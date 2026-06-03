@@ -1,0 +1,14 @@
+export type SizeStep = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+export declare const SIZE_STEPS: readonly SizeStep[];
+export declare const sizeFonts: Record<SizeStep, string>;
+export declare const sizeLeadings: Record<SizeStep, number>;
+export declare const sizePadBlock: Record<SizeStep, string>;
+export declare const sizePadInline: Record<SizeStep, string>;
+export declare const sizeGaps: Record<SizeStep, string>;
+export declare const sizeRadii: Record<SizeStep, string>;
+export declare const sizeIcons: Record<SizeStep, string>;
+export declare const sizeShadows: Record<SizeStep, string>;
+export declare const sizeHeights: Record<SizeStep, string>;
+export declare const sizeMargins: Record<SizeStep, string>;
+export declare const sizeWidths: Record<SizeStep, string>;
+export type { SizeStep as ComponentSizeStep };

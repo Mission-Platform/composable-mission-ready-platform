@@ -1,0 +1,37 @@
+{
+  "name": "@mission-platform/postcss-config",
+  "version": "0.1.0",
+  "description": "Shared PostCSS configuration for all Mission Platform packages and apps",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build && tsc --project tsconfig.build.json --declaration --declarationDir dist --emitDeclarationOnly --noEmit false --rootDir src",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "peerDependencies": {
+    "postcss": ">=8.0.0"
+  },
+  "dependencies": {
+    "autoprefixer": "catalog:vite"
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@vue/tsconfig": "catalog:vue",
+    "eslint": "catalog:eslint",
+    "postcss": "catalog:vite",
+    "prettier": "catalog:prettier",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite"
+  }
+}

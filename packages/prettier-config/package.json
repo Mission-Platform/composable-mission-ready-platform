@@ -1,0 +1,25 @@
+{
+  "name": "@mission-platform/prettier-config",
+  "version": "0.1.0",
+  "description": "Shared Prettier configuration for all Mission Platform packages and apps",
+  "type": "module",
+  "exports": {
+    ".": "./index.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "peerDependencies": {
+    "prettier": ">=3.0.0"
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "typescript": "catalog:typescript"
+  }
+}

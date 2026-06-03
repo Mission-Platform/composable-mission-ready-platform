@@ -1,0 +1,114 @@
+// ─── Unified component size scale ────────────────────────────────────────────
+// A canonical seven-step scale (2xs → 2xl) that drives component sizing.
+// Each step covers: font-size, line-height, padding (block/inline),
+// border-radius, icon size, and shadow depth.
+// All values are in rem (base font-size: 14px).
+// Reference these variables inside component SCSS instead of hard-coded values.
+
+// ── Font size per size step ───────────────────────────────────────────────────
+// Base font-size: 14px → md = 1rem (the default body size)
+$size-font-2xs: 0.643rem; // ~9px
+$size-font-xs:  0.786rem; // ~11px
+$size-font-sm:  0.929rem; // ~13px
+$size-font-md:  1rem;     //  14px  ← base (md = 1rem)
+$size-font-lg:  1.143rem; // ~16px
+$size-font-xl:  1.286rem; // ~18px
+$size-font-2xl: 1.714rem; // ~24px
+
+// ── Line height per size step ─────────────────────────────────────────────────
+$size-leading-2xs: 1.25;
+$size-leading-xs:  1.25;
+$size-leading-sm:  1.375;
+$size-leading-md:  1.5;
+$size-leading-lg:  1.5;
+$size-leading-xl:  1.5;
+$size-leading-2xl: 1.375;
+
+// ── Block (top/bottom) padding per size step ──────────────────────────────────
+$size-pad-block-2xs: 0.143rem; // ~2px
+$size-pad-block-xs:  0.286rem; // ~4px
+$size-pad-block-sm:  0.429rem; // ~6px
+$size-pad-block-md:  0.571rem; // ~8px
+$size-pad-block-lg:  0.714rem; // ~10px
+$size-pad-block-xl:  0.857rem; // ~12px
+$size-pad-block-2xl: 1.143rem; // ~16px
+
+// ── Inline (left/right) padding per size step ─────────────────────────────────
+$size-pad-inline-2xs: 0.286rem; // ~4px
+$size-pad-inline-xs:  0.571rem; // ~8px
+$size-pad-inline-sm:  0.714rem; // ~10px
+$size-pad-inline-md:  0.857rem; // ~12px
+$size-pad-inline-lg:  1.143rem; // ~16px
+$size-pad-inline-xl:  1.429rem; // ~20px
+$size-pad-inline-2xl: 1.714rem; // ~24px
+
+// ── Gap between elements per size step ───────────────────────────────────────
+$size-gap-2xs: 0.143rem; // ~2px
+$size-gap-xs:  0.286rem; // ~4px
+$size-gap-sm:  0.429rem; // ~6px
+$size-gap-md:  0.571rem; // ~8px
+$size-gap-lg:  0.857rem; // ~12px
+$size-gap-xl:  1.143rem; // ~16px
+$size-gap-2xl: 1.714rem; // ~24px
+
+// ── Border radius per size step ───────────────────────────────────────────────
+$size-radius-2xs: 0.143rem; // ~2px
+$size-radius-xs:  0.286rem; // ~4px
+$size-radius-sm:  0.286rem; // ~4px
+$size-radius-md:  0.429rem; // ~6px
+$size-radius-lg:  0.571rem; // ~8px
+$size-radius-xl:  0.714rem; // ~10px
+$size-radius-2xl: 0.857rem; // ~12px
+
+// ── Icon size per size step — md = 1rem (14px), matches font scale ───────────
+$size-icon-2xs: 0.643rem; // ~9px
+$size-icon-xs:  0.786rem; // ~11px
+$size-icon-sm:  0.929rem; // ~13px
+$size-icon-md:  1rem;     //  14px  ← base (md = 1rem)
+$size-icon-lg:  1.143rem; // ~16px
+$size-icon-xl:  1.286rem; // ~18px
+$size-icon-2xl: 1.714rem; // ~24px
+
+// ── Box shadow per size step ──────────────────────────────────────────────────
+$size-shadow-2xs: 0 0.071rem 0.071rem 0 rgb(0 0 0 / 3%);
+$size-shadow-xs:  0 0.071rem 0.143rem 0 rgb(0 0 0 / 5%);
+$size-shadow-sm:  0 0.071rem 0.214rem 0 rgb(0 0 0 / 10%), 0 0.071rem 0.143rem -0.071rem rgb(0 0 0 / 10%);
+$size-shadow-md:  0 0.286rem 0.429rem -0.071rem rgb(0 0 0 / 10%), 0 0.143rem 0.286rem -0.143rem rgb(0 0 0 / 10%);
+$size-shadow-lg:  0 0.714rem 1.071rem -0.214rem rgb(0 0 0 / 10%), 0 0.286rem 0.429rem -0.286rem rgb(0 0 0 / 10%);
+$size-shadow-xl:  0 1.429rem 1.786rem -0.357rem rgb(0 0 0 / 10%), 0 0.571rem 0.714rem -0.429rem rgb(0 0 0 / 10%);
+$size-shadow-2xl: 0 1.786rem 3.571rem -0.857rem rgb(0 0 0 / 25%);
+
+// ── Height (touch target / input height) per size step ────────────────────────
+$size-height-2xs: 1.429rem; // ~20px
+$size-height-xs:  1.714rem; // ~24px
+$size-height-sm:  2rem;     // ~28px
+$size-height-md:  2.571rem; // ~36px
+$size-height-lg:  2.857rem; // ~40px
+$size-height-xl:  3.429rem; // ~48px
+$size-height-2xl: 4rem;     // ~56px
+
+// ── Margin aliases (same as gap, exposed for semantic clarity) ────────────────
+$size-margin-2xs: $size-gap-2xs;
+$size-margin-xs:  $size-gap-xs;
+$size-margin-sm:  $size-gap-sm;
+$size-margin-md:  $size-gap-md;
+$size-margin-lg:  $size-gap-lg;
+$size-margin-xl:  $size-gap-xl;
+$size-margin-2xl: $size-gap-2xl;
+
+// ── Content-area widths — 5/8 of each breakpoint (2xs & xs = full viewport) ──
+// Base font-size: 14px. Formula: breakpointPx * 5/8 / 14 = rem value.
+// 2xs (0 px)   → 100vw  (full viewport, mobile)
+// xs  (480 px) → 100vw  (full viewport, small mobile/landscape)
+// sm  (768 px) → 480 px = 34.286rem
+// md  (1024px) → 640 px = 45.714rem
+// lg  (1920px) → 1200px = 85.714rem
+// xl  (2560px) → 1600px = 114.286rem
+// 2xl (3840px) → 2400px = 171.429rem
+$size-width-2xs: 100vw;
+$size-width-xs:  100vw;
+$size-width-sm:  34.286rem;
+$size-width-md:  45.714rem;
+$size-width-lg:  85.714rem;
+$size-width-xl:  114.286rem;
+$size-width-2xl: 171.429rem;

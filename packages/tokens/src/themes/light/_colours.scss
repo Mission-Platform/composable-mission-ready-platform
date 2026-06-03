@@ -1,0 +1,20 @@
+// ─── Light Theme Named Colour Aliases ────────────────────────────────────────
+// Semantic SCSS variable aliases for the light theme.
+// Every value is WCAG AAA (≥ 7:1) contrast against the #eff1f3 base surface.
+// Use these in components that need a named colour rather than a CSS custom
+// property, e.g. for syntax highlighting, badges, or data-visualisation.
+//
+// Usage:
+//   @use '@mission-platform/tokens/scss/themes/light/colours' as lc;
+//   color: lc.$red;
+
+@use '../../scss/colors' as c;
+
+$black:   c.$color-black;                // #000
+$white:   c.$color-white;                // #fff
+$red:     c.$color-danger-800;           // #9f1239 —  7.08:1 on #eff1f3 (WCAG AAA)
+$green:   c.$color-success-800;          // #073d1d — 10.95:1 on #eff1f3 (WCAG AAA)
+$blue:    c.$color-notice-800;           // #3730a3 —  8.77:1 on #eff1f3 (WCAG AAA)
+$cyan:    c.$color-cyan-800;             // #07403d — 10.25:1 on #eff1f3 (WCAG AAA)
+$magenta: c.$color-debug-800;            // #5b21b6 —  7.93:1 on #eff1f3 (WCAG AAA)
+$yellow:  c.$color-alert-900;            // #7c2d12 —  8.28:1 on #eff1f3 (WCAG AAA)

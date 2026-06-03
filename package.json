@@ -1,0 +1,18 @@
+{
+  "name": "mission-platform",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "build": "pnpm --filter @mission-platform/tokens build && pnpm --filter @mission-platform/postcss-config build && pnpm --filter @mission-platform/icons build && pnpm --filter @mission-platform/components --filter @mission-platform/breakpoints --filter @mission-platform/i18n --filter @mission-platform/map build",
+    "lint": "pnpm -r --parallel run lint",
+    "lint:fix": "pnpm -r --parallel run lint --fix",
+    "lint:style": "pnpm -r --parallel run lint:style",
+    "lint:style:fix": "pnpm -r --parallel run lint:style --fix",
+    "format": "pnpm -r --parallel run format",
+    "storybook": "pnpm --filter @mission-platform/storybook storybook"
+  },
+  "devDependencies": {
+    "@changesets/cli": "catalog:"
+  },
+  "packageManager": "pnpm@11.5.0+sha512.dbfcc4f81cf48597afd4bc391ffdf12c11f1a9fb83a395bfa6b0a2d9cc2fd8ffebafdb1ccbd529632153f793904c2615b7f09fe1a345473fd1c35845172a8eb1"
+}

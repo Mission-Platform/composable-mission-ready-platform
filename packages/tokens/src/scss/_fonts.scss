@@ -1,0 +1,19 @@
+// ─── Font faces ───────────────────────────────────────────────────────────────
+// Loads the Comfortaa (sans) and Datatype (monospace) variable fonts bundled
+// with the tokens package.
+
+@font-face {
+  font-family: 'Comfortaa';
+  src: url('../fonts/Comfortaa/Comfortaa-VariableFont_wght.ttf') format('truetype');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Datatype';
+  src: url('../fonts/Datatype/Datatype-VariableFont_wdth,wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}

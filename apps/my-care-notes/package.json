@@ -1,0 +1,51 @@
+{
+  "name": "@mission-platform/my-care-notes",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "lint:style": "stylelint \"src/**/*.{vue,scss,css}\"",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@mission-platform/breakpoints": "workspace:*",
+    "@mission-platform/components": "workspace:*",
+    "@mission-platform/i18n": "workspace:*",
+    "@mission-platform/icons": "workspace:*",
+    "@mission-platform/tokens": "workspace:*",
+    "@mission-platform/hunspell": "workspace:*",
+    "vue-i18n": "catalog:vue",
+    "monaco-editor": "catalog:",
+    "nanoid": "catalog:",
+    "vue": "catalog:vue",
+    "vue-router": "catalog:vue"
+  },
+  "devDependencies": {
+    "@intlify/unplugin-vue-i18n": "catalog:vue",
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/postcss-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/stylelint-config": "workspace:*",
+    "@types/node": "catalog:typescript",
+    "@vitejs/plugin-vue": "catalog:vue",
+    "@vue/tsconfig": "catalog:vue",
+    "eslint": "catalog:eslint",
+    "postcss-html": "catalog:stylelint",
+    "postcss-scss": "catalog:stylelint",
+    "prettier": "catalog:prettier",
+    "sass-embedded": "catalog:vite",
+    "stylelint": "catalog:stylelint",
+    "stylelint-config-recommended-vue": "catalog:stylelint",
+    "stylelint-config-standard-scss": "catalog:stylelint",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite",
+    "vite-plugin-pwa": "catalog:vite",
+    "vitest": "catalog:testing",
+    "vue-tsc": "catalog:vue"
+  }
+}

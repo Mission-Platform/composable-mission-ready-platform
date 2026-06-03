@@ -1,0 +1,295 @@
+// =============================================================================
+// Font Mixins & Functions
+// =============================================================================
+// Usage:
+//   @use '@mission-platform/tokens/scss/mixins' as mp;
+//
+//   .my-heading { @include mp.mp-font-h1; }
+//   .my-label   { @include mp.mp-font('label', $weight: 'medium'); }
+//   font-size: mp.mp-rem(14px);
+// =============================================================================
+
+@use 'sass:math';
+@use 'sass:map';
+@use 'typography' as ty;
+
+// -----------------------------------------------------------------------------
+// Helper function — px to rem
+// -----------------------------------------------------------------------------
+
+/// Converts a pixel value to rem (base 16 px).
+/// @param {Number} $px - Value in pixels (unitless or with px unit).
+/// @return {Number} Value in rem.
+@function mp-rem($px) {
+  @if math.unit($px) == 'px' {
+    @return math.div($px, 16px) * 1rem;
+  }
+  @return math.div($px, 16) * 1rem;
+}
+
+// -----------------------------------------------------------------------------
+// Lookup functions — retrieve a token by semantic name
+// -----------------------------------------------------------------------------
+
+/// Returns a font-size token by variant name.
+/// Throws a compile-time error for unknown variants.
+/// @param {String} $variant - One of: display h1 h2 h3 h4 h5 body-lg body-md body-sm body-xs label caption code
+@function mp-font-size($variant) {
+  $map: (
+    'display':  ty.$font-size-5xl,   // 3rem   / 48px
+    'h1':       ty.$font-size-4xl,   // 2.25rem / 36px
+    'h2':       ty.$font-size-3xl,   // 1.875rem / 30px
+    'h3':       ty.$font-size-2xl,   // 1.5rem  / 24px
+    'h4':       ty.$font-size-xl,    // 1.25rem / 20px
+    'h5':       ty.$font-size-lg,    // 1.125rem / 18px
+    'body-lg':  ty.$font-size-lg,    // 1.125rem / 18px
+    'body-md':  ty.$font-size-md,    // 1rem     / 16px
+    'body-sm':  ty.$font-size-sm,    // 0.875rem / 14px
+    'body-xs':  ty.$font-size-xs,    // 0.75rem  / 12px
+    'label':    ty.$font-size-sm,    // 0.875rem / 14px
+    'caption':  ty.$font-size-xs,    // 0.75rem  / 12px
+    'code':     ty.$font-size-sm,    // 0.875rem / 14px
+  );
+  @if not map.has-key($map, $variant) {
+    @error "mp-font-size(): unknown variant '#{$variant}'. Valid values: #{map.keys($map)}";
+  }
+  @return map.get($map, $variant);
+}
+
+/// Returns a font-weight token by name.
+/// @param {String} $weight - One of: regular medium semibold bold
+@function mp-font-weight($weight) {
+  $map: (
+    'regular':  ty.$font-weight-regular,
+    'medium':   ty.$font-weight-medium,
+    'semibold': ty.$font-weight-semibold,
+    'bold':     ty.$font-weight-bold,
+  );
+  @if not map.has-key($map, $weight) {
+    @error "mp-font-weight(): unknown weight '#{$weight}'. Valid values: #{map.keys($map)}";
+  }
+  @return map.get($map, $weight);
+}
+
+/// Returns a line-height token by name.
+/// @param {String} $scale - One of: tight snug normal relaxed loose code
+@function mp-line-height($scale) {
+  $map: (
+    'tight':   ty.$line-height-tight,
+    'snug':    ty.$line-height-snug,
+    'normal':  ty.$line-height-normal,
+    'relaxed': ty.$line-height-relaxed,
+    'loose':   ty.$line-height-loose,
+    'code':    ty.$line-height-snug,   // code blocks use snug line-height
+  );
+  @if not map.has-key($map, $scale) {
+    @error "mp-line-height(): unknown scale '#{$scale}'. Valid values: #{map.keys($map)}";
+  }
+  @return map.get($map, $scale);
+}
+
+/// Returns a letter-spacing token by name.
+/// @param {String} $scale - One of: tight normal wide wider widest
+///                          Semantic aliases: display heading body caption code
+@function mp-letter-spacing($scale) {
+  $map: (
+    // Raw scale
+    'tight':   ty.$letter-spacing-tight,
+    'normal':  ty.$letter-spacing-normal,
+    'wide':    ty.$letter-spacing-wide,
+    'wider':   ty.$letter-spacing-wider,
+    'widest':  ty.$letter-spacing-widest,
+    // Semantic aliases
+    'display': ty.$letter-spacing-tight,
+    'heading': ty.$letter-spacing-tight,
+    'body':    ty.$letter-spacing-normal,
+    'caption': ty.$letter-spacing-wide,
+    'code':    ty.$letter-spacing-normal,
+  );
+  @if not map.has-key($map, $scale) {
+    @error "mp-letter-spacing(): unknown scale '#{$scale}'. Valid values: #{map.keys($map)}";
+  }
+  @return map.get($map, $scale);
+}
+
+// -----------------------------------------------------------------------------
+// Core mixin — generic font style
+// -----------------------------------------------------------------------------
+
+/// Applies a complete font style using token primitives.
+/// @param {String} $variant      - Typography variant key (see mp-font-size).
+/// @param {String} $family       - Font-family key: sans | mono (default: sans).
+/// @param {String} $weight       - Font-weight key (default: regular).
+/// @param {String} $line-height  - Line-height key (default: normal).
+/// @param {String} $tracking     - Letter-spacing key (default: body).
+@mixin mp-font(
+  $variant,
+  $family:      'sans',
+  $weight:      'regular',
+  $line-height: 'normal',
+  $tracking:    'body'
+) {
+  $family-map: (
+    'sans':  ty.$font-family-sans,
+    'mono':  ty.$font-family-mono,
+  );
+
+  @if not map.has-key($family-map, $family) {
+    @error "mp-font(): unknown family '#{$family}'. Valid values: #{map.keys($family-map)}";
+  }
+
+  font-family:    map.get($family-map, $family);
+  font-size:      mp-font-size($variant);
+  font-weight:    mp-font-weight($weight);
+  line-height:    mp-line-height($line-height);
+  letter-spacing: mp-letter-spacing($tracking);
+}
+
+// -----------------------------------------------------------------------------
+// Variant mixins — one mixin per BaseTypography variant
+// These are the recommended API for component authors.
+// -----------------------------------------------------------------------------
+
+/// Display — hero / marketing headline.
+@mixin mp-font-display {
+  @include mp-font(
+    'display',
+    $weight:      'bold',
+    $line-height: 'tight',
+    $tracking:    'display'
+  );
+}
+
+/// Heading level 1.
+@mixin mp-font-h1 {
+  @include mp-font(
+    'h1',
+    $weight:      'semibold',
+    $line-height: 'tight',
+    $tracking:    'heading'
+  );
+}
+
+/// Heading level 2.
+@mixin mp-font-h2 {
+  @include mp-font(
+    'h2',
+    $weight:      'semibold',
+    $line-height: 'tight',
+    $tracking:    'heading'
+  );
+}
+
+/// Heading level 3.
+@mixin mp-font-h3 {
+  @include mp-font(
+    'h3',
+    $weight:      'medium',
+    $line-height: 'snug',
+    $tracking:    'heading'
+  );
+}
+
+/// Heading level 4.
+@mixin mp-font-h4 {
+  @include mp-font(
+    'h4',
+    $weight:      'medium',
+    $line-height: 'snug',
+    $tracking:    'heading'
+  );
+}
+
+/// Heading level 5.
+@mixin mp-font-h5 {
+  @include mp-font(
+    'h5',
+    $weight:      'medium',
+    $line-height: 'snug',
+    $tracking:    'body'
+  );
+}
+
+/// Body large — introductory / lead text.
+@mixin mp-font-body-lg {
+  @include mp-font(
+    'body-lg',
+    $line-height: 'relaxed',
+    $tracking:    'body'
+  );
+}
+
+/// Body medium — default body copy.
+@mixin mp-font-body-md {
+  @include mp-font(
+    'body-md',
+    $line-height: 'normal',
+    $tracking:    'body'
+  );
+}
+
+/// Body small — secondary body copy.
+@mixin mp-font-body-sm {
+  @include mp-font(
+    'body-sm',
+    $line-height: 'normal',
+    $tracking:    'body'
+  );
+}
+
+/// Body extra-small — fine print.
+@mixin mp-font-body-xs {
+  @include mp-font(
+    'body-xs',
+    $line-height: 'snug',
+    $tracking:    'caption'
+  );
+}
+
+/// Label — form labels, table headers, navigation items.
+@mixin mp-font-label {
+  @include mp-font(
+    'label',
+    $weight:      'medium',
+    $line-height: 'snug',
+    $tracking:    'body'
+  );
+}
+
+/// Caption — helper text, timestamps, metadata.
+@mixin mp-font-caption {
+  @include mp-font(
+    'caption',
+    $line-height: 'snug',
+    $tracking:    'caption'
+  );
+}
+
+/// Code — inline and block code.
+@mixin mp-font-code {
+  @include mp-font(
+    'code',
+    $family:      'mono',
+    $line-height: 'code',
+    $tracking:    'code'
+  );
+}
+
+// -----------------------------------------------------------------------------
+// Base typography reset mixin
+// -----------------------------------------------------------------------------
+
+/// Applies the global default font settings to a root element (body / :root).
+/// Sets the default sans-serif font family with graceful degradation, base size,
+/// normal line-height and body letter-spacing, plus font-rendering optimisations.
+@mixin mp-font-base {
+  font-family:             ty.$font-family-sans;
+  font-size:               ty.$font-size-md;
+  font-weight:             ty.$font-weight-regular;
+  line-height:             ty.$line-height-normal;
+  letter-spacing:          ty.$letter-spacing-normal;
+  font-synthesis:          none;
+  text-rendering:          optimizeLegibility;
+  -webkit-font-smoothing:  antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

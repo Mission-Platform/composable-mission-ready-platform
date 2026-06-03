@@ -1,0 +1,526 @@
+<script setup lang="ts">
+  import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+  import { useFloating, autoUpdate, offset, flip, shift } from '@floating-ui/vue'
+  import { IconCalendar, IconChevron } from '@mission-platform/icons'
+
+  import { useId } from '../../composables/useId'
+  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+
+  export type DateInputSize = 'sm' | 'md' | 'lg'
+
+  const props = withDefaults(
+    defineProps<{
+      modelValue?: string
+      label?: string
+      labelHidden?: boolean
+      hint?: string
+      error?: string
+      disabled?: boolean
+      required?: boolean
+      placeholder?: string
+      size?: DateInputSize
+      min?: string
+      max?: string
+      id?: string
+    }>(),
+    {
+      modelValue: '',
+      label: undefined,
+      labelHidden: false,
+      hint: undefined,
+      error: undefined,
+      disabled: false,
+      required: false,
+      placeholder: 'YYYY-MM-DD',
+      size: 'md',
+      min: undefined,
+      max: undefined,
+      id: undefined,
+    },
+  )
+
+  const emit = defineEmits<{
+    'update:modelValue': [value: string]
+    change: [value: string]
+  }>()
+
+  const { id: resolvedId } = useId(props.id)
+
+  const open = ref(false)
+  const calendarRef = ref<HTMLElement | null>(null)
+  const triggerRef = ref<HTMLElement | null>(null)
+
+  const { floatingStyles } = useFloating(triggerRef, calendarRef, {
+    placement: 'bottom-start',
+    whileElementsMounted: autoUpdate,
+    middleware: [offset(4), flip({ padding: 8 }), shift({ padding: 8 })],
+  })
+
+  const viewYear = ref(new Date().getFullYear())
+  const viewMonth = ref(new Date().getMonth())
+
+  const MONTHS = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
+  const DAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
+
+  function parseDate(val: string): Date | null {
+    if (!val) return null
+    const d = new Date(val + 'T00:00:00')
+    return isNaN(d.getTime()) ? null : d
+  }
+
+  const minDate = computed(() => (props.min ? parseDate(props.min) : null))
+  const maxDate = computed(() => (props.max ? parseDate(props.max) : null))
+
+  const calendarDays = computed(() => {
+    const firstDay = new Date(viewYear.value, viewMonth.value, 1).getDay()
+    const daysInMonth = new Date(viewYear.value, viewMonth.value + 1, 0).getDate()
+    const cells: Array<{ day: number | null; date: string | null; disabled: boolean }> = []
+    for (let i = 0; i < firstDay; i++) cells.push({ day: null, date: null, disabled: true })
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${viewYear.value}-${String(viewMonth.value + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
+      const dateObj = new Date(viewYear.value, viewMonth.value, d)
+      let disabled = false
+      if (minDate.value && dateObj < minDate.value) disabled = true
+      if (maxDate.value && dateObj > maxDate.value) disabled = true
+      cells.push({ day: d, date: dateStr, disabled })
+    }
+    return cells
+  })
+
+  function isSelected(date: string | null): boolean {
+    return !!date && date === props.modelValue
+  }
+
+  function isToday(date: string | null): boolean {
+    if (!date) return false
+    const t = new Date()
+    return (
+      date ===
+      `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`
+    )
+  }
+
+  function selectDate(date: string | null, disabled: boolean) {
+    if (!date || disabled) return
+    emit('update:modelValue', date)
+    emit('change', date)
+    open.value = false
+  }
+
+  function prevMonth() {
+    if (viewMonth.value === 0) {
+      viewYear.value--
+      viewMonth.value = 11
+    } else viewMonth.value--
+  }
+
+  function nextMonth() {
+    if (viewMonth.value === 11) {
+      viewYear.value++
+      viewMonth.value = 0
+    } else viewMonth.value++
+  }
+
+  function toggleOpen() {
+    if (props.disabled) return
+    if (!open.value) {
+      const d = parseDate(props.modelValue)
+      if (d) {
+        viewYear.value = d.getFullYear()
+        viewMonth.value = d.getMonth()
+      }
+    }
+    open.value = !open.value
+  }
+
+  function onClickOutside(e: MouseEvent) {
+    const t = e.target as Node
+    if (
+      calendarRef.value &&
+      !calendarRef.value.contains(t) &&
+      triggerRef.value &&
+      !triggerRef.value.contains(t)
+    )
+      open.value = false
+  }
+
+  watch(
+    () => props.modelValue,
+    (val) => {
+      const d = parseDate(val)
+      if (d) {
+        viewYear.value = d.getFullYear()
+        viewMonth.value = d.getMonth()
+      }
+    },
+  )
+
+  onMounted(() => document.addEventListener('mousedown', onClickOutside))
+  onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
+</script>
+
+<template>
+  <div
+    :class="[
+      'base-date-input',
+      `base-date-input--${size}`,
+      { 'base-date-input--error': !!error, 'base-date-input--disabled': disabled },
+    ]"
+  >
+    <label
+      v-if="label"
+      :for="resolvedId"
+      :class="['base-date-input__label', { 'base-date-input__label--hidden': labelHidden }]"
+    >
+      <BaseTypography variant="label" as="span" color="primary">{{ label }}</BaseTypography>
+      <span v-if="required" class="base-date-input__required" aria-hidden="true">*</span>
+    </label>
+
+    <button
+      ref="triggerRef"
+      :id="resolvedId"
+      type="button"
+      class="base-date-input__trigger"
+      :aria-expanded="open"
+      :aria-haspopup="'dialog'"
+      :aria-label="label ?? 'Date picker'"
+      :aria-invalid="!!error || undefined"
+      :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
+      @click="toggleOpen"
+      @keydown.escape="open = false"
+    >
+      <span
+        :class="['base-date-input__value', { 'base-date-input__value--placeholder': !modelValue }]"
+      >
+        {{ modelValue || placeholder }}
+      </span>
+      <span class="base-date-input__icon" aria-hidden="true">
+        <IconCalendar size="sm" />
+      </span>
+    </button>
+
+    <div
+      v-show="open"
+      ref="calendarRef"
+      class="base-date-input__calendar"
+      role="dialog"
+      :aria-label="`${label ?? 'Date'} calendar`"
+      :style="floatingStyles"
+    >
+      <div class="base-date-input__cal-header">
+        <button
+          type="button"
+          class="base-date-input__nav-btn"
+          @click.stop="prevMonth"
+          aria-label="Previous month"
+        >
+          <IconChevron size="xs" direction="left" />
+        </button>
+        <BaseTypography variant="label" as="span" color="primary"
+          >{{ MONTHS[viewMonth] }} {{ viewYear }}</BaseTypography
+        >
+        <button
+          type="button"
+          class="base-date-input__nav-btn"
+          @click.stop="nextMonth"
+          aria-label="Next month"
+        >
+          <IconChevron size="xs" direction="right" />
+        </button>
+      </div>
+
+      <div class="base-date-input__cal-grid">
+        <span v-for="d in DAYS" :key="d" class="base-date-input__weekday">{{ d }}</span>
+        <button
+          v-for="(cell, i) in calendarDays"
+          :key="i"
+          type="button"
+          :disabled="!cell.day || cell.disabled"
+          :class="[
+            'base-date-input__day',
+            {
+              'base-date-input__day--empty': !cell.day,
+              'base-date-input__day--selected': isSelected(cell.date),
+              'base-date-input__day--today': isToday(cell.date) && !isSelected(cell.date),
+              'base-date-input__day--disabled': cell.disabled,
+            },
+          ]"
+          :aria-label="cell.date ?? undefined"
+          :aria-pressed="isSelected(cell.date)"
+          @click.stop="selectDate(cell.date, cell.disabled)"
+        >
+          {{ cell.day ?? '' }}
+        </button>
+      </div>
+    </div>
+
+    <BaseTypography
+      v-if="error"
+      :id="`${resolvedId}-error`"
+      variant="caption"
+      as="p"
+      color="inherit"
+      class="base-date-input__error"
+      role="alert"
+      >{{ error }}</BaseTypography
+    >
+    <BaseTypography
+      v-else-if="hint"
+      :id="`${resolvedId}-hint`"
+      variant="caption"
+      as="p"
+      color="secondary"
+      class="base-date-input__hint"
+      >{{ hint }}</BaseTypography
+    >
+  </div>
+</template>
+
+<style scoped lang="scss">
+  @use '@mission-platform/tokens/scss/mixins' as mp;
+
+  .base-date-input {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mp-spacing-1);
+    position: relative;
+
+    &__label {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+
+      &--hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    }
+
+    &__required {
+      color: var(--mp-color-danger-default);
+      margin-left: 2px;
+    }
+
+    &__trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      appearance: none;
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-md);
+      background-color: var(--mp-color-bg-surface);
+      cursor: pointer;
+      transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease;
+      user-select: none;
+
+      &:focus {
+        outline: none;
+        border-color: var(--mp-color-border-focus);
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+
+      &:hover:not(:focus) {
+        border-color: var(--mp-color-border-default);
+        filter: brightness(0.97);
+      }
+    }
+
+    &__value {
+      @include mp.mp-font-body-md;
+
+      color: var(--mp-color-text-primary);
+
+      &--placeholder {
+        color: var(--mp-color-text-tertiary);
+      }
+    }
+
+    &__icon {
+      color: var(--mp-color-text-secondary);
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    // Sizes
+    &--sm .base-date-input__trigger {
+      padding: var(--mp-spacing-1) var(--mp-spacing-2);
+      .base-date-input__value {
+        font-size: var(--mp-font-size-sm);
+      }
+    }
+
+    &--md .base-date-input__trigger {
+      padding: var(--mp-spacing-2) var(--mp-spacing-3);
+      .base-date-input__value {
+        font-size: var(--mp-font-size-md);
+      }
+    }
+
+    &--lg .base-date-input__trigger {
+      padding: var(--mp-spacing-3) var(--mp-spacing-4);
+      .base-date-input__value {
+        font-size: var(--mp-font-size-lg);
+      }
+    }
+
+    // States
+    &--error .base-date-input__trigger {
+      border-color: var(--mp-color-danger-default);
+      &:focus {
+        box-shadow: var(--mp-shadow-focus-danger);
+      }
+    }
+
+    &--disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      .base-date-input__trigger {
+        background-color: var(--mp-color-bg-muted);
+        cursor: not-allowed;
+      }
+    }
+
+    &__error {
+      color: var(--mp-color-danger-text);
+      margin: 0;
+    }
+    &__hint {
+      margin: 0;
+    }
+
+    // Calendar
+    &__calendar {
+      position: fixed;
+      z-index: 200;
+      background: var(--mp-color-bg-surface);
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-lg);
+      box-shadow: var(--mp-shadow-lg);
+      padding: var(--mp-spacing-3);
+      min-width: 280px;
+    }
+
+    &__cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--mp-spacing-2);
+    }
+
+    &__nav-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      border-radius: var(--mp-radius-sm);
+      cursor: pointer;
+      color: var(--mp-color-text-secondary);
+      transition:
+        background-color 150ms ease,
+        color 150ms ease;
+
+      &:hover {
+        background-color: var(--mp-color-bg-muted);
+        color: var(--mp-color-text-primary);
+      }
+      &:focus-visible {
+        outline: 2px solid var(--mp-color-border-focus);
+        outline-offset: 2px;
+      }
+    }
+
+    &__cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+    }
+
+    &__weekday {
+      @include mp.mp-font-caption;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      font-weight: var(--mp-font-weight-medium);
+      color: var(--mp-color-text-tertiary);
+    }
+
+    &__day {
+      @include mp.mp-font-body-sm;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      width: 100%;
+      border: none;
+      background: transparent;
+      border-radius: var(--mp-radius-sm);
+      cursor: pointer;
+      color: var(--mp-color-text-primary);
+      transition:
+        background-color 150ms ease,
+        color 150ms ease;
+
+      &:hover:not(:disabled):not(.base-date-input__day--selected) {
+        background-color: var(--mp-color-bg-muted);
+      }
+
+      &--empty {
+        pointer-events: none;
+      }
+
+      &--selected {
+        background-color: var(--mp-color-primary-default);
+        color: var(--mp-color-text-on-primary);
+        font-weight: var(--mp-font-weight-semibold);
+      }
+
+      &--today {
+        background-color: color-mix(in srgb, var(--mp-color-primary-default) 12%, transparent);
+        color: var(--mp-color-primary-default);
+        font-weight: var(--mp-font-weight-semibold);
+      }
+
+      &--disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--mp-color-border-focus);
+        outline-offset: 2px;
+      }
+    }
+  }
+</style>

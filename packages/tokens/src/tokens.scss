@@ -1,0 +1,29 @@
+// ─── Tokens barrel ───────────────────────────────────────────────────────────
+// Import this file to get all structural CSS custom properties.
+// Then import a theme file (light or dark) separately to get colour tokens.
+//
+// Quickstart:
+//   @use '@mission-platform/tokens/scss/tokens';
+//   @use '@mission-platform/tokens/scss/themes/light';
+
+@use 'scss/fonts';
+@use 'scss/css-vars';
+
+// Establish 14px as the base font-size so that 1rem = 14px throughout.
+// All token rem values are calculated against this base.
+:root {
+  font-size: 14px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  padding: var(--mp-spacing-0);
+  margin:  var(--mp-spacing-0);
+
+  margin-top: env(safe-area-inset-top);
+}

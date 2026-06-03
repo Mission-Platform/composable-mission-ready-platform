@@ -1,0 +1,131 @@
+<script setup lang="ts">
+  import { ref, watch } from 'vue'
+  import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue'
+
+  export type DropdownPlacement =
+    | 'bottom-start'
+    | 'bottom-end'
+    | 'bottom'
+    | 'top-start'
+    | 'top-end'
+    | 'top'
+
+  const props = withDefaults(
+    defineProps<{
+      open?: boolean
+      placement?: DropdownPlacement
+      matchTriggerWidth?: boolean
+      maxHeight?: string
+      closeOnOutsideClick?: boolean
+    }>(),
+    {
+      open: false,
+      placement: 'bottom-start',
+      matchTriggerWidth: true,
+      maxHeight: '240px',
+      closeOnOutsideClick: true,
+    },
+  )
+
+  const emit = defineEmits<{
+    'update:open': [value: boolean]
+    close: []
+  }>()
+
+  const referenceEl = ref<HTMLElement | null>(null)
+  const floatingEl = ref<HTMLElement | null>(null)
+
+  const { floatingStyles } = useFloating(referenceEl, floatingEl, {
+    placement: props.placement,
+    whileElementsMounted: autoUpdate,
+    middleware: [offset(2), flip({ padding: 4 }), shift({ padding: 4 })],
+  })
+
+  function handleOutsideClick(event: MouseEvent) {
+    if (!props.closeOnOutsideClick || !props.open) return
+    const target = event.target as Node
+    if (referenceEl.value?.contains(target) || floatingEl.value?.contains(target)) return
+    emit('update:open', false)
+    emit('close')
+  }
+
+  watch(
+    () => props.open,
+    (open) => {
+      if (open) {
+        document.addEventListener('mousedown', handleOutsideClick)
+      } else {
+        document.removeEventListener('mousedown', handleOutsideClick)
+      }
+    },
+    { immediate: true },
+  )
+</script>
+
+<template>
+  <div class="base-dropdown-host">
+    <div ref="referenceEl" class="base-dropdown-trigger">
+      <slot name="trigger" />
+    </div>
+
+    <Transition name="base-dropdown-fade">
+      <div
+        v-if="open"
+        ref="floatingEl"
+        tabindex="0"
+        class="base-dropdown"
+        :style="{
+          ...floatingStyles,
+          maxHeight,
+          minWidth:
+            matchTriggerWidth && referenceEl?.offsetWidth
+              ? `${referenceEl?.offsetWidth}px`
+              : undefined,
+        }"
+      >
+        <slot />
+      </div>
+    </Transition>
+  </div>
+</template>
+
+<style scoped lang="scss">
+  .base-dropdown-host {
+    display: contents;
+  }
+
+  .base-dropdown-trigger {
+    display: inline-block;
+    min-width: 1px;
+    min-height: 1px;
+  }
+
+  .base-dropdown {
+    position: fixed;
+    z-index: 200;
+    margin: 0;
+    padding: var(--mp-spacing-1) 0;
+    background-color: var(--mp-color-bg-surface);
+    border: 1px solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+    box-shadow: var(--mp-shadow-md);
+    overflow-y: auto;
+    outline: none;
+    min-width: 1px;
+    min-height: 1px;
+  }
+
+  .base-dropdown-fade-enter-active,
+  .base-dropdown-fade-leave-active {
+    transition:
+      opacity 120ms ease,
+      transform 120ms ease;
+  }
+
+  .base-dropdown-fade-enter-from,
+  .base-dropdown-fade-leave-to {
+    opacity: 0;
+    transform: scaleY(0.97) translateY(-4px);
+    transform-origin: top;
+  }
+</style>

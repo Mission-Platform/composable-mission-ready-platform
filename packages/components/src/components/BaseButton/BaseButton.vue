@@ -1,0 +1,187 @@
+<script setup lang="ts">
+  import { useI18n } from 'vue-i18n'
+
+  export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
+  export type ButtonSize = 'sm' | 'md' | 'lg'
+
+  const props = withDefaults(
+    defineProps<{
+      variant?: ButtonVariant
+      size?: ButtonSize
+      disabled?: boolean
+      loading?: boolean
+      type?: 'button' | 'submit' | 'reset'
+    }>(),
+    {
+      variant: 'primary',
+      size: 'md',
+      disabled: false,
+      loading: false,
+      type: 'button',
+    },
+  )
+
+  const emit = defineEmits<{
+    click: [event: MouseEvent]
+  }>()
+
+  const { t } = useI18n({
+    inheritLocale: true,
+    messages: { en: { loading: 'Loading…' } },
+  })
+
+  function handleClick(event: MouseEvent) {
+    if (!props.disabled && !props.loading) {
+      emit('click', event)
+    }
+  }
+</script>
+
+<template>
+  <button
+    :type="type"
+    :disabled="disabled || loading"
+    :class="[
+      'base-button',
+      `base-button--${variant}`,
+      `base-button--${size}`,
+      { 'base-button--loading': loading },
+    ]"
+    :aria-busy="loading"
+    @click="handleClick"
+  >
+    <span
+      v-if="loading"
+      class="base-button__spinner"
+      role="status"
+      aria-atomic="false"
+      aria-live="off"
+      :aria-label="t('loading')"
+    />
+    <slot />
+  </button>
+</template>
+
+<style scoped lang="scss">
+  .base-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--mp-spacing-2);
+    border: 1px solid transparent;
+    border-radius: var(--mp-radius-md);
+    font-family: var(--mp-font-family-sans);
+    font-weight: var(--mp-font-weight-medium);
+    line-height: var(--mp-line-height-tight);
+    cursor: pointer;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      box-shadow 150ms ease,
+      opacity 150ms ease;
+    white-space: nowrap;
+    user-select: none;
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--mp-shadow-focus-primary);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    // Sizes
+    &--sm {
+      padding: var(--mp-spacing-1) var(--mp-spacing-3);
+      font-size: var(--mp-font-size-sm);
+    }
+
+    &--md {
+      padding: var(--mp-spacing-2) var(--mp-spacing-4);
+      font-size: var(--mp-font-size-md);
+    }
+
+    &--lg {
+      padding: var(--mp-spacing-3) var(--mp-spacing-6);
+      font-size: var(--mp-font-size-lg);
+    }
+
+    // Variants
+    &--primary {
+      background-color: var(--mp-color-primary-default);
+      color: var(--mp-color-text-on-primary);
+
+      &:hover:not(:disabled) {
+        background-color: var(--mp-color-primary-hover);
+      }
+
+      &:active:not(:disabled) {
+        background-color: var(--mp-color-primary-active);
+      }
+    }
+
+    &--secondary {
+      background-color: var(--mp-color-bg-surface);
+      border-color: var(--mp-color-border-default);
+      color: var(--mp-color-text-primary);
+
+      &:hover:not(:disabled) {
+        background-color: var(--mp-color-bg-muted);
+        border-color: var(--mp-color-border-strong);
+      }
+
+      &:active:not(:disabled) {
+        background-color: var(--mp-color-bg-sunken);
+      }
+    }
+
+    &--ghost {
+      background-color: transparent;
+      color: var(--mp-color-text-primary);
+
+      &:hover:not(:disabled) {
+        background-color: var(--mp-color-bg-muted);
+      }
+
+      &:active:not(:disabled) {
+        background-color: var(--mp-color-bg-sunken);
+      }
+    }
+
+    &--danger {
+      background-color: var(--mp-color-danger-default);
+      color: var(--mp-color-text-on-primary);
+
+      &:hover:not(:disabled) {
+        background-color: var(--mp-color-danger-hover);
+      }
+
+      &:focus-visible {
+        box-shadow: var(--mp-shadow-focus-danger);
+      }
+    }
+
+    // Loading spinner
+    &--loading {
+      pointer-events: none;
+    }
+
+    &__spinner {
+      width: 1em;
+      height: 1em;
+      border: 2px solid currentcolor;
+      border-top-color: transparent;
+      border-radius: var(--mp-radius-full);
+      animation: mp-spin 0.6s linear infinite;
+      flex-shrink: 0;
+    }
+  }
+
+  @keyframes mp-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

@@ -1,0 +1,54 @@
+{
+  "name": "@mission-platform/icons",
+  "version": "0.1.0",
+  "description": "SVG icon components for Mission Platform",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/icons.js"
+    }
+  },
+  "main": "./dist/icons.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vue-tsc -b && vite build && vue-tsc --project tsconfig.app.json --emitDeclarationOnly",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "lint:style": "stylelint \"src/**/*.{vue,scss}\"",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@mission-platform/tokens": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/postcss-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/stylelint-config": "workspace:*",
+    "@types/node": "catalog:typescript",
+    "@vue/test-utils": "catalog:vue",
+    "jsdom": "catalog:testing",
+    "vitest": "catalog:testing",
+    "@vitejs/plugin-vue": "catalog:vue",
+    "@vue/tsconfig": "catalog:vue",
+    "eslint": "catalog:eslint",
+    "postcss-html": "catalog:stylelint",
+    "postcss-scss": "catalog:stylelint",
+    "prettier": "catalog:prettier",
+    "stylelint": "catalog:stylelint",
+    "stylelint-config-recommended-vue": "catalog:stylelint",
+    "stylelint-config-standard-scss": "catalog:stylelint",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite",
+    "vite-svg-loader": "^5.1.1",
+    "vue": "catalog:vue",
+    "vue-tsc": "catalog:vue"
+  }
+}

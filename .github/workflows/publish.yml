@@ -1,0 +1,82 @@
+name: Publish Packages
+
+on:
+  push:
+    branches:
+      - main      # production release
+      - develop   # staging / pre-release
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish to GitHub Packages
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write       # needed for Changesets to create/update the release PR
+      packages: write       # needed to publish to GitHub Packages
+      pull-requests: write  # needed for Changesets to open the version PR
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          # Full history is required so Changesets can diff versions
+          fetch-depth: 0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+          registry-url: https://npm.pkg.github.com
+          scope: "@mission-platform"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+
+      # ──────────────────────────────────────────────────────────────
+      # PRODUCTION — main branch
+      # Changesets creates a "Version Packages" PR; when that PR is
+      # merged, the same workflow runs again and publishes the release.
+      # ──────────────────────────────────────────────────────────────
+      - name: Publish (production — main)
+        if: github.ref == 'refs/heads/main'
+        uses: changesets/action@v1
+        with:
+          publish: pnpm changeset publish
+          title: "chore: release packages"
+          commit: "chore: release packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ──────────────────────────────────────────────────────────────
+      # STAGING — develop branch
+      # Publishes a pre-release snapshot with a `dev` dist-tag so it
+      # is never resolved as the `latest` version by default.
+      # ──────────────────────────────────────────────────────────────
+      - name: Enter pre-release mode (staging — develop)
+        if: github.ref == 'refs/heads/develop'
+        run: pnpm changeset pre enter dev
+
+      - name: Version pre-release packages (staging — develop)
+        if: github.ref == 'refs/heads/develop'
+        run: pnpm changeset version
+
+      - name: Publish pre-release (staging — develop)
+        if: github.ref == 'refs/heads/develop'
+        run: pnpm changeset publish --tag dev
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

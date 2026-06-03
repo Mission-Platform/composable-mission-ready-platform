@@ -1,0 +1,69 @@
+<script setup lang="ts">
+  import { IconClose } from '@mission-platform/icons'
+  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+
+  defineProps<{
+    title?: string
+    closeLabel: string
+  }>()
+
+  const emit = defineEmits<{
+    close: []
+  }>()
+</script>
+
+<template>
+  <header class="base-modal__header">
+    <slot>
+      <BaseTypography v-if="title" variant="h5" as="h2" color="primary" class="base-modal__title">{{ title }}</BaseTypography>
+    </slot>
+    <button
+      type="button"
+      class="base-modal__close"
+      :aria-label="closeLabel"
+      @click="emit('close')"
+    >
+      <IconClose size="md" />
+    </button>
+  </header>
+</template>
+
+<style scoped lang="scss">
+  .base-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--mp-spacing-4) var(--mp-spacing-6);
+    border-bottom: 1px solid var(--mp-color-border-default);
+    flex-shrink: 0;
+    gap: var(--mp-spacing-4);
+  }
+
+  .base-modal__title {
+    margin: 0;
+  }
+
+  .base-modal__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--mp-spacing-1);
+    border: none;
+    border-radius: var(--mp-radius-sm);
+    background: transparent;
+    cursor: pointer;
+    color: var(--mp-color-text-secondary);
+    flex-shrink: 0;
+    line-height: 1;
+
+    &:hover {
+      background-color: var(--mp-color-bg-muted);
+      color: var(--mp-color-text-primary);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--mp-shadow-focus-primary);
+    }
+  }
+</style>

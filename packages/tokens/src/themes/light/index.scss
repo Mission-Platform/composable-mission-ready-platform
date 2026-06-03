@@ -1,0 +1,101 @@
+// ─── Light Theme ─────────────────────────────────────────────────────────────
+// Applies semantic colour CSS custom properties for the light theme.
+// Base surfaces use neutral whites; primary brand uses the purple scale.
+// All contrast ratios verified at WCAG AAA (≥ 7:1) against their paired surfaces.
+// Usage: import this file and apply the class/attribute to your root element.
+//   e.g. <html data-theme="light"> or <html class="theme-light">
+
+@use '../../scss/colors' as c;
+
+:root,
+[data-theme='light'],
+.theme-light {
+  // Background surfaces — #eff1f3 base for the light theme (L=0.877)
+  --mp-color-bg-base:    #{c.$color-base-light};   // #eff1f3
+  --mp-color-bg-surface: #{c.$color-white};         // #ffffff
+  --mp-color-bg-raised:  #{c.$color-white};         // #ffffff
+  --mp-color-bg-overlay: #{c.$color-white};         // #ffffff
+  --mp-color-bg-sunken:  #{c.$color-neutral-100};  // #f2f2f5
+  --mp-color-bg-muted:   #{c.$color-neutral-100};  // #f2f2f5
+  --mp-color-bg-scrim:          rgb(0 0 0 / 50%);  // modal/dialog backdrop
+  --mp-color-bg-scrim-soft:     rgb(0 0 0 / 40%);  // sidebar backdrop
+  --mp-color-bg-loading-overlay: rgb(255 255 255 / 70%); // table loading overlay
+  --mp-color-skeleton-shimmer:  rgb(255 255 255 / 40%);  // skeleton animation highlight
+
+  // Borders — deep cyan tones that clear 3:1 (non-text, WCAG 1.4.11) on #eff1f3
+  --mp-color-border-default: #{c.$color-cyan-800};    // #07403d — 10.25:1 on #eff1f3 (WCAG AAA)
+  --mp-color-border-strong:  #{c.$color-cyan-900};    // #042523 — 14.33:1 on #eff1f3 (WCAG AAA)
+  --mp-color-border-focus:   #{c.$color-primary-600}; // #5420a8 —  8.63:1 on #eff1f3; 3:1 non-text (WCAG AAA)
+
+  // Text — neutral dark values; all WCAG AAA (≥ 7:1) on #eff1f3 base
+  --mp-color-text-primary:    #{c.$color-neutral-900};  // #08060d — 17.80:1 on #eff1f3 (WCAG AAA)
+  --mp-color-text-secondary:  #{c.$color-neutral-700};  //  #3a3545 — 10.45:1 on #eff1f3 (WCAG AAA)
+  --mp-color-text-tertiary:   #{c.$color-neutral-600};  //  #504b5c —  7.41:1 on #eff1f3 (WCAG AAA)
+  --mp-color-text-disabled:   #{c.$color-neutral-600};  //  #504b5c —  7.41:1 on #eff1f3 (WCAG AAA)
+  --mp-color-text-inverse:    #{c.$color-neutral-50};   // on dark backgrounds
+  --mp-color-text-on-primary: #{c.$color-white};        //  9.1:1 on primary-600 #5420a8
+
+  // Brand / Primary — purple scale for visible interactive elements
+  --mp-color-primary-default: #{c.$color-primary-600};  // #5420a8 — 8.63:1 on #eff1f3 (WCAG AAA)
+  --mp-color-primary-hover:   #{c.$color-primary-700};  // #3d1680
+  --mp-color-primary-active:  #{c.$color-primary-700};  // #3d1680
+  --mp-color-primary-subtle:  #{c.$color-primary-50};   // #f4f0ff
+  --mp-color-primary-muted:   #{c.$color-primary-100};  // #e5d9ff
+  --mp-color-primary-text:    #{c.$color-primary-700};  // #3d1680 — 8.5:1 on primary-100
+
+  // Success
+  --mp-color-success-default: #{c.$color-success-800};  // #073d1d — 10.95:1 on #eff1f3 (WCAG AAA)
+  --mp-color-success-hover:   #{c.$color-success-900};  // #031e0e
+  --mp-color-success-subtle:  #{c.$color-success-50};   // #edfaf2
+  --mp-color-success-muted:   #{c.$color-success-100};  // #d0f4df
+  --mp-color-success-text:    #{c.$color-success-800};  // #073d1d — 10.44:1 on success-100 (WCAG AAA)
+
+  // Warning
+  --mp-color-warning-default: #{c.$color-warning-900};  // #7a2e0e —  8.34:1 on #eff1f3 (WCAG AAA)
+  --mp-color-warning-hover:   #{c.$color-warning-900};  // #7a2e0e — deepened; same as default (darkest available)
+  --mp-color-warning-subtle:  #{c.$color-warning-50};   // #fffaeb
+  --mp-color-warning-muted:   #{c.$color-warning-100};  // #fef0c7
+  --mp-color-warning-text:    #{c.$color-warning-900};  // #7a2e0e —  8.32:1 on warning-100 (WCAG AAA)
+
+  // Danger
+  --mp-color-danger-default: #{c.$color-danger-800};   // #9f1239 —  7.08:1 on #eff1f3 (WCAG AAA)
+  --mp-color-danger-hover:   #{c.$color-danger-900};   // #881337 —  8.45:1 on #eff1f3 (WCAG AAA)
+  --mp-color-danger-subtle:  #{c.$color-danger-50};    // #fff1f3
+  --mp-color-danger-muted:   #{c.$color-danger-100};   // #ffe4e8
+  --mp-color-danger-text:    #{c.$color-danger-900};   // #881337 —  7.98:1 on danger-100 (WCAG AAA)
+
+  // Info
+  --mp-color-info-default: #{c.$color-info-900};   // #164e63 —  8.05:1 on #eff1f3 (WCAG AAA)
+  --mp-color-info-hover:   #{c.$color-info-900};   // #164e63 — deepened; same as default (darkest available)
+  --mp-color-info-subtle:  #{c.$color-info-50};    // #ecfeff
+  --mp-color-info-muted:   #{c.$color-info-100};   // #cffafe
+  --mp-color-info-text:    #{c.$color-info-900};   // #164e63 —  8.14:1 on info-100 (WCAG AAA)
+
+  // Error — rose scale (hard errors / crashes; darker variant of danger)
+  --mp-color-error-default: #{c.$color-error-800};  // #9f1239 —  7.08:1 on #eff1f3 (WCAG AAA)
+  --mp-color-error-hover:   #{c.$color-error-900};  // #881337 —  8.45:1 on #eff1f3 (WCAG AAA)
+  --mp-color-error-subtle:  #{c.$color-error-50};   // #fff1f2
+  --mp-color-error-muted:   #{c.$color-error-100};  // #ffe4e6
+  --mp-color-error-text:    #{c.$color-error-900};  // #881337 —  7.98:1 on error-100 (WCAG AAA)
+
+  // Alert — orange (between warning and danger; high-attention notices)
+  --mp-color-alert-default: #{c.$color-alert-900};  // #7c2d12 —  8.28:1 on #eff1f3 (WCAG AAA)
+  --mp-color-alert-hover:   #{c.$color-alert-900};  // #7c2d12 — deepened; same as default (darkest available)
+  --mp-color-alert-subtle:  #{c.$color-alert-50};   // #fff7ed
+  --mp-color-alert-muted:   #{c.$color-alert-100};  // #ffedd5
+  --mp-color-alert-text:    #{c.$color-alert-900};  // #7c2d12 —  8.21:1 on alert-100 (WCAG AAA)
+
+  // Notice — indigo (low-urgency informational; below info)
+  --mp-color-notice-default: #{c.$color-notice-800};  // #3730a3 —  8.77:1 on #eff1f3 (WCAG AAA)
+  --mp-color-notice-hover:   #{c.$color-notice-900};  // #312e81 — 10.09:1 on #eff1f3 (WCAG AAA)
+  --mp-color-notice-subtle:  #{c.$color-notice-50};   // #eef2ff
+  --mp-color-notice-muted:   #{c.$color-notice-100};  // #e0e7ff
+  --mp-color-notice-text:    #{c.$color-notice-900};  // #312e81 —  9.81:1 on notice-100 (WCAG AAA)
+
+  // Debug — violet (developer diagnostics)
+  --mp-color-debug-default: #{c.$color-debug-800};  // #5b21b6 —  7.93:1 on #eff1f3 (WCAG AAA)
+  --mp-color-debug-hover:   #{c.$color-debug-900};  // #4c1d95 —  9.67:1 on #eff1f3 (WCAG AAA)
+  --mp-color-debug-subtle:  #{c.$color-debug-50};   // #f5f3ff
+  --mp-color-debug-muted:   #{c.$color-debug-100};  // #ede9fe
+  --mp-color-debug-text:    #{c.$color-debug-900};  // #4c1d95 —  9.10:1 on debug-100 (WCAG AAA)
+}

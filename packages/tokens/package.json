@@ -1,0 +1,40 @@
+{
+  "name": "@mission-platform/tokens",
+  "version": "0.1.0",
+  "description": "CSS design tokens and SCSS theme definitions for Mission Platform",
+  "type": "module",
+  "exports": {
+    ".": "./dist/tokens.js",
+    "./scss/tokens": "./src/tokens.scss",
+    "./scss/themes/light": "./src/themes/light/index.scss",
+    "./scss/themes/light/colours": "./src/themes/light/_colours.scss",
+    "./scss/themes/dark": "./src/themes/dark/index.scss",
+    "./scss/mixins": "./src/scss/_mixins.scss"
+  },
+  "main": "./dist/tokens.js",
+  "types": "./dist/tokens.d.ts",
+  "files": [
+    "dist",
+    "src/**/*.scss",
+    "src/fonts/**/*.ttf"
+  ],
+  "scripts": {
+    "build": "vite build && tsc --project tsconfig.build.json --declaration --declarationDir dist --emitDeclarationOnly --noEmit false --rootDir src",
+    "lint": "eslint .",
+    "lint:style": "stylelint \"src/**/*.scss\"",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/stylelint-config": "workspace:*",
+    "@vue/tsconfig": "catalog:vue",
+    "eslint": "catalog:eslint",
+    "postcss-scss": "catalog:stylelint",
+    "prettier": "catalog:prettier",
+    "sass-embedded": "catalog:vite",
+    "stylelint": "catalog:stylelint",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite"
+  }
+}
