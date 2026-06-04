@@ -8,7 +8,7 @@ const i18nRulesOff = Object.fromEntries(
 export default [
   ...baseConfig,
   {
-    files: ['src/components/*/Icon.vue'],
+    files: ['src/components/*/icon.vue'],
     rules: {
       'vue/multi-word-component-names': 'off',
     },
