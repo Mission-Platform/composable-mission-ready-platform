@@ -64,7 +64,7 @@ export function useSnippets() {
     saveToStorage(snippets.value);
   }
 
-  function resolveSlashCommand(command: string): string | null {
+  function resolveSlashCommand(command: string): string | undefined {
     // Built-in snippets
     if (command === 'date') {
       const now = new Date();
@@ -76,7 +76,7 @@ export function useSnippets() {
 
     // User-defined snippets
     const snippet = snippetMap.value.get(command);
-    return snippet ? snippet.content : null;
+    return snippet ? snippet.content : undefined;
   }
 
   function exportSnippet(id: string): void {
