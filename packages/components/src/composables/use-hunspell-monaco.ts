@@ -1,6 +1,5 @@
-import { onBeforeUnmount, type Ref, watch } from 'vue';
-
 import * as monaco from 'monaco-editor';
+import { onBeforeUnmount, type Ref, watch } from 'vue';
 
 /**
  * Applications must configure a Hunspell worker factory on
@@ -16,11 +15,14 @@ import * as monaco from 'monaco-editor';
  * }
  */
 declare global {
-  interface Window {
-    HunspellEnvironment?: {
-      getWorker: () => Worker;
-    };
-  }
+  // Extends Window (for browser environments) and globalThis (for TypeScript's
+  // typeof globalThis index) so that `globalThis.HunspellEnvironment` is typed.
+  var HunspellEnvironment:
+    | {
+        getWorker: () => Worker;
+      }
+    | undefined;
+
 }
 
 type SpellIssue = {
@@ -83,7 +85,7 @@ export function useHunspellMonaco(
   function setup(): void {
     if (!editorReference.value) return;
 
-    if (!window.HunspellEnvironment?.getWorker) {
+    if (!globalThis.HunspellEnvironment?.getWorker) {
       console.warn(
         '[useHunspellMonaco] window.HunspellEnvironment.getWorker is not configured. ' +
           'Set window.HunspellEnvironment = { getWorker: () => new HunspellWorker() } in your app entry.',
@@ -91,7 +93,7 @@ export function useHunspellMonaco(
       return;
     }
 
-    const newWorker = window.HunspellEnvironment.getWorker();
+    const newWorker = globalThis.HunspellEnvironment.getWorker();
     worker = newWorker;
 
     newWorker.addEventListener('message', (event_: MessageEvent<SpellIssue[]>) => {
