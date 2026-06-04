@@ -43,6 +43,7 @@
     "@types/node": "catalog:typescript",
     "@vitejs/plugin-vue": "catalog:vue",
     "@vitejs/plugin-vue-jsx": "catalog:vue",
+    "@vue/test-utils": "catalog:vue",
     "@vitest/browser-playwright": "catalog:testing",
     "@vitest/coverage-v8": "catalog:testing",
     "@vue/tsconfig": "catalog:vue",

@@ -388,6 +388,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: catalog:testing
         version: 4.1.8(@vitest/browser@4.1.8)(vitest@4.1.8)
+      '@vue/test-utils':
+        specifier: catalog:vue
+        version: 2.4.10(@vue/compiler-dom@3.5.35)(@vue/server-renderer@3.5.35(vue@3.5.35(typescript@6.0.3)))(vue@3.5.35(typescript@6.0.3))
       '@vue/tsconfig':
         specifier: catalog:vue
         version: 0.9.1(typescript@6.0.3)(vue@3.5.35(typescript@6.0.3))
