@@ -6,6 +6,7 @@ import { mapKey } from '../composables/injection-keys';
 
 import type { MountingOptions } from '@vue/test-utils';
 import type { Map } from 'maplibre-gl';
+import type { Component } from 'vue';
 
 export interface MountWithMapResult {
   /** The mounted wrapper containing the `<MapLibre>`-equivalent host component. */
@@ -37,10 +38,10 @@ export function mountWithMap(
   const fakeMap = {
     on: vi.fn(),
     off: vi.fn(),
-    getSource: vi.fn().mockReturnValue(),
+    getSource: vi.fn().mockImplementation(() => {}),
     addSource: vi.fn(),
     removeSource: vi.fn(),
-    getLayer: vi.fn().mockReturnValue(),
+    getLayer: vi.fn().mockImplementation(() => {}),
     addLayer: vi.fn(),
     removeLayer: vi.fn(),
   } as unknown as Map;
@@ -56,16 +57,18 @@ export function mountWithMap(
     template: '<div><slot /></div>',
   });
 
-  const wrapper = mount(Host, {
+  const mergedOptions = {
     ...mountOptions,
     global: {
       ...mountOptions.global,
       components: {
-        ...(mountOptions.global?.components as Record<string, unknown> | undefined),
-        ...extraComponents,
+        ...(mountOptions.global?.components as Record<string, object | Component> | undefined),
+        ...(extraComponents as Record<string, object | Component> | undefined),
       },
     },
-  });
+  };
+
+  const wrapper = mount(Host, mergedOptions as Parameters<typeof mount>[1]);
 
   return { wrapper, mapReference };
 }

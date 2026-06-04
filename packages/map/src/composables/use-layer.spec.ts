@@ -10,7 +10,7 @@ vi.mock('maplibre-gl', () => ({}));
 
 function makeFakeMap(): Map {
   return {
-    getLayer: vi.fn().mockReturnValue(),
+    getLayer: vi.fn().mockImplementation(() => {}),
     addLayer: vi.fn(),
     removeLayer: vi.fn(),
   } as unknown as Map;

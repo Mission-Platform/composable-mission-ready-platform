@@ -215,7 +215,7 @@ export const WithDrawToolbar: Story = {
       const mapDrawReference = ref<InstanceType<typeof MapDraw> | undefined>(undefined);
 
       watch(
-        () => arguments_.geodesic,
+        () => (arguments_ as Record<string, unknown>).geodesic as boolean | undefined,
         (value) => {
           geodesic.value = value ?? true;
         },

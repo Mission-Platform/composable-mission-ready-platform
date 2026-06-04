@@ -16,10 +16,10 @@ function makeFakeMap(queryHits: unknown[] = []): Map {
   return {
     on: vi.fn(),
     off: vi.fn(),
-    getSource: vi.fn().mockReturnValue(),
+    getSource: vi.fn().mockImplementation(() => {}),
     addSource: vi.fn(),
     removeSource: vi.fn(),
-    getLayer: vi.fn().mockReturnValue(),
+    getLayer: vi.fn().mockImplementation(() => {}),
     addLayer: vi.fn(),
     removeLayer: vi.fn(),
     queryRenderedFeatures: vi.fn().mockReturnValue(queryHits),

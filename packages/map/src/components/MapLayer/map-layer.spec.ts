@@ -18,7 +18,7 @@ const circleLayerJson = JSON.stringify({
 
 describe('MapLayer', () => {
   it('adds the layer to the map when rendered inside <MapLibre>', async () => {
-    mountWithMap({
+    const { mapReference } = mountWithMap({
       slots: {
         default: `<MapLayer :layer="${circleLayerJson.replaceAll('"', "'")}" />`,
       },

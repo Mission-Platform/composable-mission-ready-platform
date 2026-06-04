@@ -21,7 +21,7 @@ describe('MapDraw', () => {
   });
 
   it('registers committed, draft, and vertex sources on the map', async () => {
-    mountWithMap({
+    const { mapReference } = mountWithMap({
       slots: { default: '<MapDraw />' },
       components: { MapDraw },
     });
@@ -29,7 +29,7 @@ describe('MapDraw', () => {
     await nextTick();
 
     const addSourceCalls = (mapReference.value?.addSource as ReturnType<typeof vi.fn>).mock.calls;
-    const sourceIds = addSourceCalls.map(([id]: [string]) => id);
+    const sourceIds = addSourceCalls.map((arguments_: unknown[]) => arguments_[0] as string);
 
     expect(sourceIds).toContain('map-draw-committed');
     expect(sourceIds).toContain('map-draw-draft');
@@ -37,7 +37,7 @@ describe('MapDraw', () => {
   });
 
   it('registers fill, line, draft-fill, draft-line and vertex layers on the map', async () => {
-    mountWithMap({
+    const { mapReference } = mountWithMap({
       slots: { default: '<MapDraw />' },
       components: { MapDraw },
     });
@@ -45,7 +45,7 @@ describe('MapDraw', () => {
     await nextTick();
 
     const addLayerCalls = (mapReference.value?.addLayer as ReturnType<typeof vi.fn>).mock.calls;
-    const layerIds = addLayerCalls.map(([spec]: [{ id: string }]) => spec.id);
+    const layerIds = addLayerCalls.map((arguments_: unknown[]) => (arguments_[0] as { id: string }).id);
 
     expect(layerIds).toContain('map-draw-fill');
     expect(layerIds).toContain('map-draw-line');

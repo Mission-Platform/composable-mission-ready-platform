@@ -126,8 +126,8 @@ export interface UseDrawingReturn {
   finishDrawing: () => void;
   /** Cancel the current in-progress shape without committing. */
   cancelDrawing: () => void;
-  /** Select a feature for editing. Pass `undefined` to deselect. */
-  selectFeature: (id: FeatureId | undefined) => void;
+  /** Select a feature for editing. Omit or pass `undefined` to deselect. */
+  selectFeature: (id?: FeatureId) => void;
   /** Delete the currently selected feature. */
   deleteSelected: () => void;
   /** Delete a feature by ID. */
@@ -626,7 +626,7 @@ export function useDrawing(
 
   // ── Selection ────────────────────────────────────────────────────────────
 
-  function selectFeature(id: FeatureId | undefined): void {
+  function selectFeature(id?: FeatureId): void {
     if (mode.value) cancelDrawing();
     selectedId.value = id;
   }
