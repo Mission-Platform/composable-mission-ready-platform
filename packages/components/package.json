@@ -45,6 +45,7 @@
     "@mission-platform/hunspell": "workspace:*",
     "@mission-platform/i18n": "workspace:*",
     "@mission-platform/icons": "workspace:*",
+    "@mission-platform/harper": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
     "highlight.js": "catalog:",
     "luxon": "catalog:",

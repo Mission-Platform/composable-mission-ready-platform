@@ -3,6 +3,7 @@
   import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue';
 
   import { useHunspellMonaco } from '../../composables/use-hunspell-monaco';
+  import { useHarperMonaco } from '@mission-platform/harper';
 
   export type MonacoEditorCompletionItemProvider = monaco.languages.CompletionItemProvider;
 
@@ -142,6 +143,12 @@
   let completionDisposable: monaco.IDisposable | null = null;
 
   useHunspellMonaco(
+    editorRef,
+    computed(() => props.spellCheck && !props.readonly),
+    computed(() => props.language ?? 'plaintext'),
+  );
+
+  useHarperMonaco(
     editorRef,
     computed(() => props.spellCheck && !props.readonly),
     computed(() => props.language ?? 'plaintext'),

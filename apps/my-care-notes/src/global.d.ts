@@ -6,6 +6,12 @@ declare global {
         getWorker(): Worker;
       }
     | undefined;
+
+  var HarperEnvironment:
+    | {
+        getWorker(): Worker;
+      }
+    | undefined;
 }
 
 // eslint-disable-next-line unicorn/require-module-specifiers

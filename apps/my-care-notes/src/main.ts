@@ -4,7 +4,7 @@ import '@mission-platform/tokens/scss/themes/dark';
 import '@mission-platform/components/styles';
 
 import { locales as uiLocales } from '@mission-platform/components/locales';
-import HunspellWorker from '@mission-platform/hunspell/worker?worker';
+import HarperWorker from '@mission-platform/harper/worker?worker';
 import { createMpI18n } from '@mission-platform/i18n';
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import CssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
@@ -26,8 +26,12 @@ globalThis.MonacoEnvironment = {
   },
 };
 
-globalThis.HunspellEnvironment = {
-  getWorker: () => new HunspellWorker(),
+// globalThis.HunspellEnvironment = {
+//   getWorker: () => new HunspellWorker(),
+// };
+
+globalThis.HarperEnvironment = {
+  getWorker: () => new HarperWorker(),
 };
 
 createApp(RouterView)

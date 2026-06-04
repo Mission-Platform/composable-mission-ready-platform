@@ -1,0 +1,53 @@
+{
+  "name": "@mission-platform/harper",
+  "version": "0.1.0",
+  "description": "Harper grammar and style checker integration for Monaco editor",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./worker": {
+      "types": "./dist/harper.worker.d.ts",
+      "import": "./dist/harper.worker.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vue-tsc -b && vite build && vue-tsc --project tsconfig.build.json --emitDeclarationOnly",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --write ."
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "dependencies": {
+    "harper.js": "^2.0.0",
+    "monaco-editor": "catalog:"
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@types/node": "catalog:typescript",
+    "@vitejs/plugin-vue": "catalog:vue",
+    "@vitest/coverage-v8": "catalog:testing",
+    "@vue/test-utils": "catalog:vue",
+    "@vue/tsconfig": "catalog:vue",
+    "eslint": "catalog:eslint",
+    "jsdom": "catalog:testing",
+    "prettier": "catalog:prettier",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite",
+    "vitest": "catalog:testing",
+    "vue": "catalog:vue",
+    "vue-tsc": "catalog:vue"
+  }
+}
