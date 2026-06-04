@@ -23,9 +23,7 @@ export default defineConfig({
     vue(),
     vueJsx(),
     VueI18nPlugin({
-      include: [
-        path.resolve(dirname, '../../packages/*/src/**/*.vue'),
-      ],
+      include: [path.resolve(dirname, '../../packages/*/src/**/*.vue')],
     }),
     svgLoader({
       svgo: true,
