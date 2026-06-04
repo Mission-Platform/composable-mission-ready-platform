@@ -35,7 +35,9 @@
           v-if="index > 0"
           aria-hidden="true"
           class="base-breadcrumb__separator"
-        >{{ separator }}</span>
+        >
+          {{ separator }}
+        </span>
         <RouterLink
           v-if="item.to && index < items.length - 1"
           :to="item.to"

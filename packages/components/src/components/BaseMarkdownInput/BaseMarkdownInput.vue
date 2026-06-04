@@ -170,13 +170,17 @@
         as="span"
         color="primary"
         variant="label"
-      >{{ label }}</BaseTypography>
+      >
+        {{ label }}
+      </BaseTypography>
       <span
         v-if="required"
         :title="t('required')"
         aria-hidden="true"
         class="markdown-input__required"
-      >*</span>
+      >
+        *
+      </span>
     </label>
 
     <div class="markdown-input__editor">

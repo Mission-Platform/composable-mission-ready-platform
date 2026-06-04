@@ -92,13 +92,17 @@
         as="span"
         color="primary"
         variant="label"
-      >{{ label }}</BaseTypography>
+      >
+        {{ label }}
+      </BaseTypography>
       <span
         v-if="required"
         :title="t('required')"
         aria-hidden="true"
         class="base-file-input__required"
-      >*</span>
+      >
+        *
+      </span>
     </label>
 
     <div
@@ -118,7 +122,9 @@
         <label
           :for="resolvedId"
           class="base-file-input__browse-link"
-        >{{ t('browse') }}</label>
+        >
+          {{ t('browse') }}
+        </label>
       </p>
       <p
         v-if="displayName"

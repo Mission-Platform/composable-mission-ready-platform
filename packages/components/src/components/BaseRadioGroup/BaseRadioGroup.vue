@@ -67,7 +67,9 @@
         :title="t('required')"
         aria-hidden="true"
         class="base-radio-group__required"
-      >*</span>
+      >
+        *
+      </span>
     </legend>
     <div :class="['base-radio-group__options', `base-radio-group__options--${direction}`]">
       <BaseRadio

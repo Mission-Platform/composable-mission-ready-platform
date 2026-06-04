@@ -47,7 +47,9 @@
             color="secondary"
             variant="caption"
             weight="semibold"
-          >{{ col.label }}</BaseTypography>
+          >
+            {{ col.label }}
+          </BaseTypography>
           <span
             v-if="col.sortable"
             class="base-table__sort-icon"

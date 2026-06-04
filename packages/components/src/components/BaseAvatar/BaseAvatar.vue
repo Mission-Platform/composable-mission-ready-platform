@@ -98,7 +98,9 @@
       <span
         v-else-if="initials"
         class="avatar__initials"
-      >{{ initials }}</span>
+      >
+        {{ initials }}
+      </span>
       <slot v-else />
     </div>
     <span

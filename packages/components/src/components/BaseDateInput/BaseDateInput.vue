@@ -183,12 +183,16 @@
         as="span"
         color="primary"
         variant="label"
-      >{{ label }}</BaseTypography>
+      >
+        {{ label }}
+      </BaseTypography>
       <span
         v-if="required"
         aria-hidden="true"
         class="base-date-input__required"
-      >*</span>
+      >
+        *
+      </span>
     </label>
 
     <button
@@ -260,7 +264,9 @@
           v-for="d in DAYS"
           :key="d"
           class="base-date-input__weekday"
-        >{{ d }}</span>
+        >
+          {{ d }}
+        </span>
         <button
           v-for="(cell, i) in calendarDays"
           :key="i"

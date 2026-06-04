@@ -126,7 +126,9 @@
             v-if="child.icon"
             aria-hidden="true"
             class="base-navbar-item__dropdown-icon"
-          >{{ child.icon }}</span>
+          >
+            {{ child.icon }}
+          </span>
           <span>{{ child.label }}</span>
         </RouterLink>
         <a
@@ -140,7 +142,9 @@
             v-if="child.icon"
             aria-hidden="true"
             class="base-navbar-item__dropdown-icon"
-          >{{ child.icon }}</span>
+          >
+            {{ child.icon }}
+          </span>
           <span>{{ child.label }}</span>
         </a>
         <button
@@ -157,7 +161,9 @@
             v-if="child.icon"
             aria-hidden="true"
             class="base-navbar-item__dropdown-icon"
-          >{{ child.icon }}</span>
+          >
+            {{ child.icon }}
+          </span>
           <span>{{ child.label }}</span>
         </button>
       </li>

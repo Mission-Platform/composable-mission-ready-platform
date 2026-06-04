@@ -202,7 +202,9 @@
         <span
           :aria-colspan="columns.length"
           role="gridcell"
-        >{{ emptyText }}</span>
+        >
+          {{ emptyText }}
+        </span>
       </div>
 
       <!-- Full-height spacer so the scroll container has the correct total scroll range -->

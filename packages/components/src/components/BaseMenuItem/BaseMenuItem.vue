@@ -78,7 +78,9 @@
           as="span"
           color="inherit"
           variant="body-sm"
-        >{{ label }}</BaseTypography>
+        >
+          {{ label }}
+        </BaseTypography>
       </slot>
     </a>
     <span
@@ -97,7 +99,9 @@
           as="span"
           color="inherit"
           variant="body-sm"
-        >{{ label }}</BaseTypography>
+        >
+          {{ label }}
+        </BaseTypography>
       </slot>
     </span>
   </li>

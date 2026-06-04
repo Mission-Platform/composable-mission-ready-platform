@@ -139,13 +139,17 @@
         as="span"
         color="primary"
         variant="label"
-      >{{ label }}</BaseTypography>
+      >
+        {{ label }}
+      </BaseTypography>
       <span
         v-if="required"
         :title="t('required')"
         aria-hidden="true"
         class="base-multiselect__required"
-      >*</span>
+      >
+        *
+      </span>
     </label>
 
     <BaseDropdown

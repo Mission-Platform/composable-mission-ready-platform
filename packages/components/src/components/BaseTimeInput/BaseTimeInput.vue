@@ -149,12 +149,16 @@
         as="span"
         color="primary"
         variant="label"
-      >{{ label }}</BaseTypography>
+      >
+        {{ label }}
+      </BaseTypography>
       <span
         v-if="required"
         aria-hidden="true"
         class="base-time-input__required"
-      >*</span>
+      >
+        *
+      </span>
     </label>
 
     <button

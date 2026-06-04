@@ -53,7 +53,9 @@
               color="inherit"
               variant="body-sm"
               weight="semibold"
-            >{{ index + 1 }}</BaseTypography>
+            >
+              {{ index + 1 }}
+            </BaseTypography>
           </span>
           <span class="base-form-wizard__step-label">
             <BaseTypography
@@ -62,14 +64,18 @@
               color="primary"
               variant="body-sm"
               weight="medium"
-            >{{ step.title }}</BaseTypography>
+            >
+              {{ step.title }}
+            </BaseTypography>
             <BaseTypography
               v-if="step.description"
               as="span"
               class="base-form-wizard__step-desc"
               color="secondary"
               variant="caption"
-            >{{ step.description }}</BaseTypography>
+            >
+              {{ step.description }}
+            </BaseTypography>
           </span>
         </button>
         <div

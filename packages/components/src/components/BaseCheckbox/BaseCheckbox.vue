@@ -138,13 +138,17 @@
           as="span"
           color="primary"
           variant="body-md"
-        >{{ label }}</BaseTypography>
+        >
+          {{ label }}
+        </BaseTypography>
         <span
           v-if="required"
           :title="t('required')"
           aria-hidden="true"
           class="base-checkbox__required"
-        >*</span>
+        >
+          *
+        </span>
       </span>
     </label>
     <BaseTypography

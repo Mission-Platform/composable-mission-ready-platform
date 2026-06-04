@@ -33,7 +33,9 @@
       color="inherit"
       variant="caption"
       weight="medium"
-    >{{ label }}</BaseTypography>
+    >
+      {{ label }}
+    </BaseTypography>
     <button
       v-if="!disabled"
       :aria-label="`Remove ${label}`"

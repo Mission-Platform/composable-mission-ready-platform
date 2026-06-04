@@ -104,11 +104,15 @@
       <span
         v-if="filename"
         class="base-code-block__filename"
-      >{{ filename }}</span>
+      >
+        {{ filename }}
+      </span>
       <span
         v-else
         class="base-code-block__language"
-      >{{ language }}</span>
+      >
+        {{ language }}
+      </span>
 
       <button
         v-if="showCopyButton"

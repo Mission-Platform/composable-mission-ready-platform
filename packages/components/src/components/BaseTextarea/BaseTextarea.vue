@@ -71,13 +71,17 @@
         as="span"
         color="primary"
         variant="label"
-      >{{ label }}</BaseTypography>
+      >
+        {{ label }}
+      </BaseTypography>
       <span
         v-if="required"
         :title="t('required')"
         aria-hidden="true"
         class="base-textarea__required"
-      >*</span>
+      >
+        *
+      </span>
     </label>
     <textarea
       :id="resolvedId"

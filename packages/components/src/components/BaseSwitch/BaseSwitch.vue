@@ -79,7 +79,9 @@
           as="span"
           color="primary"
           variant="body-md"
-        >{{ label }}</BaseTypography>
+        >
+          {{ label }}
+        </BaseTypography>
       </span>
     </label>
     <BaseTypography

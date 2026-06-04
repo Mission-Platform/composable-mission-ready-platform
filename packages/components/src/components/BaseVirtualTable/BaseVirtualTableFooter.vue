@@ -23,7 +23,9 @@
     <slot>
       <span>{{ rowCount.toLocaleString() }} rows</span>
       <span v-if="sortKey">
-        Sorted by <strong style="color: var(--mp-color-text-primary)">{{ sortKey }}</strong> ({{ sortDir }})
+        Sorted by
+        <strong style="color: var(--mp-color-text-primary)">{{ sortKey }}</strong>
+        ({{ sortDir }})
       </span>
     </slot>
   </div>

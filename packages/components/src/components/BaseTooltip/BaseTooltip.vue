@@ -101,7 +101,9 @@
           as="span"
           color="inherit"
           variant="caption"
-        >{{ content }}</BaseTypography>
+        >
+          {{ content }}
+        </BaseTypography>
         <span
           ref="arrowEl"
           :style="getArrowStyle()"

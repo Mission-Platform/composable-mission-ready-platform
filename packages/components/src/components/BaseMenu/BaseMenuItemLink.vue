@@ -20,7 +20,9 @@
       v-if="item.icon"
       aria-hidden="true"
       class="base-menu__icon"
-    >{{ item.icon }}</span>
+    >
+      {{ item.icon }}
+    </span>
     <span class="base-menu__label">{{ item.label }}</span>
   </RouterLink>
   <a
@@ -35,7 +37,9 @@
       v-if="item.icon"
       aria-hidden="true"
       class="base-menu__icon"
-    >{{ item.icon }}</span>
+    >
+      {{ item.icon }}
+    </span>
     <span class="base-menu__label">{{ item.label }}</span>
   </a>
 </template>
