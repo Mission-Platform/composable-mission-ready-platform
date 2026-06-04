@@ -23,7 +23,7 @@
       class="bp-debug__badge"
     >
       {{ key }}
-      <span class="bp-debug__px"> {{ t('debug_px', { breakpoint: breakpoints[key] }) }} </span>
+      <span class="bp-debug__px">{{ t('debug_px', { breakpoint: breakpoints[key] }) }}</span>
     </span>
   </div>
 </template>
