@@ -1,2 +1,9 @@
 // Re-export the auto-generated types that Emscripten emitted at build time.
-export type { HunspellChecker, StringVector, MainModule as HunspellModule } from './wasm/hunspell';
+// `MainModule` is re-exported under the friendlier `HunspellModule` alias.
+export type {
+  MainModule as HunspellModule,
+  HunspellChecker,
+  StringVector,
+  TokenResult,
+  TokenResultVector,
+} from './wasm/hunspell';

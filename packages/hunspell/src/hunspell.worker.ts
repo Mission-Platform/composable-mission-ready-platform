@@ -13,19 +13,6 @@ export interface HunspellIssue {
   suggestions: string[];
 }
 
-// Simple word tokeniser: finds all runs of letters (including apostrophes and
-// hyphens within words) and returns each token with its byte offset.
-function tokenise(text: string): Array<{ word: string; offset: number }> {
-  const tokens: Array<{ word: string; offset: number }> = [];
-  // Match words: sequences of Unicode letters / digits, allowing internal ' and -
-  const re = /[^\s\d\W][\w'-]*/gu;
-  let m: RegExpExecArray | undefined;
-  while ((m = re.exec(text) ?? undefined) !== undefined) {
-    tokens.push({ word: m[0], offset: m.index });
-  }
-  return tokens;
-}
-
 // ── Worker lifecycle ──────────────────────────────────────────────────────────
 
 let initPromise: Promise<Awaited<ReturnType<typeof createHunspell>>> | undefined;
@@ -48,18 +35,27 @@ self.addEventListener('message', async (event_: MessageEvent<{ text: string }>) 
     const { checker } = await getModule();
     const issues: HunspellIssue[] = [];
 
-    for (const { word, offset } of tokenise(text)) {
+    // Use the dictionary-aware TextParser exposed via checker.tokenize() rather
+    // than a hand-rolled regex, so word-boundary detection is consistent with
+    // Hunspell's own understanding of the loaded .aff file.
+    const tokensVector = checker.tokenize(text);
+    for (let index = 0; index < tokensVector.size(); index++) {
+      const token = tokensVector.get(index);
+      if (token === undefined) continue;
+
+      const { word, offset, length } = token;
       if (!checker.spell(word)) {
         const suggestionsVector = checker.suggest(word);
         const suggestions: string[] = [];
-        for (let index = 0; index < suggestionsVector.size(); index++) {
-          const s = suggestionsVector.get(index);
+        for (let si = 0; si < suggestionsVector.size(); si++) {
+          const s = suggestionsVector.get(si);
           if (s !== undefined) suggestions.push(s);
         }
         suggestionsVector.delete();
-        issues.push({ text: word, offset, length: word.length, suggestions });
+        issues.push({ text: word, offset, length, suggestions });
       }
     }
+    tokensVector.delete();
 
     self.postMessage(issues);
   } catch (error) {
