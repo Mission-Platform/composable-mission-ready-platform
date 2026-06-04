@@ -1,19 +1,20 @@
-<script setup lang="ts">
-  import { computed } from 'vue'
-  import { RouterLink } from 'vue-router'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+<script lang="ts" setup>
+  import { computed } from 'vue';
+  import { RouterLink } from 'vue-router';
 
-  export type MenuItemVariant = 'default' | 'danger'
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
+
+  export type MenuItemVariant = 'default' | 'danger';
 
   const props = withDefaults(
     defineProps<{
-      label?: string
-      disabled?: boolean
-      variant?: MenuItemVariant
-      icon?: string
-      active?: boolean
-      href?: string
-      to?: string | Record<string, unknown>
+      label?: string;
+      disabled?: boolean;
+      variant?: MenuItemVariant;
+      icon?: string;
+      active?: boolean;
+      href?: string;
+      to?: string | Record<string, unknown>;
     }>(),
     {
       label: undefined,
@@ -24,16 +25,16 @@
       href: undefined,
       to: undefined,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    click: [event: MouseEvent]
-  }>()
+    click: [event: MouseEvent];
+  }>();
 
-  const isLink = computed(() => !props.disabled && (!!props.to || !!props.href))
+  const isLink = computed(() => !props.disabled && (!!props.to || !!props.href));
 
   function handleClick(event: MouseEvent) {
-    emit('click', event)
+    emit('click', event);
   }
 </script>
 
@@ -48,47 +49,61 @@
   >
     <RouterLink
       v-if="isLink && to"
-      :to="to"
-      role="menuitem"
-      class="base-menu-item__link"
       :tabindex="disabled ? -1 : 0"
+      :to="to"
+      class="base-menu-item__link"
+      role="menuitem"
     >
       <slot name="icon" />
       <slot>
-        <BaseTypography variant="body-sm" as="span" color="inherit">{{ label }}</BaseTypography>
+        <BaseTypography
+          as="span"
+          color="inherit"
+          variant="body-sm"
+        >
+          {{ label }}
+        </BaseTypography>
       </slot>
     </RouterLink>
     <a
       v-else-if="isLink && href"
       :href="href"
-      role="menuitem"
-      class="base-menu-item__link"
       :tabindex="disabled ? -1 : 0"
+      class="base-menu-item__link"
+      role="menuitem"
     >
       <slot name="icon" />
       <slot>
-        <BaseTypography variant="body-sm" as="span" color="inherit">{{ label }}</BaseTypography>
+        <BaseTypography
+          as="span"
+          color="inherit"
+          variant="body-sm"
+        >{{ label }}</BaseTypography>
       </slot>
     </a>
     <span
       v-else
-      role="menuitem"
       :aria-disabled="disabled ? 'true' : undefined"
-      :tabindex="disabled ? -1 : 0"
+      :tabindex="0"
       class="base-menu-item__button"
+      role="menuitem"
       @click="!disabled && handleClick($event)"
       @keydown.enter.prevent="!disabled && handleClick($event as unknown as MouseEvent)"
       @keydown.space.prevent="!disabled && handleClick($event as unknown as MouseEvent)"
     >
       <slot name="icon" />
       <slot>
-        <BaseTypography variant="body-sm" as="span" color="inherit">{{ label }}</BaseTypography>
+        <BaseTypography
+          as="span"
+          color="inherit"
+          variant="body-sm"
+        >{{ label }}</BaseTypography>
       </slot>
     </span>
   </li>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-menu-item {
     list-style: none;
 

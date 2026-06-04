@@ -1,1 +1,1 @@
-export { default } from './BaseDialog.vue'
+export { default } from './BaseDialog.vue';

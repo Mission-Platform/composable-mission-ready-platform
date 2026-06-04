@@ -1,14 +1,13 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   defineProps<{
-    rowCount: number
-    sortKey: string | null
-    sortDir: 'asc' | 'desc' | null
-  }>()
+    rowCount: number;
+    sortKey: string | undefined;
+    sortDir: 'asc' | 'desc' | null;
+  }>();
 </script>
 
 <template>
   <div
-    class="virtual-table__footer"
     :style="{
       flexShrink: '0',
       padding: 'var(--mp-spacing-2) var(--mp-spacing-4)',
@@ -19,11 +18,12 @@
       display: 'flex',
       justifyContent: 'space-between',
     }"
+    class="virtual-table__footer"
   >
     <slot>
       <span>{{ rowCount.toLocaleString() }} rows</span>
       <span v-if="sortKey">
-        Sorted by <strong style="color: var(--mp-color-text-primary);">{{ sortKey }}</strong> ({{ sortDir }})
+        Sorted by <strong style="color: var(--mp-color-text-primary)">{{ sortKey }}</strong> ({{ sortDir }})
       </span>
     </slot>
   </div>

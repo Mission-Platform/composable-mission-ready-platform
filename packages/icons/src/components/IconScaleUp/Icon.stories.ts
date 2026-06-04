@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import IconScaleUp from './Icon.vue'
+import IconScaleUp from './Icon.vue';
+
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
   title: 'Icons/Map/IconScaleUp',
@@ -15,15 +16,15 @@ const meta = {
     color: 'currentColor',
     ariaLabel: 'Scale Up',
   },
-} satisfies Meta<typeof IconScaleUp>
+} satisfies Meta<typeof IconScaleUp>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {}
+export const Default: Story = {};
 
-export const Small: Story = { args: { size: 16 } }
+export const Small: Story = { args: { size: 16 } };
 
-export const Large: Story = { args: { size: 32 } }
+export const Large: Story = { args: { size: 32 } };
 
-export const Colored: Story = { args: { color: '#3b82f6' } }
+export const Colored: Story = { args: { color: '#3b82f6' } };

@@ -1,8 +1,12 @@
-// ─── CSS Custom Properties Bridge ────────────────────────────────────────────
-// Declares all design tokens as CSS custom properties.
-// Apply the theme SCSS files to a root selector (e.g. :root or [data-theme])
-// which override the semantic colour vars; all other structural tokens are
-// defined here directly.
+/* ─── CSS Custom Properties Bridge ──────────────────────────────────────────── */
+
+/* Declares all design tokens as CSS custom properties. */
+
+/* Apply the theme SCSS files to a root selector (e.g. :root or [data-theme]) */
+
+/* which override the semantic colour vars; all other structural tokens are */
+
+/* defined here directly. */
 
 @forward 'colors';
 @forward 'spacing';
@@ -11,16 +15,15 @@
 @forward 'shadows';
 @forward 'size';
 @forward 'mixins';
-
 @use 'spacing' as sp;
 @use 'typography' as ty;
 @use 'radii' as ra;
 @use 'shadows' as sh;
 @use 'size' as sz;
 
-// Structural CSS custom properties (non-colour; same for all themes)
+/* Structural CSS custom properties (non-colour; same for all themes) */
 :root {
-  // Spacing
+  /* Spacing */
   --mp-spacing-0: #{sp.$spacing-0};
   --mp-spacing-1: #{sp.$spacing-1};
   --mp-spacing-2: #{sp.$spacing-2};
@@ -35,7 +38,7 @@
   --mp-spacing-20: #{sp.$spacing-20};
   --mp-spacing-24: #{sp.$spacing-24};
 
-  // Typography
+  /* Typography */
   --mp-font-family-sans: #{ty.$font-family-sans};
   --mp-font-family-mono: #{ty.$font-family-mono};
   --mp-font-size-2xs: #{ty.$font-size-2xs};
@@ -58,7 +61,7 @@
   --mp-line-height-relaxed: #{ty.$line-height-relaxed};
   --mp-line-height-loose: #{ty.$line-height-loose};
 
-  // Radii
+  /* Radii */
   --mp-radius-none: #{ra.$radius-none};
   --mp-radius-xs: #{ra.$radius-xs};
   --mp-radius-sm: #{ra.$radius-sm};
@@ -69,7 +72,7 @@
   --mp-radius-3xl: #{ra.$radius-3xl};
   --mp-radius-full: #{ra.$radius-full};
 
-  // Shadows
+  /* Shadows */
   --mp-shadow-none: #{sh.$shadow-none};
   --mp-shadow-2xs: #{sh.$shadow-2xs};
   --mp-shadow-xs: #{sh.$shadow-xs};
@@ -82,8 +85,9 @@
   --mp-shadow-focus-primary: #{sh.$shadow-focus-primary};
   --mp-shadow-focus-danger: #{sh.$shadow-focus-danger};
 
-  // ── Unified size scale (2xs → 2xl) ─────────────────────────────────────────
-  // Font size
+  /* ── Unified size scale (2xs → 2xl) ───────────────────────────────────────── */
+
+  /* Font size */
   --mp-size-font-2xs: #{sz.$size-font-2xs};
   --mp-size-font-xs: #{sz.$size-font-xs};
   --mp-size-font-sm: #{sz.$size-font-sm};
@@ -92,7 +96,7 @@
   --mp-size-font-xl: #{sz.$size-font-xl};
   --mp-size-font-2xl: #{sz.$size-font-2xl};
 
-  // Padding block (top/bottom)
+  /* Padding block (top/bottom) */
   --mp-size-pad-block-2xs: #{sz.$size-pad-block-2xs};
   --mp-size-pad-block-xs: #{sz.$size-pad-block-xs};
   --mp-size-pad-block-sm: #{sz.$size-pad-block-sm};
@@ -101,7 +105,7 @@
   --mp-size-pad-block-xl: #{sz.$size-pad-block-xl};
   --mp-size-pad-block-2xl: #{sz.$size-pad-block-2xl};
 
-  // Padding inline (left/right)
+  /* Padding inline (left/right) */
   --mp-size-pad-inline-2xs: #{sz.$size-pad-inline-2xs};
   --mp-size-pad-inline-xs: #{sz.$size-pad-inline-xs};
   --mp-size-pad-inline-sm: #{sz.$size-pad-inline-sm};
@@ -110,7 +114,7 @@
   --mp-size-pad-inline-xl: #{sz.$size-pad-inline-xl};
   --mp-size-pad-inline-2xl: #{sz.$size-pad-inline-2xl};
 
-  // Gap
+  /* Gap */
   --mp-size-gap-2xs: #{sz.$size-gap-2xs};
   --mp-size-gap-xs: #{sz.$size-gap-xs};
   --mp-size-gap-sm: #{sz.$size-gap-sm};
@@ -119,7 +123,7 @@
   --mp-size-gap-xl: #{sz.$size-gap-xl};
   --mp-size-gap-2xl: #{sz.$size-gap-2xl};
 
-  // Border radius
+  /* Border radius */
   --mp-size-radius-2xs: #{sz.$size-radius-2xs};
   --mp-size-radius-xs: #{sz.$size-radius-xs};
   --mp-size-radius-sm: #{sz.$size-radius-sm};
@@ -128,7 +132,7 @@
   --mp-size-radius-xl: #{sz.$size-radius-xl};
   --mp-size-radius-2xl: #{sz.$size-radius-2xl};
 
-  // Icon size
+  /* Icon size */
   --mp-size-icon-2xs: #{sz.$size-icon-2xs};
   --mp-size-icon-xs: #{sz.$size-icon-xs};
   --mp-size-icon-sm: #{sz.$size-icon-sm};
@@ -137,7 +141,7 @@
   --mp-size-icon-xl: #{sz.$size-icon-xl};
   --mp-size-icon-2xl: #{sz.$size-icon-2xl};
 
-  // Touch-target height
+  /* Touch-target height */
   --mp-size-height-2xs: #{sz.$size-height-2xs};
   --mp-size-height-xs: #{sz.$size-height-xs};
   --mp-size-height-sm: #{sz.$size-height-sm};
@@ -146,7 +150,7 @@
   --mp-size-height-xl: #{sz.$size-height-xl};
   --mp-size-height-2xl: #{sz.$size-height-2xl};
 
-  // Content-area width — 5/8 of breakpoint (2xs & xs = 100vw)
+  /* Content-area width — 5/8 of breakpoint (2xs & xs = 100vw) */
   --mp-size-width-2xs: #{sz.$size-width-2xs};
   --mp-size-width-xs: #{sz.$size-width-xs};
   --mp-size-width-sm: #{sz.$size-width-sm};

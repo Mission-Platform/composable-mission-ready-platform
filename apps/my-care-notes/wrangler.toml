@@ -1,0 +1,23 @@
+"$schema" = "./node_modules/wrangler/config-schema.json"
+name = "mission-platform-my-care-notes"
+pages_build_output_dir = "./dist"
+compatibility_date = "2026-06-02"
+
+[vars]
+ENVIRONMENT = "staging"
+
+[env.production]
+# Custom domain: notes.mission-platform.com
+# Attach this domain in the Cloudflare Pages dashboard under Custom Domains,
+# or via: npx wrangler pages deploy --branch main
+
+[env.production.vars]
+ENVIRONMENT = "production"
+
+[env.preview]
+# Custom domain: notes.mission-platform.dev
+# Attach this domain in the Cloudflare Pages dashboard under Custom Domains,
+# or via: npx wrangler pages deploy --branch staging
+
+[env.preview.vars]
+ENVIRONMENT = "staging"

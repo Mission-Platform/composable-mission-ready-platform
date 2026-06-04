@@ -1,18 +1,19 @@
-// ─── Responsive visibility utility classes ────────────────────────────────────
-// Generated from the seven-step breakpoint scale.
-//
-// Naming convention:
-//   .bp-show-{key}     →  visible at ≥ {key} (hidden below)
-//   .bp-hide-{key}     →  hidden at ≥ {key} (visible below)
-//   .bp-only-{key}     →  visible only within the {key} band
-//
-// Usage in Vue templates:
-//   <div class="bp-show-lg">Only on Full HD and above</div>
-//   <div class="bp-hide-xl">Hidden on extra-large screens</div>
+/* ─── Responsive visibility utility classes ────────────────────────────────────
+ * Generated from the seven-step breakpoint scale.
+ *
+ * Naming convention:
+ *   .bp-show-{key}     →  visible at ≥ {key} (hidden below)
+ *   .bp-hide-{key}     →  hidden at ≥ {key} (visible below)
+ *   .bp-only-{key}     →  visible only within the {key} band
+ *
+ * Usage in Vue templates:
+ *   <div class="bp-show-lg">Only on Full HD and above</div>
+ *   <div class="bp-hide-xl">Hidden on extra-large screens</div>
+ */
 
 @use 'breakpoints' as *;
 
-// ── bp-show-{key}: display only at ≥ key ─────────────────────────────────────
+/* ── bp-show-{key}: display only at ≥ key ───────────────────────────────────── */
 
 .bp-show-2xs {
   display: block;
@@ -66,7 +67,7 @@
   }
 }
 
-// ── bp-hide-{key}: hide at ≥ key ─────────────────────────────────────────────
+/* ── bp-hide-{key}: hide at ≥ key ───────────────────────────────────────────── */
 
 .bp-hide-2xs {
   display: none;
@@ -108,7 +109,7 @@
   }
 }
 
-// ── bp-only-{key}: visible only within the band for key ──────────────────────
+/* ── bp-only-{key}: visible only within the band for key ────────────────────── */
 
 .bp-only-2xs {
   display: block;

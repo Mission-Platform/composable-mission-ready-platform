@@ -1,1 +1,1 @@
-export { default } from './BaseVirtualTabs.vue'
+export { default } from './BaseVirtualTabs.vue';

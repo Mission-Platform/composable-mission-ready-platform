@@ -1,19 +1,18 @@
 /// <reference types="vitest/config" />
 // https://vite.dev/config/
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
-import postcssConfig from '@mission-platform/postcss-config'
-import { storybookTest } from '@storybook/addon-vitest/vitest-plugin'
-import vue from '@vitejs/plugin-vue'
-import vueJsx from '@vitejs/plugin-vue-jsx'
-import { playwright } from '@vitest/browser-playwright'
-import { defineConfig } from 'vite'
-import svgLoader from 'vite-svg-loader'
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+import postcssConfig from '@mission-platform/postcss-config';
+import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
+import vue from '@vitejs/plugin-vue';
+import vueJsx from '@vitejs/plugin-vue-jsx';
+import { playwright } from '@vitest/browser-playwright';
+import { defineConfig } from 'vite';
+import svgLoader from 'vite-svg-loader';
 
-const dirname =
-  typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url))
+const dirname = typeof __dirname === 'undefined' ? path.dirname(fileURLToPath(import.meta.url)) : __dirname;
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
@@ -24,7 +23,11 @@ export default defineConfig({
     vue(),
     vueJsx(),
     VueI18nPlugin({
-      include: path.resolve(dirname, '../../packages/*/src/locales/**/*.yaml'),
+      include: [
+        path.resolve(dirname, '../../packages/*/src/locales/**/*.yaml'),
+        path.resolve(dirname, '../../packages/*/src/**/*.vue'),
+        path.resolve(dirname, 'src/**/*.vue'),
+      ],
     }),
     svgLoader({
       svgo: true,
@@ -73,4 +76,4 @@ export default defineConfig({
       },
     ],
   },
-})
+});

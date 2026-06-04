@@ -1,39 +1,40 @@
-<script setup lang="ts">
-  import { useIconSize } from '../../useIconSize.ts'
+<script lang="ts" setup>
+  import { useIconSize } from '../../use-icon-size.ts';
 
   const props = withDefaults(
     defineProps<{
-      size?: number | string
-      color?: string
-      ariaLabel?: string
+      size?: number | string;
+      color?: string;
+      ariaLabel?: string;
     }>(),
     {
       size: 'md',
       color: 'currentColor',
       ariaLabel: undefined,
     },
-  )
+  );
 
-  const sizeValue = useIconSize(() => props.size)
+  const sizeValue = useIconSize(() => props.size);
 </script>
 
 <template>
   <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
+    :aria-hidden="!ariaLabel"
+    :aria-label="ariaLabel"
+    :height="sizeValue"
     :stroke="color"
-    stroke-width="2"
+    :width="sizeValue"
+    class="base-icon-home"
+    fill="none"
+    role="img"
     stroke-linecap="round"
     stroke-linejoin="round"
-    :width="sizeValue"
-    :height="sizeValue"
-    :aria-label="ariaLabel"
-    :aria-hidden="!ariaLabel"
-    role="img"
-    class="base-icon-home"
+    stroke-width="2"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
   >
-    <path d="M3 9L12 2L21 9V20A2 2 0 0 1 19 22H5A2 2 0 0 1 3 20Z"/><polyline points="9,22 9,12 15,12 15,22"/>
+    <path d="M3 9L12 2L21 9V20A2 2 0 0 1 19 22H5A2 2 0 0 1 3 20Z" />
+    <polyline points="9,22 9,12 15,12 15,22" />
   </svg>
 </template>
 

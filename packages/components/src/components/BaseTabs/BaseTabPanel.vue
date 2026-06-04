@@ -1,29 +1,29 @@
-<script setup lang="ts">
-  import type { TabItem } from './BaseTabs.vue'
+<script lang="ts" setup>
+  import type { TabItem } from './BaseTabs.vue';
 
   defineProps<{
-    tab: TabItem
-    activeId: string
-  }>()
+    tab: TabItem;
+    activeId: string;
+  }>();
 
   defineSlots<{
-    default(props: { tab: TabItem }): unknown
-  }>()
+    default(props: { tab: TabItem }): unknown;
+  }>();
 </script>
 
 <template>
   <div
     :id="`panel-${tab.id}`"
-    role="tabpanel"
     :aria-labelledby="`tab-${tab.id}`"
     :hidden="activeId !== tab.id"
     class="base-tabs__panel"
+    role="tabpanel"
   >
     <slot :tab="tab" />
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-tabs__panel {
     display: flex;
     flex-direction: column;

@@ -12,6 +12,6 @@ export const shadows = {
   inner: 'inset 0 2px 4px 0 rgb(0 0 0 / 5%)',
   focusPrimary: '0 0 0 3px rgb(108 47 212 / 30%)',
   focusDanger: '0 0 0 3px rgb(244 63 94 / 30%)',
-} as const
+} as const;
 
-export type Shadows = typeof shadows
+export type Shadows = typeof shadows;

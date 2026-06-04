@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   /**
    * TreeView — a recursive, accessible tree component.
    *
@@ -13,72 +13,81 @@
    *   select(node)  — emitted when a node label is clicked
    *   toggle(node)  — emitted when a node is expanded/collapsed
    */
-  import { ref } from 'vue'
+  import { ref } from 'vue';
 
-  import BaseTreeNode from './BaseTreeNode.vue'
+  import BaseTreeNode from './BaseTreeNode.vue';
 
   export interface TreeNode {
-    id: string | number
-    label: string
-    children?: TreeNode[]
-    [key: string]: unknown
+    id: string | number;
+    label: string;
+    children?: TreeNode[];
+    [key: string]: unknown;
   }
 
   const props = withDefaults(
     defineProps<{
-      nodes: TreeNode[]
-      defaultOpen?: boolean
+      nodes: TreeNode[];
+      defaultOpen?: boolean;
     }>(),
     {
       defaultOpen: false,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    select: [node: TreeNode]
-    toggle: [node: TreeNode]
-  }>()
+    select: [node: TreeNode];
+    toggle: [node: TreeNode];
+  }>();
 
   defineSlots<{
-    label(props: { node: TreeNode; depth: number }): unknown
-  }>()
+    label(props: { node: TreeNode; depth: number }): unknown;
+  }>();
 
-  const openMap = ref<Record<string | number, boolean>>({})
+  const openMap = ref<Record<string | number, boolean>>({});
 
   function isOpen(node: TreeNode): boolean {
-    if (node.id in openMap.value) return openMap.value[node.id]
-    return props.defaultOpen
+    if (node.id in openMap.value) return openMap.value[node.id];
+    return props.defaultOpen;
   }
 
   function toggle(node: TreeNode) {
-    openMap.value = { ...openMap.value, [node.id]: !isOpen(node) }
-    emit('toggle', node)
+    openMap.value = { ...openMap.value, [node.id]: !isOpen(node) };
+    emit('toggle', node);
   }
 
   function select(node: TreeNode) {
-    emit('select', node)
+    emit('select', node);
   }
 </script>
 
 <template>
-  <ul class="tree-view" role="tree">
+  <ul
+    class="tree-view"
+    role="tree"
+  >
     <BaseTreeNode
       v-for="node in nodes"
       :key="node.id"
-      :node="node"
       :depth="0"
       :is-open-fn="isOpen"
-      @toggle="toggle"
+      :node="node"
       @select="select"
+      @toggle="toggle"
     >
-      <template v-if="$slots.label" #label="slotProps">
-        <slot name="label" v-bind="slotProps" />
+      <template
+        v-if="$slots.label"
+        #label="slotProps"
+      >
+        <slot
+          name="label"
+          v-bind="slotProps"
+        />
       </template>
     </BaseTreeNode>
   </ul>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
   .tree-view {

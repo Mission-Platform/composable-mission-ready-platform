@@ -1,16 +1,16 @@
-<script setup lang="ts">
-  import { useI18n } from 'vue-i18n'
+<script lang="ts" setup>
+  import { useI18n } from '@mission-platform/i18n';
 
-  export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
-  export type ButtonSize = 'sm' | 'md' | 'lg'
+  export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
+  export type ButtonSize = 'sm' | 'md' | 'lg';
 
   const props = withDefaults(
     defineProps<{
-      variant?: ButtonVariant
-      size?: ButtonSize
-      disabled?: boolean
-      loading?: boolean
-      type?: 'button' | 'submit' | 'reset'
+      variant?: ButtonVariant;
+      size?: ButtonSize;
+      disabled?: boolean;
+      loading?: boolean;
+      type?: 'button' | 'submit' | 'reset';
     }>(),
     {
       variant: 'primary',
@@ -19,50 +19,42 @@
       loading: false,
       type: 'button',
     },
-  )
+  );
 
   const emit = defineEmits<{
-    click: [event: MouseEvent]
-  }>()
+    click: [event: MouseEvent];
+  }>();
 
-  const { t } = useI18n({
-    inheritLocale: true,
-    messages: { en: { loading: 'Loading…' } },
-  })
+  const { t } = useI18n({ useScope: 'local' });
 
   function handleClick(event: MouseEvent) {
     if (!props.disabled && !props.loading) {
-      emit('click', event)
+      emit('click', event);
     }
   }
 </script>
 
 <template>
   <button
-    :type="type"
-    :disabled="disabled || loading"
-    :class="[
-      'base-button',
-      `base-button--${variant}`,
-      `base-button--${size}`,
-      { 'base-button--loading': loading },
-    ]"
     :aria-busy="loading"
+    :class="['base-button', `base-button--${variant}`, `base-button--${size}`, { 'base-button--loading': loading }]"
+    :disabled="disabled || loading"
+    :type="type"
     @click="handleClick"
   >
     <span
       v-if="loading"
-      class="base-button__spinner"
-      role="status"
+      :aria-label="t('loading')"
       aria-atomic="false"
       aria-live="off"
-      :aria-label="t('loading')"
+      class="base-button__spinner"
+      role="status"
     />
     <slot />
   </button>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-button {
     display: inline-flex;
     align-items: center;
@@ -92,7 +84,7 @@
       opacity: 0.5;
     }
 
-    // Sizes
+    /* Sizes */
     &--sm {
       padding: var(--mp-spacing-1) var(--mp-spacing-3);
       font-size: var(--mp-font-size-sm);
@@ -108,7 +100,7 @@
       font-size: var(--mp-font-size-lg);
     }
 
-    // Variants
+    /* Variants */
     &--primary {
       background-color: var(--mp-color-primary-default);
       color: var(--mp-color-text-on-primary);
@@ -154,16 +146,16 @@
       background-color: var(--mp-color-danger-default);
       color: var(--mp-color-text-on-primary);
 
-      &:hover:not(:disabled) {
-        background-color: var(--mp-color-danger-hover);
-      }
-
       &:focus-visible {
         box-shadow: var(--mp-shadow-focus-danger);
       }
+
+      &:hover:not(:disabled) {
+        background-color: var(--mp-color-danger-hover);
+      }
     }
 
-    // Loading spinner
+    /* Loading spinner */
     &--loading {
       pointer-events: none;
     }
@@ -185,3 +177,8 @@
     }
   }
 </style>
+
+<i18n lang="yaml">
+en:
+  loading: Loading…
+</i18n>

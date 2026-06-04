@@ -24,10 +24,10 @@ pnpm --filter @mission-platform/<app-name> add -D <package>
 
 ## Apps in this workspace
 
-| App | Path | Description |
-|---|---|---|
-| `@mission-platform/my-care-notes` | `apps/my-care-notes` | My Care Notes application |
-| `@mission-platform/storybook` | `apps/storybook` | Storybook instance for developing, documenting, and visually testing Vue components |
+| App                               | Path                 | Description                                                                         |
+|-----------------------------------|----------------------|-------------------------------------------------------------------------------------|
+| `@mission-platform/my-care-notes` | `apps/my-care-notes` | My Care Notes application                                                           |
+| `@mission-platform/storybook`     | `apps/storybook`     | Storybook instance for developing, documenting, and visually testing Vue components |
 
 ---
 
@@ -63,7 +63,8 @@ pnpm --filter @mission-platform/my-care-notes format
 - Apps are **always `"private": true`** — they are never published to a registry.
 - Shared packages are referenced as workspace dependencies: `"@mission-platform/components": "workspace:*"`.
 - All source files must be `.ts` or `.vue` (using `<script setup lang="ts">`). No plain `.js` files.
-- Linting, formatting, and stylelint configs must extend the shared `@mission-platform/eslint-config`, `@mission-platform/prettier-config`, and `@mission-platform/stylelint-config` packages.
+- Linting, formatting, and stylelint configs must extend the shared `@mission-platform/eslint-config`,
+  `@mission-platform/prettier-config`, and `@mission-platform/stylelint-config` packages.
 
 ---
 

@@ -1,33 +1,33 @@
-<script setup lang="ts">
-  import { computed, ref } from 'vue'
-  import { useI18n } from 'vue-i18n'
-  import { IconChevron } from '@mission-platform/icons'
+<script lang="ts" setup>
+  import { useI18n } from '@mission-platform/i18n';
+  import { IconChevron } from '@mission-platform/icons';
+  import { computed, ref } from 'vue';
 
-  import { useId } from '../../composables/useId'
-  import BaseDropdown from '../BaseDropdown/BaseDropdown.vue'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+  import { useId } from '../../composables/use-id';
+  import BaseDropdown from '../BaseDropdown/BaseDropdown.vue';
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
-  export type SelectSize = 'sm' | 'md' | 'lg'
+  export type SelectSize = 'sm' | 'md' | 'lg';
 
   export interface SelectOption {
-    label: string
-    value: string | number
-    disabled?: boolean
+    label: string;
+    value: string | number;
+    disabled?: boolean;
   }
 
   const props = withDefaults(
     defineProps<{
-      modelValue?: string | number
-      options?: SelectOption[]
-      size?: SelectSize
-      label?: string
-      labelHidden?: boolean
-      hint?: string
-      error?: string
-      placeholder?: string
-      disabled?: boolean
-      required?: boolean
-      id?: string
+      modelValue?: string | number;
+      options?: SelectOption[];
+      size?: SelectSize;
+      label?: string;
+      labelHidden?: boolean;
+      hint?: string;
+      error?: string;
+      placeholder?: string;
+      disabled?: boolean;
+      required?: boolean;
+      id?: string;
     }>(),
     {
       modelValue: '',
@@ -42,87 +42,78 @@
       required: false,
       id: undefined,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    'update:modelValue': [value: string | number]
-    change: [value: string | number]
-    blur: [event: FocusEvent]
-    focus: [event: FocusEvent]
-  }>()
+    'update:modelValue': [value: string | number];
+    change: [value: string | number];
+    blur: [event: FocusEvent];
+    focus: [event: FocusEvent];
+  }>();
 
-  const { t } = useI18n({
-    inheritLocale: true,
-    messages: {
-      en: { required: 'required' },
-    },
-  })
-  const { id: resolvedId } = useId(props.id)
+  const { t } = useI18n({ useScope: 'local' });
+  const { id: resolvedId } = useId(props.id);
 
-  const isOpen = ref(false)
-  const triggerRef = ref<HTMLButtonElement | null>(null)
+  const isOpen = ref(false);
+  const triggerRef = ref<HTMLButtonElement | null>(null);
 
-  const selectedOption = computed(() =>
-    props.options.find((opt) => opt.value === props.modelValue) ?? null,
-  )
+  const selectedOption = computed(() => props.options.find((opt) => opt.value === props.modelValue) ?? null);
 
-  const displayLabel = computed(() =>
-    selectedOption.value ? selectedOption.value.label : (props.placeholder ?? ''),
-  )
+  const displayLabel = computed(() => (selectedOption.value ? selectedOption.value.label : (props.placeholder ?? '')));
 
-  const hasPlaceholder = computed(() => !selectedOption.value)
+  const hasPlaceholder = computed(() => !selectedOption.value);
 
   function openDropdown() {
-    if (props.disabled) return
-    isOpen.value = true
-    emit('focus', new FocusEvent('focus'))
+    if (props.disabled) return;
+    isOpen.value = true;
+    emit('focus', new FocusEvent('focus'));
   }
 
   function closeDropdown() {
-    isOpen.value = false
+    isOpen.value = false;
   }
 
   function selectOption(option: SelectOption) {
-    if (option.disabled) return
-    emit('update:modelValue', option.value)
-    emit('change', option.value)
-    closeDropdown()
-    triggerRef.value?.focus()
+    if (option.disabled) return;
+    emit('update:modelValue', option.value);
+    emit('change', option.value);
+    closeDropdown();
+    triggerRef.value?.focus();
   }
 
   function handleKeydown(event: KeyboardEvent) {
     if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      isOpen.value ? closeDropdown() : openDropdown()
+      event.preventDefault();
+      isOpen.value ? closeDropdown() : openDropdown();
     } else if (event.key === 'Escape') {
-      closeDropdown()
+      closeDropdown();
     } else if (event.key === 'ArrowDown') {
-      event.preventDefault()
+      event.preventDefault();
       if (!isOpen.value) {
-        openDropdown()
+        openDropdown();
       } else {
-        selectAdjacentOption(1)
+        selectAdjacentOption(1);
       }
     } else if (event.key === 'ArrowUp') {
-      event.preventDefault()
-      selectAdjacentOption(-1)
+      event.preventDefault();
+      selectAdjacentOption(-1);
     }
   }
 
   function selectAdjacentOption(direction: 1 | -1) {
-    const enabledOptions = props.options.filter((opt) => !opt.disabled)
-    if (enabledOptions.length === 0) return
-    const currentIndex = enabledOptions.findIndex((opt) => opt.value === props.modelValue)
-    const nextIndex = Math.max(0, Math.min(enabledOptions.length - 1, currentIndex + direction))
-    const next = enabledOptions[nextIndex]
+    const enabledOptions = props.options.filter((opt) => !opt.disabled);
+    if (enabledOptions.length === 0) return;
+    const currentIndex = enabledOptions.findIndex((opt) => opt.value === props.modelValue);
+    const nextIndex = Math.max(0, Math.min(enabledOptions.length - 1, currentIndex + direction));
+    const next = enabledOptions[nextIndex];
     if (next) {
-      emit('update:modelValue', next.value)
-      emit('change', next.value)
+      emit('update:modelValue', next.value);
+      emit('change', next.value);
     }
   }
 
   function handleBlur(event: FocusEvent) {
-    emit('blur', event)
+    emit('blur', event);
   }
 </script>
 
@@ -131,57 +122,87 @@
     :class="[
       'base-select',
       `base-select--${size}`,
-      { 'base-select--error': !!error, 'base-select--disabled': disabled, 'base-select--open': isOpen },
+      {
+        'base-select--error': !!error,
+        'base-select--disabled': disabled,
+        'base-select--open': isOpen,
+      },
     ]"
   >
-    <label v-if="label" :id="`${resolvedId}-label`" :for="resolvedId" :class="['base-select__label', { 'base-select__label--hidden': labelHidden }]">
-      <BaseTypography variant="label" as="span" color="primary">{{ label }}</BaseTypography>
-      <span v-if="required" class="base-select__required" :title="t('required')" aria-hidden="true">*</span>
+    <label
+      v-if="label"
+      :id="`${resolvedId}-label`"
+      :class="['base-select__label', { 'base-select__label--hidden': labelHidden }]"
+      :for="resolvedId"
+    >
+      <BaseTypography
+        as="span"
+        color="primary"
+        variant="label"
+      >{{ label }}</BaseTypography>
+      <span
+        v-if="required"
+        :title="t('required')"
+        aria-hidden="true"
+        class="base-select__required"
+      >*</span>
     </label>
     <BaseDropdown
       :open="isOpen"
-      @update:open="(val) => { if (!val) closeDropdown() }"
       @close="closeDropdown"
+      @update:open="
+        (val) => {
+          if (!val) closeDropdown();
+        }
+      "
     >
       <template #trigger>
         <div
-          class="base-select__wrapper"
-          role="combobox"
+          :aria-controls="`${resolvedId}-listbox`"
           :aria-expanded="isOpen"
           :aria-haspopup="'listbox'"
-          :aria-owns="`${resolvedId}-listbox`"
           :aria-labelledby="label ? `${resolvedId}-label` : undefined"
           :aria-required="required || undefined"
+          class="base-select__wrapper"
+          role="combobox"
         >
           <button
             :id="resolvedId"
             ref="triggerRef"
-            type="button"
+            :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
+            :aria-invalid="!!error || undefined"
             :class="['base-select__field', { 'base-select__field--placeholder': hasPlaceholder }]"
             :disabled="disabled"
-            :aria-invalid="!!error || undefined"
-            :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
+            type="button"
+            @blur="handleBlur"
             @click="isOpen ? closeDropdown() : openDropdown()"
             @keydown="handleKeydown"
-            @blur="handleBlur"
           >
             {{ displayLabel }}
           </button>
-          <span class="base-select__chevron" aria-hidden="true">
-            <IconChevron size="sm" :direction="isOpen ? 'up' : 'down'" />
+          <span
+            aria-hidden="true"
+            class="base-select__chevron"
+          >
+            <IconChevron
+              :direction="isOpen ? 'up' : 'down'"
+              size="sm"
+            />
           </span>
         </div>
       </template>
 
       <ul
         :id="`${resolvedId}-listbox`"
-        role="listbox"
-        class="base-select__listbox"
         :aria-labelledby="label ? `${resolvedId}-label` : undefined"
+        class="base-select__listbox"
+        role="listbox"
       >
         <li
           v-for="opt in options"
           :key="opt.value"
+          :aria-disabled="opt.disabled || undefined"
+          :aria-selected="opt.value === modelValue"
           :class="[
             'base-select__option',
             {
@@ -190,36 +211,55 @@
             },
           ]"
           role="option"
-          :aria-selected="opt.value === modelValue"
-          :aria-disabled="opt.disabled || undefined"
+          tabindex="-1"
           @mousedown.prevent="selectOption(opt)"
         >
           {{ opt.label }}
         </li>
         <li
           v-if="options.length === 0"
+          aria-disabled="true"
+          aria-selected="false"
           class="base-select__empty"
           role="option"
-          aria-selected="false"
-          aria-disabled="true"
+          tabindex="-1"
         >
           No options available
         </li>
       </ul>
     </BaseDropdown>
-    <BaseTypography v-if="error" :id="`${resolvedId}-error`" variant="caption" as="p" color="inherit" class="base-select__error" role="alert">{{ error }}</BaseTypography>
-    <BaseTypography v-else-if="hint" :id="`${resolvedId}-hint`" variant="caption" as="p" color="secondary" class="base-select__hint">{{ hint }}</BaseTypography>
+    <BaseTypography
+      v-if="error"
+      :id="`${resolvedId}-error`"
+      as="p"
+      class="base-select__error"
+      color="inherit"
+      role="alert"
+      variant="caption"
+    >
+      {{ error }}
+    </BaseTypography>
+    <BaseTypography
+      v-else-if="hint"
+      :id="`${resolvedId}-hint`"
+      as="p"
+      class="base-select__hint"
+      color="secondary"
+      variant="caption"
+    >
+      {{ hint }}
+    </BaseTypography>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-select {
     display: flex;
     flex-direction: column;
     gap: var(--mp-spacing-1);
 
     &__label {
-      // typography handled by BaseTypography
+      /* typography handled by BaseTypography */
 
       &--hidden {
         position: absolute;
@@ -228,7 +268,7 @@
         padding: 0;
         margin: -1px;
         overflow: hidden;
-        clip: rect(0, 0, 0, 0);
+        clip-path: inset(50%);
         white-space: nowrap;
         border: 0;
       }
@@ -245,7 +285,9 @@
       border: 1px solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
       background-color: var(--mp-color-bg-surface);
-      transition: border-color 150ms ease, box-shadow 150ms ease;
+      transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease;
       cursor: pointer;
 
       &:focus-within {
@@ -291,10 +333,6 @@
       color: var(--mp-color-text-primary);
       cursor: pointer;
 
-      &:hover:not(.base-select__option--disabled) {
-        background-color: var(--mp-color-bg-muted);
-      }
-
       &--selected {
         font-weight: var(--mp-font-weight-medium);
       }
@@ -302,6 +340,10 @@
       &--disabled {
         color: var(--mp-color-text-disabled);
         cursor: not-allowed;
+      }
+
+      &:hover:not(.base-select__option--disabled) {
+        background-color: var(--mp-color-bg-muted);
       }
     }
 
@@ -312,7 +354,7 @@
       font-style: italic;
     }
 
-    // Sizes
+    /* Sizes */
     &--sm {
       .base-select__field {
         padding: var(--mp-spacing-1) var(--mp-spacing-2);
@@ -346,7 +388,7 @@
       }
     }
 
-    // States
+    /* States */
     &--error {
       .base-select__wrapper {
         border-color: var(--mp-color-danger-default);
@@ -385,3 +427,8 @@
     }
   }
 </style>
+
+<i18n lang="yaml">
+en:
+  required: required
+</i18n>

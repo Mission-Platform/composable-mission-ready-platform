@@ -1,24 +1,24 @@
-<script setup lang="ts">
-  import { ref } from 'vue'
-  import { useI18n } from 'vue-i18n'
-  import { IconUpload } from '@mission-platform/icons'
+<script lang="ts" setup>
+  import { useI18n } from '@mission-platform/i18n';
+  import { IconUpload } from '@mission-platform/icons';
+  import { ref } from 'vue';
 
-  import { useId } from '../../composables/useId'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+  import { useId } from '../../composables/use-id';
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
   const props = withDefaults(
     defineProps<{
-      modelValue?: File | File[] | null
-      multiple?: boolean
-      accept?: string
-      label?: string
-      labelHidden?: boolean
-      hint?: string
-      error?: string
-      disabled?: boolean
-      required?: boolean
-      id?: string
-      dragDrop?: boolean
+      modelValue?: File | File[] | null;
+      multiple?: boolean;
+      accept?: string;
+      label?: string;
+      labelHidden?: boolean;
+      hint?: string;
+      error?: string;
+      disabled?: boolean;
+      required?: boolean;
+      id?: string;
+      dragDrop?: boolean;
     }>(),
     {
       modelValue: null,
@@ -33,92 +33,110 @@
       id: undefined,
       dragDrop: false,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    'update:modelValue': [value: File | File[] | null]
-    change: [files: FileList | null]
-  }>()
+    'update:modelValue': [value: File | File[] | null];
+    change: [files: FileList | null];
+  }>();
 
-  const { t } = useI18n({
-    inheritLocale: true,
-    messages: {
-      en: {
-        required: 'required',
-        browse: 'Browse files',
-        drag: 'Drag & drop files here or',
-        noFile: 'No file chosen',
-      },
-    },
-  })
+  const { t } = useI18n({ useScope: 'local' });
 
-  const { id: resolvedId } = useId(props.id)
-  const isDragging = ref(false)
-  const displayName = ref('')
+  const { id: resolvedId } = useId(props.id);
+  const isDragging = ref(false);
+  const displayName = ref('');
 
   function handleFiles(files: FileList | null) {
     if (!files || files.length === 0) {
-      emit('update:modelValue', null)
-      emit('change', null)
-      displayName.value = ''
-      return
+      emit('update:modelValue', null);
+      emit('change', null);
+      displayName.value = '';
+      return;
     }
-    const result = props.multiple ? Array.from(files) : files[0]
-    emit('update:modelValue', result)
-    emit('change', files)
-    displayName.value = props.multiple
-      ? `${files.length} file${files.length > 1 ? 's' : ''} selected`
-      : files[0].name
+    const result = props.multiple ? Array.from(files) : files[0];
+    emit('update:modelValue', result);
+    emit('change', files);
+    displayName.value = props.multiple ? `${files.length} file${files.length > 1 ? 's' : ''} selected` : files[0].name;
   }
 
   function handleInputChange(event: Event) {
-    const input = event.target as HTMLInputElement
-    handleFiles(input.files)
+    const input = event.target as HTMLInputElement;
+    handleFiles(input.files);
   }
 
   function handleDrop(event: DragEvent) {
-    event.preventDefault()
-    isDragging.value = false
-    if (props.disabled) return
-    handleFiles(event.dataTransfer?.files ?? null)
+    event.preventDefault();
+    isDragging.value = false;
+    if (props.disabled) return;
+    handleFiles(event.dataTransfer?.files ?? null);
   }
 
   function handleDragOver(event: DragEvent) {
-    event.preventDefault()
-    if (!props.disabled) isDragging.value = true
+    event.preventDefault();
+    if (!props.disabled) isDragging.value = true;
   }
 
   function handleDragLeave() {
-    isDragging.value = false
+    isDragging.value = false;
   }
 </script>
 
 <template>
-  <div
-    :class="['base-file-input', { 'base-file-input--error': !!error, 'base-file-input--disabled': disabled }]"
-  >
-    <label v-if="label" :for="resolvedId" :class="['base-file-input__label', { 'base-file-input__label--hidden': labelHidden }]">
-      <BaseTypography variant="label" as="span" color="primary">{{ label }}</BaseTypography>
-      <span v-if="required" class="base-file-input__required" :title="t('required')" aria-hidden="true">*</span>
+  <div :class="['base-file-input', { 'base-file-input--error': !!error, 'base-file-input--disabled': disabled }]">
+    <label
+      v-if="label"
+      :class="['base-file-input__label', { 'base-file-input__label--hidden': labelHidden }]"
+      :for="resolvedId"
+    >
+      <BaseTypography
+        as="span"
+        color="primary"
+        variant="label"
+      >{{ label }}</BaseTypography>
+      <span
+        v-if="required"
+        :title="t('required')"
+        aria-hidden="true"
+        class="base-file-input__required"
+      >*</span>
     </label>
 
     <div
       v-if="dragDrop"
       :class="['base-file-input__dropzone', { 'base-file-input__dropzone--active': isDragging }]"
-      @drop="handleDrop"
-      @dragover="handleDragOver"
+      role="presentation"
       @dragleave="handleDragLeave"
+      @dragover="handleDragOver"
+      @drop="handleDrop"
     >
-      <IconUpload size="xl" class="base-file-input__icon" />
+      <IconUpload
+        class="base-file-input__icon"
+        size="xl"
+      />
       <p class="base-file-input__drop-text">
         {{ t('drag') }}
-        <label :for="resolvedId" class="base-file-input__browse-link">{{ t('browse') }}</label>
+        <label
+          :for="resolvedId"
+          class="base-file-input__browse-link"
+        >{{ t('browse') }}</label>
       </p>
-      <p v-if="displayName" class="base-file-input__file-name">{{ displayName }}</p>
+      <p
+        v-if="displayName"
+        class="base-file-input__file-name"
+      >
+        {{ displayName }}
+      </p>
     </div>
 
-    <div v-else class="base-file-input__row">
-      <label :for="resolvedId" class="base-file-input__button" :class="{ 'base-file-input__button--disabled': disabled }">
+    <div
+      v-else
+      class="base-file-input__row"
+    >
+      <label
+        :class="{ 'base-file-input__button--disabled': disabled }"
+        :for="resolvedId"
+        class="base-file-input__button"
+      >
         {{ t('browse') }}
       </label>
       <span class="base-file-input__name">{{ displayName || t('noFile') }}</span>
@@ -126,29 +144,48 @@
 
     <input
       :id="resolvedId"
-      type="file"
-      :multiple="multiple"
       :accept="accept"
-      :disabled="disabled"
-      :required="required"
-      :aria-invalid="!!error || undefined"
       :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
+      :aria-invalid="!!error || undefined"
+      :disabled="disabled"
+      :multiple="multiple"
+      :required="required"
       class="base-file-input__native"
+      type="file"
       @change="handleInputChange"
-    />
-    <BaseTypography v-if="error" :id="`${resolvedId}-error`" variant="caption" as="p" color="inherit" class="base-file-input__error" role="alert">{{ error }}</BaseTypography>
-    <BaseTypography v-else-if="hint" :id="`${resolvedId}-hint`" variant="caption" as="p" color="secondary" class="base-file-input__hint">{{ hint }}</BaseTypography>
+    >
+    <BaseTypography
+      v-if="error"
+      :id="`${resolvedId}-error`"
+      as="p"
+      class="base-file-input__error"
+      color="inherit"
+      role="alert"
+      variant="caption"
+    >
+      {{ error }}
+    </BaseTypography>
+    <BaseTypography
+      v-else-if="hint"
+      :id="`${resolvedId}-hint`"
+      as="p"
+      class="base-file-input__hint"
+      color="secondary"
+      variant="caption"
+    >
+      {{ hint }}
+    </BaseTypography>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-file-input {
     display: flex;
     flex-direction: column;
     gap: var(--mp-spacing-1);
 
     &__label {
-      // typography handled by BaseTypography
+      /* typography handled by BaseTypography */
 
       &--hidden {
         position: absolute;
@@ -157,7 +194,7 @@
         padding: 0;
         margin: -1px;
         overflow: hidden;
-        clip: rect(0, 0, 0, 0);
+        clip-path: inset(50%);
         white-space: nowrap;
         border: 0;
       }
@@ -175,7 +212,7 @@
       padding: 0;
       margin: -1px;
       overflow: hidden;
-      clip: rect(0, 0, 0, 0);
+      clip-path: inset(50%);
       white-space: nowrap;
       border: 0;
     }
@@ -198,17 +235,19 @@
       border-radius: var(--mp-radius-md);
       cursor: pointer;
       white-space: nowrap;
-      transition: background-color 150ms ease, border-color 150ms ease;
-
-      &:hover:not(&--disabled) {
-        background-color: var(--mp-color-bg-muted);
-        border-color: var(--mp-color-border-strong);
-      }
+      transition:
+        background-color 150ms ease,
+        border-color 150ms ease;
 
       &--disabled {
         background-color: var(--mp-color-bg-muted);
         color: var(--mp-color-text-disabled);
         cursor: not-allowed;
+      }
+
+      &:hover:not(&--disabled) {
+        background-color: var(--mp-color-bg-muted);
+        border-color: var(--mp-color-border-strong);
       }
     }
 
@@ -230,7 +269,9 @@
       border: 2px dashed var(--mp-color-border-default);
       border-radius: var(--mp-radius-lg);
       background-color: var(--mp-color-bg-surface);
-      transition: border-color 150ms ease, background-color 150ms ease;
+      transition:
+        border-color 150ms ease,
+        background-color 150ms ease;
       cursor: pointer;
       text-align: center;
 
@@ -302,3 +343,11 @@
     }
   }
 </style>
+
+<i18n lang="yaml">
+en:
+  required: required
+  browse: Browse files
+  drag: Drag & drop files here or
+  noFile: No file chosen
+</i18n>

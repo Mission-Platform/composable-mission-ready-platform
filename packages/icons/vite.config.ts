@@ -1,9 +1,9 @@
-import { resolve } from 'node:path'
+import path from 'node:path';
 
-import postcssConfig from '@mission-platform/postcss-config'
-import vue from '@vitejs/plugin-vue'
-import { defineConfig } from 'vite'
-import svgLoader from 'vite-svg-loader'
+import postcssConfig from '@mission-platform/postcss-config';
+import vue from '@vitejs/plugin-vue';
+import { defineConfig } from 'vite';
+import svgLoader from 'vite-svg-loader';
 
 export default defineConfig({
   css: {
@@ -19,7 +19,7 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
+      entry: path.resolve(__dirname, 'src/index.ts'),
       name: 'MissionPlatformIcons',
       fileName: 'icons',
       formats: ['es'],
@@ -33,4 +33,4 @@ export default defineConfig({
       },
     },
   },
-})
+});

@@ -1,15 +1,15 @@
-<script setup lang="ts">
-  import { useIconSize } from '../../useIconSize.ts'
+<script lang="ts" setup>
+  import { useIconSize } from '../../use-icon-size.ts';
 
-  export type SortDirection = 'asc' | 'desc' | null
+  export type SortDirection = 'asc' | 'desc' | null;
 
   const props = withDefaults(
     defineProps<{
-      size?: number | string
-      color?: string
-      ariaLabel?: string
-      active?: boolean
-      direction?: SortDirection
+      size?: number | string;
+      color?: string;
+      ariaLabel?: string;
+      active?: boolean;
+      direction?: SortDirection;
     }>(),
     {
       size: 'md',
@@ -18,33 +18,33 @@
       active: false,
       direction: null,
     },
-  )
+  );
 
-  const sizeValue = useIconSize(() => props.size)
+  const sizeValue = useIconSize(() => props.size);
 </script>
 
 <template>
   <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    :width="sizeValue"
-    :height="sizeValue"
-    :aria-label="ariaLabel"
     :aria-hidden="!ariaLabel"
-    role="img"
+    :aria-label="ariaLabel"
+    :height="sizeValue"
+    :width="sizeValue"
     class="base-icon-sort"
+    fill="none"
+    role="img"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
   >
     <path
-      d="M12 3l5 7H7l5-7z"
       :fill="active && direction === 'asc' ? color : 'none'"
       :stroke="color"
+      d="M12 3l5 7H7l5-7z"
       stroke-width="1.5"
     />
     <path
-      d="M12 21l-5-7h10l-5 7z"
       :fill="active && direction === 'desc' ? color : 'none'"
       :stroke="color"
+      d="M12 21l-5-7h10l-5 7z"
       stroke-width="1.5"
     />
   </svg>

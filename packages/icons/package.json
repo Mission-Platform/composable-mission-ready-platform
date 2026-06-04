@@ -28,11 +28,13 @@
     "vue": "^3.5.0"
   },
   "devDependencies": {
+    "@intlify/eslint-plugin-vue-i18n": "catalog:eslint",
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/postcss-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
     "@mission-platform/stylelint-config": "workspace:*",
     "@types/node": "catalog:typescript",
+    "@storybook/vue3-vite": "catalog:storybook",
     "@vue/test-utils": "catalog:vue",
     "jsdom": "catalog:testing",
     "vitest": "catalog:testing",

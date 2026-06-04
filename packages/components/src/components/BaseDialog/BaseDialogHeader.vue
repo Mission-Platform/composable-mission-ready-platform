@@ -1,26 +1,35 @@
-<script setup lang="ts">
-  import { IconClose } from '@mission-platform/icons'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+<script lang="ts" setup>
+  import { IconClose } from '@mission-platform/icons';
+
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
   defineProps<{
-    title?: string
-    closeLabel: string
-  }>()
+    title?: string;
+    closeLabel: string;
+  }>();
 
   const emit = defineEmits<{
-    close: []
-  }>()
+    close: [];
+  }>();
 </script>
 
 <template>
   <header class="base-dialog__header">
     <slot>
-      <BaseTypography v-if="title" variant="h5" as="h2" color="primary" class="base-dialog__title">{{ title }}</BaseTypography>
+      <BaseTypography
+        v-if="title"
+        as="h2"
+        class="base-dialog__title"
+        color="primary"
+        variant="h5"
+      >
+        {{ title }}
+      </BaseTypography>
     </slot>
     <button
-      type="button"
-      class="base-dialog__close"
       :aria-label="closeLabel"
+      class="base-dialog__close"
+      type="button"
       @click="emit('close')"
     >
       <IconClose size="md" />
@@ -28,7 +37,7 @@
   </header>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-dialog__header {
     display: flex;
     align-items: center;

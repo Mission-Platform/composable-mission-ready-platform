@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import IconLock from './Icon.vue'
+import IconLock from './Icon.vue';
+
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
   title: 'Icons/General UI/IconLock',
@@ -17,17 +18,17 @@ const meta = {
     color: 'currentColor',
     ariaLabel: 'Lock',
   },
-} satisfies Meta<typeof IconLock>
+} satisfies Meta<typeof IconLock>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {}
+export const Default: Story = {};
 
-export const Open: Story = { args: { open: true, ariaLabel: 'Unlocked' } }
+export const Open: Story = { args: { open: true, ariaLabel: 'Unlocked' } };
 
-export const Small: Story = { args: { size: 16 } }
+export const Small: Story = { args: { size: 16 } };
 
-export const Large: Story = { args: { size: 32 } }
+export const Large: Story = { args: { size: 32 } };
 
-export const Colored: Story = { args: { color: '#6c2fd4' } }
+export const Colored: Story = { args: { color: '#6c2fd4' } };

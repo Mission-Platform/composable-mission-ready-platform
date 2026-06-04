@@ -1,10 +1,10 @@
-<script setup lang="ts">
-  import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
-  import * as monaco from 'monaco-editor'
+<script lang="ts" setup>
+  import * as monaco from 'monaco-editor';
+  import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue';
 
-  import { useHunspellMonaco } from '../../composables/useHunspellMonaco'
+  import { useHunspellMonaco } from '../../composables/use-hunspell-monaco';
 
-  export type MonacoEditorCompletionItemProvider = monaco.languages.CompletionItemProvider
+  export type MonacoEditorCompletionItemProvider = monaco.languages.CompletionItemProvider;
 
   export type MonacoEditorLanguage =
     | 'abap'
@@ -90,26 +90,26 @@
     | 'xml'
     | 'yaml'
     | 'zenscript'
-    | 'plaintext'
+    | 'plaintext';
 
-  export type MonacoEditorTheme = 'vs' | 'vs-dark' | 'hc-black' | 'hc-light'
+  export type MonacoEditorTheme = 'vs' | 'vs-dark' | 'hc-black' | 'hc-light';
 
   const props = withDefaults(
     defineProps<{
-      modelValue?: string
-      language?: MonacoEditorLanguage
-      theme?: MonacoEditorTheme
-      readonly?: boolean
-      minimap?: boolean
-      lineNumbers?: boolean
-      wordWrap?: boolean
-      height?: string
-      fontSize?: number
-      tabSize?: number
-      scrollBeyondLastLine?: boolean
-      automaticLayout?: boolean
-      completionProvider?: MonacoEditorCompletionItemProvider
-      spellCheck?: boolean
+      modelValue?: string;
+      language?: MonacoEditorLanguage;
+      theme?: MonacoEditorTheme;
+      readonly?: boolean;
+      minimap?: boolean;
+      lineNumbers?: boolean;
+      wordWrap?: boolean;
+      height?: string;
+      fontSize?: number;
+      tabSize?: number;
+      scrollBeyondLastLine?: boolean;
+      automaticLayout?: boolean;
+      completionProvider?: MonacoEditorCompletionItemProvider;
+      spellCheck?: boolean;
     }>(),
     {
       modelValue: '',
@@ -124,41 +124,39 @@
       tabSize: 2,
       scrollBeyondLastLine: false,
       automaticLayout: true,
+      completionProvider: undefined,
       spellCheck: false,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    'update:modelValue': [value: string]
-    change: [value: string]
-    blur: []
-    focus: []
-    ready: [editor: monaco.editor.IStandaloneCodeEditor]
-  }>()
+    'update:modelValue': [value: string];
+    change: [value: string];
+    blur: [];
+    focus: [];
+    ready: [editor: monaco.editor.IStandaloneCodeEditor];
+  }>();
 
-  const containerEl = ref<HTMLDivElement | null>(null)
-  const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
-  let completionDisposable: monaco.IDisposable | null = null
+  const containerEl = ref<HTMLDivElement | null>(null);
+  const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | undefined>(undefined);
+  let completionDisposable: monaco.IDisposable | null = null;
 
   useHunspellMonaco(
     editorRef,
     computed(() => props.spellCheck && !props.readonly),
     computed(() => props.language ?? 'plaintext'),
-  )
+  );
 
   function registerCompletionProvider(language: string): void {
-    completionDisposable?.dispose()
-    completionDisposable = null
+    completionDisposable?.dispose();
+    completionDisposable = null;
     if (props.completionProvider) {
-      completionDisposable = monaco.languages.registerCompletionItemProvider(
-        language,
-        props.completionProvider,
-      )
+      completionDisposable = monaco.languages.registerCompletionItemProvider(language, props.completionProvider);
     }
   }
 
   onMounted(() => {
-    if (!containerEl.value) return
+    if (!containerEl.value) return;
 
     editorRef.value = monaco.editor.create(containerEl.value, {
       value: props.modelValue,
@@ -181,125 +179,125 @@
       renderLineHighlight: 'all',
       cursorStyle: 'line',
       padding: { top: 8, bottom: 8 },
-    })
+    });
 
     // Forward content changes
     editorRef.value.onDidChangeModelContent(() => {
-      const value = editorRef.value!.getValue()
-      emit('update:modelValue', value)
-      emit('change', value)
-    })
+      const value = editorRef.value!.getValue();
+      emit('update:modelValue', value);
+      emit('change', value);
+    });
 
-    editorRef.value.onDidBlurEditorText(() => emit('blur'))
-    editorRef.value.onDidFocusEditorText(() => emit('focus'))
+    editorRef.value.onDidBlurEditorText(() => emit('blur'));
+    editorRef.value.onDidFocusEditorText(() => emit('focus'));
 
-    registerCompletionProvider(props.language ?? 'plaintext')
+    registerCompletionProvider(props.language ?? 'plaintext');
 
-    emit('ready', editorRef.value)
-  })
+    emit('ready', editorRef.value);
+  });
 
   onBeforeUnmount(() => {
-    completionDisposable?.dispose()
-    completionDisposable = null
-    editorRef.value?.dispose()
-    editorRef.value = null
-  })
+    completionDisposable?.dispose();
+    completionDisposable = null;
+    editorRef.value?.dispose();
+    editorRef.value = undefined;
+  });
 
   // ── Watchers ───────────────────────────────────────────────────────────────
 
   watch(
     () => props.modelValue,
     (value) => {
-      if (!editorRef.value) return
+      if (!editorRef.value) return;
       // Avoid re-setting value when the editor itself triggered the change
       if (editorRef.value.getValue() !== value) {
-        editorRef.value.setValue(value)
+        editorRef.value.setValue(value);
       }
     },
-  )
+  );
 
   watch(
     () => props.language,
     (language) => {
-      const model = editorRef.value?.getModel()
-      if (model) monaco.editor.setModelLanguage(model, language)
-      registerCompletionProvider(language)
+      const model = editorRef.value?.getModel();
+      if (model) monaco.editor.setModelLanguage(model, language);
+      registerCompletionProvider(language);
     },
-  )
+  );
 
   watch(
     () => props.completionProvider,
     () => {
-      registerCompletionProvider(props.language ?? 'plaintext')
+      registerCompletionProvider(props.language ?? 'plaintext');
     },
-  )
+  );
 
   watch(
     () => props.theme,
     (theme) => {
-      monaco.editor.setTheme(theme)
+      monaco.editor.setTheme(theme);
     },
-  )
+  );
 
   watch(
     () => props.readonly,
     (readonly) => {
-      editorRef.value?.updateOptions({ readOnly: readonly })
+      editorRef.value?.updateOptions({ readOnly: readonly });
     },
-  )
+  );
 
   watch(
     () => props.minimap,
     (minimap) => {
-      editorRef.value?.updateOptions({ minimap: { enabled: minimap } })
+      editorRef.value?.updateOptions({ minimap: { enabled: minimap } });
     },
-  )
+  );
 
   watch(
     () => props.lineNumbers,
     (lineNumbers) => {
-      editorRef.value?.updateOptions({ lineNumbers: lineNumbers ? 'on' : 'off' })
+      editorRef.value?.updateOptions({ lineNumbers: lineNumbers ? 'on' : 'off' });
     },
-  )
+  );
 
   watch(
     () => props.wordWrap,
     (wordWrap) => {
-      editorRef.value?.updateOptions({ wordWrap: wordWrap ? 'on' : 'off' })
+      editorRef.value?.updateOptions({ wordWrap: wordWrap ? 'on' : 'off' });
     },
-  )
+  );
 
   watch(
     () => props.fontSize,
     (fontSize) => {
-      editorRef.value?.updateOptions({ fontSize })
+      editorRef.value?.updateOptions({ fontSize });
     },
-  )
+  );
 
   watch(
     () => props.tabSize,
     (tabSize) => {
-      editorRef.value?.updateOptions({ tabSize })
+      editorRef.value?.updateOptions({ tabSize });
     },
-  )
+  );
 
   /**
    * Expose the raw Monaco editor instance for advanced use cases.
    */
-  defineExpose({ editor: () => editorRef.value })
+  defineExpose({ editor: () => editorRef.value });
 </script>
 
 <template>
   <div
     ref="containerEl"
+    :aria-label="`${language} editor`"
+    :style="{ height }"
     class="base-monaco-editor"
     role="region"
-    :style="{ height }"
-    :aria-label="`${language} editor`"
   />
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-monaco-editor {
     width: 100%;
     border: 1px solid var(--mp-color-border-default);

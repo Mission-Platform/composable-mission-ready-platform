@@ -1,22 +1,22 @@
-<script setup lang="ts">
-  import BaseCardHeader from './BaseCardHeader.vue'
-  import BaseCardBody from './BaseCardBody.vue'
-  import BaseCardFooter from './BaseCardFooter.vue'
+<script lang="ts" setup>
+  import BaseCardBody from './BaseCardBody.vue';
+  import BaseCardFooter from './BaseCardFooter.vue';
+  import BaseCardHeader from './BaseCardHeader.vue';
 
-  export type CardPadding = 'none' | 'sm' | 'md' | 'lg'
+  export type CardPadding = 'none' | 'sm' | 'md' | 'lg';
 
   withDefaults(
     defineProps<{
-      padding?: CardPadding
-      shadow?: boolean
-      bordered?: boolean
+      padding?: CardPadding;
+      shadow?: boolean;
+      bordered?: boolean;
     }>(),
     {
       padding: 'md',
       shadow: false,
       bordered: true,
     },
-  )
+  );
 </script>
 
 <template>
@@ -39,7 +39,7 @@
   </article>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   @use '@mission-platform/breakpoints/scss/mixins' as bp;
 
   .base-card {
@@ -55,7 +55,7 @@
       box-shadow: var(--mp-shadow-md);
     }
 
-    // Padding variants — mobile-first, tablet/desktop gets more breathing room
+    /* Padding variants — mobile-first, tablet/desktop gets more breathing room */
     &--padding-none {
       .base-card__header,
       .base-card__body,
@@ -105,7 +105,7 @@
     }
 
     &__body {
-      // typography handled by BaseTypography
+      /* typography handled by BaseTypography */
     }
 
     &__footer {

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   /**
    * VirtualLogViewer — a high-performance virtual-scrolling log viewer.
    *
@@ -19,31 +19,31 @@
    * Events
    *   select(entry) — emitted when a log row is clicked
    */
-  import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+  import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 
-  import BaseLogViewerToolbar from './BaseLogViewerToolbar.vue'
-  import BaseLogViewerRow from './BaseLogViewerRow.vue'
+  import BaseLogViewerRow from './BaseLogViewerRow.vue';
+  import BaseLogViewerToolbar from './BaseLogViewerToolbar.vue';
 
-  export type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'fatal'
+  export type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'fatal';
 
   export interface LogEntry {
-    id: string | number
-    level: LogLevel
-    message: string
-    timestamp?: string
-    [key: string]: unknown
+    id: string | number;
+    level: LogLevel;
+    message: string;
+    timestamp?: string;
+    [key: string]: unknown;
   }
 
   const props = withDefaults(
     defineProps<{
-      entries: LogEntry[]
-      itemHeight?: number
-      overscan?: number
-      height?: number
-      showLevel?: boolean
-      showTimestamp?: boolean
-      followTail?: boolean
-      filter?: string
+      entries: LogEntry[];
+      itemHeight?: number;
+      overscan?: number;
+      height?: number;
+      showLevel?: boolean;
+      showTimestamp?: boolean;
+      followTail?: boolean;
+      filter?: string;
     }>(),
     {
       itemHeight: 24,
@@ -54,84 +54,87 @@
       followTail: true,
       filter: '',
     },
-  )
+  );
 
   const emit = defineEmits<{
-    select: [entry: LogEntry]
-  }>()
+    select: [entry: LogEntry];
+  }>();
 
   // ─── Filtering ────────────────────────────────────────────────────────────────
 
   const filteredEntries = computed(() => {
-    const q = props.filter.trim().toLowerCase()
-    if (!q) return props.entries
-    return props.entries.filter((e) => e.message.toLowerCase().includes(q))
-  })
+    const q = props.filter.trim().toLowerCase();
+    if (!q) return props.entries;
+    return props.entries.filter((e) => e.message.toLowerCase().includes(q));
+  });
 
   // ─── Virtual scroll ───────────────────────────────────────────────────────────
 
-  const scrollTop = ref(0)
-  const containerRef = ref<HTMLElement | null>(null)
-  let userScrolled = false
+  const scrollTop = ref(0);
+  const containerRef = ref<HTMLElement | null>(null);
+  let userScrolled = false;
 
-  const totalHeight = computed(() => filteredEntries.value.length * props.itemHeight)
+  const totalHeight = computed(() => filteredEntries.value.length * props.itemHeight);
 
   const startIndex = computed(() => {
-    const raw = Math.floor(scrollTop.value / props.itemHeight) - props.overscan
-    return Math.max(0, raw)
-  })
+    const raw = Math.floor(scrollTop.value / props.itemHeight) - props.overscan;
+    return Math.max(0, raw);
+  });
 
   const endIndex = computed(() => {
-    const visibleCount = Math.ceil(props.height / props.itemHeight)
-    const raw = Math.floor(scrollTop.value / props.itemHeight) + visibleCount + props.overscan
-    return Math.min(filteredEntries.value.length - 1, raw)
-  })
+    const visibleCount = Math.ceil(props.height / props.itemHeight);
+    const raw = Math.floor(scrollTop.value / props.itemHeight) + visibleCount + props.overscan;
+    return Math.min(filteredEntries.value.length - 1, raw);
+  });
 
   const visibleRows = computed(() =>
     filteredEntries.value.slice(startIndex.value, endIndex.value + 1).map((entry, i) => ({
       entry,
       index: startIndex.value + i,
     })),
-  )
+  );
 
-  const offsetY = computed(() => startIndex.value * props.itemHeight)
+  const offsetY = computed(() => startIndex.value * props.itemHeight);
 
   function handleScroll(e: Event) {
-    const el = e.target as HTMLElement
-    scrollTop.value = el.scrollTop
+    const el = e.target as HTMLElement;
+    scrollTop.value = el.scrollTop;
     // Detect manual upward scroll — disable follow-tail
-    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < props.itemHeight * 2
-    userScrolled = !atBottom
+    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < props.itemHeight * 2;
+    userScrolled = !atBottom;
   }
 
   // ─── Follow tail ──────────────────────────────────────────────────────────────
 
   async function scrollToBottom() {
-    await nextTick()
+    await nextTick();
     if (containerRef.value) {
-      containerRef.value.scrollTop = containerRef.value.scrollHeight
+      containerRef.value.scrollTop = containerRef.value.scrollHeight;
     }
   }
 
   watch(
     () => props.entries.length,
     () => {
-      if (props.followTail && !userScrolled) scrollToBottom()
+      if (props.followTail && !userScrolled) scrollToBottom();
     },
-  )
+  );
 
   onMounted(() => {
-    containerRef.value?.addEventListener('scroll', handleScroll, { passive: true })
-    if (props.followTail) scrollToBottom()
-  })
+    containerRef.value?.addEventListener('scroll', handleScroll, { passive: true });
+    if (props.followTail) scrollToBottom();
+  });
 
   onUnmounted(() => {
-    containerRef.value?.removeEventListener('scroll', handleScroll)
-  })
+    containerRef.value?.removeEventListener('scroll', handleScroll);
+  });
 </script>
 
 <template>
-  <div class="log-viewer" :style="{ height: `${height}px` }">
+  <div
+    :style="{ height: `${height}px` }"
+    class="log-viewer"
+  >
     <!-- Toolbar: filter status -->
     <BaseLogViewerToolbar
       v-if="filter"
@@ -142,12 +145,12 @@
     <!-- Scroll container -->
     <div
       ref="containerRef"
-      class="log-viewer__scroll"
       :style="{
         height: filter ? `calc(${height}px - 32px)` : `${height}px`,
         overflowY: 'auto',
         position: 'relative',
       }"
+      class="log-viewer__scroll"
     >
       <!-- Full-height spacer -->
       <div
@@ -163,9 +166,9 @@
           left: 0,
           right: 0,
         }"
-        role="log"
         aria-atomic="false"
         aria-live="polite"
+        role="log"
       >
         <BaseLogViewerRow
           v-for="{ entry, index } in visibleRows"
@@ -182,7 +185,7 @@
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .log-viewer {
     display: flex;
     flex-direction: column;
@@ -225,15 +228,6 @@
       border-bottom: 1px solid transparent;
       transition: background-color 80ms ease;
 
-      &:hover {
-        background-color: var(--mp-color-bg-raised);
-      }
-
-      &:focus-visible {
-        outline: none;
-        box-shadow: var(--mp-shadow-focus-primary);
-      }
-
       &--warn {
         background: color-mix(in srgb, var(--mp-color-warning-default) 6%, transparent);
       }
@@ -241,6 +235,15 @@
       &--error,
       &--fatal {
         background: color-mix(in srgb, var(--mp-color-danger-default) 8%, transparent);
+      }
+
+      &:focus-visible {
+        outline: none;
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+
+      &:hover {
+        background-color: var(--mp-color-bg-raised);
       }
     }
 

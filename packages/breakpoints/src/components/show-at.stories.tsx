@@ -1,6 +1,6 @@
-import ShowAt from './ShowAt.vue'
+import ShowAt from './ShowAt.vue';
 
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
   title: 'Breakpoints/ShowAt',
@@ -21,7 +21,7 @@ const meta = {
   render: (arguments_) => ({
     components: { ShowAt },
     setup() {
-      return { args: arguments_ }
+      return { args: arguments_ };
     },
     template: `
       <ShowAt v-bind="args">
@@ -31,43 +31,43 @@ const meta = {
       </ShowAt>
     `,
   }),
-} satisfies Meta<typeof ShowAt>
+} satisfies Meta<typeof ShowAt>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const AlwaysVisible: Story = {
   parameters: { viewport: { defaultViewport: 'md' } },
   args: {},
-}
+};
 
 export const ShowFromMd: Story = {
   parameters: { viewport: { defaultViewport: 'md' } },
   args: { min: 'md' },
-}
+};
 
 export const ShowFromMdOnMobile: Story = {
   name: 'ShowFrom md — hidden on mobile (2xs)',
   parameters: { viewport: { defaultViewport: '2xs' } },
   args: { min: 'md' },
-}
+};
 
 export const ShowFromLg: Story = {
   parameters: { viewport: { defaultViewport: 'lg' } },
   args: { min: 'lg' },
-}
+};
 
 export const ShowFromXl: Story = {
   parameters: { viewport: { defaultViewport: 'xl' } },
   args: { min: 'xl' },
-}
+};
 
 export const ShowBelowLg: Story = {
   parameters: { viewport: { defaultViewport: 'sm' } },
   args: { max: 'lg' },
-}
+};
 
 export const ShowBetweenSmAndXl: Story = {
   parameters: { viewport: { defaultViewport: 'sm' } },
   args: { min: 'sm', max: 'xl' },
-}
+};

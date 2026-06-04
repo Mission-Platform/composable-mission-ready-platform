@@ -1,1 +1,1 @@
-export type { HunspellModule, HunspellChecker, StringVector } from './types'
+export type { HunspellModule, HunspellChecker, StringVector } from './types';

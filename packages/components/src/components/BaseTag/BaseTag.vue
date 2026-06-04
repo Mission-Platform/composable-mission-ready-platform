@@ -1,44 +1,44 @@
-<script setup lang="ts">
-  import { IconClose } from '@mission-platform/icons'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+<script lang="ts" setup>
+  import { IconClose } from '@mission-platform/icons';
 
-  export type TagSize = 'sm' | 'md'
-  export type TagVariant = 'neutral' | 'primary'
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
+
+  export type TagSize = 'sm' | 'md';
+  export type TagVariant = 'neutral' | 'primary';
 
   withDefaults(
     defineProps<{
-      label: string
-      size?: TagSize
-      variant?: TagVariant
-      disabled?: boolean
+      label: string;
+      size?: TagSize;
+      variant?: TagVariant;
+      disabled?: boolean;
     }>(),
     {
       size: 'md',
       variant: 'neutral',
       disabled: false,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    remove: []
-  }>()
+    remove: [];
+  }>();
 </script>
 
 <template>
-  <span
-    :class="[
-      'base-tag',
-      `base-tag--${size}`,
-      `base-tag--${variant}`,
-      { 'base-tag--disabled': disabled },
-    ]"
-  >
-    <BaseTypography variant="caption" weight="medium" as="span" color="inherit" class="base-tag__label">{{ label }}</BaseTypography>
+  <span :class="['base-tag', `base-tag--${size}`, `base-tag--${variant}`, { 'base-tag--disabled': disabled }]">
+    <BaseTypography
+      as="span"
+      class="base-tag__label"
+      color="inherit"
+      variant="caption"
+      weight="medium"
+    >{{ label }}</BaseTypography>
     <button
       v-if="!disabled"
-      type="button"
-      class="base-tag__remove"
       :aria-label="`Remove ${label}`"
+      class="base-tag__remove"
+      type="button"
       @click.stop="emit('remove')"
     >
       <IconClose size="2xs" />
@@ -46,7 +46,7 @@
   </span>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-tag {
     display: inline-flex;
     align-items: center;
@@ -56,7 +56,7 @@
     line-height: var(--mp-line-height-tight);
     white-space: nowrap;
 
-    // Sizes
+    /* Sizes */
     &--sm {
       padding: 2px var(--mp-spacing-2);
     }
@@ -65,7 +65,7 @@
       padding: var(--mp-spacing-1) var(--mp-spacing-2);
     }
 
-    // Variants
+    /* Variants */
     &--neutral {
       background-color: var(--mp-color-bg-muted);
       color: var(--mp-color-text-secondary);
@@ -76,7 +76,7 @@
       color: var(--mp-color-primary-text);
     }
 
-    // States
+    /* States */
     &--disabled {
       pointer-events: none;
       background-color: var(--mp-color-bg-muted);

@@ -1,108 +1,117 @@
-// ─── Dark Theme ──────────────────────────────────────────────────────────────
-// Applies semantic colour CSS custom properties for the dark theme.
-// All background surfaces are derived from the base background #111D1C (hsl 177°, very dark teal).
-// Usage: import this file and apply the class/attribute to your root element.
-//   e.g. <html data-theme="dark"> or <html class="theme-dark">
-//
-// The mixin mp-dark-theme-vars is also forwarded so consumers can include the
-// dark tokens inside a @media (prefers-color-scheme: dark) block.
+/* ─── Dark Theme ────────────────────────────────────────────────────────────── */
+
+/* Applies semantic colour CSS custom properties for the dark theme. */
+
+/* All background surfaces are derived from the base background #111D1C (hsl 177°, very dark teal). */
+
+/* Usage: import this file and apply the class/attribute to your root element. */
+
+/*   e.g. <html data-theme="dark"> or <html class="theme-dark"> */
+
+/* The mixin mp-dark-theme-vars is also forwarded so consumers can include the */
+
+/* dark tokens inside a @media (prefers-color-scheme: dark) block. */
 
 @use '../../scss/colors' as c;
 
-/// All dark-theme CSS custom property declarations, extracted into a mixin so
-/// they can be included both inside selector rules and inside @media blocks.
+/* All dark-theme CSS custom property declarations, extracted into a mixin so */
+
+/* they can be included both inside selector rules and inside @media blocks. */
 @mixin mp-dark-theme-vars {
-  // Background surfaces — derived from #111D1C (dark teal base, $color-cyan-950)
-  --mp-color-bg-base:    #{c.$color-cyan-950};
+  /* Background surfaces — derived from #111D1C (dark teal base, $color-cyan-950) */
+  --mp-color-bg-base: #{c.$color-cyan-950};
   --mp-color-bg-surface: #172423;
-  --mp-color-bg-raised:  #1e2e2d;
+  --mp-color-bg-raised: #1e2e2d;
   --mp-color-bg-overlay: #243837;
-  --mp-color-bg-sunken:  #0b1413;
-  --mp-color-bg-muted:   #172423;
-  --mp-color-bg-scrim:          rgb(0 0 0 / 60%);  // modal/dialog backdrop (slightly more opaque on dark)
-  --mp-color-bg-scrim-soft:     rgb(0 0 0 / 50%);  // sidebar backdrop
-  --mp-color-bg-loading-overlay: rgb(0 0 0 / 40%); // table loading overlay
-  --mp-color-skeleton-shimmer:  rgb(255 255 255 / 8%);  // skeleton animation highlight
+  --mp-color-bg-sunken: #0b1413;
+  --mp-color-bg-muted: #172423;
+  --mp-color-bg-scrim: rgb(0 0 0 / 60%); /* modal/dialog backdrop (slightly more opaque on dark) */
+  --mp-color-bg-scrim-soft: rgb(0 0 0 / 50%); /* sidebar backdrop */
+  --mp-color-bg-loading-overlay: rgb(0 0 0 / 40%); /* table loading overlay */
+  --mp-color-skeleton-shimmer: rgb(255 255 255 / 8%); /* skeleton animation highlight */
 
-  // Borders — teal-tinted dark borders
+  /* Borders — teal-tinted dark borders */
   --mp-color-border-default: #233130;
-  --mp-color-border-strong:  #2e4140;
-  --mp-color-border-focus:   #{c.$color-cyan-400};
+  --mp-color-border-strong: #2e4140;
+  --mp-color-border-focus: #{c.$color-cyan-400};
 
-  // Text — light cyan values for contrast on the dark teal background
-  --mp-color-text-primary:    #{c.$color-cyan-50};
-  --mp-color-text-secondary:  #{c.$color-cyan-200};
-  --mp-color-text-tertiary:   #{c.$color-cyan-400};
-  --mp-color-text-disabled:   #{c.$color-cyan-400};  // #1ae6db — 10.2:1 on bg-surface #172423 (WCAG AAA)
-  --mp-color-text-inverse:    #{c.$color-cyan-900};
-  --mp-color-text-on-primary: #{c.$color-cyan-900};  // 8.85:1 on primary-200 button bg
+  /* Text — light cyan values for contrast on the dark teal background */
+  --mp-color-text-primary: #{c.$color-cyan-50};
+  --mp-color-text-secondary: #{c.$color-cyan-200};
+  --mp-color-text-tertiary: #{c.$color-cyan-400};
+  --mp-color-text-disabled: #{c.$color-cyan-400}; /* #1ae6db — 10.2:1 on bg-surface #172423 (WCAG AAA) */
+  --mp-color-text-inverse: #{c.$color-cyan-900};
+  --mp-color-text-on-primary: #{c.$color-cyan-900}; /* 8.85:1 on primary-200 button bg */
 
-  // Brand / Primary
-  // primary-default is used as button bg — primary-200 gives 8.85:1 with cyan-900 text-on-primary
+  /* Brand / Primary */
+
+  /* primary-default is used as button bg — primary-200 gives 8.85:1 with cyan-900 text-on-primary */
   --mp-color-primary-default: #{c.$color-primary-200};
-  --mp-color-primary-hover:   #{c.$color-primary-100};
-  --mp-color-primary-active:  #{c.$color-primary-300};
-  --mp-color-primary-subtle:  #{c.$color-primary-900};
-  --mp-color-primary-muted:   #{c.$color-primary-800};
-  --mp-color-primary-text:    #{c.$color-primary-200};  // 8.90:1 on primary-800 muted
+  --mp-color-primary-hover: #{c.$color-primary-100};
+  --mp-color-primary-active: #{c.$color-primary-300};
+  --mp-color-primary-subtle: #{c.$color-primary-900};
+  --mp-color-primary-muted: #{c.$color-primary-800};
+  --mp-color-primary-text: #{c.$color-primary-200}; /* 8.90:1 on primary-800 muted */
 
-  // Success
+  /* Success */
   --mp-color-success-default: #{c.$color-success-400};
-  --mp-color-success-hover:   #{c.$color-success-300};
-  --mp-color-success-subtle:  #{c.$color-success-900};
-  --mp-color-success-muted:   #{c.$color-success-800};
-  --mp-color-success-text:    #{c.$color-success-100};  // 10.44:1 on success-800 muted
+  --mp-color-success-hover: #{c.$color-success-300};
+  --mp-color-success-subtle: #{c.$color-success-900};
+  --mp-color-success-muted: #{c.$color-success-800};
+  --mp-color-success-text: #{c.$color-success-100}; /* 10.44:1 on success-800 muted */
 
-  // Warning
+  /* Warning */
   --mp-color-warning-default: #{c.$color-warning-400};
-  --mp-color-warning-hover:   #{c.$color-warning-300};
-  --mp-color-warning-subtle:  #{c.$color-warning-900};
-  --mp-color-warning-muted:   #{c.$color-warning-900};  // 7.21:1 with warning-50 text
-  --mp-color-warning-text:    #{c.$color-warning-50};   // 7.21:1 on warning-900 muted
+  --mp-color-warning-hover: #{c.$color-warning-300};
+  --mp-color-warning-subtle: #{c.$color-warning-900};
+  --mp-color-warning-muted: #{c.$color-warning-900}; /* 7.21:1 with warning-50 text */
+  --mp-color-warning-text: #{c.$color-warning-50}; /* 7.21:1 on warning-900 muted */
 
-  // Danger
-  // danger-300 gives 8.46:1 on dark bg-surface; danger-100 gives 7.98:1 on danger-900 muted
+  /* Danger */
+
+  /* danger-300 gives 8.46:1 on dark bg-surface; danger-100 gives 7.98:1 on danger-900 muted */
   --mp-color-danger-default: #{c.$color-danger-300};
-  --mp-color-danger-hover:   #{c.$color-danger-200};
-  --mp-color-danger-subtle:  #{c.$color-danger-900};
-  --mp-color-danger-muted:   #{c.$color-danger-900};  // 7.98:1 with danger-100 text
-  --mp-color-danger-text:    #{c.$color-danger-100};  // 7.98:1 on danger-900 muted
+  --mp-color-danger-hover: #{c.$color-danger-200};
+  --mp-color-danger-subtle: #{c.$color-danger-900};
+  --mp-color-danger-muted: #{c.$color-danger-900}; /* 7.98:1 with danger-100 text */
+  --mp-color-danger-text: #{c.$color-danger-100}; /* 7.98:1 on danger-900 muted */
 
-  // Info
-  // info-100 gives 8.14:1 on info-900 muted
+  /* Info */
+
+  /* info-100 gives 8.14:1 on info-900 muted */
   --mp-color-info-default: #{c.$color-info-400};
-  --mp-color-info-hover:   #{c.$color-info-300};
-  --mp-color-info-subtle:  #{c.$color-info-900};
-  --mp-color-info-muted:   #{c.$color-info-900};  // 8.14:1 with info-100 text
-  --mp-color-info-text:    #{c.$color-info-100};  // 8.14:1 on info-900 muted
+  --mp-color-info-hover: #{c.$color-info-300};
+  --mp-color-info-subtle: #{c.$color-info-900};
+  --mp-color-info-muted: #{c.$color-info-900}; /* 8.14:1 with info-100 text */
+  --mp-color-info-text: #{c.$color-info-100}; /* 8.14:1 on info-900 muted */
 
-  // Error — rose (hard errors; error-300 gives 8.46:1 on dark bg-surface)
+  /* Error — rose (hard errors; error-300 gives 8.46:1 on dark bg-surface) */
   --mp-color-error-default: #{c.$color-error-300};
-  --mp-color-error-hover:   #{c.$color-error-200};
-  --mp-color-error-subtle:  #{c.$color-error-900};
-  --mp-color-error-muted:   #{c.$color-error-900};  // 7.98:1 with error-100 text
-  --mp-color-error-text:    #{c.$color-error-100};  // 7.98:1 on error-900 muted
+  --mp-color-error-hover: #{c.$color-error-200};
+  --mp-color-error-subtle: #{c.$color-error-900};
+  --mp-color-error-muted: #{c.$color-error-900}; /* 7.98:1 with error-100 text */
+  --mp-color-error-text: #{c.$color-error-100}; /* 7.98:1 on error-900 muted */
 
-  // Alert — orange (alert-300 gives 8.21:1 on dark bg-surface)
+  /* Alert — orange (alert-300 gives 8.21:1 on dark bg-surface) */
   --mp-color-alert-default: #{c.$color-alert-400};
-  --mp-color-alert-hover:   #{c.$color-alert-300};
-  --mp-color-alert-subtle:  #{c.$color-alert-900};
-  --mp-color-alert-muted:   #{c.$color-alert-900};  // 8.21:1 with alert-50 text
-  --mp-color-alert-text:    #{c.$color-alert-50};   // 8.21:1 on alert-900 muted
+  --mp-color-alert-hover: #{c.$color-alert-300};
+  --mp-color-alert-subtle: #{c.$color-alert-900};
+  --mp-color-alert-muted: #{c.$color-alert-900}; /* 8.21:1 with alert-50 text */
+  --mp-color-alert-text: #{c.$color-alert-50}; /* 8.21:1 on alert-900 muted */
 
-  // Notice — indigo (notice-300 gives 9.81:1 on dark bg-surface)
+  /* Notice — indigo (notice-300 gives 9.81:1 on dark bg-surface) */
   --mp-color-notice-default: #{c.$color-notice-300};
-  --mp-color-notice-hover:   #{c.$color-notice-200};
-  --mp-color-notice-subtle:  #{c.$color-notice-900};
-  --mp-color-notice-muted:   #{c.$color-notice-900};  // 9.81:1 with notice-100 text
-  --mp-color-notice-text:    #{c.$color-notice-100};  // 9.81:1 on notice-900 muted
+  --mp-color-notice-hover: #{c.$color-notice-200};
+  --mp-color-notice-subtle: #{c.$color-notice-900};
+  --mp-color-notice-muted: #{c.$color-notice-900}; /* 9.81:1 with notice-100 text */
+  --mp-color-notice-text: #{c.$color-notice-100}; /* 9.81:1 on notice-900 muted */
 
-  // Debug — violet (debug-300 gives 9.10:1 on dark bg-surface)
+  /* Debug — violet (debug-300 gives 9.10:1 on dark bg-surface) */
   --mp-color-debug-default: #{c.$color-debug-300};
-  --mp-color-debug-hover:   #{c.$color-debug-200};
-  --mp-color-debug-subtle:  #{c.$color-debug-900};
-  --mp-color-debug-muted:   #{c.$color-debug-900};  // 9.10:1 with debug-100 text
-  --mp-color-debug-text:    #{c.$color-debug-100};  // 9.10:1 on debug-900 muted
+  --mp-color-debug-hover: #{c.$color-debug-200};
+  --mp-color-debug-subtle: #{c.$color-debug-900};
+  --mp-color-debug-muted: #{c.$color-debug-900}; /* 9.10:1 with debug-100 text */
+  --mp-color-debug-text: #{c.$color-debug-100}; /* 9.10:1 on debug-900 muted */
 }
 
 [data-theme='dark'],

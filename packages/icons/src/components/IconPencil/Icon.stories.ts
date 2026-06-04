@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import IconPencil from './Icon.vue'
+import IconPencil from './Icon.vue';
+
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
   title: 'Icons/Actions/IconPencil',
@@ -15,15 +16,15 @@ const meta = {
     color: 'currentColor',
     ariaLabel: 'Pencil',
   },
-} satisfies Meta<typeof IconPencil>
+} satisfies Meta<typeof IconPencil>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {}
+export const Default: Story = {};
 
-export const Small: Story = { args: { size: 16 } }
+export const Small: Story = { args: { size: 16 } };
 
-export const Large: Story = { args: { size: 32 } }
+export const Large: Story = { args: { size: 32 } };
 
-export const Colored: Story = { args: { color: '#6c2fd4' } }
+export const Colored: Story = { args: { color: '#6c2fd4' } };

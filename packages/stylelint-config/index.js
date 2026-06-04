@@ -26,6 +26,8 @@ const config = {
       rules: {
         // v-bind() in Vue SFC CSS uses camelCase JS expressions — disable keyword casing for Vue files
         'value-keyword-case': null, // eslint-disable-line unicorn/no-null -- stylelint rule API uses null to disable a rule
+        // SCSS @use/@include are handled by scss/at-rule-no-unknown; disable the base rule for Vue SFCs
+        'at-rule-no-unknown': null, // eslint-disable-line unicorn/no-null -- stylelint rule API uses null to disable a rule
       },
     },
   ],
@@ -45,6 +47,6 @@ const config = {
     'scss/dollar-variable-pattern': '^[a-z][a-z0-9-]*$',
     'import-notation': 'string',
   },
-}
+};
 
-export default config
+export default config;

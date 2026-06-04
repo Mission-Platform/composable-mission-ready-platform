@@ -1,39 +1,40 @@
-<script setup lang="ts">
-  import { useIconSize } from '../../useIconSize.ts'
+<script lang="ts" setup>
+  import { useIconSize } from '../../use-icon-size.ts';
 
   const props = withDefaults(
     defineProps<{
-      size?: number | string
-      color?: string
-      ariaLabel?: string
+      size?: number | string;
+      color?: string;
+      ariaLabel?: string;
     }>(),
     {
       size: 'md',
       color: 'currentColor',
       ariaLabel: undefined,
     },
-  )
+  );
 
-  const sizeValue = useIconSize(() => props.size)
+  const sizeValue = useIconSize(() => props.size);
 </script>
 
 <template>
   <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
+    :aria-hidden="!ariaLabel"
+    :aria-label="ariaLabel ?? 'Inline Code'"
+    :height="sizeValue"
     :stroke="color"
-    stroke-width="2"
+    :width="sizeValue"
+    class="base-icon-code-inline"
+    fill="none"
+    role="img"
     stroke-linecap="round"
     stroke-linejoin="round"
-    :width="sizeValue"
-    :height="sizeValue"
-    :aria-label="ariaLabel ?? 'Inline Code'"
-    :aria-hidden="!ariaLabel"
-    role="img"
-    class="base-icon-code-inline"
+    stroke-width="2"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
   >
-    <polyline points="10,8 6,12 10,16"/><polyline points="14,8 18,12 14,16"/>
+    <polyline points="10,8 6,12 10,16" />
+    <polyline points="14,8 18,12 14,16" />
   </svg>
 </template>
 

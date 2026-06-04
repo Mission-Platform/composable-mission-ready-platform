@@ -1,10 +1,14 @@
-<script setup lang="ts">
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+<script lang="ts" setup>
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 </script>
 
 <template>
   <div class="base-card__body">
-    <BaseTypography variant="body-md" as="div" color="primary">
+    <BaseTypography
+      as="div"
+      color="primary"
+      variant="body-md"
+    >
       <slot />
     </BaseTypography>
   </div>

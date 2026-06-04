@@ -1,6 +1,6 @@
-<script setup lang="ts">
-  import { computed, ref } from 'vue'
-  import { useFloating, autoUpdate, offset, flip, shift } from '@floating-ui/vue'
+<script lang="ts" setup>
+  import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue';
+  import { computed, ref } from 'vue';
 
   export type TypographyVariant =
     | 'display'
@@ -16,19 +16,34 @@
     | 'body-xs'
     | 'label'
     | 'caption'
-    | 'code'
+    | 'code';
 
-  export type TypographyWeight = 'regular' | 'medium' | 'semibold' | 'bold'
+  export type TypographyWeight = 'regular' | 'medium' | 'semibold' | 'bold';
 
-  export type TypographyColor =
-    | 'primary'
-    | 'secondary'
-    | 'tertiary'
-    | 'disabled'
-    | 'inverse'
-    | 'inherit'
+  export type TypographyColor = 'primary' | 'secondary' | 'tertiary' | 'disabled' | 'inverse' | 'inherit';
 
-  export type TypographyAlign = 'start' | 'center' | 'end'
+  export type TypographyAlign = 'start' | 'center' | 'end';
+
+  const props = withDefaults(
+    defineProps<{
+      variant?: TypographyVariant;
+      as?: string;
+      weight?: TypographyWeight;
+      color?: TypographyColor;
+      align?: TypographyAlign;
+      truncate?: boolean;
+      truncatePopup?: boolean;
+    }>(),
+    {
+      variant: 'body-md',
+      as: undefined,
+      weight: undefined,
+      color: 'primary',
+      align: undefined,
+      truncate: false,
+      truncatePopup: false,
+    },
+  );
 
   const TAG_MAP: Record<TypographyVariant, string> = {
     display: 'h1',
@@ -45,53 +60,32 @@
     label: 'span',
     caption: 'span',
     code: 'code',
-  }
+  };
 
-  const props = withDefaults(
-    defineProps<{
-      variant?: TypographyVariant
-      as?: string
-      weight?: TypographyWeight
-      color?: TypographyColor
-      align?: TypographyAlign
-      truncate?: boolean
-      truncatePopup?: boolean
-    }>(),
-    {
-      variant: 'body-md',
-      as: undefined,
-      weight: undefined,
-      color: 'primary',
-      align: undefined,
-      truncate: false,
-      truncatePopup: false,
-    },
-  )
-
-  const tag = computed(() => props.as ?? TAG_MAP[props.variant ?? 'body-md'])
+  const tag = computed(() => props.as ?? TAG_MAP[props.variant ?? 'body-md']);
 
   // ── Truncate-popup logic ──────────────────────────────────────────────────
-  const referenceEl = ref<HTMLElement | null>(null)
-  const floatingEl = ref<HTMLElement | null>(null)
-  const popupVisible = ref(false)
+  const referenceEl = ref<HTMLElement | null>(null);
+  const floatingEl = ref<HTMLElement | null>(null);
+  const popupVisible = ref(false);
 
   const { floatingStyles } = useFloating(referenceEl, floatingEl, {
     placement: 'bottom-start',
     whileElementsMounted: autoUpdate,
     middleware: [offset(6), flip(), shift({ padding: 8 })],
-  })
+  });
 
   function isOverflowing(): boolean {
-    const el = referenceEl.value
-    return el ? el.scrollWidth > el.clientWidth : false
+    const el = referenceEl.value;
+    return el ? el.scrollWidth > el.clientWidth : false;
   }
 
   function showPopup() {
-    if (props.truncatePopup && isOverflowing()) popupVisible.value = true
+    if (props.truncatePopup && isOverflowing()) popupVisible.value = true;
   }
 
   function hidePopup() {
-    popupVisible.value = false
+    popupVisible.value = false;
   }
 </script>
 
@@ -102,8 +96,8 @@
     When off the root is the semantic tag itself (no extra DOM node).
   -->
   <component
-    v-if="!truncatePopup"
     :is="tag"
+    v-if="!truncatePopup"
     :class="[
       'base-typography',
       `base-typography--${variant}`,
@@ -116,7 +110,10 @@
     <slot />
   </component>
 
-  <span v-else class="base-typography-popup-wrapper">
+  <span
+    v-else
+    class="base-typography-popup-wrapper"
+  >
     <component
       :is="tag"
       ref="referenceEl"
@@ -128,10 +125,10 @@
         align && `base-typography--align-${align}`,
         'base-typography--truncate',
       ]"
-      @mouseenter="showPopup"
-      @mouseleave="hidePopup"
       @focusin="showPopup"
       @focusout="hidePopup"
+      @mouseenter="showPopup"
+      @mouseleave="hidePopup"
     >
       <slot />
     </component>
@@ -139,9 +136,9 @@
       <span
         v-if="popupVisible"
         ref="floatingEl"
+        :style="floatingStyles"
         class="base-typography-popup"
         role="tooltip"
-        :style="floatingStyles"
       >
         <slot />
       </span>
@@ -149,7 +146,7 @@
   </span>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
   .base-typography {
@@ -157,7 +154,7 @@
     font-family: var(--mp-font-family-sans);
     line-height: var(--mp-line-height-normal);
 
-    // ── Variants ────────────────────────────────────────────────────────────
+    /* ── Variants ──────────────────────────────────────────────────────────── */
 
     &--display {
       @include mp.mp-font-display;
@@ -217,28 +214,61 @@
       @include mp.mp-font-code;
     }
 
-    // ── Weight overrides ─────────────────────────────────────────────────────
+    /* ── Weight overrides ───────────────────────────────────────────────────── */
 
-    &--weight-regular  { font-weight: var(--mp-font-weight-regular); }
-    &--weight-medium   { font-weight: var(--mp-font-weight-medium); }
-    &--weight-semibold { font-weight: var(--mp-font-weight-semibold); }
-    &--weight-bold     { font-weight: var(--mp-font-weight-bold); }
+    &--weight-regular {
+      font-weight: var(--mp-font-weight-regular);
+    }
 
-    // ── Color ────────────────────────────────────────────────────────────────
+    &--weight-medium {
+      font-weight: var(--mp-font-weight-medium);
+    }
 
-    &--color-primary   { color: var(--mp-color-text-primary); }
-    &--color-secondary { color: var(--mp-color-text-secondary); }
-    &--color-tertiary  { color: var(--mp-color-text-tertiary); }
-    &--color-disabled  { color: var(--mp-color-text-disabled); }
-    &--color-inverse   { color: var(--mp-color-text-inverse); }
+    &--weight-semibold {
+      font-weight: var(--mp-font-weight-semibold);
+    }
 
-    // ── Alignment ────────────────────────────────────────────────────────────
+    &--weight-bold {
+      font-weight: var(--mp-font-weight-bold);
+    }
 
-    &--align-start  { text-align: start; }
-    &--align-center { text-align: center; }
-    &--align-end    { text-align: end; }
+    /* ── Color ──────────────────────────────────────────────────────────────── */
 
-    // ── Truncate ─────────────────────────────────────────────────────────────
+    &--color-primary {
+      color: var(--mp-color-text-primary);
+    }
+
+    &--color-secondary {
+      color: var(--mp-color-text-secondary);
+    }
+
+    &--color-tertiary {
+      color: var(--mp-color-text-tertiary);
+    }
+
+    &--color-disabled {
+      color: var(--mp-color-text-disabled);
+    }
+
+    &--color-inverse {
+      color: var(--mp-color-text-inverse);
+    }
+
+    /* ── Alignment ──────────────────────────────────────────────────────────── */
+
+    &--align-start {
+      text-align: start;
+    }
+
+    &--align-center {
+      text-align: center;
+    }
+
+    &--align-end {
+      text-align: end;
+    }
+
+    /* ── Truncate ───────────────────────────────────────────────────────────── */
 
     &--truncate {
       overflow: hidden;
@@ -247,7 +277,7 @@
     }
   }
 
-  // ── Truncate-popup wrapper & floating popup ──────────────────────────────
+  /* ── Truncate-popup wrapper & floating popup ────────────────────────────── */
 
   .base-typography-popup-wrapper {
     display: block;
@@ -266,7 +296,7 @@
     border-radius: var(--mp-radius-md);
     box-shadow: var(--mp-shadow-md);
     white-space: normal;
-    word-break: break-word;
+    overflow-wrap: break-word;
     pointer-events: none;
   }
 

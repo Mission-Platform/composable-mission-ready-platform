@@ -10,5 +10,7 @@
   <line x1="10" y1="16" x2="22" y2="16" stroke="#b0cfd9" stroke-width="1.5" stroke-linecap="round"/>
   <line x1="10" y1="20" x2="18" y2="20" stroke="#b0cfd9" stroke-width="1.5" stroke-linecap="round"/>
   <!-- Care / heart icon -->
-  <path d="M16 9.5 C16 9.5 13 7 11.5 8.5 C10 10 11.5 12 13 13 L16 15 L19 13 C20.5 12 22 10 20.5 8.5 C19 7 16 9.5 16 9.5Z" fill="#e05c8a"/>
+  <path
+    d="M16 9.5 C16 9.5 13 7 11.5 8.5 C10 10 11.5 12 13 13 L16 15 L19 13 C20.5 12 22 10 20.5 8.5 C19 7 16 9.5 16 9.5Z"
+    fill="#e05c8a"/>
 </svg>

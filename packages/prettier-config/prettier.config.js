@@ -1,3 +1,1 @@
-import baseConfig from "."
-
-export default { ...baseConfig }
+export { default } from './config.js';

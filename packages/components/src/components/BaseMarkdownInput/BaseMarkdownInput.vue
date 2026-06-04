@@ -1,38 +1,38 @@
-<script setup lang="ts">
-  import { computed, ref } from 'vue'
-  import { marked } from 'marked'
-  import { useI18n } from 'vue-i18n'
+<script lang="ts" setup>
+  import { useI18n } from '@mission-platform/i18n';
   import {
+    IconBlockquote,
     IconBold,
-    IconItalic,
-    IconHeading,
+    IconBulletList,
     IconCodeInline,
     IconExternalLink,
-    IconBulletList,
+    IconHeading,
+    IconItalic,
     IconNumberedList,
-    IconBlockquote,
-  } from '@mission-platform/icons'
+  } from '@mission-platform/icons';
+  import { marked } from 'marked';
+  import { computed, ref } from 'vue';
 
-  import { useId } from '../../composables/useId'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+  import { useId } from '../../composables/use-id';
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
-  export type MarkdownInputSize = 'sm' | 'md' | 'lg'
-  export type MarkdownInputTab = 'write' | 'preview'
+  export type MarkdownInputSize = 'sm' | 'md' | 'lg';
+  export type MarkdownInputTab = 'write' | 'preview';
 
   const props = withDefaults(
     defineProps<{
-      modelValue?: string
-      rows?: number
-      size?: MarkdownInputSize
-      placeholder?: string
-      label?: string
-      labelHidden?: boolean
-      hint?: string
-      error?: string
-      disabled?: boolean
-      readonly?: boolean
-      required?: boolean
-      id?: string
+      modelValue?: string;
+      rows?: number;
+      size?: MarkdownInputSize;
+      placeholder?: string;
+      label?: string;
+      labelHidden?: boolean;
+      hint?: string;
+      error?: string;
+      disabled?: boolean;
+      readonly?: boolean;
+      required?: boolean;
+      id?: string;
     }>(),
     {
       modelValue: '',
@@ -48,71 +48,53 @@
       required: false,
       id: undefined,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    'update:modelValue': [value: string]
-    change: [event: Event]
-    blur: [event: FocusEvent]
-    focus: [event: FocusEvent]
-  }>()
+    'update:modelValue': [value: string];
+    change: [event: Event];
+    blur: [event: FocusEvent];
+    focus: [event: FocusEvent];
+  }>();
 
-  const { t } = useI18n({
-    inheritLocale: true,
-    messages: {
-      en: {
-        required: 'required',
-        write: 'Write',
-        preview: 'Preview',
-        bold: 'Bold',
-        italic: 'Italic',
-        heading: 'Heading',
-        link: 'Link',
-        bulletList: 'Bullet list',
-        numberedList: 'Numbered list',
-        quote: 'Blockquote',
-        code: 'Inline code',
-        emptyPreview: 'Nothing to preview.',
-      },
-    },
-  })
+  const { t } = useI18n({ useScope: 'local' });
 
-  const { id: resolvedId } = useId(props.id)
-  const activeTab = ref<MarkdownInputTab>('write')
+  const { id: resolvedId } = useId(props.id);
+  const activeTab = ref<MarkdownInputTab>('write');
   const effectiveTab = computed<MarkdownInputTab>(() =>
     props.disabled || props.readonly ? 'preview' : activeTab.value,
-  )
-  const textareaRef = ref<HTMLTextAreaElement | null>(null)
+  );
+  const textareaRef = ref<HTMLTextAreaElement | null>(null);
 
   const renderedHtml = computed(() => {
-    if (!props.modelValue) return ''
-    return marked(props.modelValue) as string
-  })
+    if (!props.modelValue) return '';
+    return marked(props.modelValue) as string;
+  });
 
   function handleInput(event: Event) {
-    const target = event.target as HTMLTextAreaElement
-    emit('update:modelValue', target.value)
+    const target = event.target as HTMLTextAreaElement;
+    emit('update:modelValue', target.value);
   }
 
   /** Insert or wrap text at the current cursor position / selection. */
   function applyFormat(prefix: string, suffix = '', defaultText = '') {
-    const textarea = textareaRef.value
-    if (!textarea) return
+    const textarea = textareaRef.value;
+    if (!textarea) return;
 
-    const start = textarea.selectionStart
-    const end = textarea.selectionEnd
-    const selected = textarea.value.slice(start, end) || defaultText
-    const replacement = `${prefix}${selected}${suffix}`
-    const newValue = textarea.value.slice(0, start) + replacement + textarea.value.slice(end)
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selected = textarea.value.slice(start, end) || defaultText;
+    const replacement = `${prefix}${selected}${suffix}`;
+    const newValue = textarea.value.slice(0, start) + replacement + textarea.value.slice(end);
 
-    emit('update:modelValue', newValue)
+    emit('update:modelValue', newValue);
 
     // restore cursor after Vue re-renders
     requestAnimationFrame(() => {
-      textarea.focus()
-      const cursorPos = start + prefix.length + selected.length + suffix.length
-      textarea.setSelectionRange(cursorPos, cursorPos)
-    })
+      textarea.focus();
+      const cursorPos = start + prefix.length + selected.length + suffix.length;
+      textarea.setSelectionRange(cursorPos, cursorPos);
+    });
   }
 
   const toolbar: Array<{ key: string; label: () => string; icon: unknown; action: () => void }> = [
@@ -164,7 +146,7 @@
       icon: IconBlockquote,
       action: () => applyFormat('> ', '', 'quoted text'),
     },
-  ]
+  ];
 </script>
 
 <template>
@@ -172,52 +154,93 @@
     :class="[
       'markdown-input',
       `markdown-input--${size}`,
-      { 'markdown-input--error': !!error, 'markdown-input--disabled': disabled, 'markdown-input--readonly': readonly },
+      {
+        'markdown-input--error': !!error,
+        'markdown-input--disabled': disabled,
+        'markdown-input--readonly': readonly,
+      },
     ]"
   >
-    <label v-if="label" :for="resolvedId" :class="['markdown-input__label', { 'markdown-input__label--hidden': labelHidden }]">
-      <BaseTypography variant="label" as="span" color="primary">{{ label }}</BaseTypography>
-      <span v-if="required" class="markdown-input__required" :title="t('required')" aria-hidden="true">*</span>
+    <label
+      v-if="label"
+      :class="['markdown-input__label', { 'markdown-input__label--hidden': labelHidden }]"
+      :for="resolvedId"
+    >
+      <BaseTypography
+        as="span"
+        color="primary"
+        variant="label"
+      >{{ label }}</BaseTypography>
+      <span
+        v-if="required"
+        :title="t('required')"
+        aria-hidden="true"
+        class="markdown-input__required"
+      >*</span>
     </label>
 
     <div class="markdown-input__editor">
       <!-- Tab bar — hidden when component is locked to preview (disabled or readonly) -->
-      <div v-if="!disabled && !readonly" class="markdown-input__tabs" role="tablist">
+      <div
+        v-if="!disabled && !readonly"
+        class="markdown-input__tabs"
+        role="tablist"
+      >
         <button
-          role="tab"
-          :aria-selected="effectiveTab === 'write'"
           :aria-controls="`${resolvedId}-write-panel`"
+          :aria-selected="effectiveTab === 'write'"
           :class="['markdown-input__tab', { 'markdown-input__tab--active': effectiveTab === 'write' }]"
+          role="tab"
           type="button"
           @click="activeTab = 'write'"
         >
-          <BaseTypography variant="label" as="span" color="inherit">{{ t('write') }}</BaseTypography>
+          <BaseTypography
+            as="span"
+            color="inherit"
+            variant="label"
+          >
+            {{ t('write') }}
+          </BaseTypography>
         </button>
         <button
-          role="tab"
-          :aria-selected="effectiveTab === 'preview'"
           :aria-controls="`${resolvedId}-preview-panel`"
+          :aria-selected="effectiveTab === 'preview'"
           :class="['markdown-input__tab', { 'markdown-input__tab--active': effectiveTab === 'preview' }]"
+          role="tab"
           type="button"
           @click="activeTab = 'preview'"
         >
-          <BaseTypography variant="label" as="span" color="inherit">{{ t('preview') }}</BaseTypography>
+          <BaseTypography
+            as="span"
+            color="inherit"
+            variant="label"
+          >
+            {{ t('preview') }}
+          </BaseTypography>
         </button>
       </div>
 
       <!-- Toolbar (visible only on write tab) -->
-      <div v-if="effectiveTab === 'write'" class="markdown-input__toolbar" role="toolbar" :aria-label="label ?? 'Markdown toolbar'">
+      <div
+        v-if="effectiveTab === 'write'"
+        :aria-label="label ?? 'Markdown toolbar'"
+        class="markdown-input__toolbar"
+        role="toolbar"
+      >
         <button
           v-for="item in toolbar"
           :key="item.key"
-          type="button"
-          :title="item.label()"
           :aria-label="item.label()"
           :disabled="disabled"
+          :title="item.label()"
           class="markdown-input__tool"
+          type="button"
           @click="item.action()"
         >
-          <component :is="item.icon" size="sm" />
+          <component
+            :is="item.icon"
+            size="sm"
+          />
         </button>
       </div>
 
@@ -225,25 +248,25 @@
       <div
         v-show="effectiveTab === 'write'"
         :id="`${resolvedId}-write-panel`"
-        role="tabpanel"
         class="markdown-input__panel"
+        role="tabpanel"
       >
         <textarea
           :id="resolvedId"
           ref="textareaRef"
-          :value="modelValue"
-          :rows="rows"
-          :placeholder="placeholder"
+          :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
+          :aria-invalid="!!error || undefined"
           :disabled="disabled"
+          :placeholder="placeholder"
           :readonly="readonly"
           :required="required"
-          :aria-invalid="!!error || undefined"
-          :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
+          :rows="rows"
+          :value="modelValue"
           class="markdown-input__field"
-          @input="handleInput"
-          @change="emit('change', $event)"
           @blur="emit('blur', $event)"
+          @change="emit('change', $event)"
           @focus="emit('focus', $event)"
+          @input="handleInput"
         />
       </div>
 
@@ -251,21 +274,53 @@
       <div
         v-show="effectiveTab === 'preview'"
         :id="`${resolvedId}-preview-panel`"
-        role="tabpanel"
         class="markdown-input__panel markdown-input__preview"
+        role="tabpanel"
       >
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <article v-if="renderedHtml" class="markdown-input__preview-content" v-html="renderedHtml" />
-        <BaseTypography v-else variant="body-sm" as="p" color="tertiary" class="markdown-input__preview-empty">{{ t('emptyPreview') }}</BaseTypography>
+        <!-- eslint-disable vue/no-v-html -->
+        <article
+          v-if="renderedHtml"
+          class="markdown-input__preview-content"
+          v-html="renderedHtml"
+        />
+        <!-- eslint-enable vue/no-v-html -->
+        <BaseTypography
+          v-else
+          as="p"
+          class="markdown-input__preview-empty"
+          color="tertiary"
+          variant="body-sm"
+        >
+          {{ t('emptyPreview') }}
+        </BaseTypography>
       </div>
     </div>
 
-    <BaseTypography v-if="error" :id="`${resolvedId}-error`" variant="caption" as="p" color="inherit" class="markdown-input__error" role="alert">{{ error }}</BaseTypography>
-    <BaseTypography v-else-if="hint" :id="`${resolvedId}-hint`" variant="caption" as="p" color="secondary" class="markdown-input__hint">{{ hint }}</BaseTypography>
+    <BaseTypography
+      v-if="error"
+      :id="`${resolvedId}-error`"
+      as="p"
+      class="markdown-input__error"
+      color="inherit"
+      role="alert"
+      variant="caption"
+    >
+      {{ error }}
+    </BaseTypography>
+    <BaseTypography
+      v-else-if="hint"
+      :id="`${resolvedId}-hint`"
+      as="p"
+      class="markdown-input__hint"
+      color="secondary"
+      variant="caption"
+    >
+      {{ hint }}
+    </BaseTypography>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .markdown-input {
     display: flex;
     flex-direction: column;
@@ -279,7 +334,7 @@
         padding: 0;
         margin: -1px;
         overflow: hidden;
-        clip: rect(0, 0, 0, 0);
+        clip-path: inset(50%);
         white-space: nowrap;
         border: 0;
       }
@@ -296,7 +351,9 @@
       border: 1px solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
       overflow: hidden;
-      transition: border-color 150ms ease, box-shadow 150ms ease;
+      transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease;
 
       &:focus-within {
         border-color: var(--mp-color-border-focus);
@@ -304,7 +361,7 @@
       }
     }
 
-    // Tabs
+    /* Tabs */
     &__tabs {
       display: flex;
       border-bottom: 1px solid var(--mp-color-border-default);
@@ -320,19 +377,21 @@
       border: none;
       border-bottom: 2px solid transparent;
       cursor: pointer;
-      transition: color 150ms ease, border-color 150ms ease;
-
-      &:hover {
-        color: var(--mp-color-text-primary);
-      }
+      transition:
+        color 150ms ease,
+        border-color 150ms ease;
 
       &--active {
         color: var(--mp-color-text-primary);
         border-bottom-color: var(--mp-color-primary-default);
       }
+
+      &:hover {
+        color: var(--mp-color-text-primary);
+      }
     }
 
-    // Toolbar
+    /* Toolbar */
     &__toolbar {
       display: flex;
       flex-wrap: wrap;
@@ -352,20 +411,22 @@
       border: 1px solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-sm);
       cursor: pointer;
-      transition: background-color 150ms ease, color 150ms ease;
-
-      &:hover:not(:disabled) {
-        background-color: var(--mp-color-bg-muted);
-        color: var(--mp-color-text-primary);
-      }
+      transition:
+        background-color 150ms ease,
+        color 150ms ease;
 
       &:disabled {
         color: var(--mp-color-text-disabled);
         cursor: not-allowed;
       }
+
+      &:hover:not(:disabled) {
+        background-color: var(--mp-color-bg-muted);
+        color: var(--mp-color-text-primary);
+      }
     }
 
-    // Panels
+    /* Panels */
     &__panel {
       flex: 1;
     }
@@ -444,7 +505,7 @@
       font-style: italic;
     }
 
-    // Sizes
+    /* Sizes */
     &--sm {
       .markdown-input__field,
       .markdown-input__preview-content {
@@ -481,7 +542,7 @@
       }
     }
 
-    // Error state
+    /* Error state */
     &--error {
       .markdown-input__editor {
         border-color: var(--mp-color-danger-default);
@@ -492,7 +553,7 @@
       }
     }
 
-    // Disabled state
+    /* Disabled state */
     &--disabled {
       pointer-events: none;
 
@@ -519,7 +580,7 @@
       }
     }
 
-    // Readonly state
+    /* Readonly state */
     &--readonly {
       .markdown-input__editor {
         border-color: var(--mp-color-border-default);
@@ -541,3 +602,19 @@
     }
   }
 </style>
+
+<i18n lang="yaml">
+en:
+  required: required
+  write: Write
+  preview: Preview
+  bold: Bold
+  italic: Italic
+  heading: Heading
+  link: Link
+  bulletList: Bullet list
+  numberedList: Numbered list
+  quote: Blockquote
+  code: Inline code
+  emptyPreview: Nothing to preview.
+</i18n>

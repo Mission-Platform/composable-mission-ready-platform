@@ -1,22 +1,16 @@
-<script setup lang="ts">
-  import { ref, watch } from 'vue'
-  import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue'
+<script lang="ts" setup>
+  import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue';
+  import { ref, watch } from 'vue';
 
-  export type DropdownPlacement =
-    | 'bottom-start'
-    | 'bottom-end'
-    | 'bottom'
-    | 'top-start'
-    | 'top-end'
-    | 'top'
+  export type DropdownPlacement = 'bottom-start' | 'bottom-end' | 'bottom' | 'top-start' | 'top-end' | 'top';
 
   const props = withDefaults(
     defineProps<{
-      open?: boolean
-      placement?: DropdownPlacement
-      matchTriggerWidth?: boolean
-      maxHeight?: string
-      closeOnOutsideClick?: boolean
+      open?: boolean;
+      placement?: DropdownPlacement;
+      matchTriggerWidth?: boolean;
+      maxHeight?: string;
+      closeOnOutsideClick?: boolean;
     }>(),
     {
       open: false,
@@ -25,46 +19,49 @@
       maxHeight: '240px',
       closeOnOutsideClick: true,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    'update:open': [value: boolean]
-    close: []
-  }>()
+    'update:open': [value: boolean];
+    close: [];
+  }>();
 
-  const referenceEl = ref<HTMLElement | null>(null)
-  const floatingEl = ref<HTMLElement | null>(null)
+  const referenceEl = ref<HTMLElement | null>(null);
+  const floatingEl = ref<HTMLElement | null>(null);
 
   const { floatingStyles } = useFloating(referenceEl, floatingEl, {
     placement: props.placement,
     whileElementsMounted: autoUpdate,
     middleware: [offset(2), flip({ padding: 4 }), shift({ padding: 4 })],
-  })
+  });
 
   function handleOutsideClick(event: MouseEvent) {
-    if (!props.closeOnOutsideClick || !props.open) return
-    const target = event.target as Node
-    if (referenceEl.value?.contains(target) || floatingEl.value?.contains(target)) return
-    emit('update:open', false)
-    emit('close')
+    if (!props.closeOnOutsideClick || !props.open) return;
+    const target = event.target as Node;
+    if (referenceEl.value?.contains(target) || floatingEl.value?.contains(target)) return;
+    emit('update:open', false);
+    emit('close');
   }
 
   watch(
     () => props.open,
     (open) => {
       if (open) {
-        document.addEventListener('mousedown', handleOutsideClick)
+        document.addEventListener('mousedown', handleOutsideClick);
       } else {
-        document.removeEventListener('mousedown', handleOutsideClick)
+        document.removeEventListener('mousedown', handleOutsideClick);
       }
     },
     { immediate: true },
-  )
+  );
 </script>
 
 <template>
   <div class="base-dropdown-host">
-    <div ref="referenceEl" class="base-dropdown-trigger">
+    <div
+      ref="referenceEl"
+      class="base-dropdown-trigger"
+    >
       <slot name="trigger" />
     </div>
 
@@ -72,16 +69,13 @@
       <div
         v-if="open"
         ref="floatingEl"
-        tabindex="0"
-        class="base-dropdown"
         :style="{
           ...floatingStyles,
           maxHeight,
-          minWidth:
-            matchTriggerWidth && referenceEl?.offsetWidth
-              ? `${referenceEl?.offsetWidth}px`
-              : undefined,
+          minWidth: matchTriggerWidth && referenceEl?.offsetWidth ? `${referenceEl?.offsetWidth}px` : undefined,
         }"
+        class="base-dropdown"
+        tabindex="0"
       >
         <slot />
       </div>
@@ -89,7 +83,7 @@
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-dropdown-host {
     display: contents;
   }

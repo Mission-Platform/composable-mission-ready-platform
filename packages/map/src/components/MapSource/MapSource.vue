@@ -1,23 +1,24 @@
-<script setup lang="ts">
-import { computed } from 'vue'
-import type { SourceSpecification } from 'maplibre-gl'
+<script lang="ts" setup>
+  import { computed } from 'vue';
 
-import { useMap } from '../../composables/useMap'
-import { useSource } from '../../composables/useSource'
+  import { useMap } from '../../composables/use-map';
+  import { useSource } from '../../composables/use-source';
 
-export interface MapSourceProps {
-  /** Unique ID for this source. Referenced by `<MapLayer>` via its `source` field. */
-  id: string
-  /** MapLibre source specification. Reactively replaced when changed. */
-  source: SourceSpecification
-}
+  import type { SourceSpecification } from 'maplibre-gl';
 
-const props = defineProps<MapSourceProps>()
+  export interface MapSourceProps {
+    /** Unique ID for this source. Referenced by `<MapLayer>` via its `source` field. */
+    id: string;
+    /** MapLibre source specification. Reactively replaced when changed. */
+    source: SourceSpecification;
+  }
 
-const { map } = useMap()
-const sourceRef = computed(() => props.source)
+  const props = defineProps<MapSourceProps>();
 
-useSource(map, { id: props.id, source: sourceRef })
+  const { map } = useMap();
+  const sourceRef = computed(() => props.source);
+
+  useSource(map, { id: props.id, source: sourceRef });
 </script>
 
 <template>

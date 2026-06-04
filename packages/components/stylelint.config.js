@@ -1,9 +1,6 @@
-import baseConfig from '@mission-platform/stylelint-config'
+import baseConfig from '@mission-platform/stylelint-config';
 
 export default {
   ...baseConfig,
-  extends: [
-    ...(baseConfig.extends ?? []),
-    'stylelint-config-recommended-vue',
-  ],
-}
+  extends: [...(baseConfig.extends ?? []), 'stylelint-config-recommended-vue'],
+};

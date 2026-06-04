@@ -1,9 +1,9 @@
-import { resolve } from 'node:path'
+import path from 'node:path';
 
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
-import postcssConfig from '@mission-platform/postcss-config'
-import vue from '@vitejs/plugin-vue'
-import { defineConfig } from 'vite'
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+import postcssConfig from '@mission-platform/postcss-config';
+import vue from '@vitejs/plugin-vue';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   css: {
@@ -12,14 +12,14 @@ export default defineConfig({
   plugins: [
     vue(),
     VueI18nPlugin({
-      include: resolve(__dirname, 'src/locales/**/*.yaml'),
+      include: [path.resolve(__dirname, 'src/locales/**/*.yaml')],
     }),
   ],
   build: {
     lib: {
       entry: {
-        ui: resolve(__dirname, 'src/index.ts'),
-        locales: resolve(__dirname, 'src/locales/index.ts'),
+        ui: path.resolve(__dirname, 'src/index.ts'),
+        locales: path.resolve(__dirname, 'src/locales/index.ts'),
       },
       name: 'MissionPlatformUi',
       formats: ['es'],
@@ -34,4 +34,4 @@ export default defineConfig({
     },
     cssCodeSplit: false,
   },
-})
+});

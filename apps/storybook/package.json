@@ -9,6 +9,8 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
+    "deploy:staging": "pnpm build-storybook && wrangler pages deploy --branch staging",
+    "deploy:prod": "pnpm build-storybook && wrangler pages deploy --branch main",
     "test": "vitest run --project unit",
     "lint": "eslint .",
     "lint:style": "stylelint \"src/**/*.{vue,scss,css}\"",
@@ -58,6 +60,7 @@
     "vite": "catalog:vite",
     "vite-svg-loader": "^5.1.1",
     "vitest": "catalog:testing",
-    "vue-tsc": "catalog:vue"
+    "vue-tsc": "catalog:vue",
+    "wrangler": "catalog:"
   }
 }

@@ -1,3 +1,4 @@
+import { BreakpointDebug, HideAt, ShowAt, useBreakpoints } from '@mission-platform/breakpoints';
 import {
   BaseAccordion,
   BaseAccordionItem,
@@ -16,6 +17,7 @@ import {
   BaseDateTimeRangeInput,
   BaseDialog,
   BaseFileInput,
+  BaseFormBuilder,
   BaseFormWizard,
   BaseInput,
   BaseInView,
@@ -43,6 +45,7 @@ import {
   BaseTabs,
   BaseTag,
   BaseTextarea,
+  BaseThemeToggle,
   BaseTimeInput,
   BaseTimeRangeInput,
   BaseTooltip,
@@ -53,9 +56,7 @@ import {
   BaseVirtualTable,
   BaseVirtualTreeView,
   BaseWindowPopout,
-  BaseFormBuilder,
-  BaseThemeToggle,
-} from '@mission-platform/components'
+} from '@mission-platform/components';
 import {
   IconAlert,
   IconAlignCenter,
@@ -76,12 +77,18 @@ import {
   IconCopy,
   IconDebug,
   IconDownload,
+  IconDrawCircle,
+  IconDrawLine,
+  IconDrawPolygon,
+  IconDrawSquare,
+  IconDrawTriangle,
   IconEdit,
   IconError,
   IconExternalLink,
   IconEye,
   IconEyeOff,
   IconFilter,
+  IconGeodesic,
   IconGlobe,
   IconHeading,
   IconHeadingFive,
@@ -93,15 +100,24 @@ import {
   IconHome,
   IconInfo,
   IconItalic,
+  IconJoin,
   IconLock,
+  IconLockOpen,
   IconMenu,
   IconMinus,
+  IconMove,
   IconNotice,
   IconNumberedList,
   IconPlus,
   IconRefresh,
+  IconRotateCCW,
+  IconRotateCW,
+  IconScaleDown,
+  IconScaleUp,
   IconSearch,
   IconSettings,
+  IconSort,
+  IconSplit,
   IconStar,
   IconTable,
   IconTableColumnAdd,
@@ -110,41 +126,16 @@ import {
   IconTableRowRemove,
   IconTrash,
   IconUpload,
-  IconDrawCircle,
-  IconDrawLine,
-  IconDrawPolygon,
-  IconDrawSquare,
-  IconDrawTriangle,
-  IconGeodesic,
-  IconJoin,
-  IconLockOpen,
-  IconMove,
-  IconRotateCCW,
-  IconRotateCW,
-  IconScaleDown,
-  IconScaleUp,
-  IconSort,
-  IconSplit,
   IconUser,
   IconWarning,
-} from '@mission-platform/icons'
-import {
-  BreakpointDebug,
-  HideAt,
-  ShowAt,
-  useBreakpoints,
-} from '@mission-platform/breakpoints'
-import {
-  MapDraw,
-  MapLibre,
-  MapMarker,
-  MapPopup,
-} from '@mission-platform/map'
-import type { DrawMode, DrawnFeature } from '@mission-platform/map'
-import 'maplibre-gl/dist/maplibre-gl.css'
-import { ref, type Component } from 'vue'
+} from '@mission-platform/icons';
+import { MapDraw, MapLibre, MapMarker, MapPopup } from '@mission-platform/map';
+import { type Component, ref } from 'vue';
 
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import type { DrawMode, DrawnFeature } from '@mission-platform/map';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 // A self-contained component that renders a full component showcase inside a given theme class
 const ThemeShowcase = {
@@ -284,40 +275,40 @@ const ThemeShowcase = {
     IconWarning,
   },
   setup() {
-    const inputValue = ref('')
-    const selectValue = ref('')
-    const textareaValue = ref('')
-    const checkboxValue = ref(true)
-    const switchValue = ref(true)
-    const radioValue = ref('a')
-    const searchValue = ref('')
-    const multiselectValue = ref<string[]>([])
-    const dateValue = ref('')
-    const timeValue = ref('')
-    const dateRangeValue = ref({ start: '', end: '' })
-    const timeRangeValue = ref({ start: '', end: '' })
-    const dateTimeRangeValue = ref({ start: '', end: '', timezone: 'browser' as const })
-    const fileValue = ref<File | null>(null)
-    const markdownValue = ref('')
-    const collapseOpen = ref(false)
-    const popoverOpen = ref(false)
-    const dialogOpen = ref(false)
-    const modalOpen = ref(false)
-    const tabActive = ref('tab1')
-    const sidebarOpen = ref(false)
-    const wizardStep = ref(0)
-    const formBuilderValues = ref<Record<string, unknown>>({})
-    const calendarValue = ref('')
-    const monacoValue = ref('// Monaco Editor\nconsole.log("Hello, Mission Platform!")')
+    const inputValue = ref('');
+    const selectValue = ref('');
+    const textareaValue = ref('');
+    const checkboxValue = ref(true);
+    const switchValue = ref(true);
+    const radioValue = ref('a');
+    const searchValue = ref('');
+    const multiselectValue = ref<string[]>([]);
+    const dateValue = ref('');
+    const timeValue = ref('');
+    const dateRangeValue = ref({ start: '', end: '' });
+    const timeRangeValue = ref({ start: '', end: '' });
+    const dateTimeRangeValue = ref({ start: '', end: '', timezone: 'browser' as const });
+    const fileValue = ref<File | undefined>(undefined);
+    const markdownValue = ref('');
+    const collapseOpen = ref(false);
+    const popoverOpen = ref(false);
+    const dialogOpen = ref(false);
+    const modalOpen = ref(false);
+    const tabActive = ref('tab1');
+    const sidebarOpen = ref(false);
+    const wizardStep = ref(0);
+    const formBuilderValues = ref<Record<string, unknown>>({});
+    const calendarValue = ref('');
+    const monacoValue = ref('// Monaco Editor\nconsole.log("Hello, Mission Platform!")');
     const codeBlockSample = ref(
-      'import { MapLibre } from "@mission-platform/map"\n\nconst map = useMap()\nmap.value?.flyTo({ center: [2.35, 48.85], zoom: 12 })'
-    )
-    const logEntries = Array.from({ length: 50 }, (_, i) => ({
-      id: i + 1,
-      level: (['debug', 'info', 'warn', 'error', 'fatal'] as const)[i % 5],
-      message: `Log message #${i + 1} — sample output from the virtual log viewer`,
-      timestamp: new Date(Date.now() - (50 - i) * 2000).toISOString(),
-    }))
+      'import { MapLibre } from "@mission-platform/map"\n\nconst map = useMap()\nmap.value?.flyTo({ center: [2.35, 48.85], zoom: 12 })',
+    );
+    const logEntries = Array.from({ length: 50 }, (_, index) => ({
+      id: index + 1,
+      level: (['debug', 'info', 'warn', 'error', 'fatal'] as const)[index % 5],
+      message: `Log message #${index + 1} — sample output from the virtual log viewer`,
+      timestamp: new Date(Date.now() - (50 - index) * 2000).toISOString(),
+    }));
     const treeNodes = [
       {
         id: 'root-1',
@@ -344,93 +335,89 @@ const ThemeShowcase = {
           { id: 'child-7', label: 'mediaQuery', children: [] },
         ],
       },
-    ]
-    const { current: bpCurrent, active: bpActive } = useBreakpoints()
+    ];
+    const { current: bpCurrent, active: bpActive } = useBreakpoints();
 
     // ── Map / Draw toolbar state ──────────────────────────────────────────
-    const drawMode = ref<DrawMode>(undefined)
-    const drawFeatures = ref<DrawnFeature[]>([])
-    const drawSelectedId = ref<string | null>(null)
-    const drawJoiningFromId = ref<string | null>(null)
-    const drawGeodesic = ref(true)
-    const mapDrawRef = ref<InstanceType<typeof MapDraw> | null>(null)
+    const drawMode = ref<DrawMode>(undefined);
+    const drawFeatures = ref<DrawnFeature[]>([]);
+    const drawSelectedId = ref<string | undefined>(undefined);
+    const drawJoiningFromId = ref<string | undefined>(undefined);
+    const drawGeodesic = ref(true);
+    const mapDrawReference = ref<InstanceType<typeof MapDraw> | undefined>(undefined);
 
     const drawModes: { label: string; value: DrawMode; icon: unknown }[] = [
-      { label: 'None', value: undefined, icon: null },
+      { label: 'None', value: undefined, icon: undefined },
       { label: 'Line', value: 'line', icon: IconDrawLine },
       { label: 'Polygon', value: 'polygon', icon: IconDrawPolygon },
       { label: 'Square', value: 'square', icon: IconDrawSquare },
       { label: 'Circle', value: 'circle', icon: IconDrawCircle },
       { label: 'Triangle', value: 'triangle', icon: IconDrawTriangle },
-    ]
+    ];
 
     function setDrawMode(m: DrawMode) {
-      drawMode.value = m
+      drawMode.value = m;
     }
 
     function drawScale(factor: number) {
-      mapDrawRef.value?.drawing.scaleSelected(factor)
+      mapDrawReference.value?.drawing.scaleSelected(factor);
     }
 
     function drawRotate(deg: number) {
-      mapDrawRef.value?.drawing.rotateSelected(deg)
+      mapDrawReference.value?.drawing.rotateSelected(deg);
     }
 
     function drawDeleteSelected() {
-      mapDrawRef.value?.drawing.deleteSelected()
-      drawSelectedId.value = null
-      drawJoiningFromId.value = null
+      mapDrawReference.value?.drawing.deleteSelected();
+      drawSelectedId.value = undefined;
+      drawJoiningFromId.value = undefined;
     }
 
     function drawSplitSelected() {
-      mapDrawRef.value?.drawing.splitSelected()
+      mapDrawReference.value?.drawing.splitSelected();
     }
 
     function drawStartJoin() {
-      if (!drawSelectedId.value) return
-      drawJoiningFromId.value = drawSelectedId.value
+      if (!drawSelectedId.value) return;
+      drawJoiningFromId.value = drawSelectedId.value;
     }
 
-    function onDrawSelect(id: string | null) {
+    function onDrawSelect(id: string | undefined) {
       if (drawJoiningFromId.value && id && id !== drawJoiningFromId.value) {
-        mapDrawRef.value?.drawing.joinLines(drawJoiningFromId.value, id)
-        drawJoiningFromId.value = null
-        drawSelectedId.value = mapDrawRef.value?.drawing.selectedId.value ?? null
-        return
+        mapDrawReference.value?.drawing.joinLines(drawJoiningFromId.value, id);
+        drawJoiningFromId.value = undefined;
+        drawSelectedId.value = mapDrawReference.value?.drawing.selectedId.value;
+        return;
       }
-      if (id === drawJoiningFromId.value) return
-      drawJoiningFromId.value = null
-      drawSelectedId.value = id
+      if (id === drawJoiningFromId.value) return;
+      drawJoiningFromId.value = undefined;
+      drawSelectedId.value = id ?? undefined;
     }
 
     function drawToggleGeodesic() {
-      drawGeodesic.value = !drawGeodesic.value
+      drawGeodesic.value = !drawGeodesic.value;
     }
 
     function drawIsLine() {
-      const f = drawFeatures.value.find((x) => x.id === drawSelectedId.value)
-      return f?.geometry.type === 'LineString'
+      const f = drawFeatures.value.find((x) => x.id === drawSelectedId.value);
+      return f?.geometry.type === 'LineString';
     }
 
     const listItems = [
       { id: '1', label: 'First item' },
       { id: '2', label: 'Second item' },
       { id: '3', label: 'Third item' },
-    ]
+    ];
 
-    const breadcrumbItems = [
-      { label: 'Home', href: '#' },
-      { label: 'Components', href: '#' },
-      { label: 'Showcase' },
-    ]
+    const breadcrumbItems = [{ label: 'Home', href: '#' }, { label: 'Components', href: '#' }, { label: 'Showcase' }];
 
     const tabItems = [
       { id: 'tab1', label: 'Tab 1' },
       { id: 'tab2', label: 'Tab 2' },
       { id: 'tab3', label: 'Tab 3' },
-    ]
+    ];
 
-    const showcaseTab = ref('basics')
+    const showcaseTab = ref('basics');
     const showcaseTabs = [
       { id: 'basics', label: 'Basics' },
       { id: 'forms', label: 'Forms' },
@@ -442,7 +429,7 @@ const ThemeShowcase = {
       { id: 'editors', label: 'Editors' },
       { id: 'map', label: 'Map' },
       { id: 'breakpoints', label: 'Breakpoints' },
-    ]
+    ];
 
     return {
       inputValue,
@@ -485,7 +472,7 @@ const ThemeShowcase = {
       drawSelectedId,
       drawJoiningFromId,
       drawGeodesic,
-      mapDrawRef,
+      mapDrawRef: mapDrawReference,
       drawModes,
       setDrawMode,
       drawScale,
@@ -496,7 +483,7 @@ const ThemeShowcase = {
       onDrawSelect,
       drawToggleGeodesic,
       drawIsLine,
-    }
+    };
   },
   template: `
     <div>
@@ -1417,7 +1404,7 @@ const ThemeShowcase = {
       </BaseApplicationLayout>
     </div>
   `,
-}
+};
 
 const meta = {
   title: 'Themes/Showcase',
@@ -1438,10 +1425,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta
+} satisfies Meta;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const LightTheme: Story = {
   globals: {
@@ -1451,7 +1438,7 @@ export const LightTheme: Story = {
     components: { ThemeShowcase: ThemeShowcase as unknown as Component },
     template: '<ThemeShowcase />',
   }),
-}
+};
 
 export const DarkTheme: Story = {
   globals: {
@@ -1461,7 +1448,7 @@ export const DarkTheme: Story = {
     components: { ThemeShowcase: ThemeShowcase as unknown as Component },
     template: '<ThemeShowcase />',
   }),
-}
+};
 
 export const SideBySide: Story = {
   // Two full-page layouts are rendered side by side for visual comparison; duplicate
@@ -1494,4 +1481,4 @@ export const SideBySide: Story = {
       </div>
     `,
   }),
-}
+};

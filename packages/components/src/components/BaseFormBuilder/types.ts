@@ -1,4 +1,4 @@
-import type { ZodTypeAny } from 'zod'
+import type { ZodTypeAny } from 'zod';
 
 // ─── JSON Schema field types supported by FormBuilder ─────────────────────────
 
@@ -14,7 +14,7 @@ export type FormFieldType =
   | 'checkbox'
   | 'switch'
   | 'select'
-  | 'radio'
+  | 'radio';
 
 /**
  * A single JSON-Schema-like field descriptor that FormBuilder uses to render
@@ -22,45 +22,45 @@ export type FormFieldType =
  */
 export interface FormFieldSchema {
   /** Field key – used as the form data property name. */
-  key: string
+  key: string;
   /** Visual control to render.  Defaults to `'text'`. */
-  type?: FormFieldType
+  type?: FormFieldType;
   /** Human-readable label shown above the field. */
-  label?: string
+  label?: string;
   /** Helper text displayed below the field. */
-  hint?: string
+  hint?: string;
   /** Placeholder text (for text-like inputs). */
-  placeholder?: string
+  placeholder?: string;
   /** Mark the field as required. */
-  required?: boolean
+  required?: boolean;
   /** Disable the field entirely. */
-  disabled?: boolean
+  disabled?: boolean;
   /**
    * Allowed values for `select` and `radio` field types.
    * Each entry is `{ label, value }`.
    */
-  options?: Array<{ label: string; value: string | number }>
+  options?: Array<{ label: string; value: string | number }>;
   /** Number of visible rows (textarea / markdown). */
-  rows?: number
+  rows?: number;
   /** `zod` schema used to validate this individual field. */
-  schema?: ZodTypeAny
+  schema?: ZodTypeAny;
 }
 
 /**
  * Top-level form schema passed to `<FormBuilder>` / `useFormSchema`.
  */
 export interface FormSchema {
-  fields: FormFieldSchema[]
+  fields: FormFieldSchema[];
   /**
    * Optional Zod object schema that validates the whole form at once.
    * When provided, `validate()` from `useFormSchema` runs this instead of
    * per-field schemas.
    */
-  zodSchema?: ZodTypeAny
+  zodSchema?: ZodTypeAny;
 }
 
 /** Per-field error map, keyed by `FormFieldSchema.key`. */
-export type FormErrors = Record<string, string | undefined>
+export type FormErrors = Record<string, string | undefined>;
 
 /** The reactive form data bag, keyed by field key. */
-export type FormValues = Record<string, unknown>
+export type FormValues = Record<string, unknown>;

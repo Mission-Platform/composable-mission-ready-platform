@@ -1,17 +1,19 @@
-<script setup lang="ts">
-  import { ref, watch } from 'vue'
-  import { useI18n } from 'vue-i18n'
-  import BaseDialogHeader from './BaseDialogHeader.vue'
-  import BaseDialogBody from './BaseDialogBody.vue'
-  import BaseDialogFooter from './BaseDialogFooter.vue'
-  import { useRouterClose } from '../../composables/useRouterClose'
+<script lang="ts" setup>
+  import { useI18n } from '@mission-platform/i18n';
+  import { ref, watch } from 'vue';
+
+  import { useRouterClose } from '../../composables/use-router-close';
+
+  import BaseDialogBody from './BaseDialogBody.vue';
+  import BaseDialogFooter from './BaseDialogFooter.vue';
+  import BaseDialogHeader from './BaseDialogHeader.vue';
 
   const props = withDefaults(
     defineProps<{
-      open?: boolean
-      title?: string
-      closeOnBackdrop?: boolean
-      closeOnRouteChange?: boolean
+      open?: boolean;
+      title?: string;
+      closeOnBackdrop?: boolean;
+      closeOnRouteChange?: boolean;
     }>(),
     {
       open: false,
@@ -19,68 +21,64 @@
       closeOnBackdrop: true,
       closeOnRouteChange: true,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    'update:open': [value: boolean]
-    close: []
-  }>()
+    'update:open': [value: boolean];
+    close: [];
+  }>();
 
-  const { t } = useI18n({
-    inheritLocale: true,
-    messages: { en: { close: 'Close' } },
-  })
+  const { t } = useI18n({ useScope: 'local' });
 
-  const dialogRef = ref<HTMLDialogElement | null>(null)
+  const dialogRef = ref<HTMLDialogElement | undefined>(undefined);
 
   watch(
     () => props.open,
     (value) => {
-      if (!dialogRef.value) return
+      if (!dialogRef.value) return;
       if (value) {
-        dialogRef.value.showModal()
+        dialogRef.value.showModal();
       } else {
-        dialogRef.value.close()
+        dialogRef.value.close();
       }
     },
     { immediate: true, flush: 'post' },
-  )
+  );
 
   function handleClose() {
-    emit('update:open', false)
-    emit('close')
+    emit('update:open', false);
+    emit('close');
   }
 
-  function handleBackdropClick(event: MouseEvent) {
-    if (!props.closeOnBackdrop) return
-    const rect = dialogRef.value?.getBoundingClientRect()
-    if (!rect) return
-    const { clientX: x, clientY: y } = event
-    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
-      handleClose()
-    }
+  function handleBackdropKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') handleClose();
   }
 
   useRouterClose(() => {
-    if (props.closeOnRouteChange) handleClose()
-  })
+    if (props.closeOnRouteChange) handleClose();
+  });
 </script>
 
 <template>
+  <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
   <dialog
     ref="dialogRef"
     class="base-dialog"
     @close="handleClose"
-    @click="handleBackdropClick"
+    @keydown="handleBackdropKeydown"
+    @click.self="props.closeOnBackdrop && handleClose()"
   >
-    <div class="base-dialog__panel" @click.stop>
+    <div class="base-dialog__panel">
       <BaseDialogHeader
         v-if="title || $slots.header"
-        :title="title"
         :close-label="t('close')"
+        :title="title"
         @close="handleClose"
       >
-        <template v-if="$slots.header" #default>
+        <template
+          v-if="$slots.header"
+          #default
+        >
           <slot name="header" />
         </template>
       </BaseDialogHeader>
@@ -94,7 +92,7 @@
   </dialog>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-dialog {
     padding: 0;
     border: none;
@@ -119,3 +117,8 @@
     }
   }
 </style>
+
+<i18n lang="yaml">
+en:
+  close: Close
+</i18n>

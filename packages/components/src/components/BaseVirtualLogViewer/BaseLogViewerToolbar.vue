@@ -1,8 +1,8 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   defineProps<{
-    filteredCount: number
-    totalCount: number
-  }>()
+    filteredCount: number;
+    totalCount: number;
+  }>();
 </script>
 
 <template>

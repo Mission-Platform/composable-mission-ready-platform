@@ -1,23 +1,23 @@
-// ─── Breakpoint SCSS variables & mixins ──────────────────────────────────────
-// Seven-step responsive scale anchored so that `lg` = 1920×1080 (Full HD).
-//
-//  2xs │  xs  │  sm  │  md   │  lg   │  xl   │  2xl
-//    0    480    768    1024   1920    2560    3840
-//       ────────────────────────────────────────────→ viewport width
+/* ─── Breakpoint SCSS variables & mixins ──────────────────────────────────────
+Seven-step responsive scale anchored so that `lg` = 1920×1080 (Full HD).
+
+ 2xs │  xs  │  sm  │  md   │  lg   │  xl   │  2xl
+   0    480    768    1024   1920    2560    3840
+      ────────────────────────────────────────────→ viewport width */
 
 @use 'sass:map';
 @use 'sass:list';
 
-// ── Min-width thresholds ──────────────────────────────────────────────────────
-$bp-2xs: 0px; // stylelint-disable-line length-zero-no-unit
+/* ── Min-width thresholds ────────────────────────────────────────────────────── */
+$bp-2xs: 0px; /* stylelint-disable-line length-zero-no-unit */
 $bp-xs: 480px;
 $bp-sm: 768px;
 $bp-md: 1024px;
-$bp-lg: 1920px; // Full HD — 1920×1080
-$bp-xl: 2560px; // QHD
-$bp-2xl: 3840px; // 4K UHD
+$bp-lg: 1920px; /* Full HD — 1920×1080 */
+$bp-xl: 2560px; /* QHD */
+$bp-2xl: 3840px; /* 4K UHD */
 
-// ── Ordered breakpoint map ────────────────────────────────────────────────────
+/* ── Ordered breakpoint map ──────────────────────────────────────────────────── */
 $breakpoints: (
   '2xs': $bp-2xs,
   'xs': $bp-xs,
@@ -28,24 +28,24 @@ $breakpoints: (
   '2xl': $bp-2xl,
 );
 
-// ── Mixins ────────────────────────────────────────────────────────────────────
+/* ── Mixins ──────────────────────────────────────────────────────────────────── */
 
-/// Apply styles when the viewport is at least `$bp` wide (mobile-first).
-///
-/// @param {String} $bp - Breakpoint key (2xs | xs | sm | md | lg | xl | 2xl)
-///
-/// @example scss
-///   .element {
-///     @include bp-up('lg') { font-size: 1.5rem; }
-///   }
+/* Apply styles when the viewport is at least `$bp` wide (mobile-first).
+
+ @param {String} $bp - Breakpoint key (2xs | xs | sm | md | lg | xl | 2xl)
+
+ @example scss
+   .element {
+     @include bp-up('lg') { font-size: 1.5rem; }
+   } */
 @mixin bp-up($bp) {
   $value: map.get($breakpoints, $bp);
 
-  @if $value == null {
+  @if not $value {
     @error 'Unknown breakpoint `#{$bp}`. Expected one of: #{map.keys($breakpoints)}.';
   }
 
-  @if $value == 0px {
+  @if $value == 0 {
     @content;
   } @else {
     @media (min-width: #{$value}) {
@@ -54,22 +54,22 @@ $breakpoints: (
   }
 }
 
-/// Apply styles when the viewport is narrower than `$bp`.
-///
-/// @param {String} $bp - Breakpoint key (xs | sm | md | lg | xl | 2xl)
-///
-/// @example scss
-///   .element {
-///     @include bp-down('md') { display: none; }
-///   }
+/* Apply styles when the viewport is narrower than `$bp`.
+
+ @param {String} $bp - Breakpoint key (xs | sm | md | lg | xl | 2xl)
+
+ @example scss
+   .element {
+     @include bp-down('md') { display: none; }
+   } */
 @mixin bp-down($bp) {
   $value: map.get($breakpoints, $bp);
 
-  @if $value == null {
+  @if not $value {
     @error 'Unknown breakpoint `#{$bp}`. Expected one of: #{map.keys($breakpoints)}.';
   }
 
-  @if $value == 0px {
+  @if $value == 0 {
     @media not all {
       @content;
     }
@@ -80,28 +80,28 @@ $breakpoints: (
   }
 }
 
-/// Apply styles only within a specific breakpoint band (between two keys).
-///
-/// @param {String} $lower - Lower breakpoint key (inclusive)
-/// @param {String} $upper - Upper breakpoint key (exclusive upper bound)
-///
-/// @example scss
-///   .element {
-///     @include bp-between('sm', 'lg') { padding: 1rem; }
-///   }
+/* Apply styles only within a specific breakpoint band (between two keys).
+
+ @param {String} $lower - Lower breakpoint key (inclusive)
+ @param {String} $upper - Upper breakpoint key (exclusive upper bound)
+
+ @example scss
+   .element {
+     @include bp-between('sm', 'lg') { padding: 1rem; }
+   } */
 @mixin bp-between($lower, $upper) {
   $lower-value: map.get($breakpoints, $lower);
   $upper-value: map.get($breakpoints, $upper);
 
-  @if $lower-value == null {
+  @if not $lower-value {
     @error 'Unknown breakpoint `#{$lower}`. Expected one of: #{map.keys($breakpoints)}.';
   }
 
-  @if $upper-value == null {
+  @if not $upper-value {
     @error 'Unknown breakpoint `#{$upper}`. Expected one of: #{map.keys($breakpoints)}.';
   }
 
-  @if $lower-value == 0px {
+  @if $lower-value == 0 {
     @media (max-width: #{$upper-value - 1}) {
       @content;
     }
@@ -112,20 +112,20 @@ $breakpoints: (
   }
 }
 
-/// Apply styles only at exactly the given breakpoint band.
-/// (i.e. from this breakpoint up to just before the next one.)
-///
-/// @param {String} $bp - Breakpoint key
-///
-/// @example scss
-///   .element {
-///     @include bp-only('md') { color: red; }
-///   }
+/* Apply styles only at exactly the given breakpoint band.
+   (i.e. from this breakpoint up to just before the next one.)
+
+   @param {String} $bp - Breakpoint key
+
+   @example scss
+     .element {
+       @include bp-only('md') { color: red; }
+     } */
 @mixin bp-only($bp) {
   $keys: map.keys($breakpoints);
   $idx: list.index($keys, $bp);
 
-  @if $idx == null {
+  @if not $idx {
     @error 'Unknown breakpoint `#{$bp}`. Expected one of: #{$keys}.';
   }
 
@@ -137,6 +137,7 @@ $breakpoints: (
     }
   } @else {
     $next-bp: list.nth($keys, $next-idx);
+
     @include bp-between($bp, $next-bp) {
       @content;
     }

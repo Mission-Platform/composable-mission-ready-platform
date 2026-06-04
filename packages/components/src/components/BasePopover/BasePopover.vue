@@ -1,6 +1,6 @@
-<script setup lang="ts">
-  import { ref, watch } from 'vue'
-  import { arrow, autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue'
+<script lang="ts" setup>
+  import { arrow, autoUpdate, flip, offset as floatingOffset, shift, useFloating } from '@floating-ui/vue';
+  import { ref, watch } from 'vue';
 
   export type PopoverPlacement =
     | 'top'
@@ -14,16 +14,16 @@
     | 'left-end'
     | 'right'
     | 'right-start'
-    | 'right-end'
+    | 'right-end';
 
   const props = withDefaults(
     defineProps<{
-      open?: boolean
-      placement?: PopoverPlacement
-      offset?: number
-      closeOnOutsideClick?: boolean
+      open?: boolean;
+      placement?: PopoverPlacement;
+      offset?: number;
+      closeOnOutsideClick?: boolean;
       /** Accessible label for the popover dialog (required for screen readers when no visible heading is present) */
-      label?: string
+      label?: string;
     }>(),
     {
       open: false,
@@ -32,17 +32,17 @@
       closeOnOutsideClick: true,
       label: undefined,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    'update:open': [value: boolean]
-    close: []
-  }>()
+    'update:open': [value: boolean];
+    close: [];
+  }>();
 
   // Floating UI refs
-  const referenceEl = ref<HTMLElement | null>(null)
-  const floatingEl = ref<HTMLElement | null>(null)
-  const arrowEl = ref<HTMLElement | null>(null)
+  const referenceEl = ref<HTMLElement | undefined>(undefined);
+  const floatingEl = ref<HTMLElement | undefined>(undefined);
+  const arrowEl = ref<HTMLElement | undefined>(undefined);
 
   const {
     floatingStyles,
@@ -52,58 +52,61 @@
     placement: props.placement,
     whileElementsMounted: autoUpdate,
     middleware: [
-      offset(props.offset),
+      floatingOffset(props.offset),
       flip({ padding: 8 }),
       shift({ padding: 8 }),
       arrow({ element: arrowEl }),
     ],
-  })
+  });
 
   // Arrow position helper
   function getArrowStyle() {
-    const arrowData = middlewareData.value.arrow
-    if (!arrowData) return {}
-    const { x, y } = arrowData
-    const side = actualPlacement.value.split('-')[0]
+    const arrowData = middlewareData.value.arrow;
+    if (!arrowData) return {};
+    const { x, y } = arrowData;
+    const side = actualPlacement.value.split('-')[0];
     const staticSide: Record<string, string> = {
       top: 'bottom',
       bottom: 'top',
       left: 'right',
       right: 'left',
-    }
+    };
     return {
       left: x != null ? `${x}px` : '',
       top: y != null ? `${y}px` : '',
       [staticSide[side]]: '-4px',
-    }
+    };
   }
 
   // Close on outside click
   function handleOutsideClick(event: MouseEvent) {
-    if (!props.closeOnOutsideClick || !props.open) return
-    const target = event.target as Node
-    if (referenceEl.value?.contains(target) || floatingEl.value?.contains(target)) return
-    emit('update:open', false)
-    emit('close')
+    if (!props.closeOnOutsideClick || !props.open) return;
+    const target = event.target as Node;
+    if (referenceEl.value?.contains(target) || floatingEl.value?.contains(target)) return;
+    emit('update:open', false);
+    emit('close');
   }
 
   watch(
     () => props.open,
     (open) => {
       if (open) {
-        document.addEventListener('mousedown', handleOutsideClick)
+        document.addEventListener('mousedown', handleOutsideClick);
       } else {
-        document.removeEventListener('mousedown', handleOutsideClick)
+        document.removeEventListener('mousedown', handleOutsideClick);
       }
     },
     { immediate: true },
-  )
+  );
 </script>
 
 <template>
   <div class="base-popover-host">
     <!-- Reference / trigger element -->
-    <div ref="referenceEl" class="base-popover-trigger">
+    <div
+      ref="referenceEl"
+      class="base-popover-trigger"
+    >
       <slot name="trigger" />
     </div>
 
@@ -112,24 +115,24 @@
       <dialog
         v-if="open"
         ref="floatingEl"
-        class="base-popover"
+        :aria-label="label"
         :data-placement="actualPlacement"
         :style="floatingStyles"
-        :aria-label="label"
+        class="base-popover"
       >
         <slot />
         <span
           ref="arrowEl"
-          class="base-popover__arrow"
           :style="getArrowStyle()"
           aria-hidden="true"
+          class="base-popover__arrow"
         />
       </dialog>
     </Transition>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-popover-host {
     display: inline-flex;
     align-items: center;

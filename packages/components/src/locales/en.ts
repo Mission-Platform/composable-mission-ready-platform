@@ -5,4 +5,4 @@ export const en = {
   required: 'required',
   /** Loading spinner aria-label inside BaseButton */
   loading: 'Loading…',
-}
+};

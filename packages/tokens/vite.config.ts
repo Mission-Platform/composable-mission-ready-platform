@@ -1,6 +1,6 @@
-import path from 'node:path'
+import path from 'node:path';
 
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   build: {
@@ -16,4 +16,4 @@ export default defineConfig({
       },
     },
   },
-})
+});

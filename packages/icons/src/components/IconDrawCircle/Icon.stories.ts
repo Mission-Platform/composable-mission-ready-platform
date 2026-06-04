@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import IconDrawCircle from './Icon.vue'
+import IconDrawCircle from './Icon.vue';
+
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
   title: 'Icons/Map/IconDrawCircle',
@@ -15,15 +16,15 @@ const meta = {
     color: 'currentColor',
     ariaLabel: 'Draw Circle',
   },
-} satisfies Meta<typeof IconDrawCircle>
+} satisfies Meta<typeof IconDrawCircle>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {}
+export const Default: Story = {};
 
-export const Small: Story = { args: { size: 16 } }
+export const Small: Story = { args: { size: 16 } };
 
-export const Large: Story = { args: { size: 32 } }
+export const Large: Story = { args: { size: 32 } };
 
-export const Colored: Story = { args: { color: '#3b82f6' } }
+export const Colored: Story = { args: { color: '#3b82f6' } };

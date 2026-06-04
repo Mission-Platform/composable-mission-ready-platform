@@ -1,32 +1,25 @@
-<script setup lang="ts">
-  import { useI18n } from 'vue-i18n'
+<script lang="ts" setup>
+  import { useI18n } from '@mission-platform/i18n';
 
-  import { useId } from '../../composables/useId'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+  import { useId } from '../../composables/use-id';
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
-  export type InputSize = 'sm' | 'md' | 'lg'
-  export type InputType =
-    | 'text'
-    | 'email'
-    | 'password'
-    | 'number'
-    | 'search'
-    | 'tel'
-    | 'url'
+  export type InputSize = 'sm' | 'md' | 'lg';
+  export type InputType = 'text' | 'email' | 'password' | 'number' | 'search' | 'tel' | 'url';
 
   const props = withDefaults(
     defineProps<{
-      modelValue?: string | number
-      type?: InputType
-      size?: InputSize
-      placeholder?: string
-      label?: string
-      labelHidden?: boolean
-      hint?: string
-      error?: string
-      disabled?: boolean
-      required?: boolean
-      id?: string
+      modelValue?: string | number;
+      type?: InputType;
+      size?: InputSize;
+      placeholder?: string;
+      label?: string;
+      labelHidden?: boolean;
+      hint?: string;
+      error?: string;
+      disabled?: boolean;
+      required?: boolean;
+      id?: string;
     }>(),
     {
       modelValue: '',
@@ -41,26 +34,21 @@
       required: false,
       id: undefined,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    'update:modelValue': [value: string | number]
-    change: [event: Event]
-    blur: [event: FocusEvent]
-    focus: [event: FocusEvent]
-  }>()
+    'update:modelValue': [value: string | number];
+    change: [event: Event];
+    blur: [event: FocusEvent];
+    focus: [event: FocusEvent];
+  }>();
 
-  const { t } = useI18n({
-    inheritLocale: true,
-    messages: {
-      en: { required: 'required' },
-    },
-  })
-  const { id: resolvedId } = useId(props.id)
+  const { t } = useI18n({ useScope: 'local' });
+  const { id: resolvedId } = useId(props.id);
 
   function handleInput(event: Event) {
-    const target = event.target as HTMLInputElement
-    emit('update:modelValue', props.type === 'number' ? target.valueAsNumber : target.value)
+    const target = event.target as HTMLInputElement;
+    emit('update:modelValue', props.type === 'number' ? target.valueAsNumber : target.value);
   }
 </script>
 
@@ -68,42 +56,74 @@
   <div
     :class="['base-input', `base-input--${size}`, { 'base-input--error': !!error, 'base-input--disabled': disabled }]"
   >
-    <label v-if="label" :for="resolvedId" :class="['base-input__label', { 'base-input__label--hidden': labelHidden }]">
-      <BaseTypography variant="label" as="span" color="primary">{{ label }}</BaseTypography>
-      <span v-if="required" class="base-input__required" :title="t('required')" aria-hidden="true">*</span>
+    <label
+      v-if="label"
+      :class="['base-input__label', { 'base-input__label--hidden': labelHidden }]"
+      :for="resolvedId"
+    >
+      <BaseTypography
+        as="span"
+        color="primary"
+        variant="label"
+      >{{ label }}</BaseTypography>
+      <span
+        v-if="required"
+        :title="t('required')"
+        aria-hidden="true"
+        class="base-input__required"
+      >*</span>
     </label>
     <div class="base-input__wrapper">
       <slot name="prefix" />
       <input
         :id="resolvedId"
+        :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
+        :aria-invalid="!!error || undefined"
+        :disabled="disabled"
+        :placeholder="placeholder"
+        :required="required"
         :type="type"
         :value="modelValue"
-        :placeholder="placeholder"
-        :disabled="disabled"
-        :required="required"
-        :aria-invalid="!!error || undefined"
-        :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
         class="base-input__field"
-        @input="handleInput"
-        @change="emit('change', $event)"
         @blur="emit('blur', $event)"
+        @change="emit('change', $event)"
         @focus="emit('focus', $event)"
-      />
+        @input="handleInput"
+      >
       <slot name="suffix" />
     </div>
-    <BaseTypography v-if="error" :id="`${resolvedId}-error`" variant="caption" as="p" color="inherit" class="base-input__error" role="alert">{{ error }}</BaseTypography>
-    <BaseTypography v-else-if="hint" :id="`${resolvedId}-hint`" variant="caption" as="p" color="secondary" class="base-input__hint">{{ hint }}</BaseTypography>
+    <BaseTypography
+      v-if="error"
+      :id="`${resolvedId}-error`"
+      as="p"
+      class="base-input__error"
+      color="inherit"
+      role="alert"
+      variant="caption"
+    >
+      {{ error }}
+    </BaseTypography>
+    <BaseTypography
+      v-else-if="hint"
+      :id="`${resolvedId}-hint`"
+      as="p"
+      class="base-input__hint"
+      color="secondary"
+      variant="caption"
+    >
+      {{ hint }}
+    </BaseTypography>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-input {
     display: flex;
     flex-direction: column;
     gap: var(--mp-spacing-1);
 
     &__label {
-      // typography handled by BaseTypography
+      /* typography handled by BaseTypography */
 
       &--hidden {
         position: absolute;
@@ -112,7 +132,7 @@
         padding: 0;
         margin: -1px;
         overflow: hidden;
-        clip: rect(0, 0, 0, 0);
+        clip-path: inset(50%);
         white-space: nowrap;
         border: 0;
       }
@@ -129,7 +149,9 @@
       border: 1px solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
       background-color: var(--mp-color-bg-surface);
-      transition: border-color 150ms ease, box-shadow 150ms ease;
+      transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease;
 
       &:focus-within {
         border-color: var(--mp-color-border-focus);
@@ -152,7 +174,7 @@
       }
     }
 
-    // Sizes
+    /* Sizes */
     &--sm {
       .base-input__field {
         padding: var(--mp-spacing-1) var(--mp-spacing-2);
@@ -174,7 +196,7 @@
       }
     }
 
-    // States
+    /* States */
     &--error {
       .base-input__wrapper {
         border-color: var(--mp-color-danger-default);
@@ -205,3 +227,8 @@
     }
   }
 </style>
+
+<i18n lang="yaml">
+en:
+  required: required
+</i18n>

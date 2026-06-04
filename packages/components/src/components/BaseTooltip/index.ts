@@ -1,2 +1,2 @@
-export { default } from './BaseTooltip.vue'
-export type { TooltipPlacement } from './BaseTooltip.vue'
+export { default } from './BaseTooltip.vue';
+export type { TooltipPlacement } from './BaseTooltip.vue';

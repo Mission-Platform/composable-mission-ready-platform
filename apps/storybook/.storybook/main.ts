@@ -1,7 +1,7 @@
-import { mergeConfig } from 'vite'
-import vueJsx from '@vitejs/plugin-vue-jsx'
+import vueJsx from '@vitejs/plugin-vue-jsx';
+import { mergeConfig } from 'vite';
 
-import type { StorybookConfig } from '@storybook/vue3-vite'
+import type { StorybookConfig } from '@storybook/vue3-vite';
 
 const config: StorybookConfig = {
   stories: [
@@ -30,5 +30,5 @@ const config: StorybookConfig = {
         exclude: ['vue-i18n'],
       },
     }),
-}
-export default config
+};
+export default config;

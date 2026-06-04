@@ -1,29 +1,30 @@
-<script setup lang="ts">
-  import { computed, ref } from 'vue'
-  import { RouterLink } from 'vue-router'
-  import { IconChevron } from '@mission-platform/icons'
-  import BaseDropdown from '../BaseDropdown/BaseDropdown.vue'
+<script lang="ts" setup>
+  import { IconChevron } from '@mission-platform/icons';
+  import { computed, ref } from 'vue';
+  import { RouterLink } from 'vue-router';
 
-  export type NavbarItemVariant = 'default' | 'primary'
+  import BaseDropdown from '../BaseDropdown/BaseDropdown.vue';
+
+  export type NavbarItemVariant = 'default' | 'primary';
 
   export interface NavbarItemChild {
-    label: string
-    href?: string
-    to?: string | Record<string, unknown>
-    disabled?: boolean
-    icon?: string
-    onClick?: () => void
+    label: string;
+    href?: string;
+    to?: string | Record<string, unknown>;
+    disabled?: boolean;
+    icon?: string;
+    onClick?: () => void;
   }
 
   const props = withDefaults(
     defineProps<{
-      label?: string
-      href?: string
-      to?: string | Record<string, unknown>
-      disabled?: boolean
-      active?: boolean
-      variant?: NavbarItemVariant
-      children?: NavbarItemChild[]
+      label?: string;
+      href?: string;
+      to?: string | Record<string, unknown>;
+      disabled?: boolean;
+      active?: boolean;
+      variant?: NavbarItemVariant;
+      children?: NavbarItemChild[];
     }>(),
     {
       label: undefined,
@@ -34,33 +35,33 @@
       variant: 'default',
       children: undefined,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    click: [event: MouseEvent]
-  }>()
+    click: [event: MouseEvent];
+  }>();
 
   const tag = computed(() => {
-    if (props.to && !props.disabled) return RouterLink
-    if (props.href) return 'a'
-    return 'button'
-  })
-  const hasChildren = computed(() => !!props.children && props.children.length > 0)
-  const dropdownOpen = ref(false)
+    if (props.to && !props.disabled) return RouterLink;
+    if (props.href) return 'a';
+    return 'button';
+  });
+  const hasChildren = computed(() => !!props.children && props.children.length > 0);
+  const dropdownOpen = ref(false);
 
   function handleClick(event: MouseEvent) {
-    if (props.disabled) return
+    if (props.disabled) return;
     if (hasChildren.value) {
-      dropdownOpen.value = !dropdownOpen.value
-      return
+      dropdownOpen.value = !dropdownOpen.value;
+      return;
     }
-    emit('click', event)
+    emit('click', event);
   }
 
   function handleChildClick(child: NavbarItemChild) {
-    if (child.disabled) return
-    dropdownOpen.value = false
-    if (child.onClick) child.onClick()
+    if (child.disabled) return;
+    dropdownOpen.value = false;
+    if (child.onClick) child.onClick();
   }
 </script>
 
@@ -69,14 +70,17 @@
   <BaseDropdown
     v-if="hasChildren"
     v-model:open="dropdownOpen"
-    placement="bottom-start"
     :match-trigger-width="false"
-    max-height="320px"
     class="base-navbar-item-dropdown-host"
+    max-height="320px"
+    placement="bottom-start"
   >
     <template #trigger>
       <button
-        type="button"
+        :aria-current="active ? 'page' : undefined"
+        :aria-disabled="disabled ? 'true' : undefined"
+        :aria-expanded="dropdownOpen"
+        :aria-haspopup="true"
         :class="[
           'base-navbar-item',
           `base-navbar-item--${variant}`,
@@ -87,61 +91,73 @@
           },
         ]"
         :disabled="disabled || undefined"
-        :aria-disabled="disabled ? 'true' : undefined"
-        :aria-current="active ? 'page' : undefined"
-        :aria-haspopup="true"
-        :aria-expanded="dropdownOpen"
+        type="button"
         @click="handleClick"
       >
         <slot name="icon" />
         <slot>{{ label }}</slot>
         <IconChevron
-          class="base-navbar-item__chevron"
           :direction="dropdownOpen ? 'up' : 'down'"
+          class="base-navbar-item__chevron"
           size="sm"
         />
       </button>
     </template>
 
     <!-- Dropdown panel -->
-    <ul class="base-navbar-item__dropdown-list" role="menu">
+    <ul
+      class="base-navbar-item__dropdown-list"
+      role="menu"
+    >
       <li
         v-for="(child, i) in children"
         :key="i"
-        role="none"
         class="base-navbar-item__dropdown-item-wrapper"
+        role="none"
       >
         <RouterLink
           v-if="child.to && !child.disabled"
           :to="child.to"
-          role="menuitem"
           class="base-navbar-item__dropdown-item"
+          role="menuitem"
           @click="dropdownOpen = false"
         >
-          <span v-if="child.icon" class="base-navbar-item__dropdown-icon" aria-hidden="true">{{ child.icon }}</span>
+          <span
+            v-if="child.icon"
+            aria-hidden="true"
+            class="base-navbar-item__dropdown-icon"
+          >{{ child.icon }}</span>
           <span>{{ child.label }}</span>
         </RouterLink>
         <a
           v-else-if="child.href && !child.disabled"
           :href="child.href"
-          role="menuitem"
           class="base-navbar-item__dropdown-item"
+          role="menuitem"
           @click="dropdownOpen = false"
         >
-          <span v-if="child.icon" class="base-navbar-item__dropdown-icon" aria-hidden="true">{{ child.icon }}</span>
+          <span
+            v-if="child.icon"
+            aria-hidden="true"
+            class="base-navbar-item__dropdown-icon"
+          >{{ child.icon }}</span>
           <span>{{ child.label }}</span>
         </a>
         <button
           v-else
-          type="button"
-          role="menuitem"
-          :disabled="child.disabled || undefined"
           :aria-disabled="child.disabled ? 'true' : undefined"
-          class="base-navbar-item__dropdown-item"
           :class="{ 'base-navbar-item__dropdown-item--disabled': child.disabled }"
+          :disabled="child.disabled || undefined"
+          class="base-navbar-item__dropdown-item"
+          role="menuitem"
+          type="button"
           @click="handleChildClick(child)"
         >
-          <span v-if="child.icon" class="base-navbar-item__dropdown-icon" aria-hidden="true">{{ child.icon }}</span>
+          <span
+            v-if="child.icon"
+            aria-hidden="true"
+            class="base-navbar-item__dropdown-icon"
+          >{{ child.icon }}</span>
           <span>{{ child.label }}</span>
         </button>
       </li>
@@ -152,18 +168,18 @@
   <component
     :is="tag"
     v-else
+    :aria-current="active ? 'page' : undefined"
+    :aria-disabled="disabled ? 'true' : undefined"
     :class="[
       'base-navbar-item',
       `base-navbar-item--${variant}`,
       { 'base-navbar-item--active': active, 'base-navbar-item--disabled': disabled },
     ]"
-    :to="tag === RouterLink ? to : undefined"
-    :href="tag === 'a' ? (disabled ? undefined : href) : undefined"
-    :type="tag === 'button' ? 'button' : undefined"
     :disabled="tag === 'button' ? disabled || undefined : undefined"
-    :aria-disabled="disabled ? 'true' : undefined"
-    :aria-current="active ? 'page' : undefined"
+    :href="tag === 'a' ? (disabled ? undefined : href) : undefined"
     :tabindex="disabled ? -1 : undefined"
+    :to="tag === RouterLink ? to : undefined"
+    :type="tag === 'button' ? 'button' : undefined"
     @click="handleClick"
   >
     <slot name="icon" />
@@ -171,7 +187,7 @@
   </component>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
   .base-navbar-item-dropdown-host {
@@ -196,11 +212,6 @@
     transition:
       background-color 150ms ease,
       color 150ms ease;
-
-    &:hover:not(&--disabled) {
-      background-color: var(--mp-color-bg-subtle);
-      color: var(--mp-color-text-primary);
-    }
 
     &:focus-visible {
       outline: none;
@@ -229,6 +240,11 @@
       opacity: 0.5;
       cursor: not-allowed;
       pointer-events: none;
+    }
+
+    &:hover:not(&--disabled) {
+      background-color: var(--mp-color-bg-subtle);
+      color: var(--mp-color-text-primary);
     }
 
     &__chevron {
@@ -268,10 +284,6 @@
       background-color 150ms ease,
       color 150ms ease;
 
-    &:hover:not(&--disabled) {
-      background-color: var(--mp-color-bg-subtle);
-    }
-
     &:focus-visible {
       outline: none;
       box-shadow: var(--mp-shadow-focus-primary);
@@ -281,6 +293,10 @@
       color: var(--mp-color-text-disabled);
       cursor: not-allowed;
       pointer-events: none;
+    }
+
+    &:hover:not(&--disabled) {
+      background-color: var(--mp-color-bg-subtle);
     }
   }
 

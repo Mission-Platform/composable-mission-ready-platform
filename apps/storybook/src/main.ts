@@ -1,8 +1,8 @@
-import 'maplibre-gl/dist/maplibre-gl.css'
-import './style.scss'
+import 'maplibre-gl/dist/maplibre-gl.css';
+import './style.scss';
 
-import { createApp } from 'vue'
+import { createApp } from 'vue';
 
-import App from './App.vue'
+import App from './App.vue';
 
-createApp(App).mount('#app')
+createApp(App).mount('#app');

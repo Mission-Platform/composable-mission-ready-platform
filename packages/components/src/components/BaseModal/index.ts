@@ -1,2 +1,2 @@
-export { default } from './BaseModal.vue'
-export type { ModalSize } from './BaseModal.vue'
+export { default } from './BaseModal.vue';
+export type { ModalSize } from './BaseModal.vue';

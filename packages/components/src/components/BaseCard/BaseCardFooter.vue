@@ -1,10 +1,14 @@
-<script setup lang="ts">
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+<script lang="ts" setup>
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 </script>
 
 <template>
   <footer class="base-card__footer">
-    <BaseTypography variant="body-sm" as="div" color="secondary">
+    <BaseTypography
+      as="div"
+      color="secondary"
+      variant="body-sm"
+    >
       <slot />
     </BaseTypography>
   </footer>

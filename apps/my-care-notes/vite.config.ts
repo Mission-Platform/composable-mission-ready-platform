@@ -1,15 +1,14 @@
 /// <reference types="vitest/config" />
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
-import postcssConfig from '@mission-platform/postcss-config'
-import vue from '@vitejs/plugin-vue'
-import { defineConfig } from 'vite'
-import { VitePWA } from 'vite-plugin-pwa'
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+import postcssConfig from '@mission-platform/postcss-config';
+import vue from '@vitejs/plugin-vue';
+import { defineConfig } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa';
 
-const dirname =
-  typeof __dirname === 'undefined' ? path.dirname(fileURLToPath(import.meta.url)) : __dirname
+const dirname = typeof __dirname === 'undefined' ? path.dirname(fileURLToPath(import.meta.url)) : __dirname;
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -19,7 +18,7 @@ export default defineConfig({
   plugins: [
     vue(),
     VueI18nPlugin({
-      include: path.resolve(dirname, '../../packages/*/src/locales/**/*.yaml'),
+      include: [path.resolve(dirname, 'src/**/*.vue')],
     }),
     VitePWA({
       registerType: 'autoUpdate',
@@ -70,7 +69,7 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('monaco-editor')) {
-            return 'monaco-editor'
+            return 'monaco-editor';
           }
         },
       },
@@ -83,4 +82,4 @@ export default defineConfig({
     environment: 'jsdom',
     include: ['src/**/*.test.ts'],
   },
-})
+});

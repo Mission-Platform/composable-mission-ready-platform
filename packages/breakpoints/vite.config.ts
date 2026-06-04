@@ -1,10 +1,11 @@
-import path from 'node:path'
+import path from 'node:path';
 
-import vue from '@vitejs/plugin-vue'
-import { defineConfig } from 'vite'
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+import vue from '@vitejs/plugin-vue';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [vue(), VueI18nPlugin()],
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
@@ -21,4 +22,4 @@ export default defineConfig({
       },
     },
   },
-})
+});

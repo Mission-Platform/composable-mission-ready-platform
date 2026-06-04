@@ -23,7 +23,7 @@ export const colors = {
   primaryDark: '#6b6e6f',
 
   cyan: {
-    50:  '#ebfffe',
+    50: '#ebfffe',
     100: '#cdfefb',
     200: '#9efaf5',
     300: '#5af2ea',
@@ -99,6 +99,6 @@ export const colors = {
     800: '#155e75',
     900: '#164e63',
   },
-} as const
+} as const;
 
-export type Colors = typeof colors
+export type Colors = typeof colors;

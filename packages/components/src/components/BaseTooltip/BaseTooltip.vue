@@ -1,85 +1,85 @@
-<script setup lang="ts">
-  import { ref } from 'vue'
-  import { useFloating, autoUpdate, offset, flip, shift, arrow } from '@floating-ui/vue'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+<script lang="ts" setup>
+  import { arrow, autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue';
+  import { ref } from 'vue';
 
-  import { useId } from '../../composables/useId'
+  import { useId } from '../../composables/use-id';
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
-  export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right'
+  export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right';
 
   const props = withDefaults(
     defineProps<{
-      content: string
-      placement?: TooltipPlacement
-      disabled?: boolean
-      delay?: number
+      content: string;
+      placement?: TooltipPlacement;
+      disabled?: boolean;
+      delay?: number;
     }>(),
     {
       placement: 'top',
       disabled: false,
       delay: 0,
     },
-  )
+  );
 
-  const { id: tooltipId } = useId(undefined)
-  const visible = ref(false)
-  let showTimer: ReturnType<typeof setTimeout> | null = null
+  const { id: tooltipId } = useId(undefined);
+  const visible = ref(false);
+  let showTimer: ReturnType<typeof setTimeout> | undefined;
 
   // Floating UI refs
-  const referenceEl = ref<HTMLElement | null>(null)
-  const floatingEl = ref<HTMLElement | null>(null)
-  const arrowEl = ref<HTMLElement | null>(null)
+  const referenceEl = ref<HTMLElement | undefined>(undefined);
+  const floatingEl = ref<HTMLElement | undefined>(undefined);
+  const arrowEl = ref<HTMLElement | undefined>(undefined);
 
-  const { floatingStyles, middlewareData, placement: actualPlacement } = useFloating(referenceEl, floatingEl, {
+  const {
+    floatingStyles,
+    middlewareData,
+    placement: actualPlacement,
+  } = useFloating(referenceEl, floatingEl, {
     placement: props.placement,
     whileElementsMounted: autoUpdate,
-    middleware: [
-      offset(8),
-      flip(),
-      shift({ padding: 4 }),
-      arrow({ element: arrowEl }),
-    ],
-  })
+    middleware: [offset(8), flip(), shift({ padding: 4 }), arrow({ element: arrowEl })],
+  });
 
-  function show(delay: number) {
-    if (showTimer) clearTimeout(showTimer)
+  function show(delayMs: number) {
+    if (showTimer) clearTimeout(showTimer);
     showTimer = setTimeout(() => {
-      visible.value = true
-    }, delay)
+      visible.value = true;
+    }, delayMs);
   }
 
   function hide() {
-    if (showTimer) clearTimeout(showTimer)
-    visible.value = false
+    if (showTimer) clearTimeout(showTimer);
+    visible.value = false;
   }
 
   // Compute arrow position based on Floating UI middleware data
   function getArrowStyle() {
-    const arrowData = middlewareData.value.arrow
-    if (!arrowData) return {}
-    const { x, y } = arrowData
-    const side = actualPlacement.value.split('-')[0]
+    const arrowData = middlewareData.value.arrow;
+    if (!arrowData) return {};
+    const { x, y } = arrowData;
+    const side = actualPlacement.value.split('-')[0];
     const staticSide: Record<string, string> = {
       top: 'bottom',
       bottom: 'top',
       left: 'right',
       right: 'left',
-    }
+    };
     return {
       left: x != null ? `${x}px` : '',
       top: y != null ? `${y}px` : '',
       [staticSide[side]]: '-4px',
-    }
+    };
   }
 </script>
 
 <template>
   <span
     class="base-tooltip-wrapper"
-    @mouseenter="!disabled && show(delay)"
-    @mouseleave="hide"
+    role="presentation"
     @focusin="!disabled && show(0)"
     @focusout="hide"
+    @mouseenter="!disabled && show(delay)"
+    @mouseleave="hide"
   >
     <span
       ref="referenceEl"
@@ -94,22 +94,26 @@
         :id="tooltipId"
         ref="floatingEl"
         :class="['base-tooltip', `base-tooltip--${actualPlacement.split('-')[0]}`]"
-        role="tooltip"
         :style="floatingStyles"
+        role="tooltip"
       >
-        <BaseTypography variant="caption" as="span" color="inherit">{{ content }}</BaseTypography>
+        <BaseTypography
+          as="span"
+          color="inherit"
+          variant="caption"
+        >{{ content }}</BaseTypography>
         <span
           ref="arrowEl"
-          class="base-tooltip__arrow"
           :style="getArrowStyle()"
           aria-hidden="true"
+          class="base-tooltip__arrow"
         />
       </span>
     </Transition>
   </span>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
   .base-tooltip-wrapper {

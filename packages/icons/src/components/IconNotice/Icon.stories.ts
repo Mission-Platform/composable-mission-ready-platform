@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import IconNotice from './Icon.vue'
+import IconNotice from './Icon.vue';
+
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
   title: 'Icons/State / Status/IconNotice',
@@ -11,11 +12,11 @@ const meta = {
     ariaLabel: { control: 'text' },
   },
   args: { size: 'md', color: 'currentColor' },
-} satisfies Meta<typeof IconNotice>
+} satisfies Meta<typeof IconNotice>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {}
-export const Small: Story = { args: { size: 'sm' } }
-export const Large: Story = { args: { size: 'xl' } }
+export const Default: Story = {};
+export const Small: Story = { args: { size: 'sm' } };
+export const Large: Story = { args: { size: 'xl' } };

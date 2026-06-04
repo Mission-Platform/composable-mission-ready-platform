@@ -2,9 +2,9 @@
 
 declare global {
   var HunspellEnvironment: {
-    getWorker(): Worker
-  }
+    getWorker(): Worker;
+  };
 }
 
 // eslint-disable-next-line unicorn/require-module-specifiers
-export {}
+export {};

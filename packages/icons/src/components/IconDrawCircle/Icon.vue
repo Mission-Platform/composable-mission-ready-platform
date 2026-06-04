@@ -1,42 +1,64 @@
-<script setup lang="ts">
-  import { useIconSize } from '../../useIconSize.ts'
+<script lang="ts" setup>
+  import { useIconSize } from '../../use-icon-size.ts';
 
   const props = withDefaults(
     defineProps<{
-      size?: number | string
-      color?: string
-      ariaLabel?: string
+      size?: number | string;
+      color?: string;
+      ariaLabel?: string;
     }>(),
     {
       size: 'md',
       color: 'currentColor',
       ariaLabel: undefined,
     },
-  )
+  );
 
-  const sizeValue = useIconSize(() => props.size)
+  const sizeValue = useIconSize(() => props.size);
 </script>
 
 <template>
   <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
+    :aria-hidden="!ariaLabel"
+    :aria-label="ariaLabel"
+    :height="sizeValue"
     :stroke="color"
-    stroke-width="2"
+    :width="sizeValue"
+    class="base-icon-draw-circle"
+    fill="none"
+    role="img"
     stroke-linecap="round"
     stroke-linejoin="round"
-    :width="sizeValue"
-    :height="sizeValue"
-    :aria-label="ariaLabel"
-    :aria-hidden="!ariaLabel"
-    role="img"
-    class="base-icon-draw-circle"
+    stroke-width="2"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
   >
-    <circle cx="12" cy="12" r="9"/>
-    <circle cx="12" cy="12" r="1.5" :fill="color" stroke="none"/>
-    <circle cx="21" cy="12" r="1.5" :fill="color" stroke="none"/>
-    <line x1="12" y1="12" x2="21" y2="12" stroke-dasharray="3,2"/>
+    <circle
+      cx="12"
+      cy="12"
+      r="9"
+    />
+    <circle
+      :fill="color"
+      cx="12"
+      cy="12"
+      r="1.5"
+      stroke="none"
+    />
+    <circle
+      :fill="color"
+      cx="21"
+      cy="12"
+      r="1.5"
+      stroke="none"
+    />
+    <line
+      stroke-dasharray="3,2"
+      x1="12"
+      x2="21"
+      y1="12"
+      y2="12"
+    />
   </svg>
 </template>
 

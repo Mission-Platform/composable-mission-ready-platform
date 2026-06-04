@@ -1,22 +1,22 @@
-<script setup lang="ts">
-  import { computed, ref, watch } from 'vue'
-  import { useI18n } from 'vue-i18n'
+<script lang="ts" setup>
+  import { useI18n } from '@mission-platform/i18n';
+  import { computed, ref, watch } from 'vue';
 
-  import { useId } from '../../composables/useId'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+  import { useId } from '../../composables/use-id';
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
   const props = withDefaults(
     defineProps<{
-      modelValue?: boolean | string[]
-      value?: string
-      label?: string
-      labelHidden?: boolean
-      hint?: string
-      error?: string
-      disabled?: boolean
-      required?: boolean
-      indeterminate?: boolean
-      id?: string
+      modelValue?: boolean | string[];
+      value?: string;
+      label?: string;
+      labelHidden?: boolean;
+      hint?: string;
+      error?: string;
+      disabled?: boolean;
+      required?: boolean;
+      indeterminate?: boolean;
+      id?: string;
     }>(),
     {
       modelValue: false,
@@ -30,114 +30,148 @@
       indeterminate: false,
       id: undefined,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    'update:modelValue': [value: boolean | string[]]
-    change: [event: Event]
-  }>()
+    'update:modelValue': [value: boolean | string[]];
+    change: [event: Event];
+  }>();
 
   const isChecked = computed(() => {
     if (Array.isArray(props.modelValue)) {
-      return props.value !== undefined && props.modelValue.includes(props.value)
+      return props.value !== undefined && props.modelValue.includes(props.value);
     }
-    return props.modelValue
-  })
+    return props.modelValue;
+  });
 
   function handleChange(event: Event) {
-    const target = event.target as HTMLInputElement
+    const target = event.target as HTMLInputElement;
     if (Array.isArray(props.modelValue) && props.value !== undefined) {
-      const next = [...props.modelValue]
+      const next = [...props.modelValue];
       if (target.checked) {
-        next.push(props.value)
+        next.push(props.value);
       } else {
-        const idx = next.indexOf(props.value)
-        if (idx !== -1) next.splice(idx, 1)
+        const idx = next.indexOf(props.value);
+        if (idx !== -1) next.splice(idx, 1);
       }
-      emit('update:modelValue', next)
+      emit('update:modelValue', next);
     } else {
-      emit('update:modelValue', target.checked)
+      emit('update:modelValue', target.checked);
     }
-    emit('change', event)
+    emit('change', event);
   }
 
-  const { t } = useI18n({
-    inheritLocale: true,
-    messages: { en: { required: 'required' } },
-  })
-  const { id: resolvedId } = useId(props.id)
+  const { t } = useI18n({ useScope: 'local' });
+  const { id: resolvedId } = useId(props.id);
 
-  const checkboxRef = ref<HTMLInputElement | null>(null)
+  const checkboxRef = ref<HTMLInputElement | null>(null);
 
   watch(
     () => props.indeterminate,
     (val) => {
-      if (checkboxRef.value) checkboxRef.value.indeterminate = val
+      if (checkboxRef.value) checkboxRef.value.indeterminate = val;
     },
     { immediate: true },
-  )
+  );
 </script>
 
 <template>
-  <div
-    :class="[
-      'base-checkbox',
-      { 'base-checkbox--error': !!error, 'base-checkbox--disabled': disabled },
-    ]"
-  >
-    <label class="base-checkbox__row">
+  <div :class="['base-checkbox', { 'base-checkbox--error': !!error, 'base-checkbox--disabled': disabled }]">
+    <label
+      :for="resolvedId"
+      class="base-checkbox__row"
+    >
       <span class="base-checkbox__control-wrapper">
         <input
           :id="resolvedId"
           ref="checkboxRef"
-          type="checkbox"
+          :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
+          :aria-invalid="!!error || undefined"
           :checked="isChecked"
-          :value="value"
           :disabled="disabled"
           :required="required"
-          :aria-invalid="!!error || undefined"
-          :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
+          :value="value"
           class="base-checkbox__input"
+          type="checkbox"
           @change="handleChange"
-        />
-        <span class="base-checkbox__box" aria-hidden="true">
+        >
+        <span
+          aria-hidden="true"
+          class="base-checkbox__box"
+        >
           <svg
             v-if="indeterminate"
             class="base-checkbox__icon"
-            viewBox="0 0 12 12"
             fill="none"
+            viewBox="0 0 12 12"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <path
+              d="M2 6h8"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-width="2"
+            />
           </svg>
           <svg
             v-else
             class="base-checkbox__icon"
-            viewBox="0 0 12 12"
             fill="none"
+            viewBox="0 0 12 12"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M2 6l3 3 5-5"
               stroke="currentColor"
-              stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
+              stroke-width="2"
             />
           </svg>
         </span>
       </span>
-      <span v-if="label" :class="['base-checkbox__label', { 'base-checkbox__label--hidden': labelHidden }]">
-        <BaseTypography variant="body-md" as="span" color="primary">{{ label }}</BaseTypography>
-        <span v-if="required" class="base-checkbox__required" :title="t('required')" aria-hidden="true">*</span>
+      <span
+        v-if="label"
+        :class="['base-checkbox__label', { 'base-checkbox__label--hidden': labelHidden }]"
+      >
+        <BaseTypography
+          as="span"
+          color="primary"
+          variant="body-md"
+        >{{ label }}</BaseTypography>
+        <span
+          v-if="required"
+          :title="t('required')"
+          aria-hidden="true"
+          class="base-checkbox__required"
+        >*</span>
       </span>
     </label>
-    <BaseTypography v-if="error" :id="`${resolvedId}-error`" variant="caption" as="p" color="inherit" class="base-checkbox__error" role="alert">{{ error }}</BaseTypography>
-    <BaseTypography v-else-if="hint" :id="`${resolvedId}-hint`" variant="caption" as="p" color="secondary" class="base-checkbox__hint">{{ hint }}</BaseTypography>
+    <BaseTypography
+      v-if="error"
+      :id="`${resolvedId}-error`"
+      as="p"
+      class="base-checkbox__error"
+      color="inherit"
+      role="alert"
+      variant="caption"
+    >
+      {{ error }}
+    </BaseTypography>
+    <BaseTypography
+      v-else-if="hint"
+      :id="`${resolvedId}-hint`"
+      as="p"
+      class="base-checkbox__hint"
+      color="secondary"
+      variant="caption"
+    >
+      {{ hint }}
+    </BaseTypography>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-checkbox {
     display: flex;
     flex-direction: column;
@@ -158,6 +192,55 @@
       flex-shrink: 0;
     }
 
+    &__box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-sm);
+      background-color: var(--mp-color-bg-surface);
+      color: transparent;
+      transition:
+        background-color 150ms ease,
+        border-color 150ms ease;
+      pointer-events: none;
+    }
+
+    &__icon {
+      width: 12px;
+      height: 12px;
+    }
+
+    &__label {
+      /* typography handled by BaseTypography */
+
+      &--hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border: 0;
+      }
+    }
+
+    &__required {
+      color: var(--mp-color-danger-default);
+      margin-left: 2px;
+    }
+
+    /* States */
+    &--error {
+      .base-checkbox__box {
+        border-color: var(--mp-color-danger-default);
+      }
+    }
+
     &__input {
       position: absolute;
       opacity: 0;
@@ -176,53 +259,6 @@
         background-color: var(--mp-color-primary-default);
         border-color: var(--mp-color-primary-default);
         color: var(--mp-color-text-on-primary);
-      }
-    }
-
-    &__box {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 18px;
-      height: 18px;
-      border: 2px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-sm);
-      background-color: var(--mp-color-bg-surface);
-      color: transparent;
-      transition: background-color 150ms ease, border-color 150ms ease;
-      pointer-events: none;
-    }
-
-    &__icon {
-      width: 12px;
-      height: 12px;
-    }
-
-    &__label {
-      // typography handled by BaseTypography
-
-      &--hidden {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-      }
-    }
-
-    &__required {
-      color: var(--mp-color-danger-default);
-      margin-left: 2px;
-    }
-
-    // States
-    &--error {
-      .base-checkbox__box {
-        border-color: var(--mp-color-danger-default);
       }
     }
 
@@ -247,3 +283,8 @@
     }
   }
 </style>
+
+<i18n lang="yaml">
+en:
+  required: required
+</i18n>

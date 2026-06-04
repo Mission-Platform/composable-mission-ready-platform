@@ -1,5 +1,5 @@
-import vue from '@vitejs/plugin-vue'
-import { defineConfig } from 'vitest/config'
+import vue from '@vitejs/plugin-vue';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [vue()],
@@ -8,4 +8,4 @@ export default defineConfig({
     globals: true,
     include: ['src/**/*.spec.ts'],
   },
-})
+});

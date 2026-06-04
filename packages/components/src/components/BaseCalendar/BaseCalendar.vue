@@ -1,26 +1,26 @@
-<script setup lang="ts">
-  import { ref, computed, watch } from 'vue'
-  import { DateTime } from 'luxon'
-  import { IconChevron } from '@mission-platform/icons'
+<script lang="ts" setup>
+  import { IconChevron } from '@mission-platform/icons';
+  import { DateTime } from 'luxon';
+  import { computed, ref, watch } from 'vue';
 
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
-  export type CalendarSize = 'sm' | 'md' | 'lg'
+  export type CalendarSize = 'sm' | 'md' | 'lg';
 
   const props = withDefaults(
     defineProps<{
       /** ISO date string (YYYY-MM-DD) – the selected date. */
-      modelValue?: string
+      modelValue?: string;
       /** Earliest selectable ISO date (YYYY-MM-DD). */
-      min?: string
+      min?: string;
       /** Latest selectable ISO date (YYYY-MM-DD). */
-      max?: string
+      max?: string;
       /** Array of ISO date strings (YYYY-MM-DD) that should be un-selectable. */
-      disabledDates?: string[]
+      disabledDates?: string[];
       /** Visual size of the calendar. */
-      size?: CalendarSize
+      size?: CalendarSize;
       /** IANA timezone string used for rendering (e.g. "America/New_York"). Defaults to the local timezone. */
-      timezone?: string
+      timezone?: string;
     }>(),
     {
       modelValue: undefined,
@@ -30,139 +30,146 @@
       size: 'md',
       timezone: undefined,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    'update:modelValue': [value: string]
-    change: [value: string]
-  }>()
+    'update:modelValue': [value: string];
+    change: [value: string];
+  }>();
 
   // ── Helpers ──────────────────────────────────────────────────────────────────
 
   function zone() {
-    return props.timezone ?? 'local'
+    return props.timezone ?? 'local';
   }
 
   function parseISO(iso: string): DateTime | null {
-    if (!iso) return null
-    const dt = DateTime.fromISO(iso, { zone: zone() })
-    return dt.isValid ? dt : null
+    if (!iso) return null;
+    const dt = DateTime.fromISO(iso, { zone: zone() });
+    return dt.isValid ? dt : null;
   }
 
   function todayISO(): string {
-    return DateTime.now().setZone(zone()).toISODate() ?? ''
+    return DateTime.now().setZone(zone()).toISODate() ?? '';
   }
 
   // ── View state ────────────────────────────────────────────────────────────────
 
   const initialView = (() => {
-    const selected = props.modelValue ? parseISO(props.modelValue) : null
-    const base = selected ?? DateTime.now().setZone(zone())
-    return base.startOf('month')
-  })()
+    const selected = props.modelValue ? parseISO(props.modelValue) : null;
+    const base = selected ?? DateTime.now().setZone(zone());
+    return base.startOf('month');
+  })();
 
-  const viewYear = ref(initialView.year)
-  const viewMonth = ref(initialView.month) // 1-12 (Luxon convention)
+  const viewYear = ref(initialView.year);
+  const viewMonth = ref(initialView.month); // 1-12 (Luxon convention)
 
   const MONTHS = [
-    'January', 'February', 'March', 'April',
-    'May', 'June', 'July', 'August',
-    'September', 'October', 'November', 'December',
-  ]
-  const DAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  const DAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
   // ── Computed constraints ──────────────────────────────────────────────────────
 
-  const minDt = computed(() => (props.min ? parseISO(props.min) : null))
-  const maxDt = computed(() => (props.max ? parseISO(props.max) : null))
-  const disabledSet = computed(() => new Set(props.disabledDates ?? []))
+  const minDt = computed(() => (props.min ? parseISO(props.min) : null));
+  const maxDt = computed(() => (props.max ? parseISO(props.max) : null));
+  const disabledSet = computed(() => new Set(props.disabledDates ?? []));
 
   // ── Calendar grid ─────────────────────────────────────────────────────────────
 
   interface CalendarCell {
-    day: number | null
-    iso: string | null
-    disabled: boolean
+    day: number | null;
+    iso: string | null;
+    disabled: boolean;
   }
 
   const calendarDays = computed((): CalendarCell[] => {
     const firstOfMonth = DateTime.fromObject(
       { year: viewYear.value, month: viewMonth.value, day: 1 },
       { zone: zone() },
-    )
+    );
     // Sunday-first offset: Luxon weekday is 1(Mon)–7(Sun); JS getDay is 0(Sun)–6(Sat)
-    const startOffset = firstOfMonth.toJSDate().getDay() // 0 = Sunday
-    const daysInMonth = firstOfMonth.daysInMonth ?? 30
+    const startOffset = firstOfMonth.toJSDate().getDay(); // 0 = Sunday
+    const daysInMonth = firstOfMonth.daysInMonth ?? 30;
 
-    const cells: CalendarCell[] = []
+    const cells: CalendarCell[] = [];
 
     // Leading empty cells
     for (let i = 0; i < startOffset; i++) {
-      cells.push({ day: null, iso: null, disabled: true })
+      cells.push({ day: null, iso: null, disabled: true });
     }
 
     for (let d = 1; d <= daysInMonth; d++) {
-      const dt = firstOfMonth.set({ day: d })
-      const iso = dt.toISODate() ?? ''
-      let disabled = false
-      if (minDt.value && dt < minDt.value.startOf('day')) disabled = true
-      if (maxDt.value && dt > maxDt.value.startOf('day')) disabled = true
-      if (disabledSet.value.has(iso)) disabled = true
-      cells.push({ day: d, iso, disabled })
+      const dt = firstOfMonth.set({ day: d });
+      const iso = dt.toISODate() ?? '';
+      let disabled = false;
+      if (minDt.value && dt < minDt.value.startOf('day')) disabled = true;
+      if (maxDt.value && dt > maxDt.value.startOf('day')) disabled = true;
+      if (disabledSet.value.has(iso)) disabled = true;
+      cells.push({ day: d, iso, disabled });
     }
 
-    return cells
-  })
+    return cells;
+  });
 
   // ── Calendar weeks ─────────────────────────────────────────────────────────
 
   const calendarWeeks = computed((): CalendarCell[][] => {
-    const cells = calendarDays.value
-    const weeks: CalendarCell[][] = []
+    const cells = calendarDays.value;
+    const weeks: CalendarCell[][] = [];
     for (let i = 0; i < cells.length; i += 7) {
-      weeks.push(cells.slice(i, i + 7))
+      weeks.push(cells.slice(i, i + 7));
     }
-    return weeks
-  })
+    return weeks;
+  });
 
   // ── Navigation ────────────────────────────────────────────────────────────────
 
   function prevMonth() {
-    const prev = DateTime.fromObject(
-      { year: viewYear.value, month: viewMonth.value },
-      { zone: zone() },
-    ).minus({ months: 1 })
-    viewYear.value = prev.year
-    viewMonth.value = prev.month
+    const prev = DateTime.fromObject({ year: viewYear.value, month: viewMonth.value }, { zone: zone() }).minus({
+      months: 1,
+    });
+    viewYear.value = prev.year;
+    viewMonth.value = prev.month;
   }
 
   function nextMonth() {
-    const next = DateTime.fromObject(
-      { year: viewYear.value, month: viewMonth.value },
-      { zone: zone() },
-    ).plus({ months: 1 })
-    viewYear.value = next.year
-    viewMonth.value = next.month
+    const next = DateTime.fromObject({ year: viewYear.value, month: viewMonth.value }, { zone: zone() }).plus({
+      months: 1,
+    });
+    viewYear.value = next.year;
+    viewMonth.value = next.month;
   }
 
   // ── Selection ─────────────────────────────────────────────────────────────────
 
   function selectDate(iso: string | null, disabled: boolean) {
-    if (!iso || disabled) return
-    emit('update:modelValue', iso)
-    emit('change', iso)
+    if (!iso || disabled) return;
+    emit('update:modelValue', iso);
+    emit('change', iso);
   }
 
   // ── State helpers ─────────────────────────────────────────────────────────────
 
-  const today = todayISO()
+  const today = todayISO();
 
   function isSelected(iso: string | null): boolean {
-    return !!iso && iso === props.modelValue
+    return !!iso && iso === props.modelValue;
   }
 
   function isToday(iso: string | null): boolean {
-    return !!iso && iso === today
+    return !!iso && iso === today;
   }
 
   // ── Sync view when modelValue changes externally ──────────────────────────────
@@ -170,57 +177,75 @@
   watch(
     () => props.modelValue,
     (val) => {
-      if (!val) return
-      const dt = parseISO(val)
+      if (!val) return;
+      const dt = parseISO(val);
       if (dt) {
-        viewYear.value = dt.year
-        viewMonth.value = dt.month
+        viewYear.value = dt.year;
+        viewMonth.value = dt.month;
       }
     },
-  )
+  );
 </script>
 
 <template>
   <div
+    :aria-label="`Calendar, ${MONTHS[viewMonth - 1]} ${viewYear}`"
     :class="['base-calendar', `base-calendar--${size}`]"
     role="application"
-    :aria-label="`Calendar, ${MONTHS[viewMonth - 1]} ${viewYear}`"
   >
     <!-- Month / year navigation -->
     <div class="base-calendar__header">
       <button
-        type="button"
-        class="base-calendar__nav-btn"
         aria-label="Previous month"
+        class="base-calendar__nav-btn"
+        type="button"
         @click="prevMonth"
       >
-        <IconChevron size="xs" direction="left" />
+        <IconChevron
+          direction="left"
+          size="xs"
+        />
       </button>
 
-      <BaseTypography variant="label" as="span" color="primary" class="base-calendar__month-label">
+      <BaseTypography
+        as="span"
+        class="base-calendar__month-label"
+        color="primary"
+        variant="label"
+      >
         {{ MONTHS[viewMonth - 1] }} {{ viewYear }}
       </BaseTypography>
 
       <button
-        type="button"
-        class="base-calendar__nav-btn"
         aria-label="Next month"
+        class="base-calendar__nav-btn"
+        type="button"
         @click="nextMonth"
       >
-        <IconChevron size="xs" direction="right" />
+        <IconChevron
+          direction="right"
+          size="xs"
+        />
       </button>
     </div>
 
     <!-- Day grid -->
-    <div class="base-calendar__grid" role="grid" :aria-label="`${MONTHS[viewMonth - 1]} ${viewYear}`">
+    <div
+      :aria-label="`${MONTHS[viewMonth - 1]} ${viewYear}`"
+      class="base-calendar__grid"
+      role="grid"
+    >
       <!-- Weekday header row -->
-      <div role="row" class="base-calendar__row">
+      <div
+        class="base-calendar__row"
+        role="row"
+      >
         <span
           v-for="d in DAYS"
           :key="d"
+          :aria-label="d"
           class="base-calendar__weekday"
           role="columnheader"
-          :aria-label="d"
         >
           {{ d }}
         </span>
@@ -230,18 +255,15 @@
       <div
         v-for="(week, wi) in calendarWeeks"
         :key="wi"
-        role="row"
         class="base-calendar__row"
+        role="row"
       >
         <button
           v-for="(cell, i) in week"
           :key="i"
-          type="button"
-          role="gridcell"
-          :disabled="!cell.day || cell.disabled"
-          :aria-selected="isSelected(cell.iso)"
-          :aria-label="cell.iso ?? undefined"
           :aria-current="isToday(cell.iso) ? 'date' : undefined"
+          :aria-label="cell.iso ?? undefined"
+          :aria-selected="isSelected(cell.iso)"
           :class="[
             'base-calendar__day',
             {
@@ -251,6 +273,9 @@
               'base-calendar__day--disabled': cell.disabled && !!cell.day,
             },
           ]"
+          :disabled="!cell.day || cell.disabled"
+          role="gridcell"
+          type="button"
           @click="selectDate(cell.iso, cell.disabled)"
         >
           {{ cell.day ?? '' }}
@@ -260,7 +285,7 @@
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
   .base-calendar {
@@ -272,7 +297,7 @@
     box-shadow: var(--mp-shadow-md);
     user-select: none;
 
-    // ── Sizes ───────────────────────────────────────────────────────────────────
+    /* ── Sizes ─────────────────────────────────────────────────────────────────── */
 
     &--sm {
       padding: var(--mp-spacing-2);
@@ -281,6 +306,7 @@
       .base-calendar__weekday,
       .base-calendar__day {
         height: 28px;
+
         @include mp.mp-font-caption;
       }
     }
@@ -292,6 +318,7 @@
       .base-calendar__weekday,
       .base-calendar__day {
         height: 32px;
+
         @include mp.mp-font-body-sm;
       }
     }
@@ -303,11 +330,12 @@
       .base-calendar__weekday,
       .base-calendar__day {
         height: 40px;
+
         @include mp.mp-font-body-md;
       }
     }
 
-    // ── Header ──────────────────────────────────────────────────────────────────
+    /* ── Header ────────────────────────────────────────────────────────────────── */
 
     &__header {
       display: flex;
@@ -348,7 +376,7 @@
       }
     }
 
-    // ── Grid ────────────────────────────────────────────────────────────────────
+    /* ── Grid ──────────────────────────────────────────────────────────────────── */
 
     &__grid {
       display: grid;
@@ -370,7 +398,7 @@
       color: var(--mp-color-text-tertiary);
     }
 
-    // ── Day cells ───────────────────────────────────────────────────────────────
+    /* ── Day cells ─────────────────────────────────────────────────────────────── */
 
     &__day {
       display: flex;
@@ -385,10 +413,6 @@
       transition:
         background-color 150ms ease,
         color 150ms ease;
-
-      &:hover:not(:disabled):not(.base-calendar__day--selected) {
-        background-color: var(--mp-color-bg-muted);
-      }
 
       &--empty {
         pointer-events: none;
@@ -415,6 +439,10 @@
       &:focus-visible {
         outline: 2px solid var(--mp-color-border-focus);
         outline-offset: 2px;
+      }
+
+      &:hover:not(:disabled, .base-calendar__day--selected) {
+        background-color: var(--mp-color-bg-muted);
       }
     }
   }

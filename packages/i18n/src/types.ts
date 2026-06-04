@@ -4,20 +4,20 @@
 
 export interface MpMessages {
   /** Visible label for the required-field asterisk tooltip. */
-  required: string
+  required: string;
   /** Screen-reader label for the loading spinner inside a button. */
-  loading: string
+  loading: string;
   /** Fallback aria-label for a close / dismiss action. */
-  close: string
+  close: string;
   /** Fallback aria-label for a search action. */
-  search: string
+  search: string;
   /** Fallback aria-label for expanding a panel. */
-  expand: string
+  expand: string;
   /** Fallback aria-label for collapsing a panel. */
-  collapse: string
+  collapse: string;
 }
 
-export type MpLocales = Record<string, Partial<MpMessages>>
+export type MpLocales = Record<string, Partial<MpMessages>>;
 
 /**
  * A locale module contributed by a package or app.
@@ -31,4 +31,4 @@ export type MpLocales = Record<string, Partial<MpMessages>>
  *   fr: { required: 'requis', loading: 'Chargement…' },
  * }
  */
-export type MpLocaleModule = Record<string, Record<string, string>>
+export type MpLocaleModule = Record<string, Record<string, string>>;

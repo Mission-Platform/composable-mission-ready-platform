@@ -1,29 +1,29 @@
-<script setup lang="ts">
-  import { computed } from 'vue'
+<script lang="ts" setup>
+  import { computed } from 'vue';
 
-  import type { StatusLevel } from './types'
+  import type { StatusLevel } from './types';
 
   const props = withDefaults(
     defineProps<{
-      statusLevel?: StatusLevel
+      statusLevel?: StatusLevel;
     }>(),
     {
       statusLevel: 'none',
     },
-  )
+  );
 
   const statusColor = computed(() => {
     switch (props.statusLevel) {
       case 'info':
-        return 'var(--mp-color-info-default)'
+        return 'var(--mp-color-info-default)';
       case 'warning':
-        return 'var(--mp-color-warning-default)'
+        return 'var(--mp-color-warning-default)';
       case 'error':
-        return 'var(--mp-color-danger-default)'
+        return 'var(--mp-color-danger-default)';
       default:
-        return 'transparent'
+        return 'transparent';
     }
-  })
+  });
 
   // Current token values (WCAG AAA on white — all dark colors):
   //   info-default    #155e75 → white text = 9.20:1 (WCAG AAA)
@@ -31,14 +31,14 @@
   //   danger-default  #9f1239 → white text = 5.72:1 (WCAG AA)
   // All three use white text (--mp-color-text-on-primary) for consistent readable contrast.
   const statusTextColor = computed(() => {
-    return props.statusLevel !== 'none' ? 'var(--mp-color-text-on-primary)' : undefined
-  })
+    return props.statusLevel !== 'none' ? 'var(--mp-color-text-on-primary)' : undefined;
+  });
 
   const statusRole = computed(() => {
-    if (props.statusLevel === 'error') return 'alert'
-    if (props.statusLevel === 'none') return undefined
-    return 'status'
-  })
+    if (props.statusLevel === 'error') return 'alert';
+    if (props.statusLevel === 'none') return undefined;
+    return 'status';
+  });
 
   // role="alert" implies aria-live="assertive"; role="status" implies aria-live="polite".
   // We omit an explicit aria-live to avoid conflicting with the implicit value from the role.
@@ -47,26 +47,32 @@
 <template>
   <div class="application-layout">
     <div
-      class="application-layout__status"
-      :style="{ backgroundColor: statusColor, color: statusTextColor }"
       :aria-hidden="statusLevel === 'none' || undefined"
       :role="statusRole"
+      :style="{ backgroundColor: statusColor, color: statusTextColor }"
+      class="application-layout__status"
     >
       <slot name="status" />
     </div>
-    <div role="none" class="application-layout__header">
+    <div
+      class="application-layout__header"
+      role="none"
+    >
       <slot name="navbar" />
     </div>
     <main class="application-layout__content">
       <slot name="content" />
     </main>
-    <div role="none" class="application-layout__footer">
+    <div
+      class="application-layout__footer"
+      role="none"
+    >
       <slot name="footer" />
     </div>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
   @use '@mission-platform/breakpoints/scss/mixins' as bp;
 
@@ -79,7 +85,6 @@
     &__status {
       transition: background-color 0.2s ease;
       min-height: 0;
-
       padding-left: env(safe-area-inset-left);
       padding-right: env(safe-area-inset-right);
 

@@ -1,75 +1,68 @@
-<script setup lang="ts">
-  import { inject } from 'vue'
+<script lang="ts" setup>
+  import { IconChevron } from '@mission-platform/icons';
+  import { inject } from 'vue';
 
-  import { IconChevron } from '@mission-platform/icons'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
-  import type { AccordionContext } from './BaseAccordion.vue'
+  import type { AccordionContext } from './BaseAccordion.vue';
 
   const props = defineProps<{
-    id: string
-    disabled?: boolean
-  }>()
+    id: string;
+    disabled?: boolean;
+  }>();
 
-  const accordion = inject<AccordionContext>('accordion')
+  const accordion = inject<AccordionContext>('accordion');
 
   function handleClick() {
     if (!props.disabled) {
-      accordion?.toggle(props.id)
+      accordion?.toggle(props.id);
     }
   }
 
   function isOpen() {
-    return accordion?.openIds.value.has(props.id) ?? false
+    return accordion?.openIds.value.has(props.id) ?? false;
   }
 </script>
 
 <template>
   <details
-    :open="isOpen()"
     :class="['base-accordion__item', { 'base-accordion__item--disabled': disabled }]"
-    :aria-disabled="disabled || undefined"
+    :open="isOpen()"
     @toggle.prevent
-    @click.prevent="handleClick"
   >
-    <summary class="base-accordion__summary">
-      <BaseTypography variant="body-md" weight="medium" as="span" color="inherit"
-        ><slot name="summary"
-      /></BaseTypography>
+    <summary
+      :aria-disabled="disabled || undefined"
+      class="base-accordion__summary"
+      role="button"
+      tabindex="0"
+      @click.prevent="handleClick"
+      @keydown.enter.prevent="handleClick"
+      @keydown.space.prevent="handleClick"
+    >
+      <BaseTypography
+        as="span"
+        color="inherit"
+        variant="body-md"
+        weight="medium"
+      >
+        <slot name="summary" />
+      </BaseTypography>
       <IconChevron
-        class="base-accordion__chevron"
         :direction="isOpen() ? 'up' : 'down'"
         :size="16"
+        class="base-accordion__chevron"
       />
     </summary>
-    <div v-if="isOpen()" class="base-accordion__content">
+    <div
+      v-if="isOpen()"
+      class="base-accordion__content"
+    >
       <slot />
     </div>
   </details>
 </template>
 
-<style scoped lang="scss">
-  .base-accordion__item {
-    background-color: var(--mp-color-bg-surface);
-
-    & + .base-accordion__item {
-      border-top: 1px solid var(--mp-color-border-default);
-    }
-
-    &--disabled {
-      background-color: var(--mp-color-bg-muted);
-
-      .base-accordion__summary {
-        color: var(--mp-color-text-disabled);
-        cursor: not-allowed;
-
-        &:hover {
-          background-color: var(--mp-color-bg-muted);
-        }
-      }
-    }
-  }
-
+<style lang="scss" scoped>
   .base-accordion__summary {
     display: flex;
     align-items: center;
@@ -92,6 +85,27 @@
     &:focus-visible {
       outline: none;
       box-shadow: var(--mp-shadow-focus-primary);
+    }
+  }
+
+  .base-accordion__item {
+    background-color: var(--mp-color-bg-surface);
+
+    & + .base-accordion__item {
+      border-top: 1px solid var(--mp-color-border-default);
+    }
+
+    &--disabled {
+      background-color: var(--mp-color-bg-muted);
+
+      .base-accordion__summary {
+        color: var(--mp-color-text-disabled);
+        cursor: not-allowed;
+
+        &:hover {
+          background-color: var(--mp-color-bg-muted);
+        }
+      }
     }
   }
 

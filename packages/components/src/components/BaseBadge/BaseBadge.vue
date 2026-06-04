@@ -1,39 +1,37 @@
-<script setup lang="ts">
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+<script lang="ts" setup>
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
-  export type BadgeVariant = 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'neutral'
-  export type BadgeSize = 'sm' | 'md'
+  export type BadgeVariant = 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'neutral';
+  export type BadgeSize = 'sm' | 'md';
 
   withDefaults(
     defineProps<{
-      variant?: BadgeVariant
-      size?: BadgeSize
-      pill?: boolean
+      variant?: BadgeVariant;
+      size?: BadgeSize;
+      pill?: boolean;
     }>(),
     {
       variant: 'neutral',
       size: 'md',
       pill: false,
     },
-  )
+  );
 </script>
 
 <template>
-  <span
-    :class="[
-      'base-badge',
-      `base-badge--${variant}`,
-      `base-badge--${size}`,
-      { 'base-badge--pill': pill },
-    ]"
-  >
-    <BaseTypography variant="caption" weight="medium" as="span" color="inherit">
+  <span :class="['base-badge', `base-badge--${variant}`, `base-badge--${size}`, { 'base-badge--pill': pill }]">
+    <BaseTypography
+      as="span"
+      color="inherit"
+      variant="caption"
+      weight="medium"
+    >
       <slot />
     </BaseTypography>
   </span>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-badge {
     display: inline-flex;
     align-items: center;
@@ -47,7 +45,7 @@
       border-radius: var(--mp-radius-full);
     }
 
-    // Sizes
+    /* Sizes */
     &--sm {
       padding: 2px var(--mp-spacing-2);
     }
@@ -56,7 +54,7 @@
       padding: var(--mp-spacing-1) var(--mp-spacing-3);
     }
 
-    // Variants
+    /* Variants */
     &--neutral {
       background-color: var(--mp-color-bg-muted);
       color: var(--mp-color-text-secondary);

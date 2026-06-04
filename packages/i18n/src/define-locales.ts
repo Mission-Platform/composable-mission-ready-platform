@@ -1,7 +1,7 @@
 // ─── @mission-platform/i18n ──────────────────────────────────────────────────
 // Helper for packages to declare their own locale modules with correct typing.
 
-import type { MpLocaleModule } from './types'
+import type { MpLocaleModule } from './types';
 
 /**
  * Identity helper that returns its argument unchanged.
@@ -22,5 +22,5 @@ import type { MpLocaleModule } from './types'
  * @returns The same object, typed as `MpLocaleModule`.
  */
 export function defineLocales(module: MpLocaleModule): MpLocaleModule {
-  return module
+  return module;
 }

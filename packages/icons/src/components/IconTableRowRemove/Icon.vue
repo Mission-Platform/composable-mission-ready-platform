@@ -1,39 +1,63 @@
-<script setup lang="ts">
-  import { useIconSize } from '../../useIconSize.ts'
+<script lang="ts" setup>
+  import { useIconSize } from '../../use-icon-size.ts';
 
   const props = withDefaults(
     defineProps<{
-      size?: number | string
-      color?: string
-      ariaLabel?: string
+      size?: number | string;
+      color?: string;
+      ariaLabel?: string;
     }>(),
     {
       size: 'md',
       color: 'currentColor',
       ariaLabel: undefined,
     },
-  )
+  );
 
-  const sizeValue = useIconSize(() => props.size)
+  const sizeValue = useIconSize(() => props.size);
 </script>
 
 <template>
   <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
+    :aria-hidden="!ariaLabel"
+    :aria-label="ariaLabel ?? 'Remove Table Row'"
+    :height="sizeValue"
     :stroke="color"
-    stroke-width="2"
+    :width="sizeValue"
+    class="base-icon-table-row-remove"
+    fill="none"
+    role="img"
     stroke-linecap="round"
     stroke-linejoin="round"
-    :width="sizeValue"
-    :height="sizeValue"
-    :aria-label="ariaLabel ?? 'Remove Table Row'"
-    :aria-hidden="!ariaLabel"
-    role="img"
-    class="base-icon-table-row-remove"
+    stroke-width="2"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
   >
-    <path d="M3 3h18v10H3z"/><line x1="9" y1="3" x2="9" y2="13"/><line x1="15" y1="3" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="23"/><line x1="15" y1="17" x2="9" y2="23"/>
+    <path d="M3 3h18v10H3z" />
+    <line
+      x1="9"
+      x2="9"
+      y1="3"
+      y2="13"
+    />
+    <line
+      x1="15"
+      x2="15"
+      y1="3"
+      y2="13"
+    />
+    <line
+      x1="9"
+      x2="15"
+      y1="17"
+      y2="23"
+    />
+    <line
+      x1="15"
+      x2="9"
+      y1="17"
+      y2="23"
+    />
   </svg>
 </template>
 

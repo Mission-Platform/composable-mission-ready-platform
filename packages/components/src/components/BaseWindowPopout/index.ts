@@ -1,1 +1,1 @@
-export { default } from './BaseWindowPopout.vue'
+export { default } from './BaseWindowPopout.vue';

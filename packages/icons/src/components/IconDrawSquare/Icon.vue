@@ -1,43 +1,73 @@
-<script setup lang="ts">
-  import { useIconSize } from '../../useIconSize.ts'
+<script lang="ts" setup>
+  import { useIconSize } from '../../use-icon-size.ts';
 
   const props = withDefaults(
     defineProps<{
-      size?: number | string
-      color?: string
-      ariaLabel?: string
+      size?: number | string;
+      color?: string;
+      ariaLabel?: string;
     }>(),
     {
       size: 'md',
       color: 'currentColor',
       ariaLabel: undefined,
     },
-  )
+  );
 
-  const sizeValue = useIconSize(() => props.size)
+  const sizeValue = useIconSize(() => props.size);
 </script>
 
 <template>
   <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
+    :aria-hidden="!ariaLabel"
+    :aria-label="ariaLabel"
+    :height="sizeValue"
     :stroke="color"
-    stroke-width="2"
+    :width="sizeValue"
+    class="base-icon-draw-square"
+    fill="none"
+    role="img"
     stroke-linecap="round"
     stroke-linejoin="round"
-    :width="sizeValue"
-    :height="sizeValue"
-    :aria-label="ariaLabel"
-    :aria-hidden="!ariaLabel"
-    role="img"
-    class="base-icon-draw-square"
+    stroke-width="2"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
   >
-    <rect x="3" y="3" width="18" height="18" rx="1"/>
-    <circle cx="3" cy="3" r="1.5" :fill="color" stroke="none"/>
-    <circle cx="21" cy="3" r="1.5" :fill="color" stroke="none"/>
-    <circle cx="21" cy="21" r="1.5" :fill="color" stroke="none"/>
-    <circle cx="3" cy="21" r="1.5" :fill="color" stroke="none"/>
+    <rect
+      height="18"
+      rx="1"
+      width="18"
+      x="3"
+      y="3"
+    />
+    <circle
+      :fill="color"
+      cx="3"
+      cy="3"
+      r="1.5"
+      stroke="none"
+    />
+    <circle
+      :fill="color"
+      cx="21"
+      cy="3"
+      r="1.5"
+      stroke="none"
+    />
+    <circle
+      :fill="color"
+      cx="21"
+      cy="21"
+      r="1.5"
+      stroke="none"
+    />
+    <circle
+      :fill="color"
+      cx="3"
+      cy="21"
+      r="1.5"
+      stroke="none"
+    />
   </svg>
 </template>
 

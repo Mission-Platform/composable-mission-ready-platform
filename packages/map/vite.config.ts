@@ -1,15 +1,15 @@
-import { resolve } from 'node:path'
+import path from 'node:path';
 
-import vue from '@vitejs/plugin-vue'
-import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [vue()],
   build: {
     lib: {
       entry: {
-        map: resolve(__dirname, 'src/index.ts'),
-        locales: resolve(__dirname, 'src/locales/index.ts'),
+        map: path.resolve(__dirname, 'src/index.ts'),
+        locales: path.resolve(__dirname, 'src/locales/index.ts'),
       },
       name: 'MissionPlatformMap',
       formats: ['es'],
@@ -24,4 +24,4 @@ export default defineConfig({
       },
     },
   },
-})
+});

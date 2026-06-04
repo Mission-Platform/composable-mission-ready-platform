@@ -32,6 +32,8 @@
     "eslint": "catalog:eslint",
     "postcss-scss": "catalog:stylelint",
     "prettier": "catalog:prettier",
+    "stylelint-config-recommended-vue": "catalog:stylelint",
+    "stylelint-config-standard-scss": "catalog:stylelint",
     "sass-embedded": "catalog:vite",
     "stylelint": "catalog:stylelint",
     "typescript": "catalog:typescript",

@@ -1,26 +1,26 @@
-<script setup lang="ts">
-  import { useI18n } from 'vue-i18n'
+<script lang="ts" setup>
+  import { useI18n } from '@mission-platform/i18n';
 
-  import { useId } from '../../composables/useId'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+  import { useId } from '../../composables/use-id';
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
-  export type TextareaSize = 'sm' | 'md' | 'lg'
-  export type TextareaResize = 'none' | 'vertical' | 'horizontal' | 'both'
+  export type TextareaSize = 'sm' | 'md' | 'lg';
+  export type TextareaResize = 'none' | 'vertical' | 'horizontal' | 'both';
 
   const props = withDefaults(
     defineProps<{
-      modelValue?: string
-      rows?: number
-      size?: TextareaSize
-      resize?: TextareaResize
-      placeholder?: string
-      label?: string
-      labelHidden?: boolean
-      hint?: string
-      error?: string
-      disabled?: boolean
-      required?: boolean
-      id?: string
+      modelValue?: string;
+      rows?: number;
+      size?: TextareaSize;
+      resize?: TextareaResize;
+      placeholder?: string;
+      label?: string;
+      labelHidden?: boolean;
+      hint?: string;
+      error?: string;
+      disabled?: boolean;
+      required?: boolean;
+      id?: string;
     }>(),
     {
       modelValue: '',
@@ -36,24 +36,21 @@
       required: false,
       id: undefined,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    'update:modelValue': [value: string]
-    change: [event: Event]
-    blur: [event: FocusEvent]
-    focus: [event: FocusEvent]
-  }>()
+    'update:modelValue': [value: string];
+    change: [event: Event];
+    blur: [event: FocusEvent];
+    focus: [event: FocusEvent];
+  }>();
 
-  const { t } = useI18n({
-    inheritLocale: true,
-    messages: { en: { required: 'required' } },
-  })
-  const { id: resolvedId } = useId(props.id)
+  const { t } = useI18n({ useScope: 'local' });
+  const { id: resolvedId } = useId(props.id);
 
   function handleInput(event: Event) {
-    const target = event.target as HTMLTextAreaElement
-    emit('update:modelValue', target.value)
+    const target = event.target as HTMLTextAreaElement;
+    emit('update:modelValue', target.value);
   }
 </script>
 
@@ -65,39 +62,71 @@
       { 'base-textarea--error': !!error, 'base-textarea--disabled': disabled },
     ]"
   >
-    <label v-if="label" :for="resolvedId" :class="['base-textarea__label', { 'base-textarea__label--hidden': labelHidden }]">
-      <BaseTypography variant="label" as="span" color="primary">{{ label }}</BaseTypography>
-      <span v-if="required" class="base-textarea__required" :title="t('required')" aria-hidden="true">*</span>
+    <label
+      v-if="label"
+      :class="['base-textarea__label', { 'base-textarea__label--hidden': labelHidden }]"
+      :for="resolvedId"
+    >
+      <BaseTypography
+        as="span"
+        color="primary"
+        variant="label"
+      >{{ label }}</BaseTypography>
+      <span
+        v-if="required"
+        :title="t('required')"
+        aria-hidden="true"
+        class="base-textarea__required"
+      >*</span>
     </label>
     <textarea
       :id="resolvedId"
-      :value="modelValue"
-      :rows="rows"
-      :placeholder="placeholder"
-      :disabled="disabled"
-      :required="required"
-      :style="{ resize }"
-      :aria-invalid="!!error || undefined"
       :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
+      :aria-invalid="!!error || undefined"
+      :disabled="disabled"
+      :placeholder="placeholder"
+      :required="required"
+      :rows="rows"
+      :style="{ resize }"
+      :value="modelValue"
       class="base-textarea__field"
-      @input="handleInput"
-      @change="emit('change', $event)"
       @blur="emit('blur', $event)"
+      @change="emit('change', $event)"
       @focus="emit('focus', $event)"
+      @input="handleInput"
     />
-    <BaseTypography v-if="error" :id="`${resolvedId}-error`" variant="caption" as="p" color="inherit" class="base-textarea__error" role="alert">{{ error }}</BaseTypography>
-    <BaseTypography v-else-if="hint" :id="`${resolvedId}-hint`" variant="caption" as="p" color="secondary" class="base-textarea__hint">{{ hint }}</BaseTypography>
+    <BaseTypography
+      v-if="error"
+      :id="`${resolvedId}-error`"
+      as="p"
+      class="base-textarea__error"
+      color="inherit"
+      role="alert"
+      variant="caption"
+    >
+      {{ error }}
+    </BaseTypography>
+    <BaseTypography
+      v-else-if="hint"
+      :id="`${resolvedId}-hint`"
+      as="p"
+      class="base-textarea__hint"
+      color="secondary"
+      variant="caption"
+    >
+      {{ hint }}
+    </BaseTypography>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-textarea {
     display: flex;
     flex-direction: column;
     gap: var(--mp-spacing-1);
 
     &__label {
-      // typography handled by BaseTypography
+      /* typography handled by BaseTypography */
 
       &--hidden {
         position: absolute;
@@ -106,7 +135,7 @@
         padding: 0;
         margin: -1px;
         overflow: hidden;
-        clip: rect(0, 0, 0, 0);
+        clip-path: inset(50%);
         white-space: nowrap;
         border: 0;
       }
@@ -127,7 +156,9 @@
       font-family: var(--mp-font-family-sans);
       line-height: var(--mp-line-height-normal);
       outline: none;
-      transition: border-color 150ms ease, box-shadow 150ms ease;
+      transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease;
 
       &::placeholder {
         color: var(--mp-color-text-tertiary);
@@ -139,7 +170,7 @@
       }
     }
 
-    // Sizes
+    /* Sizes */
     &--sm .base-textarea__field {
       padding: var(--mp-spacing-1) var(--mp-spacing-2);
       font-size: var(--mp-font-size-sm);
@@ -155,7 +186,7 @@
       font-size: var(--mp-font-size-lg);
     }
 
-    // States
+    /* States */
     &--error {
       .base-textarea__field {
         border-color: var(--mp-color-danger-default);
@@ -186,3 +217,8 @@
     }
   }
 </style>
+
+<i18n lang="yaml">
+en:
+  required: required
+</i18n>

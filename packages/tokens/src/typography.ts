@@ -3,7 +3,7 @@
 export const fontFamilies = {
   sans: "'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif",
   mono: "'JetBrains Mono', 'Fira Code', ui-monospace, 'Cascadia Mono', monospace",
-} as const
+} as const;
 
 export const fontSizes = {
   '2xs': '0.625rem',
@@ -16,14 +16,14 @@ export const fontSizes = {
   '3xl': '1.875rem',
   '4xl': '2.25rem',
   '5xl': '3rem',
-} as const
+} as const;
 
 export const fontWeights = {
   regular: 400,
   medium: 500,
   semibold: 600,
   bold: 700,
-} as const
+} as const;
 
 export const lineHeights = {
   tight: 1.25,
@@ -31,7 +31,7 @@ export const lineHeights = {
   normal: 1.5,
   relaxed: 1.625,
   loose: 2,
-} as const
+} as const;
 
 export const letterSpacings = {
   tight: '-0.025em',
@@ -39,10 +39,10 @@ export const letterSpacings = {
   wide: '0.025em',
   wider: '0.05em',
   widest: '0.1em',
-} as const
+} as const;
 
-export type FontFamilies = typeof fontFamilies
-export type FontSizes = typeof fontSizes
-export type FontWeights = typeof fontWeights
-export type LineHeights = typeof lineHeights
-export type LetterSpacings = typeof letterSpacings
+export type FontFamilies = typeof fontFamilies;
+export type FontSizes = typeof fontSizes;
+export type FontWeights = typeof fontWeights;
+export type LineHeights = typeof lineHeights;
+export type LetterSpacings = typeof letterSpacings;

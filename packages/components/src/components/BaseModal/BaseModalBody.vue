@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-modal__body {
     padding: var(--mp-spacing-6);
     overflow-y: auto;

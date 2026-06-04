@@ -4,7 +4,7 @@
   </footer>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-dialog__footer {
     display: flex;
     align-items: center;

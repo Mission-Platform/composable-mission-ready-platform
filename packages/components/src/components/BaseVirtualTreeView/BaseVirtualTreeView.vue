@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   /**
    * VirtualTreeView — a virtual-scrolling tree that renders only visible rows.
    *
@@ -20,29 +20,29 @@
    *   select(node)  — node was clicked
    *   toggle(node)  — node expand/collapse toggled
    */
-  import { computed, ref, onMounted, onUnmounted } from 'vue'
+  import { computed, onMounted, onUnmounted, ref } from 'vue';
 
-  import BaseTreeNodeLabel from '../BaseTreeView/BaseTreeNodeLabel.vue'
+  import BaseTreeNodeLabel from '../BaseTreeView/BaseTreeNodeLabel.vue';
 
   export interface TreeNode {
-    id: string | number
-    label: string
-    children?: TreeNode[]
-    [key: string]: unknown
+    id: string | number;
+    label: string;
+    children?: TreeNode[];
+    [key: string]: unknown;
   }
 
   interface FlatNode {
-    node: TreeNode
-    depth: number
+    node: TreeNode;
+    depth: number;
   }
 
   const props = withDefaults(
     defineProps<{
-      nodes: TreeNode[]
-      itemHeight?: number
-      overscan?: number
-      height?: number
-      defaultOpen?: boolean
+      nodes: TreeNode[];
+      itemHeight?: number;
+      overscan?: number;
+      height?: number;
+      defaultOpen?: boolean;
     }>(),
     {
       itemHeight: 32,
@@ -50,100 +50,103 @@
       height: 400,
       defaultOpen: false,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    select: [node: TreeNode]
-    toggle: [node: TreeNode]
-  }>()
+    select: [node: TreeNode];
+    toggle: [node: TreeNode];
+  }>();
 
   defineSlots<{
-    default(props: { node: TreeNode; depth: number; isOpen: boolean; toggle: () => void; select: () => void }): unknown
-  }>()
+    default(props: { node: TreeNode; depth: number; isOpen: boolean; toggle: () => void; select: () => void }): unknown;
+  }>();
 
   // ─── Open state ──────────────────────────────────────────────────────────────
 
-  const openMap = ref<Record<string | number, boolean>>({})
+  const openMap = ref<Record<string | number, boolean>>({});
 
   function isOpen(node: TreeNode): boolean {
-    if (node.id in openMap.value) return openMap.value[node.id]
-    return props.defaultOpen
+    if (node.id in openMap.value) return openMap.value[node.id];
+    return props.defaultOpen;
   }
 
   function toggle(node: TreeNode) {
-    openMap.value = { ...openMap.value, [node.id]: !isOpen(node) }
-    emit('toggle', node)
+    openMap.value = { ...openMap.value, [node.id]: !isOpen(node) };
+    emit('toggle', node);
   }
 
   function select(node: TreeNode) {
-    emit('select', node)
+    emit('select', node);
   }
 
   // ─── Flatten visible nodes ────────────────────────────────────────────────────
 
   function flatten(nodes: TreeNode[], depth: number): FlatNode[] {
-    const result: FlatNode[] = []
+    const result: FlatNode[] = [];
     for (const node of nodes) {
-      result.push({ node, depth })
+      result.push({ node, depth });
       if (isOpen(node) && Array.isArray(node.children) && node.children.length > 0) {
-        result.push(...flatten(node.children, depth + 1))
+        result.push(...flatten(node.children, depth + 1));
       }
     }
-    return result
+    return result;
   }
 
-  const flatNodes = computed(() => flatten(props.nodes, 0))
+  const flatNodes = computed(() => flatten(props.nodes, 0));
 
   // ─── Virtual scroll ────────────────────────────────────────────────────────
 
-  const scrollTop = ref(0)
-  const containerRef = ref<HTMLElement | null>(null)
+  const scrollTop = ref(0);
+  const containerRef = ref<HTMLElement | null>(null);
 
-  const totalHeight = computed(() => flatNodes.value.length * props.itemHeight)
+  const totalHeight = computed(() => flatNodes.value.length * props.itemHeight);
 
   const startIndex = computed(() => {
-    const raw = Math.floor(scrollTop.value / props.itemHeight) - props.overscan
-    return Math.max(0, raw)
-  })
+    const raw = Math.floor(scrollTop.value / props.itemHeight) - props.overscan;
+    return Math.max(0, raw);
+  });
 
   const endIndex = computed(() => {
-    const visibleCount = Math.ceil(props.height / props.itemHeight)
-    const raw = Math.floor(scrollTop.value / props.itemHeight) + visibleCount + props.overscan
-    return Math.min(flatNodes.value.length - 1, raw)
-  })
+    const visibleCount = Math.ceil(props.height / props.itemHeight);
+    const raw = Math.floor(scrollTop.value / props.itemHeight) + visibleCount + props.overscan;
+    return Math.min(flatNodes.value.length - 1, raw);
+  });
 
   const visibleRows = computed(() =>
     flatNodes.value.slice(startIndex.value, endIndex.value + 1).map((row, i) => ({
       ...row,
       index: startIndex.value + i,
     })),
-  )
+  );
 
-  const offsetY = computed(() => startIndex.value * props.itemHeight)
+  const offsetY = computed(() => startIndex.value * props.itemHeight);
 
   function handleScroll(e: Event) {
-    scrollTop.value = (e.target as HTMLElement).scrollTop
+    scrollTop.value = (e.target as HTMLElement).scrollTop;
   }
 
   onMounted(() => {
-    containerRef.value?.addEventListener('scroll', handleScroll, { passive: true })
-  })
+    containerRef.value?.addEventListener('scroll', handleScroll, { passive: true });
+  });
 
   onUnmounted(() => {
-    containerRef.value?.removeEventListener('scroll', handleScroll)
-  })
+    containerRef.value?.removeEventListener('scroll', handleScroll);
+  });
 </script>
 
 <template>
   <div
     ref="containerRef"
+    :style="{ height: `${height}px`, overflowY: 'auto', position: 'relative' }"
     class="virtual-tree"
     role="tree"
     tabindex="0"
-    :style="{ height: `${height}px`, overflowY: 'auto', position: 'relative' }"
   >
     <!-- Full-height spacer so scrollbar reflects true content size -->
-    <div :style="{ height: `${totalHeight}px`, position: 'relative', pointerEvents: 'none' }" aria-hidden="true" />
+    <div
+      :style="{ height: `${totalHeight}px`, position: 'relative', pointerEvents: 'none' }"
+      aria-hidden="true"
+    />
 
     <!-- Rendered slice at the correct scroll offset -->
     <div
@@ -157,26 +160,33 @@
       <div
         v-for="{ node, depth } in visibleRows"
         :key="node.id"
+        :style="{ height: `${itemHeight}px`, boxSizing: 'border-box' }"
         class="virtual-tree__row"
         role="none"
-        :style="{ height: `${itemHeight}px`, boxSizing: 'border-box' }"
       >
         <slot
-          :node="node"
           :depth="depth"
           :is-open="isOpen(node)"
-          :toggle="() => toggle(node)"
+          :node="node"
           :select="() => select(node)"
+          :toggle="() => toggle(node)"
         >
           <!-- Default row renderer -->
           <BaseTreeNodeLabel
-            :node="node"
             :depth="depth"
-            :is-open="isOpen(node)"
             :has-children="Boolean(node.children?.length)"
-            @toggle="toggle(node)"
+            :is-open="isOpen(node)"
+            :node="node"
+            @keydown="
+              (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  select(node);
+                }
+              }
+            "
             @select="select(node)"
-            @keydown="(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(node) } }"
+            @toggle="toggle(node)"
           />
         </slot>
       </div>
@@ -184,7 +194,7 @@
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
   .virtual-tree {

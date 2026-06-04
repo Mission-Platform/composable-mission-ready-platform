@@ -1,10 +1,9 @@
-import { locales as uiLocales } from '@mission-platform/components/locales'
-import { createMpI18n, defineLocales, mergeLocales } from '@mission-platform/i18n'
-import { locales as baseLocales } from '@mission-platform/i18n/locales'
-import { defineComponent, ref, type Ref } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { locales as uiLocales } from '@mission-platform/components/locales';
+import { createMpI18n, defineLocales, mergeLocales, useI18n } from '@mission-platform/i18n';
+import { locales as baseLocales } from '@mission-platform/i18n/locales';
+import { defineComponent, ref, type Ref } from 'vue';
 
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -15,17 +14,17 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 const LocaleInspector = defineComponent({
   name: 'LocaleInspector',
   setup() {
-    const { t, locale, availableLocales, getLocaleMessage } = useI18n({ useScope: 'global' })
+    const { t, locale, availableLocales, getLocaleMessage } = useI18n({ useScope: 'global' });
 
-    const selectedLocale = ref(locale.value)
+    const selectedLocale = ref(locale.value);
 
     function switchLocale(code: string) {
-      locale.value = code
-      selectedLocale.value = code
+      locale.value = code;
+      selectedLocale.value = code;
     }
 
     return () => {
-      const msgs = getLocaleMessage(selectedLocale.value) as Record<string, string>
+      const msgs = getLocaleMessage(selectedLocale.value) as Record<string, string>;
 
       return (
         <div style="font-family: monospace; font-size: 13px; line-height: 1.8;">
@@ -45,9 +44,7 @@ const LocaleInspector = defineComponent({
             <thead>
               <tr style="background: #f5f5f5;">
                 <th style="padding: 6px 12px; text-align: left; border: 1px solid #ddd;">Key</th>
-                <th style="padding: 6px 12px; text-align: left; border: 1px solid #ddd;">
-                  t(key) → value
-                </th>
+                <th style="padding: 6px 12px; text-align: left; border: 1px solid #ddd;">t(key) → value</th>
               </tr>
             </thead>
             <tbody>
@@ -60,10 +57,10 @@ const LocaleInspector = defineComponent({
             </tbody>
           </table>
         </div>
-      )
-    }
+      );
+    };
   },
-})
+});
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -134,9 +131,9 @@ const i18n = createI18n({ legacy: false, locale: 'en', messages })
       },
     },
   },
-}
+};
 
-export default meta
+export default meta;
 
 // ─── Stories ─────────────────────────────────────────────────────────────────
 
@@ -153,7 +150,7 @@ export const DefaultSetup: StoryObj = {
     components: { LocaleInspector },
     template: '<LocaleInspector />',
   }),
-}
+};
 
 /**
  * Demonstrates \`mergeLocales\` used standalone — outside of \`createMpI18n\`.
@@ -163,13 +160,13 @@ export const MergeLocalesUtility: StoryObj = {
   name: 'mergeLocales — standalone merge',
   render: () => ({
     setup() {
-      const packageA = defineLocales({ en: { hello: 'Hello', goodbye: 'Goodbye' } })
-      const packageB = defineLocales({ en: { hello: 'Hi' }, fr: { hello: 'Bonjour' } })
-      const appOverride = { fr: { hello: 'Salut' } }
+      const packageA = defineLocales({ en: { hello: 'Hello', goodbye: 'Goodbye' } });
+      const packageB = defineLocales({ en: { hello: 'Hi' }, fr: { hello: 'Bonjour' } });
+      const appOverride = { fr: { hello: 'Salut' } };
 
-      const merged = mergeLocales([packageA, packageB, appOverride])
+      const merged = mergeLocales([packageA, packageB, appOverride]);
 
-      return { merged }
+      return { merged };
     },
     template: `
       <div style="font-family: monospace; font-size: 13px; line-height: 1.8;">
@@ -182,7 +179,7 @@ export const MergeLocalesUtility: StoryObj = {
       </div>
     `,
   }),
-}
+};
 
 /**
  * Demonstrates \`defineLocales\` — the typed identity helper that packages use
@@ -195,11 +192,11 @@ export const DefineLocalesUtility: StoryObj = {
       const myLocales = defineLocales({
         en: { greeting: 'Hello from my-package', farewell: 'Goodbye' },
         fr: { greeting: 'Bonjour depuis my-package', farewell: 'Au revoir' },
-      })
+      });
 
-      const i18n = createMpI18n({ modules: [baseLocales, uiLocales, myLocales] })
+      const i18n = createMpI18n({ modules: [baseLocales, uiLocales, myLocales] });
 
-      return { module: myLocales, locale: (i18n.global.locale as unknown as Ref<string>).value }
+      return { module: myLocales, locale: (i18n.global.locale as unknown as Ref<string>).value };
     },
     template: `
       <div style="font-family: monospace; font-size: 13px; line-height: 1.8;">
@@ -212,4 +209,4 @@ export const DefineLocalesUtility: StoryObj = {
       </div>
     `,
   }),
-}
+};

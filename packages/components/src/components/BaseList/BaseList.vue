@@ -1,22 +1,22 @@
-<script setup lang="ts">
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+<script lang="ts" setup>
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
-  export type ListVariant = 'unordered' | 'ordered' | 'description' | 'none'
-  export type ListSize = 'sm' | 'md' | 'lg'
+  export type ListVariant = 'unordered' | 'ordered' | 'description' | 'none';
+  export type ListSize = 'sm' | 'md' | 'lg';
 
   export interface ListItem {
-    label?: string
-    description?: string
-    term?: string
-    content?: string
+    label?: string;
+    description?: string;
+    term?: string;
+    content?: string;
   }
 
   withDefaults(
     defineProps<{
-      items?: ListItem[]
-      variant?: ListVariant
-      size?: ListSize
-      divided?: boolean
+      items?: ListItem[];
+      variant?: ListVariant;
+      size?: ListSize;
+      divided?: boolean;
     }>(),
     {
       items: () => [],
@@ -24,30 +24,41 @@
       size: 'md',
       divided: false,
     },
-  )
+  );
 </script>
 
 <template>
   <dl
     v-if="variant === 'description'"
-    :class="[
-      'base-list',
-      'base-list--description',
-      `base-list--${size}`,
-      { 'base-list--divided': divided },
-    ]"
+    :class="['base-list', 'base-list--description', `base-list--${size}`, { 'base-list--divided': divided }]"
   >
-    <template v-for="(item, index) in items" :key="index">
-      <slot name="item" :item="item" :index="index">
+    <template
+      v-for="(item, index) in items"
+      :key="index"
+    >
+      <slot
+        :index="index"
+        :item="item"
+        name="item"
+      >
         <dt class="base-list__term">
-          <BaseTypography variant="body-md" weight="semibold" as="span" color="primary">{{
-            item.term ?? item.label
-          }}</BaseTypography>
+          <BaseTypography
+            as="span"
+            color="primary"
+            variant="body-md"
+            weight="semibold"
+          >
+            {{ item.term ?? item.label }}
+          </BaseTypography>
         </dt>
         <dd class="base-list__detail">
-          <BaseTypography variant="body-md" as="span" color="secondary">{{
-            item.content ?? item.description
-          }}</BaseTypography>
+          <BaseTypography
+            as="span"
+            color="secondary"
+            variant="body-md"
+          >
+            {{ item.content ?? item.description }}
+          </BaseTypography>
         </dd>
       </slot>
     </template>
@@ -56,19 +67,25 @@
 
   <ol
     v-else-if="variant === 'ordered'"
-    :class="[
-      'base-list',
-      'base-list--ordered',
-      `base-list--${size}`,
-      { 'base-list--divided': divided },
-    ]"
+    :class="['base-list', 'base-list--ordered', `base-list--${size}`, { 'base-list--divided': divided }]"
   >
-    <template v-for="(item, index) in items" :key="index">
-      <slot name="item" :item="item" :index="index">
+    <template
+      v-for="(item, index) in items"
+      :key="index"
+    >
+      <slot
+        :index="index"
+        :item="item"
+        name="item"
+      >
         <li class="base-list__item">
-          <BaseTypography variant="body-md" as="span" color="primary">{{
-            item.label
-          }}</BaseTypography>
+          <BaseTypography
+            as="span"
+            color="primary"
+            variant="body-md"
+          >
+            {{ item.label }}
+          </BaseTypography>
         </li>
       </slot>
     </template>
@@ -77,19 +94,25 @@
 
   <ul
     v-else-if="variant === 'none'"
-    :class="[
-      'base-list',
-      'base-list--none',
-      `base-list--${size}`,
-      { 'base-list--divided': divided },
-    ]"
+    :class="['base-list', 'base-list--none', `base-list--${size}`, { 'base-list--divided': divided }]"
   >
-    <template v-for="(item, index) in items" :key="index">
-      <slot name="item" :item="item" :index="index">
+    <template
+      v-for="(item, index) in items"
+      :key="index"
+    >
+      <slot
+        :index="index"
+        :item="item"
+        name="item"
+      >
         <li class="base-list__item">
-          <BaseTypography variant="body-md" as="span" color="primary">{{
-            item.label
-          }}</BaseTypography>
+          <BaseTypography
+            as="span"
+            color="primary"
+            variant="body-md"
+          >
+            {{ item.label }}
+          </BaseTypography>
         </li>
       </slot>
     </template>
@@ -98,19 +121,25 @@
 
   <ul
     v-else
-    :class="[
-      'base-list',
-      'base-list--unordered',
-      `base-list--${size}`,
-      { 'base-list--divided': divided },
-    ]"
+    :class="['base-list', 'base-list--unordered', `base-list--${size}`, { 'base-list--divided': divided }]"
   >
-    <template v-for="(item, index) in items" :key="index">
-      <slot name="item" :item="item" :index="index">
+    <template
+      v-for="(item, index) in items"
+      :key="index"
+    >
+      <slot
+        :index="index"
+        :item="item"
+        name="item"
+      >
         <li class="base-list__item">
-          <BaseTypography variant="body-md" as="span" color="primary">{{
-            item.label
-          }}</BaseTypography>
+          <BaseTypography
+            as="span"
+            color="primary"
+            variant="body-md"
+          >
+            {{ item.label }}
+          </BaseTypography>
         </li>
       </slot>
     </template>
@@ -118,7 +147,7 @@
   </ul>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-list {
     margin: 0;
 
@@ -130,7 +159,7 @@
       }
     }
 
-    // Variants
+    /* Variants */
     &--unordered,
     &--ordered {
       padding-left: var(--mp-spacing-6);
@@ -151,7 +180,7 @@
       padding: 0;
     }
 
-    // Sizes
+    /* Sizes */
     &--sm {
       font-size: var(--mp-font-size-sm);
 
@@ -182,7 +211,7 @@
       }
     }
 
-    // Divided
+    /* Divided */
     &--divided {
       &.base-list--none .base-list__item + .base-list__item,
       &.base-list--unordered .base-list__item + .base-list__item,

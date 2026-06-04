@@ -1,10 +1,14 @@
-<script setup lang="ts">
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+<script lang="ts" setup>
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 </script>
 
 <template>
   <header class="base-card__header">
-    <BaseTypography variant="h5" as="div" color="primary">
+    <BaseTypography
+      as="div"
+      color="primary"
+      variant="h5"
+    >
       <slot />
     </BaseTypography>
   </header>

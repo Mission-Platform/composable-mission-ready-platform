@@ -1,2 +1,2 @@
-export { default } from './MapSource.vue'
-export type { MapSourceProps } from './MapSource.vue'
+export { default } from './MapSource.vue';
+export type { MapSourceProps } from './MapSource.vue';

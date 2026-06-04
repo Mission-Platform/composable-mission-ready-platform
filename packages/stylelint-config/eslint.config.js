@@ -1,3 +1,3 @@
-import baseConfig from '@mission-platform/eslint-config'
+import baseConfig from '@mission-platform/eslint-config';
 
-export default [...baseConfig]
+export default [...baseConfig];

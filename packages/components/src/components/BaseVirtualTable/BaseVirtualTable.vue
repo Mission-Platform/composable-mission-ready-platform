@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends Record<string, unknown>">
+<script generic="T extends Record<string, unknown>" lang="ts" setup>
   /**
    * VirtualTable — a virtualized data table that renders only visible rows.
    *
@@ -17,27 +17,28 @@
    *   caption     — accessible <caption> text
    *   emptyText   — message shown when rows is empty
    */
-  import { computed, onMounted, onUnmounted, ref } from 'vue'
+  import { computed, onMounted, onUnmounted, ref } from 'vue';
 
-  import BaseVirtualTableHead from './BaseVirtualTableHead.vue'
-  import BaseVirtualTableRow from './BaseVirtualTableRow.vue'
-  import BaseVirtualTableFooter from './BaseVirtualTableFooter.vue'
-  import type { SortDirection, TableColumn } from '../BaseTable/types'
+  import BaseVirtualTableFooter from './BaseVirtualTableFooter.vue';
+  import BaseVirtualTableHead from './BaseVirtualTableHead.vue';
+  import BaseVirtualTableRow from './BaseVirtualTableRow.vue';
 
-  export type { TableColumn as VirtualTableColumn } from '../BaseTable/types'
-  export type { SortDirection } from '../BaseTable/types'
+  import type { SortDirection, TableColumn } from '../BaseTable/types';
+
+  export type { TableColumn as VirtualTableColumn } from '../BaseTable/types';
+  export type { SortDirection } from '../BaseTable/types';
 
   const props = withDefaults(
     defineProps<{
-      columns: TableColumn<T>[]
-      rows: T[]
-      rowHeight?: number
-      height?: number
-      overscan?: number
-      striped?: boolean
-      bordered?: boolean
-      caption?: string
-      emptyText?: string
+      columns: TableColumn<T>[];
+      rows: T[];
+      rowHeight?: number;
+      height?: number;
+      overscan?: number;
+      striped?: boolean;
+      bordered?: boolean;
+      caption?: string;
+      emptyText?: string;
     }>(),
     {
       rowHeight: 48,
@@ -48,82 +49,82 @@
       caption: undefined,
       emptyText: 'No data available',
     },
-  )
+  );
 
   const emit = defineEmits<{
-    sort: [key: string, direction: SortDirection]
-    rowClick: [row: T, index: number]
-  }>()
+    sort: [key: string, direction: SortDirection];
+    rowClick: [row: T, index: number];
+  }>();
 
   // ── Sorting ────────────────────────────────────────────────────────────────
-  const sortKey = ref<string | null>(null)
-  const sortDir = ref<SortDirection>(null)
+  const sortKey = ref<string | undefined>(undefined);
+  const sortDir = ref<SortDirection>(null);
 
   const sortedRows = computed<T[]>(() => {
-    if (!sortKey.value || !sortDir.value) return props.rows
+    if (!sortKey.value || !sortDir.value) return props.rows;
     return [...props.rows].sort((a, b) => {
-      const av = a[sortKey.value!]
-      const bv = b[sortKey.value!]
-      const cmp = String(av).localeCompare(String(bv), undefined, { numeric: true })
-      return sortDir.value === 'asc' ? cmp : -cmp
-    })
-  })
+      const av = a[sortKey.value!];
+      const bv = b[sortKey.value!];
+      const cmp = String(av).localeCompare(String(bv), undefined, { numeric: true });
+      return sortDir.value === 'asc' ? cmp : -cmp;
+    });
+  });
 
   function toggleSort(col: TableColumn<T>) {
-    if (!col.sortable) return
+    if (!col.sortable) return;
     if (sortKey.value !== col.key) {
-      sortKey.value = col.key
-      sortDir.value = 'asc'
+      sortKey.value = col.key;
+      sortDir.value = 'asc';
     } else if (sortDir.value === 'asc') {
-      sortDir.value = 'desc'
+      sortDir.value = 'desc';
     } else {
-      sortKey.value = null
-      sortDir.value = null
+      sortKey.value = undefined;
+      sortDir.value = null;
     }
-    emit('sort', col.key, sortDir.value)
+    emit('sort', col.key, sortDir.value);
   }
 
   // ── Virtualisation ─────────────────────────────────────────────────────────
   // Header height is fixed at 44px — matches the sticky <thead> rendered below.
-  const HEADER_HEIGHT = 44
+  const HEADER_HEIGHT = 44;
 
-  const scrollTop = ref(0)
-  const bodyRef = ref<HTMLElement | null>(null)
+  const scrollTop = ref(0);
+  const bodyRef = ref<HTMLElement | null>(null);
 
-  const bodyHeight = computed(() => props.height - HEADER_HEIGHT)
-  const totalScrollHeight = computed(() => sortedRows.value.length * props.rowHeight)
+  const bodyHeight = computed(() => props.height - HEADER_HEIGHT);
+  const totalScrollHeight = computed(() => sortedRows.value.length * props.rowHeight);
 
   const startIndex = computed(() => {
-    const raw = Math.floor(scrollTop.value / props.rowHeight) - props.overscan
-    return Math.max(0, raw)
-  })
+    const raw = Math.floor(scrollTop.value / props.rowHeight) - props.overscan;
+    return Math.max(0, raw);
+  });
 
   const endIndex = computed(() => {
-    const visibleCount = Math.ceil(bodyHeight.value / props.rowHeight)
-    const raw = Math.floor(scrollTop.value / props.rowHeight) + visibleCount + props.overscan
-    return Math.min(sortedRows.value.length - 1, raw)
-  })
+    const visibleCount = Math.ceil(bodyHeight.value / props.rowHeight);
+    const raw = Math.floor(scrollTop.value / props.rowHeight) + visibleCount + props.overscan;
+    return Math.min(sortedRows.value.length - 1, raw);
+  });
 
   const visibleRows = computed(() =>
     sortedRows.value.slice(startIndex.value, endIndex.value + 1).map((row, i) => ({
       row,
       index: startIndex.value + i,
     })),
-  )
+  );
 
-  const offsetY = computed(() => startIndex.value * props.rowHeight)
+  const offsetY = computed(() => startIndex.value * props.rowHeight);
 
   function handleScroll(e: Event) {
-    scrollTop.value = (e.target as HTMLElement).scrollTop
+    scrollTop.value = (e.target as HTMLElement).scrollTop;
   }
 
   onMounted(() => {
-    bodyRef.value?.addEventListener('scroll', handleScroll, { passive: true })
-  })
+    bodyRef.value?.addEventListener('scroll', handleScroll, { passive: true });
+  });
 
   onUnmounted(() => {
-    bodyRef.value?.removeEventListener('scroll', handleScroll)
-  })
+    bodyRef.value?.removeEventListener('scroll', handleScroll);
+  });
 </script>
 
 <template>
@@ -142,8 +143,6 @@
     the component fully accessible to screen readers.
   -->
   <div
-    class="virtual-table"
-    role="table"
     :aria-label="caption || undefined"
     :aria-rowcount="sortedRows.length"
     :style="{
@@ -155,14 +154,16 @@
       overflow: 'hidden',
       background: 'var(--mp-color-bg-surface)',
     }"
+    class="virtual-table"
+    role="table"
   >
     <!-- ── Sticky header ─────────────────────────────────────────────────── -->
     <BaseVirtualTableHead
-      :columns="columns"
-      :sort-key="sortKey"
-      :sort-dir="sortDir"
       :bordered="bordered"
+      :columns="columns"
       :header-height="HEADER_HEIGHT"
+      :sort-dir="sortDir"
+      :sort-key="sortKey"
       @sort="toggleSort"
     />
 
@@ -174,21 +175,19 @@
     -->
     <div
       ref="bodyRef"
-      class="virtual-table__body"
-      role="rowgroup"
-      tabindex="0"
       :style="{
         flex: '1',
         overflowY: 'auto',
         position: 'relative',
         WebkitOverflowScrolling: 'touch',
       }"
+      class="virtual-table__body"
+      role="rowgroup"
+      tabindex="0"
     >
       <!-- Empty state -->
       <div
         v-if="sortedRows.length === 0"
-        role="row"
-        aria-rowindex="1"
         :style="{
           display: 'flex',
           alignItems: 'center',
@@ -197,8 +196,13 @@
           color: 'var(--mp-color-text-tertiary)',
           fontSize: 'var(--mp-font-size-sm)',
         }"
+        aria-rowindex="1"
+        role="row"
       >
-        <span role="gridcell" :aria-colspan="columns.length">{{ emptyText }}</span>
+        <span
+          :aria-colspan="columns.length"
+          role="gridcell"
+        >{{ emptyText }}</span>
       </div>
 
       <!-- Full-height spacer so the scroll container has the correct total scroll range -->
@@ -221,24 +225,37 @@
         <BaseVirtualTableRow
           v-for="{ row, index } in visibleRows"
           :key="index"
-          :row="row"
-          :index="index"
+          :bordered="bordered"
           :columns="columns"
+          :index="index"
+          :row="row"
           :row-height="rowHeight"
           :striped="striped"
-          :bordered="bordered"
           @row-click="(r, i) => emit('rowClick', r, i)"
         >
-          <template v-for="col in columns" #[`cell-${col.key}`]="slotProps">
-            <slot :name="`cell-${col.key}`" v-bind="slotProps" />
+          <template
+            v-for="col in columns"
+            #[`cell-${col.key}`]="slotProps"
+          >
+            <slot
+              :name="`cell-${col.key}`"
+              v-bind="slotProps"
+            />
           </template>
         </BaseVirtualTableRow>
       </div>
     </div>
 
     <!-- ── Footer / row count ───────────────────────────────────────────── -->
-    <BaseVirtualTableFooter :row-count="sortedRows.length" :sort-key="sortKey" :sort-dir="sortDir">
-      <template v-if="$slots.footer" #default>
+    <BaseVirtualTableFooter
+      :row-count="sortedRows.length"
+      :sort-dir="sortDir"
+      :sort-key="sortKey"
+    >
+      <template
+        v-if="$slots.footer"
+        #default
+      >
         <slot name="footer" />
       </template>
     </BaseVirtualTableFooter>

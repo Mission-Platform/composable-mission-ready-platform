@@ -1,1 +1,1 @@
-export { default } from './BaseVirtualList.vue'
+export { default } from './BaseVirtualList.vue';

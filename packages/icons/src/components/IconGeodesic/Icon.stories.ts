@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import IconGeodesic from './Icon.vue'
+import IconGeodesic from './Icon.vue';
+
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
   title: 'Icons/Map/IconGeodesic',
@@ -15,15 +16,15 @@ const meta = {
     color: 'currentColor',
     ariaLabel: 'Geodesic Mode',
   },
-} satisfies Meta<typeof IconGeodesic>
+} satisfies Meta<typeof IconGeodesic>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {}
+export const Default: Story = {};
 
-export const Small: Story = { args: { size: 16 } }
+export const Small: Story = { args: { size: 16 } };
 
-export const Large: Story = { args: { size: 32 } }
+export const Large: Story = { args: { size: 32 } };
 
-export const Colored: Story = { args: { color: '#3b82f6' } }
+export const Colored: Story = { args: { color: '#3b82f6' } };

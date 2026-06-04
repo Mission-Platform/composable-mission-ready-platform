@@ -1,9 +1,9 @@
-import { createI18n } from 'vue-i18n'
+import { createI18n } from 'vue-i18n';
 
-import { en as enMessages } from './locales/en'
-import { mergeLocales } from './merge-locales'
+import { en as enMessages } from './locales/en';
+import { mergeLocales } from './merge-locales';
 
-import type { MpLocaleModule, MpLocales, MpMessages } from './types'
+import type { MpLocaleModule, MpLocales, MpMessages } from './types';
 
 /**
  * Creates a configured vue-i18n instance for Mission Platform.
@@ -23,21 +23,23 @@ import type { MpLocaleModule, MpLocales, MpMessages } from './types'
  *   modules: [uiLocales, { fr: { required: 'requis' } }],
  * }))
  */
-export function createMpI18n(options: {
-  locale?: string
-  /** Locale modules contributed by packages / apps.  Merged left-to-right. */
-  modules?: MpLocaleModule[]
-  /** Low-level per-locale overrides applied after all modules. */
-  messages?: MpLocales
-} = {}) {
-  const { locale = 'en', modules = [], messages = {} } = options
+export function createMpI18n(
+  options: {
+    locale?: string;
+    /** Locale modules contributed by packages / apps.  Merged left-to-right. */
+    modules?: MpLocaleModule[];
+    /** Low-level per-locale overrides applied after all modules. */
+    messages?: MpLocales;
+  } = {},
+) {
+  const { locale = 'en', modules = [], messages = {} } = options;
 
   // Merge the built-in base locale with all package / app modules.
-  const merged = mergeLocales([{ en: enMessages as unknown as Record<string, string> }, ...modules])
+  const merged = mergeLocales([{ en: enMessages as unknown as Record<string, string> }, ...modules]);
 
   // Apply top-level per-locale overrides last.
   for (const [loc, msgs] of Object.entries(messages)) {
-    merged[loc] = { ...merged[loc], ...(msgs as Record<string, string>) }
+    merged[loc] = { ...merged[loc], ...(msgs as Record<string, string>) };
   }
 
   return createI18n<[MpMessages], string>({
@@ -45,5 +47,5 @@ export function createMpI18n(options: {
     locale,
     fallbackLocale: 'en',
     messages: merged as unknown as Record<string, MpMessages>,
-  })
+  });
 }

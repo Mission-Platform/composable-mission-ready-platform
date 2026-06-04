@@ -1,12 +1,11 @@
 // TypeScript bindings for emscripten-generated code.  Automatically generated at compile time.
-declare module "jsdoc" {
-    export = MiniLZ4;
-    var MiniLZ4: {};
+declare module 'jsdoc' {
+  export = MiniLZ4;
+  var MiniLZ4: {};
 }
-interface WasmModule {
-}
+interface WasmModule {}
 
-type EmbindString = ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string;
+type EmbindString = ArrayBuffer | Uint8Array | Uint8ClampedArray | Int8Array | string;
 export interface ClassHandle {
   isAliasOf(other: ClassHandle): boolean;
   delete(): void;
@@ -32,12 +31,12 @@ export interface StringVector extends ClassHandle, Iterable<string> {
 
 interface EmbindModule {
   HunspellChecker: {
-    new(_0: EmbindString, _1: EmbindString): HunspellChecker;
+    new (_0: EmbindString, _1: EmbindString): HunspellChecker;
   };
   StringVector: {
-    new(): StringVector;
+    new (): StringVector;
   };
 }
 
 export type MainModule = WasmModule & typeof RuntimeExports & EmbindModule;
-export default function MainModuleFactory (options?: unknown): Promise<MainModule>;
+export default function MainModuleFactory(options?: unknown): Promise<MainModule>;

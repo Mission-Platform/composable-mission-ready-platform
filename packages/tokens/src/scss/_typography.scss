@@ -1,35 +1,40 @@
-// ─── Typography tokens ────────────────────────────────────────────────────────
+/* ─── Typography tokens ──────────────────────────────────────────────────────── */
 
-// Font families
-$font-family-sans: 'Comfortaa', ui-sans-serif, system-ui, -apple-system, sans-serif;
+/* Font families */
+$font-family-sans:
+  'Comfortaa',
+  ui-sans-serif,
+  system-ui,
+  -apple-system,
+  sans-serif;
 $font-family-mono: 'Datatype', ui-monospace, 'Cascadia Mono', monospace;
 
-// Font sizes — all in rem, base font-size: 14px; md = 1rem (base body size)
-$font-size-2xs: 0.643rem; // ~9px
-$font-size-xs: 0.786rem;  // ~11px
-$font-size-sm: 0.929rem;  // ~13px
-$font-size-md: 1rem;      //  14px  ← base (md = 1rem)
-$font-size-lg: 1.143rem;  // ~16px
-$font-size-xl: 1.286rem;  // ~18px
-$font-size-2xl: 1.571rem; // ~22px
-$font-size-3xl: 1.929rem; // ~27px
-$font-size-4xl: 2.357rem; // ~33px
-$font-size-5xl: 3.143rem; // ~44px
+/* Font sizes — all in rem, base font-size: 14px; md = 1rem (base body size) */
+$font-size-2xs: 0.643rem; /* ~9px */
+$font-size-xs: 0.786rem; /* ~11px */
+$font-size-sm: 0.929rem; /* ~13px */
+$font-size-md: 1rem; /*  14px  ← base (md = 1rem) */
+$font-size-lg: 1.143rem; /* ~16px */
+$font-size-xl: 1.286rem; /* ~18px */
+$font-size-2xl: 1.571rem; /* ~22px */
+$font-size-3xl: 1.929rem; /* ~27px */
+$font-size-4xl: 2.357rem; /* ~33px */
+$font-size-5xl: 3.143rem; /* ~44px */
 
-// Font weights
+/* Font weights */
 $font-weight-regular: 400;
 $font-weight-medium: 500;
 $font-weight-semibold: 600;
 $font-weight-bold: 700;
 
-// Line heights
+/* Line heights */
 $line-height-tight: 1.25;
 $line-height-snug: 1.375;
 $line-height-normal: 1.5;
 $line-height-relaxed: 1.625;
 $line-height-loose: 2;
 
-// Letter spacing
+/* Letter spacing */
 $letter-spacing-tight: -0.025em;
 $letter-spacing-normal: 0em;
 $letter-spacing-wide: 0.025em;

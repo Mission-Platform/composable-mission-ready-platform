@@ -1,7 +1,7 @@
 // ─── @mission-platform/i18n ──────────────────────────────────────────────────
 // Utility for merging locale modules contributed by multiple packages / apps.
 
-import type { MpLocaleModule } from './types'
+import type { MpLocaleModule } from './types';
 
 /**
  * Deep-merges an array of locale modules into a single messages map.
@@ -22,13 +22,13 @@ import type { MpLocaleModule } from './types'
  * @returns A single flat locale map ready to pass to `createI18n({ messages })`.
  */
 export function mergeLocales(modules: MpLocaleModule[]): Record<string, Record<string, string>> {
-  const result: Record<string, Record<string, string>> = {}
+  const result: Record<string, Record<string, string>> = {};
 
   for (const module_ of modules) {
     for (const [locale, msgs] of Object.entries(module_)) {
-      result[locale] = { ...result[locale], ...msgs }
+      result[locale] = { ...result[locale], ...msgs };
     }
   }
 
-  return result
+  return result;
 }

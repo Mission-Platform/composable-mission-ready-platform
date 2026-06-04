@@ -1,57 +1,88 @@
-<script setup lang="ts">
-  import { IconCheck } from '@mission-platform/icons'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
-  import type { WizardStep } from './BaseFormWizard.vue'
+<script lang="ts" setup>
+  import { IconCheck } from '@mission-platform/icons';
+
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
+
+  import type { WizardStep } from './BaseFormWizard.vue';
 
   const props = defineProps<{
-    steps: WizardStep[]
-    currentIndex: number
-    linear: boolean
-  }>()
+    steps: WizardStep[];
+    currentIndex: number;
+    linear: boolean;
+  }>();
 
   const emit = defineEmits<{
-    goTo: [index: number]
-  }>()
+    goTo: [index: number];
+  }>();
 
   function stepStatus(index: number): 'complete' | 'current' | 'upcoming' {
-    if (index < props.currentIndex) return 'complete'
-    if (index === props.currentIndex) return 'current'
-    return 'upcoming'
+    if (index < props.currentIndex) return 'complete';
+    if (index === props.currentIndex) return 'current';
+    return 'upcoming';
   }
 </script>
 
 <template>
-  <nav class="base-form-wizard__steps" aria-label="Progress">
+  <nav
+    aria-label="Progress"
+    class="base-form-wizard__steps"
+  >
     <ol class="base-form-wizard__step-list">
       <li
         v-for="(step, index) in steps"
         :key="step.id"
-        :class="['base-form-wizard__step', `base-form-wizard__step--${stepStatus(index)}`]"
         :aria-current="index === currentIndex ? 'step' : undefined"
+        :class="['base-form-wizard__step', `base-form-wizard__step--${stepStatus(index)}`]"
       >
         <button
-          type="button"
-          class="base-form-wizard__step-btn"
-          :disabled="linear && index > currentIndex + 1"
           :aria-label="`Step ${index + 1}: ${step.title}`"
+          :disabled="linear && index > currentIndex + 1"
+          class="base-form-wizard__step-btn"
+          type="button"
           @click="emit('goTo', index)"
         >
           <span class="base-form-wizard__step-circle">
-            <IconCheck v-if="stepStatus(index) === 'complete'" size="xs" />
-            <BaseTypography v-else variant="body-sm" weight="semibold" as="span" color="inherit" class="base-form-wizard__step-number">{{ index + 1 }}</BaseTypography>
+            <IconCheck
+              v-if="stepStatus(index) === 'complete'"
+              size="xs"
+            />
+            <BaseTypography
+              v-else
+              as="span"
+              class="base-form-wizard__step-number"
+              color="inherit"
+              variant="body-sm"
+              weight="semibold"
+            >{{ index + 1 }}</BaseTypography>
           </span>
           <span class="base-form-wizard__step-label">
-            <BaseTypography variant="body-sm" weight="medium" as="span" color="primary" class="base-form-wizard__step-title">{{ step.title }}</BaseTypography>
-            <BaseTypography v-if="step.description" variant="caption" as="span" color="secondary" class="base-form-wizard__step-desc">{{ step.description }}</BaseTypography>
+            <BaseTypography
+              as="span"
+              class="base-form-wizard__step-title"
+              color="primary"
+              variant="body-sm"
+              weight="medium"
+            >{{ step.title }}</BaseTypography>
+            <BaseTypography
+              v-if="step.description"
+              as="span"
+              class="base-form-wizard__step-desc"
+              color="secondary"
+              variant="caption"
+            >{{ step.description }}</BaseTypography>
           </span>
         </button>
-        <div v-if="index < steps.length - 1" class="base-form-wizard__connector" aria-hidden="true" />
+        <div
+          v-if="index < steps.length - 1"
+          aria-hidden="true"
+          class="base-form-wizard__connector"
+        />
       </li>
     </ol>
   </nav>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-form-wizard__steps {
     width: 100%;
   }
@@ -109,7 +140,9 @@
     border: 2px solid var(--mp-color-border-default);
     background-color: var(--mp-color-bg-surface);
     flex-shrink: 0;
-    transition: background-color 150ms ease, border-color 150ms ease;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease;
   }
 
   .base-form-wizard__step--complete .base-form-wizard__step-circle {

@@ -1,10 +1,11 @@
-// ─── Primitive colour palette ────────────────────────────────────────────────
-// Raw colour values. Use semantic tokens (see themes) in component styles.
+/* ─── Primitive colour palette ──────────────────────────────────────────────── */
 
-// Neutrals
+/* Raw colour values. Use semantic tokens (see themes) in component styles. */
+
+/* Neutrals */
 $color-black: #000;
 $color-white: #fff;
-$color-base-light: #eff1f3; // light theme base surface — L=0.877
+$color-base-light: #eff1f3; /* light theme base surface — L=0.877 */
 
 $color-neutral-50: #f9f9fb;
 $color-neutral-100: #f2f2f5;
@@ -17,7 +18,7 @@ $color-neutral-700: #3a3545;
 $color-neutral-800: #211e2c;
 $color-neutral-900: #08060d;
 
-// Primary – purple
+/* Primary – purple */
 $color-primary-50: #f4f0ff;
 $color-primary-100: #e5d9ff;
 $color-primary-200: #c9b4ff;
@@ -29,24 +30,24 @@ $color-primary-700: #3d1680;
 $color-primary-800: #280e56;
 $color-primary-900: #14072c;
 
-// Theme primaries
+/* Theme primaries */
 $color-primary-light: #fbfbf8;
 $color-primary-dark: #6b6e6f;
 
-// Cyan – light theme base (derived from #ebfffe, hsl 177°) / dark theme base #111D1C
-$color-cyan-50:   #ebfffe;
-$color-cyan-100:  #cdfefb;
-$color-cyan-200:  #9efaf5;
-$color-cyan-300:  #5af2ea;
-$color-cyan-400:  #1ae6db;
-$color-cyan-500:  #14b8af;
-$color-cyan-600:  #0f8a83;
-$color-cyan-700:  #0b6560;
-$color-cyan-800:  #07403d;
-$color-cyan-900:  #042523;
-$color-cyan-950:  #111D1C; // dark theme background base
+/* Cyan – light theme base (derived from #ebfffe, hsl 177°) / dark theme base #111D1C */
+$color-cyan-50: #ebfffe;
+$color-cyan-100: #cdfefb;
+$color-cyan-200: #9efaf5;
+$color-cyan-300: #5af2ea;
+$color-cyan-400: #1ae6db;
+$color-cyan-500: #14b8af;
+$color-cyan-600: #0f8a83;
+$color-cyan-700: #0b6560;
+$color-cyan-800: #07403d;
+$color-cyan-900: #042523;
+$color-cyan-950: #111d1c; /* dark theme background base */
 
-// Success – green
+/* Success – green */
 $color-success-50: #edfaf2;
 $color-success-100: #d0f4df;
 $color-success-200: #9ae8ba;
@@ -58,7 +59,7 @@ $color-success-700: #0d5e2e;
 $color-success-800: #073d1d;
 $color-success-900: #031e0e;
 
-// Warning – amber
+/* Warning – amber */
 $color-warning-50: #fffaeb;
 $color-warning-100: #fef0c7;
 $color-warning-200: #fedf89;
@@ -70,7 +71,7 @@ $color-warning-700: #b54708;
 $color-warning-800: #93370d;
 $color-warning-900: #7a2e0e;
 
-// Danger – red
+/* Danger – red */
 $color-danger-50: #fff1f3;
 $color-danger-100: #ffe4e8;
 $color-danger-200: #fecdd6;
@@ -82,7 +83,7 @@ $color-danger-700: #be123c;
 $color-danger-800: #9f1239;
 $color-danger-900: #881337;
 
-// Info – cyan
+/* Info – cyan */
 $color-info-50: #ecfeff;
 $color-info-100: #cffafe;
 $color-info-200: #a5f3fc;
@@ -94,8 +95,8 @@ $color-info-700: #0e7490;
 $color-info-800: #155e75;
 $color-info-900: #164e63;
 
-// Error – rose (distinct from danger/red; used for hard errors, crashes)
-$color-error-50:  #fff1f2;
+/* Error – rose (distinct from danger/red; used for hard errors, crashes) */
+$color-error-50: #fff1f2;
 $color-error-100: #ffe4e6;
 $color-error-200: #fecdd3;
 $color-error-300: #fda4af;
@@ -106,8 +107,8 @@ $color-error-700: #be123c;
 $color-error-800: #9f1239;
 $color-error-900: #881337;
 
-// Alert – orange (attention-level between warning and danger)
-$color-alert-50:  #fff7ed;
+/* Alert – orange (attention-level between warning and danger) */
+$color-alert-50: #fff7ed;
 $color-alert-100: #ffedd5;
 $color-alert-200: #fed7aa;
 $color-alert-300: #fdba74;
@@ -118,8 +119,8 @@ $color-alert-700: #c2410c;
 $color-alert-800: #9a3412;
 $color-alert-900: #7c2d12;
 
-// Notice – indigo (informational, lower urgency than info)
-$color-notice-50:  #eef2ff;
+/* Notice – indigo (informational, lower urgency than info) */
+$color-notice-50: #eef2ff;
 $color-notice-100: #e0e7ff;
 $color-notice-200: #c7d2fe;
 $color-notice-300: #a5b4fc;
@@ -130,8 +131,8 @@ $color-notice-700: #4338ca;
 $color-notice-800: #3730a3;
 $color-notice-900: #312e81;
 
-// Debug – violet (developer/diagnostic contexts)
-$color-debug-50:  #f5f3ff;
+/* Debug – violet (developer/diagnostic contexts) */
+$color-debug-50: #f5f3ff;
 $color-debug-100: #ede9fe;
 $color-debug-200: #ddd6fe;
 $color-debug-300: #c4b5fd;

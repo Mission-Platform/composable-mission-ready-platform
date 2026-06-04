@@ -1,39 +1,77 @@
-<script setup lang="ts">
-  import { useIconSize } from '../../useIconSize.ts'
+<script lang="ts" setup>
+  import { useIconSize } from '../../use-icon-size.ts';
 
   const props = withDefaults(
     defineProps<{
-      size?: number | string
-      color?: string
-      ariaLabel?: string
+      size?: number | string;
+      color?: string;
+      ariaLabel?: string;
     }>(),
     {
       size: 'md',
       color: 'currentColor',
       ariaLabel: undefined,
     },
-  )
+  );
 
-  const sizeValue = useIconSize(() => props.size)
+  const sizeValue = useIconSize(() => props.size);
 </script>
 
 <template>
   <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
+    :aria-hidden="!ariaLabel"
+    :aria-label="ariaLabel ?? 'Bullet List'"
+    :height="sizeValue"
     :stroke="color"
-    stroke-width="2"
+    :width="sizeValue"
+    class="base-icon-bullet-list"
+    fill="none"
+    role="img"
     stroke-linecap="round"
     stroke-linejoin="round"
-    :width="sizeValue"
-    :height="sizeValue"
-    :aria-label="ariaLabel ?? 'Bullet List'"
-    :aria-hidden="!ariaLabel"
-    role="img"
-    class="base-icon-bullet-list"
+    stroke-width="2"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
   >
-    <line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1" fill="currentColor" stroke="none"/>
+    <line
+      x1="9"
+      x2="20"
+      y1="6"
+      y2="6"
+    />
+    <line
+      x1="9"
+      x2="20"
+      y1="12"
+      y2="12"
+    />
+    <line
+      x1="9"
+      x2="20"
+      y1="18"
+      y2="18"
+    />
+    <circle
+      cx="4"
+      cy="6"
+      fill="currentColor"
+      r="1"
+      stroke="none"
+    />
+    <circle
+      cx="4"
+      cy="12"
+      fill="currentColor"
+      r="1"
+      stroke="none"
+    />
+    <circle
+      cx="4"
+      cy="18"
+      fill="currentColor"
+      r="1"
+      stroke="none"
+    />
   </svg>
 </template>
 

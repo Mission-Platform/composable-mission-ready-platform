@@ -1,44 +1,74 @@
-<script setup lang="ts">
-  import { useIconSize } from '../../useIconSize.ts'
+<script lang="ts" setup>
+  import { useIconSize } from '../../use-icon-size.ts';
 
   const props = withDefaults(
     defineProps<{
-      size?: number | string
-      color?: string
-      ariaLabel?: string
+      size?: number | string;
+      color?: string;
+      ariaLabel?: string;
     }>(),
     {
       size: 'md',
       color: 'currentColor',
       ariaLabel: undefined,
     },
-  )
+  );
 
-  const sizeValue = useIconSize(() => props.size)
+  const sizeValue = useIconSize(() => props.size);
 </script>
 
 <template>
   <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
+    :aria-hidden="!ariaLabel"
+    :aria-label="ariaLabel"
+    :height="sizeValue"
     :stroke="color"
-    stroke-width="2"
+    :width="sizeValue"
+    class="base-icon-draw-polygon"
+    fill="none"
+    role="img"
     stroke-linecap="round"
     stroke-linejoin="round"
-    :width="sizeValue"
-    :height="sizeValue"
-    :aria-label="ariaLabel"
-    :aria-hidden="!ariaLabel"
-    role="img"
-    class="base-icon-draw-polygon"
+    stroke-width="2"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
   >
-    <polygon points="12,3 21,9 18,20 6,20 3,9"/>
-    <circle cx="12" cy="3" r="1.5" :fill="color" stroke="none"/>
-    <circle cx="21" cy="9" r="1.5" :fill="color" stroke="none"/>
-    <circle cx="18" cy="20" r="1.5" :fill="color" stroke="none"/>
-    <circle cx="6" cy="20" r="1.5" :fill="color" stroke="none"/>
-    <circle cx="3" cy="9" r="1.5" :fill="color" stroke="none"/>
+    <polygon points="12,3 21,9 18,20 6,20 3,9" />
+    <circle
+      :fill="color"
+      cx="12"
+      cy="3"
+      r="1.5"
+      stroke="none"
+    />
+    <circle
+      :fill="color"
+      cx="21"
+      cy="9"
+      r="1.5"
+      stroke="none"
+    />
+    <circle
+      :fill="color"
+      cx="18"
+      cy="20"
+      r="1.5"
+      stroke="none"
+    />
+    <circle
+      :fill="color"
+      cx="6"
+      cy="20"
+      r="1.5"
+      stroke="none"
+    />
+    <circle
+      :fill="color"
+      cx="3"
+      cy="9"
+      r="1.5"
+      stroke="none"
+    />
   </svg>
 </template>
 

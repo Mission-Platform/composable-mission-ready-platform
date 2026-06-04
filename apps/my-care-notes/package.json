@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
+    "deploy:staging": "pnpm build && wrangler pages deploy --branch staging",
+    "deploy:prod": "pnpm build && wrangler pages deploy --branch main",
     "preview": "vite preview",
     "test": "vitest run",
     "lint": "eslint .",
@@ -46,6 +48,7 @@
     "vite": "catalog:vite",
     "vite-plugin-pwa": "catalog:vite",
     "vitest": "catalog:testing",
-    "vue-tsc": "catalog:vue"
+    "vue-tsc": "catalog:vue",
+    "wrangler": "catalog:"
   }
 }

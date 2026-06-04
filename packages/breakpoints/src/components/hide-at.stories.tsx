@@ -1,6 +1,6 @@
-import HideAt from './HideAt.vue'
+import HideAt from './HideAt.vue';
 
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
   title: 'Breakpoints/HideAt',
@@ -21,7 +21,7 @@ const meta = {
   render: (arguments_) => ({
     components: { HideAt },
     setup() {
-      return { args: arguments_ }
+      return { args: arguments_ };
     },
     template: `
       <div>
@@ -36,32 +36,32 @@ const meta = {
       </div>
     `,
   }),
-} satisfies Meta<typeof HideAt>
+} satisfies Meta<typeof HideAt>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const AlwaysHidden: Story = {
   parameters: { viewport: { defaultViewport: 'md' } },
   args: {},
-}
+};
 
 export const HideFromLg: Story = {
   parameters: { viewport: { defaultViewport: 'lg' } },
   args: { min: 'lg' },
-}
+};
 
 export const HideFromXl: Story = {
   parameters: { viewport: { defaultViewport: 'xl' } },
   args: { min: 'xl' },
-}
+};
 
 export const HideBelowMd: Story = {
   parameters: { viewport: { defaultViewport: '2xs' } },
   args: { max: 'md' },
-}
+};
 
 export const HideBetweenSmAndXl: Story = {
   parameters: { viewport: { defaultViewport: 'sm' } },
   args: { min: 'sm', max: 'xl' },
-}
+};

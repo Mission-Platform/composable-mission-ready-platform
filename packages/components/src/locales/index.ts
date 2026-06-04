@@ -6,11 +6,10 @@
 //   import { locales as uiLocales } from '@mission-platform/components/locales'
 //   createMpI18n({ modules: [uiLocales, { fr: { required: 'requis' } }] })
 
-// eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../yaml.d.ts" />
 
-import en from './en.yaml'
+import { defineLocales } from '@mission-platform/i18n';
 
-import { defineLocales } from '@mission-platform/i18n'
+import en from './en.yaml';
 
-export const locales = defineLocales({ en })
+export const locales = defineLocales({ en });

@@ -1,31 +1,36 @@
-// ─── Global Styles ────────────────────────────────────────────────────────────
-// Light theme tokens are applied to :root / [data-theme="light"] / .theme-light.
-// Dark  theme tokens are applied to  [data-theme="dark"]  / .theme-dark.
-// A media-query block mirrors the dark tokens onto :root when the OS prefers dark.
+/* ─── Global Styles ──────────────────────────────────────────────────────────── */
+
+/* Light theme tokens are applied to :root / [data-theme="light"] / .theme-light. */
+
+/* Dark  theme tokens are applied to  [data-theme="dark"]  / .theme-dark. */
+
+/* A media-query block mirrors the dark tokens onto :root when the OS prefers dark. */
 @use '@mission-platform/tokens/scss/themes/light';
 @use '@mission-platform/tokens/scss/themes/dark' as dark-theme;
 @use '@mission-platform/tokens/scss/mixins' as mp;
 
-// ── OS-level dark mode: apply dark tokens to :root automatically ──────────────
-// Targets :root unless an explicit light theme override is active, ensuring
-// the page responds to the OS colour preference without a data-theme attribute.
+/* ── OS-level dark mode: apply dark tokens to :root automatically ────────────── */
+
+/* Targets :root unless an explicit light theme override is active, ensuring */
+
+/* the page responds to the OS colour preference without a data-theme attribute. */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']):not(.theme-light) {
+  :root:not([data-theme='light'], .theme-light) {
     @include dark-theme.mp-dark-theme-vars;
   }
 }
 
-// ─── Base reset & typography ──────────────────────────────────────────────────
+/* ─── Base reset & typography ────────────────────────────────────────────────── */
 :root {
   color-scheme: light dark;
 
   @include mp.mp-font-base;
 
-  color:      var(--mp-color-text-primary);
+  color: var(--mp-color-text-primary);
   background: var(--mp-color-bg-base);
 
-  @media (max-width: 1024px) {
-    font-size: 1rem; // 16px
+  @media (width <= 1024px) {
+    font-size: 1rem; /* 16px */
   }
 }
 
@@ -33,35 +38,35 @@ body {
   margin: 0;
 }
 
-// ─── Headings ─────────────────────────────────────────────────────────────────
+/* ─── Headings ───────────────────────────────────────────────────────────────── */
 h1,
 h2 {
   font-family: var(--mp-font-family-heading, var(--mp-font-family-sans));
-  color:       var(--mp-color-text-primary);
+  color: var(--mp-color-text-primary);
 }
 
 h1 {
   @include mp.mp-font-h1;
 
-  font-size:      3.5rem; // 56px — display-scale override
+  font-size: 3.5rem; /* 56px — display-scale override */
   letter-spacing: -0.03em;
-  margin:         2rem 0;
+  margin: 2rem 0;
 
-  @media (max-width: 1024px) {
-    font-size: 2.25rem; // 36px
-    margin:    1.25rem 0;
+  @media (width <= 1024px) {
+    font-size: 2.25rem; /* 36px */
+    margin: 1.25rem 0;
   }
 }
 
 h2 {
   @include mp.mp-font-h3;
 
-  line-height:    118%;
+  line-height: 118%;
   letter-spacing: -0.01em;
-  margin:         0 0 0.5rem;
+  margin: 0 0 0.5rem;
 
-  @media (max-width: 1024px) {
-    font-size: 1.25rem; // 20px
+  @media (width <= 1024px) {
+    font-size: 1.25rem; /* 20px */
   }
 }
 
@@ -69,32 +74,32 @@ p {
   margin: 0;
 }
 
-// ─── Code ─────────────────────────────────────────────────────────────────────
+/* ─── Code ───────────────────────────────────────────────────────────────────── */
 code,
 .counter {
   @include mp.mp-font-code;
 
-  display:       inline-flex;
+  display: inline-flex;
   border-radius: 0.25rem;
-  color:         var(--mp-color-text-primary);
+  color: var(--mp-color-text-primary);
 }
 
 code {
-  font-size:   0.9375rem; // 15px
+  font-size: 0.9375rem; /* 15px */
   line-height: 135%;
-  padding:     0.25rem 0.5rem;
-  background:  var(--mp-color-bg-sunken);
+  padding: 0.25rem 0.5rem;
+  background: var(--mp-color-bg-sunken);
 }
 
-// ─── Counter / badge ──────────────────────────────────────────────────────────
+/* ─── Counter / badge ────────────────────────────────────────────────────────── */
 .counter {
-  font-size:     1rem;
-  padding:       0.3125rem 0.625rem;
+  font-size: 1rem;
+  padding: 0.3125rem 0.625rem;
   border-radius: 0.3125rem;
-  color:         var(--mp-color-primary-default);
-  background:    var(--mp-color-primary-subtle);
-  border:        2px solid transparent;
-  transition:    border-color 0.3s;
+  color: var(--mp-color-primary-default);
+  background: var(--mp-color-primary-subtle);
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
   margin-bottom: 1.5rem;
 
   &:hover {
@@ -102,12 +107,12 @@ code {
   }
 
   &:focus-visible {
-    outline:        2px solid var(--mp-color-border-focus);
+    outline: 2px solid var(--mp-color-border-focus);
     outline-offset: 2px;
   }
 }
 
-// ─── Hero image group ─────────────────────────────────────────────────────────
+/* ─── Hero image group ───────────────────────────────────────────────────────── */
 .hero {
   position: relative;
 
@@ -115,13 +120,13 @@ code {
   .framework,
   .vite {
     inset-inline: 0;
-    margin:       0 auto;
+    margin: 0 auto;
   }
 
   .base {
-    width:    170px;
+    width: 170px;
     position: relative;
-    z-index:  0;
+    z-index: 0;
   }
 
   .framework,
@@ -130,121 +135,121 @@ code {
   }
 
   .framework {
-    z-index:   1;
-    top:       34px;
-    height:    28px;
+    z-index: 1;
+    top: 34px;
+    height: 28px;
     transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg) scale(1.4);
   }
 
   .vite {
-    z-index:   0;
-    top:       107px;
-    height:    26px;
-    width:     auto;
+    z-index: 0;
+    top: 107px;
+    height: 26px;
+    width: auto;
     transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg) scale(0.8);
   }
 }
 
-// ─── App shell ────────────────────────────────────────────────────────────────
+/* ─── App shell ──────────────────────────────────────────────────────────────── */
 #app {
-  width:          1126px;
-  max-width:      100%;
-  margin:         0 auto;
-  text-align:     center;
-  border-inline:  1px solid var(--mp-color-border-default);
-  min-height:     100svh;
-  display:        flex;
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  border-inline: 1px solid var(--mp-color-border-default);
+  min-height: 100svh;
+  display: flex;
   flex-direction: column;
-  box-sizing:     border-box;
+  box-sizing: border-box;
 }
 
-// ─── Centre panel ─────────────────────────────────────────────────────────────
+/* ─── Centre panel ───────────────────────────────────────────────────────────── */
 #center {
-  display:        flex;
+  display: flex;
   flex-direction: column;
-  gap:            25px;
-  place-content:  center;
-  place-items:    center;
-  flex-grow:      1;
+  gap: 25px;
+  place-content: center;
+  place-items: center;
+  flex-grow: 1;
 
-  @media (max-width: 1024px) {
+  @media (width <= 1024px) {
     padding: 2rem 1.25rem 1.5rem;
-    gap:     18px;
+    gap: 18px;
   }
 }
 
-// ─── Next steps panel ─────────────────────────────────────────────────────────
+/* ─── Next steps panel ───────────────────────────────────────────────────────── */
 #next-steps {
-  display:    flex;
+  display: flex;
   border-top: 1px solid var(--mp-color-border-default);
   text-align: left;
 
   & > div {
-    flex:    1 1 0;
+    flex: 1 1 0;
     padding: 2rem;
 
-    @media (max-width: 1024px) {
+    @media (width <= 1024px) {
       padding: 1.5rem 1.25rem;
     }
   }
 
   .icon {
     margin-bottom: 1rem;
-    width:         22px;
-    height:        22px;
+    width: 22px;
+    height: 22px;
   }
 
-  @media (max-width: 1024px) {
+  @media (width <= 1024px) {
     flex-direction: column;
-    text-align:     center;
+    text-align: center;
   }
 }
 
 #docs {
   border-right: 1px solid var(--mp-color-border-default);
 
-  @media (max-width: 1024px) {
-    border-right:  none;
+  @media (width <= 1024px) {
+    border-right: none;
     border-bottom: 1px solid var(--mp-color-border-default);
   }
 }
 
 #next-steps ul {
   list-style: none;
-  padding:    0;
-  display:    flex;
-  gap:        0.5rem;
-  margin:     2rem 0 0;
+  padding: 0;
+  display: flex;
+  gap: 0.5rem;
+  margin: 2rem 0 0;
 
   .logo {
     height: 18px;
   }
 
   a {
-    color:           var(--mp-color-text-primary);
-    font-size:       1rem;
-    border-radius:   0.375rem;
-    background:      var(--mp-color-bg-muted);
-    display:         flex;
-    padding:         0.375rem 0.75rem;
-    align-items:     center;
-    gap:             0.5rem;
+    color: var(--mp-color-text-primary);
+    font-size: 1rem;
+    border-radius: 0.375rem;
+    background: var(--mp-color-bg-muted);
+    display: flex;
+    padding: 0.375rem 0.75rem;
+    align-items: center;
+    gap: 0.5rem;
     text-decoration: none;
-    transition:      box-shadow 0.3s;
+    transition: box-shadow 0.3s;
 
     &:hover {
-      box-shadow: var(--mp-shadow-md, rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px);
+      box-shadow: var(--mp-shadow-md, rgb(0 0 0 / 10%) 0 10px 15px -3px, rgb(0 0 0 / 5%) 0 4px 6px -2px);
     }
 
     .button-icon {
       height: 18px;
-      width:  18px;
+      width: 18px;
     }
   }
 
-  @media (max-width: 1024px) {
-    margin-top:      1.25rem;
-    flex-wrap:       wrap;
+  @media (width <= 1024px) {
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
     justify-content: center;
 
     li {
@@ -252,43 +257,43 @@ code {
     }
 
     a {
-      width:          100%;
+      width: 100%;
       justify-content: center;
-      box-sizing:     border-box;
+      box-sizing: border-box;
     }
   }
 }
 
-// ─── Spacer ───────────────────────────────────────────────────────────────────
+/* ─── Spacer ─────────────────────────────────────────────────────────────────── */
 #spacer {
-  height:     88px;
+  height: 88px;
   border-top: 1px solid var(--mp-color-border-default);
 
-  @media (max-width: 1024px) {
+  @media (width <= 1024px) {
     height: 48px;
   }
 }
 
-// ─── Tick decorations ─────────────────────────────────────────────────────────
+/* ─── Tick decorations ───────────────────────────────────────────────────────── */
 .ticks {
   position: relative;
-  width:    100%;
+  width: 100%;
 
   &::before,
   &::after {
-    content:  '';
+    content: '';
     position: absolute;
-    top:      -4.5px;
-    border:   5px solid transparent;
+    top: -4.5px;
+    border: 5px solid transparent;
   }
 
   &::before {
-    left:             0;
+    left: 0;
     border-left-color: var(--mp-color-border-default);
   }
 
   &::after {
-    right:              0;
+    right: 0;
     border-right-color: var(--mp-color-border-default);
   }
 }

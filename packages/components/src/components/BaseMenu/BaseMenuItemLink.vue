@@ -1,37 +1,46 @@
-<script setup lang="ts">
-  import { RouterLink } from 'vue-router'
-  import type { MenuItem } from './BaseMenu.vue'
+<script lang="ts" setup>
+  import { RouterLink } from 'vue-router';
+
+  import type { MenuItem } from './BaseMenu.vue';
 
   defineProps<{
-    item: MenuItem
-  }>()
+    item: MenuItem;
+  }>();
 </script>
 
 <template>
   <RouterLink
     v-if="item.to && !item.disabled"
+    :tabindex="item.disabled ? -1 : 0"
     :to="item.to"
     class="base-menu__link"
     role="menuitem"
-    :tabindex="item.disabled ? -1 : 0"
   >
-    <span v-if="item.icon" class="base-menu__icon" aria-hidden="true">{{ item.icon }}</span>
+    <span
+      v-if="item.icon"
+      aria-hidden="true"
+      class="base-menu__icon"
+    >{{ item.icon }}</span>
     <span class="base-menu__label">{{ item.label }}</span>
   </RouterLink>
   <a
     v-else
+    :aria-disabled="item.disabled || undefined"
     :href="item.disabled ? undefined : item.href"
+    :tabindex="item.disabled ? -1 : 0"
     class="base-menu__link"
     role="menuitem"
-    :aria-disabled="item.disabled || undefined"
-    :tabindex="item.disabled ? -1 : 0"
   >
-    <span v-if="item.icon" class="base-menu__icon" aria-hidden="true">{{ item.icon }}</span>
+    <span
+      v-if="item.icon"
+      aria-hidden="true"
+      class="base-menu__icon"
+    >{{ item.icon }}</span>
     <span class="base-menu__label">{{ item.label }}</span>
   </a>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
   .base-menu__link {
@@ -53,11 +62,6 @@
       background-color 0.15s ease,
       color 0.15s ease;
 
-    &:hover:not([aria-disabled='true']) {
-      background-color: var(--mp-color-bg-subtle);
-      color: var(--mp-color-text-primary);
-    }
-
     &:focus-visible {
       outline: 2px solid var(--mp-color-border-focus);
       outline-offset: 2px;
@@ -67,6 +71,11 @@
       color: var(--mp-color-text-disabled);
       cursor: not-allowed;
       pointer-events: none;
+    }
+
+    &:hover:not([aria-disabled='true']) {
+      background-color: var(--mp-color-bg-subtle);
+      color: var(--mp-color-text-primary);
     }
   }
 

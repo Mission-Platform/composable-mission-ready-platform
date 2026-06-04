@@ -1,6 +1,6 @@
-import { onMounted, onUnmounted, readonly, ref } from 'vue'
+import { onMounted, onUnmounted, readonly, ref } from 'vue';
 
-import type { MonacoEditorTheme } from '@mission-platform/components'
+import type { MonacoEditorTheme } from '@mission-platform/components';
 
 /**
  * Returns a reactive Monaco editor theme that mirrors the app's
@@ -11,28 +11,28 @@ import type { MonacoEditorTheme } from '@mission-platform/components'
  */
 export function useMonacoTheme() {
   function readTheme(): MonacoEditorTheme {
-    return document.documentElement.dataset['theme'] === 'dark' ? 'vs-dark' : 'vs'
+    return document.documentElement.dataset['theme'] === 'dark' ? 'vs-dark' : 'vs';
   }
 
-  const monacoTheme = ref<MonacoEditorTheme>(readTheme())
+  const monacoTheme = ref<MonacoEditorTheme>(readTheme());
 
-  let observer: MutationObserver | undefined
+  let observer: MutationObserver | undefined;
 
   onMounted(() => {
-    monacoTheme.value = readTheme()
+    monacoTheme.value = readTheme();
     observer = new MutationObserver(() => {
-      monacoTheme.value = readTheme()
-    })
+      monacoTheme.value = readTheme();
+    });
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['data-theme'],
-    })
-  })
+    });
+  });
 
   onUnmounted(() => {
-    observer?.disconnect()
-    observer = undefined
-  })
+    observer?.disconnect();
+    observer = undefined;
+  });
 
-  return { monacoTheme: readonly(monacoTheme) }
+  return { monacoTheme: readonly(monacoTheme) };
 }

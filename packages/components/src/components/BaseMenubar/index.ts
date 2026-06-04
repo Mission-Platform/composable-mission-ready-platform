@@ -1,1 +1,1 @@
-export { default } from './BaseMenubar.vue'
+export { default } from './BaseMenubar.vue';

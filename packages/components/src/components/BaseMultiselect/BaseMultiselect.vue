@@ -1,34 +1,34 @@
-<script setup lang="ts">
-  import { computed, ref } from 'vue'
-  import { useI18n } from 'vue-i18n'
-  import { IconChevron } from '@mission-platform/icons'
+<script lang="ts" setup>
+  import { useI18n } from '@mission-platform/i18n';
+  import { IconChevron } from '@mission-platform/icons';
+  import { computed, ref } from 'vue';
 
-  import { useId } from '../../composables/useId'
-  import BaseDropdown from '../BaseDropdown/BaseDropdown.vue'
-  import BaseTag from '../BaseTag/BaseTag.vue'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+  import { useId } from '../../composables/use-id';
+  import BaseDropdown from '../BaseDropdown/BaseDropdown.vue';
+  import BaseTag from '../BaseTag/BaseTag.vue';
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
-  export type MultiselectSize = 'sm' | 'md' | 'lg'
+  export type MultiselectSize = 'sm' | 'md' | 'lg';
 
   export interface MultiselectOption {
-    label: string
-    value: string | number
-    disabled?: boolean
+    label: string;
+    value: string | number;
+    disabled?: boolean;
   }
 
   const props = withDefaults(
     defineProps<{
-      modelValue?: (string | number)[]
-      options?: MultiselectOption[]
-      size?: MultiselectSize
-      label?: string
-      labelHidden?: boolean
-      hint?: string
-      error?: string
-      placeholder?: string
-      disabled?: boolean
-      required?: boolean
-      id?: string
+      modelValue?: (string | number)[];
+      options?: MultiselectOption[];
+      size?: MultiselectSize;
+      label?: string;
+      labelHidden?: boolean;
+      hint?: string;
+      error?: string;
+      placeholder?: string;
+      disabled?: boolean;
+      required?: boolean;
+      id?: string;
     }>(),
     {
       modelValue: () => [],
@@ -43,93 +43,78 @@
       required: false,
       id: undefined,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    'update:modelValue': [value: (string | number)[]]
-    change: [value: (string | number)[]]
-    blur: [event: FocusEvent]
-    focus: [event: FocusEvent]
-  }>()
+    'update:modelValue': [value: (string | number)[]];
+    change: [value: (string | number)[]];
+    blur: [event: FocusEvent];
+    focus: [event: FocusEvent];
+  }>();
 
-  const { t } = useI18n({
-    inheritLocale: true,
-    messages: {
-      en: {
-        required: 'required',
-        placeholder: 'Select options…',
-      },
-    },
-  })
-  const { id: resolvedId } = useId(props.id)
+  const { t } = useI18n({ useScope: 'local' });
+  const { id: resolvedId } = useId(props.id);
 
-  const isOpen = ref(false)
-  const inputRef = ref<HTMLInputElement | null>(null)
-  const searchQuery = ref('')
+  const isOpen = ref(false);
+  const inputRef = ref<HTMLInputElement | null>(null);
+  const searchQuery = ref('');
 
-  const selectedOptions = computed(() =>
-    props.options.filter((opt) => props.modelValue.includes(opt.value)),
-  )
+  const selectedOptions = computed(() => props.options.filter((opt) => props.modelValue.includes(opt.value)));
 
   const availableOptions = computed(() =>
     props.options.filter((opt) => {
-      const notSelected = !props.modelValue.includes(opt.value)
-      const matchesSearch =
-        !searchQuery.value || opt.label.toLowerCase().includes(searchQuery.value.toLowerCase())
-      return notSelected && matchesSearch
+      const notSelected = !props.modelValue.includes(opt.value);
+      const matchesSearch = !searchQuery.value || opt.label.toLowerCase().includes(searchQuery.value.toLowerCase());
+      return notSelected && matchesSearch;
     }),
-  )
+  );
 
   function openDropdown() {
-    if (props.disabled) return
-    isOpen.value = true
-    inputRef.value?.focus()
+    if (props.disabled) return;
+    isOpen.value = true;
+    inputRef.value?.focus();
   }
 
   function closeDropdown() {
-    isOpen.value = false
-    searchQuery.value = ''
+    isOpen.value = false;
+    searchQuery.value = '';
   }
 
   function selectOption(option: MultiselectOption) {
-    if (option.disabled) return
-    const next = [...props.modelValue, option.value]
-    emit('update:modelValue', next)
-    emit('change', next)
-    searchQuery.value = ''
-    inputRef.value?.focus()
+    if (option.disabled) return;
+    const next = [...props.modelValue, option.value];
+    emit('update:modelValue', next);
+    emit('change', next);
+    searchQuery.value = '';
+    inputRef.value?.focus();
   }
 
   function removeOption(value: string | number) {
-    const next = props.modelValue.filter((v) => v !== value)
-    emit('update:modelValue', next)
-    emit('change', next)
+    const next = props.modelValue.filter((v) => v !== value);
+    emit('update:modelValue', next);
+    emit('change', next);
   }
 
   function handleKeydown(event: KeyboardEvent) {
     if (event.key === 'Escape') {
-      closeDropdown()
-    } else if (
-      event.key === 'Backspace' &&
-      !searchQuery.value &&
-      selectedOptions.value.length > 0
-    ) {
-      const last = selectedOptions.value[selectedOptions.value.length - 1]
-      removeOption(last.value)
+      closeDropdown();
+    } else if (event.key === 'Backspace' && !searchQuery.value && selectedOptions.value.length > 0) {
+      const last = selectedOptions.value[selectedOptions.value.length - 1];
+      removeOption(last.value);
     }
   }
 
   function handleBlur(event: FocusEvent) {
-    const relatedTarget = event.relatedTarget as HTMLElement | null
-    const wrapper = (event.currentTarget as HTMLElement)?.closest('.base-multiselect__wrapper')
-    if (wrapper && relatedTarget && wrapper.contains(relatedTarget)) return
-    closeDropdown()
-    emit('blur', event)
+    const relatedTarget = event.relatedTarget as HTMLElement | null;
+    const wrapper = (event.currentTarget as HTMLElement)?.closest('.base-multiselect__wrapper');
+    if (wrapper && relatedTarget && wrapper.contains(relatedTarget)) return;
+    closeDropdown();
+    emit('blur', event);
   }
 
   function handleFocus(event: FocusEvent) {
-    isOpen.value = true
-    emit('focus', event)
+    isOpen.value = true;
+    emit('focus', event);
   }
 </script>
 
@@ -147,68 +132,80 @@
   >
     <label
       v-if="label"
-      :for="resolvedId"
       :class="['base-multiselect__label', { 'base-multiselect__label--hidden': labelHidden }]"
+      :for="resolvedId"
     >
-      <BaseTypography variant="label" as="span" color="primary">{{ label }}</BaseTypography>
+      <BaseTypography
+        as="span"
+        color="primary"
+        variant="label"
+      >{{ label }}</BaseTypography>
       <span
         v-if="required"
-        class="base-multiselect__required"
         :title="t('required')"
         aria-hidden="true"
-        >*</span
-      >
+        class="base-multiselect__required"
+      >*</span>
     </label>
 
     <BaseDropdown
       :open="isOpen"
-      @update:open="(val) => { if (!val) closeDropdown() }"
       @close="closeDropdown"
+      @update:open="
+        (val) => {
+          if (!val) closeDropdown();
+        }
+      "
     >
       <template #trigger>
         <div
-          class="base-multiselect__wrapper"
-          role="combobox"
+          :aria-controls="`${resolvedId}-listbox`"
           :aria-expanded="isOpen"
           :aria-haspopup="'listbox'"
-          :aria-owns="`${resolvedId}-listbox`"
+          class="base-multiselect__wrapper"
+          role="combobox"
+          tabindex="0"
           @click="openDropdown"
           @blur.capture="handleBlur"
+          @keydown.enter="openDropdown"
+          @keydown.space="openDropdown"
         >
           <div class="base-multiselect__control">
             <div class="base-multiselect__tags">
               <BaseTag
                 v-for="opt in selectedOptions"
                 :key="opt.value"
+                :disabled="disabled"
                 :label="opt.label"
                 :size="size === 'lg' ? 'md' : 'sm'"
                 variant="primary"
-                :disabled="disabled"
                 @remove="removeOption(opt.value)"
               />
               <input
                 :id="resolvedId"
                 ref="inputRef"
                 v-model="searchQuery"
-                type="text"
-                class="base-multiselect__input"
-                :placeholder="
-                  selectedOptions.length === 0 ? (placeholder ?? t('placeholder')) : undefined
-                "
-                :disabled="disabled"
-                :required="required && modelValue.length === 0"
-                :aria-invalid="!!error || undefined"
-                :aria-describedby="
-                  error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined
-                "
                 :aria-autocomplete="'list'"
+                :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
+                :aria-invalid="!!error || undefined"
+                :disabled="disabled"
+                :placeholder="selectedOptions.length === 0 ? (placeholder ?? t('placeholder')) : undefined"
+                :required="required && modelValue.length === 0"
                 autocomplete="off"
+                class="base-multiselect__input"
+                type="text"
                 @focus="handleFocus"
                 @keydown="handleKeydown"
-              />
+              >
             </div>
-            <span class="base-multiselect__chevron" aria-hidden="true">
-              <IconChevron size="sm" :direction="isOpen ? 'up' : 'down'" />
+            <span
+              aria-hidden="true"
+              class="base-multiselect__chevron"
+            >
+              <IconChevron
+                :direction="isOpen ? 'up' : 'down'"
+                size="sm"
+              />
             </span>
           </div>
         </div>
@@ -217,23 +214,22 @@
       <li
         v-for="opt in availableOptions"
         :key="opt.value"
-        :class="[
-          'base-multiselect__option',
-          { 'base-multiselect__option--disabled': opt.disabled },
-        ]"
-        role="option"
-        :aria-selected="false"
         :aria-disabled="opt.disabled || undefined"
+        :aria-selected="false"
+        :class="['base-multiselect__option', { 'base-multiselect__option--disabled': opt.disabled }]"
+        role="option"
+        tabindex="-1"
         @mousedown.prevent="selectOption(opt)"
       >
         {{ opt.label }}
       </li>
       <li
         v-if="availableOptions.length === 0"
+        aria-disabled="true"
+        aria-selected="false"
         class="base-multiselect__empty"
         role="option"
-        aria-selected="false"
-        aria-disabled="true"
+        tabindex="-1"
       >
         {{ searchQuery ? `No results for "${searchQuery}"` : 'No options available' }}
       </li>
@@ -242,26 +238,28 @@
     <BaseTypography
       v-if="error"
       :id="`${resolvedId}-error`"
-      variant="caption"
       as="p"
-      color="inherit"
       class="base-multiselect__error"
+      color="inherit"
       role="alert"
-      >{{ error }}</BaseTypography
+      variant="caption"
     >
+      {{ error }}
+    </BaseTypography>
     <BaseTypography
       v-else-if="hint"
       :id="`${resolvedId}-hint`"
-      variant="caption"
       as="p"
-      color="secondary"
       class="base-multiselect__hint"
-      >{{ hint }}</BaseTypography
+      color="secondary"
+      variant="caption"
     >
+      {{ hint }}
+    </BaseTypography>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
   .base-multiselect {
@@ -270,7 +268,7 @@
     gap: var(--mp-spacing-1);
 
     &__label {
-      // typography handled by BaseTypography
+      /* typography handled by BaseTypography */
 
       &--hidden {
         position: absolute;
@@ -279,7 +277,7 @@
         padding: 0;
         margin: -1px;
         overflow: hidden;
-        clip: rect(0, 0, 0, 0);
+        clip-path: inset(50%);
         white-space: nowrap;
         border: 0;
       }
@@ -343,7 +341,6 @@
       flex-shrink: 0;
     }
 
-
     &__option {
       @include mp.mp-font-body-sm;
 
@@ -351,13 +348,13 @@
       color: var(--mp-color-text-primary);
       cursor: pointer;
 
-      &:hover:not(.base-multiselect__option--disabled) {
-        background-color: var(--mp-color-bg-muted);
-      }
-
       &--disabled {
         color: var(--mp-color-text-disabled);
         cursor: not-allowed;
+      }
+
+      &:hover:not(.base-multiselect__option--disabled) {
+        background-color: var(--mp-color-bg-muted);
       }
     }
 
@@ -369,7 +366,7 @@
       font-style: italic;
     }
 
-    // Sizes
+    /* Sizes */
     &--sm {
       .base-multiselect__control {
         padding: var(--mp-spacing-1) var(--mp-spacing-2);
@@ -400,7 +397,7 @@
       }
     }
 
-    // States
+    /* States */
     &--error {
       .base-multiselect__wrapper {
         border-color: var(--mp-color-danger-default);
@@ -435,3 +432,9 @@
     }
   }
 </style>
+
+<i18n lang="yaml">
+en:
+  required: required
+  placeholder: Select options…
+</i18n>

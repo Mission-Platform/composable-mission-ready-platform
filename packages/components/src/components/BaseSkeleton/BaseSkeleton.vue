@@ -1,12 +1,12 @@
-<script setup lang="ts">
-  export type SkeletonShape = 'line' | 'circle' | 'block'
+<script lang="ts" setup>
+  export type SkeletonShape = 'line' | 'circle' | 'block';
 
   withDefaults(
     defineProps<{
-      shape?: SkeletonShape
-      width?: string
-      height?: string
-      animated?: boolean
+      shape?: SkeletonShape;
+      width?: string;
+      height?: string;
+      animated?: boolean;
     }>(),
     {
       shape: 'line',
@@ -14,7 +14,7 @@
       height: undefined,
       animated: true,
     },
-  )
+  );
 </script>
 
 <template>
@@ -25,7 +25,7 @@
   />
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-skeleton {
     display: block;
     background-color: var(--mp-color-bg-muted);
@@ -37,16 +37,11 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        90deg,
-        transparent 0%,
-        var(--mp-color-skeleton-shimmer) 50%,
-        transparent 100%
-      );
+      background: linear-gradient(90deg, transparent 0%, var(--mp-color-skeleton-shimmer) 50%, transparent 100%);
       animation: mp-skeleton-shimmer 1.6s ease-in-out infinite;
     }
 
-    // Shapes
+    /* Shapes */
     &--line {
       width: 100%;
       height: 1em;
@@ -67,7 +62,12 @@
   }
 
   @keyframes mp-skeleton-shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+    0% {
+      transform: translateX(-100%);
+    }
+
+    100% {
+      transform: translateX(100%);
+    }
   }
 </style>

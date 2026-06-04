@@ -1,52 +1,57 @@
-<script setup lang="ts">
-  import { computed } from 'vue'
-  import type { MenuItem } from './BaseMenu.vue'
-  import { IconChevron } from '@mission-platform/icons'
+<script lang="ts" setup>
+  import { IconChevron } from '@mission-platform/icons';
+  import { computed } from 'vue';
+
+  import type { MenuItem } from './BaseMenu.vue';
 
   const props = withDefaults(
     defineProps<{
-      item: MenuItem
-      isOpen: boolean
-      nested?: boolean
+      item: MenuItem;
+      isOpen: boolean;
+      nested?: boolean;
     }>(),
     {
       nested: false,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    click: []
-  }>()
+    click: [];
+  }>();
 
   const chevronDirection = computed(() => {
-    if (props.nested) return props.isOpen ? 'left' : 'right'
-    return props.isOpen ? 'up' : 'down'
-  })
+    if (props.nested) return props.isOpen ? 'left' : 'right';
+    return props.isOpen ? 'up' : 'down';
+  });
 </script>
 
 <template>
   <button
-    class="base-menu__link"
-    type="button"
-    role="menuitem"
     :aria-disabled="item.disabled || undefined"
-    :aria-haspopup="item.children && item.children.length > 0 ? 'menu' : undefined"
     :aria-expanded="item.children && item.children.length > 0 ? isOpen : undefined"
+    :aria-haspopup="item.children && item.children.length > 0 ? 'menu' : undefined"
     :disabled="item.disabled"
+    class="base-menu__link"
+    role="menuitem"
+    type="button"
     @click="emit('click')"
   >
-    <span v-if="item.icon" class="base-menu__icon" aria-hidden="true">{{ item.icon }}</span>
+    <span
+      v-if="item.icon"
+      aria-hidden="true"
+      class="base-menu__icon"
+    >{{ item.icon }}</span>
     <span class="base-menu__label">{{ item.label }}</span>
     <IconChevron
       v-if="item.children && item.children.length > 0"
-      class="base-menu__chevron"
       :direction="chevronDirection"
+      class="base-menu__chevron"
       size="sm"
     />
   </button>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
   .base-menu__link {
@@ -68,11 +73,6 @@
       background-color 0.15s ease,
       color 0.15s ease;
 
-    &:hover:not(:disabled):not([aria-disabled='true']) {
-      background-color: var(--mp-color-bg-subtle);
-      color: var(--mp-color-text-primary);
-    }
-
     &:focus-visible {
       outline: 2px solid var(--mp-color-border-focus);
       outline-offset: 2px;
@@ -83,6 +83,11 @@
       color: var(--mp-color-text-disabled);
       cursor: not-allowed;
       pointer-events: none;
+    }
+
+    &:hover:not(:disabled, [aria-disabled='true']) {
+      background-color: var(--mp-color-bg-subtle);
+      color: var(--mp-color-text-primary);
     }
   }
 

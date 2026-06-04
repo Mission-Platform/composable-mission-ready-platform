@@ -1,103 +1,102 @@
-<script setup lang="ts">
-  import { ref } from 'vue'
+<script lang="ts" setup>
+  import { BaseButton, BaseCodeBlock, BaseCollapse, BaseTooltip } from '@mission-platform/components';
+  import { useI18n } from '@mission-platform/i18n';
   import {
-    BaseButton,
-    BaseCodeBlock,
-    BaseCollapse,
-    BaseTooltip,
-  } from '@mission-platform/components'
-  import {
+    IconDrawCircle,
     IconDrawLine,
     IconDrawPolygon,
     IconDrawSquare,
-    IconDrawCircle,
     IconDrawTriangle,
-    IconScaleUp,
-    IconScaleDown,
-    IconRotateCW,
-    IconRotateCCW,
-    IconSplit,
-    IconJoin,
     IconGeodesic,
+    IconJoin,
+    IconRotateCCW,
+    IconRotateCW,
+    IconScaleDown,
+    IconScaleUp,
+    IconSplit,
     IconTrash,
-  } from '@mission-platform/icons'
-  import { MapLibre, MapDraw } from '@mission-platform/map'
-  import type { DrawMode, DrawnFeature } from '@mission-platform/map'
+  } from '@mission-platform/icons';
+  import { MapDraw, MapLibre } from '@mission-platform/map';
+  import { computed, ref } from 'vue';
 
-  const MAP_STYLE = 'https://demotiles.maplibre.org/style.json'
+  import type { DrawMode, DrawnFeature } from '@mission-platform/map';
 
-  const mode = ref<DrawMode>(undefined)
-  const features = ref<DrawnFeature[]>([])
-  const selectedId = ref<string | null>(null)
-  const joiningFromId = ref<string | null>(null)
-  const geodesic = ref(true)
-  const mapDrawRef = ref<InstanceType<typeof MapDraw> | null>(null)
+  const MAP_STYLE = 'https://demotiles.maplibre.org/style.json';
 
-  const drawModes: { label: string; value: DrawMode; icon: unknown }[] = [
-    { label: 'None', value: undefined, icon: null },
-    { label: 'Line', value: 'line', icon: IconDrawLine },
-    { label: 'Polygon', value: 'polygon', icon: IconDrawPolygon },
-    { label: 'Square', value: 'square', icon: IconDrawSquare },
-    { label: 'Circle', value: 'circle', icon: IconDrawCircle },
-    { label: 'Triangle', value: 'triangle', icon: IconDrawTriangle },
-  ]
+  const { t } = useI18n({ useScope: 'local' });
+
+  const mode = ref<DrawMode>(undefined);
+  const features = ref<DrawnFeature[]>([]);
+  const selectedId = ref<string | null>(null);
+  const joiningFromId = ref<string | null>(null);
+  const geodesic = ref(true);
+  const mapDrawRef = ref<InstanceType<typeof MapDraw> | null>(null);
+
+  const drawModes = computed<{ label: string; value: DrawMode; icon: unknown }[]>(() => [
+    { label: t('draw.none'), value: undefined, icon: null },
+    { label: t('draw.line'), value: 'line', icon: IconDrawLine },
+    { label: t('draw.polygon'), value: 'polygon', icon: IconDrawPolygon },
+    { label: t('draw.square'), value: 'square', icon: IconDrawSquare },
+    { label: t('draw.circle'), value: 'circle', icon: IconDrawCircle },
+    { label: t('draw.triangle'), value: 'triangle', icon: IconDrawTriangle },
+  ]);
 
   function setMode(m: DrawMode) {
-    mode.value = m
+    mode.value = m;
   }
 
   function scale(factor: number) {
-    mapDrawRef.value?.drawing.scaleSelected(factor)
+    mapDrawRef.value?.drawing.scaleSelected(factor);
   }
 
   function rotate(deg: number) {
-    mapDrawRef.value?.drawing.rotateSelected(deg)
+    mapDrawRef.value?.drawing.rotateSelected(deg);
   }
 
   function deleteSelected() {
-    mapDrawRef.value?.drawing.deleteSelected()
-    selectedId.value = null
-    joiningFromId.value = null
+    mapDrawRef.value?.drawing.deleteSelected();
+    selectedId.value = null;
+    joiningFromId.value = null;
   }
 
   function splitSelected() {
-    mapDrawRef.value?.drawing.splitSelected()
+    mapDrawRef.value?.drawing.splitSelected();
   }
 
   function startJoin() {
-    if (!selectedId.value) return
-    joiningFromId.value = selectedId.value
+    if (!selectedId.value) return;
+    joiningFromId.value = selectedId.value;
   }
 
   function onSelect(id: string | null) {
     if (joiningFromId.value && id && id !== joiningFromId.value) {
-      mapDrawRef.value?.drawing.joinLines(joiningFromId.value, id)
-      joiningFromId.value = null
-      selectedId.value = mapDrawRef.value?.drawing.selectedId.value ?? null
-      return
+      mapDrawRef.value?.drawing.joinLines(joiningFromId.value, id);
+      joiningFromId.value = null;
+      selectedId.value = mapDrawRef.value?.drawing.selectedId.value ?? null;
+      return;
     }
-    if (id === joiningFromId.value) return
-    joiningFromId.value = null
-    selectedId.value = id
+    if (id === joiningFromId.value) return;
+    joiningFromId.value = null;
+    selectedId.value = id;
   }
 
   function toggleGeodesic() {
-    geodesic.value = !geodesic.value
+    geodesic.value = !geodesic.value;
   }
 
   function isLine() {
-    const f = features.value.find((x) => x.id === selectedId.value)
-    return f?.geometry.type === 'LineString'
+    const f = features.value.find((x) => x.id === selectedId.value);
+    return f?.geometry.type === 'LineString';
   }
 </script>
 
 <template>
   <div class="showcase">
-    <h1>Map Draw Toolbar</h1>
+    <h1>{{ t('title') }}</h1>
 
     <div class="toolbar">
       <div class="toolbar__row">
-        <span class="toolbar__label">Draw:</span>
+        <span class="toolbar__label">{{ t('label.draw') }}</span>
         <BaseTooltip
           v-for="m in drawModes"
           :key="String(m.value)"
@@ -109,118 +108,194 @@
             size="sm"
             @click="setMode(m.value)"
           >
-            <component :is="m.icon" v-if="m.icon" :size="16" :aria-label="m.label" />
+            <component
+              :is="m.icon"
+              v-if="m.icon"
+              :aria-label="m.label"
+              :size="16"
+            />
             <span v-else>{{ m.label }}</span>
           </BaseButton>
         </BaseTooltip>
       </div>
 
       <div class="toolbar__row">
-        <span class="toolbar__label">Edit:</span>
-        <span class="toolbar__status" :class="{ 'toolbar__status--joining': joiningFromId }">
+        <span class="toolbar__label">{{ t('label.edit') }}</span>
+        <span
+          :class="{ 'toolbar__status--joining': joiningFromId }"
+          class="toolbar__status"
+        >
           {{
             joiningFromId
-              ? '⚡ Click another line to join with ' + joiningFromId
+              ? t('status.joining', { id: joiningFromId })
               : selectedId
-                ? 'Selected: ' + selectedId
-                : 'Click a shape to select'
+                ? t('status.selected', { id: selectedId })
+                : t('status.none')
           }}
         </span>
 
-        <BaseTooltip content="Scale Up ×1.5" placement="bottom">
-          <BaseButton variant="secondary" size="sm" :disabled="!selectedId" @click="scale(1.5)">
-            <IconScaleUp :size="16" aria-label="Scale Up" />
-          </BaseButton>
-        </BaseTooltip>
-
-        <BaseTooltip content="Scale Down ×0.75" placement="bottom">
-          <BaseButton variant="secondary" size="sm" :disabled="!selectedId" @click="scale(0.75)">
-            <IconScaleDown :size="16" aria-label="Scale Down" />
-          </BaseButton>
-        </BaseTooltip>
-
-        <BaseTooltip content="Rotate +45°" placement="bottom">
-          <BaseButton variant="secondary" size="sm" :disabled="!selectedId" @click="rotate(45)">
-            <IconRotateCW :size="16" aria-label="Rotate Clockwise" />
-          </BaseButton>
-        </BaseTooltip>
-
-        <BaseTooltip content="Rotate −45°" placement="bottom">
-          <BaseButton variant="secondary" size="sm" :disabled="!selectedId" @click="rotate(-45)">
-            <IconRotateCCW :size="16" aria-label="Rotate Counter-Clockwise" />
-          </BaseButton>
-        </BaseTooltip>
-
-        <BaseTooltip content="Split line at midpoint" placement="bottom">
+        <BaseTooltip
+          :content="t('tooltip.scale-up')"
+          placement="bottom"
+        >
           <BaseButton
-            variant="secondary"
+            :disabled="!selectedId"
             size="sm"
+            variant="secondary"
+            @click="scale(1.5)"
+          >
+            <IconScaleUp
+              :size="16"
+              :aria-label="t('aria.scale-up')"
+            />
+          </BaseButton>
+        </BaseTooltip>
+
+        <BaseTooltip
+          :content="t('tooltip.scale-down')"
+          placement="bottom"
+        >
+          <BaseButton
+            :disabled="!selectedId"
+            size="sm"
+            variant="secondary"
+            @click="scale(0.75)"
+          >
+            <IconScaleDown
+              :size="16"
+              :aria-label="t('aria.scale-down')"
+            />
+          </BaseButton>
+        </BaseTooltip>
+
+        <BaseTooltip
+          :content="t('tooltip.rotate-cw')"
+          placement="bottom"
+        >
+          <BaseButton
+            :disabled="!selectedId"
+            size="sm"
+            variant="secondary"
+            @click="rotate(45)"
+          >
+            <IconRotateCW
+              :size="16"
+              :aria-label="t('aria.rotate-cw')"
+            />
+          </BaseButton>
+        </BaseTooltip>
+
+        <BaseTooltip
+          :content="t('tooltip.rotate-ccw')"
+          placement="bottom"
+        >
+          <BaseButton
+            :disabled="!selectedId"
+            size="sm"
+            variant="secondary"
+            @click="rotate(-45)"
+          >
+            <IconRotateCCW
+              :size="16"
+              :aria-label="t('aria.rotate-ccw')"
+            />
+          </BaseButton>
+        </BaseTooltip>
+
+        <BaseTooltip
+          :content="t('tooltip.split')"
+          placement="bottom"
+        >
+          <BaseButton
             :disabled="!(selectedId && isLine())"
+            size="sm"
+            variant="secondary"
             @click="splitSelected()"
           >
-            <IconSplit :size="16" aria-label="Split Line" />
+            <IconSplit
+              :size="16"
+              :aria-label="t('aria.split')"
+            />
           </BaseButton>
         </BaseTooltip>
 
         <BaseTooltip
-          :content="
-            joiningFromId
-              ? 'Joining — select another line to complete join'
-              : 'Join two lines at nearest endpoints'
-          "
+          :content="joiningFromId ? t('tooltip.join-active') : t('tooltip.join')"
           placement="bottom"
         >
           <BaseButton
+            :disabled="!(selectedId && isLine())"
             :variant="joiningFromId ? 'primary' : 'secondary'"
             size="sm"
-            :disabled="!(selectedId && isLine())"
             @click="startJoin()"
           >
-            <IconJoin :size="16" aria-label="Join Lines" />
-          </BaseButton>
-        </BaseTooltip>
-
-        <BaseTooltip content="Delete selected feature" placement="bottom">
-          <BaseButton variant="danger" size="sm" :disabled="!selectedId" @click="deleteSelected()">
-            <IconTrash :size="16" aria-label="Delete" />
+            <IconJoin
+              :size="16"
+              :aria-label="t('aria.join')"
+            />
           </BaseButton>
         </BaseTooltip>
 
         <BaseTooltip
-          :content="
-            geodesic
-              ? 'Geodesic mode: move/scale respects ground distances. Click for flat/visual mode.'
-              : 'Flat mode: move/scale preserves visual shape. Click for geodesic mode.'
-          "
+          :content="t('tooltip.delete')"
           placement="bottom"
         >
-          <BaseButton variant="secondary" size="sm" @click="toggleGeodesic()">
-            <IconGeodesic :size="16" aria-label="Geodesic mode" />
-            {{ geodesic ? 'Geodesic' : 'Flat' }}
+          <BaseButton
+            :disabled="!selectedId"
+            size="sm"
+            variant="danger"
+            @click="deleteSelected()"
+          >
+            <IconTrash
+              :size="16"
+              :aria-label="t('aria.delete')"
+            />
+          </BaseButton>
+        </BaseTooltip>
+
+        <BaseTooltip
+          :content="geodesic ? t('tooltip.geodesic') : t('tooltip.flat')"
+          placement="bottom"
+        >
+          <BaseButton
+            size="sm"
+            variant="secondary"
+            @click="toggleGeodesic()"
+          >
+            <IconGeodesic
+              :size="16"
+              :aria-label="t('aria.geodesic')"
+            />
+            {{ geodesic ? t('mode.geodesic') : t('mode.flat') }}
           </BaseButton>
         </BaseTooltip>
       </div>
     </div>
 
-    <MapLibre :map-style="MAP_STYLE" :center="[0, 20]" :zoom="1.5" class="showcase__map">
+    <MapLibre
+      :center="[0, 20]"
+      :map-style="MAP_STYLE"
+      :zoom="1.5"
+      class="showcase__map"
+    >
       <MapDraw
         ref="mapDrawRef"
         v-model="features"
-        :mode="mode"
         :geodesic="geodesic"
+        :mode="mode"
+        @select="onSelect"
         @update:mode="mode = $event"
         @update:geodesic="geodesic = $event"
-        @select="onSelect"
       />
     </MapLibre>
 
-    <BaseCollapse :summary="'GeoJSON output (' + features.length + ' features)'">
+    <BaseCollapse :summary="t('geojson-summary', { count: features.length })">
       <BaseCodeBlock
-        language="json"
+        :code="JSON.stringify({ type: 'FeatureCollection', features }, null, 2)"
         :show-copy-button="false"
         :show-line-numbers="true"
-        :code="JSON.stringify({ type: 'FeatureCollection', features }, null, 2)"
         class="showcase__geojson"
+        language="json"
       />
     </BaseCollapse>
   </div>
@@ -275,3 +350,46 @@
     overflow: auto;
   }
 </style>
+
+<i18n lang="yaml">
+en:
+  title: Map Draw Toolbar
+  label:
+    draw: 'Draw:'
+    edit: 'Edit:'
+  draw:
+    none: None
+    line: Line
+    polygon: Polygon
+    square: Square
+    circle: Circle
+    triangle: Triangle
+  status:
+    none: Click a shape to select
+    selected: 'Selected: {id}'
+    joining: '⚡ Click another line to join with {id}'
+  tooltip:
+    scale-up: Scale Up ×1.5
+    scale-down: Scale Down ×0.75
+    rotate-cw: Rotate +45°
+    rotate-ccw: Rotate −45°
+    split: Split line at midpoint
+    join: Join two lines at nearest endpoints
+    join-active: Joining — select another line to complete join
+    delete: Delete selected feature
+    geodesic: 'Geodesic mode: move/scale respects ground distances. Click for flat/visual mode.'
+    flat: 'Flat mode: move/scale preserves visual shape. Click for geodesic mode.'
+  aria:
+    scale-up: Scale Up
+    scale-down: Scale Down
+    rotate-cw: Rotate Clockwise
+    rotate-ccw: Rotate Counter-Clockwise
+    split: Split Line
+    join: Join Lines
+    delete: Delete
+    geodesic: Geodesic mode
+  mode:
+    geodesic: Geodesic
+    flat: Flat
+  geojson-summary: 'GeoJSON output ({count} features)'
+</i18n>

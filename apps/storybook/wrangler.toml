@@ -1,0 +1,23 @@
+"$schema" = "./node_modules/wrangler/config-schema.json"
+name = "mission-platform-storybook"
+pages_build_output_dir = "./storybook-static"
+compatibility_date = "2026-06-02"
+
+[vars]
+ENVIRONMENT = "staging"
+
+[env.production]
+# Custom domain: storybook.mission-platform.com
+# Attach this domain in the Cloudflare Pages dashboard under Custom Domains,
+# or via: npx wrangler pages deploy --branch main
+
+[env.production.vars]
+ENVIRONMENT = "production"
+
+[env.preview]
+# Custom domain: storybook.mission-platform.dev
+# Attach this domain in the Cloudflare Pages dashboard under Custom Domains,
+# or via: npx wrangler pages deploy --branch staging
+
+[env.preview.vars]
+ENVIRONMENT = "staging"

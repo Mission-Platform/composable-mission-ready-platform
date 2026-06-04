@@ -1,27 +1,27 @@
-<script setup lang="ts">
-  import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-  import { useFloating, autoUpdate, offset, flip, shift } from '@floating-ui/vue'
-  import { IconCalendar, IconChevron } from '@mission-platform/icons'
+<script lang="ts" setup>
+  import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue';
+  import { IconCalendar, IconChevron } from '@mission-platform/icons';
+  import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
-  import { useId } from '../../composables/useId'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+  import { useId } from '../../composables/use-id';
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
-  export type DateInputSize = 'sm' | 'md' | 'lg'
+  export type DateInputSize = 'sm' | 'md' | 'lg';
 
   const props = withDefaults(
     defineProps<{
-      modelValue?: string
-      label?: string
-      labelHidden?: boolean
-      hint?: string
-      error?: string
-      disabled?: boolean
-      required?: boolean
-      placeholder?: string
-      size?: DateInputSize
-      min?: string
-      max?: string
-      id?: string
+      modelValue?: string;
+      label?: string;
+      labelHidden?: boolean;
+      hint?: string;
+      error?: string;
+      disabled?: boolean;
+      required?: boolean;
+      placeholder?: string;
+      size?: DateInputSize;
+      min?: string;
+      max?: string;
+      id?: string;
     }>(),
     {
       modelValue: '',
@@ -37,27 +37,27 @@
       max: undefined,
       id: undefined,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    'update:modelValue': [value: string]
-    change: [value: string]
-  }>()
+    'update:modelValue': [value: string];
+    change: [value: string];
+  }>();
 
-  const { id: resolvedId } = useId(props.id)
+  const { id: resolvedId } = useId(props.id);
 
-  const open = ref(false)
-  const calendarRef = ref<HTMLElement | null>(null)
-  const triggerRef = ref<HTMLElement | null>(null)
+  const open = ref(false);
+  const calendarRef = ref<HTMLElement | null>(null);
+  const triggerRef = ref<HTMLElement | null>(null);
 
   const { floatingStyles } = useFloating(triggerRef, calendarRef, {
     placement: 'bottom-start',
     whileElementsMounted: autoUpdate,
     middleware: [offset(4), flip({ padding: 8 }), shift({ padding: 8 })],
-  })
+  });
 
-  const viewYear = ref(new Date().getFullYear())
-  const viewMonth = ref(new Date().getMonth())
+  const viewYear = ref(new Date().getFullYear());
+  const viewMonth = ref(new Date().getMonth());
 
   const MONTHS = [
     'January',
@@ -72,104 +72,98 @@
     'October',
     'November',
     'December',
-  ]
-  const DAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
+  ];
+  const DAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
   function parseDate(val: string): Date | null {
-    if (!val) return null
-    const d = new Date(val + 'T00:00:00')
-    return isNaN(d.getTime()) ? null : d
+    if (!val) return null;
+    const d = new Date(val + 'T00:00:00');
+    return isNaN(d.getTime()) ? null : d;
   }
 
-  const minDate = computed(() => (props.min ? parseDate(props.min) : null))
-  const maxDate = computed(() => (props.max ? parseDate(props.max) : null))
+  const minDate = computed(() => (props.min ? parseDate(props.min) : null));
+  const maxDate = computed(() => (props.max ? parseDate(props.max) : null));
 
   const calendarDays = computed(() => {
-    const firstDay = new Date(viewYear.value, viewMonth.value, 1).getDay()
-    const daysInMonth = new Date(viewYear.value, viewMonth.value + 1, 0).getDate()
-    const cells: Array<{ day: number | null; date: string | null; disabled: boolean }> = []
-    for (let i = 0; i < firstDay; i++) cells.push({ day: null, date: null, disabled: true })
+    const firstDay = new Date(viewYear.value, viewMonth.value, 1).getDay();
+    const daysInMonth = new Date(viewYear.value, viewMonth.value + 1, 0).getDate();
+    const cells: Array<{ day: number | null; date: string | null; disabled: boolean }> = [];
+    for (let i = 0; i < firstDay; i++) cells.push({ day: null, date: null, disabled: true });
     for (let d = 1; d <= daysInMonth; d++) {
-      const dateStr = `${viewYear.value}-${String(viewMonth.value + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
-      const dateObj = new Date(viewYear.value, viewMonth.value, d)
-      let disabled = false
-      if (minDate.value && dateObj < minDate.value) disabled = true
-      if (maxDate.value && dateObj > maxDate.value) disabled = true
-      cells.push({ day: d, date: dateStr, disabled })
+      const dateStr = `${viewYear.value}-${String(viewMonth.value + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      const dateObj = new Date(viewYear.value, viewMonth.value, d);
+      let disabled = false;
+      if (minDate.value && dateObj < minDate.value) disabled = true;
+      if (maxDate.value && dateObj > maxDate.value) disabled = true;
+      cells.push({ day: d, date: dateStr, disabled });
     }
-    return cells
-  })
+    return cells;
+  });
 
   function isSelected(date: string | null): boolean {
-    return !!date && date === props.modelValue
+    return !!date && date === props.modelValue;
   }
 
   function isToday(date: string | null): boolean {
-    if (!date) return false
-    const t = new Date()
+    if (!date) return false;
+    const t = new Date();
     return (
-      date ===
-      `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`
-    )
+      date === `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`
+    );
   }
 
   function selectDate(date: string | null, disabled: boolean) {
-    if (!date || disabled) return
-    emit('update:modelValue', date)
-    emit('change', date)
-    open.value = false
+    if (!date || disabled) return;
+    emit('update:modelValue', date);
+    emit('change', date);
+    open.value = false;
   }
 
   function prevMonth() {
     if (viewMonth.value === 0) {
-      viewYear.value--
-      viewMonth.value = 11
-    } else viewMonth.value--
+      viewYear.value--;
+      viewMonth.value = 11;
+    } else viewMonth.value--;
   }
 
   function nextMonth() {
     if (viewMonth.value === 11) {
-      viewYear.value++
-      viewMonth.value = 0
-    } else viewMonth.value++
+      viewYear.value++;
+      viewMonth.value = 0;
+    } else viewMonth.value++;
   }
 
   function toggleOpen() {
-    if (props.disabled) return
+    if (props.disabled) return;
     if (!open.value) {
-      const d = parseDate(props.modelValue)
+      const d = parseDate(props.modelValue);
       if (d) {
-        viewYear.value = d.getFullYear()
-        viewMonth.value = d.getMonth()
+        viewYear.value = d.getFullYear();
+        viewMonth.value = d.getMonth();
       }
     }
-    open.value = !open.value
+    open.value = !open.value;
   }
 
   function onClickOutside(e: MouseEvent) {
-    const t = e.target as Node
-    if (
-      calendarRef.value &&
-      !calendarRef.value.contains(t) &&
-      triggerRef.value &&
-      !triggerRef.value.contains(t)
-    )
-      open.value = false
+    const t = e.target as Node;
+    if (calendarRef.value && !calendarRef.value.contains(t) && triggerRef.value && !triggerRef.value.contains(t))
+      open.value = false;
   }
 
   watch(
     () => props.modelValue,
     (val) => {
-      const d = parseDate(val)
+      const d = parseDate(val);
       if (d) {
-        viewYear.value = d.getFullYear()
-        viewMonth.value = d.getMonth()
+        viewYear.value = d.getFullYear();
+        viewMonth.value = d.getMonth();
       }
     },
-  )
+  );
 
-  onMounted(() => document.addEventListener('mousedown', onClickOutside))
-  onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
+  onMounted(() => document.addEventListener('mousedown', onClickOutside));
+  onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside));
 </script>
 
 <template>
@@ -182,32 +176,41 @@
   >
     <label
       v-if="label"
-      :for="resolvedId"
       :class="['base-date-input__label', { 'base-date-input__label--hidden': labelHidden }]"
+      :for="resolvedId"
     >
-      <BaseTypography variant="label" as="span" color="primary">{{ label }}</BaseTypography>
-      <span v-if="required" class="base-date-input__required" aria-hidden="true">*</span>
+      <BaseTypography
+        as="span"
+        color="primary"
+        variant="label"
+      >{{ label }}</BaseTypography>
+      <span
+        v-if="required"
+        aria-hidden="true"
+        class="base-date-input__required"
+      >*</span>
     </label>
 
     <button
-      ref="triggerRef"
       :id="resolvedId"
-      type="button"
-      class="base-date-input__trigger"
+      ref="triggerRef"
+      :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
       :aria-expanded="open"
       :aria-haspopup="'dialog'"
-      :aria-label="label ?? 'Date picker'"
       :aria-invalid="!!error || undefined"
-      :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
+      :aria-label="label ?? 'Date picker'"
+      class="base-date-input__trigger"
+      type="button"
       @click="toggleOpen"
       @keydown.escape="open = false"
     >
-      <span
-        :class="['base-date-input__value', { 'base-date-input__value--placeholder': !modelValue }]"
-      >
+      <span :class="['base-date-input__value', { 'base-date-input__value--placeholder': !modelValue }]">
         {{ modelValue || placeholder }}
       </span>
-      <span class="base-date-input__icon" aria-hidden="true">
+      <span
+        aria-hidden="true"
+        class="base-date-input__icon"
+      >
         <IconCalendar size="sm" />
       </span>
     </button>
@@ -215,40 +218,54 @@
     <div
       v-show="open"
       ref="calendarRef"
-      class="base-date-input__calendar"
-      role="dialog"
       :aria-label="`${label ?? 'Date'} calendar`"
       :style="floatingStyles"
+      class="base-date-input__calendar"
+      role="dialog"
     >
       <div class="base-date-input__cal-header">
         <button
-          type="button"
-          class="base-date-input__nav-btn"
-          @click.stop="prevMonth"
           aria-label="Previous month"
-        >
-          <IconChevron size="xs" direction="left" />
-        </button>
-        <BaseTypography variant="label" as="span" color="primary"
-          >{{ MONTHS[viewMonth] }} {{ viewYear }}</BaseTypography
-        >
-        <button
-          type="button"
           class="base-date-input__nav-btn"
-          @click.stop="nextMonth"
-          aria-label="Next month"
+          type="button"
+          @click.stop="prevMonth"
         >
-          <IconChevron size="xs" direction="right" />
+          <IconChevron
+            direction="left"
+            size="xs"
+          />
+        </button>
+        <BaseTypography
+          as="span"
+          color="primary"
+          variant="label"
+        >
+          {{ MONTHS[viewMonth] }} {{ viewYear }}
+        </BaseTypography>
+        <button
+          aria-label="Next month"
+          class="base-date-input__nav-btn"
+          type="button"
+          @click.stop="nextMonth"
+        >
+          <IconChevron
+            direction="right"
+            size="xs"
+          />
         </button>
       </div>
 
       <div class="base-date-input__cal-grid">
-        <span v-for="d in DAYS" :key="d" class="base-date-input__weekday">{{ d }}</span>
+        <span
+          v-for="d in DAYS"
+          :key="d"
+          class="base-date-input__weekday"
+        >{{ d }}</span>
         <button
           v-for="(cell, i) in calendarDays"
           :key="i"
-          type="button"
-          :disabled="!cell.day || cell.disabled"
+          :aria-label="cell.date ?? undefined"
+          :aria-pressed="isSelected(cell.date)"
           :class="[
             'base-date-input__day',
             {
@@ -258,8 +275,8 @@
               'base-date-input__day--disabled': cell.disabled,
             },
           ]"
-          :aria-label="cell.date ?? undefined"
-          :aria-pressed="isSelected(cell.date)"
+          :disabled="!cell.day || cell.disabled"
+          type="button"
           @click.stop="selectDate(cell.date, cell.disabled)"
         >
           {{ cell.day ?? '' }}
@@ -270,26 +287,28 @@
     <BaseTypography
       v-if="error"
       :id="`${resolvedId}-error`"
-      variant="caption"
       as="p"
-      color="inherit"
       class="base-date-input__error"
+      color="inherit"
       role="alert"
-      >{{ error }}</BaseTypography
+      variant="caption"
     >
+      {{ error }}
+    </BaseTypography>
     <BaseTypography
       v-else-if="hint"
       :id="`${resolvedId}-hint`"
-      variant="caption"
       as="p"
-      color="secondary"
       class="base-date-input__hint"
-      >{{ hint }}</BaseTypography
+      color="secondary"
+      variant="caption"
     >
+      {{ hint }}
+    </BaseTypography>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
   .base-date-input {
@@ -310,7 +329,7 @@
         padding: 0;
         margin: -1px;
         overflow: hidden;
-        clip: rect(0, 0, 0, 0);
+        clip-path: inset(50%);
         white-space: nowrap;
         border: 0;
       }
@@ -366,9 +385,10 @@
       flex-shrink: 0;
     }
 
-    // Sizes
+    /* Sizes */
     &--sm .base-date-input__trigger {
       padding: var(--mp-spacing-1) var(--mp-spacing-2);
+
       .base-date-input__value {
         font-size: var(--mp-font-size-sm);
       }
@@ -376,6 +396,7 @@
 
     &--md .base-date-input__trigger {
       padding: var(--mp-spacing-2) var(--mp-spacing-3);
+
       .base-date-input__value {
         font-size: var(--mp-font-size-md);
       }
@@ -383,14 +404,16 @@
 
     &--lg .base-date-input__trigger {
       padding: var(--mp-spacing-3) var(--mp-spacing-4);
+
       .base-date-input__value {
         font-size: var(--mp-font-size-lg);
       }
     }
 
-    // States
+    /* States */
     &--error .base-date-input__trigger {
       border-color: var(--mp-color-danger-default);
+
       &:focus {
         box-shadow: var(--mp-shadow-focus-danger);
       }
@@ -399,6 +422,7 @@
     &--disabled {
       opacity: 0.5;
       pointer-events: none;
+
       .base-date-input__trigger {
         background-color: var(--mp-color-bg-muted);
         cursor: not-allowed;
@@ -409,11 +433,12 @@
       color: var(--mp-color-danger-text);
       margin: 0;
     }
+
     &__hint {
       margin: 0;
     }
 
-    // Calendar
+    /* Calendar */
     &__calendar {
       position: fixed;
       z-index: 200;
@@ -451,6 +476,7 @@
         background-color: var(--mp-color-bg-muted);
         color: var(--mp-color-text-primary);
       }
+
       &:focus-visible {
         outline: 2px solid var(--mp-color-border-focus);
         outline-offset: 2px;
@@ -491,10 +517,6 @@
         background-color 150ms ease,
         color 150ms ease;
 
-      &:hover:not(:disabled):not(.base-date-input__day--selected) {
-        background-color: var(--mp-color-bg-muted);
-      }
-
       &--empty {
         pointer-events: none;
       }
@@ -520,6 +542,10 @@
       &:focus-visible {
         outline: 2px solid var(--mp-color-border-focus);
         outline-offset: 2px;
+      }
+
+      &:hover:not(:disabled, .base-date-input__day--selected) {
+        background-color: var(--mp-color-bg-muted);
       }
     }
   }

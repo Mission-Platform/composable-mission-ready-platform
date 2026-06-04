@@ -1,43 +1,62 @@
-<script setup lang="ts">
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+<script lang="ts" setup>
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
   defineProps<{
-    isFirst: boolean
-    isLast: boolean
-    backLabel: string
-    nextLabel: string
-    finishLabel: string
-  }>()
+    isFirst: boolean;
+    isLast: boolean;
+    backLabel: string;
+    nextLabel: string;
+    finishLabel: string;
+  }>();
 
   const emit = defineEmits<{
-    prev: []
-    next: []
-  }>()
+    prev: [];
+    next: [];
+  }>();
 </script>
 
 <template>
   <footer class="base-form-wizard__footer">
-    <slot :prev="() => emit('prev')" :next="() => emit('next')" :is-first="isFirst" :is-last="isLast">
+    <slot
+      :is-first="isFirst"
+      :is-last="isLast"
+      :next="() => emit('next')"
+      :prev="() => emit('prev')"
+    >
       <button
         v-if="!isFirst"
-        type="button"
         class="base-form-wizard__btn base-form-wizard__btn--secondary"
+        type="button"
         @click="emit('prev')"
       >
-        <BaseTypography variant="body-md" weight="medium" as="span" color="inherit">{{ backLabel }}</BaseTypography>
+        <BaseTypography
+          as="span"
+          color="inherit"
+          variant="body-md"
+          weight="medium"
+        >
+          {{ backLabel }}
+        </BaseTypography>
       </button>
       <button
-        type="button"
         class="base-form-wizard__btn base-form-wizard__btn--primary"
+        type="button"
         @click="emit('next')"
       >
-        <BaseTypography variant="body-md" weight="medium" as="span" color="inherit">{{ isLast ? finishLabel : nextLabel }}</BaseTypography>
+        <BaseTypography
+          as="span"
+          color="inherit"
+          variant="body-md"
+          weight="medium"
+        >
+          {{ isLast ? finishLabel : nextLabel }}
+        </BaseTypography>
       </button>
     </slot>
   </footer>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-form-wizard__footer {
     display: flex;
     align-items: center;
@@ -55,7 +74,9 @@
     border: 1px solid transparent;
     border-radius: var(--mp-radius-md);
     cursor: pointer;
-    transition: background-color 150ms ease, border-color 150ms ease;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease;
 
     &--primary {
       background-color: var(--mp-color-primary-default);

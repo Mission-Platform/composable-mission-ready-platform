@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-sidebar__body {
     flex: 1;
     overflow-y: auto;

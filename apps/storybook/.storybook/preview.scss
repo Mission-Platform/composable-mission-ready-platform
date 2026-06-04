@@ -1,10 +1,11 @@
-// Set the base font-size so that 1rem = 14px across all token values.
+/* Set the base font-size so that 1rem = 14px across all token values. */
 :root {
   font-size: 14px;
 }
 
-// Apply theme background and text to the Storybook preview root so that
-// the data-theme attribute set by @storybook/addon-themes is visible.
+/* Apply theme background and text to the Storybook preview root so that */
+
+/* the data-theme attribute set by @storybook/addon-themes is visible. */
 body,
 #storybook-root {
   background-color: var(--mp-color-bg-base);

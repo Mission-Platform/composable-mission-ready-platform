@@ -1,20 +1,20 @@
-<script setup lang="ts">
-  import { computed, ref } from 'vue'
-  import { useI18n } from 'vue-i18n'
-  import { IconClose, IconSearch } from '@mission-platform/icons'
+<script lang="ts" setup>
+  import { useI18n } from '@mission-platform/i18n';
+  import { IconClose, IconSearch } from '@mission-platform/icons';
+  import { computed, ref } from 'vue';
 
-  import { useId } from '../../composables/useId'
+  import { useId } from '../../composables/use-id';
 
-  export type SearchInputSize = 'sm' | 'md' | 'lg'
+  export type SearchInputSize = 'sm' | 'md' | 'lg';
 
   const props = withDefaults(
     defineProps<{
-      modelValue?: string
-      placeholder?: string
-      size?: SearchInputSize
-      disabled?: boolean
-      loading?: boolean
-      id?: string
+      modelValue?: string;
+      placeholder?: string;
+      size?: SearchInputSize;
+      disabled?: boolean;
+      loading?: boolean;
+      id?: string;
     }>(),
     {
       modelValue: '',
@@ -24,70 +24,76 @@
       loading: false,
       id: undefined,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    'update:modelValue': [value: string]
-    search: [value: string]
-    clear: []
-  }>()
+    'update:modelValue': [value: string];
+    search: [value: string];
+    clear: [];
+  }>();
 
-  const { t } = useI18n({
-    inheritLocale: true,
-    messages: { en: { clear: 'Clear search', loading: 'Searching…' } },
-  })
+  const { t } = useI18n({ useScope: 'local' });
 
-  const { id: resolvedId } = useId(props.id)
-  const inputRef = ref<HTMLInputElement | null>(null)
+  const { id: resolvedId } = useId(props.id);
+  const inputRef = ref<HTMLInputElement | null>(null);
 
-  const hasValue = computed(() => props.modelValue.length > 0)
+  const hasValue = computed(() => props.modelValue.length > 0);
 
   function handleInput(event: Event) {
-    const target = event.target as HTMLInputElement
-    emit('update:modelValue', target.value)
+    const target = event.target as HTMLInputElement;
+    emit('update:modelValue', target.value);
   }
 
   function handleKeydown(event: KeyboardEvent) {
     if (event.key === 'Enter') {
-      emit('search', props.modelValue)
+      emit('search', props.modelValue);
     } else if (event.key === 'Escape') {
-      handleClear()
+      handleClear();
     }
   }
 
   function handleClear() {
-    emit('update:modelValue', '')
-    emit('clear')
-    inputRef.value?.focus()
+    emit('update:modelValue', '');
+    emit('clear');
+    inputRef.value?.focus();
   }
 </script>
 
 <template>
-  <div
-    :class="['base-search-input', `base-search-input--${size}`, { 'base-search-input--disabled': disabled }]"
-  >
+  <div :class="['base-search-input', `base-search-input--${size}`, { 'base-search-input--disabled': disabled }]">
     <div class="base-search-input__wrapper">
-      <span class="base-search-input__search-icon" aria-hidden="true">
-        <IconSearch v-if="!loading" size="sm" />
-        <span v-else class="base-search-input__spinner" role="status" :aria-label="t('loading')" />
+      <span
+        aria-hidden="true"
+        class="base-search-input__search-icon"
+      >
+        <IconSearch
+          v-if="!loading"
+          size="sm"
+        />
+        <span
+          v-else
+          :aria-label="t('loading')"
+          class="base-search-input__spinner"
+          role="status"
+        />
       </span>
       <input
         :id="resolvedId"
         ref="inputRef"
-        type="search"
-        :value="modelValue"
-        :placeholder="placeholder"
-        :disabled="disabled"
         :aria-busy="loading"
+        :disabled="disabled"
+        :placeholder="placeholder"
+        :value="modelValue"
         class="base-search-input__field"
+        type="search"
         @input="handleInput"
         @keydown="handleKeydown"
-      />
+      >
       <button
         v-if="hasValue"
-        type="button"
-        class="base-search-input__clear"
         :aria-label="t('clear')"
+        class="base-search-input__clear"
+        type="button"
         @click="handleClear"
       >
         <IconClose size="xs" />
@@ -96,7 +102,7 @@
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-search-input {
     display: flex;
     flex-direction: column;
@@ -107,7 +113,9 @@
       border: 1px solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
       background-color: var(--mp-color-bg-surface);
-      transition: border-color 150ms ease, box-shadow 150ms ease;
+      transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease;
       gap: var(--mp-spacing-1);
 
       &:focus-within {
@@ -136,7 +144,7 @@
         color: var(--mp-color-text-tertiary);
       }
 
-      // Remove native search clear button
+      /* Remove native search clear button */
       &::-webkit-search-cancel-button {
         display: none;
       }
@@ -175,7 +183,7 @@
       animation: mp-spin 0.6s linear infinite;
     }
 
-    // Sizes
+    /* Sizes */
     &--sm {
       .base-search-input__wrapper {
         padding: var(--mp-spacing-1) var(--mp-spacing-3);
@@ -226,6 +234,14 @@
   }
 
   @keyframes mp-spin {
-    to { transform: rotate(360deg); }
+    to {
+      transform: rotate(360deg);
+    }
   }
 </style>
+
+<i18n lang="yaml">
+en:
+  clear: Clear search
+  loading: Searching…
+</i18n>

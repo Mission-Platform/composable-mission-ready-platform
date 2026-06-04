@@ -1,51 +1,65 @@
-<script setup lang="ts">
-  import { IconChevron } from '@mission-platform/icons'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
-  import type { TreeNode } from './BaseTreeView.vue'
+<script lang="ts" setup>
+  import { IconChevron } from '@mission-platform/icons';
+
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
+
+  import type { TreeNode } from './BaseTreeView.vue';
 
   defineProps<{
-    node: TreeNode
-    depth: number
-    isOpen: boolean
-    hasChildren: boolean
-  }>()
+    node: TreeNode;
+    depth: number;
+    isOpen: boolean;
+    hasChildren: boolean;
+    selected?: boolean;
+  }>();
 
   const emit = defineEmits<{
-    toggle: []
-    select: []
-    keydown: [event: KeyboardEvent]
-  }>()
+    toggle: [];
+    select: [];
+    keydown: [event: KeyboardEvent];
+  }>();
 </script>
 
 <template>
   <span
+    :aria-expanded="hasChildren ? isOpen : undefined"
+    :aria-selected="selected ?? false"
+    :style="{ paddingLeft: `${depth * 20}px` }"
     class="tree-node__label"
     role="treeitem"
     tabindex="0"
-    :aria-expanded="hasChildren ? isOpen : undefined"
-    :style="{ paddingLeft: `${depth * 20}px` }"
     @click="emit('select')"
     @keydown="emit('keydown', $event)"
   >
     <button
       v-if="hasChildren"
-      :class="['tree-node__toggle', { 'tree-node__toggle--open': isOpen }]"
       :aria-label="isOpen ? 'Collapse' : 'Expand'"
+      :class="['tree-node__toggle', { 'tree-node__toggle--open': isOpen }]"
       @click.stop="emit('toggle')"
     >
-      <IconChevron :direction="isOpen ? 'up' : 'right'" size="xs" />
+      <IconChevron
+        :direction="isOpen ? 'up' : 'right'"
+        size="xs"
+      />
     </button>
-    <span v-else class="tree-node__spacer" />
+    <span
+      v-else
+      class="tree-node__spacer"
+    />
 
     <slot>
-      <BaseTypography variant="body-sm" as="span" color="inherit">
+      <BaseTypography
+        as="span"
+        color="inherit"
+        variant="body-sm"
+      >
         {{ node.label }}
       </BaseTypography>
     </slot>
   </span>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .tree-node__label {
     display: flex;
     align-items: center;

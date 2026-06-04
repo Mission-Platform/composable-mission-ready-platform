@@ -1,2 +1,2 @@
-export { default } from './BaseNavbarItem.vue'
-export type { NavbarItemVariant, NavbarItemChild } from './BaseNavbarItem.vue'
+export { default } from './BaseNavbarItem.vue';
+export type { NavbarItemVariant, NavbarItemChild } from './BaseNavbarItem.vue';

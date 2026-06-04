@@ -1,26 +1,30 @@
-<script setup lang="ts">
-  import { RouterLink } from 'vue-router'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+<script lang="ts" setup>
+  import { RouterLink } from 'vue-router';
+
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
   export interface BreadcrumbItem {
-    label: string
-    href?: string
-    to?: string | Record<string, unknown>
+    label: string;
+    href?: string;
+    to?: string | Record<string, unknown>;
   }
 
   withDefaults(
     defineProps<{
-      items: BreadcrumbItem[]
-      separator?: string
+      items: BreadcrumbItem[];
+      separator?: string;
     }>(),
     {
       separator: '/',
     },
-  )
+  );
 </script>
 
 <template>
-  <nav class="base-breadcrumb" aria-label="Breadcrumb">
+  <nav
+    aria-label="Breadcrumb"
+    class="base-breadcrumb"
+  >
     <ol class="base-breadcrumb__list">
       <li
         v-for="(item, index) in items"
@@ -29,37 +33,43 @@
       >
         <span
           v-if="index > 0"
-          class="base-breadcrumb__separator"
           aria-hidden="true"
+          class="base-breadcrumb__separator"
         >{{ separator }}</span>
         <RouterLink
           v-if="item.to && index < items.length - 1"
           :to="item.to"
           class="base-breadcrumb__link"
-        >{{ item.label }}</RouterLink>
+        >
+          {{ item.label }}
+        </RouterLink>
         <BaseTypography
           v-else-if="item.href && index < items.length - 1"
-          variant="body-sm"
-          as="a"
-          color="secondary"
           :href="item.href"
+          as="a"
           class="base-breadcrumb__link"
-        >{{ item.label }}</BaseTypography>
+          color="secondary"
+          variant="body-sm"
+        >
+          {{ item.label }}
+        </BaseTypography>
         <BaseTypography
           v-else
+          :aria-current="index === items.length - 1 ? 'page' : undefined"
+          as="span"
+          class="base-breadcrumb__current"
+          color="secondary"
           variant="body-sm"
           weight="medium"
-          as="span"
-          color="secondary"
-          class="base-breadcrumb__current"
-          :aria-current="index === items.length - 1 ? 'page' : undefined"
-        >{{ item.label }}</BaseTypography>
+        >
+          {{ item.label }}
+        </BaseTypography>
       </li>
     </ol>
   </nav>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-breadcrumb {
     &__list {
       display: flex;
@@ -98,7 +108,7 @@
     }
 
     &__current {
-      // typography handled by BaseTypography
+      /* typography handled by BaseTypography */
     }
   }
 </style>

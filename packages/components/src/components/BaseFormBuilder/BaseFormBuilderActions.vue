@@ -1,24 +1,30 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   defineProps<{
-    resetLabel: string
-    submitLabel: string
-  }>()
+    resetLabel: string;
+    submitLabel: string;
+  }>();
 </script>
 
 <template>
   <div class="form-builder__actions">
     <slot>
-      <button type="reset" class="form-builder__btn form-builder__btn--reset">
+      <button
+        class="form-builder__btn form-builder__btn--reset"
+        type="reset"
+      >
         {{ resetLabel }}
       </button>
-      <button type="submit" class="form-builder__btn form-builder__btn--submit">
+      <button
+        class="form-builder__btn form-builder__btn--submit"
+        type="submit"
+      >
         {{ submitLabel }}
       </button>
     </slot>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
   .form-builder__actions {

@@ -1,42 +1,48 @@
-<script setup lang="ts">
-  import { ref } from 'vue'
-  import { IconChevron } from '@mission-platform/icons'
+<script lang="ts" setup>
+  import { IconChevron } from '@mission-platform/icons';
+  import { ref } from 'vue';
 
   const props = withDefaults(
     defineProps<{
-      summary?: string
-      open?: boolean
-      disabled?: boolean
+      summary?: string;
+      open?: boolean;
+      disabled?: boolean;
     }>(),
     {
       summary: 'Details',
       open: false,
       disabled: false,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    toggle: [open: boolean]
-  }>()
+    toggle: [open: boolean];
+  }>();
 
-  const isOpen = ref(props.open)
+  const isOpen = ref(props.open);
 
   function handleToggle(event: Event) {
-    const target = event.target as HTMLDetailsElement
-    isOpen.value = target.open
-    emit('toggle', target.open)
+    const target = event.target as HTMLDetailsElement;
+    isOpen.value = target.open;
+    emit('toggle', target.open);
   }
 </script>
 
 <template>
   <details
-    :open="open"
     :class="['base-collapse', { 'base-collapse--disabled': disabled }]"
+    :open="open"
     @toggle="handleToggle"
   >
     <summary class="base-collapse__summary">
-      <slot name="summary">{{ summary }}</slot>
-      <IconChevron class="base-collapse__chevron" size="sm" :direction="isOpen ? 'up' : 'down'" />
+      <slot name="summary">
+        {{ summary }}
+      </slot>
+      <IconChevron
+        :direction="isOpen ? 'up' : 'down'"
+        class="base-collapse__chevron"
+        size="sm"
+      />
     </summary>
     <div class="base-collapse__content">
       <slot />
@@ -44,7 +50,7 @@
   </details>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
   .base-collapse {

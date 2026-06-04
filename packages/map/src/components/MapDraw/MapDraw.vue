@@ -1,47 +1,43 @@
-<script setup lang="ts">
-  import { computed, watch } from 'vue'
-  import type { GeoJSONSourceSpecification } from 'maplibre-gl'
-  import type { Feature, FeatureCollection } from 'geojson'
-  import { colors } from '@mission-platform/tokens'
+<script lang="ts" setup>
+  import { colors } from '@mission-platform/tokens';
+  import { computed, watch } from 'vue';
 
-  import { useMap } from '../../composables/useMap'
-  import type {
-    DrawMode,
-    DrawnFeature,
-    FeatureId,
-    UseDrawingOptions,
-  } from '../../composables/useDrawing'
-  import { useDrawing } from '../../composables/useDrawing'
-  import MapSource from '../MapSource/MapSource.vue'
-  import MapLayer from '../MapLayer/MapLayer.vue'
+  import { useDrawing } from '../../composables/use-drawing';
+  import { useMap } from '../../composables/use-map';
+  import MapLayer from '../MapLayer/MapLayer.vue';
+  import MapSource from '../MapSource/MapSource.vue';
+
+  import type { DrawMode, DrawnFeature, FeatureId, UseDrawingOptions } from '../../composables/use-drawing';
+  import type { Feature, FeatureCollection } from 'geojson';
+  import type { GeoJSONSourceSpecification } from 'maplibre-gl';
 
   export interface MapDrawProps {
     /** Currently active drawing mode. When omitted the tool is in idle/edit mode. */
-    mode?: DrawMode
+    mode?: DrawMode;
     /**
      * Pre-existing drawn features to hydrate the tool with (e.g. loaded from a
      * server). Changes to this prop are reflected in the internal state.
      */
-    modelValue?: DrawnFeature[]
+    modelValue?: DrawnFeature[];
     /**
      * When `true` (default), move and scale operations use geodesic (ground-accurate)
      * calculations that respect map projection distortion.
      * When `false`, raw lng/lat arithmetic is used — shapes keep their visual
      * appearance on the screen regardless of latitude.
      */
-    geodesic?: boolean
+    geodesic?: boolean;
     /** Stroke colour for drawn shapes. */
-    strokeColor?: string
+    strokeColor?: string;
     /** Fill colour for drawn polygon/fill shapes. */
-    fillColor?: string
+    fillColor?: string;
     /** Fill opacity (0–1). */
-    fillOpacity?: number
+    fillOpacity?: number;
     /** Stroke width in pixels. */
-    strokeWidth?: number
+    strokeWidth?: number;
     /** Colour for the draft (in-progress) shape. */
-    draftColor?: string
+    draftColor?: string;
     /** Colour of vertex handle circles. */
-    vertexColor?: string
+    vertexColor?: string;
   }
 
   const props = withDefaults(defineProps<MapDrawProps>(), {
@@ -54,47 +50,47 @@
     strokeWidth: 2,
     draftColor: colors.warning[500], // #f79009
     vertexColor: colors.white, // #fff
-  })
-
-  /** Vertex colour used specifically for draft (in-drawing) vertex circles. */
-  const draftVertexColor = colors.warning[500]
+  });
 
   const emit = defineEmits<{
     /** Fired whenever the committed feature set changes. */
-    'update:modelValue': [features: DrawnFeature[]]
+    'update:modelValue': [features: DrawnFeature[]];
     /** Fired when the active drawing mode changes. */
-    'update:mode': [mode: DrawMode]
+    'update:mode': [mode: DrawMode];
     /** Fired when a feature is selected. `null` means deselected. */
-    select: [id: FeatureId | null]
+    select: [id: FeatureId | null];
     /** Fired when the geodesic toggle changes. */
-    'update:geodesic': [geodesic: boolean]
-  }>()
+    'update:geodesic': [geodesic: boolean];
+  }>();
 
-  const { map } = useMap()
+  /** Vertex colour used specifically for draft (in-drawing) vertex circles. */
+  const draftVertexColor = colors.warning[500];
+
+  const { map } = useMap();
 
   const drawingOptions: UseDrawingOptions = {
     initialFeatures: props.modelValue,
-  }
+  };
 
-  const drawing = useDrawing(map, drawingOptions)
+  const drawing = useDrawing(map, drawingOptions);
 
   // ── Sync geodesic prop → internal drawing state ──────────────────────────
   watch(
     () => props.geodesic,
     (val: boolean | undefined) => {
       if (drawing.geodesic.value !== (val !== false)) {
-        drawing.setGeodesic(val !== false)
+        drawing.setGeodesic(val !== false);
       }
     },
     { immediate: true },
-  )
+  );
 
   // ── Emit geodesic changes upward ─────────────────────────────────────────
   watch(drawing.geodesic, (val) => {
     if ((props.geodesic !== false) !== !!val) {
-      emit('update:geodesic', !!val)
+      emit('update:geodesic', !!val);
     }
-  })
+  });
 
   // ── Sync mode prop → internal drawing mode ────────────────────────────────
   watch(
@@ -102,87 +98,87 @@
     (newMode) => {
       if (newMode !== drawing.mode.value) {
         if (newMode === null) {
-          drawing.cancelDrawing()
+          drawing.cancelDrawing();
         } else {
-          drawing.startDrawing(newMode)
+          drawing.startDrawing(newMode);
         }
       }
     },
     { immediate: true },
-  )
+  );
 
   // ── Sync modelValue prop → internal features ─────────────────────────────
   // Guard flag prevents re-seeding when the value bounced back from an internal change.
-  let emittingFromInternal = false
+  let emittingFromInternal = false;
 
   watch(
     () => props.modelValue,
     (val) => {
-      if (emittingFromInternal) return
-      drawing.setFeatures(val ?? [])
+      if (emittingFromInternal) return;
+      drawing.setFeatures(val ?? []);
     },
-  )
+  );
 
   // ── Emit feature changes upward ───────────────────────────────────────────
   watch(drawing.features, (fc) => {
-    emittingFromInternal = true
-    emit('update:modelValue', fc.features as DrawnFeature[])
+    emittingFromInternal = true;
+    emit('update:modelValue', fc.features as DrawnFeature[]);
     // Reset on next microtask so the parent watcher has time to run first
     Promise.resolve().then(() => {
-      emittingFromInternal = false
-    })
-  })
+      emittingFromInternal = false;
+    });
+  });
 
   watch(
     () => drawing.selectedId.value,
     (id) => {
-      emit('select', id ?? null)
+      emit('select', id ?? null);
     },
-  )
+  );
 
   // ── Map event wiring ──────────────────────────────────────────────────────
   watch(
     map,
     (instance, prev) => {
       if (prev) {
-        prev.off('click', drawing.handleMapClick)
-        prev.off('dblclick', drawing.handleMapDblClick)
-        prev.off('mousemove', drawing.handleMapMouseMove)
-        prev.off('mousedown', drawing.handleMapMouseDown)
-        prev.off('mouseup', drawing.handleMapMouseUp)
-        prev.off('moveend', drawing.handleMapMoveEnd)
-        prev.off('zoomend', drawing.handleMapMoveEnd)
+        prev.off('click', drawing.handleMapClick);
+        prev.off('dblclick', drawing.handleMapDblClick);
+        prev.off('mousemove', drawing.handleMapMouseMove);
+        prev.off('mousedown', drawing.handleMapMouseDown);
+        prev.off('mouseup', drawing.handleMapMouseUp);
+        prev.off('moveend', drawing.handleMapMoveEnd);
+        prev.off('zoomend', drawing.handleMapMoveEnd);
       }
-      if (!instance) return
+      if (!instance) return;
 
-      instance.on('click', drawing.handleMapClick)
-      instance.on('dblclick', drawing.handleMapDblClick)
-      instance.on('mousemove', drawing.handleMapMouseMove)
-      instance.on('mousedown', drawing.handleMapMouseDown)
-      instance.on('mouseup', drawing.handleMapMouseUp)
-      instance.on('moveend', drawing.handleMapMoveEnd)
-      instance.on('zoomend', drawing.handleMapMoveEnd)
+      instance.on('click', drawing.handleMapClick);
+      instance.on('dblclick', drawing.handleMapDblClick);
+      instance.on('mousemove', drawing.handleMapMouseMove);
+      instance.on('mousedown', drawing.handleMapMouseDown);
+      instance.on('mouseup', drawing.handleMapMouseUp);
+      instance.on('moveend', drawing.handleMapMoveEnd);
+      instance.on('zoomend', drawing.handleMapMoveEnd);
     },
     { immediate: true },
-  )
+  );
 
   // ── Cursor style ─────────────────────────────────────────────────────────
   watch(
     [() => drawing.isDragging.value, () => drawing.mode.value, () => drawing.selectedId.value],
     ([dragging, activeMode, selected]) => {
-      const canvas = map.value?.getCanvas()
-      if (!canvas) return
+      const canvas = map.value?.getCanvas();
+      if (!canvas) return;
       if (activeMode) {
-        canvas.style.cursor = 'crosshair'
+        canvas.style.cursor = 'crosshair';
       } else if (dragging) {
-        canvas.style.cursor = 'grabbing'
+        canvas.style.cursor = 'grabbing';
       } else if (selected) {
-        canvas.style.cursor = 'grab'
+        canvas.style.cursor = 'grab';
       } else {
-        canvas.style.cursor = ''
+        canvas.style.cursor = '';
       }
     },
-  )
+  );
 
   // ── GeoJSON sources ───────────────────────────────────────────────────────
 
@@ -192,7 +188,7 @@
     data: drawing.features.value as unknown as FeatureCollection,
     // Promote the string `id` property so queryRenderedFeatures can find it via feature.id
     promoteId: 'id',
-  }))
+  }));
 
   /** Ghost preview source — follows the cursor live during drawing. */
   const ghostSource = computed<GeoJSONSourceSpecification>(() => ({
@@ -201,13 +197,13 @@
       type: 'FeatureCollection',
       features: drawing.ghostFeature.value ? [drawing.ghostFeature.value as Feature] : [],
     },
-  }))
+  }));
 
   /** Draft vertex point source — circles at each clicked vertex during line/polygon drawing. */
   const draftVertexSource = computed<GeoJSONSourceSpecification>(() => ({
     type: 'geojson',
     data: drawing.draftVertexPoints.value as unknown as FeatureCollection,
-  }))
+  }));
 
   /** Anchor/center point source for two-click shapes (square, circle, triangle). */
   const anchorSource = computed<GeoJSONSourceSpecification>(() => ({
@@ -216,13 +212,13 @@
       type: 'FeatureCollection',
       features: drawing.anchorPoint.value ? [drawing.anchorPoint.value as Feature] : [],
     },
-  }))
+  }));
 
   /** Measurement label source — midpoint of lines and centroid of polygons. */
   const measureSource = computed<GeoJSONSourceSpecification>(() => ({
     type: 'geojson',
     data: drawing.measureLabels.value as unknown as FeatureCollection,
-  }))
+  }));
 
   /** Draft (in-progress) shape source — committed draft, not used for live preview. */
   const draftSource = computed<GeoJSONSourceSpecification>(() => ({
@@ -231,26 +227,26 @@
       type: 'FeatureCollection',
       features: drawing.draftFeature.value ? [drawing.draftFeature.value as Feature] : [],
     },
-  }))
+  }));
 
   /** Vertex handle source — only for the selected feature. */
   const vertexSource = computed<GeoJSONSourceSpecification>(() => {
     const selectedFeature = (drawing.features.value as FeatureCollection).features.find(
       (f: Feature) => (f as DrawnFeature).id === drawing.selectedId.value,
-    ) as DrawnFeature | undefined
+    ) as DrawnFeature | undefined;
 
     if (!selectedFeature) {
-      return { type: 'geojson', data: { type: 'FeatureCollection', features: [] } }
+      return { type: 'geojson', data: { type: 'FeatureCollection', features: [] } };
     }
 
-    const geom = selectedFeature.geometry
-    let coords: [number, number][] = []
+    const geom = selectedFeature.geometry;
+    let coords: [number, number][] = [];
 
     if (geom.type === 'LineString') {
-      coords = geom.coordinates as [number, number][]
+      coords = geom.coordinates as [number, number][];
     } else if (geom.type === 'Polygon') {
       // Exclude the closing duplicate vertex
-      coords = (geom.coordinates[0]?.slice(0, -1) ?? []) as [number, number][]
+      coords = (geom.coordinates[0]?.slice(0, -1) ?? []) as [number, number][];
     }
 
     return {
@@ -264,8 +260,8 @@
           properties: { vertexIndex: index },
         })),
       },
-    }
-  })
+    };
+  });
 
   // ── Layer paint expressions ───────────────────────────────────────────────
 
@@ -277,56 +273,56 @@
       Math.min(props.fillOpacity * 1.5, 1),
       props.fillOpacity,
     ] as unknown as number,
-  }))
+  }));
 
   const linePaint = computed(() => ({
     'line-color': props.strokeColor,
     'line-width': props.strokeWidth,
-  }))
+  }));
 
   const draftFillPaint = computed(() => ({
     'fill-color': props.draftColor,
     'fill-opacity': props.fillOpacity,
-  }))
+  }));
 
   const draftLinePaint = computed(() => ({
     'line-color': props.draftColor,
     'line-width': props.strokeWidth,
     'line-dasharray': [2, 2],
-  }))
+  }));
 
   const vertexPaint = computed(() => ({
     'circle-radius': 6,
     'circle-color': props.vertexColor,
     'circle-stroke-color': props.strokeColor,
     'circle-stroke-width': 2,
-  }))
+  }));
 
   const draftVertexPaint = computed(() => ({
     'circle-radius': 5,
     'circle-color': draftVertexColor,
     'circle-stroke-color': colors.white,
     'circle-stroke-width': 2,
-  }))
+  }));
 
   const anchorPaint = computed(() => ({
     'circle-radius': 7,
     'circle-color': props.draftColor,
     'circle-stroke-color': colors.white,
     'circle-stroke-width': 2,
-  }))
+  }));
 
   const ghostFillPaint = computed(() => ({
     'fill-color': props.draftColor,
     'fill-opacity': props.fillOpacity * 0.6,
-  }))
+  }));
 
   const ghostLinePaint = computed(() => ({
     'line-color': props.draftColor,
     'line-width': props.strokeWidth,
     'line-dasharray': [3, 3],
     'line-opacity': 0.75,
-  }))
+  }));
 
   const measureLabelLayout = computed(() => ({
     'text-field': ['get', 'label'] as unknown as string,
@@ -336,23 +332,26 @@
     'text-offset': [0, 0.5] as [number, number],
     'text-allow-overlap': false,
     'text-ignore-placement': false,
-  }))
+  }));
 
   const measureLabelPaint = computed(() => ({
     'text-color': colors.neutral[900], // #08060d — dark text on map
     'text-halo-color': colors.white, // #fff — halo for legibility
     'text-halo-width': 2,
-  }))
+  }));
 
   // ── Public API exposed to parent ──────────────────────────────────────────
   defineExpose({
     drawing,
-  })
+  });
 </script>
 
 <template>
   <!-- Committed shapes -->
-  <MapSource id="map-draw-committed" :source="committedSource">
+  <MapSource
+    id="map-draw-committed"
+    :source="committedSource"
+  >
     <!-- Polygon / square / circle / triangle fill -->
     <MapLayer
       :layer="{
@@ -375,7 +374,10 @@
   </MapSource>
 
   <!-- Ghost preview: cursor-following live shape while drawing -->
-  <MapSource id="map-draw-ghost" :source="ghostSource">
+  <MapSource
+    id="map-draw-ghost"
+    :source="ghostSource"
+  >
     <MapLayer
       :layer="{
         id: 'map-draw-ghost-fill',
@@ -396,7 +398,10 @@
   </MapSource>
 
   <!-- Vertex indicator circles for each clicked point during line/polygon drawing -->
-  <MapSource id="map-draw-draft-vertices" :source="draftVertexSource">
+  <MapSource
+    id="map-draw-draft-vertices"
+    :source="draftVertexSource"
+  >
     <MapLayer
       :layer="{
         id: 'map-draw-draft-vertices-circle',
@@ -408,7 +413,10 @@
   </MapSource>
 
   <!-- Anchor/center point for two-click shapes (square, circle, triangle) -->
-  <MapSource id="map-draw-anchor" :source="anchorSource">
+  <MapSource
+    id="map-draw-anchor"
+    :source="anchorSource"
+  >
     <MapLayer
       :layer="{
         id: 'map-draw-anchor-circle',
@@ -420,7 +428,10 @@
   </MapSource>
 
   <!-- Committed draft shape (kept for compatibility; ghost replaces visual role) -->
-  <MapSource id="map-draw-draft" :source="draftSource">
+  <MapSource
+    id="map-draw-draft"
+    :source="draftSource"
+  >
     <MapLayer
       :layer="{
         id: 'map-draw-draft-fill',
@@ -441,7 +452,10 @@
   </MapSource>
 
   <!-- Measurement labels: length on lines, area on polygons -->
-  <MapSource id="map-draw-measure" :source="measureSource">
+  <MapSource
+    id="map-draw-measure"
+    :source="measureSource"
+  >
     <MapLayer
       :layer="{
         id: 'map-draw-measure-labels',
@@ -454,7 +468,10 @@
   </MapSource>
 
   <!-- Vertex handles for the selected committed feature -->
-  <MapSource id="map-draw-vertices" :source="vertexSource">
+  <MapSource
+    id="map-draw-vertices"
+    :source="vertexSource"
+  >
     <MapLayer
       :layer="{
         id: 'map-draw-vertices-circle',

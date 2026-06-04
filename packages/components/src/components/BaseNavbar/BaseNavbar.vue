@@ -1,37 +1,42 @@
-<script setup lang="ts">
-  import { ref } from 'vue'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
-  import BaseSidebar from '../BaseSidebar/BaseSidebar.vue'
+<script lang="ts" setup>
+  import { ref } from 'vue';
+
+  import BaseSidebar from '../BaseSidebar/BaseSidebar.vue';
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
   withDefaults(
     defineProps<{
-      brand?: string
-      sticky?: boolean
-      mobileTitle?: string
+      brand?: string;
+      sticky?: boolean;
+      mobileTitle?: string;
     }>(),
     {
       brand: undefined,
       sticky: false,
       mobileTitle: undefined,
     },
-  )
+  );
 
-  const sidebarOpen = ref(false)
+  const sidebarOpen = ref(false);
 </script>
 
 <template>
   <header :class="['base-navbar', { 'base-navbar--sticky': sticky }]">
-    <nav class="base-navbar__container" aria-label="Main navigation">
+    <nav
+      aria-label="Main navigation"
+      class="base-navbar__container"
+    >
       <div class="base-navbar__start">
         <slot name="brand">
           <BaseTypography
             v-if="brand"
-            variant="h6"
             as="span"
-            color="primary"
             class="base-navbar__brand"
-            >{{ brand }}</BaseTypography
+            color="primary"
+            variant="h6"
           >
+            {{ brand }}
+          </BaseTypography>
         </slot>
       </div>
       <div class="base-navbar__center">
@@ -43,10 +48,10 @@
 
       <!-- Hamburger: only shown on mobile -->
       <button
+        :aria-expanded="sidebarOpen"
+        :aria-label="sidebarOpen ? 'Close menu' : 'Open menu'"
         class="base-navbar__hamburger"
         type="button"
-        :aria-label="sidebarOpen ? 'Close menu' : 'Open menu'"
-        :aria-expanded="sidebarOpen"
         @click="sidebarOpen = !sidebarOpen"
       >
         <span class="base-navbar__hamburger-bar" />
@@ -57,8 +62,16 @@
   </header>
 
   <!-- Mobile sidebar drawer -->
-  <BaseSidebar v-model:open="sidebarOpen" side="left" size="sm" :title="mobileTitle || brand">
-    <nav class="base-navbar__mobile-nav" aria-label="Mobile navigation">
+  <BaseSidebar
+    v-model:open="sidebarOpen"
+    :title="mobileTitle || brand"
+    side="left"
+    size="sm"
+  >
+    <nav
+      aria-label="Mobile navigation"
+      class="base-navbar__mobile-nav"
+    >
       <div class="base-navbar__mobile-nav-items">
         <slot />
       </div>
@@ -69,14 +82,13 @@
   </BaseSidebar>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   @use '@mission-platform/breakpoints/scss/mixins' as bp;
 
   .base-navbar {
     background-color: var(--mp-color-bg-surface);
     border-bottom: 1px solid var(--mp-color-border-default);
     z-index: 100;
-
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
 
@@ -121,7 +133,7 @@
     }
 
     &__brand {
-      // typography handled by BaseTypography
+      /* typography handled by BaseTypography */
       text-decoration: none;
       letter-spacing: -0.01em;
     }
@@ -183,7 +195,7 @@
     border-top: 1px solid var(--mp-color-border-default);
   }
 
-  // On mobile (below sm breakpoint): hide center/end, show hamburger
+  /* On mobile (below sm breakpoint): hide center/end, show hamburger */
   @include bp.bp-down('sm') {
     .base-navbar {
       &__center,

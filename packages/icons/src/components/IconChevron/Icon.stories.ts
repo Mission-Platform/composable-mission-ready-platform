@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import IconChevron from './Icon.vue'
+import IconChevron from './Icon.vue';
+
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
   title: 'Icons/Navigation / Controls/IconChevron',
@@ -16,21 +17,21 @@ const meta = {
     size: 24,
     color: 'currentColor',
   },
-} satisfies Meta<typeof IconChevron>
+} satisfies Meta<typeof IconChevron>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {}
+export const Default: Story = {};
 
-export const Up: Story = { args: { direction: 'up' } }
+export const Up: Story = { args: { direction: 'up' } };
 
-export const Right: Story = { args: { direction: 'right' } }
+export const Right: Story = { args: { direction: 'right' } };
 
-export const Left: Story = { args: { direction: 'left' } }
+export const Left: Story = { args: { direction: 'left' } };
 
-export const Small: Story = { args: { size: 16 } }
+export const Small: Story = { args: { size: 16 } };
 
-export const Large: Story = { args: { size: 32 } }
+export const Large: Story = { args: { size: 32 } };
 
-export const Colored: Story = { args: { color: '#6c2fd4' } }
+export const Colored: Story = { args: { color: '#6c2fd4' } };

@@ -1,2 +1,2 @@
-export { default } from './BaseTable.vue'
-export type { TableColumn } from './BaseTable.vue'
+export { default } from './BaseTable.vue';
+export type { TableColumn } from './BaseTable.vue';

@@ -1,1 +1,1 @@
-export { default } from './BaseCollapse.vue'
+export { default } from './BaseCollapse.vue';

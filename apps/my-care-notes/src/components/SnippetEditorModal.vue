@@ -1,71 +1,70 @@
-<script setup lang="ts">
-  import { BaseButton, BaseInput, BaseModal, BaseMonacoEditor } from '@mission-platform/components'
-  import { computed, ref, watch } from 'vue'
-  import { useRoute } from 'vue-router'
+<script lang="ts" setup>
+  import { BaseButton, BaseInput, BaseModal, BaseMonacoEditor } from '@mission-platform/components';
+  import { useI18n } from '@mission-platform/i18n';
+  import { computed, ref, watch } from 'vue';
+  import { useRoute } from 'vue-router';
 
-  import { useMonacoTheme } from '../composables/use-monaco-theme'
-  import { useSnippets } from '../composables/use-snippets'
+  import { useMonacoTheme } from '../composables/use-monaco-theme';
+  import { useSnippets } from '../composables/use-snippets';
 
-  import type { Snippet } from '../types'
+  import type { Snippet } from '../types';
 
   interface Emits {
-    (event: 'close'): void
-    (event: 'save', name: string, content: string): void
-    (event: 'delete', id: string): void
+    (event: 'close'): void;
+    (event: 'save', name: string, content: string): void;
+    (event: 'delete', id: string): void;
   }
 
-  const emit = defineEmits<Emits>()
+  const emit = defineEmits<Emits>();
 
-  const route = useRoute()
-  const { snippets } = useSnippets()
+  const { t } = useI18n({ useScope: 'local' });
 
-  const visible = computed(
-    () => route.query['overlay'] === 'snippet-new' || route.query['overlay'] === 'snippet-edit',
-  )
+  const route = useRoute();
+  const { snippets } = useSnippets();
+
+  const visible = computed(() => route.query['overlay'] === 'snippet-new' || route.query['overlay'] === 'snippet-edit');
 
   const snippet = computed<Snippet | undefined>(() => {
-    if (route.query['overlay'] !== 'snippet-edit') return undefined
-    const id = route.query['id']
-    if (typeof id !== 'string') return undefined
-    return snippets.value.find((s) => s.id === id)
-  })
+    if (route.query['overlay'] !== 'snippet-edit') return undefined;
+    const id = route.query['id'];
+    if (typeof id !== 'string') return undefined;
+    return snippets.value.find((s) => s.id === id);
+  });
 
-  const name = ref('')
-  const content = ref('')
+  const name = ref('');
+  const content = ref('');
 
-  const { monacoTheme } = useMonacoTheme()
+  const { monacoTheme } = useMonacoTheme();
 
-  const isEditing = computed(() => !!snippet.value)
-  const modalTitle = computed(() => (isEditing.value ? 'Edit Snippet' : 'New Snippet'))
-  const commandPreview = computed(
-    () => `/${name.value.trim().replace(/\s+/g, '_') || 'my_snippet'}`,
-  )
+  const isEditing = computed(() => !!snippet.value);
+  const modalTitle = computed(() => (isEditing.value ? t('title.edit') : t('title.new')));
+  const commandPreview = computed(() => `/${name.value.trim().replace(/\s+/g, '_') || 'my_snippet'}`);
 
   watch(
     snippet,
     (s) => {
-      name.value = s?.name ?? ''
-      content.value = s?.content ?? ''
+      name.value = s?.name ?? '';
+      content.value = s?.content ?? '';
     },
     { immediate: true },
-  )
+  );
 
   watch(visible, (v) => {
     if (v && !snippet.value) {
-      name.value = ''
-      content.value = ''
+      name.value = '';
+      content.value = '';
     }
-  })
+  });
 
   function onSave(): void {
-    const trimmedName = name.value.trim().replace(/\s+/g, '_')
-    if (!trimmedName) return
-    emit('save', trimmedName, content.value)
+    const trimmedName = name.value.trim().replace(/\s+/g, '_');
+    if (!trimmedName) return;
+    emit('save', trimmedName, content.value);
   }
 
   function onDelete(): void {
     if (snippet.value) {
-      emit('delete', snippet.value.id)
+      emit('delete', snippet.value.id);
     }
   }
 </script>
@@ -82,41 +81,64 @@
       <BaseInput
         id="snippet-name"
         v-model="name"
-        label="Snippet name"
-        :hint="`Used as ${commandPreview} in the editor`"
-        placeholder="e.g. greeting"
+        :hint="t('name.hint', { preview: commandPreview })"
         autocomplete="off"
+        :label="t('name.label')"
+        :placeholder="t('name.placeholder')"
       />
 
       <div class="snippet-editor">
-        <label class="snippet-editor__label" for="snippet-content">Content</label>
+        <p
+          id="snippet-content-label"
+          class="snippet-editor__label"
+        >
+          {{ t('content-label') }}
+        </p>
         <BaseMonacoEditor
           id="snippet-content"
           v-model="content"
-          language="markdown"
-          :theme="monacoTheme"
-          height="280px"
-          :word-wrap="true"
           :line-numbers="true"
           :minimap="false"
           :spell-check="true"
+          :theme="monacoTheme"
+          :word-wrap="true"
+          aria-labelledby="snippet-content-label"
+          height="280px"
+          language="markdown"
         />
       </div>
     </div>
 
     <template #footer>
       <div class="snippet-modal-footer">
-        <BaseButton v-if="isEditing" variant="danger" @click="onDelete"> Delete </BaseButton>
+        <BaseButton
+          v-if="isEditing"
+          variant="danger"
+          @click="onDelete"
+        >
+          {{ t('btn.delete') }}
+        </BaseButton>
         <div class="snippet-modal-footer__right">
-          <BaseButton variant="ghost" @click="emit('close')">Cancel</BaseButton>
-          <BaseButton variant="primary" :disabled="!name.trim()" @click="onSave"> Save </BaseButton>
+          <BaseButton
+            variant="ghost"
+            @click="emit('close')"
+          >
+            {{ t('btn.cancel') }}
+          </BaseButton>
+          <BaseButton
+            :disabled="!name.trim()"
+            variant="primary"
+            @click="onSave"
+          >
+            {{ t('btn.save') }}
+          </BaseButton>
         </div>
       </div>
     </template>
   </BaseModal>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .snippet-form {
     display: flex;
     flex-direction: column;
@@ -149,3 +171,19 @@
     }
   }
 </style>
+
+<i18n lang="yaml">
+en:
+  title:
+    new: New Snippet
+    edit: Edit Snippet
+  name:
+    label: Snippet name
+    placeholder: 'e.g. greeting'
+    hint: 'Used as {preview} in the editor'
+  content-label: Content
+  btn:
+    delete: Delete
+    cancel: Cancel
+    save: Save
+</i18n>

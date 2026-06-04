@@ -1,15 +1,16 @@
-<script setup lang="ts">
-  import { computed } from 'vue'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+<script lang="ts" setup>
+  import { computed } from 'vue';
+
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
   const props = withDefaults(
     defineProps<{
-      modelValue?: string | number
-      value: string | number
-      label?: string
-      labelHidden?: boolean
-      disabled?: boolean
-      id?: string
+      modelValue?: string | number;
+      value: string | number;
+      label?: string;
+      labelHidden?: boolean;
+      disabled?: boolean;
+      id?: string;
     }>(),
     {
       modelValue: undefined,
@@ -18,43 +19,50 @@
       disabled: false,
       id: undefined,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    'update:modelValue': [value: string | number]
-    change: [event: Event]
-  }>()
+    'update:modelValue': [value: string | number];
+    change: [event: Event];
+  }>();
 
-  const isChecked = computed(() => props.modelValue === props.value)
+  const isChecked = computed(() => props.modelValue === props.value);
 
   function handleChange(event: Event) {
-    emit('update:modelValue', props.value)
-    emit('change', event)
+    emit('update:modelValue', props.value);
+    emit('change', event);
   }
 </script>
 
 <template>
-  <label
-    :class="['base-radio', { 'base-radio--checked': isChecked, 'base-radio--disabled': disabled }]"
-  >
+  <label :class="['base-radio', { 'base-radio--checked': isChecked, 'base-radio--disabled': disabled }]">
     <span class="base-radio__control-wrapper">
       <input
         :id="id"
-        type="radio"
         :checked="isChecked"
-        :value="value"
         :disabled="disabled"
+        :value="value"
         class="base-radio__input"
+        type="radio"
         @change="handleChange"
+      >
+      <span
+        aria-hidden="true"
+        class="base-radio__circle"
       />
-      <span class="base-radio__circle" aria-hidden="true" />
     </span>
-    <BaseTypography v-if="label" variant="body-md" as="span" color="primary" :class="['base-radio__label', { 'base-radio__label--hidden': labelHidden }]">{{ label }}</BaseTypography>
+    <BaseTypography
+      v-if="label"
+      :class="['base-radio__label', { 'base-radio__label--hidden': labelHidden }]"
+      as="span"
+      color="primary"
+      variant="body-md"
+    >{{ label }}</BaseTypography>
     <slot />
   </label>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-radio {
     display: inline-flex;
     align-items: center;
@@ -118,7 +126,7 @@
     }
 
     &__label {
-      // typography handled by BaseTypography
+      /* typography handled by BaseTypography */
 
       &--hidden {
         position: absolute;
@@ -127,7 +135,7 @@
         padding: 0;
         margin: -1px;
         overflow: hidden;
-        clip: rect(0, 0, 0, 0);
+        clip-path: inset(50%);
         white-space: nowrap;
         border: 0;
       }

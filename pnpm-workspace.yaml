@@ -11,20 +11,21 @@ catalog:
   'monaco-editor': ^0.55.1
   marked: ^18.0.4
   nanoid: ^5.1.11
+  wrangler: ^4.96.0
   zod: ^4.4.3
 
 catalogs:
   eslint:
-    '@intlify/eslint-plugin-vue-i18n': ^4.5.0
+    '@intlify/eslint-plugin-vue-i18n': ^4.5.1
     eslint-plugin-unicorn: ^64.0.0
-    '@typescript-eslint/eslint-plugin': ^8.60.0
-    '@typescript-eslint/parser': ^8.60.0
-    eslint: ^10.4.0
-    eslint-import-resolver-typescript: ^4.4.4
+    '@typescript-eslint/eslint-plugin': ^8.60.1
+    '@typescript-eslint/parser': ^8.60.1
+    eslint: ^10.4.1
+    eslint-import-resolver-typescript: ^4.4.5
     eslint-plugin-import-x: ^4.16.2
     eslint-plugin-vue: ^10.9.1
     eslint-plugin-vuejs-accessibility: ^2.5.0
-    typescript-eslint: ^8.60.0
+    typescript-eslint: ^8.60.1
     vue-eslint-parser: ^10.4.1
 
   stylelint:
@@ -47,15 +48,15 @@ catalogs:
     '@vitejs/plugin-vue-jsx': ^5.1.5
     vue: ^3.5.35
     vue-i18n: ^11.4.4
-    vue-router: ^4.4.5
-    vue-tsc: ^3.3.2
+    vue-router: ^4.6.4
+    vue-tsc: ^3.3.3
 
   vite:
-    autoprefixer: ^10.4.21
-    postcss: ^8.5.6
+    autoprefixer: ^10.5.0
+    postcss: ^8.5.15
     sass-embedded: ^1.100.0
-    vite: ^8.0.14
-    vite-plugin-pwa: ^1.1.0
+    vite: ^8.0.16
+    vite-plugin-pwa: ^1.3.0
 
   storybook:
     '@chromatic-com/storybook': ^5.2.1
@@ -67,11 +68,11 @@ catalogs:
     storybook: ^10.4.1
 
   testing:
-    '@vitest/browser-playwright': ^4.1.7
-    '@vitest/coverage-v8': ^4.1.7
+    '@vitest/browser-playwright': ^4.1.8
+    '@vitest/coverage-v8': ^4.1.8
     jsdom: ^29.1.1
     playwright: ^1.60.0
-    vitest: ^4.1.7
+    vitest: ^4.1.8
 
   map:
     '@types/geojson': ^7946.0.16
@@ -79,7 +80,7 @@ catalogs:
     maplibre-gl: ^5.24.0
 
   typescript:
-    '@types/node': ^24.1.0
+    '@types/node': ^24.12.4
     typescript: ~6.0.3
 
 trustPolicy: no-downgrade
@@ -99,8 +100,10 @@ trustPolicyExclude:
 allowBuilds:
   '@parcel/watcher': true
   esbuild: true
+  sharp: true
   unrs-resolver: true
   vue-demi: true
+  workerd: true
 
 minimumReleaseAgeExclude:
   - vue-eslint-parser@10.4.1

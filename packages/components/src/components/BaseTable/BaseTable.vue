@@ -1,24 +1,26 @@
-<script setup lang="ts" generic="T extends Record<string, unknown>">
-  import { computed, ref } from 'vue'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
-  import BaseTableHead from './BaseTableHead.vue'
-  import BaseTableBody from './BaseTableBody.vue'
+<script generic="T extends Record<string, unknown>" lang="ts" setup>
+  import { computed, ref } from 'vue';
 
-  export type { TableColumn } from './types'
-  export type { SortDirection } from './types'
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
-  import type { TableColumn, SortDirection } from './types'
+  import BaseTableBody from './BaseTableBody.vue';
+  import BaseTableHead from './BaseTableHead.vue';
+
+  import type { SortDirection, TableColumn } from './types';
+
+  export type { TableColumn } from './types';
+  export type { SortDirection } from './types';
 
   const props = withDefaults(
     defineProps<{
-      columns: TableColumn<T>[]
-      rows: T[]
-      caption?: string
-      striped?: boolean
-      bordered?: boolean
-      hoverable?: boolean
-      loading?: boolean
-      emptyText?: string
+      columns: TableColumn<T>[];
+      rows: T[];
+      caption?: string;
+      striped?: boolean;
+      bordered?: boolean;
+      hoverable?: boolean;
+      loading?: boolean;
+      emptyText?: string;
     }>(),
     {
       caption: undefined,
@@ -28,76 +30,104 @@
       loading: false,
       emptyText: 'No data available',
     },
-  )
+  );
 
   const emit = defineEmits<{
-    sort: [key: string, direction: SortDirection]
-  }>()
+    sort: [key: string, direction: SortDirection];
+  }>();
 
-  const sortKey = ref<string | null>(null)
-  const sortDir = ref<SortDirection>(null)
+  const sortKey = ref<string | null>(null);
+  const sortDir = ref<SortDirection>(null);
 
   const sortedRows = computed<T[]>(() => {
-    if (!sortKey.value || sortDir.value === null) return props.rows
+    if (!sortKey.value || sortDir.value === null) return props.rows;
     return [...props.rows].sort((a, b) => {
-      const av = a[sortKey.value!]
-      const bv = b[sortKey.value!]
-      const cmp = String(av).localeCompare(String(bv), undefined, { numeric: true })
-      return sortDir.value === 'asc' ? cmp : -cmp
-    })
-  })
+      const av = a[sortKey.value!];
+      const bv = b[sortKey.value!];
+      const cmp = String(av).localeCompare(String(bv), undefined, { numeric: true });
+      return sortDir.value === 'asc' ? cmp : -cmp;
+    });
+  });
 
   function toggleSort(col: TableColumn<T>) {
-    if (!col.sortable) return
+    if (!col.sortable) return;
     if (sortKey.value !== col.key) {
-      sortKey.value = col.key
-      sortDir.value = 'asc'
+      sortKey.value = col.key;
+      sortDir.value = 'asc';
     } else if (sortDir.value === 'asc') {
-      sortDir.value = 'desc'
+      sortDir.value = 'desc';
     } else {
-      sortKey.value = null
-      sortDir.value = null
+      sortKey.value = null;
+      sortDir.value = null;
     }
-    emit('sort', col.key, sortDir.value)
+    emit('sort', col.key, sortDir.value);
   }
-
 </script>
 
 <template>
   <div class="base-table-wrapper">
-    <div v-if="loading" class="base-table__loading" aria-busy="true" aria-label="Loading table data">
-      <span class="base-table__spinner" role="status" aria-label="Loading…" />
+    <div
+      v-if="loading"
+      aria-busy="true"
+      aria-label="Loading table data"
+      class="base-table__loading"
+    >
+      <span
+        aria-label="Loading…"
+        class="base-table__spinner"
+        role="status"
+      />
     </div>
     <table
       :class="[
         'base-table',
-        { 'base-table--striped': striped, 'base-table--bordered': bordered, 'base-table--hoverable': hoverable },
+        {
+          'base-table--striped': striped,
+          'base-table--bordered': bordered,
+          'base-table--hoverable': hoverable,
+        },
       ]"
     >
-      <caption v-if="caption" class="base-table__caption">
-        <BaseTypography variant="body-md" weight="semibold" as="span" color="primary">{{ caption }}</BaseTypography>
+      <caption
+        v-if="caption"
+        class="base-table__caption"
+      >
+        <BaseTypography
+          as="span"
+          color="primary"
+          variant="body-md"
+          weight="semibold"
+        >
+          {{ caption }}
+        </BaseTypography>
       </caption>
       <BaseTableHead
         :columns="columns"
-        :sort-key="sortKey"
         :sort-dir="sortDir"
+        :sort-key="sortKey"
         @sort="toggleSort"
       />
       <BaseTableBody
-        :rows="sortedRows"
         :columns="columns"
-        :loading="loading"
         :empty-text="emptyText"
+        :loading="loading"
+        :rows="sortedRows"
       >
-        <template v-for="col in columns" #[`cell-${col.key}`]="slotProps">
-          <slot :name="`cell-${col.key}`" v-bind="slotProps" />
+        <template
+          v-for="col in columns"
+          #[`cell-${col.key}`]="slotProps"
+        >
+          <slot
+            :name="`cell-${col.key}`"
+            v-bind="slotProps"
+          />
         </template>
       </BaseTableBody>
     </table>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
   @use '@mission-platform/breakpoints/scss/mixins' as bp;
 
@@ -139,7 +169,8 @@
       padding: var(--mp-spacing-3) var(--mp-spacing-4);
       text-align: left;
       caption-side: top;
-      // typography handled by BaseTypography
+
+      /* typography handled by BaseTypography */
     }
 
     &__head {
@@ -156,8 +187,13 @@
         padding: var(--mp-spacing-3) var(--mp-spacing-4);
       }
 
-      &--align-center { text-align: center; }
-      &--align-right  { text-align: right; }
+      &--align-center {
+        text-align: center;
+      }
+
+      &--align-right {
+        text-align: right;
+      }
 
       &--sortable {
         cursor: pointer;
@@ -188,8 +224,13 @@
         padding: var(--mp-spacing-3) var(--mp-spacing-4);
       }
 
-      &--align-center { text-align: center; }
-      &--align-right  { text-align: right; }
+      &--align-center {
+        text-align: center;
+      }
+
+      &--align-right {
+        text-align: right;
+      }
     }
 
     &__row {
@@ -203,15 +244,16 @@
     &__empty {
       padding: var(--mp-spacing-8) var(--mp-spacing-4);
       text-align: center;
-      // typography handled by BaseTypography
+
+      /* typography handled by BaseTypography */
     }
 
-    // Striped
+    /* Striped */
     &--striped .base-table__row:nth-child(even) {
       background-color: var(--mp-color-bg-muted);
     }
 
-    // Bordered
+    /* Bordered */
     &--bordered {
       .base-table__th,
       .base-table__td {
@@ -219,13 +261,15 @@
       }
     }
 
-    // Hoverable
+    /* Hoverable */
     &--hoverable .base-table__row:hover {
       background-color: var(--mp-color-bg-muted);
     }
   }
 
   @keyframes mp-spin {
-    to { transform: rotate(360deg); }
+    to {
+      transform: rotate(360deg);
+    }
   }
 </style>

@@ -1,27 +1,28 @@
-<script setup lang="ts">
-  import { computed } from 'vue'
-  import { useI18n } from 'vue-i18n'
-  import BaseRadio from '../BaseRadio/BaseRadio.vue'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+<script lang="ts" setup>
+  import { useI18n } from '@mission-platform/i18n';
+  import { computed } from 'vue';
+
+  import BaseRadio from '../BaseRadio/BaseRadio.vue';
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
   export interface RadioOption {
-    label: string
-    value: string | number
-    disabled?: boolean
+    label: string;
+    value: string | number;
+    disabled?: boolean;
   }
 
   const props = withDefaults(
     defineProps<{
-      modelValue?: string | number
-      options?: RadioOption[]
-      legend?: string
-      legendHidden?: boolean
-      hint?: string
-      error?: string
-      disabled?: boolean
-      required?: boolean
-      direction?: 'vertical' | 'horizontal'
-      name?: string
+      modelValue?: string | number;
+      options?: RadioOption[];
+      legend?: string;
+      legendHidden?: boolean;
+      hint?: string;
+      error?: string;
+      disabled?: boolean;
+      required?: boolean;
+      direction?: 'vertical' | 'horizontal';
+      name?: string;
     }>(),
     {
       modelValue: undefined,
@@ -35,51 +36,76 @@
       direction: 'vertical',
       name: undefined,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    'update:modelValue': [value: string | number]
-    change: [event: Event]
-  }>()
+    'update:modelValue': [value: string | number];
+    change: [event: Event];
+  }>();
 
-  const { t } = useI18n({
-    inheritLocale: true,
-    messages: { en: { required: 'required' } },
-  })
-  const groupId = computed(() => props.name ?? `radio-group-${Math.random().toString(36).slice(2, 8)}`)
+  const { t } = useI18n({ useScope: 'local' });
+  const groupId = computed(() => props.name ?? `radio-group-${Math.random().toString(36).slice(2, 8)}`);
 </script>
 
 <template>
   <fieldset
-    :class="[
-      'base-radio-group',
-      { 'base-radio-group--error': !!error, 'base-radio-group--disabled': disabled },
-    ]"
+    :class="['base-radio-group', { 'base-radio-group--error': !!error, 'base-radio-group--disabled': disabled }]"
   >
-    <legend v-if="legend" :class="['base-radio-group__legend', { 'base-radio-group__legend--hidden': legendHidden }]">
-      <BaseTypography variant="label" as="span" color="primary">{{ legend }}</BaseTypography>
-      <span v-if="required" class="base-radio-group__required" :title="t('required')" aria-hidden="true">*</span>
+    <legend
+      v-if="legend"
+      :class="['base-radio-group__legend', { 'base-radio-group__legend--hidden': legendHidden }]"
+    >
+      <BaseTypography
+        as="span"
+        color="primary"
+        variant="label"
+      >
+        {{ legend }}
+      </BaseTypography>
+      <span
+        v-if="required"
+        :title="t('required')"
+        aria-hidden="true"
+        class="base-radio-group__required"
+      >*</span>
     </legend>
     <div :class="['base-radio-group__options', `base-radio-group__options--${direction}`]">
       <BaseRadio
         v-for="opt in options"
+        :id="`${groupId}-${opt.value}`"
         :key="opt.value"
+        :disabled="disabled || opt.disabled"
+        :label="opt.label"
         :model-value="modelValue"
         :value="opt.value"
-        :label="opt.label"
-        :disabled="disabled || opt.disabled"
-        :id="`${groupId}-${opt.value}`"
-        @update:model-value="(v) => emit('update:modelValue', v)"
         @change="(e) => emit('change', e)"
+        @update:model-value="(v) => emit('update:modelValue', v)"
       />
       <slot />
     </div>
-    <BaseTypography v-if="error" variant="caption" as="p" color="inherit" class="base-radio-group__error" role="alert">{{ error }}</BaseTypography>
-    <BaseTypography v-else-if="hint" variant="caption" as="p" color="secondary" class="base-radio-group__hint">{{ hint }}</BaseTypography>
+    <BaseTypography
+      v-if="error"
+      as="p"
+      class="base-radio-group__error"
+      color="inherit"
+      role="alert"
+      variant="caption"
+    >
+      {{ error }}
+    </BaseTypography>
+    <BaseTypography
+      v-else-if="hint"
+      as="p"
+      class="base-radio-group__hint"
+      color="secondary"
+      variant="caption"
+    >
+      {{ hint }}
+    </BaseTypography>
   </fieldset>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-radio-group {
     border: none;
     padding: 0;
@@ -99,7 +125,7 @@
         padding: 0;
         margin: -1px;
         overflow: hidden;
-        clip: rect(0, 0, 0, 0);
+        clip-path: inset(50%);
         white-space: nowrap;
         border: 0;
       }
@@ -119,8 +145,7 @@
       }
 
       &--horizontal {
-        flex-direction: row;
-        flex-wrap: wrap;
+        flex-flow: row wrap;
         gap: var(--mp-spacing-4);
       }
     }
@@ -140,3 +165,8 @@
     }
   }
 </style>
+
+<i18n lang="yaml">
+en:
+  required: required
+</i18n>

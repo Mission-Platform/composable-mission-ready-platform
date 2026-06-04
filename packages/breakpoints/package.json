@@ -28,9 +28,11 @@
     "format": "prettier --write ."
   },
   "peerDependencies": {
+    "@mission-platform/i18n": "workspace:*",
     "vue": "^3.5.0"
   },
   "devDependencies": {
+    "@intlify/unplugin-vue-i18n": "catalog:vue",
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
     "@mission-platform/stylelint-config": "workspace:*",

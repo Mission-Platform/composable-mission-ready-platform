@@ -5,12 +5,12 @@ export {
   maxMediaQuery,
   mediaQuery,
   resolveBreakpoint,
-} from './breakpoints'
-export type { BreakpointKey, BreakpointValues } from './breakpoints'
+} from './breakpoints';
+export type { BreakpointKey, BreakpointValues } from './breakpoints';
 
-export { useBreakpoints } from './use-breakpoints'
-export type { UseBreakpointsReturn } from './use-breakpoints'
+export { useBreakpoints } from './use-breakpoints';
+export type { UseBreakpointsReturn } from './use-breakpoints';
 
-export { default as BreakpointDebug } from './components/BreakpointDebug.vue'
-export { default as HideAt } from './components/HideAt.vue'
-export { default as ShowAt } from './components/ShowAt.vue'
+export { default as BreakpointDebug } from './components/BreakpointDebug.vue';
+export { default as HideAt } from './components/HideAt.vue';
+export { default as ShowAt } from './components/ShowAt.vue';

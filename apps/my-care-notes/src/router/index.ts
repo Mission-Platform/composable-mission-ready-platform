@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router';
 
 /**
  * Overlay query params:
@@ -14,6 +14,6 @@ const router = createRouter({
       component: async () => import('../App.vue'),
     },
   ],
-})
+});
 
-export default router
+export default router;

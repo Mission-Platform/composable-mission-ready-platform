@@ -1,6 +1,6 @@
-import BreakpointDebug from './BreakpointDebug.vue'
+import BreakpointDebug from './BreakpointDebug.vue';
 
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
   title: 'Breakpoints/BreakpointDebug',
@@ -25,26 +25,26 @@ const meta = {
       </div>
     `,
   }),
-} satisfies Meta<typeof BreakpointDebug>
+} satisfies Meta<typeof BreakpointDebug>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   parameters: { viewport: { defaultViewport: 'md' } },
-}
+};
 
 export const Mobile: Story = {
   name: 'Mobile (2xs)',
   parameters: { viewport: { defaultViewport: '2xs' } },
-}
+};
 
 export const Tablet: Story = {
   name: 'Tablet (sm)',
   parameters: { viewport: { defaultViewport: 'sm' } },
-}
+};
 
 export const Desktop: Story = {
   name: 'Desktop (lg)',
   parameters: { viewport: { defaultViewport: 'lg' } },
-}
+};

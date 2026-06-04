@@ -1,145 +1,171 @@
-<script setup lang="ts">
-  import { onBeforeUnmount, ref } from 'vue'
-  import { useI18n } from 'vue-i18n'
-  import { IconArrow, IconExternalLink } from '@mission-platform/icons'
-  import BaseTypography from '../BaseTypography/BaseTypography.vue'
+<script lang="ts" setup>
+  import { useI18n } from '@mission-platform/i18n';
+  import { IconArrow, IconExternalLink } from '@mission-platform/icons';
+  import { onBeforeUnmount, ref } from 'vue';
+
+  import BaseTypography from '../BaseTypography/BaseTypography.vue';
 
   const props = withDefaults(
     defineProps<{
-      title?: string
-      width?: number
-      height?: number
+      title?: string;
+      width?: number;
+      height?: number;
     }>(),
     {
       title: undefined,
       width: 800,
       height: 600,
     },
-  )
+  );
 
   const emit = defineEmits<{
-    open: []
-    close: []
-  }>()
+    open: [];
+    close: [];
+  }>();
 
-  const { t } = useI18n({
-    inheritLocale: true,
-    messages: {
-      en: {
-        popout: 'Pop out',
-        popin: 'Pop back in',
-      },
-    },
-  })
+  const { t } = useI18n({ useScope: 'local' });
 
-  const isPopped = ref(false)
-  const popoutWindow = ref<Window | null>(null)
-  const popoutContainer = ref<HTMLElement | null>(null)
-  let closePoller: ReturnType<typeof setInterval> | null = null
+  const isPopped = ref(false);
+  const popoutWindow = ref<Window | undefined>(undefined);
+  const popoutContainer = ref<HTMLElement | undefined>(undefined);
+  let closePoller: ReturnType<typeof setInterval> | undefined;
 
   function copyStyles(sourceDoc: Document, targetDoc: Document) {
     Array.from(sourceDoc.querySelectorAll('link[rel="stylesheet"], style')).forEach((el) => {
-      targetDoc.head.appendChild(el.cloneNode(true))
-    })
+      targetDoc.head.append(el.cloneNode(true));
+    });
   }
 
   function openPopout() {
-    const features = `width=${props.width},height=${props.height},resizable=yes,scrollbars=yes`
-    const win = window.open('', '_blank', features)
-    if (!win) return
+    const features = `width=${props.width},height=${props.height},resizable=yes,scrollbars=yes`;
+    const win = window.open('', '_blank', features);
+    if (!win) return;
 
-    win.document.title = props.title ?? document.title
-    win.document.body.style.margin = '0'
+    win.document.title = props.title ?? document.title;
+    win.document.body.style.margin = '0';
 
-    const container = win.document.createElement('div')
-    container.setAttribute('id', 'mp-popout-root')
-    container.style.height = '100%'
-    win.document.body.appendChild(container)
+    const container = win.document.createElement('div');
+    container.setAttribute('id', 'mp-popout-root');
+    container.style.height = '100%';
+    win.document.body.append(container);
 
-    copyStyles(document, win.document)
+    copyStyles(document, win.document);
 
-    popoutWindow.value = win
-    popoutContainer.value = container
-    isPopped.value = true
-    emit('open')
+    popoutWindow.value = win;
+    popoutContainer.value = container;
+    isPopped.value = true;
+    emit('open');
 
     // Detect external close (user clicks the X on the popout window)
     closePoller = setInterval(() => {
       if (win.closed) {
-        clearPollerAndReset()
-        emit('close')
+        clearPollerAndReset();
+        emit('close');
       }
-    }, 250)
+    }, 250);
 
     win.addEventListener('beforeunload', () => {
-      clearPollerAndReset()
-      emit('close')
-    })
+      clearPollerAndReset();
+      emit('close');
+    });
   }
 
   function clearPollerAndReset() {
     if (closePoller) {
-      clearInterval(closePoller)
-      closePoller = null
+      clearInterval(closePoller);
+      closePoller = undefined;
     }
-    popoutWindow.value = null
-    popoutContainer.value = null
-    isPopped.value = false
+    popoutWindow.value = undefined;
+    popoutContainer.value = undefined;
+    isPopped.value = false;
   }
 
   function closePopout() {
     if (popoutWindow.value && !popoutWindow.value.closed) {
-      popoutWindow.value.close()
+      popoutWindow.value.close();
     }
-    clearPollerAndReset()
-    emit('close')
+    clearPollerAndReset();
+    emit('close');
   }
 
   onBeforeUnmount(() => {
-    if (closePoller) clearInterval(closePoller)
+    if (closePoller) clearInterval(closePoller);
     if (popoutWindow.value && !popoutWindow.value.closed) {
-      popoutWindow.value.close()
+      popoutWindow.value.close();
     }
-  })
+  });
 
-  defineExpose({ openPopout, closePopout, isPopped })
+  defineExpose({ openPopout, closePopout, isPopped });
 </script>
 
 <template>
   <div class="base-window-popout">
     <!-- Inline content shown when not popped out -->
-    <div v-if="!isPopped" class="base-window-popout__inline">
+    <div
+      v-if="!isPopped"
+      class="base-window-popout__inline"
+    >
       <slot />
     </div>
 
     <!-- Placeholder shown in the host page while content is in the popout -->
-    <output v-else class="base-window-popout__placeholder" aria-live="polite">
+    <output
+      v-else
+      :aria-label="title ?? t('placeholder')"
+      aria-live="polite"
+      class="base-window-popout__placeholder"
+    >
       <slot name="placeholder">
-        <BaseTypography variant="body-sm" as="p" color="secondary" class="base-window-popout__placeholder-text">
+        <BaseTypography
+          as="p"
+          class="base-window-popout__placeholder-text"
+          color="secondary"
+          variant="body-sm"
+        >
           <slot name="placeholder-text">Content is open in a separate window.</slot>
         </BaseTypography>
       </slot>
     </output>
 
     <!-- Teleport slot content into the new window when popped -->
-    <Teleport v-if="isPopped && popoutContainer" :to="popoutContainer">
+    <Teleport
+      v-if="isPopped && popoutContainer"
+      :to="popoutContainer"
+    >
       <slot />
     </Teleport>
 
     <!-- Toggle button (shown unless consumer suppresses it via the controls slot) -->
     <div class="base-window-popout__controls">
-      <slot name="controls" :is-popped="isPopped" :open="openPopout" :close="closePopout">
+      <slot
+        :close="closePopout"
+        :is-popped="isPopped"
+        :open="openPopout"
+        name="controls"
+      >
         <button
-          type="button"
-          class="base-window-popout__toggle"
           :aria-pressed="isPopped"
+          class="base-window-popout__toggle"
+          type="button"
           @click="isPopped ? closePopout() : openPopout()"
         >
           <!-- Pop-out icon -->
-          <IconExternalLink v-if="!isPopped" size="sm" />
+          <IconExternalLink
+            v-if="!isPopped"
+            size="sm"
+          />
           <!-- Pop-in icon -->
-          <IconArrow v-else size="sm" direction="left" />
-          <BaseTypography variant="body-sm" as="span" color="inherit" class="base-window-popout__toggle-label">
+          <IconArrow
+            v-else
+            direction="left"
+            size="sm"
+          />
+          <BaseTypography
+            as="span"
+            class="base-window-popout__toggle-label"
+            color="inherit"
+            variant="body-sm"
+          >
             {{ isPopped ? t('popin') : t('popout') }}
           </BaseTypography>
         </button>
@@ -148,7 +174,7 @@
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-window-popout {
     position: relative;
     display: flex;
@@ -172,7 +198,8 @@
 
     &__placeholder-text {
       margin: 0;
-      // typography handled by BaseTypography
+
+      /* typography handled by BaseTypography */
     }
 
     &__controls {
@@ -213,7 +240,14 @@
     }
 
     &__toggle-label {
-      // typography handled by BaseTypography
+      /* typography handled by BaseTypography */
     }
   }
 </style>
+
+<i18n lang="yaml">
+en:
+  popout: Pop out
+  popin: Pop back in
+  placeholder: Popout content area
+</i18n>

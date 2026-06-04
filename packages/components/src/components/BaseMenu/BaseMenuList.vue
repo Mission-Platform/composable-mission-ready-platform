@@ -1,16 +1,20 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   defineProps<{
-    orientation: 'vertical' | 'horizontal'
-  }>()
+    orientation: 'vertical' | 'horizontal';
+  }>();
 </script>
 
 <template>
-  <menu class="base-menu__list" role="menubar" :aria-orientation="orientation">
+  <menu
+    :aria-orientation="orientation"
+    class="base-menu__list"
+    role="menubar"
+  >
     <slot />
   </menu>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .base-menu__list {
     list-style: none;
     margin: 0;

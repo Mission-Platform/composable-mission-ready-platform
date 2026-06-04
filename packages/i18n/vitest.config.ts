@@ -1,8 +1,8 @@
-import path from 'node:path'
+import path from 'node:path';
 
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
-import vue from '@vitejs/plugin-vue'
-import { defineConfig } from 'vitest/config'
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+import vue from '@vitejs/plugin-vue';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [
@@ -21,4 +21,4 @@ export default defineConfig({
       exclude: ['src/**/*.spec.ts', 'src/index.ts'],
     },
   },
-})
+});

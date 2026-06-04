@@ -1,2 +1,2 @@
-export { default } from './BaseProgressBar.vue'
-export type { ProgressVariant, ProgressSize } from './BaseProgressBar.vue'
+export { default } from './BaseProgressBar.vue';
+export type { ProgressVariant, ProgressSize } from './BaseProgressBar.vue';

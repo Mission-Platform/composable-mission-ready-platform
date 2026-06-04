@@ -6,8 +6,8 @@
 //    0    480    768    1024   1920    2560    3840
 //       ────────────────────────────────────────────→  viewport width
 
-export const breakpointKeys = ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] as const
-export type BreakpointKey = (typeof breakpointKeys)[number]
+export const breakpointKeys = ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] as const;
+export type BreakpointKey = (typeof breakpointKeys)[number];
 
 /**
  * Min-width pixel thresholds for every breakpoint step.
@@ -28,13 +28,13 @@ export const breakpoints: Record<BreakpointKey, number> = {
   lg: 1920,
   xl: 2560,
   '2xl': 3840,
-} as const
+} as const;
 
 /**
  * Returns the pixel value for a given breakpoint key.
  */
 export function getBreakpointValue(key: BreakpointKey): number {
-  return breakpoints[key]
+  return breakpoints[key];
 }
 
 /**
@@ -45,8 +45,8 @@ export function getBreakpointValue(key: BreakpointKey): number {
  * mediaQuery('xl') // → '(min-width: 2560px)'
  */
 export function mediaQuery(key: BreakpointKey): string {
-  const value = breakpoints[key]
-  return value === 0 ? 'all' : `(min-width: ${value}px)`
+  const value = breakpoints[key];
+  return value === 0 ? 'all' : `(min-width: ${value}px)`;
 }
 
 /**
@@ -57,23 +57,23 @@ export function mediaQuery(key: BreakpointKey): string {
  * maxMediaQuery('md') // → '(max-width: 1023px)'
  */
 export function maxMediaQuery(key: BreakpointKey): string {
-  const value = breakpoints[key]
-  return value === 0 ? 'not all' : `(max-width: ${value - 1}px)`
+  const value = breakpoints[key];
+  return value === 0 ? 'not all' : `(max-width: ${value - 1}px)`;
 }
 
 /**
  * Given a pixel width, returns the currently active breakpoint key.
  */
 export function resolveBreakpoint(width: number): BreakpointKey {
-  const reversed = Object.entries(breakpoints)
+  const reversed = [...(Object.entries(breakpoints) as [BreakpointKey, number][])]
     .reverse()
-    .filter(([_, value]) => width >= value)
-    .map(([key, _]) => key as BreakpointKey)
-    .at(0)
+    .filter(([_key, value]) => width >= value)
+    .map(([key, _value]) => key)
+    .at(0);
   if (!reversed) {
-    return '2xs'
+    return '2xs';
   }
-  return reversed
+  return reversed;
 }
 
-export type BreakpointValues = Record<BreakpointKey, boolean>
+export type BreakpointValues = Record<BreakpointKey, boolean>;
