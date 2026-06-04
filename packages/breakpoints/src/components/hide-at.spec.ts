@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import HideAt from './HideAt.vue';
+import HideAt from './hide-at.vue';
 
 function mockWindowWidth(width: number): void {
   Object.defineProperty(globalThis.window, 'innerWidth', {

@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import ShowAt from './ShowAt.vue';
+import ShowAt from './show-at.vue';
 
 function mockWindowWidth(width: number): void {
   Object.defineProperty(globalThis.window, 'innerWidth', {

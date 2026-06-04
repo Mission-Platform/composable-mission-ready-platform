@@ -2,215 +2,215 @@
 // Vue 3 component library for Mission Platform.
 // Import the styles separately:  import '@mission-platform/components/styles'
 
-export { default as BaseButton } from './components/BaseButton';
-export type { ButtonVariant, ButtonSize } from './components/BaseButton';
+export { default as BaseButton } from './components/base-button';
+export type { ButtonVariant, ButtonSize } from './components/base-button';
 
-export { default as BaseCard } from './components/BaseCard';
-export type { CardPadding } from './components/BaseCard';
-export { default as BaseCardHeader } from './components/BaseCard/BaseCardHeader.vue';
-export { default as BaseCardBody } from './components/BaseCard/BaseCardBody.vue';
-export { default as BaseCardFooter } from './components/BaseCard/BaseCardFooter.vue';
+export { default as BaseCard } from './components/base-card';
+export type { CardPadding } from './components/base-card';
+export { default as BaseCardHeader } from './components/base-card/base-card-header.vue';
+export { default as BaseCardBody } from './components/base-card/base-card-body.vue';
+export { default as BaseCardFooter } from './components/base-card/base-card-footer.vue';
 
-export { default as BaseBadge } from './components/BaseBadge';
-export type { BadgeVariant, BadgeSize } from './components/BaseBadge';
+export { default as BaseBadge } from './components/base-badge';
+export type { BadgeVariant, BadgeSize } from './components/base-badge';
 
-export { default as BaseInput } from './components/BaseInput';
-export type { InputSize, InputType } from './components/BaseInput';
+export { default as BaseInput } from './components/base-input';
+export type { InputSize, InputType } from './components/base-input';
 
-export { default as BaseSelect } from './components/BaseSelect';
-export type { SelectSize, SelectOption } from './components/BaseSelect';
+export { default as BaseSelect } from './components/base-select';
+export type { SelectSize, SelectOption } from './components/base-select';
 
-export { default as BaseTextarea } from './components/BaseTextarea';
-export type { TextareaSize, TextareaResize } from './components/BaseTextarea';
+export { default as BaseTextarea } from './components/base-textarea';
+export type { TextareaSize, TextareaResize } from './components/base-textarea';
 
-export { default as BaseCheckbox } from './components/BaseCheckbox';
+export { default as BaseCheckbox } from './components/base-checkbox';
 
-export { default as BaseRadio } from './components/BaseRadio';
+export { default as BaseRadio } from './components/base-radio';
 
-export { default as BaseRadioGroup } from './components/BaseRadioGroup';
-export type { RadioOption } from './components/BaseRadioGroup';
+export { default as BaseRadioGroup } from './components/base-radio-group';
+export type { RadioOption } from './components/base-radio-group';
 
-export { default as BaseSwitch } from './components/BaseSwitch';
-export type { SwitchSize } from './components/BaseSwitch';
+export { default as BaseSwitch } from './components/base-switch';
+export type { SwitchSize } from './components/base-switch';
 
-export { default as BaseMarkdownInput } from './components/BaseMarkdownInput';
-export type { MarkdownInputSize, MarkdownInputTab } from './components/BaseMarkdownInput';
+export { default as BaseMarkdownInput } from './components/base-markdown-input';
+export type { MarkdownInputSize, MarkdownInputTab } from './components/base-markdown-input';
 
-export { default as BaseFormBuilder, useFormSchema } from './components/BaseFormBuilder';
-export type { FormSchema, FormValues, FormFieldSchema, FormFieldType, FormErrors } from './components/BaseFormBuilder';
-export { default as BaseFormBuilderField } from './components/BaseFormBuilder/BaseFormBuilderField.vue';
-export { default as BaseFormBuilderActions } from './components/BaseFormBuilder/BaseFormBuilderActions.vue';
+export { default as BaseFormBuilder, useFormSchema } from './components/base-form-builder';
+export type { FormSchema, FormValues, FormFieldSchema, FormFieldType, FormErrors } from './components/base-form-builder';
+export { default as BaseFormBuilderField } from './components/base-form-builder/base-form-builder-field.vue';
+export { default as BaseFormBuilderActions } from './components/base-form-builder/base-form-builder-actions.vue';
 
-export { default as BaseTag } from './components/BaseTag';
-export type { TagSize, TagVariant } from './components/BaseTag';
+export { default as BaseTag } from './components/base-tag';
+export type { TagSize, TagVariant } from './components/base-tag';
 
-export { default as BaseDropdown } from './components/BaseDropdown';
-export type { DropdownPlacement } from './components/BaseDropdown';
+export { default as BaseDropdown } from './components/base-dropdown';
+export type { DropdownPlacement } from './components/base-dropdown';
 
-export { default as BaseMultiselect } from './components/BaseMultiselect';
-export type { MultiselectSize, MultiselectOption } from './components/BaseMultiselect';
+export { default as BaseMultiselect } from './components/base-multiselect';
+export type { MultiselectSize, MultiselectOption } from './components/base-multiselect';
 
-export { default as BaseCollapse } from './components/BaseCollapse';
+export { default as BaseCollapse } from './components/base-collapse';
 
-export { default as BaseAccordion } from './components/BaseAccordion';
-export { BaseAccordionItem } from './components/BaseAccordion';
-export type { AccordionContext } from './components/BaseAccordion';
+export { default as BaseAccordion } from './components/base-accordion';
+export { BaseAccordionItem } from './components/base-accordion';
+export type { AccordionContext } from './components/base-accordion';
 
-export { default as BaseDialog } from './components/BaseDialog';
-export { default as BaseDialogHeader } from './components/BaseDialog/BaseDialogHeader.vue';
-export { default as BaseDialogBody } from './components/BaseDialog/BaseDialogBody.vue';
-export { default as BaseDialogFooter } from './components/BaseDialog/BaseDialogFooter.vue';
+export { default as BaseDialog } from './components/base-dialog';
+export { default as BaseDialogHeader } from './components/base-dialog/base-dialog-header.vue';
+export { default as BaseDialogBody } from './components/base-dialog/base-dialog-body.vue';
+export { default as BaseDialogFooter } from './components/base-dialog/base-dialog-footer.vue';
 
-export { default as BaseBreadcrumb } from './components/BaseBreadcrumb';
-export type { BreadcrumbItem } from './components/BaseBreadcrumb';
+export { default as BaseBreadcrumb } from './components/base-breadcrumb';
+export type { BreadcrumbItem } from './components/base-breadcrumb';
 
-export { default as BaseSidebar } from './components/BaseSidebar';
-export type { SidebarSide, SidebarSize } from './components/BaseSidebar';
-export { default as BaseSidebarHeader } from './components/BaseSidebar/BaseSidebarHeader.vue';
-export { default as BaseSidebarBody } from './components/BaseSidebar/BaseSidebarBody.vue';
-export { default as BaseSidebarFooter } from './components/BaseSidebar/BaseSidebarFooter.vue';
+export { default as BaseSidebar } from './components/base-sidebar';
+export type { SidebarSide, SidebarSize } from './components/base-sidebar';
+export { default as BaseSidebarHeader } from './components/base-sidebar/base-sidebar-header.vue';
+export { default as BaseSidebarBody } from './components/base-sidebar/base-sidebar-body.vue';
+export { default as BaseSidebarFooter } from './components/base-sidebar/base-sidebar-footer.vue';
 
-export { default as BaseFileInput } from './components/BaseFileInput';
+export { default as BaseFileInput } from './components/base-file-input';
 
-export { default as BaseSearchInput } from './components/BaseSearchInput';
-export type { SearchInputSize } from './components/BaseSearchInput';
+export { default as BaseSearchInput } from './components/base-search-input';
+export type { SearchInputSize } from './components/base-search-input';
 
-export { default as BaseList } from './components/BaseList';
-export type { ListVariant, ListSize, ListItem } from './components/BaseList';
+export { default as BaseList } from './components/base-list';
+export type { ListVariant, ListSize, ListItem } from './components/base-list';
 
-export { default as BaseSpinner } from './components/BaseSpinner';
-export type { SpinnerSize, SpinnerVariant } from './components/BaseSpinner';
+export { default as BaseSpinner } from './components/base-spinner';
+export type { SpinnerSize, SpinnerVariant } from './components/base-spinner';
 
-export { default as BaseProgressBar } from './components/BaseProgressBar';
-export type { ProgressVariant, ProgressSize } from './components/BaseProgressBar';
+export { default as BaseProgressBar } from './components/base-progress-bar';
+export type { ProgressVariant, ProgressSize } from './components/base-progress-bar';
 
-export { default as BaseMenu } from './components/BaseMenu';
-export type { MenuItem } from './components/BaseMenu';
-export { default as BaseMenuList } from './components/BaseMenu/BaseMenuList.vue';
-export { default as BaseMenuItemLink } from './components/BaseMenu/BaseMenuItemLink.vue';
-export { default as BaseMenuItemButton } from './components/BaseMenu/BaseMenuItemButton.vue';
-export { default as BaseMenuSubmenu } from './components/BaseMenu/BaseMenuSubmenu.vue';
+export { default as BaseMenu } from './components/base-menu';
+export type { MenuItem } from './components/base-menu';
+export { default as BaseMenuList } from './components/base-menu/base-menu-list.vue';
+export { default as BaseMenuItemLink } from './components/base-menu/base-menu-item-link.vue';
+export { default as BaseMenuItemButton } from './components/base-menu/base-menu-item-button.vue';
+export { default as BaseMenuSubmenu } from './components/base-menu/base-menu-submenu.vue';
 
-export { default as BaseMenubar } from './components/BaseMenubar';
+export { default as BaseMenubar } from './components/base-menubar';
 
-export { default as BaseMenuItem } from './components/BaseMenuItem';
-export type { MenuItemVariant } from './components/BaseMenuItem';
+export { default as BaseMenuItem } from './components/base-menu-item';
+export type { MenuItemVariant } from './components/base-menu-item';
 
-export { default as BaseModal } from './components/BaseModal';
-export type { ModalSize } from './components/BaseModal';
-export { default as BaseModalHeader } from './components/BaseModal/BaseModalHeader.vue';
-export { default as BaseModalBody } from './components/BaseModal/BaseModalBody.vue';
-export { default as BaseModalFooter } from './components/BaseModal/BaseModalFooter.vue';
+export { default as BaseModal } from './components/base-modal';
+export type { ModalSize } from './components/base-modal';
+export { default as BaseModalHeader } from './components/base-modal/base-modal-header.vue';
+export { default as BaseModalBody } from './components/base-modal/base-modal-body.vue';
+export { default as BaseModalFooter } from './components/base-modal/base-modal-footer.vue';
 
-export { default as BaseNavbar } from './components/BaseNavbar';
+export { default as BaseNavbar } from './components/base-navbar';
 
-export { default as BaseNavbarItem } from './components/BaseNavbarItem';
-export type { NavbarItemVariant, NavbarItemChild } from './components/BaseNavbarItem';
+export { default as BaseNavbarItem } from './components/base-navbar-item';
+export type { NavbarItemVariant, NavbarItemChild } from './components/base-navbar-item';
 
-export { default as BaseSkeleton } from './components/BaseSkeleton';
-export type { SkeletonShape } from './components/BaseSkeleton';
+export { default as BaseSkeleton } from './components/base-skeleton';
+export type { SkeletonShape } from './components/base-skeleton';
 
-export { default as BaseStatusIcon } from './components/BaseStatusIcon';
-export type { StatusLevel, StatusIconSize } from './components/BaseStatusIcon';
+export { default as BaseStatusIcon } from './components/base-status-icon';
+export type { StatusLevel, StatusIconSize } from './components/base-status-icon';
 
-export { default as BaseFormWizard } from './components/BaseFormWizard';
-export type { WizardStep } from './components/BaseFormWizard';
-export { default as BaseFormWizardSteps } from './components/BaseFormWizard/BaseFormWizardSteps.vue';
-export { default as BaseFormWizardContent } from './components/BaseFormWizard/BaseFormWizardContent.vue';
-export { default as BaseFormWizardFooter } from './components/BaseFormWizard/BaseFormWizardFooter.vue';
+export { default as BaseFormWizard } from './components/base-form-wizard';
+export type { WizardStep } from './components/base-form-wizard';
+export { default as BaseFormWizardSteps } from './components/base-form-wizard/base-form-wizard-steps.vue';
+export { default as BaseFormWizardContent } from './components/base-form-wizard/base-form-wizard-content.vue';
+export { default as BaseFormWizardFooter } from './components/base-form-wizard/base-form-wizard-footer.vue';
 
-export { default as BaseTabs } from './components/BaseTabs';
-export type { TabItem, TabsVariant } from './components/BaseTabs';
-export { default as BaseTabList } from './components/BaseTabs/BaseTabList.vue';
-export { default as BaseTabPanel } from './components/BaseTabs/BaseTabPanel.vue';
-export { default as BaseVirtualTabs } from './components/BaseVirtualTabs';
+export { default as BaseTabs } from './components/base-tabs';
+export type { TabItem, TabsVariant } from './components/base-tabs';
+export { default as BaseTabList } from './components/base-tabs/base-tab-list.vue';
+export { default as BaseTabPanel } from './components/base-tabs/base-tab-panel.vue';
+export { default as BaseVirtualTabs } from './components/base-virtual-tabs';
 
-export { default as BaseTable } from './components/BaseTable';
-export type { TableColumn } from './components/BaseTable';
-export type { SortDirection } from './components/BaseTable/types';
-export { default as BaseTableHead } from './components/BaseTable/BaseTableHead.vue';
-export { default as BaseTableBody } from './components/BaseTable/BaseTableBody.vue';
-export { default as BaseTableEmptyState } from './components/BaseTable/BaseTableEmptyState.vue';
+export { default as BaseTable } from './components/base-table';
+export type { TableColumn } from './components/base-table';
+export type { SortDirection } from './components/base-table/types';
+export { default as BaseTableHead } from './components/base-table/base-table-head.vue';
+export { default as BaseTableBody } from './components/base-table/base-table-body.vue';
+export { default as BaseTableEmptyState } from './components/base-table/base-table-empty-state.vue';
 
-export { default as BaseTooltip } from './components/BaseTooltip';
-export type { TooltipPlacement } from './components/BaseTooltip';
+export { default as BaseTooltip } from './components/base-tooltip';
+export type { TooltipPlacement } from './components/base-tooltip';
 
-export { default as BasePopover } from './components/BasePopover';
-export type { PopoverPlacement } from './components/BasePopover';
+export { default as BasePopover } from './components/base-popover';
+export type { PopoverPlacement } from './components/base-popover';
 
-export { default as BaseWindowPopout } from './components/BaseWindowPopout';
+export { default as BaseWindowPopout } from './components/base-window-popout';
 
-export { default as BaseTypography } from './components/BaseTypography';
+export { default as BaseTypography } from './components/base-typography';
 export type {
   TypographyVariant,
   TypographyWeight,
   TypographyColor,
   TypographyAlign,
-} from './components/BaseTypography';
+} from './components/base-typography';
 
 // ─── Layout & display components ─────────────────────────────────────────────
 
-export { default as BaseApplicationLayout, StatusLevels } from './components/BaseApplicationLayout';
-export type { ApplicationStatusLevel } from './components/BaseApplicationLayout';
+export { default as BaseApplicationLayout, StatusLevels } from './components/base-application-layout';
+export type { ApplicationStatusLevel } from './components/base-application-layout';
 
-export { default as BaseAvatar } from './components/BaseAvatar';
-export type { AvatarSize, AvatarShape, AvatarStatus } from './components/BaseAvatar';
+export { default as BaseAvatar } from './components/base-avatar';
+export type { AvatarSize, AvatarShape, AvatarStatus } from './components/base-avatar';
 
-export { default as BaseInView } from './components/BaseInView';
-export type { InViewAnimation } from './components/BaseInView';
+export { default as BaseInView } from './components/base-in-view';
+export type { InViewAnimation } from './components/base-in-view';
 
-export { default as BaseVirtualList } from './components/BaseVirtualList';
+export { default as BaseVirtualList } from './components/base-virtual-list';
 
-export { default as BaseVirtualTable } from './components/BaseVirtualTable';
-export type { VirtualTableColumn } from './components/BaseVirtualTable';
-export { default as BaseVirtualTableHead } from './components/BaseVirtualTable/BaseVirtualTableHead.vue';
-export { default as BaseVirtualTableRow } from './components/BaseVirtualTable/BaseVirtualTableRow.vue';
-export { default as BaseVirtualTableFooter } from './components/BaseVirtualTable/BaseVirtualTableFooter.vue';
+export { default as BaseVirtualTable } from './components/base-virtual-table';
+export type { VirtualTableColumn } from './components/base-virtual-table';
+export { default as BaseVirtualTableHead } from './components/base-virtual-table/base-virtual-table-head.vue';
+export { default as BaseVirtualTableRow } from './components/base-virtual-table/base-virtual-table-row.vue';
+export { default as BaseVirtualTableFooter } from './components/base-virtual-table/base-virtual-table-footer.vue';
 
-export { default as BaseTreeView } from './components/BaseTreeView';
-export type { TreeNode } from './components/BaseTreeView';
-export { default as BaseTreeNodeLabel } from './components/BaseTreeView/BaseTreeNodeLabel.vue';
+export { default as BaseTreeView } from './components/base-tree-view';
+export type { TreeNode } from './components/base-tree-view';
+export { default as BaseTreeNodeLabel } from './components/base-tree-view/base-tree-node-label.vue';
 
-export { default as BaseVirtualTreeView } from './components/BaseVirtualTreeView';
-export type { VirtualTreeNode } from './components/BaseVirtualTreeView';
+export { default as BaseVirtualTreeView } from './components/base-virtual-tree-view';
+export type { VirtualTreeNode } from './components/base-virtual-tree-view';
 
-export { default as BaseVirtualLogViewer } from './components/BaseVirtualLogViewer';
-export type { LogEntry, LogLevel } from './components/BaseVirtualLogViewer';
-export { default as BaseLogViewerToolbar } from './components/BaseVirtualLogViewer/BaseLogViewerToolbar.vue';
-export { default as BaseLogViewerRow } from './components/BaseVirtualLogViewer/BaseLogViewerRow.vue';
+export { default as BaseVirtualLogViewer } from './components/base-virtual-log-viewer';
+export type { LogEntry, LogLevel } from './components/base-virtual-log-viewer';
+export { default as BaseLogViewerToolbar } from './components/base-virtual-log-viewer/base-log-viewer-toolbar.vue';
+export { default as BaseLogViewerRow } from './components/base-virtual-log-viewer/base-log-viewer-row.vue';
 
 // ─── Date / time picker components ───────────────────────────────────────────
 
-export { default as BaseCalendar } from './components/BaseCalendar';
-export type { CalendarSize } from './components/BaseCalendar';
+export { default as BaseCalendar } from './components/base-calendar';
+export type { CalendarSize } from './components/base-calendar';
 
-export { default as BaseDateInput } from './components/BaseDateInput';
-export type { DateInputSize } from './components/BaseDateInput';
+export { default as BaseDateInput } from './components/base-date-input';
+export type { DateInputSize } from './components/base-date-input';
 
-export { default as BaseDateRangeInput } from './components/BaseDateRangeInput';
-export type { DateRangeInputSize, DateRange } from './components/BaseDateRangeInput';
+export { default as BaseDateRangeInput } from './components/base-date-range-input';
+export type { DateRangeInputSize, DateRange } from './components/base-date-range-input';
 
-export { default as BaseTimeInput } from './components/BaseTimeInput';
-export type { TimeInputSize } from './components/BaseTimeInput';
+export { default as BaseTimeInput } from './components/base-time-input';
+export type { TimeInputSize } from './components/base-time-input';
 
-export { default as BaseTimeRangeInput } from './components/BaseTimeRangeInput';
-export type { TimeRangeInputSize, TimeRange } from './components/BaseTimeRangeInput';
+export { default as BaseTimeRangeInput } from './components/base-time-range-input';
+export type { TimeRangeInputSize, TimeRange } from './components/base-time-range-input';
 
-export { default as BaseDateTimeRangeInput } from './components/BaseDateTimeRangeInput';
-export type { DateTimeRangeInputSize, DateTimeRange, TimezoneMode } from './components/BaseDateTimeRangeInput';
+export { default as BaseDateTimeRangeInput } from './components/base-date-time-range-input';
+export type { DateTimeRangeInputSize, DateTimeRange, TimezoneMode } from './components/base-date-time-range-input';
 
 // ─── Code ─────────────────────────────────────────────────────────────────────
 
-export { default as BaseCodeBlock } from './components/BaseCodeBlock';
-export type { CodeBlockLanguage } from './components/BaseCodeBlock';
+export { default as BaseCodeBlock } from './components/base-code-block';
+export type { CodeBlockLanguage } from './components/base-code-block';
 
-export { default as BaseMonacoEditor } from './components/BaseMonacoEditor';
-export type { MonacoEditorLanguage, MonacoEditorTheme } from './components/BaseMonacoEditor';
+export { default as BaseMonacoEditor } from './components/base-monaco-editor';
+export type { MonacoEditorLanguage, MonacoEditorTheme } from './components/base-monaco-editor';
 
 // ─── Theme ────────────────────────────────────────────────────────────────────
 
-export { default as BaseThemeToggle } from './components/BaseThemeToggle';
-export type { Theme } from './components/BaseThemeToggle';
+export { default as BaseThemeToggle } from './components/base-theme-toggle';
+export type { Theme } from './components/base-theme-toggle';
 
 // ─── Composables ──────────────────────────────────────────────────────────────
 

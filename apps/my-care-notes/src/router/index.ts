@@ -11,7 +11,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      component: async () => import('../App.vue'),
+      component: async () => import('../app.vue'),
     },
   ],
 });

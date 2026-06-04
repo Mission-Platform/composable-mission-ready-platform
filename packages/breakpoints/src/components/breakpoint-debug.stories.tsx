@@ -1,4 +1,4 @@
-import BreakpointDebug from './BreakpointDebug.vue';
+import BreakpointDebug from './breakpoint-debug.vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 

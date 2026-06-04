@@ -1,4 +1,4 @@
-import ShowAt from './ShowAt.vue';
+import ShowAt from './show-at.vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 

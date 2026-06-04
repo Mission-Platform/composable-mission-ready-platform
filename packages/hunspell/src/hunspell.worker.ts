@@ -1,6 +1,6 @@
 import { createHunspell } from './create-hunspell';
-import affContent from './dictionaries/en_AU.aff?raw';
-import dicContent from './dictionaries/en_AU.dic?raw';
+import affContent from './dictionaries/en_au.aff?raw';
+import dicContent from './dictionaries/en_au.dic?raw';
 
 /**
  * A word + its byte offset in the original text, posted back to the main

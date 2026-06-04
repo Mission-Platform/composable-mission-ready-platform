@@ -4,23 +4,23 @@
 //   import 'maplibre-gl/dist/maplibre-gl.css'
 
 // ── Components ────────────────────────────────────────────────────────────────
-export { default as MapLibre } from './components/MapLibre';
-export type { MapLibreProps } from './components/MapLibre';
+export { default as MapLibre } from './components/map-libre';
+export type { MapLibreProps } from './components/map-libre';
 
-export { default as MapMarker } from './components/MapMarker';
-export type { MapMarkerProps } from './components/MapMarker';
+export { default as MapMarker } from './components/map-marker';
+export type { MapMarkerProps } from './components/map-marker';
 
-export { default as MapPopup } from './components/MapPopup';
-export type { MapPopupProps } from './components/MapPopup';
+export { default as MapPopup } from './components/map-popup';
+export type { MapPopupProps } from './components/map-popup';
 
-export { default as MapSource } from './components/MapSource';
-export type { MapSourceProps } from './components/MapSource';
+export { default as MapSource } from './components/map-source';
+export type { MapSourceProps } from './components/map-source';
 
-export { default as MapLayer } from './components/MapLayer';
-export type { MapLayerProps } from './components/MapLayer';
+export { default as MapLayer } from './components/map-layer';
+export type { MapLayerProps } from './components/map-layer';
 
-export { default as MapDraw } from './components/MapDraw';
-export type { MapDrawProps } from './components/MapDraw';
+export { default as MapDraw } from './components/map-draw';
+export type { MapDrawProps } from './components/map-draw';
 
 // ── Composables ───────────────────────────────────────────────────────────────
 export { useMap } from './composables/use-map';

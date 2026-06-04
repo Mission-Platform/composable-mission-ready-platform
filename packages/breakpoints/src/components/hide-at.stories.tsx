@@ -1,4 +1,4 @@
-import HideAt from './HideAt.vue';
+import HideAt from './hide-at.vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
