@@ -125,6 +125,59 @@ pnpm changeset publish # publish to registry
 
 ---
 
+## Git Commit Convention
+
+All commits in this repository **must** follow the [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) specification.
+
+### Commit message structure
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+### Rules
+
+- The **type** is required and must be one of:
+  - `feat` — a new feature (correlates with SemVer **MINOR**)
+  - `fix` — a bug fix (correlates with SemVer **PATCH**)
+  - `refactor` — a code change that is neither a bug fix nor a new feature
+  - `style` — changes that do not affect meaning (formatting, whitespace, etc.)
+  - `chore` — other changes that don't modify source or test files (e.g. config, tooling)
+  - `docs` — documentation-only changes
+  - `test` — adding or updating tests
+  - `build` — changes that affect the build system or external dependencies
+  - `ci` — CI configuration changes
+  - `perf` — performance improvements
+- The **scope** is optional but recommended; it must be the name of the package or app being changed, e.g. `fix(map):`, `feat(components):`.
+- The **description** must immediately follow the `type(scope): ` prefix, be written in lowercase imperative mood, and must not end with a period.
+- A **body** may be provided one blank line after the description for additional context.
+- **Footers** go one blank line after the body (or description if no body). Use `BREAKING CHANGE: <description>` for breaking API changes (correlates with SemVer **MAJOR**). Use `Co-authored-by: Name <email>` for co-authorship.
+- Append `!` after the type/scope to draw attention to a breaking change: `feat(api)!: remove deprecated endpoint`.
+
+### Examples
+
+```
+feat(components): add BaseTooltip component
+
+fix(map): make selectFeature parameter optional
+
+refactor(components): remove redundant Window interface in use-hunspell-monaco
+
+style(components): reformat Vue SFCs with htmlWhitespaceSensitivity ignore
+
+chore: add dist/ to .gitignore
+
+feat(api)!: drop support for Vue 2
+
+BREAKING CHANGE: Vue 2 is no longer supported; upgrade to Vue 3.5+.
+```
+
+---
+
 ## Key Principles for Agents
 
 1. **Dependency direction is one-way.** Code in `packages/` must never import from `apps/`. Apps import from packages, not the reverse.
@@ -133,3 +186,4 @@ pnpm changeset publish # publish to registry
 4. **Storybook is the component workbench.** When adding or modifying components in `packages/`, add or update corresponding stories in `apps/storybook`.
 5. **TypeScript everywhere.** All new files must be `.ts` or `.vue` (using `<script setup lang="ts">`). No plain JavaScript files.
 6. **Test alongside implementation.** Unit tests (Vitest) and browser tests (Playwright) live next to the code they cover inside each workspace.
+7. **Follow Conventional Commits.** Every commit must use the `type(scope): description` format defined in the Git Commit Convention section above.
