@@ -1,5 +1,5 @@
 import * as monaco from 'monaco-editor';
-import { onBeforeUnmount, type Ref, watch } from 'vue';
+import { onBeforeUnmount, type MaybeRefOrGetter, toValue, watch } from 'vue';
 
 /**
  * Applications must configure a Hunspell worker factory on
@@ -43,9 +43,9 @@ function debounce<T extends unknown[]>(
 }
 
 export function useHunspellMonaco(
-  editorReference: Ref<monaco.editor.IStandaloneCodeEditor | undefined>,
-  enabled: Ref<boolean>,
-  languageReference: Ref<string>,
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
 ): void {
   let worker: Worker | undefined;
   let contentListener: monaco.IDisposable | undefined;
@@ -55,7 +55,7 @@ export function useHunspellMonaco(
   let latestIssues: SpellIssue[] = [];
 
   function clearMarkers(): void {
-    const model = editorReference.value?.getModel();
+    const model = toValue(editorReference)?.getModel();
     if (model) {
       monaco.editor.setModelMarkers(model, 'hunspell', []);
     }
@@ -75,14 +75,14 @@ export function useHunspellMonaco(
   }
 
   const sendToWorker = debounce(() => {
-    if (!worker || !editorReference.value) return;
-    const model = editorReference.value.getModel();
+    if (!worker || !toValue(editorReference)) return;
+    const model = toValue(editorReference)!.getModel();
     if (!model) return;
     worker.postMessage({ text: model.getValue() });
   }, 300);
 
   function setup(): void {
-    if (!editorReference.value) return;
+    if (!toValue(editorReference)) return;
 
     if (!globalThis.HunspellEnvironment?.getWorker) {
       console.warn(
@@ -96,7 +96,7 @@ export function useHunspellMonaco(
     worker = newWorker;
 
     newWorker.addEventListener('message', (event_: MessageEvent<SpellIssue[]>) => {
-      const model = editorReference.value?.getModel();
+      const model = toValue(editorReference)?.getModel();
       if (!model) return;
 
       latestIssues = event_.data;
@@ -119,11 +119,11 @@ export function useHunspellMonaco(
       monaco.editor.setModelMarkers(model, 'hunspell', markers);
     });
 
-    contentListener = editorReference.value.onDidChangeModelContent(sendToWorker);
+    contentListener = toValue(editorReference)!.onDidChangeModelContent(sendToWorker);
 
     // Register a code action provider to show spelling suggestions as quick fixes.
     // We register per language so Monaco shows the lightbulb on hunspell markers.
-    const language = languageReference.value || 'plaintext';
+    const language = toValue(languageReference) || 'plaintext';
     codeActionProvider = monaco.languages.registerCodeActionProvider(language, {
       provideCodeActions(model, range) {
         const actions: monaco.languages.CodeAction[] = [];
@@ -163,7 +163,7 @@ export function useHunspellMonaco(
   }
 
   watch(
-    [enabled, editorReference],
+    [() => toValue(enabled), () => toValue(editorReference)] as const,
     ([isEnabled]) => {
       if (isEnabled) {
         teardown();
@@ -175,11 +175,14 @@ export function useHunspellMonaco(
     { immediate: true },
   );
 
-  watch(languageReference, () => {
-    if (enabled.value && worker) {
-      sendToWorker();
-    }
-  });
+  watch(
+    () => toValue(languageReference),
+    () => {
+      if (toValue(enabled) && worker) {
+        sendToWorker();
+      }
+    },
+  );
 
   onBeforeUnmount(() => {
     teardown();

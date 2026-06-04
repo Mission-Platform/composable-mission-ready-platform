@@ -1,4 +1,4 @@
-import { watch } from 'vue';
+import { toValue, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 /**
@@ -22,7 +22,7 @@ export function useRouterClose(close: () => void): void {
   if (!router) return;
 
   watch(
-    () => router!.currentRoute.value.fullPath,
+    () => toValue(router!.currentRoute).fullPath,
     (_newPath, oldPath) => {
       if (oldPath !== undefined) {
         close();

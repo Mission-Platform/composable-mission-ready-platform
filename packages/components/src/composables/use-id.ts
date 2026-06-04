@@ -1,5 +1,4 @@
-import { nanoid } from 'nanoid';
-import { computed } from 'vue';
+import { useId as useVueId } from 'vue';
 
 /**
  * Returns a stable element ID.  If the caller passes an explicit `id` prop,
@@ -8,6 +7,6 @@ import { computed } from 'vue';
  * does not supply an id.
  */
 export function useId(explicitId: string | undefined): { id: string } {
-  const id = explicitId ?? `mp-${nanoid()}`;
-  return { id: computed(() => id).value };
+  const id = explicitId ?? useVueId();
+  return { id };
 }

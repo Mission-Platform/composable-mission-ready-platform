@@ -1,9 +1,9 @@
 // ─── Tokens barrel ────────────────────────────────────────────────────────────
 // Single entry point for all TypeScript/JavaScript design token values.
 
-export * from './colors.ts';
-export * from './spacing.ts';
-export * from './typography.ts';
-export * from './radii.ts';
-export * from './shadows.ts';
-export * from './size.ts';
+export * from './colors.js';
+export * from './spacing.js';
+export * from './typography.js';
+export * from './radii.js';
+export * from './shadows.js';
+export * from './size.js';

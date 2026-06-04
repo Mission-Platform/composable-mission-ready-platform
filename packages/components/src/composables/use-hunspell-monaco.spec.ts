@@ -5,7 +5,6 @@ import { computed, defineComponent, ref } from 'vue';
 import { useHunspellMonaco } from './use-hunspell-monaco';
 
 import type * as monaco from 'monaco-editor';
-import type { Ref } from 'vue';
 
 // ── Monaco mock ───────────────────────────────────────────────────────────────
 
@@ -133,7 +132,9 @@ function makeComponent(
 ) {
   return defineComponent({
     setup() {
-      const editorReference = ref(editorValue) as unknown as Ref<monaco.editor.IStandaloneCodeEditor | undefined>;
+      const editorReference = ref(editorValue) as unknown as ReturnType<
+        typeof ref<monaco.editor.IStandaloneCodeEditor | undefined>
+      >;
       const enabled = computed(() => enabledValue);
       const language = computed(() => languageValue);
       useHunspellMonaco(editorReference, enabled, language);

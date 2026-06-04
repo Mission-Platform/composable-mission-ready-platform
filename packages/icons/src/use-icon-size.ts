@@ -3,7 +3,7 @@
 // @mission-platform/tokens so every icon component shares one source of truth.
 
 import { sizeIcons } from '@mission-platform/tokens';
-import { computed, type ComputedRef } from 'vue';
+import { computed, type ComputedRef, type MaybeRefOrGetter, toValue } from 'vue';
 
 /**
  * Named size token → CSS `var(--mp-size-icon-*)` with a rem fallback.
@@ -25,11 +25,11 @@ export const ICON_SIZE_MAP: Record<string, string> = {
  * - Number (e.g. `32`)        → `'32px'`
  * - Any other string           → returned as-is
  */
-export function useIconSize(size: () => number | string): ComputedRef<string> {
+export function useIconSize(size: MaybeRefOrGetter<number | string>): ComputedRef<string> {
   return computed(() => {
-    const s = size();
+    const s = toValue(size);
     if (typeof s === 'number') return `${s}px`;
     if (s in ICON_SIZE_MAP) return ICON_SIZE_MAP[s];
-    return s as string;
+    return s;
   });
 }
