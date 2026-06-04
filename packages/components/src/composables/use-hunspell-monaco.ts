@@ -22,7 +22,6 @@ declare global {
         getWorker: () => Worker;
       }
     | undefined;
-
 }
 
 type SpellIssue = {

@@ -1,10 +1,11 @@
-import type * as monaco from 'monaco-editor';
 import { mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { computed, defineComponent, ref } from 'vue';
-import type { Ref } from 'vue';
 
 import { useHunspellMonaco } from './use-hunspell-monaco';
+
+import type * as monaco from 'monaco-editor';
+import type { Ref } from 'vue';
 
 // ── Monaco mock ───────────────────────────────────────────────────────────────
 
