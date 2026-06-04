@@ -260,7 +260,9 @@
           </BaseTypography>
           <div class="base-time-range__columns">
             <div class="base-time-range__col">
-              <div class="base-time-range__col-header">HH</div>
+              <div class="base-time-range__col-header">
+                HH
+              </div>
               <div class="base-time-range__scroll">
                 <button
                   v-for="h in hours"
@@ -275,7 +277,9 @@
             </div>
             <span class="base-time-range__sep">:</span>
             <div class="base-time-range__col">
-              <div class="base-time-range__col-header">MM</div>
+              <div class="base-time-range__col-header">
+                MM
+              </div>
               <div class="base-time-range__scroll">
                 <button
                   v-for="m in minutes"
@@ -291,7 +295,9 @@
             <template v-if="showSeconds">
               <span class="base-time-range__sep">:</span>
               <div class="base-time-range__col">
-                <div class="base-time-range__col-header">SS</div>
+                <div class="base-time-range__col-header">
+                  SS
+                </div>
                 <div class="base-time-range__scroll">
                   <button
                     v-for="s in seconds"
@@ -327,7 +333,9 @@
           </BaseTypography>
           <div class="base-time-range__columns">
             <div class="base-time-range__col">
-              <div class="base-time-range__col-header">HH</div>
+              <div class="base-time-range__col-header">
+                HH
+              </div>
               <div class="base-time-range__scroll">
                 <button
                   v-for="h in hours"
@@ -342,7 +350,9 @@
             </div>
             <span class="base-time-range__sep">:</span>
             <div class="base-time-range__col">
-              <div class="base-time-range__col-header">MM</div>
+              <div class="base-time-range__col-header">
+                MM
+              </div>
               <div class="base-time-range__scroll">
                 <button
                   v-for="m in minutes"
@@ -358,7 +368,9 @@
             <template v-if="showSeconds">
               <span class="base-time-range__sep">:</span>
               <div class="base-time-range__col">
-                <div class="base-time-range__col-header">SS</div>
+                <div class="base-time-range__col-header">
+                  SS
+                </div>
                 <div class="base-time-range__scroll">
                   <button
                     v-for="s in seconds"

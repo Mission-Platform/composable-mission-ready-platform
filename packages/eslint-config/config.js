@@ -80,6 +80,7 @@ const config = [
       'vue/multi-word-component-names': 'error',
       'vue/component-api-style': ['error', ['script-setup']],
       'vue/define-macros-order': ['error', { order: ['defineOptions', 'defineProps', 'defineEmits', 'defineSlots'] }],
+      'vue/html-self-closing': ['error', { html: { void: 'always', normal: 'always', component: 'always' } }],
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
