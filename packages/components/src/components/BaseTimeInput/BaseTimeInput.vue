@@ -214,9 +214,7 @@
     >
       <div class="base-time-input__columns">
         <div class="base-time-input__col">
-          <div class="base-time-input__col-header">
-            HH
-          </div>
+          <div class="base-time-input__col-header">HH</div>
           <div class="base-time-input__scroll">
             <button
               v-for="h in hours"
@@ -233,9 +231,7 @@
         <span class="base-time-input__sep">:</span>
 
         <div class="base-time-input__col">
-          <div class="base-time-input__col-header">
-            MM
-          </div>
+          <div class="base-time-input__col-header">MM</div>
           <div class="base-time-input__scroll">
             <button
               v-for="m in minutes"
@@ -252,9 +248,7 @@
         <template v-if="showSeconds">
           <span class="base-time-input__sep">:</span>
           <div class="base-time-input__col">
-            <div class="base-time-input__col-header">
-              SS
-            </div>
+            <div class="base-time-input__col-header">SS</div>
             <div class="base-time-input__scroll">
               <button
                 v-for="s in seconds"

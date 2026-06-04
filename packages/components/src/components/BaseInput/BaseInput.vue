@@ -93,7 +93,7 @@
         @change="emit('change', $event)"
         @focus="emit('focus', $event)"
         @input="handleInput"
-      >
+      />
       <slot name="suffix" />
     </div>
     <BaseTypography

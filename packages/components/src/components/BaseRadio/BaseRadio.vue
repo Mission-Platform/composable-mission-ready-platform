@@ -45,7 +45,7 @@
         class="base-radio__input"
         type="radio"
         @change="handleChange"
-      >
+      />
       <span
         aria-hidden="true"
         class="base-radio__circle"

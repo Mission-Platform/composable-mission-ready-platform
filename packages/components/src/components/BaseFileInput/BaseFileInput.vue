@@ -159,7 +159,7 @@
       class="base-file-input__native"
       type="file"
       @change="handleInputChange"
-    >
+    />
     <BaseTypography
       v-if="error"
       :id="`${resolvedId}-error`"

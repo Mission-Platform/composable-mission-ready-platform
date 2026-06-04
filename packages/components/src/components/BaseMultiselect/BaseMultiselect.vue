@@ -200,7 +200,7 @@
                 type="text"
                 @focus="handleFocus"
                 @keydown="handleKeydown"
-              >
+              />
             </div>
             <span
               aria-hidden="true"

@@ -63,7 +63,7 @@
           role="switch"
           type="checkbox"
           @change="handleChange"
-        >
+        />
         <span
           aria-hidden="true"
           class="base-switch__track"

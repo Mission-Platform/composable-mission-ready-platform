@@ -88,7 +88,7 @@
         type="search"
         @input="handleInput"
         @keydown="handleKeydown"
-      >
+      />
       <button
         v-if="hasValue"
         :aria-label="t('clear')"

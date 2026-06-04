@@ -94,7 +94,7 @@
           class="base-checkbox__input"
           type="checkbox"
           @change="handleChange"
-        >
+        />
         <span
           aria-hidden="true"
           class="base-checkbox__box"

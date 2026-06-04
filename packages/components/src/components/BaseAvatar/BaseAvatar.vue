@@ -94,7 +94,7 @@
         :alt="alt"
         :src="src"
         style="width: 100%; height: 100%; object-fit: cover"
-      >
+      />
       <span
         v-else-if="initials"
         class="avatar__initials"
