@@ -211,8 +211,7 @@ describe('useHarperMonaco', () => {
         severity: 2 as const,
         suggestions: ['world', 'word'],
       };
-      for (const listener of getWorkerMessageListeners())
-        listener(new MessageEvent('message', { data: [issue] }));
+      for (const listener of getWorkerMessageListeners()) listener(new MessageEvent('message', { data: [issue] }));
 
       expect(mockSetModelMarkers).toHaveBeenCalledWith(
         mockModel,
@@ -239,8 +238,7 @@ describe('useHarperMonaco', () => {
         severity: 1 as const,
         suggestions: [],
       };
-      for (const listener of getWorkerMessageListeners())
-        listener(new MessageEvent('message', { data: [issue] }));
+      for (const listener of getWorkerMessageListeners()) listener(new MessageEvent('message', { data: [issue] }));
 
       expect(mockSetModelMarkers).toHaveBeenCalledWith(
         mockModel,
@@ -257,8 +255,7 @@ describe('useHarperMonaco', () => {
     it('clears markers when worker returns no issues', () => {
       mount(makeComponent(mockEditorInstance as never, true));
 
-      for (const listener of getWorkerMessageListeners())
-        listener(new MessageEvent('message', { data: [] }));
+      for (const listener of getWorkerMessageListeners()) listener(new MessageEvent('message', { data: [] }));
 
       expect(mockSetModelMarkers).toHaveBeenCalledWith(mockModel, 'harper', []);
     });

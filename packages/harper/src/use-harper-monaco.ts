@@ -148,12 +148,7 @@ export function useHarperMonaco(
         for (const issue of latestIssues) {
           const startPos = model.getPositionAt(issue.offset);
           const endPos = model.getPositionAt(issue.offset + issue.length);
-          const issueRange = new monaco.Range(
-            startPos.lineNumber,
-            startPos.column,
-            endPos.lineNumber,
-            endPos.column,
-          );
+          const issueRange = new monaco.Range(startPos.lineNumber, startPos.column, endPos.lineNumber, endPos.column);
 
           if (!issueRange.intersectRanges(range)) continue;
 

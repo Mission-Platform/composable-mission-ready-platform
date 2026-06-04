@@ -1,7 +1,7 @@
 import { expect, userEvent, within } from 'storybook/test';
 
-import BaseAccordion from './base-accordion.vue';
 import BaseAccordionItem from './base-accordion-item.vue';
+import BaseAccordion from './base-accordion.vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 

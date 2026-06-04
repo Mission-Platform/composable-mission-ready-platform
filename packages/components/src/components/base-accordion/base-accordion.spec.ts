@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import { mountWithI18n } from '../../test-utils/mount-with-i18n';
 
-import BaseAccordion from './base-accordion.vue';
 import BaseAccordionItem from './base-accordion-item.vue';
+import BaseAccordion from './base-accordion.vue';
 
 describe('BaseAccordion', () => {
   it('renders slotted items', () => {

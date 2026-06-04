@@ -37,7 +37,13 @@ export { default as BaseMarkdownInput } from './components/base-markdown-input';
 export type { MarkdownInputSize, MarkdownInputTab } from './components/base-markdown-input';
 
 export { default as BaseFormBuilder, useFormSchema } from './components/base-form-builder';
-export type { FormSchema, FormValues, FormFieldSchema, FormFieldType, FormErrors } from './components/base-form-builder';
+export type {
+  FormSchema,
+  FormValues,
+  FormFieldSchema,
+  FormFieldType,
+  FormErrors,
+} from './components/base-form-builder';
 export { default as BaseFormBuilderField } from './components/base-form-builder/base-form-builder-field.vue';
 export { default as BaseFormBuilderActions } from './components/base-form-builder/base-form-builder-actions.vue';
 

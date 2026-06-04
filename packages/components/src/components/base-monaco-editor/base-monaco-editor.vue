@@ -1,9 +1,9 @@
 <script lang="ts" setup>
+  import { useHarperMonaco } from '@mission-platform/harper';
   import * as monaco from 'monaco-editor';
   import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue';
 
   import { useHunspellMonaco } from '../../composables/use-hunspell-monaco';
-  import { useHarperMonaco } from '@mission-platform/harper';
 
   export type MonacoEditorCompletionItemProvider = monaco.languages.CompletionItemProvider;
 
