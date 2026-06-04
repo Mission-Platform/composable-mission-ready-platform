@@ -11,6 +11,7 @@ const config = {
   bracketSpacing: true,
   singleAttributePerLine: true,
   bracketSameLine: false,
+  htmlWhitespaceSensitivity: 'ignore',
   arrowParens: 'always',
   endOfLine: 'lf',
   vueIndentScriptAndStyle: true,
