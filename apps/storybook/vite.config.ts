@@ -24,9 +24,7 @@ export default defineConfig({
     vueJsx(),
     VueI18nPlugin({
       include: [
-        path.resolve(dirname, '../../packages/*/src/locales/**/*.yaml'),
         path.resolve(dirname, '../../packages/*/src/**/*.vue'),
-        path.resolve(dirname, 'src/**/*.vue'),
       ],
     }),
     svgLoader({
