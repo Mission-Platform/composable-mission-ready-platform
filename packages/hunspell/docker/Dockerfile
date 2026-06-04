@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM emscripten/emsdk:5.0.7-arm64 AS build
+FROM emscripten/emsdk:5.0.7 AS build
 
 # System deps needed to build Hunspell from source + ccache for compiler caching
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \

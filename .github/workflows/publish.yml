@@ -40,6 +40,9 @@ jobs:
           registry-url: https://npm.pkg.github.com
           scope: "@mission-platform"
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
