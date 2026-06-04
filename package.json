@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "scripts": {
     "build:config": "pnpm --filter @mission-platform/eslint-config --filter @mission-platform/prettier-config --filter @mission-platform/stylelint-config --filter @mission-platform/postcss-config --parallel build",
-    "build:tokens": "pnpm --filter @mission-platform/tokens--parallel build",
+    "build:tokens": "pnpm --filter @mission-platform/tokens --parallel build",
     "build:icons": "pnpm --filter @mission-platform/icons --parallel build",
     "build:monaco": "pnpm --filter @mission-platform/hunspell --filter @mission-platform/harper --parallel build",
     "build:packages": "pnpm --filter @mission-platform/components --filter @mission-platform/breakpoints --filter @mission-platform/i18n --filter @mission-platform/map --parallel build",
