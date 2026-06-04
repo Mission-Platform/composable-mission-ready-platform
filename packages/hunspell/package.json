@@ -5,19 +5,23 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "import": "./src/index.ts"
+      "types": "./dist/hunspell.d.ts",
+      "import": "./dist/hunspell.js"
     },
     "./worker": {
-      "types": "./src/hunspell.worker.ts",
-      "import": "./src/hunspell.worker.ts"
+      "types": "./dist/hunspell.worker.d.ts",
+      "import": "./dist/hunspell.worker.js"
     },
     "./src/dictionaries/*": "./src/dictionaries/*"
   },
+  "main": "./dist/hunspell.js",
+  "types": "./dist/hunspell.d.ts",
   "files": [
-    "src"
+    "dist",
+    "src/dictionaries"
   ],
   "scripts": {
+    "build": "vue-tsc -b && vite build && vue-tsc --project tsconfig.build.json --emitDeclarationOnly",
     "build:wasm": "bash build.sh",
     "build:wasm:clean": "bash build.sh --no-cache",
     "lint": "eslint .",
@@ -28,8 +32,11 @@
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
     "@types/node": "catalog:typescript",
+    "@vue/tsconfig": "catalog:vue",
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",
-    "typescript": "catalog:typescript"
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite",
+    "vue-tsc": "catalog:vue"
   }
 }

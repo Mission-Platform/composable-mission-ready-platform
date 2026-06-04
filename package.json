@@ -3,8 +3,11 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "build:packages": "pnpm --filter @mission-platform/tokens build && pnpm --filter @mission-platform/postcss-config build && pnpm --filter @mission-platform/icons build && pnpm --filter @mission-platform/components --filter @mission-platform/breakpoints --filter @mission-platform/i18n --filter @mission-platform/map build",
-    "build:apps": "pnpm --filter @mission-platform/storybook build && pnpm --filter @mission-platform/my-care-notes build",
+    "build:config": "pnpm --filter @mission-platform/eslint-config --filter @mission-platform/prettier-config --filter @mission-platform/stylelint-config --filter @mission-platform/postcss-config --parallel build",
+    "build:assets": "pnpm --filter @mission-platform/tokens --filter @mission-platform/icons --parallel build",
+    "build:packages": "pnpm --filter @mission-platform/components --filter @mission-platform/breakpoints --filter @mission-platform/i18n --filter @mission-platform/map --filter @mission-platform/hunspell --parallel build",
+    "build:apps": "pnpm --filter @mission-platform/storybook --filter @mission-platform/my-care-notes --parallel build",
+    "build": "pnpm build:config && pnpm build:assets && pnpm build:packages && pnpm build:apps",
     "lint": "pnpm -r --parallel run lint",
     "lint:fix": "pnpm -r --parallel run lint --fix",
     "lint:style": "pnpm -r --parallel run lint:style",

@@ -69,4 +69,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /** GeoJSON source with three US city locations rendered as circle layers. */
-export const Default: Story = {};
+export const Default: Story = {
+  args: {
+    id: 'default',
+    source: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+  },
+};

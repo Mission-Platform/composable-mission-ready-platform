@@ -18,7 +18,7 @@ export default defineConfig({
   plugins: [
     vue(),
     VueI18nPlugin({
-      include: [path.resolve(dirname, 'src/**/*.vue')],
+      include: [path.resolve(dirname, '../../packages/*/src/**/*.{json,yaml,yml}')],
     }),
     VitePWA({
       registerType: 'autoUpdate',

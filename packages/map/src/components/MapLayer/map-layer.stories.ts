@@ -64,4 +64,8 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /** A line layer tracing a cross-country route across the USA. */
-export const Default: Story = {};
+export const Default: Story = {
+  args: {
+    layer: { id: 'default', type: 'background' },
+  },
+};
