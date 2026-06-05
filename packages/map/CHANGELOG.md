@@ -1,5 +1,20 @@
 # @mission-platform/map
 
+## 0.1.3
+
+### Patch Changes
+
+- 5dee755: docs(map): add Storybook stories for all map components
+
+  Add stories for MapLibre, MapLayer, MapMarker, MapPopup, and MapSource
+  components with realistic args and controls so each component is browsable
+  and visually testable in the Storybook catalogue.
+
+- Updated dependencies [ee616a0]
+- Updated dependencies [8687deb]
+  - @mission-platform/icons@0.1.2
+  - @mission-platform/components@0.2.1
+
 ## 0.1.2
 
 ### Patch Changes
