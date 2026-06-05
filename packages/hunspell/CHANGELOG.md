@@ -1,5 +1,11 @@
 # @mission-platform/hunspell
 
+## 0.2.1
+
+### Patch Changes
+
+- 40b0054: fix build script to exclude wasm build step from default build
+
 ## 0.2.0
 
 ### Minor Changes
