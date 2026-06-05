@@ -200,10 +200,6 @@
           :key="day"
           :class="['base-scheduler-time-grid__column', { 'base-scheduler-time-grid__column--today': day === todayIso }]"
           :data-scheduler-day="day"
-          role="button"
-          tabindex="0"
-          @click="onColumnClick($event, day)"
-          @keydown="onColumnKeydown($event, day)"
         >
           <!-- Hour grid lines -->
           <div
@@ -234,6 +230,14 @@
             class="base-scheduler-time-grid__now-line"
             :style="{ top: nowTop }"
             aria-hidden="true"
+          />
+
+          <!-- Slot-click target: sits behind events, provides accessible button for adding events -->
+          <button
+            class="base-scheduler-time-grid__slot-btn"
+            :aria-label="`Add event on ${new Date(day + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}`"
+            @click="onColumnClick($event, day)"
+            @keydown="onColumnKeydown($event, day)"
           />
         </div>
       </div>
@@ -349,6 +353,24 @@
 
       &--today {
         background-color: var(--mp-color-primary-50, rgb(244 240 255 / 30%));
+      }
+    }
+
+    &__slot-btn {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      border: none;
+      padding: 0;
+      margin: 0;
+      cursor: cell;
+      z-index: 0;
+
+      &:focus-visible {
+        outline: 2px solid var(--mp-color-border-focus);
+        outline-offset: -2px;
       }
     }
 

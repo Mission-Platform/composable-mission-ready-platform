@@ -112,6 +112,80 @@
     return weeks;
   });
 
+  // ─── Colour-contrast utilities (WCAG AAA) ───────────────────────────────────
+
+  function hexToRgb(hex: string): [number, number, number] | null {
+    const clean = hex.replace('#', '');
+    if (clean.length === 3) {
+      return [
+        parseInt(clean[0] + clean[0], 16),
+        parseInt(clean[1] + clean[1], 16),
+        parseInt(clean[2] + clean[2], 16),
+      ];
+    }
+    if (clean.length === 6) {
+      return [
+        parseInt(clean.substring(0, 2), 16),
+        parseInt(clean.substring(2, 4), 16),
+        parseInt(clean.substring(4, 6), 16),
+      ];
+    }
+    return null;
+  }
+
+  function relativeLuminance(rgb: [number, number, number]): number {
+    const [r, g, b] = rgb.map((c) => {
+      const s = c / 255;
+      return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+    }) as [number, number, number];
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  }
+
+  function contrastRatio(l1: number, l2: number): number {
+    const lighter = Math.max(l1, l2);
+    const darker = Math.min(l1, l2);
+    return (lighter + 0.05) / (darker + 0.05);
+  }
+
+  /**
+   * Alpha-blends a hex colour against a solid background (default white)
+   * at the given alpha to produce the solid hex the eye actually sees.
+   */
+  function alphaBlend(hex: string, alpha: number, bgHex: string = '#ffffff'): string {
+    const fg = hexToRgb(hex);
+    const bg = hexToRgb(bgHex);
+    if (!fg || !bg) return hex;
+    const r = Math.round(fg[0] * alpha + bg[0] * (1 - alpha));
+    const g = Math.round(fg[1] * alpha + bg[1] * (1 - alpha));
+    const b = Math.round(fg[2] * alpha + bg[2] * (1 - alpha));
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  }
+
+  /**
+   * Returns `#1a1a1a` (near-black) or `#ffffff` (white) — whichever achieves
+   * the higher contrast ratio against `bgHex`. Falls back to `#1a1a1a` when
+   * the background is a CSS variable (not a parseable hex string).
+   */
+  function accessibleTextColor(bgHex: string | undefined): string {
+    if (!bgHex) return '#ffffff';
+    const rgb = hexToRgb(bgHex);
+    if (!rgb) return '#ffffff';
+    const bgL = relativeLuminance(rgb);
+    const whiteContrast = contrastRatio(1.0, bgL);
+    const blackContrast = contrastRatio(0.0, bgL);
+    return blackContrast >= whiteContrast ? '#1a1a1a' : '#ffffff';
+  }
+
+  /**
+   * Returns the effective background hex for an event pill, accounting for
+   * other-month dimming (alpha = 0.4 over white = the cell background colour).
+   */
+  function pillBgColor(eventColor: string | undefined, isCurrentMonth: boolean): string | undefined {
+    if (!eventColor) return undefined;
+    if (!isCurrentMonth) return alphaBlend(eventColor, 0.4);
+    return eventColor;
+  }
+
   // ─── Month/year label ──────────────────────────────────────────────────────
 
   const monthLabel = computed(() => props.anchor.toLocaleDateString(undefined, { month: 'long', year: 'numeric' }));
@@ -178,7 +252,10 @@
             variant="ghost"
             size="sm"
             class="base-scheduler-month-view__event-pill"
-            :style="{ backgroundColor: ev.color ?? 'var(--mp-color-primary-default)' }"
+            :style="{
+              backgroundColor: pillBgColor(ev.color, cell.isCurrentMonth) ?? 'var(--mp-color-primary-default)',
+              color: accessibleTextColor(pillBgColor(ev.color, cell.isCurrentMonth)),
+            }"
             :title="`${ev.summary ?? '(no title)'} · ${formatDuration(ev)}`"
             @click.stop="emit('event-click', ev)"
           >
@@ -253,7 +330,14 @@
       transition: background 0.1s ease;
 
       &--other-month {
-        opacity: 0.4;
+        // No element-level opacity — it would also fade event pill text and break
+        // WCAG AAA. Instead, visual dimming is achieved by the muted background
+        // and the day-number colour token below.
+        background: var(--mp-color-bg-muted, #f5f5f5);
+
+        .base-scheduler-month-view__day-number {
+          color: var(--mp-color-text-disabled, #9e9ca4);
+        }
       }
 
       &:last-child {
@@ -301,7 +385,8 @@
       min-height: 0;
     }
 
-    // The event pill overrides BaseButton to show the event colour as background
+    // The event pill overrides BaseButton to show the event colour as background.
+    // Text colour is set via inline style (accessibleTextColor) for WCAG AAA.
     &__event-pill {
       @include mp.mp-font-caption;
 
@@ -310,18 +395,16 @@
       justify-content: flex-start;
       border-radius: var(--mp-radius-xs, 2px);
       padding: 1px var(--mp-spacing-1);
-      color: var(--mp-color-text-on-primary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
 
-      // Inline style sets backgroundColor; override BaseButton ghost defaults
+      // Inline style sets backgroundColor and color; override BaseButton ghost defaults
       &.base-button--ghost {
-        color: var(--mp-color-text-on-primary);
-
         &:hover {
           filter: brightness(0.9);
           background: inherit; // keep the event colour on hover
+          color: inherit; // keep the computed accessible text colour on hover
         }
       }
     }
