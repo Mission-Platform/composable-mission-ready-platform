@@ -216,7 +216,7 @@ describe('resolveSlashCommand', () => {
     const result = resolveSlashCommand('nonexistent');
 
     // Assert
-    expect(result).toBeNull();
+    expect(result).toBeUndefined();
   });
 });
 
