@@ -205,6 +205,33 @@ export type { TimeRangeInputSize, TimeRange } from './components/base-time-range
 export { default as BaseDateTimeRangeInput } from './components/base-date-time-range-input';
 export type { DateTimeRangeInputSize, DateTimeRange, TimezoneMode } from './components/base-date-time-range-input';
 
+export { default as BaseColorInput } from './components/base-color-input';
+export type { ColorInputSize } from './components/base-color-input';
+
+// ─── Scheduler ────────────────────────────────────────────────────────────────
+
+export { default as BaseScheduler } from './components/base-scheduler';
+export { default as BaseSchedulerEvent } from './components/base-scheduler/base-scheduler-event.vue';
+export { default as BaseSchedulerTimeGrid } from './components/base-scheduler/base-scheduler-time-grid.vue';
+export { default as BaseSchedulerMonthView } from './components/base-scheduler/base-scheduler-month-view.vue';
+export { default as BaseSchedulerYearView } from './components/base-scheduler/base-scheduler-year-view.vue';
+export { default as BaseSchedulerEventDialog } from './components/base-scheduler/base-scheduler-event-dialog.vue';
+export { useScheduler } from './components/base-scheduler/use-scheduler';
+export type { SchedulerInstance } from './components/base-scheduler/use-scheduler';
+export type {
+  VEvent,
+  VEventStatus,
+  VEventClass,
+  VEventTransp,
+  VEventAttendee,
+  VAlarm,
+  RRule,
+  RRuleFreq,
+  RRuleWeekday,
+  SchedulerView,
+  SchedulerEventSlot,
+} from './components/base-scheduler/types';
+
 // ─── Code ─────────────────────────────────────────────────────────────────────
 
 export { default as BaseCodeBlock } from './components/base-code-block';
@@ -221,3 +248,5 @@ export type { Theme } from './components/base-theme-toggle';
 // ─── Composables ──────────────────────────────────────────────────────────────
 
 export { useRouterClose } from './composables/use-router-close';
+export { useZIndex, ZLayer } from './composables/use-z-index';
+export type { ZLayerName } from './composables/use-z-index';

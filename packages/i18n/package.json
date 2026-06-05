@@ -13,10 +13,6 @@
     ".": {
       "types": "./src/index.ts",
       "import": "./dist/i18n.js"
-    },
-    "./locales": {
-      "types": "./src/locales/index.ts",
-      "import": "./dist/locales.js"
     }
   },
   "scripts": {
@@ -24,7 +20,6 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "i18n:compile": "intlify compile -s src/locales/en.yaml -o dist/locales",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
@@ -33,10 +28,9 @@
     "vue-i18n": "^11.0.0"
   },
   "devDependencies": {
-    "@intlify/cli": "catalog:vue",
-    "@intlify/unplugin-vue-i18n": "catalog:vue",
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
+    "@intlify/unplugin-vue-i18n": "catalog:vue",
     "@vitejs/plugin-vue": "catalog:vue",
     "@vitest/coverage-v8": "catalog:testing",
     "@vue/tsconfig": "catalog:vue",

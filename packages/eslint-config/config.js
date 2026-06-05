@@ -81,6 +81,9 @@ const config = [
       'vue/component-api-style': ['error', ['script-setup']],
       'vue/define-macros-order': ['error', { order: ['defineOptions', 'defineProps', 'defineEmits', 'defineSlots'] }],
       'vue/html-self-closing': ['error', { html: { void: 'always', normal: 'always', component: 'always' } }],
+      // Disabled: conflicts with Prettier's htmlWhitespaceSensitivity: 'ignore' setting, which
+      // collapses short single-line elements. Prettier is the source of truth for formatting.
+      'vue/singleline-html-element-content-newline': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
@@ -153,51 +156,20 @@ const config = [
     files: ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.js', '**/*.mjs', '**/*.cjs'],
   },
   // ── vue-i18n ───────────────────────────────────────────────────────────────
-  // Spread the recommended flat config, then add settings pointing at YAML
-  // locale files so the plugin can resolve keys for no-missing-keys etc.
-  // Skip entries that target locale JSON/YAML files with a non-vue sub-parser
-  // (jsonc-eslint-parser, yaml-eslint-parser) — those entries must not be
-  // remapped to **/*.vue because they would override the TypeScript sub-parser
-  // that vue-eslint-parser needs, causing "Cannot read properties of undefined
-  // (reading 'arguments')" parse errors on every .vue file.
-  ...pluginVueI18n.configs['flat/recommended']
-    .filter((cfg) => {
-      const subParserName =
-        cfg.languageOptions?.parserOptions?.parser?.meta?.name ||
-        cfg.languageOptions?.parserOptions?.parser?.name ||
-        '';
-      // Drop locale-file parser configs (jsonc / yaml sub-parsers).
-      return (
-        !subParserName || subParserName.includes('vue-eslint-parser') || subParserName.includes('typescript-eslint')
-      );
-    })
-    .map((cfg) => {
-      // Configs that set vue-eslint-parser must only apply to .vue files;
-      // applying them to .ts/.tsx files overrides @typescript-eslint/parser
-      // and breaks rules that require type information (e.g. consistent-type-imports).
-      const parserName = cfg.languageOptions?.parser?.meta?.name || cfg.languageOptions?.parser?.name || '';
-      const files = parserName.includes('vue-eslint-parser') ? ['**/*.vue'] : ['**/*.ts', '**/*.tsx', '**/*.vue'];
-      return {
-        ...cfg,
-        files,
-        settings: {
-          ...cfg.settings,
-          'vue-i18n': {
-            localeDir: './src/locales/*.{yaml,yml}',
-            messageSyntaxVersion: '^9.0.0',
-          },
-        },
-      };
-    }),
-  // ── component-library overrides ───────────────────────────────────────────
-  // Component packages ship raw UI text intentionally (e.g. 'Done', 'Copy',
-  // 'HH', '%'). They are not vue-i18n consumer apps, so the raw-text rule
-  // is not applicable and is disabled here.
+  // All i18n strings live in SFC-local <i18n> blocks — there are no external
+  // locale JSON/YAML files. Apply only the rules that are relevant to .vue
+  // and .ts/.tsx files; skip the jsonc/yaml sub-parser entries from
+  // flat/recommended to avoid "Unexpected token '<'" parse errors.
   {
-    name: 'mission-platform/i18n-overrides',
+    name: 'mission-platform/vue-i18n',
     files: ['**/*.vue', '**/*.ts', '**/*.tsx'],
+    plugins: { '@intlify/vue-i18n': pluginVueI18n },
+    settings: {
+      'vue-i18n': { messageSyntaxVersion: '^9.0.0' },
+    },
     rules: {
       '@intlify/vue-i18n/no-raw-text': 'off',
+      '@intlify/vue-i18n/no-missing-keys': 'off',
     },
   },
 ];

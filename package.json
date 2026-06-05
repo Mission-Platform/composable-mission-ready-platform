@@ -2,6 +2,7 @@
   "name": "mission-platform",
   "private": true,
   "version": "0.1.0",
+  "type": "module",
   "scripts": {
     "build:config": "pnpm --filter @mission-platform/eslint-config --filter @mission-platform/prettier-config --filter @mission-platform/stylelint-config --filter @mission-platform/postcss-config --parallel build",
     "build:tokens": "pnpm --filter @mission-platform/tokens --parallel build",
@@ -15,10 +16,14 @@
     "lint:style": "pnpm -r --parallel run lint:style",
     "lint:style:fix": "pnpm -r --parallel run lint:style --fix",
     "format": "pnpm -r --parallel run format",
-    "storybook": "pnpm --filter @mission-platform/storybook storybook"
+    "storybook": "pnpm --filter @mission-platform/storybook storybook",
+    "i18n:extract": "node --experimental-strip-types scripts/i18n-extract.ts"
   },
   "devDependencies": {
-    "@changesets/cli": "catalog:"
+    "@changesets/cli": "catalog:",
+    "@types/js-yaml": "catalog:",
+    "@vue/compiler-sfc": "catalog:",
+    "js-yaml": "catalog:"
   },
   "packageManager": "pnpm@11.5.0+sha512.dbfcc4f81cf48597afd4bc391ffdf12c11f1a9fb83a395bfa6b0a2d9cc2fd8ffebafdb1ccbd529632153f793904c2615b7f09fe1a345473fd1c35845172a8eb1"
 }

@@ -5,7 +5,6 @@
 ### Patch Changes
 
 - b5bbd19: add harper grammar and style checker package and integrate into monaco editor
-
   - add new `@mission-platform/harper` package providing Harper grammar/style checker integration for Monaco editor via `useHarperMonaco` composable
   - integrate `useHarperMonaco` into `base-monaco-editor` alongside the existing Hunspell spell-checker
   - add `@mission-platform/harper` as a dependency to `@mission-platform/components` and `@mission-platform/my-care-notes`

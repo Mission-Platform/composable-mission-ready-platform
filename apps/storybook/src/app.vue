@@ -21,6 +21,8 @@
 
   import type { DrawMode, DrawnFeature } from '@mission-platform/map';
 
+  defineOptions({ name: 'MapShowcase' });
+
   const MAP_STYLE = 'https://demotiles.maplibre.org/style.json';
 
   const { t } = useI18n({ useScope: 'local' });

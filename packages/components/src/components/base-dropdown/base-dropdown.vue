@@ -2,6 +2,8 @@
   import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue';
   import { ref, watch } from 'vue';
 
+  import { useZIndex } from '../../composables/use-z-index';
+
   export type DropdownPlacement = 'bottom-start' | 'bottom-end' | 'bottom' | 'top-start' | 'top-end' | 'top';
 
   const props = withDefaults(
@@ -25,6 +27,8 @@
     'update:open': [value: boolean];
     close: [];
   }>();
+
+  const { zIndex } = useZIndex('dropdown');
 
   const referenceEl = ref<HTMLElement | null>(null);
   const floatingEl = ref<HTMLElement | null>(null);
@@ -71,6 +75,7 @@
         ref="floatingEl"
         :style="{
           ...floatingStyles,
+          zIndex,
           maxHeight,
           minWidth: matchTriggerWidth && referenceEl?.offsetWidth ? `${referenceEl?.offsetWidth}px` : undefined,
         }"
@@ -96,7 +101,6 @@
 
   .base-dropdown {
     position: fixed;
-    z-index: 200;
     margin: 0;
     padding: var(--mp-spacing-1) 0;
     background-color: var(--mp-color-bg-surface);

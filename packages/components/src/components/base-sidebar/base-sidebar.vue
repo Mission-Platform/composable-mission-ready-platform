@@ -2,6 +2,7 @@
   import { useI18n } from '@mission-platform/i18n';
 
   import { useRouterClose } from '../../composables/use-router-close';
+  import { useZIndex } from '../../composables/use-z-index';
 
   import BaseSidebarBody from './base-sidebar-body.vue';
   import BaseSidebarFooter from './base-sidebar-footer.vue';
@@ -35,6 +36,7 @@
   }>();
 
   const { t } = useI18n({ useScope: 'local' });
+  const { zIndex } = useZIndex('popover');
 
   function handleClose() {
     emit('update:open', false);
@@ -51,6 +53,7 @@
     <Transition name="base-sidebar-fade">
       <div
         v-if="open"
+        :style="{ zIndex }"
         aria-hidden="true"
         class="base-sidebar-backdrop"
         @click="closeOnBackdrop && handleClose()"
@@ -61,6 +64,7 @@
         v-if="open"
         :aria-label="title"
         :class="['base-sidebar', `base-sidebar--${side}`, `base-sidebar--${size}`]"
+        :style="{ zIndex: zIndex + 1 }"
       >
         <BaseSidebarHeader
           v-if="title || $slots.header"
@@ -93,14 +97,12 @@
     position: fixed;
     inset: 0;
     background-color: var(--mp-color-bg-scrim-soft);
-    z-index: 400;
   }
 
   .base-sidebar {
     position: fixed;
     top: 0;
     bottom: 0;
-    z-index: 401;
     background-color: var(--mp-color-bg-surface);
     box-shadow: var(--mp-shadow-xl);
     display: flex;

@@ -9,17 +9,11 @@ export default defineConfig({
   css: {
     postcss: postcssConfig,
   },
-  plugins: [
-    vue(),
-    VueI18nPlugin({
-      include: [path.resolve(__dirname, 'src/locales/**/*.yaml')],
-    }),
-  ],
+  plugins: [vue(), VueI18nPlugin({ include: [] })],
   build: {
     lib: {
       entry: {
         ui: path.resolve(__dirname, 'src/index.ts'),
-        locales: path.resolve(__dirname, 'src/locales/index.ts'),
       },
       name: 'MissionPlatformUi',
       formats: ['es'],

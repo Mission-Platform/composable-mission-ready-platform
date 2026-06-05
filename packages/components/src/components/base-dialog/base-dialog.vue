@@ -3,6 +3,7 @@
   import { ref, watch } from 'vue';
 
   import { useRouterClose } from '../../composables/use-router-close';
+  import { useZIndex } from '../../composables/use-z-index';
 
   import BaseDialogBody from './base-dialog-body.vue';
   import BaseDialogFooter from './base-dialog-footer.vue';
@@ -29,6 +30,7 @@
   }>();
 
   const { t } = useI18n({ useScope: 'local' });
+  const { zIndex } = useZIndex('modal');
 
   const dialogRef = ref<HTMLDialogElement | undefined>(undefined);
 
@@ -60,36 +62,39 @@
 </script>
 
 <template>
-  <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
-  <dialog
-    ref="dialogRef"
-    class="base-dialog"
-    @close="handleClose"
-    @keydown="handleBackdropKeydown"
-    @click.self="props.closeOnBackdrop && handleClose()"
-  >
-    <div class="base-dialog__panel">
-      <BaseDialogHeader
-        v-if="title || $slots.header"
-        :close-label="t('close')"
-        :title="title"
-        @close="handleClose"
-      >
-        <template
-          v-if="$slots.header"
-          #default
+  <Teleport to="body">
+    <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
+    <dialog
+      ref="dialogRef"
+      :style="{ zIndex }"
+      class="base-dialog"
+      @close="handleClose"
+      @keydown="handleBackdropKeydown"
+      @click.self="props.closeOnBackdrop && handleClose()"
+    >
+      <div class="base-dialog__panel">
+        <BaseDialogHeader
+          v-if="title || $slots.header"
+          :close-label="t('close')"
+          :title="title"
+          @close="handleClose"
         >
-          <slot name="header" />
-        </template>
-      </BaseDialogHeader>
-      <BaseDialogBody>
-        <slot />
-      </BaseDialogBody>
-      <BaseDialogFooter v-if="$slots.footer">
-        <slot name="footer" />
-      </BaseDialogFooter>
-    </div>
-  </dialog>
+          <template
+            v-if="$slots.header"
+            #default
+          >
+            <slot name="header" />
+          </template>
+        </BaseDialogHeader>
+        <BaseDialogBody>
+          <slot />
+        </BaseDialogBody>
+        <BaseDialogFooter v-if="$slots.footer">
+          <slot name="footer" />
+        </BaseDialogFooter>
+      </div>
+    </dialog>
+  </Teleport>
 </template>
 
 <style lang="scss" scoped>

@@ -22,6 +22,8 @@
 
   import type { Snippet } from './types';
 
+  defineOptions({ name: 'MyCareNotesApp' });
+
   const {
     activeTabId,
     openTabs,

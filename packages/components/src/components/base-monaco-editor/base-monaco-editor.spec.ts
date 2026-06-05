@@ -26,6 +26,7 @@ const {
   onDidBlurEditorTextListeners,
   onDidFocusEditorTextListeners,
   mockEditorInstance,
+  MarkerSeverity,
 } = vi.hoisted(() => {
   const onDidChangeModelContentListeners: Array<() => void> = [];
   const onDidBlurEditorTextListeners: Array<() => void> = [];
@@ -63,6 +64,8 @@ const {
 
   const mockCreate = vi.fn(() => mockEditorInstance);
 
+  const MarkerSeverity = { Error: 8, Warning: 4, Info: 2, Hint: 1 };
+
   return {
     mockDispose,
     mockSetValue,
@@ -78,6 +81,7 @@ const {
     onDidBlurEditorTextListeners,
     onDidFocusEditorTextListeners,
     mockEditorInstance,
+    MarkerSeverity,
   };
 });
 
@@ -90,6 +94,7 @@ vi.mock('monaco-editor', () => ({
   languages: {
     registerCompletionItemProvider: mockRegisterCompletionItemProvider,
   },
+  MarkerSeverity,
 }));
 
 const { mockUseHunspellMonaco } = vi.hoisted(() => ({

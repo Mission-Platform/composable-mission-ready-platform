@@ -10,7 +10,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/**/*.ts', 'src/**/*.vue'],
-      exclude: ['src/**/*.stories.*', 'src/index.ts', 'src/locales/index.ts'],
+      exclude: ['src/**/*.stories.*', 'src/index.ts'],
     },
   },
 });

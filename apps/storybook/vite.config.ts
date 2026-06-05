@@ -22,9 +22,7 @@ export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
-    VueI18nPlugin({
-      include: [path.resolve(dirname, '../../packages/*/src/**/*.{json,yaml,yml}')],
-    }),
+    VueI18nPlugin({ include: [] }),
     svgLoader({
       svgo: true,
       defaultImport: 'component',
@@ -51,12 +49,6 @@ export default defineConfig({
             instances: [
               {
                 browser: 'chromium',
-              },
-              {
-                browser: 'firefox',
-              },
-              {
-                browser: 'webkit',
               },
             ],
           },

@@ -23,8 +23,21 @@ The project uses the following core technologies:
 ```
 composable_mission_ready_platform/
 ├── apps/                   # Deployable applications
+│   ├── my-care-notes/      # My Care Notes Vue 3 app — note-taking with spell/grammar checking
 │   └── storybook/          # Storybook app — component catalogue & visual tests
 ├── packages/               # Shared, reusable packages consumed by apps
+│   ├── breakpoints/        # Responsive breakpoint utilities, composables, and Vue components
+│   ├── components/         # Vue 3 component library
+│   ├── eslint-config/      # Base ESLint flat config
+│   ├── harper/             # Harper grammar checker integration for Monaco editor
+│   ├── hunspell/           # Hunspell spell checker compiled to WebAssembly
+│   ├── i18n/               # vue-i18n integration utilities and base locales
+│   ├── icons/              # SVG icon components
+│   ├── map/                # MapLibre GL Vue 3 wrapper
+│   ├── postcss-config/     # Shared PostCSS configuration
+│   ├── prettier-config/    # Base Prettier config
+│   ├── stylelint-config/   # Base Stylelint config
+│   └── tokens/             # CSS design tokens and SCSS theme definitions
 ├── package.json            # Root workspace manifest (private, tooling only)
 ├── pnpm-workspace.yaml     # pnpm workspace configuration
 └── AGENTS.md               # This file
@@ -48,6 +61,7 @@ The `apps/` folder contains every deployable application in the platform. Each a
 
 | App | Path | Description |
 |---|---|---|
+| `@mission-platform/my-care-notes` | `apps/my-care-notes` | Vue 3 note-taking app with spell checking (Hunspell/WebAssembly), grammar checking (Harper), Monaco editor, vue-i18n, and Cloudflare Pages deployment |
 | `@mission-platform/storybook` | `apps/storybook` | Storybook instance for developing, documenting, and visually testing Vue components sourced from `packages/` |
 
 ---
@@ -69,11 +83,20 @@ The `packages/` folder contains all reusable libraries that apps consume. These 
 
 | Package | Path | Description |
 |---|---|---|
-| `@mission-platform/prettier-config` | `packages/prettier-config` | Base Prettier config — print width, quotes, trailing commas, Vue indent |
+| `@mission-platform/breakpoints` | `packages/breakpoints` | Responsive breakpoint utilities, composables, and Vue components |
+| `@mission-platform/components` | `packages/components` | Vue 3 component library |
 | `@mission-platform/eslint-config` | `packages/eslint-config` | Base ESLint flat config — TypeScript, Vue 3 (script setup), JS rules |
+| `@mission-platform/harper` | `packages/harper` | Harper grammar and style checker integration for Monaco editor |
+| `@mission-platform/hunspell` | `packages/hunspell` | Hunspell spell checker compiled to WebAssembly via Emscripten |
+| `@mission-platform/i18n` | `packages/i18n` | vue-i18n integration utilities and compiled base locales |
+| `@mission-platform/icons` | `packages/icons` | SVG icon components for Mission Platform |
+| `@mission-platform/map` | `packages/map` | MapLibre GL Vue 3 wrapper with full reactivity support |
+| `@mission-platform/postcss-config` | `packages/postcss-config` | Shared PostCSS configuration for all packages and apps |
+| `@mission-platform/prettier-config` | `packages/prettier-config` | Base Prettier config — print width, quotes, trailing commas, Vue indent |
 | `@mission-platform/stylelint-config` | `packages/stylelint-config` | Base Stylelint config — standard SCSS + Vue SFC style blocks, BEM class naming |
+| `@mission-platform/tokens` | `packages/tokens` | CSS design tokens and SCSS theme definitions |
 
-All other packages and apps **must** extend these three configs rather than defining their own from scratch.
+All other packages and apps **must** extend the three linting/formatting configs rather than defining their own from scratch.
 
 ```js
 // eslint.config.js in any package or app
@@ -89,13 +112,21 @@ import baseConfig from '@mission-platform/stylelint-config'
 export default { ...baseConfig }
 ```
 
+Where applicable, also extend `@mission-platform/postcss-config`:
+
+```js
+// postcss.config.js in any package or app that uses PostCSS
+import baseConfig from '@mission-platform/postcss-config'
+export default { ...baseConfig }
+```
+
 ---
 
 ### Adding a new package
 
 1. Create a new directory: `packages/<package-name>/`.
 2. Initialise a `package.json` with `"name": "@mission-platform/<package-name>"`.
-3. Add `@mission-platform/eslint-config`, `@mission-platform/prettier-config`, and `@mission-platform/stylelint-config` as `devDependencies` and wire up the config files.
+3. Add `@mission-platform/eslint-config`, `@mission-platform/prettier-config`, `@mission-platform/stylelint-config`, and (where applicable) `@mission-platform/postcss-config` as `devDependencies` and wire up the config files.
 4. Build and export the package (e.g. via a `vite` library build or `tsc`).
 5. Reference it in any app that needs it: `"@mission-platform/<package-name>": "workspace:*"`.
 6. Add stories or tests in `apps/storybook` to document the new components/composables.
@@ -111,11 +142,22 @@ pnpm install
 # Run the Storybook development server (port 6006)
 pnpm --filter @mission-platform/storybook storybook
 
+# Run the My Care Notes dev server
+pnpm --filter @mission-platform/my-care-notes dev
+
 # Build all apps
 pnpm --filter "./apps/**" build
 
+# Build all packages
+pnpm --filter "./packages/**" build
+
 # Run tests across all workspaces
 pnpm --filter "./apps/**" test
+pnpm --filter "./packages/**" test
+
+# Deploy My Care Notes
+pnpm --filter @mission-platform/my-care-notes deploy:staging
+pnpm --filter @mission-platform/my-care-notes deploy:prod
 
 # Release packages with Changesets
 pnpm changeset        # describe changes

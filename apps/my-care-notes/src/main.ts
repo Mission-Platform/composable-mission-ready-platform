@@ -3,7 +3,6 @@ import '@mission-platform/tokens/scss/themes/light';
 import '@mission-platform/tokens/scss/themes/dark';
 import '@mission-platform/components/styles';
 
-import { locales as uiLocales } from '@mission-platform/components/locales';
 import HarperWorker from '@mission-platform/harper/worker?worker';
 import { createMpI18n } from '@mission-platform/i18n';
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
@@ -34,7 +33,4 @@ globalThis.HarperEnvironment = {
   getWorker: () => new HarperWorker(),
 };
 
-createApp(RouterView)
-  .use(router)
-  .use(createMpI18n({ modules: [uiLocales] }))
-  .mount('#app');
+createApp(RouterView).use(router).use(createMpI18n()).mount('#app');

@@ -3,6 +3,7 @@
   import { ref } from 'vue';
 
   import { useId } from '../../composables/use-id';
+  import { useZIndex } from '../../composables/use-z-index';
   import BaseTypography from '../base-typography/base-typography.vue';
 
   export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right';
@@ -22,6 +23,7 @@
   );
 
   const { id: tooltipId } = useId(undefined);
+  const { zIndex } = useZIndex('tooltip');
   const visible = ref(false);
   let showTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -94,7 +96,7 @@
         :id="tooltipId"
         ref="floatingEl"
         :class="['base-tooltip', `base-tooltip--${actualPlacement.split('-')[0]}`]"
-        :style="floatingStyles"
+        :style="{ ...floatingStyles, zIndex }"
         role="tooltip"
       >
         <BaseTypography
@@ -132,7 +134,6 @@
   .base-tooltip {
     @include mp.mp-font-caption;
 
-    z-index: 600;
     padding: var(--mp-spacing-1) var(--mp-spacing-3);
     background-color: var(--mp-color-text-primary);
     color: var(--mp-color-text-inverse);

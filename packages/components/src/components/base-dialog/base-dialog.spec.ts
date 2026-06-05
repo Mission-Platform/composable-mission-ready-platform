@@ -6,47 +6,57 @@ import BaseDialog from './base-dialog.vue';
 
 describe('BaseDialog', () => {
   it('renders a dialog element', () => {
-    const wrapper = mountWithI18n(BaseDialog, { props: { title: 'Test' } });
-    expect(wrapper.find('dialog').exists()).toBe(true);
+    const wrapper = mountWithI18n(BaseDialog, { props: { title: 'Test' }, attachTo: document.body });
+    expect(document.querySelector('dialog')).not.toBeNull();
+    wrapper.unmount();
   });
 
   it('renders title when provided', () => {
-    const wrapper = mountWithI18n(BaseDialog, { props: { title: 'My Dialog' } });
-    expect(wrapper.find('.base-dialog__title').text()).toBe('My Dialog');
+    const wrapper = mountWithI18n(BaseDialog, { props: { title: 'My Dialog' }, attachTo: document.body });
+    expect(document.querySelector('.base-dialog__title')?.textContent).toBe('My Dialog');
+    wrapper.unmount();
   });
 
   it('renders body slot content', () => {
     const wrapper = mountWithI18n(BaseDialog, {
       props: { title: 'Test' },
       slots: { default: 'Body text' },
+      attachTo: document.body,
     });
-    expect(wrapper.find('.base-dialog__body').text()).toContain('Body text');
+    expect(document.querySelector('.base-dialog__body')?.textContent).toContain('Body text');
+    wrapper.unmount();
   });
 
   it('renders footer slot when provided', () => {
     const wrapper = mountWithI18n(BaseDialog, {
       props: { title: 'Test' },
       slots: { footer: '<button>OK</button>' },
+      attachTo: document.body,
     });
-    expect(wrapper.find('.base-dialog__footer').exists()).toBe(true);
+    expect(document.querySelector('.base-dialog__footer')).not.toBeNull();
+    wrapper.unmount();
   });
 
   it('does not render footer when slot is absent', () => {
-    const wrapper = mountWithI18n(BaseDialog, { props: { title: 'Test' } });
-    expect(wrapper.find('.base-dialog__footer').exists()).toBe(false);
+    const wrapper = mountWithI18n(BaseDialog, { props: { title: 'Test' }, attachTo: document.body });
+    expect(document.querySelector('.base-dialog__footer')).toBeNull();
+    wrapper.unmount();
   });
 
   it('emits update:open false when close button is clicked', async () => {
-    const wrapper = mountWithI18n(BaseDialog, { props: { title: 'Test' } });
-    await wrapper.find('.base-dialog__close').trigger('click');
+    const wrapper = mountWithI18n(BaseDialog, { props: { title: 'Test' }, attachTo: document.body });
+    const closeButton = document.querySelector('.base-dialog__close') as HTMLButtonElement;
+    closeButton.click();
+    await wrapper.vm.$nextTick();
     expect(wrapper.emitted('update:open')).toEqual([[false]]);
+    wrapper.unmount();
   });
 
   it('emits close when route changes and closeOnRouteChange is true', async () => {
     const router = createTestRouter();
     const wrapper = mountWithI18n(
       BaseDialog,
-      { props: { open: true, title: 'Test', closeOnRouteChange: true } },
+      { props: { open: true, title: 'Test', closeOnRouteChange: true }, attachTo: document.body },
       router,
     );
     await router.push('/test-route');
@@ -59,7 +69,7 @@ describe('BaseDialog', () => {
     const router = createTestRouter();
     const wrapper = mountWithI18n(
       BaseDialog,
-      { props: { open: true, title: 'Test', closeOnRouteChange: false } },
+      { props: { open: true, title: 'Test', closeOnRouteChange: false }, attachTo: document.body },
       router,
     );
     await router.push('/another-route');

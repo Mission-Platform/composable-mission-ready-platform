@@ -9,7 +9,6 @@ export default defineConfig({
     lib: {
       entry: {
         map: path.resolve(__dirname, 'src/index.ts'),
-        locales: path.resolve(__dirname, 'src/locales/index.ts'),
       },
       name: 'MissionPlatformMap',
       formats: ['es'],

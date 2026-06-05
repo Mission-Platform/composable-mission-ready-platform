@@ -3,6 +3,7 @@
   import { watch } from 'vue';
 
   import { useRouterClose } from '../../composables/use-router-close';
+  import { useZIndex } from '../../composables/use-z-index';
 
   import BaseModalBody from './base-modal-body.vue';
   import BaseModalFooter from './base-modal-footer.vue';
@@ -35,6 +36,7 @@
   }>();
 
   const { t } = useI18n({ useScope: 'local' });
+  const { zIndex } = useZIndex('modal');
 
   watch(
     () => props.open,
@@ -66,6 +68,7 @@
     <Transition name="base-modal-fade">
       <div
         v-if="open"
+        :style="{ zIndex }"
         class="base-modal-overlay"
         role="presentation"
         @keydown="handleKeydown"
@@ -110,7 +113,6 @@
   .base-modal-overlay {
     position: fixed;
     inset: 0;
-    z-index: 500;
     background-color: var(--mp-color-bg-scrim);
     display: flex;
 

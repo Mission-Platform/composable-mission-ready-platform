@@ -8,10 +8,6 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/map.js"
     },
-    "./locales": {
-      "types": "./dist/locales/index.d.ts",
-      "import": "./dist/locales.js"
-    },
     "./styles": "./node_modules/maplibre-gl/dist/maplibre-gl.css"
   },
   "main": "./dist/map.js",

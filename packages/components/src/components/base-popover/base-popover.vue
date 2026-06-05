@@ -2,6 +2,8 @@
   import { arrow, autoUpdate, flip, offset as floatingOffset, shift, useFloating } from '@floating-ui/vue';
   import { ref, watch } from 'vue';
 
+  import { useZIndex } from '../../composables/use-z-index';
+
   export type PopoverPlacement =
     | 'top'
     | 'top-start'
@@ -38,6 +40,8 @@
     'update:open': [value: boolean];
     close: [];
   }>();
+
+  const { zIndex } = useZIndex('popover');
 
   // Floating UI refs
   const referenceEl = ref<HTMLElement | undefined>(undefined);
@@ -117,7 +121,7 @@
         ref="floatingEl"
         :aria-label="label"
         :data-placement="actualPlacement"
-        :style="floatingStyles"
+        :style="{ ...floatingStyles, zIndex }"
         class="base-popover"
       >
         <slot />
@@ -146,7 +150,6 @@
   }
 
   .base-popover {
-    z-index: 400;
     margin: 0;
     background-color: var(--mp-color-bg-surface);
     border: 1px solid var(--mp-color-border-default);

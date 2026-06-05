@@ -4,6 +4,7 @@
   import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
   import { useId } from '../../composables/use-id';
+  import { useZIndex } from '../../composables/use-z-index';
   import BaseTypography from '../base-typography/base-typography.vue';
 
   export type DateTimeRangeInputSize = 'sm' | 'md' | 'lg';
@@ -48,6 +49,7 @@
   }>();
 
   const { id: resolvedId } = useId(props.id);
+  const { zIndex } = useZIndex('inputPopover');
 
   const open = ref(false);
   const popoverRef = ref<HTMLElement | null>(null);
@@ -390,342 +392,332 @@
       </span>
     </button>
 
-    <div
-      v-show="open"
-      ref="popoverRef"
-      :aria-label="`${label ?? 'Date-time range'} picker`"
-      :style="floatingStyles"
-      class="base-dtr__popover"
-      role="dialog"
-    >
-      <!-- ── Timezone toggle ──────────────────────────────────────────── -->
-      <div class="base-dtr__tz-row">
-        <BaseTypography
-          as="span"
-          color="secondary"
-          variant="caption"
-        >
-          Timezone:
-        </BaseTypography>
-        <div
-          aria-label="Timezone selection"
-          class="base-dtr__tz-toggle"
-          role="group"
-        >
-          <button
-            :class="['base-dtr__tz-btn', { 'base-dtr__tz-btn--active': timezone === 'browser' }]"
-            type="button"
-            @click.stop="timezone !== 'browser' && toggleTimezone()"
-          >
-            <IconGlobe size="xs" />
-            {{ browserTimezoneLabel }}
-          </button>
-          <button
-            :class="['base-dtr__tz-btn', { 'base-dtr__tz-btn--active': timezone === 'utc' }]"
-            type="button"
-            @click.stop="timezone !== 'utc' && toggleTimezone()"
-          >
-            UTC
-          </button>
-        </div>
-      </div>
-
-      <!-- ── Phase hint ──────────────────────────────────────────────── -->
-      <div class="base-dtr__phase-hint">
-        <BaseTypography
-          as="span"
-          color="secondary"
-          variant="caption"
-        >
-          {{ phaseLabel }}
-        </BaseTypography>
-      </div>
-
-      <!-- ── Calendar panels ─────────────────────────────────────────── -->
-      <template v-if="showCalendar">
-        <div class="base-dtr__cal-panels">
-          <!-- Left -->
-          <div class="base-dtr__cal-panel">
-            <div class="base-dtr__cal-header">
-              <button
-                aria-label="Previous month"
-                class="base-dtr__nav-btn"
-                type="button"
-                @click.stop="prevMonth"
-              >
-                <IconChevron
-                  direction="left"
-                  size="xs"
-                />
-              </button>
-              <BaseTypography
-                as="span"
-                color="primary"
-                variant="label"
-              >
-                {{ leftLabel }}
-              </BaseTypography>
-              <span style="width: 28px" />
-            </div>
-            <div class="base-dtr__cal-grid">
-              <span
-                v-for="d in DAYS"
-                :key="`ld-${d}`"
-                class="base-dtr__weekday"
-              >
-                {{ d }}
-              </span>
-              <button
-                v-for="(cell, i) in leftDays"
-                :key="`l-${i}`"
-                :class="[
-                  'base-dtr__day',
-                  {
-                    'base-dtr__day--empty': !cell.day,
-                    'base-dtr__day--range-start': isRangeStart(cell.date),
-                    'base-dtr__day--range-end': isRangeEnd(cell.date),
-                    'base-dtr__day--in-range': isInRange(cell.date),
-                    'base-dtr__day--today': isToday(cell.date) && !isRangeStart(cell.date) && !isRangeEnd(cell.date),
-                  },
-                ]"
-                :disabled="!cell.day"
-                type="button"
-                @focusin="hoverDate = cell.date"
-                @focusout="hoverDate = null"
-                @mouseenter="hoverDate = cell.date"
-                @mouseleave="hoverDate = null"
-                @click.stop="handleDayClick(cell.date)"
-              >
-                {{ cell.day ?? '' }}
-              </button>
-            </div>
-          </div>
-
-          <div class="base-dtr__cal-sep" />
-
-          <!-- Right -->
-          <div class="base-dtr__cal-panel">
-            <div class="base-dtr__cal-header">
-              <span style="width: 28px" />
-              <BaseTypography
-                as="span"
-                color="primary"
-                variant="label"
-              >
-                {{ rightLabel }}
-              </BaseTypography>
-              <button
-                aria-label="Next month"
-                class="base-dtr__nav-btn"
-                type="button"
-                @click.stop="nextMonth"
-              >
-                <IconChevron
-                  direction="right"
-                  size="xs"
-                />
-              </button>
-            </div>
-            <div class="base-dtr__cal-grid">
-              <span
-                v-for="d in DAYS"
-                :key="`rd-${d}`"
-                class="base-dtr__weekday"
-              >
-                {{ d }}
-              </span>
-              <button
-                v-for="(cell, i) in rightDays"
-                :key="`r-${i}`"
-                :class="[
-                  'base-dtr__day',
-                  {
-                    'base-dtr__day--empty': !cell.day,
-                    'base-dtr__day--range-start': isRangeStart(cell.date),
-                    'base-dtr__day--range-end': isRangeEnd(cell.date),
-                    'base-dtr__day--in-range': isInRange(cell.date),
-                    'base-dtr__day--today': isToday(cell.date) && !isRangeStart(cell.date) && !isRangeEnd(cell.date),
-                  },
-                ]"
-                :disabled="!cell.day"
-                type="button"
-                @focusin="hoverDate = cell.date"
-                @focusout="hoverDate = null"
-                @mouseenter="hoverDate = cell.date"
-                @mouseleave="hoverDate = null"
-                @click.stop="handleDayClick(cell.date)"
-              >
-                {{ cell.day ?? '' }}
-              </button>
-            </div>
-          </div>
-        </div>
-      </template>
-
-      <!-- ── Start time picker ────────────────────────────────────────── -->
-      <template v-if="showStartTime">
-        <div class="base-dtr__time-section">
+    <Teleport to="body">
+      <div
+        v-show="open"
+        ref="popoverRef"
+        :aria-label="`${label ?? 'Date-time range'} picker`"
+        :style="{ ...floatingStyles, zIndex }"
+        class="base-dtr__popover"
+        role="dialog"
+      >
+        <!-- ── Timezone toggle ──────────────────────────────────────────── -->
+        <div class="base-dtr__tz-row">
           <BaseTypography
-            as="div"
-            class="base-dtr__time-date-label"
-            color="primary"
-            variant="label"
+            as="span"
+            color="secondary"
+            variant="caption"
           >
-            {{ startDate }} — Start time
+            Timezone:
           </BaseTypography>
-          <div class="base-dtr__time-columns">
-            <div class="base-dtr__time-col">
-              <div class="base-dtr__time-col-header">
-                HH
-              </div>
-              <div class="base-dtr__time-scroll">
+          <div
+            aria-label="Timezone selection"
+            class="base-dtr__tz-toggle"
+            role="group"
+          >
+            <button
+              :class="['base-dtr__tz-btn', { 'base-dtr__tz-btn--active': timezone === 'browser' }]"
+              type="button"
+              @click.stop="timezone !== 'browser' && toggleTimezone()"
+            >
+              <IconGlobe size="xs" />
+              {{ browserTimezoneLabel }}
+            </button>
+            <button
+              :class="['base-dtr__tz-btn', { 'base-dtr__tz-btn--active': timezone === 'utc' }]"
+              type="button"
+              @click.stop="timezone !== 'utc' && toggleTimezone()"
+            >
+              UTC
+            </button>
+          </div>
+        </div>
+
+        <!-- ── Phase hint ──────────────────────────────────────────────── -->
+        <div class="base-dtr__phase-hint">
+          <BaseTypography
+            as="span"
+            color="secondary"
+            variant="caption"
+          >
+            {{ phaseLabel }}
+          </BaseTypography>
+        </div>
+
+        <!-- ── Calendar panels ─────────────────────────────────────────── -->
+        <template v-if="showCalendar">
+          <div class="base-dtr__cal-panels">
+            <!-- Left -->
+            <div class="base-dtr__cal-panel">
+              <div class="base-dtr__cal-header">
                 <button
-                  v-for="h in hours"
-                  :key="`sh-${h}`"
-                  :class="['base-dtr__unit-btn', { 'base-dtr__unit-btn--active': startH === h }]"
+                  aria-label="Previous month"
+                  class="base-dtr__nav-btn"
                   type="button"
-                  @click.stop="setStartH(h)"
+                  @click.stop="prevMonth"
                 >
-                  {{ pad(h) }}
+                  <IconChevron
+                    direction="left"
+                    size="xs"
+                  />
+                </button>
+                <BaseTypography
+                  as="span"
+                  color="primary"
+                  variant="label"
+                >
+                  {{ leftLabel }}
+                </BaseTypography>
+                <span style="width: 28px" />
+              </div>
+              <div class="base-dtr__cal-grid">
+                <span
+                  v-for="d in DAYS"
+                  :key="`ld-${d}`"
+                  class="base-dtr__weekday"
+                >
+                  {{ d }}
+                </span>
+                <button
+                  v-for="(cell, i) in leftDays"
+                  :key="`l-${i}`"
+                  :class="[
+                    'base-dtr__day',
+                    {
+                      'base-dtr__day--empty': !cell.day,
+                      'base-dtr__day--range-start': isRangeStart(cell.date),
+                      'base-dtr__day--range-end': isRangeEnd(cell.date),
+                      'base-dtr__day--in-range': isInRange(cell.date),
+                      'base-dtr__day--today': isToday(cell.date) && !isRangeStart(cell.date) && !isRangeEnd(cell.date),
+                    },
+                  ]"
+                  :disabled="!cell.day"
+                  type="button"
+                  @focusin="hoverDate = cell.date"
+                  @focusout="hoverDate = null"
+                  @mouseenter="hoverDate = cell.date"
+                  @mouseleave="hoverDate = null"
+                  @click.stop="handleDayClick(cell.date)"
+                >
+                  {{ cell.day ?? '' }}
                 </button>
               </div>
             </div>
-            <span class="base-dtr__time-sep">:</span>
-            <div class="base-dtr__time-col">
-              <div class="base-dtr__time-col-header">
-                MM
-              </div>
-              <div class="base-dtr__time-scroll">
-                <button
-                  v-for="m in minutes"
-                  :key="`sm-${m}`"
-                  :class="['base-dtr__unit-btn', { 'base-dtr__unit-btn--active': startM === m }]"
-                  type="button"
-                  @click.stop="setStartM(m)"
+
+            <div class="base-dtr__cal-sep" />
+
+            <!-- Right -->
+            <div class="base-dtr__cal-panel">
+              <div class="base-dtr__cal-header">
+                <span style="width: 28px" />
+                <BaseTypography
+                  as="span"
+                  color="primary"
+                  variant="label"
                 >
-                  {{ pad(m) }}
+                  {{ rightLabel }}
+                </BaseTypography>
+                <button
+                  aria-label="Next month"
+                  class="base-dtr__nav-btn"
+                  type="button"
+                  @click.stop="nextMonth"
+                >
+                  <IconChevron
+                    direction="right"
+                    size="xs"
+                  />
+                </button>
+              </div>
+              <div class="base-dtr__cal-grid">
+                <span
+                  v-for="d in DAYS"
+                  :key="`rd-${d}`"
+                  class="base-dtr__weekday"
+                >
+                  {{ d }}
+                </span>
+                <button
+                  v-for="(cell, i) in rightDays"
+                  :key="`r-${i}`"
+                  :class="[
+                    'base-dtr__day',
+                    {
+                      'base-dtr__day--empty': !cell.day,
+                      'base-dtr__day--range-start': isRangeStart(cell.date),
+                      'base-dtr__day--range-end': isRangeEnd(cell.date),
+                      'base-dtr__day--in-range': isInRange(cell.date),
+                      'base-dtr__day--today': isToday(cell.date) && !isRangeStart(cell.date) && !isRangeEnd(cell.date),
+                    },
+                  ]"
+                  :disabled="!cell.day"
+                  type="button"
+                  @focusin="hoverDate = cell.date"
+                  @focusout="hoverDate = null"
+                  @mouseenter="hoverDate = cell.date"
+                  @mouseleave="hoverDate = null"
+                  @click.stop="handleDayClick(cell.date)"
+                >
+                  {{ cell.day ?? '' }}
                 </button>
               </div>
             </div>
-            <template v-if="showSeconds">
-              <span class="base-dtr__time-sep">:</span>
+          </div>
+        </template>
+
+        <!-- ── Start time picker ────────────────────────────────────────── -->
+        <template v-if="showStartTime">
+          <div class="base-dtr__time-section">
+            <BaseTypography
+              as="div"
+              class="base-dtr__time-date-label"
+              color="primary"
+              variant="label"
+            >
+              {{ startDate }} — Start time
+            </BaseTypography>
+            <div class="base-dtr__time-columns">
               <div class="base-dtr__time-col">
-                <div class="base-dtr__time-col-header">
-                  SS
-                </div>
+                <div class="base-dtr__time-col-header">HH</div>
                 <div class="base-dtr__time-scroll">
                   <button
-                    v-for="s in seconds"
-                    :key="`ss-${s}`"
-                    :class="['base-dtr__unit-btn', { 'base-dtr__unit-btn--active': startS === s }]"
+                    v-for="h in hours"
+                    :key="`sh-${h}`"
+                    :class="['base-dtr__unit-btn', { 'base-dtr__unit-btn--active': startH === h }]"
                     type="button"
-                    @click.stop="setStartS(s)"
+                    @click.stop="setStartH(h)"
                   >
-                    {{ pad(s) }}
+                    {{ pad(h) }}
                   </button>
                 </div>
               </div>
-            </template>
-          </div>
-          <div class="base-dtr__time-footer">
-            <button
-              class="base-dtr__next-btn"
-              type="button"
-              @click.stop="selectingPhase = 'end-time'"
-            >
-              Next: End time →
-            </button>
-          </div>
-        </div>
-      </template>
-
-      <!-- ── End time picker ──────────────────────────────────────────── -->
-      <template v-if="showEndTime">
-        <div class="base-dtr__time-section">
-          <BaseTypography
-            as="div"
-            class="base-dtr__time-date-label"
-            color="primary"
-            variant="label"
-          >
-            {{ endDate }} — End time
-          </BaseTypography>
-          <div class="base-dtr__time-columns">
-            <div class="base-dtr__time-col">
-              <div class="base-dtr__time-col-header">
-                HH
-              </div>
-              <div class="base-dtr__time-scroll">
-                <button
-                  v-for="h in hours"
-                  :key="`eh-${h}`"
-                  :class="['base-dtr__unit-btn', { 'base-dtr__unit-btn--active': endH === h }]"
-                  type="button"
-                  @click.stop="setEndH(h)"
-                >
-                  {{ pad(h) }}
-                </button>
-              </div>
-            </div>
-            <span class="base-dtr__time-sep">:</span>
-            <div class="base-dtr__time-col">
-              <div class="base-dtr__time-col-header">
-                MM
-              </div>
-              <div class="base-dtr__time-scroll">
-                <button
-                  v-for="m in minutes"
-                  :key="`em-${m}`"
-                  :class="['base-dtr__unit-btn', { 'base-dtr__unit-btn--active': endM === m }]"
-                  type="button"
-                  @click.stop="setEndM(m)"
-                >
-                  {{ pad(m) }}
-                </button>
-              </div>
-            </div>
-            <template v-if="showSeconds">
               <span class="base-dtr__time-sep">:</span>
               <div class="base-dtr__time-col">
-                <div class="base-dtr__time-col-header">
-                  SS
-                </div>
+                <div class="base-dtr__time-col-header">MM</div>
                 <div class="base-dtr__time-scroll">
                   <button
-                    v-for="s in seconds"
-                    :key="`es-${s}`"
-                    :class="['base-dtr__unit-btn', { 'base-dtr__unit-btn--active': endS === s }]"
+                    v-for="m in minutes"
+                    :key="`sm-${m}`"
+                    :class="['base-dtr__unit-btn', { 'base-dtr__unit-btn--active': startM === m }]"
                     type="button"
-                    @click.stop="setEndS(s)"
+                    @click.stop="setStartM(m)"
                   >
-                    {{ pad(s) }}
+                    {{ pad(m) }}
                   </button>
                 </div>
               </div>
-            </template>
+              <template v-if="showSeconds">
+                <span class="base-dtr__time-sep">:</span>
+                <div class="base-dtr__time-col">
+                  <div class="base-dtr__time-col-header">SS</div>
+                  <div class="base-dtr__time-scroll">
+                    <button
+                      v-for="s in seconds"
+                      :key="`ss-${s}`"
+                      :class="['base-dtr__unit-btn', { 'base-dtr__unit-btn--active': startS === s }]"
+                      type="button"
+                      @click.stop="setStartS(s)"
+                    >
+                      {{ pad(s) }}
+                    </button>
+                  </div>
+                </div>
+              </template>
+            </div>
+            <div class="base-dtr__time-footer">
+              <button
+                class="base-dtr__next-btn"
+                type="button"
+                @click.stop="selectingPhase = 'end-time'"
+              >
+                Next: End time →
+              </button>
+            </div>
           </div>
-          <div class="base-dtr__time-footer">
-            <button
-              class="base-dtr__back-btn"
-              type="button"
-              @click.stop="selectingPhase = 'start-time'"
+        </template>
+
+        <!-- ── End time picker ──────────────────────────────────────────── -->
+        <template v-if="showEndTime">
+          <div class="base-dtr__time-section">
+            <BaseTypography
+              as="div"
+              class="base-dtr__time-date-label"
+              color="primary"
+              variant="label"
             >
-              ← Back
-            </button>
-            <button
-              class="base-dtr__done-btn"
-              type="button"
-              @click.stop="
-                emitValue();
-                open = false;
-              "
-            >
-              Done
-            </button>
+              {{ endDate }} — End time
+            </BaseTypography>
+            <div class="base-dtr__time-columns">
+              <div class="base-dtr__time-col">
+                <div class="base-dtr__time-col-header">HH</div>
+                <div class="base-dtr__time-scroll">
+                  <button
+                    v-for="h in hours"
+                    :key="`eh-${h}`"
+                    :class="['base-dtr__unit-btn', { 'base-dtr__unit-btn--active': endH === h }]"
+                    type="button"
+                    @click.stop="setEndH(h)"
+                  >
+                    {{ pad(h) }}
+                  </button>
+                </div>
+              </div>
+              <span class="base-dtr__time-sep">:</span>
+              <div class="base-dtr__time-col">
+                <div class="base-dtr__time-col-header">MM</div>
+                <div class="base-dtr__time-scroll">
+                  <button
+                    v-for="m in minutes"
+                    :key="`em-${m}`"
+                    :class="['base-dtr__unit-btn', { 'base-dtr__unit-btn--active': endM === m }]"
+                    type="button"
+                    @click.stop="setEndM(m)"
+                  >
+                    {{ pad(m) }}
+                  </button>
+                </div>
+              </div>
+              <template v-if="showSeconds">
+                <span class="base-dtr__time-sep">:</span>
+                <div class="base-dtr__time-col">
+                  <div class="base-dtr__time-col-header">SS</div>
+                  <div class="base-dtr__time-scroll">
+                    <button
+                      v-for="s in seconds"
+                      :key="`es-${s}`"
+                      :class="['base-dtr__unit-btn', { 'base-dtr__unit-btn--active': endS === s }]"
+                      type="button"
+                      @click.stop="setEndS(s)"
+                    >
+                      {{ pad(s) }}
+                    </button>
+                  </div>
+                </div>
+              </template>
+            </div>
+            <div class="base-dtr__time-footer">
+              <button
+                class="base-dtr__back-btn"
+                type="button"
+                @click.stop="selectingPhase = 'start-time'"
+              >
+                ← Back
+              </button>
+              <button
+                class="base-dtr__done-btn"
+                type="button"
+                @click.stop="
+                  emitValue();
+                  open = false;
+                "
+              >
+                Done
+              </button>
+            </div>
           </div>
-        </div>
-      </template>
-    </div>
+        </template>
+      </div>
+    </Teleport>
 
     <BaseTypography
       v-if="error"
@@ -878,7 +870,6 @@
     /* Popover */
     &__popover {
       position: fixed;
-      z-index: 200;
       margin: 0;
       background: var(--mp-color-bg-surface);
       border: 1px solid var(--mp-color-border-default);

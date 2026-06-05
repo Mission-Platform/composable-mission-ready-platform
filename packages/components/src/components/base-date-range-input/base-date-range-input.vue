@@ -4,6 +4,7 @@
   import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
   import { useId } from '../../composables/use-id';
+  import { useZIndex } from '../../composables/use-z-index';
   import BaseTypography from '../base-typography/base-typography.vue';
 
   export type DateRangeInputSize = 'sm' | 'md' | 'lg';
@@ -48,6 +49,7 @@
   }>();
 
   const { id: resolvedId } = useId(props.id);
+  const { zIndex } = useZIndex('inputPopover');
 
   const open = ref(false);
   const calendarRef = ref<HTMLElement | null>(null);
@@ -277,146 +279,148 @@
       </span>
     </button>
 
-    <div
-      v-show="open"
-      ref="calendarRef"
-      :aria-label="`${label ?? 'Date range'} calendar`"
-      :style="floatingStyles"
-      class="base-date-range__calendar"
-      role="dialog"
-    >
-      <div class="base-date-range__hint">
-        <BaseTypography
-          as="span"
-          color="secondary"
-          variant="caption"
-        >
-          {{ selectingPhase === 'start' ? 'Select start date' : 'Select end date' }}
-        </BaseTypography>
-      </div>
-
-      <div class="base-date-range__panels">
-        <!-- Left panel -->
-        <div class="base-date-range__panel">
-          <div class="base-date-range__cal-header">
-            <button
-              aria-label="Previous month"
-              class="base-date-range__nav-btn"
-              type="button"
-              @click.stop="prevMonth"
-            >
-              <IconChevron
-                direction="left"
-                size="xs"
-              />
-            </button>
-            <BaseTypography
-              as="span"
-              color="primary"
-              variant="label"
-            >
-              {{ leftLabel }}
-            </BaseTypography>
-            <span style="width: 28px" />
-          </div>
-          <div class="base-date-range__cal-grid">
-            <span
-              v-for="d in DAYS"
-              :key="`ld-${d}`"
-              class="base-date-range__weekday"
-            >
-              {{ d }}
-            </span>
-            <button
-              v-for="(cell, i) in leftDays"
-              :key="`l-${i}`"
-              :class="[
-                'base-date-range__day',
-                {
-                  'base-date-range__day--empty': !cell.day,
-                  'base-date-range__day--range-start': isRangeStart(cell.date),
-                  'base-date-range__day--range-end': isRangeEnd(cell.date),
-                  'base-date-range__day--in-range': isInRange(cell.date),
-                  'base-date-range__day--today':
-                    isToday(cell.date) && !isRangeStart(cell.date) && !isRangeEnd(cell.date),
-                  'base-date-range__day--disabled': cell.disabled,
-                },
-              ]"
-              :disabled="!cell.day || cell.disabled"
-              type="button"
-              @focusin="hoverDate = cell.date"
-              @focusout="hoverDate = null"
-              @mouseenter="hoverDate = cell.date"
-              @mouseleave="hoverDate = null"
-              @click.stop="handleDayClick(cell.date, cell.disabled)"
-            >
-              {{ cell.day ?? '' }}
-            </button>
-          </div>
+    <Teleport to="body">
+      <div
+        v-show="open"
+        ref="calendarRef"
+        :aria-label="`${label ?? 'Date range'} calendar`"
+        :style="{ ...floatingStyles, zIndex }"
+        class="base-date-range__calendar"
+        role="dialog"
+      >
+        <div class="base-date-range__hint">
+          <BaseTypography
+            as="span"
+            color="secondary"
+            variant="caption"
+          >
+            {{ selectingPhase === 'start' ? 'Select start date' : 'Select end date' }}
+          </BaseTypography>
         </div>
 
-        <div class="base-date-range__sep" />
-
-        <!-- Right panel -->
-        <div class="base-date-range__panel">
-          <div class="base-date-range__cal-header">
-            <span style="width: 28px" />
-            <BaseTypography
-              as="span"
-              color="primary"
-              variant="label"
-            >
-              {{ rightLabel }}
-            </BaseTypography>
-            <button
-              aria-label="Next month"
-              class="base-date-range__nav-btn"
-              type="button"
-              @click.stop="nextMonth"
-            >
-              <IconChevron
-                direction="right"
-                size="xs"
-              />
-            </button>
+        <div class="base-date-range__panels">
+          <!-- Left panel -->
+          <div class="base-date-range__panel">
+            <div class="base-date-range__cal-header">
+              <button
+                aria-label="Previous month"
+                class="base-date-range__nav-btn"
+                type="button"
+                @click.stop="prevMonth"
+              >
+                <IconChevron
+                  direction="left"
+                  size="xs"
+                />
+              </button>
+              <BaseTypography
+                as="span"
+                color="primary"
+                variant="label"
+              >
+                {{ leftLabel }}
+              </BaseTypography>
+              <span style="width: 28px" />
+            </div>
+            <div class="base-date-range__cal-grid">
+              <span
+                v-for="d in DAYS"
+                :key="`ld-${d}`"
+                class="base-date-range__weekday"
+              >
+                {{ d }}
+              </span>
+              <button
+                v-for="(cell, i) in leftDays"
+                :key="`l-${i}`"
+                :class="[
+                  'base-date-range__day',
+                  {
+                    'base-date-range__day--empty': !cell.day,
+                    'base-date-range__day--range-start': isRangeStart(cell.date),
+                    'base-date-range__day--range-end': isRangeEnd(cell.date),
+                    'base-date-range__day--in-range': isInRange(cell.date),
+                    'base-date-range__day--today':
+                      isToday(cell.date) && !isRangeStart(cell.date) && !isRangeEnd(cell.date),
+                    'base-date-range__day--disabled': cell.disabled,
+                  },
+                ]"
+                :disabled="!cell.day || cell.disabled"
+                type="button"
+                @focusin="hoverDate = cell.date"
+                @focusout="hoverDate = null"
+                @mouseenter="hoverDate = cell.date"
+                @mouseleave="hoverDate = null"
+                @click.stop="handleDayClick(cell.date, cell.disabled)"
+              >
+                {{ cell.day ?? '' }}
+              </button>
+            </div>
           </div>
-          <div class="base-date-range__cal-grid">
-            <span
-              v-for="d in DAYS"
-              :key="`rd-${d}`"
-              class="base-date-range__weekday"
-            >
-              {{ d }}
-            </span>
-            <button
-              v-for="(cell, i) in rightDays"
-              :key="`r-${i}`"
-              :class="[
-                'base-date-range__day',
-                {
-                  'base-date-range__day--empty': !cell.day,
-                  'base-date-range__day--range-start': isRangeStart(cell.date),
-                  'base-date-range__day--range-end': isRangeEnd(cell.date),
-                  'base-date-range__day--in-range': isInRange(cell.date),
-                  'base-date-range__day--today':
-                    isToday(cell.date) && !isRangeStart(cell.date) && !isRangeEnd(cell.date),
-                  'base-date-range__day--disabled': cell.disabled,
-                },
-              ]"
-              :disabled="!cell.day || cell.disabled"
-              type="button"
-              @focusin="hoverDate = cell.date"
-              @focusout="hoverDate = null"
-              @mouseenter="hoverDate = cell.date"
-              @mouseleave="hoverDate = null"
-              @click.stop="handleDayClick(cell.date, cell.disabled)"
-            >
-              {{ cell.day ?? '' }}
-            </button>
+
+          <div class="base-date-range__sep" />
+
+          <!-- Right panel -->
+          <div class="base-date-range__panel">
+            <div class="base-date-range__cal-header">
+              <span style="width: 28px" />
+              <BaseTypography
+                as="span"
+                color="primary"
+                variant="label"
+              >
+                {{ rightLabel }}
+              </BaseTypography>
+              <button
+                aria-label="Next month"
+                class="base-date-range__nav-btn"
+                type="button"
+                @click.stop="nextMonth"
+              >
+                <IconChevron
+                  direction="right"
+                  size="xs"
+                />
+              </button>
+            </div>
+            <div class="base-date-range__cal-grid">
+              <span
+                v-for="d in DAYS"
+                :key="`rd-${d}`"
+                class="base-date-range__weekday"
+              >
+                {{ d }}
+              </span>
+              <button
+                v-for="(cell, i) in rightDays"
+                :key="`r-${i}`"
+                :class="[
+                  'base-date-range__day',
+                  {
+                    'base-date-range__day--empty': !cell.day,
+                    'base-date-range__day--range-start': isRangeStart(cell.date),
+                    'base-date-range__day--range-end': isRangeEnd(cell.date),
+                    'base-date-range__day--in-range': isInRange(cell.date),
+                    'base-date-range__day--today':
+                      isToday(cell.date) && !isRangeStart(cell.date) && !isRangeEnd(cell.date),
+                    'base-date-range__day--disabled': cell.disabled,
+                  },
+                ]"
+                :disabled="!cell.day || cell.disabled"
+                type="button"
+                @focusin="hoverDate = cell.date"
+                @focusout="hoverDate = null"
+                @mouseenter="hoverDate = cell.date"
+                @mouseleave="hoverDate = null"
+                @click.stop="handleDayClick(cell.date, cell.disabled)"
+              >
+                {{ cell.day ?? '' }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Teleport>
 
     <BaseTypography
       v-if="error"
@@ -565,7 +569,6 @@
     /* Calendar */
     &__calendar {
       position: fixed;
-      z-index: 200;
       background: var(--mp-color-bg-surface);
       border: 1px solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-lg);

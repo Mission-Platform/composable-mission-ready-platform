@@ -6,7 +6,6 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import './preview.scss';
 
 import { breakpointKeys, breakpoints } from '@mission-platform/breakpoints';
-import { locales as uiLocales } from '@mission-platform/components/locales';
 import { createMpI18n } from '@mission-platform/i18n';
 import { withThemeByDataAttribute } from '@storybook/addon-themes';
 import { setup } from '@storybook/vue3-vite';
@@ -45,7 +44,7 @@ const router = createRouter({
 });
 
 setup((app) => {
-  app.use(createMpI18n({ modules: [uiLocales] }));
+  app.use(createMpI18n());
   app.use(router);
 });
 

@@ -4,6 +4,7 @@
   import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
   import { useId } from '../../composables/use-id';
+  import { useZIndex } from '../../composables/use-z-index';
   import BaseTypography from '../base-typography/base-typography.vue';
 
   export type TimeRangeInputSize = 'sm' | 'md' | 'lg';
@@ -46,6 +47,7 @@
   }>();
 
   const { id: resolvedId } = useId(props.id);
+  const { zIndex } = useZIndex('inputPopover');
 
   const open = ref(false);
   const popoverRef = ref<HTMLElement | null>(null);
@@ -239,165 +241,155 @@
       </span>
     </button>
 
-    <div
-      v-show="open"
-      ref="popoverRef"
-      :aria-label="`${label ?? 'Time range'} picker`"
-      :style="floatingStyles"
-      class="base-time-range__popover"
-      role="dialog"
-    >
-      <div class="base-time-range__panels">
-        <!-- Start panel -->
-        <div class="base-time-range__panel">
-          <BaseTypography
-            as="div"
-            class="base-time-range__panel-title"
-            color="secondary"
-            variant="caption"
-          >
-            Start
-          </BaseTypography>
-          <div class="base-time-range__columns">
-            <div class="base-time-range__col">
-              <div class="base-time-range__col-header">
-                HH
-              </div>
-              <div class="base-time-range__scroll">
-                <button
-                  v-for="h in hours"
-                  :key="`sh-${h}`"
-                  :class="['base-time-range__unit-btn', { 'base-time-range__unit-btn--active': startH === h }]"
-                  type="button"
-                  @click.stop="setStartH(h)"
-                >
-                  {{ pad(h) }}
-                </button>
-              </div>
-            </div>
-            <span class="base-time-range__sep">:</span>
-            <div class="base-time-range__col">
-              <div class="base-time-range__col-header">
-                MM
-              </div>
-              <div class="base-time-range__scroll">
-                <button
-                  v-for="m in minutes"
-                  :key="`sm-${m}`"
-                  :class="['base-time-range__unit-btn', { 'base-time-range__unit-btn--active': startM === m }]"
-                  type="button"
-                  @click.stop="setStartM(m)"
-                >
-                  {{ pad(m) }}
-                </button>
-              </div>
-            </div>
-            <template v-if="showSeconds">
-              <span class="base-time-range__sep">:</span>
+    <Teleport to="body">
+      <div
+        v-show="open"
+        ref="popoverRef"
+        :aria-label="`${label ?? 'Time range'} picker`"
+        :style="{ ...floatingStyles, zIndex }"
+        class="base-time-range__popover"
+        role="dialog"
+      >
+        <div class="base-time-range__panels">
+          <!-- Start panel -->
+          <div class="base-time-range__panel">
+            <BaseTypography
+              as="div"
+              class="base-time-range__panel-title"
+              color="secondary"
+              variant="caption"
+            >
+              Start
+            </BaseTypography>
+            <div class="base-time-range__columns">
               <div class="base-time-range__col">
-                <div class="base-time-range__col-header">
-                  SS
-                </div>
+                <div class="base-time-range__col-header">HH</div>
                 <div class="base-time-range__scroll">
                   <button
-                    v-for="s in seconds"
-                    :key="`ss-${s}`"
-                    :class="['base-time-range__unit-btn', { 'base-time-range__unit-btn--active': startS === s }]"
+                    v-for="h in hours"
+                    :key="`sh-${h}`"
+                    :class="['base-time-range__unit-btn', { 'base-time-range__unit-btn--active': startH === h }]"
                     type="button"
-                    @click.stop="setStartS(s)"
+                    @click.stop="setStartH(h)"
                   >
-                    {{ pad(s) }}
+                    {{ pad(h) }}
                   </button>
                 </div>
               </div>
-            </template>
-          </div>
-        </div>
-
-        <div class="base-time-range__divider">
-          <IconArrow
-            direction="right"
-            size="sm"
-          />
-        </div>
-
-        <!-- End panel -->
-        <div class="base-time-range__panel">
-          <BaseTypography
-            as="div"
-            class="base-time-range__panel-title"
-            color="secondary"
-            variant="caption"
-          >
-            End
-          </BaseTypography>
-          <div class="base-time-range__columns">
-            <div class="base-time-range__col">
-              <div class="base-time-range__col-header">
-                HH
-              </div>
-              <div class="base-time-range__scroll">
-                <button
-                  v-for="h in hours"
-                  :key="`eh-${h}`"
-                  :class="['base-time-range__unit-btn', { 'base-time-range__unit-btn--active': endH === h }]"
-                  type="button"
-                  @click.stop="setEndH(h)"
-                >
-                  {{ pad(h) }}
-                </button>
-              </div>
-            </div>
-            <span class="base-time-range__sep">:</span>
-            <div class="base-time-range__col">
-              <div class="base-time-range__col-header">
-                MM
-              </div>
-              <div class="base-time-range__scroll">
-                <button
-                  v-for="m in minutes"
-                  :key="`em-${m}`"
-                  :class="['base-time-range__unit-btn', { 'base-time-range__unit-btn--active': endM === m }]"
-                  type="button"
-                  @click.stop="setEndM(m)"
-                >
-                  {{ pad(m) }}
-                </button>
-              </div>
-            </div>
-            <template v-if="showSeconds">
               <span class="base-time-range__sep">:</span>
               <div class="base-time-range__col">
-                <div class="base-time-range__col-header">
-                  SS
-                </div>
+                <div class="base-time-range__col-header">MM</div>
                 <div class="base-time-range__scroll">
                   <button
-                    v-for="s in seconds"
-                    :key="`es-${s}`"
-                    :class="['base-time-range__unit-btn', { 'base-time-range__unit-btn--active': endS === s }]"
+                    v-for="m in minutes"
+                    :key="`sm-${m}`"
+                    :class="['base-time-range__unit-btn', { 'base-time-range__unit-btn--active': startM === m }]"
                     type="button"
-                    @click.stop="setEndS(s)"
+                    @click.stop="setStartM(m)"
                   >
-                    {{ pad(s) }}
+                    {{ pad(m) }}
                   </button>
                 </div>
               </div>
-            </template>
+              <template v-if="showSeconds">
+                <span class="base-time-range__sep">:</span>
+                <div class="base-time-range__col">
+                  <div class="base-time-range__col-header">SS</div>
+                  <div class="base-time-range__scroll">
+                    <button
+                      v-for="s in seconds"
+                      :key="`ss-${s}`"
+                      :class="['base-time-range__unit-btn', { 'base-time-range__unit-btn--active': startS === s }]"
+                      type="button"
+                      @click.stop="setStartS(s)"
+                    >
+                      {{ pad(s) }}
+                    </button>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <div class="base-time-range__divider">
+            <IconArrow
+              direction="right"
+              size="sm"
+            />
+          </div>
+
+          <!-- End panel -->
+          <div class="base-time-range__panel">
+            <BaseTypography
+              as="div"
+              class="base-time-range__panel-title"
+              color="secondary"
+              variant="caption"
+            >
+              End
+            </BaseTypography>
+            <div class="base-time-range__columns">
+              <div class="base-time-range__col">
+                <div class="base-time-range__col-header">HH</div>
+                <div class="base-time-range__scroll">
+                  <button
+                    v-for="h in hours"
+                    :key="`eh-${h}`"
+                    :class="['base-time-range__unit-btn', { 'base-time-range__unit-btn--active': endH === h }]"
+                    type="button"
+                    @click.stop="setEndH(h)"
+                  >
+                    {{ pad(h) }}
+                  </button>
+                </div>
+              </div>
+              <span class="base-time-range__sep">:</span>
+              <div class="base-time-range__col">
+                <div class="base-time-range__col-header">MM</div>
+                <div class="base-time-range__scroll">
+                  <button
+                    v-for="m in minutes"
+                    :key="`em-${m}`"
+                    :class="['base-time-range__unit-btn', { 'base-time-range__unit-btn--active': endM === m }]"
+                    type="button"
+                    @click.stop="setEndM(m)"
+                  >
+                    {{ pad(m) }}
+                  </button>
+                </div>
+              </div>
+              <template v-if="showSeconds">
+                <span class="base-time-range__sep">:</span>
+                <div class="base-time-range__col">
+                  <div class="base-time-range__col-header">SS</div>
+                  <div class="base-time-range__scroll">
+                    <button
+                      v-for="s in seconds"
+                      :key="`es-${s}`"
+                      :class="['base-time-range__unit-btn', { 'base-time-range__unit-btn--active': endS === s }]"
+                      type="button"
+                      @click.stop="setEndS(s)"
+                    >
+                      {{ pad(s) }}
+                    </button>
+                  </div>
+                </div>
+              </template>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="base-time-range__footer">
-        <button
-          class="base-time-range__done-btn"
-          type="button"
-          @click.stop="open = false"
-        >
-          Done
-        </button>
+        <div class="base-time-range__footer">
+          <button
+            class="base-time-range__done-btn"
+            type="button"
+            @click.stop="open = false"
+          >
+            Done
+          </button>
+        </div>
       </div>
-    </div>
+    </Teleport>
 
     <BaseTypography
       v-if="error"
@@ -550,7 +542,6 @@
     /* Popover */
     &__popover {
       position: fixed;
-      z-index: 200;
       margin: 0;
       background: var(--mp-color-bg-surface);
       border: 1px solid var(--mp-color-border-default);

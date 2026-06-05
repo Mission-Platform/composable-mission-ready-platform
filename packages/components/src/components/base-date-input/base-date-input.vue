@@ -4,6 +4,7 @@
   import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
   import { useId } from '../../composables/use-id';
+  import { useZIndex } from '../../composables/use-z-index';
   import BaseTypography from '../base-typography/base-typography.vue';
 
   export type DateInputSize = 'sm' | 'md' | 'lg';
@@ -45,6 +46,7 @@
   }>();
 
   const { id: resolvedId } = useId(props.id);
+  const { zIndex } = useZIndex('inputPopover');
 
   const open = ref(false);
   const calendarRef = ref<HTMLElement | null>(null);
@@ -219,76 +221,78 @@
       </span>
     </button>
 
-    <div
-      v-show="open"
-      ref="calendarRef"
-      :aria-label="`${label ?? 'Date'} calendar`"
-      :style="floatingStyles"
-      class="base-date-input__calendar"
-      role="dialog"
-    >
-      <div class="base-date-input__cal-header">
-        <button
-          aria-label="Previous month"
-          class="base-date-input__nav-btn"
-          type="button"
-          @click.stop="prevMonth"
-        >
-          <IconChevron
-            direction="left"
-            size="xs"
-          />
-        </button>
-        <BaseTypography
-          as="span"
-          color="primary"
-          variant="label"
-        >
-          {{ MONTHS[viewMonth] }} {{ viewYear }}
-        </BaseTypography>
-        <button
-          aria-label="Next month"
-          class="base-date-input__nav-btn"
-          type="button"
-          @click.stop="nextMonth"
-        >
-          <IconChevron
-            direction="right"
-            size="xs"
-          />
-        </button>
-      </div>
+    <Teleport to="body">
+      <div
+        v-show="open"
+        ref="calendarRef"
+        :aria-label="`${label ?? 'Date'} calendar`"
+        :style="{ ...floatingStyles, zIndex }"
+        class="base-date-input__calendar"
+        role="dialog"
+      >
+        <div class="base-date-input__cal-header">
+          <button
+            aria-label="Previous month"
+            class="base-date-input__nav-btn"
+            type="button"
+            @click.stop="prevMonth"
+          >
+            <IconChevron
+              direction="left"
+              size="xs"
+            />
+          </button>
+          <BaseTypography
+            as="span"
+            color="primary"
+            variant="label"
+          >
+            {{ MONTHS[viewMonth] }} {{ viewYear }}
+          </BaseTypography>
+          <button
+            aria-label="Next month"
+            class="base-date-input__nav-btn"
+            type="button"
+            @click.stop="nextMonth"
+          >
+            <IconChevron
+              direction="right"
+              size="xs"
+            />
+          </button>
+        </div>
 
-      <div class="base-date-input__cal-grid">
-        <span
-          v-for="d in DAYS"
-          :key="d"
-          class="base-date-input__weekday"
-        >
-          {{ d }}
-        </span>
-        <button
-          v-for="(cell, i) in calendarDays"
-          :key="i"
-          :aria-label="cell.date ?? undefined"
-          :aria-pressed="isSelected(cell.date)"
-          :class="[
-            'base-date-input__day',
-            {
-              'base-date-input__day--empty': !cell.day,
-              'base-date-input__day--selected': isSelected(cell.date),
-              'base-date-input__day--today': isToday(cell.date) && !isSelected(cell.date),
-              'base-date-input__day--disabled': cell.disabled,
-            },
-          ]"
-          :disabled="!cell.day || cell.disabled"
-          type="button"
-          @click.stop="selectDate(cell.date, cell.disabled)"
-        >
-          {{ cell.day ?? '' }}
-        </button>
+        <div class="base-date-input__cal-grid">
+          <span
+            v-for="d in DAYS"
+            :key="d"
+            class="base-date-input__weekday"
+          >
+            {{ d }}
+          </span>
+          <button
+            v-for="(cell, i) in calendarDays"
+            :key="i"
+            :aria-label="cell.date ?? undefined"
+            :aria-pressed="isSelected(cell.date)"
+            :class="[
+              'base-date-input__day',
+              {
+                'base-date-input__day--empty': !cell.day,
+                'base-date-input__day--selected': isSelected(cell.date),
+                'base-date-input__day--today': isToday(cell.date) && !isSelected(cell.date),
+                'base-date-input__day--disabled': cell.disabled,
+              },
+            ]"
+            :disabled="!cell.day || cell.disabled"
+            type="button"
+            @click.stop="selectDate(cell.date, cell.disabled)"
+          >
+            {{ cell.day ?? '' }}
+          </button>
+        </div>
       </div>
-    </div>
+    </Teleport>
 
     <BaseTypography
       v-if="error"
@@ -447,7 +451,6 @@
     /* Calendar */
     &__calendar {
       position: fixed;
-      z-index: 200;
       background: var(--mp-color-bg-surface);
       border: 1px solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-lg);

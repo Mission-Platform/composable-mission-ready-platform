@@ -1,7 +1,5 @@
-import { locales as uiLocales } from '@mission-platform/components/locales';
-import { createMpI18n, defineLocales, mergeLocales, useI18n } from '@mission-platform/i18n';
-import { locales as baseLocales } from '@mission-platform/i18n/locales';
-import { defineComponent, ref, type Ref } from 'vue';
+import { createMpI18n, useI18n } from '@mission-platform/i18n';
+import { defineComponent, ref } from 'vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
@@ -72,61 +70,52 @@ const meta: Meta = {
         component: `
 # Mission Platform i18n
 
-The \`@mission-platform/i18n\` package provides three composable utilities for
-building a multi-package i18n system in Vue 3:
+The \`@mission-platform/i18n\` package provides Vue 3 i18n integration following
+the **SFC-local** pattern: every component owns its strings inside an
+\`<i18n>\` block, so no external locale files or compile steps are needed.
 
 | Export | Purpose |
 |---|---|
-| \`createMpI18n\` | Create a configured \`vue-i18n\` instance, merging all locale modules |
-| \`mergeLocales\` | Standalone deep-merge of \`MpLocaleModule[]\` into one messages map |
-| \`defineLocales\` | Identity helper — types a locale object as \`MpLocaleModule\` |
+| \`createMpI18n\` | Create a configured \`vue-i18n\` instance |
+| \`useI18n\` | Re-exported from \`vue-i18n\` for single-import convenience |
 
-## Pattern: each package owns its strings
+## Pattern: SFC-local strings
 
-\`\`\`ts
-// packages/my-package/src/locales/index.ts
-import { defineLocales } from '@mission-platform/i18n'
+Each component declares its own translations inline using \`useScope: 'local'\`:
 
-export const locales = defineLocales({
-  en: { greeting: 'Hello' },
-  fr: { greeting: 'Bonjour' },
-})
-\`\`\`
+\`\`\`vue
+<script setup lang="ts">
+import { useI18n } from '@mission-platform/i18n'
 
-Export the subpath in \`package.json\`:
+const { t } = useI18n({ useScope: 'local' })
+</script>
 
-\`\`\`json
+<template>
+  <button :aria-label="t('close')">×</button>
+</template>
+
+<i18n lang="json">
 {
-  "exports": {
-    "./locales": { "import": "./dist/locales.js", "types": "./dist/locales/index.d.ts" }
-  }
+  "en": { "close": "Close" },
+  "fr": { "close": "Fermer" }
 }
+</i18n>
 \`\`\`
 
-## Pattern: app merges everything
+## Pattern: global instance
+
+Apps create a single global instance and install it via \`app.use()\`:
 
 \`\`\`ts
-// main.ts  (or .storybook/preview.ts)
+// main.ts
 import { createMpI18n } from '@mission-platform/i18n'
-import { locales as baseLocales }  from '@mission-platform/i18n/locales'
-import { locales as uiLocales }    from '@mission-platform/components/locales'
-import { locales as mapLocales }   from '@mission-platform/map/locales'
 
-app.use(createMpI18n({
-  locale: 'en',
-  modules: [baseLocales, uiLocales, mapLocales],
-}))
+app.use(createMpI18n({ locale: 'en' }))
 \`\`\`
 
-## Pattern: manual merge before \`createI18n\`
-
-\`\`\`ts
-import { mergeLocales } from '@mission-platform/i18n'
-import { createI18n } from 'vue-i18n'
-
-const messages = mergeLocales([baseLocales, uiLocales, { fr: { close: 'Quitter' } }])
-const i18n = createI18n({ legacy: false, locale: 'en', messages })
-\`\`\`
+The global instance is used by \`useI18n({ useScope: 'global' })\`.
+SFC-local scopes automatically inherit from the global instance, so
+locale switching propagates to every component.
         `,
       },
     },
@@ -138,14 +127,12 @@ export default meta;
 // ─── Stories ─────────────────────────────────────────────────────────────────
 
 /**
- * The default setup: base strings + UI component strings registered via
- * \`createMpI18n({ modules: [baseLocales, uiLocales] })\`.
- *
- * Storybook's global i18n instance (set up in \`preview.ts\`) is already
- * configured this way, so the inspector below reads from that shared instance.
+ * The default setup: Storybook's global i18n instance (set up in `preview.ts`)
+ * is already configured, so the inspector below reads from that shared instance.
+ * Individual components provide their own strings via SFC-local `<i18n>` blocks.
  */
 export const DefaultSetup: StoryObj = {
-  name: 'Default setup (base + UI components)',
+  name: 'Global instance (SFC-local components)',
   render: () => ({
     components: { LocaleInspector },
     template: '<LocaleInspector />',
@@ -153,59 +140,38 @@ export const DefaultSetup: StoryObj = {
 };
 
 /**
- * Demonstrates \`mergeLocales\` used standalone — outside of \`createMpI18n\`.
- * The result object is displayed as JSON so you can inspect the merged shape.
+ * Demonstrates creating a standalone `createMpI18n` instance and passing
+ * custom global messages inline — no external locale files required.
  */
-export const MergeLocalesUtility: StoryObj = {
-  name: 'mergeLocales — standalone merge',
+export const CustomMessages: StoryObj = {
+  name: 'createMpI18n — custom global messages',
   render: () => ({
     setup() {
-      const packageA = defineLocales({ en: { hello: 'Hello', goodbye: 'Goodbye' } });
-      const packageB = defineLocales({ en: { hello: 'Hi' }, fr: { hello: 'Bonjour' } });
-      const appOverride = { fr: { hello: 'Salut' } };
-
-      const merged = mergeLocales([packageA, packageB, appOverride]);
-
-      return { merged };
-    },
-    template: `
-      <div style="font-family: monospace; font-size: 13px; line-height: 1.8;">
-        <p style="margin-bottom: 8px; font-weight: bold;">mergeLocales([pkgA, pkgB, appOverride])</p>
-        <pre style="background: #f5f5f5; padding: 16px; border-radius: 6px; overflow: auto;">{{ JSON.stringify(merged, null, 2) }}</pre>
-        <p style="color: #555; margin-top: 8px; font-size: 12px;">
-          pkgA.en.hello = "Hello" is overridden by pkgB.en.hello = "Hi".<br>
-          pkgB.fr.hello = "Bonjour" is overridden by appOverride.fr.hello = "Salut".
-        </p>
-      </div>
-    `,
-  }),
-};
-
-/**
- * Demonstrates \`defineLocales\` — the typed identity helper that packages use
- * to declare their own locale modules without an explicit type annotation.
- */
-export const DefineLocalesUtility: StoryObj = {
-  name: 'defineLocales — typed locale module helper',
-  render: () => ({
-    setup() {
-      const myLocales = defineLocales({
-        en: { greeting: 'Hello from my-package', farewell: 'Goodbye' },
-        fr: { greeting: 'Bonjour depuis my-package', farewell: 'Au revoir' },
+      const i18n = createMpI18n({
+        locale: 'en',
+        messages: {
+          en: { greeting: 'Hello', farewell: 'Goodbye' },
+          fr: { greeting: 'Bonjour', farewell: 'Au revoir' },
+        },
       });
 
-      const i18n = createMpI18n({ modules: [baseLocales, uiLocales, myLocales] });
+      const { t, locale } = i18n.global as unknown as ReturnType<typeof useI18n>;
+      const currentLocale = ref((locale as unknown as { value: string }).value);
 
-      return { module: myLocales, locale: (i18n.global.locale as unknown as Ref<string>).value };
+      return { t, locale, currentLocale };
     },
     template: `
       <div style="font-family: monospace; font-size: 13px; line-height: 1.8;">
-        <p style="margin-bottom: 8px; font-weight: bold;">defineLocales({ en: { … }, fr: { … } })</p>
-        <pre style="background: #f5f5f5; padding: 16px; border-radius: 6px; overflow: auto;">{{ JSON.stringify(module, null, 2) }}</pre>
-        <p style="color: #555; margin-top: 8px; font-size: 12px;">
-          Returns the same object typed as <code>MpLocaleModule</code>.  Pass it straight to
-          <code>createMpI18n({ modules: […, myLocales] })</code>.
-        </p>
+        <div style="margin-bottom: 12px; display: flex; gap: 8px;">
+          <button
+            v-for="code in ['en', 'fr']"
+            :key="code"
+            @click="locale = code; currentLocale = code"
+            :style="'padding: 4px 12px; border-radius: 4px; border: 1px solid #ccc; cursor: pointer; background: ' + (code === currentLocale ? '#1a73e8' : '#fff') + '; color: ' + (code === currentLocale ? '#fff' : '#333') + ';'"
+          >{{ code }}</button>
+        </div>
+        <p><strong>greeting:</strong> {{ t('greeting') }}</p>
+        <p><strong>farewell:</strong> {{ t('farewell') }}</p>
       </div>
     `,
   }),

@@ -5,7 +5,6 @@
 ### Patch Changes
 
 - b5e4353: broaden composable APIs to MaybeRefOrGetter and fix token re-export extensions
-
   - refactor `useHunspellMonaco` to accept `MaybeRefOrGetter` for all three parameters instead of `Ref`, allowing plain values, refs, and getters
   - update `useHunspellMonaco` spec to use native `ReturnType<typeof ref<...>>` instead of explicit `Ref` import
   - migrate `useId` from `nanoid` to Vue's built-in `useId` for stable server-side-compatible IDs

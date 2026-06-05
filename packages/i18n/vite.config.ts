@@ -5,17 +5,11 @@ import Vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  plugins: [
-    Vue(),
-    VueI18nPlugin({
-      include: path.resolve(__dirname, 'src/locales/**/*.yaml'),
-    }),
-  ],
+  plugins: [Vue(), VueI18nPlugin({ include: [] })],
   build: {
     lib: {
       entry: {
         i18n: path.resolve(__dirname, 'src/index.ts'),
-        locales: path.resolve(__dirname, 'src/locales/index.ts'),
       },
       name: 'MissionPlatformI18n',
       formats: ['es'],
