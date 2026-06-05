@@ -1,10 +1,29 @@
 # @mission-platform/map
 
+## 0.1.2
+
+### Patch Changes
+
+- ba565b3: remove empty locales placeholder and ./locales export
+
+  The map package had a placeholder `src/locales/index.ts` that depended on
+  `defineLocales` from `@mission-platform/i18n`. Since that API has been removed
+  and the map package has no translated strings, the file and its `./locales`
+  package export are dropped.
+
+- Updated dependencies [ba565b3]
+- Updated dependencies [ba565b3]
+  - @mission-platform/components@0.2.0
+  - @mission-platform/i18n@0.2.0
+  - @mission-platform/icons@0.1.1
+  - @mission-platform/tokens@0.1.1
+
 ## 0.1.1
 
 ### Patch Changes
 
 - 735d1d6: Improve `useDrawing` composable and map test infrastructure:
+
   - `selectFeature` parameter is now optional (`id?: FeatureId`) for more ergonomic deselection calls
   - Fix spec files to use `mockImplementation(() => {})` instead of `mockReturnValue()` for `getSource` and `getLayer` mocks, avoiding misleading `undefined` return type
   - `mountWithMap` test utility now accepts `Component` type for extra components and uses a type-safe `mergedOptions` variable

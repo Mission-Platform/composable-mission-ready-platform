@@ -1,5 +1,20 @@
 # @mission-platform/my-care-notes
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [ba565b3]
+- Updated dependencies [ba565b3]
+- Updated dependencies [40b0054]
+  - @mission-platform/components@0.2.0
+  - @mission-platform/i18n@0.2.0
+  - @mission-platform/hunspell@0.2.1
+  - @mission-platform/breakpoints@1.0.0
+  - @mission-platform/harper@0.1.1
+  - @mission-platform/icons@0.1.1
+  - @mission-platform/tokens@0.1.1
+
 ## 0.0.2
 
 ### Patch Changes

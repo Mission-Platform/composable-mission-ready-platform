@@ -1,5 +1,19 @@
 # @mission-platform/storybook
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [ba565b3]
+- Updated dependencies [ba565b3]
+- Updated dependencies [ba565b3]
+  - @mission-platform/components@0.2.0
+  - @mission-platform/i18n@0.2.0
+  - @mission-platform/map@0.1.2
+  - @mission-platform/breakpoints@1.0.0
+  - @mission-platform/icons@0.1.1
+  - @mission-platform/tokens@0.1.1
+
 ## 0.0.2
 
 ### Patch Changes
