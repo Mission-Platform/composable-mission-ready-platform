@@ -1,5 +1,15 @@
 # @mission-platform/eslint-config
 
+## 0.1.2
+
+### Patch Changes
+
+- ba565b3: disable vue/singleline-html-element-content-newline rule
+
+  The rule conflicts with Prettier's `htmlWhitespaceSensitivity: 'ignore'` setting,
+  which collapses short single-line elements. Prettier is the source of truth for
+  HTML formatting.
+
 ## 0.1.1
 
 ### Patch Changes
