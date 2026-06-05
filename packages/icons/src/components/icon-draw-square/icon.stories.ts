@@ -16,15 +16,27 @@ const meta = {
     color: 'currentColor',
     ariaLabel: 'Draw Square',
   },
+
+  parameters: {
+    docs: {
+      description: {
+        component: 'Draw-square tool indicator. Use in map drawing toolbars to activate the square-drawing mode.',
+      },
+    },
+  },
 } satisfies Meta<typeof IconDrawSquare>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Default size (`md` / `24px`) with `currentColor` fill — inherits the surrounding text colour. */
 export const Default: Story = {};
 
+/** Small size variant — useful in compact UI elements such as inline badges or table cells. */
 export const Small: Story = { args: { size: 16 } };
 
+/** Large size variant — suitable for empty-state illustrations or prominent call-to-action areas. */
 export const Large: Story = { args: { size: 32 } };
 
+/** Custom colour applied via the `color` prop — demonstrates that any CSS colour value is accepted. */
 export const Colored: Story = { args: { color: '#3b82f6' } };
