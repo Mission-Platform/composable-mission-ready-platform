@@ -9,8 +9,7 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "deploy:staging": "pnpm build-storybook && wrangler pages deploy --branch staging",
-    "deploy:prod": "pnpm build-storybook && wrangler pages deploy --branch main",
+    "deploy": "chromatic --project-token=chpt_c79f311b83ab8e0",
     "test": "vitest run --project unit",
     "lint": "eslint .",
     "lint:style": "stylelint \"src/**/*.{vue,scss,css}\"",
@@ -29,6 +28,7 @@
     "maplibre-gl": "catalog:map"
   },
   "devDependencies": {
+    "chromatic": "catalog:storybook",
     "@chromatic-com/storybook": "catalog:storybook",
     "@intlify/unplugin-vue-i18n": "catalog:vue",
     "@mission-platform/eslint-config": "workspace:*",

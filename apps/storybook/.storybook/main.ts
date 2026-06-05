@@ -20,7 +20,8 @@ const config: StorybookConfig = {
     '@storybook/addon-docs',
   ],
   features: {
-    developmentModeForBuild: true,
+    developmentModeForBuild: false,
+    sidebarOnboardingChecklist: false,
   },
   framework: '@storybook/vue3-vite',
   viteFinal: (config) =>
@@ -28,6 +29,14 @@ const config: StorybookConfig = {
       plugins: [vueJsx()],
       optimizeDeps: {
         exclude: ['vue-i18n'],
+      },
+      build: {
+        // Disable the modulePreload polyfill so Vite does not dynamically inject
+        // <link rel="stylesheet"> elements for CSS chunks at runtime. Without this,
+        // Chromatic's headless browser fails to preload lazily-loaded CSS chunks
+        // (e.g. base-code-block-*.css from highlight.js imports) and aborts story
+        // extraction with "Unable to preload CSS" errors.
+        modulePreload: false,
       },
     }),
 };

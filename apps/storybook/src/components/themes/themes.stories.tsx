@@ -1411,6 +1411,42 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
+    docs: {
+      description: {
+        component: `
+The **Themes Showcase** renders the full Mission Platform component library inside
+both the \`light\` and \`dark\` themes so you can visually verify that every token,
+colour, and spacing value is correct across themes.
+
+It is **not** a component story in the traditional sense — there is no single
+component under test. Instead it acts as a living style guide: all components from
+\`@mission-platform/components\`, all icons from \`@mission-platform/icons\`, the map
+stack from \`@mission-platform/map\`, and the breakpoint helpers from
+\`@mission-platform/breakpoints\` are all rendered together in one place.
+
+### Tabs
+
+| Tab | What is shown |
+|---|---|
+| Basics | Buttons, badges, typography, collapse, code block, avatar, status icon, spinner, skeleton, progress bar, tag |
+| Forms | Inputs, select, multiselect, checkbox, switch, radio, date/time pickers, file input, textarea, markdown, form builder, form wizard |
+| Navigation | Menu, menubar, sidebar, navbar, breadcrumb, tabs |
+| Data | List, table, virtual list, virtual table, tree view, virtual tree view, virtual log viewer |
+| Overlays | Tooltip, popover, dialog, modal, window popout |
+| Icons | Full icon grid |
+| Calendar | Date picker calendar |
+| Editors | Monaco editor |
+| Map | Interactive MapLibre map with drawing tools |
+| Breakpoints | ShowAt / HideAt / BreakpointDebug helpers |
+
+### Theme switching
+
+Use the **Storybook toolbar** (🌗 icon) to switch the global theme. The
+\`LightTheme\` and \`DarkTheme\` stories pin a specific theme, while \`SideBySide\`
+renders both simultaneously for visual diffing.
+        `.trim(),
+      },
+    },
     a11y: {
       config: {
         rules: [
@@ -1430,6 +1466,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Full component showcase rendered in the light theme. */
 export const LightTheme: Story = {
   globals: {
     theme: 'light',
@@ -1440,6 +1477,7 @@ export const LightTheme: Story = {
   }),
 };
 
+/** Full component showcase rendered in the dark theme. */
 export const DarkTheme: Story = {
   globals: {
     theme: 'dark',
@@ -1450,6 +1488,11 @@ export const DarkTheme: Story = {
   }),
 };
 
+/**
+ * Light and dark themes rendered side by side for instant visual diffing.
+ * Two full-page layouts are placed in a two-column grid so differences in colours,
+ * spacing, or component states are immediately visible.
+ */
 export const SideBySide: Story = {
   // Two full-page layouts are rendered side by side for visual comparison; duplicate
   // landmark roles (main, header, footer, nav) are structurally unavoidable in this context.
