@@ -27,6 +27,47 @@ const meta = {
     closeButton: true,
     closeOnClick: true,
   },
+  parameters: {
+    docs: {
+      description: {
+        component: `
+**MapPopup** attaches a MapLibre GL JS popup to a geographic position. It must be
+placed inside a \`<MapLibre>\` component, from which it receives the map instance
+via \`inject\`.
+
+The popup is rendered into the MapLibre canvas overlay — **MapPopup produces no
+additional DOM output of its own**.
+
+### Content modes
+
+| Mode | Prop | Behaviour |
+|---|---|---|
+| HTML | \`is-text="false"\` (default) | \`content\` is inserted as raw HTML — supports rich markup |
+| Plain text | \`is-text="true"\` | \`content\` is HTML-escaped before rendering — safe against XSS |
+
+### Usage
+
+\`\`\`vue
+<MapLibre map-style="..." :center="[2.35, 48.86]" :zoom="11" style="height: 400px;">
+  <MapMarker :lngLat="[2.35, 48.86]" />
+  <MapPopup
+    :lngLat="[2.35, 48.86]"
+    content="<strong>Paris</strong>"
+    :open="true"
+    :close-button="true"
+  />
+</MapLibre>
+\`\`\`
+
+### Events
+
+| Event | Payload | Description |
+|---|---|---|
+| \`close\` | — | Fired when the popup is dismissed (close button or click-outside) |
+        `.trim(),
+      },
+    },
+  },
   render: (arguments_) => ({
     components: { MapLibre, MapMarker, MapPopup },
     setup() {

@@ -19,6 +19,34 @@ const meta = {
     scale: 1,
     draggable: false,
   },
+  parameters: {
+    docs: {
+      description: {
+        component: `
+**MapMarker** renders a MapLibre GL JS marker at a geographic position. It must be
+placed inside a \`<MapLibre>\` component, from which it automatically receives the
+map instance via \`inject\`.
+
+The marker is rendered directly into the MapLibre canvas — **MapMarker produces no
+DOM output of its own**.
+
+### Usage
+
+\`\`\`vue
+<MapLibre map-style="..." :center="[-0.13, 51.51]" :zoom="10" style="height: 400px;">
+  <MapMarker :lngLat="[-0.13, 51.51]" color="#e74c3c" :scale="1.2" draggable />
+</MapLibre>
+\`\`\`
+
+### Events
+
+| Event | Payload | Description |
+|---|---|---|
+| \`dragend\` | \`LngLatLike\` | Fired when a draggable marker is dropped at a new position |
+        `.trim(),
+      },
+    },
+  },
   render: (arguments_) => ({
     components: { MapLibre, MapMarker },
     setup() {

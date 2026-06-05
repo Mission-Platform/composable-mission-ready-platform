@@ -27,7 +27,6 @@ import MapLibre from './map-libre.vue';
 import type { DrawMode, DrawnFeature } from '../../composables/use-drawing';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-/** MapLibre stylesheet must be imported by the consumer. Storybook loads it via preview.ts. */
 const meta = {
   title: 'Map/MapLibre',
   component: MapLibre,
@@ -43,6 +42,55 @@ const meta = {
     zoom: 1.5,
     bearing: 0,
     pitch: 0,
+  },
+  parameters: {
+    docs: {
+      description: {
+        component: `
+**MapLibre** is the root map container component. It initialises a MapLibre GL JS
+map instance, mounts it into the DOM, and provides the instance to child components
+via Vue's \`provide/inject\` mechanism.
+
+> **Note:** the MapLibre stylesheet must be imported by the consuming application.
+> In Storybook it is loaded automatically via \`preview.ts\`.
+
+### Child components
+
+Place any of the following inside the default slot — they will receive the map
+instance automatically:
+
+| Component | Purpose |
+|---|---|
+| \`<MapMarker>\` | Renders a MapLibre marker at a given \`[lng, lat]\` |
+| \`<MapPopup>\` | Attaches an HTML or plain-text popup at a given position |
+| \`<MapSource>\` | Registers a data source (GeoJSON, vector tiles, …) |
+| \`<MapLayer>\` | Renders a visual layer sourced from a \`<MapSource>\` |
+| \`<MapDraw>\` | Adds interactive drawing and shape-editing tools |
+
+### Basic usage
+
+\`\`\`vue
+<MapLibre
+  map-style="https://demotiles.maplibre.org/style.json"
+  :center="[2.3522, 48.8566]"
+  :zoom="11"
+  style="width: 100%; height: 400px;"
+>
+  <MapMarker :lngLat="[2.3522, 48.8566]" color="#e74c3c" />
+</MapLibre>
+\`\`\`
+
+### Events
+
+| Event | Payload | Description |
+|---|---|---|
+| \`load\` | \`Map\` | Fired once the initial map style finishes loading |
+| \`move\` | \`Map\` | Fired on every pan, zoom, or rotation |
+| \`click\` | \`MapMouseEvent\` | Fired when the user clicks the map canvas |
+| \`contextmenu\` | \`MapMouseEvent\` | Fired on right-click / long-press on the map canvas |
+        `.trim(),
+      },
+    },
   },
   render: (arguments_) => ({
     components: { MapLibre },

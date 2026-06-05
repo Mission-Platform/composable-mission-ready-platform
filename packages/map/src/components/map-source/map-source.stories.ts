@@ -9,6 +9,38 @@ const meta = {
   title: 'Map/MapSource',
   component: MapSource,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+**MapSource** registers a MapLibre GL JS data source and exposes it to child
+\`<MapLayer>\` components via a named slot. It must be placed inside a \`<MapLibre>\`
+root component.
+
+When the \`source\` prop changes the old source (and any layers that reference it)
+is removed and the new source is registered in its place.
+
+### Supported source types
+
+Any [MapLibre source specification](https://maplibre.org/maplibre-style-spec/sources/)
+is accepted: \`geojson\`, \`vector\`, \`raster\`, \`raster-dem\`, \`image\`, and \`video\`.
+
+### Usage
+
+\`\`\`vue
+<MapLibre map-style="..." :center="[-100, 40]" :zoom="3" style="height: 400px;">
+  <MapSource id="cities" :source="{ type: 'geojson', data: featureCollection }">
+    <MapLayer :layer="circleLayer" />
+  </MapSource>
+</MapLibre>
+\`\`\`
+
+The \`id\` prop must be **unique within the map instance** and is referenced by any
+\`<MapLayer>\` placed inside this source's slot via the layer's \`source\` field.
+        `.trim(),
+      },
+    },
+  },
   render: () => ({
     components: { MapLibre, MapSource, MapLayer },
     setup() {

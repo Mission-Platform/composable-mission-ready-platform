@@ -9,6 +9,39 @@ const meta = {
   title: 'Map/MapLayer',
   component: MapLayer,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+**MapLayer** registers a MapLibre GL JS layer inside a \`<MapSource>\` component.
+It must be placed inside a \`<MapSource>\`, which in turn must be inside a
+\`<MapLibre>\` root component.
+
+The layer is added to the MapLibre GL canvas — **MapLayer produces no DOM output
+of its own**. When the \`layer\` prop changes the old layer is removed and the new
+one is registered in its place.
+
+### Usage
+
+\`\`\`vue
+<MapLibre map-style="..." :center="[-100, 40]" :zoom="3" style="height: 400px;">
+  <MapSource id="route" :source="geojsonSource">
+    <MapLayer :layer="{ id: 'route-line', type: 'line', source: 'route', paint: { 'line-color': '#e74c3c', 'line-width': 3 } }" />
+  </MapSource>
+</MapLibre>
+\`\`\`
+
+### Layer ordering
+
+Use the optional \`before-id\` prop to insert this layer *below* an existing layer:
+
+\`\`\`vue
+<MapLayer :layer="fillLayer" before-id="road-label" />
+\`\`\`
+        `.trim(),
+      },
+    },
+  },
   render: () => ({
     components: { MapLibre, MapSource, MapLayer },
     setup() {
