@@ -25,6 +25,7 @@ Mission Platform is a **Vue 3 monorepo** managed with [pnpm workspaces](https://
 ```
 composable_mission_ready_platform/
 ├── apps/
+│   ├── my-care-notes/      # Note-taking app with spell/grammar checking & Cloudflare Pages deployment
 │   └── storybook/          # Component catalogue & visual tests
 └── packages/
     ├── breakpoints/        # Responsive breakpoint utilities & composables
@@ -39,6 +40,15 @@ composable_mission_ready_platform/
     ├── prettier-config/    # Shared Prettier config
     └── stylelint-config/   # Shared Stylelint config
 ```
+
+---
+
+## Apps
+
+| App | Description |
+|---|---|
+| `@mission-platform/my-care-notes` | Vue 3 note-taking app with Hunspell spell checking, Harper grammar checking, Monaco editor, vue-i18n, and Cloudflare Pages deployment |
+| `@mission-platform/storybook` | Storybook instance for developing, documenting, and visually testing Vue components |
 
 ---
 
@@ -92,6 +102,9 @@ pnpm install
 ```bash
 # Run the Storybook dev server (http://localhost:6006)
 pnpm storybook
+
+# Run the My Care Notes dev server (http://localhost:5173)
+pnpm --filter @mission-platform/my-care-notes dev
 ```
 
 ### Build
@@ -120,6 +133,9 @@ pnpm format
 ### Test
 
 ```bash
+# Run tests across all packages
+pnpm --filter "./packages/**" test
+
 # Run tests across all apps
 pnpm --filter "./apps/**" test
 ```
