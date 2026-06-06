@@ -5,16 +5,16 @@ packages:
 catalog:
   '@changesets/cli': ^2.31.0
   '@types/js-yaml': ^4.0.9
-  '@vue/compiler-sfc': ^3.5.0
+  '@vue/compiler-sfc': ^3.5.35
   'js-yaml': ^4.2.0
   'luxon': ^3.7.2
   '@types/luxon': ^3.7.1
   '@floating-ui/vue': ^1.1.11
   'highlight.js': ^11.11.1
   'monaco-editor': ^0.55.1
-  marked: ^18.0.4
+  marked: ^18.0.5
   nanoid: ^5.1.11
-  wrangler: ^4.96.0
+  wrangler: ^4.98.0
   zod: ^4.4.3
 
 catalogs:
@@ -26,7 +26,7 @@ catalogs:
     eslint: ^10.4.1
     eslint-import-resolver-typescript: ^4.4.5
     eslint-plugin-import-x: ^4.16.2
-    eslint-plugin-vue: ^10.9.1
+    eslint-plugin-vue: ^10.9.2
     eslint-plugin-vuejs-accessibility: ^2.5.0
     typescript-eslint: ^8.60.1
     vue-eslint-parser: ^10.4.1
@@ -63,12 +63,12 @@ catalogs:
   storybook:
     '@chromatic-com/storybook': ^5.2.1
     "chromatic": "^17.2.0"
-    '@storybook/addon-a11y': ^10.4.1
-    '@storybook/addon-docs': ^10.4.1
-    '@storybook/addon-themes': ^10.4.1
-    '@storybook/addon-vitest': ^10.4.1
-    '@storybook/vue3-vite': ^10.4.1
-    storybook: ^10.4.1
+    '@storybook/addon-a11y': ^10.4.2
+    '@storybook/addon-docs': ^10.4.2
+    '@storybook/addon-themes': ^10.4.2
+    '@storybook/addon-vitest': ^10.4.2
+    '@storybook/vue3-vite': ^10.4.2
+    storybook: ^10.4.2
 
   testing:
     '@vitest/browser-playwright': ^4.1.8
@@ -84,7 +84,7 @@ catalogs:
 
   typescript:
     '@types/js-yaml': ^4.0.9
-    '@types/node': ^24.12.4
+    '@types/node': ^24.13.0
     typescript: ~6.0.3
 
 trustPolicy: no-downgrade
@@ -93,7 +93,7 @@ registries:
   default: https://registry.npmjs.org/
 
 namedRegistries:
-  gh: https://npm.pkg.github.example.com/
+  gh: https://npm.pkg.github.com/
 
 trustPolicyExclude:
   - tinyexec
