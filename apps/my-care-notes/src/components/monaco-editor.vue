@@ -21,9 +21,6 @@
   const { snippets, resolveSlashCommand } = useSnippets();
   const { monacoTheme } = useMonacoTheme();
 
-  // Slash command tracking state
-  let slashCommandStart: monaco.Position | undefined;
-
   const completionProvider = computed<monaco.languages.CompletionItemProvider>(() => ({
     provideCompletionItems(model, position) {
       const lineContent = model.getLineContent(position.lineNumber);
@@ -63,25 +60,28 @@
     },
   }));
 
-  function applySlashCommand(editor: monaco.editor.IStandaloneCodeEditor, command: string): void {
-    const resolved = resolveSlashCommand(command);
-    if (resolved === undefined || slashCommandStart === undefined) return;
-
-    const model = editor.getModel();
-    if (!model) return;
-
-    const start = slashCommandStart;
-    const currentPos = editor.getPosition();
-    if (!currentPos) return;
-
-    // Replace the /command text (including the slash) with the resolved value
-    const range = new monaco.Range(start.lineNumber, start.column, currentPos.lineNumber, currentPos.column);
-
-    editor.executeEdits('slash-command', [{ range, text: resolved }]);
-    slashCommandStart = undefined;
-  }
-
   function onEditorReady(editor: monaco.editor.IStandaloneCodeEditor): void {
+    // Slash command tracking state — scoped per editor instance
+    let slashCommandStart: monaco.Position | undefined;
+
+    function applySlashCommand(command: string): void {
+      const resolved = resolveSlashCommand(command);
+      if (resolved === undefined || slashCommandStart === undefined) return;
+
+      const model = editor.getModel();
+      if (!model) return;
+
+      const start = slashCommandStart;
+      const currentPos = editor.getPosition();
+      if (!currentPos) return;
+
+      // Replace the /command text (including the slash) with the resolved value
+      const range = new monaco.Range(start.lineNumber, start.column, currentPos.lineNumber, currentPos.column);
+
+      editor.executeEdits('slash-command', [{ range, text: resolved }]);
+      slashCommandStart = undefined;
+    }
+
     // Track when a slash is typed to begin a slash-command sequence
     editor.onDidChangeModelContent(() => {
       const position = editor.getPosition();
@@ -112,7 +112,7 @@
             if (resolved !== undefined) {
               e.preventDefault();
               e.stopPropagation();
-              applySlashCommand(editor, command);
+              applySlashCommand(command);
               return;
             }
           }
