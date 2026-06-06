@@ -43,5 +43,8 @@ jobs:
       - name: Build packages
         run: pnpm build
 
-      - name: Run tests
+      - name: Run package tests
+        run: pnpm --filter "./packages/**" test
+
+      - name: Run app tests
         run: pnpm --filter "./apps/**" test
