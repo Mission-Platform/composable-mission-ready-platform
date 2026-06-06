@@ -33,9 +33,24 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      # Cache Vite's on-disk dependency pre-bundling + Turbo-style build caches
+      # across runs.  Keyed on the lockfile + workflow file so it invalidates
+      # whenever dependencies or CI configuration change.
+      - name: Cache Vite & build artefacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            **/node_modules/.vite
+            **/.vite
+            **/dist
+          key: ${{ runner.os }}-build-${{ hashFiles('pnpm-lock.yaml', '.github/workflows/ci.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-build-
 
       - name: Lint
         run: pnpm lint

@@ -15,6 +15,13 @@ jobs:
     name: Publish to GitHub Packages
     runs-on: ubuntu-latest
 
+    # Map the branch onto a GitHub environment so deployments are tracked,
+    # protection rules / secrets can differ per environment, and the
+    # environment URL is surfaced in the GitHub UI.
+    environment:
+      name: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+      url: https://github.com/${{ github.repository }}/pkgs/container
+
     permissions:
       contents: write       # needed for Changesets to create/update the release PR
       packages: write       # needed to publish to GitHub Packages
@@ -37,6 +44,7 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
           registry-url: https://npm.pkg.github.com
           scope: "@mission-platform"
 
