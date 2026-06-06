@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "deploy:staging": "pnpm build && wrangler pages deploy --branch staging",
+    "deploy:preview": "pnpm build && wrangler pages deploy --branch $BRANCH",
     "deploy:prod": "pnpm build && wrangler pages deploy --branch main",
     "preview": "vite preview",
     "test": "vitest run",
