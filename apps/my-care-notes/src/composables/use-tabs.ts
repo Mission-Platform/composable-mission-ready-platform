@@ -66,23 +66,26 @@ export function useTabs() {
   }
 
   function closeTab(id: string): void {
-    const index = tabs.value.findIndex((t) => t.id === id);
-    if (index === -1) return;
-
-    tabs.value = tabs.value.map((t) => (t.id === id ? { ...t, closedAt: Date.now() } : t));
+    if (!tabs.value.some((t) => t.id === id)) return;
 
     if (activeTabId.value === id) {
-      const open = openTabs();
-      if (open.length > 0) {
-        // Select the nearest open tab
-        const newActive = open[Math.max(0, index - 1)];
-        activeTabId.value = newActive.id;
+      // Capture the open-tabs snapshot and resolve the neighbour's ID before closing
+      const openBefore = openTabs();
+      const closingIndex = openBefore.findIndex((t) => t.id === id);
+      const neighbourId = openBefore[closingIndex - 1]?.id ?? openBefore[closingIndex + 1]?.id;
+
+      tabs.value = tabs.value.map((t) => (t.id === id ? { ...t, closedAt: Date.now() } : t));
+
+      if (neighbourId) {
+        activeTabId.value = neighbourId;
       } else {
         // No open tabs left — create a new one
         const newTab = createDefaultTab();
         tabs.value = [...tabs.value, newTab];
         activeTabId.value = newTab.id;
       }
+    } else {
+      tabs.value = tabs.value.map((t) => (t.id === id ? { ...t, closedAt: Date.now() } : t));
     }
   }
 
@@ -107,7 +110,9 @@ export function useTabs() {
     const a = document.createElement('a');
     a.href = url;
     a.download = `${tab.title}.md`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }
 

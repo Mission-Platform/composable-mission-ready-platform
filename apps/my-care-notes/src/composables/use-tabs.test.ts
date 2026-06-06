@@ -144,15 +144,52 @@ describe('closeTab', () => {
     const { addTab, closeTab, activeTabId } = useTabs();
     const second = addTab();
     const thirdId = addTab().id;
-    // At this point: tabs = [default(idx0), second(idx1), third(idx2)]
-    // active is third; close it → in openTabs() before close: [default, second]
-    // idx of third in tabs.value = 2, Math.max(0, 2-1) = 1 → open[1] = second
+    // At this point openTabs() = [default, second, third]
+    // closing third: closingIndex=2, neighbour = openBefore[1] = second
 
     // Act
     closeTab(thirdId);
 
     // Assert
     expect(activeTabId.value).toBe(second.id);
+  });
+
+  it('switches active tab to a valid open neighbour when previously-closed tabs precede the active tab', () => {
+    // Arrange — simulate a tab that was closed earlier in the session (still within TTL)
+    // tabs.value = [previously-closed(idx0), open_tab_A(idx1), active_open_tab_B(idx2)]
+    // openTabs() = [tab_A, tab_B]; closing tab_B: closingIndex=1, neighbour = openBefore[0] = tab_A
+    const { tabs, addTab, closeTab, activeTabId } = useTabs();
+    const tabA = addTab();
+    const tabB = addTab();
+
+    // Close the default tab to simulate a previously-closed tab in the array
+    closeTab(tabs.value[0].id);
+
+    // Make tab_B active and close it — the previously-closed default tab is at idx 0
+    activeTabId.value = tabB.id;
+
+    // Act
+    closeTab(tabB.id);
+
+    // Assert — must resolve to a valid open tab (tabA), not undefined
+    expect(activeTabId.value).toBe(tabA.id);
+  });
+
+  it('closes the correct tab by id regardless of its position in the array', () => {
+    // Arrange — three open tabs; close the middle one by id
+    const { tabs, addTab, closeTab, openTabs } = useTabs();
+    const second = addTab();
+    addTab();
+    // tabs: [default(0), second(1), third(2)]
+
+    // Act — close the middle tab using its id
+    closeTab(second.id);
+
+    // Assert — only the tab with that id is marked closed; the others remain open
+    expect(tabs.value.find((t) => t.id === second.id)?.closedAt).toBeGreaterThan(0);
+    const open = openTabs();
+    expect(open.every((t) => t.id !== second.id)).toBe(true);
+    expect(open).toHaveLength(2);
   });
 
   it('does nothing when the id does not exist', () => {
