@@ -12,7 +12,7 @@
   } from '@mission-platform/components';
   import { useI18n } from '@mission-platform/i18n';
   import { IconDownload, IconPencil } from '@mission-platform/icons';
-  import { computed } from 'vue';
+  import { computed, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
 
   import MonacoEditor from './components/monaco-editor.vue';
@@ -52,16 +52,33 @@
   const route = useRoute();
   const router = useRouter();
 
+  // ── Rename-tab modal state ────────────────────────────────────────────────
+  const renamingTabId = ref<string | undefined>(undefined);
+  const renameTabTitle = ref('');
+
+  function openRenameTabModal(id: string): void {
+    const tab = visibleTabs.value.find((t) => t.id === id);
+    if (!tab) return;
+    renamingTabId.value = id;
+    renameTabTitle.value = tab.title;
+  }
+
+  function confirmRenameTab(): void {
+    if (renamingTabId.value && renameTabTitle.value.trim()) {
+      updateTabTitle(renamingTabId.value, renameTabTitle.value.trim());
+    }
+    renamingTabId.value = undefined;
+  }
+
+  function cancelRenameTab(): void {
+    renamingTabId.value = undefined;
+  }
+
   const visibleTabs = computed(() => openTabs().map((tab) => ({ ...tab, label: tab.title })));
   const activeTab = computed(() => visibleTabs.value.find((tab) => tab.id === activeTabId.value));
 
   function onRenameTab(id: string): void {
-    const tab = visibleTabs.value.find((t) => t.id === id);
-    if (!tab) return;
-    const newTitle = prompt('Rename tab:', tab.title);
-    if (newTitle !== null && newTitle.trim()) {
-      updateTabTitle(id, newTitle.trim());
-    }
+    openRenameTabModal(id);
   }
 
   // ── Overlay state is driven entirely by URL query params ──────────────────
@@ -280,7 +297,51 @@
     @delete="onSnippetDelete"
     @save="onSnippetSave"
   />
+
+  <!-- Rename-tab modal -->
+  <BaseModal
+    :open="renamingTabId !== undefined"
+    :title="t('rename.title')"
+    size="sm"
+    @close="cancelRenameTab"
+    @update:open="(v) => !v && cancelRenameTab()"
+  >
+    <BaseInput
+      id="rename-tab-input"
+      v-model="renameTabTitle"
+      :label="t('rename.label')"
+      autocomplete="off"
+      @keydown.enter="confirmRenameTab"
+      @keydown.esc="cancelRenameTab"
+    />
+    <template #footer>
+      <div class="rename-modal-footer">
+        <BaseButton
+          variant="ghost"
+          @click="cancelRenameTab"
+        >
+          {{ t('rename.cancel') }}
+        </BaseButton>
+        <BaseButton
+          :disabled="!renameTabTitle.trim()"
+          variant="primary"
+          @click="confirmRenameTab"
+        >
+          {{ t('rename.confirm') }}
+        </BaseButton>
+      </div>
+    </template>
+  </BaseModal>
 </template>
+
+<style lang="scss" scoped>
+  .rename-modal-footer {
+    display: flex;
+    gap: var(--mp-space-2, 8px);
+    justify-content: flex-end;
+    width: 100%;
+  }
+</style>
 
 <i18n lang="yaml">
 en:
@@ -305,4 +366,9 @@ en:
     export: Export snippet
     edit: Edit Snippet
   date-row-content: Current date (DD/MM/YYYY)
+  rename:
+    title: Rename tab
+    label: Tab name
+    cancel: Cancel
+    confirm: Rename
 </i18n>
