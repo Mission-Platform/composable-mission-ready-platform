@@ -1,18 +1,16 @@
-import path from 'node:path';
+import { defineLibraryConfig } from '@mission-platform/vite-config';
 
-import { defineConfig } from 'vite';
-
-export default defineConfig({
-  build: {
-    lib: {
-      entry: path.resolve(__dirname, 'src/tokens.ts'),
-      name: 'MissionPlatformTokens',
-      fileName: 'tokens',
-      formats: ['es'],
-    },
-    rollupOptions: {
-      output: {
-        preserveModules: false,
+export default defineLibraryConfig({
+  rootDir: __dirname,
+  entry: 'src/tokens.ts',
+  name: 'MissionPlatformTokens',
+  fileName: 'tokens',
+  overrides: {
+    build: {
+      rollupOptions: {
+        output: {
+          preserveModules: false,
+        },
       },
     },
   },
