@@ -1,5 +1,56 @@
 # @mission-platform/map
 
+## 0.1.4
+
+### Patch Changes
+
+- 65106e2: use shared `@mission-platform/typescript-config` and `@mission-platform/vite-config`
+
+  Migrates `vite.config.ts`, `vitest.config.ts`, and the `tsconfig.*.json`
+  files (build, node, test, storybook) to extend the shared workspaces
+  under `configs/`. `maplibre-gl` is added as a Rollup external via the
+  helper's `external`/`globals` options. No runtime or public-API change.
+
+- 05d31c9: normalize lint and format scripts across all workspaces
+
+  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
+
+- 6679759: adopt shared `stories` tsconfig preset for Storybook story files
+
+  Each package that ships Storybook stories now has a dedicated
+  `tsconfig.stories.json` extending
+  `@mission-platform/typescript-config/stories` and is registered as a
+  project reference from the workspace's root `tsconfig.json`. This gives
+  `src/**/*.stories.{ts,tsx}` files a dedicated TypeScript project so
+  ESLint's `projectService` can type-check them out of the box, and
+  removes the legacy `tsconfig.storybook.json` from
+  `@mission-platform/map` in favour of the shared name.
+
+- cf89515: enable tree shaking support when consumed by apps
+
+  Declares `"sideEffects"` in each package's `package.json` so app bundlers
+  (Vite/Rollup) can safely drop unused exports. Pure-TypeScript packages
+  (`harper`, `hunspell`, `i18n`) opt out of side effects entirely with
+  `"sideEffects": false`. Packages that ship styles and/or Vue SFCs
+  (`breakpoints`, `components`, `icons`, `map`, `tokens`) keep `*.css`,
+  `*.scss`, and `*.vue` files marked as side-effectful so component
+  styles and SCSS entrypoints are preserved.
+
+- Updated dependencies [a77eafa]
+- Updated dependencies [d2bf0e1]
+- Updated dependencies [c8f7e0a]
+- Updated dependencies [14521e9]
+- Updated dependencies [37a17e4]
+- Updated dependencies [2e27467]
+- Updated dependencies [05d31c9]
+- Updated dependencies [6679759]
+- Updated dependencies [cf89515]
+- Updated dependencies [8314555]
+  - @mission-platform/components@0.2.2
+  - @mission-platform/i18n@0.3.0
+  - @mission-platform/icons@0.1.3
+  - @mission-platform/tokens@0.1.2
+
 ## 0.1.3
 
 ### Patch Changes
@@ -38,6 +89,7 @@
 ### Patch Changes
 
 - 735d1d6: Improve `useDrawing` composable and map test infrastructure:
+
   - `selectFeature` parameter is now optional (`id?: FeatureId`) for more ergonomic deselection calls
   - Fix spec files to use `mockImplementation(() => {})` instead of `mockReturnValue()` for `getSource` and `getLayer` mocks, avoiding misleading `undefined` return type
   - `mountWithMap` test utility now accepts `Component` type for extra components and uses a type-safe `mergedOptions` variable

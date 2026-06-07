@@ -1,5 +1,22 @@
 # @mission-platform/eslint-config
 
+## 0.2.0
+
+### Minor Changes
+
+- e7a0c19: promote `@typescript-eslint/no-explicit-any` from `warn` to `error`
+
+  Explicit `any` usage is now a lint error across all consuming
+  workspaces, encouraging stricter typing in shared code.
+
+### Patch Changes
+
+- a9a149a: Ignore the top-level `storybook-static/` build output (in addition to `.storybook/storybook-static/`) so lint runs don't traverse generated Storybook artifacts.
+- 021a647: Move shared tooling configs from `packages/` into a dedicated `configs/` workspace directory. Package names and public entry points are unchanged; consumers continue to import via `@mission-platform/<config-name>`.
+- 05d31c9: normalize lint and format scripts across all workspaces
+
+  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
+
 ## 0.1.2
 
 ### Patch Changes

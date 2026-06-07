@@ -1,5 +1,44 @@
 # @mission-platform/typescript-config
 
+## 0.2.0
+
+### Minor Changes
+
+- 184e7f0: add shared `@mission-platform/typescript-config` workspace
+
+  Introduces a new shared tooling workspace under `configs/` that exposes
+  `base`, `app`, `library`, `node`, and `test` tsconfig presets (extending
+  `@vue/tsconfig`) so every package and app extends a single source of
+  truth for the project's TypeScript standards.
+
+- 37da963: add a `stories` variant for Storybook story files
+
+  A new `tsconfig.stories.json` preset is exposed via the
+  `@mission-platform/typescript-config/stories` subpath. It extends the
+  shared base + `@vue/tsconfig/tsconfig.dom.json` and sets the Storybook
+  story compiler options (DOM lib + `vite/client` types), so consuming
+  workspaces can type-check their `src/**/*.stories.{ts,tsx}` files with
+  a single `extends` (consumers declare their own `include` per the
+  existing presets policy).
+
+### Patch Changes
+
+- 05d31c9: normalize lint and format scripts across all workspaces
+
+  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
+
+- cce9928: remove `include`/`exclude` from shared tsconfig presets
+
+  TypeScript resolves `include` and `exclude` globs relative to the
+  tsconfig file that declares them, not relative to the consumer that
+  extends them — so the globs shipped in the `app`, `library`, `node`,
+  and `test` presets pointed at files inside `configs/typescript-config/`
+  and never matched anything in consuming workspaces.
+
+  Consumers must now declare their own `include`/`exclude` (which is what
+  existing `packages/*` and `apps/*` workspaces already do). The
+  `compilerOptions` portion of each preset is unchanged.
+
 ## 0.1.0
 
 ### Minor Changes

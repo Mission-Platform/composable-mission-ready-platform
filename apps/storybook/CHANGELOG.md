@@ -1,5 +1,37 @@
 # @mission-platform/storybook
 
+## 0.0.5
+
+### Patch Changes
+
+- 62cb43c: use shared `@mission-platform/typescript-config` and `@mission-platform/vite-config`
+
+  Migrates `vite.config.ts` to use `defineAppConfig` (bundling the Vue
+  plugin, vue-i18n plugin, and shared PostCSS pipeline) and the
+  `tsconfig.app.json` / `tsconfig.node.json` files to extend the shared
+  TypeScript presets. The `vueJsx` + `svgLoader` plugins and the Vitest
+  storybook/unit project configuration are layered in via `overrides`.
+  No runtime or public-API change.
+
+- Updated dependencies [9e8198e]
+- Updated dependencies [a77eafa]
+- Updated dependencies [d2bf0e1]
+- Updated dependencies [c8f7e0a]
+- Updated dependencies [14521e9]
+- Updated dependencies [37a17e4]
+- Updated dependencies [65106e2]
+- Updated dependencies [2e27467]
+- Updated dependencies [05d31c9]
+- Updated dependencies [6679759]
+- Updated dependencies [cf89515]
+- Updated dependencies [8314555]
+  - @mission-platform/breakpoints@2.0.0
+  - @mission-platform/components@0.2.2
+  - @mission-platform/i18n@0.3.0
+  - @mission-platform/icons@0.1.3
+  - @mission-platform/map@0.1.4
+  - @mission-platform/tokens@0.1.2
+
 ## 0.0.4
 
 ### Patch Changes
