@@ -30,10 +30,9 @@
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
-    "@intlify/unplugin-vue-i18n": "catalog:vue",
-    "@vitejs/plugin-vue": "catalog:vue",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@mission-platform/vite-config": "workspace:*",
     "@vitest/coverage-v8": "catalog:testing",
-    "@vue/tsconfig": "catalog:vue",
     "eslint": "catalog:eslint",
     "jsdom": "catalog:testing",
     "prettier": "catalog:prettier",

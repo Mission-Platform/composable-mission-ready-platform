@@ -1,26 +1,7 @@
-import path from 'node:path';
+import { defineLibraryConfig } from '@mission-platform/vite-config';
 
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
-import Vue from '@vitejs/plugin-vue';
-import { defineConfig } from 'vite';
-
-export default defineConfig({
-  plugins: [Vue(), VueI18nPlugin({ include: [] })],
-  build: {
-    lib: {
-      entry: {
-        i18n: path.resolve(__dirname, 'src/index.ts'),
-      },
-      name: 'MissionPlatformI18n',
-      formats: ['es'],
-    },
-    rollupOptions: {
-      external: ['vue', 'vue-i18n'],
-      output: {
-        globals: {
-          vue: 'Vue',
-        },
-      },
-    },
-  },
+export default defineLibraryConfig({
+  rootDir: __dirname,
+  entry: { i18n: 'src/index.ts' },
+  name: 'MissionPlatformI18n',
 });
