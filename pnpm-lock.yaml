@@ -430,6 +430,12 @@ importers:
       prettier:
         specifier: catalog:prettier
         version: 3.8.3
+      react:
+        specifier: ^19.2.7
+        version: 19.2.7
+      react-dom:
+        specifier: ^19.2.7
+        version: 19.2.7(react@19.2.7)
       sass-embedded:
         specifier: catalog:vite
         version: 1.100.0
@@ -460,9 +466,6 @@ importers:
       vue-tsc:
         specifier: catalog:vue
         version: 3.3.3(typescript@6.0.3)
-      wrangler:
-        specifier: 'catalog:'
-        version: 4.98.0(@cloudflare/workers-types@4.20260606.1)
 
   configs/eslint-config:
     dependencies:
@@ -1252,9 +1255,6 @@ importers:
       typescript:
         specifier: catalog:typescript
         version: 6.0.3
-      wrangler:
-        specifier: 'catalog:'
-        version: 4.98.0(@cloudflare/workers-types@4.20260606.1)
 
 packages:
 

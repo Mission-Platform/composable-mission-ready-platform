@@ -34,8 +34,8 @@ export default defineAppConfig({
             browser: {
               enabled: true,
               headless: true,
-              provider: playwright({}),
-              instances: [{ browser: 'chromium' }],
+              provider: playwright({ persistentContext: false }),
+              instances: [{ browser: 'chromium' }, { browser: 'firefox' }, { browser: 'webkit' }],
             },
           },
         },
