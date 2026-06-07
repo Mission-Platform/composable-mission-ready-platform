@@ -3,6 +3,11 @@
   "version": "0.1.3",
   "description": "MapLibre GL Vue 3 wrapper with full reactivity support for Mission Platform",
   "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss",
+    "**/*.vue"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

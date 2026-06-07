@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "Responsive breakpoint utilities, composables, and Vue components for Mission Platform",
   "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss",
+    "**/*.vue"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

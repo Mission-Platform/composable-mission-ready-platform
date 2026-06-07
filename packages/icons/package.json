@@ -3,6 +3,11 @@
   "version": "0.1.2",
   "description": "SVG icon components for Mission Platform",
   "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss",
+    "**/*.vue"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

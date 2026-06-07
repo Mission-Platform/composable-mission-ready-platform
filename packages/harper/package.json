@@ -3,6 +3,7 @@
   "version": "0.1.1",
   "description": "Harper grammar and style checker integration for Monaco editor",
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

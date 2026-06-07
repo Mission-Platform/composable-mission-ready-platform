@@ -3,6 +3,7 @@
   "version": "0.2.1",
   "description": "Hunspell spell checker compiled to WebAssembly via Emscripten",
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/hunspell.d.ts",

@@ -3,6 +3,11 @@
   "version": "0.2.1",
   "description": "Vue 3 component library for Mission Platform",
   "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss",
+    "**/*.vue"
+  ],
   "exports": {
     ".": {
       "types": "./src/index.ts",

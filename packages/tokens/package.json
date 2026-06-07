@@ -3,6 +3,10 @@
   "version": "0.1.1",
   "description": "CSS design tokens and SCSS theme definitions for Mission Platform",
   "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
   "exports": {
     ".": "./dist/tokens.js",
     "./scss/tokens": "./src/tokens.scss",

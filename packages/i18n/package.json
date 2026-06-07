@@ -2,6 +2,7 @@
   "name": "@mission-platform/i18n",
   "version": "0.2.0",
   "type": "module",
+  "sideEffects": false,
   "files": [
     "dist",
     "src"
