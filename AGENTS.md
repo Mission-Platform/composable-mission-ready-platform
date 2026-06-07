@@ -161,7 +161,12 @@ export default { ...baseConfig }
 
 ## Development Workflow
 
+> **Node version:** This repository pins its Node.js version via `.nvmrc`. You **must** run `nvm use` in every new shell before running any `pnpm` command — otherwise installs, builds, and tests may silently use the wrong Node version and fail in confusing ways.
+
 ```bash
+# Always select the correct Node version first (uses .nvmrc)
+nvm use
+
 # Install all workspace dependencies
 pnpm install
 
