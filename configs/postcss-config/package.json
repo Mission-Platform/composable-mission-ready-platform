@@ -14,7 +14,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "vite build && tsc --project tsconfig.build.json --declaration --declarationDir dist --emitDeclarationOnly --noEmit false --rootDir src",
+    "build": "tsc --project tsconfig.build.json",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
@@ -27,11 +27,10 @@
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
-    "@vue/tsconfig": "catalog:vue",
+    "@mission-platform/typescript-config": "workspace:*",
     "eslint": "catalog:eslint",
     "postcss": "catalog:vite",
     "prettier": "catalog:prettier",
-    "typescript": "catalog:typescript",
-    "vite": "catalog:vite"
+    "typescript": "catalog:typescript"
   }
 }
