@@ -1,13 +1,7 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "extends": "@mission-platform/typescript-config/app",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
-    "types": ["vite/client"],
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true,
     "paths": {
       "@mission-platform/breakpoints": ["../../packages/breakpoints/src/index.ts"]
     }
