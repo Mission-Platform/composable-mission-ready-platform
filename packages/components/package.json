@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/components",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Vue 3 component library for Mission Platform",
   "type": "module",
   "sideEffects": [

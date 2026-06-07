@@ -1,5 +1,12 @@
 # @mission-platform/map
 
+## 0.1.5
+
+### Patch Changes
+
+- Updated dependencies [2b0cce4]
+  - @mission-platform/components@0.3.0
+
 ## 0.1.4
 
 ### Patch Changes
