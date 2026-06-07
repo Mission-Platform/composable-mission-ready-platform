@@ -1,0 +1,24 @@
+{
+  "name": "@mission-platform/scripts",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "i18n:extract": "node --experimental-strip-types i18n-extract.ts",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@vue/compiler-sfc": "catalog:",
+    "js-yaml": "catalog:"
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@types/js-yaml": "catalog:typescript",
+    "@types/node": "catalog:typescript",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "typescript": "catalog:typescript"
+  }
+}

@@ -154,6 +154,9 @@ catalogs:
       specifier: ^4.1.8
       version: 4.1.8
   typescript:
+    '@types/js-yaml':
+      specifier: ^4.0.9
+      version: 4.0.9
     '@types/node':
       specifier: ^24.13.0
       version: 24.13.0
@@ -245,6 +248,9 @@ importers:
       '@mission-platform/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
+      js-yaml:
+        specifier: 'catalog:'
+        version: 4.2.0
       monaco-editor:
         specifier: 'catalog:'
         version: 0.55.1
@@ -276,6 +282,9 @@ importers:
       '@mission-platform/stylelint-config':
         specifier: workspace:*
         version: link:../../packages/stylelint-config
+      '@types/js-yaml':
+        specifier: catalog:typescript
+        version: 4.0.9
       '@types/node':
         specifier: catalog:typescript
         version: 24.13.0
@@ -1150,6 +1159,37 @@ importers:
       vite:
         specifier: catalog:vite
         version: 8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+
+  scripts:
+    dependencies:
+      '@vue/compiler-sfc':
+        specifier: 'catalog:'
+        version: 3.5.35
+      js-yaml:
+        specifier: 'catalog:'
+        version: 4.2.0
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../packages/eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../packages/prettier-config
+      '@types/js-yaml':
+        specifier: catalog:typescript
+        version: 4.0.9
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.0
+      eslint:
+        specifier: catalog:eslint
+        version: 10.4.1
+      prettier:
+        specifier: catalog:prettier
+        version: 3.8.3
+      typescript:
+        specifier: catalog:typescript
+        version: 6.0.3
 
 packages:
 

@@ -1,6 +1,7 @@
 packages:
   - apps/**
   - packages/**
+  - scripts
 
 catalog:
   '@changesets/cli': ^2.31.0

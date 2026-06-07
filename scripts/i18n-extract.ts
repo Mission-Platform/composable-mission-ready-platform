@@ -1,10 +1,11 @@
 /**
- * i18n-extract — SFC locale block extractor
+ * i18n-extract — SFC locale block extractor (per-app)
  *
- * Scans every .vue file under packages/ and apps/, extracts <i18n> blocks,
- * and writes a single i18n-meta.yaml at the workspace root.
+ * For every app under apps/, scans the app's own .vue files plus the .vue files
+ * of every @mission-platform/* workspace package it depends on, extracts
+ * <i18n> blocks, and writes an i18n-meta.yaml at the root of that app.
  *
- * Output shape:
+ * Output shape (per app):
  *   en:
  *     BaseButton:
  *       loading: Loading…
@@ -16,7 +17,7 @@
  *   node --experimental-strip-types scripts/i18n-extract.ts
  */
 
-import { readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { basename, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -25,20 +26,34 @@ import yaml from 'js-yaml';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+// @ts-ignore
 type LocaleMessages = Record<string, string | LocaleMessages>;
 type ComponentMessages = Record<string, LocaleMessages>;
 type MetaOutput = Record<string, ComponentMessages>;
 
+interface PackageJson {
+  name?: string;
+  dependencies?: Record<string, string>;
+  devDependencies?: Record<string, string>;
+  peerDependencies?: Record<string, string>;
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const ROOT = resolve(fileURLToPath(import.meta.url), '../..');
-const SCAN_DIRS = ['packages', 'apps'];
+const APPS_DIR = join(ROOT, 'apps');
+const PACKAGES_DIR = join(ROOT, 'packages');
 const SKIP_DIRS = new Set(['node_modules', 'dist', '.storybook', 'storybook-static', 'public']);
-const OUTPUT = join(ROOT, 'i18n-meta.yaml');
+const WORKSPACE_SCOPE = '@mission-platform/';
 
 /** Recursively collect all .vue files under a directory. */
 function collectVueFiles(dir: string): string[] {
-  const entries = readdirSync(dir, { withFileTypes: true });
+  let entries;
+  try {
+    entries = readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return [];
+  }
   const files: string[] = [];
   for (const entry of entries) {
     if (SKIP_DIRS.has(entry.name)) continue;
@@ -52,6 +67,9 @@ function collectVueFiles(dir: string): string[] {
   return files;
 }
 
+const OPTIONS_REGEX = new RegExp(/defineOptions\s*\(\s*\{[^}]*name:\s*['"]([^'"]+)['"]/s);
+const COMPONENTS_REGEX = new RegExp(/defineComponent\s*\(\s*\{[^}]*name:\s*['"]([^'"]+)['"]/s);
+
 /**
  * Derive a component name from the SFC source.
  * Priority:
@@ -60,46 +78,88 @@ function collectVueFiles(dir: string): string[] {
  *   3. PascalCase of the filename stem
  */
 function extractComponentName(sfcSource: string, filePath: string): string {
-  const nameMatch =
-    sfcSource.match(/defineOptions\s*\(\s*\{[^}]*name:\s*['"]([^'"]+)['"]/s) ??
-    sfcSource.match(/defineComponent\s*\(\s*\{[^}]*name:\s*['"]([^'"]+)['"]/s);
+  const nameMatch = OPTIONS_REGEX.exec(sfcSource) ?? COMPONENTS_REGEX.exec(sfcSource);
 
   if (nameMatch) return nameMatch[1];
 
   const stem = basename(filePath, '.vue');
-  return stem.replace(/(^|[-_])(\w)/g, (_, __, c: string) => c.toUpperCase());
+  return stem.replaceAll(/(^|[-_])(\w)/g, (_, __, c: string) => c.toUpperCase());
 }
 
 /** Deep-merge source into target (both plain objects). */
 function deepMerge<T extends Record<string, unknown>>(target: T, source: T): T {
   for (const [key, value] of Object.entries(source)) {
-    if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
-      target[key as keyof T] = deepMerge(
-        (target[key as keyof T] as Record<string, unknown>) ?? {},
-        value as Record<string, unknown>,
-      ) as T[keyof T];
-    } else {
-      target[key as keyof T] = value as T[keyof T];
-    }
+    target[key as keyof T] =
+      value !== null && typeof value === 'object' && !Array.isArray(value)
+        ? (deepMerge(
+            (target[key as keyof T] as Record<string, unknown>) ?? {},
+            value as Record<string, unknown>,
+          ) as T[keyof T])
+        : (value as T[keyof T]);
   }
   return target;
 }
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
-
-const meta: MetaOutput = {};
-let totalFiles = 0;
-let totalComponents = 0;
-
-for (const scanDir of SCAN_DIRS) {
-  const absDir = join(ROOT, scanDir);
-  let files: string[];
+function readPackageJson(packageDir: string): PackageJson | undefined {
   try {
-    statSync(absDir);
-    files = collectVueFiles(absDir);
+    return JSON.parse(readFileSync(join(packageDir, 'package.json'), 'utf-8')) as PackageJson;
   } catch {
-    continue;
+    return undefined;
   }
+}
+
+/** Build a map of workspace package name → absolute directory. */
+function loadWorkspacePackages(): Map<string, string> {
+  const map = new Map<string, string>();
+  let entries;
+  try {
+    entries = readdirSync(PACKAGES_DIR, { withFileTypes: true });
+  } catch {
+    return map;
+  }
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+    const pkgDir = join(PACKAGES_DIR, entry.name);
+    const package_ = readPackageJson(pkgDir);
+    if (package_?.name) map.set(package_.name, pkgDir);
+  }
+  return map;
+}
+
+/** Collect workspace-scoped dependency directories transitively for an app. */
+function resolveAppPackageDirectories(appPackage: PackageJson, workspacePackages: Map<string, string>): string[] {
+  const visited = new Set<string>();
+  const queue: string[] = [];
+
+  const addDeps = (package_: PackageJson | undefined) => {
+    if (!package_) return;
+    for (const deps of [package_.dependencies, package_.devDependencies, package_.peerDependencies]) {
+      if (!deps) continue;
+      for (const name of Object.keys(deps)) {
+        if (name.startsWith(WORKSPACE_SCOPE) && workspacePackages.has(name) && !visited.has(name)) {
+          visited.add(name);
+          queue.push(name);
+        }
+      }
+    }
+  };
+
+  addDeps(appPackage);
+  while (queue.length > 0) {
+    const name = queue.shift()!;
+    const dir = workspacePackages.get(name);
+    if (!dir) continue;
+    addDeps(readPackageJson(dir));
+  }
+
+  return [...visited].map((name) => workspacePackages.get(name)!).filter(Boolean);
+}
+
+/** Extract i18n meta from a list of .vue files. */
+function extractMetaFromFiles(files: string[]): { meta: MetaOutput; fileCount: number; componentCount: number } {
+  const meta: MetaOutput = {};
+  let fileCount = 0;
+  let componentCount = 0;
 
   for (const filePath of files) {
     const source = readFileSync(filePath, 'utf-8');
@@ -111,7 +171,7 @@ for (const scanDir of SCAN_DIRS) {
     const componentName = extractComponentName(source, filePath);
     const relPath = relative(ROOT, filePath);
 
-    totalFiles++;
+    fileCount++;
     let componentAdded = false;
 
     for (const block of i18nBlocks) {
@@ -119,11 +179,10 @@ for (const scanDir of SCAN_DIRS) {
       let parsed: Record<string, LocaleMessages>;
 
       try {
-        if (lang === 'yaml' || lang === 'yml') {
-          parsed = yaml.load(block.content) as Record<string, LocaleMessages>;
-        } else {
-          parsed = JSON.parse(block.content) as Record<string, LocaleMessages>;
-        }
+        parsed =
+          lang === 'yaml' || lang === 'yml'
+            ? (yaml.load(block.content) as Record<string, LocaleMessages>)
+            : (JSON.parse(block.content) as Record<string, LocaleMessages>);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         console.warn(`⚠  Could not parse <i18n> block in ${relPath}: ${message}`);
@@ -141,28 +200,108 @@ for (const scanDir of SCAN_DIRS) {
     }
 
     if (componentAdded) {
-      totalComponents++;
+      componentCount++;
       console.log(`  ✓  ${relPath}  →  ${componentName}`);
     }
   }
+
+  return { meta, fileCount, componentCount };
 }
 
-// Sort locales alphabetically; within each locale sort component names.
-const sorted: MetaOutput = {};
-for (const locale of Object.keys(meta).sort()) {
-  sorted[locale] = {};
-  for (const component of Object.keys(meta[locale]).sort()) {
-    sorted[locale][component] = meta[locale][component];
+/**
+ * Recursively replace leaf string values in `fresh` with the matching leaf
+ * values from `existing`, where both share the same key path. Keys present
+ * only in `fresh` are kept (newly added); keys present only in `existing`
+ * are dropped (removed from source). This guarantees existing translations
+ * are never modified by re-running the extractor.
+ */
+function preserveExistingLeaves(
+  fresh: Record<string, unknown>,
+  existing: Record<string, unknown> | undefined,
+): Record<string, unknown> {
+  if (!existing) return fresh;
+  for (const [key, freshValue] of Object.entries(fresh)) {
+    const existingValue = existing[key];
+    if (
+      freshValue !== null &&
+      typeof freshValue === 'object' &&
+      !Array.isArray(freshValue) &&
+      existingValue !== null &&
+      typeof existingValue === 'object' &&
+      !Array.isArray(existingValue)
+    ) {
+      preserveExistingLeaves(freshValue as Record<string, unknown>, existingValue as Record<string, unknown>);
+    } else if (typeof freshValue === 'string' && typeof existingValue === 'string') {
+      fresh[key] = existingValue;
+    }
   }
+  return fresh;
 }
 
-const header =
-  '# i18n-meta.yaml — auto-generated by scripts/i18n-extract.ts\n' +
-  '# Do not edit by hand. Run: pnpm i18n:extract\n' +
-  '#\n' +
-  '# Shape: <locale> → <ComponentName> → <key> → <value>\n' +
-  '# Use this file with your translation tool (Lokalise, POEditor, Crowdin, …).\n\n';
+/** Load existing per-app meta file (if any) so we can preserve translated values. */
+function loadExistingMeta(outputPath: string): MetaOutput | undefined {
+  try {
+    const source = readFileSync(outputPath, 'utf-8');
+    const parsed = yaml.load(source);
+    if (parsed && typeof parsed === 'object') return parsed as MetaOutput;
+  } catch {
+    // No existing file (or unreadable) — treat as empty.
+  }
+  return undefined;
+}
 
-writeFileSync(OUTPUT, header + yaml.dump(sorted, { indent: 2, lineWidth: 120 }), 'utf-8');
+function sortMeta(meta: MetaOutput): MetaOutput {
+  const sorted: MetaOutput = {};
+  for (const locale of Object.keys(meta).sort((a, b) => a.localeCompare(b))) {
+    sorted[locale] = {};
+    for (const component of Object.keys(meta[locale]).sort((a, b) => a.localeCompare(b))) {
+      sorted[locale][component] = meta[locale][component];
+    }
+  }
+  return sorted;
+}
 
-console.log(`\n✅  Wrote ${totalComponents} components (${totalFiles} files) → i18n-meta.yaml`);
+// ─── Main ─────────────────────────────────────────────────────────────────────
+
+const workspacePackages = loadWorkspacePackages();
+
+let appEntries;
+try {
+  statSync(APPS_DIR);
+  appEntries = readdirSync(APPS_DIR, { withFileTypes: true });
+} catch {
+  console.warn(`⚠  No apps/ directory found at ${APPS_DIR}`);
+  process.exit(0);
+}
+
+for (const entry of appEntries) {
+  if (!entry.isDirectory()) continue;
+  const appDir = join(APPS_DIR, entry.name);
+  const appPackage = readPackageJson(appDir);
+  if (!appPackage) continue;
+
+  console.log(`\n▸ ${appPackage.name ?? entry.name}`);
+
+  const packageDirectories = resolveAppPackageDirectories(appPackage, workspacePackages);
+  const files = [...collectVueFiles(appDir), ...packageDirectories.flatMap((dir) => collectVueFiles(dir))];
+
+  const { meta, fileCount, componentCount } = extractMetaFromFiles(files);
+
+  const output = join(appDir, 'i18n-meta.yaml');
+  const existing = loadExistingMeta(output);
+  preserveExistingLeaves(meta as Record<string, unknown>, existing as Record<string, unknown> | undefined);
+
+  const sorted = sortMeta(meta);
+
+  const header =
+    '# i18n-meta.yaml — auto-generated by scripts/i18n-extract.ts\n' +
+    '# Do not edit by hand. Run: pnpm i18n:extract\n' +
+    '#\n' +
+    `# App: ${appPackage.name ?? entry.name}\n` +
+    '# Shape: <locale> → <ComponentName> → <key> → <value>\n' +
+    '# Use this file with your translation tool (Lokalise, POEditor, Crowdin, …).\n\n';
+
+  writeFileSync(output, header + yaml.dump(sorted, { indent: 2, lineWidth: 120 }), 'utf-8');
+
+  console.log(`  ✅  Wrote ${componentCount} components (${fileCount} files) → ${relative(ROOT, output)}`);
+}

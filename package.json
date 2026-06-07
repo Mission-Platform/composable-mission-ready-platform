@@ -19,7 +19,7 @@
     "lint:style:fix": "pnpm -r --parallel run lint:style --fix",
     "format": "pnpm -r --parallel run format",
     "storybook": "pnpm --filter @mission-platform/storybook storybook",
-    "i18n:extract": "node --experimental-strip-types scripts/i18n-extract.ts"
+    "i18n:extract": "pnpm --filter @mission-platform/scripts i18n:extract"
   },
   "devDependencies": {
     "@changesets/cli": "catalog:",
