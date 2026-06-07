@@ -1,10 +1,8 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "extends": "@mission-platform/typescript-config/test",
   "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
-    "types": ["vite/client", "vitest/globals"],
-    "erasableSyntaxOnly": true
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo"
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/**/*.spec.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/**/*.spec.ts"],
+  "exclude": ["src/**/*.stories.ts", "src/**/*.stories.tsx"]
 }
