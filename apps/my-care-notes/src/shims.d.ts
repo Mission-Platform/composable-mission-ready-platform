@@ -6,6 +6,6 @@ declare module '@mission-platform/tokens/scss/themes/dark' {}
 
 // Raw YAML imports via Vite's ?raw query.
 declare module '*.yaml?raw' {
-  const src: string;
-  export default src;
+  const source: string;
+  export default source;
 }

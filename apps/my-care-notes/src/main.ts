@@ -15,6 +15,7 @@ import { createApp } from 'vue';
 import { RouterView } from 'vue-router';
 
 import i18nMetaSource from '../i18n-meta.yaml?raw';
+
 import router from './router';
 
 import type { MpLocales } from '@mission-platform/i18n';
