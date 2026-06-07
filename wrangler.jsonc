@@ -24,7 +24,7 @@
       "name": "my-care-notes",
       "main": "./workers/base-spa/dist/index.js",
       "workers_dev": false,
-      "preview_urls": false,
+      "preview_urls": true,
       "build": {
         "watch_dir": [
           "./components/**/src/",
@@ -52,14 +52,14 @@
       },
       "routes": [
         {
-          "zone_name": "mission-platform.dev",
-          "pattern": "care-notes.mission-platform.dev",
-          "custom_domain": true
-        },
-        {
           "zone_name": "mission-platform.com",
           "pattern": "care-notes.mission-platform.com",
           "custom_domain": true
+        },
+        {
+          "pattern": "care-notes-*.mission-platform.dev",
+          "custom_domain": true,
+          "previews_enabled": true
         }
       ]
     }
