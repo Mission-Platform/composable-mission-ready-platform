@@ -18,6 +18,7 @@
   },
   "scripts": {
     "build": "vue-tsc -b tsconfig.build.json && vite build",
+    "build:watch": "vite build --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

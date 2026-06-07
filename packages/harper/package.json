@@ -21,6 +21,7 @@
   ],
   "scripts": {
     "build": "vue-tsc -b && vite build && vue-tsc --project tsconfig.build.json --emitDeclarationOnly",
+    "build:watch": "vite build --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",

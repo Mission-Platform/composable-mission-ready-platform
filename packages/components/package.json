@@ -22,6 +22,7 @@
   ],
   "scripts": {
     "build": "vue-tsc -b && vite build && vue-tsc --project tsconfig.app.json --emitDeclarationOnly",
+    "build:watch": "vite build --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

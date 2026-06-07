@@ -24,6 +24,7 @@
   "scripts": {
     "build": "pnpm build:ts",
     "build:ts": "vue-tsc -b && vite build && vue-tsc --project tsconfig.build.json --emitDeclarationOnly",
+    "build:watch": "vite build --watch",
     "build:wasm": "bash build.sh",
     "build:wasm:clean": "bash build.sh --no-cache",
     "lint": "eslint .",
