@@ -534,9 +534,9 @@ importers:
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
-      '@vue/tsconfig':
-        specifier: catalog:vue
-        version: 0.9.1(typescript@6.0.3)(vue@3.5.35(typescript@6.0.3))
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       eslint:
         specifier: catalog:eslint
         version: 10.4.1
@@ -549,9 +549,6 @@ importers:
       typescript:
         specifier: catalog:typescript
         version: 6.0.3
-      vite:
-        specifier: catalog:vite
-        version: 8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
 
   configs/prettier-config:
     devDependencies:
@@ -604,6 +601,68 @@ importers:
       typescript:
         specifier: catalog:typescript
         version: 6.0.3
+
+  configs/typescript-config:
+    dependencies:
+      '@vue/tsconfig':
+        specifier: catalog:vue
+        version: 0.9.1(typescript@6.0.3)(vue@3.5.35(typescript@6.0.3))
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
+      eslint:
+        specifier: catalog:eslint
+        version: 10.4.1
+      prettier:
+        specifier: catalog:prettier
+        version: 3.8.3
+      typescript:
+        specifier: catalog:typescript
+        version: 6.0.3
+
+  configs/vite-config:
+    dependencies:
+      '@intlify/unplugin-vue-i18n':
+        specifier: catalog:vue
+        version: 11.2.3(@vue/compiler-dom@3.5.35)(eslint@10.4.1)(rollup@4.61.1)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))(vue-i18n@11.4.4(vue@3.5.35(typescript@6.0.3)))(vue@3.5.35(typescript@6.0.3))
+      '@mission-platform/postcss-config':
+        specifier: workspace:*
+        version: link:../postcss-config
+      '@vitejs/plugin-vue':
+        specifier: catalog:vue
+        version: 6.0.7(vite@8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.35(typescript@6.0.3))
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.0
+      eslint:
+        specifier: catalog:eslint
+        version: 10.4.1
+      prettier:
+        specifier: catalog:prettier
+        version: 3.8.3
+      typescript:
+        specifier: catalog:typescript
+        version: 6.0.3
+      vite:
+        specifier: catalog:vite
+        version: 8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+      vitest:
+        specifier: catalog:testing
+        version: 4.1.8(@types/node@24.13.0)(@vitest/browser-playwright@4.1.8)(@vitest/coverage-v8@4.1.8)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
 
   packages/breakpoints:
     dependencies:
