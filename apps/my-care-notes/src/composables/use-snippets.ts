@@ -89,9 +89,9 @@ export function useSnippets() {
     const a = document.createElement('a');
     a.href = url;
     a.download = `${snippet.name}.md`;
-    document.body.appendChild(a);
+    document.body.append(a);
     a.click();
-    document.body.removeChild(a);
+    a.remove();
     URL.revokeObjectURL(url);
   }
 
@@ -102,9 +102,9 @@ export function useSnippets() {
     const a = document.createElement('a');
     a.href = url;
     a.download = 'snippets.md';
-    document.body.appendChild(a);
+    document.body.append(a);
     a.click();
-    document.body.removeChild(a);
+    a.remove();
     URL.revokeObjectURL(url);
   }
 

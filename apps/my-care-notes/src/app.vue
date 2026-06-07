@@ -2,7 +2,9 @@
   import {
     BaseApplicationLayout,
     BaseButton,
+    BaseInput,
     BaseMenubar,
+    BaseModal,
     BaseNavbar,
     BaseNavbarItem,
     BaseSidebar,
@@ -283,7 +285,7 @@
           #[tab.id]
         >
           <MonacoEditor
-            :model-value="openTabs().find((t) => t.id === tab.id)?.content ?? ''"
+            :model-value="openTabs().find((openedTab) => openedTab.id === tab.id)?.content ?? ''"
             :tab-id="tab.id"
             @update:model-value="updateTabContent(tab.id, $event)"
           />
@@ -304,7 +306,7 @@
     :title="t('rename.title')"
     size="sm"
     @close="cancelRenameTab"
-    @update:open="(v) => !v && cancelRenameTab()"
+    @update:open="(opened) => !opened && cancelRenameTab()"
   >
     <BaseInput
       id="rename-tab-input"
