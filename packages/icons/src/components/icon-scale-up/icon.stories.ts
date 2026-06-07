@@ -20,7 +20,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Scale up / grow. Use in map drawing toolbars or image-editing controls to increase the size of a selected feature.',
+        component:
+          'Scale up / grow. Use in map drawing toolbars or image-editing controls to increase the size of a selected feature.',
       },
     },
   },

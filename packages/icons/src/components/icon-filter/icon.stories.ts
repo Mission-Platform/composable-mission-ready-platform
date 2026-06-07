@@ -20,7 +20,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Filter / funnel. Use on filter panel triggers, active filter badges, or data-table filter controls.',
+        component:
+          'Filter / funnel. Use on filter panel triggers, active filter badges, or data-table filter controls.',
       },
     },
   },

@@ -18,7 +18,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Sort indicator. The `direction` prop (`asc` | `desc`) and `active` prop control the visual state. Use in data-table column headers to show current sort order.',
+        component:
+          'Sort indicator. The `direction` prop (`asc` | `desc`) and `active` prop control the visual state. Use in data-table column headers to show current sort order.',
       },
     },
   },

@@ -20,7 +20,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Rotate clockwise. Use in map drawing toolbars or image-editing controls to rotate a selected feature right.',
+        component:
+          'Rotate clockwise. Use in map drawing toolbars or image-editing controls to rotate a selected feature right.',
       },
     },
   },

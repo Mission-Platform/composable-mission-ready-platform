@@ -20,7 +20,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'External link indicator. Use alongside hyperlinks that open in a new tab or navigate outside the application.',
+        component:
+          'External link indicator. Use alongside hyperlinks that open in a new tab or navigate outside the application.',
       },
     },
   },

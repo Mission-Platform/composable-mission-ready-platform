@@ -20,7 +20,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Split-line tool indicator. Use in map drawing toolbars to split a selected line feature at the nearest vertex.',
+        component:
+          'Split-line tool indicator. Use in map drawing toolbars to split a selected line feature at the nearest vertex.',
       },
     },
   },

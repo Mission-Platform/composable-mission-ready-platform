@@ -16,7 +16,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Error indicator (circle with X). Use to represent a critical error, failed state, or destructive validation message.',
+        component:
+          'Error indicator (circle with X). Use to represent a critical error, failed state, or destructive validation message.',
       },
     },
   },

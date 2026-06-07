@@ -22,7 +22,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Padlock. Use to represent a locked or restricted state. The `open` prop toggles between locked and unlocked appearances.',
+        component:
+          'Padlock. Use to represent a locked or restricted state. The `open` prop toggles between locked and unlocked appearances.',
       },
     },
   },

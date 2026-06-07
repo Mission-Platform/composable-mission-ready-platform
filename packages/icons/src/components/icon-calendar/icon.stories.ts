@@ -20,7 +20,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Calendar / date-picker trigger. Use to open date-selection controls or indicate a date-related field.',
+        component:
+          'Calendar / date-picker trigger. Use to open date-selection controls or indicate a date-related field.',
       },
     },
   },

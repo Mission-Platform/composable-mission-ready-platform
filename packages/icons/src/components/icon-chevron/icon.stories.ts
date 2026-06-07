@@ -21,7 +21,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Chevron directional indicator. Supports `up`, `right`, `down`, and `left` directions. Use for dropdowns, accordion toggles, or breadcrumb separators.',
+        component:
+          'Chevron directional indicator. Supports `up`, `right`, `down`, and `left` directions. Use for dropdowns, accordion toggles, or breadcrumb separators.',
       },
     },
   },

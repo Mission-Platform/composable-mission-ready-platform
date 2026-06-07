@@ -20,7 +20,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Globe / world. Use to represent geographic scope, language/locale settings, or external web content.',
+        component:
+          'Globe / world. Use to represent geographic scope, language/locale settings, or external web content.',
       },
     },
   },

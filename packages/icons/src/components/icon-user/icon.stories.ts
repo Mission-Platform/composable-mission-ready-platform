@@ -20,7 +20,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'User / person avatar placeholder. Use in user profile menus, author attributions, or account settings.',
+        component:
+          'User / person avatar placeholder. Use in user profile menus, author attributions, or account settings.',
       },
     },
   },

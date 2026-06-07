@@ -13,9 +13,9 @@
       "routes": [
         {
           "pattern": "notes.mission-platform.dev/*",
-          "zone_name": "mission-platform.dev"
-        }
-      ]
+          "zone_name": "mission-platform.dev",
+        },
+      ],
     },
     // -------------------------------------------------------------------------
     // Production deployments — main branch only
@@ -25,9 +25,9 @@
       "routes": [
         {
           "pattern": "notes.mission-platform.com/*",
-          "zone_name": "mission-platform.com"
-        }
-      ]
-    }
-  }
+          "zone_name": "mission-platform.com",
+        },
+      ],
+    },
+  },
 }

@@ -16,7 +16,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Triangular alert symbol. Use to draw attention to a potential issue or warning message that requires user awareness.',
+        component:
+          'Triangular alert symbol. Use to draw attention to a potential issue or warning message that requires user awareness.',
       },
     },
   },

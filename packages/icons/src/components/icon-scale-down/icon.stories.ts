@@ -20,7 +20,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Scale down / shrink. Use in map drawing toolbars or image-editing controls to reduce the size of a selected feature.',
+        component:
+          'Scale down / shrink. Use in map drawing toolbars or image-editing controls to reduce the size of a selected feature.',
       },
     },
   },

@@ -20,7 +20,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Geodesic / great-circle path indicator. Use in map drawing toolbars to toggle geodesic mode for drawn lines and polygons.',
+        component:
+          'Geodesic / great-circle path indicator. Use in map drawing toolbars to toggle geodesic mode for drawn lines and polygons.',
       },
     },
   },

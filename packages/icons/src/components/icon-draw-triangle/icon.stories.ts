@@ -20,7 +20,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Draw-triangle tool indicator. Use in map drawing toolbars to activate the equilateral-triangle drawing mode.',
+        component:
+          'Draw-triangle tool indicator. Use in map drawing toolbars to activate the equilateral-triangle drawing mode.',
       },
     },
   },

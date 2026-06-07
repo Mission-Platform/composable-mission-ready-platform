@@ -17,7 +17,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Directional arrow. Supports `up`, `right`, `down`, and `left` directions. Use for navigation, sorting indicators, or directional actions.',
+        component:
+          'Directional arrow. Supports `up`, `right`, `down`, and `left` directions. Use for navigation, sorting indicators, or directional actions.',
       },
     },
   },

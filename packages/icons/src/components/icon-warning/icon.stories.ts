@@ -20,7 +20,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Warning triangle with exclamation mark. Use for caution-level warnings that are less severe than errors but require user attention.',
+        component:
+          'Warning triangle with exclamation mark. Use for caution-level warnings that are less severe than errors but require user attention.',
       },
     },
   },

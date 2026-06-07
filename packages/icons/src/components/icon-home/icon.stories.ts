@@ -20,7 +20,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Home / dashboard. Use in navigation menus or breadcrumbs to link back to the application home page.',
+        component:
+          'Home / dashboard. Use in navigation menus or breadcrumbs to link back to the application home page.',
       },
     },
   },

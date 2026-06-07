@@ -16,7 +16,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Notice / info circle. Use for lower-priority informational notices that do not require immediate action.',
+        component:
+          'Notice / info circle. Use for lower-priority informational notices that do not require immediate action.',
       },
     },
   },

@@ -43,9 +43,7 @@ const meta = {
     color: 'primary',
     truncate: false,
   },
-  render: (arguments_) => (
-    <BaseTypography {...arguments_}>The quick brown fox jumps over the lazy dog.</BaseTypography>
-  ),
+  render: (arguments_) => <BaseTypography {...arguments_}>The quick brown fox jumps over the lazy dog.</BaseTypography>,
 } satisfies Meta<typeof BaseTypography>;
 
 export default meta;
@@ -158,40 +156,87 @@ export const TruncatePopup: Story = {
   name: 'Truncate with Popup',
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', padding: '1.5rem', maxWidth: '640px' }}>
-
       <div>
-        <BaseTypography variant="label" color="secondary" style={{ marginBottom: '0.5rem', display: 'block' }}>
+        <BaseTypography
+          variant="label"
+          color="secondary"
+          style={{ marginBottom: '0.5rem', display: 'block' }}
+        >
           Narrow container (200 px) — hover to see full text
         </BaseTypography>
-        <div style={{ width: '200px', border: '1px dashed var(--mp-color-border-default)', borderRadius: '4px', padding: '4px 8px' }}>
-          <BaseTypography variant="body-md" truncatePopup>
+        <div
+          style={{
+            width: '200px',
+            border: '1px dashed var(--mp-color-border-default)',
+            borderRadius: '4px',
+            padding: '4px 8px',
+          }}
+        >
+          <BaseTypography
+            variant="body-md"
+            truncatePopup
+          >
             This is a very long sentence that will be truncated inside its narrow container.
           </BaseTypography>
         </div>
       </div>
 
       <div>
-        <BaseTypography variant="label" color="secondary" style={{ marginBottom: '0.5rem', display: 'block' }}>
+        <BaseTypography
+          variant="label"
+          color="secondary"
+          style={{ marginBottom: '0.5rem', display: 'block' }}
+        >
           Table-cell simulation — hover rows to reveal full content
         </BaseTypography>
-        <div style={{ width: '300px', border: '1px solid var(--mp-color-border-default)', borderRadius: '6px', overflow: 'hidden' }}>
+        <div
+          style={{
+            width: '300px',
+            border: '1px solid var(--mp-color-border-default)',
+            borderRadius: '6px',
+            overflow: 'hidden',
+          }}
+        >
           {truncatePopupRows.map((row) => (
-            <div key={row} style={{ padding: '8px 12px', borderBottom: '1px solid var(--mp-color-border-default)' }}>
-              <BaseTypography variant="body-sm" truncatePopup>{row}</BaseTypography>
+            <div
+              key={row}
+              style={{ padding: '8px 12px', borderBottom: '1px solid var(--mp-color-border-default)' }}
+            >
+              <BaseTypography
+                variant="body-sm"
+                truncatePopup
+              >
+                {row}
+              </BaseTypography>
             </div>
           ))}
         </div>
       </div>
 
       <div>
-        <BaseTypography variant="label" color="secondary" style={{ marginBottom: '0.5rem', display: 'block' }}>
+        <BaseTypography
+          variant="label"
+          color="secondary"
+          style={{ marginBottom: '0.5rem', display: 'block' }}
+        >
           Short text — no popup (text is not overflowing)
         </BaseTypography>
-        <div style={{ width: '400px', border: '1px dashed var(--mp-color-border-default)', borderRadius: '4px', padding: '4px 8px' }}>
-          <BaseTypography variant="body-md" truncatePopup>Short</BaseTypography>
+        <div
+          style={{
+            width: '400px',
+            border: '1px dashed var(--mp-color-border-default)',
+            borderRadius: '4px',
+            padding: '4px 8px',
+          }}
+        >
+          <BaseTypography
+            variant="body-md"
+            truncatePopup
+          >
+            Short
+          </BaseTypography>
         </div>
       </div>
-
     </div>
   ),
 };
@@ -200,9 +245,7 @@ export const TruncatePopup: Story = {
 
 export const PolymorphicAs: Story = {
   args: { variant: 'body-md', as: 'span' },
-  render: (arguments_) => (
-    <BaseTypography {...arguments_}>Rendered as a {'<span>'} element</BaseTypography>
-  ),
+  render: (arguments_) => <BaseTypography {...arguments_}>Rendered as a {'<span>'} element</BaseTypography>,
 };
 
 // ── Full scale showcase ───────────────────────────────────────────────────────
@@ -236,15 +279,13 @@ export const InContext: Story = {
   name: 'In Context (Used in Components)',
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', padding: '1.5rem', maxWidth: '640px' }}>
-
       <BaseCard
         v-slots={{
           header: () => 'Release Notes — v2.0',
           default: () => (
             <p>
-              BaseTypography is now used throughout all library components.
-              It ensures consistent font sizing, weight, color, and line-height
-              by mapping each semantic variant to the correct design token.
+              BaseTypography is now used throughout all library components. It ensures consistent font sizing, weight,
+              color, and line-height by mapping each semantic variant to the correct design token.
             </p>
           ),
           footer: () => 'Published 31 May 2026 · 2 min read',
@@ -253,15 +294,28 @@ export const InContext: Story = {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
         <BaseTypography variant="h4">Typography in Action</BaseTypography>
-        <BaseTypography variant="body-md" color="secondary">
-          Every variant automatically picks the correct element, font size, weight, and
-          color token. Use the <BaseTypography variant="code" as="span">as</BaseTypography>
-          {' '}prop to override the rendered element without losing the visual style.
+        <BaseTypography
+          variant="body-md"
+          color="secondary"
+        >
+          Every variant automatically picks the correct element, font size, weight, and color token. Use the{' '}
+          <BaseTypography
+            variant="code"
+            as="span"
+          >
+            as
+          </BaseTypography>{' '}
+          prop to override the rendered element without losing the visual style.
         </BaseTypography>
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-        <BaseTypography variant="label" color="secondary">Status:</BaseTypography>
+        <BaseTypography
+          variant="label"
+          color="secondary"
+        >
+          Status:
+        </BaseTypography>
         <BaseBadge variant="success">Stable</BaseBadge>
         <BaseBadge variant="info">v2.0</BaseBadge>
         <BaseBadge variant="warning">Beta</BaseBadge>
@@ -270,22 +324,33 @@ export const InContext: Story = {
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-        <BaseTypography variant="label" color="secondary">Tags:</BaseTypography>
+        <BaseTypography
+          variant="label"
+          color="secondary"
+        >
+          Tags:
+        </BaseTypography>
         <BaseTag label="Design System" />
-        <BaseTag label="Vue 3" variant="primary" />
+        <BaseTag
+          label="Vue 3"
+          variant="primary"
+        />
         <BaseTag label="TypeScript" />
       </div>
 
       <div>
         <BaseTypography variant="body-md">
-          Form fields, tooltips, breadcrumbs, modals, dialogs, tables, and more
-          all use BaseTypography internally to render their labels, hints, and captions.
+          Form fields, tooltips, breadcrumbs, modals, dialogs, tables, and more all use BaseTypography internally to
+          render their labels, hints, and captions.
         </BaseTypography>
-        <BaseTypography variant="caption" color="secondary" style={{ marginTop: '0.25rem', display: 'block' }}>
+        <BaseTypography
+          variant="caption"
+          color="secondary"
+          style={{ marginTop: '0.25rem', display: 'block' }}
+        >
           Hint: Open any component story to see BaseTypography in the rendered HTML.
         </BaseTypography>
       </div>
-
     </div>
   ),
 };

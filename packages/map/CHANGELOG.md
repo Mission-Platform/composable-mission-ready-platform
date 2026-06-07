@@ -38,7 +38,6 @@
 ### Patch Changes
 
 - 735d1d6: Improve `useDrawing` composable and map test infrastructure:
-
   - `selectFeature` parameter is now optional (`id?: FeatureId`) for more ergonomic deselection calls
   - Fix spec files to use `mockImplementation(() => {})` instead of `mockReturnValue()` for `getSource` and `getLayer` mocks, avoiding misleading `undefined` return type
   - `mountWithMap` test utility now accepts `Component` type for extra components and uses a type-safe `mergedOptions` variable

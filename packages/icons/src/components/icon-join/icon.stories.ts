@@ -20,7 +20,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Join-lines tool indicator. Use in map drawing toolbars to connect two separate line features end-to-end.',
+        component:
+          'Join-lines tool indicator. Use in map drawing toolbars to connect two separate line features end-to-end.',
       },
     },
   },
