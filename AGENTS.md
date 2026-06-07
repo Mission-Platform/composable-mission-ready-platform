@@ -25,19 +25,21 @@ composable_mission_ready_platform/
 ├── apps/                   # Deployable applications
 │   ├── my-care-notes/      # My Care Notes Vue 3 app — note-taking with spell/grammar checking
 │   └── storybook/          # Storybook app — component catalogue & visual tests
+├── configs/                # Shared tooling/configuration workspace packages
+│   ├── eslint-config/      # Base ESLint flat config
+│   ├── postcss-config/     # Shared PostCSS configuration
+│   ├── prettier-config/    # Base Prettier config
+│   └── stylelint-config/   # Base Stylelint config
 ├── packages/               # Shared, reusable packages consumed by apps
 │   ├── breakpoints/        # Responsive breakpoint utilities, composables, and Vue components
 │   ├── components/         # Vue 3 component library
-│   ├── eslint-config/      # Base ESLint flat config
 │   ├── harper/             # Harper grammar checker integration for Monaco editor
 │   ├── hunspell/           # Hunspell spell checker compiled to WebAssembly
 │   ├── i18n/               # vue-i18n integration utilities and base locales
 │   ├── icons/              # SVG icon components
 │   ├── map/                # MapLibre GL Vue 3 wrapper
-│   ├── postcss-config/     # Shared PostCSS configuration
-│   ├── prettier-config/    # Base Prettier config
-│   ├── stylelint-config/   # Base Stylelint config
 │   └── tokens/             # CSS design tokens and SCSS theme definitions
+├── scripts/                # Repo-wide tooling scripts (i18n extraction, etc.)
 ├── package.json            # Root workspace manifest (private, tooling only)
 ├── pnpm-workspace.yaml     # pnpm workspace configuration
 └── AGENTS.md               # This file
@@ -85,16 +87,35 @@ The `packages/` folder contains all reusable libraries that apps consume. These 
 |---|---|---|
 | `@mission-platform/breakpoints` | `packages/breakpoints` | Responsive breakpoint utilities, composables, and Vue components |
 | `@mission-platform/components` | `packages/components` | Vue 3 component library |
-| `@mission-platform/eslint-config` | `packages/eslint-config` | Base ESLint flat config — TypeScript, Vue 3 (script setup), JS rules |
 | `@mission-platform/harper` | `packages/harper` | Harper grammar and style checker integration for Monaco editor |
 | `@mission-platform/hunspell` | `packages/hunspell` | Hunspell spell checker compiled to WebAssembly via Emscripten |
 | `@mission-platform/i18n` | `packages/i18n` | vue-i18n integration utilities and compiled base locales |
 | `@mission-platform/icons` | `packages/icons` | SVG icon components for Mission Platform |
 | `@mission-platform/map` | `packages/map` | MapLibre GL Vue 3 wrapper with full reactivity support |
-| `@mission-platform/postcss-config` | `packages/postcss-config` | Shared PostCSS configuration for all packages and apps |
-| `@mission-platform/prettier-config` | `packages/prettier-config` | Base Prettier config — print width, quotes, trailing commas, Vue indent |
-| `@mission-platform/stylelint-config` | `packages/stylelint-config` | Base Stylelint config — standard SCSS + Vue SFC style blocks, BEM class naming |
 | `@mission-platform/tokens` | `packages/tokens` | CSS design tokens and SCSS theme definitions |
+
+---
+
+## `configs/` — Shared Tooling Configurations
+
+The `configs/` folder contains the shared linting, formatting, and build-tooling configuration packages. They are pnpm workspace packages (same conventions as `packages/`), but kept in a dedicated top-level directory to make their tooling-only role explicit and to keep `packages/` focused on product-facing libraries.
+
+### Conventions for configs
+
+- Each config lives in its own subdirectory: `configs/<config-name>/`.
+- Package names follow the scoped convention `@mission-platform/<config-name>`.
+- Configs are consumed both by `packages/` and by `apps/` as `devDependencies` (`"workspace:*"`).
+- Configs must **never import from `apps/` or `packages/`** — the dependency flow is one-way: `apps`/`packages` → `configs`.
+- Configs are versioned and released independently using [Changesets](https://github.com/changesets/changesets), the same as `packages/`.
+
+### Current configs
+
+| Package | Path | Description |
+|---|---|---|
+| `@mission-platform/eslint-config` | `configs/eslint-config` | Base ESLint flat config — TypeScript, Vue 3 (script setup), JS rules |
+| `@mission-platform/postcss-config` | `configs/postcss-config` | Shared PostCSS configuration for all packages and apps |
+| `@mission-platform/prettier-config` | `configs/prettier-config` | Base Prettier config — print width, quotes, trailing commas, Vue indent |
+| `@mission-platform/stylelint-config` | `configs/stylelint-config` | Base Stylelint config — standard SCSS + Vue SFC style blocks, BEM class naming |
 
 All other packages and apps **must** extend the three linting/formatting configs rather than defining their own from scratch.
 
@@ -124,12 +145,13 @@ export default { ...baseConfig }
 
 ### Adding a new package
 
-1. Create a new directory: `packages/<package-name>/`.
+1. Create a new directory: `packages/<package-name>/` (or `configs/<config-name>/` for new shared tooling configurations).
 2. Initialise a `package.json` with `"name": "@mission-platform/<package-name>"`.
 3. Add `@mission-platform/eslint-config`, `@mission-platform/prettier-config`, `@mission-platform/stylelint-config`, and (where applicable) `@mission-platform/postcss-config` as `devDependencies` and wire up the config files.
 4. Build and export the package (e.g. via a `vite` library build or `tsc`).
 5. Reference it in any app that needs it: `"@mission-platform/<package-name>": "workspace:*"`.
 6. Add stories or tests in `apps/storybook` to document the new components/composables.
+7. Add a [Changeset](https://github.com/changesets/changesets) entry (`pnpm changeset`) describing the new package so it is included in the next versioned release.
 
 ---
 
@@ -148,22 +170,35 @@ pnpm --filter @mission-platform/my-care-notes dev
 # Build all apps
 pnpm --filter "./apps/**" build
 
+# Build all shared tooling configs
+pnpm --filter "./configs/**" build
+
 # Build all packages
 pnpm --filter "./packages/**" build
 
 # Run tests across all workspaces
 pnpm --filter "./apps/**" test
 pnpm --filter "./packages/**" test
+pnpm --filter "./configs/**" test
 
 # Deploy My Care Notes
 pnpm --filter @mission-platform/my-care-notes deploy:staging
 pnpm --filter @mission-platform/my-care-notes deploy:prod
 
 # Release packages with Changesets
-pnpm changeset        # describe changes
-pnpm changeset version # bump versions
-pnpm changeset publish # publish to registry
+pnpm changeset          # add a changeset describing the change (required for any
+                        # user-visible change to a package in configs/ or packages/)
+pnpm changeset status   # show pending changesets and the versions they will bump
+pnpm changeset version  # consume changesets, bump versions, and update CHANGELOGs
+pnpm changeset publish  # publish the bumped packages to the registry
 ```
+
+### Changesets policy
+
+- Every PR that changes a published workspace (anything under `configs/` or `packages/`) **must** include a changeset describing the change. The `Conventional Commits` GitHub workflow runs `pnpm changeset status` against the PR's base branch to enforce this.
+- App-only changes (anything under `apps/`) do **not** require a changeset, since apps are private and never published.
+- Pick the smallest meaningful bump: `patch` for bug fixes and internal refactors, `minor` for backwards-compatible features, `major` for breaking changes (mirror the `BREAKING CHANGE` / `!` marker used in the commit message).
+- The changeset summary should mirror the Conventional Commit subject (without the `type(scope):` prefix), so the generated CHANGELOG reads naturally.
 
 ---
 
@@ -194,7 +229,7 @@ All commits in this repository **must** follow the [Conventional Commits v1.0.0]
   - `build` — changes that affect the build system or external dependencies
   - `ci` — CI configuration changes
   - `perf` — performance improvements
-- The **scope** is optional but recommended; it must be the name of the package or app being changed, e.g. `fix(map):`, `feat(components):`.
+- The **scope** is optional but recommended; it must be the name of the workspace being changed — that is, the directory name under `apps/`, `packages/`, or `configs/` (e.g. `fix(map):`, `feat(components):`, `chore(eslint-config):`). Use `repo` for cross-cutting changes that don't belong to a single workspace.
 - The **description** must immediately follow the `type(scope): ` prefix, be written in lowercase imperative mood, and must not end with a period.
 - A **body** may be provided one blank line after the description for additional context.
 - **Footers** go one blank line after the body (or description if no body). Use `BREAKING CHANGE: <description>` for breaking API changes (correlates with SemVer **MAJOR**). Use `Co-authored-by: Name <email>` for co-authorship.
@@ -211,6 +246,8 @@ refactor(components): remove redundant Window interface in use-hunspell-monaco
 
 style(components): reformat Vue SFCs with htmlWhitespaceSensitivity ignore
 
+chore(eslint-config): move shared eslint config into the configs/ workspace
+
 chore: add dist/ to .gitignore
 
 feat(api)!: drop support for Vue 2
@@ -222,10 +259,11 @@ BREAKING CHANGE: Vue 2 is no longer supported; upgrade to Vue 3.5+.
 
 ## Key Principles for Agents
 
-1. **Dependency direction is one-way.** Code in `packages/` must never import from `apps/`. Apps import from packages, not the reverse.
-2. **Isolate concerns in packages.** New reusable UI components, composables, utilities, or design tokens belong in `packages/`, not embedded inside an app.
+1. **Dependency direction is one-way.** Code in `packages/` and `configs/` must never import from `apps/`. The flow is strictly `apps` → `packages` → `configs` (and `apps` → `configs` directly for tooling).
+2. **Isolate concerns in packages.** New reusable UI components, composables, utilities, or design tokens belong in `packages/`, not embedded inside an app. New shared lint/format/build tooling belongs in `configs/`.
 3. **Each app wires packages together.** Apps are thin orchestration layers that compose packages into a working product.
 4. **Storybook is the component workbench.** When adding or modifying components in `packages/`, add or update corresponding stories in `apps/storybook`.
 5. **TypeScript everywhere.** All new files must be `.ts` or `.vue` (using `<script setup lang="ts">`). No plain JavaScript files.
 6. **Test alongside implementation.** Unit tests (Vitest) and browser tests (Playwright) live next to the code they cover inside each workspace.
 7. **Follow Conventional Commits.** Every commit must use the `type(scope): description` format defined in the Git Commit Convention section above.
+8. **Ship a Changeset with every package change.** Any PR that modifies a workspace under `configs/` or `packages/` must include a changeset (`pnpm changeset`) — this is enforced by the `Conventional Commits` GitHub workflow.
