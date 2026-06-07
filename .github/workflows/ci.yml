@@ -38,6 +38,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install playwright browsers
+        run: pnpm dlx playwright install --with-deps
+
       # Cache Vite's on-disk dependency pre-bundling + Turbo-style build caches
       # across runs.  Keyed on the lockfile + workflow file so it invalidates
       # whenever dependencies or CI configuration change.
