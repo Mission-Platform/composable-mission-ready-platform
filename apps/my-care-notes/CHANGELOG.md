@@ -1,5 +1,12 @@
 # @mission-platform/my-care-notes
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [2b0cce4]
+  - @mission-platform/components@0.3.0
+
 ## 0.0.5
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @mission-platform/storybook
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [2b0cce4]
+  - @mission-platform/components@0.3.0
+  - @mission-platform/map@0.1.5
+
 ## 0.0.5
 
 ### Patch Changes
