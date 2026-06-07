@@ -17,7 +17,7 @@ import vueParser from 'vue-eslint-parser';
 const config = [
   {
     name: 'mission-platform/ignores',
-    ignores: ['**/dist/**', '**/node_modules/**', '**/.storybook/storybook-static/**'],
+    ignores: ['**/dist/**', '**/node_modules/**', '**/storybook-static/**', '**/.storybook/storybook-static/**'],
   },
   {
     name: 'mission-platform/typescript',
