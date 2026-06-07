@@ -1,10 +1,7 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "extends": "@mission-platform/typescript-config/app",
   "compilerOptions": {
-    "lib": ["ES2022", "ES2023", "DOM", "DOM.Iterable"],
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.storybook.tsbuildinfo",
-    "types": ["vite/client"],
-    "erasableSyntaxOnly": true,
     "skipLibCheck": true,
     "noImplicitAny": false
   },

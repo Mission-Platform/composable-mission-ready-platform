@@ -1,16 +1,6 @@
-import vue from '@vitejs/plugin-vue';
-import { defineConfig } from 'vitest/config';
+import { defineVitestConfig } from '@mission-platform/vite-config/vitest';
 
-export default defineConfig({
-  plugins: [vue()],
-  test: {
-    environment: 'jsdom',
-    globals: true,
-    include: ['src/**/*.spec.ts'],
-    coverage: {
-      provider: 'v8',
-      include: ['src/**/*.ts', 'src/**/*.vue'],
-      exclude: ['src/**/*.stories.*', 'src/index.ts'],
-    },
-  },
+export default defineVitestConfig({
+  coverageInclude: ['src/**/*.ts', 'src/**/*.vue'],
+  coverageExclude: ['src/**/*.stories.*', 'src/index.ts'],
 });
