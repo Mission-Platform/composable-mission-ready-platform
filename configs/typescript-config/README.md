@@ -9,13 +9,14 @@ presets rather than redefining the same options locally.
 
 ## Presets
 
-| Preset                                  | Subpath import                         | Use case                                              |
-| --------------------------------------- | -------------------------------------- | ----------------------------------------------------- |
-| `tsconfig.base.json`                    | `@mission-platform/typescript-config`        | Shared linting flags only — building block            |
-| `tsconfig.app.json`                     | `@mission-platform/typescript-config/app`    | Vue 3 / DOM app source — type-checks `src/**`         |
-| `tsconfig.library.json`                 | `@mission-platform/typescript-config/library`| Library source — emits `.d.ts` to `dist/`             |
-| `tsconfig.node.json`                    | `@mission-platform/typescript-config/node`   | Node tooling — `vite.config.ts`, `vitest.config.ts`   |
-| `tsconfig.test.json`                    | `@mission-platform/typescript-config/test`   | Vitest specs — pulls in `vitest/globals` types        |
+| Preset                  | Subpath import                                | Use case                                            |
+| ----------------------- | --------------------------------------------- | --------------------------------------------------- |
+| `tsconfig.base.json`    | `@mission-platform/typescript-config`         | Shared linting flags only — building block          |
+| `tsconfig.app.json`     | `@mission-platform/typescript-config/app`     | Vue 3 / DOM app source — type-checks `src/**`       |
+| `tsconfig.library.json` | `@mission-platform/typescript-config/library` | Library source — emits `.d.ts` to `dist/`           |
+| `tsconfig.node.json`    | `@mission-platform/typescript-config/node`    | Node tooling — `vite.config.ts`, `vitest.config.ts` |
+| `tsconfig.test.json`    | `@mission-platform/typescript-config/test`    | Vitest specs — pulls in `vitest/globals` types      |
+| `tsconfig.stories.json` | `@mission-platform/typescript-config/stories` | Storybook stories — `src/**/*.stories.{ts,tsx}`     |
 
 ## Usage
 
@@ -24,8 +25,8 @@ Add the package as a `devDependency`:
 ```jsonc
 {
   "devDependencies": {
-    "@mission-platform/typescript-config": "workspace:*"
-  }
+    "@mission-platform/typescript-config": "workspace:*",
+  },
 }
 ```
 

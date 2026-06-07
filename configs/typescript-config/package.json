@@ -9,14 +9,16 @@
     "./app": "./tsconfig.app.json",
     "./node": "./tsconfig.node.json",
     "./test": "./tsconfig.test.json",
-    "./library": "./tsconfig.library.json"
+    "./library": "./tsconfig.library.json",
+    "./stories": "./tsconfig.stories.json"
   },
   "files": [
     "tsconfig.base.json",
     "tsconfig.app.json",
     "tsconfig.node.json",
     "tsconfig.test.json",
-    "tsconfig.library.json"
+    "tsconfig.library.json",
+    "tsconfig.stories.json"
   ],
   "scripts": {
     "lint": "eslint .",
