@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import type { NoteTab } from '../types';
 
@@ -56,6 +56,33 @@ watch(activeTabId, (id) => {
 export function useTabs() {
   function openTabs() {
     return tabs.value.filter((t) => !t.closedAt);
+  }
+
+  const closedTabs = computed(() =>
+    tabs.value
+      .filter((t): t is NoteTab & { closedAt: number } => typeof t.closedAt === 'number')
+      .sort((a, b) => b.closedAt - a.closedAt),
+  );
+
+  function restoreTab(id: string): void {
+    const tab = tabs.value.find((t) => t.id === id);
+    if (!tab || !tab.closedAt) return;
+    tabs.value = tabs.value.map((t) => (t.id === id ? { ...t, closedAt: undefined } : t));
+    activeTabId.value = id;
+  }
+
+  function removeTab(id: string): void {
+    tabs.value = tabs.value.filter((t) => t.id !== id);
+    if (activeTabId.value === id) {
+      const next = openTabs()[0];
+      if (next) {
+        activeTabId.value = next.id;
+      } else {
+        const newTab = createDefaultTab();
+        tabs.value = [...tabs.value, newTab];
+        activeTabId.value = newTab.id;
+      }
+    }
   }
 
   function addTab(): NoteTab {
@@ -134,8 +161,11 @@ export function useTabs() {
     tabs,
     activeTabId,
     openTabs,
+    closedTabs,
     addTab,
     closeTab,
+    restoreTab,
+    removeTab,
     updateTabContent,
     updateTabTitle,
     setActiveTab,
