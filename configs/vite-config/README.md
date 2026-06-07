@@ -7,10 +7,10 @@ preconfigured for Vue components.
 
 ## Exports
 
-| Subpath                                  | Helpers                                                          |
-| ---------------------------------------- | ---------------------------------------------------------------- |
-| `@mission-platform/vite-config`          | `defineLibraryConfig`, `defineAppConfig`, default externals/globals |
-| `@mission-platform/vite-config/vitest`   | `defineVitestConfig`                                             |
+| Subpath                                | Helpers                                                             |
+| -------------------------------------- | ------------------------------------------------------------------- |
+| `@mission-platform/vite-config`        | `defineLibraryConfig`, `defineAppConfig`, default externals/globals |
+| `@mission-platform/vite-config/vitest` | `defineVitestConfig`                                                |
 
 ## Library package usage
 
@@ -49,7 +49,11 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineAppConfig({
   overrides: {
-    plugins: [VitePWA({ /* ... */ })],
+    plugins: [
+      VitePWA({
+        /* ... */
+      }),
+    ],
     worker: { format: 'es' },
   },
 });
