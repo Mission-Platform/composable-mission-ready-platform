@@ -63,6 +63,7 @@
           "custom_domain": true
         },
         {
+          "zone_name": "mission-platform.dev",
           "pattern": "*-care-notes.mission-platform.dev",
           "custom_domain": false,
           "previews_enabled": true
