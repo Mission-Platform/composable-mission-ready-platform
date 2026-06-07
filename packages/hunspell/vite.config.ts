@@ -1,22 +1,20 @@
-import path from 'node:path';
+import { defineLibraryConfig } from '@mission-platform/vite-config';
 
-import { defineConfig } from 'vite';
-
-export default defineConfig({
-  build: {
-    lib: {
-      entry: {
-        hunspell: path.resolve(__dirname, 'src/index.ts'),
-        'hunspell.worker': path.resolve(__dirname, 'src/hunspell.worker.ts'),
-      },
-      name: 'MissionPlatformHunspell',
-      formats: ['es'],
-    },
-    rollupOptions: {
-      output: {
-        assetFileNames: 'assets/[name][extname]',
+export default defineLibraryConfig({
+  rootDir: __dirname,
+  entry: {
+    hunspell: 'src/index.ts',
+    'hunspell.worker': 'src/hunspell.worker.ts',
+  },
+  name: 'MissionPlatformHunspell',
+  overrides: {
+    assetsInclude: ['**/*.wasm'],
+    build: {
+      rollupOptions: {
+        output: {
+          assetFileNames: 'assets/[name][extname]',
+        },
       },
     },
   },
-  assetsInclude: ['**/*.wasm'],
 });
