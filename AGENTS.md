@@ -29,7 +29,9 @@ composable_mission_ready_platform/
 │   ├── eslint-config/      # Base ESLint flat config
 │   ├── postcss-config/     # Shared PostCSS configuration
 │   ├── prettier-config/    # Base Prettier config
-│   └── stylelint-config/   # Base Stylelint config
+│   ├── stylelint-config/   # Base Stylelint config
+│   ├── typescript-config/  # Shared TypeScript base tsconfig presets
+│   └── vite-config/        # Shared Vite/Vitest configuration helpers
 ├── packages/               # Shared, reusable packages consumed by apps
 │   ├── breakpoints/        # Responsive breakpoint utilities, composables, and Vue components
 │   ├── components/         # Vue 3 component library
@@ -116,6 +118,8 @@ The `configs/` folder contains the shared linting, formatting, and build-tooling
 | `@mission-platform/postcss-config` | `configs/postcss-config` | Shared PostCSS configuration for all packages and apps |
 | `@mission-platform/prettier-config` | `configs/prettier-config` | Base Prettier config — print width, quotes, trailing commas, Vue indent |
 | `@mission-platform/stylelint-config` | `configs/stylelint-config` | Base Stylelint config — standard SCSS + Vue SFC style blocks, BEM class naming |
+| `@mission-platform/typescript-config` | `configs/typescript-config` | Shared TypeScript base configs — `base`, `app`, `library`, `node`, `test` presets |
+| `@mission-platform/vite-config` | `configs/vite-config` | Shared Vite/Vitest helpers — `defineLibraryConfig`, `defineAppConfig`, `defineVitestConfig` |
 
 All other packages and apps **must** extend the three linting/formatting configs rather than defining their own from scratch.
 
