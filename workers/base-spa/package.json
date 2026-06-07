@@ -27,7 +27,6 @@
     "@mission-platform/typescript-config": "workspace:*",
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",
-    "typescript": "catalog:typescript",
-    "wrangler": "catalog:"
+    "typescript": "catalog:typescript"
   }
 }
