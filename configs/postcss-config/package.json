@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/postcss-config",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shared PostCSS configuration for all Mission Platform packages and apps",
   "type": "module",
   "exports": {

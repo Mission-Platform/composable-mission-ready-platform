@@ -1,5 +1,31 @@
 # @mission-platform/hunspell
 
+## 0.2.2
+
+### Patch Changes
+
+- 8a910f9: use shared `@mission-platform/typescript-config` and `@mission-platform/vite-config`
+
+  Migrates `vite.config.ts`, `tsconfig.build.json`, and `tsconfig.node.json`
+  to extend the shared workspaces under `configs/`. The `assetsInclude`
+
+  - `assetFileNames` settings (for the WebAssembly artefact) are layered
+    in via `overrides`. No runtime or public-API change.
+
+- 05d31c9: normalize lint and format scripts across all workspaces
+
+  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
+
+- cf89515: enable tree shaking support when consumed by apps
+
+  Declares `"sideEffects"` in each package's `package.json` so app bundlers
+  (Vite/Rollup) can safely drop unused exports. Pure-TypeScript packages
+  (`harper`, `hunspell`, `i18n`) opt out of side effects entirely with
+  `"sideEffects": false`. Packages that ship styles and/or Vue SFCs
+  (`breakpoints`, `components`, `icons`, `map`, `tokens`) keep `*.css`,
+  `*.scss`, and `*.vue` files marked as side-effectful so component
+  styles and SCSS entrypoints are preserved.
+
 ## 0.2.1
 
 ### Patch Changes

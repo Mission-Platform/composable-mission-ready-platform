@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/tokens",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "CSS design tokens and SCSS theme definitions for Mission Platform",
   "type": "module",
   "sideEffects": [
