@@ -1,16 +1,10 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "extends": "@mission-platform/typescript-config/library",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.build.tsbuildinfo",
     "types": ["vite/client"],
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true,
-    "declaration": true,
     "declarationDir": "./dist",
     "emitDeclarationOnly": true,
-    "noEmit": false,
     "rootDir": "./src"
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts"],
