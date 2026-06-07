@@ -5,6 +5,11 @@
   "compatibility_flags": [
     "nodejs_compat"
   ],
+  "dev": {
+    "generate_types": true,
+    "local_protocol": "https",
+    "upstream_protocol": "https"
+  },
   "workers_dev": false,
   "preview_urls": false,
   "env": {
@@ -23,7 +28,8 @@
       },
       "name": "my-care-notes",
       "main": "./workers/base-spa/dist/index.js",
-      "workers_dev": false,
+      "workers_dev": true,
+      "first_party_worker": true,
       "preview_urls": true,
       "build": {
         "watch_dir": [
@@ -58,7 +64,7 @@
         },
         {
           "pattern": "*-care-notes.mission-platform.dev",
-          "custom_domain": true,
+          "custom_domain": false,
           "previews_enabled": true
         }
       ]
