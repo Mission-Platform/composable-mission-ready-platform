@@ -1,0 +1,38 @@
+{
+  "name": "@mission-platform/typescript-config",
+  "version": "0.1.0",
+  "description": "Shared TypeScript base configurations for all Mission Platform packages and apps",
+  "type": "module",
+  "exports": {
+    ".": "./tsconfig.base.json",
+    "./base": "./tsconfig.base.json",
+    "./app": "./tsconfig.app.json",
+    "./node": "./tsconfig.node.json",
+    "./test": "./tsconfig.test.json",
+    "./library": "./tsconfig.library.json"
+  },
+  "files": [
+    "tsconfig.base.json",
+    "tsconfig.app.json",
+    "tsconfig.node.json",
+    "tsconfig.test.json",
+    "tsconfig.library.json"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "peerDependencies": {
+    "typescript": ">=5.0.0"
+  },
+  "dependencies": {
+    "@vue/tsconfig": "catalog:vue"
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "typescript": "catalog:typescript"
+  }
+}
