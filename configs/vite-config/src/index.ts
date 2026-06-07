@@ -9,12 +9,7 @@ import { defineConfig, mergeConfig, type UserConfig } from 'vite';
  * Default Rollup externals every shared library should treat as peer-provided.
  * Apps consuming the library are expected to supply these themselves.
  */
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[] = [
-  'vue',
-  'vue-router',
-  'vue-i18n',
-  '@mission-platform/i18n',
-];
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[] = ['vue', 'vue-router', 'vue-i18n', '@mission-platform/i18n'];
 
 /**
  * Default Rollup output globals for UMD/IIFE consumers. We only target ESM but
@@ -29,6 +24,11 @@ export interface LibraryConfigOptions {
   rootDir: string;
   /** Entry file or map of named entries, relative to `rootDir`. */
   entry?: string | Record<string, string>;
+  /**
+   * Output bundle file name (without extension) used by Rollup when `entry`
+   * is a single string. Ignored when `entry` is an entry map.
+   */
+  fileName?: string;
   /** Global UMD-style name used when bundling for non-ESM consumers. */
   name?: string;
   /** Extra Rollup externals to merge with {@link DEFAULT_LIBRARY_EXTERNALS}. */
@@ -48,6 +48,7 @@ export function defineLibraryConfig(options: LibraryConfigOptions): UserConfig {
   const {
     rootDir,
     entry = 'src/index.ts',
+    fileName,
     name = 'MissionPlatform',
     external = [],
     globals = {},
@@ -57,9 +58,7 @@ export function defineLibraryConfig(options: LibraryConfigOptions): UserConfig {
   const resolvedEntry =
     typeof entry === 'string'
       ? path.resolve(rootDir, entry)
-      : Object.fromEntries(
-          Object.entries(entry).map(([key, value]) => [key, path.resolve(rootDir, value)]),
-        );
+      : Object.fromEntries(Object.entries(entry).map(([key, value]) => [key, path.resolve(rootDir, value)]));
 
   const base = defineConfig({
     css: {
@@ -71,6 +70,7 @@ export function defineLibraryConfig(options: LibraryConfigOptions): UserConfig {
         entry: resolvedEntry,
         name,
         formats: ['es'],
+        ...(fileName && typeof entry === 'string' ? { fileName } : {}),
       },
       rollupOptions: {
         external: [...DEFAULT_LIBRARY_EXTERNALS, ...external],
