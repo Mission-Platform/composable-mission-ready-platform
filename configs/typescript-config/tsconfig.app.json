@@ -5,7 +5,5 @@
   "compilerOptions": {
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "types": ["vite/client"]
-  },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/**/*.d.ts"],
-  "exclude": ["src/**/*.stories.ts", "src/**/*.stories.tsx", "src/**/*.spec.ts", "src/**/*.test.ts"]
+  }
 }

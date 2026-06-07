@@ -5,13 +5,5 @@
   "compilerOptions": {
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "types": ["vite/client", "vitest/globals"]
-  },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts",
-    "src/test-utils/**"
-  ]
+  }
 }
