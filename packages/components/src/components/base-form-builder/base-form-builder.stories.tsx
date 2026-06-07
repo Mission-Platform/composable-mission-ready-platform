@@ -167,6 +167,7 @@ export const WithValidation: Story = {
       const formValues = ref({});
       const result = ref<string | undefined>(undefined);
       function onSubmit(values: Record<string, unknown>, isValid: boolean) {
+        console.log('Form submitted:', values, 'Valid:', isValid);
         result.value = isValid ? '✅ Form submitted successfully!' : '❌ Please fix the errors above.';
       }
       return { args: arguments_, formValues, result, onSubmit };
