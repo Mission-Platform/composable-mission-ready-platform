@@ -4,6 +4,7 @@
   import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue';
 
   import { useHunspellMonaco } from '../../composables/use-hunspell-monaco';
+  import { fontFamilies } from '@mission-platform/tokens';
 
   export type MonacoEditorCompletionItemProvider = monaco.languages.CompletionItemProvider;
 
@@ -180,12 +181,18 @@
       // Render floating widgets (suggest, hover, context-menu) relative to the
       // viewport so they are never clipped by the container's overflow:hidden.
       fixedOverflowWidgets: true,
+      allowOverflow: true,
       // Trim visual noise
       overviewRulerLanes: 0,
       overviewRulerBorder: false,
       renderLineHighlight: 'all',
       cursorStyle: 'line',
       padding: { top: 8, bottom: 8 },
+      fontLigatures: true,
+      fontVariations: true,
+      fontFamily: fontFamilies.mono,
+      codeLensFontFamily: fontFamilies.sans,
+      copyWithSyntaxHighlighting: false,
     });
 
     // Forward content changes
@@ -300,7 +307,6 @@
     :aria-label="`${language} editor`"
     :style="{ height }"
     class="base-monaco-editor"
-    role="region"
   />
 </template>
 
