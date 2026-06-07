@@ -21,8 +21,11 @@
   "scripts": {
     "build": "vite build && tsc --project tsconfig.build.json --declaration --declarationDir dist --emitDeclarationOnly --noEmit false --rootDir src",
     "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
     "lint:style": "stylelint \"src/**/*.scss\"",
-    "format": "prettier --write ."
+    "lint:style:fix": "stylelint --fix \"src/**/*.scss\"",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",

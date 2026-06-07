@@ -27,7 +27,8 @@
     "build:wasm:clean": "bash build.sh --no-cache",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "format": "prettier --write ."
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",

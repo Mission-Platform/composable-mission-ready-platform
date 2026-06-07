@@ -22,7 +22,9 @@
   ],
   "scripts": {
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
   },
   "peerDependencies": {
     "typescript": ">=5.0.0"

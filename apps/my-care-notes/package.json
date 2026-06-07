@@ -11,8 +11,11 @@
     "preview": "vite preview",
     "test": "vitest run",
     "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
     "lint:style": "stylelint \"src/**/*.{vue,scss,css}\"",
-    "format": "prettier --write ."
+    "lint:style:fix": "stylelint --fix \"src/**/*.{vue,scss,css}\"",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
   },
   "dependencies": {
     "@mission-platform/breakpoints": "workspace:*",

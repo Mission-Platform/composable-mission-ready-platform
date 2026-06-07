@@ -14,10 +14,11 @@
     "build": "pnpm build:dependencies && pnpm build:apps",
     "build:storybook": "pnpm build:config && pnpm build:tokens && pnpm build:icons && pnpm build:monaco && pnpm build:packages && pnpm --filter @mission-platform/storybook build-storybook",
     "lint": "pnpm -r --parallel run lint",
-    "lint:fix": "pnpm -r --parallel run lint --fix",
+    "lint:fix": "pnpm -r --parallel run lint:fix",
     "lint:style": "pnpm -r --parallel run lint:style",
-    "lint:style:fix": "pnpm -r --parallel run lint:style --fix",
+    "lint:style:fix": "pnpm -r --parallel run lint:style:fix",
     "format": "pnpm -r --parallel run format",
+    "format:write": "pnpm -r --parallel run format:write",
     "storybook": "pnpm --filter @mission-platform/storybook storybook",
     "i18n:extract": "pnpm --filter @mission-platform/scripts i18n:extract"
   },

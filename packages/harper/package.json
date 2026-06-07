@@ -24,7 +24,8 @@
     "test:watch": "vitest",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "format": "prettier --write ."
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
   },
   "peerDependencies": {
     "vue": "^3.5.0"

@@ -20,7 +20,9 @@
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
   },
   "peerDependencies": {
     "vite": ">=8.0.0",

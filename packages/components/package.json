@@ -23,7 +23,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "lint:style": "stylelint \"src/**/*.{vue,scss}\"",
-    "format": "prettier --write ."
+    "lint:style:fix": "stylelint --fix \"src/**/*.{vue,scss}\"",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
   },
   "peerDependencies": {
     "vue": "^3.5.0",

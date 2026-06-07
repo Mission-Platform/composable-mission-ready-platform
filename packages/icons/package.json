@@ -18,8 +18,11 @@
     "build": "vue-tsc -b && vite build && vue-tsc --project tsconfig.app.json --emitDeclarationOnly",
     "test": "vitest run",
     "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
     "lint:style": "stylelint \"src/**/*.{vue,scss}\"",
-    "format": "prettier --write ."
+    "lint:style:fix": "stylelint --fix \"src/**/*.{vue,scss}\"",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
   },
   "dependencies": {
     "@mission-platform/tokens": "workspace:*"

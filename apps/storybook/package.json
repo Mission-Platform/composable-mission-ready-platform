@@ -12,8 +12,11 @@
     "deploy": "chromatic --project-token=chpt_c79f311b83ab8e0",
     "test": "vitest run --project unit",
     "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
     "lint:style": "stylelint \"src/**/*.{vue,scss,css}\"",
-    "format": "prettier --write ."
+    "lint:style:fix": "stylelint --fix \"src/**/*.{vue,scss,css}\"",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
   },
   "dependencies": {
     "@mission-platform/breakpoints": "workspace:*",
