@@ -27,9 +27,9 @@
       "preview_urls": true,
       "build": {
         "watch_dir": [
-          "./components/**/src/",
-          "./apps/my-care-notes/src/",
-          "./workers/base-spa/src"
+          "./components/**/src/*",
+          "./apps/my-care-notes/src/*",
+          "./workers/base-spa/src/*"
         ],
         "cwd": ".",
         "command": "pnpm build:config && pnpm build:workers && pnpm build:dependencies && pnpm run --filter @mission-platform/my-care-notes build"
@@ -57,7 +57,7 @@
           "custom_domain": true
         },
         {
-          "pattern": "care-notes-*.mission-platform.dev",
+          "pattern": "*-care-notes.mission-platform.dev",
           "custom_domain": true,
           "previews_enabled": true
         }
