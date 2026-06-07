@@ -1,36 +1,17 @@
-import path from 'node:path';
-
-import postcssConfig from '@mission-platform/postcss-config';
-import vue from '@vitejs/plugin-vue';
-import { defineConfig } from 'vite';
+import { defineLibraryConfig } from '@mission-platform/vite-config';
 import svgLoader from 'vite-svg-loader';
 
-export default defineConfig({
-  css: {
-    postcss: postcssConfig,
-  },
-  plugins: [
-    vue(),
-    svgLoader({
-      svgo: true,
-      defaultImport: 'component',
-      svgoConfig: { multipass: true, datauri: 'unenc' },
-    }),
-  ],
-  build: {
-    lib: {
-      entry: path.resolve(__dirname, 'src/index.ts'),
-      name: 'MissionPlatformIcons',
-      fileName: 'icons',
-      formats: ['es'],
-    },
-    rollupOptions: {
-      external: ['vue'],
-      output: {
-        globals: {
-          vue: 'Vue',
-        },
-      },
-    },
+export default defineLibraryConfig({
+  rootDir: __dirname,
+  name: 'MissionPlatformIcons',
+  fileName: 'icons',
+  overrides: {
+    plugins: [
+      svgLoader({
+        svgo: true,
+        defaultImport: 'component',
+        svgoConfig: { multipass: true, datauri: 'unenc' },
+      }),
+    ],
   },
 });

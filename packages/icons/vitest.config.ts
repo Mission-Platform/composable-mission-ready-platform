@@ -1,11 +1,3 @@
-import vue from '@vitejs/plugin-vue';
-import { defineConfig } from 'vitest/config';
+import { defineVitestConfig } from '@mission-platform/vite-config/vitest';
 
-export default defineConfig({
-  plugins: [vue()],
-  test: {
-    environment: 'jsdom',
-    globals: true,
-    include: ['src/**/*.spec.ts'],
-  },
-});
+export default defineVitestConfig();
