@@ -1,0 +1,50 @@
+{
+  "name": "@mission-platform/vite-config",
+  "version": "0.1.0",
+  "description": "Shared Vite and Vitest configuration helpers for all Mission Platform packages and apps",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./vitest": {
+      "import": "./dist/vitest.js",
+      "types": "./dist/vitest.d.ts"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "peerDependencies": {
+    "vite": ">=8.0.0",
+    "vitest": ">=4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "vitest": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@intlify/unplugin-vue-i18n": "catalog:vue",
+    "@mission-platform/postcss-config": "workspace:*",
+    "@vitejs/plugin-vue": "catalog:vue"
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@types/node": "catalog:typescript",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite",
+    "vitest": "catalog:testing"
+  }
+}
