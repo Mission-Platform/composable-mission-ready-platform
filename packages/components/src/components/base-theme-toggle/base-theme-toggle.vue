@@ -2,13 +2,17 @@
   /**
    * `BaseThemeToggle` — Theme toggle component for the Mission Platform UI.
    *
+   * Cycles between three states: `light` → `dark` → `auto` → `light`.
+   * The `auto` state removes the explicit `data-theme` attribute from
+   * `<html>` so the UI follows the user's system `prefers-color-scheme`.
+   *
    * See the props, emits, and slots tables below (auto-generated from
    * the component's TypeScript declarations) for the full public API,
    * and refer to the linked stories for usage examples.
    */
-  import { onMounted, onUnmounted, ref } from 'vue';
+  import { computed, onMounted, onUnmounted, ref } from 'vue';
 
-  export type Theme = 'light' | 'dark';
+  export type Theme = 'light' | 'dark' | 'auto';
 
   const props = withDefaults(
     defineProps<{
@@ -23,18 +27,49 @@
     change: [theme: Theme];
   }>();
 
-  const theme = ref<Theme>('light');
-
   function readTheme(): Theme {
-    return (document.documentElement.getAttribute('data-theme') as Theme | null) ?? 'light';
+    if (typeof document === 'undefined') return 'auto';
+    const attribute = document.documentElement.getAttribute('data-theme');
+    if (attribute === 'light' || attribute === 'dark') return attribute;
+    return 'auto';
+  }
+
+  const theme = ref<Theme>(readTheme());
+
+  function applyTheme(next: Theme): void {
+    if (next === 'auto') {
+      document.documentElement.removeAttribute('data-theme');
+    } else {
+      document.documentElement.setAttribute('data-theme', next);
+    }
+  }
+
+  function nextTheme(current: Theme): Theme {
+    if (current === 'light') return 'dark';
+    if (current === 'dark') return 'auto';
+    return 'light';
   }
 
   function toggle() {
-    const next: Theme = theme.value === 'light' ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', next);
+    const next = nextTheme(theme.value);
+    applyTheme(next);
     theme.value = next;
     emit('change', next);
   }
+
+  const resolvedAriaLabel = computed(() => {
+    if (props.ariaLabel !== undefined) return props.ariaLabel;
+    const upcoming = nextTheme(theme.value);
+    if (upcoming === 'light') return 'Switch to light theme';
+    if (upcoming === 'dark') return 'Switch to dark theme';
+    return 'Switch to auto theme';
+  });
+
+  const defaultLabel = computed(() => {
+    if (theme.value === 'light') return 'Dark mode';
+    if (theme.value === 'dark') return 'Auto mode';
+    return 'Light mode';
+  });
 
   let observer: MutationObserver | null = null;
 
@@ -57,13 +92,7 @@
 
 <template>
   <button
-    :aria-label="
-      props.ariaLabel !== undefined
-        ? props.ariaLabel
-        : theme === 'dark'
-          ? 'Switch to light theme'
-          : 'Switch to dark theme'
-    "
+    :aria-label="resolvedAriaLabel"
     :aria-pressed="theme === 'dark'"
     :class="['theme-toggle', `theme-toggle--${theme}`]"
     type="button"
@@ -74,7 +103,7 @@
       class="theme-toggle__icon"
     >
       <svg
-        v-if="theme === 'dark'"
+        v-if="theme === 'light'"
         fill="currentColor"
         height="20"
         viewBox="0 0 24 24"
@@ -86,7 +115,7 @@
         />
       </svg>
       <svg
-        v-else
+        v-else-if="theme === 'dark'"
         fill="currentColor"
         height="20"
         viewBox="0 0 24 24"
@@ -99,9 +128,19 @@
           fill-rule="evenodd"
         />
       </svg>
+      <svg
+        v-else
+        fill="currentColor"
+        height="20"
+        viewBox="0 0 24 24"
+        width="20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 1.5v15a7.5 7.5 0 0 0 0-15Z" />
+      </svg>
     </span>
     <span class="theme-toggle__label">
-      <slot>{{ theme === 'dark' ? 'Light mode' : 'Dark mode' }}</slot>
+      <slot>{{ defaultLabel }}</slot>
     </span>
   </button>
 </template>
