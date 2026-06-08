@@ -63,7 +63,7 @@ en:
     placeholder: Popout content area
   BreakpointDebug:
     breakpoint: 'breakpoint:'
-    separator: "{'|'}"
+    separator: '{''|''}'
     debug_px: ({breakpoint}px)
   MyCareNotesApp:
     nav:
@@ -71,6 +71,8 @@ en:
       snippets: Snippets
       import-note: Import Note
       export-note: Export Note
+      reopen-closed: Reopen Closed Tab
+      restore-tab: 'Restore: {title}'
     theme-toggle: Toggle colour theme
     sidebar:
       title: Snippets
