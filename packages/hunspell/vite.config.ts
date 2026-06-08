@@ -4,7 +4,7 @@ export default defineLibraryConfig({
   rootDir: __dirname,
   entry: {
     hunspell: 'src/index.ts',
-    'hunspell.worker': 'src/hunspell.worker.ts',
+    'hunspell.worker': 'src/worker/hunspell.worker.ts',
   },
   name: 'MissionPlatformHunspell',
   overrides: {

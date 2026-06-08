@@ -1,7 +1,7 @@
 import { LocalLinter, Dialect, type Lint } from 'harper.js';
 import { binary } from 'harper.js/binary';
 
-import type { HarperIssue, HarperWorkerRequest, HarperWorkerResponse } from './types';
+import type { HarperIssue, HarperWorkerRequest, HarperWorkerResponse } from '../types';
 
 /**
  * Harper Web Worker — fully in-browser, no API required.

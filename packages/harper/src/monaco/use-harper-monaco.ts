@@ -1,7 +1,7 @@
 import * as monaco from 'monaco-editor';
 import { onBeforeUnmount, type MaybeRefOrGetter, toValue, watch } from 'vue';
 
-import type { HarperIssue, HarperWorkerResponse } from './types';
+import type { HarperIssue, HarperWorkerResponse } from '../types';
 
 /**
  * Applications must configure a Harper worker factory on
