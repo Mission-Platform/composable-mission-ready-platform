@@ -467,6 +467,100 @@ importers:
         specifier: catalog:vue
         version: 3.3.3(typescript@6.0.3)
 
+  apps/website:
+    dependencies:
+      '@mission-platform/breakpoints':
+        specifier: workspace:*
+        version: link:../../packages/breakpoints
+      '@mission-platform/components':
+        specifier: workspace:*
+        version: link:../../packages/components
+      '@mission-platform/hunspell':
+        specifier: workspace:*
+        version: link:../../packages/hunspell
+      '@mission-platform/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@mission-platform/icons':
+        specifier: workspace:*
+        version: link:../../packages/icons
+      '@mission-platform/tokens':
+        specifier: workspace:*
+        version: link:../../packages/tokens
+      vue:
+        specifier: catalog:vue
+        version: 3.5.35(typescript@6.0.3)
+      vue-i18n:
+        specifier: catalog:vue
+        version: 11.4.4(vue@3.5.35(typescript@6.0.3))
+      vue-router:
+        specifier: catalog:vue
+        version: 4.6.4(vue@3.5.35(typescript@6.0.3))
+    devDependencies:
+      '@intlify/unplugin-vue-i18n':
+        specifier: catalog:vue
+        version: 11.2.3(@vue/compiler-dom@3.5.35)(eslint@10.4.1)(rollup@4.61.1)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))(vue-i18n@11.4.4(vue@3.5.35(typescript@6.0.3)))(vue@3.5.35(typescript@6.0.3))
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../../configs/eslint-config
+      '@mission-platform/postcss-config':
+        specifier: workspace:*
+        version: link:../../configs/postcss-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../../configs/prettier-config
+      '@mission-platform/stylelint-config':
+        specifier: workspace:*
+        version: link:../../configs/stylelint-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../../configs/typescript-config
+      '@mission-platform/vite-config':
+        specifier: workspace:*
+        version: link:../../configs/vite-config
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.0
+      '@vitejs/plugin-vue':
+        specifier: catalog:vue
+        version: 6.0.7(vite@8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.35(typescript@6.0.3))
+      eslint:
+        specifier: catalog:eslint
+        version: 10.4.1
+      postcss-html:
+        specifier: catalog:stylelint
+        version: 1.8.1
+      postcss-scss:
+        specifier: catalog:stylelint
+        version: 4.0.9(postcss@8.5.15)
+      prettier:
+        specifier: catalog:prettier
+        version: 3.8.3
+      sass-embedded:
+        specifier: catalog:vite
+        version: 1.100.0
+      stylelint:
+        specifier: catalog:stylelint
+        version: 17.12.0(typescript@6.0.3)
+      stylelint-config-recommended-vue:
+        specifier: catalog:stylelint
+        version: 1.6.1(postcss-html@1.8.1)(stylelint@17.12.0(typescript@6.0.3))
+      stylelint-config-standard-scss:
+        specifier: catalog:stylelint
+        version: 17.0.0(postcss@8.5.15)(stylelint@17.12.0(typescript@6.0.3))
+      typescript:
+        specifier: catalog:typescript
+        version: 6.0.3
+      vite:
+        specifier: catalog:vite
+        version: 8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+      vitest:
+        specifier: catalog:testing
+        version: 4.1.8(@types/node@24.13.0)(@vitest/browser-playwright@4.1.8)(@vitest/coverage-v8@4.1.8)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+      vue-tsc:
+        specifier: catalog:vue
+        version: 3.3.3(typescript@6.0.3)
+
   configs/eslint-config:
     dependencies:
       '@intlify/eslint-plugin-vue-i18n':
@@ -12869,7 +12963,7 @@ snapshots:
       acorn: 8.16.0
       eslint-visitor-keys: 3.4.3
       espree: 9.6.1
-      semver: 7.8.1
+      semver: 7.8.2
 
   jsonfile@4.0.0:
     optionalDependencies:
