@@ -16,6 +16,13 @@ const meta = {
   title: 'Components/Forms/BaseSelect',
   component: BaseSelect,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: "`BaseSelect` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+      },
+    },
+  },
   argTypes: {
     size: { control: 'select', options: ['sm', 'md', 'lg'] },
     disabled: { control: 'boolean' },

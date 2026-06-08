@@ -8,6 +8,20 @@ const meta = {
   title: 'Components/Overlays/Tooltip',
   component: BaseTooltip,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: [
+          '`BaseTooltip` shows a short, contextual hint anchored to its trigger element.',
+          '',
+          'Positioning is powered by [Floating UI](https://floating-ui.com/) with `offset`, `flip`, `shift`,',
+          'and `arrow` middleware plus `autoUpdate`, so the tooltip stays glued to the trigger and flips',
+          'to the opposite side when room runs out. The tooltip opens on hover and focus, exposes',
+          '`role="tooltip"`, and wires `aria-describedby` on the trigger while visible.',
+        ].join('\n'),
+      },
+    },
+  },
   argTypes: {
     placement: { control: 'select', options: ['top', 'bottom', 'left', 'right'] },
     disabled: { control: 'boolean' },
@@ -25,6 +39,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  parameters: {
+    docs: { description: { story: 'Hover or focus the button to reveal the tooltip in the default `top` placement.' } },
+  },
   render: (arguments_) => ({
     components: { BaseTooltip, BaseButton },
     setup() {
@@ -41,6 +58,14 @@ export const Default: Story = {
 };
 
 export const Placements: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Showcases all four placements (`top`, `bottom`, `left`, `right`). Floating UI will still flip if a placement collides with the viewport edge.',
+      },
+    },
+  },
   render: () => ({
     components: { BaseTooltip, BaseButton },
     template: `
@@ -63,6 +88,14 @@ export const Placements: Story = {
 };
 
 export const Delayed: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Hover-open delay of `500ms` to avoid flickering when the cursor passes over the trigger. Focus-open is always immediate.',
+      },
+    },
+  },
   render: () => ({
     components: { BaseTooltip, BaseButton },
     template: `
@@ -76,6 +109,14 @@ export const Delayed: Story = {
 };
 
 export const Disabled: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'When `disabled` is `true`, the tooltip is fully suppressed and the trigger receives no `aria-describedby`.',
+      },
+    },
+  },
   render: () => ({
     components: { BaseTooltip, BaseButton },
     template: `

@@ -1,4 +1,11 @@
 <script lang="ts" setup>
+  /**
+   * `BaseTreeNode` — Tree node component for the Mission Platform UI.
+   *
+   * See the props, emits, and slots tables below (auto-generated from
+   * the component's TypeScript declarations) for the full public API,
+   * and refer to the linked stories for usage examples.
+   */
   import BaseTreeNodeLabel from './base-tree-node-label.vue';
 
   import type { TreeNode } from './base-tree-view.vue';

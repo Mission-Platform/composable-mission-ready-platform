@@ -100,7 +100,7 @@ vi.mock('monaco-editor', () => ({
 const { mockUseHunspellMonaco } = vi.hoisted(() => ({
   mockUseHunspellMonaco: vi.fn(),
 }));
-vi.mock('../../composables/use-hunspell-monaco', () => ({
+vi.mock('@mission-platform/hunspell', () => ({
   useHunspellMonaco: mockUseHunspellMonaco,
 }));
 

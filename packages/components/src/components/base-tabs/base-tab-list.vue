@@ -1,16 +1,29 @@
 <script lang="ts" setup>
-  import { IconClose, IconPlus } from '@mission-platform/icons';
+  /**
+   * `BaseTabList` is an internal child of `BaseTabs` that renders the horizontal
+   * `role="tablist"` row of `BaseTab` buttons plus the optional `+` add affordance.
+   *
+   * Not intended for direct consumer use — prefer `BaseTabs`.
+   *
+   * @internal
+   */
+  import { IconPlus } from '@mission-platform/icons';
 
-  import BaseTypography from '../base-typography/base-typography.vue';
+  import BaseTab from './base-tab.vue';
 
   import type { TabItem, TabsVariant } from './base-tabs.vue';
 
   withDefaults(
     defineProps<{
+      /** Ordered list of tab descriptors to render. */
       tabs: TabItem[];
+      /** Currently active tab `id`, used to apply the active state on the matching `BaseTab`. */
       activeId: string;
+      /** Visual treatment forwarded from `BaseTabs`. */
       variant: TabsVariant;
+      /** Whether each tab renders a close affordance. */
       closable?: boolean;
+      /** Whether the trailing `+` add button is rendered. */
       addable?: boolean;
     }>(),
     {
@@ -20,10 +33,15 @@
   );
 
   const emit = defineEmits<{
+    /** A tab was activated (click or keyboard). */
     select: [id: string];
+    /** A tab's close affordance was activated. */
     close: [id: string];
+    /** The `+` add button was clicked. */
     add: [];
+    /** A tab requested a rename (e.g. double-click). */
     rename: [id: string];
+    /** A `keydown` event bubbled from a tab; forwarded to `BaseTabs` for roving-tabindex navigation. */
     keydown: [event: KeyboardEvent, id: string];
   }>();
 </script>
@@ -34,59 +52,19 @@
       :class="['base-tabs__list', `base-tabs__list--${variant}`]"
       role="tablist"
     >
-      <button
+      <BaseTab
         v-for="tab in tabs"
-        :id="`tab-${tab.id}`"
         :key="tab.id"
-        :aria-controls="`panel-${tab.id}`"
-        :aria-selected="activeId === tab.id"
-        :class="[
-          'base-tabs__tab',
-          `base-tabs__tab--${variant}`,
-          {
-            'base-tabs__tab--active': activeId === tab.id,
-            'base-tabs__tab--disabled': tab.disabled,
-            'base-tabs__tab--closable': closable,
-          },
-        ]"
-        :data-tab-id="tab.id"
-        :disabled="tab.disabled"
-        :tabindex="activeId === tab.id ? 0 : -1"
-        role="tab"
-        type="button"
-        @click="emit('select', tab.id)"
-        @dblclick="emit('rename', tab.id)"
-        @keydown="emit('keydown', $event, tab.id)"
-      >
-        <BaseTypography
-          as="span"
-          color="inherit"
-          variant="label"
-        >
-          {{ tab.label }}
-        </BaseTypography>
-        <span
-          v-if="closable"
-          aria-hidden="true"
-          class="base-tabs__close-icon"
-        >
-          <IconClose size="xs" />
-        </span>
-      </button>
+        :active="activeId === tab.id"
+        :closable="closable"
+        :tab="tab"
+        :variant="variant"
+        @close="(id) => emit('close', id)"
+        @keydown="(event, id) => emit('keydown', event, id)"
+        @rename="(id) => emit('rename', id)"
+        @select="(id) => emit('select', id)"
+      />
     </div>
-    <template v-if="closable">
-      <button
-        v-for="tab in tabs"
-        :key="tab.id"
-        :aria-label="`Close ${tab.label}`"
-        :data-close-tab-id="tab.id"
-        class="base-tabs__close"
-        type="button"
-        @click.stop="emit('close', tab.id)"
-      >
-        <IconClose size="xs" />
-      </button>
-    </template>
     <button
       v-if="addable"
       :class="['base-tabs__add', `base-tabs__add--${variant}`]"
@@ -131,108 +109,6 @@
       padding: var(--mp-spacing-1);
       gap: var(--mp-spacing-1);
     }
-  }
-
-  .base-tabs__tab {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--mp-spacing-2);
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    color: var(--mp-color-text-secondary);
-    transition:
-      color 150ms ease,
-      background-color 150ms ease;
-    white-space: nowrap;
-    user-select: none;
-
-    &:focus-visible {
-      outline: none;
-      border-radius: var(--mp-radius-sm);
-      box-shadow: var(--mp-shadow-focus-primary);
-    }
-
-    &--disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    &--closable.base-tabs__tab--line {
-      padding-right: var(--mp-spacing-2);
-    }
-
-    &--closable.base-tabs__tab--pill {
-      padding-right: var(--mp-spacing-1);
-    }
-
-    &--line {
-      padding: var(--mp-spacing-2) var(--mp-spacing-4);
-      border-bottom: 2px solid transparent;
-      margin-bottom: -2px;
-      border-radius: var(--mp-radius-sm) var(--mp-radius-sm) 0 0;
-
-      &:hover:not(.base-tabs__tab--disabled) {
-        color: var(--mp-color-text-primary);
-        border-bottom-color: var(--mp-color-border-strong);
-      }
-
-      &.base-tabs__tab--active {
-        color: var(--mp-color-primary-text);
-        border-bottom-color: var(--mp-color-primary-text);
-      }
-    }
-
-    &--pill {
-      padding: var(--mp-spacing-2) var(--mp-spacing-3);
-      border-radius: var(--mp-radius-sm);
-
-      &:hover:not(.base-tabs__tab--active, .base-tabs__tab--disabled) {
-        background-color: var(--mp-color-bg-sunken);
-        color: var(--mp-color-text-primary);
-      }
-
-      &.base-tabs__tab--active {
-        background-color: var(--mp-color-bg-surface);
-        color: var(--mp-color-text-primary);
-        box-shadow: var(--mp-shadow-sm);
-      }
-    }
-  }
-
-  .base-tabs__close-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    color: var(--mp-color-text-muted);
-    padding: 2px;
-    border-radius: var(--mp-radius-sm);
-    transition:
-      color 150ms ease,
-      background-color 150ms ease;
-  }
-
-  .base-tabs__tab:hover .base-tabs__close-icon,
-  .base-tabs__tab.base-tabs__tab--active .base-tabs__close-icon {
-    color: var(--mp-color-text-primary);
-  }
-
-  .base-tabs__tab:hover .base-tabs__close-icon:hover {
-    background-color: var(--mp-color-bg-muted);
-  }
-
-  /* Accessible close buttons are visually hidden but keyboard/AT accessible */
-  .base-tabs__close {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-    border: 0;
   }
 
   .base-tabs__add {

@@ -2,9 +2,9 @@
   import {
     BaseApplicationLayout,
     BaseButton,
+    BaseDialog,
     BaseInput,
     BaseMenubar,
-    BaseModal,
     BaseNavbar,
     BaseNavbarItem,
     BaseSidebar,
@@ -29,8 +29,10 @@
   const {
     activeTabId,
     openTabs,
+    closedTabs,
     addTab,
     closeTab,
+    restoreTab,
     updateTabContent,
     updateTabTitle,
     setActiveTab,
@@ -73,6 +75,8 @@
   }
 
   function cancelRenameTab(): void {
+    // eslint-disable-next-line no-console
+    console.log('[my-care-notes] rename dialog close requested', { tabId: renamingTabId.value });
     renamingTabId.value = undefined;
   }
 
@@ -205,6 +209,19 @@
             :children="[
               { label: t('nav.import-note'), onClick: onImportNote },
               { label: t('nav.export-note'), onClick: onExportNote, disabled: !activeTab },
+              ...(closedTabs.length > 0
+                ? [
+                    { label: '\u2500'.repeat(8), disabled: true },
+                    {
+                      label: t('nav.reopen-closed'),
+                      onClick: () => restoreTab(closedTabs[0]!.id),
+                    },
+                    ...closedTabs.slice(0, 10).map((tab) => ({
+                      label: t('nav.restore-tab', { title: tab.title }),
+                      onClick: () => restoreTab(tab.id),
+                    })),
+                  ]
+                : []),
             ]"
           >
             {{ t('nav.notes') }}
@@ -269,7 +286,7 @@
       </BaseSidebar>
 
       <BaseVirtualTabs
-        :active-id="activeTabId"
+        :model-value="activeTabId"
         :tabs="visibleTabs"
         addable
         closable
@@ -277,7 +294,7 @@
         @add="addTab"
         @close="closeTab"
         @rename="onRenameTab"
-        @select="setActiveTab"
+        @update:model-value="setActiveTab"
       >
         <template
           v-for="tab in visibleTabs"
@@ -300,11 +317,10 @@
     @save="onSnippetSave"
   />
 
-  <!-- Rename-tab modal -->
-  <BaseModal
+  <!-- Rename-tab dialog -->
+  <BaseDialog
     :open="renamingTabId !== undefined"
     :title="t('rename.title')"
-    size="sm"
     @close="cancelRenameTab"
     @update:open="(opened) => !opened && cancelRenameTab()"
   >
@@ -333,7 +349,7 @@
         </BaseButton>
       </div>
     </template>
-  </BaseModal>
+  </BaseDialog>
 </template>
 
 <style lang="scss" scoped>
@@ -352,6 +368,8 @@ en:
     snippets: Snippets
     import-note: Import Note
     export-note: Export Note
+    reopen-closed: Reopen Closed Tab
+    restore-tab: 'Restore: {title}'
   theme-toggle: Toggle colour theme
   sidebar:
     title: Snippets

@@ -6,6 +6,13 @@ const meta = {
   title: 'Components/Forms/BaseFileInput',
   component: BaseFileInput,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: "`BaseFileInput` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+      },
+    },
+  },
   argTypes: {
     multiple: { control: 'boolean' },
     disabled: { control: 'boolean' },

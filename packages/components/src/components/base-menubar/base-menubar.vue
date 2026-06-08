@@ -1,6 +1,13 @@
 <script lang="ts"></script>
 
 <script lang="ts" setup>
+  /**
+   * `BaseMenubar` — Menubar component for the Mission Platform UI.
+   *
+   * See the props, emits, and slots tables below (auto-generated from
+   * the component's TypeScript declarations) for the full public API,
+   * and refer to the linked stories for usage examples.
+   */
   import { onMounted, onUnmounted, ref } from 'vue';
 
   import BaseMenuItemButton from '../base-menu/base-menu-item-button.vue';

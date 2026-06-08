@@ -15,6 +15,13 @@ const meta = {
   title: 'Components/Forms/BaseMultiselect',
   component: BaseMultiselect,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: "`BaseMultiselect` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+      },
+    },
+  },
   argTypes: {
     size: { control: 'select', options: ['sm', 'md', 'lg'] },
     disabled: { control: 'boolean' },

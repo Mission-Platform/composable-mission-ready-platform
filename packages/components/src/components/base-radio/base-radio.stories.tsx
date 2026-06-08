@@ -8,6 +8,13 @@ const meta = {
   title: 'Components/Forms/BaseRadio',
   component: BaseRadio,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: "`BaseRadio` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+      },
+    },
+  },
   argTypes: {
     label: { control: 'text' },
     disabled: { control: 'boolean' },

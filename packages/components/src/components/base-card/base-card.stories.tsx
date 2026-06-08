@@ -6,6 +6,13 @@ const meta = {
   title: 'Components/Display/Card',
   component: BaseCard,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: "`Card` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+      },
+    },
+  },
   argTypes: {
     padding: { control: 'select', options: ['none', 'sm', 'md', 'lg'] },
     shadow: { control: 'boolean' },

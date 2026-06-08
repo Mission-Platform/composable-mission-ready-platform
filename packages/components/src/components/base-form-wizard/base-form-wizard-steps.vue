@@ -1,4 +1,11 @@
 <script lang="ts" setup>
+  /**
+   * `BaseFormWizardSteps` — Form wizard steps component for the Mission Platform UI.
+   *
+   * See the props, emits, and slots tables below (auto-generated from
+   * the component's TypeScript declarations) for the full public API,
+   * and refer to the linked stories for usage examples.
+   */
   import { IconCheck } from '@mission-platform/icons';
 
   import BaseTypography from '../base-typography/base-typography.vue';

@@ -1,4 +1,11 @@
 <script lang="ts" setup>
+  /**
+   * `BaseColorInput` — Color input component for the Mission Platform UI.
+   *
+   * See the props, emits, and slots tables below (auto-generated from
+   * the component's TypeScript declarations) for the full public API,
+   * and refer to the linked stories for usage examples.
+   */
   import { computed, ref } from 'vue';
 
   import { useId } from '../../composables/use-id';

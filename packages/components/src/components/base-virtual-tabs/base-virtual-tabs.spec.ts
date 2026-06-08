@@ -131,23 +131,23 @@ describe('tab selection', () => {
 describe('closable', () => {
   it('does not render close buttons by default', () => {
     const wrapper = mountWithI18n(BaseVirtualTabs, { props: { tabs } });
-    expect(wrapper.findAll('.base-tabs__close')).toHaveLength(0);
+    expect(wrapper.findAll('.base-tabs__close-icon')).toHaveLength(0);
   });
 
   it('renders a close button for every tab when closable is true', () => {
     const wrapper = mountWithI18n(BaseVirtualTabs, { props: { tabs, closable: true } });
-    expect(wrapper.findAll('.base-tabs__close')).toHaveLength(tabs.length);
+    expect(wrapper.findAll('.base-tabs__close-icon')).toHaveLength(tabs.length);
   });
 
   it('emits close with the correct tab id when the close button is clicked', async () => {
     const wrapper = mountWithI18n(BaseVirtualTabs, { props: { tabs, closable: true } });
-    await wrapper.findAll('.base-tabs__close')[1].trigger('click');
+    await wrapper.findAll('.base-tabs__close-icon')[1].trigger('click');
     expect(wrapper.emitted('close')?.[0]).toEqual(['b']);
   });
 
   it('does not emit select (update:modelValue) when a close button is clicked', async () => {
     const wrapper = mountWithI18n(BaseVirtualTabs, { props: { tabs, closable: true } });
-    await wrapper.findAll('.base-tabs__close')[0].trigger('click');
+    await wrapper.findAll('.base-tabs__close-icon')[0].trigger('click');
     expect(wrapper.emitted('update:modelValue')).toBeFalsy();
   });
 });
@@ -182,7 +182,7 @@ describe('addable', () => {
 // ─── rename ───────────────────────────────────────────────────────────────────
 
 describe('rename', () => {
-  it('emits rename with the correct tab id on dblclick', async () => {
+  it('emits rename with the correct tab id when the tab is double-clicked', async () => {
     const wrapper = mountWithI18n(BaseVirtualTabs, { props: { tabs } });
     await wrapper.findAll('[role="tab"]')[0].trigger('dblclick');
     expect(wrapper.emitted('rename')?.[0]).toEqual(['a']);

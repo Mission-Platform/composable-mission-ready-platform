@@ -1,4 +1,24 @@
 <script lang="ts" setup>
+  /**
+   * `BaseTooltip` displays a short, contextual hint anchored to its trigger element.
+   *
+   * Positioning is powered by [Floating UI](https://floating-ui.com/) (`offset`, `flip`, `shift`, `arrow`)
+   * with auto-update, so the tooltip stays glued to the trigger across scroll/resize and flips to the
+   * opposite side when there isn't enough room. The tooltip uses a portal-free `Transition` with
+   * fade in/out and is rendered via the `tooltip` z-index layer.
+   *
+   * Accessibility:
+   * - The trigger receives `aria-describedby` pointing at the tooltip while visible.
+   * - The tooltip has `role="tooltip"`.
+   * - Opens on `mouseenter` / `focusin`, hides on `mouseleave` / `focusout`.
+   *
+   * @example
+   * ```html
+   * <BaseTooltip content="Save changes" placement="top">
+   *   <BaseButton>Save</BaseButton>
+   * </BaseTooltip>
+   * ```
+   */
   import { arrow, autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue';
   import { ref } from 'vue';
 
@@ -6,13 +26,18 @@
   import { useZIndex } from '../../composables/use-z-index';
   import BaseTypography from '../base-typography/base-typography.vue';
 
+  /** Preferred placement of the tooltip relative to its trigger. Floating UI may flip it if there isn't room. */
   export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right';
 
   const props = withDefaults(
     defineProps<{
+      /** Text content of the tooltip. Plain text only — pass complex content via the default slot of a different component. */
       content: string;
+      /** Preferred placement. Floating UI may flip to the opposite side if there isn't enough space. Defaults to `'top'`. */
       placement?: TooltipPlacement;
+      /** When `true`, the tooltip is suppressed entirely and never shown. */
       disabled?: boolean;
+      /** Hover-open delay in milliseconds. Focus-open is always immediate. Defaults to `0`. */
       delay?: number;
     }>(),
     {
@@ -21,6 +46,14 @@
       delay: 0,
     },
   );
+
+  /**
+   * Default slot — the trigger element the tooltip is anchored to (e.g. a button or icon).
+   * @slot default
+   */
+  defineSlots<{
+    default(props: Record<string, never>): unknown;
+  }>();
 
   const { id: tooltipId } = useId(undefined);
   const { zIndex } = useZIndex('tooltip');

@@ -32,6 +32,13 @@ const meta: Meta<any> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component: BaseTable as any,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: "`Table` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+      },
+    },
+  },
   argTypes: {
     striped: { control: 'boolean' },
     bordered: { control: 'boolean' },

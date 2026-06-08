@@ -1,4 +1,23 @@
 <script lang="ts" setup>
+  /**
+   * `BaseAccordionItem` is a single collapsible row inside a `BaseAccordion`.
+   *
+   * Open state is owned by the parent `BaseAccordion` via the injected `accordion`
+   * context, so items are stateless. Use the `summary` slot for the always-visible
+   * header and the default slot for the content revealed when open.
+   *
+   * Accessibility:
+   * - The `<summary>` is keyboard-activatable with `Enter` and `Space`.
+   * - Disabled items expose `aria-disabled` and do not toggle.
+   *
+   * @example
+   * ```html
+   * <BaseAccordionItem id="profile">
+   *   <template #summary>Profile</template>
+   *   <p>Profile details…</p>
+   * </BaseAccordionItem>
+   * ```
+   */
   import { IconChevron } from '@mission-platform/icons';
   import { inject } from 'vue';
 
@@ -7,8 +26,19 @@
   import type { AccordionContext } from './base-accordion.vue';
 
   const props = defineProps<{
+    /** Stable unique id used by the parent `BaseAccordion` to track open state. */
     id: string;
+    /** When `true`, the item cannot be toggled and renders in a disabled style. */
     disabled?: boolean;
+  }>();
+
+  /**
+   * @slot summary - Always-visible header content (typically a title).
+   * @slot default - Content revealed when the item is open.
+   */
+  defineSlots<{
+    summary(props: Record<string, never>): unknown;
+    default(props: Record<string, never>): unknown;
   }>();
 
   const accordion = inject<AccordionContext>('accordion');

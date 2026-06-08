@@ -27,6 +27,13 @@ const meta = {
   title: 'Components/Display/Typography',
   component: BaseTypography,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: "`Typography` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+      },
+    },
+  },
   argTypes: {
     variant: { control: 'select', options: VARIANTS },
     weight: { control: 'select', options: ['regular', 'medium', 'semibold', 'bold'] },

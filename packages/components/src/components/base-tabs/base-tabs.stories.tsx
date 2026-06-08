@@ -16,6 +16,20 @@ const meta = {
   title: 'Components/Navigation/Tabs',
   component: BaseTabs,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: [
+          '`BaseTabs` is an accessible, `v-model`-driven tabs container.',
+          '',
+          'Pass an ordered `tabs` array of `{ id, label, disabled? }` descriptors; content for each tab',
+          'is provided via a named slot whose name matches the tab `id`. Keyboard navigation',
+          '(`ArrowLeft` / `ArrowRight` / `Home` / `End`) skips disabled tabs. Enable `closable` for',
+          'per-tab close affordances and `addable` for a trailing `+` button when managing dynamic tabsets.',
+        ].join('\n'),
+      },
+    },
+  },
   argTypes: {
     variant: { control: 'select', options: ['line', 'pill'] },
     closable: { control: 'boolean' },
@@ -34,6 +48,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Line: Story = {
+  parameters: {
+    docs: {
+      description: { story: 'Default `line` variant — underlined active tab. Best for primary in-page navigation.' },
+    },
+  },
   render: (arguments_) => ({
     components: { BaseTabs },
     setup() {
@@ -56,6 +75,14 @@ export const Line: Story = {
 };
 
 export const Pill: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`pill` variant — rounded pills on a muted background. Best for segmented controls and toolbar-style selection.',
+      },
+    },
+  },
   render: () => ({
     components: { BaseTabs },
     setup() {
@@ -73,6 +100,14 @@ export const Pill: Story = {
 
 export const ClosableAndAddable: Story = {
   name: 'Closable + Addable (dynamic)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Dynamic tabset — the parent owns the `tabs` array and handles `add` / `close` events to mutate it. Demonstrates the recommended controlled pattern.',
+      },
+    },
+  },
   render: () => ({
     components: { BaseTabs },
     setup() {
@@ -118,6 +153,14 @@ export const ClosableAndAddable: Story = {
 
 export const ManyTabsScrollable: Story = {
   name: 'Many Tabs (scrollable)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'When tabs exceed the available width, the tab list scrolls horizontally with hidden scrollbars while keyboard navigation continues to work.',
+      },
+    },
+  },
   render: () => ({
     components: { BaseTabs },
     setup() {

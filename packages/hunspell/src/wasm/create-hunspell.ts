@@ -1,4 +1,4 @@
-import type { HunspellModule } from './types';
+import type { HunspellModule } from '../types';
 
 /**
  * Lazily loads the Emscripten-compiled Hunspell WASM module.
@@ -10,7 +10,7 @@ import type { HunspellModule } from './types';
  * `locateFile` hook so that bundlers (Vite, webpack) can handle the asset URL.
  */
 export async function createHunspell(): Promise<HunspellModule> {
-  const { default: factory } = await import('./wasm/hunspell.js');
+  const { default: factory } = await import('./hunspell.js');
 
   return await factory();
 }

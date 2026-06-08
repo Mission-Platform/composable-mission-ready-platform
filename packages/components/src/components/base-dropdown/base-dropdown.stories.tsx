@@ -11,6 +11,13 @@ const meta = {
   title: 'Components/Overlays/Dropdown',
   component: BaseDropdown,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: "`Dropdown` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+      },
+    },
+  },
   argTypes: {
     placement: {
       control: 'select',

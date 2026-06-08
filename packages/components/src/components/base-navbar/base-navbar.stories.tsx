@@ -9,6 +9,13 @@ const meta = {
   title: 'Components/Layout/Navbar',
   component: BaseNavbar,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: "`Navbar` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+      },
+    },
+  },
   argTypes: {
     sticky: { control: 'boolean' },
     brand: { control: 'text' },

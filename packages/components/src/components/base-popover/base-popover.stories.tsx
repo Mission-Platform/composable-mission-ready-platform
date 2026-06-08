@@ -11,6 +11,13 @@ const meta = {
   title: 'Components/Overlays/Popover',
   component: BasePopover,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: "`Popover` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+      },
+    },
+  },
   argTypes: {
     placement: {
       control: 'select',

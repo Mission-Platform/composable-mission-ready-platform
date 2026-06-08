@@ -14,6 +14,13 @@ const meta = {
   title: 'Components/Display/List',
   component: BaseList,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: "`List` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+      },
+    },
+  },
   argTypes: {
     variant: { control: 'select', options: ['unordered', 'ordered', 'description', 'none'] },
     size: { control: 'select', options: ['sm', 'md', 'lg'] },

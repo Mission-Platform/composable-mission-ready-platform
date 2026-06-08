@@ -8,6 +8,13 @@ const meta = {
   title: 'Components/Forms/BaseCheckbox',
   component: BaseCheckbox,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: "`BaseCheckbox` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+      },
+    },
+  },
   argTypes: {
     disabled: { control: 'boolean' },
     required: { control: 'boolean' },

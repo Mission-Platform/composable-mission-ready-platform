@@ -1,4 +1,11 @@
 <script lang="ts" setup>
+  /**
+   * `BaseSchedulerEventDialog` — Scheduler event dialog component for the Mission Platform UI.
+   *
+   * See the props, emits, and slots tables below (auto-generated from
+   * the component's TypeScript declarations) for the full public API,
+   * and refer to the linked stories for usage examples.
+   */
   import { computed, ref, watch } from 'vue';
 
   import BaseButton from '../base-button/base-button.vue';

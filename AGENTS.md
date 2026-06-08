@@ -41,6 +41,8 @@ composable_mission_ready_platform/
 │   ├── icons/              # SVG icon components
 │   ├── map/                # MapLibre GL Vue 3 wrapper
 │   └── tokens/             # CSS design tokens and SCSS theme definitions
+├── workers/                # Cloudflare Workers consumed by the apps
+│   └── base-spa/           # Base SPA worker (static asset + SPA fallback handler)
 ├── scripts/                # Repo-wide tooling scripts (i18n extraction, etc.)
 ├── package.json            # Root workspace manifest (private, tooling only)
 ├── pnpm-workspace.yaml     # pnpm workspace configuration
@@ -144,6 +146,26 @@ Where applicable, also extend `@mission-platform/postcss-config`:
 import baseConfig from '@mission-platform/postcss-config'
 export default { ...baseConfig }
 ```
+
+---
+
+## `workers/` — Cloudflare Workers
+
+The `workers/` folder contains Cloudflare Worker packages consumed by the deployable apps (for example, to serve static assets with an SPA-style fallback). They are pnpm workspace packages but are kept in a dedicated top-level directory to make their runtime/infrastructure role explicit and separate from product-facing libraries in `packages/`.
+
+### Conventions for workers
+
+- Each worker lives in its own subdirectory: `workers/<worker-name>/`.
+- Package names follow the scoped convention `@mission-platform/<worker-name>`.
+- Workers are **always `"private": true`** — they are never published to a registry, and are exempt from the Changesets release flow (same as `apps/`).
+- Workers consume `configs/` packages as `devDependencies` (`"workspace:*"`) and may consume `packages/` as runtime dependencies when needed.
+- Workers must **never import from `apps/`** — the dependency flow is strictly one-directional: `apps` → `packages`/`workers` → `configs`.
+
+### Current workers
+
+| Package | Path | Description |
+|---|---|---|
+| `@mission-platform/base-spa` | `workers/base-spa` | Cloudflare Worker that serves static assets with an SPA-style fallback, consumed by the deployable apps |
 
 ---
 
@@ -268,7 +290,7 @@ BREAKING CHANGE: Vue 2 is no longer supported; upgrade to Vue 3.5+.
 
 ## Key Principles for Agents
 
-1. **Dependency direction is one-way.** Code in `packages/` and `configs/` must never import from `apps/`. The flow is strictly `apps` → `packages` → `configs` (and `apps` → `configs` directly for tooling).
+1. **Dependency direction is one-way.** Code in `packages/`, `configs/`, and `workers/` must never import from `apps/`. The flow is strictly `apps` → `packages`/`workers` → `configs` (and `apps` → `configs` directly for tooling).
 2. **Isolate concerns in packages.** New reusable UI components, composables, utilities, or design tokens belong in `packages/`, not embedded inside an app. New shared lint/format/build tooling belongs in `configs/`.
 3. **Each app wires packages together.** Apps are thin orchestration layers that compose packages into a working product.
 4. **Storybook is the component workbench.** When adding or modifying components in `packages/`, add or update corresponding stories in `apps/storybook`.

@@ -79,6 +79,13 @@ const meta = {
   title: 'Components/Code/CodeBlock',
   component: BaseCodeBlock,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: "`CodeBlock` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+      },
+    },
+  },
   argTypes: {
     language: {
       control: 'select',

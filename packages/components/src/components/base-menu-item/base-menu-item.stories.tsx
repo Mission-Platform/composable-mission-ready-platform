@@ -6,6 +6,13 @@ const meta = {
   title: 'Components/Navigation/MenuItem',
   component: BaseMenuItem,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: "`MenuItem` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+      },
+    },
+  },
   argTypes: {
     variant: { control: 'select', options: ['default', 'danger'] },
     disabled: { control: 'boolean' },

@@ -6,6 +6,13 @@ const meta = {
   title: 'Components/Display/BaseThemeToggle',
   component: BaseThemeToggle,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: "`BaseThemeToggle` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+      },
+    },
+  },
   argTypes: {
     ariaLabel: { control: 'text' },
   },

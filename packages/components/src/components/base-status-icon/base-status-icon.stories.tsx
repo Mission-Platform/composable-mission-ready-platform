@@ -6,6 +6,13 @@ const meta = {
   title: 'Components/Feedback/StatusIcon',
   component: BaseStatusIcon,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: "`StatusIcon` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+      },
+    },
+  },
   argTypes: {
     status: { control: 'select', options: ['success', 'warning', 'error', 'info', 'neutral'] },
     size: { control: 'select', options: ['sm', 'md', 'lg'] },

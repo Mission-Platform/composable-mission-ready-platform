@@ -1,10 +1,16 @@
 <script lang="ts" setup>
+  /**
+   * `BaseMonacoEditor` — Monaco editor component for the Mission Platform UI.
+   *
+   * See the props, emits, and slots tables below (auto-generated from
+   * the component's TypeScript declarations) for the full public API,
+   * and refer to the linked stories for usage examples.
+   */
   import { useHarperMonaco } from '@mission-platform/harper';
+  import { useHunspellMonaco } from '@mission-platform/hunspell';
+  import { fontFamilies } from '@mission-platform/tokens';
   import * as monaco from 'monaco-editor';
   import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue';
-
-  import { useHunspellMonaco } from '../../composables/use-hunspell-monaco';
-  import { fontFamilies } from '@mission-platform/tokens';
 
   export type MonacoEditorCompletionItemProvider = monaco.languages.CompletionItemProvider;
 

@@ -9,6 +9,20 @@ const meta = {
   title: 'Components/Display/Button',
   component: BaseButton,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: [
+          '`BaseButton` is the foundational interactive element used across Mission Platform apps.',
+          '',
+          'It exposes four visual `variant`s (`primary`, `secondary`, `ghost`, `danger`), three `size`s,',
+          'and built-in `disabled` and `loading` states. The default slot accepts plain text and/or icons',
+          'from `@mission-platform/icons`. Click events are suppressed while the button is disabled or loading,',
+          'and the loading spinner exposes a localised `aria-label` via `vue-i18n`.',
+        ].join('\n'),
+      },
+    },
+  },
   argTypes: {
     variant: { control: 'select', options: ['primary', 'secondary', 'ghost', 'danger'] },
     size: { control: 'select', options: ['sm', 'md', 'lg'] },
@@ -37,6 +51,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Default primary call-to-action button. Verifies that clicking emits a single `click` event.',
+      },
+    },
+  },
   play: async ({ canvasElement, args }) => {
     // Arrange
     const canvas = within(canvasElement);
@@ -50,18 +71,52 @@ export const Primary: Story = {
   },
 };
 
-export const Secondary: Story = { args: { variant: 'secondary' } };
+export const Secondary: Story = {
+  args: { variant: 'secondary' },
+  parameters: {
+    docs: { description: { story: 'Lower-emphasis action. Use for secondary actions alongside a primary button.' } },
+  },
+};
 
-export const Ghost: Story = { args: { variant: 'ghost' } };
+export const Ghost: Story = {
+  args: { variant: 'ghost' },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Transparent background. Use inside toolbars, menus, or dense surfaces where chrome should recede.',
+      },
+    },
+  },
+};
 
-export const Danger: Story = { args: { variant: 'danger' } };
+export const Danger: Story = {
+  args: { variant: 'danger' },
+  parameters: {
+    docs: {
+      description: { story: 'Destructive action (delete, remove, leave). Pairs with a danger-tinted focus ring.' },
+    },
+  },
+};
 
-export const Small: Story = { args: { size: 'sm' } };
+export const Small: Story = {
+  args: { size: 'sm' },
+  parameters: { docs: { description: { story: 'Compact size for dense layouts (toolbars, table rows).' } } },
+};
 
-export const Large: Story = { args: { size: 'lg' } };
+export const Large: Story = {
+  args: { size: 'lg' },
+  parameters: {
+    docs: { description: { story: 'Prominent size for marketing surfaces and primary calls-to-action.' } },
+  },
+};
 
 export const Disabled: Story = {
   args: { disabled: true },
+  parameters: {
+    docs: {
+      description: { story: 'When `disabled`, the native attribute is applied and `click` events are suppressed.' },
+    },
+  },
   play: async ({ canvasElement, args }) => {
     // Arrange
     const canvas = within(canvasElement);
@@ -76,9 +131,21 @@ export const Disabled: Story = {
   },
 };
 
-export const Loading: Story = { args: { loading: true } };
+export const Loading: Story = {
+  args: { loading: true },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Sets `aria-busy="true"`, displays the spinner, and suppresses `click` until loading ends.',
+      },
+    },
+  },
+};
 
 export const WithIconLeft: Story = {
+  parameters: {
+    docs: { description: { story: 'Leading icon pattern — place the icon before the label in the default slot.' } },
+  },
   render: () => ({
     components: { BaseButton, IconPlus },
     template: '<BaseButton><IconPlus size="sm" /> Add item</BaseButton>',
@@ -86,6 +153,9 @@ export const WithIconLeft: Story = {
 };
 
 export const WithIconRight: Story = {
+  parameters: {
+    docs: { description: { story: 'Trailing icon pattern — typically used for download or navigation affordances.' } },
+  },
   render: () => ({
     components: { BaseButton, IconDownload },
     template: '<BaseButton variant="secondary">Download <IconDownload size="sm" /></BaseButton>',
@@ -93,6 +163,7 @@ export const WithIconRight: Story = {
 };
 
 export const DangerWithIcon: Story = {
+  parameters: { docs: { description: { story: 'Destructive variant with a leading icon to reinforce intent.' } } },
   render: () => ({
     components: { BaseButton, IconTrash },
     template: '<BaseButton variant="danger"><IconTrash size="sm" /> Delete</BaseButton>',

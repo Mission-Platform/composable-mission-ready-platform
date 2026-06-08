@@ -9,6 +9,13 @@ const meta = {
   title: 'Components/Forms/BaseInput',
   component: BaseInput,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: "`BaseInput` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+      },
+    },
+  },
   argTypes: {
     type: {
       control: 'select',

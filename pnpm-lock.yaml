@@ -911,6 +911,10 @@ importers:
         version: 3.3.3(typescript@6.0.3)
 
   packages/hunspell:
+    dependencies:
+      monaco-editor:
+        specifier: 'catalog:'
+        version: 0.55.1
     devDependencies:
       '@mission-platform/eslint-config':
         specifier: workspace:*
@@ -927,9 +931,18 @@ importers:
       '@types/node':
         specifier: catalog:typescript
         version: 24.13.0
+      '@vitest/coverage-v8':
+        specifier: catalog:testing
+        version: 4.1.8(@vitest/browser@4.1.8)(vitest@4.1.8)
+      '@vue/test-utils':
+        specifier: catalog:vue
+        version: 2.4.10(@vue/compiler-dom@3.5.35)(@vue/server-renderer@3.5.35(vue@3.5.35(typescript@6.0.3)))(vue@3.5.35(typescript@6.0.3))
       eslint:
         specifier: catalog:eslint
         version: 10.4.1
+      jsdom:
+        specifier: catalog:testing
+        version: 29.1.1
       prettier:
         specifier: catalog:prettier
         version: 3.8.3
@@ -939,6 +952,12 @@ importers:
       vite:
         specifier: catalog:vite
         version: 8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+      vitest:
+        specifier: catalog:testing
+        version: 4.1.8(@types/node@24.13.0)(@vitest/browser-playwright@4.1.8)(@vitest/coverage-v8@4.1.8)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+      vue:
+        specifier: catalog:vue
+        version: 3.5.35(typescript@6.0.3)
       vue-tsc:
         specifier: catalog:vue
         version: 3.3.3(typescript@6.0.3)
@@ -11858,7 +11877,7 @@ snapshots:
       '@one-ini/wasm': 0.1.1
       commander: 10.0.1
       minimatch: 9.0.9
-      semver: 7.8.1
+      semver: 7.8.2
 
   ejs@3.1.10:
     dependencies:
@@ -12989,7 +13008,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.8.1
+      semver: 7.8.2
 
   maplibre-gl@5.24.0:
     dependencies:
