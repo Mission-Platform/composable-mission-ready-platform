@@ -9,7 +9,7 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: `\`Spinner\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+        component: "`Spinner` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
       },
     },
   },
