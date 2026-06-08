@@ -6,6 +6,13 @@ const meta = {
   title: 'Components/Feedback/Skeleton',
   component: BaseSkeleton,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `\`Skeleton\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+      },
+    },
+  },
   argTypes: {
     shape: { control: 'select', options: ['line', 'circle', 'block'] },
     animated: { control: 'boolean' },

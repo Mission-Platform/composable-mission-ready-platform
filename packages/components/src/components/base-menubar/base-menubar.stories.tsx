@@ -9,6 +9,13 @@ const meta = {
   title: 'Components/Navigation/Menubar',
   component: BaseMenubar,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `\`Menubar\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+      },
+    },
+  },
   argTypes: {
     bordered: { control: 'boolean' },
     label: { control: 'text' },

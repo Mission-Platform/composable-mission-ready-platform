@@ -1,4 +1,11 @@
 <script lang="ts" setup>
+  /**
+   * `BaseCodeBlock` — Code block component for the Mission Platform UI.
+   *
+   * See the props, emits, and slots tables below (auto-generated from
+   * the component's TypeScript declarations) for the full public API,
+   * and refer to the linked stories for usage examples.
+   */
   import hljs from 'highlight.js/lib/core';
   // Register a curated set of commonly-used languages
   import bash from 'highlight.js/lib/languages/bash';

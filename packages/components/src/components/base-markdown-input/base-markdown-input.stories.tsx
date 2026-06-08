@@ -6,6 +6,13 @@ const meta = {
   title: 'Components/Forms/BaseMarkdownInput',
   component: BaseMarkdownInput,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `\`BaseMarkdownInput\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+      },
+    },
+  },
   argTypes: {
     size: { control: 'select', options: ['sm', 'md', 'lg'] },
     disabled: { control: 'boolean' },

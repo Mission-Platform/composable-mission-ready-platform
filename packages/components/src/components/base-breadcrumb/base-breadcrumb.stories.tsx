@@ -14,6 +14,13 @@ const meta = {
   title: 'Components/Navigation/Breadcrumb',
   component: BaseBreadcrumb,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `\`Breadcrumb\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+      },
+    },
+  },
   argTypes: {
     separator: { control: 'text' },
   },

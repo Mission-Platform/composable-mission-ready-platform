@@ -6,6 +6,13 @@ const meta = {
   title: 'Components/Display/Tag',
   component: BaseTag,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `\`Tag\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+      },
+    },
+  },
   argTypes: {
     size: { control: 'select', options: ['sm', 'md'] },
     variant: { control: 'select', options: ['neutral', 'primary'] },

@@ -98,6 +98,13 @@ const meta = {
   title: 'Components/Code/MonacoEditor',
   component: BaseMonacoEditor,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `\`MonacoEditor\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+      },
+    },
+  },
   argTypes: {
     language: {
       control: 'select',

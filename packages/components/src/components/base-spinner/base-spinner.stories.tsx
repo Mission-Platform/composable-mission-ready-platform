@@ -6,6 +6,13 @@ const meta = {
   title: 'Components/Feedback/Spinner',
   component: BaseSpinner,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `\`Spinner\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+      },
+    },
+  },
   argTypes: {
     size: { control: 'select', options: ['xs', 'sm', 'md', 'lg', 'xl'] },
     variant: {

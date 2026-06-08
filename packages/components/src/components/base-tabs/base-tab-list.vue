@@ -1,4 +1,12 @@
 <script lang="ts" setup>
+  /**
+   * `BaseTabList` is an internal child of `BaseTabs` that renders the horizontal
+   * `role="tablist"` row of `BaseTab` buttons plus the optional `+` add affordance.
+   *
+   * Not intended for direct consumer use — prefer `BaseTabs`.
+   *
+   * @internal
+   */
   import { IconPlus } from '@mission-platform/icons';
 
   import BaseTab from './base-tab.vue';
@@ -7,10 +15,15 @@
 
   withDefaults(
     defineProps<{
+      /** Ordered list of tab descriptors to render. */
       tabs: TabItem[];
+      /** Currently active tab `id`, used to apply the active state on the matching `BaseTab`. */
       activeId: string;
+      /** Visual treatment forwarded from `BaseTabs`. */
       variant: TabsVariant;
+      /** Whether each tab renders a close affordance. */
       closable?: boolean;
+      /** Whether the trailing `+` add button is rendered. */
       addable?: boolean;
     }>(),
     {
@@ -20,10 +33,15 @@
   );
 
   const emit = defineEmits<{
+    /** A tab was activated (click or keyboard). */
     select: [id: string];
+    /** A tab's close affordance was activated. */
     close: [id: string];
+    /** The `+` add button was clicked. */
     add: [];
+    /** A tab requested a rename (e.g. double-click). */
     rename: [id: string];
+    /** A `keydown` event bubbled from a tab; forwarded to `BaseTabs` for roving-tabindex navigation. */
     keydown: [event: KeyboardEvent, id: string];
   }>();
 </script>

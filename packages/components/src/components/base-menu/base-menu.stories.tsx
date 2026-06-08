@@ -7,6 +7,13 @@ const meta = {
   title: 'Components/Navigation/Menu',
   component: BaseMenu,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `\`Menu\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+      },
+    },
+  },
   argTypes: {
     orientation: {
       control: 'select',

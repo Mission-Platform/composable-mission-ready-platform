@@ -1,4 +1,11 @@
 <script lang="ts" setup>
+  /**
+   * `BaseFormBuilderField` — Form builder field component for the Mission Platform UI.
+   *
+   * See the props, emits, and slots tables below (auto-generated from
+   * the component's TypeScript declarations) for the full public API,
+   * and refer to the linked stories for usage examples.
+   */
   import BaseCheckbox from '../base-checkbox/base-checkbox.vue';
   import BaseInput from '../base-input/base-input.vue';
   import BaseMarkdownInput from '../base-markdown-input/base-markdown-input.vue';

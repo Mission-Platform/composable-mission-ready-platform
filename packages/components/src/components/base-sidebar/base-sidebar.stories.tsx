@@ -11,6 +11,13 @@ const meta = {
   title: 'Components/Layout/Sidebar',
   component: BaseSidebar,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `\`Sidebar\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+      },
+    },
+  },
   argTypes: {
     side: { control: 'select', options: ['left', 'right'] },
     size: { control: 'select', options: ['sm', 'md', 'lg'] },

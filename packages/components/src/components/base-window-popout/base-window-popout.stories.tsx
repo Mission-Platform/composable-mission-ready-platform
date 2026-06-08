@@ -6,6 +6,13 @@ const meta = {
   title: 'Components/Layout/WindowPopout',
   component: BaseWindowPopout,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `\`WindowPopout\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+      },
+    },
+  },
   argTypes: {
     title: { control: 'text' },
     width: { control: 'number' },

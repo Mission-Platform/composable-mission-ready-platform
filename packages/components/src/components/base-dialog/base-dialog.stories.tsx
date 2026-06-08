@@ -11,6 +11,13 @@ const meta = {
   title: 'Components/Overlays/Dialog',
   component: BaseDialog,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `\`Dialog\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+      },
+    },
+  },
   argTypes: {
     open: { control: 'boolean' },
     closeOnBackdrop: { control: 'boolean' },

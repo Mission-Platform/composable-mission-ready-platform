@@ -16,6 +16,13 @@ const meta = {
   title: 'Components/Navigation/VirtualTabs',
   component: BaseVirtualTabs,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `\`VirtualTabs\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+      },
+    },
+  },
   argTypes: {
     variant: { control: 'select', options: ['line', 'pill'] },
     closable: { control: 'boolean' },

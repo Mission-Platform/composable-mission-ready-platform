@@ -1,4 +1,11 @@
 <script lang="ts" setup>
+  /**
+   * `BaseVirtualTableFooter` — Virtual table footer component for the Mission Platform UI.
+   *
+   * See the props, emits, and slots tables below (auto-generated from
+   * the component's TypeScript declarations) for the full public API,
+   * and refer to the linked stories for usage examples.
+   */
   defineProps<{
     rowCount: number;
     sortKey: string | undefined;

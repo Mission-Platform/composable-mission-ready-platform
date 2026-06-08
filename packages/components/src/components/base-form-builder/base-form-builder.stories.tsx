@@ -10,6 +10,13 @@ const meta = {
   title: 'Components/Forms/BaseFormBuilder',
   component: BaseFormBuilder,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `\`BaseFormBuilder\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+      },
+    },
+  },
   argTypes: {
     disabled: { control: 'boolean' },
   },

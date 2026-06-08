@@ -6,6 +6,13 @@ const meta = {
   title: 'Components/Feedback/ProgressBar',
   component: BaseProgressBar,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `\`ProgressBar\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+      },
+    },
+  },
   argTypes: {
     variant: { control: 'select', options: ['primary', 'success', 'danger', 'warning', 'info'] },
     size: { control: 'select', options: ['sm', 'md', 'lg'] },

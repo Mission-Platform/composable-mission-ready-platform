@@ -9,6 +9,19 @@ const meta = {
   title: 'Components/Display/Accordion',
   component: BaseAccordion,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: [
+          '`BaseAccordion` is a vertically stacked container of collapsible `BaseAccordionItem` rows.',
+          '',
+          'Open state is centralised on the parent via `provide`/`inject`. Use `exclusive` (default `true`)',
+          'to enforce a single-open-item behavior, or set it to `false` to allow multiple items open at once.',
+          'Children use the `summary` slot for the header and the default slot for the revealed content.',
+        ].join('\n'),
+      },
+    },
+  },
   argTypes: {
     exclusive: { control: 'boolean' },
   },
@@ -47,6 +60,14 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Exclusive mode (default) — opening one item closes the others. Verifies that clicking an item reveals its content.',
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     // Arrange
     const canvas = within(canvasElement);
@@ -60,4 +81,13 @@ export const Default: Story = {
   },
 };
 
-export const MultiOpen: Story = { args: { exclusive: false } };
+export const MultiOpen: Story = {
+  args: { exclusive: false },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Non-exclusive mode — multiple items can be open simultaneously. Use for FAQ-style content.',
+      },
+    },
+  },
+};

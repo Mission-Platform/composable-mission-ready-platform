@@ -7,6 +7,13 @@ const meta = {
   title: 'Components/Display/Avatar',
   component: BaseAvatar,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `\`Avatar\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+      },
+    },
+  },
   argTypes: {
     size: { control: 'select', options: ['xs', 'sm', 'md', 'lg', 'xl'] as AvatarSize[] },
     shape: { control: 'select', options: ['circle', 'square'] as AvatarShape[] },

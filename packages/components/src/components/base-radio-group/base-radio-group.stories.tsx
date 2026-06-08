@@ -13,6 +13,13 @@ const meta = {
   title: 'Components/Forms/BaseRadioGroup',
   component: BaseRadioGroup,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `\`BaseRadioGroup\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+      },
+    },
+  },
   argTypes: {
     direction: { control: 'select', options: ['vertical', 'horizontal'] },
     disabled: { control: 'boolean' },

@@ -1,15 +1,40 @@
 <script lang="ts" setup>
+  /**
+   * `BaseButton` is the foundational interactive element of the Mission Platform UI.
+   *
+   * It renders a native `<button>` with consistent theming, sizing, focus-visible
+   * outlines, disabled / loading states, and a built-in accessible loading spinner.
+   * Use the default slot for the button label and/or leading/trailing icons.
+   *
+   * Accessibility:
+   * - Sets `aria-busy` while `loading` is true.
+   * - The spinner exposes an `aria-label` localised via `vue-i18n` (`loading` key).
+   * - When `disabled` or `loading`, the native `disabled` attribute is applied and
+   *   click events are suppressed.
+   *
+   * @example
+   * ```html
+   * <BaseButton variant="primary" size="md" @click="onSave">Save</BaseButton>
+   * ```
+   */
   import { useI18n } from '@mission-platform/i18n';
 
+  /** Visual treatment of the button. */
   export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
+  /** Size token applied to padding and font-size. */
   export type ButtonSize = 'sm' | 'md' | 'lg';
 
   const props = withDefaults(
     defineProps<{
+      /** Visual treatment. Defaults to `'primary'`. */
       variant?: ButtonVariant;
+      /** Size token controlling padding and font-size. Defaults to `'md'`. */
       size?: ButtonSize;
+      /** Whether the button is non-interactive. Suppresses `click` and applies the native `disabled` attribute. */
       disabled?: boolean;
+      /** Shows the spinner, sets `aria-busy`, and suppresses `click`. */
       loading?: boolean;
+      /** Native `type` attribute. Defaults to `'button'` to avoid accidental form submissions. */
       type?: 'button' | 'submit' | 'reset';
     }>(),
     {
@@ -22,7 +47,16 @@
   );
 
   const emit = defineEmits<{
+    /** Emitted on a real user click. Suppressed while `disabled` or `loading`. */
     click: [event: MouseEvent];
+  }>();
+
+  /**
+   * Default slot — button label and/or icon content.
+   * @slot default
+   */
+  defineSlots<{
+    default(props: Record<string, never>): unknown;
   }>();
 
   const { t } = useI18n({ useScope: 'local' });

@@ -6,6 +6,13 @@ const meta = {
   title: 'Components/Forms/BaseTextarea',
   component: BaseTextarea,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `\`BaseTextarea\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+      },
+    },
+  },
   argTypes: {
     size: { control: 'select', options: ['sm', 'md', 'lg'] },
     resize: { control: 'select', options: ['none', 'vertical', 'horizontal', 'both'] },

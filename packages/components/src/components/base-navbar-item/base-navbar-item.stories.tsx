@@ -8,6 +8,13 @@ const meta = {
   title: 'Components/Navigation/NavbarItem',
   component: BaseNavbarItem,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `\`NavbarItem\` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.`,
+      },
+    },
+  },
   argTypes: {
     label: { control: 'text' },
     href: { control: 'text' },
