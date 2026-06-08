@@ -24,21 +24,28 @@ Mission Platform is a **Vue 3 monorepo** managed with [pnpm workspaces](https://
 
 ```
 composable_mission_ready_platform/
-├── apps/
+├── apps/                   # Deployable applications
 │   ├── my-care-notes/      # Note-taking app with spell/grammar checking & Cloudflare Pages deployment
 │   └── storybook/          # Component catalogue & visual tests
-└── packages/
-    ├── breakpoints/        # Responsive breakpoint utilities & composables
-    ├── components/         # Vue 3 component library
-    ├── icons/              # SVG icon components
-    ├── tokens/             # CSS design tokens & SCSS theme definitions
-    ├── i18n/               # Internationalisation (vue-i18n)
-    ├── map/                # MapLibre GL Vue 3 wrapper
-    ├── hunspell/           # WebAssembly spell checker
-    ├── postcss-config/     # Shared PostCSS configuration
-    ├── eslint-config/      # Shared ESLint flat config
-    ├── prettier-config/    # Shared Prettier config
-    └── stylelint-config/   # Shared Stylelint config
+├── configs/                # Shared tooling/configuration workspace packages
+│   ├── eslint-config/      # Shared ESLint flat config
+│   ├── postcss-config/     # Shared PostCSS configuration
+│   ├── prettier-config/    # Shared Prettier config
+│   ├── stylelint-config/   # Shared Stylelint config
+│   ├── typescript-config/  # Shared TypeScript base presets
+│   └── vite-config/        # Shared Vite/Vitest configuration helpers
+├── packages/               # Shared, reusable packages consumed by apps
+│   ├── breakpoints/        # Responsive breakpoint utilities & composables
+│   ├── components/         # Vue 3 component library
+│   ├── harper/             # Harper grammar checker integration for Monaco editor
+│   ├── hunspell/           # Hunspell spell checker compiled to WebAssembly
+│   ├── i18n/               # Internationalisation (vue-i18n)
+│   ├── icons/              # SVG icon components
+│   ├── map/                # MapLibre GL Vue 3 wrapper
+│   └── tokens/             # CSS design tokens & SCSS theme definitions
+├── workers/                # Cloudflare Workers consumed by the apps
+│   └── base-spa/           # Base SPA worker (static asset + SPA fallback handler)
+└── scripts/                # Repo-wide tooling scripts (i18n extraction, etc.)
 ```
 
 ---
@@ -56,17 +63,35 @@ composable_mission_ready_platform/
 
 | Package | Description |
 |---|---|
-| `@mission-platform/components` | Vue 3 component library |
-| `@mission-platform/tokens` | CSS design tokens & SCSS theme definitions |
-| `@mission-platform/icons` | SVG icon components |
 | `@mission-platform/breakpoints` | Responsive breakpoint utilities, composables, and Vue components |
+| `@mission-platform/components` | Vue 3 component library |
+| `@mission-platform/harper` | Harper grammar and style checker integration for Monaco editor |
+| `@mission-platform/hunspell` | Hunspell spell checker compiled to WebAssembly via Emscripten (includes the `useHunspellMonaco` composable) |
 | `@mission-platform/i18n` | Internationalisation via vue-i18n |
+| `@mission-platform/icons` | SVG icon components |
 | `@mission-platform/map` | MapLibre GL Vue 3 wrapper with full reactivity support |
-| `@mission-platform/hunspell` | Hunspell spell checker compiled to WebAssembly via Emscripten |
-| `@mission-platform/postcss-config` | Shared PostCSS configuration |
+| `@mission-platform/tokens` | CSS design tokens & SCSS theme definitions |
+
+---
+
+## Shared Tooling Configs
+
+| Package | Description |
+|---|---|
 | `@mission-platform/eslint-config` | Shared ESLint flat config (TypeScript + Vue 3) |
+| `@mission-platform/postcss-config` | Shared PostCSS configuration |
 | `@mission-platform/prettier-config` | Shared Prettier config |
 | `@mission-platform/stylelint-config` | Shared Stylelint config (SCSS + BEM) |
+| `@mission-platform/typescript-config` | Shared TypeScript base configs (`base`, `app`, `library`, `node`, `test`) |
+| `@mission-platform/vite-config` | Shared Vite/Vitest helpers (`defineLibraryConfig`, `defineAppConfig`, `defineVitestConfig`) |
+
+---
+
+## Workers
+
+| Worker | Description |
+|---|---|
+| `@mission-platform/base-spa` | Cloudflare Worker that serves static assets with an SPA-style fallback, consumed by the deployable apps |
 
 ---
 
@@ -149,10 +174,11 @@ pnpm --filter "./apps/**" test
 The dependency graph is strictly **one-directional**:
 
 ```
-apps/  →  packages/
+apps/  →  packages/  →  configs/
+workers/ →  configs/
 ```
 
-Code in `packages/` must **never** import from `apps/`. Apps are thin orchestration layers that compose packages into a working product.
+Code in `packages/`, `configs/`, or `workers/` must **never** import from `apps/`. Apps are thin orchestration layers that compose packages into a working product.
 
 ### Shared tooling configs
 
@@ -180,11 +206,12 @@ export default { ...baseConfig }
 
 ## Adding a New Package
 
-1. Create `packages/<package-name>/` with a `package.json` named `@mission-platform/<package-name>`.
-2. Add `eslint-config`, `prettier-config`, and `stylelint-config` as `devDependencies` and wire up the shared configs.
+1. Create `packages/<package-name>/` (or `configs/<config-name>/` for new shared tooling configs) with a `package.json` named `@mission-platform/<package-name>`.
+2. Add `eslint-config`, `prettier-config`, `stylelint-config`, `typescript-config`, and (where applicable) `vite-config`/`postcss-config` as `devDependencies` and wire up the shared configs.
 3. Build and export the package (via a Vite library build or `tsc`).
 4. Reference it in any app: `"@mission-platform/<package-name>": "workspace:*"`.
 5. Add stories in `apps/storybook` to document the new components or composables.
+6. Add a [Changeset](https://github.com/changesets/changesets) entry (`pnpm changeset`) describing the change — required for any user-visible change under `configs/` or `packages/`.
 
 ---
 
