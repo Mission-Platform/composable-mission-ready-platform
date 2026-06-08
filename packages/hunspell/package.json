@@ -27,10 +27,18 @@
     "build:watch": "vite build --watch",
     "build:wasm": "bash build.sh",
     "build:wasm:clean": "bash build.sh --no-cache",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --check .",
     "format:write": "prettier --write ."
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "dependencies": {
+    "monaco-editor": "catalog:"
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
@@ -38,10 +46,15 @@
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@types/node": "catalog:typescript",
+    "@vitest/coverage-v8": "catalog:testing",
+    "@vue/test-utils": "catalog:vue",
     "eslint": "catalog:eslint",
+    "jsdom": "catalog:testing",
     "prettier": "catalog:prettier",
     "typescript": "catalog:typescript",
     "vite": "catalog:vite",
+    "vitest": "catalog:testing",
+    "vue": "catalog:vue",
     "vue-tsc": "catalog:vue"
   }
 }

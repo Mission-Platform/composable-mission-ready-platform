@@ -7,11 +7,10 @@
    * and refer to the linked stories for usage examples.
    */
   import { useHarperMonaco } from '@mission-platform/harper';
+  import { useHunspellMonaco } from '@mission-platform/hunspell';
+  import { fontFamilies } from '@mission-platform/tokens';
   import * as monaco from 'monaco-editor';
   import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue';
-
-  import { useHunspellMonaco } from '../../composables/use-hunspell-monaco';
-  import { fontFamilies } from '@mission-platform/tokens';
 
   export type MonacoEditorCompletionItemProvider = monaco.languages.CompletionItemProvider;
 
