@@ -1,0 +1,11 @@
+{
+  "extends": "@mission-platform/typescript-config/library",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.build.tsbuildinfo",
+    "rootDir": "src",
+    "emitDeclarationOnly": true,
+    "declarationDir": "./dist",
+    "types": ["vite/client"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts"]
+}
