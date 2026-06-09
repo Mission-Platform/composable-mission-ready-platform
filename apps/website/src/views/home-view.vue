@@ -19,9 +19,9 @@
   import { IconDebug, IconGlobe, IconLanguage, IconLightning, IconPalette, IconPuzzle } from '@mission-platform/icons';
   import { useI18n } from '@mission-platform/i18n';
   import { computed, onBeforeUnmount, onMounted, ref, type Component } from 'vue';
+  import { useRouter } from 'vue-router';
 
-  import { i18n } from '../main';
-  import { loadLocaleMessages } from '../locales/load-locale';
+  import { DEFAULT_LOCALE, type SupportedLocale } from '../router';
 
   interface Feature {
     title: string;
@@ -40,6 +40,7 @@
   }
 
   const { t, locale } = useI18n();
+  const router = useRouter();
 
   const featureIcons: Component[] = [IconPuzzle, IconLightning, IconPalette, IconLanguage, IconDebug, IconGlobe];
   const features = computed<Feature[]>(() =>
@@ -61,14 +62,15 @@
     languages.map((lang) => ({
       label: lang.label,
       onClick: async () => {
-        await loadLocaleMessages(i18n, lang.code);
-        locale.value = lang.code;
-        document.documentElement.setAttribute('lang', lang.code);
+        // Drive the locale entirely through the URL: the router guard in
+        // `main.ts` loads messages and updates `<html lang>` / vue-i18n.
+        const code = lang.code as SupportedLocale;
         try {
-          localStorage.setItem('mp-locale', lang.code);
+          localStorage.setItem('mp-locale', code);
         } catch {
           // ignore
         }
+        await router.push(code === DEFAULT_LOCALE ? '/' : `/${code}`);
       },
     })),
   );

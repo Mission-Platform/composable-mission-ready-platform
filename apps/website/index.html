@@ -11,28 +11,11 @@
       name="theme-color"
     />
 
-    <!-- Primary SEO -->
+    <!-- Primary SEO, Open Graph, and Twitter metadata are injected at runtime
+         by @mission-platform/page-meta and @mission-platform/open-graph
+         (see src/main.ts). A minimal <title> is kept here so the document has
+         a sensible title before the JS bundle executes. -->
     <title>Mission Platform — Composable. Mission Ready.</title>
-    <meta
-      content="Mission Platform is an independent, composable Vue 3 monorepo of design tokens, components, composables, and Cloudflare Workers for building modern, mission-ready web experiences."
-      name="description"
-    />
-    <meta
-      content="Mission Platform"
-      name="author"
-    />
-    <meta
-      content="Vue 3, monorepo, design system, components, composable, Cloudflare Workers, TypeScript, Vite, Storybook, mission ready, Mission Platform"
-      name="keywords"
-    />
-    <link
-      href="https://mission-platform.dev/"
-      rel="canonical"
-    />
-    <meta
-      content="index,follow"
-      name="robots"
-    />
 
     <!-- Icons -->
     <link
@@ -45,73 +28,8 @@
       rel="apple-touch-icon"
     />
 
-    <!-- Open Graph -->
-    <meta
-      content="website"
-      property="og:type"
-    />
-    <meta
-      content="Mission Platform"
-      property="og:site_name"
-    />
-    <meta
-      content="Mission Platform — Composable. Mission Ready."
-      property="og:title"
-    />
-    <meta
-      content="An independent, composable Vue 3 monorepo of design tokens, components, composables, and Cloudflare Workers for building modern, mission-ready web experiences."
-      property="og:description"
-    />
-    <meta
-      content="https://mission-platform.dev/"
-      property="og:url"
-    />
-    <meta
-      content="https://mission-platform.dev/og-image.svg"
-      property="og:image"
-    />
-    <meta
-      content="image/svg+xml"
-      property="og:image:type"
-    />
-    <meta
-      content="1200"
-      property="og:image:width"
-    />
-    <meta
-      content="630"
-      property="og:image:height"
-    />
-    <meta
-      content="Mission Platform — Composable. Mission Ready."
-      property="og:image:alt"
-    />
-    <meta
-      content="en_GB"
-      property="og:locale"
-    />
-
-    <!-- Twitter / X -->
-    <meta
-      content="summary_large_image"
-      name="twitter:card"
-    />
-    <meta
-      content="Mission Platform — Composable. Mission Ready."
-      name="twitter:title"
-    />
-    <meta
-      content="An independent, composable Vue 3 monorepo for building modern, mission-ready web experiences."
-      name="twitter:description"
-    />
-    <meta
-      content="https://mission-platform.dev/og-image.svg"
-      name="twitter:image"
-    />
-    <meta
-      content="Mission Platform — Composable. Mission Ready."
-      name="twitter:image:alt"
-    />
+    <!-- Open Graph + Twitter metadata is injected at runtime by
+         @mission-platform/open-graph (see src/main.ts). -->
 
     <!-- Structured data (JSON-LD) -->
     <script type="application/ld+json">
