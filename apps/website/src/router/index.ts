@@ -3,11 +3,14 @@ import type { RouterOptions, RouteRecordRaw } from 'vue-router';
 /**
  * Locales supported by the website. The default locale (`en`) is served at
  * the site root (`/`) without a path prefix, while every other locale gets
- * its own URL prefix (`/es/`, `/fr/`, `/nl/`). Keep this list in sync with
- * `src/locales/`, `load-locale.ts`, and the `hreflang` alternates declared
- * in `main.ts`.
+ * its own URL prefix (`/es/`, `/fr/`, `/nl/`, `/it/`, `/de/`, `/ko/`, `/ja/`,
+ * `/zh/`, `/ar/`, `/he/`). Keep this list in sync with `src/locales/`,
+ * `load-locale.ts`, and the `hreflang` alternates declared in `main.ts`.
+ *
+ * `ar` and `he` are right-to-left locales — `LOCALE_DIR` in `main.ts` maps
+ * those to `dir="rtl"` on the `<html>` element.
  */
-export const SUPPORTED_LOCALES = ['en', 'es', 'fr', 'nl'] as const;
+export const SUPPORTED_LOCALES = ['en', 'es', 'fr', 'nl', 'it', 'de', 'ko', 'ja', 'zh', 'ar', 'he'] as const;
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
 export const DEFAULT_LOCALE: SupportedLocale = 'en';

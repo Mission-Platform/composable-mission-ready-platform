@@ -5,6 +5,194 @@
 # Shape: <locale> → <ComponentName> → <key> → <value>
 # Use this file with your translation tool (Lokalise, POEditor, Crowdin, …).
 
+ar:
+  HomeView:
+    ai-translation-warning: تمت ترجمة هذه الصفحة بواسطة الذكاء الاصطناعي. قد تكون بعض الصياغات غير دقيقة — النسخة الإنجليزية هي المرجع.
+    nav:
+      features: الميزات
+      packages: الحزم
+      about: حول
+      faq: الأسئلة الشائعة
+    hero:
+      badge: قابلة للتركيب · جاهزة للمهمة
+      title: منصة قابلة للتركيب وجاهزة للمهمة لمنتجات Vue 3 الحديثة.
+      lead: >-
+        Mission Platform هي مستودع موحّد من لبنات بناء Vue 3 القابلة لإعادة الاستخدام — مكونات، رموز تصميم، composables،
+        وعمّال Cloudflare، وأساسيات SEO — تتيح للفرق تجميع تطبيقات أنيقة وعالية الأداء وسهلة الاكتشاف دون إعادة اختراع
+        الأساسيات.
+      cta-primary: استكشف المنصة
+      cta-secondary: اقرأ الوثائق
+    features:
+      title: لماذا Mission Platform؟
+      items:
+        - title: قابلة للتركيب بحكم التصميم
+          description: تُشحن كل قدرة كحزمة مستقلة ومُصدَّرة بإصدار خاص. اختر ما تحتاجه واصنع منتجك الخاص.
+        - title: أداء جاهز للمهمة
+          description: مبنية على Vue 3 وVite ومعايير الويب الحديثة. تعمل دون اتصال أولاً، ومتوافقة مع PWA، وجاهزة للحافة.
+        - title: نظام تصميم متناغم
+          description: رموز تصميم مشتركة، وثيمات، ومكتبة مكونات Vue 3 مصقولة — قابلة للوصول وقابلة لتغيير الثيم منذ البداية.
+        - title: i18n وa11y أولاً
+          description: >-
+            تكامل vue-i18n وتخطيطات تدعم اتجاه الكتابة من اليمين إلى اليسار ومكونات مختبرة لإمكانية الوصول، تجعل منتجك
+            يتحدث بلغة كل مستخدم.
+        - title: تجربة المطوّر
+          description: منضدة عمل Storybook، وإعدادات ESLint/Prettier/Stylelint المشتركة، وVitest + Playwright — كل شيء جاهز.
+        - title: نشر أصلي على الحافة
+          description: دعم من الدرجة الأولى لـ Cloudflare Workers مع عامل base-spa للاستضافة الثابتة + احتياطي SPA.
+        - title: قابلة للاكتشاف افتراضيًا
+          description: >-
+            composables مدمجة لـ Open Graph وpage-meta، إلى جانب مخرجات SSG مُسبقة العرض، تُبقي كل مسار جاهزًا للسيو
+            وقابلًا للمشاركة.
+    packages:
+      title: لبنات البناء
+      lead: كل حزمة تُصدَّر وتُنشر بشكل مستقل. امزج وطابق وركّب.
+      items:
+        - مكتبة مكونات Vue 3
+        - رموز تصميم CSS وثيمات SCSS
+        - مكونات أيقونات SVG
+        - أدوات وcomposables استجابية
+        - تكامل vue-i18n واللغات الأساسية
+        - غلاف MapLibre GL لـ Vue 3
+        - مدقق Harper النحوي لـ Monaco
+        - مدقق Hunspell الإملائي (WASM)
+        - 'تحسين محركات البحث الموحد: بيانات الصفحة، Open Graph، Twitter Card و JSON-LD'
+        - عامل base-spa من Cloudflare
+    about:
+      title: ما الذي نبنيه
+      lead: >-
+        تدير Mission Platform تطبيقات حقيقية — مثل {app}، محرر ملاحظات سريرية يعمل دون اتصال أولاً مع تدقيق إملائي بـ
+        WebAssembly ومساعدة نحوية. هدف المنصة هو جعل تجارب كهذه قابلة للتكرار، قابلة للتركيب، وسهلة الإطلاق.
+      cta: شارك معنا
+    faq:
+      title: الأسئلة الشائعة
+      items:
+        affiliation:
+          question: هل Mission Platform مرتبطة بأي مشروع آخر؟
+          answer: >-
+            لا. Mission Platform هي مشروع ومنظمة مفتوحَا المصدر ومستقلَّان، وغير مرتبطة بأي مشروع أو منتج أو شركة أو
+            منظمة أخرى قد تحمل نفس الاسم أو اسمًا مشابهًا، ولا مدعومة منها ولا مرتبطة بها.
+        composable:
+          question: ماذا تعني «قابلة للتركيب» هنا فعلاً؟
+          answer: >-
+            تعيش كل قدرة — المكونات، الرموز، i18n، الخرائط، التدقيق الإملائي — في حزمة خاصة بها ومُصدَّرة بإصدار. تستورد
+            فقط ما تحتاجه وتجمّع منتجك الخاص، بدلاً من تبني إطار عمل متراص.
+        vue-version:
+          question: ما إصدار Vue المدعوم؟
+          answer: >-
+            Vue 3.5+ مع Composition API وصياغة `script setup`. جميع الحزم مكتوبة بـ TypeScript وتوفر تعريفات أنواع
+            كاملة.
+        deploy:
+          question: كيف أنشر تطبيق Mission Platform؟
+          answer: >-
+            التطبيقات هي تطبيقات صفحة واحدة مبنية بـ Vite. يأتي معها عامل Cloudflare من الدرجة الأولى باسم base-spa
+            للاستضافة الثابتة الأصلية على الحافة مع احتياطي SPA، لكن أي خادم يقدم ملفات ثابتة سيعمل.
+    footer:
+      disclaimer: >-
+        {brand} مشروع ومنظمة مفتوحَا المصدر ومستقلَّان. وهي {not-affiliated} أي مشروع أو منتج أو شركة أو منظمة أخرى قد
+        تحمل نفس الاسم أو اسمًا مشابهًا. أي تشابه مع أسماء قائمة هو من قبيل الصدفة.
+      not-affiliated: غير مرتبطة بأو مدعومة من أو مرتبطة بـ
+      copyright: © {year} مساهمو Mission Platform.
+de:
+  HomeView:
+    ai-translation-warning: >-
+      Diese Seite wurde von einer KI übersetzt. Einige Formulierungen können ungenau sein — die englische Version ist
+      maßgeblich.
+    nav:
+      features: Funktionen
+      packages: Pakete
+      about: Über
+      faq: FAQ
+    hero:
+      badge: Komponierbar · Einsatzbereit
+      title: Eine komponierbare, einsatzbereite Plattform für moderne Vue 3-Produkte.
+      lead: >-
+        Mission Platform ist ein Monorepo aus wiederverwendbaren Vue 3-Bausteinen — Komponenten, Design-Tokens,
+        Composables, Cloudflare Workers und SEO-Primitiven —, mit denen Teams polierte, leistungsstarke und auffindbare
+        Anwendungen zusammenstellen können, ohne das Rad neu zu erfinden.
+      cta-primary: Plattform erkunden
+      cta-secondary: Dokumentation lesen
+    features:
+      title: Warum Mission Platform?
+      items:
+        - title: Komponierbar von Grund auf
+          description: >-
+            Jede Fähigkeit wird als eigenständiges, versioniertes Paket ausgeliefert. Wähle, was du brauchst, und stelle
+            dein eigenes Produkt zusammen.
+        - title: Einsatzbereite Leistung
+          description: Aufgebaut auf Vue 3, Vite und modernen Web-Standards. Offline-first, PWA-tauglich und bereit für die Edge.
+        - title: Stimmiges Designsystem
+          description: >-
+            Geteilte Design-Tokens, Themes und eine polierte Vue 3-Komponentenbibliothek — von Haus aus zugänglich und
+            thematisierbar.
+        - title: i18n und a11y zuerst
+          description: >-
+            vue-i18n-Integration, RTL-fähige Layouts und auf Barrierefreiheit getestete Komponenten sorgen dafür, dass
+            dein Produkt die Sprache jeder Nutzerin spricht.
+        - title: Entwicklererlebnis
+          description: >-
+            Storybook-Werkbank, geteilte ESLint/Prettier/Stylelint-Konfigurationen, Vitest + Playwright — alles
+            eingerichtet und bereit.
+        - title: Edge-native Bereitstellung
+          description: >-
+            Erstklassige Unterstützung für Cloudflare Workers mit dem base-spa-Worker für statisches Hosting +
+            SPA-Fallback.
+        - title: Standardmäßig auffindbar
+          description: >-
+            Integrierte Open Graph- und page-meta-Composables sowie vorgerenderte SSG-Ausgaben halten jede Route
+            SEO-bereit und teilbar.
+    packages:
+      title: Bausteine
+      lead: Jedes Paket wird unabhängig versioniert und veröffentlicht. Mische, kombiniere und komponiere.
+      items:
+        - Vue 3-Komponentenbibliothek
+        - CSS-Design-Tokens und SCSS-Themes
+        - SVG-Icon-Komponenten
+        - Responsive Utilities und Composables
+        - vue-i18n-Integration und Basis-Locales
+        - MapLibre GL Vue 3-Wrapper
+        - Harper-Grammatikprüfer für Monaco
+        - Hunspell-Rechtschreibprüfung (WASM)
+        - 'Vereinheitlichtes SEO: Seitenmetadaten, Open Graph, Twitter Card und JSON-LD'
+        - base-spa-Cloudflare-Worker
+    about:
+      title: Woran wir bauen
+      lead: >-
+        Mission Platform betreibt echte Anwendungen — wie {app}, einen offline-first Editor für klinische Notizen mit
+        WebAssembly-Rechtschreibprüfung und Grammatikhilfe. Ziel der Plattform ist es, solche Erlebnisse wiederholbar,
+        komponierbar und einfach lieferbar zu machen.
+      cta: Mitmachen
+    faq:
+      title: Häufig gestellte Fragen
+      items:
+        affiliation:
+          question: Ist Mission Platform mit anderen Projekten verbunden?
+          answer: >-
+            Nein. Mission Platform ist ein unabhängiges Open-Source-Projekt und eine unabhängige Organisation und ist
+            mit keinem anderen Projekt, Produkt, Unternehmen oder keiner Organisation verbunden, befürwortet oder
+            assoziiert, das oder die denselben oder einen ähnlichen Namen tragen könnte.
+        composable:
+          question: Was bedeutet „komponierbar“ hier eigentlich?
+          answer: >-
+            Jede Fähigkeit — Komponenten, Tokens, i18n, Karten, Rechtschreibprüfung — lebt in einem eigenen
+            versionierten Paket. Du importierst nur, was du brauchst, und stellst dein eigenes Produkt zusammen, statt
+            ein monolithisches Framework zu übernehmen.
+        vue-version:
+          question: Welche Vue-Version wird unterstützt?
+          answer: >-
+            Vue 3.5+ mit der Composition API und der `script setup`-Syntax. Alle Pakete sind in TypeScript geschrieben
+            und liefern vollständige Typdefinitionen.
+        deploy:
+          question: Wie deploye ich eine Mission Platform-App?
+          answer: >-
+            Apps sind mit Vite gebaute Single-Page-Apps. Ein erstklassiger base-spa-Cloudflare-Worker ist für
+            edge-natives statisches Hosting + SPA-Fallback enthalten, aber jeder statische Dateiserver funktioniert.
+    footer:
+      disclaimer: >-
+        {brand} ist ein unabhängiges Open-Source-Projekt und eine unabhängige Organisation. Es ist {not-affiliated}
+        keinem anderen Projekt, Produkt, Unternehmen oder keiner Organisation, das oder die denselben oder einen
+        ähnlichen Namen tragen könnte. Jede Ähnlichkeit mit bestehenden Namen ist rein zufällig.
+      not-affiliated: verbunden mit, befürwortet von oder assoziiert mit
+      copyright: © {year} Mission Platform-Mitwirkende.
 en:
   BaseButton:
     loading: Loading…
@@ -92,11 +280,17 @@ en:
             Shared design tokens, themes, and a polished Vue 3 component library — accessible and themable out of the
             box.
         - title: i18n & a11y first
-          description: vue-i18n integration and accessibility-tested components mean your product speaks every user’s language.
+          description: >-
+            vue-i18n integration, RTL-aware layouts, and accessibility-tested components mean your product speaks every
+            user’s language.
         - title: Developer experience
           description: Storybook workbench, shared ESLint/Prettier/Stylelint configs, Vitest + Playwright — wired up and ready.
         - title: Edge-native deployment
           description: First-class Cloudflare Workers support with the base-spa worker for static + SPA fallback hosting.
+        - title: Discoverable by default
+          description: >-
+            Built-in Open Graph and page-meta composables plus prerendered SSG output keep every route SEO-ready and
+            shareable.
     packages:
       title: Building blocks
       lead: Every package is independently versioned and published. Mix, match, and compose.
@@ -109,6 +303,8 @@ en:
         - MapLibre GL Vue 3 wrapper
         - Harper grammar checker for Monaco
         - Hunspell spell checker (WASM)
+        - 'Unified SEO: page metadata, Open Graph, Twitter Card & JSON-LD'
+        - base-spa Cloudflare Worker
     about:
       title: What we’re building
       lead: >-
@@ -183,8 +379,8 @@ es:
             de fábrica.
         - title: i18n y a11y primero
           description: >-
-            La integración con vue-i18n y los componentes probados en accesibilidad hacen que tu producto hable el
-            idioma de cada usuario.
+            La integración con vue-i18n, los diseños compatibles con RTL y los componentes probados en accesibilidad
+            hacen que tu producto hable el idioma de cada usuario.
         - title: Experiencia de desarrollo
           description: >-
             Banco de trabajo Storybook, configuraciones compartidas de ESLint/Prettier/Stylelint, Vitest + Playwright —
@@ -193,6 +389,10 @@ es:
           description: >-
             Soporte de primera clase para Cloudflare Workers con el worker base-spa para alojamiento estático + respaldo
             SPA.
+        - title: Detectable por defecto
+          description: >-
+            Composables integrados de Open Graph y page-meta, junto con salida SSG prerenderizada, mantienen cada ruta
+            lista para SEO y para compartir.
     packages:
       title: Bloques de construcción
       lead: Cada paquete se versiona y publica de forma independiente. Mezcla, combina y compón.
@@ -205,6 +405,8 @@ es:
         - Wrapper de MapLibre GL para Vue 3
         - Corrector gramatical Harper para Monaco
         - Corrector ortográfico Hunspell (WASM)
+        - 'SEO unificado: metadatos de página, Open Graph, Twitter Card y JSON-LD'
+        - Cloudflare Worker base-spa
     about:
       title: Lo que estamos construyendo
       lead: >-
@@ -281,14 +483,18 @@ fr:
             thématisable d’emblée.
         - title: i18n et a11y avant tout
           description: >-
-            L’intégration vue-i18n et des composants testés pour l’accessibilité font que votre produit parle la langue
-            de chaque utilisateur.
+            L’intégration vue-i18n, les mises en page compatibles RTL et des composants testés pour l’accessibilité font
+            que votre produit parle la langue de chaque utilisateur.
         - title: Expérience développeur
           description: Atelier Storybook, configurations ESLint/Prettier/Stylelint partagées, Vitest + Playwright — tout est prêt.
         - title: Déploiement natif au edge
           description: >-
             Prise en charge de premier ordre des Cloudflare Workers avec le worker base-spa pour l’hébergement statique
             + repli SPA.
+        - title: Découvrable par défaut
+          description: >-
+            Composables Open Graph et page-meta intégrés, plus une sortie SSG prérendue, qui rendent chaque route prête
+            pour le SEO et le partage.
     packages:
       title: Briques de construction
       lead: Chaque paquet est versionné et publié indépendamment. Mélangez, assortissez et composez.
@@ -301,6 +507,8 @@ fr:
         - Wrapper MapLibre GL pour Vue 3
         - Correcteur grammatical Harper pour Monaco
         - Correcteur orthographique Hunspell (WASM)
+        - 'SEO unifié : métadonnées de page, Open Graph, Twitter Card et JSON-LD'
+        - Cloudflare Worker base-spa
     about:
       title: Ce que nous construisons
       lead: >-
@@ -341,6 +549,348 @@ fr:
         avec des noms existants est fortuite.
       not-affiliated: ni affilié, ni soutenu, ni associé à
       copyright: © {year} Contributeurs de Mission Platform.
+he:
+  HomeView:
+    ai-translation-warning: דף זה תורגם על ידי בינה מלאכותית. חלק מהניסוחים עשויים להיות לא מדויקים — הגרסה האנגלית היא המחייבת.
+    nav:
+      features: תכונות
+      packages: חבילות
+      about: אודות
+      faq: שאלות נפוצות
+    hero:
+      badge: בר-הרכבה · מוכן למשימה
+      title: פלטפורמה בת-הרכבה ומוכנה למשימה למוצרי Vue 3 מודרניים.
+      lead: >-
+        Mission Platform היא מונורפו של אבני בניין לשימוש חוזר ב-Vue 3 — קומפוננטות, design tokens, composables,
+        Cloudflare Workers ופרימיטיבים ל-SEO — שמאפשרים לצוותים להרכיב יישומים מלוטשים, ביצועיים וברי-גילוי, מבלי להמציא
+        את הגלגל מחדש.
+      cta-primary: גלה את הפלטפורמה
+      cta-secondary: קרא את התיעוד
+    features:
+      title: למה Mission Platform?
+      items:
+        - title: בת-הרכבה בעיצוב
+          description: כל יכולת מסופקת כחבילה עצמאית עם ניהול גרסאות משלה. בחר את מה שאתה צריך והרכב את המוצר שלך.
+        - title: ביצועים מוכנים למשימה
+          description: בנויה על Vue 3, Vite וסטנדרטים מודרניים של הוויב. Offline-first, ידידותית ל-PWA ומוכנה לקצה.
+        - title: מערכת עיצוב מגובשת
+          description: >-
+            design tokens משותפים, ערכות נושא וספריית קומפוננטות מלוטשת של Vue 3 — נגישה וניתנת להחלפת ערכת נושא מחוץ
+            לקופסה.
+        - title: i18n ו-a11y קודם כל
+          description: שילוב vue-i18n, פריסות מודעות ל-RTL וקומפוננטות שעברו בדיקות נגישות, מאפשרים למוצר שלך לדבר בשפת כל משתמש.
+        - title: חוויית מפתח
+          description: >-
+            שולחן עבודה של Storybook, קונפיגורציות ESLint/Prettier/Stylelint משותפות, Vitest + Playwright — הכול מחובר
+            ומוכן.
+        - title: פריסה ילידית לקצה
+          description: תמיכה מהשורה הראשונה ב-Cloudflare Workers עם ה-worker base-spa לאחסון סטטי + נסיגה ל-SPA.
+        - title: בר-גילוי כברירת מחדל
+          description: composables מובנים של Open Graph ו-page-meta, יחד עם פלט SSG מעובד מראש, שומרים כל נתיב מוכן ל-SEO ולשיתוף.
+    packages:
+      title: אבני בניין
+      lead: כל חבילה מנוהלת ומפורסמת בנפרד. ערבב, התאם והרכב.
+      items:
+        - ספריית קומפוננטות Vue 3
+        - design tokens של CSS וערכות נושא ב-SCSS
+        - קומפוננטות אייקוני SVG
+        - כלים ו-composables רספונסיביים
+        - שילוב vue-i18n ושפות בסיס
+        - עטיפת MapLibre GL ל-Vue 3
+        - בודק תחביר Harper ל-Monaco
+        - בודק איות Hunspell (WASM)
+        - 'SEO מאוחד: מטא-נתוני עמוד, Open Graph, Twitter Card ו-JSON-LD'
+        - Cloudflare Worker base-spa
+    about:
+      title: מה אנחנו בונים
+      lead: >-
+        Mission Platform מפעילה יישומים אמיתיים — כמו {app}, עורך הערות קליניות offline-first עם בדיקת איות
+        ב-WebAssembly וסיוע תחבירי. מטרת הפלטפורמה היא להפוך חוויות כאלה לחזרתיות, בנות-הרכבה וקלות לשילוח.
+      cta: הצטרף
+    faq:
+      title: שאלות נפוצות
+      items:
+        affiliation:
+          question: האם Mission Platform קשורה לפרויקט אחר?
+          answer: >-
+            לא. Mission Platform היא פרויקט וארגון קוד פתוח עצמאיים, ואינה קשורה, מאושרת או מזוהה עם שום פרויקט, מוצר,
+            חברה או ארגון אחרים שעשויים לשאת אותו שם או שם דומה.
+        composable:
+          question: מה זה בעצם «בר-הרכבה» כאן?
+          answer: >-
+            כל יכולת — קומפוננטות, tokens, i18n, מפות, בדיקת איות — חיה בחבילה עצמאית משלה עם ניהול גרסאות. אתה מושך רק
+            את מה שצריך ומרכיב את המוצר שלך, במקום לאמץ מסגרת מונוליטית.
+        vue-version:
+          question: איזו גרסה של Vue נתמכת?
+          answer: >-
+            Vue 3.5+ עם Composition API ותחביר `script setup`. כל החבילות כתובות ב-TypeScript ומגיעות עם הגדרות טיפוסים
+            מלאות.
+        deploy:
+          question: איך פורסים אפליקציית Mission Platform?
+          answer: >-
+            היישומים הם SPA שנבנו עם Vite. כלול Cloudflare Worker base-spa מהשורה הראשונה לאחסון סטטי + נסיגת SPA
+            ילידית-לקצה, אבל כל שרת קבצים סטטי יעבוד.
+    footer:
+      disclaimer: >-
+        {brand} הוא פרויקט וארגון קוד פתוח עצמאיים. הוא {not-affiliated} שום פרויקט, מוצר, חברה או ארגון אחרים שעשויים
+        לשאת אותו שם או שם דומה. כל דמיון לשמות קיימים הוא מקרי בלבד.
+      not-affiliated: אינו קשור, מאושר או מזוהה עם
+      copyright: © {year} תורמי Mission Platform.
+it:
+  HomeView:
+    ai-translation-warning: >-
+      Questa pagina è stata tradotta dall’IA. Alcune formulazioni possono essere imprecise — la versione inglese è
+      quella autorevole.
+    nav:
+      features: Funzionalità
+      packages: Pacchetti
+      about: Informazioni
+      faq: FAQ
+    hero:
+      badge: Componibile · Pronto per la missione
+      title: Una piattaforma componibile e pronta per la missione, per prodotti Vue 3 moderni.
+      lead: >-
+        Mission Platform è un monorepo di mattoncini Vue 3 riutilizzabili — componenti, design token, composables,
+        Cloudflare Workers e primitive SEO — che permette ai team di assemblare applicazioni curate, performanti e ben
+        indicizzate senza reinventare le basi.
+      cta-primary: Esplora la piattaforma
+      cta-secondary: Leggi la documentazione
+    features:
+      title: Perché Mission Platform?
+      items:
+        - title: Componibile per natura
+          description: >-
+            Ogni capacità viene rilasciata come pacchetto indipendente e versionato. Scegli ciò che ti serve, componi il
+            tuo prodotto.
+        - title: Prestazioni pronte per la missione
+          description: Costruito su Vue 3, Vite e i moderni standard web. Offline-first, PWA-friendly e pronto per l’edge.
+        - title: Sistema di design coerente
+          description: >-
+            Design token condivisi, temi e una curata libreria di componenti Vue 3 — accessibile e tematizzabile di
+            default.
+        - title: i18n e a11y prima di tutto
+          description: >-
+            Integrazione vue-i18n, layout RTL-aware e componenti testati per l’accessibilità fanno sì che il tuo
+            prodotto parli la lingua di ogni utente.
+        - title: Esperienza dello sviluppatore
+          description: >-
+            Banco di lavoro Storybook, configurazioni ESLint/Prettier/Stylelint condivise, Vitest + Playwright — tutto
+            pronto.
+        - title: Distribuzione edge-native
+          description: Supporto di prima classe per Cloudflare Workers con il worker base-spa per hosting statico + fallback SPA.
+        - title: Scopribile di default
+          description: >-
+            Composables Open Graph e page-meta integrati, oltre all’output SSG prerenderizzato, mantengono ogni rotta
+            pronta per la SEO e condivisibile.
+    packages:
+      title: Mattoni di costruzione
+      lead: Ogni pacchetto è versionato e pubblicato in modo indipendente. Mescola, abbina e componi.
+      items:
+        - Libreria di componenti Vue 3
+        - Design token CSS e temi SCSS
+        - Componenti di icone SVG
+        - Utility e composables responsive
+        - Integrazione vue-i18n e locali base
+        - Wrapper MapLibre GL per Vue 3
+        - Correttore grammaticale Harper per Monaco
+        - Correttore ortografico Hunspell (WASM)
+        - 'SEO unificata: metadati di pagina, Open Graph, Twitter Card e JSON-LD'
+        - Cloudflare Worker base-spa
+    about:
+      title: Cosa stiamo costruendo
+      lead: >-
+        Mission Platform alimenta applicazioni reali — come {app}, un editor di note cliniche offline-first con
+        correzione ortografica WebAssembly e assistenza grammaticale. L’obiettivo della piattaforma è rendere esperienze
+        come quella ripetibili, componibili e facili da rilasciare.
+      cta: Partecipa
+    faq:
+      title: Domande frequenti
+      items:
+        affiliation:
+          question: Mission Platform è affiliata ad altri progetti?
+          answer: >-
+            No. Mission Platform è un progetto e un’organizzazione open-source indipendenti e non è affiliata, sostenuta
+            o associata ad alcun altro progetto, prodotto, azienda o organizzazione che possa condividere lo stesso nome
+            o uno simile.
+        composable:
+          question: Cosa significa davvero «componibile» qui?
+          answer: >-
+            Ogni capacità — componenti, token, i18n, mappe, controllo ortografico — vive nel proprio pacchetto
+            versionato. Importi solo ciò che ti serve e assembli il tuo prodotto, invece di adottare un framework
+            monolitico.
+        vue-version:
+          question: Quale versione di Vue è supportata?
+          answer: >-
+            Vue 3.5+ con la Composition API e la sintassi `script setup`. Tutti i pacchetti sono scritti in TypeScript e
+            includono definizioni di tipi complete.
+        deploy:
+          question: Come distribuisco un’app Mission Platform?
+          answer: >-
+            Le app sono SPA costruite con Vite. È incluso un Cloudflare Worker base-spa di prima classe per hosting
+            statico + fallback SPA edge-native, ma qualsiasi server di file statici funziona.
+    footer:
+      disclaimer: >-
+        {brand} è un progetto e un’organizzazione open-source indipendenti. Non è {not-affiliated} alcun altro progetto,
+        prodotto, azienda o organizzazione che possa condividere lo stesso nome o uno simile. Qualsiasi somiglianza con
+        nomi esistenti è puramente casuale.
+      not-affiliated: affiliato, sostenuto o associato a
+      copyright: © {year} Contributori di Mission Platform.
+ja:
+  HomeView:
+    ai-translation-warning: このページはAIによって翻訳されています。一部の表現は正確でない場合があります — 英語版が正となります。
+    nav:
+      features: 機能
+      packages: パッケージ
+      about: 概要
+      faq: よくある質問
+    hero:
+      badge: コンポーザブル · ミッションレディ
+      title: モダンな Vue 3 プロダクトのための、コンポーザブルでミッションレディなプラットフォーム。
+      lead: >-
+        Mission Platform は、再利用可能な Vue 3 ビルディングブロック — コンポーネント、デザイントークン、コンポーザブル、Cloudflare Workers、SEO プリミティブ —
+        のモノレポであり、チームが基本を作り直すことなく、洗練され、高性能で、見つけてもらいやすいアプリケーションを組み立てられるようにします。
+      cta-primary: プラットフォームを見る
+      cta-secondary: ドキュメントを読む
+    features:
+      title: なぜ Mission Platform なのか?
+      items:
+        - title: 設計からコンポーザブル
+          description: すべての機能は独立してバージョン管理されたパッケージとして提供されます。必要なものだけを選び、自分のプロダクトを組み立てましょう。
+        - title: ミッションレディなパフォーマンス
+          description: Vue 3、Vite、モダンな Web 標準の上に構築。オフラインファースト、PWA フレンドリーで、エッジにも対応。
+        - title: 統一感のあるデザインシステム
+          description: 共有のデザイントークン、テーマ、洗練された Vue 3 コンポーネントライブラリ — はじめからアクセシブルでテーマ変更も可能。
+        - title: i18n と a11y を最優先
+          description: vue-i18n 統合、RTL 対応レイアウト、アクセシビリティをテスト済みのコンポーネントにより、プロダクトはすべてのユーザーの言語で話します。
+        - title: 開発者体験
+          description: Storybook ワークベンチ、共有の ESLint/Prettier/Stylelint 設定、Vitest + Playwright — すべて配線済みで使えます。
+        - title: エッジネイティブなデプロイ
+          description: 静的 + SPA フォールバックホスティング用の base-spa ワーカーを備えた、Cloudflare Workers のファーストクラスサポート。
+        - title: デフォルトで発見しやすい
+          description: 組み込みの Open Graph と page-meta コンポーザブル、そして事前レンダリングされた SSG 出力により、すべてのルートが SEO と共有に対応します。
+    packages:
+      title: ビルディングブロック
+      lead: すべてのパッケージは独立してバージョン管理・公開されています。組み合わせて、自由に構成してください。
+      items:
+        - Vue 3 コンポーネントライブラリ
+        - CSS デザイントークンと SCSS テーマ
+        - SVG アイコンコンポーネント
+        - レスポンシブユーティリティとコンポーザブル
+        - vue-i18n 統合とベースロケール
+        - Vue 3 向け MapLibre GL ラッパー
+        - Monaco 向け Harper 文法チェッカー
+        - Hunspell スペルチェッカー (WASM)
+        - 統合 SEO：ページメタデータ、Open Graph、Twitter Card、JSON-LD
+        - base-spa Cloudflare Worker
+    about:
+      title: 私たちが作っているもの
+      lead: >-
+        Mission Platform は実際のアプリケーションを支えています — 例えば {app}、WebAssembly
+        スペルチェックと文法支援を備えたオフラインファーストの臨床ノートエディタです。プラットフォームの目標は、そのような体験を再現可能、コンポーザブル、そして出荷しやすいものにすることです。
+      cta: 参加する
+    faq:
+      title: よくある質問
+      items:
+        affiliation:
+          question: Mission Platform は他のプロジェクトと提携していますか?
+          answer: いいえ。Mission Platform は独立したオープンソースのプロジェクトおよび組織であり、同じまたは類似の名前を持つ可能性のある他のプロジェクト、製品、企業、または組織と提携、推奨、関連付けされていません。
+        composable:
+          question: ここでの「コンポーザブル」とは具体的に何を意味しますか?
+          answer: >-
+            すべての機能 — コンポーネント、トークン、i18n、地図、スペルチェック —
+            は、それぞれ独立してバージョン管理されたパッケージに収められています。モノリシックなフレームワークを採用するのではなく、必要なものだけを取り込み、自分のプロダクトを組み立てます。
+        vue-version:
+          question: どの Vue バージョンがサポートされていますか?
+          answer: Composition API と `script setup` 構文を用いた Vue 3.5+。すべてのパッケージは TypeScript で書かれ、完全な型定義を提供します。
+        deploy:
+          question: Mission Platform のアプリはどのようにデプロイしますか?
+          answer: >-
+            アプリは Vite でビルドされたシングルページアプリです。エッジネイティブな静的 + SPA フォールバックホスティング用のファーストクラスの base-spa Cloudflare Worker
+            が同梱されていますが、静的アセットを配信できるものなら何でも動作します。
+    footer:
+      disclaimer: '{brand} は独立したオープンソースのプロジェクトおよび組織です。同じまたは類似の名前を持つ可能性のある他のプロジェクト、製品、企業、または組織と {not-affiliated}。既存の名称との類似性は偶然の一致です。'
+      not-affiliated: 提携、推奨、関連付けはされていません
+      copyright: © {year} Mission Platform コントリビューター。
+ko:
+  HomeView:
+    ai-translation-warning: 이 페이지는 AI로 번역되었습니다. 일부 표현이 부정확할 수 있으며, 영어 버전이 기준입니다.
+    nav:
+      features: 기능
+      packages: 패키지
+      about: 소개
+      faq: 자주 묻는 질문
+    hero:
+      badge: 컴포저블 · 미션 레디
+      title: 현대적인 Vue 3 제품을 위한 컴포저블하고 미션-레디한 플랫폼.
+      lead: >-
+        Mission Platform은 재사용 가능한 Vue 3 빌딩 블록 — 컴포넌트, 디자인 토큰, 컴포저블, Cloudflare Workers, SEO 프리미티브 — 의 모노레포로, 팀이 기본기를 다시
+        발명하지 않고도 세련되고 성능 좋으며 검색에 잘 노출되는 애플리케이션을 조립할 수 있게 해줍니다.
+      cta-primary: 플랫폼 둘러보기
+      cta-secondary: 문서 읽기
+    features:
+      title: 왜 Mission Platform인가요?
+      items:
+        - title: 설계부터 컴포저블
+          description: 모든 기능은 독립적이고 버전이 관리되는 패키지로 제공됩니다. 필요한 것만 골라 직접 제품을 구성하세요.
+        - title: 미션-레디 성능
+          description: Vue 3, Vite, 그리고 최신 웹 표준 위에 구축. 오프라인 우선, PWA 친화적이며 엣지에 바로 적용 가능합니다.
+        - title: 일관된 디자인 시스템
+          description: 공유 디자인 토큰, 테마, 그리고 세련된 Vue 3 컴포넌트 라이브러리 — 기본적으로 접근 가능하고 테마 적용이 쉽습니다.
+        - title: i18n과 a11y 우선
+          description: vue-i18n 통합, RTL 친화적 레이아웃, 접근성 테스트를 거친 컴포넌트로 제품이 모든 사용자의 언어를 말합니다.
+        - title: 개발자 경험
+          description: Storybook 워크벤치, 공유 ESLint/Prettier/Stylelint 설정, Vitest + Playwright — 모두 연결되어 바로 사용할 수 있습니다.
+        - title: 엣지 네이티브 배포
+          description: 정적 호스팅 + SPA 폴백을 위한 base-spa 워커와 함께 Cloudflare Workers를 일급으로 지원합니다.
+        - title: 기본적으로 검색에 노출
+          description: 기본 제공되는 Open Graph 및 page-meta 컴포저블과 사전 렌더링된 SSG 출력 덕분에 모든 경로가 SEO와 공유에 적합합니다.
+    packages:
+      title: 빌딩 블록
+      lead: 모든 패키지는 독립적으로 버전이 관리되고 게시됩니다. 섞고, 맞추고, 구성하세요.
+      items:
+        - Vue 3 컴포넌트 라이브러리
+        - CSS 디자인 토큰 및 SCSS 테마
+        - SVG 아이콘 컴포넌트
+        - 반응형 유틸리티 및 컴포저블
+        - vue-i18n 통합 및 기본 로케일
+        - Vue 3용 MapLibre GL 래퍼
+        - Monaco용 Harper 문법 검사기
+        - Hunspell 맞춤법 검사기 (WASM)
+        - '통합 SEO: 페이지 메타데이터, Open Graph, Twitter Card 및 JSON-LD'
+        - base-spa Cloudflare 워커
+    about:
+      title: 우리가 만드는 것
+      lead: >-
+        Mission Platform은 실제 애플리케이션을 구동합니다 — 예를 들어 {app}, WebAssembly 맞춤법 검사 및 문법 도우미가 포함된 오프라인 우선 임상 노트 편집기입니다. 플랫폼의
+        목표는 그런 경험을 반복 가능하고, 컴포저블하며, 쉽게 출시할 수 있도록 만드는 것입니다.
+      cta: 참여하기
+    faq:
+      title: 자주 묻는 질문
+      items:
+        affiliation:
+          question: Mission Platform은 다른 프로젝트와 제휴되어 있나요?
+          answer: >-
+            아닙니다. Mission Platform은 독립적인 오픈 소스 프로젝트이자 조직이며, 동일하거나 유사한 이름을 사용할 수 있는 어떠한 다른 프로젝트, 제품, 회사 또는 조직과도 제휴, 보증 또는
+            연관이 없습니다.
+        composable:
+          question: 여기서 "컴포저블"이란 실제로 무엇을 의미하나요?
+          answer: >-
+            모든 기능 — 컴포넌트, 토큰, i18n, 지도, 맞춤법 검사 — 은 각자 버전이 관리되는 패키지에 들어 있습니다. 모놀리식 프레임워크를 채택하는 대신 필요한 것만 가져와 직접 제품을
+            조립합니다.
+        vue-version:
+          question: 어떤 Vue 버전이 지원되나요?
+          answer: Composition API와 `script setup` 구문을 사용하는 Vue 3.5+. 모든 패키지는 TypeScript로 작성되었으며 완전한 타입 정의를 제공합니다.
+        deploy:
+          question: Mission Platform 앱은 어떻게 배포하나요?
+          answer: >-
+            앱은 Vite로 빌드된 단일 페이지 앱입니다. 엣지 네이티브 정적 + SPA 폴백 호스팅을 위한 일급 base-spa Cloudflare Worker가 포함되어 있지만, 정적 자산을 제공하는
+            어떤 서버에서도 동작합니다.
+    footer:
+      disclaimer: >-
+        {brand}은(는) 독립적인 오픈 소스 프로젝트이자 조직입니다. 동일하거나 유사한 이름을 사용할 수 있는 어떠한 다른 프로젝트, 제품, 회사 또는 조직과도 {not-affiliated}. 기존
+        이름과의 유사성은 우연의 일치입니다.
+      not-affiliated: 제휴, 보증 또는 연관되어 있지 않습니다
+      copyright: © {year} Mission Platform 기여자들.
 nl:
   HomeView:
     ai-translation-warning: Deze pagina is vertaald door AI. Sommige formuleringen kunnen onnauwkeurig zijn — de Engelse versie is leidend.
@@ -373,8 +923,8 @@ nl:
             thematiseerbaar uit de doos.
         - title: i18n en a11y voorop
           description: >-
-            vue-i18n-integratie en op toegankelijkheid geteste componenten zorgen dat je product de taal van elke
-            gebruiker spreekt.
+            vue-i18n-integratie, RTL-bewuste layouts en op toegankelijkheid geteste componenten zorgen dat je product de
+            taal van elke gebruiker spreekt.
         - title: Ontwikkelaarservaring
           description: >-
             Storybook-werkbank, gedeelde ESLint/Prettier/Stylelint-configuraties, Vitest + Playwright — alles
@@ -383,6 +933,10 @@ nl:
           description: >-
             Eersteklas ondersteuning voor Cloudflare Workers met de base-spa-worker voor statische hosting met
             SPA-fallback.
+        - title: Standaard vindbaar
+          description: >-
+            Ingebouwde Open Graph- en page-meta-composables plus prerenderde SSG-output houden elke route SEO-klaar en
+            deelbaar.
     packages:
       title: Bouwstenen
       lead: Elk pakket wordt onafhankelijk geversioneerd en gepubliceerd. Mix, match en stel samen.
@@ -395,6 +949,8 @@ nl:
         - MapLibre GL Vue 3-wrapper
         - Harper grammaticacontrole voor Monaco
         - Hunspell spellingcontrole (WASM)
+        - 'Geünificeerde SEO: paginametadata, Open Graph, Twitter Card en JSON-LD'
+        - base-spa Cloudflare Worker
     about:
       title: Wat we bouwen
       lead: >-
@@ -434,3 +990,73 @@ nl:
         bestaande namen berust op toeval.
       not-affiliated: niet verbonden met, onderschreven door of geassocieerd met
       copyright: © {year} Mission Platform-bijdragers.
+zh:
+  HomeView:
+    ai-translation-warning: 本页面由 AI 翻译。部分措辞可能不够准确——以英文版本为准。
+    nav:
+      features: 功能
+      packages: 软件包
+      about: 关于
+      faq: 常见问题
+    hero:
+      badge: 可组合 · 任务就绪
+      title: 面向现代 Vue 3 产品的可组合、任务就绪的平台。
+      lead: >-
+        Mission Platform 是一个可复用 Vue 3 构建块 —— 组件、设计令牌、可组合函数、Cloudflare Workers 和 SEO 原语 ——
+        的单体仓库,让团队无需重新造轮子,即可拼装精致、高性能且易于被发现的应用。
+      cta-primary: 浏览平台
+      cta-secondary: 阅读文档
+    features:
+      title: 为什么选择 Mission Platform?
+      items:
+        - title: 从设计上就可组合
+          description: 每项能力都作为独立、可版本化的软件包发布。按需挑选,组合出你自己的产品。
+        - title: 任务就绪的性能
+          description: 基于 Vue 3、Vite 和现代 Web 标准构建。离线优先,对 PWA 友好,可直接部署到边缘。
+        - title: 一致的设计系统
+          description: 共享的设计令牌、主题和精致的 Vue 3 组件库 —— 开箱即用,可访问且可主题化。
+        - title: i18n 与 a11y 优先
+          description: vue-i18n 集成、RTL 友好的布局以及经过无障碍测试的组件,让你的产品讲每个用户的语言。
+        - title: 开发者体验
+          description: Storybook 工作台、共享的 ESLint/Prettier/Stylelint 配置、Vitest + Playwright —— 全部接好即用。
+        - title: 边缘原生部署
+          description: 一流的 Cloudflare Workers 支持,并提供 base-spa worker 用于静态资源 + SPA 回退托管。
+        - title: 默认易于被发现
+          description: 内置的 Open Graph 与 page-meta 可组合函数,加上预渲染的 SSG 输出,让每条路由都具备良好的 SEO 与分享能力。
+    packages:
+      title: 构建块
+      lead: 每个软件包都独立版本化和发布。混合、搭配、组合。
+      items:
+        - Vue 3 组件库
+        - CSS 设计令牌与 SCSS 主题
+        - SVG 图标组件
+        - 响应式工具与可组合函数
+        - vue-i18n 集成与基础语言包
+        - 面向 Vue 3 的 MapLibre GL 封装
+        - 面向 Monaco 的 Harper 语法检查器
+        - Hunspell 拼写检查器(WASM)
+        - 统一 SEO:页面元数据、Open Graph、Twitter Card 与 JSON-LD
+        - base-spa Cloudflare Worker
+    about:
+      title: 我们正在构建什么
+      lead: Mission Platform 驱动着真实的应用 —— 例如 {app},一个具备 WebAssembly 拼写检查与语法辅助的离线优先临床笔记编辑器。平台的目标,是让这样的体验可复制、可组合,并易于交付。
+      cta: 加入我们
+    faq:
+      title: 常见问题
+      items:
+        affiliation:
+          question: Mission Platform 是否与其他项目有关联?
+          answer: 没有。Mission Platform 是一个独立的开源项目和组织,与任何可能拥有相同或相似名称的其他项目、产品、公司或组织均无关联、背书或关系。
+        composable:
+          question: 这里的"可组合"到底是什么意思?
+          answer: 每一项能力 —— 组件、令牌、i18n、地图、拼写检查 —— 都存在于各自独立的版本化软件包中。你只引入需要的部分,自行组装产品,而不是采用一个庞大的整体框架。
+        vue-version:
+          question: 支持哪个 Vue 版本?
+          answer: Vue 3.5+,使用 Composition API 与 `script setup` 语法。所有软件包均使用 TypeScript 编写,并附带完整的类型定义。
+        deploy:
+          question: 如何部署 Mission Platform 应用?
+          answer: 应用是用 Vite 构建的单页应用。我们提供一流的 base-spa Cloudflare Worker,用于边缘原生的静态资源 + SPA 回退托管,但任何能托管静态文件的服务都可以。
+    footer:
+      disclaimer: '{brand} 是一个独立的开源项目和组织。它与任何可能拥有相同或相似名称的其他项目、产品、公司或组织{not-affiliated}。与现有名称的任何相似之处纯属巧合。'
+      not-affiliated: 均无关联、未受其背书,也不存在关联关系
+      copyright: © {year} Mission Platform 贡献者。

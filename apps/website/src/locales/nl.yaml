@@ -31,14 +31,18 @@ features:
         uit de doos.
     - title: i18n en a11y voorop
       description: >-
-        vue-i18n-integratie en op toegankelijkheid geteste componenten zorgen dat je product de taal van elke gebruiker
-        spreekt.
+        vue-i18n-integratie, RTL-bewuste layouts en op toegankelijkheid geteste componenten zorgen dat je product de
+        taal van elke gebruiker spreekt.
     - title: Ontwikkelaarservaring
       description: >-
         Storybook-werkbank, gedeelde ESLint/Prettier/Stylelint-configuraties, Vitest + Playwright — alles aangesloten en
         klaar.
     - title: Edge-native uitrol
       description: Eersteklas ondersteuning voor Cloudflare Workers met de base-spa-worker voor statische hosting met SPA-fallback.
+    - title: Standaard vindbaar
+      description: >-
+        Ingebouwde Open Graph- en page-meta-composables plus prerenderde SSG-output houden elke route SEO-klaar en
+        deelbaar.
 packages:
   title: Bouwstenen
   lead: Elk pakket wordt onafhankelijk geversioneerd en gepubliceerd. Mix, match en stel samen.
@@ -51,6 +55,8 @@ packages:
     - MapLibre GL Vue 3-wrapper
     - Harper grammaticacontrole voor Monaco
     - Hunspell spellingcontrole (WASM)
+    - 'Geünificeerde SEO: paginametadata, Open Graph, Twitter Card en JSON-LD'
+    - base-spa Cloudflare Worker
 about:
   title: Wat we bouwen
   lead: >-

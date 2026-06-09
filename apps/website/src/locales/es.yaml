@@ -33,8 +33,8 @@ features:
         fábrica.
     - title: i18n y a11y primero
       description: >-
-        La integración con vue-i18n y los componentes probados en accesibilidad hacen que tu producto hable el idioma de
-        cada usuario.
+        La integración con vue-i18n, los diseños compatibles con RTL y los componentes probados en accesibilidad hacen
+        que tu producto hable el idioma de cada usuario.
     - title: Experiencia de desarrollo
       description: >-
         Banco de trabajo Storybook, configuraciones compartidas de ESLint/Prettier/Stylelint, Vitest + Playwright — todo
@@ -43,6 +43,10 @@ features:
       description: >-
         Soporte de primera clase para Cloudflare Workers con el worker base-spa para alojamiento estático + respaldo
         SPA.
+    - title: Detectable por defecto
+      description: >-
+        Composables integrados de Open Graph y page-meta, junto con salida SSG prerenderizada, mantienen cada ruta lista
+        para SEO y para compartir.
 packages:
   title: Bloques de construcción
   lead: Cada paquete se versiona y publica de forma independiente. Mezcla, combina y compón.
@@ -55,6 +59,8 @@ packages:
     - Wrapper de MapLibre GL para Vue 3
     - Corrector gramatical Harper para Monaco
     - Corrector ortográfico Hunspell (WASM)
+    - 'SEO unificado: metadatos de página, Open Graph, Twitter Card y JSON-LD'
+    - Cloudflare Worker base-spa
 about:
   title: Lo que estamos construyendo
   lead: >-

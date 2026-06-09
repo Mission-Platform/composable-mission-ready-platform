@@ -9,11 +9,26 @@ import { defineConfig, type UserConfig } from 'vite';
 // `vite-ssg` reads `ssgOptions` off the resolved Vite config but does not
 // ship a module augmentation for Vite's own `UserConfig` type, so we cast
 // our config through an intersection that includes the extra property.
+interface BeastiesOptions {
+  preload?: 'body' | 'media' | 'swap' | 'swap-high' | 'js' | 'js-lazy';
+  pruneSource?: boolean;
+  inlineFonts?: boolean;
+  preloadFonts?: boolean;
+  fonts?: boolean;
+  compress?: boolean;
+  logLevel?: 'info' | 'warn' | 'error' | 'silent' | 'debug' | 'trace';
+  reduceInlineStyles?: boolean;
+  mergeStylesheets?: boolean;
+  additionalStylesheets?: string[];
+  [key: string]: unknown;
+}
+
 interface SsgUserConfig extends UserConfig {
   ssgOptions?: {
     includedRoutes?: () => string[] | Promise<string[]>;
     formatting?: 'minify' | 'prettify' | 'none';
     dirStyle?: 'flat' | 'nested';
+    beastiesOptions?: BeastiesOptions | false;
   };
 }
 
@@ -38,12 +53,34 @@ const config: SsgUserConfig = {
     // Default locale at `/`, plus one prerendered route per prefixed locale.
     // Keep this in sync with `SUPPORTED_LOCALES` / `PREFIXED_LOCALES` in
     // `src/router/index.ts`.
-    includedRoutes: () => ['/', '/es', '/fr', '/nl'],
+    includedRoutes: () => ['/', '/es', '/fr', '/nl', '/it', '/de', '/ko', '/ja', '/zh', '/ar', '/he'],
     // Emit `dist/es/index.html` (rather than `dist/es.html`) so prefixed
     // locales work cleanly behind a static file server / SPA worker.
     dirStyle: 'nested',
     // Minify each generated HTML file.
     formatting: 'minify',
+    // Inline critical CSS into each prerendered HTML file and lazy-load the
+    // rest, via `beasties` (the maintained fork of `critters`). `vite-ssg`
+    // auto-detects `beasties` from the workspace and runs it during the SSG
+    // pass; we pass through explicit options so the behaviour is pinned in
+    // config rather than implicit defaults.
+    beastiesOptions: {
+      // Lazy-load the non-critical stylesheet via a media-swap `<link>` so
+      // the browser fetches it without blocking first paint, then upgrades
+      // to `rel="stylesheet"` once loaded.
+      preload: 'swap-high',
+      // Keep the original full stylesheets in the bundle so client-side
+      // navigation (SPA hydration after the initial route) can apply any
+      // styles that were not critical for the prerendered HTML.
+      pruneSource: false,
+      noscriptFallback: true,
+      // Inline `@font-face` declarations referenced by critical CSS so web
+      // fonts start loading from the inlined `<style>` block.
+      inlineFonts: false,
+      preloadFonts: false,
+      // Only surface real problems during the build log.
+      logLevel: 'warn',
+    },
   },
   test: {
     environment: 'jsdom',

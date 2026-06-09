@@ -54,11 +54,17 @@ features:
     - title: Cohesive design system
       description: Shared design tokens, themes, and a polished Vue 3 component library — accessible and themable out of the box.
     - title: i18n & a11y first
-      description: vue-i18n integration and accessibility-tested components mean your product speaks every user’s language.
+      description: >-
+        vue-i18n integration, RTL-aware layouts, and accessibility-tested components mean your product speaks every
+        user’s language.
     - title: Developer experience
       description: Storybook workbench, shared ESLint/Prettier/Stylelint configs, Vitest + Playwright — wired up and ready.
     - title: Edge-native deployment
       description: First-class Cloudflare Workers support with the base-spa worker for static + SPA fallback hosting.
+    - title: Discoverable by default
+      description: >-
+        Built-in Open Graph and page-meta composables plus prerendered SSG output keep every route SEO-ready and
+        shareable.
 packages:
   title: Building blocks
   lead: Every package is independently versioned and published. Mix, match, and compose.
@@ -71,6 +77,8 @@ packages:
     - MapLibre GL Vue 3 wrapper
     - Harper grammar checker for Monaco
     - Hunspell spell checker (WASM)
+    - 'Unified SEO: page metadata, Open Graph, Twitter Card & JSON-LD'
+    - base-spa Cloudflare Worker
 about:
   title: What we’re building
   lead: >-

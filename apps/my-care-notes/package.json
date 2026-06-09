@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "seo:generate": "node --experimental-strip-types scripts/generate-seo-files.ts",
+    "prebuild": "pnpm seo:generate",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest run",
@@ -20,7 +22,7 @@
     "@mission-platform/components": "workspace:*",
     "@mission-platform/i18n": "workspace:*",
     "@mission-platform/icons": "workspace:*",
-    "@mission-platform/open-graph": "workspace:*",
+    "@mission-platform/seo": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
     "@mission-platform/hunspell": "workspace:*",
     "@mission-platform/harper": "workspace:*",

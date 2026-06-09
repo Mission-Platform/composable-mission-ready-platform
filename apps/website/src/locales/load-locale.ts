@@ -9,6 +9,13 @@ const localeLoaders: Record<string, LocaleLoader> = {
   fr: () => import('./fr.yaml'),
   es: () => import('./es.yaml'),
   nl: () => import('./nl.yaml'),
+  it: () => import('./it.yaml'),
+  de: () => import('./de.yaml'),
+  ko: () => import('./ko.yaml'),
+  ja: () => import('./ja.yaml'),
+  zh: () => import('./zh.yaml'),
+  ar: () => import('./ar.yaml'),
+  he: () => import('./he.yaml'),
 };
 
 const loaded = new Set<string>(['en']);

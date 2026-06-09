@@ -33,14 +33,18 @@ features:
         d’emblée.
     - title: i18n et a11y avant tout
       description: >-
-        L’intégration vue-i18n et des composants testés pour l’accessibilité font que votre produit parle la langue de
-        chaque utilisateur.
+        L’intégration vue-i18n, les mises en page compatibles RTL et des composants testés pour l’accessibilité font que
+        votre produit parle la langue de chaque utilisateur.
     - title: Expérience développeur
       description: Atelier Storybook, configurations ESLint/Prettier/Stylelint partagées, Vitest + Playwright — tout est prêt.
     - title: Déploiement natif au edge
       description: >-
         Prise en charge de premier ordre des Cloudflare Workers avec le worker base-spa pour l’hébergement statique +
         repli SPA.
+    - title: Découvrable par défaut
+      description: >-
+        Composables Open Graph et page-meta intégrés, plus une sortie SSG prérendue, qui rendent chaque route prête pour
+        le SEO et le partage.
 packages:
   title: Briques de construction
   lead: Chaque paquet est versionné et publié indépendamment. Mélangez, assortissez et composez.
@@ -53,6 +57,8 @@ packages:
     - Wrapper MapLibre GL pour Vue 3
     - Correcteur grammatical Harper pour Monaco
     - Correcteur orthographique Hunspell (WASM)
+    - 'SEO unifié : métadonnées de page, Open Graph, Twitter Card et JSON-LD'
+    - Cloudflare Worker base-spa
 about:
   title: Ce que nous construisons
   lead: >-

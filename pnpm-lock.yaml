@@ -167,6 +167,9 @@ catalogs:
     autoprefixer:
       specifier: ^10.5.0
       version: 10.5.0
+    beasties:
+      specifier: ^0.4.2
+      version: 0.4.2
     postcss:
       specifier: ^8.5.15
       version: 8.5.15
@@ -254,9 +257,9 @@ importers:
       '@mission-platform/icons':
         specifier: workspace:*
         version: link:../../packages/icons
-      '@mission-platform/open-graph':
+      '@mission-platform/seo':
         specifier: workspace:*
-        version: link:../../packages/open-graph
+        version: link:../../packages/seo
       '@mission-platform/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
@@ -493,12 +496,9 @@ importers:
       '@mission-platform/icons':
         specifier: workspace:*
         version: link:../../packages/icons
-      '@mission-platform/open-graph':
+      '@mission-platform/seo':
         specifier: workspace:*
-        version: link:../../packages/open-graph
-      '@mission-platform/page-meta':
-        specifier: workspace:*
-        version: link:../../packages/page-meta
+        version: link:../../packages/seo
       '@mission-platform/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
@@ -539,6 +539,9 @@ importers:
       '@vitejs/plugin-vue':
         specifier: catalog:vue
         version: 6.0.7(vite@8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.35(typescript@6.0.3))
+      beasties:
+        specifier: catalog:vite
+        version: 0.4.2
       eslint:
         specifier: catalog:eslint
         version: 10.4.1
@@ -571,7 +574,7 @@ importers:
         version: 8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
       vite-ssg:
         specifier: catalog:vite
-        version: 28.3.0(prettier@3.8.3)(unhead@2.1.15)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))(vue-router@4.6.4(vue@3.5.35(typescript@6.0.3)))(vue@3.5.35(typescript@6.0.3))
+        version: 28.3.0(beasties@0.4.2)(prettier@3.8.3)(unhead@2.1.15)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))(vue-router@4.6.4(vue@3.5.35(typescript@6.0.3)))(vue@3.5.35(typescript@6.0.3))
       vitest:
         specifier: catalog:testing
         version: 4.1.8(@types/node@24.13.0)(@vitest/browser-playwright@4.1.8)(@vitest/coverage-v8@4.1.8)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
@@ -1287,52 +1290,7 @@ importers:
         specifier: catalog:vue
         version: 3.3.3(typescript@6.0.3)
 
-  packages/open-graph:
-    devDependencies:
-      '@mission-platform/eslint-config':
-        specifier: workspace:*
-        version: link:../../configs/eslint-config
-      '@mission-platform/prettier-config':
-        specifier: workspace:*
-        version: link:../../configs/prettier-config
-      '@mission-platform/typescript-config':
-        specifier: workspace:*
-        version: link:../../configs/typescript-config
-      '@mission-platform/vite-config':
-        specifier: workspace:*
-        version: link:../../configs/vite-config
-      '@unhead/vue':
-        specifier: catalog:vue
-        version: 2.1.15(vue@3.5.35(typescript@6.0.3))
-      '@vitest/coverage-v8':
-        specifier: catalog:testing
-        version: 4.1.8(@vitest/browser@4.1.8)(vitest@4.1.8)
-      eslint:
-        specifier: catalog:eslint
-        version: 10.4.1
-      jsdom:
-        specifier: catalog:testing
-        version: 29.1.1
-      prettier:
-        specifier: catalog:prettier
-        version: 3.8.3
-      typescript:
-        specifier: catalog:typescript
-        version: 6.0.3
-      vite:
-        specifier: catalog:vite
-        version: 8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
-      vitest:
-        specifier: catalog:testing
-        version: 4.1.8(@types/node@24.13.0)(@vitest/browser-playwright@4.1.8)(@vitest/coverage-v8@4.1.8)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
-      vue:
-        specifier: catalog:vue
-        version: 3.5.35(typescript@6.0.3)
-      vue-tsc:
-        specifier: catalog:vue
-        version: 3.3.3(typescript@6.0.3)
-
-  packages/page-meta:
+  packages/seo:
     devDependencies:
       '@mission-platform/eslint-config':
         specifier: workspace:*
@@ -4813,6 +4771,10 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
 
+  beasties@0.4.2:
+    resolution: {integrity: sha512-NvcGjG/7AVUAfRbvrJmHunDQS9uHnE6Q/7AkaPr8oKE8HjOlpjRG5075z/th2Tmlezk3VlaaS8+X9I1RwHJMQw==}
+    engines: {node: '>=18.0.0'}
+
   better-path-resolve@1.0.0:
     resolution: {integrity: sha512-pbnl5XzGBdrFU/wT4jqmJVPn2B6UHPBOhzMQkY/SPUPB6QtUXtmBHBIwCbXJol93mOpGMnQyP/+BB19q04xj7g==}
     engines: {node: '>=4'}
@@ -5034,6 +4996,9 @@ packages:
   css-select@5.2.2:
     resolution: {integrity: sha512-TizTzUddG/xYLA3NXodFM0fSbNizXjOKhqiQQwvhlspadZokn1KDy0NZFS0wuEubIYAV5/c1/lAr0TaaFXEXzw==}
 
+  css-select@6.0.0:
+    resolution: {integrity: sha512-rZZVSLle8v0+EY8QAkDWrKhpgt6SA5OtHsgBnsj6ZaLb5dmDVOWUDtQitd9ydxxvEjhewNudS6eTVU7uOyzvXw==}
+
   css-tree@2.2.1:
     resolution: {integrity: sha512-OA0mILzGc1kCOCSJerOeqDxDQ4HOh+G8NbOJFOTgOCzpw7fCBubk0fEyxp8AgOL/jvLgYA/uV0cMbe43ElF1JA==}
     engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0, npm: '>=7.0.0'}
@@ -5048,6 +5013,10 @@ packages:
 
   css-what@6.2.2:
     resolution: {integrity: sha512-u/O3vwbptzhMs3L1fQE82ZSLHQQfto5gyZzwteVIEyeaY5Fc7R4dapF/BvRoSYFeqfBk4m0V1Vafq5Pjv25wvA==}
+    engines: {node: '>= 6'}
+
+  css-what@7.0.0:
+    resolution: {integrity: sha512-wD5oz5xibMOPHzy13CyGmogB3phdvcDaB5t0W/Nr5Z2O/agcB8YwOz6e2Lsp10pNDzBoDO9nVa3RGs/2BttpHQ==}
     engines: {node: '>= 6'}
 
   css.escape@1.5.1:
@@ -5738,6 +5707,9 @@ packages:
 
   html5parser@2.0.2:
     resolution: {integrity: sha512-L0y+IdTVxHsovmye8MBtFgBvWZnq1C9WnI/SmJszxoQjmUH1psX2uzDk21O5k5et6udxdGjwxkbmT9eVRoG05w==}
+
+  htmlparser2@10.1.0:
+    resolution: {integrity: sha512-VTZkM9GWRAtEpveh7MSF6SjjrpNVNNVJfFup7xTY3UpFtm67foy9HDVXneLtFVt4pMz5kZtgNcvCniNFb1hlEQ==}
 
   htmlparser2@8.0.2:
     resolution: {integrity: sha512-GYdjWKDkbRLkZ5geuHs5NY1puJ+PXwP7+fHPRz06Eirsb9ugf6d8kkXav6ADhcODhFFPMIXyxkxSuMf3D6NCFA==}
@@ -11871,6 +11843,18 @@ snapshots:
 
   baseline-browser-mapping@2.10.33: {}
 
+  beasties@0.4.2:
+    dependencies:
+      css-select: 6.0.0
+      css-what: 7.0.0
+      dom-serializer: 2.0.0
+      domhandler: 5.0.3
+      htmlparser2: 10.1.0
+      picocolors: 1.1.1
+      postcss: 8.5.15
+      postcss-media-query-parser: 0.2.3
+      postcss-safe-parser: 7.0.1(postcss@8.5.15)
+
   better-path-resolve@1.0.0:
     dependencies:
       is-windows: 1.0.2
@@ -12071,6 +12055,14 @@ snapshots:
       domutils: 3.2.2
       nth-check: 2.1.1
 
+  css-select@6.0.0:
+    dependencies:
+      boolbase: 1.0.0
+      css-what: 7.0.0
+      domhandler: 5.0.3
+      domutils: 3.2.2
+      nth-check: 2.1.1
+
   css-tree@2.2.1:
     dependencies:
       mdn-data: 2.0.28
@@ -12087,6 +12079,8 @@ snapshots:
       source-map-js: 1.2.1
 
   css-what@6.2.2: {}
+
+  css-what@7.0.0: {}
 
   css.escape@1.5.1: {}
 
@@ -12928,6 +12922,13 @@ snapshots:
   html5parser@2.0.2:
     dependencies:
       tslib: 2.8.1
+
+  htmlparser2@10.1.0:
+    dependencies:
+      domelementtype: 2.3.0
+      domhandler: 5.0.3
+      domutils: 3.2.2
+      entities: 7.0.1
 
   htmlparser2@8.0.2:
     dependencies:
@@ -14865,7 +14866,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vite-ssg@28.3.0(prettier@3.8.3)(unhead@2.1.15)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))(vue-router@4.6.4(vue@3.5.35(typescript@6.0.3)))(vue@3.5.35(typescript@6.0.3)):
+  vite-ssg@28.3.0(beasties@0.4.2)(prettier@3.8.3)(unhead@2.1.15)(vite@8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))(vue-router@4.6.4(vue@3.5.35(typescript@6.0.3)))(vue@3.5.35(typescript@6.0.3)):
     dependencies:
       '@unhead/dom': 2.1.15(unhead@2.1.15)
       '@unhead/vue': 2.1.15(vue@3.5.35(typescript@6.0.3))
@@ -14877,6 +14878,7 @@ snapshots:
       vite: 8.0.16(@types/node@24.13.0)(esbuild@0.27.7)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
       vue: 3.5.35(typescript@6.0.3)
     optionalDependencies:
+      beasties: 0.4.2
       prettier: 3.8.3
       vue-router: 4.6.4(vue@3.5.35(typescript@6.0.3))
     transitivePeerDependencies:

@@ -98,8 +98,7 @@ The `packages/` folder contains all reusable libraries that apps consume. These 
 | `@mission-platform/i18n` | `packages/i18n` | vue-i18n integration utilities and compiled base locales |
 | `@mission-platform/icons` | `packages/icons` | SVG icon components for Mission Platform |
 | `@mission-platform/map` | `packages/map` | MapLibre GL Vue 3 wrapper with full reactivity support |
-| `@mission-platform/open-graph` | `packages/open-graph` | Open Graph (and Twitter Card) `<meta>` tag generation with a Vue 3 composable for dynamic injection into `document.head` (SSR/SSG-safe via `@unhead/vue`) |
-| `@mission-platform/page-meta` | `packages/page-meta` | Standard page metadata (`<title>`, description, keywords, canonical, hreflang, robots, theme-color, `<html lang>`) with a Vue 3 composable for dynamic injection into `document.head` (SSR/SSG-safe via `@unhead/vue`) |
+| `@mission-platform/seo` | `packages/seo` | Unified SEO surface — standard page metadata (`<title>`, description, canonical, hreflang, `<html lang>`, …), Open Graph + Twitter Card `<meta>` tags, and JSON-LD structured data (Schema.org `WebSite`, `WebPage`, `Organization`, `BreadcrumbList`, `Article`, `Product`, `FAQPage`, `Event`, … ) with a Vue 3 `useSeo` composable and `<Seo>` component for dynamic injection into `document.head` (SSR/SSG-safe via `@unhead/vue`) |
 | `@mission-platform/tokens` | `packages/tokens` | CSS design tokens and SCSS theme definitions |
 
 ---

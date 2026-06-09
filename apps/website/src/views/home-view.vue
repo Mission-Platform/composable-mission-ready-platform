@@ -16,12 +16,22 @@
     BaseThemeToggle,
     BaseTypography,
   } from '@mission-platform/components';
-  import { IconDebug, IconGlobe, IconLanguage, IconLightning, IconPalette, IconPuzzle } from '@mission-platform/icons';
+  import {
+    IconDebug,
+    IconGlobe,
+    IconLanguage,
+    IconLightning,
+    IconPalette,
+    IconPuzzle,
+    IconSearch,
+  } from '@mission-platform/icons';
   import { useI18n } from '@mission-platform/i18n';
+  import { organizationId, useSeo, webPage, webSiteId } from '@mission-platform/seo';
   import { computed, onBeforeUnmount, onMounted, ref, type Component } from 'vue';
   import { useRouter } from 'vue-router';
 
-  import { DEFAULT_LOCALE, type SupportedLocale } from '../router';
+  import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type SupportedLocale } from '../router';
+  import { canonicalFor, LOCALE_BCP47, SITE_DESCRIPTION, SITE_NAME, SITE_ORIGIN, SITE_TITLE } from '../seo-site';
 
   interface Feature {
     title: string;
@@ -42,7 +52,49 @@
   const { t, locale } = useI18n();
   const router = useRouter();
 
-  const featureIcons: Component[] = [IconPuzzle, IconLightning, IconPalette, IconLanguage, IconDebug, IconGlobe];
+  // Per-route SEO surface: emit the `WebPage` JSON-LD node for this route,
+  // explicitly linked into the site-wide `WebSite` + `Organization` graph
+  // (emitted once per app in `main.ts`) via stable `@id` references. The
+  // `workTranslation` array cross-links every other prerendered locale
+  // variant of this same route so multilingual versions are recognised as
+  // translations of one logical work.
+  const currentLocale = computed<SupportedLocale>(() => {
+    const parameter = router.currentRoute.value.params.locale;
+    return typeof parameter === 'string' && (SUPPORTED_LOCALES as readonly string[]).includes(parameter)
+      ? (parameter as SupportedLocale)
+      : DEFAULT_LOCALE;
+  });
+  useSeo(() => ({
+    jsonLd: [
+      {
+        ...webPage({
+          name: SITE_TITLE,
+          url: canonicalFor(currentLocale.value),
+          description: SITE_DESCRIPTION,
+          inLanguage: LOCALE_BCP47[currentLocale.value],
+          primaryImageOfPage: `${SITE_ORIGIN}/og-image.svg`,
+          isPartOf: { name: SITE_NAME, url: `${SITE_ORIGIN}/` },
+          workTranslation: SUPPORTED_LOCALES.filter((l) => l !== currentLocale.value).map((l) => ({
+            url: canonicalFor(l),
+            inLanguage: LOCALE_BCP47[l],
+            name: SITE_TITLE,
+          })),
+        }),
+        about: { '@id': organizationId(`${SITE_ORIGIN}/`) },
+        isPartOf: { '@id': webSiteId(`${SITE_ORIGIN}/`) },
+      },
+    ],
+  }));
+
+  const featureIcons: Component[] = [
+    IconPuzzle,
+    IconLightning,
+    IconPalette,
+    IconLanguage,
+    IconDebug,
+    IconGlobe,
+    IconSearch,
+  ];
   const features = computed<Feature[]>(() =>
     featureIcons.map((icon, index) => ({
       icon,
@@ -57,6 +109,13 @@
     { code: 'fr', label: 'Français' },
     { code: 'es', label: 'Español' },
     { code: 'nl', label: 'Nederlands' },
+    { code: 'it', label: 'Italiano' },
+    { code: 'de', label: 'Deutsch' },
+    { code: 'ko', label: '한국어' },
+    { code: 'ja', label: '日本語' },
+    { code: 'zh', label: '中文' },
+    { code: 'ar', label: 'العربية' },
+    { code: 'he', label: 'עברית' },
   ];
   const languageChildren = computed(() =>
     languages.map((lang) => ({
@@ -86,6 +145,8 @@
     '@mission-platform/map',
     '@mission-platform/harper',
     '@mission-platform/hunspell',
+    '@mission-platform/seo',
+    '@mission-platform/base-spa',
   ];
   const packages = computed<Pkg[]>(() =>
     packageNames.map((name, index) => ({
@@ -615,7 +676,7 @@ en:
   hero:
     badge: Composable · Mission Ready
     title: A composable, mission-ready platform for modern Vue 3 products.
-    lead: Mission Platform is a monorepo of reusable Vue 3 building blocks — components, design tokens, composables, and Cloudflare Workers — that let teams assemble polished, performant applications without reinventing the basics.
+    lead: Mission Platform is a monorepo of reusable Vue 3 building blocks — components, design tokens, composables, Cloudflare Workers, and SEO primitives — that let teams assemble polished, performant, discoverable applications without reinventing the basics.
     cta-primary: Explore the platform
     cta-secondary: Read the docs
   features:
@@ -628,11 +689,13 @@ en:
       - title: Cohesive design system
         description: Shared design tokens, themes, and a polished Vue 3 component library — accessible and themable out of the box.
       - title: i18n & a11y first
-        description: vue-i18n integration and accessibility-tested components mean your product speaks every user’s language.
+        description: vue-i18n integration, RTL-aware layouts, and accessibility-tested components mean your product speaks every user’s language.
       - title: Developer experience
         description: Storybook workbench, shared ESLint/Prettier/Stylelint configs, Vitest + Playwright — wired up and ready.
       - title: Edge-native deployment
         description: First-class Cloudflare Workers support with the base-spa worker for static + SPA fallback hosting.
+      - title: Discoverable by default
+        description: Built-in Open Graph and page-meta composables plus prerendered SSG output keep every route SEO-ready and shareable.
   packages:
     title: Building blocks
     lead: Every package is independently versioned and published. Mix, match, and compose.
@@ -645,6 +708,8 @@ en:
       - MapLibre GL Vue 3 wrapper
       - Harper grammar checker for Monaco
       - Hunspell spell checker (WASM)
+      - 'Unified SEO: page metadata, Open Graph, Twitter Card & JSON-LD'
+      - base-spa Cloudflare Worker
   about:
     title: What we’re building
     lead: 'Mission Platform powers real applications — like {app}, an offline-first clinical notes editor with WebAssembly spell checking and grammar assistance. The platform’s goal is to make experiences like that repeatable, composable, and easy to ship.'
@@ -668,196 +733,4 @@ en:
     disclaimer: '{brand} is an independent open-source project and organisation. It is {not-affiliated} any other project, product, company, or organisation that may share the same or a similar name. Any resemblance to existing names is coincidental.'
     not-affiliated: not affiliated with, endorsed by, or associated with
     copyright: © {year} Mission Platform contributors.
-
-fr:
-  ai-translation-warning: Cette page a été traduite par une IA. Certaines formulations peuvent être inexactes — la version anglaise fait foi.
-  nav:
-    features: Fonctionnalités
-    packages: Paquets
-    about: À propos
-    faq: FAQ
-  hero:
-    badge: Composable · Prêt pour la mission
-    title: Une plateforme composable et prête pour la mission, pour des produits Vue 3 modernes.
-    lead: Mission Platform est un monorepo de briques Vue 3 réutilisables — composants, jetons de design, composables et Cloudflare Workers — qui permet aux équipes d’assembler des applications soignées et performantes sans réinventer les bases.
-    cta-primary: Explorer la plateforme
-    cta-secondary: Lire la documentation
-  features:
-    title: Pourquoi Mission Platform ?
-    items:
-      - title: Composable par conception
-        description: Chaque fonctionnalité est livrée comme un paquet indépendant et versionné. Choisissez ce qu’il vous faut, composez votre propre produit.
-      - title: Performances prêtes pour la mission
-        description: Construit sur Vue 3, Vite et les standards web modernes. Hors ligne d’abord, compatible PWA et prêt pour le edge.
-      - title: Système de design cohérent
-        description: Jetons de design partagés, thèmes et une bibliothèque de composants Vue 3 soignée — accessible et thématisable d’emblée.
-      - title: i18n et a11y avant tout
-        description: L’intégration vue-i18n et des composants testés pour l’accessibilité font que votre produit parle la langue de chaque utilisateur.
-      - title: Expérience développeur
-        description: Atelier Storybook, configurations ESLint/Prettier/Stylelint partagées, Vitest + Playwright — tout est prêt.
-      - title: Déploiement natif au edge
-        description: Prise en charge de premier ordre des Cloudflare Workers avec le worker base-spa pour l’hébergement statique + repli SPA.
-  packages:
-    title: Briques de construction
-    lead: Chaque paquet est versionné et publié indépendamment. Mélangez, assortissez et composez.
-    items:
-      - Bibliothèque de composants Vue 3
-      - Jetons de design CSS et thèmes SCSS
-      - Composants d’icônes SVG
-      - Utilitaires et composables responsives
-      - Intégration vue-i18n et locales de base
-      - Wrapper MapLibre GL pour Vue 3
-      - Correcteur grammatical Harper pour Monaco
-      - Correcteur orthographique Hunspell (WASM)
-  about:
-    title: Ce que nous construisons
-    lead: 'Mission Platform fait fonctionner de vraies applications — comme {app}, un éditeur de notes cliniques hors ligne d’abord avec correction orthographique WebAssembly et assistance grammaticale. L’objectif de la plateforme est de rendre ce type d’expérience reproductible, composable et facile à livrer.'
-    cta: S’impliquer
-  faq:
-    title: Questions fréquentes
-    items:
-      affiliation:
-        question: Mission Platform est-il affilié à un autre projet ?
-        answer: Non. Mission Platform est un projet et une organisation open-source indépendants, et n’est ni affilié, ni soutenu, ni associé à un autre projet, produit, entreprise ou organisation pouvant porter un nom identique ou similaire.
-      composable:
-        question: Que signifie vraiment « composable » ici ?
-        answer: Chaque fonctionnalité — composants, jetons, i18n, cartes, correction orthographique — vit dans son propre paquet versionné. Vous n’importez que ce dont vous avez besoin et assemblez votre propre produit, au lieu d’adopter un cadre monolithique.
-      vue-version:
-        question: Quelle version de Vue est prise en charge ?
-        answer: Vue 3.5+ avec la Composition API et la syntaxe `script setup`. Tous les paquets sont écrits en TypeScript et fournissent des définitions de types complètes.
-      deploy:
-        question: Comment déployer une application Mission Platform ?
-        answer: Les applications sont des SPA construites avec Vite. Un Cloudflare Worker base-spa de premier ordre est inclus pour un hébergement statique + repli SPA natif au edge, mais tout serveur de fichiers statiques fonctionne.
-  footer:
-    disclaimer: '{brand} est un projet et une organisation open-source indépendants. Il n’est {not-affiliated} aucun autre projet, produit, entreprise ou organisation pouvant porter un nom identique ou similaire. Toute ressemblance avec des noms existants est fortuite.'
-    not-affiliated: ni affilié, ni soutenu, ni associé à
-    copyright: © {year} Contributeurs de Mission Platform.
-
-es:
-  ai-translation-warning: Esta página ha sido traducida por IA. Algunas expresiones pueden ser imprecisas — la versión en inglés es la oficial.
-  nav:
-    features: Funcionalidades
-    packages: Paquetes
-    about: Acerca de
-    faq: Preguntas frecuentes
-  hero:
-    badge: Componible · Listo para la misión
-    title: Una plataforma componible y lista para la misión, para productos modernos en Vue 3.
-    lead: Mission Platform es un monorepo de bloques reutilizables de Vue 3 — componentes, tokens de diseño, composables y Cloudflare Workers — que permite a los equipos ensamblar aplicaciones pulidas y de alto rendimiento sin reinventar lo básico.
-    cta-primary: Explorar la plataforma
-    cta-secondary: Leer la documentación
-  features:
-    title: ¿Por qué Mission Platform?
-    items:
-      - title: Componible por diseño
-        description: Cada capacidad se entrega como un paquete independiente y versionado. Elige lo que necesites, compón tu propio producto.
-      - title: Rendimiento listo para la misión
-        description: Construido sobre Vue 3, Vite y los estándares web modernos. Offline primero, compatible con PWA y listo para el edge.
-      - title: Sistema de diseño cohesivo
-        description: Tokens de diseño compartidos, temas y una pulida biblioteca de componentes Vue 3 — accesible y tematizable de fábrica.
-      - title: i18n y a11y primero
-        description: La integración con vue-i18n y los componentes probados en accesibilidad hacen que tu producto hable el idioma de cada usuario.
-      - title: Experiencia de desarrollo
-        description: Banco de trabajo Storybook, configuraciones compartidas de ESLint/Prettier/Stylelint, Vitest + Playwright — todo listo.
-      - title: Despliegue nativo en el edge
-        description: Soporte de primera clase para Cloudflare Workers con el worker base-spa para alojamiento estático + respaldo SPA.
-  packages:
-    title: Bloques de construcción
-    lead: Cada paquete se versiona y publica de forma independiente. Mezcla, combina y compón.
-    items:
-      - Biblioteca de componentes Vue 3
-      - Tokens de diseño CSS y temas SCSS
-      - Componentes de iconos SVG
-      - Utilidades y composables responsivos
-      - Integración con vue-i18n y locales base
-      - Wrapper de MapLibre GL para Vue 3
-      - Corrector gramatical Harper para Monaco
-      - Corrector ortográfico Hunspell (WASM)
-  about:
-    title: Lo que estamos construyendo
-    lead: 'Mission Platform impulsa aplicaciones reales — como {app}, un editor de notas clínicas offline-first con corrección ortográfica WebAssembly y asistencia gramatical. El objetivo de la plataforma es hacer que ese tipo de experiencias sean repetibles, componibles y fáciles de entregar.'
-    cta: Participar
-  faq:
-    title: Preguntas frecuentes
-    items:
-      affiliation:
-        question: ¿Está Mission Platform afiliada con algún otro proyecto?
-        answer: No. Mission Platform es un proyecto y una organización open-source independientes, y no está afiliada, respaldada ni asociada con ningún otro proyecto, producto, empresa u organización que pueda compartir el mismo nombre o uno similar.
-      composable:
-        question: ¿Qué significa realmente «componible» aquí?
-        answer: Cada capacidad — componentes, tokens, i18n, mapas, corrección ortográfica — vive en su propio paquete versionado. Solo importas lo que necesitas y ensamblas tu propio producto, en lugar de adoptar un marco monolítico.
-      vue-version:
-        question: ¿Qué versión de Vue es compatible?
-        answer: Vue 3.5+ con la Composition API y la sintaxis `script setup`. Todos los paquetes están escritos en TypeScript y ofrecen definiciones de tipos completas.
-      deploy:
-        question: ¿Cómo despliego una aplicación Mission Platform?
-        answer: Las aplicaciones son SPA construidas con Vite. Se incluye un Cloudflare Worker base-spa de primera clase para alojamiento estático + respaldo SPA nativo del edge, pero cualquier servidor de archivos estáticos funciona.
-  footer:
-    disclaimer: '{brand} es un proyecto y una organización open-source independientes. No está {not-affiliated} ningún otro proyecto, producto, empresa u organización que pueda compartir el mismo nombre o uno similar. Cualquier parecido con nombres existentes es pura coincidencia.'
-    not-affiliated: afiliado, respaldado ni asociado con
-    copyright: © {year} Colaboradores de Mission Platform.
-
-nl:
-  ai-translation-warning: Deze pagina is vertaald door AI. Sommige formuleringen kunnen onnauwkeurig zijn — de Engelse versie is leidend.
-  nav:
-    features: Functies
-    packages: Pakketten
-    about: Over
-    faq: FAQ
-  hero:
-    badge: Samen te stellen · Missie-klaar
-    title: Een samen te stellen, missie-klaar platform voor moderne Vue 3-producten.
-    lead: Mission Platform is een monorepo van herbruikbare Vue 3-bouwstenen — componenten, design-tokens, composables en Cloudflare Workers — waarmee teams gepolijste, performante applicaties kunnen samenstellen zonder het wiel opnieuw uit te vinden.
-    cta-primary: Verken het platform
-    cta-secondary: Lees de documentatie
-  features:
-    title: Waarom Mission Platform?
-    items:
-      - title: Samen te stellen van nature
-        description: Elke mogelijkheid wordt geleverd als een onafhankelijk, geversioneerd pakket. Kies wat je nodig hebt en stel je eigen product samen.
-      - title: Missie-klare prestaties
-        description: Gebouwd op Vue 3, Vite en moderne webstandaarden. Offline-first, PWA-vriendelijk en klaar voor de edge.
-      - title: Samenhangend designsysteem
-        description: Gedeelde design-tokens, thema’s en een verzorgde Vue 3-componentenbibliotheek — toegankelijk en thematiseerbaar uit de doos.
-      - title: i18n en a11y voorop
-        description: vue-i18n-integratie en op toegankelijkheid geteste componenten zorgen dat je product de taal van elke gebruiker spreekt.
-      - title: Ontwikkelaarservaring
-        description: Storybook-werkbank, gedeelde ESLint/Prettier/Stylelint-configuraties, Vitest + Playwright — alles aangesloten en klaar.
-      - title: Edge-native uitrol
-        description: Eersteklas ondersteuning voor Cloudflare Workers met de base-spa-worker voor statische hosting met SPA-fallback.
-  packages:
-    title: Bouwstenen
-    lead: Elk pakket wordt onafhankelijk geversioneerd en gepubliceerd. Mix, match en stel samen.
-    items:
-      - Vue 3-componentenbibliotheek
-      - CSS design-tokens en SCSS-thema’s
-      - SVG-icooncomponenten
-      - Responsieve utilities en composables
-      - vue-i18n-integratie en basis-locales
-      - MapLibre GL Vue 3-wrapper
-      - Harper grammaticacontrole voor Monaco
-      - Hunspell spellingcontrole (WASM)
-  about:
-    title: Wat we bouwen
-    lead: 'Mission Platform draait echte applicaties — zoals {app}, een offline-first klinische notitie-editor met WebAssembly-spellingcontrole en grammatica-ondersteuning. Het doel van het platform is om dat soort ervaringen herhaalbaar, samen te stellen en eenvoudig leverbaar te maken.'
-    cta: Doe mee
-  faq:
-    title: Veelgestelde vragen
-    items:
-      affiliation:
-        question: Is Mission Platform verbonden met een ander project?
-        answer: Nee. Mission Platform is een onafhankelijk open-source project en organisatie, en is niet verbonden met, onderschreven door of geassocieerd met enig ander project, product, bedrijf of organisatie dat dezelfde of een vergelijkbare naam zou kunnen dragen.
-      composable:
-        question: Wat betekent «samen te stellen» hier eigenlijk?
-        answer: Elke mogelijkheid — componenten, tokens, i18n, kaarten, spellingcontrole — leeft in een eigen geversioneerd pakket. Je trekt alleen binnen wat je nodig hebt en stelt je eigen product samen, in plaats van een monolithisch framework te adopteren.
-      vue-version:
-        question: Welke Vue-versie wordt ondersteund?
-        answer: Vue 3.5+ met de Composition API en de `script setup`-syntaxis. Alle pakketten zijn geschreven in TypeScript en worden geleverd met volledige typedefinities.
-      deploy:
-        question: Hoe ontplooi ik een Mission Platform-app?
-        answer: Apps zijn met Vite gebouwde single-page apps. Een eersteklas base-spa Cloudflare Worker is meegeleverd voor edge-native statische hosting met SPA-fallback, maar elke statische bestandsserver werkt.
-  footer:
-    disclaimer: '{brand} is een onafhankelijk open-source project en organisatie. Het is {not-affiliated} enig ander project, product, bedrijf of organisatie dat dezelfde of een vergelijkbare naam zou kunnen dragen. Elke gelijkenis met bestaande namen berust op toeval.'
-    not-affiliated: niet verbonden met, onderschreven door of geassocieerd met
-    copyright: © {year} Mission Platform-bijdragers.
 </i18n>

@@ -14,6 +14,7 @@
   } from '@mission-platform/components';
   import { useI18n } from '@mission-platform/i18n';
   import { IconDownload, IconPencil } from '@mission-platform/icons';
+  import { organizationId, useSeo, webPage, webSiteId } from '@mission-platform/seo';
   import { computed, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
 
@@ -21,10 +22,30 @@
   import SnippetEditorModal from './components/snippet-editor-modal.vue';
   import { useSnippets } from './composables/use-snippets';
   import { useTabs } from './composables/use-tabs';
+  import { APP_DESCRIPTION, APP_LOCALE_BCP47, APP_ORIGIN, APP_TITLE, PUBLISHER_URL } from './seo-app';
 
   import type { Snippet } from './types';
 
   defineOptions({ name: 'MyCareNotesApp' });
+
+  // Per-route SEO surface: emit the `WebPage` JSON-LD node for this route,
+  // explicitly linked into the site-wide `WebSite` + `Organization` graph
+  // (emitted once per app in `main.ts`) via stable `@id` references.
+  useSeo({
+    jsonLd: [
+      {
+        ...webPage({
+          name: APP_TITLE,
+          url: APP_ORIGIN,
+          description: APP_DESCRIPTION,
+          inLanguage: APP_LOCALE_BCP47,
+          isPartOf: { name: APP_TITLE, url: APP_ORIGIN },
+        }),
+        about: { '@id': organizationId(PUBLISHER_URL) },
+        isPartOf: { '@id': webSiteId(APP_ORIGIN) },
+      },
+    ],
+  });
 
   const {
     activeTabId,

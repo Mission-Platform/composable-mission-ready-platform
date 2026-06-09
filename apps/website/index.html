@@ -11,10 +11,12 @@
       name="theme-color"
     />
 
-    <!-- Primary SEO, Open Graph, and Twitter metadata are injected at runtime
-         by @mission-platform/page-meta and @mission-platform/open-graph
-         (see src/main.ts). A minimal <title> is kept here so the document has
-         a sensible title before the JS bundle executes. -->
+    <!-- Primary SEO surface — standard page metadata, Open Graph / Twitter
+         Card metadata, and JSON-LD structured data — is injected at runtime
+         (and baked into prerendered HTML per locale) by
+         @mission-platform/seo via the `useSeo` composable in src/main.ts.
+         A minimal <title> is kept here so the document has a sensible title
+         before the JS bundle executes. -->
     <title>Mission Platform — Composable. Mission Ready.</title>
 
     <!-- Icons -->
@@ -28,28 +30,10 @@
       rel="apple-touch-icon"
     />
 
-    <!-- Open Graph + Twitter metadata is injected at runtime by
-         @mission-platform/open-graph (see src/main.ts). -->
-
-    <!-- Structured data (JSON-LD) -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Mission Platform",
-        "url": "https://mission-platform.dev/",
-        "description": "An independent, composable Vue 3 monorepo of design tokens, components, composables, and Cloudflare Workers for building modern, mission-ready web experiences.",
-        "publisher": {
-          "@type": "Organization",
-          "name": "Mission Platform",
-          "url": "https://mission-platform.dev/",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://mission-platform.dev/favicon.svg"
-          }
-        }
-      }
-    </script>
+    <!-- Open Graph + Twitter Card meta tags and JSON-LD structured data
+         (WebSite, Organization, …) are injected at runtime by
+         @mission-platform/seo — see src/main.ts. They are also baked into the
+         prerendered HTML for every locale by vite-ssg. -->
   </head>
   <body>
     <div id="app"></div>
