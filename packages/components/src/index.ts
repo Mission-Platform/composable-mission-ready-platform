@@ -1,6 +1,11 @@
 // ─── @mission-platform/components ───────────────────────────────────────────
 // Vue 3 component library for Mission Platform.
 // Import the styles separately:  import '@mission-platform/components/styles'
+//
+// `BaseMonacoEditor` lives behind the dedicated `./monaco` subpath
+// (`@mission-platform/components/monaco`) so apps that don't render a code
+// editor — most notably the SSG-prerendered marketing site — pay no Monaco
+// / language-worker bundle cost.
 
 export { default as BaseButton } from './components/base-button';
 export type { ButtonVariant, ButtonSize } from './components/base-button';
@@ -237,8 +242,12 @@ export type {
 export { default as BaseCodeBlock } from './components/base-code-block';
 export type { CodeBlockLanguage } from './components/base-code-block';
 
-export { default as BaseMonacoEditor } from './components/base-monaco-editor';
-export type { MonacoEditorLanguage, MonacoEditorTheme } from './components/base-monaco-editor';
+// `BaseMonacoEditor` and its `MonacoEditorLanguage` / `MonacoEditorTheme`
+// type aliases are intentionally NOT re-exported from this barrel. Import
+// them from the dedicated subpath instead:
+//
+//   import { BaseMonacoEditor } from '@mission-platform/components/monaco'
+//   import type { MonacoEditorLanguage } from '@mission-platform/components/monaco'
 
 // ─── Theme ────────────────────────────────────────────────────────────────────
 

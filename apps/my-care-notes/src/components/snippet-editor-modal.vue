@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-  import { BaseButton, BaseInput, BaseModal, BaseMonacoEditor } from '@mission-platform/components';
+  import { BaseButton, BaseInput, BaseModal } from '@mission-platform/components';
+  import { BaseMonacoEditor } from '@mission-platform/components/monaco';
   import { useI18n } from '@mission-platform/i18n';
   import { computed, ref, watch } from 'vue';
   import { useRoute } from 'vue-router';
