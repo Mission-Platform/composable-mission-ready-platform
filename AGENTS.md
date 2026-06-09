@@ -40,6 +40,8 @@ composable_mission_ready_platform/
 │   ├── i18n/               # vue-i18n integration utilities and base locales
 │   ├── icons/              # SVG icon components
 │   ├── map/                # MapLibre GL Vue 3 wrapper
+│   ├── open-graph/         # Open Graph metadata generation and dynamic injection
+│   ├── page-meta/          # Standard page metadata (title, description, canonical, hreflang, …) and dynamic injection
 │   └── tokens/             # CSS design tokens and SCSS theme definitions
 ├── workers/                # Cloudflare Workers consumed by the apps
 │   └── base-spa/           # Base SPA worker (static asset + SPA fallback handler)
@@ -96,6 +98,8 @@ The `packages/` folder contains all reusable libraries that apps consume. These 
 | `@mission-platform/i18n` | `packages/i18n` | vue-i18n integration utilities and compiled base locales |
 | `@mission-platform/icons` | `packages/icons` | SVG icon components for Mission Platform |
 | `@mission-platform/map` | `packages/map` | MapLibre GL Vue 3 wrapper with full reactivity support |
+| `@mission-platform/open-graph` | `packages/open-graph` | Open Graph (and Twitter Card) `<meta>` tag generation with a Vue 3 composable for dynamic injection into `document.head` (SSR/SSG-safe via `@unhead/vue`) |
+| `@mission-platform/page-meta` | `packages/page-meta` | Standard page metadata (`<title>`, description, keywords, canonical, hreflang, robots, theme-color, `<html lang>`) with a Vue 3 composable for dynamic injection into `document.head` (SSR/SSG-safe via `@unhead/vue`) |
 | `@mission-platform/tokens` | `packages/tokens` | CSS design tokens and SCSS theme definitions |
 
 ---
