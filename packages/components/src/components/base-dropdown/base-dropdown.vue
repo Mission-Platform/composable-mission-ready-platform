@@ -57,6 +57,10 @@
   watch(
     () => props.open,
     (open) => {
+      // Guard against SSR/SSG environments where `document` is undefined.
+      // The watcher runs `immediate: true` during `setup()`, which happens
+      // server-side during prerendering (e.g. `vite-ssg`).
+      if (typeof document === 'undefined') return;
       if (open) {
         document.addEventListener('mousedown', handleOutsideClick);
       } else {
