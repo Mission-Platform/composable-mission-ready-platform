@@ -5,13 +5,14 @@ import '@mission-platform/components/styles';
 
 import HarperWorker from '@mission-platform/harper/worker?worker';
 import { createMpI18n } from '@mission-platform/i18n';
+import { useOpenGraph } from '@mission-platform/open-graph';
 import yaml from 'js-yaml';
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import CssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
 import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
-import { createApp } from 'vue';
+import { createApp, effectScope } from 'vue';
 import { RouterView } from 'vue-router';
 
 import i18nMetaSource from '../i18n-meta.yaml?raw';
@@ -39,6 +40,24 @@ globalThis.MonacoEnvironment = {
 globalThis.HarperEnvironment = {
   getWorker: () => new HarperWorker(),
 };
+
+// Inject Open Graph / Twitter Card metadata into <head> via the
+// @mission-platform/open-graph composable. An effect scope is required so
+// `watchEffect` inside the composable has a parent scope to attach to.
+effectScope(true).run(() => {
+  useOpenGraph({
+    title: 'My Care Notes',
+    description:
+      'A privacy-first, offline-capable note-taking app with built-in spell and grammar checking, powered by the Mission Platform.',
+    type: 'website',
+    url: 'https://my-care-notes.mission-platform.dev/',
+    siteName: 'My Care Notes',
+    locale: 'en_AU',
+    twitter: {
+      card: 'summary',
+    },
+  });
+});
 
 createApp(RouterView)
   .use(router)
