@@ -251,7 +251,7 @@ en:
     placeholder: Popout content area
   BreakpointDebug:
     breakpoint: 'breakpoint:'
-    separator: '{''|''}'
+    separator: "{'|'}"
     debug_px: ({breakpoint}px)
   HomeView:
     ai-translation-warning: This page has been translated by AI. Some wording may be inaccurate — the English version is authoritative.

@@ -28,7 +28,7 @@ clear: Clear search
 popout: Pop out
 popin: Pop back in
 breakpoint: 'breakpoint:'
-separator: '{''|''}'
+separator: "{'|'}"
 debug_px: ({breakpoint}px)
 ai-translation-warning: This page has been translated by AI. Some wording may be inaccurate — the English version is authoritative.
 nav:
