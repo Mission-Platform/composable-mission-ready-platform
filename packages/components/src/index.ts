@@ -16,6 +16,8 @@ export { default as BaseCardHeader } from './components/base-card/base-card-head
 export { default as BaseCardBody } from './components/base-card/base-card-body.vue';
 export { default as BaseCardFooter } from './components/base-card/base-card-footer.vue';
 
+export { default as BaseCarousel } from './components/base-carousel';
+
 export { default as BaseBadge } from './components/base-badge';
 export type { BadgeVariant, BadgeSize } from './components/base-badge';
 
