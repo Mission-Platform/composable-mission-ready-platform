@@ -18,9 +18,22 @@
 
 ---
 
+## Status
+
+| Workflow / Check            | Badge                                                                                                                                                                                                                                                                   |
+|-----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| CI                          | [![CI](https://github.com/Mission-Platform/composable-mission-ready-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/Mission-Platform/composable-mission-ready-platform/actions/workflows/ci.yml)                                                       |
+| Conventional Commits        | [![Conventional Commits](https://github.com/Mission-Platform/composable-mission-ready-platform/actions/workflows/conventional-commits.yml/badge.svg)](https://github.com/Mission-Platform/composable-mission-ready-platform/actions/workflows/conventional-commits.yml) |
+| Build Hunspell Docker Image | [![Build Hunspell Docker Image](https://github.com/Mission-Platform/composable-mission-ready-platform/actions/workflows/docker-hunspell.yml/badge.svg)](https://github.com/Mission-Platform/composable-mission-ready-platform/actions/workflows/docker-hunspell.yml)    |
+| Publish Packages            | [![Publish Packages](https://github.com/Mission-Platform/composable-mission-ready-platform/actions/workflows/publish.yml/badge.svg)](https://github.com/Mission-Platform/composable-mission-ready-platform/actions/workflows/publish.yml)                               |
+
+---
+
 ## Overview
 
-Mission Platform is a **Vue 3 monorepo** managed with [pnpm workspaces](https://pnpm.io/workspaces). It follows a composable, package-driven architecture where reusable building blocks live in `packages/` and deployable applications are assembled from those building blocks in `apps/`.
+Mission Platform is a **Vue 3 monorepo** managed with [pnpm workspaces](https://pnpm.io/workspaces) and orchestrated
+by [Turborepo](https://turborepo.com). It follows a composable, package-driven architecture where reusable building
+blocks live in `packages/` and deployable applications are assembled from those building blocks in `apps/`.
 
 ```
 composable_mission_ready_platform/
@@ -52,60 +65,61 @@ composable_mission_ready_platform/
 
 ## Apps
 
-| App | Description |
-|---|---|
+| App                               | Description                                                                                                                           |
+|-----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
 | `@mission-platform/my-care-notes` | Vue 3 note-taking app with Hunspell spell checking, Harper grammar checking, Monaco editor, vue-i18n, and Cloudflare Pages deployment |
-| `@mission-platform/storybook` | Storybook instance for developing, documenting, and visually testing Vue components |
+| `@mission-platform/storybook`     | Storybook instance for developing, documenting, and visually testing Vue components                                                   |
 
 ---
 
 ## Packages
 
-| Package | Description |
-|---|---|
-| `@mission-platform/breakpoints` | Responsive breakpoint utilities, composables, and Vue components |
-| `@mission-platform/components` | Vue 3 component library |
-| `@mission-platform/harper` | Harper grammar and style checker integration for Monaco editor |
-| `@mission-platform/hunspell` | Hunspell spell checker compiled to WebAssembly via Emscripten (includes the `useHunspellMonaco` composable) |
-| `@mission-platform/i18n` | Internationalisation via vue-i18n |
-| `@mission-platform/icons` | SVG icon components |
-| `@mission-platform/map` | MapLibre GL Vue 3 wrapper with full reactivity support |
-| `@mission-platform/tokens` | CSS design tokens & SCSS theme definitions |
+| Package                         | Description                                                                                                 |
+|---------------------------------|-------------------------------------------------------------------------------------------------------------|
+| `@mission-platform/breakpoints` | Responsive breakpoint utilities, composables, and Vue components                                            |
+| `@mission-platform/components`  | Vue 3 component library                                                                                     |
+| `@mission-platform/harper`      | Harper grammar and style checker integration for Monaco editor                                              |
+| `@mission-platform/hunspell`    | Hunspell spell checker compiled to WebAssembly via Emscripten (includes the `useHunspellMonaco` composable) |
+| `@mission-platform/i18n`        | Internationalisation via vue-i18n                                                                           |
+| `@mission-platform/icons`       | SVG icon components                                                                                         |
+| `@mission-platform/map`         | MapLibre GL Vue 3 wrapper with full reactivity support                                                      |
+| `@mission-platform/tokens`      | CSS design tokens & SCSS theme definitions                                                                  |
 
 ---
 
 ## Shared Tooling Configs
 
-| Package | Description |
-|---|---|
-| `@mission-platform/eslint-config` | Shared ESLint flat config (TypeScript + Vue 3) |
-| `@mission-platform/postcss-config` | Shared PostCSS configuration |
-| `@mission-platform/prettier-config` | Shared Prettier config |
-| `@mission-platform/stylelint-config` | Shared Stylelint config (SCSS + BEM) |
-| `@mission-platform/typescript-config` | Shared TypeScript base configs (`base`, `app`, `library`, `node`, `test`) |
-| `@mission-platform/vite-config` | Shared Vite/Vitest helpers (`defineLibraryConfig`, `defineAppConfig`, `defineVitestConfig`) |
+| Package                               | Description                                                                                 |
+|---------------------------------------|---------------------------------------------------------------------------------------------|
+| `@mission-platform/eslint-config`     | Shared ESLint flat config (TypeScript + Vue 3)                                              |
+| `@mission-platform/postcss-config`    | Shared PostCSS configuration                                                                |
+| `@mission-platform/prettier-config`   | Shared Prettier config                                                                      |
+| `@mission-platform/stylelint-config`  | Shared Stylelint config (SCSS + BEM)                                                        |
+| `@mission-platform/typescript-config` | Shared TypeScript base configs (`base`, `app`, `library`, `node`, `test`)                   |
+| `@mission-platform/vite-config`       | Shared Vite/Vitest helpers (`defineLibraryConfig`, `defineAppConfig`, `defineVitestConfig`) |
 
 ---
 
 ## Workers
 
-| Worker | Description |
-|---|---|
+| Worker                       | Description                                                                                             |
+|------------------------------|---------------------------------------------------------------------------------------------------------|
 | `@mission-platform/base-spa` | Cloudflare Worker that serves static assets with an SPA-style fallback, consumed by the deployable apps |
 
 ---
 
 ## Tech Stack
 
-| Technology | Purpose |
-|---|---|
-| Vue 3 (Composition API / `<script setup>`) | UI framework for all apps and components |
-| TypeScript | Type-safe JavaScript across every workspace |
-| Vite | Dev server and production bundler |
-| Vitest + Playwright | Unit and browser-level testing |
-| Storybook | Component development, documentation, and visual testing |
-| pnpm workspaces | Monorepo dependency management |
-| Changesets | Versioning and changelog automation |
+| Technology                                 | Purpose                                                               |
+|--------------------------------------------|-----------------------------------------------------------------------|
+| Vue 3 (Composition API / `<script setup>`) | UI framework for all apps and components                              |
+| TypeScript                                 | Type-safe JavaScript across every workspace                           |
+| Vite                                       | Dev server and production bundler                                     |
+| Vitest + Playwright                        | Unit and browser-level testing                                        |
+| Storybook                                  | Component development, documentation, and visual testing              |
+| pnpm workspaces                            | Monorepo dependency management                                        |
+| Turborepo                                  | Task orchestration, caching, and incremental builds across workspaces |
+| Changesets                                 | Versioning and changelog automation                                   |
 
 ---
 
@@ -122,47 +136,57 @@ composable_mission_ready_platform/
 pnpm install
 ```
 
+> All cross-workspace tasks (`build`, `dev`, `test`, `lint`, …) are run through [Turborepo](https://turborepo.com),
+> which handles topological ordering (`^build`), parallelism, and local caching under `.turbo/`. Use `turbo run` (not the
+`turbo` shorthand) and `--filter` to target individual workspaces.
+
 ### Development
 
 ```bash
 # Run the Storybook dev server (http://localhost:6006)
-pnpm storybook
+turbo run storybook --filter=@mission-platform/storybook
 
 # Run the My Care Notes dev server (http://localhost:5173)
-pnpm --filter @mission-platform/my-care-notes dev
+turbo run dev --filter=@mission-platform/my-care-notes
 ```
 
 ### Build
 
 ```bash
-# Build all packages and apps
-pnpm build
+# Build everything, in topological order, with caching
+turbo run build
 
-# Build a specific package
-pnpm --filter @mission-platform/components build
+# Build a specific package (and its dependencies)
+turbo run build --filter=@mission-platform/components
+
+# Build only the workspaces affected by your changes
+turbo run build --affected
 ```
 
 ### Lint & Format
 
 ```bash
-# Lint all workspaces in parallel
-pnpm lint
+# Lint all workspaces
+turbo run lint
 
 # Check styles across all workspaces
-pnpm lint:style
+turbo run lint:style
 
 # Format all workspaces
-pnpm format
+turbo run format
 ```
 
 ### Test
 
 ```bash
-# Run tests across all packages
-pnpm --filter "./packages/**" test
+# Run tests across all workspaces
+turbo run test
 
-# Run tests across all apps
-pnpm --filter "./apps/**" test
+# Run tests for a single workspace
+turbo run test --filter=@mission-platform/components
+
+# Run only the tasks affected by your changes
+turbo run build test lint --affected
 ```
 
 ---
@@ -178,7 +202,8 @@ apps/  →  packages/  →  configs/
 workers/ →  configs/
 ```
 
-Code in `packages/`, `configs/`, or `workers/` must **never** import from `apps/`. Apps are thin orchestration layers that compose packages into a working product.
+Code in `packages/`, `configs/`, or `workers/` must **never** import from `apps/`. Apps are thin orchestration layers
+that compose packages into a working product.
 
 ### Shared tooling configs
 
@@ -187,31 +212,37 @@ Every package and app extends the three base configs rather than defining their 
 ```js
 // eslint.config.js
 import baseConfig from '@mission-platform/eslint-config'
+
 export default [...baseConfig]
 ```
 
 ```js
 // prettier.config.js
 import baseConfig from '@mission-platform/prettier-config'
-export default { ...baseConfig }
+
+export default {...baseConfig}
 ```
 
 ```js
 // stylelint.config.js
 import baseConfig from '@mission-platform/stylelint-config'
-export default { ...baseConfig }
+
+export default {...baseConfig}
 ```
 
 ---
 
 ## Adding a New Package
 
-1. Create `packages/<package-name>/` (or `configs/<config-name>/` for new shared tooling configs) with a `package.json` named `@mission-platform/<package-name>`.
-2. Add `eslint-config`, `prettier-config`, `stylelint-config`, `typescript-config`, and (where applicable) `vite-config`/`postcss-config` as `devDependencies` and wire up the shared configs.
+1. Create `packages/<package-name>/` (or `configs/<config-name>/` for new shared tooling configs) with a `package.json`
+   named `@mission-platform/<package-name>`.
+2. Add `eslint-config`, `prettier-config`, `stylelint-config`, `typescript-config`, and (where applicable)
+   `vite-config`/`postcss-config` as `devDependencies` and wire up the shared configs.
 3. Build and export the package (via a Vite library build or `tsc`).
 4. Reference it in any app: `"@mission-platform/<package-name>": "workspace:*"`.
 5. Add stories in `apps/storybook` to document the new components or composables.
-6. Add a [Changeset](https://github.com/changesets/changesets) entry (`pnpm changeset`) describing the change — required for any user-visible change under `configs/` or `packages/`.
+6. Add a [Changeset](https://github.com/changesets/changesets) entry (`pnpm changeset`) describing the change — required
+   for any user-visible change under `configs/` or `packages/`.
 
 ---
 
