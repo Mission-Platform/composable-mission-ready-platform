@@ -266,6 +266,9 @@ importers:
       '@mission-platform/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
+      '@unhead/vue':
+        specifier: catalog:vue
+        version: 2.1.15(vue@3.5.35(typescript@6.0.3))
       js-yaml:
         specifier: 'catalog:'
         version: 4.2.0

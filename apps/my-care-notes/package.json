@@ -24,6 +24,7 @@
     "@mission-platform/icons": "workspace:*",
     "@mission-platform/seo": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
+    "@unhead/vue": "catalog:vue",
     "@mission-platform/hunspell": "workspace:*",
     "@mission-platform/harper": "workspace:*",
     "js-yaml": "catalog:",
