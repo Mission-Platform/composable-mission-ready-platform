@@ -45,7 +45,7 @@ jobs:
       # cache across runs.  Keyed on the lockfile + workflow file so it
       # invalidates whenever dependencies or CI configuration change.
       - name: Cache Vite & Turbo artefacts
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             **/node_modules/.vite
@@ -89,7 +89,7 @@ jobs:
       # cache across runs.  Keyed on the lockfile + workflow file so it
       # invalidates whenever dependencies or CI configuration change.
       - name: Cache Vite & Turbo artefacts
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             **/node_modules/.vite
