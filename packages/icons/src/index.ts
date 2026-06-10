@@ -183,3 +183,17 @@ export { default as IconJoin } from './components/icon-join/icon.vue';
 export { default as IconMove } from './components/icon-move/icon.vue';
 
 export { default as IconGeodesic } from './components/icon-geodesic/icon.vue';
+
+// ── Feature icons (Mission Platform marketing) ───────────────────────────────
+
+export { default as IconPuzzle } from './components/icon-puzzle/icon.vue';
+
+export { default as IconLightning } from './components/icon-lightning/icon.vue';
+
+export { default as IconPalette } from './components/icon-palette/icon.vue';
+
+export { default as IconLanguage } from './components/icon-language/icon.vue';
+
+export { default as IconWrench } from './components/icon-wrench/icon.vue';
+
+export { default as IconCloud } from './components/icon-cloud/icon.vue';

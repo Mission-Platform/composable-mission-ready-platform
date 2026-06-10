@@ -189,6 +189,7 @@
                 :disabled="disabled"
                 :label="opt.label"
                 :size="size === 'lg' ? 'md' : 'sm'"
+                removable
                 variant="primary"
                 @remove="removeOption(opt.value)"
               />

@@ -9,10 +9,10 @@
     "build:icons": "pnpm --filter @mission-platform/icons --parallel build",
     "build:workers": "pnpm --filter @mission-platform/base-spa --parallel build",
     "build:monaco": "pnpm --filter @mission-platform/hunspell --filter @mission-platform/harper --parallel build",
-    "build:packages": "pnpm --filter @mission-platform/components --filter @mission-platform/breakpoints --filter @mission-platform/i18n --filter @mission-platform/map --parallel build",
+    "build:packages": "pnpm --filter @mission-platform/seo  --filter @mission-platform/components --filter @mission-platform/breakpoints --filter @mission-platform/i18n --filter @mission-platform/map --parallel build",
     "build:watch": "pnpm --filter \"./packages/**\" --parallel build:watch",
     "build:dependencies": "pnpm build:tokens && pnpm build:icons && pnpm build:monaco && pnpm build:packages",
-    "build:apps": "pnpm --filter @mission-platform/storybook --filter @mission-platform/my-care-notes --parallel build && pnpm --filter @mission-platform/storybook build-storybook",
+    "build:apps": "pnpm --filter @mission-platform/storybook --filter @mission-platform/my-care-notes  --filter @mission-platform/website --parallel build && pnpm --filter @mission-platform/storybook build-storybook",
     "build": "pnpm build:config && pnpm build:workers && pnpm build:dependencies && pnpm build:apps",
     "build:storybook": "pnpm build:config && pnpm build:tokens && pnpm build:icons && pnpm build:monaco && pnpm build:packages && pnpm --filter @mission-platform/storybook build-storybook",
     "lint": "pnpm -r --parallel run lint",
@@ -25,7 +25,10 @@
     "i18n:extract": "pnpm --filter @mission-platform/scripts i18n:extract",
     "deploy:my-care-notes": "wrangler deploy --env \"my-care-notes\"",
     "preview:my-care-notes": "wrangler dev --env \"my-care-notes\"",
-    "version:my-care-notes": "wrangler versions upload --env \"my-care-notes\""
+    "version:my-care-notes": "wrangler versions upload --env \"my-care-notes\"",
+    "deploy:website": "wrangler deploy --env \"website\"",
+    "preview:website": "wrangler dev --env \"website\"",
+    "version:website": "wrangler versions upload --env \"website\""
   },
   "devDependencies": {
     "@changesets/cli": "catalog:",

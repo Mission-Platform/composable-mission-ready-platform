@@ -9,8 +9,22 @@
   import { useHarperMonaco } from '@mission-platform/harper';
   import { useHunspellMonaco } from '@mission-platform/hunspell';
   import { fontFamilies } from '@mission-platform/tokens';
-  import * as monaco from 'monaco-editor';
   import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue';
+
+  // Type-only import: erased at build time, so `monaco-editor` is NOT pulled
+  // into the synchronous module graph. The runtime module is loaded lazily
+  // via a dynamic `import('monaco-editor')` inside `onMounted` (see below),
+  // which lets Vite/Rollup split Monaco into its own chunk and ensures the
+  // editor is only ever evaluated in the browser — making this component
+  // safe to (transitively) re-export from SSG-prerendered apps that never
+  // actually render it.
+  import type * as monaco from 'monaco-editor';
+
+  // Alias for the dynamically-imported Monaco runtime module. Defining
+  // this as a named type alias keeps inline `typeof import(...)`
+  // annotations (which `@typescript-eslint/consistent-type-imports` flags)
+  // out of the rest of the file.
+  type MonacoRuntime = typeof monaco;
 
   export type MonacoEditorCompletionItemProvider = monaco.languages.CompletionItemProvider;
 
@@ -147,6 +161,8 @@
 
   const containerEl = ref<HTMLDivElement | null>(null);
   const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | undefined>(undefined);
+  // Lazily-resolved Monaco runtime module — populated on first client mount.
+  let monacoRuntime: MonacoRuntime | undefined;
   let completionDisposable: monaco.IDisposable | null = null;
 
   useHunspellMonaco(
@@ -164,15 +180,22 @@
   function registerCompletionProvider(language: string): void {
     completionDisposable?.dispose();
     completionDisposable = null;
-    if (props.completionProvider) {
-      completionDisposable = monaco.languages.registerCompletionItemProvider(language, props.completionProvider);
+    if (monacoRuntime && props.completionProvider) {
+      completionDisposable = monacoRuntime.languages.registerCompletionItemProvider(language, props.completionProvider);
     }
   }
 
-  onMounted(() => {
+  onMounted(async () => {
     if (!containerEl.value) return;
 
-    editorRef.value = monaco.editor.create(containerEl.value, {
+    // Dynamic import: keeps Monaco out of the synchronous SSG/SSR module
+    // graph and lets Vite emit it as a separate, lazily-loaded chunk.
+    monacoRuntime = await import('monaco-editor');
+
+    // Bail out if the component was unmounted while Monaco was loading.
+    if (!containerEl.value) return;
+
+    editorRef.value = monacoRuntime.editor.create(containerEl.value, {
       value: props.modelValue,
       language: props.language,
       theme: props.theme,
@@ -240,7 +263,7 @@
     () => props.language,
     (language) => {
       const model = editorRef.value?.getModel();
-      if (model) monaco.editor.setModelLanguage(model, language);
+      if (model && monacoRuntime) monacoRuntime.editor.setModelLanguage(model, language);
       registerCompletionProvider(language);
     },
   );
@@ -255,7 +278,7 @@
   watch(
     () => props.theme,
     (theme) => {
-      monaco.editor.setTheme(theme);
+      monacoRuntime?.editor.setTheme(theme);
     },
   );
 
@@ -310,6 +333,7 @@
 <template>
   <div
     ref="containerEl"
+    role="region"
     :aria-label="`${language} editor`"
     :style="{ height }"
     class="base-monaco-editor"

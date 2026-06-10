@@ -17,6 +17,7 @@
 .theme-light {
   /* Background surfaces — #eff1f3 base for the light theme (L=0.877) */
   --mp-color-bg-base: #{c.$color-base-light}; /* #eff1f3 */
+  --mp-color-bg-base-alt: #e4e7ea; /* slightly darker than bg-base for alternating sections */
   --mp-color-bg-surface: #{c.$color-white}; /* #ffffff */
   --mp-color-bg-raised: #{c.$color-white}; /* #ffffff */
   --mp-color-bg-overlay: #{c.$color-white}; /* #ffffff */

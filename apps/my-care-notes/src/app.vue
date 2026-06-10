@@ -14,6 +14,7 @@
   } from '@mission-platform/components';
   import { useI18n } from '@mission-platform/i18n';
   import { IconDownload, IconPencil } from '@mission-platform/icons';
+  import { organizationId, useSeo, webPage } from '@mission-platform/seo';
   import { computed, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
 
@@ -21,10 +22,29 @@
   import SnippetEditorModal from './components/snippet-editor-modal.vue';
   import { useSnippets } from './composables/use-snippets';
   import { useTabs } from './composables/use-tabs';
+  import { APP_DESCRIPTION, APP_LOCALE_BCP47, APP_ORIGIN, APP_TITLE, PUBLISHER_URL } from './seo-app';
 
   import type { Snippet } from './types';
 
   defineOptions({ name: 'MyCareNotesApp' });
+
+  // Per-route SEO surface: emit the `WebPage` JSON-LD node for this route,
+  // explicitly linked into the site-wide `WebSite` + `Organization` graph
+  // (emitted once per app in `main.ts`) via stable `@id` references.
+  useSeo({
+    jsonLd: [
+      {
+        ...webPage({
+          name: APP_TITLE,
+          url: APP_ORIGIN,
+          description: APP_DESCRIPTION,
+          inLanguage: APP_LOCALE_BCP47,
+          isPartOf: { name: APP_TITLE, url: APP_ORIGIN },
+        }),
+        about: { '@id': organizationId(PUBLISHER_URL) },
+      },
+    ],
+  });
 
   const {
     activeTabId,
@@ -75,9 +95,16 @@
   }
 
   function cancelRenameTab(): void {
-    // eslint-disable-next-line no-console
     console.log('[my-care-notes] rename dialog close requested', { tabId: renamingTabId.value });
     renamingTabId.value = undefined;
+  }
+
+  function onRenameTabKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      confirmRenameTab();
+    } else if (event.key === 'Escape') {
+      cancelRenameTab();
+    }
   }
 
   const visibleTabs = computed(() => openTabs().map((tab) => ({ ...tab, label: tab.title })));
@@ -329,8 +356,7 @@
       v-model="renameTabTitle"
       :label="t('rename.label')"
       autocomplete="off"
-      @keydown.enter="confirmRenameTab"
-      @keydown.esc="cancelRenameTab"
+      @keydown="onRenameTabKeydown"
     />
     <template #footer>
       <div class="rename-modal-footer">

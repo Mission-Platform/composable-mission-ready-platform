@@ -9,7 +9,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: "`BaseThemeToggle` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+        component:
+          '`BaseThemeToggle` component. Cycles between `light`, `dark`, and `auto` (follows the system `prefers-color-scheme`) on each click. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
       },
     },
   },

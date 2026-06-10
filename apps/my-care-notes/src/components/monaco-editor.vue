@@ -1,10 +1,18 @@
 <script lang="ts" setup>
-  import { BaseMonacoEditor } from '@mission-platform/components';
-  import * as monaco from 'monaco-editor';
+  import { BaseMonacoEditor } from '@mission-platform/components/monaco';
   import { computed } from 'vue';
 
   import { useMonacoTheme } from '../composables/use-monaco-theme';
   import { useSnippets } from '../composables/use-snippets';
+  import { ensureMonacoEnvironment } from '../monaco-environment';
+
+  // Type-only import: erased at build time. The runtime Monaco module is
+  // loaded lazily — see `loadMonaco()` below and `BaseMonacoEditor` itself.
+  // This keeps `monaco-editor` out of the eagerly-loaded module graph so it
+  // can be code-split into its own chunk by Vite.
+  import type * as monaco from 'monaco-editor';
+
+  type MonacoRuntime = typeof monaco;
 
   interface Props {
     modelValue: string;
@@ -18,11 +26,29 @@
   defineProps<Props>();
   const emit = defineEmits<Emits>();
 
+  // Cached, lazily-resolved Monaco runtime module — populated by the first
+  // call to `loadMonaco()` (i.e. the first time the editor is interacted
+  // with). The dynamic `import()` also lets Vite emit Monaco as a separate
+  // chunk that is never shipped to consumers that don't render the editor.
+  let monacoRuntime: MonacoRuntime | undefined;
+  async function loadMonaco(): Promise<MonacoRuntime> {
+    if (!monacoRuntime) {
+      ensureMonacoEnvironment();
+      monacoRuntime = await import('monaco-editor');
+    }
+    return monacoRuntime;
+  }
+
   const { snippets, resolveSlashCommand } = useSnippets();
   const { monacoTheme } = useMonacoTheme();
 
   const completionProvider = computed<monaco.languages.CompletionItemProvider>(() => ({
-    provideCompletionItems(model, position) {
+    async provideCompletionItems(model, position) {
+      // Lazily resolve the Monaco runtime — by the time the user triggers
+      // completion the editor is already mounted, so the dynamic import is
+      // cache-resolved on the microtask and effectively synchronous.
+      const m = await loadMonaco();
+
       const lineContent = model.getLineContent(position.lineNumber);
       const textBeforeCursor = lineContent.slice(0, position.column - 1);
       const slashIndex = textBeforeCursor.lastIndexOf('/');
@@ -30,22 +56,22 @@
       if (slashIndex === -1) return { suggestions: [] };
 
       const prefix = textBeforeCursor.slice(slashIndex + 1);
-      const range = new monaco.Range(position.lineNumber, slashIndex + 1, position.lineNumber, position.column);
+      const range = new m.Range(position.lineNumber, slashIndex + 1, position.lineNumber, position.column);
 
       const builtIn: monaco.languages.CompletionItem[] = [
         {
           label: '/date',
-          kind: monaco.languages.CompletionItemKind.Snippet,
+          kind: m.languages.CompletionItemKind.Snippet,
           insertText: resolveSlashCommand('date') ?? '',
           documentation: "Insert today's date",
-          range: new monaco.Range(position.lineNumber, slashIndex + 1, position.lineNumber, position.column),
+          range: new m.Range(position.lineNumber, slashIndex + 1, position.lineNumber, position.column),
           filterText: '/date',
         },
       ];
 
       const userSnippets: monaco.languages.CompletionItem[] = snippets.value.map((s) => ({
         label: `/${s.name}`,
-        kind: monaco.languages.CompletionItemKind.Snippet,
+        kind: m.languages.CompletionItemKind.Snippet,
         insertText: s.content,
         documentation: s.content,
         range,
@@ -60,7 +86,12 @@
     },
   }));
 
-  function onEditorReady(editor: monaco.editor.IStandaloneCodeEditor): void {
+  async function onEditorReady(editor: monaco.editor.IStandaloneCodeEditor): Promise<void> {
+    // Resolve the lazy Monaco runtime once; safe to await here because the
+    // editor is already mounted by the time this handler fires, so the
+    // dynamic-import promise is already cache-resolved.
+    const m = await loadMonaco();
+
     // Slash command tracking state — scoped per editor instance
     let slashCommandStart: monaco.Position | undefined;
 
@@ -76,7 +107,7 @@
       if (!currentPos) return;
 
       // Replace the /command text (including the slash) with the resolved value
-      const range = new monaco.Range(start.lineNumber, start.column, currentPos.lineNumber, currentPos.column);
+      const range = new m.Range(start.lineNumber, start.column, currentPos.lineNumber, currentPos.column);
 
       editor.executeEdits('slash-command', [{ range, text: resolved }]);
       slashCommandStart = undefined;
@@ -91,7 +122,7 @@
         const charBefore = lineContent[position.column - 2];
         if (charBefore === '/') {
           // Record where the slash started (column is 1-based, so slash is at column-1)
-          slashCommandStart = new monaco.Position(position.lineNumber, position.column - 1);
+          slashCommandStart = new m.Position(position.lineNumber, position.column - 1);
         }
       }
     });

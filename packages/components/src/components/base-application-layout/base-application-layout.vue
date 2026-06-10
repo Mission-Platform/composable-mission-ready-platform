@@ -13,9 +13,12 @@
   const props = withDefaults(
     defineProps<{
       statusLevel?: StatusLevel;
+      /** When `true`, the header slot sticks to the top of the viewport on scroll. */
+      stickyHeader?: boolean;
     }>(),
     {
       statusLevel: 'none',
+      stickyHeader: false,
     },
   );
 
@@ -61,21 +64,15 @@
     >
       <slot name="status" />
     </div>
-    <div
-      class="application-layout__header"
-      role="none"
-    >
+    <div :class="['application-layout__header', { 'application-layout__header--sticky': stickyHeader }]">
       <slot name="navbar" />
     </div>
     <main class="application-layout__content">
       <slot name="content" />
     </main>
-    <div
-      class="application-layout__footer"
-      role="none"
-    >
+    <footer class="application-layout__footer">
       <slot name="footer" />
-    </div>
+    </footer>
   </div>
 </template>
 
@@ -108,6 +105,12 @@
 
     &__header {
       flex-shrink: 0;
+
+      &--sticky {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
     }
 
     &__content {

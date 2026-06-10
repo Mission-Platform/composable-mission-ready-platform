@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+  /* eslint-disable vuejs-accessibility/interactive-supports-focus */
   import { IconClose } from '@mission-platform/icons';
 
   import BaseTypography from '../base-typography/base-typography.vue';
@@ -27,56 +28,46 @@
 
 <template>
   <div
+    :id="`tab-${tab.id}`"
+    :aria-controls="`panel-${tab.id}`"
+    :aria-disabled="tab.disabled || undefined"
+    :aria-selected="active"
     :class="[
       'base-tabs__tab-wrapper',
+      'base-tabs__tab',
       `base-tabs__tab-wrapper--${variant}`,
+      `base-tabs__tab--${variant}`,
       {
         'base-tabs__tab-wrapper--active': active,
         'base-tabs__tab-wrapper--disabled': tab.disabled,
+        'base-tabs__tab--active': active,
+        'base-tabs__tab--disabled': tab.disabled,
+        'base-tabs__tab--closable': closable,
       },
     ]"
+    :data-tab-id="tab.id"
+    :tabindex="tab.disabled ? -1 : active ? 0 : -1"
+    role="tab"
+    @click="!tab.disabled && emit('select', tab.id)"
+    @dblclick="!tab.disabled && emit('rename', tab.id)"
+    @keydown="emit('keydown', $event, tab.id)"
   >
-    <button
-      :id="`tab-${tab.id}`"
-      :aria-controls="`panel-${tab.id}`"
-      :aria-selected="active"
-      :class="[
-        'base-tabs__tab',
-        `base-tabs__tab--${variant}`,
-        {
-          'base-tabs__tab--active': active,
-          'base-tabs__tab--disabled': tab.disabled,
-          'base-tabs__tab--closable': closable,
-        },
-      ]"
-      :data-tab-id="tab.id"
-      :disabled="tab.disabled"
-      :tabindex="active ? 0 : -1"
-      role="tab"
-      type="button"
-      @click="emit('select', tab.id)"
-      @dblclick="emit('rename', tab.id)"
-      @keydown="emit('keydown', $event, tab.id)"
+    <BaseTypography
+      as="span"
+      color="inherit"
+      variant="label"
     >
-      <BaseTypography
-        as="span"
-        color="inherit"
-        variant="label"
-      >
-        {{ tab.label }}
-      </BaseTypography>
-    </button>
-    <button
+      {{ tab.label }}
+    </BaseTypography>
+    <span
       v-if="closable"
-      :aria-label="`Close ${tab.label}`"
       :data-close-tab-id="tab.id"
+      aria-hidden="true"
       class="base-tabs__close-icon"
-      tabindex="-1"
-      type="button"
       @click.stop="emit('close', tab.id)"
     >
       <IconClose size="xs" />
-    </button>
+    </span>
   </div>
 </template>
 

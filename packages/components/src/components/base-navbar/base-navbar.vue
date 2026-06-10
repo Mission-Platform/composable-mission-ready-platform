@@ -11,16 +11,21 @@
   import BaseSidebar from '../base-sidebar/base-sidebar.vue';
   import BaseTypography from '../base-typography/base-typography.vue';
 
+  export type NavbarAlign = 'start' | 'center' | 'end';
+
   withDefaults(
     defineProps<{
       brand?: string;
       sticky?: boolean;
       mobileTitle?: string;
+      /** Alignment of the default-slot (center) navigation items. */
+      align?: NavbarAlign;
     }>(),
     {
       brand: undefined,
       sticky: false,
       mobileTitle: undefined,
+      align: 'start',
     },
   );
 
@@ -46,7 +51,7 @@
           </BaseTypography>
         </slot>
       </div>
-      <div class="base-navbar__center">
+      <div :class="['base-navbar__center', `base-navbar__center--${align}`]">
         <slot />
       </div>
       <div class="base-navbar__end">
@@ -128,8 +133,24 @@
     &__center {
       display: flex;
       align-items: center;
-      gap: var(--mp-spacing-1);
+      gap: var(--mp-spacing-3);
       flex: 1;
+
+      @include bp.bp-up('sm') {
+        gap: var(--mp-spacing-4);
+      }
+
+      &--start {
+        justify-content: flex-start;
+      }
+
+      &--center {
+        justify-content: center;
+      }
+
+      &--end {
+        justify-content: flex-end;
+      }
     }
 
     &__end {
@@ -149,6 +170,7 @@
       display: none;
       flex-direction: column;
       justify-content: center;
+      margin-left: auto;
       gap: var(--mp-spacing-1);
       width: var(--mp-size-height-md);
       height: var(--mp-size-height-md);

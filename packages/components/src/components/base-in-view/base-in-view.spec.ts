@@ -19,19 +19,21 @@ let lastObserver: MockIntersectionObserver | undefined;
 
 beforeEach(() => {
   lastObserver = undefined;
-  const Mock = vi.fn(function (
-    this: MockIntersectionObserver,
-    callback: IntersectionCallback,
-    options?: IntersectionObserverInit,
-  ) {
-    this.observe = vi.fn();
-    this.disconnect = vi.fn();
-    this.unobserve = vi.fn();
-    this.takeRecords = vi.fn(() => []);
-    this.trigger = (isIntersecting: boolean) => callback([{ isIntersecting }]);
-    this.options = options;
-    lastObserver = this;
-  });
+  const createMock = (callback: IntersectionCallback, options?: IntersectionObserverInit) => {
+    const instance: MockIntersectionObserver = {
+      observe: vi.fn(),
+      disconnect: vi.fn(),
+      unobserve: vi.fn(),
+      takeRecords: vi.fn(() => []),
+      trigger: (isIntersecting: boolean) => callback([{ isIntersecting }]),
+      options,
+    };
+    lastObserver = instance;
+    return instance;
+  };
+  function Mock(this: MockIntersectionObserver, callback: IntersectionCallback, options?: IntersectionObserverInit) {
+    return createMock(callback, options);
+  }
   vi.stubGlobal('IntersectionObserver', Mock);
 });
 

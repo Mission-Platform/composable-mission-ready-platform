@@ -35,7 +35,8 @@ const meta: Meta<any> = {
   parameters: {
     docs: {
       description: {
-        component: "`Table` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+        component:
+          '`Table` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
       },
     },
   },

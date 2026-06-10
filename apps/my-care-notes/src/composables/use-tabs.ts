@@ -70,7 +70,7 @@ export function useTabs() {
   const closedTabs = computed(() =>
     tabs.value
       .filter((t): t is NoteTab & { closedAt: number } => typeof t.closedAt === 'number')
-      .sort((a, b) => b.closedAt - a.closedAt),
+      .toSorted((a, b) => b.closedAt - a.closedAt),
   );
 
   /** Restore a previously soft-closed tab by id and make it the active tab. No-op if the tab is unknown or already open. */

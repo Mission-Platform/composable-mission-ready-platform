@@ -5,6 +5,23 @@
  * of every @mission-platform/* workspace package it depends on, extracts
  * <i18n> blocks, and writes an i18n-meta.yaml at the root of that app.
  *
+ * Locale ownership:
+ *   - SFC `<i18n>` blocks must contain ONLY the English (`en`) source strings.
+ *     They are the single source of truth for keys + English copy.
+ *   - All other locales live exclusively in `i18n-meta.yaml`, where they can
+ *     be managed by translation tooling (Crowdin, Lokalise, POEditor, …).
+ *     This script re-attaches those existing translations on every run so
+ *     the meta file remains the source of truth for them.
+ *   - Any non-English locale accidentally left inside a `<i18n>` block is
+ *     dropped with a warning.
+ *
+ * Additionally, the per-app i18n-meta.yaml is treated as the source of truth
+ * for runtime translation bundles: for every non-English locale present in
+ * the meta, a flat per-locale file is written to apps/<app>/src/locales/<locale>.yaml.
+ * The runtime files are component-name-flattened (the top-level <ComponentName>
+ * keys from the meta are stripped and their children merged), matching the
+ * local scope used by the SFC `<i18n>` blocks they pair with.
+ *
  * Output shape (per app):
  *   en:
  *     BaseButton:
@@ -17,7 +34,7 @@
  *   node --experimental-strip-types scripts/i18n-extract.ts
  */
 
-import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { basename, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -238,6 +255,63 @@ function preserveExistingLeaves(
   return fresh;
 }
 
+/**
+ * Merge non-English translations from the existing `i18n-meta.yaml` back into
+ * the freshly extracted meta.
+ *
+ * SFC `<i18n>` blocks are expected to contain ONLY the English (`en`) source
+ * strings — translations into other locales are owned by translation tooling
+ * (Crowdin, Lokalise, …) and live exclusively in `i18n-meta.yaml`. This helper
+ * ensures that re-running the extractor preserves those translations:
+ *
+ *   - For every non-English locale present in `existing`, copy each component
+ *     entry into `fresh` ONLY if the component also has a fresh English entry
+ *     (i.e. it still exists in the codebase). Components that have been
+ *     removed from source are dropped, matching the behaviour for English.
+ *   - For each preserved component, only keep translation keys that still
+ *     exist under the English entry. Stale keys are removed; new English-only
+ *     keys remain untranslated until the translation tool fills them in.
+ */
+function mergeExistingTranslations(fresh: MetaOutput, existing: MetaOutput | undefined): void {
+  if (!existing) return;
+  const freshEn = fresh['en'] ?? {};
+  for (const [locale, components] of Object.entries(existing)) {
+    if (locale === 'en') continue;
+    for (const [componentName, messages] of Object.entries(components)) {
+      const freshEnComponent = freshEn[componentName] as Record<string, unknown> | undefined;
+      if (!freshEnComponent) continue;
+      if (!fresh[locale]) fresh[locale] = {};
+      fresh[locale][componentName] = pruneToShape(
+        messages as Record<string, unknown>,
+        freshEnComponent,
+      ) as LocaleMessages;
+    }
+  }
+}
+
+/**
+ * Return a copy of `translated` that only contains keys present in `shape`
+ * (the English source). Recurses into nested objects; values whose shape no
+ * longer matches the English source are dropped.
+ */
+function pruneToShape(translated: Record<string, unknown>, shape: Record<string, unknown>): Record<string, unknown> {
+  const pruned: Record<string, unknown> = {};
+  for (const [key, shapeValue] of Object.entries(shape)) {
+    if (!(key in translated)) continue;
+    const translatedValue = translated[key];
+    pruned[key] =
+      shapeValue !== null &&
+      typeof shapeValue === 'object' &&
+      !Array.isArray(shapeValue) &&
+      translatedValue !== null &&
+      typeof translatedValue === 'object' &&
+      !Array.isArray(translatedValue)
+        ? pruneToShape(translatedValue as Record<string, unknown>, shapeValue as Record<string, unknown>)
+        : translatedValue;
+  }
+  return pruned;
+}
+
 /** Load existing per-app meta file (if any) so we can preserve translated values. */
 function loadExistingMeta(outputPath: string): MetaOutput | undefined {
   try {
@@ -289,7 +363,27 @@ for (const entry of appEntries) {
 
   const output = join(appDir, 'i18n-meta.yaml');
   const existing = loadExistingMeta(output);
+
+  // Warn about — and ignore — any non-English locales accidentally left in
+  // SFC <i18n> blocks. English is the only source-of-truth locale that lives
+  // alongside the component; every other locale must be owned by the
+  // translation tool via i18n-meta.yaml.
+  for (const locale of Object.keys(meta)) {
+    if (locale === 'en') continue;
+    console.warn(
+      `  ⚠  Locale '${locale}' was found inside a <i18n> block. ` +
+        'SFC <i18n> blocks must contain only English source strings — ' +
+        'translations belong in i18n-meta.yaml (managed by Crowdin/Lokalise/…). ' +
+        `Dropping inline '${locale}' messages.`,
+    );
+    delete meta[locale];
+  }
+
   preserveExistingLeaves(meta as Record<string, unknown>, existing as Record<string, unknown> | undefined);
+
+  // Re-attach all non-English translations from the existing meta so Crowdin-
+  // managed translations survive a re-run of the extractor.
+  mergeExistingTranslations(meta, existing);
 
   const sorted = sortMeta(meta);
 
@@ -304,4 +398,42 @@ for (const entry of appEntries) {
   writeFileSync(output, header + yaml.dump(sorted, { indent: 2, lineWidth: 120 }), 'utf-8');
 
   console.log(`  ✅  Wrote ${componentCount} components (${fileCount} files) → ${relative(ROOT, output)}`);
+
+  // Emit runtime per-locale bundles for every non-English locale present in
+  // the meta. The meta is the single source of truth for translations; the
+  // files under src/locales/ are derived artefacts (loaded on demand at runtime).
+  const localesDir = join(appDir, 'src', 'locales');
+  const runtimeHeader =
+    '# Auto-generated by scripts/i18n-extract.ts from ../../i18n-meta.yaml\n' +
+    '# Do not edit by hand. Edit i18n-meta.yaml and re-run: pnpm i18n:extract\n\n';
+
+  for (const locale of Object.keys(sorted)) {
+    // Emit every locale (including English): the meta is the single source
+    // of truth and runtime bundles — including the eagerly-loaded English
+    // global bundle — are derived from it.
+    // Flatten <ComponentName> → <key> into a single map. Matches the local
+    // scope of SFC <i18n> blocks (the en source is also flat).
+    const flat: Record<string, unknown> = {};
+    for (const componentName of Object.keys(sorted[locale])) {
+      const componentMessages = sorted[locale][componentName] as Record<string, unknown>;
+      for (const [key, value] of Object.entries(componentMessages)) {
+        if (key in flat) {
+          console.warn(
+            `  ⚠  Key collision while flattening locale '${locale}': '${key}' from ` +
+              `'${componentName}' overrides previous value.`,
+          );
+        }
+        flat[key] = value;
+      }
+    }
+    if (Object.keys(flat).length === 0) continue;
+    try {
+      mkdirSync(localesDir, { recursive: true });
+    } catch {
+      // ignore — write will fail with a clearer error if dir cannot be created
+    }
+    const runtimeOutput = join(localesDir, `${locale}.yaml`);
+    writeFileSync(runtimeOutput, runtimeHeader + yaml.dump(flat, { indent: 2, lineWidth: 120 }), 'utf-8');
+    console.log(`    ↳  ${locale}  →  ${relative(ROOT, runtimeOutput)}`);
+  }
 }

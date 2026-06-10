@@ -30,15 +30,20 @@ describe('BaseTag', () => {
     expect(wrapper.classes()).toContain('base-tag--sm');
   });
 
-  it('renders a remove button when not disabled', () => {
+  it('does not render a remove button by default', () => {
     const wrapper = mount(BaseTag, { props: { label: 'Vue' } });
+    expect(wrapper.find('.base-tag__remove').exists()).toBe(false);
+  });
+
+  it('renders a remove button when removable is true and not disabled', () => {
+    const wrapper = mount(BaseTag, { props: { label: 'Vue', removable: true } });
     const button = wrapper.find('.base-tag__remove');
     expect(button.exists()).toBe(true);
     expect(button.attributes('aria-label')).toBe('Remove Vue');
   });
 
-  it('does not render a remove button when disabled', () => {
-    const wrapper = mount(BaseTag, { props: { label: 'Vue', disabled: true } });
+  it('does not render a remove button when disabled even if removable', () => {
+    const wrapper = mount(BaseTag, { props: { label: 'Vue', removable: true, disabled: true } });
     expect(wrapper.find('.base-tag__remove').exists()).toBe(false);
   });
 
@@ -48,14 +53,17 @@ describe('BaseTag', () => {
   });
 
   it('emits remove event when remove button is clicked', async () => {
-    const wrapper = mount(BaseTag, { props: { label: 'Vue' } });
+    const wrapper = mount(BaseTag, { props: { label: 'Vue', removable: true } });
     await wrapper.find('.base-tag__remove').trigger('click');
     expect(wrapper.emitted('remove')).toHaveLength(1);
   });
 
-  it('does not emit remove when remove button click is suppressed via disabled', () => {
+  it('does not emit remove when removable+disabled (button is not rendered)', () => {
     const onRemove = vi.fn();
-    const wrapper = mount(BaseTag, { props: { label: 'Vue', disabled: true }, attrs: { onRemove } });
+    const wrapper = mount(BaseTag, {
+      props: { label: 'Vue', removable: true, disabled: true },
+      attrs: { onRemove },
+    });
     expect(wrapper.find('.base-tag__remove').exists()).toBe(false);
     expect(onRemove).not.toHaveBeenCalled();
   });

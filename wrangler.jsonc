@@ -69,6 +69,63 @@
           "previews_enabled": true
         }
       ]
+    },
+    "website": {
+      "observability": {
+        "enabled": true,
+        "traces": {
+          "enabled": true,
+          "persist": false
+        },
+        "logs": {
+          "enabled": true,
+          "persist": false,
+          "invocation_logs": true
+        }
+      },
+      "name": "website",
+      "main": "./workers/base-spa/dist/index.js",
+      "workers_dev": true,
+      "first_party_worker": true,
+      "preview_urls": true,
+      "build": {
+        "watch_dir": [
+          "./components/**/src/*",
+          "./apps/website/src/*",
+          "./workers/base-spa/src/*"
+        ],
+        "cwd": ".",
+        "command": "pnpm build:config && pnpm build:workers && pnpm build:dependencies && pnpm run --filter @mission-platform/website build"
+      },
+      "assets": {
+        "not_found_handling": "single-page-application",
+        "directory": "./apps/website/dist/",
+        "binding": "ASSETS",
+        "run_worker_first": [
+          "/*",
+          "!/assets/*",
+          "!/favicon.svg",
+          "!/manifest.webmanifest",
+          "!/pwa-192x192.png",
+          "!/pwa-512x512.png",
+          "!/registerSW.js",
+          "!/sw.js",
+          "!/workbox-dcde9eb3.js"
+        ]
+      },
+      "routes": [
+        {
+          "zone_name": "mission-platform.com",
+          "pattern": "mission-platform.com",
+          "custom_domain": true
+        },
+        {
+          "zone_name": "mission-platform.dev",
+          "pattern": "*.mission-platform.dev",
+          "custom_domain": false,
+          "previews_enabled": true
+        }
+      ]
     }
   }
 }

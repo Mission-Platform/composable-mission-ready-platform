@@ -19,11 +19,14 @@
       size?: TagSize;
       variant?: TagVariant;
       disabled?: boolean;
+      /** When `true`, renders a remove (×) button that emits the `remove` event. */
+      removable?: boolean;
     }>(),
     {
       size: 'md',
       variant: 'neutral',
       disabled: false,
+      removable: false,
     },
   );
 
@@ -44,7 +47,7 @@
       {{ label }}
     </BaseTypography>
     <button
-      v-if="!disabled"
+      v-if="removable && !disabled"
       :aria-label="`Remove ${label}`"
       class="base-tag__remove"
       type="button"

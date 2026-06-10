@@ -20,6 +20,7 @@
 @mixin mp-dark-theme-vars {
   /* Background surfaces — derived from #111D1C (dark teal base, $color-cyan-950) */
   --mp-color-bg-base: #{c.$color-cyan-950};
+  --mp-color-bg-base-alt: #1a2827; /* slightly lighter than bg-base for alternating sections */
   --mp-color-bg-surface: #172423;
   --mp-color-bg-raised: #1e2e2d;
   --mp-color-bg-overlay: #243837;

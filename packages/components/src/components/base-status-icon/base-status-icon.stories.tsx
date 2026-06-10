@@ -9,7 +9,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: "`StatusIcon` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+        component:
+          '`StatusIcon` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
       },
     },
   },

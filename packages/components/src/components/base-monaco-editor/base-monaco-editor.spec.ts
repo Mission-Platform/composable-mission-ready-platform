@@ -1,7 +1,18 @@
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import BaseMonacoEditor from './base-monaco-editor.vue';
+
+// Monaco is now loaded lazily via `await import('monaco-editor')` inside
+// `onMounted`, so the editor is only instantiated after the dynamic-import
+// microtask has settled. Wrap `mount` in a helper that flushes the pending
+// promises so the rest of the suite can keep its synchronous assertions
+// against the Monaco mocks below.
+async function mountEditor(options?: Parameters<typeof mount>[1]): Promise<ReturnType<typeof mount>> {
+  const wrapper = mount(BaseMonacoEditor, options);
+  await flushPromises();
+  return wrapper;
+}
 
 // ── Monaco mock ──────────────────────────────────────────────────────────────
 // Monaco editor requires a real browser environment with canvas / worker
@@ -119,8 +130,8 @@ describe('BaseMonacoEditor', () => {
   });
 
   describe('spellCheck prop', () => {
-    it('defaults spellCheck to false', () => {
-      mount(BaseMonacoEditor);
+    it('defaults spellCheck to false', async () => {
+      await mountEditor();
       expect(mockUseHunspellMonaco).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({ value: false }),
@@ -128,163 +139,163 @@ describe('BaseMonacoEditor', () => {
       );
     });
 
-    it('passes enabled=true to useHunspellMonaco when spellCheck is true and not readonly', () => {
-      mount(BaseMonacoEditor, { props: { spellCheck: true, readonly: false } });
+    it('passes enabled=true to useHunspellMonaco when spellCheck is true and not readonly', async () => {
+      await mountEditor({ props: { spellCheck: true, readonly: false } });
       const enabledArgument = mockUseHunspellMonaco.mock.calls[0][1];
       expect(enabledArgument.value).toBe(true);
     });
 
-    it('passes enabled=false to useHunspellMonaco when spellCheck is true but readonly is true', () => {
-      mount(BaseMonacoEditor, { props: { spellCheck: true, readonly: true } });
+    it('passes enabled=false to useHunspellMonaco when spellCheck is true but readonly is true', async () => {
+      await mountEditor({ props: { spellCheck: true, readonly: true } });
       const enabledArgument = mockUseHunspellMonaco.mock.calls[0][1];
       expect(enabledArgument.value).toBe(false);
     });
 
-    it('passes the current language to useHunspellMonaco', () => {
-      mount(BaseMonacoEditor, { props: { language: 'markdown' } });
+    it('passes the current language to useHunspellMonaco', async () => {
+      await mountEditor({ props: { language: 'markdown' } });
       const languageArgument = mockUseHunspellMonaco.mock.calls[0][2];
       expect(languageArgument.value).toBe('markdown');
     });
 
-    it('passes plaintext as language when language prop is not provided', () => {
-      mount(BaseMonacoEditor);
+    it('passes plaintext as language when language prop is not provided', async () => {
+      await mountEditor();
       const languageArgument = mockUseHunspellMonaco.mock.calls[0][2];
       expect(languageArgument.value).toBe('plaintext');
     });
   });
 
   describe('rendering', () => {
-    it('renders a root div with the base-monaco-editor class', () => {
-      const wrapper = mount(BaseMonacoEditor);
+    it('renders a root div with the base-monaco-editor class', async () => {
+      const wrapper = await mountEditor();
       expect(wrapper.find('div.base-monaco-editor').exists()).toBe(true);
     });
 
-    it('sets role="region" on the container', () => {
-      const wrapper = mount(BaseMonacoEditor);
+    it('sets role="region" on the container', async () => {
+      const wrapper = await mountEditor();
       expect(wrapper.find('.base-monaco-editor').attributes('role')).toBe('region');
     });
 
-    it('sets aria-label including the language', () => {
-      const wrapper = mount(BaseMonacoEditor, { props: { language: 'typescript' } });
+    it('sets aria-label including the language', async () => {
+      const wrapper = await mountEditor({ props: { language: 'typescript' } });
       expect(wrapper.find('.base-monaco-editor').attributes('aria-label')).toBe('typescript editor');
     });
 
-    it('applies the height style prop', () => {
-      const wrapper = mount(BaseMonacoEditor, { props: { height: '500px' } });
+    it('applies the height style prop', async () => {
+      const wrapper = await mountEditor({ props: { height: '500px' } });
       expect(wrapper.find('.base-monaco-editor').attributes('style')).toContain('height: 500px');
     });
 
-    it('defaults height to 300px', () => {
-      const wrapper = mount(BaseMonacoEditor);
+    it('defaults height to 300px', async () => {
+      const wrapper = await mountEditor();
       expect(wrapper.find('.base-monaco-editor').attributes('style')).toContain('height: 300px');
     });
   });
 
   describe('Monaco editor initialisation', () => {
-    it('calls monaco.editor.create on mount', () => {
-      mount(BaseMonacoEditor);
+    it('calls monaco.editor.create on mount', async () => {
+      await mountEditor();
       expect(mockCreate).toHaveBeenCalledOnce();
     });
 
-    it('passes modelValue as the initial value', () => {
-      mount(BaseMonacoEditor, { props: { modelValue: 'hello world' } });
+    it('passes modelValue as the initial value', async () => {
+      await mountEditor({ props: { modelValue: 'hello world' } });
       expect(mockCreate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ value: 'hello world' }));
     });
 
-    it('passes language to the editor', () => {
-      mount(BaseMonacoEditor, { props: { language: 'json' } });
+    it('passes language to the editor', async () => {
+      await mountEditor({ props: { language: 'json' } });
       expect(mockCreate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ language: 'json' }));
     });
 
-    it('passes theme to the editor', () => {
-      mount(BaseMonacoEditor, { props: { theme: 'vs-dark' } });
+    it('passes theme to the editor', async () => {
+      await mountEditor({ props: { theme: 'vs-dark' } });
       expect(mockCreate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ theme: 'vs-dark' }));
     });
 
-    it('passes readOnly when readonly prop is true', () => {
-      mount(BaseMonacoEditor, { props: { readonly: true } });
+    it('passes readOnly when readonly prop is true', async () => {
+      await mountEditor({ props: { readonly: true } });
       expect(mockCreate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ readOnly: true }));
     });
 
-    it('passes minimap enabled option', () => {
-      mount(BaseMonacoEditor, { props: { minimap: true } });
+    it('passes minimap enabled option', async () => {
+      await mountEditor({ props: { minimap: true } });
       expect(mockCreate).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({ minimap: { enabled: true } }),
       );
     });
 
-    it('passes lineNumbers as "on" when lineNumbers prop is true', () => {
-      mount(BaseMonacoEditor, { props: { lineNumbers: true } });
+    it('passes lineNumbers as "on" when lineNumbers prop is true', async () => {
+      await mountEditor({ props: { lineNumbers: true } });
       expect(mockCreate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ lineNumbers: 'on' }));
     });
 
-    it('passes lineNumbers as "off" when lineNumbers prop is false', () => {
-      mount(BaseMonacoEditor, { props: { lineNumbers: false } });
+    it('passes lineNumbers as "off" when lineNumbers prop is false', async () => {
+      await mountEditor({ props: { lineNumbers: false } });
       expect(mockCreate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ lineNumbers: 'off' }));
     });
 
-    it('passes wordWrap as "on" when wordWrap prop is true', () => {
-      mount(BaseMonacoEditor, { props: { wordWrap: true } });
+    it('passes wordWrap as "on" when wordWrap prop is true', async () => {
+      await mountEditor({ props: { wordWrap: true } });
       expect(mockCreate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ wordWrap: 'on' }));
     });
 
-    it('passes fontSize to the editor', () => {
-      mount(BaseMonacoEditor, { props: { fontSize: 16 } });
+    it('passes fontSize to the editor', async () => {
+      await mountEditor({ props: { fontSize: 16 } });
       expect(mockCreate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ fontSize: 16 }));
     });
 
-    it('passes tabSize to the editor', () => {
-      mount(BaseMonacoEditor, { props: { tabSize: 4 } });
+    it('passes tabSize to the editor', async () => {
+      await mountEditor({ props: { tabSize: 4 } });
       expect(mockCreate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ tabSize: 4 }));
     });
   });
 
   describe('prop defaults', () => {
-    it('defaults language to plaintext', () => {
-      mount(BaseMonacoEditor);
+    it('defaults language to plaintext', async () => {
+      await mountEditor();
       expect(mockCreate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ language: 'plaintext' }));
     });
 
-    it('defaults theme to vs', () => {
-      mount(BaseMonacoEditor);
+    it('defaults theme to vs', async () => {
+      await mountEditor();
       expect(mockCreate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ theme: 'vs' }));
     });
 
-    it('defaults readonly to false', () => {
-      mount(BaseMonacoEditor);
+    it('defaults readonly to false', async () => {
+      await mountEditor();
       expect(mockCreate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ readOnly: false }));
     });
 
-    it('defaults minimap to disabled', () => {
-      mount(BaseMonacoEditor);
+    it('defaults minimap to disabled', async () => {
+      await mountEditor();
       expect(mockCreate).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({ minimap: { enabled: false } }),
       );
     });
 
-    it('defaults fontSize to 14', () => {
-      mount(BaseMonacoEditor);
+    it('defaults fontSize to 14', async () => {
+      await mountEditor();
       expect(mockCreate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ fontSize: 14 }));
     });
 
-    it('defaults tabSize to 2', () => {
-      mount(BaseMonacoEditor);
+    it('defaults tabSize to 2', async () => {
+      await mountEditor();
       expect(mockCreate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ tabSize: 2 }));
     });
   });
 
   describe('events', () => {
-    it('emits ready with the editor instance on mount', () => {
-      const wrapper = mount(BaseMonacoEditor);
+    it('emits ready with the editor instance on mount', async () => {
+      const wrapper = await mountEditor();
       expect(wrapper.emitted('ready')).toHaveLength(1);
       expect(wrapper.emitted('ready')![0][0]).toBe(mockEditorInstance);
     });
 
     it('emits update:modelValue and change when content changes', async () => {
       mockGetValue.mockReturnValue('updated code');
-      const wrapper = mount(BaseMonacoEditor);
+      const wrapper = await mountEditor();
       // Trigger the onDidChangeModelContent listener
       for (const callback of onDidChangeModelContentListeners) callback();
       await wrapper.vm.$nextTick();
@@ -295,14 +306,14 @@ describe('BaseMonacoEditor', () => {
     });
 
     it('emits blur when editor loses focus', async () => {
-      const wrapper = mount(BaseMonacoEditor);
+      const wrapper = await mountEditor();
       for (const callback of onDidBlurEditorTextListeners) callback();
       await wrapper.vm.$nextTick();
       expect(wrapper.emitted('blur')).toHaveLength(1);
     });
 
     it('emits focus when editor gains focus', async () => {
-      const wrapper = mount(BaseMonacoEditor);
+      const wrapper = await mountEditor();
       for (const callback of onDidFocusEditorTextListeners) callback();
       await wrapper.vm.$nextTick();
       expect(wrapper.emitted('focus')).toHaveLength(1);
@@ -311,50 +322,50 @@ describe('BaseMonacoEditor', () => {
 
   describe('reactive prop updates', () => {
     it('calls setTheme when theme prop changes', async () => {
-      const wrapper = mount(BaseMonacoEditor, { props: { theme: 'vs' } });
+      const wrapper = await mountEditor({ props: { theme: 'vs' } });
       await wrapper.setProps({ theme: 'vs-dark' });
       expect(mockSetTheme).toHaveBeenCalledWith('vs-dark');
     });
 
     it('calls updateOptions with readOnly when readonly prop changes', async () => {
-      const wrapper = mount(BaseMonacoEditor, { props: { readonly: false } });
+      const wrapper = await mountEditor({ props: { readonly: false } });
       await wrapper.setProps({ readonly: true });
       expect(mockUpdateOptions).toHaveBeenCalledWith(expect.objectContaining({ readOnly: true }));
     });
 
     it('calls updateOptions with minimap when minimap prop changes', async () => {
-      const wrapper = mount(BaseMonacoEditor, { props: { minimap: false } });
+      const wrapper = await mountEditor({ props: { minimap: false } });
       await wrapper.setProps({ minimap: true });
       expect(mockUpdateOptions).toHaveBeenCalledWith(expect.objectContaining({ minimap: { enabled: true } }));
     });
 
     it('calls updateOptions with lineNumbers when lineNumbers prop changes', async () => {
-      const wrapper = mount(BaseMonacoEditor, { props: { lineNumbers: true } });
+      const wrapper = await mountEditor({ props: { lineNumbers: true } });
       await wrapper.setProps({ lineNumbers: false });
       expect(mockUpdateOptions).toHaveBeenCalledWith(expect.objectContaining({ lineNumbers: 'off' }));
     });
 
     it('calls updateOptions with wordWrap when wordWrap prop changes', async () => {
-      const wrapper = mount(BaseMonacoEditor, { props: { wordWrap: false } });
+      const wrapper = await mountEditor({ props: { wordWrap: false } });
       await wrapper.setProps({ wordWrap: true });
       expect(mockUpdateOptions).toHaveBeenCalledWith(expect.objectContaining({ wordWrap: 'on' }));
     });
 
     it('calls updateOptions with fontSize when fontSize prop changes', async () => {
-      const wrapper = mount(BaseMonacoEditor, { props: { fontSize: 14 } });
+      const wrapper = await mountEditor({ props: { fontSize: 14 } });
       await wrapper.setProps({ fontSize: 18 });
       expect(mockUpdateOptions).toHaveBeenCalledWith(expect.objectContaining({ fontSize: 18 }));
     });
 
     it('calls updateOptions with tabSize when tabSize prop changes', async () => {
-      const wrapper = mount(BaseMonacoEditor, { props: { tabSize: 2 } });
+      const wrapper = await mountEditor({ props: { tabSize: 2 } });
       await wrapper.setProps({ tabSize: 4 });
       expect(mockUpdateOptions).toHaveBeenCalledWith(expect.objectContaining({ tabSize: 4 }));
     });
 
     it('calls setValue when modelValue prop changes to a different value', async () => {
       mockGetValue.mockReturnValue('original');
-      const wrapper = mount(BaseMonacoEditor, { props: { modelValue: 'original' } });
+      const wrapper = await mountEditor({ props: { modelValue: 'original' } });
       mockGetValue.mockReturnValue('original');
       await wrapper.setProps({ modelValue: 'new value' });
       expect(mockSetValue).toHaveBeenCalledWith('new value');
@@ -362,7 +373,7 @@ describe('BaseMonacoEditor', () => {
 
     it('does not call setValue when modelValue is unchanged', async () => {
       mockGetValue.mockReturnValue('same value');
-      const wrapper = mount(BaseMonacoEditor, { props: { modelValue: 'same value' } });
+      const wrapper = await mountEditor({ props: { modelValue: 'same value' } });
       mockSetValue.mockClear();
       await wrapper.setProps({ modelValue: 'same value' });
       expect(mockSetValue).not.toHaveBeenCalled();
@@ -370,41 +381,41 @@ describe('BaseMonacoEditor', () => {
   });
 
   describe('lifecycle', () => {
-    it('disposes the editor instance on unmount', () => {
-      const wrapper = mount(BaseMonacoEditor);
+    it('disposes the editor instance on unmount', async () => {
+      const wrapper = await mountEditor();
       wrapper.unmount();
       expect(mockDispose).toHaveBeenCalledOnce();
     });
 
-    it('disposes the completion provider on unmount', () => {
+    it('disposes the completion provider on unmount', async () => {
       const provider = { provideCompletionItems: vi.fn() };
-      const wrapper = mount(BaseMonacoEditor, { props: { completionProvider: provider } });
+      const wrapper = await mountEditor({ props: { completionProvider: provider } });
       wrapper.unmount();
       expect(mockCompletionDispose).toHaveBeenCalledOnce();
     });
   });
 
   describe('completionProvider', () => {
-    it('does not register a provider when completionProvider prop is absent', () => {
-      mount(BaseMonacoEditor);
+    it('does not register a provider when completionProvider prop is absent', async () => {
+      await mountEditor();
       expect(mockRegisterCompletionItemProvider).not.toHaveBeenCalled();
     });
 
-    it('registers the provider for the current language on mount', () => {
+    it('registers the provider for the current language on mount', async () => {
       const provider = { provideCompletionItems: vi.fn() };
-      mount(BaseMonacoEditor, { props: { language: 'markdown', completionProvider: provider } });
+      await mountEditor({ props: { language: 'markdown', completionProvider: provider } });
       expect(mockRegisterCompletionItemProvider).toHaveBeenCalledWith('markdown', provider);
     });
 
-    it('uses plaintext as language when language prop is not provided', () => {
+    it('uses plaintext as language when language prop is not provided', async () => {
       const provider = { provideCompletionItems: vi.fn() };
-      mount(BaseMonacoEditor, { props: { completionProvider: provider } });
+      await mountEditor({ props: { completionProvider: provider } });
       expect(mockRegisterCompletionItemProvider).toHaveBeenCalledWith('plaintext', provider);
     });
 
     it('re-registers the provider when the language prop changes', async () => {
       const provider = { provideCompletionItems: vi.fn() };
-      const wrapper = mount(BaseMonacoEditor, {
+      const wrapper = await mountEditor({
         props: { language: 'markdown', completionProvider: provider },
       });
       mockRegisterCompletionItemProvider.mockReturnValue({ dispose: mockCompletionDispose });
@@ -416,7 +427,7 @@ describe('BaseMonacoEditor', () => {
     it('re-registers when the completionProvider prop changes', async () => {
       const providerA = { provideCompletionItems: vi.fn() };
       const providerB = { provideCompletionItems: vi.fn() };
-      const wrapper = mount(BaseMonacoEditor, {
+      const wrapper = await mountEditor({
         props: { language: 'markdown', completionProvider: providerA },
       });
       mockRegisterCompletionItemProvider.mockReturnValue({ dispose: mockCompletionDispose });
@@ -427,7 +438,7 @@ describe('BaseMonacoEditor', () => {
 
     it('disposes the provider registration when completionProvider is set to undefined', async () => {
       const provider = { provideCompletionItems: vi.fn() };
-      const wrapper = mount(BaseMonacoEditor, {
+      const wrapper = await mountEditor({
         props: { language: 'markdown', completionProvider: provider },
       });
       await wrapper.setProps({ completionProvider: undefined });
