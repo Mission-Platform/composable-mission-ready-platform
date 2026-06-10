@@ -34,23 +34,23 @@ describe('BaseThemeToggle', () => {
       expect(wrapper.attributes('aria-pressed')).toBe('true');
     });
 
-    it('renders the default label "Light mode" when in auto mode', () => {
+    it('renders the default label "Auto mode" when in auto mode', () => {
       const wrapper = mount(BaseThemeToggle);
-      expect(wrapper.find('.theme-toggle__label').text()).toBe('Light mode');
+      expect(wrapper.find('.theme-toggle__label').text()).toBe('Auto mode');
     });
 
-    it('renders the default label "Dark mode" when in light mode', async () => {
+    it('renders the default label "Light mode" when in light mode', async () => {
       document.documentElement.setAttribute('data-theme', 'light');
       const wrapper = mount(BaseThemeToggle);
       await nextTick();
-      expect(wrapper.find('.theme-toggle__label').text()).toBe('Dark mode');
+      expect(wrapper.find('.theme-toggle__label').text()).toBe('Light mode');
     });
 
-    it('renders the default label "Auto mode" when in dark mode', async () => {
+    it('renders the default label "Dark mode" when in dark mode', async () => {
       document.documentElement.setAttribute('data-theme', 'dark');
       const wrapper = mount(BaseThemeToggle);
       await nextTick();
-      expect(wrapper.find('.theme-toggle__label').text()).toBe('Auto mode');
+      expect(wrapper.find('.theme-toggle__label').text()).toBe('Dark mode');
     });
 
     it('renders a custom label slot when provided', () => {

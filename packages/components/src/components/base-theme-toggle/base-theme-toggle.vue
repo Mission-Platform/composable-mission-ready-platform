@@ -66,9 +66,9 @@
   });
 
   const defaultLabel = computed(() => {
-    if (theme.value === 'light') return 'Dark mode';
-    if (theme.value === 'dark') return 'Auto mode';
-    return 'Light mode';
+    if (theme.value === 'light') return 'Light mode';
+    if (theme.value === 'dark') return 'Dark mode';
+    return 'Auto mode';
   });
 
   let observer: MutationObserver | null = null;
