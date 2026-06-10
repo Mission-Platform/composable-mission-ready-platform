@@ -52,7 +52,7 @@ export function webPageId(pageUrl: string): string {
 }
 
 /** Build a lightweight `{ '@id': ... }` reference node. */
-function ref(id: string): Record<string, unknown> {
+function reference(id: string): Record<string, unknown> {
   return { '@id': id };
 }
 
@@ -160,7 +160,7 @@ export function webSite(input: WebSiteInput): JsonLd {
     // Reference the Organization by `@id` so the WebSite and Organization
     // nodes merge into a single linked graph rather than duplicating the
     // publisher inline.
-    publisher: input.publisher ? ref(organizationId(input.publisher.url)) : undefined,
+    publisher: input.publisher ? reference(organizationId(input.publisher.url)) : undefined,
     potentialAction: input.searchUrlTemplate
       ? {
           '@type': 'SearchAction',
@@ -227,7 +227,7 @@ export function webPage(input: WebPageInput): JsonLd {
       : undefined,
     // Link to the site-wide WebSite node by `@id` so search engines treat the
     // page as part of the same graph rather than a parallel WebSite stub.
-    isPartOf: input.isPartOf ? ref(webSiteId(input.isPartOf.url)) : undefined,
+    isPartOf: input.isPartOf ? reference(webSiteId(input.isPartOf.url)) : undefined,
     breadcrumb: input.breadcrumb ? breadcrumbListNode(input.breadcrumb) : undefined,
     // Cross-link translated variants of this page so search engines can
     // associate the multilingual versions as one logical work. Each entry
@@ -296,9 +296,9 @@ export function article(input: ArticleInput): JsonLd {
     author: authors.length === 0 ? undefined : authors.map((entry) => agentNode(entry)),
     // Reference the publishing Organization by `@id` so an Article links into
     // the site-wide graph rather than redefining the publisher inline.
-    publisher: input.publisher ? ref(organizationId(input.publisher.url)) : undefined,
+    publisher: input.publisher ? reference(organizationId(input.publisher.url)) : undefined,
     // Tie the Article to its containing WebPage via `@id` reference.
-    mainEntityOfPage: input.url ? ref(webPageId(input.url)) : undefined,
+    mainEntityOfPage: input.url ? reference(webPageId(input.url)) : undefined,
   }) as JsonLd;
 }
 

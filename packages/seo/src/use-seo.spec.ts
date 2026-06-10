@@ -36,10 +36,7 @@ describe('useSeo', () => {
       useSeo({
         page: { title: 'Home', description: 'desc', language: 'en-AU', canonical: 'https://x.test/' },
         openGraph: { title: 'Home', url: 'https://x.test/', siteName: 'X' },
-        jsonLd: [
-          webSite({ name: 'X', url: 'https://x.test/' }),
-          organization({ name: 'X', url: 'https://x.test/' }),
-        ],
+        jsonLd: [webSite({ name: 'X', url: 'https://x.test/' }), organization({ name: 'X', url: 'https://x.test/' })],
       });
     });
     await nextTick();

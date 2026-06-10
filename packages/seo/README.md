@@ -33,7 +33,7 @@ pnpm add @mission-platform/seo
 
 ```vue
 <script setup lang="ts">
-import { Seo, webSite, organization, breadcrumbList } from '@mission-platform/seo';
+  import { Seo, webSite, organization, breadcrumbList } from '@mission-platform/seo';
 </script>
 
 <template>
@@ -55,10 +55,7 @@ import { Seo, webSite, organization, breadcrumbList } from '@mission-platform/se
     :json-ld="[
       webSite({ name: 'Mission Platform', url: 'https://mission-platform.dev/' }),
       organization({ name: 'Mission Platform', url: 'https://mission-platform.dev/' }),
-      breadcrumbList({ items: [
-        { name: 'Home', url: 'https://mission-platform.dev/' },
-        { name: 'About' },
-      ] }),
+      breadcrumbList({ items: [{ name: 'Home', url: 'https://mission-platform.dev/' }, { name: 'About' }] }),
     ]"
   />
 </template>
