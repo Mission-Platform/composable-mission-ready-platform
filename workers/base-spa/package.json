@@ -21,7 +21,7 @@
     "format:write": "prettier --write ."
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20251101.0",
+    "@cloudflare/workers-types": "^4.20260609.1",
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
