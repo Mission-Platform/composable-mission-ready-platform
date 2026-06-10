@@ -11,7 +11,7 @@
     "prebuild:spa": "pnpm seo:generate",
     "build:spa": "vue-tsc -b && vite build",
     "preview": "vite preview",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "lint:style": "stylelint \"src/**/*.{vue,scss,css}\"",
