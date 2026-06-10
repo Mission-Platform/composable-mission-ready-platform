@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/eslint-config",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Shared ESLint flat configuration for all Mission Platform packages and apps",
   "type": "module",
   "exports": {

@@ -1,5 +1,15 @@
 # @mission-platform/tokens
 
+## 0.2.0
+
+### Minor Changes
+
+- 37571da: add `--mp-color-bg-base-alt` semantic background token to light and dark themes — a subtle shade off the base background (slightly darker in light, slightly lighter in dark) for alternating sections, banded surfaces, and zebra layouts
+
+### Patch Changes
+
+- 266acd6: add `build:watch` script for incremental rebuilds during development
+
 ## 0.1.2
 
 ### Patch Changes

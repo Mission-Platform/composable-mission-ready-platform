@@ -1,5 +1,13 @@
 # @mission-platform/harper
 
+## 0.1.3
+
+### Patch Changes
+
+- 266acd6: add `build:watch` script for incremental rebuilds during development
+- 5050849: migrate vite build config to rolldownOptions and bump harper.js to ^2.4.0
+- ca1660f: reorganise package src layout into logical folders (`monaco/`, `worker/`, and — for hunspell — `wasm/`); the public package entry points and built output filenames are unchanged
+
 ## 0.1.2
 
 ### Patch Changes

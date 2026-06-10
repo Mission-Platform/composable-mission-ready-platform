@@ -1,5 +1,69 @@
 # @mission-platform/components
 
+## 1.0.0
+
+### Major Changes
+
+- 6a1d844: Move `BaseMonacoEditor` (and its `MonacoEditorLanguage` / `MonacoEditorTheme`
+  type aliases) from the main barrel to a dedicated `./monaco` subpath export so
+  apps that don't render a code editor pay no Monaco / language-worker bundle
+  cost. The component is now exported as an async (dynamically imported)
+  component, so even consumers that opt in only pay the load cost lazily on
+  first mount.
+
+  **Migration:**
+
+  ```diff
+  -import { BaseMonacoEditor } from '@mission-platform/components'
+  -import type { MonacoEditorLanguage, MonacoEditorTheme } from '@mission-platform/components'
+  +import { BaseMonacoEditor } from '@mission-platform/components/monaco'
+  +import type { MonacoEditorLanguage, MonacoEditorTheme } from '@mission-platform/components/monaco'
+  ```
+
+### Minor Changes
+
+- c0e4b38: add `BaseCarousel` component — a horizontally-scrollable slide container with optional previous/next controls, indicator dots, looping behaviour, `v-model` support for the active slide index, keyboard navigation (ArrowLeft/ArrowRight/Home/End), pointer-based touch swipe with a configurable threshold, and pauseable `autoplay` (with `interval` and `pauseOnHover` options)
+- 3944f87: add `removable` prop to `BaseTag` (default `false`) to make the inline remove (×) button opt-in, and add an `align` prop (`'start' | 'center' | 'end'`, default `'start'`) to `BaseNavbar` to control the alignment of the default-slot navigation items
+- 3944f87: add `stickyHeader` prop to `BaseApplicationLayout` to opt the navbar/header slot into sticky positioning at the top of the layout
+- 3944f87: extend `base-theme-toggle` to support a three-state cycle: `light`, `dark`, and `auto` (follows the system `prefers-color-scheme`)
+
+### Patch Changes
+
+- 266acd6: add `build:watch` script for incremental rebuilds during development
+- 895c0e3: use semantic `<header>` and `<footer>` elements in `base-application-layout` instead of `<div role="none">` wrappers
+- 5053fb0: fix base-carousel a11y by using a div with role="region" and simplify goTo logic
+- ccc2c34: fix(components): make `BaseDropdown` SSR/SSG-safe by guarding the `document`-touching `watch` callback against environments where `document` is undefined (e.g. `vite-ssg` prerendering). Behaviour is unchanged in the browser.
+- 1e135ae: add unit test coverage for `base-avatar`, `base-in-view`, and `base-theme-toggle`
+- 387331e: add baseline TSDoc and Storybook autodocs descriptions across the component library
+- c958b81: reformat stories and specs to match prettier-aligned eslint config; refactor `base-in-view` spec to avoid `unicorn/no-this-assignment` and switch `base-theme-toggle` spec to the `dataset` DOM API
+- 72c7c44: replace unnecessary template literals with string literals in storybook autodocs descriptions
+- b47b849: extract individual tab into a dedicated `base-tab.vue` to better differentiate the tab bar from the tabs it renders
+- e917051: use a `<section>` element as the BaseCarousel root and drop the leading template comment so keyboard, hover, and tabindex behaviour reaches the wrapper element
+- 3b322ce: fix accessibility violations in `BaseApplicationLayout` and `BaseTabs`:
+
+  - `BaseApplicationLayout` now wraps the `navbar` slot in a `<div>` rather than a `<header>` so that a slotted `BaseNavbar` (itself a `<header>` banner landmark) is not nested inside another banner landmark (`landmark-banner-is-top-level`).
+  - `BaseTabs`/`BaseVirtualTabs`: the individual tab element is now a `<div role="tab">` instead of a nested `<button>`, and the optional close affordance is a `<span aria-hidden="true">` inside the tab rather than a sibling `<button>` inside the `role="tablist"` container. This resolves `aria-required-children` (tablist children must all be tabs) and `nested-interactive` violations while preserving all existing keyboard, click, and emit behaviour.
+
+- a5d10fd: move `useHunspellMonaco` composable from `@mission-platform/components` to `@mission-platform/hunspell` to mirror the structure of `@mission-platform/harper`. The composable is now exported from `@mission-platform/hunspell`; update imports accordingly.
+- 3944f87: fix(components): end-align the navbar hamburger menu on mobile
+- 3944f87: increase the gap between navbar items in `BaseNavbar`
+- b162ee6: fix `base-theme-toggle` default label so it reflects the current theme (`Light mode` / `Dark mode` / `Auto mode`) instead of the next state in the cycle, matching the icon
+- Updated dependencies [266acd6]
+- Updated dependencies [37571da]
+- Updated dependencies [5050849]
+- Updated dependencies [a443677]
+- Updated dependencies [fef2a3a]
+- Updated dependencies [3c17696]
+- Updated dependencies [58f2f50]
+- Updated dependencies [a5d10fd]
+- Updated dependencies [ca1660f]
+  - @mission-platform/breakpoints@2.0.1
+  - @mission-platform/harper@0.1.3
+  - @mission-platform/hunspell@0.3.0
+  - @mission-platform/i18n@0.3.1
+  - @mission-platform/icons@0.2.0
+  - @mission-platform/tokens@0.2.0
+
 ## 0.3.0
 
 ### Minor Changes
@@ -113,6 +177,7 @@
 ### Patch Changes
 
 - b5e4353: broaden composable APIs to MaybeRefOrGetter and fix token re-export extensions
+
   - refactor `useHunspellMonaco` to accept `MaybeRefOrGetter` for all three parameters instead of `Ref`, allowing plain values, refs, and getters
   - update `useHunspellMonaco` spec to use native `ReturnType<typeof ref<...>>` instead of explicit `Ref` import
   - migrate `useId` from `nanoid` to Vue's built-in `useId` for stable server-side-compatible IDs
@@ -121,11 +186,13 @@
   - fix token barrel re-exports in `@mission-platform/tokens` to use `.js` extensions instead of `.ts` for ESM compatibility
 
 - 5ed2115: add vue/html-self-closing eslint rule and reformat time column headers
+
   - add `vue/html-self-closing` rule to eslint-config enforcing `always` self-closing on void, normal, and component elements
   - reformat time column header elements (HH, MM, SS) in BaseTimeInput, BaseTimeRangeInput, and BaseDateTimeRangeInput to comply with the new rule
 
 - 7b0b1ca: Remove redundant `interface Window { HunspellEnvironment? }` extension from `use-hunspell-monaco.ts`. The `declare global { var HunspellEnvironment }` declaration already covers both `globalThis` and `window`, making the `Window` interface block unnecessary.
 - b5bbd19: add harper grammar and style checker package and integrate into monaco editor
+
   - add new `@mission-platform/harper` package providing Harper grammar/style checker integration for Monaco editor via `useHarperMonaco` composable
   - integrate `useHarperMonaco` into `base-monaco-editor` alongside the existing Hunspell spell-checker
   - add `@mission-platform/harper` as a dependency to `@mission-platform/components` and `@mission-platform/my-care-notes`

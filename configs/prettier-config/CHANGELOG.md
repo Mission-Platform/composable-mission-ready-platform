@@ -1,5 +1,11 @@
 # @mission-platform/prettier-config
 
+## 0.1.3
+
+### Patch Changes
+
+- 2b34b1c: drop the unused `@mission-platform/eslint-config` devDependency
+
 ## 0.1.2
 
 ### Patch Changes
