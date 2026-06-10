@@ -62,10 +62,17 @@ packages:
 about:
   title: Woran wir bauen
   lead: >-
-    Mission Platform betreibt echte Anwendungen — wie {app}, einen offline-first Editor für klinische Notizen mit
-    WebAssembly-Rechtschreibprüfung und Grammatikhilfe. Ziel der Plattform ist es, solche Erlebnisse wiederholbar,
-    komponierbar und einfach lieferbar zu machen.
-  cta: Mitmachen
+    Mission Platform betreibt echte Anwendungen in unterschiedlichsten Bereichen. Ziel der Plattform ist es, polierte,
+    einsatzbereite Erlebnisse wiederholbar, komponierbar und einfach lieferbar zu machen.
+projects:
+  aria-label: Mit Mission Platform gebaute Projekte
+  items:
+    my-care-notes:
+      name: My Care Notes
+      description: >-
+        Ein offline-first Editor für klinische Notizen mit WebAssembly-Rechtschreibprüfung (Hunspell) und Grammatikhilfe
+        (Harper), gebaut auf Mission-Platform-Paketen.
+      cta: Live-App öffnen
 faq:
   title: Häufig gestellte Fragen
   items:

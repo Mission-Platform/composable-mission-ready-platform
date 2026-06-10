@@ -60,10 +60,17 @@ packages:
 about:
   title: Wat we bouwen
   lead: >-
-    Mission Platform draait echte applicaties — zoals {app}, een offline-first klinische notitie-editor met
-    WebAssembly-spellingcontrole en grammatica-ondersteuning. Het doel van het platform is om dat soort ervaringen
-    herhaalbaar, samen te stellen en eenvoudig leverbaar te maken.
-  cta: Doe mee
+    Mission Platform draait echte applicaties in uiteenlopende domeinen. Het doel van het platform is om gepolijste,
+    mission-ready ervaringen herhaalbaar, samen te stellen en eenvoudig leverbaar te maken.
+projects:
+  aria-label: Projecten gebouwd met Mission Platform
+  items:
+    my-care-notes:
+      name: My Care Notes
+      description: >-
+        Een offline-first klinische notitie-editor met WebAssembly-spellingcontrole (Hunspell) en
+        grammatica-ondersteuning (Harper), gebouwd op de pakketten van Mission Platform.
+      cta: Open de live-app
 faq:
   title: Veelgestelde vragen
   items:

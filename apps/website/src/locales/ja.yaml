@@ -48,10 +48,14 @@ packages:
     - base-spa Cloudflare Worker
 about:
   title: 私たちが作っているもの
-  lead: >-
-    Mission Platform は実際のアプリケーションを支えています — 例えば {app}、WebAssembly
-    スペルチェックと文法支援を備えたオフラインファーストの臨床ノートエディタです。プラットフォームの目標は、そのような体験を再現可能、コンポーザブル、そして出荷しやすいものにすることです。
-  cta: 参加する
+  lead: Mission Platform は多様な分野で実際のアプリケーションを支えています。プラットフォームの目標は、洗練されミッション対応の体験を、再現可能でコンポーザブル、そして出荷しやすいものにすることです。
+projects:
+  aria-label: Mission Platform で構築されたプロジェクト
+  items:
+    my-care-notes:
+      name: My Care Notes
+      description: WebAssembly スペルチェック (Hunspell) と文法支援 (Harper) を備えた、Mission Platform のパッケージ上に構築されたオフラインファーストの臨床ノートエディタ。
+      cta: ライブアプリを開く
 faq:
   title: よくある質問
   items:

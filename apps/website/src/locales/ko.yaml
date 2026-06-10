@@ -48,10 +48,14 @@ packages:
     - base-spa Cloudflare 워커
 about:
   title: 우리가 만드는 것
-  lead: >-
-    Mission Platform은 실제 애플리케이션을 구동합니다 — 예를 들어 {app}, WebAssembly 맞춤법 검사 및 문법 도우미가 포함된 오프라인 우선 임상 노트 편집기입니다. 플랫폼의 목표는 그런
-    경험을 반복 가능하고, 컴포저블하며, 쉽게 출시할 수 있도록 만드는 것입니다.
-  cta: 참여하기
+  lead: Mission Platform은 다양한 도메인에서 실제 애플리케이션을 구동합니다. 플랫폼의 목표는 정제되고 미션 대응이 된 경험을 반복 가능하고, 컴포저블하며, 쉽게 출시할 수 있도록 만드는 것입니다.
+projects:
+  aria-label: Mission Platform으로 만든 프로젝트
+  items:
+    my-care-notes:
+      name: My Care Notes
+      description: WebAssembly 맞춤법 검사(Hunspell)와 문법 도우미(Harper)를 갖춘 오프라인 우선 임상 노트 편집기로, Mission Platform 패키지 위에 구축되었습니다.
+      cta: 라이브 앱 열기
 faq:
   title: 자주 묻는 질문
   items:

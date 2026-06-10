@@ -60,9 +60,17 @@ ar:
     about:
       title: ما الذي نبنيه
       lead: >-
-        تدير Mission Platform تطبيقات حقيقية — مثل {app}، محرر ملاحظات سريرية يعمل دون اتصال أولاً مع تدقيق إملائي بـ
-        WebAssembly ومساعدة نحوية. هدف المنصة هو جعل تجارب كهذه قابلة للتكرار، قابلة للتركيب، وسهلة الإطلاق.
-      cta: شارك معنا
+        تدير Mission Platform تطبيقات حقيقية في مجالات متنوعة. هدف المنصة هو جعل التجارب المصقولة والجاهزة للمهمة قابلة
+        للتكرار، قابلة للتركيب، وسهلة الإطلاق.
+    projects:
+      aria-label: مشاريع مبنية باستخدام Mission Platform
+      items:
+        my-care-notes:
+          name: My Care Notes
+          description: >-
+            محرر ملاحظات سريرية يعمل دون اتصال أولاً مع تدقيق إملائي بـ WebAssembly (Hunspell) ومساعدة نحوية (Harper)،
+            مبني على حزم Mission Platform.
+          cta: افتح التطبيق المباشر
     faq:
       title: الأسئلة الشائعة
       items:
@@ -157,10 +165,17 @@ de:
     about:
       title: Woran wir bauen
       lead: >-
-        Mission Platform betreibt echte Anwendungen — wie {app}, einen offline-first Editor für klinische Notizen mit
-        WebAssembly-Rechtschreibprüfung und Grammatikhilfe. Ziel der Plattform ist es, solche Erlebnisse wiederholbar,
-        komponierbar und einfach lieferbar zu machen.
-      cta: Mitmachen
+        Mission Platform betreibt echte Anwendungen in unterschiedlichsten Bereichen. Ziel der Plattform ist es,
+        polierte, einsatzbereite Erlebnisse wiederholbar, komponierbar und einfach lieferbar zu machen.
+    projects:
+      aria-label: Mit Mission Platform gebaute Projekte
+      items:
+        my-care-notes:
+          name: My Care Notes
+          description: >-
+            Ein offline-first Editor für klinische Notizen mit WebAssembly-Rechtschreibprüfung (Hunspell) und
+            Grammatikhilfe (Harper), gebaut auf Mission-Platform-Paketen.
+          cta: Live-App öffnen
     faq:
       title: Häufig gestellte Fragen
       items:
@@ -251,7 +266,7 @@ en:
     placeholder: Popout content area
   BreakpointDebug:
     breakpoint: 'breakpoint:'
-    separator: "{'|'}"
+    separator: '{''|''}'
     debug_px: ({breakpoint}px)
   HomeView:
     ai-translation-warning: This page has been translated by AI. Some wording may be inaccurate — the English version is authoritative.
@@ -308,10 +323,17 @@ en:
     about:
       title: What we’re building
       lead: >-
-        Mission Platform powers real applications — like {app}, an offline-first clinical notes editor with WebAssembly
-        spell checking and grammar assistance. The platform’s goal is to make experiences like that repeatable,
-        composable, and easy to ship.
-      cta: Get involved
+        Mission Platform powers real applications across diverse domains. The platform’s goal is to make polished,
+        mission-ready experiences repeatable, composable, and easy to ship.
+    projects:
+      aria-label: Projects built with Mission Platform
+      items:
+        my-care-notes:
+          name: My Care Notes
+          description: >-
+            An offline-first clinical notes editor with WebAssembly spell checking (Hunspell) and grammar assistance
+            (Harper), built on top of Mission Platform packages.
+          cta: Open the live app
     faq:
       title: Frequently asked
       items:
@@ -410,10 +432,17 @@ es:
     about:
       title: Lo que estamos construyendo
       lead: >-
-        Mission Platform impulsa aplicaciones reales — como {app}, un editor de notas clínicas offline-first con
-        corrección ortográfica WebAssembly y asistencia gramatical. El objetivo de la plataforma es hacer que ese tipo
-        de experiencias sean repetibles, componibles y fáciles de entregar.
-      cta: Participar
+        Mission Platform impulsa aplicaciones reales en diversos dominios. El objetivo de la plataforma es hacer que las
+        experiencias pulidas y listas para la misión sean repetibles, componibles y fáciles de entregar.
+    projects:
+      aria-label: Proyectos construidos con Mission Platform
+      items:
+        my-care-notes:
+          name: My Care Notes
+          description: >-
+            Un editor de notas clínicas offline-first con corrección ortográfica WebAssembly (Hunspell) y asistencia
+            gramatical (Harper), construido sobre los paquetes de Mission Platform.
+          cta: Abrir la app en vivo
     faq:
       title: Preguntas frecuentes
       items:
@@ -512,10 +541,18 @@ fr:
     about:
       title: Ce que nous construisons
       lead: >-
-        Mission Platform fait fonctionner de vraies applications — comme {app}, un éditeur de notes cliniques hors ligne
-        d’abord avec correction orthographique WebAssembly et assistance grammaticale. L’objectif de la plateforme est
-        de rendre ce type d’expérience reproductible, composable et facile à livrer.
-      cta: S’impliquer
+        Mission Platform fait fonctionner de vraies applications dans des domaines variés. L’objectif de la plateforme
+        est de rendre les expériences soignées et prêtes pour la mission reproductibles, composables et faciles à
+        livrer.
+    projects:
+      aria-label: Projets construits avec Mission Platform
+      items:
+        my-care-notes:
+          name: My Care Notes
+          description: >-
+            Un éditeur de notes cliniques hors ligne d’abord avec correction orthographique WebAssembly (Hunspell) et
+            assistance grammaticale (Harper), construit sur les paquets de Mission Platform.
+          cta: Ouvrir l’application en direct
     faq:
       title: Questions fréquentes
       items:
@@ -604,9 +641,17 @@ he:
     about:
       title: מה אנחנו בונים
       lead: >-
-        Mission Platform מפעילה יישומים אמיתיים — כמו {app}, עורך הערות קליניות offline-first עם בדיקת איות
-        ב-WebAssembly וסיוע תחבירי. מטרת הפלטפורמה היא להפוך חוויות כאלה לחזרתיות, בנות-הרכבה וקלות לשילוח.
-      cta: הצטרף
+        Mission Platform מפעילה יישומים אמיתיים בתחומים מגוונים. מטרת הפלטפורמה היא להפוך חוויות מלוטשות ומוכנות-למשימה
+        לחזרתיות, בנות-הרכבה וקלות לשילוח.
+    projects:
+      aria-label: פרויקטים שנבנו עם Mission Platform
+      items:
+        my-care-notes:
+          name: My Care Notes
+          description: >-
+            עורך הערות קליניות offline-first עם בדיקת איות ב-WebAssembly (Hunspell) וסיוע תחבירי (Harper), בנוי על
+            חבילות Mission Platform.
+          cta: פתח את האפליקציה החיה
     faq:
       title: שאלות נפוצות
       items:
@@ -699,10 +744,17 @@ it:
     about:
       title: Cosa stiamo costruendo
       lead: >-
-        Mission Platform alimenta applicazioni reali — come {app}, un editor di note cliniche offline-first con
-        correzione ortografica WebAssembly e assistenza grammaticale. L’obiettivo della piattaforma è rendere esperienze
-        come quella ripetibili, componibili e facili da rilasciare.
-      cta: Partecipa
+        Mission Platform alimenta applicazioni reali in diversi domini. L’obiettivo della piattaforma è rendere
+        esperienze rifinite e mission-ready ripetibili, componibili e facili da rilasciare.
+    projects:
+      aria-label: Progetti costruiti con Mission Platform
+      items:
+        my-care-notes:
+          name: My Care Notes
+          description: >-
+            Un editor di note cliniche offline-first con correzione ortografica WebAssembly (Hunspell) e assistenza
+            grammaticale (Harper), costruito sui pacchetti di Mission Platform.
+          cta: Apri l’app live
     faq:
       title: Domande frequenti
       items:
@@ -784,10 +836,14 @@ ja:
         - base-spa Cloudflare Worker
     about:
       title: 私たちが作っているもの
-      lead: >-
-        Mission Platform は実際のアプリケーションを支えています — 例えば {app}、WebAssembly
-        スペルチェックと文法支援を備えたオフラインファーストの臨床ノートエディタです。プラットフォームの目標は、そのような体験を再現可能、コンポーザブル、そして出荷しやすいものにすることです。
-      cta: 参加する
+      lead: Mission Platform は多様な分野で実際のアプリケーションを支えています。プラットフォームの目標は、洗練されミッション対応の体験を、再現可能でコンポーザブル、そして出荷しやすいものにすることです。
+    projects:
+      aria-label: Mission Platform で構築されたプロジェクト
+      items:
+        my-care-notes:
+          name: My Care Notes
+          description: WebAssembly スペルチェック (Hunspell) と文法支援 (Harper) を備えた、Mission Platform のパッケージ上に構築されたオフラインファーストの臨床ノートエディタ。
+          cta: ライブアプリを開く
     faq:
       title: よくある質問
       items:
@@ -860,10 +916,14 @@ ko:
         - base-spa Cloudflare 워커
     about:
       title: 우리가 만드는 것
-      lead: >-
-        Mission Platform은 실제 애플리케이션을 구동합니다 — 예를 들어 {app}, WebAssembly 맞춤법 검사 및 문법 도우미가 포함된 오프라인 우선 임상 노트 편집기입니다. 플랫폼의
-        목표는 그런 경험을 반복 가능하고, 컴포저블하며, 쉽게 출시할 수 있도록 만드는 것입니다.
-      cta: 참여하기
+      lead: Mission Platform은 다양한 도메인에서 실제 애플리케이션을 구동합니다. 플랫폼의 목표는 정제되고 미션 대응이 된 경험을 반복 가능하고, 컴포저블하며, 쉽게 출시할 수 있도록 만드는 것입니다.
+    projects:
+      aria-label: Mission Platform으로 만든 프로젝트
+      items:
+        my-care-notes:
+          name: My Care Notes
+          description: WebAssembly 맞춤법 검사(Hunspell)와 문법 도우미(Harper)를 갖춘 오프라인 우선 임상 노트 편집기로, Mission Platform 패키지 위에 구축되었습니다.
+          cta: 라이브 앱 열기
     faq:
       title: 자주 묻는 질문
       items:
@@ -954,10 +1014,17 @@ nl:
     about:
       title: Wat we bouwen
       lead: >-
-        Mission Platform draait echte applicaties — zoals {app}, een offline-first klinische notitie-editor met
-        WebAssembly-spellingcontrole en grammatica-ondersteuning. Het doel van het platform is om dat soort ervaringen
-        herhaalbaar, samen te stellen en eenvoudig leverbaar te maken.
-      cta: Doe mee
+        Mission Platform draait echte applicaties in uiteenlopende domeinen. Het doel van het platform is om gepolijste,
+        mission-ready ervaringen herhaalbaar, samen te stellen en eenvoudig leverbaar te maken.
+    projects:
+      aria-label: Projecten gebouwd met Mission Platform
+      items:
+        my-care-notes:
+          name: My Care Notes
+          description: >-
+            Een offline-first klinische notitie-editor met WebAssembly-spellingcontrole (Hunspell) en
+            grammatica-ondersteuning (Harper), gebouwd op de pakketten van Mission Platform.
+          cta: Open de live-app
     faq:
       title: Veelgestelde vragen
       items:
@@ -1039,8 +1106,14 @@ zh:
         - base-spa Cloudflare Worker
     about:
       title: 我们正在构建什么
-      lead: Mission Platform 驱动着真实的应用 —— 例如 {app},一个具备 WebAssembly 拼写检查与语法辅助的离线优先临床笔记编辑器。平台的目标,是让这样的体验可复制、可组合,并易于交付。
-      cta: 加入我们
+      lead: Mission Platform 在多种领域驱动着真实的应用。平台的目标,是让精致且任务就绪的体验可复制、可组合,并易于交付。
+    projects:
+      aria-label: 使用 Mission Platform 构建的项目
+      items:
+        my-care-notes:
+          name: My Care Notes
+          description: 一个具备 WebAssembly 拼写检查 (Hunspell) 与语法辅助 (Harper) 的离线优先临床笔记编辑器,基于 Mission Platform 的软件包构建。
+          cta: 打开在线应用
     faq:
       title: 常见问题
       items:

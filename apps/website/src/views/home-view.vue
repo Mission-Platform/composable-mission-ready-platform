@@ -9,6 +9,7 @@
     BaseCard,
     BaseCardBody,
     BaseCardHeader,
+    BaseCarousel,
     BaseInView,
     BaseNavbar,
     BaseNavbarItem,
@@ -47,6 +48,13 @@
   interface Faq {
     question: string;
     answer: string;
+  }
+
+  interface Project {
+    name: string;
+    description: string;
+    href: string;
+    cta: string;
   }
 
   const { t, locale } = useI18n({ useScope: 'global' });
@@ -154,6 +162,15 @@
       description: t(`packages.items[${index}]`),
     })),
   );
+
+  const projects = computed<Project[]>(() => [
+    {
+      name: t('projects.items.my-care-notes.name'),
+      description: t('projects.items.my-care-notes.description'),
+      href: 'https://care-notes.mission-platform.com/',
+      cta: t('projects.items.my-care-notes.cta'),
+    },
+  ]);
 
   const faqKeys = ['affiliation', 'composable', 'vue-version', 'deploy'] as const;
   const faqs = computed<Faq[]>(() =>
@@ -445,23 +462,50 @@
             color="secondary"
             class="home__section-lead"
           >
-            <i18n-t
-              keypath="about.lead"
-              scope="global"
-            >
-              <template #app>
-                <strong>My Care Notes</strong>
-              </template>
-            </i18n-t>
+            {{ t('about.lead') }}
           </BaseTypography>
-          <div class="home__cta">
-            <BaseButton
-              variant="primary"
-              size="lg"
-              @click="() => {}"
+          <div class="home__projects">
+            <BaseCarousel
+              :aria-label="t('projects.aria-label')"
+              :loop="projects.length > 1"
+              :controls="projects.length > 1"
+              :indicators="projects.length > 1"
             >
-              {{ t('about.cta') }}
-            </BaseButton>
+              <BaseCard
+                v-for="project in projects"
+                :key="project.name"
+                shadow
+                class="home__project"
+              >
+                <BaseCardHeader>
+                  <BaseTypography
+                    variant="h4"
+                    weight="semibold"
+                  >
+                    {{ project.name }}
+                  </BaseTypography>
+                </BaseCardHeader>
+                <BaseCardBody>
+                  <BaseTypography
+                    variant="body-md"
+                    color="secondary"
+                    class="home__project-description"
+                  >
+                    {{ project.description }}
+                  </BaseTypography>
+                  <a
+                    :href="project.href"
+                    class="home__project-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <BaseButton variant="primary">
+                      {{ project.cta }}
+                    </BaseButton>
+                  </a>
+                </BaseCardBody>
+              </BaseCard>
+            </BaseCarousel>
           </div>
         </BaseInView>
       </section>
@@ -630,6 +674,26 @@
     margin-bottom: 8px;
   }
 
+  .home__projects {
+    margin: 0 auto 32px;
+    max-width: 720px;
+    padding-inline: 0;
+  }
+
+  .home__project {
+    height: 100%;
+  }
+
+  .home__project-description {
+    margin-bottom: 16px;
+  }
+
+  .home__project-link {
+    display: inline-block;
+    text-decoration: none;
+    color: inherit;
+  }
+
   .home__packages {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -715,8 +779,14 @@ en:
       - base-spa Cloudflare Worker
   about:
     title: What we’re building
-    lead: 'Mission Platform powers real applications — like {app}, an offline-first clinical notes editor with WebAssembly spell checking and grammar assistance. The platform’s goal is to make experiences like that repeatable, composable, and easy to ship.'
-    cta: Get involved
+    lead: Mission Platform powers real applications across diverse domains. The platform’s goal is to make polished, mission-ready experiences repeatable, composable, and easy to ship.
+  projects:
+    aria-label: Projects built with Mission Platform
+    items:
+      my-care-notes:
+        name: My Care Notes
+        description: An offline-first clinical notes editor with WebAssembly spell checking (Hunspell) and grammar assistance (Harper), built on top of Mission Platform packages.
+        cta: Open the live app
   faq:
     title: Frequently asked
     items:

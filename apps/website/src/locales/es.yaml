@@ -64,10 +64,17 @@ packages:
 about:
   title: Lo que estamos construyendo
   lead: >-
-    Mission Platform impulsa aplicaciones reales — como {app}, un editor de notas clínicas offline-first con corrección
-    ortográfica WebAssembly y asistencia gramatical. El objetivo de la plataforma es hacer que ese tipo de experiencias
-    sean repetibles, componibles y fáciles de entregar.
-  cta: Participar
+    Mission Platform impulsa aplicaciones reales en diversos dominios. El objetivo de la plataforma es hacer que las
+    experiencias pulidas y listas para la misión sean repetibles, componibles y fáciles de entregar.
+projects:
+  aria-label: Proyectos construidos con Mission Platform
+  items:
+    my-care-notes:
+      name: My Care Notes
+      description: >-
+        Un editor de notas clínicas offline-first con corrección ortográfica WebAssembly (Hunspell) y asistencia
+        gramatical (Harper), construido sobre los paquetes de Mission Platform.
+      cta: Abrir la app en vivo
 faq:
   title: Preguntas frecuentes
   items:

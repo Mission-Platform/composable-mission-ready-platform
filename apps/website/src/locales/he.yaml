@@ -53,9 +53,17 @@ packages:
 about:
   title: מה אנחנו בונים
   lead: >-
-    Mission Platform מפעילה יישומים אמיתיים — כמו {app}, עורך הערות קליניות offline-first עם בדיקת איות ב-WebAssembly
-    וסיוע תחבירי. מטרת הפלטפורמה היא להפוך חוויות כאלה לחזרתיות, בנות-הרכבה וקלות לשילוח.
-  cta: הצטרף
+    Mission Platform מפעילה יישומים אמיתיים בתחומים מגוונים. מטרת הפלטפורמה היא להפוך חוויות מלוטשות ומוכנות-למשימה
+    לחזרתיות, בנות-הרכבה וקלות לשילוח.
+projects:
+  aria-label: פרויקטים שנבנו עם Mission Platform
+  items:
+    my-care-notes:
+      name: My Care Notes
+      description: >-
+        עורך הערות קליניות offline-first עם בדיקת איות ב-WebAssembly (Hunspell) וסיוע תחבירי (Harper), בנוי על חבילות
+        Mission Platform.
+      cta: פתח את האפליקציה החיה
 faq:
   title: שאלות נפוצות
   items:

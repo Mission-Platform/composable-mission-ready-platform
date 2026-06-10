@@ -54,9 +54,17 @@ packages:
 about:
   title: ما الذي نبنيه
   lead: >-
-    تدير Mission Platform تطبيقات حقيقية — مثل {app}، محرر ملاحظات سريرية يعمل دون اتصال أولاً مع تدقيق إملائي بـ
-    WebAssembly ومساعدة نحوية. هدف المنصة هو جعل تجارب كهذه قابلة للتكرار، قابلة للتركيب، وسهلة الإطلاق.
-  cta: شارك معنا
+    تدير Mission Platform تطبيقات حقيقية في مجالات متنوعة. هدف المنصة هو جعل التجارب المصقولة والجاهزة للمهمة قابلة
+    للتكرار، قابلة للتركيب، وسهلة الإطلاق.
+projects:
+  aria-label: مشاريع مبنية باستخدام Mission Platform
+  items:
+    my-care-notes:
+      name: My Care Notes
+      description: >-
+        محرر ملاحظات سريرية يعمل دون اتصال أولاً مع تدقيق إملائي بـ WebAssembly (Hunspell) ومساعدة نحوية (Harper)، مبني
+        على حزم Mission Platform.
+      cta: افتح التطبيق المباشر
 faq:
   title: الأسئلة الشائعة
   items:

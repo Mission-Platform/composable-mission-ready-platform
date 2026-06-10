@@ -28,7 +28,7 @@ clear: Clear search
 popout: Pop out
 popin: Pop back in
 breakpoint: 'breakpoint:'
-separator: "{'|'}"
+separator: '{''|''}'
 debug_px: ({breakpoint}px)
 ai-translation-warning: This page has been translated by AI. Some wording may be inaccurate — the English version is authoritative.
 nav:
@@ -82,10 +82,17 @@ packages:
 about:
   title: What we’re building
   lead: >-
-    Mission Platform powers real applications — like {app}, an offline-first clinical notes editor with WebAssembly
-    spell checking and grammar assistance. The platform’s goal is to make experiences like that repeatable, composable,
-    and easy to ship.
-  cta: Get involved
+    Mission Platform powers real applications across diverse domains. The platform’s goal is to make polished,
+    mission-ready experiences repeatable, composable, and easy to ship.
+projects:
+  aria-label: Projects built with Mission Platform
+  items:
+    my-care-notes:
+      name: My Care Notes
+      description: >-
+        An offline-first clinical notes editor with WebAssembly spell checking (Hunspell) and grammar assistance
+        (Harper), built on top of Mission Platform packages.
+      cta: Open the live app
 faq:
   title: Frequently asked
   items:

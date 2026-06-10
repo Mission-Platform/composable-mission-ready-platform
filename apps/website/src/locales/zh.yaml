@@ -48,8 +48,14 @@ packages:
     - base-spa Cloudflare Worker
 about:
   title: 我们正在构建什么
-  lead: Mission Platform 驱动着真实的应用 —— 例如 {app},一个具备 WebAssembly 拼写检查与语法辅助的离线优先临床笔记编辑器。平台的目标,是让这样的体验可复制、可组合,并易于交付。
-  cta: 加入我们
+  lead: Mission Platform 在多种领域驱动着真实的应用。平台的目标,是让精致且任务就绪的体验可复制、可组合,并易于交付。
+projects:
+  aria-label: 使用 Mission Platform 构建的项目
+  items:
+    my-care-notes:
+      name: My Care Notes
+      description: 一个具备 WebAssembly 拼写检查 (Hunspell) 与语法辅助 (Harper) 的离线优先临床笔记编辑器,基于 Mission Platform 的软件包构建。
+      cta: 打开在线应用
 faq:
   title: 常见问题
   items:
