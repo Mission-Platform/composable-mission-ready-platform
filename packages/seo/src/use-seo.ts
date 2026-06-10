@@ -7,6 +7,33 @@ import { buildPageMeta, type BuiltPageMeta } from './build-page-meta';
 import type { JsonLd, OpenGraphMetadata, SeoMetadata, SeoMetaTag } from './types';
 import type { MaybeRefOrGetter } from 'vue';
 
+/**
+ * Strip any JSON-LD `<script type="application/ld+json">` tags that were
+ * baked into the HTML by the static-site generator (or any other SSR step)
+ * before `@unhead/vue` mounts on the client.
+ *
+ * These prerendered tags are plain DOM nodes — `@unhead/vue` does not own
+ * them, so when `useHead` re-emits the same JSON-LD blocks on hydration it
+ * appends a fresh set of `<script>` tags rather than replacing the SSR ones.
+ * The result is duplicated `Organization` / `WebSite` / `WebPage` entries
+ * on every page load.
+ *
+ * Removing the SSR-rendered scripts once, before the first `useHead` call,
+ * leaves a single authoritative copy that unhead manages and updates
+ * reactively on subsequent route changes.
+ */
+let ssrJsonLdStripped = false;
+function stripSsrJsonLdOnce(): void {
+  if (ssrJsonLdStripped) return;
+  ssrJsonLdStripped = true;
+  const doc = (
+    globalThis as { document?: { head: { querySelectorAll: (s: string) => Iterable<{ remove: () => void }> } } }
+  ).document;
+  if (!doc) return;
+  const nodes = doc.head.querySelectorAll('script[type="application/ld+json"]');
+  for (const node of nodes) node.remove();
+}
+
 interface UnheadShape {
   title?: string;
   htmlAttrs?: { lang?: string };
@@ -89,6 +116,7 @@ function toUnheadHead(metadata: SeoMetadata): UnheadShape {
  * be used both with reactive state and with static metadata.
  */
 export function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void {
+  stripSsrJsonLdOnce();
   const head = computed(() => toUnheadHead(toValue(metadata)));
   useHead(head);
 }
