@@ -7,10 +7,11 @@ export default defineLibraryConfig({
     'hunspell.worker': 'src/worker/hunspell.worker.ts',
   },
   name: 'MissionPlatformHunspell',
+  external: ['monaco-editor'],
   overrides: {
     assetsInclude: ['**/*.wasm'],
     build: {
-      rollupOptions: {
+      rolldownOptions: {
         output: {
           assetFileNames: 'assets/[name][extname]',
         },
