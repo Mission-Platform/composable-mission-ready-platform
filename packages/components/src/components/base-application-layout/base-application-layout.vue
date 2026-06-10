@@ -64,21 +64,15 @@
     >
       <slot name="status" />
     </div>
-    <div
-      :class="['application-layout__header', { 'application-layout__header--sticky': stickyHeader }]"
-      role="none"
-    >
+    <header :class="['application-layout__header', { 'application-layout__header--sticky': stickyHeader }]">
       <slot name="navbar" />
-    </div>
+    </header>
     <main class="application-layout__content">
       <slot name="content" />
     </main>
-    <div
-      class="application-layout__footer"
-      role="none"
-    >
+    <footer class="application-layout__footer">
       <slot name="footer" />
-    </div>
+    </footer>
   </div>
 </template>
 
