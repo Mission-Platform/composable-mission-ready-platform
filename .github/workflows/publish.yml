@@ -56,7 +56,7 @@ jobs:
       # does.  Keyed on the lockfile + workflow file so it invalidates whenever
       # dependencies or this workflow change.
       - name: Cache Vite & Turbo artefacts
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             **/node_modules/.vite
