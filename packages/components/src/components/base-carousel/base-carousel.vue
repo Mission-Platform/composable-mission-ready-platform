@@ -227,10 +227,8 @@
 </script>
 
 <template>
-  <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
-  <div
+  <section
     class="base-carousel"
-    role="region"
     :aria-label="ariaLabel"
     aria-roledescription="carousel"
     tabindex="0"
@@ -292,7 +290,7 @@
         @click="goTo(index - 1)"
       />
     </div>
-  </div>
+  </section>
 </template>
 
 <style lang="scss" scoped>

@@ -95,7 +95,7 @@ describe('BaseThemeToggle', () => {
       expect(document.documentElement.dataset.theme).toBe('dark');
 
       await wrapper.trigger('click');
-      expect(document.documentElement.dataset.theme).toBeNull();
+      expect(document.documentElement.dataset.theme).toBeUndefined();
 
       await wrapper.trigger('click');
       expect(document.documentElement.dataset.theme).toBe('light');
