@@ -64,9 +64,9 @@
     >
       <slot name="status" />
     </div>
-    <header :class="['application-layout__header', { 'application-layout__header--sticky': stickyHeader }]">
+    <div :class="['application-layout__header', { 'application-layout__header--sticky': stickyHeader }]">
       <slot name="navbar" />
-    </header>
+    </div>
     <main class="application-layout__content">
       <slot name="content" />
     </main>
