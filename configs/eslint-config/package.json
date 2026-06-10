@@ -24,16 +24,16 @@
     "@typescript-eslint/eslint-plugin": "catalog:eslint",
     "@typescript-eslint/parser": "catalog:eslint",
     "eslint-config-prettier": "catalog:eslint",
+    "eslint-config-turbo": "catalog:eslint",
     "eslint-import-resolver-typescript": "catalog:eslint",
     "eslint-plugin-import-x": "catalog:eslint",
-    "eslint-plugin-vue": "catalog:eslint",
     "eslint-plugin-unicorn": "catalog:eslint",
+    "eslint-plugin-vue": "catalog:eslint",
     "eslint-plugin-vuejs-accessibility": "catalog:eslint",
     "typescript-eslint": "catalog:eslint",
     "vue-eslint-parser": "catalog:eslint"
   },
   "devDependencies": {
-    "@mission-platform/prettier-config": "workspace:*",
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",
     "typescript": "catalog:typescript"

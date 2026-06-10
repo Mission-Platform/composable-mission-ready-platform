@@ -1,0 +1,17 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "seo:generate": {
+      "inputs": ["scripts/generate-seo-files.ts", "src/**/*.ts", "src/**/*.vue"],
+      "outputs": ["public/sitemap.xml", "public/robots.txt", "src/generated/**"]
+    },
+    "prebuild": {
+      "dependsOn": ["seo:generate"]
+    },
+    "build": {
+      "dependsOn": ["^build", "prebuild"],
+      "outputs": ["dist/**", ".vite/**"]
+    }
+  }
+}

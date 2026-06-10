@@ -4,24 +4,6 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "build:config": "pnpm --filter @mission-platform/eslint-config --filter @mission-platform/prettier-config --filter @mission-platform/stylelint-config --filter @mission-platform/postcss-config --parallel build && pnpm run --filter @mission-platform/vite-config build",
-    "build:tokens": "pnpm --filter @mission-platform/tokens --parallel build",
-    "build:icons": "pnpm --filter @mission-platform/icons --parallel build",
-    "build:workers": "pnpm --filter @mission-platform/base-spa --parallel build",
-    "build:monaco": "pnpm --filter @mission-platform/hunspell --filter @mission-platform/harper --parallel build",
-    "build:packages": "pnpm --filter @mission-platform/seo  --filter @mission-platform/components --filter @mission-platform/breakpoints --filter @mission-platform/i18n --filter @mission-platform/map --parallel build",
-    "build:watch": "pnpm --filter \"./packages/**\" --parallel build:watch",
-    "build:dependencies": "pnpm build:tokens && pnpm build:icons && pnpm build:monaco && pnpm build:packages",
-    "build:apps": "pnpm --filter @mission-platform/storybook --filter @mission-platform/my-care-notes  --filter @mission-platform/website --parallel build && pnpm --filter @mission-platform/storybook build-storybook",
-    "build": "pnpm build:config && pnpm build:workers && pnpm build:dependencies && pnpm build:apps",
-    "build:storybook": "pnpm build:config && pnpm build:tokens && pnpm build:icons && pnpm build:monaco && pnpm build:packages && pnpm --filter @mission-platform/storybook build-storybook",
-    "lint": "pnpm -r --parallel run lint",
-    "lint:fix": "pnpm -r --parallel run lint:fix",
-    "lint:style": "pnpm -r --parallel run lint:style",
-    "lint:style:fix": "pnpm -r --parallel run lint:style:fix",
-    "format": "pnpm -r --parallel run format",
-    "format:write": "pnpm -r --parallel run format:write",
-    "storybook": "pnpm --filter @mission-platform/storybook storybook",
     "i18n:extract": "pnpm --filter @mission-platform/scripts i18n:extract",
     "deploy:my-care-notes": "wrangler deploy --env \"my-care-notes\"",
     "preview:my-care-notes": "wrangler dev --env \"my-care-notes\"",
@@ -32,10 +14,13 @@
   },
   "devDependencies": {
     "@changesets/cli": "catalog:",
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
     "@types/js-yaml": "catalog:",
     "@vue/compiler-sfc": "catalog:",
     "js-yaml": "catalog:",
+    "turbo": "^2.9.16",
     "wrangler": "catalog:"
   },
-  "packageManager": "pnpm@11.5.0+sha512.dbfcc4f81cf48597afd4bc391ffdf12c11f1a9fb83a395bfa6b0a2d9cc2fd8ffebafdb1ccbd529632153f793904c2615b7f09fe1a345473fd1c35845172a8eb1"
+  "packageManager": "pnpm@11.5.3+sha512.7ac1c919341c213a34dc0d02afb7143c5c26ac26ee8c4782deea821b8ac64d2134a081fd8941dae6e29bbb48f58dfc2b7fbceeccc07cb2f09d219d342a4969ed"
 }
