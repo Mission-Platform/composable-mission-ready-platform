@@ -299,18 +299,15 @@ function pruneToShape(translated: Record<string, unknown>, shape: Record<string,
   for (const [key, shapeValue] of Object.entries(shape)) {
     if (!(key in translated)) continue;
     const translatedValue = translated[key];
-    if (
+    pruned[key] =
       shapeValue !== null &&
       typeof shapeValue === 'object' &&
       !Array.isArray(shapeValue) &&
       translatedValue !== null &&
       typeof translatedValue === 'object' &&
       !Array.isArray(translatedValue)
-    ) {
-      pruned[key] = pruneToShape(translatedValue as Record<string, unknown>, shapeValue as Record<string, unknown>);
-    } else {
-      pruned[key] = translatedValue;
-    }
+        ? pruneToShape(translatedValue as Record<string, unknown>, shapeValue as Record<string, unknown>)
+        : translatedValue;
   }
   return pruned;
 }
