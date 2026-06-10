@@ -56,7 +56,6 @@
 ### Patch Changes
 
 - b5e4353: broaden composable APIs to MaybeRefOrGetter and fix token re-export extensions
-
   - refactor `useHunspellMonaco` to accept `MaybeRefOrGetter` for all three parameters instead of `Ref`, allowing plain values, refs, and getters
   - update `useHunspellMonaco` spec to use native `ReturnType<typeof ref<...>>` instead of explicit `Ref` import
   - migrate `useId` from `nanoid` to Vue's built-in `useId` for stable server-side-compatible IDs
@@ -65,7 +64,6 @@
   - fix token barrel re-exports in `@mission-platform/tokens` to use `.js` extensions instead of `.ts` for ESM compatibility
 
 - bb5e252: add unit tests and stories for all icon components
-
   - add `icon.spec.ts` for every icon component covering svg rendering, class application, named size tokens, and numeric size in px
   - add `icon.stories.ts` for icon components that benefit from visual documentation in Storybook
   - rename storybook story and test files to lowercase (`I18n` → `i18n`, `Themes` → `themes`) for consistent file naming conventions
