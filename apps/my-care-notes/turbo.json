@@ -3,6 +3,7 @@
   "extends": ["//"],
   "tasks": {
     "seo:generate": {
+      "dependsOn": ["^build"],
       "inputs": ["scripts/generate-seo-files.ts", "src/**/*.ts", "src/**/*.vue"],
       "outputs": ["public/sitemap.xml", "public/robots.txt", "src/generated/**"]
     },
