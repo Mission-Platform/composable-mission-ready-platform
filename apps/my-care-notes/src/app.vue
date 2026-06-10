@@ -14,7 +14,7 @@
   } from '@mission-platform/components';
   import { useI18n } from '@mission-platform/i18n';
   import { IconDownload, IconPencil } from '@mission-platform/icons';
-  import { organizationId, useSeo, webPage, webSiteId } from '@mission-platform/seo';
+  import { organizationId, useSeo, webPage } from '@mission-platform/seo';
   import { computed, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
 
@@ -42,7 +42,6 @@
           isPartOf: { name: APP_TITLE, url: APP_ORIGIN },
         }),
         about: { '@id': organizationId(PUBLISHER_URL) },
-        isPartOf: { '@id': webSiteId(APP_ORIGIN) },
       },
     ],
   });
@@ -98,6 +97,14 @@
   function cancelRenameTab(): void {
     console.log('[my-care-notes] rename dialog close requested', { tabId: renamingTabId.value });
     renamingTabId.value = undefined;
+  }
+
+  function onRenameTabKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      confirmRenameTab();
+    } else if (event.key === 'Escape') {
+      cancelRenameTab();
+    }
   }
 
   const visibleTabs = computed(() => openTabs().map((tab) => ({ ...tab, label: tab.title })));
@@ -349,8 +356,7 @@
       v-model="renameTabTitle"
       :label="t('rename.label')"
       autocomplete="off"
-      @keydown.enter="confirmRenameTab"
-      @keydown.esc="cancelRenameTab"
+      @keydown="onRenameTabKeydown"
     />
     <template #footer>
       <div class="rename-modal-footer">
