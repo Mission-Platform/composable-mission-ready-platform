@@ -1,5 +1,11 @@
 # @mission-platform/i18n
 
+## 0.3.1
+
+### Patch Changes
+
+- 266acd6: add `build:watch` script for incremental rebuilds during development
+
 ## 0.3.0
 
 ### Minor Changes

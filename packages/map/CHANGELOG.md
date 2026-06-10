@@ -1,5 +1,37 @@
 # @mission-platform/map
 
+## 0.1.6
+
+### Patch Changes
+
+- 266acd6: add `build:watch` script for incremental rebuilds during development
+- Updated dependencies [266acd6]
+- Updated dependencies [895c0e3]
+- Updated dependencies [5053fb0]
+- Updated dependencies [ccc2c34]
+- Updated dependencies [37571da]
+- Updated dependencies [1e135ae]
+- Updated dependencies [c0e4b38]
+- Updated dependencies [387331e]
+- Updated dependencies [6a1d844]
+- Updated dependencies [c958b81]
+- Updated dependencies [72c7c44]
+- Updated dependencies [3944f87]
+- Updated dependencies [b47b849]
+- Updated dependencies [e917051]
+- Updated dependencies [3b322ce]
+- Updated dependencies [58f2f50]
+- Updated dependencies [a5d10fd]
+- Updated dependencies [3944f87]
+- Updated dependencies [3944f87]
+- Updated dependencies [3944f87]
+- Updated dependencies [3944f87]
+- Updated dependencies [b162ee6]
+  - @mission-platform/components@1.0.0
+  - @mission-platform/i18n@0.3.1
+  - @mission-platform/icons@0.2.0
+  - @mission-platform/tokens@0.2.0
+
 ## 0.1.5
 
 ### Patch Changes
@@ -96,6 +128,7 @@
 ### Patch Changes
 
 - 735d1d6: Improve `useDrawing` composable and map test infrastructure:
+
   - `selectFeature` parameter is now optional (`id?: FeatureId`) for more ergonomic deselection calls
   - Fix spec files to use `mockImplementation(() => {})` instead of `mockReturnValue()` for `getSource` and `getLayer` mocks, avoiding misleading `undefined` return type
   - `mountWithMap` test utility now accepts `Component` type for extra components and uses a type-safe `mergedOptions` variable

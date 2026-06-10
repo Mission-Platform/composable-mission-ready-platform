@@ -1,5 +1,19 @@
 # @mission-platform/hunspell
 
+## 0.3.0
+
+### Minor Changes
+
+- a5d10fd: move `useHunspellMonaco` composable from `@mission-platform/components` to `@mission-platform/hunspell` to mirror the structure of `@mission-platform/harper`. The composable is now exported from `@mission-platform/hunspell`; update imports accordingly.
+
+### Patch Changes
+
+- 266acd6: add `build:watch` script for incremental rebuilds during development
+- a443677: migrate vite build config to rolldownOptions and externalize monaco-editor
+- fef2a3a: include `vitest.config.ts` in `tsconfig.node.json` so ESLint's TypeScript project service can parse it, and reorder worker imports to satisfy `import/order`
+- 3c17696: correct `types` entry points in `package.json` to match the actual emitted declaration files (`./dist/index.d.ts` for the main entry and `./dist/worker/hunspell.worker.d.ts` for the `./worker` subpath)
+- ca1660f: reorganise package src layout into logical folders (`monaco/`, `worker/`, and — for hunspell — `wasm/`); the public package entry points and built output filenames are unchanged
+
 ## 0.2.2
 
 ### Patch Changes
@@ -8,6 +22,7 @@
 
   Migrates `vite.config.ts`, `tsconfig.build.json`, and `tsconfig.node.json`
   to extend the shared workspaces under `configs/`. The `assetsInclude`
+
   - `assetFileNames` settings (for the WebAssembly artefact) are layered
     in via `overrides`. No runtime or public-API change.
 

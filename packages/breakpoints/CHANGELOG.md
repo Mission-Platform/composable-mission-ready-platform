@@ -1,5 +1,13 @@
 # @mission-platform/breakpoints
 
+## 2.0.1
+
+### Patch Changes
+
+- 266acd6: add `build:watch` script for incremental rebuilds during development
+- Updated dependencies [266acd6]
+  - @mission-platform/i18n@0.3.1
+
 ## 2.0.0
 
 ### Patch Changes

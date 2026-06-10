@@ -1,5 +1,18 @@
 # @mission-platform/icons
 
+## 0.2.0
+
+### Minor Changes
+
+- 58f2f50: add six new feature icons used by the Mission Platform marketing site: `IconPuzzle`, `IconLightning`, `IconPalette`, `IconLanguage`, `IconWrench`, and `IconCloud`
+
+### Patch Changes
+
+- 266acd6: add `build:watch` script for incremental rebuilds during development
+- Updated dependencies [266acd6]
+- Updated dependencies [37571da]
+  - @mission-platform/tokens@0.2.0
+
 ## 0.1.3
 
 ### Patch Changes
@@ -56,6 +69,7 @@
 ### Patch Changes
 
 - b5e4353: broaden composable APIs to MaybeRefOrGetter and fix token re-export extensions
+
   - refactor `useHunspellMonaco` to accept `MaybeRefOrGetter` for all three parameters instead of `Ref`, allowing plain values, refs, and getters
   - update `useHunspellMonaco` spec to use native `ReturnType<typeof ref<...>>` instead of explicit `Ref` import
   - migrate `useId` from `nanoid` to Vue's built-in `useId` for stable server-side-compatible IDs
@@ -64,6 +78,7 @@
   - fix token barrel re-exports in `@mission-platform/tokens` to use `.js` extensions instead of `.ts` for ESM compatibility
 
 - bb5e252: add unit tests and stories for all icon components
+
   - add `icon.spec.ts` for every icon component covering svg rendering, class application, named size tokens, and numeric size in px
   - add `icon.stories.ts` for icon components that benefit from visual documentation in Storybook
   - rename storybook story and test files to lowercase (`I18n` → `i18n`, `Themes` → `themes`) for consistent file naming conventions

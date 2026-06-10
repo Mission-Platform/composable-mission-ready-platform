@@ -1,5 +1,12 @@
 # @mission-platform/eslint-config
 
+## 0.3.0
+
+### Minor Changes
+
+- 6138e5f: integrate eslint-config-prettier to stop ESLint from enforcing formatting rules that conflict with Prettier (notably `eslint-plugin-vue`'s recommended formatting rules); Prettier is now the single source of truth for formatting
+- be51917: add eslint-config-turbo to flag environment variables that are not declared in `turbo.json` (`globalEnv` / per-task `env`) and would otherwise silently break Turborepo's cache hashing
+
 ## 0.2.0
 
 ### Minor Changes
