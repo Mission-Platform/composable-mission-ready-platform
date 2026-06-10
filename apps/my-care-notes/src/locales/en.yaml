@@ -28,7 +28,7 @@ clear: Clear search
 popout: Pop out
 popin: Pop back in
 breakpoint: 'breakpoint:'
-separator: "{'|'}"
+separator: '{''|''}'
 debug_px: ({breakpoint}px)
 nav:
   notes: Notes
