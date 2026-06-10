@@ -1,0 +1,25 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "seo:generate": {
+      "dependsOn": ["^build"],
+      "inputs": ["scripts/generate-seo-files.ts", "src/**/*.ts", "src/**/*.vue"],
+      "outputs": ["public/sitemap.xml", "public/robots.txt", "src/generated/**"]
+    },
+    "prebuild": {
+      "dependsOn": ["seo:generate"]
+    },
+    "prebuild:spa": {
+      "dependsOn": ["seo:generate"]
+    },
+    "build": {
+      "dependsOn": ["^build", "prebuild"],
+      "outputs": ["dist/**", ".output/**", ".vite/**"]
+    },
+    "build:spa": {
+      "dependsOn": ["^build", "prebuild:spa"],
+      "outputs": ["dist/**", ".output/**"]
+    }
+  }
+}

@@ -1,5 +1,6 @@
 import pluginVueI18n from '@intlify/eslint-plugin-vue-i18n';
 import prettierConfig from 'eslint-config-prettier/flat';
+import turboConfig from 'eslint-config-turbo/flat';
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 import importX from 'eslint-plugin-import-x';
 import unicorn from 'eslint-plugin-unicorn';
@@ -173,6 +174,11 @@ const config = [
       '@intlify/vue-i18n/no-missing-keys': 'off',
     },
   },
+  // ── turbo ─────────────────────────────────────────────────────────────────
+  // Flag usage of environment variables that have not been declared in
+  // `turbo.json` (`globalEnv` / per-task `env`), which would otherwise silently
+  // break Turborepo's cache hashing.
+  ...turboConfig.map((cfg) => ({ ...cfg, name: cfg.name ?? 'mission-platform/turbo' })),
   // ── prettier ──────────────────────────────────────────────────────────────
   // Must come last: disables all ESLint rules that conflict with Prettier so
   // ESLint never reformats code in ways Prettier would undo. Prettier remains

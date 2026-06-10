@@ -1,0 +1,79 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "ui": "stream",
+  "globalDependencies": [
+    "pnpm-workspace.yaml",
+    "pnpm-lock.yaml",
+    ".nvmrc",
+    "tsconfig*.json"
+  ],
+  "globalEnv": ["NODE_ENV", "CI", "SSR"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": ["dist/**", ".vite/**"]
+    },
+    "build:watch": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "preview": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
+    },
+    "storybook": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": ["^build"]
+    },
+    "test:watch": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "test:coverage": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "transit": {
+      "dependsOn": ["^transit"]
+    },
+    "lint": {
+      "dependsOn": ["transit"]
+    },
+    "lint:fix": {
+      "dependsOn": ["transit"],
+      "cache": false
+    },
+    "lint:style": {},
+    "lint:style:fix": {
+      "cache": false
+    },
+    "format": {},
+    "format:write": {
+      "cache": false
+    },
+    "deploy": {
+      "dependsOn": ["build"],
+      "cache": false
+    }
+  }
+}

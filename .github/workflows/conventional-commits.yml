@@ -31,45 +31,14 @@ jobs:
           # Fetch the full PR history so we can lint every commit in the range.
           fetch-depth: 0
 
+      # Lint every commit in the PR range with commitlint, using the repo's
+      # `commitlint.config.mjs` — the same single rule source enforced locally by
+      # the Husky `commit-msg` hook — instead of a duplicated bash regex.
       - name: Validate Conventional Commits
-        shell: bash
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: |
-          set -euo pipefail
-
-          # Conventional Commits v1.0.0 — type(scope)!: description
-          # Allowed types match the convention documented in AGENTS.md.
-          pattern='^(feat|fix|refactor|style|chore|docs|test|build|ci|perf|revert)(\([a-z0-9_.\/-]+\))?!?: [^A-Z].{0,71}$'
-
-          git fetch --no-tags --depth=0 origin "$BASE_SHA" "$HEAD_SHA" >/dev/null 2>&1 || true
-
-          mapfile -t commits < <(git log --no-merges --format='%H' "$BASE_SHA".."$HEAD_SHA")
-
-          if [ "${#commits[@]}" -eq 0 ]; then
-            echo "No non-merge commits to validate."
-            exit 0
-          fi
-
-          failed=0
-          for sha in "${commits[@]}"; do
-            subject=$(git log -1 --format='%s' "$sha")
-            if [[ ! "$subject" =~ $pattern ]]; then
-              echo "::error::Commit $sha does not follow Conventional Commits: $subject"
-              failed=1
-            else
-              echo "ok: $sha $subject"
-            fi
-          done
-
-          if [ "$failed" -ne 0 ]; then
-            echo ""
-            echo "Expected format: <type>(<scope>)!: <description>"
-            echo "Allowed types:   feat, fix, refactor, style, chore, docs, test, build, ci, perf, revert"
-            echo "Description:     lowercase imperative mood, no trailing period, ≤ 72 chars total subject."
-            exit 1
-          fi
+        uses: wagoid/commitlint-github-action@v6
+        with:
+          configFile: commitlint.config.mjs
+          failOnWarnings: true
 
   changeset:
     name: Require a changeset for package changes
