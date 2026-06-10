@@ -32,12 +32,12 @@ jobs:
           fetch-depth: 0
 
       # Lint every commit in the PR range with commitlint, using the repo's
-      # `commitlint.config.js` — the same single rule source enforced locally by
+      # `commitlint.config.mjs` — the same single rule source enforced locally by
       # the Husky `commit-msg` hook — instead of a duplicated bash regex.
       - name: Validate Conventional Commits
         uses: wagoid/commitlint-github-action@v6
         with:
-          configFile: commitlint.config.js
+          configFile: commitlint.config.mjs
           failOnWarnings: true
 
   changeset:

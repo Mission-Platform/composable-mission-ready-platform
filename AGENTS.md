@@ -301,7 +301,7 @@ Commit messages are validated **locally** as well as in CI, so non-conforming co
 
 - A [Husky](https://typicode.github.io/husky/) `commit-msg` hook (`.husky/commit-msg`) runs [commitlint](https://commitlint.js.org) on every `git commit`.
 - The hook is installed automatically by the root `prepare` script (`husky`) whenever you run `pnpm install`, so no manual setup is required.
-- The rules live in the root `commitlint.config.js`. It extends `@commitlint/config-conventional` and is tuned to match this repo's convention: the allowed `type`s above, a lowercase-leading description with no trailing period, lowercase scopes, and a 72-character subject limit. The `Conventional Commits` GitHub workflow lints PR commits with the same `commitlint.config.js` (via `wagoid/commitlint-github-action`), so a single rule source is enforced both locally and in CI.
+- The rules live in the root `commitlint.config.mjs`. It extends `@commitlint/config-conventional` and is tuned to match this repo's convention: the allowed `type`s above, a lowercase-leading description with no trailing period, lowercase scopes, and a 72-character subject limit. The `Conventional Commits` GitHub workflow lints PR commits with the same `commitlint.config.mjs` (via `wagoid/commitlint-github-action`), so a single rule source is enforced both locally and in CI.
 - To lint a message manually (e.g. while drafting), use `pnpm commitlint`, for example: `echo "feat(map): add layer toggle" | pnpm commitlint`.
 - Bypassing the hook with `git commit --no-verify` is strongly discouraged — the same checks run in CI and will fail the PR.
 
