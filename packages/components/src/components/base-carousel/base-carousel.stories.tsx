@@ -1,6 +1,7 @@
 import { ref, watch } from 'vue';
 
 import BaseCard from '../base-card/base-card.vue';
+
 import BaseCarousel from './base-carousel.vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';

@@ -4,9 +4,9 @@ import { h, nextTick } from 'vue';
 
 import BaseCarousel from './base-carousel.vue';
 
-function mountWithSlides(slideCount: number, props: Record<string, unknown> = {}) {
+function mountWithSlides(slideCount: number, properties: Record<string, unknown> = {}) {
   return mount(BaseCarousel, {
-    props,
+    props: properties,
     attachTo: document.body,
     slots: {
       default: () =>
@@ -16,7 +16,7 @@ function mountWithSlides(slideCount: number, props: Record<string, unknown> = {}
 }
 
 function dispatchPointer(
-  el: Element,
+  element: Element,
   type: 'pointerdown' | 'pointerup' | 'pointercancel' | 'pointerleave',
   init: { clientX: number; clientY: number; pointerType?: string; pointerId?: number },
 ): void {
@@ -32,7 +32,7 @@ function dispatchPointer(
   Object.defineProperty(event, 'pointerType', { value: init.pointerType ?? 'touch' });
   Object.defineProperty(event, 'pointerId', { value: init.pointerId ?? 1 });
   Object.defineProperty(event, 'button', { value: 0 });
-  el.dispatchEvent(event);
+  element.dispatchEvent(event);
 }
 
 describe('BaseCarousel', () => {

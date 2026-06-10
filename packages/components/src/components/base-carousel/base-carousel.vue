@@ -87,13 +87,9 @@
 
   function goTo(index: number): void {
     if (slideCount.value === 0) return;
-    let next = index;
-    if (properties.loop) {
-      next = ((index % slideCount.value) + slideCount.value) % slideCount.value;
-    } else {
-      next = Math.max(0, Math.min(slideCount.value - 1, index));
-    }
-    currentIndex.value = next;
+    currentIndex.value = properties.loop
+      ? ((index % slideCount.value) + slideCount.value) % slideCount.value
+      : Math.max(0, Math.min(slideCount.value - 1, index));
   }
 
   function previous(): void {
@@ -231,8 +227,10 @@
 </script>
 
 <template>
-  <section
+  <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
+  <div
     class="base-carousel"
+    role="region"
     :aria-label="ariaLabel"
     aria-roledescription="carousel"
     tabindex="0"
@@ -294,7 +292,7 @@
         @click="goTo(index - 1)"
       />
     </div>
-  </section>
+  </div>
 </template>
 
 <style lang="scss" scoped>
