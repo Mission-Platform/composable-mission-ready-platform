@@ -14,6 +14,7 @@ The project uses the following core technologies:
 | Vitest + Playwright | Unit and browser-level testing |
 | Storybook | Component development, documentation, and visual testing |
 | pnpm workspaces | Monorepo dependency management |
+| Turborepo | Task orchestration, caching, and incremental builds across workspaces |
 | Changesets | Versioning and changelog automation |
 
 ---
@@ -188,36 +189,41 @@ The `workers/` folder contains Cloudflare Worker packages consumed by the deploy
 
 > **Node version:** This repository pins its Node.js version via `.nvmrc`. You **must** run `nvm use` in every new shell before running any `pnpm` command — otherwise installs, builds, and tests may silently use the wrong Node version and fail in confusing ways.
 
+> **Task runner:** All cross-workspace tasks (`build`, `lint`, `test`, …) are orchestrated by [Turborepo](https://turborepo.com). The root `turbo.json` defines only generic, cross-cutting tasks (`build`, `dev`, `test`, `lint`, `format`, `preview`, `storybook`, `deploy`, …). Workspace-specific tasks — `seo:generate` / `prebuild` (apps), `build:spa` (`apps/website`), `build:storybook` (`apps/storybook`), `build:ts` / `build:wasm` / `build:wasm:clean` (`packages/hunspell`), and `i18n:extract` (`scripts/`) — live in per-workspace `turbo.json` files that extend the root via `"extends": ["//"]`. Turbo handles topological ordering (`^build`), parallelism, and local caching under `.turbo/` and each workspace's `.turbo/` directory.
+
 ```bash
 # Always select the correct Node version first (uses .nvmrc)
 nvm use
 
-# Install all workspace dependencies
+# Install all workspace dependencies (pnpm manages the workspace; turbo runs the tasks)
 pnpm install
 
 # Run the Storybook development server (port 6006)
-pnpm --filter @mission-platform/storybook storybook
+turbo run storybook --filter=@mission-platform/storybook
 
 # Run the My Care Notes dev server
-pnpm --filter @mission-platform/my-care-notes dev
+turbo run dev --filter=@mission-platform/my-care-notes
 
 # Build all apps
-pnpm --filter "./apps/**" build
+turbo run build --filter="./apps/*"
 
 # Build all shared tooling configs
-pnpm --filter "./configs/**" build
+turbo run build --filter="./configs/*"
 
 # Build all packages
-pnpm --filter "./packages/**" build
+turbo run build --filter="./packages/*"
 
-# Run tests across all workspaces
-pnpm --filter "./apps/**" test
-pnpm --filter "./packages/**" test
-pnpm --filter "./configs/**" test
+# Build everything, in topological order, with caching
+turbo run build
 
-# Deploy My Care Notes
-pnpm --filter @mission-platform/my-care-notes deploy:staging
-pnpm --filter @mission-platform/my-care-notes deploy:prod
+# Run tests across all workspaces (turbo handles ordering and caching)
+turbo run test
+
+# Run only the tasks affected by your changes (compared against the default branch)
+turbo run build test lint --affected
+
+# Deploy My Care Notes (wrangler scripts on the root workspace)
+pnpm deploy:my-care-notes
 
 # Release packages with Changesets
 pnpm changeset          # add a changeset describing the change (required for any
@@ -288,6 +294,16 @@ feat(api)!: drop support for Vue 2
 
 BREAKING CHANGE: Vue 2 is no longer supported; upgrade to Vue 3.5+.
 ```
+
+### Local enforcement (pre-commit hook)
+
+Commit messages are validated **locally** as well as in CI, so non-conforming commits are rejected before they are created:
+
+- A [Husky](https://typicode.github.io/husky/) `commit-msg` hook (`.husky/commit-msg`) runs [commitlint](https://commitlint.js.org) on every `git commit`.
+- The hook is installed automatically by the root `prepare` script (`husky`) whenever you run `pnpm install`, so no manual setup is required.
+- The rules live in the root `commitlint.config.js`. It extends `@commitlint/config-conventional` and is tuned to match this repo's convention: the allowed `type`s above, a lowercase-leading description with no trailing period, lowercase scopes, and a 72-character subject limit. The `Conventional Commits` GitHub workflow lints PR commits with the same `commitlint.config.js` (via `wagoid/commitlint-github-action`), so a single rule source is enforced both locally and in CI.
+- To lint a message manually (e.g. while drafting), use `pnpm commitlint`, for example: `echo "feat(map): add layer toggle" | pnpm commitlint`.
+- Bypassing the hook with `git commit --no-verify` is strongly discouraged — the same checks run in CI and will fail the PR.
 
 ---
 
