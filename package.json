@@ -9,7 +9,7 @@
     "build:icons": "pnpm --filter @mission-platform/icons --parallel build",
     "build:workers": "pnpm --filter @mission-platform/base-spa --parallel build",
     "build:monaco": "pnpm --filter @mission-platform/hunspell --filter @mission-platform/harper --parallel build",
-    "build:packages": "pnpm --filter @mission-platform/components --filter @mission-platform/breakpoints --filter @mission-platform/i18n --filter @mission-platform/map --parallel build",
+    "build:packages": "pnpm --filter @mission-platform/seo  --filter @mission-platform/components --filter @mission-platform/breakpoints --filter @mission-platform/i18n --filter @mission-platform/map --parallel build",
     "build:watch": "pnpm --filter \"./packages/**\" --parallel build:watch",
     "build:dependencies": "pnpm build:tokens && pnpm build:icons && pnpm build:monaco && pnpm build:packages",
     "build:apps": "pnpm --filter @mission-platform/storybook --filter @mission-platform/my-care-notes  --filter @mission-platform/website --parallel build && pnpm --filter @mission-platform/storybook build-storybook",
