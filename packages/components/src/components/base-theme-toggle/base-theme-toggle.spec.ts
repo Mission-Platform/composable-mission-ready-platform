@@ -6,11 +6,11 @@ import BaseThemeToggle from './base-theme-toggle.vue';
 
 describe('BaseThemeToggle', () => {
   beforeEach(() => {
-    document.documentElement.removeAttribute('data-theme');
+    delete document.documentElement.dataset.theme;
   });
 
   afterEach(() => {
-    document.documentElement.removeAttribute('data-theme');
+    delete document.documentElement.dataset.theme;
   });
 
   describe('rendering', () => {
@@ -27,7 +27,7 @@ describe('BaseThemeToggle', () => {
     });
 
     it('reads the current data-theme attribute from <html> on mount', async () => {
-      document.documentElement.setAttribute('data-theme', 'dark');
+      document.documentElement.dataset.theme = 'dark';
       const wrapper = mount(BaseThemeToggle);
       await nextTick();
       expect(wrapper.classes()).toContain('theme-toggle--dark');
@@ -40,14 +40,14 @@ describe('BaseThemeToggle', () => {
     });
 
     it('renders the default label "Light mode" when in light mode', async () => {
-      document.documentElement.setAttribute('data-theme', 'light');
+      document.documentElement.dataset.theme = 'light';
       const wrapper = mount(BaseThemeToggle);
       await nextTick();
       expect(wrapper.find('.theme-toggle__label').text()).toBe('Light mode');
     });
 
     it('renders the default label "Dark mode" when in dark mode', async () => {
-      document.documentElement.setAttribute('data-theme', 'dark');
+      document.documentElement.dataset.theme = 'dark';
       const wrapper = mount(BaseThemeToggle);
       await nextTick();
       expect(wrapper.find('.theme-toggle__label').text()).toBe('Dark mode');
@@ -66,14 +66,14 @@ describe('BaseThemeToggle', () => {
     });
 
     it('falls back to a generated aria-label when no prop is provided (light -> dark)', async () => {
-      document.documentElement.setAttribute('data-theme', 'light');
+      document.documentElement.dataset.theme = 'light';
       const wrapper = mount(BaseThemeToggle);
       await nextTick();
       expect(wrapper.attributes('aria-label')).toBe('Switch to dark theme');
     });
 
     it('falls back to a generated aria-label when no prop is provided (dark -> auto)', async () => {
-      document.documentElement.setAttribute('data-theme', 'dark');
+      document.documentElement.dataset.theme = 'dark';
       const wrapper = mount(BaseThemeToggle);
       await nextTick();
       expect(wrapper.attributes('aria-label')).toBe('Switch to auto theme');
@@ -87,22 +87,22 @@ describe('BaseThemeToggle', () => {
 
   describe('toggle behaviour', () => {
     it('cycles light -> dark -> auto -> light on click', async () => {
-      document.documentElement.setAttribute('data-theme', 'light');
+      document.documentElement.dataset.theme = 'light';
       const wrapper = mount(BaseThemeToggle);
       await nextTick();
 
       await wrapper.trigger('click');
-      expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+      expect(document.documentElement.dataset.theme).toBe('dark');
 
       await wrapper.trigger('click');
-      expect(document.documentElement.getAttribute('data-theme')).toBeNull();
+      expect(document.documentElement.dataset.theme).toBeNull();
 
       await wrapper.trigger('click');
-      expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+      expect(document.documentElement.dataset.theme).toBe('light');
     });
 
     it('emits a change event with the new theme', async () => {
-      document.documentElement.setAttribute('data-theme', 'light');
+      document.documentElement.dataset.theme = 'light';
       const wrapper = mount(BaseThemeToggle);
       await nextTick();
 

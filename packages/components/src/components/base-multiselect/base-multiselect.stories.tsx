@@ -18,7 +18,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: "`BaseMultiselect` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+        component:
+          '`BaseMultiselect` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
       },
     },
   },
