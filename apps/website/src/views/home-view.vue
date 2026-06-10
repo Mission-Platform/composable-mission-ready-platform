@@ -16,6 +16,7 @@
     BaseThemeToggle,
     BaseTypography,
   } from '@mission-platform/components';
+  import { useI18n } from '@mission-platform/i18n';
   import {
     IconDebug,
     IconGlobe,
@@ -25,7 +26,6 @@
     IconPuzzle,
     IconSearch,
   } from '@mission-platform/icons';
-  import { useI18n } from '@mission-platform/i18n';
   import { organizationId, useSeo, webPage, webSiteId } from '@mission-platform/seo';
   import { type Component, computed, onBeforeUnmount, onMounted, ref } from 'vue';
   import { useRouter } from 'vue-router';

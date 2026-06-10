@@ -24,7 +24,7 @@ export async function loadLocaleMessages(i18n: I18n, locale: string): Promise<vo
   if (loaded.has(locale)) return;
   const loader = localeLoaders[locale];
   if (!loader) return;
-  const mod = await loader();
-  i18n.global.setLocaleMessage(locale, mod.default);
+  const module_ = await loader();
+  i18n.global.setLocaleMessage(locale, module_.default);
   loaded.add(locale);
 }
