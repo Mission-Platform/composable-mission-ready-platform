@@ -96,7 +96,6 @@
   }
 
   function cancelRenameTab(): void {
-    // eslint-disable-next-line no-console
     console.log('[my-care-notes] rename dialog close requested', { tabId: renamingTabId.value });
     renamingTabId.value = undefined;
   }
