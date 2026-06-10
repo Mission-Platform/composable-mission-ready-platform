@@ -27,7 +27,7 @@
   } from '@mission-platform/icons';
   import { useI18n } from '@mission-platform/i18n';
   import { organizationId, useSeo, webPage, webSiteId } from '@mission-platform/seo';
-  import { computed, onBeforeUnmount, onMounted, ref, type Component } from 'vue';
+  import { type Component, computed, onBeforeUnmount, onMounted, ref } from 'vue';
   import { useRouter } from 'vue-router';
 
   import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type SupportedLocale } from '../router';
@@ -49,7 +49,7 @@
     answer: string;
   }
 
-  const { t, locale } = useI18n();
+  const { t, locale } = useI18n({ useScope: 'global' });
   const router = useRouter();
 
   // Per-route SEO surface: emit the `WebPage` JSON-LD node for this route,
@@ -221,9 +221,12 @@
         mobile-title="Mission Platform"
       >
         <template #brand>
-          <a
+          <router-link
+            :to="{
+              name: 'home',
+              params: { locale: currentLocale === DEFAULT_LOCALE ? undefined : currentLocale },
+            }"
             class="home__brand"
-            href="#/"
           >
             <BaseAvatar
               src="/favicon.svg"
@@ -238,7 +241,7 @@
             >
               Mission Platform
             </BaseTypography>
-          </a>
+          </router-link>
         </template>
         <BaseNavbarItem
           :active="activeSection === 'features'"
@@ -503,7 +506,7 @@
     </template>
 
     <template #footer>
-      <footer class="home__footer">
+      <div class="home__footer">
         <BaseTypography
           variant="caption"
           color="secondary"
@@ -527,7 +530,7 @@
         >
           {{ t('footer.copyright', { year: new Date().getFullYear() }) }}
         </BaseTypography>
-      </footer>
+      </div>
     </template>
   </BaseApplicationLayout>
 </template>
