@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+  /* eslint-disable vuejs-accessibility/no-static-element-interactions */
   /**
    * `BaseCarousel` — Carousel component for the Mission Platform UI.
    *
