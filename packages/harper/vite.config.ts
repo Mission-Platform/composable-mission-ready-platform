@@ -10,7 +10,7 @@ export default defineLibraryConfig({
   external: ['monaco-editor'],
   overrides: {
     build: {
-      rollupOptions: {
+      rolldownOptions: {
         output: {
           preserveModules: false,
         },
