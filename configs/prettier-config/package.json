@@ -19,7 +19,6 @@
     "prettier": ">=3.0.0"
   },
   "devDependencies": {
-    "@mission-platform/eslint-config": "workspace:*",
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",
     "typescript": "catalog:typescript"
