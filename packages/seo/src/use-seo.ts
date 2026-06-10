@@ -26,11 +26,11 @@ let ssrJsonLdStripped = false;
 function stripSsrJsonLdOnce(): void {
   if (ssrJsonLdStripped) return;
   ssrJsonLdStripped = true;
-  const doc = (
+  const document = (
     globalThis as { document?: { head: { querySelectorAll: (s: string) => Iterable<{ remove: () => void }> } } }
   ).document;
-  if (!doc) return;
-  const nodes = doc.head.querySelectorAll('script[type="application/ld+json"]');
+  if (!document) return;
+  const nodes = document.head.querySelectorAll('script[type="application/ld+json"]');
   for (const node of nodes) node.remove();
 }
 
