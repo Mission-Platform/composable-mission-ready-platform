@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/breakpoints",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "Responsive breakpoint utilities, composables, and Vue components for Mission Platform",
   "type": "module",
   "sideEffects": [

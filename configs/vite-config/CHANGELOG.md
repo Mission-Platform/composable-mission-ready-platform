@@ -1,5 +1,27 @@
 # @mission-platform/vite-config
 
+## 0.3.0
+
+### Minor Changes
+
+- f0a0e11: emit code-split, tree-shakeable library builds
+
+  `defineLibraryConfig` now preserves the source module graph (one output file per
+  module) and externalises each package's own `dependencies`/`peerDependencies` by
+  default, so consumers get first-class tree shaking and code splitting. Packages
+  that ship a single self-contained artifact (workers, WASM entries, the flat token
+  bundle) opt out via the new `preserveModules: false` option. The main entry of
+  each preserved-module package is now emitted as `dist/index.js`.
+
+### Patch Changes
+
+- c09a726: reduce cyclomatic complexity of `defineLibraryConfig`
+
+  Extract the entry-resolution and Rollup `output` branching into the
+  `resolveLibraryEntry` and `buildLibraryOutput` helpers so the main
+  `defineLibraryConfig` function has fewer decision points. Behaviour is
+  unchanged.
+
 ## 0.2.0
 
 ### Minor Changes

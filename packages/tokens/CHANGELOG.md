@@ -1,5 +1,33 @@
 # @mission-platform/tokens
 
+## 0.3.0
+
+### Minor Changes
+
+- a6ac78b: unify component variants on `primary`, `secondary`, `tertiary`, `default`, `success`, `warning`, `information`, `error` & `critical`
+
+  All semantic-color components (`BaseButton`, `BaseBadge`, `BaseTag`, `BaseSpinner`,
+  `BaseProgressBar`, `BaseMenuItem`, `BaseNavbarItem`) now share one canonical
+  `variant` set. **Breaking:** the old per-component values were renamed —
+  `danger` → `error`, `info` → `information`, `neutral` → `default`, and the button's
+  `ghost` → `tertiary`. `default` keeps the neutral treatment, `tertiary` keeps the
+  ghost/transparent treatment, and `information` keeps the info treatment.
+
+  `@mission-platform/tokens` adds the backing semantic CSS-variable families
+  (`secondary`, `tertiary`, `default`, `information`, `critical`) for both the light
+  and dark themes, plus a new `critical` primitive colour scale.
+
+### Patch Changes
+
+- f0a0e11: emit code-split, tree-shakeable library builds
+
+  `defineLibraryConfig` now preserves the source module graph (one output file per
+  module) and externalises each package's own `dependencies`/`peerDependencies` by
+  default, so consumers get first-class tree shaking and code splitting. Packages
+  that ship a single self-contained artifact (workers, WASM entries, the flat token
+  bundle) opt out via the new `preserveModules: false` option. The main entry of
+  each preserved-module package is now emitted as `dist/index.js`.
+
 ## 0.2.0
 
 ### Minor Changes
