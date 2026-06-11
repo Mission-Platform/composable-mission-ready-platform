@@ -1,5 +1,11 @@
 # @mission-platform/website
 
+## 0.0.2
+
+### Patch Changes
+
+- 6f1af39: add per-app wrangler config with production and staging environments
+
 ## 0.0.1
 
 ### Patch Changes
