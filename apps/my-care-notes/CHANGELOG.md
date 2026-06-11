@@ -1,5 +1,11 @@
 # @mission-platform/my-care-notes
 
+## 0.0.8
+
+### Patch Changes
+
+- 6f1af39: add per-app wrangler config with production and staging environments
+
 ## 0.0.7
 
 ### Patch Changes
