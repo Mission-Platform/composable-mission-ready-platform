@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   /**
-   * `BaseFormBuilderActions` — Form builder actions component for the Mission Platform UI.
+   * `BaseSchemaFormActions` — Schema form actions component for the Mission Platform UI.
    *
    * See the props, emits, and slots tables below (auto-generated from
    * the component's TypeScript declarations) for the full public API,
@@ -13,16 +13,16 @@
 </script>
 
 <template>
-  <div class="form-builder__actions">
+  <div class="schema-form__actions">
     <slot>
       <button
-        class="form-builder__btn form-builder__btn--reset"
+        class="schema-form__btn schema-form__btn--reset"
         type="reset"
       >
         {{ resetLabel }}
       </button>
       <button
-        class="form-builder__btn form-builder__btn--submit"
+        class="schema-form__btn schema-form__btn--submit"
         type="submit"
       >
         {{ submitLabel }}
@@ -34,13 +34,13 @@
 <style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
-  .form-builder__actions {
+  .schema-form__actions {
     display: flex;
     justify-content: flex-end;
     gap: var(--mp-spacing-2);
   }
 
-  .form-builder__btn {
+  .schema-form__btn {
     @include mp.mp-font('body-md', $weight: 'medium');
 
     padding: var(--mp-spacing-2) var(--mp-spacing-4);

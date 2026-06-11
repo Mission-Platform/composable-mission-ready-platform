@@ -17,6 +17,8 @@
     id: string;
     title: string;
     description?: string;
+    /** When `true`, the step is rendered in an errored (highlighted) state. */
+    error?: boolean;
   }
 
   const props = withDefaults(

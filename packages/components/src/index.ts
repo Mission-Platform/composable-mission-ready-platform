@@ -43,16 +43,32 @@ export type { SwitchSize } from './components/base-switch';
 export { default as BaseMarkdownInput } from './components/base-markdown-input';
 export type { MarkdownInputSize, MarkdownInputTab } from './components/base-markdown-input';
 
-export { default as BaseFormBuilder, useFormSchema } from './components/base-form-builder';
+export {
+  default as BaseSchemaForm,
+  useSchemaForm,
+  jsonSchemaToFields,
+  jsonSchemaDefaults,
+  createFormValidator,
+} from './components/base-schema-form';
 export type {
-  FormSchema,
+  FormJsonSchema,
+  SchemaFormDefinition,
+  SchemaFormValidationMode,
+  SchemaFormStep,
+  JsonSchemaProperty,
+  JsonSchemaType,
+  JsonSchemaStringFormat,
+  FieldUiOptions,
   FormValues,
   FormFieldSchema,
   FormFieldType,
   FormErrors,
-} from './components/base-form-builder';
-export { default as BaseFormBuilderField } from './components/base-form-builder/base-form-builder-field.vue';
-export { default as BaseFormBuilderActions } from './components/base-form-builder/base-form-builder-actions.vue';
+  FormValidator,
+  SchemaFormTranslate,
+  SchemaObject,
+} from './components/base-schema-form';
+export { default as BaseSchemaFormField } from './components/base-schema-form/base-schema-form-field.vue';
+export { default as BaseSchemaFormActions } from './components/base-schema-form/base-schema-form-actions.vue';
 
 export { default as BaseTag } from './components/base-tag';
 export type { TagSize, TagVariant } from './components/base-tag';

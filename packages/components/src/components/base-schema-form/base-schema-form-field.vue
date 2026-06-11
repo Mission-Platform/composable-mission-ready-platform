@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   /**
-   * `BaseFormBuilderField` — Form builder field component for the Mission Platform UI.
+   * `BaseSchemaFormField` — Schema form field component for the Mission Platform UI.
    *
    * See the props, emits, and slots tables below (auto-generated from
    * the component's TypeScript declarations) for the full public API,
@@ -44,7 +44,7 @@
     :placeholder="field.placeholder"
     :required="field.required"
     :type="(field.type as 'text' | 'email' | 'password' | 'number' | 'url' | 'tel') ?? 'text'"
-    class="form-builder__field"
+    class="schema-form__field"
     @update:model-value="onUpdate"
   />
 
@@ -59,7 +59,7 @@
     :placeholder="field.placeholder"
     :required="field.required"
     :rows="field.rows"
-    class="form-builder__field"
+    class="schema-form__field"
     @update:model-value="onUpdate"
   />
 
@@ -74,7 +74,7 @@
     :placeholder="field.placeholder"
     :required="field.required"
     :rows="field.rows"
-    class="form-builder__field"
+    class="schema-form__field"
     @update:model-value="onUpdate"
   />
 
@@ -87,7 +87,7 @@
     :label="field.label"
     :model-value="(value as boolean) ?? false"
     :required="field.required"
-    class="form-builder__field"
+    class="schema-form__field"
     @update:model-value="onUpdate"
   />
 
@@ -99,7 +99,7 @@
     :hint="field.hint"
     :label="field.label"
     :model-value="(value as boolean) ?? false"
-    class="form-builder__field"
+    class="schema-form__field"
     @update:model-value="onUpdate"
   />
 
@@ -114,7 +114,7 @@
     :options="field.options ?? []"
     :placeholder="field.placeholder"
     :required="field.required"
-    class="form-builder__field"
+    class="schema-form__field"
     @update:model-value="onUpdate"
   />
 
@@ -128,7 +128,7 @@
     :model-value="(value as string | number) ?? ''"
     :options="field.options ?? []"
     :required="field.required"
-    class="form-builder__field"
+    class="schema-form__field"
     @update:model-value="onUpdate"
   />
 </template>

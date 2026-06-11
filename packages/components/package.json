@@ -60,7 +60,8 @@
     "monaco-editor": "catalog:",
     "nanoid": "catalog:",
     "vue-i18n": "catalog:vue",
-    "zod": "catalog:"
+    "ajv": "catalog:",
+    "ajv-formats": "catalog:"
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",

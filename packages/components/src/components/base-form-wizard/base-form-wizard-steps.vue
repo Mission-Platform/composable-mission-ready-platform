@@ -39,9 +39,14 @@
         v-for="(step, index) in steps"
         :key="step.id"
         :aria-current="index === currentIndex ? 'step' : undefined"
-        :class="['base-form-wizard__step', `base-form-wizard__step--${stepStatus(index)}`]"
+        :class="[
+          'base-form-wizard__step',
+          `base-form-wizard__step--${stepStatus(index)}`,
+          { 'base-form-wizard__step--error': step.error },
+        ]"
       >
         <button
+          :aria-invalid="step.error ? 'true' : undefined"
           :aria-label="`Step ${index + 1}: ${step.title}`"
           :disabled="linear && index > currentIndex + 1"
           class="base-form-wizard__step-btn"
@@ -50,7 +55,7 @@
         >
           <span class="base-form-wizard__step-circle">
             <IconCheck
-              v-if="stepStatus(index) === 'complete'"
+              v-if="stepStatus(index) === 'complete' && !step.error"
               size="xs"
             />
             <BaseTypography
@@ -176,6 +181,18 @@
 
   .base-form-wizard__step--upcoming .base-form-wizard__step-title {
     color: var(--mp-color-text-tertiary);
+  }
+
+  // Errored steps are highlighted regardless of their complete/current/upcoming
+  // status, so these rules intentionally win over the status rules above.
+  .base-form-wizard__step--error .base-form-wizard__step-circle {
+    background-color: var(--mp-color-bg-surface);
+    border-color: var(--mp-color-danger-default);
+    color: var(--mp-color-danger-text);
+  }
+
+  .base-form-wizard__step--error .base-form-wizard__step-title {
+    color: var(--mp-color-danger-text);
   }
 
   .base-form-wizard__connector {
