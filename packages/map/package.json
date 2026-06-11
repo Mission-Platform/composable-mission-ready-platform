@@ -11,11 +11,11 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/map.js"
+      "import": "./dist/index.js"
     },
     "./styles": "./node_modules/maplibre-gl/dist/maplibre-gl.css"
   },
-  "main": "./dist/map.js",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist"

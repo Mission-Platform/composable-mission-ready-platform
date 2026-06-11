@@ -11,12 +11,12 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/breakpoints.js"
+      "import": "./dist/index.js"
     },
     "./scss/breakpoints": "./src/scss/breakpoints.scss",
     "./scss/mixins": "./src/scss/_breakpoints.scss"
   },
-  "main": "./dist/breakpoints.js",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist",

@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import path from 'node:path';
 
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
@@ -19,6 +20,42 @@ export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>> = {
   vue: 'Vue',
 };
 
+/**
+ * Read the `dependencies` and `peerDependencies` declared in the package.json
+ * located at `rootDirectory`. Used to keep a library's runtime dependencies out of
+ * its own bundle so consumers can dedupe and tree-shake them.
+ */
+export function readPackageDependencyNames(rootDirectory: string): string[] {
+  try {
+    const manifest = JSON.parse(fs.readFileSync(path.resolve(rootDirectory, 'package.json'), 'utf8')) as {
+      dependencies?: Record<string, string>;
+      peerDependencies?: Record<string, string>;
+    };
+    return [...Object.keys(manifest.dependencies ?? {}), ...Object.keys(manifest.peerDependencies ?? {})];
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Build a Rollup/Rolldown `external` predicate that treats every name in
+ * `names` (and any of their subpath imports, e.g. `pkg/sub`) as external.
+ */
+export function createExternalMatcher(names: readonly string[]): (id: string) => boolean {
+  const exact = new Set(names);
+  return (id: string): boolean => {
+    if (exact.has(id)) {
+      return true;
+    }
+    for (const name of exact) {
+      if (id.startsWith(`${name}/`)) {
+        return true;
+      }
+    }
+    return false;
+  };
+}
+
 export interface LibraryConfigOptions {
   /** Absolute path of the consuming workspace (typically `__dirname`). */
   rootDir: string;
@@ -35,6 +72,34 @@ export interface LibraryConfigOptions {
   external?: readonly string[];
   /** Extra Rollup globals to merge with {@link DEFAULT_LIBRARY_GLOBALS}. */
   globals?: Readonly<Record<string, string>>;
+  /**
+   * Treat the package's own `dependencies` and `peerDependencies` as external
+   * instead of bundling them into the output. This keeps the emitted artifact
+   * limited to the package's own modules so consumers dedupe and tree-shake
+   * shared dependencies themselves.
+   *
+   * Defaults to the value of {@link preserveModules}: pure library packages
+   * externalise their dependencies, while self-contained bundles (workers,
+   * WASM entries) keep inlining them.
+   */
+  autoExternalDeps?: boolean;
+  /**
+   * Emit one output file per source module (mirroring the `src/` tree) instead
+   * of a single bundled file. This keeps the module graph intact so consumers
+   * get first-class tree shaking and code splitting (each module is its own
+   * chunk and can be lazily loaded).
+   *
+   * Defaults to `true`. Set to `false` for packages that must ship a single
+   * self-contained artifact (e.g. web workers, WASM-backed entries, or a flat
+   * token bundle).
+   */
+  preserveModules?: boolean;
+  /**
+   * Directory (relative to `rootDir`) stripped from emitted module paths when
+   * {@link preserveModules} is enabled. Defaults to `src`, so `src/index.ts`
+   * becomes `dist/index.js`.
+   */
+  preserveModulesRoot?: string;
   /** Override or extend the generated config. */
   overrides?: UserConfig;
 }
@@ -43,6 +108,11 @@ export interface LibraryConfigOptions {
  * Build a Vite config tailored to the Mission Platform Vue library packages:
  * Vue + vue-i18n plugins, the shared PostCSS pipeline, ESM-only lib output,
  * single CSS bundle, and sensible peer-dependency externals.
+ *
+ * By default the build preserves the source module graph
+ * ({@link LibraryConfigOptions.preserveModules}), emitting one file per module
+ * so downstream apps benefit from tree shaking and code splitting out of the
+ * box. Packages that need a single bundled artifact can opt out per call.
  */
 export function defineLibraryConfig(options: LibraryConfigOptions): UserConfig {
   const {
@@ -52,8 +122,17 @@ export function defineLibraryConfig(options: LibraryConfigOptions): UserConfig {
     name = 'MissionPlatform',
     external = [],
     globals = {},
+    preserveModules = true,
+    preserveModulesRoot = 'src',
+    autoExternalDeps = preserveModules,
     overrides,
   } = options;
+
+  const externalNames = [
+    ...DEFAULT_LIBRARY_EXTERNALS,
+    ...external,
+    ...(autoExternalDeps ? readPackageDependencyNames(rootDir) : []),
+  ];
 
   const resolvedEntry =
     typeof entry === 'string'
@@ -72,10 +151,18 @@ export function defineLibraryConfig(options: LibraryConfigOptions): UserConfig {
         formats: ['es'],
         ...(fileName && typeof entry === 'string' ? { fileName } : {}),
       },
-      rollupOptions: {
-        external: [...DEFAULT_LIBRARY_EXTERNALS, ...external],
+      rolldownOptions: {
+        external: createExternalMatcher(externalNames),
         output: {
           globals: { ...DEFAULT_LIBRARY_GLOBALS, ...globals },
+          ...(preserveModules
+            ? {
+                preserveModules: true,
+                preserveModulesRoot: path.resolve(rootDir, preserveModulesRoot),
+                entryFileNames: '[name].js',
+                chunkFileNames: '[name].js',
+              }
+            : {}),
         },
       },
       cssCodeSplit: false,
