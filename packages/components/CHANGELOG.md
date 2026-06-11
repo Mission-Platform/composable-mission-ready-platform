@@ -1,5 +1,56 @@
 # @mission-platform/components
 
+## 2.0.0
+
+### Major Changes
+
+- a6ac78b: unify component variants on `primary`, `secondary`, `tertiary`, `default`, `success`, `warning`, `information`, `error` & `critical`
+
+  All semantic-color components (`BaseButton`, `BaseBadge`, `BaseTag`, `BaseSpinner`,
+  `BaseProgressBar`, `BaseMenuItem`, `BaseNavbarItem`) now share one canonical
+  `variant` set. **Breaking:** the old per-component values were renamed —
+  `danger` → `error`, `info` → `information`, `neutral` → `default`, and the button's
+  `ghost` → `tertiary`. `default` keeps the neutral treatment, `tertiary` keeps the
+  ghost/transparent treatment, and `information` keeps the info treatment.
+
+  `@mission-platform/tokens` adds the backing semantic CSS-variable families
+  (`secondary`, `tertiary`, `default`, `information`, `critical`) for both the light
+  and dark themes, plus a new `critical` primitive colour scale.
+
+### Minor Changes
+
+- a6ac78b: unify all component `size` props on the canonical `2xs`, `xs`, `sm`, `md`, `lg`, `xl` & `2xl` scale
+
+  Every `size`-bearing component (`BaseButton`, `BaseBadge`, `BaseTag`, `BaseSpinner`,
+  `BaseProgressBar`, `BaseAvatar`, `BaseSwitch`, `BaseInput`, `BaseTextarea`, `BaseSelect`,
+  `BaseMultiselect`, `BaseSearchInput`, `BaseDateInput`, `BaseTimeInput`, `BaseDateRangeInput`,
+  `BaseTimeRangeInput`, `BaseDateTimeRangeInput`, `BaseColorInput`, `BaseCalendar`, `BaseList`,
+  `BaseStatusIcon`, `BaseSidebar`, `BaseModal`) now accepts the full seven-step scale
+  `2xs | xs | sm | md | lg | xl | 2xl`, with `md` remaining the default. The component SCSS
+  is wired to the shared `--mp-size-*` tokens so every step is consistent across the library.
+  `BaseModal` additionally keeps its special `full` (near-fullscreen) value. The change is
+  additive for existing values (`sm`/`md`/`lg`/`xs`/`xl`/`full` still work), though the rendered
+  metrics of some steps are refined to match the token scale.
+
+  `@mission-platform/icons` `useIconSize` (and every icon's numeric `size` prop) now emits the
+  value in `rem` instead of `px`.
+
+  BREAKING CHANGE: a numeric icon `size` is now interpreted as pixels and converted to `rem`
+  (e.g. `size={32}` → `2rem` instead of `32px`, assuming a 16px root). Pass a named token
+  (`md`, `lg`, …) or an explicit unit string if you need different behaviour.
+
+### Patch Changes
+
+- Updated dependencies [f0a0e11]
+- Updated dependencies [a6ac78b]
+- Updated dependencies [a6ac78b]
+  - @mission-platform/breakpoints@3.0.0
+  - @mission-platform/icons@1.0.0
+  - @mission-platform/i18n@0.4.0
+  - @mission-platform/harper@0.1.4
+  - @mission-platform/hunspell@0.3.1
+  - @mission-platform/tokens@0.3.0
+
 ## 1.0.0
 
 ### Major Changes

@@ -1,5 +1,28 @@
 # @mission-platform/map
 
+## 0.2.0
+
+### Minor Changes
+
+- f0a0e11: emit code-split, tree-shakeable library builds
+
+  `defineLibraryConfig` now preserves the source module graph (one output file per
+  module) and externalises each package's own `dependencies`/`peerDependencies` by
+  default, so consumers get first-class tree shaking and code splitting. Packages
+  that ship a single self-contained artifact (workers, WASM entries, the flat token
+  bundle) opt out via the new `preserveModules: false` option. The main entry of
+  each preserved-module package is now emitted as `dist/index.js`.
+
+### Patch Changes
+
+- Updated dependencies [f0a0e11]
+- Updated dependencies [a6ac78b]
+- Updated dependencies [a6ac78b]
+  - @mission-platform/icons@1.0.0
+  - @mission-platform/i18n@0.4.0
+  - @mission-platform/tokens@0.3.0
+  - @mission-platform/components@2.0.0
+
 ## 0.1.6
 
 ### Patch Changes
