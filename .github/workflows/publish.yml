@@ -23,9 +23,12 @@ jobs:
       url: https://github.com/${{ github.repository }}/pkgs/container
 
     permissions:
-      contents: write       # needed for Changesets to create/update the release PR
-      packages: write       # needed to publish to GitHub Packages
-      pull-requests: write  # needed for Changesets to open the version PR
+      contents: write          # needed for Changesets to create/update the release PR
+      packages: write          # needed to publish to GitHub Packages
+      pull-requests: write     # needed for Changesets to open the version PR
+      id-token: write          # mint the OIDC token used to request a Sigstore signing certificate
+      attestations: write      # persist the generated build provenance attestation
+      artifact-metadata: write # create the artifact storage record for the attestation
 
     steps:
       - name: Checkout repository
@@ -76,6 +79,7 @@ jobs:
       # merged, the same workflow runs again and publishes the release.
       # ──────────────────────────────────────────────────────────────
       - name: Publish (production — main)
+        id: changesets
         if: github.ref == 'refs/heads/main'
         uses: changesets/action@v1
         with:
@@ -104,3 +108,47 @@ jobs:
         run: pnpm changeset publish --tag dev
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ──────────────────────────────────────────────────────────────
+      # ATTESTATION — build provenance for the published packages
+      # Re-pack each publishable package into the exact tarball that was
+      # published (pnpm pack mirrors pnpm publish), then generate a SLSA
+      # build provenance attestation for those tarballs with
+      # `actions/attest`.  This lets consumers cryptographically verify
+      # that a package tarball was produced by this workflow, from this
+      # repository, at a specific commit.  Runs only when packages were
+      # actually published (every develop run, and main runs where the
+      # Changesets release PR was merged).
+      # ──────────────────────────────────────────────────────────────
+      - name: Pack published packages for attestation
+        if: github.ref == 'refs/heads/develop' || (github.ref == 'refs/heads/main' && steps.changesets.outputs.published == 'true')
+        run: |
+          mkdir -p "${{ runner.temp }}/attestations"
+          pnpm --filter="./packages/**" exec \
+            pnpm pack --pack-destination "${{ runner.temp }}/attestations"
+
+      - name: Attest package build provenance
+        if: github.ref == 'refs/heads/develop' || (github.ref == 'refs/heads/main' && steps.changesets.outputs.published == 'true')
+        uses: actions/attest@v4
+        with:
+          subject-path: "${{ runner.temp }}/attestations/*.tgz"
+
+      # ──────────────────────────────────────────────────────────────
+      # PRODUCTION DEPLOY — main branch
+      # Deploy the apps to the Cloudflare production environment, but ONLY
+      # when merging the Changesets release PR actually published a new
+      # version (`steps.changesets.outputs.published == 'true'`).  Ordinary
+      # pushes to `main` that don't publish a release (e.g. the release PR
+      # simply being (re)generated) must not trigger a production deploy.
+      # `turbo` builds the apps + base-spa worker on demand via the per-app
+      # `deploy` task (`wrangler deploy --env production`).
+      # ──────────────────────────────────────────────────────────────
+      - name: Deploy to production
+        if: github.ref == 'refs/heads/main' && steps.changesets.outputs.published == 'true'
+        run: >-
+          pnpm exec turbo run deploy
+          --filter=@mission-platform/website
+          --filter=@mission-platform/my-care-notes
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
