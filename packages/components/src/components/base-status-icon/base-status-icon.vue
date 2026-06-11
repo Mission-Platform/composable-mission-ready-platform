@@ -10,7 +10,7 @@
   import { computed } from 'vue';
 
   export type StatusLevel = 'success' | 'warning' | 'error' | 'info' | 'neutral';
-  export type StatusIconSize = 'sm' | 'md' | 'lg';
+  export type StatusIconSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
   const props = withDefaults(
     defineProps<{
@@ -25,7 +25,7 @@
     },
   );
 
-  const iconSize = computed(() => ({ sm: 'sm', md: 'md', lg: 'lg' })[props.size]);
+  const iconSize = computed(() => props.size);
 </script>
 
 <template>

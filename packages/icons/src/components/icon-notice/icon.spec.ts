@@ -19,8 +19,8 @@ describe('IconNotice', () => {
     expect(wrapper.find('svg').attributes('width')).toContain('mp-size-icon-lg');
   });
 
-  it('applies numeric size as px', () => {
+  it('applies numeric size as rem', () => {
     const wrapper = mount(IconNotice, { props: { size: 32 } });
-    expect(wrapper.find('svg').attributes('width')).toBe('32px');
+    expect(wrapper.find('svg').attributes('width')).toBe('2rem');
   });
 });

@@ -22,9 +22,9 @@ describe('BaseMenuItem', () => {
     expect(wrapper.find('li').classes()).toContain('base-menu-item--active');
   });
 
-  it('applies danger variant class', () => {
-    const wrapper = mountWithI18n(BaseMenuItem, { props: { label: 'Delete', variant: 'danger' } });
-    expect(wrapper.find('li').classes()).toContain('base-menu-item--danger');
+  it('applies error variant class', () => {
+    const wrapper = mountWithI18n(BaseMenuItem, { props: { label: 'Delete', variant: 'error' } });
+    expect(wrapper.find('li').classes()).toContain('base-menu-item--error');
   });
 
   it('applies disabled state', () => {

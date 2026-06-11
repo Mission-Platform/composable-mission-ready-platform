@@ -23,7 +23,17 @@ const meta = {
     disabled: { control: 'boolean' },
     variant: {
       control: 'select',
-      options: ['default', 'primary'],
+      options: [
+        'default',
+        'primary',
+        'secondary',
+        'tertiary',
+        'success',
+        'warning',
+        'information',
+        'error',
+        'critical',
+      ],
     },
   },
   args: {

@@ -154,7 +154,7 @@
       >
         <!-- Month heading -->
         <BaseButton
-          variant="ghost"
+          variant="tertiary"
           size="sm"
           class="base-scheduler-year-view__month-title"
           @click="emit('month-click', new Date(month.year, month.month, 1))"
@@ -229,7 +229,7 @@
       padding: 0;
       margin-bottom: var(--mp-spacing-1);
 
-      &.base-button--ghost:hover {
+      &.base-button--tertiary:hover {
         background: transparent;
         color: var(--mp-color-primary-default);
         text-decoration: underline;

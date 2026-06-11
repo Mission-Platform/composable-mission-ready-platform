@@ -15,7 +15,7 @@ const meta = {
         component: [
           '`BaseButton` is the foundational interactive element used across Mission Platform apps.',
           '',
-          'It exposes four visual `variant`s (`primary`, `secondary`, `ghost`, `danger`), three `size`s,',
+          'It exposes nine visual `variant`s (`primary`, `secondary`, `tertiary`, `default`, `success`, `warning`, `information`, `error`, `critical`), three `size`s,',
           'and built-in `disabled` and `loading` states. The default slot accepts plain text and/or icons',
           'from `@mission-platform/icons`. Click events are suppressed while the button is disabled or loading,',
           'and the loading spinner exposes a localised `aria-label` via `vue-i18n`.',
@@ -24,8 +24,21 @@ const meta = {
     },
   },
   argTypes: {
-    variant: { control: 'select', options: ['primary', 'secondary', 'ghost', 'danger'] },
-    size: { control: 'select', options: ['sm', 'md', 'lg'] },
+    variant: {
+      control: 'select',
+      options: [
+        'primary',
+        'secondary',
+        'tertiary',
+        'default',
+        'success',
+        'warning',
+        'information',
+        'error',
+        'critical',
+      ],
+    },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     type: { control: 'select', options: ['button', 'submit', 'reset'] },
     disabled: { control: 'boolean' },
     loading: { control: 'boolean' },
@@ -78,22 +91,56 @@ export const Secondary: Story = {
   },
 };
 
-export const Ghost: Story = {
-  args: { variant: 'ghost' },
+export const Tertiary: Story = {
+  args: { variant: 'tertiary' },
   parameters: {
     docs: {
       description: {
-        story: 'Transparent background. Use inside toolbars, menus, or dense surfaces where chrome should recede.',
+        story:
+          'Transparent background (ghost). Use inside toolbars, menus, or dense surfaces where chrome should recede.',
       },
     },
   },
 };
 
-export const Danger: Story = {
-  args: { variant: 'danger' },
+export const Default: Story = {
+  args: { variant: 'default' },
+  parameters: {
+    docs: { description: { story: 'Neutral, intent-free solid fill for generic actions.' } },
+  },
+};
+
+export const Success: Story = {
+  args: { variant: 'success' },
+  parameters: { docs: { description: { story: 'Positive / confirming action.' } } },
+};
+
+export const Warning: Story = {
+  args: { variant: 'warning' },
+  parameters: { docs: { description: { story: 'Cautionary action requiring attention.' } } },
+};
+
+export const Information: Story = {
+  args: { variant: 'information' },
+  parameters: { docs: { description: { story: 'Informational action.' } } },
+};
+
+export const Error: Story = {
+  args: { variant: 'error' },
   parameters: {
     docs: {
       description: { story: 'Destructive action (delete, remove, leave). Pairs with a danger-tinted focus ring.' },
+    },
+  },
+};
+
+export const Critical: Story = {
+  args: { variant: 'critical' },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Most severe / irreversible action — one step beyond `error`. Pairs with a danger-tinted focus ring.',
+      },
     },
   },
 };
@@ -162,10 +209,10 @@ export const WithIconRight: Story = {
   }),
 };
 
-export const DangerWithIcon: Story = {
+export const ErrorWithIcon: Story = {
   parameters: { docs: { description: { story: 'Destructive variant with a leading icon to reinforce intent.' } } },
   render: () => ({
     components: { BaseButton, IconTrash },
-    template: '<BaseButton variant="danger"><IconTrash size="sm" /> Delete</BaseButton>',
+    template: '<BaseButton variant="error"><IconTrash size="sm" /> Delete</BaseButton>',
   }),
 };

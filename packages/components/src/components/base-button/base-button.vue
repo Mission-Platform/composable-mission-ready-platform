@@ -20,9 +20,18 @@
   import { useI18n } from '@mission-platform/i18n';
 
   /** Visual treatment of the button. */
-  export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
+  export type ButtonVariant =
+    | 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'default'
+    | 'success'
+    | 'warning'
+    | 'information'
+    | 'error'
+    | 'critical';
   /** Size token applied to padding and font-size. */
-  export type ButtonSize = 'sm' | 'md' | 'lg';
+  export type ButtonSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
   const props = withDefaults(
     defineProps<{
@@ -118,36 +127,67 @@
       opacity: 0.5;
     }
 
-    /* Sizes */
-    &--sm {
-      padding: var(--mp-spacing-1) var(--mp-spacing-3);
-      font-size: var(--mp-font-size-sm);
-    }
-
-    &--md {
-      padding: var(--mp-spacing-2) var(--mp-spacing-4);
-      font-size: var(--mp-font-size-md);
-    }
-
-    &--lg {
-      padding: var(--mp-spacing-3) var(--mp-spacing-6);
-      font-size: var(--mp-font-size-lg);
+    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+      &--#{$size} {
+        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+        font-size: var(--mp-size-font-#{$size});
+      }
     }
 
     /* Variants */
-    &--primary {
-      background-color: var(--mp-color-primary-default);
+
+    /* Solid fill (high emphasis) for brand / intent treatments. */
+    @mixin solid($family) {
+      background-color: var(--mp-color-#{$family}-default);
       color: var(--mp-color-text-on-primary);
 
       &:hover:not(:disabled) {
-        background-color: var(--mp-color-primary-hover);
+        background-color: var(--mp-color-#{$family}-hover);
       }
 
       &:active:not(:disabled) {
-        background-color: var(--mp-color-primary-active);
+        background-color: var(--mp-color-#{$family}-active, var(--mp-color-#{$family}-hover));
       }
     }
 
+    &--primary {
+      @include solid('primary');
+    }
+
+    &--default {
+      @include solid('default');
+    }
+
+    &--success {
+      @include solid('success');
+    }
+
+    &--warning {
+      @include solid('warning');
+    }
+
+    &--information {
+      @include solid('information');
+    }
+
+    &--error {
+      @include solid('error');
+
+      &:focus-visible {
+        box-shadow: var(--mp-shadow-focus-danger);
+      }
+    }
+
+    &--critical {
+      @include solid('critical');
+
+      &:focus-visible {
+        box-shadow: var(--mp-shadow-focus-danger);
+      }
+    }
+
+    /* Secondary — outlined (medium emphasis). */
     &--secondary {
       background-color: var(--mp-color-bg-surface);
       border-color: var(--mp-color-border-default);
@@ -163,7 +203,8 @@
       }
     }
 
-    &--ghost {
+    /* Tertiary — ghost / transparent (low emphasis). */
+    &--tertiary {
       background-color: transparent;
       color: var(--mp-color-text-primary);
 
@@ -173,19 +214,6 @@
 
       &:active:not(:disabled) {
         background-color: var(--mp-color-bg-sunken);
-      }
-    }
-
-    &--danger {
-      background-color: var(--mp-color-danger-default);
-      color: var(--mp-color-text-on-primary);
-
-      &:focus-visible {
-        box-shadow: var(--mp-shadow-focus-danger);
-      }
-
-      &:hover:not(:disabled) {
-        background-color: var(--mp-color-danger-hover);
       }
     }
 

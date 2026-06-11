@@ -325,10 +325,10 @@ export const InContext: Story = {
           Status:
         </BaseTypography>
         <BaseBadge variant="success">Stable</BaseBadge>
-        <BaseBadge variant="info">v2.0</BaseBadge>
+        <BaseBadge variant="information">v2.0</BaseBadge>
         <BaseBadge variant="warning">Beta</BaseBadge>
-        <BaseBadge variant="danger">Deprecated</BaseBadge>
-        <BaseBadge variant="neutral">Neutral</BaseBadge>
+        <BaseBadge variant="error">Deprecated</BaseBadge>
+        <BaseBadge variant="default">Neutral</BaseBadge>
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>

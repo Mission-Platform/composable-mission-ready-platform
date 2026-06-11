@@ -9,7 +9,7 @@
   import BaseTypography from '../base-typography/base-typography.vue';
 
   export type ListVariant = 'unordered' | 'ordered' | 'description' | 'none';
-  export type ListSize = 'sm' | 'md' | 'lg';
+  export type ListSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
   export interface ListItem {
     label?: string;
@@ -187,34 +187,16 @@
       padding: 0;
     }
 
-    /* Sizes */
-    &--sm {
-      font-size: var(--mp-font-size-sm);
+    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+      &--#{$size} {
+        font-size: var(--mp-size-font-#{$size});
 
-      .base-list__item,
-      .base-list__term,
-      .base-list__detail {
-        padding: var(--mp-spacing-1) 0;
-      }
-    }
-
-    &--md {
-      font-size: var(--mp-font-size-md);
-
-      .base-list__item,
-      .base-list__term,
-      .base-list__detail {
-        padding: var(--mp-spacing-2) 0;
-      }
-    }
-
-    &--lg {
-      font-size: var(--mp-font-size-lg);
-
-      .base-list__item,
-      .base-list__term,
-      .base-list__detail {
-        padding: var(--mp-spacing-3) 0;
+        .base-list__item,
+        .base-list__term,
+        .base-list__detail {
+          padding: var(--mp-size-pad-block-#{$size}) 0;
+        }
       }
     }
 

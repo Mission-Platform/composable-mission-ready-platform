@@ -16,7 +16,7 @@ const meta = {
   },
   argTypes: {
     status: { control: 'select', options: ['success', 'warning', 'error', 'info', 'neutral'] },
-    size: { control: 'select', options: ['sm', 'md', 'lg'] },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
   },
   args: {
     status: 'success',

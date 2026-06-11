@@ -252,7 +252,7 @@
           <BaseButton
             v-for="ev in cell.events.slice(0, MAX_VISIBLE)"
             :key="ev.uid"
-            variant="ghost"
+            variant="tertiary"
             size="sm"
             class="base-scheduler-month-view__event-pill"
             :style="{
@@ -268,7 +268,7 @@
           <!-- Overflow -->
           <BaseButton
             v-if="cell.events.length > MAX_VISIBLE"
-            variant="ghost"
+            variant="tertiary"
             size="sm"
             class="base-scheduler-month-view__overflow"
             @click.stop="emit('drill-down', cell.date)"
@@ -402,8 +402,8 @@
       overflow: hidden;
       text-overflow: ellipsis;
 
-      // Inline style sets backgroundColor and color; override BaseButton ghost defaults
-      &.base-button--ghost {
+      // Inline style sets backgroundColor and color; override BaseButton tertiary defaults
+      &.base-button--tertiary {
         &:hover {
           filter: brightness(0.9);
           background: inherit; // keep the event colour on hover
@@ -419,7 +419,7 @@
       padding: 0 var(--mp-spacing-1);
       color: var(--mp-color-text-secondary);
 
-      &.base-button--ghost:hover {
+      &.base-button--tertiary:hover {
         background: transparent;
         color: var(--mp-color-text-primary);
       }

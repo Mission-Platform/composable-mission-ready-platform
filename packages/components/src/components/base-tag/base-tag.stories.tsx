@@ -15,14 +15,27 @@ const meta = {
     },
   },
   argTypes: {
-    size: { control: 'select', options: ['sm', 'md'] },
-    variant: { control: 'select', options: ['neutral', 'primary'] },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    variant: {
+      control: 'select',
+      options: [
+        'primary',
+        'secondary',
+        'tertiary',
+        'default',
+        'success',
+        'warning',
+        'information',
+        'error',
+        'critical',
+      ],
+    },
     disabled: { control: 'boolean' },
   },
   args: {
     label: 'Vue.js',
     size: 'md',
-    variant: 'neutral',
+    variant: 'default',
     disabled: false,
   },
   render: (arguments_) => ({
@@ -40,6 +53,20 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 export const Primary: Story = { args: { variant: 'primary' } };
+
+export const Secondary: Story = { args: { variant: 'secondary' } };
+
+export const Tertiary: Story = { args: { variant: 'tertiary' } };
+
+export const Success: Story = { args: { variant: 'success' } };
+
+export const Warning: Story = { args: { variant: 'warning' } };
+
+export const Information: Story = { args: { variant: 'information' } };
+
+export const Error: Story = { args: { variant: 'error' } };
+
+export const Critical: Story = { args: { variant: 'critical' } };
 
 export const Small: Story = { args: { size: 'sm' } };
 

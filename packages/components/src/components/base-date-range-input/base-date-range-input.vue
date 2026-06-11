@@ -14,7 +14,7 @@
   import { useZIndex } from '../../composables/use-z-index';
   import BaseTypography from '../base-typography/base-typography.vue';
 
-  export type DateRangeInputSize = 'sm' | 'md' | 'lg';
+  export type DateRangeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
   export interface DateRange {
     start: string;
@@ -525,28 +525,14 @@
       flex-shrink: 0;
     }
 
-    /* Sizes */
-    &--sm .base-date-range__trigger {
-      padding: var(--mp-spacing-1) var(--mp-spacing-2);
+    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+      &--#{$size} .base-date-range__trigger {
+        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
 
-      .base-date-range__value {
-        font-size: var(--mp-font-size-sm);
-      }
-    }
-
-    &--md .base-date-range__trigger {
-      padding: var(--mp-spacing-2) var(--mp-spacing-3);
-
-      .base-date-range__value {
-        font-size: var(--mp-font-size-md);
-      }
-    }
-
-    &--lg .base-date-range__trigger {
-      padding: var(--mp-spacing-3) var(--mp-spacing-4);
-
-      .base-date-range__value {
-        font-size: var(--mp-font-size-lg);
+        .base-date-range__value {
+          font-size: var(--mp-size-font-#{$size});
+        }
       }
     }
 

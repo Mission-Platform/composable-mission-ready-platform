@@ -11,7 +11,16 @@
 
   import BaseTypography from '../base-typography/base-typography.vue';
 
-  export type MenuItemVariant = 'default' | 'danger';
+  export type MenuItemVariant =
+    | 'default'
+    | 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'success'
+    | 'warning'
+    | 'information'
+    | 'error'
+    | 'critical';
 
   const props = withDefaults(
     defineProps<{
@@ -154,14 +163,25 @@
       color: var(--mp-color-primary-text);
     }
 
-    &--danger > &__link,
-    &--danger > &__button {
-      color: var(--mp-color-danger-text);
+    @mixin tone($family) {
+      &--#{$family} > .base-menu-item__link,
+      &--#{$family} > .base-menu-item__button {
+        color: var(--mp-color-#{$family}-text);
 
-      &:hover {
-        background-color: var(--mp-color-danger-subtle);
+        &:hover {
+          background-color: var(--mp-color-#{$family}-subtle);
+        }
       }
     }
+
+    @include tone('primary');
+    @include tone('secondary');
+    @include tone('tertiary');
+    @include tone('success');
+    @include tone('warning');
+    @include tone('information');
+    @include tone('error');
+    @include tone('critical');
 
     &--disabled > &__link,
     &--disabled > &__button {

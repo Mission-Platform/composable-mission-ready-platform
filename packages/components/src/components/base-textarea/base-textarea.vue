@@ -11,7 +11,7 @@
   import { useId } from '../../composables/use-id';
   import BaseTypography from '../base-typography/base-typography.vue';
 
-  export type TextareaSize = 'sm' | 'md' | 'lg';
+  export type TextareaSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   export type TextareaResize = 'none' | 'vertical' | 'horizontal' | 'both';
 
   const props = withDefaults(
@@ -181,20 +181,12 @@
       }
     }
 
-    /* Sizes */
-    &--sm .base-textarea__field {
-      padding: var(--mp-spacing-1) var(--mp-spacing-2);
-      font-size: var(--mp-font-size-sm);
-    }
-
-    &--md .base-textarea__field {
-      padding: var(--mp-spacing-2) var(--mp-spacing-3);
-      font-size: var(--mp-font-size-md);
-    }
-
-    &--lg .base-textarea__field {
-      padding: var(--mp-spacing-3) var(--mp-spacing-4);
-      font-size: var(--mp-font-size-lg);
+    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+      &--#{$size} .base-textarea__field {
+        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+        font-size: var(--mp-size-font-#{$size});
+      }
     }
 
     /* States */

@@ -12,8 +12,8 @@ describe('IconAlignCenter', () => {
   it('applies size prop', () => {
     const wrapper = mount(IconAlignCenter, { props: { size: 32 } });
     const svg = wrapper.find('svg');
-    expect(svg.attributes('width')).toBe('32px');
-    expect(svg.attributes('height')).toBe('32px');
+    expect(svg.attributes('width')).toBe('2rem');
+    expect(svg.attributes('height')).toBe('2rem');
   });
 
   it('applies ariaLabel when provided', () => {

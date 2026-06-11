@@ -24,7 +24,7 @@ const meta = {
   },
   argTypes: {
     variant: { control: 'select', options: ['unordered', 'ordered', 'description', 'none'] },
-    size: { control: 'select', options: ['sm', 'md', 'lg'] },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     divided: { control: 'boolean' },
   },
   args: {

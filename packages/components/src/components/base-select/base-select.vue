@@ -14,7 +14,7 @@
   import BaseDropdown from '../base-dropdown/base-dropdown.vue';
   import BaseTypography from '../base-typography/base-typography.vue';
 
-  export type SelectSize = 'sm' | 'md' | 'lg';
+  export type SelectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
   export interface SelectOption {
     label: string;
@@ -365,37 +365,17 @@
       font-style: italic;
     }
 
-    /* Sizes */
-    &--sm {
-      .base-select__field {
-        padding: var(--mp-spacing-1) var(--mp-spacing-2);
-        font-size: var(--mp-font-size-sm);
-      }
+    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+      &--#{$size} {
+        .base-select__field {
+          padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+          font-size: var(--mp-size-font-#{$size});
+        }
 
-      .base-select__chevron {
-        padding-right: var(--mp-spacing-2);
-      }
-    }
-
-    &--md {
-      .base-select__field {
-        padding: var(--mp-spacing-2) var(--mp-spacing-3);
-        font-size: var(--mp-font-size-md);
-      }
-
-      .base-select__chevron {
-        padding-right: var(--mp-spacing-3);
-      }
-    }
-
-    &--lg {
-      .base-select__field {
-        padding: var(--mp-spacing-3) var(--mp-spacing-4);
-        font-size: var(--mp-font-size-lg);
-      }
-
-      .base-select__chevron {
-        padding-right: var(--mp-spacing-4);
+        .base-select__chevron {
+          padding-right: var(--mp-size-pad-inline-#{$size});
+        }
       }
     }
 

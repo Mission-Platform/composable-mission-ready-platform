@@ -14,9 +14,9 @@ describe('BaseTag', () => {
     expect(wrapper.element.tagName).toBe('SPAN');
   });
 
-  it('applies default classes (neutral, md)', () => {
+  it('applies default classes (default, md)', () => {
     const wrapper = mount(BaseTag, { props: { label: 'Vue' } });
-    expect(wrapper.classes()).toContain('base-tag--neutral');
+    expect(wrapper.classes()).toContain('base-tag--default');
     expect(wrapper.classes()).toContain('base-tag--md');
   });
 

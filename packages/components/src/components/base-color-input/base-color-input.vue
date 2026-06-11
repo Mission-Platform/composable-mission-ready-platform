@@ -11,7 +11,7 @@
   import { useId } from '../../composables/use-id';
   import BaseTypography from '../base-typography/base-typography.vue';
 
-  export type ColorInputSize = 'sm' | 'md' | 'lg';
+  export type ColorInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
   const props = withDefaults(
     defineProps<{
@@ -257,40 +257,18 @@
       }
     }
 
-    // ── Sizes ────────────────────────────────────────────────────────────────
-    &--sm {
-      .base-color-input__swatch-label {
-        width: 28px;
-        height: 28px;
-      }
+    // ── Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. ────
+    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+      &--#{$size} {
+        .base-color-input__swatch-label {
+          width: var(--mp-size-height-#{$size});
+          height: var(--mp-size-height-#{$size});
+        }
 
-      .base-color-input__text {
-        padding: var(--mp-spacing-1) var(--mp-spacing-2);
-        font-size: var(--mp-font-size-sm);
-      }
-    }
-
-    &--md {
-      .base-color-input__swatch-label {
-        width: 36px;
-        height: 36px;
-      }
-
-      .base-color-input__text {
-        padding: var(--mp-spacing-2) var(--mp-spacing-3);
-        font-size: var(--mp-font-size-md);
-      }
-    }
-
-    &--lg {
-      .base-color-input__swatch-label {
-        width: 44px;
-        height: 44px;
-      }
-
-      .base-color-input__text {
-        padding: var(--mp-spacing-3) var(--mp-spacing-4);
-        font-size: var(--mp-font-size-lg);
+        .base-color-input__text {
+          padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+          font-size: var(--mp-size-font-#{$size});
+        }
       }
     }
 

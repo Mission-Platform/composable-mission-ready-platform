@@ -9,7 +9,7 @@
   import { useId } from '../../composables/use-id';
   import BaseTypography from '../base-typography/base-typography.vue';
 
-  export type SwitchSize = 'sm' | 'md' | 'lg';
+  export type SwitchSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
   const props = withDefaults(
     defineProps<{
@@ -116,6 +116,8 @@
 </template>
 
 <style lang="scss" scoped>
+  @use 'sass:list';
+
   .base-switch {
     display: flex;
     flex-direction: column;
@@ -135,51 +137,29 @@
       flex-shrink: 0;
     }
 
-    /* Sizes */
-    &--sm {
-      --thumb-translate: 16px;
+    /* Sizes — canonical 2xs → 2xl scale (track / thumb dimensions). */
+    @each $size, $dims in (
+      '2xs': (24px, 14px, 2px, 10px, 12px),
+      'xs': (28px, 16px, 2px, 12px, 14px),
+      'sm': (32px, 18px, 2px, 14px, 16px),
+      'md': (40px, 22px, 2px, 18px, 20px),
+      'lg': (52px, 28px, 3px, 22px, 26px),
+      'xl': (60px, 32px, 3px, 26px, 30px),
+      '2xl': (72px, 38px, 4px, 30px, 36px)
+    ) {
+      &--#{$size} {
+        --thumb-translate: #{list.nth($dims, 5)};
 
-      .base-switch__track {
-        width: 32px;
-        height: 18px;
-        padding: 2px;
-      }
+        .base-switch__track {
+          width: list.nth($dims, 1);
+          height: list.nth($dims, 2);
+          padding: list.nth($dims, 3);
+        }
 
-      .base-switch__thumb {
-        width: 14px;
-        height: 14px;
-      }
-
-      /* label typography handled by BaseTypography */
-    }
-
-    &--md {
-      --thumb-translate: 20px;
-
-      .base-switch__track {
-        width: 40px;
-        height: 22px;
-        padding: 2px;
-      }
-
-      .base-switch__thumb {
-        width: 18px;
-        height: 18px;
-      }
-    }
-
-    &--lg {
-      --thumb-translate: 26px;
-
-      .base-switch__track {
-        width: 52px;
-        height: 28px;
-        padding: 3px;
-      }
-
-      .base-switch__thumb {
-        width: 22px;
-        height: 22px;
+        .base-switch__thumb {
+          width: list.nth($dims, 4);
+          height: list.nth($dims, 4);
+        }
       }
     }
 

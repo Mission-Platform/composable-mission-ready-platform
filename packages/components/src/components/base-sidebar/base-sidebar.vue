@@ -16,7 +16,7 @@
   import BaseSidebarHeader from './base-sidebar-header.vue';
 
   export type SidebarSide = 'left' | 'right';
-  export type SidebarSize = 'sm' | 'md' | 'lg' | 'xl';
+  export type SidebarSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
   const props = withDefaults(
     defineProps<{
@@ -130,20 +130,14 @@
       border-left: 1px solid var(--mp-color-border-default);
     }
 
-    /* Named width variants: apply fixed widths only on sm+ (tablet/desktop) */
+    /* Named width variants: apply fixed widths only on sm+ (tablet/desktop).
+       Canonical 2xs → 2xl scale. */
     @include bp.bp-up('sm') {
-      &--sm {
-        width: 20rem;
-      } /* ~280px */
-      &--md {
-        width: 25.714rem;
-      } /* ~360px */
-      &--lg {
-        width: 34.286rem;
-      } /* ~480px */
-      &--xl {
-        width: 45.714rem;
-      } /* ~640px */
+      @each $size, $width in ('2xs': 14rem, 'xs': 17rem, 'sm': 20rem, 'md': 25.714rem, 'lg': 34.286rem, 'xl': 45.714rem, '2xl': 57rem) {
+        &--#{$size} {
+          width: $width;
+        }
+      }
     }
   }
 

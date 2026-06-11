@@ -49,6 +49,30 @@
   --mp-color-primary-muted: #{c.$color-primary-100}; /* #e5d9ff */
   --mp-color-primary-text: #{c.$color-primary-700}; /* #3d1680 — 8.5:1 on primary-100 */
 
+  /* Secondary — cyan/teal accent (one emphasis step below primary) */
+  --mp-color-secondary-default: #{c.$color-cyan-800}; /* #07403d — 10.25:1 on #eff1f3 (WCAG AAA) */
+  --mp-color-secondary-hover: #{c.$color-cyan-900}; /* #042523 */
+  --mp-color-secondary-active: #{c.$color-cyan-900}; /* #042523 */
+  --mp-color-secondary-subtle: #{c.$color-cyan-50}; /* #ebfffe */
+  --mp-color-secondary-muted: #{c.$color-cyan-100}; /* #cdfefb */
+  --mp-color-secondary-text: #{c.$color-cyan-800}; /* #07403d — AAA on secondary-muted */
+
+  /* Tertiary — low-emphasis neutral accent */
+  --mp-color-tertiary-default: #{c.$color-neutral-500}; /* #6b6375 */
+  --mp-color-tertiary-hover: #{c.$color-neutral-600}; /* #504b5c */
+  --mp-color-tertiary-active: #{c.$color-neutral-700}; /* #3a3545 */
+  --mp-color-tertiary-subtle: #{c.$color-neutral-50}; /* #f9f9fb */
+  --mp-color-tertiary-muted: #{c.$color-neutral-100}; /* #f2f2f5 */
+  --mp-color-tertiary-text: #{c.$color-neutral-600}; /* #504b5c — 7.41:1 on #eff1f3 (WCAG AAA) */
+
+  /* Default — neutral (no intent) */
+  --mp-color-default-default: #{c.$color-neutral-700}; /* #3a3545 — 10.45:1 on #eff1f3 (WCAG AAA) */
+  --mp-color-default-hover: #{c.$color-neutral-800}; /* #211e2c */
+  --mp-color-default-active: #{c.$color-neutral-900}; /* #08060d */
+  --mp-color-default-subtle: #{c.$color-neutral-100}; /* #f2f2f5 */
+  --mp-color-default-muted: #{c.$color-neutral-200}; /* #e5e4e7 */
+  --mp-color-default-text: #{c.$color-neutral-800}; /* #211e2c — AAA on default-muted */
+
   /* Success */
   --mp-color-success-default: #{c.$color-success-800}; /* #073d1d — 10.95:1 on #eff1f3 (WCAG AAA) */
   --mp-color-success-hover: #{c.$color-success-900}; /* #031e0e */
@@ -77,12 +101,28 @@
   --mp-color-info-muted: #{c.$color-info-100}; /* #cffafe */
   --mp-color-info-text: #{c.$color-info-900}; /* #164e63 —  8.14:1 on info-100 (WCAG AAA) */
 
+  /* Information — alias of info (canonical variant name) */
+  --mp-color-information-default: #{c.$color-info-900}; /* #164e63 —  8.05:1 on #eff1f3 (WCAG AAA) */
+  --mp-color-information-hover: #{c.$color-info-900}; /* #164e63 */
+  --mp-color-information-active: #{c.$color-info-900}; /* #164e63 */
+  --mp-color-information-subtle: #{c.$color-info-50}; /* #ecfeff */
+  --mp-color-information-muted: #{c.$color-info-100}; /* #cffafe */
+  --mp-color-information-text: #{c.$color-info-900}; /* #164e63 —  8.14:1 on info-100 (WCAG AAA) */
+
   /* Error — rose scale (hard errors / crashes; darker variant of danger) */
   --mp-color-error-default: #{c.$color-error-800}; /* #9f1239 —  7.08:1 on #eff1f3 (WCAG AAA) */
   --mp-color-error-hover: #{c.$color-error-900}; /* #881337 —  8.45:1 on #eff1f3 (WCAG AAA) */
   --mp-color-error-subtle: #{c.$color-error-50}; /* #fff1f2 */
   --mp-color-error-muted: #{c.$color-error-100}; /* #ffe4e6 */
   --mp-color-error-text: #{c.$color-error-900}; /* #881337 —  7.98:1 on error-100 (WCAG AAA) */
+
+  /* Critical — deep crimson (most severe; one step beyond error) */
+  --mp-color-critical-default: #{c.$color-critical-800}; /* #500d0d — very high contrast on #eff1f3 (WCAG AAA) */
+  --mp-color-critical-hover: #{c.$color-critical-900}; /* #380909 */
+  --mp-color-critical-active: #{c.$color-critical-900}; /* #380909 */
+  --mp-color-critical-subtle: #{c.$color-critical-50}; /* #fdf2f2 */
+  --mp-color-critical-muted: #{c.$color-critical-100}; /* #f9dada */
+  --mp-color-critical-text: #{c.$color-critical-800}; /* #500d0d — AAA on critical-muted */
 
   /* Alert — orange (between warning and danger; high-attention notices) */
   --mp-color-alert-default: #{c.$color-alert-900}; /* #7c2d12 —  8.28:1 on #eff1f3 (WCAG AAA) */

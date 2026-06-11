@@ -65,7 +65,7 @@ export const Dropdown: Story = {
             <BaseMenuItem label="Edit" @click="open = false" />
             <BaseMenuItem label="Duplicate" @click="open = false" />
             <BaseMenuItem label="Archive" @click="open = false" />
-            <BaseMenuItem label="Delete" variant="danger" @click="open = false" />
+            <BaseMenuItem label="Delete" variant="error" @click="open = false" />
           </ul>
         </BasePopover>
       </div>
@@ -109,7 +109,7 @@ export const TopPlacement: Story = {
       <div style="padding: 120px; display: flex; justify-content: center;">
         <BasePopover v-model:open="open" placement="top">
           <template #trigger>
-            <BaseButton variant="ghost" @click="open = !open">Above ▴</BaseButton>
+            <BaseButton variant="tertiary" @click="open = !open">Above ▴</BaseButton>
           </template>
           <div style="padding: 12px 16px;">Opens above the trigger</div>
         </BasePopover>
