@@ -7,12 +7,16 @@
     "prepare": "husky",
     "commitlint": "commitlint",
     "i18n:extract": "pnpm --filter @mission-platform/scripts i18n:extract",
-    "deploy:my-care-notes": "wrangler deploy --env \"my-care-notes\"",
-    "preview:my-care-notes": "wrangler dev --env \"my-care-notes\"",
-    "version:my-care-notes": "wrangler versions upload --env \"my-care-notes\"",
-    "deploy:website": "wrangler deploy --env \"website\"",
-    "preview:website": "wrangler dev --env \"website\"",
-    "version:website": "wrangler versions upload --env \"website\""
+    "deploy:my-care-notes": "turbo run deploy --filter=@mission-platform/my-care-notes",
+    "deploy:my-care-notes:staging": "turbo run deploy:staging --filter=@mission-platform/my-care-notes",
+    "preview:my-care-notes": "pnpm --filter @mission-platform/my-care-notes cf:dev",
+    "version:my-care-notes": "turbo run version --filter=@mission-platform/my-care-notes",
+    "version:my-care-notes:staging": "turbo run version:staging --filter=@mission-platform/my-care-notes",
+    "deploy:website": "turbo run deploy --filter=@mission-platform/website",
+    "deploy:website:staging": "turbo run deploy:staging --filter=@mission-platform/website",
+    "preview:website": "pnpm --filter @mission-platform/website cf:dev",
+    "version:website": "turbo run version --filter=@mission-platform/website",
+    "version:website:staging": "turbo run version:staging --filter=@mission-platform/website"
   },
   "devDependencies": {
     "@changesets/cli": "catalog:",

@@ -1,0 +1,76 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "my-care-notes",
+  "compatibility_date": "2026-06-07",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "../../workers/base-spa/dist/index.js",
+  "first_party_worker": true,
+  "dev": {
+    "generate_types": true,
+    "local_protocol": "https",
+    "upstream_protocol": "https"
+  },
+  "observability": {
+    "enabled": true,
+    "traces": {
+      "enabled": true,
+      "persist": false
+    },
+    "logs": {
+      "enabled": true,
+      "persist": false,
+      "invocation_logs": true
+    }
+  },
+  "build": {
+    "cwd": "../../",
+    "watch_dir": [
+      "./packages/**/src/*",
+      "./apps/my-care-notes/src/*",
+      "./workers/base-spa/src/*"
+    ],
+    "command": "turbo run build --filter=@mission-platform/my-care-notes --filter=@mission-platform/base-spa"
+  },
+  "assets": {
+    "not_found_handling": "single-page-application",
+    "directory": "./dist/",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/*",
+      "!/assets/*",
+      "!/favicon.svg",
+      "!/manifest.webmanifest",
+      "!/pwa-192x192.png",
+      "!/pwa-512x512.png",
+      "!/registerSW.js",
+      "!/sw.js",
+      "!/workbox-dcde9eb3.js"
+    ]
+  },
+  "env": {
+    "production": {
+      "name": "my-care-notes",
+      "workers_dev": false,
+      "preview_urls": false,
+      "routes": [
+        {
+          "zone_name": "mission-platform.com",
+          "pattern": "care-notes.mission-platform.com",
+          "custom_domain": true
+        }
+      ]
+    },
+    "staging": {
+      "name": "my-care-notes-staging",
+      "workers_dev": true,
+      "preview_urls": true,
+      "routes": [
+        {
+          "zone_name": "mission-platform.dev",
+          "pattern": "staging-care-notes.mission-platform.dev",
+          "custom_domain": true
+        }
+      ]
+    }
+  }
+}

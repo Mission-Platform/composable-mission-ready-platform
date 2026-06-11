@@ -20,6 +20,22 @@
     "build:spa": {
       "dependsOn": ["^build", "prebuild:spa"],
       "outputs": ["dist/**", ".output/**"]
+    },
+    "deploy": {
+      "dependsOn": ["build", "@mission-platform/base-spa#build"],
+      "cache": false
+    },
+    "deploy:staging": {
+      "dependsOn": ["build", "@mission-platform/base-spa#build"],
+      "cache": false
+    },
+    "version": {
+      "dependsOn": ["build", "@mission-platform/base-spa#build"],
+      "cache": false
+    },
+    "version:staging": {
+      "dependsOn": ["build", "@mission-platform/base-spa#build"],
+      "cache": false
     }
   }
 }
