@@ -11,6 +11,12 @@
     "prebuild:spa": "pnpm seo:generate",
     "build:spa": "vue-tsc -b && vite build",
     "preview": "vite preview",
+    "deploy": "wrangler deploy --env production",
+    "deploy:staging": "wrangler deploy --env staging",
+    "cf:dev": "wrangler dev --env staging",
+    "cf:dev:production": "wrangler dev --env production",
+    "version": "wrangler versions upload --env production",
+    "version:staging": "wrangler versions upload --env staging",
     "test": "vitest run --passWithNoTests",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
@@ -54,6 +60,7 @@
     "vite": "catalog:vite",
     "vite-ssg": "catalog:vite",
     "vitest": "catalog:testing",
-    "vue-tsc": "catalog:vue"
+    "vue-tsc": "catalog:vue",
+    "wrangler": "catalog:"
   }
 }

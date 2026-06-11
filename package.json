@@ -6,13 +6,7 @@
   "scripts": {
     "prepare": "husky",
     "commitlint": "commitlint",
-    "i18n:extract": "pnpm --filter @mission-platform/scripts i18n:extract",
-    "deploy:my-care-notes": "wrangler deploy --env \"my-care-notes\"",
-    "preview:my-care-notes": "wrangler dev --env \"my-care-notes\"",
-    "version:my-care-notes": "wrangler versions upload --env \"my-care-notes\"",
-    "deploy:website": "wrangler deploy --env \"website\"",
-    "preview:website": "wrangler dev --env \"website\"",
-    "version:website": "wrangler versions upload --env \"website\""
+    "i18n:extract": "pnpm --filter @mission-platform/scripts i18n:extract"
   },
   "devDependencies": {
     "@changesets/cli": "catalog:",

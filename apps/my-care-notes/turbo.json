@@ -13,6 +13,22 @@
     "build": {
       "dependsOn": ["^build", "prebuild"],
       "outputs": ["dist/**", ".vite/**"]
+    },
+    "deploy": {
+      "dependsOn": ["build", "@mission-platform/base-spa#build"],
+      "cache": false
+    },
+    "deploy:staging": {
+      "dependsOn": ["build", "@mission-platform/base-spa#build"],
+      "cache": false
+    },
+    "version": {
+      "dependsOn": ["build", "@mission-platform/base-spa#build"],
+      "cache": false
+    },
+    "version:staging": {
+      "dependsOn": ["build", "@mission-platform/base-spa#build"],
+      "cache": false
     }
   }
 }

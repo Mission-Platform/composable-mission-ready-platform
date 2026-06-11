@@ -369,6 +369,9 @@ importers:
       vue-tsc:
         specifier: catalog:vue
         version: 3.3.4(typescript@6.0.3)
+      wrangler:
+        specifier: 'catalog:'
+        version: 4.99.0(@cloudflare/workers-types@4.20260609.1)
 
   apps/storybook:
     dependencies:
@@ -608,6 +611,9 @@ importers:
       vue-tsc:
         specifier: catalog:vue
         version: 3.3.4(typescript@6.0.3)
+      wrangler:
+        specifier: 'catalog:'
+        version: 4.99.0(@cloudflare/workers-types@4.20260609.1)
 
   configs/eslint-config:
     dependencies:
