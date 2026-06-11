@@ -19,16 +19,19 @@ export const ICON_SIZE_MAP: Record<string, string> = {
   '2xl': `var(--mp-size-icon-2xl, ${sizeIcons['2xl']})`,
 };
 
+/** Root font-size (in px) used to convert numeric icon sizes to `rem`. */
+const PX_PER_REM = 16;
+
 /**
  * Returns a reactive CSS size string for an icon `size` prop value.
  * - Named token (e.g. `'md'`) → `var(--mp-size-icon-md, 1.125rem)`
- * - Number (e.g. `32`)        → `'32px'`
+ * - Number (e.g. `32`)        → `'2rem'` (interpreted as px and converted to rem)
  * - Any other string           → returned as-is
  */
 export function useIconSize(size: MaybeRefOrGetter<number | string>): ComputedRef<string> {
   return computed(() => {
     const s = toValue(size);
-    if (typeof s === 'number') return `${s}px`;
+    if (typeof s === 'number') return `${s / PX_PER_REM}rem`;
     if (s in ICON_SIZE_MAP) return ICON_SIZE_MAP[s];
     return s;
   });

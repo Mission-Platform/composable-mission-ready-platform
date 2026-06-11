@@ -8,8 +8,17 @@
    */
   import BaseTypography from '../base-typography/base-typography.vue';
 
-  export type BadgeVariant = 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'neutral';
-  export type BadgeSize = 'sm' | 'md';
+  export type BadgeVariant =
+    | 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'default'
+    | 'success'
+    | 'warning'
+    | 'information'
+    | 'error'
+    | 'critical';
+  export type BadgeSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
   withDefaults(
     defineProps<{
@@ -18,7 +27,7 @@
       pill?: boolean;
     }>(),
     {
-      variant: 'neutral',
+      variant: 'default',
       size: 'md',
       pill: false,
     },
@@ -52,44 +61,54 @@
       border-radius: var(--mp-radius-full);
     }
 
-    /* Sizes */
-    &--sm {
-      padding: 2px var(--mp-spacing-2);
-    }
-
-    &--md {
-      padding: var(--mp-spacing-1) var(--mp-spacing-3);
+    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+      &--#{$size} {
+        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+        font-size: var(--mp-size-font-#{$size});
+      }
     }
 
     /* Variants */
-    &--neutral {
-      background-color: var(--mp-color-bg-muted);
-      color: var(--mp-color-text-secondary);
+    @mixin tone($family) {
+      background-color: var(--mp-color-#{$family}-muted);
+      color: var(--mp-color-#{$family}-text);
+    }
+
+    &--default {
+      @include tone('default');
     }
 
     &--primary {
-      background-color: var(--mp-color-primary-muted);
-      color: var(--mp-color-primary-text);
+      @include tone('primary');
+    }
+
+    &--secondary {
+      @include tone('secondary');
+    }
+
+    &--tertiary {
+      @include tone('tertiary');
     }
 
     &--success {
-      background-color: var(--mp-color-success-muted);
-      color: var(--mp-color-success-text);
+      @include tone('success');
     }
 
     &--warning {
-      background-color: var(--mp-color-warning-muted);
-      color: var(--mp-color-warning-text);
+      @include tone('warning');
     }
 
-    &--danger {
-      background-color: var(--mp-color-danger-muted);
-      color: var(--mp-color-danger-text);
+    &--information {
+      @include tone('information');
     }
 
-    &--info {
-      background-color: var(--mp-color-info-muted);
-      color: var(--mp-color-info-text);
+    &--error {
+      @include tone('error');
+    }
+
+    &--critical {
+      @include tone('critical');
     }
   }
 </style>

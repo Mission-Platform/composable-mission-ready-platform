@@ -14,14 +14,24 @@ describe('BaseBadge', () => {
     expect(wrapper.element.tagName).toBe('SPAN');
   });
 
-  it('applies default classes (neutral, md)', () => {
+  it('applies default classes (default, md)', () => {
     const wrapper = mount(BaseBadge);
-    expect(wrapper.classes()).toContain('base-badge--neutral');
+    expect(wrapper.classes()).toContain('base-badge--default');
     expect(wrapper.classes()).toContain('base-badge--md');
   });
 
   it('applies variant class', () => {
-    for (const variant of ['primary', 'success', 'warning', 'danger', 'info'] as const) {
+    for (const variant of [
+      'primary',
+      'secondary',
+      'tertiary',
+      'default',
+      'success',
+      'warning',
+      'information',
+      'error',
+      'critical',
+    ] as const) {
       const wrapper = mount(BaseBadge, { props: { variant } });
       expect(wrapper.classes()).toContain(`base-badge--${variant}`);
     }

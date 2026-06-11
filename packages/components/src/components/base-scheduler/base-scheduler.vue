@@ -298,7 +298,7 @@
       <!-- Prev / Next -->
       <div class="base-scheduler__nav">
         <BaseButton
-          variant="ghost"
+          variant="tertiary"
           size="sm"
           aria-label="Previous"
           @click="scheduler.prev()"
@@ -306,7 +306,7 @@
           <IconChevron class="base-scheduler__icon base-scheduler__icon--prev" />
         </BaseButton>
         <BaseButton
-          variant="ghost"
+          variant="tertiary"
           size="sm"
           aria-label="Next"
           @click="scheduler.next()"
@@ -345,7 +345,7 @@
         <BaseButton
           v-for="v in VIEWS"
           :key="v.id"
-          :variant="scheduler.view.value === v.id ? 'primary' : 'ghost'"
+          :variant="scheduler.view.value === v.id ? 'primary' : 'tertiary'"
           size="sm"
           class="base-scheduler__view-btn"
           @click="scheduler.setView(v.id)"

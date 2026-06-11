@@ -137,7 +137,7 @@ export const RepeatOnScroll: Story = {
             <BaseCard bordered>
               <template #header>
                 <span>Repeating Observer</span>
-                <BaseBadge :variant="inView ? 'success' : 'neutral'" style="margin-left: var(--mp-spacing-2);">
+                <BaseBadge :variant="inView ? 'success' : 'default'" style="margin-left: var(--mp-spacing-2);">
                   {{ inView ? 'in view' : 'out of view' }}
                 </BaseBadge>
               </template>
@@ -199,10 +199,10 @@ export const StaggeredCardGrid: Story = {
     setup() {
       const cards = [
         { title: 'Active Missions', value: '12', badge: 'success', badgeText: '+2 today' },
-        { title: 'Units Deployed', value: '47', badge: 'info', badgeText: 'Across 5 regions' },
+        { title: 'Units Deployed', value: '47', badge: 'information', badgeText: 'Across 5 regions' },
         { title: 'Alerts', value: '3', badge: 'warning', badgeText: 'Pending review' },
-        { title: 'Reports Due', value: '8', badge: 'danger', badgeText: 'Overdue' },
-        { title: 'Completed', value: '124', badge: 'neutral', badgeText: 'This month' },
+        { title: 'Reports Due', value: '8', badge: 'error', badgeText: 'Overdue' },
+        { title: 'Completed', value: '124', badge: 'default', badgeText: 'This month' },
         { title: 'Operatives', value: '280', badge: 'primary', badgeText: 'On assignment' },
       ];
       return { cards };

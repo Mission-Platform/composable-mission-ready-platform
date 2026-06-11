@@ -363,7 +363,7 @@
     <template #footer>
       <BaseButton
         v-if="event"
-        variant="danger"
+        variant="error"
         size="sm"
         type="button"
         class="base-scheduler-event-dialog__delete-btn"

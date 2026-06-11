@@ -21,7 +21,7 @@ const meta = {
   },
   argTypes: {
     side: { control: 'select', options: ['left', 'right'] },
-    size: { control: 'select', options: ['sm', 'md', 'lg'] },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     closeOnBackdrop: { control: 'boolean' },
   },
   args: {

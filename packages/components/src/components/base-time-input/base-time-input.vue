@@ -13,7 +13,7 @@
   import { useZIndex } from '../../composables/use-z-index';
   import BaseTypography from '../base-typography/base-typography.vue';
 
-  export type TimeInputSize = 'sm' | 'md' | 'lg';
+  export type TimeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
   // modelValue: "HH:MM" or "HH:MM:SS"
   const props = withDefaults(
@@ -382,28 +382,14 @@
       flex-shrink: 0;
     }
 
-    /* Sizes */
-    &--sm .base-time-input__trigger {
-      padding: var(--mp-spacing-1) var(--mp-spacing-2);
+    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+      &--#{$size} .base-time-input__trigger {
+        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
 
-      .base-time-input__value {
-        font-size: var(--mp-font-size-sm);
-      }
-    }
-
-    &--md .base-time-input__trigger {
-      padding: var(--mp-spacing-2) var(--mp-spacing-3);
-
-      .base-time-input__value {
-        font-size: var(--mp-font-size-md);
-      }
-    }
-
-    &--lg .base-time-input__trigger {
-      padding: var(--mp-spacing-3) var(--mp-spacing-4);
-
-      .base-time-input__value {
-        font-size: var(--mp-font-size-lg);
+        .base-time-input__value {
+          font-size: var(--mp-size-font-#{$size});
+        }
       }
     }
 

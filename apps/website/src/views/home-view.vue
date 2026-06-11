@@ -320,7 +320,7 @@
         animation="slide-up"
         class="home__hero"
       >
-        <BaseBadge variant="info">{{ t('hero.badge') }}</BaseBadge>
+        <BaseBadge variant="information">{{ t('hero.badge') }}</BaseBadge>
         <BaseTypography
           variant="display"
           weight="bold"

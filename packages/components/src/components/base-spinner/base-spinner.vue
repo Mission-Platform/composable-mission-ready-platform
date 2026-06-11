@@ -8,8 +8,17 @@
    */
   import { useI18n } from '@mission-platform/i18n';
 
-  export type SpinnerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  export type SpinnerVariant = 'primary' | 'success' | 'danger' | 'warning' | 'info' | 'neutral';
+  export type SpinnerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  export type SpinnerVariant =
+    | 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'default'
+    | 'success'
+    | 'warning'
+    | 'information'
+    | 'error'
+    | 'critical';
 
   withDefaults(
     defineProps<{
@@ -44,66 +53,55 @@
     animation: mp-spin 0.65s linear infinite;
     flex-shrink: 0;
 
-    /* Sizes */
-    &--xs {
-      width: 12px;
-      height: 12px;
-      border-width: 2px;
-    }
-
-    &--sm {
-      width: 16px;
-      height: 16px;
-      border-width: 2px;
-    }
-
-    &--md {
-      width: 24px;
-      height: 24px;
-      border-width: 3px;
-    }
-
-    &--lg {
-      width: 36px;
-      height: 36px;
-      border-width: 3px;
-    }
-
-    &--xl {
-      width: 48px;
-      height: 48px;
-      border-width: 4px;
+    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+    @each $size, $border-width in ('2xs': 2px, 'xs': 2px, 'sm': 2px, 'md': 3px, 'lg': 3px, 'xl': 4px, '2xl': 4px) {
+      &--#{$size} {
+        width: var(--mp-size-height-#{$size});
+        height: var(--mp-size-height-#{$size});
+        border-width: $border-width;
+      }
     }
 
     /* Variants */
-    &--primary {
-      border-color: var(--mp-color-primary-default);
+    @mixin tone($family) {
+      border-color: var(--mp-color-#{$family}-default);
       border-top-color: transparent;
+    }
+
+    &--primary {
+      @include tone('primary');
+    }
+
+    &--secondary {
+      @include tone('secondary');
+    }
+
+    &--tertiary {
+      @include tone('tertiary');
+    }
+
+    &--default {
+      @include tone('default');
     }
 
     &--success {
-      border-color: var(--mp-color-success-default);
-      border-top-color: transparent;
-    }
-
-    &--danger {
-      border-color: var(--mp-color-danger-default);
-      border-top-color: transparent;
+      @include tone('success');
     }
 
     &--warning {
-      border-color: var(--mp-color-warning-default);
-      border-top-color: transparent;
+      @include tone('warning');
     }
 
-    &--info {
-      border-color: var(--mp-color-info-default);
-      border-top-color: transparent;
+    &--information {
+      @include tone('information');
     }
 
-    &--neutral {
-      border-color: var(--mp-color-border-strong);
-      border-top-color: transparent;
+    &--error {
+      @include tone('error');
+    }
+
+    &--critical {
+      @include tone('critical');
     }
   }
 

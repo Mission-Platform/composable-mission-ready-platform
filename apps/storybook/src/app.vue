@@ -245,7 +245,7 @@
           <BaseButton
             :disabled="!selectedId"
             size="sm"
-            variant="danger"
+            variant="error"
             @click="deleteSelected()"
           >
             <IconTrash

@@ -21,11 +21,11 @@ interface Mission {
   region: string;
 }
 
-const STATUS_VARIANT: Record<MissionStatus, 'success' | 'warning' | 'neutral' | 'danger'> = {
+const STATUS_VARIANT: Record<MissionStatus, 'success' | 'warning' | 'default' | 'error'> = {
   active: 'success',
   standby: 'warning',
-  complete: 'neutral',
-  aborted: 'danger',
+  complete: 'default',
+  aborted: 'error',
 };
 
 const REGIONS = ['North', 'South', 'East', 'West', 'Central', 'Coastal', 'Mountain'];

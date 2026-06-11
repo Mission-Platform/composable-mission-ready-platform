@@ -6,7 +6,8 @@
   "scripts": {
     "prepare": "husky",
     "commitlint": "commitlint",
-    "i18n:extract": "pnpm --filter @mission-platform/scripts i18n:extract"
+    "i18n:extract": "pnpm --filter @mission-platform/scripts i18n:extract",
+    "storybook": "pnpm exec turbo run --filter @mission-platform/storybook storybook"
   },
   "devDependencies": {
     "@changesets/cli": "catalog:",

@@ -10,8 +10,17 @@
 
   import BaseTypography from '../base-typography/base-typography.vue';
 
-  export type TagSize = 'sm' | 'md';
-  export type TagVariant = 'neutral' | 'primary';
+  export type TagSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  export type TagVariant =
+    | 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'default'
+    | 'success'
+    | 'warning'
+    | 'information'
+    | 'error'
+    | 'critical';
 
   withDefaults(
     defineProps<{
@@ -24,7 +33,7 @@
     }>(),
     {
       size: 'md',
-      variant: 'neutral',
+      variant: 'default',
       disabled: false,
       removable: false,
     },
@@ -68,24 +77,54 @@
     line-height: var(--mp-line-height-tight);
     white-space: nowrap;
 
-    /* Sizes */
-    &--sm {
-      padding: 2px var(--mp-spacing-2);
-    }
-
-    &--md {
-      padding: var(--mp-spacing-1) var(--mp-spacing-2);
+    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+      &--#{$size} {
+        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+        font-size: var(--mp-size-font-#{$size});
+      }
     }
 
     /* Variants */
-    &--neutral {
-      background-color: var(--mp-color-bg-muted);
-      color: var(--mp-color-text-secondary);
+    @mixin tone($family) {
+      background-color: var(--mp-color-#{$family}-muted);
+      color: var(--mp-color-#{$family}-text);
+    }
+
+    &--default {
+      @include tone('default');
     }
 
     &--primary {
-      background-color: var(--mp-color-primary-muted);
-      color: var(--mp-color-primary-text);
+      @include tone('primary');
+    }
+
+    &--secondary {
+      @include tone('secondary');
+    }
+
+    &--tertiary {
+      @include tone('tertiary');
+    }
+
+    &--success {
+      @include tone('success');
+    }
+
+    &--warning {
+      @include tone('warning');
+    }
+
+    &--information {
+      @include tone('information');
+    }
+
+    &--error {
+      @include tone('error');
+    }
+
+    &--critical {
+      @include tone('critical');
     }
 
     /* States */

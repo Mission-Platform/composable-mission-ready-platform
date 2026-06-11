@@ -12,7 +12,16 @@
 
   import BaseDropdown from '../base-dropdown/base-dropdown.vue';
 
-  export type NavbarItemVariant = 'default' | 'primary';
+  export type NavbarItemVariant =
+    | 'default'
+    | 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'success'
+    | 'warning'
+    | 'information'
+    | 'error'
+    | 'critical';
 
   export interface NavbarItemChild {
     label: string;
@@ -241,13 +250,24 @@
       color: var(--mp-color-text-primary);
     }
 
-    &--primary {
-      color: var(--mp-color-primary-text);
+    @mixin tone($family) {
+      &--#{$family} {
+        color: var(--mp-color-#{$family}-text);
 
-      &:hover:not(.base-navbar-item--disabled) {
-        background-color: var(--mp-color-primary-muted);
+        &:hover:not(.base-navbar-item--disabled) {
+          background-color: var(--mp-color-#{$family}-muted);
+        }
       }
     }
+
+    @include tone('primary');
+    @include tone('secondary');
+    @include tone('tertiary');
+    @include tone('success');
+    @include tone('warning');
+    @include tone('information');
+    @include tone('error');
+    @include tone('critical');
 
     &--disabled {
       opacity: 0.5;

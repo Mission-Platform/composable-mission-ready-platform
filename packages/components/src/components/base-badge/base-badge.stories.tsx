@@ -17,13 +17,23 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['neutral', 'primary', 'success', 'warning', 'danger', 'info'],
+      options: [
+        'primary',
+        'secondary',
+        'tertiary',
+        'default',
+        'success',
+        'warning',
+        'information',
+        'error',
+        'critical',
+      ],
     },
-    size: { control: 'select', options: ['sm', 'md'] },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     pill: { control: 'boolean' },
   },
   args: {
-    variant: 'neutral',
+    variant: 'default',
     size: 'md',
     pill: false,
   },
@@ -39,17 +49,23 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Neutral: Story = {};
+export const Default: Story = {};
 
 export const Primary: Story = { args: { variant: 'primary' } };
+
+export const Secondary: Story = { args: { variant: 'secondary' } };
+
+export const Tertiary: Story = { args: { variant: 'tertiary' } };
 
 export const Success: Story = { args: { variant: 'success' } };
 
 export const Warning: Story = { args: { variant: 'warning' } };
 
-export const Danger: Story = { args: { variant: 'danger' } };
+export const Information: Story = { args: { variant: 'information' } };
 
-export const Info: Story = { args: { variant: 'info' } };
+export const Error: Story = { args: { variant: 'error' } };
+
+export const Critical: Story = { args: { variant: 'critical' } };
 
 export const Pill: Story = { args: { pill: true } };
 

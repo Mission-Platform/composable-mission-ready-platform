@@ -16,7 +16,10 @@ const meta = {
     },
   },
   argTypes: {
-    size: { control: 'select', options: ['xs', 'sm', 'md', 'lg', 'xl'] as AvatarSize[] },
+    size: {
+      control: 'select',
+      options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] as AvatarSize[],
+    },
     shape: { control: 'select', options: ['circle', 'square'] as AvatarShape[] },
     status: {
       control: 'select',
@@ -62,11 +65,13 @@ export const Sizes: Story = {
     components: { BaseAvatar },
     template: `
       <div style="display: flex; align-items: center; gap: var(--mp-spacing-4);">
+        <BaseAvatar size="2xs" initials="2XS" />
         <BaseAvatar size="xs" initials="XS" />
         <BaseAvatar size="sm" initials="SM" />
         <BaseAvatar size="md" initials="MD" />
         <BaseAvatar size="lg" initials="LG" />
         <BaseAvatar size="xl" initials="XL" />
+        <BaseAvatar size="2xl" initials="2XL" />
       </div>
     `,
   }),

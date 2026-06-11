@@ -97,11 +97,11 @@ const sampleRender = (statusMessage?: string, statusIcon?: string) => (arguments
               </div>
               <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--mp-spacing-2) 0; border-bottom: 1px solid var(--mp-color-border-default);">
                 <span style="color: var(--mp-color-text-primary); font-size: var(--mp-font-size-sm);">Unit Bravo-3 repositioned</span>
-                <BaseBadge variant="info">Updated</BaseBadge>
+                <BaseBadge variant="information">Updated</BaseBadge>
               </div>
               <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--mp-spacing-2) 0;">
                 <span style="color: var(--mp-color-text-primary); font-size: var(--mp-font-size-sm);">Report Q4 submitted</span>
-                <BaseBadge variant="neutral">Archived</BaseBadge>
+                <BaseBadge variant="default">Archived</BaseBadge>
               </div>
             </div>
           </BaseCard>

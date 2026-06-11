@@ -12,7 +12,7 @@
 
   import BaseTypography from '../base-typography/base-typography.vue';
 
-  export type CalendarSize = 'sm' | 'md' | 'lg';
+  export type CalendarSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
   const props = withDefaults(
     defineProps<{
@@ -293,8 +293,6 @@
 </template>
 
 <style lang="scss" scoped>
-  @use '@mission-platform/tokens/scss/mixins' as mp;
-
   .base-calendar {
     display: inline-flex;
     flex-direction: column;
@@ -304,41 +302,17 @@
     box-shadow: var(--mp-shadow-md);
     user-select: none;
 
-    /* ── Sizes ─────────────────────────────────────────────────────────────────── */
+    /* ── Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. ─── */
+    @each $size, $min-width in ('2xs': 200px, 'xs': 220px, 'sm': 240px, 'md': 280px, 'lg': 320px, 'xl': 360px, '2xl': 400px) {
+      &--#{$size} {
+        padding: var(--mp-size-pad-inline-#{$size});
+        min-width: $min-width;
 
-    &--sm {
-      padding: var(--mp-spacing-2);
-      min-width: 240px;
-
-      .base-calendar__weekday,
-      .base-calendar__day {
-        height: 28px;
-
-        @include mp.mp-font-caption;
-      }
-    }
-
-    &--md {
-      padding: var(--mp-spacing-3);
-      min-width: 280px;
-
-      .base-calendar__weekday,
-      .base-calendar__day {
-        height: 32px;
-
-        @include mp.mp-font-body-sm;
-      }
-    }
-
-    &--lg {
-      padding: var(--mp-spacing-4);
-      min-width: 320px;
-
-      .base-calendar__weekday,
-      .base-calendar__day {
-        height: 40px;
-
-        @include mp.mp-font-body-md;
+        .base-calendar__weekday,
+        .base-calendar__day {
+          height: var(--mp-size-height-#{$size});
+          font-size: var(--mp-size-font-#{$size});
+        }
       }
     }
 

@@ -15,10 +15,20 @@ const meta = {
     },
   },
   argTypes: {
-    size: { control: 'select', options: ['xs', 'sm', 'md', 'lg', 'xl'] },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     variant: {
       control: 'select',
-      options: ['primary', 'success', 'danger', 'warning', 'info', 'neutral'],
+      options: [
+        'primary',
+        'secondary',
+        'tertiary',
+        'default',
+        'success',
+        'warning',
+        'information',
+        'error',
+        'critical',
+      ],
     },
   },
   args: {
@@ -49,11 +59,14 @@ export const Variants: Story = {
   render: () => (
     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
       <BaseSpinner variant="primary" />
+      <BaseSpinner variant="secondary" />
+      <BaseSpinner variant="tertiary" />
+      <BaseSpinner variant="default" />
       <BaseSpinner variant="success" />
-      <BaseSpinner variant="danger" />
       <BaseSpinner variant="warning" />
-      <BaseSpinner variant="info" />
-      <BaseSpinner variant="neutral" />
+      <BaseSpinner variant="information" />
+      <BaseSpinner variant="error" />
+      <BaseSpinner variant="critical" />
     </div>
   ),
 };

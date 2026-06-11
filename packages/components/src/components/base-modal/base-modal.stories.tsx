@@ -20,7 +20,7 @@ const meta = {
     },
   },
   argTypes: {
-    size: { control: 'select', options: ['sm', 'md', 'lg', 'xl', 'full'] },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', 'full'] },
     closeOnBackdrop: { control: 'boolean' },
     closeOnEsc: { control: 'boolean' },
   },

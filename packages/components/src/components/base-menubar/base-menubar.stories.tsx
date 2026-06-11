@@ -42,7 +42,7 @@ export const Default: Story = {
         <BaseMenuItem label="Edit" :active="true" />
         <BaseMenuItem label="View" />
         <BaseMenuItem label="Help" />
-        <BaseMenuItem label="Delete" variant="danger" />
+        <BaseMenuItem label="Delete" variant="error" />
         <BaseMenuItem label="Disabled" :disabled="true" />
       </BaseMenubar>
     `,

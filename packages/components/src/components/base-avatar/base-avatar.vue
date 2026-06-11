@@ -8,7 +8,7 @@
    */
   import { computed, type StyleValue } from 'vue';
 
-  export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  export type AvatarSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   export type AvatarShape = 'circle' | 'square';
   export type AvatarStatus = 'online' | 'offline' | 'away' | 'busy' | undefined;
 
@@ -34,27 +34,33 @@
   );
 
   const sizeMap: Record<AvatarSize, string> = {
+    '2xs': '20px',
     xs: '24px',
     sm: '32px',
     md: '40px',
     lg: '56px',
     xl: '80px',
+    '2xl': '96px',
   };
 
   const fontSizeMap: Record<AvatarSize, string> = {
-    xs: 'var(--mp-font-size-xs)',
-    sm: 'var(--mp-font-size-sm)',
-    md: 'var(--mp-font-size-md)',
-    lg: 'var(--mp-font-size-lg)',
-    xl: 'var(--mp-font-size-2xl)',
+    '2xs': 'var(--mp-size-font-2xs)',
+    xs: 'var(--mp-size-font-xs)',
+    sm: 'var(--mp-size-font-sm)',
+    md: 'var(--mp-size-font-md)',
+    lg: 'var(--mp-size-font-lg)',
+    xl: 'var(--mp-size-font-xl)',
+    '2xl': 'var(--mp-size-font-2xl)',
   };
 
   const statusSizeMap: Record<AvatarSize, string> = {
+    '2xs': '5px',
     xs: '6px',
     sm: '8px',
     md: '10px',
     lg: '13px',
     xl: '18px',
+    '2xl': '22px',
   };
 
   const statusColorMap: Record<NonNullable<AvatarStatus>, string> = {

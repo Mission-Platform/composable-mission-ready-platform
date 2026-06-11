@@ -17,8 +17,8 @@ describe('BaseButton', () => {
   });
 
   it('applies variant class', () => {
-    const wrapper = mount(BaseButton, { props: { variant: 'danger' } });
-    expect(wrapper.classes()).toContain('base-button--danger');
+    const wrapper = mount(BaseButton, { props: { variant: 'error' } });
+    expect(wrapper.classes()).toContain('base-button--error');
   });
 
   it('applies size class', () => {

@@ -16,7 +16,7 @@
   import BaseModalFooter from './base-modal-footer.vue';
   import BaseModalHeader from './base-modal-header.vue';
 
-  export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
 
   const props = withDefaults(
     defineProps<{
@@ -157,22 +157,23 @@
       max-height: calc(100vh - var(--mp-spacing-8));
     }
 
-    /* Size variants only apply on sm+ (tablet/desktop); on mobile always full-width */
+    /* Size variants only apply on sm+ (tablet/desktop); on mobile always full-width.
+       Canonical 2xs → 2xl scale, plus a special `full` (near-fullscreen) value. */
     @include bp.bp-up('sm') {
-      &--sm {
-        max-width: var(--mp-size-width-sm);
+      @each $size, $max-width in (
+        '2xs': 20rem,
+        'xs': 24rem,
+        'sm': var(--mp-size-width-sm),
+        'md': var(--mp-size-width-md),
+        'lg': 51.429rem,
+        'xl': 68.571rem,
+        '2xl': var(--mp-size-width-lg)
+      ) {
+        &--#{$size} {
+          max-width: $max-width;
+        }
       }
 
-      &--md {
-        max-width: var(--mp-size-width-md);
-      }
-
-      &--lg {
-        max-width: 51.429rem;
-      } /* ~720px */
-      &--xl {
-        max-width: 68.571rem;
-      } /* ~960px */
       &--full {
         max-width: calc(100vw - var(--mp-spacing-8));
         max-height: calc(100vh - var(--mp-spacing-8));

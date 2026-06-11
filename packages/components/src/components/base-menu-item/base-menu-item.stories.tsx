@@ -15,7 +15,20 @@ const meta = {
     },
   },
   argTypes: {
-    variant: { control: 'select', options: ['default', 'danger'] },
+    variant: {
+      control: 'select',
+      options: [
+        'default',
+        'primary',
+        'secondary',
+        'tertiary',
+        'success',
+        'warning',
+        'information',
+        'error',
+        'critical',
+      ],
+    },
     disabled: { control: 'boolean' },
     active: { control: 'boolean' },
   },
@@ -42,7 +55,9 @@ export const Default: Story = {};
 
 export const Active: Story = { args: { active: true } };
 
-export const Danger: Story = { args: { variant: 'danger', label: 'Delete' } };
+export const Error: Story = { args: { variant: 'error', label: 'Delete' } };
+
+export const Critical: Story = { args: { variant: 'critical', label: 'Delete account' } };
 
 export const Disabled: Story = { args: { disabled: true } };
 

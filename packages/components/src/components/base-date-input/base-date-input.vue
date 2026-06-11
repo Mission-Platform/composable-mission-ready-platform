@@ -14,7 +14,7 @@
   import { useZIndex } from '../../composables/use-z-index';
   import BaseTypography from '../base-typography/base-typography.vue';
 
-  export type DateInputSize = 'sm' | 'md' | 'lg';
+  export type DateInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
   const props = withDefaults(
     defineProps<{
@@ -402,28 +402,14 @@
       flex-shrink: 0;
     }
 
-    /* Sizes */
-    &--sm .base-date-input__trigger {
-      padding: var(--mp-spacing-1) var(--mp-spacing-2);
+    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+      &--#{$size} .base-date-input__trigger {
+        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
 
-      .base-date-input__value {
-        font-size: var(--mp-font-size-sm);
-      }
-    }
-
-    &--md .base-date-input__trigger {
-      padding: var(--mp-spacing-2) var(--mp-spacing-3);
-
-      .base-date-input__value {
-        font-size: var(--mp-font-size-md);
-      }
-    }
-
-    &--lg .base-date-input__trigger {
-      padding: var(--mp-spacing-3) var(--mp-spacing-4);
-
-      .base-date-input__value {
-        font-size: var(--mp-font-size-lg);
+        .base-date-input__value {
+          font-size: var(--mp-size-font-#{$size});
+        }
       }
     }
 

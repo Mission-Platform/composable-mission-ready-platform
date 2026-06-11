@@ -15,7 +15,7 @@
   import BaseTag from '../base-tag/base-tag.vue';
   import BaseTypography from '../base-typography/base-typography.vue';
 
-  export type MultiselectSize = 'sm' | 'md' | 'lg';
+  export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
   export interface MultiselectOption {
     label: string;
@@ -378,34 +378,16 @@
       font-style: italic;
     }
 
-    /* Sizes */
-    &--sm {
-      .base-multiselect__control {
-        padding: var(--mp-spacing-1) var(--mp-spacing-2);
-      }
+    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+      &--#{$size} {
+        .base-multiselect__control {
+          padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+        }
 
-      .base-multiselect__input {
-        @include mp.mp-font-body-sm;
-      }
-    }
-
-    &--md {
-      .base-multiselect__control {
-        padding: var(--mp-spacing-2) var(--mp-spacing-3);
-      }
-
-      .base-multiselect__input {
-        @include mp.mp-font-body-md;
-      }
-    }
-
-    &--lg {
-      .base-multiselect__control {
-        padding: var(--mp-spacing-3) var(--mp-spacing-4);
-      }
-
-      .base-multiselect__input {
-        @include mp.mp-font-body-lg;
+        .base-multiselect__input {
+          font-size: var(--mp-size-font-#{$size});
+        }
       }
     }
 

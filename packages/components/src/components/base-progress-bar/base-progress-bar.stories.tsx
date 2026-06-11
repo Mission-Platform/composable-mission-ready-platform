@@ -15,8 +15,21 @@ const meta = {
     },
   },
   argTypes: {
-    variant: { control: 'select', options: ['primary', 'success', 'danger', 'warning', 'info'] },
-    size: { control: 'select', options: ['sm', 'md', 'lg'] },
+    variant: {
+      control: 'select',
+      options: [
+        'primary',
+        'secondary',
+        'tertiary',
+        'default',
+        'success',
+        'warning',
+        'information',
+        'error',
+        'critical',
+      ],
+    },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     value: { control: { type: 'range', min: 0, max: 100, step: 1 } },
     showLabel: { control: 'boolean' },
     indeterminate: { control: 'boolean' },
@@ -50,8 +63,12 @@ export const Indeterminate: Story = { args: { indeterminate: true, label: 'Proce
 
 export const Success: Story = { args: { variant: 'success', value: 100, showLabel: true } };
 
-export const Danger: Story = {
-  args: { variant: 'danger', value: 30, showLabel: true, label: 'Error' },
+export const Error: Story = {
+  args: { variant: 'error', value: 30, showLabel: true, label: 'Error' },
+};
+
+export const Critical: Story = {
+  args: { variant: 'critical', value: 15, showLabel: true, label: 'Critical' },
 };
 
 export const Sizes: Story = {

@@ -114,14 +114,14 @@
       <div class="snippet-modal-footer">
         <BaseButton
           v-if="isEditing"
-          variant="danger"
+          variant="error"
           @click="onDelete"
         >
           {{ t('btn.delete') }}
         </BaseButton>
         <div class="snippet-modal-footer__right">
           <BaseButton
-            variant="ghost"
+            variant="tertiary"
             @click="emit('close')"
           >
             {{ t('btn.cancel') }}
