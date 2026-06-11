@@ -294,7 +294,7 @@
               <BaseButton
                 size="sm"
                 :title="t('snippet.export')"
-                variant="ghost"
+                variant="tertiary"
                 @click="exportSnippet((rawRow as SnippetRow).id as string)"
               >
                 <IconDownload size="xs" />
@@ -302,7 +302,7 @@
               <BaseButton
                 size="sm"
                 :title="t('snippet.edit')"
-                variant="ghost"
+                variant="tertiary"
                 @click="openEditSnippet(rawRow as SnippetRow as Snippet)"
               >
                 <IconPencil size="xs" />
@@ -361,7 +361,7 @@
     <template #footer>
       <div class="rename-modal-footer">
         <BaseButton
-          variant="ghost"
+          variant="tertiary"
           @click="cancelRenameTab"
         >
           {{ t('rename.cancel') }}
