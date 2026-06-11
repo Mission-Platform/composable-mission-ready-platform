@@ -13,13 +13,13 @@
     "@changesets/cli": "catalog:",
     "@commitlint/cli": "^21.0.2",
     "@commitlint/config-conventional": "^21.0.2",
-    "husky": "^9.1.7",
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
     "@types/js-yaml": "catalog:",
     "@vue/compiler-sfc": "catalog:",
+    "husky": "^9.1.7",
     "js-yaml": "catalog:",
-    "turbo": "^2.9.16",
+    "turbo": "^2.9.17",
     "wrangler": "catalog:"
   },
   "packageManager": "pnpm@11.5.3+sha512.7ac1c919341c213a34dc0d02afb7143c5c26ac26ee8c4782deea821b8ac64d2134a081fd8941dae6e29bbb48f58dfc2b7fbceeccc07cb2f09d219d342a4969ed"
