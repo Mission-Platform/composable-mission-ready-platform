@@ -8,13 +8,6 @@ export default defineLibraryConfig({
   },
   name: 'MissionPlatformHarper',
   external: ['monaco-editor'],
-  overrides: {
-    build: {
-      rolldownOptions: {
-        output: {
-          preserveModules: false,
-        },
-      },
-    },
-  },
+  // Bundle each entry (incl. the worker) into a single self-contained file.
+  preserveModules: false,
 });

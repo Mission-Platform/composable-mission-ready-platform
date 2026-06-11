@@ -5,13 +5,6 @@ export default defineLibraryConfig({
   entry: 'src/tokens.ts',
   name: 'MissionPlatformTokens',
   fileName: 'tokens',
-  overrides: {
-    build: {
-      rollupOptions: {
-        output: {
-          preserveModules: false,
-        },
-      },
-    },
-  },
+  // Ship a single flat token bundle rather than a per-module tree.
+  preserveModules: false,
 });
