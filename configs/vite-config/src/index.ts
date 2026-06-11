@@ -105,6 +105,44 @@ export interface LibraryConfigOptions {
 }
 
 /**
+ * Resolve the configured `entry` (a single path or a name→path map) into
+ * absolute paths anchored at `rootDir`.
+ */
+function resolveLibraryEntry(
+  rootDirectory: string,
+  entry: string | Record<string, string>,
+): string | Record<string, string> {
+  if (typeof entry === 'string') {
+    return path.resolve(rootDirectory, entry);
+  }
+  return Object.fromEntries(Object.entries(entry).map(([key, value]) => [key, path.resolve(rootDirectory, value)]));
+}
+
+/**
+ * Build the Rollup/Rolldown `output` options, optionally preserving the source
+ * module graph so consumers get first-class tree shaking and code splitting.
+ */
+function buildLibraryOutput(
+  rootDirectory: string,
+  globals: Readonly<Record<string, string>>,
+  preserveModules: boolean,
+  preserveModulesRoot: string,
+): Record<string, unknown> {
+  const output: Record<string, unknown> = {
+    globals: { ...DEFAULT_LIBRARY_GLOBALS, ...globals },
+  };
+
+  if (preserveModules) {
+    output.preserveModules = true;
+    output.preserveModulesRoot = path.resolve(rootDirectory, preserveModulesRoot);
+    output.entryFileNames = '[name].js';
+    output.chunkFileNames = '[name].js';
+  }
+
+  return output;
+}
+
+/**
  * Build a Vite config tailored to the Mission Platform Vue library packages:
  * Vue + vue-i18n plugins, the shared PostCSS pipeline, ESM-only lib output,
  * single CSS bundle, and sensible peer-dependency externals.
@@ -134,10 +172,7 @@ export function defineLibraryConfig(options: LibraryConfigOptions): UserConfig {
     ...(autoExternalDeps ? readPackageDependencyNames(rootDir) : []),
   ];
 
-  const resolvedEntry =
-    typeof entry === 'string'
-      ? path.resolve(rootDir, entry)
-      : Object.fromEntries(Object.entries(entry).map(([key, value]) => [key, path.resolve(rootDir, value)]));
+  const useFileName = Boolean(fileName) && typeof entry === 'string';
 
   const base = defineConfig({
     css: {
@@ -146,24 +181,14 @@ export function defineLibraryConfig(options: LibraryConfigOptions): UserConfig {
     plugins: [vue(), VueI18nPlugin({ include: [] })],
     build: {
       lib: {
-        entry: resolvedEntry,
+        entry: resolveLibraryEntry(rootDir, entry),
         name,
         formats: ['es'],
-        ...(fileName && typeof entry === 'string' ? { fileName } : {}),
+        ...(useFileName ? { fileName } : {}),
       },
       rolldownOptions: {
         external: createExternalMatcher(externalNames),
-        output: {
-          globals: { ...DEFAULT_LIBRARY_GLOBALS, ...globals },
-          ...(preserveModules
-            ? {
-                preserveModules: true,
-                preserveModulesRoot: path.resolve(rootDir, preserveModulesRoot),
-                entryFileNames: '[name].js',
-                chunkFileNames: '[name].js',
-              }
-            : {}),
-        },
+        output: buildLibraryOutput(rootDir, globals, preserveModules, preserveModulesRoot),
       },
       cssCodeSplit: false,
     },
