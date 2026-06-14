@@ -6,7 +6,7 @@
    * the component's TypeScript declarations) for the full public API,
    * and refer to the linked stories for usage examples.
    */
-  import BaseTypography from '../base-typography/base-typography.vue';
+  import BaseButton from '../base-button/base-button.vue';
 
   defineProps<{
     isFirst: boolean;
@@ -30,35 +30,23 @@
       :next="() => emit('next')"
       :prev="() => emit('prev')"
     >
-      <button
+      <BaseButton
         v-if="!isFirst"
         class="base-form-wizard__btn base-form-wizard__btn--secondary"
         type="button"
+        variant="secondary"
         @click="emit('prev')"
       >
-        <BaseTypography
-          as="span"
-          color="inherit"
-          variant="body-md"
-          weight="medium"
-        >
-          {{ backLabel }}
-        </BaseTypography>
-      </button>
-      <button
+        {{ backLabel }}
+      </BaseButton>
+      <BaseButton
         class="base-form-wizard__btn base-form-wizard__btn--primary"
         type="button"
+        variant="primary"
         @click="emit('next')"
       >
-        <BaseTypography
-          as="span"
-          color="inherit"
-          variant="body-md"
-          weight="medium"
-        >
-          {{ isLast ? finishLabel : nextLabel }}
-        </BaseTypography>
-      </button>
+        {{ isLast ? finishLabel : nextLabel }}
+      </BaseButton>
     </slot>
   </footer>
 </template>
@@ -71,47 +59,5 @@
     gap: var(--mp-spacing-3);
     padding-top: var(--mp-spacing-4);
     border-top: 1px solid var(--mp-color-border-default);
-  }
-
-  .base-form-wizard__btn {
-    display: inline-flex;
-    align-items: center;
-    padding: var(--mp-spacing-2) var(--mp-spacing-4);
-    font-family: var(--mp-font-family-sans);
-    border: 1px solid transparent;
-    border-radius: var(--mp-radius-md);
-    cursor: pointer;
-    transition:
-      background-color 150ms ease,
-      border-color 150ms ease;
-
-    &--primary {
-      background-color: var(--mp-color-primary-default);
-      color: var(--mp-color-text-on-primary);
-
-      &:hover {
-        background-color: var(--mp-color-primary-hover);
-      }
-
-      &:focus-visible {
-        outline: none;
-        box-shadow: var(--mp-shadow-focus-primary);
-      }
-    }
-
-    &--secondary {
-      background-color: var(--mp-color-bg-surface);
-      border-color: var(--mp-color-border-default);
-      color: var(--mp-color-text-primary);
-
-      &:hover {
-        background-color: var(--mp-color-bg-muted);
-      }
-
-      &:focus-visible {
-        outline: none;
-        box-shadow: var(--mp-shadow-focus-primary);
-      }
-    }
   }
 </style>

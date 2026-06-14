@@ -8,6 +8,7 @@
    */
   import { IconClose } from '@mission-platform/icons';
 
+  import BaseIconButton from '../base-icon-button/base-icon-button.vue';
   import BaseTypography from '../base-typography/base-typography.vue';
 
   withDefaults(
@@ -41,15 +42,15 @@
         {{ title }}
       </BaseTypography>
     </slot>
-    <button
+    <BaseIconButton
       v-if="!hideClose"
-      :aria-label="closeLabel"
+      :label="closeLabel"
       class="base-sidebar__close"
-      type="button"
+      size="sm"
       @click="emit('close')"
     >
       <IconClose size="md" />
-    </button>
+    </BaseIconButton>
   </header>
 </template>
 
@@ -66,29 +67,5 @@
 
   .base-sidebar__title {
     margin: 0;
-  }
-
-  .base-sidebar__close {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--mp-spacing-1);
-    border: none;
-    border-radius: var(--mp-radius-sm);
-    background: transparent;
-    cursor: pointer;
-    color: var(--mp-color-text-secondary);
-    flex-shrink: 0;
-    line-height: 1;
-
-    &:hover {
-      background-color: var(--mp-color-bg-muted);
-      color: var(--mp-color-text-primary);
-    }
-
-    &:focus-visible {
-      outline: none;
-      box-shadow: var(--mp-shadow-focus-primary);
-    }
   }
 </style>

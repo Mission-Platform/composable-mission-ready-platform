@@ -10,6 +10,7 @@ The package provides over 100 Vue 3 components with consistent styling and behav
 
 #### Form Controls
 - `BaseButton` — Button component with variants (primary, secondary, ghost) and sizes
+- `BaseIconButton` — Compact, square, icon-only button (ghost/primary/secondary/danger variants, sm/md/lg sizes) with a required `label` for accessibility; used for close controls, toolbar actions, and chip removal
 - `BaseInput`, `BaseTextarea` — Text input components with validation states
 - `BaseSelect`, `BaseMultiselect` — Dropdown selection components
 - `BaseCheckbox`, `BaseRadio`, `BaseSwitch` — Single/multi-state inputs

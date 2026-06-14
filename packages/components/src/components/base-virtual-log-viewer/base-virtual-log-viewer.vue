@@ -222,9 +222,16 @@
       display: flex;
       align-items: center;
       gap: var(--mp-spacing-2);
+      width: 100%;
       padding: 0 var(--mp-spacing-3);
+      margin: 0;
+      font: inherit;
+      color: inherit;
+      text-align: left;
       cursor: default;
       outline: none;
+      background: none;
+      border: 0;
       border-bottom: 1px solid transparent;
       transition: background-color 80ms ease;
 

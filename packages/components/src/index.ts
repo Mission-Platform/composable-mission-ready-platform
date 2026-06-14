@@ -10,6 +10,9 @@
 export { default as BaseButton } from './components/base-button';
 export type { ButtonVariant, ButtonSize } from './components/base-button';
 
+export { default as BaseIconButton } from './components/base-icon-button';
+export type { IconButtonVariant, IconButtonSize } from './components/base-icon-button';
+
 export { default as BaseCard } from './components/base-card';
 export type { CardPadding } from './components/base-card';
 export { default as BaseCardHeader } from './components/base-card/base-card-header.vue';
