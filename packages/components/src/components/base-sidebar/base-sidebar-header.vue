@@ -10,10 +10,18 @@
 
   import BaseTypography from '../base-typography/base-typography.vue';
 
-  defineProps<{
-    title?: string;
-    closeLabel: string;
-  }>();
+  withDefaults(
+    defineProps<{
+      title?: string;
+      closeLabel: string;
+      /** Hide the close button (e.g. for an inline, fixed-open sidebar). */
+      hideClose?: boolean;
+    }>(),
+    {
+      title: undefined,
+      hideClose: false,
+    },
+  );
 
   const emit = defineEmits<{
     close: [];
@@ -34,6 +42,7 @@
       </BaseTypography>
     </slot>
     <button
+      v-if="!hideClose"
       :aria-label="closeLabel"
       class="base-sidebar__close"
       type="button"
