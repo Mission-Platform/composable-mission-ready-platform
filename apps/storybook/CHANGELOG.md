@@ -1,5 +1,54 @@
 # @mission-platform/storybook
 
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies [576b2ed]
+- Updated dependencies [e02caaf]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [c1834ea]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [e02caaf]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+- Updated dependencies [577c4d7]
+- Updated dependencies [81b33bd]
+- Updated dependencies [a085437]
+- Updated dependencies [e02caaf]
+- Updated dependencies [e02caaf]
+- Updated dependencies [577c4d7]
+- Updated dependencies [577c4d7]
+- Updated dependencies [dfb4eaa]
+- Updated dependencies [81b33bd]
+- Updated dependencies [577c4d7]
+- Updated dependencies [81b33bd]
+- Updated dependencies [81b33bd]
+  - @mission-platform/components@3.0.0
+  - @mission-platform/map@0.2.1
+  - @mission-platform/breakpoints@3.0.0
+  - @mission-platform/i18n@0.4.0
+  - @mission-platform/icons@1.0.0
+  - @mission-platform/tokens@0.3.0
+
 ## 0.0.8
 
 ### Patch Changes
