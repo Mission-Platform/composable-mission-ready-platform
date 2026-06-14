@@ -47,6 +47,7 @@
     }
   },
   "dependencies": {
+    "@dnd-kit/vue": "catalog:",
     "@floating-ui/vue": "catalog:",
     "@mission-platform/breakpoints": "workspace:*",
     "@mission-platform/hunspell": "workspace:*",

@@ -49,6 +49,8 @@ export {
   jsonSchemaToFields,
   jsonSchemaDefaults,
   createFormValidator,
+  evaluateCondition,
+  isFieldVisible,
 } from './components/base-schema-form';
 export type {
   FormJsonSchema,
@@ -66,9 +68,55 @@ export type {
   FormValidator,
   SchemaFormTranslate,
   SchemaObject,
+  FieldCondition,
+  FieldConditionLeaf,
+  FieldConditionGroup,
 } from './components/base-schema-form';
 export { default as BaseSchemaFormField } from './components/base-schema-form/base-schema-form-field.vue';
 export { default as BaseSchemaFormActions } from './components/base-schema-form/base-schema-form-actions.vue';
+
+export { default as BaseFieldSet } from './components/base-field-set';
+
+export {
+  default as BaseFormBuilder,
+  useFormBuilder,
+  DEFAULT_FIELD_TYPES,
+  createField,
+  nextFieldId,
+  builderFieldToProperty,
+  fieldsToSchema,
+  fieldsToWizardSchema,
+  fieldsToDefinition,
+  schemaToFields,
+  schemaStepTitles,
+  schemaStepDescriptions,
+  schemaStepConditions,
+  fieldKeyError,
+  slugify,
+  uniqueKey,
+  widgetToJsonType,
+  widgetHasOptions,
+  isNumberWidget,
+  isFieldsetWidget,
+  CANVAS_GROUP,
+  PALETTE_GROUP,
+  canvasGroup,
+  canvasStepGroup,
+  canvasGroupStep,
+  canvasGroupParentId,
+  isCanvasGroup,
+} from './components/base-form-builder';
+export type {
+  UseFormBuilder,
+  UseFormBuilderConfig,
+  InsertTarget,
+  BuilderField,
+  BuilderFieldOption,
+  FieldTypeDescriptor,
+  FieldsToSchemaOptions,
+  FormBuilderDragData,
+  FormBuilderDropData,
+} from './components/base-form-builder';
 
 export { default as BaseTag } from './components/base-tag';
 export type { TagSize, TagVariant } from './components/base-tag';
@@ -93,8 +141,8 @@ export { default as BaseDialogFooter } from './components/base-dialog/base-dialo
 export { default as BaseBreadcrumb } from './components/base-breadcrumb';
 export type { BreadcrumbItem } from './components/base-breadcrumb';
 
-export { default as BaseSidebar } from './components/base-sidebar';
-export type { SidebarSide, SidebarSize } from './components/base-sidebar';
+export { default as BaseSidebar, SIDEBAR_SIZE_REM } from './components/base-sidebar';
+export type { SidebarSide, SidebarSize, SidebarVariant, SidebarDraggable } from './components/base-sidebar';
 export { default as BaseSidebarHeader } from './components/base-sidebar/base-sidebar-header.vue';
 export { default as BaseSidebarBody } from './components/base-sidebar/base-sidebar-body.vue';
 export { default as BaseSidebarFooter } from './components/base-sidebar/base-sidebar-footer.vue';
@@ -182,6 +230,8 @@ export type {
 export { default as BaseApplicationLayout, StatusLevels } from './components/base-application-layout';
 export type { ApplicationStatusLevel } from './components/base-application-layout';
 
+export { default as BaseVerticalLayout } from './components/base-vertical-layout';
+
 export { default as BaseAvatar } from './components/base-avatar';
 export type { AvatarSize, AvatarShape, AvatarStatus } from './components/base-avatar';
 
@@ -230,6 +280,30 @@ export type { DateTimeRangeInputSize, DateTimeRange, TimezoneMode } from './comp
 
 export { default as BaseColorInput } from './components/base-color-input';
 export type { ColorInputSize } from './components/base-color-input';
+
+export { default as BaseNumberStepper } from './components/base-number-stepper';
+export type { NumberStepperSize } from './components/base-number-stepper';
+
+export {
+  default as BaseLocationInput,
+  COORDINATE_PRECISION,
+  roundCoordinate,
+  parseAxis,
+  formatAxis,
+  formatLocation,
+  toGeoJsonPoint,
+  fromGeoJsonPoint,
+  isCompleteLocation,
+  isEmptyLocation,
+  emptyLocation,
+} from './components/base-location-input';
+export type {
+  LocationInputSize,
+  LocationFormat,
+  LocationValue,
+  GeoJsonPoint,
+  CoordinateAxis,
+} from './components/base-location-input';
 
 // ─── Scheduler ────────────────────────────────────────────────────────────────
 
