@@ -163,7 +163,7 @@ export const Resizable: Story = {
     components: { BaseSidebar, BaseButton },
     setup() {
       const open = ref(false);
-      const width = ref<number | undefined>();
+      const width = ref<number | undefined>(undefined);
       return { open, width };
     },
     template: `

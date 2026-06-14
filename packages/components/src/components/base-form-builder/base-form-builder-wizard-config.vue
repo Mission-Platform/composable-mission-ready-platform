@@ -12,7 +12,7 @@
   import BaseTextarea from '../base-textarea/base-textarea.vue';
 
   withDefaults(
-    defineProps<{   
+    defineProps<{
       /** The form title. */
       title?: string;
       /** The form description. */
@@ -34,6 +34,7 @@
     'update:description': [description: string];
   }>();
 </script>
+
 <template>
   <div class="form-builder-wizard-config">
     <BaseInput

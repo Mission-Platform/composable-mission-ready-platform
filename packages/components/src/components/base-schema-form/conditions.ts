@@ -29,69 +29,39 @@ function valueAtPath(values: FormValues, path: string): unknown {
 
 /** Whether a value counts as "filled" for the `truthy` comparator. */
 function isFilled(value: unknown): boolean {
-  const typeChecks: { [key: string]: (v: unknown) => boolean } = {
-    undefined: () => false,
-    object: v => v === null ? false : Array.isArray(v) ? v.length > 0 : true,
-    string: v => (v as string).length > 0,
-    boolean: v => v as boolean,
-    default: () => true,
-  };
-  const check = typeChecks[typeof value] || typeChecks.default;
-  return check(value);
+  if (value === undefined || value === null || value === '') return false;
+  if (Array.isArray(value)) return value.length > 0;
+  if (typeof value === 'boolean') return value;
+  return true;
 }
 
 /** Coerce a value to a finite number, or `undefined` when not numeric. */
 function toNumber(value: unknown): number | undefined {
-  const handlers: Record<string, (v: any) => number | undefined> = {
-    number: (v) => Number.isFinite(v) ? v : undefined,
-    string: (v) => {
-      if (v.trim() === '') return undefined;
-      const parsed = Number(v);
-      return Number.isNaN(parsed) ? undefined : parsed;
-    },
-  };
-
-  const handler = handlers[typeof value];
-  return handler ? handler(value as any) : undefined;
+  if (typeof value === 'number') return Number.isFinite(value) ? value : undefined;
+  if (typeof value === 'string' && value.trim() !== '') {
+    const parsed = Number(value);
+    return Number.isNaN(parsed) ? undefined : parsed;
+  }
+  return undefined;
 }
 
 /** Evaluate a single leaf comparison against the current form values. */
 function evaluateLeaf(leaf: FieldConditionLeaf, values: FormValues): boolean {
   const value = valueAtPath(values, leaf.field);
 
-  const checks: Record<string, (val: any, cond: any) => boolean> = {
-    equals: (val, cond) => val === cond,
-    notEquals: (val, cond) => val !== cond,
-    in: (val, cond: Array<string | number | boolean>) => cond.includes(val),
-    contains: (val, cond) => Array.isArray(val) && val.includes(cond),
-    truthy: (val, cond: boolean) => isFilled(val) === cond,
-  };
-
-  for (const [key, checker] of Object.entries(checks)) {
-    const cond = (leaf as any)[key];
-    if (cond !== undefined && !checker(value, cond)) {
-      return false;
-    }
-  }
-
-  const numericComparators: Record<string, (num: number, cond: number) => boolean> = {
-    gt: (num, cond) => num > cond,
-    gte: (num, cond) => num >= cond,
-    lt: (num, cond) => num < cond,
-    lte: (num, cond) => num <= cond,
-  };
+  if (leaf.equals !== undefined && value !== leaf.equals) return false;
+  if (leaf.notEquals !== undefined && value === leaf.notEquals) return false;
+  if (leaf.in !== undefined && !leaf.in.includes(value as string | number | boolean)) return false;
+  if (leaf.contains !== undefined && (!Array.isArray(value) || !value.includes(leaf.contains))) return false;
+  if (leaf.truthy !== undefined && isFilled(value) !== leaf.truthy) return false;
 
   if (leaf.gt !== undefined || leaf.gte !== undefined || leaf.lt !== undefined || leaf.lte !== undefined) {
     const numeric = toNumber(value);
-    if (numeric === undefined) {
-      return false;
-    }
-    for (const [key, checker] of Object.entries(numericComparators)) {
-      const cond = (leaf as any)[key];
-      if (cond !== undefined && !checker(numeric, cond)) {
-        return false;
-      }
-    }
+    if (numeric === undefined) return false;
+    if (leaf.gt !== undefined && !(numeric > leaf.gt)) return false;
+    if (leaf.gte !== undefined && !(numeric >= leaf.gte)) return false;
+    if (leaf.lt !== undefined && !(numeric < leaf.lt)) return false;
+    if (leaf.lte !== undefined && !(numeric <= leaf.lte)) return false;
   }
 
   return true;
@@ -104,21 +74,17 @@ function evaluateLeaf(leaf: FieldConditionLeaf, values: FormValues): boolean {
  * present on the same group are themselves AND-ed.  An empty group passes.
  */
 export function evaluateCondition(condition: FieldCondition, values: FormValues): boolean {
-  if (!isGroup(condition)) {
-    return evaluateLeaf(condition, values);
+  if (!isGroup(condition)) return evaluateLeaf(condition, values);
+
+  if (condition.allOf && !condition.allOf.every((child) => evaluateCondition(child, values))) {
+    return false;
   }
-
-  const checks: Record<'allOf' | 'anyOf' | 'oneOf', (children: FieldCondition[]) => boolean> = {
-    allOf: (children) => children.every((child) => evaluateCondition(child, values)),
-    anyOf: (children) => children.some((child) => evaluateCondition(child, values)),
-    oneOf: (children) => children.filter((child) => evaluateCondition(child, values)).length === 1,
-  };
-
-  for (const key of ['allOf', 'anyOf', 'oneOf'] as const) {
-    const children = condition[key];
-    if (children && !checks[key](children)) {
-      return false;
-    }
+  if (condition.anyOf && !condition.anyOf.some((child) => evaluateCondition(child, values))) {
+    return false;
+  }
+  if (condition.oneOf) {
+    const passing = condition.oneOf.filter((child) => evaluateCondition(child, values)).length;
+    if (passing !== 1) return false;
   }
 
   return true;

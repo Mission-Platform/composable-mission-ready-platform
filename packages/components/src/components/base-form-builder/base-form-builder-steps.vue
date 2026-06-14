@@ -43,6 +43,7 @@
       disabled: false,
     },
   );
+
   const emit = defineEmits<{
     /** Append a new wizard step. */
     'add-step': [];

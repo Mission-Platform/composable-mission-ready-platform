@@ -20,7 +20,8 @@
   export type NumberStepperSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
   const props = withDefaults(
-    defineProps<{    /** The numeric value, or `null`/`` when empty. */
+    defineProps<{
+      /** The numeric value, or `null`/`''` when empty. */
       modelValue?: number | null | '';
       label?: string;
       labelHidden?: boolean;
@@ -103,22 +104,11 @@
     return next;
   }
 
-  /**
-   * Commit the given value by emitting update:modelValue and change events.
-   *
-   * @param {number|null} value - The value to commit.
-   */
   function commit(value: number | null) {
     emit('update:modelValue', value);
     emit('change', value);
   }
 
-  /**
-   * Handle input events from the input element.
-   * Parses and normalises the input, then commits or ignores invalid input.
-   *
-   * @param {Event} event - The input event.
-   */
   function onInput(event: Event) {
     const raw = (event.target as HTMLInputElement).value;
     if (raw.trim() === '') {
@@ -135,11 +125,6 @@
   );
   const canIncrement = computed(() => !props.disabled && (props.max === undefined || (current.value ?? 0) < props.max));
 
-  /**
-   * Adjust the current value by a step in the given direction.
-   *
-   * @param {1 | -1} direction - Direction to adjust (1 to increment, -1 to decrement).
-   */
   function adjust(direction: 1 | -1) {
     if (props.disabled) return;
     const base = current.value ?? effectiveMin.value ?? 0;

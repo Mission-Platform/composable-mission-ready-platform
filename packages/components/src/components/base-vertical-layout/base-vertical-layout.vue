@@ -113,48 +113,26 @@
     return [start, 'minmax(0, 1fr)', end].filter(Boolean).join(' ');
   });
 
-  /**
-   * Updates the width override for the start sidebar during resize.
-   * @param {number} width - The new width in rem units.
-   */
   function onStartResize(width: number) {
     startWidthOverride.value = `${width}rem`;
   }
 
-  /**
-   * Updates the width override for the end sidebar during resize.
-   * @param {number} width - The new width in rem units.
-   */
   function onEndResize(width: number) {
     endWidthOverride.value = `${width}rem`;
   }
 
-  /**
-   * Emits an event to update the start sidebar open state.
-   * @param {boolean} open - Whether the start sidebar should be open.
-   */
   function setStartOpen(open: boolean) {
     emit('update:startOpen', open);
   }
 
-  /**
-   * Emits an event to update the end sidebar open state.
-   * @param {boolean} open - Whether the end sidebar should be open.
-   */
   function setEndOpen(open: boolean) {
     emit('update:endOpen', open);
   }
 
-  /**
-   * Toggles the open state of the start sidebar.
-   */
   function toggleStart() {
     setStartOpen(!props.startOpen);
   }
 
-  /**
-   * Toggles the open state of the end sidebar.
-   */
   function toggleEnd() {
     setEndOpen(!props.endOpen);
   }

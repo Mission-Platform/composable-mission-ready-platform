@@ -85,7 +85,7 @@
   watch(
     () => props.modelValue,
     (id) => {
-      if (id !== undefined && id !== activeId.value) activeId.value = id;
+      if (id != undefined && id !== activeId.value) activeId.value = id;
     },
   );
 
