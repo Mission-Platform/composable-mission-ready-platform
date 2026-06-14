@@ -75,7 +75,7 @@ en:
     placeholder: Popout content area
   BreakpointDebug:
     breakpoint: 'breakpoint:'
-    separator: '{''|''}'
+    separator: "{'|'}"
     debug_px: ({breakpoint}px)
   MapShowcase:
     title: Map Draw Toolbar
