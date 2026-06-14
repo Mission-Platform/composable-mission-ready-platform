@@ -72,3 +72,23 @@ export const Showcase: Story = {
     `,
   }),
 };
+
+export const WithStartAndEndExtensions: Story = {
+  render: () => ({
+    components: { BaseTimeInput },
+    setup() {
+      const time = ref('');
+      return { time };
+    },
+    template: `
+      <BaseTimeInput v-model="time" label="Start time" style="max-width: 360px">
+        <template #start>
+          <span style="font-size: var(--mp-font-size-sm);">At</span>
+        </template>
+        <template #end>
+          <span style="font-size: var(--mp-font-size-sm);">local</span>
+        </template>
+      </BaseTimeInput>
+    `,
+  }),
+};

@@ -11,8 +11,12 @@
   import { useId } from '../../composables/use-id';
   import BaseTypography from '../base-typography/base-typography.vue';
 
+  import type { Autocomplete } from '../base-schema-form/types';
+
   export type InputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   export type InputType = 'text' | 'email' | 'password' | 'number' | 'search' | 'tel' | 'url';
+  export type InputAutocapitalize = 'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters';
+  export type { Autocomplete } from '../base-schema-form/types';
 
   const props = withDefaults(
     defineProps<{
@@ -26,6 +30,20 @@
       error?: string;
       disabled?: boolean;
       required?: boolean;
+      /** Native `autocomplete` token (e.g. `'email'`, `'name'`, `'off'`). */
+      autocomplete?: Autocomplete;
+      /** Native `autocapitalize` hint for on-screen keyboards. */
+      autocapitalize?: InputAutocapitalize;
+      /** Allow multiple comma-separated entries (`type="email"` only). */
+      multiple?: boolean;
+      /** Step increment (`type="number"`). */
+      step?: number | string;
+      /** Inclusive minimum (`type="number"`). */
+      min?: number | string;
+      /** Inclusive maximum (`type="number"`). */
+      max?: number | string;
+      /** Autocomplete suggestions rendered as a native `<datalist>`. */
+      list?: Array<string | number>;
       id?: string;
     }>(),
     {
@@ -39,6 +57,13 @@
       error: undefined,
       disabled: false,
       required: false,
+      autocomplete: undefined,
+      autocapitalize: undefined,
+      multiple: false,
+      step: undefined,
+      min: undefined,
+      max: undefined,
+      list: undefined,
       id: undefined,
     },
   );
@@ -85,14 +110,28 @@
       </span>
     </label>
     <div class="base-input__wrapper">
+      <!-- Leading extension (e.g. an icon, unit, or button), like the stepper's −/+ controls. -->
+      <span
+        v-if="$slots.start"
+        class="base-input__extension base-input__extension--start"
+      >
+        <slot name="start" />
+      </span>
       <slot name="prefix" />
       <input
         :id="resolvedId"
         :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
         :aria-invalid="!!error || undefined"
+        :autocapitalize="autocapitalize"
+        :autocomplete="autocomplete"
         :disabled="disabled"
+        :list="list && list.length ? `${resolvedId}-list` : undefined"
+        :max="max"
+        :min="min"
+        :multiple="type === 'email' && multiple ? true : undefined"
         :placeholder="placeholder"
         :required="required"
+        :step="step"
         :type="type"
         :value="modelValue"
         class="base-input__field"
@@ -101,7 +140,24 @@
         @focus="emit('focus', $event)"
         @input="handleInput"
       />
+      <datalist
+        v-if="list && list.length"
+        :id="`${resolvedId}-list`"
+      >
+        <option
+          v-for="option in list"
+          :key="String(option)"
+          :value="option"
+        />
+      </datalist>
       <slot name="suffix" />
+      <!-- Trailing extension (e.g. an icon, unit, or button). -->
+      <span
+        v-if="$slots.end"
+        class="base-input__extension base-input__extension--end"
+      >
+        <slot name="end" />
+      </span>
     </div>
     <BaseTypography
       v-if="error"
@@ -173,6 +229,7 @@
     &__field {
       flex: 1;
       width: 100%;
+      min-width: 0;
       border: none;
       outline: none;
       background: transparent;
@@ -182,6 +239,22 @@
 
       &::placeholder {
         color: var(--mp-color-text-tertiary);
+      }
+    }
+
+    /* Leading / trailing extension areas (icons, units, or buttons). */
+    &__extension {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      color: var(--mp-color-text-secondary);
+
+      &--start {
+        margin-inline-start: var(--mp-spacing-2);
+      }
+
+      &--end {
+        margin-inline-end: var(--mp-spacing-2);
       }
     }
 

@@ -262,29 +262,45 @@
       </span>
     </label>
 
-    <button
-      :id="resolvedId"
-      ref="triggerRef"
-      :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
-      :aria-expanded="open"
-      :aria-haspopup="'dialog'"
-      :aria-invalid="!!error || undefined"
-      :aria-label="label ?? 'Date range picker'"
-      class="base-date-range__trigger"
-      type="button"
-      @click="toggleOpen"
-      @keydown.escape="open = false"
-    >
-      <span :class="['base-date-range__value', { 'base-date-range__value--placeholder': !displayValue }]">
-        {{ displayValue || 'YYYY-MM-DD  →  YYYY-MM-DD' }}
-      </span>
+    <div class="base-date-range__wrapper">
+      <!-- Leading extension (e.g. an icon, unit, or button). -->
       <span
-        aria-hidden="true"
-        class="base-date-range__icon"
+        v-if="$slots.start"
+        class="base-date-range__extension base-date-range__extension--start"
       >
-        <IconCalendar size="sm" />
+        <slot name="start" />
       </span>
-    </button>
+      <button
+        :id="resolvedId"
+        ref="triggerRef"
+        :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
+        :aria-expanded="open"
+        :aria-haspopup="'dialog'"
+        :aria-invalid="!!error || undefined"
+        :aria-label="label ?? 'Date range picker'"
+        class="base-date-range__trigger"
+        type="button"
+        @click="toggleOpen"
+        @keydown.escape="open = false"
+      >
+        <span :class="['base-date-range__value', { 'base-date-range__value--placeholder': !displayValue }]">
+          {{ displayValue || 'YYYY-MM-DD  →  YYYY-MM-DD' }}
+        </span>
+        <span
+          aria-hidden="true"
+          class="base-date-range__icon"
+        >
+          <IconCalendar size="sm" />
+        </span>
+      </button>
+      <!-- Trailing extension (e.g. an icon, unit, or button). -->
+      <span
+        v-if="$slots.end"
+        class="base-date-range__extension base-date-range__extension--end"
+      >
+        <slot name="end" />
+      </span>
+    </div>
 
     <Teleport to="body">
       <div
@@ -485,26 +501,54 @@
       margin-left: 2px;
     }
 
+    &__wrapper {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-md);
+      background-color: var(--mp-color-bg-surface);
+      transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease;
+
+      &:focus-within {
+        border-color: var(--mp-color-border-focus);
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+    }
+
     &__trigger {
       display: flex;
+      flex: 1;
+      min-width: 0;
       align-items: center;
       justify-content: space-between;
       appearance: none;
       width: 100%;
       text-align: left;
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background-color: var(--mp-color-bg-surface);
+      border: none;
+      background: transparent;
       cursor: pointer;
-      transition:
-        border-color 150ms ease,
-        box-shadow 150ms ease;
       user-select: none;
 
       &:focus {
         outline: none;
-        border-color: var(--mp-color-border-focus);
-        box-shadow: var(--mp-shadow-focus-primary);
+      }
+    }
+
+    /* Leading / trailing extension areas (icons, units, or buttons). */
+    &__extension {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      color: var(--mp-color-text-secondary);
+
+      &--start {
+        margin-inline-start: var(--mp-spacing-2);
+      }
+
+      &--end {
+        margin-inline-end: var(--mp-spacing-2);
       }
     }
 
@@ -536,15 +580,19 @@
       }
     }
 
-    &--error .base-date-range__trigger {
+    &--error .base-date-range__wrapper {
       border-color: var(--mp-color-danger-default);
+
+      &:focus-within {
+        box-shadow: var(--mp-shadow-focus-danger);
+      }
     }
 
     &--disabled {
       opacity: 0.5;
       pointer-events: none;
 
-      .base-date-range__trigger {
+      .base-date-range__wrapper {
         background-color: var(--mp-color-bg-muted);
         cursor: not-allowed;
       }

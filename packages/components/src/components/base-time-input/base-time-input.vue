@@ -170,48 +170,64 @@
       </span>
     </label>
 
-    <button
-      :id="resolvedId"
-      ref="triggerRef"
-      :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
-      :aria-expanded="open"
-      :aria-haspopup="'dialog'"
-      :aria-invalid="!!error || undefined"
-      :aria-label="label ?? 'Time picker'"
-      class="base-time-input__trigger"
-      type="button"
-      @click="toggleOpen"
-      @keydown.escape="open = false"
-    >
-      <span :class="['base-time-input__value', { 'base-time-input__value--placeholder': !displayValue }]">
-        {{ displayValue || placeholder }}
-      </span>
+    <div class="base-time-input__wrapper">
+      <!-- Leading extension (e.g. an icon, unit, or button). -->
       <span
-        aria-hidden="true"
-        class="base-time-input__icon"
+        v-if="$slots.start"
+        class="base-time-input__extension base-time-input__extension--start"
       >
-        <svg
-          fill="none"
-          height="16"
-          viewBox="0 0 16 16"
-          width="16"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle
-            cx="8"
-            cy="8"
-            r="6.5"
-            stroke="currentColor"
-          />
-          <path
-            d="M8 5V8.5L10.5 10"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
+        <slot name="start" />
       </span>
-    </button>
+      <button
+        :id="resolvedId"
+        ref="triggerRef"
+        :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
+        :aria-expanded="open"
+        :aria-haspopup="'dialog'"
+        :aria-invalid="!!error || undefined"
+        :aria-label="label ?? 'Time picker'"
+        class="base-time-input__trigger"
+        type="button"
+        @click="toggleOpen"
+        @keydown.escape="open = false"
+      >
+        <span :class="['base-time-input__value', { 'base-time-input__value--placeholder': !displayValue }]">
+          {{ displayValue || placeholder }}
+        </span>
+        <span
+          aria-hidden="true"
+          class="base-time-input__icon"
+        >
+          <svg
+            fill="none"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="8"
+              cy="8"
+              r="6.5"
+              stroke="currentColor"
+            />
+            <path
+              d="M8 5V8.5L10.5 10"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      </button>
+      <!-- Trailing extension (e.g. an icon, unit, or button). -->
+      <span
+        v-if="$slots.end"
+        class="base-time-input__extension base-time-input__extension--end"
+      >
+        <slot name="end" />
+      </span>
+    </div>
 
     <Teleport to="body">
       <div
@@ -342,26 +358,54 @@
       margin-left: 2px;
     }
 
+    &__wrapper {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-md);
+      background-color: var(--mp-color-bg-surface);
+      transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease;
+
+      &:focus-within {
+        border-color: var(--mp-color-border-focus);
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+    }
+
     &__trigger {
       display: flex;
+      flex: 1;
+      min-width: 0;
       align-items: center;
       justify-content: space-between;
       appearance: none;
       width: 100%;
       text-align: left;
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background-color: var(--mp-color-bg-surface);
+      border: none;
+      background: transparent;
       cursor: pointer;
-      transition:
-        border-color 150ms ease,
-        box-shadow 150ms ease;
       user-select: none;
 
       &:focus {
         outline: none;
-        border-color: var(--mp-color-border-focus);
-        box-shadow: var(--mp-shadow-focus-primary);
+      }
+    }
+
+    /* Leading / trailing extension areas (icons, units, or buttons). */
+    &__extension {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      color: var(--mp-color-text-secondary);
+
+      &--start {
+        margin-inline-start: var(--mp-spacing-2);
+      }
+
+      &--end {
+        margin-inline-end: var(--mp-spacing-2);
       }
     }
 
@@ -393,10 +437,10 @@
       }
     }
 
-    &--error .base-time-input__trigger {
+    &--error .base-time-input__wrapper {
       border-color: var(--mp-color-danger-default);
 
-      &:focus {
+      &:focus-within {
         box-shadow: var(--mp-shadow-focus-danger);
       }
     }
@@ -405,7 +449,7 @@
       opacity: 0.5;
       pointer-events: none;
 
-      .base-time-input__trigger {
+      .base-time-input__wrapper {
         background-color: var(--mp-color-bg-muted);
         cursor: not-allowed;
       }

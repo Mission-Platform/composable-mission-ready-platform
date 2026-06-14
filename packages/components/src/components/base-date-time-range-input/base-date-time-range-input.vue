@@ -34,6 +34,10 @@
       required?: boolean;
       size?: DateTimeRangeInputSize;
       showSeconds?: boolean;
+      /** Earliest selectable date (`YYYY-MM-DD`); earlier days are disabled. */
+      min?: string;
+      /** Latest selectable date (`YYYY-MM-DD`); later days are disabled. */
+      max?: string;
       id?: string;
     }>(),
     {
@@ -46,6 +50,8 @@
       required: false,
       size: 'md',
       showSeconds: false,
+      min: undefined,
+      max: undefined,
       id: undefined,
     },
   );
@@ -214,15 +220,23 @@
     return isNaN(d.getTime()) ? null : d;
   }
 
+  const minDate = computed(() => (props.min ? parseDate(props.min) : null));
+  const maxDate = computed(() => (props.max ? parseDate(props.max) : null));
+
   function buildDays(year: number, month: number) {
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const cells: Array<{ day: number | null; date: string | null }> = [];
-    for (let i = 0; i < firstDay; i++) cells.push({ day: null, date: null });
+    const cells: Array<{ day: number | null; date: string | null; disabled: boolean }> = [];
+    for (let i = 0; i < firstDay; i++) cells.push({ day: null, date: null, disabled: true });
     for (let d = 1; d <= daysInMonth; d++) {
+      const dateObj = new Date(year, month, d);
+      let disabled = false;
+      if (minDate.value && dateObj < minDate.value) disabled = true;
+      if (maxDate.value && dateObj > maxDate.value) disabled = true;
       cells.push({
         day: d,
         date: `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`,
+        disabled,
       });
     }
     return cells;
@@ -264,8 +278,8 @@
     );
   }
 
-  function handleDayClick(date: string | null) {
-    if (!date) return;
+  function handleDayClick(date: string | null, disabled = false) {
+    if (!date || disabled) return;
     if (selectingPhase.value === 'start-date' || endDate.value) {
       startDate.value = date;
       endDate.value = '';
@@ -375,29 +389,45 @@
       </span>
     </label>
 
-    <button
-      :id="resolvedId"
-      ref="triggerRef"
-      :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
-      :aria-expanded="open"
-      :aria-haspopup="'dialog'"
-      :aria-invalid="!!error || undefined"
-      :aria-label="label ?? 'Date-time range picker'"
-      class="base-dtr__trigger"
-      type="button"
-      @click="toggleOpen"
-      @keydown.escape="open = false"
-    >
-      <span :class="['base-dtr__value', { 'base-dtr__value--placeholder': !displayValue }]">
-        {{ displayValue || 'YYYY-MM-DD HH:MM  →  YYYY-MM-DD HH:MM' }}
-      </span>
+    <div class="base-dtr__wrapper">
+      <!-- Leading extension (e.g. an icon, unit, or button). -->
       <span
-        aria-hidden="true"
-        class="base-dtr__icon"
+        v-if="$slots.start"
+        class="base-dtr__extension base-dtr__extension--start"
       >
-        <IconCalendar size="sm" />
+        <slot name="start" />
       </span>
-    </button>
+      <button
+        :id="resolvedId"
+        ref="triggerRef"
+        :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
+        :aria-expanded="open"
+        :aria-haspopup="'dialog'"
+        :aria-invalid="!!error || undefined"
+        :aria-label="label ?? 'Date-time range picker'"
+        class="base-dtr__trigger"
+        type="button"
+        @click="toggleOpen"
+        @keydown.escape="open = false"
+      >
+        <span :class="['base-dtr__value', { 'base-dtr__value--placeholder': !displayValue }]">
+          {{ displayValue || 'YYYY-MM-DD HH:MM  →  YYYY-MM-DD HH:MM' }}
+        </span>
+        <span
+          aria-hidden="true"
+          class="base-dtr__icon"
+        >
+          <IconCalendar size="sm" />
+        </span>
+      </button>
+      <!-- Trailing extension (e.g. an icon, unit, or button). -->
+      <span
+        v-if="$slots.end"
+        class="base-dtr__extension base-dtr__extension--end"
+      >
+        <slot name="end" />
+      </span>
+    </div>
 
     <Teleport to="body">
       <div
@@ -496,15 +526,16 @@
                       'base-dtr__day--range-end': isRangeEnd(cell.date),
                       'base-dtr__day--in-range': isInRange(cell.date),
                       'base-dtr__day--today': isToday(cell.date) && !isRangeStart(cell.date) && !isRangeEnd(cell.date),
+                      'base-dtr__day--disabled': cell.disabled,
                     },
                   ]"
-                  :disabled="!cell.day"
+                  :disabled="!cell.day || cell.disabled"
                   type="button"
                   @focusin="hoverDate = cell.date"
                   @focusout="hoverDate = null"
                   @mouseenter="hoverDate = cell.date"
                   @mouseleave="hoverDate = null"
-                  @click.stop="handleDayClick(cell.date)"
+                  @click.stop="handleDayClick(cell.date, cell.disabled)"
                 >
                   {{ cell.day ?? '' }}
                 </button>
@@ -555,15 +586,16 @@
                       'base-dtr__day--range-end': isRangeEnd(cell.date),
                       'base-dtr__day--in-range': isInRange(cell.date),
                       'base-dtr__day--today': isToday(cell.date) && !isRangeStart(cell.date) && !isRangeEnd(cell.date),
+                      'base-dtr__day--disabled': cell.disabled,
                     },
                   ]"
-                  :disabled="!cell.day"
+                  :disabled="!cell.day || cell.disabled"
                   type="button"
                   @focusin="hoverDate = cell.date"
                   @focusout="hoverDate = null"
                   @mouseenter="hoverDate = cell.date"
                   @mouseleave="hoverDate = null"
-                  @click.stop="handleDayClick(cell.date)"
+                  @click.stop="handleDayClick(cell.date, cell.disabled)"
                 >
                   {{ cell.day ?? '' }}
                 </button>
@@ -782,26 +814,54 @@
       margin-left: 2px;
     }
 
+    &__wrapper {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-md);
+      background-color: var(--mp-color-bg-surface);
+      transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease;
+
+      &:focus-within {
+        border-color: var(--mp-color-border-focus);
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+    }
+
     &__trigger {
       display: flex;
+      flex: 1;
+      min-width: 0;
       align-items: center;
       justify-content: space-between;
       appearance: none;
       width: 100%;
       text-align: left;
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background-color: var(--mp-color-bg-surface);
+      border: none;
+      background: transparent;
       cursor: pointer;
-      transition:
-        border-color 150ms ease,
-        box-shadow 150ms ease;
       user-select: none;
 
       &:focus {
         outline: none;
-        border-color: var(--mp-color-border-focus);
-        box-shadow: var(--mp-shadow-focus-primary);
+      }
+    }
+
+    /* Leading / trailing extension areas (icons, units, or buttons). */
+    &__extension {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      color: var(--mp-color-text-secondary);
+
+      &--start {
+        margin-inline-start: var(--mp-spacing-2);
+      }
+
+      &--end {
+        margin-inline-end: var(--mp-spacing-2);
       }
     }
 
@@ -833,10 +893,10 @@
       }
     }
 
-    &--error .base-dtr__trigger {
+    &--error .base-dtr__wrapper {
       border-color: var(--mp-color-danger-default);
 
-      &:focus {
+      &:focus-within {
         box-shadow: var(--mp-shadow-focus-danger);
       }
     }
@@ -845,7 +905,7 @@
       opacity: 0.5;
       pointer-events: none;
 
-      .base-dtr__trigger {
+      .base-dtr__wrapper {
         background-color: var(--mp-color-bg-muted);
         cursor: not-allowed;
       }
@@ -1006,6 +1066,12 @@
         color 150ms ease;
 
       &--empty {
+        pointer-events: none;
+      }
+
+      &--disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
         pointer-events: none;
       }
 

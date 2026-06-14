@@ -11,8 +11,12 @@
   import { useId } from '../../composables/use-id';
   import BaseTypography from '../base-typography/base-typography.vue';
 
+  import type { Autocomplete } from '../base-schema-form/types';
+
   export type TextareaSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   export type TextareaResize = 'none' | 'vertical' | 'horizontal' | 'both';
+  export type TextareaAutocapitalize = 'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters';
+  export type { Autocomplete } from '../base-schema-form/types';
 
   const props = withDefaults(
     defineProps<{
@@ -27,6 +31,10 @@
       error?: string;
       disabled?: boolean;
       required?: boolean;
+      /** Native `autocomplete` token (e.g. `'street-address'`, `'off'`). */
+      autocomplete?: Autocomplete;
+      /** Native `autocapitalize` hint for on-screen keyboards. */
+      autocapitalize?: TextareaAutocapitalize;
       id?: string;
     }>(),
     {
@@ -41,6 +49,8 @@
       error: undefined,
       disabled: false,
       required: false,
+      autocomplete: undefined,
+      autocapitalize: undefined,
       id: undefined,
     },
   );
@@ -90,22 +100,40 @@
         *
       </span>
     </label>
-    <textarea
-      :id="resolvedId"
-      :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
-      :aria-invalid="!!error || undefined"
-      :disabled="disabled"
-      :placeholder="placeholder"
-      :required="required"
-      :rows="rows"
-      :style="{ resize }"
-      :value="modelValue"
-      class="base-textarea__field"
-      @blur="emit('blur', $event)"
-      @change="emit('change', $event)"
-      @focus="emit('focus', $event)"
-      @input="handleInput"
-    />
+    <div class="base-textarea__wrapper">
+      <!-- Leading extension (e.g. an icon or button), top-aligned. -->
+      <span
+        v-if="$slots.start"
+        class="base-textarea__extension base-textarea__extension--start"
+      >
+        <slot name="start" />
+      </span>
+      <textarea
+        :id="resolvedId"
+        :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
+        :aria-invalid="!!error || undefined"
+        :autocapitalize="autocapitalize"
+        :autocomplete="autocomplete"
+        :disabled="disabled"
+        :placeholder="placeholder"
+        :required="required"
+        :rows="rows"
+        :style="{ resize }"
+        :value="modelValue"
+        class="base-textarea__field"
+        @blur="emit('blur', $event)"
+        @change="emit('change', $event)"
+        @focus="emit('focus', $event)"
+        @input="handleInput"
+      />
+      <!-- Trailing extension (e.g. an icon or button), top-aligned. -->
+      <span
+        v-if="$slots.end"
+        class="base-textarea__extension base-textarea__extension--end"
+      >
+        <slot name="end" />
+      </span>
+    </div>
     <BaseTypography
       v-if="error"
       :id="`${resolvedId}-error`"
@@ -157,27 +185,53 @@
       margin-left: 2px;
     }
 
-    &__field {
-      width: 100%;
+    &__wrapper {
+      display: flex;
+      align-items: flex-start;
       box-sizing: border-box;
       border: 1px solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
       background-color: var(--mp-color-bg-surface);
-      color: var(--mp-color-text-primary);
-      font-family: var(--mp-font-family-sans);
-      line-height: var(--mp-line-height-normal);
-      outline: none;
       transition:
         border-color 150ms ease,
         box-shadow 150ms ease;
 
+      &:focus-within {
+        border-color: var(--mp-color-border-focus);
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+    }
+
+    &__field {
+      flex: 1;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      border: none;
+      background: transparent;
+      color: var(--mp-color-text-primary);
+      font-family: var(--mp-font-family-sans);
+      line-height: var(--mp-line-height-normal);
+      outline: none;
+
       &::placeholder {
         color: var(--mp-color-text-tertiary);
       }
+    }
 
-      &:focus {
-        border-color: var(--mp-color-border-focus);
-        box-shadow: var(--mp-shadow-focus-primary);
+    /* Leading / trailing extension areas (icons or buttons), top-aligned. */
+    &__extension {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      color: var(--mp-color-text-secondary);
+
+      &--start {
+        margin-inline-start: var(--mp-spacing-2);
+      }
+
+      &--end {
+        margin-inline-end: var(--mp-spacing-2);
       }
     }
 
@@ -191,10 +245,10 @@
 
     /* States */
     &--error {
-      .base-textarea__field {
+      .base-textarea__wrapper {
         border-color: var(--mp-color-danger-default);
 
-        &:focus {
+        &:focus-within {
           box-shadow: var(--mp-shadow-focus-danger);
         }
       }
@@ -204,7 +258,7 @@
       opacity: 0.5;
       pointer-events: none;
 
-      .base-textarea__field {
+      .base-textarea__wrapper {
         background-color: var(--mp-color-bg-muted);
         cursor: not-allowed;
       }

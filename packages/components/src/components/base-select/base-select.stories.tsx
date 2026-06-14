@@ -92,3 +92,27 @@ export const Small: Story = { args: { size: 'sm' } };
 export const Large: Story = { args: { size: 'lg' } };
 
 export const NoLabel: Story = { args: { label: 'Fruit', labelHidden: true } };
+
+export const WithStartExtension: Story = {
+  render: () => ({
+    components: { BaseSelect },
+    setup() {
+      const modelValue = ref('');
+      return { modelValue, options: FRUIT_OPTIONS };
+    },
+    template: `
+      <BaseSelect
+        label="Fruit"
+        placeholder="Pick a fruit…"
+        :options="options"
+        :modelValue="modelValue"
+        @update:modelValue="modelValue = $event"
+        style="max-width: 320px"
+      >
+        <template #start>
+          <span style="margin-inline-start: 10px;">🍎</span>
+        </template>
+      </BaseSelect>
+    `,
+  }),
+};
