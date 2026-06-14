@@ -190,4 +190,50 @@ describe('BaseMultiselect', () => {
     const wrapper = mount(BaseMultiselect, { props: { label: 'Visible Label' } });
     expect(wrapper.find('.base-multiselect__label--hidden').exists()).toBe(false);
   });
+
+  it('renders a hidden native multiple select backing the combobox', () => {
+    const wrapper = mount(BaseMultiselect, { props: { options: FRUIT_OPTIONS } });
+    const native = wrapper.find('select.base-multiselect__native');
+    expect(native.exists()).toBe(true);
+    expect(native.attributes('multiple')).toBeDefined();
+    expect(native.findAll('option')).toHaveLength(FRUIT_OPTIONS.length);
+    expect(native.attributes('aria-hidden')).toBe('true');
+    expect(native.attributes('tabindex')).toBe('-1');
+  });
+
+  it('forwards name and autocomplete to the native select', () => {
+    const wrapper = mount(BaseMultiselect, {
+      props: { options: FRUIT_OPTIONS, name: 'fruits', autocomplete: 'off' },
+    });
+    const native = wrapper.find('select.base-multiselect__native');
+    expect(native.attributes('name')).toBe('fruits');
+    expect(native.attributes('autocomplete')).toBe('off');
+  });
+
+  it('marks native options matching modelValue as selected', () => {
+    const wrapper = mount(BaseMultiselect, {
+      props: { options: FRUIT_OPTIONS, modelValue: ['apple', 'cherry'] },
+    });
+    const selected = wrapper
+      .findAll('select.base-multiselect__native option')
+      .filter((o) => (o.element as HTMLOptionElement).selected)
+      .map((o) => o.text());
+    expect(selected).toEqual(['Apple', 'Cherry']);
+  });
+
+  it('emits update:modelValue when the native select changes (autofill)', async () => {
+    const wrapper = mount(BaseMultiselect, {
+      props: { options: FRUIT_OPTIONS, modelValue: [] },
+    });
+    const native = wrapper.find('select.base-multiselect__native');
+    await native.setValue(['apple', 'cherry']);
+    const emitted = wrapper.emitted('update:modelValue')!;
+    expect(emitted.at(-1)![0]).toEqual(['apple', 'cherry']);
+    expect(wrapper.emitted('change')).toBeTruthy();
+  });
+
+  it('disables the native select when disabled', () => {
+    const wrapper = mount(BaseMultiselect, { props: { options: FRUIT_OPTIONS, disabled: true } });
+    expect(wrapper.find('select.base-multiselect__native').attributes('disabled')).toBeDefined();
+  });
 });

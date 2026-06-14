@@ -15,7 +15,11 @@
   import BaseTag from '../base-tag/base-tag.vue';
   import BaseTypography from '../base-typography/base-typography.vue';
 
+  import type { Autocomplete } from '../base-schema-form/types';
+
   export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+
+  export type { Autocomplete } from '../base-schema-form/types';
 
   export interface MultiselectOption {
     label: string;
@@ -35,6 +39,10 @@
       placeholder?: string;
       disabled?: boolean;
       required?: boolean;
+      /** Native form-field `name`, submitted by the hidden native `<select multiple>`. */
+      name?: string;
+      /** Native `autocomplete` token applied to the hidden native `<select multiple>`. */
+      autocomplete?: Autocomplete;
       id?: string;
     }>(),
     {
@@ -48,6 +56,8 @@
       placeholder: undefined,
       disabled: false,
       required: false,
+      name: undefined,
+      autocomplete: undefined,
       id: undefined,
     },
   );
@@ -123,6 +133,19 @@
     isOpen.value = true;
     emit('focus', event);
   }
+
+  /**
+   * Mirror selections made on the hidden native `<select multiple>` (e.g. by
+   * browser autofill) back into `modelValue`, preserving the original option
+   * value types and their declared order.
+   */
+  function handleNativeChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const selected = new Set(Array.from(target.selectedOptions, (opt) => opt.value));
+    const next = props.options.filter((opt) => selected.has(String(opt.value))).map((opt) => opt.value);
+    emit('update:modelValue', next);
+    emit('change', next);
+  }
 </script>
 
 <template>
@@ -158,6 +181,36 @@
         *
       </span>
     </label>
+
+    <!--
+      Hidden native <select multiple> mirroring the current selection. It carries
+      the field's `name`/`autocomplete` so the browser (and profile managers) can
+      autofill the control and submit the values in a native form, while the
+      custom combobox above provides the visible UI. It is removed from the
+      accessibility tree and tab order to avoid duplicating the combobox.
+    -->
+    <select
+      :id="`${resolvedId}-native`"
+      :autocomplete="autocomplete"
+      :disabled="disabled"
+      :name="name"
+      :required="required && modelValue.length === 0"
+      aria-hidden="true"
+      class="base-multiselect__native"
+      multiple
+      tabindex="-1"
+      @change="handleNativeChange"
+    >
+      <option
+        v-for="opt in options"
+        :key="opt.value"
+        :disabled="opt.disabled"
+        :selected="modelValue.includes(opt.value)"
+        :value="opt.value"
+      >
+        {{ opt.label }}
+      </option>
+    </select>
 
     <BaseDropdown
       :open="isOpen"
@@ -312,6 +365,19 @@
     &__required {
       color: var(--mp-color-danger-default);
       margin-left: 2px;
+    }
+
+    /* Hidden native <select multiple> backing the combobox for autofill / form submission. */
+    &__native {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
     }
 
     &__wrapper {
