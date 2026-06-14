@@ -125,6 +125,20 @@ const config = [
       'import-x/no-useless-path-segments': ['error', { noUselessIndex: true }],
     },
   },
+  // ── import/default on Vue SFCs ────────────────────────────────────────────
+  // `eslint-plugin-import`'s `import/default` rule (DeepSource shortcode
+  // JS-W1028) cannot resolve the implicit default export that a Vue
+  // `<script setup>` SFC compiles to, so importing a `.vue` component as a
+  // default import is wrongly flagged as "No default export found". This repo
+  // lints imports via `eslint-plugin-import-x`, not the upstream plugin, so the
+  // rule is not part of our active rule set; we register the plugin here purely
+  // to switch the rule off. DeepSource honours rules explicitly disabled in the
+  // ESLint config, which silences the false positives at the source.
+  {
+    name: 'mission-platform/import-default-off',
+    plugins: { import: importX },
+    rules: { 'import/default': 'off' },
+  },
   // ── vuejs-accessibility ───────────────────────────────────────────────────
   // Register the plugin and apply the recommended a11y rules to Vue files,
   // without overriding the parser already configured above.
