@@ -40,6 +40,14 @@ describe('BaseSelect', () => {
     expect(wrapper.find('button.base-select__field').text()).toBe('Select...');
   });
 
+  it('renders a non-breaking space in the trigger when empty so the height stays constant', () => {
+    const wrapper = mount(BaseSelect, { props: { options: OPTIONS } });
+    // With no selection and no placeholder the field must still contain a line
+    // box (a non-breaking space) so it keeps the same height as when filled.
+    // `.text()` trims whitespace, so assert on the raw textContent instead.
+    expect(wrapper.find('button.base-select__field').element.textContent).toContain('\u00A0');
+  });
+
   it('renders label when label prop is provided', () => {
     const wrapper = mount(BaseSelect, { props: { label: 'Fruit', id: 'fruit' } });
     expect(wrapper.find('label').text()).toContain('Fruit');

@@ -196,7 +196,10 @@
             @click="isOpen ? closeDropdown() : openDropdown()"
             @keydown="handleKeydown"
           >
-            {{ displayLabel }}
+            <!-- Fall back to a non-breaking space so the field keeps a full line
+                 box (and therefore a constant height) even when there is no
+                 selection and no placeholder. -->
+            {{ displayLabel || '\u00A0' }}
           </button>
           <!-- Trailing extension (e.g. an icon or button), before the chevron. -->
           <span
