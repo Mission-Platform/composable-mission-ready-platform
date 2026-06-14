@@ -8,7 +8,13 @@
     "commitlint": "commitlint",
     "i18n:extract": "pnpm --filter @mission-platform/scripts i18n:extract",
     "storybook": "pnpm exec turbo run --filter @mission-platform/storybook storybook",
-    "build": "pnpm exec turbo run build"
+    "build": "pnpm exec turbo run build",
+    "lint": "pnpm exec turbo run lint",
+    "lint:fix": "pnpm exec turbo run lint:fix",
+    "lint:style": "pnpm exec turbo run lint:style",
+    "lint:style:fix": "pnpm exec turbo run lint:style:fix",
+    "format": "pnpm exec turbo run format",
+    "format:write": "pnpm exec turbo run format:write"
   },
   "devDependencies": {
     "@changesets/cli": "catalog:",
