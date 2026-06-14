@@ -1,0 +1,6 @@
+# @mission-platform/tokens
+
+CSS design tokens and SCSS theme definitions.
+
+## Usage
+Import these tokens to ensure consistent design (colors, spacing, radii, etc.) across the application.

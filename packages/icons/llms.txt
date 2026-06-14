@@ -1,0 +1,6 @@
+# @mission-platform/icons
+
+SVG icon components for Mission Platform.
+
+## Usage
+Import individual SVG components for use within your application's UI.

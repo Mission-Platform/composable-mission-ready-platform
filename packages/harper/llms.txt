@@ -1,0 +1,114 @@
+# @mission-platform/harper
+
+Harper grammar and style checker integration for Monaco editor.
+
+## Features
+
+### Harper Grammar Checking
+
+Harper (https://writewithharper.com) is a fast, offline, privacy-first English grammar checker powered by WebAssembly. It runs entirely in the browser with no network requests required.
+
+### Monaco Integration
+
+The `useHarperMonaco` composable provides real-time grammar checking within Monaco editor instances.
+
+#### Usage
+
+```ts
+import { useHarperMonaco } from '@mission-platform/harper'
+
+// Configure Harper worker in your app's main entry:
+import HarperWorker from '@mission-platform/harper/worker?worker'
+
+window.HarperEnvironment = {
+  getWorker: () => new HarperWorker(),
+}
+
+// In your Vue component:
+const { editorRef, enabled } = useEditor()
+useHarperMonaco(editorRef, enabled, 'markdown')
+```
+
+#### Features
+
+- **Real-time checking** — Issues detected as you type (debounced by 300ms)
+- **Visual markers** — Grammar/style issues highlighted in the editor
+- **Quick fixes** — Apply suggestions via the Monaco lightbulb code action
+- **Severity levels** — Errors, warnings, info, and hints
+- **Browser-based** — No network requests required; all processing happens locally
+
+### Types
+
+#### `HarperIssue`
+
+```ts
+interface HarperIssue {
+  offset: number           // Byte offset of the issue in the text
+  length: number           // Length of the affected text
+  message: string          // Human-readable explanation
+  ruleId: string           // Harper rule identifier
+  suggestions: string[]    // Alternative text suggestions
+  severity: 1 | 2 | 3 | 4  // LSP severity (error/warn/info/hint)
+}
+```
+
+### Exported Functions
+
+#### `useHarperMonaco(editor, enabled, language)`
+
+```ts
+function useHarperMonaco(
+  editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
+  enabled: MaybeRefOrGetter<boolean>,
+  languageReference: MaybeRefOrGetter<string>,
+): void
+```
+
+**Parameters:**
+- `editorReference` — The Monaco editor instance (ref or getter)
+- `enabled` — Toggle grammar checking on/off
+- `languageReference` — The editor's language mode (for code action registration)
+
+**Behavior:**
+- Spawns a Harper worker via `window.HarperEnvironment.getWorker()`
+- Sends editor content to the worker on every model change (debounced)
+- Converts Harper issues to Monaco markers
+- Registers a code-action provider for quick fixes
+
+### Worker Configuration
+
+Your application must configure the Harper worker factory before using the composable:
+
+```ts
+// main.ts
+import HarperWorker from '@mission-platform/harper/worker?worker'
+
+window.HarperEnvironment = {
+  getWorker: () => new HarperWorker(),
+}
+```
+
+### Example with My Care Notes
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useHarperMonaco } from '@mission-platform/harper'
+
+const editorRef = ref<monaco.editor.IStandaloneCodeEditor>()
+const grammarCheckEnabled = ref(true)
+
+// Monaco editor initialization...
+editorRef.value = monaco.editor.create(containerRef.value, {
+  value: 'Hello world!',
+  language: 'markdown',
+})
+
+// Enable Harper grammar checking
+useHarperMonaco(editorRef, grammarCheckEnabled, 'markdown')
+</script>
+
+<template>
+  <div ref="containerRef" class="editor-container" />
+</template>
+```

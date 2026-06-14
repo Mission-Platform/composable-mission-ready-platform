@@ -1,0 +1,6 @@
+# @mission-platform/i18n
+
+vue-i18n integration utilities and compiled base locales.
+
+## Usage
+Use for handling localization, message formatting, and managing locale files across the monorepo.
