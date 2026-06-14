@@ -27,15 +27,6 @@
 
   const props = withDefaults(
     defineProps<{
-      field: BuilderField;
-      fieldTypes: FieldTypeDescriptor[];
-      disabled?: boolean;
-      keyError?: string;
-      wizard?: boolean;
-      stepCount?: number;
-      step?: number;
-    }>(),
-    {
       disabled: false,
       keyError: undefined,
       wizard: false,
