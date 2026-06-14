@@ -23,12 +23,7 @@
   import type { FormValues, SchemaFormDefinition, SchemaFormValidationMode } from './types';
   import type { WizardStep } from '../base-form-wizard/base-form-wizard.vue';
 
-  export type {
-    FormJsonSchema,
-    SchemaFormDefinition,
-    SchemaFormValidationMode,
-    FormValues,
-  } from './types';
+  export type { FormJsonSchema, SchemaFormDefinition, SchemaFormValidationMode, FormValues } from './types';
   export type {
     FormFieldSchema,
     FormFieldType,
@@ -79,6 +74,7 @@
     isWizard,
     steps,
     currentStep,
+    visibleStepIndices,
     values,
     errors,
     isValid,
@@ -90,24 +86,55 @@
   } = useSchemaForm(props.schema, props.modelValue, (key, named) => t(key, named ?? {}));
 
   /**
-   * Wizard step descriptors derived from each step schema's title/description,
-   * with `error` flagged for any step that currently holds validation errors so
-   * the step indicator can highlight it.
+   * Wizard step descriptors for the steps currently **visible** (a step may be
+   * conditionally hidden via its schema `visibleWhen`), derived from each step
+   * schema's title/description, with `error` flagged for any step that currently
+   * holds validation errors so the step indicator can highlight it.  Hidden
+   * steps are omitted entirely, so the indicator only ever shows reachable steps.
    */
   const wizardSteps = computed<WizardStep[]>(() =>
-    steps.map((step, index) => ({
-      id: step.id,
-      title: step.title ?? t('step', { index: index + 1 }),
-      description: step.description,
-      error: stepHasErrors.value[index],
-    })),
+    visibleStepIndices.value.map((stepIndex, position) => {
+      const step = steps[stepIndex];
+      return {
+        id: step.id,
+        title: step.title ?? t('step', { index: position + 1 }),
+        description: step.description,
+        error: stepHasErrors.value[stepIndex],
+      };
+    }),
   );
+
+  /**
+   * The active step's position within the visible steps — the index the wizard
+   * component works in (it is unaware of hidden steps).
+   */
+  const currentWizardIndex = computed(() => {
+    const position = visibleStepIndices.value.indexOf(currentStep.value);
+    return position === -1 ? 0 : position;
+  });
 
   /** Fields to render for the active step (the only step in a single form). */
   const currentFields = computed(() => steps[currentStep.value]?.fields ?? []);
 
-  function onFieldUpdate(key: string, value: unknown) {
-    values[key] = value;
+  /**
+   * Write a (possibly nested, dotted) field path into the shared values bag.
+   * A plain key (`"name"`) sets a top-level value; a dotted path
+   * (`"address.street"`) writes into the nested field-set object, creating
+   * intermediate objects as needed.
+   */
+  function setByPath(target: FormValues, fieldPath: string, value: unknown) {
+    const segments = fieldPath.split('.');
+    let cursor: Record<string, unknown> = target;
+    for (const segment of segments.slice(0, -1)) {
+      const next = cursor[segment];
+      if (typeof next !== 'object' || next === null) cursor[segment] = {};
+      cursor = cursor[segment] as Record<string, unknown>;
+    }
+    cursor[segments.at(-1) as string] = value;
+  }
+
+  function onFieldUpdate(fieldPath: string, value: unknown) {
+    setByPath(values, fieldPath, value);
     emit('update:modelValue', { ...values });
   }
 
@@ -120,16 +147,21 @@
    * - In `'final'` mode, navigation is never gated — the user moves freely and
    *   validation is deferred until submit.
    */
-  function onWizardNavigate(index: number) {
+  function onWizardNavigate(position: number) {
+    // The wizard reports a position within the *visible* steps; map it back to
+    // the absolute step index before navigating.
+    const targetIndex = visibleStepIndices.value[position];
+    if (targetIndex === undefined) return;
+
     if (props.validationMode === 'final') {
-      goTo(index);
+      goTo(targetIndex);
       return;
     }
 
-    if (index > currentStep.value) {
-      if (validateStep(currentStep.value)) goTo(index);
+    if (position > currentWizardIndex.value) {
+      if (validateStep(currentStep.value)) goTo(targetIndex);
     } else {
-      goTo(index);
+      goTo(targetIndex);
     }
   }
 
@@ -167,7 +199,7 @@
   >
     <BaseFormWizard
       :linear="validationMode === 'per-step'"
-      :model-value="currentStep"
+      :model-value="currentWizardIndex"
       :steps="wizardSteps"
       @complete="handleSubmit"
       @update:model-value="onWizardNavigate"
@@ -178,9 +210,11 @@
             v-for="field in currentFields"
             :key="field.key"
             :disabled="disabled"
-            :error="errors[field.key]"
+            :errors="errors"
             :field="field"
+            :path="field.key"
             :value="values[field.key]"
+            :values="values"
             @update="onFieldUpdate"
           />
         </div>
@@ -201,9 +235,11 @@
         v-for="field in currentFields"
         :key="field.key"
         :disabled="disabled"
-        :error="errors[field.key]"
+        :errors="errors"
         :field="field"
+        :path="field.key"
         :value="values[field.key]"
+        :values="values"
         @update="onFieldUpdate"
       />
     </div>

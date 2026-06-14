@@ -1,9 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
+import { nextTick } from 'vue';
 
 import { mountWithI18n as mount } from '../../test-utils/mount-with-i18n';
 
 import BaseSchemaForm from './base-schema-form.vue';
-import { createFormValidator, jsonSchemaToFields } from './json-schema';
+import { createFormValidator, jsonSchemaDefaults, jsonSchemaToFields } from './json-schema';
 import { useSchemaForm } from './use-schema-form';
 
 import type { FormJsonSchema } from './types';
@@ -184,8 +185,7 @@ describe('createFormValidator', () => {
 
   it('routes generated messages through the supplied translate function', () => {
     const translate = vi.fn(
-      (key: string, named?: Record<string, unknown>) =>
-        `${key}|${String(named?.label)}|${String(named?.limit ?? '')}`,
+      (key: string, named?: Record<string, unknown>) => `${key}|${String(named?.label)}|${String(named?.limit ?? '')}`,
     );
     const validator = createFormValidator(
       {
@@ -554,6 +554,89 @@ describe('BaseSchemaForm', () => {
   });
 });
 
+// ─── field sets (nested object properties) ───────────────────────────────────
+
+describe('BaseSchemaForm field sets', () => {
+  const fieldSetSchema: FormJsonSchema = {
+    type: 'object',
+    properties: {
+      fullName: { type: 'string', title: 'Full name' },
+      address: {
+        type: 'object',
+        title: 'Address',
+        description: 'Where you live',
+        properties: {
+          street: { type: 'string', title: 'Street' },
+          city: { type: 'string', title: 'City' },
+        },
+        required: ['street'],
+      },
+    },
+    required: ['fullName'],
+  };
+
+  it('derives a fieldset field carrying its own nested fields', () => {
+    const fields = jsonSchemaToFields(fieldSetSchema);
+    const group = fields.find((f) => f.key === 'address');
+    expect(group?.type).toBe('fieldset');
+    expect(group?.label).toBe('Address');
+    expect(group?.fields?.map((f) => f.key)).toEqual(['street', 'city']);
+    expect(group?.fields?.find((f) => f.key === 'street')?.required).toBe(true);
+  });
+
+  it('treats a bare object property (no ui.widget) as a fieldset', () => {
+    const fields = jsonSchemaToFields({
+      type: 'object',
+      properties: { meta: { type: 'object', properties: { a: { type: 'string' } } } },
+    });
+    expect(fields[0].type).toBe('fieldset');
+    expect(fields[0].fields?.[0].key).toBe('a');
+  });
+
+  it('builds a nested default object for a field set', () => {
+    const defaults = jsonSchemaDefaults(fieldSetSchema);
+    expect(defaults.address).toEqual({ street: '', city: '' });
+  });
+
+  it('validates a nested required child under its dotted path', () => {
+    const validator = createFormValidator(fieldSetSchema);
+    const errors = validator.validate({ fullName: 'Ada', address: { street: '', city: '' } });
+    expect(errors['address.street']).toBeTruthy();
+    expect(errors.fullName).toBeUndefined();
+
+    const ok = validator.validate({ fullName: 'Ada', address: { street: '221B', city: '' } });
+    expect(ok['address.street']).toBeUndefined();
+  });
+
+  it('renders a field set with a legend and its nested child inputs', () => {
+    const wrapper = mount(BaseSchemaForm, { props: { schema: fieldSetSchema } });
+    const fieldset = wrapper.find('fieldset.base-field-set');
+    expect(fieldset.exists()).toBe(true);
+    expect(fieldset.find('legend').text()).toContain('Address');
+    // fullName + street + city → three text inputs in total.
+    expect(wrapper.findAll('input[type="text"]')).toHaveLength(3);
+  });
+
+  it('emits a nested value object when a field-set child changes', async () => {
+    const wrapper = mount(BaseSchemaForm, { props: { schema: fieldSetSchema } });
+    // Inputs render in schema order: fullName, street, city.
+    const inputs = wrapper.findAll('input[type="text"]');
+    await inputs[1].setValue('221B Baker Street');
+
+    const emitted = wrapper.emitted('update:modelValue');
+    expect(emitted).toBeTruthy();
+    const last = emitted!.at(-1)![0] as { address: { street: string } };
+    expect(last.address.street).toBe('221B Baker Street');
+  });
+
+  it('shows a nested required error on the field-set child on submit', async () => {
+    const wrapper = mount(BaseSchemaForm, { props: { schema: fieldSetSchema } });
+    await wrapper.find('input[type="text"]').setValue('Ada');
+    await wrapper.find('form').trigger('submit');
+    expect(wrapper.text()).toContain('Street is required');
+  });
+});
+
 // ─── useSchemaForm wizard tests ───────────────────────────────────────────────
 
 describe('useSchemaForm (wizard)', () => {
@@ -630,6 +713,77 @@ describe('useSchemaForm (wizard)', () => {
     // Clearing all errors (reset) clears every flag.
     form.reset();
     expect(form.stepHasErrors.value).toEqual([false, false]);
+  });
+});
+
+// ─── useSchemaForm conditional wizard step tests ──────────────────────────────
+
+describe('useSchemaForm (wizard step conditions)', () => {
+  const conditionalSteps: FormJsonSchema[] = [
+    { type: 'object', title: 'One', properties: { kind: { type: 'string', title: 'Kind' } } },
+    {
+      type: 'object',
+      title: 'Two',
+      visibleWhen: { allOf: [{ field: 'kind', equals: 'biz' }] },
+      properties: { company: { type: 'string', title: 'Company' } },
+      required: ['company'],
+    },
+    { type: 'object', title: 'Three', properties: { note: { type: 'string', title: 'Note' } } },
+  ];
+
+  it('omits a conditional step from the visible indices until its condition holds', () => {
+    const form = useSchemaForm(conditionalSteps);
+    expect(form.visibleStepIndices.value).toEqual([0, 2]);
+
+    form.values.kind = 'biz';
+    expect(form.visibleStepIndices.value).toEqual([0, 1, 2]);
+  });
+
+  it('next() skips a hidden step and advances to the next visible one', () => {
+    const form = useSchemaForm(conditionalSteps);
+    expect(form.currentStep.value).toBe(0);
+    expect(form.next()).toBe(true);
+    // Step 1 is hidden (kind ≠ biz), so navigation lands on step 2.
+    expect(form.currentStep.value).toBe(2);
+  });
+
+  it('next() lands on the conditional step once it becomes visible', () => {
+    const form = useSchemaForm(conditionalSteps, { kind: 'biz' });
+    expect(form.next()).toBe(true);
+    expect(form.currentStep.value).toBe(1);
+  });
+
+  it('validate() ignores hidden steps, so a required field on one never blocks', () => {
+    const form = useSchemaForm(conditionalSteps);
+    // `company` is required but lives on the hidden step → form is still valid.
+    expect(form.validate()).toBe(true);
+  });
+
+  it('validate() enforces a conditional step once it is visible', () => {
+    const form = useSchemaForm(conditionalSteps, { kind: 'biz' });
+    expect(form.validate()).toBe(false);
+    expect(form.errors.company).toBeTruthy();
+
+    form.values.company = 'Acme';
+    expect(form.validate()).toBe(true);
+  });
+
+  it('snaps off a step that becomes hidden after a value change', async () => {
+    const form = useSchemaForm(conditionalSteps, { kind: 'biz' });
+    form.goTo(1);
+    expect(form.currentStep.value).toBe(1);
+
+    form.values.kind = 'personal';
+    await nextTick();
+    expect(form.visibleStepIndices.value).toEqual([0, 2]);
+    expect(form.currentStep.value).not.toBe(1);
+  });
+
+  it('keeps the first step when every step is conditionally hidden', () => {
+    const form = useSchemaForm([
+      { type: 'object', title: 'Only', visibleWhen: { allOf: [{ field: 'x', truthy: true }] }, properties: {} },
+    ]);
+    expect(form.visibleStepIndices.value).toEqual([0]);
   });
 });
 

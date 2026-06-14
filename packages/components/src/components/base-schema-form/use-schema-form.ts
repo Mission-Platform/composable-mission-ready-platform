@@ -1,8 +1,10 @@
-import { computed, reactive, readonly, ref } from 'vue';
+import { computed, reactive, readonly, ref, watch } from 'vue';
 
+import { evaluateCondition } from './conditions';
 import { createFormValidator, jsonSchemaDefaults, jsonSchemaToFields } from './json-schema';
 
 import type {
+  FieldCondition,
   FormErrors,
   FormFieldSchema,
   FormJsonSchema,
@@ -29,6 +31,14 @@ export interface SchemaFormStep {
 /** Normalise the public definition into an array of step schemas. */
 function toStepSchemas(definition: SchemaFormDefinition): FormJsonSchema[] {
   return Array.isArray(definition) ? definition : [definition];
+}
+
+/**
+ * Whether an error key belongs to a field — directly (`field.key`) or as a
+ * nested field-set child (`field.key.<child>`, dotted path).
+ */
+function errorBelongsToField(errorKey: string, fieldKey: string): boolean {
+  return errorKey === fieldKey || errorKey.startsWith(`${fieldKey}.`);
 }
 
 /**
@@ -76,19 +86,52 @@ export function useSchemaForm(
   }));
   const validators = stepSchemas.map((schema) => createFormValidator(schema, translate));
 
+  // A step may carry its own `visibleWhen` condition; when present the whole
+  // step is shown/skipped as a unit, mirroring field-level conditional blocks.
+  const stepConditions: Array<FieldCondition | undefined> = stepSchemas.map((schema) => schema.visibleWhen);
+
   // Defaults are merged across every step so the shared values bag is complete.
-  const defaultValues: FormValues = Object.assign(
-    {},
-    ...stepSchemas.map((schema) => jsonSchemaDefaults(schema)),
-  );
+  const defaultValues: FormValues = Object.assign({}, ...stepSchemas.map((schema) => jsonSchemaDefaults(schema)));
 
   const values = reactive<FormValues>({ ...defaultValues, ...initialValues });
   const errors = reactive<FormErrors>({});
   const isValid = ref(false);
   const currentStep = ref(0);
 
-  const isFirstStep = computed(() => currentStep.value === 0);
-  const isLastStep = computed(() => currentStep.value === steps.length - 1);
+  /**
+   * The absolute indices of the steps that are currently visible, in order.
+   * A step with no `visibleWhen` is always visible; a conditional step is
+   * included only while its condition holds against the shared values.  When
+   * conditions hide every step, the first step is kept so the wizard always has
+   * something to render.
+   */
+  const visibleStepIndices = computed<number[]>(() => {
+    const indices = steps
+      .map((_, index) => index)
+      .filter((index) => {
+        const condition = stepConditions[index];
+        return condition ? evaluateCondition(condition, values) : true;
+      });
+    return indices.length > 0 ? indices : [0];
+  });
+
+  /** The position of the active step within {@link visibleStepIndices}. */
+  function currentVisiblePosition(): number {
+    const position = visibleStepIndices.value.indexOf(currentStep.value);
+    return position === -1 ? 0 : position;
+  }
+
+  const isFirstStep = computed(() => currentVisiblePosition() === 0);
+  const isLastStep = computed(() => currentVisiblePosition() === visibleStepIndices.value.length - 1);
+
+  // If a value change hides the active step, snap to the nearest still-visible
+  // step (the closest preceding one, else the first) so the wizard never lands
+  // on a hidden step.
+  watch(visibleStepIndices, (indices) => {
+    if (indices.includes(currentStep.value)) return;
+    const preceding = indices.findLast((index) => index <= currentStep.value);
+    currentStep.value = preceding ?? indices[0] ?? 0;
+  });
 
   /**
    * Reactive flag per step: `true` when any field belonging to that step
@@ -96,13 +139,18 @@ export function useSchemaForm(
    * the wizard step indicator, regardless of the validation mode.
    */
   const stepHasErrors = computed<boolean[]>(() =>
-    steps.map((step) => step.fields.some((field) => Boolean(errors[field.key]))),
+    steps.map((step) =>
+      step.fields.some((field) => Object.keys(errors).some((errorKey) => errorBelongsToField(errorKey, field.key))),
+    ),
   );
 
   /** Clear the error entries that belong to a given step's fields. */
   function clearStepErrors(index: number) {
-    for (const field of steps[index].fields) {
-      delete errors[field.key];
+    const fieldKeys = steps[index].fields.map((field) => field.key);
+    for (const errorKey of Object.keys(errors)) {
+      if (fieldKeys.some((fieldKey) => errorBelongsToField(errorKey, fieldKey))) {
+        delete errors[errorKey];
+      }
     }
   }
 
@@ -125,14 +173,16 @@ export function useSchemaForm(
   }
 
   /**
-   * Validate every step.  Returns `true` when the whole form is valid; errors
-   * for all failing steps are populated so nothing is silently missed.
+   * Validate every **visible** step.  Returns `true` when the whole form is
+   * valid; errors for all failing steps are populated so nothing is silently
+   * missed.  Hidden (conditionally-skipped) steps are excluded, so a required
+   * field on a hidden step never blocks submission.
    */
   function validate(): boolean {
     clearAllErrors();
     let valid = true;
 
-    for (const [index] of steps.entries()) {
+    for (const index of visibleStepIndices.value) {
       const stepErrors = validators[index].validate(values);
       Object.assign(errors, stepErrors);
       if (Object.keys(stepErrors).length > 0) valid = false;
@@ -148,18 +198,25 @@ export function useSchemaForm(
    */
   function next(): boolean {
     const valid = validateStep(currentStep.value);
-    if (valid && !isLastStep.value) currentStep.value += 1;
+    if (valid && !isLastStep.value) {
+      const position = currentVisiblePosition();
+      currentStep.value = visibleStepIndices.value[position + 1];
+    }
     return valid;
   }
 
-  /** Move back to the previous step (no validation). */
+  /** Move back to the previous **visible** step (no validation). */
   function previous() {
-    if (!isFirstStep.value) currentStep.value -= 1;
+    const position = currentVisiblePosition();
+    if (position > 0) currentStep.value = visibleStepIndices.value[position - 1];
   }
 
-  /** Jump to an arbitrary step index (clamped to the valid range). */
+  /**
+   * Jump to an arbitrary step index.  Hidden (conditionally-skipped) steps are
+   * ignored; any other out-of-range index is a no-op.
+   */
   function goTo(index: number) {
-    if (index >= 0 && index < steps.length) currentStep.value = index;
+    if (visibleStepIndices.value.includes(index)) currentStep.value = index;
   }
 
   /** Reset values to their initial state, clear errors, return to step one. */
@@ -190,8 +247,10 @@ export function useSchemaForm(
     errors: readonly(errors) as FormErrors,
     /** Whether the last full `validate()` call passed without errors. */
     isValid,
-    /** Zero-based index of the active wizard step. */
+    /** Zero-based absolute index of the active wizard step. */
     currentStep,
+    /** Absolute indices of the steps currently visible, in order. */
+    visibleStepIndices,
     /** Whether the active step is the first one. */
     isFirstStep,
     /** Whether the active step is the last one. */
