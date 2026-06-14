@@ -204,29 +204,45 @@
       </span>
     </label>
 
-    <button
-      :id="resolvedId"
-      ref="triggerRef"
-      :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
-      :aria-expanded="open"
-      :aria-haspopup="'dialog'"
-      :aria-invalid="!!error || undefined"
-      :aria-label="label ?? 'Date picker'"
-      class="base-date-input__trigger"
-      type="button"
-      @click="toggleOpen"
-      @keydown.escape="open = false"
-    >
-      <span :class="['base-date-input__value', { 'base-date-input__value--placeholder': !modelValue }]">
-        {{ modelValue || placeholder }}
-      </span>
+    <div class="base-date-input__wrapper">
+      <!-- Leading extension (e.g. an icon, unit, or button). -->
       <span
-        aria-hidden="true"
-        class="base-date-input__icon"
+        v-if="$slots.start"
+        class="base-date-input__extension base-date-input__extension--start"
       >
-        <IconCalendar size="sm" />
+        <slot name="start" />
       </span>
-    </button>
+      <button
+        :id="resolvedId"
+        ref="triggerRef"
+        :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
+        :aria-expanded="open"
+        :aria-haspopup="'dialog'"
+        :aria-invalid="!!error || undefined"
+        :aria-label="label ?? 'Date picker'"
+        class="base-date-input__trigger"
+        type="button"
+        @click="toggleOpen"
+        @keydown.escape="open = false"
+      >
+        <span :class="['base-date-input__value', { 'base-date-input__value--placeholder': !modelValue }]">
+          {{ modelValue || placeholder }}
+        </span>
+        <span
+          aria-hidden="true"
+          class="base-date-input__icon"
+        >
+          <IconCalendar size="sm" />
+        </span>
+      </button>
+      <!-- Trailing extension (e.g. an icon, unit, or button). -->
+      <span
+        v-if="$slots.end"
+        class="base-date-input__extension base-date-input__extension--end"
+      >
+        <slot name="end" />
+      </span>
+    </div>
 
     <Teleport to="body">
       <div
@@ -357,31 +373,58 @@
       margin-left: 2px;
     }
 
+    &__wrapper {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-md);
+      background-color: var(--mp-color-bg-surface);
+      transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease;
+
+      &:focus-within {
+        border-color: var(--mp-color-border-focus);
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+    }
+
     &__trigger {
       display: flex;
+      flex: 1;
+      min-width: 0;
       align-items: center;
       justify-content: space-between;
       appearance: none;
       width: 100%;
       text-align: left;
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background-color: var(--mp-color-bg-surface);
+      border: none;
+      background: transparent;
       cursor: pointer;
-      transition:
-        border-color 150ms ease,
-        box-shadow 150ms ease;
       user-select: none;
 
       &:focus {
         outline: none;
-        border-color: var(--mp-color-border-focus);
-        box-shadow: var(--mp-shadow-focus-primary);
       }
 
-      &:hover:not(:focus) {
-        border-color: var(--mp-color-border-default);
+      &:hover {
         filter: brightness(0.97);
+      }
+    }
+
+    /* Leading / trailing extension areas (icons, units, or buttons). */
+    &__extension {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      color: var(--mp-color-text-secondary);
+
+      &--start {
+        margin-inline-start: var(--mp-spacing-2);
+      }
+
+      &--end {
+        margin-inline-end: var(--mp-spacing-2);
       }
     }
 
@@ -414,10 +457,10 @@
     }
 
     /* States */
-    &--error .base-date-input__trigger {
+    &--error .base-date-input__wrapper {
       border-color: var(--mp-color-danger-default);
 
-      &:focus {
+      &:focus-within {
         box-shadow: var(--mp-shadow-focus-danger);
       }
     }
@@ -426,7 +469,7 @@
       opacity: 0.5;
       pointer-events: none;
 
-      .base-date-input__trigger {
+      .base-date-input__wrapper {
         background-color: var(--mp-color-bg-muted);
         cursor: not-allowed;
       }

@@ -114,6 +114,25 @@ describe('BaseCodeBlock', () => {
     });
   });
 
+  describe('maxHeight', () => {
+    it('does not constrain the body height by default', () => {
+      const wrapper = mount(BaseCodeBlock, { props: { code: TS_CODE } });
+      expect(wrapper.find('.base-code-block__body').attributes('style')).toBeUndefined();
+    });
+
+    it('caps and scrolls the body when a numeric maxHeight is set', () => {
+      const wrapper = mount(BaseCodeBlock, { props: { code: TS_CODE, maxHeight: 240 } });
+      const style = wrapper.find('.base-code-block__body').attributes('style');
+      expect(style).toContain('max-height: 240px');
+      expect(style).toContain('overflow-y: auto');
+    });
+
+    it('accepts a CSS length string for maxHeight', () => {
+      const wrapper = mount(BaseCodeBlock, { props: { code: TS_CODE, maxHeight: '60vh' } });
+      expect(wrapper.find('.base-code-block__body').attributes('style')).toContain('max-height: 60vh');
+    });
+  });
+
   describe('prop defaults', () => {
     it('defaults language to plaintext', () => {
       const wrapper = mount(BaseCodeBlock, { props: { code: 'text' } });

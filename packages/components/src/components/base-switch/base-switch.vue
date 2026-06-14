@@ -138,15 +138,60 @@
     }
 
     /* Sizes — canonical 2xs → 2xl scale (track / thumb dimensions). */
-    @each $size, $dims in (
-      '2xs': (24px, 14px, 2px, 10px, 12px),
-      'xs': (28px, 16px, 2px, 12px, 14px),
-      'sm': (32px, 18px, 2px, 14px, 16px),
-      'md': (40px, 22px, 2px, 18px, 20px),
-      'lg': (52px, 28px, 3px, 22px, 26px),
-      'xl': (60px, 32px, 3px, 26px, 30px),
-      '2xl': (72px, 38px, 4px, 30px, 36px)
-    ) {
+    @each $size,
+      $dims
+        in (
+          '2xs': (
+              24px,
+              14px,
+              2px,
+              10px,
+              12px,
+            ),
+          'xs': (
+              28px,
+              16px,
+              2px,
+              12px,
+              14px,
+            ),
+          'sm': (
+              32px,
+              18px,
+              2px,
+              14px,
+              16px,
+            ),
+          'md': (
+              40px,
+              22px,
+              2px,
+              18px,
+              20px,
+            ),
+          'lg': (
+              52px,
+              28px,
+              3px,
+              22px,
+              26px,
+            ),
+          'xl': (
+              60px,
+              32px,
+              3px,
+              26px,
+              30px,
+            ),
+          '2xl': (
+              72px,
+              38px,
+              4px,
+              30px,
+              36px,
+            )
+        )
+    {
       &--#{$size} {
         --thumb-translate: #{list.nth($dims, 5)};
 

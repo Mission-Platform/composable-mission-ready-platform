@@ -34,12 +34,20 @@
       filename?: string;
       showLineNumbers?: boolean;
       showCopyButton?: boolean;
+      /**
+       * Constrains the height of the scrollable code area.  When set, the code
+       * body scrolls vertically within this height while the header (filename /
+       * language + copy button) stays pinned to the top.  Accepts a number (CSS
+       * pixels) or any CSS length string (e.g. `'480px'`, `'60vh'`).
+       */
+      maxHeight?: string | number;
     }>(),
     {
       language: 'plaintext',
       filename: undefined,
       showLineNumbers: false,
       showCopyButton: true,
+      maxHeight: undefined,
     },
   );
   hljs.registerLanguage('bash', bash);
@@ -91,6 +99,23 @@
   });
 
   const lines = computed(() => highlighted.value.split('\n'));
+
+  /** The resolved `max-height` for the scrollable body (a number means pixels). */
+  const bodyMaxHeight = computed(() =>
+    props.maxHeight == undefined
+      ? undefined
+      : typeof props.maxHeight === 'number'
+        ? `${props.maxHeight}px`
+        : props.maxHeight,
+  );
+
+  /**
+   * Inline style for the scrollable body.  When a `maxHeight` is set the body
+   * caps its height and scrolls vertically, leaving the sticky header pinned.
+   */
+  const bodyStyle = computed(() =>
+    bodyMaxHeight.value ? { maxHeight: bodyMaxHeight.value, overflowY: 'auto' as const } : undefined,
+  );
 
   async function copyCode() {
     await navigator.clipboard.writeText(props.code);
@@ -172,6 +197,7 @@
 
     <div
       class="base-code-block__body"
+      :style="bodyStyle"
       tabindex="0"
     >
       <table
@@ -265,6 +291,12 @@ class="base-code-block__code hljs"
     font-size: var(--mp-font-size-sm);
 
     &__header {
+      // Pinned to the top so it stays visible while the code body scrolls. The
+      // body is the scroll container (capped via the `maxHeight` prop), so this
+      // keeps the filename/language + copy button always reachable.
+      position: sticky;
+      top: 0;
+      z-index: 1;
       display: flex;
       align-items: center;
       justify-content: space-between;

@@ -91,3 +91,23 @@ export const Showcase: Story = {
     `,
   }),
 };
+
+export const WithStartAndEndExtensions: Story = {
+  render: () => ({
+    components: { BaseDateTimeRangeInput },
+    setup() {
+      const range = ref<DateTimeRange>({ start: '', end: '', timezone: 'browser' });
+      return { range };
+    },
+    template: `
+      <BaseDateTimeRangeInput v-model="range" label="Window" style="max-width: 520px">
+        <template #start>
+          <span style="font-size: var(--mp-font-size-sm);">🕐</span>
+        </template>
+        <template #end>
+          <span style="font-size: var(--mp-font-size-sm);">{{ range.timezone === 'utc' ? 'UTC' : 'local' }}</span>
+        </template>
+      </BaseDateTimeRangeInput>
+    `,
+  }),
+};

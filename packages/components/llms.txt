@@ -1,0 +1,132 @@
+# @mission-platform/components
+
+Vue 3 component library for Mission Platform. A comprehensive collection of reusable, accessible, and responsive UI components.
+
+## Features
+
+### Base Components (100+)
+
+The package provides over 100 Vue 3 components with consistent styling and behavior:
+
+#### Form Controls
+- `BaseButton` — Button component with variants (primary, secondary, ghost) and sizes
+- `BaseInput`, `BaseTextarea` — Text input components with validation states
+- `BaseSelect`, `BaseMultiselect` — Dropdown selection components
+- `BaseCheckbox`, `BaseRadio`, `BaseSwitch` — Single/multi-state inputs
+- `BaseDateInput`, `BaseTimeInput`, `BaseDateRangeInput` — Date/time pickers
+- `BaseColorInput` — Color picker component
+- `BaseFileInput` — File upload input with preview support
+- `BaseSearchInput` — Search input with debounce and clear functionality
+- `BaseMarkdownInput` — Markdown editor using Monaco Editor
+- `BaseLocationInput` — Location/geocoding input with coordinate support
+
+#### Data Display
+- `BaseTable`, `BaseVirtualTable` — Tables with sorting, pagination, virtualization
+- `BaseList` — List component with variants and custom rendering
+- `BaseBadge`, `BaseTag` — Status and category tags
+- `BaseAvatar` — User avatar with status indicators
+- `BaseStatusIcon` — Status indicator icons (success, warning, error)
+- `BaseSkeleton` — Loading skeleton components
+- `BaseSpinner` — Loading spinner with variants
+- `BaseProgressBar` — Progress bar component
+- `BaseCalendar` — Calendar view with month/week views (Scheduler)
+
+#### Feedback & Overlays
+- `BaseDialog`, `BaseModal` — Dialog and modal windows with headers/footers
+- `BaseDropdown` — Dropdown menu component
+- `BasePopover` — Popover tooltip with arbitrary content
+- `BaseTooltip` — Tooltip component
+- `BaseCollapse`, `BaseAccordion` — Collapsible content areas
+- `BaseTabs`, `BaseVirtualTabs` — Tabbed interface with virtualized tabs
+
+#### Navigation
+- `BaseNavbar`, `BaseNavbarItem` — Top navigation bar
+- `BaseBreadcrumb` — Breadcrumb navigation
+- `BaseSidebar` — Side navigation with draggable resize
+- `BaseMenu`, `BaseMenubar` — Menu components
+- `BaseMenuItem`, `BaseMenuItemLink`, `BaseMenuItemButton` — Menu item variants
+- `BaseFormWizard` — Multi-step form wizard
+
+#### Layout & Display
+- `BaseApplicationLayout` — Application shell with header, sidebar, footer
+- `BaseVerticalLayout`, `BaseCard` — Layout containers and cards
+- `BaseTypography` — Typography utility component
+- `BaseCarousel` — Image/document carousel
+- `BaseTreeView`, `BaseVirtualTreeView` — Tree view components with virtualization
+- `BaseInPage` — Component that triggers callbacks when in viewport
+- `BaseWindowPopout` — Window popout utility
+
+#### Specialized Components
+- `BaseMonacoEditor` — Monaco Editor wrapper for code editing (separate import)
+- `BaseFormBuilder` — Dynamic form builder with drag-and-drop, with Editor, live Preview, and JSON Schema tabs (plus a wizard-only Steps tab for configuring steps)
+- `BaseSchemaForm` — JSON Schema-driven forms with validation
+- `BaseScheduler` — Calendar/scheduling component with event management
+- `BaseVirtualLogViewer` — High-performance log viewer for large datasets
+
+### Composables
+
+#### `useId()`
+
+Generate unique IDs for form accessibility.
+
+```ts
+import { useId } from '@mission-platform/components'
+
+const id = useId() // unique ID like "radix-:id-1"
+```
+
+#### `useZIndex()`
+
+Manage z-index layering for overlays.
+
+```ts
+import { useZIndex } from '@mission-platform/components'
+
+const { current, next, increment, reset } = useZIndex()
+```
+
+#### `useRouterClose()`
+
+Close modal/dialog via router navigation.
+
+```ts
+import { useRouterClose } from '@mission-platform/components'
+
+const router = useRouter()
+const close = useRouterClose(router)
+```
+
+### Special Import Paths
+
+#### Monaco Editor Support
+
+The `BaseMonacoEditor` component is exported via a dedicated subpath to avoid bundling Monaco language workers for apps that don't need code editing:
+
+```ts
+// Import for apps using Monaco Editor
+import { BaseMonacoEditor } from '@mission-platform/components/monaco'
+```
+
+#### Styles Import
+
+Component styles must be imported separately:
+
+```scss
+@use '@mission-platform/components/styles';
+```
+
+### Type Definitions
+
+All components export TypeScript types for props, emits, and configurations:
+
+```ts
+import type {
+  ButtonVariant,
+  ButtonSize,
+  InputType,
+  SelectOption,
+  TableColumns,
+} from '@mission-platform/components'
+```
+
+## Usage

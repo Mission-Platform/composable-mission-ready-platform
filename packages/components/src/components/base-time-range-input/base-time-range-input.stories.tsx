@@ -76,3 +76,23 @@ export const Showcase: Story = {
     `,
   }),
 };
+
+export const WithStartAndEndExtensions: Story = {
+  render: () => ({
+    components: { BaseTimeRangeInput },
+    setup() {
+      const range = ref<TimeRange>({ start: '', end: '' });
+      return { range };
+    },
+    template: `
+      <BaseTimeRangeInput v-model="range" label="Shift" style="max-width: 420px">
+        <template #start>
+          <span style="font-size: var(--mp-font-size-sm);">⏱</span>
+        </template>
+        <template #end>
+          <span style="font-size: var(--mp-font-size-sm);">local</span>
+        </template>
+      </BaseTimeRangeInput>
+    `,
+  }),
+};

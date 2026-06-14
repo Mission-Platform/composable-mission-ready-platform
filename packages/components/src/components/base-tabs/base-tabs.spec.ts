@@ -58,6 +58,27 @@ describe('BaseTabs', () => {
     expect(panels[1].attributes('hidden')).toBeDefined();
   });
 
+  it('only the active panel is visible', () => {
+    const wrapper = mountWithI18n(BaseTabs, { props: { tabs, modelValue: 'b' } });
+    const panels = wrapper.findAll('[role="tabpanel"]');
+    // `v-show` keeps inactive panels mounted but with `display: none`, so only
+    // the active tab's panel should report as visible.
+    expect(panels[0].isVisible()).toBe(false);
+    expect(panels[1].isVisible()).toBe(true);
+    expect(panels[2].isVisible()).toBe(false);
+  });
+
+  it('moves visibility to the newly activated panel', async () => {
+    const wrapper = mountWithI18n(BaseTabs, { props: { tabs } });
+    expect(wrapper.findAll('[role="tabpanel"]')[0].isVisible()).toBe(true);
+
+    await wrapper.findAll('[role="tab"]')[1].trigger('click');
+
+    const panels = wrapper.findAll('[role="tabpanel"]');
+    expect(panels[0].isVisible()).toBe(false);
+    expect(panels[1].isVisible()).toBe(true);
+  });
+
   it('applies pill variant class', () => {
     const wrapper = mountWithI18n(BaseTabs, { props: { tabs, variant: 'pill' } });
     expect(wrapper.find('.base-tabs').classes()).toContain('base-tabs--pill');

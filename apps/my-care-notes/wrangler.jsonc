@@ -24,11 +24,7 @@
   },
   "build": {
     "cwd": "../../",
-    "watch_dir": [
-      "./packages/**/src/*",
-      "./apps/my-care-notes/src/*",
-      "./workers/base-spa/src/*"
-    ],
+    "watch_dir": ["./packages/**/src/*", "./apps/my-care-notes/src/*", "./workers/base-spa/src/*"],
     "command": "turbo run build --filter=@mission-platform/my-care-notes --filter=@mission-platform/base-spa"
   },
   "assets": {

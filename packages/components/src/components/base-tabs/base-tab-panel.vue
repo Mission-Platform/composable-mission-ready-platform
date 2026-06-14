@@ -13,6 +13,7 @@
 
 <template>
   <div
+    v-show="activeId === tab.id"
     :id="`panel-${tab.id}`"
     :aria-labelledby="`tab-${tab.id}`"
     :hidden="activeId !== tab.id"
@@ -29,5 +30,11 @@
     flex-direction: column;
     flex: 1;
     padding-top: var(--mp-spacing-4);
+
+    // The `display: flex` above overrides the user-agent `[hidden]` rule, so
+    // restore it explicitly to keep inactive panels hidden.
+    &[hidden] {
+      display: none;
+    }
   }
 </style>

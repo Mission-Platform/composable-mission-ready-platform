@@ -182,6 +182,13 @@
           @keydown.space="openDropdown"
         >
           <div class="base-multiselect__control">
+            <!-- Leading extension (e.g. an icon or unit). -->
+            <span
+              v-if="$slots.start"
+              class="base-multiselect__extension base-multiselect__extension--start"
+            >
+              <slot name="start" />
+            </span>
             <div class="base-multiselect__tags">
               <BaseTag
                 v-for="opt in selectedOptions"
@@ -210,6 +217,13 @@
                 @keydown="handleKeydown"
               />
             </div>
+            <!-- Trailing extension (e.g. an icon or button), before the chevron. -->
+            <span
+              v-if="$slots.end"
+              class="base-multiselect__extension base-multiselect__extension--end"
+            >
+              <slot name="end" />
+            </span>
             <span
               aria-hidden="true"
               class="base-multiselect__chevron"
@@ -351,6 +365,14 @@
       color: var(--mp-color-text-secondary);
       pointer-events: none;
       flex-shrink: 0;
+    }
+
+    /* Leading / trailing extension areas (icons, units, or buttons). */
+    &__extension {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      color: var(--mp-color-text-secondary);
     }
 
     &__option {

@@ -72,3 +72,23 @@ export const Showcase: Story = {
     `,
   }),
 };
+
+export const WithStartAndEndExtensions: Story = {
+  render: () => ({
+    components: { BaseDateRangeInput },
+    setup() {
+      const range = ref<DateRange>({ start: '', end: '' });
+      return { range };
+    },
+    template: `
+      <BaseDateRangeInput v-model="range" label="Trip dates" style="max-width: 420px">
+        <template #start>
+          <span style="font-size: var(--mp-font-size-sm);">📅</span>
+        </template>
+        <template #end>
+          <span style="font-size: var(--mp-font-size-sm);">UTC</span>
+        </template>
+      </BaseDateRangeInput>
+    `,
+  }),
+};

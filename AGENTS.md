@@ -87,6 +87,7 @@ The `packages/` folder contains all reusable libraries that apps consume. These 
 - Each package must have its own `package.json`, `tsconfig.json`, and `vite.config.ts` (or equivalent build config).
 - Packages are versioned and released independently using [Changesets](https://github.com/changesets/changesets).
 - Packages must **never import from `apps/`** — the dependency flow is strictly one-directional: `apps` → `packages`.
+- Each package must maintain an `llms.txt` file explaining its usage, which must be updated whenever the package content, components, or API change.
 
 ### Current packages
 

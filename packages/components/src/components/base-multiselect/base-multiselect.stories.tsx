@@ -1,3 +1,5 @@
+import { ref } from 'vue';
+
 import BaseMultiselect from './base-multiselect.vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
@@ -68,3 +70,30 @@ export const Small: Story = { args: { size: 'sm' } };
 export const Large: Story = { args: { size: 'lg' } };
 
 export const NoLabel: Story = { args: { label: undefined } };
+
+export const WithStartAndEndExtensions: Story = {
+  render: () => ({
+    components: { BaseMultiselect },
+    setup() {
+      const value = ref<(string | number)[]>(['apple']);
+      return { value, options: FRUIT_OPTIONS };
+    },
+    template: `
+      <BaseMultiselect
+        label="Fruits"
+        placeholder="Pick fruits…"
+        :options="options"
+        :modelValue="value"
+        @update:modelValue="value = $event"
+        style="max-width: 400px"
+      >
+        <template #start>
+          <span>🥇</span>
+        </template>
+        <template #end>
+          <span style="font-size: var(--mp-font-size-sm);">{{ value.length }}</span>
+        </template>
+      </BaseMultiselect>
+    `,
+  }),
+};

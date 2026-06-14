@@ -76,3 +76,23 @@ export const Showcase: Story = {
     `,
   }),
 };
+
+export const WithStartAndEndExtensions: Story = {
+  render: () => ({
+    components: { BaseDateInput },
+    setup() {
+      const date = ref('');
+      return { date };
+    },
+    template: `
+      <BaseDateInput v-model="date" label="Departure" style="max-width: 360px">
+        <template #start>
+          <span style="font-size: var(--mp-font-size-sm);">From</span>
+        </template>
+        <template #end>
+          <span style="font-size: var(--mp-font-size-sm);">UTC</span>
+        </template>
+      </BaseDateInput>
+    `,
+  }),
+};

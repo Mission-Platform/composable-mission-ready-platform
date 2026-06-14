@@ -113,6 +113,7 @@ const meta = {
     showLineNumbers: { control: 'boolean' },
     showCopyButton: { control: 'boolean' },
     filename: { control: 'text' },
+    maxHeight: { control: 'text' },
   },
   args: {
     code: TS_SAMPLE,
@@ -120,6 +121,7 @@ const meta = {
     showLineNumbers: false,
     showCopyButton: true,
     filename: undefined,
+    maxHeight: undefined,
   },
   render: (arguments_) => ({
     components: { BaseCodeBlock },
@@ -200,5 +202,18 @@ export const Plaintext: Story = {
   args: {
     code: 'This is plain unformatted text.\nNo syntax highlighting applied.',
     language: 'plaintext',
+  },
+};
+
+// A long snippet capped with `maxHeight`: the code area scrolls vertically while
+// the header (filename / language + copy button) stays pinned to the top.
+const LONG_SAMPLE = Array.from({ length: 60 }, (_, index) => `const line${index + 1} = ${index + 1}`).join('\n');
+
+export const ScrollableWithStickyHeader: Story = {
+  args: {
+    code: LONG_SAMPLE,
+    language: 'typescript',
+    filename: 'src/long-file.ts',
+    maxHeight: 280,
   },
 };

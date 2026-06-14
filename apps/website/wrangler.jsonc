@@ -24,11 +24,7 @@
   },
   "build": {
     "cwd": "../../",
-    "watch_dir": [
-      "./packages/**/src/*",
-      "./apps/website/src/*",
-      "./workers/base-spa/src/*"
-    ],
+    "watch_dir": ["./packages/**/src/*", "./apps/website/src/*", "./workers/base-spa/src/*"],
     "command": "turbo run build --filter=@mission-platform/website --filter=@mission-platform/base-spa"
   },
   "assets": {

@@ -61,3 +61,19 @@ export const Large: Story = { args: { size: 'lg' } };
 export const NoResize: Story = { args: { resize: 'none' } };
 
 export const TallRows: Story = { args: { rows: 8 } };
+
+export const WithExtensions: Story = {
+  render: () => ({
+    components: { BaseTextarea },
+    template: `
+      <BaseTextarea label="Notes" placeholder="Write a note…" style="max-width: 400px">
+        <template #start>
+          <span style="margin: 8px 0 0 8px; font-size: var(--mp-font-size-sm);">✎</span>
+        </template>
+        <template #end>
+          <span style="margin: 8px 8px 0 0; font-size: var(--mp-font-size-sm);">0/500</span>
+        </template>
+      </BaseTextarea>
+    `,
+  }),
+};

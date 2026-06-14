@@ -1,278 +1,410 @@
+import { DragDropProvider } from '@dnd-kit/vue';
 import { describe, expect, it } from 'vitest';
-import { z } from 'zod';
 
 import { mountWithI18n as mount } from '../../test-utils/mount-with-i18n';
 
 import BaseFormBuilder from './base-form-builder.vue';
-import { useFormSchema } from './use-form-schema';
+import {
+  builderFieldToProperty,
+  createField,
+  fieldKeyError,
+  fieldsToSchema,
+  fieldsToWizardSchema,
+  isFieldsetWidget,
+  schemaStepConditions,
+  schemaStepTitles,
+  schemaToFields,
+  slugify,
+  uniqueKey,
+  widgetHasOptions,
+  widgetToJsonType,
+} from './form-schema';
+import { useFormBuilder } from './use-form-builder';
 
-import type { FormSchema } from './types';
+import type { BuilderField, FormJsonSchema, SchemaFormDefinition } from './types';
 
-// ─── useFormSchema unit tests ─────────────────────────────────────────────────
+/** A schema with a nested field set (an `object` property owning `properties`). */
+const nestedSchema: FormJsonSchema = {
+  type: 'object',
+  properties: {
+    address: {
+      type: 'object',
+      title: 'Address',
+      ui: { widget: 'fieldset' },
+      properties: {
+        street: { type: 'string', title: 'Street', ui: { widget: 'text' } },
+        city: { type: 'string', title: 'City', ui: { widget: 'text' } },
+      },
+      required: ['street'],
+    },
+  },
+};
 
-describe('useFormSchema', () => {
-  const schema: FormSchema = {
-    fields: [
-      { key: 'name', label: 'Name', schema: z.string().min(2, 'Too short') },
-      { key: 'age', type: 'number', label: 'Age' },
-      { key: 'active', type: 'checkbox', label: 'Active' },
-    ],
-  };
+/** Emits a `@dnd-kit/vue` provider event so we can drive the builder's handlers. */
+function emitDrag(wrapper: ReturnType<typeof mount>, event: string, payload: unknown) {
+  return wrapper.findComponent(DragDropProvider).vm.$emit(event, payload);
+}
 
-  it('initialises values from field type defaults', () => {
-    const { values } = useFormSchema(schema);
-    expect(values.name).toBe('');
-    expect(values.age).toBeUndefined();
-    expect(values.active).toBe(false);
+// ─── form-schema unit tests ──────────────────────────────────────────────────
+
+describe('slugify', () => {
+  it('produces a snake_case key from a label', () => {
+    expect(slugify('First Name')).toBe('first_name');
+    expect(slugify('  Hello, World!  ')).toBe('hello_world');
   });
 
-  it('overlays caller-supplied initial values', () => {
-    const { values } = useFormSchema(schema, { name: 'Alice', active: true });
-    expect(values.name).toBe('Alice');
-    expect(values.active).toBe(true);
-  });
-
-  it('validate() returns true when all field schemas pass', () => {
-    const { values, validate } = useFormSchema(schema, { name: 'Alice' });
-    values.name = 'Alice';
-    expect(validate()).toBe(true);
-  });
-
-  it('validate() returns false and populates errors when field schema fails', () => {
-    const { errors, validate } = useFormSchema(schema, { name: 'A' });
-    const result = validate();
-    expect(result).toBe(false);
-    expect(errors.name).toBe('Too short');
-  });
-
-  it('validate() uses whole-form zodSchema when provided', () => {
-    const s: FormSchema = {
-      fields: [{ key: 'email', label: 'Email' }],
-      zodSchema: z.object({ email: z.string().email('Bad email') }),
-    };
-    const { values, errors, validate } = useFormSchema(s, { email: 'not-an-email' });
-    values.email = 'not-an-email';
-    expect(validate()).toBe(false);
-    expect(errors.email).toBe('Bad email');
-  });
-
-  it('validate() passes with valid whole-form zodSchema', () => {
-    const s: FormSchema = {
-      fields: [{ key: 'email', label: 'Email' }],
-      zodSchema: z.object({ email: z.string().email() }),
-    };
-    const { values, validate } = useFormSchema(s, { email: 'test@example.com' });
-    values.email = 'test@example.com';
-    expect(validate()).toBe(true);
-  });
-
-  it('reset() restores default values and clears errors', () => {
-    const { values, errors, validate, reset } = useFormSchema(schema, { name: 'A' });
-    validate(); // populate errors
-    values.name = 'Changed';
-    reset();
-    expect(values.name).toBe('A'); // restored to initial
-    expect(errors.name).toBeUndefined();
-  });
-
-  it('isValid reflects latest validate() result', () => {
-    const { values, isValid, validate } = useFormSchema(schema);
-    values.name = 'Alice';
-    validate();
-    expect(isValid.value).toBe(true);
-    values.name = 'A';
-    validate();
-    expect(isValid.value).toBe(false);
+  it('strips diacritics and falls back to "field" when empty', () => {
+    expect(slugify('Prénom')).toBe('prenom');
+    expect(slugify('***')).toBe('field');
   });
 });
 
-// ─── BaseFormBuilder component tests ─────────────────────────────────────────
+describe('uniqueKey', () => {
+  it('returns the base when unused', () => {
+    expect(uniqueKey('name', [])).toBe('name');
+  });
+
+  it('suffixes incrementally on collision', () => {
+    expect(uniqueKey('name', ['name'])).toBe('name_2');
+    expect(uniqueKey('name', ['name', 'name_2'])).toBe('name_3');
+  });
+});
+
+describe('fieldKeyError', () => {
+  it('accepts a non-empty key with no sibling collision', () => {
+    expect(fieldKeyError('name', ['email', 'phone'])).toBeUndefined();
+  });
+
+  it('flags an empty or whitespace-only key', () => {
+    expect(fieldKeyError('', [])).toBe('A key is required.');
+    expect(fieldKeyError('   ', [])).toBe('A key is required.');
+  });
+
+  it('flags a key that collides with a sibling', () => {
+    expect(fieldKeyError('email', ['name', 'email'])).toBe('Another field in this group already uses this key.');
+  });
+});
+
+describe('widget helpers', () => {
+  it('maps widgets to JSON Schema types', () => {
+    expect(widgetToJsonType('text')).toBe('string');
+    expect(widgetToJsonType('email')).toBe('string');
+    expect(widgetToJsonType('number')).toBe('number');
+    expect(widgetToJsonType('checkbox')).toBe('boolean');
+    expect(widgetToJsonType('switch')).toBe('boolean');
+    expect(widgetToJsonType('multiselect')).toBe('array');
+    expect(widgetToJsonType('fieldset')).toBe('object');
+  });
+
+  it('flags option-based widgets', () => {
+    expect(widgetHasOptions('select')).toBe(true);
+    expect(widgetHasOptions('radio')).toBe(true);
+    expect(widgetHasOptions('multiselect')).toBe(true);
+    expect(widgetHasOptions('text')).toBe(false);
+  });
+
+  it('flags field-set widgets', () => {
+    expect(isFieldsetWidget('fieldset')).toBe(true);
+    expect(isFieldsetWidget('text')).toBe(false);
+  });
+});
+
+describe('createField', () => {
+  it('derives a unique snake_case key from the label', () => {
+    const field = createField({ type: 'text', label: 'First Name', usedKeys: ['first_name'] });
+    expect(field.type).toBe('text');
+    expect(field.key).toBe('first_name_2');
+    expect(field.required).toBe(false);
+    expect(field.options).toEqual([]);
+  });
+
+  it('seeds option widgets with starter options', () => {
+    const field = createField({ type: 'select' });
+    expect(field.options).toHaveLength(2);
+  });
+
+  it('gives field sets an empty children array', () => {
+    const field = createField({ type: 'fieldset' });
+    expect(field.children).toEqual([]);
+  });
+});
+
+// ─── builder field → schema property ──────────────────────────────────────────
+
+describe('builderFieldToProperty', () => {
+  it('pins the widget and maps validation keywords', () => {
+    const field = createField({ type: 'text', label: 'Name', key: 'name' });
+    field.minLength = 2;
+    field.placeholder = 'Jane';
+    const property = builderFieldToProperty(field);
+    expect(property.type).toBe('string');
+    expect(property.title).toBe('Name');
+    expect(property.minLength).toBe(2);
+    expect(property.ui).toMatchObject({ widget: 'text', placeholder: 'Jane' });
+  });
+
+  it('serialises options as oneOf', () => {
+    const field = createField({ type: 'select', key: 'topic' });
+    field.options = [
+      { label: 'Sales', value: 'sales' },
+      { label: 'Support', value: 'support' },
+    ];
+    const property = builderFieldToProperty(field);
+    expect(property.oneOf).toEqual([
+      { const: 'sales', title: 'Sales' },
+      { const: 'support', title: 'Support' },
+    ]);
+  });
+
+  it('nests a field set as an object property', () => {
+    const fieldset = createField({ type: 'fieldset', label: 'Address', key: 'address' });
+    const child = createField({ type: 'text', label: 'Street', key: 'street' });
+    child.required = true;
+    fieldset.children = [child];
+    const property = builderFieldToProperty(fieldset);
+    expect(property.type).toBe('object');
+    expect(property.properties?.street?.title).toBe('Street');
+    expect(property.required).toEqual(['street']);
+  });
+});
+
+// ─── fields → schema definition ───────────────────────────────────────────────
+
+describe('fieldsToSchema', () => {
+  it('builds an object schema with ordered properties and required keys', () => {
+    const name = createField({ type: 'text', label: 'Name', key: 'name' });
+    name.required = true;
+    const email = createField({ type: 'email', label: 'Email', key: 'email' });
+    const schema = fieldsToSchema([name, email], { title: 'Contact' });
+    expect(schema.title).toBe('Contact');
+    expect(Object.keys(schema.properties)).toEqual(['name', 'email']);
+    expect(schema.required).toEqual(['name']);
+  });
+});
+
+describe('fieldsToWizardSchema', () => {
+  it('keeps each step fields and preserves step titles', () => {
+    const fieldA = createField({ type: 'text', key: 'a' });
+    const fieldB = createField({ type: 'text', key: 'b' });
+    const steps = fieldsToWizardSchema([[fieldA], [fieldB]], { stepTitles: ['One', 'Two'] });
+    expect(steps).toHaveLength(2);
+    expect(steps[0].title).toBe('One');
+    expect(Object.keys(steps[0].properties)).toEqual(['a']);
+    expect(Object.keys(steps[1].properties)).toEqual(['b']);
+  });
+
+  it('honours an explicit step count, keeping empty steps', () => {
+    const field = createField({ type: 'text', key: 'a' });
+    const steps = fieldsToWizardSchema([[field]], { stepCount: 3 });
+    expect(steps).toHaveLength(3);
+    expect(Object.keys(steps[2].properties)).toEqual([]);
+  });
+});
+
+// ─── schema → builder fields (round trip) ──────────────────────────────────────
+
+describe('schemaToFields', () => {
+  it('hydrates a nested field set', () => {
+    const fields = schemaToFields(nestedSchema) as BuilderField[];
+    expect(fields).toHaveLength(1);
+    const [address] = fields;
+    expect(address.type).toBe('fieldset');
+    expect(address.children).toHaveLength(2);
+    expect(address.children?.[0].key).toBe('street');
+    expect(address.children?.[0].required).toBe(true);
+  });
+
+  it('hydrates a wizard definition into a per-step matrix', () => {
+    const wizard: SchemaFormDefinition = [
+      { type: 'object', properties: { a: { type: 'string', ui: { widget: 'text' } } } },
+      { type: 'object', properties: { b: { type: 'string', ui: { widget: 'text' } } } },
+    ];
+    const fields = schemaToFields(wizard) as BuilderField[][];
+    expect(fields).toHaveLength(2);
+    expect(fields[0].map((field) => field.key)).toEqual(['a']);
+    expect(fields[1].map((field) => field.key)).toEqual(['b']);
+  });
+
+  it('round-trips a nested schema back to an equivalent definition', () => {
+    const fields = schemaToFields(nestedSchema) as BuilderField[];
+    const rebuilt = fieldsToSchema(fields);
+    expect(rebuilt.properties.address?.properties?.street?.title).toBe('Street');
+    expect(rebuilt.properties.address?.required).toEqual(['street']);
+  });
+
+  it('reads wizard step metadata', () => {
+    const wizard: SchemaFormDefinition = [
+      { type: 'object', title: 'One', properties: {}, visibleWhen: { allOf: [{ field: 'x', equals: 'y' }] } },
+      { type: 'object', title: 'Two', properties: {} },
+    ];
+    expect(schemaStepTitles(wizard)).toEqual(['One', 'Two']);
+    expect(schemaStepConditions(wizard)[0]).toEqual({ allOf: [{ field: 'x', equals: 'y' }] });
+  });
+});
+
+// ─── useFormBuilder ────────────────────────────────────────────────────────────
+
+function makeBuilder(wizard = false) {
+  return useFormBuilder({ wizard: () => wizard, title: () => '', description: () => '' });
+}
+
+/** Narrows the builder's working fields to the flat single-step list. */
+function flatFields(builder: ReturnType<typeof useFormBuilder>): BuilderField[] {
+  return builder.fields.value as BuilderField[];
+}
+
+describe('useFormBuilder', () => {
+  it('adds, selects, updates, and removes fields', () => {
+    const builder = makeBuilder();
+    const id = builder.addField('text');
+    expect(builder.fields.value).toHaveLength(1);
+    expect(builder.selectedId.value).toBe(id);
+
+    builder.updateField(id, { label: 'Renamed', required: true });
+    expect(flatFields(builder)[0].label).toBe('Renamed');
+    expect(flatFields(builder)[0].required).toBe(true);
+
+    builder.removeField(id);
+    expect(builder.fields.value).toHaveLength(0);
+    expect(builder.selectedId.value).toBeUndefined();
+  });
+
+  it('coerces type-dependent state on a type change', () => {
+    const builder = makeBuilder();
+    const id = builder.addField('text');
+    builder.updateField(id, { type: 'fieldset' });
+    expect(flatFields(builder)[0].children).toEqual([]);
+    builder.updateField(id, { type: 'select' });
+    expect(flatFields(builder)[0].children).toBeUndefined();
+    expect(flatFields(builder)[0].options).toHaveLength(2);
+  });
+
+  it('duplicates a field with a fresh id and key right after the original', () => {
+    const builder = makeBuilder();
+    const id = builder.addField('text', { index: 0 });
+    builder.duplicateField(id);
+    expect(builder.fields.value).toHaveLength(2);
+    expect(flatFields(builder)[1].id).not.toBe(id);
+    expect(flatFields(builder)[1].key).not.toBe(flatFields(builder)[0].key);
+  });
+
+  it('reorders fields within their container', () => {
+    const builder = makeBuilder();
+    const first = builder.addField('text');
+    const second = builder.addField('email');
+    builder.moveUp(second);
+    expect(flatFields(builder).map((field) => field.id)).toEqual([second, first]);
+  });
+
+  it('only reorders among same-step siblings in wizard mode', () => {
+    const builder = makeBuilder(true);
+    builder.addStep();
+    const firstId = builder.insertField('text', { step: 0 });
+    const secondId = builder.insertField('text', { step: 1 });
+    // Moving the step-1 field up must not jump it above the step-0 field.
+    builder.moveUp(secondId);
+    const steps = builder.fields.value as BuilderField[][];
+    expect(steps[0].map((field) => field.id)).toEqual([firstId]);
+    expect(steps[1].map((field) => field.id)).toEqual([secondId]);
+  });
+
+  it('moves a field between steps without storing the step on the field', () => {
+    const builder = makeBuilder(true);
+    builder.addStep();
+    const fieldId = builder.insertField('text', { step: 0 });
+    expect(builder.selectedStep.value).toBe(0);
+    builder.moveFieldToStep(fieldId, 1);
+    const steps = builder.fields.value as BuilderField[][];
+    expect(steps[0]).toHaveLength(0);
+    expect(steps[1].map((field) => field.id)).toEqual([fieldId]);
+    expect(builder.selectedStep.value).toBe(1);
+  });
+
+  it('nests an existing field into a field set and back out', () => {
+    const builder = makeBuilder();
+    const fieldsetId = builder.addField('fieldset');
+    const fieldId = builder.addField('text');
+    builder.moveField(fieldId, { parentId: fieldsetId, index: 0 });
+    expect(builder.fields.value).toHaveLength(1);
+    expect(flatFields(builder)[0].children).toHaveLength(1);
+
+    builder.moveField(fieldId, { index: 1 });
+    expect(builder.fields.value).toHaveLength(2);
+    expect(flatFields(builder)[0].children).toHaveLength(0);
+  });
+
+  it('refuses to nest a field set into itself', () => {
+    const builder = makeBuilder();
+    const fieldsetId = builder.addField('fieldset');
+    builder.moveField(fieldsetId, { parentId: fieldsetId, index: 0 });
+    expect(builder.fields.value).toHaveLength(1);
+    expect(flatFields(builder)[0].children).toHaveLength(0);
+  });
+
+  it('exposes a definition that switches to a wizard array', () => {
+    const builder = makeBuilder(true);
+    builder.addStep();
+    builder.insertField('text', { step: 0 });
+    builder.insertField('text', { step: 1 });
+    expect(Array.isArray(builder.definition.value)).toBe(true);
+    expect(builder.definition.value).toHaveLength(2);
+  });
+
+  it('adds child fields to a field set', () => {
+    const builder = makeBuilder();
+    const fieldsetId = builder.addField('fieldset');
+    builder.addChild(fieldsetId);
+    expect(flatFields(builder)[0].children).toHaveLength(1);
+  });
+});
+
+// ─── BaseFormBuilder component ──────────────────────────────────────────────────
 
 describe('BaseFormBuilder', () => {
-  const baseSchema: FormSchema = {
-    fields: [{ key: 'username', label: 'Username', placeholder: 'Enter username' }],
-  };
-
-  it('renders a <form> element', () => {
-    const wrapper = mount(BaseFormBuilder, { props: { schema: baseSchema } });
-    expect(wrapper.find('form').exists()).toBe(true);
+  it('renders the palette and the empty-canvas hint', () => {
+    const wrapper = mount(BaseFormBuilder);
+    expect(wrapper.text()).toContain('Fields');
+    expect(wrapper.text()).toContain('Drag a field here from the palette');
   });
 
-  it('renders a text input field by default', () => {
-    const wrapper = mount(BaseFormBuilder, { props: { schema: baseSchema } });
-    expect(wrapper.find('input[type="text"]').exists()).toBe(true);
+  it('adds a field when a palette entry is clicked', async () => {
+    const wrapper = mount(BaseFormBuilder);
+    await wrapper.find('.form-builder-palette-item').trigger('click');
+    expect(wrapper.findAll('.form-builder-field')).toHaveLength(1);
+    const emitted = wrapper.emitted('update:modelValue');
+    expect(emitted).toBeTruthy();
   });
 
-  it('renders email input for email type', () => {
-    const s: FormSchema = { fields: [{ key: 'email', type: 'email', label: 'Email' }] };
-    const wrapper = mount(BaseFormBuilder, { props: { schema: s } });
-    expect(wrapper.find('input[type="email"]').exists()).toBe(true);
-  });
-
-  it('renders number input for number type', () => {
-    const s: FormSchema = { fields: [{ key: 'count', type: 'number', label: 'Count' }] };
-    const wrapper = mount(BaseFormBuilder, { props: { schema: s } });
-    expect(wrapper.find('input[type="number"]').exists()).toBe(true);
-  });
-
-  it('renders textarea for textarea type', () => {
-    const s: FormSchema = { fields: [{ key: 'bio', type: 'textarea', label: 'Bio' }] };
-    const wrapper = mount(BaseFormBuilder, { props: { schema: s } });
-    expect(wrapper.find('textarea').exists()).toBe(true);
-  });
-
-  it('renders markdown input for markdown type', () => {
-    const s: FormSchema = { fields: [{ key: 'body', type: 'markdown', label: 'Body' }] };
-    const wrapper = mount(BaseFormBuilder, { props: { schema: s } });
-    expect(wrapper.find('textarea').exists()).toBe(true);
-    expect(wrapper.find('.markdown-input').exists()).toBe(true);
-  });
-
-  it('renders checkbox for checkbox type', () => {
-    const s: FormSchema = { fields: [{ key: 'agree', type: 'checkbox', label: 'Agree' }] };
-    const wrapper = mount(BaseFormBuilder, { props: { schema: s } });
-    expect(wrapper.find('input[type="checkbox"]').exists()).toBe(true);
-  });
-
-  it('renders switch for switch type', () => {
-    const s: FormSchema = { fields: [{ key: 'notify', type: 'switch', label: 'Notify' }] };
-    const wrapper = mount(BaseFormBuilder, { props: { schema: s } });
-    expect(wrapper.find('input[role="switch"]').exists()).toBe(true);
-  });
-
-  it('renders select for select type', () => {
-    const s: FormSchema = {
-      fields: [
-        {
-          key: 'role',
-          type: 'select',
-          label: 'Role',
-          options: [
-            { label: 'Admin', value: 'admin' },
-            { label: 'User', value: 'user' },
-          ],
-        },
-      ],
-    };
-    const wrapper = mount(BaseFormBuilder, { props: { schema: s } });
-    expect(wrapper.find('[role="combobox"]').exists()).toBe(true);
-  });
-
-  it('renders radio group for radio type', () => {
-    const s: FormSchema = {
-      fields: [
-        {
-          key: 'plan',
-          type: 'radio',
-          label: 'Plan',
-          options: [
-            { label: 'Free', value: 'free' },
-            { label: 'Pro', value: 'pro' },
-          ],
-        },
-      ],
-    };
-    const wrapper = mount(BaseFormBuilder, { props: { schema: s } });
-    expect(wrapper.findAll('input[type="radio"]').length).toBe(2);
-  });
-
-  it('renders multiple fields from schema', () => {
-    const s: FormSchema = {
-      fields: [
-        { key: 'first', label: 'First' },
-        { key: 'last', label: 'Last' },
-        { key: 'email', type: 'email', label: 'Email' },
-      ],
-    };
-    const wrapper = mount(BaseFormBuilder, { props: { schema: s } });
-    expect(wrapper.findAll('input').length).toBe(3);
-  });
-
-  it('shows field labels', () => {
-    const wrapper = mount(BaseFormBuilder, { props: { schema: baseSchema } });
-    expect(wrapper.find('label').text()).toContain('Username');
-  });
-
-  it('emits update:modelValue when a field changes', async () => {
-    const wrapper = mount(BaseFormBuilder, { props: { schema: baseSchema } });
-    await wrapper.find('input').setValue('alice');
-    expect(wrapper.emitted('update:modelValue')).toBeTruthy();
-    expect((wrapper.emitted('update:modelValue')![0][0] as Record<string, unknown>).username).toBe('alice');
-  });
-
-  it('emits submit with values and isValid=true when form is valid', async () => {
-    const s: FormSchema = {
-      fields: [{ key: 'name', label: 'Name', schema: z.string().min(1) }],
-    };
-    const wrapper = mount(BaseFormBuilder, { props: { schema: s } });
-    await wrapper.find('input').setValue('Alice');
-    await wrapper.find('form').trigger('submit');
-    const submitEvents = wrapper.emitted('submit');
-    expect(submitEvents).toBeTruthy();
-    expect(submitEvents![0][1]).toBe(true);
-  });
-
-  it('emits submit with isValid=false when validation fails', async () => {
-    const s: FormSchema = {
-      fields: [{ key: 'name', label: 'Name', schema: z.string().min(5, 'Too short') }],
-    };
-    const wrapper = mount(BaseFormBuilder, { props: { schema: s } });
-    await wrapper.find('input').setValue('Ab');
-    await wrapper.find('form').trigger('submit');
-    const submitEvents = wrapper.emitted('submit');
-    expect(submitEvents).toBeTruthy();
-    expect(submitEvents![0][1]).toBe(false);
-  });
-
-  it('shows validation error messages on submit', async () => {
-    const s: FormSchema = {
-      fields: [{ key: 'name', label: 'Name', schema: z.string().min(5, 'Min 5 chars') }],
-    };
-    const wrapper = mount(BaseFormBuilder, { props: { schema: s } });
-    await wrapper.find('input').setValue('Hi');
-    await wrapper.find('form').trigger('submit');
-    expect(wrapper.text()).toContain('Min 5 chars');
-  });
-
-  it('clears errors and resets values on form reset', async () => {
-    const s: FormSchema = {
-      fields: [{ key: 'name', label: 'Name', schema: z.string().min(5, 'Too short') }],
-    };
-    const wrapper = mount(BaseFormBuilder, { props: { schema: s } });
-    await wrapper.find('input').setValue('Hi');
-    await wrapper.find('form').trigger('submit');
-    expect(wrapper.text()).toContain('Too short');
-    await wrapper.find('form').trigger('reset');
-    expect(wrapper.text()).not.toContain('Too short');
-  });
-
-  it('renders default Submit and Reset buttons', () => {
-    const wrapper = mount(BaseFormBuilder, { props: { schema: baseSchema } });
-    const buttons = wrapper.findAll('button');
-    const texts = buttons.map((b) => b.text());
-    expect(texts).toContain('Submit');
-    expect(texts).toContain('Reset');
-  });
-
-  it('disables all fields when disabled prop is true', () => {
-    const s: FormSchema = {
-      fields: [
-        { key: 'a', label: 'A' },
-        { key: 'b', type: 'checkbox', label: 'B' },
-      ],
-    };
-    const wrapper = mount(BaseFormBuilder, { props: { schema: s, disabled: true } });
-    for (const input of wrapper.findAll('input')) {
-      expect(input.attributes('disabled')).toBeDefined();
-    }
-  });
-
-  it('supports slot override for actions', () => {
-    const wrapper = mount(BaseFormBuilder, {
-      props: { schema: baseSchema },
-      slots: { actions: '<button type="submit">Save</button>' },
+  it('adds a field when a palette item is dropped on the canvas', async () => {
+    const wrapper = mount(BaseFormBuilder);
+    emitDrag(wrapper, 'dragEnd', {
+      canceled: false,
+      operation: {
+        source: { data: { kind: 'palette', fieldType: 'text' } },
+        target: { data: { kind: 'canvas' } },
+      },
     });
-    expect(wrapper.find('button').text()).toBe('Save');
-    expect(wrapper.findAll('button').length).toBe(1);
+    await wrapper.vm.$nextTick();
+    expect(wrapper.findAll('.form-builder-field')).toHaveLength(1);
+  });
+
+  it('hydrates from a nested schema passed via v-model', () => {
+    const wrapper = mount(BaseFormBuilder, { props: { modelValue: nestedSchema } });
+    expect(wrapper.text()).toContain('Address');
+    // The nested child row renders inside the field set.
+    expect(wrapper.findAll('.form-builder-field').length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('ignores drops while disabled', async () => {
+    const wrapper = mount(BaseFormBuilder, { props: { disabled: true } });
+    emitDrag(wrapper, 'dragEnd', {
+      canceled: false,
+      operation: {
+        source: { data: { kind: 'palette', fieldType: 'text' } },
+        target: { data: { kind: 'canvas' } },
+      },
+    });
+    await wrapper.vm.$nextTick();
+    expect(wrapper.findAll('.form-builder-field')).toHaveLength(0);
   });
 });

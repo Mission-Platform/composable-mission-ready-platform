@@ -177,6 +177,13 @@
           class="base-select__wrapper"
           role="combobox"
         >
+          <!-- Leading extension (e.g. an icon or unit). -->
+          <span
+            v-if="$slots.start"
+            class="base-select__extension base-select__extension--start"
+          >
+            <slot name="start" />
+          </span>
           <button
             :id="resolvedId"
             ref="triggerRef"
@@ -191,6 +198,13 @@
           >
             {{ displayLabel }}
           </button>
+          <!-- Trailing extension (e.g. an icon or button), before the chevron. -->
+          <span
+            v-if="$slots.end"
+            class="base-select__extension base-select__extension--end"
+          >
+            <slot name="end" />
+          </span>
           <span
             aria-hidden="true"
             class="base-select__chevron"
@@ -330,6 +344,22 @@
       pointer-events: none;
       color: var(--mp-color-text-secondary);
       flex-shrink: 0;
+    }
+
+    /* Leading / trailing extension areas (icons, units, or buttons). */
+    &__extension {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      color: var(--mp-color-text-secondary);
+
+      &--start {
+        margin-inline-start: var(--mp-spacing-2);
+      }
+
+      &--end {
+        margin-inline-end: var(--mp-spacing-1);
+      }
     }
 
     &__listbox {

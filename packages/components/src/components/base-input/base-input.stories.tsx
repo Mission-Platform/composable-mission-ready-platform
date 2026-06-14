@@ -119,3 +119,45 @@ export const PasswordWithIcon: Story = {
     `,
   }),
 };
+
+export const WithStartExtension: Story = {
+  render: () => ({
+    components: { BaseInput, IconSearch },
+    template: `
+      <BaseInput label="Search" placeholder="Search…" style="max-width: 360px">
+        <template #start>
+          <IconSearch size="sm" />
+        </template>
+      </BaseInput>
+    `,
+  }),
+};
+
+export const WithEndExtension: Story = {
+  render: () => ({
+    components: { BaseInput },
+    template: `
+      <BaseInput label="Amount" type="number" placeholder="0.00" style="max-width: 360px">
+        <template #end>
+          <span style="font-size: var(--mp-font-size-sm);">USD</span>
+        </template>
+      </BaseInput>
+    `,
+  }),
+};
+
+export const WithStartAndEndExtensions: Story = {
+  render: () => ({
+    components: { BaseInput },
+    template: `
+      <BaseInput label="Price" type="number" placeholder="0.00" style="max-width: 360px">
+        <template #start>
+          <span style="font-size: var(--mp-font-size-sm);">$</span>
+        </template>
+        <template #end>
+          <span style="font-size: var(--mp-font-size-sm);">/ month</span>
+        </template>
+      </BaseInput>
+    `,
+  }),
+};

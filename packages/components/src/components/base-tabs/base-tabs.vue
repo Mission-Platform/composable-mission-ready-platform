@@ -24,7 +24,7 @@
    * </BaseTabs>
    * ```
    */
-  import { ref } from 'vue';
+  import { ref, watch } from 'vue';
 
   import BaseTabList from './base-tab-list.vue';
   import BaseTabPanel from './base-tab-panel.vue';
@@ -79,6 +79,15 @@
   const tablistRef = ref<{ $el: HTMLElement } | null>(null);
 
   const activeId = ref(props.modelValue ?? props.tabs[0]?.id ?? '');
+
+  // Keep the internal active tab in sync when the component is driven as a
+  // controlled (`v-model`) input, so a parent can switch tabs programmatically.
+  watch(
+    () => props.modelValue,
+    (id) => {
+      if (id != undefined && id !== activeId.value) activeId.value = id;
+    },
+  );
 
   function select(id: string) {
     const tab = props.tabs.find((t) => t.id === id);

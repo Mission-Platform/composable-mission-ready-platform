@@ -1,0 +1,6 @@
+# @mission-platform/hunspell
+
+Hunspell spell checker compiled to WebAssembly via Emscripten.
+
+## Usage
+Integrate Hunspell spell-checking capabilities into your application using the provided WASM-based utilities.

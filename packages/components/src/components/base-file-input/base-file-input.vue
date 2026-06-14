@@ -18,6 +18,11 @@
       modelValue?: File | File[] | null;
       multiple?: boolean;
       accept?: string;
+      /**
+       * Native `capture` hint: prefer a device camera/microphone, optionally
+       * picking the user-facing (`'user'`) or rear (`'environment'`) camera.
+       */
+      capture?: boolean | 'user' | 'environment';
       label?: string;
       labelHidden?: boolean;
       hint?: string;
@@ -31,6 +36,7 @@
       modelValue: null,
       multiple: false,
       accept: undefined,
+      capture: undefined,
       label: undefined,
       labelHidden: false,
       hint: undefined,
@@ -124,7 +130,12 @@
         class="base-file-input__icon"
         size="xl"
       />
-      <p class="base-file-input__drop-text">
+      <BaseTypography
+        as="p"
+        class="base-file-input__drop-text"
+        color="secondary"
+        variant="body-sm"
+      >
         {{ t('drag') }}
         <label
           :for="resolvedId"
@@ -132,13 +143,16 @@
         >
           {{ t('browse') }}
         </label>
-      </p>
-      <p
+      </BaseTypography>
+      <BaseTypography
         v-if="displayName"
+        as="p"
         class="base-file-input__file-name"
+        variant="body-sm"
+        weight="medium"
       >
         {{ displayName }}
-      </p>
+      </BaseTypography>
     </div>
 
     <div
@@ -152,7 +166,14 @@
       >
         {{ t('browse') }}
       </label>
-      <span class="base-file-input__name">{{ displayName || t('noFile') }}</span>
+      <BaseTypography
+        as="span"
+        class="base-file-input__name"
+        color="secondary"
+        variant="body-sm"
+      >
+        {{ displayName || t('noFile') }}
+      </BaseTypography>
     </div>
 
     <input
@@ -160,6 +181,7 @@
       :accept="accept"
       :aria-describedby="error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined"
       :aria-invalid="!!error || undefined"
+      :capture="capture"
       :disabled="disabled"
       :multiple="multiple"
       :required="required"
@@ -265,8 +287,6 @@
     }
 
     &__name {
-      font-size: var(--mp-font-size-sm);
-      color: var(--mp-color-text-secondary);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -300,8 +320,6 @@
 
     &__drop-text {
       margin: 0;
-      font-size: var(--mp-font-size-sm);
-      color: var(--mp-color-text-secondary);
     }
 
     &__browse-link {
@@ -317,9 +335,6 @@
 
     &__file-name {
       margin: 0;
-      font-size: var(--mp-font-size-sm);
-      color: var(--mp-color-text-primary);
-      font-weight: var(--mp-font-weight-medium);
     }
 
     &--error {

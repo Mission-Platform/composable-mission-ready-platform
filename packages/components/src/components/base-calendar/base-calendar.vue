@@ -303,7 +303,9 @@
     user-select: none;
 
     /* ── Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. ─── */
-    @each $size, $min-width in ('2xs': 200px, 'xs': 220px, 'sm': 240px, 'md': 280px, 'lg': 320px, 'xl': 360px, '2xl': 400px) {
+    @each $size,
+      $min-width in ('2xs': 200px, 'xs': 220px, 'sm': 240px, 'md': 280px, 'lg': 320px, 'xl': 360px, '2xl': 400px)
+    {
       &--#{$size} {
         padding: var(--mp-size-pad-inline-#{$size});
         min-width: $min-width;

@@ -7,8 +7,6 @@ close: Close sidebar
 browse: Browse files
 drag: Drag & drop files here or
 noFile: No file chosen
-submit: Submit
-reset: Reset
 back: Back
 next: Next
 finish: Finish
@@ -24,11 +22,25 @@ quote: Blockquote
 code: Inline code
 emptyPreview: Nothing to preview.
 placeholder: Popout content area
+submit: Submit
+reset: Reset
+step: Step {index}
+errors:
+  required: '{label} is required'
+  minLength: '{label} must be at least {limit} character(s)'
+  maxLength: '{label} must be at most {limit} character(s)'
+  minimum: '{label} must be at least {limit}'
+  maximum: '{label} must be at most {limit}'
+  format: '{label} must be a valid {format}'
+  pattern: '{label} is invalid'
+  enum: '{label} must be one of the allowed values'
+  number: '{label} must be a number'
+  invalid: '{label} is invalid'
 clear: Clear search
 popout: Pop out
 popin: Pop back in
 breakpoint: 'breakpoint:'
-separator: '{''|''}'
+separator: "{'|'}"
 debug_px: ({breakpoint}px)
 ai-translation-warning: This page has been translated by AI. Some wording may be inaccurate — the English version is authoritative.
 nav:

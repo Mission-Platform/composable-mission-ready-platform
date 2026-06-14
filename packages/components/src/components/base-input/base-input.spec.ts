@@ -86,6 +86,19 @@ describe('BaseInput', () => {
     expect(wrapper.find('.sfx').exists()).toBe(true);
   });
 
+  it('renders start and end extension slots', () => {
+    const wrapper = mount(BaseInput, {
+      slots: { start: '<span class="lead">$</span>', end: '<span class="trail">USD</span>' },
+    });
+    expect(wrapper.find('.base-input__extension--start .lead').exists()).toBe(true);
+    expect(wrapper.find('.base-input__extension--end .trail').exists()).toBe(true);
+  });
+
+  it('omits the extension wrappers when no start/end slot is supplied', () => {
+    const wrapper = mount(BaseInput);
+    expect(wrapper.find('.base-input__extension').exists()).toBe(false);
+  });
+
   it('shows required asterisk when required prop is true', () => {
     const wrapper = mount(BaseInput, { props: { label: 'Name', required: true } });
     expect(wrapper.find('.base-input__required').exists()).toBe(true);

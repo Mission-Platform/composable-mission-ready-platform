@@ -6,6 +6,8 @@
    * the component's TypeScript declarations) for the full public API,
    * and refer to the linked stories for usage examples.
    */
+  import BaseTypography from '../base-typography/base-typography.vue';
+
   defineProps<{
     rowCount: number;
     sortKey: string | undefined;
@@ -28,12 +30,30 @@
     class="virtual-table__footer"
   >
     <slot>
-      <span>{{ rowCount.toLocaleString() }} rows</span>
-      <span v-if="sortKey">
+      <BaseTypography
+        as="span"
+        color="inherit"
+        variant="caption"
+      >
+        {{ rowCount.toLocaleString() }} rows
+      </BaseTypography>
+      <BaseTypography
+        v-if="sortKey"
+        as="span"
+        color="inherit"
+        variant="caption"
+      >
         Sorted by
-        <strong style="color: var(--mp-color-text-primary)">{{ sortKey }}</strong>
+        <BaseTypography
+          as="strong"
+          color="primary"
+          variant="caption"
+          weight="bold"
+        >
+          {{ sortKey }}
+        </BaseTypography>
         ({{ sortDir }})
-      </span>
+      </BaseTypography>
     </slot>
   </div>
 </template>

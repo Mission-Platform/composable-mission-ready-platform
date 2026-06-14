@@ -1,0 +1,6 @@
+# @mission-platform/seo
+
+Unified SEO surface for dynamic metadata management.
+
+## Usage
+Use the `useSeo` composable or the `<Seo>` component to inject standard page metadata, Open Graph, Twitter cards, and JSON-LD structured data into the document head.
