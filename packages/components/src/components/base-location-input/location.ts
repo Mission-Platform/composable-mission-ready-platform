@@ -84,20 +84,26 @@ export function parseAxis(input: string, format: LocationFormat, axis: Coordinat
   const text = input.trim();
   if (text === '') return undefined;
 
-  if (format === 'dms' || format === 'dm') {
-    return parseSexagesimal(text, axis);
-  }
+  const parsers: Record<LocationFormat, (text: string, axis: CoordinateAxis) => number | undefined> = {
+    dms: parseSexagesimal,
+    dm: parseSexagesimal
+  };
 
-  // Decimal degrees may still carry a hemisphere suffix (e.g. "40.5 N").
-  const hemMatch = /([NSEW])\s*$/i.exec(text);
-  const numeric = Number(text.replaceAll(/[NSEW]/gi, '').trim());
-  if (Number.isNaN(numeric)) return undefined;
-  let degrees = numeric;
-  if (hemMatch) {
-    const letter = hemMatch[1].toUpperCase();
-    degrees = Math.abs(degrees) * (letter === 'S' || letter === 'W' ? -1 : 1);
-  }
-  return inRange(degrees, axis) ? roundCoordinate(degrees) : undefined;
+  const decimalParser = (text: string, axis: CoordinateAxis): number | undefined => {
+    const hemMatch = /([NSEW])\s*$/i.exec(text);
+    const numeric = Number(text.replaceAll(/[NSEW]/gi, '').trim());
+    if (Number.isNaN(numeric)) return undefined;
+    let degrees = numeric;
+    if (hemMatch) {
+      const hemisphereSign: Record<string, number> = { N: 1, S: -1, E: 1, W: -1 };
+      const sign = hemisphereSign[hemMatch[1].toUpperCase()];
+      degrees = Math.abs(numeric) * sign;
+    }
+    return inRange(degrees, axis) ? roundCoordinate(degrees) : undefined;
+  };
+
+  const parser = parsers[format] ?? decimalParser;
+  return parser(text, axis);
 }
 
 /** Parse a `D M S` / `D M.m` sexagesimal string into signed decimal degrees. */
@@ -114,8 +120,11 @@ function parseSexagesimal(text: string, axis: CoordinateAxis): number | undefine
   if ([degrees, minutes, seconds].some((n) => Number.isNaN(n))) return undefined;
 
   let decimal = degrees + minutes / 60 + seconds / 3600;
-  const negative = hemMatch ? ['S', 'W'].includes(hemMatch[0].toUpperCase()) : Number(deg) < 0;
-  if (negative) decimal = -decimal;
+  const signMap: Record<string, number> = { N: 1, E: 1, S: -1, W: -1 };
+  const signLetter = hemMatch?.[0].toUpperCase();
+  const numericalSign = Math.sign(Number(deg)) || 1;
+  const sign = signLetter ? signMap[signLetter] : numericalSign;
+  decimal = decimal * sign;
 
   return inRange(decimal, axis) ? roundCoordinate(decimal) : undefined;
 }
@@ -158,7 +167,7 @@ function toDm(absolute: number): { degrees: number; minutes: number } {
 
 /** Whether a location value carries both coordinates. */
 export function isCompleteLocation(value: LocationValue | null | undefined): boolean {
-  return !!value && value.lat !== undefined && value.lng !== undefined;
+  return Boolean(value) && value.lat !== undefined && value.lng !== undefined;
 }
 
 /** Whether a location value is empty (no coordinate entered). */
@@ -188,14 +197,17 @@ export function fromGeoJsonPoint(point: GeoJsonPoint): LocationValue {
  */
 export function formatLocation(value: LocationValue, precision: number = COORDINATE_PRECISION): string {
   if (value.lat === undefined || value.lng === undefined) return '';
-  if (value.format === 'geojson') {
-    const point = toGeoJsonPoint(value);
-    return point ? JSON.stringify(point) : '';
-  }
-  if (value.format === 'dms' || value.format === 'dm') {
-    return `${formatAxis(value.lat, value.format, 'lat')} ${formatAxis(value.lng, value.format, 'lng')}`;
-  }
-  return `${roundCoordinate(value.lat, precision)}, ${roundCoordinate(value.lng, precision)}`;
+  const formatters: Record<string, (val: LocationValue, prec: number) => string> = {
+    geojson: (val, prec) => {
+      const point = toGeoJsonPoint(val);
+      return point ? JSON.stringify(point) : '';
+    },
+    dms: (val, prec) => `${formatAxis(val.lat, val.format, 'lat')} ${formatAxis(val.lng, val.format, 'lng')}`,
+    dm: (val, prec) => `${formatAxis(val.lat, val.format, 'lat')} ${formatAxis(val.lng, val.format, 'lng')}`,
+    default: (val, prec) => `${roundCoordinate(val.lat, prec)}, ${roundCoordinate(val.lng, prec)}`,
+  };
+  const formatter = formatters[value.format] || formatters.default;
+  return formatter(value, precision);
 }
 
 /** A blank {@link LocationValue} for the given format (defaults to `dd`). */
@@ -234,27 +246,30 @@ export function parseLocation(input: string, format: LocationFormat): LocationVa
   const text = input.trim();
   if (text === '') return emptyLocation(format);
 
-  if (format === 'geojson') {
-    try {
-      const parsed = JSON.parse(text) as Partial<GeoJsonPoint>;
-      if (parsed?.type === 'Point' && Array.isArray(parsed.coordinates) && parsed.coordinates.length === 2) {
-        return fromGeoJsonPoint({ type: 'Point', coordinates: parsed.coordinates });
+  const handlers: Partial<Record<LocationFormat, (t: string, f: LocationFormat) => LocationValue>> = {
+    geojson: (t, f) => {
+      try {
+        const parsed = JSON.parse(t) as Partial<GeoJsonPoint>;
+        if (parsed?.type === 'Point' && Array.isArray(parsed.coordinates) && parsed.coordinates.length === 2) {
+          return fromGeoJsonPoint({ type: 'Point', coordinates: parsed.coordinates });
+        }
+      } catch {
+        return emptyLocation(f);
       }
-    } catch {
-      return emptyLocation(format);
-    }
-    return emptyLocation(format);
-  }
-
-  // Split into two axis components: DMS/DM pairs are space-separated; decimal
-  // pairs may be comma- or space-separated.
-  const parts =
-    format === 'dms' || format === 'dm' ? text.split(/\s+/) : text.split(/[\s,]+/).filter((part) => part !== '');
-  const [latText = '', lngText = ''] = parts;
-
-  return {
-    lat: parseAxis(latText, format, 'lat'),
-    lng: parseAxis(lngText, format, 'lng'),
-    format,
+      return emptyLocation(f);
+    },
   };
+
+  const handler = handlers[format] || ((t: string, f: LocationFormat): LocationValue => {
+    const regex = f === 'dms' || f === 'dm' ? /\s+/ : /[\s,]+/;
+    const parts = t.split(regex).filter((part) => part !== '');
+    const [latText = '', lngText = ''] = parts;
+    return {
+      lat: parseAxis(latText, f, 'lat'),
+      lng: parseAxis(lngText, f, 'lng'),
+      format: f,
+    };
+  });
+
+  return handler(text, format);
 }

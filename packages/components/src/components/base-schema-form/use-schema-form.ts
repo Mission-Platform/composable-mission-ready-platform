@@ -147,18 +147,16 @@ export function useSchemaForm(
   /** Clear the error entries that belong to a given step's fields. */
   function clearStepErrors(index: number) {
     const fieldKeys = steps[index].fields.map((field) => field.key);
-    for (const errorKey of Object.keys(errors)) {
+    for (const errorKey of errors.keys()) {
       if (fieldKeys.some((fieldKey) => errorBelongsToField(errorKey, fieldKey))) {
-        delete errors[errorKey];
+        errors.delete(errorKey);
       }
     }
   }
 
   /** Clear every error entry. */
   function clearAllErrors() {
-    for (const key of Object.keys(errors)) {
-      delete errors[key];
-    }
+    errors.clear();
   }
 
   /**
@@ -221,11 +219,11 @@ export function useSchemaForm(
 
   /** Reset values to their initial state, clear errors, return to step one. */
   function reset() {
-    const fresh = { ...defaultValues, ...initialValues };
-    for (const key of Object.keys(values)) {
-      delete (values as Record<string, unknown>)[key];
+    const fresh = new Map([...Object.entries(defaultValues), ...Object.entries(initialValues)]);
+    values.clear();
+    for (const [key, val] of fresh) {
+      values.set(key, val);
     }
-    Object.assign(values, fresh);
 
     clearAllErrors();
     isValid.value = false;

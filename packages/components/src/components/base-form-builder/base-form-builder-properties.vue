@@ -27,25 +27,6 @@
 
   const props = withDefaults(
     defineProps<{
-      /** The field being edited. */
-      field: BuilderField;
-      /** Field types selectable in the type dropdown. */
-      fieldTypes: FieldTypeDescriptor[];
-      /** Whether the editor is disabled (read-only builder). */
-      disabled?: boolean;
-      /** Validation message for the field's key, shown beneath the Key input. */
-      keyError?: string;
-      /** Whether the builder is in wizard mode (exposes the step assignment). */
-      wizard?: boolean;
-      /** Number of wizard steps (bounds the step selector). */
-      stepCount?: number;
-      /**
-       * Zero-based wizard step the field currently belongs to. `undefined` for a
-       * nested (non-top-level) field, which hides the step selector.
-       */
-      step?: number;
-    }>(),
-    {
       disabled: false,
       keyError: undefined,
       wizard: false,

@@ -56,7 +56,7 @@
   import type { SidebarDraggable } from '../base-sidebar/base-sidebar.vue';
 
   const props = withDefaults(
-    defineProps<{
+    defineProps<{ 
       /** `v-model` — the generated JSON Schema definition. */
       modelValue?: SchemaFormDefinition;
       /** Form title written into the schema (`v-model:title`). */

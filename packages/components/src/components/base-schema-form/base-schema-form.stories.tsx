@@ -53,6 +53,12 @@ const simpleSchema: FormJsonSchema = {
   required: ['firstName', 'lastName', 'email'],
 };
 
+/**
+ * Handles default form submission by logging values and validity.
+ *
+ * @param values - The form values as a record of key-value pairs.
+ * @param isValid - Indicates whether the form is valid.
+ */
 function onSubmitDefault(values: Record<string, unknown>, isValid: boolean) {
   console.log('submit', { values, isValid });
 }
@@ -239,14 +245,17 @@ export const WithValidation: Story = {
     components: { BaseSchemaForm },
     setup() {
       const formValues = ref({});
-      const result = ref<string | undefined>(undefined);
+      const result = ref<string | undefined>();
+      /**
+       * Handles form submission.
+       *
+       * @param values - The form values as a record of key-value pairs.
+       * @param isValid - Indicates whether the form is valid.
+       */
       function onSubmit(values: Record<string, unknown>, isValid: boolean) {
         console.log('Form submitted:', values, 'Valid:', isValid);
         result.value = isValid ? '✅ Form submitted successfully!' : '❌ Please fix the errors above.';
       }
-      return { args: arguments_, formValues, result, onSubmit };
-    },
-    template: `
       <div style="max-width: 480px">
         <BaseSchemaForm v-bind="args" v-model="formValues" @submit="onSubmit" />
         <p v-if="result" style="margin-top: 1rem; font-weight: 500">{{ result }}</p>
@@ -330,7 +339,12 @@ export const WithFieldSets: Story = {
     components: { BaseSchemaForm },
     setup() {
       const formValues = ref({});
-      const result = ref<string | undefined>(undefined);
+      const result = ref<string | undefined>();
+      /**
+       * Handles form submission by logging values and updating the result based on validity.
+       * @param values - The form values as a record of key-value pairs.
+       * @param isValid - Boolean indicating whether the form data is valid.
+       */
       function onSubmit(values: Record<string, unknown>, isValid: boolean) {
         console.log('Form submitted:', values, 'Valid:', isValid);
         result.value = isValid ? '✅ Form submitted successfully!' : '❌ Please fix the errors above.';
@@ -399,7 +413,13 @@ export const Wizard: Story = {
     components: { BaseSchemaForm },
     setup() {
       const formValues = ref({});
-      const result = ref<string | undefined>(undefined);
+      const result = ref<string | undefined>();
+      /**
+       * Handles form submission for the wizard.
+       *
+       * @param values - The form values as a record of key and unknown.
+       * @param isValid - Indicates whether the form is valid.
+       */
       function onSubmit(values: Record<string, unknown>, isValid: boolean) {
         console.log('Wizard submitted:', values, 'Valid:', isValid);
         result.value = isValid ? '✅ Wizard completed!' : '❌ Some steps still have errors.';
@@ -426,7 +446,13 @@ export const WizardValidateAtEnd: Story = {
     components: { BaseSchemaForm },
     setup() {
       const formValues = ref({});
-      const result = ref<string | undefined>(undefined);
+      const result = ref<string | undefined>();
+      /**
+       * Handles the wizard form submission by logging the values and validity status, and updating the result message.
+       * @param values - The form values as a record of strings to unknown values.
+       * @param isValid - Indicates whether the form is valid.
+       * @returns void
+       */
       function onSubmit(values: Record<string, unknown>, isValid: boolean) {
         console.log('Wizard submitted:', values, 'Valid:', isValid);
         result.value = isValid
@@ -511,15 +537,18 @@ export const WizardConditionalSteps: Story = {
     components: { BaseSchemaForm },
     setup() {
       const formValues = ref({});
-      const result = ref<string | undefined>(undefined);
+      const result = ref<string | undefined>();
+      /**
+       * Handles the submission of the wizard form.
+       *
+       * @param values - A record of form field values.
+       * @param isValid - Boolean indicating whether the form is valid.
+       * @returns void
+       */
       function onSubmit(values: Record<string, unknown>, isValid: boolean) {
         console.log('Wizard submitted:', values, 'Valid:', isValid);
         result.value = isValid ? '✅ Wizard completed!' : '❌ Some steps still have errors.';
       }
-      return { args: arguments_, formValues, result, onSubmit };
-    },
-    template: `
-      <div style="max-width: 640px">
         <BaseSchemaForm v-bind="args" v-model="formValues" @submit="onSubmit" />
         <p v-if="result" style="margin-top: 1rem; font-weight: 500">{{ result }}</p>
       </div>

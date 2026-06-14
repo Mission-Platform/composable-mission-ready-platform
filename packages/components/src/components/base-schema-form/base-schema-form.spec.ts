@@ -285,12 +285,12 @@ describe('useSchemaForm', () => {
   });
 
   it('validate() handles email format generated from the schema', () => {
-    const s: FormJsonSchema = {
+    const schema: FormJsonSchema = {
       type: 'object',
       properties: { email: { type: 'string', format: 'email', errorMessage: { format: 'Bad email' } } },
       required: ['email'],
     };
-    const { values, errors, validate } = useSchemaForm(s, { email: 'not-an-email' });
+    const { values, errors, validate } = useSchemaForm(schema, { email: 'not-an-email' });
     values.email = 'not-an-email';
     expect(validate()).toBe(false);
     expect(errors.email).toBe('Bad email');
@@ -335,62 +335,62 @@ describe('BaseSchemaForm', () => {
   });
 
   it('renders email input for email format', () => {
-    const s: FormJsonSchema = {
+    const formSchema: FormJsonSchema = {
       type: 'object',
       properties: { email: { type: 'string', format: 'email', title: 'Email' } },
     };
-    const wrapper = mount(BaseSchemaForm, { props: { schema: s } });
+    const wrapper = mount(BaseSchemaForm, { props: { schema: formSchema } });
     expect(wrapper.find('input[type="email"]').exists()).toBe(true);
   });
 
   it('renders number input for number type', () => {
-    const s: FormJsonSchema = {
+    const schema: FormJsonSchema = {
       type: 'object',
       properties: { count: { type: 'number', title: 'Count' } },
     };
-    const wrapper = mount(BaseSchemaForm, { props: { schema: s } });
+    const wrapper = mount(BaseSchemaForm, { props: { schema } });
     expect(wrapper.find('input[type="number"]').exists()).toBe(true);
   });
 
   it('renders textarea for textarea widget', () => {
-    const s: FormJsonSchema = {
+    const formSchema: FormJsonSchema = {
       type: 'object',
       properties: { bio: { type: 'string', title: 'Bio', ui: { widget: 'textarea' } } },
     };
-    const wrapper = mount(BaseSchemaForm, { props: { schema: s } });
+    const wrapper = mount(BaseSchemaForm, { props: { schema: formSchema } });
     expect(wrapper.find('textarea').exists()).toBe(true);
   });
 
   it('renders markdown input for markdown widget', () => {
-    const s: FormJsonSchema = {
+    const formSchema: FormJsonSchema = {
       type: 'object',
       properties: { body: { type: 'string', title: 'Body', ui: { widget: 'markdown' } } },
     };
-    const wrapper = mount(BaseSchemaForm, { props: { schema: s } });
+    const wrapper = mount(BaseSchemaForm, { props: { schema: formSchema } });
     expect(wrapper.find('textarea').exists()).toBe(true);
     expect(wrapper.find('.markdown-input').exists()).toBe(true);
   });
 
   it('renders checkbox for boolean type', () => {
-    const s: FormJsonSchema = {
+    const schema: FormJsonSchema = {
       type: 'object',
       properties: { agree: { type: 'boolean', title: 'Agree' } },
     };
-    const wrapper = mount(BaseSchemaForm, { props: { schema: s } });
+    const wrapper = mount(BaseSchemaForm, { props: { schema } });
     expect(wrapper.find('input[type="checkbox"]').exists()).toBe(true);
   });
 
   it('renders switch for switch widget', () => {
-    const s: FormJsonSchema = {
+    const schema: FormJsonSchema = {
       type: 'object',
       properties: { notify: { type: 'boolean', title: 'Notify', ui: { widget: 'switch' } } },
     };
-    const wrapper = mount(BaseSchemaForm, { props: { schema: s } });
+    const wrapper = mount(BaseSchemaForm, { props: { schema } });
     expect(wrapper.find('input[role="switch"]').exists()).toBe(true);
   });
 
   it('renders select for enum properties', () => {
-    const s: FormJsonSchema = {
+    const schema: FormJsonSchema = {
       type: 'object',
       properties: {
         role: {
@@ -403,12 +403,12 @@ describe('BaseSchemaForm', () => {
         },
       },
     };
-    const wrapper = mount(BaseSchemaForm, { props: { schema: s } });
+    const wrapper = mount(BaseSchemaForm, { props: { schema } });
     expect(wrapper.find('[role="combobox"]').exists()).toBe(true);
   });
 
   it('renders radio group for radio widget', () => {
-    const s: FormJsonSchema = {
+    const formSchema: FormJsonSchema = {
       type: 'object',
       properties: {
         plan: {
@@ -422,12 +422,12 @@ describe('BaseSchemaForm', () => {
         },
       },
     };
-    const wrapper = mount(BaseSchemaForm, { props: { schema: s } });
+    const wrapper = mount(BaseSchemaForm, { props: { schema: formSchema } });
     expect(wrapper.findAll('input[type="radio"]').length).toBe(2);
   });
 
   it('renders multiple fields from schema', () => {
-    const s: FormJsonSchema = {
+    const testSchema: FormJsonSchema = {
       type: 'object',
       properties: {
         first: { type: 'string', title: 'First' },
@@ -435,7 +435,7 @@ describe('BaseSchemaForm', () => {
         email: { type: 'string', format: 'email', title: 'Email' },
       },
     };
-    const wrapper = mount(BaseSchemaForm, { props: { schema: s } });
+    const wrapper = mount(BaseSchemaForm, { props: { schema: testSchema } });
     expect(wrapper.findAll('input').length).toBe(3);
   });
 
@@ -448,58 +448,58 @@ describe('BaseSchemaForm', () => {
     const wrapper = mount(BaseSchemaForm, { props: { schema: baseSchema } });
     await wrapper.find('input').setValue('alice');
     expect(wrapper.emitted('update:modelValue')).toBeTruthy();
-    expect((wrapper.emitted('update:modelValue')![0][0] as Record<string, unknown>).username).toBe('alice');
+    expect((wrapper.emitted('update:modelValue')?.[0]?.[0] as Record<string, unknown>).username).toBe('alice');
   });
 
   it('emits submit with values and isValid=true when form is valid', async () => {
-    const s: FormJsonSchema = {
+    const formSchema: FormJsonSchema = {
       type: 'object',
       properties: { name: { type: 'string', title: 'Name', minLength: 1 } },
       required: ['name'],
     };
-    const wrapper = mount(BaseSchemaForm, { props: { schema: s } });
+    const wrapper = mount(BaseSchemaForm, { props: { schema: formSchema } });
     await wrapper.find('input').setValue('Alice');
     await wrapper.find('form').trigger('submit');
     const submitEvents = wrapper.emitted('submit');
     expect(submitEvents).toBeTruthy();
-    expect(submitEvents![0][1]).toBe(true);
+    expect(submitEvents?.[0]?.[1]).toBe(true);
   });
 
   it('emits submit with isValid=false when validation fails', async () => {
-    const s: FormJsonSchema = {
+    const schema: FormJsonSchema = {
       type: 'object',
       properties: { name: { type: 'string', title: 'Name', minLength: 5, errorMessage: 'Too short' } },
       required: ['name'],
     };
-    const wrapper = mount(BaseSchemaForm, { props: { schema: s } });
+    const wrapper = mount(BaseSchemaForm, { props: { schema } });
     await wrapper.find('input').setValue('Ab');
     await wrapper.find('form').trigger('submit');
     const submitEvents = wrapper.emitted('submit');
     expect(submitEvents).toBeTruthy();
-    expect(submitEvents![0][1]).toBe(false);
+    expect(submitEvents?.[0]?.[1]).toBe(false);
   });
 
   it('shows validation error messages on submit', async () => {
-    const s: FormJsonSchema = {
+    const formSchema: FormJsonSchema = {
       type: 'object',
       properties: {
         name: { type: 'string', title: 'Name', minLength: 5, errorMessage: { minLength: 'Min 5 chars' } },
       },
       required: ['name'],
     };
-    const wrapper = mount(BaseSchemaForm, { props: { schema: s } });
+    const wrapper = mount(BaseSchemaForm, { props: { schema: formSchema } });
     await wrapper.find('input').setValue('Hi');
     await wrapper.find('form').trigger('submit');
     expect(wrapper.text()).toContain('Min 5 chars');
   });
 
   it('renders generated (non-override) messages through the local i18n scope', async () => {
-    const s: FormJsonSchema = {
+    const formSchema: FormJsonSchema = {
       type: 'object',
       properties: { name: { type: 'string', title: 'Name' } },
       required: ['name'],
     };
-    const wrapper = mount(BaseSchemaForm, { props: { schema: s } });
+    const wrapper = mount(BaseSchemaForm, { props: { schema: formSchema } });
     await wrapper.find('form').trigger('submit');
     // The label and limit are interpolated by vue-i18n from the `errors.*` keys
     // defined in the component's local `<i18n>` block.
@@ -507,14 +507,14 @@ describe('BaseSchemaForm', () => {
   });
 
   it('clears errors and resets values on form reset', async () => {
-    const s: FormJsonSchema = {
+    const formSchema: FormJsonSchema = {
       type: 'object',
       properties: {
         name: { type: 'string', title: 'Name', minLength: 5, errorMessage: { minLength: 'Too short' } },
       },
       required: ['name'],
     };
-    const wrapper = mount(BaseSchemaForm, { props: { schema: s } });
+    const wrapper = mount(BaseSchemaForm, { props: { schema: formSchema } });
     await wrapper.find('input').setValue('Hi');
     await wrapper.find('form').trigger('submit');
     expect(wrapper.text()).toContain('Too short');
@@ -531,14 +531,14 @@ describe('BaseSchemaForm', () => {
   });
 
   it('disables all fields when disabled prop is true', () => {
-    const s: FormJsonSchema = {
+    const testSchema: FormJsonSchema = {
       type: 'object',
       properties: {
         a: { type: 'string', title: 'A' },
         b: { type: 'boolean', title: 'B' },
       },
     };
-    const wrapper = mount(BaseSchemaForm, { props: { schema: s, disabled: true } });
+    const wrapper = mount(BaseSchemaForm, { props: { schema: testSchema, disabled: true } });
     for (const input of wrapper.findAll('input')) {
       expect(input.attributes('disabled')).toBeDefined();
     }
@@ -625,8 +625,8 @@ describe('BaseSchemaForm field sets', () => {
 
     const emitted = wrapper.emitted('update:modelValue');
     expect(emitted).toBeTruthy();
-    const last = emitted!.at(-1)![0] as { address: { street: string } };
-    expect(last.address.street).toBe('221B Baker Street');
+    const last = emitted?.at(-1)?.[0] as { address: { street: string } };
+    expect(last?.address.street).toBe('221B Baker Street');
   });
 
   it('shows a nested required error on the field-set child on submit', async () => {
@@ -832,7 +832,7 @@ describe('BaseSchemaForm (wizard)', () => {
     await wrapper.find('.base-form-wizard__btn--primary').trigger('click'); // finish
     const submitEvents = wrapper.emitted('submit');
     expect(submitEvents).toBeTruthy();
-    expect(submitEvents![0][1]).toBe(true);
+    expect(submitEvents?.[0]?.[1]).toBe(true);
   });
 
   it('highlights an errored step in the step indicator (per-step mode)', async () => {
@@ -873,7 +873,7 @@ describe('BaseSchemaForm (wizard)', () => {
 
     const submitEvents = wrapper.emitted('submit');
     expect(submitEvents).toBeTruthy();
-    expect(submitEvents![0][1]).toBe(false);
+    expect(submitEvents?.[0]?.[1]).toBe(false);
     // The first step (with the unmet requirement) is now highlighted.
     const errored = wrapper.findAll('.base-form-wizard__step--error');
     expect(errored.length).toBe(1);

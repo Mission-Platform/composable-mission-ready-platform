@@ -31,6 +31,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/**
+ * Renders the BaseVerticalLayout story with provided arguments.
+ * @param arguments_ The arguments to bind to the component.
+ * @returns The story object containing components, setup function, and template.
+ */
 const render = (arguments_: Record<string, unknown>) => ({
   components: { BaseVerticalLayout, BaseButton, BaseCard },
   setup() {

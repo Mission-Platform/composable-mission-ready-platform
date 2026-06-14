@@ -26,13 +26,19 @@ function isCompositeWidget(type: FormFieldType): boolean {
 
 /** Whether a composite (range / location) value counts as "no input". */
 function isCompositeEmpty(type: FormFieldType, value: unknown): boolean {
-  if (value === null || value === undefined) return true;
-  if (type === 'location') {
-    const loc = value as { lat?: unknown; lng?: unknown };
-    return (loc.lat === null || loc.lat === undefined) && (loc.lng === null || loc.lng === undefined);
-  }
-  const range = value as { start?: unknown; end?: unknown };
-  return !range.start && !range.end;
+  if (value == null) return true;
+  const checkers: Record<string, (v: unknown) => boolean> = {
+    location: (v) => {
+      const loc = v as { lat?: unknown; lng?: unknown };
+      return loc.lat == null && loc.lng == null;
+    },
+    default: (v) => {
+      const range = v as { start?: unknown; end?: unknown };
+      return !range.start && !range.end;
+    },
+  };
+  const checker = checkers[type] || checkers.default;
+  return checker(value);
 }
 
 // ─── JSON Schema → SchemaForm derivation helpers ──────────────────────────────
@@ -79,49 +85,67 @@ function inferWidget(property: JsonSchemaProperty): FormFieldType {
 
   if (property.enum?.length || property.oneOf?.length) return 'select';
 
-  switch (property.type) {
-    case 'boolean': {
-      return 'checkbox';
-    }
-    case 'number':
-    case 'integer': {
-      return 'number';
-    }
-    default: {
-      if (property.format === 'email') return 'email';
-      if (property.format === 'url') return 'url';
-      if (property.format === 'tel') return 'tel';
-      if (property.format === 'password') return 'password';
-      if (property.format === 'date') return 'date';
-      if (property.format === 'time') return 'time';
-      if (property.format === 'date-time') return 'datetime';
-      return 'text';
-    }
+  const typeWidgetMap: Record<string, FormFieldType> = {
+    boolean: 'checkbox',
+    number: 'number',
+    integer: 'number'
+  };
+
+  if (typeWidgetMap[property.type]) {
+    return typeWidgetMap[property.type];
   }
+
+  const formatWidgetMap: Record<string, FormFieldType> = {
+    email: 'email',
+    url: 'url',
+    tel: 'tel',
+    password: 'password',
+    date: 'date',
+    time: 'time',
+    'date-time': 'datetime'
+  };
+
+  return formatWidgetMap[property.format] || 'text';
 }
 
 /** Copy the numeric / location / datetime presentation hints onto a field. */
 function applyWidgetMeta(field: FormFieldSchema, property: JsonSchemaProperty): void {
   const ui = property.ui;
-  if (property.type === 'number' || property.type === 'integer' || field.type === 'stepper') {
+
+  const numberHandler = (field: FormFieldSchema, property: JsonSchemaProperty, ui: any) => {
     if (typeof property.minimum === 'number') field.min = property.minimum;
     if (typeof property.maximum === 'number') field.max = property.maximum;
     if (ui?.step !== undefined) field.step = ui.step;
     if (ui?.precision !== undefined) field.precision = ui.precision;
     field.integer = ui?.integer ?? property.type === 'integer';
     if (ui?.unsigned) field.unsigned = true;
-  }
-  if (
-    (field.type === 'time' ||
-      field.type === 'datetime' ||
-      field.type === 'timerange' ||
-      field.type === 'datetimerange') &&
-    ui?.showSeconds
-  )
-    field.showSeconds = true;
-  if (field.type === 'location') {
-    field.locationFormat = ui?.locationFormat ?? 'dd';
-  }
+  };
+
+  const metaHandlers: Record<string, (field: FormFieldSchema, property: JsonSchemaProperty, ui: any) => void> = {
+    number: numberHandler,
+    integer: numberHandler,
+    stepper: numberHandler,
+    time: (field, property, ui) => {
+      if (ui?.showSeconds) field.showSeconds = true;
+    },
+    datetime: (field, property, ui) => {
+      if (ui?.showSeconds) field.showSeconds = true;
+    },
+    timerange: (field, property, ui) => {
+      if (ui?.showSeconds) field.showSeconds = true;
+    },
+    datetimerange: (field, property, ui) => {
+      if (ui?.showSeconds) field.showSeconds = true;
+    },
+    location: (field, property, ui) => {
+      field.locationFormat = ui?.locationFormat ?? 'dd';
+    },
+  };
+
+  const typeKey = property.type in metaHandlers ? property.type : field.type;
+  const handler = metaHandlers[typeKey];
+  if (handler) handler(field, property, ui);
+
   if (ui?.visibleWhen) field.visibleWhen = ui.visibleWhen;
 }
 
@@ -129,42 +153,47 @@ function applyWidgetMeta(field: FormFieldSchema, property: JsonSchemaProperty): 
 function propertyToField(key: string, property: JsonSchemaProperty, isRequired: boolean): FormFieldSchema {
   const type = inferWidget(property);
 
-  // A field set owns nested child fields rather than a value of its own.
-  if (type === 'fieldset') {
-    const group: FormFieldSchema = {
-      key,
-      type,
-      label: property.title,
-      hint: property.ui?.hint ?? property.description,
-      required: isRequired,
-      disabled: property.ui?.disabled,
-      fields: propertiesToFields(property.properties ?? {}, property.required),
-    };
-    if (property.ui?.visibleWhen) group.visibleWhen = property.ui.visibleWhen;
-    return group;
-  }
-
-  const field: FormFieldSchema = {
-    key,
-    type,
-    label: property.title,
-    hint: property.ui?.hint ?? property.description,
-    placeholder: property.ui?.placeholder,
-    required: isRequired,
-    disabled: property.ui?.disabled,
-    options: resolveOptions(property),
-    rows: property.ui?.rows,
-    accept: property.ui?.accept,
-    multiple: property.ui?.multiple,
-    capture: property.ui?.capture,
-    autocomplete: property.ui?.autocomplete,
-    autocapitalize: property.ui?.autocapitalize,
-    suggestions: property.ui?.suggestions,
-    minDate: property.ui?.minDate,
-    maxDate: property.ui?.maxDate,
+  const fieldBuilders: Record<string, () => FormFieldSchema> = {
+    // A field set owns nested child fields rather than a value of its own.
+    fieldset: () => {
+      const group: FormFieldSchema = {
+        key,
+        type,
+        label: property.title,
+        hint: property.ui?.hint ?? property.description,
+        required: isRequired,
+        disabled: property.ui?.disabled,
+        fields: propertiesToFields(property.properties ?? {}, property.required),
+        visibleWhen: property.ui?.visibleWhen,
+      };
+      return group;
+    },
+    default: () => {
+      const field: FormFieldSchema = {
+        key,
+        type,
+        label: property.title,
+        hint: property.ui?.hint ?? property.description,
+        placeholder: property.ui?.placeholder,
+        required: isRequired,
+        disabled: property.ui?.disabled,
+        options: resolveOptions(property),
+        rows: property.ui?.rows,
+        accept: property.ui?.accept,
+        multiple: property.ui?.multiple,
+        capture: property.ui?.capture,
+        autocomplete: property.ui?.autocomplete,
+        autocapitalize: property.ui?.autocapitalize,
+        suggestions: property.ui?.suggestions,
+        minDate: property.ui?.minDate,
+        maxDate: property.ui?.maxDate,
+      };
+      applyWidgetMeta(field, property);
+      return field;
+    },
   };
-  applyWidgetMeta(field, property);
-  return field;
+
+  return (fieldBuilders[type] || fieldBuilders.default)();
 }
 
 /** Derive the ordered fields for a `properties` map and its `required` list. */
@@ -195,18 +224,30 @@ function propertyDefault(property: JsonSchemaProperty): unknown {
 
   // Composite (range / location) widgets are object-typed but own a fixed-shape
   // value rather than nested child fields, so they are handled before field sets.
-  if (widget === 'location') return emptyLocation(property.ui?.locationFormat ?? 'dd');
-  if (widget === 'datetimerange') return { start: '', end: '', timezone: 'browser' };
-  if (widget === 'daterange' || widget === 'timerange') return { start: '', end: '' };
-
-  // Field sets default to a nested object of their children's own defaults.
-  if (type === 'object' || widget === 'fieldset') {
-    return objectDefaults(property.properties ?? {});
+  const widgetDefaults: Record<string, unknown> = {
+    location: emptyLocation(property.ui?.locationFormat ?? 'dd'),
+    datetimerange: { start: '', end: '', timezone: 'browser' },
+    daterange: { start: '', end: '' },
+    timerange: { start: '', end: '' },
+    file: undefined,
+    multiselect: [],
+    stepper: undefined,
+    fieldset: objectDefaults(property.properties ?? {}),
+  };
+  if (widget && Object.prototype.hasOwnProperty.call(widgetDefaults, widget)) {
+    return widgetDefaults[widget];
   }
-  if (widget === 'file') return undefined;
-  if (type === 'array' || widget === 'multiselect') return [];
-  if (type === 'boolean') return false;
-  if (type === 'number' || type === 'integer' || widget === 'stepper') return undefined;
+
+  const typeDefaults: Record<string, unknown> = {
+    object: objectDefaults(property.properties ?? {}),
+    array: [],
+    boolean: false,
+    number: undefined,
+    integer: undefined,
+  };
+  if (Object.prototype.hasOwnProperty.call(typeDefaults, type)) {
+    return typeDefaults[type];
+  }
   return '';
 }
 
@@ -282,24 +323,60 @@ function propertyToStandardSchema(
   const widget = property.ui?.widget;
   const type = property.type ?? 'string';
   const standard: Record<string, unknown> = {};
+  const title = property.title;
 
-  // Range / location widgets store a composite object.  Presence is enforced
-  // through the owning `required` list (empty composites are pruned before
-  // validation); the object's interior is not deeply validated here.  These are
-  // object-typed, so they must be handled before the field-set branch below.
+  // Determine which schema handler to use
+  let mode: string;
   if (widget && isCompositeWidget(widget)) {
-    standard.type = 'object';
-    if (property.title) standard.title = property.title;
-    return standard;
+    mode = 'composite';
+  } else if (widget === 'fieldset' || type === 'object') {
+    mode = 'fieldset';
+  } else {
+    mode = widget || type;
   }
 
-  // Field sets serialise to a nested object schema validated in its own right.
-  if (type === 'object' || widget === 'fieldset') {
-    const nested = objectToStandardSchema(property.properties ?? {}, property.required, rootValues);
-    Object.assign(standard, nested);
-    if (property.title) standard.title = property.title;
-    return standard;
-  }
+  const handlers: Record<string, (s: Record<string, unknown>) => Record<string, unknown>> = {
+    composite: (s) => {
+      s.type = 'object';
+      if (title) s.title = title;
+      return s;
+    },
+    fieldset: (s) => {
+      const nested = objectToStandardSchema(property.properties ?? {}, property.required, rootValues);
+      Object.assign(s, nested);
+      if (title) s.title = title;
+      return s;
+    },
+    string: (s) => {
+      s.type = 'string';
+      if (title) s.title = title;
+      return s;
+    },
+    number: (s) => {
+      s.type = 'number';
+      if (title) s.title = title;
+      return s;
+    },
+    integer: (s) => {
+      s.type = 'integer';
+      if (title) s.title = title;
+      return s;
+    },
+    boolean: (s) => {
+      s.type = 'boolean';
+      if (title) s.title = title;
+      return s;
+    },
+    default: (s) => {
+      s.type = type;
+      if (title) s.title = title;
+      return s;
+    },
+  };
+
+  const handler = handlers[mode] || handlers.default;
+  return handler(standard);
+}
 
   // File widgets carry `File` objects that JSON Schema cannot describe; only
   // their presence is enforced (via the owning `required` list).
@@ -376,38 +453,59 @@ function pruneObjectValues(
   rootValues: FormValues,
 ): FormValues {
   const cleaned: FormValues = {};
+  const entries = Object.entries(properties);
 
-  for (const [key, property] of Object.entries(properties)) {
-    // Conditionally-hidden fields are dropped entirely, so neither their value
-    // constraints nor a `required` entry can fail validation while hidden.
-    if (property.ui?.visibleWhen && !isFieldVisible({ visibleWhen: property.ui.visibleWhen }, rootValues)) {
-      continue;
-    }
+  const conditionHandlers: Array<{ check: (ctx: { key: string; property: JsonSchemaProperty; widget: string | undefined; value: any; values: FormValues; rootValues: FormValues; cleaned: FormValues; }) => boolean; handle: (ctx: { key: string; property: JsonSchemaProperty; widget: string | undefined; value: any; values: FormValues; rootValues: FormValues; cleaned: FormValues; }) => boolean | void; }> = [
+    {
+      check: (ctx) =>
+        ctx.property.ui?.visibleWhen &&
+        !isFieldVisible({ visibleWhen: ctx.property.ui.visibleWhen }, ctx.rootValues),
+      handle: () => true, // skip
+    },
+    {
+      check: (ctx) => ctx.widget && isCompositeWidget(ctx.widget),
+      handle: (ctx) => {
+        if (isCompositeEmpty(ctx.widget, ctx.value)) return true;
+        ctx.cleaned[ctx.key] = ctx.value;
+        return true;
+      },
+    },
+    {
+      check: (ctx) =>
+        ctx.property.type === 'object' || ctx.widget === 'fieldset',
+      handle: (ctx) => {
+        const nested = (ctx.values[ctx.key] ?? {}) as FormValues;
+        ctx.cleaned[ctx.key] = pruneObjectValues(
+          typeof nested === 'object' && nested !== null ? nested : {},
+          ctx.property.properties ?? {},
+          ctx.rootValues,
+        );
+        return true;
+      },
+    },
+    {
+      check: (ctx) => ctx.value === '' || ctx.value === null || ctx.value === undefined,
+      handle: () => true, // skip
+    },
+    {
+      check: () => true,
+      handle: (ctx) => {
+        ctx.cleaned[ctx.key] = ctx.value;
+        return true;
+      },
+    },
+  ];
 
+  for (const [key, property] of entries) {
     const widget = property.ui?.widget;
     const value = values[key];
-
-    // Empty composite (range / location) values are treated as "no input" so an
-    // optional field passes and a required one is caught by the `required` list.
-    // Checked before the field-set branch since these are object-typed too.
-    if (widget && isCompositeWidget(widget)) {
-      if (isCompositeEmpty(widget, value)) continue;
-      cleaned[key] = value;
-      continue;
+    const ctx = { key, property, widget, value, values, rootValues, cleaned };
+    for (const handler of conditionHandlers) {
+      if (handler.check(ctx)) {
+        handler.handle(ctx);
+        break;
+      }
     }
-
-    if (property.type === 'object' || widget === 'fieldset') {
-      const nested = (values[key] ?? {}) as FormValues;
-      cleaned[key] = pruneObjectValues(
-        typeof nested === 'object' && nested !== null ? nested : {},
-        property.properties ?? {},
-        rootValues,
-      );
-      continue;
-    }
-
-    if (value === '' || value === null || value === undefined) continue;
-    cleaned[key] = value;
   }
 
   return cleaned;
@@ -454,6 +552,23 @@ const FALLBACK_MESSAGES: Record<string, (parameters: Record<string, unknown>) =>
   invalid: ({ label }) => `${label} is invalid`,
 };
 
+const ERROR_DESCRIPTOR_MAP: Record<string, (label: string, parameters: { limit?: number; format?: string }) => MessageDescriptor> = {
+  required: (label) => ({ key: 'required', params: { label } }),
+  minLength: (label, { limit }) =>
+    (limit ?? 0) <= 1
+      ? { key: 'required', params: { label } }
+      : { key: 'minLength', params: { label, limit: limit! } },
+  minItems: (label) => ({ key: 'required', params: { label } }),
+  maxLength: (label, { limit }) => ({ key: 'maxLength', params: { label, limit } }),
+  minimum: (label, { limit }) => ({ key: 'minimum', params: { label, limit } }),
+  maximum: (label, { limit }) => ({ key: 'maximum', params: { label, limit } }),
+  format: (label, { format }) => ({ key: 'format', params: { label, format } }),
+  pattern: (label) => ({ key: 'pattern', params: { label } }),
+  enum: (label) => ({ key: 'enum', params: { label } }),
+  number: (label) => ({ key: 'number', params: { label } }),
+  invalid: (label) => ({ key: 'invalid', params: { label } }),
+};
+
 /**
  * Map an Ajv {@link ErrorObject} to a localisable {@link MessageDescriptor}.
  * The `key` selects an `errors.<key>` i18n message; `params` carries the named
@@ -464,27 +579,12 @@ function describeError(property: JsonSchemaProperty | undefined, key: string, er
   // fall back to the leaf segment for a readable label.
   const label = property?.title ?? key.split('.').at(-1) ?? key;
   const parameters = error.params as { limit?: number; format?: string };
-
-  switch (error.keyword) {
-    case 'required': {
-      return { key: 'required', params: { label } };
-    }
-    case 'minLength': {
-      const limit = parameters.limit ?? 0;
-      return limit <= 1 ? { key: 'required', params: { label } } : { key: 'minLength', params: { label, limit } };
-    }
-    case 'minItems': {
-      // A required multiselect with no selection.
-      return { key: 'required', params: { label } };
-    }
-    case 'maxLength': {
-      return { key: 'maxLength', params: { label, limit: parameters.limit } };
-    }
-    case 'minimum': {
-      return { key: 'minimum', params: { label, limit: parameters.limit } };
-    }
-    case 'maximum': {
-      return { key: 'maximum', params: { label, limit: parameters.limit } };
+  const descriptorFn = ERROR_DESCRIPTOR_MAP[error.keyword];
+  if (descriptorFn) {
+    return descriptorFn(label, parameters);
+  }
+  return { key: error.keyword, params: { label } };
+}
     }
     case 'format': {
       return { key: 'format', params: { label, format: parameters.format ?? 'value' } };
@@ -547,12 +647,16 @@ function resolveMessage(
   // Prefer an explicit per-keyword override, then a "required" override for the
   // keywords that effectively mean "this field is required".  Overrides are
   // authored literals, so they intentionally bypass translation.
-  const override =
-    messageFor(property, error.keyword) ??
-    (['required', 'const'].includes(error.keyword) ? messageFor(property, 'required') : undefined) ??
-    (error.keyword === 'minLength' && ((error.params as { limit?: number }).limit ?? 0) <= 1
-      ? messageFor(property, 'required')
-      : undefined);
+  const overrideMap: Record<string, (params: any) => string | undefined> = {
+    required: () => messageFor(property, 'required'),
+    const: () => messageFor(property, 'required'),
+    minLength: (params) => ((params.limit ?? 0) <= 1 ? messageFor(property, 'required') : undefined),
+  };
+
+  const explicit = messageFor(property, error.keyword);
+  const mapped = overrideMap[error.keyword]?.(error.params as { limit?: number });
+
+  const override = explicit ?? mapped;
 
   if (override) return override;
 
@@ -567,13 +671,16 @@ function fieldKeyForError(error: ErrorObject): string | undefined {
   // instancePath looks like "/address/street"; turn it into a dotted path.
   const path = error.instancePath.replace(/^\//, '').split('/').filter(Boolean).join('.');
 
-  if (error.keyword === 'required') {
-    const missing = (error.params as { missingProperty?: string }).missingProperty;
-    if (!missing) return path || undefined;
-    return path ? `${path}.${missing}` : missing;
-  }
+  const handlers: Record<string, (err: ErrorObject, p: string) => string | undefined> = {
+    required: (err, p) => {
+      const missing = (err.params as { missingProperty?: string }).missingProperty;
+      if (!missing) return p || undefined;
+      return p ? `${p}.${missing}` : missing;
+    }
+  };
 
-  return path || undefined;
+  const handler = handlers[error.keyword];
+  return handler ? handler(error, path) : path || undefined;
 }
 
 /** The validator returned by {@link createFormValidator}. */
@@ -622,23 +729,23 @@ export function createFormValidator(schema: FormJsonSchema, translate?: SchemaFo
   return {
     jsonSchema,
     validate(values: FormValues): FormErrors {
-      const errors: FormErrors = {};
-      const validateFunction = conditional ? ajv.compile(toStandardJsonSchema(schema, values)) : baseValidate;
+      const validateFunction = conditional
+        ? ajv.compile(toStandardJsonSchema(schema, values))
+        : baseValidate;
       // Validate a pruned clone so empty optional fields pass and the caller's
       // reactive state is never mutated by Ajv's type coercion.
       const data = pruneEmptyValues(values, schema);
       const valid = validateFunction(data);
 
-      if (!valid && validateFunction.errors) {
-        for (const error of validateFunction.errors) {
-          const key = fieldKeyForError(error);
-          if (key && !errors[key]) {
-            errors[key] = resolveMessage(schema, key, error, translate);
-          }
-        }
-      }
-
-      return errors;
+      return (!valid && validateFunction.errors)
+        ? validateFunction.errors.reduce((errorsAcc: FormErrors, error) => {
+            const key = fieldKeyForError(error);
+            if (key && !errorsAcc[key]) {
+              errorsAcc[key] = resolveMessage(schema, key, error, translate);
+            }
+            return errorsAcc;
+          }, {})
+        : {};
     },
   };
 }
