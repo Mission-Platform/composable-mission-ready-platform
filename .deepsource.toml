@@ -1,0 +1,26 @@
+version = 1
+
+exclude_patterns = [
+  "**/dist/**",
+  "**/node_modules/**",
+  "**/storybook-static/**",
+  "**/.storybook/storybook-static/**",
+  "**/*.d.ts",
+]
+
+test_patterns = [
+  "**/*.spec.ts",
+  "**/*.spec.tsx",
+  "**/*.test.ts",
+  "**/*.test.tsx",
+]
+
+[[analyzers]]
+name = "javascript"
+enabled = true
+
+  [analyzers.meta]
+  plugins = ["vue"]
+  environment = ["nodejs", "browser", "vitest"]
+  dialect = "typescript"
+  module_system = "es-modules"
