@@ -184,9 +184,9 @@ describe('fieldsToSchema', () => {
 
 describe('fieldsToWizardSchema', () => {
   it('keeps each step fields and preserves step titles', () => {
-    const a = createField({ type: 'text', key: 'a' });
-    const b = createField({ type: 'text', key: 'b' });
-    const steps = fieldsToWizardSchema([[a], [b]], { stepTitles: ['One', 'Two'] });
+    const fieldA = createField({ type: 'text', key: 'a' });
+    const fieldB = createField({ type: 'text', key: 'b' });
+    const steps = fieldsToWizardSchema([[fieldA], [fieldB]], { stepTitles: ['One', 'Two'] });
     expect(steps).toHaveLength(2);
     expect(steps[0].title).toBe('One');
     expect(Object.keys(steps[0].properties)).toEqual(['a']);
@@ -194,8 +194,8 @@ describe('fieldsToWizardSchema', () => {
   });
 
   it('honours an explicit step count, keeping empty steps', () => {
-    const a = createField({ type: 'text', key: 'a' });
-    const steps = fieldsToWizardSchema([[a]], { stepCount: 3 });
+    const field = createField({ type: 'text', key: 'a' });
+    const steps = fieldsToWizardSchema([[field]], { stepCount: 3 });
     expect(steps).toHaveLength(3);
     expect(Object.keys(steps[2].properties)).toEqual([]);
   });
@@ -299,24 +299,24 @@ describe('useFormBuilder', () => {
   it('only reorders among same-step siblings in wizard mode', () => {
     const builder = makeBuilder(true);
     builder.addStep();
-    const a = builder.insertField('text', { step: 0 });
-    const b = builder.insertField('text', { step: 1 });
+    const firstId = builder.insertField('text', { step: 0 });
+    const secondId = builder.insertField('text', { step: 1 });
     // Moving the step-1 field up must not jump it above the step-0 field.
-    builder.moveUp(b);
+    builder.moveUp(secondId);
     const steps = builder.fields.value as BuilderField[][];
-    expect(steps[0].map((field) => field.id)).toEqual([a]);
-    expect(steps[1].map((field) => field.id)).toEqual([b]);
+    expect(steps[0].map((field) => field.id)).toEqual([firstId]);
+    expect(steps[1].map((field) => field.id)).toEqual([secondId]);
   });
 
   it('moves a field between steps without storing the step on the field', () => {
     const builder = makeBuilder(true);
     builder.addStep();
-    const a = builder.insertField('text', { step: 0 });
+    const fieldId = builder.insertField('text', { step: 0 });
     expect(builder.selectedStep.value).toBe(0);
-    builder.moveFieldToStep(a, 1);
+    builder.moveFieldToStep(fieldId, 1);
     const steps = builder.fields.value as BuilderField[][];
     expect(steps[0]).toHaveLength(0);
-    expect(steps[1].map((field) => field.id)).toEqual([a]);
+    expect(steps[1].map((field) => field.id)).toEqual([fieldId]);
     expect(builder.selectedStep.value).toBe(1);
   });
 

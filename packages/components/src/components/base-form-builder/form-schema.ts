@@ -65,10 +65,10 @@ const WIDGET_FORMATS: Partial<Record<FormFieldType, JsonSchemaProperty['format']
 export function slugify(label: string): string {
   const slug = label
     .normalize('NFKD')
-    .replaceAll(/[\u0300-\u036F]/g, '') // strip diacritics
+    .replaceAll(/[\u0300-\u036F]/gu, '') // strip diacritics
     .toLowerCase()
-    .replaceAll(/[^a-z0-9]+/g, '_')
-    .replaceAll(/^_+|_+$/g, '');
+    .replaceAll(/[^a-z0-9]+/gu, '_')
+    .replaceAll(/^_+|_+$/gu, '');
   return slug || 'field';
 }
 
@@ -172,6 +172,16 @@ function compact<T extends Record<string, unknown>>(object: T): T {
   return Object.fromEntries(Object.entries(object).filter(([, value]) => value !== undefined)) as T;
 }
 
+/** Returns `true` when the flag is set, else `undefined` (so it is dropped). */
+function flag(value: boolean | undefined): true | undefined {
+  return value || undefined;
+}
+
+/** Returns the list only when it has entries, else `undefined` (so it is dropped). */
+function nonEmpty<T>(value: T[] | undefined): T[] | undefined {
+  return value && value.length > 0 ? value : undefined;
+}
+
 /** Builds the `ui` options object for a field (omitting empty hints). */
 function buildUi(field: BuilderField): JsonSchemaProperty['ui'] {
   const ui = compact({
@@ -180,44 +190,51 @@ function buildUi(field: BuilderField): JsonSchemaProperty['ui'] {
     hint: field.hint,
     rows: field.rows,
     accept: field.accept,
-    multiple: field.multiple || undefined,
+    multiple: flag(field.multiple),
     capture: field.capture,
     autocomplete: field.autocomplete,
     autocapitalize: field.autocapitalize,
-    suggestions: field.suggestions && field.suggestions.length > 0 ? field.suggestions : undefined,
+    suggestions: nonEmpty(field.suggestions),
     minDate: field.minDate,
     maxDate: field.maxDate,
-    disabled: field.disabled || undefined,
-    integer: field.integer || undefined,
-    unsigned: field.unsigned || undefined,
+    disabled: flag(field.disabled),
+    integer: flag(field.integer),
+    unsigned: flag(field.unsigned),
     precision: field.precision,
     step: field.stepAmount,
-    showSeconds: field.showSeconds || undefined,
+    showSeconds: flag(field.showSeconds),
     locationFormat: field.locationFormat,
     visibleWhen: field.visibleWhen,
   });
   return ui as JsonSchemaProperty['ui'];
 }
 
+/** A schema `title` derived from a field label, or `undefined` when blank. */
+function titleOf(field: BuilderField): string | undefined {
+  return field.label || undefined;
+}
+
+/** Builds the nested `object` property for a field-set field and its children. */
+function fieldsetProperty(field: BuilderField): JsonSchemaProperty {
+  const children = field.children ?? [];
+  return compact({
+    type: 'object',
+    title: titleOf(field),
+    description: field.hint,
+    ui: buildUi(field),
+    properties: fieldsToProperties(children),
+    required: requiredKeys(children),
+  }) as JsonSchemaProperty;
+}
+
 /** Converts a single {@link BuilderField} into a {@link JsonSchemaProperty}. */
 export function builderFieldToProperty(field: BuilderField): JsonSchemaProperty {
   // Field set: a nested object property owning its own children.
-  if (isFieldsetWidget(field.type)) {
-    const children = field.children ?? [];
-    return compact({
-      type: 'object',
-      title: field.label || undefined,
-      description: field.hint,
-      ui: buildUi(field),
-      properties: fieldsToProperties(children),
-      required: requiredKeys(children),
-    }) as JsonSchemaProperty;
-  }
+  if (isFieldsetWidget(field.type)) return fieldsetProperty(field);
 
-  const type = widgetToJsonType(field.type);
   const property: JsonSchemaProperty = compact({
-    type,
-    title: field.label || undefined,
+    type: widgetToJsonType(field.type),
+    title: titleOf(field),
     format: WIDGET_FORMATS[field.type],
     minLength: field.minLength,
     maxLength: field.maxLength,
@@ -322,47 +339,93 @@ function propertyOptions(property: JsonSchemaProperty): BuilderFieldOption[] {
   return [];
 }
 
+/** JSON-Schema primitive `type` → builder widget, consulted by {@link inferWidget}. */
+const JSON_TYPE_WIDGETS: Partial<Record<JsonSchemaType, FormFieldType>> = {
+  object: 'fieldset',
+  number: 'number',
+  integer: 'number',
+  boolean: 'checkbox',
+  array: 'multiselect',
+};
+
+/** JSON-Schema string `format` → builder widget, consulted by {@link inferWidget}. */
+const FORMAT_WIDGETS: Partial<Record<NonNullable<JsonSchemaProperty['format']>, FormFieldType>> = {
+  email: 'email',
+  url: 'url',
+  tel: 'tel',
+  password: 'password',
+  date: 'date',
+  time: 'time',
+  'date-time': 'datetime',
+};
+
+/** Widget implied by a property's structure (nested object, or primitive type). */
+function widgetForShape(property: JsonSchemaProperty): FormFieldType | undefined {
+  if (property.properties) return 'fieldset';
+  return property.type ? JSON_TYPE_WIDGETS[property.type] : undefined;
+}
+
+/** Widget implied by a property exposing an enumerated value list. */
+function widgetForEnum(property: JsonSchemaProperty): FormFieldType | undefined {
+  return property.oneOf || property.enum ? 'select' : undefined;
+}
+
+/** Widget implied by a property's string `format` (falls back to plain text). */
+function widgetForFormat(format: JsonSchemaProperty['format']): FormFieldType {
+  return (format ? FORMAT_WIDGETS[format] : undefined) ?? 'text';
+}
+
 /** Infers the builder widget for a property (pinned `ui.widget` wins). */
 function inferWidget(property: JsonSchemaProperty): FormFieldType {
-  if (property.ui?.widget) return property.ui.widget;
-  if (property.properties) return 'fieldset';
-  if (property.type === 'object') return 'fieldset';
-  if (property.type === 'number' || property.type === 'integer') return 'number';
-  if (property.type === 'boolean') return 'checkbox';
-  if (property.type === 'array') return 'multiselect';
-  if (property.oneOf || property.enum) return 'select';
-  switch (property.format) {
-    case 'email': {
-      return 'email';
-    }
-    case 'url': {
-      return 'url';
-    }
-    case 'tel': {
-      return 'tel';
-    }
-    case 'password': {
-      return 'password';
-    }
-    case 'date': {
-      return 'date';
-    }
-    case 'time': {
-      return 'time';
-    }
-    case 'date-time': {
-      return 'datetime';
-    }
-    default: {
-      return 'text';
-    }
-  }
+  return property.ui?.widget ?? widgetForShape(property) ?? widgetForEnum(property) ?? widgetForFormat(property.format);
+}
+
+/** Validation constraints copied verbatim from a schema property onto a field. */
+function validationFromProperty(property: JsonSchemaProperty): Partial<BuilderField> {
+  return {
+    minLength: property.minLength,
+    maxLength: property.maxLength,
+    pattern: property.pattern,
+    minimum: property.minimum,
+    maximum: property.maximum,
+    multipleOf: property.multipleOf,
+  };
+}
+
+/** UI hints lifted from a property's `ui` block (and `description`) onto a field. */
+function uiHintsFromProperty(property: JsonSchemaProperty): Partial<BuilderField> {
+  const ui = property.ui ?? {};
+  return {
+    placeholder: ui.placeholder,
+    hint: ui.hint ?? property.description,
+    disabled: flag(ui.disabled),
+    rows: ui.rows,
+    integer: flag(ui.integer),
+    unsigned: flag(ui.unsigned),
+    precision: ui.precision,
+    stepAmount: ui.step,
+    showSeconds: flag(ui.showSeconds),
+    locationFormat: ui.locationFormat,
+    accept: ui.accept,
+    multiple: flag(ui.multiple),
+    capture: ui.capture,
+    autocomplete: ui.autocomplete,
+    autocapitalize: ui.autocapitalize,
+    suggestions: ui.suggestions?.map(String),
+    minDate: ui.minDate,
+    maxDate: ui.maxDate,
+    visibleWhen: ui.visibleWhen,
+  };
+}
+
+/** Hydrates a field-set property's nested child fields. */
+function fieldsetChildren(property: JsonSchemaProperty): BuilderField[] {
+  return propertiesToFields(property.properties ?? {}, property.required ?? []);
 }
 
 /** Converts a single schema property (with its key) into a {@link BuilderField}. */
 function propertyToField(key: string, property: JsonSchemaProperty, required: boolean): BuilderField {
   const type = inferWidget(property);
-  const ui = property.ui ?? {};
 
   const field: BuilderField = {
     id: nextFieldId(),
@@ -371,50 +434,22 @@ function propertyToField(key: string, property: JsonSchemaProperty, required: bo
     label: property.title ?? key,
     required,
     options: widgetHasOptions(type) ? propertyOptions(property) : [],
-    placeholder: ui.placeholder,
-    hint: ui.hint ?? property.description,
-    disabled: ui.disabled || undefined,
-    rows: ui.rows,
-    minLength: property.minLength,
-    maxLength: property.maxLength,
-    pattern: property.pattern,
-    minimum: property.minimum,
-    maximum: property.maximum,
-    multipleOf: property.multipleOf,
-    integer: ui.integer || undefined,
-    unsigned: ui.unsigned || undefined,
-    precision: ui.precision,
-    stepAmount: ui.step,
-    showSeconds: ui.showSeconds || undefined,
-    locationFormat: ui.locationFormat,
-    accept: ui.accept,
-    multiple: ui.multiple || undefined,
-    capture: ui.capture,
-    autocomplete: ui.autocomplete,
-    autocapitalize: ui.autocapitalize,
-    suggestions: ui.suggestions?.map(String),
-    minDate: ui.minDate,
-    maxDate: ui.maxDate,
     defaultValue: property.default,
-    visibleWhen: ui.visibleWhen,
+    ...validationFromProperty(property),
+    ...uiHintsFromProperty(property),
   };
 
   if (isFieldsetWidget(type)) {
-    field.children = propertiesToFields(property.properties ?? {}, property.required ?? []);
+    field.children = fieldsetChildren(property);
   }
 
   return field;
 }
 
 /** Converts an ordered property map into a list of builder fields. */
-function propertiesToFields(
-  properties: Record<string, JsonSchemaProperty>,
-  required: string[],
-): BuilderField[] {
+function propertiesToFields(properties: Record<string, JsonSchemaProperty>, required: string[]): BuilderField[] {
   const requiredSet = new Set(required);
-  return Object.entries(properties).map(([key, property]) =>
-    propertyToField(key, property, requiredSet.has(key)),
-  );
+  return Object.entries(properties).map(([key, property]) => propertyToField(key, property, requiredSet.has(key)));
 }
 
 /** Normalises a definition into its array-of-steps form. */
@@ -429,9 +464,7 @@ function definitionSteps(definition: SchemaFormDefinition | undefined): FormJson
  * (`BuilderField[][]`, one inner list per step); a single-step (object)
  * definition becomes a flat list (`BuilderField[]`).
  */
-export function schemaToFields(
-  definition: SchemaFormDefinition | undefined,
-): BuilderField[] | BuilderField[][] {
+export function schemaToFields(definition: SchemaFormDefinition | undefined): BuilderField[] | BuilderField[][] {
   const steps = definitionSteps(definition);
   if (Array.isArray(definition)) {
     return steps.map((step) => propertiesToFields(step.properties ?? {}, step.required ?? []));
@@ -451,8 +484,6 @@ export function schemaStepDescriptions(definition: SchemaFormDefinition | undefi
 }
 
 /** The per-step conditional-visibility rules of a wizard definition. */
-export function schemaStepConditions(
-  definition: SchemaFormDefinition | undefined,
-): Array<FieldCondition | undefined> {
+export function schemaStepConditions(definition: SchemaFormDefinition | undefined): Array<FieldCondition | undefined> {
   return definitionSteps(definition).map((step) => step.visibleWhen);
 }

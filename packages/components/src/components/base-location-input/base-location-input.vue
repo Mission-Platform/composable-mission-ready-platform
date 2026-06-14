@@ -78,6 +78,7 @@
   const latText = ref('');
   const lngText = ref('');
 
+  /** Refreshes the text buffers from the current model value and format. */
   function syncFromModel() {
     const value = props.modelValue;
     latText.value = formatAxis(value?.lat, format.value, 'lat');
@@ -98,16 +99,19 @@
     emit('change', value);
   }
 
+  /** Handles latitude input: buffers the text and re-emits the location. */
   function onLatInput(next: string | number) {
     latText.value = String(next);
     commit();
   }
 
+  /** Handles longitude input: buffers the text and re-emits the location. */
   function onLngInput(next: string | number) {
     lngText.value = String(next);
     commit();
   }
 
+  /** Switches the coordinate format, preserving the current coordinates. */
   function onFormatChange(next: string | number) {
     const base = props.modelValue ?? emptyLocation();
     const value: LocationValue = { lat: base.lat, lng: base.lng, format: next as LocationFormat };
@@ -119,10 +123,10 @@
   const placeholders = computed(() => {
     switch (format.value) {
       case 'dms': {
-        return { lat: `40°42'46.0"N`, lng: `74°00'21.5"W` };
+        return { lat: '40°42\'46.0"N', lng: '74°00\'21.5"W' };
       }
       case 'dm': {
-        return { lat: `40°42.767'N`, lng: `74°00.358'W` };
+        return { lat: "40°42.767'N", lng: "74°00.358'W" };
       }
       default: {
         return { lat: '40.7127753', lng: '-74.0059728' };

@@ -16,6 +16,7 @@ import {
   schemaStepDescriptions,
   schemaStepTitles,
   schemaToFields,
+  widgetHasOptions,
 } from './form-schema';
 
 import type { BuilderField, FieldCondition, FormFieldType, SchemaFormDefinition } from './types';
@@ -180,6 +181,40 @@ function cloneField(field: BuilderField, usedKeys: Iterable<string>): BuilderFie
   return clone;
 }
 
+/** Whether `candidateId` is a descendant (a child at any depth) of `field`. */
+function isDescendant(field: BuilderField, candidateId: string): boolean {
+  if (!field.children) return false;
+  return field.children.some((child) => child.id === candidateId || isDescendant(child, candidateId));
+}
+
+/** Whether moving field `id` into `parentId` would nest a field set inside itself. */
+function wouldNestInSelf(field: BuilderField, id: string, parentId: string | undefined): boolean {
+  if (!parentId) return false;
+  return parentId === id || isDescendant(field, parentId);
+}
+
+/**
+ * The insertion index within `destination`, clamped to its bounds and adjusted
+ * for the field just spliced out of the same container.
+ */
+function adjustedIndex(source: Located, destination: BuilderField[], requested: number | undefined): number {
+  let index = requested ?? destination.length;
+  // Account for the just-removed item when reordering within one container.
+  if (source.list === destination && source.index < index) index -= 1;
+  return Math.max(0, Math.min(index, destination.length));
+}
+
+/** Reconciles type-dependent state (children / starter options) after a type change. */
+function reconcileType(field: BuilderField, type: FormFieldType): void {
+  field.children = type === 'fieldset' ? (field.children ?? []) : undefined;
+  if (widgetHasOptions(type) && field.options.length === 0) {
+    field.options = [
+      { label: 'Option 1', value: 'option_1' },
+      { label: 'Option 2', value: 'option_2' },
+    ];
+  }
+}
+
 /**
  * Creates the form-builder state machine. See {@link UseFormBuilder} for the
  * full returned API.
@@ -197,14 +232,12 @@ export function useFormBuilder(config: UseFormBuilderConfig): UseFormBuilder {
   // The public field tree: the per-step matrix in wizard mode, the flat
   // top-level list otherwise.
   const fields = computed<BuilderField[] | BuilderField[][]>(() =>
-    toValue(config.wizard) ? steps.value : steps.value[0] ?? [],
+    toValue(config.wizard) ? steps.value : (steps.value[0] ?? []),
   );
 
   const stepCount = computed(() => Math.max(1, steps.value.length));
 
-  const selectedField = computed(() =>
-    selectedId.value ? locate(steps.value, selectedId.value)?.field : undefined,
-  );
+  const selectedField = computed(() => (selectedId.value ? locate(steps.value, selectedId.value)?.field : undefined));
 
   const selectedStep = computed<number | undefined>(() => {
     const id = selectedId.value;
@@ -224,6 +257,7 @@ export function useFormBuilder(config: UseFormBuilderConfig): UseFormBuilder {
     }),
   );
 
+  /** Replaces the entire builder state from a schema definition. */
   function load(next: SchemaFormDefinition | undefined): void {
     const loaded = schemaToFields(next);
     if (Array.isArray(next)) {
@@ -238,10 +272,12 @@ export function useFormBuilder(config: UseFormBuilderConfig): UseFormBuilder {
     if (selectedId.value && !locate(steps.value, selectedId.value)) selectedId.value = undefined;
   }
 
+  /** Selects a field (or clears the selection with `undefined`). */
   function select(id?: string): void {
     selectedId.value = id;
   }
 
+  /** Inserts a brand-new field of `type` at a precise canvas position. */
   function insertField(type: FormFieldType, target: InsertTarget): string {
     const container = containerFor(steps.value, target.parentId, target.step ?? 0) ?? steps.value[0];
     const field = createField({ type, usedKeys: siblingKeys(container) });
@@ -251,28 +287,24 @@ export function useFormBuilder(config: UseFormBuilderConfig): UseFormBuilder {
     return field.id;
   }
 
+  /** Creates a field of `type` and appends it to a container. Returns the new id. */
   function addField(type: FormFieldType, target: InsertTarget = {}): string {
     return insertField(type, target);
   }
 
+  /** Moves an existing field into a new container / position. */
   function moveField(id: string, target: InsertTarget): void {
     const source = locate(steps.value, id);
     if (!source) return;
-
     const destination = containerFor(steps.value, target.parentId, target.step ?? 0);
     if (!destination) return;
-
     // Disallow nesting a field set into itself or its own descendants.
-    if (target.parentId && (target.parentId === id || isDescendant(source.field, target.parentId))) return;
-
+    if (wouldNestInSelf(source.field, id, target.parentId)) return;
     const [moved] = source.list.splice(source.index, 1);
-
-    let index = target.index ?? destination.length;
-    // Account for the just-removed item when moving within the same container.
-    if (source.list === destination && source.index < index) index -= 1;
-    destination.splice(Math.max(0, Math.min(index, destination.length)), 0, moved);
+    destination.splice(adjustedIndex(source, destination, target.index), 0, moved);
   }
 
+  /** Moves a top-level field to the wizard step at `step` (wizard mode). */
   function moveFieldToStep(id: string, step: number): void {
     const source = locate(steps.value, id);
     if (!source) return;
@@ -283,11 +315,7 @@ export function useFormBuilder(config: UseFormBuilderConfig): UseFormBuilder {
     destination.push(moved);
   }
 
-  function isDescendant(field: BuilderField, candidateId: string): boolean {
-    if (!field.children) return false;
-    return field.children.some((child) => child.id === candidateId || isDescendant(child, candidateId));
-  }
-
+  /** Swaps a field one slot in `delta` direction within its own container. */
   function shift(id: string, delta: -1 | 1): void {
     const located = locate(steps.value, id);
     if (!located) return;
@@ -301,37 +329,26 @@ export function useFormBuilder(config: UseFormBuilderConfig): UseFormBuilder {
     [list[index], list[swap]] = [list[swap], list[index]];
   }
 
+  /** Reorders a field one position up within its own container. */
   function moveUp(id: string): void {
     shift(id, -1);
   }
 
+  /** Reorders a field one position down within its own container. */
   function moveDown(id: string): void {
     shift(id, 1);
   }
 
+  /** Merges a partial patch into the field with the given id. */
   function updateField(id: string, patch: Partial<BuilderField>): void {
     const located = locate(steps.value, id);
     if (!located) return;
-    const field = located.field;
-
-    Object.assign(field, patch);
-
-    // Keep type-dependent state coherent after a type change.
-    if (patch.type) {
-      if (patch.type === 'fieldset') {
-        if (!field.children) field.children = [];
-      } else {
-        field.children = undefined;
-      }
-      if (['select', 'radio', 'multiselect'].includes(patch.type) && field.options.length === 0) {
-        field.options = [
-          { label: 'Option 1', value: 'option_1' },
-          { label: 'Option 2', value: 'option_2' },
-        ];
-      }
-    }
+    Object.assign(located.field, patch);
+    // Keep type-dependent state (children / starter options) coherent.
+    if (patch.type) reconcileType(located.field, patch.type);
   }
 
+  /** Removes a field (and clears the selection if it was selected). */
   function removeField(id: string): void {
     const located = locate(steps.value, id);
     if (!located) return;
@@ -339,6 +356,7 @@ export function useFormBuilder(config: UseFormBuilderConfig): UseFormBuilder {
     if (selectedId.value === id) selectedId.value = undefined;
   }
 
+  /** Duplicates a field (deep clone with fresh ids/keys) right after the original. */
   function duplicateField(id: string): void {
     const located = locate(steps.value, id);
     if (!located) return;
@@ -347,6 +365,7 @@ export function useFormBuilder(config: UseFormBuilderConfig): UseFormBuilder {
     selectedId.value = clone.id;
   }
 
+  /** Appends a new child field to the field set with the given id. */
   function addChild(parentId: string): void {
     const container = containerFor(steps.value, parentId);
     if (!container) return;
@@ -355,10 +374,12 @@ export function useFormBuilder(config: UseFormBuilderConfig): UseFormBuilder {
     selectedId.value = field.id;
   }
 
+  /** Appends a new (empty) wizard step. */
   function addStep(): void {
     steps.value.push([]);
   }
 
+  /** Removes the wizard step at `index`, reflowing later steps and their fields. */
   function removeStep(index: number): void {
     if (steps.value.length <= 1) return;
     const [removed] = steps.value.splice(index, 1);
@@ -370,18 +391,21 @@ export function useFormBuilder(config: UseFormBuilderConfig): UseFormBuilder {
     stepConditions.value.splice(index, 1);
   }
 
+  /** Sets the title of the wizard step at `index`. */
   function setStepTitle(index: number, title: string): void {
     const next = [...stepTitles.value];
     next[index] = title;
     stepTitles.value = next;
   }
 
+  /** Sets the description of the wizard step at `index`. */
   function setStepDescription(index: number, description: string): void {
     const next = [...stepDescriptions.value];
     next[index] = description;
     stepDescriptions.value = next;
   }
 
+  /** Sets the conditional-visibility rule of the wizard step at `index`. */
   function setStepCondition(index: number, condition: FieldCondition | undefined): void {
     const next = [...stepConditions.value];
     next[index] = condition;

@@ -237,12 +237,7 @@
   }
 
   /** The container + position of the field with `id` within one step's list. */
-  function locateInList(
-    list: BuilderField[],
-    id: string,
-    step: number,
-    parentId?: string,
-  ): InsertTarget | undefined {
+  function locateInList(list: BuilderField[], id: string, step: number, parentId?: string): InsertTarget | undefined {
     for (let index = 0; index < list.length; index += 1) {
       const field = list[index];
       if (field.id === id) return { parentId, index, step };
@@ -263,28 +258,29 @@
     return undefined;
   }
 
+  /** Append-at-end target for the root list of wizard `step`. */
+  function stepTarget(step: number): InsertTarget {
+    return { step, index: rootLists.value[step]?.length ?? 0 };
+  }
+
+  /** Append-at-end target inside the field set identified by `id`. */
+  function fieldsetTarget(id: string): InsertTarget {
+    return { parentId: id, index: findField(id)?.children?.length ?? 0 };
+  }
+
   /** Maps a drop target's payload onto an {@link InsertTarget}. */
   function resolveDrop(data: FormBuilderDropData | undefined): InsertTarget | undefined {
     if (!data) return undefined;
-    switch (data.kind) {
-      case 'canvas':
-        return { step: 0, index: rootLists.value[0]?.length ?? 0 };
-      case 'step':
-        return { step: data.step, index: rootLists.value[data.step]?.length ?? 0 };
-      case 'fieldset': {
-        const fieldset = findField(data.id);
-        return { parentId: data.id, index: fieldset?.children?.length ?? 0 };
-      }
-      case 'field':
-        return locateTarget(data.id);
-      default:
-        return undefined;
-    }
+    if (data.kind === 'canvas') return stepTarget(0);
+    if (data.kind === 'step') return stepTarget(data.step);
+    if (data.kind === 'fieldset') return fieldsetTarget(data.id);
+    return locateTarget(data.id);
   }
 
   /** The minimal shape we read from a `@dnd-kit/vue` drag event. */
   type DragEntity = { data?: unknown } | null | undefined;
 
+  /** Tracks the dragged item's label so the drag overlay can preview it. */
   function onDragStart(event: { operation: { source?: DragEntity } }): void {
     const data = event.operation.source?.data as FormBuilderDragData | undefined;
     if (!data) {
@@ -296,6 +292,13 @@
     }
   }
 
+  /** Inserts a new palette field, or moves an existing field, at the drop target. */
+  function applyDrop(source: FormBuilderDragData, target: InsertTarget): void {
+    if (source.kind === 'palette') builder.insertField(source.fieldType, target);
+    else builder.moveField(source.id, target);
+  }
+
+  /** Commits a completed drag: resolves the drop target and applies it. */
   function onDragEnd(event: { canceled: boolean; operation: { source?: DragEntity; target?: DragEntity } }): void {
     activeDragLabel.value = null;
     if (props.disabled || event.canceled) return;
@@ -307,21 +310,23 @@
     const target = resolveDrop(dropData);
     if (!target) return;
 
-    if (sourceData.kind === 'palette') builder.insertField(sourceData.fieldType, target);
-    else builder.moveField(sourceData.id, target);
+    applyDrop(sourceData, target);
   }
 
   // ─── Inspector actions ───────────────────────────────────────────────────────
+  /** Adds a field of `type` to the first step from the palette's add button. */
   function addFromPalette(type: FormFieldType): void {
     if (props.disabled) return;
     builder.addField(type, { step: 0 });
   }
 
+  /** Updates the form title and notifies the parent via `update:title`. */
   function updateTitle(value: string): void {
     formTitle.value = value;
     emit('update:title', value);
   }
 
+  /** Updates the form description and notifies the parent via `update:description`. */
   function updateDescription(value: string): void {
     formDescription.value = value;
     emit('update:description', value);

@@ -46,14 +46,14 @@ describe('parseAxis (decimal degrees)', () => {
 
 describe('parseAxis (DMS / DM)', () => {
   it('parses degrees/minutes/seconds with hemisphere', () => {
-    const lat = parseAxis(`40°42'46.0"N`, 'dms', 'lat');
+    const lat = parseAxis('40°42\'46.0"N', 'dms', 'lat');
     expect(lat).toBeCloseTo(40.712_777_8, 5);
-    const lng = parseAxis(`74°00'21.5"W`, 'dms', 'lng');
+    const lng = parseAxis('74°00\'21.5"W', 'dms', 'lng');
     expect(lng).toBeCloseTo(-74.005_972_2, 5);
   });
 
   it('parses degrees/decimal-minutes with hemisphere', () => {
-    const lat = parseAxis(`40°42.767'N`, 'dm', 'lat');
+    const lat = parseAxis("40°42.767'N", 'dm', 'lat');
     expect(lat).toBeCloseTo(40.712_783, 4);
   });
 });
@@ -147,7 +147,7 @@ describe('parseLocation', () => {
   });
 
   it('parses a DMS pair', () => {
-    const parsed = parseLocation(`40°42'46.0"N 74°00'21.5"W`, 'dms');
+    const parsed = parseLocation('40°42\'46.0"N 74°00\'21.5"W', 'dms');
     expect(parsed.lat).toBeCloseTo(40.712_777_8, 5);
     expect(parsed.lng).toBeCloseTo(-74.005_972_2, 5);
     expect(parsed.format).toBe('dms');

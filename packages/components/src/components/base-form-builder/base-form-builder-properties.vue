@@ -100,6 +100,7 @@
     return Number.isNaN(parsed) ? undefined : parsed;
   }
 
+  /** Merges a partial change into the option at `index`. */
   function updateOption(index: number, part: Partial<BuilderFieldOption>): void {
     patch(
       'options',
@@ -107,11 +108,13 @@
     );
   }
 
+  /** Appends a new, auto-numbered option to the field. */
   function addOption(): void {
     const next = props.field.options.length + 1;
     patch('options', [...props.field.options, { label: `Option ${next}`, value: `option_${next}` }]);
   }
 
+  /** Removes the option at `index` from the field. */
   function removeOption(index: number): void {
     patch(
       'options',

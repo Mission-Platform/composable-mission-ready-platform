@@ -120,15 +120,18 @@
     emit('update', leaves.length === 0 ? undefined : ({ [combinator]: leaves } as FieldCondition));
   }
 
+  /** Enables the rule (one empty leaf) or clears it entirely. */
   function toggle(on: boolean): void {
     if (on) emitGroup('allOf', [{ field: '', equals: '' }]);
-    else emit('update', undefined);
+    else emitGroup('allOf', []);
   }
 
+  /** Re-emits the current leaves under a different combinator. */
   function setCombinator(combinator: Combinator): void {
     emitGroup(combinator, currentGroup.value.leaves);
   }
 
+  /** Patches one part (field / operator / value) of the leaf at `index`. */
   function updateLeaf(index: number, part: { field?: string; operator?: string; value?: string }): void {
     const { combinator, leaves } = currentGroup.value;
     const existing = leaves[index];
@@ -141,11 +144,13 @@
     );
   }
 
+  /** Appends a fresh, empty leaf to the current group. */
   function addLeaf(): void {
     const { combinator, leaves } = currentGroup.value;
     emitGroup(combinator, [...leaves, { field: '', equals: '' }]);
   }
 
+  /** Removes the leaf at `index` from the current group. */
   function removeLeaf(index: number): void {
     const { combinator, leaves } = currentGroup.value;
     emitGroup(
