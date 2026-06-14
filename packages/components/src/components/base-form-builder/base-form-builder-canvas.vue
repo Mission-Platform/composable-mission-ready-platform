@@ -137,7 +137,8 @@
         variant="label"
         weight="semibold"
       >
-        Step {{ entry.step + 1 }}<template v-if="entry.title"> — {{ entry.title }}</template>
+        Step {{ entry.step + 1 }}
+        <template v-if="entry.title">— {{ entry.title }}</template>
       </BaseTypography>
 
       <BaseFormBuilderDropzone

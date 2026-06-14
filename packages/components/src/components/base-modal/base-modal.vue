@@ -160,15 +160,18 @@
     /* Size variants only apply on sm+ (tablet/desktop); on mobile always full-width.
        Canonical 2xs → 2xl scale, plus a special `full` (near-fullscreen) value. */
     @include bp.bp-up('sm') {
-      @each $size, $max-width in (
-        '2xs': 20rem,
-        'xs': 24rem,
-        'sm': var(--mp-size-width-sm),
-        'md': var(--mp-size-width-md),
-        'lg': 51.429rem,
-        'xl': 68.571rem,
-        '2xl': var(--mp-size-width-lg)
-      ) {
+      @each $size,
+        $max-width
+          in (
+            '2xs': 20rem,
+            'xs': 24rem,
+            'sm': var(--mp-size-width-sm),
+            'md': var(--mp-size-width-md),
+            'lg': 51.429rem,
+            'xl': 68.571rem,
+            '2xl': var(--mp-size-width-lg)
+          )
+      {
         &--#{$size} {
           max-width: $max-width;
         }

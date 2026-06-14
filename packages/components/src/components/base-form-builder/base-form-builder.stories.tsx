@@ -472,7 +472,12 @@ const conditionsSchema: SchemaFormDefinition = {
       ui: {
         widget: 'email',
         hint: 'Shown when plan is "team" AND age ≥ 18.',
-        visibleWhen: { allOf: [{ field: 'plan', equals: 'team' }, { field: 'age', gte: 18 }] },
+        visibleWhen: {
+          allOf: [
+            { field: 'plan', equals: 'team' },
+            { field: 'age', gte: 18 },
+          ],
+        },
       },
     },
     priority_support: {
@@ -481,7 +486,12 @@ const conditionsSchema: SchemaFormDefinition = {
       ui: {
         widget: 'switch',
         hint: 'Shown when plan is "pro" OR "team".',
-        visibleWhen: { anyOf: [{ field: 'plan', equals: 'pro' }, { field: 'plan', equals: 'team' }] },
+        visibleWhen: {
+          anyOf: [
+            { field: 'plan', equals: 'pro' },
+            { field: 'plan', equals: 'team' },
+          ],
+        },
       },
     },
     reminder: {
@@ -491,7 +501,10 @@ const conditionsSchema: SchemaFormDefinition = {
         widget: 'text',
         hint: 'Shown when exactly one of email / SMS is chosen.',
         visibleWhen: {
-          oneOf: [{ field: 'contact_method', equals: 'email' }, { field: 'contact_method', equals: 'sms' }],
+          oneOf: [
+            { field: 'contact_method', equals: 'email' },
+            { field: 'contact_method', equals: 'sms' },
+          ],
         },
       },
     },
