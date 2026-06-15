@@ -45,7 +45,8 @@
 
 ### Minor Changes
 
-- 58f2f50: add six new feature icons used by the Mission Platform marketing site: `IconPuzzle`, `IconLightning`, `IconPalette`, `IconLanguage`, `IconWrench`, and `IconCloud`
+- 58f2f50: add six new feature icons used by the Mission Platform marketing site: `IconPuzzle`, `IconLightning`,
+  `IconPalette`, `IconLanguage`, `IconWrench`, and `IconCloud`
 
 ### Patch Changes
 
@@ -67,7 +68,8 @@
 
 - 05d31c9: normalize lint and format scripts across all workspaces
 
-  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
+  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run
+  `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
 
 - 6679759: adopt shared `stories` tsconfig preset for Storybook story files
 
@@ -111,18 +113,23 @@
 
 - b5e4353: broaden composable APIs to MaybeRefOrGetter and fix token re-export extensions
 
-  - refactor `useHunspellMonaco` to accept `MaybeRefOrGetter` for all three parameters instead of `Ref`, allowing plain values, refs, and getters
+  - refactor `useHunspellMonaco` to accept `MaybeRefOrGetter` for all three parameters instead of `Ref`, allowing plain
+    values, refs, and getters
   - update `useHunspellMonaco` spec to use native `ReturnType<typeof ref<...>>` instead of explicit `Ref` import
   - migrate `useId` from `nanoid` to Vue's built-in `useId` for stable server-side-compatible IDs
   - update `useRouterClose` to call `toValue(router.currentRoute)` instead of `.value` directly
-  - refactor `useIconSize` in `@mission-platform/icons` to accept `MaybeRefOrGetter<number | string>` instead of a getter function `() => number | string`
-  - fix token barrel re-exports in `@mission-platform/tokens` to use `.js` extensions instead of `.ts` for ESM compatibility
+  - refactor `useIconSize` in `@mission-platform/icons` to accept `MaybeRefOrGetter<number | string>` instead of a
+    getter function `() => number | string`
+  - fix token barrel re-exports in `@mission-platform/tokens` to use `.js` extensions instead of `.ts` for ESM
+    compatibility
 
 - bb5e252: add unit tests and stories for all icon components
 
-  - add `icon.spec.ts` for every icon component covering svg rendering, class application, named size tokens, and numeric size in px
+  - add `icon.spec.ts` for every icon component covering svg rendering, class application, named size tokens, and
+    numeric size in px
   - add `icon.stories.ts` for icon components that benefit from visual documentation in Storybook
-  - rename storybook story and test files to lowercase (`I18n` → `i18n`, `Themes` → `themes`) for consistent file naming conventions
+  - rename storybook story and test files to lowercase (`I18n` → `i18n`, `Themes` → `themes`) for consistent file naming
+    conventions
   - add `@vue/test-utils` devDependency to `@mission-platform/storybook` to support icon component mounting in tests
 
 - Updated dependencies [b5e4353]

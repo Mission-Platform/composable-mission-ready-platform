@@ -4,7 +4,8 @@
 
 ### Minor Changes
 
-- a6ac78b: unify component variants on `primary`, `secondary`, `tertiary`, `default`, `success`, `warning`, `information`, `error` & `critical`
+- a6ac78b: unify component variants on `primary`, `secondary`, `tertiary`, `default`, `success`, `warning`,
+  `information`, `error` & `critical`
 
   All semantic-color components (`BaseButton`, `BaseBadge`, `BaseTag`, `BaseSpinner`,
   `BaseProgressBar`, `BaseMenuItem`, `BaseNavbarItem`) now share one canonical
@@ -32,7 +33,9 @@
 
 ### Minor Changes
 
-- 37571da: add `--mp-color-bg-base-alt` semantic background token to light and dark themes — a subtle shade off the base background (slightly darker in light, slightly lighter in dark) for alternating sections, banded surfaces, and zebra layouts
+- 37571da: add `--mp-color-bg-base-alt` semantic background token to light and dark themes — a subtle shade off the base
+  background (slightly darker in light, slightly lighter in dark) for alternating sections, banded surfaces, and zebra
+  layouts
 
 ### Patch Changes
 
@@ -44,7 +47,8 @@
 
 - 05d31c9: normalize lint and format scripts across all workspaces
 
-  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
+  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run
+  `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
 
 - cf89515: enable tree shaking support when consumed by apps
 
@@ -66,12 +70,15 @@
 ### Patch Changes
 
 - b5e4353: broaden composable APIs to MaybeRefOrGetter and fix token re-export extensions
-  - refactor `useHunspellMonaco` to accept `MaybeRefOrGetter` for all three parameters instead of `Ref`, allowing plain values, refs, and getters
+  - refactor `useHunspellMonaco` to accept `MaybeRefOrGetter` for all three parameters instead of `Ref`, allowing plain
+    values, refs, and getters
   - update `useHunspellMonaco` spec to use native `ReturnType<typeof ref<...>>` instead of explicit `Ref` import
   - migrate `useId` from `nanoid` to Vue's built-in `useId` for stable server-side-compatible IDs
   - update `useRouterClose` to call `toValue(router.currentRoute)` instead of `.value` directly
-  - refactor `useIconSize` in `@mission-platform/icons` to accept `MaybeRefOrGetter<number | string>` instead of a getter function `() => number | string`
-  - fix token barrel re-exports in `@mission-platform/tokens` to use `.js` extensions instead of `.ts` for ESM compatibility
+  - refactor `useIconSize` in `@mission-platform/icons` to accept `MaybeRefOrGetter<number | string>` instead of a
+    getter function `() => number | string`
+  - fix token barrel re-exports in `@mission-platform/tokens` to use `.js` extensions instead of `.ts` for ESM
+    compatibility
 
 ## 0.1.0
 

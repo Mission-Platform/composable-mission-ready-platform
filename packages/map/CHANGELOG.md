@@ -122,7 +122,8 @@
 
 - 05d31c9: normalize lint and format scripts across all workspaces
 
-  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
+  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run
+  `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
 
 - 6679759: adopt shared `stories` tsconfig preset for Storybook story files
 
@@ -200,14 +201,20 @@
 - 735d1d6: Improve `useDrawing` composable and map test infrastructure:
 
   - `selectFeature` parameter is now optional (`id?: FeatureId`) for more ergonomic deselection calls
-  - Fix spec files to use `mockImplementation(() => {})` instead of `mockReturnValue()` for `getSource` and `getLayer` mocks, avoiding misleading `undefined` return type
-  - `mountWithMap` test utility now accepts `Component` type for extra components and uses a type-safe `mergedOptions` variable
+  - Fix spec files to use `mockImplementation(() => {})` instead of `mockReturnValue()` for `getSource` and `getLayer`
+    mocks, avoiding misleading `undefined` return type
+  - `mountWithMap` test utility now accepts `Component` type for extra components and uses a type-safe `mergedOptions`
+    variable
   - Add `lib` compiler option to `tsconfig.build.json` and `tsconfig.test.json` for explicit DOM/ES2022 lib targets
-  - Exclude stories files from `tsconfig.test.json` include and add `tsconfig.storybook.json` reference to root `tsconfig.json`
-  - Fix `arguments_` destructuring in map-draw and map-layer specs to use index access instead of destructured parameter patterns
+  - Exclude stories files from `tsconfig.test.json` include and add `tsconfig.storybook.json` reference to root
+    `tsconfig.json`
+  - Fix `arguments_` destructuring in map-draw and map-layer specs to use index access instead of destructured parameter
+    patterns
   - Fix type-unsafe `arguments_.geodesic` access in map-libre.stories.ts by casting through `Record<string, unknown>`
 
-- 30480f4: Remove `@storybook/vue3-vite` from devDependencies. Storybook is an app-level concern and must not be a dependency of a library package; it lives exclusively in `apps/storybook`. Also remove unnecessary `as Story` type assertion in `map-layer.stories.ts` — the variable's declared type annotation already provides full type checking.
+- 30480f4: Remove `@storybook/vue3-vite` from devDependencies. Storybook is an app-level concern and must not be a
+  dependency of a library package; it lives exclusively in `apps/storybook`. Also remove unnecessary `as Story` type
+  assertion in `map-layer.stories.ts` — the variable's declared type annotation already provides full type checking.
 - Updated dependencies [b5e4353]
 - Updated dependencies [5ed2115]
 - Updated dependencies [7b0b1ca]

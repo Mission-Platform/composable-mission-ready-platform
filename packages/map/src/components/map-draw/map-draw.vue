@@ -87,7 +87,7 @@
 
   // ── Emit geodesic changes upward ─────────────────────────────────────────
   watch(drawing.geodesic, (val) => {
-    if ((props.geodesic !== false) !== !!val) {
+    if (props.geodesic !== !!val) {
       emit('update:geodesic', !!val);
     }
   });

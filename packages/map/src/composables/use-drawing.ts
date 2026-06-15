@@ -15,16 +15,7 @@ import {
 } from '@turf/turf';
 import { computed, type ComputedRef, readonly, ref, type ShallowRef } from 'vue';
 
-import type {
-  Feature,
-  FeatureCollection,
-  GeoJsonProperties,
-  Geometry,
-  LineString,
-  Point,
-  Polygon,
-  Position,
-} from 'geojson';
+import type { Feature, FeatureCollection, Geometry, LineString, Point, Polygon, Position } from 'geojson';
 import type { Map, MapMouseEvent } from 'maplibre-gl';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -63,7 +54,7 @@ export type FeatureId = string;
  * and `_edge` geographic positions so the polygon ring can be recomputed
  * after pan/zoom to maintain visual shape.
  */
-export type DrawnFeature = Feature<Geometry, GeoJsonProperties> & {
+export type DrawnFeature = Feature & {
   id: FeatureId;
   properties: {
     drawMode: DrawMode;

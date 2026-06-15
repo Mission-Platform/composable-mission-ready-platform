@@ -17,15 +17,20 @@
 
 ### Minor Changes
 
-- a5d10fd: move `useHunspellMonaco` composable from `@mission-platform/components` to `@mission-platform/hunspell` to mirror the structure of `@mission-platform/harper`. The composable is now exported from `@mission-platform/hunspell`; update imports accordingly.
+- a5d10fd: move `useHunspellMonaco` composable from `@mission-platform/components` to `@mission-platform/hunspell` to
+  mirror the structure of `@mission-platform/harper`. The composable is now exported from `@mission-platform/hunspell`;
+  update imports accordingly.
 
 ### Patch Changes
 
 - 266acd6: add `build:watch` script for incremental rebuilds during development
 - a443677: migrate vite build config to rolldownOptions and externalize monaco-editor
-- fef2a3a: include `vitest.config.ts` in `tsconfig.node.json` so ESLint's TypeScript project service can parse it, and reorder worker imports to satisfy `import/order`
-- 3c17696: correct `types` entry points in `package.json` to match the actual emitted declaration files (`./dist/index.d.ts` for the main entry and `./dist/worker/hunspell.worker.d.ts` for the `./worker` subpath)
-- ca1660f: reorganise package src layout into logical folders (`monaco/`, `worker/`, and — for hunspell — `wasm/`); the public package entry points and built output filenames are unchanged
+- fef2a3a: include `vitest.config.ts` in `tsconfig.node.json` so ESLint's TypeScript project service can parse it, and
+  reorder worker imports to satisfy `import/order`
+- 3c17696: correct `types` entry points in `package.json` to match the actual emitted declaration files (
+  `./dist/index.d.ts` for the main entry and `./dist/worker/hunspell.worker.d.ts` for the `./worker` subpath)
+- ca1660f: reorganise package src layout into logical folders (`monaco/`, `worker/`, and — for hunspell — `wasm/`); the
+  public package entry points and built output filenames are unchanged
 
 ## 0.2.2
 
@@ -41,7 +46,8 @@
 
 - 05d31c9: normalize lint and format scripts across all workspaces
 
-  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
+  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run
+  `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
 
 - cf89515: enable tree shaking support when consumed by apps
 
@@ -63,7 +69,9 @@
 
 ### Minor Changes
 
-- 74736b6: Add `tokenize` method to `HunspellChecker` with `TokenResult` and `TokenResultVector` types; export new types from package index. Refactor hunspell build script to separate `build:wasm` and `build:ts` steps. Remove redundant `role="region"` from `BaseMonacoEditor`.
+- 74736b6: Add `tokenize` method to `HunspellChecker` with `TokenResult` and `TokenResultVector` types; export new types
+  from package index. Refactor hunspell build script to separate `build:wasm` and `build:ts` steps. Remove redundant
+  `role="region"` from `BaseMonacoEditor`.
 
 ### Patch Changes
 

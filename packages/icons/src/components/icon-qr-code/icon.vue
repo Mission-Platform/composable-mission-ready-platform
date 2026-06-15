@@ -33,7 +33,31 @@
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><path d="M14 14h3v3" /><path d="M21 14v7h-7" /><path d="M17 21h.01" /><path d="M21 17h.01" />
+    <rect
+      height="7"
+      rx="1"
+      width="7"
+      x="3"
+      y="3"
+    />
+    <rect
+      height="7"
+      rx="1"
+      width="7"
+      x="14"
+      y="3"
+    />
+    <rect
+      height="7"
+      rx="1"
+      width="7"
+      x="3"
+      y="14"
+    />
+    <path d="M14 14h3v3" />
+    <path d="M21 14v7h-7" />
+    <path d="M17 21h.01" />
+    <path d="M21 17h.01" />
   </svg>
 </template>
 

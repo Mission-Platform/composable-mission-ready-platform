@@ -33,7 +33,14 @@
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <rect x="2" y="4" width="20" height="16" rx="2" /><polyline points="22,6 12,13 2,6" />
+    <rect
+      height="16"
+      rx="2"
+      width="20"
+      x="2"
+      y="4"
+    />
+    <polyline points="22,6 12,13 2,6" />
   </svg>
 </template>
 

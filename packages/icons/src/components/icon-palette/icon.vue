@@ -35,22 +35,22 @@
   >
     <path d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 10 10c0 2-2 3-4 3h-2a2 2 0 0 0-2 2 2 2 0 0 1-2 2Z" />
     <circle
+      :fill="color"
       cx="7.5"
       cy="10.5"
       r="1"
-      :fill="color"
     />
     <circle
+      :fill="color"
       cx="12"
       cy="7.5"
       r="1"
-      :fill="color"
     />
     <circle
+      :fill="color"
       cx="16.5"
       cy="10.5"
       r="1"
-      :fill="color"
     />
   </svg>
 </template>
