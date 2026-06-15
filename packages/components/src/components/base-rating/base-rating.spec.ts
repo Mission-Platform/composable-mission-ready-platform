@@ -1,6 +1,8 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 
+import { expectNoA11yViolations, mountForA11y, runAxe } from '../../test-utils/axe';
+
 import BaseRating from './base-rating.vue';
 
 describe('BaseRating', () => {
@@ -69,5 +71,39 @@ describe('BaseRating', () => {
     expect(wrapper.emitted('update:modelValue')?.[2]).toEqual([0]);
     await wrapper.trigger('keydown', { key: 'End' });
     expect(wrapper.emitted('update:modelValue')?.[3]).toEqual([5]);
+  });
+});
+
+describe('BaseRating accessibility (WCAG AAA)', () => {
+  it('has no violations in interactive mode', async () => {
+    const wrapper = mountForA11y(BaseRating, { props: { modelValue: 3, max: 5, ariaLabel: 'Overall rating' } });
+    await expectNoA11yViolations(wrapper.element);
+    wrapper.unmount();
+  });
+
+  it('has no violations with half-star precision', async () => {
+    const wrapper = mountForA11y(BaseRating, { props: { modelValue: 2.5, max: 5, allowHalf: true } });
+    await expectNoA11yViolations(wrapper.element);
+    wrapper.unmount();
+  });
+
+  it('has no violations in read-only mode', async () => {
+    const wrapper = mountForA11y(BaseRating, { props: { modelValue: 4, max: 5, readonly: true } });
+    await expectNoA11yViolations(wrapper.element);
+    wrapper.unmount();
+  });
+
+  // Regression guard: the mouse hit-targets must stay out of the accessibility
+  // tree (plain aria-hidden <span>s) so the role="slider" exposes no nested
+  // interactive controls to assistive technology.
+  it('exposes no nested interactive controls', async () => {
+    const wrapper = mountForA11y(BaseRating, { props: { modelValue: 3, max: 5, allowHalf: true } });
+    expect(wrapper.find('.base-rating__hit').element.tagName).toBe('SPAN');
+    expect(wrapper.find('.base-rating__hit').attributes('aria-hidden')).toBe('true');
+    expect(wrapper.findAll('button')).toHaveLength(0);
+
+    const { violations } = await runAxe(wrapper.element);
+    expect(violations.map((v) => v.id)).not.toContain('nested-interactive');
+    wrapper.unmount();
   });
 });
