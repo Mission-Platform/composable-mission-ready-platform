@@ -118,6 +118,34 @@ export { default as IconBell } from './components/icon-bell/icon.vue';
 
 export { default as IconCalendar } from './components/icon-calendar/icon.vue';
 
+export { default as IconClock } from './components/icon-clock/icon.vue';
+
+export { default as IconQrCode } from './components/icon-qr-code/icon.vue';
+
+export { default as IconLink } from './components/icon-link/icon.vue';
+
+export { default as IconMapPin } from './components/icon-map-pin/icon.vue';
+
+export { default as IconHeart } from './components/icon-heart/icon.vue';
+
+export { default as IconShare } from './components/icon-share/icon.vue';
+
+// ── Communication ─────────────────────────────────────────────────────────────
+
+export { default as IconChat } from './components/icon-chat/icon.vue';
+
+export { default as IconSend } from './components/icon-send/icon.vue';
+
+export { default as IconMail } from './components/icon-mail/icon.vue';
+
+export { default as IconPhone } from './components/icon-phone/icon.vue';
+
+// ── Media ─────────────────────────────────────────────────────────────────────
+
+export { default as IconCamera } from './components/icon-camera/icon.vue';
+
+export { default as IconImage } from './components/icon-image/icon.vue';
+
 // ── Rich text / editor ────────────────────────────────────────────────────────
 
 export { default as IconBold } from './components/icon-bold/icon.vue';
