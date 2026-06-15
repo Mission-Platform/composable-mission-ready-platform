@@ -14,6 +14,8 @@ The package provides over 100 Vue 3 components with consistent styling and behav
 - `BaseInput`, `BaseTextarea` — Text input components with validation states
 - `BaseSelect`, `BaseMultiselect` — Dropdown selection components, each backed by a visually-hidden native `<select>` (`<select multiple>` for `BaseMultiselect`) so browser/profile-manager autofill works and the value is submitted in a native form; expose `name` and `autocomplete` props
 - `BaseCheckbox`, `BaseRadio`, `BaseSwitch` — Single/multi-state inputs
+- `BaseRating` — Star rating input/display (`v-model`) with whole or half-star precision (`allowHalf`), interactive `role="slider"` mode (arrow/Home/End keys) vs. read-only `role="img"` display, hover preview, `clearable`, and `sm`/`md`/`lg` sizes
+- `BaseSlider` — Range slider (`v-model`) with `min`/`max`/`step` rounding, drag and full keyboard control (arrows, PageUp/Down, Home/End), an optional value tooltip (`showValue`/`formatValue`), and `sm`/`md`/`lg` sizes
 - `BaseDateInput`, `BaseTimeInput`, `BaseDateRangeInput` — Date/time pickers
 - `BaseColorInput` — Color picker component
 - `BaseFileInput` — File upload input with preview support
@@ -27,6 +29,7 @@ The package provides over 100 Vue 3 components with consistent styling and behav
 - `BaseBadge`, `BaseTag` — Status and category tags
 - `BaseAvatar` — User avatar with status indicators
 - `BaseStatusIcon` — Status indicator icons (success, warning, error)
+- `BaseQuote` — Semantic `<blockquote>` / pull-quote with optional author + source attribution, a `cite` URL, `default`/`bordered`/`plain` variants, and `sm`/`md`/`lg` sizes
 - `BaseSkeleton` — Loading skeleton components
 - `BaseSpinner` — Loading spinner with variants
 - `BaseProgressBar` — Progress bar component
@@ -39,10 +42,14 @@ The package provides over 100 Vue 3 components with consistent styling and behav
 - `BaseTooltip` — Tooltip component
 - `BaseCollapse`, `BaseAccordion` — Collapsible content areas
 - `BaseTabs`, `BaseVirtualTabs` — Tabbed interface with virtualized tabs
+- `BaseAlertBanner` — Inline alert/notification banner with `info`/`success`/`warning`/`error`/`neutral` intents, optional title, built-in status icon, dismiss button (`v-model` visibility), and an `actions` slot; uses `role="alert"`/`role="status"` appropriately
+- `BaseToast`, `BaseToastContainer` — Toast notifications: `BaseToast` is the presentational card; `BaseToastContainer` renders the `useToast` store, teleported to `<body>` at one of six positions with enter/leave transitions and the `notification` z-index layer
 
 #### Navigation
 - `BaseNavbar`, `BaseNavbarItem` — Top navigation bar
 - `BaseBreadcrumb` — Breadcrumb navigation
+- `BasePagination` — Page navigation (`v-model:page`) with prev/next/edge controls and truncation ellipses; accepts `pageCount` or `total` + `pageSize`, configurable `siblingCount`/`boundaryCount`, and `sm`/`md`/`lg` sizes
+- `BaseSegmentControl` — Single-select segmented switcher (`v-model`) backed by `role="radiogroup"` with roving tabindex and arrow/Home/End navigation, per-segment disable, and `fullWidth`
 - `BaseSidebar` — Side navigation with draggable resize
 - `BaseMenu`, `BaseMenubar` — Menu components
 - `BaseMenuItem`, `BaseMenuItemLink`, `BaseMenuItemButton` — Menu item variants
@@ -51,7 +58,15 @@ The package provides over 100 Vue 3 components with consistent styling and behav
 #### Layout & Display
 - `BaseApplicationLayout` — Application shell with header, sidebar, footer
 - `BaseVerticalLayout`, `BaseCard` — Layout containers and cards
+- `BaseGrid` — CSS Grid layout primitive arranging content into a grid of `rows` (m) by `cols` (n), with a named `2xs`–`2xl` gap scale (mapped to `--mp-spacing-*` tokens) for `gap`/`rowGap`/`columnGap`, `justify`/`align` item-placement controls (`justify-items`/`align-items`), a scoped `cell` slot exposing per-cell `row`/`column`/`index`, and default-slot children that can span tracks via `grid-column`/`grid-row` `span`
+- `BaseStack` — Flexbox stack layout primitive laying children out vertically (column) or horizontally (row) via `direction`, sharing the named `2xs`–`2xl` gap scale, with `justify` (`justify-content`), `align` (`align-items`), and `wrap` controls
 - `BaseTypography` — Typography utility component
+- `BaseHero` — Page hero/banner with eyebrow/title/subtitle props, `media`/`actions` slots, `start`/`center`/`end` alignment, `sm`/`md`/`lg` padding, optional `fullHeight`, and a scrim `overlay` for full-bleed backgrounds
+- `BaseSeparator` — Horizontal/vertical divider with `solid`/`dashed`/`dotted` variants, a spacing scale, an optional centred label slot, and `decorative` (presentational) support
+- `BaseButtonGroup` — Groups related buttons into a single visual unit (`role="group"`), horizontal/vertical, with an `attached` mode that joins children's borders
+- `BaseResponsiveImage` — Art-directed `<picture>` with format/media `sources`, native `srcset`/`sizes`, lazy loading, async decoding, fixed `aspectRatio` (avoids CLS), and `object-fit` control
+- `BaseResponsiveVideo` — Responsive `<video>` with format `sources`, poster, playback flags, fixed `aspectRatio`, `object-fit`, and `play`/`pause`/`ended` events
+- `BaseBackgroundVideo` — Decorative full-bleed autoplaying/muted/looping background video with overlaid content slot and optional scrim; honours `prefers-reduced-motion`
 - `BaseCarousel` — Image/document carousel
 - `BaseTreeView`, `BaseVirtualTreeView` — Tree view components with virtualization
 - `BaseInPage` — Component that triggers callbacks when in viewport
@@ -64,7 +79,46 @@ The package provides over 100 Vue 3 components with consistent styling and behav
 - `BaseScheduler` — Calendar/scheduling component with event management
 - `BaseVirtualLogViewer` — High-performance log viewer for large datasets
 
+### Theme configuration
+- `BaseThemeProvider` — Renderless provider that creates and shares a reactive theme store (`useTheme`) with descendants; applies the resolved theme to `<html>` via `data-theme` (matching `BaseThemeToggle`), persists the preference to `localStorage`, tracks the system color scheme, and exposes `theme`/`resolvedTheme`/`setTheme`/`toggleTheme`/`cycleTheme` as slot props
+- `BaseThemeToggle` — Standalone control for switching `light`/`dark`/`auto`
+- `BaseThemeComposer` — Theme-attribute composer that configures the theme at runtime: maps friendly attributes (`primaryColor`/`primaryHoverColor`/`primaryActiveColor`, `secondaryColor`, `textColor`, `backgroundColor`, `surfaceColor`, `borderColor`, `focusColor`, `fontFamily`/`monoFontFamily`, `baseFontSize`, `radius`) plus an arbitrary `tokens` escape hatch onto `--mp-*` CSS custom properties; scopes them to its own (`display: contents`) wrapper by default or applies them globally to `<html>` when `global`, supports `v-model` on the config, optional `localStorage` persistence, and shares the store with descendants via `useThemeComposer` (exposed as slot props: `config`/`cssVariables`/`styleString`/`setConfig`/`setAttribute`/`setToken`/`removeToken`/`reset`)
+
 ### Composables
+
+#### `useTheme()`
+
+Access the shared theme store (provided by `BaseThemeProvider`, or a standalone singleton when no provider is present).
+
+```ts
+import { useTheme } from '@mission-platform/components'
+
+const { theme, resolvedTheme, setTheme, toggleTheme, cycleTheme } = useTheme()
+```
+
+#### `useThemeComposer()`
+
+Configure attributes of the theme at runtime. Returns the store shared by the nearest `BaseThemeComposer` (or a standalone singleton when no provider is present). Friendly attributes and raw `tokens` resolve to `--mp-*` CSS custom properties (`cssVariables`/`styleString`). Helpers `configToCssVariables`/`cssVariablesToString`, the `ATTRIBUTE_TO_CSS_VAR` map, and the `createThemeComposer` factory are also exported.
+
+```ts
+import { useThemeComposer } from '@mission-platform/components'
+
+const { config, cssVariables, setAttribute, setToken, reset } = useThemeComposer()
+setAttribute('primaryColor', '#0ea5e9')
+setToken('radius-md', '1rem') // raw --mp-* override (prefix optional)
+```
+
+#### `useToast()`
+
+Imperatively show/dismiss toast notifications (render a single `BaseToastContainer` to display them).
+
+```ts
+import { useToast } from '@mission-platform/components'
+
+const toast = useToast()
+toast.success('Saved!')
+toast.error('Something went wrong', { duration: 0 }) // sticky until dismissed
+```
 
 #### `useId()`
 

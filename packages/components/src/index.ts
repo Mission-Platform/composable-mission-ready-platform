@@ -235,6 +235,12 @@ export type { ApplicationStatusLevel } from './components/base-application-layou
 
 export { default as BaseVerticalLayout } from './components/base-vertical-layout';
 
+export { default as BaseGrid, GRID_GAP_SPACING } from './components/base-grid';
+export type { GridCell, GridGap, GridAlignment } from './components/base-grid';
+
+export { default as BaseStack, STACK_JUSTIFY_CONTENT, STACK_ALIGN_ITEMS } from './components/base-stack';
+export type { StackDirection, StackJustify, StackAlign } from './components/base-stack';
+
 export { default as BaseAvatar } from './components/base-avatar';
 export type { AvatarSize, AvatarShape, AvatarStatus } from './components/base-avatar';
 
@@ -344,13 +350,89 @@ export type { CodeBlockLanguage } from './components/base-code-block';
 //   import { BaseMonacoEditor } from '@mission-platform/components/monaco'
 //   import type { MonacoEditorLanguage } from '@mission-platform/components/monaco'
 
+// ─── Content & media components ──────────────────────────────────────────────
+
+export { default as BaseSeparator } from './components/base-separator';
+export type { SeparatorOrientation, SeparatorVariant, SeparatorSpacing } from './components/base-separator';
+
+export { default as BaseQuote } from './components/base-quote';
+export type { QuoteVariant, QuoteSize } from './components/base-quote';
+
+export { default as BaseButtonGroup } from './components/base-button-group';
+export type { ButtonGroupOrientation, ButtonGroupGap } from './components/base-button-group';
+
+export { default as BaseHero } from './components/base-hero';
+export type { HeroAlign, HeroSize } from './components/base-hero';
+
+export { default as BaseAlertBanner } from './components/base-alert-banner';
+export type { AlertBannerVariant } from './components/base-alert-banner';
+
+export { default as BaseResponsiveImage } from './components/base-responsive-image';
+export type { ResponsiveImageSource, ResponsiveImageFit } from './components/base-responsive-image';
+
+export { default as BaseResponsiveVideo } from './components/base-responsive-video';
+export type { ResponsiveVideoSource, ResponsiveVideoFit } from './components/base-responsive-video';
+
+export { default as BaseBackgroundVideo } from './components/base-background-video';
+export type { BackgroundVideoSource, BackgroundVideoFit } from './components/base-background-video';
+
+// ─── Navigation & input components ───────────────────────────────────────────
+
+export { default as BasePagination } from './components/base-pagination';
+export type { PaginationSize, PaginationItem } from './components/base-pagination';
+
+export { default as BaseRating } from './components/base-rating';
+export type { RatingSize } from './components/base-rating';
+
+export { default as BaseSegmentControl } from './components/base-segment-control';
+export type { SegmentControlSize, SegmentOption } from './components/base-segment-control';
+
+export { default as BaseSlider } from './components/base-slider';
+export type { SliderSize } from './components/base-slider';
+
+// ─── Toast notifications ─────────────────────────────────────────────────────
+
+export { default as BaseToast, BaseToastContainer } from './components/base-toast';
+
 // ─── Theme ────────────────────────────────────────────────────────────────────
 
 export { default as BaseThemeToggle } from './components/base-theme-toggle';
 export type { Theme } from './components/base-theme-toggle';
+
+export { default as BaseThemeProvider } from './components/base-theme-provider';
+
+export { default as BaseThemeComposer } from './components/base-theme-composer';
 
 // ─── Composables ──────────────────────────────────────────────────────────────
 
 export { useRouterClose } from './composables/use-router-close';
 export { useZIndex, ZLayer } from './composables/use-z-index';
 export type { ZLayerName } from './composables/use-z-index';
+
+export { useTheme, createThemeStore, resetThemeStore, ThemeStoreKey } from './composables/use-theme';
+export type { ResolvedTheme, UseThemeOptions, ThemeStore } from './composables/use-theme';
+
+export {
+  useThemeComposer,
+  createThemeComposer,
+  resetThemeComposer,
+  configToCssVariables,
+  cssVariablesToString,
+  ATTRIBUTE_TO_CSS_VAR,
+  ThemeComposerKey,
+} from './composables/use-theme-composer';
+export type {
+  ThemeComposerConfig,
+  ThemeComposerAttribute,
+  ThemeComposerStore,
+  UseThemeComposerOptions,
+} from './composables/use-theme-composer';
+
+export { useToast } from './composables/use-toast';
+export type {
+  ToastVariant,
+  ToastPosition,
+  ToastOptions,
+  ToastRecord,
+  UseToastReturn,
+} from './composables/use-toast';
