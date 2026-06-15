@@ -63,8 +63,8 @@ en:
     loading: Searching…
   BaseSelect:
     required: required
-  BaseSidebar:
-    close: Close sidebar
+  BaseDrawer:
+    close: Close drawer
   BaseSpinner:
     loading: Loading…
   BaseTextarea:

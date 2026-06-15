@@ -11,7 +11,8 @@
   import { useId } from '../../composables/use-id';
   import BaseTypography from '../base-typography/base-typography.vue';
 
-  import type { Autocomplete } from '../base-schema-form/types';
+  import type { Autocomplete } from '../base-schema-form';
+  import type { AriaAttributes } from 'vue';
 
   export type InputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   export type InputType = 'text' | 'email' | 'password' | 'number' | 'search' | 'tel' | 'url';
@@ -19,33 +20,35 @@
   export type { Autocomplete } from '../base-schema-form/types';
 
   const props = withDefaults(
-    defineProps<{
-      modelValue?: string | number;
-      type?: InputType;
-      size?: InputSize;
-      placeholder?: string;
-      label?: string;
-      labelHidden?: boolean;
-      hint?: string;
-      error?: string;
-      disabled?: boolean;
-      required?: boolean;
-      /** Native `autocomplete` token (e.g. `'email'`, `'name'`, `'off'`). */
-      autocomplete?: Autocomplete;
-      /** Native `autocapitalize` hint for on-screen keyboards. */
-      autocapitalize?: InputAutocapitalize;
-      /** Allow multiple comma-separated entries (`type="email"` only). */
-      multiple?: boolean;
-      /** Step increment (`type="number"`). */
-      step?: number | string;
-      /** Inclusive minimum (`type="number"`). */
-      min?: number | string;
-      /** Inclusive maximum (`type="number"`). */
-      max?: number | string;
-      /** Autocomplete suggestions rendered as a native `<datalist>`. */
-      list?: Array<string | number>;
-      id?: string;
-    }>(),
+    defineProps<
+      {
+        modelValue?: string | number;
+        type?: InputType;
+        size?: InputSize;
+        placeholder?: string;
+        label?: string;
+        labelHidden?: boolean;
+        hint?: string;
+        error?: string;
+        disabled?: boolean;
+        required?: boolean;
+        /** Native `autocomplete` token (e.g. `'email'`, `'name'`, `'off'`). */
+        autocomplete?: Autocomplete;
+        /** Native `autocapitalize` hint for on-screen keyboards. */
+        autocapitalize?: InputAutocapitalize;
+        /** Allow multiple comma-separated entries (`type="email"` only). */
+        multiple?: boolean;
+        /** Step increment (`type="number"`). */
+        step?: number | string;
+        /** Inclusive minimum (`type="number"`). */
+        min?: number | string;
+        /** Inclusive maximum (`type="number"`). */
+        max?: number | string;
+        /** Autocomplete suggestions rendered as a native `<datalist>`. */
+        list?: Array<string | number>;
+        id?: string;
+      } & /* @vue-ignore */ AriaAttributes
+    >(),
     {
       modelValue: '',
       type: 'text',

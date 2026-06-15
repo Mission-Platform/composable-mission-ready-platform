@@ -14,7 +14,7 @@
   import BaseMenuItemLink from '../base-menu/base-menu-item-link.vue';
   import BaseMenuSubmenu from '../base-menu/base-menu-submenu.vue';
 
-  import type { MenuItem } from '../base-menu/base-menu.vue';
+  import type { MenuItem } from '../base-menu';
 
   export type { MenuItem } from '../base-menu/base-menu.vue';
 

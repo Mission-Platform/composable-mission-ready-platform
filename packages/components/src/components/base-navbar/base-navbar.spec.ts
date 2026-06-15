@@ -54,7 +54,7 @@ describe('BaseNavbar', () => {
     });
     await wrapper.find('.base-navbar__hamburger').trigger('click');
     expect(wrapper.find('.base-navbar__hamburger').attributes('aria-expanded')).toBe('true');
-    expect(document.querySelector('.base-sidebar')).toBeTruthy();
+    expect(document.querySelector('.base-drawer')).toBeTruthy();
     wrapper.unmount();
   });
 
@@ -66,7 +66,7 @@ describe('BaseNavbar', () => {
     await wrapper.find('.base-navbar__hamburger').trigger('click');
     await wrapper.find('.base-navbar__hamburger').trigger('click');
     expect(wrapper.find('.base-navbar__hamburger').attributes('aria-expanded')).toBe('false');
-    expect(document.querySelector('.base-sidebar')).toBeNull();
+    expect(document.querySelector('.base-drawer')).toBeNull();
     wrapper.unmount();
   });
 
@@ -76,7 +76,7 @@ describe('BaseNavbar', () => {
       attachTo: document.body,
     });
     await wrapper.find('.base-navbar__hamburger').trigger('click');
-    expect(document.querySelector('.base-sidebar')?.getAttribute('aria-label')).toBe('Mobile Menu');
+    expect(document.querySelector('.base-drawer')?.getAttribute('aria-label')).toBe('Mobile Menu');
     wrapper.unmount();
   });
 
@@ -86,7 +86,7 @@ describe('BaseNavbar', () => {
       attachTo: document.body,
     });
     await wrapper.find('.base-navbar__hamburger').trigger('click');
-    expect(document.querySelector('.base-sidebar')?.getAttribute('aria-label')).toBe('MyApp');
+    expect(document.querySelector('.base-drawer')?.getAttribute('aria-label')).toBe('MyApp');
     wrapper.unmount();
   });
 });

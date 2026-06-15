@@ -35,6 +35,18 @@ function dispatchPointer(
   element.dispatchEvent(event);
 }
 
+function stubReducedMotion(matches: boolean): void {
+  vi.stubGlobal(
+    'matchMedia',
+    vi.fn(() => ({
+      matches,
+      media: '(prefers-reduced-motion: reduce)',
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    })),
+  );
+}
+
 describe('BaseCarousel', () => {
   it('renders a region with the carousel role description', () => {
     const wrapper = mountWithSlides(3);
@@ -208,6 +220,47 @@ describe('BaseCarousel', () => {
       vi.advanceTimersByTime(1000);
       await nextTick();
       expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([1]);
+    });
+
+    it('renders an accessible pause control while autoplaying (WCAG 2.2.2)', () => {
+      const wrapper = mountWithSlides(3, { autoplay: true, pauseOnHover: false });
+      const toggle = wrapper.find('.base-carousel__autoplay');
+      expect(toggle.exists()).toBe(true);
+      expect(toggle.attributes('aria-label')).toBe('Pause automatic slide rotation');
+      expect(toggle.attributes('aria-pressed')).toBe('false');
+    });
+
+    it('does not render the pause control when autoplay is off', () => {
+      const wrapper = mountWithSlides(3, { autoplay: false });
+      expect(wrapper.find('.base-carousel__autoplay').exists()).toBe(false);
+    });
+
+    it('stops auto-rotation when the user activates the pause control', async () => {
+      const wrapper = mountWithSlides(3, { autoplay: true, interval: 1000, pauseOnHover: false });
+      const toggle = wrapper.find('.base-carousel__autoplay');
+      await toggle.trigger('click');
+      expect(toggle.attributes('aria-label')).toBe('Start automatic slide rotation');
+      expect(toggle.attributes('aria-pressed')).toBe('true');
+      vi.advanceTimersByTime(3000);
+      await nextTick();
+      expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+    });
+  });
+
+  describe('reduced motion', () => {
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it('does not auto-rotate or show the pause control when reduced motion is preferred', async () => {
+      vi.useFakeTimers();
+      stubReducedMotion(true);
+      const wrapper = mountWithSlides(3, { autoplay: true, interval: 1000, pauseOnHover: false });
+      vi.advanceTimersByTime(3000);
+      await nextTick();
+      expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+      expect(wrapper.find('.base-carousel__autoplay').exists()).toBe(false);
+      vi.useRealTimers();
     });
   });
 });

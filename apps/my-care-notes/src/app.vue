@@ -3,11 +3,11 @@
     BaseApplicationLayout,
     BaseButton,
     BaseDialog,
+    BaseDrawer,
     BaseInput,
     BaseMenubar,
     BaseNavbar,
     BaseNavbarItem,
-    BaseSidebar,
     BaseThemeToggle,
     BaseVirtualTable,
     BaseVirtualTabs,
@@ -265,9 +265,9 @@
 
     <template #content>
       <!-- Snippets panel -->
-      <BaseSidebar
+      <BaseDrawer
         :open="snippetsPanelVisible"
-        side="left"
+        placement="start"
         size="xl"
         :title="t('sidebar.title')"
         @update:open="onSnippetsPanelUpdate"
@@ -310,7 +310,7 @@
             </template>
           </template>
         </BaseVirtualTable>
-      </BaseSidebar>
+      </BaseDrawer>
 
       <BaseVirtualTabs
         :model-value="activeTabId"

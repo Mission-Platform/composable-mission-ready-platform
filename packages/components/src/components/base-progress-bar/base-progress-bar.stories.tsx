@@ -3,7 +3,7 @@ import BaseProgressBar from './base-progress-bar.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Feedback/ProgressBar',
+  title: 'Components/Feedback/BaseProgressBar',
   component: BaseProgressBar,
   tags: ['autodocs'],
   parameters: {

@@ -31,7 +31,7 @@ const STATUS_COLORS: Record<Person['status'], string> = {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const meta: Meta<any> = {
-  title: 'Components/Data/VirtualList',
+  title: 'Components/Data/BaseVirtualList',
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component: BaseVirtualList as any,
   tags: ['autodocs'],

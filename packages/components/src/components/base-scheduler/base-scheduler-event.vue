@@ -172,7 +172,8 @@
 </script>
 
 <template>
-  <div
+  <button
+    :aria-label="title"
     :class="[
       'base-scheduler-event',
       {
@@ -182,15 +183,12 @@
       },
     ]"
     :style="style"
-    role="button"
-    :aria-label="title"
-    tabindex="0"
+    type="button"
+    @click="emit('click', event)"
     @pointerdown="onPointerDown"
     @pointerup="onPointerUp"
-    @click="emit('click', event)"
-    @keydown.enter="emit('click', event)"
   >
-    <div class="base-scheduler-event__body">
+    <span class="base-scheduler-event__body">
       <span class="base-scheduler-event__title">{{ title }}</span>
       <span
         v-if="event.location"
@@ -199,16 +197,16 @@
         {{ event.location }}
       </span>
       <span class="base-scheduler-event__duration">{{ duration }}</span>
-    </div>
+    </span>
 
     <!-- Resize handle -->
-    <div
+    <span
       v-if="resizable"
-      class="base-scheduler-event__resize-handle"
       aria-hidden="true"
+      class="base-scheduler-event__resize-handle"
       @pointerdown="onResizePointerDown"
     />
-  </div>
+  </button>
 </template>
 
 <style lang="scss" scoped>
@@ -216,12 +214,16 @@
 
   .base-scheduler-event {
     position: absolute;
+    border: 0;
     border-radius: var(--mp-radius-sm);
     overflow: hidden;
     color: inherit; /* set dynamically via textColor computed */
     display: flex;
     flex-direction: column;
     padding: var(--mp-spacing-1) var(--mp-spacing-2);
+    margin: 0;
+    font: inherit;
+    text-align: left;
     user-select: none;
     z-index: 1;
     box-shadow: var(--mp-shadow-sm);

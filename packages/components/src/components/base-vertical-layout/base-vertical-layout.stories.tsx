@@ -5,7 +5,7 @@ import BaseVerticalLayout from './base-vertical-layout.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Layout/VerticalLayout',
+  title: 'Components/Layout/BaseVerticalLayout',
   component: BaseVerticalLayout,
   tags: ['autodocs'],
   parameters: {

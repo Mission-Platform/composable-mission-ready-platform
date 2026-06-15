@@ -15,7 +15,7 @@
 // from Ajv's own published types (`JSONType`, `SchemaObject`) rather than being
 // re-declared, so they stay in lock-step with the validator.
 
-import type { LocationFormat } from '../base-location-input/location';
+import type { LocationFormat } from '../base-location-input';
 import type { JSONType } from 'ajv';
 
 /** Re-export of Ajv's compiled JSON Schema object type. */

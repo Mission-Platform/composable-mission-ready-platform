@@ -46,16 +46,12 @@
 </script>
 
 <template>
-  <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
-  <div
+  <button
     ref="element"
-    :aria-disabled="disabled ? 'true' : undefined"
     :class="['form-builder-palette-item', { 'form-builder-palette-item--dragging': isDragging }]"
-    role="button"
-    tabindex="0"
-    @click="!disabled && emit('add', descriptor.type)"
-    @keydown.enter.prevent="!disabled && emit('add', descriptor.type)"
-    @keydown.space.prevent="!disabled && emit('add', descriptor.type)"
+    :disabled="disabled"
+    type="button"
+    @click="emit('add', descriptor.type)"
   >
     <span class="form-builder-palette-item__body">
       <BaseTypography
@@ -75,11 +71,10 @@
       </BaseTypography>
     </span>
     <IconPlus
-      aria-hidden="true"
       class="form-builder-palette-item__icon"
       size="sm"
     />
-  </div>
+  </button>
 </template>
 
 <style lang="scss" scoped>
@@ -88,7 +83,11 @@
     gap: var(--mp-spacing-2);
     align-items: center;
     justify-content: space-between;
+    width: 100%;
     padding: var(--mp-spacing-3);
+    font: inherit;
+    color: inherit;
+    text-align: left;
     cursor: grab;
     background-color: var(--mp-color-bg-surface);
     border: 1px solid var(--mp-color-border-default);
@@ -114,7 +113,7 @@
       opacity: 0.5;
     }
 
-    &[aria-disabled='true'] {
+    &:disabled {
       cursor: not-allowed;
       opacity: 0.5;
     }

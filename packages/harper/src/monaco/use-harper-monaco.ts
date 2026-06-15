@@ -1,5 +1,5 @@
 import * as monaco from 'monaco-editor';
-import { onBeforeUnmount, type MaybeRefOrGetter, toValue, watch } from 'vue';
+import { type MaybeRefOrGetter, onBeforeUnmount, toValue, watch } from 'vue';
 
 import type { HarperIssue, HarperWorkerResponse } from '../types';
 

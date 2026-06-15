@@ -95,7 +95,7 @@ def start_mission(mission: Mission) -> None:
     print(f'Mission "{mission.name}" is now active.')`;
 
 const meta = {
-  title: 'Components/Code/MonacoEditor',
+  title: 'Components/Code/BaseMonacoEditor',
   component: BaseMonacoEditor,
   tags: ['autodocs'],
   parameters: {

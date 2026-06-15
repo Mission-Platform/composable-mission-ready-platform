@@ -11,8 +11,10 @@
     BaseCardHeader,
     BaseCarousel,
     BaseInView,
+    BaseMasonry,
     BaseNavbar,
     BaseNavbarItem,
+    BaseQrCode,
     BaseTag,
     BaseThemeToggle,
     BaseTypography,
@@ -419,7 +421,11 @@
           >
             {{ t('packages.lead') }}
           </BaseTypography>
-          <div class="home__packages">
+          <BaseMasonry
+            class="home__packages"
+            min-column-width="18rem"
+            gap="md"
+          >
             <BaseCard
               v-for="pkg in packages"
               :key="pkg.name"
@@ -441,7 +447,7 @@
                 </BaseTypography>
               </BaseCardBody>
             </BaseCard>
-          </div>
+          </BaseMasonry>
         </BaseInView>
       </section>
 
@@ -493,16 +499,24 @@
                   >
                     {{ project.description }}
                   </BaseTypography>
-                  <a
-                    :href="project.href"
-                    class="home__project-link"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <BaseButton variant="primary">
-                      {{ project.cta }}
-                    </BaseButton>
-                  </a>
+                  <div class="home__project-cta">
+                    <a
+                      :href="project.href"
+                      class="home__project-link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <BaseButton variant="primary">
+                        {{ project.cta }}
+                      </BaseButton>
+                    </a>
+                    <BaseQrCode
+                      :aria-label="project.cta + ': ' + project.name"
+                      :size="96"
+                      :value="project.href"
+                      class="home__project-qr"
+                    />
+                  </div>
                 </BaseCardBody>
               </BaseCard>
             </BaseCarousel>
@@ -694,10 +708,20 @@
     color: inherit;
   }
 
-  .home__packages {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  .home__project-cta {
+    display: flex;
+    align-items: center;
     gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .home__project-qr {
+    border-radius: var(--mp-radius-md, 8px);
+  }
+
+  .home__packages {
+    /* Column layout is handled by BaseMasonry's inline column-* styles. */
+    width: 100%;
   }
 
   .home__package-row {

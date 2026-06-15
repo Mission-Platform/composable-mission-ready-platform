@@ -40,6 +40,14 @@ describe('BaseSelect', () => {
     expect(wrapper.find('button.base-select__field').text()).toBe('Select...');
   });
 
+  it('renders a non-breaking space in the trigger when empty so the height stays constant', () => {
+    const wrapper = mount(BaseSelect, { props: { options: OPTIONS } });
+    // With no selection and no placeholder the field must still contain a line
+    // box (a non-breaking space) so it keeps the same height as when filled.
+    // `.text()` trims whitespace, so assert on the raw textContent instead.
+    expect(wrapper.find('button.base-select__field').element.textContent).toContain('\u00A0');
+  });
+
   it('renders label when label prop is provided', () => {
     const wrapper = mount(BaseSelect, { props: { label: 'Fruit', id: 'fruit' } });
     expect(wrapper.find('label').text()).toContain('Fruit');
@@ -97,5 +105,43 @@ describe('BaseSelect', () => {
   it('renders label visible by default when labelHidden is false', () => {
     const wrapper = mount(BaseSelect, { props: { label: 'Visible Label' } });
     expect(wrapper.find('.base-select__label--hidden').exists()).toBe(false);
+  });
+
+  it('renders a hidden native select backing the combobox', () => {
+    const wrapper = mount(BaseSelect, { props: { options: OPTIONS } });
+    const native = wrapper.find('select.base-select__native');
+    expect(native.exists()).toBe(true);
+    // A placeholder option plus one option per provided option.
+    expect(native.findAll('option')).toHaveLength(OPTIONS.length + 1);
+    expect(native.attributes('aria-hidden')).toBe('true');
+    expect(native.attributes('tabindex')).toBe('-1');
+  });
+
+  it('forwards name and autocomplete to the native select', () => {
+    const wrapper = mount(BaseSelect, {
+      props: { options: OPTIONS, name: 'fruit', autocomplete: 'off' },
+    });
+    const native = wrapper.find('select.base-select__native');
+    expect(native.attributes('name')).toBe('fruit');
+    expect(native.attributes('autocomplete')).toBe('off');
+  });
+
+  it('marks the native option matching modelValue as selected', () => {
+    const wrapper = mount(BaseSelect, { props: { options: OPTIONS, modelValue: 'banana' } });
+    const native = wrapper.find('select.base-select__native');
+    expect((native.element as HTMLSelectElement).value).toBe('banana');
+  });
+
+  it('emits update:modelValue when the native select changes (autofill)', async () => {
+    const wrapper = mount(BaseSelect, { props: { options: OPTIONS, modelValue: '' } });
+    const native = wrapper.find('select.base-select__native');
+    await native.setValue('banana');
+    expect(wrapper.emitted('update:modelValue')![0]).toEqual(['banana']);
+    expect(wrapper.emitted('change')![0]).toEqual(['banana']);
+  });
+
+  it('disables the native select when disabled', () => {
+    const wrapper = mount(BaseSelect, { props: { options: OPTIONS, disabled: true } });
+    expect(wrapper.find('select.base-select__native').attributes('disabled')).toBeDefined();
   });
 });

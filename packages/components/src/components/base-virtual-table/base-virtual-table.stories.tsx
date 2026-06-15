@@ -58,7 +58,7 @@ const COLUMNS: VirtualTableColumn<Mission>[] = [
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const meta: Meta<any> = {
-  title: 'Components/Data/VirtualTable',
+  title: 'Components/Data/BaseVirtualTable',
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component: BaseVirtualTable as any,
   tags: ['autodocs'],

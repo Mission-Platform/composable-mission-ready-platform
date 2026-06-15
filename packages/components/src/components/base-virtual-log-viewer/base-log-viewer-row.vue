@@ -42,15 +42,13 @@
 </script>
 
 <template>
-  <div
+  <button
     :aria-label="`Log entry ${index + 1}: ${entry.level} — ${entry.message}`"
     :class="`log-viewer__row--${entry.level}`"
     :style="{ height: `${itemHeight}px`, boxSizing: 'border-box' }"
     class="log-viewer__row"
-    role="button"
-    tabindex="0"
+    type="button"
     @click="emit('select', entry)"
-    @keydown.enter.prevent="emit('select', entry)"
   >
     <BaseTypography
       as="span"
@@ -78,7 +76,6 @@
     >
       <component
         :is="LEVEL_ICONS[entry.level]"
-        :aria-label="entry.level"
         size="xs"
       />
       <BaseTypography
@@ -99,5 +96,5 @@
     >
       {{ entry.message }}
     </BaseTypography>
-  </div>
+  </button>
 </template>

@@ -51,7 +51,13 @@
   JSON-LD graph so search engines can recognise locale variants as translations
   of the same logical work.
 
-- c0c00d8: add new `@mission-platform/seo` package that unifies standard page metadata, Open Graph + Twitter Card metadata, and JSON-LD structured data (Schema.org `WebSite`, `WebPage`, `Organization`, `LocalBusiness`, `Person`, `BreadcrumbList`, `Article`/`BlogPosting`/`NewsArticle`, `Product`, `FAQPage`, `Event`, `VideoObject`, `ImageObject`, `SoftwareApplication`, `Recipe`, `Review`) behind a single Vue 3 `useSeo` composable and renderless `<Seo>` component, with SSR/SSG-safe head injection via `@unhead/vue`. Replaces and removes the previous `@mission-platform/page-meta` and `@mission-platform/open-graph` packages — migrate by passing their inputs as `page` / `openGraph` blocks to `useSeo`.
+- c0c00d8: add new `@mission-platform/seo` package that unifies standard page metadata, Open Graph + Twitter Card
+  metadata, and JSON-LD structured data (Schema.org `WebSite`, `WebPage`, `Organization`, `LocalBusiness`, `Person`,
+  `BreadcrumbList`, `Article`/`BlogPosting`/`NewsArticle`, `Product`, `FAQPage`, `Event`, `VideoObject`, `ImageObject`,
+  `SoftwareApplication`, `Recipe`, `Review`) behind a single Vue 3 `useSeo` composable and renderless `<Seo>` component,
+  with SSR/SSG-safe head injection via `@unhead/vue`. Replaces and removes the previous `@mission-platform/page-meta`
+  and `@mission-platform/open-graph` packages — migrate by passing their inputs as `page` / `openGraph` blocks to
+  `useSeo`.
 - c0c00d8: feat(seo): add `buildRobotsTxt`, `buildSitemapXml`, and `buildSitemapIndex` generators
 
   The package now ships deterministic, SSR/SSG-safe builders for the two
@@ -73,5 +79,7 @@
 ### Patch Changes
 
 - 9edf34d: rename local `doc` variable to `document` in `stripSsrJsonLdOnce`
-- b5b4c0a: rename internal `ref` helper to `reference` in `build-json-ld` to avoid shadowing Vue's `ref` and satisfy lint; reformat README example and spec
-- c62cd90: fix(seo): strip SSR-prerendered JSON-LD scripts on client hydration so unhead doesn't append duplicate `Organization` / `WebSite` / `WebPage` blocks on app load
+- b5b4c0a: rename internal `ref` helper to `reference` in `build-json-ld` to avoid shadowing Vue's `ref` and satisfy
+  lint; reformat README example and spec
+- c62cd90: fix(seo): strip SSR-prerendered JSON-LD scripts on client hydration so unhead doesn't append duplicate
+  `Organization` / `WebSite` / `WebPage` blocks on app load

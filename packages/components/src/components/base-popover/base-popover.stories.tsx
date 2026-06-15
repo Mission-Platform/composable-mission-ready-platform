@@ -8,7 +8,7 @@ import BasePopover from './base-popover.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Overlays/Popover',
+  title: 'Components/Overlays/BasePopover',
   component: BasePopover,
   tags: ['autodocs'],
   parameters: {

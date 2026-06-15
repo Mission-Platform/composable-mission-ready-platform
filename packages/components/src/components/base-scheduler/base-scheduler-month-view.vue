@@ -200,9 +200,9 @@
 
 <template>
   <div
+    :aria-label="monthLabel"
     class="base-scheduler-month-view"
     role="grid"
-    :aria-label="monthLabel"
   >
     <!-- Weekday headers -->
     <div
@@ -229,6 +229,7 @@
       <div
         v-for="cell in week"
         :key="isoDate(cell.date)"
+        :aria-label="cell.date.toLocaleDateString()"
         :class="[
           'base-scheduler-month-view__cell',
           {
@@ -237,7 +238,6 @@
           },
         ]"
         role="gridcell"
-        :aria-label="cell.date.toLocaleDateString()"
         tabindex="0"
         @click="emit('day-click', cell.date)"
         @keydown.enter="emit('day-click', cell.date)"
@@ -252,14 +252,14 @@
           <BaseButton
             v-for="ev in cell.events.slice(0, MAX_VISIBLE)"
             :key="ev.uid"
-            variant="tertiary"
-            size="sm"
-            class="base-scheduler-month-view__event-pill"
             :style="{
               backgroundColor: pillBgColor(ev.color, cell.isCurrentMonth) ?? 'var(--mp-color-primary-default)',
               color: accessibleTextColor(pillBgColor(ev.color, cell.isCurrentMonth)),
             }"
             :title="`${ev.summary ?? '(no title)'} · ${formatDuration(ev)}`"
+            class="base-scheduler-month-view__event-pill"
+            size="sm"
+            variant="tertiary"
             @click.stop="emit('event-click', ev)"
           >
             {{ ev.summary ?? '(no title)' }}
@@ -268,9 +268,9 @@
           <!-- Overflow -->
           <BaseButton
             v-if="cell.events.length > MAX_VISIBLE"
-            variant="tertiary"
-            size="sm"
             class="base-scheduler-month-view__overflow"
+            size="sm"
+            variant="tertiary"
             @click.stop="emit('drill-down', cell.date)"
           >
             +{{ cell.events.length - MAX_VISIBLE }} more

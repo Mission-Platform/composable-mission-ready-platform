@@ -1,6 +1,6 @@
 import BaseTable from './base-table.vue';
 
-import type { TableColumn } from './base-table.vue';
+import type { TableColumn } from './types.ts';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 type Row = Record<string, unknown> & {
@@ -28,7 +28,7 @@ const rows: Row[] = [
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const meta: Meta<any> = {
-  title: 'Components/Display/Table',
+  title: 'Components/Display/BaseTable',
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component: BaseTable as any,
   tags: ['autodocs'],

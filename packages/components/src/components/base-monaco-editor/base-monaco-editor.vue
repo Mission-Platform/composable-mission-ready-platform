@@ -333,10 +333,10 @@
 <template>
   <div
     ref="containerEl"
-    role="region"
     :aria-label="`${language} editor`"
     :style="{ height }"
     class="base-monaco-editor"
+    role="region"
   />
 </template>
 

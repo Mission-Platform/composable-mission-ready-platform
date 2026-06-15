@@ -13,7 +13,7 @@ const tabs: TabItem[] = [
 ];
 
 const meta = {
-  title: 'Components/Navigation/VirtualTabs',
+  title: 'Components/Navigation/BaseVirtualTabs',
   component: BaseVirtualTabs,
   tags: ['autodocs'],
   parameters: {

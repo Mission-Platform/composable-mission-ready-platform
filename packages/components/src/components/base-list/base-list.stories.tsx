@@ -11,7 +11,7 @@ const descItems = [
 ];
 
 const meta = {
-  title: 'Components/Display/List',
+  title: 'Components/Display/BaseList',
   component: BaseList,
   tags: ['autodocs'],
   parameters: {

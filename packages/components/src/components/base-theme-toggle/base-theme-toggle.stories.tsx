@@ -3,7 +3,7 @@ import BaseThemeToggle from './base-theme-toggle.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Display/ThemeToggle',
+  title: 'Components/Display/BaseThemeToggle',
   component: BaseThemeToggle,
   tags: ['autodocs'],
   parameters: {

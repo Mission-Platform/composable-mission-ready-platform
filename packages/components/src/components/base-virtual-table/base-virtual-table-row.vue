@@ -56,9 +56,9 @@
     @click="emit('rowClick', row, index)"
     @focusin="onMouseover($event.currentTarget as HTMLElement)"
     @focusout="onMouseleave($event.currentTarget as HTMLElement)"
-    @keydown.enter="emit('rowClick', row, index)"
     @mouseleave="onMouseleave($event.currentTarget as HTMLElement)"
     @mouseover="onMouseover($event.currentTarget as HTMLElement)"
+    @keydown.enter="emit('rowClick', row, index)"
   >
     <div
       v-for="col in columns"

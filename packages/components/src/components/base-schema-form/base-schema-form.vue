@@ -21,7 +21,7 @@
   import { useSchemaForm } from './use-schema-form';
 
   import type { FormValues, SchemaFormDefinition, SchemaFormValidationMode } from './types';
-  import type { WizardStep } from '../base-form-wizard/base-form-wizard.vue';
+  import type { WizardStep } from '../base-form-wizard';
 
   export type { FormJsonSchema, SchemaFormDefinition, SchemaFormValidationMode, FormValues } from './types';
   export type {

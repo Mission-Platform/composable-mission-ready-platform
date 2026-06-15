@@ -24,7 +24,7 @@ describe('BaseVerticalLayout', () => {
       slots,
       attachTo: document.body,
     });
-    const asides = wrapper.findAll('aside.base-sidebar--inline');
+    const asides = wrapper.findAll('aside.base-drawer--inline');
     expect(asides).toHaveLength(2);
     // The grid allocates a track for each inline side column.
     const style = wrapper.find('.vertical-layout').attributes('style') ?? '';
@@ -32,7 +32,7 @@ describe('BaseVerticalLayout', () => {
     wrapper.unmount();
   });
 
-  it('derives the inline grid track widths from the sidebar size scale', () => {
+  it('derives the inline grid track widths from the drawer size scale', () => {
     setViewportWidth(1280); // ≥ md
     const wrapper = mountWithI18n(BaseVerticalLayout, {
       props: { breakpoint: 'md', startTitle: 'Start', endTitle: 'End', startSize: 'lg', endSize: 'sm' },
@@ -40,12 +40,12 @@ describe('BaseVerticalLayout', () => {
       attachTo: document.body,
     });
     const style = wrapper.find('.vertical-layout').attributes('style') ?? '';
-    // lg → 34.286rem, sm → 20rem (from SIDEBAR_SIZE_REM).
+    // lg → 34.286rem, sm → 20rem (from DRAWER_SIZE_REM).
     expect(style).toContain('34.286rem');
     expect(style).toContain('20rem');
-    // The size is forwarded to the backing sidebars as a size modifier class.
-    expect(wrapper.find('aside.base-sidebar--lg').exists()).toBe(true);
-    expect(wrapper.find('aside.base-sidebar--sm').exists()).toBe(true);
+    // The size is forwarded to the backing drawers as a size modifier class.
+    expect(wrapper.find('aside.base-drawer--lg').exists()).toBe(true);
+    expect(wrapper.find('aside.base-drawer--sm').exists()).toBe(true);
     wrapper.unmount();
   });
 
@@ -57,7 +57,7 @@ describe('BaseVerticalLayout', () => {
       attachTo: document.body,
     });
     // Closed overlay drawers render nothing; only the content column remains.
-    expect(wrapper.find('aside.base-sidebar').exists()).toBe(false);
+    expect(wrapper.find('aside.base-drawer').exists()).toBe(false);
     expect(wrapper.text()).toContain('content');
     wrapper.unmount();
   });
@@ -86,8 +86,8 @@ describe('BaseVerticalLayout', () => {
       attachTo: document.body,
     });
     // Each draggable inline column exposes a resize handle on its inner edge.
-    expect(wrapper.find('.base-sidebar__resize-handle--left').exists()).toBe(true);
-    expect(wrapper.find('.base-sidebar__resize-handle--right').exists()).toBe(true);
+    expect(wrapper.find('.base-drawer__resize-handle--start').exists()).toBe(true);
+    expect(wrapper.find('.base-drawer__resize-handle--end').exists()).toBe(true);
     wrapper.unmount();
   });
 
@@ -98,8 +98,8 @@ describe('BaseVerticalLayout', () => {
       slots: { start: () => h('p', 'start'), default: () => h('p', 'content') },
       attachTo: document.body,
     });
-    // Only the start column is present → a single inline sidebar.
-    expect(wrapper.findAll('aside.base-sidebar--inline')).toHaveLength(1);
+    // Only the start column is present → a single inline drawer.
+    expect(wrapper.findAll('aside.base-drawer--inline')).toHaveLength(1);
     wrapper.unmount();
   });
 });

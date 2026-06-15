@@ -4,7 +4,7 @@ import { mountWithI18n } from '../../test-utils/mount-with-i18n';
 
 import BaseTable from './base-table.vue';
 
-import type { TableColumn } from './base-table.vue';
+import type { TableColumn } from './types.ts';
 
 interface Row {
   name: string;

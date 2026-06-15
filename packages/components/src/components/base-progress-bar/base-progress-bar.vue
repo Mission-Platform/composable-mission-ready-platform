@@ -8,6 +8,7 @@
    */
   import { computed } from 'vue';
 
+  import BaseStack from '../base-stack/base-stack.vue';
   import BaseTypography from '../base-typography/base-typography.vue';
 
   export type ProgressVariant =
@@ -49,7 +50,10 @@
 </script>
 
 <template>
-  <div :class="['base-progress-bar', `base-progress-bar--${size}`]">
+  <BaseStack
+    :class="['base-progress-bar', `base-progress-bar--${size}`]"
+    gap="2xs"
+  >
     <div
       v-if="label || showLabel"
       class="base-progress-bar__header"
@@ -81,15 +85,11 @@
       :value="indeterminate ? undefined : value"
       class="base-progress-bar__track"
     />
-  </div>
+  </BaseStack>
 </template>
 
 <style lang="scss" scoped>
   .base-progress-bar {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-1);
-
     &__header {
       display: flex;
       justify-content: space-between;

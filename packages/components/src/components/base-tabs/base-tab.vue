@@ -45,9 +45,9 @@
         'base-tabs__tab--closable': closable,
       },
     ]"
-    :data-tab-id="tab.id"
     :tabindex="tab.disabled ? -1 : active ? 0 : -1"
     role="tab"
+    v-bind="{ 'data-tab-id': tab.id }"
     @click="!tab.disabled && emit('select', tab.id)"
     @dblclick="!tab.disabled && emit('rename', tab.id)"
     @keydown="emit('keydown', $event, tab.id)"
@@ -61,9 +61,9 @@
     </BaseTypography>
     <span
       v-if="closable"
-      :data-close-tab-id="tab.id"
       aria-hidden="true"
       class="base-tabs__close-icon"
+      v-bind="{ 'data-close-tab-id': tab.id }"
       @click.stop="emit('close', tab.id)"
     >
       <IconClose size="xs" />

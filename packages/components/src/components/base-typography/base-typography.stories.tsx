@@ -24,7 +24,7 @@ const VARIANTS = [
 ] as const;
 
 const meta = {
-  title: 'Components/Display/Typography',
+  title: 'Components/Display/BaseTypography',
   component: BaseTypography,
   tags: ['autodocs'],
   parameters: {

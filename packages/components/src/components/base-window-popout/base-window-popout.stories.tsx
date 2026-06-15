@@ -3,7 +3,7 @@ import BaseWindowPopout from './base-window-popout.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Layout/WindowPopout',
+  title: 'Components/Layout/BaseWindowPopout',
   component: BaseWindowPopout,
   tags: ['autodocs'],
   parameters: {

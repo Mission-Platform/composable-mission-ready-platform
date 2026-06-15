@@ -6,7 +6,7 @@ import BaseAccordion from './base-accordion.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Display/Accordion',
+  title: 'Components/Display/BaseAccordion',
   component: BaseAccordion,
   tags: ['autodocs'],
   parameters: {

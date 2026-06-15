@@ -1,4 +1,4 @@
-import { LocalLinter, Dialect, type Lint } from 'harper.js';
+import { Dialect, type Lint, LocalLinter } from 'harper.js';
 import { binary } from 'harper.js/binary';
 
 import type { HarperIssue, HarperWorkerRequest, HarperWorkerResponse } from '../types';

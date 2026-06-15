@@ -8,7 +8,7 @@ import BaseDropdown from './base-dropdown.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Overlays/Dropdown',
+  title: 'Components/Overlays/BaseDropdown',
   component: BaseDropdown,
   tags: ['autodocs'],
   parameters: {

@@ -19,6 +19,8 @@
    */
   import { useI18n } from '@mission-platform/i18n';
 
+  import type { ButtonHTMLAttributes } from 'vue';
+
   /** Visual treatment of the button. */
   export type ButtonVariant =
     | 'primary'
@@ -34,18 +36,20 @@
   export type ButtonSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
   const props = withDefaults(
-    defineProps<{
-      /** Visual treatment. Defaults to `'primary'`. */
-      variant?: ButtonVariant;
-      /** Size token controlling padding and font-size. Defaults to `'md'`. */
-      size?: ButtonSize;
-      /** Whether the button is non-interactive. Suppresses `click` and applies the native `disabled` attribute. */
-      disabled?: boolean;
-      /** Shows the spinner, sets `aria-busy`, and suppresses `click`. */
-      loading?: boolean;
-      /** Native `type` attribute. Defaults to `'button'` to avoid accidental form submissions. */
-      type?: 'button' | 'submit' | 'reset';
-    }>(),
+    defineProps<
+      {
+        /** Visual treatment. Defaults to `'primary'`. */
+        variant?: ButtonVariant;
+        /** Size token controlling padding and font-size. Defaults to `'md'`. */
+        size?: ButtonSize;
+        /** Whether the button is non-interactive. Suppresses `click` and applies the native `disabled` attribute. */
+        disabled?: boolean;
+        /** Shows the spinner, sets `aria-busy`, and suppresses `click`. */
+        loading?: boolean;
+        /** Native `type` attribute. Defaults to `'button'` to avoid accidental form submissions. */
+        type?: 'button' | 'submit' | 'reset';
+      } & /* @vue-ignore */ ButtonHTMLAttributes
+    >(),
     {
       variant: 'primary',
       size: 'md',

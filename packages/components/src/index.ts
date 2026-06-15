@@ -7,8 +7,15 @@
 // editor — most notably the SSG-prerendered marketing site — pay no Monaco
 // / language-worker bundle cost.
 
+// Global accessibility safety net (a `prefers-reduced-motion` reset) bundled
+// into the component stylesheet (`@mission-platform/components/styles`).
+import './styles/a11y.scss';
+
 export { default as BaseButton } from './components/base-button';
 export type { ButtonVariant, ButtonSize } from './components/base-button';
+
+export { default as BaseIconButton } from './components/base-icon-button';
+export type { IconButtonVariant, IconButtonSize } from './components/base-icon-button';
 
 export { default as BaseCard } from './components/base-card';
 export type { CardPadding } from './components/base-card';
@@ -141,11 +148,11 @@ export { default as BaseDialogFooter } from './components/base-dialog/base-dialo
 export { default as BaseBreadcrumb } from './components/base-breadcrumb';
 export type { BreadcrumbItem } from './components/base-breadcrumb';
 
-export { default as BaseSidebar, SIDEBAR_SIZE_REM } from './components/base-sidebar';
-export type { SidebarSide, SidebarSize, SidebarVariant, SidebarDraggable } from './components/base-sidebar';
-export { default as BaseSidebarHeader } from './components/base-sidebar/base-sidebar-header.vue';
-export { default as BaseSidebarBody } from './components/base-sidebar/base-sidebar-body.vue';
-export { default as BaseSidebarFooter } from './components/base-sidebar/base-sidebar-footer.vue';
+export { default as BaseDrawer, DRAWER_SIZE_REM } from './components/base-drawer';
+export type { DrawerPlacement, DrawerSize, DrawerVariant, DrawerDraggable } from './components/base-drawer';
+export { default as BaseDrawerHeader } from './components/base-drawer/base-drawer-header.vue';
+export { default as BaseDrawerBody } from './components/base-drawer/base-drawer-body.vue';
+export { default as BaseDrawerFooter } from './components/base-drawer/base-drawer-footer.vue';
 
 export { default as BaseFileInput } from './components/base-file-input';
 
@@ -231,6 +238,23 @@ export { default as BaseApplicationLayout, StatusLevels } from './components/bas
 export type { ApplicationStatusLevel } from './components/base-application-layout';
 
 export { default as BaseVerticalLayout } from './components/base-vertical-layout';
+
+export { default as BaseGrid, GRID_GAP_SPACING } from './components/base-grid';
+export type { GridCell, GridGap, GridAlignment } from './components/base-grid';
+
+export { default as BaseStack, STACK_JUSTIFY_CONTENT, STACK_ALIGN_ITEMS } from './components/base-stack';
+export type { StackDirection, StackJustify, StackAlign } from './components/base-stack';
+
+export { default as BaseMasonry, MASONRY_GAP_SPACING } from './components/base-masonry';
+export type { MasonryGap } from './components/base-masonry';
+
+export { default as BaseTimeline, BaseTimelineItem, TimelineContextKey } from './components/base-timeline';
+export type {
+  TimelineOrientation,
+  TimelineAlign,
+  TimelineItemVariant,
+  TimelineContext,
+} from './components/base-timeline';
 
 export { default as BaseAvatar } from './components/base-avatar';
 export type { AvatarSize, AvatarShape, AvatarStatus } from './components/base-avatar';
@@ -341,13 +365,101 @@ export type { CodeBlockLanguage } from './components/base-code-block';
 //   import { BaseMonacoEditor } from '@mission-platform/components/monaco'
 //   import type { MonacoEditorLanguage } from '@mission-platform/components/monaco'
 
+// ─── Content & media components ──────────────────────────────────────────────
+
+export { default as BaseSeparator } from './components/base-separator';
+export type { SeparatorOrientation, SeparatorVariant, SeparatorSpacing } from './components/base-separator';
+
+export { default as BaseQuote } from './components/base-quote';
+export type { QuoteVariant, QuoteSize } from './components/base-quote';
+
+export { default as BaseButtonGroup } from './components/base-button-group';
+export type { ButtonGroupOrientation, ButtonGroupGap } from './components/base-button-group';
+
+export { default as BaseHero } from './components/base-hero';
+export type { HeroAlign, HeroSize } from './components/base-hero';
+
+export { default as BaseAlertBanner } from './components/base-alert-banner';
+export type { AlertBannerVariant } from './components/base-alert-banner';
+
+export { default as BaseResponsiveImage } from './components/base-responsive-image';
+export type { ResponsiveImageSource, ResponsiveImageFit } from './components/base-responsive-image';
+
+export { default as BaseResponsiveVideo } from './components/base-responsive-video';
+export type { ResponsiveVideoSource, ResponsiveVideoFit } from './components/base-responsive-video';
+
+export { default as BaseBackgroundVideo } from './components/base-background-video';
+export type { BackgroundVideoSource, BackgroundVideoFit } from './components/base-background-video';
+
+export { default as BaseQrCode, encodeQr } from './components/base-qr-code';
+export type { QrErrorCorrection, QrMatrix } from './components/base-qr-code';
+
+// ─── Communication components ────────────────────────────────────────────────
+
+export { default as BaseChatArea } from './components/base-chat-area';
+
+export { default as BaseChatBubble } from './components/base-chat-bubble';
+export type { ChatBubbleSide, ChatBubbleVariant } from './components/base-chat-bubble';
+
+// ─── Navigation & input components ───────────────────────────────────────────
+
+export { default as BasePagination } from './components/base-pagination';
+export type { PaginationSize, PaginationItem } from './components/base-pagination';
+
+export { default as BaseRating } from './components/base-rating';
+export type { RatingSize } from './components/base-rating';
+
+export { default as BaseSegmentControl } from './components/base-segment-control';
+export type { SegmentControlSize, SegmentOption } from './components/base-segment-control';
+
+export { default as BaseSlider } from './components/base-slider';
+export type { SliderSize } from './components/base-slider';
+
+export { default as BaseRangeInput } from './components/base-range-input';
+export type { RangeInputSize, RangeValue } from './components/base-range-input';
+
+export { default as BaseOtpInput } from './components/base-otp-input';
+export type { OtpInputType, OtpInputSize } from './components/base-otp-input';
+
+// ─── Toast notifications ─────────────────────────────────────────────────────
+
+export { default as BaseToast, BaseToastContainer } from './components/base-toast';
+
 // ─── Theme ────────────────────────────────────────────────────────────────────
 
 export { default as BaseThemeToggle } from './components/base-theme-toggle';
 export type { Theme } from './components/base-theme-toggle';
+
+export { default as BaseThemeProvider } from './components/base-theme-provider';
+
+export { default as BaseThemeComposer } from './components/base-theme-composer';
 
 // ─── Composables ──────────────────────────────────────────────────────────────
 
 export { useRouterClose } from './composables/use-router-close';
 export { useZIndex, ZLayer } from './composables/use-z-index';
 export type { ZLayerName } from './composables/use-z-index';
+
+export { useReducedMotion, prefersReducedMotion } from './composables/use-reduced-motion';
+
+export { useTheme, createThemeStore, resetThemeStore, ThemeStoreKey } from './composables/use-theme';
+export type { ResolvedTheme, UseThemeOptions, ThemeStore } from './composables/use-theme';
+
+export {
+  useThemeComposer,
+  createThemeComposer,
+  resetThemeComposer,
+  configToCssVariables,
+  cssVariablesToString,
+  ATTRIBUTE_TO_CSS_VAR,
+  ThemeComposerKey,
+} from './composables/use-theme-composer';
+export type {
+  ThemeComposerConfig,
+  ThemeComposerAttribute,
+  ThemeComposerStore,
+  UseThemeComposerOptions,
+} from './composables/use-theme-composer';
+
+export { useToast } from './composables/use-toast';
+export type { ToastVariant, ToastPosition, ToastOptions, ToastRecord, UseToastReturn } from './composables/use-toast';

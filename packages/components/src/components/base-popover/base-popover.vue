@@ -127,9 +127,9 @@
         v-if="open"
         ref="floatingEl"
         :aria-label="label"
-        :data-placement="actualPlacement"
         :style="{ ...floatingStyles, zIndex }"
         class="base-popover"
+        v-bind="{ 'data-placement': actualPlacement }"
       >
         <slot />
         <span

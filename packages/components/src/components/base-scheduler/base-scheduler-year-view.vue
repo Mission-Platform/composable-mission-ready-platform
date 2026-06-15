@@ -143,8 +143,8 @@
 
 <template>
   <div
-    class="base-scheduler-year-view"
     :aria-label="`Year ${yearLabel}`"
+    class="base-scheduler-year-view"
   >
     <div class="base-scheduler-year-view__grid">
       <div
@@ -154,9 +154,9 @@
       >
         <!-- Month heading -->
         <BaseButton
-          variant="tertiary"
-          size="sm"
           class="base-scheduler-year-view__month-title"
+          size="sm"
+          variant="tertiary"
           @click="emit('month-click', new Date(month.year, month.month, 1))"
         >
           {{ month.label }}
@@ -178,6 +178,7 @@
           <button
             v-for="(day, di) in month.days"
             :key="di"
+            :aria-label="day.date?.toLocaleDateString() ?? undefined"
             :class="[
               'base-scheduler-year-view__day',
               {
@@ -188,7 +189,6 @@
             ]"
             :disabled="!day.date"
             type="button"
-            :aria-label="day.date?.toLocaleDateString() ?? undefined"
             @click="day.date && emit('day-click', day.date)"
           >
             {{ day.date?.getDate() ?? '' }}

@@ -36,6 +36,8 @@ export function createMpI18n(
   }
 
   return createI18n({
+    // Composition API mode: every consumer uses `useI18n()` and
+    // `i18n.global.locale` is a `WritableComputedRef` (accessed via `.value`).
     legacy: false,
     locale,
     fallbackLocale: 'en',

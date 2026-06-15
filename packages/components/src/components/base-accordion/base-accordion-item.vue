@@ -60,10 +60,12 @@
     :open="isOpen()"
     @toggle.prevent
   >
+    <!-- `<summary>` is a natively interactive disclosure control, so attaching
+         activation handlers here is correct. -->
+    <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
     <summary
       :aria-disabled="disabled || undefined"
       class="base-accordion__summary"
-      role="button"
       tabindex="0"
       @click.prevent="handleClick"
       @keydown.enter.prevent="handleClick"

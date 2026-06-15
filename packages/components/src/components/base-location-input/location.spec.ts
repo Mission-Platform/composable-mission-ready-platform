@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  COORDINATE_PRECISION,
   convertLocation,
+  COORDINATE_PRECISION,
   emptyLocation,
   formatAxis,
   formatLocation,

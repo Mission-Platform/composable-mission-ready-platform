@@ -3,7 +3,7 @@ import BaseStatusIcon from './base-status-icon.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Feedback/StatusIcon',
+  title: 'Components/Feedback/BaseStatusIcon',
   component: BaseStatusIcon,
   tags: ['autodocs'],
   parameters: {

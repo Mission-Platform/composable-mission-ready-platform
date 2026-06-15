@@ -19,8 +19,8 @@
   import BaseTextarea from '../base-textarea/base-textarea.vue';
 
   import type { RRuleFreq, VEvent, VEventClass, VEventStatus, VEventTransp } from './types';
-  import type { DateRange } from '../base-date-range-input/base-date-range-input.vue';
-  import type { DateTimeRange } from '../base-date-time-range-input/base-date-time-range-input.vue';
+  import type { DateRange } from '../base-date-range-input';
+  import type { DateTimeRange } from '../base-date-time-range-input';
 
   const props = defineProps<{
     /** Whether the dialog is visible. */
@@ -162,6 +162,65 @@
     },
   });
 
+  // ─── v-model bridges ───────────────────────────────────────────────────────
+  // `BaseInput` / `BaseSelect` expose a `string | number` model and `BaseCheckbox`
+  // a `boolean | string[]` model. These writable proxies adapt the strongly-typed
+  // `form` fields so `v-model` type-checks under strict template checking while
+  // keeping `form` (and therefore `onSave`) strongly typed.
+  function stringModel(get: () => string, set: (value: string) => void) {
+    return computed<string | number>({
+      get,
+      set: (value) => set(String(value)),
+    });
+  }
+
+  const summaryModel = stringModel(
+    () => form.value.summary,
+    (value) => (form.value.summary = value),
+  );
+  const locationModel = stringModel(
+    () => form.value.location,
+    (value) => (form.value.location = value),
+  );
+  const urlModel = stringModel(
+    () => form.value.url,
+    (value) => (form.value.url = value),
+  );
+  const organizerModel = stringModel(
+    () => form.value.organizer,
+    (value) => (form.value.organizer = value),
+  );
+  const rruleFreqModel = stringModel(
+    () => form.value.rruleFreq,
+    (value) => (form.value.rruleFreq = value),
+  );
+  const rruleIntervalModel = stringModel(
+    () => form.value.rruleInterval,
+    (value) => (form.value.rruleInterval = value),
+  );
+  const rruleCountModel = stringModel(
+    () => form.value.rruleCount,
+    (value) => (form.value.rruleCount = value),
+  );
+
+  const statusModel = computed<string | number>({
+    get: () => form.value.status,
+    set: (value) => (form.value.status = value as VEventStatus),
+  });
+  const classificationModel = computed<string | number>({
+    get: () => form.value.classification,
+    set: (value) => (form.value.classification = value as VEventClass),
+  });
+  const transpModel = computed<string | number>({
+    get: () => form.value.transp,
+    set: (value) => (form.value.transp = value as VEventTransp),
+  });
+
+  const allDayModel = computed<boolean | string[]>({
+    get: () => form.value.allDay,
+    set: (value) => (form.value.allDay = Boolean(value)),
+  });
+
   // ─── Save ──────────────────────────────────────────────────────────────────
 
   function toIsoField(localStr: string, allDay: boolean): string {
@@ -234,11 +293,11 @@
 
 <template>
   <BaseDialog
+    :close-on-route-change="false"
     :open="open"
     :title="dialogTitle"
-    :close-on-route-change="false"
-    @update:open="(v) => !v && emit('close')"
     @close="emit('close')"
+    @update:open="(v) => !v && emit('close')"
   >
     <!-- default slot = BaseDialogBody content -->
     <form
@@ -247,7 +306,7 @@
     >
       <!-- Summary -->
       <BaseInput
-        v-model="form.summary"
+        v-model="summaryModel"
         label="Title"
         placeholder="Add title"
         required
@@ -255,7 +314,7 @@
 
       <!-- All-day toggle -->
       <BaseCheckbox
-        v-model="form.allDay"
+        v-model="allDayModel"
         label="All day"
       />
 
@@ -276,13 +335,13 @@
       <!-- Color -->
       <BaseColorInput
         v-model="form.color"
-        label="Colour"
         hint="Click the swatch or type a hex value"
+        label="Colour"
       />
 
       <!-- Location -->
       <BaseInput
-        v-model="form.location"
+        v-model="locationModel"
         label="Location"
         placeholder="Add location"
       />
@@ -290,43 +349,43 @@
       <!-- Description -->
       <BaseTextarea
         v-model="form.description"
-        label="Description"
         :rows="3"
+        label="Description"
         placeholder="Add description"
       />
 
       <!-- URL -->
       <BaseInput
-        v-model="form.url"
-        type="url"
+        v-model="urlModel"
         label="URL (RFC 5545 URL)"
         placeholder="https://…"
+        type="url"
       />
 
       <!-- RFC 5545 STATUS -->
       <BaseSelect
-        v-model="form.status"
-        label="Status (RFC 5545 STATUS)"
+        v-model="statusModel"
         :options="statusOptions"
+        label="Status (RFC 5545 STATUS)"
       />
 
       <!-- RFC 5545 CLASS -->
       <BaseSelect
-        v-model="form.classification"
-        label="Classification (RFC 5545 CLASS)"
+        v-model="classificationModel"
         :options="classOptions"
+        label="Classification (RFC 5545 CLASS)"
       />
 
       <!-- RFC 5545 TRANSP -->
       <BaseSelect
-        v-model="form.transp"
-        label="Transparency (RFC 5545 TRANSP)"
+        v-model="transpModel"
         :options="transpOptions"
+        label="Transparency (RFC 5545 TRANSP)"
       />
 
       <!-- RFC 5545 ORGANIZER -->
       <BaseInput
-        v-model="form.organizer"
+        v-model="organizerModel"
         label="Organizer (RFC 5545 ORGANIZER)"
         placeholder="mailto:organizer@example.com"
       />
@@ -336,24 +395,24 @@
         <legend class="base-scheduler-event-dialog__fieldset-legend">Recurrence (RFC 5545 RRULE)</legend>
 
         <BaseSelect
-          v-model="form.rruleFreq"
-          label="Frequency"
+          v-model="rruleFreqModel"
           :options="freqOptions"
+          label="Frequency"
         />
 
         <template v-if="form.rruleFreq">
           <BaseInput
-            v-model="form.rruleInterval"
-            type="number"
+            v-model="rruleIntervalModel"
             label="Interval (every N …)"
             placeholder="1"
+            type="number"
           />
 
           <BaseInput
-            v-model="form.rruleCount"
-            type="number"
+            v-model="rruleCountModel"
             label="Count (end after N occurrences)"
             placeholder="unlimited"
+            type="number"
           />
         </template>
       </fieldset>
@@ -363,26 +422,26 @@
     <template #footer>
       <BaseButton
         v-if="event"
-        variant="error"
+        class="base-scheduler-event-dialog__delete-btn"
         size="sm"
         type="button"
-        class="base-scheduler-event-dialog__delete-btn"
+        variant="error"
         @click="onDelete"
       >
         Delete
       </BaseButton>
       <BaseButton
-        variant="secondary"
         size="sm"
         type="button"
+        variant="secondary"
         @click="emit('close')"
       >
         Cancel
       </BaseButton>
       <BaseButton
-        variant="primary"
         size="sm"
         type="button"
+        variant="primary"
         @click="onSave"
       >
         {{ event ? 'Update' : 'Create' }}

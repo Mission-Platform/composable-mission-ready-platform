@@ -14,7 +14,11 @@
   import BaseDropdown from '../base-dropdown/base-dropdown.vue';
   import BaseTypography from '../base-typography/base-typography.vue';
 
+  import type { Autocomplete } from '../base-schema-form';
+
   export type SelectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+
+  export type { Autocomplete } from '../base-schema-form/types';
 
   export interface SelectOption {
     label: string;
@@ -34,6 +38,10 @@
       placeholder?: string;
       disabled?: boolean;
       required?: boolean;
+      /** Native form-field `name`, submitted by the hidden native `<select>`. */
+      name?: string;
+      /** Native `autocomplete` token applied to the hidden native `<select>`. */
+      autocomplete?: Autocomplete;
       id?: string;
     }>(),
     {
@@ -47,6 +55,8 @@
       placeholder: undefined,
       disabled: false,
       required: false,
+      name: undefined,
+      autocomplete: undefined,
       id: undefined,
     },
   );
@@ -122,6 +132,18 @@
   function handleBlur(event: FocusEvent) {
     emit('blur', event);
   }
+
+  /**
+   * Mirror selections made on the hidden native `<select>` (e.g. by browser
+   * autofill) back into `modelValue`, preserving the original option value type.
+   */
+  function handleNativeChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const matched = props.options.find((opt) => String(opt.value) === target.value);
+    const value = matched ? matched.value : '';
+    emit('update:modelValue', value);
+    emit('change', value);
+  }
 </script>
 
 <template>
@@ -158,6 +180,40 @@
         *
       </span>
     </label>
+    <!--
+      Hidden native <select> mirroring the current value. It carries the field's
+      `name`/`autocomplete` so the browser (and password/profile managers) can
+      autofill the control and submit the value in a native form, while the
+      custom combobox above provides the visible UI. It is removed from the
+      accessibility tree and tab order to avoid duplicating the combobox.
+    -->
+    <select
+      :id="`${resolvedId}-native`"
+      :autocomplete="autocomplete"
+      :disabled="disabled"
+      :name="name"
+      :required="required"
+      aria-hidden="true"
+      class="base-select__native"
+      tabindex="-1"
+      @change="handleNativeChange"
+    >
+      <option
+        :selected="hasPlaceholder"
+        value=""
+      >
+        {{ placeholder }}
+      </option>
+      <option
+        v-for="opt in options"
+        :key="opt.value"
+        :disabled="opt.disabled"
+        :selected="opt.value === modelValue"
+        :value="opt.value"
+      >
+        {{ opt.label }}
+      </option>
+    </select>
     <BaseDropdown
       :open="isOpen"
       @close="closeDropdown"
@@ -196,7 +252,10 @@
             @click="isOpen ? closeDropdown() : openDropdown()"
             @keydown="handleKeydown"
           >
-            {{ displayLabel }}
+            <!-- Fall back to a non-breaking space so the field keeps a full line
+                 box (and therefore a constant height) even when there is no
+                 selection and no placeholder. -->
+            {{ displayLabel || '\u00A0' }}
           </button>
           <!-- Trailing extension (e.g. an icon or button), before the chevron. -->
           <span
@@ -302,6 +361,19 @@
     &__required {
       color: var(--mp-color-danger-default);
       margin-left: 2px;
+    }
+
+    /* Hidden native <select> backing the combobox for autofill / form submission. */
+    &__native {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
     }
 
     &__wrapper {

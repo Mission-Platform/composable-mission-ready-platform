@@ -4,9 +4,9 @@
    *
    * It arranges an optional **start** column, a main **content** column, and an
    * optional **end** column. The start/end columns are powered by
-   * {@link BaseSidebar}'s `inline` variant: at and above `breakpoint` they render
+   * {@link BaseDrawer}'s `inline` variant: at and above `breakpoint` they render
    * inline as static, always-open ("fixed open") columns that flank the content;
-   * below `breakpoint` they collapse into toggleable overlay sidebars (drawers),
+   * below `breakpoint` they collapse into toggleable overlay drawers,
    * leaving the content to span the full width.
    *
    * The `startOpen` / `endOpen` models control the drawers on small screens (they
@@ -22,8 +22,8 @@
   import { type BreakpointKey, useBreakpoints } from '@mission-platform/breakpoints';
   import { computed, ref, useSlots } from 'vue';
 
-  import BaseSidebar, { type SidebarDraggable } from '../base-sidebar/base-sidebar.vue';
-  import { type SidebarSize, SIDEBAR_SIZE_REM } from '../base-sidebar/constants';
+  import { DRAWER_SIZE_REM, type DrawerSize } from '../base-drawer';
+  import BaseDrawer, { type DrawerDraggable } from '../base-drawer/base-drawer.vue';
 
   const props = withDefaults(
     defineProps<{
@@ -41,31 +41,31 @@
       /** Accessible label for the end column. */
       endTitle?: string;
       /**
-       * Named {@link SidebarSize} of the inline **start** column. Forwarded to
-       * the backing `BaseSidebar`'s `size`, and used to derive the inline grid
+       * Named {@link DrawerSize} of the inline **start** column. Forwarded to
+       * the backing `BaseDrawer`'s `size`, and used to derive the inline grid
        * track width from the canonical size scale.
        */
-      startSize?: SidebarSize;
+      startSize?: DrawerSize;
       /**
-       * Named {@link SidebarSize} of the inline **end** column. Forwarded to the
-       * backing `BaseSidebar`'s `size`, and used to derive the inline grid track
+       * Named {@link DrawerSize} of the inline **end** column. Forwarded to the
+       * backing `BaseDrawer`'s `size`, and used to derive the inline grid track
        * width from the canonical size scale.
        */
-      endSize?: SidebarSize;
+      endSize?: DrawerSize;
       /** Gap between the columns (any CSS length). */
       gap?: string;
       /**
        * Whether the inline **start** column is resizable by dragging its inner
        * edge, and the upper bound the width is clamped to. Forwarded to the
-       * backing `BaseSidebar`'s `draggable` prop. See its `SidebarDraggable` type.
+       * backing `BaseDrawer`'s `draggable` prop. See its `DrawerDraggable` type.
        */
-      startDraggable?: SidebarDraggable;
+      startDraggable?: DrawerDraggable;
       /**
        * Whether the inline **end** column is resizable by dragging its inner
        * edge, and the upper bound the width is clamped to. Forwarded to the
-       * backing `BaseSidebar`'s `draggable` prop. See its `SidebarDraggable` type.
+       * backing `BaseDrawer`'s `draggable` prop. See its `DrawerDraggable` type.
        */
-      endDraggable?: SidebarDraggable;
+      endDraggable?: DrawerDraggable;
     }>(),
     {
       startOpen: false,
@@ -95,16 +95,16 @@
   const hasStart = computed(() => Boolean(slots.start));
   const hasEnd = computed(() => Boolean(slots.end));
 
-  // While a column is resized (draggable), the backing sidebar emits its new
+  // While a column is resized (draggable), the backing drawer emits its new
   // width in `rem`; we mirror it into the matching grid track so the column and
-  // the sidebar stay in lock-step.
+  // the drawer stay in lock-step.
   const startWidthOverride = ref<string | null>(null);
   const endWidthOverride = ref<string | null>(null);
 
   /** The current width of the inline start column track. */
-  const startTrackWidth = computed(() => startWidthOverride.value ?? `${SIDEBAR_SIZE_REM[props.startSize]}rem`);
+  const startTrackWidth = computed(() => startWidthOverride.value ?? `${DRAWER_SIZE_REM[props.startSize]}rem`);
   /** The current width of the inline end column track. */
-  const endTrackWidth = computed(() => endWidthOverride.value ?? `${SIDEBAR_SIZE_REM[props.endSize]}rem`);
+  const endTrackWidth = computed(() => endWidthOverride.value ?? `${DRAWER_SIZE_REM[props.endSize]}rem`);
 
   /** Grid template — side columns only occupy a track while inline. */
   const gridTemplateColumns = computed(() => {
@@ -143,14 +143,14 @@
     :class="['vertical-layout', { 'vertical-layout--inline': isInline }]"
     :style="{ gridTemplateColumns, gap }"
   >
-    <BaseSidebar
+    <BaseDrawer
       v-if="hasStart"
       :draggable="startDraggable"
       :inline-breakpoint="breakpoint"
       :open="startOpen"
       :size="startSize"
       :title="startTitle"
-      side="left"
+      placement="start"
       variant="inline"
       @resize="onStartResize"
       @update:open="setStartOpen"
@@ -168,7 +168,7 @@
       >
         <slot name="start-footer" />
       </template>
-    </BaseSidebar>
+    </BaseDrawer>
 
     <main class="vertical-layout__content">
       <slot
@@ -178,14 +178,14 @@
       />
     </main>
 
-    <BaseSidebar
+    <BaseDrawer
       v-if="hasEnd"
       :draggable="endDraggable"
       :inline-breakpoint="breakpoint"
       :open="endOpen"
       :size="endSize"
       :title="endTitle"
-      side="right"
+      placement="end"
       variant="inline"
       @resize="onEndResize"
       @update:open="setEndOpen"
@@ -203,7 +203,7 @@
       >
         <slot name="end-footer" />
       </template>
-    </BaseSidebar>
+    </BaseDrawer>
   </div>
 </template>
 

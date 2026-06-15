@@ -7,6 +7,7 @@
    * and refer to the linked stories for usage examples.
    */
   import { useId } from '../../composables/use-id';
+  import BaseStack from '../base-stack/base-stack.vue';
   import BaseTypography from '../base-typography/base-typography.vue';
 
   export type SwitchSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
@@ -49,14 +50,22 @@
 </script>
 
 <template>
-  <div
+  <BaseStack
     :class="[
       'base-switch',
       `base-switch--${size}`,
       { 'base-switch--error': !!error, 'base-switch--disabled': disabled },
     ]"
+    gap="2xs"
   >
-    <label class="base-switch__row">
+    <BaseStack
+      align="center"
+      as="label"
+      class="base-switch__row"
+      direction="horizontal"
+      gap="xs"
+      inline
+    >
       <span class="base-switch__track-wrapper">
         <input
           :id="resolvedId"
@@ -90,7 +99,7 @@
           {{ label }}
         </BaseTypography>
       </span>
-    </label>
+    </BaseStack>
     <BaseTypography
       v-if="error"
       :id="`${resolvedId}-error`"
@@ -112,21 +121,14 @@
     >
       {{ hint }}
     </BaseTypography>
-  </div>
+  </BaseStack>
 </template>
 
 <style lang="scss" scoped>
   @use 'sass:list';
 
   .base-switch {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-1);
-
     &__row {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--mp-spacing-2);
       cursor: pointer;
     }
 

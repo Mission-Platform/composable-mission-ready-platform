@@ -30,10 +30,10 @@
   import { isFieldVisible } from './conditions';
 
   import type { FormErrors, FormFieldSchema, FormValues } from './types';
-  import type { DateRange } from '../base-date-range-input/base-date-range-input.vue';
-  import type { DateTimeRange } from '../base-date-time-range-input/base-date-time-range-input.vue';
-  import type { LocationValue } from '../base-location-input/location';
-  import type { TimeRange } from '../base-time-range-input/base-time-range-input.vue';
+  import type { DateRange } from '../base-date-range-input';
+  import type { DateTimeRange } from '../base-date-time-range-input';
+  import type { LocationValue } from '../base-location-input';
+  import type { TimeRange } from '../base-time-range-input';
 
   const props = withDefaults(
     defineProps<{

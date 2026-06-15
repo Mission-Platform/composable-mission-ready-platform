@@ -23,8 +23,10 @@
 
 ### Minor Changes
 
-- d2bf0e1: Export public locale types (`MpLocaleModule`, `MpLocales`, `MpMessageObject`, `MpMessageValue`) from the package entry point so consumers can type their locale message bundles without reaching into internal paths.
-- 2e27467: Support nested message objects in `MpLocaleModule` and `MpLocales` types. Locale message values can now be either strings or recursively nested message objects, aligning with vue-i18n's native message schema.
+- d2bf0e1: Export public locale types (`MpLocaleModule`, `MpLocales`, `MpMessageObject`, `MpMessageValue`) from the
+  package entry point so consumers can type their locale message bundles without reaching into internal paths.
+- 2e27467: Support nested message objects in `MpLocaleModule` and `MpLocales` types. Locale message values can now be
+  either strings or recursively nested message objects, aligning with vue-i18n's native message schema.
 
 ### Patch Changes
 
@@ -36,7 +38,8 @@
 
 - 05d31c9: normalize lint and format scripts across all workspaces
 
-  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
+  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run
+  `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
 
 - cf89515: enable tree shaking support when consumed by apps
 

@@ -3,7 +3,7 @@ import BaseCollapse from './base-collapse.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Display/Collapse',
+  title: 'Components/Display/BaseCollapse',
   component: BaseCollapse,
   tags: ['autodocs'],
   parameters: {

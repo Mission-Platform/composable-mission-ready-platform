@@ -395,7 +395,7 @@ describe('TTL filtering', () => {
       title: 'Nearly Gone',
       content: 'body',
       createdAt: Date.now() - 12 * 60 * 60 * 1000,
-      closedAt: Date.now() - 1 * 60 * 60 * 1000, // 1 h ago — within TTL
+      closedAt: Date.now() - 60 * 60 * 1000, // 1 h ago — within TTL
     };
     localStorage.setItem('my-care-notes:tabs', JSON.stringify([recentlyClosedTab]));
     localStorage.setItem('my-care-notes:active-tab', recentlyClosedTab.id);

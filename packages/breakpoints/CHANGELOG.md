@@ -39,7 +39,8 @@
 
 - 05d31c9: normalize lint and format scripts across all workspaces
 
-  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
+  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run
+  `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
 
 - 6679759: adopt shared `stories` tsconfig preset for Storybook story files
 

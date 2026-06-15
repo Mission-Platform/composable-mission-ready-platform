@@ -5,7 +5,7 @@ import BaseInView from './base-in-view.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Layout/InView',
+  title: 'Components/Layout/BaseInView',
   component: BaseInView,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },

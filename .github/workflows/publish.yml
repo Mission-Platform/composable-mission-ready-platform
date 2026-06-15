@@ -27,8 +27,8 @@ jobs:
       packages: write          # needed to publish to GitHub Packages
       pull-requests: write     # needed for Changesets to open the version PR
       id-token: write          # mint the OIDC token used to request a Sigstore signing certificate
-      attestations: write      # persist the generated build provenance attestation
-      artifact-metadata: write # create the artifact storage record for the attestation
+    #      attestations: write      # persist the generated build provenance attestation
+    #      artifact-metadata: write # create the artifact storage record for the attestation
 
     steps:
       - name: Checkout repository
@@ -120,18 +120,18 @@ jobs:
       # actually published (every develop run, and main runs where the
       # Changesets release PR was merged).
       # ──────────────────────────────────────────────────────────────
-      - name: Pack published packages for attestation
-        if: github.ref == 'refs/heads/develop' || (github.ref == 'refs/heads/main' && steps.changesets.outputs.published == 'true')
-        run: |
-          mkdir -p "${{ runner.temp }}/attestations"
-          pnpm --filter="./packages/**" exec \
-            pnpm pack --pack-destination "${{ runner.temp }}/attestations"
-
-      - name: Attest package build provenance
-        if: github.ref == 'refs/heads/develop' || (github.ref == 'refs/heads/main' && steps.changesets.outputs.published == 'true')
-        uses: actions/attest@v4
-        with:
-          subject-path: "${{ runner.temp }}/attestations/*.tgz"
+      #      - name: Pack published packages for attestation
+      #        if: github.ref == 'refs/heads/develop' || (github.ref == 'refs/heads/main' && steps.changesets.outputs.published == 'true')
+      #        run: |
+      #          mkdir -p "${{ runner.temp }}/attestations"
+      #          pnpm --filter="./packages/**" exec \
+      #            pnpm pack --pack-destination "${{ runner.temp }}/attestations"
+      #
+      #      - name: Attest package build provenance
+      #        if: github.ref == 'refs/heads/develop' || (github.ref == 'refs/heads/main' && steps.changesets.outputs.published == 'true')
+      #        uses: actions/attest@v4
+      #        with:
+      #          subject-path: "${{ runner.temp }}/attestations/*.tgz"
 
       # ──────────────────────────────────────────────────────────────
       # PRODUCTION DEPLOY — main branch

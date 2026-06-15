@@ -75,6 +75,7 @@
     "@types/node": "catalog:typescript",
     "@vitest/coverage-v8": "catalog:testing",
     "@vue/test-utils": "catalog:vue",
+    "axe-core": "catalog:testing",
     "eslint": "catalog:eslint",
     "jsdom": "catalog:testing",
     "postcss-html": "catalog:stylelint",

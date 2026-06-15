@@ -3,7 +3,7 @@ import BaseTag from './base-tag.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Display/Tag',
+  title: 'Components/Display/BaseTag',
   component: BaseTag,
   tags: ['autodocs'],
   parameters: {

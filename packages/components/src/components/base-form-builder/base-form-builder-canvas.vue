@@ -112,12 +112,12 @@
       :sibling-count="rootFields.length"
       :type-labels="typeLabels"
       :wizard="wizard"
-      @add-child="emit('add-child', $event)"
       @duplicate="emit('duplicate', $event)"
-      @move-down="emit('move-down', $event)"
-      @move-up="emit('move-up', $event)"
       @remove="emit('remove', $event)"
       @select="emit('select', $event)"
+      @add-child="emit('add-child', $event)"
+      @move-down="emit('move-down', $event)"
+      @move-up="emit('move-up', $event)"
     />
   </BaseFormBuilderDropzone>
 
@@ -169,12 +169,12 @@
           :step="entry.step"
           :type-labels="typeLabels"
           :wizard="wizard"
-          @add-child="emit('add-child', $event)"
           @duplicate="emit('duplicate', $event)"
-          @move-down="emit('move-down', $event)"
-          @move-up="emit('move-up', $event)"
           @remove="emit('remove', $event)"
           @select="emit('select', $event)"
+          @add-child="emit('add-child', $event)"
+          @move-down="emit('move-down', $event)"
+          @move-up="emit('move-up', $event)"
         />
       </BaseFormBuilderDropzone>
     </section>
