@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+  import { provide, ref } from 'vue';
+
+  import type { Ref } from 'vue';
   /**
    * `BaseAccordion` is a vertically stacked container of collapsible `BaseAccordionItem`s.
    *
@@ -14,9 +17,6 @@
    * </BaseAccordion>
    * ```
    */
-  import { provide, ref } from 'vue';
-
-  import type { Ref } from 'vue';
 
   /** Shared accordion state injected into `BaseAccordionItem` children. */
   export interface AccordionContext {

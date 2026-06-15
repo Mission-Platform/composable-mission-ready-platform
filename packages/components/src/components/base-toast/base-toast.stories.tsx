@@ -1,7 +1,6 @@
 import { useToast } from '../../composables/use-toast';
 import BaseButton from '../base-button/base-button.vue';
 
-
 import BaseToastContainer from './base-toast-container.vue';
 import BaseToast from './base-toast.vue';
 

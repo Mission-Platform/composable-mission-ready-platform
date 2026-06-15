@@ -8,5 +8,8 @@
     "rootDir": "./src"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/**/*.d.ts"],
-  "exclude": ["src/**/*.stories.ts", "src/**/*.stories.tsx", "src/**/*.spec.ts", "src/test-utils/**"]
+  "exclude": ["src/**/*.stories.ts", "src/**/*.stories.tsx", "src/**/*.spec.ts", "src/test-utils/**"],
+  "vueCompilerOptions": {
+    "strictTemplates": true
+  }
 }

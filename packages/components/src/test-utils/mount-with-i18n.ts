@@ -3,7 +3,7 @@ import { createI18n } from 'vue-i18n';
 import { createMemoryHistory, createRouter, type Router } from 'vue-router';
 
 /** A minimal vue-i18n instance used in component unit tests. */
-const testI18n = createI18n({ legacy: false, locale: 'en', messages: { en: {} } });
+const testI18n = createI18n({ locale: 'en', messages: { en: {} } });
 
 /** Creates a fresh in-memory router for each test to avoid cross-test interference. */
 export function createTestRouter(): Router {

@@ -9,6 +9,8 @@
   import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue';
   import { computed, ref } from 'vue';
 
+  import type { AnchorHTMLAttributes } from 'vue';
+
   export type TypographyVariant =
     | 'display'
     | 'h1'
@@ -32,15 +34,17 @@
   export type TypographyAlign = 'start' | 'center' | 'end';
 
   const props = withDefaults(
-    defineProps<{
-      variant?: TypographyVariant;
-      as?: string;
-      weight?: TypographyWeight;
-      color?: TypographyColor;
-      align?: TypographyAlign;
-      truncate?: boolean;
-      truncatePopup?: boolean;
-    }>(),
+    defineProps<
+      {
+        variant?: TypographyVariant;
+        as?: string;
+        weight?: TypographyWeight;
+        color?: TypographyColor;
+        align?: TypographyAlign;
+        truncate?: boolean;
+        truncatePopup?: boolean;
+      } & /* @vue-ignore */ AnchorHTMLAttributes
+    >(),
     {
       variant: 'body-md',
       as: undefined,

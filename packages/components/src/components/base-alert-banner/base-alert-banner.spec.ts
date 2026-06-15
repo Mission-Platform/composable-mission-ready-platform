@@ -34,7 +34,11 @@ describe('BaseAlertBanner', () => {
 
   it('renders the status icon by default and hides it when icon is false', () => {
     expect(mount(BaseAlertBanner).find('.base-alert-banner__icon').exists()).toBe(true);
-    expect(mount(BaseAlertBanner, { props: { icon: false } }).find('.base-alert-banner__icon').exists()).toBe(false);
+    expect(
+      mount(BaseAlertBanner, { props: { icon: false } })
+        .find('.base-alert-banner__icon')
+        .exists(),
+    ).toBe(false);
   });
 
   it('does not render the dismiss button unless dismissible', () => {

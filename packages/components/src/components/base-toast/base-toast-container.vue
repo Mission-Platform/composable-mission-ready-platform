@@ -51,24 +51,24 @@
     :disabled="!teleport"
     to="body"
   >
-    <TransitionGroup
+    <div
       :aria-label="ariaLabel"
       :class="['base-toast-container', `base-toast-container--${position}`]"
       :style="{ zIndex }"
-      name="base-toast"
       role="region"
-      tag="div"
     >
-      <BaseToast
-        v-for="toast in orderedToasts"
-        :key="toast.id"
-        :dismissible="toast.dismissible"
-        :message="toast.message"
-        :title="toast.title"
-        :variant="toast.variant"
-        @dismiss="dismiss(toast.id)"
-      />
-    </TransitionGroup>
+      <TransitionGroup name="base-toast">
+        <BaseToast
+          v-for="toast in orderedToasts"
+          :key="toast.id"
+          :dismissible="toast.dismissible"
+          :message="toast.message"
+          :title="toast.title"
+          :variant="toast.variant"
+          @dismiss="dismiss(toast.id)"
+        />
+      </TransitionGroup>
+    </div>
   </Teleport>
 </template>
 

@@ -1,6 +1,5 @@
-import type { TimelineOrientation, TimelineAlign } from './base-timeline.vue';
-import type { InjectionKey, ComputedRef } from 'vue';
-
+import type { TimelineAlign, TimelineOrientation } from './base-timeline.vue';
+import type { ComputedRef, InjectionKey } from 'vue';
 
 /** Shared layout state injected into `BaseTimelineItem` children. */
 export interface TimelineContext {

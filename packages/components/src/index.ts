@@ -462,10 +462,4 @@ export type {
 } from './composables/use-theme-composer';
 
 export { useToast } from './composables/use-toast';
-export type {
-  ToastVariant,
-  ToastPosition,
-  ToastOptions,
-  ToastRecord,
-  UseToastReturn,
-} from './composables/use-toast';
+export type { ToastVariant, ToastPosition, ToastOptions, ToastRecord, UseToastReturn } from './composables/use-toast';

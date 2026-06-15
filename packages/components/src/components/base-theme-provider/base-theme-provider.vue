@@ -18,7 +18,7 @@
    */
   import { onScopeDispose, provide } from 'vue';
 
-  import { ThemeStoreKey, createThemeStore } from '../../composables/use-theme';
+  import { createThemeStore, ThemeStoreKey } from '../../composables/use-theme';
 
   import type { ResolvedTheme, Theme } from '../../composables/use-theme';
 
@@ -62,7 +62,6 @@
   provide(ThemeStoreKey, store);
 
   onScopeDispose(() => store.dispose());
-
 </script>
 
 <template>

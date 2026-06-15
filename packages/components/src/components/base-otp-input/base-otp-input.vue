@@ -225,7 +225,9 @@
       background-color: var(--mp-color-bg-surface);
       border: 1px solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
 
       &:focus {
         outline: none;

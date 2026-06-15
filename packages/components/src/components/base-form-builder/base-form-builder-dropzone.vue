@@ -15,18 +15,21 @@
   import { computed, ref } from 'vue';
 
   import type { FormBuilderDropData } from './types';
+  import type { HTMLAttributes } from 'vue';
 
   const props = withDefaults(
-    defineProps<{
-      /** Globally-unique droppable id. */
-      id: string;
-      /** The drop payload identifying this target to the drag-end handler. */
-      data: FormBuilderDropData;
-      /** Whether the zone is disabled (read-only builder). */
-      disabled?: boolean;
-      /** Whether the zone is currently empty (renders the placeholder state). */
-      empty?: boolean;
-    }>(),
+    defineProps<
+      {
+        /** Globally-unique droppable id. */
+        id: string;
+        /** The drop payload identifying this target to the drag-end handler. */
+        data: FormBuilderDropData;
+        /** Whether the zone is disabled (read-only builder). */
+        disabled?: boolean;
+        /** Whether the zone is currently empty (renders the placeholder state). */
+        empty?: boolean;
+      } & /* @vue-ignore */ HTMLAttributes
+    >(),
     {
       disabled: false,
       empty: false,

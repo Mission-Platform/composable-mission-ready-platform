@@ -6,13 +6,7 @@ import type { DeepReadonly } from 'vue';
 export type ToastVariant = 'info' | 'success' | 'warning' | 'error' | 'neutral';
 
 /** Where the toast container is anchored on screen. */
-export type ToastPosition =
-  | 'top-left'
-  | 'top-center'
-  | 'top-right'
-  | 'bottom-left'
-  | 'bottom-center'
-  | 'bottom-right';
+export type ToastPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
 
 /** Options accepted when showing a toast. */
 export interface ToastOptions {

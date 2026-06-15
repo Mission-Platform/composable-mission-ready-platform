@@ -1,18 +1,18 @@
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 
-import { emptyLocation } from '../base-location-input/location';
+import { emptyLocation } from '../base-location-input';
 
 import { isFieldVisible } from './conditions';
 
 import type {
-  SchemaFormTranslate,
   FormErrors,
   FormFieldSchema,
   FormFieldType,
   FormJsonSchema,
   FormValues,
   JsonSchemaProperty,
+  SchemaFormTranslate,
 } from './types';
 import type { ErrorObject, SchemaObject, ValidateFunction } from 'ajv';
 
@@ -578,10 +578,11 @@ function fieldKeyForError(error: ErrorObject): string | undefined {
 
 /** The validator returned by {@link createFormValidator}. */
 export interface FormValidator {
-  /** Validate `values`; returns per-field errors (empty object when valid). */
-  validate(values: FormValues): FormErrors;
   /** The compiled, standards-compliant JSON Schema (Ajv's `SchemaObject`). */
   readonly jsonSchema: SchemaObject;
+
+  /** Validate `values`; returns per-field errors (empty object when valid). */
+  validate(values: FormValues): FormErrors;
 }
 
 /** Whether any property in the schema declares a `ui.visibleWhen` condition. */

@@ -100,7 +100,7 @@
 
   function onKeydown(event: KeyboardEvent): void {
     if (!interactive.value) return;
-    let next = props.modelValue;
+    let next: number;
     switch (event.key) {
       case 'ArrowRight':
       case 'ArrowUp':
@@ -136,9 +136,9 @@
     :aria-valuemax="max"
     :aria-valuenow="modelValue"
     :aria-valuetext="valueText"
+    :class="[`base-rating--${size}`]"
     aria-valuemin="0"
     class="base-rating"
-    :class="[`base-rating--${size}`]"
     role="slider"
     tabindex="0"
     @blur="clearHover"
@@ -164,8 +164,8 @@
         />
       </svg>
       <span
-        class="base-rating__fill"
         :style="{ width: `${fillFor(star)}%` }"
+        class="base-rating__fill"
       >
         <svg
           aria-hidden="true"
@@ -200,8 +200,8 @@
   <div
     v-else
     :aria-label="`${ariaLabel}: ${valueText}`"
-    class="base-rating"
     :class="[`base-rating--${size}`, { 'base-rating--disabled': disabled }]"
+    class="base-rating"
     role="img"
   >
     <span
@@ -223,8 +223,8 @@
         />
       </svg>
       <span
-        class="base-rating__fill"
         :style="{ width: `${fillFor(star)}%` }"
+        class="base-rating__fill"
       >
         <svg
           aria-hidden="true"

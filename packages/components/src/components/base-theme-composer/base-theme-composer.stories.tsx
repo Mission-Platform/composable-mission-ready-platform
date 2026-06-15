@@ -77,7 +77,12 @@ export const PresetBrand: Story = {
   render: () => ({
     components: { BaseThemeComposer, BaseButton, BaseCard },
     setup() {
-      const config = { primaryColor: '#db2777', primaryHoverColor: '#be185d', radius: '0.75rem', fontFamily: 'Georgia, serif' };
+      const config = {
+        primaryColor: '#db2777',
+        primaryHoverColor: '#be185d',
+        radius: '0.75rem',
+        fontFamily: 'Georgia, serif',
+      };
       return { config };
     },
     template: `

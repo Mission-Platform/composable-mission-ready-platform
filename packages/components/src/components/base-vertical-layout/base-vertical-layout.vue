@@ -22,8 +22,8 @@
   import { type BreakpointKey, useBreakpoints } from '@mission-platform/breakpoints';
   import { computed, ref, useSlots } from 'vue';
 
+  import { DRAWER_SIZE_REM, type DrawerSize } from '../base-drawer';
   import BaseDrawer, { type DrawerDraggable } from '../base-drawer/base-drawer.vue';
-  import { type DrawerSize, DRAWER_SIZE_REM } from '../base-drawer/constants';
 
   const props = withDefaults(
     defineProps<{

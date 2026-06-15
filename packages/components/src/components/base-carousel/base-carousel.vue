@@ -125,13 +125,7 @@
 
   function startAutoplay(): void {
     stopAutoplay();
-    if (
-      !properties.autoplay ||
-      isPaused.value ||
-      userPaused.value ||
-      reducedMotion.value ||
-      slideCount.value <= 1
-    ) {
+    if (!properties.autoplay || isPaused.value || userPaused.value || reducedMotion.value || slideCount.value <= 1) {
       return;
     }
     autoplayTimer = setInterval(
@@ -143,9 +137,7 @@
   }
 
   /** Whether the user-facing pause/play control should be shown. */
-  const showAutoplayToggle = computed(
-    () => properties.autoplay && slideCount.value > 1 && !reducedMotion.value,
-  );
+  const showAutoplayToggle = computed(() => properties.autoplay && slideCount.value > 1 && !reducedMotion.value);
 
   /** Toggles the explicit, user-controlled autoplay pause (WCAG 2.2.2). */
   function toggleAutoplayPaused(): void {
@@ -261,26 +253,26 @@
 
 <template>
   <section
-    class="base-carousel"
     :aria-label="ariaLabel"
     aria-roledescription="carousel"
+    class="base-carousel"
     tabindex="0"
+    @focusin="handleFocusIn"
+    @focusout="handleFocusOut"
     @keydown="handleKeydown"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
-    @focusin="handleFocusIn"
-    @focusout="handleFocusOut"
   >
     <div
       class="base-carousel__viewport"
-      @pointerdown="handlePointerDown"
-      @pointerup="handlePointerUp"
       @pointercancel="handlePointerCancel"
+      @pointerdown="handlePointerDown"
       @pointerleave="handlePointerCancel"
+      @pointerup="handlePointerUp"
     >
       <div
-        class="base-carousel__track"
         :style="trackStyle"
+        class="base-carousel__track"
       >
         <slot />
       </div>
@@ -288,20 +280,20 @@
 
     <button
       v-if="controls && slideCount > 1"
-      type="button"
-      class="base-carousel__control base-carousel__control--prev"
-      aria-label="Previous slide"
       :disabled="!loop && currentIndex === 0"
+      aria-label="Previous slide"
+      class="base-carousel__control base-carousel__control--prev"
+      type="button"
       @click="previous"
     >
       <span aria-hidden="true">‹</span>
     </button>
     <button
       v-if="controls && slideCount > 1"
-      type="button"
-      class="base-carousel__control base-carousel__control--next"
-      aria-label="Next slide"
       :disabled="!loop && currentIndex === slideCount - 1"
+      aria-label="Next slide"
+      class="base-carousel__control base-carousel__control--next"
+      type="button"
       @click="next"
     >
       <span aria-hidden="true">›</span>
@@ -315,21 +307,21 @@
       <button
         v-for="index in slideCount"
         :key="index - 1"
-        type="button"
-        role="tab"
         :aria-label="`Go to slide ${index}`"
         :aria-selected="currentIndex === index - 1"
         :class="['base-carousel__indicator', { 'base-carousel__indicator--active': currentIndex === index - 1 }]"
+        role="tab"
+        type="button"
         @click="goTo(index - 1)"
       />
     </div>
 
     <button
       v-if="showAutoplayToggle"
-      type="button"
-      class="base-carousel__autoplay"
       :aria-label="userPaused ? 'Start automatic slide rotation' : 'Pause automatic slide rotation'"
       :aria-pressed="userPaused"
+      class="base-carousel__autoplay"
+      type="button"
       @click="toggleAutoplayPaused"
     >
       <span aria-hidden="true">{{ userPaused ? '▶' : '❙❙' }}</span>

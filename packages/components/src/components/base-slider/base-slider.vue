@@ -125,7 +125,7 @@
   function onKeydown(event: KeyboardEvent): void {
     if (props.disabled) return;
     const big = props.step * 10;
-    let next = clampedValue.value;
+    let next: number;
     switch (event.key) {
       case 'ArrowRight':
       case 'ArrowUp':
@@ -156,20 +156,18 @@
 </script>
 
 <template>
-  <div
-    :class="['base-slider', `base-slider--${size}`, { 'base-slider--disabled': disabled }]"
-  >
+  <div :class="['base-slider', `base-slider--${size}`, { 'base-slider--disabled': disabled }]">
     <div
       ref="track"
       class="base-slider__track"
+      @pointercancel="onPointerUp"
       @pointerdown="onPointerDown"
       @pointermove="onPointerMove"
       @pointerup="onPointerUp"
-      @pointercancel="onPointerUp"
     >
       <div
-        class="base-slider__fill"
         :style="{ width: `${percent}%` }"
+        class="base-slider__fill"
       />
       <!-- eslint-disable-next-line vuejs-accessibility/interactive-supports-focus -->
       <div

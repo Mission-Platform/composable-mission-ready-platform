@@ -43,7 +43,7 @@
   import BaseFormBuilderSteps from './base-form-builder-steps.vue';
   import BaseFormBuilderWizardConfig from './base-form-builder-wizard-config.vue';
   import { DEFAULT_FIELD_TYPES, fieldKeyError } from './form-schema';
-  import { useFormBuilder, type InsertTarget } from './use-form-builder';
+  import { type InsertTarget, useFormBuilder } from './use-form-builder';
 
   import type {
     BuilderField,
@@ -53,7 +53,7 @@
     FormFieldType,
     SchemaFormDefinition,
   } from './types';
-  import type { DrawerDraggable } from '../base-drawer/base-drawer.vue';
+  import type { DrawerDraggable } from '../base-drawer';
 
   const props = withDefaults(
     defineProps<{
@@ -370,12 +370,12 @@
               :step-titles="builder.stepTitles.value"
               :type-labels="typeLabels"
               :wizard="wizard"
-              @add-child="builder.addChild"
               @duplicate="builder.duplicateField"
-              @move-down="builder.moveDown"
-              @move-up="builder.moveUp"
               @remove="builder.removeField"
               @select="builder.select"
+              @add-child="builder.addChild"
+              @move-down="builder.moveDown"
+              @move-up="builder.moveUp"
             />
           </div>
         </template>
@@ -445,8 +445,8 @@
             :step="builder.selectedStep.value"
             :step-count="builder.stepCount.value"
             :wizard="wizard"
-            @move-to-step="builder.moveFieldToStep(builder.selectedField.value!.id, $event)"
             @update="builder.updateField(builder.selectedField.value!.id, $event)"
+            @move-to-step="builder.moveFieldToStep(builder.selectedField.value!.id, $event)"
           />
           <BaseFormBuilderWizardConfig
             v-else

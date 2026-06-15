@@ -76,7 +76,6 @@
     >
       <component
         :is="LEVEL_ICONS[entry.level]"
-        :aria-label="entry.level"
         size="xs"
       />
       <BaseTypography

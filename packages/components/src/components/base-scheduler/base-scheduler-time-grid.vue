@@ -190,8 +190,8 @@
         <div
           v-for="h in HOURS"
           :key="h"
-          class="base-scheduler-time-grid__hour-label"
           :style="{ height: `${HOUR_HEIGHT}px` }"
+          class="base-scheduler-time-grid__hour-label"
         >
           <span>{{ formatHour(h) }}</span>
         </div>
@@ -199,33 +199,33 @@
 
       <!-- Day columns -->
       <div
-        class="base-scheduler-time-grid__columns"
         :style="{ height: `${GRID_HEIGHT}px` }"
+        class="base-scheduler-time-grid__columns"
       >
         <div
           v-for="day in days"
           :key="day"
           :class="['base-scheduler-time-grid__column', { 'base-scheduler-time-grid__column--today': day === todayIso }]"
-          :data-scheduler-day="day"
+          v-bind="{ 'data-scheduler-day': day }"
         >
           <!-- Hour grid lines -->
           <div
             v-for="h in HOURS"
             :key="h"
-            class="base-scheduler-time-grid__hour-row"
             :style="{ height: `${HOUR_HEIGHT}px` }"
+            class="base-scheduler-time-grid__hour-row"
           />
 
           <!-- Events -->
           <BaseSchedulerEvent
             v-for="slot in layouts[day]"
             :key="slot.event.uid"
-            :event="slot.event"
             :duration="formatDuration(slot.event)"
-            :top="slotTop(slot.event)"
+            :event="slot.event"
             :height="slotHeight(slot.event)"
-            :width-fraction="1 / slot.totalColumns"
             :left-fraction="slot.column / slot.totalColumns"
+            :top="slotTop(slot.event)"
+            :width-fraction="1 / slot.totalColumns"
             @click="emit('event-click', $event)"
             @drag-start="(uid, oy) => emit('event-drag-start', uid, oy)"
             @resize-start="(uid, sy) => emit('event-resize-start', uid, sy)"
@@ -234,15 +234,15 @@
           <!-- Current time indicator (only on today's column) -->
           <div
             v-if="day === todayIso"
-            class="base-scheduler-time-grid__now-line"
             :style="{ top: nowTop }"
             aria-hidden="true"
+            class="base-scheduler-time-grid__now-line"
           />
 
           <!-- Slot-click target: sits behind events, provides accessible button for adding events -->
           <button
-            class="base-scheduler-time-grid__slot-btn"
             :aria-label="`Add event on ${new Date(day + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}`"
+            class="base-scheduler-time-grid__slot-btn"
             @click="onColumnClick($event, day)"
             @keydown="onColumnKeydown($event, day)"
           />

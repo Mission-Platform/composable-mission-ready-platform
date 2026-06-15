@@ -288,8 +288,8 @@
     <div class="base-scheduler__toolbar">
       <!-- Today -->
       <BaseButton
-        variant="secondary"
         size="sm"
+        variant="secondary"
         @click="scheduler.goToToday()"
       >
         Today
@@ -298,17 +298,17 @@
       <!-- Prev / Next -->
       <div class="base-scheduler__nav">
         <BaseButton
-          variant="tertiary"
-          size="sm"
           aria-label="Previous"
+          size="sm"
+          variant="tertiary"
           @click="scheduler.prev()"
         >
           <IconChevron class="base-scheduler__icon base-scheduler__icon--prev" />
         </BaseButton>
         <BaseButton
-          variant="tertiary"
-          size="sm"
           aria-label="Next"
+          size="sm"
+          variant="tertiary"
           @click="scheduler.next()"
         >
           <IconChevron class="base-scheduler__icon base-scheduler__icon--next" />
@@ -318,8 +318,8 @@
       <!-- Title -->
       <BaseTypography
         as="h2"
-        variant="h5"
         class="base-scheduler__title"
+        variant="h5"
       >
         {{ toolbarTitle }}
       </BaseTypography>
@@ -329,8 +329,8 @@
 
       <!-- New Event -->
       <BaseButton
-        variant="primary"
         size="sm"
+        variant="primary"
         @click="openCreateDialog()"
       >
         + New Event
@@ -338,16 +338,16 @@
 
       <!-- View switcher -->
       <div
+        aria-label="Calendar view"
         class="base-scheduler__view-switcher"
         role="group"
-        aria-label="Calendar view"
       >
         <BaseButton
           v-for="v in VIEWS"
           :key="v.id"
           :variant="scheduler.view.value === v.id ? 'primary' : 'tertiary'"
-          size="sm"
           class="base-scheduler__view-btn"
+          size="sm"
           @click="scheduler.setView(v.id)"
         >
           {{ v.label }}
@@ -394,12 +394,12 @@
 
     <!-- ── Event dialog ── -->
     <BaseSchedulerEventDialog
-      :open="dialogOpen"
-      :event="dialogEvent"
       :default-start="dialogDefaultStart"
-      @save="onDialogSave"
-      @delete="onDialogDelete"
+      :event="dialogEvent"
+      :open="dialogOpen"
       @close="dialogOpen = false"
+      @delete="onDialogDelete"
+      @save="onDialogSave"
     />
   </div>
 </template>

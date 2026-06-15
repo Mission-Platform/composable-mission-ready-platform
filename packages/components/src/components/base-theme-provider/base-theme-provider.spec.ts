@@ -8,7 +8,6 @@ import BaseThemeProvider from './base-theme-provider.vue';
 
 import type { Theme } from '../../composables/use-theme';
 
-
 beforeEach(() => {
   delete document.documentElement.dataset.theme;
   localStorage.clear();

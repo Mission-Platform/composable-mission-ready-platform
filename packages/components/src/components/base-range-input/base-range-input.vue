@@ -166,7 +166,7 @@
     if (props.disabled) return;
     const big = props.step * 10;
     const current = thumb === 'min' ? lower.value : upper.value;
-    let next = current;
+    let next: number;
     switch (event.key) {
       case 'ArrowRight':
       case 'ArrowUp':
@@ -201,14 +201,14 @@
     <div
       ref="track"
       class="base-range-input__track"
+      @pointercancel="onPointerUp"
       @pointerdown="onTrackPointerDown"
       @pointermove="onPointerMove"
       @pointerup="onPointerUp"
-      @pointercancel="onPointerUp"
     >
       <div
-        class="base-range-input__fill"
         :style="{ left: `${lowerPercent}%`, right: `${100 - upperPercent}%` }"
+        class="base-range-input__fill"
       />
       <!-- eslint-disable-next-line vuejs-accessibility/interactive-supports-focus -->
       <div
@@ -223,10 +223,10 @@
         class="base-range-input__thumb base-range-input__thumb--min"
         role="slider"
         @keydown="onKeydown('min', $event)"
+        @pointercancel="onPointerUp"
         @pointerdown="onThumbPointerDown('min', $event)"
         @pointermove="onPointerMove"
         @pointerup="onPointerUp"
-        @pointercancel="onPointerUp"
       >
         <span
           v-if="showValue"
@@ -248,10 +248,10 @@
         class="base-range-input__thumb base-range-input__thumb--max"
         role="slider"
         @keydown="onKeydown('max', $event)"
+        @pointercancel="onPointerUp"
         @pointerdown="onThumbPointerDown('max', $event)"
         @pointermove="onPointerMove"
         @pointerup="onPointerUp"
-        @pointercancel="onPointerUp"
       >
         <span
           v-if="showValue"

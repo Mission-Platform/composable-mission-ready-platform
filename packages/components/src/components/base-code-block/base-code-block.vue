@@ -196,8 +196,8 @@
     </div>
 
     <div
-      class="base-code-block__body"
       :style="bodyStyle"
+      class="base-code-block__body"
       tabindex="0"
     >
       <table

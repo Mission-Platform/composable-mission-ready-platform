@@ -24,7 +24,7 @@
    */
   import { computed } from 'vue';
 
-  import { type GridGap, type GridAlignment, GRID_GAP_SPACING } from './constants';
+  import { GRID_GAP_SPACING, type GridAlignment, type GridGap } from './constants';
 
   /** Coordinates exposed by the scoped `cell` slot for each grid cell. */
   export interface GridCell {

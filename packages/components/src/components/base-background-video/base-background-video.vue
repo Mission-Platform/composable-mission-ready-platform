@@ -103,7 +103,7 @@
       ref="videoElement"
       :autoplay="!reducedMotion"
       :poster="poster"
-      :src="sources.length ? undefined : src"
+      :src="sources?.length ? undefined : src"
       :style="{ objectFit: fit }"
       aria-hidden="true"
       class="base-background-video__video"

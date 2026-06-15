@@ -2,7 +2,7 @@ import BaseMenuItem from '../base-menu-item/base-menu-item.vue';
 
 import BaseMenubar from './base-menubar.vue';
 
-import type { MenuItem } from './base-menubar.vue';
+import type { MenuItem } from '../base-menu';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {

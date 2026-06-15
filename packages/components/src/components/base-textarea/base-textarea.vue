@@ -11,7 +11,7 @@
   import { useId } from '../../composables/use-id';
   import BaseTypography from '../base-typography/base-typography.vue';
 
-  import type { Autocomplete } from '../base-schema-form/types';
+  import type { Autocomplete } from '../base-schema-form';
 
   export type TextareaSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   export type TextareaResize = 'none' | 'vertical' | 'horizontal' | 'both';

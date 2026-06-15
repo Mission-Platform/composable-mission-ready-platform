@@ -71,7 +71,6 @@
       </BaseTypography>
     </span>
     <IconPlus
-      aria-hidden="true"
       class="form-builder-palette-item__icon"
       size="sm"
     />

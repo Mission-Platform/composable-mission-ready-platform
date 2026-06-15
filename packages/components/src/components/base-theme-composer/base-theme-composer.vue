@@ -22,15 +22,9 @@
    */
   import { onScopeDispose, provide, watch } from 'vue';
 
-  import {
-    ThemeComposerKey,
-    createThemeComposer,
-  } from '../../composables/use-theme-composer';
+  import { createThemeComposer, ThemeComposerKey } from '../../composables/use-theme-composer';
 
-  import type {
-    ThemeComposerAttribute,
-    ThemeComposerConfig,
-  } from '../../composables/use-theme-composer';
+  import type { ThemeComposerAttribute, ThemeComposerConfig } from '../../composables/use-theme-composer';
 
   const props = withDefaults(
     defineProps<{

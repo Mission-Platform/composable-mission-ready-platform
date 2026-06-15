@@ -23,7 +23,7 @@
    */
   import { computed } from 'vue';
 
-  import { type MasonryGap, MASONRY_GAP_SPACING } from './constants';
+  import { MASONRY_GAP_SPACING, type MasonryGap } from './constants';
 
   const props = withDefaults(
     defineProps<{

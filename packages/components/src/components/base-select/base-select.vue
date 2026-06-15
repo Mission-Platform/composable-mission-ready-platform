@@ -14,7 +14,7 @@
   import BaseDropdown from '../base-dropdown/base-dropdown.vue';
   import BaseTypography from '../base-typography/base-typography.vue';
 
-  import type { Autocomplete } from '../base-schema-form/types';
+  import type { Autocomplete } from '../base-schema-form';
 
   export type SelectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 

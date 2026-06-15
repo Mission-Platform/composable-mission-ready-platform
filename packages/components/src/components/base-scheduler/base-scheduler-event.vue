@@ -173,6 +173,7 @@
 
 <template>
   <button
+    :aria-label="title"
     :class="[
       'base-scheduler-event',
       {
@@ -182,11 +183,10 @@
       },
     ]"
     :style="style"
-    :aria-label="title"
     type="button"
+    @click="emit('click', event)"
     @pointerdown="onPointerDown"
     @pointerup="onPointerUp"
-    @click="emit('click', event)"
   >
     <span class="base-scheduler-event__body">
       <span class="base-scheduler-event__title">{{ title }}</span>
@@ -202,8 +202,8 @@
     <!-- Resize handle -->
     <span
       v-if="resizable"
-      class="base-scheduler-event__resize-handle"
       aria-hidden="true"
+      class="base-scheduler-event__resize-handle"
       @pointerdown="onResizePointerDown"
     />
   </button>

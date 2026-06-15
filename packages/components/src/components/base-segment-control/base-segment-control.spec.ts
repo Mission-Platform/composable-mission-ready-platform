@@ -58,7 +58,12 @@ describe('BaseSegmentControl', () => {
 
   it('disables individual segments and the whole control', () => {
     const disabledOption = mount(BaseSegmentControl, {
-      props: { options: [{ label: 'A', value: 'a', disabled: true }, { label: 'B', value: 'b' }] },
+      props: {
+        options: [
+          { label: 'A', value: 'a', disabled: true },
+          { label: 'B', value: 'b' },
+        ],
+      },
     });
     expect((disabledOption.findAll('[role="radio"]')[0].element as HTMLButtonElement).disabled).toBe(true);
 

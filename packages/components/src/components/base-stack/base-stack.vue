@@ -17,33 +17,37 @@
    */
   import { computed } from 'vue';
 
-  import { type GridGap, GRID_GAP_SPACING } from '../base-grid/constants';
+  import { GRID_GAP_SPACING, type GridGap } from '../base-grid';
 
   import {
+    STACK_ALIGN_ITEMS,
+    STACK_JUSTIFY_CONTENT,
+    type StackAlign,
     type StackDirection,
     type StackJustify,
-    type StackAlign,
-    STACK_JUSTIFY_CONTENT,
-    STACK_ALIGN_ITEMS,
   } from './constants';
 
+  import type { LabelHTMLAttributes } from 'vue';
+
   const props = withDefaults(
-    defineProps<{
-      /** Axis the children flow along: `vertical` (column) or `horizontal` (row). */
-      direction?: StackDirection;
-      /** Gap between children (named `2xs … 2xl` scale). */
-      gap?: GridGap;
-      /** Main-axis distribution of the children (`justify-content`). */
-      justify?: StackJustify;
-      /** Cross-axis placement of the children (`align-items`). */
-      align?: StackAlign;
-      /** Whether children wrap onto multiple lines when they overflow. */
-      wrap?: boolean;
-      /** Render as an inline flex container (`inline-flex`) rather than a block. */
-      inline?: boolean;
-      /** The HTML tag the stack container renders as. */
-      as?: string;
-    }>(),
+    defineProps<
+      {
+        /** Axis the children flow along: `vertical` (column) or `horizontal` (row). */
+        direction?: StackDirection;
+        /** Gap between children (named `2xs … 2xl` scale). */
+        gap?: GridGap;
+        /** Main-axis distribution of the children (`justify-content`). */
+        justify?: StackJustify;
+        /** Cross-axis placement of the children (`align-items`). */
+        align?: StackAlign;
+        /** Whether children wrap onto multiple lines when they overflow. */
+        wrap?: boolean;
+        /** Render as an inline flex container (`inline-flex`) rather than a block. */
+        inline?: boolean;
+        /** The HTML tag the stack container renders as. */
+        as?: string;
+      } & /* @vue-ignore */ LabelHTMLAttributes
+    >(),
     {
       direction: 'vertical',
       gap: 'md',

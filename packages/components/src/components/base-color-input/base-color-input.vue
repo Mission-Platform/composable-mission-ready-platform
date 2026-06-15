@@ -120,9 +120,9 @@
       <!-- Native colour picker — visually a swatch button -->
       <label
         :for="resolvedId"
-        class="base-color-input__swatch-label"
         :style="{ backgroundColor: displayValue }"
         aria-label="Open colour picker"
+        class="base-color-input__swatch-label"
       />
       <input
         :id="resolvedId"

@@ -8,13 +8,7 @@
 // `BaseSchemaForm`, so the produced schema can be fed straight into a form with
 // no translation layer.
 
-import type {
-  Autocapitalize,
-  Autocomplete,
-  FieldCondition,
-  FormFieldType,
-  LocationFormat,
-} from '../base-schema-form/types';
+import type { Autocapitalize, Autocomplete, FieldCondition, FormFieldType, LocationFormat } from '../base-schema-form';
 
 export type {
   FormFieldType,

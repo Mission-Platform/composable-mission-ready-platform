@@ -17,20 +17,23 @@
   import { computed } from 'vue';
 
   import type { ToastVariant } from '../../composables/use-toast';
+  import type { HTMLAttributes } from 'vue';
 
   const props = withDefaults(
-    defineProps<{
-      /** Intent / colour treatment. Defaults to `'info'`. */
-      variant?: ToastVariant;
-      /** Bold title rendered above the message. */
-      title?: string;
-      /** The message text (overridden by the default slot). */
-      message?: string;
-      /** Whether to render a dismiss button. Defaults to `true`. */
-      dismissible?: boolean;
-      /** Accessible label for the dismiss button. Defaults to `'Dismiss'`. */
-      dismissLabel?: string;
-    }>(),
+    defineProps<
+      {
+        /** Intent / colour treatment. Defaults to `'info'`. */
+        variant?: ToastVariant;
+        /** Bold title rendered above the message. */
+        title?: string;
+        /** The message text (overridden by the default slot). */
+        message?: string;
+        /** Whether to render a dismiss button. Defaults to `true`. */
+        dismissible?: boolean;
+        /** Accessible label for the dismiss button. Defaults to `'Dismiss'`. */
+        dismissLabel?: string;
+      } & /* @vue-ignore */ HTMLAttributes
+    >(),
     {
       variant: 'info',
       title: undefined,

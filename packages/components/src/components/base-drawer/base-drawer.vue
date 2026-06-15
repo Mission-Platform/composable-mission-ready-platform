@@ -21,7 +21,7 @@
   import BaseDrawerBody from './base-drawer-body.vue';
   import BaseDrawerFooter from './base-drawer-footer.vue';
   import BaseDrawerHeader from './base-drawer-header.vue';
-  import { type DrawerSize, DRAWER_SIZE_REM } from './constants';
+  import { DRAWER_SIZE_REM, type DrawerSize } from './constants';
 
   /**
    * Which viewport edge the drawer is anchored to:
@@ -159,7 +159,8 @@
   const resizeStyle = computed<Record<string, string> | undefined>(() => {
     if (!canResize.value) return undefined;
     const style: Record<string, string> = {};
-    const dimension = resizedSizeRem.value == undefined ? undefined : `${Math.round(resizedSizeRem.value * 1000) / 1000}rem`;
+    const dimension =
+      resizedSizeRem.value == undefined ? undefined : `${Math.round(resizedSizeRem.value * 1000) / 1000}rem`;
     if (isHorizontal.value) {
       style.maxWidth = props.draggable === true ? '100vw' : `${maxSizeRem.value}rem`;
       if (dimension != undefined) style.width = dimension;

@@ -15,7 +15,7 @@
   import BaseTag from '../base-tag/base-tag.vue';
   import BaseTypography from '../base-typography/base-typography.vue';
 
-  import type { Autocomplete } from '../base-schema-form/types';
+  import type { Autocomplete } from '../base-schema-form';
 
   export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 

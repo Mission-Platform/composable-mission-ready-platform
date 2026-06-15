@@ -22,7 +22,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '`Timeline` displays a chronological sequence of events. Compose it from `BaseTimelineItem` children; the item automatically inherits the parent timeline\'s orientation and alternating rhythm. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          "`Timeline` displays a chronological sequence of events. Compose it from `BaseTimelineItem` children; the item automatically inherits the parent timeline's orientation and alternating rhythm. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
       },
     },
   },
