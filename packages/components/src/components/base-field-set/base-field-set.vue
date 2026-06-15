@@ -15,6 +15,7 @@
    * the component's TypeScript declarations) for the full public API,
    * and refer to the linked stories for usage examples.
    */
+  import BaseStack from '../base-stack/base-stack.vue';
   import BaseTypography from '../base-typography/base-typography.vue';
 
   withDefaults(
@@ -65,9 +66,12 @@
       {{ description }}
     </BaseTypography>
 
-    <div class="base-field-set__content">
+    <BaseStack
+      class="base-field-set__content"
+      gap="sm"
+    >
       <slot />
-    </div>
+    </BaseStack>
   </fieldset>
 </template>
 
@@ -93,12 +97,6 @@
 
     &__description {
       margin: 0 0 var(--mp-spacing-3);
-    }
-
-    &__content {
-      display: flex;
-      flex-direction: column;
-      gap: var(--mp-spacing-3);
     }
   }
 </style>

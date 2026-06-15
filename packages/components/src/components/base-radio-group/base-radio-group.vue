@@ -10,6 +10,7 @@
   import { computed } from 'vue';
 
   import BaseRadio from '../base-radio/base-radio.vue';
+  import BaseStack from '../base-stack/base-stack.vue';
   import BaseTypography from '../base-typography/base-typography.vue';
 
   export interface RadioOption {
@@ -78,7 +79,13 @@
         *
       </span>
     </legend>
-    <div :class="['base-radio-group__options', `base-radio-group__options--${direction}`]">
+    <BaseStack
+      :align="direction === 'horizontal' ? 'center' : 'stretch'"
+      :class="['base-radio-group__options', `base-radio-group__options--${direction}`]"
+      :direction="direction"
+      :gap="direction === 'horizontal' ? 'md' : 'xs'"
+      :wrap="direction === 'horizontal'"
+    >
       <BaseRadio
         v-for="opt in options"
         :id="`${groupId}-${opt.value}`"
@@ -91,7 +98,7 @@
         @update:model-value="(v) => emit('update:modelValue', v)"
       />
       <slot />
-    </div>
+    </BaseStack>
     <BaseTypography
       v-if="error"
       as="p"
@@ -143,20 +150,6 @@
     &__required {
       color: var(--mp-color-danger-default);
       margin-left: 2px;
-    }
-
-    &__options {
-      display: flex;
-      gap: var(--mp-spacing-2);
-
-      &--vertical {
-        flex-direction: column;
-      }
-
-      &--horizontal {
-        flex-flow: row wrap;
-        gap: var(--mp-spacing-4);
-      }
     }
 
     &--disabled {

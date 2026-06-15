@@ -15,6 +15,7 @@
   import { computed } from 'vue';
 
   import { useId } from '../../composables/use-id';
+  import BaseStack from '../base-stack/base-stack.vue';
   import BaseTypography from '../base-typography/base-typography.vue';
 
   export type NumberStepperSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
@@ -133,12 +134,13 @@
 </script>
 
 <template>
-  <div
+  <BaseStack
     :class="[
       'base-number-stepper',
       `base-number-stepper--${size}`,
       { 'base-number-stepper--error': !!error, 'base-number-stepper--disabled': disabled },
     ]"
+    gap="2xs"
   >
     <label
       v-if="label"
@@ -221,15 +223,11 @@
     >
       {{ hint }}
     </BaseTypography>
-  </div>
+  </BaseStack>
 </template>
 
 <style lang="scss" scoped>
   .base-number-stepper {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-1);
-
     &__label {
       display: flex;
       align-items: center;

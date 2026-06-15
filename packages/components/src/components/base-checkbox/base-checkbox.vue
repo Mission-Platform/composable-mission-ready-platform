@@ -10,6 +10,7 @@
   import { computed, ref, watch } from 'vue';
 
   import { useId } from '../../composables/use-id';
+  import BaseStack from '../base-stack/base-stack.vue';
   import BaseTypography from '../base-typography/base-typography.vue';
 
   const props = withDefaults(
@@ -83,10 +84,18 @@
 </script>
 
 <template>
-  <div :class="['base-checkbox', { 'base-checkbox--error': !!error, 'base-checkbox--disabled': disabled }]">
-    <label
+  <BaseStack
+    :class="['base-checkbox', { 'base-checkbox--error': !!error, 'base-checkbox--disabled': disabled }]"
+    gap="2xs"
+  >
+    <BaseStack
       :for="resolvedId"
+      align="center"
+      as="label"
       class="base-checkbox__row"
+      direction="horizontal"
+      gap="xs"
+      inline
     >
       <span class="base-checkbox__control-wrapper">
         <input
@@ -157,7 +166,7 @@
           *
         </span>
       </span>
-    </label>
+    </BaseStack>
     <BaseTypography
       v-if="error"
       :id="`${resolvedId}-error`"
@@ -179,19 +188,12 @@
     >
       {{ hint }}
     </BaseTypography>
-  </div>
+  </BaseStack>
 </template>
 
 <style lang="scss" scoped>
   .base-checkbox {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-1);
-
     &__row {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--mp-spacing-2);
       cursor: pointer;
     }
 
