@@ -272,8 +272,8 @@
     }
 
     &--disabled {
-      opacity: 0.5;
       pointer-events: none;
+      color: var(--mp-color-text-disabled);
     }
 
     &__error {
