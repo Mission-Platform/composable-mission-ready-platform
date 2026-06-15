@@ -1,5 +1,13 @@
 # @mission-platform/eslint-config
 
+## 0.3.2
+
+### Patch Changes
+
+- e9b2b65: guard turbo config name lookup with optional chaining
+
+  The flat-config mapping over `turboConfig` now reads `cfg?.name` instead of `cfg.name`, so a `null`/`undefined` entry no longer throws while ESLint loads the shared config.
+
 ## 0.3.1
 
 ### Patch Changes

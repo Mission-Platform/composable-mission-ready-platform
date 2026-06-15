@@ -1,5 +1,37 @@
 # @mission-platform/map
 
+## 0.2.2
+
+### Patch Changes
+
+- 075a5a2: normalize source formatting and import ordering
+
+  Apply the repo-wide Prettier/ESLint formatting pass (line reflow, attribute and import ordering, barrel-import paths, and simplified GeoJSON `Feature` typings in `map`). No runtime behaviour changes.
+
+- Updated dependencies [776e32c]
+- Updated dependencies [90bb7dc]
+- Updated dependencies [8e634ea]
+- Updated dependencies [32013ac]
+- Updated dependencies [90928a1]
+- Updated dependencies [4e887cf]
+- Updated dependencies [6d51afc]
+- Updated dependencies [f9f35db]
+- Updated dependencies [cf0be57]
+- Updated dependencies [2d48c37]
+- Updated dependencies [01faab7]
+- Updated dependencies [54fdc7a]
+- Updated dependencies [dc84af7]
+- Updated dependencies [a93a7b2]
+- Updated dependencies [075a5a2]
+- Updated dependencies [140ad29]
+- Updated dependencies [026e5bc]
+- Updated dependencies [b4feb31]
+- Updated dependencies [bfab936]
+  - @mission-platform/components@4.0.0
+  - @mission-platform/i18n@0.4.1
+  - @mission-platform/icons@1.1.0
+  - @mission-platform/tokens@0.3.1
+
 ## 0.2.1
 
 ### Patch Changes

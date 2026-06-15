@@ -1,5 +1,16 @@
 # @mission-platform/breakpoints
 
+## 3.0.1
+
+### Patch Changes
+
+- 075a5a2: normalize source formatting and import ordering
+
+  Apply the repo-wide Prettier/ESLint formatting pass (line reflow, attribute and import ordering, barrel-import paths, and simplified GeoJSON `Feature` typings in `map`). No runtime behaviour changes.
+
+- Updated dependencies [dc84af7]
+  - @mission-platform/i18n@0.4.1
+
 ## 3.0.0
 
 ### Minor Changes

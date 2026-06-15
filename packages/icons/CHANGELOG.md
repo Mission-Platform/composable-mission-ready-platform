@@ -1,5 +1,20 @@
 # @mission-platform/icons
 
+## 1.1.0
+
+### Minor Changes
+
+- a93a7b2: add new utility icons: `IconChat`, `IconSend`, `IconMail`, `IconPhone`, `IconClock`, `IconQrCode`, `IconLink`, `IconMapPin`, `IconHeart`, `IconShare`, `IconCamera`, and `IconImage`
+
+### Patch Changes
+
+- 075a5a2: normalize source formatting and import ordering
+
+  Apply the repo-wide Prettier/ESLint formatting pass (line reflow, attribute and import ordering, barrel-import paths, and simplified GeoJSON `Feature` typings in `map`). No runtime behaviour changes.
+
+- Updated dependencies [075a5a2]
+  - @mission-platform/tokens@0.3.1
+
 ## 1.0.0
 
 ### Major Changes

@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/map",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "MapLibre GL Vue 3 wrapper with full reactivity support for Mission Platform",
   "type": "module",
   "sideEffects": [
