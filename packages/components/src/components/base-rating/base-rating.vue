@@ -182,20 +182,16 @@
         </svg>
       </span>
 
-      <button
+      <span
         v-if="allowHalf"
-        :aria-label="`Rate ${star - 0.5} of ${max}`"
+        aria-hidden="true"
         class="base-rating__hit base-rating__hit--half"
-        tabindex="-1"
-        type="button"
         @click="onStarClick(star, true)"
         @mousemove="onStarHover(star, true)"
       />
-      <button
-        :aria-label="`Rate ${star} of ${max}`"
+      <span
+        aria-hidden="true"
         class="base-rating__hit base-rating__hit--full"
-        tabindex="-1"
-        type="button"
         @click="onStarClick(star, false)"
         @mousemove="onStarHover(star, false)"
       />
