@@ -50,7 +50,7 @@ export default defineAppConfig({
       }),
     ],
     build: {
-      rollupOptions: {
+      rolldownOptions: {
         output: {
           manualChunks(id) {
             if (id.includes('monaco-editor')) {
