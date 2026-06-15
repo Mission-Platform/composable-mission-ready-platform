@@ -192,7 +192,7 @@ const config = [
   // Flag usage of environment variables that have not been declared in
   // `turbo.json` (`globalEnv` / per-task `env`), which would otherwise silently
   // break Turborepo's cache hashing.
-  ...turboConfig.map((cfg) => ({ ...cfg, name: cfg.name ?? 'mission-platform/turbo' })),
+  ...turboConfig.map((cfg) => ({ ...cfg, name: cfg?.name ?? 'mission-platform/turbo' })),
   // ── prettier ──────────────────────────────────────────────────────────────
   // Must come last: disables all ESLint rules that conflict with Prettier so
   // ESLint never reformats code in ways Prettier would undo. Prettier remains
