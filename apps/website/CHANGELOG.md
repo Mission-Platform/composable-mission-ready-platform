@@ -1,5 +1,36 @@
 # @mission-platform/website
 
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies [776e32c]
+- Updated dependencies [90bb7dc]
+- Updated dependencies [8e634ea]
+- Updated dependencies [32013ac]
+- Updated dependencies [90928a1]
+- Updated dependencies [4e887cf]
+- Updated dependencies [6d51afc]
+- Updated dependencies [f9f35db]
+- Updated dependencies [cf0be57]
+- Updated dependencies [2d48c37]
+- Updated dependencies [01faab7]
+- Updated dependencies [54fdc7a]
+- Updated dependencies [dc84af7]
+- Updated dependencies [a93a7b2]
+- Updated dependencies [075a5a2]
+- Updated dependencies [140ad29]
+- Updated dependencies [026e5bc]
+- Updated dependencies [b4feb31]
+- Updated dependencies [bfab936]
+  - @mission-platform/components@4.0.0
+  - @mission-platform/i18n@0.4.1
+  - @mission-platform/icons@1.1.0
+  - @mission-platform/breakpoints@3.0.1
+  - @mission-platform/hunspell@0.3.2
+  - @mission-platform/seo@0.3.1
+  - @mission-platform/tokens@0.3.1
+
 ## 0.0.4
 
 ### Patch Changes

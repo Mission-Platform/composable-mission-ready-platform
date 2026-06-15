@@ -1,5 +1,151 @@
 # @mission-platform/components
 
+## 4.0.0
+
+### Major Changes
+
+- 54fdc7a: redo `BaseSidebar` as `BaseDrawer` with start/end/top/bottom placement
+
+  The `BaseSidebar` family is replaced by a more general `BaseDrawer` that can be anchored to any viewport edge. The `side` prop (`left`/`right`) is replaced by a `placement` prop accepting `start`/`end` (full-height side panels sized by width, using logical inline edges) and the new `top`/`bottom` (full-width panels sized by height). Sizing, slide transitions, and the optional draggable resize handle are all axis-aware, so a drag on a `top`/`bottom` drawer grows its height.
+
+  BREAKING CHANGE: `BaseSidebar`, `BaseSidebarHeader`, `BaseSidebarBody`, `BaseSidebarFooter` are renamed to `BaseDrawer`, `BaseDrawerHeader`, `BaseDrawerBody`, `BaseDrawerFooter`. The `side="left" | "right"` prop is replaced by `placement="start" | "end" | "top" | "bottom"` (default `start`). The `SidebarSide`, `SidebarSize`, `SidebarVariant`, `SidebarDraggable` types and the `SIDEBAR_SIZE_REM` export are renamed to `DrawerPlacement`, `DrawerSize`, `DrawerVariant`, `DrawerDraggable` and `DRAWER_SIZE_REM`. Update imports, tags, the `side` prop, and the CSS class hooks (`base-sidebar*` → `base-drawer*`, including the resize handle modifiers `--left`/`--right` → `--start`/`--end`).
+
+### Minor Changes
+
+- 776e32c: improve accessibility / WCAG 2.2 compliance
+
+  - Ship a global reduced-motion safety net in `@mission-platform/components/styles`: a `@media (prefers-reduced-motion: reduce)` reset that collapses animation/transition durations and disables smooth scrolling across every component and the host app (WCAG 2.2 SC 2.3.3 / 2.2.2), so plain-CSS motion honours the user's preference without each component opting in.
+  - Add a reusable, SSR-safe `useReducedMotion()` composable (and a one-off `prefersReducedMotion()` helper) for gating JS-driven motion; refactor `BaseBackgroundVideo` to use it.
+  - `BaseCarousel`: never auto-rotate when reduced motion is preferred, expose an always-available, accessible pause/play control while autoplaying (WCAG 2.2.2 Pause, Stop, Hide), and enlarge each indicator dot to a ≥24×24px tap target with a visible focus ring (WCAG 2.5.8 / 2.4.7).
+
+- 90bb7dc: feat(components): add BaseGrid layout component
+
+  Add `BaseGrid`, a CSS Grid layout primitive that arranges content into a
+  grid of `rows` (m) by `cols` (n). Gaps use a named `2xs`–`2xl` scale
+  (`gap`, `rowGap`, `columnGap`) where each step maps to a `--mp-spacing-*`
+  design token. The `justify` / `align` props control item placement within
+  each cell (`justify-items` / `align-items`). It also supports a custom
+  container tag via `as`, a default slot for free-form children (which may
+  span tracks via the standard `grid-column` / `grid-row` `span` CSS), and a
+  scoped `cell` slot that renders one node per cell exposing the zero-based
+  `row`, `column`, and `index`.
+
+- 8e634ea: add BaseIconButton and reuse BaseButton/BaseIconButton across components
+
+  Introduce a new `BaseIconButton` component (ghost/primary/secondary/danger variants, sm/md/lg sizes, required `label` for an accessible name) and adopt the shared button components instead of hand-rolled markup: dialog/modal/sidebar header close controls now use `BaseIconButton`; the default schema-form actions and form-wizard footer now use `BaseButton`; and the log viewer row, form-builder palette item, and scheduler event tile are now real `<button>` elements instead of `role="button"` divs, improving keyboard and screen-reader behaviour.
+
+- 4e887cf: feat(components): add BaseStack layout component
+
+  Add `BaseStack`, a flexbox stack layout primitive that lays its children
+  out in a single line, either vertically (a column) or horizontally (a row)
+  via the `direction` prop. Gaps reuse the shared named `2xs`–`2xl` scale
+  (each step mapping to a `--mp-spacing-*` design token). The `justify`
+  (`justify-content`) and `align` (`align-items`) props control distribution
+  along the main axis and placement along the cross axis, `wrap` toggles flex
+  wrapping, `inline` renders an `inline-flex` container, and `as` sets the
+  container tag.
+
+- 01faab7: feat(components): add content, media, navigation, feedback, and theme components
+
+  Add a large batch of new Vue 3 components and composables to the library:
+
+  - Content & display: `BaseSeparator` (horizontal/vertical divider with an
+    optional label and `decorative` mode), `BaseQuote` (semantic blockquote
+    with attribution), `BaseButtonGroup` (joined/`attached` button row),
+    `BaseHero` (page banner with eyebrow/title/subtitle, media + actions
+    slots, and a scrim overlay).
+  - Media: `BaseResponsiveImage` (`<picture>` with art-directed sources,
+    lazy loading, fixed aspect ratio), `BaseResponsiveVideo` (responsive
+    `<video>` with format sources and poster), and `BaseBackgroundVideo`
+    (decorative full-bleed background video that honours
+    `prefers-reduced-motion`).
+  - Navigation & input: `BasePagination` (with prev/next/edge controls and
+    truncation ellipses), `BaseSegmentControl` (`role="radiogroup"` switcher
+    with roving tabindex), `BaseRating` (whole/half-star input and read-only
+    display), and `BaseSlider` (range input with drag + keyboard control).
+  - Feedback: `BaseAlertBanner` (inline, dismissible alert) plus a toast
+    system — `BaseToast`, `BaseToastContainer`, and the `useToast` store.
+  - Theme configuration: `BaseThemeProvider` and the `useTheme` composable,
+    which create/share a reactive theme store, apply `data-theme` to
+    `<html>`, persist the preference, and track the system color scheme
+    (interoperating with the existing `BaseThemeToggle`).
+
+  All components ship with Storybook stories, unit tests, design-token-based
+  styling, and accessible roles/keyboard interactions.
+
+- 026e5bc: back BaseSelect and BaseMultiselect with a hidden native select for autofill
+
+  `BaseSelect` and `BaseMultiselect` now render a visually-hidden native `<select>` (a `<select multiple>` for `BaseMultiselect`) that mirrors the current value, so browsers and password/profile managers can autofill the control and submit its value in a native `<form>`. Both components gain `name` and `autocomplete` props that are forwarded to the hidden native select, and selections made via autofill update `v-model` just like choosing an option in the custom UI.
+
+- b4feb31: add BaseThemeComposer and useThemeComposer for runtime theme attribute composition
+
+  Introduces a theme composer that lets consumers configure attributes of the theme at runtime. Friendly attributes (brand/accent colours, text/surface/border/focus colours, sans/mono font families, base font size, and base corner radius) plus an arbitrary `tokens` escape hatch resolve to `--mp-*` CSS custom properties. `BaseThemeComposer` scopes the result to its own wrapper element by default or applies it globally to `<html>`, supports `v-model` on the config, optional `localStorage` persistence, and shares the reactive store with descendants via the new `useThemeComposer` composable.
+
+- bfab936: add timeline, QR code, OTP input, min/max range input, masonry, and chat components
+
+  - `BaseTimeline` + `BaseTimelineItem`: ordered, chronological event list (vertical/horizontal, optional alternating layout) built from semantic `<ol>`/`<li>`.
+  - `BaseQrCode`: scannable QR Code rendered as a compact SVG by a bundled, dependency-free encoder (byte mode, automatic version selection, lowest-penalty mask).
+  - `BaseOtpInput`: segmented one-time-password / verification-code field with auto-advance, paste distribution, masking, and character-set validation, wrapped in a semantic `<fieldset>`.
+  - `BaseRangeInput`: dual-thumb min/max range selector with ordered non-crossing thumbs and an optional `minDistance`.
+  - `BaseMasonry`: CSS multi-column masonry layout with fixed `columns` or responsive `minColumnWidth`.
+  - `BaseChatArea` + `BaseChatBubble`: scrollable, auto-scrolling conversation surface and message bubbles using semantic `<ul>`/`<li>`.
+
+  Also prefer semantic HTML over ARIA roles where a native element exists (e.g. removed the redundant `role="button"` from the accordion `<summary>`).
+
+### Patch Changes
+
+- 32013ac: fix(components): keep BaseLocationInput legend readable when disabled
+
+  `BaseLocationInput`'s disabled state dimmed the whole `<fieldset>` with `opacity: 0.5`, which blended the legend label's primary text colour down to `#7c7c80` on the light surface (3.67:1, failing WCAG 2.1 SC 1.4.3). The disabled state now mirrors `BaseRadioGroup` — it uses `pointer-events: none` with the accessible `--mp-color-text-disabled` token (7.41:1) instead of opacity, so the legend label keeps its full-contrast primary colour while the control still reads as disabled.
+
+- 90928a1: fix(components): stop assistive tech from reaching BaseRating hit targets
+
+  `BaseRating`'s interactive (`role="slider"`) mode rendered its mouse hit areas as `<button tabindex="-1">` elements nested inside the slider. A negative `tabindex` removes them from the Tab order but does not stop assistive technologies from focusing/exposing them, and they constituted nested interactive controls (a slider already provides full keyboard control). The hit areas are now plain `aria-hidden="true"` `<span>` elements, removing them from the accessibility tree while preserving the existing click and hover behaviour.
+
+- 6d51afc: adopt the BaseStack layout primitive across existing components
+
+  Refactor `BaseFieldSet`, `BaseRadioGroup`, `BaseCheckbox`, `BaseSwitch`,
+  `BaseProgressBar`, and `BaseNumberStepper` to compose their internal
+  vertical/horizontal layouts with `BaseStack` (using the shared `2xs`–`2xl`
+  gap scale) instead of bespoke flexbox CSS. Public APIs, markup classes, and
+  behaviour are unchanged.
+
+- f9f35db: docs(components): prefix all Storybook story titles with `Base`
+
+  Align every component's Storybook `title` leaf segment with its `Base`-prefixed component name (for example `Components/Forms/RangeInput` is now `Components/Forms/BaseRangeInput`). Titles that already carried the `Base` prefix, as well as the `map` and `icons` package stories (whose components are not `Base`-prefixed), are unchanged.
+
+- cf0be57: enable Volar `strictTemplates` and fix the template type errors it surfaces
+
+  - Turn on `vueCompilerOptions.strictTemplates` for the component library so `v-model`, prop, and attribute bindings are fully type-checked at build time.
+  - Let the wrapper components forward standard host-element attributes by intersecting their props with the matching Vue attribute types (`BaseTypography` → `AnchorHTMLAttributes`, `BaseButton` → `ButtonHTMLAttributes`, `BaseStack` → `LabelHTMLAttributes`, `BaseInput` → `AriaAttributes`, `BaseFormBuilderDropzone` → `HTMLAttributes`, `BaseToast` → `HTMLAttributes`), so passing `role`, `id`, `href`, `for`, `aria-*`, and similar attributes is type-safe.
+  - Set dynamic `data-*` attributes via `v-bind` object syntax (`BaseTab`, `BasePopover`, scheduler time grid) and render the toast container's `role="region"` on a wrapping element instead of `TransitionGroup`.
+  - Drop redundant icon `aria-*` attributes (icons manage their own labelling) and bridge the scheduler event dialog's strongly-typed form fields to the broader component `v-model` types via writable computed proxies.
+
+- 2d48c37: test(components): add WCAG AAA accessibility test harness and suite
+
+  Add an `axe-core`-based accessibility testing harness for the component library:
+
+  - New `src/test-utils/axe.ts` helper exporting `runAxe`, `expectNoA11yViolations`, `summarizeViolations`, and `mountForA11y`. It scopes axe-core to a mounted component's root element and runs the WCAG 2.0/2.1/2.2 A, AA, and AAA rule sets, so failures report the offending rule ids, impact, help text, and DOM targets. (Under jsdom, axe's colour-contrast rules are reported as _incomplete_ rather than violations — the design tokens are independently verified at AAA contrast — so these tests cover the _structural_ AAA requirements: roles, names, relationships, landmarks, and ARIA usage.)
+  - New cross-component `src/components/accessibility.spec.ts` suite auditing a representative cross-section of components (button, badge, typography, input, checkbox, radio group, field set, rating, location input, alert banner, breadcrumb).
+  - Lock-in regression tests for the two recent a11y fixes: `BaseRating` now asserts it exposes no nested interactive controls, and a new `BaseLocationInput` spec asserts the disabled legend keeps its full-contrast primary colour.
+  - Adds `axe-core` as a dev dependency.
+
+- 140ad29: fix(components): keep BaseSelect at a constant height when empty
+
+  The select trigger now renders a non-breaking space when there is no
+  selection and no placeholder, so the field keeps a full line box and no
+  longer collapses to a reduced height compared to its selected state.
+
+- Updated dependencies [dc84af7]
+- Updated dependencies [a93a7b2]
+- Updated dependencies [075a5a2]
+  - @mission-platform/i18n@0.4.1
+  - @mission-platform/icons@1.1.0
+  - @mission-platform/breakpoints@3.0.1
+  - @mission-platform/harper@0.1.5
+  - @mission-platform/hunspell@0.3.2
+  - @mission-platform/tokens@0.3.1
+
 ## 3.0.0
 
 ### Major Changes

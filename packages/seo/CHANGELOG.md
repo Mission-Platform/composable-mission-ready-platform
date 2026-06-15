@@ -1,5 +1,13 @@
 # @mission-platform/seo
 
+## 0.3.1
+
+### Patch Changes
+
+- 075a5a2: normalize source formatting and import ordering
+
+  Apply the repo-wide Prettier/ESLint formatting pass (line reflow, attribute and import ordering, barrel-import paths, and simplified GeoJSON `Feature` typings in `map`). No runtime behaviour changes.
+
 ## 0.3.0
 
 ### Minor Changes
