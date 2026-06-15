@@ -53,7 +53,7 @@
     FormFieldType,
     SchemaFormDefinition,
   } from './types';
-  import type { SidebarDraggable } from '../base-sidebar/base-sidebar.vue';
+  import type { DrawerDraggable } from '../base-drawer/base-drawer.vue';
 
   const props = withDefaults(
     defineProps<{
@@ -70,9 +70,9 @@
       /** The field types offered in the palette. */
       fieldTypes?: FieldTypeDescriptor[];
       /** Whether the start (palette) column is resizable, and its width bound. */
-      startDraggable?: SidebarDraggable;
+      startDraggable?: DrawerDraggable;
       /** Whether the end (inspector) column is resizable, and its width bound. */
-      endDraggable?: SidebarDraggable;
+      endDraggable?: DrawerDraggable;
     }>(),
     {
       modelValue: undefined,

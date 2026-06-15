@@ -144,11 +144,11 @@ export { default as BaseDialogFooter } from './components/base-dialog/base-dialo
 export { default as BaseBreadcrumb } from './components/base-breadcrumb';
 export type { BreadcrumbItem } from './components/base-breadcrumb';
 
-export { default as BaseSidebar, SIDEBAR_SIZE_REM } from './components/base-sidebar';
-export type { SidebarSide, SidebarSize, SidebarVariant, SidebarDraggable } from './components/base-sidebar';
-export { default as BaseSidebarHeader } from './components/base-sidebar/base-sidebar-header.vue';
-export { default as BaseSidebarBody } from './components/base-sidebar/base-sidebar-body.vue';
-export { default as BaseSidebarFooter } from './components/base-sidebar/base-sidebar-footer.vue';
+export { default as BaseDrawer, DRAWER_SIZE_REM } from './components/base-drawer';
+export type { DrawerPlacement, DrawerSize, DrawerVariant, DrawerDraggable } from './components/base-drawer';
+export { default as BaseDrawerHeader } from './components/base-drawer/base-drawer-header.vue';
+export { default as BaseDrawerBody } from './components/base-drawer/base-drawer-body.vue';
+export { default as BaseDrawerFooter } from './components/base-drawer/base-drawer-footer.vue';
 
 export { default as BaseFileInput } from './components/base-file-input';
 

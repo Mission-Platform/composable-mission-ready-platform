@@ -50,7 +50,7 @@ The package provides over 100 Vue 3 components with consistent styling and behav
 - `BaseBreadcrumb` — Breadcrumb navigation
 - `BasePagination` — Page navigation (`v-model:page`) with prev/next/edge controls and truncation ellipses; accepts `pageCount` or `total` + `pageSize`, configurable `siblingCount`/`boundaryCount`, and `sm`/`md`/`lg` sizes
 - `BaseSegmentControl` — Single-select segmented switcher (`v-model`) backed by `role="radiogroup"` with roving tabindex and arrow/Home/End navigation, per-segment disable, and `fullWidth`
-- `BaseSidebar` — Side navigation with draggable resize
+- `BaseDrawer` — Sliding panel anchored to a viewport edge via `placement` (`start`/`end` full-height side panels sized by width, `top`/`bottom` full-width panels sized by height); `overlay` (teleported, scrim-backed, `v-model:open`) or responsive `inline` (fixed-open above `inlineBreakpoint`) variants, named `2xs`–`2xl` `size` scale, optional draggable resize (axis-aware handle), and `closeOnBackdrop`/`closeOnRouteChange`
 - `BaseMenu`, `BaseMenubar` — Menu components
 - `BaseMenuItem`, `BaseMenuItemLink`, `BaseMenuItemButton` — Menu item variants
 - `BaseFormWizard` — Multi-step form wizard

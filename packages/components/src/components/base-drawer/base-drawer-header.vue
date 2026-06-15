@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   /**
-   * `BaseSidebarHeader` — Sidebar header component for the Mission Platform UI.
+   * `BaseDrawerHeader` — Drawer header component for the Mission Platform UI.
    *
    * See the props, emits, and slots tables below (auto-generated from
    * the component's TypeScript declarations) for the full public API,
@@ -15,7 +15,7 @@
     defineProps<{
       title?: string;
       closeLabel: string;
-      /** Hide the close button (e.g. for an inline, fixed-open sidebar). */
+      /** Hide the close button (e.g. for an inline, fixed-open drawer). */
       hideClose?: boolean;
     }>(),
     {
@@ -30,12 +30,12 @@
 </script>
 
 <template>
-  <header class="base-sidebar__header">
+  <header class="base-drawer__header">
     <slot>
       <BaseTypography
         v-if="title"
         as="h2"
-        class="base-sidebar__title"
+        class="base-drawer__title"
         color="primary"
         variant="h5"
       >
@@ -45,7 +45,7 @@
     <BaseIconButton
       v-if="!hideClose"
       :label="closeLabel"
-      class="base-sidebar__close"
+      class="base-drawer__close"
       size="sm"
       @click="emit('close')"
     >
@@ -55,7 +55,7 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-sidebar__header {
+  .base-drawer__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -65,7 +65,7 @@
     gap: var(--mp-spacing-4);
   }
 
-  .base-sidebar__title {
+  .base-drawer__title {
     margin: 0;
   }
 </style>

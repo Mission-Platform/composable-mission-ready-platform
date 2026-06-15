@@ -8,7 +8,7 @@
    */
   import { ref } from 'vue';
 
-  import BaseSidebar from '../base-sidebar/base-sidebar.vue';
+  import BaseDrawer from '../base-drawer/base-drawer.vue';
   import BaseTypography from '../base-typography/base-typography.vue';
 
   export type NavbarAlign = 'start' | 'center' | 'end';
@@ -73,11 +73,11 @@
     </nav>
   </header>
 
-  <!-- Mobile sidebar drawer -->
-  <BaseSidebar
+  <!-- Mobile navigation drawer -->
+  <BaseDrawer
     v-model:open="sidebarOpen"
     :title="mobileTitle || brand"
-    side="left"
+    placement="start"
     size="sm"
   >
     <nav
@@ -91,7 +91,7 @@
         <slot name="end" />
       </div>
     </nav>
-  </BaseSidebar>
+  </BaseDrawer>
 </template>
 
 <style lang="scss" scoped>

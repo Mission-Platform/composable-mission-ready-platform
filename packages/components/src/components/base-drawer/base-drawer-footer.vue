@@ -1,11 +1,11 @@
 <template>
-  <footer class="base-sidebar__footer">
+  <footer class="base-drawer__footer">
     <slot />
   </footer>
 </template>
 
 <style lang="scss" scoped>
-  .base-sidebar__footer {
+  .base-drawer__footer {
     display: flex;
     align-items: center;
     justify-content: flex-end;
