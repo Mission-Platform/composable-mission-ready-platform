@@ -52,6 +52,17 @@ src/components/
    ```
 6. **No flat component files** — do not place `.vue`, `.stories.*` or `.ts` files directly inside `src/components/`.
 7. **`[ComponentName].spec.ts`** contains Vitest unit tests using `@vue/test-utils`. Every component must have a spec file in its folder. Tests run with `pnpm test` in `packages/components` (jsdom environment, no browser required).
+8. **Prefer semantic HTML over ARIA roles.** Always reach for the native element that already carries the correct semantics instead of adding a `role` to a generic element:
+   - `<button>` instead of `<div role="button">`
+   - `<ul>` / `<ol>` + `<li>` instead of `role="list"` / `role="listitem"`
+   - `<a href>` instead of `role="link"`
+   - `<nav>`, `<header>`, `<footer>`, `<main>`, `<section>`, `<fieldset>`, `<dialog>`, `<table>`/`<thead>`/`<tbody>`/`<tr>`/`<th>`/`<td>` instead of their `role="…"` equivalents
+   - Only use an explicit `role` when **no** native element provides the semantics (e.g. `slider`, `tab`/`tablist`/`tabpanel`, `menu`/`menuitem`, `alert`/`status`/`log` live regions, `tooltip`, `img` on inline SVG). Native interactive elements also give keyboard behaviour and focus for free, so they are strongly preferred.
+9. **Target WCAG 2.2 compliance.** New/modified components should keep meeting the published a11y bar:
+   - **Reduced motion** — CSS animations/transitions are neutralised globally by the bundled `src/styles/a11y.scss` reset, so you don't need per-component `@media (prefers-reduced-motion)` blocks for plain CSS motion. For **JS-driven** motion (autoplay, `setInterval` rotation, `scrollTo({ behavior: 'smooth' })`, programmatic animation), gate it on the `useReducedMotion()` composable (or the one-off `prefersReducedMotion()`).
+   - **Auto-moving content** — anything that moves/auto-advances for more than 5s (carousels, marquees) must expose an accessible, always-available pause/stop control (WCAG 2.2.2), not only pause-on-hover.
+   - **Target size** — interactive controls should present at least a 24×24px hit area (WCAG 2.5.8). Keep a small visual affordance (e.g. a dot) inside a larger transparent/padded target rather than shrinking the clickable element.
+   - **Focus visibility** — every focusable control needs a clear `:focus-visible` indicator (use the `--mp-shadow-focus-*` tokens or a 2px outline with offset); never remove focus styling without a replacement.
 
 ---
 
