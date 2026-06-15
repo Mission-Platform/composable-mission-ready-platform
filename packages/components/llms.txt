@@ -75,7 +75,7 @@ The package provides over 100 Vue 3 components with consistent styling and behav
 - `BaseResponsiveImage` — Art-directed `<picture>` with format/media `sources`, native `srcset`/`sizes`, lazy loading, async decoding, fixed `aspectRatio` (avoids CLS), and `object-fit` control
 - `BaseResponsiveVideo` — Responsive `<video>` with format `sources`, poster, playback flags, fixed `aspectRatio`, `object-fit`, and `play`/`pause`/`ended` events
 - `BaseBackgroundVideo` — Decorative full-bleed autoplaying/muted/looping background video with overlaid content slot and optional scrim; honours `prefers-reduced-motion`
-- `BaseCarousel` — Image/document carousel
+- `BaseCarousel` — Image/document carousel that never auto-rotates when `prefers-reduced-motion` is set, exposes an always-available accessible pause/play control while autoplaying (WCAG 2.2.2), and uses ≥24×24px indicator tap targets with a visible focus ring (WCAG 2.5.8 / 2.4.7)
 - `BaseTreeView`, `BaseVirtualTreeView` — Tree view components with virtualization
 - `BaseInPage` — Component that triggers callbacks when in viewport
 - `BaseWindowPopout` — Window popout utility
@@ -159,6 +159,17 @@ const router = useRouter()
 const close = useRouterClose(router)
 ```
 
+#### `useReducedMotion()`
+
+Reactively track the user's `prefers-reduced-motion` setting to gate JS-driven motion (SSR-safe). A one-off `prefersReducedMotion()` helper is also exported.
+
+```ts
+import { useReducedMotion } from '@mission-platform/components'
+
+const reduced = useReducedMotion()
+// e.g. skip autoplay / instant-scroll when `reduced.value` is true
+```
+
 ### Special Import Paths
 
 #### Monaco Editor Support
@@ -177,6 +188,8 @@ Component styles must be imported separately:
 ```scss
 @use '@mission-platform/components/styles';
 ```
+
+This bundle also ships a global `prefers-reduced-motion` reset (WCAG 2.2 SC 2.3.3 / 2.2.2) that collapses CSS animation/transition durations and disables smooth scrolling for users who request reduced motion.
 
 ### Type Definitions
 

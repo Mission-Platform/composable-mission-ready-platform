@@ -7,6 +7,10 @@
 // editor — most notably the SSG-prerendered marketing site — pay no Monaco
 // / language-worker bundle cost.
 
+// Global accessibility safety net (a `prefers-reduced-motion` reset) bundled
+// into the component stylesheet (`@mission-platform/components/styles`).
+import './styles/a11y.scss';
+
 export { default as BaseButton } from './components/base-button';
 export type { ButtonVariant, ButtonSize } from './components/base-button';
 
@@ -435,6 +439,8 @@ export { default as BaseThemeComposer } from './components/base-theme-composer';
 export { useRouterClose } from './composables/use-router-close';
 export { useZIndex, ZLayer } from './composables/use-z-index';
 export type { ZLayerName } from './composables/use-z-index';
+
+export { useReducedMotion, prefersReducedMotion } from './composables/use-reduced-motion';
 
 export { useTheme, createThemeStore, resetThemeStore, ThemeStoreKey } from './composables/use-theme';
 export type { ResolvedTheme, UseThemeOptions, ThemeStore } from './composables/use-theme';

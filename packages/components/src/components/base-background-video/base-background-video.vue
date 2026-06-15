@@ -16,7 +16,9 @@
    * the component's TypeScript declarations) for the full public API,
    * and refer to the linked stories for usage examples.
    */
-  import { onBeforeUnmount, onMounted, ref } from 'vue';
+  import { onMounted, ref, watch } from 'vue';
+
+  import { useReducedMotion } from '../../composables/use-reduced-motion';
 
   /** A single format-specific video source. */
   export interface BackgroundVideoSource {
@@ -63,12 +65,11 @@
   }>();
 
   const videoElement = ref<HTMLVideoElement | null>(null);
-  const reducedMotion = ref(false);
+  // Reactive `prefers-reduced-motion`; the listener is cleaned up automatically.
+  const reducedMotion = useReducedMotion();
 
-  let mediaQuery: MediaQueryList | null = null;
-
-  function syncReducedMotion(): void {
-    reducedMotion.value = mediaQuery?.matches ?? false;
+  /** Plays or pauses the video to match the current reduced-motion preference. */
+  function syncPlayback(): void {
     const element = videoElement.value;
     if (!element) return;
     try {
@@ -89,17 +90,8 @@
     }
   }
 
-  onMounted(() => {
-    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
-    mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    mediaQuery.addEventListener('change', syncReducedMotion);
-    syncReducedMotion();
-  });
-
-  onBeforeUnmount(() => {
-    mediaQuery?.removeEventListener('change', syncReducedMotion);
-    mediaQuery = null;
-  });
+  onMounted(syncPlayback);
+  watch(reducedMotion, syncPlayback);
 </script>
 
 <template>

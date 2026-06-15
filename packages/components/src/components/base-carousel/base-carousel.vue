@@ -14,6 +14,8 @@
    */
   import { computed, onBeforeUnmount, ref, useSlots, watch } from 'vue';
 
+  import { useReducedMotion } from '../../composables/use-reduced-motion';
+
   const properties = withDefaults(
     defineProps<{
       /** Index of the initially visible slide. */
@@ -107,7 +109,12 @@
 
   // ── Autoplay ────────────────────────────────────────────────────────────────
   let autoplayTimer: ReturnType<typeof setInterval> | null = null;
+  // Transient pause from hover / focus.
   const isPaused = ref(false);
+  // Explicit pause requested by the user via the pause/play control (WCAG 2.2.2).
+  const userPaused = ref(false);
+  // Respect the user's reduced-motion preference: never auto-rotate when set.
+  const reducedMotion = useReducedMotion();
 
   function stopAutoplay(): void {
     if (autoplayTimer !== null) {
@@ -118,7 +125,15 @@
 
   function startAutoplay(): void {
     stopAutoplay();
-    if (!properties.autoplay || isPaused.value || slideCount.value <= 1) return;
+    if (
+      !properties.autoplay ||
+      isPaused.value ||
+      userPaused.value ||
+      reducedMotion.value ||
+      slideCount.value <= 1
+    ) {
+      return;
+    }
     autoplayTimer = setInterval(
       () => {
         next();
@@ -127,8 +142,25 @@
     );
   }
 
+  /** Whether the user-facing pause/play control should be shown. */
+  const showAutoplayToggle = computed(
+    () => properties.autoplay && slideCount.value > 1 && !reducedMotion.value,
+  );
+
+  /** Toggles the explicit, user-controlled autoplay pause (WCAG 2.2.2). */
+  function toggleAutoplayPaused(): void {
+    userPaused.value = !userPaused.value;
+  }
+
   watch(
-    () => [properties.autoplay, properties.interval, isPaused.value, slideCount.value],
+    () => [
+      properties.autoplay,
+      properties.interval,
+      isPaused.value,
+      userPaused.value,
+      reducedMotion.value,
+      slideCount.value,
+    ],
     () => startAutoplay(),
     { immediate: true },
   );
@@ -291,6 +323,17 @@
         @click="goTo(index - 1)"
       />
     </div>
+
+    <button
+      v-if="showAutoplayToggle"
+      type="button"
+      class="base-carousel__autoplay"
+      :aria-label="userPaused ? 'Start automatic slide rotation' : 'Pause automatic slide rotation'"
+      :aria-pressed="userPaused"
+      @click="toggleAutoplayPaused"
+    >
+      <span aria-hidden="true">{{ userPaused ? '▶' : '❙❙' }}</span>
+    </button>
   </section>
 </template>
 
@@ -372,17 +415,64 @@
     }
 
     &__indicator {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      border: none;
+      /* Keep the visible dot small while guaranteeing a >=24x24px hit area
+         so the control satisfies WCAG 2.2 SC 2.5.8 (Target Size, Minimum). */
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
       padding: 0;
-      background: var(--mp-color-border-default);
+      border: none;
+      border-radius: 50%;
+      background: transparent;
       cursor: pointer;
-      transition: background 200ms ease;
 
-      &--active {
+      &::before {
+        content: '';
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--mp-color-border-default);
+        transition: background 200ms ease;
+      }
+
+      &--active::before {
         background: var(--mp-color-primary-default);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--mp-color-primary-default);
+        outline-offset: 2px;
+      }
+    }
+
+    &__autoplay {
+      /* Always-available pause/play control for autoplaying carousels
+         (WCAG 2.2.2 Pause, Stop, Hide). Sized to meet the 24px target min. */
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      margin: var(--mp-spacing-2) auto 0;
+      padding: 0;
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: 50%;
+      background: var(--mp-color-bg-surface);
+      color: var(--mp-color-text-default);
+      font-size: 12px;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: var(--mp-shadow-sm);
+
+      &:hover {
+        background: var(--mp-color-bg-base-alt);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--mp-color-primary-default);
+        outline-offset: 2px;
       }
     }
   }
