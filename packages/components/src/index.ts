@@ -241,6 +241,17 @@ export type { GridCell, GridGap, GridAlignment } from './components/base-grid';
 export { default as BaseStack, STACK_JUSTIFY_CONTENT, STACK_ALIGN_ITEMS } from './components/base-stack';
 export type { StackDirection, StackJustify, StackAlign } from './components/base-stack';
 
+export { default as BaseMasonry, MASONRY_GAP_SPACING } from './components/base-masonry';
+export type { MasonryGap } from './components/base-masonry';
+
+export { default as BaseTimeline, BaseTimelineItem, TimelineContextKey } from './components/base-timeline';
+export type {
+  TimelineOrientation,
+  TimelineAlign,
+  TimelineItemVariant,
+  TimelineContext,
+} from './components/base-timeline';
+
 export { default as BaseAvatar } from './components/base-avatar';
 export type { AvatarSize, AvatarShape, AvatarStatus } from './components/base-avatar';
 
@@ -376,6 +387,16 @@ export type { ResponsiveVideoSource, ResponsiveVideoFit } from './components/bas
 export { default as BaseBackgroundVideo } from './components/base-background-video';
 export type { BackgroundVideoSource, BackgroundVideoFit } from './components/base-background-video';
 
+export { default as BaseQrCode, encodeQr } from './components/base-qr-code';
+export type { QrErrorCorrection, QrMatrix } from './components/base-qr-code';
+
+// ─── Communication components ────────────────────────────────────────────────
+
+export { default as BaseChatArea } from './components/base-chat-area';
+
+export { default as BaseChatBubble } from './components/base-chat-bubble';
+export type { ChatBubbleSide, ChatBubbleVariant } from './components/base-chat-bubble';
+
 // ─── Navigation & input components ───────────────────────────────────────────
 
 export { default as BasePagination } from './components/base-pagination';
@@ -389,6 +410,12 @@ export type { SegmentControlSize, SegmentOption } from './components/base-segmen
 
 export { default as BaseSlider } from './components/base-slider';
 export type { SliderSize } from './components/base-slider';
+
+export { default as BaseRangeInput } from './components/base-range-input';
+export type { RangeInputSize, RangeValue } from './components/base-range-input';
+
+export { default as BaseOtpInput } from './components/base-otp-input';
+export type { OtpInputType, OtpInputSize } from './components/base-otp-input';
 
 // ─── Toast notifications ─────────────────────────────────────────────────────
 

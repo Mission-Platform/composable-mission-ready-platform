@@ -16,6 +16,8 @@ The package provides over 100 Vue 3 components with consistent styling and behav
 - `BaseCheckbox`, `BaseRadio`, `BaseSwitch` — Single/multi-state inputs
 - `BaseRating` — Star rating input/display (`v-model`) with whole or half-star precision (`allowHalf`), interactive `role="slider"` mode (arrow/Home/End keys) vs. read-only `role="img"` display, hover preview, `clearable`, and `sm`/`md`/`lg` sizes
 - `BaseSlider` — Range slider (`v-model`) with `min`/`max`/`step` rounding, drag and full keyboard control (arrows, PageUp/Down, Home/End), an optional value tooltip (`showValue`/`formatValue`), and `sm`/`md`/`lg` sizes
+- `BaseRangeInput` — Dual-thumb min/max range selector (`v-model`) with ordered, non-crossing thumbs and an optional `minDistance`
+- `BaseOtpInput` — Segmented one-time-password / verification-code field with auto-advance, paste distribution, masking, and character-set validation, wrapped in a semantic `<fieldset>`
 - `BaseDateInput`, `BaseTimeInput`, `BaseDateRangeInput` — Date/time pickers
 - `BaseColorInput` — Color picker component
 - `BaseFileInput` — File upload input with preview support
@@ -34,6 +36,8 @@ The package provides over 100 Vue 3 components with consistent styling and behav
 - `BaseSpinner` — Loading spinner with variants
 - `BaseProgressBar` — Progress bar component
 - `BaseCalendar` — Calendar view with month/week views (Scheduler)
+- `BaseTimeline`, `BaseTimelineItem` — Ordered, chronological event list (vertical/horizontal, optional alternating layout) built from a semantic `<ol>`/`<li>`
+- `BaseQrCode` — Scannable QR Code rendered as a compact SVG by a bundled, dependency-free encoder (byte mode, automatic version selection, lowest-penalty mask)
 
 #### Feedback & Overlays
 - `BaseDialog`, `BaseModal` — Dialog and modal windows with headers/footers
@@ -44,6 +48,9 @@ The package provides over 100 Vue 3 components with consistent styling and behav
 - `BaseTabs`, `BaseVirtualTabs` — Tabbed interface with virtualized tabs
 - `BaseAlertBanner` — Inline alert/notification banner with `info`/`success`/`warning`/`error`/`neutral` intents, optional title, built-in status icon, dismiss button (`v-model` visibility), and an `actions` slot; uses `role="alert"`/`role="status"` appropriately
 - `BaseToast`, `BaseToastContainer` — Toast notifications: `BaseToast` is the presentational card; `BaseToastContainer` renders the `useToast` store, teleported to `<body>` at one of six positions with enter/leave transitions and the `notification` z-index layer
+
+#### Communication
+- `BaseChatArea`, `BaseChatBubble` — Scrollable, auto-scrolling conversation surface and message bubbles (`start`/`end` sides, variants) using a semantic `<ul>`/`<li>`
 
 #### Navigation
 - `BaseNavbar`, `BaseNavbarItem` — Top navigation bar
@@ -60,6 +67,7 @@ The package provides over 100 Vue 3 components with consistent styling and behav
 - `BaseVerticalLayout`, `BaseCard` — Layout containers and cards
 - `BaseGrid` — CSS Grid layout primitive arranging content into a grid of `rows` (m) by `cols` (n), with a named `2xs`–`2xl` gap scale (mapped to `--mp-spacing-*` tokens) for `gap`/`rowGap`/`columnGap`, `justify`/`align` item-placement controls (`justify-items`/`align-items`), a scoped `cell` slot exposing per-cell `row`/`column`/`index`, and default-slot children that can span tracks via `grid-column`/`grid-row` `span`
 - `BaseStack` — Flexbox stack layout primitive laying children out vertically (column) or horizontally (row) via `direction`, sharing the named `2xs`–`2xl` gap scale, with `justify` (`justify-content`), `align` (`align-items`), and `wrap` controls
+- `BaseMasonry` — CSS multi-column masonry layout with fixed `columns` or responsive `minColumnWidth` and a named `2xs`–`2xl` gap scale
 - `BaseTypography` — Typography utility component
 - `BaseHero` — Page hero/banner with eyebrow/title/subtitle props, `media`/`actions` slots, `start`/`center`/`end` alignment, `sm`/`md`/`lg` padding, optional `fullHeight`, and a scrim `overlay` for full-bleed backgrounds
 - `BaseSeparator` — Horizontal/vertical divider with `solid`/`dashed`/`dotted` variants, a spacing scale, an optional centred label slot, and `decorative` (presentational) support
