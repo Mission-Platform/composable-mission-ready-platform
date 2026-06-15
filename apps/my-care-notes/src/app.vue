@@ -266,6 +266,7 @@
     <template #content>
       <!-- Snippets panel -->
       <BaseDrawer
+        :close-on-route-change="false"
         :open="snippetsPanelVisible"
         placement="start"
         size="xl"

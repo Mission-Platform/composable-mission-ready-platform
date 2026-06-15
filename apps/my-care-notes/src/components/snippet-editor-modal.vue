@@ -72,6 +72,7 @@
 
 <template>
   <BaseModal
+    :close-on-route-change="false"
     :open="visible"
     :title="modalTitle"
     size="lg"
