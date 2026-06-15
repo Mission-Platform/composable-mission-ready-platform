@@ -4,10 +4,12 @@
     BaseButton,
     BaseDialog,
     BaseDrawer,
+    BaseIconButton,
     BaseInput,
     BaseMenubar,
     BaseNavbar,
     BaseNavbarItem,
+    BaseStack,
     BaseThemeToggle,
     BaseVirtualTable,
     BaseVirtualTabs,
@@ -292,22 +294,24 @@
         >
           <template #cell-actions="{ row: rawRow }">
             <template v-if="(rawRow as SnippetRow).id !== undefined">
-              <BaseButton
-                size="sm"
+              <BaseIconButton
+                :label="t('snippet.export')"
                 :title="t('snippet.export')"
-                variant="tertiary"
+                size="sm"
+                variant="ghost"
                 @click="exportSnippet((rawRow as SnippetRow).id as string)"
               >
                 <IconDownload size="xs" />
-              </BaseButton>
-              <BaseButton
-                size="sm"
+              </BaseIconButton>
+              <BaseIconButton
+                :label="t('snippet.edit')"
                 :title="t('snippet.edit')"
-                variant="tertiary"
+                size="sm"
+                variant="ghost"
                 @click="openEditSnippet(rawRow as SnippetRow as Snippet)"
               >
                 <IconPencil size="xs" />
-              </BaseButton>
+              </BaseIconButton>
             </template>
           </template>
         </BaseVirtualTable>
@@ -360,7 +364,12 @@
       @keydown="onRenameTabKeydown"
     />
     <template #footer>
-      <div class="rename-modal-footer">
+      <BaseStack
+        class="rename-modal-footer"
+        direction="horizontal"
+        gap="xs"
+        justify="end"
+      >
         <BaseButton
           variant="tertiary"
           @click="cancelRenameTab"
@@ -374,16 +383,13 @@
         >
           {{ t('rename.confirm') }}
         </BaseButton>
-      </div>
+      </BaseStack>
     </template>
   </BaseDialog>
 </template>
 
 <style lang="scss" scoped>
   .rename-modal-footer {
-    display: flex;
-    gap: var(--mp-space-2, 8px);
-    justify-content: flex-end;
     width: 100%;
   }
 </style>
