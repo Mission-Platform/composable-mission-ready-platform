@@ -7,7 +7,7 @@ import BaseAlertBanner from './base-alert-banner.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Feedback/AlertBanner',
+  title: 'Components/Feedback/BaseAlertBanner',
   component: BaseAlertBanner,
   tags: ['autodocs'],
   parameters: {

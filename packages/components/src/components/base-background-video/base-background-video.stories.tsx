@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 const SAMPLE_VIDEO = 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4';
 
 const meta = {
-  title: 'Components/Media/BackgroundVideo',
+  title: 'Components/Media/BaseBackgroundVideo',
   component: BaseBackgroundVideo,
   tags: ['autodocs'],
   parameters: {

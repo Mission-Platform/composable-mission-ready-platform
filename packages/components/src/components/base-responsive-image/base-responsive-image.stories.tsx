@@ -3,7 +3,7 @@ import BaseResponsiveImage from './base-responsive-image.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Media/ResponsiveImage',
+  title: 'Components/Media/BaseResponsiveImage',
   component: BaseResponsiveImage,
   tags: ['autodocs'],
   parameters: {

@@ -3,7 +3,7 @@ import BaseSpinner from './base-spinner.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Feedback/Spinner',
+  title: 'Components/Feedback/BaseSpinner',
   component: BaseSpinner,
   tags: ['autodocs'],
   parameters: {

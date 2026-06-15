@@ -12,7 +12,7 @@ const THEME_OPTIONS = [
 ];
 
 const meta = {
-  title: 'Components/Theme/ThemeProvider',
+  title: 'Components/Theme/BaseThemeProvider',
   component: BaseThemeProvider,
   tags: ['autodocs'],
   parameters: {

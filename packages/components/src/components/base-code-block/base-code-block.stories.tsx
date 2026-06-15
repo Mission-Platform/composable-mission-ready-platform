@@ -76,7 +76,7 @@ spec:
             - containerPort: 8080`;
 
 const meta = {
-  title: 'Components/Code/CodeBlock',
+  title: 'Components/Code/BaseCodeBlock',
   component: BaseCodeBlock,
   tags: ['autodocs'],
   parameters: {

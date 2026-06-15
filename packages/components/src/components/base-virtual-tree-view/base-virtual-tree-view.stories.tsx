@@ -90,7 +90,7 @@ const ORG_TREE: TreeNode[] = [
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: 'Components/Data/VirtualTreeView',
+  title: 'Components/Data/BaseVirtualTreeView',
   component: BaseVirtualTreeView,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },

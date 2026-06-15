@@ -8,7 +8,7 @@ import BaseDialog from './base-dialog.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Overlays/Dialog',
+  title: 'Components/Overlays/BaseDialog',
   component: BaseDialog,
   tags: ['autodocs'],
   parameters: {

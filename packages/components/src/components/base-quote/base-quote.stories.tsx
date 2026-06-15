@@ -3,7 +3,7 @@ import BaseQuote from './base-quote.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Display/Quote',
+  title: 'Components/Display/BaseQuote',
   component: BaseQuote,
   tags: ['autodocs'],
   parameters: {

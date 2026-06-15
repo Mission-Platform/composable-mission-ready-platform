@@ -9,7 +9,7 @@ import type { ToastPosition } from '../../composables/use-toast';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Feedback/Toast',
+  title: 'Components/Feedback/BaseToast',
   component: BaseToast,
   tags: ['autodocs'],
   parameters: {

@@ -48,7 +48,7 @@ function makeLogs(count: number): LogEntry[] {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: 'Components/Data/VirtualLogViewer',
+  title: 'Components/Data/BaseVirtualLogViewer',
   component: BaseVirtualLogViewer,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },

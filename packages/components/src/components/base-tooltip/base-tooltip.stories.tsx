@@ -5,7 +5,7 @@ import BaseTooltip from './base-tooltip.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Overlays/Tooltip',
+  title: 'Components/Overlays/BaseTooltip',
   component: BaseTooltip,
   tags: ['autodocs'],
   parameters: {

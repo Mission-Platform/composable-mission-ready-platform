@@ -3,7 +3,7 @@ import BaseSeparator from './base-separator.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Layout/Separator',
+  title: 'Components/Layout/BaseSeparator',
   component: BaseSeparator,
   tags: ['autodocs'],
   parameters: {

@@ -11,7 +11,7 @@ const OPTIONS = [
 ];
 
 const meta = {
-  title: 'Components/Navigation/SegmentControl',
+  title: 'Components/Navigation/BaseSegmentControl',
   component: BaseSegmentControl,
   tags: ['autodocs'],
   parameters: {

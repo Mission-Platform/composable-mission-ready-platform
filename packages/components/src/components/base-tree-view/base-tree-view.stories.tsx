@@ -84,7 +84,7 @@ const ORG_TREE: TreeNode[] = [
 ];
 
 const meta = {
-  title: 'Components/Data/TreeView',
+  title: 'Components/Data/BaseTreeView',
   component: BaseTreeView,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },

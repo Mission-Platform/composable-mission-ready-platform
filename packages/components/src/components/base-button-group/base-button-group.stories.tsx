@@ -5,7 +5,7 @@ import BaseButtonGroup from './base-button-group.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Display/ButtonGroup',
+  title: 'Components/Display/BaseButtonGroup',
   component: BaseButtonGroup,
   tags: ['autodocs'],
   parameters: {

@@ -14,7 +14,7 @@ const cellStyle = [
 ].join(';');
 
 const meta = {
-  title: 'Components/Layout/Grid',
+  title: 'Components/Layout/BaseGrid',
   component: BaseGrid,
   tags: ['autodocs'],
   parameters: {

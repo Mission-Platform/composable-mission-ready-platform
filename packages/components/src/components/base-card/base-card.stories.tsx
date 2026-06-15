@@ -3,7 +3,7 @@ import BaseCard from './base-card.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Display/Card',
+  title: 'Components/Display/BaseCard',
   component: BaseCard,
   tags: ['autodocs'],
   parameters: {

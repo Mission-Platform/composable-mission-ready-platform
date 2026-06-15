@@ -5,7 +5,7 @@ import BaseSlider from './base-slider.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Forms/Slider',
+  title: 'Components/Forms/BaseSlider',
   component: BaseSlider,
   tags: ['autodocs'],
   parameters: {

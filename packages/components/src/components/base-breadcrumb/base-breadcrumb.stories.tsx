@@ -11,7 +11,7 @@ const items: BreadcrumbItem[] = [
 ];
 
 const meta = {
-  title: 'Components/Navigation/Breadcrumb',
+  title: 'Components/Navigation/BaseBreadcrumb',
   component: BaseBreadcrumb,
   tags: ['autodocs'],
   parameters: {

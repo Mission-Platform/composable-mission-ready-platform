@@ -5,7 +5,7 @@ import BasePagination from './base-pagination.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Navigation/Pagination',
+  title: 'Components/Navigation/BasePagination',
   component: BasePagination,
   tags: ['autodocs'],
   parameters: {

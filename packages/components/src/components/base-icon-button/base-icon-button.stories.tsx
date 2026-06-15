@@ -6,7 +6,7 @@ import BaseIconButton from './base-icon-button.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Display/IconButton',
+  title: 'Components/Display/BaseIconButton',
   component: BaseIconButton,
   tags: ['autodocs'],
   parameters: {

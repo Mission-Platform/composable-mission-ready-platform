@@ -8,7 +8,7 @@ import BaseModal from './base-modal.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Overlays/Modal',
+  title: 'Components/Overlays/BaseModal',
   component: BaseModal,
   tags: ['autodocs'],
   parameters: {

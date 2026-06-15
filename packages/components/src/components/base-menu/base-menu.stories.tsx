@@ -4,7 +4,7 @@ import type { MenuItem } from './base-menu.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Navigation/Menu',
+  title: 'Components/Navigation/BaseMenu',
   component: BaseMenu,
   tags: ['autodocs'],
   parameters: {

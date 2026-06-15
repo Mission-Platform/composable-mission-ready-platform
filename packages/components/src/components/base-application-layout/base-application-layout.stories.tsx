@@ -6,7 +6,7 @@ import { StatusLevels } from './types';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Layout/ApplicationLayout',
+  title: 'Components/Layout/BaseApplicationLayout',
   component: BaseApplicationLayout,
   tags: ['autodocs'],
   parameters: {

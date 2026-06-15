@@ -5,7 +5,7 @@ import BaseHero from './base-hero.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Layout/Hero',
+  title: 'Components/Layout/BaseHero',
   component: BaseHero,
   tags: ['autodocs'],
   parameters: {

@@ -25,7 +25,7 @@ const containerStyle = [
 const gapOptions = ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'];
 
 const meta = {
-  title: 'Components/Layout/Stack',
+  title: 'Components/Layout/BaseStack',
   component: BaseStack,
   tags: ['autodocs'],
   parameters: {

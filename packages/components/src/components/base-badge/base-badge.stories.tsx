@@ -3,7 +3,7 @@ import BaseBadge from './base-badge.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Display/Badge',
+  title: 'Components/Display/BaseBadge',
   component: BaseBadge,
   tags: ['autodocs'],
   parameters: {

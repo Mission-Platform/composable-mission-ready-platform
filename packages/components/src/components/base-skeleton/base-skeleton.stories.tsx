@@ -3,7 +3,7 @@ import BaseSkeleton from './base-skeleton.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Feedback/Skeleton',
+  title: 'Components/Feedback/BaseSkeleton',
   component: BaseSkeleton,
   tags: ['autodocs'],
   parameters: {

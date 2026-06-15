@@ -6,7 +6,7 @@ import BaseNavbar from './base-navbar.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Layout/Navbar',
+  title: 'Components/Layout/BaseNavbar',
   component: BaseNavbar,
   tags: ['autodocs'],
   parameters: {

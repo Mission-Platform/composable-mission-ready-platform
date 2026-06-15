@@ -28,7 +28,7 @@ const rows: Row[] = [
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const meta: Meta<any> = {
-  title: 'Components/Display/Table',
+  title: 'Components/Display/BaseTable',
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component: BaseTable as any,
   tags: ['autodocs'],

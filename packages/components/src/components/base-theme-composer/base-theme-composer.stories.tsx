@@ -6,7 +6,7 @@ import BaseThemeComposer from './base-theme-composer.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Theme/ThemeComposer',
+  title: 'Components/Theme/BaseThemeComposer',
   component: BaseThemeComposer,
   tags: ['autodocs'],
   parameters: {

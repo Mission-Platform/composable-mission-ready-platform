@@ -7,7 +7,7 @@ import BaseCarousel from './base-carousel.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 const meta = {
-  title: 'Components/Display/Carousel',
+  title: 'Components/Display/BaseCarousel',
   component: BaseCarousel,
   tags: ['autodocs'],
   parameters: {
