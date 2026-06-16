@@ -1,6 +1,9 @@
+// `scss/tokens` already ships the `light-dark()` colour tokens *and* the
+// `[data-theme]`/`.theme-*` scheme pins (inside the `mp.tokens` layer), so the
+// separate `scss/themes/{light,dark}` imports are no longer needed. The active
+// scheme is pinned on <html> by the pre-paint script in index.html before this
+// bundle runs (see also @mission-platform/components' themeInitScript()).
 import '@mission-platform/tokens/scss/tokens';
-import '@mission-platform/tokens/scss/themes/light';
-import '@mission-platform/tokens/scss/themes/dark';
 import '@mission-platform/components/styles';
 
 import { createMpI18n, type MpMessageObject } from '@mission-platform/i18n';

@@ -6,6 +6,32 @@
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
       name="viewport"
     />
+    <!-- Advertise that the document supports both schemes so the UA chrome
+         (scrollbars, form controls, address bar) renders correctly before the
+         app's CSS/JS loads. -->
+    <meta
+      content="light dark"
+      name="color-scheme"
+    />
+    <!-- Pre-paint theme init: resolves the persisted preference and pins
+         data-theme/color-scheme on <html> synchronously, before the stylesheet
+         and app bundle load, so the first paint matches the saved theme (no
+         flash). Mirrors @mission-platform/components' themeInitScript(). -->
+    <script>
+      (function () {
+        try {
+          var d = document.documentElement;
+          var t = localStorage.getItem('mp-theme') || 'auto';
+          if (t === 'light' || t === 'dark') {
+            d.setAttribute('data-theme', t);
+            d.style.colorScheme = t;
+          } else {
+            d.removeAttribute('data-theme');
+            d.style.colorScheme = 'light dark';
+          }
+        } catch (e) {}
+      })();
+    </script>
     <meta
       content="#4a9ebe"
       name="theme-color"
