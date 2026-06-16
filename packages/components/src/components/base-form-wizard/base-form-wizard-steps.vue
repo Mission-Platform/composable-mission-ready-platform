@@ -101,109 +101,111 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-form-wizard__steps {
-    width: 100%;
-  }
-
-  .base-form-wizard__step-list {
-    display: flex;
-    align-items: flex-start;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    gap: 0;
-  }
-
-  .base-form-wizard__step {
-    display: flex;
-    align-items: center;
-    flex: 1;
-
-    &:last-child {
-      flex: 0;
+  @layer mp.components {
+    .base-form-wizard__steps {
+      width: 100%;
     }
-  }
 
-  .base-form-wizard__step-btn {
-    display: flex;
-    align-items: center;
-    gap: var(--mp-spacing-3);
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    padding: 0;
-    text-align: left;
-    color: var(--mp-color-text-primary);
+    .base-form-wizard__step-list {
+      display: flex;
+      align-items: flex-start;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      gap: 0;
+    }
 
-    &:disabled {
-      cursor: default;
+    .base-form-wizard__step {
+      display: flex;
+      align-items: center;
+      flex: 1;
+
+      &:last-child {
+        flex: 0;
+      }
+    }
+
+    .base-form-wizard__step-btn {
+      display: flex;
+      align-items: center;
+      gap: var(--mp-spacing-3);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 0;
+      text-align: left;
+      color: var(--mp-color-text-primary);
+
+      &:disabled {
+        cursor: default;
+        color: var(--mp-color-text-tertiary);
+      }
+
+      &:focus-visible {
+        outline: none;
+        border-radius: var(--mp-radius-sm);
+        box-shadow: var(--mp-shadow-focus-primary);
+        color: var(--mp-color-text-primary);
+      }
+    }
+
+    .base-form-wizard__step-circle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: var(--mp-radius-full);
+      border: 2px solid var(--mp-color-border-default);
+      background-color: var(--mp-color-bg-surface);
+      flex-shrink: 0;
+      transition:
+        background-color 150ms ease,
+        border-color 150ms ease;
+    }
+
+    .base-form-wizard__step--complete .base-form-wizard__step-circle {
+      background-color: var(--mp-color-primary-default);
+      border-color: var(--mp-color-primary-default);
+      color: var(--mp-color-text-on-primary);
+    }
+
+    .base-form-wizard__step--current .base-form-wizard__step-circle {
+      border-color: var(--mp-color-primary-text);
+      color: var(--mp-color-primary-text);
+    }
+
+    .base-form-wizard__step-label {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .base-form-wizard__step--upcoming .base-form-wizard__step-title {
       color: var(--mp-color-text-tertiary);
     }
 
-    &:focus-visible {
-      outline: none;
-      border-radius: var(--mp-radius-sm);
-      box-shadow: var(--mp-shadow-focus-primary);
-      color: var(--mp-color-text-primary);
+    // Errored steps are highlighted regardless of their complete/current/upcoming
+    // status, so these rules intentionally win over the status rules above.
+    .base-form-wizard__step--error .base-form-wizard__step-circle {
+      background-color: var(--mp-color-bg-surface);
+      border-color: var(--mp-color-danger-default);
+      color: var(--mp-color-danger-text);
     }
-  }
 
-  .base-form-wizard__step-circle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: var(--mp-radius-full);
-    border: 2px solid var(--mp-color-border-default);
-    background-color: var(--mp-color-bg-surface);
-    flex-shrink: 0;
-    transition:
-      background-color 150ms ease,
-      border-color 150ms ease;
-  }
+    .base-form-wizard__step--error .base-form-wizard__step-title {
+      color: var(--mp-color-danger-text);
+    }
 
-  .base-form-wizard__step--complete .base-form-wizard__step-circle {
-    background-color: var(--mp-color-primary-default);
-    border-color: var(--mp-color-primary-default);
-    color: var(--mp-color-text-on-primary);
-  }
+    .base-form-wizard__connector {
+      flex: 1;
+      height: 2px;
+      background-color: var(--mp-color-border-default);
+      margin: 0 var(--mp-spacing-2);
+      align-self: center;
+    }
 
-  .base-form-wizard__step--current .base-form-wizard__step-circle {
-    border-color: var(--mp-color-primary-text);
-    color: var(--mp-color-primary-text);
-  }
-
-  .base-form-wizard__step-label {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .base-form-wizard__step--upcoming .base-form-wizard__step-title {
-    color: var(--mp-color-text-tertiary);
-  }
-
-  // Errored steps are highlighted regardless of their complete/current/upcoming
-  // status, so these rules intentionally win over the status rules above.
-  .base-form-wizard__step--error .base-form-wizard__step-circle {
-    background-color: var(--mp-color-bg-surface);
-    border-color: var(--mp-color-danger-default);
-    color: var(--mp-color-danger-text);
-  }
-
-  .base-form-wizard__step--error .base-form-wizard__step-title {
-    color: var(--mp-color-danger-text);
-  }
-
-  .base-form-wizard__connector {
-    flex: 1;
-    height: 2px;
-    background-color: var(--mp-color-border-default);
-    margin: 0 var(--mp-spacing-2);
-    align-self: center;
-  }
-
-  .base-form-wizard__step--complete + .base-form-wizard__connector {
-    background-color: var(--mp-color-primary-default);
+    .base-form-wizard__step--complete + .base-form-wizard__connector {
+      background-color: var(--mp-color-primary-default);
+    }
   }
 </style>

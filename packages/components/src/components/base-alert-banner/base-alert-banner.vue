@@ -189,86 +189,88 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-alert-banner {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--mp-spacing-3);
-    padding: var(--mp-spacing-3) var(--mp-spacing-4);
-    border: 1px solid transparent;
-    border-radius: var(--mp-radius-md);
-    font-family: var(--mp-font-family-sans);
-
-    &__icon {
+  @layer mp.components {
+    .base-alert-banner {
       display: flex;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
+      align-items: flex-start;
+      gap: var(--mp-spacing-3);
+      padding: var(--mp-spacing-3) var(--mp-spacing-4);
+      border: 1px solid transparent;
+      border-radius: var(--mp-radius-md);
+      font-family: var(--mp-font-family-sans);
 
-    &__content {
-      flex: 1 1 auto;
-      display: flex;
-      flex-direction: column;
-      gap: var(--mp-spacing-1);
-      min-width: 0;
-    }
-
-    &__actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--mp-spacing-2);
-      margin-top: var(--mp-spacing-2);
-    }
-
-    &__dismiss {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      padding: var(--mp-spacing-1);
-      margin: calc(var(--mp-spacing-1) * -1);
-      background: transparent;
-      border: 0;
-      border-radius: var(--mp-radius-sm);
-      color: inherit;
-      cursor: pointer;
-      opacity: 0.7;
-      transition: opacity 150ms ease;
-
-      &:hover {
-        opacity: 1;
+      &__icon {
+        display: flex;
+        flex-shrink: 0;
+        margin-top: 1px;
       }
 
-      &:focus-visible {
-        outline: 2px solid currentcolor;
-        outline-offset: 1px;
+      &__content {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        gap: var(--mp-spacing-1);
+        min-width: 0;
       }
-    }
 
-    /* Variants */
-    @mixin tone($family) {
-      background-color: var(--mp-color-#{$family}-muted);
-      border-color: var(--mp-color-#{$family}-subtle);
-      color: var(--mp-color-#{$family}-text);
-    }
+      &__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--mp-spacing-2);
+        margin-top: var(--mp-spacing-2);
+      }
 
-    &--info {
-      @include tone('information');
-    }
+      &__dismiss {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        padding: var(--mp-spacing-1);
+        margin: calc(var(--mp-spacing-1) * -1);
+        background: transparent;
+        border: 0;
+        border-radius: var(--mp-radius-sm);
+        color: inherit;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 150ms ease;
 
-    &--success {
-      @include tone('success');
-    }
+        &:hover {
+          opacity: 1;
+        }
 
-    &--warning {
-      @include tone('warning');
-    }
+        &:focus-visible {
+          outline: 2px solid currentcolor;
+          outline-offset: 1px;
+        }
+      }
 
-    &--error {
-      @include tone('error');
-    }
+      /* Variants */
+      @mixin tone($family) {
+        background-color: var(--mp-color-#{$family}-muted);
+        border-color: var(--mp-color-#{$family}-subtle);
+        color: var(--mp-color-#{$family}-text);
+      }
 
-    &--neutral {
-      @include tone('default');
+      &--info {
+        @include tone('information');
+      }
+
+      &--success {
+        @include tone('success');
+      }
+
+      &--warning {
+        @include tone('warning');
+      }
+
+      &--error {
+        @include tone('error');
+      }
+
+      &--neutral {
+        @include tone('default');
+      }
     }
   }
 </style>

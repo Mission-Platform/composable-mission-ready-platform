@@ -130,36 +130,38 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-background-video {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-
-    &__video {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -2;
-    }
-
-    &--overlay::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      background-color: var(--mp-color-bg-scrim);
-    }
-
-    &__content {
+  @layer mp.components {
+    .base-background-video {
       position: relative;
-      z-index: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      min-height: inherit;
-      padding: var(--mp-spacing-8);
-      color: var(--mp-color-text-inverse);
+      overflow: hidden;
+      isolation: isolate;
+
+      &__video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -2;
+      }
+
+      &--overlay::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background-color: var(--mp-color-bg-scrim);
+      }
+
+      &__content {
+        position: relative;
+        z-index: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: inherit;
+        padding: var(--mp-spacing-8);
+        color: var(--mp-color-text-inverse);
+      }
     }
   }
 </style>

@@ -123,13 +123,15 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-form-wizard {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-6);
+  @layer mp.components {
+    .base-form-wizard {
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-spacing-6);
 
-    &__content {
-      flex: 1;
+      &__content {
+        flex: 1;
+      }
     }
   }
 </style>

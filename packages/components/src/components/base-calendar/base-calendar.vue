@@ -293,139 +293,141 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-calendar {
-    display: inline-flex;
-    flex-direction: column;
-    background: var(--mp-color-bg-surface);
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-lg);
-    box-shadow: var(--mp-shadow-md);
-    user-select: none;
+  @layer mp.components {
+    .base-calendar {
+      display: inline-flex;
+      flex-direction: column;
+      background: var(--mp-color-bg-surface);
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-lg);
+      box-shadow: var(--mp-shadow-md);
+      user-select: none;
 
-    /* ── Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. ─── */
-    @each $size,
-      $min-width in ('2xs': 200px, 'xs': 220px, 'sm': 240px, 'md': 280px, 'lg': 320px, 'xl': 360px, '2xl': 400px)
-    {
-      &--#{$size} {
-        padding: var(--mp-size-pad-inline-#{$size});
-        min-width: $min-width;
+      /* ── Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. ─── */
+      @each $size,
+        $min-width in ('2xs': 200px, 'xs': 220px, 'sm': 240px, 'md': 280px, 'lg': 320px, 'xl': 360px, '2xl': 400px)
+      {
+        &--#{$size} {
+          padding: var(--mp-size-pad-inline-#{$size});
+          min-width: $min-width;
 
-        .base-calendar__weekday,
-        .base-calendar__day {
-          height: var(--mp-size-height-#{$size});
-          font-size: var(--mp-size-font-#{$size});
+          .base-calendar__weekday,
+          .base-calendar__day {
+            height: var(--mp-size-height-#{$size});
+            font-size: var(--mp-size-font-#{$size});
+          }
         }
       }
-    }
 
-    /* ── Header ────────────────────────────────────────────────────────────────── */
+      /* ── Header ────────────────────────────────────────────────────────────────── */
 
-    &__header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: var(--mp-spacing-2);
-    }
+      &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: var(--mp-spacing-2);
+      }
 
-    &__month-label {
-      flex: 1;
-      text-align: center;
-    }
+      &__month-label {
+        flex: 1;
+        text-align: center;
+      }
 
-    &__nav-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      flex-shrink: 0;
-      border: none;
-      background: transparent;
-      border-radius: var(--mp-radius-sm);
-      cursor: pointer;
-      color: var(--mp-color-text-secondary);
-      transition:
-        background-color 150ms ease,
-        color 150ms ease;
+      &__nav-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        flex-shrink: 0;
+        border: none;
+        background: transparent;
+        border-radius: var(--mp-radius-sm);
+        cursor: pointer;
+        color: var(--mp-color-text-secondary);
+        transition:
+          background-color 150ms ease,
+          color 150ms ease;
 
-      &:hover {
-        background-color: var(--mp-color-bg-muted);
+        &:hover {
+          background-color: var(--mp-color-bg-muted);
+          color: var(--mp-color-text-primary);
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--mp-color-border-focus);
+          outline-offset: 2px;
+        }
+      }
+
+      /* ── Grid ──────────────────────────────────────────────────────────────────── */
+
+      &__grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+      }
+
+      &__row {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+      }
+
+      &__weekday {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: var(--mp-font-weight-medium);
+        color: var(--mp-color-text-tertiary);
+      }
+
+      /* ── Day cells ─────────────────────────────────────────────────────────────── */
+
+      &__day {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        border: none;
+        background: transparent;
+        border-radius: var(--mp-radius-sm);
+        cursor: pointer;
         color: var(--mp-color-text-primary);
-      }
+        transition:
+          background-color 150ms ease,
+          color 150ms ease;
 
-      &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
-        outline-offset: 2px;
-      }
-    }
+        &--empty {
+          pointer-events: none;
+        }
 
-    /* ── Grid ──────────────────────────────────────────────────────────────────── */
+        &--selected {
+          background-color: var(--mp-color-primary-default);
+          color: var(--mp-color-text-on-primary);
+          font-weight: var(--mp-font-weight-semibold);
+        }
 
-    &__grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 2px;
-    }
+        &--today {
+          background-color: color-mix(in srgb, var(--mp-color-primary-default) 12%, transparent);
+          color: var(--mp-color-primary-default);
+          font-weight: var(--mp-font-weight-semibold);
+        }
 
-    &__row {
-      display: grid;
-      grid-column: 1 / -1;
-      grid-template-columns: subgrid;
-    }
+        &--disabled {
+          opacity: 0.3;
+          cursor: not-allowed;
+          pointer-events: none;
+        }
 
-    &__weekday {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: var(--mp-font-weight-medium);
-      color: var(--mp-color-text-tertiary);
-    }
+        &:focus-visible {
+          outline: 2px solid var(--mp-color-border-focus);
+          outline-offset: 2px;
+        }
 
-    /* ── Day cells ─────────────────────────────────────────────────────────────── */
-
-    &__day {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      border: none;
-      background: transparent;
-      border-radius: var(--mp-radius-sm);
-      cursor: pointer;
-      color: var(--mp-color-text-primary);
-      transition:
-        background-color 150ms ease,
-        color 150ms ease;
-
-      &--empty {
-        pointer-events: none;
-      }
-
-      &--selected {
-        background-color: var(--mp-color-primary-default);
-        color: var(--mp-color-text-on-primary);
-        font-weight: var(--mp-font-weight-semibold);
-      }
-
-      &--today {
-        background-color: color-mix(in srgb, var(--mp-color-primary-default) 12%, transparent);
-        color: var(--mp-color-primary-default);
-        font-weight: var(--mp-font-weight-semibold);
-      }
-
-      &--disabled {
-        opacity: 0.3;
-        cursor: not-allowed;
-        pointer-events: none;
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
-        outline-offset: 2px;
-      }
-
-      &:hover:not(:disabled, .base-calendar__day--selected) {
-        background-color: var(--mp-color-bg-muted);
+        &:hover:not(:disabled, .base-calendar__day--selected) {
+          background-color: var(--mp-color-bg-muted);
+        }
       }
     }
   }

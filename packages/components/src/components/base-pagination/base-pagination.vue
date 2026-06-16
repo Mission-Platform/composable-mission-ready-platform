@@ -211,82 +211,84 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-pagination {
-    &__list {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: var(--mp-spacing-1);
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    &__btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: var(--mp-pagination-size, 2.25rem);
-      height: var(--mp-pagination-size, 2.25rem);
-      padding: 0 var(--mp-spacing-2);
-      background-color: transparent;
-      color: var(--mp-color-text-primary);
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      font-family: var(--mp-font-family-sans);
-      font-size: var(--mp-pagination-font, var(--mp-size-font-sm));
-      cursor: pointer;
-      transition:
-        background-color 150ms ease,
-        border-color 150ms ease,
-        color 150ms ease;
-
-      &--active {
-        background-color: var(--mp-color-primary-default);
-        border-color: var(--mp-color-primary-default);
-        color: var(--mp-color-text-on-primary);
-        cursor: default;
+  @layer mp.components {
+    .base-pagination {
+      &__list {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--mp-spacing-1);
+        list-style: none;
+        margin: 0;
+        padding: 0;
       }
 
-      &:focus-visible {
-        outline: none;
-        box-shadow: var(--mp-shadow-focus-primary);
+      &__btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: var(--mp-pagination-size, 2.25rem);
+        height: var(--mp-pagination-size, 2.25rem);
+        padding: 0 var(--mp-spacing-2);
+        background-color: transparent;
+        color: var(--mp-color-text-primary);
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-md);
+        font-family: var(--mp-font-family-sans);
+        font-size: var(--mp-pagination-font, var(--mp-size-font-sm));
+        cursor: pointer;
+        transition:
+          background-color 150ms ease,
+          border-color 150ms ease,
+          color 150ms ease;
+
+        &--active {
+          background-color: var(--mp-color-primary-default);
+          border-color: var(--mp-color-primary-default);
+          color: var(--mp-color-text-on-primary);
+          cursor: default;
+        }
+
+        &:focus-visible {
+          outline: none;
+          box-shadow: var(--mp-shadow-focus-primary);
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+          opacity: 0.5;
+        }
+
+        &:hover:not(:disabled, .base-pagination__btn--active) {
+          background-color: var(--mp-color-bg-muted);
+          border-color: var(--mp-color-border-strong);
+        }
       }
 
-      &:disabled {
-        cursor: not-allowed;
-        opacity: 0.5;
+      &__ellipsis {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: var(--mp-pagination-size, 2.25rem);
+        height: var(--mp-pagination-size, 2.25rem);
+        color: var(--mp-color-text-tertiary);
+        user-select: none;
       }
 
-      &:hover:not(:disabled, .base-pagination__btn--active) {
-        background-color: var(--mp-color-bg-muted);
-        border-color: var(--mp-color-border-strong);
+      &--sm {
+        --mp-pagination-size: 1.75rem;
+        --mp-pagination-font: var(--mp-size-font-xs);
       }
-    }
 
-    &__ellipsis {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: var(--mp-pagination-size, 2.25rem);
-      height: var(--mp-pagination-size, 2.25rem);
-      color: var(--mp-color-text-tertiary);
-      user-select: none;
-    }
+      &--md {
+        --mp-pagination-size: 2.25rem;
+        --mp-pagination-font: var(--mp-size-font-sm);
+      }
 
-    &--sm {
-      --mp-pagination-size: 1.75rem;
-      --mp-pagination-font: var(--mp-size-font-xs);
-    }
-
-    &--md {
-      --mp-pagination-size: 2.25rem;
-      --mp-pagination-font: var(--mp-size-font-sm);
-    }
-
-    &--lg {
-      --mp-pagination-size: 2.75rem;
-      --mp-pagination-font: var(--mp-size-font-md);
+      &--lg {
+        --mp-pagination-size: 2.75rem;
+        --mp-pagination-font: var(--mp-size-font-md);
+      }
     }
   }
 </style>

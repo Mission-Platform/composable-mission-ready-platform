@@ -76,27 +76,29 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-field-set {
-    min-width: 0;
-    padding: var(--mp-spacing-4);
-    margin: 0;
-    background-color: var(--mp-color-bg-surface);
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-lg);
+  @layer mp.components {
+    .base-field-set {
+      min-width: 0;
+      padding: var(--mp-spacing-4);
+      margin: 0;
+      background-color: var(--mp-color-bg-surface);
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-lg);
 
-    &--flush {
-      padding: 0;
-      background-color: transparent;
-      border: none;
-      border-radius: 0;
-    }
+      &--flush {
+        padding: 0;
+        background-color: transparent;
+        border: none;
+        border-radius: 0;
+      }
 
-    &__legend {
-      padding: 0 var(--mp-spacing-1);
-    }
+      &__legend {
+        padding: 0 var(--mp-spacing-1);
+      }
 
-    &__description {
-      margin: 0 0 var(--mp-spacing-3);
+      &__description {
+        margin: 0 0 var(--mp-spacing-3);
+      }
     }
   }
 </style>

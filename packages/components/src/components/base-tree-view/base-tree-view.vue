@@ -90,13 +90,15 @@
 <style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
-  .tree-view {
-    @include mp.mp-font-body-sm;
+  @layer mp.components {
+    .tree-view {
+      @include mp.mp-font-body-sm;
 
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    color: var(--mp-color-text-primary);
-    user-select: none;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      color: var(--mp-color-text-primary);
+      user-select: none;
+    }
   }
 </style>

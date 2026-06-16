@@ -64,68 +64,70 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-button-group {
-    display: inline-flex;
+  @layer mp.components {
+    .base-button-group {
+      display: inline-flex;
 
-    &--horizontal {
-      flex-direction: row;
-      align-items: center;
-    }
-
-    &--vertical {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    /* Gaps (only when not attached) */
-    $gap-map: (
-      'none': var(--mp-spacing-0),
-      'xs': var(--mp-spacing-1),
-      'sm': var(--mp-spacing-2),
-      'md': var(--mp-spacing-3),
-    );
-
-    @each $name, $value in $gap-map {
-      &--gap-#{$name}:not(.base-button-group--attached) {
-        gap: #{$value};
+      &--horizontal {
+        flex-direction: row;
+        align-items: center;
       }
-    }
 
-    /* Attached — collapse inner radii and overlap borders. */
-    &--attached {
-      gap: 0;
+      &--vertical {
+        flex-direction: column;
+        align-items: stretch;
+      }
 
-      &.base-button-group--horizontal {
-        :deep(> *:not(:first-child)) {
-          border-top-left-radius: 0;
-          border-bottom-left-radius: 0;
-          margin-left: -1px;
-        }
+      /* Gaps (only when not attached) */
+      $gap-map: (
+        'none': var(--mp-spacing-0),
+        'xs': var(--mp-spacing-1),
+        'sm': var(--mp-spacing-2),
+        'md': var(--mp-spacing-3),
+      );
 
-        :deep(> *:not(:last-child)) {
-          border-top-right-radius: 0;
-          border-bottom-right-radius: 0;
+      @each $name, $value in $gap-map {
+        &--gap-#{$name}:not(.base-button-group--attached) {
+          gap: #{$value};
         }
       }
 
-      &.base-button-group--vertical {
-        :deep(> *:not(:first-child)) {
-          border-top-left-radius: 0;
-          border-top-right-radius: 0;
-          margin-top: -1px;
+      /* Attached — collapse inner radii and overlap borders. */
+      &--attached {
+        gap: 0;
+
+        &.base-button-group--horizontal {
+          :deep(> *:not(:first-child)) {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            margin-left: -1px;
+          }
+
+          :deep(> *:not(:last-child)) {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+          }
         }
 
-        :deep(> *:not(:last-child)) {
-          border-bottom-left-radius: 0;
-          border-bottom-right-radius: 0;
-        }
-      }
+        &.base-button-group--vertical {
+          :deep(> *:not(:first-child)) {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            margin-top: -1px;
+          }
 
-      /* Keep the focused button above its neighbours so the focus ring is not clipped. */
-      :deep(> *:focus-visible),
-      :deep(> *:hover) {
-        position: relative;
-        z-index: 1;
+          :deep(> *:not(:last-child)) {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+          }
+        }
+
+        /* Keep the focused button above its neighbours so the focus ring is not clipped. */
+        :deep(> *:focus-visible),
+        :deep(> *:hover) {
+          position: relative;
+          z-index: 1;
+        }
       }
     }
   }

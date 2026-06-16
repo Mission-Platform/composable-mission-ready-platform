@@ -73,74 +73,76 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-toast-container {
-    position: fixed;
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-3);
-    width: min(24rem, calc(100vw - 2 * var(--mp-spacing-4)));
-    padding: 0;
-    margin: 0;
-    pointer-events: none;
+  @layer mp.components {
+    .base-toast-container {
+      position: fixed;
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-spacing-3);
+      width: min(24rem, calc(100vw - 2 * var(--mp-spacing-4)));
+      padding: 0;
+      margin: 0;
+      pointer-events: none;
 
-    &--top-left {
-      top: var(--mp-spacing-4);
-      left: var(--mp-spacing-4);
+      &--top-left {
+        top: var(--mp-spacing-4);
+        left: var(--mp-spacing-4);
+      }
+
+      &--top-center {
+        top: var(--mp-spacing-4);
+        left: 50%;
+        transform: translateX(-50%);
+        align-items: center;
+      }
+
+      &--top-right {
+        top: var(--mp-spacing-4);
+        right: var(--mp-spacing-4);
+      }
+
+      &--bottom-left {
+        bottom: var(--mp-spacing-4);
+        left: var(--mp-spacing-4);
+      }
+
+      &--bottom-center {
+        bottom: var(--mp-spacing-4);
+        left: 50%;
+        transform: translateX(-50%);
+        align-items: center;
+      }
+
+      &--bottom-right {
+        bottom: var(--mp-spacing-4);
+        right: var(--mp-spacing-4);
+      }
     }
 
-    &--top-center {
-      top: var(--mp-spacing-4);
-      left: 50%;
-      transform: translateX(-50%);
-      align-items: center;
-    }
-
-    &--top-right {
-      top: var(--mp-spacing-4);
-      right: var(--mp-spacing-4);
-    }
-
-    &--bottom-left {
-      bottom: var(--mp-spacing-4);
-      left: var(--mp-spacing-4);
-    }
-
-    &--bottom-center {
-      bottom: var(--mp-spacing-4);
-      left: 50%;
-      transform: translateX(-50%);
-      align-items: center;
-    }
-
-    &--bottom-right {
-      bottom: var(--mp-spacing-4);
-      right: var(--mp-spacing-4);
-    }
-  }
-
-  /* Enter / leave transitions */
-  .base-toast-enter-active,
-  .base-toast-leave-active {
-    transition:
-      opacity 200ms ease,
-      transform 200ms ease;
-  }
-
-  .base-toast-enter-from,
-  .base-toast-leave-to {
-    opacity: 0;
-    transform: translateY(-0.5rem);
-  }
-
-  .base-toast-leave-active {
-    position: absolute;
-    width: 100%;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
+    /* Enter / leave transitions */
     .base-toast-enter-active,
     .base-toast-leave-active {
-      transition: none;
+      transition:
+        opacity 200ms ease,
+        transform 200ms ease;
+    }
+
+    .base-toast-enter-from,
+    .base-toast-leave-to {
+      opacity: 0;
+      transform: translateY(-0.5rem);
+    }
+
+    .base-toast-leave-active {
+      position: absolute;
+      width: 100%;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .base-toast-enter-active,
+      .base-toast-leave-active {
+        transition: none;
+      }
     }
   }
 </style>

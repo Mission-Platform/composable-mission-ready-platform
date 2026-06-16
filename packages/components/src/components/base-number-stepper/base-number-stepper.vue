@@ -227,121 +227,123 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-number-stepper {
-    &__label {
-      display: flex;
-      align-items: center;
-      gap: 2px;
+  @layer mp.components {
+    .base-number-stepper {
+      &__label {
+        display: flex;
+        align-items: center;
+        gap: 2px;
 
-      &--hidden {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
+        &--hidden {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip-path: inset(50%);
+          white-space: nowrap;
+          border: 0;
+        }
+      }
+
+      &__required {
+        color: var(--mp-color-danger-default);
+        margin-left: 2px;
+      }
+
+      &__wrapper {
+        display: flex;
+        align-items: stretch;
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-md);
+        background-color: var(--mp-color-bg-surface);
         overflow: hidden;
-        clip-path: inset(50%);
-        white-space: nowrap;
-        border: 0;
-      }
-    }
+        transition:
+          border-color 150ms ease,
+          box-shadow 150ms ease;
 
-    &__required {
-      color: var(--mp-color-danger-default);
-      margin-left: 2px;
-    }
-
-    &__wrapper {
-      display: flex;
-      align-items: stretch;
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background-color: var(--mp-color-bg-surface);
-      overflow: hidden;
-      transition:
-        border-color 150ms ease,
-        box-shadow 150ms ease;
-
-      &:focus-within {
-        border-color: var(--mp-color-border-focus);
-        box-shadow: var(--mp-shadow-focus-primary);
-      }
-    }
-
-    &__btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.25rem;
-      flex-shrink: 0;
-      border: none;
-      background-color: var(--mp-color-bg-muted);
-      color: var(--mp-color-text-primary);
-      font-size: var(--mp-font-size-lg);
-      line-height: 1;
-      cursor: pointer;
-      user-select: none;
-      transition: background-color 150ms ease;
-
-      &:disabled {
-        cursor: not-allowed;
-        opacity: 0.4;
+        &:focus-within {
+          border-color: var(--mp-color-border-focus);
+          box-shadow: var(--mp-shadow-focus-primary);
+        }
       }
 
-      &:hover:not(:disabled) {
-        background-color: var(--mp-color-border-default);
-      }
-    }
-
-    &__field {
-      flex: 1;
-      width: 100%;
-      min-width: 0;
-      border: none;
-      outline: none;
-      background: transparent;
-      text-align: center;
-      color: var(--mp-color-text-primary);
-      font-family: var(--mp-font-family-sans);
-      line-height: var(--mp-line-height-normal);
-
-      &::placeholder {
-        color: var(--mp-color-text-tertiary);
-      }
-    }
-
-    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
-      &--#{$size} .base-number-stepper__field {
-        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
-        font-size: var(--mp-size-font-#{$size});
-      }
-    }
-
-    &--error .base-number-stepper__wrapper {
-      border-color: var(--mp-color-danger-default);
-
-      &:focus-within {
-        box-shadow: var(--mp-shadow-focus-danger);
-      }
-    }
-
-    &--disabled {
-      opacity: 0.5;
-      pointer-events: none;
-
-      .base-number-stepper__wrapper {
+      &__btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.25rem;
+        flex-shrink: 0;
+        border: none;
         background-color: var(--mp-color-bg-muted);
-        cursor: not-allowed;
+        color: var(--mp-color-text-primary);
+        font-size: var(--mp-font-size-lg);
+        line-height: 1;
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 150ms ease;
+
+        &:disabled {
+          cursor: not-allowed;
+          opacity: 0.4;
+        }
+
+        &:hover:not(:disabled) {
+          background-color: var(--mp-color-border-default);
+        }
       }
-    }
 
-    &__error {
-      color: var(--mp-color-danger-text);
-      margin: 0;
-    }
+      &__field {
+        flex: 1;
+        width: 100%;
+        min-width: 0;
+        border: none;
+        outline: none;
+        background: transparent;
+        text-align: center;
+        color: var(--mp-color-text-primary);
+        font-family: var(--mp-font-family-sans);
+        line-height: var(--mp-line-height-normal);
 
-    &__hint {
-      margin: 0;
+        &::placeholder {
+          color: var(--mp-color-text-tertiary);
+        }
+      }
+
+      @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+        &--#{$size} .base-number-stepper__field {
+          padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+          font-size: var(--mp-size-font-#{$size});
+        }
+      }
+
+      &--error .base-number-stepper__wrapper {
+        border-color: var(--mp-color-danger-default);
+
+        &:focus-within {
+          box-shadow: var(--mp-shadow-focus-danger);
+        }
+      }
+
+      &--disabled {
+        opacity: 0.5;
+        pointer-events: none;
+
+        .base-number-stepper__wrapper {
+          background-color: var(--mp-color-bg-muted);
+          cursor: not-allowed;
+        }
+      }
+
+      &__error {
+        color: var(--mp-color-danger-text);
+        margin: 0;
+      }
+
+      &__hint {
+        margin: 0;
+      }
     }
   }
 </style>

@@ -5,9 +5,11 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-dialog__body {
-    padding: var(--mp-spacing-6);
-    flex: 1;
-    overflow-y: auto;
+  @layer mp.components {
+    .base-dialog__body {
+      padding: var(--mp-spacing-6);
+      flex: 1;
+      overflow-y: auto;
+    }
   }
 </style>

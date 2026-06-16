@@ -418,32 +418,34 @@
 </template>
 
 <style lang="scss" scoped>
-  .schema-form__datetime {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-2);
-    padding: 0;
-    margin: 0;
-    border: 0;
-  }
+  @layer mp.components {
+    .schema-form__datetime {
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-spacing-2);
+      padding: 0;
+      margin: 0;
+      border: 0;
+    }
 
-  .schema-form__datetime-legend {
-    padding: 0;
-    margin-bottom: var(--mp-spacing-1);
-  }
+    .schema-form__datetime-legend {
+      padding: 0;
+      margin-bottom: var(--mp-spacing-1);
+    }
 
-  .schema-form__datetime-controls {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--mp-spacing-2);
-  }
+    .schema-form__datetime-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--mp-spacing-2);
+    }
 
-  .schema-form__datetime-hint {
-    margin: 0;
-    color: var(--mp-color-text-tertiary);
+    .schema-form__datetime-hint {
+      margin: 0;
+      color: var(--mp-color-text-tertiary);
 
-    &--error {
-      color: var(--mp-color-danger-text);
+      &--error {
+        color: var(--mp-color-danger-text);
+      }
     }
   }
 </style>

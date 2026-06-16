@@ -72,25 +72,27 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-timeline {
-    --mp-timeline-marker-size: 0.875rem;
-    --mp-timeline-line-thickness: 2px;
-    --mp-timeline-gutter: var(--mp-spacing-6);
+  @layer mp.components {
+    .base-timeline {
+      --mp-timeline-marker-size: 0.875rem;
+      --mp-timeline-line-thickness: 2px;
+      --mp-timeline-gutter: var(--mp-spacing-6);
 
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    width: 100%;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      width: 100%;
 
-    &--vertical {
-      display: flex;
-      flex-direction: column;
-    }
+      &--vertical {
+        display: flex;
+        flex-direction: column;
+      }
 
-    &--horizontal {
-      display: flex;
-      flex-direction: row;
-      overflow-x: auto;
+      &--horizontal {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+      }
     }
   }
 </style>

@@ -5,9 +5,11 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-drawer__body {
-    flex: 1;
-    overflow-y: auto;
-    padding: var(--mp-spacing-6);
+  @layer mp.components {
+    .base-drawer__body {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--mp-spacing-6);
+    }
   }
 </style>

@@ -95,145 +95,147 @@
 </template>
 
 <style lang="scss" scoped>
-  @use '@mission-platform/breakpoints/scss/mixins' as bp;
+  @use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 
-  .base-navbar {
-    background-color: var(--mp-color-bg-surface);
-    border-bottom: 1px solid var(--mp-color-border-default);
-    z-index: 100;
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-
-    &--sticky {
-      position: sticky;
-      top: 0;
-    }
-
-    &__container {
-      display: flex;
-      align-items: center;
-      height: var(--mp-size-height-xl);
-      padding: 0 var(--mp-spacing-4);
-      gap: var(--mp-spacing-3);
-      max-width: 100%;
-
-      @include bp.bp-up('sm') {
-        padding: 0 var(--mp-spacing-6);
-        gap: var(--mp-spacing-4);
-      }
-    }
-
-    &__start {
-      display: flex;
-      align-items: center;
-      gap: var(--mp-spacing-4);
-      flex-shrink: 0;
-    }
-
-    &__center {
-      display: flex;
-      align-items: center;
-      gap: var(--mp-spacing-3);
-      flex: 1;
-
-      @include bp.bp-up('sm') {
-        gap: var(--mp-spacing-4);
-      }
-
-      &--start {
-        justify-content: flex-start;
-      }
-
-      &--center {
-        justify-content: center;
-      }
-
-      &--end {
-        justify-content: flex-end;
-      }
-    }
-
-    &__end {
-      display: flex;
-      align-items: center;
-      gap: var(--mp-spacing-2);
-      flex-shrink: 0;
-    }
-
-    &__brand {
-      /* typography handled by BaseTypography */
-      text-decoration: none;
-      letter-spacing: -0.01em;
-    }
-
-    &__hamburger {
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      margin-left: auto;
-      gap: var(--mp-spacing-1);
-      width: var(--mp-size-height-md);
-      height: var(--mp-size-height-md);
-      padding: var(--mp-spacing-2);
-      background: none;
-      border: none;
-      border-radius: var(--mp-radius-md);
-      cursor: pointer;
-      color: var(--mp-color-text-primary);
-      flex-shrink: 0;
-
-      &:hover {
-        background-color: var(--mp-color-bg-subtle);
-      }
-
-      &:focus-visible {
-        outline: none;
-        box-shadow: var(--mp-shadow-focus-primary);
-      }
-    }
-
-    &__hamburger-bar {
-      display: block;
-      width: 100%;
-      height: 2px;
-      border-radius: 1px;
-      background-color: currentColor;
-    }
-  }
-
-  .base-navbar__mobile-nav {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-1);
-    padding: var(--mp-spacing-2) var(--mp-spacing-3);
-    height: 100%;
-  }
-
-  .base-navbar__mobile-nav-items {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-1);
-    flex: 1;
-  }
-
-  .base-navbar__mobile-nav-end {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-2);
-    padding-top: var(--mp-spacing-4);
-    border-top: 1px solid var(--mp-color-border-default);
-  }
-
-  /* On mobile (below sm breakpoint): hide center/end, show hamburger */
-  @include bp.bp-down('sm') {
+  @layer mp.components {
     .base-navbar {
-      &__center,
+      background-color: var(--mp-color-bg-surface);
+      border-bottom: 1px solid var(--mp-color-border-default);
+      z-index: 100;
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+
+      &--sticky {
+        position: sticky;
+        top: 0;
+      }
+
+      &__container {
+        display: flex;
+        align-items: center;
+        height: var(--mp-size-height-xl);
+        padding: 0 var(--mp-spacing-4);
+        gap: var(--mp-spacing-3);
+        max-width: 100%;
+
+        @include bp.bp-up('sm') {
+          padding: 0 var(--mp-spacing-6);
+          gap: var(--mp-spacing-4);
+        }
+      }
+
+      &__start {
+        display: flex;
+        align-items: center;
+        gap: var(--mp-spacing-4);
+        flex-shrink: 0;
+      }
+
+      &__center {
+        display: flex;
+        align-items: center;
+        gap: var(--mp-spacing-3);
+        flex: 1;
+
+        @include bp.bp-up('sm') {
+          gap: var(--mp-spacing-4);
+        }
+
+        &--start {
+          justify-content: flex-start;
+        }
+
+        &--center {
+          justify-content: center;
+        }
+
+        &--end {
+          justify-content: flex-end;
+        }
+      }
+
       &__end {
-        display: none;
+        display: flex;
+        align-items: center;
+        gap: var(--mp-spacing-2);
+        flex-shrink: 0;
+      }
+
+      &__brand {
+        /* typography handled by BaseTypography */
+        text-decoration: none;
+        letter-spacing: -0.01em;
       }
 
       &__hamburger {
-        display: flex;
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        margin-left: auto;
+        gap: var(--mp-spacing-1);
+        width: var(--mp-size-height-md);
+        height: var(--mp-size-height-md);
+        padding: var(--mp-spacing-2);
+        background: none;
+        border: none;
+        border-radius: var(--mp-radius-md);
+        cursor: pointer;
+        color: var(--mp-color-text-primary);
+        flex-shrink: 0;
+
+        &:hover {
+          background-color: var(--mp-color-bg-subtle);
+        }
+
+        &:focus-visible {
+          outline: none;
+          box-shadow: var(--mp-shadow-focus-primary);
+        }
+      }
+
+      &__hamburger-bar {
+        display: block;
+        width: 100%;
+        height: 2px;
+        border-radius: 1px;
+        background-color: currentColor;
+      }
+    }
+
+    .base-navbar__mobile-nav {
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-spacing-1);
+      padding: var(--mp-spacing-2) var(--mp-spacing-3);
+      height: 100%;
+    }
+
+    .base-navbar__mobile-nav-items {
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-spacing-1);
+      flex: 1;
+    }
+
+    .base-navbar__mobile-nav-end {
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-spacing-2);
+      padding-top: var(--mp-spacing-4);
+      border-top: 1px solid var(--mp-color-border-default);
+    }
+
+    /* On mobile (below sm breakpoint): hide center/end, show hamburger */
+    @include bp.bp-down('sm') {
+      .base-navbar {
+        &__center,
+        &__end {
+          display: none;
+        }
+
+        &__hamburger {
+          display: flex;
+        }
       }
     }
   }

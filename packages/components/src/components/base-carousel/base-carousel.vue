@@ -330,141 +330,143 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-carousel {
-    position: relative;
-    width: 100%;
-
-    &:focus {
-      outline: none;
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--mp-color-primary-default);
-      outline-offset: 2px;
-      border-radius: var(--mp-radius-lg);
-    }
-
-    &__viewport {
-      overflow: hidden;
-      border-radius: var(--mp-radius-lg);
-      touch-action: pan-y;
-      user-select: none;
-    }
-
-    &__track {
-      display: flex;
+  @layer mp.components {
+    .base-carousel {
+      position: relative;
       width: 100%;
-      transition: transform 400ms ease;
 
-      > :deep(*) {
-        flex: 0 0 100%;
-        min-width: 0;
-        box-sizing: border-box;
-      }
-    }
-
-    &__control {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 1px solid var(--mp-color-border-default);
-      background: var(--mp-color-bg-surface);
-      color: var(--mp-color-text-default);
-      font-size: 24px;
-      line-height: 1;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: var(--mp-shadow-sm);
-
-      &--prev {
-        left: var(--mp-spacing-2);
+      &:focus {
+        outline: none;
       }
 
-      &--next {
-        right: var(--mp-spacing-2);
+      &:focus-visible {
+        outline: 2px solid var(--mp-color-primary-default);
+        outline-offset: 2px;
+        border-radius: var(--mp-radius-lg);
       }
 
-      &:disabled {
-        opacity: 0.4;
-        cursor: not-allowed;
+      &__viewport {
+        overflow: hidden;
+        border-radius: var(--mp-radius-lg);
+        touch-action: pan-y;
+        user-select: none;
       }
 
-      &:hover:not(:disabled) {
-        background: var(--mp-color-bg-base-alt);
+      &__track {
+        display: flex;
+        width: 100%;
+        transition: transform 400ms ease;
+
+        > :deep(*) {
+          flex: 0 0 100%;
+          min-width: 0;
+          box-sizing: border-box;
+        }
       }
-    }
 
-    &__indicators {
-      display: flex;
-      justify-content: center;
-      gap: var(--mp-spacing-2);
-      margin-top: var(--mp-spacing-3);
-    }
-
-    &__indicator {
-      /* Keep the visible dot small while guaranteeing a >=24x24px hit area
-         so the control satisfies WCAG 2.2 SC 2.5.8 (Target Size, Minimum). */
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      padding: 0;
-      border: none;
-      border-radius: 50%;
-      background: transparent;
-      cursor: pointer;
-
-      &::before {
-        content: '';
-        width: 10px;
-        height: 10px;
+      &__control {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
-        background: var(--mp-color-border-default);
-        transition: background 200ms ease;
+        border: 1px solid var(--mp-color-border-default);
+        background: var(--mp-color-bg-surface);
+        color: var(--mp-color-text-default);
+        font-size: 24px;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: var(--mp-shadow-sm);
+
+        &--prev {
+          left: var(--mp-spacing-2);
+        }
+
+        &--next {
+          right: var(--mp-spacing-2);
+        }
+
+        &:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
+
+        &:hover:not(:disabled) {
+          background: var(--mp-color-bg-base-alt);
+        }
       }
 
-      &--active::before {
-        background: var(--mp-color-primary-default);
+      &__indicators {
+        display: flex;
+        justify-content: center;
+        gap: var(--mp-spacing-2);
+        margin-top: var(--mp-spacing-3);
       }
 
-      &:focus-visible {
-        outline: 2px solid var(--mp-color-primary-default);
-        outline-offset: 2px;
+      &__indicator {
+        /* Keep the visible dot small while guaranteeing a >=24x24px hit area
+           so the control satisfies WCAG 2.2 SC 2.5.8 (Target Size, Minimum). */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background: transparent;
+        cursor: pointer;
+
+        &::before {
+          content: '';
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: var(--mp-color-border-default);
+          transition: background 200ms ease;
+        }
+
+        &--active::before {
+          background: var(--mp-color-primary-default);
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--mp-color-primary-default);
+          outline-offset: 2px;
+        }
       }
-    }
 
-    &__autoplay {
-      /* Always-available pause/play control for autoplaying carousels
-         (WCAG 2.2.2 Pause, Stop, Hide). Sized to meet the 24px target min. */
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      margin: var(--mp-spacing-2) auto 0;
-      padding: 0;
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: 50%;
-      background: var(--mp-color-bg-surface);
-      color: var(--mp-color-text-default);
-      font-size: 12px;
-      line-height: 1;
-      cursor: pointer;
-      box-shadow: var(--mp-shadow-sm);
+      &__autoplay {
+        /* Always-available pause/play control for autoplaying carousels
+           (WCAG 2.2.2 Pause, Stop, Hide). Sized to meet the 24px target min. */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        margin: var(--mp-spacing-2) auto 0;
+        padding: 0;
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: 50%;
+        background: var(--mp-color-bg-surface);
+        color: var(--mp-color-text-default);
+        font-size: 12px;
+        line-height: 1;
+        cursor: pointer;
+        box-shadow: var(--mp-shadow-sm);
 
-      &:hover {
-        background: var(--mp-color-bg-base-alt);
-      }
+        &:hover {
+          background: var(--mp-color-bg-base-alt);
+        }
 
-      &:focus-visible {
-        outline: 2px solid var(--mp-color-primary-default);
-        outline-offset: 2px;
+        &:focus-visible {
+          outline: 2px solid var(--mp-color-primary-default);
+          outline-offset: 2px;
+        }
       }
     }
   }

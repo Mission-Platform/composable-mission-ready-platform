@@ -192,107 +192,109 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-checkbox {
-    &__row {
-      cursor: pointer;
-    }
+  @layer mp.components {
+    .base-checkbox {
+      &__row {
+        cursor: pointer;
+      }
 
-    &__control-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
+      &__control-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
 
-    &__box {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 18px;
-      height: 18px;
-      border: 2px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-sm);
-      background-color: var(--mp-color-bg-surface);
-      color: transparent;
-      transition:
-        background-color 150ms ease,
-        border-color 150ms ease;
-      pointer-events: none;
-    }
+      &__box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        border: 2px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-sm);
+        background-color: var(--mp-color-bg-surface);
+        color: transparent;
+        transition:
+          background-color 150ms ease,
+          border-color 150ms ease;
+        pointer-events: none;
+      }
 
-    &__icon {
-      width: 12px;
-      height: 12px;
-    }
+      &__icon {
+        width: 12px;
+        height: 12px;
+      }
 
-    &__label {
-      /* typography handled by BaseTypography */
+      &__label {
+        /* typography handled by BaseTypography */
 
-      &--hidden {
+        &--hidden {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip-path: inset(50%);
+          white-space: nowrap;
+          border: 0;
+        }
+      }
+
+      &__required {
+        color: var(--mp-color-danger-default);
+        margin-left: 2px;
+      }
+
+      /* States */
+      &--error {
+        .base-checkbox__box {
+          border-color: var(--mp-color-danger-default);
+        }
+      }
+
+      &__input {
         position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip-path: inset(50%);
-        white-space: nowrap;
-        border: 0;
-      }
-    }
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        cursor: pointer;
 
-    &__required {
-      color: var(--mp-color-danger-default);
-      margin-left: 2px;
-    }
+        &:focus-visible ~ .base-checkbox__box {
+          outline: 2px solid var(--mp-color-border-focus);
+          outline-offset: 2px;
+        }
 
-    /* States */
-    &--error {
-      .base-checkbox__box {
-        border-color: var(--mp-color-danger-default);
-      }
-    }
-
-    &__input {
-      position: absolute;
-      opacity: 0;
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      cursor: pointer;
-
-      &:focus-visible ~ .base-checkbox__box {
-        outline: 2px solid var(--mp-color-border-focus);
-        outline-offset: 2px;
+        &:checked ~ .base-checkbox__box,
+        &:indeterminate ~ .base-checkbox__box {
+          background-color: var(--mp-color-primary-default);
+          border-color: var(--mp-color-primary-default);
+          color: var(--mp-color-text-on-primary);
+        }
       }
 
-      &:checked ~ .base-checkbox__box,
-      &:indeterminate ~ .base-checkbox__box {
-        background-color: var(--mp-color-primary-default);
-        border-color: var(--mp-color-primary-default);
-        color: var(--mp-color-text-on-primary);
+      &--disabled {
+        opacity: 0.5;
+        pointer-events: none;
+
+        .base-checkbox__row {
+          cursor: not-allowed;
+        }
       }
-    }
 
-    &--disabled {
-      opacity: 0.5;
-      pointer-events: none;
-
-      .base-checkbox__row {
-        cursor: not-allowed;
+      &__error {
+        color: var(--mp-color-danger-text);
+        margin: 0;
+        padding-left: calc(18px + var(--mp-spacing-2));
       }
-    }
 
-    &__error {
-      color: var(--mp-color-danger-text);
-      margin: 0;
-      padding-left: calc(18px + var(--mp-spacing-2));
-    }
-
-    &__hint {
-      margin: 0;
-      padding-left: calc(18px + var(--mp-spacing-2));
+      &__hint {
+        margin: 0;
+        padding-left: calc(18px + var(--mp-spacing-2));
+      }
     }
   }
 </style>

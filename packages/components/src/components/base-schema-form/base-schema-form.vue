@@ -259,15 +259,17 @@
 </template>
 
 <style lang="scss" scoped>
-  .schema-form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-4);
-
-    &__fields {
+  @layer mp.components {
+    .schema-form {
       display: flex;
       flex-direction: column;
       gap: var(--mp-spacing-4);
+
+      &__fields {
+        display: flex;
+        flex-direction: column;
+        gap: var(--mp-spacing-4);
+      }
     }
   }
 </style>

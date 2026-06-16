@@ -78,50 +78,52 @@
 
 <style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
-  @use '@mission-platform/breakpoints/scss/mixins' as bp;
+  @use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 
-  .application-layout {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: var(--mp-color-bg-base);
-
-    &__status {
-      transition: background-color 0.2s ease;
-      min-height: 0;
-      padding-left: env(safe-area-inset-left);
-      padding-right: env(safe-area-inset-right);
-
-      &:not(:empty) {
-        @include mp.mp-font-label;
-
-        padding: var(--mp-spacing-2) var(--mp-spacing-4);
-
-        @include bp.bp-up('sm') {
-          padding: var(--mp-spacing-2) var(--mp-spacing-6);
-        }
-      }
-    }
-
-    &__header {
-      flex-shrink: 0;
-
-      &--sticky {
-        position: sticky;
-        top: 0;
-        z-index: 100;
-      }
-    }
-
-    &__content {
+  @layer mp.components {
+    .application-layout {
       display: flex;
       flex-direction: column;
-      flex: 1;
-      overflow: auto;
-    }
+      min-height: 100vh;
+      background-color: var(--mp-color-bg-base);
 
-    &__footer {
-      flex-shrink: 0;
+      &__status {
+        transition: background-color 0.2s ease;
+        min-height: 0;
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+
+        &:not(:empty) {
+          @include mp.mp-font-label;
+
+          padding: var(--mp-spacing-2) var(--mp-spacing-4);
+
+          @include bp.bp-up('sm') {
+            padding: var(--mp-spacing-2) var(--mp-spacing-6);
+          }
+        }
+      }
+
+      &__header {
+        flex-shrink: 0;
+
+        &--sticky {
+          position: sticky;
+          top: 0;
+          z-index: 100;
+        }
+      }
+
+      &__content {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        overflow: auto;
+      }
+
+      &__footer {
+        flex-shrink: 0;
+      }
     }
   }
 </style>

@@ -159,118 +159,120 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-textarea {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-1);
-
-    &__label {
-      /* typography handled by BaseTypography */
-
-      &--hidden {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip-path: inset(50%);
-        white-space: nowrap;
-        border: 0;
-      }
-    }
-
-    &__required {
-      color: var(--mp-color-danger-default);
-      margin-left: 2px;
-    }
-
-    &__wrapper {
+  @layer mp.components {
+    .base-textarea {
       display: flex;
-      align-items: flex-start;
-      box-sizing: border-box;
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background-color: var(--mp-color-bg-surface);
-      transition:
-        border-color 150ms ease,
-        box-shadow 150ms ease;
+      flex-direction: column;
+      gap: var(--mp-spacing-1);
 
-      &:focus-within {
-        border-color: var(--mp-color-border-focus);
-        box-shadow: var(--mp-shadow-focus-primary);
-      }
-    }
+      &__label {
+        /* typography handled by BaseTypography */
 
-    &__field {
-      flex: 1;
-      width: 100%;
-      min-width: 0;
-      box-sizing: border-box;
-      border: none;
-      background: transparent;
-      color: var(--mp-color-text-primary);
-      font-family: var(--mp-font-family-sans);
-      line-height: var(--mp-line-height-normal);
-      outline: none;
-
-      &::placeholder {
-        color: var(--mp-color-text-tertiary);
-      }
-    }
-
-    /* Leading / trailing extension areas (icons or buttons), top-aligned. */
-    &__extension {
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
-      color: var(--mp-color-text-secondary);
-
-      &--start {
-        margin-inline-start: var(--mp-spacing-2);
-      }
-
-      &--end {
-        margin-inline-end: var(--mp-spacing-2);
-      }
-    }
-
-    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
-    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
-      &--#{$size} .base-textarea__field {
-        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
-        font-size: var(--mp-size-font-#{$size});
-      }
-    }
-
-    /* States */
-    &--error {
-      .base-textarea__wrapper {
-        border-color: var(--mp-color-danger-default);
-
-        &:focus-within {
-          box-shadow: var(--mp-shadow-focus-danger);
+        &--hidden {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip-path: inset(50%);
+          white-space: nowrap;
+          border: 0;
         }
       }
-    }
 
-    &--disabled {
-      opacity: 0.5;
-      pointer-events: none;
-
-      .base-textarea__wrapper {
-        background-color: var(--mp-color-bg-muted);
-        cursor: not-allowed;
+      &__required {
+        color: var(--mp-color-danger-default);
+        margin-left: 2px;
       }
-    }
 
-    &__error {
-      color: var(--mp-color-danger-text);
-      margin: 0;
-    }
+      &__wrapper {
+        display: flex;
+        align-items: flex-start;
+        box-sizing: border-box;
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-md);
+        background-color: var(--mp-color-bg-surface);
+        transition:
+          border-color 150ms ease,
+          box-shadow 150ms ease;
 
-    &__hint {
-      margin: 0;
+        &:focus-within {
+          border-color: var(--mp-color-border-focus);
+          box-shadow: var(--mp-shadow-focus-primary);
+        }
+      }
+
+      &__field {
+        flex: 1;
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        border: none;
+        background: transparent;
+        color: var(--mp-color-text-primary);
+        font-family: var(--mp-font-family-sans);
+        line-height: var(--mp-line-height-normal);
+        outline: none;
+
+        &::placeholder {
+          color: var(--mp-color-text-tertiary);
+        }
+      }
+
+      /* Leading / trailing extension areas (icons or buttons), top-aligned. */
+      &__extension {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        color: var(--mp-color-text-secondary);
+
+        &--start {
+          margin-inline-start: var(--mp-spacing-2);
+        }
+
+        &--end {
+          margin-inline-end: var(--mp-spacing-2);
+        }
+      }
+
+      /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+      @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+        &--#{$size} .base-textarea__field {
+          padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+          font-size: var(--mp-size-font-#{$size});
+        }
+      }
+
+      /* States */
+      &--error {
+        .base-textarea__wrapper {
+          border-color: var(--mp-color-danger-default);
+
+          &:focus-within {
+            box-shadow: var(--mp-shadow-focus-danger);
+          }
+        }
+      }
+
+      &--disabled {
+        opacity: 0.5;
+        pointer-events: none;
+
+        .base-textarea__wrapper {
+          background-color: var(--mp-color-bg-muted);
+          cursor: not-allowed;
+        }
+      }
+
+      &__error {
+        color: var(--mp-color-danger-text);
+        margin: 0;
+      }
+
+      &__hint {
+        margin: 0;
+      }
     }
   }
 </style>

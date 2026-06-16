@@ -82,102 +82,104 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-icon-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid transparent;
-    border-radius: var(--mp-radius-sm);
-    background: transparent;
-    color: var(--mp-color-text-secondary);
-    line-height: 1;
-    cursor: pointer;
-    flex-shrink: 0;
-    transition:
-      background-color 150ms ease,
-      border-color 150ms ease,
-      color 150ms ease,
-      box-shadow 150ms ease,
-      opacity 150ms ease;
-
-    &:focus-visible {
-      outline: none;
-      box-shadow: var(--mp-shadow-focus-primary);
-    }
-
-    &:disabled {
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
-
-    /* Sizes — square padding. */
-    &--sm {
-      padding: var(--mp-spacing-1);
-    }
-
-    &--md {
-      padding: var(--mp-spacing-2);
-    }
-
-    &--lg {
-      padding: var(--mp-spacing-3);
-    }
-
-    /* Variants */
-
-    /* Ghost — transparent, the default toolbar / close affordance. */
-    &--ghost {
-      &:hover:not(:disabled) {
-        background-color: var(--mp-color-bg-muted);
-        color: var(--mp-color-text-primary);
-      }
-
-      &:active:not(:disabled) {
-        background-color: var(--mp-color-bg-sunken);
-      }
-    }
-
-    /* Primary — solid brand fill. */
-    &--primary {
-      background-color: var(--mp-color-primary-default);
-      color: var(--mp-color-text-on-primary);
-
-      &:hover:not(:disabled) {
-        background-color: var(--mp-color-primary-hover);
-      }
-
-      &:active:not(:disabled) {
-        background-color: var(--mp-color-primary-active, var(--mp-color-primary-hover));
-      }
-    }
-
-    /* Secondary — outlined (medium emphasis). */
-    &--secondary {
-      border-color: var(--mp-color-border-default);
-      background-color: var(--mp-color-bg-surface);
-      color: var(--mp-color-text-primary);
-
-      &:hover:not(:disabled) {
-        background-color: var(--mp-color-bg-muted);
-        border-color: var(--mp-color-border-strong);
-      }
-
-      &:active:not(:disabled) {
-        background-color: var(--mp-color-bg-sunken);
-      }
-    }
-
-    /* Danger — destructive icon action. */
-    &--danger {
-      color: var(--mp-color-error-default);
+  @layer mp.components {
+    .base-icon-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid transparent;
+      border-radius: var(--mp-radius-sm);
+      background: transparent;
+      color: var(--mp-color-text-secondary);
+      line-height: 1;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease,
+        box-shadow 150ms ease,
+        opacity 150ms ease;
 
       &:focus-visible {
-        box-shadow: var(--mp-shadow-focus-danger);
+        outline: none;
+        box-shadow: var(--mp-shadow-focus-primary);
       }
 
-      &:hover:not(:disabled) {
-        background-color: var(--mp-color-error-default);
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+
+      /* Sizes — square padding. */
+      &--sm {
+        padding: var(--mp-spacing-1);
+      }
+
+      &--md {
+        padding: var(--mp-spacing-2);
+      }
+
+      &--lg {
+        padding: var(--mp-spacing-3);
+      }
+
+      /* Variants */
+
+      /* Ghost — transparent, the default toolbar / close affordance. */
+      &--ghost {
+        &:hover:not(:disabled) {
+          background-color: var(--mp-color-bg-muted);
+          color: var(--mp-color-text-primary);
+        }
+
+        &:active:not(:disabled) {
+          background-color: var(--mp-color-bg-sunken);
+        }
+      }
+
+      /* Primary — solid brand fill. */
+      &--primary {
+        background-color: var(--mp-color-primary-default);
         color: var(--mp-color-text-on-primary);
+
+        &:hover:not(:disabled) {
+          background-color: var(--mp-color-primary-hover);
+        }
+
+        &:active:not(:disabled) {
+          background-color: var(--mp-color-primary-active, var(--mp-color-primary-hover));
+        }
+      }
+
+      /* Secondary — outlined (medium emphasis). */
+      &--secondary {
+        border-color: var(--mp-color-border-default);
+        background-color: var(--mp-color-bg-surface);
+        color: var(--mp-color-text-primary);
+
+        &:hover:not(:disabled) {
+          background-color: var(--mp-color-bg-muted);
+          border-color: var(--mp-color-border-strong);
+        }
+
+        &:active:not(:disabled) {
+          background-color: var(--mp-color-bg-sunken);
+        }
+      }
+
+      /* Danger — destructive icon action. */
+      &--danger {
+        color: var(--mp-color-error-default);
+
+        &:focus-visible {
+          box-shadow: var(--mp-shadow-focus-danger);
+        }
+
+        &:hover:not(:disabled) {
+          background-color: var(--mp-color-error-default);
+          color: var(--mp-color-text-on-primary);
+        }
       }
     }
   }

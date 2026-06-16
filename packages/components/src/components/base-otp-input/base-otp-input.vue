@@ -192,53 +192,55 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-otp-input {
-    --mp-otp-cell-size: 3rem;
-    --mp-otp-font-size: var(--mp-size-font-lg);
+  @layer mp.components {
+    .base-otp-input {
+      --mp-otp-cell-size: 3rem;
+      --mp-otp-font-size: var(--mp-size-font-lg);
 
-    display: inline-flex;
-    gap: var(--mp-spacing-2);
-    margin: 0;
-    padding: 0;
-    border: 0;
-    min-inline-size: auto;
-
-    &--sm {
-      --mp-otp-cell-size: 2.5rem;
-      --mp-otp-font-size: var(--mp-size-font-md);
-    }
-
-    &--lg {
-      --mp-otp-cell-size: 3.5rem;
-      --mp-otp-font-size: var(--mp-size-font-xl);
-    }
-
-    &__cell {
-      width: var(--mp-otp-cell-size);
-      height: var(--mp-otp-cell-size);
+      display: inline-flex;
+      gap: var(--mp-spacing-2);
+      margin: 0;
       padding: 0;
-      text-align: center;
-      font-family: var(--mp-font-family-sans);
-      font-size: var(--mp-otp-font-size);
-      font-weight: var(--mp-font-weight-semibold, 600);
-      color: var(--mp-color-text-primary);
-      background-color: var(--mp-color-bg-surface);
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      transition:
-        border-color 0.15s ease,
-        box-shadow 0.15s ease;
+      border: 0;
+      min-inline-size: auto;
 
-      &:focus {
-        outline: none;
-        border-color: var(--mp-color-primary-default);
-        box-shadow: var(--mp-shadow-focus-primary);
+      &--sm {
+        --mp-otp-cell-size: 2.5rem;
+        --mp-otp-font-size: var(--mp-size-font-md);
       }
-    }
 
-    &--disabled &__cell {
-      opacity: 0.5;
-      cursor: not-allowed;
+      &--lg {
+        --mp-otp-cell-size: 3.5rem;
+        --mp-otp-font-size: var(--mp-size-font-xl);
+      }
+
+      &__cell {
+        width: var(--mp-otp-cell-size);
+        height: var(--mp-otp-cell-size);
+        padding: 0;
+        text-align: center;
+        font-family: var(--mp-font-family-sans);
+        font-size: var(--mp-otp-font-size);
+        font-weight: var(--mp-font-weight-semibold, 600);
+        color: var(--mp-color-text-primary);
+        background-color: var(--mp-color-bg-surface);
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-md);
+        transition:
+          border-color 0.15s ease,
+          box-shadow 0.15s ease;
+
+        &:focus {
+          outline: none;
+          border-color: var(--mp-color-primary-default);
+          box-shadow: var(--mp-shadow-focus-primary);
+        }
+      }
+
+      &--disabled &__cell {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
     }
   }
 </style>

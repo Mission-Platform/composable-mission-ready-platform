@@ -104,54 +104,56 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-quote {
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-3);
-
-    &__content {
+  @layer mp.components {
+    .base-quote {
       margin: 0;
-    }
-
-    &__text {
-      font-style: italic;
-    }
-
-    &__attribution {
       display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      gap: var(--mp-spacing-2);
+      flex-direction: column;
+      gap: var(--mp-spacing-3);
 
-      &::before {
-        content: '—';
-        color: var(--mp-color-text-tertiary);
+      &__content {
+        margin: 0;
       }
-    }
 
-    &__source {
-      font-style: normal;
-
-      &::before {
-        content: ', ';
+      &__text {
+        font-style: italic;
       }
-    }
 
-    /* Variants */
-    &--bordered {
-      padding-left: var(--mp-spacing-4);
-      border-left: 3px solid var(--mp-color-primary-default);
-    }
+      &__attribution {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: var(--mp-spacing-2);
 
-    &--default {
-      padding: var(--mp-spacing-5);
-      background-color: var(--mp-color-bg-muted);
-      border-radius: var(--mp-radius-lg);
-    }
+        &::before {
+          content: '—';
+          color: var(--mp-color-text-tertiary);
+        }
+      }
 
-    &--plain {
-      /* no chrome — text only */
+      &__source {
+        font-style: normal;
+
+        &::before {
+          content: ', ';
+        }
+      }
+
+      /* Variants */
+      &--bordered {
+        padding-left: var(--mp-spacing-4);
+        border-left: 3px solid var(--mp-color-primary-default);
+      }
+
+      &--default {
+        padding: var(--mp-spacing-5);
+        background-color: var(--mp-color-bg-muted);
+        border-radius: var(--mp-radius-lg);
+      }
+
+      &--plain {
+        /* no chrome — text only */
+      }
     }
   }
 </style>

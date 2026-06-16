@@ -265,86 +265,88 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-range-input {
-    --mp-range-track-height: 0.375rem;
-    --mp-range-thumb-size: 1.125rem;
+  @layer mp.components {
+    .base-range-input {
+      --mp-range-track-height: 0.375rem;
+      --mp-range-thumb-size: 1.125rem;
 
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding-block: calc(var(--mp-range-thumb-size) / 2);
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding-block: calc(var(--mp-range-thumb-size) / 2);
 
-    &--sm {
-      --mp-range-track-height: 0.25rem;
-      --mp-range-thumb-size: 0.875rem;
-    }
-
-    &--lg {
-      --mp-range-track-height: 0.5rem;
-      --mp-range-thumb-size: 1.5rem;
-    }
-
-    &--disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    &__track {
-      position: relative;
-      flex: 1 1 auto;
-      height: var(--mp-range-track-height);
-      background-color: var(--mp-color-bg-sunken);
-      border-radius: var(--mp-radius-pill, 9999px);
-      cursor: pointer;
-      touch-action: none;
-    }
-
-    &--disabled &__track {
-      cursor: not-allowed;
-    }
-
-    &__fill {
-      position: absolute;
-      inset-block: 0;
-      background-color: var(--mp-color-primary-default);
-      border-radius: inherit;
-    }
-
-    &__thumb {
-      position: absolute;
-      top: 50%;
-      width: var(--mp-range-thumb-size);
-      height: var(--mp-range-thumb-size);
-      transform: translate(-50%, -50%);
-      background-color: var(--mp-color-bg-surface);
-      border: 2px solid var(--mp-color-primary-default);
-      border-radius: 50%;
-      cursor: grab;
-      touch-action: none;
-
-      &:focus-visible {
-        outline: none;
-        box-shadow: var(--mp-shadow-focus-primary);
+      &--sm {
+        --mp-range-track-height: 0.25rem;
+        --mp-range-thumb-size: 0.875rem;
       }
 
-      &:active {
-        cursor: grabbing;
+      &--lg {
+        --mp-range-track-height: 0.5rem;
+        --mp-range-thumb-size: 1.5rem;
       }
-    }
 
-    &__value {
-      position: absolute;
-      bottom: calc(100% + var(--mp-spacing-1));
-      left: 50%;
-      transform: translateX(-50%);
-      padding: var(--mp-spacing-1) var(--mp-spacing-2);
-      background-color: var(--mp-color-text-primary);
-      color: var(--mp-color-bg-surface);
-      border-radius: var(--mp-radius-sm);
-      font-family: var(--mp-font-family-sans);
-      font-size: var(--mp-size-font-xs);
-      white-space: nowrap;
-      pointer-events: none;
+      &--disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      &__track {
+        position: relative;
+        flex: 1 1 auto;
+        height: var(--mp-range-track-height);
+        background-color: var(--mp-color-bg-sunken);
+        border-radius: var(--mp-radius-pill, 9999px);
+        cursor: pointer;
+        touch-action: none;
+      }
+
+      &--disabled &__track {
+        cursor: not-allowed;
+      }
+
+      &__fill {
+        position: absolute;
+        inset-block: 0;
+        background-color: var(--mp-color-primary-default);
+        border-radius: inherit;
+      }
+
+      &__thumb {
+        position: absolute;
+        top: 50%;
+        width: var(--mp-range-thumb-size);
+        height: var(--mp-range-thumb-size);
+        transform: translate(-50%, -50%);
+        background-color: var(--mp-color-bg-surface);
+        border: 2px solid var(--mp-color-primary-default);
+        border-radius: 50%;
+        cursor: grab;
+        touch-action: none;
+
+        &:focus-visible {
+          outline: none;
+          box-shadow: var(--mp-shadow-focus-primary);
+        }
+
+        &:active {
+          cursor: grabbing;
+        }
+      }
+
+      &__value {
+        position: absolute;
+        bottom: calc(100% + var(--mp-spacing-1));
+        left: 50%;
+        transform: translateX(-50%);
+        padding: var(--mp-spacing-1) var(--mp-spacing-2);
+        background-color: var(--mp-color-text-primary);
+        color: var(--mp-color-bg-surface);
+        border-radius: var(--mp-radius-sm);
+        font-family: var(--mp-font-family-sans);
+        font-size: var(--mp-size-font-xs);
+        white-space: nowrap;
+        pointer-events: none;
+      }
     }
   }
 </style>

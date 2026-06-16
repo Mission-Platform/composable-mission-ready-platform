@@ -100,41 +100,43 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-dropdown-host {
-    display: contents;
-  }
+  @layer mp.components {
+    .base-dropdown-host {
+      display: contents;
+    }
 
-  .base-dropdown-trigger {
-    display: inline-block;
-    min-width: 1px;
-    min-height: 1px;
-  }
+    .base-dropdown-trigger {
+      display: inline-block;
+      min-width: 1px;
+      min-height: 1px;
+    }
 
-  .base-dropdown {
-    position: fixed;
-    margin: 0;
-    padding: var(--mp-spacing-1) 0;
-    background-color: var(--mp-color-bg-surface);
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-    box-shadow: var(--mp-shadow-md);
-    overflow-y: auto;
-    outline: none;
-    min-width: 1px;
-    min-height: 1px;
-  }
+    .base-dropdown {
+      position: fixed;
+      margin: 0;
+      padding: var(--mp-spacing-1) 0;
+      background-color: var(--mp-color-bg-surface);
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-md);
+      box-shadow: var(--mp-shadow-md);
+      overflow-y: auto;
+      outline: none;
+      min-width: 1px;
+      min-height: 1px;
+    }
 
-  .base-dropdown-fade-enter-active,
-  .base-dropdown-fade-leave-active {
-    transition:
-      opacity 120ms ease,
-      transform 120ms ease;
-  }
+    .base-dropdown-fade-enter-active,
+    .base-dropdown-fade-leave-active {
+      transition:
+        opacity 120ms ease,
+        transform 120ms ease;
+    }
 
-  .base-dropdown-fade-enter-from,
-  .base-dropdown-fade-leave-to {
-    opacity: 0;
-    transform: scaleY(0.97) translateY(-4px);
-    transform-origin: top;
+    .base-dropdown-fade-enter-from,
+    .base-dropdown-fade-leave-to {
+      opacity: 0;
+      transform: scaleY(0.97) translateY(-4px);
+      transform-origin: top;
+    }
   }
 </style>

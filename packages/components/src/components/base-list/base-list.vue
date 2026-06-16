@@ -155,66 +155,68 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-list {
-    margin: 0;
+  @layer mp.components {
+    .base-list {
+      margin: 0;
 
-    &__item {
-      line-height: var(--mp-line-height-normal);
+      &__item {
+        line-height: var(--mp-line-height-normal);
 
-      .base-list--divided & + & {
-        border-top: 1px solid var(--mp-color-border-default);
-      }
-    }
-
-    /* Variants */
-    &--unordered,
-    &--ordered {
-      padding-left: var(--mp-spacing-6);
-    }
-
-    &--none {
-      list-style: none;
-      padding: 0;
-
-      .base-list__item {
-        padding: 0;
-      }
-    }
-
-    &--description {
-      display: grid;
-      grid-template-columns: max-content 1fr;
-      padding: 0;
-    }
-
-    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
-    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
-      &--#{$size} {
-        font-size: var(--mp-size-font-#{$size});
-
-        .base-list__item,
-        .base-list__term,
-        .base-list__detail {
-          padding: var(--mp-size-pad-block-#{$size}) 0;
+        .base-list--divided & + & {
+          border-top: 1px solid var(--mp-color-border-default);
         }
       }
-    }
 
-    /* Divided */
-    &--divided {
-      &.base-list--none .base-list__item + .base-list__item,
-      &.base-list--unordered .base-list__item + .base-list__item,
-      &.base-list--ordered .base-list__item + .base-list__item {
-        border-top: 1px solid var(--mp-color-border-default);
+      /* Variants */
+      &--unordered,
+      &--ordered {
+        padding-left: var(--mp-spacing-6);
       }
-    }
 
-    &__term {
-      padding-right: var(--mp-spacing-6);
-    }
+      &--none {
+        list-style: none;
+        padding: 0;
 
-    &__detail {
-      margin: 0;
+        .base-list__item {
+          padding: 0;
+        }
+      }
+
+      &--description {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        padding: 0;
+      }
+
+      /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+      @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+        &--#{$size} {
+          font-size: var(--mp-size-font-#{$size});
+
+          .base-list__item,
+          .base-list__term,
+          .base-list__detail {
+            padding: var(--mp-size-pad-block-#{$size}) 0;
+          }
+        }
+      }
+
+      /* Divided */
+      &--divided {
+        &.base-list--none .base-list__item + .base-list__item,
+        &.base-list--unordered .base-list__item + .base-list__item,
+        &.base-list--ordered .base-list__item + .base-list__item {
+          border-top: 1px solid var(--mp-color-border-default);
+        }
+      }
+
+      &__term {
+        padding-right: var(--mp-spacing-6);
+      }
+
+      &__detail {
+        margin: 0;
+      }
     }
   }
 </style>

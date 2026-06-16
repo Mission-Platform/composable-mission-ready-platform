@@ -115,97 +115,99 @@
 </template>
 
 <style lang="scss" scoped>
-  @use '@mission-platform/breakpoints/scss/mixins' as bp;
+  @use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 
-  .base-modal-overlay {
-    position: fixed;
-    inset: 0;
-    background-color: var(--mp-color-bg-scrim);
-    display: flex;
+  @layer mp.components {
+    .base-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: var(--mp-color-bg-scrim);
+      display: flex;
 
-    /* On mobile: slide modal up from bottom, full-width */
-    align-items: flex-end;
-    justify-content: center;
-    padding: 0;
+      /* On mobile: slide modal up from bottom, full-width */
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0;
 
-    @include bp.bp-up('sm') {
-      align-items: center;
-      padding: var(--mp-spacing-4);
-    }
-  }
-
-  .base-modal {
-    position: static;
-    margin: 0;
-    border: none;
-    background-color: var(--mp-color-bg-surface);
-
-    /* Mobile: square bottom corners, rounded top corners only */
-    border-radius: var(--mp-radius-xl) var(--mp-radius-xl) 0 0;
-    box-shadow: var(--mp-shadow-2xl);
-    display: flex;
-    flex-direction: column;
-
-    /* Mobile: take up to 90% of viewport height, full width */
-    max-height: 90vh;
-    overflow: hidden;
-    width: 100%;
-
-    @include bp.bp-up('sm') {
-      /* Tablet+: centred dialog, rounded all corners */
-      border-radius: var(--mp-radius-xl);
-      max-height: calc(100vh - var(--mp-spacing-8));
-    }
-
-    /* Size variants only apply on sm+ (tablet/desktop); on mobile always full-width.
-       Canonical 2xs → 2xl scale, plus a special `full` (near-fullscreen) value. */
-    @include bp.bp-up('sm') {
-      @each $size,
-        $max-width
-          in (
-            '2xs': 20rem,
-            'xs': 24rem,
-            'sm': var(--mp-size-width-sm),
-            'md': var(--mp-size-width-md),
-            'lg': 51.429rem,
-            'xl': 68.571rem,
-            '2xl': var(--mp-size-width-lg)
-          )
-      {
-        &--#{$size} {
-          max-width: $max-width;
-        }
+      @include bp.bp-up('sm') {
+        align-items: center;
+        padding: var(--mp-spacing-4);
       }
+    }
 
-      &--full {
-        max-width: calc(100vw - var(--mp-spacing-8));
+    .base-modal {
+      position: static;
+      margin: 0;
+      border: none;
+      background-color: var(--mp-color-bg-surface);
+
+      /* Mobile: square bottom corners, rounded top corners only */
+      border-radius: var(--mp-radius-xl) var(--mp-radius-xl) 0 0;
+      box-shadow: var(--mp-shadow-2xl);
+      display: flex;
+      flex-direction: column;
+
+      /* Mobile: take up to 90% of viewport height, full width */
+      max-height: 90vh;
+      overflow: hidden;
+      width: 100%;
+
+      @include bp.bp-up('sm') {
+        /* Tablet+: centred dialog, rounded all corners */
+        border-radius: var(--mp-radius-xl);
         max-height: calc(100vh - var(--mp-spacing-8));
       }
+
+      /* Size variants only apply on sm+ (tablet/desktop); on mobile always full-width.
+         Canonical 2xs → 2xl scale, plus a special `full` (near-fullscreen) value. */
+      @include bp.bp-up('sm') {
+        @each $size,
+          $max-width
+            in (
+              '2xs': 20rem,
+              'xs': 24rem,
+              'sm': var(--mp-size-width-sm),
+              'md': var(--mp-size-width-md),
+              'lg': 51.429rem,
+              'xl': 68.571rem,
+              '2xl': var(--mp-size-width-lg)
+            )
+        {
+          &--#{$size} {
+            max-width: $max-width;
+          }
+        }
+
+        &--full {
+          max-width: calc(100vw - var(--mp-spacing-8));
+          max-height: calc(100vh - var(--mp-spacing-8));
+        }
+      }
     }
-  }
 
-  /* Transitions */
-  .base-modal-fade-enter-active,
-  .base-modal-fade-leave-active {
-    transition: opacity 200ms ease;
-  }
+    /* Transitions */
+    .base-modal-fade-enter-active,
+    .base-modal-fade-leave-active {
+      transition: opacity 200ms ease;
+    }
 
-  .base-modal-fade-enter-from,
-  .base-modal-fade-leave-to {
-    opacity: 0;
-  }
+    .base-modal-fade-enter-from,
+    .base-modal-fade-leave-to {
+      opacity: 0;
+    }
 
-  .base-modal-scale-enter-active,
-  .base-modal-scale-leave-active {
-    transition:
-      transform 200ms ease,
-      opacity 200ms ease;
-  }
+    .base-modal-scale-enter-active,
+    .base-modal-scale-leave-active {
+      transition:
+        transform 200ms ease,
+        opacity 200ms ease;
+    }
 
-  .base-modal-scale-enter-from,
-  .base-modal-scale-leave-to {
-    opacity: 0;
-    transform: scale(0.95) translateY(-8px);
+    .base-modal-scale-enter-from,
+    .base-modal-scale-leave-to {
+      opacity: 0;
+      transform: scale(0.95) translateY(-8px);
+    }
   }
 </style>
 

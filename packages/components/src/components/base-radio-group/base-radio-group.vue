@@ -122,48 +122,50 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-radio-group {
-    border: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-2);
-
-    &__legend {
+  @layer mp.components {
+    .base-radio-group {
+      border: none;
       padding: 0;
-      margin-bottom: var(--mp-spacing-1);
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-spacing-2);
 
-      &--hidden {
-        position: absolute;
-        width: 1px;
-        height: 1px;
+      &__legend {
         padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip-path: inset(50%);
-        white-space: nowrap;
-        border: 0;
+        margin-bottom: var(--mp-spacing-1);
+
+        &--hidden {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip-path: inset(50%);
+          white-space: nowrap;
+          border: 0;
+        }
       }
-    }
 
-    &__required {
-      color: var(--mp-color-danger-default);
-      margin-left: 2px;
-    }
+      &__required {
+        color: var(--mp-color-danger-default);
+        margin-left: 2px;
+      }
 
-    &--disabled {
-      pointer-events: none;
-      color: var(--mp-color-text-disabled);
-    }
+      &--disabled {
+        pointer-events: none;
+        color: var(--mp-color-text-disabled);
+      }
 
-    &__error {
-      color: var(--mp-color-danger-text);
-      margin: 0;
-    }
+      &__error {
+        color: var(--mp-color-danger-text);
+        margin: 0;
+      }
 
-    &__hint {
-      margin: 0;
+      &__hint {
+        margin: 0;
+      }
     }
   }
 </style>

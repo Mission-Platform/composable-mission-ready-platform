@@ -95,58 +95,60 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-accordion__summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--mp-spacing-3) var(--mp-spacing-4);
-    cursor: pointer;
-    color: var(--mp-color-text-primary);
-    list-style: none;
-    user-select: none;
-    gap: var(--mp-spacing-2);
+  @layer mp.components {
+    .base-accordion__summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--mp-spacing-3) var(--mp-spacing-4);
+      cursor: pointer;
+      color: var(--mp-color-text-primary);
+      list-style: none;
+      user-select: none;
+      gap: var(--mp-spacing-2);
 
-    &::-webkit-details-marker {
-      display: none;
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      &:hover {
+        background-color: var(--mp-color-bg-muted);
+      }
+
+      &:focus-visible {
+        outline: none;
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
     }
 
-    &:hover {
-      background-color: var(--mp-color-bg-muted);
-    }
+    .base-accordion__item {
+      background-color: var(--mp-color-bg-surface);
 
-    &:focus-visible {
-      outline: none;
-      box-shadow: var(--mp-shadow-focus-primary);
-    }
-  }
+      & + .base-accordion__item {
+        border-top: 1px solid var(--mp-color-border-default);
+      }
 
-  .base-accordion__item {
-    background-color: var(--mp-color-bg-surface);
+      &--disabled {
+        background-color: var(--mp-color-bg-muted);
 
-    & + .base-accordion__item {
-      border-top: 1px solid var(--mp-color-border-default);
-    }
+        .base-accordion__summary {
+          color: var(--mp-color-text-disabled);
+          cursor: not-allowed;
 
-    &--disabled {
-      background-color: var(--mp-color-bg-muted);
-
-      .base-accordion__summary {
-        color: var(--mp-color-text-disabled);
-        cursor: not-allowed;
-
-        &:hover {
-          background-color: var(--mp-color-bg-muted);
+          &:hover {
+            background-color: var(--mp-color-bg-muted);
+          }
         }
       }
     }
-  }
 
-  .base-accordion__chevron {
-    flex-shrink: 0;
-  }
+    .base-accordion__chevron {
+      flex-shrink: 0;
+    }
 
-  .base-accordion__content {
-    padding: var(--mp-spacing-3) var(--mp-spacing-4);
-    border-top: 1px solid var(--mp-color-border-default);
+    .base-accordion__content {
+      padding: var(--mp-spacing-3) var(--mp-spacing-4);
+      border-top: 1px solid var(--mp-color-border-default);
+    }
   }
 </style>

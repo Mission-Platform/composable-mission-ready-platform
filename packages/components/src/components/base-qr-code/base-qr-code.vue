@@ -110,9 +110,11 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-qr-code {
-    display: block;
-    max-width: 100%;
-    height: auto;
+  @layer mp.components {
+    .base-qr-code {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
   }
 </style>

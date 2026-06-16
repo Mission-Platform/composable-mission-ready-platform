@@ -212,87 +212,89 @@
 <style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
-  .base-scheduler-event {
-    position: absolute;
-    border: 0;
-    border-radius: var(--mp-radius-sm);
-    overflow: hidden;
-    color: inherit; /* set dynamically via textColor computed */
-    display: flex;
-    flex-direction: column;
-    padding: var(--mp-spacing-1) var(--mp-spacing-2);
-    margin: 0;
-    font: inherit;
-    text-align: left;
-    user-select: none;
-    z-index: 1;
-    box-shadow: var(--mp-shadow-sm);
-    transition: box-shadow 0.15s ease;
-
-    &:focus-visible {
-      outline: 2px solid var(--mp-color-border-focus);
-      outline-offset: 1px;
-    }
-
-    &--tentative {
-      // No element-level opacity — text contrast is preserved by alpha-blending
-      // the background colour in JS (effectiveBgColor). The dashed border still
-      // conveys the tentative status visually.
-      border: 2px dashed currentcolor;
-    }
-
-    &--cancelled {
-      // Background is alpha-blended in JS; line-through conveys cancellation.
-      text-decoration: line-through;
-    }
-
-    &--dragging {
-      // Elevated shadow provides drag feedback without reducing text contrast.
-      box-shadow: var(--mp-shadow-lg);
-      cursor: grabbing;
-      z-index: 100;
-    }
-
-    &__body {
+  @layer mp.components {
+    .base-scheduler-event {
+      position: absolute;
+      border: 0;
+      border-radius: var(--mp-radius-sm);
+      overflow: hidden;
+      color: inherit; /* set dynamically via textColor computed */
       display: flex;
       flex-direction: column;
-      gap: 1px;
-      min-height: 0;
-      overflow: hidden;
-      flex: 1;
-    }
+      padding: var(--mp-spacing-1) var(--mp-spacing-2);
+      margin: 0;
+      font: inherit;
+      text-align: left;
+      user-select: none;
+      z-index: 1;
+      box-shadow: var(--mp-shadow-sm);
+      transition: box-shadow 0.15s ease;
 
-    &__title {
-      @include mp.mp-font-body-sm;
+      &:focus-visible {
+        outline: 2px solid var(--mp-color-border-focus);
+        outline-offset: 1px;
+      }
 
-      font-weight: 600;
-      line-height: 1.2;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+      &--tentative {
+        // No element-level opacity — text contrast is preserved by alpha-blending
+        // the background colour in JS (effectiveBgColor). The dashed border still
+        // conveys the tentative status visually.
+        border: 2px dashed currentcolor;
+      }
 
-    &__location,
-    &__duration {
-      @include mp.mp-font-caption;
+      &--cancelled {
+        // Background is alpha-blended in JS; line-through conveys cancellation.
+        text-decoration: line-through;
+      }
 
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+      &--dragging {
+        // Elevated shadow provides drag feedback without reducing text contrast.
+        box-shadow: var(--mp-shadow-lg);
+        cursor: grabbing;
+        z-index: 100;
+      }
 
-    &__resize-handle {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 6px;
-      cursor: ns-resize;
-      background: linear-gradient(to bottom, transparent, rgb(0 0 0 / 20%));
-      border-radius: 0 0 var(--mp-radius-sm) var(--mp-radius-sm);
+      &__body {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        min-height: 0;
+        overflow: hidden;
+        flex: 1;
+      }
 
-      &:hover {
-        background: linear-gradient(to bottom, transparent, rgb(0 0 0 / 35%));
+      &__title {
+        @include mp.mp-font-body-sm;
+
+        font-weight: 600;
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      &__location,
+      &__duration {
+        @include mp.mp-font-caption;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      &__resize-handle {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        cursor: ns-resize;
+        background: linear-gradient(to bottom, transparent, rgb(0 0 0 / 20%));
+        border-radius: 0 0 var(--mp-radius-sm) var(--mp-radius-sm);
+
+        &:hover {
+          background: linear-gradient(to bottom, transparent, rgb(0 0 0 / 35%));
+        }
       }
     }
   }

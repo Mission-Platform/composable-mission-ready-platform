@@ -472,282 +472,284 @@
 <style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
-  .base-date-range {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-1);
-    position: relative;
-
-    &__label {
+  @layer mp.components {
+    .base-date-range {
       display: flex;
-      align-items: center;
-      gap: 2px;
+      flex-direction: column;
+      gap: var(--mp-spacing-1);
+      position: relative;
 
-      &--hidden {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip-path: inset(50%);
-        white-space: nowrap;
-        border: 0;
-      }
-    }
+      &__label {
+        display: flex;
+        align-items: center;
+        gap: 2px;
 
-    &__required {
-      color: var(--mp-color-danger-default);
-      margin-left: 2px;
-    }
-
-    &__wrapper {
-      display: flex;
-      align-items: center;
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background-color: var(--mp-color-bg-surface);
-      transition:
-        border-color 150ms ease,
-        box-shadow 150ms ease;
-
-      &:focus-within {
-        border-color: var(--mp-color-border-focus);
-        box-shadow: var(--mp-shadow-focus-primary);
-      }
-    }
-
-    &__trigger {
-      display: flex;
-      flex: 1;
-      min-width: 0;
-      align-items: center;
-      justify-content: space-between;
-      appearance: none;
-      width: 100%;
-      text-align: left;
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      user-select: none;
-
-      &:focus {
-        outline: none;
-      }
-    }
-
-    /* Leading / trailing extension areas (icons, units, or buttons). */
-    &__extension {
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
-      color: var(--mp-color-text-secondary);
-
-      &--start {
-        margin-inline-start: var(--mp-spacing-2);
-      }
-
-      &--end {
-        margin-inline-end: var(--mp-spacing-2);
-      }
-    }
-
-    &__value {
-      @include mp.mp-font-body-md;
-
-      color: var(--mp-color-text-primary);
-
-      &--placeholder {
-        color: var(--mp-color-text-tertiary);
-      }
-    }
-
-    &__icon {
-      color: var(--mp-color-text-secondary);
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
-    }
-
-    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
-    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
-      &--#{$size} .base-date-range__trigger {
-        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
-
-        .base-date-range__value {
-          font-size: var(--mp-size-font-#{$size});
+        &--hidden {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip-path: inset(50%);
+          white-space: nowrap;
+          border: 0;
         }
       }
-    }
 
-    &--error .base-date-range__wrapper {
-      border-color: var(--mp-color-danger-default);
-
-      &:focus-within {
-        box-shadow: var(--mp-shadow-focus-danger);
+      &__required {
+        color: var(--mp-color-danger-default);
+        margin-left: 2px;
       }
-    }
 
-    &--disabled {
-      opacity: 0.5;
-      pointer-events: none;
+      &__wrapper {
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-md);
+        background-color: var(--mp-color-bg-surface);
+        transition:
+          border-color 150ms ease,
+          box-shadow 150ms ease;
 
-      .base-date-range__wrapper {
-        background-color: var(--mp-color-bg-muted);
-        cursor: not-allowed;
+        &:focus-within {
+          border-color: var(--mp-color-border-focus);
+          box-shadow: var(--mp-shadow-focus-primary);
+        }
       }
-    }
 
-    &__error {
-      color: var(--mp-color-danger-text);
-      margin: 0;
-    }
+      &__trigger {
+        display: flex;
+        flex: 1;
+        min-width: 0;
+        align-items: center;
+        justify-content: space-between;
+        appearance: none;
+        width: 100%;
+        text-align: left;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        user-select: none;
 
-    &__hint-text {
-      margin: 0;
-    }
+        &:focus {
+          outline: none;
+        }
+      }
 
-    /* Calendar */
-    &__calendar {
-      position: fixed;
-      background: var(--mp-color-bg-surface);
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-lg);
-      box-shadow: var(--mp-shadow-lg);
-      padding: var(--mp-spacing-3);
-    }
+      /* Leading / trailing extension areas (icons, units, or buttons). */
+      &__extension {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        color: var(--mp-color-text-secondary);
 
-    &__hint {
-      text-align: center;
-      margin-bottom: var(--mp-spacing-2);
-    }
+        &--start {
+          margin-inline-start: var(--mp-spacing-2);
+        }
 
-    &__panels {
-      display: flex;
-      gap: var(--mp-spacing-4);
-    }
+        &--end {
+          margin-inline-end: var(--mp-spacing-2);
+        }
+      }
 
-    &__panel {
-      min-width: 252px;
-    }
+      &__value {
+        @include mp.mp-font-body-md;
 
-    &__sep {
-      width: 1px;
-      background: var(--mp-color-border-default);
-      align-self: stretch;
-    }
-
-    &__cal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: var(--mp-spacing-2);
-    }
-
-    &__nav-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      border: none;
-      background: transparent;
-      border-radius: var(--mp-radius-sm);
-      cursor: pointer;
-      color: var(--mp-color-text-secondary);
-      transition:
-        background-color 150ms ease,
-        color 150ms ease;
-
-      &:hover {
-        background-color: var(--mp-color-bg-muted);
         color: var(--mp-color-text-primary);
+
+        &--placeholder {
+          color: var(--mp-color-text-tertiary);
+        }
       }
 
-      &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
-        outline-offset: 2px;
-      }
-    }
-
-    &__cal-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 2px;
-    }
-
-    &__weekday {
-      @include mp.mp-font-caption;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 32px;
-      font-weight: var(--mp-font-weight-medium);
-      color: var(--mp-color-text-tertiary);
-    }
-
-    &__day {
-      @include mp.mp-font-body-sm;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 32px;
-      width: 100%;
-      border: none;
-      background: transparent;
-      border-radius: var(--mp-radius-sm);
-      cursor: pointer;
-      color: var(--mp-color-text-primary);
-      transition:
-        background-color 150ms ease,
-        color 150ms ease;
-
-      &--empty {
-        pointer-events: none;
+      &__icon {
+        color: var(--mp-color-text-secondary);
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
       }
 
-      &--range-start,
-      &--range-end {
-        background-color: var(--mp-color-primary-default);
-        color: var(--mp-color-text-on-primary);
-        font-weight: var(--mp-font-weight-semibold);
+      /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+      @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+        &--#{$size} .base-date-range__trigger {
+          padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+
+          .base-date-range__value {
+            font-size: var(--mp-size-font-#{$size});
+          }
+        }
       }
 
-      &--range-start {
-        border-radius: var(--mp-radius-sm) 0 0 var(--mp-radius-sm);
-      }
+      &--error .base-date-range__wrapper {
+        border-color: var(--mp-color-danger-default);
 
-      &--range-end {
-        border-radius: 0 var(--mp-radius-sm) var(--mp-radius-sm) 0;
-      }
-
-      &--in-range {
-        background-color: color-mix(in srgb, var(--mp-color-primary-default) 12%, transparent);
-        color: var(--mp-color-primary-default);
-        border-radius: 0;
-      }
-
-      &--today {
-        background-color: color-mix(in srgb, var(--mp-color-primary-default) 8%, transparent);
-        color: var(--mp-color-primary-default);
-        font-weight: var(--mp-font-weight-semibold);
+        &:focus-within {
+          box-shadow: var(--mp-shadow-focus-danger);
+        }
       }
 
       &--disabled {
-        opacity: 0.3;
-        cursor: not-allowed;
+        opacity: 0.5;
         pointer-events: none;
+
+        .base-date-range__wrapper {
+          background-color: var(--mp-color-bg-muted);
+          cursor: not-allowed;
+        }
       }
 
-      &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
-        outline-offset: 2px;
+      &__error {
+        color: var(--mp-color-danger-text);
+        margin: 0;
       }
 
-      &:hover:not(:disabled, .base-date-range__day--range-start, .base-date-range__day--range-end) {
-        background-color: var(--mp-color-bg-muted);
+      &__hint-text {
+        margin: 0;
+      }
+
+      /* Calendar */
+      &__calendar {
+        position: fixed;
+        background: var(--mp-color-bg-surface);
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-lg);
+        box-shadow: var(--mp-shadow-lg);
+        padding: var(--mp-spacing-3);
+      }
+
+      &__hint {
+        text-align: center;
+        margin-bottom: var(--mp-spacing-2);
+      }
+
+      &__panels {
+        display: flex;
+        gap: var(--mp-spacing-4);
+      }
+
+      &__panel {
+        min-width: 252px;
+      }
+
+      &__sep {
+        width: 1px;
+        background: var(--mp-color-border-default);
+        align-self: stretch;
+      }
+
+      &__cal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: var(--mp-spacing-2);
+      }
+
+      &__nav-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border: none;
+        background: transparent;
+        border-radius: var(--mp-radius-sm);
+        cursor: pointer;
+        color: var(--mp-color-text-secondary);
+        transition:
+          background-color 150ms ease,
+          color 150ms ease;
+
+        &:hover {
+          background-color: var(--mp-color-bg-muted);
+          color: var(--mp-color-text-primary);
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--mp-color-border-focus);
+          outline-offset: 2px;
+        }
+      }
+
+      &__cal-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+      }
+
+      &__weekday {
+        @include mp.mp-font-caption;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 32px;
+        font-weight: var(--mp-font-weight-medium);
+        color: var(--mp-color-text-tertiary);
+      }
+
+      &__day {
+        @include mp.mp-font-body-sm;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 32px;
+        width: 100%;
+        border: none;
+        background: transparent;
+        border-radius: var(--mp-radius-sm);
+        cursor: pointer;
+        color: var(--mp-color-text-primary);
+        transition:
+          background-color 150ms ease,
+          color 150ms ease;
+
+        &--empty {
+          pointer-events: none;
+        }
+
+        &--range-start,
+        &--range-end {
+          background-color: var(--mp-color-primary-default);
+          color: var(--mp-color-text-on-primary);
+          font-weight: var(--mp-font-weight-semibold);
+        }
+
+        &--range-start {
+          border-radius: var(--mp-radius-sm) 0 0 var(--mp-radius-sm);
+        }
+
+        &--range-end {
+          border-radius: 0 var(--mp-radius-sm) var(--mp-radius-sm) 0;
+        }
+
+        &--in-range {
+          background-color: color-mix(in srgb, var(--mp-color-primary-default) 12%, transparent);
+          color: var(--mp-color-primary-default);
+          border-radius: 0;
+        }
+
+        &--today {
+          background-color: color-mix(in srgb, var(--mp-color-primary-default) 8%, transparent);
+          color: var(--mp-color-primary-default);
+          font-weight: var(--mp-font-weight-semibold);
+        }
+
+        &--disabled {
+          opacity: 0.3;
+          cursor: not-allowed;
+          pointer-events: none;
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--mp-color-border-focus);
+          outline-offset: 2px;
+        }
+
+        &:hover:not(:disabled, .base-date-range__day--range-start, .base-date-range__day--range-end) {
+          background-color: var(--mp-color-bg-muted);
+        }
       }
     }
   }

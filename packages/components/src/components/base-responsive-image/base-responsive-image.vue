@@ -115,18 +115,20 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-responsive-image {
-    display: block;
-    overflow: hidden;
-
-    &--rounded {
-      border-radius: var(--mp-radius-lg);
-    }
-
-    &__img {
+  @layer mp.components {
+    .base-responsive-image {
       display: block;
-      width: 100%;
-      height: 100%;
+      overflow: hidden;
+
+      &--rounded {
+        border-radius: var(--mp-radius-lg);
+      }
+
+      &__img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
     }
   }
 </style>

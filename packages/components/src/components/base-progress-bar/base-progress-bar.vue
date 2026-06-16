@@ -89,79 +89,81 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-progress-bar {
-    &__header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+  @layer mp.components {
+    .base-progress-bar {
+      &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-    &__label {
-      /* typography handled by BaseTypography */
-    }
+      &__label {
+        /* typography handled by BaseTypography */
+      }
 
-    &__value {
-      /* typography handled by BaseTypography */
-    }
+      &__value {
+        /* typography handled by BaseTypography */
+      }
 
-    &__track {
-      appearance: none;
-      display: block;
-      width: 100%;
-      border: none;
-      border-radius: var(--mp-radius-full);
-      overflow: hidden;
-      background-color: var(--mp-color-bg-muted);
-
-      /* WebKit: trough */
-      &::-webkit-progress-bar {
-        background-color: var(--mp-color-bg-muted);
+      &__track {
+        appearance: none;
+        display: block;
+        width: 100%;
+        border: none;
         border-radius: var(--mp-radius-full);
-      }
+        overflow: hidden;
+        background-color: var(--mp-color-bg-muted);
 
-      /* Fill per variant (WebKit + Firefox/standard pseudo-elements) */
-      @mixin fill($family) {
-        &--#{$family}::-webkit-progress-value {
-          background-color: var(--mp-color-#{$family}-default);
+        /* WebKit: trough */
+        &::-webkit-progress-bar {
+          background-color: var(--mp-color-bg-muted);
           border-radius: var(--mp-radius-full);
         }
 
-        &--#{$family}::-moz-progress-bar {
-          background-color: var(--mp-color-#{$family}-default);
-          border-radius: var(--mp-radius-full);
+        /* Fill per variant (WebKit + Firefox/standard pseudo-elements) */
+        @mixin fill($family) {
+          &--#{$family}::-webkit-progress-value {
+            background-color: var(--mp-color-#{$family}-default);
+            border-radius: var(--mp-radius-full);
+          }
+
+          &--#{$family}::-moz-progress-bar {
+            background-color: var(--mp-color-#{$family}-default);
+            border-radius: var(--mp-radius-full);
+          }
+        }
+
+        @include fill('primary');
+        @include fill('secondary');
+        @include fill('tertiary');
+        @include fill('default');
+        @include fill('success');
+        @include fill('warning');
+        @include fill('information');
+        @include fill('error');
+        @include fill('critical');
+
+        &--indeterminate {
+          animation: mp-progress-indeterminate 1.5s ease-in-out infinite;
         }
       }
 
-      @include fill('primary');
-      @include fill('secondary');
-      @include fill('tertiary');
-      @include fill('default');
-      @include fill('success');
-      @include fill('warning');
-      @include fill('information');
-      @include fill('error');
-      @include fill('critical');
-
-      &--indeterminate {
-        animation: mp-progress-indeterminate 1.5s ease-in-out infinite;
+      /* Sizes — canonical 2xs → 2xl scale (track thickness). */
+      @each $size, $height in ('2xs': 2px, 'xs': 3px, 'sm': 4px, 'md': 8px, 'lg': 12px, 'xl': 16px, '2xl': 20px) {
+        &--#{$size} .base-progress-bar__track {
+          height: $height;
+        }
       }
     }
 
-    /* Sizes — canonical 2xs → 2xl scale (track thickness). */
-    @each $size, $height in ('2xs': 2px, 'xs': 3px, 'sm': 4px, 'md': 8px, 'lg': 12px, 'xl': 16px, '2xl': 20px) {
-      &--#{$size} .base-progress-bar__track {
-        height: $height;
+    @keyframes mp-progress-indeterminate {
+      0% {
+        transform: translateX(-100%);
       }
-    }
-  }
 
-  @keyframes mp-progress-indeterminate {
-    0% {
-      transform: translateX(-100%);
-    }
-
-    100% {
-      transform: translateX(300%);
+      100% {
+        transform: translateX(300%);
+      }
     }
   }
 </style>

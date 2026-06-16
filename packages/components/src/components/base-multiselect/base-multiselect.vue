@@ -341,15 +341,35 @@
 <style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
-  .base-multiselect {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-1);
+  @layer mp.components {
+    .base-multiselect {
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-spacing-1);
 
-    &__label {
-      /* typography handled by BaseTypography */
+      &__label {
+        /* typography handled by BaseTypography */
 
-      &--hidden {
+        &--hidden {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip-path: inset(50%);
+          white-space: nowrap;
+          border: 0;
+        }
+      }
+
+      &__required {
+        color: var(--mp-color-danger-default);
+        margin-left: 2px;
+      }
+
+      /* Hidden native <select multiple> backing the combobox for autofill / form submission. */
+      &__native {
         position: absolute;
         width: 1px;
         height: 1px;
@@ -360,157 +380,139 @@
         white-space: nowrap;
         border: 0;
       }
-    }
 
-    &__required {
-      color: var(--mp-color-danger-default);
-      margin-left: 2px;
-    }
-
-    /* Hidden native <select multiple> backing the combobox for autofill / form submission. */
-    &__native {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip-path: inset(50%);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    &__wrapper {
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background-color: var(--mp-color-bg-surface);
-      transition:
-        border-color 150ms ease,
-        box-shadow 150ms ease;
-      cursor: text;
-
-      &:focus-within {
-        border-color: var(--mp-color-border-focus);
-        box-shadow: var(--mp-shadow-focus-primary);
-      }
-    }
-
-    &__control {
-      display: flex;
-      align-items: center;
-      gap: var(--mp-spacing-2);
-    }
-
-    &__tags {
-      display: flex;
-      flex: 1;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: var(--mp-spacing-1);
-      min-width: 0;
-    }
-
-    &__input {
-      @include mp.mp-font-body-md;
-
-      flex: 1;
-      min-width: 80px;
-      border: none;
-      outline: none;
-      background: transparent;
-      color: var(--mp-color-text-primary);
-
-      &::placeholder {
-        color: var(--mp-color-text-tertiary);
-      }
-    }
-
-    &__chevron {
-      display: flex;
-      align-items: center;
-      color: var(--mp-color-text-secondary);
-      pointer-events: none;
-      flex-shrink: 0;
-    }
-
-    /* Leading / trailing extension areas (icons, units, or buttons). */
-    &__extension {
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
-      color: var(--mp-color-text-secondary);
-    }
-
-    &__option {
-      @include mp.mp-font-body-sm;
-
-      padding: var(--mp-spacing-2) var(--mp-spacing-3);
-      color: var(--mp-color-text-primary);
-      cursor: pointer;
-
-      &--disabled {
-        color: var(--mp-color-text-disabled);
-        cursor: not-allowed;
-      }
-
-      &:hover:not(.base-multiselect__option--disabled) {
-        background-color: var(--mp-color-bg-muted);
-      }
-    }
-
-    &__empty {
-      @include mp.mp-font-body-sm;
-
-      padding: var(--mp-spacing-2) var(--mp-spacing-3);
-      color: var(--mp-color-text-secondary);
-      font-style: italic;
-    }
-
-    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
-    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
-      &--#{$size} {
-        .base-multiselect__control {
-          padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
-        }
-
-        .base-multiselect__input {
-          font-size: var(--mp-size-font-#{$size});
-        }
-      }
-    }
-
-    /* States */
-    &--error {
-      .base-multiselect__wrapper {
-        border-color: var(--mp-color-danger-default);
+      &__wrapper {
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-md);
+        background-color: var(--mp-color-bg-surface);
+        transition:
+          border-color 150ms ease,
+          box-shadow 150ms ease;
+        cursor: text;
 
         &:focus-within {
-          box-shadow: var(--mp-shadow-focus-danger);
+          border-color: var(--mp-color-border-focus);
+          box-shadow: var(--mp-shadow-focus-primary);
         }
       }
-    }
 
-    &--disabled {
-      pointer-events: none;
-
-      .base-multiselect__wrapper {
-        background-color: var(--mp-color-bg-muted);
-        cursor: not-allowed;
+      &__control {
+        display: flex;
+        align-items: center;
+        gap: var(--mp-spacing-2);
       }
 
-      .base-multiselect__input,
-      .base-multiselect__chevron {
-        color: var(--mp-color-text-disabled);
+      &__tags {
+        display: flex;
+        flex: 1;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--mp-spacing-1);
+        min-width: 0;
       }
-    }
 
-    &__error {
-      color: var(--mp-color-danger-text);
-      margin: 0;
-    }
+      &__input {
+        @include mp.mp-font-body-md;
 
-    &__hint {
-      margin: 0;
+        flex: 1;
+        min-width: 80px;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: var(--mp-color-text-primary);
+
+        &::placeholder {
+          color: var(--mp-color-text-tertiary);
+        }
+      }
+
+      &__chevron {
+        display: flex;
+        align-items: center;
+        color: var(--mp-color-text-secondary);
+        pointer-events: none;
+        flex-shrink: 0;
+      }
+
+      /* Leading / trailing extension areas (icons, units, or buttons). */
+      &__extension {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        color: var(--mp-color-text-secondary);
+      }
+
+      &__option {
+        @include mp.mp-font-body-sm;
+
+        padding: var(--mp-spacing-2) var(--mp-spacing-3);
+        color: var(--mp-color-text-primary);
+        cursor: pointer;
+
+        &--disabled {
+          color: var(--mp-color-text-disabled);
+          cursor: not-allowed;
+        }
+
+        &:hover:not(.base-multiselect__option--disabled) {
+          background-color: var(--mp-color-bg-muted);
+        }
+      }
+
+      &__empty {
+        @include mp.mp-font-body-sm;
+
+        padding: var(--mp-spacing-2) var(--mp-spacing-3);
+        color: var(--mp-color-text-secondary);
+        font-style: italic;
+      }
+
+      /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+      @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+        &--#{$size} {
+          .base-multiselect__control {
+            padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+          }
+
+          .base-multiselect__input {
+            font-size: var(--mp-size-font-#{$size});
+          }
+        }
+      }
+
+      /* States */
+      &--error {
+        .base-multiselect__wrapper {
+          border-color: var(--mp-color-danger-default);
+
+          &:focus-within {
+            box-shadow: var(--mp-shadow-focus-danger);
+          }
+        }
+      }
+
+      &--disabled {
+        pointer-events: none;
+
+        .base-multiselect__wrapper {
+          background-color: var(--mp-color-bg-muted);
+          cursor: not-allowed;
+        }
+
+        .base-multiselect__input,
+        .base-multiselect__chevron {
+          color: var(--mp-color-text-disabled);
+        }
+      }
+
+      &__error {
+        color: var(--mp-color-danger-text);
+        margin: 0;
+      }
+
+      &__hint {
+        margin: 0;
+      }
     }
   }
 </style>

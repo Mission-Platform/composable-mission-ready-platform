@@ -67,51 +67,53 @@
 </template>
 
 <style lang="scss" scoped>
-  .tree-node__label {
-    display: flex;
-    align-items: center;
-    gap: var(--mp-spacing-2);
-    height: 32px;
-    cursor: pointer;
-    border-radius: var(--mp-radius-sm);
-    outline: none;
-    padding-right: var(--mp-spacing-3);
-    color: var(--mp-color-text-primary);
-    transition: background-color 80ms ease;
-
-    &:hover {
-      background-color: var(--mp-color-bg-muted);
-    }
-
-    &:focus-visible {
+  @layer mp.components {
+    .tree-node__label {
+      display: flex;
+      align-items: center;
+      gap: var(--mp-spacing-2);
+      height: 32px;
+      cursor: pointer;
+      border-radius: var(--mp-radius-sm);
       outline: none;
-      box-shadow: var(--mp-shadow-focus-primary);
-    }
-  }
-
-  .tree-node__toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--mp-color-text-secondary);
-    padding: 0;
-    border-radius: var(--mp-radius-sm);
-    transition: color 80ms ease;
-
-    &:hover {
+      padding-right: var(--mp-spacing-3);
       color: var(--mp-color-text-primary);
-    }
-  }
+      transition: background-color 80ms ease;
 
-  .tree-node__spacer {
-    display: inline-block;
-    width: 20px;
-    flex-shrink: 0;
+      &:hover {
+        background-color: var(--mp-color-bg-muted);
+      }
+
+      &:focus-visible {
+        outline: none;
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+    }
+
+    .tree-node__toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--mp-color-text-secondary);
+      padding: 0;
+      border-radius: var(--mp-radius-sm);
+      transition: color 80ms ease;
+
+      &:hover {
+        color: var(--mp-color-text-primary);
+      }
+    }
+
+    .tree-node__spacer {
+      display: inline-block;
+      width: 20px;
+      flex-shrink: 0;
+    }
   }
 </style>

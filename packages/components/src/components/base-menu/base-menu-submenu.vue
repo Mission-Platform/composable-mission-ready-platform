@@ -92,39 +92,41 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-menu__submenu {
-    list-style: none;
-    margin: 0;
-    padding: var(--mp-spacing-1) 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-1);
-    background-color: var(--mp-color-bg-surface);
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
+  @layer mp.components {
+    .base-menu__submenu {
+      list-style: none;
+      margin: 0;
+      padding: var(--mp-spacing-1) 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-spacing-1);
+      background-color: var(--mp-color-bg-surface);
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-md);
 
-    &--dropdown {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      z-index: 100;
-      margin-top: var(--mp-spacing-1);
-      min-width: 160px;
-      box-shadow: var(--mp-shadow-md);
+      &--dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 100;
+        margin-top: var(--mp-spacing-1);
+        min-width: 160px;
+        box-shadow: var(--mp-shadow-md);
+      }
+
+      &--nested {
+        position: absolute;
+        top: 0;
+        left: 100%;
+        z-index: 101;
+        margin-left: var(--mp-spacing-1);
+        min-width: 160px;
+        box-shadow: var(--mp-shadow-md);
+      }
     }
 
-    &--nested {
-      position: absolute;
-      top: 0;
-      left: 100%;
-      z-index: 101;
-      margin-left: var(--mp-spacing-1);
-      min-width: 160px;
-      box-shadow: var(--mp-shadow-md);
+    .base-menu__item {
+      position: relative;
     }
-  }
-
-  .base-menu__item {
-    position: relative;
   }
 </style>

@@ -8,7 +8,7 @@
    */
   import { useHarperMonaco } from '@mission-platform/harper';
   import { useHunspellMonaco } from '@mission-platform/hunspell';
-  import { fontFamilies } from '@mission-platform/tokens';
+  import { font } from '@mission-platform/tokens';
   import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue';
 
   // Type-only import: erased at build time, so `monaco-editor` is NOT pulled
@@ -219,8 +219,8 @@
       padding: { top: 8, bottom: 8 },
       fontLigatures: true,
       fontVariations: true,
-      fontFamily: fontFamilies.mono,
-      codeLensFontFamily: fontFamilies.sans,
+      fontFamily: font.font.family.mono,
+      codeLensFontFamily: font.font.family.sans,
       copyWithSyntaxHighlighting: false,
     });
 
@@ -341,10 +341,12 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-monaco-editor {
-    width: 100%;
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-    overflow: hidden;
+  @layer mp.components {
+    .base-monaco-editor {
+      width: 100%;
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-md);
+      overflow: hidden;
+    }
   }
 </style>

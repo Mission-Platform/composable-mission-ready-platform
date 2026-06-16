@@ -25,16 +25,18 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-tabs__panel {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    padding-top: var(--mp-spacing-4);
+  @layer mp.components {
+    .base-tabs__panel {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding-top: var(--mp-spacing-4);
 
-    // The `display: flex` above overrides the user-agent `[hidden]` rule, so
-    // restore it explicitly to keep inactive panels hidden.
-    &[hidden] {
-      display: none;
+      // The `display: flex` above overrides the user-agent `[hidden]` rule, so
+      // restore it explicitly to keep inactive panels hidden.
+      &[hidden] {
+        display: none;
+      }
     }
   }
 </style>

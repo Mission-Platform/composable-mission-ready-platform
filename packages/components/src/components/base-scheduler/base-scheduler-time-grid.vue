@@ -255,163 +255,165 @@
 <style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
-  $gutter-width: 52px;
+  @layer mp.components {
+    $gutter-width: 52px;
 
-  .base-scheduler-time-grid {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow: hidden;
-
-    // ── Header ────────────────────────────────────────────────────────────────
-
-    &__header {
-      display: flex;
-      border-bottom: 1px solid var(--mp-color-border-default);
-      background: var(--mp-color-bg-surface);
-      flex-shrink: 0;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    &__gutter-spacer {
-      width: $gutter-width;
-      flex-shrink: 0;
-    }
-
-    &__day-header {
-      flex: 1;
+    .base-scheduler-time-grid {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding: var(--mp-spacing-2) var(--mp-spacing-1);
-      gap: var(--mp-spacing-1);
+      height: 100%;
+      overflow: hidden;
 
-      &--today .base-scheduler-time-grid__day-number {
-        background: var(--mp-color-primary-default);
-        color: var(--mp-color-text-on-primary);
-        border-radius: var(--mp-radius-full);
-        width: 28px;
-        height: 28px;
+      // ── Header ────────────────────────────────────────────────────────────────
+
+      &__header {
         display: flex;
-        align-items: center;
-        justify-content: center;
+        border-bottom: 1px solid var(--mp-color-border-default);
+        background: var(--mp-color-bg-surface);
+        flex-shrink: 0;
+        position: sticky;
+        top: 0;
+        z-index: 10;
       }
-    }
 
-    &__day-name {
-      @include mp.mp-font-caption;
+      &__gutter-spacer {
+        width: $gutter-width;
+        flex-shrink: 0;
+      }
 
-      color: var(--mp-color-text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
+      &__day-header {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: var(--mp-spacing-2) var(--mp-spacing-1);
+        gap: var(--mp-spacing-1);
 
-    &__day-number {
-      @include mp.mp-font-body-md;
+        &--today .base-scheduler-time-grid__day-number {
+          background: var(--mp-color-primary-default);
+          color: var(--mp-color-text-on-primary);
+          border-radius: var(--mp-radius-full);
+          width: 28px;
+          height: 28px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
 
-      font-weight: 600;
-    }
-
-    // ── Scrollable area ───────────────────────────────────────────────────────
-
-    &__scroll-area {
-      display: flex;
-      flex: 1;
-      overflow: hidden auto;
-    }
-
-    // ── Hour gutter ───────────────────────────────────────────────────────────
-
-    &__gutter {
-      width: $gutter-width;
-      flex-shrink: 0;
-    }
-
-    &__hour-label {
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-end;
-      padding-right: var(--mp-spacing-2);
-      padding-top: 2px;
-
-      span {
+      &__day-name {
         @include mp.mp-font-caption;
 
         color: var(--mp-color-text-secondary);
-        white-space: nowrap;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
       }
-    }
 
-    // ── Columns ────────────────────────────────────────────────────────────────
+      &__day-number {
+        @include mp.mp-font-body-md;
 
-    &__columns {
-      display: flex;
-      flex: 1;
-      position: relative;
-    }
-
-    &__column {
-      flex: 1;
-      position: relative;
-      border-left: 1px solid var(--mp-color-border-default);
-      cursor: cell;
-
-      &--today {
-        background-color: var(--mp-color-primary-50, rgb(244 240 255 / 30%));
+        font-weight: 600;
       }
-    }
 
-    &__slot-btn {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      border: none;
-      padding: 0;
-      margin: 0;
-      cursor: cell;
-      z-index: 0;
+      // ── Scrollable area ───────────────────────────────────────────────────────
 
-      &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
-        outline-offset: -2px;
+      &__scroll-area {
+        display: flex;
+        flex: 1;
+        overflow: hidden auto;
       }
-    }
 
-    // ── Hour rows (grid lines) ────────────────────────────────────────────────
+      // ── Hour gutter ───────────────────────────────────────────────────────────
 
-    &__hour-row {
-      border-bottom: 1px solid var(--mp-color-border-muted, var(--mp-color-border-default));
-
-      &:nth-child(2n) {
-        border-bottom-style: dashed;
-        opacity: 0.5;
+      &__gutter {
+        width: $gutter-width;
+        flex-shrink: 0;
       }
-    }
 
-    // ── Current time indicator ─────────────────────────────────────────────────
+      &__hour-label {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
+        padding-right: var(--mp-spacing-2);
+        padding-top: 2px;
 
-    &__now-line {
-      position: absolute;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: var(--mp-color-danger-500, #ef4444);
-      z-index: 5;
-      pointer-events: none;
+        span {
+          @include mp.mp-font-caption;
 
-      &::before {
-        content: '';
+          color: var(--mp-color-text-secondary);
+          white-space: nowrap;
+        }
+      }
+
+      // ── Columns ────────────────────────────────────────────────────────────────
+
+      &__columns {
+        display: flex;
+        flex: 1;
+        position: relative;
+      }
+
+      &__column {
+        flex: 1;
+        position: relative;
+        border-left: 1px solid var(--mp-color-border-default);
+        cursor: cell;
+
+        &--today {
+          background-color: var(--mp-color-primary-50, rgb(244 240 255 / 30%));
+        }
+      }
+
+      &__slot-btn {
         position: absolute;
-        left: -4px;
-        top: -4px;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        border: none;
+        padding: 0;
+        margin: 0;
+        cursor: cell;
+        z-index: 0;
+
+        &:focus-visible {
+          outline: 2px solid var(--mp-color-border-focus);
+          outline-offset: -2px;
+        }
+      }
+
+      // ── Hour rows (grid lines) ────────────────────────────────────────────────
+
+      &__hour-row {
+        border-bottom: 1px solid var(--mp-color-border-muted, var(--mp-color-border-default));
+
+        &:nth-child(2n) {
+          border-bottom-style: dashed;
+          opacity: 0.5;
+        }
+      }
+
+      // ── Current time indicator ─────────────────────────────────────────────────
+
+      &__now-line {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 2px;
         background: var(--mp-color-danger-500, #ef4444);
+        z-index: 5;
+        pointer-events: none;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: -4px;
+          top: -4px;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: var(--mp-color-danger-500, #ef4444);
+        }
       }
     }
   }

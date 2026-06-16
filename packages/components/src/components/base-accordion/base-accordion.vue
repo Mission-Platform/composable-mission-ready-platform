@@ -80,9 +80,11 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-accordion {
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-    overflow: hidden;
+  @layer mp.components {
+    .base-accordion {
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-md);
+      overflow: hidden;
+    }
   }
 </style>

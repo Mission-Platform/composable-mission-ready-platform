@@ -208,16 +208,18 @@
 </template>
 
 <style lang="scss" scoped>
-  .vertical-layout {
-    display: grid;
-    width: 100%;
+  @layer mp.components {
+    .vertical-layout {
+      display: grid;
+      width: 100%;
 
-    /* On small screens the side columns are overlay drawers (removed from flow),
-       so the layout collapses to a single content column. */
-    grid-template-columns: minmax(0, 1fr);
+      /* On small screens the side columns are overlay drawers (removed from flow),
+         so the layout collapses to a single content column. */
+      grid-template-columns: minmax(0, 1fr);
 
-    &__content {
-      min-width: 0;
+      &__content {
+        min-width: 0;
+      }
     }
   }
 </style>

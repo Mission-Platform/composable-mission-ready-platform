@@ -128,19 +128,21 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-menu {
-    display: inline-block;
+  @layer mp.components {
+    .base-menu {
+      display: inline-block;
 
-    &--horizontal {
-      width: 100%;
-    }
+      &--horizontal {
+        width: 100%;
+      }
 
-    &--vertical {
-      width: 100%;
-    }
+      &--vertical {
+        width: 100%;
+      }
 
-    &__item {
-      position: relative;
+      &__item {
+        position: relative;
+      }
     }
   }
 </style>

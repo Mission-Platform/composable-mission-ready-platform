@@ -80,11 +80,13 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-stack {
-    min-width: 0;
+  @layer mp.components {
+    .base-stack {
+      min-width: 0;
 
-    &--vertical {
-      width: 100%;
+      &--vertical {
+        width: 100%;
+      }
     }
   }
 </style>

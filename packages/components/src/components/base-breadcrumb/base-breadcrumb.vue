@@ -79,45 +79,47 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-breadcrumb {
-    &__list {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: var(--mp-spacing-1);
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    &__item {
-      display: flex;
-      align-items: center;
-      gap: var(--mp-spacing-1);
-    }
-
-    &__separator {
-      color: var(--mp-color-text-tertiary);
-      user-select: none;
-    }
-
-    &__link {
-      color: var(--mp-color-text-secondary);
-      text-decoration: underline;
-
-      &:hover {
-        color: var(--mp-color-text-primary);
+  @layer mp.components {
+    .base-breadcrumb {
+      &__list {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--mp-spacing-1);
+        list-style: none;
+        margin: 0;
+        padding: 0;
       }
 
-      &:focus-visible {
-        outline: none;
-        border-radius: var(--mp-radius-xs);
-        box-shadow: var(--mp-shadow-focus-primary);
+      &__item {
+        display: flex;
+        align-items: center;
+        gap: var(--mp-spacing-1);
       }
-    }
 
-    &__current {
-      /* typography handled by BaseTypography */
+      &__separator {
+        color: var(--mp-color-text-tertiary);
+        user-select: none;
+      }
+
+      &__link {
+        color: var(--mp-color-text-secondary);
+        text-decoration: underline;
+
+        &:hover {
+          color: var(--mp-color-text-primary);
+        }
+
+        &:focus-visible {
+          outline: none;
+          border-radius: var(--mp-radius-xs);
+          box-shadow: var(--mp-shadow-focus-primary);
+        }
+      }
+
+      &__current {
+        /* typography handled by BaseTypography */
+      }
     }
   }
 </style>

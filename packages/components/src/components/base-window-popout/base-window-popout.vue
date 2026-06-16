@@ -182,72 +182,74 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-window-popout {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-2);
-
-    &__inline {
-      width: 100%;
-    }
-
-    &__placeholder {
+  @layer mp.components {
+    .base-window-popout {
+      position: relative;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: var(--mp-spacing-6);
-      border: 2px dashed var(--mp-color-border-default);
-      border-radius: var(--mp-radius-lg);
-      background-color: var(--mp-color-bg-muted);
-      min-height: 80px;
-    }
+      flex-direction: column;
+      gap: var(--mp-spacing-2);
 
-    &__placeholder-text {
-      margin: 0;
+      &__inline {
+        width: 100%;
+      }
 
-      /* typography handled by BaseTypography */
-    }
-
-    &__controls {
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    &__toggle {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--mp-spacing-1);
-      padding: var(--mp-spacing-1) var(--mp-spacing-3);
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background: var(--mp-color-bg-surface);
-      cursor: pointer;
-      transition:
-        background-color 150ms ease,
-        color 150ms ease,
-        border-color 150ms ease;
-
-      &:hover {
+      &__placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--mp-spacing-6);
+        border: 2px dashed var(--mp-color-border-default);
+        border-radius: var(--mp-radius-lg);
         background-color: var(--mp-color-bg-muted);
-        color: var(--mp-color-text-primary);
-        border-color: var(--mp-color-border-strong);
+        min-height: 80px;
       }
 
-      &:focus-visible {
-        outline: none;
-        box-shadow: var(--mp-shadow-focus-primary);
+      &__placeholder-text {
+        margin: 0;
+
+        /* typography handled by BaseTypography */
       }
 
-      &[aria-pressed='true'] {
-        background-color: var(--mp-color-primary-muted);
-        color: var(--mp-color-primary-text);
-        border-color: var(--mp-color-primary-default);
+      &__controls {
+        display: flex;
+        justify-content: flex-end;
       }
-    }
 
-    &__toggle-label {
-      /* typography handled by BaseTypography */
+      &__toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--mp-spacing-1);
+        padding: var(--mp-spacing-1) var(--mp-spacing-3);
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-md);
+        background: var(--mp-color-bg-surface);
+        cursor: pointer;
+        transition:
+          background-color 150ms ease,
+          color 150ms ease,
+          border-color 150ms ease;
+
+        &:hover {
+          background-color: var(--mp-color-bg-muted);
+          color: var(--mp-color-text-primary);
+          border-color: var(--mp-color-border-strong);
+        }
+
+        &:focus-visible {
+          outline: none;
+          box-shadow: var(--mp-shadow-focus-primary);
+        }
+
+        &[aria-pressed='true'] {
+          background-color: var(--mp-color-primary-muted);
+          color: var(--mp-color-primary-text);
+          border-color: var(--mp-color-primary-default);
+        }
+      }
+
+      &__toggle-label {
+        /* typography handled by BaseTypography */
+      }
     }
   }
 </style>
