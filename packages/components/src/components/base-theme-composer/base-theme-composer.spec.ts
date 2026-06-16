@@ -124,6 +124,27 @@ describe('createThemeComposer', () => {
     expect(document.documentElement.style.getPropertyValue('--mp-radius-md')).toBe('');
   });
 
+  it('appends the color-scheme declaration to the style string', () => {
+    const store = createThemeComposer({ initialConfig: { primaryColor: '#f00', colorScheme: 'dark' } });
+    expect(store.styleString.value).toContain('--mp-color-primary-default: #f00;');
+    expect(store.styleString.value).toContain('color-scheme: dark;');
+    // color-scheme is not emitted as a --mp-* custom property.
+    expect(store.cssVariables.value['--mp-color-scheme']).toBeUndefined();
+    store.dispose();
+  });
+
+  it('applies and cleans up color-scheme on document.documentElement when global', async () => {
+    const store = createThemeComposer({ global: true, initialConfig: { colorScheme: 'dark' } });
+    expect(document.documentElement.style.colorScheme).toBe('dark');
+
+    store.setConfig({ colorScheme: 'light dark' });
+    await nextTick();
+    expect(document.documentElement.style.colorScheme).toBe('light dark');
+
+    store.dispose();
+    expect(document.documentElement.style.colorScheme).toBe('');
+  });
+
   it('persists and restores the configuration from localStorage', () => {
     const store = createThemeComposer({ persist: true, storageKey: 'mp-tc', initialConfig: { primaryColor: '#f00' } });
     expect(JSON.parse(localStorage.getItem('mp-tc') as string)).toMatchObject({ primaryColor: '#f00' });

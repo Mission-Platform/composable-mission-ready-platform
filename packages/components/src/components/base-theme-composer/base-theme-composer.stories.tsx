@@ -35,7 +35,7 @@ const meta = {
       return { args: arguments_ };
     },
     template: `
-      <BaseThemeComposer v-bind="args" :model-value="{ primaryColor: '#0ea5e9', radius: '1rem' }">
+      <BaseThemeComposer v-bind="args" :model-value="{ primaryColor: '#0369a1', radius: '1rem' }">
         <template #default="{ config, setAttribute, reset }">
           <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 24rem;">
             <label style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
@@ -100,7 +100,7 @@ export const RawTokenOverrides: Story = {
   render: () => ({
     components: { BaseThemeComposer, BaseButton },
     setup() {
-      const config = { tokens: { 'radius-md': '9999px', '--mp-color-primary-default': '#16a34a' } };
+      const config = { tokens: { 'radius-md': '9999px', '--mp-color-primary-default': '#15803d' } };
       return { config };
     },
     template: `

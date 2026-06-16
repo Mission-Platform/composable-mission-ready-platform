@@ -2,15 +2,25 @@ import { mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { nextTick } from 'vue';
 
+import { resetThemeStore } from '../../composables/use-theme';
+
 import BaseThemeToggle from './base-theme-toggle.vue';
 
 describe('BaseThemeToggle', () => {
+  // The toggle is backed by the shared `useTheme` fallback store, so reset it
+  // (and the persisted preference + `data-theme`) between every test.
   beforeEach(() => {
     delete document.documentElement.dataset.theme;
+    document.documentElement.style.removeProperty('color-scheme');
+    localStorage.clear();
+    resetThemeStore();
   });
 
   afterEach(() => {
     delete document.documentElement.dataset.theme;
+    document.documentElement.style.removeProperty('color-scheme');
+    localStorage.clear();
+    resetThemeStore();
   });
 
   describe('rendering', () => {

@@ -139,7 +139,9 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-theme-composer {
-    display: contents;
+  @layer mp.components {
+    .base-theme-composer {
+      display: contents;
+    }
   }
 </style>
