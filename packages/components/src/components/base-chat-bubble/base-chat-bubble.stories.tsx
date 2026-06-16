@@ -31,6 +31,14 @@ const meta = {
       },
     },
   },
+  // The bubble's root is an `<li>` (it lives inside `BaseChatArea`'s message
+  // `<ul>` in real usage), so wrap each isolated story in a list to keep the
+  // markup valid and accessible (axe `listitem`).
+  decorators: [
+    () => ({
+      template: '<ul style="list-style: none; margin: 0; padding: 0;"><story /></ul>',
+    }),
+  ],
 } satisfies Meta<typeof BaseChatBubble>;
 
 export default meta;

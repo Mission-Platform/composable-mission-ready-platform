@@ -125,43 +125,45 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-chat-area {
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    height: 100%;
-    background-color: var(--mp-color-bg-surface);
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-lg);
-    overflow: hidden;
-
-    &__header {
-      flex-shrink: 0;
-      padding: var(--mp-spacing-3) var(--mp-spacing-4);
-      border-bottom: 1px solid var(--mp-color-border-default);
-    }
-
-    &__log {
-      flex: 1 1 auto;
-      min-height: 0;
-      overflow-y: auto;
-      padding: var(--mp-spacing-4);
-      scroll-behavior: smooth;
-    }
-
-    &__messages {
+  @layer mp.components {
+    .base-chat-area {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-spacing-3);
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
+      min-height: 0;
+      height: 100%;
+      background-color: var(--mp-color-bg-surface);
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-lg);
+      overflow: hidden;
 
-    &__footer {
-      flex-shrink: 0;
-      padding: var(--mp-spacing-3) var(--mp-spacing-4);
-      border-top: 1px solid var(--mp-color-border-default);
+      &__header {
+        flex-shrink: 0;
+        padding: var(--mp-spacing-3) var(--mp-spacing-4);
+        border-bottom: 1px solid var(--mp-color-border-default);
+      }
+
+      &__log {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        padding: var(--mp-spacing-4);
+        scroll-behavior: smooth;
+      }
+
+      &__messages {
+        display: flex;
+        flex-direction: column;
+        gap: var(--mp-spacing-3);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      &__footer {
+        flex-shrink: 0;
+        padding: var(--mp-spacing-3) var(--mp-spacing-4);
+        border-top: 1px solid var(--mp-color-border-default);
+      }
     }
   }
 </style>

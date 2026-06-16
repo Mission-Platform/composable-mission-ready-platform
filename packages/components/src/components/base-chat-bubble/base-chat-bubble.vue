@@ -128,76 +128,80 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-chat-bubble {
-    display: flex;
-    gap: var(--mp-spacing-2);
-    max-width: 100%;
-    align-items: flex-end;
-    list-style: none;
-
-    &--start {
-      flex-direction: row;
-      align-self: flex-start;
-    }
-
-    &--end {
-      flex-direction: row-reverse;
-      align-self: flex-end;
-    }
-
-    &--pending {
-      opacity: 0.6;
-    }
-
-    &__avatar {
-      flex-shrink: 0;
-    }
-
-    &__column {
-      display: flex;
-      flex-direction: column;
-      gap: var(--mp-spacing-1);
-      min-width: 0;
-      max-width: min(36rem, 75%);
-    }
-
-    &--end &__column {
-      align-items: flex-end;
-    }
-
-    &__meta {
+  @layer mp.components {
+    .base-chat-bubble {
       display: flex;
       gap: var(--mp-spacing-2);
-      align-items: baseline;
-      padding-inline: var(--mp-spacing-1);
-    }
+      max-width: 100%;
+      align-items: flex-end;
+      list-style: none;
 
-    &__body {
-      padding: var(--mp-spacing-2) var(--mp-spacing-3);
-      background-color: var(--mp-color-bg-sunken);
-      color: var(--mp-color-text-primary);
-      border-radius: var(--mp-radius-lg);
-      font-family: var(--mp-font-family-sans);
-      font-size: var(--mp-size-font-sm);
-      line-height: var(--mp-line-height-normal, 1.5);
-      overflow-wrap: anywhere;
-    }
+      &--start {
+        flex-direction: row;
+        align-self: flex-start;
+      }
 
-    &--start &__body {
-      border-end-start-radius: var(--mp-radius-xs, 4px);
-    }
+      &--end {
+        flex-direction: row-reverse;
+        align-self: flex-end;
+      }
 
-    &--end &__body {
-      border-end-end-radius: var(--mp-radius-xs, 4px);
-    }
+      &--pending {
+        /* Dim as an "optimistic / not yet delivered" cue. Kept high enough that the
+           composited text still clears WCAG AA (4.5:1) against the page background. */
+        opacity: 0.85;
+      }
 
-    &--primary &__body {
-      background-color: var(--mp-color-primary-default);
-      color: var(--mp-color-primary-on, #fff);
-    }
+      &__avatar {
+        flex-shrink: 0;
+      }
 
-    &__footer {
-      padding-inline: var(--mp-spacing-1);
+      &__column {
+        display: flex;
+        flex-direction: column;
+        gap: var(--mp-spacing-1);
+        min-width: 0;
+        max-width: min(36rem, 75%);
+      }
+
+      &--end &__column {
+        align-items: flex-end;
+      }
+
+      &__meta {
+        display: flex;
+        gap: var(--mp-spacing-2);
+        align-items: baseline;
+        padding-inline: var(--mp-spacing-1);
+      }
+
+      &__body {
+        padding: var(--mp-spacing-2) var(--mp-spacing-3);
+        background-color: var(--mp-color-bg-sunken);
+        color: var(--mp-color-text-primary);
+        border-radius: var(--mp-radius-lg);
+        font-family: var(--mp-font-family-sans);
+        font-size: var(--mp-size-font-sm);
+        line-height: var(--mp-line-height-normal, 1.5);
+        overflow-wrap: anywhere;
+      }
+
+      &--start &__body {
+        border-end-start-radius: var(--mp-radius-xs, 4px);
+      }
+
+      &--end &__body {
+        border-end-end-radius: var(--mp-radius-xs, 4px);
+      }
+
+      &--primary &__body {
+        background-color: var(--mp-color-primary-default);
+        color: var(--mp-color-text-on-primary, #fff);
+      }
+
+      &__footer {
+        padding-inline: var(--mp-spacing-1);
+      }
     }
   }
 </style>
