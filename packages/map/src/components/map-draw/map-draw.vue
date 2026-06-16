@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { colors } from '@mission-platform/tokens';
+  import { palette } from '@mission-platform/tokens';
   import { computed, watch } from 'vue';
 
   import { useDrawing } from '../../composables/use-drawing';
@@ -44,12 +44,12 @@
     mode: undefined,
     modelValue: () => [],
     geodesic: true,
-    strokeColor: colors.primary[500], // #6c2fd4
-    fillColor: colors.primary[500], // #6c2fd4
+    strokeColor: palette.color.primary[500], // #6c2fd4
+    fillColor: palette.color.primary[500], // #6c2fd4
     fillOpacity: 0.2,
     strokeWidth: 2,
-    draftColor: colors.warning[500], // #f79009
-    vertexColor: colors.white, // #fff
+    draftColor: palette.color.warning[500], // #f79009
+    vertexColor: palette.color.white, // #fff
   });
 
   const emit = defineEmits<{
@@ -64,7 +64,7 @@
   }>();
 
   /** Vertex colour used specifically for draft (in-drawing) vertex circles. */
-  const draftVertexColor = colors.warning[500];
+  const draftVertexColor = palette.color.warning[500];
 
   const { map } = useMap();
 
@@ -301,14 +301,14 @@
   const draftVertexPaint = computed(() => ({
     'circle-radius': 5,
     'circle-color': draftVertexColor,
-    'circle-stroke-color': colors.white,
+    'circle-stroke-color': palette.color.white,
     'circle-stroke-width': 2,
   }));
 
   const anchorPaint = computed(() => ({
     'circle-radius': 7,
     'circle-color': props.draftColor,
-    'circle-stroke-color': colors.white,
+    'circle-stroke-color': palette.color.white,
     'circle-stroke-width': 2,
   }));
 
@@ -335,8 +335,8 @@
   }));
 
   const measureLabelPaint = computed(() => ({
-    'text-color': colors.neutral[900], // #08060d — dark text on map
-    'text-halo-color': colors.white, // #fff — halo for legibility
+    'text-color': palette.color.neutral[900], // #08060d — dark text on map
+    'text-halo-color': palette.color.white, // #fff — halo for legibility
     'text-halo-width': 2,
   }));
 

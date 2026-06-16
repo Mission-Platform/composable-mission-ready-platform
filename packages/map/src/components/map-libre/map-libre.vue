@@ -143,9 +143,11 @@
 </template>
 
 <style scoped>
-  .map-libre {
-    position: relative;
-    width: 100%;
-    height: 100%;
+  @layer mp.map {
+    .map-libre {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
   }
 </style>
