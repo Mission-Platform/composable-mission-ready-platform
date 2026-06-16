@@ -78,56 +78,58 @@
 </template>
 
 <style lang="scss" scoped>
-  .form-builder-palette-item {
-    display: flex;
-    gap: var(--mp-spacing-2);
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: var(--mp-spacing-3);
-    font: inherit;
-    color: inherit;
-    text-align: left;
-    cursor: grab;
-    background-color: var(--mp-color-bg-surface);
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-    transition:
-      border-color 0.15s ease,
-      box-shadow 0.15s ease;
-
-    &:hover {
-      border-color: var(--mp-color-primary-default);
-    }
-
-    &:focus-visible {
-      outline: none;
-      box-shadow: var(--mp-shadow-focus-primary);
-    }
-
-    &:active {
-      cursor: grabbing;
-    }
-
-    &--dragging {
-      opacity: 0.5;
-    }
-
-    &:disabled {
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
-
-    &__body {
+  @layer mp.components {
+    .form-builder-palette-item {
       display: flex;
-      flex-direction: column;
-      gap: var(--mp-spacing-1);
-      min-width: 0;
-    }
+      gap: var(--mp-spacing-2);
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: var(--mp-spacing-3);
+      font: inherit;
+      color: inherit;
+      text-align: left;
+      cursor: grab;
+      background-color: var(--mp-color-bg-surface);
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-md);
+      transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
 
-    &__icon {
-      flex-shrink: 0;
-      color: var(--mp-color-text-tertiary);
+      &:hover {
+        border-color: var(--mp-color-primary-default);
+      }
+
+      &:focus-visible {
+        outline: none;
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      &--dragging {
+        opacity: 0.5;
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+
+      &__body {
+        display: flex;
+        flex-direction: column;
+        gap: var(--mp-spacing-1);
+        min-width: 0;
+      }
+
+      &__icon {
+        flex-shrink: 0;
+        color: var(--mp-color-text-tertiary);
+      }
     }
   }
 </style>

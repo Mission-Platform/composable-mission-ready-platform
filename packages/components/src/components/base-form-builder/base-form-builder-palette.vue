@@ -63,23 +63,25 @@
 </template>
 
 <style lang="scss" scoped>
-  .form-builder-palette {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-2);
-
-    &__title {
-      margin: 0;
-    }
-
-    &__hint {
-      margin: 0 0 var(--mp-spacing-2);
-    }
-
-    &__list {
+  @layer mp.components {
+    .form-builder-palette {
       display: flex;
       flex-direction: column;
       gap: var(--mp-spacing-2);
+
+      &__title {
+        margin: 0;
+      }
+
+      &__hint {
+        margin: 0 0 var(--mp-spacing-2);
+      }
+
+      &__list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--mp-spacing-2);
+      }
     }
   }
 </style>

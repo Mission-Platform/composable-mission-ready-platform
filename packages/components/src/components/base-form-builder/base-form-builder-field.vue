@@ -139,9 +139,12 @@
       ref="row"
       class="form-builder-field__row"
     >
+      <!-- `@dnd-kit/vue` turns this handle into a focusable `role="button"`
+           drag affordance, so it must not be `aria-hidden`; give it an
+           accessible name (the inner icon stays decorative). -->
       <span
         ref="handle"
-        aria-hidden="true"
+        aria-label="Drag to reorder"
         class="form-builder-field__handle"
       >
         <IconMove size="sm" />
@@ -234,6 +237,7 @@
         :data="{ kind: 'fieldset', id: field.id }"
         :disabled="disabled"
         :empty="children.length === 0"
+        :role="children.length === 0 ? undefined : 'list'"
       >
         <template v-if="children.length === 0">
           <BaseTypography
@@ -281,133 +285,135 @@
 </template>
 
 <style lang="scss" scoped>
-  .form-builder-field {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-2);
-    padding: var(--mp-spacing-3);
-    background-color: var(--mp-color-bg-surface);
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-    transition:
-      border-color 0.15s ease,
-      box-shadow 0.15s ease;
-
-    &:hover {
-      border-color: var(--mp-color-border-strong);
-    }
-
-    &:focus-visible {
-      outline: none;
-      box-shadow: var(--mp-shadow-focus-primary);
-    }
-
-    &--selected {
-      border-color: var(--mp-color-primary-default);
-      box-shadow: var(--mp-shadow-focus-primary);
-    }
-
-    &--dragging {
-      opacity: 0.6;
-    }
-
-    // A steady "a field will land here" marker shown while another field is
-    // dragged over this row. It replaces dnd-kit's removed live reorder preview
-    // with a fixed accent line, so nothing shifts position mid-drag.
-    &--drop-target {
-      box-shadow: inset 0 3px 0 0 var(--mp-color-primary-default);
-    }
-
-    &__row {
-      display: flex;
-      gap: var(--mp-spacing-3);
-      align-items: center;
-    }
-
-    &__handle {
-      color: var(--mp-color-text-tertiary);
-      cursor: grab;
-      user-select: none;
-
-      &:active {
-        cursor: grabbing;
-      }
-    }
-
-    &__body {
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-      gap: var(--mp-spacing-1);
-      min-width: 0;
-    }
-
-    &__label {
-      display: inline-flex;
-      gap: var(--mp-spacing-1);
-      align-items: baseline;
-    }
-
-    &__required {
-      color: var(--mp-color-danger-default);
-    }
-
-    &__meta {
-      display: flex;
-      gap: var(--mp-spacing-2);
-      align-items: center;
-    }
-
-    &__key {
-      font-family: var(--mp-font-family-mono);
-      font-size: var(--mp-font-size-xs);
-      color: var(--mp-color-text-secondary);
-    }
-
-    &__type {
-      padding: 0 var(--mp-spacing-2);
-      font-size: var(--mp-font-size-2xs);
-      color: var(--mp-color-primary-text);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      background-color: var(--mp-color-primary-muted);
-      border-radius: var(--mp-radius-full);
-    }
-
-    &__step {
-      padding: 0 var(--mp-spacing-2);
-      font-size: var(--mp-font-size-2xs);
-      color: var(--mp-color-secondary-text);
-      background-color: var(--mp-color-secondary-muted);
-      border-radius: var(--mp-radius-full);
-    }
-
-    &__actions {
-      display: flex;
-      gap: var(--mp-spacing-1);
-      align-items: center;
-    }
-
-    &__action {
-      padding: var(--mp-spacing-1);
-      color: var(--mp-color-text-secondary);
-
-      &--danger:hover:not(:disabled) {
-        color: var(--mp-color-danger-text);
-        background-color: var(--mp-color-danger-muted);
-      }
-    }
-
-    &__nested {
+  @layer mp.components {
+    .form-builder-field {
       display: flex;
       flex-direction: column;
       gap: var(--mp-spacing-2);
-      padding-left: var(--mp-spacing-4);
-      border-left: 2px solid var(--mp-color-border-default);
-    }
+      padding: var(--mp-spacing-3);
+      background-color: var(--mp-color-bg-surface);
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-md);
+      transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
 
-    &__add-child {
-      align-self: flex-start;
+      &:hover {
+        border-color: var(--mp-color-border-strong);
+      }
+
+      &:focus-visible {
+        outline: none;
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+
+      &--selected {
+        border-color: var(--mp-color-primary-default);
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+
+      &--dragging {
+        opacity: 0.6;
+      }
+
+      // A steady "a field will land here" marker shown while another field is
+      // dragged over this row. It replaces dnd-kit's removed live reorder preview
+      // with a fixed accent line, so nothing shifts position mid-drag.
+      &--drop-target {
+        box-shadow: inset 0 3px 0 0 var(--mp-color-primary-default);
+      }
+
+      &__row {
+        display: flex;
+        gap: var(--mp-spacing-3);
+        align-items: center;
+      }
+
+      &__handle {
+        color: var(--mp-color-text-tertiary);
+        cursor: grab;
+        user-select: none;
+
+        &:active {
+          cursor: grabbing;
+        }
+      }
+
+      &__body {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: var(--mp-spacing-1);
+        min-width: 0;
+      }
+
+      &__label {
+        display: inline-flex;
+        gap: var(--mp-spacing-1);
+        align-items: baseline;
+      }
+
+      &__required {
+        color: var(--mp-color-danger-default);
+      }
+
+      &__meta {
+        display: flex;
+        gap: var(--mp-spacing-2);
+        align-items: center;
+      }
+
+      &__key {
+        font-family: var(--mp-font-family-mono);
+        font-size: var(--mp-font-size-xs);
+        color: var(--mp-color-text-secondary);
+      }
+
+      &__type {
+        padding: 0 var(--mp-spacing-2);
+        font-size: var(--mp-font-size-2xs);
+        color: var(--mp-color-primary-text);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        background-color: var(--mp-color-primary-muted);
+        border-radius: var(--mp-radius-full);
+      }
+
+      &__step {
+        padding: 0 var(--mp-spacing-2);
+        font-size: var(--mp-font-size-2xs);
+        color: var(--mp-color-secondary-text);
+        background-color: var(--mp-color-secondary-muted);
+        border-radius: var(--mp-radius-full);
+      }
+
+      &__actions {
+        display: flex;
+        gap: var(--mp-spacing-1);
+        align-items: center;
+      }
+
+      &__action {
+        padding: var(--mp-spacing-1);
+        color: var(--mp-color-text-secondary);
+
+        &--danger:hover:not(:disabled) {
+          color: var(--mp-color-danger-text);
+          background-color: var(--mp-color-danger-muted);
+        }
+      }
+
+      &__nested {
+        display: flex;
+        flex-direction: column;
+        gap: var(--mp-spacing-2);
+        padding-left: var(--mp-spacing-4);
+        border-left: 2px solid var(--mp-color-border-default);
+      }
+
+      &__add-child {
+        align-self: flex-start;
+      }
     }
   }
 </style>

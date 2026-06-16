@@ -233,41 +233,43 @@
 </template>
 
 <style lang="scss" scoped>
-  .form-builder-condition-editor {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-2);
-    padding: var(--mp-spacing-3);
-    margin: 0;
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-
-    &__legend {
-      padding: 0 var(--mp-spacing-1);
-      font-size: var(--mp-font-size-sm);
-      font-weight: var(--mp-font-weight-medium);
-      color: var(--mp-color-text-secondary);
-    }
-
-    &__rule {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr auto;
+  @layer mp.components {
+    .form-builder-condition-editor {
+      display: flex;
+      flex-direction: column;
       gap: var(--mp-spacing-2);
-      align-items: center;
-    }
+      padding: var(--mp-spacing-3);
+      margin: 0;
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-md);
 
-    &__remove {
-      padding: var(--mp-spacing-1);
-      color: var(--mp-color-text-secondary);
-
-      &:hover:not(:disabled) {
-        color: var(--mp-color-danger-text);
-        background-color: var(--mp-color-danger-muted);
+      &__legend {
+        padding: 0 var(--mp-spacing-1);
+        font-size: var(--mp-font-size-sm);
+        font-weight: var(--mp-font-weight-medium);
+        color: var(--mp-color-text-secondary);
       }
-    }
 
-    &__add {
-      align-self: flex-start;
+      &__rule {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr auto;
+        gap: var(--mp-spacing-2);
+        align-items: center;
+      }
+
+      &__remove {
+        padding: var(--mp-spacing-1);
+        color: var(--mp-color-text-secondary);
+
+        &:hover:not(:disabled) {
+          color: var(--mp-color-danger-text);
+          background-color: var(--mp-color-danger-muted);
+        }
+      }
+
+      &__add {
+        align-self: flex-start;
+      }
     }
   }
 </style>

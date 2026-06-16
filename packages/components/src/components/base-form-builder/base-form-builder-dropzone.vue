@@ -74,26 +74,28 @@
 </template>
 
 <style lang="scss" scoped>
-  .form-builder-dropzone {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-3);
-    border-radius: var(--mp-radius-md);
-    transition: background-color 0.15s ease;
+  @layer mp.components {
+    .form-builder-dropzone {
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-spacing-3);
+      border-radius: var(--mp-radius-md);
+      transition: background-color 0.15s ease;
 
-    &--empty {
-      align-items: center;
-      justify-content: center;
-      min-height: 7rem;
-      padding: var(--mp-spacing-4);
-      color: var(--mp-color-text-tertiary);
-      text-align: center;
-      border: 1px dashed var(--mp-color-border-default);
-    }
+      &--empty {
+        align-items: center;
+        justify-content: center;
+        min-height: 7rem;
+        padding: var(--mp-spacing-4);
+        color: var(--mp-color-text-tertiary);
+        text-align: center;
+        border: 1px dashed var(--mp-color-border-default);
+      }
 
-    &--over {
-      background-color: var(--mp-color-primary-muted);
-      box-shadow: inset 0 0 0 2px var(--mp-color-primary-default);
+      &--over {
+        background-color: var(--mp-color-primary-muted);
+        box-shadow: inset 0 0 0 2px var(--mp-color-primary-default);
+      }
     }
   }
 </style>
