@@ -1,0 +1,132 @@
+# @mission-platform/vite-plugin-tokens
+
+A Vite plugin that generates the Mission Platform design-token artefacts from
+the DTCG (Design Tokens Community Group, https://www.designtokens.org/) sources
+using a self-contained custom generator — no external CLI is involved. The DTCG
+sources are flattened in-process and emitted by focused generator modules
+(`dtcg.ts`, `generators/scss.ts`, `generators/typescript.ts`); one SCSS partial
+and one TypeScript module are produced per source file.
+
+It replaces the previous standalone generation script: the artefacts are
+produced during `vite build` (and on dev-server start) via the rollup
+`buildStart` hook.
+
+## Inputs
+
+DTCG `*.tokens.json` sources (authored against the **v2025.10** schema):
+
+- `palette.tokens.json`      — primitive colour palette (OKLab `color` tokens)
+- structural scales          — one file each: `border-width`, `breakpoint`, `motion` (duration + easing),
+  `opacity`, `radius`, `shadow`, `size`, `spacing`, `z-index`
+- `font.tokens.json`         — primitive font scales (family, size, weight, line-height, letter-spacing)
+- `typography.tokens.json`   — composite `typography`-type styles (display, h1–h6, body-*, label, caption, code)
+- `theme-light.tokens.json`  — light-theme semantic colours (palette `{color.*}` aliases)
+- `theme-dark.tokens.json`   — dark-theme semantic colours (palette `{color.*}` aliases)
+
+## Outputs (written to `outDir`)
+
+One SCSS partial per non-theme source (the two themes are merged into one), one
+TS module per source, plus two aggregate barrels:
+
+- `scss/_<file>.scss`             — a self-contained structural SCSS partial per non-theme source:
+  unprefixed `$` variables, then `:root { --mp-*: #{$<token>} }` custom properties (each value
+  interpolates the matching local `$`-variable, never an inlined literal), then a matching
+  `@property { syntax; inherits; initial-value }` registration per token (typed by `$type`).
+  - `palette` is emitted exactly like the structural scales (`$color-*` vars + `--mp-color-*` custom
+    properties + `<color>` `@property` registrations); colours with `alpha` (scrims) round-trip too
+  - `typography` is flattened to per-field tokens (`typography-<variant>-<field>`) whose value is a
+    `var(--mp-font-*)` reference to the primitive token, then emitted through the same structural path
+- `scss/_theme.scss`              — the single combined theme partial:
+  `:root { color-scheme: light dark; --mp-color-*: light-dark(<light>, <dark>); }`, where each
+  light/dark value is a `var(--mp-color-*)` reference to the matching palette custom property
+  (the `theme-light`/`theme-dark` sources hold palette aliases). It also emits the opt-in scheme
+  pins `[data-theme='light'], .theme-light { color-scheme: light }` and the matching dark rules
+  (after `:root`, inside the `mp.tokens` layer), so importing `scss/tokens` alone is enough to pin a
+  subtree (or the document) to one scheme via `data-theme`/`.theme-*`. No `@property` is emitted for
+  the theme — `light-dark()`/`var()` are not valid `initial-value`s.
+- `ts/<file>.ts`                  — one nested `as const` object per source, named after the file
+  (camelCased). A single top-level group whose key equals the file name is unwrapped (so the export
+  mirrors the scale directly, e.g. `size.icon.md`); otherwise the document is preserved (`palette.color.*`,
+  `font.font.*` / `font['line-height']`, `themeLight.color.*`). Colours are emitted as `oklab(…)` strings
+  and both the composite `typography` `{font.*}` aliases and the `theme-*` `{color.*}` aliases are resolved
+  to their primitive values.
+- `_tokens.scss`                  — SCSS barrel `@forward`ing every partial **including** `scss/theme`,
+  so a single `@use 'generated/tokens'` emits the structural + palette + typography custom properties
+  (with their `@property` registrations), re-exports the `$` variables, and applies the `light-dark()` theme
+- `tokens.ts`                     — TypeScript barrel re-exporting every `ts/<file>.ts` module
+
+Colour values are emitted in the **OKLab** colour space (`oklab(L a b / α)`).
+
+> `@property` registrations use a typed `syntax` for `color`/`dimension`/`number`/`fontWeight`/`duration`
+> tokens (with an `initial-value` that resolves to the matching local `$`-variable, e.g.
+> `initial-value: $size-radius-2xl;`) and fall back to the universal `*` syntax (no `initial-value`) for
+> everything whose value is a `var()` reference (the typography fields) or a non-typeable literal
+> (shadows, easing curves, font-family stacks).
+
+## Install
+
+Consumed inside the monorepo as a workspace dependency:
+
+```jsonc
+// packages/tokens/package.json
+{
+  "devDependencies": {
+    "@mission-platform/vite-plugin-tokens": "workspace:*"
+  }
+}
+```
+
+`vite` is an optional peer dependency.
+
+## Usage
+
+```ts
+// packages/tokens/vite.config.ts
+import { tokensPlugin } from '@mission-platform/vite-plugin-tokens';
+import { defineLibraryConfig } from '@mission-platform/vite-config';
+
+export default defineLibraryConfig({
+  rootDir: __dirname,
+  entry: 'src/tokens.ts',
+  name: 'MissionPlatformTokens',
+  preserveModules: false,
+  overrides: {
+    plugins: [
+      tokensPlugin({
+        tokensDir: `${__dirname}/tokens`,
+        outDir: `${__dirname}/src/generated`,
+      }),
+    ],
+  },
+});
+```
+
+## API
+
+### `tokensPlugin(options): Plugin`
+
+- `options.tokensDir` — absolute path to the DTCG sources directory. Required.
+- `options.outDir` — absolute path where generated artefacts are written. Required.
+- `options.prefix` — CSS custom-property prefix. Default `'mp'` (`--mp-*`).
+
+### Helpers (also exported)
+
+- `generateTokens(options)` — run generation outside of Vite.
+- `flattenTokens(document)` — flatten a DTCG document into `TokenRecord[]` (path, group, `$type`, value, description).
+- `buildScssVariables(records)` — build the grouped, unprefixed `$` SCSS variable body (no header).
+- `buildStructuralScss(records, prefix?)` — build a self-contained structural partial (`$`-vars + `:root`
+  custom properties that interpolate the local `$`-vars + `@property` registrations). The palette and the
+  flattened typography are both emitted through this path.
+- `buildLightDarkThemeScss(lightDocument, darkDocument, prefix?)` — build the single combined theme partial
+  (`:root { color-scheme: light dark; --<prefix>-color-*: light-dark(<light>, <dark>) }`) plus the opt-in
+  `[data-theme]`/`.theme-*` `color-scheme` pins.
+- `buildTypographyRecords(typographyGroup, prefix?)` — flatten a composite typography group into per-field
+  `TokenRecord`s whose value is the `var(--<prefix>-*)` primitive reference (feed to `buildStructuralScss`).
+- `buildPropertyRule(record, prefix, useScssVariable?)` — build a single `@property` registration; with
+  `useScssVariable` the `initial-value` resolves to the local `$<token>` instead of an inlined literal.
+- `buildTokenModule(basename, document, aliasDocument?)` — build a per-file nested `as const` TS module.
+- `buildBarrelModule(basenames)` — build the `tokens.ts` re-export barrel.
+- `camelCase(dashed)` / `camelCaseName(record)` — camelCase a dashed string / token name.
+- `formatColorValue(value)` / `resolveTsValue(value)` — DTCG → TypeScript value helpers.
+- `formatCssColor(value)` / `formatCssValue(value)` — DTCG → CSS/SCSS value helpers.
+- `resolveAlias(alias, document)` / `aliasToCssVariable(alias, prefix)` — DTCG alias helpers.
