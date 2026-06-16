@@ -1,0 +1,12 @@
+{
+  "$description": "Opacity scale for Mission Platform — named alpha levels for disabled, muted and overlay states, unifying the repeated `opacity: 0.5` literals across the component library.",
+  "opacity": {
+    "$description": "Named opacity levels (0 → 1).",
+    "$type": "number",
+    "0": { "$value": 0, "$description": "0 — fully transparent." },
+    "disabled": { "$value": 0.5, "$description": "0.5 — disabled / inactive controls." },
+    "muted": { "$value": 0.65, "$description": "0.65 — muted / secondary text and icons." },
+    "subtle": { "$value": 0.85, "$description": "0.85 — subtle de-emphasis (e.g. pending / placeholder states)." },
+    "full": { "$value": 1, "$description": "1 — fully opaque." }
+  }
+}

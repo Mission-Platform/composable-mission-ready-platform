@@ -1,0 +1,19 @@
+{
+  "$description": "Border-radius scale for Mission Platform — from square (none) to fully rounded (full = pill/circle). Values are rem relative to the 14px root font-size so radii scale with the user's font size.",
+  "radius": {
+    "$description": "Border-radius scale from square (none) to fully rounded (full = pill/circle). Values are rem relative to the 14px root.",
+    "$type": "dimension",
+    "none": { "$value": "0", "$description": "0 — square corners." },
+    "xs": { "$value": "0.143rem", "$description": "≈2px — subtle softening (inputs, chips)." },
+    "sm": { "$value": "0.286rem", "$description": "≈4px — small controls." },
+    "md": { "$value": "0.429rem", "$description": "≈6px — default control/card radius." },
+    "lg": { "$value": "0.571rem", "$description": "≈8px — cards, panels." },
+    "xl": { "$value": "0.857rem", "$description": "≈12px — large cards, modals." },
+    "2xl": { "$value": "1.143rem", "$description": "≈16px — prominent surfaces." },
+    "3xl": { "$value": "1.714rem", "$description": "≈24px — hero / feature panels." },
+    "full": {
+      "$value": "9999px",
+      "$description": "9999px — pills, circular avatars/badges (sentinel value, intentionally px)."
+    }
+  }
+}

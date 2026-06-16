@@ -1,0 +1,45 @@
+{
+  "$description": "Elevation drop-shadow scale for Mission Platform (plus inner and focus-ring shadows).",
+  "shadow": {
+    "$description": "Elevation drop-shadow scale (plus inner and focus-ring shadows). Offsets/blur/spread are rem relative to the 14px root; focus rings use the brand/danger colours at 30% alpha.",
+    "$type": "shadow",
+    "none": { "$value": "none", "$description": "No shadow — flat / level 0." },
+    "2xs": {
+      "$value": "0 0.071rem 0.071rem 0 rgb(0 0 0 / 3%)",
+      "$description": "Hairline elevation — subtle separation."
+    },
+    "xs": { "$value": "0 0.071rem 0.143rem 0 rgb(0 0 0 / 5%)", "$description": "Very low elevation." },
+    "sm": {
+      "$value": "0 0.071rem 0.214rem 0 rgb(0 0 0 / 10%), 0 0.071rem 0.143rem -0.071rem rgb(0 0 0 / 10%)",
+      "$description": "Low elevation — buttons, chips."
+    },
+    "md": {
+      "$value": "0 0.286rem 0.429rem -0.071rem rgb(0 0 0 / 10%), 0 0.143rem 0.286rem -0.143rem rgb(0 0 0 / 10%)",
+      "$description": "Default elevation — cards, dropdowns."
+    },
+    "lg": {
+      "$value": "0 0.714rem 1.071rem -0.214rem rgb(0 0 0 / 10%), 0 0.286rem 0.429rem -0.286rem rgb(0 0 0 / 10%)",
+      "$description": "Raised elevation — popovers, menus."
+    },
+    "xl": {
+      "$value": "0 1.429rem 1.786rem -0.357rem rgb(0 0 0 / 10%), 0 0.571rem 0.714rem -0.429rem rgb(0 0 0 / 10%)",
+      "$description": "High elevation — modals, dialogs."
+    },
+    "2xl": {
+      "$value": "0 1.786rem 3.571rem -0.857rem rgb(0 0 0 / 25%)",
+      "$description": "Highest elevation — full-screen overlays."
+    },
+    "inner": {
+      "$value": "inset 0 0.143rem 0.286rem 0 rgb(0 0 0 / 5%)",
+      "$description": "Inset shadow — wells, pressed states."
+    },
+    "focus-primary": {
+      "$value": "0 0 0 0.214rem rgb(108 47 212 / 30%)",
+      "$description": "Primary focus ring — keyboard focus on brand controls."
+    },
+    "focus-danger": {
+      "$value": "0 0 0 0.214rem rgb(244 63 94 / 30%)",
+      "$description": "Danger focus ring — keyboard focus on destructive controls."
+    }
+  }
+}

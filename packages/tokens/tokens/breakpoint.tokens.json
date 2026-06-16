@@ -1,0 +1,14 @@
+{
+  "$description": "Responsive breakpoint thresholds for Mission Platform. All values are absolute px and are consumed at compile time by the SCSS bp-up/bp-down/bp-between/bp-only mixins.",
+  "breakpoint": {
+    "$description": "Seven-step responsive breakpoint min-width thresholds (mobile-first), anchored so that `lg` = 1920×1080 (Full HD). Consumed at compile time by the SCSS bp-up/bp-down/bp-between/bp-only mixins.",
+    "$type": "dimension",
+    "2xs": { "$value": "0", "$description": "0 — smallest phones; the mobile-first base, always matches." },
+    "xs": { "$value": "480px", "$description": "480px — large phones / small phones in landscape." },
+    "sm": { "$value": "768px", "$description": "768px — tablets (portrait)." },
+    "md": { "$value": "1024px", "$description": "1024px — tablets (landscape) / small laptops." },
+    "lg": { "$value": "1920px", "$description": "1920px — Full HD (1920×1080) desktops; the design anchor." },
+    "xl": { "$value": "2560px", "$description": "2560px — QHD / 1440p desktops." },
+    "2xl": { "$value": "3840px", "$description": "3840px — 4K UHD displays." }
+  }
+}

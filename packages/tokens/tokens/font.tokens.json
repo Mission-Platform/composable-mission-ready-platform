@@ -1,0 +1,64 @@
+{
+  "$description": "Primitive font design tokens for Mission Platform — the raw font families, size, weight, line-height and letter-spacing scales that the composite typography styles (see typography.tokens.json) are built from. All rem values are relative to the 14px root font-size.",
+  "font": {
+    "$description": "Font primitives: family stacks, the modular size scale and the named weight steps.",
+    "family": {
+      "$description": "Font-family stacks. The first entry is the brand face; the rest are progressive system fallbacks.",
+      "$type": "string",
+      "sans": {
+        "$value": "'Comfortaa', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif",
+        "$description": "Primary sans-serif stack — Comfortaa is the brand UI/body face, falling back to Inter then the system sans."
+      },
+      "mono": {
+        "$value": "'Datatype', 'JetBrains Mono', 'Fira Code', ui-monospace, 'Cascadia Mono', monospace",
+        "$description": "Primary monospace stack — Datatype is the brand code face, falling back to JetBrains Mono / Fira Code then the system mono."
+      }
+    },
+    "size": {
+      "$description": "Modular font-size scale (base + 2xs → 5xl) consumed by the composite typography variants. The `base` step is the absolute root font-size; every other step is rem relative to it.",
+      "$type": "dimension",
+      "base": {
+        "$value": "14px",
+        "$description": "14px — the root font-size; all rem values in this scale are relative to it."
+      },
+      "2xs": { "$value": "0.625rem", "$description": "8.75px — micro labels, legal fine print." },
+      "xs": { "$value": "0.75rem", "$description": "10.5px — captions, helper text." },
+      "sm": { "$value": "0.875rem", "$description": "12.25px — secondary body, labels, code." },
+      "md": { "$value": "1rem", "$description": "14px — default body copy / base font size." },
+      "lg": { "$value": "1.125rem", "$description": "15.75px — lead/intro body, h5." },
+      "xl": { "$value": "1.25rem", "$description": "17.5px — h4." },
+      "2xl": { "$value": "1.5rem", "$description": "21px — h3." },
+      "3xl": { "$value": "1.875rem", "$description": "26.25px — h2." },
+      "4xl": { "$value": "2.25rem", "$description": "31.5px — h1." },
+      "5xl": { "$value": "3rem", "$description": "42px — hero / marketing display." }
+    },
+    "weight": {
+      "$description": "Named font-weight steps (400 → 700) covering the supported Comfortaa/Datatype axes.",
+      "$type": "fontWeight",
+      "regular": { "$value": 400, "$description": "Regular (400) — body copy default." },
+      "medium": { "$value": 500, "$description": "Medium (500) — labels, h3–h6 emphasis." },
+      "semibold": { "$value": 600, "$description": "Semibold (600) — h1–h2 headings." },
+      "bold": { "$value": 700, "$description": "Bold (700) — display / hero headlines." }
+    }
+  },
+
+  "line-height": {
+    "$description": "Unitless line-height (leading) ratios, from dense headings to loose long-form copy.",
+    "$type": "number",
+    "tight": { "$value": 1.25, "$description": "1.25 — large headings / display." },
+    "snug": { "$value": 1.375, "$description": "1.375 — sub-headings, labels, captions." },
+    "normal": { "$value": 1.5, "$description": "1.5 — default body copy." },
+    "relaxed": { "$value": 1.625, "$description": "1.625 — lead / long-form reading." },
+    "loose": { "$value": 2, "$description": "2 — airy, spaced-out text." }
+  },
+
+  "letter-spacing": {
+    "$description": "Letter-spacing (tracking) steps in em, from tightened headings to widely-tracked overlines.",
+    "$type": "dimension",
+    "tight": { "$value": "-0.025em", "$description": "-0.025em — large headings, tightened tracking." },
+    "normal": { "$value": "0em", "$description": "0 — default, no tracking adjustment." },
+    "wide": { "$value": "0.025em", "$description": "0.025em — small body / captions for legibility." },
+    "wider": { "$value": "0.05em", "$description": "0.05em — labels, buttons." },
+    "widest": { "$value": "0.1em", "$description": "0.1em — uppercase overlines / eyebrows." }
+  }
+}

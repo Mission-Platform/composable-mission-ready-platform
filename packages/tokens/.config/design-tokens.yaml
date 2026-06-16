@@ -1,0 +1,20 @@
+# Asimonim configuration for @mission-platform/tokens.
+# https://bennypowers.dev/asimonim/
+#
+# This file makes the DTCG token sources discoverable by the asimonim
+# CLI, Language Server (LSP) and MCP server. The build-time generation of
+# CSS/SCSS/JS is driven by `@mission-platform/vite-plugin-tokens` (during
+# `vite build`), which calls `asimonim convert` per source with the correct
+# selectors.
+
+# DTCG schema version of the *.tokens.json sources.
+schema: v2025.10
+
+# NOTE: the `mp` prefix for generated CSS custom properties (`--mp-*`) is applied
+# per-output by the Vite plugin (only to the CSS outputs), so it is not set
+# globally here — SCSS `$` variables and TS identifiers are intentionally
+# generated without a prefix.
+
+# Design token sources (DTCG v2025.10 format).
+files:
+  - tokens/*.tokens.json

@@ -1,0 +1,17 @@
+/* ─── Dark Theme (compatibility shim) ───────────────────────────────────────── */
+
+/* Scheme pinning now ships with `@mission-platform/tokens/scss/tokens`: the */
+
+/* generated theme already emits */
+
+/*   [data-theme='dark'], .theme-dark { color-scheme: dark; } */
+
+/* inside the `mp.tokens` cascade layer, so importing `scss/tokens` is enough to */
+
+/* pin a subtree (or the document) to dark via `data-theme='dark'` / */
+
+/* `.theme-dark`. This file is kept only for backwards compatibility with */
+
+/* consumers that still `@use '@mission-platform/tokens/scss/themes/dark'`; it */
+
+/* intentionally emits no CSS to avoid duplicating the pin. */
