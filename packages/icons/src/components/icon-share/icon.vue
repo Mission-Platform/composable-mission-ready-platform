@@ -64,11 +64,13 @@
 </template>
 
 <style scoped>
-  .base-icon-share {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    vertical-align: middle;
+  @layer mp.icons {
+    .base-icon-share {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
   }
 </style>

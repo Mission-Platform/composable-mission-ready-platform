@@ -45,11 +45,13 @@
 </template>
 
 <style scoped>
-  .base-icon-eye-off {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    vertical-align: middle;
+  @layer mp.icons {
+    .base-icon-eye-off {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
   }
 </style>
