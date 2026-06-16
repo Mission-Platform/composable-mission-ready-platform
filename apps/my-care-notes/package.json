@@ -5,8 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "seo:generate": "node --experimental-strip-types scripts/generate-seo-files.ts",
-    "prebuild": "pnpm seo:generate",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "deploy": "wrangler deploy --env production",
@@ -46,6 +44,7 @@
     "@mission-platform/stylelint-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
+    "@mission-platform/vite-plugin-seo": "workspace:*",
     "@types/js-yaml": "catalog:typescript",
     "@types/node": "catalog:typescript",
     "eslint": "catalog:eslint",
