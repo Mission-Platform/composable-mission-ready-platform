@@ -9,7 +9,11 @@ import { seoPlugin } from '.';
 import type { ResolvedConfig } from 'vite';
 
 /** Minimal stub of the rollup plugin context used by `buildStart`. */
-const pluginContext = { info: () => {} };
+const pluginContext = {
+  info: () => {
+    /* no-op: the plugin context logger is unused in these tests */
+  },
+};
 
 const runPlugin = (
   options: Parameters<typeof seoPlugin>[0],
