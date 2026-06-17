@@ -1,16 +1,105 @@
 /// <reference types="vitest/config" />
 import { defineAppConfig } from '@mission-platform/vite-config';
 import { seoPlugin } from '@mission-platform/vite-plugin-seo';
+import { type Plugin, type UserConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 import { APP_LOCALE_BCP47, APP_ORIGIN } from './src/seo-app';
 
+/**
+ * During the `vite-ssg` *server* build (and the JSDOM prerender that follows),
+ * Vite runs the app through Node. `monaco-editor` pulls in browser-only ESM
+ * with `.css` side-effect imports that Node's ESM loader cannot link, crashing
+ * the prerender. It reaches the SSR graph both directly (the editor component)
+ * and transitively — `@mission-platform/harper` and `@mission-platform/hunspell`
+ * statically import `monaco-editor`.
+ *
+ * The editor is rendered client-only (see `<ClientOnly>` + the async
+ * `MonacoEditor`/`SnippetEditorModal`), so Monaco is never needed to produce
+ * the prerendered HTML. This plugin replaces `monaco-editor` (and its deep
+ * entries / `?worker` imports) with an inert stub in the SSR environment only,
+ * leaving the client build (the real, shipped bundle) completely untouched.
+ */
+function ssrStubBrowserOnlyEditorPlugin(): Plugin {
+  const STUB_ID = '\0mp-ssr-editor-stub';
+
+  // Stub `monaco-editor` itself (incl. its deep `esm/...` entries and `?worker`
+  // imports) — the sole source of the browser-only `.css` side-effect imports
+  // that break Node's ESM loader. The harper/hunspell packages, which only
+  // *re-export composables* alongside their static `monaco-editor` import, are
+  // intentionally left real so their named exports (e.g. `useHarperMonaco`,
+  // `useHunspellMonaco`) still resolve during the SSR build's static analysis.
+  const shouldStub = (id: string): boolean => {
+    const base = id.split('?')[0] ?? id;
+    return base === 'monaco-editor' || base.startsWith('monaco-editor/');
+  };
+
+  return {
+    name: 'mp-ssr-stub-browser-only-editor',
+    enforce: 'pre',
+    resolveId(id, _importer, options) {
+      if (options?.ssr && shouldStub(id)) return STUB_ID;
+      return null;
+    },
+    load(id) {
+      if (id === STUB_ID) {
+        // A self-returning Proxy that is callable / `new`-able, so any access
+        // shape resolves to a harmless no-op during SSR. `@mission-platform/harper`
+        // and `@mission-platform/hunspell` do `import * as monaco from 'monaco-editor'`
+        // and touch `monaco.MarkerSeverity.Error`, `monaco.editor`, `monaco.Range`,
+        // `monaco.languages` at *module top-level*, so those have to exist as named
+        // exports on the stub namespace or the chunk throws when it is linked.
+        return [
+          'const handler = { get: () => stub, apply: () => stub, construct: () => ({}) };',
+          'const stub = new Proxy(function stub() {}, handler);',
+          'export default stub;',
+          'export const editor = stub;',
+          'export const languages = stub;',
+          'export const Uri = stub;',
+          'export const Range = stub;',
+          'export const Position = stub;',
+          'export const Selection = stub;',
+          'export const KeyMod = stub;',
+          'export const KeyCode = stub;',
+          'export const MarkerSeverity = stub;',
+          'export const MarkerTag = stub;',
+          'export const Token = stub;',
+        ].join('\n');
+      }
+      return null;
+    },
+  };
+}
+
 const ROOT_URL = APP_ORIGIN.endsWith('/') ? APP_ORIGIN : `${APP_ORIGIN}/`;
 const SITEMAP_URL = `${ROOT_URL}sitemap.xml`;
 
-export default defineAppConfig({
+// `vite-ssg` reads `ssgOptions` off the resolved Vite config but does not ship
+// a module augmentation for Vite's own `UserConfig` type, so we cast the final
+// config through an intersection that includes the extra property.
+interface BeastiesOptions {
+  preload?: 'body' | 'media' | 'swap' | 'swap-high' | 'js' | 'js-lazy';
+  pruneSource?: boolean;
+  inlineFonts?: boolean;
+  preloadFonts?: boolean;
+  logLevel?: 'info' | 'warn' | 'error' | 'silent' | 'debug' | 'trace';
+  [key: string]: unknown;
+}
+
+interface SsgUserConfig extends UserConfig {
+  ssgOptions?: {
+    includedRoutes?: () => string[] | Promise<string[]>;
+    formatting?: 'minify' | 'prettify' | 'none';
+    dirStyle?: 'flat' | 'nested';
+    beastiesOptions?: BeastiesOptions | false;
+  };
+}
+
+const config = defineAppConfig({
   overrides: {
     plugins: [
+      // SSR-only: keep Monaco / harper / hunspell out of the prerender pass.
+      ssrStubBrowserOnlyEditorPlugin(),
       // Single-route SPA: advertise the root URL with its locale alternate.
       seoPlugin({
         sitemap: {
@@ -97,3 +186,33 @@ export default defineAppConfig({
     },
   },
 });
+
+// `vite-ssg build` prerenders the app's single `/` route to static HTML and
+// hydrates it on the client. The extra `ssgOptions` key is read by `vite-ssg`
+// at build time and is not part of Vite's own `UserConfig`.
+const ssgConfig: SsgUserConfig = {
+  ...config,
+  ssgOptions: {
+    // Single-route SPA — only the root needs prerendering.
+    includedRoutes: () => ['/'],
+    // Minify the generated HTML file.
+    formatting: 'minify',
+    // Inline critical CSS into the prerendered HTML and lazy-load the rest via
+    // `beasties` (the maintained fork of `critters`). `vite-ssg` auto-detects
+    // `beasties` from the workspace and runs it during the SSG pass; we pass
+    // explicit options so the behaviour is pinned in config.
+    beastiesOptions: {
+      // Lazy-load the non-critical stylesheet via a media-swap `<link>`.
+      preload: 'swap-high',
+      // Keep the original full stylesheets so client-side hydration can apply
+      // any styles that were not critical for the prerendered HTML.
+      pruneSource: false,
+      inlineFonts: false,
+      preloadFonts: false,
+      // Only surface real problems during the build log.
+      logLevel: 'warn',
+    },
+  },
+};
+
+export default ssgConfig as UserConfig;

@@ -28,7 +28,7 @@ const StubComponent = defineComponent({
       h(
         'div',
         Object.values(slots)
-          .filter((slot): slot is NonNullable<typeof slot> => slot != undefined)
+          .filter((slot): slot is NonNullable<typeof slot> => slot !== undefined)
           .map((slot) => slot()),
       );
   },
@@ -107,7 +107,7 @@ vi.mock('./composables/use-snippets', () => ({
 
 vi.mock('./composables/use-tabs', () => ({
   useTabs: () => ({
-    activeTabId: ref(undefined),
+    activeTabId: ref<string>(),
     openTabs: () => [],
     closedTabs: [],
     addTab: vi.fn(),

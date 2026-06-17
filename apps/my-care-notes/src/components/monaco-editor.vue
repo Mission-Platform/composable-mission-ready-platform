@@ -4,7 +4,6 @@
 
   import { useMonacoTheme } from '../composables/use-monaco-theme';
   import { useSnippets } from '../composables/use-snippets';
-  import { ensureMonacoEnvironment } from '../monaco-environment';
 
   // Type-only import: erased at build time. The runtime Monaco module is
   // loaded lazily — see `loadMonaco()` below and `BaseMonacoEditor` itself.
@@ -33,6 +32,10 @@
   let monacoRuntime: MonacoRuntime | undefined;
   async function loadMonaco(): Promise<MonacoRuntime> {
     if (!monacoRuntime) {
+      // Dynamically import the Monaco/Harper `?worker` wiring so the worker
+      // entries stay out of the synchronous module graph (and out of the
+      // `vite-ssg` server build entirely).
+      const { ensureMonacoEnvironment } = await import('../monaco-environment');
       ensureMonacoEnvironment();
       monacoRuntime = await import('monaco-editor');
     }
