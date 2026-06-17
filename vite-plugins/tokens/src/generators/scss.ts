@@ -210,8 +210,8 @@ export function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: 
   // adding `data-theme="light|dark"` (or the `.theme-light`/`.theme-dark`
   // classes). The `light-dark()` colour tokens resolve against this used
   // `color-scheme`, so no colour custom property has to be redeclared.
-  const lightPin = `  [data-theme='light'],\n  .theme-light {\n    color-scheme: light;\n  }`;
-  const darkPin = `  [data-theme='dark'],\n  .theme-dark {\n    color-scheme: dark;\n  }`;
+  const lightPin = "  [data-theme='light'],\n  .theme-light {\n    color-scheme: light;\n  }";
+  const darkPin = "  [data-theme='dark'],\n  .theme-dark {\n    color-scheme: dark;\n  }";
   const block = `@layer mp.tokens {\n${root}\n\n${lightPin}\n\n${darkPin}\n}`;
   return `${CSS_HEADER}\n\n${block}\n`;
 }

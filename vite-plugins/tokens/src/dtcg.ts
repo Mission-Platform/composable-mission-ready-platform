@@ -20,9 +20,11 @@ export interface DtcgToken {
 /** A DTCG group node (an object of nested groups/tokens plus `$`-metadata). */
 export type DtcgGroup = Record<string, unknown>;
 
+/** Type guard: is `value` a DTCG colour value (`{ colorSpace, components, … }`)? */
 export const isColorValue = (value: unknown): value is DtcgColorValue =>
   typeof value === 'object' && value !== null && 'colorSpace' in value && 'components' in value;
 
+/** Type guard: is `value` a DTCG leaf token (an object carrying a `$value`)? */
 export const isToken = (value: unknown): value is DtcgToken =>
   typeof value === 'object' && value !== null && '$value' in value;
 
@@ -72,22 +74,28 @@ export const camelCaseName = (record: TokenRecord): string => camelCase(dashedNa
  */
 export function flattenTokens(document_: DtcgGroup): TokenRecord[] {
   const records: TokenRecord[] = [];
+  /** Build a {@link TokenRecord} for a single resolved leaf token. */
+  const toRecord = (childPath: string[], token: DtcgToken, groupType?: string): TokenRecord => ({
+    path: childPath,
+    group: childPath[0],
+    type: (token.$type as string | undefined) ?? groupType,
+    value: token.$value,
+    description: token.$description,
+  });
+  /** Handle a single group entry: push a leaf record or recurse into a nested group. */
+  const visit = (childPath: string[], child: unknown, groupType?: string): void => {
+    if (isToken(child)) {
+      records.push(toRecord(childPath, child, groupType));
+    } else if (typeof child === 'object' && child !== null) {
+      walk(child as DtcgGroup, childPath, groupType);
+    }
+  };
+  /** Recursively descend a group, carrying the nearest ancestor `$type` down. */
   const walk = (node: DtcgGroup, segments: string[], inheritedType?: string): void => {
     const groupType = (node.$type as string | undefined) ?? inheritedType;
     for (const [key, child] of Object.entries(node)) {
       if (key.startsWith('$')) continue;
-      const childPath = [...segments, key];
-      if (isToken(child)) {
-        records.push({
-          path: childPath,
-          group: childPath[0],
-          type: (child.$type as string | undefined) ?? groupType,
-          value: child.$value,
-          description: child.$description,
-        });
-      } else if (typeof child === 'object' && child !== null) {
-        walk(child as DtcgGroup, childPath, groupType);
-      }
+      visit([...segments, key], child, groupType);
     }
   };
   walk(document_, []);
@@ -125,11 +133,13 @@ export function resolveTsValue(value: unknown): string | number {
   return String(value);
 }
 
+/** Is `key` a purely-numeric object key (e.g. a `500` palette step)? */
 const isNumericKey = (key: string): boolean => /^[0-9]+$/.test(key);
 
 /** Quote a DTCG object key unless it is purely numeric (`500` → `500`, `mono` → `'mono'`). */
 export const formatKey = (key: string): string => (isNumericKey(key) ? key : `'${key}'`);
 
+/** Type guard: is `value` a DTCG alias reference (a `{group.token}` string)? */
 export const isAlias = (value: unknown): value is string =>
   typeof value === 'string' && value.startsWith('{') && value.endsWith('}');
 

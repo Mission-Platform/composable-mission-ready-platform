@@ -71,6 +71,45 @@ function sourceDescriptors(): SourceDescriptor[] {
 }
 
 /**
+ * Context shared by {@link writeSourceArtefacts} for a single DTCG source: the
+ * output directories, the CSS-property prefix, and the alias source documents.
+ */
+interface EmitContext {
+  scssDirectory: string;
+  tsDirectory: string;
+  prefix: string;
+  fontDocument?: DtcgGroup;
+  paletteDocument?: DtcgGroup;
+}
+
+/**
+ * Write the SCSS (non-theme sources) and TypeScript artefacts for a single DTCG
+ * source. SCSS partials use the leading-underscore convention (`_<file>.scss`);
+ * each non-theme source also yields a CSS-free `_<file>-vars.scss` (the
+ * `$`-variables only). Theme SCSS is emitted once by the caller, after the loop.
+ */
+function writeSourceArtefacts(descriptor: SourceDescriptor, document_: DtcgGroup, context: EmitContext): void {
+  const { scssDirectory, tsDirectory, prefix, fontDocument, paletteDocument } = context;
+  if (descriptor.kind === 'structural' || descriptor.kind === 'typography') {
+    const records =
+      descriptor.kind === 'typography'
+        ? buildTypographyRecords(document_.typography as DtcgGroup, prefix)
+        : flattenTokens(document_);
+    writeFileSync(join(scssDirectory, `_${descriptor.file}-vars.scss`), buildScssVariablesScss(records));
+    writeFileSync(
+      join(scssDirectory, `_${descriptor.file}.scss`),
+      buildStructuralScss(records, prefix, descriptor.file),
+    );
+  }
+  const aliasDocument =
+    descriptor.kind === 'typography' ? fontDocument : descriptor.kind === 'theme' ? paletteDocument : undefined;
+  writeFileSync(
+    join(tsDirectory, `${descriptor.file}.ts`),
+    buildTokenModule(descriptor.file, document_, aliasDocument),
+  );
+}
+
+/**
  * Generate every consumable token artefact from the DTCG sources:
  *   • `scss/_<file>.scss`  — one self-contained SCSS partial per non-theme source
  *   • `scss/_theme.scss`   — the combined `light-dark()` theme partial
@@ -90,6 +129,7 @@ export function generateTokens(options: TokensPluginOptions): void {
   mkdirSync(scssDirectory, { recursive: true });
   mkdirSync(tsDirectory, { recursive: true });
 
+  /** Read and parse a DTCG `<file>.tokens.json` source from {@link tokensDir}. */
   const read = (file: string): DtcgGroup =>
     JSON.parse(readFileSync(join(tokensDir, `${file}.tokens.json`), 'utf8')) as DtcgGroup;
 
@@ -100,31 +140,11 @@ export function generateTokens(options: TokensPluginOptions): void {
   const fontDocument = documents.get('font');
   const paletteDocument = documents.get('palette');
 
+  // The `@forward`/`@use` references omit the partial's leading underscore, as
+  // Sass resolves a partial from its unprefixed name.
+  const context: EmitContext = { scssDirectory, tsDirectory, prefix, fontDocument, paletteDocument };
   for (const descriptor of descriptors) {
-    const document_ = documents.get(descriptor.file) as DtcgGroup;
-    // SCSS partials use the leading-underscore convention (`_<file>.scss`); the
-    // `@forward`/`@use` references omit it, as Sass resolves a partial from its
-    // unprefixed name. Each non-theme source also yields a CSS-free
-    // `_<file>-vars.scss` (the `$`-variables only) so internal consumers can read
-    // a token's value at compile time without pulling in its `:root`/`@property`
-    // CSS. Theme SCSS is emitted once, after the loop.
-    if (descriptor.kind === 'structural' || descriptor.kind === 'typography') {
-      const records =
-        descriptor.kind === 'typography'
-          ? buildTypographyRecords(document_.typography as DtcgGroup, prefix)
-          : flattenTokens(document_);
-      writeFileSync(join(scssDirectory, `_${descriptor.file}-vars.scss`), buildScssVariablesScss(records));
-      writeFileSync(
-        join(scssDirectory, `_${descriptor.file}.scss`),
-        buildStructuralScss(records, prefix, descriptor.file),
-      );
-    }
-    const aliasDocument =
-      descriptor.kind === 'typography' ? fontDocument : descriptor.kind === 'theme' ? paletteDocument : undefined;
-    writeFileSync(
-      join(tsDirectory, `${descriptor.file}.ts`),
-      buildTokenModule(descriptor.file, document_, aliasDocument),
-    );
+    writeSourceArtefacts(descriptor, documents.get(descriptor.file) as DtcgGroup, context);
   }
 
   // Combined theme partial — `:root { color-scheme: light dark; --mp-color-*:
