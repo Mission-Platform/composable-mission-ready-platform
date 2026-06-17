@@ -60,6 +60,7 @@ const LOCALE_BCP47: Record<SupportedLocale, string> = {
   he: 'he-IL',
 };
 
+/** Build the canonical URL for a locale (the default locale maps to the site root). */
 const canonicalFor = (locale: SupportedLocale): string =>
   locale === DEFAULT_LOCALE ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}/${locale}/`;
 
