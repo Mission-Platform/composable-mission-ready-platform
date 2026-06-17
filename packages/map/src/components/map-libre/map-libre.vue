@@ -51,8 +51,8 @@
     contextmenu: [event: MapMouseEvent];
   }>();
 
-  const containerRef = shallowRef<HTMLDivElement | undefined>(undefined);
-  const map = shallowRef<Map | undefined>(undefined);
+  const containerRef = shallowRef<HTMLDivElement | undefined>();
+  const map = shallowRef<Map | undefined>();
 
   provide(mapKey, map);
 
