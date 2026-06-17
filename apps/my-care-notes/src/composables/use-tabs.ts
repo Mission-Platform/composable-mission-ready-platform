@@ -34,12 +34,12 @@ function saveToStorage(tabs: NoteTab[]): void {
   }
 }
 
-/** Read the persisted active-tab id, returning `null` when storage is unavailable (e.g. SSR/SSG). */
-function loadActiveTabId(): string | null {
+/** Read the persisted active-tab id, returning `undefined` when storage is unavailable (e.g. SSR/SSG). */
+function loadActiveTabId(): string | undefined {
   try {
-    return localStorage.getItem(ACTIVE_TAB_KEY);
+    return localStorage.getItem(ACTIVE_TAB_KEY) ?? undefined;
   } catch {
-    return null;
+    return undefined;
   }
 }
 

@@ -6,6 +6,17 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 import { APP_LOCALE_BCP47, APP_ORIGIN } from './src/seo-app';
 
+// Stub `monaco-editor` itself (incl. its deep `esm/...` entries and `?worker`
+// imports) — the sole source of the browser-only `.css` side-effect imports
+// that break Node's ESM loader. The harper/hunspell packages, which only
+// *re-export composables* alongside their static `monaco-editor` import, are
+// intentionally left real so their named exports (e.g. `useHarperMonaco`,
+// `useHunspellMonaco`) still resolve during the SSR build's static analysis.
+function shouldStubForSsr(id: string): boolean {
+  const base = id.split('?')[0] ?? id;
+  return base === 'monaco-editor' || base.startsWith('monaco-editor/');
+}
+
 /**
  * During the `vite-ssg` *server* build (and the JSDOM prerender that follows),
  * Vite runs the app through Node. `monaco-editor` pulls in browser-only ESM
@@ -23,23 +34,12 @@ import { APP_LOCALE_BCP47, APP_ORIGIN } from './src/seo-app';
 function ssrStubBrowserOnlyEditorPlugin(): Plugin {
   const STUB_ID = '\0mp-ssr-editor-stub';
 
-  // Stub `monaco-editor` itself (incl. its deep `esm/...` entries and `?worker`
-  // imports) — the sole source of the browser-only `.css` side-effect imports
-  // that break Node's ESM loader. The harper/hunspell packages, which only
-  // *re-export composables* alongside their static `monaco-editor` import, are
-  // intentionally left real so their named exports (e.g. `useHarperMonaco`,
-  // `useHunspellMonaco`) still resolve during the SSR build's static analysis.
-  const shouldStub = (id: string): boolean => {
-    const base = id.split('?')[0] ?? id;
-    return base === 'monaco-editor' || base.startsWith('monaco-editor/');
-  };
-
   return {
     name: 'mp-ssr-stub-browser-only-editor',
     enforce: 'pre',
     resolveId(id, _importer, options) {
-      if (options?.ssr && shouldStub(id)) return STUB_ID;
-      return null;
+      if (options?.ssr && shouldStubForSsr(id)) return STUB_ID;
+      return;
     },
     load(id) {
       if (id === STUB_ID) {
@@ -66,7 +66,7 @@ function ssrStubBrowserOnlyEditorPlugin(): Plugin {
           'export const Token = stub;',
         ].join('\n');
       }
-      return null;
+      return;
     },
   };
 }
