@@ -99,16 +99,25 @@ Development utility component that displays the current breakpoint in the corner
 
 ### SCSS Utilities
 
-The package exports SCSS variables and mixins for use in stylesheets:
+The breakpoint SCSS layer (variables, `bp-up`/`bp-down`/`bp-between`/`bp-only` mixins, and the
+`.bp-show-*`/`.bp-hide-*`/`.bp-only-*` visibility utility classes) now lives in
+`@mission-platform/tokens`, alongside the other design-token SCSS. Import it from there:
 
 ```scss
-@use '@mission-platform/breakpoints/scss/breakpoints' as *;
+// The $breakpoints map + mixins only (no emitted CSS):
+@use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 
-@media (min-width: breakpoint-value(md)) {
-  .container {
+.container {
+  @include bp.bp-up('md') {
     max-width: 1024px;
   }
 }
+
+// The .bp-show-*/.bp-hide-*/.bp-only-* visibility utility classes (emits CSS):
+@use '@mission-platform/tokens/scss/breakpoints-utilities';
 ```
+
+This package continues to export the responsive composables and components (`useBreakpoints`,
+`<ShowAt>`, `<HideAt>`, `<BreakpointDebug>`) described above.
 
 ## Usage

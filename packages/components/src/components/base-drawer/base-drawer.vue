@@ -302,196 +302,198 @@
 </template>
 
 <style lang="scss" scoped>
-  @use '@mission-platform/breakpoints/scss/mixins' as bp;
+  @use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 
-  /* Canonical 2xs → 2xl size scale, shared by width (start/end) and height
-     (top/bottom) placements. Mirrors `DRAWER_SIZE_REM` in `constants.ts`. */
-  $drawer-sizes: (
-    '2xs': 14rem,
-    'xs': 17rem,
-    'sm': 20rem,
-    'md': 25.714rem,
-    'lg': 34.286rem,
-    'xl': 45.714rem,
-    '2xl': 57rem,
-  );
+  @layer mp.components {
+    /* Canonical 2xs → 2xl size scale, shared by width (start/end) and height
+       (top/bottom) placements. Mirrors `DRAWER_SIZE_REM` in `constants.ts`. */
+    $drawer-sizes: (
+      '2xs': 14rem,
+      'xs': 17rem,
+      'sm': 20rem,
+      'md': 25.714rem,
+      'lg': 34.286rem,
+      'xl': 45.714rem,
+      '2xl': 57rem,
+    );
 
-  .base-drawer-backdrop {
-    position: fixed;
-    inset: 0;
-    background-color: var(--mp-color-bg-scrim-soft);
-  }
-
-  .base-drawer {
-    position: fixed;
-    background-color: var(--mp-color-bg-surface);
-    box-shadow: var(--mp-shadow-xl);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-
-    /* Horizontal placements (start/end): a full-height vertical panel.
-       On mobile it always spans the full viewport width. */
-    &--start,
-    &--end {
-      top: 0;
-      bottom: 0;
-      width: 100vw;
-      max-width: 100vw;
+    .base-drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: var(--mp-color-bg-scrim-soft);
     }
 
-    &--start {
-      inset-inline-start: 0;
-      border-inline-end: 1px solid var(--mp-color-border-default);
-    }
+    .base-drawer {
+      position: fixed;
+      background-color: var(--mp-color-bg-surface);
+      box-shadow: var(--mp-shadow-xl);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
 
-    &--end {
-      inset-inline-end: 0;
-      border-inline-start: 1px solid var(--mp-color-border-default);
-    }
-
-    /* Vertical placements (top/bottom): a full-width horizontal panel sized by
-       height. */
-    &--top,
-    &--bottom {
-      left: 0;
-      right: 0;
-      width: 100vw;
-      max-width: 100vw;
-      max-height: 100vh;
-    }
-
-    &--top {
-      top: 0;
-      border-bottom: 1px solid var(--mp-color-border-default);
-    }
-
-    &--bottom {
-      bottom: 0;
-      border-top: 1px solid var(--mp-color-border-default);
-    }
-
-    /* Named width variants for start/end: apply fixed widths only on sm+
-       (tablet/desktop); below that they span the full viewport width. */
-    @include bp.bp-up('sm') {
-      @each $size, $width in $drawer-sizes {
-        &--start.base-drawer--#{$size},
-        &--end.base-drawer--#{$size} {
-          width: $width;
-        }
-      }
-    }
-
-    /* Named height variants for top/bottom: applied at every breakpoint. */
-    @each $size, $height in $drawer-sizes {
-      &--top.base-drawer--#{$size},
-      &--bottom.base-drawer--#{$size} {
-        height: $height;
-      }
-    }
-
-    /* Inline, fixed-open variant: the drawer leaves the fixed overlay layer and
-       flows in place as a static panel that fills its container.  Used by
-       layout primitives (e.g. a three-column form builder) to render the
-       start/end panels inline on larger screens. */
-    &--inline {
-      // `relative` (rather than `static`) so the absolutely-positioned resize
-      // handle anchors to the panel while it still flows in place.
-      position: relative;
-      inset: auto;
-      width: 100%;
-      max-width: 100%;
-      height: 100%;
-      box-shadow: none;
-    }
-
-    /* Resize handle: a thin grab strip on the drawer's inner edge. */
-    &__resize-handle {
-      position: absolute;
-      z-index: 1;
-      touch-action: none;
-      background-color: transparent;
-      transition: background-color 150ms ease;
-
+      /* Horizontal placements (start/end): a full-height vertical panel.
+         On mobile it always spans the full viewport width. */
       &--start,
       &--end {
         top: 0;
         bottom: 0;
-        width: var(--mp-spacing-2);
-        cursor: ew-resize;
+        width: 100vw;
+        max-width: 100vw;
       }
 
       &--start {
-        right: 0;
+        inset-inline-start: 0;
+        border-inline-end: 1px solid var(--mp-color-border-default);
       }
 
       &--end {
-        left: 0;
+        inset-inline-end: 0;
+        border-inline-start: 1px solid var(--mp-color-border-default);
       }
 
+      /* Vertical placements (top/bottom): a full-width horizontal panel sized by
+         height. */
       &--top,
       &--bottom {
         left: 0;
         right: 0;
-        height: var(--mp-spacing-2);
-        cursor: ns-resize;
+        width: 100vw;
+        max-width: 100vw;
+        max-height: 100vh;
       }
 
       &--top {
-        bottom: 0;
+        top: 0;
+        border-bottom: 1px solid var(--mp-color-border-default);
       }
 
       &--bottom {
-        top: 0;
+        bottom: 0;
+        border-top: 1px solid var(--mp-color-border-default);
       }
 
-      &:hover,
-      &:active {
-        background-color: var(--mp-color-border-strong);
+      /* Named width variants for start/end: apply fixed widths only on sm+
+         (tablet/desktop); below that they span the full viewport width. */
+      @include bp.bp-up('sm') {
+        @each $size, $width in $drawer-sizes {
+          &--start.base-drawer--#{$size},
+          &--end.base-drawer--#{$size} {
+            width: $width;
+          }
+        }
+      }
+
+      /* Named height variants for top/bottom: applied at every breakpoint. */
+      @each $size, $height in $drawer-sizes {
+        &--top.base-drawer--#{$size},
+        &--bottom.base-drawer--#{$size} {
+          height: $height;
+        }
+      }
+
+      /* Inline, fixed-open variant: the drawer leaves the fixed overlay layer and
+         flows in place as a static panel that fills its container.  Used by
+         layout primitives (e.g. a three-column form builder) to render the
+         start/end panels inline on larger screens. */
+      &--inline {
+        // `relative` (rather than `static`) so the absolutely-positioned resize
+        // handle anchors to the panel while it still flows in place.
+        position: relative;
+        inset: auto;
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        box-shadow: none;
+      }
+
+      /* Resize handle: a thin grab strip on the drawer's inner edge. */
+      &__resize-handle {
+        position: absolute;
+        z-index: 1;
+        touch-action: none;
+        background-color: transparent;
+        transition: background-color 150ms ease;
+
+        &--start,
+        &--end {
+          top: 0;
+          bottom: 0;
+          width: var(--mp-spacing-2);
+          cursor: ew-resize;
+        }
+
+        &--start {
+          right: 0;
+        }
+
+        &--end {
+          left: 0;
+        }
+
+        &--top,
+        &--bottom {
+          left: 0;
+          right: 0;
+          height: var(--mp-spacing-2);
+          cursor: ns-resize;
+        }
+
+        &--top {
+          bottom: 0;
+        }
+
+        &--bottom {
+          top: 0;
+        }
+
+        &:hover,
+        &:active {
+          background-color: var(--mp-color-border-strong);
+        }
       }
     }
-  }
 
-  /* Transitions */
-  .base-drawer-fade-enter-active,
-  .base-drawer-fade-leave-active {
-    transition: opacity 250ms ease;
-  }
+    /* Transitions */
+    .base-drawer-fade-enter-active,
+    .base-drawer-fade-leave-active {
+      transition: opacity 250ms ease;
+    }
 
-  .base-drawer-fade-enter-from,
-  .base-drawer-fade-leave-to {
-    opacity: 0;
-  }
+    .base-drawer-fade-enter-from,
+    .base-drawer-fade-leave-to {
+      opacity: 0;
+    }
 
-  .base-drawer-slide-start-enter-active,
-  .base-drawer-slide-start-leave-active,
-  .base-drawer-slide-end-enter-active,
-  .base-drawer-slide-end-leave-active,
-  .base-drawer-slide-top-enter-active,
-  .base-drawer-slide-top-leave-active,
-  .base-drawer-slide-bottom-enter-active,
-  .base-drawer-slide-bottom-leave-active {
-    transition: transform 250ms ease;
-  }
+    .base-drawer-slide-start-enter-active,
+    .base-drawer-slide-start-leave-active,
+    .base-drawer-slide-end-enter-active,
+    .base-drawer-slide-end-leave-active,
+    .base-drawer-slide-top-enter-active,
+    .base-drawer-slide-top-leave-active,
+    .base-drawer-slide-bottom-enter-active,
+    .base-drawer-slide-bottom-leave-active {
+      transition: transform 250ms ease;
+    }
 
-  .base-drawer-slide-start-enter-from,
-  .base-drawer-slide-start-leave-to {
-    transform: translateX(-100%);
-  }
+    .base-drawer-slide-start-enter-from,
+    .base-drawer-slide-start-leave-to {
+      transform: translateX(-100%);
+    }
 
-  .base-drawer-slide-end-enter-from,
-  .base-drawer-slide-end-leave-to {
-    transform: translateX(100%);
-  }
+    .base-drawer-slide-end-enter-from,
+    .base-drawer-slide-end-leave-to {
+      transform: translateX(100%);
+    }
 
-  .base-drawer-slide-top-enter-from,
-  .base-drawer-slide-top-leave-to {
-    transform: translateY(-100%);
-  }
+    .base-drawer-slide-top-enter-from,
+    .base-drawer-slide-top-leave-to {
+      transform: translateY(-100%);
+    }
 
-  .base-drawer-slide-bottom-enter-from,
-  .base-drawer-slide-bottom-leave-to {
-    transform: translateY(100%);
+    .base-drawer-slide-bottom-enter-from,
+    .base-drawer-slide-bottom-leave-to {
+      transform: translateY(100%);
+    }
   }
 </style>
 

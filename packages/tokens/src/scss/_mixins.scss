@@ -14,11 +14,19 @@
 
 /*   font-size: mp.mp-rem(14px); */
 
+/* These mixins/functions resolve to the generated `--mp-*` design-token CSS */
+
+/* custom properties (from `@mission-platform/tokens/scss/tokens`) rather than */
+
+/* the underlying SCSS `$`-variables, so a runtime token override (e.g. via */
+
+/* `BaseThemeComposer`) flows through automatically. */
+
 /* ============================================================================= */
 
 @use 'sass:math';
 @use 'sass:map';
-@use 'typography' as ty;
+@use '../generated/scss/font-vars' as font;
 
 /* ----------------------------------------------------------------------------- */
 
@@ -26,45 +34,49 @@
 
 /* ----------------------------------------------------------------------------- */
 
-/* Converts a pixel value to rem (base 16 px). */
+/* Converts a pixel value to rem, relative to the base root font-size */
+
+/* (the generated `font.size.base` token — currently 14px — set on :root by */
+
+/* `scss/tokens`), so the result renders at the requested pixel size. */
 
 /* @param {Number} $px - Value in pixels (unitless or with px unit). */
 
 /* @return {Number} Value in rem. */
 @function mp-rem($px) {
   @if math.unit($px) == 'px' {
-    @return math.div($px, 16px) * 1rem;
+    @return math.div($px, font.$font-size-base) * 1rem;
   }
 
-  @return math.div($px, 16) * 1rem;
+  @return math.div($px, math.div(font.$font-size-base, 1px)) * 1rem;
 }
 
 /* ----------------------------------------------------------------------------- */
 
-/* Lookup functions — retrieve a token by semantic name */
+/* Lookup functions — retrieve a token custom property by semantic name */
 
 /* ----------------------------------------------------------------------------- */
 
-/* Returns a font-size token by variant name. */
+/* Returns a font-size token custom property by variant name. */
 
 /* Throws a compile-time error for unknown variants. */
 
 /* @param {String} $variant - One of: display h1 h2 h3 h4 h5 body-lg body-md body-sm body-xs label caption code */
 @function mp-font-size($variant) {
   $map: (
-    'display': ty.$font-size-5xl,
-    /* 3rem   / 48px */ 'h1': ty.$font-size-4xl,
-    /* 2.25rem / 36px */ 'h2': ty.$font-size-3xl,
-    /* 1.875rem / 30px */ 'h3': ty.$font-size-2xl,
-    /* 1.5rem  / 24px */ 'h4': ty.$font-size-xl,
-    /* 1.25rem / 20px */ 'h5': ty.$font-size-lg,
-    /* 1.125rem / 18px */ 'body-lg': ty.$font-size-lg,
-    /* 1.125rem / 18px */ 'body-md': ty.$font-size-md,
-    /* 1rem     / 16px */ 'body-sm': ty.$font-size-sm,
-    /* 0.875rem / 14px */ 'body-xs': ty.$font-size-xs,
-    /* 0.75rem  / 12px */ 'label': ty.$font-size-sm,
-    /* 0.875rem / 14px */ 'caption': ty.$font-size-xs,
-    /* 0.75rem  / 12px */ 'code': ty.$font-size-sm /* 0.875rem / 14px */,
+    'display': var(--mp-font-size-5xl),
+    /* 3rem   / 48px */ 'h1': var(--mp-font-size-4xl),
+    /* 2.25rem / 36px */ 'h2': var(--mp-font-size-3xl),
+    /* 1.875rem / 30px */ 'h3': var(--mp-font-size-2xl),
+    /* 1.5rem  / 24px */ 'h4': var(--mp-font-size-xl),
+    /* 1.25rem / 20px */ 'h5': var(--mp-font-size-lg),
+    /* 1.125rem / 18px */ 'body-lg': var(--mp-font-size-lg),
+    /* 1.125rem / 18px */ 'body-md': var(--mp-font-size-md),
+    /* 1rem     / 16px */ 'body-sm': var(--mp-font-size-sm),
+    /* 0.875rem / 14px */ 'body-xs': var(--mp-font-size-xs),
+    /* 0.75rem  / 12px */ 'label': var(--mp-font-size-sm),
+    /* 0.875rem / 14px */ 'caption': var(--mp-font-size-xs),
+    /* 0.75rem  / 12px */ 'code': var(--mp-font-size-sm) /* 0.875rem / 14px */,
   );
 
   @if not map.has-key($map, $variant) {
@@ -74,15 +86,15 @@
   @return map.get($map, $variant);
 }
 
-/* Returns a font-weight token by name. */
+/* Returns a font-weight token custom property by name. */
 
 /* @param {String} $weight - One of: regular medium semibold bold */
 @function mp-font-weight($weight) {
   $map: (
-    'regular': ty.$font-weight-regular,
-    'medium': ty.$font-weight-medium,
-    'semibold': ty.$font-weight-semibold,
-    'bold': ty.$font-weight-bold,
+    'regular': var(--mp-font-weight-regular),
+    'medium': var(--mp-font-weight-medium),
+    'semibold': var(--mp-font-weight-semibold),
+    'bold': var(--mp-font-weight-bold),
   );
 
   @if not map.has-key($map, $weight) {
@@ -92,17 +104,17 @@
   @return map.get($map, $weight);
 }
 
-/* Returns a line-height token by name. */
+/* Returns a line-height token custom property by name. */
 
 /* @param {String} $scale - One of: tight snug normal relaxed loose code */
 @function mp-line-height($scale) {
   $map: (
-    'tight': ty.$line-height-tight,
-    'snug': ty.$line-height-snug,
-    'normal': ty.$line-height-normal,
-    'relaxed': ty.$line-height-relaxed,
-    'loose': ty.$line-height-loose,
-    'code': ty.$line-height-snug /* code blocks use snug line-height */,
+    'tight': var(--mp-line-height-tight),
+    'snug': var(--mp-line-height-snug),
+    'normal': var(--mp-line-height-normal),
+    'relaxed': var(--mp-line-height-relaxed),
+    'loose': var(--mp-line-height-loose),
+    'code': var(--mp-line-height-snug) /* code blocks use snug line-height */,
   );
 
   @if not map.has-key($map, $scale) {
@@ -112,23 +124,23 @@
   @return map.get($map, $scale);
 }
 
-/* Returns a letter-spacing token by name. */
+/* Returns a letter-spacing token custom property by name. */
 
 /* @param {String} $scale - One of: tight normal wide wider widest */
 
 /*                          Semantic aliases: display heading body caption code */
 @function mp-letter-spacing($scale) {
   $map: (
-    /* Raw scale */ 'tight': ty.$letter-spacing-tight,
-    'normal': ty.$letter-spacing-normal,
-    'wide': ty.$letter-spacing-wide,
-    'wider': ty.$letter-spacing-wider,
-    'widest': ty.$letter-spacing-widest,
-    /* Semantic aliases */ 'display': ty.$letter-spacing-tight,
-    'heading': ty.$letter-spacing-tight,
-    'body': ty.$letter-spacing-normal,
-    'caption': ty.$letter-spacing-wide,
-    'code': ty.$letter-spacing-normal
+    /* Raw scale */ 'tight': var(--mp-letter-spacing-tight),
+    'normal': var(--mp-letter-spacing-normal),
+    'wide': var(--mp-letter-spacing-wide),
+    'wider': var(--mp-letter-spacing-wider),
+    'widest': var(--mp-letter-spacing-widest),
+    /* Semantic aliases */ 'display': var(--mp-letter-spacing-tight),
+    'heading': var(--mp-letter-spacing-tight),
+    'body': var(--mp-letter-spacing-normal),
+    'caption': var(--mp-letter-spacing-wide),
+    'code': var(--mp-letter-spacing-normal)
   );
 
   @if not map.has-key($map, $scale) {
@@ -144,7 +156,7 @@
 
 /* ----------------------------------------------------------------------------- */
 
-/* Applies a complete font style using token primitives. */
+/* Applies a complete font style using the token custom properties. */
 
 /* @param {String} $variant      - Typography variant key (see mp-font-size). */
 
@@ -157,8 +169,8 @@
 /* @param {String} $tracking     - Letter-spacing key (default: body). */
 @mixin mp-font($variant, $family: 'sans', $weight: 'regular', $line-height: 'normal', $tracking: 'body') {
   $family-map: (
-    'sans': ty.$font-family-sans,
-    'mono': ty.$font-family-mono,
+    'sans': var(--mp-font-family-sans),
+    'mono': var(--mp-font-family-mono),
   );
 
   @if not map.has-key($family-map, $family) {
@@ -180,39 +192,14 @@
 
 /* ----------------------------------------------------------------------------- */
 
-/* Display — hero / marketing headline. */
-@mixin mp-font-display {
-  @include mp-font('display', $weight: 'bold', $line-height: 'tight', $tracking: 'display');
-}
-
 /* Heading level 1. */
 @mixin mp-font-h1 {
   @include mp-font('h1', $weight: 'semibold', $line-height: 'tight', $tracking: 'heading');
 }
 
-/* Heading level 2. */
-@mixin mp-font-h2 {
-  @include mp-font('h2', $weight: 'semibold', $line-height: 'tight', $tracking: 'heading');
-}
-
 /* Heading level 3. */
 @mixin mp-font-h3 {
   @include mp-font('h3', $weight: 'medium', $line-height: 'snug', $tracking: 'heading');
-}
-
-/* Heading level 4. */
-@mixin mp-font-h4 {
-  @include mp-font('h4', $weight: 'medium', $line-height: 'snug', $tracking: 'heading');
-}
-
-/* Heading level 5. */
-@mixin mp-font-h5 {
-  @include mp-font('h5', $weight: 'medium', $line-height: 'snug', $tracking: 'body');
-}
-
-/* Body large — introductory / lead text. */
-@mixin mp-font-body-lg {
-  @include mp-font('body-lg', $line-height: 'relaxed', $tracking: 'body');
 }
 
 /* Body medium — default body copy. */
@@ -223,11 +210,6 @@
 /* Body small — secondary body copy. */
 @mixin mp-font-body-sm {
   @include mp-font('body-sm', $line-height: 'normal', $tracking: 'body');
-}
-
-/* Body extra-small — fine print. */
-@mixin mp-font-body-xs {
-  @include mp-font('body-xs', $line-height: 'snug', $tracking: 'caption');
 }
 
 /* Label — form labels, table headers, navigation items. */
@@ -257,11 +239,11 @@
 
 /* normal line-height and body letter-spacing, plus font-rendering optimisations. */
 @mixin mp-font-base {
-  font-family: ty.$font-family-sans;
-  font-size: ty.$font-size-md;
-  font-weight: ty.$font-weight-regular;
-  line-height: ty.$line-height-normal;
-  letter-spacing: ty.$letter-spacing-normal;
+  font-family: var(--mp-font-family-sans);
+  font-size: var(--mp-font-size-base);
+  font-weight: var(--mp-font-weight-regular);
+  line-height: var(--mp-line-height-normal);
+  letter-spacing: var(--mp-letter-spacing-normal);
   font-synthesis: none;
   text-rendering: optimizelegibility;
   -webkit-font-smoothing: antialiased;

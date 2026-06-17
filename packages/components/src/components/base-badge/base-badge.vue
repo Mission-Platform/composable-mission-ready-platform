@@ -48,67 +48,69 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--mp-spacing-1);
-    border-radius: var(--mp-radius-sm);
-    font-family: var(--mp-font-family-sans);
-    line-height: var(--mp-line-height-tight);
-    white-space: nowrap;
+  @layer mp.components {
+    .base-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--mp-spacing-1);
+      border-radius: var(--mp-radius-sm);
+      font-family: var(--mp-font-family-sans);
+      line-height: var(--mp-line-height-tight);
+      white-space: nowrap;
 
-    &--pill {
-      border-radius: var(--mp-radius-full);
-    }
-
-    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
-    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
-      &--#{$size} {
-        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
-        font-size: var(--mp-size-font-#{$size});
+      &--pill {
+        border-radius: var(--mp-radius-full);
       }
-    }
 
-    /* Variants */
-    @mixin tone($family) {
-      background-color: var(--mp-color-#{$family}-muted);
-      color: var(--mp-color-#{$family}-text);
-    }
+      /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+      @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+        &--#{$size} {
+          padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+          font-size: var(--mp-size-font-#{$size});
+        }
+      }
 
-    &--default {
-      @include tone('default');
-    }
+      /* Variants */
+      @mixin tone($family) {
+        background-color: var(--mp-color-#{$family}-muted);
+        color: var(--mp-color-#{$family}-text);
+      }
 
-    &--primary {
-      @include tone('primary');
-    }
+      &--default {
+        @include tone('default');
+      }
 
-    &--secondary {
-      @include tone('secondary');
-    }
+      &--primary {
+        @include tone('primary');
+      }
 
-    &--tertiary {
-      @include tone('tertiary');
-    }
+      &--secondary {
+        @include tone('secondary');
+      }
 
-    &--success {
-      @include tone('success');
-    }
+      &--tertiary {
+        @include tone('tertiary');
+      }
 
-    &--warning {
-      @include tone('warning');
-    }
+      &--success {
+        @include tone('success');
+      }
 
-    &--information {
-      @include tone('information');
-    }
+      &--warning {
+        @include tone('warning');
+      }
 
-    &--error {
-      @include tone('error');
-    }
+      &--information {
+        @include tone('information');
+      }
 
-    &--critical {
-      @include tone('critical');
+      &--error {
+        @include tone('error');
+      }
+
+      &--critical {
+        @include tone('critical');
+      }
     }
   }
 </style>

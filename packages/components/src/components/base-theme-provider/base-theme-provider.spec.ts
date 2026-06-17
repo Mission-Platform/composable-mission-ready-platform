@@ -10,12 +10,14 @@ import type { Theme } from '../../composables/use-theme';
 
 beforeEach(() => {
   delete document.documentElement.dataset.theme;
+  document.documentElement.style.removeProperty('color-scheme');
   localStorage.clear();
   resetThemeStore();
 });
 
 afterEach(() => {
   delete document.documentElement.dataset.theme;
+  document.documentElement.style.removeProperty('color-scheme');
   localStorage.clear();
   resetThemeStore();
 });
@@ -29,6 +31,20 @@ describe('BaseThemeProvider', () => {
   it('removes data-theme for the auto theme', () => {
     mount(BaseThemeProvider, { props: { defaultTheme: 'auto', persist: false } });
     expect(document.documentElement.dataset.theme).toBeUndefined();
+  });
+
+  it('pins color-scheme to an explicit theme and lets auto follow the OS', async () => {
+    const wrapper = mount(BaseThemeProvider, {
+      props: { defaultTheme: 'dark', persist: false },
+      slots: {
+        default: (slotProperties: { setTheme: (t: Theme) => void }) =>
+          h('button', { onClick: () => slotProperties.setTheme('auto') }, 'auto'),
+      },
+    });
+    expect(document.documentElement.style.colorScheme).toBe('dark');
+    await wrapper.find('button').trigger('click');
+    // 'auto' lets the root follow prefers-color-scheme via `light dark`.
+    expect(document.documentElement.style.colorScheme).toBe('light dark');
   });
 
   it('respects a pre-applied data-theme attribute over the default (SSR-friendly)', () => {
@@ -68,6 +84,21 @@ describe('BaseThemeProvider', () => {
       slots: { default: () => h(Child) },
     });
     expect(wrapper.find('span').text()).toBe('dark');
+  });
+
+  it('scopes the theme to its wrapper element (not <html>) when global is false', () => {
+    const wrapper = mount(BaseThemeProvider, {
+      props: { global: false, defaultTheme: 'dark', persist: false },
+      attachTo: document.body,
+      slots: { default: () => h('span', 'child') },
+    });
+    const root = wrapper.find('.base-theme-provider');
+    expect(root.exists()).toBe(true);
+    expect((root.element as HTMLElement).dataset.theme).toBe('dark');
+    expect((root.element as HTMLElement).style.colorScheme).toBe('dark');
+    // The document root is left untouched in scoped mode.
+    expect(document.documentElement.dataset.theme).toBeUndefined();
+    wrapper.unmount();
   });
 
   it('cycles light → dark → auto', async () => {

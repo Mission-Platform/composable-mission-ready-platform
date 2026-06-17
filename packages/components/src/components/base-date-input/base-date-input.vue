@@ -344,253 +344,255 @@
 <style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
-  .base-date-input {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-1);
-    position: relative;
-
-    &__label {
+  @layer mp.components {
+    .base-date-input {
       display: flex;
-      align-items: center;
-      gap: 2px;
+      flex-direction: column;
+      gap: var(--mp-spacing-1);
+      position: relative;
 
-      &--hidden {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip-path: inset(50%);
-        white-space: nowrap;
-        border: 0;
-      }
-    }
+      &__label {
+        display: flex;
+        align-items: center;
+        gap: 2px;
 
-    &__required {
-      color: var(--mp-color-danger-default);
-      margin-left: 2px;
-    }
-
-    &__wrapper {
-      display: flex;
-      align-items: center;
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background-color: var(--mp-color-bg-surface);
-      transition:
-        border-color 150ms ease,
-        box-shadow 150ms ease;
-
-      &:focus-within {
-        border-color: var(--mp-color-border-focus);
-        box-shadow: var(--mp-shadow-focus-primary);
-      }
-    }
-
-    &__trigger {
-      display: flex;
-      flex: 1;
-      min-width: 0;
-      align-items: center;
-      justify-content: space-between;
-      appearance: none;
-      width: 100%;
-      text-align: left;
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      user-select: none;
-
-      &:focus {
-        outline: none;
-      }
-
-      &:hover {
-        filter: brightness(0.97);
-      }
-    }
-
-    /* Leading / trailing extension areas (icons, units, or buttons). */
-    &__extension {
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
-      color: var(--mp-color-text-secondary);
-
-      &--start {
-        margin-inline-start: var(--mp-spacing-2);
-      }
-
-      &--end {
-        margin-inline-end: var(--mp-spacing-2);
-      }
-    }
-
-    &__value {
-      @include mp.mp-font-body-md;
-
-      color: var(--mp-color-text-primary);
-
-      &--placeholder {
-        color: var(--mp-color-text-tertiary);
-      }
-    }
-
-    &__icon {
-      color: var(--mp-color-text-secondary);
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
-    }
-
-    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
-    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
-      &--#{$size} .base-date-input__trigger {
-        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
-
-        .base-date-input__value {
-          font-size: var(--mp-size-font-#{$size});
+        &--hidden {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip-path: inset(50%);
+          white-space: nowrap;
+          border: 0;
         }
       }
-    }
 
-    /* States */
-    &--error .base-date-input__wrapper {
-      border-color: var(--mp-color-danger-default);
-
-      &:focus-within {
-        box-shadow: var(--mp-shadow-focus-danger);
+      &__required {
+        color: var(--mp-color-danger-default);
+        margin-left: 2px;
       }
-    }
 
-    &--disabled {
-      opacity: 0.5;
-      pointer-events: none;
+      &__wrapper {
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-md);
+        background-color: var(--mp-color-bg-surface);
+        transition:
+          border-color 150ms ease,
+          box-shadow 150ms ease;
 
-      .base-date-input__wrapper {
-        background-color: var(--mp-color-bg-muted);
-        cursor: not-allowed;
+        &:focus-within {
+          border-color: var(--mp-color-border-focus);
+          box-shadow: var(--mp-shadow-focus-primary);
+        }
       }
-    }
 
-    &__error {
-      color: var(--mp-color-danger-text);
-      margin: 0;
-    }
+      &__trigger {
+        display: flex;
+        flex: 1;
+        min-width: 0;
+        align-items: center;
+        justify-content: space-between;
+        appearance: none;
+        width: 100%;
+        text-align: left;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        user-select: none;
 
-    &__hint {
-      margin: 0;
-    }
+        &:focus {
+          outline: none;
+        }
 
-    /* Calendar */
-    &__calendar {
-      position: fixed;
-      background: var(--mp-color-bg-surface);
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-lg);
-      box-shadow: var(--mp-shadow-lg);
-      padding: var(--mp-spacing-3);
-      min-width: 280px;
-    }
+        &:hover {
+          filter: brightness(0.97);
+        }
+      }
 
-    &__cal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: var(--mp-spacing-2);
-    }
+      /* Leading / trailing extension areas (icons, units, or buttons). */
+      &__extension {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        color: var(--mp-color-text-secondary);
 
-    &__nav-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      border: none;
-      background: transparent;
-      border-radius: var(--mp-radius-sm);
-      cursor: pointer;
-      color: var(--mp-color-text-secondary);
-      transition:
-        background-color 150ms ease,
-        color 150ms ease;
+        &--start {
+          margin-inline-start: var(--mp-spacing-2);
+        }
 
-      &:hover {
-        background-color: var(--mp-color-bg-muted);
+        &--end {
+          margin-inline-end: var(--mp-spacing-2);
+        }
+      }
+
+      &__value {
+        @include mp.mp-font-body-md;
+
         color: var(--mp-color-text-primary);
+
+        &--placeholder {
+          color: var(--mp-color-text-tertiary);
+        }
       }
 
-      &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
-        outline-offset: 2px;
-      }
-    }
-
-    &__cal-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 2px;
-    }
-
-    &__weekday {
-      @include mp.mp-font-caption;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 32px;
-      font-weight: var(--mp-font-weight-medium);
-      color: var(--mp-color-text-tertiary);
-    }
-
-    &__day {
-      @include mp.mp-font-body-sm;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 32px;
-      width: 100%;
-      border: none;
-      background: transparent;
-      border-radius: var(--mp-radius-sm);
-      cursor: pointer;
-      color: var(--mp-color-text-primary);
-      transition:
-        background-color 150ms ease,
-        color 150ms ease;
-
-      &--empty {
-        pointer-events: none;
+      &__icon {
+        color: var(--mp-color-text-secondary);
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
       }
 
-      &--selected {
-        background-color: var(--mp-color-primary-default);
-        color: var(--mp-color-text-on-primary);
-        font-weight: var(--mp-font-weight-semibold);
+      /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+      @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+        &--#{$size} .base-date-input__trigger {
+          padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+
+          .base-date-input__value {
+            font-size: var(--mp-size-font-#{$size});
+          }
+        }
       }
 
-      &--today {
-        background-color: color-mix(in srgb, var(--mp-color-primary-default) 12%, transparent);
-        color: var(--mp-color-primary-default);
-        font-weight: var(--mp-font-weight-semibold);
+      /* States */
+      &--error .base-date-input__wrapper {
+        border-color: var(--mp-color-danger-default);
+
+        &:focus-within {
+          box-shadow: var(--mp-shadow-focus-danger);
+        }
       }
 
       &--disabled {
-        opacity: 0.3;
-        cursor: not-allowed;
+        opacity: 0.5;
         pointer-events: none;
+
+        .base-date-input__wrapper {
+          background-color: var(--mp-color-bg-muted);
+          cursor: not-allowed;
+        }
       }
 
-      &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
-        outline-offset: 2px;
+      &__error {
+        color: var(--mp-color-danger-text);
+        margin: 0;
       }
 
-      &:hover:not(:disabled, .base-date-input__day--selected) {
-        background-color: var(--mp-color-bg-muted);
+      &__hint {
+        margin: 0;
+      }
+
+      /* Calendar */
+      &__calendar {
+        position: fixed;
+        background: var(--mp-color-bg-surface);
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-lg);
+        box-shadow: var(--mp-shadow-lg);
+        padding: var(--mp-spacing-3);
+        min-width: 280px;
+      }
+
+      &__cal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: var(--mp-spacing-2);
+      }
+
+      &__nav-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border: none;
+        background: transparent;
+        border-radius: var(--mp-radius-sm);
+        cursor: pointer;
+        color: var(--mp-color-text-secondary);
+        transition:
+          background-color 150ms ease,
+          color 150ms ease;
+
+        &:hover {
+          background-color: var(--mp-color-bg-muted);
+          color: var(--mp-color-text-primary);
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--mp-color-border-focus);
+          outline-offset: 2px;
+        }
+      }
+
+      &__cal-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+      }
+
+      &__weekday {
+        @include mp.mp-font-caption;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 32px;
+        font-weight: var(--mp-font-weight-medium);
+        color: var(--mp-color-text-tertiary);
+      }
+
+      &__day {
+        @include mp.mp-font-body-sm;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 32px;
+        width: 100%;
+        border: none;
+        background: transparent;
+        border-radius: var(--mp-radius-sm);
+        cursor: pointer;
+        color: var(--mp-color-text-primary);
+        transition:
+          background-color 150ms ease,
+          color 150ms ease;
+
+        &--empty {
+          pointer-events: none;
+        }
+
+        &--selected {
+          background-color: var(--mp-color-primary-default);
+          color: var(--mp-color-text-on-primary);
+          font-weight: var(--mp-font-weight-semibold);
+        }
+
+        &--today {
+          background-color: color-mix(in srgb, var(--mp-color-primary-default) 12%, transparent);
+          color: var(--mp-color-primary-default);
+          font-weight: var(--mp-font-weight-semibold);
+        }
+
+        &--disabled {
+          opacity: 0.3;
+          cursor: not-allowed;
+          pointer-events: none;
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--mp-color-border-focus);
+          outline-offset: 2px;
+        }
+
+        &:hover:not(:disabled, .base-date-input__day--selected) {
+          background-color: var(--mp-color-bg-muted);
+        }
       }
     }
   }

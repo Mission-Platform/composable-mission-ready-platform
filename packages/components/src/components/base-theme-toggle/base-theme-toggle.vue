@@ -3,14 +3,23 @@
    * `BaseThemeToggle` — Theme toggle component for the Mission Platform UI.
    *
    * Cycles between three states: `light` → `dark` → `auto` → `light`.
-   * The `auto` state removes the explicit `data-theme` attribute from
-   * `<html>` so the UI follows the user's system `prefers-color-scheme`.
+   * The `auto` state follows the user's system `prefers-color-scheme`.
+   *
+   * It is backed by the shared theme store (`useTheme`): clicking it drives the
+   * same store that `BaseThemeProvider` shares, so it persists the preference,
+   * pins the `color-scheme` (and the `<meta name="color-scheme">`), and stays in
+   * sync with the system theme — rather than hand-rolling its own `data-theme`
+   * manipulation. When rendered inside a `BaseThemeProvider` it controls that
+   * provider's store (including a subtree-scoped, non-global provider); used
+   * standalone it controls the shared fallback store.
    *
    * See the props, emits, and slots tables below (auto-generated from
    * the component's TypeScript declarations) for the full public API,
    * and refer to the linked stories for usage examples.
    */
-  import { computed, onMounted, onUnmounted, ref } from 'vue';
+  import { computed } from 'vue';
+
+  import { useTheme } from '../../composables/use-theme';
 
   export type Theme = 'light' | 'dark' | 'auto';
 
@@ -27,23 +36,10 @@
     change: [theme: Theme];
   }>();
 
-  function readTheme(): Theme {
-    if (typeof document === 'undefined') return 'auto';
-    const attribute = document.documentElement.getAttribute('data-theme');
-    if (attribute === 'light' || attribute === 'dark') return attribute;
-    return 'auto';
-  }
+  const store = useTheme();
+  const theme = store.theme;
 
-  const theme = ref<Theme>(readTheme());
-
-  function applyTheme(next: Theme): void {
-    if (next === 'auto') {
-      document.documentElement.removeAttribute('data-theme');
-    } else {
-      document.documentElement.setAttribute('data-theme', next);
-    }
-  }
-
+  /** Resolve the next theme in the `light` → `dark` → `auto` → `light` cycle. */
   function nextTheme(current: Theme): Theme {
     if (current === 'light') return 'dark';
     if (current === 'dark') return 'auto';
@@ -51,10 +47,10 @@
   }
 
   function toggle() {
-    const next = nextTheme(theme.value);
-    applyTheme(next);
-    theme.value = next;
-    emit('change', next);
+    // Delegates to the shared store, which applies `data-theme`/`color-scheme`,
+    // syncs the `<meta>`, and persists the preference.
+    store.cycleTheme();
+    emit('change', theme.value);
   }
 
   const resolvedAriaLabel = computed(() => {
@@ -69,24 +65,6 @@
     if (theme.value === 'light') return 'Light mode';
     if (theme.value === 'dark') return 'Dark mode';
     return 'Auto mode';
-  });
-
-  let observer: MutationObserver | null = null;
-
-  onMounted(() => {
-    theme.value = readTheme();
-    observer = new MutationObserver(() => {
-      theme.value = readTheme();
-    });
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme'],
-    });
-  });
-
-  onUnmounted(() => {
-    observer?.disconnect();
-    observer = null;
   });
 </script>
 
@@ -148,43 +126,45 @@
 <style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
-  .theme-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--mp-spacing-2);
-    padding: var(--mp-spacing-2) var(--mp-spacing-3);
-    background-color: var(--mp-color-bg-surface);
-    color: var(--mp-color-text-primary);
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-    cursor: pointer;
-    font: inherit;
-    transition:
-      background-color 150ms ease,
-      border-color 150ms ease,
-      color 150ms ease;
-
-    &:hover {
-      background-color: var(--mp-color-bg-muted);
-      border-color: var(--mp-color-border-strong);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--mp-color-border-focus);
-      outline-offset: 2px;
-    }
-
-    &__icon {
-      display: flex;
+  @layer mp.components {
+    .theme-toggle {
+      display: inline-flex;
       align-items: center;
-      flex-shrink: 0;
-      color: var(--mp-color-text-secondary);
-    }
+      gap: var(--mp-spacing-2);
+      padding: var(--mp-spacing-2) var(--mp-spacing-3);
+      background-color: var(--mp-color-bg-surface);
+      color: var(--mp-color-text-primary);
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-md);
+      cursor: pointer;
+      font: inherit;
+      transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease;
 
-    &__label {
-      @include mp.mp-font-label;
+      &:hover {
+        background-color: var(--mp-color-bg-muted);
+        border-color: var(--mp-color-border-strong);
+      }
 
-      white-space: nowrap;
+      &:focus-visible {
+        outline: 2px solid var(--mp-color-border-focus);
+        outline-offset: 2px;
+      }
+
+      &__icon {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        color: var(--mp-color-text-secondary);
+      }
+
+      &__label {
+        @include mp.mp-font-label;
+
+        white-space: nowrap;
+      }
     }
   }
 </style>

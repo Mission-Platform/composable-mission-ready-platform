@@ -9,3 +9,10 @@ dist/
 # Generated SEO artifacts (produced by each app's `pnpm seo:generate`)
 apps/*/public/robots.txt
 apps/*/public/sitemap.xml
+
+# Junie (JetBrains AI agent) local & runtime artifacts.
+# Shared config (guidelines.md, skills/, extensions.json) stays tracked;
+# per-developer memory, per-task plans, and machine-local MCP config do not.
+**/.junie/memory/
+**/.junie/plans/
+**/.junie/mcp/

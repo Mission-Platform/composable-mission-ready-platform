@@ -442,8 +442,8 @@ export type { ZLayerName } from './composables/use-z-index';
 
 export { useReducedMotion, prefersReducedMotion } from './composables/use-reduced-motion';
 
-export { useTheme, createThemeStore, resetThemeStore, ThemeStoreKey } from './composables/use-theme';
-export type { ResolvedTheme, UseThemeOptions, ThemeStore } from './composables/use-theme';
+export { useTheme, createThemeStore, resetThemeStore, themeInitScript, ThemeStoreKey } from './composables/use-theme';
+export type { ResolvedTheme, UseThemeOptions, ThemeStore, ThemeInitScriptOptions } from './composables/use-theme';
 
 export {
   useThemeComposer,

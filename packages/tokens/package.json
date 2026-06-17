@@ -10,19 +10,23 @@
   "exports": {
     ".": "./dist/tokens.js",
     "./scss/tokens": "./src/tokens.scss",
-    "./scss/themes/light": "./src/themes/light/index.scss",
-    "./scss/themes/light/colours": "./src/themes/light/_colours.scss",
-    "./scss/themes/dark": "./src/themes/dark/index.scss",
-    "./scss/mixins": "./src/scss/_mixins.scss"
+    "./scss/themes/light": "./src/scss/themes/light/index.scss",
+    "./scss/themes/dark": "./src/scss/themes/dark/index.scss",
+    "./scss/mixins": "./src/scss/_mixins.scss",
+    "./scss/breakpoints-mixins": "./src/scss/_breakpoints.scss",
+    "./scss/breakpoints-utilities": "./src/scss/_breakpoints-utilities.scss"
   },
   "main": "./dist/tokens.js",
   "types": "./dist/tokens.d.ts",
   "files": [
     "dist",
     "src/**/*.scss",
-    "src/fonts/**/*.ttf"
+    "src/fonts/**/*.ttf",
+    "tokens/*.tokens.json",
+    ".config/design-tokens.yaml"
   ],
   "scripts": {
+    "tokens:validate": "asimonim validate --schema v2025.10 tokens/*.tokens.json",
     "build": "vite build && tsc --project tsconfig.build.json --declaration --declarationDir dist --emitDeclarationOnly --noEmit false --rootDir src",
     "build:watch": "vite build --watch",
     "lint": "eslint .",
@@ -34,10 +38,12 @@
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
+    "@pwrs/asimonim": "catalog:",
     "@mission-platform/prettier-config": "workspace:*",
     "@mission-platform/stylelint-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
+    "@mission-platform/vite-plugin-tokens": "workspace:*",
     "eslint": "catalog:eslint",
     "postcss-scss": "catalog:stylelint",
     "prettier": "catalog:prettier",

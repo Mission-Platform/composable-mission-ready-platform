@@ -1,0 +1,146 @@
+{
+  "$description": "Composite typography styles for Mission Platform. Each token is a DTCG `typography` value composed from the primitive font tokens in font.tokens.json. The variants mirror the `BaseTypography` component variants and resolve, at generation time, to the matching `--mp-typography-<variant>-*` CSS custom properties (which themselves reference the primitive `--mp-font-*`, `--mp-line-height-*` and `--mp-letter-spacing-*` tokens).",
+  "typography": {
+    "$type": "typography",
+    "display": {
+      "$description": "Hero / marketing headline.",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.5xl}",
+        "fontWeight": "{font.weight.bold}",
+        "lineHeight": "{line-height.tight}",
+        "letterSpacing": "{letter-spacing.tight}"
+      }
+    },
+    "h1": {
+      "$description": "Heading level 1.",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.4xl}",
+        "fontWeight": "{font.weight.semibold}",
+        "lineHeight": "{line-height.tight}",
+        "letterSpacing": "{letter-spacing.tight}"
+      }
+    },
+    "h2": {
+      "$description": "Heading level 2.",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.3xl}",
+        "fontWeight": "{font.weight.semibold}",
+        "lineHeight": "{line-height.tight}",
+        "letterSpacing": "{letter-spacing.tight}"
+      }
+    },
+    "h3": {
+      "$description": "Heading level 3.",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.2xl}",
+        "fontWeight": "{font.weight.medium}",
+        "lineHeight": "{line-height.snug}",
+        "letterSpacing": "{letter-spacing.tight}"
+      }
+    },
+    "h4": {
+      "$description": "Heading level 4.",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.xl}",
+        "fontWeight": "{font.weight.medium}",
+        "lineHeight": "{line-height.snug}",
+        "letterSpacing": "{letter-spacing.tight}"
+      }
+    },
+    "h5": {
+      "$description": "Heading level 5.",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.lg}",
+        "fontWeight": "{font.weight.medium}",
+        "lineHeight": "{line-height.snug}",
+        "letterSpacing": "{letter-spacing.normal}"
+      }
+    },
+    "h6": {
+      "$description": "Heading level 6.",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.md}",
+        "fontWeight": "{font.weight.medium}",
+        "lineHeight": "{line-height.normal}",
+        "letterSpacing": "{letter-spacing.normal}"
+      }
+    },
+    "body-lg": {
+      "$description": "Body large — introductory / lead text.",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.lg}",
+        "fontWeight": "{font.weight.regular}",
+        "lineHeight": "{line-height.relaxed}",
+        "letterSpacing": "{letter-spacing.normal}"
+      }
+    },
+    "body-md": {
+      "$description": "Body medium — default body copy.",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.md}",
+        "fontWeight": "{font.weight.regular}",
+        "lineHeight": "{line-height.normal}",
+        "letterSpacing": "{letter-spacing.normal}"
+      }
+    },
+    "body-sm": {
+      "$description": "Body small — secondary body copy.",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.sm}",
+        "fontWeight": "{font.weight.regular}",
+        "lineHeight": "{line-height.normal}",
+        "letterSpacing": "{letter-spacing.normal}"
+      }
+    },
+    "body-xs": {
+      "$description": "Body extra-small — fine print.",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.xs}",
+        "fontWeight": "{font.weight.regular}",
+        "lineHeight": "{line-height.snug}",
+        "letterSpacing": "{letter-spacing.wide}"
+      }
+    },
+    "label": {
+      "$description": "Label — form labels, table headers, navigation items.",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.sm}",
+        "fontWeight": "{font.weight.medium}",
+        "lineHeight": "{line-height.snug}",
+        "letterSpacing": "{letter-spacing.normal}"
+      }
+    },
+    "caption": {
+      "$description": "Caption — helper text, timestamps, metadata.",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.xs}",
+        "fontWeight": "{font.weight.regular}",
+        "lineHeight": "{line-height.snug}",
+        "letterSpacing": "{letter-spacing.wide}"
+      }
+    },
+    "code": {
+      "$description": "Code — inline and block code.",
+      "$value": {
+        "fontFamily": "{font.family.mono}",
+        "fontSize": "{font.size.sm}",
+        "fontWeight": "{font.weight.regular}",
+        "lineHeight": "{line-height.snug}",
+        "letterSpacing": "{letter-spacing.normal}"
+      }
+    }
+  }
+}

@@ -102,144 +102,146 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--mp-spacing-2);
-    border: 1px solid transparent;
-    border-radius: var(--mp-radius-md);
-    font-family: var(--mp-font-family-sans);
-    font-weight: var(--mp-font-weight-medium);
-    line-height: var(--mp-line-height-tight);
-    cursor: pointer;
-    transition:
-      background-color 150ms ease,
-      border-color 150ms ease,
-      box-shadow 150ms ease,
-      opacity 150ms ease;
-    white-space: nowrap;
-    user-select: none;
-
-    &:focus-visible {
-      outline: none;
-      box-shadow: var(--mp-shadow-focus-primary);
-    }
-
-    &:disabled {
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
-
-    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
-    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
-      &--#{$size} {
-        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
-        font-size: var(--mp-size-font-#{$size});
-      }
-    }
-
-    /* Variants */
-
-    /* Solid fill (high emphasis) for brand / intent treatments. */
-    @mixin solid($family) {
-      background-color: var(--mp-color-#{$family}-default);
-      color: var(--mp-color-text-on-primary);
-
-      &:hover:not(:disabled) {
-        background-color: var(--mp-color-#{$family}-hover);
-      }
-
-      &:active:not(:disabled) {
-        background-color: var(--mp-color-#{$family}-active, var(--mp-color-#{$family}-hover));
-      }
-    }
-
-    &--primary {
-      @include solid('primary');
-    }
-
-    &--default {
-      @include solid('default');
-    }
-
-    &--success {
-      @include solid('success');
-    }
-
-    &--warning {
-      @include solid('warning');
-    }
-
-    &--information {
-      @include solid('information');
-    }
-
-    &--error {
-      @include solid('error');
+  @layer mp.components {
+    .base-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--mp-spacing-2);
+      border: var(--mp-border-width-thin) solid transparent;
+      border-radius: var(--mp-radius-md);
+      font-family: var(--mp-font-family-sans);
+      font-weight: var(--mp-font-weight-medium);
+      line-height: var(--mp-line-height-tight);
+      cursor: pointer;
+      transition:
+        background-color var(--mp-duration-fast) var(--mp-easing-standard),
+        border-color var(--mp-duration-fast) var(--mp-easing-standard),
+        box-shadow var(--mp-duration-fast) var(--mp-easing-standard),
+        opacity var(--mp-duration-fast) var(--mp-easing-standard);
+      white-space: nowrap;
+      user-select: none;
 
       &:focus-visible {
-        box-shadow: var(--mp-shadow-focus-danger);
+        outline: none;
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        opacity: var(--mp-opacity-disabled);
+      }
+
+      /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+      @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+        &--#{$size} {
+          padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+          font-size: var(--mp-size-font-#{$size});
+        }
+      }
+
+      /* Variants */
+
+      /* Solid fill (high emphasis) for brand / intent treatments. */
+      @mixin solid($family) {
+        background-color: var(--mp-color-#{$family}-default);
+        color: var(--mp-color-text-on-primary);
+
+        &:hover:not(:disabled) {
+          background-color: var(--mp-color-#{$family}-hover);
+        }
+
+        &:active:not(:disabled) {
+          background-color: var(--mp-color-#{$family}-active, var(--mp-color-#{$family}-hover));
+        }
+      }
+
+      &--primary {
+        @include solid('primary');
+      }
+
+      &--default {
+        @include solid('default');
+      }
+
+      &--success {
+        @include solid('success');
+      }
+
+      &--warning {
+        @include solid('warning');
+      }
+
+      &--information {
+        @include solid('information');
+      }
+
+      &--error {
+        @include solid('error');
+
+        &:focus-visible {
+          box-shadow: var(--mp-shadow-focus-danger);
+        }
+      }
+
+      &--critical {
+        @include solid('critical');
+
+        &:focus-visible {
+          box-shadow: var(--mp-shadow-focus-danger);
+        }
+      }
+
+      /* Secondary — outlined (medium emphasis). */
+      &--secondary {
+        background-color: var(--mp-color-bg-surface);
+        border-color: var(--mp-color-border-default);
+        color: var(--mp-color-text-primary);
+
+        &:hover:not(:disabled) {
+          background-color: var(--mp-color-bg-muted);
+          border-color: var(--mp-color-border-strong);
+        }
+
+        &:active:not(:disabled) {
+          background-color: var(--mp-color-bg-sunken);
+        }
+      }
+
+      /* Tertiary — ghost / transparent (low emphasis). */
+      &--tertiary {
+        background-color: transparent;
+        color: var(--mp-color-text-primary);
+
+        &:hover:not(:disabled) {
+          background-color: var(--mp-color-bg-muted);
+        }
+
+        &:active:not(:disabled) {
+          background-color: var(--mp-color-bg-sunken);
+        }
+      }
+
+      /* Loading spinner */
+      &--loading {
+        pointer-events: none;
+      }
+
+      &__spinner {
+        width: 1em;
+        height: 1em;
+        border: var(--mp-border-width-thick) solid currentcolor;
+        border-top-color: transparent;
+        border-radius: var(--mp-radius-full);
+        animation: mp-spin 0.6s var(--mp-easing-linear) infinite;
+        flex-shrink: 0;
       }
     }
 
-    &--critical {
-      @include solid('critical');
-
-      &:focus-visible {
-        box-shadow: var(--mp-shadow-focus-danger);
+    @keyframes mp-spin {
+      to {
+        transform: rotate(360deg);
       }
-    }
-
-    /* Secondary — outlined (medium emphasis). */
-    &--secondary {
-      background-color: var(--mp-color-bg-surface);
-      border-color: var(--mp-color-border-default);
-      color: var(--mp-color-text-primary);
-
-      &:hover:not(:disabled) {
-        background-color: var(--mp-color-bg-muted);
-        border-color: var(--mp-color-border-strong);
-      }
-
-      &:active:not(:disabled) {
-        background-color: var(--mp-color-bg-sunken);
-      }
-    }
-
-    /* Tertiary — ghost / transparent (low emphasis). */
-    &--tertiary {
-      background-color: transparent;
-      color: var(--mp-color-text-primary);
-
-      &:hover:not(:disabled) {
-        background-color: var(--mp-color-bg-muted);
-      }
-
-      &:active:not(:disabled) {
-        background-color: var(--mp-color-bg-sunken);
-      }
-    }
-
-    /* Loading spinner */
-    &--loading {
-      pointer-events: none;
-    }
-
-    &__spinner {
-      width: 1em;
-      height: 1em;
-      border: 2px solid currentcolor;
-      border-top-color: transparent;
-      border-radius: var(--mp-radius-full);
-      animation: mp-spin 0.6s linear infinite;
-      flex-shrink: 0;
-    }
-  }
-
-  @keyframes mp-spin {
-    to {
-      transform: rotate(360deg);
     }
   }
 </style>

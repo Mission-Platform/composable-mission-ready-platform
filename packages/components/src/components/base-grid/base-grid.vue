@@ -112,9 +112,11 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-grid {
-    display: grid;
-    width: 100%;
-    min-width: 0;
+  @layer mp.components {
+    .base-grid {
+      display: grid;
+      width: 100%;
+      min-width: 0;
+    }
   }
 </style>

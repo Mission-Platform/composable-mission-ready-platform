@@ -153,43 +153,45 @@
 <style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
-  .base-tooltip-wrapper {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .base-tooltip-trigger {
-    display: inline-flex;
-    align-items: center;
-  }
-
-  .base-tooltip {
-    @include mp.mp-font-caption;
-
-    padding: var(--mp-spacing-1) var(--mp-spacing-3);
-    background-color: var(--mp-color-text-primary);
-    color: var(--mp-color-text-inverse);
-    border-radius: var(--mp-radius-sm);
-    pointer-events: none;
-    max-width: 240px;
-
-    &__arrow {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      background-color: var(--mp-color-text-primary);
-      transform: rotate(45deg);
+  @layer mp.components {
+    .base-tooltip-wrapper {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
-  }
 
-  .base-tooltip-fade-enter-active,
-  .base-tooltip-fade-leave-active {
-    transition: opacity 150ms ease;
-  }
+    .base-tooltip-trigger {
+      display: inline-flex;
+      align-items: center;
+    }
 
-  .base-tooltip-fade-enter-from,
-  .base-tooltip-fade-leave-to {
-    opacity: 0;
+    .base-tooltip {
+      @include mp.mp-font-caption;
+
+      padding: var(--mp-spacing-1) var(--mp-spacing-3);
+      background-color: var(--mp-color-text-primary);
+      color: var(--mp-color-text-inverse);
+      border-radius: var(--mp-radius-sm);
+      pointer-events: none;
+      max-width: 240px;
+
+      &__arrow {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background-color: var(--mp-color-text-primary);
+        transform: rotate(45deg);
+      }
+    }
+
+    .base-tooltip-fade-enter-active,
+    .base-tooltip-fade-leave-active {
+      transition: opacity 150ms ease;
+    }
+
+    .base-tooltip-fade-enter-from,
+    .base-tooltip-fade-leave-to {
+      opacity: 0;
+    }
   }
 </style>

@@ -1,29 +1,19 @@
 /* ─── Global Styles ──────────────────────────────────────────────────────────── */
 
-/* Light theme tokens are applied to :root / [data-theme="light"] / .theme-light. */
+/* scss/tokens emits the semantic colour tokens as `light-dark()` values on :root */
 
-/* Dark  theme tokens are applied to  [data-theme="dark"]  / .theme-dark. */
+/* with `color-scheme: light dark`, so the page follows the OS colour preference */
 
-/* A media-query block mirrors the dark tokens onto :root when the OS prefers dark. */
+/* automatically. The light/dark theme entry points add the [data-theme] opt-in */
+
+/* selectors that pin a subtree to one scheme. */
+@use '@mission-platform/tokens/scss/tokens';
 @use '@mission-platform/tokens/scss/themes/light';
-@use '@mission-platform/tokens/scss/themes/dark' as dark-theme;
+@use '@mission-platform/tokens/scss/themes/dark';
 @use '@mission-platform/tokens/scss/mixins' as mp;
-
-/* ── OS-level dark mode: apply dark tokens to :root automatically ────────────── */
-
-/* Targets :root unless an explicit light theme override is active, ensuring */
-
-/* the page responds to the OS colour preference without a data-theme attribute. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light'], .theme-light) {
-    @include dark-theme.mp-dark-theme-vars;
-  }
-}
 
 /* ─── Base reset & typography ────────────────────────────────────────────────── */
 :root {
-  color-scheme: light dark;
-
   @include mp.mp-font-base;
 
   color: var(--mp-color-text-primary);

@@ -63,54 +63,56 @@
 <style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
-  .base-menu__link {
-    @include mp.mp-font-label;
+  @layer mp.components {
+    .base-menu__link {
+      @include mp.mp-font-label;
 
-    display: flex;
-    align-items: center;
-    gap: var(--mp-spacing-2);
-    width: 100%;
-    padding: var(--mp-spacing-2) var(--mp-spacing-3);
-    border-radius: var(--mp-radius-md);
-    color: var(--mp-color-text-primary);
-    background: none;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    text-align: left;
-    transition:
-      background-color 0.15s ease,
-      color 0.15s ease;
-
-    &:focus-visible {
-      outline: 2px solid var(--mp-color-border-focus);
-      outline-offset: 2px;
-    }
-
-    &:disabled,
-    &[aria-disabled='true'] {
-      color: var(--mp-color-text-disabled);
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-
-    &:hover:not(:disabled, [aria-disabled='true']) {
-      background-color: var(--mp-color-bg-subtle);
+      display: flex;
+      align-items: center;
+      gap: var(--mp-spacing-2);
+      width: 100%;
+      padding: var(--mp-spacing-2) var(--mp-spacing-3);
+      border-radius: var(--mp-radius-md);
       color: var(--mp-color-text-primary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: left;
+      transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+
+      &:focus-visible {
+        outline: 2px solid var(--mp-color-border-focus);
+        outline-offset: 2px;
+      }
+
+      &:disabled,
+      &[aria-disabled='true'] {
+        color: var(--mp-color-text-disabled);
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      &:hover:not(:disabled, [aria-disabled='true']) {
+        background-color: var(--mp-color-bg-subtle);
+        color: var(--mp-color-text-primary);
+      }
     }
-  }
 
-  .base-menu__icon {
-    flex-shrink: 0;
-    font-size: var(--mp-font-size-base);
-  }
+    .base-menu__icon {
+      flex-shrink: 0;
+      font-size: var(--mp-font-size-base);
+    }
 
-  .base-menu__label {
-    flex: 1;
-  }
+    .base-menu__label {
+      flex: 1;
+    }
 
-  .base-menu__chevron {
-    flex-shrink: 0;
-    color: var(--mp-color-text-secondary);
+    .base-menu__chevron {
+      flex-shrink: 0;
+      color: var(--mp-color-text-secondary);
+    }
   }
 </style>

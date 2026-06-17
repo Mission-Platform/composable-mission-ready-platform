@@ -21,15 +21,40 @@ function loadFromStorage(): NoteTab[] {
   }
 }
 
-/** Persist the current tabs array to `localStorage` under {@link STORAGE_KEY}. */
+/**
+ * Persist the current tabs array to `localStorage` under {@link STORAGE_KEY}.
+ * Guarded so it is a safe no-op during SSR/SSG prerendering (no `localStorage`)
+ * and in private-mode/quota-exceeded scenarios.
+ */
 function saveToStorage(tabs: NoteTab[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(tabs));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tabs));
+  } catch {
+    // Ignore (SSR/SSG prerender, private mode, quota exceeded, …).
+  }
 }
 
-/** Create a new untitled, empty `NoteTab` with a generated id and current timestamp. */
-function createDefaultTab(): NoteTab {
+/** Read the persisted active-tab id, returning `undefined` when storage is unavailable (e.g. SSR/SSG). */
+function loadActiveTabId(): string | undefined {
+  try {
+    return localStorage.getItem(ACTIVE_TAB_KEY) ?? undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Stable id for the very first "Untitled" tab created when there is nothing in
+ * storage yet. Using a deterministic id (rather than a random `nanoid`) keeps
+ * the server-prerendered HTML and the first client render identical for fresh
+ * visitors, so `vite-ssg` hydration does not mismatch on the tab key.
+ */
+const INITIAL_TAB_ID = 'default';
+
+/** Create a new untitled, empty `NoteTab` with the given (or a generated) id and current timestamp. */
+function createDefaultTab(id: string = nanoid()): NoteTab {
   return {
-    id: nanoid(),
+    id,
     title: 'Untitled',
     content: '',
     createdAt: Date.now(),
@@ -37,9 +62,9 @@ function createDefaultTab(): NoteTab {
 }
 
 const storedTabs = loadFromStorage();
-const tabs = ref<NoteTab[]>(storedTabs.length > 0 ? storedTabs : [createDefaultTab()]);
+const tabs = ref<NoteTab[]>(storedTabs.length > 0 ? storedTabs : [createDefaultTab(INITIAL_TAB_ID)]);
 
-const storedActiveId = localStorage.getItem(ACTIVE_TAB_KEY);
+const storedActiveId = loadActiveTabId();
 const activeTabId = ref<string>(
   storedActiveId && tabs.value.some((t) => t.id === storedActiveId) ? storedActiveId : tabs.value[0].id,
 );
@@ -53,7 +78,11 @@ watch(
 );
 
 watch(activeTabId, (id) => {
-  localStorage.setItem(ACTIVE_TAB_KEY, id);
+  try {
+    localStorage.setItem(ACTIVE_TAB_KEY, id);
+  } catch {
+    // Ignore (SSR/SSG prerender, private mode, …).
+  }
 });
 
 /**

@@ -169,76 +169,78 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-segment-control {
-    display: inline-flex;
-    padding: var(--mp-spacing-1);
-    background-color: var(--mp-color-bg-sunken);
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-lg);
-    gap: var(--mp-spacing-1);
-
-    &--full-width {
-      display: flex;
-      width: 100%;
-    }
-
-    &--disabled {
-      opacity: 0.5;
-    }
-
-    &__segment {
-      flex: 1 1 auto;
+  @layer mp.components {
+    .base-segment-control {
       display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      white-space: nowrap;
-      background-color: transparent;
-      color: var(--mp-color-text-secondary);
-      border: 0;
-      border-radius: var(--mp-radius-md);
-      font-family: var(--mp-font-family-sans);
-      font-weight: var(--mp-font-weight-medium, 500);
-      cursor: pointer;
-      transition:
-        background-color 150ms ease,
-        color 150ms ease,
-        box-shadow 150ms ease;
+      padding: var(--mp-spacing-1);
+      background-color: var(--mp-color-bg-sunken);
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-lg);
+      gap: var(--mp-spacing-1);
 
-      &--selected {
-        background-color: var(--mp-color-bg-surface);
-        color: var(--mp-color-text-primary);
-        box-shadow: var(--mp-shadow-sm);
+      &--full-width {
+        display: flex;
+        width: 100%;
       }
 
-      &:focus-visible {
-        outline: none;
-        box-shadow: var(--mp-shadow-focus-primary);
-      }
-
-      &:disabled {
-        cursor: not-allowed;
+      &--disabled {
         opacity: 0.5;
       }
 
-      &:hover:not(:disabled, .base-segment-control__segment--selected) {
-        color: var(--mp-color-text-primary);
+      &__segment {
+        flex: 1 1 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        background-color: transparent;
+        color: var(--mp-color-text-secondary);
+        border: 0;
+        border-radius: var(--mp-radius-md);
+        font-family: var(--mp-font-family-sans);
+        font-weight: var(--mp-font-weight-medium, 500);
+        cursor: pointer;
+        transition:
+          background-color 150ms ease,
+          color 150ms ease,
+          box-shadow 150ms ease;
+
+        &--selected {
+          background-color: var(--mp-color-bg-surface);
+          color: var(--mp-color-text-primary);
+          box-shadow: var(--mp-shadow-sm);
+        }
+
+        &:focus-visible {
+          outline: none;
+          box-shadow: var(--mp-shadow-focus-primary);
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+          opacity: 0.5;
+        }
+
+        &:hover:not(:disabled, .base-segment-control__segment--selected) {
+          color: var(--mp-color-text-primary);
+        }
       }
-    }
 
-    /* Sizes */
-    &--sm .base-segment-control__segment {
-      padding: var(--mp-size-pad-block-xs) var(--mp-size-pad-inline-sm);
-      font-size: var(--mp-size-font-xs);
-    }
+      /* Sizes */
+      &--sm .base-segment-control__segment {
+        padding: var(--mp-size-pad-block-xs) var(--mp-size-pad-inline-sm);
+        font-size: var(--mp-size-font-xs);
+      }
 
-    &--md .base-segment-control__segment {
-      padding: var(--mp-size-pad-block-sm) var(--mp-size-pad-inline-md);
-      font-size: var(--mp-size-font-sm);
-    }
+      &--md .base-segment-control__segment {
+        padding: var(--mp-size-pad-block-sm) var(--mp-size-pad-inline-md);
+        font-size: var(--mp-size-font-sm);
+      }
 
-    &--lg .base-segment-control__segment {
-      padding: var(--mp-size-pad-block-md) var(--mp-size-pad-inline-lg);
-      font-size: var(--mp-size-font-md);
+      &--lg .base-segment-control__segment {
+        padding: var(--mp-size-pad-block-md) var(--mp-size-pad-inline-lg);
+        font-size: var(--mp-size-font-md);
+      }
     }
   }
 </style>

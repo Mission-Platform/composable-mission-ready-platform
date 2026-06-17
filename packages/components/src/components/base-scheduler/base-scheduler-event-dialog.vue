@@ -453,32 +453,34 @@
 <style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
-  .base-scheduler-event-dialog {
-    &__body {
-      display: flex;
-      flex-direction: column;
-      gap: var(--mp-spacing-4);
-    }
+  @layer mp.components {
+    .base-scheduler-event-dialog {
+      &__body {
+        display: flex;
+        flex-direction: column;
+        gap: var(--mp-spacing-4);
+      }
 
-    &__fieldset {
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      padding: var(--mp-spacing-3);
-      display: flex;
-      flex-direction: column;
-      gap: var(--mp-spacing-3);
-    }
+      &__fieldset {
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-md);
+        padding: var(--mp-spacing-3);
+        display: flex;
+        flex-direction: column;
+        gap: var(--mp-spacing-3);
+      }
 
-    &__fieldset-legend {
-      @include mp.mp-font-body-sm;
+      &__fieldset-legend {
+        @include mp.mp-font-body-sm;
 
-      font-weight: 600;
-      padding: 0 var(--mp-spacing-1);
-      color: var(--mp-color-text-secondary);
-    }
+        font-weight: 600;
+        padding: 0 var(--mp-spacing-1);
+        color: var(--mp-color-text-secondary);
+      }
 
-    &__delete-btn {
-      margin-right: auto;
+      &__delete-btn {
+        margin-right: auto;
+      }
     }
   }
 </style>

@@ -78,64 +78,66 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-tabs__bar {
-    display: flex;
-    align-items: stretch;
+  @layer mp.components {
+    .base-tabs__bar {
+      display: flex;
+      align-items: stretch;
 
-    &--line {
-      border-bottom: 2px solid var(--mp-color-border-default);
-    }
-  }
-
-  .base-tabs__list {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    min-width: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      display: none;
+      &--line {
+        border-bottom: 2px solid var(--mp-color-border-default);
+      }
     }
 
-    &--line {
-      gap: 0;
+    .base-tabs__list {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      min-width: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      &--line {
+        gap: 0;
+      }
+
+      &--pill {
+        background-color: var(--mp-color-bg-muted);
+        border-radius: var(--mp-radius-md);
+        padding: var(--mp-spacing-1);
+        gap: var(--mp-spacing-1);
+      }
     }
 
-    &--pill {
-      background-color: var(--mp-color-bg-muted);
-      border-radius: var(--mp-radius-md);
-      padding: var(--mp-spacing-1);
-      gap: var(--mp-spacing-1);
-    }
-  }
+    .base-tabs__add {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: var(--mp-color-text-muted);
+      padding: var(--mp-spacing-2) var(--mp-spacing-3);
+      transition: color 150ms ease;
 
-  .base-tabs__add {
-    flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    color: var(--mp-color-text-muted);
-    padding: var(--mp-spacing-2) var(--mp-spacing-3);
-    transition: color 150ms ease;
+      &:hover {
+        color: var(--mp-color-text-primary);
+      }
 
-    &:hover {
-      color: var(--mp-color-text-primary);
-    }
+      &:focus-visible {
+        outline: none;
+        border-radius: var(--mp-radius-sm);
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
 
-    &:focus-visible {
-      outline: none;
-      border-radius: var(--mp-radius-sm);
-      box-shadow: var(--mp-shadow-focus-primary);
-    }
-
-    &--line {
-      border-bottom: 2px solid var(--mp-color-border-default);
-      margin-bottom: -2px;
+      &--line {
+        border-bottom: 2px solid var(--mp-color-border-default);
+        margin-bottom: -2px;
+      }
     }
   }
 </style>

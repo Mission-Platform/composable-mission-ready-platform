@@ -473,38 +473,40 @@
 </template>
 
 <style lang="scss" scoped>
-  .form-builder {
-    min-height: 30rem;
+  @layer mp.components {
+    .form-builder {
+      min-height: 30rem;
 
-    &__center {
-      min-width: 0;
-    }
+      &__center {
+        min-width: 0;
+      }
 
-    &__panel {
-      display: flex;
-      flex-direction: column;
-      gap: var(--mp-spacing-3);
-      padding: var(--mp-spacing-3) 0;
-    }
+      &__panel {
+        display: flex;
+        flex-direction: column;
+        gap: var(--mp-spacing-3);
+        padding: var(--mp-spacing-3) 0;
+      }
 
-    &__inspector {
-      display: flex;
-      flex-direction: column;
-      gap: var(--mp-spacing-3);
-    }
+      &__inspector {
+        display: flex;
+        flex-direction: column;
+        gap: var(--mp-spacing-3);
+      }
 
-    &__inspector-title {
-      margin: 0;
-    }
+      &__inspector-title {
+        margin: 0;
+      }
 
-    &__overlay {
-      padding: var(--mp-spacing-2) var(--mp-spacing-3);
-      font-size: var(--mp-font-size-sm);
-      color: var(--mp-color-primary-text);
-      background-color: var(--mp-color-bg-surface);
-      border: 1px solid var(--mp-color-primary-default);
-      border-radius: var(--mp-radius-md);
-      box-shadow: var(--mp-shadow-md);
+      &__overlay {
+        padding: var(--mp-spacing-2) var(--mp-spacing-3);
+        font-size: var(--mp-font-size-sm);
+        color: var(--mp-color-primary-text);
+        background-color: var(--mp-color-bg-surface);
+        border: 1px solid var(--mp-color-primary-default);
+        border-radius: var(--mp-radius-md);
+        box-shadow: var(--mp-shadow-md);
+      }
     }
   }
 </style>

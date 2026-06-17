@@ -1,0 +1,122 @@
+{
+  "$description": "Unified component size scale for Mission Platform (2xs → 2xl). All rem values are relative to the 14px root font-size.",
+  "size": {
+    "$description": "Unified component size scale (2xs → 2xl) covering font, padding, gap, radius, icon, shadow, leading, height and width. Each subgroup is one facet of a component at a given size step, so a `sm` button reads its font, padding, radius, etc. from the matching `sm` key across these subgroups.",
+    "font": {
+      "$description": "Per-size component font-size (text within a sized control).",
+      "$type": "dimension",
+      "2xs": { "$value": "0.643rem" },
+      "xs": { "$value": "0.786rem" },
+      "sm": { "$value": "0.929rem" },
+      "md": { "$value": "1rem" },
+      "lg": { "$value": "1.143rem" },
+      "xl": { "$value": "1.286rem" },
+      "2xl": { "$value": "1.714rem" }
+    },
+    "leading": {
+      "$description": "Per-size line-height (unitless) for text within a sized control.",
+      "$type": "number",
+      "2xs": { "$value": 1.25 },
+      "xs": { "$value": 1.25 },
+      "sm": { "$value": 1.375 },
+      "md": { "$value": 1.5 },
+      "lg": { "$value": 1.5 },
+      "xl": { "$value": 1.5 },
+      "2xl": { "$value": 1.375 }
+    },
+    "pad-block": {
+      "$description": "Per-size block (top/bottom) padding for sized controls.",
+      "$type": "dimension",
+      "2xs": { "$value": "0.143rem" },
+      "xs": { "$value": "0.286rem" },
+      "sm": { "$value": "0.429rem" },
+      "md": { "$value": "0.571rem" },
+      "lg": { "$value": "0.714rem" },
+      "xl": { "$value": "0.857rem" },
+      "2xl": { "$value": "1.143rem" }
+    },
+    "pad-inline": {
+      "$description": "Per-size inline (left/right) padding for sized controls.",
+      "$type": "dimension",
+      "2xs": { "$value": "0.286rem" },
+      "xs": { "$value": "0.571rem" },
+      "sm": { "$value": "0.714rem" },
+      "md": { "$value": "0.857rem" },
+      "lg": { "$value": "1.143rem" },
+      "xl": { "$value": "1.429rem" },
+      "2xl": { "$value": "1.714rem" }
+    },
+    "gap": {
+      "$description": "Per-size internal gap between elements (e.g. icon-to-label) in sized controls; also reused as the margin scale.",
+      "$type": "dimension",
+      "2xs": { "$value": "0.143rem" },
+      "xs": { "$value": "0.286rem" },
+      "sm": { "$value": "0.429rem" },
+      "md": { "$value": "0.571rem" },
+      "lg": { "$value": "0.857rem" },
+      "xl": { "$value": "1.143rem" },
+      "2xl": { "$value": "1.714rem" }
+    },
+    "radius": {
+      "$description": "Per-size corner radius for sized controls.",
+      "$type": "dimension",
+      "2xs": { "$value": "0.143rem" },
+      "xs": { "$value": "0.286rem" },
+      "sm": { "$value": "0.286rem" },
+      "md": { "$value": "0.429rem" },
+      "lg": { "$value": "0.571rem" },
+      "xl": { "$value": "0.714rem" },
+      "2xl": { "$value": "0.857rem" }
+    },
+    "icon": {
+      "$description": "Per-size icon dimension (square) for sized controls.",
+      "$type": "dimension",
+      "2xs": { "$value": "0.643rem" },
+      "xs": { "$value": "0.786rem" },
+      "sm": { "$value": "0.929rem" },
+      "md": { "$value": "1rem" },
+      "lg": { "$value": "1.143rem" },
+      "xl": { "$value": "1.286rem" },
+      "2xl": { "$value": "1.714rem" }
+    },
+    "shadow": {
+      "$description": "Per-size elevation shadow (rem-based mirror of the absolute shadow scale) for sized surfaces.",
+      "$type": "shadow",
+      "2xs": { "$value": "0 0.071rem 0.071rem 0 rgb(0 0 0 / 3%)" },
+      "xs": { "$value": "0 0.071rem 0.143rem 0 rgb(0 0 0 / 5%)" },
+      "sm": { "$value": "0 0.071rem 0.214rem 0 rgb(0 0 0 / 10%), 0 0.071rem 0.143rem -0.071rem rgb(0 0 0 / 10%)" },
+      "md": {
+        "$value": "0 0.286rem 0.429rem -0.071rem rgb(0 0 0 / 10%), 0 0.143rem 0.286rem -0.143rem rgb(0 0 0 / 10%)"
+      },
+      "lg": {
+        "$value": "0 0.714rem 1.071rem -0.214rem rgb(0 0 0 / 10%), 0 0.286rem 0.429rem -0.286rem rgb(0 0 0 / 10%)"
+      },
+      "xl": {
+        "$value": "0 1.429rem 1.786rem -0.357rem rgb(0 0 0 / 10%), 0 0.571rem 0.714rem -0.429rem rgb(0 0 0 / 10%)"
+      },
+      "2xl": { "$value": "0 1.786rem 3.571rem -0.857rem rgb(0 0 0 / 25%)" }
+    },
+    "height": {
+      "$description": "Per-size control height (e.g. button / input height).",
+      "$type": "dimension",
+      "2xs": { "$value": "1.429rem" },
+      "xs": { "$value": "1.714rem" },
+      "sm": { "$value": "2rem" },
+      "md": { "$value": "2.571rem" },
+      "lg": { "$value": "2.857rem" },
+      "xl": { "$value": "3.429rem" },
+      "2xl": { "$value": "4rem" }
+    },
+    "width": {
+      "$description": "Per-size container/overlay max-width (e.g. modal width); 2xs/xs fall back to full viewport width.",
+      "$type": "dimension",
+      "2xs": { "$value": "100vw" },
+      "xs": { "$value": "100vw" },
+      "sm": { "$value": "34.286rem" },
+      "md": { "$value": "45.714rem" },
+      "lg": { "$value": "85.714rem" },
+      "xl": { "$value": "114.286rem" },
+      "2xl": { "$value": "171.429rem" }
+    }
+  }
+}

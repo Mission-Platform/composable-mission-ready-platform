@@ -124,70 +124,72 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-menu-item {
-    list-style: none;
+  @layer mp.components {
+    .base-menu-item {
+      list-style: none;
 
-    &__link,
-    &__button {
-      display: flex;
-      align-items: center;
-      gap: var(--mp-spacing-2);
-      width: 100%;
-      padding: var(--mp-spacing-2) var(--mp-spacing-3);
-      font-family: var(--mp-font-family-sans);
-      cursor: pointer;
-      border-radius: var(--mp-radius-sm);
-      user-select: none;
-      white-space: nowrap;
-      text-decoration: none;
-      color: inherit;
-      transition:
-        background-color 100ms ease,
-        color 100ms ease;
-    }
+      &__link,
+      &__button {
+        display: flex;
+        align-items: center;
+        gap: var(--mp-spacing-2);
+        width: 100%;
+        padding: var(--mp-spacing-2) var(--mp-spacing-3);
+        font-family: var(--mp-font-family-sans);
+        cursor: pointer;
+        border-radius: var(--mp-radius-sm);
+        user-select: none;
+        white-space: nowrap;
+        text-decoration: none;
+        color: inherit;
+        transition:
+          background-color 100ms ease,
+          color 100ms ease;
+      }
 
-    &__link:hover,
-    &__button:hover {
-      background-color: var(--mp-color-bg-muted);
-    }
+      &__link:hover,
+      &__button:hover {
+        background-color: var(--mp-color-bg-muted);
+      }
 
-    &__link:focus-visible,
-    &__button:focus-visible {
-      outline: none;
-      box-shadow: var(--mp-shadow-focus-primary);
-    }
+      &__link:focus-visible,
+      &__button:focus-visible {
+        outline: none;
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
 
-    &--active > &__link,
-    &--active > &__button {
-      background-color: var(--mp-color-primary-muted);
-      color: var(--mp-color-primary-text);
-    }
+      &--active > &__link,
+      &--active > &__button {
+        background-color: var(--mp-color-primary-muted);
+        color: var(--mp-color-primary-text);
+      }
 
-    @mixin tone($family) {
-      &--#{$family} > .base-menu-item__link,
-      &--#{$family} > .base-menu-item__button {
-        color: var(--mp-color-#{$family}-text);
+      @mixin tone($family) {
+        &--#{$family} > .base-menu-item__link,
+        &--#{$family} > .base-menu-item__button {
+          color: var(--mp-color-#{$family}-text);
 
-        &:hover {
-          background-color: var(--mp-color-#{$family}-subtle);
+          &:hover {
+            background-color: var(--mp-color-#{$family}-subtle);
+          }
         }
       }
-    }
 
-    @include tone('primary');
-    @include tone('secondary');
-    @include tone('tertiary');
-    @include tone('success');
-    @include tone('warning');
-    @include tone('information');
-    @include tone('error');
-    @include tone('critical');
+      @include tone('primary');
+      @include tone('secondary');
+      @include tone('tertiary');
+      @include tone('success');
+      @include tone('warning');
+      @include tone('information');
+      @include tone('error');
+      @include tone('critical');
 
-    &--disabled > &__link,
-    &--disabled > &__button {
-      opacity: 0.5;
-      cursor: not-allowed;
-      pointer-events: none;
+      &--disabled > &__link,
+      &--disabled > &__button {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
     }
   }
 </style>

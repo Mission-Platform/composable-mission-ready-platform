@@ -145,47 +145,49 @@
 </template>
 
 <style lang="scss" scoped>
-  .form-builder-steps {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-3);
-    padding: var(--mp-spacing-3) 0;
-
-    &__intro {
-      margin: 0;
-    }
-
-    &__step {
+  @layer mp.components {
+    .form-builder-steps {
       display: flex;
       flex-direction: column;
       gap: var(--mp-spacing-3);
-      padding: var(--mp-spacing-3);
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-    }
+      padding: var(--mp-spacing-3) 0;
 
-    &__step-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    &__step-heading {
-      margin: 0;
-    }
-
-    &__remove {
-      padding: var(--mp-spacing-1);
-      color: var(--mp-color-text-secondary);
-
-      &:hover:not(:disabled) {
-        color: var(--mp-color-danger-text);
-        background-color: var(--mp-color-danger-muted);
+      &__intro {
+        margin: 0;
       }
-    }
 
-    &__add {
-      align-self: flex-start;
+      &__step {
+        display: flex;
+        flex-direction: column;
+        gap: var(--mp-spacing-3);
+        padding: var(--mp-spacing-3);
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-md);
+      }
+
+      &__step-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      &__step-heading {
+        margin: 0;
+      }
+
+      &__remove {
+        padding: var(--mp-spacing-1);
+        color: var(--mp-color-text-secondary);
+
+        &:hover:not(:disabled) {
+          color: var(--mp-color-danger-text);
+          background-color: var(--mp-color-danger-muted);
+        }
+      }
+
+      &__add {
+        align-self: flex-start;
+      }
     }
   }
 </style>

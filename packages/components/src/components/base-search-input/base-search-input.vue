@@ -110,119 +110,121 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-search-input {
-    display: flex;
-    flex-direction: column;
-
-    &__wrapper {
+  @layer mp.components {
+    .base-search-input {
       display: flex;
-      align-items: center;
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background-color: var(--mp-color-bg-surface);
-      transition:
-        border-color 150ms ease,
-        box-shadow 150ms ease;
-      gap: var(--mp-spacing-1);
+      flex-direction: column;
 
-      &:focus-within {
-        border-color: var(--mp-color-border-focus);
-        box-shadow: var(--mp-shadow-focus-primary);
+      &__wrapper {
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-md);
+        background-color: var(--mp-color-bg-surface);
+        transition:
+          border-color 150ms ease,
+          box-shadow 150ms ease;
+        gap: var(--mp-spacing-1);
+
+        &:focus-within {
+          border-color: var(--mp-color-border-focus);
+          box-shadow: var(--mp-shadow-focus-primary);
+        }
       }
-    }
 
-    &__search-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      color: var(--mp-color-text-tertiary);
-    }
-
-    &__field {
-      flex: 1;
-      border: none;
-      outline: none;
-      background: transparent;
-      color: var(--mp-color-text-primary);
-      font-family: var(--mp-font-family-sans);
-
-      &::placeholder {
+      &__search-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
         color: var(--mp-color-text-tertiary);
       }
 
-      /* Remove native search clear button */
-      &::-webkit-search-cancel-button {
-        display: none;
-      }
-    }
-
-    &__clear {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      color: var(--mp-color-text-tertiary);
-      border-radius: var(--mp-radius-full);
-      flex-shrink: 0;
-      line-height: 1;
-
-      &:hover {
-        color: var(--mp-color-text-primary);
-      }
-
-      &:focus-visible {
+      &__field {
+        flex: 1;
+        border: none;
         outline: none;
-        box-shadow: var(--mp-shadow-focus-primary);
+        background: transparent;
+        color: var(--mp-color-text-primary);
+        font-family: var(--mp-font-family-sans);
+
+        &::placeholder {
+          color: var(--mp-color-text-tertiary);
+        }
+
+        /* Remove native search clear button */
+        &::-webkit-search-cancel-button {
+          display: none;
+        }
       }
-    }
 
-    &__spinner {
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      border: 2px solid currentcolor;
-      border-top-color: transparent;
-      border-radius: var(--mp-radius-full);
-      animation: mp-spin 0.6s linear infinite;
-    }
+      &__clear {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        color: var(--mp-color-text-tertiary);
+        border-radius: var(--mp-radius-full);
+        flex-shrink: 0;
+        line-height: 1;
 
-    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
-    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
-      &--#{$size} {
+        &:hover {
+          color: var(--mp-color-text-primary);
+        }
+
+        &:focus-visible {
+          outline: none;
+          box-shadow: var(--mp-shadow-focus-primary);
+        }
+      }
+
+      &__spinner {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid currentcolor;
+        border-top-color: transparent;
+        border-radius: var(--mp-radius-full);
+        animation: mp-spin 0.6s linear infinite;
+      }
+
+      /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+      @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+        &--#{$size} {
+          .base-search-input__wrapper {
+            padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+          }
+
+          .base-search-input__field {
+            padding: 0;
+            font-size: var(--mp-size-font-#{$size});
+          }
+        }
+      }
+
+      &--disabled {
+        pointer-events: none;
+
         .base-search-input__wrapper {
-          padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+          background-color: var(--mp-color-bg-muted);
+          cursor: not-allowed;
         }
 
-        .base-search-input__field {
-          padding: 0;
-          font-size: var(--mp-size-font-#{$size});
+        .base-search-input__field,
+        .base-search-input__search-icon,
+        .base-search-input__clear {
+          color: var(--mp-color-text-disabled);
         }
       }
     }
 
-    &--disabled {
-      pointer-events: none;
-
-      .base-search-input__wrapper {
-        background-color: var(--mp-color-bg-muted);
-        cursor: not-allowed;
+    @keyframes mp-spin {
+      to {
+        transform: rotate(360deg);
       }
-
-      .base-search-input__field,
-      .base-search-input__search-icon,
-      .base-search-input__clear {
-        color: var(--mp-color-text-disabled);
-      }
-    }
-  }
-
-  @keyframes mp-spin {
-    to {
-      transform: rotate(360deg);
     }
   }
 </style>

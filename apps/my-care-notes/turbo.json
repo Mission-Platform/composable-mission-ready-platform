@@ -2,17 +2,13 @@
   "$schema": "https://turborepo.com/schema.json",
   "extends": ["//"],
   "tasks": {
-    "seo:generate": {
-      "dependsOn": ["^build"],
-      "inputs": ["scripts/generate-seo-files.ts", "src/**/*.ts", "src/**/*.vue"],
-      "outputs": ["public/sitemap.xml", "public/robots.txt", "src/generated/**"]
-    },
-    "prebuild": {
-      "dependsOn": ["seo:generate"]
-    },
     "build": {
-      "dependsOn": ["^build", "prebuild"],
-      "outputs": ["dist/**", ".vite/**"]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".output/**", ".vite/**", "public/sitemap.xml", "public/robots.txt"]
+    },
+    "build:spa": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".output/**", ".vite/**", "public/sitemap.xml", "public/robots.txt"]
     },
     "deploy": {
       "dependsOn": ["build", "@mission-platform/base-spa#build"],

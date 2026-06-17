@@ -1,0 +1,426 @@
+{
+  "$description": "Light theme semantic colour tokens. Every value references a primitive in palette.tokens.json; the values mirror the hand-authored src/themes/light/index.scss mapping.",
+  "color": {
+    "$type": "color",
+    "bg": {
+      "base": {
+        "$value": "{color.base-light}",
+        "$description": "color.base-light"
+      },
+      "base-alt": {
+        "$value": "{color.surface.light-alt}",
+        "$description": "color.surface.light-alt"
+      },
+      "surface": {
+        "$value": "{color.white}",
+        "$description": "color.white"
+      },
+      "raised": {
+        "$value": "{color.white}",
+        "$description": "color.white"
+      },
+      "overlay": {
+        "$value": "{color.white}",
+        "$description": "color.white"
+      },
+      "sunken": {
+        "$value": "{color.neutral.100}",
+        "$description": "color.neutral.100"
+      },
+      "muted": {
+        "$value": "{color.neutral.100}",
+        "$description": "color.neutral.100"
+      },
+      "scrim": {
+        "$value": "{color.scrim.black-50}",
+        "$description": "color.scrim.black-50"
+      },
+      "scrim-soft": {
+        "$value": "{color.scrim.black-40}",
+        "$description": "color.scrim.black-40"
+      },
+      "loading-overlay": {
+        "$value": "{color.scrim.white-70}",
+        "$description": "color.scrim.white-70"
+      }
+    },
+    "skeleton": {
+      "shimmer": {
+        "$value": "{color.scrim.white-40}",
+        "$description": "color.scrim.white-40"
+      }
+    },
+    "border": {
+      "default": {
+        "$value": "{color.cyan.800}",
+        "$description": "color.cyan.800"
+      },
+      "strong": {
+        "$value": "{color.cyan.900}",
+        "$description": "color.cyan.900"
+      },
+      "focus": {
+        "$value": "{color.primary.600}",
+        "$description": "color.primary.600"
+      }
+    },
+    "text": {
+      "primary": {
+        "$value": "{color.neutral.900}",
+        "$description": "color.neutral.900"
+      },
+      "secondary": {
+        "$value": "{color.neutral.700}",
+        "$description": "color.neutral.700"
+      },
+      "tertiary": {
+        "$value": "{color.neutral.600}",
+        "$description": "color.neutral.600"
+      },
+      "disabled": {
+        "$value": "{color.neutral.600}",
+        "$description": "color.neutral.600"
+      },
+      "inverse": {
+        "$value": "{color.neutral.50}",
+        "$description": "color.neutral.50"
+      },
+      "on-primary": {
+        "$value": "{color.white}",
+        "$description": "color.white"
+      }
+    },
+    "primary": {
+      "default": {
+        "$value": "{color.primary.600}",
+        "$description": "color.primary.600"
+      },
+      "hover": {
+        "$value": "{color.primary.700}",
+        "$description": "color.primary.700"
+      },
+      "active": {
+        "$value": "{color.primary.700}",
+        "$description": "color.primary.700"
+      },
+      "subtle": {
+        "$value": "{color.primary.50}",
+        "$description": "color.primary.50"
+      },
+      "muted": {
+        "$value": "{color.primary.100}",
+        "$description": "color.primary.100"
+      },
+      "text": {
+        "$value": "{color.primary.700}",
+        "$description": "color.primary.700"
+      }
+    },
+    "secondary": {
+      "default": {
+        "$value": "{color.cyan.800}",
+        "$description": "color.cyan.800"
+      },
+      "hover": {
+        "$value": "{color.cyan.900}",
+        "$description": "color.cyan.900"
+      },
+      "active": {
+        "$value": "{color.cyan.900}",
+        "$description": "color.cyan.900"
+      },
+      "subtle": {
+        "$value": "{color.cyan.50}",
+        "$description": "color.cyan.50"
+      },
+      "muted": {
+        "$value": "{color.cyan.100}",
+        "$description": "color.cyan.100"
+      },
+      "text": {
+        "$value": "{color.cyan.800}",
+        "$description": "color.cyan.800"
+      }
+    },
+    "tertiary": {
+      "default": {
+        "$value": "{color.neutral.500}",
+        "$description": "color.neutral.500"
+      },
+      "hover": {
+        "$value": "{color.neutral.600}",
+        "$description": "color.neutral.600"
+      },
+      "active": {
+        "$value": "{color.neutral.700}",
+        "$description": "color.neutral.700"
+      },
+      "subtle": {
+        "$value": "{color.neutral.50}",
+        "$description": "color.neutral.50"
+      },
+      "muted": {
+        "$value": "{color.neutral.100}",
+        "$description": "color.neutral.100"
+      },
+      "text": {
+        "$value": "{color.neutral.600}",
+        "$description": "color.neutral.600"
+      }
+    },
+    "default": {
+      "default": {
+        "$value": "{color.neutral.700}",
+        "$description": "color.neutral.700"
+      },
+      "hover": {
+        "$value": "{color.neutral.800}",
+        "$description": "color.neutral.800"
+      },
+      "active": {
+        "$value": "{color.neutral.900}",
+        "$description": "color.neutral.900"
+      },
+      "subtle": {
+        "$value": "{color.neutral.100}",
+        "$description": "color.neutral.100"
+      },
+      "muted": {
+        "$value": "{color.neutral.200}",
+        "$description": "color.neutral.200"
+      },
+      "text": {
+        "$value": "{color.neutral.800}",
+        "$description": "color.neutral.800"
+      }
+    },
+    "success": {
+      "default": {
+        "$value": "{color.success.800}",
+        "$description": "color.success.800"
+      },
+      "hover": {
+        "$value": "{color.success.900}",
+        "$description": "color.success.900"
+      },
+      "subtle": {
+        "$value": "{color.success.50}",
+        "$description": "color.success.50"
+      },
+      "muted": {
+        "$value": "{color.success.100}",
+        "$description": "color.success.100"
+      },
+      "text": {
+        "$value": "{color.success.800}",
+        "$description": "color.success.800"
+      }
+    },
+    "warning": {
+      "default": {
+        "$value": "{color.warning.900}",
+        "$description": "color.warning.900"
+      },
+      "hover": {
+        "$value": "{color.warning.900}",
+        "$description": "color.warning.900"
+      },
+      "subtle": {
+        "$value": "{color.warning.50}",
+        "$description": "color.warning.50"
+      },
+      "muted": {
+        "$value": "{color.warning.100}",
+        "$description": "color.warning.100"
+      },
+      "text": {
+        "$value": "{color.warning.900}",
+        "$description": "color.warning.900"
+      }
+    },
+    "danger": {
+      "default": {
+        "$value": "{color.danger.800}",
+        "$description": "color.danger.800"
+      },
+      "hover": {
+        "$value": "{color.danger.900}",
+        "$description": "color.danger.900"
+      },
+      "subtle": {
+        "$value": "{color.danger.50}",
+        "$description": "color.danger.50"
+      },
+      "muted": {
+        "$value": "{color.danger.100}",
+        "$description": "color.danger.100"
+      },
+      "text": {
+        "$value": "{color.danger.900}",
+        "$description": "color.danger.900"
+      }
+    },
+    "info": {
+      "default": {
+        "$value": "{color.info.900}",
+        "$description": "color.info.900"
+      },
+      "hover": {
+        "$value": "{color.info.900}",
+        "$description": "color.info.900"
+      },
+      "subtle": {
+        "$value": "{color.info.50}",
+        "$description": "color.info.50"
+      },
+      "muted": {
+        "$value": "{color.info.100}",
+        "$description": "color.info.100"
+      },
+      "text": {
+        "$value": "{color.info.900}",
+        "$description": "color.info.900"
+      }
+    },
+    "information": {
+      "default": {
+        "$value": "{color.info.900}",
+        "$description": "color.info.900"
+      },
+      "hover": {
+        "$value": "{color.info.900}",
+        "$description": "color.info.900"
+      },
+      "active": {
+        "$value": "{color.info.900}",
+        "$description": "color.info.900"
+      },
+      "subtle": {
+        "$value": "{color.info.50}",
+        "$description": "color.info.50"
+      },
+      "muted": {
+        "$value": "{color.info.100}",
+        "$description": "color.info.100"
+      },
+      "text": {
+        "$value": "{color.info.900}",
+        "$description": "color.info.900"
+      }
+    },
+    "error": {
+      "default": {
+        "$value": "{color.error.800}",
+        "$description": "color.error.800"
+      },
+      "hover": {
+        "$value": "{color.error.900}",
+        "$description": "color.error.900"
+      },
+      "subtle": {
+        "$value": "{color.error.50}",
+        "$description": "color.error.50"
+      },
+      "muted": {
+        "$value": "{color.error.100}",
+        "$description": "color.error.100"
+      },
+      "text": {
+        "$value": "{color.error.900}",
+        "$description": "color.error.900"
+      }
+    },
+    "critical": {
+      "default": {
+        "$value": "{color.critical.800}",
+        "$description": "color.critical.800"
+      },
+      "hover": {
+        "$value": "{color.critical.900}",
+        "$description": "color.critical.900"
+      },
+      "active": {
+        "$value": "{color.critical.900}",
+        "$description": "color.critical.900"
+      },
+      "subtle": {
+        "$value": "{color.critical.50}",
+        "$description": "color.critical.50"
+      },
+      "muted": {
+        "$value": "{color.critical.100}",
+        "$description": "color.critical.100"
+      },
+      "text": {
+        "$value": "{color.critical.800}",
+        "$description": "color.critical.800"
+      }
+    },
+    "alert": {
+      "default": {
+        "$value": "{color.alert.900}",
+        "$description": "color.alert.900"
+      },
+      "hover": {
+        "$value": "{color.alert.900}",
+        "$description": "color.alert.900"
+      },
+      "subtle": {
+        "$value": "{color.alert.50}",
+        "$description": "color.alert.50"
+      },
+      "muted": {
+        "$value": "{color.alert.100}",
+        "$description": "color.alert.100"
+      },
+      "text": {
+        "$value": "{color.alert.900}",
+        "$description": "color.alert.900"
+      }
+    },
+    "notice": {
+      "default": {
+        "$value": "{color.notice.800}",
+        "$description": "color.notice.800"
+      },
+      "hover": {
+        "$value": "{color.notice.900}",
+        "$description": "color.notice.900"
+      },
+      "subtle": {
+        "$value": "{color.notice.50}",
+        "$description": "color.notice.50"
+      },
+      "muted": {
+        "$value": "{color.notice.100}",
+        "$description": "color.notice.100"
+      },
+      "text": {
+        "$value": "{color.notice.900}",
+        "$description": "color.notice.900"
+      }
+    },
+    "debug": {
+      "default": {
+        "$value": "{color.debug.800}",
+        "$description": "color.debug.800"
+      },
+      "hover": {
+        "$value": "{color.debug.900}",
+        "$description": "color.debug.900"
+      },
+      "subtle": {
+        "$value": "{color.debug.50}",
+        "$description": "color.debug.50"
+      },
+      "muted": {
+        "$value": "{color.debug.100}",
+        "$description": "color.debug.100"
+      },
+      "text": {
+        "$value": "{color.debug.900}",
+        "$description": "color.debug.900"
+      }
+    }
+  }
+}

@@ -51,8 +51,8 @@
     contextmenu: [event: MapMouseEvent];
   }>();
 
-  const containerRef = shallowRef<HTMLDivElement | undefined>(undefined);
-  const map = shallowRef<Map | undefined>(undefined);
+  const containerRef = shallowRef<HTMLDivElement | undefined>();
+  const map = shallowRef<Map | undefined>();
 
   provide(mapKey, map);
 
@@ -143,9 +143,11 @@
 </template>
 
 <style scoped>
-  .map-libre {
-    position: relative;
-    width: 100%;
-    height: 100%;
+  @layer mp.map {
+    .map-libre {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
   }
 </style>

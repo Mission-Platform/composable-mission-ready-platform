@@ -214,15 +214,34 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-file-input {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-1);
+  @layer mp.components {
+    .base-file-input {
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-spacing-1);
 
-    &__label {
-      /* typography handled by BaseTypography */
+      &__label {
+        /* typography handled by BaseTypography */
 
-      &--hidden {
+        &--hidden {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip-path: inset(50%);
+          white-space: nowrap;
+          border: 0;
+        }
+      }
+
+      &__required {
+        color: var(--mp-color-danger-default);
+        margin-left: 2px;
+      }
+
+      &__native {
         position: absolute;
         width: 1px;
         height: 1px;
@@ -233,141 +252,124 @@
         white-space: nowrap;
         border: 0;
       }
-    }
 
-    &__required {
-      color: var(--mp-color-danger-default);
-      margin-left: 2px;
-    }
+      &__row {
+        display: flex;
+        align-items: center;
+        gap: var(--mp-spacing-3);
+      }
 
-    &__native {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip-path: inset(50%);
-      white-space: nowrap;
-      border: 0;
-    }
+      &__button {
+        display: inline-flex;
+        align-items: center;
+        padding: var(--mp-spacing-2) var(--mp-spacing-4);
+        font-size: var(--mp-font-size-sm);
+        font-weight: var(--mp-font-weight-medium);
+        color: var(--mp-color-text-primary);
+        background-color: var(--mp-color-bg-surface);
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-md);
+        cursor: pointer;
+        white-space: nowrap;
+        transition:
+          background-color 150ms ease,
+          border-color 150ms ease;
 
-    &__row {
-      display: flex;
-      align-items: center;
-      gap: var(--mp-spacing-3);
-    }
+        &--disabled {
+          background-color: var(--mp-color-bg-muted);
+          color: var(--mp-color-text-disabled);
+          cursor: not-allowed;
+        }
 
-    &__button {
-      display: inline-flex;
-      align-items: center;
-      padding: var(--mp-spacing-2) var(--mp-spacing-4);
-      font-size: var(--mp-font-size-sm);
-      font-weight: var(--mp-font-weight-medium);
-      color: var(--mp-color-text-primary);
-      background-color: var(--mp-color-bg-surface);
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      cursor: pointer;
-      white-space: nowrap;
-      transition:
-        background-color 150ms ease,
-        border-color 150ms ease;
+        &:hover:not(&--disabled) {
+          background-color: var(--mp-color-bg-muted);
+          border-color: var(--mp-color-border-strong);
+        }
+      }
+
+      &__name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      &__dropzone {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--mp-spacing-2);
+        padding: var(--mp-spacing-8) var(--mp-spacing-4);
+        border: 2px dashed var(--mp-color-border-default);
+        border-radius: var(--mp-radius-lg);
+        background-color: var(--mp-color-bg-surface);
+        transition:
+          border-color 150ms ease,
+          background-color 150ms ease;
+        cursor: pointer;
+        text-align: center;
+
+        &--active {
+          border-color: var(--mp-color-primary-default);
+          background-color: var(--mp-color-primary-subtle);
+        }
+      }
+
+      &__icon {
+        color: var(--mp-color-text-tertiary);
+      }
+
+      &__drop-text {
+        margin: 0;
+      }
+
+      &__browse-link {
+        color: var(--mp-color-primary-text);
+        cursor: pointer;
+        font-weight: var(--mp-font-weight-medium);
+        text-decoration: underline;
+
+        &:hover {
+          color: var(--mp-color-text-primary);
+        }
+      }
+
+      &__file-name {
+        margin: 0;
+      }
+
+      &--error {
+        .base-file-input__button,
+        .base-file-input__dropzone {
+          border-color: var(--mp-color-danger-default);
+        }
+      }
 
       &--disabled {
-        background-color: var(--mp-color-bg-muted);
-        color: var(--mp-color-text-disabled);
-        cursor: not-allowed;
+        pointer-events: none;
+
+        .base-file-input__label,
+        .base-file-input__name,
+        .base-file-input__drop-text,
+        .base-file-input__file-name {
+          color: var(--mp-color-text-disabled);
+        }
+
+        .base-file-input__dropzone {
+          background-color: var(--mp-color-bg-muted);
+          color: var(--mp-color-text-disabled);
+          cursor: not-allowed;
+        }
       }
 
-      &:hover:not(&--disabled) {
-        background-color: var(--mp-color-bg-muted);
-        border-color: var(--mp-color-border-strong);
-      }
-    }
-
-    &__name {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    &__dropzone {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: var(--mp-spacing-2);
-      padding: var(--mp-spacing-8) var(--mp-spacing-4);
-      border: 2px dashed var(--mp-color-border-default);
-      border-radius: var(--mp-radius-lg);
-      background-color: var(--mp-color-bg-surface);
-      transition:
-        border-color 150ms ease,
-        background-color 150ms ease;
-      cursor: pointer;
-      text-align: center;
-
-      &--active {
-        border-color: var(--mp-color-primary-default);
-        background-color: var(--mp-color-primary-subtle);
-      }
-    }
-
-    &__icon {
-      color: var(--mp-color-text-tertiary);
-    }
-
-    &__drop-text {
-      margin: 0;
-    }
-
-    &__browse-link {
-      color: var(--mp-color-primary-text);
-      cursor: pointer;
-      font-weight: var(--mp-font-weight-medium);
-      text-decoration: underline;
-
-      &:hover {
-        color: var(--mp-color-text-primary);
-      }
-    }
-
-    &__file-name {
-      margin: 0;
-    }
-
-    &--error {
-      .base-file-input__button,
-      .base-file-input__dropzone {
-        border-color: var(--mp-color-danger-default);
-      }
-    }
-
-    &--disabled {
-      pointer-events: none;
-
-      .base-file-input__label,
-      .base-file-input__name,
-      .base-file-input__drop-text,
-      .base-file-input__file-name {
-        color: var(--mp-color-text-disabled);
+      &__error {
+        color: var(--mp-color-danger-text);
+        margin: 0;
       }
 
-      .base-file-input__dropzone {
-        background-color: var(--mp-color-bg-muted);
-        color: var(--mp-color-text-disabled);
-        cursor: not-allowed;
+      &__hint {
+        margin: 0;
       }
-    }
-
-    &__error {
-      color: var(--mp-color-danger-text);
-      margin: 0;
-    }
-
-    &__hint {
-      margin: 0;
     }
   }
 </style>

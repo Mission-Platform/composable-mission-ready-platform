@@ -43,7 +43,10 @@ composable_mission_ready_platform/
 │   ├── map/                # MapLibre GL Vue 3 wrapper
 │   ├── open-graph/         # Open Graph metadata generation and dynamic injection
 │   ├── page-meta/          # Standard page metadata (title, description, canonical, hreflang, …) and dynamic injection
-│   └── tokens/             # CSS design tokens and SCSS theme definitions
+│   └── tokens/             # DTCG design tokens (OKLab) + SCSS theme definitions, managed with asimonim
+├── vite-plugins/           # Vite plugins consumed by the apps at build time
+│   ├── seo/                # Generates robots.txt + sitemap.xml during vite build
+│   └── tokens/             # Generates the design-token SCSS/CSS/TS from the DTCG sources during vite build
 ├── workers/                # Cloudflare Workers consumed by the apps
 │   └── base-spa/           # Base SPA worker (static asset + SPA fallback handler)
 ├── scripts/                # Repo-wide tooling scripts (i18n extraction, etc.)
@@ -93,7 +96,7 @@ The `packages/` folder contains all reusable libraries that apps consume. These 
 
 | Package | Path | Description |
 |---|---|---|
-| `@mission-platform/breakpoints` | `packages/breakpoints` | Responsive breakpoint utilities, composables, and Vue components |
+| `@mission-platform/breakpoints` | `packages/breakpoints` | Responsive breakpoint utilities, composables, and Vue components (the breakpoint SCSS variables, mixins, and visibility utility classes now live in `@mission-platform/tokens`) |
 | `@mission-platform/components` | `packages/components` | Vue 3 component library |
 | `@mission-platform/harper` | `packages/harper` | Harper grammar and style checker integration for Monaco editor |
 | `@mission-platform/hunspell` | `packages/hunspell` | Hunspell spell checker compiled to WebAssembly via Emscripten |
@@ -101,7 +104,7 @@ The `packages/` folder contains all reusable libraries that apps consume. These 
 | `@mission-platform/icons` | `packages/icons` | SVG icon components for Mission Platform |
 | `@mission-platform/map` | `packages/map` | MapLibre GL Vue 3 wrapper with full reactivity support |
 | `@mission-platform/seo` | `packages/seo` | Unified SEO surface — standard page metadata (`<title>`, description, canonical, hreflang, `<html lang>`, …), Open Graph + Twitter Card `<meta>` tags, and JSON-LD structured data (Schema.org `WebSite`, `WebPage`, `Organization`, `BreadcrumbList`, `Article`, `Product`, `FAQPage`, `Event`, … ) with a Vue 3 `useSeo` composable and `<Seo>` component for dynamic injection into `document.head` (SSR/SSG-safe via `@unhead/vue`) |
-| `@mission-platform/tokens` | `packages/tokens` | CSS design tokens and SCSS theme definitions |
+| `@mission-platform/tokens` | `packages/tokens` | Design tokens authored in the DTCG (designtokens.org) v2025.10 format with OKLab colours (validated with [asimonim](https://bennypowers.dev/asimonim/)); the DTCG sources are split into `palette` (colours, incl. the dark surface/border + scrim/shimmer primitives), one DTCG file per structural scale (`breakpoint`, `spacing`, `radius`, `shadow`, `size`, `motion` (duration + easing), `z-index`, `opacity`, `border-width`), `font` (family/size/weight/line-height/letter-spacing primitives), `typography` (composite per-variant styles), and the light/dark theme files (palette `{color.*}` aliases). `@mission-platform/vite-plugin-tokens` emits the palette and the flattened typography as structural partials (`src/generated/scss/_<file>.scss` — `$` variables, `--mp-*` CSS custom properties that interpolate the local `$` vars (incl. composite `--mp-typography-<variant>-*` referencing `var(--mp-font-*)`), and `@property` registrations) and merges the two themes into one `src/generated/scss/_theme.scss` (`:root { color-scheme: light dark; --mp-color-*: light-dark(<light>, <dark>) }`), plus one nested `as const` TypeScript module (`src/generated/ts/<file>.ts`) per source and the aggregate `src/generated/_tokens.scss` (incl. the theme) and `src/generated/tokens.ts` barrels |
 
 ---
 
@@ -174,6 +177,28 @@ The `workers/` folder contains Cloudflare Worker packages consumed by the deploy
 
 ---
 
+## `vite-plugins/` — Vite Plugins
+
+The `vite-plugins/` folder contains Vite plugin packages consumed by the deployable apps at build time. They are pnpm workspace packages but are kept in a dedicated top-level directory to make their build-tooling role explicit and separate from product-facing libraries in `packages/` and the static shared tooling in `configs/`.
+
+### Conventions for vite-plugins
+
+- Each plugin lives in its own subdirectory: `vite-plugins/<plugin-name>/`.
+- Package names follow the scoped convention `@mission-platform/<plugin-name>` (e.g. `@mission-platform/vite-plugin-seo`).
+- Plugins declare `vite` as an **optional `peerDependency`**, consume `configs/` packages as `devDependencies` (`"workspace:*"`), and may consume `packages/` as runtime dependencies when needed.
+- Plugins are versioned and released independently using [Changesets](https://github.com/changesets/changesets), the same as `packages/` and `configs/`.
+- Plugins must **never import from `apps/`** — the dependency flow is strictly one-directional: `apps` → `vite-plugins` → `packages`/`configs`.
+- Each plugin must maintain an `llms.txt` file explaining its usage, which must be updated whenever the plugin behaviour or API changes.
+
+### Current vite-plugins
+
+| Package | Path | Description |
+|---|---|---|
+| `@mission-platform/vite-plugin-seo` | `vite-plugins/seo` | Vite plugin that generates `robots.txt` and `sitemap.xml` at build time (and on dev-server start) from the `@mission-platform/seo` builders, replacing the per-app `seo:generate` prebuild scripts |
+| `@mission-platform/vite-plugin-tokens` | `vite-plugins/tokens` | Vite plugin that generates the design-token artefacts from the `@mission-platform/tokens` DTCG sources at build time, using a self-contained custom generator (split into `dtcg.ts`, `generators/scss.ts`, `generators/typescript.ts`, with no external CLI). Each non-theme source yields one self-contained structural SCSS partial (`generated/scss/_<file>.scss`: `$`-variables, `--mp-*` custom properties that interpolate the local `$`-variables, and `@property` registrations) — the palette and the flattened composite typography use this same path — while the two themes are merged into one `generated/scss/_theme.scss` (`:root { color-scheme: light dark; --mp-color-*: light-dark(<light>, <dark>) }`). Every source also yields one nested `as const` TypeScript module (`generated/ts/<file>.ts`), alongside the aggregate `generated/_tokens.scss` (SCSS `@forward` barrel, incl. the theme) and `generated/tokens.ts` (TypeScript re-export barrel) |
+
+---
+
 ### Adding a new package
 
 1. Create a new directory: `packages/<package-name>/` (or `configs/<config-name>/` for new shared tooling configurations).
@@ -190,7 +215,7 @@ The `workers/` folder contains Cloudflare Worker packages consumed by the deploy
 
 > **Node version:** This repository pins its Node.js version via `.nvmrc`. You **must** run `nvm use` in every new shell before running any `pnpm` command — otherwise installs, builds, and tests may silently use the wrong Node version and fail in confusing ways.
 
-> **Task runner:** All cross-workspace tasks (`build`, `lint`, `test`, …) are orchestrated by [Turborepo](https://turborepo.com). The root `turbo.json` defines only generic, cross-cutting tasks (`build`, `dev`, `test`, `lint`, `format`, `preview`, `storybook`, `deploy`, …). Workspace-specific tasks — `seo:generate` / `prebuild` (apps), `build:spa` (`apps/website`), `build:storybook` (`apps/storybook`), `build:ts` / `build:wasm` / `build:wasm:clean` (`packages/hunspell`), and `i18n:extract` (`scripts/`) — live in per-workspace `turbo.json` files that extend the root via `"extends": ["//"]`. Turbo handles topological ordering (`^build`), parallelism, and local caching under `.turbo/` and each workspace's `.turbo/` directory.
+> **Task runner:** All cross-workspace tasks (`build`, `lint`, `test`, …) are orchestrated by [Turborepo](https://turborepo.com). The root `turbo.json` defines only generic, cross-cutting tasks (`build`, `dev`, `test`, `lint`, `format`, `preview`, `storybook`, `deploy`, …). Workspace-specific tasks — `build:spa` (`apps/website`), `build:storybook` (`apps/storybook`), `build:ts` / `build:wasm` / `build:wasm:clean` (`packages/hunspell`), and `i18n:extract` (`scripts/`) — live in per-workspace `turbo.json` files that extend the root via `"extends": ["//"]`. Turbo handles topological ordering (`^build`), parallelism, and local caching under `.turbo/` and each workspace's `.turbo/` directory.
 
 ```bash
 # Always select the correct Node version first (uses .nvmrc)
@@ -310,7 +335,7 @@ Commit messages are validated **locally** as well as in CI, so non-conforming co
 
 ## Key Principles for Agents
 
-1. **Dependency direction is one-way.** Code in `packages/`, `configs/`, and `workers/` must never import from `apps/`. The flow is strictly `apps` → `packages`/`workers` → `configs` (and `apps` → `configs` directly for tooling).
+1. **Dependency direction is one-way.** Code in `packages/`, `configs/`, `vite-plugins/`, and `workers/` must never import from `apps/`. The flow is strictly `apps` → `packages`/`vite-plugins`/`workers` → `configs` (and `apps` → `configs` directly for tooling).
 2. **Isolate concerns in packages.** New reusable UI components, composables, utilities, or design tokens belong in `packages/`, not embedded inside an app. New shared lint/format/build tooling belongs in `configs/`.
 3. **Each app wires packages together.** Apps are thin orchestration layers that compose packages into a working product.
 4. **Storybook is the component workbench.** When adding or modifying components in `packages/`, add or update corresponding stories in `apps/storybook`.

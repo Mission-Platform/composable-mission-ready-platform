@@ -245,82 +245,84 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-rating {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--mp-spacing-1);
-    color: var(--mp-color-warning-default);
-    line-height: 1;
-
-    &--sm {
-      font-size: 1rem;
-    }
-
-    &--md {
-      font-size: 1.5rem;
-    }
-
-    &--lg {
-      font-size: 2rem;
-    }
-
-    &--disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    &:focus-visible {
-      outline: none;
-      border-radius: var(--mp-radius-sm);
-      box-shadow: var(--mp-shadow-focus-primary);
-    }
-
-    &__star {
-      position: relative;
+  @layer mp.components {
+    .base-rating {
       display: inline-flex;
-      width: 1em;
-      height: 1em;
-    }
-
-    &__icon {
-      display: block;
-      width: 1em;
-      height: 1em;
-
-      &--empty {
-        color: var(--mp-color-border-default);
-      }
-    }
-
-    &__fill {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
+      align-items: center;
+      gap: var(--mp-spacing-1);
       color: var(--mp-color-warning-default);
-    }
+      line-height: 1;
 
-    &__hit {
-      position: absolute;
-      inset: 0;
-      padding: 0;
-      margin: 0;
-      background: transparent;
-      border: 0;
-      cursor: pointer;
-
-      &--half {
-        right: 50%;
-        z-index: 2;
+      &--sm {
+        font-size: 1rem;
       }
 
-      &--full {
-        z-index: 1;
+      &--md {
+        font-size: 1.5rem;
+      }
+
+      &--lg {
+        font-size: 2rem;
+      }
+
+      &--disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      &:focus-visible {
+        outline: none;
+        border-radius: var(--mp-radius-sm);
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+
+      &__star {
+        position: relative;
+        display: inline-flex;
+        width: 1em;
+        height: 1em;
+      }
+
+      &__icon {
+        display: block;
+        width: 1em;
+        height: 1em;
+
+        &--empty {
+          color: var(--mp-color-border-default);
+        }
+      }
+
+      &__fill {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        color: var(--mp-color-warning-default);
+      }
+
+      &__hit {
+        position: absolute;
+        inset: 0;
+        padding: 0;
+        margin: 0;
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+
+        &--half {
+          right: 50%;
+          z-index: 2;
+        }
+
+        &--full {
+          z-index: 1;
+        }
       }
     }
-  }
 
-  .base-rating--readonly .base-rating__hit,
-  .base-rating--disabled .base-rating__hit {
-    cursor: default;
+    .base-rating--readonly .base-rating__hit,
+    .base-rating--disabled .base-rating__hit {
+      cursor: default;
+    }
   }
 </style>

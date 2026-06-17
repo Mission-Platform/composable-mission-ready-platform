@@ -155,107 +155,109 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-toast {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--mp-spacing-3);
-    width: 100%;
-    max-width: 24rem;
-    padding: var(--mp-spacing-3) var(--mp-spacing-4);
-    background-color: var(--mp-color-bg-surface);
-    border: 1px solid var(--mp-color-border-default);
-    border-left-width: 4px;
-    border-radius: var(--mp-radius-md);
-    box-shadow: var(--mp-shadow-lg);
-    color: var(--mp-color-text-primary);
-    font-family: var(--mp-font-family-sans);
-    pointer-events: auto;
-
-    &__icon {
+  @layer mp.components {
+    .base-toast {
       display: flex;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
+      align-items: flex-start;
+      gap: var(--mp-spacing-3);
+      width: 100%;
+      max-width: 24rem;
+      padding: var(--mp-spacing-3) var(--mp-spacing-4);
+      background-color: var(--mp-color-bg-surface);
+      border: 1px solid var(--mp-color-border-default);
+      border-left-width: 4px;
+      border-radius: var(--mp-radius-md);
+      box-shadow: var(--mp-shadow-lg);
+      color: var(--mp-color-text-primary);
+      font-family: var(--mp-font-family-sans);
+      pointer-events: auto;
 
-    &__content {
-      flex: 1 1 auto;
-      min-width: 0;
-    }
-
-    &__title {
-      margin: 0 0 var(--mp-spacing-1);
-      font-size: var(--mp-size-font-sm);
-      font-weight: var(--mp-font-weight-semibold, 600);
-    }
-
-    &__message {
-      font-size: var(--mp-size-font-sm);
-      color: var(--mp-color-text-secondary);
-      overflow-wrap: break-word;
-    }
-
-    &__dismiss {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      padding: var(--mp-spacing-1);
-      margin: calc(var(--mp-spacing-1) * -1);
-      background: transparent;
-      border: 0;
-      border-radius: var(--mp-radius-sm);
-      color: var(--mp-color-text-tertiary);
-      cursor: pointer;
-      transition: color 150ms ease;
-
-      &:hover {
-        color: var(--mp-color-text-primary);
+      &__icon {
+        display: flex;
+        flex-shrink: 0;
+        margin-top: 1px;
       }
 
-      &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
-        outline-offset: 1px;
+      &__content {
+        flex: 1 1 auto;
+        min-width: 0;
       }
-    }
 
-    /* Variants — accent the icon and left border. */
-    &--info {
-      border-left-color: var(--mp-color-information-default);
-
-      .base-toast__icon {
-        color: var(--mp-color-information-default);
+      &__title {
+        margin: 0 0 var(--mp-spacing-1);
+        font-size: var(--mp-size-font-sm);
+        font-weight: var(--mp-font-weight-semibold, 600);
       }
-    }
 
-    &--success {
-      border-left-color: var(--mp-color-success-default);
-
-      .base-toast__icon {
-        color: var(--mp-color-success-default);
-      }
-    }
-
-    &--warning {
-      border-left-color: var(--mp-color-warning-default);
-
-      .base-toast__icon {
-        color: var(--mp-color-warning-default);
-      }
-    }
-
-    &--error {
-      border-left-color: var(--mp-color-error-default);
-
-      .base-toast__icon {
-        color: var(--mp-color-error-default);
-      }
-    }
-
-    &--neutral {
-      border-left-color: var(--mp-color-border-strong);
-
-      .base-toast__icon {
+      &__message {
+        font-size: var(--mp-size-font-sm);
         color: var(--mp-color-text-secondary);
+        overflow-wrap: break-word;
+      }
+
+      &__dismiss {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        padding: var(--mp-spacing-1);
+        margin: calc(var(--mp-spacing-1) * -1);
+        background: transparent;
+        border: 0;
+        border-radius: var(--mp-radius-sm);
+        color: var(--mp-color-text-tertiary);
+        cursor: pointer;
+        transition: color 150ms ease;
+
+        &:hover {
+          color: var(--mp-color-text-primary);
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--mp-color-border-focus);
+          outline-offset: 1px;
+        }
+      }
+
+      /* Variants — accent the icon and left border. */
+      &--info {
+        border-left-color: var(--mp-color-information-default);
+
+        .base-toast__icon {
+          color: var(--mp-color-information-default);
+        }
+      }
+
+      &--success {
+        border-left-color: var(--mp-color-success-default);
+
+        .base-toast__icon {
+          color: var(--mp-color-success-default);
+        }
+      }
+
+      &--warning {
+        border-left-color: var(--mp-color-warning-default);
+
+        .base-toast__icon {
+          color: var(--mp-color-warning-default);
+        }
+      }
+
+      &--error {
+        border-left-color: var(--mp-color-error-default);
+
+        .base-toast__icon {
+          color: var(--mp-color-error-default);
+        }
+      }
+
+      &--neutral {
+        border-left-color: var(--mp-color-border-strong);
+
+        .base-toast__icon {
+          color: var(--mp-color-text-secondary);
+        }
       }
     }
   }

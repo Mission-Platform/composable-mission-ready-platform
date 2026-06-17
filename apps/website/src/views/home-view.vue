@@ -15,6 +15,7 @@
     BaseNavbar,
     BaseNavbarItem,
     BaseQrCode,
+    BaseStack,
     BaseTag,
     BaseThemeToggle,
     BaseTypography,
@@ -339,7 +340,13 @@
         >
           {{ t('hero.lead') }}
         </BaseTypography>
-        <div class="home__cta">
+        <BaseStack
+          class="home__cta"
+          direction="horizontal"
+          gap="sm"
+          justify="center"
+          wrap
+        >
           <BaseButton
             variant="primary"
             size="lg"
@@ -354,7 +361,7 @@
           >
             {{ t('hero.cta-secondary') }}
           </BaseButton>
-        </div>
+        </BaseStack>
       </BaseInView>
 
       <section
@@ -630,10 +637,6 @@
   }
 
   .home__cta {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
     margin-top: 8px;
   }
 

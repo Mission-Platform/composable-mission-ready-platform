@@ -1,6 +1,161 @@
 # @mission-platform/tokens
 
-CSS design tokens and SCSS theme definitions.
+Design tokens for Mission Platform, defined in the **DTCG** (Design Tokens
+Community Group, https://www.designtokens.org/) format and managed with
+[asimonim](https://bennypowers.dev/asimonim/).
+
+- Schema: **DTCG v2025.10**
+- Colour space: **OKLab** (`oklab(L a b / α)`)
+- Generator: `@mission-platform/vite-plugin-tokens` (runs `asimonim convert` during `vite build`)
+
+## Source of truth — `tokens/*.tokens.json`
+
+Edit these DTCG files only; never edit the generated output.
+
+- `palette.tokens.json`      — primitive colour palette (`color.primary.600`, …), OKLab
+- structural scales — one DTCG file per scale (asimonim merges them by top-level group):
+  - `breakpoint.tokens.json`   — responsive `breakpoint.*` thresholds
+  - `spacing.tokens.json`      — `spacing.*` margin/padding/gap scale
+  - `radius.tokens.json`       — `radius.*` border-radius scale (rem; `full` is the `9999px` pill sentinel)
+  - `shadow.tokens.json`       — `shadow.*` elevation + focus-ring scale (rem offsets/blur/spread)
+  - `size.tokens.json`         — the unified component `size.*` scale (font/pad/gap/icon/height/…)
+  - `motion.tokens.json`       — `duration.*` and `easing.*` (transition/animation timing)
+  - `z-index.tokens.json`      — `z-index.*` stacking order (`base` → `toast`)
+  - `opacity.tokens.json`      — `opacity.*` alpha levels (`disabled`, `muted`, …)
+  - `border-width.tokens.json` — `border-width.*` (`thin`/`thick`/`heavy`), rem
+
+All dimension scales (spacing, radius, shadow, size, border-width) are expressed in **rem**
+relative to the `14px` root font-size (set in `scss/tokens`) so they scale with the user's
+font size; only `breakpoint.*` stays in absolute **px** (rem in a media query is relative to the
+browser root, not `:root`) and `radius.full` keeps its `9999px` pill sentinel.
+- `font.tokens.json`         — primitive font scales: `font.family` (sans/mono), `font.size`,
+  `font.weight`, `line-height`, `letter-spacing`
+- `typography.tokens.json`   — composite typography styles (DTCG `typography` type): `display`,
+  `h1`–`h6`, `body-lg`/`md`/`sm`/`xs`, `label`, `caption`, `code` — each composed from the
+  `font.tokens.json` primitives via aliases (`{font.size.4xl}`, …)
+- `theme-light.tokens.json`  — light-theme semantic colours (`color.bg.*`, `color.primary.*`, …)
+- `theme-dark.tokens.json`   — dark-theme semantic colours
+
+Fonts: primary sans is **Comfortaa**, primary mono is **Datatype** (with fallbacks).
+
+Every group and token carries a DTCG `$description` documenting its intent (hue/role for
+colours, px equivalents and usage for the scales). asimonim emits these descriptions as
+`///` SCSS doc comments / JS doc comments in the generated output, and the asimonim LSP
+surfaces them on hover — so keep them accurate when editing a token.
+
+`.config/design-tokens.yaml` configures asimonim (schema + source discovery) for
+its CLI, Language Server (LSP) and MCP server.
+
+## Generated output — `src/generated/` (do not edit)
+
+- `_palette.scss` / `_scale.scss`            — unprefixed `$color-*`, `$font-size-*`, … SCSS variables
+  (`_scale.scss` also carries the `font.tokens.json` `$font-*` / `$line-height-*` / `$letter-spacing-*` vars)
+- `_structural.scss`                          — `:root { --mp-* }` structural + font CSS custom properties
+- `_typography.scss`                          — composite `--mp-typography-<variant>-*` CSS vars (each
+  referencing the matching primitive `--mp-*` token)
+- `_theme-light.scss` / `_theme-dark.scss`    — selector-scoped semantic `--mp-color-*` vars
+- `flat.ts`                                    — flat `as const` token values (asimonim)
+- `tokens.ts`                                  — nested TypeScript API (re-exported by `src/tokens.ts`),
+  including the `typography` map (`typography.h1.fontSize`, …)
+- `tokens.css`                                 — standalone CSS bundle (structural + font + light theme)
 
 ## Usage
-Import these tokens to ensure consistent design (colors, spacing, radii, etc.) across the application.
+
+TypeScript:
+
+```ts
+import { colors, spacing, fontSizes, typography, sizeIcons } from '@mission-platform/tokens';
+// typography.h1 => { fontFamily, fontSize, fontWeight, lineHeight, letterSpacing }
+import { durations, easings, zIndices, opacities, borderWidths } from '@mission-platform/tokens';
+// durations.fast => '150ms'; easings.standard => 'ease'; zIndices.modal => 1300
+```
+
+Motion, layering & box-model CSS custom properties (prefer these over inline literals):
+
+```css
+.control {
+  transition: background-color var(--mp-duration-fast) var(--mp-easing-standard);
+  border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+}
+.control:disabled {
+  opacity: var(--mp-opacity-disabled);
+}
+.dialog {
+  z-index: var(--mp-z-index-modal);
+}
+```
+
+Composite typography CSS custom properties (preferred over the legacy SCSS mixins):
+
+```css
+.headline {
+  font-family: var(--mp-typography-h1-font-family);
+  font-size: var(--mp-typography-h1-font-size);
+  font-weight: var(--mp-typography-h1-font-weight);
+  line-height: var(--mp-typography-h1-line-height);
+  letter-spacing: var(--mp-typography-h1-letter-spacing);
+}
+```
+
+SCSS (structural CSS vars + base resets + the `light-dark()` theme — one import):
+
+```scss
+@use '@mission-platform/tokens/scss/tokens';
+```
+
+`scss/tokens` emits the semantic colour tokens as `:root { color-scheme: light dark;
+--mp-color-*: light-dark(<light>, <dark>) }`, so by default the UI follows the OS
+`prefers-color-scheme`. It also ships the opt-in scheme pins, so adding
+`data-theme="light|dark"` (or the `.theme-light`/`.theme-dark` classes) to any
+element pins that element **and its subtree** to one scheme — no extra import is
+needed (the legacy `scss/themes/{light,dark}` entry points are kept only as
+no-op back-compat shims). Runtime theme switching is handled by
+`@mission-platform/components` (`BaseThemeProvider`/`useTheme`/`BaseThemeToggle`,
+plus `themeInitScript()` for a flash-free pre-paint init).
+
+Typography mixins (legacy — being retired in Phase 2):
+
+```scss
+@use '@mission-platform/tokens/scss/mixins' as mp;
+.label { @include mp.mp-font('label', $weight: 'medium'); }
+```
+
+> **Phase 2 (in progress):** the SCSS `mp-font-*` mixin layer is being incrementally
+> retired in favour of composing the generated `--mp-font-*`, `--mp-line-height-*`
+> and `--mp-letter-spacing-*` CSS custom properties directly. New code should prefer
+> the CSS variables; `BaseTypography` (in `@mission-platform/components`) has already
+> been migrated as the first consumer.
+
+Plain CSS (no SCSS toolchain):
+
+```css
+@import '@mission-platform/tokens/css';
+```
+
+Breakpoints (the responsive SCSS layer lives here; the `useBreakpoints` composable and
+`<ShowAt>`/`<HideAt>`/`<BreakpointDebug>` components remain in `@mission-platform/breakpoints`).
+The seven threshold **values** are design tokens (`breakpoint.*` in `breakpoint.tokens.json`,
+generated as `$breakpoint-2xs` … `$breakpoint-2xl` in `src/generated/scss/_breakpoint.scss`); the
+SCSS partials (`src/scss/_breakpoints.scss`, `_breakpoints-utilities.scss`) are hand-authored
+wrappers that build the `$breakpoints` map and mixins directly from those generated breakpoint
+properties:
+
+```scss
+// $breakpoints map + bp-up/bp-down/bp-between/bp-only mixins (no emitted CSS):
+@use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
+.sidebar { @include bp.bp-up('lg') { width: 18rem; } }
+
+// The .bp-show-*/.bp-hide-*/.bp-only-* visibility utility classes (emits CSS):
+@use '@mission-platform/tokens/scss/breakpoints-utilities';
+```
+
+## Scripts
+
+- `pnpm --filter @mission-platform/tokens build` — generate artefacts (via the Vite plugin) + build
+- `pnpm --filter @mission-platform/tokens tokens:validate` — validate the DTCG sources with asimonim
+
+## Adding or changing a token
+
+1. Edit the relevant `tokens/*.tokens.json` file (DTCG v2025.10, OKLab colours).
+2. Run the build (or `tokens:validate`) — the SCSS/CSS/TS output is regenerated automatically.
+3. Never hand-edit `src/generated/`.

@@ -127,23 +127,25 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-menubar {
-    display: flex;
-    align-items: center;
-    gap: var(--mp-spacing-1);
-    list-style: none;
-    margin: 0;
-    padding: var(--mp-spacing-1);
-    background-color: var(--mp-color-bg-surface);
+  @layer mp.components {
+    .base-menubar {
+      display: flex;
+      align-items: center;
+      gap: var(--mp-spacing-1);
+      list-style: none;
+      margin: 0;
+      padding: var(--mp-spacing-1);
+      background-color: var(--mp-color-bg-surface);
 
-    &--bordered {
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
+      &--bordered {
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-md);
+      }
     }
-  }
 
-  .base-menubar__item {
-    position: relative;
-    list-style: none;
+    .base-menubar__item {
+      position: relative;
+      list-style: none;
+    }
   }
 </style>

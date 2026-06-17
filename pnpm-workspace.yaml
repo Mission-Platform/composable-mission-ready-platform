@@ -2,10 +2,12 @@ packages:
   - apps/**
   - configs/**
   - packages/**
+  - vite-plugins/**
   - workers/**
   - scripts
 
 catalog:
+  '@pwrs/asimonim': ^0.3.2
   '@changesets/cli': ^2.31.0
   '@types/js-yaml': ^4.0.9
   '@vue/compiler-sfc': ^3.5.38
@@ -73,20 +75,20 @@ catalogs:
   storybook:
     '@chromatic-com/storybook': ^5.2.1
     "chromatic": "^17.4.1"
-    '@storybook/addon-a11y': ^10.4.4
-    '@storybook/addon-docs': ^10.4.4
-    '@storybook/addon-themes': ^10.4.4
-    '@storybook/addon-vitest': ^10.4.4
-    '@storybook/vue3-vite': ^10.4.4
-    storybook: ^10.4.4
+    '@storybook/addon-a11y': ^10.4.5
+    '@storybook/addon-docs': ^10.4.5
+    '@storybook/addon-themes': ^10.4.5
+    '@storybook/addon-vitest': ^10.4.5
+    '@storybook/vue3-vite': ^10.4.5
+    storybook: ^10.4.5
 
   testing:
-    '@vitest/browser-playwright': ^4.1.8
-    '@vitest/coverage-v8': ^4.1.8
+    '@vitest/browser-playwright': ^4.1.9
+    '@vitest/coverage-v8': ^4.1.9
     axe-core: ^4.12.1
     jsdom: ^29.1.1
-    playwright: ^1.60.0
-    vitest: ^4.1.8
+    playwright: ^1.61.0
+    vitest: ^4.1.9
 
   map:
     '@types/geojson': ^7946.0.16
@@ -114,6 +116,7 @@ trustPolicyExclude:
 
 allowBuilds:
   '@parcel/watcher': true
+  '@pwrs/asimonim': true
   esbuild: true
   sharp: true
   unrs-resolver: true

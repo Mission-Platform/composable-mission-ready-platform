@@ -202,106 +202,108 @@
 <style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
-  .base-scheduler-year-view {
-    padding: var(--mp-spacing-4);
-    overflow-y: auto;
-    height: 100%;
+  @layer mp.components {
+    .base-scheduler-year-view {
+      padding: var(--mp-spacing-4);
+      overflow-y: auto;
+      height: 100%;
 
-    &__grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: var(--mp-spacing-6);
-    }
+      &__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: var(--mp-spacing-6);
+      }
 
-    // ── Mini month ─────────────────────────────────────────────────────────────
+      // ── Mini month ─────────────────────────────────────────────────────────────
 
-    &__month {
-      display: flex;
-      flex-direction: column;
-      gap: var(--mp-spacing-1);
-    }
+      &__month {
+        display: flex;
+        flex-direction: column;
+        gap: var(--mp-spacing-1);
+      }
 
-    &__month-title {
-      @include mp.mp-font-body-sm;
+      &__month-title {
+        @include mp.mp-font-body-sm;
 
-      justify-content: flex-start;
-      font-weight: 600;
-      padding: 0;
-      margin-bottom: var(--mp-spacing-1);
+        justify-content: flex-start;
+        font-weight: 600;
+        padding: 0;
+        margin-bottom: var(--mp-spacing-1);
 
-      &.base-button--tertiary:hover {
+        &.base-button--tertiary:hover {
+          background: transparent;
+          color: var(--mp-color-primary-default);
+          text-decoration: underline;
+        }
+      }
+
+      // ── Weekday labels ─────────────────────────────────────────────────────────
+
+      &__weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+      }
+
+      &__wd {
+        @include mp.mp-font-caption;
+
+        text-align: center;
+        color: var(--mp-color-text-secondary);
+        font-weight: 600;
+      }
+
+      // ── Day grid ──────────────────────────────────────────────────────────────
+
+      &__days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
+      }
+
+      &__day {
+        @include mp.mp-font-caption;
+
+        aspect-ratio: 1;
+        border: none;
         background: transparent;
-        color: var(--mp-color-primary-default);
-        text-decoration: underline;
-      }
-    }
+        border-radius: var(--mp-radius-full);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
 
-    // ── Weekday labels ─────────────────────────────────────────────────────────
+        &--filler {
+          visibility: hidden;
+          pointer-events: none;
+        }
 
-    &__weekdays {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-    }
+        &--today {
+          background: var(--mp-color-primary-default);
+          color: var(--mp-color-text-on-primary);
+          font-weight: 700;
+        }
 
-    &__wd {
-      @include mp.mp-font-caption;
+        &--has-event:not(.base-scheduler-year-view__day--today)::after {
+          content: '';
+          position: absolute;
+          bottom: 2px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          background: var(--mp-color-primary-default);
+        }
 
-      text-align: center;
-      color: var(--mp-color-text-secondary);
-      font-weight: 600;
-    }
+        &:focus-visible {
+          outline: 2px solid var(--mp-color-border-focus);
+          outline-offset: 1px;
+        }
 
-    // ── Day grid ──────────────────────────────────────────────────────────────
-
-    &__days {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 1px;
-    }
-
-    &__day {
-      @include mp.mp-font-caption;
-
-      aspect-ratio: 1;
-      border: none;
-      background: transparent;
-      border-radius: var(--mp-radius-full);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-
-      &--filler {
-        visibility: hidden;
-        pointer-events: none;
-      }
-
-      &--today {
-        background: var(--mp-color-primary-default);
-        color: var(--mp-color-text-on-primary);
-        font-weight: 700;
-      }
-
-      &--has-event:not(.base-scheduler-year-view__day--today)::after {
-        content: '';
-        position: absolute;
-        bottom: 2px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background: var(--mp-color-primary-default);
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
-        outline-offset: 1px;
-      }
-
-      &:hover:not(:disabled, .base-scheduler-year-view__day--today) {
-        background: var(--mp-color-bg-muted);
+        &:hover:not(:disabled, .base-scheduler-year-view__day--today) {
+          background: var(--mp-color-bg-muted);
+        }
       }
     }
   }

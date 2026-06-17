@@ -4,10 +4,12 @@
     BaseButton,
     BaseDialog,
     BaseDrawer,
+    BaseIconButton,
     BaseInput,
     BaseMenubar,
     BaseNavbar,
     BaseNavbarItem,
+    BaseStack,
     BaseThemeToggle,
     BaseVirtualTable,
     BaseVirtualTabs,
@@ -15,11 +17,10 @@
   import { useI18n } from '@mission-platform/i18n';
   import { IconDownload, IconPencil } from '@mission-platform/icons';
   import { organizationId, useSeo, webPage } from '@mission-platform/seo';
-  import { computed, ref } from 'vue';
+  import { computed, defineAsyncComponent, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
 
-  import MonacoEditor from './components/monaco-editor.vue';
-  import SnippetEditorModal from './components/snippet-editor-modal.vue';
+  import ClientOnly from './components/client-only.vue';
   import { useSnippets } from './composables/use-snippets';
   import { useTabs } from './composables/use-tabs';
   import { APP_DESCRIPTION, APP_LOCALE_BCP47, APP_ORIGIN, APP_TITLE, PUBLISHER_URL } from './seo-app';
@@ -27,6 +28,15 @@
   import type { Snippet } from './types';
 
   defineOptions({ name: 'MyCareNotesApp' });
+
+  // The Monaco-backed editor and the snippet editor modal both pull in the
+  // (heavy, browser-only) `monaco-editor` runtime and its `?worker` entries.
+  // Load them as async components so they are code-split into client-only
+  // chunks and excluded from the `vite-ssg` server build / prerendered HTML —
+  // the editor has no meaningful server-rendered output anyway and mounts on
+  // the client after hydration.
+  const MonacoEditor = defineAsyncComponent(() => import('./components/monaco-editor.vue'));
+  const SnippetEditorModal = defineAsyncComponent(() => import('./components/snippet-editor-modal.vue'));
 
   // Per-route SEO surface: emit the `WebPage` JSON-LD node for this route,
   // explicitly linked into the site-wide `WebSite` + `Organization` graph
@@ -266,6 +276,7 @@
     <template #content>
       <!-- Snippets panel -->
       <BaseDrawer
+        :close-on-route-change="false"
         :open="snippetsPanelVisible"
         placement="start"
         size="xl"
@@ -291,22 +302,24 @@
         >
           <template #cell-actions="{ row: rawRow }">
             <template v-if="(rawRow as SnippetRow).id !== undefined">
-              <BaseButton
-                size="sm"
+              <BaseIconButton
+                :label="t('snippet.export')"
                 :title="t('snippet.export')"
-                variant="tertiary"
+                size="sm"
+                variant="ghost"
                 @click="exportSnippet((rawRow as SnippetRow).id as string)"
               >
                 <IconDownload size="xs" />
-              </BaseButton>
-              <BaseButton
-                size="sm"
+              </BaseIconButton>
+              <BaseIconButton
+                :label="t('snippet.edit')"
                 :title="t('snippet.edit')"
-                variant="tertiary"
+                size="sm"
+                variant="ghost"
                 @click="openEditSnippet(rawRow as SnippetRow as Snippet)"
               >
                 <IconPencil size="xs" />
-              </BaseButton>
+              </BaseIconButton>
             </template>
           </template>
         </BaseVirtualTable>
@@ -328,21 +341,25 @@
           :key="tab.id"
           #[tab.id]
         >
-          <MonacoEditor
-            :model-value="openTabs().find((openedTab) => openedTab.id === tab.id)?.content ?? ''"
-            :tab-id="tab.id"
-            @update:model-value="updateTabContent(tab.id, $event)"
-          />
+          <ClientOnly>
+            <MonacoEditor
+              :model-value="openTabs().find((openedTab) => openedTab.id === tab.id)?.content ?? ''"
+              :tab-id="tab.id"
+              @update:model-value="updateTabContent(tab.id, $event)"
+            />
+          </ClientOnly>
         </template>
       </BaseVirtualTabs>
     </template>
   </BaseApplicationLayout>
 
-  <SnippetEditorModal
-    @close="closeSnippetModal"
-    @delete="onSnippetDelete"
-    @save="onSnippetSave"
-  />
+  <ClientOnly>
+    <SnippetEditorModal
+      @close="closeSnippetModal"
+      @delete="onSnippetDelete"
+      @save="onSnippetSave"
+    />
+  </ClientOnly>
 
   <!-- Rename-tab dialog -->
   <BaseDialog
@@ -359,7 +376,12 @@
       @keydown="onRenameTabKeydown"
     />
     <template #footer>
-      <div class="rename-modal-footer">
+      <BaseStack
+        class="rename-modal-footer"
+        direction="horizontal"
+        gap="xs"
+        justify="end"
+      >
         <BaseButton
           variant="tertiary"
           @click="cancelRenameTab"
@@ -373,16 +395,13 @@
         >
           {{ t('rename.confirm') }}
         </BaseButton>
-      </div>
+      </BaseStack>
     </template>
   </BaseDialog>
 </template>
 
 <style lang="scss" scoped>
   .rename-modal-footer {
-    display: flex;
-    gap: var(--mp-space-2, 8px);
-    justify-content: flex-end;
     width: 100%;
   }
 </style>

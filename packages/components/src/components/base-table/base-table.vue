@@ -129,147 +129,149 @@
 
 <style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
-  @use '@mission-platform/breakpoints/scss/mixins' as bp;
+  @use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 
-  .base-table-wrapper {
-    position: relative;
-    overflow-x: auto;
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-  }
-
-  .base-table__loading {
-    position: absolute;
-    inset: 0;
-    background-color: var(--mp-color-bg-loading-overlay);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-    border-radius: var(--mp-radius-md);
-  }
-
-  .base-table__spinner {
-    display: inline-block;
-    width: var(--mp-size-icon-lg);
-    height: var(--mp-size-icon-lg);
-    border: 0.214rem solid var(--mp-color-primary-default);
-    border-top-color: transparent;
-    border-radius: var(--mp-radius-full);
-    animation: mp-spin 0.65s linear infinite;
-  }
-
-  .base-table {
-    @include mp.mp-font-body-sm;
-
-    width: 100%;
-    border-collapse: collapse;
-
-    &__caption {
-      padding: var(--mp-spacing-3) var(--mp-spacing-4);
-      text-align: left;
-      caption-side: top;
-
-      /* typography handled by BaseTypography */
+  @layer mp.components {
+    .base-table-wrapper {
+      position: relative;
+      overflow-x: auto;
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-md);
     }
 
-    &__head {
-      background-color: var(--mp-color-bg-muted);
+    .base-table__loading {
+      position: absolute;
+      inset: 0;
+      background-color: var(--mp-color-bg-loading-overlay);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      border-radius: var(--mp-radius-md);
     }
 
-    &__th {
-      padding: var(--mp-spacing-2) var(--mp-spacing-3);
-      text-align: left;
-      white-space: nowrap;
-      border-bottom: 1px solid var(--mp-color-border-default);
+    .base-table__spinner {
+      display: inline-block;
+      width: var(--mp-size-icon-lg);
+      height: var(--mp-size-icon-lg);
+      border: 0.214rem solid var(--mp-color-primary-default);
+      border-top-color: transparent;
+      border-radius: var(--mp-radius-full);
+      animation: mp-spin 0.65s linear infinite;
+    }
 
-      @include bp.bp-up('sm') {
+    .base-table {
+      @include mp.mp-font-body-sm;
+
+      width: 100%;
+      border-collapse: collapse;
+
+      &__caption {
         padding: var(--mp-spacing-3) var(--mp-spacing-4);
+        text-align: left;
+        caption-side: top;
+
+        /* typography handled by BaseTypography */
       }
 
-      &--align-center {
-        text-align: center;
+      &__head {
+        background-color: var(--mp-color-bg-muted);
       }
 
-      &--align-right {
-        text-align: right;
-      }
+      &__th {
+        padding: var(--mp-spacing-2) var(--mp-spacing-3);
+        text-align: left;
+        white-space: nowrap;
+        border-bottom: 1px solid var(--mp-color-border-default);
 
-      &--sortable {
-        cursor: pointer;
-        user-select: none;
+        @include bp.bp-up('sm') {
+          padding: var(--mp-spacing-3) var(--mp-spacing-4);
+        }
 
-        &:hover {
-          background-color: var(--mp-color-bg-sunken);
-          color: var(--mp-color-text-primary);
+        &--align-center {
+          text-align: center;
+        }
+
+        &--align-right {
+          text-align: right;
+        }
+
+        &--sortable {
+          cursor: pointer;
+          user-select: none;
+
+          &:hover {
+            background-color: var(--mp-color-bg-sunken);
+            color: var(--mp-color-text-primary);
+          }
         }
       }
-    }
 
-    &__th-content {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--mp-spacing-1);
-    }
-
-    &__sort-icon {
-      opacity: 0.5;
-    }
-
-    &__td {
-      padding: var(--mp-spacing-2) var(--mp-spacing-3);
-      vertical-align: middle;
-
-      @include bp.bp-up('sm') {
-        padding: var(--mp-spacing-3) var(--mp-spacing-4);
+      &__th-content {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--mp-spacing-1);
       }
 
-      &--align-center {
+      &__sort-icon {
+        opacity: 0.5;
+      }
+
+      &__td {
+        padding: var(--mp-spacing-2) var(--mp-spacing-3);
+        vertical-align: middle;
+
+        @include bp.bp-up('sm') {
+          padding: var(--mp-spacing-3) var(--mp-spacing-4);
+        }
+
+        &--align-center {
+          text-align: center;
+        }
+
+        &--align-right {
+          text-align: right;
+        }
+      }
+
+      &__row {
+        border-bottom: 1px solid var(--mp-color-border-default);
+
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+
+      &__empty {
+        padding: var(--mp-spacing-8) var(--mp-spacing-4);
         text-align: center;
+
+        /* typography handled by BaseTypography */
       }
 
-      &--align-right {
-        text-align: right;
+      /* Striped */
+      &--striped .base-table__row:nth-child(even) {
+        background-color: var(--mp-color-bg-muted);
       }
-    }
 
-    &__row {
-      border-bottom: 1px solid var(--mp-color-border-default);
-
-      &:last-child {
-        border-bottom: none;
+      /* Bordered */
+      &--bordered {
+        .base-table__th,
+        .base-table__td {
+          border: 1px solid var(--mp-color-border-default);
+        }
       }
-    }
 
-    &__empty {
-      padding: var(--mp-spacing-8) var(--mp-spacing-4);
-      text-align: center;
-
-      /* typography handled by BaseTypography */
-    }
-
-    /* Striped */
-    &--striped .base-table__row:nth-child(even) {
-      background-color: var(--mp-color-bg-muted);
-    }
-
-    /* Bordered */
-    &--bordered {
-      .base-table__th,
-      .base-table__td {
-        border: 1px solid var(--mp-color-border-default);
+      /* Hoverable */
+      &--hoverable .base-table__row:hover {
+        background-color: var(--mp-color-bg-muted);
       }
     }
 
-    /* Hoverable */
-    &--hoverable .base-table__row:hover {
-      background-color: var(--mp-color-bg-muted);
-    }
-  }
-
-  @keyframes mp-spin {
-    to {
-      transform: rotate(360deg);
+    @keyframes mp-spin {
+      to {
+        transform: rotate(360deg);
+      }
     }
   }
 </style>

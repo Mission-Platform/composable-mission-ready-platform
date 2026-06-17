@@ -46,16 +46,18 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-dialog__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--mp-spacing-4) var(--mp-spacing-6);
-    border-bottom: 1px solid var(--mp-color-border-default);
-    gap: var(--mp-spacing-4);
-  }
+  @layer mp.components {
+    .base-dialog__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--mp-spacing-4) var(--mp-spacing-6);
+      border-bottom: 1px solid var(--mp-color-border-default);
+      gap: var(--mp-spacing-4);
+    }
 
-  .base-dialog__title {
-    margin: 0;
+    .base-dialog__title {
+      margin: 0;
+    }
   }
 </style>

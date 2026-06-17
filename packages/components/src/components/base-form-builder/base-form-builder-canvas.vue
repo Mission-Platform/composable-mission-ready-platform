@@ -89,8 +89,8 @@
     :data="{ kind: 'canvas' }"
     :disabled="disabled"
     :empty="rootFields.length === 0"
+    :role="rootFields.length === 0 ? undefined : 'list'"
     class="form-builder-canvas"
-    role="list"
   >
     <template v-if="rootFields.length === 0">
       <BaseTypography
@@ -146,7 +146,7 @@
         :data="{ kind: 'step', step: entry.step }"
         :disabled="disabled"
         :empty="entry.fields.length === 0"
-        role="list"
+        :role="entry.fields.length === 0 ? undefined : 'list'"
       >
         <template v-if="entry.fields.length === 0">
           <BaseTypography
@@ -182,23 +182,25 @@
 </template>
 
 <style lang="scss" scoped>
-  .form-builder-canvas {
-    min-height: 100%;
+  @layer mp.components {
+    .form-builder-canvas {
+      min-height: 100%;
 
-    &--wizard {
-      display: flex;
-      flex-direction: column;
-      gap: var(--mp-spacing-4);
-    }
+      &--wizard {
+        display: flex;
+        flex-direction: column;
+        gap: var(--mp-spacing-4);
+      }
 
-    &__step {
-      display: flex;
-      flex-direction: column;
-      gap: var(--mp-spacing-2);
-    }
+      &__step {
+        display: flex;
+        flex-direction: column;
+        gap: var(--mp-spacing-2);
+      }
 
-    &__step-title {
-      margin: 0;
+      &__step-title {
+        margin: 0;
+      }
     }
   }
 </style>

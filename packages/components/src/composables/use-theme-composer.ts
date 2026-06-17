@@ -37,6 +37,14 @@ export interface ThemeComposerConfig {
   /** Base corner radius — overrides `--mp-radius-md`. */
   radius?: string;
   /**
+   * Colour scheme applied to the composed scope via the CSS `color-scheme`
+   * property. Drives the tokens' `light-dark()` values (and native UA widgets):
+   * `'light dark'` follows the OS `prefers-color-scheme`, while `'light'` /
+   * `'dark'` pin the scope. Unlike the other attributes this is *not* a `--mp-*`
+   * custom property — it is emitted as a real `color-scheme` declaration.
+   */
+  colorScheme?: 'light' | 'dark' | 'light dark' | 'normal';
+  /**
    * Escape hatch — arbitrary CSS custom-property overrides. Keys may be given
    * with or without the leading `--mp-` prefix (e.g. `'spacing-4'`,
    * `'--mp-spacing-4'`, or a fully custom `'--my-var'`). These are merged on
@@ -45,8 +53,12 @@ export interface ThemeComposerConfig {
   tokens?: Record<string, string>;
 }
 
-/** The friendly attribute keys of {@link ThemeComposerConfig} (excludes `tokens`). */
-export type ThemeComposerAttribute = Exclude<keyof ThemeComposerConfig, 'tokens'>;
+/**
+ * The friendly attribute keys of {@link ThemeComposerConfig} that map to a
+ * `--mp-*` custom property (excludes the raw `tokens` escape hatch and
+ * `colorScheme`, which is emitted as a real `color-scheme` declaration).
+ */
+export type ThemeComposerAttribute = Exclude<keyof ThemeComposerConfig, 'tokens' | 'colorScheme'>;
 
 /**
  * Maps each friendly {@link ThemeComposerConfig} attribute to the `--mp-*` CSS
@@ -177,14 +189,19 @@ export function createThemeComposer(options: UseThemeComposerOptions = {}): Them
 
   const config = ref<ThemeComposerConfig>({ ...seed });
   const cssVariables = computed<Record<string, string>>(() => configToCssVariables(config.value));
-  const styleString = computed<string>(() => cssVariablesToString(cssVariables.value));
+  const styleString = computed<string>(() => {
+    const variables = cssVariablesToString(cssVariables.value);
+    const { colorScheme } = config.value;
+    if (!colorScheme) return variables;
+    const scheme = `color-scheme: ${colorScheme};`;
+    return variables ? `${variables} ${scheme}` : scheme;
+  });
 
   let applied: string[] = [];
-  function applyToDocument(): void {
-    if (!global || typeof document === 'undefined') return;
-    const root = document.documentElement;
-    const next = cssVariables.value;
-    // Remove variables that are no longer present.
+  let appliedColorScheme = false;
+
+  /** Sync the `--mp-*` custom properties on `root`, removing any that are no longer present. */
+  function syncCssVariables(root: HTMLElement, next: Record<string, string>): void {
     for (const name of applied) {
       if (!(name in next)) root.style.removeProperty(name);
     }
@@ -192,6 +209,26 @@ export function createThemeComposer(options: UseThemeComposerOptions = {}): Them
       root.style.setProperty(name, value);
     }
     applied = Object.keys(next);
+  }
+
+  /** Apply (or clear) the `color-scheme` property — drives `light-dark()` + native UA widgets. */
+  function syncColorScheme(root: HTMLElement): void {
+    const { colorScheme } = config.value;
+    if (colorScheme) {
+      root.style.colorScheme = colorScheme;
+      appliedColorScheme = true;
+    } else if (appliedColorScheme) {
+      root.style.removeProperty('color-scheme');
+      appliedColorScheme = false;
+    }
+  }
+
+  /** Write the resolved CSS variables and `color-scheme` onto `document.documentElement` (global mode). */
+  function applyToDocument(): void {
+    if (!global || typeof document === 'undefined') return;
+    const root = document.documentElement;
+    syncCssVariables(root, cssVariables.value);
+    syncColorScheme(root);
   }
 
   function persistConfig(): void {
@@ -245,8 +282,10 @@ export function createThemeComposer(options: UseThemeComposerOptions = {}): Them
     stopWatch();
     if (global && typeof document !== 'undefined') {
       for (const name of applied) document.documentElement.style.removeProperty(name);
+      if (appliedColorScheme) document.documentElement.style.removeProperty('color-scheme');
     }
     applied = [];
+    appliedColorScheme = false;
   }
 
   return {

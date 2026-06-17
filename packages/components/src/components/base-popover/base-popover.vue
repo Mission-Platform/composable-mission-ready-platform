@@ -144,48 +144,50 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-popover-host {
-    display: inline-flex;
-    align-items: center;
-  }
+  @layer mp.components {
+    .base-popover-host {
+      display: inline-flex;
+      align-items: center;
+    }
 
-  .base-popover-trigger {
-    display: inline-flex;
-    align-items: center;
-    min-width: 1px;
-    min-height: 1px;
-  }
+    .base-popover-trigger {
+      display: inline-flex;
+      align-items: center;
+      min-width: 1px;
+      min-height: 1px;
+    }
 
-  .base-popover {
-    margin: 0;
-    background-color: var(--mp-color-bg-surface);
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-lg);
-    box-shadow: var(--mp-shadow-lg);
-    padding: var(--mp-spacing-1) 0;
-    min-width: 160px;
-
-    &__arrow {
-      position: absolute;
-      width: 8px;
-      height: 8px;
+    .base-popover {
+      margin: 0;
       background-color: var(--mp-color-bg-surface);
       border: 1px solid var(--mp-color-border-default);
-      transform: rotate(45deg);
-      pointer-events: none;
+      border-radius: var(--mp-radius-lg);
+      box-shadow: var(--mp-shadow-lg);
+      padding: var(--mp-spacing-1) 0;
+      min-width: 160px;
+
+      &__arrow {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background-color: var(--mp-color-bg-surface);
+        border: 1px solid var(--mp-color-border-default);
+        transform: rotate(45deg);
+        pointer-events: none;
+      }
     }
-  }
 
-  .base-popover-fade-enter-active,
-  .base-popover-fade-leave-active {
-    transition:
-      opacity 150ms ease,
-      transform 150ms ease;
-  }
+    .base-popover-fade-enter-active,
+    .base-popover-fade-leave-active {
+      transition:
+        opacity 150ms ease,
+        transform 150ms ease;
+    }
 
-  .base-popover-fade-enter-from,
-  .base-popover-fade-leave-to {
-    opacity: 0;
-    transform: scale(0.97) translateY(-4px);
+    .base-popover-fade-enter-from,
+    .base-popover-fade-leave-to {
+      opacity: 0;
+      transform: scale(0.97) translateY(-4px);
+    }
   }
 </style>

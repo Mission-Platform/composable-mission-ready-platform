@@ -93,19 +93,21 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-masonry {
-    width: 100%;
-    min-width: 0;
+  @layer mp.components {
+    .base-masonry {
+      width: 100%;
+      min-width: 0;
 
-    &__item {
-      break-inside: avoid;
-      margin-bottom: var(--mp-masonry-gap);
-    }
+      &__item {
+        break-inside: avoid;
+        margin-bottom: var(--mp-masonry-gap);
+      }
 
-    /* Keep free-form (default-slot) children from splitting across columns. */
-    :slotted(*) {
-      break-inside: avoid;
-      margin-bottom: var(--mp-masonry-gap);
+      /* Keep free-form (default-slot) children from splitting across columns. */
+      :slotted(*) {
+        break-inside: avoid;
+        margin-bottom: var(--mp-masonry-gap);
+      }
     }
   }
 </style>

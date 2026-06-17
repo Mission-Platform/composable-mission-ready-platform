@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { BaseButton, BaseInput, BaseModal } from '@mission-platform/components';
+  import { BaseButton, BaseInput, BaseModal, BaseStack } from '@mission-platform/components';
   import { BaseMonacoEditor } from '@mission-platform/components/monaco';
   import { useI18n } from '@mission-platform/i18n';
   import { computed, ref, watch } from 'vue';
@@ -72,6 +72,7 @@
 
 <template>
   <BaseModal
+    :close-on-route-change="false"
     :open="visible"
     :title="modalTitle"
     size="lg"
@@ -111,7 +112,12 @@
     </div>
 
     <template #footer>
-      <div class="snippet-modal-footer">
+      <BaseStack
+        align="center"
+        class="snippet-modal-footer"
+        direction="horizontal"
+        justify="between"
+      >
         <BaseButton
           v-if="isEditing"
           variant="error"
@@ -119,7 +125,11 @@
         >
           {{ t('btn.delete') }}
         </BaseButton>
-        <div class="snippet-modal-footer__right">
+        <BaseStack
+          class="snippet-modal-footer__right"
+          direction="horizontal"
+          gap="xs"
+        >
           <BaseButton
             variant="tertiary"
             @click="emit('close')"
@@ -133,8 +143,8 @@
           >
             {{ t('btn.save') }}
           </BaseButton>
-        </div>
-      </div>
+        </BaseStack>
+      </BaseStack>
     </template>
   </BaseModal>
 </template>
@@ -160,14 +170,9 @@
   }
 
   .snippet-modal-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     width: 100%;
 
     &__right {
-      display: flex;
-      gap: var(--mp-space-2, 8px);
       margin-left: auto;
     }
   }

@@ -187,118 +187,120 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-input {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-1);
-
-    &__label {
-      /* typography handled by BaseTypography */
-
-      &--hidden {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip-path: inset(50%);
-        white-space: nowrap;
-        border: 0;
-      }
-    }
-
-    &__required {
-      color: var(--mp-color-danger-default);
-      margin-left: 2px;
-    }
-
-    &__wrapper {
+  @layer mp.components {
+    .base-input {
       display: flex;
-      align-items: center;
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background-color: var(--mp-color-bg-surface);
-      transition:
-        border-color 150ms ease,
-        box-shadow 150ms ease;
+      flex-direction: column;
+      gap: var(--mp-spacing-1);
 
-      &:focus-within {
-        border-color: var(--mp-color-border-focus);
-        box-shadow: var(--mp-shadow-focus-primary);
-      }
-    }
+      &__label {
+        /* typography handled by BaseTypography */
 
-    &__field {
-      flex: 1;
-      width: 100%;
-      min-width: 0;
-      border: none;
-      outline: none;
-      background: transparent;
-      color: var(--mp-color-text-primary);
-      font-family: var(--mp-font-family-sans);
-      line-height: var(--mp-line-height-normal);
-
-      &::placeholder {
-        color: var(--mp-color-text-tertiary);
-      }
-    }
-
-    /* Leading / trailing extension areas (icons, units, or buttons). */
-    &__extension {
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
-      color: var(--mp-color-text-secondary);
-
-      &--start {
-        margin-inline-start: var(--mp-spacing-2);
-      }
-
-      &--end {
-        margin-inline-end: var(--mp-spacing-2);
-      }
-    }
-
-    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
-    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
-      &--#{$size} {
-        .base-input__field {
-          padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
-          font-size: var(--mp-size-font-#{$size});
+        &--hidden {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip-path: inset(50%);
+          white-space: nowrap;
+          border: 0;
         }
       }
-    }
 
-    /* States */
-    &--error {
-      .base-input__wrapper {
-        border-color: var(--mp-color-danger-default);
+      &__required {
+        color: var(--mp-color-danger-default);
+        margin-left: 2px;
+      }
+
+      &__wrapper {
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-md);
+        background-color: var(--mp-color-bg-surface);
+        transition:
+          border-color 150ms ease,
+          box-shadow 150ms ease;
 
         &:focus-within {
-          box-shadow: var(--mp-shadow-focus-danger);
+          border-color: var(--mp-color-border-focus);
+          box-shadow: var(--mp-shadow-focus-primary);
         }
       }
-    }
 
-    &--disabled {
-      opacity: 0.5;
-      pointer-events: none;
+      &__field {
+        flex: 1;
+        width: 100%;
+        min-width: 0;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: var(--mp-color-text-primary);
+        font-family: var(--mp-font-family-sans);
+        line-height: var(--mp-line-height-normal);
 
-      .base-input__wrapper {
-        background-color: var(--mp-color-bg-muted);
-        cursor: not-allowed;
+        &::placeholder {
+          color: var(--mp-color-text-tertiary);
+        }
       }
-    }
 
-    &__error {
-      color: var(--mp-color-danger-text);
-      margin: 0;
-    }
+      /* Leading / trailing extension areas (icons, units, or buttons). */
+      &__extension {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        color: var(--mp-color-text-secondary);
 
-    &__hint {
-      margin: 0;
+        &--start {
+          margin-inline-start: var(--mp-spacing-2);
+        }
+
+        &--end {
+          margin-inline-end: var(--mp-spacing-2);
+        }
+      }
+
+      /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+      @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+        &--#{$size} {
+          .base-input__field {
+            padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+            font-size: var(--mp-size-font-#{$size});
+          }
+        }
+      }
+
+      /* States */
+      &--error {
+        .base-input__wrapper {
+          border-color: var(--mp-color-danger-default);
+
+          &:focus-within {
+            box-shadow: var(--mp-shadow-focus-danger);
+          }
+        }
+      }
+
+      &--disabled {
+        opacity: 0.5;
+        pointer-events: none;
+
+        .base-input__wrapper {
+          background-color: var(--mp-color-bg-muted);
+          cursor: not-allowed;
+        }
+      }
+
+      &__error {
+        color: var(--mp-color-danger-text);
+        margin: 0;
+      }
+
+      &__hint {
+        margin: 0;
+      }
     }
   }
 </style>

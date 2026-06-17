@@ -406,54 +406,56 @@
 </template>
 
 <style lang="scss" scoped>
-  .form-builder-properties {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-3);
-
-    &__row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--mp-spacing-2);
-    }
-
-    &__note {
-      margin: 0;
-    }
-
-    &__options {
+  @layer mp.components {
+    .form-builder-properties {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-spacing-2);
-      padding: var(--mp-spacing-3);
-      margin: 0;
-      border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-    }
+      gap: var(--mp-spacing-3);
 
-    &__legend {
-      padding: 0 var(--mp-spacing-1);
-    }
-
-    &__option {
-      display: grid;
-      grid-template-columns: 1fr 1fr auto;
-      gap: var(--mp-spacing-2);
-      align-items: center;
-    }
-
-    &__option-remove {
-      padding: var(--mp-spacing-1);
-      color: var(--mp-color-text-secondary);
-
-      &:hover:not(:disabled) {
-        color: var(--mp-color-danger-text);
-        background-color: var(--mp-color-danger-muted);
+      &__row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--mp-spacing-2);
       }
-    }
 
-    &__add-option {
-      align-self: flex-start;
+      &__note {
+        margin: 0;
+      }
+
+      &__options {
+        display: flex;
+        flex-direction: column;
+        gap: var(--mp-spacing-2);
+        padding: var(--mp-spacing-3);
+        margin: 0;
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-md);
+      }
+
+      &__legend {
+        padding: 0 var(--mp-spacing-1);
+      }
+
+      &__option {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: var(--mp-spacing-2);
+        align-items: center;
+      }
+
+      &__option-remove {
+        padding: var(--mp-spacing-1);
+        color: var(--mp-color-text-secondary);
+
+        &:hover:not(:disabled) {
+          color: var(--mp-color-danger-text);
+          background-color: var(--mp-color-danger-muted);
+        }
+      }
+
+      &__add-option {
+        align-self: flex-start;
+      }
     }
   }
 </style>

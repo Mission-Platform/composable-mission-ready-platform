@@ -11,6 +11,11 @@ import type { MonacoEditorTheme } from '@mission-platform/components/monaco';
  */
 export function useMonacoTheme() {
   function readTheme(): MonacoEditorTheme {
+    // Guard against SSR/SSG prerendering, where `document` is undefined. The
+    // ref is initialised during `setup()`, which runs server-side under
+    // `vite-ssg`. Defaults to the light theme; the `onMounted` hook re-reads
+    // the real value on the client.
+    if (typeof document === 'undefined') return 'vs';
     return document.documentElement.dataset['theme'] === 'dark' ? 'vs-dark' : 'vs';
   }
 

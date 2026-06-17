@@ -52,12 +52,14 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-form-wizard__footer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: var(--mp-spacing-3);
-    padding-top: var(--mp-spacing-4);
-    border-top: 1px solid var(--mp-color-border-default);
+  @layer mp.components {
+    .base-form-wizard__footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--mp-spacing-3);
+      padding-top: var(--mp-spacing-4);
+      border-top: 1px solid var(--mp-color-border-default);
+    }
   }
 </style>

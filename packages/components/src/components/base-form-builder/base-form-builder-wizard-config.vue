@@ -54,9 +54,11 @@
 </template>
 
 <style lang="scss" scoped>
-  .form-builder-wizard-config {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-3);
+  @layer mp.components {
+    .form-builder-wizard-config {
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-spacing-3);
+    }
   }
 </style>

@@ -36,7 +36,11 @@ function loadFromStorage(): Snippet[] {
 }
 
 function saveToStorage(snippets: Snippet[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(snippets));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(snippets));
+  } catch {
+    // Ignore (SSR/SSG prerender, private mode, quota exceeded, …).
+  }
 }
 
 const snippets = ref<Snippet[]>(loadFromStorage());

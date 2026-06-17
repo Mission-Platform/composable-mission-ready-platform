@@ -1,0 +1,20 @@
+{
+  "$description": "Spacing scale for Mission Platform — margin, padding and gap steps. All rem values are relative to the 14px root font-size.",
+  "spacing": {
+    "$description": "Spacing scale for margin, padding and gap. The numeric keys are an ~0.286rem (4px) base unit step; rem values are relative to the 14px root.",
+    "$type": "dimension",
+    "0": { "$value": "0", "$description": "0 — no space." },
+    "1": { "$value": "0.286rem", "$description": "≈4px — hairline gaps." },
+    "2": { "$value": "0.571rem", "$description": "≈8px — tight padding/gaps." },
+    "3": { "$value": "0.857rem", "$description": "≈12px — compact padding." },
+    "4": { "$value": "1.143rem", "$description": "≈16px — default element padding." },
+    "5": { "$value": "1.429rem", "$description": "≈20px." },
+    "6": { "$value": "1.714rem", "$description": "≈24px — comfortable block spacing." },
+    "8": { "$value": "2.286rem", "$description": "≈32px — section padding." },
+    "10": { "$value": "2.857rem", "$description": "≈40px." },
+    "12": { "$value": "3.429rem", "$description": "≈48px — large section gaps." },
+    "16": { "$value": "4.571rem", "$description": "≈64px." },
+    "20": { "$value": "5.714rem", "$description": "≈80px." },
+    "24": { "$value": "6.857rem", "$description": "≈96px — page-level vertical rhythm." }
+  }
+}

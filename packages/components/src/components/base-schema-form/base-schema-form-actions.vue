@@ -36,9 +36,11 @@
 </template>
 
 <style lang="scss" scoped>
-  .schema-form__actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--mp-spacing-2);
+  @layer mp.components {
+    .schema-form__actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--mp-spacing-2);
+    }
   }
 </style>

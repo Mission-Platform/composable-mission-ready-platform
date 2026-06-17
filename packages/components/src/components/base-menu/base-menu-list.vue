@@ -22,12 +22,14 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-menu__list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-1);
+  @layer mp.components {
+    .base-menu__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-spacing-1);
+    }
   }
 </style>

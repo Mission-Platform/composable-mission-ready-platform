@@ -1,0 +1,17 @@
+/* ─── Light Theme (compatibility shim) ──────────────────────────────────────── */
+
+/* Scheme pinning now ships with `@mission-platform/tokens/scss/tokens`: the */
+
+/* generated theme already emits */
+
+/*   [data-theme='light'], .theme-light { color-scheme: light; } */
+
+/* inside the `mp.tokens` cascade layer, so importing `scss/tokens` is enough to */
+
+/* pin a subtree (or the document) to light via `data-theme='light'` / */
+
+/* `.theme-light`. This file is kept only for backwards compatibility with */
+
+/* consumers that still `@use '@mission-platform/tokens/scss/themes/light'`; it */
+
+/* intentionally emits no CSS to avoid duplicating the pin. */

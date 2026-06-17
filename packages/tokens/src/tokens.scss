@@ -1,34 +1,47 @@
 /* ─── Tokens barrel ─────────────────────────────────────────────────────────── */
 
-/* Import this file to get all structural CSS custom properties. */
+/* Import this file to get every token custom property: the structural scales, */
 
-/* Then import a theme file (light or dark) separately to get colour tokens. */
+/* the colour palette, the composite typography, and the semantic colour tokens. */
+
+/* The colour tokens are emitted as `light-dark()` values on :root with */
+
+/* `color-scheme: light dark`, so they follow the OS preference automatically. */
+
+/* Import scss/themes/light or scss/themes/dark to pin a subtree to one scheme. */
 
 /* Quickstart: */
 
 /*   @use '@mission-platform/tokens/scss/tokens'; */
 
-/*   @use '@mission-platform/tokens/scss/themes/light'; */
+/*   @use '@mission-platform/tokens/scss/themes/light';  // optional: pin to light */
 
 @use 'scss/fonts';
-@use 'scss/css-vars';
+@use 'generated/tokens';
 
-/* Establish 14px as the base font-size so that 1rem = 14px throughout. */
+/* The token custom properties + base resets live in the `mp.tokens` cascade */
 
-/* All token rem values are calculated against this base. */
-:root {
-  font-size: 14px;
-}
+/* layer (matching the generated partials) so unlayered application styles win */
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+/* over them without specificity battles. */
+@layer mp.tokens {
+  /* Establish the base font-size so that 1rem = 14px throughout. */
 
-html,
-body {
-  padding: var(--mp-spacing-0);
-  margin: var(--mp-spacing-0);
-  margin-top: env(safe-area-inset-top);
+  /* All token rem values are calculated against this base (font.size.base). */
+  :root {
+    font-size: var(--mp-font-size-base);
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    padding: var(--mp-spacing-0);
+    margin: var(--mp-spacing-0);
+    margin-top: env(safe-area-inset-top);
+  }
 }

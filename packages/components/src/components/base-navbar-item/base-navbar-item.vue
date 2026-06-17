@@ -212,129 +212,131 @@
 <style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
-  .base-navbar-item-dropdown-host {
-    display: inline-flex;
-  }
-
-  .base-navbar-item {
-    @include mp.mp-font-label;
-
-    display: inline-flex;
-    align-items: center;
-    gap: var(--mp-spacing-2);
-    padding: var(--mp-spacing-1-5) var(--mp-spacing-3);
-    border-radius: var(--mp-radius-md);
-    color: var(--mp-color-text-secondary);
-    background: none;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    white-space: nowrap;
-    user-select: none;
-    transition:
-      background-color 150ms ease,
-      color 150ms ease;
-
-    &:focus-visible {
-      outline: none;
-      box-shadow: var(--mp-shadow-focus-primary);
+  @layer mp.components {
+    .base-navbar-item-dropdown-host {
+      display: inline-flex;
     }
 
-    &--active {
-      background-color: var(--mp-color-primary-muted);
-      color: var(--mp-color-primary-text);
-    }
+    .base-navbar-item {
+      @include mp.mp-font-label;
 
-    &--open {
-      background-color: var(--mp-color-bg-subtle);
-      color: var(--mp-color-text-primary);
-    }
+      display: inline-flex;
+      align-items: center;
+      gap: var(--mp-spacing-2);
+      padding: var(--mp-spacing-1-5) var(--mp-spacing-3);
+      border-radius: var(--mp-radius-md);
+      color: var(--mp-color-text-secondary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      user-select: none;
+      transition:
+        background-color 150ms ease,
+        color 150ms ease;
 
-    @mixin tone($family) {
-      &--#{$family} {
-        color: var(--mp-color-#{$family}-text);
+      &:focus-visible {
+        outline: none;
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
 
-        &:hover:not(.base-navbar-item--disabled) {
-          background-color: var(--mp-color-#{$family}-muted);
+      &--active {
+        background-color: var(--mp-color-primary-muted);
+        color: var(--mp-color-primary-text);
+      }
+
+      &--open {
+        background-color: var(--mp-color-bg-subtle);
+        color: var(--mp-color-text-primary);
+      }
+
+      @mixin tone($family) {
+        &--#{$family} {
+          color: var(--mp-color-#{$family}-text);
+
+          &:hover:not(.base-navbar-item--disabled) {
+            background-color: var(--mp-color-#{$family}-muted);
+          }
         }
+      }
+
+      @include tone('primary');
+      @include tone('secondary');
+      @include tone('tertiary');
+      @include tone('success');
+      @include tone('warning');
+      @include tone('information');
+      @include tone('error');
+      @include tone('critical');
+
+      &--disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      &:hover:not(&--disabled) {
+        background-color: var(--mp-color-bg-subtle);
+        color: var(--mp-color-text-primary);
+      }
+
+      &__chevron {
+        flex-shrink: 0;
+        color: var(--mp-color-text-secondary);
+        transition: transform 150ms ease;
       }
     }
 
-    @include tone('primary');
-    @include tone('secondary');
-    @include tone('tertiary');
-    @include tone('success');
-    @include tone('warning');
-    @include tone('information');
-    @include tone('error');
-    @include tone('critical');
-
-    &--disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      pointer-events: none;
+    .base-navbar-item__dropdown-list {
+      list-style: none;
+      margin: 0;
+      padding: var(--mp-spacing-1) 0;
+      min-width: 180px;
     }
 
-    &:hover:not(&--disabled) {
-      background-color: var(--mp-color-bg-subtle);
+    .base-navbar-item__dropdown-item-wrapper {
+      display: block;
+    }
+
+    .base-navbar-item__dropdown-item {
+      @include mp.mp-font-label;
+
+      display: flex;
+      align-items: center;
+      gap: var(--mp-spacing-2);
+      width: 100%;
+      padding: var(--mp-spacing-2) var(--mp-spacing-4);
       color: var(--mp-color-text-primary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: left;
+      white-space: nowrap;
+      transition:
+        background-color 150ms ease,
+        color 150ms ease;
+
+      &:focus-visible {
+        outline: none;
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+
+      &--disabled {
+        color: var(--mp-color-text-disabled);
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      &:hover:not(&--disabled) {
+        background-color: var(--mp-color-bg-subtle);
+      }
     }
 
-    &__chevron {
+    .base-navbar-item__dropdown-icon {
       flex-shrink: 0;
-      color: var(--mp-color-text-secondary);
-      transition: transform 150ms ease;
+      font-size: var(--mp-font-size-base);
     }
-  }
-
-  .base-navbar-item__dropdown-list {
-    list-style: none;
-    margin: 0;
-    padding: var(--mp-spacing-1) 0;
-    min-width: 180px;
-  }
-
-  .base-navbar-item__dropdown-item-wrapper {
-    display: block;
-  }
-
-  .base-navbar-item__dropdown-item {
-    @include mp.mp-font-label;
-
-    display: flex;
-    align-items: center;
-    gap: var(--mp-spacing-2);
-    width: 100%;
-    padding: var(--mp-spacing-2) var(--mp-spacing-4);
-    color: var(--mp-color-text-primary);
-    background: none;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    text-align: left;
-    white-space: nowrap;
-    transition:
-      background-color 150ms ease,
-      color 150ms ease;
-
-    &:focus-visible {
-      outline: none;
-      box-shadow: var(--mp-shadow-focus-primary);
-    }
-
-    &--disabled {
-      color: var(--mp-color-text-disabled);
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-
-    &:hover:not(&--disabled) {
-      background-color: var(--mp-color-bg-subtle);
-    }
-  }
-
-  .base-navbar-item__dropdown-icon {
-    flex-shrink: 0;
-    font-size: var(--mp-font-size-base);
   }
 </style>

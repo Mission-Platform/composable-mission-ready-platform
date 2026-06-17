@@ -197,65 +197,67 @@
 <style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
-  .virtual-tree {
-    @include mp.mp-font-body-sm;
+  @layer mp.components {
+    .virtual-tree {
+      @include mp.mp-font-body-sm;
 
-    color: var(--mp-color-text-primary);
-    user-select: none;
-    outline: none;
-
-    &__row {
-      display: flex;
-      align-items: center;
-    }
-
-    &__label {
-      display: flex;
-      align-items: center;
-      gap: var(--mp-spacing-2);
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-      border-radius: var(--mp-radius-sm);
-      outline: none;
-      padding-right: var(--mp-spacing-3);
       color: var(--mp-color-text-primary);
-      transition: background-color 80ms ease;
+      user-select: none;
+      outline: none;
 
-      &:hover {
-        background-color: var(--mp-color-bg-muted);
+      &__row {
+        display: flex;
+        align-items: center;
       }
 
-      &:focus-visible {
+      &__label {
+        display: flex;
+        align-items: center;
+        gap: var(--mp-spacing-2);
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        border-radius: var(--mp-radius-sm);
         outline: none;
-        box-shadow: var(--mp-shadow-focus-primary);
-      }
-    }
-
-    &__toggle {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--mp-color-text-secondary);
-      padding: 0;
-      border-radius: var(--mp-radius-sm);
-      transition: color 80ms ease;
-
-      &:hover {
+        padding-right: var(--mp-spacing-3);
         color: var(--mp-color-text-primary);
-      }
-    }
+        transition: background-color 80ms ease;
 
-    &__spacer {
-      display: inline-block;
-      width: 20px;
-      flex-shrink: 0;
+        &:hover {
+          background-color: var(--mp-color-bg-muted);
+        }
+
+        &:focus-visible {
+          outline: none;
+          box-shadow: var(--mp-shadow-focus-primary);
+        }
+      }
+
+      &__toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--mp-color-text-secondary);
+        padding: 0;
+        border-radius: var(--mp-radius-sm);
+        transition: color 80ms ease;
+
+        &:hover {
+          color: var(--mp-color-text-primary);
+        }
+      }
+
+      &__spacer {
+        display: inline-block;
+        width: 20px;
+        flex-shrink: 0;
+      }
     }
   }
 </style>

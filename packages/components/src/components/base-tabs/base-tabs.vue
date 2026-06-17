@@ -156,9 +156,11 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-tabs {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
+  @layer mp.components {
+    .base-tabs {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
   }
 </style>

@@ -33,48 +33,50 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-skeleton {
-    display: block;
-    background-color: var(--mp-color-bg-muted);
-    border-radius: var(--mp-radius-sm);
-    position: relative;
-    overflow: hidden;
-
-    &--animated::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, transparent 0%, var(--mp-color-skeleton-shimmer) 50%, transparent 100%);
-      animation: mp-skeleton-shimmer 1.6s ease-in-out infinite;
-    }
-
-    /* Shapes */
-    &--line {
-      width: 100%;
-      height: 1em;
+  @layer mp.components {
+    .base-skeleton {
+      display: block;
+      background-color: var(--mp-color-bg-muted);
       border-radius: var(--mp-radius-sm);
+      position: relative;
+      overflow: hidden;
+
+      &--animated::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent 0%, var(--mp-color-skeleton-shimmer) 50%, transparent 100%);
+        animation: mp-skeleton-shimmer 1.6s ease-in-out infinite;
+      }
+
+      /* Shapes */
+      &--line {
+        width: 100%;
+        height: 1em;
+        border-radius: var(--mp-radius-sm);
+      }
+
+      &--circle {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: var(--mp-radius-full);
+      }
+
+      &--block {
+        width: 100%;
+        height: 8rem;
+        border-radius: var(--mp-radius-md);
+      }
     }
 
-    &--circle {
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: var(--mp-radius-full);
-    }
+    @keyframes mp-skeleton-shimmer {
+      0% {
+        transform: translateX(-100%);
+      }
 
-    &--block {
-      width: 100%;
-      height: 8rem;
-      border-radius: var(--mp-radius-md);
-    }
-  }
-
-  @keyframes mp-skeleton-shimmer {
-    0% {
-      transform: translateX(-100%);
-    }
-
-    100% {
-      transform: translateX(100%);
+      100% {
+        transform: translateX(100%);
+      }
     }
   }
 </style>

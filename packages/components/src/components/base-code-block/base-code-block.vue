@@ -282,137 +282,139 @@ class="base-code-block__code hljs"
 </style>
 
 <style lang="scss" scoped>
-  .base-code-block {
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-    background-color: var(--mp-color-bg-sunken);
-    overflow: hidden;
-    font-family: var(--mp-font-family-mono);
-    font-size: var(--mp-font-size-sm);
-
-    &__header {
-      // Pinned to the top so it stays visible while the code body scrolls. The
-      // body is the scroll container (capped via the `maxHeight` prop), so this
-      // keeps the filename/language + copy button always reachable.
-      position: sticky;
-      top: 0;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: var(--mp-spacing-2) var(--mp-spacing-4);
-      border-bottom: 1px solid var(--mp-color-border-default);
-      background-color: var(--mp-color-bg-muted);
-      gap: var(--mp-spacing-3);
-    }
-
-    &__filename {
-      font-family: var(--mp-font-family-mono);
-      font-size: var(--mp-font-size-xs);
-      color: var(--mp-color-text-secondary);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      flex: 1;
-      min-width: 0;
-    }
-
-    &__language {
-      font-family: var(--mp-font-family-mono);
-      font-size: var(--mp-font-size-xs);
-      color: var(--mp-color-text-tertiary);
-      text-transform: lowercase;
-      flex: 1;
-      min-width: 0;
-    }
-
-    &__copy {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--mp-spacing-1);
-      padding: var(--mp-spacing-1) var(--mp-spacing-2);
+  @layer mp.components {
+    .base-code-block {
       border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-sm);
-      background: transparent;
-      color: var(--mp-color-text-tertiary);
-      font-family: var(--mp-font-family-sans);
-      font-size: var(--mp-font-size-xs);
-      line-height: 1;
-      cursor: pointer;
-      transition:
-        color 150ms ease,
-        border-color 150ms ease,
-        background-color 150ms ease;
-      white-space: nowrap;
-      flex-shrink: 0;
-
-      &:hover {
-        color: var(--mp-color-text-primary);
-        border-color: var(--mp-color-border-strong);
-        background-color: var(--mp-color-bg-surface);
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
-        outline-offset: 2px;
-      }
-    }
-
-    &__body {
-      overflow-x: auto;
-    }
-
-    &__pre {
-      margin: 0;
-      padding: var(--mp-spacing-4);
-      background: transparent;
-      overflow: visible;
-    }
-
-    &__code {
+      border-radius: var(--mp-radius-md);
+      background-color: var(--mp-color-bg-sunken);
+      overflow: hidden;
       font-family: var(--mp-font-family-mono);
       font-size: var(--mp-font-size-sm);
-      background: transparent !important;
-      padding: 0 !important;
-      white-space: pre;
-      tab-size: 2;
-      overflow-x: visible; /* Scrolling handled by parent .base-code-block__body */
-    }
 
-    &__table {
-      width: 100%;
-      border-collapse: collapse;
-      padding: var(--mp-spacing-2) 0;
-    }
-
-    &__line {
-      line-height: var(--mp-line-height-relaxed);
-
-      &:first-child {
-        padding-top: var(--mp-spacing-2);
+      &__header {
+        // Pinned to the top so it stays visible while the code body scrolls. The
+        // body is the scroll container (capped via the `maxHeight` prop), so this
+        // keeps the filename/language + copy button always reachable.
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--mp-spacing-2) var(--mp-spacing-4);
+        border-bottom: 1px solid var(--mp-color-border-default);
+        background-color: var(--mp-color-bg-muted);
+        gap: var(--mp-spacing-3);
       }
 
-      &:last-child {
-        padding-bottom: var(--mp-spacing-2);
+      &__filename {
+        font-family: var(--mp-font-family-mono);
+        font-size: var(--mp-font-size-xs);
+        color: var(--mp-color-text-secondary);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        flex: 1;
+        min-width: 0;
       }
-    }
 
-    &__line-no {
-      user-select: none;
-      text-align: right;
-      padding: 0 var(--mp-spacing-3) 0 var(--mp-spacing-4);
-      color: var(--mp-color-text-disabled);
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap;
-      width: 1%;
-      vertical-align: top;
-    }
+      &__language {
+        font-family: var(--mp-font-family-mono);
+        font-size: var(--mp-font-size-xs);
+        color: var(--mp-color-text-tertiary);
+        text-transform: lowercase;
+        flex: 1;
+        min-width: 0;
+      }
 
-    &__line-code {
-      padding: 0 var(--mp-spacing-4) 0 var(--mp-spacing-2);
-      white-space: pre;
-      tab-size: 2;
-      vertical-align: top;
+      &__copy {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--mp-spacing-1);
+        padding: var(--mp-spacing-1) var(--mp-spacing-2);
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-sm);
+        background: transparent;
+        color: var(--mp-color-text-tertiary);
+        font-family: var(--mp-font-family-sans);
+        font-size: var(--mp-font-size-xs);
+        line-height: 1;
+        cursor: pointer;
+        transition:
+          color 150ms ease,
+          border-color 150ms ease,
+          background-color 150ms ease;
+        white-space: nowrap;
+        flex-shrink: 0;
+
+        &:hover {
+          color: var(--mp-color-text-primary);
+          border-color: var(--mp-color-border-strong);
+          background-color: var(--mp-color-bg-surface);
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--mp-color-border-focus);
+          outline-offset: 2px;
+        }
+      }
+
+      &__body {
+        overflow-x: auto;
+      }
+
+      &__pre {
+        margin: 0;
+        padding: var(--mp-spacing-4);
+        background: transparent;
+        overflow: visible;
+      }
+
+      &__code {
+        font-family: var(--mp-font-family-mono);
+        font-size: var(--mp-font-size-sm);
+        background: transparent !important;
+        padding: 0 !important;
+        white-space: pre;
+        tab-size: 2;
+        overflow-x: visible; /* Scrolling handled by parent .base-code-block__body */
+      }
+
+      &__table {
+        width: 100%;
+        border-collapse: collapse;
+        padding: var(--mp-spacing-2) 0;
+      }
+
+      &__line {
+        line-height: var(--mp-line-height-relaxed);
+
+        &:first-child {
+          padding-top: var(--mp-spacing-2);
+        }
+
+        &:last-child {
+          padding-bottom: var(--mp-spacing-2);
+        }
+      }
+
+      &__line-no {
+        user-select: none;
+        text-align: right;
+        padding: 0 var(--mp-spacing-3) 0 var(--mp-spacing-4);
+        color: var(--mp-color-text-disabled);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        width: 1%;
+        vertical-align: top;
+      }
+
+      &__line-code {
+        padding: 0 var(--mp-spacing-4) 0 var(--mp-spacing-2);
+        white-space: pre;
+        tab-size: 2;
+        vertical-align: top;
+      }
     }
   }
 </style>

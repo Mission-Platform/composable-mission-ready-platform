@@ -59,31 +59,33 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-status-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+  @layer mp.components {
+    .base-status-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
 
-    /* Variants */
-    &--success {
-      color: var(--mp-color-success-default);
-    }
+      /* Variants */
+      &--success {
+        color: var(--mp-color-success-default);
+      }
 
-    &--warning {
-      color: var(--mp-color-warning-default);
-    }
+      &--warning {
+        color: var(--mp-color-warning-default);
+      }
 
-    &--error {
-      color: var(--mp-color-danger-default);
-    }
+      &--error {
+        color: var(--mp-color-danger-default);
+      }
 
-    &--info {
-      color: var(--mp-color-info-default);
-    }
+      &--info {
+        color: var(--mp-color-info-default);
+      }
 
-    &--neutral {
-      color: var(--mp-color-text-tertiary);
+      &--neutral {
+        color: var(--mp-color-text-tertiary);
+      }
     }
   }
 </style>

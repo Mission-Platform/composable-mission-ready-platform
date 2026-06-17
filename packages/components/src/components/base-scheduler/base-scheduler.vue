@@ -407,82 +407,84 @@
 <style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
-  .base-scheduler {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    background: var(--mp-color-bg-surface);
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-lg);
-    overflow: hidden;
-
-    // ── Toolbar ───────────────────────────────────────────────────────────────
-
-    &__toolbar {
+  @layer mp.components {
+    .base-scheduler {
       display: flex;
-      align-items: center;
-      gap: var(--mp-spacing-2);
-      padding: var(--mp-spacing-3) var(--mp-spacing-4);
-      border-bottom: 1px solid var(--mp-color-border-default);
+      flex-direction: column;
+      height: 100%;
       background: var(--mp-color-bg-surface);
-      flex-shrink: 0;
-      flex-wrap: wrap;
-    }
-
-    &__title {
-      margin: 0;
-      white-space: nowrap;
-    }
-
-    &__spacer {
-      flex: 1;
-    }
-
-    // ── Navigation arrows ─────────────────────────────────────────────────────
-
-    &__nav {
-      display: flex;
-      gap: 2px;
-    }
-
-    &__icon {
-      width: 16px;
-      height: 16px;
-
-      &--prev {
-        transform: rotate(90deg);
-      }
-
-      &--next {
-        transform: rotate(-90deg);
-      }
-    }
-
-    // ── View switcher ─────────────────────────────────────────────────────────
-
-    &__view-switcher {
-      display: flex;
       border: 1px solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
+      border-radius: var(--mp-radius-lg);
       overflow: hidden;
 
-      // Flatten nested BaseButton borders so they look like a segmented control
-      .base-button {
-        border-radius: 0;
-        border: none;
+      // ── Toolbar ───────────────────────────────────────────────────────────────
 
-        &:not(:last-child) {
-          border-right: 1px solid var(--mp-color-border-default);
+      &__toolbar {
+        display: flex;
+        align-items: center;
+        gap: var(--mp-spacing-2);
+        padding: var(--mp-spacing-3) var(--mp-spacing-4);
+        border-bottom: 1px solid var(--mp-color-border-default);
+        background: var(--mp-color-bg-surface);
+        flex-shrink: 0;
+        flex-wrap: wrap;
+      }
+
+      &__title {
+        margin: 0;
+        white-space: nowrap;
+      }
+
+      &__spacer {
+        flex: 1;
+      }
+
+      // ── Navigation arrows ─────────────────────────────────────────────────────
+
+      &__nav {
+        display: flex;
+        gap: 2px;
+      }
+
+      &__icon {
+        width: 16px;
+        height: 16px;
+
+        &--prev {
+          transform: rotate(90deg);
+        }
+
+        &--next {
+          transform: rotate(-90deg);
         }
       }
-    }
 
-    // ── Body ──────────────────────────────────────────────────────────────────
+      // ── View switcher ─────────────────────────────────────────────────────────
 
-    &__body {
-      flex: 1;
-      min-height: 0;
-      overflow: hidden;
+      &__view-switcher {
+        display: flex;
+        border: 1px solid var(--mp-color-border-default);
+        border-radius: var(--mp-radius-md);
+        overflow: hidden;
+
+        // Flatten nested BaseButton borders so they look like a segmented control
+        .base-button {
+          border-radius: 0;
+          border: none;
+
+          &:not(:last-child) {
+            border-right: 1px solid var(--mp-color-border-default);
+          }
+        }
+      }
+
+      // ── Body ──────────────────────────────────────────────────────────────────
+
+      &__body {
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+      }
     }
   }
 </style>

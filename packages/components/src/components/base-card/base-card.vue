@@ -47,76 +47,83 @@
 </template>
 
 <style lang="scss" scoped>
-  @use '@mission-platform/breakpoints/scss/mixins' as bp;
+  /* Component styles live in the `mp.components` cascade layer so unlayered */
 
-  .base-card {
-    background-color: var(--mp-color-bg-surface);
-    border-radius: var(--mp-radius-lg);
-    overflow: hidden;
+  /* application overrides win without specificity battles. */
+  @layer mp.components {
+    .base-card {
+      /* Become an inline-size container so the inner padding responds to the */
 
-    &--bordered {
-      border: 1px solid var(--mp-color-border-default);
-    }
+      /* card's own width (e.g. in a narrow grid cell) rather than the viewport. */
+      container: base-card / inline-size;
+      background-color: var(--mp-color-bg-surface);
+      border-radius: var(--mp-radius-lg);
+      overflow: hidden;
 
-    &--shadow {
-      box-shadow: var(--mp-shadow-md);
-    }
-
-    /* Padding variants — mobile-first, tablet/desktop gets more breathing room */
-    &--padding-none {
-      .base-card__header,
-      .base-card__body,
-      .base-card__footer {
-        padding: 0;
+      &--bordered {
+        border: 1px solid var(--mp-color-border-default);
       }
-    }
 
-    &--padding-sm {
-      .base-card__header,
-      .base-card__body,
-      .base-card__footer {
-        padding: var(--mp-spacing-2) var(--mp-spacing-3);
+      &--shadow {
+        box-shadow: var(--mp-shadow-md);
+      }
 
-        @include bp.bp-up('sm') {
+      /* Padding variants — compact by default, wider cards get more breathing room */
+      &--padding-none {
+        .base-card__header,
+        .base-card__body,
+        .base-card__footer {
+          padding: 0;
+        }
+      }
+
+      &--padding-sm {
+        .base-card__header,
+        .base-card__body,
+        .base-card__footer {
+          padding: var(--mp-spacing-2) var(--mp-spacing-3);
+
+          @container base-card (width >= 30rem) {
+            padding: var(--mp-spacing-3) var(--mp-spacing-4);
+          }
+        }
+      }
+
+      &--padding-md {
+        .base-card__header,
+        .base-card__body,
+        .base-card__footer {
           padding: var(--mp-spacing-3) var(--mp-spacing-4);
+
+          @container base-card (width >= 30rem) {
+            padding: var(--mp-spacing-4) var(--mp-spacing-6);
+          }
         }
       }
-    }
 
-    &--padding-md {
-      .base-card__header,
-      .base-card__body,
-      .base-card__footer {
-        padding: var(--mp-spacing-3) var(--mp-spacing-4);
-
-        @include bp.bp-up('sm') {
+      &--padding-lg {
+        .base-card__header,
+        .base-card__body,
+        .base-card__footer {
           padding: var(--mp-spacing-4) var(--mp-spacing-6);
+
+          @container base-card (width >= 30rem) {
+            padding: var(--mp-spacing-6) var(--mp-spacing-8);
+          }
         }
       }
-    }
 
-    &--padding-lg {
-      .base-card__header,
-      .base-card__body,
-      .base-card__footer {
-        padding: var(--mp-spacing-4) var(--mp-spacing-6);
-
-        @include bp.bp-up('sm') {
-          padding: var(--mp-spacing-6) var(--mp-spacing-8);
-        }
+      &__header {
+        border-bottom: 1px solid var(--mp-color-border-default);
       }
-    }
 
-    &__header {
-      border-bottom: 1px solid var(--mp-color-border-default);
-    }
+      &__body {
+        /* typography handled by BaseTypography */
+      }
 
-    &__body {
-      /* typography handled by BaseTypography */
-    }
-
-    &__footer {
-      border-top: 1px solid var(--mp-color-border-default);
+      &__footer {
+        border-top: 1px solid var(--mp-color-border-default);
+      }
     }
   }
 </style>

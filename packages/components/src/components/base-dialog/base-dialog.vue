@@ -105,27 +105,75 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-dialog {
-    padding: 0;
-    border: none;
-    border-radius: var(--mp-radius-xl);
-    background: var(--mp-color-bg-surface);
-    box-shadow: var(--mp-shadow-xl);
-    max-width: min(560px, calc(100vw - 2rem));
-    width: 100%;
+  /* Component styles live in the `mp.components` cascade layer so unlayered */
 
-    &::backdrop {
-      background-color: var(--mp-color-bg-scrim);
-    }
-
-    &[open] {
-      display: flex;
-    }
-
-    &__panel {
-      display: flex;
-      flex-direction: column;
+  /* application overrides win without specificity battles. */
+  @layer mp.components {
+    .base-dialog {
+      padding: 0;
+      border: none;
+      border-radius: var(--mp-radius-xl);
+      background: var(--mp-color-bg-surface);
+      box-shadow: var(--mp-shadow-xl);
+      max-width: min(560px, calc(100vw - 2rem));
       width: 100%;
+
+      /* Enter/exit animation for the native <dialog>. Because opening toggles */
+
+      /* `display` (none ⇄ flex) and the top layer, the transition lists */
+
+      /* `display`/`overlay` with `allow-discrete`, and `@starting-style` */
+
+      /* provides the pre-open values to animate from. */
+      opacity: 0;
+      translate: 0 0.5rem;
+      transition:
+        opacity 200ms ease,
+        translate 200ms ease,
+        overlay 200ms ease allow-discrete,
+        display 200ms ease allow-discrete;
+
+      &::backdrop {
+        background-color: var(--mp-color-bg-scrim);
+        opacity: 0;
+        transition:
+          opacity 200ms ease,
+          overlay 200ms ease allow-discrete,
+          display 200ms ease allow-discrete;
+      }
+
+      &[open] {
+        display: flex;
+        opacity: 1;
+        translate: 0 0;
+
+        @starting-style {
+          opacity: 0;
+          translate: 0 0.5rem;
+        }
+
+        &::backdrop {
+          opacity: 1;
+
+          @starting-style {
+            opacity: 0;
+          }
+        }
+      }
+
+      &__panel {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+
+      /* Respect users who prefer reduced motion. */
+      @media (prefers-reduced-motion: reduce) {
+        &,
+        &::backdrop {
+          transition: none;
+        }
+      }
     }
   }
 </style>

@@ -93,13 +93,15 @@
 </template>
 
 <style lang="scss" scoped>
-  .tree-node {
-    list-style: none;
-
-    &__children {
+  @layer mp.components {
+    .tree-node {
       list-style: none;
-      margin: 0;
-      padding: 0;
+
+      &__children {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
     }
   }
 </style>

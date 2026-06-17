@@ -223,66 +223,68 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-location-input {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-spacing-2);
-    padding: 0;
-    margin: 0;
-    border: 0;
-
-    &__legend {
+  @layer mp.components {
+    .base-location-input {
       display: flex;
-      align-items: center;
-      gap: 2px;
-      padding: 0;
-      margin-bottom: var(--mp-spacing-1);
-
-      &--hidden {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip-path: inset(50%);
-        white-space: nowrap;
-        border: 0;
-      }
-    }
-
-    &__required {
-      color: var(--mp-color-danger-default);
-      margin-left: 2px;
-    }
-
-    &__row {
-      display: flex;
+      flex-direction: column;
       gap: var(--mp-spacing-2);
-      align-items: flex-end;
-    }
-
-    &__format {
-      flex: 0 0 auto;
-    }
-
-    &__coord {
-      flex: 1 1 0;
-      min-width: 0;
-    }
-
-    &--disabled {
-      pointer-events: none;
-      color: var(--mp-color-text-disabled);
-    }
-
-    &__error {
-      color: var(--mp-color-danger-text);
+      padding: 0;
       margin: 0;
-    }
+      border: 0;
 
-    &__hint {
-      margin: 0;
+      &__legend {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        padding: 0;
+        margin-bottom: var(--mp-spacing-1);
+
+        &--hidden {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip-path: inset(50%);
+          white-space: nowrap;
+          border: 0;
+        }
+      }
+
+      &__required {
+        color: var(--mp-color-danger-default);
+        margin-left: 2px;
+      }
+
+      &__row {
+        display: flex;
+        gap: var(--mp-spacing-2);
+        align-items: flex-end;
+      }
+
+      &__format {
+        flex: 0 0 auto;
+      }
+
+      &__coord {
+        flex: 1 1 0;
+        min-width: 0;
+      }
+
+      &--disabled {
+        pointer-events: none;
+        color: var(--mp-color-text-disabled);
+      }
+
+      &__error {
+        color: var(--mp-color-danger-text);
+        margin: 0;
+      }
+
+      &__hint {
+        margin: 0;
+      }
     }
   }
 </style>

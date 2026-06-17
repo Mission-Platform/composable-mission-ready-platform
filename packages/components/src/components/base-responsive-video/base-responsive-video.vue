@@ -111,15 +111,17 @@
 </template>
 
 <style lang="scss" scoped>
-  .base-responsive-video {
-    display: block;
-    width: 100%;
-    height: auto;
-    background-color: var(--mp-color-bg-sunken);
+  @layer mp.components {
+    .base-responsive-video {
+      display: block;
+      width: 100%;
+      height: auto;
+      background-color: var(--mp-color-bg-sunken);
 
-    &--rounded {
-      border-radius: var(--mp-radius-lg);
-      overflow: hidden;
+      &--rounded {
+        border-radius: var(--mp-radius-lg);
+        overflow: hidden;
+      }
     }
   }
 </style>

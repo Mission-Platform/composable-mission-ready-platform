@@ -1,0 +1,29 @@
+{
+  "$description": "Motion design tokens for Mission Platform — transition/animation durations and easing (timing-function) curves. Replaces the inline `150ms ease` literals scattered across the component library with named, reusable values.",
+  "duration": {
+    "$description": "Transition/animation duration scale, from fast press-feedback to slow enter/exit. The default UI transition is `fast` (150ms).",
+    "$type": "duration",
+    "instant": { "$value": "80ms", "$description": "80ms — fast press / hover feedback." },
+    "fast": {
+      "$value": "150ms",
+      "$description": "150ms — the default UI transition (colour, border, shadow, opacity)."
+    },
+    "moderate": { "$value": "200ms", "$description": "200ms — medium transitions." },
+    "base": { "$value": "250ms", "$description": "250ms — medium-slow transitions." },
+    "slow": { "$value": "400ms", "$description": "400ms — enter/exit of larger surfaces." },
+    "slower": { "$value": "1000ms", "$description": "1000ms — slow, deliberate animation." }
+  },
+  "easing": {
+    "$description": "Named easing (timing-function) curves. `standard` is the default UI easing.",
+    "$type": "cubicBezier",
+    "linear": { "$value": "linear", "$description": "Constant rate — progress bars, spinners." },
+    "standard": { "$value": "ease", "$description": "The default UI easing curve." },
+    "in": { "$value": "ease-in", "$description": "Accelerate from rest — exiting elements." },
+    "out": { "$value": "ease-out", "$description": "Decelerate to rest — entering elements." },
+    "in-out": { "$value": "ease-in-out", "$description": "Accelerate then decelerate — moving elements." },
+    "emphasized": {
+      "$value": "cubic-bezier(0.2, 0, 0, 1)",
+      "$description": "Emphasized easing — prominent, expressive motion."
+    }
+  }
+}

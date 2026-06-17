@@ -1,0 +1,915 @@
+{
+  "$description": "Primitive colour palette for Mission Platform. Raw values; consume the semantic theme tokens in component styles.",
+  "color": {
+    "$description": "Primitive colour swatches in OKLab: the absolute black/white anchors, two named base/primary helpers, and the 10-/11-step hue ramps (50 = lightest, 900/950 = darkest). These are raw values — components consume the semantic theme tokens (theme-light/theme-dark.tokens.json), not these directly.",
+    "$type": "color",
+    "black": {
+      "$value": {
+        "colorSpace": "oklab",
+        "components": [0, 0, 0]
+      },
+      "$description": "Absolute black (OKLab L=0)."
+    },
+    "white": {
+      "$value": {
+        "colorSpace": "oklab",
+        "components": [1, 0, 0]
+      },
+      "$description": "Absolute white (OKLab L=1)."
+    },
+    "base-light": {
+      "$value": {
+        "colorSpace": "oklab",
+        "components": [0.95719, -0.0013, -0.00318]
+      },
+      "$description": "light theme base surface — L=0.877"
+    },
+    "primary-light": {
+      "$value": {
+        "colorSpace": "oklab",
+        "components": [0.98726, -0.00112, 0.00379]
+      },
+      "$description": "Near-white tint used as a light on-primary / primary surface helper."
+    },
+    "primary-dark": {
+      "$value": {
+        "colorSpace": "oklab",
+        "components": [0.53595, -0.0031, -0.00256]
+      },
+      "$description": "Mid-tone neutral used as a primary helper on dark surfaces."
+    },
+    "neutral": {
+      "$description": "Greyscale ramp — surfaces, borders and text in both themes.",
+      "50": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.98268, 0.00074, -0.00254]
+        }
+      },
+      "100": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.962, 0.00112, -0.00383]
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.9205, 0.00217, -0.00355]
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.83195, 0.00299, -0.00629]
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.69692, 0.00542, -0.01041]
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.51351, 0.01717, -0.02411]
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.42414, 0.01365, -0.025]
+        }
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.3407, 0.01384, -0.02478]
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.24493, 0.0109, -0.02428]
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.12971, 0.00828, -0.01499]
+        }
+      }
+    },
+    "primary": {
+      "$description": "Brand violet ramp — the primary action / accent colour.",
+      "50": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.96258, 0.00962, -0.01794]
+        }
+      },
+      "100": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.90668, 0.02623, -0.04587]
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.81426, 0.04789, -0.09465]
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.69329, 0.08175, -0.16438]
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.59022, 0.09338, -0.21023]
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.49146, 0.08814, -0.21271]
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.40989, 0.07598, -0.18118]
+        }
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.33453, 0.05982, -0.14942]
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.25726, 0.04508, -0.10995]
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.1769, 0.02919, -0.06447]
+        }
+      }
+    },
+    "cyan": {
+      "$description": "Cyan/teal ramp — the secondary accent; the 950 stop is the dark-theme background base.",
+      "50": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.98512, -0.02036, -0.00477]
+        }
+      },
+      "100": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.9624, -0.04884, -0.01015]
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.92622, -0.08655, -0.01735]
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.87926, -0.12569, -0.02247]
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.83508, -0.14058, -0.02123]
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.70668, -0.11874, -0.0178]
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.57223, -0.09562, -0.01416]
+        }
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.45828, -0.07565, -0.01163]
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.33674, -0.0541, -0.00893]
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.2404, -0.0373, -0.00601]
+        }
+      },
+      "950": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.21907, -0.01687, -0.00281]
+        },
+        "$description": "dark theme background base"
+      }
+    },
+    "success": {
+      "$description": "Green ramp — success / positive status.",
+      "50": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.97323, -0.01613, 0.00615]
+        }
+      },
+      "100": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.93569, -0.04395, 0.01619]
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.86789, -0.09291, 0.03825]
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.79425, -0.13681, 0.0629]
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.72422, -0.15499, 0.07987]
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.62912, -0.1407, 0.07657]
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.52749, -0.11801, 0.06495]
+        }
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.42422, -0.0939, 0.05145]
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.31757, -0.06872, 0.03678]
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.20865, -0.04199, 0.01993]
+        }
+      }
+    },
+    "warning": {
+      "$description": "Amber ramp — warning / caution status.",
+      "50": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.98493, -0.00056, 0.02039]
+        }
+      },
+      "100": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.956, -0.00136, 0.05519]
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.9112, -0.00053, 0.11091]
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.85942, 0.01375, 0.14931]
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.81092, 0.0405, 0.15829]
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.74688, 0.07957, 0.15033]
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.64634, 0.10852, 0.13026]
+        }
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.53942, 0.11422, 0.10649]
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.4615, 0.10102, 0.08762]
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.40606, 0.08673, 0.07426]
+        }
+      }
+    },
+    "danger": {
+      "$description": "Red ramp — danger / destructive actions.",
+      "50": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.96969, 0.01518, 0.00199]
+        }
+      },
+      "100": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.94192, 0.0298, 0.00393]
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.89327, 0.05617, 0.00583]
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.80966, 0.10393, 0.02141]
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.71919, 0.16436, 0.03924]
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.64503, 0.2066, 0.06096]
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.58584, 0.21167, 0.06708]
+        }
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.51426, 0.18923, 0.05762]
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.45457, 0.16641, 0.04056]
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.41033, 0.14776, 0.02678]
+        }
+      }
+    },
+    "info": {
+      "$description": "Blue ramp — informational status.",
+      "50": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.98412, -0.01765, -0.00673]
+        }
+      },
+      "100": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.95626, -0.04069, -0.0176]
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.91666, -0.06994, -0.03267]
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.86507, -0.1027, -0.05251]
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.79712, -0.11412, -0.07002]
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.71484, -0.10272, -0.07252]
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.60891, -0.0828, -0.07383]
+        }
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.51976, -0.06829, -0.06396]
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.45003, -0.05518, -0.05381]
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.39821, -0.04496, -0.04888]
+        }
+      }
+    },
+    "error": {
+      "$description": "Red ramp — error status (mirrors the danger hue).",
+      "50": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.96941, 0.01481, 0.00326]
+        }
+      },
+      "100": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.94137, 0.02906, 0.00649]
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.89245, 0.05506, 0.00971]
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.80966, 0.10393, 0.02141]
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.71919, 0.16436, 0.03924]
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.64503, 0.2066, 0.06096]
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.58584, 0.21167, 0.06708]
+        }
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.51426, 0.18923, 0.05762]
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.45457, 0.16641, 0.04056]
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.41033, 0.14776, 0.02678]
+        }
+      }
+    },
+    "critical": {
+      "$description": "Deep red/orange ramp — critical severity, above error.",
+      "50": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.96973, 0.01132, 0.00354]
+        }
+      },
+      "100": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.91402, 0.03285, 0.01055]
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.81669, 0.07114, 0.02424]
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.69315, 0.11853, 0.04514]
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.57395, 0.1544, 0.06926]
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.47905, 0.15153, 0.07536]
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.40625, 0.13047, 0.06567]
+        }
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.34504, 0.10971, 0.05478]
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.28426, 0.08804, 0.0431]
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.22829, 0.06693, 0.03156]
+        }
+      }
+    },
+    "alert": {
+      "$description": "Orange ramp — alert severity.",
+      "50": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.97962, 0.00443, 0.01514]
+        }
+      },
+      "100": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.9542, 0.00951, 0.03592]
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.90146, 0.02411, 0.06885]
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.83657, 0.04686, 0.1067]
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.75764, 0.08908, 0.13175]
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.70487, 0.1259, 0.13789]
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.64607, 0.1464, 0.12779]
+        }
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.55343, 0.13625, 0.108]
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.4698, 0.11379, 0.08669]
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.40839, 0.09156, 0.07198]
+        }
+      }
+    },
+    "notice": {
+      "$description": "Indigo/violet ramp — notice severity.",
+      "50": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.96191, 0.00072, -0.01792]
+        }
+      },
+      "100": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.92994, 0.00163, -0.03339]
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.86986, 0.00438, -0.06207]
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.7853, 0.00856, -0.10378]
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.68011, 0.01911, -0.15714]
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.5854, 0.02528, -0.20248]
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.51057, 0.0279, -0.22836]
+        }
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.45678, 0.02624, -0.21297]
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.39843, 0.02274, -0.17588]
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.35875, 0.02048, -0.13386]
+        }
+      }
+    },
+    "debug": {
+      "$description": "Blue-violet ramp — debug / developer diagnostics.",
+      "50": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.96914, 0.00647, -0.0147]
+        }
+      },
+      "100": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.94335, 0.01182, -0.02583]
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.89427, 0.02169, -0.05041]
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.81116, 0.0405, -0.09284]
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.70897, 0.06357, -0.14592]
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.60563, 0.08454, -0.20193]
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.54134, 0.09638, -0.22697]
+        }
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.49067, 0.09263, -0.22274]
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.43199, 0.08147, -0.19419]
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.37964, 0.0718, -0.16321]
+        }
+      }
+    },
+    "surface": {
+      "$description": "Theme surface & border primitives that fall outside the hue ramps: the light alternating surface plus the dark teal surface/border steps derived from the #111D1C (color.cyan.950) dark base.",
+      "light-alt": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.92653, -0.00196, -0.00481]
+        },
+        "$description": "#e4e7ea — light theme alternating surface (slightly darker than the base)."
+      },
+      "dark-alt": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.26374, -0.01885, -0.0035]
+        },
+        "$description": "#1a2827 — dark theme alternating surface (slightly lighter than the base)."
+      },
+      "dark": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.24794, -0.01781, -0.00317]
+        },
+        "$description": "#172423 — dark theme raised surface / muted background."
+      },
+      "dark-raised": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.28664, -0.02096, -0.00413]
+        },
+        "$description": "#1e2e2d — dark theme raised surface (cards, popovers)."
+      },
+      "dark-overlay": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.32337, -0.02511, -0.00535]
+        },
+        "$description": "#243837 — dark theme overlay surface (menus, tooltips)."
+      },
+      "dark-sunken": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.18188, -0.01348, -0.00176]
+        },
+        "$description": "#0b1413 — dark theme sunken surface (wells, inset code)."
+      },
+      "dark-border": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.30018, -0.0185, -0.00351]
+        },
+        "$description": "#233130 — dark theme default border (teal-tinted)."
+      },
+      "dark-border-strong": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0.35877, -0.02368, -0.00506]
+        },
+        "$description": "#2e4140 — dark theme strong border (teal-tinted)."
+      }
+    },
+    "scrim": {
+      "$description": "Translucent black/white overlay primitives for scrims, loading overlays and skeleton shimmer. The numeric suffix is the alpha percentage.",
+      "black-40": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0, 0, 0],
+          "alpha": 0.4
+        },
+        "$description": "Black at 40% — soft scrim / dark loading overlay."
+      },
+      "black-50": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0, 0, 0],
+          "alpha": 0.5
+        },
+        "$description": "Black at 50% — default scrim (light) / soft scrim (dark)."
+      },
+      "black-60": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [0, 0, 0],
+          "alpha": 0.6
+        },
+        "$description": "Black at 60% — default scrim (dark)."
+      },
+      "white-8": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [1, 0, 0],
+          "alpha": 0.08
+        },
+        "$description": "White at 8% — dark theme skeleton shimmer highlight."
+      },
+      "white-40": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [1, 0, 0],
+          "alpha": 0.4
+        },
+        "$description": "White at 40% — light theme skeleton shimmer highlight."
+      },
+      "white-70": {
+        "$value": {
+          "colorSpace": "oklab",
+          "components": [1, 0, 0],
+          "alpha": 0.7
+        },
+        "$description": "White at 70% — light theme loading overlay."
+      }
+    }
+  }
+}

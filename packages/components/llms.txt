@@ -88,20 +88,29 @@ The package provides over 100 Vue 3 components with consistent styling and behav
 - `BaseVirtualLogViewer` — High-performance log viewer for large datasets
 
 ### Theme configuration
-- `BaseThemeProvider` — Renderless provider that creates and shares a reactive theme store (`useTheme`) with descendants; applies the resolved theme to `<html>` via `data-theme` (matching `BaseThemeToggle`), persists the preference to `localStorage`, tracks the system color scheme, and exposes `theme`/`resolvedTheme`/`setTheme`/`toggleTheme`/`cycleTheme` as slot props
-- `BaseThemeToggle` — Standalone control for switching `light`/`dark`/`auto`
+- `BaseThemeProvider` — Provider that creates and shares a reactive theme store (`useTheme`) with descendants; persists the preference to `localStorage`, pins `color-scheme` + a synced `<meta name="color-scheme">`, tracks the system color scheme, and exposes `theme`/`resolvedTheme`/`setTheme`/`toggleTheme`/`cycleTheme` as slot props. By default (`global`) it themes `<html>` via `data-theme`; set `:global="false"` to scope the theme to a rendered (`display: contents`) wrapper element (`as`, default `div`) for nested / per-subtree themes
+- `BaseThemeToggle` — Control for switching `light`/`dark`/`auto`; backed by the shared `useTheme` store (so it persists, pins `color-scheme`/`<meta>`, and drives the surrounding `BaseThemeProvider`, global or subtree-scoped)
 - `BaseThemeComposer` — Theme-attribute composer that configures the theme at runtime: maps friendly attributes (`primaryColor`/`primaryHoverColor`/`primaryActiveColor`, `secondaryColor`, `textColor`, `backgroundColor`, `surfaceColor`, `borderColor`, `focusColor`, `fontFamily`/`monoFontFamily`, `baseFontSize`, `radius`) plus an arbitrary `tokens` escape hatch onto `--mp-*` CSS custom properties; scopes them to its own (`display: contents`) wrapper by default or applies them globally to `<html>` when `global`, supports `v-model` on the config, optional `localStorage` persistence, and shares the store with descendants via `useThemeComposer` (exposed as slot props: `config`/`cssVariables`/`styleString`/`setConfig`/`setAttribute`/`setToken`/`removeToken`/`reset`)
 
 ### Composables
 
 #### `useTheme()`
 
-Access the shared theme store (provided by `BaseThemeProvider`, or a standalone singleton when no provider is present).
+Access the shared theme store (provided by `BaseThemeProvider`, or a standalone singleton when no provider is present). The `createThemeStore` factory accepts `scoped`/`target` (theme a subtree element, assignable later via the returned `setTarget`) and `syncMeta` options.
 
 ```ts
 import { useTheme } from '@mission-platform/components'
 
 const { theme, resolvedTheme, setTheme, toggleTheme, cycleTheme } = useTheme()
+```
+
+To eliminate the flash of the wrong colour scheme, inline `themeInitScript()` as a
+blocking `<script>` in the document `<head>` (before any stylesheet); it pins
+`data-theme`/`color-scheme` from the persisted preference before first paint.
+
+```ts
+import { themeInitScript } from '@mission-platform/components'
+// e.g. inject into index.html <head>: <script>{themeInitScript()}</script>
 ```
 
 #### `useThemeComposer()`
@@ -112,7 +121,7 @@ Configure attributes of the theme at runtime. Returns the store shared by the ne
 import { useThemeComposer } from '@mission-platform/components'
 
 const { config, cssVariables, setAttribute, setToken, reset } = useThemeComposer()
-setAttribute('primaryColor', '#0ea5e9')
+setAttribute('primaryColor', '#0369a1')
 setToken('radius-md', '1rem') // raw --mp-* override (prefix optional)
 ```
 

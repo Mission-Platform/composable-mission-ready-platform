@@ -284,144 +284,146 @@
 <style lang="scss" scoped>
   @use '@mission-platform/tokens/scss/mixins' as mp;
 
-  .base-scheduler-month-view {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow: hidden;
-
-    // ── Weekday header row ────────────────────────────────────────────────────
-
-    &__weekdays {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      border-bottom: 1px solid var(--mp-color-border-default);
-      background: var(--mp-color-bg-surface);
-      flex-shrink: 0;
-    }
-
-    &__weekday {
-      @include mp.mp-font-caption;
-
-      text-align: center;
-      padding: var(--mp-spacing-2) 0;
-      color: var(--mp-color-text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    // ── Week rows ─────────────────────────────────────────────────────────────
-
-    &__week {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      flex: 1;
-      min-height: 0;
-    }
-
-    // ── Day cells ─────────────────────────────────────────────────────────────
-
-    &__cell {
-      border-right: 1px solid var(--mp-color-border-default);
-      border-bottom: 1px solid var(--mp-color-border-default);
-      padding: var(--mp-spacing-1) var(--mp-spacing-2);
-      overflow: hidden;
+  @layer mp.components {
+    .base-scheduler-month-view {
       display: flex;
       flex-direction: column;
-      gap: 2px;
-      cursor: pointer;
-      transition: background 0.1s ease;
+      height: 100%;
+      overflow: hidden;
 
-      &--other-month {
-        // No element-level opacity — it would also fade event pill text and break
-        // WCAG AAA. Instead, visual dimming is achieved by the muted background
-        // and the day-number colour token below.
-        background: var(--mp-color-bg-muted, #f5f5f5);
+      // ── Weekday header row ────────────────────────────────────────────────────
 
-        .base-scheduler-month-view__day-number {
-          color: var(--mp-color-text-disabled, #9e9ca4);
-        }
+      &__weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        border-bottom: 1px solid var(--mp-color-border-default);
+        background: var(--mp-color-bg-surface);
+        flex-shrink: 0;
       }
 
-      &:last-child {
-        border-right: none;
+      &__weekday {
+        @include mp.mp-font-caption;
+
+        text-align: center;
+        padding: var(--mp-spacing-2) 0;
+        color: var(--mp-color-text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
       }
 
-      &:hover {
-        background: var(--mp-color-bg-muted);
+      // ── Week rows ─────────────────────────────────────────────────────────────
+
+      &__week {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        flex: 1;
+        min-height: 0;
       }
 
-      &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
-        outline-offset: -2px;
-      }
+      // ── Day cells ─────────────────────────────────────────────────────────────
 
-      &--today .base-scheduler-month-view__day-number {
-        background: var(--mp-color-primary-default);
-        color: var(--mp-color-text-on-primary);
-        border-radius: var(--mp-radius-full);
-        width: 24px;
-        height: 24px;
+      &__cell {
+        border-right: 1px solid var(--mp-color-border-default);
+        border-bottom: 1px solid var(--mp-color-border-default);
+        padding: var(--mp-spacing-1) var(--mp-spacing-2);
+        overflow: hidden;
         display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-    }
+        flex-direction: column;
+        gap: 2px;
+        cursor: pointer;
+        transition: background 0.1s ease;
 
-    // ── Day number ────────────────────────────────────────────────────────────
+        &--other-month {
+          // No element-level opacity — it would also fade event pill text and break
+          // WCAG AAA. Instead, visual dimming is achieved by the muted background
+          // and the day-number colour token below.
+          background: var(--mp-color-bg-muted, #f5f5f5);
 
-    &__day-number {
-      @include mp.mp-font-caption;
+          .base-scheduler-month-view__day-number {
+            color: var(--mp-color-text-disabled, #9e9ca4);
+          }
+        }
 
-      font-weight: 600;
-      align-self: flex-start;
-      line-height: 24px;
-    }
+        &:last-child {
+          border-right: none;
+        }
 
-    // ── Events inside a cell ──────────────────────────────────────────────────
-
-    &__events {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      overflow: hidden;
-      min-height: 0;
-    }
-
-    // The event pill overrides BaseButton to show the event colour as background.
-    // Text colour is set via inline style (accessibleTextColor) for WCAG AAA.
-    &__event-pill {
-      @include mp.mp-font-caption;
-
-      display: block;
-      width: 100%;
-      justify-content: flex-start;
-      border-radius: var(--mp-radius-xs, 2px);
-      padding: 1px var(--mp-spacing-1);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
-      // Inline style sets backgroundColor and color; override BaseButton tertiary defaults
-      &.base-button--tertiary {
         &:hover {
-          filter: brightness(0.9);
-          background: inherit; // keep the event colour on hover
-          color: inherit; // keep the computed accessible text colour on hover
+          background: var(--mp-color-bg-muted);
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--mp-color-border-focus);
+          outline-offset: -2px;
+        }
+
+        &--today .base-scheduler-month-view__day-number {
+          background: var(--mp-color-primary-default);
+          color: var(--mp-color-text-on-primary);
+          border-radius: var(--mp-radius-full);
+          width: 24px;
+          height: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
       }
-    }
 
-    &__overflow {
-      @include mp.mp-font-caption;
+      // ── Day number ────────────────────────────────────────────────────────────
 
-      justify-content: flex-start;
-      padding: 0 var(--mp-spacing-1);
-      color: var(--mp-color-text-secondary);
+      &__day-number {
+        @include mp.mp-font-caption;
 
-      &.base-button--tertiary:hover {
-        background: transparent;
-        color: var(--mp-color-text-primary);
+        font-weight: 600;
+        align-self: flex-start;
+        line-height: 24px;
+      }
+
+      // ── Events inside a cell ──────────────────────────────────────────────────
+
+      &__events {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        overflow: hidden;
+        min-height: 0;
+      }
+
+      // The event pill overrides BaseButton to show the event colour as background.
+      // Text colour is set via inline style (accessibleTextColor) for WCAG AAA.
+      &__event-pill {
+        @include mp.mp-font-caption;
+
+        display: block;
+        width: 100%;
+        justify-content: flex-start;
+        border-radius: var(--mp-radius-xs, 2px);
+        padding: 1px var(--mp-spacing-1);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        // Inline style sets backgroundColor and color; override BaseButton tertiary defaults
+        &.base-button--tertiary {
+          &:hover {
+            filter: brightness(0.9);
+            background: inherit; // keep the event colour on hover
+            color: inherit; // keep the computed accessible text colour on hover
+          }
+        }
+      }
+
+      &__overflow {
+        @include mp.mp-font-caption;
+
+        justify-content: flex-start;
+        padding: 0 var(--mp-spacing-1);
+        color: var(--mp-color-text-secondary);
+
+        &.base-button--tertiary:hover {
+          background: transparent;
+          color: var(--mp-color-text-primary);
+        }
       }
     }
   }
