@@ -199,11 +199,9 @@ export function createThemeComposer(options: UseThemeComposerOptions = {}): Them
 
   let applied: string[] = [];
   let appliedColorScheme = false;
-  function applyToDocument(): void {
-    if (!global || typeof document === 'undefined') return;
-    const root = document.documentElement;
-    const next = cssVariables.value;
-    // Remove variables that are no longer present.
+
+  /** Sync the `--mp-*` custom properties on `root`, removing any that are no longer present. */
+  function syncCssVariables(root: HTMLElement, next: Record<string, string>): void {
     for (const name of applied) {
       if (!(name in next)) root.style.removeProperty(name);
     }
@@ -211,7 +209,10 @@ export function createThemeComposer(options: UseThemeComposerOptions = {}): Them
       root.style.setProperty(name, value);
     }
     applied = Object.keys(next);
-    // Apply the `color-scheme` property (drives `light-dark()` + native UA widgets).
+  }
+
+  /** Apply (or clear) the `color-scheme` property — drives `light-dark()` + native UA widgets. */
+  function syncColorScheme(root: HTMLElement): void {
     const { colorScheme } = config.value;
     if (colorScheme) {
       root.style.colorScheme = colorScheme;
@@ -220,6 +221,14 @@ export function createThemeComposer(options: UseThemeComposerOptions = {}): Them
       root.style.removeProperty('color-scheme');
       appliedColorScheme = false;
     }
+  }
+
+  /** Write the resolved CSS variables and `color-scheme` onto `document.documentElement` (global mode). */
+  function applyToDocument(): void {
+    if (!global || typeof document === 'undefined') return;
+    const root = document.documentElement;
+    syncCssVariables(root, cssVariables.value);
+    syncColorScheme(root);
   }
 
   function persistConfig(): void {

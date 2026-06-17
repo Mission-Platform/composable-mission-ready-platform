@@ -39,6 +39,7 @@
   const store = useTheme();
   const theme = store.theme;
 
+  /** Resolve the next theme in the `light` → `dark` → `auto` → `light` cycle. */
   function nextTheme(current: Theme): Theme {
     if (current === 'light') return 'dark';
     if (current === 'dark') return 'auto';

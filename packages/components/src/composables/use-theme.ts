@@ -93,6 +93,16 @@ function readStoredTheme(storageKey: string): Theme | undefined {
   return undefined;
 }
 
+/** Find or create the `<meta name="color-scheme">` element in the document head. */
+function ensureColorSchemeMeta(): HTMLMetaElement {
+  const existing = document.head.querySelector<HTMLMetaElement>('meta[name="color-scheme"]');
+  if (existing) return existing;
+  const created = document.createElement('meta');
+  created.setAttribute('name', 'color-scheme');
+  document.head.append(created);
+  return created;
+}
+
 /**
  * Creates a standalone, reactive theme store. By default the store applies the
  * resolved theme to `document.documentElement` (the `data-theme` attribute,
@@ -118,20 +128,22 @@ export function createThemeStore(options: UseThemeOptions = {}): ThemeStore {
   // global mode and is resolved lazily so SSR stays safe).
   let targetElement: HTMLElement | undefined = target;
 
-  const initial: Theme = (() => {
-    // Honour an attribute already on the root (e.g. set by the pre-paint init
-    // script) so the store doesn't fight a server/inline-rendered preference.
-    // Skipped in `scoped` mode, where the subtree element drives nothing global.
-    if (!scoped && typeof document !== 'undefined') {
-      const attribute = document.documentElement.dataset.theme;
-      if (attribute === 'light' || attribute === 'dark') return attribute;
-    }
-    if (persist) {
-      const stored = readStoredTheme(storageKey);
-      if (stored) return stored;
-    }
-    return defaultTheme;
-  })();
+  // Honour an attribute already on the root (e.g. set by the pre-paint init
+  // script) so the store doesn't fight a server/inline-rendered preference.
+  // Skipped in `scoped` mode, where the subtree element drives nothing global.
+  /** Read a `'light'`/`'dark'` preference already pinned on the document root (global mode only). */
+  function themeFromRootAttribute(): Theme | undefined {
+    if (scoped || typeof document === 'undefined') return undefined;
+    const attribute = document.documentElement.dataset.theme;
+    return attribute === 'light' || attribute === 'dark' ? attribute : undefined;
+  }
+
+  /** Resolve the initial theme: root attribute, then the persisted value, then the default. */
+  function resolveInitialTheme(): Theme {
+    return themeFromRootAttribute() ?? (persist ? readStoredTheme(storageKey) : undefined) ?? defaultTheme;
+  }
+
+  const initial: Theme = resolveInitialTheme();
 
   const theme = ref<Theme>(initial);
   const systemTheme = ref<ResolvedTheme>(systemPrefersDark() ? 'dark' : 'light');
@@ -167,15 +179,10 @@ export function createThemeStore(options: UseThemeOptions = {}): ThemeStore {
    */
   function syncMetaColorScheme(): void {
     if (!syncMeta || typeof document === 'undefined' || !document.head) return;
-    let meta = document.head.querySelector<HTMLMetaElement>('meta[name="color-scheme"]');
-    if (!meta) {
-      meta = document.createElement('meta');
-      meta.setAttribute('name', 'color-scheme');
-      document.head.append(meta);
-    }
-    meta.setAttribute('content', theme.value === 'auto' ? 'light dark' : theme.value);
+    ensureColorSchemeMeta().setAttribute('content', theme.value === 'auto' ? 'light dark' : theme.value);
   }
 
+  /** Apply the resolved theme to the target element and (in global mode) the `<meta>`. */
   function applyTheme(): void {
     const element = resolveTarget();
     if (element) applyToElement(element);
@@ -302,11 +309,11 @@ export function themeInitScript(options: ThemeInitScriptOptions = {}): string {
   const key = JSON.stringify(storageKey);
   const fallback = JSON.stringify(defaultTheme);
   return (
-    `(function(){try{` +
-    `var d=document.documentElement;` +
+    '(function(){try{' +
+    'var d=document.documentElement;' +
     `var t=localStorage.getItem(${key})||${fallback};` +
-    `if(t==='light'||t==='dark'){d.setAttribute('data-theme',t);d.style.colorScheme=t;}` +
-    `else{d.removeAttribute('data-theme');d.style.colorScheme='light dark';}` +
-    `}catch(e){}})();`
+    "if(t==='light'||t==='dark'){d.setAttribute('data-theme',t);d.style.colorScheme=t;}" +
+    "else{d.removeAttribute('data-theme');d.style.colorScheme='light dark';}" +
+    '}catch(e){}})();'
   );
 }
