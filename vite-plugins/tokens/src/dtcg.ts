@@ -82,22 +82,25 @@ export function flattenTokens(document_: DtcgGroup): TokenRecord[] {
     value: token.$value,
     description: token.$description,
   });
+  // `visit` and `walk` are mutually recursive, so they are written as hoisted
+  // function declarations (rather than `const` arrows) to avoid referencing
+  // either before its definition.
   /** Handle a single group entry: push a leaf record or recurse into a nested group. */
-  const visit = (childPath: string[], child: unknown, groupType?: string): void => {
+  function visit(childPath: string[], child: unknown, groupType?: string): void {
     if (isToken(child)) {
       records.push(toRecord(childPath, child, groupType));
     } else if (typeof child === 'object' && child !== null) {
       walk(child as DtcgGroup, childPath, groupType);
     }
-  };
+  }
   /** Recursively descend a group, carrying the nearest ancestor `$type` down. */
-  const walk = (node: DtcgGroup, segments: string[], inheritedType?: string): void => {
+  function walk(node: DtcgGroup, segments: string[], inheritedType?: string): void {
     const groupType = (node.$type as string | undefined) ?? inheritedType;
     for (const [key, child] of Object.entries(node)) {
       if (key.startsWith('$')) continue;
       visit([...segments, key], child, groupType);
     }
-  };
+  }
   walk(document_, []);
   return records;
 }

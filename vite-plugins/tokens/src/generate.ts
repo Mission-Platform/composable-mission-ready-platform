@@ -83,13 +83,33 @@ interface EmitContext {
 }
 
 /**
+ * The alias source document for a TS module: the composite typography resolves
+ * its `{font.*}` aliases against the `font` document, the themes resolve their
+ * semantic `{color.*}` aliases against the `palette` document, and everything
+ * else has no aliases to resolve.
+ */
+function aliasDocumentFor(descriptor: SourceDescriptor, context: EmitContext): DtcgGroup | undefined {
+  switch (descriptor.kind) {
+    case 'typography': {
+      return context.fontDocument;
+    }
+    case 'theme': {
+      return context.paletteDocument;
+    }
+    default: {
+      return undefined;
+    }
+  }
+}
+
+/**
  * Write the SCSS (non-theme sources) and TypeScript artefacts for a single DTCG
  * source. SCSS partials use the leading-underscore convention (`_<file>.scss`);
  * each non-theme source also yields a CSS-free `_<file>-vars.scss` (the
  * `$`-variables only). Theme SCSS is emitted once by the caller, after the loop.
  */
 function writeSourceArtefacts(descriptor: SourceDescriptor, document_: DtcgGroup, context: EmitContext): void {
-  const { scssDirectory, tsDirectory, prefix, fontDocument, paletteDocument } = context;
+  const { scssDirectory, tsDirectory, prefix } = context;
   if (descriptor.kind === 'structural' || descriptor.kind === 'typography') {
     const records =
       descriptor.kind === 'typography'
@@ -101,11 +121,9 @@ function writeSourceArtefacts(descriptor: SourceDescriptor, document_: DtcgGroup
       buildStructuralScss(records, prefix, descriptor.file),
     );
   }
-  const aliasDocument =
-    descriptor.kind === 'typography' ? fontDocument : descriptor.kind === 'theme' ? paletteDocument : undefined;
   writeFileSync(
     join(tsDirectory, `${descriptor.file}.ts`),
-    buildTokenModule(descriptor.file, document_, aliasDocument),
+    buildTokenModule(descriptor.file, document_, aliasDocumentFor(descriptor, context)),
   );
 }
 
