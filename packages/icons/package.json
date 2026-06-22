@@ -1,64 +1,88 @@
 {
   "name": "@mission-platform/icons",
-  "version": "1.1.0",
-  "description": "SVG icon components for Mission Platform",
+  "version": "0.1.0",
+  "description": "SVG icon components for Mission Platform, authored once in JSX and compiled to Vue 3 and React",
   "type": "module",
   "sideEffects": [
     "**/*.css",
-    "**/*.scss",
-    "**/*.vue"
+    "**/*.scss"
   ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./dist/components/index.d.ts",
+      "import": "./src/components/index.ts"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js"
+    },
+    "./vue": {
+      "types": "./dist/vue/index.d.ts",
+      "import": "./dist/vue/index.js"
     }
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
-    "build": "vue-tsc -b && vite build && vue-tsc --project tsconfig.app.json --emitDeclarationOnly",
+    "build": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc --project tsconfig.build.json --noEmit && vite build --mode vue && vite build --mode react && tsc --project tsconfig.build.json --emitDeclarationOnly",
     "build:watch": "vite build --watch",
     "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "lint:style": "stylelint \"src/**/*.{vue,scss}\"",
-    "lint:style:fix": "stylelint --fix \"src/**/*.{vue,scss}\"",
+    "lint:style": "stylelint \"src/**/*.scss\"",
+    "lint:style:fix": "stylelint --fix \"src/**/*.scss\"",
     "format": "prettier --check .",
     "format:write": "prettier --write ."
   },
   "dependencies": {
-    "@mission-platform/tokens": "workspace:*"
+    "@mission-platform/jsx": "workspace:*"
   },
   "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
     "vue": "^3.5.0"
   },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
+  },
   "devDependencies": {
-    "@intlify/eslint-plugin-vue-i18n": "catalog:eslint",
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
     "@mission-platform/stylelint-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
-    "@types/node": "catalog:typescript",
+    "@mission-platform/vite-plugin-jsx": "workspace:*",
     "@storybook/vue3-vite": "catalog:storybook",
-    "@vue/test-utils": "catalog:vue",
-    "jsdom": "catalog:testing",
-    "vitest": "catalog:testing",
+    "@types/node": "catalog:typescript",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-vue": "catalog:vue",
+    "@vitejs/plugin-vue-jsx": "catalog:vue",
+    "@vitest/coverage-v8": "catalog:testing",
     "eslint": "catalog:eslint",
+    "jsdom": "catalog:testing",
     "postcss-html": "catalog:stylelint",
     "postcss-scss": "catalog:stylelint",
     "prettier": "catalog:prettier",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "storybook": "catalog:storybook",
     "stylelint": "catalog:stylelint",
     "stylelint-config-recommended-vue": "catalog:stylelint",
     "stylelint-config-standard-scss": "catalog:stylelint",
     "typescript": "catalog:typescript",
     "vite": "catalog:vite",
-    "vite-svg-loader": "^5.1.1",
-    "vue": "catalog:vue",
-    "vue-tsc": "catalog:vue"
+    "vitest": "catalog:testing",
+    "vue": "catalog:vue"
   }
 }

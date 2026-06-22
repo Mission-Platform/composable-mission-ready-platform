@@ -1,0 +1,25 @@
+@layer mp.icons {
+  .base-icon-lock {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    vertical-align: middle;
+    overflow: visible;
+  }
+
+  .base-icon-lock__shackle {
+    transform-origin: 7px 11px;
+    transform: rotate(0deg) translateY(0);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .base-icon-lock__shackle {
+      transition: transform 0.3s ease;
+    }
+  }
+
+  .base-icon-lock--open .base-icon-lock__shackle {
+    transform: rotate(-20deg) translateY(-3px);
+  }
+}
