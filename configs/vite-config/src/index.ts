@@ -1,16 +1,39 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import postcssConfig from '@mission-platform/postcss-config';
 import vue from '@vitejs/plugin-vue';
-import { defineConfig, mergeConfig, type UserConfig } from 'vite';
+import { defineConfig, mergeConfig, type Plugin, type UserConfig } from 'vite';
+
+/**
+ * Vite plugin that turns Vue SFC `<i18n>` custom blocks into no-op modules.
+ *
+ * The platform's `<i18n>` blocks hold the English source strings consumed by
+ * the `scripts/i18n-extract.ts` tooling only — at runtime translations are
+ * loaded from the generated `src/locales/*.yaml` bundles via i18next. Since the
+ * project no longer uses a vue-i18n custom-block compiler, `@vitejs/plugin-vue`
+ * would otherwise emit the raw YAML block as a JS module and fail to parse it.
+ * This plugin pre-empts that load with an inert default export (the shape
+ * `@vitejs/plugin-vue` expects so it can call `block(component)` harmlessly).
+ */
+export function ignoreVueI18nBlocksPlugin(): Plugin {
+  return {
+    name: 'mission-platform:ignore-vue-i18n-blocks',
+    enforce: 'pre',
+    load(id) {
+      if (id.includes('vue&type=i18n')) {
+        return 'export default function ignoredI18nBlock() {}';
+      }
+      return;
+    },
+  };
+}
 
 /**
  * Default Rollup externals every shared library should treat as peer-provided.
  * Apps consuming the library are expected to supply these themselves.
  */
-export const DEFAULT_LIBRARY_EXTERNALS: readonly string[] = ['vue', 'vue-router', 'vue-i18n', '@mission-platform/i18n'];
+export const DEFAULT_LIBRARY_EXTERNALS: readonly string[] = ['vue', 'vue-router', '@mission-platform/i18n'];
 
 /**
  * Default Rollup output globals for UMD/IIFE consumers. We only target ESM but
@@ -144,8 +167,8 @@ function buildLibraryOutput(
 
 /**
  * Build a Vite config tailored to the Mission Platform Vue library packages:
- * Vue + vue-i18n plugins, the shared PostCSS pipeline, ESM-only lib output,
- * single CSS bundle, and sensible peer-dependency externals.
+ * the Vue plugin, the shared PostCSS pipeline, ESM-only lib output, single CSS
+ * bundle, and sensible peer-dependency externals.
  *
  * By default the build preserves the source module graph
  * ({@link LibraryConfigOptions.preserveModules}), emitting one file per module
@@ -178,7 +201,7 @@ export function defineLibraryConfig(options: LibraryConfigOptions): UserConfig {
     css: {
       postcss: postcssConfig,
     },
-    plugins: [vue(), VueI18nPlugin({ include: [] })],
+    plugins: [vue(), ignoreVueI18nBlocksPlugin()],
     build: {
       lib: {
         entry: resolveLibraryEntry(rootDir, entry),
@@ -203,16 +226,16 @@ export interface AppConfigOptions {
 }
 
 /**
- * Build a Vite config for Mission Platform Vue 3 apps: Vue + vue-i18n plugins
- * and the shared PostCSS pipeline. Apps add their own routing, PWA, worker,
- * and bundling tweaks via {@link AppConfigOptions.overrides}.
+ * Build a Vite config for Mission Platform Vue 3 apps: the Vue plugin and the
+ * shared PostCSS pipeline. Apps add their own routing, PWA, worker, and
+ * bundling tweaks via {@link AppConfigOptions.overrides}.
  */
 export function defineAppConfig(options: AppConfigOptions = {}): UserConfig {
   const base = defineConfig({
     css: {
       postcss: postcssConfig,
     },
-    plugins: [vue(), VueI18nPlugin({ include: [] })],
+    plugins: [vue(), ignoreVueI18nBlocksPlugin()],
   });
 
   return options.overrides ? mergeConfig(base, options.overrides) : base;

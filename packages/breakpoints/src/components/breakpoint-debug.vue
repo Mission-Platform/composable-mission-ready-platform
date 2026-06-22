@@ -1,11 +1,13 @@
 <script lang="ts" setup>
-  import { useI18n } from '@mission-platform/i18n';
+  import { mpNamespace, useI18n } from '@mission-platform/i18n/vue';
 
   import { breakpointKeys, breakpoints } from '../breakpoints';
   import { useBreakpoints } from '../use-breakpoints';
 
   const { current, active } = useBreakpoints();
-  const { t } = useI18n({ useScope: 'local' });
+  // Resolve against this package's own `mp.breakpoints` namespace so consuming
+  // apps can override these strings without colliding with their own keys.
+  const { t } = useI18n(mpNamespace('breakpoints'));
 </script>
 
 <template>
@@ -102,6 +104,6 @@
 <i18n lang="yaml">
 en:
   breakpoint: 'breakpoint:'
-  separator: "{'|'}"
+  separator: '|'
   debug_px: '({breakpoint}px)'
 </i18n>

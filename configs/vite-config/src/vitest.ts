@@ -1,6 +1,7 @@
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import vue from '@vitejs/plugin-vue';
 import { defineConfig, mergeConfig, type ViteUserConfig } from 'vitest/config';
+
+import { ignoreVueI18nBlocksPlugin } from './index.js';
 
 export interface VitestConfigOptions {
   /** Test environment. Defaults to `'jsdom'` (Vue components require a DOM). */
@@ -19,8 +20,8 @@ export interface VitestConfigOptions {
 
 /**
  * Build a Vitest config for Mission Platform packages and apps. Provides the
- * standard Vue + vue-i18n plugins, a jsdom environment, and a v8 coverage
- * provider preconfigured for `src/**\/*.vue` components.
+ * standard Vue plugin, a jsdom environment, and a v8 coverage provider
+ * preconfigured for `src/**\/*.vue` components.
  */
 export function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig {
   const {
@@ -33,7 +34,7 @@ export function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserC
   } = options;
 
   const base = defineConfig({
-    plugins: [vue(), VueI18nPlugin({ include: [] })],
+    plugins: [vue(), ignoreVueI18nBlocksPlugin()],
     test: {
       environment,
       globals,
