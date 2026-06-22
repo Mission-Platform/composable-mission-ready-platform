@@ -39,17 +39,6 @@ mp.website:
   packages:
     title: 构建块
     lead: 每个软件包都独立版本化和发布。混合、搭配、组合。
-    items:
-      - Vue 3 组件库
-      - CSS 设计令牌与 SCSS 主题
-      - SVG 图标组件
-      - 响应式工具与可组合函数
-      - vue-i18n 集成与基础语言包
-      - 面向 Vue 3 的 MapLibre GL 封装
-      - 面向 Monaco 的 Harper 语法检查器
-      - Hunspell 拼写检查器(WASM)
-      - 统一 SEO:页面元数据、Open Graph、Twitter Card 与 JSON-LD
-      - base-spa Cloudflare Worker
   about:
     title: 我们正在构建什么
     lead: Mission Platform 在多种领域驱动着真实的应用。平台的目标,是让精致且任务就绪的体验可复制、可组合,并易于交付。

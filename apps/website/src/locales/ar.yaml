@@ -44,17 +44,6 @@ mp.website:
   packages:
     title: لبنات البناء
     lead: كل حزمة تُصدَّر وتُنشر بشكل مستقل. امزج وطابق وركّب.
-    items:
-      - مكتبة مكونات Vue 3
-      - رموز تصميم CSS وثيمات SCSS
-      - مكونات أيقونات SVG
-      - أدوات وcomposables استجابية
-      - تكامل vue-i18n واللغات الأساسية
-      - غلاف MapLibre GL لـ Vue 3
-      - مدقق Harper النحوي لـ Monaco
-      - مدقق Hunspell الإملائي (WASM)
-      - 'تحسين محركات البحث الموحد: بيانات الصفحة، Open Graph، Twitter Card و JSON-LD'
-      - عامل base-spa من Cloudflare
   about:
     title: ما الذي نبنيه
     lead: >-

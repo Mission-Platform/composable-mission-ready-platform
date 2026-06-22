@@ -52,17 +52,6 @@ mp.website:
   packages:
     title: Bouwstenen
     lead: Elk pakket wordt onafhankelijk geversioneerd en gepubliceerd. Mix, match en stel samen.
-    items:
-      - Vue 3-componentenbibliotheek
-      - CSS design-tokens en SCSS-thema’s
-      - SVG-icooncomponenten
-      - Responsieve utilities en composables
-      - vue-i18n-integratie en basis-locales
-      - MapLibre GL Vue 3-wrapper
-      - Harper grammaticacontrole voor Monaco
-      - Hunspell spellingcontrole (WASM)
-      - 'Geünificeerde SEO: paginametadata, Open Graph, Twitter Card en JSON-LD'
-      - base-spa Cloudflare Worker
   about:
     title: Wat we bouwen
     lead: >-

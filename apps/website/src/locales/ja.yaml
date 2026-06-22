@@ -39,17 +39,6 @@ mp.website:
   packages:
     title: ビルディングブロック
     lead: すべてのパッケージは独立してバージョン管理・公開されています。組み合わせて、自由に構成してください。
-    items:
-      - Vue 3 コンポーネントライブラリ
-      - CSS デザイントークンと SCSS テーマ
-      - SVG アイコンコンポーネント
-      - レスポンシブユーティリティとコンポーザブル
-      - vue-i18n 統合とベースロケール
-      - Vue 3 向け MapLibre GL ラッパー
-      - Monaco 向け Harper 文法チェッカー
-      - Hunspell スペルチェッカー (WASM)
-      - 統合 SEO：ページメタデータ、Open Graph、Twitter Card、JSON-LD
-      - base-spa Cloudflare Worker
   about:
     title: 私たちが作っているもの
     lead: Mission Platform は多様な分野で実際のアプリケーションを支えています。プラットフォームの目標は、洗練されミッション対応の体験を、再現可能でコンポーザブル、そして出荷しやすいものにすることです。

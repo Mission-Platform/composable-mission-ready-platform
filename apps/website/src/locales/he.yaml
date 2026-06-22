@@ -44,17 +44,6 @@ mp.website:
   packages:
     title: אבני בניין
     lead: כל חבילה מנוהלת ומפורסמת בנפרד. ערבב, התאם והרכב.
-    items:
-      - ספריית קומפוננטות Vue 3
-      - design tokens של CSS וערכות נושא ב-SCSS
-      - קומפוננטות אייקוני SVG
-      - כלים ו-composables רספונסיביים
-      - שילוב vue-i18n ושפות בסיס
-      - עטיפת MapLibre GL ל-Vue 3
-      - בודק תחביר Harper ל-Monaco
-      - בודק איות Hunspell (WASM)
-      - 'SEO מאוחד: מטא-נתוני עמוד, Open Graph, Twitter Card ו-JSON-LD'
-      - Cloudflare Worker base-spa
   about:
     title: מה אנחנו בונים
     lead: >-

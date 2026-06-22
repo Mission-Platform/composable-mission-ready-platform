@@ -56,17 +56,6 @@ mp.website:
   packages:
     title: Bloques de construcción
     lead: Cada paquete se versiona y publica de forma independiente. Mezcla, combina y compón.
-    items:
-      - Biblioteca de componentes Vue 3
-      - Tokens de diseño CSS y temas SCSS
-      - Componentes de iconos SVG
-      - Utilidades y composables responsivos
-      - Integración con vue-i18n y locales base
-      - Wrapper de MapLibre GL para Vue 3
-      - Corrector gramatical Harper para Monaco
-      - Corrector ortográfico Hunspell (WASM)
-      - 'SEO unificado: metadatos de página, Open Graph, Twitter Card y JSON-LD'
-      - Cloudflare Worker base-spa
   about:
     title: Lo que estamos construyendo
     lead: >-

@@ -1,7 +1,6 @@
 import { type MpI18n, type MpMessageObject } from '@mission-platform/i18n';
 import yaml from 'js-yaml';
 
-
 // Lazy-loaded YAML locale bundles. Each `.yaml` is imported as a raw string
 // (`?raw`) and parsed with js-yaml on demand, then registered with i18next.
 type LocaleLoader = () => Promise<string>;

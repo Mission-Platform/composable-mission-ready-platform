@@ -52,17 +52,6 @@ mp.website:
   packages:
     title: Mattoni di costruzione
     lead: Ogni pacchetto è versionato e pubblicato in modo indipendente. Mescola, abbina e componi.
-    items:
-      - Libreria di componenti Vue 3
-      - Design token CSS e temi SCSS
-      - Componenti di icone SVG
-      - Utility e composables responsive
-      - Integrazione vue-i18n e locali base
-      - Wrapper MapLibre GL per Vue 3
-      - Correttore grammaticale Harper per Monaco
-      - Correttore ortografico Hunspell (WASM)
-      - 'SEO unificata: metadati di pagina, Open Graph, Twitter Card e JSON-LD'
-      - Cloudflare Worker base-spa
   about:
     title: Cosa stiamo costruendo
     lead: >-
