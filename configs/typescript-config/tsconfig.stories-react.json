@@ -1,0 +1,5 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Mission Platform — React Stories (Storybook)",
+  "extends": "./tsconfig.react.json"
+}

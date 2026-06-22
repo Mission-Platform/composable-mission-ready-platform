@@ -7,18 +7,22 @@
     ".": "./tsconfig.base.json",
     "./base": "./tsconfig.base.json",
     "./app": "./tsconfig.app.json",
+    "./react": "./tsconfig.react.json",
     "./node": "./tsconfig.node.json",
     "./test": "./tsconfig.test.json",
     "./library": "./tsconfig.library.json",
-    "./stories": "./tsconfig.stories.json"
+    "./stories": "./tsconfig.stories.json",
+    "./stories-react": "./tsconfig.stories-react.json"
   },
   "files": [
     "tsconfig.base.json",
     "tsconfig.app.json",
+    "tsconfig.react.json",
     "tsconfig.node.json",
     "tsconfig.test.json",
     "tsconfig.library.json",
-    "tsconfig.stories.json"
+    "tsconfig.stories.json",
+    "tsconfig.stories-react.json"
   ],
   "scripts": {
     "lint": "eslint .",
