@@ -1,2 +1,6 @@
-export { default } from './base-button-group.vue';
-export type { ButtonGroupOrientation, ButtonGroupGap } from './base-button-group.vue';
+export {
+  BaseButtonGroup,
+  type ButtonGroupGap,
+  type ButtonGroupOrientation,
+  type ButtonGroupProperties,
+} from './base-button-group';

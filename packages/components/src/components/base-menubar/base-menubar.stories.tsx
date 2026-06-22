@@ -1,219 +1,88 @@
-import BaseMenuItem from '../base-menu-item/base-menu-item.vue';
-
-import BaseMenubar from './base-menubar.vue';
+import { Menubar } from '@mission-platform/components/vue';
 
 import type { MenuItem } from '../base-menu';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+const items: MenuItem[] = [
+  {
+    label: 'File',
+    children: [{ label: 'New', href: '/new' }, { label: 'Open', href: '/open' }, { label: 'Save' }],
+  },
+  {
+    label: 'Edit',
+    children: [{ label: 'Undo' }, { label: 'Redo' }, { label: 'Cut', disabled: true }],
+  },
+  {
+    label: 'View',
+    children: [
+      { label: 'Zoom in' },
+      { label: 'Zoom out' },
+      {
+        label: 'Appearance',
+        children: [{ label: 'Light' }, { label: 'Dark' }, { label: 'System' }],
+      },
+    ],
+  },
+  { label: 'Help', href: '/help' },
+];
+
+/**
+ * `Menubar` is the Vue 3 build of the write-once `BaseMenubar` in this package.
+ * The component is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/jsx`) and compiled straight to a Vue component at build
+ * time by `@mission-platform/vite-plugin-jsx`. The very same source also ships
+ * as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Navigation/BaseMenubar',
-  component: BaseMenubar,
+  component: Menubar,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`Menubar` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Menubar` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). It renders a horizontal `role="menubar"` whose items open dropdown submenus that nest **to any depth** (one open per level, the ancestor chain staying open); clicking outside or pressing Escape closes them. Mirroring the recursive Vue `BaseMenuSubmenu`, the JSX version recurses through a single `renderItems` walk driven by a path-keyed `openPath`; when `items` is omitted it renders the default slot, icons become text glyphs, and `vue-router` targets become a plain `<a href>`. Styling comes from the co-located `base-menubar.module.scss`.',
       },
     },
   },
   argTypes: {
-    bordered: { control: 'boolean' },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     label: { control: 'text' },
+    bordered: { control: 'boolean' },
   },
   args: {
+    items,
+    label: 'Application menu',
     bordered: true,
-    label: 'Main Menu',
   },
-} satisfies Meta<typeof BaseMenubar>;
+  render: (arguments_) => ({
+    components: { Menubar },
+    setup() {
+      return { args: arguments_ };
+    },
+    template: '<div style="padding-bottom: 12rem;"><Menubar v-bind="args" /></div>',
+  }),
+} satisfies Meta<typeof Menubar>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: (arguments_) => ({
-    components: { BaseMenubar, BaseMenuItem },
-    setup() {
-      return { args: arguments_ };
-    },
-    template: `
-      <BaseMenubar v-bind="args">
-        <BaseMenuItem label="File" />
-        <BaseMenuItem label="Edit" :active="true" />
-        <BaseMenuItem label="View" />
-        <BaseMenuItem label="Help" />
-        <BaseMenuItem label="Delete" variant="error" />
-        <BaseMenuItem label="Disabled" :disabled="true" />
-      </BaseMenubar>
-    `,
-  }),
-};
+export const Default: Story = {};
 
-const menubarWithSubmenusItems: MenuItem[] = [
-  {
-    label: 'File',
-    children: [
-      { label: 'New', onClick: () => alert('New') },
-      { label: 'Open', onClick: () => alert('Open') },
-      { label: 'Save', onClick: () => alert('Save') },
-      { label: 'Save As…', onClick: () => alert('Save As') },
-    ],
-  },
-  {
-    label: 'Edit',
-    children: [
-      { label: 'Undo', onClick: () => alert('Undo') },
-      { label: 'Redo', onClick: () => alert('Redo'), disabled: true },
-      { label: 'Cut', onClick: () => alert('Cut') },
-      { label: 'Copy', onClick: () => alert('Copy') },
-      { label: 'Paste', onClick: () => alert('Paste') },
-    ],
-  },
-  {
-    label: 'View',
-    children: [
-      { label: 'Zoom In', onClick: () => alert('Zoom In') },
-      { label: 'Zoom Out', onClick: () => alert('Zoom Out') },
-      { label: 'Full Screen', onClick: () => alert('Full Screen') },
-    ],
-  },
-  { label: 'Help', onClick: () => alert('Help') },
-];
+export const Borderless: Story = { args: { bordered: false } };
 
-export const WithSubmenus: Story = {
-  render: (arguments_) => ({
-    components: { BaseMenubar },
-    setup() {
-      const items = menubarWithSubmenusItems;
-      return { args: arguments_, items };
-    },
-    template: `
-      <BaseMenubar v-bind="args" :items="items" />
-    `,
-  }),
-  args: {
-    bordered: true,
-    label: 'Main Menu',
-  },
-};
-
-const operationsSubmenusItems: MenuItem[] = [
-  { label: 'Dashboard', href: '#' },
-  {
-    label: 'Operations',
-    children: [
-      { label: 'Active Missions', href: '#' },
-      { label: 'Unit Deployment', href: '#' },
-      { label: 'Logistics', href: '#' },
-    ],
-  },
-  {
-    label: 'Reports',
-    children: [
-      { label: 'Daily Summary', href: '#' },
-      { label: 'Weekly Report', href: '#' },
-      { label: 'Archive', href: '#', disabled: true },
-    ],
-  },
-  { label: 'Settings', href: '#' },
-];
-
-export const WithSubmenusAndLinks: Story = {
-  render: (arguments_) => ({
-    components: { BaseMenubar },
-    setup() {
-      const items = operationsSubmenusItems;
-      return { args: arguments_, items };
-    },
-    template: `
-      <BaseMenubar v-bind="args" :items="items" />
-    `,
-  }),
-  args: {
-    bordered: true,
-    label: 'Operations Menu',
-  },
-};
-
-export const WithSubmenusUnbordered: Story = {
-  render: (arguments_) => ({
-    components: { BaseMenubar },
-    setup() {
-      const items = menubarWithSubmenusItems;
-      return { args: arguments_, items };
-    },
-    template: `
-      <BaseMenubar v-bind="args" :items="items" />
-    `,
-  }),
-  args: {
-    bordered: false,
-    label: 'Main Menu',
-  },
-};
-
-const nestedMenubarItems: MenuItem[] = [
-  {
-    label: 'File',
-    children: [
-      { label: 'New', onClick: () => alert('New') },
-      {
-        label: 'Open Recent',
-        children: [
-          { label: 'Document 1.txt', onClick: () => alert('Document 1') },
-          { label: 'Report Q4.pdf', onClick: () => alert('Report Q4') },
-          { label: 'Archive.zip', onClick: () => alert('Archive'), disabled: true },
-        ],
+export const DefaultSlot: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'With no `items`, the menubar renders its **default slot** instead — matching the Vue SFC’s `<slot v-else>` fallback.',
       },
-      { label: 'Save', onClick: () => alert('Save') },
-      { label: 'Save As…', onClick: () => alert('Save As') },
-    ],
-  },
-  {
-    label: 'Edit',
-    children: [
-      { label: 'Undo', onClick: () => alert('Undo') },
-      { label: 'Redo', onClick: () => alert('Redo'), disabled: true },
-      {
-        label: 'Find',
-        children: [
-          { label: 'Find…', onClick: () => alert('Find') },
-          { label: 'Find & Replace…', onClick: () => alert('Find & Replace') },
-          {
-            label: 'Advanced',
-            children: [
-              { label: 'Regex Search', onClick: () => alert('Regex') },
-              { label: 'Fuzzy Match', onClick: () => alert('Fuzzy') },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'View',
-    children: [
-      { label: 'Zoom In', onClick: () => alert('Zoom In') },
-      { label: 'Zoom Out', onClick: () => alert('Zoom Out') },
-      { label: 'Full Screen', onClick: () => alert('Full Screen') },
-    ],
-  },
-  { label: 'Help', onClick: () => alert('Help') },
-];
-
-export const WithNestedSubmenus: Story = {
-  render: (arguments_) => ({
-    components: { BaseMenubar },
-    setup() {
-      const items = nestedMenubarItems;
-      return { args: arguments_, items };
     },
-    template: `
-      <BaseMenubar v-bind="args" :items="items" />
-    `,
-  }),
-  args: {
-    bordered: true,
-    label: 'Main Menu',
   },
+  render: () => ({
+    components: { Menubar },
+    template:
+      '<Menubar label="Custom" :bordered="true"><span style="padding: 0 0.5rem;">Custom menubar content</span></Menubar>',
+  }),
 };

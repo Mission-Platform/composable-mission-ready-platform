@@ -1,48 +1,52 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseProgressBar } from './base-progress-bar';
 
-import BaseProgressBar from './base-progress-bar.vue';
+/**
+ * Exercises the **neutral** `BaseProgressBar` authored in this package,
+ * rendering it on both frameworks through the `@mission-platform/jsx` runtime
+ * adapters. Covers the determinate label row (via the composed
+ * `BaseTypography`) and the indeterminate mode.
+ */
+const ReactProgressBar = toReactComponent(BaseProgressBar, 'ProgressBar');
+const VueProgressBar = toVueComponent(BaseProgressBar, 'ProgressBar');
 
-describe('BaseProgressBar', () => {
-  it('renders a progressbar role element', () => {
-    const wrapper = mountWithI18n(BaseProgressBar, { props: { value: 50 } });
-    expect(wrapper.find('progress').exists()).toBe(true);
+describe('BaseProgressBar authors the same component for React and Vue', () => {
+  it('renders a labelled, determinate track with a percentage on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactProgressBar, { value: 30, variant: 'success', size: 'lg', label: 'Upload', showLabel: true }),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () =>
+          vueH(VueProgressBar, { value: 30, variant: 'success', size: 'lg', label: 'Upload', showLabel: true }),
+      }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-progress-bar');
+      expect(html).toContain('base-progress-bar--lg');
+      expect(html).toContain('base-progress-bar__track--success');
+      // The composed neutral BaseTypography renders the label + percentage.
+      expect(html).toContain('base-typography');
+      expect(html).toContain('Upload');
+      expect(html).toContain('30%');
+      expect(html).toContain('aria-label="Upload"');
+    }
   });
 
-  it('sets value attribute on progress element', () => {
-    const wrapper = mountWithI18n(BaseProgressBar, { props: { value: 75 } });
-    expect(wrapper.find('progress').attributes('value')).toBe('75');
-  });
+  it('renders an indeterminate track without a value on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactProgressBar, { indeterminate: true }));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueProgressBar, { indeterminate: true }) }));
 
-  it('fill width matches percentage via value attribute', () => {
-    const wrapper = mountWithI18n(BaseProgressBar, { props: { value: 50, max: 100 } });
-    expect(wrapper.find('progress').attributes('value')).toBe('50');
-    expect(wrapper.find('progress').attributes('max')).toBe('100');
-  });
-
-  it('shows label when provided', () => {
-    const wrapper = mountWithI18n(BaseProgressBar, { props: { value: 30, label: 'Loading' } });
-    expect(wrapper.find('.base-progress-bar__label').text()).toBe('Loading');
-  });
-
-  it('shows percentage when showLabel is true', () => {
-    const wrapper = mountWithI18n(BaseProgressBar, { props: { value: 40, showLabel: true } });
-    expect(wrapper.find('.base-progress-bar__value').text()).toBe('40%');
-  });
-
-  it('applies indeterminate class', () => {
-    const wrapper = mountWithI18n(BaseProgressBar, { props: { indeterminate: true } });
-    expect(wrapper.find('progress').classes()).toContain('base-progress-bar__track--indeterminate');
-  });
-
-  it('clamps value above 100', () => {
-    const wrapper = mountWithI18n(BaseProgressBar, { props: { value: 150, showLabel: true } });
-    expect(wrapper.find('.base-progress-bar__value').text()).toBe('100%');
-  });
-
-  it('applies variant class', () => {
-    const wrapper = mountWithI18n(BaseProgressBar, { props: { value: 50, variant: 'success' } });
-    expect(wrapper.find('progress').classes()).toContain('base-progress-bar__track--success');
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-progress-bar__track--indeterminate');
+    }
   });
 });

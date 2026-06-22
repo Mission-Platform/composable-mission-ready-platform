@@ -1,17 +1,30 @@
 import { ref } from 'vue';
 
-import BaseDateRangeInput from './base-date-range-input.vue';
+import { DateRangeInput } from '@mission-platform/components/vue';
 
-import type { DateRange } from './base-date-range-input.vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `DateRangeInput` is the Vue 3 build of the write-once `BaseDateRangeInput` in
+ * this package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Forms/BaseDateRangeInput',
-  component: BaseDateRangeInput,
+  component: DateRangeInput,
   tags: ['autodocs'],
-  parameters: { layout: 'padded' },
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Cross-framework `DateRangeInput` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). A trigger opens a teleported, CSS-anchor-positioned popover with two composed `Calendar`s (start/end), kept ordered via `min`/`max` (substituting the SFC hover-driven dual-month grid); the `{ start, end }` range is controlled via `modelValue`, and the `v-model` + `change` emit become the `onUpdateModelValue`/`onChange` callback props. Styling comes from the co-located `base-date-range-input.module.scss`.',
+      },
+    },
+  },
   argTypes: {
-    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    size: { control: 'inline-radio', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     disabled: { control: 'boolean' },
     required: { control: 'boolean' },
   },
@@ -20,75 +33,24 @@ const meta = {
     size: 'md',
     disabled: false,
     required: false,
-    modelValue: { start: '', end: '' },
   },
   render: (arguments_) => ({
-    components: { BaseDateRangeInput },
+    components: { DateRangeInput },
     setup() {
-      const range = ref<DateRange>(arguments_.modelValue ?? { start: '', end: '' });
-      return { args: arguments_, range };
+      const value = ref(arguments_.modelValue ?? { start: '', end: '' });
+      return { args: arguments_, value };
     },
-    template: '<BaseDateRangeInput v-bind="args" v-model="range" />',
+    template: '<DateRangeInput v-bind="args" :model-value="value" @update-model-value="value = $event" />',
   }),
-} satisfies Meta<typeof BaseDateRangeInput>;
+} satisfies Meta<typeof DateRangeInput>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const WithValue: Story = {
-  args: { modelValue: { start: '2025-06-01', end: '2025-06-14' } },
-};
+export const Selected: Story = { args: { modelValue: { start: '2026-01-10', end: '2026-01-20' } } };
 
-export const Small: Story = { args: { size: 'sm' } };
+export const WithHint: Story = { args: { hint: 'Both endpoints are inclusive.' } };
 
-export const Large: Story = { args: { size: 'lg' } };
-
-export const Required: Story = { args: { required: true } };
-
-export const WithError: Story = { args: { error: 'Please select a valid range.' } };
-
-export const Disabled: Story = {
-  args: { disabled: true, modelValue: { start: '2025-06-01', end: '2025-06-14' } },
-  // WCAG 2.1 SC 1.4.3 explicitly exempts inactive (disabled) UI components from contrast requirements.
-  parameters: { a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } } },
-};
-
-export const Showcase: Story = {
-  render: () => ({
-    components: { BaseDateRangeInput },
-    setup() {
-      const range = ref<DateRange>({ start: '', end: '' });
-      return { range };
-    },
-    template: `
-      <div style="display: flex; flex-direction: column; gap: var(--mp-spacing-6); max-width: 520px;">
-        <BaseDateRangeInput v-model="range" label="Date range" hint="Click start date, then end date." />
-        <p style="font-size: var(--mp-font-size-sm); color: var(--mp-color-text-secondary);">
-          Start: <strong>{{ range.start || '—' }}</strong> &nbsp;|&nbsp; End: <strong>{{ range.end || '—' }}</strong>
-        </p>
-      </div>
-    `,
-  }),
-};
-
-export const WithStartAndEndExtensions: Story = {
-  render: () => ({
-    components: { BaseDateRangeInput },
-    setup() {
-      const range = ref<DateRange>({ start: '', end: '' });
-      return { range };
-    },
-    template: `
-      <BaseDateRangeInput v-model="range" label="Trip dates" style="max-width: 420px">
-        <template #start>
-          <span style="font-size: var(--mp-font-size-sm);">📅</span>
-        </template>
-        <template #end>
-          <span style="font-size: var(--mp-font-size-sm);">UTC</span>
-        </template>
-      </BaseDateRangeInput>
-    `,
-  }),
-};
+export const WithError: Story = { args: { error: 'A range is required.' } };

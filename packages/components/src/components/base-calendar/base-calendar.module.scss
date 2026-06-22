@@ -1,0 +1,261 @@
+/**
+ * Styling for the write-once `BaseCalendar`.
+ *
+ * `BaseCalendar` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its BEM appearance ships in the built package CSS (the
+ * two-stage compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package.
+ */
+
+@layer mp.components {
+  .base-calendar {
+    display: inline-flex;
+    flex-direction: column;
+    background: var(--mp-color-bg-surface);
+    border: 1px solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-lg);
+    box-shadow: var(--mp-shadow-md);
+    user-select: none;
+
+    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+    @each $size,
+      $min-width in ('2xs': 200px, 'xs': 220px, 'sm': 240px, 'md': 280px, 'lg': 320px, 'xl': 360px, '2xl': 400px)
+    {
+      &--#{$size} {
+        padding: var(--mp-size-pad-inline-#{$size});
+        min-width: $min-width;
+
+        .base-calendar__weekday,
+        .base-calendar__day,
+        .base-calendar__cell {
+          height: var(--mp-size-height-#{$size});
+          font-size: var(--mp-size-font-#{$size});
+        }
+      }
+    }
+
+    /* Flat: drop the calendar's own surface so it sits flush inside an
+       already-bordered container (e.g. a dropdown panel) without doubling up. */
+    &--flat {
+      border: none;
+      box-shadow: none;
+      background: transparent;
+    }
+
+    &__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--mp-spacing-2);
+    }
+
+    &__month-label {
+      flex: 1;
+      text-align: center;
+    }
+
+    &__label-group {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--mp-spacing-1);
+    }
+
+    &__label-btn {
+      border: none;
+      background: transparent;
+      padding: var(--mp-spacing-1) var(--mp-spacing-2);
+      border-radius: var(--mp-radius-sm);
+      cursor: pointer;
+      transition: background-color 150ms ease;
+
+      &:hover {
+        background-color: var(--mp-color-bg-muted);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--mp-color-border-focus);
+        outline-offset: 2px;
+      }
+    }
+
+    &__nav-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      border: none;
+      background: transparent;
+      border-radius: var(--mp-radius-sm);
+      cursor: pointer;
+      color: var(--mp-color-text-secondary);
+      transition:
+        background-color 150ms ease,
+        color 150ms ease;
+
+      &:hover {
+        background-color: var(--mp-color-bg-muted);
+        color: var(--mp-color-text-primary);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--mp-color-border-focus);
+        outline-offset: 2px;
+      }
+    }
+
+    &__grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+    }
+
+    &__row {
+      display: grid;
+      grid-column: 1 / -1;
+      grid-template-columns: subgrid;
+    }
+
+    &__weekday {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: var(--mp-font-weight-medium);
+      color: var(--mp-color-text-tertiary);
+    }
+
+    &__day {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      border: none;
+      background: transparent;
+      border-radius: var(--mp-radius-sm);
+      cursor: pointer;
+      color: var(--mp-color-text-primary);
+      transition:
+        background-color 150ms ease,
+        color 150ms ease;
+
+      &--empty {
+        pointer-events: none;
+      }
+
+      &--selected {
+        background-color: var(--mp-color-primary-default);
+        color: var(--mp-color-text-on-primary);
+        font-weight: var(--mp-font-weight-semibold);
+      }
+
+      &--range-start,
+      &--range-end {
+        background-color: var(--mp-color-primary-default);
+        color: var(--mp-color-text-on-primary);
+        font-weight: var(--mp-font-weight-semibold);
+      }
+
+      &--range-start {
+        border-radius: var(--mp-radius-sm) 0 0 var(--mp-radius-sm);
+      }
+
+      &--range-end {
+        border-radius: 0 var(--mp-radius-sm) var(--mp-radius-sm) 0;
+      }
+
+      &--in-range {
+        background-color: color-mix(in srgb, var(--mp-color-primary-default) 12%, transparent);
+        color: var(--mp-color-primary-default);
+        border-radius: 0;
+      }
+
+      /* Tentative range preview (start chosen, end being hovered): a lighter
+         in-between fill and a softer, outlined end cap than the committed range. */
+      &--in-preview {
+        background-color: color-mix(in srgb, var(--mp-color-primary-default) 8%, transparent);
+        color: var(--mp-color-primary-default);
+        border-radius: 0;
+      }
+
+      &--preview-end {
+        background-color: color-mix(in srgb, var(--mp-color-primary-default) 20%, transparent);
+        color: var(--mp-color-primary-default);
+        font-weight: var(--mp-font-weight-semibold);
+        border-radius: 0 var(--mp-radius-sm) var(--mp-radius-sm) 0;
+      }
+
+      &--today {
+        background-color: color-mix(in srgb, var(--mp-color-primary-default) 12%, transparent);
+        color: var(--mp-color-primary-default);
+        font-weight: var(--mp-font-weight-semibold);
+      }
+
+      &--disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--mp-color-border-focus);
+        outline-offset: 2px;
+      }
+
+      &:hover:not(
+          :disabled,
+          .base-calendar__day--selected,
+          .base-calendar__day--range-start,
+          .base-calendar__day--range-end,
+          .base-calendar__day--preview-end
+        ) {
+        background-color: var(--mp-color-bg-muted);
+      }
+    }
+
+    /* Month / year jump grids (shown in place of the day grid). */
+    &__months,
+    &__years {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--mp-spacing-1);
+    }
+
+    &__cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      border-radius: var(--mp-radius-sm);
+      cursor: pointer;
+      color: var(--mp-color-text-primary);
+      transition:
+        background-color 150ms ease,
+        color 150ms ease;
+
+      &--current {
+        background-color: var(--mp-color-primary-default);
+        color: var(--mp-color-text-on-primary);
+        font-weight: var(--mp-font-weight-semibold);
+      }
+
+      &--outside {
+        color: var(--mp-color-text-tertiary);
+        opacity: 0.6;
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--mp-color-border-focus);
+        outline-offset: 2px;
+      }
+
+      &:hover:not(.base-calendar__cell--current) {
+        background-color: var(--mp-color-bg-muted);
+      }
+    }
+  }
+}

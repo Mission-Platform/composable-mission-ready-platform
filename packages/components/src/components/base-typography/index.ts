@@ -1,2 +1,10 @@
-export { default } from './base-typography.vue';
-export type { TypographyVariant, TypographyWeight, TypographyColor, TypographyAlign } from './base-typography.vue';
+export {
+  BaseTypography,
+  type TypographyHorizontalAlign,
+  type TypographyColor,
+  type TypographyLineHeight,
+  type TypographyProperties,
+  type TypographyVariant,
+  type TypographyVerticalAlign,
+  type TypographyWeight,
+} from './base-typography';

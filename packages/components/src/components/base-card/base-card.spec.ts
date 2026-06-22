@@ -1,64 +1,56 @@
-import { mount } from '@vue/test-utils';
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import BaseCard from './base-card.vue';
+import { BaseCard } from './base-card';
 
-describe('BaseCard', () => {
-  it('renders default slot content', () => {
-    const wrapper = mount(BaseCard, { slots: { default: 'Card body' } });
-    expect(wrapper.find('.base-card__body').text()).toBe('Card body');
+/**
+ * Exercises the **neutral** `BaseCard` authored in this package, rendering it on
+ * both frameworks through the `@mission-platform/jsx` runtime adapters. Covers
+ * the conditional header/footer regions and the default-slot body.
+ */
+const ReactCard = toReactComponent(BaseCard, 'Card');
+const VueCard = toVueComponent(BaseCard, 'Card');
+
+describe('BaseCard authors the same component for React and Vue', () => {
+  it('renders header, body, and footer regions on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactCard, { padding: 'lg', shadow: true, header: 'Title', footer: 'Actions' }, 'Body text'),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () =>
+          vueH(VueCard, { padding: 'lg', shadow: true, header: 'Title', footer: 'Actions' }, () => 'Body text'),
+      }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('<article');
+      expect(html).toContain('base-card--padding-lg');
+      expect(html).toContain('base-card--shadow');
+      expect(html).toContain('base-card__header');
+      expect(html).toContain('Title');
+      expect(html).toContain('base-card__body');
+      expect(html).toContain('Body text');
+      expect(html).toContain('base-card__footer');
+      expect(html).toContain('Actions');
+    }
   });
 
-  it('renders an <article> element', () => {
-    const wrapper = mount(BaseCard);
-    expect(wrapper.element.tagName).toBe('ARTICLE');
-    expect(wrapper.classes()).toContain('base-card');
-  });
+  it('omits the header and footer regions when not supplied on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactCard, { bordered: false }, 'Just a body'));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueCard, { bordered: false }, () => 'Just a body') }),
+    );
 
-  it('applies default padding class (md)', () => {
-    const wrapper = mount(BaseCard);
-    expect(wrapper.classes()).toContain('base-card--padding-md');
-  });
-
-  it('applies custom padding class', () => {
-    const wrapper = mount(BaseCard, { props: { padding: 'lg' } });
-    expect(wrapper.classes()).toContain('base-card--padding-lg');
-  });
-
-  it('applies bordered class by default', () => {
-    const wrapper = mount(BaseCard);
-    expect(wrapper.classes()).toContain('base-card--bordered');
-  });
-
-  it('does not apply bordered class when bordered is false', () => {
-    const wrapper = mount(BaseCard, { props: { bordered: false } });
-    expect(wrapper.classes()).not.toContain('base-card--bordered');
-  });
-
-  it('applies shadow class when shadow prop is true', () => {
-    const wrapper = mount(BaseCard, { props: { shadow: true } });
-    expect(wrapper.classes()).toContain('base-card--shadow');
-  });
-
-  it('renders header slot when provided', () => {
-    const wrapper = mount(BaseCard, { slots: { header: 'Card Header' } });
-    expect(wrapper.find('.base-card__header').exists()).toBe(true);
-    expect(wrapper.find('.base-card__header').text()).toBe('Card Header');
-  });
-
-  it('does not render header when header slot is not provided', () => {
-    const wrapper = mount(BaseCard);
-    expect(wrapper.find('.base-card__header').exists()).toBe(false);
-  });
-
-  it('renders footer slot when provided', () => {
-    const wrapper = mount(BaseCard, { slots: { footer: 'Card Footer' } });
-    expect(wrapper.find('.base-card__footer').exists()).toBe(true);
-    expect(wrapper.find('.base-card__footer').text()).toBe('Card Footer');
-  });
-
-  it('does not render footer when footer slot is not provided', () => {
-    const wrapper = mount(BaseCard);
-    expect(wrapper.find('.base-card__footer').exists()).toBe(false);
+    for (const html of [react, vue]) {
+      expect(html).toContain('Just a body');
+      expect(html).not.toContain('base-card__header');
+      expect(html).not.toContain('base-card__footer');
+    }
   });
 });

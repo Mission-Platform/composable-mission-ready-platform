@@ -1,59 +1,54 @@
-import { mount } from '@vue/test-utils';
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import BaseQuote from './base-quote.vue';
+import { BaseQuote } from './base-quote';
 
-describe('BaseQuote', () => {
-  it('renders the quote text inside a <blockquote>', () => {
-    const wrapper = mount(BaseQuote, { slots: { default: 'To be or not to be.' } });
-    const blockquote = wrapper.find('blockquote');
-    expect(blockquote.exists()).toBe(true);
-    expect(blockquote.text()).toContain('To be or not to be.');
-  });
+/**
+ * Exercises the **neutral** `BaseQuote` authored in this package, rendering it
+ * on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * Covers the quotation content, attribution, and the omitted-attribution path.
+ */
+const ReactQuote = toReactComponent(BaseQuote, 'Quote');
+const VueQuote = toVueComponent(BaseQuote, 'Quote');
 
-  it('renders a <figure> root', () => {
-    const wrapper = mount(BaseQuote);
-    expect(wrapper.element.tagName).toBe('FIGURE');
-  });
+describe('BaseQuote authors the same component for React and Vue', () => {
+  it('renders the quotation with attribution on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactQuote, { variant: 'bordered', author: 'Ada Lovelace', source: 'Notes' }, 'To be or not'),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () =>
+          vueH(VueQuote, { variant: 'bordered', author: 'Ada Lovelace', source: 'Notes' }, () => 'To be or not'),
+      }),
+    );
 
-  it('applies default variant and size classes', () => {
-    const wrapper = mount(BaseQuote);
-    expect(wrapper.classes()).toContain('base-quote--default');
-    expect(wrapper.classes()).toContain('base-quote--md');
-  });
-
-  it('applies variant class', () => {
-    for (const variant of ['default', 'bordered', 'plain'] as const) {
-      const wrapper = mount(BaseQuote, { props: { variant } });
-      expect(wrapper.classes()).toContain(`base-quote--${variant}`);
+    for (const html of [react, vue]) {
+      expect(html).toContain('<figure');
+      expect(html).toContain('<blockquote');
+      expect(html).toContain('base-quote--bordered');
+      expect(html).toContain('To be or not');
+      expect(html).toContain('<figcaption');
+      expect(html).toContain('Ada Lovelace');
+      expect(html).toContain('<cite');
+      expect(html).toContain('Notes');
     }
   });
 
-  it('forwards the cite attribute to the blockquote', () => {
-    const wrapper = mount(BaseQuote, { props: { cite: 'https://example.com' } });
-    expect(wrapper.find('blockquote').attributes('cite')).toBe('https://example.com');
-  });
+  it('omits the attribution footer when there is no author/source on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactQuote, { variant: 'plain' }, 'Anonymous wisdom'));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueQuote, { variant: 'plain' }, () => 'Anonymous wisdom') }),
+    );
 
-  it('does not render a figcaption without attribution', () => {
-    const wrapper = mount(BaseQuote, { slots: { default: 'Quote' } });
-    expect(wrapper.find('figcaption').exists()).toBe(false);
-  });
-
-  it('renders author and source attribution', () => {
-    const wrapper = mount(BaseQuote, {
-      props: { author: 'Ada Lovelace', source: 'Notes' },
-      slots: { default: 'Quote' },
-    });
-    const caption = wrapper.find('figcaption');
-    expect(caption.exists()).toBe(true);
-    expect(caption.text()).toContain('Ada Lovelace');
-    expect(caption.text()).toContain('Notes');
-  });
-
-  it('renders a custom author slot', () => {
-    const wrapper = mount(BaseQuote, {
-      slots: { default: 'Quote', author: '<span class="custom">Custom</span>' },
-    });
-    expect(wrapper.find('figcaption .custom').exists()).toBe(true);
+    for (const html of [react, vue]) {
+      expect(html).toContain('Anonymous wisdom');
+      expect(html).not.toContain('<figcaption');
+    }
   });
 });

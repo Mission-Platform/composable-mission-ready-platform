@@ -1,2 +1,7 @@
-export { default } from './base-textarea.vue';
-export type { TextareaSize, TextareaResize } from './base-textarea.vue';
+export {
+  BaseTextarea,
+  type TextareaAutocapitalize,
+  type TextareaProperties,
+  type TextareaResize,
+  type TextareaSize,
+} from './base-textarea';

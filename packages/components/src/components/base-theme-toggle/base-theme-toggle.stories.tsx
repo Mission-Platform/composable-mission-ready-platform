@@ -1,33 +1,44 @@
-import BaseThemeToggle from './base-theme-toggle.vue';
+import { ThemeToggle } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `ThemeToggle` is the Vue 3 build of the write-once `BaseThemeToggle` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`; the very same source also
+ * ships as a React component via the package's `./react` subpath.
+ *
+ * Clicking it cycles the active theme through `light → dark → auto`, driving the
+ * shared observable theme store (the substitute for the original Vue
+ * `provide`/`inject`) which pins `data-theme`/`color-scheme` on the document
+ * root and persists the preference.
+ */
 const meta = {
-  title: 'Components/Display/BaseThemeToggle',
-  component: BaseThemeToggle,
+  title: 'Components/Theme/BaseThemeToggle',
+  component: ThemeToggle,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`BaseThemeToggle` component. Cycles between `light`, `dark`, and `auto` (follows the system `prefers-color-scheme`) on each click. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `ThemeToggle` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). It cycles `light → dark → auto`, backed by the shared observable theme store, and fires `onChange` with the new theme. The label is overridable through the default slot.',
       },
     },
   },
   argTypes: {
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     ariaLabel: { control: 'text' },
   },
-  args: {
-    ariaLabel: undefined,
-  },
+  args: {},
   render: (arguments_) => ({
-    components: { BaseThemeToggle },
+    components: { ThemeToggle },
     setup() {
       return { args: arguments_ };
     },
-    template: '<BaseThemeToggle v-bind="args" />',
+    template: '<ThemeToggle v-bind="args" />',
   }),
-} satisfies Meta<typeof BaseThemeToggle>;
+} satisfies Meta<typeof ThemeToggle>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -35,14 +46,11 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 export const CustomLabel: Story = {
-  args: {
-    ariaLabel: 'Toggle colour scheme',
-  },
-};
-
-export const WithCustomSlot: Story = {
-  render: () => ({
-    components: { BaseThemeToggle },
-    template: '<BaseThemeToggle>Toggle theme</BaseThemeToggle>',
+  render: (arguments_) => ({
+    components: { ThemeToggle },
+    setup() {
+      return { args: arguments_ };
+    },
+    template: '<ThemeToggle v-bind="args">Theme</ThemeToggle>',
   }),
 };

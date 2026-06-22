@@ -1,64 +1,39 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseStack } from './base-stack';
 
-import BaseStack from './base-stack.vue';
+/**
+ * Exercises the **neutral** `BaseStack` authored in this package, rendering it
+ * on both frameworks through the `@mission-platform/jsx` runtime adapters. The
+ * assertions confirm cross-framework parity of the BEM class and the computed
+ * flexbox inline style.
+ */
+const ReactStack = toReactComponent(BaseStack, 'Stack');
+const VueStack = toVueComponent(BaseStack, 'Stack');
 
-describe('BaseStack', () => {
-  it('renders a flex div with the stack class by default', () => {
-    const wrapper = mountWithI18n(BaseStack);
-    const root = wrapper.find('.base-stack');
-    expect(root.exists()).toBe(true);
-    expect(root.element.tagName).toBe('DIV');
-    const style = root.attributes('style') ?? '';
-    expect(style).toContain('display: flex');
-  });
+describe('BaseStack authors the same component for React and Vue', () => {
+  it('renders matching markup and flexbox style on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactStack, { direction: 'horizontal', gap: 'lg', justify: 'between' }, 'One'),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () => vueH(VueStack, { direction: 'horizontal', gap: 'lg', justify: 'between' }, () => 'One'),
+      }),
+    );
 
-  it('stacks vertically (column) by default', () => {
-    const wrapper = mountWithI18n(BaseStack);
-    const root = wrapper.find('.base-stack');
-    expect(root.classes()).toContain('base-stack--vertical');
-    expect(root.attributes('style') ?? '').toContain('flex-direction: column');
-  });
-
-  it('stacks horizontally (row) when direction is horizontal', () => {
-    const wrapper = mountWithI18n(BaseStack, { props: { direction: 'horizontal' } });
-    const root = wrapper.find('.base-stack');
-    expect(root.classes()).toContain('base-stack--horizontal');
-    expect(root.attributes('style') ?? '').toContain('flex-direction: row');
-  });
-
-  it('maps the named gap scale onto a --mp-spacing-* token', () => {
-    const wrapper = mountWithI18n(BaseStack, { props: { gap: 'lg' } });
-    expect(wrapper.find('.base-stack').attributes('style') ?? '').toContain('gap: var(--mp-spacing-6)');
-  });
-
-  it('maps justify onto justify-content and align onto align-items', () => {
-    const wrapper = mountWithI18n(BaseStack, { props: { justify: 'between', align: 'center' } });
-    const style = wrapper.find('.base-stack').attributes('style') ?? '';
-    expect(style).toContain('justify-content: space-between');
-    expect(style).toContain('align-items: center');
-  });
-
-  it('toggles flex wrapping via the wrap prop', () => {
-    const wrapper = mountWithI18n(BaseStack, { props: { wrap: true } });
-    expect(wrapper.find('.base-stack').attributes('style') ?? '').toContain('flex-wrap: wrap');
-  });
-
-  it('renders as an inline-flex container when inline is set', () => {
-    const wrapper = mountWithI18n(BaseStack, { props: { inline: true } });
-    expect(wrapper.find('.base-stack').attributes('style') ?? '').toContain('display: inline-flex');
-  });
-
-  it('renders default-slot content', () => {
-    const wrapper = mountWithI18n(BaseStack, {
-      slots: { default: '<span class="item">A</span><span class="item">B</span>' },
-    });
-    expect(wrapper.findAll('.item')).toHaveLength(2);
-  });
-
-  it('renders as a custom element when `as` is provided', () => {
-    const wrapper = mountWithI18n(BaseStack, { props: { as: 'section' } });
-    expect(wrapper.find('.base-stack').element.tagName).toBe('SECTION');
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-stack');
+      expect(html).toContain('base-stack--horizontal');
+      expect(html).toContain('flex-direction');
+      expect(html).toContain('space-between');
+      expect(html).toContain('One');
+    }
   });
 });

@@ -1,0 +1,77 @@
+/**
+ * Styling for the write-once `BaseSegmentControl`.
+ *
+ * `BaseSegmentControl` owns this co-located CSS Module: it side-effect-imports
+ * the stylesheet so its BEM appearance ships in the built package CSS (the
+ * two-stage compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package.
+ */
+
+@layer mp.components {
+  .base-segment-control {
+    display: inline-flex;
+    padding: var(--mp-spacing-1);
+    background-color: var(--mp-color-bg-sunken);
+    border: 1px solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-lg);
+    gap: var(--mp-spacing-1);
+
+    &--full-width {
+      display: flex;
+      width: 100%;
+    }
+
+    &--disabled {
+      opacity: 0.5;
+    }
+
+    &__segment {
+      flex: 1 1 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      background-color: transparent;
+      color: var(--mp-color-text-secondary);
+      border: 0;
+      border-radius: var(--mp-radius-md);
+      font-family: var(--mp-font-family-sans);
+      font-weight: var(--mp-font-weight-medium, 500);
+      cursor: pointer;
+      transition:
+        background-color 150ms ease,
+        color 150ms ease,
+        box-shadow 150ms ease;
+
+      &--selected {
+        background-color: var(--mp-color-bg-surface);
+        color: var(--mp-color-text-primary);
+        box-shadow: var(--mp-shadow-sm);
+      }
+
+      &:focus-visible {
+        outline: none;
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+
+      &:hover:not(:disabled, .base-segment-control__segment--selected) {
+        color: var(--mp-color-text-primary);
+      }
+    }
+
+    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+      &--#{$size} .base-segment-control__segment {
+        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+        font-size: var(--mp-size-font-#{$size});
+      }
+    }
+  }
+}

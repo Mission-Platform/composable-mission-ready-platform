@@ -1,2 +1,1 @@
-export { default } from './base-pagination.vue';
-export type { PaginationSize, PaginationItem } from './base-pagination.vue';
+export { BasePagination, type PaginationItem, type PaginationProperties, type PaginationSize } from './base-pagination';

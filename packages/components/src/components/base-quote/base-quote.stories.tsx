@@ -1,22 +1,43 @@
-import BaseQuote from './base-quote.vue';
+import { Quote } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `Quote` is the Vue 3 build of the write-once `BaseQuote` in this package. The
+ * component is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/jsx`) and compiled straight to a Vue component at build
+ * time by `@mission-platform/vite-plugin-jsx`. The very same source also ships
+ * as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Display/BaseQuote',
-  component: BaseQuote,
+  component: Quote,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`Quote` component — a semantic blockquote with optional attribution. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Quote` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). The quotation goes in the default slot (rendered via the composed neutral `Typography`); optional `author`/`source` populate the attribution footer. Styling comes from the co-located `base-quote.module.scss`.',
       },
     },
   },
   argTypes: {
     variant: { control: 'inline-radio', options: ['default', 'bordered', 'plain'] },
-    size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
+    tone: {
+      control: 'select',
+      options: [
+        'neutral',
+        'primary',
+        'secondary',
+        'tertiary',
+        'success',
+        'warning',
+        'info',
+        'error',
+        'critical',
+      ],
+    },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     author: { control: 'text' },
     source: { control: 'text' },
     cite: { control: 'text' },
@@ -28,17 +49,14 @@ const meta = {
     source: 'Notes on the Analytical Engine',
   },
   render: (arguments_) => ({
-    components: { BaseQuote },
+    components: { Quote },
     setup() {
       return { args: arguments_ };
     },
-    template: `
-      <BaseQuote v-bind="args">
-        The Analytical Engine weaves algebraical patterns just as the Jacquard loom weaves flowers and leaves.
-      </BaseQuote>
-    `,
+    template:
+      '<Quote v-bind="args">The Analytical Engine weaves algebraic patterns, just as the Jacquard loom weaves flowers and leaves.</Quote>',
   }),
-} satisfies Meta<typeof BaseQuote>;
+} satisfies Meta<typeof Quote>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

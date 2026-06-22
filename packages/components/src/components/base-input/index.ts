@@ -1,2 +1,7 @@
-export { default } from './base-input.vue';
-export type { InputSize, InputType } from './base-input.vue';
+export {
+  BaseInput,
+  type InputAutocapitalize,
+  type InputProperties,
+  type InputSize,
+  type InputType,
+} from './base-input';

@@ -1,0 +1,112 @@
+/**
+ * Styling for the write-once `BaseVirtualLogViewer`.
+ *
+ * The component owns its CSS Module: the React build imports the hashed
+ * `*.module.scss`, while the Vue build inlines these rules as a (non-scoped)
+ * SFC `<style>` and the compiler collapses the `styles[…]` reads to the literal
+ * BEM class names. Rules live in the shared `mp.components` cascade layer.
+ */
+
+@layer mp.components {
+  .log-viewer {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--mp-color-bg-sunken);
+    border: 1px solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+  }
+
+  .log-viewer__toolbar {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    height: 32px;
+    padding: 0 var(--mp-spacing-4);
+    background: var(--mp-color-bg-surface);
+    border-bottom: 1px solid var(--mp-color-border-strong);
+  }
+
+  .log-viewer__filter-badge {
+    font-family: var(--mp-font-family-sans);
+    font-size: var(--mp-font-size-xs);
+    font-weight: var(--mp-font-weight-semibold);
+    color: var(--mp-color-text-secondary);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .log-viewer__scroll {
+    flex: 1;
+  }
+
+  .log-viewer__row {
+    display: flex;
+    gap: var(--mp-spacing-2);
+    align-items: center;
+    width: 100%;
+    padding: 0 var(--mp-spacing-3);
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: default;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    outline: none;
+    transition: background-color 80ms ease;
+
+    &:hover {
+      background-color: var(--mp-color-bg-raised);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--mp-shadow-focus-primary);
+    }
+  }
+
+  .log-viewer__row--warn {
+    background: color-mix(in srgb, var(--mp-color-warning-default) 6%, transparent);
+  }
+
+  .log-viewer__row--error,
+  .log-viewer__row--fatal {
+    background: color-mix(in srgb, var(--mp-color-danger-default) 8%, transparent);
+  }
+
+  .log-viewer__line-no {
+    flex-shrink: 0;
+    min-width: 44px;
+    padding-right: var(--mp-spacing-2);
+    text-align: right;
+    border-right: 1px solid var(--mp-color-border-default);
+  }
+
+  .log-viewer__timestamp {
+    flex-shrink: 0;
+    min-width: 140px;
+  }
+
+  .log-viewer__level {
+    display: flex;
+    flex-shrink: 0;
+    gap: var(--mp-spacing-1);
+    align-items: center;
+    min-width: 72px;
+  }
+
+  .log-viewer__level-label {
+    font-weight: var(--mp-font-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .log-viewer__message {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

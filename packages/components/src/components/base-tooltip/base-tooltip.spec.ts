@@ -1,92 +1,44 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseTooltip } from './base-tooltip';
 
-import BaseTooltip from './base-tooltip.vue';
+/**
+ * Exercises the **neutral** `BaseTooltip` authored in this package, rendering it
+ * on both frameworks through the `@mission-platform/jsx` runtime adapters. The
+ * hint is portalled through the neutral `<Teleport>` primitive and gated on the
+ * internal hover/focus visibility, so it is closed (and therefore absent from
+ * the markup) on the server render; the presentation wrapper and the
+ * trigger-anchored default slot must match across React and Vue.
+ */
+const ReactTooltip = toReactComponent(BaseTooltip, 'Tooltip');
+const VueTooltip = toVueComponent(BaseTooltip, 'Tooltip');
 
-describe('BaseTooltip', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-  });
+describe('BaseTooltip authors the same component for React and Vue', () => {
+  it('renders the presentation wrapper and trigger-anchored slot, with the hint closed, on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactTooltip, { content: 'Save changes' }, createElement('button', undefined, 'Trigger')),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () => vueH(VueTooltip, { content: 'Save changes' }, () => vueH('button', undefined, 'Trigger')),
+      }),
+    );
 
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
-  it('renders trigger slot content', () => {
-    const wrapper = mountWithI18n(BaseTooltip, {
-      props: { content: 'Tip text' },
-      slots: { default: '<button>Hover</button>' },
-    });
-    expect(wrapper.find('button').text()).toBe('Hover');
-  });
-
-  it('tooltip is hidden by default', () => {
-    const wrapper = mountWithI18n(BaseTooltip, {
-      props: { content: 'Tip' },
-      slots: { default: '<button>X</button>' },
-    });
-    expect(wrapper.find('[role="tooltip"]').exists()).toBe(false);
-  });
-
-  it('shows tooltip on mouseenter', async () => {
-    const wrapper = mountWithI18n(BaseTooltip, {
-      props: { content: 'Tip text', delay: 0 },
-      slots: { default: '<button>X</button>' },
-    });
-    await wrapper.find('.base-tooltip-wrapper').trigger('mouseenter');
-    vi.runAllTimers();
-    await wrapper.vm.$nextTick();
-    expect(wrapper.find('[role="tooltip"]').exists()).toBe(true);
-    expect(wrapper.find('[role="tooltip"]').text()).toBe('Tip text');
-  });
-
-  it('hides tooltip on mouseleave', async () => {
-    const wrapper = mountWithI18n(BaseTooltip, {
-      props: { content: 'Tip', delay: 0 },
-      slots: { default: '<button>X</button>' },
-    });
-    await wrapper.find('.base-tooltip-wrapper').trigger('mouseenter');
-    vi.runAllTimers();
-    await wrapper.vm.$nextTick();
-    await wrapper.find('.base-tooltip-wrapper').trigger('mouseleave');
-    expect(wrapper.find('[role="tooltip"]').exists()).toBe(false);
-  });
-
-  it('does not show tooltip when disabled', async () => {
-    const wrapper = mountWithI18n(BaseTooltip, {
-      props: { content: 'Tip', disabled: true },
-      slots: { default: '<button>X</button>' },
-    });
-    await wrapper.find('.base-tooltip-wrapper').trigger('mouseenter');
-    vi.runAllTimers();
-    await wrapper.vm.$nextTick();
-    expect(wrapper.find('[role="tooltip"]').exists()).toBe(false);
-  });
-
-  it('renders full text for really long content', async () => {
-    const longContent =
-      'This is a really long tooltip message that should wrap across multiple lines instead of being truncated or cut off in any way';
-    const wrapper = mountWithI18n(BaseTooltip, {
-      props: { content: longContent, delay: 0 },
-      slots: { default: '<button>X</button>' },
-    });
-    await wrapper.find('.base-tooltip-wrapper').trigger('mouseenter');
-    vi.runAllTimers();
-    await wrapper.vm.$nextTick();
-    const tooltip = wrapper.find('[role="tooltip"]');
-    expect(tooltip.exists()).toBe(true);
-    expect(tooltip.text()).toBe(longContent);
-  });
-
-  it('applies placement class', async () => {
-    const wrapper = mountWithI18n(BaseTooltip, {
-      props: { content: 'Tip', placement: 'right', delay: 0 },
-      slots: { default: '<button>X</button>' },
-    });
-    await wrapper.find('.base-tooltip-wrapper').trigger('mouseenter');
-    vi.runAllTimers();
-    await wrapper.vm.$nextTick();
-    expect(wrapper.find('[role="tooltip"]').classes()).toContain('base-tooltip--right');
+    for (const html of [react, vue]) {
+      expect(html).toContain('role="presentation"');
+      expect(html).toContain('<button>Trigger</button>');
+      // The trigger declares the CSS anchor the teleported hint tethers to.
+      expect(html).toContain('anchor-name:');
+      // The hint is teleported and gated on the internal visibility, so it is
+      // closed (and absent from the markup) until hover/focus opens it.
+      expect(html).not.toContain('role="tooltip"');
+      expect(html).not.toContain('Save changes');
+    }
   });
 });

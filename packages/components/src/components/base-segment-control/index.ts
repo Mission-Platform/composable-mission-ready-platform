@@ -1,2 +1,6 @@
-export { default } from './base-segment-control.vue';
-export type { SegmentControlSize, SegmentOption } from './base-segment-control.vue';
+export {
+  BaseSegmentControl,
+  type SegmentControlProperties,
+  type SegmentControlSize,
+  type SegmentOption,
+} from './base-segment-control';

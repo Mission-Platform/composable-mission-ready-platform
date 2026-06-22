@@ -1,63 +1,65 @@
 import { ref } from 'vue';
 
-import BaseRating from './base-rating.vue';
+import { Rating } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `Rating` is the Vue 3 build of the write-once `BaseRating` in this package.
+ * The component is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/jsx`) and compiled straight to a Vue component at build
+ * time by `@mission-platform/vite-plugin-jsx`. The very same source also ships
+ * as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Forms/BaseRating',
-  component: BaseRating,
+  component: Rating,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`Rating` component — a star rating with whole/half precision, interactive and read-only modes, keyboard control, and hover preview. Controlled via `v-model`. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Rating` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). A row of `★` glyph stars (the inline SVGs are substituted) with optional half-star precision, hover preview (neutral `useState`), and a read-only display mode; the value is controlled via `modelValue` and the original `v-model` + `change` emit become the `onUpdateModelValue`/`onChange` callback props. Styling comes from the co-located `base-rating.module.scss`.',
       },
     },
   },
   argTypes: {
-    max: { control: 'number' },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     allowHalf: { control: 'boolean' },
     readonly: { control: 'boolean' },
     disabled: { control: 'boolean' },
     clearable: { control: 'boolean' },
-    size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
   },
   args: {
+    modelValue: 3,
     max: 5,
+    size: 'md',
     allowHalf: false,
     readonly: false,
     disabled: false,
     clearable: false,
-    size: 'md',
   },
   render: (arguments_) => ({
-    components: { BaseRating },
+    components: { Rating },
     setup() {
-      const value = ref(3);
+      const value = ref(arguments_.modelValue ?? 0);
       return { args: arguments_, value };
     },
-    template: `
-      <div>
-        <BaseRating v-bind="args" v-model="value" />
-        <p style="margin-top: 0.5rem;">Value: {{ value }}</p>
-      </div>
-    `,
+    template: '<Rating v-bind="args" :model-value="value" @update-model-value="value = $event" />',
   }),
-} satisfies Meta<typeof BaseRating>;
+} satisfies Meta<typeof Rating>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const HalfStars: Story = { args: { allowHalf: true } };
+export const HalfStars: Story = { args: { allowHalf: true, modelValue: 3.5 } };
 
 export const Clearable: Story = { args: { clearable: true } };
 
-export const ReadOnly: Story = { args: { readonly: true } };
+export const ReadOnly: Story = { args: { readonly: true, modelValue: 4 } };
 
-export const Small: Story = { args: { size: 'sm' } };
+export const Disabled: Story = { args: { disabled: true, modelValue: 2 } };
 
-export const Large: Story = { args: { size: 'lg', max: 10 } };
+export const Large: Story = { args: { size: 'lg', modelValue: 5 } };

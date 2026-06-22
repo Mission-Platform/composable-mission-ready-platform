@@ -1,3 +1,8 @@
-export { default } from './base-stack.vue';
-export { STACK_JUSTIFY_CONTENT, STACK_ALIGN_ITEMS } from './constants';
-export type { StackDirection, StackJustify, StackAlign } from './constants';
+export {
+  BaseStack,
+  type StackAlign,
+  type StackDirection,
+  type StackGap,
+  type StackJustify,
+  type StackProperties,
+} from './base-stack';

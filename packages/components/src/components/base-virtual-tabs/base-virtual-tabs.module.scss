@@ -1,0 +1,163 @@
+/**
+ * Styling for the write-once `BaseVirtualTabs`.
+ *
+ * `BaseVirtualTabs` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its BEM appearance ships in the built package CSS (the
+ * two-stage compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package.
+ */
+
+@layer mp.components {
+  .base-virtual-tabs {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    &__bar {
+      display: flex;
+      align-items: stretch;
+
+      &--line {
+        border-bottom: 2px solid var(--mp-color-border-default);
+      }
+    }
+
+    &__list {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      min-width: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      &--pill {
+        background-color: var(--mp-color-bg-muted);
+        border-radius: var(--mp-radius-md);
+        padding: var(--mp-spacing-1);
+        gap: var(--mp-spacing-1);
+      }
+    }
+
+    &__tab {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--mp-spacing-2);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: var(--mp-color-text-secondary);
+      white-space: nowrap;
+      user-select: none;
+      transition:
+        color 150ms ease,
+        background-color 150ms ease;
+
+      &:focus-visible {
+        outline: none;
+        border-radius: var(--mp-radius-sm);
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+
+      &--disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      &--line {
+        padding: var(--mp-spacing-2) var(--mp-spacing-4);
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        border-radius: var(--mp-radius-sm) var(--mp-radius-sm) 0 0;
+
+        &:hover:not(.base-virtual-tabs__tab--disabled) {
+          color: var(--mp-color-text-primary);
+          border-bottom-color: var(--mp-color-border-strong);
+        }
+
+        &.base-virtual-tabs__tab--active {
+          color: var(--mp-color-primary-text);
+          border-bottom-color: var(--mp-color-primary-text);
+        }
+      }
+
+      &--pill {
+        padding: var(--mp-spacing-2) var(--mp-spacing-3);
+        border-radius: var(--mp-radius-sm);
+
+        &:hover:not(.base-virtual-tabs__tab--active, .base-virtual-tabs__tab--disabled) {
+          background-color: var(--mp-color-bg-sunken);
+          color: var(--mp-color-text-primary);
+        }
+
+        &.base-virtual-tabs__tab--active {
+          background-color: var(--mp-color-bg-surface);
+          color: var(--mp-color-text-primary);
+          box-shadow: var(--mp-shadow-sm);
+        }
+      }
+    }
+
+    &__close-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: none;
+      background: transparent;
+      color: var(--mp-color-text-muted);
+      padding: 2px;
+      border-radius: var(--mp-radius-sm);
+      cursor: pointer;
+      font-size: var(--mp-size-font-xs);
+      transition:
+        color 150ms ease,
+        background-color 150ms ease;
+
+      &:hover {
+        color: var(--mp-color-text-primary);
+        background-color: var(--mp-color-bg-muted);
+      }
+    }
+
+    &__add {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: var(--mp-color-text-muted);
+      padding: var(--mp-spacing-2) var(--mp-spacing-3);
+      transition: color 150ms ease;
+
+      &:hover {
+        color: var(--mp-color-text-primary);
+      }
+
+      &:focus-visible {
+        outline: none;
+        border-radius: var(--mp-radius-sm);
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+
+      &--line {
+        border-bottom: 2px solid var(--mp-color-border-default);
+        margin-bottom: -2px;
+      }
+    }
+
+    &__panel {
+      padding-top: var(--mp-spacing-4);
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+  }
+}

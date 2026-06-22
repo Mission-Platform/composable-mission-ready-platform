@@ -1,130 +1,62 @@
-import BaseButton from '../base-button/base-button.vue';
-
-import BaseTooltip from './base-tooltip.vue';
+import { Button, Tooltip } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `Tooltip` is the Vue 3 build of the write-once `BaseTooltip` in this package.
+ * The component is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/jsx`) and compiled straight to a Vue component at build
+ * time by `@mission-platform/vite-plugin-jsx`. The very same source also ships
+ * as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Overlays/BaseTooltip',
-  component: BaseTooltip,
+  component: Tooltip,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
-        component: [
-          '`BaseTooltip` shows a short, contextual hint anchored to its trigger element.',
-          '',
-          'Positioning is powered by [Floating UI](https://floating-ui.com/) with `offset`, `flip`, `shift`,',
-          'and `arrow` middleware plus `autoUpdate`, so the tooltip stays glued to the trigger and flips',
-          'to the opposite side when room runs out. The tooltip opens on hover and focus, exposes',
-          '`role="tooltip"`, and wires `aria-describedby` on the trigger while visible.',
-        ].join('\n'),
+        component:
+          'Cross-framework `Tooltip` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). The trigger is the default slot. The hint is portalled to `document.body` through the neutral `<Teleport>` primitive (compiled to React `createPortal` / Vue `<Teleport>`) — mounted only while it is shown — and stays anchored to its trigger via the CSS Anchor Positioning API (`anchor-name`/`position-anchor`/`position-area` + `position-try-fallbacks`) instead of `@floating-ui`. This example composes the package’s own `Button` as the trigger. Styling comes from the co-located `base-tooltip.module.scss`.',
       },
     },
   },
   argTypes: {
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     placement: { control: 'select', options: ['top', 'bottom', 'left', 'right'] },
     disabled: { control: 'boolean' },
     delay: { control: { type: 'number', min: 0, max: 1000, step: 50 } },
   },
   args: {
-    content: 'This is a tooltip',
+    content: 'Save your changes',
     placement: 'top',
     disabled: false,
     delay: 0,
   },
-} satisfies Meta<typeof BaseTooltip>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Default: Story = {
-  parameters: {
-    docs: { description: { story: 'Hover or focus the button to reveal the tooltip in the default `top` placement.' } },
-  },
   render: (arguments_) => ({
-    components: { BaseTooltip, BaseButton },
+    components: { Tooltip, Button },
     setup() {
       return { args: arguments_ };
     },
     template: `
-      <div style="display: flex; justify-content: center; padding: 80px;">
-        <BaseTooltip v-bind="args">
-          <BaseButton>Hover me</BaseButton>
-        </BaseTooltip>
+      <div style="padding: 4rem; display: flex; justify-content: center;">
+        <Tooltip v-bind="args">
+          <Button variant="secondary">Hover or focus me</Button>
+        </Tooltip>
       </div>
     `,
   }),
-};
+} satisfies Meta<typeof Tooltip>;
 
-export const Placements: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Showcases all four placements (`top`, `bottom`, `left`, `right`). Floating UI will still flip if a placement collides with the viewport edge.',
-      },
-    },
-  },
-  render: () => ({
-    components: { BaseTooltip, BaseButton },
-    template: `
-      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 80px; max-width: 400px; margin: auto;">
-        <BaseTooltip content="Top tooltip" placement="top">
-          <BaseButton size="sm" style="width: 100%;">Top</BaseButton>
-        </BaseTooltip>
-        <BaseTooltip content="Bottom tooltip" placement="bottom">
-          <BaseButton size="sm" style="width: 100%;">Bottom</BaseButton>
-        </BaseTooltip>
-        <BaseTooltip content="Left tooltip" placement="left">
-          <BaseButton size="sm" style="width: 100%;">Left</BaseButton>
-        </BaseTooltip>
-        <BaseTooltip content="Right tooltip" placement="right">
-          <BaseButton size="sm" style="width: 100%;">Right</BaseButton>
-        </BaseTooltip>
-      </div>
-    `,
-  }),
-};
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Delayed: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Hover-open delay of `500ms` to avoid flickering when the cursor passes over the trigger. Focus-open is always immediate.',
-      },
-    },
-  },
-  render: () => ({
-    components: { BaseTooltip, BaseButton },
-    template: `
-      <div style="display: flex; justify-content: center; padding: 80px;">
-        <BaseTooltip content="Appears after 500ms" :delay="500">
-          <BaseButton>Hover (500ms delay)</BaseButton>
-        </BaseTooltip>
-      </div>
-    `,
-  }),
-};
+export const Default: Story = {};
 
-export const Disabled: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'When `disabled` is `true`, the tooltip is fully suppressed and the trigger receives no `aria-describedby`.',
-      },
-    },
-  },
-  render: () => ({
-    components: { BaseTooltip, BaseButton },
-    template: `
-      <div style="display: flex; justify-content: center; padding: 80px;">
-        <BaseTooltip content="You won't see this" :disabled="true">
-          <BaseButton>Tooltip disabled</BaseButton>
-        </BaseTooltip>
-      </div>
-    `,
-  }),
-};
+export const Bottom: Story = { args: { placement: 'bottom' } };
+
+export const Right: Story = { args: { placement: 'right' } };
+
+export const WithDelay: Story = { args: { delay: 300 } };
+
+export const Disabled: Story = { args: { disabled: true } };

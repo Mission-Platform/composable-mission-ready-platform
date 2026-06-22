@@ -1,1 +1,1 @@
-export { default } from './base-menubar.vue';
+export { BaseMenubar, type MenubarProperties } from './base-menubar';

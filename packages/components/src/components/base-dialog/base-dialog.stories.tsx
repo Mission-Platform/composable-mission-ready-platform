@@ -1,102 +1,85 @@
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed, h, ref } from 'vue';
 
-import BaseButton from '../base-button/base-button.vue';
-
-import BaseDialog from './base-dialog.vue';
+import { Button, Dialog, Stack, Typography } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `Dialog` is the Vue 3 build of the write-once `BaseDialog` in this package.
+ * The component is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/jsx`) and compiled straight to a Vue component at build
+ * time by `@mission-platform/vite-plugin-jsx`. The very same source also ships
+ * as a React component via the package's `./react` subpath.
+ *
+ * The examples below **compose other components from this package** — the
+ * trigger is a `Button`, the body uses `Typography`/`Stack`, and the footer
+ * actions are `Button`s passed through the `footer` content prop.
+ */
 const meta = {
   title: 'Components/Overlays/BaseDialog',
-  component: BaseDialog,
+  component: Dialog,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`Dialog` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Dialog` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). It is a **native `<dialog>`** opened with `showModal()`, so the browser provides the top layer, the `::backdrop` scrim, focus trapping, and `Escape`-to-close — no `<Teleport>` needed. Open state is controlled via `open` + `update:open`; the `title`/`header` and `footer` are content props and the body is the default slot. Styling (incl. the `@starting-style` fade) comes from the co-located `base-dialog.module.scss`.',
       },
     },
   },
   argTypes: {
-    open: { control: 'boolean' },
-    closeOnBackdrop: { control: 'boolean' },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     title: { control: 'text' },
+    closeOnBackdrop: { control: 'boolean' },
+    closeLabel: { control: 'text' },
   },
   args: {
-    open: false,
-    title: 'Dialog Title',
+    title: 'Delete project',
     closeOnBackdrop: true,
+    closeLabel: 'Close',
   },
-} satisfies Meta<typeof BaseDialog>;
+  render: (arguments_) => ({
+    components: { Dialog, Button, Stack, Typography },
+    setup() {
+      const open = ref(false);
+      const close = (): void => {
+        open.value = false;
+      };
+      // The footer is a content prop, so its actions are real `Button`s built
+      // with Vue's `h` (showcasing cross-package composition).
+      const footer = computed(() => [
+        h(Button, { variant: 'tertiary', onClick: close }, () => 'Cancel'),
+        h(Button, { variant: 'primary', onClick: close }, () => 'Delete'),
+      ]);
+      return { args: arguments_, open, close, footer };
+    },
+    template: `
+      <Button variant="primary" @click="open = true">Open dialog</Button>
+      <Dialog
+        v-bind="args"
+        :open="open"
+        :footer="footer"
+        @update-open="open = $event"
+        @close="open = false"
+      >
+        <Stack gap="sm">
+          <Typography variant="body-md">
+            This action permanently removes the project and all of its data. This cannot be undone.
+          </Typography>
+          <Typography color="secondary" variant="caption">
+            Tip: press Escape or click the backdrop to dismiss.
+          </Typography>
+        </Stack>
+      </Dialog>
+    `,
+  }),
+} satisfies Meta<typeof Dialog>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => ({
-    components: { BaseDialog, BaseButton },
-    setup() {
-      const open = ref(false);
-      return { open };
-    },
-    template: `
-      <div>
-        <BaseButton @click="open = true">Open Dialog</BaseButton>
-        <BaseDialog v-model:open="open" title="Confirm Action">
-          Are you sure you want to proceed?
-          <template #footer>
-            <BaseButton variant="secondary" @click="open = false">Cancel</BaseButton>
-            <BaseButton @click="open = false">Confirm</BaseButton>
-          </template>
-        </BaseDialog>
-      </div>
-    `,
-  }),
-};
+export const Default: Story = {};
 
-export const NoHeader: Story = {
-  render: () => ({
-    components: { BaseDialog, BaseButton },
-    setup() {
-      const open = ref(false);
-      return { open };
-    },
-    template: `
-      <div>
-        <BaseButton @click="open = true">Open (no header)</BaseButton>
-        <BaseDialog v-model:open="open" :closeOnBackdrop="true">
-          This dialog has no title or header slot.
-        </BaseDialog>
-      </div>
-    `,
-  }),
-};
+export const PersistentOnBackdrop: Story = { args: { closeOnBackdrop: false } };
 
-export const CloseOnRouteChange: Story = {
-  name: 'Close on Route Change',
-  render: () => ({
-    components: { BaseDialog, BaseButton },
-    setup() {
-      const open = ref(false);
-      const router = useRouter();
-      function navigate() {
-        open.value = true;
-        setTimeout(() => router.push('/reports'), 1500);
-      }
-      return { open, navigate };
-    },
-    template: `
-      <div>
-        <BaseButton @click="navigate">Open &amp; navigate after 1.5s</BaseButton>
-        <BaseDialog v-model:open="open" title="Auto-closes on navigation" close-on-route-change>
-          <p>This dialog will close automatically when the route changes.</p>
-          <template #footer>
-            <BaseButton variant="secondary" @click="open = false">Close</BaseButton>
-          </template>
-        </BaseDialog>
-      </div>
-    `,
-  }),
-};
+export const Untitled: Story = { args: { title: undefined } };

@@ -1,88 +1,60 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseTimeline } from './base-timeline';
 
-import BaseTimelineItem from './base-timeline-item.vue';
-import BaseTimeline from './base-timeline.vue';
+/**
+ * Exercises the **neutral** `BaseTimeline` authored in this package, rendering
+ * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * Covers the rendered events, the time/title/body, and the orientation class.
+ */
+const ReactTimeline = toReactComponent(BaseTimeline, 'Timeline');
+const VueTimeline = toVueComponent(BaseTimeline, 'Timeline');
 
-describe('BaseTimeline', () => {
-  it('renders an ordered list with the vertical class by default', () => {
-    const wrapper = mountWithI18n(BaseTimeline);
-    const root = wrapper.find('.base-timeline');
-    expect(root.exists()).toBe(true);
-    expect(root.element.tagName).toBe('OL');
-    expect(root.classes()).toContain('base-timeline--vertical');
+const ITEMS = [
+  { id: 'a', time: '09:00', title: 'Kickoff', body: 'Project started.' },
+  { id: 'b', time: '12:00', title: 'Lunch', body: 'Team break.', variant: 'success' as const },
+  { id: 'c', time: '17:00', title: 'Wrap up', body: 'End of day.', outlined: true },
+];
+
+describe('BaseTimeline authors the same component for React and Vue', () => {
+  it('renders one list item per event with its content on both frameworks', async () => {
+    const properties = { items: ITEMS };
+    const react = renderToStaticMarkup(createElement(ReactTimeline, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueTimeline, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html.match(/<li/g)).toHaveLength(3);
+      expect(html).toContain('Kickoff');
+      expect(html).toContain('09:00');
+      expect(html).toContain('Project started.');
+    }
   });
 
-  it('applies the horizontal orientation class', () => {
-    const wrapper = mountWithI18n(BaseTimeline, { props: { orientation: 'horizontal' } });
-    expect(wrapper.find('.base-timeline--horizontal').exists()).toBe(true);
+  it('applies the requested orientation to the list on both frameworks', async () => {
+    const properties = { items: ITEMS, orientation: 'horizontal' as const };
+    const react = renderToStaticMarkup(createElement(ReactTimeline, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueTimeline, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-timeline--horizontal');
+      expect(html).toContain('base-timeline-item--horizontal');
+    }
   });
 
-  it('applies the alternate modifier only for vertical timelines', () => {
-    const vertical = mountWithI18n(BaseTimeline, { props: { align: 'alternate' } });
-    expect(vertical.find('.base-timeline--alternate').exists()).toBe(true);
+  it('tints a marker via the item variant on both frameworks', async () => {
+    const properties = { items: ITEMS };
+    const react = renderToStaticMarkup(createElement(ReactTimeline, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueTimeline, properties) }));
 
-    const horizontal = mountWithI18n(BaseTimeline, { props: { orientation: 'horizontal', align: 'alternate' } });
-    expect(horizontal.find('.base-timeline--alternate').exists()).toBe(false);
-  });
-
-  it('renders item children passed through the default slot', () => {
-    const wrapper = mountWithI18n(BaseTimeline, {
-      slots: {
-        default: '<li class="custom-item">A</li><li class="custom-item">B</li>',
-      },
-    });
-    expect(wrapper.findAll('.custom-item')).toHaveLength(2);
-  });
-});
-
-describe('BaseTimelineItem', () => {
-  it('renders a list item with a default filled dot', () => {
-    const wrapper = mountWithI18n(BaseTimelineItem);
-    const root = wrapper.find('.base-timeline-item');
-    expect(root.element.tagName).toBe('LI');
-    expect(wrapper.find('.base-timeline-item__dot').exists()).toBe(true);
-  });
-
-  it('renders the title and time props', () => {
-    const wrapper = mountWithI18n(BaseTimelineItem, {
-      props: { title: 'Launched', time: 'Jan 2024' },
-      slots: { default: 'Details here' },
-    });
-    expect(wrapper.find('.base-timeline-item__title').text()).toBe('Launched');
-    expect(wrapper.find('.base-timeline-item__time').text()).toBe('Jan 2024');
-    expect(wrapper.find('.base-timeline-item__body').text()).toContain('Details here');
-  });
-
-  it('applies the variant class', () => {
-    const wrapper = mountWithI18n(BaseTimelineItem, { props: { variant: 'success' } });
-    expect(wrapper.find('.base-timeline-item--success').exists()).toBe(true);
-  });
-
-  it('applies the outlined modifier', () => {
-    const wrapper = mountWithI18n(BaseTimelineItem, { props: { outlined: true } });
-    expect(wrapper.find('.base-timeline-item--outlined').exists()).toBe(true);
-  });
-
-  it('renders a custom marker slot in place of the dot', () => {
-    const wrapper = mountWithI18n(BaseTimelineItem, {
-      slots: { marker: '<span class="custom-marker" />' },
-    });
-    expect(wrapper.find('.custom-marker').exists()).toBe(true);
-    expect(wrapper.find('.base-timeline-item__dot').exists()).toBe(false);
-  });
-
-  it('inherits the orientation from a parent timeline via provide/inject', () => {
-    const composed = mountWithI18n({
-      components: { BaseTimeline, BaseTimelineItem },
-      template: `<BaseTimeline orientation="horizontal"><BaseTimelineItem title="X" /></BaseTimeline>`,
-    });
-    expect(composed.find('.base-timeline-item--horizontal').exists()).toBe(true);
-  });
-
-  it('defaults to vertical when used without a parent timeline', () => {
-    const wrapper = mountWithI18n(BaseTimelineItem, { props: { title: 'Standalone' } });
-    expect(wrapper.find('.base-timeline-item--vertical').exists()).toBe(true);
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-timeline-item--success');
+      expect(html).toContain('base-timeline-item--outlined');
+    }
   });
 });

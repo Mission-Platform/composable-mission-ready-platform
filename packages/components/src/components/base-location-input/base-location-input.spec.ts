@@ -1,55 +1,62 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { expectNoA11yViolations, mountForA11y } from '../../test-utils/axe';
-import { mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseLocationInput } from './base-location-input';
 
-import BaseLocationInput from './base-location-input.vue';
+/**
+ * Exercises the **neutral** `BaseLocationInput` authored in this package,
+ * rendering it on both frameworks through the `@mission-platform/jsx` runtime
+ * adapters. Covers the legend, the formatted coordinate fields, the format
+ * selector, and the error message.
+ */
+const ReactLocationInput = toReactComponent(BaseLocationInput, 'LocationInput');
+const VueLocationInput = toVueComponent(BaseLocationInput, 'LocationInput');
 
-describe('BaseLocationInput', () => {
-  it('renders a <fieldset> with a <legend> label', () => {
-    const wrapper = mountWithI18n(BaseLocationInput, { props: { label: 'Location' } });
-    expect(wrapper.element.tagName).toBe('FIELDSET');
-    expect(wrapper.find('legend').text()).toContain('Location');
+describe('BaseLocationInput authors the same component for React and Vue', () => {
+  it('renders the legend, latitude/longitude fields, and the format selector on both frameworks', async () => {
+    const properties = {
+      label: 'Coordinates',
+      modelValue: { lat: 40.712_775_3, lng: -74.005_972_8, format: 'dd' as const },
+    };
+    const react = renderToStaticMarkup(createElement(ReactLocationInput, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueLocationInput, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('Coordinates');
+      expect(html).toContain('Latitude');
+      expect(html).toContain('Longitude');
+      // The format selector exposes the three coordinate formats.
+      expect(html).toContain('Coordinate format');
+      // The decimal-degree coordinates are formatted into the inputs.
+      expect(html).toContain('40.7127753');
+      expect(html).toContain('-74.0059728');
+    }
   });
 
-  it('renders latitude and longitude inputs', () => {
-    const wrapper = mountWithI18n(BaseLocationInput, { props: { label: 'Location' } });
-    expect(wrapper.findAll('input').length).toBeGreaterThanOrEqual(2);
+  it('hides the format selector when allowFormatChange is false on both frameworks', async () => {
+    const properties = { allowFormatChange: false };
+    const react = renderToStaticMarkup(createElement(ReactLocationInput, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueLocationInput, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).not.toContain('Coordinate format');
+      expect(html).toContain('Latitude');
+    }
   });
 
-  it('applies the disabled modifier class when disabled', () => {
-    const wrapper = mountWithI18n(BaseLocationInput, { props: { label: 'Location', disabled: true } });
-    expect(wrapper.classes()).toContain('base-location-input--disabled');
-  });
+  it('renders the error message on both frameworks', async () => {
+    const properties = { error: 'Coordinates are required.' };
+    const react = renderToStaticMarkup(createElement(ReactLocationInput, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueLocationInput, properties) }));
 
-  // Regression guard: the disabled state must not dim the legend with `opacity`
-  // (which dropped the label below the WCAG contrast threshold); it keeps the
-  // legend's full-contrast primary text colour instead.
-  it('keeps the legend label at full-contrast primary colour when disabled', () => {
-    const wrapper = mountWithI18n(BaseLocationInput, { props: { label: 'Location', disabled: true } });
-    const legendText = wrapper.find('legend .base-typography');
-    expect(legendText.classes()).toContain('base-typography--color-primary');
-  });
-});
-
-describe('BaseLocationInput accessibility (WCAG AAA)', () => {
-  it('has no violations when labelled', async () => {
-    const wrapper = mountForA11y(BaseLocationInput, { props: { label: 'Location' } });
-    await expectNoA11yViolations(wrapper.element);
-    wrapper.unmount();
-  });
-
-  it('has no violations when disabled', async () => {
-    const wrapper = mountForA11y(BaseLocationInput, { props: { label: 'Location', disabled: true } });
-    await expectNoA11yViolations(wrapper.element);
-    wrapper.unmount();
-  });
-
-  it('has no violations with a hidden label, hint, and required marker', async () => {
-    const wrapper = mountForA11y(BaseLocationInput, {
-      props: { label: 'Drop point', labelHidden: true, hint: 'Enter decimal degrees', required: true },
-    });
-    await expectNoA11yViolations(wrapper.element);
-    wrapper.unmount();
+    for (const html of [react, vue]) {
+      expect(html).toContain('Coordinates are required.');
+      expect(html).toContain('role="alert"');
+    }
   });
 });

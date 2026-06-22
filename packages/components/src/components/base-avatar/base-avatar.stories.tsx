@@ -1,151 +1,116 @@
-import BaseAvatar from './base-avatar.vue';
+import { Avatar } from '@mission-platform/components/vue';
 
-import type { AvatarShape, AvatarSize, AvatarStatus } from './base-avatar.vue';
+import styles from './base-avatar.module.scss';
+
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `Avatar` is the Vue 3 build of the write-once `BaseAvatar` in this package.
+ * The component is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/jsx`) and compiled straight to a Vue component at build
+ * time by `@mission-platform/vite-plugin-jsx`. The very same source also ships
+ * as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Display/BaseAvatar',
-  component: BaseAvatar,
+  component: Avatar,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`Avatar` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Avatar` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). It shows (in priority order) an `src` image, fallback `initials`, or the default slot, with an optional presence-status corner dot. The avatar lays itself out with inline token-driven styles; the demo row layout comes from the co-located `base-avatar.module.scss`.',
       },
     },
   },
   argTypes: {
-    size: {
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    shape: { control: 'inline-radio', options: ['circle', 'square'] },
+    status: { control: 'select', options: [undefined, 'online', 'offline', 'away', 'busy'] },
+    variant: {
       control: 'select',
-      options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] as AvatarSize[],
-    },
-    shape: { control: 'select', options: ['circle', 'square'] as AvatarShape[] },
-    status: {
-      control: 'select',
-      options: [undefined, 'online', 'offline', 'away', 'busy'] as (AvatarStatus | undefined)[],
+      options: [
+        'neutral',
+        'primary',
+        'secondary',
+        'tertiary',
+        'success',
+        'warning',
+        'info',
+        'error',
+        'critical',
+      ],
     },
     src: { control: 'text' },
-    alt: { control: 'text' },
     initials: { control: 'text' },
     color: { control: 'text' },
   },
   args: {
     size: 'md',
     shape: 'circle',
-    status: undefined,
-    initials: 'MP',
+    initials: 'AB',
   },
   render: (arguments_) => ({
-    components: { BaseAvatar },
+    components: { Avatar },
     setup() {
       return { args: arguments_ };
     },
-    template: '<BaseAvatar v-bind="args" />',
+    template: '<Avatar v-bind="args" />',
   }),
-} satisfies Meta<typeof BaseAvatar>;
+} satisfies Meta<typeof Avatar>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Initials: Story = {
-  args: { initials: 'MP' },
+export const Initials: Story = {};
+
+export const Square: Story = { args: { shape: 'square' } };
+
+export const WithStatus: Story = { args: { status: 'online' } };
+
+export const Variants: Story = {
+  render: () => ({
+    components: { Avatar },
+    template: `
+      <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+        <Avatar variant="neutral" initials="N" />
+        <Avatar variant="primary" initials="P" />
+        <Avatar variant="secondary" initials="S" />
+        <Avatar variant="tertiary" initials="T" />
+        <Avatar variant="success" initials="S" />
+        <Avatar variant="warning" initials="W" />
+        <Avatar variant="info" initials="I" />
+        <Avatar variant="error" initials="E" />
+        <Avatar variant="critical" initials="C" />
+      </div>
+    `,
+  }),
 };
 
-export const WithImage: Story = {
+export const Image: Story = {
   args: {
-    src: 'https://i.pravatar.cc/80?img=1',
-    alt: 'User avatar',
+    src: 'https://i.pravatar.cc/96?img=12',
+    alt: 'Profile photo',
     initials: undefined,
   },
 };
 
 export const Sizes: Story = {
-  render: () => ({
-    components: { BaseAvatar },
+  render: (arguments_) => ({
+    components: { Avatar },
+    setup() {
+      return { args: arguments_, styles };
+    },
     template: `
-      <div style="display: flex; align-items: center; gap: var(--mp-spacing-4);">
-        <BaseAvatar size="2xs" initials="2XS" />
-        <BaseAvatar size="xs" initials="XS" />
-        <BaseAvatar size="sm" initials="SM" />
-        <BaseAvatar size="md" initials="MD" />
-        <BaseAvatar size="lg" initials="LG" />
-        <BaseAvatar size="xl" initials="XL" />
-        <BaseAvatar size="2xl" initials="2XL" />
+      <div :class="styles['avatar-demo-row']">
+        <Avatar v-bind="args" size="2xs" />
+        <Avatar v-bind="args" size="xs" />
+        <Avatar v-bind="args" size="sm" />
+        <Avatar v-bind="args" size="md" />
+        <Avatar v-bind="args" size="lg" />
+        <Avatar v-bind="args" size="xl" />
+        <Avatar v-bind="args" size="2xl" />
       </div>
     `,
   }),
-};
-
-export const Shapes: Story = {
-  render: () => ({
-    components: { BaseAvatar },
-    template: `
-      <div style="display: flex; align-items: center; gap: var(--mp-spacing-4);">
-        <BaseAvatar shape="circle" initials="CI" />
-        <BaseAvatar shape="square" initials="SQ" />
-      </div>
-    `,
-  }),
-};
-
-export const Statuses: Story = {
-  render: () => ({
-    components: { BaseAvatar },
-    template: `
-      <div style="display: flex; align-items: center; gap: var(--mp-spacing-4);">
-        <BaseAvatar initials="ON" status="online" />
-        <BaseAvatar initials="OF" status="offline" />
-        <BaseAvatar initials="AW" status="away" />
-        <BaseAvatar initials="BU" status="busy" />
-      </div>
-    `,
-  }),
-};
-
-export const Colors: Story = {
-  render: () => ({
-    components: { BaseAvatar },
-    template: `
-      <div style="display: flex; align-items: center; gap: var(--mp-spacing-4);">
-        <BaseAvatar initials="A" color="var(--mp-color-primary-default)" />
-        <BaseAvatar initials="B" color="var(--mp-color-success-hover)" />
-        <BaseAvatar initials="C" color="var(--mp-color-warning-text)" />
-        <BaseAvatar initials="D" color="var(--mp-color-danger-default)" />
-        <BaseAvatar initials="E" color="var(--mp-color-info-default)" />
-      </div>
-    `,
-  }),
-};
-
-export const AvatarGroup: Story = {
-  render: () => ({
-    components: { BaseAvatar },
-    template: `
-      <div style="display: flex; align-items: center;">
-        <div style="display: flex; margin-left: 0;">
-          <div style="margin-left: -8px; border: 2px solid var(--mp-color-bg-surface); border-radius: 50%;">
-            <BaseAvatar size="md" initials="AB" color="var(--mp-color-primary-default)" />
-          </div>
-          <div style="margin-left: -8px; border: 2px solid var(--mp-color-bg-surface); border-radius: 50%;">
-            <BaseAvatar size="md" initials="CD" color="var(--mp-color-success-hover)" />
-          </div>
-          <div style="margin-left: -8px; border: 2px solid var(--mp-color-bg-surface); border-radius: 50%;">
-            <BaseAvatar size="md" initials="EF" color="var(--mp-color-warning-text)" />
-          </div>
-          <div style="margin-left: -8px; border: 2px solid var(--mp-color-bg-surface); border-radius: 50%;">
-            <BaseAvatar size="md" initials="+3" color="var(--mp-color-text-tertiary)" />
-          </div>
-        </div>
-      </div>
-    `,
-  }),
-};
-
-export const Online: Story = {
-  args: {
-    initials: 'JD',
-    status: 'online',
-    size: 'lg',
-  },
 };

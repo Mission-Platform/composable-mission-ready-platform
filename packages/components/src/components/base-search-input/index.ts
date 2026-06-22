@@ -1,2 +1,1 @@
-export { default } from './base-search-input.vue';
-export type { SearchInputSize } from './base-search-input.vue';
+export { BaseSearchInput, type SearchInputProperties, type SearchInputSize } from './base-search-input';

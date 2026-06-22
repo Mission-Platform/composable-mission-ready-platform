@@ -1,2 +1,1 @@
-export { default } from './base-code-block.vue';
-export type { CodeBlockLanguage } from './base-code-block.vue';
+export { BaseCodeBlock, type CodeBlockLanguage, type CodeBlockProperties } from './base-code-block';

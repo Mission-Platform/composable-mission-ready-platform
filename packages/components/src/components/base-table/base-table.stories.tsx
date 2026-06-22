@@ -1,102 +1,89 @@
-import BaseTable from './base-table.vue';
+import { Table } from '@mission-platform/components/vue';
 
-import type { TableColumn } from './types.ts';
+import type { TableColumn } from './base-table';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-type Row = Record<string, unknown> & {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-  status: string;
-};
-
-const columns: TableColumn<Row>[] = [
-  { key: 'id', label: '#', align: 'right', sortable: true },
+const columns: TableColumn[] = [
   { key: 'name', label: 'Name', sortable: true },
-  { key: 'email', label: 'Email' },
-  { key: 'role', label: 'Role', sortable: true },
-  { key: 'status', label: 'Status', align: 'center' },
+  { key: 'framework', label: 'Framework', sortable: true },
+  { key: 'downloads', label: 'Downloads', align: 'right', sortable: true },
 ];
 
-const rows: Row[] = [
-  { id: 1, name: 'Alice Johnson', email: 'alice@example.com', role: 'Admin', status: 'Active' },
-  { id: 2, name: 'Bob Smith', email: 'bob@example.com', role: 'Editor', status: 'Active' },
-  { id: 3, name: 'Carol White', email: 'carol@example.com', role: 'Viewer', status: 'Inactive' },
-  { id: 4, name: 'Dave Brown', email: 'dave@example.com', role: 'Editor', status: 'Active' },
+const rows: Record<string, unknown>[] = [
+  { name: 'Badge', framework: 'Both', downloads: 1280 },
+  { name: 'Table', framework: 'Both', downloads: 940 },
+  { name: 'Collapse', framework: 'Both', downloads: 612 },
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const meta: Meta<any> = {
+/**
+ * `Table` is the Vue 3 build of the write-once `BaseTable` in this package. The
+ * component is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/jsx`) and compiled straight to a Vue component at build
+ * time by `@mission-platform/vite-plugin-jsx`. The very same source also ships
+ * as a React component via the package's `./react` subpath.
+ */
+const meta = {
   title: 'Components/Display/BaseTable',
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  component: BaseTable as any,
+  component: Table,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`Table` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Table` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). It renders `columns`/`rows` with click-to-sort headers (firing `onSort`), an optional caption, loading overlay, and empty state; sort state uses the neutral hooks. Styling comes from the co-located `base-table.module.scss`.',
       },
     },
   },
   argTypes: {
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    caption: { control: 'text' },
     striped: { control: 'boolean' },
     bordered: { control: 'boolean' },
     hoverable: { control: 'boolean' },
+    variant: {
+      control: 'select',
+      options: [
+        'neutral',
+        'primary',
+        'secondary',
+        'tertiary',
+        'success',
+        'warning',
+        'info',
+        'error',
+        'critical',
+      ],
+    },
     loading: { control: 'boolean' },
+    emptyText: { control: 'text' },
   },
   args: {
     columns,
     rows,
+    caption: 'Component downloads',
     striped: false,
     bordered: false,
     hoverable: true,
     loading: false,
-    caption: 'Users',
   },
-  render: (arguments_: Record<string, unknown>) => ({
-    components: { BaseTable },
+  render: (arguments_) => ({
+    components: { Table },
     setup() {
       return { args: arguments_ };
     },
-    template: '<BaseTable v-bind="args" />',
+    template: '<Table v-bind="args" />',
   }),
-};
+} satisfies Meta<typeof Table>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  parameters: { viewport: { defaultViewport: 'md' } },
-};
+export const Default: Story = {};
 
-export const Mobile: Story = {
-  name: 'Mobile (2xs)',
-  parameters: { viewport: { defaultViewport: '2xs' } },
-};
+export const Striped: Story = { args: { striped: true } };
 
-export const Tablet: Story = {
-  name: 'Tablet (sm)',
-  parameters: { viewport: { defaultViewport: 'sm' } },
-};
+export const Bordered: Story = { args: { bordered: true } };
 
-export const Striped: Story = {
-  parameters: { viewport: { defaultViewport: 'md' } },
-  args: { striped: true },
-};
+export const Loading: Story = { args: { loading: true } };
 
-export const Bordered: Story = {
-  parameters: { viewport: { defaultViewport: 'md' } },
-  args: { bordered: true },
-};
-
-export const Loading: Story = {
-  parameters: { viewport: { defaultViewport: 'md' } },
-  args: { loading: true },
-};
-
-export const Empty: Story = {
-  parameters: { viewport: { defaultViewport: 'md' } },
-  args: { rows: [] },
-};
+export const Empty: Story = { args: { rows: [], emptyText: 'No components found' } };

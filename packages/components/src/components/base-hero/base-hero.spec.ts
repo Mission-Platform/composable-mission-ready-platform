@@ -1,62 +1,65 @@
-import { mount } from '@vue/test-utils';
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import BaseHero from './base-hero.vue';
+import { BaseHero } from './base-hero';
 
-describe('BaseHero', () => {
-  it('renders a <section> root by default', () => {
-    const wrapper = mount(BaseHero);
-    expect(wrapper.element.tagName).toBe('SECTION');
-  });
+/**
+ * Exercises the **neutral** `BaseHero` (which composes the neutral
+ * `BaseTypography`) on both frameworks through the `@mission-platform/jsx`
+ * runtime adapters. Covers the eyebrow/title/subtitle props, the body default
+ * slot, the `media` region + `has-media` modifier, and the alignment/size
+ * modifiers.
+ */
+const ReactHero = toReactComponent(BaseHero, 'Hero');
+const VueHero = toVueComponent(BaseHero, 'Hero');
 
-  it('renders the title, subtitle, and eyebrow props', () => {
-    const wrapper = mount(BaseHero, {
-      props: { eyebrow: 'New', title: 'Welcome', subtitle: 'Get started today' },
-    });
-    expect(wrapper.find('.base-hero__eyebrow').text()).toBe('New');
-    expect(wrapper.find('.base-hero__title').text()).toBe('Welcome');
-    expect(wrapper.find('.base-hero__subtitle').text()).toBe('Get started today');
-  });
+describe('BaseHero authors the same component for React and Vue', () => {
+  it('renders the eyebrow/title/subtitle and body on both frameworks', async () => {
+    const properties = { eyebrow: 'Welcome', title: 'Mission Platform', subtitle: 'Build once' };
+    const react = renderToStaticMarkup(createElement(ReactHero, properties, 'Body copy'));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueHero, properties, () => 'Body copy') }));
 
-  it('applies default align and size classes', () => {
-    const wrapper = mount(BaseHero);
-    expect(wrapper.classes()).toContain('base-hero--align-start');
-    expect(wrapper.classes()).toContain('base-hero--md');
-  });
-
-  it('applies the alignment class', () => {
-    for (const align of ['start', 'center', 'end'] as const) {
-      const wrapper = mount(BaseHero, { props: { align } });
-      expect(wrapper.classes()).toContain(`base-hero--align-${align}`);
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-hero');
+      expect(html).toContain('base-hero--align-start');
+      expect(html).toContain('base-hero--md');
+      expect(html).toContain('base-hero__content');
+      expect(html).toContain('Welcome');
+      expect(html).toContain('Mission Platform');
+      expect(html).toContain('Build once');
+      expect(html).toContain('Body copy');
+      // Composes BaseTypography (its variant classes appear).
+      expect(html).toContain('base-typography--display');
     }
   });
 
-  it('applies full-height and renders media + overlay', () => {
-    const wrapper = mount(BaseHero, {
-      props: { fullHeight: true, overlay: true },
-      slots: { media: '<img src="x" alt="" />' },
-    });
-    expect(wrapper.classes()).toContain('base-hero--full-height');
-    expect(wrapper.classes()).toContain('base-hero--has-media');
-    expect(wrapper.classes()).toContain('base-hero--overlay');
-    expect(wrapper.find('.base-hero__media img').exists()).toBe(true);
+  it('renders the media region and applies the has-media modifier on both frameworks', async () => {
+    const properties = { title: 'Over media', media: 'BACKGROUND', overlay: true };
+    const react = renderToStaticMarkup(createElement(ReactHero, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueHero, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-hero__media');
+      expect(html).toContain('base-hero--has-media');
+      expect(html).toContain('base-hero--overlay');
+      expect(html).toContain('BACKGROUND');
+      // Over media the title switches to the inverse colour.
+      expect(html).toContain('base-typography--color-inverse');
+    }
   });
 
-  it('does not render the actions container without an actions slot', () => {
-    const wrapper = mount(BaseHero, { props: { title: 'Hi' } });
-    expect(wrapper.find('.base-hero__actions').exists()).toBe(false);
-  });
+  it('omits the media region when no media is provided on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactHero, { title: 'Plain' }));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueHero, { title: 'Plain' }) }));
 
-  it('renders the actions slot', () => {
-    const wrapper = mount(BaseHero, {
-      props: { title: 'Hi' },
-      slots: { actions: '<button>Go</button>' },
-    });
-    expect(wrapper.find('.base-hero__actions button').exists()).toBe(true);
-  });
-
-  it('renders with a custom root element', () => {
-    const wrapper = mount(BaseHero, { props: { as: 'header' } });
-    expect(wrapper.element.tagName).toBe('HEADER');
+    for (const html of [react, vue]) {
+      expect(html).not.toContain('base-hero__media');
+      expect(html).not.toContain('base-hero--has-media');
+    }
   });
 });

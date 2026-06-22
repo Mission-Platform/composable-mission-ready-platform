@@ -1,1 +1,1 @@
-export { default } from './base-virtual-tabs.vue';
+export { BaseVirtualTabs, type VirtualTabPanelScope, type VirtualTabsProperties } from './base-virtual-tabs';

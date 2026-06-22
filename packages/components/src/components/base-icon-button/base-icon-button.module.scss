@@ -1,0 +1,112 @@
+/**
+ * Styling for the write-once `BaseIconButton`.
+ *
+ * Carried onto both frameworks by the two-stage compiler: React imports this as
+ * a hashed CSS Module, Vue inlines it as a (non-scoped) `<style>` block. The
+ * rules live in the shared `mp.components` cascade layer (matching the
+ * `@mission-platform/components` package).
+ */
+
+@layer mp.components {
+  .base-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    border-radius: var(--mp-radius-sm);
+    background: transparent;
+    color: var(--mp-color-text-secondary);
+    line-height: 1;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      color 150ms ease,
+      box-shadow 150ms ease,
+      opacity 150ms ease;
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--mp-shadow-focus-primary);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    /* Sizes — square padding, canonical 2xs → 2xl scale driven by the shared size tokens. */
+    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+      &--#{$size} {
+        padding: var(--mp-size-pad-block-#{$size});
+        font-size: var(--mp-size-font-#{$size});
+      }
+    }
+
+    /* Variants */
+
+    /* Ghost / tertiary — transparent, the default toolbar / close affordance. */
+    &--ghost,
+    &--tertiary {
+      &:hover:not(:disabled) {
+        background-color: var(--mp-color-bg-muted);
+        color: var(--mp-color-text-primary);
+      }
+
+      &:active:not(:disabled) {
+        background-color: var(--mp-color-bg-sunken);
+      }
+    }
+
+    /**
+     * Solid fill (high emphasis) for the colour tones. The `neutral` tone reuses
+     * the `default` token family (no `neutral` alias).
+     */
+    @mixin solid($name, $family) {
+      &--#{$name} {
+        background-color: var(--mp-color-#{$family}-default);
+        color: var(--mp-color-text-on-primary);
+
+        &:hover:not(:disabled) {
+          background-color: var(--mp-color-#{$family}-hover);
+        }
+
+        &:active:not(:disabled) {
+          background-color: var(--mp-color-#{$family}-active, var(--mp-color-#{$family}-hover));
+        }
+      }
+    }
+
+    @include solid('neutral', 'default');
+    @include solid('primary', 'primary');
+    @include solid('success', 'success');
+    @include solid('warning', 'warning');
+    @include solid('info', 'info');
+    @include solid('error', 'error');
+    @include solid('critical', 'critical');
+
+    &--error,
+    &--critical {
+      &:focus-visible {
+        box-shadow: var(--mp-shadow-focus-danger);
+      }
+    }
+
+    /* Secondary — outlined (medium emphasis). */
+    &--secondary {
+      border-color: var(--mp-color-border-default);
+      background-color: var(--mp-color-bg-surface);
+      color: var(--mp-color-text-primary);
+
+      &:hover:not(:disabled) {
+        background-color: var(--mp-color-bg-muted);
+        border-color: var(--mp-color-border-strong);
+      }
+
+      &:active:not(:disabled) {
+        background-color: var(--mp-color-bg-sunken);
+      }
+    }
+  }
+}

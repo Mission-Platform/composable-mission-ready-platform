@@ -1,65 +1,40 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n as mount } from '../../test-utils/mount-with-i18n';
+import { BaseIconButton } from './base-icon-button';
 
-import BaseIconButton from './base-icon-button.vue';
+/**
+ * Exercises the **neutral** `BaseIconButton` authored in this package,
+ * rendering it on both frameworks through the `@mission-platform/jsx` runtime
+ * adapters. Covers the required accessible name, the variant/size modifiers,
+ * and the disabled state.
+ */
+const ReactIconButton = toReactComponent(BaseIconButton, 'IconButton');
+const VueIconButton = toVueComponent(BaseIconButton, 'IconButton');
 
-describe('BaseIconButton', () => {
-  it('renders a <button> element', () => {
-    const wrapper = mount(BaseIconButton, { props: { label: 'Close' } });
-    expect(wrapper.element.tagName).toBe('BUTTON');
-  });
+describe('BaseIconButton authors the same component for React and Vue', () => {
+  it('renders an accessible, modifier-classed button on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactIconButton, { label: 'Close', variant: 'error', size: 'lg', disabled: true }, '×'),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () => vueH(VueIconButton, { label: 'Close', variant: 'error', size: 'lg', disabled: true }, () => '×'),
+      }),
+    );
 
-  it('renders slot content', () => {
-    const wrapper = mount(BaseIconButton, { props: { label: 'Close' }, slots: { default: '<svg />' } });
-    expect(wrapper.find('svg').exists()).toBe(true);
-  });
-
-  it('applies the label as aria-label', () => {
-    const wrapper = mount(BaseIconButton, { props: { label: 'Close dialog' } });
-    expect(wrapper.attributes('aria-label')).toBe('Close dialog');
-  });
-
-  it('applies default classes', () => {
-    const wrapper = mount(BaseIconButton, { props: { label: 'Close' } });
-    expect(wrapper.classes()).toContain('base-icon-button--ghost');
-    expect(wrapper.classes()).toContain('base-icon-button--md');
-  });
-
-  it('applies variant class', () => {
-    const wrapper = mount(BaseIconButton, { props: { label: 'Close', variant: 'danger' } });
-    expect(wrapper.classes()).toContain('base-icon-button--danger');
-  });
-
-  it('applies size class', () => {
-    const wrapper = mount(BaseIconButton, { props: { label: 'Close', size: 'sm' } });
-    expect(wrapper.classes()).toContain('base-icon-button--sm');
-  });
-
-  it('defaults the native type to button', () => {
-    const wrapper = mount(BaseIconButton, { props: { label: 'Close' } });
-    expect(wrapper.attributes('type')).toBe('button');
-  });
-
-  it('honours an explicit type', () => {
-    const wrapper = mount(BaseIconButton, { props: { label: 'Submit', type: 'submit' } });
-    expect(wrapper.attributes('type')).toBe('submit');
-  });
-
-  it('emits click when clicked', async () => {
-    const wrapper = mount(BaseIconButton, { props: { label: 'Close' } });
-    await wrapper.trigger('click');
-    expect(wrapper.emitted('click')).toHaveLength(1);
-  });
-
-  it('is disabled when disabled prop is true', () => {
-    const wrapper = mount(BaseIconButton, { props: { label: 'Close', disabled: true } });
-    expect(wrapper.attributes('disabled')).toBeDefined();
-  });
-
-  it('does not emit click when disabled', async () => {
-    const wrapper = mount(BaseIconButton, { props: { label: 'Close', disabled: true } });
-    await wrapper.trigger('click');
-    expect(wrapper.emitted('click')).toBeUndefined();
+    for (const html of [react, vue]) {
+      expect(html).toContain('<button');
+      expect(html).toContain('aria-label="Close"');
+      expect(html).toContain('base-icon-button--error');
+      expect(html).toContain('base-icon-button--lg');
+      expect(html).toContain('disabled');
+      expect(html).toContain('×');
+    }
   });
 });

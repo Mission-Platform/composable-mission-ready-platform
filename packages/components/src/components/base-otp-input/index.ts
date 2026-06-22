@@ -1,2 +1,1 @@
-export { default } from './base-otp-input.vue';
-export type { OtpInputType, OtpInputSize } from './base-otp-input.vue';
+export { BaseOtpInput, type OtpInputProperties, type OtpInputSize, type OtpInputType } from './base-otp-input';

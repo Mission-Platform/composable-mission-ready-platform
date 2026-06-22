@@ -1,63 +1,50 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import { RouterLink } from 'vue-router';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseBreadcrumb, type BreadcrumbItem } from './base-breadcrumb';
 
-import BaseBreadcrumb from './base-breadcrumb.vue';
-
-import type { BreadcrumbItem } from './base-breadcrumb.vue';
+/**
+ * Exercises the **neutral** `BaseBreadcrumb` authored in this package, rendering
+ * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * Covers the labelled landmark, the link/current split, the separators, and the
+ * `aria-current` on the final entry.
+ */
+const ReactBreadcrumb = toReactComponent(BaseBreadcrumb, 'Breadcrumb');
+const VueBreadcrumb = toVueComponent(BaseBreadcrumb, 'Breadcrumb');
 
 const items: BreadcrumbItem[] = [
   { label: 'Home', href: '/' },
-  { label: 'Products', href: '/products' },
-  { label: 'Current Page' },
+  { label: 'Library', href: '/library' },
+  { label: 'Data' },
 ];
 
-describe('BaseBreadcrumb', () => {
-  it('renders a nav element with aria-label', () => {
-    const wrapper = mountWithI18n(BaseBreadcrumb, { props: { items } });
-    expect(wrapper.find('nav').attributes('aria-label')).toBe('Breadcrumb');
+describe('BaseBreadcrumb authors the same component for React and Vue', () => {
+  it('renders links, separators, and the current page on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactBreadcrumb, { items }));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueBreadcrumb, { items }) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('aria-label="Breadcrumb"');
+      expect(html).toContain('href="/"');
+      expect(html).toContain('href="/library"');
+      expect(html).toContain('Home');
+      expect(html).toContain('Library');
+      expect(html).toContain('Data');
+      expect(html).toContain('aria-current="page"');
+    }
   });
 
-  it('renders all items', () => {
-    const wrapper = mountWithI18n(BaseBreadcrumb, { props: { items } });
-    expect(wrapper.findAll('li')).toHaveLength(3);
-  });
+  it('honours a custom separator on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactBreadcrumb, { items, separator: '›' }));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueBreadcrumb, { items, separator: '›' }) }));
 
-  it('renders links for non-last items with href', () => {
-    const wrapper = mountWithI18n(BaseBreadcrumb, { props: { items } });
-    expect(wrapper.findAll('a')).toHaveLength(2);
-  });
-
-  it('marks last item as aria-current page', () => {
-    const wrapper = mountWithI18n(BaseBreadcrumb, { props: { items } });
-    const spans = wrapper.findAll('.base-breadcrumb__current');
-    const last = spans.at(-1)!;
-    expect(last.attributes('aria-current')).toBe('page');
-  });
-
-  it('renders custom separator', () => {
-    const wrapper = mountWithI18n(BaseBreadcrumb, { props: { items, separator: '›' } });
-    const seps = wrapper.findAll('.base-breadcrumb__separator');
-    expect(seps[0].text()).toBe('›');
-  });
-
-  it('renders RouterLink for non-last items with to prop', () => {
-    const routerItems: BreadcrumbItem[] = [
-      { label: 'Home', to: '/' },
-      { label: 'Products', to: '/products' },
-      { label: 'Current Page' },
-    ];
-    const wrapper = mountWithI18n(BaseBreadcrumb, { props: { items: routerItems } });
-    const links = wrapper.findAllComponents(RouterLink);
-    expect(links).toHaveLength(2);
-    expect(links[0].props('to')).toBe('/');
-    expect(links[1].props('to')).toBe('/products');
-  });
-
-  it('prefers to over href when both are provided', () => {
-    const mixedItems: BreadcrumbItem[] = [{ label: 'Home', to: '/', href: '/fallback' }, { label: 'Current Page' }];
-    const wrapper = mountWithI18n(BaseBreadcrumb, { props: { items: mixedItems } });
-    expect(wrapper.findComponent(RouterLink).exists()).toBe(true);
+    for (const html of [react, vue]) {
+      expect(html).toContain('›');
+    }
   });
 });

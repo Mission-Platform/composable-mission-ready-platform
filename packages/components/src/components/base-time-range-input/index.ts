@@ -1,2 +1,2 @@
-export { default } from './base-time-range-input.vue';
-export type { TimeRangeInputSize, TimeRange } from './base-time-range-input.vue';
+export { BaseTimeRangeInput, type TimeRangeInputProperties, type TimeRangeInputSize } from './base-time-range-input';
+export type { TimeRange } from '../date-time';

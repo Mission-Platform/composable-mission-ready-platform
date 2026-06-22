@@ -1,40 +1,49 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseStatusIcon } from './base-status-icon';
 
-import BaseStatusIcon from './base-status-icon.vue';
+/**
+ * Exercises the **neutral** `BaseStatusIcon` authored in this package, rendering
+ * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * Covers the toned glyph per status and the labelled/decorative accessibility
+ * modes.
+ */
+const ReactStatusIcon = toReactComponent(BaseStatusIcon, 'StatusIcon');
+const VueStatusIcon = toVueComponent(BaseStatusIcon, 'StatusIcon');
 
-describe('BaseStatusIcon', () => {
-  it('renders a span with role img', () => {
-    const wrapper = mountWithI18n(BaseStatusIcon, { props: { status: 'success' } });
-    expect(wrapper.find('span').attributes('role')).toBe('img');
+describe('BaseStatusIcon authors the same component for React and Vue', () => {
+  it('renders a labelled, toned success glyph on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactStatusIcon, { status: 'success', size: 'lg', label: 'Complete' }),
+    );
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueStatusIcon, { status: 'success', size: 'lg', label: 'Complete' }) }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-status-icon');
+      expect(html).toContain('base-status-icon--success');
+      expect(html).toContain('base-status-icon--lg');
+      expect(html).toContain('role="img"');
+      expect(html).toContain('aria-label="Complete"');
+      expect(html).toContain('✓');
+    }
   });
 
-  it('applies status class', () => {
-    const wrapper = mountWithI18n(BaseStatusIcon, { props: { status: 'warning' } });
-    expect(wrapper.find('span').classes()).toContain('base-status-icon--warning');
-  });
+  it('is decorative (aria-hidden) without a label on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactStatusIcon, { status: 'error' }));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueStatusIcon, { status: 'error' }) }));
 
-  it('applies size class', () => {
-    const wrapper = mountWithI18n(BaseStatusIcon, { props: { status: 'info', size: 'lg' } });
-    expect(wrapper.find('span').classes()).toContain('base-status-icon--lg');
-  });
-
-  it('sets aria-label when label provided', () => {
-    const wrapper = mountWithI18n(BaseStatusIcon, {
-      props: { status: 'error', label: 'Error occurred' },
-    });
-    expect(wrapper.find('span').attributes('aria-label')).toBe('Error occurred');
-  });
-
-  it('renders an SVG icon', () => {
-    const wrapper = mountWithI18n(BaseStatusIcon, { props: { status: 'success' } });
-    expect(wrapper.find('svg').exists()).toBe(true);
-  });
-
-  it.each(['success', 'warning', 'error', 'info', 'neutral'] as const)('renders %s icon', (status) => {
-    const wrapper = mountWithI18n(BaseStatusIcon, { props: { status } });
-    expect(wrapper.find('svg').exists()).toBe(true);
-    expect(wrapper.find('span').classes()).toContain(`base-status-icon--${status}`);
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-status-icon--error');
+      expect(html).toContain('aria-hidden="true"');
+      expect(html).toContain('✕');
+    }
   });
 });

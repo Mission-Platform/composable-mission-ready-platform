@@ -1,1 +1,1 @@
-export { default } from './base-file-input.vue';
+export { BaseFileInput, type FileInputProperties, type FileInputSize } from './base-file-input';

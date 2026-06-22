@@ -1,2 +1,6 @@
-export { default } from './base-multiselect.vue';
-export type { MultiselectSize, MultiselectOption } from './base-multiselect.vue';
+export {
+  BaseMultiselect,
+  type MultiselectOption,
+  type MultiselectProperties,
+  type MultiselectSize,
+} from './base-multiselect';

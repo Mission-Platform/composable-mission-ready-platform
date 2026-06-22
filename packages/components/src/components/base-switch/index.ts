@@ -1,2 +1,1 @@
-export { default } from './base-switch.vue';
-export type { SwitchSize } from './base-switch.vue';
+export { BaseSwitch, type SwitchProperties, type SwitchSize } from './base-switch';

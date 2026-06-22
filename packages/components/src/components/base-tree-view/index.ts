@@ -1,2 +1,1 @@
-export { default } from './base-tree-view.vue';
-export type { TreeNode } from './base-tree-view.vue';
+export { BaseTreeView, type TreeViewLabelScope, type TreeViewNode, type TreeViewProperties } from './base-tree-view';

@@ -1,80 +1,51 @@
-import { mount } from '@vue/test-utils';
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import BaseAvatar from './base-avatar.vue';
+import { BaseAvatar } from './base-avatar';
 
-describe('BaseAvatar', () => {
-  describe('default rendering', () => {
-    it('renders a root .avatar wrapper', () => {
-      const wrapper = mount(BaseAvatar);
-      expect(wrapper.find('.avatar').exists()).toBe(true);
-    });
+/**
+ * Exercises the **neutral** `BaseAvatar` authored in this package, rendering it
+ * on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * Covers the image, initials, and presence-status branches.
+ */
+const ReactAvatar = toReactComponent(BaseAvatar, 'Avatar');
+const VueAvatar = toVueComponent(BaseAvatar, 'Avatar');
 
-    it('applies default size and shape classes (md, circle)', () => {
-      const wrapper = mount(BaseAvatar);
-      const image = wrapper.find('.avatar__image');
-      expect(image.classes()).toContain('avatar--md');
-      expect(image.classes()).toContain('avatar--circle');
-    });
+describe('BaseAvatar authors the same component for React and Vue', () => {
+  it('renders an image avatar with a presence dot on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactAvatar, { src: 'https://example.com/a.png', alt: 'Ada', size: 'lg', status: 'online' }),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () => vueH(VueAvatar, { src: 'https://example.com/a.png', alt: 'Ada', size: 'lg', status: 'online' }),
+      }),
+    );
 
-    it('does not render a status indicator by default', () => {
-      const wrapper = mount(BaseAvatar);
-      expect(wrapper.find('.avatar__status').exists()).toBe(false);
-    });
+    for (const html of [react, vue]) {
+      expect(html).toContain('avatar');
+      expect(html).toContain('avatar--lg');
+      expect(html).toContain('https://example.com/a.png');
+      expect(html).toContain('role="status"');
+      expect(html).toContain('aria-label="online"');
+    }
   });
 
-  describe('src image', () => {
-    it('renders an <img> when src is provided', () => {
-      const wrapper = mount(BaseAvatar, {
-        props: { src: 'https://example.com/me.png', alt: 'Me' },
-      });
-      const img = wrapper.find('img');
-      expect(img.exists()).toBe(true);
-      expect(img.attributes('src')).toBe('https://example.com/me.png');
-      expect(img.attributes('alt')).toBe('Me');
-    });
+  it('renders the initials fallback when there is no image on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactAvatar, { initials: 'AB', shape: 'square' }));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueAvatar, { initials: 'AB', shape: 'square' }) }),
+    );
 
-    it('does not render initials when src is provided', () => {
-      const wrapper = mount(BaseAvatar, {
-        props: { src: 'https://example.com/me.png', initials: 'JS' },
-      });
-      expect(wrapper.find('.avatar__initials').exists()).toBe(false);
-    });
-  });
-
-  describe('initials fallback', () => {
-    it('renders initials when no src is provided', () => {
-      const wrapper = mount(BaseAvatar, { props: { initials: 'JS' } });
-      const initials = wrapper.find('.avatar__initials');
-      expect(initials.exists()).toBe(true);
-      expect(initials.text()).toBe('JS');
-    });
-
-    it('renders the default slot when neither src nor initials are provided', () => {
-      const wrapper = mount(BaseAvatar, { slots: { default: '<svg data-test="icon" />' } });
-      expect(wrapper.find('[data-test="icon"]').exists()).toBe(true);
-    });
-  });
-
-  describe('size and shape', () => {
-    it.each(['xs', 'sm', 'md', 'lg', 'xl'] as const)('applies size class %s', (size) => {
-      const wrapper = mount(BaseAvatar, { props: { size } });
-      expect(wrapper.find('.avatar__image').classes()).toContain(`avatar--${size}`);
-    });
-
-    it('applies square shape class', () => {
-      const wrapper = mount(BaseAvatar, { props: { shape: 'square' } });
-      expect(wrapper.find('.avatar__image').classes()).toContain('avatar--square');
-    });
-  });
-
-  describe('status indicator', () => {
-    it.each(['online', 'offline', 'away', 'busy'] as const)('renders the %s status', (status) => {
-      const wrapper = mount(BaseAvatar, { props: { status } });
-      const indicator = wrapper.find('.avatar__status');
-      expect(indicator.exists()).toBe(true);
-      expect(indicator.attributes('aria-label')).toBe(status);
-      expect(indicator.attributes('role')).toBe('status');
-    });
+    for (const html of [react, vue]) {
+      expect(html).toContain('avatar__initials');
+      expect(html).toContain('avatar--square');
+      expect(html).toContain('AB');
+    }
   });
 });

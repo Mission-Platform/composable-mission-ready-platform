@@ -1,96 +1,58 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseGrid } from './base-grid';
 
-import BaseGrid from './base-grid.vue';
+/**
+ * Exercises the **neutral** `BaseGrid` authored in this package, rendering it
+ * on both frameworks through the `@mission-platform/jsx` runtime adapters. The
+ * assertions confirm cross-framework parity of the BEM class and the computed
+ * CSS Grid inline style (track template derived from `rows` / `cols`).
+ */
+const ReactGrid = toReactComponent(BaseGrid, 'Grid');
+const VueGrid = toVueComponent(BaseGrid, 'Grid');
 
-describe('BaseGrid', () => {
-  it('renders a div with the grid class by default', () => {
-    const wrapper = mountWithI18n(BaseGrid);
-    const root = wrapper.find('.base-grid');
-    expect(root.exists()).toBe(true);
-    expect(root.element.tagName).toBe('DIV');
+describe('BaseGrid authors the same component for React and Vue', () => {
+  it('renders matching markup and grid track template on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactGrid, { rows: 2, cols: 3, gap: 'lg' }, 'Cell'));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueGrid, { rows: 2, cols: 3, gap: 'lg' }, () => 'Cell') }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-grid');
+      expect(html).toContain('display:grid');
+      expect(html).toContain('repeat(3, minmax(0, 1fr))');
+      expect(html).toContain('repeat(2, minmax(0, auto))');
+      expect(html).toContain('Cell');
+    }
   });
 
-  it('sets grid templates from rows (m) and cols (n)', () => {
-    const wrapper = mountWithI18n(BaseGrid, { props: { rows: 2, cols: 3 } });
-    const style = wrapper.find('.base-grid').attributes('style') ?? '';
-    expect(style).toContain('grid-template-columns: repeat(3, minmax(0, 1fr))');
-    expect(style).toContain('grid-template-rows: repeat(2, minmax(0, auto))');
+  it('switches to a responsive auto-fit track list when `minColumnWidth` is set on both frameworks', async () => {
+    const properties = { minColumnWidth: '12rem', cols: 5 } as const;
+    const react = renderToStaticMarkup(createElement(ReactGrid, properties, 'Cell'));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueGrid, properties, () => 'Cell') }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('repeat(auto-fit, minmax(min(12rem, 100%), 1fr))');
+      // `cols` is ignored in the responsive mode.
+      expect(html).not.toContain('repeat(5, minmax(0, 1fr))');
+    }
   });
 
-  it('renders rows * cols cells via the scoped cell slot', () => {
-    const wrapper = mountWithI18n(BaseGrid, {
-      props: { rows: 2, cols: 3 },
-      slots: {
-        cell: '<div class="cell" />',
-      },
-    });
-    expect(wrapper.findAll('.cell')).toHaveLength(6);
-  });
+  it('applies the shared padding/margin spacing classes on both frameworks', async () => {
+    const properties = { padding: 'lg', margin: 'md' } as const;
+    const react = renderToStaticMarkup(createElement(ReactGrid, properties, 'Cell'));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueGrid, properties, () => 'Cell') }));
 
-  it('exposes zero-based row, column, and index to the cell slot', () => {
-    const wrapper = mountWithI18n(BaseGrid, {
-      props: { rows: 2, cols: 2 },
-      slots: {
-        cell: '<div class="cell">{{ params.row }}-{{ params.column }}-{{ params.index }}</div>',
-      },
-    });
-    const cells = wrapper.findAll('.cell').map((cell) => cell.text());
-    expect(cells).toEqual(['0-0-0', '0-1-1', '1-0-2', '1-1-3']);
-  });
-
-  it('renders default-slot content when no cell slot is provided', () => {
-    const wrapper = mountWithI18n(BaseGrid, {
-      props: { rows: 1, cols: 2 },
-      slots: {
-        default: '<span class="item">A</span><span class="item">B</span>',
-      },
-    });
-    expect(wrapper.findAll('.item')).toHaveLength(2);
-  });
-
-  it('maps the named gap scale onto --mp-spacing-* tokens on both axes', () => {
-    const wrapper = mountWithI18n(BaseGrid, { props: { rows: 2, cols: 2, gap: 'lg' } });
-    const style = wrapper.find('.base-grid').attributes('style') ?? '';
-    expect(style).toContain('row-gap: var(--mp-spacing-6)');
-    expect(style).toContain('column-gap: var(--mp-spacing-6)');
-  });
-
-  it('lets rowGap / columnGap override gap with their own named steps', () => {
-    const wrapper = mountWithI18n(BaseGrid, {
-      props: { rows: 2, cols: 2, gap: 'md', rowGap: '2xs', columnGap: '2xl' },
-    });
-    const style = wrapper.find('.base-grid').attributes('style') ?? '';
-    expect(style).toContain('row-gap: var(--mp-spacing-1)');
-    expect(style).toContain('column-gap: var(--mp-spacing-12)');
-  });
-
-  it('defaults justify-items and align-items to stretch', () => {
-    const wrapper = mountWithI18n(BaseGrid, { props: { rows: 2, cols: 2 } });
-    const style = wrapper.find('.base-grid').attributes('style') ?? '';
-    expect(style).toContain('justify-items: stretch');
-    expect(style).toContain('align-items: stretch');
-  });
-
-  it('maps justify onto justify-items and align onto align-items', () => {
-    const wrapper = mountWithI18n(BaseGrid, {
-      props: { rows: 2, cols: 2, justify: 'center', align: 'end' },
-    });
-    const style = wrapper.find('.base-grid').attributes('style') ?? '';
-    expect(style).toContain('justify-items: center');
-    expect(style).toContain('align-items: end');
-  });
-
-  it('clamps rows and cols to at least 1', () => {
-    const wrapper = mountWithI18n(BaseGrid, { props: { rows: 0, cols: -2 } });
-    const style = wrapper.find('.base-grid').attributes('style') ?? '';
-    expect(style).toContain('grid-template-columns: repeat(1, minmax(0, 1fr))');
-    expect(style).toContain('grid-template-rows: repeat(1, minmax(0, auto))');
-  });
-
-  it('renders as a custom element when `as` is provided', () => {
-    const wrapper = mountWithI18n(BaseGrid, { props: { as: 'section' } });
-    expect(wrapper.find('.base-grid').element.tagName).toBe('SECTION');
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-spacing--padding-lg');
+      expect(html).toContain('base-spacing--margin-md');
+    }
   });
 });

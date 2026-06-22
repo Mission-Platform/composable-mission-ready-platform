@@ -1,58 +1,98 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseFormWizard, type WizardStep } from './base-form-wizard';
 
-import BaseFormWizard from './base-form-wizard.vue';
+/**
+ * Exercises the **neutral** `BaseFormWizard` authored in this package, rendering
+ * it on both frameworks through the `@mission-platform/jsx` adapters. It renders
+ * the step indicator, the active step's content, and the navigation footer.
+ */
+const ReactFormWizard = toReactComponent(BaseFormWizard, 'FormWizard');
+const VueFormWizard = toVueComponent(BaseFormWizard, 'FormWizard');
 
-import type { WizardStep } from './base-form-wizard.vue';
-
-const steps: WizardStep[] = [
-  { id: 'a', title: 'Step One' },
-  { id: 'b', title: 'Step Two' },
-  { id: 'c', title: 'Step Three' },
+const STEPS: WizardStep[] = [
+  { id: 'account', title: 'Account', description: 'Your login', content: 'Account step body' },
+  { id: 'profile', title: 'Profile', content: 'Profile step body' },
+  { id: 'review', title: 'Review', content: 'Review step body' },
 ];
 
-describe('BaseFormWizard', () => {
-  it('renders all steps', () => {
-    const wrapper = mountWithI18n(BaseFormWizard, { props: { steps, modelValue: 0 } });
-    expect(wrapper.findAll('.base-form-wizard__step')).toHaveLength(3);
+describe('BaseFormWizard authors the same component for React and Vue', () => {
+  it('renders the steps, the active step body, and Next on the first step on both frameworks', async () => {
+    const properties = { steps: STEPS, modelValue: 0 };
+    const react = renderToStaticMarkup(createElement(ReactFormWizard, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueFormWizard, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('Account');
+      expect(html).toContain('Profile');
+      expect(html).toContain('Review');
+      expect(html).toContain('Account step body');
+      expect(html).toContain('Next');
+      expect(html).toContain('aria-current="step"');
+    }
   });
 
-  it('marks current step with aria-current', () => {
-    const wrapper = mountWithI18n(BaseFormWizard, { props: { steps, modelValue: 1 } });
-    const stepItems = wrapper.findAll('.base-form-wizard__step');
-    expect(stepItems[1].attributes('aria-current')).toBe('step');
+  it('shows the Finish label on the last step on both frameworks', async () => {
+    const properties = { steps: STEPS, modelValue: 2, finishLabel: 'Done' };
+    const react = renderToStaticMarkup(createElement(ReactFormWizard, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueFormWizard, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('Review step body');
+      expect(html).toContain('Done');
+    }
   });
 
-  it('applies complete class to previous steps', () => {
-    const wrapper = mountWithI18n(BaseFormWizard, { props: { steps, modelValue: 2 } });
-    expect(wrapper.findAll('.base-form-wizard__step')[0].classes()).toContain('base-form-wizard__step--complete');
+  it('omits a conditional step (`when: false`) from the sequence on both frameworks', async () => {
+    const conditionalSteps: WizardStep[] = [
+      { id: 'account', title: 'Account', content: 'Account step body' },
+      { id: 'billing', title: 'Billing', when: false, content: 'Billing step body' },
+      { id: 'review', title: 'Review', content: 'Review step body' },
+    ];
+    const properties = { steps: conditionalSteps, modelValue: 0 };
+    const react = renderToStaticMarkup(createElement(ReactFormWizard, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueFormWizard, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('Account');
+      expect(html).toContain('Review');
+      expect(html).not.toContain('Billing');
+    }
   });
 
-  it('shows Back button when not on first step', () => {
-    const wrapper = mountWithI18n(BaseFormWizard, { props: { steps, modelValue: 1 } });
-    expect(wrapper.find('.base-form-wizard__btn--secondary').exists()).toBe(true);
+  it('disables the primary button while the active step is invalid (per-step validation) on both frameworks', async () => {
+    const invalidSteps: WizardStep[] = [
+      { id: 'account', title: 'Account', valid: false, content: 'Account step body' },
+      { id: 'review', title: 'Review', content: 'Review step body' },
+    ];
+    const properties = { steps: invalidSteps, modelValue: 0 };
+    const react = renderToStaticMarkup(createElement(ReactFormWizard, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueFormWizard, properties) }));
+
+    for (const html of [react, vue]) {
+      // The primary (Next) button itself carries the disabled attribute.
+      expect(html).toMatch(/<button[^>]*\bdisabled\b[^>]*>Next<\/button>/);
+    }
   });
 
-  it('hides Back button on first step', () => {
-    const wrapper = mountWithI18n(BaseFormWizard, { props: { steps, modelValue: 0 } });
-    expect(wrapper.find('.base-form-wizard__btn--secondary').exists()).toBe(false);
-  });
+  it('disables Finish when the final step is invalid (final-step validation) on both frameworks', async () => {
+    const finalInvalidSteps: WizardStep[] = [
+      { id: 'account', title: 'Account', content: 'Account step body' },
+      { id: 'review', title: 'Review', valid: false, content: 'Review step body' },
+    ];
+    const properties = { steps: finalInvalidSteps, modelValue: 1, finishLabel: 'Finish' };
+    const react = renderToStaticMarkup(createElement(ReactFormWizard, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueFormWizard, properties) }));
 
-  it('shows Finish on last step', () => {
-    const wrapper = mountWithI18n(BaseFormWizard, { props: { steps, modelValue: 2 } });
-    expect(wrapper.find('.base-form-wizard__btn--primary').text()).toBe('Finish');
-  });
-
-  it('emits next when Next clicked', async () => {
-    const wrapper = mountWithI18n(BaseFormWizard, { props: { steps, modelValue: 0 } });
-    await wrapper.find('.base-form-wizard__btn--primary').trigger('click');
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([1]);
-  });
-
-  it('emits complete when Finish clicked on last step', async () => {
-    const wrapper = mountWithI18n(BaseFormWizard, { props: { steps, modelValue: 2 } });
-    await wrapper.find('.base-form-wizard__btn--primary').trigger('click');
-    expect(wrapper.emitted('complete')).toBeTruthy();
+    for (const html of [react, vue]) {
+      // The final Finish button itself carries the disabled attribute.
+      expect(html).toMatch(/<button[^>]*\bdisabled\b[^>]*>Finish<\/button>/);
+    }
   });
 });

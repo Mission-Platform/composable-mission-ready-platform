@@ -1,49 +1,38 @@
-import BaseStack from './base-stack.vue';
+import { Stack } from '@mission-platform/components/vue';
+
+import styles from './base-stack.module.scss';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-const itemStyle = [
-  'display: flex',
-  'align-items: center',
-  'justify-content: center',
-  'min-width: 64px',
-  'min-height: 48px',
-  'padding: var(--mp-spacing-2) var(--mp-spacing-4)',
-  'border-radius: var(--mp-radius-md)',
-  'background: var(--mp-color-surface-raised)',
-  'border: 1px solid var(--mp-color-border-default)',
-  'color: var(--mp-color-text-primary)',
-].join(';');
-
-const containerStyle = [
-  'padding: var(--mp-spacing-4)',
-  'border: 1px dashed var(--mp-color-border-default)',
-  'border-radius: var(--mp-radius-md)',
-  'min-height: 160px',
-].join(';');
-
-const gapOptions = ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'];
-
+/**
+ * `Stack` is the Vue 3 build of the write-once `BaseStack` in this package. The
+ * component is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/jsx`) and compiled straight to a Vue component at build
+ * time by `@mission-platform/vite-plugin-jsx`. The very same source also ships
+ * as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Layout/BaseStack',
-  component: BaseStack,
+  component: Stack,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`Stack` layout primitive — lays its children out in a single vertical (column) or horizontal (row) line with a consistent `gap`, plus `justify` / `align` controls. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Stack` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). It lays its children out in a single vertical (column) or horizontal (row) line with a consistent `gap`, plus `justify` / `align` controls. The demo box styling comes from the co-located `base-stack.module.scss` CSS Module (consumed here through its hashed class map).',
       },
     },
   },
   argTypes: {
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     direction: { control: 'inline-radio', options: ['vertical', 'horizontal'] },
-    gap: { control: 'select', options: gapOptions },
+    gap: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     justify: { control: 'select', options: ['start', 'center', 'end', 'between', 'around', 'evenly'] },
     align: { control: 'select', options: ['start', 'center', 'end', 'stretch', 'baseline'] },
     wrap: { control: 'boolean' },
     inline: { control: 'boolean' },
-    as: { control: 'text' },
+    padding: { control: 'select', options: [undefined, '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    margin: { control: 'select', options: [undefined, '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
   },
   args: {
     direction: 'vertical',
@@ -54,19 +43,19 @@ const meta = {
     inline: false,
   },
   render: (arguments_) => ({
-    components: { BaseStack },
+    components: { Stack },
     setup() {
-      return { args: arguments_, itemStyle, containerStyle };
+      return { args: arguments_, styles };
     },
     template: `
-      <BaseStack v-bind="args" :style="containerStyle">
-        <div :style="itemStyle">One</div>
-        <div :style="itemStyle">Two</div>
-        <div :style="itemStyle">Three</div>
-      </BaseStack>
+      <Stack v-bind="args" :class="styles['stack-demo-container']">
+        <div :class="styles['stack-demo-item']">One</div>
+        <div :class="styles['stack-demo-item']">Two</div>
+        <div :class="styles['stack-demo-item']">Three</div>
+      </Stack>
     `,
   }),
-} satisfies Meta<typeof BaseStack>;
+} satisfies Meta<typeof Stack>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -86,14 +75,14 @@ export const SpaceBetween: Story = {
 export const Wrapping: Story = {
   args: { direction: 'horizontal', wrap: true, gap: 'sm' },
   render: (arguments_) => ({
-    components: { BaseStack },
+    components: { Stack },
     setup() {
-      return { args: arguments_, itemStyle, containerStyle };
+      return { args: arguments_, styles };
     },
     template: `
-      <BaseStack v-bind="args" :style="containerStyle">
-        <div v-for="n in 12" :key="n" :style="itemStyle">Item {{ n }}</div>
-      </BaseStack>
+      <Stack v-bind="args" :class="styles['stack-demo-container']">
+        <div v-for="n in 12" :key="n" :class="styles['stack-demo-item']">Item {{ n }}</div>
+      </Stack>
     `,
   }),
 };

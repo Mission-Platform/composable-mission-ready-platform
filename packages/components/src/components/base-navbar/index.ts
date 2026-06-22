@@ -1,1 +1,1 @@
-export { default } from './base-navbar.vue';
+export { BaseNavbar, type NavbarAlign, type NavbarProperties } from './base-navbar';

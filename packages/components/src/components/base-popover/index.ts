@@ -1,2 +1,1 @@
-export { default } from './base-popover.vue';
-export type { PopoverPlacement } from './base-popover.vue';
+export { BasePopover, type PopoverPlacement, type PopoverProperties } from './base-popover';

@@ -1,27 +1,25 @@
 import { ref } from 'vue';
 
-import BaseMultiselect from './base-multiselect.vue';
+import { Multiselect } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-const FRUIT_OPTIONS = [
-  { label: 'Apple', value: 'apple' },
-  { label: 'Banana', value: 'banana' },
-  { label: 'Cherry', value: 'cherry' },
-  { label: 'Durian (disabled)', value: 'durian', disabled: true },
-  { label: 'Elderberry', value: 'elderberry' },
-  { label: 'Fig', value: 'fig' },
-];
-
+/**
+ * `Multiselect` is the Vue 3 build of the write-once `BaseMultiselect` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Forms/BaseMultiselect',
-  component: BaseMultiselect,
+  component: Multiselect,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`BaseMultiselect` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Multiselect` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). Selected values render as removable `BaseTag` chips and an inline search filters the remaining options. The original SFC used `BaseDropdown` (Teleport + floating-ui), which the neutral dialect does not model, so the listbox is rendered **in-place** and toggled by internal `useState`; a hidden native `<select multiple>` is kept for autofill/form submission. The selection is controlled via `modelValue` and the original `v-model` + `change` emit become the `onUpdateModelValue`/`onChange` callback props. Styling comes from the co-located `base-multiselect.module.scss`.',
       },
     },
   },
@@ -29,169 +27,44 @@ const meta = {
     size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     disabled: { control: 'boolean' },
     required: { control: 'boolean' },
-    name: { control: 'text' },
-    autocomplete: { control: 'text' },
+    labelHidden: { control: 'boolean' },
   },
   args: {
-    modelValue: [],
+    label: 'Toppings',
+    placeholder: 'Select toppings…',
     size: 'md',
-    label: 'Fruits',
-    placeholder: 'Pick fruits…',
-    options: FRUIT_OPTIONS,
     disabled: false,
     required: false,
+    labelHidden: false,
+    options: [
+      { label: 'Cheese', value: 'cheese' },
+      { label: 'Mushroom', value: 'mushroom' },
+      { label: 'Pepperoni', value: 'pepperoni' },
+      { label: 'Olives', value: 'olives' },
+      { label: 'Pineapple (sold out)', value: 'pineapple', disabled: true },
+    ],
   },
   render: (arguments_) => ({
-    components: { BaseMultiselect },
+    components: { Multiselect },
     setup() {
-      return { args: arguments_ };
+      const value = ref<(string | number)[]>(arguments_.modelValue ?? []);
+      return { args: arguments_, value };
     },
-    template: '<BaseMultiselect v-bind="args" style="max-width: 400px" />',
+    template: '<Multiselect v-bind="args" :model-value="value" @update-model-value="value = $event" />',
   }),
-} satisfies Meta<typeof BaseMultiselect>;
+} satisfies Meta<typeof Multiselect>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const WithPreselected: Story = {
-  args: { modelValue: ['apple', 'cherry'] },
-};
-
-export const WithHint: Story = { args: { hint: 'Choose all your favourite fruits.' } };
-
-export const WithError: Story = { args: { error: 'Please select at least one fruit.' } };
+export const Preselected: Story = { args: { modelValue: ['cheese', 'mushroom'] } };
 
 export const Required: Story = { args: { required: true } };
 
-export const Disabled: Story = { args: { disabled: true, modelValue: ['apple', 'banana'] } };
+export const WithHint: Story = { args: { hint: 'Choose as many as you like.' } };
 
-export const Small: Story = { args: { size: 'sm' } };
+export const WithError: Story = { args: { error: 'Select at least one topping.' } };
 
-export const Large: Story = { args: { size: 'lg' } };
-
-export const NoLabel: Story = { args: { label: undefined } };
-
-export const WithNativeAutocomplete: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story: [
-          'The combobox is backed by a visually-hidden native `<select multiple>` that carries the',
-          '`name` and `autocomplete` attributes, so browsers and profile managers can autofill the',
-          'field and submit its values in a native `<form>`. Autofill updates `v-model` just like',
-          'picking options from the dropdown.',
-        ].join(' '),
-      },
-    },
-  },
-  render: (arguments_) => ({
-    components: { BaseMultiselect },
-    setup() {
-      const value = ref<(string | number)[]>(arguments_.modelValue ?? []);
-      return { args: arguments_, value, options: FRUIT_OPTIONS };
-    },
-    template: `
-      <form style="max-width: 400px">
-        <BaseMultiselect
-          v-bind="args"
-          name="fruits"
-          autocomplete="off"
-          :options="options"
-          :modelValue="value"
-          @update:modelValue="value = $event"
-        />
-      </form>
-    `,
-  }),
-};
-
-export const AutocompleteExamples: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story: [
-          'Multi-select fields inside a native `<form>`, each backed by the hidden',
-          '`<select multiple>`. Use a `name` together with a standard `autocomplete` token',
-          'where one applies (e.g. `language` for spoken languages), or `autocomplete="off"`',
-          'for bespoke lists the browser should not try to autofill. Selections are submitted',
-          'natively and autofill updates `v-model` like picking options from the dropdown.',
-        ].join(' '),
-      },
-    },
-  },
-  render: () => ({
-    components: { BaseMultiselect },
-    setup() {
-      const languages = ref<(string | number)[]>([]);
-      const skills = ref<(string | number)[]>([]);
-
-      const languageOptions = [
-        { label: 'English', value: 'en' },
-        { label: 'French', value: 'fr' },
-        { label: 'Spanish', value: 'es' },
-        { label: 'German', value: 'de' },
-        { label: 'Mandarin', value: 'zh' },
-      ];
-      const skillOptions = [
-        { label: 'Vue', value: 'vue' },
-        { label: 'TypeScript', value: 'ts' },
-        { label: 'CSS', value: 'css' },
-        { label: 'Accessibility', value: 'a11y' },
-        { label: 'Testing', value: 'testing' },
-      ];
-
-      return { languages, skills, languageOptions, skillOptions };
-    },
-    template: `
-      <form style="display: grid; gap: 16px; max-width: 400px">
-        <BaseMultiselect
-          label="Spoken languages"
-          placeholder="Select languages…"
-          name="language"
-          autocomplete="language"
-          :options="languageOptions"
-          :modelValue="languages"
-          @update:modelValue="languages = $event"
-        />
-        <BaseMultiselect
-          label="Skills"
-          placeholder="Select skills…"
-          name="skills"
-          autocomplete="off"
-          :options="skillOptions"
-          :modelValue="skills"
-          @update:modelValue="skills = $event"
-        />
-      </form>
-    `,
-  }),
-};
-
-export const WithStartAndEndExtensions: Story = {
-  render: () => ({
-    components: { BaseMultiselect },
-    setup() {
-      const value = ref<(string | number)[]>(['apple']);
-      return { value, options: FRUIT_OPTIONS };
-    },
-    template: `
-      <BaseMultiselect
-        label="Fruits"
-        placeholder="Pick fruits…"
-        :options="options"
-        :modelValue="value"
-        @update:modelValue="value = $event"
-        style="max-width: 400px"
-      >
-        <template #start>
-          <span>🥇</span>
-        </template>
-        <template #end>
-          <span style="font-size: var(--mp-font-size-sm);">{{ value.length }}</span>
-        </template>
-      </BaseMultiselect>
-    `,
-  }),
-};
+export const Disabled: Story = { args: { disabled: true, modelValue: ['cheese'] } };

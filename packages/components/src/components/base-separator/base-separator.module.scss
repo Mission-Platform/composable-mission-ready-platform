@@ -1,0 +1,112 @@
+/**
+ * Styling for the write-once `BaseSeparator`.
+ *
+ * `BaseSeparator` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its line / label / spacing styling (ported from the original
+ * Vue component) ships in the built package CSS (the two-stage compiler carries
+ * the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package.
+ */
+
+@layer mp.components {
+  .base-separator {
+    border: 0;
+    background: transparent;
+    color: var(--mp-color-text-tertiary);
+  }
+
+  .base-separator--horizontal {
+    width: 100%;
+    border-top-width: 1px;
+    border-top-color: var(--mp-color-border-default);
+
+    &.base-separator--solid {
+      border-top-style: solid;
+    }
+
+    &.base-separator--dashed {
+      border-top-style: dashed;
+    }
+
+    &.base-separator--dotted {
+      border-top-style: dotted;
+    }
+  }
+
+  .base-separator--vertical {
+    align-self: stretch;
+    height: auto;
+    min-height: 1em;
+    margin-inline: var(--mp-separator-spacing, var(--mp-spacing-4));
+    border-left-width: 1px;
+    border-left-color: var(--mp-color-border-default);
+
+    &.base-separator--solid {
+      border-left-style: solid;
+    }
+
+    &.base-separator--dashed {
+      border-left-style: dashed;
+    }
+
+    &.base-separator--dotted {
+      border-left-style: dotted;
+    }
+  }
+
+  .base-separator--labelled {
+    display: flex;
+    align-items: center;
+    gap: var(--mp-spacing-3);
+    width: 100%;
+  }
+
+  .base-separator__line {
+    flex: 1 1 auto;
+    border-top-width: 1px;
+    border-top-color: var(--mp-color-border-default);
+  }
+
+  .base-separator--labelled.base-separator--solid .base-separator__line {
+    border-top-style: solid;
+  }
+
+  .base-separator--labelled.base-separator--dashed .base-separator__line {
+    border-top-style: dashed;
+  }
+
+  .base-separator--labelled.base-separator--dotted .base-separator__line {
+    border-top-style: dotted;
+  }
+
+  .base-separator__label {
+    flex: 0 0 auto;
+    font-family: var(--mp-font-family-sans);
+    font-size: var(--mp-size-font-sm);
+    line-height: var(--mp-line-height-tight);
+    color: var(--mp-color-text-secondary);
+    white-space: nowrap;
+  }
+
+  /* Spacing — applied along the main axis for the relevant orientation. */
+  $spacing-map: (
+    'none': var(--mp-spacing-0),
+    'sm': var(--mp-spacing-2),
+    'md': var(--mp-spacing-4),
+    'lg': var(--mp-spacing-6),
+    'xl': var(--mp-spacing-8),
+  );
+
+  @each $name, $value in $spacing-map {
+    .base-separator--spacing-#{$name} {
+      --mp-separator-spacing: #{$value};
+    }
+  }
+
+  .base-separator--horizontal,
+  .base-separator--labelled {
+    margin-block: var(--mp-separator-spacing, var(--mp-spacing-4));
+  }
+}

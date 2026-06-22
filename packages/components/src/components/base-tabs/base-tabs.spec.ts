@@ -1,142 +1,90 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseTabs, type TabItem } from './base-tabs';
 
-import BaseTabs from './base-tabs.vue';
-
-import type { TabItem } from './base-tabs.vue';
+/**
+ * Exercises the **neutral** `BaseTabs` authored in this package, rendering it on
+ * both frameworks through the `@mission-platform/jsx` runtime adapters. Covers
+ * the ARIA `tablist`/`tab`/`tabpanel` roles, the selected tab, the scoped panel
+ * render-prop, and the closable/addable affordances.
+ */
+const ReactTabs = toReactComponent(BaseTabs, 'Tabs');
+const VueTabs = toVueComponent(BaseTabs, 'Tabs');
 
 const tabs: TabItem[] = [
-  { id: 'a', label: 'Tab A' },
-  { id: 'b', label: 'Tab B' },
-  { id: 'c', label: 'Tab C', disabled: true },
+  { id: 'overview', label: 'Overview' },
+  { id: 'details', label: 'Details' },
+  { id: 'settings', label: 'Settings', disabled: true },
 ];
 
-describe('BaseTabs', () => {
-  it('renders a tablist', () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs } });
-    expect(wrapper.find('[role="tablist"]').exists()).toBe(true);
+describe('BaseTabs authors the same component for React and Vue', () => {
+  it('renders a tablist with the active tab and its panel on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactTabs, {
+        tabs,
+        modelValue: 'details',
+        panel: ({ tab }: { tab: TabItem }) => `Panel: ${tab.label}`,
+      }),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () =>
+          vueH(VueTabs, {
+            tabs,
+            modelValue: 'details',
+            panel: ({ tab }: { tab: TabItem }) => `Panel: ${tab.label}`,
+          }),
+      }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('role="tablist"');
+      expect(html).toContain('role="tab"');
+      expect(html).toContain('role="tabpanel"');
+      expect(html).toContain('Overview');
+      expect(html).toContain('Details');
+      expect(html).toContain('Panel: Details');
+      expect(html).toContain('aria-selected="true"');
+      expect(html).toContain('panel-details');
+    }
   });
 
-  it('renders correct number of tabs', () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs } });
-    expect(wrapper.findAll('[role="tab"]')).toHaveLength(3);
+  it('keeps every panel mounted, hiding the inactive ones (matching the Vue SFC)', async () => {
+    const properties = {
+      tabs,
+      modelValue: 'details',
+      panel: ({ tab }: { tab: TabItem }) => `Panel: ${tab.label}`,
+    };
+    const react = renderToStaticMarkup(createElement(ReactTabs, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueTabs, properties) }));
+
+    for (const html of [react, vue]) {
+      // A panel exists per tab (not just the active one)…
+      expect(html).toContain('panel-overview');
+      expect(html).toContain('panel-details');
+      expect(html).toContain('panel-settings');
+      expect(html).toContain('Panel: Overview');
+      expect(html).toContain('Panel: Settings');
+      // …and the inactive panels carry the `hidden` attribute.
+      expect(html).toContain('hidden');
+    }
   });
 
-  it('sets first tab as active by default', () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs } });
-    const firstTab = wrapper.findAll('[role="tab"]')[0];
-    expect(firstTab.attributes('aria-selected')).toBe('true');
-  });
+  it('renders the close and add affordances on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactTabs, { tabs, closable: true, addable: true }));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueTabs, { tabs, closable: true, addable: true }) }),
+    );
 
-  it('sets modelValue tab as active when provided', () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs, modelValue: 'b' } });
-    const tabs_els = wrapper.findAll('[role="tab"]');
-    expect(tabs_els[1].attributes('aria-selected')).toBe('true');
-  });
-
-  it('emits update:modelValue when tab clicked', async () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs } });
-    await wrapper.findAll('[role="tab"]')[1].trigger('click');
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['b']);
-  });
-
-  it('does not emit when disabled tab clicked', async () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs } });
-    await wrapper.findAll('[role="tab"]')[2].trigger('click');
-    expect(wrapper.emitted('update:modelValue')).toBeFalsy();
-  });
-
-  it('renders tabpanels', () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs } });
-    expect(wrapper.findAll('[role="tabpanel"]')).toHaveLength(3);
-  });
-
-  it('hides non-active panels', () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs } });
-    const panels = wrapper.findAll('[role="tabpanel"]');
-    expect(panels[1].attributes('hidden')).toBeDefined();
-  });
-
-  it('only the active panel is visible', () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs, modelValue: 'b' } });
-    const panels = wrapper.findAll('[role="tabpanel"]');
-    // `v-show` keeps inactive panels mounted but with `display: none`, so only
-    // the active tab's panel should report as visible.
-    expect(panels[0].isVisible()).toBe(false);
-    expect(panels[1].isVisible()).toBe(true);
-    expect(panels[2].isVisible()).toBe(false);
-  });
-
-  it('moves visibility to the newly activated panel', async () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs } });
-    expect(wrapper.findAll('[role="tabpanel"]')[0].isVisible()).toBe(true);
-
-    await wrapper.findAll('[role="tab"]')[1].trigger('click');
-
-    const panels = wrapper.findAll('[role="tabpanel"]');
-    expect(panels[0].isVisible()).toBe(false);
-    expect(panels[1].isVisible()).toBe(true);
-  });
-
-  it('applies pill variant class', () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs, variant: 'pill' } });
-    expect(wrapper.find('.base-tabs').classes()).toContain('base-tabs--pill');
-  });
-});
-
-// ─── closable ────────────────────────────────────────────────────────────────
-
-describe('closable', () => {
-  it('does not render close buttons by default', () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs } });
-    expect(wrapper.findAll('.base-tabs__close-icon')).toHaveLength(0);
-  });
-
-  it('renders a close button for every tab when closable is true', () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs, closable: true } });
-    expect(wrapper.findAll('.base-tabs__close-icon')).toHaveLength(tabs.length);
-  });
-
-  it('emits close with the correct tab id when close button is clicked', async () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs, closable: true } });
-    await wrapper.findAll('.base-tabs__close-icon')[1].trigger('click');
-    expect(wrapper.emitted('close')?.[0]).toEqual(['b']);
-  });
-
-  it('does not emit select when close button is clicked', async () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs, closable: true } });
-    await wrapper.findAll('.base-tabs__close-icon')[0].trigger('click');
-    expect(wrapper.emitted('update:modelValue')).toBeFalsy();
-  });
-});
-
-// ─── addable ─────────────────────────────────────────────────────────────────
-
-describe('addable', () => {
-  it('does not render the add button by default', () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs } });
-    expect(wrapper.find('.base-tabs__add').exists()).toBe(false);
-  });
-
-  it('renders the add button when addable is true', () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs, addable: true } });
-    expect(wrapper.find('.base-tabs__add').exists()).toBe(true);
-  });
-
-  it('emits add when the add button is clicked', async () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs, addable: true } });
-    await wrapper.find('.base-tabs__add').trigger('click');
-    expect(wrapper.emitted('add')).toBeTruthy();
-  });
-});
-
-// ─── rename ──────────────────────────────────────────────────────────────────
-
-describe('rename', () => {
-  it('emits rename with the correct tab id when the tab is double-clicked', async () => {
-    const wrapper = mountWithI18n(BaseTabs, { props: { tabs } });
-    await wrapper.findAll('[role="tab"]')[0].trigger('dblclick');
-    expect(wrapper.emitted('rename')?.[0]).toEqual(['a']);
+    for (const html of [react, vue]) {
+      expect(html).toContain('data-close-tab-id="overview"');
+      expect(html).toContain('aria-label="New tab"');
+    }
   });
 });

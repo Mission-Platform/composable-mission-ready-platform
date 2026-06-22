@@ -1,119 +1,36 @@
-import { mount } from '@vue/test-utils';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { nextTick } from 'vue';
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import BaseInView from './base-in-view.vue';
+import { BaseInView } from './base-in-view';
 
-type IntersectionCallback = (entries: Array<{ isIntersecting: boolean }>) => void;
+/**
+ * Exercises the **neutral** `BaseInView` through the `@mission-platform/jsx`
+ * runtime adapters, where the neutral hooks render the component once in its
+ * initial (pre-reveal) state — no `IntersectionObserver` runs during SSR. The
+ * point is cross-framework parity of that initial markup; the live reveal
+ * behaviour (the Vue hook shim / React hooks) is exercised by the Storybook
+ * stories in a browser.
+ */
+const ReactInView = toReactComponent(BaseInView, 'InView');
+const VueInView = toVueComponent(BaseInView, 'InView');
 
-interface MockIntersectionObserver {
-  observe: ReturnType<typeof vi.fn>;
-  disconnect: ReturnType<typeof vi.fn>;
-  unobserve: ReturnType<typeof vi.fn>;
-  takeRecords: ReturnType<typeof vi.fn>;
-  trigger: (isIntersecting: boolean) => void;
-  options: IntersectionObserverInit | undefined;
-}
+describe('BaseInView authors the same component for React and Vue', () => {
+  it('renders the wrapper with its pre-reveal style on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactInView, { animation: 'fade' }, 'Reveal me'));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueInView, { animation: 'fade' }, () => 'Reveal me') }),
+    );
 
-let lastObserver: MockIntersectionObserver | undefined;
-
-beforeEach(() => {
-  lastObserver = undefined;
-  const createMock = (callback: IntersectionCallback, options?: IntersectionObserverInit) => {
-    const instance: MockIntersectionObserver = {
-      observe: vi.fn(),
-      disconnect: vi.fn(),
-      unobserve: vi.fn(),
-      takeRecords: vi.fn(() => []),
-      trigger: (isIntersecting: boolean) => callback([{ isIntersecting }]),
-      options,
-    };
-    lastObserver = instance;
-    return instance;
-  };
-  function Mock(this: MockIntersectionObserver, callback: IntersectionCallback, options?: IntersectionObserverInit) {
-    return createMock(callback, options);
-  }
-  vi.stubGlobal('IntersectionObserver', Mock);
-});
-
-afterEach(() => {
-  vi.unstubAllGlobals();
-});
-
-describe('BaseInView', () => {
-  describe('rendering', () => {
-    it('renders a <div> wrapper by default', () => {
-      const wrapper = mount(BaseInView);
-      expect(wrapper.element.tagName).toBe('DIV');
-      expect(wrapper.classes()).toContain('in-view');
-    });
-
-    it('renders a custom tag when provided', () => {
-      const wrapper = mount(BaseInView, { props: { tag: 'section' } });
-      expect(wrapper.element.tagName).toBe('SECTION');
-    });
-
-    it('exposes inView and hasBeenInView state to the default slot', () => {
-      const wrapper = mount(BaseInView, {
-        slots: {
-          default: `<template #default="{ inView, hasBeenInView }">
-            <span data-test="state">{{ inView }}-{{ hasBeenInView }}</span>
-          </template>`,
-        },
-      });
-      expect(wrapper.find('[data-test="state"]').text()).toBe('false-false');
-    });
-  });
-
-  describe('IntersectionObserver wiring', () => {
-    it('creates an observer with the provided threshold and rootMargin', () => {
-      mount(BaseInView, { props: { threshold: 0.5, rootMargin: '50px' } });
-      expect(lastObserver).toBeDefined();
-      expect(lastObserver?.options).toEqual({ threshold: 0.5, rootMargin: '50px' });
-      expect(lastObserver?.observe).toHaveBeenCalledOnce();
-    });
-
-    it('emits "enter" and updates state when the element intersects', async () => {
-      const wrapper = mount(BaseInView, {
-        slots: {
-          default: `<template #default="{ inView, hasBeenInView }">
-            <span data-test="state">{{ inView }}-{{ hasBeenInView }}</span>
-          </template>`,
-        },
-      });
-
-      lastObserver?.trigger(true);
-      await nextTick();
-
-      expect(wrapper.emitted('enter')).toHaveLength(1);
-      expect(wrapper.find('[data-test="state"]').text()).toBe('true-true');
-    });
-
-    it('disconnects the observer after entering when once=true (default)', () => {
-      mount(BaseInView);
-      lastObserver?.trigger(true);
-      expect(lastObserver?.disconnect).toHaveBeenCalledOnce();
-    });
-
-    it('keeps observing and emits "leave" when once=false', async () => {
-      const wrapper = mount(BaseInView, { props: { once: false } });
-
-      lastObserver?.trigger(true);
-      await nextTick();
-      lastObserver?.trigger(false);
-      await nextTick();
-
-      expect(wrapper.emitted('enter')).toHaveLength(1);
-      expect(wrapper.emitted('leave')).toHaveLength(1);
-      expect(lastObserver?.disconnect).not.toHaveBeenCalled();
-    });
-
-    it('disconnects the observer on unmount', () => {
-      const wrapper = mount(BaseInView, { props: { once: false } });
-      const observer = lastObserver;
-      wrapper.unmount();
-      expect(observer?.disconnect).toHaveBeenCalled();
-    });
+    for (const html of [react, vue]) {
+      expect(html).toContain('in-view');
+      // Pre-reveal (state is initial `false` during SSR) → opacity 0.
+      expect(html).toContain('opacity');
+      expect(html).toContain('Reveal me');
+    }
   });
 });

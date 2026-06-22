@@ -1,16 +1,30 @@
 import { ref } from 'vue';
 
-import BaseDateInput from './base-date-input.vue';
+import { DateInput } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `DateInput` is the Vue 3 build of the write-once `BaseDateInput` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Forms/BaseDateInput',
-  component: BaseDateInput,
+  component: DateInput,
   tags: ['autodocs'],
-  parameters: { layout: 'padded' },
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Cross-framework `DateInput` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). A trigger opens a teleported, CSS-anchor-positioned popover composing the migrated `Calendar` (replacing `@floating-ui` + `useZIndex`); the ISO date is controlled via `modelValue`, and the `v-model` + `change` emit become the `onUpdateModelValue`/`onChange` callback props. Styling comes from the co-located `base-date-input.module.scss`.',
+      },
+    },
+  },
   argTypes: {
-    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    size: { control: 'inline-radio', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     disabled: { control: 'boolean' },
     required: { control: 'boolean' },
   },
@@ -21,78 +35,24 @@ const meta = {
     required: false,
   },
   render: (arguments_) => ({
-    components: { BaseDateInput },
+    components: { DateInput },
     setup() {
-      const date = ref(arguments_.modelValue ?? '');
-      return { args: arguments_, date };
+      const value = ref(arguments_.modelValue ?? '');
+      return { args: arguments_, value };
     },
-    template: '<BaseDateInput v-bind="args" v-model="date" />',
+    template: '<DateInput v-bind="args" :model-value="value" @update-model-value="value = $event" />',
   }),
-} satisfies Meta<typeof BaseDateInput>;
+} satisfies Meta<typeof DateInput>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const WithValue: Story = {
-  args: { modelValue: '2025-06-15' },
-};
+export const Selected: Story = { args: { modelValue: '2026-01-15' } };
 
-export const Small: Story = { args: { size: 'sm' } };
+export const WithHint: Story = { args: { hint: 'Choose any future date.' } };
 
-export const Large: Story = { args: { size: 'lg' } };
+export const WithError: Story = { args: { error: 'A date is required.' } };
 
-export const Required: Story = { args: { required: true, hint: 'This field is required.' } };
-
-export const WithError: Story = { args: { error: 'Please select a valid date.' } };
-
-export const Disabled: Story = {
-  args: { disabled: true, modelValue: '2025-06-15' },
-  // WCAG 2.1 SC 1.4.3 explicitly exempts inactive (disabled) UI components from contrast requirements.
-  parameters: { a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } } },
-};
-
-export const MinMax: Story = {
-  args: {
-    min: '2025-01-01',
-    max: '2025-12-31',
-    hint: 'Only 2025 dates are selectable.',
-  },
-};
-
-export const Showcase: Story = {
-  render: () => ({
-    components: { BaseDateInput },
-    setup() {
-      const date = ref('');
-      return { date };
-    },
-    template: `
-      <div style="display: flex; flex-direction: column; gap: var(--mp-spacing-6); max-width: 520px;">
-        <BaseDateInput v-model="date" label="Date" placeholder="YYYY-MM-DD" hint="Click to open the calendar." />
-        <p style="font-size: var(--mp-font-size-sm); color: var(--mp-color-text-secondary);">Value: <strong>{{ date || '—' }}</strong></p>
-      </div>
-    `,
-  }),
-};
-
-export const WithStartAndEndExtensions: Story = {
-  render: () => ({
-    components: { BaseDateInput },
-    setup() {
-      const date = ref('');
-      return { date };
-    },
-    template: `
-      <BaseDateInput v-model="date" label="Departure" style="max-width: 360px">
-        <template #start>
-          <span style="font-size: var(--mp-font-size-sm);">From</span>
-        </template>
-        <template #end>
-          <span style="font-size: var(--mp-font-size-sm);">UTC</span>
-        </template>
-      </BaseDateInput>
-    `,
-  }),
-};
+export const Disabled: Story = { args: { disabled: true, modelValue: '2026-01-15' } };

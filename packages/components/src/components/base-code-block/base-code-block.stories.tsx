@@ -1,219 +1,65 @@
-import BaseCodeBlock from './base-code-block.vue';
+import { CodeBlock } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-const TS_SAMPLE = `interface Mission {
-  id: string
-  name: string
-  status: 'active' | 'pending' | 'completed'
-  units: string[]
-}
-
-function startMission(mission: Mission): void {
-  if (mission.status !== 'pending') {
-    throw new Error(\`Mission "\${mission.name}" cannot be started.\`)
-  }
-  mission.status = 'active'
-  console.log(\`Mission "\${mission.name}" is now active.\`)
-}`;
-
-const PY_SAMPLE = `from dataclasses import dataclass
-from typing import Literal
-
-@dataclass
-class Mission:
-    id: str
-    name: str
-    status: Literal['active', 'pending', 'completed']
-    units: list[str]
-
-def start_mission(mission: Mission) -> None:
-    if mission.status != 'pending':
-        raise ValueError(f'Mission "{mission.name}" cannot be started.')
-    mission.status = 'active'
-    print(f'Mission "{mission.name}" is now active.')`;
-
-const JSON_SAMPLE = `{
-  "mission": {
-    "id": "alpha-7",
-    "name": "Operation Nightfall",
-    "status": "active",
-    "units": ["bravo-1", "charlie-3"],
-    "coordinates": {
-      "lat": 48.8566,
-      "lng": 2.3522
-    }
-  }
-}`;
-
-const BASH_SAMPLE = `#!/usr/bin/env bash
-set -euo pipefail
-
-MISSION_ID="\${1:?Usage: $0 <mission-id>}"
-
-echo "Deploying mission: \$MISSION_ID"
-curl -sS -X POST "https://api.example.com/missions/\$MISSION_ID/deploy" \\
-  -H "Authorization: Bearer \$API_TOKEN" \\
-  -H "Content-Type: application/json" | jq .`;
-
-const YAML_SAMPLE = `apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: mission-api
-  labels:
-    app: mission-api
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: mission-api
-  template:
-    spec:
-      containers:
-        - name: api
-          image: mission-platform/api:latest
-          ports:
-            - containerPort: 8080`;
-
+/**
+ * `CodeBlock` is the Vue 3 build of the write-once `BaseCodeBlock` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
-  title: 'Components/Code/BaseCodeBlock',
-  component: BaseCodeBlock,
+  title: 'Components/Display/BaseCodeBlock',
+  component: CodeBlock,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`CodeBlock` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `CodeBlock` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). It highlights `code` with `highlight.js` (kept verbatim) and injects the markup into a `<code>` host via a `useRef` + `useEffect` `innerHTML` assignment (replacing `v-html`); the hljs token theme ships as a global side-effect stylesheet. Chrome styling comes from the co-located `base-code-block.module.scss`.',
       },
     },
   },
   argTypes: {
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     language: {
       control: 'select',
-      options: [
-        'bash',
-        'css',
-        'dockerfile',
-        'go',
-        'ini',
-        'javascript',
-        'json',
-        'markdown',
-        'plaintext',
-        'python',
-        'rust',
-        'scss',
-        'shell',
-        'sql',
-        'typescript',
-        'xml',
-        'yaml',
-      ],
+      options: ['typescript', 'javascript', 'json', 'bash', 'css', 'scss', 'python', 'plaintext'],
     },
     showLineNumbers: { control: 'boolean' },
     showCopyButton: { control: 'boolean' },
-    filename: { control: 'text' },
-    maxHeight: { control: 'text' },
+    variant: {
+      control: 'select',
+      options: [
+        'neutral',
+        'primary',
+        'secondary',
+        'tertiary',
+        'success',
+        'warning',
+        'info',
+        'error',
+        'critical',
+      ],
+    },
   },
   args: {
-    code: TS_SAMPLE,
     language: 'typescript',
+    filename: 'example.ts',
     showLineNumbers: false,
     showCopyButton: true,
-    filename: undefined,
-    maxHeight: undefined,
+    code: ['export function greet(name: string): string {', '  return `Hello, ${name}!`;', '}'].join('\n'),
   },
-  render: (arguments_) => ({
-    components: { BaseCodeBlock },
-    setup() {
-      return { args: arguments_ };
-    },
-    template: '<BaseCodeBlock v-bind="args" />',
-  }),
-} satisfies Meta<typeof BaseCodeBlock>;
+} satisfies Meta<typeof CodeBlock>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const TypeScript: Story = {};
+export const Default: Story = {};
 
-export const Python: Story = {
-  args: {
-    code: PY_SAMPLE,
-    language: 'python',
-  },
-};
+export const WithLineNumbers: Story = { args: { showLineNumbers: true } };
 
-export const JSON: Story = {
-  args: {
-    code: JSON_SAMPLE,
-    language: 'json',
-  },
-};
+export const LanguageLabel: Story = { args: { filename: undefined, language: 'json', code: '{ "ok": true }' } };
 
-export const Bash: Story = {
-  args: {
-    code: BASH_SAMPLE,
-    language: 'bash',
-  },
-};
-
-export const YAML: Story = {
-  args: {
-    code: YAML_SAMPLE,
-    language: 'yaml',
-  },
-};
-
-export const WithFilename: Story = {
-  args: {
-    code: TS_SAMPLE,
-    language: 'typescript',
-    filename: 'src/mission.ts',
-  },
-};
-
-export const WithLineNumbers: Story = {
-  args: {
-    code: TS_SAMPLE,
-    language: 'typescript',
-    showLineNumbers: true,
-  },
-};
-
-export const WithFilenameAndLineNumbers: Story = {
-  args: {
-    code: TS_SAMPLE,
-    language: 'typescript',
-    filename: 'src/mission.ts',
-    showLineNumbers: true,
-  },
-};
-
-export const NoCopyButton: Story = {
-  args: {
-    code: JSON_SAMPLE,
-    language: 'json',
-    showCopyButton: false,
-  },
-};
-
-export const Plaintext: Story = {
-  args: {
-    code: 'This is plain unformatted text.\nNo syntax highlighting applied.',
-    language: 'plaintext',
-  },
-};
-
-// A long snippet capped with `maxHeight`: the code area scrolls vertically while
-// the header (filename / language + copy button) stays pinned to the top.
-const LONG_SAMPLE = Array.from({ length: 60 }, (_, index) => `const line${index + 1} = ${index + 1}`).join('\n');
-
-export const ScrollableWithStickyHeader: Story = {
-  args: {
-    code: LONG_SAMPLE,
-    language: 'typescript',
-    filename: 'src/long-file.ts',
-    maxHeight: 280,
-  },
-};
+export const NoCopyButton: Story = { args: { showCopyButton: false } };

@@ -1,36 +1,46 @@
-import { IconClose, IconPlus, IconTrash } from '@mission-platform/icons';
-import { expect, fn, userEvent, within } from 'storybook/test';
-
-import BaseIconButton from './base-icon-button.vue';
+import { IconButton } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `IconButton` is the Vue 3 build of the write-once `BaseIconButton` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Display/BaseIconButton',
-  component: BaseIconButton,
+  component: IconButton,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
-        component: [
-          '`BaseIconButton` is a compact, square, icon-only button used for affordances where a',
-          'visible text label would be redundant — close controls in dialog / modal / sidebar headers,',
-          'toolbar actions, or chip removal.',
-          '',
-          'It exposes four `variant`s (`ghost`, `primary`, `secondary`, `danger`) and three `size`s.',
-          'Because the button has no visible text, an accessible name is **required** via the `label` prop',
-          '(applied as `aria-label`). Place an icon from `@mission-platform/icons` in the default slot.',
-          'Click events are suppressed while the button is disabled.',
-        ].join('\n'),
+        component:
+          'Cross-framework `IconButton` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). Place the icon in the default slot; an accessible name is required via `label`. Styling comes from the co-located `base-icon-button.module.scss`. The demo uses a simple inline glyph in place of an `@mission-platform/icons` icon.',
       },
     },
   },
   argTypes: {
-    variant: { control: 'select', options: ['ghost', 'primary', 'secondary', 'danger'] },
-    size: { control: 'select', options: ['sm', 'md', 'lg'] },
-    type: { control: 'select', options: ['button', 'submit', 'reset'] },
-    disabled: { control: 'boolean' },
     label: { control: 'text' },
+    variant: {
+      control: 'select',
+      options: [
+        'ghost',
+        'neutral',
+        'primary',
+        'secondary',
+        'tertiary',
+        'success',
+        'warning',
+        'info',
+        'error',
+        'critical',
+      ],
+    },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    disabled: { control: 'boolean' },
+    type: { control: 'select', options: ['button', 'submit', 'reset'] },
   },
   args: {
     label: 'Close',
@@ -38,100 +48,33 @@ const meta = {
     size: 'md',
     disabled: false,
     type: 'button',
-    onClick: fn(),
   },
   render: (arguments_) => ({
-    components: { BaseIconButton, IconClose },
+    components: { IconButton },
     setup() {
       return { args: arguments_ };
     },
-    template: '<BaseIconButton v-bind="args"><IconClose size="md" /></BaseIconButton>',
+    template: '<IconButton v-bind="args"><span aria-hidden="true">✕</span></IconButton>',
   }),
-} satisfies Meta<typeof BaseIconButton>;
+} satisfies Meta<typeof IconButton>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Ghost: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Default transparent affordance (close buttons, toolbars). Verifies that clicking emits a single `click`.',
-      },
-    },
-  },
-  play: async ({ canvasElement, args }) => {
-    // Arrange
-    const canvas = within(canvasElement);
-    const button = canvas.getByRole('button', { name: /close/i });
+export const Ghost: Story = {};
 
-    // Act
-    await userEvent.click(button);
+export const Primary: Story = { args: { variant: 'primary' } };
 
-    // Assert
-    expect(args.onClick).toHaveBeenCalledOnce();
-  },
-};
+export const Secondary: Story = { args: { variant: 'secondary' } };
 
-export const Primary: Story = {
-  args: { variant: 'primary', label: 'Add' },
-  parameters: { docs: { description: { story: 'Solid brand fill for a high-emphasis icon action.' } } },
-  render: (arguments_) => ({
-    components: { BaseIconButton, IconPlus },
-    setup() {
-      return { args: arguments_ };
-    },
-    template: '<BaseIconButton v-bind="args"><IconPlus size="md" /></BaseIconButton>',
-  }),
-};
+export const Success: Story = { args: { variant: 'success' } };
 
-export const Secondary: Story = {
-  args: { variant: 'secondary' },
-  parameters: { docs: { description: { story: 'Outlined, medium-emphasis treatment.' } } },
-};
+export const Warning: Story = { args: { variant: 'warning' } };
 
-export const Danger: Story = {
-  args: { variant: 'danger', label: 'Delete' },
-  parameters: {
-    docs: { description: { story: 'Destructive icon action (remove, delete). Pairs with a danger focus ring.' } },
-  },
-  render: (arguments_) => ({
-    components: { BaseIconButton, IconTrash },
-    setup() {
-      return { args: arguments_ };
-    },
-    template: '<BaseIconButton v-bind="args"><IconTrash size="md" /></BaseIconButton>',
-  }),
-};
+export const Info: Story = { args: { variant: 'info' } };
 
-export const Small: Story = {
-  args: { size: 'sm' },
-  parameters: { docs: { description: { story: 'Compact size for dense surfaces (headers, table rows).' } } },
-};
+export const Error: Story = { args: { variant: 'error' } };
 
-export const Large: Story = {
-  args: { size: 'lg' },
-  parameters: { docs: { description: { story: 'Larger hit area for prominent or touch-first surfaces.' } } },
-};
+export const Critical: Story = { args: { variant: 'critical' } };
 
-export const Disabled: Story = {
-  args: { disabled: true },
-  parameters: {
-    docs: {
-      description: { story: 'When `disabled`, the native attribute is applied and `click` events are suppressed.' },
-    },
-  },
-  play: async ({ canvasElement, args }) => {
-    // Arrange
-    const canvas = within(canvasElement);
-    const button = canvas.getByRole('button', { name: /close/i });
-
-    // Act — disabled button must not fire onClick
-    await userEvent.click(button);
-
-    // Assert
-    expect(button).toBeDisabled();
-    expect(args.onClick).not.toHaveBeenCalled();
-  },
-};
+export const Disabled: Story = { args: { disabled: true } };

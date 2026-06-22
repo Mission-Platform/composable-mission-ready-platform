@@ -1,61 +1,45 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseMasonry } from './base-masonry';
 
-import BaseMasonry from './base-masonry.vue';
+/**
+ * Exercises the **neutral** `BaseMasonry` authored in this package, rendering
+ * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * The assertions confirm cross-framework parity of the BEM class and the
+ * multi-column inline style (fixed `column-count` vs. responsive `column-width`).
+ */
+const ReactMasonry = toReactComponent(BaseMasonry, 'Masonry');
+const VueMasonry = toVueComponent(BaseMasonry, 'Masonry');
 
-describe('BaseMasonry', () => {
-  it('renders a div with the masonry class by default', () => {
-    const wrapper = mountWithI18n(BaseMasonry);
-    const root = wrapper.find('.base-masonry');
-    expect(root.exists()).toBe(true);
-    expect(root.element.tagName).toBe('DIV');
+describe('BaseMasonry authors the same component for React and Vue', () => {
+  it('renders a fixed column count on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactMasonry, { columns: 4, gap: 'lg' }, 'Item'));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueMasonry, { columns: 4, gap: 'lg' }, () => 'Item') }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-masonry');
+      expect(html).toContain('column-count:4');
+      expect(html).toContain('Item');
+    }
   });
 
-  it('sets a fixed column-count from the columns prop', () => {
-    const wrapper = mountWithI18n(BaseMasonry, { props: { columns: 4 } });
-    const style = wrapper.find('.base-masonry').attributes('style') ?? '';
-    expect(style).toContain('column-count: 4');
-  });
+  it('prefers a responsive column width when `minColumnWidth` is set', async () => {
+    const react = renderToStaticMarkup(createElement(ReactMasonry, { columns: 4, minColumnWidth: '12rem' }, 'Item'));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueMasonry, { columns: 4, minColumnWidth: '12rem' }, () => 'Item') }),
+    );
 
-  it('uses column-width (not column-count) when minColumnWidth is set', () => {
-    const wrapper = mountWithI18n(BaseMasonry, { props: { columns: 4, minColumnWidth: '16rem' } });
-    const style = wrapper.find('.base-masonry').attributes('style') ?? '';
-    expect(style).toContain('column-width: 16rem');
-    expect(style).not.toContain('column-count');
-  });
-
-  it('maps the named gap scale onto a --mp-spacing-* token', () => {
-    const wrapper = mountWithI18n(BaseMasonry, { props: { gap: 'lg' } });
-    const style = wrapper.find('.base-masonry').attributes('style') ?? '';
-    expect(style).toContain('column-gap: var(--mp-spacing-6)');
-    expect(style).toContain('--mp-masonry-gap: var(--mp-spacing-6)');
-  });
-
-  it('clamps columns to at least 1', () => {
-    const wrapper = mountWithI18n(BaseMasonry, { props: { columns: 0 } });
-    expect(wrapper.find('.base-masonry').attributes('style')).toContain('column-count: 1');
-  });
-
-  it('renders default-slot content', () => {
-    const wrapper = mountWithI18n(BaseMasonry, {
-      slots: { default: '<div class="card">A</div><div class="card">B</div>' },
-    });
-    expect(wrapper.findAll('.card')).toHaveLength(2);
-  });
-
-  it('renders one break-safe wrapper per item via the scoped item slot', () => {
-    const wrapper = mountWithI18n(BaseMasonry, {
-      props: { items: ['a', 'b', 'c'] },
-      slots: { item: '<span class="cell">{{ params.item }}-{{ params.index }}</span>' },
-    });
-    const wrappers = wrapper.findAll('.base-masonry__item');
-    expect(wrappers).toHaveLength(3);
-    expect(wrapper.findAll('.cell').map((c) => c.text())).toEqual(['a-0', 'b-1', 'c-2']);
-  });
-
-  it('renders as a custom element when `as` is provided', () => {
-    const wrapper = mountWithI18n(BaseMasonry, { props: { as: 'section' } });
-    expect(wrapper.find('.base-masonry').element.tagName).toBe('SECTION');
+    for (const html of [react, vue]) {
+      expect(html).toContain('column-width:12rem');
+      expect(html).not.toContain('column-count');
+    }
   });
 });

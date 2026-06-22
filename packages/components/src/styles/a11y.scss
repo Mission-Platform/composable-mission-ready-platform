@@ -1,9 +1,10 @@
 /**
  * Global accessibility safety net for @mission-platform/components.
  *
- * Imported as a side effect from the package entry (`src/index.ts`) so it is
- * bundled into `@mission-platform/components/styles` (dist/components.css) and
- * applied wherever the component styles are loaded.
+ * Exposed as the package's `./styles` side-effect entry
+ * (`@mission-platform/components/styles`) so a host app can opt into the
+ * same global reset the Vue component library shipped, independent of the
+ * per-component CSS that loads automatically with each imported component.
  *
  * WCAG 2.2 — Success Criterion 2.3.3 Animation from Interactions (AAA) and
  * 2.2.2 Pause, Stop, Hide: when a user has expressed a system-level preference

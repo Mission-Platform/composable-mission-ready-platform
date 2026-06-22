@@ -1,223 +1,80 @@
-import BaseButton from '../base-button/base-button.vue';
-import BaseNavbarItem from '../base-navbar-item/base-navbar-item.vue';
-
-import BaseNavbar from './base-navbar.vue';
+import { Navbar } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `Navbar` is the Vue 3 build of the write-once `BaseNavbar` in this package.
+ * The component is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/jsx`) and compiled straight to a Vue component at build
+ * time by `@mission-platform/vite-plugin-jsx`. The very same source also ships
+ * as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Layout/BaseNavbar',
-  component: BaseNavbar,
+  component: Navbar,
   tags: ['autodocs'],
   parameters: {
+    layout: 'fullscreen',
     docs: {
       description: {
         component:
-          '`Navbar` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Navbar` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). It composes the write-once `Drawer` (mobile menu) and `Typography` (brand), with a `brand` slot, the centred default slot, and an `end` slot that collapse to a hamburger-toggled drawer below the `sm` breakpoint. Styling comes from the co-located `base-navbar.module.scss`.',
       },
     },
   },
   argTypes: {
-    sticky: { control: 'boolean' },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     brand: { control: 'text' },
+    sticky: { control: 'boolean' },
+    align: { control: 'inline-radio', options: ['start', 'center', 'end'] },
     mobileTitle: { control: 'text' },
   },
   args: {
     brand: 'Mission Platform',
     sticky: false,
-    mobileTitle: undefined,
+    align: 'start',
   },
-} satisfies Meta<typeof BaseNavbar>;
+  render: (arguments_) => ({
+    components: { Navbar },
+    setup() {
+      return { args: arguments_ };
+    },
+    template: `
+      <Navbar v-bind="args">
+        <a href="#" style="color: var(--mp-color-text-primary); text-decoration: none;">Home</a>
+        <a href="#" style="color: var(--mp-color-text-primary); text-decoration: none;">Features</a>
+        <a href="#" style="color: var(--mp-color-text-primary); text-decoration: none;">Pricing</a>
+        <template #end>
+          <button type="button" style="padding: var(--mp-spacing-2) var(--mp-spacing-4);">Sign in</button>
+        </template>
+      </Navbar>
+    `,
+  }),
+} satisfies Meta<typeof Navbar>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  parameters: { viewport: { defaultViewport: 'md' } },
+export const Default: Story = {};
+
+export const Centered: Story = { args: { align: 'center' } };
+
+export const Sticky: Story = { args: { sticky: true } };
+
+export const CustomBrand: Story = {
   render: (arguments_) => ({
-    components: { BaseNavbar, BaseNavbarItem, BaseButton },
+    components: { Navbar },
     setup() {
       return { args: arguments_ };
     },
     template: `
-      <BaseNavbar v-bind="args">
-        <BaseNavbarItem label="Home" active />
-        <BaseNavbarItem label="About" href="#about" />
-        <BaseNavbarItem label="Contact" href="#contact" />
-        <template #end>
-          <BaseButton size="sm" variant="secondary">Sign in</BaseButton>
-          <BaseButton size="sm">Sign up</BaseButton>
+      <Navbar v-bind="args">
+        <template #brand>
+          <strong style="color: var(--mp-color-primary-default);">★ Custom Brand</strong>
         </template>
-      </BaseNavbar>
+        <a href="#" style="color: var(--mp-color-text-primary); text-decoration: none;">Docs</a>
+        <a href="#" style="color: var(--mp-color-text-primary); text-decoration: none;">About</a>
+      </Navbar>
     `,
   }),
-};
-
-export const Mobile: Story = {
-  name: 'Mobile (2xs)',
-  parameters: { viewport: { defaultViewport: '2xs' } },
-  render: (arguments_) => ({
-    components: { BaseNavbar, BaseNavbarItem, BaseButton },
-    setup() {
-      return { args: arguments_ };
-    },
-    template: `
-      <BaseNavbar v-bind="args">
-        <BaseNavbarItem label="Home" active />
-        <BaseNavbarItem label="About" href="#about" />
-        <BaseNavbarItem label="Contact" href="#contact" />
-        <template #end>
-          <BaseButton size="sm" variant="secondary">Sign in</BaseButton>
-          <BaseButton size="sm">Sign up</BaseButton>
-        </template>
-      </BaseNavbar>
-    `,
-  }),
-};
-
-export const Tablet: Story = {
-  name: 'Tablet (sm)',
-  parameters: { viewport: { defaultViewport: 'sm' } },
-  render: (arguments_) => ({
-    components: { BaseNavbar, BaseNavbarItem, BaseButton },
-    setup() {
-      return { args: arguments_ };
-    },
-    template: `
-      <BaseNavbar v-bind="args">
-        <BaseNavbarItem label="Home" active />
-        <BaseNavbarItem label="About" href="#about" />
-        <BaseNavbarItem label="Contact" href="#contact" />
-        <template #end>
-          <BaseButton size="sm" variant="secondary">Sign in</BaseButton>
-          <BaseButton size="sm">Sign up</BaseButton>
-        </template>
-      </BaseNavbar>
-    `,
-  }),
-};
-
-export const WithNestedItems: Story = {
-  name: 'With Nested Items',
-  render: (arguments_) => ({
-    components: { BaseNavbar, BaseNavbarItem, BaseButton },
-    setup() {
-      const servicesChildren = [
-        { label: 'Care Planning', href: '#care-planning' },
-        { label: 'Health Monitoring', href: '#health-monitoring' },
-        { label: 'Appointments', href: '#appointments' },
-        { label: 'Prescriptions', href: '#prescriptions' },
-      ];
-      const resourcesChildren = [
-        { label: 'Documentation', href: '#docs' },
-        { label: 'API Reference', href: '#api' },
-        { label: 'Support', href: '#support' },
-        { label: 'Community', href: '#community' },
-      ];
-      return { args: arguments_, servicesChildren, resourcesChildren };
-    },
-    template: `
-      <BaseNavbar v-bind="args">
-        <BaseNavbarItem label="Home" active />
-        <BaseNavbarItem label="Services" :children="servicesChildren" />
-        <BaseNavbarItem label="Resources" :children="resourcesChildren" />
-        <BaseNavbarItem label="About" href="#about" />
-        <template #end>
-          <BaseButton size="sm" variant="secondary">Sign in</BaseButton>
-          <BaseButton size="sm">Sign up</BaseButton>
-        </template>
-      </BaseNavbar>
-    `,
-  }),
-};
-
-export const WithDeepNesting: Story = {
-  name: 'With Mixed Items',
-  render: (arguments_) => ({
-    components: { BaseNavbar, BaseNavbarItem, BaseButton },
-    setup() {
-      const platformChildren = [
-        { label: 'Patient Records', href: '#patients', icon: '👤' },
-        { label: 'Care Notes', href: '#care-notes', icon: '📝' },
-        { label: 'Appointments', href: '#appointments', icon: '📅' },
-        { label: 'Clinical Overview', href: '#clinical', icon: '🩺' },
-        { label: 'Lab Results', href: '#labs', icon: '🔬' },
-        { label: 'User Management', href: '#users', icon: '⚙️' },
-        { label: 'Settings', href: '#settings', icon: '🛠️', disabled: true },
-      ];
-      return { args: arguments_, platformChildren };
-    },
-    template: `
-      <BaseNavbar v-bind="args">
-        <BaseNavbarItem label="Home" active />
-        <BaseNavbarItem label="Platform" :children="platformChildren" />
-        <BaseNavbarItem label="Reports" href="#reports" />
-        <BaseNavbarItem label="Help" href="#help" />
-        <template #end>
-          <BaseButton size="sm" variant="secondary">Sign in</BaseButton>
-          <BaseButton size="sm">Sign up</BaseButton>
-        </template>
-      </BaseNavbar>
-    `,
-  }),
-};
-
-export const WithNavbarItems: Story = {
-  name: 'All States',
-  render: (arguments_) => ({
-    components: { BaseNavbar, BaseNavbarItem, BaseButton },
-    setup() {
-      return { args: arguments_ };
-    },
-    template: `
-      <BaseNavbar v-bind="args">
-        <BaseNavbarItem label="Default" />
-        <BaseNavbarItem label="Active" active />
-        <BaseNavbarItem label="As Link" href="#link" />
-        <BaseNavbarItem label="Primary" variant="primary" />
-        <BaseNavbarItem label="Disabled" disabled />
-        <template #end>
-          <BaseButton size="sm" variant="secondary">Sign in</BaseButton>
-          <BaseButton size="sm">Sign up</BaseButton>
-        </template>
-      </BaseNavbar>
-    `,
-  }),
-};
-
-export const MobileWithDrawer: Story = {
-  name: 'Mobile with Drawer (2xs)',
-  parameters: { viewport: { defaultViewport: '2xs' } },
-  render: (arguments_) => ({
-    components: { BaseNavbar, BaseNavbarItem, BaseButton },
-    setup() {
-      const servicesChildren = [
-        { label: 'Care Planning', href: '#care-planning' },
-        { label: 'Health Monitoring', href: '#health-monitoring' },
-        { label: 'Appointments', href: '#appointments' },
-      ];
-      return { args: arguments_, servicesChildren };
-    },
-    template: `
-      <BaseNavbar v-bind="args">
-        <BaseNavbarItem label="Home" active />
-        <BaseNavbarItem label="Services" :children="servicesChildren" />
-        <BaseNavbarItem label="Reports" href="#reports" />
-        <BaseNavbarItem label="Admin" disabled />
-        <template #end>
-          <BaseButton size="sm" variant="secondary">Sign in</BaseButton>
-          <BaseButton size="sm">Sign up</BaseButton>
-        </template>
-      </BaseNavbar>
-    `,
-  }),
-  args: {
-    brand: 'Mission Platform',
-    mobileTitle: 'Navigation',
-  },
-};
-
-export const Sticky: Story = {
-  parameters: { viewport: { defaultViewport: 'md' } },
-  args: { sticky: true },
 };

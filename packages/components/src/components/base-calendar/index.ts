@@ -1,2 +1,1 @@
-export { default } from './base-calendar.vue';
-export type { CalendarSize } from './base-calendar.vue';
+export { BaseCalendar, type CalendarProperties, type CalendarSize } from './base-calendar';

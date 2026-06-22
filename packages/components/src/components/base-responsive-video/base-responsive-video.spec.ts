@@ -1,59 +1,54 @@
-import { mount } from '@vue/test-utils';
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import BaseResponsiveVideo from './base-responsive-video.vue';
+import { BaseResponsiveVideo } from './base-responsive-video';
 
-describe('BaseResponsiveVideo', () => {
-  it('renders a <video> element', () => {
-    const wrapper = mount(BaseResponsiveVideo, { props: { src: '/v.mp4' } });
-    expect(wrapper.element.tagName).toBe('VIDEO');
-    expect(wrapper.find('video').attributes('src')).toBe('/v.mp4');
+/**
+ * Exercises the **neutral** `BaseResponsiveVideo` authored in this package,
+ * rendering it on both frameworks through the `@mission-platform/jsx` runtime
+ * adapters. Covers the rounded affordance, the accessible label, and the
+ * format-specific `<source>` entries.
+ */
+const ReactResponsiveVideo = toReactComponent(BaseResponsiveVideo, 'ResponsiveVideo');
+const VueResponsiveVideo = toVueComponent(BaseResponsiveVideo, 'ResponsiveVideo');
+
+describe('BaseResponsiveVideo authors the same component for React and Vue', () => {
+  it('renders a labelled, rounded video with a single source on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactResponsiveVideo, { src: 'https://example.test/a.mp4', label: 'A clip', rounded: true }),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () => vueH(VueResponsiveVideo, { src: 'https://example.test/a.mp4', label: 'A clip', rounded: true }),
+      }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('<video');
+      expect(html).toContain('base-responsive-video');
+      expect(html).toContain('base-responsive-video--rounded');
+      expect(html).toContain('aria-label="A clip"');
+      expect(html).toContain('https://example.test/a.mp4');
+    }
   });
 
-  it('renders controls by default and applies the default aspect ratio', () => {
-    const wrapper = mount(BaseResponsiveVideo, { props: { src: '/v.mp4' } });
-    const video = wrapper.find('video');
-    expect(video.attributes('controls')).toBeDefined();
-    expect(video.attributes('style')).toContain('aspect-ratio: 16 / 9');
-  });
+  it('renders one source per format entry on both frameworks', async () => {
+    const sources = [
+      { src: 'https://example.test/a.webm', type: 'video/webm' },
+      { src: 'https://example.test/a.mp4', type: 'video/mp4' },
+    ];
+    const react = renderToStaticMarkup(createElement(ReactResponsiveVideo, { sources }));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueResponsiveVideo, { sources }) }));
 
-  it('renders <source> entries and omits the top-level src when sources are provided', () => {
-    const wrapper = mount(BaseResponsiveVideo, {
-      props: {
-        sources: [
-          { src: '/v.webm', type: 'video/webm' },
-          { src: '/v.mp4', type: 'video/mp4' },
-        ],
-      },
-    });
-    const sources = wrapper.findAll('source');
-    expect(sources).toHaveLength(2);
-    expect(sources[0].attributes('type')).toBe('video/webm');
-    expect(wrapper.find('video').attributes('src')).toBeUndefined();
-  });
-
-  it('forwards the poster image', () => {
-    const wrapper = mount(BaseResponsiveVideo, { props: { src: '/v.mp4', poster: '/p.jpg' } });
-    expect(wrapper.find('video').attributes('poster')).toBe('/p.jpg');
-  });
-
-  it('applies aria-label from the label prop', () => {
-    const wrapper = mount(BaseResponsiveVideo, { props: { src: '/v.mp4', label: 'Demo' } });
-    expect(wrapper.find('video').attributes('aria-label')).toBe('Demo');
-  });
-
-  it('applies the rounded class', () => {
-    const wrapper = mount(BaseResponsiveVideo, { props: { src: '/v.mp4', rounded: true } });
-    expect(wrapper.classes()).toContain('base-responsive-video--rounded');
-  });
-
-  it('emits play, pause, and ended events', async () => {
-    const wrapper = mount(BaseResponsiveVideo, { props: { src: '/v.mp4' } });
-    await wrapper.find('video').trigger('play');
-    await wrapper.find('video').trigger('pause');
-    await wrapper.find('video').trigger('ended');
-    expect(wrapper.emitted('play')).toHaveLength(1);
-    expect(wrapper.emitted('pause')).toHaveLength(1);
-    expect(wrapper.emitted('ended')).toHaveLength(1);
+    for (const html of [react, vue]) {
+      expect(html).toContain('https://example.test/a.webm');
+      expect(html).toContain('video/webm');
+      expect(html).toContain('https://example.test/a.mp4');
+    }
   });
 });

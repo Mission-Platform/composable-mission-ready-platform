@@ -1,1 +1,1 @@
-export { default } from './base-chat-area.vue';
+export { BaseChatArea, type ChatAreaProperties } from './base-chat-area';

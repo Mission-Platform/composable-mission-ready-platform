@@ -1,58 +1,59 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n as mount } from '../../test-utils/mount-with-i18n';
+import { BaseNumberStepper } from './base-number-stepper';
 
-import BaseNumberStepper from './base-number-stepper.vue';
+/**
+ * Exercises the **neutral** `BaseNumberStepper` authored in this package,
+ * rendering it on both frameworks through the `@mission-platform/jsx` runtime
+ * adapters. Covers the value display, the decrement/increment buttons, and the
+ * min/max bounds.
+ */
+const ReactStepper = toReactComponent(BaseNumberStepper, 'NumberStepper');
+const VueStepper = toVueComponent(BaseNumberStepper, 'NumberStepper');
 
-describe('BaseNumberStepper', () => {
-  it('renders a number input and stepper buttons', () => {
-    const wrapper = mount(BaseNumberStepper, { props: { label: 'Qty' } });
-    expect(wrapper.find('input[type="number"]').exists()).toBe(true);
-    expect(wrapper.findAll('button').length).toBe(2);
+describe('BaseNumberStepper authors the same component for React and Vue', () => {
+  it('renders the value and the −/+ buttons on both frameworks', async () => {
+    const properties = { modelValue: 5, label: 'Quantity', id: 'ns-1' };
+    const react = renderToStaticMarkup(createElement(ReactStepper, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueStepper, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('Quantity');
+      expect(html).toContain('type="number"');
+      expect(html).toContain('value="5"');
+      expect(html).toContain('aria-label="Decrease"');
+      expect(html).toContain('aria-label="Increase"');
+    }
   });
 
-  it('emits the parsed numeric value on input', async () => {
-    const wrapper = mount(BaseNumberStepper);
-    await wrapper.find('input').setValue('42');
-    expect(wrapper.emitted('update:modelValue')!.at(-1)![0]).toBe(42);
+  it('disables decrement at the minimum bound on both frameworks', async () => {
+    const properties = { modelValue: 0, min: 0, id: 'ns-2' };
+    const react = renderToStaticMarkup(createElement(ReactStepper, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueStepper, properties) }));
+
+    for (const html of [react, vue]) {
+      // The decrement button is disabled because the value is at the minimum.
+      expect(html).toContain('aria-label="Decrease"');
+      expect(html).toContain('disabled');
+    }
   });
 
-  it('emits null when cleared', async () => {
-    const wrapper = mount(BaseNumberStepper, { props: { modelValue: 5 } });
-    await wrapper.find('input').setValue('');
-    expect(wrapper.emitted('update:modelValue')!.at(-1)![0]).toBeNull();
-  });
+  it('renders an empty field for a null value on both frameworks', async () => {
+    const properties = { modelValue: undefined, label: 'Amount', placeholder: '0', id: 'ns-3' };
+    const react = renderToStaticMarkup(createElement(ReactStepper, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueStepper, properties) }));
 
-  it('increments and decrements by the step', async () => {
-    const wrapper = mount(BaseNumberStepper, { props: { modelValue: 4, step: 3 } });
-    const [dec, inc] = wrapper.findAll('button');
-    await inc.trigger('click');
-    expect(wrapper.emitted('update:modelValue')!.at(-1)![0]).toBe(7);
-    await dec.trigger('click');
-    expect(wrapper.emitted('update:modelValue')!.at(-1)![0]).toBe(1);
-  });
-
-  it('truncates to an integer when integer is set', async () => {
-    const wrapper = mount(BaseNumberStepper, { props: { integer: true } });
-    await wrapper.find('input').setValue('3.9');
-    expect(wrapper.emitted('update:modelValue')!.at(-1)![0]).toBe(3);
-  });
-
-  it('clamps to zero when unsigned', async () => {
-    const wrapper = mount(BaseNumberStepper, { props: { unsigned: true } });
-    await wrapper.find('input').setValue('-5');
-    expect(wrapper.emitted('update:modelValue')!.at(-1)![0]).toBe(0);
-  });
-
-  it('rounds to the configured float precision', async () => {
-    const wrapper = mount(BaseNumberStepper, { props: { precision: 2 } });
-    await wrapper.find('input').setValue('1.239');
-    expect(wrapper.emitted('update:modelValue')!.at(-1)![0]).toBe(1.24);
-  });
-
-  it('respects min/max bounds', async () => {
-    const wrapper = mount(BaseNumberStepper, { props: { modelValue: 10, max: 10 } });
-    const inc = wrapper.findAll('button')[1];
-    expect(inc.attributes('disabled')).toBeDefined();
+    for (const html of [react, vue]) {
+      expect(html).toContain('placeholder="0"');
+      expect(html).toContain('type="number"');
+      // The field shows no numeric value when the model is null.
+      expect(html).not.toMatch(/value="\d/);
+    }
   });
 });

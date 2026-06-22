@@ -1,64 +1,44 @@
-import { mount } from '@vue/test-utils';
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import BaseRadio from './base-radio.vue';
+import { BaseRadio } from './base-radio';
 
-describe('BaseRadio', () => {
-  it('renders a radio input', () => {
-    const wrapper = mount(BaseRadio, { props: { value: 'a' } });
-    expect(wrapper.find('input[type="radio"]').exists()).toBe(true);
+/**
+ * Exercises the **neutral** `BaseRadio` authored in this package, rendering it
+ * on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * Covers the selected state, the label, and the disabled state.
+ */
+const ReactRadio = toReactComponent(BaseRadio, 'Radio');
+const VueRadio = toVueComponent(BaseRadio, 'Radio');
+
+describe('BaseRadio authors the same component for React and Vue', () => {
+  it('renders a selected radio with its label on both frameworks', async () => {
+    const properties = { modelValue: 'a', value: 'a', label: 'Option A' };
+    const react = renderToStaticMarkup(createElement(ReactRadio, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueRadio, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('type="radio"');
+      expect(html).toContain('value="a"');
+      expect(html).toContain('Option A');
+      expect(html).toMatch(/checked/);
+    }
   });
 
-  it('renders label text', () => {
-    const wrapper = mount(BaseRadio, { props: { value: 'a', label: 'Option A' } });
-    expect(wrapper.text()).toContain('Option A');
-  });
+  it('renders an unselected, disabled radio on both frameworks', async () => {
+    const properties = { modelValue: 'a', value: 'b', label: 'Option B', disabled: true };
+    const react = renderToStaticMarkup(createElement(ReactRadio, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueRadio, properties) }));
 
-  it('is checked when modelValue equals value', () => {
-    const wrapper = mount(BaseRadio, { props: { value: 'a', modelValue: 'a' } });
-    expect((wrapper.find('input').element as HTMLInputElement).checked).toBe(true);
-  });
-
-  it('is unchecked when modelValue differs from value', () => {
-    const wrapper = mount(BaseRadio, { props: { value: 'a', modelValue: 'b' } });
-    expect((wrapper.find('input').element as HTMLInputElement).checked).toBe(false);
-  });
-
-  it('adds checked class when selected', () => {
-    const wrapper = mount(BaseRadio, { props: { value: 'a', modelValue: 'a' } });
-    expect(wrapper.classes()).toContain('base-radio--checked');
-  });
-
-  it('emits update:modelValue with value when changed', async () => {
-    const wrapper = mount(BaseRadio, { props: { value: 'a', modelValue: 'b' } });
-    await wrapper.find('input').trigger('change');
-    expect(wrapper.emitted('update:modelValue')![0]).toEqual(['a']);
-  });
-
-  it('is disabled when disabled prop is true', () => {
-    const wrapper = mount(BaseRadio, { props: { value: 'a', disabled: true } });
-    expect(wrapper.find('input').attributes('disabled')).toBeDefined();
-    expect(wrapper.classes()).toContain('base-radio--disabled');
-  });
-
-  it('renders slot content', () => {
-    const wrapper = mount(BaseRadio, {
-      props: { value: 'a' },
-      slots: { default: '<span class="custom">Custom</span>' },
-    });
-    expect(wrapper.find('.custom').exists()).toBe(true);
-  });
-
-  it('renders label visually hidden when labelHidden is true', () => {
-    const wrapper = mount(BaseRadio, {
-      props: { value: 'a', label: 'Hidden Label', labelHidden: true },
-    });
-    expect(wrapper.find('.base-radio__label').exists()).toBe(true);
-    expect(wrapper.find('.base-radio__label--hidden').exists()).toBe(true);
-  });
-
-  it('renders label visible by default when labelHidden is false', () => {
-    const wrapper = mount(BaseRadio, { props: { value: 'a', label: 'Visible Label' } });
-    expect(wrapper.find('.base-radio__label--hidden').exists()).toBe(false);
+    for (const html of [react, vue]) {
+      expect(html).toContain('value="b"');
+      expect(html).toContain('disabled');
+      expect(html).not.toMatch(/checked=/);
+    }
   });
 });

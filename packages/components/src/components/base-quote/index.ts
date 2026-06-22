@@ -1,2 +1,1 @@
-export { default } from './base-quote.vue';
-export type { QuoteVariant, QuoteSize } from './base-quote.vue';
+export { BaseQuote, type QuoteProperties, type QuoteSize, type QuoteVariant } from './base-quote';

@@ -1,0 +1,152 @@
+/**
+ * Styling for the write-once `BasePhoneInput`.
+ *
+ * `BasePhoneInput` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its BEM appearance ships in the built package CSS (the two-stage
+ * compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package.
+ */
+
+@layer mp.components {
+  .base-phone-input {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mp-spacing-1);
+
+    &__label {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+
+      &--hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border: 0;
+      }
+    }
+
+    &__required {
+      color: var(--mp-color-danger-default);
+      margin-left: 2px;
+    }
+
+    &__wrapper {
+      display: flex;
+      align-items: stretch;
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-md);
+      background-color: var(--mp-color-bg-surface);
+      overflow: hidden;
+      transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease;
+
+      &:focus-within {
+        border-color: var(--mp-color-border-focus);
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+    }
+
+    &__country {
+      flex-shrink: 0;
+      max-width: 8rem;
+      border: none;
+      border-right: 1px solid var(--mp-color-border-default);
+      outline: none;
+      background-color: var(--mp-color-bg-muted);
+      color: var(--mp-color-text-primary);
+      font-family: var(--mp-font-family-sans);
+      cursor: pointer;
+
+      &:disabled {
+        cursor: not-allowed;
+      }
+    }
+
+    &__dial {
+      display: flex;
+      align-items: center;
+      padding-left: var(--mp-spacing-2);
+      color: var(--mp-color-text-secondary);
+      font-family: var(--mp-font-family-sans);
+      user-select: none;
+    }
+
+    &__field {
+      flex: 1;
+      width: 100%;
+      min-width: 0;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--mp-color-text-primary);
+      font-family: var(--mp-font-family-sans);
+      line-height: var(--mp-line-height-normal);
+
+      &::placeholder {
+        color: var(--mp-color-text-tertiary);
+      }
+    }
+
+    &__status {
+      display: flex;
+      align-items: center;
+      padding-right: var(--mp-spacing-2);
+      color: var(--mp-color-text-tertiary);
+      user-select: none;
+    }
+
+    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+      &--#{$size} .base-phone-input__field,
+      &--#{$size} .base-phone-input__country {
+        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+        font-size: var(--mp-size-font-#{$size});
+      }
+    }
+
+    &--valid .base-phone-input__status {
+      color: var(--mp-color-success-default);
+    }
+
+    &--error {
+      .base-phone-input__wrapper {
+        border-color: var(--mp-color-danger-default);
+
+        &:focus-within {
+          box-shadow: var(--mp-shadow-focus-danger);
+        }
+      }
+
+      .base-phone-input__status {
+        color: var(--mp-color-danger-default);
+      }
+    }
+
+    &--disabled {
+      opacity: 0.5;
+      pointer-events: none;
+
+      .base-phone-input__wrapper {
+        background-color: var(--mp-color-bg-muted);
+        cursor: not-allowed;
+      }
+    }
+
+    &__error {
+      color: var(--mp-color-danger-text);
+      margin: 0;
+    }
+
+    &__hint {
+      margin: 0;
+    }
+  }
+}

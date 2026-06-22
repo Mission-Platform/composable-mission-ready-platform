@@ -1,1 +1,1 @@
-export { default } from './base-radio.vue';
+export { BaseRadio, type RadioProperties } from './base-radio';

@@ -1,243 +1,79 @@
-import { expect, userEvent, waitForElementToBeRemoved, within } from 'storybook/test';
 import { ref } from 'vue';
 
-import BaseButton from '../base-button/base-button.vue';
-
-import BaseDropdown from './base-dropdown.vue';
+import { Button, Dropdown, Stack } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `Dropdown` is the Vue 3 build of the write-once `BaseDropdown` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Overlays/BaseDropdown',
-  component: BaseDropdown,
+  component: Dropdown,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`Dropdown` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Dropdown` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). The trigger is the `trigger` named slot and the menu is the default slot. The panel is portalled to `document.body` through the neutral `<Teleport>` primitive (compiled to React `createPortal` / Vue `<Teleport>`) and stays anchored to its trigger via the CSS Anchor Positioning API (`anchor-name`/`position-anchor`/`position-area` + `position-try-fallbacks`) instead of `@floating-ui`; `matchTriggerWidth` uses CSS `anchor-size(width)` with no JS measurement. This example composes the package’s own `Button` (trigger) and `Stack` + ghost `Button`s (menu items). Styling comes from the co-located `base-dropdown.module.scss`.',
       },
     },
   },
   argTypes: {
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     placement: {
       control: 'select',
       options: ['bottom-start', 'bottom-end', 'bottom', 'top-start', 'top-end', 'top'],
     },
-    maxHeight: { control: 'text' },
     matchTriggerWidth: { control: 'boolean' },
+    maxHeight: { control: 'text' },
     closeOnOutsideClick: { control: 'boolean' },
-    open: { control: 'boolean' },
   },
   args: {
-    open: false,
     placement: 'bottom-start',
     matchTriggerWidth: true,
     maxHeight: '240px',
     closeOnOutsideClick: true,
   },
-} satisfies Meta<typeof BaseDropdown>;
+  render: (arguments_) => ({
+    components: { Dropdown, Button, Stack },
+    setup() {
+      const open = ref(false);
+      const choose = (): void => {
+        open.value = false;
+      };
+      return { args: arguments_, open, choose };
+    },
+    template: `
+      <div style="padding: 4rem; display: flex; justify-content: center;">
+        <Dropdown v-bind="args" :open="open" @update-open="open = $event" @close="open = false">
+          <template #trigger>
+            <Button variant="secondary" @click="open = !open">Menu ▾</Button>
+          </template>
+          <Stack gap="2xs">
+            <Button variant="tertiary" @click="choose">Profile</Button>
+            <Button variant="tertiary" @click="choose">Settings</Button>
+            <Button variant="tertiary" @click="choose">Sign out</Button>
+          </Stack>
+        </Dropdown>
+      </div>
+    `,
+  }),
+} satisfies Meta<typeof Dropdown>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const itemStyle = 'padding: 0.5rem 1rem; cursor: pointer; list-style: none; white-space: nowrap;';
-const ulStyle = 'list-style: none; margin: 0; padding: 0;';
+export const Default: Story = {};
 
-export const Default: Story = {
-  render: () => ({
-    components: { BaseDropdown, BaseButton },
-    setup() {
-      const open = ref(false);
-      return { open };
-    },
-    template: `
-      <BaseDropdown v-model:open="open">
-        <template #trigger>
-          <BaseButton @click="open = !open">Open dropdown</BaseButton>
-        </template>
-        <ul style="${ulStyle}">
-          <li style="${itemStyle}">Option 1</li>
-          <li style="${itemStyle}">Option 2</li>
-          <li style="${itemStyle}">Option 3</li>
-        </ul>
-      </BaseDropdown>
-    `,
-  }),
-  play: async ({ canvasElement }) => {
-    // Arrange
-    const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: /open dropdown/i });
+export const BottomEnd: Story = { args: { placement: 'bottom-end' } };
 
-    // Act — open
-    await userEvent.click(trigger);
+export const Top: Story = { args: { placement: 'top' } };
 
-    // Assert — dropdown panel is visible
-    const panel = canvasElement.querySelector('.base-dropdown');
-    expect(panel).toBeInTheDocument();
+export const IntrinsicWidth: Story = { args: { matchTriggerWidth: false } };
 
-    // Act — close
-    await userEvent.click(trigger);
-
-    // Assert — dropdown panel is removed (wait for CSS transition to complete)
-    await waitForElementToBeRemoved(() => canvasElement.querySelector('.base-dropdown'));
-  },
-};
-
-export const OpenByDefault: Story = {
-  render: () => ({
-    components: { BaseDropdown, BaseButton },
-    setup() {
-      const open = ref(true);
-      return { open };
-    },
-    template: `
-      <BaseDropdown v-model:open="open">
-        <template #trigger>
-          <BaseButton @click="open = !open">Toggle dropdown</BaseButton>
-        </template>
-        <ul style="${ulStyle}">
-          <li style="${itemStyle}">Option A</li>
-          <li style="${itemStyle}">Option B</li>
-          <li style="${itemStyle}">Option C</li>
-        </ul>
-      </BaseDropdown>
-    `,
-  }),
-  play: async ({ canvasElement }) => {
-    // Assert — dropdown panel rendered immediately
-    expect(canvasElement.querySelector('.base-dropdown')).toBeInTheDocument();
-  },
-};
-
-export const PlacementTopStart: Story = {
-  render: () => ({
-    components: { BaseDropdown, BaseButton },
-    setup() {
-      const open = ref(true);
-      return { open };
-    },
-    template: `
-      <div style="padding-top: 120px;">
-        <BaseDropdown v-model:open="open" placement="top-start">
-          <template #trigger>
-            <BaseButton @click="open = !open">Top-start</BaseButton>
-          </template>
-          <ul style="${ulStyle}">
-            <li style="${itemStyle}">Option 1</li>
-            <li style="${itemStyle}">Option 2</li>
-            <li style="${itemStyle}">Option 3</li>
-          </ul>
-        </BaseDropdown>
-      </div>
-    `,
-  }),
-};
-
-export const PlacementBottomEnd: Story = {
-  render: () => ({
-    components: { BaseDropdown, BaseButton },
-    setup() {
-      const open = ref(true);
-      return { open };
-    },
-    template: `
-      <BaseDropdown v-model:open="open" placement="bottom-end">
-        <template #trigger>
-          <BaseButton @click="open = !open">Bottom-end</BaseButton>
-        </template>
-        <ul style="${ulStyle}">
-          <li style="${itemStyle}">Option 1</li>
-          <li style="${itemStyle}">Option 2</li>
-          <li style="${itemStyle}">Option 3</li>
-        </ul>
-      </BaseDropdown>
-    `,
-  }),
-};
-
-export const NoMatchTriggerWidth: Story = {
-  render: () => ({
-    components: { BaseDropdown, BaseButton },
-    setup() {
-      const open = ref(true);
-      return { open };
-    },
-    template: `
-      <BaseDropdown v-model:open="open" :match-trigger-width="false">
-        <template #trigger>
-          <BaseButton @click="open = !open">Short</BaseButton>
-        </template>
-        <ul style="${ulStyle}">
-          <li style="${itemStyle}">A much longer option label</li>
-          <li style="${itemStyle}">Another long option label</li>
-          <li style="${itemStyle}">Short</li>
-        </ul>
-      </BaseDropdown>
-    `,
-  }),
-};
-
-export const CustomMaxHeight: Story = {
-  render: () => ({
-    components: { BaseDropdown, BaseButton },
-    setup() {
-      const open = ref(true);
-      const items = Array.from({ length: 12 }, (_, index) => `Option ${index + 1}`);
-      return { open, items };
-    },
-    template: `
-      <BaseDropdown v-model:open="open" max-height="120px">
-        <template #trigger>
-          <BaseButton @click="open = !open">Scrollable dropdown</BaseButton>
-        </template>
-        <ul style="${ulStyle}">
-          <li v-for="item in items" :key="item" style="${itemStyle}">{{ item }}</li>
-        </ul>
-      </BaseDropdown>
-    `,
-  }),
-  play: async ({ canvasElement }) => {
-    // Arrange — dropdown panel is visible
-    const panel = canvasElement.querySelector('.base-dropdown') as HTMLElement;
-
-    // Assert — maxHeight is applied as inline style
-    expect(panel).toHaveStyle({ maxHeight: '120px' });
-  },
-};
-
-export const CloseOnOutsideClickDisabled: Story = {
-  render: () => ({
-    components: { BaseDropdown, BaseButton },
-    setup() {
-      const open = ref(true);
-      return { open };
-    },
-    template: `
-      <div>
-        <BaseDropdown v-model:open="open" :close-on-outside-click="false">
-          <template #trigger>
-            <BaseButton @click="open = !open">Stays open</BaseButton>
-          </template>
-          <ul style="${ulStyle}">
-            <li style="${itemStyle}">Click outside — stays open</li>
-            <li style="${itemStyle}">Option 2</li>
-          </ul>
-        </BaseDropdown>
-        <p id="outside" style="margin-top: 8rem; font-size: 0.875rem; color: #4b5563;">Click here — dropdown stays open.</p>
-      </div>
-    `,
-  }),
-  play: async ({ canvasElement }) => {
-    // Arrange — dropdown is open
-    const canvas = within(canvasElement);
-    expect(canvasElement.querySelector('.base-dropdown')).toBeInTheDocument();
-
-    // Act — click outside the dropdown
-    const outside = canvas.getByText(/click here/i);
-    await userEvent.click(outside);
-
-    // Assert — panel is still visible because closeOnOutsideClick=false
-    expect(canvasElement.querySelector('.base-dropdown')).toBeInTheDocument();
-  },
-};
+export const ShortMaxHeight: Story = { args: { maxHeight: '120px' } };

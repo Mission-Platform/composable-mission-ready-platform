@@ -1,70 +1,63 @@
 import { ref } from 'vue';
 
-import BaseTypography from '../base-typography/base-typography.vue';
-
-import BaseOtpInput from './base-otp-input.vue';
+import { OtpInput } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `OtpInput` is the Vue 3 build of the write-once `BaseOtpInput` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Forms/BaseOtpInput',
-  component: BaseOtpInput,
+  component: OtpInput,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Cross-framework `OtpInput` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). `length` single-character cells bound to one string `modelValue`; typing advances focus, Backspace steps back, and pasting distributes the code. The Vue template ref-array is replaced with a container ref + `querySelectorAll`, and the `v-model` + `complete` emit become the `onUpdateModelValue`/`onComplete` callback props. Styling comes from the co-located `base-otp-input.module.scss`.',
+      },
+    },
+  },
   argTypes: {
-    length: { control: { type: 'number', min: 2, max: 10 } },
     type: { control: 'inline-radio', options: ['numeric', 'alphanumeric', 'text'] },
-    size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
-    disabled: { control: 'boolean' },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     mask: { control: 'boolean' },
-    autofocus: { control: 'boolean' },
+    disabled: { control: 'boolean' },
   },
   args: {
     length: 6,
     type: 'numeric',
     size: 'md',
-    disabled: false,
     mask: false,
-    autofocus: false,
-    ariaLabel: 'One-time passcode',
+    disabled: false,
+    ariaLabel: 'One-time code',
   },
-  parameters: {
-    docs: {
-      description: {
-        component:
-          '`OtpInput` is a segmented one-time-password / verification-code field bound to a single string `v-model`. Typing auto-advances, `Backspace` steps back, and pasting a full code fills every cell. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
-      },
+  render: (arguments_) => ({
+    components: { OtpInput },
+    setup() {
+      const value = ref(arguments_.modelValue ?? '');
+      return { args: arguments_, value };
     },
-  },
-} satisfies Meta<typeof BaseOtpInput>;
+    template: '<OtpInput v-bind="args" :model-value="value" @update-model-value="value = $event" />',
+  }),
+} satisfies Meta<typeof OtpInput>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const renderWithModel: Story['render'] = (arguments_) => ({
-  components: { BaseOtpInput, BaseTypography },
-  setup() {
-    const code = ref('');
-    return { args: arguments_, code };
-  },
-  template: `
-    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start;">
-      <BaseOtpInput v-bind="args" v-model="code" />
-      <BaseTypography variant="body-sm" color="secondary">Value: {{ code || '—' }}</BaseTypography>
-    </div>
-  `,
-});
+export const Default: Story = {};
 
-/** A six-digit numeric code (the default). */
-export const Numeric: Story = { render: renderWithModel };
+export const Filled: Story = { args: { modelValue: '123456' } };
 
-/** A four-cell code, e.g. for short PINs. */
-export const FourDigits: Story = { args: { length: 4 }, render: renderWithModel };
+export const FourDigits: Story = { args: { length: 4, modelValue: '12' } };
 
-/** Accepts letters and digits — handy for alphanumeric activation codes. */
-export const Alphanumeric: Story = { args: { type: 'alphanumeric' }, render: renderWithModel };
+export const Alphanumeric: Story = { args: { type: 'alphanumeric', length: 5 } };
 
-/** Masked cells obscure sensitive codes. */
-export const Masked: Story = { args: { mask: true }, render: renderWithModel };
+export const Masked: Story = { args: { mask: true, modelValue: '4242' } };
 
-/** Disabled state. */
-export const Disabled: Story = { args: { disabled: true }, render: renderWithModel };
+export const Disabled: Story = { args: { disabled: true, modelValue: '000' } };

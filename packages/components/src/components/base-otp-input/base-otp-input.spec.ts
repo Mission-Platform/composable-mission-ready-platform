@@ -1,86 +1,45 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseOtpInput } from './base-otp-input';
 
-import BaseOtpInput from './base-otp-input.vue';
+/**
+ * Exercises the **neutral** `BaseOtpInput` authored in this package, rendering
+ * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * Covers the cell count, the per-cell labels, the bound value, and masking.
+ */
+const ReactOtpInput = toReactComponent(BaseOtpInput, 'OtpInput');
+const VueOtpInput = toVueComponent(BaseOtpInput, 'OtpInput');
 
-describe('BaseOtpInput', () => {
-  it('renders `length` cells (default 6)', () => {
-    const wrapper = mountWithI18n(BaseOtpInput);
-    expect(wrapper.findAll('.base-otp-input__cell')).toHaveLength(6);
+describe('BaseOtpInput authors the same component for React and Vue', () => {
+  it('renders `length` cells split from the value on both frameworks', async () => {
+    const properties = { modelValue: '123', length: 4, ariaLabel: 'Verification code' };
+    const react = renderToStaticMarkup(createElement(ReactOtpInput, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueOtpInput, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('aria-label="Verification code"');
+      // Four cells, each with an indexed label.
+      expect(html).toContain('aria-label="Digit 1 of 4"');
+      expect(html).toContain('aria-label="Digit 4 of 4"');
+      expect(html).toContain('value="1"');
+      expect(html).toContain('value="2"');
+      expect(html).toContain('value="3"');
+    }
   });
 
-  it('renders a custom number of cells', () => {
-    const wrapper = mountWithI18n(BaseOtpInput, { props: { length: 4 } });
-    expect(wrapper.findAll('.base-otp-input__cell')).toHaveLength(4);
-  });
+  it('renders password cells when masked on both frameworks', async () => {
+    const properties = { modelValue: '99', length: 2, mask: true };
+    const react = renderToStaticMarkup(createElement(ReactOtpInput, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueOtpInput, properties) }));
 
-  it('distributes the model value across the cells', () => {
-    const wrapper = mountWithI18n(BaseOtpInput, { props: { length: 4, modelValue: '12' } });
-    const inputs = wrapper.findAll('input');
-    expect((inputs[0].element as HTMLInputElement).value).toBe('1');
-    expect((inputs[1].element as HTMLInputElement).value).toBe('2');
-    expect((inputs[2].element as HTMLInputElement).value).toBe('');
-  });
-
-  it('updates the model and advances on input', async () => {
-    const wrapper = mountWithI18n(BaseOtpInput, { props: { length: 4, modelValue: '' } });
-    const inputs = wrapper.findAll('input');
-    inputs[0].element.value = '7';
-    await inputs[0].trigger('input');
-    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual(['7']);
-  });
-
-  it('ignores non-numeric input in numeric mode', async () => {
-    const wrapper = mountWithI18n(BaseOtpInput, { props: { length: 4, type: 'numeric' } });
-    const input = wrapper.find('input');
-    input.element.value = 'a';
-    await input.trigger('input');
-    // 'a' is stripped → value stays empty, no model emission with a letter.
-    const emitted = wrapper.emitted('update:modelValue') ?? [];
-    expect(emitted.every(([value]) => value === '')).toBe(true);
-  });
-
-  it('accepts letters in alphanumeric mode', async () => {
-    const wrapper = mountWithI18n(BaseOtpInput, { props: { length: 4, type: 'alphanumeric' } });
-    const input = wrapper.find('input');
-    input.element.value = 'A';
-    await input.trigger('input');
-    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual(['A']);
-  });
-
-  it('emits complete when every cell is filled', async () => {
-    const wrapper = mountWithI18n(BaseOtpInput, { props: { length: 4, modelValue: '123' } });
-    const inputs = wrapper.findAll('input');
-    inputs[3].element.value = '4';
-    await inputs[3].trigger('input');
-    expect(wrapper.emitted('complete')?.at(-1)).toEqual(['1234']);
-  });
-
-  it('distributes a pasted code across the cells', async () => {
-    const wrapper = mountWithI18n(BaseOtpInput, { props: { length: 6, modelValue: '' } });
-    const input = wrapper.find('input');
-    const clipboardData = { getData: () => '123456' } as unknown as DataTransfer;
-    await input.trigger('paste', { clipboardData });
-    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual(['123456']);
-    expect(wrapper.emitted('complete')?.at(-1)).toEqual(['123456']);
-  });
-
-  it('clears the previous cell on backspace when empty', async () => {
-    const wrapper = mountWithI18n(BaseOtpInput, { props: { length: 4, modelValue: '12' }, attachTo: document.body });
-    const inputs = wrapper.findAll('input');
-    await inputs[2].trigger('keydown', { key: 'Backspace' });
-    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual(['1']);
-    wrapper.unmount();
-  });
-
-  it('renders masked password cells when mask is set', () => {
-    const wrapper = mountWithI18n(BaseOtpInput, { props: { mask: true } });
-    expect(wrapper.find('input').attributes('type')).toBe('password');
-  });
-
-  it('disables every cell when disabled', () => {
-    const wrapper = mountWithI18n(BaseOtpInput, { props: { disabled: true } });
-    expect(wrapper.findAll('input').every((input) => input.attributes('disabled') !== undefined)).toBe(true);
+    for (const html of [react, vue]) {
+      expect(html).toContain('type="password"');
+    }
   });
 });

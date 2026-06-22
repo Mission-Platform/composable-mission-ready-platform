@@ -1,44 +1,46 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseChatArea } from './base-chat-area';
 
-import BaseChatArea from './base-chat-area.vue';
+/**
+ * Exercises the **neutral** `BaseChatArea` authored in this package, rendering
+ * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * Covers the live-region log, the message list, and the header/footer slots.
+ */
+const ReactChatArea = toReactComponent(BaseChatArea, 'ChatArea');
+const VueChatArea = toVueComponent(BaseChatArea, 'ChatArea');
 
-describe('BaseChatArea', () => {
-  it('renders a polite log region containing a semantic list', () => {
-    const wrapper = mountWithI18n(BaseChatArea, { slots: { default: '<li class="msg" />' } });
-    const log = wrapper.find('.base-chat-area__log');
-    expect(log.attributes('role')).toBe('log');
-    expect(log.attributes('aria-live')).toBe('polite');
-    expect(wrapper.find('.base-chat-area__messages').element.tagName).toBe('UL');
-    expect(wrapper.find('.msg').exists()).toBe(true);
+describe('BaseChatArea authors the same component for React and Vue', () => {
+  it('renders the live-region log wrapping a message list on both frameworks', async () => {
+    const properties = { ariaLabel: 'Conversation', children: 'Hello there' };
+    const react = renderToStaticMarkup(createElement(ReactChatArea, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueChatArea, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('role="log"');
+      expect(html).toContain('aria-live="polite"');
+      expect(html).toContain('aria-label="Conversation"');
+      expect(html).toContain('base-chat-area__messages');
+      expect(html).toContain('Hello there');
+    }
   });
 
-  it('renders the header slot only when provided', () => {
-    const without = mountWithI18n(BaseChatArea);
-    expect(without.find('.base-chat-area__header').exists()).toBe(false);
+  it('renders the header and footer slots when provided on both frameworks', async () => {
+    const properties = { header: 'Support chat', footer: 'Type a message…', children: 'Body' };
+    const react = renderToStaticMarkup(createElement(ReactChatArea, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueChatArea, properties) }));
 
-    const withHeader = mountWithI18n(BaseChatArea, { slots: { header: '<h2 class="title">Chat</h2>' } });
-    expect(withHeader.find('.base-chat-area__header .title').exists()).toBe(true);
-  });
-
-  it('renders the footer slot only when provided', () => {
-    const without = mountWithI18n(BaseChatArea);
-    expect(without.find('.base-chat-area__footer').exists()).toBe(false);
-
-    const withFooter = mountWithI18n(BaseChatArea, { slots: { footer: '<form class="composer" />' } });
-    expect(withFooter.find('.base-chat-area__footer .composer').exists()).toBe(true);
-  });
-
-  it('applies the accessible label to the log region', () => {
-    const wrapper = mountWithI18n(BaseChatArea, { props: { ariaLabel: 'Support conversation' } });
-    expect(wrapper.find('.base-chat-area__log').attributes('aria-label')).toBe('Support conversation');
-  });
-
-  it('exposes a scrollToBottom method', () => {
-    const wrapper = mountWithI18n(BaseChatArea, { attachTo: document.body });
-    expect(typeof (wrapper.vm as unknown as { scrollToBottom: () => void }).scrollToBottom).toBe('function');
-    expect(() => (wrapper.vm as unknown as { scrollToBottom: () => void }).scrollToBottom()).not.toThrow();
-    wrapper.unmount();
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-chat-area__header');
+      expect(html).toContain('Support chat');
+      expect(html).toContain('base-chat-area__footer');
+      expect(html).toContain('Type a message…');
+    }
   });
 });

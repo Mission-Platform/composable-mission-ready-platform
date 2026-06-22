@@ -1,0 +1,272 @@
+/**
+ * Styling for the write-once `BaseDrawer`.
+ *
+ * `BaseDrawer` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its appearance ships in the built package CSS (the two-stage
+ * compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package. Only `var(--mp-*)` design-token custom
+ * properties are used. The header/body/footer sub-components are inlined here as
+ * `__header`/`__body`/`__footer` rules. The enter/leave fade + slide transition
+ * classes (driven by the neutral `<Transition>` primitive) are ported from the
+ * original Vue SFC as plain (scoped) CSS-Module classes — `base-drawer.tsx`
+ * passes their hashed names to the `<Transition>` class props, so the
+ * enter/leave styling stays component-scoped exactly like the SFC's `scoped`
+ * `<style>` (no `:global()`). Relative to the original only `<Teleport>` is
+ * dropped (the neutral dialect cannot model it), so the panel is a
+ * `position: fixed` overlay rendered in place rather than teleported to
+ * `<body>`. The `bp-up('sm')` mixin is inlined as a 768px media query.
+ */
+
+@layer mp.components {
+  $drawer-sizes: (
+    '2xs': 14rem,
+    'xs': 17rem,
+    'sm': 20rem,
+    'md': 25.714rem,
+    'lg': 34.286rem,
+    'xl': 45.714rem,
+    '2xl': 57rem,
+  );
+
+  .base-drawer-host {
+    display: contents;
+  }
+
+  .base-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 700;
+    background-color: var(--mp-color-bg-scrim-soft);
+    border: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    cursor: default;
+  }
+
+  .base-drawer {
+    position: fixed;
+    z-index: 701;
+    background-color: var(--mp-color-bg-surface);
+    box-shadow: var(--mp-shadow-xl);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    &--start,
+    &--end {
+      top: 0;
+      bottom: 0;
+      width: 100vw;
+      max-width: 100vw;
+    }
+
+    &--start {
+      inset-inline-start: 0;
+      border-inline-end: 1px solid var(--mp-color-border-default);
+    }
+
+    &--end {
+      inset-inline-end: 0;
+      border-inline-start: 1px solid var(--mp-color-border-default);
+    }
+
+    &--top,
+    &--bottom {
+      left: 0;
+      right: 0;
+      width: 100vw;
+      max-width: 100vw;
+      max-height: 100vh;
+    }
+
+    &--top {
+      top: 0;
+      border-bottom: 1px solid var(--mp-color-border-default);
+    }
+
+    &--bottom {
+      bottom: 0;
+      border-top: 1px solid var(--mp-color-border-default);
+    }
+
+    @media (width >= 768px) {
+      @each $size, $width in $drawer-sizes {
+        &--start.base-drawer--#{$size},
+        &--end.base-drawer--#{$size} {
+          width: $width;
+        }
+      }
+    }
+
+    @each $size, $height in $drawer-sizes {
+      &--top.base-drawer--#{$size},
+      &--bottom.base-drawer--#{$size} {
+        height: $height;
+      }
+    }
+
+    &--inline {
+      position: relative;
+      z-index: auto;
+      inset: auto;
+      width: 100%;
+      max-width: 100%;
+      height: 100%;
+      box-shadow: none;
+    }
+
+    &__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--mp-spacing-4) var(--mp-spacing-6);
+      border-bottom: 1px solid var(--mp-color-border-default);
+      flex-shrink: 0;
+      gap: var(--mp-spacing-4);
+    }
+
+    &__title {
+      margin: 0;
+      font-family: var(--mp-font-family-sans);
+      font-size: var(--mp-font-size-lg);
+      font-weight: var(--mp-font-weight-medium);
+      line-height: var(--mp-line-height-snug);
+      color: var(--mp-color-text-primary);
+    }
+
+    &__close {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--mp-size-8, 2rem);
+      height: var(--mp-size-8, 2rem);
+      border: none;
+      border-radius: var(--mp-radius-md);
+      background: transparent;
+      color: var(--mp-color-text-secondary);
+      font-size: var(--mp-font-size-xl);
+      line-height: 1;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--mp-color-bg-subtle, var(--mp-color-bg-surface));
+        color: var(--mp-color-text-primary);
+      }
+    }
+
+    &__body {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--mp-spacing-6);
+    }
+
+    &__footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--mp-spacing-3);
+      padding: var(--mp-spacing-4) var(--mp-spacing-6);
+      border-top: 1px solid var(--mp-color-border-default);
+      flex-shrink: 0;
+    }
+
+    /* Resize handle: a thin grab strip on the drawer's inner edge. The panel is
+       already positioned (fixed for overlay, relative for inline), so the
+       absolutely-positioned handle anchors to it. */
+    &__resize-handle {
+      position: absolute;
+      z-index: 1;
+      touch-action: none;
+      background-color: transparent;
+      transition: background-color 150ms ease;
+
+      &--start,
+      &--end {
+        top: 0;
+        bottom: 0;
+        width: var(--mp-spacing-2);
+        cursor: ew-resize;
+      }
+
+      &--start {
+        right: 0;
+      }
+
+      &--end {
+        left: 0;
+      }
+
+      &--top,
+      &--bottom {
+        left: 0;
+        right: 0;
+        height: var(--mp-spacing-2);
+        cursor: ns-resize;
+      }
+
+      &--top {
+        bottom: 0;
+      }
+
+      &--bottom {
+        top: 0;
+      }
+
+      &:hover,
+      &:active {
+        background-color: var(--mp-color-border-strong);
+      }
+    }
+  }
+
+  /* Enter/leave transitions driven by the neutral `<Transition>` primitive.
+     These are plain (non-`:global`) CSS-Module classes: `base-drawer.tsx`
+     passes their hashed names to the `<Transition>` class props, so the
+     enter/leave styling stays scoped to the component — matching the original
+     Vue SFC's `scoped` `<style>` (only these four phases per transition are
+     styled; the `-enter-to`/`-leave-from` markers carry no rules). */
+  .base-drawer-fade-enter-active,
+  .base-drawer-fade-leave-active {
+    transition: opacity 250ms ease;
+  }
+
+  .base-drawer-fade-enter-from,
+  .base-drawer-fade-leave-to {
+    opacity: 0;
+  }
+
+  .base-drawer-slide-start-enter-active,
+  .base-drawer-slide-start-leave-active,
+  .base-drawer-slide-end-enter-active,
+  .base-drawer-slide-end-leave-active,
+  .base-drawer-slide-top-enter-active,
+  .base-drawer-slide-top-leave-active,
+  .base-drawer-slide-bottom-enter-active,
+  .base-drawer-slide-bottom-leave-active {
+    transition: transform 250ms ease;
+  }
+
+  .base-drawer-slide-start-enter-from,
+  .base-drawer-slide-start-leave-to {
+    transform: translateX(-100%);
+  }
+
+  .base-drawer-slide-end-enter-from,
+  .base-drawer-slide-end-leave-to {
+    transform: translateX(100%);
+  }
+
+  .base-drawer-slide-top-enter-from,
+  .base-drawer-slide-top-leave-to {
+    transform: translateY(-100%);
+  }
+
+  .base-drawer-slide-bottom-enter-from,
+  .base-drawer-slide-bottom-leave-to {
+    transform: translateY(100%);
+  }
+}

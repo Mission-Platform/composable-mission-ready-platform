@@ -1,0 +1,43 @@
+/**
+ * Styling for the write-once `BaseMasonry`.
+ *
+ * `BaseMasonry` owns the `.base-masonry` rules in this co-located CSS Module: it
+ * side-effect-imports the stylesheet so the container box (`width` / `min-width`)
+ * and the per-child break-safety (ported from the original Vue component's
+ * `:slotted(*)` rule) ship in the built package CSS (the two-stage compiler
+ * carries the import onto both the React and Vue builds). The dynamic
+ * multi-column properties (`column-count` / `column-width`, `column-gap`, and
+ * the `--mp-masonry-gap` custom property) are still applied via inline styles,
+ * mirroring the Vue original's split.
+ *
+ * The remaining `.masonry-demo-item` rule is demo-only: it dresses the slotted
+ * Storybook cards with design tokens so the examples are legible.
+ *
+ * The rules live in the shared `mp.components` cascade layer (matching the
+ * `@mission-platform/components` package). The stylesheet is a CSS Module,
+ * consumed through its hashed class map by `base-masonry.tsx` (the component
+ * styles) and `base-masonry.stories.tsx` (the demo card).
+ */
+
+@layer mp.components {
+  .base-masonry {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Keep free-form (default-slot) children from splitting across columns. */
+  .base-masonry > * {
+    break-inside: avoid;
+    margin-bottom: var(--mp-masonry-gap);
+  }
+
+  .masonry-demo-item {
+    break-inside: avoid;
+    margin-bottom: var(--mp-masonry-gap, var(--mp-spacing-4));
+    padding: var(--mp-spacing-4);
+    border: 1px solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+    background: var(--mp-color-surface-raised);
+    color: var(--mp-color-text-primary);
+  }
+}

@@ -1,79 +1,67 @@
-import BaseTypography from '../base-typography/base-typography.vue';
-
-import BaseTimelineItem from './base-timeline-item.vue';
-import BaseTimeline from './base-timeline.vue';
+import { Timeline } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `Timeline` is the Vue 3 build of the write-once `BaseTimeline` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Data Display/BaseTimeline',
-  component: BaseTimeline,
-  subcomponents: { BaseTimelineItem },
+  component: Timeline,
   tags: ['autodocs'],
-  argTypes: {
-    orientation: { control: 'inline-radio', options: ['vertical', 'horizontal'] },
-    align: { control: 'inline-radio', options: ['start', 'alternate'] },
-  },
-  args: {
-    orientation: 'vertical',
-    align: 'start',
-  },
   parameters: {
     docs: {
       description: {
         component:
-          "`Timeline` displays a chronological sequence of events. Compose it from `BaseTimelineItem` children; the item automatically inherits the parent timeline's orientation and alternating rhythm. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.",
+          'Cross-framework `Timeline` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). The original `BaseTimeline`/`BaseTimelineItem` pair shared its orientation through a `provide`/`inject` context; the neutral version flattens them into one component driven by an `items` array (like the migrated `BaseTabs`), so the layout state simply flows from props onto each `<li>`. Styling comes from the co-located `base-timeline.module.scss`.',
       },
     },
   },
-} satisfies Meta<typeof BaseTimeline>;
+  argTypes: {
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    orientation: { control: 'select', options: ['vertical', 'horizontal'] },
+    align: { control: 'select', options: ['start', 'alternate'] },
+  },
+  args: {
+    orientation: 'vertical',
+    align: 'start',
+    items: [
+      {
+        id: 'ordered',
+        time: '09:00',
+        title: 'Order placed',
+        body: 'Your order has been received.',
+        variant: 'primary',
+      },
+      {
+        id: 'packed',
+        time: '11:30',
+        title: 'Packed',
+        body: 'Your items are packed and ready.',
+        variant: 'information',
+      },
+      { id: 'shipped', time: '14:15', title: 'Shipped', body: 'On its way to you.', variant: 'success' },
+      {
+        id: 'delivered',
+        time: 'Pending',
+        title: 'Delivered',
+        body: 'Awaiting delivery.',
+        variant: 'default',
+        outlined: true,
+      },
+    ],
+  },
+} satisfies Meta<typeof Timeline>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** A vertical timeline with mixed marker variants and body content. */
-export const Vertical: Story = {
-  render: (arguments_) => ({
-    components: { BaseTimeline, BaseTimelineItem, BaseTypography },
-    setup: () => ({ args: arguments_ }),
-    template: `
-      <BaseTimeline v-bind="args">
-        <BaseTimelineItem variant="success" title="Project kick-off" time="January 2024">
-          <BaseTypography variant="body-sm" color="secondary">The platform monorepo is scaffolded.</BaseTypography>
-        </BaseTimelineItem>
-        <BaseTimelineItem variant="primary" title="First component shipped" time="March 2024">
-          <BaseTypography variant="body-sm" color="secondary">BaseButton lands in the catalogue.</BaseTypography>
-        </BaseTimelineItem>
-        <BaseTimelineItem variant="information" title="Theming released" time="June 2024">
-          <BaseTypography variant="body-sm" color="secondary">Light / dark themes and design tokens go live.</BaseTypography>
-        </BaseTimelineItem>
-        <BaseTimelineItem variant="warning" outlined title="In progress" time="Now">
-          <BaseTypography variant="body-sm" color="secondary">Expanding the component library.</BaseTypography>
-        </BaseTimelineItem>
-      </BaseTimeline>
-    `,
-  }),
-};
+export const Default: Story = {};
 
-/** Vertical items zig-zag on alternating sides of a centred line. */
-export const Alternate: Story = {
-  args: { align: 'alternate' },
-  render: Vertical.render,
-};
+export const Alternate: Story = { args: { align: 'alternate' } };
 
-/** A horizontal timeline scrolls along the inline axis. */
-export const Horizontal: Story = {
-  args: { orientation: 'horizontal' },
-  render: (arguments_) => ({
-    components: { BaseTimeline, BaseTimelineItem, BaseTypography },
-    setup: () => ({ args: arguments_ }),
-    template: `
-      <BaseTimeline v-bind="args">
-        <BaseTimelineItem variant="success" title="Ordered" time="09:00" />
-        <BaseTimelineItem variant="primary" title="Packed" time="11:30" />
-        <BaseTimelineItem variant="information" title="Shipped" time="14:15" />
-        <BaseTimelineItem variant="warning" outlined title="Out for delivery" time="Now" />
-      </BaseTimeline>
-    `,
-  }),
-};
+export const Horizontal: Story = { args: { orientation: 'horizontal' } };

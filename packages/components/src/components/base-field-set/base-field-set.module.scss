@@ -1,0 +1,42 @@
+/**
+ * Styling for the write-once `BaseFieldSet`.
+ *
+ * `BaseFieldSet` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its BEM appearance ships in the built package CSS (the
+ * two-stage compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package.
+ */
+
+@layer mp.components {
+  .base-field-set {
+    min-width: 0;
+    padding: var(--mp-spacing-4);
+    margin: 0;
+    background-color: var(--mp-color-bg-surface);
+    border: 1px solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-lg);
+
+    &--flush {
+      padding: 0;
+      background-color: transparent;
+      border: none;
+      border-radius: 0;
+    }
+
+    &__legend {
+      padding: 0 var(--mp-spacing-1);
+    }
+
+    &__description {
+      margin: 0 0 var(--mp-spacing-3);
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-spacing-3);
+    }
+  }
+}

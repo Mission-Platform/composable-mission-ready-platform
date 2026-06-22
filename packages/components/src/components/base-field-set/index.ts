@@ -1,1 +1,1 @@
-export { default } from './base-field-set.vue';
+export { BaseFieldSet, type FieldSetProperties } from './base-field-set';

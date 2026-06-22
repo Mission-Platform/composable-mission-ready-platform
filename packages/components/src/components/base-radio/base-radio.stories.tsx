@@ -1,87 +1,71 @@
 import { ref } from 'vue';
 
-import BaseRadio from './base-radio.vue';
+import { Radio } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `Radio` is the Vue 3 build of the write-once `BaseRadio` in this package. The
+ * component is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/jsx`) and compiled straight to a Vue component at build
+ * time by `@mission-platform/vite-plugin-jsx`. The very same source also ships
+ * as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Forms/BaseRadio',
-  component: BaseRadio,
+  component: Radio,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`BaseRadio` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Radio` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). A radio is selected when its `value` equals the group `modelValue`; the original `v-model` + `change` emit become the `onUpdateModelValue`/`onChange` callback props. Styling comes from the co-located `base-radio.module.scss`.',
       },
     },
   },
   argTypes: {
-    label: { control: 'text' },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     disabled: { control: 'boolean' },
     labelHidden: { control: 'boolean' },
   },
   args: {
-    value: 'a',
     label: 'Option A',
+    value: 'a',
+    size: 'md',
     disabled: false,
     labelHidden: false,
   },
   render: (arguments_) => ({
-    components: { BaseRadio },
+    components: { Radio },
     setup() {
-      const model = ref(arguments_.value);
-      return { args: arguments_, model };
+      const value = ref(arguments_.modelValue ?? 'a');
+      return { args: arguments_, value };
     },
-    template: '<BaseRadio v-bind="args" v-model="model" />',
+    template: '<Radio v-bind="args" :model-value="value" @update-model-value="value = $event" />',
   }),
-} satisfies Meta<typeof BaseRadio>;
+} satisfies Meta<typeof Radio>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const Checked: Story = {
-  render: (arguments_) => ({
-    components: { BaseRadio },
-    setup() {
-      const model = ref('a');
-      return { args: arguments_, model };
-    },
-    template: '<BaseRadio v-bind="args" v-model="model" value="a" label="Selected option" />',
-  }),
-};
-
-export const Unchecked: Story = {
-  render: (arguments_) => ({
-    components: { BaseRadio },
-    setup() {
-      const model = ref('b');
-      return { args: arguments_, model };
-    },
-    template: '<BaseRadio v-bind="args" v-model="model" value="a" label="Unselected option" />',
-  }),
-};
+export const Selected: Story = { args: { modelValue: 'a' } };
 
 export const Disabled: Story = { args: { disabled: true } };
 
-export const HiddenLabel: Story = {
-  args: { labelHidden: true, label: 'Hidden label (screen-reader only)' },
-};
-
 export const Group: Story = {
   render: () => ({
-    components: { BaseRadio },
+    components: { Radio },
     setup() {
-      const selected = ref('a');
+      const selected = ref('email');
       return { selected };
     },
     template: `
-      <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-        <BaseRadio v-model="selected" value="a" label="Option A" />
-        <BaseRadio v-model="selected" value="b" label="Option B" />
-        <BaseRadio v-model="selected" value="c" label="Option C" />
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <Radio :model-value="selected" value="email" label="Email" @update-model-value="selected = $event" />
+        <Radio :model-value="selected" value="sms" label="SMS" @update-model-value="selected = $event" />
+        <Radio :model-value="selected" value="push" label="Push notification" @update-model-value="selected = $event" />
       </div>
     `,
   }),

@@ -1,2 +1,1 @@
-export { default } from './base-card.vue';
-export type { CardPadding } from './base-card.vue';
+export { BaseCard, type CardPadding, type CardProperties } from './base-card';

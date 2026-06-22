@@ -1,1 +1,1 @@
-export { default } from './base-dialog.vue';
+export { BaseDialog, type DialogProperties } from './base-dialog';

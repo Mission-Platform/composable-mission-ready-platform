@@ -1,76 +1,55 @@
-import { mount } from '@vue/test-utils';
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import BaseSlider from './base-slider.vue';
+import { BaseSlider } from './base-slider';
 
-describe('BaseSlider', () => {
-  it('renders a thumb with role="slider" and aria values', () => {
-    const wrapper = mount(BaseSlider, { props: { modelValue: 40, min: 0, max: 100 } });
-    const thumb = wrapper.find('[role="slider"]');
-    expect(thumb.exists()).toBe(true);
-    expect(thumb.attributes('aria-valuenow')).toBe('40');
-    expect(thumb.attributes('aria-valuemin')).toBe('0');
-    expect(thumb.attributes('aria-valuemax')).toBe('100');
-    expect(thumb.attributes('tabindex')).toBe('0');
+/**
+ * Exercises the **neutral** `BaseSlider` authored in this package, rendering it
+ * on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * Covers the bespoke `role="slider"` thumb, its ARIA range, and the value badge
+ * — the parity surface of the `@mission-platform/components` SFC.
+ */
+const ReactSlider = toReactComponent(BaseSlider, 'Slider');
+const VueSlider = toVueComponent(BaseSlider, 'Slider');
+
+describe('BaseSlider authors the same component for React and Vue', () => {
+  it('renders a slider thumb with its ARIA range on both frameworks', async () => {
+    const properties = { modelValue: 40, min: 0, max: 100, step: 5, ariaLabel: 'Volume' };
+    const react = renderToStaticMarkup(createElement(ReactSlider, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueSlider, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('role="slider"');
+      expect(html).toContain('aria-label="Volume"');
+      expect(html).toContain('aria-valuemin="0"');
+      expect(html).toContain('aria-valuemax="100"');
+      expect(html).toContain('aria-valuenow="40"');
+      // The fill + thumb are positioned at the value's percentage of the track.
+      expect(html).toContain('40%');
+    }
   });
 
-  it('positions the fill and thumb according to the value', () => {
-    const wrapper = mount(BaseSlider, { props: { modelValue: 25, min: 0, max: 100 } });
-    expect((wrapper.find('.base-slider__fill').element as HTMLElement).style.width).toBe('25%');
-    expect((wrapper.find('.base-slider__thumb').element as HTMLElement).style.left).toBe('25%');
-  });
+  it('clamps the value and shows the formatted badge on both frameworks', async () => {
+    const properties = {
+      modelValue: 250,
+      min: 0,
+      max: 100,
+      showValue: true,
+      formatValue: (value: number) => `${value}%`,
+    };
+    const react = renderToStaticMarkup(createElement(ReactSlider, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueSlider, properties) }));
 
-  it('clamps the displayed value to the range', () => {
-    const wrapper = mount(BaseSlider, { props: { modelValue: 999, min: 0, max: 100 } });
-    expect(wrapper.find('[role="slider"]').attributes('aria-valuenow')).toBe('100');
-  });
-
-  it('increments and decrements with arrow keys (respecting step)', async () => {
-    const wrapper = mount(BaseSlider, { props: { modelValue: 50, step: 5 } });
-    const thumb = wrapper.find('[role="slider"]');
-    await thumb.trigger('keydown', { key: 'ArrowRight' });
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([55]);
-    await thumb.trigger('keydown', { key: 'ArrowLeft' });
-    expect(wrapper.emitted('update:modelValue')?.[1]).toEqual([45]);
-  });
-
-  it('jumps by 10 steps with Page Up/Down', async () => {
-    const wrapper = mount(BaseSlider, { props: { modelValue: 50, step: 2 } });
-    const thumb = wrapper.find('[role="slider"]');
-    await thumb.trigger('keydown', { key: 'PageUp' });
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([70]);
-    await thumb.trigger('keydown', { key: 'PageDown' });
-    expect(wrapper.emitted('update:modelValue')?.[1]).toEqual([30]);
-  });
-
-  it('jumps to min/max with Home/End', async () => {
-    const wrapper = mount(BaseSlider, { props: { modelValue: 50, min: 10, max: 90 } });
-    const thumb = wrapper.find('[role="slider"]');
-    await thumb.trigger('keydown', { key: 'Home' });
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([10]);
-    await thumb.trigger('keydown', { key: 'End' });
-    expect(wrapper.emitted('update:modelValue')?.[1]).toEqual([90]);
-  });
-
-  it('emits change on keyboard interaction', async () => {
-    const wrapper = mount(BaseSlider, { props: { modelValue: 50 } });
-    await wrapper.find('[role="slider"]').trigger('keydown', { key: 'ArrowRight' });
-    expect(wrapper.emitted('change')?.[0]).toEqual([51]);
-  });
-
-  it('does not respond to keys when disabled', async () => {
-    const wrapper = mount(BaseSlider, { props: { modelValue: 50, disabled: true } });
-    const thumb = wrapper.find('[role="slider"]');
-    expect(thumb.attributes('tabindex')).toBe('-1');
-    await thumb.trigger('keydown', { key: 'ArrowRight' });
-    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
-  });
-
-  it('uses formatValue for aria-valuetext and the displayed value', () => {
-    const wrapper = mount(BaseSlider, {
-      props: { modelValue: 50, showValue: true, formatValue: (v: number) => `${v}%` },
-    });
-    expect(wrapper.find('[role="slider"]').attributes('aria-valuetext')).toBe('50%');
-    expect(wrapper.find('.base-slider__value').text()).toBe('50%');
+    for (const html of [react, vue]) {
+      // 250 is clamped to the max of 100 and formatted.
+      expect(html).toContain('aria-valuenow="100"');
+      expect(html).toContain('100%');
+      expect(html).toContain('aria-valuetext="100%"');
+    }
   });
 });

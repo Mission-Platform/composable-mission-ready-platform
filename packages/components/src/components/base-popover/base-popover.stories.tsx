@@ -1,25 +1,30 @@
 import { ref } from 'vue';
 
-import BaseButton from '../base-button/base-button.vue';
-import BaseMenuItem from '../base-menu-item/base-menu-item.vue';
-
-import BasePopover from './base-popover.vue';
+import { Button, Popover, Stack, Typography } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `Popover` is the Vue 3 build of the write-once `BasePopover` in this package.
+ * The component is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/jsx`) and compiled straight to a Vue component at build
+ * time by `@mission-platform/vite-plugin-jsx`. The very same source also ships
+ * as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Overlays/BasePopover',
-  component: BasePopover,
+  component: Popover,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`Popover` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Popover` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). The trigger is the `trigger` named slot and the body is the default slot. The panel is portalled to `document.body` through the neutral `<Teleport>` primitive (compiled to React `createPortal` / Vue `<Teleport>`) and stays anchored to its trigger via the CSS Anchor Positioning API (`anchor-name`/`position-anchor`/`position-area` + `position-try-fallbacks`) instead of `@floating-ui`. Open state is controlled via `open` + `update:open`; outside-click + `Escape` dismissal listens on `document`. This example composes the package’s own `Button` (trigger) and `Stack` + `Typography` (body). Styling comes from the co-located `base-popover.module.scss`.',
       },
     },
   },
   argTypes: {
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     placement: {
       control: 'select',
       options: [
@@ -37,83 +42,47 @@ const meta = {
         'right-end',
       ],
     },
+    offset: { control: { type: 'number', min: 0, max: 24, step: 1 } },
     closeOnOutsideClick: { control: 'boolean' },
+    label: { control: 'text' },
   },
   args: {
     placement: 'bottom-start',
+    offset: 6,
     closeOnOutsideClick: true,
+    label: 'Account menu',
   },
-} satisfies Meta<typeof BasePopover>;
+  render: (arguments_) => ({
+    components: { Popover, Button, Stack, Typography },
+    setup() {
+      const open = ref(false);
+      return { args: arguments_, open };
+    },
+    template: `
+      <div style="padding: 6rem; display: flex; justify-content: center;">
+        <Popover v-bind="args" :open="open" @update-open="open = $event" @close="open = false">
+          <template #trigger>
+            <Button variant="secondary" @click="open = !open">Toggle popover</Button>
+          </template>
+          <Stack gap="2xs" style="padding: 0.5rem 1rem;">
+            <Typography variant="label">Account</Typography>
+            <Typography color="secondary" variant="body-sm">Popover content lives in the default slot.</Typography>
+          </Stack>
+        </Popover>
+      </div>
+    `,
+  }),
+} satisfies Meta<typeof Popover>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Dropdown: Story = {
-  render: () => ({
-    components: { BasePopover, BaseButton, BaseMenuItem },
-    setup() {
-      const open = ref(false);
-      return { open };
-    },
-    template: `
-      <div style="padding: 80px; display: flex; justify-content: center;">
-        <BasePopover v-model:open="open" placement="bottom-start">
-          <template #trigger>
-            <BaseButton @click="open = !open">Options ▾</BaseButton>
-          </template>
-          <ul role="menu" style="list-style:none;margin:0;padding:4px;">
-            <BaseMenuItem label="Edit" @click="open = false" />
-            <BaseMenuItem label="Duplicate" @click="open = false" />
-            <BaseMenuItem label="Archive" @click="open = false" />
-            <BaseMenuItem label="Delete" variant="error" @click="open = false" />
-          </ul>
-        </BasePopover>
-      </div>
-    `,
-  }),
-};
+export const Default: Story = {};
 
-export const RichContent: Story = {
-  render: () => ({
-    components: { BasePopover, BaseButton },
-    setup() {
-      const open = ref(false);
-      return { open };
-    },
-    template: `
-      <div style="padding: 80px; display: flex; justify-content: center;">
-        <BasePopover v-model:open="open" placement="bottom">
-          <template #trigger>
-            <BaseButton variant="secondary" @click="open = !open">Info ▾</BaseButton>
-          </template>
-          <div style="padding: 12px 16px; max-width: 240px;">
-            <strong>Floating UI Popover</strong>
-            <p style="margin: 8px 0 0; font-size: 0.875rem; color: #666;">
-              Positioned with @floating-ui/vue — flip, shift, and autoUpdate keep it anchored.
-            </p>
-          </div>
-        </BasePopover>
-      </div>
-    `,
-  }),
-};
+export const TopEnd: Story = { args: { placement: 'top-end' } };
 
-export const TopPlacement: Story = {
-  render: () => ({
-    components: { BasePopover, BaseButton },
-    setup() {
-      const open = ref(false);
-      return { open };
-    },
-    template: `
-      <div style="padding: 120px; display: flex; justify-content: center;">
-        <BasePopover v-model:open="open" placement="top">
-          <template #trigger>
-            <BaseButton variant="tertiary" @click="open = !open">Above ▴</BaseButton>
-          </template>
-          <div style="padding: 12px 16px;">Opens above the trigger</div>
-        </BasePopover>
-      </div>
-    `,
-  }),
-};
+export const RightStart: Story = { args: { placement: 'right-start' } };
+
+export const WideOffset: Story = { args: { offset: 16 } };
+
+export const PersistentOnOutsideClick: Story = { args: { closeOnOutsideClick: false } };

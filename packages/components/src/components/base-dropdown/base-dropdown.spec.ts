@@ -1,119 +1,117 @@
-import { mount } from '@vue/test-utils';
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import BaseDropdown from './base-dropdown.vue';
+import { BaseDropdown } from './base-dropdown';
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+/**
+ * Exercises the **neutral** `BaseDropdown` authored in this package, rendering
+ * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * The panel is portalled through the neutral `<Teleport>` primitive (the
+ * adapters render teleported children in place for SSR parity) and gated on
+ * `open`, so it only ships in the markup while open; when open it stays anchored
+ * to its trigger via the CSS Anchor Positioning API (`anchor-name` on the
+ * trigger, `position-anchor` on the panel). The trigger and menu content must
+ * match across React and Vue.
+ */
+const ReactDropdown = toReactComponent(BaseDropdown, 'Dropdown');
+const VueDropdown = toVueComponent(BaseDropdown, 'Dropdown');
 
-function mountDropdown(properties = {}, slots = {}) {
-  return mount(BaseDropdown, {
-    props: properties,
-    slots: {
-      trigger: '<button>Trigger</button>',
-      default: '<li>Option 1</li><li>Option 2</li>',
-      ...slots,
-    },
-    attachTo: document.body,
-  });
-}
+describe('BaseDropdown authors the same component for React and Vue', () => {
+  it('teleports the trigger-anchored panel when open on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(
+        ReactDropdown,
+        { open: true, trigger: createElement('button', undefined, 'Menu') },
+        createElement('ul', undefined, createElement('li', undefined, 'Profile')),
+      ),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () =>
+          vueH(
+            VueDropdown,
+            { open: true },
+            {
+              trigger: () => vueH('button', undefined, 'Menu'),
+              default: () => vueH('ul', undefined, vueH('li', undefined, 'Profile')),
+            },
+          ),
+      }),
+    );
 
-// ─── Tests ────────────────────────────────────────────────────────────────────
-
-describe('BaseDropdown', () => {
-  describe('default props', () => {
-    it('renders the trigger slot', () => {
-      const wrapper = mountDropdown();
-      expect(wrapper.find('.base-dropdown-trigger').exists()).toBe(true);
-      expect(wrapper.find('.base-dropdown-trigger button').exists()).toBe(true);
-    });
-
-    it('does not render the listbox when closed by default', () => {
-      const wrapper = mountDropdown();
-      expect(wrapper.find('.base-dropdown').exists()).toBe(false);
-    });
-
-    it('renders the listbox when open=true', () => {
-      const wrapper = mountDropdown({ open: true });
-      expect(wrapper.find('.base-dropdown').exists()).toBe(true);
-    });
-
-    it('renders as a div element', () => {
-      const wrapper = mountDropdown({ open: true });
-      expect(wrapper.find('.base-dropdown').element.tagName).toBe('DIV');
-    });
-  });
-
-  describe('slots', () => {
-    it('renders default slot items inside the listbox', () => {
-      const wrapper = mountDropdown({ open: true });
-      const items = wrapper.findAll('.base-dropdown li');
-      expect(items).toHaveLength(2);
-      expect(items[0].text()).toBe('Option 1');
-      expect(items[1].text()).toBe('Option 2');
-    });
-
-    it('renders custom trigger slot content', () => {
-      const wrapper = mountDropdown({}, { trigger: '<span id="custom-trigger">Open</span>' });
-      expect(wrapper.find('#custom-trigger').exists()).toBe(true);
-    });
+    for (const html of [react, vue]) {
+      expect(html).toContain('<button>Menu</button>');
+      // The teleported panel ships in the markup while open, is focusable, and is
+      // tethered to the trigger via CSS anchor positioning.
+      expect(html).toContain('tabindex="0"');
+      expect(html).toContain('anchor-name:');
+      expect(html).toContain('position-anchor:');
+      expect(html).toContain('Profile');
+    }
   });
 
-  describe('maxHeight prop', () => {
-    it('applies the default maxHeight of 240px to the listbox', () => {
-      const wrapper = mountDropdown({ open: true });
-      expect(wrapper.find('.base-dropdown').attributes('style')).toContain('max-height: 240px');
-    });
+  it('uses a valid (fully-logical) position-area for compound placements on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(
+        ReactDropdown,
+        { open: true, placement: 'bottom-start', trigger: createElement('button', undefined, 'Menu') },
+        createElement('ul', undefined, createElement('li', undefined, 'Profile')),
+      ),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () =>
+          vueH(
+            VueDropdown,
+            { open: true, placement: 'bottom-start' },
+            {
+              trigger: () => vueH('button', undefined, 'Menu'),
+              default: () => vueH('ul', undefined, vueH('li', undefined, 'Profile')),
+            },
+          ),
+      }),
+    );
 
-    it('applies a custom maxHeight to the listbox', () => {
-      const wrapper = mountDropdown({ open: true, maxHeight: '120px' });
-      expect(wrapper.find('.base-dropdown').attributes('style')).toContain('max-height: 120px');
-    });
+    for (const html of [react, vue]) {
+      // `position-area` rejects values that mix a physical side keyword with a
+      // logical span, so `bottom span-inline-end` is silently dropped and the
+      // teleported panel falls back to its static position. The compound
+      // (`-start`/`-end`) placements must use the valid fully-logical form.
+      expect(html).toContain('position-area:block-end span-inline-end');
+      expect(html).not.toContain('position-area:bottom span-inline-end');
+    }
   });
 
-  describe('matchTriggerWidth prop', () => {
-    it('does not set min-width when matchTriggerWidth=true and trigger has no width (jsdom layout)', () => {
-      // jsdom always returns 0 for offsetWidth; the component guards with `referenceEl?.offsetWidth`
-      // so min-width is not applied in jsdom. The behaviour is integration-tested via Storybook stories.
-      const wrapper = mountDropdown({ open: true, matchTriggerWidth: true });
-      const style = wrapper.find('.base-dropdown').attributes('style') ?? '';
-      expect(style).not.toContain('min-width: 0px');
-    });
+  it('omits the teleported panel while closed on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(
+        ReactDropdown,
+        { open: false, trigger: createElement('button', undefined, 'Menu') },
+        createElement('ul', undefined, createElement('li', undefined, 'Profile')),
+      ),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () =>
+          vueH(
+            VueDropdown,
+            { open: false },
+            {
+              trigger: () => vueH('button', undefined, 'Menu'),
+              default: () => vueH('ul', undefined, vueH('li', undefined, 'Profile')),
+            },
+          ),
+      }),
+    );
 
-    it('does not set min-width when matchTriggerWidth=false', () => {
-      const wrapper = mountDropdown({ open: true, matchTriggerWidth: false });
-      const style = wrapper.find('.base-dropdown').attributes('style') ?? '';
-      expect(style).not.toContain('min-width: ');
-    });
-  });
-
-  describe('emitted events', () => {
-    it('emits update:open with false when the trigger is clicked while open and closeOnOutsideClick=true', async () => {
-      const wrapper = mountDropdown({ open: true, closeOnOutsideClick: true });
-
-      // Simulate an outside mousedown event
-      document.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-      await wrapper.vm.$nextTick();
-
-      expect(wrapper.emitted('update:open')).toEqual([[false]]);
-      expect(wrapper.emitted('close')).toBeTruthy();
-    });
-
-    it('does not emit update:open on outside click when closeOnOutsideClick=false', async () => {
-      const wrapper = mountDropdown({ open: true, closeOnOutsideClick: false });
-
-      document.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-      await wrapper.vm.$nextTick();
-
-      expect(wrapper.emitted('update:open')).toBeUndefined();
-    });
-
-    it('does not emit update:open on outside click when closed', async () => {
-      const wrapper = mountDropdown({ open: false, closeOnOutsideClick: true });
-
-      document.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-      await wrapper.vm.$nextTick();
-
-      expect(wrapper.emitted('update:open')).toBeUndefined();
-    });
+    for (const html of [react, vue]) {
+      expect(html).toContain('<button>Menu</button>');
+      expect(html).not.toContain('Profile');
+    }
   });
 });

@@ -1,2 +1,6 @@
-export { default } from './base-radio-group.vue';
-export type { RadioOption } from './base-radio-group.vue';
+export {
+  BaseRadioGroup,
+  type RadioGroupDirection,
+  type RadioGroupProperties,
+  type RadioOption,
+} from './base-radio-group';

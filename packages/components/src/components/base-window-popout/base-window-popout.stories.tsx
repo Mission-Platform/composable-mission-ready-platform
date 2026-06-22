@@ -1,115 +1,60 @@
-import BaseWindowPopout from './base-window-popout.vue';
+import { WindowPopout } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `WindowPopout` is the Vue 3 build of the write-once `BaseWindowPopout` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Layout/BaseWindowPopout',
-  component: BaseWindowPopout,
+  component: WindowPopout,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`WindowPopout` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `WindowPopout` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). Inline it shows its default-slot content and a toggle button; clicking the button opens the content in a separate browser window and shows an in-page placeholder. The neutral dialect models neither Vue `<Teleport>` nor React `createPortal`, so the popped-out window receives a static HTML snapshot of the inline content; the open/close state is reported via the `onOpen` / `onClose` callback props. Styling comes from the co-located `base-window-popout.module.scss`.',
       },
     },
   },
   argTypes: {
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     title: { control: 'text' },
     width: { control: 'number' },
     height: { control: 'number' },
+    popoutLabel: { control: 'text' },
+    popinLabel: { control: 'text' },
   },
   args: {
-    width: 800,
-    height: 600,
+    title: 'Popped-out content',
+    width: 600,
+    height: 400,
+    popoutLabel: 'Pop out',
+    popinLabel: 'Pop back in',
   },
-} satisfies Meta<typeof BaseWindowPopout>;
+  render: (arguments_) => ({
+    components: { WindowPopout },
+    setup() {
+      return { args: arguments_ };
+    },
+    template: `
+      <WindowPopout v-bind="args">
+        <div style="padding: var(--mp-spacing-4); border: 1px solid var(--mp-color-border-default); border-radius: var(--mp-radius-md); color: var(--mp-color-text-primary);">
+          <h3 style="margin-top: 0;">Detachable panel</h3>
+          <p>Click “Pop out” to open this content in a separate browser window.</p>
+        </div>
+      </WindowPopout>
+    `,
+  }),
+} satisfies Meta<typeof WindowPopout>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: (arguments_) => ({
-    components: { BaseWindowPopout },
-    setup() {
-      return { args: arguments_ };
-    },
-    template: `
-      <BaseWindowPopout v-bind="args" @open="console.log('opened')" @close="console.log('closed')">
-        <div style="padding: 24px; background: #f5f5f5; border-radius: 8px;">
-          <h3 style="margin: 0 0 8px;">Popout Content</h3>
-          <p style="margin: 0;">
-            Click <strong>Pop out</strong> to open this panel in a separate browser window.
-            The content will be teleported into the new window. Styles are copied automatically.
-          </p>
-        </div>
-      </BaseWindowPopout>
-    `,
-  }),
-};
+export const Default: Story = {};
 
-export const CustomTitle: Story = {
-  args: { title: 'My Dashboard Panel', width: 1024, height: 768 },
-  render: (arguments_) => ({
-    components: { BaseWindowPopout },
-    setup() {
-      return { args: arguments_ };
-    },
-    template: `
-      <BaseWindowPopout v-bind="args">
-        <div style="padding: 24px; background: #e8f4fd; border-radius: 8px;">
-          <h3 style="margin: 0 0 8px;">Dashboard Panel</h3>
-          <p style="margin: 0;">This panel will open in a 1024×768 window titled <em>"My Dashboard Panel"</em>.</p>
-        </div>
-      </BaseWindowPopout>
-    `,
-  }),
-};
-
-export const CustomPlaceholder: Story = {
-  render: () => ({
-    components: { BaseWindowPopout },
-    template: `
-      <BaseWindowPopout>
-        <template #default>
-          <div style="padding: 24px; background: #f0fdf4; border-radius: 8px;">
-            <h3 style="margin: 0 0 8px;">Chart Panel</h3>
-            <p style="margin: 0;">Imagine a fancy chart here.</p>
-          </div>
-        </template>
-        <template #placeholder>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:24px;">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span style="font-size: 0.875rem; color: #555;">Chart is in a separate window</span>
-          </div>
-        </template>
-      </BaseWindowPopout>
-    `,
-  }),
-};
-
-export const CustomControls: Story = {
-  render: () => ({
-    components: { BaseWindowPopout },
-    template: `
-      <BaseWindowPopout>
-        <template #default>
-          <div style="padding: 24px; background: #fef9ee; border-radius: 8px;">
-            <p style="margin: 0;">Content panel with a fully custom control button.</p>
-          </div>
-        </template>
-        <template #controls="{ isPopped, open, close }">
-          <button
-            style="padding: 4px 12px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; background: white;"
-            @click="isPopped ? close() : open()"
-          >
-            {{ isPopped ? '⬅ Bring back' : '⤴ Open in window' }}
-          </button>
-        </template>
-      </BaseWindowPopout>
-    `,
-  }),
-};
+export const CustomLabels: Story = { args: { popoutLabel: 'Detach', popinLabel: 'Re-attach' } };

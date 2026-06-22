@@ -1,1 +1,1 @@
-export { default } from './base-virtual-list.vue';
+export { BaseVirtualList, type VirtualListItemScope, type VirtualListProperties } from './base-virtual-list';

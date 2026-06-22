@@ -1,1 +1,1 @@
-export { default } from './base-theme-provider.vue';
+export { BaseThemeProvider, type ThemeProviderProperties } from './base-theme-provider';

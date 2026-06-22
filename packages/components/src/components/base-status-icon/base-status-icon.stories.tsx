@@ -1,73 +1,78 @@
-import BaseStatusIcon from './base-status-icon.vue';
+import { StatusIcon } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `StatusIcon` is the Vue 3 build of the write-once `BaseStatusIcon` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Feedback/BaseStatusIcon',
-  component: BaseStatusIcon,
+  component: StatusIcon,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`StatusIcon` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `StatusIcon` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). It renders a toned glyph per status (`✓`/`⚠`/`✕`/`ℹ`/`–`, substituted for the original `@mission-platform/icons` SVGs) with `role="img"` when labelled. Styling comes from the co-located `base-status-icon.module.scss`.',
       },
     },
   },
   argTypes: {
-    status: { control: 'select', options: ['success', 'warning', 'error', 'info', 'neutral'] },
+    status: {
+      control: 'select',
+      options: [
+        'neutral',
+        'primary',
+        'secondary',
+        'tertiary',
+        'success',
+        'warning',
+        'info',
+        'error',
+        'critical',
+      ],
+    },
     size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    label: { control: 'text' },
   },
   args: {
-    status: 'success',
+    status: 'neutral',
     size: 'md',
-    label: 'Success',
   },
   render: (arguments_) => ({
-    components: { BaseStatusIcon },
+    components: { StatusIcon },
     setup() {
       return { args: arguments_ };
     },
-    template: '<BaseStatusIcon v-bind="args" />',
+    template: '<StatusIcon v-bind="args" />',
   }),
-} satisfies Meta<typeof BaseStatusIcon>;
+} satisfies Meta<typeof StatusIcon>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Success: Story = {};
+export const Default: Story = {};
 
-export const Warning: Story = { args: { status: 'warning', label: 'Warning' } };
+export const Success: Story = { args: { status: 'success', label: 'Success' } };
 
-export const Error: Story = { args: { status: 'error', label: 'Error' } };
-
-export const Info: Story = { args: { status: 'info', label: 'Info' } };
-
-export const Neutral: Story = { args: { status: 'neutral', label: 'Neutral' } };
-
-export const AllStatuses: Story = {
+export const Statuses: Story = {
   render: () => ({
-    components: { BaseStatusIcon },
+    components: { StatusIcon },
     template: `
       <div style="display: flex; align-items: center; gap: 16px;">
-        <BaseStatusIcon status="success" label="Success" />
-        <BaseStatusIcon status="warning" label="Warning" />
-        <BaseStatusIcon status="error"   label="Error" />
-        <BaseStatusIcon status="info"    label="Info" />
-        <BaseStatusIcon status="neutral" label="Neutral" />
-      </div>
-    `,
-  }),
-};
-
-export const Sizes: Story = {
-  render: () => ({
-    components: { BaseStatusIcon },
-    template: `
-      <div style="display: flex; align-items: center; gap: 16px;">
-        <BaseStatusIcon status="success" size="sm" />
-        <BaseStatusIcon status="success" size="md" />
-        <BaseStatusIcon status="success" size="lg" />
+        <StatusIcon status="neutral" />
+        <StatusIcon status="primary" />
+        <StatusIcon status="secondary" />
+        <StatusIcon status="tertiary" />
+        <StatusIcon status="success" />
+        <StatusIcon status="warning" />
+        <StatusIcon status="info" />
+        <StatusIcon status="error" />
+        <StatusIcon status="critical" />
       </div>
     `,
   }),

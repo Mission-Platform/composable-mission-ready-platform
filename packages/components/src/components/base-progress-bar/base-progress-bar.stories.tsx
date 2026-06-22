@@ -1,16 +1,23 @@
-import BaseProgressBar from './base-progress-bar.vue';
+import { ProgressBar } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `ProgressBar` is the Vue 3 build of the write-once `BaseProgressBar` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Feedback/BaseProgressBar',
-  component: BaseProgressBar,
+  component: ProgressBar,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`ProgressBar` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `ProgressBar` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). It renders a native `<progress>` track with a tone/size, an optional label row (via the composed neutral `Typography`), and an indeterminate mode. Styling comes from the co-located `base-progress-bar.module.scss`.',
       },
     },
   },
@@ -18,13 +25,13 @@ const meta = {
     variant: {
       control: 'select',
       options: [
+        'neutral',
         'primary',
         'secondary',
         'tertiary',
-        'default',
         'success',
         'warning',
-        'information',
+        'info',
         'error',
         'critical',
       ],
@@ -44,13 +51,13 @@ const meta = {
     label: 'Uploading…',
   },
   render: (arguments_) => ({
-    components: { BaseProgressBar },
+    components: { ProgressBar },
     setup() {
       return { args: arguments_ };
     },
-    template: '<BaseProgressBar v-bind="args" style="max-width: 400px;" />',
+    template: '<ProgressBar v-bind="args" style="max-width: 400px;" />',
   }),
-} satisfies Meta<typeof BaseProgressBar>;
+} satisfies Meta<typeof ProgressBar>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -73,12 +80,12 @@ export const Critical: Story = {
 
 export const Sizes: Story = {
   render: () => ({
-    components: { BaseProgressBar },
+    components: { ProgressBar },
     template: `
       <div style="display: flex; flex-direction: column; gap: 12px; max-width: 400px;">
-        <BaseProgressBar size="sm" :value="40" />
-        <BaseProgressBar size="md" :value="60" />
-        <BaseProgressBar size="lg" :value="80" />
+        <ProgressBar size="sm" :value="40" />
+        <ProgressBar size="md" :value="60" />
+        <ProgressBar size="lg" :value="80" />
       </div>
     `,
   }),

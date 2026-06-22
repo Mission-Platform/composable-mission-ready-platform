@@ -1,1 +1,1 @@
-export { default } from './base-collapse.vue';
+export { BaseCollapse, type CollapseProperties } from './base-collapse';

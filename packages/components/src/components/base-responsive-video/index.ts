@@ -1,2 +1,6 @@
-export { default } from './base-responsive-video.vue';
-export type { ResponsiveVideoSource, ResponsiveVideoFit } from './base-responsive-video.vue';
+export {
+  BaseResponsiveVideo,
+  type ResponsiveVideoFit,
+  type ResponsiveVideoProperties,
+  type ResponsiveVideoSource,
+} from './base-responsive-video';

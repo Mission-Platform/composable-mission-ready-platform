@@ -1,67 +1,87 @@
-import BaseButton from '../base-button/base-button.vue';
-import BaseSegmentControl from '../base-segment-control/base-segment-control.vue';
-
-import BaseThemeProvider from './base-theme-provider.vue';
+import { ThemeProvider, ThemeToggle } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-const THEME_OPTIONS = [
-  { label: 'Light', value: 'light' },
-  { label: 'Dark', value: 'dark' },
-  { label: 'Auto', value: 'auto' },
-];
-
+/**
+ * `ThemeProvider` is the Vue 3 build of the write-once `BaseThemeProvider` in
+ * this package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`; the very same source also
+ * ships as a React component via the package's `./react` subpath.
+ *
+ * It configures the shared observable theme store (the substitute for the
+ * original Vue `provide`/`inject`) from its props and exposes the live theme
+ * state and mutators to its default scoped slot, so a `ThemeToggle` (or any
+ * other consumer) placed inside it shares the same theme.
+ */
 const meta = {
   title: 'Components/Theme/BaseThemeProvider',
-  component: BaseThemeProvider,
+  component: ThemeProvider,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`ThemeProvider` component — configures and shares a reactive theme store (`useTheme`) with descendants, applying `data-theme` to `<html>` and persisting the preference. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `ThemeProvider` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). It configures the shared theme store and exposes `{ theme, resolvedTheme, systemTheme, setTheme, toggleTheme, cycleTheme }` to its default scoped slot. The original `provide`/`inject` is substituted by the shared singleton store.',
       },
     },
   },
   argTypes: {
-    defaultTheme: { control: 'inline-radio', options: ['light', 'dark', 'auto'] },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    defaultTheme: { control: 'select', options: ['light', 'dark', 'auto'] },
     storageKey: { control: 'text' },
     persist: { control: 'boolean' },
   },
   args: {
     defaultTheme: 'auto',
-    storageKey: 'mp-theme',
-    persist: true,
+    persist: false,
   },
   render: (arguments_) => ({
-    components: { BaseThemeProvider, BaseSegmentControl, BaseButton },
+    components: { ThemeProvider },
     setup() {
-      return { args: arguments_, themeOptions: THEME_OPTIONS };
+      return { args: arguments_ };
     },
     template: `
-      <BaseThemeProvider v-bind="args">
-        <template #default="{ theme, resolvedTheme, setTheme, toggleTheme }">
-          <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start;">
-            <BaseSegmentControl
-              :options="themeOptions"
-              :model-value="theme"
-              aria-label="Theme"
-              @update:model-value="(value) => setTheme(value)"
-            />
-            <p style="margin: 0;">Preference: <strong>{{ theme }}</strong> · Resolved: <strong>{{ resolvedTheme }}</strong></p>
-            <BaseButton variant="secondary" @click="toggleTheme">Toggle light / dark</BaseButton>
+      <ThemeProvider v-bind="args">
+        <template #default="{ theme, resolvedTheme, setTheme }">
+          <div style="display: flex; flex-direction: column; gap: var(--mp-spacing-3); padding: var(--mp-spacing-4); border: 1px solid var(--mp-color-border-default); border-radius: var(--mp-radius-md); background: var(--mp-color-bg-surface); color: var(--mp-color-text-primary);">
+            <p>Preference: <strong>{{ theme }}</strong> · Resolved: <strong>{{ resolvedTheme }}</strong></p>
+            <div style="display: flex; gap: var(--mp-spacing-2);">
+              <button type="button" @click="setTheme('light')">Light</button>
+              <button type="button" @click="setTheme('dark')">Dark</button>
+              <button type="button" @click="setTheme('auto')">Auto</button>
+            </div>
           </div>
         </template>
-      </BaseThemeProvider>
+      </ThemeProvider>
     `,
   }),
-} satisfies Meta<typeof BaseThemeProvider>;
+} satisfies Meta<typeof ThemeProvider>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const DefaultDark: Story = { args: { defaultTheme: 'dark' } };
-
-export const WithoutPersistence: Story = { args: { persist: false } };
+/**
+ * A `ThemeToggle` nested inside the provider drives the same shared store, so the
+ * provider's exposed `theme` updates in lock-step with the toggle.
+ */
+export const WithToggle: Story = {
+  render: (arguments_) => ({
+    components: { ThemeProvider, ThemeToggle },
+    setup() {
+      return { args: arguments_ };
+    },
+    template: `
+      <ThemeProvider v-bind="args">
+        <template #default="{ theme }">
+          <div style="display: flex; align-items: center; gap: var(--mp-spacing-3);">
+            <ThemeToggle />
+            <span>Active preference: <strong>{{ theme }}</strong></span>
+          </div>
+        </template>
+      </ThemeProvider>
+    `,
+  }),
+};
