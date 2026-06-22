@@ -52,17 +52,6 @@ mp.website:
   packages:
     title: Briques de construction
     lead: Chaque paquet est versionné et publié indépendamment. Mélangez, assortissez et composez.
-    items:
-      - Bibliothèque de composants Vue 3
-      - Jetons de design CSS et thèmes SCSS
-      - Composants d’icônes SVG
-      - Utilitaires et composables responsives
-      - Intégration vue-i18n et locales de base
-      - Wrapper MapLibre GL pour Vue 3
-      - Correcteur grammatical Harper pour Monaco
-      - Correcteur orthographique Hunspell (WASM)
-      - 'SEO unifié : métadonnées de page, Open Graph, Twitter Card et JSON-LD'
-      - Cloudflare Worker base-spa
   about:
     title: Ce que nous construisons
     lead: >-

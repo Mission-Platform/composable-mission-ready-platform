@@ -54,17 +54,6 @@ mp.website:
   packages:
     title: Bausteine
     lead: Jedes Paket wird unabhängig versioniert und veröffentlicht. Mische, kombiniere und komponiere.
-    items:
-      - Vue 3-Komponentenbibliothek
-      - CSS-Design-Tokens und SCSS-Themes
-      - SVG-Icon-Komponenten
-      - Responsive Utilities und Composables
-      - vue-i18n-Integration und Basis-Locales
-      - MapLibre GL Vue 3-Wrapper
-      - Harper-Grammatikprüfer für Monaco
-      - Hunspell-Rechtschreibprüfung (WASM)
-      - 'Vereinheitlichtes SEO: Seitenmetadaten, Open Graph, Twitter Card und JSON-LD'
-      - base-spa-Cloudflare-Worker
   about:
     title: Woran wir bauen
     lead: >-
