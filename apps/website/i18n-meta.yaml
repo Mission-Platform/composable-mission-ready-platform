@@ -46,17 +46,6 @@ ar:
     packages:
       title: لبنات البناء
       lead: كل حزمة تُصدَّر وتُنشر بشكل مستقل. امزج وطابق وركّب.
-      items:
-        - مكتبة مكونات Vue 3
-        - رموز تصميم CSS وثيمات SCSS
-        - مكونات أيقونات SVG
-        - أدوات وcomposables استجابية
-        - تكامل vue-i18n واللغات الأساسية
-        - غلاف MapLibre GL لـ Vue 3
-        - مدقق Harper النحوي لـ Monaco
-        - مدقق Hunspell الإملائي (WASM)
-        - 'تحسين محركات البحث الموحد: بيانات الصفحة، Open Graph، Twitter Card و JSON-LD'
-        - عامل base-spa من Cloudflare
     about:
       title: ما الذي نبنيه
       lead: >-
@@ -151,17 +140,6 @@ de:
     packages:
       title: Bausteine
       lead: Jedes Paket wird unabhängig versioniert und veröffentlicht. Mische, kombiniere und komponiere.
-      items:
-        - Vue 3-Komponentenbibliothek
-        - CSS-Design-Tokens und SCSS-Themes
-        - SVG-Icon-Komponenten
-        - Responsive Utilities und Composables
-        - vue-i18n-Integration und Basis-Locales
-        - MapLibre GL Vue 3-Wrapper
-        - Harper-Grammatikprüfer für Monaco
-        - Hunspell-Rechtschreibprüfung (WASM)
-        - 'Vereinheitlichtes SEO: Seitenmetadaten, Open Graph, Twitter Card und JSON-LD'
-        - base-spa-Cloudflare-Worker
     about:
       title: Woran wir bauen
       lead: >-
@@ -224,9 +202,9 @@ en:
       badge: Composable · Write Once · Mission Ready
       title: The composable, mission-ready platform for modern web products.
       lead: >-
-        Mission Platform is a monorepo of reusable, framework-neutral building blocks — write-once components that ship
-        to the framework of your choice, plus design tokens, composables, Cloudflare Workers, and SEO primitives.
-        Assemble polished, fast, discoverable apps without reinventing the basics.
+        Mission Platform is a monorepo of reusable, framework-neutral building blocks — write-once components that
+        compile straight to Vue 3 and React, plus design tokens, layouts, forms, routing, scheduling, i18n, maps, and
+        SEO primitives. Assemble polished, fast, discoverable apps without reinventing the basics.
       cta-primary: Explore the platform
       cta-secondary: Read the docs
     features:
@@ -240,8 +218,8 @@ en:
           description: Built on Vite and modern web standards — offline-first, PWA-friendly, and ready for the edge.
         - title: Write once, ship everywhere
           description: >-
-            Author each component once in a framework-neutral JSX dialect, then compile it straight to the framework of
-            your choice. No per-framework rewrites.
+            Author each component once in a framework-neutral JSX dialect, then compile it straight to both Vue 3 and
+            React. No per-framework rewrites.
         - title: i18n & a11y first
           description: >-
             First-class i18n integration, RTL-aware layouts, and accessibility-tested components let your product speak
@@ -254,15 +232,20 @@ en:
           description: First-class Cloudflare Workers support, with the base-spa worker for static and SPA-fallback hosting.
         - title: Discoverable by default
           description: >-
-            Built-in Open Graph and page-meta composables plus prerendered SSG output keep every route SEO-ready and
-            shareable.
+            A unified SEO package — page metadata, Open Graph, Twitter Card, and JSON-LD — plus prerendered SSG output
+            keeps every route SEO-ready and shareable.
     packages:
       title: Building blocks
       lead: Every package is independently versioned and published. Mix, match, and compose.
       items:
-        - Write-once component library
-        - CSS design tokens & SCSS themes
+        - Write-once component library (Vue 3 + React)
+        - Framework-neutral JSX runtime & adapters
+        - DTCG design tokens & SCSS themes
         - Write-once SVG icon components
+        - Write-once application layouts
+        - Write-once form builder & schema forms
+        - Framework-agnostic router with Vue adapter
+        - Calendar & scheduling core (RFC 5545 recurrence)
         - Responsive utilities & composables
         - i18n integration & base locales
         - MapLibre GL map wrapper
@@ -369,17 +352,6 @@ es:
     packages:
       title: Bloques de construcción
       lead: Cada paquete se versiona y publica de forma independiente. Mezcla, combina y compón.
-      items:
-        - Biblioteca de componentes Vue 3
-        - Tokens de diseño CSS y temas SCSS
-        - Componentes de iconos SVG
-        - Utilidades y composables responsivos
-        - Integración con vue-i18n y locales base
-        - Wrapper de MapLibre GL para Vue 3
-        - Corrector gramatical Harper para Monaco
-        - Corrector ortográfico Hunspell (WASM)
-        - 'SEO unificado: metadatos de página, Open Graph, Twitter Card y JSON-LD'
-        - Cloudflare Worker base-spa
     about:
       title: Lo que estamos construyendo
       lead: >-
@@ -478,17 +450,6 @@ fr:
     packages:
       title: Briques de construction
       lead: Chaque paquet est versionné et publié indépendamment. Mélangez, assortissez et composez.
-      items:
-        - Bibliothèque de composants Vue 3
-        - Jetons de design CSS et thèmes SCSS
-        - Composants d’icônes SVG
-        - Utilitaires et composables responsives
-        - Intégration vue-i18n et locales de base
-        - Wrapper MapLibre GL pour Vue 3
-        - Correcteur grammatical Harper pour Monaco
-        - Correcteur orthographique Hunspell (WASM)
-        - 'SEO unifié : métadonnées de page, Open Graph, Twitter Card et JSON-LD'
-        - Cloudflare Worker base-spa
     about:
       title: Ce que nous construisons
       lead: >-
@@ -578,17 +539,6 @@ he:
     packages:
       title: אבני בניין
       lead: כל חבילה מנוהלת ומפורסמת בנפרד. ערבב, התאם והרכב.
-      items:
-        - ספריית קומפוננטות Vue 3
-        - design tokens של CSS וערכות נושא ב-SCSS
-        - קומפוננטות אייקוני SVG
-        - כלים ו-composables רספונסיביים
-        - שילוב vue-i18n ושפות בסיס
-        - עטיפת MapLibre GL ל-Vue 3
-        - בודק תחביר Harper ל-Monaco
-        - בודק איות Hunspell (WASM)
-        - 'SEO מאוחד: מטא-נתוני עמוד, Open Graph, Twitter Card ו-JSON-LD'
-        - Cloudflare Worker base-spa
     about:
       title: מה אנחנו בונים
       lead: >-
@@ -681,17 +631,6 @@ it:
     packages:
       title: Mattoni di costruzione
       lead: Ogni pacchetto è versionato e pubblicato in modo indipendente. Mescola, abbina e componi.
-      items:
-        - Libreria di componenti Vue 3
-        - Design token CSS e temi SCSS
-        - Componenti di icone SVG
-        - Utility e composables responsive
-        - Integrazione vue-i18n e locali base
-        - Wrapper MapLibre GL per Vue 3
-        - Correttore grammaticale Harper per Monaco
-        - Correttore ortografico Hunspell (WASM)
-        - 'SEO unificata: metadati di pagina, Open Graph, Twitter Card e JSON-LD'
-        - Cloudflare Worker base-spa
     about:
       title: Cosa stiamo costruendo
       lead: >-
@@ -774,17 +713,6 @@ ja:
     packages:
       title: ビルディングブロック
       lead: すべてのパッケージは独立してバージョン管理・公開されています。組み合わせて、自由に構成してください。
-      items:
-        - Vue 3 コンポーネントライブラリ
-        - CSS デザイントークンと SCSS テーマ
-        - SVG アイコンコンポーネント
-        - レスポンシブユーティリティとコンポーザブル
-        - vue-i18n 統合とベースロケール
-        - Vue 3 向け MapLibre GL ラッパー
-        - Monaco 向け Harper 文法チェッカー
-        - Hunspell スペルチェッカー (WASM)
-        - 統合 SEO：ページメタデータ、Open Graph、Twitter Card、JSON-LD
-        - base-spa Cloudflare Worker
     about:
       title: 私たちが作っているもの
       lead: Mission Platform は多様な分野で実際のアプリケーションを支えています。プラットフォームの目標は、洗練されミッション対応の体験を、再現可能でコンポーザブル、そして出荷しやすいものにすることです。
@@ -856,17 +784,6 @@ ko:
     packages:
       title: 빌딩 블록
       lead: 모든 패키지는 독립적으로 버전이 관리되고 게시됩니다. 섞고, 맞추고, 구성하세요.
-      items:
-        - Vue 3 컴포넌트 라이브러리
-        - CSS 디자인 토큰 및 SCSS 테마
-        - SVG 아이콘 컴포넌트
-        - 반응형 유틸리티 및 컴포저블
-        - vue-i18n 통합 및 기본 로케일
-        - Vue 3용 MapLibre GL 래퍼
-        - Monaco용 Harper 문법 검사기
-        - Hunspell 맞춤법 검사기 (WASM)
-        - '통합 SEO: 페이지 메타데이터, Open Graph, Twitter Card 및 JSON-LD'
-        - base-spa Cloudflare 워커
     about:
       title: 우리가 만드는 것
       lead: Mission Platform은 다양한 도메인에서 실제 애플리케이션을 구동합니다. 플랫폼의 목표는 정제되고 미션 대응이 된 경험을 반복 가능하고, 컴포저블하며, 쉽게 출시할 수 있도록 만드는 것입니다.
@@ -953,17 +870,6 @@ nl:
     packages:
       title: Bouwstenen
       lead: Elk pakket wordt onafhankelijk geversioneerd en gepubliceerd. Mix, match en stel samen.
-      items:
-        - Vue 3-componentenbibliotheek
-        - CSS design-tokens en SCSS-thema’s
-        - SVG-icooncomponenten
-        - Responsieve utilities en composables
-        - vue-i18n-integratie en basis-locales
-        - MapLibre GL Vue 3-wrapper
-        - Harper grammaticacontrole voor Monaco
-        - Hunspell spellingcontrole (WASM)
-        - 'Geünificeerde SEO: paginametadata, Open Graph, Twitter Card en JSON-LD'
-        - base-spa Cloudflare Worker
     about:
       title: Wat we bouwen
       lead: >-
@@ -1046,17 +952,6 @@ zh:
     packages:
       title: 构建块
       lead: 每个软件包都独立版本化和发布。混合、搭配、组合。
-      items:
-        - Vue 3 组件库
-        - CSS 设计令牌与 SCSS 主题
-        - SVG 图标组件
-        - 响应式工具与可组合函数
-        - vue-i18n 集成与基础语言包
-        - 面向 Vue 3 的 MapLibre GL 封装
-        - 面向 Monaco 的 Harper 语法检查器
-        - Hunspell 拼写检查器(WASM)
-        - 统一 SEO:页面元数据、Open Graph、Twitter Card 与 JSON-LD
-        - base-spa Cloudflare Worker
     about:
       title: 我们正在构建什么
       lead: Mission Platform 在多种领域驱动着真实的应用。平台的目标,是让精致且任务就绪的体验可复制、可组合,并易于交付。

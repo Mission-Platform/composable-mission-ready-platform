@@ -19,7 +19,6 @@
     BaseAlertBanner,
   } from '@mission-platform/components/vue';
   import { useI18n } from '@mission-platform/i18n/vue';
-  import { BaseApplicationLayout } from '@mission-platform/layouts/vue';
   import {
     IconDebug,
     IconGlobe,
@@ -29,6 +28,7 @@
     IconPuzzle,
     IconSearch,
   } from '@mission-platform/icons/vue';
+  import { BaseApplicationLayout } from '@mission-platform/layouts/vue';
   import { organizationId, useSeo, webPage, webSiteId } from '@mission-platform/seo';
   import { type Component, computed, onBeforeUnmount, onMounted, ref } from 'vue';
   import { useRouter } from 'vue-router';
@@ -148,8 +148,13 @@
 
   const packageNames = [
     '@mission-platform/components',
+    '@mission-platform/jsx',
     '@mission-platform/tokens',
     '@mission-platform/icons',
+    '@mission-platform/layouts',
+    '@mission-platform/forms',
+    '@mission-platform/router',
+    '@mission-platform/scheduler-core',
     '@mission-platform/breakpoints',
     '@mission-platform/i18n',
     '@mission-platform/map',
@@ -766,7 +771,7 @@ en:
   hero:
     badge: Composable · Write Once · Mission Ready
     title: The composable, mission-ready platform for modern web products.
-    lead: Mission Platform is a monorepo of reusable, framework-neutral building blocks — write-once components that ship to the framework of your choice, plus design tokens, composables, Cloudflare Workers, and SEO primitives. Assemble polished, fast, discoverable apps without reinventing the basics.
+    lead: Mission Platform is a monorepo of reusable, framework-neutral building blocks — write-once components that compile straight to Vue 3 and React, plus design tokens, layouts, forms, routing, scheduling, i18n, maps, and SEO primitives. Assemble polished, fast, discoverable apps without reinventing the basics.
     cta-primary: Explore the platform
     cta-secondary: Read the docs
   features:
@@ -777,7 +782,7 @@ en:
       - title: Mission-ready performance
         description: Built on Vite and modern web standards — offline-first, PWA-friendly, and ready for the edge.
       - title: Write once, ship everywhere
-        description: Author each component once in a framework-neutral JSX dialect, then compile it straight to the framework of your choice. No per-framework rewrites.
+        description: Author each component once in a framework-neutral JSX dialect, then compile it straight to both Vue 3 and React. No per-framework rewrites.
       - title: i18n & a11y first
         description: First-class i18n integration, RTL-aware layouts, and accessibility-tested components let your product speak every user’s language.
       - title: Developer experience
@@ -785,14 +790,19 @@ en:
       - title: Edge-native deployment
         description: First-class Cloudflare Workers support, with the base-spa worker for static and SPA-fallback hosting.
       - title: Discoverable by default
-        description: Built-in Open Graph and page-meta composables plus prerendered SSG output keep every route SEO-ready and shareable.
+        description: A unified SEO package — page metadata, Open Graph, Twitter Card, and JSON-LD — plus prerendered SSG output keeps every route SEO-ready and shareable.
   packages:
     title: Building blocks
     lead: Every package is independently versioned and published. Mix, match, and compose.
     items:
-      - Write-once component library
-      - CSS design tokens & SCSS themes
+      - Write-once component library (Vue 3 + React)
+      - Framework-neutral JSX runtime & adapters
+      - DTCG design tokens & SCSS themes
       - Write-once SVG icon components
+      - Write-once application layouts
+      - Write-once form builder & schema forms
+      - Framework-agnostic router with Vue adapter
+      - Calendar & scheduling core (RFC 5545 recurrence)
       - Responsive utilities & composables
       - i18n integration & base locales
       - MapLibre GL map wrapper
