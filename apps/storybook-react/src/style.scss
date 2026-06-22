@@ -1,0 +1,58 @@
+/* ─── Global Styles ──────────────────────────────────────────────────────────── */
+
+/* scss/tokens emits the semantic colour tokens as `light-dark()` values on :root */
+
+/* with `color-scheme: light dark`, so the page follows the OS colour preference */
+
+/* automatically. The light/dark theme entry points add the [data-theme] opt-in */
+
+/* selectors that pin a subtree to one scheme. */
+@use '@mission-platform/tokens/scss/tokens';
+@use '@mission-platform/tokens/scss/themes/light';
+@use '@mission-platform/tokens/scss/themes/dark';
+@use '@mission-platform/tokens/scss/mixins' as mp;
+
+/* ─── Base reset & typography ────────────────────────────────────────────────── */
+:root {
+  @include mp.mp-font-base;
+
+  color: var(--mp-color-text-primary);
+  background: var(--mp-color-bg-base);
+}
+
+body {
+  margin: 0;
+}
+
+h1 {
+  @include mp.mp-font-h1;
+
+  font-family: var(--mp-font-family-heading, var(--mp-font-family-sans));
+  color: var(--mp-color-text-primary);
+}
+
+p {
+  margin: 0;
+  color: var(--mp-color-text-secondary);
+}
+
+/* ─── App shell ──────────────────────────────────────────────────────────────── */
+#root {
+  width: 960px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  box-sizing: border-box;
+  min-height: 100svh;
+}
+
+.app__header {
+  margin-bottom: 2rem;
+}
+
+.app__showcase {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
