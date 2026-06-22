@@ -1,0 +1,48 @@
+# @mission-platform/forms
+
+Write-once Mission Platform **form** components — authored once in the
+framework-neutral `@mission-platform/jsx` dialect and compiled straight to both
+Vue 3 (`./vue`) and React (`./react`) by `@mission-platform/vite-plugin-jsx`'s
+two-stage compiler (there is no neutral runtime build). The package was split out
+of `@mission-platform/components` so it can depend on **both**
+`@mission-platform/components` (for the field widgets and `BaseDrawer`) and
+`@mission-platform/layouts` (for `BaseVerticalLayout`) without creating a
+dependency cycle.
+
+## Components
+
+- **BaseFormBuilder** (`./components/base-form-builder`) — a visual authoring
+  surface for JSON-Schema forms: a field palette, a tabbed centre (Editor canvas,
+  a wizard-only Steps tab, a live Preview, and a Schema JSON tab), and an
+  inspector. Laid out as a three-column `BaseVerticalLayout` (from
+  `@mission-platform/layouts`). The whole field tree is emitted as a
+  `SchemaFormDefinition` (built through `@mission-platform/forms-core`) via the
+  controlled `modelValue` / `onUpdateModelValue` callback prop.
+- **BaseSchemaForm** (`./components/base-schema-form`) — renders and validates a
+  form entirely from a JSON Schema (fields + Ajv validation derived through
+  `@mission-platform/forms-core`, so Vue and React validate identically). A
+  single object renders a one-step form; a top-level array renders a multi-step
+  wizard. Supports nested field sets, `ui.visibleWhen` conditional visibility,
+  and per-field error surfacing.
+
+## Consuming
+
+- Vue: `import { FormBuilder, SchemaForm } from '@mission-platform/forms/vue'`
+- React: `import { FormBuilder, SchemaForm } from '@mission-platform/forms/react'`
+  (both names are also exported under their neutral `Base*` aliases).
+- Styles: `import '@mission-platform/forms/styles'` for the shared a11y helpers;
+  each component additionally ships its own co-located CSS Module.
+
+## Authoring notes
+
+- Each component lives in `src/components/<name>/` (`<name>.tsx`,
+  `<name>.module.scss`, `<name>.stories.tsx`, `<name>.spec.ts`, `index.ts`); the
+  neutral barrel is `src/components/index.ts`.
+- Neutral sources import sibling widgets from `@mission-platform/components`
+  (remapped to the built `./vue` / `./react` entry at build time), `BaseDrawer`
+  types from `@mission-platform/components/base-drawer`, and `BaseVerticalLayout`
+  from `@mission-platform/layouts`.
+- Co-located Storybook stories (globbed by `apps/storybook`) are titled
+  `Forms/<Name>` (the `forms` package has its own top-level Storybook section,
+  separate from `@mission-platform/components`) and consume the built `./vue`
+  subpath.

@@ -1,0 +1,69 @@
+# @mission-platform/forms-core
+
+Framework-agnostic forms core for Mission Platform. It holds the **single
+implementation** of the heavy, framework-independent forms logic that both the
+Vue `@mission-platform/components` (`BaseSchemaForm` / `BaseFormBuilder`) and the
+write-once `@mission-platform/components` counterparts consume, so the two
+frameworks stay in parity by construction rather than by duplication.
+
+It is a pure-TypeScript package (no Vue, no React) built straight to ESM + types
+with `vite` + `tsc`. Its only runtime dependencies are `ajv`/`ajv-formats` (JSON
+Schema validation) and `nanoid` (builder field ids).
+
+## Exports (`@mission-platform/forms-core`)
+
+### JSON Schema dialect + types (`src/types.ts`)
+- `FormFieldType`, `FormJsonSchema`, `SchemaFormDefinition` (single object = a
+  one-step form; array of objects = a multi-step wizard), `JsonSchemaProperty`,
+  `FieldUiOptions` (the namespaced `ui` presentation extension), `FormFieldSchema`
+  (the resolved, render-ready field shape), `FormValues`, `FormErrors`,
+  `SchemaFormTranslate`, `SchemaFormValidationMode`.
+- Conditional-visibility types: `FieldCondition`, `FieldConditionLeaf`,
+  `FieldConditionGroup` (`allOf`/`anyOf`/`oneOf`, mirroring JSON Schema).
+- `LocationFormat` / `LocationValue` (the `location` widget's value; defined here
+  so the core stays framework-agnostic, structurally identical to the
+  `@mission-platform/components` location-input type).
+- `Autocomplete`, `AutocompleteToken`, `Autocapitalize`, and the grouped
+  `AUTOCOMPLETE_OPTIONS` list for a builder dropdown.
+
+### Conditional visibility (`src/conditions.ts`)
+- `evaluateCondition(condition, values)` — evaluate a `FieldCondition` against the
+  form values (combinators follow JSON Schema: `allOf`=AND, `anyOf`=OR,
+  `oneOf`=XOR; dotted paths walk into nested field sets).
+- `isFieldVisible(field, values)` — whether a field with an optional `visibleWhen`
+  should render.
+
+### JSON Schema → fields / defaults + validation (`src/json-schema.ts`)
+- `jsonSchemaToFields(schema)` — derive the ordered, render-ready `FormFieldSchema[]`
+  (recursing into nested `object` field sets).
+- `jsonSchemaDefaults(schema)` — the default value object (explicit `default`
+  keywords, else type-appropriate blanks; composite range/location defaults).
+- `createFormValidator(schema, translate?)` → `FormValidator` — compiles the
+  schema to a clean, Ajv-compilable JSON Schema and validates `values`, returning
+  a per-field `FormErrors` map. Hidden (`visibleWhen`) fields are excluded from
+  validation; author `errorMessage` overrides win; generated messages route
+  through the optional `translate` fn (else built-in English).
+
+### Form-builder model + field ⇄ schema conversion (`src/builder-types.ts`, `src/form-schema.ts`)
+- `BuilderField` / `BuilderFieldOption` / `FieldTypeDescriptor` / `FieldsToSchemaOptions`
+  — the builder's working representation of a (possibly nested) field tree.
+- `DEFAULT_FIELD_TYPES` — the palette, in display order.
+- `createField`, `nextFieldId`, `slugify`, `uniqueKey`, `fieldKeyError`,
+  `widgetToJsonType`, `widgetHasOptions`, `isNumberWidget`, `isFieldsetWidget`.
+- `fieldsToSchema` / `fieldsToWizardSchema` / `fieldsToDefinition` /
+  `builderFieldToProperty` — builder fields → `SchemaFormDefinition`.
+- `schemaToFields` / `schemaStepTitles` / `schemaStepDescriptions` /
+  `schemaStepConditions` — hydrate a definition back into builder fields.
+
+The `@dnd-kit`-specific sortable-group/drag-payload helpers used only by the Vue
+builder remain in `@mission-platform/components`; this package is intentionally
+free of any DnD or framework concern.
+
+## Consumers
+- `@mission-platform/components` — `base-schema-form` and `base-form-builder`
+  re-export this package's types/logic (their local `types.ts`/`conditions.ts`/
+  `json-schema.ts`/`form-schema.ts` are thin re-exports), keeping their existing
+  specs as the parity baseline.
+- `@mission-platform/components` — `BaseSchemaForm` derives its controls and
+  validates through this package; `BaseFormBuilder` builds/hydrates its schema
+  through it.
