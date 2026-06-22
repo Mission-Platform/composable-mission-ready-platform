@@ -4,6 +4,7 @@
 
   import { useDrawing } from '../../composables/use-drawing';
   import { useMap } from '../../composables/use-map';
+  import { toMapColor } from '../../utils/to-map-color';
   import MapLayer from '../map-layer/map-layer.vue';
   import MapSource from '../map-source/map-source.vue';
 
@@ -105,6 +106,21 @@
       }
     },
     { immediate: true },
+  );
+
+  // ── Emit mode changes upward ──────────────────────────────────────────────
+  // The internal drawing mode resets to `undefined` once a shape is committed
+  // (or cancelled). Without propagating that back to the parent, a `v-model:mode`
+  // / `:mode` + `@update:mode` binding would stay stuck on the previous value,
+  // so the prop watcher above never re-fires `startDrawing` and no further
+  // shapes can be drawn.
+  watch(
+    () => drawing.mode.value,
+    (newMode) => {
+      if (props.mode !== newMode) {
+        emit('update:mode', newMode);
+      }
+    },
   );
 
   // ── Sync modelValue prop → internal features ─────────────────────────────
@@ -266,7 +282,7 @@
   // ── Layer paint expressions ───────────────────────────────────────────────
 
   const fillPaint = computed(() => ({
-    'fill-color': props.fillColor,
+    'fill-color': toMapColor(props.fillColor),
     'fill-opacity': [
       'case',
       ['==', ['get', 'id'], drawing.selectedId.value ?? ''],
@@ -276,49 +292,49 @@
   }));
 
   const linePaint = computed(() => ({
-    'line-color': props.strokeColor,
+    'line-color': toMapColor(props.strokeColor),
     'line-width': props.strokeWidth,
   }));
 
   const draftFillPaint = computed(() => ({
-    'fill-color': props.draftColor,
+    'fill-color': toMapColor(props.draftColor),
     'fill-opacity': props.fillOpacity,
   }));
 
   const draftLinePaint = computed(() => ({
-    'line-color': props.draftColor,
+    'line-color': toMapColor(props.draftColor),
     'line-width': props.strokeWidth,
     'line-dasharray': [2, 2],
   }));
 
   const vertexPaint = computed(() => ({
     'circle-radius': 6,
-    'circle-color': props.vertexColor,
-    'circle-stroke-color': props.strokeColor,
+    'circle-color': toMapColor(props.vertexColor),
+    'circle-stroke-color': toMapColor(props.strokeColor),
     'circle-stroke-width': 2,
   }));
 
   const draftVertexPaint = computed(() => ({
     'circle-radius': 5,
-    'circle-color': draftVertexColor,
-    'circle-stroke-color': palette.color.white,
+    'circle-color': toMapColor(draftVertexColor),
+    'circle-stroke-color': toMapColor(palette.color.white),
     'circle-stroke-width': 2,
   }));
 
   const anchorPaint = computed(() => ({
     'circle-radius': 7,
-    'circle-color': props.draftColor,
-    'circle-stroke-color': palette.color.white,
+    'circle-color': toMapColor(props.draftColor),
+    'circle-stroke-color': toMapColor(palette.color.white),
     'circle-stroke-width': 2,
   }));
 
   const ghostFillPaint = computed(() => ({
-    'fill-color': props.draftColor,
+    'fill-color': toMapColor(props.draftColor),
     'fill-opacity': props.fillOpacity * 0.6,
   }));
 
   const ghostLinePaint = computed(() => ({
-    'line-color': props.draftColor,
+    'line-color': toMapColor(props.draftColor),
     'line-width': props.strokeWidth,
     'line-dasharray': [3, 3],
     'line-opacity': 0.75,
@@ -335,8 +351,8 @@
   }));
 
   const measureLabelPaint = computed(() => ({
-    'text-color': palette.color.neutral[900], // #08060d — dark text on map
-    'text-halo-color': palette.color.white, // #fff — halo for legibility
+    'text-color': toMapColor(palette.color.neutral[900]), // #08060d — dark text on map
+    'text-halo-color': toMapColor(palette.color.white), // #fff — halo for legibility
     'text-halo-width': 2,
   }));
 

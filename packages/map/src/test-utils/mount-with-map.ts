@@ -35,6 +35,7 @@ export function mountWithMap(
     components?: Record<string, unknown>;
   } = {},
 ): MountWithMapResult {
+  const fakeCanvas = { style: {} as CSSStyleDeclaration } as HTMLCanvasElement;
   const fakeMap = {
     on: vi.fn(),
     off: vi.fn(),
@@ -44,6 +45,9 @@ export function mountWithMap(
     getLayer: vi.fn().mockImplementation(() => {}),
     addLayer: vi.fn(),
     removeLayer: vi.fn(),
+    getCanvas: vi.fn(() => fakeCanvas),
+    queryRenderedFeatures: vi.fn(() => []),
+    dragPan: { enable: vi.fn(), disable: vi.fn() },
   } as unknown as Map;
 
   const mapReference = shallowRef<Map | undefined>(fakeMap);
