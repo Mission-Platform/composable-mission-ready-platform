@@ -1,4 +1,5 @@
-import { createMpI18n, useI18n } from '@mission-platform/i18n';
+import { createMpI18n } from '@mission-platform/i18n';
+import { useI18n } from '@mission-platform/i18n/vue';
 import { defineComponent, ref } from 'vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
@@ -6,57 +7,89 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 /**
- * A small component that renders every key from the active locale so we can
- * visually inspect what is registered in the i18n instance.
+ * A small component that renders a handful of keys from the globally-installed
+ * i18next instance (set up in `preview.ts`) so we can visually inspect what is
+ * registered and how the reactive `useI18n` composable behaves.
  */
 const LocaleInspector = defineComponent({
   name: 'LocaleInspector',
   setup() {
-    const { t, locale, availableLocales, getLocaleMessage } = useI18n({ useScope: 'global' });
+    const { t, locale } = useI18n();
 
-    const selectedLocale = ref(locale.value);
+    const keys = ['title', 'draw.line', 'draw.polygon', 'status.selected', 'tooltip.split'];
 
-    function switchLocale(code: string) {
-      locale.value = code;
-      selectedLocale.value = code;
+    return () => (
+      <div style="font-family: monospace; font-size: 13px; line-height: 1.8;">
+        <p>
+          <strong>Active locale:</strong> {locale.value}
+        </p>
+        <table style="border-collapse: collapse; width: 100%;">
+          <thead>
+            <tr style="background: #f5f5f5;">
+              <th style="padding: 6px 12px; text-align: left; border: 1px solid #ddd;">Key</th>
+              <th style="padding: 6px 12px; text-align: left; border: 1px solid #ddd;">t(key) → value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {keys.map((key) => (
+              <tr key={key}>
+                <td style="padding: 6px 12px; border: 1px solid #ddd; color: #555;">{key}</td>
+                <td style="padding: 6px 12px; border: 1px solid #ddd;">{t(key, { id: 'feature-1' })}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  },
+});
+
+/**
+ * Demonstrates a standalone `createMpI18n` instance with inline messages for
+ * multiple locales — used directly (no Vue plugin) to translate and switch
+ * locales on the fly.
+ */
+const CustomMessages = defineComponent({
+  name: 'CustomMessages',
+  setup() {
+    const i18n = createMpI18n({
+      locale: 'en',
+      messages: {
+        en: { greeting: 'Hello {name}', farewell: 'Goodbye' },
+        fr: { greeting: 'Bonjour {name}', farewell: 'Au revoir' },
+      },
+    });
+
+    // i18next is framework-neutral, so bump a ref to re-render on locale change.
+    const tick = ref(0);
+    const current = ref(i18n.language);
+    async function switchLocale(code: string) {
+      await i18n.changeLanguage(code);
+      current.value = code;
+      tick.value += 1;
     }
 
-    return () => {
-      const msgs = getLocaleMessage(selectedLocale.value) as Record<string, string>;
-
-      return (
-        <div style="font-family: monospace; font-size: 13px; line-height: 1.8;">
-          <div style="margin-bottom: 12px; display: flex; gap: 8px;">
-            {availableLocales.map((code: string) => (
-              <button
-                key={code}
-                onClick={() => switchLocale(code)}
-                style={`padding: 4px 12px; border-radius: 4px; border: 1px solid #ccc; cursor: pointer; background: ${code === selectedLocale.value ? '#1a73e8' : '#fff'}; color: ${code === selectedLocale.value ? '#fff' : '#333'};`}
-              >
-                {code}
-              </button>
-            ))}
-          </div>
-
-          <table style="border-collapse: collapse; width: 100%;">
-            <thead>
-              <tr style="background: #f5f5f5;">
-                <th style="padding: 6px 12px; text-align: left; border: 1px solid #ddd;">Key</th>
-                <th style="padding: 6px 12px; text-align: left; border: 1px solid #ddd;">t(key) → value</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.keys(msgs).map((key) => (
-                <tr key={key}>
-                  <td style="padding: 6px 12px; border: 1px solid #ddd; color: #555;">{key}</td>
-                  <td style="padding: 6px 12px; border: 1px solid #ddd;">{t(key)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+    return () => (
+      <div key={tick.value} style="font-family: monospace; font-size: 13px; line-height: 1.8;">
+        <div style="margin-bottom: 12px; display: flex; gap: 8px;">
+          {['en', 'fr'].map((code) => (
+            <button
+              key={code}
+              onClick={() => switchLocale(code)}
+              style={`padding: 4px 12px; border-radius: 4px; border: 1px solid #ccc; cursor: pointer; background: ${code === current.value ? '#1a73e8' : '#fff'}; color: ${code === current.value ? '#fff' : '#333'};`}
+            >
+              {code}
+            </button>
+          ))}
         </div>
-      );
-    };
+        <p>
+          <strong>greeting:</strong> {i18n.t('greeting', { name: 'World' })}
+        </p>
+        <p>
+          <strong>farewell:</strong> {i18n.t('farewell')}
+        </p>
+      </div>
+    );
   },
 });
 
@@ -70,52 +103,67 @@ const meta: Meta = {
         component: `
 # Mission Platform i18n
 
-The \`@mission-platform/i18n\` package provides Vue 3 i18n integration following
-the **SFC-local** pattern: every component owns its strings inside an
-\`<i18n>\` block, so no external locale files or compile steps are needed.
+The \`@mission-platform/i18n\` package wraps [i18next](https://www.i18next.com/)
+in a framework-agnostic core plus thin per-framework adapters.
 
 | Export | Purpose |
 |---|---|
-| \`createMpI18n\` | Create a configured \`vue-i18n\` instance |
-| \`useI18n\` | Re-exported from \`vue-i18n\` for single-import convenience |
+| \`@mission-platform/i18n\` → \`createMpI18n\` | Build a configured, framework-neutral i18next instance |
+| \`@mission-platform/i18n/vue\` → \`createMpI18nVue\` / \`useI18n\` | Vue 3 plugin + composable (\`i18next-vue\`) |
+| \`@mission-platform/i18n/react\` → \`MpI18nProvider\` / \`useI18n\` | React provider + hook (\`react-i18next\`) |
 
-## Pattern: SFC-local strings
+## Pattern: app-wide instance
 
-Each component declares its own translations inline using \`useScope: 'local'\`:
-
-\`\`\`vue
-<script setup lang="ts">
-import { useI18n } from '@mission-platform/i18n'
-
-const { t } = useI18n({ useScope: 'local' })
-</script>
-
-<template>
-  <button :aria-label="t('close')">×</button>
-</template>
-
-<i18n lang="json">
-{
-  "en": { "close": "Close" },
-  "fr": { "close": "Fermer" }
-}
-</i18n>
-\`\`\`
-
-## Pattern: global instance
-
-Apps create a single global instance and install it via \`app.use()\`:
+Apps build one instance and install it via \`app.use()\`:
 
 \`\`\`ts
 // main.ts
 import { createMpI18n } from '@mission-platform/i18n'
+import { createMpI18nVue } from '@mission-platform/i18n/vue'
 
-app.use(createMpI18n({ locale: 'en' }))
+app.use(createMpI18nVue(createMpI18n({ messages: { en } })))
 \`\`\`
 
-The global instance is used by \`useI18n({ useScope: 'global' })\`.
-SFC-local scopes automatically inherit from the global instance, so
-locale switching propagates to every component.
+\`\`\`vue
+<script setup lang="ts">
+import { useI18n } from '@mission-platform/i18n/vue'
+const { t, locale, setLocale } = useI18n()
+</script>
+\`\`\`
+
+Interpolation uses single-brace delimiters (\`{name}\`), and nested
+(\`nav.notes\`) and array-indexed (\`items.0.title\`) keys resolve out of the box.
+
+## Namespaces: \`mp.<workspace>\`
+
+Strings are grouped into i18next namespaces. Every package lives under
+\`mp.<package_name>\` and every app under \`mp.<app_name>\` (build one with the
+\`mpNamespace\` helper). An app sets its own namespace as the default; it falls
+back to every package namespace, so component code keeps resolving the keys it
+owns. Package components resolve their own namespace explicitly:
+
+\`\`\`vue
+<script setup lang="ts">
+import { mpNamespace, useI18n } from '@mission-platform/i18n/vue'
+// Bind \`t\` to this package's namespace.
+const { t } = useI18n(mpNamespace('breakpoints'))
+</script>
+\`\`\`
+
+## Overriding a package's strings
+
+Apps can override any package/component strings per namespace via \`overrides\`,
+deep-merged on top of the package's own bundle (only the listed keys change):
+
+\`\`\`ts
+createMpI18n({
+  namespace: mpNamespace('my-care-notes'),
+  namespaces: localeNamespaces('en', enBundles),
+  overrides: {
+    [mpNamespace('breakpoints')]: { en: { breakpoint: 'Viewport:' } },
+  },
+})
+\`\`\`
         `,
       },
     },
@@ -127,12 +175,12 @@ export default meta;
 // ─── Stories ─────────────────────────────────────────────────────────────────
 
 /**
- * The default setup: Storybook's global i18n instance (set up in `preview.ts`)
- * is already configured, so the inspector below reads from that shared instance.
- * Individual components provide their own strings via SFC-local `<i18n>` blocks.
+ * The default setup: Storybook's global i18next instance (set up in
+ * `preview.ts`) is already configured, so the inspector below reads from that
+ * shared instance via the `useI18n` composable.
  */
 export const DefaultSetup: StoryObj = {
-  name: 'Global instance (SFC-local components)',
+  name: 'Global instance (useI18n)',
   render: () => ({
     components: { LocaleInspector },
     template: '<LocaleInspector />',
@@ -140,39 +188,13 @@ export const DefaultSetup: StoryObj = {
 };
 
 /**
- * Demonstrates creating a standalone `createMpI18n` instance and passing
- * custom global messages inline — no external locale files required.
+ * Demonstrates creating a standalone `createMpI18n` instance with inline
+ * messages for several locales — no external locale files required.
  */
-export const CustomMessages: StoryObj = {
-  name: 'createMpI18n — custom global messages',
+export const CustomMessagesStory: StoryObj = {
+  name: 'createMpI18n — custom messages',
   render: () => ({
-    setup() {
-      const i18n = createMpI18n({
-        locale: 'en',
-        messages: {
-          en: { greeting: 'Hello', farewell: 'Goodbye' },
-          fr: { greeting: 'Bonjour', farewell: 'Au revoir' },
-        },
-      });
-
-      const { t, locale } = i18n.global as unknown as ReturnType<typeof useI18n>;
-      const currentLocale = ref((locale as unknown as { value: string }).value);
-
-      return { t, locale, currentLocale };
-    },
-    template: `
-      <div style="font-family: monospace; font-size: 13px; line-height: 1.8;">
-        <div style="margin-bottom: 12px; display: flex; gap: 8px;">
-          <button
-            v-for="code in ['en', 'fr']"
-            :key="code"
-            @click="locale = code; currentLocale = code"
-            :style="'padding: 4px 12px; border-radius: 4px; border: 1px solid #ccc; cursor: pointer; background: ' + (code === currentLocale ? '#1a73e8' : '#fff') + '; color: ' + (code === currentLocale ? '#fff' : '#333') + ';'"
-          >{{ code }}</button>
-        </div>
-        <p><strong>greeting:</strong> {{ t('greeting') }}</p>
-        <p><strong>farewell:</strong> {{ t('farewell') }}</p>
-      </div>
-    `,
+    components: { CustomMessages },
+    template: '<CustomMessages />',
   }),
 };

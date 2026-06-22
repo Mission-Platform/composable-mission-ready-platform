@@ -1,3 +1,4 @@
+import { ignoreVueI18nBlocksPlugin } from '@mission-platform/vite-config';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { mergeConfig } from 'vite';
 
@@ -9,7 +10,9 @@ const config: StorybookConfig = {
     '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
     '../../../packages/breakpoints/src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
     '../../../packages/components/src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/forms/src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
     '../../../packages/icons/src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/layout/src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
     '../../../packages/map/src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
   ],
   addons: [
@@ -30,9 +33,9 @@ const config: StorybookConfig = {
   },
   viteFinal: (config) =>
     mergeConfig(config, {
-      plugins: [vueJsx()],
+      plugins: [vueJsx(), ignoreVueI18nBlocksPlugin()],
       optimizeDeps: {
-        exclude: ['vue-i18n'],
+        exclude: ['i18next-vue'],
       },
       build: {
         // Disable CSS code splitting so highlight.js and other component styles

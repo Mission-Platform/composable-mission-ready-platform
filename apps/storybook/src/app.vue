@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-  import { BaseButton, BaseCodeBlock, BaseCollapse, BaseTooltip } from '@mission-platform/components';
-  import { useI18n } from '@mission-platform/i18n';
+  import { BaseButton, BaseCodeBlock, BaseCollapse, BaseTooltip } from '@mission-platform/components/vue';
+  import { useI18n } from '@mission-platform/i18n/vue';
   import {
     IconDrawCircle,
     IconDrawLine,
@@ -9,13 +9,13 @@
     IconDrawTriangle,
     IconGeodesic,
     IconJoin,
-    IconRotateCCW,
-    IconRotateCW,
+    IconRotateCcw,
+    IconRotateCw,
     IconScaleDown,
     IconScaleUp,
     IconSplit,
     IconTrash,
-  } from '@mission-platform/icons';
+  } from '@mission-platform/icons/vue';
   import { MapDraw, MapLibre } from '@mission-platform/map';
   import { computed, ref } from 'vue';
 
@@ -25,7 +25,7 @@
 
   const MAP_STYLE = 'https://demotiles.maplibre.org/style.json';
 
-  const { t } = useI18n({ useScope: 'local' });
+  const { t } = useI18n();
 
   const mode = ref<DrawMode>(undefined);
   const features = ref<DrawnFeature[]>([]);
@@ -180,7 +180,7 @@
             variant="secondary"
             @click="rotate(45)"
           >
-            <IconRotateCW
+            <IconRotateCw
               :size="16"
               :aria-label="t('aria.rotate-cw')"
             />
@@ -197,7 +197,7 @@
             variant="secondary"
             @click="rotate(-45)"
           >
-            <IconRotateCCW
+            <IconRotateCcw
               :size="16"
               :aria-label="t('aria.rotate-ccw')"
             />
