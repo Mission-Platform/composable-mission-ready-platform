@@ -23,7 +23,6 @@
     "@commitlint/config-conventional": "^21.0.2",
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
-    "@pwrs/asimonim": "catalog:",
     "@types/js-yaml": "catalog:",
     "@vue/compiler-sfc": "catalog:",
     "husky": "^9.1.7",

@@ -25,7 +25,8 @@ The project uses the following core technologies:
 composable_mission_ready_platform/
 ├── apps/                   # Deployable applications
 │   ├── my-care-notes/      # My Care Notes Vue 3 app — note-taking with spell/grammar checking
-│   └── storybook/          # Storybook app — component catalogue & visual tests
+│   ├── storybook/          # Storybook app (Vue 3) — component catalogue & visual tests
+│   └── storybook-react/    # Storybook app (React) — React catalogue of the cross-framework components
 ├── configs/                # Shared tooling/configuration workspace packages
 │   ├── eslint-config/      # Base ESLint flat config
 │   ├── postcss-config/     # Shared PostCSS configuration
@@ -35,16 +36,19 @@ composable_mission_ready_platform/
 │   └── vite-config/        # Shared Vite/Vitest configuration helpers
 ├── packages/               # Shared, reusable packages consumed by apps
 │   ├── breakpoints/        # Responsive breakpoint utilities, composables, and Vue components
-│   ├── components/         # Vue 3 component library
 │   ├── harper/             # Harper grammar checker integration for Monaco editor
 │   ├── hunspell/           # Hunspell spell checker compiled to WebAssembly
-│   ├── i18n/               # vue-i18n integration utilities and base locales
-│   ├── icons/              # SVG icon components
+│   ├── i18n/               # Framework-agnostic i18next wrapper (+ Vue/React adapters) and base locales
+│   ├── icons/              # Write-once SVG icon components (Vue 3 + React)
+│   ├── jsx/                # Framework-neutral JSX runtime + Vue/React adapters (write-once components)
+│   ├── components/         # Write-once component library shipped to both Vue 3 and React
 │   ├── map/                # MapLibre GL Vue 3 wrapper
+│   ├── router/             # Framework-agnostic routing — neutral route model + per-framework adapters (vue-router)
 │   ├── open-graph/         # Open Graph metadata generation and dynamic injection
 │   ├── page-meta/          # Standard page metadata (title, description, canonical, hreflang, …) and dynamic injection
-│   └── tokens/             # DTCG design tokens (OKLab) + SCSS theme definitions, managed with asimonim
+│   └── tokens/             # DTCG design tokens (OKLab) + SCSS theme definitions
 ├── vite-plugins/           # Vite plugins consumed by the apps at build time
+│   ├── jsx/                # Compiles the framework-neutral @mission-platform/jsx components to React/Vue at build time
 │   ├── seo/                # Generates robots.txt + sitemap.xml during vite build
 │   └── tokens/             # Generates the design-token SCSS/CSS/TS from the DTCG sources during vite build
 ├── workers/                # Cloudflare Workers consumed by the apps
@@ -73,8 +77,9 @@ The `apps/` folder contains every deployable application in the platform. Each a
 
 | App | Path | Description |
 |---|---|---|
-| `@mission-platform/my-care-notes` | `apps/my-care-notes` | Vue 3 note-taking app with spell checking (Hunspell/WebAssembly), grammar checking (Harper), Monaco editor, vue-i18n, and Cloudflare Pages deployment |
-| `@mission-platform/storybook` | `apps/storybook` | Storybook instance for developing, documenting, and visually testing Vue components sourced from `packages/` |
+| `@mission-platform/my-care-notes` | `apps/my-care-notes` | Vue 3 note-taking app with spell checking (Hunspell/WebAssembly), grammar checking (Harper), Monaco editor, i18next (via `@mission-platform/i18n/vue`), and Cloudflare Pages deployment |
+| `@mission-platform/storybook` | `apps/storybook` | Storybook instance for developing, documenting, and visually testing the cross-framework (write-once) components sourced from `packages/` |
+| `@mission-platform/storybook-react` | `apps/storybook-react` | React (`@storybook/react-vite`) counterpart of `@mission-platform/storybook`, cataloguing the **React** builds of the cross-framework `@mission-platform/components` (consumed via its `./react` subpath). Runs on port 6007 and ships a representative subset of co-located `src/**/*.stories.tsx` that mirror the Vue Storybook's `Components/<Category>/<Name>` titles |
 
 ---
 
@@ -97,14 +102,16 @@ The `packages/` folder contains all reusable libraries that apps consume. These 
 | Package | Path | Description |
 |---|---|---|
 | `@mission-platform/breakpoints` | `packages/breakpoints` | Responsive breakpoint utilities, composables, and Vue components (the breakpoint SCSS variables, mixins, and visibility utility classes now live in `@mission-platform/tokens`) |
-| `@mission-platform/components` | `packages/components` | Vue 3 component library |
 | `@mission-platform/harper` | `packages/harper` | Harper grammar and style checker integration for Monaco editor |
 | `@mission-platform/hunspell` | `packages/hunspell` | Hunspell spell checker compiled to WebAssembly via Emscripten |
-| `@mission-platform/i18n` | `packages/i18n` | vue-i18n integration utilities and compiled base locales |
-| `@mission-platform/icons` | `packages/icons` | SVG icon components for Mission Platform |
+| `@mission-platform/i18n` | `packages/i18n` | Framework-agnostic [i18next](https://www.i18next.com/) wrapper: a neutral `createMpI18n` core plus `./vue` (`i18next-vue`) and `./react` (`react-i18next`) adapter subpaths, and compiled base locales |
+| `@mission-platform/icons` | `packages/icons` | Write-once SVG icon components for Mission Platform — authored once in the `@mission-platform/jsx` dialect and built to both Vue 3 (`./vue`) and React (`./react`) |
+| `@mission-platform/jsx` | `packages/jsx` | A tiny, dependency-free framework-neutral JSX runtime (the classic `h`/`Fragment` factory builds a serialisable `MpElement` tree) plus framework-neutral React-style hooks (`useState`/`useRef`/`useEffect`/`useMemo`/`useCallback`, render-once at the neutral layer and compiled per framework by `@mission-platform/vite-plugin-jsx`'s two-stage compiler), `./react` and `./vue` runtime adapters (`toReactComponent` / `toVueComponent`, used for ad-hoc/SSR rendering), and an opt-in `./jsx-globals` ambient-typings export that wires the classic `h` JSX factory's global `JSX` namespace to `MpElement`; a hand-rolled alternative to source-to-source compilers like Mitosis (`react`/`react-dom`/`vue` are optional peer deps) |
+| `@mission-platform/components` | `packages/components` | The platform's **write-once component library** — every component is authored once in the framework-neutral `@mission-platform/jsx` dialect (with the neutral React-style hooks) and built **straight to both Vue 3 and React** by `@mission-platform/vite-plugin-jsx`'s two-stage compiler (a single `pnpm build` emits the `./react` and `./vue` subpaths: Stage 1 generates a per-framework source tree — React `.tsx`, Vue `.vue` SFCs with the hooks translated to Vue reactivity — and Stage 2 compiles it with each framework's native toolchain); there is no neutral build or framework-neutral root export, no hand-authored entry files, and the build uses plain `tsc` (JSX globals come from `@mission-platform/jsx/jsx-globals`). Each component is self-contained in `src/components/<name>/` (`<name>.tsx`, `<name>.module.scss`, `<name>.stories.tsx`, `<name>.spec.ts`, `index.ts`); the co-located Storybook stories (globbed by `apps/storybook`, titled `Components/<Category>/<Name>`) consume the built `./vue` subpath |
 | `@mission-platform/map` | `packages/map` | MapLibre GL Vue 3 wrapper with full reactivity support |
+| `@mission-platform/router` | `packages/router` | Framework-agnostic routing — a framework-neutral route/location model (`MpRoute` tree, `MpRouteLocationRaw`, `MpResolvedLocation`) with pure helpers for compiling/matching/building paths, parsing/serialising query strings and locations, and flattening/resolving routes (`defineRoutes`, `flattenRoutes`, `matchRoutes`, `resolveLocation`, `createRouteResolver`), plus per-framework adapter subpaths that translate the neutral routes into a real router. The `./vue` adapter (built on `vue-router` 4) ships `createMpRouter` (returns an installable `Router`; `web`/`hash`/`memory` history), the `useMpRouter`/`useMpRoute` composables, and an `MpRouterLink` whose `to` accepts the neutral location. The neutral path grammar (`:p`, `:p?`, `:p*`/`:p+`, `*`) mirrors vue-router's so translation is near pass-through, and is designed to extend to react-router, TanStack Router, Next.js, and Nuxt |
 | `@mission-platform/seo` | `packages/seo` | Unified SEO surface — standard page metadata (`<title>`, description, canonical, hreflang, `<html lang>`, …), Open Graph + Twitter Card `<meta>` tags, and JSON-LD structured data (Schema.org `WebSite`, `WebPage`, `Organization`, `BreadcrumbList`, `Article`, `Product`, `FAQPage`, `Event`, … ) with a Vue 3 `useSeo` composable and `<Seo>` component for dynamic injection into `document.head` (SSR/SSG-safe via `@unhead/vue`) |
-| `@mission-platform/tokens` | `packages/tokens` | Design tokens authored in the DTCG (designtokens.org) v2025.10 format with OKLab colours (validated with [asimonim](https://bennypowers.dev/asimonim/)); the DTCG sources are split into `palette` (colours, incl. the dark surface/border + scrim/shimmer primitives), one DTCG file per structural scale (`breakpoint`, `spacing`, `radius`, `shadow`, `size`, `motion` (duration + easing), `z-index`, `opacity`, `border-width`), `font` (family/size/weight/line-height/letter-spacing primitives), `typography` (composite per-variant styles), and the light/dark theme files (palette `{color.*}` aliases). `@mission-platform/vite-plugin-tokens` emits the palette and the flattened typography as structural partials (`src/generated/scss/_<file>.scss` — `$` variables, `--mp-*` CSS custom properties that interpolate the local `$` vars (incl. composite `--mp-typography-<variant>-*` referencing `var(--mp-font-*)`), and `@property` registrations) and merges the two themes into one `src/generated/scss/_theme.scss` (`:root { color-scheme: light dark; --mp-color-*: light-dark(<light>, <dark>) }`), plus one nested `as const` TypeScript module (`src/generated/ts/<file>.ts`) per source and the aggregate `src/generated/_tokens.scss` (incl. the theme) and `src/generated/tokens.ts` barrels |
+| `@mission-platform/tokens` | `packages/tokens` | Design tokens authored in the DTCG (designtokens.org) v2025.10 format with OKLab colours; the DTCG sources are split into `palette` (colours, incl. the dark surface/border + scrim/shimmer primitives), one DTCG file per structural scale (`breakpoint`, `spacing`, `radius`, `shadow`, `size`, `motion` (duration + easing), `z-index`, `opacity`, `border-width`), `font` (family/size/weight/line-height/letter-spacing primitives), `typography` (composite per-variant styles), and the light/dark theme files (palette `{color.*}` aliases). `@mission-platform/vite-plugin-tokens` emits the palette and the flattened typography as structural partials (`src/generated/scss/_<file>.scss` — `$` variables, `--mp-*` CSS custom properties that interpolate the local `$` vars (incl. composite `--mp-typography-<variant>-*` referencing `var(--mp-font-*)`), and `@property` registrations) and merges the two themes into one `src/generated/scss/_theme.scss` (`:root { color-scheme: light dark; --mp-color-*: light-dark(<light>, <dark>) }`), plus one nested `as const` TypeScript module (`src/generated/ts/<file>.ts`) per source and the aggregate `src/generated/_tokens.scss` (incl. the theme) and `src/generated/tokens.ts` barrels |
 
 ---
 
@@ -128,7 +135,7 @@ The `configs/` folder contains the shared linting, formatting, and build-tooling
 | `@mission-platform/postcss-config` | `configs/postcss-config` | Shared PostCSS configuration for all packages and apps |
 | `@mission-platform/prettier-config` | `configs/prettier-config` | Base Prettier config — print width, quotes, trailing commas, Vue indent |
 | `@mission-platform/stylelint-config` | `configs/stylelint-config` | Base Stylelint config — standard SCSS + Vue SFC style blocks, BEM class naming |
-| `@mission-platform/typescript-config` | `configs/typescript-config` | Shared TypeScript base configs — `base`, `app`, `library`, `node`, `test` presets |
+| `@mission-platform/typescript-config` | `configs/typescript-config` | Shared TypeScript base configs — `base`, `app`, `react`, `library`, `node`, `test`, `stories`, `stories-react` presets (the `react`/`stories-react` presets target React apps such as `@mission-platform/storybook-react`) |
 | `@mission-platform/vite-config` | `configs/vite-config` | Shared Vite/Vitest helpers — `defineLibraryConfig`, `defineAppConfig`, `defineVitestConfig` |
 
 All other packages and apps **must** extend the three linting/formatting configs rather than defining their own from scratch.
@@ -194,6 +201,7 @@ The `vite-plugins/` folder contains Vite plugin packages consumed by the deploya
 
 | Package | Path | Description |
 |---|---|---|
+| `@mission-platform/vite-plugin-jsx` | `vite-plugins/jsx` | A **two-stage compiler** that turns the framework-neutral `@mission-platform/jsx` components into fully native **React** or **Vue 3** components at build time, with no runtime adapter. **Stage 1** (`generateFrameworkSources`, split across `src/compiler/{ast,react,vue,compile}.ts`) parses each neutral `.tsx` with the TypeScript compiler API and emits a per-framework source tree: a React `.tsx` module (`class`→`className`, `h`→`React.createElement`, hooks kept as React's own) or a real Vue `.vue` SFC (`<script lang="tsx">` `defineComponent`/`setup` with the React-style hooks translated to Vue reactivity/lifecycle — `useState`→`ref`, `useRef`→`ref`, `useMemo`→`computed`, `useEffect`→`onMounted`+`watch`+cleanup — derived work + JSX moved into the render closure, `children`→default slot, prop defaults → runtime `props`). **Stage 2** compiles that tree with the framework's own toolchain — the classic-`h` React JSX transform (`reactJsxPlugin`) or `@vitejs/plugin-vue` (+ `@vitejs/plugin-vue-jsx`). `jsxComponentsEntryDtsPlugin` synthesises the generated entry's `.d.ts`; adding a target framework is just another emitter. Consumers like `@mission-platform/components` run one build per framework to emit their `./react`/`./vue` subpaths |
 | `@mission-platform/vite-plugin-seo` | `vite-plugins/seo` | Vite plugin that generates `robots.txt` and `sitemap.xml` at build time (and on dev-server start) from the `@mission-platform/seo` builders, replacing the per-app `seo:generate` prebuild scripts |
 | `@mission-platform/vite-plugin-tokens` | `vite-plugins/tokens` | Vite plugin that generates the design-token artefacts from the `@mission-platform/tokens` DTCG sources at build time, using a self-contained custom generator (split into `dtcg.ts`, `generators/scss.ts`, `generators/typescript.ts`, with no external CLI). Each non-theme source yields one self-contained structural SCSS partial (`generated/scss/_<file>.scss`: `$`-variables, `--mp-*` custom properties that interpolate the local `$`-variables, and `@property` registrations) — the palette and the flattened composite typography use this same path — while the two themes are merged into one `generated/scss/_theme.scss` (`:root { color-scheme: light dark; --mp-color-*: light-dark(<light>, <dark>) }`). Every source also yields one nested `as const` TypeScript module (`generated/ts/<file>.ts`), alongside the aggregate `generated/_tokens.scss` (SCSS `@forward` barrel, incl. the theme) and `generated/tokens.ts` (TypeScript re-export barrel) |
 

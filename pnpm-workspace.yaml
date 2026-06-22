@@ -7,29 +7,29 @@ packages:
   - scripts
 
 catalog:
-  '@pwrs/asimonim': ^0.3.2
   '@changesets/cli': ^2.31.0
   '@types/js-yaml': ^4.0.9
   '@vue/compiler-sfc': ^3.5.38
   'js-yaml': ^4.2.0
   'luxon': ^3.7.2
-  '@types/luxon': ^3.7.1
+  '@types/luxon': ^3.7.2
   '@floating-ui/vue': ^1.1.11
   'highlight.js': ^11.11.1
   'monaco-editor': ^0.55.1
   marked: ^18.0.5
-  nanoid: ^5.1.11
-  wrangler: ^4.100.0
+  nanoid: ^5.1.14
+  wrangler: ^4.103.0
   ajv: ^8.20.0
   ajv-formats: ^3.0.1
   '@dnd-kit/vue': ^0.5.0
+  i18next: ^26.3.1
 
 catalogs:
   eslint:
-    '@intlify/eslint-plugin-vue-i18n': ^4.5.1
+    eslint-plugin-i18next: ^6.1.4
     eslint-plugin-unicorn: ^64.0.0
-    '@typescript-eslint/eslint-plugin': ^8.61.0
-    '@typescript-eslint/parser': ^8.61.0
+    '@typescript-eslint/eslint-plugin': ^8.61.1
+    '@typescript-eslint/parser': ^8.61.1
     eslint: ^10.5.0
     eslint-config-prettier: ^10.1.8
     eslint-config-turbo: ^2.9.18
@@ -37,7 +37,7 @@ catalogs:
     eslint-plugin-import-x: ^4.16.2
     eslint-plugin-vue: ^10.9.2
     eslint-plugin-vuejs-accessibility: ^2.5.0
-    typescript-eslint: ^8.61.0
+    typescript-eslint: ^8.61.1
     vue-eslint-parser: ^10.4.1
 
   stylelint:
@@ -52,14 +52,13 @@ catalogs:
     prettier: ^3.8.4
 
   vue:
-    '@intlify/unplugin-vue-i18n': ^11.2.3
     '@unhead/vue': ^2.1.15
     '@vue/test-utils': ^2.4.11
     '@vue/tsconfig': ^0.9.1
     '@vitejs/plugin-vue': ^6.0.7
     '@vitejs/plugin-vue-jsx': ^5.1.5
+    i18next-vue: ^5.4.0
     vue: ^3.5.38
-    vue-i18n: ^11.4.5
     vue-router: ^4.6.4
     vue-tsc: ^3.3.5
 
@@ -74,13 +73,22 @@ catalogs:
 
   storybook:
     '@chromatic-com/storybook': ^5.2.1
-    "chromatic": "^17.4.1"
-    '@storybook/addon-a11y': ^10.4.5
-    '@storybook/addon-docs': ^10.4.5
-    '@storybook/addon-themes': ^10.4.5
-    '@storybook/addon-vitest': ^10.4.5
-    '@storybook/vue3-vite': ^10.4.5
-    storybook: ^10.4.5
+    "chromatic": "^17.5.0"
+    '@storybook/addon-a11y': ^10.4.6
+    '@storybook/addon-docs': ^10.4.6
+    '@storybook/addon-themes': ^10.4.6
+    '@storybook/addon-vitest': ^10.4.6
+    '@storybook/react-vite': ^10.4.6
+    '@storybook/vue3-vite': ^10.4.6
+    storybook: ^10.4.6
+
+  react:
+    '@vitejs/plugin-react': ^6.0.2
+    '@types/react': ^19.2.17
+    '@types/react-dom': ^19.2.3
+    react: ^19.2.7
+    react-dom: ^19.2.7
+    react-i18next: ^17.0.8
 
   testing:
     '@vitest/browser-playwright': ^4.1.9
@@ -116,7 +124,6 @@ trustPolicyExclude:
 
 allowBuilds:
   '@parcel/watcher': true
-  '@pwrs/asimonim': true
   esbuild: true
   sharp: true
   unrs-resolver: true
@@ -137,3 +144,4 @@ overrides:
   source-map: ^0.7.6
   beasties: ^0.4.2
   DOMPurify: ^3.4.9
+  nanoid: ^5.1.14

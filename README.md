@@ -52,7 +52,7 @@ composable_mission_ready_platform/
 │   ├── components/         # Vue 3 component library
 │   ├── harper/             # Harper grammar checker integration for Monaco editor
 │   ├── hunspell/           # Hunspell spell checker compiled to WebAssembly
-│   ├── i18n/               # Internationalisation (vue-i18n)
+│   ├── i18n/               # Internationalisation (framework-agnostic i18next wrapper)
 │   ├── icons/              # SVG icon components
 │   ├── map/                # MapLibre GL Vue 3 wrapper
 │   └── tokens/             # CSS design tokens & SCSS theme definitions
@@ -67,8 +67,8 @@ composable_mission_ready_platform/
 
 | App                               | Description                                                                                                                           |
 |-----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
-| `@mission-platform/my-care-notes` | Vue 3 note-taking app with Hunspell spell checking, Harper grammar checking, Monaco editor, vue-i18n, and Cloudflare Pages deployment |
-| `@mission-platform/storybook`     | Storybook instance for developing, documenting, and visually testing Vue components                                                   |
+| `@mission-platform/my-care-notes` | Vue 3 note-taking app with Hunspell spell checking, Harper grammar checking, Monaco editor, i18next, and Cloudflare Pages deployment |
+| `@mission-platform/storybook`     | Storybook instance for developing, documenting, and visually testing the cross-framework (write-once) components                      |
 
 ---
 
@@ -77,11 +77,12 @@ composable_mission_ready_platform/
 | Package                         | Description                                                                                                 |
 |---------------------------------|-------------------------------------------------------------------------------------------------------------|
 | `@mission-platform/breakpoints` | Responsive breakpoint utilities, composables, and Vue components                                            |
-| `@mission-platform/components`  | Vue 3 component library                                                                                     |
 | `@mission-platform/harper`      | Harper grammar and style checker integration for Monaco editor                                              |
 | `@mission-platform/hunspell`    | Hunspell spell checker compiled to WebAssembly via Emscripten (includes the `useHunspellMonaco` composable) |
-| `@mission-platform/i18n`        | Internationalisation via vue-i18n                                                                           |
-| `@mission-platform/icons`       | SVG icon components                                                                                         |
+| `@mission-platform/i18n`        | Framework-agnostic i18next wrapper (neutral core + `./vue` and `./react` adapters)                          |
+| `@mission-platform/icons`   | Write-once SVG icon components (built to Vue 3 + React)                                                      |
+| `@mission-platform/jsx`         | Framework-neutral JSX runtime + hooks that compile to Vue 3 and React                                       |
+| `@mission-platform/components` | Write-once component library, built straight to both Vue 3 and React                                     |
 | `@mission-platform/map`         | MapLibre GL Vue 3 wrapper with full reactivity support                                                      |
 | `@mission-platform/tokens`      | CSS design tokens & SCSS theme definitions                                                                  |
 
