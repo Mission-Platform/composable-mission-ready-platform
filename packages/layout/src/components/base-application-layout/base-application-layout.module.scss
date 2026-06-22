@@ -1,0 +1,65 @@
+/**
+ * Styling for the write-once `BaseApplicationLayout`.
+ *
+ * `BaseApplicationLayout` owns this co-located CSS Module: it side-effect-imports
+ * the stylesheet so its layout appearance ships in the built package CSS (the
+ * two-stage compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package. Only `var(--mp-*)` design-token custom
+ * properties are used (the `mp-font-label` mixin and `bp-up('sm')` breakpoint
+ * from the original SFC are inlined as their resolved token values / media
+ * query, since this package does not depend on `@mission-platform/tokens`).
+ */
+
+@layer mp.components {
+  .application-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--mp-color-bg-base);
+
+    &__status {
+      transition: background-color 0.2s ease;
+      min-height: 0;
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+
+      &:not(:empty) {
+        // Resolved `mp-font-label`: label font size, medium weight, snug leading.
+        font-family: var(--mp-font-family-sans);
+        font-size: var(--mp-font-size-sm);
+        font-weight: var(--mp-font-weight-medium);
+        line-height: var(--mp-line-height-snug);
+        letter-spacing: var(--mp-letter-spacing-normal);
+        padding: var(--mp-spacing-2) var(--mp-spacing-4);
+
+        // Resolved `bp-up('sm')` (480px).
+        @media (width >= 480px) {
+          padding: var(--mp-spacing-2) var(--mp-spacing-6);
+        }
+      }
+    }
+
+    &__header {
+      flex-shrink: 0;
+
+      &--sticky {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow: auto;
+    }
+
+    &__footer {
+      flex-shrink: 0;
+    }
+  }
+}

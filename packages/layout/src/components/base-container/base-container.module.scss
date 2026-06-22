@@ -1,0 +1,77 @@
+/**
+ * Styling for the write-once `BaseContainer`.
+ *
+ * The `fixed` and `fluid` variants are driven entirely by the component's
+ * inline styles (a constant `max-width`, or none). The `responsive` variant,
+ * however, needs real media queries — which inline styles cannot express — so
+ * its breakpoint-stepped `max-width` lives here, in the
+ * `.base-container--responsive` class the component applies through its hashed
+ * CSS-Module class map.
+ *
+ * Matching the other write-once layouts, this module is self-contained: it
+ * does not `@use` the `@mission-platform/tokens` breakpoint mixins but inlines
+ * the platform breakpoints (xs 480 / sm 768 / md 1024 / lg 1920 / xl 2560 /
+ * 2xl 3840) as range-notation `min-width` media queries. The rules live in the shared
+ * `mp.components` cascade layer so unlayered application styles win over them.
+ *
+ * The `*-demo-*` classes only dress the Storybook examples (a framed viewport
+ * and a filled content block) and are consumed through the hashed class map by
+ * `base-container.stories.tsx`.
+ */
+
+@layer mp.components {
+  .base-container--responsive {
+    width: 100%;
+    max-width: 100%;
+
+    @media (width >= 480px) {
+      max-width: 460px;
+    }
+
+    @media (width >= 768px) {
+      max-width: 720px;
+    }
+
+    @media (width >= 1024px) {
+      max-width: 960px;
+    }
+
+    @media (width >= 1920px) {
+      max-width: 1820px;
+    }
+
+    @media (width >= 2560px) {
+      max-width: 2400px;
+    }
+
+    @media (width >= 3840px) {
+      max-width: 3600px;
+    }
+  }
+
+  .container-demo-viewport {
+    padding-block: var(--mp-spacing-4);
+    border: 1px dashed var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+    background: repeating-linear-gradient(
+      45deg,
+      var(--mp-color-surface-sunken),
+      var(--mp-color-surface-sunken) 8px,
+      transparent 8px,
+      transparent 16px
+    );
+  }
+
+  .container-demo-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 8rem;
+    padding: var(--mp-spacing-4);
+    border: 1px solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+    background: var(--mp-color-surface-raised);
+    color: var(--mp-color-text-primary);
+    text-align: center;
+  }
+}
