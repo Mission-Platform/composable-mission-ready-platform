@@ -10,8 +10,8 @@ declare module '@mission-platform/tokens/scss/tokens' {}
 declare module '@mission-platform/tokens/scss/themes/light' {}
 declare module '@mission-platform/tokens/scss/themes/dark' {}
 
-// YAML locale resources compiled by `@intlify/unplugin-vue-i18n`.
-declare module '*.yaml' {
-  const messages: Record<string, unknown>;
-  export default messages;
+// YAML locale resources imported as raw strings and parsed with js-yaml.
+declare module '*.yaml?raw' {
+  const source: string;
+  export default source;
 }
