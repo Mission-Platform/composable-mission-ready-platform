@@ -13,7 +13,7 @@ export default defineLibraryConfig({
   overrides: {
     plugins: [
       // Generate the SCSS/CSS/TS token artefacts from the DTCG sources in
-      // tokens/ (OKLab colours, DTCG v2025.10) via asimonim, before the build.
+      // tokens/ (OKLab colours, DTCG v2025.10) before the build.
       tokensPlugin({
         tokensDir: path.resolve(__dirname, 'tokens'),
         outDir: path.resolve(__dirname, 'src/generated'),

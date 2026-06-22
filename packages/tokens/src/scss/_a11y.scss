@@ -1,0 +1,29 @@
+/**
+ * Global accessibility safety net.
+ *
+ * Canonical home of the reduced-motion reset shipped by the write-once
+ * component/layout/form packages as their `./styles` side-effect entry (e.g.
+ * `@mission-platform/forms/styles`), which `@use`s this partial. A host app can
+ * opt into the same global reset independent of the per-component CSS that loads
+ * automatically with each imported component.
+ *
+ * WCAG 2.2 — Success Criterion 2.3.3 Animation from Interactions (AAA) and
+ * 2.2.2 Pause, Stop, Hide: when a user has expressed a system-level preference
+ * for reduced motion, near-instantly resolve animations and transitions and
+ * disable smooth scrolling so motion is neutralised across every component
+ * (and the host app) without each component having to opt in.
+ *
+ * This mirrors the widely-adopted reduced-motion reset: rather than removing
+ * transitions entirely (which can break state that relies on `transitionend`),
+ * it collapses their duration so they complete immediately.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

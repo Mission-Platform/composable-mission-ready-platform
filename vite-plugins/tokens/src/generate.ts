@@ -79,19 +79,22 @@ interface EmitContext {
   tsDirectory: string;
   prefix: string;
   fontDocument?: DtcgGroup;
+  spacingDocument?: DtcgGroup;
   paletteDocument?: DtcgGroup;
 }
 
 /**
  * The alias source document for a TS module: the composite typography resolves
- * its `{font.*}` aliases against the `font` document, the themes resolve their
- * semantic `{color.*}` aliases against the `palette` document, and everything
- * else has no aliases to resolve.
+ * its `{font.*}` and `{spacing.*}` aliases against the merged `font` + `spacing`
+ * documents (their top-level groups — `font`/`line-height`/`letter-spacing` vs
+ * `spacing` — don't collide), the themes resolve their semantic `{color.*}`
+ * aliases against the `palette` document, and everything else has no aliases to
+ * resolve.
  */
 function aliasDocumentFor(descriptor: SourceDescriptor, context: EmitContext): DtcgGroup | undefined {
   switch (descriptor.kind) {
     case 'typography': {
-      return context.fontDocument;
+      return { ...context.fontDocument, ...context.spacingDocument };
     }
     case 'theme': {
       return context.paletteDocument;
@@ -151,16 +154,18 @@ export function generateTokens(options: TokensPluginOptions): void {
   const read = (file: string): DtcgGroup =>
     JSON.parse(readFileSync(join(tokensDir, `${file}.tokens.json`), 'utf8')) as DtcgGroup;
 
-  // Parse every DTCG source once. The font document is the alias source for the
-  // composite typography TS module; the palette document is the alias source for
+  // Parse every DTCG source once. The font + spacing documents are the alias
+  // source for the composite typography TS module (font primitives + the
+  // logical-margin spacing steps); the palette document is the alias source for
   // the theme TS modules (their semantic `$value`s are palette aliases).
   const documents = new Map<string, DtcgGroup>(descriptors.map(({ file }) => [file, read(file)]));
   const fontDocument = documents.get('font');
+  const spacingDocument = documents.get('spacing');
   const paletteDocument = documents.get('palette');
 
   // The `@forward`/`@use` references omit the partial's leading underscore, as
   // Sass resolves a partial from its unprefixed name.
-  const context: EmitContext = { scssDirectory, tsDirectory, prefix, fontDocument, paletteDocument };
+  const context: EmitContext = { scssDirectory, tsDirectory, prefix, fontDocument, spacingDocument, paletteDocument };
   for (const descriptor of descriptors) {
     writeSourceArtefacts(descriptor, documents.get(descriptor.file) as DtcgGroup, context);
   }
