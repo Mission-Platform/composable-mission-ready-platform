@@ -6,76 +6,9 @@
 # Use this file with your translation tool (Lokalise, POEditor, Crowdin, …).
 
 en:
-  BaseButton:
-    loading: Loading…
-  BaseCheckbox:
-    required: required
-  BaseDialog:
-    close: Close
-  BaseFileInput:
-    required: required
-    browse: Browse files
-    drag: Drag & drop files here or
-    noFile: No file chosen
-  BaseFormWizard:
-    back: Back
-    next: Next
-    finish: Finish
-  BaseInput:
-    required: required
-  BaseMarkdownInput:
-    required: required
-    write: Write
-    preview: Preview
-    bold: Bold
-    italic: Italic
-    heading: Heading
-    link: Link
-    bulletList: Bullet list
-    numberedList: Numbered list
-    quote: Blockquote
-    code: Inline code
-    emptyPreview: Nothing to preview.
-  BaseModal:
-    close: Close
-  BaseMultiselect:
-    required: required
-    placeholder: Select options…
-  BaseRadioGroup:
-    required: required
-  BaseSchemaForm:
-    submit: Submit
-    reset: Reset
-    step: Step {index}
-    errors:
-      required: '{label} is required'
-      minLength: '{label} must be at least {limit} character(s)'
-      maxLength: '{label} must be at most {limit} character(s)'
-      minimum: '{label} must be at least {limit}'
-      maximum: '{label} must be at most {limit}'
-      format: '{label} must be a valid {format}'
-      pattern: '{label} is invalid'
-      enum: '{label} must be one of the allowed values'
-      number: '{label} must be a number'
-      invalid: '{label} is invalid'
-  BaseSearchInput:
-    clear: Clear search
-    loading: Searching…
-  BaseSelect:
-    required: required
-  BaseDrawer:
-    close: Close drawer
-  BaseSpinner:
-    loading: Loading…
-  BaseTextarea:
-    required: required
-  BaseWindowPopout:
-    popout: Pop out
-    popin: Pop back in
-    placeholder: Popout content area
   BreakpointDebug:
     breakpoint: 'breakpoint:'
-    separator: "{'|'}"
+    separator: '|'
     debug_px: ({breakpoint}px)
   MyCareNotesApp:
     nav:
@@ -113,7 +46,7 @@ en:
     name:
       label: Snippet name
       placeholder: e.g. greeting
-      hint: Used as {preview} in the editor
+      hint: Type {preview} in the editor to insert this snippet
     content-label: Content
     btn:
       delete: Delete

@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-  import { BaseButton, BaseInput, BaseModal, BaseStack } from '@mission-platform/components';
-  import { BaseMonacoEditor } from '@mission-platform/components/monaco';
-  import { useI18n } from '@mission-platform/i18n';
+  import { BaseButton, BaseInput, BaseModal, BaseMonacoEditor, BaseStack } from '@mission-platform/components/vue';
+  import { useI18n } from '@mission-platform/i18n/vue';
   import { computed, ref, watch } from 'vue';
   import { useRoute } from 'vue-router';
 
@@ -18,7 +17,7 @@
 
   const emit = defineEmits<Emits>();
 
-  const { t } = useI18n({ useScope: 'local' });
+  const { t } = useI18n();
 
   const route = useRoute();
   const { snippets } = useSnippets();
@@ -72,12 +71,11 @@
 
 <template>
   <BaseModal
-    :close-on-route-change="false"
     :open="visible"
     :title="modalTitle"
     size="lg"
     @close="emit('close')"
-    @update:open="(v) => !v && emit('close')"
+    @update:open="(v: boolean) => !v && emit('close')"
   >
     <div class="snippet-form">
       <BaseInput
@@ -186,7 +184,7 @@ en:
   name:
     label: Snippet name
     placeholder: 'e.g. greeting'
-    hint: 'Used as {preview} in the editor'
+    hint: 'Type {preview} in the editor to insert this snippet'
   content-label: Content
   btn:
     delete: Delete

@@ -2,13 +2,14 @@
 // `[data-theme]`/`.theme-*` scheme pins, so the separate `scss/themes/...`
 // imports remain for any consumers that pin a single scheme. The active scheme
 // is pinned on <html> by the pre-paint script in index.html before this bundle
-// runs (see also @mission-platform/components' themeInitScript()).
+// runs.
 import '@mission-platform/tokens/scss/tokens';
 import '@mission-platform/tokens/scss/themes/light';
 import '@mission-platform/tokens/scss/themes/dark';
 import '@mission-platform/components/styles';
 
-import { createMpI18n } from '@mission-platform/i18n';
+import { createMpI18n, localeNamespaces, mpNamespace } from '@mission-platform/i18n';
+import { createMpI18nVue } from '@mission-platform/i18n/vue';
 import { useSeo } from '@mission-platform/seo';
 import yaml from 'js-yaml';
 import { ViteSSG } from 'vite-ssg';
@@ -21,13 +22,15 @@ import { RouterView } from 'vue-router';
 // Monaco and its language/grammar workers out of the app's initial bundle and
 // out of the `vite-ssg` server build entirely.
 
-import i18nMetaSource from '../i18n-meta.yaml?raw';
-
+import enLocaleSource from './locales/en.yaml?raw';
 import { routerOptions } from './router';
 
-import type { MpLocales } from '@mission-platform/i18n';
+import type { MpMessageObject } from '@mission-platform/i18n';
 
-const i18nMessages = (yaml.load(i18nMetaSource) ?? {}) as MpLocales;
+// The runtime `en.yaml` is grouped by `mp.<workspace>` namespace; each top-level
+// key is a namespace (`mp.my-care-notes` for the app's own strings, `mp.breakpoints`
+// for the breakpoints package, …). The app owns the `mp.my-care-notes` namespace.
+const enBundles = (yaml.load(enLocaleSource) ?? {}) as Record<string, MpMessageObject>;
 
 /** Root render function — keeps the `useSeo`-bearing route view in a stable scope. */
 const renderRoot = (): VNode => h(RouterView);
@@ -47,7 +50,14 @@ export const createApp = ViteSSG(
   { setup: () => renderRoot },
   routerOptions,
   ({ app }) => {
-    app.use(createMpI18n({ messages: i18nMessages }));
+    app.use(
+      createMpI18nVue(
+        createMpI18n({
+          namespace: mpNamespace('my-care-notes'),
+          namespaces: localeNamespaces('en', enBundles),
+        }),
+      ),
+    );
 
     // Inject the SEO surface (standard page meta + Open Graph / Twitter Card
     // meta) into <head> via the unified `@mission-platform/seo` composable.
