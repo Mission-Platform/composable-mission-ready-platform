@@ -1,7 +1,6 @@
 import { IconClose } from '@mission-platform/icons';
 import { h, hasSlot, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
-
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
 
@@ -107,7 +106,11 @@ export function BaseAlertBanner(properties: AlertBannerProperties): MpElement {
   const banner = modelValue ? (
     <div
       aria-live={ariaLive}
-      classNames={[styles['base-alert-banner'], styles[`base-alert-banner--${variant}`], sizeStyles[`base-size--${size}`]]}
+      classNames={[
+        styles['base-alert-banner'],
+        styles[`base-alert-banner--${variant}`],
+        sizeStyles[`base-size--${size}`],
+      ]}
       role={role}
     >
       {icon ? (

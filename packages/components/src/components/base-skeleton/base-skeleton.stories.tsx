@@ -26,17 +26,7 @@ const meta = {
     shape: { control: 'select', options: ['line', 'circle', 'block'] },
     variant: {
       control: 'select',
-      options: [
-        'neutral',
-        'primary',
-        'secondary',
-        'tertiary',
-        'success',
-        'warning',
-        'info',
-        'error',
-        'critical',
-      ],
+      options: ['neutral', 'primary', 'secondary', 'tertiary', 'success', 'warning', 'info', 'error', 'critical'],
     },
     animated: { control: 'boolean' },
     width: { control: 'text' },

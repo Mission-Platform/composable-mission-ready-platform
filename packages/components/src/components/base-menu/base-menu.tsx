@@ -134,11 +134,14 @@ export function BaseMenu(properties: MenuProperties): MpElement {
       return (
         <li
           key={path}
-          classNames={[styles['base-menu__item'], {
-            [styles['base-menu__item--has-children']]: hasChildren,
-            [styles['base-menu__item--open']]: open,
-            [styles['base-menu__item--disabled']]: Boolean(item.disabled),
-          }]}
+          classNames={[
+            styles['base-menu__item'],
+            {
+              [styles['base-menu__item--has-children']]: hasChildren,
+              [styles['base-menu__item--open']]: open,
+              [styles['base-menu__item--disabled']]: Boolean(item.disabled),
+            },
+          ]}
           role="none"
         >
           {item.href && !hasChildren ? (
@@ -176,9 +179,12 @@ export function BaseMenu(properties: MenuProperties): MpElement {
           {open ? (
             <menu
               aria-label={item.label}
-              classNames={[styles['base-menu__submenu'], {
-                [styles['base-menu__submenu--nested']]: nested,
-              }]}
+              classNames={[
+                styles['base-menu__submenu'],
+                {
+                  [styles['base-menu__submenu--nested']]: nested,
+                },
+              ]}
               role="menu"
             >
               {renderItems(item.children as MenuItem[], path, true)}

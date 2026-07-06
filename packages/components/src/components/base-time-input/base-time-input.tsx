@@ -147,9 +147,12 @@ export function BaseTimeInput(properties: TimeInputProperties): MpElement {
         {units.map((unit) => (
           <button
             key={unit}
-            classNames={[styles['base-time-input__unit-btn'], {
-              [styles['base-time-input__unit-btn--active']]: active === unit,
-            }]}
+            classNames={[
+              styles['base-time-input__unit-btn'],
+              {
+                [styles['base-time-input__unit-btn--active']]: active === unit,
+              },
+            ]}
             type="button"
             onClick={() => onPick(unit)}
           >
@@ -162,16 +165,23 @@ export function BaseTimeInput(properties: TimeInputProperties): MpElement {
 
   return (
     <div
-      classNames={[styles['base-time-input'], styles[`base-time-input--${size}`], {
-        [styles['base-time-input--error']]: !!error,
-        [styles['base-time-input--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-time-input'],
+        styles[`base-time-input--${size}`],
+        {
+          [styles['base-time-input--error']]: !!error,
+          [styles['base-time-input--disabled']]: disabled,
+        },
+      ]}
     >
       {label ? (
         <label
-          classNames={[styles['base-time-input__label'], {
-            [styles['base-time-input__label--hidden']]: labelHidden,
-          }]}
+          classNames={[
+            styles['base-time-input__label'],
+            {
+              [styles['base-time-input__label--hidden']]: labelHidden,
+            },
+          ]}
           for={resolvedId}
         >
           <BaseTypography
@@ -219,9 +229,12 @@ export function BaseTimeInput(properties: TimeInputProperties): MpElement {
             onClick={toggleOpen}
           >
             <span
-              classNames={[styles['base-time-input__value'], {
-                [styles['base-time-input__value--placeholder']]: !value,
-              }]}
+              classNames={[
+                styles['base-time-input__value'],
+                {
+                  [styles['base-time-input__value--placeholder']]: !value,
+                },
+              ]}
             >
               {value || placeholder}
             </span>

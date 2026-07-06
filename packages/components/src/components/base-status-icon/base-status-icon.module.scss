@@ -32,7 +32,20 @@
      * Variants — the canonical colour set applied as the glyph's foreground. The
      * `neutral` tone reuses the `default` token family (no `neutral` alias).
      */
-    @each $name, $family in ('neutral': 'default', 'primary': 'primary', 'secondary': 'secondary', 'tertiary': 'tertiary', 'success': 'success', 'warning': 'warning', 'info': 'info', 'error': 'error', 'critical': 'critical') {
+    @each $name,
+      $family
+        in (
+          'neutral': 'default',
+          'primary': 'primary',
+          'secondary': 'secondary',
+          'tertiary': 'tertiary',
+          'success': 'success',
+          'warning': 'warning',
+          'info': 'info',
+          'error': 'error',
+          'critical': 'critical'
+        )
+    {
       &--#{$name} {
         color: var(--mp-color-#{$family}-default);
       }

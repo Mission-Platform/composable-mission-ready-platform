@@ -10,7 +10,6 @@ import {
   type MpProperties,
 } from '@mission-platform/jsx';
 
-
 import { BaseIconButton } from '../base-icon-button';
 import { BaseTypography } from '../base-typography';
 

@@ -30,7 +30,20 @@
      * family (the `neutral` tone reuses the `default` token family, which has no
      * `neutral` alias).
      */
-    @each $name, $family in ('neutral': 'default', 'primary': 'primary', 'secondary': 'secondary', 'tertiary': 'tertiary', 'success': 'success', 'warning': 'warning', 'info': 'info', 'error': 'error', 'critical': 'critical') {
+    @each $name,
+      $family
+        in (
+          'neutral': 'default',
+          'primary': 'primary',
+          'secondary': 'secondary',
+          'tertiary': 'tertiary',
+          'success': 'success',
+          'warning': 'warning',
+          'info': 'info',
+          'error': 'error',
+          'critical': 'critical'
+        )
+    {
       &--#{$name} {
         background-color: var(--mp-color-#{$family}-muted);
         color: var(--mp-color-#{$family}-text);

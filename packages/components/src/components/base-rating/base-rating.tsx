@@ -186,9 +186,13 @@ export function BaseRating(properties: RatingProperties): MpElement {
   ) : (
     <div
       aria-label={`${ariaLabel}: ${valueText}`}
-      classNames={[styles['base-rating'], styles[`base-rating--${size}`], {
-        [styles['base-rating--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-rating'],
+        styles[`base-rating--${size}`],
+        {
+          [styles['base-rating--disabled']]: disabled,
+        },
+      ]}
       role="img"
     >
       {starItems}

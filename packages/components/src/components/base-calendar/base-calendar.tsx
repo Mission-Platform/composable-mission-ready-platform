@@ -274,7 +274,11 @@ export function BaseCalendar(properties: CalendarProperties): MpElement {
   // order the start and the hovered day so the span renders either direction.
   const previewActive = !!(previewEnd && rangeStart && !rangeEnd);
   const [previewLo, previewHi] =
-    previewActive && previewEnd ? (rangeStart <= previewEnd ? [rangeStart, previewEnd] : [previewEnd, rangeStart]) : ['', ''];
+    previewActive && previewEnd
+      ? rangeStart <= previewEnd
+        ? [rangeStart, previewEnd]
+        : [previewEnd, rangeStart]
+      : ['', ''];
 
   const isPreviewEnd = (iso: string | undefined): boolean =>
     previewActive && !!iso && iso === previewEnd && iso !== rangeStart;
@@ -352,18 +356,21 @@ export function BaseCalendar(properties: CalendarProperties): MpElement {
           aria-current={isToday(cell.iso) ? 'date' : undefined}
           aria-label={cell.iso ?? undefined}
           aria-selected={rangeActive ? isRangeStart(cell.iso) || isRangeEnd(cell.iso) : isSelected(cell.iso)}
-          classNames={[styles['base-calendar__day'], {
-            [styles['base-calendar__day--empty']]: !cell.day,
-            [styles['base-calendar__day--selected']]: !rangeActive && isSelected(cell.iso),
-            [styles['base-calendar__day--range-start']]: isRangeStart(cell.iso),
-            [styles['base-calendar__day--range-end']]: isRangeEnd(cell.iso),
-            [styles['base-calendar__day--in-range']]: isInRange(cell.iso),
-            [styles['base-calendar__day--preview-end']]: isPreviewEnd(cell.iso),
-            [styles['base-calendar__day--in-preview']]: isInPreview(cell.iso),
-            [styles['base-calendar__day--today']]:
-              isToday(cell.iso) && !isSelected(cell.iso) && !isRangeStart(cell.iso) && !isRangeEnd(cell.iso),
-            [styles['base-calendar__day--disabled']]: cell.disabled && !!cell.day,
-          }]}
+          classNames={[
+            styles['base-calendar__day'],
+            {
+              [styles['base-calendar__day--empty']]: !cell.day,
+              [styles['base-calendar__day--selected']]: !rangeActive && isSelected(cell.iso),
+              [styles['base-calendar__day--range-start']]: isRangeStart(cell.iso),
+              [styles['base-calendar__day--range-end']]: isRangeEnd(cell.iso),
+              [styles['base-calendar__day--in-range']]: isInRange(cell.iso),
+              [styles['base-calendar__day--preview-end']]: isPreviewEnd(cell.iso),
+              [styles['base-calendar__day--in-preview']]: isInPreview(cell.iso),
+              [styles['base-calendar__day--today']]:
+                isToday(cell.iso) && !isSelected(cell.iso) && !isRangeStart(cell.iso) && !isRangeEnd(cell.iso),
+              [styles['base-calendar__day--disabled']]: cell.disabled && !!cell.day,
+            },
+          ]}
           disabled={!cell.day || cell.disabled}
           role="gridcell"
           type="button"
@@ -379,9 +386,13 @@ export function BaseCalendar(properties: CalendarProperties): MpElement {
   return (
     <div
       aria-label={`Calendar, ${monthLabel}`}
-      classNames={[styles['base-calendar'], styles[`base-calendar--${size}`], {
-        [styles['base-calendar--flat']]: flat,
-      }]}
+      classNames={[
+        styles['base-calendar'],
+        styles[`base-calendar--${size}`],
+        {
+          [styles['base-calendar--flat']]: flat,
+        },
+      ]}
       role="application"
     >
       <div classNames={styles['base-calendar__header']}>
@@ -486,9 +497,12 @@ export function BaseCalendar(properties: CalendarProperties): MpElement {
               key={monthName}
               aria-label={MONTHS[index]}
               aria-selected={index + 1 === viewMonth}
-              classNames={[styles['base-calendar__cell'], {
-                [styles['base-calendar__cell--current']]: index + 1 === viewMonth,
-              }]}
+              classNames={[
+                styles['base-calendar__cell'],
+                {
+                  [styles['base-calendar__cell--current']]: index + 1 === viewMonth,
+                },
+              ]}
               type="button"
               onClick={() => selectMonth(index + 1)}
             >
@@ -507,10 +521,13 @@ export function BaseCalendar(properties: CalendarProperties): MpElement {
               key={year}
               aria-label={`${year}`}
               aria-selected={year === viewYear}
-              classNames={[styles['base-calendar__cell'], {
-                [styles['base-calendar__cell--current']]: year === viewYear,
-                [styles['base-calendar__cell--outside']]: year < decadeStart || year > decadeStart + 9,
-              }]}
+              classNames={[
+                styles['base-calendar__cell'],
+                {
+                  [styles['base-calendar__cell--current']]: year === viewYear,
+                  [styles['base-calendar__cell--outside']]: year < decadeStart || year > decadeStart + 9,
+                },
+              ]}
               type="button"
               onClick={() => selectYear(year)}
             >

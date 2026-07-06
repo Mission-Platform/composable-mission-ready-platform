@@ -1,14 +1,6 @@
 import { type DrawerDraggable, type DrawerSize } from '@mission-platform/components/base-drawer';
 import { BaseDrawer } from '@mission-platform/components/base-drawer';
-import {
-  h,
-  hasSlot,
-  Slot,
-  useEffect,
-  useState,
-  type MpElement,
-  type MpProperties,
-} from '@mission-platform/jsx';
+import { h, hasSlot, Slot, useEffect, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import styles from './base-vertical-layout.module.scss';
 
@@ -146,13 +138,9 @@ export function BaseVerticalLayout(properties: VerticalLayoutProperties): MpElem
           onResize: (width: number) => setStartWidthOverride(`${width}rem`),
           onOpenChange: (next: boolean) => onStartOpenChange?.(next),
         },
-        hasSlot('start-header')
-          ? h('div', { slot: 'header' }, h(Slot, { name: 'start-header' }))
-          : undefined,
+        hasSlot('start-header') ? h('div', { slot: 'header' }, h(Slot, { name: 'start-header' })) : undefined,
         h(Slot, { name: 'start' }),
-        hasSlot('start-footer')
-          ? h('div', { slot: 'footer' }, h(Slot, { name: 'start-footer' }))
-          : undefined,
+        hasSlot('start-footer') ? h('div', { slot: 'footer' }, h(Slot, { name: 'start-footer' })) : undefined,
       )
     : undefined;
 

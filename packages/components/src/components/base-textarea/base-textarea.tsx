@@ -100,16 +100,23 @@ export function BaseTextarea(properties: TextareaProperties): MpElement {
 
   return (
     <div
-      classNames={[styles['base-textarea'], styles[`base-textarea--${size}`], {
-        [styles['base-textarea--error']]: !!error,
-        [styles['base-textarea--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-textarea'],
+        styles[`base-textarea--${size}`],
+        {
+          [styles['base-textarea--error']]: !!error,
+          [styles['base-textarea--disabled']]: disabled,
+        },
+      ]}
     >
       {label ? (
         <label
-          classNames={[styles['base-textarea__label'], {
-            [styles['base-textarea__label--hidden']]: labelHidden,
-          }]}
+          classNames={[
+            styles['base-textarea__label'],
+            {
+              [styles['base-textarea__label--hidden']]: labelHidden,
+            },
+          ]}
           for={resolvedId}
         >
           <BaseTypography

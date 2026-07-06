@@ -661,9 +661,7 @@ describe('the `classNames` attribute', () => {
   });
 
   it('maps the attribute onto Vue’s native `class` binding (which understands arrays/objects)', () => {
-    expect(vue.code).toContain(
-      ":class=\"['chip', `chip--${tone}`, { 'chip--active': properties.active ?? false }]\"",
-    );
+    expect(vue.code).toContain(":class=\"['chip', `chip--${tone}`, { 'chip--active': properties.active ?? false }]\"");
     expect(vue.code).toContain(':class="tone"');
     // Vue needs no runtime helper for the attribute.
     expect(vue.code).not.toContain('classNames');

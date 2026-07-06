@@ -10,7 +10,6 @@ import {
   type MpProperties,
 } from '@mission-platform/jsx';
 
-
 import { BaseCalendar } from '../base-calendar';
 import { BaseDropdown } from '../base-dropdown';
 import { BaseTypography } from '../base-typography';
@@ -111,16 +110,23 @@ export function BaseDateInput(properties: DateInputProperties): MpElement {
 
   return (
     <div
-      classNames={[styles['base-date-input'], styles[`base-date-input--${size}`], {
-        [styles['base-date-input--error']]: !!error,
-        [styles['base-date-input--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-date-input'],
+        styles[`base-date-input--${size}`],
+        {
+          [styles['base-date-input--error']]: !!error,
+          [styles['base-date-input--disabled']]: disabled,
+        },
+      ]}
     >
       {label ? (
         <label
-          classNames={[styles['base-date-input__label'], {
-            [styles['base-date-input__label--hidden']]: labelHidden,
-          }]}
+          classNames={[
+            styles['base-date-input__label'],
+            {
+              [styles['base-date-input__label--hidden']]: labelHidden,
+            },
+          ]}
           for={resolvedId}
         >
           <BaseTypography
@@ -169,9 +175,12 @@ export function BaseDateInput(properties: DateInputProperties): MpElement {
             onClick={toggleOpen}
           >
             <span
-              classNames={[styles['base-date-input__value'], {
-                [styles['base-date-input__value--placeholder']]: !modelValue,
-              }]}
+              classNames={[
+                styles['base-date-input__value'],
+                {
+                  [styles['base-date-input__value--placeholder']]: !modelValue,
+                },
+              ]}
             >
               {modelValue || placeholder}
             </span>

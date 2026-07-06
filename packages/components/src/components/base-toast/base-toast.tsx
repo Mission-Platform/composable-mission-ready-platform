@@ -1,7 +1,6 @@
 import { IconClose } from '@mission-platform/icons';
 import { h, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
-
 import sizeStyles from '../size.module.scss';
 
 import styles from './base-toast.module.scss';

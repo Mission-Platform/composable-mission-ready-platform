@@ -153,16 +153,22 @@ export function BaseLocationInput(properties: LocationInputProperties): MpElemen
 
   return (
     <fieldset
-      classNames={[styles['base-location-input'], {
-        [styles['base-location-input--error']]: !!error,
-        [styles['base-location-input--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-location-input'],
+        {
+          [styles['base-location-input--error']]: !!error,
+          [styles['base-location-input--disabled']]: disabled,
+        },
+      ]}
     >
       {label ? (
         <legend
-          classNames={[styles['base-location-input__legend'], {
-            [styles['base-location-input__legend--hidden']]: labelHidden,
-          }]}
+          classNames={[
+            styles['base-location-input__legend'],
+            {
+              [styles['base-location-input__legend--hidden']]: labelHidden,
+            },
+          ]}
         >
           <BaseTypography
             as="span"

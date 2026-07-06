@@ -13,7 +13,6 @@ import {
   type MpProperties,
 } from '@mission-platform/jsx';
 
-
 import { beginPointerDrag, clamp, rootFontSize } from '../pointer-drag';
 
 import styles from './base-drawer.module.scss';

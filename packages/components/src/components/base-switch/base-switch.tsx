@@ -60,10 +60,14 @@ export function BaseSwitch(properties: SwitchProperties): MpElement {
 
   return (
     <div
-      classNames={[styles['base-switch'], styles[`base-switch--${size}`], {
-        [styles['base-switch--error']]: !!error,
-        [styles['base-switch--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-switch'],
+        styles[`base-switch--${size}`],
+        {
+          [styles['base-switch--error']]: !!error,
+          [styles['base-switch--disabled']]: disabled,
+        },
+      ]}
     >
       <label classNames={styles['base-switch__row']}>
         <span classNames={styles['base-switch__track-wrapper']}>

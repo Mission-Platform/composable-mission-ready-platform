@@ -1,12 +1,5 @@
 import { IconClose, IconPlus } from '@mission-platform/icons';
-import {
-  h,
-  useRef,
-  type MpElement,
-  type MpProperties,
-  type MpRenderProperty,
-} from '@mission-platform/jsx';
-
+import { h, useRef, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
@@ -182,11 +175,15 @@ export function BaseTabs(properties: TabsProperties): MpElement {
               aria-controls={`panel-${tab.id}`}
               aria-disabled={tab.disabled ? 'true' : undefined}
               aria-selected={activeId === tab.id}
-              classNames={[styles['base-tabs__tab'], styles[`base-tabs__tab--${variant}`], {
-                [styles['base-tabs__tab--active']]: activeId === tab.id,
-                [styles['base-tabs__tab--disabled']]: Boolean(tab.disabled),
-                [styles['base-tabs__tab--closable']]: closable,
-              }]}
+              classNames={[
+                styles['base-tabs__tab'],
+                styles[`base-tabs__tab--${variant}`],
+                {
+                  [styles['base-tabs__tab--active']]: activeId === tab.id,
+                  [styles['base-tabs__tab--disabled']]: Boolean(tab.disabled),
+                  [styles['base-tabs__tab--closable']]: closable,
+                },
+              ]}
               data-tab-id={tab.id}
               role="tab"
               tabindex={tab.disabled ? -1 : activeId === tab.id ? 0 : -1}

@@ -48,7 +48,19 @@
      * Colour variants — tint the placeholder fill. `neutral` is omitted so it
      * keeps the plain grey (`--mp-color-bg-muted`).
      */
-    @each $name, $family in ('primary': 'primary', 'secondary': 'secondary', 'tertiary': 'tertiary', 'success': 'success', 'warning': 'warning', 'info': 'info', 'error': 'error', 'critical': 'critical') {
+    @each $name,
+      $family
+        in (
+          'primary': 'primary',
+          'secondary': 'secondary',
+          'tertiary': 'tertiary',
+          'success': 'success',
+          'warning': 'warning',
+          'info': 'info',
+          'error': 'error',
+          'critical': 'critical'
+        )
+    {
       &--#{$name} {
         background-color: var(--mp-color-#{$family}-muted);
       }

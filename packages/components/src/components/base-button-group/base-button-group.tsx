@@ -54,7 +54,14 @@ export interface ButtonGroupProperties extends MpProperties {
  * {@link classNames} helper.
  */
 export function BaseButtonGroup(properties: ButtonGroupProperties): MpElement {
-  const { orientation = 'horizontal', attached = false, gap = 'sm', variant = 'neutral', size = 'md', ariaLabel } = properties;
+  const {
+    orientation = 'horizontal',
+    attached = false,
+    gap = 'sm',
+    variant = 'neutral',
+    size = 'md',
+    ariaLabel,
+  } = properties;
 
   const className = classNames(
     styles['base-button-group'],

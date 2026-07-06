@@ -22,12 +22,8 @@ describe('eventsForRange', () => {
   const cancelled = timed('c', '2024-03-12T09:00:00', '2024-03-12T10:00:00', { status: 'CANCELLED' });
 
   it('returns only events overlapping the range, excluding CANCELLED', () => {
-    const result = eventsForRange(
-      [a, b, cancelled],
-      new Date('2024-03-09T00:00:00'),
-      new Date('2024-03-15T00:00:00'),
-    );
-    expect(result.map((e) => e.uid)).toEqual(['a']);
+    const result = eventsForRange([a, b, cancelled], new Date('2024-03-09T00:00:00'), new Date('2024-03-15T00:00:00'));
+    expect(result.map((event) => event.uid)).toEqual(['a']);
   });
 
   it('expands a recurring event within the range', () => {
@@ -41,7 +37,7 @@ describe('eventsForDay', () => {
   it('returns events on the given calendar day', () => {
     const a = timed('a', '2024-03-10T09:00:00', '2024-03-10T10:00:00');
     const b = timed('b', '2024-03-11T09:00:00', '2024-03-11T10:00:00');
-    expect(eventsForDay([a, b], new Date('2024-03-10T15:00:00')).map((e) => e.uid)).toEqual(['a']);
+    expect(eventsForDay([a, b], new Date('2024-03-10T15:00:00')).map((event) => event.uid)).toEqual(['a']);
   });
 });
 

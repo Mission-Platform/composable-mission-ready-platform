@@ -1,12 +1,4 @@
-import {
-  h,
-  Slot,
-  useEffect,
-  useRef,
-  useState,
-  type MpElement,
-  type MpProperties,
-} from '@mission-platform/jsx';
+import { h, Slot, useEffect, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import sizeStyles from '../size.module.scss';
 
@@ -122,10 +114,13 @@ export function BaseMenubar(properties: MenubarProperties): MpElement {
       return (
         <li
           key={path}
-          classNames={[styles['base-menubar__item'], {
-            [styles['base-menubar__item--open']]: open,
-            [styles['base-menubar__item--disabled']]: Boolean(item.disabled),
-          }]}
+          classNames={[
+            styles['base-menubar__item'],
+            {
+              [styles['base-menubar__item--open']]: open,
+              [styles['base-menubar__item--disabled']]: Boolean(item.disabled),
+            },
+          ]}
           role="none"
         >
           {item.href && !hasChildren ? (
@@ -163,9 +158,12 @@ export function BaseMenubar(properties: MenubarProperties): MpElement {
           {open ? (
             <menu
               aria-label={item.label}
-              classNames={[styles['base-menubar__submenu'], {
-                [styles['base-menubar__submenu--nested']]: nested,
-              }]}
+              classNames={[
+                styles['base-menubar__submenu'],
+                {
+                  [styles['base-menubar__submenu--nested']]: nested,
+                },
+              ]}
               role="menu"
             >
               {renderItems(item.children as MenuItem[], path, true)}
@@ -179,9 +177,13 @@ export function BaseMenubar(properties: MenubarProperties): MpElement {
     <menu
       ref={menubarReference}
       aria-label={label}
-      classNames={[styles['base-menubar'], sizeStyles[`base-size--${size}`], {
-        [styles['base-menubar--bordered']]: bordered,
-      }]}
+      classNames={[
+        styles['base-menubar'],
+        sizeStyles[`base-size--${size}`],
+        {
+          [styles['base-menubar--bordered']]: bordered,
+        },
+      ]}
       role="menubar"
     >
       {items ? renderItems(items, '', false) : undefined}

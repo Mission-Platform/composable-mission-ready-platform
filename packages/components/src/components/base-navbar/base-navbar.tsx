@@ -46,7 +46,13 @@ export function BaseNavbar(properties: NavbarProperties): MpElement {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const header = (
-    <header classNames={[styles['base-navbar'], sizeStyles[`base-size--${size}`], { [styles['base-navbar--sticky']]: sticky }]}>
+    <header
+      classNames={[
+        styles['base-navbar'],
+        sizeStyles[`base-size--${size}`],
+        { [styles['base-navbar--sticky']]: sticky },
+      ]}
+    >
       <nav
         aria-label="Main navigation"
         classNames={styles['base-navbar__container']}

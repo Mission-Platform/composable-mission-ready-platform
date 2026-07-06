@@ -24,17 +24,7 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: [
-        'neutral',
-        'primary',
-        'secondary',
-        'tertiary',
-        'success',
-        'warning',
-        'info',
-        'error',
-        'critical',
-      ],
+      options: ['neutral', 'primary', 'secondary', 'tertiary', 'success', 'warning', 'info', 'error', 'critical'],
     },
     size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     value: { control: { type: 'range', min: 0, max: 100, step: 1 } },

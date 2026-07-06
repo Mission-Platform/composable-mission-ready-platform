@@ -1,12 +1,4 @@
-import {
-  h,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type MpElement,
-  type MpProperties,
-} from '@mission-platform/jsx';
+import { h, useEffect, useMemo, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
 import hljs from 'highlight.js/lib/core';
 import bash from 'highlight.js/lib/languages/bash';
 import css from 'highlight.js/lib/languages/css';
@@ -189,7 +181,9 @@ export function BaseCodeBlock(properties: CodeBlockProperties): MpElement {
   ) : undefined;
 
   return (
-    <div classNames={[styles['base-code-block'], styles[`base-code-block--${variant}`], sizeStyles[`base-size--${size}`]]}>
+    <div
+      classNames={[styles['base-code-block'], styles[`base-code-block--${variant}`], sizeStyles[`base-size--${size}`]]}
+    >
       {hasHeader ? (
         <div classNames={styles['base-code-block__header']}>
           {filename ? (
@@ -218,9 +212,12 @@ export function BaseCodeBlock(properties: CodeBlockProperties): MpElement {
       ) : undefined}
 
       <div
-        classNames={[styles['base-code-block__body'], {
-          [styles['base-code-block__body--numbered']]: showLineNumbers,
-        }]}
+        classNames={[
+          styles['base-code-block__body'],
+          {
+            [styles['base-code-block__body--numbered']]: showLineNumbers,
+          },
+        ]}
         style={bodyStyle}
         tabindex={0}
       >

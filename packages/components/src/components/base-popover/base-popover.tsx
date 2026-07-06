@@ -94,7 +94,14 @@ const POSITION_AREA: Readonly<Record<PopoverPlacement, string>> = {
  * `base-popover.module.scss`.
  */
 export function BasePopover(properties: PopoverProperties): MpElement {
-  const { open = false, placement = 'bottom-start', offset = 6, closeOnOutsideClick = true, label, size = 'md' } = properties;
+  const {
+    open = false,
+    placement = 'bottom-start',
+    offset = 6,
+    closeOnOutsideClick = true,
+    label,
+    size = 'md',
+  } = properties;
 
   const idReference = useRef<string>(nextFieldId('mp-popover'));
   const anchorName = `--${idReference.current}`;

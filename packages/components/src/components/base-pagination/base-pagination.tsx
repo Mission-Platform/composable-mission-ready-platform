@@ -200,9 +200,12 @@ export function BasePagination(properties: PaginationProperties): MpElement {
               <button
                 aria-current={control.page === currentPage ? 'page' : undefined}
                 aria-label={`Go to page ${control.page}`}
-                classNames={[styles['base-pagination__btn'], {
-                  [styles['base-pagination__btn--active']]: control.page === currentPage,
-                }]}
+                classNames={[
+                  styles['base-pagination__btn'],
+                  {
+                    [styles['base-pagination__btn--active']]: control.page === currentPage,
+                  },
+                ]}
                 disabled={disabled}
                 type="button"
                 onClick={() => goTo(control.page)}

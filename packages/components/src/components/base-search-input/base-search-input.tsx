@@ -1,7 +1,6 @@
 import { IconClose, IconSearch } from '@mission-platform/icons';
 import { h, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
-
 import { nextFieldId } from '../field-id';
 
 import styles from './base-search-input.module.scss';
@@ -87,9 +86,13 @@ export function BaseSearchInput(properties: SearchInputProperties): MpElement {
 
   return (
     <div
-      classNames={[styles['base-search-input'], styles[`base-search-input--${size}`], {
-        [styles['base-search-input--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-search-input'],
+        styles[`base-search-input--${size}`],
+        {
+          [styles['base-search-input--disabled']]: disabled,
+        },
+      ]}
     >
       <div classNames={styles['base-search-input__wrapper']}>
         <span

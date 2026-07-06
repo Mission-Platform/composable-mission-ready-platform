@@ -107,16 +107,23 @@ export function BaseColorInput(properties: ColorInputProperties): MpElement {
 
   return (
     <div
-      classNames={[styles['base-color-input'], styles[`base-color-input--${size}`], {
-        [styles['base-color-input--error']]: !!error,
-        [styles['base-color-input--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-color-input'],
+        styles[`base-color-input--${size}`],
+        {
+          [styles['base-color-input--error']]: !!error,
+          [styles['base-color-input--disabled']]: disabled,
+        },
+      ]}
     >
       {label ? (
         <label
-          classNames={[styles['base-color-input__label'], {
-            [styles['base-color-input__label--hidden']]: labelHidden,
-          }]}
+          classNames={[
+            styles['base-color-input__label'],
+            {
+              [styles['base-color-input__label--hidden']]: labelHidden,
+            },
+          ]}
           for={`${resolvedId}-text`}
         >
           <BaseTypography

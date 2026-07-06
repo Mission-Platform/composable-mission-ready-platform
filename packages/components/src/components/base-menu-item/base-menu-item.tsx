@@ -74,10 +74,15 @@ export function BaseMenuItem(properties: MenuItemProperties): MpElement {
     }
   };
 
-  const liClass = classNames(styles['base-menu-item'], styles[`base-menu-item--${variant}`], sizeStyles[`base-size--${size}`], {
-    [styles['base-menu-item--disabled']]: disabled,
-    [styles['base-menu-item--active']]: active,
-  });
+  const liClass = classNames(
+    styles['base-menu-item'],
+    styles[`base-menu-item--${variant}`],
+    sizeStyles[`base-size--${size}`],
+    {
+      [styles['base-menu-item--disabled']]: disabled,
+      [styles['base-menu-item--active']]: active,
+    },
+  );
 
   return (
     <li

@@ -18,7 +18,6 @@ import {
   type WeekStart,
 } from '@mission-platform/scheduler-core';
 
-
 import { BaseButton } from '../base-button';
 import { BaseDialog } from '../base-dialog';
 import { BaseInput } from '../base-input';
@@ -296,9 +295,12 @@ export function BaseScheduler(properties: SchedulerProperties): MpElement {
           {days.map((day) => (
             <button
               key={isoDate(day)}
-              classNames={[styles['base-scheduler__day-heading'], {
-                [styles['base-scheduler__day-heading--today']]: isoDate(day) === todayIso,
-              }]}
+              classNames={[
+                styles['base-scheduler__day-heading'],
+                {
+                  [styles['base-scheduler__day-heading--today']]: isoDate(day) === todayIso,
+                },
+              ]}
               type="button"
               onClick={() => switchView('day', day)}
             >
@@ -425,10 +427,13 @@ export function BaseScheduler(properties: SchedulerProperties): MpElement {
             return (
               <button
                 key={dayIso}
-                classNames={[styles['base-scheduler__month-cell'], {
-                  [styles['base-scheduler__month-cell--outside']]: !inMonth,
-                  [styles['base-scheduler__month-cell--today']]: dayIso === todayIso,
-                }]}
+                classNames={[
+                  styles['base-scheduler__month-cell'],
+                  {
+                    [styles['base-scheduler__month-cell--outside']]: !inMonth,
+                    [styles['base-scheduler__month-cell--today']]: dayIso === todayIso,
+                  },
+                ]}
                 type="button"
                 onClick={() => openCreate(`${dayIso}T09:00`)}
               >
@@ -498,11 +503,14 @@ export function BaseScheduler(properties: SchedulerProperties): MpElement {
                   return (
                     <span
                       key={dayIso}
-                      classNames={[styles['base-scheduler__mini-day'], {
-                        [styles['base-scheduler__mini-day--outside']]: day.getMonth() !== monthIndex,
-                        [styles['base-scheduler__mini-day--busy']]: busyDays.has(dayIso),
-                        [styles['base-scheduler__mini-day--today']]: dayIso === todayIso,
-                      }]}
+                      classNames={[
+                        styles['base-scheduler__mini-day'],
+                        {
+                          [styles['base-scheduler__mini-day--outside']]: day.getMonth() !== monthIndex,
+                          [styles['base-scheduler__mini-day--busy']]: busyDays.has(dayIso),
+                          [styles['base-scheduler__mini-day--today']]: dayIso === todayIso,
+                        },
+                      ]}
                     >
                       {day.getDate()}
                     </span>

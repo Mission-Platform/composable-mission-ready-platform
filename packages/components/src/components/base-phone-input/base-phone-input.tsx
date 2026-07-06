@@ -140,17 +140,24 @@ export function BasePhoneInput(properties: PhoneInputProperties): MpElement {
 
   return (
     <div
-      classNames={[styles['base-phone-input'], styles[`base-phone-input--${size}`], {
-        [styles['base-phone-input--error']]: !!error,
-        [styles['base-phone-input--disabled']]: disabled,
-        [styles['base-phone-input--valid']]: valid,
-      }]}
+      classNames={[
+        styles['base-phone-input'],
+        styles[`base-phone-input--${size}`],
+        {
+          [styles['base-phone-input--error']]: !!error,
+          [styles['base-phone-input--disabled']]: disabled,
+          [styles['base-phone-input--valid']]: valid,
+        },
+      ]}
     >
       {label ? (
         <label
-          classNames={[styles['base-phone-input__label'], {
-            [styles['base-phone-input__label--hidden']]: labelHidden,
-          }]}
+          classNames={[
+            styles['base-phone-input__label'],
+            {
+              [styles['base-phone-input__label--hidden']]: labelHidden,
+            },
+          ]}
           for={resolvedId}
         >
           <BaseTypography

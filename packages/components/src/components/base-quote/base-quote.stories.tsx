@@ -25,17 +25,7 @@ const meta = {
     variant: { control: 'inline-radio', options: ['default', 'bordered', 'plain'] },
     tone: {
       control: 'select',
-      options: [
-        'neutral',
-        'primary',
-        'secondary',
-        'tertiary',
-        'success',
-        'warning',
-        'info',
-        'error',
-        'critical',
-      ],
+      options: ['neutral', 'primary', 'secondary', 'tertiary', 'success', 'warning', 'info', 'error', 'critical'],
     },
     size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     author: { control: 'text' },

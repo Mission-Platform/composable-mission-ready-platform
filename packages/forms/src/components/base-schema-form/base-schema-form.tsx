@@ -1,4 +1,26 @@
 import {
+  BaseButton,
+  BaseCheckbox,
+  BaseDateInput,
+  BaseDateRangeInput,
+  BaseDateTimeRangeInput,
+  BaseFieldSet,
+  BaseFileInput,
+  BaseInput,
+  BaseMarkdownInput,
+  BaseMultiselect,
+  BaseNumberStepper,
+  BasePhoneInput,
+  BaseRadioGroup,
+  BaseSelect,
+  BaseSwitch,
+  BaseTextarea,
+  BaseTimeInput,
+  BaseTimeRangeInput,
+  BaseTypography,
+} from '@mission-platform/components';
+import { BaseFormWizard, type WizardStep, BaseLocationInput, type LocationValue } from '@mission-platform/components';
+import {
   createFormValidator,
   evaluateCondition,
   isFieldVisible,
@@ -15,27 +37,6 @@ import {
 } from '@mission-platform/forms-core';
 import { h, Slot, useMemo, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
-import { BaseButton } from '@mission-platform/components';
-import { BaseCheckbox } from '@mission-platform/components';
-import { BaseDateInput } from '@mission-platform/components';
-import { BaseDateRangeInput } from '@mission-platform/components';
-import { BaseDateTimeRangeInput } from '@mission-platform/components';
-import { BaseFieldSet } from '@mission-platform/components';
-import { BaseFileInput } from '@mission-platform/components';
-import { BaseFormWizard, type WizardStep } from '@mission-platform/components';
-import { BaseInput } from '@mission-platform/components';
-import { BaseLocationInput, type LocationValue } from '@mission-platform/components';
-import { BaseMarkdownInput } from '@mission-platform/components';
-import { BaseMultiselect } from '@mission-platform/components';
-import { BaseNumberStepper } from '@mission-platform/components';
-import { BasePhoneInput } from '@mission-platform/components';
-import { BaseRadioGroup } from '@mission-platform/components';
-import { BaseSelect } from '@mission-platform/components';
-import { BaseSwitch } from '@mission-platform/components';
-import { BaseTextarea } from '@mission-platform/components';
-import { BaseTimeInput } from '@mission-platform/components';
-import { BaseTimeRangeInput } from '@mission-platform/components';
-import { BaseTypography } from '@mission-platform/components';
 import sizeStyles from '../size.module.scss';
 
 import styles from './base-schema-form.module.scss';
@@ -476,9 +477,12 @@ export function BaseSchemaForm(properties: SchemaFormProperties): MpElement {
             {field.hint || error ? (
               <BaseTypography
                 as="p"
-                classNames={[styles['base-schema-form__datetime-hint'], {
-                  [styles['base-schema-form__datetime-hint--error']]: Boolean(error),
-                }]}
+                classNames={[
+                  styles['base-schema-form__datetime-hint'],
+                  {
+                    [styles['base-schema-form__datetime-hint--error']]: Boolean(error),
+                  },
+                ]}
                 color="inherit"
                 variant="caption"
               >
@@ -656,9 +660,14 @@ export function BaseSchemaForm(properties: SchemaFormProperties): MpElement {
 
     return (
       <form
-        classNames={[styles['base-schema-form'], styles['base-schema-form--wizard'], sizeStyles[`base-size--${size}`], {
-          [styles['base-schema-form--disabled']]: disabled,
-        }]}
+        classNames={[
+          styles['base-schema-form'],
+          styles['base-schema-form--wizard'],
+          sizeStyles[`base-size--${size}`],
+          {
+            [styles['base-schema-form--disabled']]: disabled,
+          },
+        ]}
         onSubmit={handleSubmit}
       >
         <BaseFormWizard
@@ -675,9 +684,13 @@ export function BaseSchemaForm(properties: SchemaFormProperties): MpElement {
   // Single-step form.
   return (
     <form
-      classNames={[styles['base-schema-form'], sizeStyles[`base-size--${size}`], {
-        [styles['base-schema-form--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-schema-form'],
+        sizeStyles[`base-size--${size}`],
+        {
+          [styles['base-schema-form--disabled']]: disabled,
+        },
+      ]}
       onReset={handleReset}
       onSubmit={handleSubmit}
     >

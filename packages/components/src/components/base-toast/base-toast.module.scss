@@ -80,7 +80,20 @@
      * Variants — accent the icon and left border with the canonical colour set.
      * The `neutral` tone reuses the `default` token family (no `neutral` alias).
      */
-    @each $name, $family in ('neutral': 'default', 'primary': 'primary', 'secondary': 'secondary', 'tertiary': 'tertiary', 'success': 'success', 'warning': 'warning', 'info': 'info', 'error': 'error', 'critical': 'critical') {
+    @each $name,
+      $family
+        in (
+          'neutral': 'default',
+          'primary': 'primary',
+          'secondary': 'secondary',
+          'tertiary': 'tertiary',
+          'success': 'success',
+          'warning': 'warning',
+          'info': 'info',
+          'error': 'error',
+          'critical': 'critical'
+        )
+    {
       &--#{$name} {
         border-left-color: var(--mp-color-#{$family}-default);
 

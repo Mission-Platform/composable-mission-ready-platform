@@ -10,7 +10,6 @@ import {
   type MpProperties,
 } from '@mission-platform/jsx';
 
-
 import { BaseCalendar } from '../base-calendar';
 import { BaseDropdown } from '../base-dropdown';
 import { BaseFormWizard } from '../base-form-wizard';
@@ -185,9 +184,12 @@ export function BaseDateTimeRangeInput(properties: DateTimeRangeInputProperties)
         {units.map((unit) => (
           <button
             key={unit}
-            classNames={[styles['base-date-time-range-input__unit-btn'], {
-              [styles['base-date-time-range-input__unit-btn--active']]: active === unit,
-            }]}
+            classNames={[
+              styles['base-date-time-range-input__unit-btn'],
+              {
+                [styles['base-date-time-range-input__unit-btn--active']]: active === unit,
+              },
+            ]}
             type="button"
             onClick={() => onPick(unit)}
           >
@@ -261,16 +263,23 @@ export function BaseDateTimeRangeInput(properties: DateTimeRangeInputProperties)
 
   return (
     <div
-      classNames={[styles['base-date-time-range-input'], styles[`base-date-time-range-input--${size}`], {
-        [styles['base-date-time-range-input--error']]: !!error,
-        [styles['base-date-time-range-input--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-date-time-range-input'],
+        styles[`base-date-time-range-input--${size}`],
+        {
+          [styles['base-date-time-range-input--error']]: !!error,
+          [styles['base-date-time-range-input--disabled']]: disabled,
+        },
+      ]}
     >
       {label ? (
         <label
-          classNames={[styles['base-date-time-range-input__label'], {
-            [styles['base-date-time-range-input__label--hidden']]: labelHidden,
-          }]}
+          classNames={[
+            styles['base-date-time-range-input__label'],
+            {
+              [styles['base-date-time-range-input__label--hidden']]: labelHidden,
+            },
+          ]}
           for={resolvedId}
         >
           <BaseTypography
@@ -304,8 +313,10 @@ export function BaseDateTimeRangeInput(properties: DateTimeRangeInputProperties)
         >
           {hasSlot('startContent') ? (
             <span
-              classNames={[styles['base-date-time-range-input__extension'],
-                styles['base-date-time-range-input__extension--start']]}
+              classNames={[
+                styles['base-date-time-range-input__extension'],
+                styles['base-date-time-range-input__extension--start'],
+              ]}
             >
               <Slot name="startContent" />
             </span>
@@ -322,9 +333,12 @@ export function BaseDateTimeRangeInput(properties: DateTimeRangeInputProperties)
             onClick={toggleOpen}
           >
             <span
-              classNames={[styles['base-date-time-range-input__value'], {
-                [styles['base-date-time-range-input__value--placeholder']]: !summary,
-              }]}
+              classNames={[
+                styles['base-date-time-range-input__value'],
+                {
+                  [styles['base-date-time-range-input__value--placeholder']]: !summary,
+                },
+              ]}
             >
               {summary || 'YYYY-MM-DD HH:MM → YYYY-MM-DD HH:MM'}
             </span>
@@ -337,8 +351,10 @@ export function BaseDateTimeRangeInput(properties: DateTimeRangeInputProperties)
           </button>
           {hasSlot('endContent') ? (
             <span
-              classNames={[styles['base-date-time-range-input__extension'],
-                styles['base-date-time-range-input__extension--end']]}
+              classNames={[
+                styles['base-date-time-range-input__extension'],
+                styles['base-date-time-range-input__extension--end'],
+              ]}
             >
               <Slot name="endContent" />
             </span>
@@ -355,9 +371,12 @@ export function BaseDateTimeRangeInput(properties: DateTimeRangeInputProperties)
           >
             <button
               aria-pressed={timezone === 'browser'}
-              classNames={[styles['base-date-time-range-input__tz-btn'], {
-                [styles['base-date-time-range-input__tz-btn--active']]: timezone === 'browser',
-              }]}
+              classNames={[
+                styles['base-date-time-range-input__tz-btn'],
+                {
+                  [styles['base-date-time-range-input__tz-btn--active']]: timezone === 'browser',
+                },
+              ]}
               type="button"
               onClick={() => setTimezone('browser')}
             >
@@ -365,9 +384,12 @@ export function BaseDateTimeRangeInput(properties: DateTimeRangeInputProperties)
             </button>
             <button
               aria-pressed={timezone === 'utc'}
-              classNames={[styles['base-date-time-range-input__tz-btn'], {
-                [styles['base-date-time-range-input__tz-btn--active']]: timezone === 'utc',
-              }]}
+              classNames={[
+                styles['base-date-time-range-input__tz-btn'],
+                {
+                  [styles['base-date-time-range-input__tz-btn--active']]: timezone === 'utc',
+                },
+              ]}
               type="button"
               onClick={() => setTimezone('utc')}
             >

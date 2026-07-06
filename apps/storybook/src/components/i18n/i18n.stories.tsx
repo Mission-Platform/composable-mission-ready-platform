@@ -70,7 +70,10 @@ const CustomMessages = defineComponent({
     }
 
     return () => (
-      <div key={tick.value} style="font-family: monospace; font-size: 13px; line-height: 1.8;">
+      <div
+        key={tick.value}
+        style="font-family: monospace; font-size: 13px; line-height: 1.8;"
+      >
         <div style="margin-bottom: 12px; display: flex; gap: 8px;">
           {['en', 'fr'].map((code) => (
             <button

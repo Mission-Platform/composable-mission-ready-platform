@@ -237,9 +237,12 @@ export function BaseCarousel(properties: CarouselProperties): MpElement {
       key={slideItem.id}
       aria-label={`Go to slide ${index + 1}`}
       aria-selected={currentIndex === index}
-      classNames={[styles['base-carousel__indicator'], {
-        [styles['base-carousel__indicator--active']]: currentIndex === index,
-      }]}
+      classNames={[
+        styles['base-carousel__indicator'],
+        {
+          [styles['base-carousel__indicator--active']]: currentIndex === index,
+        },
+      ]}
       role="tab"
       type="button"
       onClick={() => goTo(index)}

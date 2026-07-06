@@ -10,7 +10,6 @@ import {
   type MpProperties,
 } from '@mission-platform/jsx';
 
-
 import { BaseCalendar } from '../base-calendar';
 import { BaseDropdown } from '../base-dropdown';
 import { BaseTypography } from '../base-typography';
@@ -133,16 +132,23 @@ export function BaseDateRangeInput(properties: DateRangeInputProperties): MpElem
 
   return (
     <div
-      classNames={[styles['base-date-range-input'], styles[`base-date-range-input--${size}`], {
-        [styles['base-date-range-input--error']]: !!error,
-        [styles['base-date-range-input--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-date-range-input'],
+        styles[`base-date-range-input--${size}`],
+        {
+          [styles['base-date-range-input--error']]: !!error,
+          [styles['base-date-range-input--disabled']]: disabled,
+        },
+      ]}
     >
       {label ? (
         <label
-          classNames={[styles['base-date-range-input__label'], {
-            [styles['base-date-range-input__label--hidden']]: labelHidden,
-          }]}
+          classNames={[
+            styles['base-date-range-input__label'],
+            {
+              [styles['base-date-range-input__label--hidden']]: labelHidden,
+            },
+          ]}
           for={resolvedId}
         >
           <BaseTypography
@@ -181,8 +187,10 @@ export function BaseDateRangeInput(properties: DateRangeInputProperties): MpElem
         >
           {hasSlot('start') ? (
             <span
-              classNames={[styles['base-date-range-input__extension'],
-                styles['base-date-range-input__extension--start']]}
+              classNames={[
+                styles['base-date-range-input__extension'],
+                styles['base-date-range-input__extension--start'],
+              ]}
             >
               <Slot name="start" />
             </span>
@@ -199,9 +207,12 @@ export function BaseDateRangeInput(properties: DateRangeInputProperties): MpElem
             onClick={toggleOpen}
           >
             <span
-              classNames={[styles['base-date-range-input__value'], {
-                [styles['base-date-range-input__value--placeholder']]: !summary,
-              }]}
+              classNames={[
+                styles['base-date-range-input__value'],
+                {
+                  [styles['base-date-range-input__value--placeholder']]: !summary,
+                },
+              ]}
             >
               {summary || 'YYYY-MM-DD → YYYY-MM-DD'}
             </span>
@@ -214,8 +225,7 @@ export function BaseDateRangeInput(properties: DateRangeInputProperties): MpElem
           </button>
           {hasSlot('end') ? (
             <span
-              classNames={[styles['base-date-range-input__extension'],
-                styles['base-date-range-input__extension--end']]}
+              classNames={[styles['base-date-range-input__extension'], styles['base-date-range-input__extension--end']]}
             >
               <Slot name="end" />
             </span>

@@ -31,7 +31,20 @@
      * Variants — the canonical colour set. The `neutral` tone reuses the
      * `default` token family (no `neutral` alias).
      */
-    @each $name, $family in ('neutral': 'default', 'primary': 'primary', 'secondary': 'secondary', 'tertiary': 'tertiary', 'success': 'success', 'warning': 'warning', 'info': 'info', 'error': 'error', 'critical': 'critical') {
+    @each $name,
+      $family
+        in (
+          'neutral': 'default',
+          'primary': 'primary',
+          'secondary': 'secondary',
+          'tertiary': 'tertiary',
+          'success': 'success',
+          'warning': 'warning',
+          'info': 'info',
+          'error': 'error',
+          'critical': 'critical'
+        )
+    {
       &--#{$name} {
         border-color: var(--mp-color-#{$family}-default);
         border-top-color: transparent;

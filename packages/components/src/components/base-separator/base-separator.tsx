@@ -51,7 +51,15 @@ export interface SeparatorProperties extends MpProperties {
  * {@link classNames} helper.
  */
 export function BaseSeparator(properties: SeparatorProperties): MpElement {
-  const { orientation = 'horizontal', variant = 'solid', spacing = 'md', decorative = false, size = 'md', padding, margin } = properties;
+  const {
+    orientation = 'horizontal',
+    variant = 'solid',
+    spacing = 'md',
+    decorative = false,
+    size = 'md',
+    padding,
+    margin,
+  } = properties;
   const sizeClass = sizeStyles[`base-size--${size}`];
 
   const role = decorative ? 'none' : 'separator';
@@ -63,13 +71,15 @@ export function BaseSeparator(properties: SeparatorProperties): MpElement {
 
   return hasLabel ? (
     <div
-      classNames={[styles['base-separator'],
+      classNames={[
+        styles['base-separator'],
         styles['base-separator--labelled'],
         styles[`base-separator--${variant}`],
         styles[`base-separator--spacing-${spacing}`],
         sizeClass,
         paddingClass,
-        marginClass]}
+        marginClass,
+      ]}
       role={role}
       aria-orientation={decorative ? undefined : 'horizontal'}
     >
@@ -79,13 +89,15 @@ export function BaseSeparator(properties: SeparatorProperties): MpElement {
     </div>
   ) : (
     <hr
-      classNames={[styles['base-separator'],
+      classNames={[
+        styles['base-separator'],
         styles[`base-separator--${orientation}`],
         styles[`base-separator--${variant}`],
         styles[`base-separator--spacing-${spacing}`],
         sizeClass,
         paddingClass,
-        marginClass]}
+        marginClass,
+      ]}
       role={role}
       aria-orientation={decorative ? undefined : orientation}
     />

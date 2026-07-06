@@ -24,17 +24,7 @@ const meta = {
   argTypes: {
     status: {
       control: 'select',
-      options: [
-        'neutral',
-        'primary',
-        'secondary',
-        'tertiary',
-        'success',
-        'warning',
-        'info',
-        'error',
-        'critical',
-      ],
+      options: ['neutral', 'primary', 'secondary', 'tertiary', 'success', 'warning', 'info', 'error', 'critical'],
     },
     size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     label: { control: 'text' },

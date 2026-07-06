@@ -107,10 +107,14 @@ export function BaseCheckbox(properties: CheckboxProperties): MpElement {
 
   return (
     <div
-      classNames={[styles['base-checkbox'], sizeStyles[`base-size--${size}`], {
-        [styles['base-checkbox--error']]: !!error,
-        [styles['base-checkbox--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-checkbox'],
+        sizeStyles[`base-size--${size}`],
+        {
+          [styles['base-checkbox--error']]: !!error,
+          [styles['base-checkbox--disabled']]: disabled,
+        },
+      ]}
     >
       <label
         classNames={styles['base-checkbox__row']}
@@ -139,9 +143,12 @@ export function BaseCheckbox(properties: CheckboxProperties): MpElement {
         </span>
         {label ? (
           <span
-            classNames={[styles['base-checkbox__label'], {
-              [styles['base-checkbox__label--hidden']]: labelHidden,
-            }]}
+            classNames={[
+              styles['base-checkbox__label'],
+              {
+                [styles['base-checkbox__label--hidden']]: labelHidden,
+              },
+            ]}
           >
             <BaseTypography
               as="span"

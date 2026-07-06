@@ -646,7 +646,6 @@
   }
 
   .home__lead {
-    max-width: 680px;
     margin: 0;
   }
 

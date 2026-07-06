@@ -1,13 +1,5 @@
 import { IconChevron } from '@mission-platform/icons';
-import {
-  h,
-  Slot,
-  useState,
-  type MpElement,
-  type MpProperties,
-  type MpRenderProperty,
-} from '@mission-platform/jsx';
-
+import { h, Slot, useState, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
@@ -105,15 +97,20 @@ export function BaseAccordion(properties: AccordionProperties): MpElement {
   };
 
   return (
-    <div classNames={[styles['base-accordion'], styles[`base-accordion--${variant}`], sizeStyles[`base-size--${size}`]]}>
+    <div
+      classNames={[styles['base-accordion'], styles[`base-accordion--${variant}`], sizeStyles[`base-size--${size}`]]}
+    >
       {items.map((item) => {
         const open = openIds.includes(item.id);
         return (
           <details
             key={item.id}
-            classNames={[styles['base-accordion__item'], {
-              [styles['base-accordion__item--disabled']]: item.disabled,
-            }]}
+            classNames={[
+              styles['base-accordion__item'],
+              {
+                [styles['base-accordion__item--disabled']]: item.disabled,
+              },
+            ]}
             open={open}
           >
             <summary

@@ -1,12 +1,4 @@
-import {
-  h,
-  Slot,
-  Teleport,
-  useRef,
-  useState,
-  type MpElement,
-  type MpProperties,
-} from '@mission-platform/jsx';
+import { h, Slot, Teleport, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
 import { nextFieldId } from '../field-id';
@@ -119,7 +111,11 @@ export function BaseTooltip(properties: TooltipProperties): MpElement {
         <Teleport to="body">
           <span
             id={tooltipId}
-            classNames={[styles['base-tooltip__panel'], styles[`base-tooltip__panel--${placement}`], sizeStyles[`base-size--${size}`]]}
+            classNames={[
+              styles['base-tooltip__panel'],
+              styles[`base-tooltip__panel--${placement}`],
+              sizeStyles[`base-size--${size}`],
+            ]}
             role="tooltip"
             style={{ positionAnchor: anchorName, positionArea: POSITION_AREA[placement] }}
           >

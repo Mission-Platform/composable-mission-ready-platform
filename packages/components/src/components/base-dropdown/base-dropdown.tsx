@@ -1,12 +1,4 @@
-import {
-  h,
-  Slot,
-  Teleport,
-  useEffect,
-  useRef,
-  type MpElement,
-  type MpProperties,
-} from '@mission-platform/jsx';
+import { h, Slot, Teleport, useEffect, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { nextFieldId } from '../field-id';
 import sizeStyles from '../size.module.scss';
@@ -144,9 +136,13 @@ export function BaseDropdown(properties: DropdownProperties): MpElement {
           <div
             ref={panelReference}
             id={panelId}
-            classNames={[styles['base-dropdown__panel'], sizeStyles[`base-size--${size}`], {
-              [styles['base-dropdown__panel--match-width']]: matchTriggerWidth,
-            }]}
+            classNames={[
+              styles['base-dropdown__panel'],
+              sizeStyles[`base-size--${size}`],
+              {
+                [styles['base-dropdown__panel--match-width']]: matchTriggerWidth,
+              },
+            ]}
             data-placement={placement}
             style={{ positionAnchor: anchorName, positionArea: POSITION_AREA[placement], maxHeight }}
             tabindex={0}

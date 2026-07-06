@@ -157,9 +157,12 @@ export function BaseTimeRangeInput(properties: TimeRangeInputProperties): MpElem
         {units.map((unit) => (
           <button
             key={unit}
-            classNames={[styles['base-time-range-input__unit-btn'], {
-              [styles['base-time-range-input__unit-btn--active']]: active === unit,
-            }]}
+            classNames={[
+              styles['base-time-range-input__unit-btn'],
+              {
+                [styles['base-time-range-input__unit-btn--active']]: active === unit,
+              },
+            ]}
             type="button"
             onClick={() => onPick(unit)}
           >
@@ -197,16 +200,23 @@ export function BaseTimeRangeInput(properties: TimeRangeInputProperties): MpElem
 
   return (
     <div
-      classNames={[styles['base-time-range-input'], styles[`base-time-range-input--${size}`], {
-        [styles['base-time-range-input--error']]: !!error,
-        [styles['base-time-range-input--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-time-range-input'],
+        styles[`base-time-range-input--${size}`],
+        {
+          [styles['base-time-range-input--error']]: !!error,
+          [styles['base-time-range-input--disabled']]: disabled,
+        },
+      ]}
     >
       {label ? (
         <label
-          classNames={[styles['base-time-range-input__label'], {
-            [styles['base-time-range-input__label--hidden']]: labelHidden,
-          }]}
+          classNames={[
+            styles['base-time-range-input__label'],
+            {
+              [styles['base-time-range-input__label--hidden']]: labelHidden,
+            },
+          ]}
           for={resolvedId}
         >
           <BaseTypography
@@ -239,8 +249,10 @@ export function BaseTimeRangeInput(properties: TimeRangeInputProperties): MpElem
         >
           {hasSlot('startContent') ? (
             <span
-              classNames={[styles['base-time-range-input__extension'],
-                styles['base-time-range-input__extension--start']]}
+              classNames={[
+                styles['base-time-range-input__extension'],
+                styles['base-time-range-input__extension--start'],
+              ]}
             >
               <Slot name="startContent" />
             </span>
@@ -257,9 +269,12 @@ export function BaseTimeRangeInput(properties: TimeRangeInputProperties): MpElem
             onClick={toggleOpen}
           >
             <span
-              classNames={[styles['base-time-range-input__value'], {
-                [styles['base-time-range-input__value--placeholder']]: !summary,
-              }]}
+              classNames={[
+                styles['base-time-range-input__value'],
+                {
+                  [styles['base-time-range-input__value--placeholder']]: !summary,
+                },
+              ]}
             >
               {summary || placeholder}
             </span>
@@ -272,8 +287,7 @@ export function BaseTimeRangeInput(properties: TimeRangeInputProperties): MpElem
           </button>
           {hasSlot('endContent') ? (
             <span
-              classNames={[styles['base-time-range-input__extension'],
-                styles['base-time-range-input__extension--end']]}
+              classNames={[styles['base-time-range-input__extension'], styles['base-time-range-input__extension--end']]}
             >
               <Slot name="endContent" />
             </span>

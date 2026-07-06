@@ -3,7 +3,6 @@ import { h, Slot, useEffect, useState, type MpElement, type MpProperties } from 
 import sizeStyles from '../size.module.scss';
 import { cycleTheme, getThemeSnapshot, subscribeTheme, type Theme } from '../theme-store';
 
-
 import styles from './base-theme-toggle.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */

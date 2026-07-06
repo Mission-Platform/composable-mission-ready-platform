@@ -30,7 +30,9 @@ describe('expandRecurrences', () => {
   });
 
   it('honours INTERVAL on a DAILY rule', () => {
-    const event = timed('2024-01-01T09:00:00', '2024-01-01T10:00:00', { rrule: { freq: 'DAILY', interval: 3, count: 3 } });
+    const event = timed('2024-01-01T09:00:00', '2024-01-01T10:00:00', {
+      rrule: { freq: 'DAILY', interval: 3, count: 3 },
+    });
     expect(expandRecurrences(event, RANGE_START, RANGE_END).map((o) => dayKey(o.dtstart))).toEqual([
       '2024-01-01',
       '2024-01-04',

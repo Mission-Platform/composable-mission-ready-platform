@@ -31,17 +31,7 @@ const meta = {
     showCopyButton: { control: 'boolean' },
     variant: {
       control: 'select',
-      options: [
-        'neutral',
-        'primary',
-        'secondary',
-        'tertiary',
-        'success',
-        'warning',
-        'info',
-        'error',
-        'critical',
-      ],
+      options: ['neutral', 'primary', 'secondary', 'tertiary', 'success', 'warning', 'info', 'error', 'critical'],
     },
   },
   args: {

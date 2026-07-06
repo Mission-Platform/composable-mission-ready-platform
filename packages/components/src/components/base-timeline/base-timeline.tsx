@@ -93,20 +93,27 @@ export function BaseTimeline(properties: TimelineProperties): MpElement {
 
   return (
     <ol
-      classNames={[styles['base-timeline'], styles[`base-timeline--${orientation}`], sizeStyles[`base-size--${size}`], {
-        [styles['base-timeline--alternate']]: isAlternate,
-      }]}
+      classNames={[
+        styles['base-timeline'],
+        styles[`base-timeline--${orientation}`],
+        sizeStyles[`base-size--${size}`],
+        {
+          [styles['base-timeline--alternate']]: isAlternate,
+        },
+      ]}
     >
       {items.map((item, index) => (
         <li
           key={item.id}
-          classNames={[styles['base-timeline-item'],
+          classNames={[
+            styles['base-timeline-item'],
             styles[`base-timeline-item--${orientation}`],
             styles[`base-timeline-item--${item.variant ?? 'primary'}`],
             {
               [styles['base-timeline-item--alternate']]: isAlternate,
               [styles['base-timeline-item--outlined']]: item.outlined,
-            }]}
+            },
+          ]}
         >
           <div classNames={styles['base-timeline-item__marker']}>
             <Slot

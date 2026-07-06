@@ -1,6 +1,14 @@
 import { IconClose } from '@mission-platform/icons';
-import { h, hasSlot, Slot, useEffect, useRef, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
-
+import {
+  h,
+  hasSlot,
+  Slot,
+  useEffect,
+  useRef,
+  type MpChild,
+  type MpElement,
+  type MpProperties,
+} from '@mission-platform/jsx';
 
 import { BaseIconButton } from '../base-icon-button';
 import { BaseTypography } from '../base-typography';

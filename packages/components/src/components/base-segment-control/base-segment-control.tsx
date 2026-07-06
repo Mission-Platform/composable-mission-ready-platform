@@ -152,9 +152,12 @@ export function BaseSegmentControl(properties: SegmentControlProperties): MpElem
         <button
           key={option.value}
           aria-checked={isSelected(option)}
-          classNames={[styles['base-segment-control__segment'], {
-            [styles['base-segment-control__segment--selected']]: isSelected(option),
-          }]}
+          classNames={[
+            styles['base-segment-control__segment'],
+            {
+              [styles['base-segment-control__segment--selected']]: isSelected(option),
+            },
+          ]}
           disabled={disabled || option.disabled}
           tabindex={isFocusable(option, index) ? 0 : -1}
           role="radio"

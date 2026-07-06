@@ -59,7 +59,19 @@
      * Colour tones — tint the `bordered` accent and the `default` background.
      * `neutral` is omitted so it keeps the plain treatment.
      */
-    @each $name, $family in ('primary': 'primary', 'secondary': 'secondary', 'tertiary': 'tertiary', 'success': 'success', 'warning': 'warning', 'info': 'info', 'error': 'error', 'critical': 'critical') {
+    @each $name,
+      $family
+        in (
+          'primary': 'primary',
+          'secondary': 'secondary',
+          'tertiary': 'tertiary',
+          'success': 'success',
+          'warning': 'warning',
+          'info': 'info',
+          'error': 'error',
+          'critical': 'critical'
+        )
+    {
       &--tone-#{$name} {
         &.base-quote--bordered {
           border-left-color: var(--mp-color-#{$family}-default);

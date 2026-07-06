@@ -11,7 +11,6 @@ import {
   type Theme,
 } from '../theme-store';
 
-
 import styles from './base-theme-provider.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale (inherited through the renderless wrapper). */

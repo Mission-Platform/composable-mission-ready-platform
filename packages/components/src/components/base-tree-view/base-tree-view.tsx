@@ -1,11 +1,4 @@
-import {
-  h,
-  Slot,
-  useState,
-  type MpElement,
-  type MpProperties,
-  type MpRenderProperty,
-} from '@mission-platform/jsx';
+import { h, Slot, useState, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
@@ -122,9 +115,12 @@ export function BaseTreeView(properties: TreeViewProperties): MpElement {
         {hasChildren(node) ? (
           <button
             type="button"
-            classNames={[styles['tree-node__toggle'], {
-              [styles['tree-node__toggle--open']]: isOpen(node),
-            }]}
+            classNames={[
+              styles['tree-node__toggle'],
+              {
+                [styles['tree-node__toggle--open']]: isOpen(node),
+              },
+            ]}
             aria-label={isOpen(node) ? 'Collapse' : 'Expand'}
             onClick={(event: MouseEvent) => {
               event.stopPropagation();

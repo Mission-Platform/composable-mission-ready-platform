@@ -1,7 +1,6 @@
 import { IconUpload } from '@mission-platform/icons';
 import { h, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
-
 import { BaseTypography } from '../base-typography';
 import { nextFieldId } from '../field-id';
 
@@ -127,16 +126,23 @@ export function BaseFileInput(properties: FileInputProperties): MpElement {
 
   return (
     <div
-      classNames={[styles['base-file-input'], styles[`base-file-input--${size}`], {
-        [styles['base-file-input--error']]: !!error,
-        [styles['base-file-input--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-file-input'],
+        styles[`base-file-input--${size}`],
+        {
+          [styles['base-file-input--error']]: !!error,
+          [styles['base-file-input--disabled']]: disabled,
+        },
+      ]}
     >
       {label ? (
         <label
-          classNames={[styles['base-file-input__label'], {
-            [styles['base-file-input__label--hidden']]: labelHidden,
-          }]}
+          classNames={[
+            styles['base-file-input__label'],
+            {
+              [styles['base-file-input__label--hidden']]: labelHidden,
+            },
+          ]}
           for={resolvedId}
         >
           <BaseTypography
@@ -159,9 +165,12 @@ export function BaseFileInput(properties: FileInputProperties): MpElement {
       ) : undefined}
       {dragDrop ? (
         <div
-          classNames={[styles['base-file-input__dropzone'], {
-            [styles['base-file-input__dropzone--active']]: isDragging,
-          }]}
+          classNames={[
+            styles['base-file-input__dropzone'],
+            {
+              [styles['base-file-input__dropzone--active']]: isDragging,
+            },
+          ]}
           role="presentation"
           onDragLeave={handleDragLeave}
           onDragOver={handleDragOver}
@@ -203,9 +212,12 @@ export function BaseFileInput(properties: FileInputProperties): MpElement {
       ) : (
         <div classNames={styles['base-file-input__row']}>
           <label
-            classNames={[styles['base-file-input__button'], {
-              [styles['base-file-input__button--disabled']]: disabled,
-            }]}
+            classNames={[
+              styles['base-file-input__button'],
+              {
+                [styles['base-file-input__button--disabled']]: disabled,
+              },
+            ]}
             for={resolvedId}
           >
             {browseLabel}

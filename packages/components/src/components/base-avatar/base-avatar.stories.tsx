@@ -29,17 +29,7 @@ const meta = {
     status: { control: 'select', options: [undefined, 'online', 'offline', 'away', 'busy'] },
     variant: {
       control: 'select',
-      options: [
-        'neutral',
-        'primary',
-        'secondary',
-        'tertiary',
-        'success',
-        'warning',
-        'info',
-        'error',
-        'critical',
-      ],
+      options: ['neutral', 'primary', 'secondary', 'tertiary', 'success', 'warning', 'info', 'error', 'critical'],
     },
     src: { control: 'text' },
     initials: { control: 'text' },

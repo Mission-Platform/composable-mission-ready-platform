@@ -1,3 +1,4 @@
+import { BaseButton, BaseCodeBlock, BaseCollapse, BaseTooltip } from '@mission-platform/components/vue';
 import {
   IconDrawCircle,
   IconDrawLine,
@@ -13,7 +14,6 @@ import {
   IconSplit,
   IconTrash,
 } from '@mission-platform/icons/vue';
-import { BaseButton, BaseCodeBlock, BaseCollapse, BaseTooltip } from '@mission-platform/components/vue';
 import { ref, watch } from 'vue';
 
 import MapLibre from '../map-libre/map-libre.vue';

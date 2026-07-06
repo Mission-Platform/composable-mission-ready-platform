@@ -1,12 +1,5 @@
 import { IconClose, IconPlus } from '@mission-platform/icons';
-import {
-  h,
-  useRef,
-  type MpElement,
-  type MpProperties,
-  type MpRenderProperty,
-} from '@mission-platform/jsx';
-
+import { h, useRef, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
@@ -132,7 +125,13 @@ export function BaseVirtualTabs(properties: VirtualTabsProperties): MpElement {
   };
 
   return (
-    <div classNames={[styles['base-virtual-tabs'], styles[`base-virtual-tabs--${variant}`], sizeStyles[`base-size--${size}`]]}>
+    <div
+      classNames={[
+        styles['base-virtual-tabs'],
+        styles[`base-virtual-tabs--${variant}`],
+        sizeStyles[`base-size--${size}`],
+      ]}
+    >
       <div classNames={[styles['base-virtual-tabs__bar'], styles[`base-virtual-tabs__bar--${variant}`]]}>
         <div
           ref={listReference}
@@ -146,10 +145,14 @@ export function BaseVirtualTabs(properties: VirtualTabsProperties): MpElement {
               aria-controls={`panel-${tab.id}`}
               aria-disabled={tab.disabled ? 'true' : undefined}
               aria-selected={activeId === tab.id}
-              classNames={[styles['base-virtual-tabs__tab'], styles[`base-virtual-tabs__tab--${variant}`], {
-                [styles['base-virtual-tabs__tab--active']]: activeId === tab.id,
-                [styles['base-virtual-tabs__tab--disabled']]: Boolean(tab.disabled),
-              }]}
+              classNames={[
+                styles['base-virtual-tabs__tab'],
+                styles[`base-virtual-tabs__tab--${variant}`],
+                {
+                  [styles['base-virtual-tabs__tab--active']]: activeId === tab.id,
+                  [styles['base-virtual-tabs__tab--disabled']]: Boolean(tab.disabled),
+                },
+              ]}
               data-tab-id={tab.id}
               role="tab"
               tabindex={tab.disabled ? -1 : activeId === tab.id ? 0 : -1}

@@ -1,7 +1,26 @@
 import {
+  BaseButton,
+  BaseCheckbox,
+  BaseCodeBlock,
+  BaseInput,
+  BaseNumberStepper,
+  BaseSelect,
+  BaseSwitch,
+  BaseTabs,
+  BaseTextarea,
+  BaseTypography,
+  type TabItem,
+} from '@mission-platform/components';
+import {
+  type BuilderField,
+  type BuilderFieldOption,
   DEFAULT_FIELD_TYPES,
+  type FieldCondition,
+  type FieldConditionLeaf,
   fieldKeyError,
   fieldsToDefinition,
+  type FieldTypeDescriptor,
+  type FormFieldType,
   isDateWidget,
   isFileWidget,
   isLocationWidget,
@@ -9,41 +28,18 @@ import {
   isNumberWidget,
   isTextWidget,
   isTimeWidget,
+  type LocationFormat,
+  type SchemaFormDefinition,
   schemaStepConditions,
   schemaStepDescriptions,
   schemaStepTitles,
   schemaToFields,
   widgetHasOptions,
-  type BuilderField,
-  type BuilderFieldOption,
-  type FieldCondition,
-  type FieldConditionLeaf,
-  type FieldTypeDescriptor,
-  type FormFieldType,
-  type LocationFormat,
-  type SchemaFormDefinition,
 } from '@mission-platform/forms-core';
-import {
-  h,
-  useRef,
-  useState,
-  type MpChild,
-  type MpElement,
-  type MpProperties,
-} from '@mission-platform/jsx';
-
-import { BaseButton } from '@mission-platform/components';
-import { BaseCheckbox } from '@mission-platform/components';
-import { BaseCodeBlock } from '@mission-platform/components';
-import { BaseInput } from '@mission-platform/components';
-import { BaseNumberStepper } from '@mission-platform/components';
-import { BaseSchemaForm } from '../base-schema-form';
-import { BaseSelect } from '@mission-platform/components';
-import { BaseSwitch } from '@mission-platform/components';
-import { BaseTabs, type TabItem } from '@mission-platform/components';
-import { BaseTextarea } from '@mission-platform/components';
-import { BaseTypography } from '@mission-platform/components';
+import { h, type MpChild, type MpElement, type MpProperties, useRef, useState } from '@mission-platform/jsx';
 import { BaseVerticalLayout } from '@mission-platform/layouts';
+
+import { BaseSchemaForm } from '../base-schema-form';
 import sizeStyles from '../size.module.scss';
 
 import styles from './base-form-builder.module.scss';
@@ -53,6 +49,7 @@ import {
   duplicateField,
   findField,
   insertField,
+  type InsertTarget,
   isGhostAtEnd,
   isGhostBefore,
   locateTarget,
@@ -64,7 +61,6 @@ import {
   siblingKeysOf,
   stepOf,
   updateField,
-  type InsertTarget,
 } from './form-builder-tree';
 
 import type { DrawerDraggable } from '@mission-platform/components/base-drawer';
@@ -606,10 +602,13 @@ export function BaseFormBuilder(properties: FormBuilderProperties): MpElement {
       <li
         key={field.id}
         aria-current={field.id === selectedId ? 'true' : undefined}
-        classNames={[styles['base-form-builder__field'], {
-          [styles['base-form-builder__field--selected']]: field.id === selectedId,
-          [styles['base-form-builder__field--dragging']]: field.id === draggingId,
-        }]}
+        classNames={[
+          styles['base-form-builder__field'],
+          {
+            [styles['base-form-builder__field--selected']]: field.id === selectedId,
+            [styles['base-form-builder__field--dragging']]: field.id === draggingId,
+          },
+        ]}
         draggable={!disabled}
         onDragEnd={clearDropIndicator}
         onDragOver={onFieldDragOver(field)}
@@ -1282,9 +1281,13 @@ export function BaseFormBuilder(properties: FormBuilderProperties): MpElement {
 
   return (
     <div
-      classNames={[styles['base-form-builder'], sizeStyles[`base-size--${size}`], {
-        [styles['base-form-builder--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-form-builder'],
+        sizeStyles[`base-size--${size}`],
+        {
+          [styles['base-form-builder--disabled']]: disabled,
+        },
+      ]}
     >
       <BaseVerticalLayout
         endDraggable={endDraggable}

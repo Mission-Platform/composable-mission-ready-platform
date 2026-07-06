@@ -268,7 +268,11 @@ interface TransitionClassOverrides {
  * (e.g. a hashed CSS-Module class) wins, otherwise the conventional
  * `<name>-<phase>-…` class is used — exactly matching Vue's `<Transition>`.
  */
-function resolvePhaseClasses(name: string, phase: 'enter' | 'leave', overrides: TransitionClassOverrides): PhaseClasses {
+function resolvePhaseClasses(
+  name: string,
+  phase: 'enter' | 'leave',
+  overrides: TransitionClassOverrides,
+): PhaseClasses {
   const isEnter = phase === 'enter';
   return {
     from: (isEnter ? overrides.enterFromClass : overrides.leaveFromClass) ?? `${name}-${phase}-from`,
@@ -346,7 +350,13 @@ function runTransitionPhase(
  * It is SSR-safe: the server render (and first client paint) renders the child
  * in place — matching Vue's SSR output — and the animation only runs afterwards.
  */
-export function Transition({ name = 'v', appear = false, duration, children, ...overrides }: TransitionProperties): ReactNode {
+export function Transition({
+  name = 'v',
+  appear = false,
+  duration,
+  children,
+  ...overrides
+}: TransitionProperties): ReactNode {
   const incoming = singleElementChild(children);
   const nodeReference = useRef<HTMLElement | null>(null);
   const [rendered, setRendered] = useState<ReactElement | undefined>(() => incoming);

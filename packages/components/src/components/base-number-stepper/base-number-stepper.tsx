@@ -1,7 +1,6 @@
 import { IconMinus, IconPlus } from '@mission-platform/icons';
 import { h, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
-
 import { BaseTypography } from '../base-typography';
 import { nextFieldId } from '../field-id';
 
@@ -152,16 +151,23 @@ export function BaseNumberStepper(properties: NumberStepperProperties): MpElemen
 
   return (
     <div
-      classNames={[styles['base-number-stepper'], styles[`base-number-stepper--${size}`], {
-        [styles['base-number-stepper--error']]: !!error,
-        [styles['base-number-stepper--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-number-stepper'],
+        styles[`base-number-stepper--${size}`],
+        {
+          [styles['base-number-stepper--error']]: !!error,
+          [styles['base-number-stepper--disabled']]: disabled,
+        },
+      ]}
     >
       {label ? (
         <label
-          classNames={[styles['base-number-stepper__label'], {
-            [styles['base-number-stepper__label--hidden']]: labelHidden,
-          }]}
+          classNames={[
+            styles['base-number-stepper__label'],
+            {
+              [styles['base-number-stepper__label--hidden']]: labelHidden,
+            },
+          ]}
           for={resolvedId}
         >
           <BaseTypography

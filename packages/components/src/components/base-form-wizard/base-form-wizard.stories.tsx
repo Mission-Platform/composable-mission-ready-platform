@@ -162,7 +162,9 @@ export const WithValidationAndConditionalSteps: Story = {
                 accepted.value = Boolean(value);
               },
             }),
-            completed.value ? h('p', { style: 'margin: 0; color: var(--mp-color-success, green);' }, '✓ All done!') : undefined,
+            completed.value
+              ? h('p', { style: 'margin: 0; color: var(--mp-color-success, green);' }, '✓ All done!')
+              : undefined,
           ]),
         },
       ]);

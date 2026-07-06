@@ -128,11 +128,16 @@ export function BaseNavbarItem(properties: NavbarItemProperties): MpElement {
     properties.onClick?.(event);
   };
 
-  const itemClass = classNames(styles['base-navbar-item'], styles[`base-navbar-item--${variant}`], sizeStyles[`base-size--${size}`], {
-    [styles['base-navbar-item--active']]: active,
-    [styles['base-navbar-item--disabled']]: disabled,
-    [styles['base-navbar-item--open']]: open && hasChildren,
-  });
+  const itemClass = classNames(
+    styles['base-navbar-item'],
+    styles[`base-navbar-item--${variant}`],
+    sizeStyles[`base-size--${size}`],
+    {
+      [styles['base-navbar-item--active']]: active,
+      [styles['base-navbar-item--disabled']]: disabled,
+      [styles['base-navbar-item--open']]: open && hasChildren,
+    },
+  );
 
   return hasChildren ? (
     <div
@@ -192,9 +197,12 @@ export function BaseNavbarItem(properties: NavbarItemProperties): MpElement {
               ) : (
                 <button
                   aria-disabled={child.disabled ? 'true' : undefined}
-                  classNames={[styles['base-navbar-item__dropdown-item'], {
-                    [styles['base-navbar-item__dropdown-item--disabled']]: Boolean(child.disabled),
-                  }]}
+                  classNames={[
+                    styles['base-navbar-item__dropdown-item'],
+                    {
+                      [styles['base-navbar-item__dropdown-item--disabled']]: Boolean(child.disabled),
+                    },
+                  ]}
                   disabled={child.disabled}
                   role="menuitem"
                   type="button"

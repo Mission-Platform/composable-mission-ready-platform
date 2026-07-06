@@ -160,7 +160,19 @@
      * Colour variants — tint the active indicator and the control accents.
      * `neutral` is omitted so it keeps the default treatment.
      */
-    @each $name, $family in ('primary': 'primary', 'secondary': 'secondary', 'tertiary': 'tertiary', 'success': 'success', 'warning': 'warning', 'info': 'info', 'error': 'error', 'critical': 'critical') {
+    @each $name,
+      $family
+        in (
+          'primary': 'primary',
+          'secondary': 'secondary',
+          'tertiary': 'tertiary',
+          'success': 'success',
+          'warning': 'warning',
+          'info': 'info',
+          'error': 'error',
+          'critical': 'critical'
+        )
+    {
       &--#{$name} {
         .base-carousel__indicator--active::before {
           background: var(--mp-color-#{$family}-default);

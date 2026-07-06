@@ -1,14 +1,5 @@
 import { IconChevron } from '@mission-platform/icons';
-import {
-  h,
-  Slot,
-  useRef,
-  useState,
-  type MpChild,
-  type MpElement,
-  type MpProperties,
-} from '@mission-platform/jsx';
-
+import { h, Slot, useRef, useState, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseDropdown } from '../base-dropdown';
 import { BaseTag } from '../base-tag';
@@ -196,9 +187,12 @@ export function BaseMultiselect(properties: MultiselectProperties): MpElement {
       key={option.value}
       aria-disabled={option.disabled || undefined}
       aria-selected="false"
-      classNames={[styles['base-multiselect__option'], {
-        [styles['base-multiselect__option--disabled']]: option.disabled,
-      }]}
+      classNames={[
+        styles['base-multiselect__option'],
+        {
+          [styles['base-multiselect__option--disabled']]: option.disabled,
+        },
+      ]}
       role="option"
       tabindex={-1}
       onMousedown={(event: MouseEvent) => {
@@ -225,17 +219,24 @@ export function BaseMultiselect(properties: MultiselectProperties): MpElement {
 
   return (
     <div
-      classNames={[styles['base-multiselect'], styles[`base-multiselect--${size}`], {
-        [styles['base-multiselect--error']]: !!error,
-        [styles['base-multiselect--disabled']]: disabled,
-        [styles['base-multiselect--open']]: isOpen,
-      }]}
+      classNames={[
+        styles['base-multiselect'],
+        styles[`base-multiselect--${size}`],
+        {
+          [styles['base-multiselect--error']]: !!error,
+          [styles['base-multiselect--disabled']]: disabled,
+          [styles['base-multiselect--open']]: isOpen,
+        },
+      ]}
     >
       {label ? (
         <label
-          classNames={[styles['base-multiselect__label'], {
-            [styles['base-multiselect__label--hidden']]: labelHidden,
-          }]}
+          classNames={[
+            styles['base-multiselect__label'],
+            {
+              [styles['base-multiselect__label--hidden']]: labelHidden,
+            },
+          ]}
           for={resolvedId}
         >
           <BaseTypography
@@ -288,9 +289,7 @@ export function BaseMultiselect(properties: MultiselectProperties): MpElement {
           }}
         >
           <div classNames={styles['base-multiselect__control']}>
-            <span
-              classNames={[styles['base-multiselect__extension'], styles['base-multiselect__extension--start']]}
-            >
+            <span classNames={[styles['base-multiselect__extension'], styles['base-multiselect__extension--start']]}>
               <Slot name="start" />
             </span>
             <div classNames={styles['base-multiselect__tags']}>{tagChips}</div>

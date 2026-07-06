@@ -12,7 +12,6 @@ import { BaseToast } from '../base-toast';
 import sizeStyles from '../size.module.scss';
 import { dismissToast, getToastsSnapshot, subscribeToasts, type ToastPosition } from '../toast-store';
 
-
 import styles from './base-toast-container.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
@@ -83,7 +82,11 @@ export function BaseToastContainer(properties: ToastContainerProperties): MpElem
     >
       <div
         aria-label={ariaLabel}
-        classNames={[styles['base-toast-container'], styles[`base-toast-container--${position}`], sizeStyles[`base-size--${size}`]]}
+        classNames={[
+          styles['base-toast-container'],
+          styles[`base-toast-container--${position}`],
+          sizeStyles[`base-size--${size}`],
+        ]}
         role="region"
       >
         <TransitionGroup

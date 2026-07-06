@@ -12,7 +12,6 @@ import {
   type ThemeComposerConfig,
 } from '../theme-composer-store';
 
-
 import styles from './base-theme-composer.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */

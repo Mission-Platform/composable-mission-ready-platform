@@ -154,17 +154,24 @@ export function BaseMarkdownInput(properties: MarkdownInputProperties): MpElemen
 
   return (
     <div
-      classNames={[styles['markdown-input'], styles[`markdown-input--${size}`], {
-        [styles['markdown-input--error']]: !!error,
-        [styles['markdown-input--disabled']]: disabled,
-        [styles['markdown-input--readonly']]: readonly,
-      }]}
+      classNames={[
+        styles['markdown-input'],
+        styles[`markdown-input--${size}`],
+        {
+          [styles['markdown-input--error']]: !!error,
+          [styles['markdown-input--disabled']]: disabled,
+          [styles['markdown-input--readonly']]: readonly,
+        },
+      ]}
     >
       {label ? (
         <label
-          classNames={[styles['markdown-input__label'], {
-            [styles['markdown-input__label--hidden']]: labelHidden,
-          }]}
+          classNames={[
+            styles['markdown-input__label'],
+            {
+              [styles['markdown-input__label--hidden']]: labelHidden,
+            },
+          ]}
           for={resolvedId}
         >
           <BaseTypography
@@ -195,9 +202,12 @@ export function BaseMarkdownInput(properties: MarkdownInputProperties): MpElemen
             <button
               aria-controls={`${resolvedId}-write-panel`}
               aria-selected={effectiveTab === 'write'}
-              classNames={[styles['markdown-input__tab'], {
-                [styles['markdown-input__tab--active']]: effectiveTab === 'write',
-              }]}
+              classNames={[
+                styles['markdown-input__tab'],
+                {
+                  [styles['markdown-input__tab--active']]: effectiveTab === 'write',
+                },
+              ]}
               role="tab"
               type="button"
               onClick={() => setActiveTab('write')}
@@ -207,9 +217,12 @@ export function BaseMarkdownInput(properties: MarkdownInputProperties): MpElemen
             <button
               aria-controls={`${resolvedId}-preview-panel`}
               aria-selected={effectiveTab === 'preview'}
-              classNames={[styles['markdown-input__tab'], {
-                [styles['markdown-input__tab--active']]: effectiveTab === 'preview',
-              }]}
+              classNames={[
+                styles['markdown-input__tab'],
+                {
+                  [styles['markdown-input__tab--active']]: effectiveTab === 'preview',
+                },
+              ]}
               role="tab"
               type="button"
               onClick={() => setActiveTab('preview')}

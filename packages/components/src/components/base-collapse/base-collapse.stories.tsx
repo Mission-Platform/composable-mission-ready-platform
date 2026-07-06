@@ -26,17 +26,7 @@ const meta = {
     summary: { control: 'text' },
     variant: {
       control: 'select',
-      options: [
-        'neutral',
-        'primary',
-        'secondary',
-        'tertiary',
-        'success',
-        'warning',
-        'info',
-        'error',
-        'critical',
-      ],
+      options: ['neutral', 'primary', 'secondary', 'tertiary', 'success', 'warning', 'info', 'error', 'critical'],
     },
     open: { control: 'boolean' },
     disabled: { control: 'boolean' },

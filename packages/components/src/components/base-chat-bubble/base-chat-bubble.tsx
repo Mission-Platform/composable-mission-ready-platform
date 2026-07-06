@@ -72,11 +72,13 @@ export function BaseChatBubble(properties: ChatBubbleProperties): MpElement {
 
   return (
     <li
-      classNames={[styles['base-chat-bubble'],
+      classNames={[
+        styles['base-chat-bubble'],
         styles[`base-chat-bubble--${side}`],
         styles[`base-chat-bubble--${variant}`],
         sizeStyles[`base-size--${size}`],
-        { [styles['base-chat-bubble--pending']]: pending }]}
+        { [styles['base-chat-bubble--pending']]: pending },
+      ]}
     >
       {hasAvatar ? (
         <div classNames={styles['base-chat-bubble__avatar']}>

@@ -54,10 +54,14 @@ export function BaseRadio(properties: RadioProperties): MpElement {
 
   return (
     <label
-      classNames={[styles['base-radio'], sizeStyles[`base-size--${size}`], {
-        [styles['base-radio--checked']]: isChecked,
-        [styles['base-radio--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-radio'],
+        sizeStyles[`base-size--${size}`],
+        {
+          [styles['base-radio--checked']]: isChecked,
+          [styles['base-radio--disabled']]: disabled,
+        },
+      ]}
     >
       <span classNames={styles['base-radio__control-wrapper']}>
         <input
@@ -76,9 +80,12 @@ export function BaseRadio(properties: RadioProperties): MpElement {
       </span>
       {label ? (
         <span
-          classNames={[styles['base-radio__label'], {
-            [styles['base-radio__label--hidden']]: labelHidden,
-          }]}
+          classNames={[
+            styles['base-radio__label'],
+            {
+              [styles['base-radio__label--hidden']]: labelHidden,
+            },
+          ]}
         >
           <BaseTypography
             as="span"

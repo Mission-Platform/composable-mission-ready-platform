@@ -220,9 +220,13 @@ export function BaseRangeInput(properties: RangeInputProperties): MpElement {
 
   return (
     <div
-      classNames={[styles['base-range-input'], styles[`base-range-input--${size}`], {
-        [styles['base-range-input--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-range-input'],
+        styles[`base-range-input--${size}`],
+        {
+          [styles['base-range-input--disabled']]: disabled,
+        },
+      ]}
     >
       <div
         ref={trackReference}

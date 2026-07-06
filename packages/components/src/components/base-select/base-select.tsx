@@ -1,14 +1,5 @@
 import { IconChevron } from '@mission-platform/icons';
-import {
-  h,
-  Slot,
-  useRef,
-  useState,
-  type MpChild,
-  type MpElement,
-  type MpProperties,
-} from '@mission-platform/jsx';
-
+import { h, Slot, useRef, useState, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseDropdown } from '../base-dropdown';
 import { BaseTypography } from '../base-typography';
@@ -227,10 +218,13 @@ export function BaseSelect(properties: SelectProperties): MpElement {
       key={option.value}
       aria-disabled={option.disabled || undefined}
       aria-selected={option.value === modelValue}
-      classNames={[styles['base-select__option'], {
-        [styles['base-select__option--selected']]: option.value === modelValue,
-        [styles['base-select__option--disabled']]: option.disabled,
-      }]}
+      classNames={[
+        styles['base-select__option'],
+        {
+          [styles['base-select__option--selected']]: option.value === modelValue,
+          [styles['base-select__option--disabled']]: option.disabled,
+        },
+      ]}
       role="option"
       tabindex={-1}
       onMousedown={(event: MouseEvent) => {
@@ -257,18 +251,25 @@ export function BaseSelect(properties: SelectProperties): MpElement {
 
   return (
     <div
-      classNames={[styles['base-select'], styles[`base-select--${size}`], {
-        [styles['base-select--error']]: !!error,
-        [styles['base-select--disabled']]: disabled,
-        [styles['base-select--open']]: isOpen,
-      }]}
+      classNames={[
+        styles['base-select'],
+        styles[`base-select--${size}`],
+        {
+          [styles['base-select--error']]: !!error,
+          [styles['base-select--disabled']]: disabled,
+          [styles['base-select--open']]: isOpen,
+        },
+      ]}
     >
       {label ? (
         <label
           id={`${resolvedId}-label`}
-          classNames={[styles['base-select__label'], {
-            [styles['base-select__label--hidden']]: labelHidden,
-          }]}
+          classNames={[
+            styles['base-select__label'],
+            {
+              [styles['base-select__label--hidden']]: labelHidden,
+            },
+          ]}
           for={resolvedId}
         >
           <BaseTypography
@@ -325,9 +326,12 @@ export function BaseSelect(properties: SelectProperties): MpElement {
             id={resolvedId}
             aria-describedby={describedBy}
             aria-invalid={error ? 'true' : undefined}
-            classNames={[styles['base-select__field'], {
-              [styles['base-select__field--placeholder']]: hasPlaceholder,
-            }]}
+            classNames={[
+              styles['base-select__field'],
+              {
+                [styles['base-select__field--placeholder']]: hasPlaceholder,
+              },
+            ]}
             disabled={disabled}
             type="button"
             onBlur={(event: FocusEvent) => properties.onBlur?.(event)}

@@ -1,7 +1,6 @@
 import { IconChevron } from '@mission-platform/icons';
 import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
-
 import sizeStyles from '../size.module.scss';
 
 import styles from './base-collapse.module.scss';

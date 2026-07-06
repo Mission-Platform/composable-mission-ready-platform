@@ -117,16 +117,23 @@ export function BaseRadioGroup(properties: RadioGroupProperties): MpElement {
 
   return (
     <fieldset
-      classNames={[styles['base-radio-group'], sizeStyles[`base-size--${size}`], {
-        [styles['base-radio-group--error']]: !!error,
-        [styles['base-radio-group--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-radio-group'],
+        sizeStyles[`base-size--${size}`],
+        {
+          [styles['base-radio-group--error']]: !!error,
+          [styles['base-radio-group--disabled']]: disabled,
+        },
+      ]}
     >
       {legend ? (
         <legend
-          classNames={[styles['base-radio-group__legend'], {
-            [styles['base-radio-group__legend--hidden']]: legendHidden,
-          }]}
+          classNames={[
+            styles['base-radio-group__legend'],
+            {
+              [styles['base-radio-group__legend--hidden']]: legendHidden,
+            },
+          ]}
         >
           <BaseTypography
             as="span"

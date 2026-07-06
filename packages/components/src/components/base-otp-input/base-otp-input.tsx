@@ -182,9 +182,13 @@ export function BaseOtpInput(properties: OtpInputProperties): MpElement {
     <fieldset
       ref={containerReference}
       aria-label={ariaLabel}
-      classNames={[styles['base-otp-input'], styles[`base-otp-input--${size}`], {
-        [styles['base-otp-input--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-otp-input'],
+        styles[`base-otp-input--${size}`],
+        {
+          [styles['base-otp-input--disabled']]: disabled,
+        },
+      ]}
     >
       {characters.map((char, index) => (
         <input

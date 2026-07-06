@@ -16,12 +16,21 @@
     "16": { "$value": "4.571rem", "$description": "≈64px." },
     "20": { "$value": "5.714rem", "$description": "≈80px." },
     "24": { "$value": "6.857rem", "$description": "≈96px — page-level vertical rhythm." },
-    "2xs": { "$value": "0.286rem", "$description": "≈4px — t-shirt 2xs; canonical smallest padding/margin step (mirrors spacing.1)." },
+    "2xs": {
+      "$value": "0.286rem",
+      "$description": "≈4px — t-shirt 2xs; canonical smallest padding/margin step (mirrors spacing.1)."
+    },
     "xs": { "$value": "0.571rem", "$description": "≈8px — t-shirt xs; tight padding/margin (mirrors spacing.2)." },
     "sm": { "$value": "0.857rem", "$description": "≈12px — t-shirt sm; compact padding/margin (mirrors spacing.3)." },
     "md": { "$value": "1.143rem", "$description": "≈16px — t-shirt md; default padding/margin (mirrors spacing.4)." },
-    "lg": { "$value": "1.714rem", "$description": "≈24px — t-shirt lg; comfortable padding/margin (mirrors spacing.6)." },
+    "lg": {
+      "$value": "1.714rem",
+      "$description": "≈24px — t-shirt lg; comfortable padding/margin (mirrors spacing.6)."
+    },
     "xl": { "$value": "2.286rem", "$description": "≈32px — t-shirt xl; spacious padding/margin (mirrors spacing.8)." },
-    "2xl": { "$value": "3.429rem", "$description": "≈48px — t-shirt 2xl; largest padding/margin step (mirrors spacing.12)." }
+    "2xl": {
+      "$value": "3.429rem",
+      "$description": "≈48px — t-shirt 2xl; largest padding/margin step (mirrors spacing.12)."
+    }
   }
 }

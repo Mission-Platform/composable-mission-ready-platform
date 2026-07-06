@@ -66,13 +66,17 @@ export const WithActions: Story = {
   render: (arguments_) => ({
     setup() {
       return () =>
-        h(Hero, { ...arguments_ }, {
-          default: () => 'A hero with a row of call-to-action buttons passed via the actions slot.',
-          actions: () => [
-            h('button', { style: 'padding: var(--mp-spacing-2) var(--mp-spacing-4);' }, 'Get started'),
-            h('button', { style: 'padding: var(--mp-spacing-2) var(--mp-spacing-4);' }, 'Learn more'),
-          ],
-        });
+        h(
+          Hero,
+          { ...arguments_ },
+          {
+            default: () => 'A hero with a row of call-to-action buttons passed via the actions slot.',
+            actions: () => [
+              h('button', { style: 'padding: var(--mp-spacing-2) var(--mp-spacing-4);' }, 'Get started'),
+              h('button', { style: 'padding: var(--mp-spacing-2) var(--mp-spacing-4);' }, 'Learn more'),
+            ],
+          },
+        );
     },
   }),
 };
@@ -82,14 +86,18 @@ export const OverMedia: Story = {
   render: (arguments_) => ({
     setup() {
       return () =>
-        h(Hero, { ...arguments_ }, {
-          default: () => 'The hero text switches to the inverse colour over a media background.',
-          media: () =>
-            h('div', {
-              style:
-                'width: 100%; height: 100%; background: linear-gradient(135deg, var(--mp-color-primary-default), var(--mp-color-info-default));',
-            }),
-        });
+        h(
+          Hero,
+          { ...arguments_ },
+          {
+            default: () => 'The hero text switches to the inverse colour over a media background.',
+            media: () =>
+              h('div', {
+                style:
+                  'width: 100%; height: 100%; background: linear-gradient(135deg, var(--mp-color-primary-default), var(--mp-color-info-default));',
+              }),
+          },
+        );
     },
   }),
 };

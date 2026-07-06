@@ -116,16 +116,23 @@ export function BaseInput(properties: InputProperties): MpElement {
 
   return (
     <div
-      classNames={[styles['base-input'], styles[`base-input--${size}`], {
-        [styles['base-input--error']]: !!error,
-        [styles['base-input--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-input'],
+        styles[`base-input--${size}`],
+        {
+          [styles['base-input--error']]: !!error,
+          [styles['base-input--disabled']]: disabled,
+        },
+      ]}
     >
       {label ? (
         <label
-          classNames={[styles['base-input__label'], {
-            [styles['base-input__label--hidden']]: labelHidden,
-          }]}
+          classNames={[
+            styles['base-input__label'],
+            {
+              [styles['base-input__label--hidden']]: labelHidden,
+            },
+          ]}
           for={resolvedId}
         >
           <BaseTypography

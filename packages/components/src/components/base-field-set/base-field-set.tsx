@@ -43,7 +43,11 @@ export function BaseFieldSet(properties: FieldSetProperties): MpElement {
 
   return (
     <fieldset
-      classNames={[styles['base-field-set'], sizeStyles[`base-size--${size}`], { [styles['base-field-set--flush']]: flush }]}
+      classNames={[
+        styles['base-field-set'],
+        sizeStyles[`base-size--${size}`],
+        { [styles['base-field-set--flush']]: flush },
+      ]}
       disabled={disabled ? true : undefined}
     >
       {legend ? (

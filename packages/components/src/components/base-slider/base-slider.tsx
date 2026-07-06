@@ -161,9 +161,13 @@ export function BaseSlider(properties: SliderProperties): MpElement {
 
   return (
     <div
-      classNames={[styles['base-slider'], styles[`base-slider--${size}`], {
-        [styles['base-slider--disabled']]: disabled,
-      }]}
+      classNames={[
+        styles['base-slider'],
+        styles[`base-slider--${size}`],
+        {
+          [styles['base-slider--disabled']]: disabled,
+        },
+      ]}
     >
       <div
         ref={trackReference}

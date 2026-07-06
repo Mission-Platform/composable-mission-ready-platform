@@ -152,11 +152,14 @@ export function BaseFormWizard(properties: FormWizardProperties): MpElement {
           >
             <button
               aria-current={index === current ? 'step' : undefined}
-              classNames={[styles['base-form-wizard__step-btn'], {
-                [styles['base-form-wizard__step-btn--active']]: index === current,
-                [styles['base-form-wizard__step-btn--done']]: index < current,
-                [styles['base-form-wizard__step-btn--error']]: !!step.error,
-              }]}
+              classNames={[
+                styles['base-form-wizard__step-btn'],
+                {
+                  [styles['base-form-wizard__step-btn--active']]: index === current,
+                  [styles['base-form-wizard__step-btn--done']]: index < current,
+                  [styles['base-form-wizard__step-btn--error']]: !!step.error,
+                },
+              ]}
               disabled={(linear && index > current + 1) || (index > current && !canAdvance)}
               type="button"
               onClick={() => goTo(index)}

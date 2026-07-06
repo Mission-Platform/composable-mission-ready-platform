@@ -28,13 +28,7 @@ import { emitEffect } from './effects.js';
 import { rewrite, singleDeclaration, type VueAnalysis } from './shared.js';
 
 /** The hook callees whose `const` declarations are translated as hooks (never derived). */
-const HOOK_CALLEES: ReadonlySet<string> = new Set([
-  'useState',
-  'useRef',
-  'useMemo',
-  'useCallback',
-  'useContext',
-]);
+const HOOK_CALLEES: ReadonlySet<string> = new Set(['useState', 'useRef', 'useMemo', 'useCallback', 'useContext']);
 
 /** A derived (non-hook) `const <id> = …` declaration in the component body. */
 interface DerivedDeclaration {
@@ -84,8 +78,7 @@ function collectDerivedDeclarations(body: ts.Block): Map<string, DerivedDeclarat
     ) {
       continue;
     }
-    const isFunction =
-      ts.isArrowFunction(declaration.initializer) || ts.isFunctionExpression(declaration.initializer);
+    const isFunction = ts.isArrowFunction(declaration.initializer) || ts.isFunctionExpression(declaration.initializer);
     derived.set(declaration.name.text, { name: declaration.name.text, declaration, isFunction });
   }
   return derived;

@@ -207,7 +207,17 @@
      * Canonical semantic tones — mapped to each family's `-text` token. The
      * `neutral` tone reuses the `default` token family (no `neutral` alias).
      */
-    @each $name, $family in ('neutral': 'default', 'success': 'success', 'warning': 'warning', 'info': 'info', 'error': 'error', 'critical': 'critical') {
+    @each $name,
+      $family
+        in (
+          'neutral': 'default',
+          'success': 'success',
+          'warning': 'warning',
+          'info': 'info',
+          'error': 'error',
+          'critical': 'critical'
+        )
+    {
       &--color-#{$name} {
         color: var(--mp-color-#{$family}-text);
       }
