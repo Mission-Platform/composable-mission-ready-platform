@@ -1,0 +1,85 @@
+# Mission Platform Documentation
+
+This repository contains comprehensive documentation for the Mission Platform, a VueJS 3 monorepo managed with pnpm workspaces.
+
+## Documentation Structure
+
+### Overview
+- **[README.md](README.md)**: Project overview and quick start guide
+- **[DOCUMENTATION.md](DOCUMENTATION.md)**: This document - comprehensive documentation structure
+- **[CONTRIBUTING.md](CONTRIBUTING.md)**: Guidelines for contributing to the project
+- **[AGENTS.md](AGENTS.md)**: Agent-specific guidelines and instructions
+
+### Core Documentation
+#### Development Setup
+- **[docs/development-setup.md](docs/development-setup.md)**: Detailed instructions for setting up your development environment
+
+#### Workspace Structure
+- **[docs/workspace-structure.md](docs/workspace-structure.md)**: Overview of the repository's directory structure
+- **[docs/package-development.md](docs/package-development.md)**: Guidelines for developing and publishing packages
+
+#### Testing
+- **[docs/testing.md](docs/testing.md)**: Comprehensive testing strategies and tools
+
+#### Build System
+- **[docs/build-system.md](docs/build-system.md)**: Overview of the build system and configuration
+
+### Advanced Documentation
+#### Architecture
+- **[docs/architecture.md](docs/architecture.md)**: Detailed architecture documentation
+
+#### API Reference
+- **[docs/api-reference.md](docs/api-reference.md)**: References for all Mission Platform packages and framework adapters
+
+#### Migration Guides
+- **[docs/migration-guides/vue2-to-vue3.md](docs/migration-guides/vue2-to-vue3.m)**: Step-by-step guide for migrating from Vue 2 to Vue 3
+
+### Best Practices
+- **[docs/best-practices.md](docs/best-practices.md)**: Essential guidelines for developing, testing, and maintaining applications in the Mission Platform monorepo
+
+### Troubleshooting
+- **[docs/troubleshooting.md](docs/troubleshooting.md)**: Common issues and solutions for debugging and performance optimization
+
+## How to Contribute Documentation
+
+1. **Identify gaps**: Review existing documentation against common questions and issues
+2. **Create new files**: Add documentation in the `docs/` directory following the naming conventions
+3. **Update references**: Update README.md and other documentation files to include links to new documentation
+4. **Follow standards**: Use Diátaxis documentation framework principles
+5. **Review changes**: Ensure documentation is accurate, up-to-date, and follows project conventions
+
+## Documentation Standards
+
+### File Naming
+- Use kebab-case for all markdown files
+- Group related documentation in subdirectories (e.g., `migration-guides/`, `best-practices/`, `troubleshooting/`)
+
+### Content Structure
+- Follow the Diátaxis framework structure:
+  - Tutorials
+  - How-to Guides
+  - Explanation
+  - Reference
+  - Discovery
+- Use clear headings and subheadings
+- Include code examples with proper formatting
+- Add tables for comparisons and summaries
+
+### Technical Requirements
+- All documentation must be written in English
+- Use Mermaid diagrams where appropriate (with size limitations)
+- Ensure all links are working
+- Update documentation when codebase changes
+- Include version information where relevant
+
+## Getting Help
+
+For questions about:
+- **Development**: Check the documentation or ask in the project channels
+- **Package usage**: Refer to the API reference or package READMEs
+- **Troubleshooting**: Use the troubleshooting guide or search for similar issues
+- **Contribution guidelines**: Refer to CONTRIBUTING.md
+
+## License
+
+Documentation is licensed under the same terms as the code - see the LICENSE file for details.
