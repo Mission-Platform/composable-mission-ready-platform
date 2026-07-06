@@ -6,25 +6,30 @@
 
 The package is divided into three main entry points:
 
-| Import | Purpose | Key Exports |
-| :--- | :--- | :--- |
-| `@mission-platform/i18n` | Framework-neutral core | `createMpI18n`, `mpNamespace`, `localeNamespaces`, `mergeLocales` |
-| `@mission-platform/i18n/vue` | Vue 3 adapter | `createMpI18nVue`, `useI18n` |
-| `@mission-platform/i18n/react` | React adapter | `MpI18nProvider`, `useI18n` |
+| Import                         | Purpose                | Key Exports                                                       |
+| :----------------------------- | :--------------------- | :---------------------------------------------------------------- |
+| `@mission-platform/i18n`       | Framework-neutral core | `createMpI18n`, `mpNamespace`, `localeNamespaces`, `mergeLocales` |
+| `@mission-platform/i18n/vue`   | Vue 3 adapter          | `createMpI18nVue`, `useI18n`                                      |
+| `@mission-platform/i18n/react` | React adapter          | `MpI18nProvider`, `useI18n`                                       |
 
 ## Core Concepts
 
 ### The i18n Instance
-The core provides `createMpI18n(options)`, which returns a synchronously initialized i18next instance. 
+
+The core provides `createMpI18n(options)`, which returns a synchronously initialized i18next instance.
+
 - **Interpolation**: Uses single-brace delimiters (e.g., `{name}`).
 - **HTML Escaping**: Disabled by default (`escapeValue: false`) to allow frameworks to handle escaping according to their own security models.
 
 ### Namespacing Strategy
+
 To avoid collisions in a monorepo, translations are grouped into namespaces using the `mp.<workspace>` convention:
+
 - **Packages**: Use `mpNamespace('<package_name>')` (e.g., `@mission-platform/breakpoints` uses `mp.breakpoints`).
 - **Apps**: Use `mpNamespace('<app_name>')`.
 
 #### Namespace Hierarchy & Overrides
+
 1. **Default Namespace**: Apps define their own namespace as the default.
 2. **Fallback**: The default namespace falls back to other namespaces, allowing component code to resolve its own keys.
 3. **Overrides**: Apps can provide an `overrides` object in the config to relabel specific strings from a package without affecting others.
@@ -32,35 +37,39 @@ To avoid collisions in a monorepo, translations are grouped into namespaces usin
 ## Usage Examples
 
 ### 1. Core Configuration
+
 ```ts
-import { createMpI18n, localeNamespaces, mpNamespace } from '@mission-platform/i18n'
+import { createMpI18n, localeNamespaces, mpNamespace } from '@mission-platform/i18n';
 
 const i18n = createMpI18n({
   namespace: mpNamespace('my-care-notes'),
   namespaces: localeNamespaces('en', enBundles), // Turn YAML bundles into i18next shape
   overrides: {
-    [mpNamespace('breakpoints')]: { 
-      en: { breakpoint: 'Viewport:' } 
+    [mpNamespace('breakpoints')]: {
+      en: { breakpoint: 'Viewport:' },
     },
   },
-})
+});
 ```
 
 ### 2. Vue 3 Integration
-**Installation:**
-```ts
-import { createMpI18n } from '@mission-platform/i18n'
-import { createMpI18nVue } from '@mission-platform/i18n/vue'
 
-const i18n = createMpI18n({ messages: { en: { hello: 'Hello {name}' } } })
-app.use(createMpI18nVue(i18n))
+**Installation:**
+
+```ts
+import { createMpI18n } from '@mission-platform/i18n';
+import { createMpI18nVue } from '@mission-platform/i18n/vue';
+
+const i18n = createMpI18n({ messages: { en: { hello: 'Hello {name}' } } });
+app.use(createMpI18nVue(i18n));
 ```
 
 **Component Usage:**
+
 ```vue
 <script setup lang="ts">
-import { useI18n } from '@mission-platform/i18n/vue'
-const { t, locale, setLocale } = useI18n()
+  import { useI18n } from '@mission-platform/i18n/vue';
+  const { t, locale, setLocale } = useI18n();
 </script>
 
 <template>
@@ -69,32 +78,37 @@ const { t, locale, setLocale } = useI18n()
 ```
 
 ### 3. React Integration
-**Provider Setup:**
-```tsx
-import { createMpI18n } from '@mission-platform/i18n'
-import { MpI18nProvider, useI18n } from '@mission-platform/i18n/react'
 
-const i18n = createMpI18n({ messages: { en: { hello: 'Hello {name}' } } })
+**Provider Setup:**
+
+```tsx
+import { createMpI18n } from '@mission-platform/i18n';
+import { MpI18nProvider, useI18n } from '@mission-platform/i18n/react';
+
+const i18n = createMpI18n({ messages: { en: { hello: 'Hello {name}' } } });
 
 root.render(
   <MpI18nProvider i18n={i18n}>
     <App />
   </MpI18nProvider>,
-)
+);
 ```
 
 **Component Usage:**
+
 ```tsx
 function Greeting() {
-  const { t } = useI18n()
-  return <button>{t('hello', { name: 'World' })}</button>
+  const { t } = useI18n();
+  return <button>{t('hello', { name: 'World' })}</button>;
 }
 ```
 
 ## API Reference
 
 ### `mpNamespace(workspace: string)`
+
 Returns the standardized namespace string for a given workspace (e.g., `'breakpoints'` $\rightarrow$ `'mp.breakpoints'`).
 
 ### `localeNamespaces(locale: string, bundles: any)`
+
 Transforms the raw, namespace-keyed translation files (typically from YAML) into the format expected by i18next.

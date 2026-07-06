@@ -38,19 +38,19 @@ pnpm add @mission-platform/jsx
 
 ```tsx
 // MyComponent.tsx
-import { h, Fragment } from '@mission-platform/jsx'
-import { useState } from '@mission-platform/jsx'
+import { h, Fragment } from '@mission-platform/jsx';
+import { useState } from '@mission-platform/jsx';
 
 export function MyComponent({ name }: { name: string }) {
-  const [count, setCount] = useState(0)
-  
+  const [count, setCount] = useState(0);
+
   return (
     <div>
       <h1>Hello, {name}!</h1>
       <p>Count: {count}</p>
       <button onClick={() => setCount(count + 1)}>Increment</button>
     </div>
-  )
+  );
 }
 ```
 
@@ -58,10 +58,10 @@ export function MyComponent({ name }: { name: string }) {
 
 ```vue
 <script setup lang="ts">
-import { toVueComponent } from '@mission-platform/jsx/vue'
-import MyComponent from './MyComponent.tsx'
+  import { toVueComponent } from '@mission-platform/jsx/vue';
+  import MyComponent from './MyComponent.tsx';
 
-const MyVueComponent = toVueComponent(MyComponent)
+  const MyVueComponent = toVueComponent(MyComponent);
 </script>
 
 <template>
@@ -72,13 +72,13 @@ const MyVueComponent = toVueComponent(MyComponent)
 ### 3. Use it in React
 
 ```tsx
-import { toReactComponent } from '@mission-platform/jsx/react'
-import MyComponent from './MyComponent.tsx'
+import { toReactComponent } from '@mission-platform/jsx/react';
+import MyComponent from './MyComponent.tsx';
 
-const MyReactComponent = toReactComponent(MyComponent)
+const MyReactComponent = toReactComponent(MyComponent);
 
 function App() {
-  return <MyReactComponent name="World" />
+  return <MyReactComponent name="World" />;
 }
 ```
 
@@ -87,9 +87,11 @@ function App() {
 ### Core Functions
 
 #### `h(type, props?, ...children)`
+
 The framework-neutral JSX factory function.
 
 **Parameters:**
+
 - `type`: React element type or string tag name
 - `props`: Object of props/attributes
 - `children`: Child elements
@@ -97,46 +99,57 @@ The framework-neutral JSX factory function.
 **Returns:** `MpElement` - A framework-neutral element tree
 
 #### `Fragment(props, ...children)`
+
 Creates a fragment (no wrapper element).
 
 ### Hooks
 
 #### `useState(initialValue)`
+
 Framework-neutral state hook.
 
 **Parameters:**
+
 - `initialValue`: Initial state value
 
 **Returns:** `[state, setState]` - State value and setter function
 
 #### `useRef(initialValue)`
+
 Creates a mutable ref object.
 
 **Parameters:**
+
 - `initialValue` (optional): Initial ref value
 
 **Returns:** `ref` - Mutable ref object with `.current` property
 
 #### `useEffect(effect, dependencies?)`
+
 Framework-neutral side effect hook.
 
 **Parameters:**
+
 - `effect`: Function to run on mount/update/unmount
 - `dependencies` (optional): Dependency array for memoization
 
 #### `useMemo(value, dependencies)`
+
 Memoizes a computed value.
 
 **Parameters:**
+
 - `value`: Value to memoize
 - `dependencies`: Dependency array
 
 **Returns:** Memoized value
 
 #### `useCallback(fn, dependencies)`
+
 Memoizes a function.
 
 **Parameters:**
+
 - `fn`: Function to memoize
 - `dependencies`: Dependency array
 
@@ -145,17 +158,21 @@ Memoizes a function.
 ### Adapters
 
 #### `toVueComponent(component)`
+
 Converts a framework-neutral component to a Vue 3 component.
 
 **Parameters:**
+
 - `component`: Framework-neutral component function
 
 **Returns:** Vue component definition
 
 #### `toReactComponent(component)`
+
 Converts a framework-neutral component to a React component.
 
 **Parameters:**
+
 - `component`: Framework-neutral component function
 
 **Returns:** React component function
@@ -165,15 +182,19 @@ Converts a framework-neutral component to a React component.
 The package includes full TypeScript declarations. You can use JSX with proper type checking:
 
 ```tsx
-import { h } from '@mission-platform/jsx'
+import { h } from '@mission-platform/jsx';
 
 type Props = {
-  title: string
-  count?: number
-}
+  title: string;
+  count?: number;
+};
 
 function MyComponent({ title, count = 0 }: Props) {
-  return <div>{title}: {count}</div>
+  return (
+    <div>
+      {title}: {count}
+    </div>
+  );
 }
 ```
 
@@ -184,16 +205,16 @@ function MyComponent({ title, count = 0 }: Props) {
 Configure your `vite.config.ts` to use the classic JSX transform:
 
 ```ts
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [vue(), react()],
   optimizeDeps: {
     include: ['@mission-platform/jsx'],
   },
-})
+});
 ```
 
 ### Global JSX Configuration
@@ -202,7 +223,7 @@ For TypeScript projects, you can configure global JSX settings:
 
 ```ts
 // jsx-globals.d.ts
-import '@mission-platform/jsx/jsx-globals'
+import '@mission-platform/jsx/jsx-globals';
 ```
 
 This configures the global `JSX` namespace to use `MpElement`.
@@ -216,20 +237,16 @@ If you're migrating from React or Vue components, the conversion is straightforw
 ```tsx
 // Before (React)
 function Button({ children }) {
-  const [count, setCount] = useState(0)
-  return <button onClick={() => setCount(count + 1)}>{children}</button>
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount(count + 1)}>{children}</button>;
 }
 
 // After (Framework-neutral)
-import { h, Fragment, useState } from '@mission-platform/jsx'
+import { h, Fragment, useState } from '@mission-platform/jsx';
 
 export function Button({ children }) {
-  const [count, setCount] = useState(0)
-  return (
-    <button onClick={() => setCount(count + 1)}>
-      {children}
-    </button>
-  )
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount(count + 1)}>{children}</button>;
 }
 ```
 
@@ -238,23 +255,19 @@ export function Button({ children }) {
 ```vue
 <!-- Before (Vue) -->
 <script setup>
-import { ref } from 'vue'
-const count = ref(0)
+  import { ref } from 'vue';
+  const count = ref(0);
 </script>
 
 <template>
   <button @click="count++">Count: {{ count }}</button>
 </template>
 
-// After (Framework-neutral)
-export function Button() {
-  const [count, setCount] = useState(0)
-  return (
-    <button onClick={() => setCount(count + 1)}>
+// After (Framework-neutral) export function Button() { const [count, setCount] = useState(0) return (
+<button onClick="{()" =""> setCount(count + 1)}>
       Count: {count}
     </button>
-  )
-}
+) }
 ```
 
 ## Performance Considerations

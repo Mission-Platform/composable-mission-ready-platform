@@ -26,8 +26,9 @@ The framework-neutral route definition system:
 **`defineRoutes`**: Creates a route tree from an array of route definitions.
 
 **Example:**
+
 ```typescript
-import { defineRoutes } from '@mission-platform/router'
+import { defineRoutes } from '@mission-platform/router';
 
 const routes = defineRoutes([
   {
@@ -45,7 +46,7 @@ const routes = defineRoutes([
     name: 'user-profile',
     component: UserProfile,
   },
-])
+]);
 ```
 
 ### Path Utilities
@@ -53,13 +54,14 @@ const routes = defineRoutes([
 **`matchRoutes`**: Matches a location against a route tree and returns matched routes.
 
 **Example:**
-```typescript
-import { matchRoutes } from '@mission-platform/router'
 
-const matches = matchRoutes(routes, '/users/123')
+```typescript
+import { matchRoutes } from '@mission-platform/router';
+
+const matches = matchRoutes(routes, '/users/123');
 matches.forEach((match) => {
-  console.log(match.route.name, match.params)
-})
+  console.log(match.route.name, match.params);
+});
 ```
 
 ### Location Utilities
@@ -67,14 +69,15 @@ matches.forEach((match) => {
 **`resolveLocation`**: Resolves a route location to a URL path.
 
 **Example:**
+
 ```typescript
-import { resolveLocation } from '@mission-platform/router'
+import { resolveLocation } from '@mission-platform/router';
 
 const location = resolveLocation({
   name: 'user-profile',
   params: { id: '123' },
-})
-console.log(location.path) // '/users/123'
+});
+console.log(location.path); // '/users/123'
 ```
 
 ## Framework Adapters
@@ -84,33 +87,35 @@ console.log(location.path) // '/users/123'
 The Vue-specific adapter provides integration with `vue-router`.
 
 **Main Exports:**
+
 - **`createMpRouter`**: Creates a Vue Router instance from neutral routes
 - **`useMpRouter`**: Composable to access the router instance
 - **`useMpRoute`**: Composable to access current route information
 - **`MpRouterLink`**: Framework-neutral router link component
 
 **Example:**
+
 ```vue
 <template>
   <div>
     <MpRouterLink to="/">Home</MpRouterLink>
     <MpRouterLink to="/about">About</MpRouterLink>
-    
+
     <router-view />
   </div>
 </template>
 
 <script setup lang="ts">
-import { MpRouterLink, createMpRouter } from '@mission-platform/router/vue'
-import { createApp } from 'vue'
-import routes from './routes'
+  import { MpRouterLink, createMpRouter } from '@mission-platform/router/vue';
+  import { createApp } from 'vue';
+  import routes from './routes';
 
-const router = createMpRouter({
-  routes,
-  history: 'web', // or 'hash' or 'memory'
-})
+  const router = createMpRouter({
+    routes,
+    history: 'web', // or 'hash' or 'memory'
+  });
 
-createApp(App).use(router).mount('#app')
+  createApp(App).use(router).mount('#app');
 </script>
 ```
 
@@ -119,6 +124,7 @@ createApp(App).use(router).mount('#app')
 The React adapter provides integration with React Router.
 
 **Main Exports:**
+
 - **`withMpRouter`**: HOC to provide router context
 - **`useMpRoute`**: Hook to access current route information
 - **`MpLink`**: Framework-neutral link component for React
@@ -128,14 +134,17 @@ The React adapter provides integration with React Router.
 ### Dependencies
 
 **Core Package:**
+
 - **TypeScript**: Type definitions and type safety
 - **No framework dependencies**: Pure JavaScript/TypeScript
 
 **Vue Adapter:**
+
 - **vue-router**: Official Vue Router library
 - **vue**: Vue 3 core
 
 **React Adapter:**
+
 - **react-router-dom**: React Router for web applications
 - **react**: React core
 
@@ -162,16 +171,18 @@ The router supports the following path parameter patterns:
 ### Basic Setup with Vue
 
 1. Install the package:
+
 ```bash
 pnpm add @mission-platform/router vue-router
 ```
 
 2. Define your routes:
+
 ```typescript
 // src/routes.ts
-import { defineRoutes } from '@mission-platform/router'
-import HomePage from './pages/Home.vue'
-import AboutPage from './pages/About.vue'
+import { defineRoutes } from '@mission-platform/router';
+import HomePage from './pages/Home.vue';
+import AboutPage from './pages/About.vue';
 
 export default defineRoutes([
   {
@@ -184,26 +195,28 @@ export default defineRoutes([
     name: 'about',
     component: AboutPage,
   },
-])
+]);
 ```
 
 3. Create the router:
+
 ```typescript
 // src/router.ts
-import { createMpRouter } from '@mission-platform/router/vue'
-import routes from './routes'
+import { createMpRouter } from '@mission-platform/router/vue';
+import routes from './routes';
 
 export default createMpRouter({
   routes,
   history: 'web',
-})
+});
 ```
 
 4. Use in your app:
+
 ```vue
 // src/App.vue
 <script setup lang="ts">
-import { MpRouterLink } from '@mission-platform/router/vue'
+  import { MpRouterLink } from '@mission-platform/router/vue';
 </script>
 
 <template>
@@ -219,12 +232,12 @@ import { MpRouterLink } from '@mission-platform/router/vue'
 
 ```vue
 <script setup lang="ts">
-import { useMpRoute } from '@mission-platform/router/vue'
+  import { useMpRoute } from '@mission-platform/router/vue';
 
-const route = useMpRoute()
+  const route = useMpRoute();
 
-console.log(route.params.id) // Access dynamic parameters
-console.log(route.query.search) // Access query parameters
+  console.log(route.params.id); // Access dynamic parameters
+  console.log(route.query.search); // Access query parameters
 </script>
 ```
 
@@ -232,21 +245,21 @@ console.log(route.query.search) // Access query parameters
 
 ```vue
 <script setup lang="ts">
-import { useMpRouter } from '@mission-platform/router/vue'
+  import { useMpRouter } from '@mission-platform/router/vue';
 
-const router = useMpRouter()
+  const router = useMpRouter();
 
-const goToAbout = () => {
-  router.push('/about')
-}
+  const goToAbout = () => {
+    router.push('/about');
+  };
 
-const navigateWithParams = () => {
-  router.push({
-    name: 'user-profile',
-    params: { id: '123' },
-    query: { tab: 'details' },
-  })
-}
+  const navigateWithParams = () => {
+    router.push({
+      name: 'user-profile',
+      params: { id: '123' },
+      query: { tab: 'details' },
+    });
+  };
 </script>
 ```
 
@@ -267,26 +280,26 @@ const routes = defineRoutes([
       adminOnly: true,
     },
   },
-])
+]);
 ```
 
 ### Route Guards (Vue)
 
 ```typescript
-import { createMpRouter } from '@mission-platform/router/vue'
+import { createMpRouter } from '@mission-platform/router/vue';
 
 const router = createMpRouter({
   routes,
   history: 'web',
-})
+});
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !isAuthenticated()) {
-    next('/login')
+    next('/login');
   } else {
-    next()
+    next();
   }
-})
+});
 ```
 
 ### Nested Routes
@@ -310,7 +323,7 @@ const routes = defineRoutes([
       },
     ],
   },
-])
+]);
 ```
 
 ## Best Practices
@@ -346,6 +359,7 @@ When migrating from react-router-dom:
 ### From Next.js
 
 For Next.js applications, consider:
+
 - Using the neutral route definitions for consistency
 - Creating a custom adapter layer if needed
 - Leveraging Next.js file-based routing alongside the neutral model

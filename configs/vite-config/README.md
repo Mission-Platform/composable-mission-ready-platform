@@ -8,10 +8,10 @@ for Vue components.
 
 ## Exports
 
-| Subpath                                | Helpers                                                             |
-| -------------------------------------- | ------------------------------------------------------------------- |
+| Subpath                                | Helpers                                                                                          |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------ |
 | `@mission-platform/vite-config`        | `defineLibraryConfig`, `defineAppConfig`, `ignoreVueI18nBlocksPlugin`, default externals/globals |
-| `@mission-platform/vite-config/vitest` | `defineVitestConfig`                                                |
+| `@mission-platform/vite-config/vitest` | `defineVitestConfig`                                                                             |
 
 ## Library package usage
 

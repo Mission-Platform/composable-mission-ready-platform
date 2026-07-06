@@ -17,7 +17,7 @@ Schema validation) and `nanoid` (builder field ids).
   one-step form; array of objects = a multi-step wizard), `JsonSchemaProperty`,
   `FieldUiOptions` (the namespaced `ui` presentation extension), `FormFieldSchema`
   (the resolved, render-ready field shape), `FormValues`, `FormErrors`,
-  `SchemaFormTranslate`, `SchemaFormValidationMode`.
+  `SchemaFormTranslate`, `SchemaFormValidationMode`, `SchemaObject`.
 - Conditional-visibility types: `FieldCondition`, `FieldConditionLeaf`,
   `FieldConditionGroup` (`allOf`/`anyOf`/`oneOf`, mirroring JSON Schema).
 - `LocationFormat` / `LocationValue` (the `location` widget's value; defined here

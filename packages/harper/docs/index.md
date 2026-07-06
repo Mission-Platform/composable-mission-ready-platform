@@ -19,11 +19,11 @@ Because Harper runs in a Web Worker, your application must configure the worker 
 In your application's main entry point (e.g., `main.ts`), define the `HarperEnvironment`:
 
 ```ts
-import HarperWorker from '@mission-platform/harper/worker?worker'
+import HarperWorker from '@mission-platform/harper/worker?worker';
 
 window.HarperEnvironment = {
   getWorker: () => new HarperWorker(),
-}
+};
 ```
 
 ## Usage
@@ -36,27 +36,30 @@ The `useHarperMonaco` composable provides an easy way to attach grammar checking
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useHarperMonaco } from '@mission-platform/harper'
+  import { ref } from 'vue';
+  import { useHarperMonaco } from '@mission-platform/harper';
 
-const containerRef = ref<HTMLElement>()
-const editorRef = ref<monaco.editor.IStandaloneCodeEditor>()
-const grammarCheckEnabled = ref(true)
+  const containerRef = ref<HTMLElement>();
+  const editorRef = ref<monaco.editor.IStandaloneCodeEditor>();
+  const grammarCheckEnabled = ref(true);
 
-// Initialize Monaco editor
-onMounted(() => {
-  editorRef.value = monaco.editor.create(containerRef.value!, {
-    value: 'This is an exampl of a grammer error.',
-    language: 'markdown',
-  })
-})
+  // Initialize Monaco editor
+  onMounted(() => {
+    editorRef.value = monaco.editor.create(containerRef.value!, {
+      value: 'This is an exampl of a grammer error.',
+      language: 'markdown',
+    });
+  });
 
-// Attach Harper grammar checking
-useHarperMonaco(editorRef, grammarCheckEnabled, 'markdown')
+  // Attach Harper grammar checking
+  useHarperMonaco(editorRef, grammarCheckEnabled, 'markdown');
 </script>
 
 <template>
-  <div ref="containerRef" style="height: 400px;" />
+  <div
+    ref="containerRef"
+    style="height: 400px;"
+  />
 </template>
 ```
 
@@ -67,7 +70,7 @@ function useHarperMonaco(
   editorReference: MaybeRefOrGetter<monaco.editor.IStandaloneCodeEditor | undefined>,
   enabled: MaybeRefOrGetter<boolean>,
   languageReference: MaybeRefOrGetter<string>,
-): void
+): void;
 ```
 
 - `editorReference`: A ref or getter providing the Monaco editor instance.
@@ -83,13 +86,13 @@ For non-Vue consumers (such as components in `@mission-platform/components`), us
 #### Example
 
 ```ts
-import { attachHarperMonaco } from '@mission-platform/harper'
+import { attachHarperMonaco } from '@mission-platform/harper';
 
 // Attach Harper to an existing editor instance
-const handle = attachHarperMonaco(editor, monacoRuntime, 'plaintext')
+const handle = attachHarperMonaco(editor, monacoRuntime, 'plaintext');
 
 // Later, clean up listeners and workers
-handle.dispose()
+handle.dispose();
 ```
 
 ## Technical Details
@@ -100,16 +103,17 @@ When the worker detects a grammar issue, it returns a `HarperIssue` object:
 
 ```ts
 interface HarperIssue {
-  offset: number           // Byte offset of the issue in the text
-  length: number           // Length of the affected text
-  message: string          // Human-readable explanation of the error
-  ruleId: string           // The identifier of the specific Harper rule triggered
-  suggestions: string[]    // Suggested alternative text corrections
-  severity: 1 | 2 | 3 | 4  // LSP severity (1=Error, 2=Warning, 3=Info, 4=Hint)
+  offset: number; // Byte offset of the issue in the text
+  length: number; // Length of the affected text
+  message: string; // Human-readable explanation of the error
+  ruleId: string; // The identifier of the specific Harper rule triggered
+  suggestions: string[]; // Suggested alternative text corrections
+  severity: 1 | 2 | 3 | 4; // LSP severity (1=Error, 2=Warning, 3=Info, 4=Hint)
 }
 ```
 
 ### Workflow
+
 1. **Worker Spawn**: The package uses the factory provided in `window.HarperEnvironment` to spawn a Harper Web Worker.
 2. **Debounced Checking**: Every change to the editor model triggers a debounced request to the worker.
 3. **Marker Mapping**: Issues returned by Harper are mapped to Monaco markers for visual highlighting.

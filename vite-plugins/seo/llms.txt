@@ -2,11 +2,15 @@
 
 A Vite plugin that generates a site's crawler-facing companion files —
 `robots.txt` and `sitemap.xml` — at build time (and on dev-server start),
-using the deterministic builders from `@mission-platform/seo`.
+using the deterministic builders in [@mission-platform/seo](../../packages/seo).
 
-It replaces the old per-app `scripts/generate-seo-files.ts` + `prebuild` Node
-scripts: SEO artifacts are now produced as part of `vite build` instead of a
+It replaces the per-app `scripts/generate-seo-files.ts` + `prebuild`
+Node scripts, so generation runs as part of `vite build` instead of a
 separate step.
+
+The files are written into the resolved Vite `publicDir` so they are served
+verbatim by the dev server and copied into the build output (`outDir`) alongside
+the rest of the static assets.
 
 ## Install
 
@@ -22,47 +26,3 @@ The plugin is consumed inside the monorepo as a workspace dependency:
 ```
 
 `vite` is an optional peer dependency (already present in every app/package).
-
-## Usage
-
-```ts
-// vite.config.ts
-import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-import { defineConfig } from 'vite';
-
-export default defineConfig({
-  plugins: [
-    seoPlugin({
-      sitemap: {
-        urls: [
-          { loc: 'https://example.com/', changefreq: 'weekly', priority: 1 },
-        ],
-      },
-      robots: {
-        groups: [{ userAgent: '*', allow: ['/'] }],
-        sitemaps: ['https://example.com/sitemap.xml'],
-        host: 'example.com',
-      },
-    }),
-  ],
-});
-```
-
-## API
-
-### `seoPlugin(options): Plugin`
-
-- `options.sitemap: SitemapXmlInput` — required. Passed to
-  `buildSitemapXml` from `@mission-platform/seo`.
-- `options.robots?: RobotsTxtInput` — optional. Passed to `buildRobotsTxt`.
-  When omitted, a permissive default (`User-agent: *`) is emitted.
-- `options.outDir?: string` — optional. Defaults to the resolved Vite
-  `publicDir`, so the files are served by the dev server and copied into the
-  build `outDir`.
-
-The plugin writes both files in the rollup `buildStart` hook, so it runs for
-`vite build`, `vite-ssg build`, and `vite` (dev) alike.
-
-The `SitemapXmlInput` / `RobotsTxtInput` types are re-exported from this
-package for convenience; the underlying builders live in
-`@mission-platform/seo`.

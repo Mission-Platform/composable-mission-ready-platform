@@ -35,14 +35,10 @@ The layout system provides a 12-column grid with responsive classes:
 <template>
   <div class="mp-grid">
     <!-- Full width on mobile, 6 columns on desktop -->
-    <div class="mp-col mp-col-12@mobile mp-col-6@desktop">
-      Left Column
-    </div>
-    
+    <div class="mp-col mp-col-12@mobile mp-col-6@desktop">Left Column</div>
+
     <!-- Full width on mobile, 6 columns on desktop -->
-    <div class="mp-col mp-col-12@mobile mp-col-6@desktop">
-      Right Column
-    </div>
+    <div class="mp-col mp-col-12@mobile mp-col-6@desktop">Right Column</div>
   </div>
 </template>
 ```
@@ -53,9 +49,7 @@ Use spacing utilities for consistent margins and padding:
 
 ```vue
 <template>
-  <div class="mp-mt-4 mp-mb-6 mp-p-4">
-    Content with spacing
-  </div>
+  <div class="mp-mt-4 mp-mb-6 mp-p-4">Content with spacing</div>
 </template>
 ```
 
@@ -65,16 +59,22 @@ The package provides Vue components for common layout patterns:
 
 ```vue
 <script setup lang="ts">
-import { MpContainer, MpRow, MpCol } from '@mission-platform/layout'
+  import { MpContainer, MpRow, MpCol } from '@mission-platform/layout';
 </script>
 
 <template>
   <MpContainer>
     <MpRow>
-      <MpCol cols="12" cols-md="6">
+      <MpCol
+        cols="12"
+        cols-md="6"
+      >
         Column Content
       </MpCol>
-      <MpCol cols="12" cols-md="6">
+      <MpCol
+        cols="12"
+        cols-md="6"
+      >
         Column Content
       </MpCol>
     </MpRow>
@@ -128,6 +128,7 @@ Available breakpoints: `mobile`, `tablet`, `desktop`, `large-desktop`
 A responsive container that centers content and provides horizontal padding.
 
 **Props:**
+
 - `fluid`: Boolean to disable max-width constraint (default: `false`)
 - `maxWidth`: Custom maximum width (e.g., `'1400px'`)
 
@@ -136,6 +137,7 @@ A responsive container that centers content and provides horizontal padding.
 Creates a flex row for grid layout.
 
 **Props:**
+
 - `noGutters`: Boolean to remove gutters (default: `false`)
 - `align`: Flex alignment (`'start'`, `'center'`, `'end'`, `'stretch'`)
 - `justify`: Flex justification (`'start'`, `'center'`, `'end'`, `'between'`, `'around'`)
@@ -145,6 +147,7 @@ Creates a flex row for grid layout.
 Creates a responsive grid column.
 
 **Props:**
+
 - `cols`: Base number of columns (1-12)
 - `cols-sm`: Columns at small breakpoint
 - `cols-md`: Columns at medium breakpoint
@@ -179,7 +182,7 @@ $mp-grid-max-widths: (
   sm: 600px,
   md: 960px,
   lg: 1280px,
-  xl: 1440px
+  xl: 1440px,
 );
 
 $mp-grid-gutter-width: 1.5rem;
@@ -190,10 +193,10 @@ $mp-grid-gutter-width: 1.5rem;
 For programmatic control, you can use the layout utilities:
 
 ```ts
-import { getBreakpoint } from '@mission-platform/layout'
+import { getBreakpoint } from '@mission-platform/layout';
 
 // Get current breakpoint
-const currentBreakpoint = getBreakpoint()
+const currentBreakpoint = getBreakpoint();
 
 // Check if at specific breakpoint
 if (isDesktop()) {

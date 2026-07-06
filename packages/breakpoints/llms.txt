@@ -6,6 +6,10 @@ Responsive breakpoint utilities, composables, and Vue components for Mission Pla
 
 ### Breakpoint Scale
 
+The following constants are exported for direct use:
+- `breakpointKeys` — An array of all available breakpoint keys: `['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl']`
+- `breakpoints` — A mapping of keys to their min-width pixel thresholds.
+
 Seven-step responsive scale based on viewport width:
 
 - `2xs` — extra-extra-small: ≥ 0 px (effectively 0)
