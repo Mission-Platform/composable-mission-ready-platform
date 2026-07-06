@@ -36,7 +36,7 @@
     "i18next-vue": "catalog:vue",
     "js-yaml": "catalog:",
     "monaco-editor": "catalog:",
-    "nanoid": "^5.1.15",
+    "nanoid": "^5.1.16",
     "vue": "catalog:vue",
     "vue-router": "catalog:vue"
   },

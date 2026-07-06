@@ -19,15 +19,15 @@
   },
   "devDependencies": {
     "@changesets/cli": "catalog:",
-    "@commitlint/cli": "^21.0.2",
-    "@commitlint/config-conventional": "^21.0.2",
+    "@commitlint/cli": "^21.1.0",
+    "@commitlint/config-conventional": "^21.1.0",
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
     "@types/js-yaml": "catalog:",
     "@vue/compiler-sfc": "catalog:",
     "husky": "^9.1.7",
     "js-yaml": "catalog:",
-    "turbo": "^2.9.18",
+    "turbo": "^2.10.0",
     "wrangler": "catalog:"
   },
   "packageManager": "pnpm@11.7.0+sha512.19cc852c120c7125760f2443ee6be0ca5b40f9f50598de1a09a1f177503e010e57c23c77646e01e761de59bf874fb22a3398c33ab9691fc13eb946b6f0f4d620"

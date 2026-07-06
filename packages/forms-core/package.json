@@ -29,7 +29,7 @@
   "dependencies": {
     "ajv": "catalog:",
     "ajv-formats": "catalog:",
-    "nanoid": "^5.1.15"
+    "nanoid": "^5.1.16"
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
