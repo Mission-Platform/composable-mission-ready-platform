@@ -16,7 +16,7 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { parseTsx, readComponentImports, readStyleImports } from './compiler/ast.js';
+import { moduleTargetsFramework, parseTsx, readComponentImports, readStyleImports } from './compiler/ast.js';
 import { compileComponentModule, type JsxFramework } from './compiler/compile.js';
 import {
   discoverComponents,
@@ -95,8 +95,16 @@ function generateEntry(
  */
 export function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): string {
   const stripPrefix = options.stripPrefix ?? 'Base';
-  const components = discoverComponents(readFileSync(options.componentsModule, 'utf8'), stripPrefix);
   const componentsDir = path.dirname(options.componentsModule);
+  // Framework-gated components (opening with a `"use react";` / `"use vue";`
+  // directive) are emitted only for the framework they target; drop the rest so
+  // they neither compile nor get re-exported from this framework's entry.
+  const components = discoverComponents(readFileSync(options.componentsModule, 'utf8'), stripPrefix).filter(
+    (component) => {
+      const sourcePath = path.join(componentsDir, component.folder, `${component.folder}.tsx`);
+      return moduleTargetsFramework(parseTsx(sourcePath, readFileSync(sourcePath, 'utf8')), options.framework);
+    },
+  );
   // The folder bases of every discovered component — used to tell sibling
   // **component** imports (rendered as Vue `./<base>.vue` children) apart from
   // plain **helper module** imports (kept as named `./<base>` imports and copied
@@ -335,6 +343,16 @@ export interface JsxComponentsEntryDtsOptions {
  * still empty (which is why the Vue scoped-style assets, emitted under
  * `preserveModules`, were previously left orphaned and the components rendered
  * unstyled).
+ *
+ * Only CSS files that were actually emitted into the bundle are re-linked. Under
+ * `preserveModules` Vite deduplicates byte-identical CSS assets — e.g. the shared
+ * `size`/`spacing` utility modules imported by many components collapse to a
+ * single emitted stylesheet — and drops the duplicates, yet still leaves their
+ * provisional per-chunk names in `importedCss`. Emitting `import './x.css'` for a
+ * dropped name produces a dangling reference that breaks every downstream
+ * consumer's build (unresolved import), so such names are filtered out; the
+ * deduplicated styles still ship via the one chunk that retained them (and the
+ * package's `./vue` / `./react` barrels pull in that chunk).
  */
 export function jsxComponentsCssImportPlugin(): Plugin {
   return {
@@ -351,12 +369,16 @@ export function jsxComponentsCssImportPlugin(): Plugin {
         }
         const fromDir = path.posix.dirname(file.fileName);
         const statements = [...importedCss]
+          .filter((cssFileName) => Object.hasOwn(bundle, cssFileName))
           .map((cssFileName) => {
             const relative = path.posix.relative(fromDir, cssFileName);
             const specifier = relative.startsWith('.') ? relative : `./${relative}`;
             return `import ${JSON.stringify(specifier)};`;
           })
           .join('\n');
+        if (statements.length === 0) {
+          continue;
+        }
         file.code = `${statements}\n${file.code}`;
       }
     },
