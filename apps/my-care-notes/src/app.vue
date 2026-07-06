@@ -222,8 +222,7 @@
   }
 
   type SnippetRow =
-    | { id: undefined; name: string; content: string; [key: string]: unknown }
-    | (Snippet & { [key: string]: unknown });
+    { id: undefined; name: string; content: string; [key: string]: unknown } | (Snippet & { [key: string]: unknown });
 
   const snippetColumns = computed(() => [
     // { key: 'id', sortable: true, label: 'ID', hidden: true },

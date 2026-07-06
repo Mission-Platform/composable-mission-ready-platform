@@ -55,14 +55,7 @@ export type TypographyHorizontalAlign = 'start' | 'center' | 'end';
 
 /** Vertical alignment of the (inline) text box (maps to CSS `vertical-align`). */
 export type TypographyVerticalAlign =
-  | 'baseline'
-  | 'top'
-  | 'middle'
-  | 'bottom'
-  | 'sub'
-  | 'super'
-  | 'text-top'
-  | 'text-bottom';
+  'baseline' | 'top' | 'middle' | 'bottom' | 'sub' | 'super' | 'text-top' | 'text-bottom';
 
 export interface TypographyProperties extends MpProperties {
   /** The type-scale variant. Defaults to `'body-md'`. */

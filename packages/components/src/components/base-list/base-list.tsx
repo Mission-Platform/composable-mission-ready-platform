@@ -8,15 +8,7 @@ import styles from './base-list.module.scss';
 export type ListVariant = 'unordered' | 'ordered' | 'description' | 'none';
 /** Colour tone of the list — the canonical colour set (`neutral` is the plain treatment). */
 export type ListTone =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 /** Canonical 2xs → 2xl size scale. */
 export type ListSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 

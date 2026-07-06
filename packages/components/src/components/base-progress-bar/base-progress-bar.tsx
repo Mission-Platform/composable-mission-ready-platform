@@ -6,15 +6,7 @@ import styles from './base-progress-bar.module.scss';
 
 /** Tone of the progress fill. */
 export type ProgressVariant =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 /** Canonical 2xs → 2xl size scale (track thickness). */
 export type ProgressSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 

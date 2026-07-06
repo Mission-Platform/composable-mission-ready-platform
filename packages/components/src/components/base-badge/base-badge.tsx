@@ -6,15 +6,7 @@ import styles from './base-badge.module.scss';
 
 /** Visual tone of the badge. Mirrors the `@mission-platform/components` `BaseBadge`. */
 export type BadgeVariant =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 /** Canonical 2xs → 2xl size scale, matching the shared size tokens. */
 export type BadgeSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 

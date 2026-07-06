@@ -13,15 +13,7 @@ export type SortDirection = 'asc' | 'desc';
 
 /** Colour tone of the table — the canonical colour set (`neutral` is the plain treatment). */
 export type TableVariant =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
 /** A single column definition. */
 export interface TableColumn {

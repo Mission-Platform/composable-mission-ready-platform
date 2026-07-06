@@ -33,15 +33,7 @@ export type CodeBlockSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 /** Colour tone of the code block — the canonical colour set (`neutral` is the plain treatment). */
 export type CodeBlockVariant =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
 /** Languages registered with the bundled `highlight.js/lib/core`. */
 export type CodeBlockLanguage =

@@ -6,15 +6,7 @@ import styles from './base-spinner.module.scss';
 export type SpinnerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 /** Tone of the spinner ring. */
 export type SpinnerVariant =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
 export interface SpinnerProperties extends MpProperties {
   /** Size token. Defaults to `'md'`. */

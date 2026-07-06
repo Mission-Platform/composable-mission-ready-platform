@@ -19,15 +19,7 @@ export type CarouselSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 /** Colour tone of the carousel — the canonical colour set (`neutral` is the plain treatment). */
 export type CarouselVariant =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
 /** A single slide descriptor. */
 export interface CarouselSlide {

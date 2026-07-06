@@ -16,15 +16,7 @@ export type TimelineAlign = 'start' | 'alternate';
 
 /** Colour family applied to a marker dot. */
 export type TimelineItemVariant =
-  | 'default'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'information'
-  | 'error'
-  | 'critical';
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 
 /** A single event descriptor within a {@link BaseTimeline}. */
 export interface TimelineItem {

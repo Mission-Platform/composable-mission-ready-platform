@@ -329,13 +329,7 @@ export interface OfferInput {
   price: number | string;
   priceCurrency: string;
   availability?:
-    | 'InStock'
-    | 'OutOfStock'
-    | 'PreOrder'
-    | 'Discontinued'
-    | 'LimitedAvailability'
-    | 'OnlineOnly'
-    | (string & {});
+    'InStock' | 'OutOfStock' | 'PreOrder' | 'Discontinued' | 'LimitedAvailability' | 'OnlineOnly' | (string & {});
   url?: string;
   priceValidUntil?: string;
 }

@@ -11,15 +11,7 @@ export type AlertBannerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 /** Intent / colour treatment of the banner — the canonical colour set. */
 export type AlertBannerVariant =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
 export interface AlertBannerProperties extends MpProperties {
   /** Controls visibility (the controlled `v-model` substitute). Defaults to `true`. */

@@ -20,15 +20,7 @@ export type NavbarItemSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 /** Tone applied to the navbar item. */
 export type NavbarItemVariant =
-  | 'default'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'information'
-  | 'error'
-  | 'critical';
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 
 /** A single dropdown child entry. */
 export interface NavbarItemChild {

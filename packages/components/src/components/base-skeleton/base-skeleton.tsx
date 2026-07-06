@@ -8,15 +8,7 @@ import styles from './base-skeleton.module.scss';
 export type SkeletonShape = 'line' | 'circle' | 'block';
 /** Colour tone of the placeholder — the canonical colour set (`neutral` is the plain grey). */
 export type SkeletonVariant =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 /** Size token — canonical 2xs → 2xl scale. */
 export type SkeletonSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 

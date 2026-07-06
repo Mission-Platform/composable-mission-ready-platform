@@ -8,15 +8,7 @@ import styles from './base-quote.module.scss';
 export type QuoteVariant = 'default' | 'bordered' | 'plain';
 /** Colour tone of the quote — the canonical colour set (`neutral` is the plain treatment). */
 export type QuoteTone =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 /** Size token controlling the quote text scale — canonical 2xs → 2xl scale. */
 export type QuoteSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
