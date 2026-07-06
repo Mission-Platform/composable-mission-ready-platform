@@ -1,0 +1,123 @@
+{
+  "name": "@mission-platform/forms",
+  "version": "0.1.0",
+  "description": "Write-once Mission Platform form builder and schema form authored with @mission-platform/jsx and shipped as both Vue 3 and React components",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./src/components/index.ts"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js"
+    },
+    "./vue": {
+      "types": "./dist/vue/index.d.ts",
+      "import": "./dist/vue/index.js"
+    },
+    "./storyblok/react": {
+      "types": "./dist/storyblok/react/index.d.ts",
+      "import": "./dist/storyblok/react/index.js"
+    },
+    "./storyblok/vue": {
+      "types": "./dist/storyblok/vue/index.d.ts",
+      "import": "./dist/storyblok/vue/index.js"
+    },
+    "./storyblok/components.json": "./dist/storyblok/components.json",
+    "./styles": "./src/styles/a11y.scss"
+  },
+  "files": [
+    "dist",
+    "src/components",
+    "src/styles"
+  ],
+  "scripts": {
+    "build": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc --project tsconfig.build.json --noEmit && vite build --mode vue && vite build --mode react && vite build --mode storyblok-vue && vite build --mode storyblok-react && tsc --project tsconfig.build.json --emitDeclarationOnly",
+    "build:watch": "vite build --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "lint:style": "stylelint \"src/**/*.scss\"",
+    "lint:style:fix": "stylelint --fix \"src/**/*.scss\"",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
+  },
+  "dependencies": {
+    "@mission-platform/components": "workspace:*",
+    "@mission-platform/forms-core": "workspace:*",
+    "@mission-platform/harper": "workspace:*",
+    "@mission-platform/hunspell": "workspace:*",
+    "@mission-platform/icons": "workspace:*",
+    "@mission-platform/jsx": "workspace:*",
+    "@mission-platform/layouts": "workspace:*",
+    "@mission-platform/scheduler-core": "workspace:*",
+    "@mission-platform/tokens": "workspace:*",
+    "google-libphonenumber": "^3.2.44",
+    "highlight.js": "catalog:",
+    "luxon": "catalog:",
+    "marked": "catalog:",
+    "monaco-editor": "catalog:"
+  },
+  "peerDependencies": {
+    "@storyblok/react": "^6.1.11",
+    "@storyblok/vue": "^10.1.10",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "vue": "^3.5.0"
+  },
+  "peerDependenciesMeta": {
+    "@storyblok/react": {
+      "optional": true
+    },
+    "@storyblok/vue": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/stylelint-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@mission-platform/vite-config": "workspace:*",
+    "@mission-platform/vite-plugin-jsx": "workspace:*",
+    "@storybook/vue3-vite": "catalog:storybook",
+    "@types/google-libphonenumber": "^7.4.30",
+    "@types/luxon": "catalog:",
+    "@types/node": "catalog:typescript",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-vue-jsx": "catalog:vue",
+    "@vitest/coverage-v8": "catalog:testing",
+    "eslint": "catalog:eslint",
+    "jsdom": "catalog:testing",
+    "postcss-html": "catalog:stylelint",
+    "postcss-scss": "catalog:stylelint",
+    "prettier": "catalog:prettier",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "storybook": "catalog:storybook",
+    "stylelint": "catalog:stylelint",
+    "stylelint-config-recommended-vue": "catalog:stylelint",
+    "stylelint-config-standard-scss": "catalog:stylelint",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite",
+    "vitest": "catalog:testing",
+    "vue": "catalog:vue"
+  }
+}

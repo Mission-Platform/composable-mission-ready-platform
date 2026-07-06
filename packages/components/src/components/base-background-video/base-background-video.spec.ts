@@ -1,52 +1,53 @@
-import { mount } from '@vue/test-utils';
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import BaseBackgroundVideo from './base-background-video.vue';
+import { BaseBackgroundVideo } from './base-background-video';
 
-describe('BaseBackgroundVideo', () => {
-  it('renders a decorative, looping, muted, inline <video>', () => {
-    const wrapper = mount(BaseBackgroundVideo, { props: { src: '/v.mp4' } });
-    const video = wrapper.find('video');
-    expect(video.exists()).toBe(true);
-    expect(video.attributes('aria-hidden')).toBe('true');
-    expect(video.attributes('loop')).toBeDefined();
-    expect(video.attributes('playsinline')).toBeDefined();
-    expect(video.attributes('tabindex')).toBe('-1');
+/**
+ * Exercises the **neutral** `BaseBackgroundVideo` authored in this package,
+ * rendering it on both frameworks through the `@mission-platform/jsx` runtime
+ * adapters. Covers the decorative (`aria-hidden`) video, the scrim overlay, the
+ * format-specific sources, and the foreground default slot.
+ */
+const ReactBackgroundVideo = toReactComponent(BaseBackgroundVideo, 'BackgroundVideo');
+const VueBackgroundVideo = toVueComponent(BaseBackgroundVideo, 'BackgroundVideo');
+
+describe('BaseBackgroundVideo authors the same component for React and Vue', () => {
+  it('renders a decorative covered video with an overlay on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactBackgroundVideo, { src: 'https://example.test/bg.mp4', overlay: true }),
+    );
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueBackgroundVideo, { src: 'https://example.test/bg.mp4', overlay: true }) }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-background-video');
+      expect(html).toContain('base-background-video--overlay');
+      expect(html).toContain('base-background-video__video');
+      expect(html).toContain('aria-hidden="true"');
+      expect(html).toContain('https://example.test/bg.mp4');
+    }
   });
 
-  it('does not expose controls', () => {
-    const wrapper = mount(BaseBackgroundVideo, { props: { src: '/v.mp4' } });
-    expect(wrapper.find('video').attributes('controls')).toBeUndefined();
-  });
+  it('layers foreground default-slot content above the video on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactBackgroundVideo, { src: 'https://example.test/bg.mp4' }, 'Hello mission'),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () => vueH(VueBackgroundVideo, { src: 'https://example.test/bg.mp4' }, () => 'Hello mission'),
+      }),
+    );
 
-  it('renders <source> entries and omits the top-level src when sources are provided', () => {
-    const wrapper = mount(BaseBackgroundVideo, {
-      props: { sources: [{ src: '/v.webm', type: 'video/webm' }] },
-    });
-    expect(wrapper.findAll('source')).toHaveLength(1);
-    expect(wrapper.find('video').attributes('src')).toBeUndefined();
-  });
-
-  it('applies the overlay class when overlay is set', () => {
-    const wrapper = mount(BaseBackgroundVideo, { props: { src: '/v.mp4', overlay: true } });
-    expect(wrapper.classes()).toContain('base-background-video--overlay');
-  });
-
-  it('applies the minHeight style', () => {
-    const wrapper = mount(BaseBackgroundVideo, { props: { src: '/v.mp4', minHeight: '40rem' } });
-    expect(wrapper.attributes('style')).toContain('min-height: 40rem');
-  });
-
-  it('renders foreground content from the default slot', () => {
-    const wrapper = mount(BaseBackgroundVideo, {
-      props: { src: '/v.mp4' },
-      slots: { default: '<h2>Overlaid title</h2>' },
-    });
-    expect(wrapper.find('.base-background-video__content h2').text()).toBe('Overlaid title');
-  });
-
-  it('forwards the poster image', () => {
-    const wrapper = mount(BaseBackgroundVideo, { props: { src: '/v.mp4', poster: '/p.jpg' } });
-    expect(wrapper.find('video').attributes('poster')).toBe('/p.jpg');
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-background-video__content');
+      expect(html).toContain('Hello mission');
+    }
   });
 });

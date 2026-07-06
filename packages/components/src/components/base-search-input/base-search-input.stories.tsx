@@ -1,55 +1,56 @@
 import { ref } from 'vue';
 
-import BaseSearchInput from './base-search-input.vue';
+import { SearchInput } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `SearchInput` is the Vue 3 build of the write-once `BaseSearchInput` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Forms/BaseSearchInput',
-  component: BaseSearchInput,
+  component: SearchInput,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`BaseSearchInput` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `SearchInput` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). A `type="search"` field with a leading `⌕` glyph (or spinner) and a clear `✕` button; the value is controlled via `modelValue`, Enter fires `onSearch` and Escape clears, and the original `v-model` + `search`/`clear` emits become callback props. Styling comes from the co-located `base-search-input.module.scss`.',
       },
     },
   },
   argTypes: {
-    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
-    disabled: { control: 'boolean' },
+    size: { control: 'inline-radio', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     loading: { control: 'boolean' },
-    placeholder: { control: 'text' },
+    disabled: { control: 'boolean' },
   },
   args: {
-    modelValue: '',
-    size: 'md',
-    disabled: false,
-    loading: false,
     placeholder: 'Search…',
+    size: 'md',
+    loading: false,
+    disabled: false,
   },
   render: (arguments_) => ({
-    components: { BaseSearchInput },
+    components: { SearchInput },
     setup() {
       const value = ref(arguments_.modelValue ?? '');
       return { args: arguments_, value };
     },
-    template: '<BaseSearchInput v-bind="args" v-model="value" style="max-width: 320px;" />',
+    template: '<SearchInput v-bind="args" :model-value="value" @update-model-value="value = $event" />',
   }),
-} satisfies Meta<typeof BaseSearchInput>;
+} satisfies Meta<typeof SearchInput>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const Small: Story = { args: { size: 'sm' } };
+export const WithValue: Story = { args: { modelValue: 'mission platform' } };
 
-export const Large: Story = { args: { size: 'lg' } };
+export const Loading: Story = { args: { modelValue: 'searching', loading: true } };
 
-export const Loading: Story = { args: { loading: true } };
-
-export const Disabled: Story = { args: { disabled: true } };
-
-export const WithValue: Story = { args: { modelValue: 'vue components' } };
+export const Disabled: Story = { args: { disabled: true, modelValue: 'locked' } };

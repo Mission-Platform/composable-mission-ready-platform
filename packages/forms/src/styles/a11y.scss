@@ -1,0 +1,9 @@
+/**
+ * Global accessibility safety net for @mission-platform/forms.
+ *
+ * Exposed as the package's `./styles` side-effect entry
+ * (`@mission-platform/forms/styles`). The reduced-motion reset itself is the
+ * canonical rule defined once in `@mission-platform/tokens`
+ * (`src/scss/_a11y.scss`); this entry just `@use`s it so the rules are emitted.
+ */
+@use '@mission-platform/tokens/scss/a11y';

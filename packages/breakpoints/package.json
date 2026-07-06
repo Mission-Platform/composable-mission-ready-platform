@@ -46,6 +46,7 @@
     "@vitest/coverage-v8": "catalog:testing",
     "@vue/test-utils": "catalog:vue",
     "eslint": "catalog:eslint",
+    "i18next-vue": "catalog:vue",
     "jsdom": "catalog:testing",
     "postcss-html": "catalog:stylelint",
     "postcss-scss": "catalog:stylelint",

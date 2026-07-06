@@ -40,17 +40,33 @@ describe('buildTokenModule', () => {
   });
 
   it('resolves composite aliases against the supplied alias document', () => {
-    const fontDocument = {
+    // The typography module's alias document is the font + spacing merge, so it
+    // resolves both `{font.*}` primitives and the `{spacing.*}` logical margins.
+    const aliasDocument = {
       font: { family: { sans: { $value: 'Comfortaa' } }, weight: { bold: { $value: 700 } } },
+      spacing: { 0: { $value: '0' }, 3: { $value: '0.857rem' } },
     };
     const module = buildTokenModule(
       'typography',
-      { typography: { h1: { $value: { fontFamily: '{font.family.sans}', fontWeight: '{font.weight.bold}' } } } },
-      fontDocument,
+      {
+        typography: {
+          h1: {
+            $value: {
+              fontFamily: '{font.family.sans}',
+              fontWeight: '{font.weight.bold}',
+              marginBlock: '{spacing.3}',
+              marginInline: '{spacing.0}',
+            },
+          },
+        },
+      },
+      aliasDocument,
     );
     expect(module).toContain('export const typography = {');
     expect(module).toContain('"fontFamily": "Comfortaa"');
     expect(module).toContain('"fontWeight": 700');
+    expect(module).toContain('"marginBlock": "0.857rem"');
+    expect(module).toContain('"marginInline": "0"');
   });
 });
 

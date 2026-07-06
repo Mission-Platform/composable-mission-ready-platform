@@ -1,2 +1,6 @@
-export { default } from './base-date-time-range-input.vue';
-export type { DateTimeRangeInputSize, DateTimeRange, TimezoneMode } from './base-date-time-range-input.vue';
+export {
+  BaseDateTimeRangeInput,
+  type DateTimeRangeInputProperties,
+  type DateTimeRangeInputSize,
+} from './base-date-time-range-input';
+export type { DateTimeRange, TimezoneMode } from '../date-time';

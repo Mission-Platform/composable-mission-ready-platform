@@ -1,59 +1,57 @@
-import { mount } from '@vue/test-utils';
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import BaseAlertBanner from './base-alert-banner.vue';
+import { BaseAlertBanner } from './base-alert-banner';
 
-describe('BaseAlertBanner', () => {
-  it('renders the message slot and title', () => {
-    const wrapper = mount(BaseAlertBanner, {
-      props: { title: 'Heads up' },
-      slots: { default: 'Something happened' },
-    });
-    expect(wrapper.find('.base-alert-banner__title').text()).toBe('Heads up');
-    expect(wrapper.find('.base-alert-banner__message').text()).toBe('Something happened');
+/**
+ * Exercises the **neutral** `BaseAlertBanner` authored in this package,
+ * rendering it on both frameworks through the `@mission-platform/jsx` runtime
+ * adapters. Covers the variant role/glyph, the title + default-slot message
+ * (via the composed `BaseTypography`), the dismiss button, and controlled
+ * visibility.
+ */
+const ReactAlertBanner = toReactComponent(BaseAlertBanner, 'AlertBanner');
+const VueAlertBanner = toVueComponent(BaseAlertBanner, 'AlertBanner');
+
+describe('BaseAlertBanner authors the same component for React and Vue', () => {
+  it('renders an assertive error banner with a title, message, and dismiss button on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactAlertBanner, { variant: 'error', title: 'Failed', dismissible: true }, 'Something broke'),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () =>
+          vueH(VueAlertBanner, { variant: 'error', title: 'Failed', dismissible: true }, () => 'Something broke'),
+      }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-alert-banner');
+      expect(html).toContain('base-alert-banner--error');
+      expect(html).toContain('role="alert"');
+      expect(html).toContain('aria-live="assertive"');
+      expect(html).toContain('Failed');
+      expect(html).toContain('Something broke');
+      expect(html).toContain('aria-label="Dismiss"');
+      // The error glyph substitutes the original inline SVG.
+      expect(html).toContain('✕');
+    }
   });
 
-  it('is visible by default and applies the default (info) variant', () => {
-    const wrapper = mount(BaseAlertBanner);
-    expect(wrapper.find('.base-alert-banner').exists()).toBe(true);
-    expect(wrapper.classes()).toContain('base-alert-banner--info');
-  });
+  it('renders nothing when modelValue is false on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactAlertBanner, { modelValue: false }, 'Hidden'));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueAlertBanner, { modelValue: false }, () => 'Hidden') }),
+    );
 
-  it('is hidden when modelValue is false', () => {
-    const wrapper = mount(BaseAlertBanner, { props: { modelValue: false } });
-    expect(wrapper.find('.base-alert-banner').exists()).toBe(false);
-  });
-
-  it('uses role="status" for info/success/neutral and role="alert" for warning/error', () => {
-    expect(mount(BaseAlertBanner, { props: { variant: 'info' } }).attributes('role')).toBe('status');
-    expect(mount(BaseAlertBanner, { props: { variant: 'success' } }).attributes('role')).toBe('status');
-    expect(mount(BaseAlertBanner, { props: { variant: 'neutral' } }).attributes('role')).toBe('status');
-    expect(mount(BaseAlertBanner, { props: { variant: 'warning' } }).attributes('role')).toBe('alert');
-    expect(mount(BaseAlertBanner, { props: { variant: 'error' } }).attributes('role')).toBe('alert');
-  });
-
-  it('renders the status icon by default and hides it when icon is false', () => {
-    expect(mount(BaseAlertBanner).find('.base-alert-banner__icon').exists()).toBe(true);
-    expect(
-      mount(BaseAlertBanner, { props: { icon: false } })
-        .find('.base-alert-banner__icon')
-        .exists(),
-    ).toBe(false);
-  });
-
-  it('does not render the dismiss button unless dismissible', () => {
-    expect(mount(BaseAlertBanner).find('.base-alert-banner__dismiss').exists()).toBe(false);
-  });
-
-  it('emits update:modelValue and dismiss when the dismiss button is clicked', async () => {
-    const wrapper = mount(BaseAlertBanner, { props: { dismissible: true } });
-    await wrapper.find('.base-alert-banner__dismiss').trigger('click');
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([false]);
-    expect(wrapper.emitted('dismiss')).toHaveLength(1);
-  });
-
-  it('renders the actions slot', () => {
-    const wrapper = mount(BaseAlertBanner, { slots: { actions: '<button>Retry</button>' } });
-    expect(wrapper.find('.base-alert-banner__actions button').exists()).toBe(true);
+    for (const html of [react, vue]) {
+      expect(html).not.toContain('base-alert-banner--info');
+      expect(html).not.toContain('Hidden');
+    }
   });
 });

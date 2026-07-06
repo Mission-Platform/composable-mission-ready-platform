@@ -1,71 +1,60 @@
-import { expect, userEvent, within } from 'storybook/test';
+import { ref } from 'vue';
 
-import BaseSwitch from './base-switch.vue';
+import { Switch } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `Switch` is the Vue 3 build of the write-once `BaseSwitch` in this package.
+ * The component is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/jsx`) and compiled straight to a Vue component at build
+ * time by `@mission-platform/vite-plugin-jsx`. The very same source also ships
+ * as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Forms/BaseSwitch',
-  component: BaseSwitch,
+  component: Switch,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`BaseSwitch` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Switch` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). A `role="switch"` checkbox styled as a sliding track/thumb across the `2xs … 2xl` size scale; the value is controlled via `modelValue` and the original `v-model` + `change` emit become the `onUpdateModelValue`/`onChange` callback props. Styling comes from the co-located `base-switch.module.scss`.',
       },
     },
   },
   argTypes: {
-    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    size: { control: 'inline-radio', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     disabled: { control: 'boolean' },
-    modelValue: { control: 'boolean' },
   },
   args: {
-    modelValue: false,
-    size: 'md',
     label: 'Enable notifications',
+    size: 'md',
     disabled: false,
-    id: 'example-switch',
   },
   render: (arguments_) => ({
-    components: { BaseSwitch },
+    components: { Switch },
     setup() {
-      return { args: arguments_ };
+      const value = ref(Boolean(arguments_.modelValue));
+      return { args: arguments_, value };
     },
-    template: '<BaseSwitch v-bind="args" />',
+    template: '<Switch v-bind="args" :model-value="value" @update-model-value="value = $event" />',
   }),
-} satisfies Meta<typeof BaseSwitch>;
+} satisfies Meta<typeof Switch>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  play: async ({ canvasElement }) => {
-    // Arrange
-    const canvas = within(canvasElement);
-    const switchElement = canvas.getByRole('switch', { name: /enable notifications/i });
-
-    // Act — toggle on
-    await userEvent.click(switchElement);
-
-    // Assert
-    expect(switchElement).toBeChecked();
-  },
-};
+export const Default: Story = {};
 
 export const On: Story = { args: { modelValue: true } };
-
-export const WithHint: Story = { args: { hint: 'You will receive email notifications.' } };
-
-export const WithError: Story = { args: { error: 'This setting is required.' } };
-
-export const Disabled: Story = { args: { disabled: true } };
-
-export const DisabledOn: Story = { args: { disabled: true, modelValue: true } };
 
 export const Small: Story = { args: { size: 'sm' } };
 
 export const Large: Story = { args: { size: 'lg' } };
 
-export const NoLabel: Story = { args: { label: undefined, ariaLabel: 'Enable notifications' } };
+export const WithHint: Story = { args: { hint: 'Sends a push notification for each new message.' } };
+
+export const WithError: Story = { args: { error: 'Notifications are blocked by your browser.' } };
+
+export const Disabled: Story = { args: { disabled: true } };

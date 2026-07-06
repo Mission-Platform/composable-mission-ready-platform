@@ -1,2 +1,1 @@
-export { default } from './base-skeleton.vue';
-export type { SkeletonShape } from './base-skeleton.vue';
+export { BaseSkeleton, type SkeletonProperties, type SkeletonShape } from './base-skeleton';

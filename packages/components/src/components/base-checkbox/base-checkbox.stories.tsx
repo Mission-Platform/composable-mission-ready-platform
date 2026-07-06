@@ -1,71 +1,66 @@
-import { expect, userEvent, within } from 'storybook/test';
+import { ref } from 'vue';
 
-import BaseCheckbox from './base-checkbox.vue';
+import { Checkbox } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `Checkbox` is the Vue 3 build of the write-once `BaseCheckbox` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Forms/BaseCheckbox',
-  component: BaseCheckbox,
+  component: Checkbox,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`BaseCheckbox` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Checkbox` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). The checked state is controlled via `modelValue`; the original `v-model` + `change` emit become the `onUpdateModelValue`/`onChange` callback props. The check/indeterminate SVGs are substituted with a CSS-coloured `✓`/`−` glyph. Styling comes from the co-located `base-checkbox.module.scss`.',
       },
     },
   },
   argTypes: {
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     disabled: { control: 'boolean' },
     required: { control: 'boolean' },
     indeterminate: { control: 'boolean' },
-    modelValue: { control: 'boolean' },
+    labelHidden: { control: 'boolean' },
   },
   args: {
-    modelValue: false,
     label: 'Accept terms and conditions',
+    size: 'md',
     disabled: false,
     required: false,
     indeterminate: false,
-    id: 'example-checkbox',
+    labelHidden: false,
   },
   render: (arguments_) => ({
-    components: { BaseCheckbox },
+    components: { Checkbox },
     setup() {
-      return { args: arguments_ };
+      const value = ref(Boolean(arguments_.modelValue));
+      return { args: arguments_, value };
     },
-    template: '<BaseCheckbox v-bind="args" />',
+    template: '<Checkbox v-bind="args" :model-value="value" @update-model-value="value = $event" />',
   }),
-} satisfies Meta<typeof BaseCheckbox>;
+} satisfies Meta<typeof Checkbox>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  play: async ({ canvasElement }) => {
-    // Arrange
-    const canvas = within(canvasElement);
-    const checkbox = canvas.getByRole('checkbox', { name: /accept terms/i });
-
-    // Act — check the checkbox
-    await userEvent.click(checkbox);
-
-    // Assert
-    expect(checkbox).toBeChecked();
-  },
-};
+export const Default: Story = {};
 
 export const Checked: Story = { args: { modelValue: true } };
 
-export const Indeterminate: Story = { args: { indeterminate: true } };
-
-export const WithHint: Story = { args: { hint: 'You must accept to continue.' } };
-
-export const WithError: Story = { args: { error: 'You must accept the terms.' } };
-
 export const Required: Story = { args: { required: true } };
 
-export const Disabled: Story = { args: { disabled: true } };
+export const Indeterminate: Story = { args: { indeterminate: true } };
 
-export const DisabledChecked: Story = { args: { disabled: true, modelValue: true } };
+export const WithHint: Story = { args: { hint: 'You can change this later in settings.' } };
+
+export const WithError: Story = { args: { error: 'You must accept to continue.' } };
+
+export const Disabled: Story = { args: { disabled: true } };

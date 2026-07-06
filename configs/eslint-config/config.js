@@ -1,7 +1,7 @@
-import pluginVueI18n from '@intlify/eslint-plugin-vue-i18n';
 import prettierConfig from 'eslint-config-prettier/flat';
 import turboConfig from 'eslint-config-turbo/flat';
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
+import pluginI18next from 'eslint-plugin-i18next';
 import importX from 'eslint-plugin-import-x';
 import unicorn from 'eslint-plugin-unicorn';
 import pluginVue from 'eslint-plugin-vue';
@@ -20,6 +20,20 @@ const config = [
   {
     name: 'mission-platform/ignores',
     ignores: ['**/dist/**', '**/node_modules/**', '**/storybook-static/**', '**/.storybook/storybook-static/**'],
+  },
+  {
+    name: 'mission-platform/dependency-direction',
+    rules: {
+      'no-restricted-paths/no-restricted-paths': [
+        'error',
+        {
+          zones: [
+            { target: './packages/**', from: './apps/**' },
+            { target: './apps/**', from: './packages/**' },
+          ],
+        },
+      ],
+    },
   },
   {
     name: 'mission-platform/typescript',
@@ -171,21 +185,19 @@ const config = [
     name: 'mission-platform/unicorn',
     files: ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.js', '**/*.mjs', '**/*.cjs'],
   },
-  // ── vue-i18n ───────────────────────────────────────────────────────────────
-  // All i18n strings live in SFC-local <i18n> blocks — there are no external
-  // locale JSON/YAML files. Apply only the rules that are relevant to .vue
-  // and .ts/.tsx files; skip the jsonc/yaml sub-parser entries from
-  // flat/recommended to avoid "Unexpected token '<'" parse errors.
+  // ── i18next ─────────────────────────────────────────────────────────────────
+  // Register `eslint-plugin-i18next` so the platform's i18next usage is linted
+  // with a single, shared plugin. The `no-literal-string` rule is intentionally
+  // disabled by default: the platform has many legitimate non-user-facing
+  // literals, so flagging every string repo-wide would be noise. Registering
+  // the plugin with the rule explicitly off keeps the rule available for opt-in
+  // per workspace and lets tools (e.g. DeepSource) honour the explicit setting.
   {
-    name: 'mission-platform/vue-i18n',
+    name: 'mission-platform/i18next',
     files: ['**/*.vue', '**/*.ts', '**/*.tsx'],
-    plugins: { '@intlify/vue-i18n': pluginVueI18n },
-    settings: {
-      'vue-i18n': { messageSyntaxVersion: '^9.0.0' },
-    },
+    plugins: { i18next: pluginI18next },
     rules: {
-      '@intlify/vue-i18n/no-raw-text': 'off',
-      '@intlify/vue-i18n/no-missing-keys': 'off',
+      'i18next/no-literal-string': 'off',
     },
   },
   // ── turbo ─────────────────────────────────────────────────────────────────

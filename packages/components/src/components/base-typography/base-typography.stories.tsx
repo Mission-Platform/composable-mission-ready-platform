@@ -1,364 +1,212 @@
-import BaseBadge from '../base-badge/base-badge.vue';
-import BaseCard from '../base-card/base-card.vue';
-import BaseTag from '../base-tag/base-tag.vue';
-
-import BaseTypography from './base-typography.vue';
+import { Typography } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-const VARIANTS = [
-  'display',
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'h5',
-  'h6',
-  'body-lg',
-  'body-md',
-  'body-sm',
-  'body-xs',
-  'label',
-  'caption',
-  'code',
-] as const;
-
+/**
+ * `Typography` is the Vue 3 build of the write-once `BaseTypography` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
-  title: 'Components/Display/BaseTypography',
-  component: BaseTypography,
+  title: 'Components/Typography/BaseTypography',
+  component: Typography,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`Typography` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Typography` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). It renders its default-slot content in the semantic tag for the chosen `variant` (overridable with `as`), applying the variant type-scale plus optional `weight`, `color`, `horizontalAlign`, `verticalAlign`, `truncate`, and `truncatePopup` modifiers. Styling comes from the co-located `base-typography.module.scss`. (`truncatePopup` reveals the full text in a floating popup on hover/focus, positioned with CSS Anchor Positioning — the cross-framework substitute for the original `@floating-ui` popup.)',
       },
     },
   },
   argTypes: {
-    variant: { control: 'select', options: VARIANTS },
-    weight: { control: 'select', options: ['regular', 'medium', 'semibold', 'bold'] },
-    color: {
-      control: { type: 'select' },
-      options: ['primary', 'secondary', 'tertiary', 'disabled', 'inverse', 'inherit'],
+    size: { control: 'select', options: [undefined, '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    variant: {
+      control: 'select',
+      options: [
+        'display',
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'h5',
+        'h6',
+        'body-lg',
+        'body-md',
+        'body-sm',
+        'body-xs',
+        'label',
+        'caption',
+        'code',
+      ],
     },
-    align: { control: 'select', options: ['start', 'center', 'end'] },
-    as: { control: 'text' },
+    weight: { control: 'inline-radio', options: ['regular', 'medium', 'semibold', 'bold'] },
+    lineHeight: { control: 'select', options: ['tight', 'snug', 'normal', 'relaxed', 'loose'] },
+    color: {
+      control: 'select',
+      options: [
+        'primary',
+        'secondary',
+        'tertiary',
+        'disabled',
+        'inverse',
+        'inherit',
+        'neutral',
+        'success',
+        'warning',
+        'info',
+        'error',
+        'critical',
+      ],
+    },
+    horizontalAlign: { control: 'inline-radio', options: ['start', 'center', 'end'] },
+    verticalAlign: {
+      control: 'select',
+      options: ['baseline', 'top', 'middle', 'bottom', 'sub', 'super', 'text-top', 'text-bottom'],
+    },
     truncate: { control: 'boolean' },
+    truncatePopup: { control: 'boolean' },
   },
   args: {
     variant: 'body-md',
     color: 'primary',
     truncate: false,
   },
-  render: (arguments_) => <BaseTypography {...arguments_}>The quick brown fox jumps over the lazy dog.</BaseTypography>,
-} satisfies Meta<typeof BaseTypography>;
+  render: (arguments_) => ({
+    components: { Typography },
+    setup() {
+      return { args: arguments_ };
+    },
+    template: `<Typography v-bind="args">The quick brown fox jumps over the lazy dog</Typography>`,
+  }),
+} satisfies Meta<typeof Typography>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const BodyMedium: Story = {};
 
-// ── Heading variants ──────────────────────────────────────────────────────────
+export const Display: Story = { args: { variant: 'display' } };
 
-export const Display: Story = {
-  args: { variant: 'display' },
-  render: (arguments_) => <BaseTypography {...arguments_}>Display Heading</BaseTypography>,
-};
+export const Heading: Story = { args: { variant: 'h2' } };
 
-export const H1: Story = {
-  args: { variant: 'h1' },
-  render: (arguments_) => <BaseTypography {...arguments_}>Heading 1</BaseTypography>,
-};
+export const Label: Story = { args: { variant: 'label', weight: 'semibold', color: 'secondary' } };
 
-export const H2: Story = {
-  args: { variant: 'h2' },
-  render: (arguments_) => <BaseTypography {...arguments_}>Heading 2</BaseTypography>,
-};
-
-export const H3: Story = {
-  args: { variant: 'h3' },
-  render: (arguments_) => <BaseTypography {...arguments_}>Heading 3</BaseTypography>,
-};
-
-export const H4: Story = {
-  args: { variant: 'h4' },
-  render: (arguments_) => <BaseTypography {...arguments_}>Heading 4</BaseTypography>,
-};
-
-export const H5: Story = {
-  args: { variant: 'h5' },
-  render: (arguments_) => <BaseTypography {...arguments_}>Heading 5</BaseTypography>,
-};
-
-export const H6: Story = {
-  args: { variant: 'h6' },
-  render: (arguments_) => <BaseTypography {...arguments_}>Heading 6</BaseTypography>,
-};
-
-// ── Body variants ─────────────────────────────────────────────────────────────
-
-export const BodyLg: Story = { args: { variant: 'body-lg' } };
-export const BodyMd: Story = { args: { variant: 'body-md' } };
-export const BodySm: Story = { args: { variant: 'body-sm' } };
-export const BodyXs: Story = { args: { variant: 'body-xs' } };
-
-// ── Utility variants ──────────────────────────────────────────────────────────
-
-export const Label: Story = {
-  args: { variant: 'label' },
-  render: (arguments_) => <BaseTypography {...arguments_}>Form label text</BaseTypography>,
-};
-
-export const Caption: Story = {
-  args: { variant: 'caption' },
-  render: (arguments_) => <BaseTypography {...arguments_}>Helper caption text</BaseTypography>,
+export const LineHeight: Story = {
+  name: 'Line Height',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `lineHeight` prop overrides the variant default leading with a `--mp-line-height-*` design token (`tight`, `snug`, `normal`, `relaxed`, `loose`). Each example below wraps a multi-line paragraph so the leading difference is visible.',
+      },
+    },
+  },
+  render: () => ({
+    components: { Typography },
+    setup() {
+      const lineHeights = ['tight', 'snug', 'normal', 'relaxed', 'loose'];
+      return { lineHeights };
+    },
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 1.5rem; padding: 1.5rem;">
+        <div v-for="lh in lineHeights" :key="lh" style="max-width: 28rem;">
+          <Typography variant="label" color="secondary">{{ lh }}</Typography>
+          <Typography variant="body-md" :line-height="lh">
+            Mission Platform is a monorepo of reusable Vue 3 building blocks — components, design tokens, composables, and SEO primitives — that let teams assemble polished, performant applications.
+          </Typography>
+        </div>
+      </div>
+    `,
+  }),
 };
 
 export const Code: Story = {
   args: { variant: 'code' },
-  render: (arguments_) => <BaseTypography {...arguments_}>{'const value = 42'}</BaseTypography>,
+  render: (arguments_) => ({
+    components: { Typography },
+    setup() {
+      return { args: arguments_ };
+    },
+    template: `<Typography v-bind="args">const answer = 42;</Typography>`,
+  }),
 };
 
-// ── Color variants ────────────────────────────────────────────────────────────
+export const VerticalAlign: Story = {
+  name: 'Vertical Alignment',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `verticalAlign` prop maps to CSS `vertical-align`. It only has a visual effect on inline-level boxes, so each example renders an inline `label` variant alongside a large reference word.',
+      },
+    },
+  },
+  render: () => ({
+    components: { Typography },
+    setup() {
+      const verticalAligns = ['baseline', 'top', 'middle', 'bottom', 'sub', 'super', 'text-top', 'text-bottom'];
+      return { verticalAligns };
+    },
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 1.25rem; padding: 1.5rem;">
+        <div
+          v-for="valign in verticalAligns"
+          :key="valign"
+          style="display: flex; align-items: baseline; gap: 1rem; border-bottom: 1px solid var(--mp-color-border-default); padding-bottom: 0.5rem;"
+        >
+          <Typography variant="label" color="secondary" style="width: 120px; flex: none;">{{ valign }}</Typography>
+          <Typography variant="display">
+            Ag
+            <Typography
+              variant="label"
+              as="span"
+              :vertical-align="valign"
+              style="padding-inline: 0.25rem; background-color: var(--mp-color-bg-surface);"
+            >{{ valign }}</Typography>
+          </Typography>
+        </div>
+      </div>
+    `,
+  }),
+};
 
-export const ColorSecondary: Story = { args: { color: 'secondary' } };
-export const ColorTertiary: Story = { args: { color: 'tertiary' } };
-export const ColorDisabled: Story = { args: { color: 'disabled' } };
-
-// ── Weight overrides ──────────────────────────────────────────────────────────
-
-export const WeightBold: Story = { args: { weight: 'bold' } };
-export const WeightSemibold: Story = { args: { weight: 'semibold' } };
-export const WeightMedium: Story = { args: { weight: 'medium' } };
-export const WeightRegular: Story = { args: { weight: 'regular' } };
-
-// ── Alignment ─────────────────────────────────────────────────────────────────
-
-export const AlignCenter: Story = { args: { align: 'center' } };
-export const AlignEnd: Story = { args: { align: 'end' } };
-
-// ── Truncate ──────────────────────────────────────────────────────────────────
-
-export const Truncate: Story = {
+export const Truncated: Story = {
   args: { truncate: true },
-  render: (arguments_) => (
-    <div style={{ width: '200px' }}>
-      <BaseTypography {...arguments_}>
-        This is a very long text that should be truncated when it overflows its container.
-      </BaseTypography>
-    </div>
-  ),
+  render: (arguments_) => ({
+    components: { Typography },
+    setup() {
+      return { args: arguments_ };
+    },
+    template: `
+      <div style="max-width: 16rem; border: 1px dashed var(--mp-color-border-default); padding: var(--mp-spacing-2);">
+        <Typography v-bind="args">This is a very long line of text that will be truncated with an ellipsis</Typography>
+      </div>
+    `,
+  }),
 };
-
-// ── Truncate with popup ───────────────────────────────────────────────────────
-
-const truncatePopupRows = [
-  'A short label',
-  'This row has a much longer description text that will definitely overflow the narrow column',
-  'Medium length entry that might or might not overflow',
-  'Another very long piece of text that should trigger the popup behaviour on hover so you can read the full content',
-];
 
 export const TruncatePopup: Story = {
-  name: 'Truncate with Popup',
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', padding: '1.5rem', maxWidth: '640px' }}>
-      <div>
-        <BaseTypography
-          variant="label"
-          color="secondary"
-          style={{ marginBottom: '0.5rem', display: 'block' }}
-        >
-          Narrow container (200 px) — hover to see full text
-        </BaseTypography>
-        <div
-          style={{
-            width: '200px',
-            border: '1px dashed var(--mp-color-border-default)',
-            borderRadius: '4px',
-            padding: '4px 8px',
-          }}
-        >
-          <BaseTypography
-            variant="body-md"
-            truncatePopup
-          >
-            This is a very long sentence that will be truncated inside its narrow container.
-          </BaseTypography>
-        </div>
+  args: { truncatePopup: true },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'When `truncatePopup` is set, hovering or focusing the truncated text reveals the full content in a floating `role="tooltip"` popup (only when the text actually overflows), positioned with CSS Anchor Positioning.',
+      },
+    },
+  },
+  render: (arguments_) => ({
+    components: { Typography },
+    setup() {
+      return { args: arguments_ };
+    },
+    template: `
+      <div style="max-width: 16rem; border: 1px dashed var(--mp-color-border-default); padding: var(--mp-spacing-2);">
+        <Typography v-bind="args">This is a very long line of text that overflows and reveals a popup on hover</Typography>
       </div>
-
-      <div>
-        <BaseTypography
-          variant="label"
-          color="secondary"
-          style={{ marginBottom: '0.5rem', display: 'block' }}
-        >
-          Table-cell simulation — hover rows to reveal full content
-        </BaseTypography>
-        <div
-          style={{
-            width: '300px',
-            border: '1px solid var(--mp-color-border-default)',
-            borderRadius: '6px',
-            overflow: 'hidden',
-          }}
-        >
-          {truncatePopupRows.map((row) => (
-            <div
-              key={row}
-              style={{ padding: '8px 12px', borderBottom: '1px solid var(--mp-color-border-default)' }}
-            >
-              <BaseTypography
-                variant="body-sm"
-                truncatePopup
-              >
-                {row}
-              </BaseTypography>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <BaseTypography
-          variant="label"
-          color="secondary"
-          style={{ marginBottom: '0.5rem', display: 'block' }}
-        >
-          Short text — no popup (text is not overflowing)
-        </BaseTypography>
-        <div
-          style={{
-            width: '400px',
-            border: '1px dashed var(--mp-color-border-default)',
-            borderRadius: '4px',
-            padding: '4px 8px',
-          }}
-        >
-          <BaseTypography
-            variant="body-md"
-            truncatePopup
-          >
-            Short
-          </BaseTypography>
-        </div>
-      </div>
-    </div>
-  ),
-};
-
-// ── Polymorphic element ───────────────────────────────────────────────────────
-
-export const PolymorphicAs: Story = {
-  args: { variant: 'body-md', as: 'span' },
-  render: (arguments_) => <BaseTypography {...arguments_}>Rendered as a {'<span>'} element</BaseTypography>,
-};
-
-// ── Full scale showcase ───────────────────────────────────────────────────────
-
-export const TypeScale: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
-      <BaseTypography variant="display">Display — The quick brown fox</BaseTypography>
-      <BaseTypography variant="h1">H1 — The quick brown fox</BaseTypography>
-      <BaseTypography variant="h2">H2 — The quick brown fox</BaseTypography>
-      <BaseTypography variant="h3">H3 — The quick brown fox</BaseTypography>
-      <BaseTypography variant="h4">H4 — The quick brown fox</BaseTypography>
-      <BaseTypography variant="h5">H5 — The quick brown fox</BaseTypography>
-      <BaseTypography variant="h6">H6 — The quick brown fox</BaseTypography>
-      <hr style={{ border: 'none', borderTop: '1px solid var(--mp-color-border-default)', margin: '0.5rem 0' }} />
-      <BaseTypography variant="body-lg">body-lg — The quick brown fox jumps over the lazy dog.</BaseTypography>
-      <BaseTypography variant="body-md">body-md — The quick brown fox jumps over the lazy dog.</BaseTypography>
-      <BaseTypography variant="body-sm">body-sm — The quick brown fox jumps over the lazy dog.</BaseTypography>
-      <BaseTypography variant="body-xs">body-xs — The quick brown fox jumps over the lazy dog.</BaseTypography>
-      <hr style={{ border: 'none', borderTop: '1px solid var(--mp-color-border-default)', margin: '0.5rem 0' }} />
-      <BaseTypography variant="label">label — Form label text</BaseTypography>
-      <BaseTypography variant="caption">caption — Helper caption text</BaseTypography>
-      <BaseTypography variant="code">{'code — const value = 42'}</BaseTypography>
-    </div>
-  ),
-};
-
-// ── In-context usage showcase ─────────────────────────────────────────────────
-
-export const InContext: Story = {
-  name: 'In Context (Used in Components)',
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', padding: '1.5rem', maxWidth: '640px' }}>
-      <BaseCard
-        v-slots={{
-          header: () => 'Release Notes — v2.0',
-          default: () => (
-            <p>
-              BaseTypography is now used throughout all library components. It ensures consistent font sizing, weight,
-              color, and line-height by mapping each semantic variant to the correct design token.
-            </p>
-          ),
-          footer: () => 'Published 31 May 2026 · 2 min read',
-        }}
-      />
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        <BaseTypography variant="h4">Typography in Action</BaseTypography>
-        <BaseTypography
-          variant="body-md"
-          color="secondary"
-        >
-          Every variant automatically picks the correct element, font size, weight, and color token. Use the{' '}
-          <BaseTypography
-            variant="code"
-            as="span"
-          >
-            as
-          </BaseTypography>{' '}
-          prop to override the rendered element without losing the visual style.
-        </BaseTypography>
-      </div>
-
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-        <BaseTypography
-          variant="label"
-          color="secondary"
-        >
-          Status:
-        </BaseTypography>
-        <BaseBadge variant="success">Stable</BaseBadge>
-        <BaseBadge variant="information">v2.0</BaseBadge>
-        <BaseBadge variant="warning">Beta</BaseBadge>
-        <BaseBadge variant="error">Deprecated</BaseBadge>
-        <BaseBadge variant="default">Neutral</BaseBadge>
-      </div>
-
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-        <BaseTypography
-          variant="label"
-          color="secondary"
-        >
-          Tags:
-        </BaseTypography>
-        <BaseTag label="Design System" />
-        <BaseTag
-          label="Vue 3"
-          variant="primary"
-        />
-        <BaseTag label="TypeScript" />
-      </div>
-
-      <div>
-        <BaseTypography variant="body-md">
-          Form fields, tooltips, breadcrumbs, modals, dialogs, tables, and more all use BaseTypography internally to
-          render their labels, hints, and captions.
-        </BaseTypography>
-        <BaseTypography
-          variant="caption"
-          color="secondary"
-          style={{ marginTop: '0.25rem', display: 'block' }}
-        >
-          Hint: Open any component story to see BaseTypography in the rendered HTML.
-        </BaseTypography>
-      </div>
-    </div>
-  ),
+    `,
+  }),
 };

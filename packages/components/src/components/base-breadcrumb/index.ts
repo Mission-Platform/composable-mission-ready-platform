@@ -1,2 +1,1 @@
-export { default } from './base-breadcrumb.vue';
-export type { BreadcrumbItem } from './base-breadcrumb.vue';
+export { BaseBreadcrumb, type BreadcrumbItem, type BreadcrumbProperties } from './base-breadcrumb';

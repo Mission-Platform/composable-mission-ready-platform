@@ -1,4 +1,1 @@
-export { default } from './base-accordion.vue';
-export type { AccordionContext } from './base-accordion.vue';
-
-export { default as BaseAccordionItem } from './base-accordion-item.vue';
+export { BaseAccordion, type AccordionItem, type AccordionItemScope, type AccordionProperties } from './base-accordion';

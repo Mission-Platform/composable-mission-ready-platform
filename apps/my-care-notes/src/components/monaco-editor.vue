@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { BaseMonacoEditor } from '@mission-platform/components/monaco';
+  import { BaseMonacoEditor, type MonacoReadyContext } from '@mission-platform/components/vue';
   import { computed } from 'vue';
 
   import { useMonacoTheme } from '../composables/use-monaco-theme';
@@ -89,7 +89,7 @@
     },
   }));
 
-  async function onEditorReady(editor: monaco.editor.IStandaloneCodeEditor): Promise<void> {
+  async function onEditorReady({ editor }: MonacoReadyContext): Promise<void> {
     // Resolve the lazy Monaco runtime once; safe to await here because the
     // editor is already mounted by the time this handler fires, so the
     // dynamic-import promise is already cache-resolved.

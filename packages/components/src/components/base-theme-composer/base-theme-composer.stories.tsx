@@ -1,112 +1,76 @@
-import BaseButton from '../base-button/base-button.vue';
-import BaseCard from '../base-card/base-card.vue';
+import { ref } from 'vue';
 
-import BaseThemeComposer from './base-theme-composer.vue';
+import { ThemeComposer } from '@mission-platform/components/vue';
 
+import type { ThemeComposerConfig } from './base-theme-composer';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `ThemeComposer` is the Vue 3 build of the write-once `BaseThemeComposer` in
+ * this package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`; the very same source also
+ * ships as a React component via the package's `./react` subpath.
+ *
+ * It composes runtime `--mp-*` design-token overrides and applies them to its
+ * scope. The original Vue `v-model` is substituted by the controlled
+ * `modelValue` + `onUpdateModelValue` callback pair; its default scoped slot
+ * exposes the current config and mutators.
+ */
 const meta = {
   title: 'Components/Theme/BaseThemeComposer',
-  component: BaseThemeComposer,
+  component: ThemeComposer,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`ThemeComposer` component — composes theme attributes (brand/accent colours, text/surface/border/focus colours, font families, base font size, and corner radius) plus arbitrary raw `--mp-*` token overrides into CSS custom properties. It scopes the result to its own wrapper element (default) or applies it globally to `<html>`, shares the reactive configuration with descendants via `useThemeComposer`, and supports `v-model`. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `ThemeComposer` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). It resolves a composed config into `--mp-*` custom properties applied to its scope (or the document when `global`), is controlled via `modelValue` + `onUpdateModelValue` (the substitute for `v-model`), and exposes `{ config, cssVariables, styleString, setConfig, setAttribute, setToken, removeToken, reset }` to its default scoped slot.',
       },
     },
   },
   argTypes: {
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     global: { control: 'boolean' },
-    persist: { control: 'boolean' },
-    storageKey: { control: 'text' },
-    as: { control: 'text' },
   },
   args: {
     global: false,
-    persist: false,
-    storageKey: 'mp-theme-composer',
-    as: 'div',
   },
   render: (arguments_) => ({
-    components: { BaseThemeComposer, BaseButton, BaseCard },
+    components: { ThemeComposer },
     setup() {
-      return { args: arguments_ };
+      const model = ref<ThemeComposerConfig>({ primaryColor: '#7c3aed', radius: '12px' });
+      const onUpdate = (next: ThemeComposerConfig): void => {
+        model.value = next;
+      };
+      return { args: arguments_, model, onUpdate };
     },
     template: `
-      <BaseThemeComposer v-bind="args" :model-value="{ primaryColor: '#0369a1', radius: '1rem' }">
-        <template #default="{ config, setAttribute, reset }">
-          <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 24rem;">
-            <label style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
-              Primary colour
+      <ThemeComposer v-bind="args" :model-value="model" :on-update-model-value="onUpdate">
+        <template #default="{ config, setAttribute }">
+          <div style="display: flex; flex-direction: column; gap: var(--mp-spacing-3); padding: var(--mp-spacing-4); border: 1px solid var(--mp-color-border-default); border-radius: var(--mp-radius-md); background: var(--mp-color-bg-surface);">
+            <button
+              type="button"
+              style="padding: var(--mp-spacing-2) var(--mp-spacing-3); border-radius: var(--mp-radius-md); background: var(--mp-color-primary-default); color: var(--mp-color-text-on-primary, #fff); border: none; cursor: pointer;"
+            >
+              Primary button
+            </button>
+            <label style="display: flex; align-items: center; gap: var(--mp-spacing-2);">
+              Brand colour
               <input
                 type="color"
                 :value="config.primaryColor"
                 @input="(event) => setAttribute('primaryColor', event.target.value)"
               />
             </label>
-            <label style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
-              Corner radius
-              <input
-                type="range"
-                min="0"
-                max="24"
-                :value="parseInt(config.radius ?? '0', 10)"
-                @input="(event) => setAttribute('radius', event.target.value + 'px')"
-              />
-            </label>
-            <BaseCard>
-              <p style="margin: 0 0 0.75rem;">Live preview</p>
-              <BaseButton variant="primary">Primary button</BaseButton>
-            </BaseCard>
-            <BaseButton variant="secondary" @click="reset">Reset</BaseButton>
           </div>
         </template>
-      </BaseThemeComposer>
+      </ThemeComposer>
     `,
   }),
-} satisfies Meta<typeof BaseThemeComposer>;
+} satisfies Meta<typeof ThemeComposer>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Playground: Story = {};
-
-export const PresetBrand: Story = {
-  render: () => ({
-    components: { BaseThemeComposer, BaseButton, BaseCard },
-    setup() {
-      const config = {
-        primaryColor: '#db2777',
-        primaryHoverColor: '#be185d',
-        radius: '0.75rem',
-        fontFamily: 'Georgia, serif',
-      };
-      return { config };
-    },
-    template: `
-      <BaseThemeComposer :model-value="config">
-        <BaseCard>
-          <p style="margin: 0 0 0.75rem;">Scoped pink brand theme</p>
-          <BaseButton variant="primary">Primary</BaseButton>
-        </BaseCard>
-      </BaseThemeComposer>
-    `,
-  }),
-};
-
-export const RawTokenOverrides: Story = {
-  render: () => ({
-    components: { BaseThemeComposer, BaseButton },
-    setup() {
-      const config = { tokens: { 'radius-md': '9999px', '--mp-color-primary-default': '#15803d' } };
-      return { config };
-    },
-    template: `
-      <BaseThemeComposer :model-value="config">
-        <BaseButton variant="primary">Pill button via raw tokens</BaseButton>
-      </BaseThemeComposer>
-    `,
-  }),
-};
+export const Default: Story = {};

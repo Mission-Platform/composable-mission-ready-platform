@@ -1,2 +1,1 @@
-export { default } from './base-toast.vue';
-export { default as BaseToastContainer } from './base-toast-container.vue';
+export { BaseToast, type ToastProperties, type ToastVariant } from './base-toast';

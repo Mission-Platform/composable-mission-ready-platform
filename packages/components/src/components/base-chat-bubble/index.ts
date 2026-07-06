@@ -1,2 +1,6 @@
-export { default } from './base-chat-bubble.vue';
-export type { ChatBubbleSide, ChatBubbleVariant } from './base-chat-bubble.vue';
+export {
+  BaseChatBubble,
+  type ChatBubbleProperties,
+  type ChatBubbleSide,
+  type ChatBubbleVariant,
+} from './base-chat-bubble';

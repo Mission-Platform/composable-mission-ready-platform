@@ -1,2 +1,1 @@
-export { default } from './base-tag.vue';
-export type { TagSize, TagVariant } from './base-tag.vue';
+export { BaseTag, type TagProperties, type TagSize, type TagVariant } from './base-tag';

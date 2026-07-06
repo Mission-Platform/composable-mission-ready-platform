@@ -1,2 +1,6 @@
-export { default } from './base-virtual-table.vue';
-export type { VirtualTableColumn } from './base-virtual-table.vue';
+export {
+  BaseVirtualTable,
+  type VirtualTableCellScope,
+  type VirtualTableColumn,
+  type VirtualTableProperties,
+} from './base-virtual-table';

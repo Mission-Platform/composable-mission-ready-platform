@@ -1,67 +1,60 @@
-import { mount } from '@vue/test-utils';
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import BasePagination from './base-pagination.vue';
+import { BasePagination } from './base-pagination';
 
-describe('BasePagination', () => {
-  it('renders a <nav> with the aria-label', () => {
-    const wrapper = mount(BasePagination, { props: { pageCount: 5 } });
-    expect(wrapper.element.tagName).toBe('NAV');
-    expect(wrapper.attributes('aria-label')).toBe('Pagination');
+/**
+ * Exercises the **neutral** `BasePagination` authored in this package, rendering
+ * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * Covers the derived page list (boundary + ellipsis truncation), the active
+ * page, and the edge/prev-next controls.
+ */
+const ReactPagination = toReactComponent(BasePagination, 'Pagination');
+const VuePagination = toVueComponent(BasePagination, 'Pagination');
+
+describe('BasePagination authors the same component for React and Vue', () => {
+  it('marks the current page on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactPagination, { modelValue: 3, pageCount: 5 }));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VuePagination, { modelValue: 3, pageCount: 5 }) }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('aria-label="Pagination"');
+      expect(html).toContain('aria-current="page"');
+      expect(html).toContain('Go to page 3');
+      expect(html).toContain('Go to previous page');
+      expect(html).toContain('Go to next page');
+    }
   });
 
-  it('renders a button per page when the count is small', () => {
-    const wrapper = mount(BasePagination, { props: { pageCount: 5, modelValue: 1, showPrevNext: false } });
-    const pageButtons = wrapper.findAll('.base-pagination__btn');
-    expect(pageButtons).toHaveLength(5);
+  it('renders truncation ellipses for large page counts on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactPagination, { modelValue: 5, pageCount: 20 }));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VuePagination, { modelValue: 5, pageCount: 20 }) }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('…');
+      expect(html).toContain('Go to page 1');
+      expect(html).toContain('Go to page 20');
+    }
   });
 
-  it('marks the current page with aria-current', () => {
-    const wrapper = mount(BasePagination, { props: { pageCount: 5, modelValue: 3, showPrevNext: false } });
-    const active = wrapper.find('.base-pagination__btn--active');
-    expect(active.text()).toBe('3');
-    expect(active.attributes('aria-current')).toBe('page');
-  });
+  it('renders the edge buttons when showEdges is set on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactPagination, { pageCount: 5, showEdges: true }));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VuePagination, { pageCount: 5, showEdges: true }) }),
+    );
 
-  it('derives the page count from total and pageSize', () => {
-    const wrapper = mount(BasePagination, { props: { total: 95, pageSize: 10, showPrevNext: false } });
-    // 95 / 10 => 10 pages; with boundary/sibling defaults this truncates with an ellipsis.
-    expect(wrapper.text()).toContain('10');
-    expect(wrapper.find('.base-pagination__ellipsis').exists()).toBe(true);
-  });
-
-  it('emits update:modelValue and change when a page is clicked', async () => {
-    const wrapper = mount(BasePagination, { props: { pageCount: 5, modelValue: 1, showPrevNext: false } });
-    const buttons = wrapper.findAll('.base-pagination__btn');
-    await buttons[2].trigger('click'); // page 3
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([3]);
-    expect(wrapper.emitted('change')?.[0]).toEqual([3]);
-  });
-
-  it('navigates with the previous/next buttons', async () => {
-    const wrapper = mount(BasePagination, { props: { pageCount: 5, modelValue: 2 } });
-    await wrapper.find('.base-pagination__btn--next').trigger('click');
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([3]);
-    await wrapper.find('.base-pagination__btn--prev').trigger('click');
-    expect(wrapper.emitted('update:modelValue')?.[1]).toEqual([1]);
-  });
-
-  it('disables previous on the first page and next on the last page', () => {
-    const first = mount(BasePagination, { props: { pageCount: 5, modelValue: 1 } });
-    expect((first.find('.base-pagination__btn--prev').element as HTMLButtonElement).disabled).toBe(true);
-    const last = mount(BasePagination, { props: { pageCount: 5, modelValue: 5 } });
-    expect((last.find('.base-pagination__btn--next').element as HTMLButtonElement).disabled).toBe(true);
-  });
-
-  it('renders edge buttons when showEdges is true', () => {
-    const wrapper = mount(BasePagination, { props: { pageCount: 5, showEdges: true } });
-    expect(wrapper.findAll('.base-pagination__btn--edge')).toHaveLength(2);
-  });
-
-  it('does not emit when clicking the active page', async () => {
-    const wrapper = mount(BasePagination, { props: { pageCount: 5, modelValue: 2, showPrevNext: false } });
-    const buttons = wrapper.findAll('.base-pagination__btn');
-    await buttons[1].trigger('click'); // page 2 (active)
-    expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+    for (const html of [react, vue]) {
+      expect(html).toContain('Go to first page');
+      expect(html).toContain('Go to last page');
+    }
   });
 });

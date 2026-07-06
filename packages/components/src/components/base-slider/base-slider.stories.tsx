@@ -1,64 +1,61 @@
 import { ref } from 'vue';
 
-import BaseSlider from './base-slider.vue';
+import { Slider } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `Slider` is the Vue 3 build of the write-once `BaseSlider` in this package.
+ * The component is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/jsx`) and compiled straight to a Vue component at build
+ * time by `@mission-platform/vite-plugin-jsx`. The very same source also ships
+ * as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Forms/BaseSlider',
-  component: BaseSlider,
+  component: Slider,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`Slider` component — a range slider with drag and keyboard control, step rounding, and an optional value tooltip. Controlled via `v-model`. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Slider` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). Like the Vue original it renders a bespoke `role="slider"` thumb on a track (dragged with a pointer or moved with the keyboard); the value is controlled via `modelValue` and the original `v-model` + `change` emit become the `onUpdateModelValue`/`onChange` callback props. Styling comes from the co-located `base-slider.module.scss`.',
       },
     },
   },
   argTypes: {
-    min: { control: 'number' },
-    max: { control: 'number' },
-    step: { control: 'number' },
-    disabled: { control: 'boolean' },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     showValue: { control: 'boolean' },
-    size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
+    disabled: { control: 'boolean' },
   },
   args: {
     min: 0,
     max: 100,
     step: 1,
-    disabled: false,
-    showValue: true,
     size: 'md',
-    ariaLabel: 'Volume',
+    showValue: true,
+    disabled: false,
+    ariaLabel: 'Value',
   },
   render: (arguments_) => ({
-    components: { BaseSlider },
+    components: { Slider },
     setup() {
-      const value = ref(40);
+      const value = ref(arguments_.modelValue ?? 50);
       return { args: arguments_, value };
     },
-    template: `
-      <div style="width: 320px;">
-        <BaseSlider v-bind="args" v-model="value" />
-        <p style="margin-top: 1.5rem;">Value: {{ value }}</p>
-      </div>
-    `,
+    template: '<Slider v-bind="args" :model-value="value" @update-model-value="value = $event" />',
   }),
-} satisfies Meta<typeof BaseSlider>;
+} satisfies Meta<typeof Slider>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const Stepped: Story = { args: { step: 10 } };
+export const Small: Story = { args: { size: 'sm', modelValue: 25 } };
 
-export const Small: Story = { args: { size: 'sm' } };
+export const Large: Story = { args: { size: 'lg', modelValue: 75 } };
 
-export const Disabled: Story = { args: { disabled: true } };
+export const Stepped: Story = { args: { min: 0, max: 10, step: 2, modelValue: 4 } };
 
-export const Percentage: Story = {
-  args: { formatValue: (value: number) => `${value}%` },
-};
+export const Disabled: Story = { args: { disabled: true, modelValue: 60 } };

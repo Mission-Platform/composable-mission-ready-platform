@@ -1,2 +1,7 @@
-export { default } from './base-separator.vue';
-export type { SeparatorOrientation, SeparatorVariant, SeparatorSpacing } from './base-separator.vue';
+export {
+  BaseSeparator,
+  type SeparatorOrientation,
+  type SeparatorProperties,
+  type SeparatorSpacing,
+  type SeparatorVariant,
+} from './base-separator';

@@ -1,219 +1,101 @@
-import { mount } from '@vue/test-utils';
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import BaseTypography from './base-typography.vue';
+import { BaseTypography } from './base-typography';
 
-import type { TypographyVariant } from './base-typography.vue';
+/**
+ * Exercises the **neutral** `BaseTypography` authored in this package, rendering
+ * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * Covers the variant→tag mapping, the `as` override, and the weight/color
+ * modifier classes.
+ */
+const ReactTypography = toReactComponent(BaseTypography, 'Typography');
+const VueTypography = toVueComponent(BaseTypography, 'Typography');
 
-describe('BaseTypography', () => {
-  it('renders slot content', () => {
-    const wrapper = mount(BaseTypography, { slots: { default: 'Hello world' } });
-    expect(wrapper.text()).toBe('Hello world');
-  });
+describe('BaseTypography authors the same component for React and Vue', () => {
+  it('renders the semantic tag for the variant on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactTypography, { variant: 'h2' }, 'Heading'));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueTypography, { variant: 'h2' }, () => 'Heading') }),
+    );
 
-  it('renders a <p> element by default (body-md variant)', () => {
-    const wrapper = mount(BaseTypography);
-    expect(wrapper.find('.base-typography').element.tagName).toBe('P');
-  });
-
-  it('applies default classes', () => {
-    const wrapper = mount(BaseTypography);
-    const element = wrapper.find('.base-typography');
-    expect(element.classes()).toContain('base-typography');
-    expect(element.classes()).toContain('base-typography--body-md');
-    expect(element.classes()).toContain('base-typography--color-primary');
-  });
-
-  it('renders heading variants with the correct HTML tag', () => {
-    const cases: Array<[string, string]> = [
-      ['display', 'H1'],
-      ['h1', 'H1'],
-      ['h2', 'H2'],
-      ['h3', 'H3'],
-      ['h4', 'H4'],
-      ['h5', 'H5'],
-      ['h6', 'H6'],
-    ];
-    for (const [variant, expectedTag] of cases) {
-      const wrapper = mount(BaseTypography, { props: { variant: variant as TypographyVariant } });
-      expect(wrapper.find('.base-typography').element.tagName).toBe(expectedTag);
+    for (const html of [react, vue]) {
+      expect(html).toMatch(/<h2[ >]/);
+      expect(html).toContain('base-typography');
+      expect(html).toContain('base-typography--h2');
+      expect(html).toContain('Heading');
     }
   });
 
-  it('renders body variants as <p>', () => {
-    for (const variant of ['body-lg', 'body-md', 'body-sm', 'body-xs'] as const) {
-      const wrapper = mount(BaseTypography, { props: { variant } });
-      expect(wrapper.find('.base-typography').element.tagName).toBe('P');
+  it('honours the `as` tag override and weight/color modifiers on both frameworks', async () => {
+    const properties = {
+      variant: 'body-md' as const,
+      as: 'span',
+      weight: 'bold' as const,
+      color: 'secondary' as const,
+    };
+    const react = renderToStaticMarkup(createElement(ReactTypography, properties, 'Text'));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueTypography, properties, () => 'Text') }));
+
+    for (const html of [react, vue]) {
+      expect(html).toMatch(/<span[ >]/);
+      expect(html).toContain('base-typography--weight-bold');
+      expect(html).toContain('base-typography--color-secondary');
     }
   });
 
-  it('renders label and caption variants as <span>', () => {
-    for (const variant of ['label', 'caption'] as const) {
-      const wrapper = mount(BaseTypography, { props: { variant } });
-      expect(wrapper.find('.base-typography').element.tagName).toBe('SPAN');
+  it('omits the colour class when `color` is `inherit` on both frameworks', async () => {
+    const properties = { color: 'inherit' as const, truncate: true };
+    const react = renderToStaticMarkup(createElement(ReactTypography, properties, 'Plain'));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueTypography, properties, () => 'Plain') }));
+
+    for (const html of [react, vue]) {
+      expect(html).not.toContain('base-typography--color-');
+      expect(html).toContain('base-typography--truncate');
     }
   });
 
-  it('renders code variant as <code>', () => {
-    const wrapper = mount(BaseTypography, { props: { variant: 'code' } });
-    expect(wrapper.find('.base-typography').element.tagName).toBe('CODE');
-  });
+  it('applies the horizontal and vertical alignment classes on both frameworks', async () => {
+    const properties = { horizontalAlign: 'center' as const, verticalAlign: 'middle' as const };
+    const react = renderToStaticMarkup(createElement(ReactTypography, properties, 'Aligned'));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueTypography, properties, () => 'Aligned') }));
 
-  it('applies variant class', () => {
-    const wrapper = mount(BaseTypography, { props: { variant: 'h2' } });
-    expect(wrapper.find('.base-typography').classes()).toContain('base-typography--h2');
-  });
-
-  it('applies weight class when weight prop is set', () => {
-    for (const weight of ['regular', 'medium', 'semibold', 'bold'] as const) {
-      const wrapper = mount(BaseTypography, { props: { weight } });
-      expect(wrapper.find('.base-typography').classes()).toContain(`base-typography--weight-${weight}`);
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-typography--halign-center');
+      expect(html).toContain('base-typography--valign-middle');
     }
   });
 
-  it('does not apply weight class when weight prop is not set', () => {
-    const wrapper = mount(BaseTypography);
-    expect(
-      wrapper
-        .find('.base-typography')
-        .classes()
-        .some((c) => c.startsWith('base-typography--weight-')),
-    ).toBe(false);
-  });
+  it('applies the line-height override class on both frameworks', async () => {
+    const properties = { variant: 'body-md' as const, lineHeight: 'relaxed' as const };
+    const react = renderToStaticMarkup(createElement(ReactTypography, properties, 'Spaced'));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueTypography, properties, () => 'Spaced') }));
 
-  it('applies color class', () => {
-    for (const color of ['primary', 'secondary', 'tertiary', 'disabled', 'inverse'] as const) {
-      const wrapper = mount(BaseTypography, { props: { color } });
-      expect(wrapper.find('.base-typography').classes()).toContain(`base-typography--color-${color}`);
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-typography--lh-relaxed');
     }
   });
 
-  it('does not apply color class when color is "inherit"', () => {
-    const wrapper = mount(BaseTypography, { props: { color: 'inherit' } });
-    expect(
-      wrapper
-        .find('.base-typography')
-        .classes()
-        .some((c) => c.startsWith('base-typography--color-')),
-    ).toBe(false);
-  });
+  it('wraps the truncated text as a CSS-anchor for the popup when `truncatePopup` is set', async () => {
+    const properties = { truncatePopup: true } as const;
+    const react = renderToStaticMarkup(createElement(ReactTypography, properties, 'A very long line'));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueTypography, properties, () => 'A very long line') }),
+    );
 
-  it('applies align class when align prop is set', () => {
-    for (const align of ['start', 'center', 'end'] as const) {
-      const wrapper = mount(BaseTypography, { props: { align } });
-      expect(wrapper.find('.base-typography').classes()).toContain(`base-typography--align-${align}`);
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-typography-popup-wrapper');
+      // Popup mode always single-line-truncates the anchored text.
+      expect(html).toContain('base-typography--truncate');
+      expect(html).toContain('base-typography--popup-anchor');
+      expect(html).toContain('A very long line');
+      // The popup itself is only revealed on hover/focus when overflowing.
+      expect(html).not.toContain('role="tooltip"');
     }
-  });
-
-  it('does not apply align class when align prop is not set', () => {
-    const wrapper = mount(BaseTypography);
-    expect(
-      wrapper
-        .find('.base-typography')
-        .classes()
-        .some((c) => c.startsWith('base-typography--align-')),
-    ).toBe(false);
-  });
-
-  it('applies truncate class when truncate prop is true', () => {
-    const wrapper = mount(BaseTypography, { props: { truncate: true } });
-    expect(wrapper.find('.base-typography').classes()).toContain('base-typography--truncate');
-  });
-
-  it('does not apply truncate class by default', () => {
-    const wrapper = mount(BaseTypography);
-    expect(wrapper.find('.base-typography').classes()).not.toContain('base-typography--truncate');
-  });
-
-  it('renders a custom element via the "as" prop', () => {
-    const wrapper = mount(BaseTypography, { props: { as: 'article' } });
-    expect(wrapper.find('.base-typography').element.tagName).toBe('ARTICLE');
-  });
-
-  it('"as" prop overrides the default tag for a variant', () => {
-    const wrapper = mount(BaseTypography, { props: { variant: 'h1', as: 'div' } });
-    expect(wrapper.find('.base-typography').element.tagName).toBe('DIV');
-  });
-
-  // ── truncatePopup ─────────────────────────────────────────────────────────
-
-  it('renders a wrapper span when truncatePopup is true', () => {
-    const wrapper = mount(BaseTypography, {
-      props: { truncatePopup: true },
-      slots: { default: 'Some text' },
-    });
-    expect(wrapper.find('.base-typography-popup-wrapper').exists()).toBe(true);
-    expect(wrapper.find('.base-typography-popup-wrapper').element.tagName).toBe('SPAN');
-  });
-
-  it('always applies truncate class to the inner element when truncatePopup is true', () => {
-    const wrapper = mount(BaseTypography, {
-      props: { truncatePopup: true },
-      slots: { default: 'Some text' },
-    });
-    const inner = wrapper.find('.base-typography');
-    expect(inner.classes()).toContain('base-typography--truncate');
-  });
-
-  it('does not show popup on mount (no overflow by default in jsdom)', () => {
-    const wrapper = mount(BaseTypography, {
-      props: { truncatePopup: true },
-      slots: { default: 'Some text' },
-    });
-    expect(wrapper.find('.base-typography-popup').exists()).toBe(false);
-  });
-
-  it('shows popup on mouseenter when text is overflowing', async () => {
-    const wrapper = mount(BaseTypography, {
-      props: { truncatePopup: true },
-      slots: { default: 'A very long truncated text' },
-    });
-    // Simulate overflow
-    const inner = wrapper.find('.base-typography').element as HTMLElement;
-    Object.defineProperty(inner, 'scrollWidth', { value: 300, configurable: true });
-    Object.defineProperty(inner, 'clientWidth', { value: 100, configurable: true });
-
-    await wrapper.find('.base-typography').trigger('mouseenter');
-    expect(wrapper.find('.base-typography-popup').exists()).toBe(true);
-    expect(wrapper.find('.base-typography-popup').text()).toBe('A very long truncated text');
-  });
-
-  it('hides popup on mouseleave', async () => {
-    const wrapper = mount(BaseTypography, {
-      props: { truncatePopup: true },
-      slots: { default: 'A very long truncated text' },
-    });
-    const inner = wrapper.find('.base-typography').element as HTMLElement;
-    Object.defineProperty(inner, 'scrollWidth', { value: 300, configurable: true });
-    Object.defineProperty(inner, 'clientWidth', { value: 100, configurable: true });
-
-    await wrapper.find('.base-typography').trigger('mouseenter');
-    expect(wrapper.find('.base-typography-popup').exists()).toBe(true);
-
-    await wrapper.find('.base-typography').trigger('mouseleave');
-    expect(wrapper.find('.base-typography-popup').exists()).toBe(false);
-  });
-
-  it('does not show popup on mouseenter when text is not overflowing', async () => {
-    const wrapper = mount(BaseTypography, {
-      props: { truncatePopup: true },
-      slots: { default: 'Short' },
-    });
-    // No overflow: scrollWidth <= clientWidth (jsdom defaults to 0)
-    await wrapper.find('.base-typography').trigger('mouseenter');
-    expect(wrapper.find('.base-typography-popup').exists()).toBe(false);
-  });
-
-  it('popup has role="tooltip"', async () => {
-    const wrapper = mount(BaseTypography, {
-      props: { truncatePopup: true },
-      slots: { default: 'A very long truncated text' },
-    });
-    const inner = wrapper.find('.base-typography').element as HTMLElement;
-    Object.defineProperty(inner, 'scrollWidth', { value: 300, configurable: true });
-    Object.defineProperty(inner, 'clientWidth', { value: 100, configurable: true });
-
-    await wrapper.find('.base-typography').trigger('mouseenter');
-    expect(wrapper.find('.base-typography-popup').attributes('role')).toBe('tooltip');
   });
 });

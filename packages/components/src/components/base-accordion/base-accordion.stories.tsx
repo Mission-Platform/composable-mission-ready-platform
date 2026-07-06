@@ -1,93 +1,63 @@
-import { expect, userEvent, within } from 'storybook/test';
-
-import BaseAccordionItem from './base-accordion-item.vue';
-import BaseAccordion from './base-accordion.vue';
+import { Accordion } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `Accordion` is the Vue 3 build of the write-once `BaseAccordion` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Display/BaseAccordion',
-  component: BaseAccordion,
+  component: Accordion,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
-        component: [
-          '`BaseAccordion` is a vertically stacked container of collapsible `BaseAccordionItem` rows.',
-          '',
-          'Open state is centralised on the parent via `provide`/`inject`. Use `exclusive` (default `true`)',
-          'to enforce a single-open-item behavior, or set it to `false` to allow multiple items open at once.',
-          'Children use the `summary` slot for the header and the default slot for the revealed content.',
-        ].join('\n'),
+        component:
+          'Cross-framework `Accordion` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). The original `BaseAccordion`/`BaseAccordionItem` pair shared open state through `provide`/`inject`; the neutral version flattens them into one component driven by an `items` array with internal `useState` open state (like the migrated `BaseTabs`). Set `exclusive` to `false` to allow several items open at once. The icon chevron becomes a CSS-rotated `▾` glyph; styling comes from the co-located `base-accordion.module.scss`.',
       },
     },
   },
   argTypes: {
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     exclusive: { control: 'boolean' },
+    variant: {
+      control: 'select',
+      options: ['neutral', 'primary', 'secondary', 'tertiary', 'success', 'warning', 'info', 'error', 'critical'],
+    },
   },
   args: {
     exclusive: true,
+    items: [
+      { id: 'shipping', title: 'Shipping', content: 'We ship worldwide within 3–5 business days.' },
+      { id: 'returns', title: 'Returns', content: 'Returns are accepted within 30 days of delivery.' },
+      { id: 'warranty', title: 'Warranty', content: 'All products carry a 2-year limited warranty.' },
+    ],
   },
-  render: (arguments_) => ({
-    components: { BaseAccordion, BaseAccordionItem },
-    setup() {
-      return { args: arguments_ };
-    },
-    template: `
-      <BaseAccordion v-bind="args" style="max-width: 560px;">
-        <BaseAccordionItem id="a">
-          <template #summary>What is Vue.js?</template>
-          Vue.js is a progressive JavaScript framework for building user interfaces.
-        </BaseAccordionItem>
-        <BaseAccordionItem id="b">
-          <template #summary>What is TypeScript?</template>
-          TypeScript is a strongly typed programming language that builds on JavaScript.
-        </BaseAccordionItem>
-        <BaseAccordionItem id="c">
-          <template #summary>What is Vite?</template>
-          Vite is a next-generation front-end tooling that is fast and lean.
-        </BaseAccordionItem>
-        <BaseAccordionItem id="d" :disabled="true">
-          <template #summary>Disabled item</template>
-          You should not see this.
-        </BaseAccordionItem>
-      </BaseAccordion>
-    `,
-  }),
-} satisfies Meta<typeof BaseAccordion>;
+} satisfies Meta<typeof Accordion>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Exclusive mode (default) — opening one item closes the others. Verifies that clicking an item reveals its content.',
-      },
-    },
-  },
-  play: async ({ canvasElement }) => {
-    // Arrange
-    const canvas = within(canvasElement);
-    const summary = canvas.getByText('What is Vue.js?');
+export const Default: Story = {};
 
-    // Act — expand the first item
-    await userEvent.click(summary);
+export const FirstOpen: Story = { args: { defaultOpen: ['shipping'] } };
 
-    // Assert — content is now visible
-    expect(canvas.getByText(/progressive JavaScript framework/i)).toBeVisible();
-  },
-};
+export const Primary: Story = { args: { variant: 'primary', defaultOpen: ['shipping'] } };
 
-export const MultiOpen: Story = {
-  args: { exclusive: false },
-  parameters: {
-    docs: {
-      description: {
-        story: 'Non-exclusive mode — multiple items can be open simultaneously. Use for FAQ-style content.',
-      },
-    },
+export const Success: Story = { args: { variant: 'success', defaultOpen: ['shipping'] } };
+
+export const Multiple: Story = { args: { exclusive: false, defaultOpen: ['shipping', 'warranty'] } };
+
+export const WithDisabledItem: Story = {
+  args: {
+    items: [
+      { id: 'shipping', title: 'Shipping', content: 'We ship worldwide within 3–5 business days.' },
+      { id: 'returns', title: 'Returns', content: 'Returns are accepted within 30 days of delivery.' },
+      { id: 'legacy', title: 'Legacy policy (unavailable)', content: 'No longer applicable.', disabled: true },
+    ],
   },
 };

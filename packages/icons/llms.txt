@@ -1,6 +1,121 @@
 # @mission-platform/icons
 
-SVG icon components for Mission Platform.
+"Write once, run on both frameworks" SVG icon components for Mission Platform.
+Each icon is authored once in the framework-neutral JSX dialect
+(`@mission-platform/jsx`) and shipped as **both** a Vue 3 component and a React
+component.
+
+The `./react` and `./vue` subpaths are produced by **compiling the neutral
+icons to each framework at build time** with the two-stage compiler in
+`@mission-platform/vite-plugin-jsx` (source-to-source → native compile), not the
+runtime `toReactComponent` / `toVueComponent` adapters. A single `pnpm build`
+produces the Vue and the React artifacts together (one per-icon JS chunk + one
+per-icon CSS asset, so consumers tree-shake to just the icons they import).
+
+The package also exposes a **framework-neutral `.` entry** that re-exports the
+neutral icon source (typed against the built `dist/components` declarations; the
+package `src` is published so the entry resolves). It is **not** a runnable
+standalone build — it exists so a write-once `@mission-platform/jsx` component
+can `import { IconX } from '@mission-platform/icons'` and have it (a) type-check,
+(b) render through the runtime adapters in unit tests, and (c) be remapped by
+`@mission-platform/vite-plugin-jsx` to the matching `./react` / `./vue` build in
+the emitted per-framework output. App/library code that is not itself written in
+the neutral dialect should keep importing the explicit `./react` / `./vue` subpath.
+
+The neutral icons are a faithful port of the Vue SFC icons in
+`@mission-platform/icons`: the same 24×24 stroke artwork, the same per-icon
+default `aria-label`, and the same `@layer mp.icons` styling.
 
 ## Usage
-Import individual SVG components for use within your application's UI.
+
+```ts
+// Vue 3
+import { IconAlert, IconArrow } from '@mission-platform/icons/vue';
+
+// React
+import { IconAlert, IconArrow } from '@mission-platform/icons/react';
+
+// Write-once neutral component (compiled per framework by vite-plugin-jsx)
+import { IconAlert, IconArrow } from '@mission-platform/icons';
+```
+
+Each icon renders an `<svg role="img">` (inside a centring `<div>` wrapper that
+carries the `base-icon-<name>` BEM class) on a `0 0 24 24` viewBox.
+
+## Props
+
+Every icon accepts:
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `size` | `number \| string` | `'md'` | Width/height — a named token (`'2xs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl'` → 12–48px) or a pixel number. |
+| `color` | `string` | `'currentColor'` | Stroke colour (and fill, for the filled-marker icons). |
+| `ariaLabel` | `string` | per-icon default | Accessible name. When omitted the icon is `aria-hidden`; most icons also carry a sensible default label (e.g. `IconAlert` → `Alert`). |
+
+Three icons add behavioural props:
+
+| Icon | Extra props | Description |
+|---|---|---|
+| `IconArrow` | `direction` (`'up' \| 'right' \| 'down' \| 'left'`, default `'up'`) | Rotates the arrow via an inline `transform`. Exports `IconArrowDirection`. |
+| `IconChevron` | `direction` (`'up' \| 'right' \| 'down' \| 'left'`, default `'down'`) | Rotates the chevron via an inline `transform`. Exports `IconDirection`. |
+| `IconSort` | `active` (`boolean`), `direction` (`'asc' \| 'desc' \| undefined`) | Fills the chevron matching the active sort direction. Exports `SortDirection`. |
+
+## Icons
+
+`IconAlert`, `IconAlignCenter`, `IconAlignJustify`, `IconAlignLeft`,
+`IconAlignRight`, `IconArrow`, `IconBell`, `IconBlockquote`, `IconBold`,
+`IconBulletList`, `IconCalendar`, `IconCamera`, `IconChat`, `IconCheck`,
+`IconChevron`, `IconClock`, `IconClose`, `IconCloud`, `IconCodeBlock`,
+`IconCodeInline`, `IconCopy`, `IconDebug`, `IconDownload`, `IconDrawCircle`,
+`IconDrawLine`, `IconDrawPolygon`, `IconDrawSquare`, `IconDrawTriangle`,
+`IconEdit`, `IconError`, `IconExternalLink`, `IconEye`, `IconEyeOff`,
+`IconFilter`, `IconGeodesic`, `IconGlobe`, `IconHeading`, `IconHeadingOne`,
+`IconHeadingTwo`, `IconHeadingThree`, `IconHeadingFour`, `IconHeadingFive`,
+`IconHeadingSix`, `IconHeart`, `IconHome`, `IconImage`, `IconInfo`,
+`IconItalic`, `IconJoin`, `IconLanguage`, `IconLightning`, `IconLink`,
+`IconLock`, `IconLockOpen`, `IconMail`, `IconMapPin`, `IconMenu`, `IconMinus`,
+`IconMove`, `IconNotice`, `IconNumberedList`, `IconPalette`, `IconPencil`,
+`IconPhone`, `IconPlus`, `IconPuzzle`, `IconQrCode`, `IconRefresh`,
+`IconRotateCcw`, `IconRotateCw`, `IconScaleDown`, `IconScaleUp`, `IconSearch`,
+`IconSend`, `IconSettings`, `IconShare`, `IconSort`, `IconSplit`, `IconStar`,
+`IconTable`, `IconTableColumnAdd`, `IconTableColumnRemove`, `IconTableRowAdd`,
+`IconTableRowRemove`, `IconTrash`, `IconUpload`, `IconUser`, `IconWarning`,
+`IconWrench`.
+
+## Storybook
+
+Every icon is catalogued in **both** Storybooks under the dedicated top-level
+`Icons` section, grouped by category (mirroring the `Icons/<Category>`
+groupings used by `@mission-platform/icons` — `State / Status`, `Media`,
+`Math / Quantity`, `Navigation / Controls`, `General UI`, `Map`, …; the icons
+the `icons` package does not story fall back to `Text Formatting` / `Table` /
+`General UI`). Titles are `Icons/<Category>/<Name>`, plus an
+`Icons/Overview` gallery of the full set:
+
+- **Vue** — co-located per-icon stories live in this package at
+  `src/components/<icon>/<icon>.vue.stories.tsx` (consuming
+  `@mission-platform/icons/vue`); they are globbed by `apps/storybook`.
+- **React** — the matching per-icon stories live in the React Storybook app at
+  `apps/storybook-react/src/components/<icon>/<icon>.react.stories.tsx`
+  (consuming `@mission-platform/icons/react`).
+
+Each story exposes `size`, `color`, and `ariaLabel` controls; the behavioural
+icons add their own (`IconArrow`/`IconChevron`: `direction`; `IconSort`:
+`active` + `direction`). Both files are generated by `scripts/generate-stories.js`
+(`pnpm stories:generate`) — re-run it whenever icons are added or removed.
+
+## Regenerating
+
+The neutral icons are generated from the `@mission-platform/icons` Vue SFCs by
+`scripts/generate-icons.js`:
+
+```sh
+node scripts/generate-icons.js
+```
+
+It re-creates one `src/components/<name>/` folder per source icon
+(`<name>.tsx` + `<name>.module.scss` + `index.ts`) and rewrites the barrel
+`src/components/index.ts` with the named re-exports the compiler discovers. The
+three behavioural icons (`IconArrow`, `IconChevron`, `IconSort`) are emitted from
+hand-written templates in the script; every other icon is a direct, faithful
+translation of its source `<svg>`. Re-run it whenever the source icons change.

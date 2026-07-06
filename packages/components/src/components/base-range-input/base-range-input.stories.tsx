@@ -1,21 +1,30 @@
 import { ref } from 'vue';
 
-import BaseTypography from '../base-typography/base-typography.vue';
-
-import BaseRangeInput, { type RangeValue } from './base-range-input.vue';
+import { RangeInput } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `RangeInput` is the Vue 3 build of the write-once `BaseRangeInput` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Forms/BaseRangeInput',
-  component: BaseRangeInput,
+  component: RangeInput,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Cross-framework `RangeInput` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). Like the Vue original it renders two bespoke `role="slider"` thumbs on a shared track (dragged with a pointer or moved with the keyboard); the `[lower, upper]` selection is controlled via `modelValue`, kept ordered with an optional `minDistance`, and the `v-model` + `change` emit become the `onUpdateModelValue`/`onChange` callback props. Styling comes from the co-located `base-range-input.module.scss`.',
+      },
+    },
+  },
   argTypes: {
-    min: { control: 'number' },
-    max: { control: 'number' },
-    step: { control: 'number' },
-    minDistance: { control: 'number' },
-    size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     disabled: { control: 'boolean' },
     showValue: { control: 'boolean' },
   },
@@ -23,56 +32,27 @@ const meta = {
     min: 0,
     max: 100,
     step: 1,
-    minDistance: 0,
     size: 'md',
-    disabled: false,
     showValue: true,
-    ariaLabelMin: 'Minimum',
-    ariaLabelMax: 'Maximum',
+    disabled: false,
   },
-  parameters: {
-    docs: {
-      description: {
-        component:
-          '`RangeInput` is a dual-thumb slider for selecting a `[min, max]` range. The two thumbs stay ordered and can be kept apart with `minDistance`. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
-      },
+  render: (arguments_) => ({
+    components: { RangeInput },
+    setup() {
+      const value = ref(arguments_.modelValue ?? [20, 80]);
+      return { args: arguments_, value };
     },
-  },
-} satisfies Meta<typeof BaseRangeInput>;
+    template: '<RangeInput v-bind="args" :model-value="value" @update-model-value="value = $event" />',
+  }),
+} satisfies Meta<typeof RangeInput>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const renderWithModel =
-  (initial: RangeValue, format?: (v: number) => string): Story['render'] =>
-  (arguments_) => ({
-    components: { BaseRangeInput, BaseTypography },
-    setup() {
-      const value = ref<RangeValue>(initial);
-      return { args: arguments_, value, format };
-    },
-    template: `
-      <div style="max-width: 28rem; display: flex; flex-direction: column; gap: 1.5rem;">
-        <BaseRangeInput v-bind="args" v-model="value" :format-value="format" />
-        <BaseTypography variant="body-sm" color="secondary">Selected: {{ value[0] }} – {{ value[1] }}</BaseTypography>
-      </div>
-    `,
-  });
+export const Default: Story = {};
 
-/** A basic 0–100 range with both values shown above the thumbs. */
-export const Default: Story = { render: renderWithModel([20, 80]) };
+export const WithMinDistance: Story = { args: { minDistance: 20, modelValue: [30, 70] } };
 
-/** A price filter formatting each value as a currency amount. */
-export const PriceFilter: Story = {
-  args: { min: 0, max: 1000, step: 50 },
-  render: renderWithModel([200, 750], (v: number) => `$${v}`),
-};
+export const Stepped: Story = { args: { step: 10, modelValue: [20, 60] } };
 
-/** Enforces a minimum gap of 10 between the two thumbs. */
-export const WithMinDistance: Story = {
-  args: { minDistance: 10 },
-  render: renderWithModel([30, 60]),
-};
-
-/** Disabled state. */
-export const Disabled: Story = { args: { disabled: true }, render: renderWithModel([25, 75]) };
+export const Disabled: Story = { args: { disabled: true } };

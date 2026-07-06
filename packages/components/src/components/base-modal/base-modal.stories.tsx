@@ -1,133 +1,90 @@
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed, h, ref } from 'vue';
 
-import BaseButton from '../base-button/base-button.vue';
-
-import BaseModal from './base-modal.vue';
+import { Button, Modal, Stack, Typography } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `Modal` is the Vue 3 build of the write-once `BaseModal` in this package. The
+ * component is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/jsx`) and compiled straight to a Vue component at build
+ * time by `@mission-platform/vite-plugin-jsx`. The very same source also ships
+ * as a React component via the package's `./react` subpath.
+ *
+ * The examples below **compose other components from this package** — the
+ * trigger is a `Button`, the body uses `Typography`/`Stack`, and the footer
+ * actions are `Button`s passed through the `footer` content prop.
+ */
 const meta = {
   title: 'Components/Overlays/BaseModal',
-  component: BaseModal,
+  component: Modal,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`Modal` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Modal` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). It is a **native `<dialog>`** opened with `showModal()` (top layer, `::backdrop` scrim, focus trap), shown as a bottom sheet on mobile and a centred dialog of the chosen `size` on `sm`+. Open state is controlled via `open` + `update:open`; `title`/`header` and `footer` are content props and the body is the default slot. Styling (incl. the `@starting-style` scale-in and body-scroll lock) comes from the co-located `base-modal.module.scss`.',
       },
     },
   },
   argTypes: {
+    title: { control: 'text' },
     size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', 'full'] },
     closeOnBackdrop: { control: 'boolean' },
     closeOnEsc: { control: 'boolean' },
+    closeLabel: { control: 'text' },
   },
   args: {
-    open: false,
-    title: 'Modal Title',
+    title: 'Edit profile',
     size: 'md',
     closeOnBackdrop: true,
     closeOnEsc: true,
+    closeLabel: 'Close',
   },
-} satisfies Meta<typeof BaseModal>;
+  render: (arguments_) => ({
+    components: { Modal, Button, Stack, Typography },
+    setup() {
+      const open = ref(false);
+      const close = (): void => {
+        open.value = false;
+      };
+      // The footer is a content prop, so its actions are real `Button`s built
+      // with Vue's `h` (showcasing cross-package composition).
+      const footer = computed(() => [
+        h(Button, { variant: 'tertiary', onClick: close }, () => 'Cancel'),
+        h(Button, { variant: 'primary', onClick: close }, () => 'Save changes'),
+      ]);
+      return { args: arguments_, open, close, footer };
+    },
+    template: `
+      <Button variant="primary" @click="open = true">Open modal</Button>
+      <Modal
+        v-bind="args"
+        :open="open"
+        :footer="footer"
+        @update-open="open = $event"
+        @close="open = false"
+      >
+        <Stack gap="sm">
+          <Typography variant="body-md">
+            Update the details below and save your changes. The modal traps focus and locks page scroll while open.
+          </Typography>
+          <Typography color="secondary" variant="caption">
+            On small screens this opens as a bottom sheet; on larger screens it is centred.
+          </Typography>
+        </Stack>
+      </Modal>
+    `,
+  }),
+} satisfies Meta<typeof Modal>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const defaultTemplate = `
-  <div>
-    <BaseButton @click="open = true">Open Modal</BaseButton>
-    <BaseModal v-model:open="open" title="Confirm Action">
-      <p>Are you sure you want to perform this action?</p>
-      <template #footer>
-        <BaseButton variant="secondary" @click="open = false">Cancel</BaseButton>
-        <BaseButton @click="open = false">Confirm</BaseButton>
-      </template>
-    </BaseModal>
-  </div>
-`;
+export const Default: Story = {};
 
-export const Default: Story = {
-  parameters: { viewport: { defaultViewport: 'md' } },
-  render: () => ({
-    components: { BaseModal, BaseButton },
-    setup() {
-      const open = ref(false);
-      return { open };
-    },
-    template: defaultTemplate,
-  }),
-};
+export const Large: Story = { args: { size: 'lg' } };
 
-export const Mobile: Story = {
-  name: 'Mobile — bottom sheet (2xs)',
-  parameters: { viewport: { defaultViewport: '2xs' } },
-  render: () => ({
-    components: { BaseModal, BaseButton },
-    setup() {
-      const open = ref(false);
-      return { open };
-    },
-    template: defaultTemplate,
-  }),
-};
+export const FullWidth: Story = { args: { size: 'full' } };
 
-export const Tablet: Story = {
-  name: 'Tablet (sm)',
-  parameters: { viewport: { defaultViewport: 'sm' } },
-  render: () => ({
-    components: { BaseModal, BaseButton },
-    setup() {
-      const open = ref(false);
-      return { open };
-    },
-    template: defaultTemplate,
-  }),
-};
-
-export const Large: Story = {
-  parameters: { viewport: { defaultViewport: 'md' } },
-  render: () => ({
-    components: { BaseModal, BaseButton },
-    setup() {
-      const open = ref(false);
-      return { open };
-    },
-    template: `
-      <div>
-        <BaseButton @click="open = true">Open Large Modal</BaseButton>
-        <BaseModal v-model:open="open" title="Large Content" size="lg">
-          <p>This is a larger modal with more content space.</p>
-          <p>You can put any content here.</p>
-        </BaseModal>
-      </div>
-    `,
-  }),
-};
-
-export const CloseOnRouteChange: Story = {
-  name: 'Close on Route Change',
-  parameters: { viewport: { defaultViewport: 'md' } },
-  render: () => ({
-    components: { BaseModal, BaseButton },
-    setup() {
-      const open = ref(false);
-      const router = useRouter();
-      function navigate() {
-        open.value = true;
-        setTimeout(() => router.push('/reports'), 1500);
-      }
-      return { open, navigate };
-    },
-    template: `
-      <div>
-        <BaseButton @click="navigate">Open &amp; navigate after 1.5s</BaseButton>
-        <BaseModal v-model:open="open" title="Auto-closes on navigation" close-on-route-change>
-          <p>This modal will close automatically when the route changes.</p>
-        </BaseModal>
-      </div>
-    `,
-  }),
-};
+export const PersistentOnBackdrop: Story = { args: { closeOnBackdrop: false, closeOnEsc: false } };

@@ -1,79 +1,65 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { createTestRouter, mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseDialog } from './base-dialog';
 
-import BaseDialog from './base-dialog.vue';
+/**
+ * Exercises the **neutral** `BaseDialog` authored in this package, rendering it
+ * on both frameworks through the `@mission-platform/jsx` runtime adapters. The
+ * component is a native `<dialog>` whose content always ships in the markup
+ * (the UA hides it until `showModal()` runs on the client); the title, body,
+ * footer, and close control must match across React and Vue.
+ */
+const ReactDialog = toReactComponent(BaseDialog, 'Dialog');
+const VueDialog = toVueComponent(BaseDialog, 'Dialog');
 
-describe('BaseDialog', () => {
-  it('renders a dialog element', () => {
-    const wrapper = mountWithI18n(BaseDialog, { props: { title: 'Test' }, attachTo: document.body });
-    expect(document.querySelector('dialog')).not.toBeNull();
-    wrapper.unmount();
-  });
-
-  it('renders title when provided', () => {
-    const wrapper = mountWithI18n(BaseDialog, { props: { title: 'My Dialog' }, attachTo: document.body });
-    expect(document.querySelector('.base-dialog__title')?.textContent).toBe('My Dialog');
-    wrapper.unmount();
-  });
-
-  it('renders body slot content', () => {
-    const wrapper = mountWithI18n(BaseDialog, {
-      props: { title: 'Test' },
-      slots: { default: 'Body text' },
-      attachTo: document.body,
-    });
-    expect(document.querySelector('.base-dialog__body')?.textContent).toContain('Body text');
-    wrapper.unmount();
-  });
-
-  it('renders footer slot when provided', () => {
-    const wrapper = mountWithI18n(BaseDialog, {
-      props: { title: 'Test' },
-      slots: { footer: '<button>OK</button>' },
-      attachTo: document.body,
-    });
-    expect(document.querySelector('.base-dialog__footer')).not.toBeNull();
-    wrapper.unmount();
-  });
-
-  it('does not render footer when slot is absent', () => {
-    const wrapper = mountWithI18n(BaseDialog, { props: { title: 'Test' }, attachTo: document.body });
-    expect(document.querySelector('.base-dialog__footer')).toBeNull();
-    wrapper.unmount();
-  });
-
-  it('emits update:open false when close button is clicked', async () => {
-    const wrapper = mountWithI18n(BaseDialog, { props: { title: 'Test' }, attachTo: document.body });
-    const closeButton = document.querySelector('.base-dialog__close') as HTMLButtonElement;
-    closeButton.click();
-    await wrapper.vm.$nextTick();
-    expect(wrapper.emitted('update:open')).toEqual([[false]]);
-    wrapper.unmount();
-  });
-
-  it('emits close when route changes and closeOnRouteChange is true', async () => {
-    const router = createTestRouter();
-    const wrapper = mountWithI18n(
-      BaseDialog,
-      { props: { open: true, title: 'Test', closeOnRouteChange: true }, attachTo: document.body },
-      router,
+describe('BaseDialog authors the same component for React and Vue', () => {
+  it('renders the native dialog with title, body, footer, and close control on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(
+        ReactDialog,
+        { open: true, title: 'Confirm', closeLabel: 'Close', footer: 'Footer actions' },
+        'Dialog body',
+      ),
     );
-    await router.push('/test-route');
-    expect(wrapper.emitted('close')).toBeTruthy();
-    expect(wrapper.emitted('update:open')?.[0]).toEqual([false]);
-    wrapper.unmount();
+    const vue = await renderToString(
+      createSSRApp({
+        render: () =>
+          vueH(
+            VueDialog,
+            { open: true, title: 'Confirm', closeLabel: 'Close', footer: 'Footer actions' },
+            () => 'Dialog body',
+          ),
+      }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('<dialog');
+      expect(html).toContain('base-dialog__header');
+      expect(html).toContain('Confirm');
+      expect(html).toContain('base-dialog__body');
+      expect(html).toContain('Dialog body');
+      expect(html).toContain('base-dialog__footer');
+      expect(html).toContain('Footer actions');
+      expect(html).toContain('aria-label="Close"');
+    }
   });
 
-  it('does not emit close when route changes and closeOnRouteChange is false', async () => {
-    const router = createTestRouter();
-    const wrapper = mountWithI18n(
-      BaseDialog,
-      { props: { open: true, title: 'Test', closeOnRouteChange: false }, attachTo: document.body },
-      router,
+  it('omits the header and footer regions when not supplied on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactDialog, { open: true }, 'Body only'));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueDialog, { open: true }, () => 'Body only') }),
     );
-    await router.push('/another-route');
-    expect(wrapper.emitted('close')).toBeFalsy();
-    wrapper.unmount();
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('Body only');
+      expect(html).not.toContain('base-dialog__header');
+      expect(html).not.toContain('base-dialog__footer');
+    }
   });
 });

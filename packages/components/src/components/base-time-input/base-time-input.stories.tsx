@@ -1,94 +1,60 @@
 import { ref } from 'vue';
 
-import BaseTimeInput from './base-time-input.vue';
+import { TimeInput } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `TimeInput` is the Vue 3 build of the write-once `BaseTimeInput` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Forms/BaseTimeInput',
-  component: BaseTimeInput,
+  component: TimeInput,
   tags: ['autodocs'],
-  parameters: { layout: 'padded' },
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Cross-framework `TimeInput` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). A trigger opens a teleported, CSS-anchor-positioned popover with scrollable hour/minute(/second) lists (replacing `@floating-ui` + `useZIndex`); the `HH:MM[:SS]` value is controlled via `modelValue`, and the `v-model` + `change` emit become the `onUpdateModelValue`/`onChange` callback props. Styling comes from the co-located `base-time-input.module.scss`.',
+      },
+    },
+  },
   argTypes: {
-    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    size: { control: 'inline-radio', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    showSeconds: { control: 'boolean' },
     disabled: { control: 'boolean' },
     required: { control: 'boolean' },
-    showSeconds: { control: 'boolean' },
   },
   args: {
     label: 'Time',
     size: 'md',
+    showSeconds: false,
     disabled: false,
     required: false,
-    showSeconds: false,
   },
   render: (arguments_) => ({
-    components: { BaseTimeInput },
+    components: { TimeInput },
     setup() {
-      const time = ref(arguments_.modelValue ?? '');
-      return { args: arguments_, time };
+      const value = ref(arguments_.modelValue ?? '');
+      return { args: arguments_, value };
     },
-    template: '<BaseTimeInput v-bind="args" v-model="time" />',
+    template: '<TimeInput v-bind="args" :model-value="value" @update-model-value="value = $event" />',
   }),
-} satisfies Meta<typeof BaseTimeInput>;
+} satisfies Meta<typeof TimeInput>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const WithValue: Story = { args: { modelValue: '14:30' } };
+export const Selected: Story = { args: { modelValue: '09:30' } };
 
-export const WithSeconds: Story = {
-  args: { modelValue: '09:30:00', showSeconds: true, hint: 'Includes seconds column.' },
-};
+export const WithSeconds: Story = { args: { showSeconds: true, modelValue: '09:30:15' } };
 
-export const Small: Story = { args: { size: 'sm' } };
+export const WithError: Story = { args: { error: 'A time is required.' } };
 
-export const Large: Story = { args: { size: 'lg' } };
-
-export const Required: Story = { args: { required: true } };
-
-export const WithError: Story = { args: { error: 'Please select a valid time.' } };
-
-export const Disabled: Story = {
-  args: { disabled: true, modelValue: '14:30' },
-  // WCAG 2.1 SC 1.4.3 explicitly exempts inactive (disabled) UI components from contrast requirements.
-  parameters: { a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } } },
-};
-
-export const Showcase: Story = {
-  render: () => ({
-    components: { BaseTimeInput },
-    setup() {
-      const time = ref('');
-      return { time };
-    },
-    template: `
-      <div style="display: flex; flex-direction: column; gap: var(--mp-spacing-6); max-width: 520px;">
-        <BaseTimeInput v-model="time" label="Time" hint="Click to open the time picker." />
-        <p style="font-size: var(--mp-font-size-sm); color: var(--mp-color-text-secondary);">Value: <strong>{{ time || '—' }}</strong></p>
-      </div>
-    `,
-  }),
-};
-
-export const WithStartAndEndExtensions: Story = {
-  render: () => ({
-    components: { BaseTimeInput },
-    setup() {
-      const time = ref('');
-      return { time };
-    },
-    template: `
-      <BaseTimeInput v-model="time" label="Start time" style="max-width: 360px">
-        <template #start>
-          <span style="font-size: var(--mp-font-size-sm);">At</span>
-        </template>
-        <template #end>
-          <span style="font-size: var(--mp-font-size-sm);">local</span>
-        </template>
-      </BaseTimeInput>
-    `,
-  }),
-};
+export const Disabled: Story = { args: { disabled: true, modelValue: '09:30' } };

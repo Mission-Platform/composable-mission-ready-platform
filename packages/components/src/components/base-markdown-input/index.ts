@@ -1,2 +1,6 @@
-export { default } from './base-markdown-input.vue';
-export type { MarkdownInputSize, MarkdownInputTab } from './base-markdown-input.vue';
+export {
+  BaseMarkdownInput,
+  type MarkdownInputProperties,
+  type MarkdownInputSize,
+  type MarkdownInputTab,
+} from './base-markdown-input';

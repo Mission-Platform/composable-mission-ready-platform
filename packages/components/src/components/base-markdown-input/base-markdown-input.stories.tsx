@@ -1,74 +1,60 @@
-import BaseMarkdownInput from './base-markdown-input.vue';
+import { ref } from 'vue';
+
+import { MarkdownInput } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `MarkdownInput` is the Vue 3 build of the write-once `BaseMarkdownInput` in
+ * this package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Forms/BaseMarkdownInput',
-  component: BaseMarkdownInput,
+  component: MarkdownInput,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`BaseMarkdownInput` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `MarkdownInput` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). A write/preview tab bar fronts a glyph toolbar + textarea and a `marked`-rendered preview (kept verbatim), injected into the preview host via a `useRef` + `useEffect` `innerHTML` assignment (replacing `v-html`); the value is controlled via `modelValue` and the `v-model`/emits become callback props. Styling comes from the co-located `base-markdown-input.module.scss`.',
       },
     },
   },
   argTypes: {
-    size: { control: 'select', options: ['sm', 'md', 'lg'] },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    rows: { control: 'number' },
     disabled: { control: 'boolean' },
     readonly: { control: 'boolean' },
     required: { control: 'boolean' },
-    rows: { control: 'number' },
   },
   args: {
-    modelValue: '',
+    label: 'Notes',
     size: 'md',
-    label: 'Description',
-    placeholder: 'Write something in **markdown**…',
     rows: 6,
     disabled: false,
     readonly: false,
     required: false,
-    id: 'example-markdown-input',
   },
   render: (arguments_) => ({
-    components: { BaseMarkdownInput },
+    components: { MarkdownInput },
     setup() {
-      return { args: arguments_ };
+      const value = ref(arguments_.modelValue ?? '# Hello\n\nSome **markdown** with a [link](https://example.com).');
+      return { args: arguments_, value };
     },
-    template: '<BaseMarkdownInput v-bind="args" style="max-width: 600px" />',
+    template: '<MarkdownInput v-bind="args" :model-value="value" @update-model-value="value = $event" />',
   }),
-} satisfies Meta<typeof BaseMarkdownInput>;
+} satisfies Meta<typeof MarkdownInput>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const WithContent: Story = {
-  args: {
-    modelValue: '# Hello\n\nThis is **bold** and _italic_ text.\n\n- Item one\n- Item two\n',
-  },
-};
+export const WithHint: Story = { args: { hint: 'Supports CommonMark.' } };
 
-export const WithHint: Story = { args: { hint: 'Markdown formatting is supported.' } };
+export const WithError: Story = { args: { error: 'Content is required.' } };
 
-export const WithError: Story = { args: { error: 'This field is required.' } };
-
-export const Required: Story = { args: { required: true } };
-
-export const Disabled: Story = {
-  args: { disabled: true, modelValue: '# Disabled\n\nThis content is **not editable**.' },
-};
-
-export const Readonly: Story = {
-  args: {
-    readonly: true,
-    modelValue: '# Readonly\n\nThis content is displayed in preview mode and **cannot be edited**.',
-  },
-};
-
-export const Small: Story = { args: { size: 'sm' } };
-
-export const Large: Story = { args: { size: 'lg' } };
+export const Readonly: Story = { args: { readonly: true } };

@@ -1,8 +1,6 @@
 /// <reference types="vitest/config" />
-import path from 'node:path';
-
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import postcssConfig from '@mission-platform/postcss-config';
+import { ignoreVueI18nBlocksPlugin } from '@mission-platform/vite-config';
 import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 import vue from '@vitejs/plugin-vue';
 import { defineConfig, type UserConfig } from 'vite';
@@ -98,11 +96,11 @@ const sitemapUrls: SitemapUrl[] = [
   })),
 ];
 
-// We don't use `defineAppConfig` here because we need to customise the
-// `VueI18nPlugin` `include` option so that the lazy-loaded standalone YAML
-// bundles under `src/locales/` are compiled to locale-message modules.
-// Merging would produce duplicate Vue / i18n plugin instances and break the
-// SFC pipeline.
+// We don't use `defineAppConfig` here so the SEO companion plugin can be
+// ordered alongside the Vue plugin without producing duplicate Vue plugin
+// instances. Locale YAML bundles under `src/locales/` are imported as raw
+// strings (`?raw`) and parsed with js-yaml at runtime, so no i18n-specific
+// Vite plugin is required.
 const config: SsgUserConfig = {
   css: {
     postcss: postcssConfig,
@@ -118,9 +116,7 @@ const config: SsgUserConfig = {
       },
     }),
     vue(),
-    VueI18nPlugin({
-      include: [path.resolve(__dirname, 'src/locales/**/*.yaml')],
-    }),
+    ignoreVueI18nBlocksPlugin(),
   ],
   // `vite-ssg` reads this property at build time. It is not part of Vite's
   // own `UserConfig`, so we extend the type locally via `SsgUserConfig`.

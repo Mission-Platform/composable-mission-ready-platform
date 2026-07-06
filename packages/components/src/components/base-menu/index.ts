@@ -1,2 +1,1 @@
-export { default } from './base-menu.vue';
-export type { MenuItem } from './base-menu.vue';
+export { BaseMenu, type MenuItem, type MenuOrientation, type MenuProperties } from './base-menu';

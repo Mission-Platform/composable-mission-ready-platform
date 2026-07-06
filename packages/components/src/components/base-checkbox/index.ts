@@ -1,1 +1,1 @@
-export { default } from './base-checkbox.vue';
+export { BaseCheckbox, type CheckboxProperties } from './base-checkbox';

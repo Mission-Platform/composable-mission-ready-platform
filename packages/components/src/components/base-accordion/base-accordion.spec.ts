@@ -1,87 +1,61 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseAccordion } from './base-accordion';
 
-import BaseAccordionItem from './base-accordion-item.vue';
-import BaseAccordion from './base-accordion.vue';
+/**
+ * Exercises the **neutral** `BaseAccordion` authored in this package, rendering
+ * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * Covers the rendered summaries, the initially-open item, and the disabled row.
+ */
+const ReactAccordion = toReactComponent(BaseAccordion, 'Accordion');
+const VueAccordion = toVueComponent(BaseAccordion, 'Accordion');
 
-describe('BaseAccordion', () => {
-  it('renders slotted items', () => {
-    const wrapper = mountWithI18n(BaseAccordion, {
-      slots: {
-        default: `
-          <BaseAccordionItem id="a">
-            <template #summary>Section A</template>
-            Content A
-          </BaseAccordionItem>
-          <BaseAccordionItem id="b">
-            <template #summary>Section B</template>
-            Content B
-          </BaseAccordionItem>
-        `,
-      },
-      global: {
-        components: { BaseAccordionItem },
-      },
-    });
-    expect(wrapper.findAll('details')).toHaveLength(2);
+const ITEMS = [
+  { id: 'one', title: 'First', content: 'First body' },
+  { id: 'two', title: 'Second', content: 'Second body' },
+  { id: 'three', title: 'Third', content: 'Third body', disabled: true },
+];
+
+describe('BaseAccordion authors the same component for React and Vue', () => {
+  it('renders one summary per item on both frameworks', async () => {
+    const properties = { items: ITEMS };
+    const react = renderToStaticMarkup(createElement(ReactAccordion, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueAccordion, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('First');
+      expect(html).toContain('Second');
+      expect(html).toContain('Third');
+      expect(html.match(/<details/g)).toHaveLength(3);
+    }
   });
 
-  it('shows no content initially', () => {
-    const wrapper = mountWithI18n(BaseAccordion, {
-      slots: {
-        default: `
-          <BaseAccordionItem id="a">
-            <template #summary>Section A</template>
-            Content A
-          </BaseAccordionItem>
-        `,
-      },
-      global: {
-        components: { BaseAccordionItem },
-      },
-    });
-    expect(wrapper.findAll('.base-accordion__content')).toHaveLength(0);
+  it('opens the item listed in defaultOpen and reveals its content on both frameworks', async () => {
+    const properties = { items: ITEMS, defaultOpen: ['two'] };
+    const react = renderToStaticMarkup(createElement(ReactAccordion, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueAccordion, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('Second body');
+      // The closed items' bodies are not rendered.
+      expect(html).not.toContain('First body');
+      expect(html).toMatch(/<details[^>]*open/);
+    }
   });
 
-  it('applies disabled class to disabled items', () => {
-    const wrapper = mountWithI18n(BaseAccordion, {
-      slots: {
-        default: `
-          <BaseAccordionItem id="a">
-            <template #summary>Section A</template>
-            Content A
-          </BaseAccordionItem>
-          <BaseAccordionItem id="b" :disabled="true">
-            <template #summary>Disabled</template>
-            Content B
-          </BaseAccordionItem>
-        `,
-      },
-      global: {
-        components: { BaseAccordionItem },
-      },
-    });
-    const disabledItem = wrapper.findAll('details')[1];
-    expect(disabledItem.classes()).toContain('base-accordion__item--disabled');
-  });
-});
+  it('marks the disabled item with aria-disabled on both frameworks', async () => {
+    const properties = { items: ITEMS };
+    const react = renderToStaticMarkup(createElement(ReactAccordion, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueAccordion, properties) }));
 
-describe('BaseAccordionItem (standalone)', () => {
-  it('renders summary slot content', () => {
-    const wrapper = mountWithI18n(BaseAccordion, {
-      slots: {
-        default: `
-          <BaseAccordionItem id="a">
-            <template #summary>My Summary</template>
-            My Content
-          </BaseAccordionItem>
-        `,
-      },
-      global: {
-        components: { BaseAccordionItem },
-      },
-    });
-    expect(wrapper.find('summary').text()).toContain('My Summary');
+    for (const html of [react, vue]) {
+      expect(html).toContain('aria-disabled="true"');
+    }
   });
 });

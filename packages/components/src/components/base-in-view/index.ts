@@ -1,2 +1,1 @@
-export { default } from './base-in-view.vue';
-export type { InViewAnimation } from './base-in-view.vue';
+export { BaseInView, type InViewAnimation, type InViewProperties } from './base-in-view';

@@ -1,2 +1,1 @@
-export { default } from './base-date-input.vue';
-export type { DateInputSize } from './base-date-input.vue';
+export { BaseDateInput, type DateInputProperties, type DateInputSize } from './base-date-input';

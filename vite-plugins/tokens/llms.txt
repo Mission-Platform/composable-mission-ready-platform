@@ -19,7 +19,8 @@ DTCG `*.tokens.json` sources (authored against the **v2025.10** schema):
 - structural scales          — one file each: `border-width`, `breakpoint`, `motion` (duration + easing),
   `opacity`, `radius`, `shadow`, `size`, `spacing`, `z-index`
 - `font.tokens.json`         — primitive font scales (family, size, weight, line-height, letter-spacing)
-- `typography.tokens.json`   — composite `typography`-type styles (display, h1–h6, body-*, label, caption, code)
+- `typography.tokens.json`   — composite `typography`-type styles (display, h1–h6, body-*, label, caption, code);
+  each carries the `{font.*}` primitives plus `marginBlock`/`marginInline` `{spacing.*}` logical-margin aliases
 - `theme-light.tokens.json`  — light-theme semantic colours (palette `{color.*}` aliases)
 - `theme-dark.tokens.json`   — dark-theme semantic colours (palette `{color.*}` aliases)
 
@@ -35,7 +36,8 @@ TS module per source, plus two aggregate barrels:
   - `palette` is emitted exactly like the structural scales (`$color-*` vars + `--mp-color-*` custom
     properties + `<color>` `@property` registrations); colours with `alpha` (scrims) round-trip too
   - `typography` is flattened to per-field tokens (`typography-<variant>-<field>`) whose value is a
-    `var(--mp-font-*)` reference to the primitive token, then emitted through the same structural path
+    `var(--mp-font-*)` (or `var(--mp-spacing-*)` for the `margin-block`/`margin-inline` fields) reference
+    to the primitive token, then emitted through the same structural path
 - `scss/_theme.scss`              — the single combined theme partial:
   `:root { color-scheme: light dark; --mp-color-*: light-dark(<light>, <dark>); }`, where each
   light/dark value is a `var(--mp-color-*)` reference to the matching palette custom property
@@ -48,8 +50,8 @@ TS module per source, plus two aggregate barrels:
   (camelCased). A single top-level group whose key equals the file name is unwrapped (so the export
   mirrors the scale directly, e.g. `size.icon.md`); otherwise the document is preserved (`palette.color.*`,
   `font.font.*` / `font['line-height']`, `themeLight.color.*`). Colours are emitted as `oklab(…)` strings
-  and both the composite `typography` `{font.*}` aliases and the `theme-*` `{color.*}` aliases are resolved
-  to their primitive values.
+  and both the composite `typography` `{font.*}`/`{spacing.*}` aliases and the `theme-*` `{color.*}` aliases
+  are resolved to their primitive values.
 - `_tokens.scss`                  — SCSS barrel `@forward`ing every partial **including** `scss/theme`,
   so a single `@use 'generated/tokens'` emits the structural + palette + typography custom properties
   (with their `@property` registrations), re-exports the `$` variables, and applies the `light-dark()` theme

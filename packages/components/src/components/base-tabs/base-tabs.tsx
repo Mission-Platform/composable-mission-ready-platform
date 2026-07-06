@@ -1,0 +1,236 @@
+import { IconClose, IconPlus } from '@mission-platform/icons';
+import { h, useRef, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/jsx';
+
+import { BaseTypography } from '../base-typography';
+import sizeStyles from '../size.module.scss';
+
+import styles from './base-tabs.module.scss';
+
+/** Size token — canonical 2xs → 2xl scale. */
+export type TabsSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+
+/** A single tab descriptor. */
+export interface TabItem {
+  /** Stable unique identifier. Also identifies the tab's panel. */
+  id: string;
+  /** Human-readable label rendered inside the tab. */
+  label: string;
+  /** When `true`, the tab cannot be selected and is skipped by keyboard navigation. */
+  disabled?: boolean;
+}
+
+/** Visual treatment of the tab list. */
+export type TabsVariant = 'line' | 'pill';
+
+/** The scope passed to the `panel` render-prop. */
+export interface TabPanelScope {
+  /** The active tab descriptor. */
+  tab: TabItem;
+}
+
+export interface TabsProperties extends MpProperties {
+  /** Ordered list of tabs to render. */
+  tabs: TabItem[];
+  /** Currently active tab `id` (controlled via `modelValue`). Defaults to the first tab. */
+  modelValue?: string;
+  /** Visual treatment. Defaults to `'line'`. */
+  variant?: TabsVariant;
+  /** Size token controlling the tabs' scale. Defaults to `'md'`. */
+  size?: TabsSize;
+  /** When `true`, each tab renders a close affordance and fires `onClose`. */
+  closable?: boolean;
+  /** When `true`, a trailing `+` button is rendered and fires `onAdd`. */
+  addable?: boolean;
+  /** Renders the active tab's panel; receives `{ tab }` (a render-prop). */
+  panel?: MpRenderProperty<TabPanelScope>;
+  /** Fired when the active tab changes (the controlled `v-model` update). */
+  onUpdateModelValue?: (id: string) => void;
+  /** Fired alongside `onUpdateModelValue` whenever the active tab changes. */
+  onChange?: (id: string) => void;
+  /** Fired when a closable tab's close affordance is activated. */
+  onClose?: (id: string) => void;
+  /** Fired when the `+` (add) button is clicked. */
+  onAdd?: () => void;
+  /** Fired when a tab is double-clicked (rename request). */
+  onRename?: (id: string) => void;
+}
+
+/**
+ * `BaseTabs` — an accessible, controlled tabs container authored once in the
+ * neutral JSX dialect and compiled straight to React or Vue by
+ * `@mission-platform/vite-plugin-jsx`.
+ *
+ * It renders an ARIA `tablist` of tab buttons (label composed via the migrated
+ * {@link BaseTypography}) with roving `tabindex` + Arrow/Home/End keyboard
+ * navigation, an optional per-tab close affordance, and an optional trailing add
+ * (`+`) button. The active tab's content is rendered through the scoped `panel`
+ * **render-prop**. It owns its styling through the co-located CSS Module
+ * `base-tabs.module.scss`.
+ *
+ * The original Vue SFC composed `BaseTabList`/`BaseTab`/`BaseTabPanel`
+ * sub-components, used `@mission-platform/icons` for the add/close glyphs, drove
+ * panel content through per-tab-id named slots, and used `v-model` + emits. The
+ * neutral version inlines the tab bar (consistent with how `BaseTable`/
+ * `BaseVirtualTable` inlined their sub-components) and renders the write-once
+ * `@mission-platform/icons` `IconPlus`/`IconClose` for the add/close
+ * affordances. Like the Vue original it renders a `role="tabpanel"`
+ * for **every** tab and keeps inactive panels mounted but `hidden` (so panel
+ * state survives tab switches); since the neutral dialect cannot express Vue's
+ * dynamic per-id slot names (`<slot :name="tab.id">`), each panel invokes a
+ * single scoped `panel` **render-prop** with `{ tab }` (the consumer switches on
+ * `tab.id`). The `panel` render-prop is invoked directly (rather than via a
+ * neutral `<Slot>`), so it stays a real prop on both frameworks and a neutral
+ * consumer can pass it as a plain attribute (`panel={({ tab }) => …}`) — a Vue
+ * `<Slot>`-backed named slot would be dropped when passed as a prop from a
+ * compiled neutral parent, leaving the panels blank. It uses the established
+ * `modelValue` + callback-prop convention.
+ */
+export function BaseTabs(properties: TabsProperties): MpElement {
+  const { tabs, modelValue, variant = 'line', closable = false, addable = false, size = 'md' } = properties;
+
+  const listReference = useRef<HTMLElement | null>(null);
+
+  const activeId = modelValue ?? tabs[0]?.id ?? '';
+
+  const select = (id: string): void => {
+    const tab = tabs.find((candidate) => candidate.id === id);
+    if (tab === undefined || tab.disabled) {
+      return;
+    }
+    properties.onUpdateModelValue?.(id);
+    properties.onChange?.(id);
+  };
+
+  const focusTab = (id: string): void => {
+    listReference.current?.querySelector<HTMLElement>(`[data-tab-id="${id}"]`)?.focus();
+  };
+
+  const onKeydown = (event: KeyboardEvent, currentId: string): void => {
+    const enabled = tabs.filter((tab) => !tab.disabled);
+    if (enabled.length === 0) {
+      return;
+    }
+    const currentIndex = enabled.findIndex((tab) => tab.id === currentId);
+    let nextIndex = currentIndex;
+    switch (event.key) {
+      case 'ArrowRight': {
+        nextIndex = (currentIndex + 1) % enabled.length;
+
+        break;
+      }
+      case 'ArrowLeft': {
+        nextIndex = (currentIndex - 1 + enabled.length) % enabled.length;
+
+        break;
+      }
+      case 'Home': {
+        nextIndex = 0;
+
+        break;
+      }
+      case 'End': {
+        nextIndex = enabled.length - 1;
+
+        break;
+      }
+      default: {
+        return;
+      }
+    }
+    event.preventDefault();
+    const nextTab = enabled[nextIndex];
+    select(nextTab.id);
+    focusTab(nextTab.id);
+  };
+
+  // Every tab gets a panel (inactive ones `hidden`) so panel state survives tab
+  // switches, matching the Vue SFC's `v-show` panels. Holding the list in a
+  // node-valued local const renders it through the compiler's render-closure
+  // path, which supports a sibling list alongside the tab bar.
+  const panels = tabs.map((tab) => (
+    <div
+      key={tab.id}
+      id={`panel-${tab.id}`}
+      aria-labelledby={`tab-${tab.id}`}
+      classNames={styles['base-tabs__panel']}
+      hidden={activeId !== tab.id}
+      role="tabpanel"
+    >
+      {properties.panel?.({ tab })}
+    </div>
+  ));
+
+  return (
+    <div classNames={[styles['base-tabs'], styles[`base-tabs--${variant}`], sizeStyles[`base-size--${size}`]]}>
+      <div classNames={[styles['base-tabs__bar'], styles[`base-tabs__bar--${variant}`]]}>
+        <div
+          ref={listReference}
+          classNames={[styles['base-tabs__list'], styles[`base-tabs__list--${variant}`]]}
+          role="tablist"
+        >
+          {tabs.map((tab) => (
+            <div
+              key={tab.id}
+              id={`tab-${tab.id}`}
+              aria-controls={`panel-${tab.id}`}
+              aria-disabled={tab.disabled ? 'true' : undefined}
+              aria-selected={activeId === tab.id}
+              classNames={[
+                styles['base-tabs__tab'],
+                styles[`base-tabs__tab--${variant}`],
+                {
+                  [styles['base-tabs__tab--active']]: activeId === tab.id,
+                  [styles['base-tabs__tab--disabled']]: Boolean(tab.disabled),
+                  [styles['base-tabs__tab--closable']]: closable,
+                },
+              ]}
+              data-tab-id={tab.id}
+              role="tab"
+              tabindex={tab.disabled ? -1 : activeId === tab.id ? 0 : -1}
+              onClick={() => select(tab.id)}
+              onDblclick={() => {
+                if (!tab.disabled) {
+                  properties.onRename?.(tab.id);
+                }
+              }}
+              onKeydown={(event: KeyboardEvent) => onKeydown(event, tab.id)}
+            >
+              <BaseTypography
+                as="span"
+                color="inherit"
+                variant="label"
+              >
+                {tab.label}
+              </BaseTypography>
+              {closable ? (
+                <span
+                  aria-hidden="true"
+                  classNames={styles['base-tabs__close-icon']}
+                  data-close-tab-id={tab.id}
+                  onClick={(event: MouseEvent) => {
+                    event.stopPropagation();
+                    properties.onClose?.(tab.id);
+                  }}
+                >
+                  <IconClose size="xs" />
+                </span>
+              ) : undefined}
+            </div>
+          ))}
+        </div>
+        {addable ? (
+          <button
+            classNames={[styles['base-tabs__add'], styles[`base-tabs__add--${variant}`]]}
+            aria-label="New tab"
+            type="button"
+            onClick={() => properties.onAdd?.()}
+          >
+            <IconPlus size="sm" />
+          </button>
+        ) : undefined}
+      </div>
+
+      {panels}
+    </div>
+  );
+}

@@ -1,1 +1,1 @@
-export { default } from './base-carousel.vue';
+export { BaseCarousel, type CarouselProperties, type CarouselSlide, type CarouselSlideScope } from './base-carousel';

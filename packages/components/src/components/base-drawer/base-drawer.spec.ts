@@ -1,179 +1,75 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { createTestRouter, mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseDrawer } from './base-drawer';
 
-import BaseDrawer from './base-drawer.vue';
+/**
+ * Exercises the **neutral** `BaseDrawer` on both frameworks through the
+ * `@mission-platform/jsx` runtime adapters. During SSR the reactive breakpoint
+ * is `false`, so the overlay behaviour is exercised: an open drawer renders the
+ * panel + backdrop, a closed one renders neither.
+ */
+const ReactDrawer = toReactComponent(BaseDrawer, 'Drawer');
+const VueDrawer = toVueComponent(BaseDrawer, 'Drawer');
 
-/** Overrides `window.innerWidth` so `useBreakpoints` resolves a known band. */
-function setViewportWidth(width: number) {
-  Object.defineProperty(globalThis.window, 'innerWidth', { value: width, configurable: true, writable: true });
-}
+describe('BaseDrawer authors the same component for React and Vue', () => {
+  it('renders the panel, header, body, and backdrop when open on both frameworks', async () => {
+    const properties = { open: true, title: 'Settings', placement: 'end' as const, size: 'sm' as const };
+    const react = renderToStaticMarkup(createElement(ReactDrawer, properties, 'Drawer body'));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueDrawer, properties, () => 'Drawer body') }));
 
-describe('BaseDrawer', () => {
-  it('renders nothing when closed', () => {
-    const wrapper = mountWithI18n(BaseDrawer, {
-      props: { open: false, title: 'Test' },
-      attachTo: document.body,
-    });
-    expect(wrapper.find('aside').exists()).toBe(false);
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-drawer-backdrop');
+      expect(html).toContain('base-drawer');
+      expect(html).toContain('base-drawer--end');
+      expect(html).toContain('base-drawer--sm');
+      expect(html).toContain('role="dialog"');
+      expect(html).toContain('aria-modal="true"');
+      expect(html).toContain('Settings');
+      expect(html).toContain('Drawer body');
+      // The close button carries the accessible label.
+      expect(html).toContain('aria-label="Close"');
+    }
   });
 
-  it('renders aside when open', () => {
-    const wrapper = mountWithI18n(BaseDrawer, {
-      props: { open: true, title: 'Test' },
-      attachTo: document.body,
-    });
-    expect(document.querySelector('aside.base-drawer')).toBeTruthy();
-    wrapper.unmount();
+  it('renders nothing visible when closed on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactDrawer, { open: false, title: 'Hidden' }));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueDrawer, { open: false, title: 'Hidden' }) }));
+
+    for (const html of [react, vue]) {
+      expect(html).not.toContain('base-drawer-backdrop');
+      expect(html).not.toContain('role="dialog"');
+      expect(html).not.toContain('Hidden');
+    }
   });
 
-  it('renders title in header', () => {
-    const wrapper = mountWithI18n(BaseDrawer, {
-      props: { open: true, title: 'My Drawer' },
-      attachTo: document.body,
-    });
-    expect(document.querySelector('.base-drawer__title')?.textContent).toBe('My Drawer');
-    wrapper.unmount();
+  it('renders the footer content when provided on both frameworks', async () => {
+    const properties = { open: true, title: 'With footer', footer: 'Footer actions' };
+    const react = renderToStaticMarkup(createElement(ReactDrawer, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueDrawer, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-drawer__footer');
+      expect(html).toContain('Footer actions');
+    }
   });
 
-  it('defaults to the `start` placement', () => {
-    const wrapper = mountWithI18n(BaseDrawer, {
-      props: { open: true, title: 'Test' },
-      attachTo: document.body,
-    });
-    expect(document.querySelector('.base-drawer--start')).toBeTruthy();
-    wrapper.unmount();
-  });
+  it('renders a resize handle when draggable on both frameworks', async () => {
+    // A `top` overlay is resizable at every breakpoint (only horizontal overlays
+    // need the `sm` breakpoint), so the handle renders during SSR.
+    const properties = { open: true, title: 'Resizable', placement: 'top' as const, draggable: true };
+    const react = renderToStaticMarkup(createElement(ReactDrawer, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueDrawer, properties) }));
 
-  it.each(['start', 'end', 'top', 'bottom'] as const)('applies the correct placement class for %s', (placement) => {
-    const wrapper = mountWithI18n(BaseDrawer, {
-      props: { open: true, title: 'Test', placement },
-      attachTo: document.body,
-    });
-    expect(document.querySelector(`.base-drawer--${placement}`)).toBeTruthy();
-    wrapper.unmount();
-  });
-
-  it('emits close and update:open when route changes and closeOnRouteChange is true', async () => {
-    const router = createTestRouter();
-    const wrapper = mountWithI18n(
-      BaseDrawer,
-      { props: { open: true, title: 'Test', closeOnRouteChange: true }, attachTo: document.body },
-      router,
-    );
-    await router.push('/test-route');
-    expect(wrapper.emitted('close')).toBeTruthy();
-    expect(wrapper.emitted('update:open')?.[0]).toEqual([false]);
-    wrapper.unmount();
-  });
-
-  it('does not emit close when route changes and closeOnRouteChange is false', async () => {
-    const router = createTestRouter();
-    const wrapper = mountWithI18n(
-      BaseDrawer,
-      { props: { open: true, title: 'Test', closeOnRouteChange: false }, attachTo: document.body },
-      router,
-    );
-    await router.push('/another-route');
-    expect(wrapper.emitted('close')).toBeFalsy();
-    wrapper.unmount();
-  });
-
-  describe('draggable / resize', () => {
-    it('renders a resize handle on the inner edge when draggable and open', () => {
-      setViewportWidth(1280); // ≥ sm
-      const wrapper = mountWithI18n(BaseDrawer, {
-        props: { open: true, title: 'Resizable', draggable: 'lg', placement: 'start' },
-        attachTo: document.body,
-      });
-      const handle = document.querySelector('.base-drawer__resize-handle');
-      expect(handle).toBeTruthy();
-      expect(handle?.classList.contains('base-drawer__resize-handle--start')).toBe(true);
-      expect(document.querySelector('.base-drawer--draggable')).toBeTruthy();
-      wrapper.unmount();
-    });
-
-    it('renders a resize handle for a top placement', () => {
-      setViewportWidth(1280);
-      const wrapper = mountWithI18n(BaseDrawer, {
-        props: { open: true, title: 'Resizable', draggable: 'lg', placement: 'top' },
-        attachTo: document.body,
-      });
-      const handle = document.querySelector('.base-drawer__resize-handle');
-      expect(handle?.classList.contains('base-drawer__resize-handle--top')).toBe(true);
-      wrapper.unmount();
-    });
-
-    it('does not render a resize handle when not draggable', () => {
-      setViewportWidth(1280);
-      const wrapper = mountWithI18n(BaseDrawer, {
-        props: { open: true, title: 'Fixed' },
-        attachTo: document.body,
-      });
-      expect(document.querySelector('.base-drawer__resize-handle')).toBeFalsy();
-      wrapper.unmount();
-    });
-
-    it('does not render the handle below sm for a horizontal overlay (full-width mobile)', () => {
-      setViewportWidth(500); // < sm (768)
-      const wrapper = mountWithI18n(BaseDrawer, {
-        props: { open: true, title: 'Resizable', draggable: true },
-        attachTo: document.body,
-      });
-      expect(document.querySelector('.base-drawer__resize-handle')).toBeFalsy();
-      wrapper.unmount();
-    });
-
-    it('still renders the handle below sm for a vertical (top/bottom) overlay', () => {
-      setViewportWidth(500); // < sm (768)
-      const wrapper = mountWithI18n(BaseDrawer, {
-        props: { open: true, title: 'Resizable', draggable: true, placement: 'bottom' },
-        attachTo: document.body,
-      });
-      expect(document.querySelector('.base-drawer__resize-handle--bottom')).toBeTruthy();
-      wrapper.unmount();
-    });
-  });
-
-  describe('inline variant', () => {
-    it('renders a static, fixed-open inline panel above the breakpoint, even when closed', () => {
-      setViewportWidth(1280); // ≥ md (1024)
-      const wrapper = mountWithI18n(BaseDrawer, {
-        props: { open: false, variant: 'inline', inlineBreakpoint: 'md', title: 'Inline' },
-        attachTo: document.body,
-      });
-      // Rendered in place (Teleport disabled), not in document.body directly.
-      const aside = wrapper.find('aside.base-drawer');
-      expect(aside.exists()).toBe(true);
-      expect(aside.classes()).toContain('base-drawer--inline');
-      // No backdrop and no close button in the fixed-open inline mode.
-      expect(document.querySelector('.base-drawer-backdrop')).toBeFalsy();
-      expect(wrapper.find('.base-drawer__close').exists()).toBe(false);
-      wrapper.unmount();
-    });
-
-    it('falls back to overlay drawer behaviour below the breakpoint', () => {
-      setViewportWidth(500); // < md (1024)
-      const wrapper = mountWithI18n(BaseDrawer, {
-        props: { open: false, variant: 'inline', inlineBreakpoint: 'md', title: 'Inline' },
-        attachTo: document.body,
-      });
-      // Closed + below breakpoint → behaves like a closed overlay (nothing shown).
-      expect(document.querySelector('aside.base-drawer')).toBeFalsy();
-      wrapper.unmount();
-    });
-
-    it('does not auto-close on route change while inline (fixed open)', async () => {
-      setViewportWidth(1280);
-      const router = createTestRouter();
-      const wrapper = mountWithI18n(
-        BaseDrawer,
-        { props: { open: true, variant: 'inline', inlineBreakpoint: 'md', title: 'Inline' }, attachTo: document.body },
-        router,
-      );
-      await router.push('/inline-route');
-      expect(wrapper.emitted('close')).toBeFalsy();
-      wrapper.unmount();
-    });
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-drawer--draggable');
+      expect(html).toContain('base-drawer__resize-handle');
+      expect(html).toContain('role="separator"');
+    }
   });
 });

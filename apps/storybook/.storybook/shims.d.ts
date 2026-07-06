@@ -9,3 +9,9 @@ declare module '@mission-platform/tokens/scss/tokens' {}
 declare module '@mission-platform/tokens/scss/themes/light' {}
 declare module '@mission-platform/tokens/scss/themes/dark' {}
 declare module '@mission-platform/components/styles' {}
+
+// English locale bundle imported as a raw string and parsed with js-yaml.
+declare module '*.yaml?raw' {
+  const source: string;
+  export default source;
+}

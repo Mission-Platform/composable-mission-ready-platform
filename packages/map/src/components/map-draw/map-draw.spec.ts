@@ -53,4 +53,33 @@ describe('MapDraw', () => {
     expect(layerIds).toContain('map-draw-draft-line');
     expect(layerIds).toContain('map-draw-vertices-circle');
   });
+
+  it('emits update:mode with undefined once a shape is committed so drawing can restart', async () => {
+    const { wrapper, mapReference } = mountWithMap({
+      slots: { default: '<MapDraw mode="line" />' },
+      components: { MapDraw },
+    });
+
+    await nextTick();
+
+    const onCalls = (mapReference.value?.on as ReturnType<typeof vi.fn>).mock.calls;
+    const findHandler = (event: string): ((payload: unknown) => void) =>
+      onCalls.find((arguments_: unknown[]) => arguments_[0] === event)?.[1] as (payload: unknown) => void;
+
+    const handleClick = findHandler('click');
+    const handleDblClick = findHandler('dblclick');
+
+    // Place three vertices, then double-click to commit the line.
+    handleClick({ lngLat: { lng: 0, lat: 0 }, point: { x: 0, y: 0 } });
+    handleClick({ lngLat: { lng: 1, lat: 1 }, point: { x: 10, y: 10 } });
+    handleClick({ lngLat: { lng: 2, lat: 2 }, point: { x: 20, y: 20 } });
+    handleDblClick({ lngLat: { lng: 2, lat: 2 }, point: { x: 20, y: 20 } });
+
+    await nextTick();
+
+    const modeEvents = wrapper.findComponent(MapDraw).emitted('update:mode');
+
+    expect(modeEvents).toBeTruthy();
+    expect(modeEvents?.at(-1)).toEqual([undefined]);
+  });
 });

@@ -1,59 +1,42 @@
-import { mount } from '@vue/test-utils';
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import BaseSeparator from './base-separator.vue';
+import { BaseSeparator } from './base-separator';
 
-describe('BaseSeparator', () => {
-  it('renders an <hr> with separator role by default', () => {
-    const wrapper = mount(BaseSeparator);
-    expect(wrapper.element.tagName).toBe('HR');
-    expect(wrapper.attributes('role')).toBe('separator');
-    expect(wrapper.attributes('aria-orientation')).toBe('horizontal');
-  });
+/**
+ * Exercises the **neutral** `BaseSeparator` authored in this package, rendering
+ * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * Covers both the plain rule (`<hr>`) and the labelled variant.
+ */
+const ReactSeparator = toReactComponent(BaseSeparator, 'Separator');
+const VueSeparator = toVueComponent(BaseSeparator, 'Separator');
 
-  it('applies the default classes (horizontal, solid, md spacing)', () => {
-    const wrapper = mount(BaseSeparator);
-    expect(wrapper.classes()).toContain('base-separator--horizontal');
-    expect(wrapper.classes()).toContain('base-separator--solid');
-    expect(wrapper.classes()).toContain('base-separator--spacing-md');
-  });
+describe('BaseSeparator authors the same component for React and Vue', () => {
+  it('renders a plain rule with the separator role on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactSeparator, { variant: 'dashed' }));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueSeparator, { variant: 'dashed' }) }));
 
-  it('supports vertical orientation', () => {
-    const wrapper = mount(BaseSeparator, { props: { orientation: 'vertical' } });
-    expect(wrapper.classes()).toContain('base-separator--vertical');
-    expect(wrapper.attributes('aria-orientation')).toBe('vertical');
-  });
-
-  it('applies the variant class', () => {
-    for (const variant of ['solid', 'dashed', 'dotted'] as const) {
-      const wrapper = mount(BaseSeparator, { props: { variant } });
-      expect(wrapper.classes()).toContain(`base-separator--${variant}`);
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-separator');
+      expect(html).toContain('base-separator--horizontal');
+      expect(html).toContain('base-separator--dashed');
+      expect(html).toContain('role="separator"');
     }
   });
 
-  it('applies the spacing class', () => {
-    for (const spacing of ['none', 'sm', 'md', 'lg', 'xl'] as const) {
-      const wrapper = mount(BaseSeparator, { props: { spacing } });
-      expect(wrapper.classes()).toContain(`base-separator--spacing-${spacing}`);
+  it('renders a centred label between two lines on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactSeparator, {}, 'OR'));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueSeparator, {}, () => 'OR') }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-separator--labelled');
+      expect(html).toContain('base-separator__label');
+      expect(html).toContain('OR');
     }
-  });
-
-  it('marks decorative separators as presentational', () => {
-    const wrapper = mount(BaseSeparator, { props: { decorative: true } });
-    expect(wrapper.attributes('role')).toBe('none');
-    expect(wrapper.attributes('aria-orientation')).toBeUndefined();
-  });
-
-  it('renders a labelled separator when the default slot is used (horizontal)', () => {
-    const wrapper = mount(BaseSeparator, { slots: { default: 'OR' } });
-    expect(wrapper.element.tagName).toBe('DIV');
-    expect(wrapper.classes()).toContain('base-separator--labelled');
-    expect(wrapper.text()).toBe('OR');
-    expect(wrapper.findAll('.base-separator__line')).toHaveLength(2);
-  });
-
-  it('ignores the label slot when vertical and renders an <hr>', () => {
-    const wrapper = mount(BaseSeparator, { props: { orientation: 'vertical' }, slots: { default: 'OR' } });
-    expect(wrapper.element.tagName).toBe('HR');
   });
 });

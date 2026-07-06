@@ -1,14 +1,9 @@
 // Regression test for the snippets drawer in the My Care Notes app shell.
 //
 // The drawer's visibility is driven entirely by the URL query
-// (`?panel=snippets`). `BaseDrawer` auto-closes on every route change by
-// default (`closeOnRouteChange`), which means the very navigation that opens
-// the drawer would immediately close it again — so the snippets panel could
-// never stay open.
-//
-// This test mounts the real `app.vue` with the heavy/contextual dependencies
-// stubbed, and asserts the `BaseDrawer` it renders (a) opens for the
-// `?panel=snippets` query and (b) explicitly opts out of close-on-route-change.
+// (`?panel=snippets`). This test mounts the real `app.vue` with the
+// heavy/contextual dependencies stubbed, and asserts the `BaseDrawer` it
+// renders opens for the `?panel=snippets` query and stays closed otherwise.
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createApp, defineComponent, h, ref } from 'vue';
@@ -39,18 +34,25 @@ const BaseDrawerStub = defineComponent({
   // Mirror the public props the drawer relies on. The drawer's body contains a
   // virtual table with scoped slots that expect row data, so we deliberately do
   // not render the default slot — we only need to capture the props.
-  props: ['open', 'placement', 'size', 'title', 'closeOnRouteChange'],
+  props: ['open', 'placement', 'size', 'title'],
   setup(properties) {
     receivedDrawerProperties = properties;
     return renderEmpty;
   },
 });
 
+// Renders nothing. Used for components whose slots are *scoped* (e.g. the tabs'
+// `#panel="{ tab }"` slot): the generic StubComponent would invoke them without
+// the expected scope and blow up on `tab.id`, so we skip rendering them.
+const EmptyComponent = defineComponent({
+  name: 'EmptyComponent',
+  setup: () => renderEmpty,
+});
+
 // Allow tests to drive the route query the component reads.
 const routeQuery = ref<Record<string, unknown>>({});
 
-vi.mock('@mission-platform/components', () => ({
-  BaseApplicationLayout: StubComponent,
+vi.mock('@mission-platform/components/vue', () => ({
   BaseButton: StubComponent,
   BaseDialog: StubComponent,
   BaseDrawer: BaseDrawerStub,
@@ -62,14 +64,18 @@ vi.mock('@mission-platform/components', () => ({
   BaseStack: StubComponent,
   BaseThemeToggle: StubComponent,
   BaseVirtualTable: StubComponent,
-  BaseVirtualTabs: StubComponent,
+  BaseVirtualTabs: EmptyComponent,
 }));
 
-vi.mock('@mission-platform/i18n', () => ({
+vi.mock('@mission-platform/layouts/vue', () => ({
+  BaseVerticalLayout: StubComponent,
+}));
+
+vi.mock('@mission-platform/i18n/vue', () => ({
   useI18n: () => ({ t: (key: string) => key }),
 }));
 
-vi.mock('@mission-platform/icons', () => ({
+vi.mock('@mission-platform/icons/vue', () => ({
   IconDownload: StubComponent,
   IconPencil: StubComponent,
 }));
@@ -149,14 +155,6 @@ describe('MyCareNotesApp snippets drawer', () => {
   it('keeps the drawer closed without the panel query', async () => {
     const cleanup = await mountApp({});
     expect(receivedDrawerProperties['open']).toBe(false);
-    cleanup();
-  });
-
-  it('opts the route-driven drawer out of close-on-route-change', async () => {
-    // The fix: without this, the navigation that sets `?panel=snippets` would
-    // immediately trigger BaseDrawer's auto-close, so the drawer never opens.
-    const cleanup = await mountApp({ panel: 'snippets' });
-    expect(receivedDrawerProperties['closeOnRouteChange']).toBe(false);
     cleanup();
   });
 });

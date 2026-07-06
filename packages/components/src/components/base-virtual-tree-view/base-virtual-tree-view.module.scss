@@ -1,0 +1,72 @@
+/**
+ * Styling for the write-once `BaseVirtualTreeView`.
+ *
+ * The component owns its CSS Module: the React build imports the hashed
+ * `*.module.scss`, while the Vue build inlines these rules as a (non-scoped)
+ * SFC `<style>` and the compiler collapses the `styles[…]` reads to the literal
+ * BEM class names. Rules live in the shared `mp.components` cascade layer.
+ */
+
+@layer mp.components {
+  .virtual-tree {
+    font-family: var(--mp-font-family-sans);
+    font-size: var(--mp-font-size-sm);
+    color: var(--mp-color-text-primary);
+    user-select: none;
+    outline: none;
+  }
+
+  .virtual-tree__row {
+    display: flex;
+    align-items: center;
+  }
+
+  .virtual-tree__label {
+    display: flex;
+    gap: var(--mp-spacing-2);
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding-right: var(--mp-spacing-3);
+    color: var(--mp-color-text-primary);
+    cursor: pointer;
+    border-radius: var(--mp-radius-sm);
+    outline: none;
+    transition: background-color 80ms ease;
+
+    &:hover {
+      background-color: var(--mp-color-bg-muted);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--mp-shadow-focus-primary);
+    }
+  }
+
+  .virtual-tree__toggle {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    color: var(--mp-color-text-secondary);
+    cursor: pointer;
+    background: none;
+    border: none;
+    border-radius: var(--mp-radius-sm);
+    transition: color 80ms ease;
+
+    &:hover {
+      color: var(--mp-color-text-primary);
+    }
+  }
+
+  .virtual-tree__spacer {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 20px;
+  }
+}

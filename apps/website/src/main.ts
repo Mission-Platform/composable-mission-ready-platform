@@ -2,17 +2,19 @@
 // `[data-theme]`/`.theme-*` scheme pins (inside the `mp.tokens` layer), so the
 // separate `scss/themes/{light,dark}` imports are no longer needed. The active
 // scheme is pinned on <html> by the pre-paint script in index.html before this
-// bundle runs (see also @mission-platform/components' themeInitScript()).
+// bundle runs.
 import '@mission-platform/tokens/scss/tokens';
 import '@mission-platform/components/styles';
 
-import { createMpI18n, type MpMessageObject } from '@mission-platform/i18n';
+import { createMpI18n, localeNamespaces, mpNamespace, type MpMessageObject } from '@mission-platform/i18n';
+import { createMpI18nVue } from '@mission-platform/i18n/vue';
 import { organization, useSeo, webSite } from '@mission-platform/seo';
+import yaml from 'js-yaml';
 import { ViteSSG } from 'vite-ssg';
 import { computed, effectScope, h, type VNode } from 'vue';
 import { RouterView } from 'vue-router';
 
-import enMessages from './locales/en.yaml';
+import enLocaleSource from './locales/en.yaml?raw';
 import { loadLocaleMessages } from './locales/load-locale';
 import { DEFAULT_LOCALE, routerOptions, SUPPORTED_LOCALES, type SupportedLocale } from './router';
 import {
@@ -28,6 +30,11 @@ import {
 } from './seo-site';
 
 import './styles/global.scss';
+
+// The runtime `en.yaml` is grouped by `mp.<workspace>` namespace; the website
+// owns `mp.website`, while package strings (e.g. `mp.breakpoints`) come from the
+// packages it depends on. Additional locales are layered on lazily per route.
+const enBundles = (yaml.load(enLocaleSource) ?? {}) as Record<string, MpMessageObject>;
 
 /** Root render function — keeps `useHead`-bearing setup in a stable scope. */
 const renderRoot = (): VNode => h(RouterView);
@@ -58,22 +65,22 @@ export const createApp = ViteSSG(
       }
     }
 
-    // Seed English (source-of-truth) messages on the global scope at creation
-    // time so `<i18n-t scope="global">` and `useI18n({ useScope: 'global' })`
-    // resolve them on first paint.
+    // Seed English (source-of-truth) messages at creation time so the first
+    // paint resolves them. Additional locales are loaded lazily per route.
     const i18n = createMpI18n({
       locale: DEFAULT_LOCALE,
-      messages: { en: enMessages as MpMessageObject },
+      namespace: mpNamespace('website'),
+      namespaces: localeNamespaces('en', enBundles),
     });
-    app.use(i18n);
+    app.use(createMpI18nVue(i18n));
 
-    // Synchronise the active route's `:locale` segment with vue-i18n's
-    // active locale on every navigation (both client and server side).
+    // Synchronise the active route's `:locale` segment with i18next's active
+    // locale on every navigation (both client and server side).
     router.beforeEach(async (to) => {
       const locale = resolveLocale(to.params.locale);
       await loadLocaleMessages(i18n, locale);
-      if (i18n.global.locale.value !== locale) {
-        i18n.global.locale.value = locale;
+      if (i18n.language !== locale) {
+        await i18n.changeLanguage(locale);
       }
       if (typeof document !== 'undefined') {
         document.documentElement.setAttribute('lang', LOCALE_BCP47[locale]);
@@ -116,9 +123,12 @@ export const createApp = ViteSSG(
           page: {
             title: siteTitle,
             description:
-              'Mission Platform is an independent, composable Vue 3 monorepo of design tokens, components, composables, and Cloudflare Workers for building modern, mission-ready web experiences.',
+              'Mission Platform is an independent, composable monorepo of framework-neutral write-once components (Vue 3 + React), design tokens, composables, and Cloudflare Workers for building modern, mission-ready web experiences.',
             keywords: [
+              'write once',
+              'framework-neutral',
               'Vue 3',
+              'React',
               'monorepo',
               'design system',
               'components',
@@ -158,7 +168,7 @@ export const createApp = ViteSSG(
               card: 'summary_large_image',
               title: siteTitle,
               description:
-                'An independent, composable Vue 3 monorepo for building modern, mission-ready web experiences.',
+                'An independent, composable monorepo of framework-neutral write-once components for building modern, mission-ready web experiences.',
               image: `${SITE_ORIGIN}/og-image.svg`,
               imageAlt: siteTitle,
             },

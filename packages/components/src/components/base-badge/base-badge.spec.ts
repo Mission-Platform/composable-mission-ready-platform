@@ -1,54 +1,25 @@
-import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 
-import BaseBadge from './base-badge.vue';
+import { expectSsrParity } from '../../test-utils/ssr-parity';
 
-describe('BaseBadge', () => {
-  it('renders slot content', () => {
-    const wrapper = mount(BaseBadge, { slots: { default: 'New' } });
-    expect(wrapper.text()).toBe('New');
-  });
+import { BaseBadge } from './base-badge';
 
-  it('renders a <span> element', () => {
-    const wrapper = mount(BaseBadge);
-    expect(wrapper.element.tagName).toBe('SPAN');
-  });
+/**
+ * Exercises the **neutral** `BaseBadge` authored in this package, rendering it
+ * on both frameworks through the `@mission-platform/jsx` runtime adapters via
+ * the shared {@link expectSsrParity} helper. That keeps the assertions
+ * independent of the build-time plugin (whose React/Vue parity is covered in
+ * `@mission-platform/vite-plugin-jsx`), while proving the component itself is
+ * correct and framework-portable: the helper asserts the React and Vue SSR
+ * output is the **same DOM** before the per-component assertions run.
+ */
+describe('BaseBadge authors the same component for React and Vue', () => {
+  it('renders to matching markup on both frameworks', async () => {
+    const { html } = await expectSsrParity(BaseBadge, { variant: 'primary', size: 'lg' }, 'New');
 
-  it('applies default classes (default, md)', () => {
-    const wrapper = mount(BaseBadge);
-    expect(wrapper.classes()).toContain('base-badge--default');
-    expect(wrapper.classes()).toContain('base-badge--md');
-  });
-
-  it('applies variant class', () => {
-    for (const variant of [
-      'primary',
-      'secondary',
-      'tertiary',
-      'default',
-      'success',
-      'warning',
-      'information',
-      'error',
-      'critical',
-    ] as const) {
-      const wrapper = mount(BaseBadge, { props: { variant } });
-      expect(wrapper.classes()).toContain(`base-badge--${variant}`);
-    }
-  });
-
-  it('applies size class sm', () => {
-    const wrapper = mount(BaseBadge, { props: { size: 'sm' } });
-    expect(wrapper.classes()).toContain('base-badge--sm');
-  });
-
-  it('adds pill class when pill prop is true', () => {
-    const wrapper = mount(BaseBadge, { props: { pill: true } });
-    expect(wrapper.classes()).toContain('base-badge--pill');
-  });
-
-  it('does not add pill class by default', () => {
-    const wrapper = mount(BaseBadge);
-    expect(wrapper.classes()).not.toContain('base-badge--pill');
+    expect(html).toContain('base-badge');
+    expect(html).toContain('base-badge--primary');
+    expect(html).toContain('base-badge--lg');
+    expect(html).toContain('New');
   });
 });

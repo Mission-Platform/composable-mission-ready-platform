@@ -1,1 +1,1 @@
-export { default } from './base-window-popout.vue';
+export { BaseWindowPopout, type WindowPopoutProperties } from './base-window-popout';

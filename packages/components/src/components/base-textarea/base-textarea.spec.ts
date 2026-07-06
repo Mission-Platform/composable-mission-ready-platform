@@ -1,87 +1,47 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n as mount } from '../../test-utils/mount-with-i18n';
+import { BaseTextarea } from './base-textarea';
 
-import BaseTextarea from './base-textarea.vue';
+/**
+ * Exercises the **neutral** `BaseTextarea` authored in this package, rendering
+ * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * Covers the value, the rows, the label association, and the error wiring.
+ */
+const ReactTextarea = toReactComponent(BaseTextarea, 'Textarea');
+const VueTextarea = toVueComponent(BaseTextarea, 'Textarea');
 
-describe('BaseTextarea', () => {
-  it('renders a <textarea> element', () => {
-    const wrapper = mount(BaseTextarea);
-    expect(wrapper.find('textarea').exists()).toBe(true);
+describe('BaseTextarea authors the same component for React and Vue', () => {
+  it('renders a labelled textarea with its value and rows on both frameworks', async () => {
+    const properties = { modelValue: 'Hello', label: 'Bio', rows: 6, id: 'ta-1' };
+    const react = renderToStaticMarkup(createElement(ReactTextarea, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueTextarea, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('<textarea');
+      expect(html).toContain('Bio');
+      expect(html).toContain('rows="6"');
+      expect(html).toContain('Hello');
+      expect(html).toContain('id="ta-1"');
+      expect(html).toContain('for="ta-1"');
+    }
   });
 
-  it('applies default size class (md)', () => {
-    const wrapper = mount(BaseTextarea);
-    expect(wrapper.classes()).toContain('base-textarea--md');
-  });
+  it('wires the error message via aria-describedby on both frameworks', async () => {
+    const properties = { modelValue: '', label: 'Notes', error: 'Too short', id: 'ta-2' };
+    const react = renderToStaticMarkup(createElement(ReactTextarea, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueTextarea, properties) }));
 
-  it('applies custom size class', () => {
-    const wrapper = mount(BaseTextarea, { props: { size: 'lg' } });
-    expect(wrapper.classes()).toContain('base-textarea--lg');
-  });
-
-  it('sets rows attribute', () => {
-    const wrapper = mount(BaseTextarea, { props: { rows: 6 } });
-    expect(wrapper.find('textarea').attributes('rows')).toBe('6');
-  });
-
-  it('binds modelValue to textarea value', () => {
-    const wrapper = mount(BaseTextarea, { props: { modelValue: 'hello world' } });
-    expect((wrapper.find('textarea').element as HTMLTextAreaElement).value).toBe('hello world');
-  });
-
-  it('emits update:modelValue on input', async () => {
-    const wrapper = mount(BaseTextarea);
-    await wrapper.find('textarea').setValue('typed text');
-    expect(wrapper.emitted('update:modelValue')).toBeTruthy();
-    expect(wrapper.emitted('update:modelValue')![0]).toEqual(['typed text']);
-  });
-
-  it('renders label when label prop is provided', () => {
-    const wrapper = mount(BaseTextarea, { props: { label: 'Description', id: 'desc' } });
-    expect(wrapper.find('label').text()).toContain('Description');
-  });
-
-  it('renders hint text', () => {
-    const wrapper = mount(BaseTextarea, { props: { hint: 'Max 200 chars' } });
-    expect(wrapper.find('.base-textarea__hint').text()).toBe('Max 200 chars');
-  });
-
-  it('renders error message and adds error class', () => {
-    const wrapper = mount(BaseTextarea, { props: { error: 'Too long' } });
-    expect(wrapper.find('.base-textarea__error').text()).toBe('Too long');
-    expect(wrapper.classes()).toContain('base-textarea--error');
-  });
-
-  it('does not render hint when error is present', () => {
-    const wrapper = mount(BaseTextarea, { props: { error: 'Err', hint: 'Hint' } });
-    expect(wrapper.find('.base-textarea__hint').exists()).toBe(false);
-  });
-
-  it('is disabled when disabled prop is true', () => {
-    const wrapper = mount(BaseTextarea, { props: { disabled: true } });
-    expect(wrapper.find('textarea').attributes('disabled')).toBeDefined();
-    expect(wrapper.classes()).toContain('base-textarea--disabled');
-  });
-
-  it('shows required asterisk when required prop is true', () => {
-    const wrapper = mount(BaseTextarea, { props: { label: 'Bio', required: true } });
-    expect(wrapper.find('.base-textarea__required').exists()).toBe(true);
-  });
-
-  it('sets resize style on textarea', () => {
-    const wrapper = mount(BaseTextarea, { props: { resize: 'none' } });
-    expect((wrapper.find('textarea').element as HTMLTextAreaElement).style.resize).toBe('none');
-  });
-
-  it('renders label visually hidden when labelHidden is true', () => {
-    const wrapper = mount(BaseTextarea, { props: { label: 'Hidden Label', labelHidden: true } });
-    expect(wrapper.find('label').exists()).toBe(true);
-    expect(wrapper.find('.base-textarea__label--hidden').exists()).toBe(true);
-  });
-
-  it('renders label visible by default when labelHidden is false', () => {
-    const wrapper = mount(BaseTextarea, { props: { label: 'Visible Label' } });
-    expect(wrapper.find('.base-textarea__label--hidden').exists()).toBe(false);
+    for (const html of [react, vue]) {
+      expect(html).toContain('Too short');
+      expect(html).toContain('aria-describedby="ta-2-error"');
+      expect(html).toContain('aria-invalid="true"');
+      expect(html).toContain('role="alert"');
+    }
   });
 });

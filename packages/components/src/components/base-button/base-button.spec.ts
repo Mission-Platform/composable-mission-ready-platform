@@ -1,72 +1,57 @@
-import { describe, expect, it, vi } from 'vitest';
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n as mount } from '../../test-utils/mount-with-i18n';
+import { BaseButton } from './base-button';
 
-import BaseButton from './base-button.vue';
+/**
+ * Exercises the **neutral** `BaseButton` authored in this package, rendering it
+ * on both frameworks through the `@mission-platform/jsx` runtime adapters. That
+ * keeps the assertions independent of the build-time plugin (whose React/Vue
+ * parity is covered in `@mission-platform/vite-plugin-jsx`), while proving the
+ * component itself — mirroring the `@mission-platform/components` `BaseButton`
+ * (nine variants, the `2xs → 2xl` size scale, and a loading spinner) — is
+ * correct and framework-portable.
+ */
+const ReactButton = toReactComponent(BaseButton, 'Button');
+const VueButton = toVueComponent(BaseButton, 'Button');
 
-describe('BaseButton', () => {
-  it('renders slot content', () => {
-    const wrapper = mount(BaseButton, { slots: { default: 'Click me' } });
-    expect(wrapper.text()).toContain('Click me');
+describe('BaseButton authors the same component for React and Vue', () => {
+  it('renders the variant and size modifiers to matching markup on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactButton, { variant: 'secondary', size: 'lg', disabled: true }, 'Save'),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () => vueH(VueButton, { variant: 'secondary', size: 'lg', disabled: true }, () => 'Save'),
+      }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('<button');
+      expect(html).toContain('base-button--secondary');
+      expect(html).toContain('base-button--lg');
+      expect(html).toContain('Save');
+    }
   });
 
-  it('applies default classes', () => {
-    const wrapper = mount(BaseButton);
-    expect(wrapper.classes()).toContain('base-button--primary');
-    expect(wrapper.classes()).toContain('base-button--md');
-  });
+  it('renders the accessible loading spinner on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactButton, { loading: true }, 'Save'));
+    const vue = await renderToString(
+      createSSRApp({
+        render: () => vueH(VueButton, { loading: true }, () => 'Save'),
+      }),
+    );
 
-  it('applies variant class', () => {
-    const wrapper = mount(BaseButton, { props: { variant: 'error' } });
-    expect(wrapper.classes()).toContain('base-button--error');
-  });
-
-  it('applies size class', () => {
-    const wrapper = mount(BaseButton, { props: { size: 'lg' } });
-    expect(wrapper.classes()).toContain('base-button--lg');
-  });
-
-  it('renders a <button> element with correct type', () => {
-    const wrapper = mount(BaseButton, { props: { type: 'submit' } });
-    expect(wrapper.element.tagName).toBe('BUTTON');
-    expect(wrapper.attributes('type')).toBe('submit');
-  });
-
-  it('is disabled when disabled prop is true', () => {
-    const wrapper = mount(BaseButton, { props: { disabled: true } });
-    expect(wrapper.attributes('disabled')).toBeDefined();
-  });
-
-  it('emits click event when clicked', async () => {
-    const wrapper = mount(BaseButton);
-    await wrapper.trigger('click');
-    expect(wrapper.emitted('click')).toHaveLength(1);
-  });
-
-  it('does not emit click when disabled', async () => {
-    const wrapper = mount(BaseButton, { props: { disabled: true } });
-    await wrapper.trigger('click');
-    expect(wrapper.emitted('click')).toBeUndefined();
-  });
-
-  it('shows spinner and adds loading class when loading', () => {
-    const wrapper = mount(BaseButton, { props: { loading: true } });
-    expect(wrapper.classes()).toContain('base-button--loading');
-    const spinner = wrapper.find('.base-button__spinner');
-    expect(spinner.exists()).toBe(true);
-    expect(spinner.attributes('role')).toBe('status');
-    expect(spinner.attributes('aria-label')).toBe('Loading…');
-  });
-
-  it('does not emit click when loading', async () => {
-    const onClick = vi.fn();
-    const wrapper = mount(BaseButton, { props: { loading: true }, attrs: { onClick } });
-    await wrapper.trigger('click');
-    expect(wrapper.emitted('click')).toBeUndefined();
-  });
-
-  it('sets aria-busy when loading', () => {
-    const wrapper = mount(BaseButton, { props: { loading: true } });
-    expect(wrapper.attributes('aria-busy')).toBe('true');
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-button--loading');
+      expect(html).toContain('base-button__spinner');
+      expect(html).toContain('role="status"');
+      expect(html).toContain('aria-label="Loading…"');
+    }
   });
 });

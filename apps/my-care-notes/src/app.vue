@@ -1,6 +1,5 @@
 <script lang="ts" setup>
   import {
-    BaseApplicationLayout,
     BaseButton,
     BaseDialog,
     BaseDrawer,
@@ -13,9 +12,10 @@
     BaseThemeToggle,
     BaseVirtualTable,
     BaseVirtualTabs,
-  } from '@mission-platform/components';
-  import { useI18n } from '@mission-platform/i18n';
-  import { IconDownload, IconPencil } from '@mission-platform/icons';
+  } from '@mission-platform/components/vue';
+  import { useI18n } from '@mission-platform/i18n/vue';
+  import { IconDownload, IconPencil } from '@mission-platform/icons/vue';
+  import { BaseVerticalLayout } from '@mission-platform/layouts/vue';
   import { organizationId, useSeo, webPage } from '@mission-platform/seo';
   import { computed, defineAsyncComponent, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
@@ -81,7 +81,7 @@
     importAllSnippets,
   } = useSnippets();
 
-  const { t } = useI18n({ useScope: 'local' });
+  const { t } = useI18n();
 
   const route = useRoute();
   const router = useRouter();
@@ -238,69 +238,66 @@
 </script>
 
 <template>
-  <BaseApplicationLayout>
-    <template #navbar>
-      <BaseNavbar brand="My Care Notes">
-        <template #default>
-          <BaseNavbarItem
-            :children="[
-              { label: t('nav.import-note'), onClick: onImportNote },
-              { label: t('nav.export-note'), onClick: onExportNote, disabled: !activeTab },
-              ...(closedTabs.length > 0
-                ? [
-                    { label: '\u2500'.repeat(8), disabled: true },
-                    {
-                      label: t('nav.reopen-closed'),
-                      onClick: () => restoreTab(closedTabs[0]!.id),
-                    },
-                    ...closedTabs.slice(0, 10).map((tab) => ({
-                      label: t('nav.restore-tab', { title: tab.title }),
-                      onClick: () => restoreTab(tab.id),
-                    })),
-                  ]
-                : []),
-            ]"
-          >
-            {{ t('nav.notes') }}
-          </BaseNavbarItem>
-          <BaseNavbarItem @click="onToggleSnippetsPanelVisible">
-            {{ t('nav.snippets') }}
-          </BaseNavbarItem>
-        </template>
-        <template #end>
-          <BaseThemeToggle :aria-label="t('theme-toggle')" />
-        </template>
-      </BaseNavbar>
-    </template>
-
-    <template #content>
-      <!-- Snippets panel -->
-      <BaseDrawer
-        :close-on-route-change="false"
-        :open="snippetsPanelVisible"
-        placement="start"
-        size="xl"
-        :title="t('sidebar.title')"
-        @update:open="onSnippetsPanelUpdate"
-      >
-        <BaseMenubar
-          :items="[
-            { label: t('menu.import'), onClick: onImportSnippet },
-            { label: t('menu.import-all'), onClick: onImportAllSnippets },
-            {
-              label: t('menu.export-all'),
-              onClick: onExportAllSnippets,
-              disabled: snippets.length === 0,
-            },
-            { label: t('menu.new'), onClick: openNewSnippet },
+  <BaseVerticalLayout>
+    <BaseNavbar brand="My Care Notes">
+      <template #default>
+        <BaseNavbarItem
+          :children="[
+            { label: t('nav.import-note'), onClick: onImportNote },
+            { label: t('nav.export-note'), onClick: onExportNote, disabled: !activeTab },
+            ...(closedTabs.length > 0
+              ? [
+                  { label: '\u2500'.repeat(8), disabled: true },
+                  {
+                    label: t('nav.reopen-closed'),
+                    onClick: () => restoreTab(closedTabs[0]!.id),
+                  },
+                  ...closedTabs.slice(0, 10).map((tab) => ({
+                    label: t('nav.restore-tab', { title: tab.title }),
+                    onClick: () => restoreTab(tab.id),
+                  })),
+                ]
+              : []),
           ]"
-        />
-
-        <BaseVirtualTable
-          :columns="snippetColumns"
-          :rows="snippetRows"
         >
-          <template #cell-actions="{ row: rawRow }">
+          {{ t('nav.notes') }}
+        </BaseNavbarItem>
+        <BaseNavbarItem @click="onToggleSnippetsPanelVisible">
+          {{ t('nav.snippets') }}
+        </BaseNavbarItem>
+      </template>
+      <template #end>
+        <BaseThemeToggle :aria-label="t('theme-toggle')" />
+      </template>
+    </BaseNavbar>
+
+    <!-- Snippets panel -->
+    <BaseDrawer
+      :open="snippetsPanelVisible"
+      placement="start"
+      size="xl"
+      :title="t('sidebar.title')"
+      @update:open="onSnippetsPanelUpdate"
+    >
+      <BaseMenubar
+        :items="[
+          { label: t('menu.import'), onClick: onImportSnippet },
+          { label: t('menu.import-all'), onClick: onImportAllSnippets },
+          {
+            label: t('menu.export-all'),
+            onClick: onExportAllSnippets,
+            disabled: snippets.length === 0,
+          },
+          { label: t('menu.new'), onClick: openNewSnippet },
+        ]"
+      />
+
+      <BaseVirtualTable
+        :columns="snippetColumns"
+        :rows="snippetRows"
+      >
+        <template #cell="{ column, row: rawRow, value }">
+          <template v-if="column.key === 'actions'">
             <template v-if="(rawRow as SnippetRow).id !== undefined">
               <BaseIconButton
                 :label="t('snippet.export')"
@@ -322,36 +319,33 @@
               </BaseIconButton>
             </template>
           </template>
-        </BaseVirtualTable>
-      </BaseDrawer>
-
-      <BaseVirtualTabs
-        :model-value="activeTabId"
-        :tabs="visibleTabs"
-        addable
-        closable
-        variant="pill"
-        @add="addTab"
-        @close="closeTab"
-        @rename="onRenameTab"
-        @update:model-value="setActiveTab"
-      >
-        <template
-          v-for="tab in visibleTabs"
-          :key="tab.id"
-          #[tab.id]
-        >
-          <ClientOnly>
-            <MonacoEditor
-              :model-value="openTabs().find((openedTab) => openedTab.id === tab.id)?.content ?? ''"
-              :tab-id="tab.id"
-              @update:model-value="updateTabContent(tab.id, $event)"
-            />
-          </ClientOnly>
+          <template v-else>{{ value }}</template>
         </template>
-      </BaseVirtualTabs>
-    </template>
-  </BaseApplicationLayout>
+      </BaseVirtualTable>
+    </BaseDrawer>
+
+    <BaseVirtualTabs
+      :model-value="activeTabId"
+      :tabs="visibleTabs"
+      addable
+      closable
+      variant="pill"
+      @add="addTab"
+      @close="closeTab"
+      @rename="onRenameTab"
+      @update:model-value="setActiveTab"
+    >
+      <template #panel="{ tab }">
+        <ClientOnly>
+          <MonacoEditor
+            :model-value="openTabs().find((openedTab) => openedTab.id === tab.id)?.content ?? ''"
+            :tab-id="tab.id"
+            @update:model-value="updateTabContent(tab.id, $event)"
+          />
+        </ClientOnly>
+      </template>
+    </BaseVirtualTabs>
+  </BaseVerticalLayout>
 
   <ClientOnly>
     <SnippetEditorModal
@@ -366,7 +360,7 @@
     :open="renamingTabId !== undefined"
     :title="t('rename.title')"
     @close="cancelRenameTab"
-    @update:open="(opened) => !opened && cancelRenameTab()"
+    @update:open="(opened: boolean) => !opened && cancelRenameTab()"
   >
     <BaseInput
       id="rename-tab-input"

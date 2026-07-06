@@ -1,207 +1,94 @@
-import { DateTime } from 'luxon';
 import { ref } from 'vue';
 
-import BaseScheduler from './base-scheduler.vue';
+import { Scheduler } from '@mission-platform/components/vue';
 
-import type { VEvent } from './types';
+import type { VEvent } from './base-scheduler';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-// ─── Luxon-based date helpers ─────────────────────────────────────────────────
-
-const TODAY = DateTime.now().startOf('day');
-const dateString = TODAY.toFormat('yyyy-MM-dd');
-const dtstamp = TODAY.toISO() ?? TODAY.toJSDate().toISOString();
-
-/** ISO datetime string for today at the given hour and optional minute. */
-function timeOnToday(hh: number, mm = 0): string {
-  return TODAY.set({ hour: hh, minute: mm, second: 0, millisecond: 0 }).toISO() ?? '';
-}
-
-/** ISO datetime string for a day offset from today at the given hour and optional minute. */
-function timeOnOffset(days: number, hh: number, mm = 0): string {
-  return TODAY.plus({ days }).set({ hour: hh, minute: mm, second: 0, millisecond: 0 }).toISO() ?? '';
-}
-
-/** ISO datetime string 8 weeks from today (used as UNTIL for recurring events). */
-const eightWeeksFromToday = TODAY.plus({ weeks: 8 }).toISO() ?? '';
-
-const SAMPLE_EVENTS: VEvent[] = [
-  {
-    uid: 'evt-standup',
-    summary: 'Daily Standup',
-    dtstart: timeOnToday(9),
-    dtend: timeOnToday(9, 30),
-    dtstamp,
-    color: '#6c2fd4',
-    status: 'CONFIRMED',
-    transp: 'OPAQUE',
-    location: 'Zoom',
-    description: 'Daily team standup meeting.',
-    rrule: { freq: 'DAILY', byday: ['MO', 'TU', 'WE', 'TH', 'FR'] },
-  },
-  {
-    uid: 'evt-design',
-    summary: 'Design Review',
-    dtstart: timeOnToday(10),
-    dtend: timeOnToday(11),
-    dtstamp,
-    color: '#14b8af',
-    status: 'CONFIRMED',
-    transp: 'OPAQUE',
-    attendees: [
-      { calAddress: 'mailto:alice@example.com', cn: 'Alice', role: 'CHAIR' },
-      { calAddress: 'mailto:bob@example.com', cn: 'Bob', role: 'REQ-PARTICIPANT' },
-    ],
-  },
-  {
-    uid: 'evt-lunch',
-    summary: 'Team Lunch',
-    dtstart: timeOnToday(12),
-    dtend: timeOnToday(13),
-    dtstamp,
-    color: '#1aa354',
-    status: 'TENTATIVE',
-    location: 'The Noodle Bar',
-  },
-  {
-    uid: 'evt-planning',
-    summary: 'Sprint Planning',
-    dtstart: timeOnToday(14),
-    dtend: timeOnToday(16),
-    dtstamp,
-    color: '#f59e0b',
-    status: 'CONFIRMED',
-    transp: 'OPAQUE',
-    priority: 1,
-  },
-  {
-    uid: 'evt-allday',
-    summary: 'Company Holiday',
-    dtstart: dateString,
-    dtend: dateString,
-    dtstamp,
-    color: '#ef4444',
-    status: 'CONFIRMED',
-    classification: 'PUBLIC',
-    transp: 'TRANSPARENT',
-  },
-];
-
-// ─── Meta ─────────────────────────────────────────────────────────────────────
-
+/**
+ * `Scheduler` is the Vue 3 build of the write-once `BaseScheduler` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
-  title: 'Components/Scheduler/BaseScheduler',
-  component: BaseScheduler,
+  title: 'Components/Forms/BaseScheduler',
+  component: Scheduler,
   tags: ['autodocs'],
   parameters: {
-    layout: 'fullscreen',
     docs: {
       description: {
-        component: `
-**BaseScheduler** is a full-featured calendar scheduler backed by RFC 5545 (iCalendar) event data.
-
-### Features
-- **Day, 3-Day, Week, Month, Year** view modes
-- **Toolbar** with Today button, prev/next navigation, and view switcher
-- **Create events** by clicking an empty time slot or pressing "+ New Event"
-- **Edit events** by clicking an event chip
-- **Move events** by dragging (Day / 3-Day / Week time grids)
-- **Resize events** via the bottom drag handle
-- **RFC 5545 fields** managed in the event dialog: SUMMARY, DTSTART/DTEND, STATUS, CLASS, TRANSP, ORGANIZER, URL, DESCRIPTION, LOCATION, RRULE (frequency, count, interval), COLOR
-- **Duration display** shown on each event chip
-        `.trim(),
+        component:
+          'Cross-framework `Scheduler` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). At full parity with the Vue original: a toolbar (Today / prev-next / title / new-event / five-view switcher) above a **time grid** (day / 3-day / week), a **month grid**, or a **year grid**. Events are RFC 5545 `VEvent`s and all the heavy logic — recurrence (RRULE/RDATE/EXDATE) expansion, view ranges, the collision layout, duration formatting — comes from the shared `@mission-platform/scheduler-core` (consumed identically by the Vue component). Time-grid events drag to a new time and resize; an event dialog (the migrated `BaseDialog`) creates/edits/deletes events. Styling comes from the co-located `base-scheduler.module.scss`.',
       },
     },
   },
-  argTypes: {
-    defaultView: {
-      control: 'select',
-      options: ['day', 'three-day', 'week', 'month', 'year'],
-    },
-  },
-  args: {
-    defaultView: 'week',
-    modelValue: SAMPLE_EVENTS,
-  },
   render: (arguments_) => ({
-    components: { BaseScheduler },
+    components: { Scheduler },
     setup() {
       const events = ref<VEvent[]>(arguments_.modelValue ?? []);
       return { args: arguments_, events };
     },
-    template: `
-      <div style="height: 100vh; padding: 0;">
-        <BaseScheduler
-          v-bind="args"
-          v-model="events"
-          :default-view="args.defaultView"
-        />
-      </div>
-    `,
+    template:
+      '<Scheduler v-bind="args" :model-value="events" @update-model-value="events = $event" @event-click="(e) => console.log(\'event-click\', e)" />',
   }),
-} satisfies Meta<typeof BaseScheduler>;
+} satisfies Meta<typeof Scheduler>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// ─── Sample events anchored to the current week ───────────────────────────────
+
+function at(dayOffset: number, hour: number, minute = 0): string {
+  const d = new Date();
+  d.setDate(d.getDate() + dayOffset);
+  d.setHours(hour, minute, 0, 0);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}T${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:00`;
+}
+
+function event(uid: string, summary: string, dtstart: string, dtend: string, extra: Partial<VEvent> = {}): VEvent {
+  return { uid, dtstamp: new Date().toISOString(), summary, dtstart, dtend, ...extra };
+}
+
+const SAMPLE_EVENTS: VEvent[] = [
+  event('standup', 'Daily standup', at(0, 9), at(0, 9, 30), { color: '#2563eb' }),
+  event('review', 'Design review', at(0, 11), at(0, 12, 30), { location: 'Room 4' }),
+  event('lunch', 'Lunch', at(1, 12), at(1, 13)),
+  event('1on1', '1:1 with Alex', at(2, 15), at(2, 15, 30), { status: 'TENTATIVE' }),
+  event('demo', 'Sprint demo', at(4, 14), at(4, 15, 30), { color: '#16a34a' }),
+];
+
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const WeekView: Story = {
-  args: { defaultView: 'week' },
-};
+export const WeekView: Story = { args: { defaultView: 'week', modelValue: SAMPLE_EVENTS } };
 
-export const DayView: Story = {
-  args: { defaultView: 'day' },
-};
+export const DayView: Story = { args: { defaultView: 'day', modelValue: SAMPLE_EVENTS } };
 
-export const ThreeDayView: Story = {
-  args: { defaultView: 'three-day' },
-};
+export const ThreeDayView: Story = { args: { defaultView: 'three-day', modelValue: SAMPLE_EVENTS } };
 
-export const MonthView: Story = {
-  args: { defaultView: 'month' },
-};
+export const MonthView: Story = { args: { defaultView: 'month', modelValue: SAMPLE_EVENTS } };
 
-export const YearView: Story = {
-  args: { defaultView: 'year' },
-};
+export const YearView: Story = { args: { defaultView: 'year', modelValue: SAMPLE_EVENTS } };
 
-export const EmptyCalendar: Story = {
-  args: { defaultView: 'week', modelValue: [] },
-};
+export const EmptyCalendar: Story = { args: { defaultView: 'week', modelValue: [] } };
 
 export const ManyOverlappingEvents: Story = {
   args: {
     defaultView: 'day',
     modelValue: [
-      {
-        uid: 'ov-1',
-        summary: 'Meeting A',
-        dtstart: timeOnToday(10),
-        dtend: timeOnToday(12),
-        dtstamp,
-        color: '#6c2fd4',
-        status: 'CONFIRMED',
+      event('a', 'Event A', at(0, 9), at(0, 11)),
+      event('b', 'Event B', at(0, 9, 30), at(0, 10, 30)),
+      event('c', 'Event C', at(0, 10), at(0, 12)),
+      event('d', 'Event D', at(0, 10, 30), at(0, 11, 30)),
+    ],
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Overlapping events are packed into parallel columns by the shared `layoutDay` collision algorithm.',
       },
-      {
-        uid: 'ov-2',
-        summary: 'Meeting B',
-        dtstart: timeOnToday(10, 30),
-        dtend: timeOnToday(11, 30),
-        dtstamp,
-        color: '#14b8af',
-        status: 'CONFIRMED',
-      },
-      {
-        uid: 'ov-3',
-        summary: 'Meeting C',
-        dtstart: timeOnToday(11),
-        dtend: timeOnToday(13),
-        dtstamp,
-        color: '#f59e0b',
-        status: 'CONFIRMED',
-      },
-    ] satisfies VEvent[],
+    },
   },
 };
 
@@ -209,17 +96,11 @@ export const WithCancelledAndTentative: Story = {
   args: {
     defaultView: 'week',
     modelValue: [
-      ...SAMPLE_EVENTS,
-      {
-        uid: 'cancelled-evt',
-        summary: 'Cancelled Call',
-        dtstart: timeOnToday(15),
-        dtend: timeOnToday(15, 30),
-        dtstamp,
-        color: '#ef4444',
-        status: 'CANCELLED',
-      },
-    ] satisfies VEvent[],
+      event('ok', 'Confirmed sync', at(0, 9), at(0, 10), { status: 'CONFIRMED' }),
+      event('maybe', 'Tentative chat', at(1, 11), at(1, 12), { status: 'TENTATIVE' }),
+      // CANCELLED events are filtered out of every view by scheduler-core.
+      event('gone', 'Cancelled call', at(2, 14), at(2, 15), { status: 'CANCELLED' }),
+    ],
   },
 };
 
@@ -227,114 +108,42 @@ export const WithRecurringEvents: Story = {
   args: {
     defaultView: 'week',
     modelValue: [
-      {
-        uid: 'recur-daily-standup',
-        summary: 'Daily Standup',
-        dtstart: timeOnToday(9),
-        dtend: timeOnToday(9, 30),
-        dtstamp,
-        color: '#6c2fd4',
-        status: 'CONFIRMED',
-        transp: 'OPAQUE',
-        location: 'Zoom',
-        description: 'Daily team standup — repeats every weekday for 8 weeks.',
-        // RRULE: every Mon–Fri until 8 weeks from today
-        rrule: { freq: 'DAILY', byday: ['MO', 'TU', 'WE', 'TH', 'FR'], until: eightWeeksFromToday },
+      event('weekday-standup', 'Weekday standup', at(0, 9), at(0, 9, 15), {
+        rrule: { freq: 'WEEKLY', byday: ['MO', 'TU', 'WE', 'TH', 'FR'], count: 20 },
+      }),
+      event('biweekly', 'Bi-weekly planning', at(0, 13), at(0, 14), {
+        rrule: { freq: 'WEEKLY', interval: 2, byday: ['MO'], count: 8 },
+      }),
+    ],
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Recurring events expand through the shared RFC 5545 `expandRecurrences`: a weekday standup and a bi-weekly Monday planning meeting.',
       },
-      {
-        uid: 'recur-weekly-sync',
-        summary: 'Weekly Sync',
-        // Start on the nearest upcoming Monday (or today if today is Monday)
-        dtstart: timeOnOffset(TODAY.weekday === 1 ? 0 : 8 - TODAY.weekday, 9),
-        dtend: timeOnOffset(TODAY.weekday === 1 ? 0 : 8 - TODAY.weekday, 9, 45),
-        dtstamp,
-        color: '#14b8af',
-        status: 'CONFIRMED',
-        transp: 'OPAQUE',
-        description: 'Weekly team sync — repeats every Mon, Wed & Fri for 8 weeks.',
-        // RRULE: Mon / Wed / Fri until 8 weeks from today
-        rrule: { freq: 'WEEKLY', byday: ['MO', 'WE', 'FR'], until: eightWeeksFromToday },
-      },
-      {
-        uid: 'recur-sprint-planning',
-        summary: 'Sprint Planning',
-        // Every other Monday starting from the nearest upcoming Monday
-        dtstart: timeOnOffset(TODAY.weekday === 1 ? 0 : 8 - TODAY.weekday, 14),
-        dtend: timeOnOffset(TODAY.weekday === 1 ? 0 : 8 - TODAY.weekday, 16),
-        dtstamp,
-        color: '#f59e0b',
-        status: 'CONFIRMED',
-        transp: 'OPAQUE',
-        priority: 1,
-        description: 'Bi-weekly sprint planning — every other Monday for 8 weeks.',
-        // RRULE: every 2 weeks on Monday until 8 weeks from today
-        rrule: { freq: 'WEEKLY', interval: 2, byday: ['MO'], until: eightWeeksFromToday },
-      },
-    ] satisfies VEvent[],
+    },
   },
 };
 
 export const WeekStartMonday: Story = {
   name: 'Week Starts on Monday (Week View)',
-  args: {
-    defaultView: 'week',
-    weekStartsOn: 1,
-    modelValue: SAMPLE_EVENTS,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'The `weekStartsOn` prop set to `1` (Monday) — the week columns run **Mon → Sun**. The month and year mini-calendars also start on Monday.',
-      },
-    },
-  },
+  args: { defaultView: 'week', weekStartsOn: 1, modelValue: SAMPLE_EVENTS },
 };
 
 export const MonthStartMonday: Story = {
   name: 'Month Starts on Monday (Month View)',
-  args: {
-    defaultView: 'month',
-    weekStartsOn: 1,
-    modelValue: SAMPLE_EVENTS,
-  },
+  args: { defaultView: 'month', weekStartsOn: 1, modelValue: SAMPLE_EVENTS },
+};
+
+export const Showcase: Story = {
+  args: { defaultView: 'week', modelValue: SAMPLE_EVENTS },
   parameters: {
     docs: {
       description: {
         story:
-          'Same `weekStartsOn: 1` prop, but with `defaultView: "month"` — the month grid header row reads **Mon Tue Wed Thu Fri Sat Sun** and the first column of every week starts on Monday.',
+          'A representative week. Click a slot to create an event, click an event to edit/delete it, and drag an event vertically to re-time it or its bottom edge to resize.',
       },
     },
   },
-};
-
-export const Showcase: Story = {
-  render: () => ({
-    components: { BaseScheduler },
-    setup() {
-      const events = ref<VEvent[]>(SAMPLE_EVENTS);
-      const lastEvent = ref<VEvent | undefined>(undefined);
-
-      function onEventClick(event: VEvent) {
-        lastEvent.value = event;
-      }
-
-      return { events, lastEvent, onEventClick };
-    },
-    template: `
-      <div style="height: 100vh; display: flex; flex-direction: column;">
-        <BaseScheduler
-          v-model="events"
-          default-view="week"
-          style="flex: 1; min-height: 0;"
-          @event-click="onEventClick"
-        />
-        <div v-if="lastEvent" style="padding: 8px 16px; background: #f5f5f5; font-family: monospace; font-size: 12px; border-top: 1px solid #ddd;">
-          <strong>Last clicked event UID:</strong> {{ lastEvent.uid }} —
-          <strong>Status:</strong> {{ lastEvent.status }} —
-          <strong>Summary:</strong> {{ lastEvent.summary }}
-        </div>
-      </div>
-    `,
-  }),
 };

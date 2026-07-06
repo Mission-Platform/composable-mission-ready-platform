@@ -1,2 +1,1 @@
-export { default } from './base-rating.vue';
-export type { RatingSize } from './base-rating.vue';
+export { BaseRating, type RatingProperties, type RatingSize } from './base-rating';

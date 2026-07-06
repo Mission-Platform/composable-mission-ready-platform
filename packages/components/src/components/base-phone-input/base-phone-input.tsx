@@ -1,0 +1,256 @@
+import { h, useRef, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
+
+import { BaseTypography } from '../base-typography';
+import { nextFieldId } from '../field-id';
+
+import styles from './base-phone-input.module.scss';
+import { dialCode, exampleNumber, formatAsYouType, isValid, listCountries, toE164, type PhoneCountry } from './phone';
+
+/** Size token (canonical `2xs … 2xl` scale). */
+export type PhoneInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+
+/** The payload emitted by {@link PhoneInputProperties.onChange}. */
+export interface PhoneChange {
+  /** The national text as displayed in the field (the controlled `modelValue`). */
+  national: string;
+  /** The canonical E.164 form (`+…`), or `''` when the input is not yet parseable. */
+  e164: string;
+  /** Whether the current input is a valid number for the selected country. */
+  valid: boolean;
+  /** The selected ISO 3166-1 alpha-2 region code, e.g. `US`. */
+  country: string;
+}
+
+export interface PhoneInputProperties extends MpProperties {
+  /** The national-format phone text (controlled via `modelValue` + `onUpdateModelValue`). */
+  modelValue?: string;
+  /** The selected ISO 3166-1 alpha-2 region (controlled via `country` + `onUpdateCountry`). Defaults to `'US'`. */
+  country?: string;
+  /** Override the country picker's option list. Defaults to every region `google-libphonenumber` supports. */
+  countries?: PhoneCountry[];
+  /** Visible label text. */
+  label?: string;
+  /** Visually hide the label (kept for assistive tech). */
+  labelHidden?: boolean;
+  /** Helper text shown below the field. */
+  hint?: string;
+  /** Error message shown below the field (replaces the hint). */
+  error?: string;
+  /** Placeholder shown when empty. Defaults to a national-format example for the country. */
+  placeholder?: string;
+  /** Field size. Defaults to `'md'`. */
+  size?: PhoneInputSize;
+  /** Disable the control. */
+  disabled?: boolean;
+  /** Mark the field as required (renders a `*` after the label). */
+  required?: boolean;
+  /** Native form-field `name`; a hidden input submits the canonical E.164 value under it. */
+  name?: string;
+  /** Accessible label for the country picker. Defaults to `'Country'`. */
+  countryLabel?: string;
+  /** Explicit id; auto-generated when omitted. */
+  id?: string;
+  /** Fired with the next national text (the controlled `v-model` update). */
+  onUpdateModelValue?: (value: string) => void;
+  /** Fired with the next region when the country picker changes. */
+  onUpdateCountry?: (country: string) => void;
+  /** Fired alongside the updates with the parsed result (`national`, `e164`, `valid`, `country`). */
+  onChange?: (change: PhoneChange) => void;
+}
+
+/**
+ * `BasePhoneInput` — an international phone-number field authored once in the
+ * neutral JSX dialect and compiled straight to React or Vue by
+ * `@mission-platform/vite-plugin-jsx`.
+ *
+ * A country picker (native `<select>` of flag + name + dial code) sits beside a
+ * `type="tel"` field. As the user types, the input is formatted as-you-type for
+ * the selected country (`@mission-platform/components`'s framework-agnostic
+ * `phone.ts` helper, built on **`google-libphonenumber`**), and the canonical
+ * E.164 form + validity are derived each render. The national text is controlled
+ * via `modelValue`/`onUpdateModelValue` and the region via `country`/
+ * `onUpdateCountry`; `onChange` reports the full parsed result and a hidden
+ * `name` input submits the E.164 value. It owns its styling through the
+ * co-located CSS Module `base-phone-input.module.scss`.
+ *
+ * The `google-libphonenumber` integration lives in the co-located, framework-
+ * agnostic `phone.ts` helper (no neutral/JSX imports), so the two-stage compiler
+ * copies it verbatim onto both the React and Vue builds and the library is
+ * bundled by each framework's own toolchain. Substitutions from a typical Vue
+ * SFC: the `useId` composable becomes the shared `nextFieldId` helper resolved
+ * once in a `useRef`; the icons become `✓`/`✕` glyphs; and `v-model` + emits
+ * become the `onUpdateModelValue`/`onUpdateCountry`/`onChange` callback props.
+ */
+export function BasePhoneInput(properties: PhoneInputProperties): MpElement {
+  const {
+    modelValue = '',
+    country = 'US',
+    label,
+    labelHidden = false,
+    hint,
+    error,
+    placeholder,
+    size = 'md',
+    disabled = false,
+    required = false,
+    name,
+    countryLabel = 'Country',
+  } = properties;
+
+  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-phone'));
+  const resolvedId = idReference.current;
+  const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
+
+  const countryList = properties.countries ?? listCountries();
+  const dial = dialCode(country);
+  const canonicalE164 = toE164(modelValue, country) ?? '';
+  const valid = isValid(modelValue, country);
+  const hasValue = modelValue.length > 0;
+  const placeholderText = placeholder ?? exampleNumber(country);
+
+  const emitChange = (national: string, region: string): void => {
+    properties.onUpdateModelValue?.(national);
+    properties.onChange?.({
+      national,
+      e164: toE164(national, region) ?? '',
+      valid: isValid(national, region),
+      country: region,
+    });
+  };
+
+  const handleInput = (event: Event): void => {
+    emitChange(formatAsYouType((event.target as HTMLInputElement).value, country), country);
+  };
+
+  const handleCountryChange = (event: Event): void => {
+    const nextCountry = (event.target as HTMLSelectElement).value;
+    properties.onUpdateCountry?.(nextCountry);
+    emitChange(formatAsYouType(modelValue, nextCountry), nextCountry);
+  };
+
+  const countryOptions: MpChild[] = countryList.map((option) => (
+    <option
+      key={option.region}
+      selected={option.region === country}
+      value={option.region}
+    >
+      {`${option.flag} ${option.name} (+${option.dialCode})`}
+    </option>
+  ));
+
+  return (
+    <div
+      classNames={[
+        styles['base-phone-input'],
+        styles[`base-phone-input--${size}`],
+        {
+          [styles['base-phone-input--error']]: !!error,
+          [styles['base-phone-input--disabled']]: disabled,
+          [styles['base-phone-input--valid']]: valid,
+        },
+      ]}
+    >
+      {label ? (
+        <label
+          classNames={[
+            styles['base-phone-input__label'],
+            {
+              [styles['base-phone-input__label--hidden']]: labelHidden,
+            },
+          ]}
+          for={resolvedId}
+        >
+          <BaseTypography
+            as="span"
+            color="primary"
+            variant="label"
+          >
+            {label}
+          </BaseTypography>
+          {required ? (
+            <span
+              aria-hidden="true"
+              classNames={styles['base-phone-input__required']}
+            >
+              *
+            </span>
+          ) : undefined}
+        </label>
+      ) : undefined}
+      <div classNames={styles['base-phone-input__wrapper']}>
+        <select
+          aria-label={countryLabel}
+          classNames={styles['base-phone-input__country']}
+          disabled={disabled}
+          onChange={handleCountryChange}
+        >
+          {countryOptions}
+        </select>
+        <span
+          aria-hidden="true"
+          classNames={styles['base-phone-input__dial']}
+        >
+          +{dial}
+        </span>
+        <input
+          id={resolvedId}
+          aria-describedby={describedBy}
+          aria-invalid={error ? 'true' : undefined}
+          autocomplete="tel-national"
+          classNames={styles['base-phone-input__field']}
+          disabled={disabled}
+          inputmode="tel"
+          placeholder={placeholderText}
+          required={required}
+          type="tel"
+          value={modelValue}
+          onInput={handleInput}
+        />
+        {hasValue ? (
+          <span
+            classNames={styles['base-phone-input__status']}
+            role="img"
+            aria-label={valid ? 'Valid number' : 'Invalid number'}
+          >
+            {valid ? '✓' : '✕'}
+          </span>
+        ) : undefined}
+      </div>
+      {name ? (
+        <input
+          name={name}
+          type="hidden"
+          value={canonicalE164}
+        />
+      ) : undefined}
+      {error ? (
+        <p
+          id={`${resolvedId}-error`}
+          classNames={styles['base-phone-input__error']}
+          role="alert"
+        >
+          <BaseTypography
+            as="span"
+            color="inherit"
+            variant="caption"
+          >
+            {error}
+          </BaseTypography>
+        </p>
+      ) : hint ? (
+        <p
+          id={`${resolvedId}-hint`}
+          classNames={styles['base-phone-input__hint']}
+        >
+          <BaseTypography
+            as="span"
+            color="secondary"
+            variant="caption"
+          >
+            {hint}
+          </BaseTypography>
+        </p>
+      ) : undefined}
+    </div>
+  );
+}

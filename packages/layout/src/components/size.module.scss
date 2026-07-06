@@ -1,0 +1,22 @@
+/**
+ * Shared size utility classes for the write-once layouts.
+ *
+ * Surfaces the canonical `2xs … 2xl` t-shirt size scale as `font-size`
+ * modifier classes, each resolving to a named `--mp-size-font-*` design token
+ * from `@mission-platform/tokens`. Layouts that have no bespoke per-size
+ * styling import this module (`import sizeStyles from '../size.module.scss'`)
+ * and apply `sizeStyles['base-size--<step>']`, so the element's `font-size`
+ * (and any `em`-relative box derived from it) scales with the requested size.
+ *
+ * The rules live in the shared `mp.components` cascade layer (matching the
+ * `@mission-platform/components` package) so unlayered application styles win
+ * over them. Only `var(--mp-*)` design-token custom properties are used.
+ */
+
+@layer mp.components {
+  @each $step in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+    .base-size--#{$step} {
+      font-size: var(--mp-size-font-#{$step});
+    }
+  }
+}

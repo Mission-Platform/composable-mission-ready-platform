@@ -203,4 +203,21 @@ describe('buildTypographyRecords / typographyEntries', () => {
   it('returns `[variant, value]` entries', () => {
     expect(typographyEntries(group).map(([variant]) => variant)).toEqual(['h1']);
   });
+
+  it('flattens the `marginBlock`/`marginInline` logical-margin fields to `var(--mp-spacing-*)` references', () => {
+    const withMargins = {
+      h1: {
+        $value: {
+          fontSize: '{font.size.4xl}',
+          marginBlock: '{spacing.3}',
+          marginInline: '{spacing.0}',
+        },
+      },
+    };
+    const byName = Object.fromEntries(
+      buildTypographyRecords(withMargins, 'mp').map((record) => [record.path.join('-'), record.value]),
+    );
+    expect(byName['typography-h1-margin-block']).toBe('var(--mp-spacing-3)');
+    expect(byName['typography-h1-margin-inline']).toBe('var(--mp-spacing-0)');
+  });
 });

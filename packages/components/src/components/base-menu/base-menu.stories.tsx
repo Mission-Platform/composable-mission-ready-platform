@@ -1,275 +1,92 @@
-import BaseMenu from './base-menu.vue';
+import { Menu } from '@mission-platform/components/vue';
 
-import type { MenuItem } from './base-menu.vue';
+import type { MenuItem } from './base-menu';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+const items: MenuItem[] = [
+  { label: 'Dashboard', icon: '▦', href: '/' },
+  {
+    label: 'Reports',
+    icon: '▤',
+    children: [
+      { label: 'Monthly', href: '/reports/monthly' },
+      {
+        label: 'Quarterly',
+        children: [
+          { label: 'Q1', href: '/reports/q1' },
+          { label: 'Q2', href: '/reports/q2' },
+          { label: 'Q3', href: '/reports/q3' },
+          { label: 'Q4', href: '/reports/q4' },
+        ],
+      },
+      { label: 'Annual', href: '/reports/annual' },
+    ],
+  },
+  { label: 'Settings', icon: '⚙', href: '/settings' },
+  { label: 'Sign out', icon: '⏻' },
+];
+
+/**
+ * `Menu` is the Vue 3 build of the write-once `BaseMenu` in this package. The
+ * component is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/jsx`) and compiled straight to a Vue component at build
+ * time by `@mission-platform/vite-plugin-jsx`. The very same source also ships
+ * as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Navigation/BaseMenu',
-  component: BaseMenu,
+  component: Menu,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`Menu` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Menu` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). It renders a `role="menubar"` whose items expand **arbitrarily deep** submenus (one open per level, the ancestor chain staying open); clicking outside or pressing Escape closes them. Mirroring the original recursive `BaseMenuSubmenu`, the JSX version recurses through a single `renderItems` walk driven by a path-keyed `openPath`; icons become text glyphs and `vue-router` targets become a plain `<a href>`. Styling comes from the co-located `base-menu.module.scss`.',
       },
     },
   },
   argTypes: {
-    orientation: {
-      control: 'select',
-      options: ['vertical', 'horizontal'],
-    },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    orientation: { control: 'inline-radio', options: ['vertical', 'horizontal'] },
   },
   args: {
+    items,
     orientation: 'vertical',
+    ariaLabel: 'Main navigation',
   },
-} satisfies Meta<typeof BaseMenu>;
+  render: (arguments_) => ({
+    components: { Menu },
+    setup() {
+      return { args: arguments_ };
+    },
+    template: '<div style="max-width: 240px;"><Menu v-bind="args" /></div>',
+  }),
+} satisfies Meta<typeof Menu>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const simpleItems: MenuItem[] = [
-  { label: 'Dashboard', href: '#' },
-  { label: 'Operations', href: '#' },
-  { label: 'Reports', href: '#' },
-  { label: 'Settings', href: '#' },
-];
+export const Default: Story = {};
 
-const withSubmenuItems: MenuItem[] = [
-  { label: 'Dashboard', href: '#' },
-  {
-    label: 'Operations',
-    children: [
-      { label: 'Active Missions', href: '#' },
-      { label: 'Unit Deployment', href: '#' },
-      { label: 'Logistics', href: '#' },
-    ],
-  },
-  {
-    label: 'Reports',
-    children: [
-      { label: 'Daily Summary', href: '#' },
-      { label: 'Weekly Report', href: '#' },
-      { label: 'Archive', href: '#' },
-    ],
-  },
-  { label: 'Settings', href: '#' },
-];
+export const Horizontal: Story = { args: { orientation: 'horizontal' } };
 
-const withIconsAndDisabled: MenuItem[] = [
-  { label: 'Dashboard', icon: '🏠', href: '#' },
-  {
-    label: 'Operations',
-    icon: '⚙️',
-    children: [
-      { label: 'Active Missions', icon: '🎯', href: '#' },
-      { label: 'Unit Deployment', icon: '🚁', href: '#' },
-      { label: 'Archived', icon: '📦', href: '#', disabled: true },
-    ],
-  },
-  { label: 'Reports', icon: '📊', href: '#' },
-  { label: 'Admin', icon: '🔒', href: '#', disabled: true },
-];
-
-const multiLevelItems: MenuItem[] = [
-  {
-    label: 'File',
-    children: [
-      { label: 'New', onClick: () => alert('New') },
-      { label: 'Open', onClick: () => alert('Open') },
-      { label: 'Save', onClick: () => alert('Save') },
-      { label: 'Save As…', onClick: () => alert('Save As') },
-    ],
-  },
-  {
-    label: 'Edit',
-    children: [
-      { label: 'Undo', onClick: () => alert('Undo') },
-      { label: 'Redo', onClick: () => alert('Redo'), disabled: true },
-      { label: 'Cut', onClick: () => alert('Cut') },
-      { label: 'Copy', onClick: () => alert('Copy') },
-      { label: 'Paste', onClick: () => alert('Paste') },
-    ],
-  },
-  {
-    label: 'View',
-    children: [
-      { label: 'Zoom In', onClick: () => alert('Zoom In') },
-      { label: 'Zoom Out', onClick: () => alert('Zoom Out') },
-      { label: 'Full Screen', onClick: () => alert('Full Screen') },
-    ],
-  },
-  { label: 'Help', onClick: () => alert('Help') },
-];
-
-const nestedSubmenuItems: MenuItem[] = [
-  { label: 'Dashboard', href: '#' },
-  {
-    label: 'Operations',
-    children: [
-      { label: 'Active Missions', href: '#' },
-      {
-        label: 'Unit Deployment',
-        children: [
-          { label: 'Ground Forces', href: '#' },
-          { label: 'Air Support', href: '#' },
-          {
-            label: 'Naval Assets',
-            children: [
-              { label: 'Carriers', href: '#' },
-              { label: 'Destroyers', href: '#' },
-              { label: 'Submarines', href: '#' },
-            ],
-          },
-        ],
-      },
-      { label: 'Logistics', href: '#' },
-    ],
-  },
-  {
-    label: 'Reports',
-    children: [
-      { label: 'Daily Summary', href: '#' },
-      {
-        label: 'Analytics',
-        children: [
-          { label: 'Performance', href: '#' },
-          { label: 'Resource Usage', href: '#' },
-          { label: 'Trends', href: '#', disabled: true },
-        ],
-      },
-      { label: 'Archive', href: '#' },
-    ],
-  },
-  { label: 'Settings', href: '#' },
-];
-
-export const Default: Story = {
-  args: {
-    items: simpleItems,
-  },
-};
-
-export const WithSubmenus: Story = {
-  args: {
-    items: withSubmenuItems,
-    orientation: 'vertical',
-  },
-};
-
-export const WithIconsAndDisabledItems: Story = {
-  args: {
-    items: withIconsAndDisabled,
-    orientation: 'vertical',
-  },
-};
-
-export const Horizontal: Story = {
-  args: {
-    items: multiLevelItems,
-    orientation: 'horizontal',
-  },
+export const Nested: Story = {
   parameters: {
-    layout: 'fullscreen',
-  },
-  render: (arguments_) => ({
-    components: { BaseMenu },
-    setup() {
-      return { args: arguments_ };
+    docs: {
+      description: {
+        story:
+          'Multi-level submenus: opening **Reports → Quarterly** keeps the whole ancestor chain open while collapsing any open sibling at each level — the same recursion the Vue `BaseMenuSubmenu` provides.',
+      },
     },
-    template: `
-      <div style="padding: var(--mp-spacing-4); background-color: var(--mp-color-bg-surface); border-bottom: 1px solid var(--mp-color-border-default);">
-        <BaseMenu v-bind="args" aria-label="Main navigation" />
-      </div>
-    `,
-  }),
-};
-
-export const Vertical: Story = {
-  args: {
-    items: withSubmenuItems,
-    orientation: 'vertical',
-  },
-  render: (arguments_) => ({
-    components: { BaseMenu },
-    setup() {
-      return { args: arguments_ };
-    },
-    template: `
-      <div style="width: 220px; padding: var(--mp-spacing-3); background-color: var(--mp-color-bg-surface); border: 1px solid var(--mp-color-border-default); border-radius: var(--mp-radius-lg);">
-        <BaseMenu v-bind="args" aria-label="Sidebar navigation" />
-      </div>
-    `,
-  }),
-};
-
-export const AllDisabled: Story = {
-  args: {
-    items: simpleItems.map((item) => ({ ...item, disabled: true })),
-    orientation: 'vertical',
   },
 };
 
-export const NestedSubmenus: Story = {
-  args: {
-    items: nestedSubmenuItems,
-    orientation: 'vertical',
-  },
-  render: (arguments_) => ({
-    components: { BaseMenu },
-    setup() {
-      return { args: arguments_ };
-    },
-    template: `
-      <div style="width: 240px; padding: var(--mp-spacing-3); background-color: var(--mp-color-bg-surface); border: 1px solid var(--mp-color-border-default); border-radius: var(--mp-radius-lg);">
-        <BaseMenu v-bind="args" aria-label="Nested navigation" />
-      </div>
-    `,
-  }),
-};
-
-export const WithRouterLinks: Story = {
-  name: 'With Router Links (to)',
+export const LinksOnly: Story = {
   args: {
     items: [
-      { label: 'Dashboard', to: '/' },
-      { label: 'Reports', to: '/reports' },
-      { label: 'Settings', to: '/settings' },
-      { label: 'Restricted', to: '/admin', disabled: true },
+      { label: 'Home', href: '/' },
+      { label: 'About', href: '/about' },
+      { label: 'Contact', href: '/contact' },
     ],
-    orientation: 'vertical',
   },
-  render: (arguments_) => ({
-    components: { BaseMenu },
-    setup() {
-      return { args: arguments_ };
-    },
-    template: `
-      <div style="width: 220px; padding: var(--mp-spacing-3); background-color: var(--mp-color-bg-surface); border: 1px solid var(--mp-color-border-default); border-radius: var(--mp-radius-lg);">
-        <BaseMenu v-bind="args" aria-label="Router link navigation" />
-      </div>
-    `,
-  }),
-};
-
-export const NestedSubmenusHorizontal: Story = {
-  args: {
-    items: nestedSubmenuItems,
-    orientation: 'horizontal',
-  },
-  parameters: {
-    layout: 'fullscreen',
-  },
-  render: (arguments_) => ({
-    components: { BaseMenu },
-    setup() {
-      return { args: arguments_ };
-    },
-    template: `
-      <div style="padding: var(--mp-spacing-4); background-color: var(--mp-color-bg-surface); border-bottom: 1px solid var(--mp-color-border-default);">
-        <BaseMenu v-bind="args" aria-label="Nested horizontal navigation" />
-      </div>
-    `,
-  }),
 };

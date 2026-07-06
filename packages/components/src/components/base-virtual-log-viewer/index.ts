@@ -1,2 +1,6 @@
-export { default } from './base-virtual-log-viewer.vue';
-export type { LogEntry, LogLevel } from './base-virtual-log-viewer.vue';
+export {
+  BaseVirtualLogViewer,
+  type LogEntry,
+  type LogLevel,
+  type VirtualLogViewerProperties,
+} from './base-virtual-log-viewer';

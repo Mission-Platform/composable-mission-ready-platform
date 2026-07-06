@@ -1,16 +1,17 @@
 # @mission-platform/vite-config
 
 Shared Vite and Vitest configuration helpers for Mission Platform packages and
-apps. Provides standard-ised library and app builds (Vue + vue-i18n plugins,
-shared PostCSS pipeline, peer-dependency externals) and a Vitest factory
-preconfigured for Vue components.
+apps. Provides standard-ised library and app builds (the Vue plugin, the shared
+PostCSS pipeline, peer-dependency externals, and an `ignoreVueI18nBlocksPlugin`
+that keeps SFC `<i18n>` custom blocks inert) and a Vitest factory preconfigured
+for Vue components.
 
 ## Exports
 
-| Subpath                                | Helpers                                                             |
-| -------------------------------------- | ------------------------------------------------------------------- |
-| `@mission-platform/vite-config`        | `defineLibraryConfig`, `defineAppConfig`, default externals/globals |
-| `@mission-platform/vite-config/vitest` | `defineVitestConfig`                                                |
+| Subpath                                | Helpers                                                                                          |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `@mission-platform/vite-config`        | `defineLibraryConfig`, `defineAppConfig`, `ignoreVueI18nBlocksPlugin`, default externals/globals |
+| `@mission-platform/vite-config/vitest` | `defineVitestConfig`                                                                             |
 
 ## Library package usage
 
@@ -80,6 +81,9 @@ export default defineVitestConfig({
   `entry` paths absolutely.
 - Use the `overrides` option instead of copy-pasting the shared boilerplate.
   This guarantees workspaces stay in lock-step with platform defaults.
-- The library helper externalises `vue`, `vue-router`, `vue-i18n`, and
+- The library helper externalises `vue`, `vue-router`, and
   `@mission-platform/i18n` by default; declare any additional peer deps via
   `external`.
+- Vue SFC `<i18n>` custom blocks are turned into inert no-op modules by the
+  bundled `ignoreVueI18nBlocksPlugin` (they are consumed only by
+  `scripts/i18n-extract.ts`; runtime translations load from i18next).

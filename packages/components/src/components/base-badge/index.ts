@@ -1,2 +1,1 @@
-export { default } from './base-badge.vue';
-export type { BadgeVariant, BadgeSize } from './base-badge.vue';
+export { BaseBadge, type BadgeProperties, type BadgeSize, type BadgeVariant } from './base-badge';

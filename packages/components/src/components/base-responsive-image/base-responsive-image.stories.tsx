@@ -1,20 +1,28 @@
-import BaseResponsiveImage from './base-responsive-image.vue';
+import { ResponsiveImage } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `ResponsiveImage` is the Vue 3 build of the write-once `BaseResponsiveImage`
+ * in this package. The component is authored **once** in the framework-neutral
+ * JSX dialect (`@mission-platform/jsx`) and compiled straight to a Vue component
+ * at build time by `@mission-platform/vite-plugin-jsx`. The very same source
+ * also ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Media/BaseResponsiveImage',
-  component: BaseResponsiveImage,
+  component: ResponsiveImage,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`ResponsiveImage` component — a `<picture>` with art-directed / format-specific sources, native lazy loading, async decoding, a fixed aspect ratio, and `object-fit` control. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `ResponsiveImage` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). It renders a `<picture>` with art-directed / format-specific sources, native lazy loading, async decoding, a fixed aspect ratio, and `object-fit` control. The original `load`/`error` emits become the `onLoad`/`onError` callback props. Styling comes from the co-located `base-responsive-image.module.scss`.',
       },
     },
   },
   argTypes: {
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     src: { control: 'text' },
     alt: { control: 'text' },
     loading: { control: 'inline-radio', options: ['lazy', 'eager'] },
@@ -31,13 +39,13 @@ const meta = {
     rounded: true,
   },
   render: (arguments_) => ({
-    components: { BaseResponsiveImage },
+    components: { ResponsiveImage },
     setup() {
       return { args: arguments_ };
     },
-    template: `<div style="max-width: 480px;"><BaseResponsiveImage v-bind="args" /></div>`,
+    template: '<div style="max-width: 480px;"><ResponsiveImage v-bind="args" /></div>',
   }),
-} satisfies Meta<typeof BaseResponsiveImage>;
+} satisfies Meta<typeof ResponsiveImage>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

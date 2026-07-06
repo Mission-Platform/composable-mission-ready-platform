@@ -1,2 +1,6 @@
-export { default } from './base-status-icon.vue';
-export type { StatusLevel, StatusIconSize } from './base-status-icon.vue';
+export {
+  BaseStatusIcon,
+  type StatusIconLevel,
+  type StatusIconProperties,
+  type StatusIconSize,
+} from './base-status-icon';

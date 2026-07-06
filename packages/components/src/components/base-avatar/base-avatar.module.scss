@@ -1,0 +1,20 @@
+/**
+ * Demo styling for the write-once `BaseAvatar`.
+ *
+ * The component lays itself out via inline token-driven styles only; this
+ * co-located CSS Module just arranges the slotted demo avatars in a row so the
+ * Storybook examples are legible.
+ *
+ * The rules live in the shared `mp.components` cascade layer (matching the
+ * `@mission-platform/components` package). The stylesheet is a CSS Module,
+ * consumed through its hashed class map by `base-avatar.stories.tsx`.
+ */
+
+@layer mp.components {
+  .avatar-demo-row {
+    display: flex;
+    align-items: center;
+    gap: var(--mp-spacing-4);
+    flex-wrap: wrap;
+  }
+}

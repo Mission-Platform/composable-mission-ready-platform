@@ -1,72 +1,67 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseTable, type TableColumn } from './base-table';
 
-import BaseTable from './base-table.vue';
+/**
+ * Exercises the **neutral** `BaseTable` authored in this package, rendering it
+ * on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * Covers the column headers, data rows (via the composed `BaseTypography`), the
+ * caption, and the empty state.
+ */
+const ReactTable = toReactComponent(BaseTable, 'Table');
+const VueTable = toVueComponent(BaseTable, 'Table');
 
-import type { TableColumn } from './types.ts';
-
-interface Row {
-  name: string;
-  age: number;
-}
-
-const columns: TableColumn<Row>[] = [
+const COLUMNS: TableColumn[] = [
   { key: 'name', label: 'Name', sortable: true },
-  { key: 'age', label: 'Age', sortable: true, align: 'right' },
+  { key: 'role', label: 'Role', align: 'right' },
+];
+const ROWS = [
+  { name: 'Ada', role: 'Author' },
+  { name: 'Grace', role: 'Admiral' },
 ];
 
-const rows: Row[] = [
-  { name: 'Bob', age: 30 },
-  { name: 'Alice', age: 25 },
-];
+describe('BaseTable authors the same component for React and Vue', () => {
+  it('renders headers, rows, and caption on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactTable, { columns: COLUMNS, rows: ROWS, caption: 'Pioneers', striped: true }),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () => vueH(VueTable, { columns: COLUMNS, rows: ROWS, caption: 'Pioneers', striped: true }),
+      }),
+    );
 
-describe('BaseTable', () => {
-  it('renders a table element', () => {
-    const wrapper = mountWithI18n(BaseTable, { props: { columns, rows } });
-    expect(wrapper.find('table').exists()).toBe(true);
+    for (const html of [react, vue]) {
+      expect(html).toContain('<table');
+      expect(html).toContain('base-table--striped');
+      expect(html).toContain('<caption');
+      expect(html).toContain('Pioneers');
+      expect(html).toContain('<th');
+      expect(html).toContain('Name');
+      expect(html).toContain('base-table__th--sortable');
+      expect(html).toContain('base-table__th--align-right');
+      expect(html).toContain('Ada');
+      expect(html).toContain('Admiral');
+    }
   });
 
-  it('renders correct column headers', () => {
-    const wrapper = mountWithI18n(BaseTable, { props: { columns, rows } });
-    const headers = wrapper.findAll('th');
-    expect(headers[0].text()).toContain('Name');
-    expect(headers[1].text()).toContain('Age');
-  });
+  it('renders the empty state when there are no rows on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactTable, { columns: COLUMNS, rows: [], emptyText: 'Nothing here' }),
+    );
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueTable, { columns: COLUMNS, rows: [], emptyText: 'Nothing here' }) }),
+    );
 
-  it('renders correct number of rows', () => {
-    const wrapper = mountWithI18n(BaseTable, { props: { columns, rows } });
-    expect(wrapper.findAll('tbody tr')).toHaveLength(2);
-  });
-
-  it('renders cell data', () => {
-    const wrapper = mountWithI18n(BaseTable, { props: { columns, rows } });
-    expect(wrapper.find('tbody').text()).toContain('Bob');
-    expect(wrapper.find('tbody').text()).toContain('Alice');
-  });
-
-  it('shows empty state when no rows', () => {
-    const wrapper = mountWithI18n(BaseTable, { props: { columns, rows: [] } });
-    expect(wrapper.find('.base-table__empty').exists()).toBe(true);
-  });
-
-  it('renders caption', () => {
-    const wrapper = mountWithI18n(BaseTable, { props: { columns, rows, caption: 'People' } });
-    expect(wrapper.find('caption').text()).toBe('People');
-  });
-
-  it('applies striped class', () => {
-    const wrapper = mountWithI18n(BaseTable, { props: { columns, rows, striped: true } });
-    expect(wrapper.find('.base-table').classes()).toContain('base-table--striped');
-  });
-
-  it('applies bordered class', () => {
-    const wrapper = mountWithI18n(BaseTable, { props: { columns, rows, bordered: true } });
-    expect(wrapper.find('.base-table').classes()).toContain('base-table--bordered');
-  });
-
-  it('shows loading spinner', () => {
-    const wrapper = mountWithI18n(BaseTable, { props: { columns, rows, loading: true } });
-    expect(wrapper.find('.base-table__loading').exists()).toBe(true);
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-table__empty');
+      expect(html).toContain('Nothing here');
+    }
   });
 });

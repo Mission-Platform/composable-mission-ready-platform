@@ -1,2 +1,1 @@
-export { default } from './base-select.vue';
-export type { SelectSize, SelectOption } from './base-select.vue';
+export { BaseSelect, type SelectOption, type SelectProperties, type SelectSize } from './base-select';

@@ -1,2 +1,7 @@
-export { default } from './base-monaco-editor.vue';
-export type { MonacoEditorLanguage, MonacoEditorTheme } from './base-monaco-editor.vue';
+export {
+  BaseMonacoEditor,
+  type MonacoEditorCompletionItemProvider,
+  type MonacoEditorProperties,
+  type MonacoEditorTheme,
+  type MonacoReadyContext,
+} from './base-monaco-editor';

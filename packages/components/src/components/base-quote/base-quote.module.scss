@@ -1,0 +1,86 @@
+/**
+ * Styling for the write-once `BaseQuote`.
+ *
+ * Carried onto both frameworks by the two-stage compiler: React imports this as
+ * a hashed CSS Module, Vue inlines it as a (non-scoped) `<style>` block. The
+ * rules live in the shared `mp.components` cascade layer (matching the
+ * `@mission-platform/components` package).
+ */
+
+@layer mp.components {
+  .base-quote {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--mp-spacing-3);
+
+    &__content {
+      margin: 0;
+      font-style: italic;
+    }
+
+    &__attribution {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: var(--mp-spacing-2);
+
+      &::before {
+        content: '—';
+        color: var(--mp-color-text-tertiary);
+      }
+    }
+
+    &__source {
+      font-style: normal;
+
+      &::before {
+        content: ', ';
+      }
+    }
+
+    /* Variants */
+    &--bordered {
+      padding-left: var(--mp-spacing-4);
+      border-left: 3px solid var(--mp-color-primary-default);
+    }
+
+    &--default {
+      padding: var(--mp-spacing-5);
+      background-color: var(--mp-color-bg-muted);
+      border-radius: var(--mp-radius-lg);
+    }
+
+    &--plain {
+      /* no chrome — text only */
+    }
+
+    /**
+     * Colour tones — tint the `bordered` accent and the `default` background.
+     * `neutral` is omitted so it keeps the plain treatment.
+     */
+    @each $name,
+      $family
+        in (
+          'primary': 'primary',
+          'secondary': 'secondary',
+          'tertiary': 'tertiary',
+          'success': 'success',
+          'warning': 'warning',
+          'info': 'info',
+          'error': 'error',
+          'critical': 'critical'
+        )
+    {
+      &--tone-#{$name} {
+        &.base-quote--bordered {
+          border-left-color: var(--mp-color-#{$family}-default);
+        }
+
+        &.base-quote--default {
+          background-color: var(--mp-color-#{$family}-muted);
+        }
+      }
+    }
+  }
+}

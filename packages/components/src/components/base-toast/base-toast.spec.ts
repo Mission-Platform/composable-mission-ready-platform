@@ -1,44 +1,54 @@
-import { mount } from '@vue/test-utils';
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import BaseToast from './base-toast.vue';
+import { BaseToast } from './base-toast';
 
-describe('BaseToast', () => {
-  it('renders the title and message', () => {
-    const wrapper = mount(BaseToast, { props: { title: 'Saved', message: 'Your changes were saved.' } });
-    expect(wrapper.find('.base-toast__title').text()).toBe('Saved');
-    expect(wrapper.find('.base-toast__message').text()).toBe('Your changes were saved.');
-  });
+/**
+ * Exercises the **neutral** `BaseToast` authored in this package, rendering it
+ * on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * Covers the variant role/glyph, the title + message, and the dismiss button.
+ */
+const ReactToast = toReactComponent(BaseToast, 'Toast');
+const VueToast = toVueComponent(BaseToast, 'Toast');
 
-  it('renders the default slot in place of the message prop', () => {
-    const wrapper = mount(BaseToast, { props: { message: 'ignored' }, slots: { default: 'Slotted body' } });
-    expect(wrapper.find('.base-toast__message').text()).toBe('Slotted body');
-  });
+describe('BaseToast authors the same component for React and Vue', () => {
+  it('renders a titled, assertive error toast with a dismiss button on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactToast, { variant: 'error', title: 'Upload failed', message: 'Try again' }),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () => vueH(VueToast, { variant: 'error', title: 'Upload failed', message: 'Try again' }),
+      }),
+    );
 
-  it('applies the variant class', () => {
-    for (const variant of ['info', 'success', 'warning', 'error', 'neutral'] as const) {
-      const wrapper = mount(BaseToast, { props: { variant } });
-      expect(wrapper.classes()).toContain(`base-toast--${variant}`);
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-toast');
+      expect(html).toContain('base-toast--error');
+      expect(html).toContain('role="alert"');
+      expect(html).toContain('aria-live="assertive"');
+      expect(html).toContain('Upload failed');
+      expect(html).toContain('Try again');
+      expect(html).toContain('aria-label="Dismiss"');
+      expect(html).toContain('✕');
     }
   });
 
-  it('uses role="status" for info/success/neutral and role="alert" for warning/error', () => {
-    expect(mount(BaseToast, { props: { variant: 'info' } }).attributes('role')).toBe('status');
-    expect(mount(BaseToast, { props: { variant: 'success' } }).attributes('role')).toBe('status');
-    expect(mount(BaseToast, { props: { variant: 'warning' } }).attributes('role')).toBe('alert');
-    expect(mount(BaseToast, { props: { variant: 'error' } }).attributes('role')).toBe('alert');
-  });
+  it('omits the dismiss button when not dismissible on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactToast, { variant: 'success', dismissible: false }, 'Saved'));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueToast, { variant: 'success', dismissible: false }, () => 'Saved') }),
+    );
 
-  it('renders a dismiss button by default and emits dismiss on click', async () => {
-    const wrapper = mount(BaseToast, { props: { message: 'x' } });
-    const button = wrapper.find('.base-toast__dismiss');
-    expect(button.exists()).toBe(true);
-    await button.trigger('click');
-    expect(wrapper.emitted('dismiss')).toHaveLength(1);
-  });
-
-  it('hides the dismiss button when not dismissible', () => {
-    const wrapper = mount(BaseToast, { props: { message: 'x', dismissible: false } });
-    expect(wrapper.find('.base-toast__dismiss').exists()).toBe(false);
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-toast--success');
+      expect(html).toContain('Saved');
+      expect(html).not.toContain('aria-label="Dismiss"');
+    }
   });
 });

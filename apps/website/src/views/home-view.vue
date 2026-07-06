@@ -1,15 +1,12 @@
 <script setup lang="ts">
   import {
     BaseAccordion,
-    BaseAccordionItem,
-    BaseApplicationLayout,
     BaseAvatar,
     BaseBadge,
     BaseButton,
     BaseCard,
-    BaseCardBody,
-    BaseCardHeader,
     BaseCarousel,
+    BaseGrid,
     BaseInView,
     BaseMasonry,
     BaseNavbar,
@@ -19,8 +16,9 @@
     BaseTag,
     BaseThemeToggle,
     BaseTypography,
-  } from '@mission-platform/components';
-  import { useI18n } from '@mission-platform/i18n';
+    BaseAlertBanner,
+  } from '@mission-platform/components/vue';
+  import { useI18n } from '@mission-platform/i18n/vue';
   import {
     IconDebug,
     IconGlobe,
@@ -29,7 +27,8 @@
     IconPalette,
     IconPuzzle,
     IconSearch,
-  } from '@mission-platform/icons';
+  } from '@mission-platform/icons/vue';
+  import { BaseApplicationLayout } from '@mission-platform/layouts/vue';
   import { organizationId, useSeo, webPage, webSiteId } from '@mission-platform/seo';
   import { type Component, computed, onBeforeUnmount, onMounted, ref } from 'vue';
   import { useRouter } from 'vue-router';
@@ -60,7 +59,7 @@
     cta: string;
   }
 
-  const { t, locale } = useI18n({ useScope: 'global' });
+  const { t, locale } = useI18n();
   const router = useRouter();
 
   // Per-route SEO surface: emit the `WebPage` JSON-LD node for this route,
@@ -109,8 +108,8 @@
   const features = computed<Feature[]>(() =>
     featureIcons.map((icon, index) => ({
       icon,
-      title: t(`features.items[${index}].title`),
-      description: t(`features.items[${index}].description`),
+      title: t(`features.items.${index}.title`),
+      description: t(`features.items.${index}.description`),
     })),
   );
 
@@ -149,8 +148,13 @@
 
   const packageNames = [
     '@mission-platform/components',
+    '@mission-platform/jsx',
     '@mission-platform/tokens',
     '@mission-platform/icons',
+    '@mission-platform/layouts',
+    '@mission-platform/forms',
+    '@mission-platform/router',
+    '@mission-platform/scheduler-core',
     '@mission-platform/breakpoints',
     '@mission-platform/i18n',
     '@mission-platform/map',
@@ -162,7 +166,7 @@
   const packages = computed<Pkg[]>(() =>
     packageNames.map((name, index) => ({
       name,
-      description: t(`packages.items[${index}]`),
+      description: t(`packages.items.${index}`),
     })),
   );
 
@@ -182,6 +186,19 @@
       answer: t(`faq.items.${key}.answer`),
     })),
   );
+  // BaseAccordion is driven by a flat `items` array (with scoped `summary`/
+  // `content` slots) rather than nested `BaseAccordionItem`s.
+  const faqItems = computed(() =>
+    faqs.value.map((faq, index) => ({
+      id: `faq-${index}`,
+      title: faq.question,
+      content: faq.answer,
+    })),
+  );
+  // BaseCarousel is driven by a flat `slides` array (with a scoped `slide`
+  // slot) rather than default-slot children; the project for each slide is
+  // looked up by index inside the slot.
+  const projectSlides = computed(() => projects.value.map((project) => ({ id: project.name })));
 
   // ── Scroll-spy: track which section is currently in view ────────────────────
   const sectionIds = ['features', 'packages', 'about', 'faq'] as const;
@@ -233,7 +250,17 @@
   <BaseApplicationLayout
     class="home"
     sticky-header
+    :status-level="undefined"
   >
+    <template
+      v-if="isAiTranslation"
+      #status
+    >
+      <BaseAlertBanner variant="warning">
+        {{ t('ai-translation-warning') }}
+      </BaseAlertBanner>
+    </template>
+
     <template #navbar>
       <BaseNavbar
         align="center"
@@ -267,30 +294,30 @@
           :active="activeSection === 'features'"
           :label="t('nav.features')"
           href="#features"
-          @click="(e) => scrollToSection(e, 'features')"
+          @click="(e: MouseEvent) => scrollToSection(e, 'features')"
         />
         <BaseNavbarItem
           :active="activeSection === 'packages'"
           :label="t('nav.packages')"
           href="#packages"
-          @click="(e) => scrollToSection(e, 'packages')"
+          @click="(e: MouseEvent) => scrollToSection(e, 'packages')"
         />
         <BaseNavbarItem
           :active="activeSection === 'about'"
           :label="t('nav.about')"
           href="#about"
-          @click="(e) => scrollToSection(e, 'about')"
+          @click="(e: MouseEvent) => scrollToSection(e, 'about')"
         />
         <BaseNavbarItem
           :active="activeSection === 'faq'"
           :label="t('nav.faq')"
           href="#faq"
-          @click="(e) => scrollToSection(e, 'faq')"
+          @click="(e: MouseEvent) => scrollToSection(e, 'faq')"
         />
 
         <template #end>
           <BaseNavbarItem
-            :children="languageChildren"
+            :dropdown-items="languageChildren"
             :label="currentLanguageLabel"
           >
             <template #icon>
@@ -306,63 +333,52 @@
     </template>
 
     <template #content>
-      <div
-        v-if="isAiTranslation"
-        class="home__ai-warning"
-        role="note"
-      >
-        <BaseTypography
-          variant="body-sm"
-          align="center"
-        >
-          ⚠️ {{ t('ai-translation-warning') }}
-        </BaseTypography>
-      </div>
-      <BaseInView
-        tag="section"
-        animation="slide-up"
+      <section
+        id="hero"
         class="home__hero"
       >
-        <BaseBadge variant="information">{{ t('hero.badge') }}</BaseBadge>
-        <BaseTypography
-          variant="display"
-          weight="bold"
-          align="center"
-          class="home__title"
-        >
-          {{ t('hero.title') }}
-        </BaseTypography>
-        <BaseTypography
-          variant="body-lg"
-          color="secondary"
-          align="center"
-          class="home__lead"
-        >
-          {{ t('hero.lead') }}
-        </BaseTypography>
-        <BaseStack
-          class="home__cta"
-          direction="horizontal"
-          gap="sm"
-          justify="center"
-          wrap
-        >
-          <BaseButton
-            variant="primary"
-            size="lg"
-            @click="() => {}"
+        <BaseInView animation="slide-up">
+          <BaseBadge variant="info">{{ t('hero.badge') }}</BaseBadge>
+          <BaseTypography
+            variant="display"
+            weight="bold"
+            align="center"
+            class="home__title"
           >
-            {{ t('hero.cta-primary') }}
-          </BaseButton>
-          <BaseButton
-            variant="secondary"
-            size="lg"
-            @click="() => {}"
+            {{ t('hero.title') }}
+          </BaseTypography>
+          <BaseTypography
+            variant="body-lg"
+            color="secondary"
+            align="center"
+            class="home__lead"
           >
-            {{ t('hero.cta-secondary') }}
-          </BaseButton>
-        </BaseStack>
-      </BaseInView>
+            {{ t('hero.lead') }}
+          </BaseTypography>
+          <BaseStack
+            class="home__cta"
+            direction="horizontal"
+            gap="sm"
+            justify="center"
+            wrap
+          >
+            <BaseButton
+              variant="primary"
+              size="lg"
+              @click="() => {}"
+            >
+              {{ t('hero.cta-primary') }}
+            </BaseButton>
+            <BaseButton
+              variant="secondary"
+              size="lg"
+              @click="() => {}"
+            >
+              {{ t('hero.cta-secondary') }}
+            </BaseButton>
+          </BaseStack>
+        </BaseInView>
+      </section>
 
       <section
         id="features"
@@ -376,13 +392,16 @@
           >
             {{ t('features.title') }}
           </BaseTypography>
-          <div class="home__grid">
+          <BaseGrid
+            min-column-width="16rem"
+            gap="lg"
+          >
             <BaseCard
               v-for="feature in features"
               :key="feature.title"
               class="home__feature"
             >
-              <BaseCardHeader>
+              <template #header>
                 <div class="home__feature-icon">
                   <component
                     :is="feature.icon"
@@ -395,17 +414,15 @@
                 >
                   {{ feature.title }}
                 </BaseTypography>
-              </BaseCardHeader>
-              <BaseCardBody>
-                <BaseTypography
-                  variant="body-md"
-                  color="secondary"
-                >
-                  {{ feature.description }}
-                </BaseTypography>
-              </BaseCardBody>
+              </template>
+              <BaseTypography
+                variant="body-md"
+                color="secondary"
+              >
+                {{ feature.description }}
+              </BaseTypography>
             </BaseCard>
-          </div>
+          </BaseGrid>
         </BaseInView>
       </section>
 
@@ -438,21 +455,19 @@
               :key="pkg.name"
               class="home__package"
             >
-              <BaseCardBody>
-                <div class="home__package-row">
-                  <BaseTag
-                    variant="primary"
-                    size="sm"
-                    :label="pkg.name"
-                  />
-                </div>
-                <BaseTypography
-                  variant="body-sm"
-                  color="secondary"
-                >
-                  {{ pkg.description }}
-                </BaseTypography>
-              </BaseCardBody>
+              <div class="home__package-row">
+                <BaseTag
+                  variant="primary"
+                  size="sm"
+                  :label="pkg.name"
+                />
+              </div>
+              <BaseTypography
+                variant="body-sm"
+                color="secondary"
+              >
+                {{ pkg.description }}
+              </BaseTypography>
             </BaseCard>
           </BaseMasonry>
         </BaseInView>
@@ -480,52 +495,51 @@
           <div class="home__projects">
             <BaseCarousel
               :aria-label="t('projects.aria-label')"
+              :slides="projectSlides"
               :loop="projects.length > 1"
               :controls="projects.length > 1"
               :indicators="projects.length > 1"
             >
-              <BaseCard
-                v-for="project in projects"
-                :key="project.name"
-                shadow
-                class="home__project"
-              >
-                <BaseCardHeader>
-                  <BaseTypography
-                    variant="h4"
-                    weight="semibold"
-                  >
-                    {{ project.name }}
-                  </BaseTypography>
-                </BaseCardHeader>
-                <BaseCardBody>
+              <template #slide="{ index }">
+                <BaseCard
+                  shadow
+                  class="home__project"
+                >
+                  <template #header>
+                    <BaseTypography
+                      variant="h4"
+                      weight="semibold"
+                    >
+                      {{ projects[index].name }}
+                    </BaseTypography>
+                  </template>
                   <BaseTypography
                     variant="body-md"
                     color="secondary"
                     class="home__project-description"
                   >
-                    {{ project.description }}
+                    {{ projects[index].description }}
                   </BaseTypography>
                   <div class="home__project-cta">
                     <a
-                      :href="project.href"
+                      :href="projects[index].href"
                       class="home__project-link"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       <BaseButton variant="primary">
-                        {{ project.cta }}
+                        {{ projects[index].cta }}
                       </BaseButton>
                     </a>
                     <BaseQrCode
-                      :aria-label="project.cta + ': ' + project.name"
+                      :aria-label="projects[index].cta + ': ' + projects[index].name"
                       :size="96"
-                      :value="project.href"
+                      :value="projects[index].href"
                       class="home__project-qr"
                     />
                   </div>
-                </BaseCardBody>
-              </BaseCard>
+                </BaseCard>
+              </template>
             </BaseCarousel>
           </div>
         </BaseInView>
@@ -543,28 +557,28 @@
           >
             {{ t('faq.title') }}
           </BaseTypography>
-          <BaseAccordion class="home__faq">
-            <BaseAccordionItem
-              v-for="(faq, index) in faqs"
-              :id="`faq-${index}`"
-              :key="faq.question"
-            >
-              <template #summary>
-                <BaseTypography
-                  variant="h5"
-                  weight="semibold"
-                  as="span"
-                >
-                  {{ faq.question }}
-                </BaseTypography>
-              </template>
+          <BaseAccordion
+            class="home__faq"
+            :items="faqItems"
+            :exclusive="false"
+          >
+            <template #summary="{ item }">
+              <BaseTypography
+                variant="h5"
+                weight="semibold"
+                as="span"
+              >
+                {{ item.title }}
+              </BaseTypography>
+            </template>
+            <template #content="{ item }">
               <BaseTypography
                 variant="body-md"
                 color="secondary"
               >
-                {{ faq.answer }}
+                {{ item.content }}
               </BaseTypography>
-            </BaseAccordionItem>
+            </template>
           </BaseAccordion>
         </BaseInView>
       </section>
@@ -577,9 +591,9 @@
           color="secondary"
           class="home__disclaimer"
         >
-          <i18n-t
-            keypath="footer.disclaimer"
-            scope="global"
+          <i18next
+            :translation="t('footer.disclaimer')"
+            tag="span"
           >
             <template #brand>
               <strong>Mission Platform</strong>
@@ -587,7 +601,7 @@
             <template #not-affiliated>
               <em>{{ t('footer.not-affiliated') }}</em>
             </template>
-          </i18n-t>
+          </i18next>
         </BaseTypography>
         <BaseTypography
           variant="caption"
@@ -632,7 +646,6 @@
   }
 
   .home__lead {
-    max-width: 680px;
     margin: 0;
   }
 
@@ -649,14 +662,7 @@
 
   .home__section--alt {
     background: var(--mp-color-bg-base-alt, #e4e7ea);
-    max-width: none;
-    padding-inline: 0;
-
-    > * {
-      max-width: 1100px;
-      margin-inline: auto;
-      padding-inline: 24px;
-    }
+    border-radius: var(--mp-radius-lg, 12px);
   }
 
   .home__section-title {
@@ -667,12 +673,6 @@
   .home__section-lead {
     margin: 0 0 32px;
     max-width: 720px;
-  }
-
-  .home__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
   }
 
   .home__feature {
@@ -761,76 +761,81 @@
 
 <i18n lang="yaml">
 en:
-  ai-translation-warning: This page has been translated by AI. Some wording may be inaccurate — the English version is authoritative.
+  ai-translation-warning: This page was translated by AI, so some wording may be imprecise. The English version is authoritative.
   nav:
     features: Features
     packages: Packages
     about: About
     faq: FAQ
   hero:
-    badge: Composable · Mission Ready
-    title: A composable, mission-ready platform for modern Vue 3 products.
-    lead: Mission Platform is a monorepo of reusable Vue 3 building blocks — components, design tokens, composables, Cloudflare Workers, and SEO primitives — that let teams assemble polished, performant, discoverable applications without reinventing the basics.
+    badge: Composable · Write Once · Mission Ready
+    title: The composable, mission-ready platform for modern web products.
+    lead: Mission Platform is a monorepo of reusable, framework-neutral building blocks — write-once components that compile straight to Vue 3 and React, plus design tokens, layouts, forms, routing, scheduling, i18n, maps, and SEO primitives. Assemble polished, fast, discoverable apps without reinventing the basics.
     cta-primary: Explore the platform
     cta-secondary: Read the docs
   features:
     title: Why Mission Platform?
     items:
       - title: Composable by design
-        description: Every capability ships as an independent, versioned package. Pick what you need, compose your own product.
+        description: Every capability ships as an independent, versioned package. Take only what you need and compose your own product.
       - title: Mission-ready performance
-        description: Built on Vue 3, Vite, and modern web standards. Offline-first, PWA-friendly, and ready for the edge.
-      - title: Cohesive design system
-        description: Shared design tokens, themes, and a polished Vue 3 component library — accessible and themable out of the box.
+        description: Built on Vite and modern web standards — offline-first, PWA-friendly, and ready for the edge.
+      - title: Write once, ship everywhere
+        description: Author each component once in a framework-neutral JSX dialect, then compile it straight to both Vue 3 and React. No per-framework rewrites.
       - title: i18n & a11y first
-        description: vue-i18n integration, RTL-aware layouts, and accessibility-tested components mean your product speaks every user’s language.
+        description: First-class i18n integration, RTL-aware layouts, and accessibility-tested components let your product speak every user’s language.
       - title: Developer experience
-        description: Storybook workbench, shared ESLint/Prettier/Stylelint configs, Vitest + Playwright — wired up and ready.
+        description: A Storybook workbench, shared ESLint/Prettier/Stylelint configs, and Vitest + Playwright — all wired up and ready to go.
       - title: Edge-native deployment
-        description: First-class Cloudflare Workers support with the base-spa worker for static + SPA fallback hosting.
+        description: First-class Cloudflare Workers support, with the base-spa worker for static and SPA-fallback hosting.
       - title: Discoverable by default
-        description: Built-in Open Graph and page-meta composables plus prerendered SSG output keep every route SEO-ready and shareable.
+        description: A unified SEO package — page metadata, Open Graph, Twitter Card, and JSON-LD — plus prerendered SSG output keeps every route SEO-ready and shareable.
   packages:
     title: Building blocks
     lead: Every package is independently versioned and published. Mix, match, and compose.
     items:
-      - Vue 3 component library
-      - CSS design tokens & SCSS themes
-      - SVG icon components
+      - Write-once component library (Vue 3 + React)
+      - Framework-neutral JSX runtime & adapters
+      - DTCG design tokens & SCSS themes
+      - Write-once SVG icon components
+      - Write-once application layouts
+      - Write-once form builder & schema forms
+      - Framework-agnostic router with Vue adapter
+      - Calendar & scheduling core (RFC 5545 recurrence)
       - Responsive utilities & composables
-      - vue-i18n integration & base locales
-      - MapLibre GL Vue 3 wrapper
+      - i18n integration & base locales
+      - MapLibre GL map wrapper
       - Harper grammar checker for Monaco
       - Hunspell spell checker (WASM)
       - 'Unified SEO: page metadata, Open Graph, Twitter Card & JSON-LD'
       - base-spa Cloudflare Worker
   about:
     title: What we’re building
-    lead: Mission Platform powers real applications across diverse domains. The platform’s goal is to make polished, mission-ready experiences repeatable, composable, and easy to ship.
+    lead: Mission Platform powers real applications across many domains. Our goal is to make polished, mission-ready experiences repeatable, composable, and easy to ship.
   projects:
     aria-label: Projects built with Mission Platform
     items:
       my-care-notes:
         name: My Care Notes
-        description: An offline-first clinical notes editor with WebAssembly spell checking (Hunspell) and grammar assistance (Harper), built on top of Mission Platform packages.
+        description: An offline-first clinical notes editor with WebAssembly spell checking (Hunspell) and grammar assistance (Harper), built on Mission Platform packages.
         cta: Open the live app
   faq:
     title: Frequently asked
     items:
       affiliation:
         question: Is Mission Platform affiliated with any other project?
-        answer: No. Mission Platform is an independent open-source project and organisation, and is not affiliated with, endorsed by, or associated with any other project, product, company, or organisation that may share the same or a similar name.
+        answer: No. Mission Platform is an independent open-source project and organisation. It is not affiliated with, endorsed by, or associated with any other project, product, company, or organisation that may share the same or a similar name.
       composable:
         question: What does “composable” actually mean here?
-        answer: Every capability — components, tokens, i18n, maps, spell checking — lives in its own versioned package. You pull in only what you need and assemble your own product, instead of adopting a monolithic framework.
+        answer: Every capability — components, tokens, i18n, maps, spell checking — lives in its own versioned package. Pull in only what you need and assemble your own product instead of adopting a monolithic framework.
       vue-version:
-        question: Which Vue version is supported?
-        answer: Vue 3.5+ with the Composition API and the `script setup` syntax. All packages are written in TypeScript and ship full type definitions.
+        question: Which frameworks are supported?
+        answer: Components are authored once in a framework-neutral JSX dialect and compiled straight to native components for the framework of your choice — no per-framework rewrites. Every package is written in TypeScript and ships full type definitions.
       deploy:
         question: How do I deploy a Mission Platform app?
-        answer: Apps are Vite-built single-page apps. A first-class base-spa Cloudflare Worker is included for edge-native static + SPA fallback hosting, but anything that serves static assets works.
+        answer: Apps are Vite-built single-page apps. A first-class base-spa Cloudflare Worker is included for edge-native static and SPA-fallback hosting, but anything that serves static assets works.
   footer:
-    disclaimer: '{brand} is an independent open-source project and organisation. It is {not-affiliated} any other project, product, company, or organisation that may share the same or a similar name. Any resemblance to existing names is coincidental.'
+    disclaimer: '<<brand>> is an independent open-source project and organisation. It is <<not-affiliated>> any other project, product, company, or organisation that may share the same or a similar name. Any resemblance to existing names is coincidental.'
     not-affiliated: not affiliated with, endorsed by, or associated with
     copyright: © {year} Mission Platform contributors.
 </i18n>

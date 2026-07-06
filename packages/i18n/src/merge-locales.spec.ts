@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { mergeLocales } from './merge-locales';
+import { deepMergeLocales, deepMergeMessages, mergeLocales } from './merge-locales';
 
 describe('mergeLocales', () => {
   it('returns an empty object when given an empty array', () => {
@@ -56,6 +56,50 @@ describe('mergeLocales', () => {
     expect(mergeLocales([base, components, overrides])).toEqual({
       en: { required: 'required', loading: 'Loading…', close: 'Close' },
       fr: { required: 'requis', loading: 'Chargement…', close: 'Quitter' },
+    });
+  });
+});
+
+describe('deepMergeMessages', () => {
+  it('merges nested objects key-by-key', () => {
+    const target = { nav: { notes: 'Notes', snippets: 'Snippets' }, theme: 'Theme' };
+    const source = { nav: { notes: 'Renamed' } };
+    expect(deepMergeMessages(target, source)).toEqual({
+      nav: { notes: 'Renamed', snippets: 'Snippets' },
+      theme: 'Theme',
+    });
+  });
+
+  it('replaces arrays wholesale rather than merging them', () => {
+    const target = { items: [{ title: 'A' }, { title: 'B' }] };
+    const source = { items: [{ title: 'C' }] };
+    expect(deepMergeMessages(target, source)).toEqual({ items: [{ title: 'C' }] });
+  });
+
+  it('does not mutate the inputs', () => {
+    const target = { nav: { notes: 'Notes' } };
+    const source = { nav: { notes: 'Renamed' } };
+    deepMergeMessages(target, source);
+    expect(target.nav.notes).toBe('Notes');
+  });
+});
+
+describe('deepMergeLocales', () => {
+  it('deep-merges each locale independently', () => {
+    const target = { en: { breakpoint: 'breakpoint:', separator: '|' }, fr: { breakpoint: 'point:' } };
+    const source = { en: { breakpoint: 'Viewport:' } };
+    expect(deepMergeLocales(target, source)).toEqual({
+      en: { breakpoint: 'Viewport:', separator: '|' },
+      fr: { breakpoint: 'point:' },
+    });
+  });
+
+  it('adds locales present only in the source', () => {
+    const target = { en: { breakpoint: 'breakpoint:' } };
+    const source = { fr: { breakpoint: 'point de rupture :' } };
+    expect(deepMergeLocales(target, source)).toEqual({
+      en: { breakpoint: 'breakpoint:' },
+      fr: { breakpoint: 'point de rupture :' },
     });
   });
 });

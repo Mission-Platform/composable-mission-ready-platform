@@ -1,20 +1,28 @@
-import { ref } from 'vue';
-
-import BaseButton from '../base-button/base-button.vue';
-import BaseChatBubble from '../base-chat-bubble/base-chat-bubble.vue';
-import BaseInput from '../base-input/base-input.vue';
-import BaseTypography from '../base-typography/base-typography.vue';
-
-import BaseChatArea from './base-chat-area.vue';
+import { ChatArea, ChatBubble } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `ChatArea` is the Vue 3 build of the write-once `BaseChatArea` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Communication/BaseChatArea',
-  component: BaseChatArea,
-  subcomponents: { BaseChatBubble },
+  component: ChatArea,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "Cross-framework `ChatArea` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). It wraps an `aria-live` message log (default slot, typically `ChatBubble`s) with optional `header`/`footer` slots. The SFC's `onMounted`/`watch`/`ResizeObserver` auto-scroll is reproduced with a single neutral `useEffect`. Styling comes from the co-located `base-chat-area.module.scss`.",
+      },
+    },
+  },
   argTypes: {
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     autoScroll: { control: 'boolean' },
     autoScrollThreshold: { control: 'number' },
   },
@@ -23,91 +31,42 @@ const meta = {
     autoScrollThreshold: 80,
     ariaLabel: 'Conversation',
   },
-  parameters: {
-    docs: {
-      description: {
-        component:
-          '`ChatArea` is the scrollable surface around a conversation: a sticky header, an auto-scrolling message log built from `BaseChatBubble`s, and a footer composer. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
-      },
+  render: (arguments_) => ({
+    components: { ChatArea, ChatBubble },
+    setup() {
+      return { args: arguments_ };
     },
-  },
-} satisfies Meta<typeof BaseChatArea>;
+    template: `
+      <div style="height: 360px; max-width: 420px;">
+        <ChatArea v-bind="args">
+          <template #header><strong>Support chat</strong></template>
+          <li><ChatBubble side="start">Hi! How can I help you today?</ChatBubble></li>
+          <li><ChatBubble side="end" variant="primary">I have a question about my order.</ChatBubble></li>
+          <li><ChatBubble side="start">Of course — what is your order number?</ChatBubble></li>
+          <template #footer><em>Type a message…</em></template>
+        </ChatArea>
+      </div>
+    `,
+  }),
+} satisfies Meta<typeof ChatArea>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-interface Message {
-  id: number;
-  side: 'start' | 'end';
-  author: string;
-  time: string;
-  text: string;
-}
+export const Default: Story = {};
 
-/** A complete chat with header, message log, and a working composer. */
-export const Conversation: Story = {
+export const WithoutChrome: Story = {
   render: (arguments_) => ({
-    components: { BaseChatArea, BaseChatBubble, BaseButton, BaseInput, BaseTypography },
+    components: { ChatArea, ChatBubble },
     setup() {
-      const messages = ref<Message[]>([
-        { id: 1, side: 'start', author: 'Support', time: '09:58', text: 'Morning! How can I help?' },
-        { id: 2, side: 'end', author: 'You', time: '09:59', text: 'My export keeps failing.' },
-        { id: 3, side: 'start', author: 'Support', time: '10:00', text: 'Thanks — which format are you exporting to?' },
-      ]);
-      const draft = ref('');
-      function send() {
-        const text = draft.value.trim();
-        if (!text) return;
-        messages.value.push({ id: Date.now(), side: 'end', author: 'You', time: 'now', text });
-        draft.value = '';
-      }
-      return { args: arguments_, messages, draft, send };
+      return { args: arguments_ };
     },
     template: `
-      <div style="height: 26rem; max-width: 32rem;">
-        <BaseChatArea v-bind="args">
-          <template #header>
-            <BaseTypography variant="h6" weight="semibold">Support chat</BaseTypography>
-          </template>
-
-          <BaseChatBubble
-            v-for="m in messages"
-            :key="m.id"
-            :side="m.side"
-            :variant="m.side === 'end' ? 'primary' : 'default'"
-            :author="m.author"
-            :timestamp="m.time"
-            :avatar-alt="m.author"
-          >
-            {{ m.text }}
-          </BaseChatBubble>
-
-          <template #footer>
-            <form style="display: flex; gap: 0.5rem;" @submit.prevent="send">
-              <div style="flex: 1;">
-                <BaseInput v-model="draft" placeholder="Type a message…" aria-label="Message" />
-              </div>
-              <BaseButton type="submit" variant="primary">Send</BaseButton>
-            </form>
-          </template>
-        </BaseChatArea>
-      </div>
-    `,
-  }),
-};
-
-/** Messages only, without a header or composer. */
-export const MessagesOnly: Story = {
-  render: (arguments_) => ({
-    components: { BaseChatArea, BaseChatBubble },
-    setup: () => ({ args: arguments_ }),
-    template: `
-      <div style="height: 20rem; max-width: 30rem;">
-        <BaseChatArea v-bind="args">
-          <BaseChatBubble author="Ada" timestamp="10:30" avatar-alt="A">Hello!</BaseChatBubble>
-          <BaseChatBubble side="end" variant="primary" author="You" timestamp="10:31" avatar-alt="Y">Hi Ada 👋</BaseChatBubble>
-          <BaseChatBubble author="Ada" timestamp="10:32" avatar-alt="A">How's the new component library going?</BaseChatBubble>
-        </BaseChatArea>
+      <div style="height: 320px; max-width: 420px;">
+        <ChatArea v-bind="args">
+          <li><ChatBubble side="start">A bare conversation, with no header or footer.</ChatBubble></li>
+          <li><ChatBubble side="end" variant="primary">Looks good!</ChatBubble></li>
+        </ChatArea>
       </div>
     `,
   }),

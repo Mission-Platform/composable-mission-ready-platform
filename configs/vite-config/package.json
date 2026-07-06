@@ -34,7 +34,6 @@
     }
   },
   "dependencies": {
-    "@intlify/unplugin-vue-i18n": "catalog:vue",
     "@mission-platform/postcss-config": "workspace:*",
     "@vitejs/plugin-vue": "catalog:vue"
   },

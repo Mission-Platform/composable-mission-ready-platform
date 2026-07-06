@@ -16,26 +16,33 @@
  *     dropped with a warning.
  *
  * Additionally, the per-app i18n-meta.yaml is treated as the source of truth
- * for runtime translation bundles: for every non-English locale present in
- * the meta, a flat per-locale file is written to apps/<app>/src/locales/<locale>.yaml.
- * The runtime files are component-name-flattened (the top-level <ComponentName>
- * keys from the meta are stripped and their children merged), matching the
+ * for runtime translation bundles: for every locale present in the meta, a
+ * per-locale file is written to apps/<app>/src/locales/<locale>.yaml.
+ * The runtime files are grouped by i18next namespace: every package and app
+ * owns a `mp.<workspace>` namespace, so the components contributed by
+ * @mission-platform/breakpoints land under `mp.breakpoints`, while the app's
+ * own components land under `mp.<app-name>`. Within a namespace the
+ * <ComponentName> keys are stripped and their children merged, matching the
  * local scope used by the SFC `<i18n>` blocks they pair with.
  *
- * Output shape (per app):
+ * Meta shape (per app, the translation source of truth):
  *   en:
  *     BaseButton:
  *       loading: Loading…
- *   fr:
- *     BaseButton:
- *       loading: Chargement…
+ *
+ * Runtime shape (per app + locale, the namespace-grouped derived bundle):
+ *   mp.components:
+ *     loading: Loading…
+ *   mp.my-care-notes:
+ *     nav:
+ *       notes: Notes
  *
  * Usage:
  *   node --experimental-strip-types scripts/i18n-extract.ts
  */
 
 import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { basename, join, relative, resolve } from 'node:path';
+import { basename, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { parse as parseSfc } from '@vue/compiler-sfc';
@@ -62,6 +69,19 @@ const APPS_DIR = join(ROOT, 'apps');
 const PACKAGES_DIR = join(ROOT, 'packages');
 const SKIP_DIRS = new Set(['node_modules', 'dist', '.storybook', 'storybook-static', 'public']);
 const WORKSPACE_SCOPE = '@mission-platform/';
+
+/** The reserved prefix for every Mission Platform i18next namespace. */
+const MP_NAMESPACE_PREFIX = 'mp';
+
+/**
+ * Build the `mp.<workspace>` i18next namespace for a package/app name, e.g.
+ * `@mission-platform/breakpoints` → `mp.breakpoints`. Mirrors `mpNamespace`
+ * from `@mission-platform/i18n` (inlined here to keep the script dependency-free).
+ */
+function mpNamespace(packageName: string): string {
+  const unscoped = packageName.startsWith(WORKSPACE_SCOPE) ? packageName.slice(WORKSPACE_SCOPE.length) : packageName;
+  return `${MP_NAMESPACE_PREFIX}.${unscoped}`;
+}
 
 /** Recursively collect all .vue files under a directory. */
 function collectVueFiles(dir: string): string[] {
@@ -173,8 +193,18 @@ function resolveAppPackageDirectories(appPackage: PackageJson, workspacePackages
 }
 
 /** Extract i18n meta from a list of .vue files. */
-function extractMetaFromFiles(files: string[]): { meta: MetaOutput; fileCount: number; componentCount: number } {
+function extractMetaFromFiles(
+  files: string[],
+  namespaceForFile: (filePath: string) => string,
+): {
+  meta: MetaOutput;
+  fileCount: number;
+  componentCount: number;
+  /** Maps each extracted component name to the `mp.<workspace>` namespace that owns it. */
+  componentNamespaces: Map<string, string>;
+} {
   const meta: MetaOutput = {};
+  const componentNamespaces = new Map<string, string>();
   let fileCount = 0;
   let componentCount = 0;
 
@@ -186,6 +216,7 @@ function extractMetaFromFiles(files: string[]): { meta: MetaOutput; fileCount: n
     if (i18nBlocks.length === 0) continue;
 
     const componentName = extractComponentName(source, filePath);
+    componentNamespaces.set(componentName, namespaceForFile(filePath));
     const relPath = relative(ROOT, filePath);
 
     fileCount++;
@@ -222,7 +253,7 @@ function extractMetaFromFiles(files: string[]): { meta: MetaOutput; fileCount: n
     }
   }
 
-  return { meta, fileCount, componentCount };
+  return { meta, fileCount, componentCount, componentNamespaces };
 }
 
 /**
@@ -338,6 +369,9 @@ function sortMeta(meta: MetaOutput): MetaOutput {
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 const workspacePackages = loadWorkspacePackages();
+// Invert the workspace map so we can resolve a package directory back to its name.
+const directoryToPackageName = new Map<string, string>();
+for (const [name, dir] of workspacePackages) directoryToPackageName.set(dir, name);
 
 let appEntries;
 try {
@@ -359,7 +393,23 @@ for (const entry of appEntries) {
   const packageDirectories = resolveAppPackageDirectories(appPackage, workspacePackages);
   const files = [...collectVueFiles(appDir), ...packageDirectories.flatMap((dir) => collectVueFiles(dir))];
 
-  const { meta, fileCount, componentCount } = extractMetaFromFiles(files);
+  // Every workspace owns a `mp.<workspace>` namespace: the app's own .vue files
+  // resolve to `mp.<app>`, while files contributed by a dependency package
+  // resolve to that package's `mp.<package>` namespace.
+  const appNamespace = mpNamespace(appPackage.name ?? entry.name);
+  const packageNamespaceEntries = packageDirectories.map((dir) => ({
+    dir,
+    namespace: mpNamespace(directoryToPackageName.get(dir) ?? basename(dir)),
+  }));
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  const namespaceForFile = (filePath: string): string => {
+    for (const { dir, namespace } of packageNamespaceEntries) {
+      if (filePath === dir || filePath.startsWith(dir + sep)) return namespace;
+    }
+    return appNamespace;
+  };
+
+  const { meta, fileCount, componentCount, componentNamespaces } = extractMetaFromFiles(files, namespaceForFile);
 
   const output = join(appDir, 'i18n-meta.yaml');
   const existing = loadExistingMeta(output);
@@ -399,41 +449,52 @@ for (const entry of appEntries) {
 
   console.log(`  ✅  Wrote ${componentCount} components (${fileCount} files) → ${relative(ROOT, output)}`);
 
-  // Emit runtime per-locale bundles for every non-English locale present in
-  // the meta. The meta is the single source of truth for translations; the
-  // files under src/locales/ are derived artefacts (loaded on demand at runtime).
+  // Emit runtime per-locale bundles for every locale present in the meta. The
+  // meta is the single source of truth for translations; the files under
+  // src/locales/ are derived artefacts (loaded on demand at runtime).
   const localesDir = join(appDir, 'src', 'locales');
   const runtimeHeader =
     '# Auto-generated by scripts/i18n-extract.ts from ../../i18n-meta.yaml\n' +
-    '# Do not edit by hand. Edit i18n-meta.yaml and re-run: pnpm i18n:extract\n\n';
+    '# Do not edit by hand. Edit i18n-meta.yaml and re-run: pnpm i18n:extract\n' +
+    '#\n' +
+    '# Shape: <mp.namespace> → <key> → <value>. Each package/app owns a\n' +
+    '# `mp.<workspace>` namespace; load every namespace into the i18next instance.\n\n';
 
   for (const locale of Object.keys(sorted)) {
     // Emit every locale (including English): the meta is the single source
     // of truth and runtime bundles — including the eagerly-loaded English
     // global bundle — are derived from it.
-    // Flatten <ComponentName> → <key> into a single map. Matches the local
-    // scope of SFC <i18n> blocks (the en source is also flat).
-    const flat: Record<string, unknown> = {};
+    // Group <ComponentName> → <key> by the `mp.<workspace>` namespace that owns
+    // the component, then strip the component name (its children are merged),
+    // matching the local scope of SFC <i18n> blocks (the en source is also flat).
+    const namespaced: Record<string, Record<string, unknown>> = {};
     for (const componentName of Object.keys(sorted[locale])) {
+      const namespace = componentNamespaces.get(componentName) ?? appNamespace;
+      const target = (namespaced[namespace] ??= {});
       const componentMessages = sorted[locale][componentName] as Record<string, unknown>;
       for (const [key, value] of Object.entries(componentMessages)) {
-        if (key in flat) {
+        if (key in target) {
           console.warn(
-            `  ⚠  Key collision while flattening locale '${locale}': '${key}' from ` +
-              `'${componentName}' overrides previous value.`,
+            `  ⚠  Key collision while flattening locale '${locale}' namespace ` +
+              `'${namespace}': '${key}' from '${componentName}' overrides previous value.`,
           );
         }
-        flat[key] = value;
+        target[key] = value;
       }
     }
-    if (Object.keys(flat).length === 0) continue;
+    // Sort namespaces for deterministic output.
+    const sortedNamespaced: Record<string, Record<string, unknown>> = {};
+    for (const namespace of Object.keys(namespaced).sort((a, b) => a.localeCompare(b))) {
+      sortedNamespaced[namespace] = namespaced[namespace];
+    }
+    if (Object.keys(sortedNamespaced).length === 0) continue;
     try {
       mkdirSync(localesDir, { recursive: true });
     } catch {
       // ignore — write will fail with a clearer error if dir cannot be created
     }
     const runtimeOutput = join(localesDir, `${locale}.yaml`);
-    writeFileSync(runtimeOutput, runtimeHeader + yaml.dump(flat, { indent: 2, lineWidth: 120 }), 'utf-8');
+    writeFileSync(runtimeOutput, runtimeHeader + yaml.dump(sortedNamespaced, { indent: 2, lineWidth: 120 }), 'utf-8');
     console.log(`    ↳  ${locale}  →  ${relative(ROOT, runtimeOutput)}`);
   }
 }

@@ -1,111 +1,76 @@
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 
-import BaseCard from '../base-card/base-card.vue';
-
-import BaseCarousel from './base-carousel.vue';
+import { Carousel } from '@mission-platform/components/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `Carousel` is the Vue 3 build of the write-once `BaseCarousel` in this
+ * package. The component is authored **once** in the framework-neutral JSX
+ * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * ships as a React component via the package's `./react` subpath.
+ */
+const SLIDES = [
+  { id: 'a', content: 'Slide A', image: 'https://picsum.photos/seed/mp-a/640/280' },
+  { id: 'b', content: 'Slide B', image: 'https://picsum.photos/seed/mp-b/640/280' },
+  { id: 'c', content: 'Slide C', image: 'https://picsum.photos/seed/mp-c/640/280' },
+  { id: 'd', content: 'Slide D', image: 'https://picsum.photos/seed/mp-d/640/280' },
+];
+
 const meta = {
   title: 'Components/Display/BaseCarousel',
-  component: BaseCarousel,
+  component: Carousel,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`Carousel` component. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
+          'Cross-framework `Carousel` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). The original SFC derived its slide count by introspecting slot VNodes, which the neutral dialect cannot do, so slides are driven by a `slides` array (with an optional scoped `slide` slot). Autoplay/keyboard/swipe are reproduced with `useState` + a `useEffect` interval; the `useReducedMotion` composable becomes an inline `matchMedia` check. The active index is controlled via `modelValue` and the original `v-model` + `change` emit become the `onUpdateModelValue`/`onChange` callback props. Styling comes from the co-located `base-carousel.module.scss`.',
       },
     },
   },
   argTypes: {
-    modelValue: { control: { type: 'number', min: 0 } },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     controls: { control: 'boolean' },
     indicators: { control: 'boolean' },
     loop: { control: 'boolean' },
-    ariaLabel: { control: 'text' },
     autoplay: { control: 'boolean' },
-    interval: { control: { type: 'number', min: 1000, step: 500 } },
     pauseOnHover: { control: 'boolean' },
-    swipeThreshold: { control: { type: 'number', min: 0, step: 5 } },
+    interval: { control: 'number' },
+    variant: {
+      control: 'select',
+      options: ['neutral', 'primary', 'secondary', 'tertiary', 'success', 'warning', 'info', 'error', 'critical'],
+    },
   },
   args: {
-    modelValue: 0,
+    slides: SLIDES,
     controls: true,
     indicators: true,
     loop: true,
-    ariaLabel: 'Example carousel',
     autoplay: false,
-    interval: 3000,
     pauseOnHover: true,
-    swipeThreshold: 40,
+    interval: 5000,
+    ariaLabel: 'Featured items',
   },
   render: (arguments_) => ({
-    components: { BaseCarousel, BaseCard },
+    components: { Carousel },
     setup() {
-      const current = ref(arguments_.modelValue ?? 0);
-      // Keep the local model in sync when Storybook controls change.
-      watch(
-        () => arguments_.modelValue,
-        (value) => {
-          if (typeof value === 'number' && value !== current.value) {
-            current.value = value;
-          }
-        },
-      );
-      return { args: arguments_, current };
+      const value = ref(arguments_.modelValue ?? 0);
+      return { args: arguments_, value };
     },
-    template: `
-      <div style="max-width: 480px">
-        <BaseCarousel v-bind="args" v-model="current">
-          <BaseCard class="story-carousel-slide"><strong>Slide 1</strong> — first card</BaseCard>
-          <BaseCard class="story-carousel-slide"><strong>Slide 2</strong> — second card</BaseCard>
-          <BaseCard class="story-carousel-slide"><strong>Slide 3</strong> — third card</BaseCard>
-        </BaseCarousel>
-        <p style="margin-top: 12px; font-family: system-ui, sans-serif; font-size: 14px;">
-          Current slide (v-model): <strong>{{ current }}</strong>
-        </p>
-      </div>
-      <style>
-        .story-carousel-slide {
-          min-height: 320px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-      </style>
-    `,
+    template:
+      '<div style="max-width: 640px;"><Carousel v-bind="args" :model-value="value" @update-model-value="value = $event" /></div>',
   }),
-} satisfies Meta<typeof BaseCarousel>;
+} satisfies Meta<typeof Carousel>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  parameters: { viewport: { defaultViewport: 'md' } },
-};
+export const Default: Story = {};
 
-export const Mobile: Story = {
-  name: 'Mobile (2xs)',
-  parameters: { viewport: { defaultViewport: '2xs' } },
-};
+export const NoControls: Story = { args: { controls: false } };
 
-export const NoIndicators: Story = {
-  parameters: { viewport: { defaultViewport: 'md' } },
-  args: { indicators: false },
-};
+export const NoLoop: Story = { args: { loop: false } };
 
-export const NoControls: Story = {
-  parameters: { viewport: { defaultViewport: 'md' } },
-  args: { controls: false },
-};
-
-export const NoLoop: Story = {
-  parameters: { viewport: { defaultViewport: 'md' } },
-  args: { loop: false },
-};
-
-export const Autoplay: Story = {
-  parameters: { viewport: { defaultViewport: 'md' } },
-  args: { autoplay: true, interval: 2500, pauseOnHover: true },
-};
+export const Autoplay: Story = { args: { autoplay: true, interval: 2500 } };

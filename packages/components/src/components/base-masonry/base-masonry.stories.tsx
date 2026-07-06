@@ -1,87 +1,68 @@
-import BaseCardBody from '../base-card/base-card-body.vue';
-import BaseCard from '../base-card/base-card.vue';
-import BaseTypography from '../base-typography/base-typography.vue';
+import { Masonry } from '@mission-platform/components/vue';
 
-import BaseMasonry from './base-masonry.vue';
+import styles from './base-masonry.module.scss';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * `Masonry` is the Vue 3 build of the write-once `BaseMasonry` in this package.
+ * The component is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/jsx`) and compiled straight to a Vue component at build
+ * time by `@mission-platform/vite-plugin-jsx`. The very same source also ships
+ * as a React component via the package's `./react` subpath.
+ */
 const meta = {
   title: 'Components/Layout/BaseMasonry',
-  component: BaseMasonry,
+  component: Masonry,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Cross-framework `Masonry` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). It flows its default-slot children into balanced, tightly-packed CSS multi-columns. The demo card styling comes from the co-located `base-masonry.module.scss` CSS Module (consumed here through its hashed class map).',
+      },
+    },
+  },
   argTypes: {
-    columns: { control: { type: 'number', min: 1, max: 6 } },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    columns: { control: { type: 'number', min: 1, max: 6, step: 1 } },
     minColumnWidth: { control: 'text' },
     gap: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    padding: { control: 'select', options: [undefined, '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    margin: { control: 'select', options: [undefined, '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
   },
   args: {
     columns: 3,
     gap: 'md',
   },
-  parameters: {
-    docs: {
-      description: {
-        component:
-          '`Masonry` flows content into balanced columns where items keep their natural height and pack tightly top-to-bottom. Use a fixed `columns` count or a responsive `minColumnWidth`. See the props, emits, and slots tables below for the public API, and the stories on this page for usage examples.',
-      },
+  render: (arguments_) => ({
+    components: { Masonry },
+    setup() {
+      const heights = [120, 80, 160, 100, 200, 90, 140, 110, 180];
+      return { args: arguments_, heights, styles };
     },
-  },
-} satisfies Meta<typeof BaseMasonry>;
+    template: `
+      <Masonry v-bind="args">
+        <div
+          v-for="(height, index) in heights"
+          :key="index"
+          :class="styles['masonry-demo-item']"
+          :style="{ height: height + 'px' }"
+        >
+          Item {{ index + 1 }}
+        </div>
+      </Masonry>
+    `,
+  }),
+} satisfies Meta<typeof Masonry>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const HEIGHTS = [120, 200, 90, 260, 150, 180, 110, 220, 140, 170, 95, 240];
+export const ThreeColumns: Story = { args: { columns: 3 } };
 
-/** A fixed three-column masonry of cards with varying heights. */
-export const FixedColumns: Story = {
-  render: (arguments_) => ({
-    components: { BaseMasonry, BaseCard, BaseCardBody, BaseTypography },
-    setup() {
-      return { args: arguments_, tiles: HEIGHTS };
-    },
-    template: `
-      <BaseMasonry v-bind="args">
-        <BaseCard v-for="(h, i) in tiles" :key="i" shadow>
-          <BaseCardBody>
-            <div :style="{ height: h + 'px', display: 'flex', alignItems: 'center', justifyContent: 'center' }">
-              <BaseTypography variant="h5" weight="bold">{{ i + 1 }}</BaseTypography>
-            </div>
-          </BaseCardBody>
-        </BaseCard>
-      </BaseMasonry>
-    `,
-  }),
-};
+export const TwoColumns: Story = { args: { columns: 2 } };
 
-/** Responsive columns: as many ≥ 14rem columns as fit the container width. */
-export const ResponsiveColumns: Story = {
-  args: { minColumnWidth: '14rem' },
-  render: FixedColumns.render,
-};
+export const Responsive: Story = { args: { minColumnWidth: '12rem' } };
 
-/** Using the `items` prop with the scoped `item` slot. */
-export const WithItemsProperty: Story = {
-  args: { columns: 3 },
-  render: (arguments_) => ({
-    components: { BaseMasonry, BaseCard, BaseCardBody, BaseTypography },
-    setup() {
-      const items = HEIGHTS.map((height, index) => ({ height, label: `Item ${index + 1}` }));
-      return { args: arguments_, items };
-    },
-    template: `
-      <BaseMasonry v-bind="args" :items="items">
-        <template #item="{ item }">
-          <BaseCard shadow>
-            <BaseCardBody>
-              <div :style="{ height: item.height + 'px', display: 'flex', alignItems: 'center', justifyContent: 'center' }">
-                <BaseTypography variant="body-md" weight="semibold">{{ item.label }}</BaseTypography>
-              </div>
-            </BaseCardBody>
-          </BaseCard>
-        </template>
-      </BaseMasonry>
-    `,
-  }),
-};
+export const TightGap: Story = { args: { columns: 4, gap: 'xs' } };

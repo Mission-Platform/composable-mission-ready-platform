@@ -1,2 +1,6 @@
-export { default } from './base-icon-button.vue';
-export type { IconButtonVariant, IconButtonSize } from './base-icon-button.vue';
+export {
+  BaseIconButton,
+  type IconButtonProperties,
+  type IconButtonSize,
+  type IconButtonVariant,
+} from './base-icon-button';

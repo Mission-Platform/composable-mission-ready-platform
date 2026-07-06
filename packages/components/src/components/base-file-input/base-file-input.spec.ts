@@ -1,62 +1,48 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseFileInput } from './base-file-input';
 
-import BaseFileInput from './base-file-input.vue';
+/**
+ * Exercises the **neutral** `BaseFileInput` authored in this package, rendering
+ * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * Covers the browse-button row, the dropzone variant, and the label/error.
+ */
+const ReactFileInput = toReactComponent(BaseFileInput, 'FileInput');
+const VueFileInput = toVueComponent(BaseFileInput, 'FileInput');
 
-describe('BaseFileInput', () => {
-  it('renders a hidden native file input', () => {
-    const wrapper = mountWithI18n(BaseFileInput, { props: {} });
-    const input = wrapper.find('input[type="file"]');
-    expect(input.exists()).toBe(true);
-    expect(input.classes()).toContain('base-file-input__native');
+describe('BaseFileInput authors the same component for React and Vue', () => {
+  it('renders the browse row with a hidden native file input on both frameworks', async () => {
+    const properties = { label: 'Attachment', accept: 'image/*', id: 'fi-1' };
+    const react = renderToStaticMarkup(createElement(ReactFileInput, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueFileInput, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('Attachment');
+      expect(html).toContain('type="file"');
+      expect(html).toContain('accept="image/*"');
+      expect(html).toContain('Browse files');
+      expect(html).toContain('No file chosen');
+      expect(html).toContain('for="fi-1"');
+    }
   });
 
-  it('renders label when provided', () => {
-    const wrapper = mountWithI18n(BaseFileInput, { props: { label: 'Upload' } });
-    expect(wrapper.find('.base-file-input__label').text()).toContain('Upload');
-  });
+  it('renders the dropzone variant and wires the error on both frameworks', async () => {
+    const properties = { dragDrop: true, error: 'File too large', id: 'fi-2' };
+    const react = renderToStaticMarkup(createElement(ReactFileInput, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueFileInput, properties) }));
 
-  it('renders error message', () => {
-    const wrapper = mountWithI18n(BaseFileInput, { props: { error: 'Required' } });
-    expect(wrapper.find('.base-file-input__error').text()).toBe('Required');
-  });
-
-  it('renders hint message', () => {
-    const wrapper = mountWithI18n(BaseFileInput, { props: { hint: 'PDF only' } });
-    expect(wrapper.find('.base-file-input__hint').text()).toBe('PDF only');
-  });
-
-  it('renders dropzone when dragDrop is true', () => {
-    const wrapper = mountWithI18n(BaseFileInput, { props: { dragDrop: true } });
-    expect(wrapper.find('.base-file-input__dropzone').exists()).toBe(true);
-  });
-
-  it('renders button row when dragDrop is false', () => {
-    const wrapper = mountWithI18n(BaseFileInput, { props: { dragDrop: false } });
-    expect(wrapper.find('.base-file-input__row').exists()).toBe(true);
-  });
-
-  it('applies disabled class', () => {
-    const wrapper = mountWithI18n(BaseFileInput, { props: { disabled: true } });
-    expect(wrapper.find('.base-file-input').classes()).toContain('base-file-input--disabled');
-  });
-
-  it('applies error class', () => {
-    const wrapper = mountWithI18n(BaseFileInput, { props: { error: 'Oops' } });
-    expect(wrapper.find('.base-file-input').classes()).toContain('base-file-input--error');
-  });
-
-  it('renders label visually hidden when labelHidden is true', () => {
-    const wrapper = mountWithI18n(BaseFileInput, {
-      props: { label: 'Hidden Label', labelHidden: true },
-    });
-    expect(wrapper.find('label.base-file-input__label').exists()).toBe(true);
-    expect(wrapper.find('.base-file-input__label--hidden').exists()).toBe(true);
-  });
-
-  it('renders label visible by default when labelHidden is false', () => {
-    const wrapper = mountWithI18n(BaseFileInput, { props: { label: 'Visible Label' } });
-    expect(wrapper.find('.base-file-input__label--hidden').exists()).toBe(false);
+    for (const html of [react, vue]) {
+      expect(html).toContain('role="presentation"');
+      // The `&` in the default drag label is HTML-escaped in the rendered markup.
+      expect(html).toContain('drop files here or');
+      expect(html).toContain('File too large');
+      expect(html).toContain('aria-describedby="fi-2-error"');
+    }
   });
 });

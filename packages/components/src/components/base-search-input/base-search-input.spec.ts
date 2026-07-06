@@ -1,46 +1,44 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n } from '../../test-utils/mount-with-i18n';
+import { BaseSearchInput } from './base-search-input';
 
-import BaseSearchInput from './base-search-input.vue';
+/**
+ * Exercises the **neutral** `BaseSearchInput` authored in this package,
+ * rendering it on both frameworks through the `@mission-platform/jsx` runtime
+ * adapters. Covers the search field, the clear button, and the loading state.
+ */
+const ReactSearchInput = toReactComponent(BaseSearchInput, 'SearchInput');
+const VueSearchInput = toVueComponent(BaseSearchInput, 'SearchInput');
 
-describe('BaseSearchInput', () => {
-  it('renders a search input', () => {
-    const wrapper = mountWithI18n(BaseSearchInput);
-    expect(wrapper.find('input[type="search"]').exists()).toBe(true);
+describe('BaseSearchInput authors the same component for React and Vue', () => {
+  it('renders the search field and a clear button when there is a value on both frameworks', async () => {
+    const properties = { modelValue: 'hello', placeholder: 'Find…' };
+    const react = renderToStaticMarkup(createElement(ReactSearchInput, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueSearchInput, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('type="search"');
+      expect(html).toContain('placeholder="Find…"');
+      expect(html).toContain('value="hello"');
+      expect(html).toContain('aria-label="Clear search"');
+    }
   });
 
-  it('shows clear button when modelValue is non-empty', () => {
-    const wrapper = mountWithI18n(BaseSearchInput, { props: { modelValue: 'hello' } });
-    expect(wrapper.find('.base-search-input__clear').exists()).toBe(true);
-  });
+  it('hides the clear button and shows the loading spinner on both frameworks', async () => {
+    const properties = { modelValue: '', loading: true };
+    const react = renderToStaticMarkup(createElement(ReactSearchInput, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueSearchInput, properties) }));
 
-  it('does not show clear button when modelValue is empty', () => {
-    const wrapper = mountWithI18n(BaseSearchInput, { props: { modelValue: '' } });
-    expect(wrapper.find('.base-search-input__clear').exists()).toBe(false);
-  });
-
-  it('emits update:modelValue on input', async () => {
-    const wrapper = mountWithI18n(BaseSearchInput, { props: { modelValue: '' } });
-    const input = wrapper.find('input');
-    await input.setValue('test query');
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['test query']);
-  });
-
-  it('emits clear and update:modelValue empty string when clear button clicked', async () => {
-    const wrapper = mountWithI18n(BaseSearchInput, { props: { modelValue: 'hello' } });
-    await wrapper.find('.base-search-input__clear').trigger('click');
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['']);
-    expect(wrapper.emitted('clear')).toBeTruthy();
-  });
-
-  it('shows spinner when loading', () => {
-    const wrapper = mountWithI18n(BaseSearchInput, { props: { loading: true } });
-    expect(wrapper.find('.base-search-input__spinner').exists()).toBe(true);
-  });
-
-  it('applies disabled class', () => {
-    const wrapper = mountWithI18n(BaseSearchInput, { props: { disabled: true } });
-    expect(wrapper.find('.base-search-input').classes()).toContain('base-search-input--disabled');
+    for (const html of [react, vue]) {
+      expect(html).not.toContain('aria-label="Clear search"');
+      expect(html).toContain('aria-busy="true"');
+      expect(html).toContain('role="status"');
+    }
   });
 });

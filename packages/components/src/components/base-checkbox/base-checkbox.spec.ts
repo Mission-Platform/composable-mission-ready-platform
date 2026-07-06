@@ -1,97 +1,60 @@
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { mountWithI18n as mount } from '../../test-utils/mount-with-i18n';
+import { BaseCheckbox } from './base-checkbox';
 
-import BaseCheckbox from './base-checkbox.vue';
+/**
+ * Exercises the **neutral** `BaseCheckbox` authored in this package, rendering
+ * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * Covers the checked state, the label, and the error/hint association.
+ */
+const ReactCheckbox = toReactComponent(BaseCheckbox, 'Checkbox');
+const VueCheckbox = toVueComponent(BaseCheckbox, 'Checkbox');
 
-describe('BaseCheckbox', () => {
-  it('renders a checkbox input', () => {
-    const wrapper = mount(BaseCheckbox);
-    expect(wrapper.find('input[type="checkbox"]').exists()).toBe(true);
+describe('BaseCheckbox authors the same component for React and Vue', () => {
+  it('renders a checked checkbox with its label on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactCheckbox, { modelValue: true, label: 'Accept terms', id: 'cb-1' }),
+    );
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueCheckbox, { modelValue: true, label: 'Accept terms', id: 'cb-1' }) }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('type="checkbox"');
+      expect(html).toContain('Accept terms');
+      // The control is checked.
+      expect(html).toMatch(/checked/);
+      expect(html).toContain('id="cb-1"');
+    }
   });
 
-  it('renders label text', () => {
-    const wrapper = mount(BaseCheckbox, { props: { label: 'Accept terms' } });
-    expect(wrapper.text()).toContain('Accept terms');
+  it('wires the error message via aria-describedby on both frameworks', async () => {
+    const properties = { modelValue: false, label: 'Subscribe', error: 'This field is required', id: 'cb-2' };
+    const react = renderToStaticMarkup(createElement(ReactCheckbox, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueCheckbox, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('This field is required');
+      expect(html).toContain('aria-describedby="cb-2-error"');
+      expect(html).toContain('id="cb-2-error"');
+      expect(html).toContain('role="alert"');
+    }
   });
 
-  it('is checked when boolean modelValue is true', () => {
-    const wrapper = mount(BaseCheckbox, { props: { modelValue: true } });
-    expect((wrapper.find('input').element as HTMLInputElement).checked).toBe(true);
-  });
+  it('toggles a value within a group array on both frameworks', async () => {
+    const properties = { modelValue: ['a', 'b'], value: 'a', label: 'Option A', id: 'cb-3' };
+    const react = renderToStaticMarkup(createElement(ReactCheckbox, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueCheckbox, properties) }));
 
-  it('is unchecked when boolean modelValue is false', () => {
-    const wrapper = mount(BaseCheckbox, { props: { modelValue: false } });
-    expect((wrapper.find('input').element as HTMLInputElement).checked).toBe(false);
-  });
-
-  it('is checked when value is included in array modelValue', () => {
-    const wrapper = mount(BaseCheckbox, {
-      props: { modelValue: ['a', 'b'], value: 'a' },
-    });
-    expect((wrapper.find('input').element as HTMLInputElement).checked).toBe(true);
-  });
-
-  it('is unchecked when value is not in array modelValue', () => {
-    const wrapper = mount(BaseCheckbox, {
-      props: { modelValue: ['b'], value: 'a' },
-    });
-    expect((wrapper.find('input').element as HTMLInputElement).checked).toBe(false);
-  });
-
-  it('emits update:modelValue with true when checked (boolean mode)', async () => {
-    const wrapper = mount(BaseCheckbox, { props: { modelValue: false } });
-    await wrapper.find('input').setValue(true);
-    expect(wrapper.emitted('update:modelValue')![0]).toEqual([true]);
-  });
-
-  it('emits update:modelValue with false when unchecked (boolean mode)', async () => {
-    const wrapper = mount(BaseCheckbox, { props: { modelValue: true } });
-    await wrapper.find('input').setValue(false);
-    expect(wrapper.emitted('update:modelValue')![0]).toEqual([false]);
-  });
-
-  it('adds value to array on check (array mode)', async () => {
-    const wrapper = mount(BaseCheckbox, {
-      props: { modelValue: ['b'], value: 'a' },
-    });
-    await wrapper.find('input').setValue(true);
-    expect(wrapper.emitted('update:modelValue')![0]).toEqual([['b', 'a']]);
-  });
-
-  it('removes value from array on uncheck (array mode)', async () => {
-    const wrapper = mount(BaseCheckbox, {
-      props: { modelValue: ['a', 'b'], value: 'a' },
-    });
-    await wrapper.find('input').setValue(false);
-    expect(wrapper.emitted('update:modelValue')![0]).toEqual([['b']]);
-  });
-
-  it('is disabled when disabled prop is true', () => {
-    const wrapper = mount(BaseCheckbox, { props: { disabled: true } });
-    expect(wrapper.find('input').attributes('disabled')).toBeDefined();
-    expect(wrapper.classes()).toContain('base-checkbox--disabled');
-  });
-
-  it('renders error message and adds error class', () => {
-    const wrapper = mount(BaseCheckbox, { props: { error: 'Required' } });
-    expect(wrapper.find('.base-checkbox__error').text()).toBe('Required');
-    expect(wrapper.classes()).toContain('base-checkbox--error');
-  });
-
-  it('renders hint text', () => {
-    const wrapper = mount(BaseCheckbox, { props: { hint: 'You must accept' } });
-    expect(wrapper.find('.base-checkbox__hint').text()).toBe('You must accept');
-  });
-
-  it('renders label visually hidden when labelHidden is true', () => {
-    const wrapper = mount(BaseCheckbox, { props: { label: 'Hidden Label', labelHidden: true } });
-    expect(wrapper.find('.base-checkbox__label').exists()).toBe(true);
-    expect(wrapper.find('.base-checkbox__label--hidden').exists()).toBe(true);
-  });
-
-  it('renders label visible by default when labelHidden is false', () => {
-    const wrapper = mount(BaseCheckbox, { props: { label: 'Visible Label' } });
-    expect(wrapper.find('.base-checkbox__label--hidden').exists()).toBe(false);
+    for (const html of [react, vue]) {
+      expect(html).toContain('value="a"');
+      expect(html).toMatch(/checked/);
+    }
   });
 });

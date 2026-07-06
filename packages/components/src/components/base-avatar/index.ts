@@ -1,2 +1,1 @@
-export { default } from './base-avatar.vue';
-export type { AvatarSize, AvatarShape, AvatarStatus } from './base-avatar.vue';
+export { BaseAvatar, type AvatarProperties, type AvatarShape, type AvatarSize, type AvatarStatus } from './base-avatar';

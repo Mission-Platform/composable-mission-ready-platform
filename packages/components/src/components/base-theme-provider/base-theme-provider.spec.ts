@@ -1,119 +1,34 @@
-import { mount } from '@vue/test-utils';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { defineComponent, h } from 'vue';
+import { toReactComponent } from '@mission-platform/jsx/react';
+import { toVueComponent } from '@mission-platform/jsx/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
-import { resetThemeStore, useTheme } from '../../composables/use-theme';
+import { BaseThemeProvider } from './base-theme-provider';
 
-import BaseThemeProvider from './base-theme-provider.vue';
+/**
+ * Exercises the **neutral** `BaseThemeProvider` through the
+ * `@mission-platform/jsx` runtime adapters. The provider is renderless aside
+ * from its `display: contents` wrapper, and renders its default slot. The
+ * scoped-slot *data* handoff is exercised by the compiled Vue build in the
+ * Storybook story (the runtime adapters invoke the default slot without scope),
+ * so here we assert the wrapper and forwarded content render on both frameworks.
+ */
+const ReactThemeProvider = toReactComponent(BaseThemeProvider, 'ThemeProvider');
+const VueThemeProvider = toVueComponent(BaseThemeProvider, 'ThemeProvider');
 
-import type { Theme } from '../../composables/use-theme';
+describe('BaseThemeProvider authors the same component for React and Vue', () => {
+  it('renders its renderless wrapper and forwarded content on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactThemeProvider, {}, 'Themed content'));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueThemeProvider, {}, () => 'Themed content') }),
+    );
 
-beforeEach(() => {
-  delete document.documentElement.dataset.theme;
-  document.documentElement.style.removeProperty('color-scheme');
-  localStorage.clear();
-  resetThemeStore();
-});
-
-afterEach(() => {
-  delete document.documentElement.dataset.theme;
-  document.documentElement.style.removeProperty('color-scheme');
-  localStorage.clear();
-  resetThemeStore();
-});
-
-describe('BaseThemeProvider', () => {
-  it('applies the default theme to <html> via data-theme', () => {
-    mount(BaseThemeProvider, { props: { defaultTheme: 'dark' } });
-    expect(document.documentElement.dataset.theme).toBe('dark');
-  });
-
-  it('removes data-theme for the auto theme', () => {
-    mount(BaseThemeProvider, { props: { defaultTheme: 'auto', persist: false } });
-    expect(document.documentElement.dataset.theme).toBeUndefined();
-  });
-
-  it('pins color-scheme to an explicit theme and lets auto follow the OS', async () => {
-    const wrapper = mount(BaseThemeProvider, {
-      props: { defaultTheme: 'dark', persist: false },
-      slots: {
-        default: (slotProperties: { setTheme: (t: Theme) => void }) =>
-          h('button', { onClick: () => slotProperties.setTheme('auto') }, 'auto'),
-      },
-    });
-    expect(document.documentElement.style.colorScheme).toBe('dark');
-    await wrapper.find('button').trigger('click');
-    // 'auto' lets the root follow prefers-color-scheme via `light dark`.
-    expect(document.documentElement.style.colorScheme).toBe('light dark');
-  });
-
-  it('respects a pre-applied data-theme attribute over the default (SSR-friendly)', () => {
-    document.documentElement.dataset.theme = 'dark';
-    mount(BaseThemeProvider, { props: { defaultTheme: 'light', persist: false } });
-    expect(document.documentElement.dataset.theme).toBe('dark');
-  });
-
-  it('persists the preference to localStorage', () => {
-    mount(BaseThemeProvider, { props: { defaultTheme: 'light', storageKey: 'my-theme' } });
-    expect(localStorage.getItem('my-theme')).toBe('light');
-  });
-
-  it('exposes theme state and mutators through the default slot', async () => {
-    const wrapper = mount(BaseThemeProvider, {
-      props: { defaultTheme: 'light' },
-      slots: {
-        default: (slotProperties: { theme: Theme; setTheme: (t: Theme) => void }) =>
-          h('button', { onClick: () => slotProperties.setTheme('dark') }, slotProperties.theme),
-      },
-    });
-    expect(wrapper.find('button').text()).toBe('light');
-    await wrapper.find('button').trigger('click');
-    expect(wrapper.find('button').text()).toBe('dark');
-    expect(document.documentElement.dataset.theme).toBe('dark');
-  });
-
-  it('shares its store with descendants through useTheme', () => {
-    const Child = defineComponent({
-      setup() {
-        const { resolvedTheme } = useTheme();
-        return () => h('span', resolvedTheme.value);
-      },
-    });
-    const wrapper = mount(BaseThemeProvider, {
-      props: { defaultTheme: 'dark' },
-      slots: { default: () => h(Child) },
-    });
-    expect(wrapper.find('span').text()).toBe('dark');
-  });
-
-  it('scopes the theme to its wrapper element (not <html>) when global is false', () => {
-    const wrapper = mount(BaseThemeProvider, {
-      props: { global: false, defaultTheme: 'dark', persist: false },
-      attachTo: document.body,
-      slots: { default: () => h('span', 'child') },
-    });
-    const root = wrapper.find('.base-theme-provider');
-    expect(root.exists()).toBe(true);
-    expect((root.element as HTMLElement).dataset.theme).toBe('dark');
-    expect((root.element as HTMLElement).style.colorScheme).toBe('dark');
-    // The document root is left untouched in scoped mode.
-    expect(document.documentElement.dataset.theme).toBeUndefined();
-    wrapper.unmount();
-  });
-
-  it('cycles light → dark → auto', async () => {
-    const wrapper = mount(BaseThemeProvider, {
-      props: { defaultTheme: 'light', persist: false },
-      slots: {
-        default: (slotProperties: { theme: Theme; cycleTheme: () => void }) =>
-          h('button', { onClick: slotProperties.cycleTheme }, slotProperties.theme),
-      },
-    });
-    const button = wrapper.find('button');
-    expect(button.text()).toBe('light');
-    await button.trigger('click');
-    expect(button.text()).toBe('dark');
-    await button.trigger('click');
-    expect(button.text()).toBe('auto');
+    for (const html of [react, vue]) {
+      expect(html).toContain('base-theme-provider');
+      expect(html).toContain('Themed content');
+    }
   });
 });

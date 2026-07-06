@@ -1,2 +1,1 @@
-export { default } from './base-dropdown.vue';
-export type { DropdownPlacement } from './base-dropdown.vue';
+export { BaseDropdown, type DropdownPlacement, type DropdownProperties } from './base-dropdown';

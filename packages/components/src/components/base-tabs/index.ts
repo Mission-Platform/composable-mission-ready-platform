@@ -1,2 +1,1 @@
-export { default } from './base-tabs.vue';
-export type { TabItem, TabsVariant } from './base-tabs.vue';
+export { BaseTabs, type TabItem, type TabPanelScope, type TabsProperties, type TabsVariant } from './base-tabs';

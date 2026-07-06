@@ -1,5 +1,5 @@
 {
-  "$description": "Composite typography styles for Mission Platform. Each token is a DTCG `typography` value composed from the primitive font tokens in font.tokens.json. The variants mirror the `BaseTypography` component variants and resolve, at generation time, to the matching `--mp-typography-<variant>-*` CSS custom properties (which themselves reference the primitive `--mp-font-*`, `--mp-line-height-*` and `--mp-letter-spacing-*` tokens).",
+  "$description": "Composite typography styles for Mission Platform. Each token is a DTCG `typography` value composed from the primitive font tokens in font.tokens.json plus the `marginBlock`/`marginInline` logical-margin steps from spacing.tokens.json. The variants mirror the `BaseTypography` component variants and resolve, at generation time, to the matching `--mp-typography-<variant>-*` CSS custom properties (which themselves reference the primitive `--mp-font-*`, `--mp-line-height-*`, `--mp-letter-spacing-*` and `--mp-spacing-*` tokens).",
   "typography": {
     "$type": "typography",
     "display": {
@@ -9,7 +9,9 @@
         "fontSize": "{font.size.5xl}",
         "fontWeight": "{font.weight.bold}",
         "lineHeight": "{line-height.tight}",
-        "letterSpacing": "{letter-spacing.tight}"
+        "letterSpacing": "{letter-spacing.tight}",
+        "marginBlock": "{spacing.3}",
+        "marginInline": "{spacing.0}"
       }
     },
     "h1": {
@@ -19,7 +21,9 @@
         "fontSize": "{font.size.4xl}",
         "fontWeight": "{font.weight.semibold}",
         "lineHeight": "{line-height.tight}",
-        "letterSpacing": "{letter-spacing.tight}"
+        "letterSpacing": "{letter-spacing.tight}",
+        "marginBlock": "{spacing.3}",
+        "marginInline": "{spacing.0}"
       }
     },
     "h2": {
@@ -29,7 +33,9 @@
         "fontSize": "{font.size.3xl}",
         "fontWeight": "{font.weight.semibold}",
         "lineHeight": "{line-height.tight}",
-        "letterSpacing": "{letter-spacing.tight}"
+        "letterSpacing": "{letter-spacing.tight}",
+        "marginBlock": "{spacing.2}",
+        "marginInline": "{spacing.0}"
       }
     },
     "h3": {
@@ -39,7 +45,9 @@
         "fontSize": "{font.size.2xl}",
         "fontWeight": "{font.weight.medium}",
         "lineHeight": "{line-height.snug}",
-        "letterSpacing": "{letter-spacing.tight}"
+        "letterSpacing": "{letter-spacing.tight}",
+        "marginBlock": "{spacing.2}",
+        "marginInline": "{spacing.0}"
       }
     },
     "h4": {
@@ -49,7 +57,9 @@
         "fontSize": "{font.size.xl}",
         "fontWeight": "{font.weight.medium}",
         "lineHeight": "{line-height.snug}",
-        "letterSpacing": "{letter-spacing.tight}"
+        "letterSpacing": "{letter-spacing.tight}",
+        "marginBlock": "{spacing.2}",
+        "marginInline": "{spacing.0}"
       }
     },
     "h5": {
@@ -59,7 +69,9 @@
         "fontSize": "{font.size.lg}",
         "fontWeight": "{font.weight.medium}",
         "lineHeight": "{line-height.snug}",
-        "letterSpacing": "{letter-spacing.normal}"
+        "letterSpacing": "{letter-spacing.normal}",
+        "marginBlock": "{spacing.1}",
+        "marginInline": "{spacing.0}"
       }
     },
     "h6": {
@@ -69,7 +81,9 @@
         "fontSize": "{font.size.md}",
         "fontWeight": "{font.weight.medium}",
         "lineHeight": "{line-height.normal}",
-        "letterSpacing": "{letter-spacing.normal}"
+        "letterSpacing": "{letter-spacing.normal}",
+        "marginBlock": "{spacing.1}",
+        "marginInline": "{spacing.0}"
       }
     },
     "body-lg": {
@@ -79,7 +93,9 @@
         "fontSize": "{font.size.lg}",
         "fontWeight": "{font.weight.regular}",
         "lineHeight": "{line-height.relaxed}",
-        "letterSpacing": "{letter-spacing.normal}"
+        "letterSpacing": "{letter-spacing.normal}",
+        "marginBlock": "{spacing.1}",
+        "marginInline": "{spacing.0}"
       }
     },
     "body-md": {
@@ -89,7 +105,9 @@
         "fontSize": "{font.size.md}",
         "fontWeight": "{font.weight.regular}",
         "lineHeight": "{line-height.normal}",
-        "letterSpacing": "{letter-spacing.normal}"
+        "letterSpacing": "{letter-spacing.normal}",
+        "marginBlock": "{spacing.1}",
+        "marginInline": "{spacing.0}"
       }
     },
     "body-sm": {
@@ -99,7 +117,9 @@
         "fontSize": "{font.size.sm}",
         "fontWeight": "{font.weight.regular}",
         "lineHeight": "{line-height.normal}",
-        "letterSpacing": "{letter-spacing.normal}"
+        "letterSpacing": "{letter-spacing.normal}",
+        "marginBlock": "{spacing.1}",
+        "marginInline": "{spacing.0}"
       }
     },
     "body-xs": {
@@ -109,7 +129,9 @@
         "fontSize": "{font.size.xs}",
         "fontWeight": "{font.weight.regular}",
         "lineHeight": "{line-height.snug}",
-        "letterSpacing": "{letter-spacing.wide}"
+        "letterSpacing": "{letter-spacing.wide}",
+        "marginBlock": "{spacing.1}",
+        "marginInline": "{spacing.0}"
       }
     },
     "label": {
@@ -119,7 +141,9 @@
         "fontSize": "{font.size.sm}",
         "fontWeight": "{font.weight.medium}",
         "lineHeight": "{line-height.snug}",
-        "letterSpacing": "{letter-spacing.normal}"
+        "letterSpacing": "{letter-spacing.normal}",
+        "marginBlock": "{spacing.0}",
+        "marginInline": "{spacing.0}"
       }
     },
     "caption": {
@@ -129,7 +153,9 @@
         "fontSize": "{font.size.xs}",
         "fontWeight": "{font.weight.regular}",
         "lineHeight": "{line-height.snug}",
-        "letterSpacing": "{letter-spacing.wide}"
+        "letterSpacing": "{letter-spacing.wide}",
+        "marginBlock": "{spacing.0}",
+        "marginInline": "{spacing.0}"
       }
     },
     "code": {
@@ -139,7 +165,9 @@
         "fontSize": "{font.size.sm}",
         "fontWeight": "{font.weight.regular}",
         "lineHeight": "{line-height.snug}",
-        "letterSpacing": "{letter-spacing.normal}"
+        "letterSpacing": "{letter-spacing.normal}",
+        "marginBlock": "{spacing.0}",
+        "marginInline": "{spacing.0}"
       }
     }
   }

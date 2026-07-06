@@ -1,0 +1,92 @@
+# @mission-platform/router
+
+Framework-agnostic routing primitives for Mission Platform. Define your routes
+and navigation targets once in a neutral model, then let a per-framework adapter
+wire them into a real router.
+
+## Entry points
+
+| Import | Purpose |
+|---|---|
+| `@mission-platform/router` | Framework-neutral core. The route/location model (`MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation`, …) plus pure helpers: `defineRoutes`, `flattenRoutes`, `findRouteByName`, `matchRoutes`, `resolveLocation`, `createRouteResolver`, and the low-level `compilePath`/`matchPath`/`buildPath`/`normalizePath`, `parseQuery`/`stringifyQuery`, `parseLocation`/`stringifyLocation`/`normalizeHash`. No framework dependency. |
+| `@mission-platform/router/vue` | Vue 3 adapter (built on `vue-router` 4). `createMpRouter(options)` returns a ready-to-install `Router`; `useMpRouter()`/`useMpRoute()` expose neutral navigation + the reactive current route; `MpRouterLink` is a `RouterLink` whose `to` accepts the neutral location; `toVueRoutes`/`toVueLocation` are the underlying translators. Re-exports the entire neutral core. |
+
+The same neutral `MpRoute` tree is designed to translate to react-router,
+TanStack Router, Next.js, and Nuxt as further adapters are added — each adapter
+is the only framework-specific surface.
+
+## The neutral model
+
+- **`MpRoute`** — `{ path, name?, component?, lazy?, redirect?, children?, meta? }`.
+  Paths use a small, portable grammar shared by every adapter:
+  - `:name` — required dynamic segment
+  - `:name?` — optional segment
+  - `:name*` / `:name+` — repeatable (catch-all) segments
+  - `*` — standalone catch-all, captured under the `pathMatch` key
+  Child `path`s are resolved relative to their parent unless they begin with `/`.
+- **`MpRouteLocationRaw`** — a navigation target: a URL string, a
+  `{ path, query?, hash? }` object, or a `{ name, params?, query?, hash? }` object.
+- **`MpResolvedLocation`** — `{ path, fullPath, params, query, hash, name?, meta? }`.
+
+```ts
+import { defineRoutes, resolveLocation, matchRoutes } from '@mission-platform/router'
+
+const routes = defineRoutes([
+  { path: '/', name: 'home' },
+  {
+    path: '/users',
+    name: 'users',
+    meta: { auth: true },
+    children: [{ path: ':id', name: 'user' }],
+  },
+  { path: '/files/*', name: 'files' },
+])
+
+matchRoutes(routes, '/users/42')                       // → { flat: …, params: { id: '42' } }
+resolveLocation({ name: 'user', params: { id: 42 } }, routes).fullPath // → '/users/42'
+```
+
+## Vue 3
+
+`createMpRouter` returns a vue-router `Router`, which is itself a Vue plugin.
+Use `history: 'web' | 'hash' | 'memory'` (default `'web'`; use `'memory'` for
+SSR/tests) and the `vueRouterOptions` escape hatch for anything vue-router-native.
+
+```ts
+// main.ts
+import { createApp } from 'vue'
+import { createMpRouter } from '@mission-platform/router/vue'
+import App from './App.vue'
+import Home from './Home.vue'
+import User from './User.vue'
+
+const router = createMpRouter({
+  routes: [
+    { path: '/', name: 'home', component: Home },
+    { path: '/users/:id', name: 'user', component: User },
+  ],
+})
+
+createApp(App).use(router).mount('#app')
+```
+
+```vue
+<script setup lang="ts">
+import { MpRouterLink, useMpRoute, useMpRouter } from '@mission-platform/router/vue'
+
+const route = useMpRoute()
+const { push } = useMpRouter()
+</script>
+
+<template>
+  <nav>
+    <MpRouterLink :to="{ name: 'user', params: { id: 42 } }">Profile</MpRouterLink>
+    <button @click="push('/')">Home</button>
+  </nav>
+  <p>Current: {{ route.fullPath }}</p>
+</template>
+```
+
+`useMpRouter()` returns `{ currentRoute, push, replace, back, forward, go, resolve }`,
+where `push`/`replace`/`resolve` accept the neutral `MpRouteLocationRaw` and
+`currentRoute`/`resolve` yield neutral `MpResolvedLocation`s.

@@ -233,6 +233,8 @@ const TYPOGRAPHY_CSS_FIELDS: ReadonlyArray<{ dtcg: string; css: string }> = [
   { dtcg: 'fontWeight', css: 'font-weight' },
   { dtcg: 'lineHeight', css: 'line-height' },
   { dtcg: 'letterSpacing', css: 'letter-spacing' },
+  { dtcg: 'marginBlock', css: 'margin-block' },
+  { dtcg: 'marginInline', css: 'margin-inline' },
 ];
 
 /** Return `[variant, value]` entries for a DTCG composite typography group. */

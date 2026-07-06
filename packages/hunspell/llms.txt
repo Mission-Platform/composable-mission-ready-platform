@@ -4,3 +4,20 @@ Hunspell spell checker compiled to WebAssembly via Emscripten.
 
 ## Usage
 Integrate Hunspell spell-checking capabilities into your application using the provided WASM-based utilities.
+
+## Framework-agnostic Monaco core (`attachHunspellMonaco`)
+
+The Vue `useHunspellMonaco` composable is a thin reactive wrapper around the
+framework-agnostic `attachHunspellMonaco(editor, monaco, language?)` core, which
+is the single source of truth for the imperative Hunspell ↔ Monaco integration
+(worker spawn, debounced checking, marker mapping, quick-fix code-action
+provider) and returns a `{ dispose, recheck }` handle. Non-Vue consumers (e.g.
+the write-once `@mission-platform/components` `BaseMonacoEditor`) import it
+directly:
+
+```ts
+import { attachHunspellMonaco } from '@mission-platform/hunspell'
+
+const handle = attachHunspellMonaco(editor, monacoRuntime, 'plaintext')
+// later: handle.dispose()
+```

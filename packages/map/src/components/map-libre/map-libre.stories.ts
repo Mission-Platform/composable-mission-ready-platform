@@ -1,4 +1,4 @@
-import { BaseButton, BaseCodeBlock, BaseCollapse, BaseTooltip } from '@mission-platform/components';
+import { BaseButton, BaseCodeBlock, BaseCollapse, BaseTooltip } from '@mission-platform/components/vue';
 import {
   IconDrawCircle,
   IconDrawLine,
@@ -7,13 +7,13 @@ import {
   IconDrawTriangle,
   IconGeodesic,
   IconJoin,
-  IconRotateCCW,
-  IconRotateCW,
+  IconRotateCcw,
+  IconRotateCw,
   IconScaleDown,
   IconScaleUp,
   IconSplit,
   IconTrash,
-} from '@mission-platform/icons';
+} from '@mission-platform/icons/vue';
 import { ref, watch } from 'vue';
 
 import MapDraw from '../map-draw/map-draw.vue';
@@ -247,8 +247,8 @@ export const WithDrawToolbar: Story = {
       IconDrawTriangle,
       IconScaleUp,
       IconScaleDown,
-      IconRotateCW,
-      IconRotateCCW,
+      IconRotateCw,
+      IconRotateCcw,
       IconSplit,
       IconJoin,
       IconGeodesic,
@@ -386,12 +386,12 @@ export const WithDrawToolbar: Story = {
           </BaseTooltip>
           <BaseTooltip content="Rotate +45°" placement="bottom">
             <BaseButton variant="secondary" size="sm" :disabled="!selectedId" @click="rotate(45)">
-              <IconRotateCW :size="16" aria-label="Rotate Clockwise" />
+              <IconRotateCw :size="16" aria-label="Rotate Clockwise" />
             </BaseButton>
           </BaseTooltip>
           <BaseTooltip content="Rotate −45°" placement="bottom">
             <BaseButton variant="secondary" size="sm" :disabled="!selectedId" @click="rotate(-45)">
-              <IconRotateCCW :size="16" aria-label="Rotate Counter-Clockwise" />
+              <IconRotateCcw :size="16" aria-label="Rotate Counter-Clockwise" />
             </BaseButton>
           </BaseTooltip>
           <BaseTooltip content="Split line at midpoint" placement="bottom">
