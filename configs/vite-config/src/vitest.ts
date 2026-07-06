@@ -1,7 +1,7 @@
 import vue from '@vitejs/plugin-vue';
 import { defineConfig, mergeConfig, type ViteUserConfig } from 'vitest/config';
 
-import { ignoreVueI18nBlocksPlugin } from '.';
+import { ignoreVueI18nBlocksPlugin } from './index.js';
 
 export interface VitestConfigOptions {
   /** Test environment. Defaults to `'jsdom'` (Vue components require a DOM). */

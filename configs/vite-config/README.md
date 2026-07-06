@@ -50,11 +50,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineAppConfig({
   overrides: {
-    plugins: [
-      VitePWA({
-        /* ... */
-      }),
-    ],
+    plugins: [VitePWA({/* ... */})],
     worker: { format: 'es' },
   },
 });
