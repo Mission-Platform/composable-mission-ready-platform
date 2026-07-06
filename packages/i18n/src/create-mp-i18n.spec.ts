@@ -98,6 +98,7 @@ describe('localeNamespaces', () => {
 });
 
 describe('createMpI18n — namespaces', () => {
+  // eslint-disable-next-line unicorn/consistent-function-scoping
   const buildNamespaced = () =>
     createMpI18n({
       namespace: mpNamespace('my-care-notes'),

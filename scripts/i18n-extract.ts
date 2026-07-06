@@ -79,9 +79,7 @@ const MP_NAMESPACE_PREFIX = 'mp';
  * from `@mission-platform/i18n` (inlined here to keep the script dependency-free).
  */
 function mpNamespace(packageName: string): string {
-  const unscoped = packageName.startsWith(WORKSPACE_SCOPE)
-    ? packageName.slice(WORKSPACE_SCOPE.length)
-    : packageName;
+  const unscoped = packageName.startsWith(WORKSPACE_SCOPE) ? packageName.slice(WORKSPACE_SCOPE.length) : packageName;
   return `${MP_NAMESPACE_PREFIX}.${unscoped}`;
 }
 
@@ -403,6 +401,7 @@ for (const entry of appEntries) {
     dir,
     namespace: mpNamespace(directoryToPackageName.get(dir) ?? basename(dir)),
   }));
+  // eslint-disable-next-line unicorn/consistent-function-scoping
   const namespaceForFile = (filePath: string): string => {
     for (const { dir, namespace } of packageNamespaceEntries) {
       if (filePath === dir || filePath.startsWith(dir + sep)) return namespace;

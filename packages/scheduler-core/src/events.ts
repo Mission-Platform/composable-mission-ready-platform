@@ -114,6 +114,7 @@ export function formatDuration(event: VEvent): string {
  * and each occupies `column` of `totalColumns` parallel tracks.
  */
 export function layoutDay(events: VEvent[]): SchedulerEventSlot[] {
+  // eslint-disable-next-line unicorn/no-array-sort
   const sorted = [...events].sort((a, b) => new Date(a.dtstart).getTime() - new Date(b.dtstart).getTime());
 
   const columns: VEvent[][] = [];
