@@ -4,16 +4,7 @@ import styles from './base-icon-button.module.scss';
 
 /** Visual treatment of the icon button — the canonical colour set plus a transparent `ghost`. */
 export type IconButtonVariant =
-  | 'ghost'
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'ghost' | 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 /** Size token controlling the square padding — canonical 2xs → 2xl scale. */
 export type IconButtonSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 

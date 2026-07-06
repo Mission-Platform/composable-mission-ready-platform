@@ -25,15 +25,7 @@
 
 /** Intent / colour treatment of a toast — the canonical colour set. */
 export type ToastVariant =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
 /** Where the toast container is anchored on screen. */
 export type ToastPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';

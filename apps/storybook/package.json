@@ -20,7 +20,9 @@
   },
   "dependencies": {
     "@mission-platform/breakpoints": "workspace:*",
+    "@mission-platform/d3": "workspace:*",
     "@mission-platform/i18n": "workspace:*",
+    "@mission-platform/rxjs": "workspace:*",
     "@mission-platform/icons": "workspace:*",
     "@mission-platform/map": "workspace:*",
     "@mission-platform/tokens": "workspace:*",

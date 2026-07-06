@@ -6,16 +6,7 @@ import styles from './base-button.module.scss';
 
 /** Visual treatment of the button. Mirrors the `@mission-platform/components` `BaseButton`. */
 export type ButtonVariant =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical'
-  | 'ghost';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';
 /** Size token applied to padding and font-size — canonical 2xs → 2xl scale. */
 export type ButtonSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 /** Named `padding`/`margin` scale; each step maps to a named `--mp-spacing-*` design token. */

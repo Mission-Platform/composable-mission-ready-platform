@@ -10,15 +10,7 @@ export type MenuItemSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 /** Tone applied to the menu item. */
 export type MenuItemVariant =
-  | 'default'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'information'
-  | 'error'
-  | 'critical';
+  'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 
 export interface MenuItemProperties extends MpProperties {
   /** Item label (rendered when no default slot is provided). */

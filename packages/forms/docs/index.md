@@ -24,9 +24,7 @@ The primary component for rendering data-driven forms. It takes a JSON Schema de
 ```vue
 <script setup lang="ts">
   import { SchemaForm } from '@mission-platform/forms/vue';
-  const mySchema = {
-    /* JSON Schema */
-  };
+  const mySchema = {/* JSON Schema */};
 </script>
 
 <template>

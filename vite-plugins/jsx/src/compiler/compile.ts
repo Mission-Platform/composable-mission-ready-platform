@@ -13,7 +13,9 @@ import { emitReactModule } from '../generators/react/index.js';
 // eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
 import { emitVueModule } from '../generators/vue/index.js';
 
-import { parseTsx } from './ast.js';
+import { parseTsx, stripFrameworkDirective } from './ast.js';
+
+export { moduleTargetsFramework, readFrameworkDirective } from './ast.js';
 
 /** A framework the neutral components can be compiled to. */
 export type JsxFramework = 'react' | 'vue';
@@ -45,9 +47,18 @@ export interface CompiledModule {
   lang: 'tsx' | 'vue';
 }
 
-/** Compile one neutral component module to its per-framework source (Stage 1). */
+/**
+ * Compile one neutral (or framework-gated) component module to its per-framework
+ * source (Stage 1).
+ *
+ * A leading `"use react";` / `"use vue";` directive is stripped before emitting
+ * so the marker never leaks into the output; gating a module out of the
+ * non-matching framework's build is handled upstream by the discovery step
+ * (see {@link moduleTargetsFramework}).
+ */
 export function compileComponentModule(source: string, options: CompileOptions): CompiledModule {
-  const sourceFile = parseTsx(options.fileName ?? `${options.componentName}.tsx`, source);
+  const parsed = parseTsx(options.fileName ?? `${options.componentName}.tsx`, source);
+  const sourceFile = stripFrameworkDirective(parsed);
   if (options.framework === 'react') {
     return { code: emitReactModule(sourceFile, options.componentName), lang: 'tsx' };
   }

@@ -1,7 +1,0 @@
-{
-  "extends": "@mission-platform/typescript-config/stories-react",
-  "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.stories.tsbuildinfo"
-  },
-  "include": ["src/**/*.stories.ts", "src/**/*.stories.tsx"]
-}

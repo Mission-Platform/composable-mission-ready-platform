@@ -1,0 +1,42 @@
+# @mission-platform/rxjs
+
+Framework-neutral RxJS integration for Mission Platform. It is authored **once**
+against the `@mission-platform/jsx` neutral hooks and compiled to both React and
+Vue by `@mission-platform/vite-plugin-jsx`, so a single write-once component can
+compose event/data streams with the full RxJS operator vocabulary and render
+their values on either framework. Observables flow into component state, and
+subscriptions are tied to the component's effect lifecycle so nothing leaks on
+unmount.
+
+Its only runtime dependencies are `rxjs` and `@mission-platform/jsx`; `react`,
+`react-dom`, and `vue` are optional peers supplied by the consuming app.
+
+## Exports (`@mission-platform/rxjs`)
+
+### Observable → component state (`src/use-observable.ts`)
+- `useObservable(source)` / `useObservable(source, initialValue)` — subscribe to
+  an `Observable` and return its latest emission as component state (via the
+  neutral `useState` + `useEffect`). Returns `undefined` (or the seed) until the
+  first emission; unsubscribes on unmount.
+
+### Subscription lifetime (`src/use-subscription.ts`)
+- `useSubscription(subscribe, dependencies?)` — run a `subscribe` factory after
+  mount (via the neutral `useEffect`) and unsubscribe from its `Unsubscribable`
+  result on unmount / dependency change.
+- `useSubscribe(source, observerOrNext?, dependencies?)` — subscribe to an
+  `Observable` for the component's lifetime in one step.
+- `Unsubscribable` — the `{ unsubscribe(): void }` shape accepted above.
+
+## Authoring model
+Because the hooks compile per-framework, the **neutral baseline** used at
+authoring time (and in SSR / the runtime adapters) is render-once: `useState`
+returns its initial value and `useEffect` is a no-op, so a component using these
+composables renders the initial/seed value identically on React and Vue. The
+live subscription behaviour comes from the per-framework hooks the build-time
+plugin swaps in.
+
+## Consumers
+Any write-once Mission Platform component (see `@mission-platform/components`)
+that needs debounced inputs, `switchMap`-style request cancellation,
+`combineLatest` derivations, or other stream orchestration while rendering the
+result on both frameworks.

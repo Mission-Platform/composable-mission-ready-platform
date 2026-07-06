@@ -10,15 +10,7 @@ export type CollapseSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 /** Colour tone of the disclosure — the canonical colour set (`neutral` is the plain treatment). */
 export type CollapseVariant =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
 export interface CollapseProperties extends MpProperties {
   /** Summary (disclosure trigger) text. Defaults to `'Details'`. */

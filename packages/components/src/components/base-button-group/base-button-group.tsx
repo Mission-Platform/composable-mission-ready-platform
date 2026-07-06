@@ -13,15 +13,7 @@ export type ButtonGroupOrientation = 'horizontal' | 'vertical';
 export type ButtonGroupGap = 'none' | 'xs' | 'sm' | 'md';
 /** Colour tone of the group — the canonical colour set (`neutral` is the plain treatment). */
 export type ButtonGroupVariant =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
 export interface ButtonGroupProperties extends MpProperties {
   /** Layout direction. Defaults to `'horizontal'`. */

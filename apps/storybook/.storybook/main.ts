@@ -7,13 +7,15 @@ import type { StorybookConfig } from '@storybook/vue3-vite';
 const config: StorybookConfig = {
   stories: [
     '../src/**/*.mdx',
-    '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-    '../../../packages/breakpoints/src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-    '../../../packages/components/src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-    '../../../packages/forms/src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-    '../../../packages/icons/src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-    '../../../packages/layout/src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-    '../../../packages/map/src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../src/**/*.vue.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/breakpoints/src/**/*.vue.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/components/src/**/*.vue.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/d3/src/**/*.vue.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/rxjs/src/**/*.vue.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/forms/src/**/*.vue.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/icons/src/**/*.vue.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/layout/src/**/*.vue.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/map/src/**/*.vue.stories.@(js|jsx|mjs|ts|tsx)',
   ],
   addons: [
     '@chromatic-com/storybook',

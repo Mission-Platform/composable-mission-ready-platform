@@ -11,15 +11,7 @@ export type CardPadding = 'none' | 'sm' | 'md' | 'lg';
 export type CardSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 /** Colour tone of the card surface — the canonical colour set (`neutral` is the plain surface). */
 export type CardVariant =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 /** Named outer-`margin` scale; each step maps to a named `--mp-spacing-*` design token. */
 export type SpacingScale = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 

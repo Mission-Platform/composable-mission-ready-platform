@@ -170,6 +170,69 @@ export function printSourceFile(sourceFile: ts.SourceFile): string {
   return printer.printFile(sourceFile);
 }
 
+/** The recognised `"use <framework>";` module directives → the framework they pin a module to. */
+const FRAMEWORK_DIRECTIVES: Readonly<Record<string, 'react' | 'vue'>> = {
+  'use react': 'react',
+  'use vue': 'vue',
+};
+
+/**
+ * Read a module's `"use <framework>";` directive, if any.
+ *
+ * A module may opt into a **framework-specific** implementation by opening with
+ * a `"use react";` or `"use vue";` directive (mirroring `"use strict"` /
+ * `"use client"`). This returns the framework the directive pins the module to,
+ * or `undefined` when the module is framework-neutral (no such directive).
+ *
+ * Only the leading **directive prologue** — the run of consecutive
+ * string-literal expression statements at the very top of the module — is
+ * inspected, matching JavaScript's directive semantics; other prologue
+ * directives (e.g. `"use strict"`) are ignored.
+ */
+export function readFrameworkDirective(sourceFile: ts.SourceFile): 'react' | 'vue' | undefined {
+  for (const statement of sourceFile.statements) {
+    if (!ts.isExpressionStatement(statement) || !ts.isStringLiteralLike(statement.expression)) {
+      // The directive prologue ends at the first non-string-literal statement.
+      break;
+    }
+    const framework = FRAMEWORK_DIRECTIVES[statement.expression.text];
+    if (framework !== undefined) {
+      return framework;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Whether a module should be emitted for `framework`. A framework-neutral module
+ * (no `"use <framework>"` directive) is emitted for every target; a gated module
+ * is emitted **only** for the framework its directive names.
+ */
+export function moduleTargetsFramework(sourceFile: ts.SourceFile, framework: 'react' | 'vue'): boolean {
+  const directive = readFrameworkDirective(sourceFile);
+  return directive === undefined || directive === framework;
+}
+
+/**
+ * Return the source file with any leading `"use react"` / `"use vue"` directive
+ * removed, so the compile-time gating marker never leaks into the emitted
+ * per-framework source. Other prologue directives are preserved.
+ */
+export function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile {
+  let inPrologue = true;
+  const statements = sourceFile.statements.filter((statement) => {
+    if (!inPrologue) {
+      return true;
+    }
+    if (ts.isExpressionStatement(statement) && ts.isStringLiteralLike(statement.expression)) {
+      return FRAMEWORK_DIRECTIVES[statement.expression.text] === undefined;
+    }
+    inPrologue = false;
+    return true;
+  });
+  return ts.factory.updateSourceFile(sourceFile, statements);
+}
+
 /** The names a module imports from the neutral package, split by binding kind. */
 export interface NeutralImports {
   /** Value imports (e.g. `h`, `useState`). */

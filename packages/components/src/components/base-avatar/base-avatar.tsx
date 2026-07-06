@@ -8,15 +8,7 @@ export type AvatarShape = 'circle' | 'square';
 export type AvatarStatus = 'online' | 'offline' | 'away' | 'busy' | undefined;
 /** Colour tone of the initials/slot fallback fill — the canonical colour set. */
 export type AvatarVariant =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
 export interface AvatarProperties extends MpProperties {
   /** Image source. When set, the image is shown in preference to `initials`/slot. */

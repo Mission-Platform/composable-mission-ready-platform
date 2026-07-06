@@ -1,0 +1,72 @@
+{
+  "name": "@mission-platform/d3",
+  "version": "0.1.0",
+  "description": "Framework-neutral D3 integration for Mission Platform — a write-once useD3 composable (authored against @mission-platform/jsx hooks and compiled to React and Vue) that binds a D3 selection to an element ref, plus pure margin-convention helpers for responsive chart layout",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json --noEmit && vite build && tsc --project tsconfig.build.json --emitDeclarationOnly",
+    "build:watch": "vite build --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
+  },
+  "dependencies": {
+    "@mission-platform/jsx": "workspace:*",
+    "d3-selection": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "vue": "^3.5.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@mission-platform/vite-config": "workspace:*",
+    "@storybook/vue3-vite": "catalog:storybook",
+    "@types/d3": "catalog:",
+    "@types/d3-selection": "catalog:",
+    "@types/node": "catalog:typescript",
+    "d3": "catalog:",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "@vitest/coverage-v8": "catalog:testing",
+    "eslint": "catalog:eslint",
+    "jsdom": "catalog:testing",
+    "prettier": "catalog:prettier",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite",
+    "vitest": "catalog:testing",
+    "vue": "catalog:vue"
+  }
+}

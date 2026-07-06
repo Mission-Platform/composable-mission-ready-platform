@@ -10,15 +10,7 @@ export type ToastSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 /** Intent / colour treatment of the toast — the canonical colour set. */
 export type ToastVariant =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
 export interface ToastProperties extends MpProperties {
   /** Intent / colour treatment. Defaults to `'info'`. */

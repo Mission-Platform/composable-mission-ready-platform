@@ -3,7 +3,16 @@ import { mergeConfig } from 'vite';
 import type { StorybookConfig } from '@storybook/react-vite';
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  stories: [
+    '../src/**/*.mdx',
+    '../src/**/*.react.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/breakpoints/src/**/*.react.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/components/src/**/*.react.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/forms/src/**/*.react.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/icons/src/**/*.react.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/layout/src/**/*.react.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/map/src/**/*.react.stories.@(js|jsx|mjs|ts|tsx)',
+  ],
   addons: [
     '@chromatic-com/storybook',
     '@storybook/addon-vitest',

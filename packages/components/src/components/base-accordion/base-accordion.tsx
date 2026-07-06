@@ -11,15 +11,7 @@ export type AccordionSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 /** Colour tone of the accordion — the canonical colour set (`neutral` is the plain treatment). */
 export type AccordionVariant =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
 /** A single collapsible row descriptor. */
 export interface AccordionItem {

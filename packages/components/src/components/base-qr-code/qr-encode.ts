@@ -244,13 +244,11 @@ class QrBuilder {
     for (let index = 0; index < numberAlign; index++) {
       for (let index_ = 0; index_ < numberAlign; index_++) {
         // Skip the three finder-pattern corners.
-        if (
-          !(
-            (index === 0 && index_ === 0) ||
-            (index === 0 && index_ === numberAlign - 1) ||
-            (index === numberAlign - 1 && index_ === 0)
-          )
-        ) {
+        if (!(
+          (index === 0 && index_ === 0) ||
+          (index === 0 && index_ === numberAlign - 1) ||
+          (index === numberAlign - 1 && index_ === 0)
+        )) {
           this.drawAlignmentPattern(alignPositions[index], alignPositions[index_]);
         }
       }

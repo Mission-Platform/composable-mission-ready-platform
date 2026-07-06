@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { compileComponentModule } from './compile';
+import { parseTsx } from './ast';
+import { compileComponentModule, moduleTargetsFramework, readFrameworkDirective } from './compile';
 
 const BADGE = [
   "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
@@ -1064,5 +1065,86 @@ describe('the emitters support a recursive (self-referencing) component', () => 
     expect(vue.code).toContain("defineOptions({ name: 'BaseTree', inheritAttrs: false });");
     expect(vue.code).toContain("const BaseTree = resolveComponent('BaseTree');");
     expect(vue.code).toMatch(/import \{[^}]*\bresolveComponent\b[^}]*\} from ['"]vue['"]/);
+  });
+});
+
+const TOGGLE = [
+  "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface ToggleProperties extends MpProperties {',
+  '  on?: boolean;',
+  '}',
+  '',
+  'export function BaseToggle(properties: ToggleProperties): MpElement {',
+  '  const { on } = properties;',
+  '  return (',
+  '    <div class="toggle">',
+  '      {on ? <span class="toggle__on">On</span> : <span class="toggle__off">Off</span>}',
+  '      {on ? <strong class="toggle__badge">!</strong> : undefined}',
+  '    </div>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the Vue emitter lowers JSX ternaries to `v-if` / `v-else`', () => {
+  const vue = compileComponentModule(TOGGLE, { framework: 'vue', componentName: 'BaseToggle' });
+
+  it('renders a `cond ? <a/> : <b/>` ternary as a `v-if` / `v-else` element pair', () => {
+    expect(vue.code).toMatch(/<span v-if="on" class="toggle__on">/);
+    expect(vue.code).toMatch(/<span v-else class="toggle__off">/);
+  });
+
+  it('renders a `cond ? <a/> : undefined` ternary as a lone `v-if` (no `v-else`)', () => {
+    // The badge is guarded by `v-if` and has no matching `v-else` sibling: there
+    // is exactly one `v-else` in the whole template (from the first ternary).
+    expect(vue.code).toMatch(/<strong v-if="on" class="toggle__badge">/);
+    expect((vue.code.match(/v-else/g) ?? []).length).toBe(1);
+  });
+
+  it('keeps the React target as native JSX ternaries (no `v-if`)', () => {
+    const react = compileComponentModule(TOGGLE, { framework: 'react', componentName: 'BaseToggle' });
+    expect(react.code).not.toContain('v-if');
+    expect(react.code).toContain('? <span');
+  });
+});
+
+const USE_VUE_WIDGET = [
+  '"use vue";',
+  "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export function BaseWidget(properties: MpProperties): MpElement {',
+  '  return <span class="widget">{properties.children}</span>;',
+  '}',
+].join('\n');
+
+describe('the compiler reads and applies `"use <framework>";` module directives', () => {
+  it('detects the framework a module is pinned to from its directive prologue', () => {
+    expect(readFrameworkDirective(parseTsx('a.tsx', '"use vue";\nexport const a = 1;'))).toBe('vue');
+    expect(readFrameworkDirective(parseTsx('a.tsx', '"use react";\nexport const a = 1;'))).toBe('react');
+  });
+
+  it('returns undefined for a neutral module or an unrelated prologue directive', () => {
+    expect(readFrameworkDirective(parseTsx('a.tsx', 'export const a = 1;'))).toBeUndefined();
+    expect(readFrameworkDirective(parseTsx('a.tsx', '"use strict";\nexport const a = 1;'))).toBeUndefined();
+  });
+
+  it('ignores a `"use vue"` string that is not part of the directive prologue', () => {
+    expect(readFrameworkDirective(parseTsx('a.tsx', 'const x = 1;\n"use vue";'))).toBeUndefined();
+  });
+
+  it('gates a module to its framework, while neutral modules target every framework', () => {
+    const gated = parseTsx('a.tsx', '"use vue";\nexport const a = 1;');
+    expect(moduleTargetsFramework(gated, 'vue')).toBe(true);
+    expect(moduleTargetsFramework(gated, 'react')).toBe(false);
+
+    const neutral = parseTsx('a.tsx', 'export const a = 1;');
+    expect(moduleTargetsFramework(neutral, 'vue')).toBe(true);
+    expect(moduleTargetsFramework(neutral, 'react')).toBe(true);
+  });
+
+  it('strips the directive from the compiled output so the marker never leaks', () => {
+    const vue = compileComponentModule(USE_VUE_WIDGET, { framework: 'vue', componentName: 'BaseWidget' });
+    expect(vue.code).not.toContain('use vue');
+    expect(vue.code).toContain('class="widget"');
   });
 });

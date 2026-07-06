@@ -4,15 +4,7 @@ import styles from './base-status-icon.module.scss';
 
 /** Status / tone conveyed by the icon — the canonical colour set. */
 export type StatusIconLevel =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'info'
-  | 'error'
-  | 'critical';
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 /** Canonical 2xs → 2xl size scale. */
 export type StatusIconSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
