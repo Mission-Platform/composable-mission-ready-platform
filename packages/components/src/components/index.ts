@@ -44,6 +44,13 @@ export {
   type DateTimeRangeInputSize,
   type TimezoneMode,
 } from './base-date-time-range-input';
+export {
+  BaseDeviceMock,
+  type DeviceMockOrientation,
+  type DeviceMockProperties,
+  type DeviceMockSize,
+  type DeviceMockType,
+} from './base-device-mock';
 export { BaseDialog, type DialogProperties } from './base-dialog';
 export {
   BaseDrawer,
