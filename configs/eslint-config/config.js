@@ -22,6 +22,20 @@ const config = [
     ignores: ['**/dist/**', '**/node_modules/**', '**/storybook-static/**', '**/.storybook/storybook-static/**'],
   },
   {
+    name: 'mission-platform/dependency-direction',
+    rules: {
+      'no-restricted-paths/no-restricted-paths': [
+        'error',
+        {
+          zones: [
+            { target: './packages/**', from: './apps/**' },
+            { target: './apps/**', from: './packages/**' },
+          ],
+        },
+      ],
+    },
+  },
+  {
     name: 'mission-platform/typescript',
     files: ['**/*.ts', '**/*.tsx', '**/*.mts'],
     languageOptions: {
