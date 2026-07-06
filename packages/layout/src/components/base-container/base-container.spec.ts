@@ -22,9 +22,7 @@ describe('BaseContainer authors the same component for React and Vue', () => {
   it('pins a constant max-width and centres for the `fixed` variant on both frameworks', async () => {
     const properties = { variant: 'fixed', maxWidth: 'lg' } as const;
     const react = renderToStaticMarkup(createElement(ReactContainer, properties, 'Content'));
-    const vue = await renderToString(
-      createSSRApp({ render: () => vueH(VueContainer, properties, () => 'Content') }),
-    );
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueContainer, properties, () => 'Content') }));
 
     for (const html of [react, vue]) {
       expect(html).toContain('base-container');
@@ -38,9 +36,7 @@ describe('BaseContainer authors the same component for React and Vue', () => {
   it('removes the max-width for the `fluid` variant on both frameworks', async () => {
     const properties = { variant: 'fluid' } as const;
     const react = renderToStaticMarkup(createElement(ReactContainer, properties, 'Content'));
-    const vue = await renderToString(
-      createSSRApp({ render: () => vueH(VueContainer, properties, () => 'Content') }),
-    );
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueContainer, properties, () => 'Content') }));
 
     for (const html of [react, vue]) {
       expect(html).toContain('base-container--fluid');
@@ -64,9 +60,7 @@ describe('BaseContainer authors the same component for React and Vue', () => {
   it('maps the `gutter` and `center` props onto inline padding/margin on both frameworks', async () => {
     const properties = { gutter: 'lg', center: false } as const;
     const react = renderToStaticMarkup(createElement(ReactContainer, properties, 'Content'));
-    const vue = await renderToString(
-      createSSRApp({ render: () => vueH(VueContainer, properties, () => 'Content') }),
-    );
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueContainer, properties, () => 'Content') }));
 
     for (const html of [react, vue]) {
       expect(html).toContain('padding-inline:var(--mp-spacing-lg)');
