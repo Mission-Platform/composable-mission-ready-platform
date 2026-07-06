@@ -111,14 +111,15 @@ Notification and loading indicators.
 
 Handling images, video and the platform's look-and-feel.
 
-| Component             | Description                                              | Key Props                                    |
-| :-------------------- | :------------------------------------------------------- | :------------------------------------------- |
-| `BaseResponsiveImage` | Art-directed `<picture>` with native srcset/sizes.       | `src`, `sources`, `aspectRatio`, `fit`       |
-| `BaseResponsiveVideo` | Responsive video player with fixed aspect ratio.         | `src`, `sources`, `poster`, `autoplay`       |
-| `BaseBackgroundVideo` | Full-bleed background video with reduced-motion support. | `src`, `overlay`, `minHeight`                |
-| `BaseThemeToggle`     | Button to cycle light/dark/auto themes via shared store. | `ariaLabel`, `onChange`                      |
-| `BaseThemeProvider`   | Configures and exposes the global theme state.           | `defaultTheme`, `persist`, `storageKey`      |
-| `BaseThemeComposer`   | Controlled editor for design-token overrides.            | `modelValue`, `global`, `onUpdateModelValue` |
+| Component             | Description                                                   | Key Props                                    |
+| :-------------------- | :------------------------------------------------------------ | :------------------------------------------- |
+| `BaseResponsiveImage` | Art-directed `<picture>` with native srcset/sizes.            | `src`, `sources`, `aspectRatio`, `fit`       |
+| `BaseResponsiveVideo` | Responsive video player with fixed aspect ratio.              | `src`, `sources`, `poster`, `autoplay`       |
+| `BaseBackgroundVideo` | Full-bleed background video with reduced-motion support.      | `src`, `overlay`, `minHeight`                |
+| `BaseDeviceMock`      | Device frame (mobile/tablet/desktop/browser) around a screen. | `device`, `orientation`, `url`, `size`       |
+| `BaseThemeToggle`     | Button to cycle light/dark/auto themes via shared store.      | `ariaLabel`, `onChange`                      |
+| `BaseThemeProvider`   | Configures and exposes the global theme state.                | `defaultTheme`, `persist`, `storageKey`      |
+| `BaseThemeComposer`   | Controlled editor for design-token overrides.                 | `modelValue`, `global`, `onUpdateModelValue` |
 
 ## Implementation Details
 
