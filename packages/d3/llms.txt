@@ -1,0 +1,41 @@
+# @mission-platform/d3
+
+Framework-neutral D3 integration for Mission Platform. It is authored **once**
+against the `@mission-platform/jsx` neutral hooks and compiled to both React and
+Vue by `@mission-platform/vite-plugin-jsx`, so a single write-once component can
+keep D3 as its drawing engine (scales, axes, shapes, transitions) and render on
+either framework. `useD3` hands back an element ref and runs a draw callback
+against that element's D3 selection after mount; the pure `margins` helpers cover
+the layout maths every chart needs.
+
+Its runtime dependencies are `d3` and `@mission-platform/jsx`; `react`,
+`react-dom`, and `vue` are optional peers supplied by the consuming app.
+
+## Exports (`@mission-platform/d3`)
+
+### Reactive D3 selection binding (`src/use-d3.ts`)
+- `useD3(draw, dependencies?)` — return a ref (`MpRef<E | null>`) to attach to an
+  element (`ref={reference}`) and run `draw(selection)` against that element's D3
+  selection after mount, re-running when `dependencies` change. `draw` may return
+  a teardown run before the next redraw and on unmount.
+- `D3Selection<E>` — a `d3` `Selection` over a single element `E`.
+- `D3Draw<E>` — the draw callback type.
+
+### Margin-convention layout maths (`src/margins.ts`)
+- `resolveMargin(input?)` — normalise a number or partial margin into a full
+  `{ top, right, bottom, left }`.
+- `innerDimensions(box)` — compute the inner plotting rectangle
+  (`innerWidth`/`innerHeight`, clamped at 0) and the `translate(left,top)`
+  transform for the classic D3 margin convention.
+- `Margin`, `MarginInput`, `ChartBox`, `InnerDimensions` — the supporting types.
+
+## Authoring model
+The hooks compile per-framework, so the **neutral baseline** used at authoring
+time (and in SSR / the runtime adapters) is render-once: `useRef` returns an
+empty `{ current: null }` container and `useEffect` is a no-op, so the host
+element renders identically on React and Vue with the D3 draw deferred to the
+framework's mounted effect.
+
+## Consumers
+Any write-once Mission Platform component that renders D3-driven charts or
+visualisations while shipping to both frameworks from a single source.
