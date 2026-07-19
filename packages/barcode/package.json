@@ -1,0 +1,97 @@
+{
+  "name": "@mission-platform/barcode",
+  "version": "0.1.0",
+  "description": "Dependency-free 1D (linear) barcode encoder and decoder written in Rust and compiled to WebAssembly, with a typed ES module wrapper and a write-once React/Vue component",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js"
+    },
+    "./vue": {
+      "types": "./dist/vue/index.d.ts",
+      "import": "./dist/vue/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "build:bundle": "vite build",
+    "build:vue": "vite build --mode vue",
+    "build:react": "vite build --mode react",
+    "build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly",
+    "build:watch": "vite build --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "lint:style": "stylelint \"src/**/*.scss\"",
+    "lint:style:fix": "stylelint --fix \"src/**/*.scss\"",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
+  },
+  "dependencies": {
+    "@mission-platform/components": "workspace:*",
+    "@mission-platform/icons": "workspace:*",
+    "@mission-platform/jsx": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "vue": "^3.5.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/stylelint-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@mission-platform/vite-config": "workspace:*",
+    "@mission-platform/vite-plugin-jsx": "workspace:*",
+    "@storybook/react-vite": "catalog:storybook",
+    "@storybook/vue3-vite": "catalog:storybook",
+    "@types/node": "catalog:typescript",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "@vitejs/plugin-vue-jsx": "catalog:vue",
+    "@vitest/coverage-v8": "catalog:testing",
+    "eslint": "catalog:eslint",
+    "jsdom": "catalog:testing",
+    "postcss-html": "catalog:stylelint",
+    "postcss-scss": "catalog:stylelint",
+    "prettier": "catalog:prettier",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
+    "storybook": "catalog:storybook",
+    "stylelint": "catalog:stylelint",
+    "stylelint-config-recommended-vue": "catalog:stylelint",
+    "stylelint-config-standard-scss": "catalog:stylelint",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite",
+    "vitest": "catalog:testing",
+    "vue": "catalog:vue"
+  }
+}
