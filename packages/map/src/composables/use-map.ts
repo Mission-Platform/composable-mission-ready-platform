@@ -1,35 +1,31 @@
-import { inject, type ShallowRef } from 'vue';
+// ─── useMap ─────────────────────────────────────────────────────────────────
+//
+// Framework-neutral: authored once against the `@mission-platform/jsx` context
+// primitive and compiled to React / Vue by `@mission-platform/vite-plugin-jsx`.
+// Returns the MapLibre `Map` instance provided by the nearest `<MapLibre>`
+// ancestor through {@link MapContext}. `undefined` until the map has loaded (and
+// when read outside a `<MapLibre>` subtree).
 
-import { mapKey } from './injection-keys';
+import { useContext } from '@mission-platform/jsx';
+
+import { MapContext } from '../components/map-context';
 
 import type { Map } from 'maplibre-gl';
 
-export interface UseMapReturn {
-  /** Reactive reference to the MapLibre `Map` instance. `undefined` until the map has loaded. */
-  map: ShallowRef<Map | undefined>;
-}
-
 /**
- * Returns the reactive MapLibre `Map` instance provided by the nearest `<MapLibre>` ancestor.
+ * Returns the MapLibre `Map` instance provided by the nearest `<MapLibre>`
+ * ancestor, or `undefined` when the map has not loaded yet.
  *
  * Must be called inside a component that is a descendant of `<MapLibre>`.
  *
  * @example
  * ```ts
- * const { map } = useMap()
- * watchEffect(() => {
- *   if (map.value) map.value.flyTo({ center: [lng, lat] })
- * })
+ * const map = useMap();
+ * useEffect(() => {
+ *   map?.flyTo({ center: [lng, lat] });
+ * }, [map]);
  * ```
  */
-export function useMap(): UseMapReturn {
-  const map = inject(mapKey);
-
-  if (!map) {
-    throw new Error(
-      '[useMap] No map context found. Make sure this composable is called inside a <MapLibre> component.',
-    );
-  }
-
-  return { map };
+export function useMap(): Map | undefined {
+  return useContext(MapContext);
 }

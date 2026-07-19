@@ -1,99 +1,98 @@
+// ─── usePopup ─────────────────────────────────────────────────────────────────
+//
+// Framework-neutral: authored once against the `@mission-platform/jsx` hooks and
+// compiled to React / Vue by `@mission-platform/vite-plugin-jsx`.
+
+import { useEffect, useRef, useState } from '@mission-platform/jsx';
 import { type LngLatLike, type Map, Popup, type PopupOptions } from 'maplibre-gl';
-import { markRaw, type MaybeRefOrGetter, onUnmounted, type ShallowRef, shallowRef, toValue, watch } from 'vue';
 
 export interface UsePopupOptions extends PopupOptions {
   /** Longitude/latitude position of the popup. */
-  lngLat: MaybeRefOrGetter<LngLatLike>;
+  lngLat: LngLatLike;
   /** HTML string or plain text to display inside the popup. */
-  content: MaybeRefOrGetter<string>;
+  content: string;
   /** When `true`, content is treated as plain text (XSS-safe). Defaults to `false`. */
   isText?: boolean;
   /** Whether the popup is currently open. Defaults to `true`. */
-  open?: MaybeRefOrGetter<boolean>;
+  open?: boolean;
+  /** Fired when the popup is closed (e.g. via the close button). */
+  onClose?: () => void;
 }
 
 export interface UsePopupReturn {
-  /** Reactive reference to the underlying `Popup` instance. */
-  popup: ShallowRef<Popup | undefined>;
+  /** The underlying `Popup` instance, or `undefined` before the map is ready. */
+  popup: Popup | undefined;
 }
 
 /**
- * Creates a reactive MapLibre `Popup` that is automatically added to and removed
- * from the map as the owning component mounts and unmounts.
- *
- * Reactively updates position, content, and open/closed state.
+ * Creates a MapLibre `Popup` that is automatically added to and removed from the
+ * map as the owning component mounts and unmounts. Updates position, content,
+ * and open/closed state.
  *
  * @example
  * ```ts
- * const { map } = useMap()
- * const { popup } = usePopup(map, {
- *   lngLat: [-0.127758, 51.507351],
- *   content: computed(() => `<strong>${cityName.value}</strong>`),
- * })
+ * const map = useMap();
+ * const { popup } = usePopup(map, { lngLat: [-0.12, 51.5], content: '<b>Hi</b>' });
  * ```
  */
-export function usePopup(mapReference: ShallowRef<Map | undefined>, options: UsePopupOptions): UsePopupReturn {
-  const { lngLat, content, isText = false, open = true, ...popupOptions } = options;
-  const popup = shallowRef<Popup | undefined>();
+export function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupReturn {
+  const { lngLat, content, isText = false, open = true, onClose, ...popupOptions } = options;
+  const [popup, setPopup] = useState<Popup | undefined>(undefined);
+  const popupReference = useRef<Popup | undefined>(undefined);
 
-  watch(
-    mapReference,
-    (map) => {
-      if (!map) return;
+  useEffect(() => {
+    if (!map) {
+      return;
+    }
+    const instance = new Popup(popupOptions);
+    if (isText) {
+      instance.setText(content);
+    } else {
+      instance.setHTML(content);
+    }
+    instance.setLngLat(lngLat);
+    if (open) {
+      instance.addTo(map);
+    }
+    if (onClose) {
+      instance.on('close', () => onClose());
+    }
+    popupReference.current = instance;
+    setPopup(instance);
+    return () => {
+      instance.remove();
+      popupReference.current = undefined;
+      setPopup(undefined);
+    };
+  }, [map]);
 
-      const instance = new Popup(popupOptions);
-      if (isText) {
-        instance.setText(toValue(content));
-      } else {
-        instance.setHTML(toValue(content));
-      }
-      instance.setLngLat(toValue(lngLat));
+  useEffect(() => {
+    popupReference.current?.setLngLat(lngLat);
+  }, [lngLat]);
 
-      if (toValue(open)) {
-        instance.addTo(map);
-      }
+  useEffect(() => {
+    const instance = popupReference.current;
+    if (!instance) {
+      return;
+    }
+    if (isText) {
+      instance.setText(content);
+    } else {
+      instance.setHTML(content);
+    }
+  }, [content]);
 
-      popup.value = markRaw(instance);
-    },
-    { immediate: true },
-  );
-
-  watch(
-    () => toValue(lngLat),
-    (position) => {
-      popup.value?.setLngLat(position);
-    },
-  );
-
-  watch(
-    () => toValue(content),
-    (html) => {
-      if (!popup.value) return;
-      if (isText) {
-        popup.value.setText(html);
-      } else {
-        popup.value.setHTML(html);
-      }
-    },
-  );
-
-  watch(
-    () => toValue(open),
-    (isOpen) => {
-      const map = mapReference.value;
-      if (!popup.value || !map) return;
-      if (isOpen) {
-        popup.value.addTo(map);
-      } else {
-        popup.value.remove();
-      }
-    },
-  );
-
-  onUnmounted(() => {
-    popup.value?.remove();
-    popup.value = undefined;
-  });
+  useEffect(() => {
+    const instance = popupReference.current;
+    if (!instance || !map) {
+      return;
+    }
+    if (open) {
+      instance.addTo(map);
+    } else {
+      instance.remove();
+    }
+  }, [open]);
 
   return { popup };
 }

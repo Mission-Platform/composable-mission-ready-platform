@@ -1,56 +1,59 @@
+// ─── useMarker ────────────────────────────────────────────────────────────────
+//
+// Framework-neutral: authored once against the `@mission-platform/jsx` hooks and
+// compiled to React / Vue by `@mission-platform/vite-plugin-jsx`.
+
+import { useEffect, useRef, useState } from '@mission-platform/jsx';
 import { type LngLatLike, type Map, Marker, type MarkerOptions } from 'maplibre-gl';
-import { markRaw, type MaybeRefOrGetter, onUnmounted, type ShallowRef, shallowRef, toValue, watch } from 'vue';
 
 export interface UseMarkerOptions extends MarkerOptions {
-  /** Initial longitude/latitude position of the marker. */
-  lngLat: MaybeRefOrGetter<LngLatLike>;
+  /** Longitude/latitude position of the marker. */
+  lngLat: LngLatLike;
+  /** Fired when the marker is dragged to a new position. */
+  onDragend?: (lngLat: LngLatLike) => void;
 }
 
 export interface UseMarkerReturn {
-  /** Reactive reference to the underlying `Marker` instance. */
-  marker: ShallowRef<Marker | undefined>;
+  /** The underlying `Marker` instance, or `undefined` before the map is ready. */
+  marker: Marker | undefined;
 }
 
 /**
- * Creates a reactive MapLibre `Marker` that is automatically added to the map
- * and removed when the owning component is unmounted.
- *
- * The marker's position reacts to changes in `lngLat`.
+ * Creates a MapLibre `Marker` that is automatically added to the map and removed
+ * when the owning component is unmounted. The marker's position tracks `lngLat`.
  *
  * @example
  * ```ts
- * const { map } = useMap()
- * const position = ref<LngLatLike>([-0.127758, 51.507351])
- * const { marker } = useMarker(map, { lngLat: position })
+ * const map = useMap();
+ * const { marker } = useMarker(map, { lngLat: [-0.12, 51.5] });
  * ```
  */
-export function useMarker(mapReference: ShallowRef<Map | undefined>, options: UseMarkerOptions): UseMarkerReturn {
-  const { lngLat, ...markerOptions } = options;
-  const marker = shallowRef<Marker | undefined>();
+export function useMarker(map: Map | undefined, options: UseMarkerOptions): UseMarkerReturn {
+  const { lngLat, onDragend, ...markerOptions } = options;
+  const [marker, setMarker] = useState<Marker | undefined>(undefined);
+  const markerReference = useRef<Marker | undefined>(undefined);
 
-  watch(
-    mapReference,
-    (map) => {
-      if (!map) return;
+  useEffect(() => {
+    if (!map) {
+      return;
+    }
+    const instance = new Marker(markerOptions);
+    instance.setLngLat(lngLat).addTo(map);
+    if (onDragend) {
+      instance.on('dragend', () => onDragend(instance.getLngLat()));
+    }
+    markerReference.current = instance;
+    setMarker(instance);
+    return () => {
+      instance.remove();
+      markerReference.current = undefined;
+      setMarker(undefined);
+    };
+  }, [map]);
 
-      const instance = new Marker(markerOptions);
-      instance.setLngLat(toValue(lngLat)).addTo(map);
-      marker.value = markRaw(instance);
-    },
-    { immediate: true },
-  );
-
-  watch(
-    () => toValue(lngLat),
-    (position) => {
-      marker.value?.setLngLat(position);
-    },
-  );
-
-  onUnmounted(() => {
-    marker.value?.remove();
-    marker.value = undefined;
-  });
+  useEffect(() => {
+    markerReference.current?.setLngLat(lngLat);
+  }, [lngLat]);
 
   return { marker };
 }
