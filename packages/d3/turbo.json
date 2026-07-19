@@ -1,0 +1,18 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["build:check", "build:neutral", "build:react", "build:vue", "build:types"]
+    },
+    "build:react": {
+      "dependsOn": ["^build", "build:neutral"]
+    },
+    "build:vue": {
+      "dependsOn": ["^build", "build:neutral"]
+    },
+    "build:types": {
+      "dependsOn": ["^build", "build:neutral"]
+    }
+  }
+}
