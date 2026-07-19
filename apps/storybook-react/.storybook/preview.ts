@@ -1,6 +1,7 @@
 import '@mission-platform/tokens/scss/tokens';
 import '@mission-platform/tokens/scss/themes/light';
 import '@mission-platform/tokens/scss/themes/dark';
+import 'maplibre-gl/dist/maplibre-gl.css';
 import './preview.scss';
 
 import { withThemeByDataAttribute } from '@storybook/addon-themes';
@@ -59,12 +60,12 @@ const preview: Preview = {
 
   initialGlobals: {
     theme: 'light',
+    viewport: { value: 'md', isRotated: false },
   },
 
   parameters: {
     viewport: {
       options: mpViewports,
-      defaultViewport: 'md',
     },
 
     controls: {

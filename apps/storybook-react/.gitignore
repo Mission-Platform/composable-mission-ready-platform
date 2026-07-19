@@ -25,3 +25,6 @@ dist-ssr
 
 *storybook.log
 storybook-static
+
+# Generated self-signed TLS certificate for the HTTPS dev server
+.storybook/certs

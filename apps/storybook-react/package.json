@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "storybook": "storybook dev -p 6007",
+    "storybook:cert": "node --experimental-strip-types ../../scripts/generate-dev-cert.ts .storybook/certs",
+    "storybook": "pnpm run storybook:cert && storybook dev -p 6007 --https --ssl-cert .storybook/certs/cert.pem --ssl-key .storybook/certs/key.pem",
     "build-storybook": "storybook build",
     "deploy": "chromatic --project-token=chpt_REPLACE_WITH_REACT_PROJECT_TOKEN",
     "test": "vitest run --project storybook",
@@ -21,7 +22,13 @@
   "dependencies": {
     "@mission-platform/icons": "workspace:*",
     "@mission-platform/components": "workspace:*",
+    "@mission-platform/qr-code": "workspace:*",
+    "@mission-platform/barcode": "workspace:*",
+    "@mission-platform/code-scanner": "workspace:*",
+    "@mission-platform/i18n": "workspace:*",
+    "@mission-platform/map": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
+    "maplibre-gl": "catalog:map",
     "react": "catalog:react",
     "react-dom": "catalog:react"
   },
