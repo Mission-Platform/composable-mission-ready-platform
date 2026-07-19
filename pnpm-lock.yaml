@@ -417,7 +417,7 @@ importers:
         specifier: catalog:typescript
         version: 24.13.3
       beasties:
-        specifier: ^0.4.3
+        specifier: ^0.4.2
         version: 0.4.3
       eslint:
         specifier: catalog:eslint
@@ -937,7 +937,7 @@ importers:
         specifier: catalog:vue
         version: 6.0.8(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.6.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.0)(yaml@2.9.0))(vue@3.5.40(typescript@6.0.3))
       beasties:
-        specifier: ^0.4.3
+        specifier: ^0.4.2
         version: 0.4.3
       eslint:
         specifier: catalog:eslint
