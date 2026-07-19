@@ -14,10 +14,22 @@
     ".": {
       "types": "./src/index.ts",
       "import": "./dist/index.js"
+    },
+    "./meta": {
+      "types": "./src/build-page-meta.ts",
+      "import": "./dist/build-page-meta.js"
+    },
+    "./json-ld": {
+      "types": "./src/build-json-ld.ts",
+      "import": "./dist/build-json-ld.js"
+    },
+    "./types": {
+      "types": "./src/types.ts"
     }
   },
   "scripts": {
-    "build": "vue-tsc -b tsconfig.build.json && vite build",
+    "build:check": "vue-tsc -b tsconfig.build.json",
+    "build:bundle": "vite build",
     "build:watch": "vite build --watch",
     "test": "vitest run",
     "test:watch": "vitest",

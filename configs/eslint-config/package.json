@@ -25,7 +25,7 @@
     "eslint-config-prettier": "catalog:eslint",
     "eslint-config-turbo": "catalog:eslint",
     "eslint-import-resolver-typescript": "catalog:eslint",
-    "eslint-plugin-i18next": "catalog:eslint",
+    "eslint-plugin-i18next": "catalog:i18next",
     "eslint-plugin-import-x": "catalog:eslint",
     "eslint-plugin-unicorn": "catalog:eslint",
     "eslint-plugin-vue": "catalog:eslint",
