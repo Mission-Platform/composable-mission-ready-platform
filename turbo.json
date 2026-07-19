@@ -1,11 +1,20 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "stream",
+  "futureFlags": {
+    "experimentalTaskCommand": true
+  },
   "globalDependencies": [
     "pnpm-workspace.yaml",
     "pnpm-lock.yaml",
     ".nvmrc",
-    "tsconfig*.json"
+    "tsconfig*.json",
+    "Cargo.toml",
+    "Cargo.lock",
+    ".cargo/config.toml",
+    "crates/*/Cargo.toml",
+    "crates/*/build.rs",
+    "crates/*/src/**"
   ],
   "globalEnv": ["NODE_ENV", "CI", "SSR"],
   "tasks": {
@@ -20,6 +29,115 @@
         "!**/coverage/**"
       ],
       "outputs": ["dist/**", ".vite/**"]
+    },
+    "build:check": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": []
+    },
+    "build:neutral": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": [
+        "dist/**",
+        "!dist/vue/**",
+        "!dist/react/**",
+        "!dist/storyblok/**",
+        "!dist/**/*.d.ts",
+        "!dist/**/*.d.ts.map"
+      ]
+    },
+    "build:bundle": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": ["dist/**", "!dist/**/*.d.ts", "!dist/**/*.d.ts.map"]
+    },
+    "build:vue": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": ["dist/vue/**"]
+    },
+    "build:react": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": ["dist/react/**"]
+    },
+    "build:storyblok-vue": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": ["dist/storyblok/vue/**", "dist/storyblok/*.json"]
+    },
+    "build:storyblok-react": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": ["dist/storyblok/react/**"]
+    },
+    "build:types": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": [
+        "dist/**/*.d.ts",
+        "dist/**/*.d.ts.map",
+        "!dist/vue/**",
+        "!dist/react/**",
+        "!dist/storyblok/**"
+      ]
     },
     "build:watch": {
       "dependsOn": ["^build"],
@@ -37,6 +155,11 @@
       "persistent": true
     },
     "storybook": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "storybook-react": {
       "dependsOn": ["^build"],
       "cache": false,
       "persistent": true

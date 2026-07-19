@@ -3,12 +3,17 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "engines": {
+    "node": "24.18.0"
+  },
   "scripts": {
     "prepare": "husky",
     "commitlint": "commitlint",
     "i18n:extract": "pnpm --filter @mission-platform/scripts i18n:extract",
     "storybook": "pnpm exec turbo run --filter @mission-platform/storybook storybook",
+    "storybook-react": "pnpm exec turbo run --filter @mission-platform/storybook-react storybook",
     "build": "pnpm exec turbo run build",
+    "build:force": "pnpm exec turbo run build --force",
     "test": "pnpm exec turbo run test",
     "lint": "pnpm exec turbo run lint",
     "lint:fix": "pnpm exec turbo run lint:fix",
@@ -18,17 +23,17 @@
     "format:write": "pnpm exec turbo run format:write"
   },
   "devDependencies": {
-    "@changesets/cli": "catalog:",
-    "@commitlint/cli": "^21.2.0",
-    "@commitlint/config-conventional": "^21.2.0",
+    "@changesets/cli": "catalog:utilities",
+    "@commitlint/cli": "catalog:utilities",
+    "@commitlint/config-conventional": "catalog:utilities",
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
     "@types/js-yaml": "catalog:",
-    "@vue/compiler-sfc": "catalog:",
-    "husky": "^9.1.7",
+    "@vue/compiler-sfc": "catalog:vue",
+    "husky": "catalog:utilities",
     "js-yaml": "catalog:",
-    "turbo": "^2.10.3",
-    "wrangler": "catalog:"
+    "turbo": "catalog:utilities",
+    "wrangler": "catalog:cloudflare"
   },
-  "packageManager": "pnpm@11.10.0+sha512.0b7f8b98060031904c017e3a41eb187a16d40eeb829b95c4f8cb03681761fc4ab53dd219115b9b447f4dce1a05a214764461e7d3703392a9f32f9511ce8c86c8"
+  "packageManager": "pnpm@11.15.0+sha512.266f8957a30d2be6e9468e5e66bcdedd35a794175f71b067ba8504d686cce1d0c0f429b33c323c3c569ad4891e667574a49ff71d1b89a22cc66f13c65818c578"
 }

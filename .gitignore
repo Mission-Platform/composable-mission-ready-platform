@@ -5,6 +5,7 @@ dist/
 .DS_Store
 .idea/
 .wrangler/
+target/
 
 # Generated SEO artifacts (produced by each app's `pnpm seo:generate`)
 apps/*/public/robots.txt

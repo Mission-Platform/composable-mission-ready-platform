@@ -23,6 +23,9 @@ The Mission Platform is a VueJS 3 monorepo managed with pnpm workspaces. It foll
 - **[Testing](docs/testing.md)**: Comprehensive testing strategies and tools
 - **[Build System](docs/build-system.md)**: Overview of the build system and configuration
 
+### MCP Server
+- **[MCP Server](mcp/README.md)**: A Model Context Protocol server (`mcp/`) that helps AI assistants use the monorepo — component usage, and package/app/worker creation and development. Build it with `pnpm exec turbo run build --filter @mission-platform/mcp`, then run the compiled output with `node mcp/dist/index.js`.
+
 ## Core Principles
 
 ### Dependency Direction
