@@ -15,11 +15,17 @@ per-framework adapter wire them into a real router.
 - **Vue 3 adapter** (`@mission-platform/router/vue`, built on `vue-router` 4) —
   `createMpRouter`, `useMpRouter`, `useMpRoute`, `MpRouterLink`, plus the
   `toVueRoutes` / `toVueLocation` translators.
+- **RedwoodSDK adapter** (`@mission-platform/router/redwood`, built on
+  `rwsdk/router`) — `toRedwoodRoutes`, `renderRoutes`, `toRedwoodPath`, and the
+  `redwoodHref` / `createRedwoodLinks` link helpers.
 
 The neutral path grammar (`:param`, `:param?`, `:param*` / `:param+`, and a
 standalone `*` catch-all) mirrors vue-router's, so translation is near
-pass-through and the same `MpRoute` tree is designed to extend to react-router,
-TanStack Router, Next.js, and Nuxt as further adapters are added.
+pass-through. RedwoodSDK's flat route table supports only `:param` and a `*`
+wildcard, so `toRedwoodPath` downgrades the neutral modifiers (`:param?` →
+`:param`, `:param*` / `:param+` → `*`). The same `MpRoute` tree is designed to
+extend to react-router, TanStack Router, Next.js, and Nuxt as further adapters
+are added.
 
 ## Install
 
@@ -76,6 +82,34 @@ createApp(App).use(router).mount('#app');
 </template>
 ```
 
+## RedwoodSDK
+
+```tsx
+// worker.tsx
+import { defineApp } from 'rwsdk/worker';
+import { renderRoutes, redwoodHref } from '@mission-platform/router/redwood';
+import { Document } from '@/app/Document';
+import { HomePage } from '@/app/pages/HomePage';
+import { UserPage } from '@/app/pages/UserPage';
+
+const routes = [
+  { path: '/', component: HomePage },
+  { path: '/users/:id', name: 'user', component: UserPage },
+];
+
+export default defineApp([
+  // `renderRoutes` translates the neutral tree into rwsdk routes and wraps them
+  // with the Document, mirroring rwsdk's own `render(Document, routes)`.
+  renderRoutes(Document, routes),
+]);
+
+// Redwood navigates with plain anchors — build hrefs from neutral locations:
+redwoodHref({ name: 'user', params: { id: 42 } }, routes); // → '/users/42'
+```
+
+Use `toRedwoodRoutes(routes)` directly when you want to spread the generated
+route definitions into `defineApp` yourself (e.g. alongside JSON API routes).
+
 ## Framework-neutral resolution (no framework required)
 
 ```ts
@@ -95,3 +129,5 @@ resolveLocation('/files/a/b', routes).params; // → { pathMatch: ['a', 'b'] }
   `stringifyLocation`, `normalizeHash`.
 - **Vue** — `createMpRouter`, `useMpRouter`, `useMpRoute`, `MpRouterLink`,
   `toVueRoutes`, `toVueLocation` (and a re-export of the entire core).
+- **RedwoodSDK** — `toRedwoodRoutes`, `renderRoutes`, `toRedwoodPath`,
+  `redwoodHref`, `createRedwoodLinks` (and a re-export of the entire core).
