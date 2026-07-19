@@ -31,20 +31,20 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  parameters: { viewport: { defaultViewport: 'md' } },
+  globals: { viewport: { value: 'md', isRotated: false } },
 };
 
 export const Mobile: Story = {
   name: 'Mobile (2xs)',
-  parameters: { viewport: { defaultViewport: '2xs' } },
+  globals: { viewport: { value: '2xs', isRotated: false } },
 };
 
 export const Tablet: Story = {
   name: 'Tablet (sm)',
-  parameters: { viewport: { defaultViewport: 'sm' } },
+  globals: { viewport: { value: 'sm', isRotated: false } },
 };
 
 export const Desktop: Story = {
   name: 'Desktop (lg)',
-  parameters: { viewport: { defaultViewport: 'lg' } },
+  globals: { viewport: { value: 'lg', isRotated: false } },
 };
