@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { computed, defineComponent, ref } from 'vue';
 
@@ -162,29 +162,35 @@ describe('useHarperMonaco', () => {
   });
 
   describe('when enabled', () => {
-    it('registers a content-change listener when enabled is true', () => {
+    it('registers a content-change listener when enabled is true', async () => {
       mount(makeComponent(mockEditorInstance as never, true));
+      // The Monaco runtime is now loaded via a lazy dynamic import, so the
+      // attach happens on a microtask after mount — flush it before asserting.
+      await flushPromises();
       expect(mockOnDidChangeModelContent).toHaveBeenCalledOnce();
     });
 
-    it('registers a code action provider when enabled is true', () => {
+    it('registers a code action provider when enabled is true', async () => {
       mount(makeComponent(mockEditorInstance as never, true));
+      await flushPromises();
       expect(mockRegisterCodeActionProvider).toHaveBeenCalledOnce();
     });
 
-    it('posts a message to the worker on initial check', () => {
+    it('posts a message to the worker on initial check', async () => {
       vi.useFakeTimers();
       mount(makeComponent(mockEditorInstance as never, true));
-      vi.runAllTimers();
+      // `runAllTimersAsync` flushes the lazy-import microtask (which performs
+      // the attach) as well as the debounce timer.
+      await vi.runAllTimersAsync();
       expect(mockWorkerPostMessage).toHaveBeenCalledWith(expect.objectContaining({ text: 'hello wrold' }));
       vi.useRealTimers();
     });
 
-    it('debounces content-change messages by 300 ms', () => {
+    it('debounces content-change messages by 300 ms', async () => {
       vi.useFakeTimers();
       mount(makeComponent(mockEditorInstance as never, true));
 
-      vi.runAllTimers();
+      await vi.runAllTimersAsync();
       mockWorkerPostMessage.mockClear();
 
       for (const callback of onDidChangeModelContentListeners) callback();
@@ -199,8 +205,9 @@ describe('useHarperMonaco', () => {
       vi.useRealTimers();
     });
 
-    it('maps LSP warning severity to Monaco Warning markers', () => {
+    it('maps LSP warning severity to Monaco Warning markers', async () => {
       mount(makeComponent(mockEditorInstance as never, true));
+      await flushPromises();
 
       const issue = {
         text: 'wrold',
@@ -226,8 +233,9 @@ describe('useHarperMonaco', () => {
       );
     });
 
-    it('maps LSP error severity to Monaco Error markers', () => {
+    it('maps LSP error severity to Monaco Error markers', async () => {
       mount(makeComponent(mockEditorInstance as never, true));
+      await flushPromises();
 
       const issue = {
         text: 'wrold',
@@ -252,8 +260,9 @@ describe('useHarperMonaco', () => {
       );
     });
 
-    it('clears markers when worker returns no issues', () => {
+    it('clears markers when worker returns no issues', async () => {
       mount(makeComponent(mockEditorInstance as never, true));
+      await flushPromises();
 
       for (const listener of getWorkerMessageListeners()) listener(new MessageEvent('message', { data: [] }));
 
@@ -262,23 +271,26 @@ describe('useHarperMonaco', () => {
   });
 
   describe('cleanup on unmount', () => {
-    it('terminates the worker on unmount', () => {
+    it('terminates the worker on unmount', async () => {
       const wrapper = mount(makeComponent(mockEditorInstance as never, true));
+      await flushPromises();
       wrapper.unmount();
       expect(mockWorkerTerminate).toHaveBeenCalledOnce();
     });
 
-    it('clears harper markers on unmount', () => {
+    it('clears harper markers on unmount', async () => {
       const wrapper = mount(makeComponent(mockEditorInstance as never, true));
+      await flushPromises();
       mockSetModelMarkers.mockClear();
       wrapper.unmount();
       expect(mockSetModelMarkers).toHaveBeenCalledWith(mockModel, 'harper', []);
     });
 
-    it('disposes the code action provider on unmount', () => {
+    it('disposes the code action provider on unmount', async () => {
       const disposeSpy = vi.fn();
       mockRegisterCodeActionProvider.mockReturnValue({ dispose: disposeSpy });
       const wrapper = mount(makeComponent(mockEditorInstance as never, true));
+      await flushPromises();
       wrapper.unmount();
       expect(disposeSpy).toHaveBeenCalledOnce();
     });

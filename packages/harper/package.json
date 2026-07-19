@@ -20,7 +20,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "vue-tsc -b && vite build && vue-tsc --project tsconfig.build.json --emitDeclarationOnly",
+    "build:check": "vue-tsc -b",
+    "build:bundle": "vite build",
+    "build:types": "vue-tsc --project tsconfig.build.json --emitDeclarationOnly",
     "build:watch": "vite build --watch",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -33,8 +35,8 @@
     "vue": "^3.5.0"
   },
   "dependencies": {
-    "harper.js": "^2.4.0",
-    "monaco-editor": "catalog:"
+    "harper.js": "catalog:code",
+    "monaco-editor": "catalog:code"
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
