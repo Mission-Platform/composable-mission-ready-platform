@@ -18,7 +18,7 @@ export interface IconAlignRightProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-align-right.module.scss`.
  */
-export function IconAlignRight(properties: IconAlignRightProperties): MpElement {
+export function IconAlignRight(properties: Readonly<IconAlignRightProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

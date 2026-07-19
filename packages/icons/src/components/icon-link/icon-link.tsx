@@ -18,7 +18,7 @@ export interface IconLinkProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-link.module.scss`.
  */
-export function IconLink(properties: IconLinkProperties): MpElement {
+export function IconLink(properties: Readonly<IconLinkProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

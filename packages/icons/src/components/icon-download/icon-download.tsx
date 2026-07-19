@@ -18,7 +18,7 @@ export interface IconDownloadProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-download.module.scss`.
  */
-export function IconDownload(properties: IconDownloadProperties): MpElement {
+export function IconDownload(properties: Readonly<IconDownloadProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

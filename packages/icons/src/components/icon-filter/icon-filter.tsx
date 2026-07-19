@@ -18,7 +18,7 @@ export interface IconFilterProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-filter.module.scss`.
  */
-export function IconFilter(properties: IconFilterProperties): MpElement {
+export function IconFilter(properties: Readonly<IconFilterProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

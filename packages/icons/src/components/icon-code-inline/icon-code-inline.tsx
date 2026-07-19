@@ -18,7 +18,7 @@ export interface IconCodeInlineProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-code-inline.module.scss`.
  */
-export function IconCodeInline(properties: IconCodeInlineProperties): MpElement {
+export function IconCodeInline(properties: Readonly<IconCodeInlineProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

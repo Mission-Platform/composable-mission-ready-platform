@@ -18,7 +18,7 @@ export interface IconAlignJustifyProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-align-justify.module.scss`.
  */
-export function IconAlignJustify(properties: IconAlignJustifyProperties): MpElement {
+export function IconAlignJustify(properties: Readonly<IconAlignJustifyProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

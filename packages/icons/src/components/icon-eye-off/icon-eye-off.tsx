@@ -18,7 +18,7 @@ export interface IconEyeOffProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-eye-off.module.scss`.
  */
-export function IconEyeOff(properties: IconEyeOffProperties): MpElement {
+export function IconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

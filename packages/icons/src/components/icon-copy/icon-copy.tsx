@@ -18,7 +18,7 @@ export interface IconCopyProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-copy.module.scss`.
  */
-export function IconCopy(properties: IconCopyProperties): MpElement {
+export function IconCopy(properties: Readonly<IconCopyProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

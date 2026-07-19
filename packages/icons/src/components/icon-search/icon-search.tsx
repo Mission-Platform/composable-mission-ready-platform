@@ -18,7 +18,7 @@ export interface IconSearchProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-search.module.scss`.
  */
-export function IconSearch(properties: IconSearchProperties): MpElement {
+export function IconSearch(properties: Readonly<IconSearchProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

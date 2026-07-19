@@ -18,7 +18,7 @@ export interface IconMailProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-mail.module.scss`.
  */
-export function IconMail(properties: IconMailProperties): MpElement {
+export function IconMail(properties: Readonly<IconMailProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

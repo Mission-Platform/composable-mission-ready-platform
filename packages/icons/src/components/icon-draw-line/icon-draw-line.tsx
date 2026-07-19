@@ -18,7 +18,7 @@ export interface IconDrawLineProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-draw-line.module.scss`.
  */
-export function IconDrawLine(properties: IconDrawLineProperties): MpElement {
+export function IconDrawLine(properties: Readonly<IconDrawLineProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

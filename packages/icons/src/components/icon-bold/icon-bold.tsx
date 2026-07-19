@@ -18,7 +18,7 @@ export interface IconBoldProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-bold.module.scss`.
  */
-export function IconBold(properties: IconBoldProperties): MpElement {
+export function IconBold(properties: Readonly<IconBoldProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

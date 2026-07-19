@@ -18,7 +18,7 @@ export interface IconNumberedListProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-numbered-list.module.scss`.
  */
-export function IconNumberedList(properties: IconNumberedListProperties): MpElement {
+export function IconNumberedList(properties: Readonly<IconNumberedListProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

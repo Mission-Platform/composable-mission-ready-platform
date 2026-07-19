@@ -18,7 +18,7 @@ export interface IconImageProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-image.module.scss`.
  */
-export function IconImage(properties: IconImageProperties): MpElement {
+export function IconImage(properties: Readonly<IconImageProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

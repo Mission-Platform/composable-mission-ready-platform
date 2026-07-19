@@ -18,7 +18,7 @@ export interface IconDrawSquareProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-draw-square.module.scss`.
  */
-export function IconDrawSquare(properties: IconDrawSquareProperties): MpElement {
+export function IconDrawSquare(properties: Readonly<IconDrawSquareProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

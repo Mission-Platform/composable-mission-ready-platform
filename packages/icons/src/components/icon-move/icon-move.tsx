@@ -18,7 +18,7 @@ export interface IconMoveProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-move.module.scss`.
  */
-export function IconMove(properties: IconMoveProperties): MpElement {
+export function IconMove(properties: Readonly<IconMoveProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

@@ -18,7 +18,7 @@ export interface IconCloudProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-cloud.module.scss`.
  */
-export function IconCloud(properties: IconCloudProperties): MpElement {
+export function IconCloud(properties: Readonly<IconCloudProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

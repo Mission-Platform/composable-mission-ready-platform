@@ -18,7 +18,7 @@ export interface IconWarningProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-warning.module.scss`.
  */
-export function IconWarning(properties: IconWarningProperties): MpElement {
+export function IconWarning(properties: Readonly<IconWarningProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';
