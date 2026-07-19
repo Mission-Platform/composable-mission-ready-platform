@@ -1,11 +1,10 @@
 /**
  * Styling for the write-once `BaseSchemaForm`.
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package's own `mp.forms` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.forms {
   .base-schema-form {
     display: flex;
     flex-direction: column;

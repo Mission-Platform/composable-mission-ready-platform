@@ -1,13 +1,12 @@
 /**
  * Styling for the write-once `BaseFormBuilder`.
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package. The three-column layout itself is
+ * The rules live in the package's own `mp.forms` cascade layer. The three-column layout itself is
  * provided by `BaseVerticalLayout`; these rules style the palette, canvas,
  * inspector, and editor sub-views inside it.
  */
 
-@layer mp.components {
+@layer mp.forms {
   .base-form-builder {
     min-height: 30rem;
 

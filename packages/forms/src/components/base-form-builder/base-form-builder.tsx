@@ -82,7 +82,10 @@ export type FormBuilderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export interface FormBuilderProperties extends MpProperties {
   /** Size token controlling the builder's font scale. Defaults to `'md'`. */
   size?: FormBuilderSize;
-  /** The generated JSON Schema definition (controlled via `modelValue`). */
+  /**
+   * The generated JSON Schema definition (controlled via `modelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: SchemaFormDefinition;
   /** Form title written into the schema. */
   title?: string;
@@ -226,7 +229,7 @@ function buildLeaf(field: string, operator: string, raw: string): FieldCondition
  * land in (before the hovered row, or appended at the end of the hovered
  * container), driven by a `dropIndicator` insert-target updated on `dragover`.
  */
-export function BaseFormBuilder(properties: FormBuilderProperties): MpElement {
+export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): MpElement {
   const {
     modelValue,
     wizard = false,
@@ -742,7 +745,7 @@ export function BaseFormBuilder(properties: FormBuilderProperties): MpElement {
               classNames={styles['base-form-builder__step']}
             >
               <BaseTypography
-                as="h4"
+                as="h3"
                 classNames={styles['base-form-builder__step-heading']}
                 variant="label"
               >
@@ -1281,6 +1284,7 @@ export function BaseFormBuilder(properties: FormBuilderProperties): MpElement {
 
   return (
     <div
+      aria-disabled={disabled ? 'true' : undefined}
       classNames={[
         styles['base-form-builder'],
         sizeStyles[`base-size--${size}`],
