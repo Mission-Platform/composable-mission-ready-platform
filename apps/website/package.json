@@ -24,14 +24,15 @@
   },
   "dependencies": {
     "@mission-platform/breakpoints": "workspace:*",
+    "@mission-platform/components": "workspace:*",
     "@mission-platform/hunspell": "workspace:*",
     "@mission-platform/i18n": "workspace:*",
     "@mission-platform/icons": "workspace:*",
-    "@mission-platform/components": "workspace:*",
     "@mission-platform/layouts": "workspace:*",
+    "@mission-platform/qr-code": "workspace:*",
     "@mission-platform/seo": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
-    "i18next-vue": "catalog:vue",
+    "i18next-vue": "catalog:i18next",
     "js-yaml": "catalog:",
     "vue": "catalog:vue",
     "vue-router": "catalog:vue"
@@ -47,7 +48,7 @@
     "@types/js-yaml": "catalog:typescript",
     "@types/node": "catalog:typescript",
     "@vitejs/plugin-vue": "catalog:vue",
-    "beasties": "^0.4.2",
+    "beasties": "^0.4.3",
     "eslint": "catalog:eslint",
     "postcss-html": "catalog:stylelint",
     "postcss-scss": "catalog:stylelint",
@@ -61,6 +62,6 @@
     "vite-ssg": "catalog:vite",
     "vitest": "catalog:testing",
     "vue-tsc": "catalog:vue",
-    "wrangler": "catalog:"
+    "wrangler": "catalog:cloudflare"
   }
 }

@@ -11,13 +11,13 @@
     BaseMasonry,
     BaseNavbar,
     BaseNavbarItem,
-    BaseQrCode,
     BaseStack,
     BaseTag,
     BaseThemeToggle,
     BaseTypography,
     BaseAlertBanner,
   } from '@mission-platform/components/vue';
+  import { QrCode as BaseQrCode } from '@mission-platform/qr-code/vue';
   import { useI18n } from '@mission-platform/i18n/vue';
   import {
     IconDebug,
