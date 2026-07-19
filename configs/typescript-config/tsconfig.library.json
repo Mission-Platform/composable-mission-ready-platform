@@ -3,10 +3,10 @@
   "display": "Mission Platform — Library (Vue + DOM, emits JS + declarations)",
   "extends": ["@vue/tsconfig/tsconfig.dom.json", "./tsconfig.base.json"],
   "compilerOptions": {
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "module": "esnext",
     "moduleResolution": "bundler",
-    "target": "es2023",
+    "target": "esnext",
     "declaration": true,
     "noEmit": false,
     "allowImportingTsExtensions": false,
