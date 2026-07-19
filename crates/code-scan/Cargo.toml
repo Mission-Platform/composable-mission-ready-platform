@@ -1,0 +1,84 @@
+[package]
+name = "mission-platform-code-scan"
+version = "0.1.0"
+edition = "2021"
+description = "Dependency-free image/frame code scanner (locate + sample QR, Data Matrix and 1D barcodes) compiled to WebAssembly for @mission-platform/code-scanner"
+license = "MIT"
+publish = false
+
+[lib]
+# `cdylib` for the shipped wasm; `rlib` so the crate can also be unit-tested
+# natively with `cargo test`.
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = ["console", "mission-platform-barcode-encode/console", "mission-platform-matrix-code-encode/console", "mission-platform-qr-code-encode/console"]
+# Optional in-browser diagnostics: compile in a `tracing-wasm` subscriber that
+# forwards events to the devtools console and install a panic hook that prints
+# readable stack traces. Kept off by default so production builds stay lean.
+console = [
+    "dep:tracing-wasm",
+    "dep:mission-platform-console-panic-hook",
+]
+
+[dependencies]
+wasm-bindgen.workspace = true
+# Diagnostics (`tracing` instrumentation + the `tracing-wasm` subscriber) are
+# pulled in only under the optional `console` feature, so they add nothing to
+# the shipped build.
+tracing = { workspace = true }
+tracing-wasm = { workspace = true, optional = true }
+mission-platform-console-panic-hook = { workspace = true, optional = true }
+# Runtime use is only the `shadow!` macro, so default (git2/C) features stay off.
+shadow-rs.workspace = true
+
+# The decoders are linked directly so the whole pipeline — binarise, locate,
+# sample *and decode* — runs in one Rust/wasm call (`scan_and_decode`), instead
+# of returning located modules to JS and back into a second wasm module. Each
+# decoder exports a `#[wasm_bindgen] decode`; linking several into this one
+# cdylib would clash on that symbol, so we depend with `default-features = false`
+# (which drops their `wasm-api` feature). That compiles only their
+# dependency-free `decode_qr` / `decode_matrix` / `decode_modules` entry points —
+# no wasm exports — leaving `code-scan` as the single source of exports.
+mission-platform-qr-code-decode = { path = "../qr-code-decode", default-features = false }
+mission-platform-matrix-code-decode = { path = "../matrix-code-decode", default-features = false }
+mission-platform-barcode-decode = { path = "../barcode-decode", default-features = false }
+mission-platform-gs1-databar-decode = { path = "../gs1-databar-decode", default-features = false }
+mission-platform-pdf417-decode = { path = "../pdf417-decode", default-features = false }
+mission-platform-maxicode-decode = { path = "../maxicode-decode", default-features = false }
+# Shared PDF417 tables/sampling used directly by the `pdf417` locator (no wasm
+# exports of its own).
+mission-platform-pdf417-common = { path = "../pdf417-common" }
+# Shared MaxiCode dimensions used directly by the `maxicode` locator (no wasm
+# exports of its own).
+mission-platform-maxicode-common = { path = "../maxicode-common" }
+
+# The integration tests render the encoders' output into a synthetic image and
+# scan it back. The encoder crates each export their own wasm-bindgen symbols
+# (`build_info`, `encode`, …), so linking them into the wasm test binary would
+# clash — restrict them to native (non-wasm) test builds only.
+[target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
+mission-platform-qr-code-encode.workspace = true
+mission-platform-matrix-code-encode.workspace = true
+mission-platform-barcode-encode.workspace = true
+mission-platform-gs1-databar-encode.workspace = true
+mission-platform-pdf417-encode.workspace = true
+mission-platform-maxicode-encode.workspace = true
+# Pure-Rust zlib inflate, used only by the real-world PNG fixture loader in the
+# native integration tests (`tests/real_world.rs`) to decode `img.png` into a
+# luma buffer without pulling a full image crate.
+miniz_oxide = "0.8"
+
+[dev-dependencies]
+# In-crate wasm-bindgen tests run under `wasm-pack test`.
+wasm-bindgen-test.workspace = true
+
+[build-dependencies]
+# Re-enable the build-script API (`build`) and the `git2` backend at build time
+# (host-compiled) to capture commit info.
+shadow-rs = { workspace = true, features = ["build", "git2"] }
+
+# Skip wasm-pack's bundled `wasm-opt` post-pass; size optimisation already comes
+# from the workspace release profile.
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false
