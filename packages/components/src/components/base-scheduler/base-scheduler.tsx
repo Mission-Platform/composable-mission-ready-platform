@@ -38,7 +38,10 @@ export type { SchedulerView, VEvent } from '@mission-platform/scheduler-core';
 export interface SchedulerProperties extends MpProperties {
   /** Size token controlling the scheduler's font scale. Defaults to `'md'`. */
   size?: SchedulerSize;
-  /** The RFC 5545 events (controlled via `modelValue`). */
+  /**
+   * The RFC 5545 events (controlled via `modelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: VEvent[];
   /** Initially active view. Defaults to `'week'`. */
   defaultView?: SchedulerView;
@@ -118,6 +121,50 @@ function timeLabel(iso: string): string {
   return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
 }
 
+/** Parse a `#rgb` / `#rrggbb` / `rgb(r, g, b)` color into `[r, g, b]`, or `undefined`. */
+function parseColor(color: string): [number, number, number] | undefined {
+  const hex = color.trim().match(/^#([\da-f]{3}|[\da-f]{6})$/i);
+  if (hex) {
+    const value = hex[1];
+    const full = value.length === 3 ? [...value].map((char) => char + char).join('') : value;
+    return [
+      Number.parseInt(full.slice(0, 2), 16),
+      Number.parseInt(full.slice(2, 4), 16),
+      Number.parseInt(full.slice(4, 6), 16),
+    ];
+  }
+  const rgb = color.trim().match(/^rgba?\(\s*(\d+)\D+(\d+)\D+(\d+)/i);
+  if (rgb) {
+    return [Number(rgb[1]), Number(rgb[2]), Number(rgb[3])];
+  }
+  return undefined;
+}
+
+/**
+ * A readable foreground (`#0b0b0f` or `#ffffff`) for text laid over `background`,
+ * chosen by WCAG relative luminance so an event chip's label always meets the
+ * contrast threshold regardless of the (user-supplied) event colour. Returns
+ * `undefined` when `background` is absent or unparseable, so the CSS default
+ * (dark text on the subtle chip tint) applies.
+ */
+function readableTextColor(background: string | undefined): string | undefined {
+  if (!background) {
+    return undefined;
+  }
+  const rgb = parseColor(background);
+  if (!rgb) {
+    return undefined;
+  }
+  const [r, g, b] = rgb.map((channel) => {
+    const s = channel / 255;
+    return s <= 0.039_28 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+  });
+  const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  // Contrast vs white is (1.05)/(L+0.05); vs near-black is (L+0.05)/0.05. Pick the
+  // higher-contrast option — light text on darker fills, dark text on lighter ones.
+  return luminance > 0.179 ? '#0b0b0f' : '#ffffff';
+}
+
 /**
  * `BaseScheduler` — a full calendar/scheduler authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
@@ -139,7 +186,7 @@ function timeLabel(iso: string): string {
  * `event-click` emit become the `onUpdateModelValue` / `onEventClick` callback
  * props.
  */
-export function BaseScheduler(properties: SchedulerProperties): MpElement {
+export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElement {
   const { modelValue = [], defaultView = 'week', weekStartsOn = 0, size = 'md' } = properties;
 
   const [events, setEvents] = useState<VEvent[]>(modelValue);
@@ -425,7 +472,7 @@ export function BaseScheduler(properties: SchedulerProperties): MpElement {
             const dayEvents = eventsForDay(events, day);
             const inMonth = day.getMonth() === anchor.getMonth();
             return (
-              <button
+              <div
                 key={dayIso}
                 classNames={[
                   styles['base-scheduler__month-cell'],
@@ -434,17 +481,22 @@ export function BaseScheduler(properties: SchedulerProperties): MpElement {
                     [styles['base-scheduler__month-cell--today']]: dayIso === todayIso,
                   },
                 ]}
-                type="button"
-                onClick={() => openCreate(`${dayIso}T09:00`)}
               >
-                <span classNames={styles['base-scheduler__month-day-number']}>{day.getDate()}</span>
+                <button
+                  aria-label={`Create event on ${dayIso}`}
+                  classNames={styles['base-scheduler__month-cell-create']}
+                  type="button"
+                  onClick={() => openCreate(`${dayIso}T09:00`)}
+                >
+                  <span classNames={styles['base-scheduler__month-day-number']}>{day.getDate()}</span>
+                </button>
                 <span classNames={styles['base-scheduler__month-events']}>
                   {dayEvents.slice(0, 3).map((event) => (
                     <span
                       key={event.recurrenceId ?? event.uid}
                       classNames={styles['base-scheduler__month-chip']}
                       role="button"
-                      style={{ backgroundColor: event.color || undefined }}
+                      style={{ backgroundColor: event.color || undefined, color: readableTextColor(event.color) }}
                       tabindex={0}
                       onClick={(clickEvent: MouseEvent) => {
                         clickEvent.stopPropagation();
@@ -468,7 +520,7 @@ export function BaseScheduler(properties: SchedulerProperties): MpElement {
                     </span>
                   ) : undefined}
                 </span>
-              </button>
+              </div>
             );
           })}
         </div>
@@ -497,7 +549,10 @@ export function BaseScheduler(properties: SchedulerProperties): MpElement {
               onClick={() => switchView('month', firstOfMonth)}
             >
               <span classNames={styles['base-scheduler__mini-title']}>{monthName}</span>
-              <span classNames={styles['base-scheduler__mini-grid']}>
+              <span
+                aria-hidden="true"
+                classNames={styles['base-scheduler__mini-grid']}
+              >
                 {cells.map((day) => {
                   const dayIso = isoDate(day);
                   return (

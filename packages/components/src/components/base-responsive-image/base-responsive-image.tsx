@@ -74,7 +74,7 @@ export interface ResponsiveImageProperties extends MpProperties {
  * props bound directly to the `<img>` (consistent with the callback-prop
  * convention used across the migrated components).
  */
-export function BaseResponsiveImage(properties: ResponsiveImageProperties): MpElement {
+export function BaseResponsiveImage(properties: Readonly<ResponsiveImageProperties>): MpElement {
   const {
     src,
     alt,

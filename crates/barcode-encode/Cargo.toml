@@ -1,0 +1,44 @@
+[package]
+name = "mission-platform-barcode-encode"
+version = "0.1.0"
+edition = "2021"
+description = "Dependency-free 1D (linear) barcode encoder compiled to WebAssembly for @mission-platform/barcode"
+license = "MIT"
+publish = false
+
+[lib]
+# `cdylib` for the shipped wasm; `rlib` so the crate can also be unit-tested
+# natively with `cargo test`.
+crate-type = ["cdylib", "rlib"]
+
+[features]
+# Optional in-browser diagnostics: compile in a `tracing-wasm` subscriber that
+# forwards events to the devtools console and install a panic hook that prints
+# readable stack traces. Kept off by default so production builds stay lean.
+console = [
+    "dep:tracing-wasm",
+    "dep:mission-platform-console-panic-hook",
+]
+
+[dependencies]
+mission-platform-barcode-common.workspace = true
+wasm-bindgen.workspace = true
+tracing = { workspace = true }
+tracing-wasm = { workspace = true, optional = true }
+mission-platform-console-panic-hook = { workspace = true, optional = true }
+# Runtime use is only the `shadow!` macro, so default (git2/C) features stay off.
+shadow-rs.workspace = true
+
+[dev-dependencies]
+# In-crate wasm-bindgen tests run under `wasm-pack test`.
+wasm-bindgen-test.workspace = true
+
+[build-dependencies]
+# Re-enable the build-script API (`build`) and the `git2` backend at build time
+# (host-compiled) to capture commit info.
+shadow-rs = { workspace = true, features = ["build", "git2"] }
+
+# Skip wasm-pack's bundled `wasm-opt` post-pass; size optimisation already comes
+# from the workspace release profile.
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false

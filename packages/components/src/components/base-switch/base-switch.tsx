@@ -1,7 +1,6 @@
-import { h, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useId, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
-import { nextFieldId } from '../field-id';
 
 import styles from './base-switch.module.scss';
 
@@ -9,7 +8,10 @@ import styles from './base-switch.module.scss';
 export type SwitchSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export interface SwitchProperties extends MpProperties {
-  /** On/off state (controlled via `modelValue` + `onUpdateModelValue`). Defaults to `false`. */
+  /**
+   * On/off state (controlled via `modelValue` + `onUpdateModelValue`). Defaults to `false`.
+   * @model onUpdateModelValue
+   */
   modelValue?: boolean;
   /** Visible label text. */
   label?: string;
@@ -40,16 +42,16 @@ export interface SwitchProperties extends MpProperties {
  * CSS Module `base-switch.module.scss` and composes the neutral
  * {@link BaseTypography} for the label/hint/error text.
  *
- * Substitutions from the original Vue SFC: the `useId` composable becomes the
- * shared `nextFieldId` helper resolved once in a `useRef`, and the `v-model` +
+ * Substitutions from the original Vue SFC: the `useId` composable maps straight
+ * to the framework-native `useId` hook, and the `v-model` +
  * `change` emit become the established `onUpdateModelValue`/`onChange` callback
  * props.
  */
-export function BaseSwitch(properties: SwitchProperties): MpElement {
+export function BaseSwitch(properties: Readonly<SwitchProperties>): MpElement {
   const { modelValue = false, label, ariaLabel, hint, error, size = 'md', disabled = false } = properties;
 
-  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-switch'));
-  const resolvedId = idReference.current;
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
   const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
 
   const handleChange = (event: Event): void => {

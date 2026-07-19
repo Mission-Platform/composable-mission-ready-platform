@@ -16,7 +16,10 @@ export interface SegmentOption {
 }
 
 export interface SegmentControlProperties extends MpProperties {
-  /** Selected value (controlled via `modelValue` + `onUpdateModelValue`). */
+  /**
+   * Selected value (controlled via `modelValue` + `onUpdateModelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: string | number;
   /** The selectable segments. */
   options: SegmentOption[];
@@ -51,7 +54,7 @@ export interface SegmentControlProperties extends MpProperties {
  * single element refs, not ref arrays). The `v-model` + `change` emit become the
  * established `onUpdateModelValue`/`onChange` callback props.
  */
-export function BaseSegmentControl(properties: SegmentControlProperties): MpElement {
+export function BaseSegmentControl(properties: Readonly<SegmentControlProperties>): MpElement {
   const { modelValue, options, size = 'md', disabled = false, fullWidth = false, ariaLabel } = properties;
 
   const containerReference = useRef<HTMLElement | null>(null);

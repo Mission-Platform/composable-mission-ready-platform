@@ -1,13 +1,21 @@
 {
   "name": "@mission-platform/d3",
   "version": "0.1.0",
-  "description": "Framework-neutral D3 integration for Mission Platform — a write-once useD3 composable (authored against @mission-platform/jsx hooks and compiled to React and Vue) that binds a D3 selection to an element ref, plus pure margin-convention helpers for responsive chart layout",
+  "description": "Framework-neutral D3 integration for Mission Platform — a write-once useD3 composable (authored against @mission-platform/jsx hooks and compiled to React (./react) and Vue (./vue)) that binds a D3 selection to an element ref, plus pure margin-convention helpers for responsive chart layout",
   "type": "module",
   "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js"
+    },
+    "./vue": {
+      "types": "./dist/vue/index.d.ts",
+      "import": "./dist/vue/index.js"
     }
   },
   "main": "./dist/index.js",
@@ -16,7 +24,11 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc --project tsconfig.build.json --noEmit && vite build && tsc --project tsconfig.build.json --emitDeclarationOnly",
+    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "build:neutral": "vite build",
+    "build:react": "vite build --mode react",
+    "build:vue": "vite build --mode vue",
+    "build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly",
     "build:watch": "vite build --watch",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -28,7 +40,7 @@
   },
   "dependencies": {
     "@mission-platform/jsx": "workspace:*",
-    "d3-selection": "catalog:"
+    "d3-selection": "catalog:d3"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
@@ -51,11 +63,12 @@
     "@mission-platform/prettier-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
+    "@mission-platform/vite-plugin-jsx": "workspace:*",
     "@storybook/vue3-vite": "catalog:storybook",
-    "@types/d3": "catalog:",
-    "@types/d3-selection": "catalog:",
+    "@types/d3": "catalog:d3",
+    "@types/d3-selection": "catalog:d3",
     "@types/node": "catalog:typescript",
-    "d3": "catalog:",
+    "d3": "catalog:d3",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
     "@vitest/coverage-v8": "catalog:testing",

@@ -19,7 +19,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Cross-framework `PhoneInput` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). A country picker sits beside a `type="tel"` field; the input is formatted as-you-type and validated with **`google-libphonenumber`** (via the package\'s framework-agnostic `phone.ts` helper), the canonical E.164 form is derived each render, and the original `v-model` + emits become the `onUpdateModelValue`/`onUpdateCountry`/`onChange` callback props. Styling comes from the co-located `base-phone-input.module.scss`.',
+          'Cross-framework `PhoneInput` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). A country picker sits beside a `type="tel"` field; the input is formatted as-you-type and validated with **`@mission-platform/phone-number`** (via the package\'s framework-agnostic `phone.ts` helper), the canonical E.164 form is derived each render, and the original `v-model` + emits become the `onUpdateModelValue`/`onUpdateCountry`/`onChange` callback props. Styling comes from the co-located `base-phone-input.module.scss`.',
       },
     },
   },

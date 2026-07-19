@@ -132,6 +132,14 @@ export function renderToReact(element: MpElement): ReactElement {
     }
   }
 
+  // A fragment (`<>…</>`) renders its children with no wrapper element. It is a
+  // function-component marker, so it must be intercepted here — by identity —
+  // before the generic `typeof type === 'function'` component-call branch, which
+  // would otherwise invoke the throw-on-call marker.
+  if (type === Fragment) {
+    return createElement(ReactFragment, undefined, ...toReactChildren(children));
+  }
+
   if (typeof type === 'function') {
     // Children tagged `slot="name"` are routed into the matching named slot of
     // the component being expanded (the rest stay as the default `children`),
@@ -151,10 +159,6 @@ export function renderToReact(element: MpElement): ReactElement {
 
   const reactChildren = toReactChildren(children);
 
-  if (type === Fragment) {
-    return createElement(ReactFragment, undefined, ...reactChildren);
-  }
-
   return createElement(type, toReactProperties(properties), ...reactChildren);
 }
 
@@ -169,7 +173,12 @@ export function toReactComponent<P extends MpProperties>(
   const Component: FunctionComponent<P> = (properties) => {
     pushSlotScope(properties);
     try {
-      return renderToReact(component(properties));
+      // A component may render nothing by returning `null` (the neutral
+      // render-nothing form, matching the compiled React output); React renders
+      // `null` as nothing, so it is forwarded verbatim rather than fed into
+      // `renderToReact` (which expects a real element).
+      const rendered = component(properties) as MpElement | null;
+      return rendered === null ? null : renderToReact(rendered);
     } finally {
       popSlotScope();
     }

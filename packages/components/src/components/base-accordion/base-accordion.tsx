@@ -71,7 +71,7 @@ export interface AccordionProperties extends MpProperties {
  * React/Vue); and the per-item `summary`/default slots become two scoped slots
  * that fall back to the item's `title`/`content` text.
  */
-export function BaseAccordion(properties: AccordionProperties): MpElement {
+export function BaseAccordion(properties: Readonly<AccordionProperties>): MpElement {
   const { items, exclusive = true, defaultOpen = [], variant = 'neutral', size = 'md' } = properties;
 
   const [openIds, setOpenIds] = useState<string[]>(defaultOpen);

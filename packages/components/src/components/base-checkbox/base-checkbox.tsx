@@ -1,7 +1,7 @@
-import { h, useEffect, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { IconCheck, IconMinus } from '@mission-platform/icons';
+import { h, useEffect, useId, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
-import { nextFieldId } from '../field-id';
 import sizeStyles from '../size.module.scss';
 
 import styles from './base-checkbox.module.scss';
@@ -14,6 +14,7 @@ export interface CheckboxProperties extends MpProperties {
    * Checked state. A `boolean` for a standalone checkbox, or a `string[]` of
    * selected `value`s when the checkbox participates in a group. Controlled via
    * `modelValue` + `onUpdateModelValue`. Defaults to `false`.
+   * @model onUpdateModelValue
    */
   modelValue?: boolean | string[];
   /** This checkbox's value, used when `modelValue` is a `string[]` group. */
@@ -51,15 +52,16 @@ export interface CheckboxProperties extends MpProperties {
  * Module `base-checkbox.module.scss` and composes the neutral {@link BaseTypography}
  * for the label/hint/error text.
  *
- * Substitutions from the original Vue SFC: the `useId` composable becomes the
- * shared `nextFieldId` helper resolved once in a `useRef`; the indeterminate
+ * Substitutions from the original Vue SFC: the `useId` composable maps straight
+ * to the framework-native `useId` hook; the indeterminate
  * DOM property is set through a `useRef` + `useEffect` pair (the neutral
- * equivalent of the SFC `watch`); the inline check/indeterminate SVGs become a
- * CSS-coloured `✓`/`−` glyph; the `useI18n` "required" title becomes a plain
+ * equivalent of the SFC `watch`); the check/indeterminate markers are the
+ * write-once `@mission-platform/icons` `IconCheck`/`IconMinus`; the `useI18n`
+ * "required" title becomes a plain
  * string; and the `v-model` + `change` emit become the established
  * `onUpdateModelValue`/`onChange` callback props.
  */
-export function BaseCheckbox(properties: CheckboxProperties): MpElement {
+export function BaseCheckbox(properties: Readonly<CheckboxProperties>): MpElement {
   const {
     modelValue = false,
     value,
@@ -73,8 +75,8 @@ export function BaseCheckbox(properties: CheckboxProperties): MpElement {
     size = 'md',
   } = properties;
 
-  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-checkbox'));
-  const resolvedId = idReference.current;
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
   const inputReference = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -138,7 +140,9 @@ export function BaseCheckbox(properties: CheckboxProperties): MpElement {
             aria-hidden="true"
             classNames={styles['base-checkbox__box']}
           >
-            <span classNames={styles['base-checkbox__glyph']}>{indeterminate ? '−' : '✓'}</span>
+            <span classNames={styles['base-checkbox__glyph']}>
+              {indeterminate ? <IconMinus size="2xs" /> : <IconCheck size="2xs" />}
+            </span>
           </span>
         </span>
         {label ? (

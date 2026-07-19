@@ -20,7 +20,10 @@ export type ThemeComposerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 export interface ThemeComposerProperties extends MpProperties {
   /** Size token controlling the composer's scale. Defaults to `'md'`. */
   size?: ThemeComposerSize;
-  /** The composed theme configuration (the controlled value). */
+  /**
+   * The composed theme configuration (the controlled value).
+   * @model onUpdateModelValue
+   */
   modelValue?: ThemeComposerConfig;
   /** Apply the composed variables to `document.documentElement` instead of the wrapper. Defaults to `false`. */
   global?: boolean;
@@ -54,7 +57,7 @@ export interface ThemeComposerProperties extends MpProperties {
  * `modelValue`/`onUpdateModelValue` pair is the single source of truth and the
  * wrapper is a fixed `<div>`.
  */
-export function BaseThemeComposer(properties: ThemeComposerProperties): MpElement {
+export function BaseThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement {
   const { modelValue, global = false, onUpdateModelValue, size = 'md' } = properties;
 
   const [config, setConfigState] = useState<ThemeComposerConfig>(modelValue ?? {});

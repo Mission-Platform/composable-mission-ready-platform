@@ -81,7 +81,7 @@ const BREAKPOINT_PX: Record<VerticalLayoutBreakpoint, number> = {
  * `{ isInline, toggleStart, toggleEnd }` scope is dropped (the default slot is a
  * plain content slot).
  */
-export function BaseVerticalLayout(properties: VerticalLayoutProperties): MpElement {
+export function BaseVerticalLayout(properties: Readonly<VerticalLayoutProperties>): MpElement {
   const {
     startOpen = false,
     endOpen = false,

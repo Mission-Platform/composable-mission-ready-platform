@@ -3,10 +3,14 @@
   "display": "Mission Platform — Node (tooling: vite.config, vitest.config, scripts)",
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "target": "es2023",
-    "lib": ["ES2023"],
+    "target": "esnext",
+    "lib": [
+      "ESNext"
+    ],
     "module": "esnext",
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "skipLibCheck": true,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,

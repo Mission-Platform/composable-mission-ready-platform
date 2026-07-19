@@ -73,3 +73,20 @@ export function useCallback<T extends (...args: never[]) => unknown>(callback: T
   void _dependencies;
   return callback;
 }
+
+let idCounter = 0;
+
+/**
+ * Neutral `useId`. Mirrors React's and Vue's `useId`: returns a stable, unique
+ * id string for the component instance, suitable for label / `aria-describedby`
+ * associations without hand-rolled counters. The baseline implementation hands
+ * out a process-incrementing id (`:mp0:`, `:mp1:`, …); the build-time plugin
+ * swaps this import for each framework's native `useId` (React's / Vue's), while
+ * the runtime adapters and SSR share this deterministic form so a single render
+ * stays stable (and identical across both frameworks).
+ */
+export function useId(): string {
+  const id = `:mp${idCounter}:`;
+  idCounter += 1;
+  return id;
+}

@@ -30,7 +30,7 @@ const ROTATION: Record<IconArrowDirection, number> = {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-arrow.module.scss`.
  */
-export function IconArrow(properties: IconArrowProperties): MpElement {
+export function IconArrow(properties: Readonly<IconArrowProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

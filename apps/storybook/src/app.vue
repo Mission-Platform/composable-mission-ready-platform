@@ -16,10 +16,10 @@
     IconSplit,
     IconTrash,
   } from '@mission-platform/icons/vue';
-  import { MapDraw, MapLibre } from '@mission-platform/map';
+  import { MapDraw, MapLibre } from '@mission-platform/map/vue';
   import { computed, ref } from 'vue';
 
-  import type { DrawMode, DrawnFeature } from '@mission-platform/map';
+  import type { DrawMode, FeatureId, UseDrawingReturn } from '@mission-platform/map/vue';
 
   defineOptions({ name: 'MapShowcase' });
 
@@ -27,12 +27,11 @@
 
   const { t } = useI18n();
 
-  const mode = ref<DrawMode>(undefined);
-  const features = ref<DrawnFeature[]>([]);
-  const selectedId = ref<string | null>(null);
-  const joiningFromId = ref<string | null>(null);
-  const geodesic = ref(true);
-  const mapDrawRef = ref<InstanceType<typeof MapDraw> | null>(null);
+  // The live drawing controller is exposed by `<MapDraw>` through its `toolbar`
+  // scoped slot (`{ drawing }`), so the toolbar below is rendered inside that
+  // slot and drives every action straight through the controller. Only the
+  // in-progress "join" source id needs to live in the showcase itself.
+  const joiningFromId = ref<FeatureId | null>(null);
 
   const drawModes = computed<{ label: string; value: DrawMode; icon: unknown }[]>(() => [
     { label: t('draw.none'), value: undefined, icon: null },
@@ -43,52 +42,41 @@
     { label: t('draw.triangle'), value: 'triangle', icon: IconDrawTriangle },
   ]);
 
-  function setMode(m: DrawMode) {
-    mode.value = m;
+  function setMode(drawing: UseDrawingReturn, m: DrawMode) {
+    if (m === undefined) {
+      drawing.cancelDrawing();
+    } else {
+      drawing.startDrawing(m);
+    }
   }
 
-  function scale(factor: number) {
-    mapDrawRef.value?.drawing.scaleSelected(factor);
-  }
-
-  function rotate(deg: number) {
-    mapDrawRef.value?.drawing.rotateSelected(deg);
-  }
-
-  function deleteSelected() {
-    mapDrawRef.value?.drawing.deleteSelected();
-    selectedId.value = null;
+  function deleteSelected(drawing: UseDrawingReturn) {
+    drawing.deleteSelected();
     joiningFromId.value = null;
   }
 
-  function splitSelected() {
-    mapDrawRef.value?.drawing.splitSelected();
-  }
-
-  function startJoin() {
-    if (!selectedId.value) return;
-    joiningFromId.value = selectedId.value;
-  }
-
-  function onSelect(id: string | null) {
-    if (joiningFromId.value && id && id !== joiningFromId.value) {
-      mapDrawRef.value?.drawing.joinLines(joiningFromId.value, id);
+  function startJoin(drawing: UseDrawingReturn) {
+    const from = drawing.selectedId;
+    if (from === undefined) return;
+    if (joiningFromId.value && joiningFromId.value !== from) {
+      drawing.joinLines(joiningFromId.value, from);
       joiningFromId.value = null;
-      selectedId.value = mapDrawRef.value?.drawing.selectedId.value ?? null;
       return;
     }
-    if (id === joiningFromId.value) return;
-    joiningFromId.value = null;
-    selectedId.value = id;
+    joiningFromId.value = from;
   }
 
-  function toggleGeodesic() {
-    geodesic.value = !geodesic.value;
+  function toggleGeodesic(drawing: UseDrawingReturn) {
+    drawing.setGeodesic(!drawing.geodesic);
   }
 
-  function isLine() {
-    const f = features.value.find((x) => x.id === selectedId.value);
+  function isLine(drawing: UseDrawingReturn) {
+    const f = drawing.features.features.find((x) => (x as { id?: FeatureId }).id === drawing.selectedId);
     return f?.geometry.type === 'LineString';
+  }
+
+  function featureCount(drawing: UseDrawingReturn) {
+    return drawing.features.features.length;
   }
 </script>
 
@@ -96,210 +84,204 @@
   <div class="showcase">
     <h1>{{ t('title') }}</h1>
 
-    <div class="toolbar">
-      <div class="toolbar__row">
-        <span class="toolbar__label">{{ t('label.draw') }}</span>
-        <BaseTooltip
-          v-for="m in drawModes"
-          :key="String(m.value)"
-          :content="m.label"
-          placement="bottom"
-        >
-          <BaseButton
-            :variant="mode === m.value ? 'primary' : 'secondary'"
-            size="sm"
-            @click="setMode(m.value)"
-          >
-            <component
-              :is="m.icon"
-              v-if="m.icon"
-              :aria-label="m.label"
-              :size="16"
-            />
-            <span v-else>{{ m.label }}</span>
-          </BaseButton>
-        </BaseTooltip>
-      </div>
-
-      <div class="toolbar__row">
-        <span class="toolbar__label">{{ t('label.edit') }}</span>
-        <span
-          :class="{ 'toolbar__status--joining': joiningFromId }"
-          class="toolbar__status"
-        >
-          {{
-            joiningFromId
-              ? t('status.joining', { id: joiningFromId })
-              : selectedId
-                ? t('status.selected', { id: selectedId })
-                : t('status.none')
-          }}
-        </span>
-
-        <BaseTooltip
-          :content="t('tooltip.scale-up')"
-          placement="bottom"
-        >
-          <BaseButton
-            :disabled="!selectedId"
-            size="sm"
-            variant="secondary"
-            @click="scale(1.5)"
-          >
-            <IconScaleUp
-              :size="16"
-              :aria-label="t('aria.scale-up')"
-            />
-          </BaseButton>
-        </BaseTooltip>
-
-        <BaseTooltip
-          :content="t('tooltip.scale-down')"
-          placement="bottom"
-        >
-          <BaseButton
-            :disabled="!selectedId"
-            size="sm"
-            variant="secondary"
-            @click="scale(0.75)"
-          >
-            <IconScaleDown
-              :size="16"
-              :aria-label="t('aria.scale-down')"
-            />
-          </BaseButton>
-        </BaseTooltip>
-
-        <BaseTooltip
-          :content="t('tooltip.rotate-cw')"
-          placement="bottom"
-        >
-          <BaseButton
-            :disabled="!selectedId"
-            size="sm"
-            variant="secondary"
-            @click="rotate(45)"
-          >
-            <IconRotateCw
-              :size="16"
-              :aria-label="t('aria.rotate-cw')"
-            />
-          </BaseButton>
-        </BaseTooltip>
-
-        <BaseTooltip
-          :content="t('tooltip.rotate-ccw')"
-          placement="bottom"
-        >
-          <BaseButton
-            :disabled="!selectedId"
-            size="sm"
-            variant="secondary"
-            @click="rotate(-45)"
-          >
-            <IconRotateCcw
-              :size="16"
-              :aria-label="t('aria.rotate-ccw')"
-            />
-          </BaseButton>
-        </BaseTooltip>
-
-        <BaseTooltip
-          :content="t('tooltip.split')"
-          placement="bottom"
-        >
-          <BaseButton
-            :disabled="!(selectedId && isLine())"
-            size="sm"
-            variant="secondary"
-            @click="splitSelected()"
-          >
-            <IconSplit
-              :size="16"
-              :aria-label="t('aria.split')"
-            />
-          </BaseButton>
-        </BaseTooltip>
-
-        <BaseTooltip
-          :content="joiningFromId ? t('tooltip.join-active') : t('tooltip.join')"
-          placement="bottom"
-        >
-          <BaseButton
-            :disabled="!(selectedId && isLine())"
-            :variant="joiningFromId ? 'primary' : 'secondary'"
-            size="sm"
-            @click="startJoin()"
-          >
-            <IconJoin
-              :size="16"
-              :aria-label="t('aria.join')"
-            />
-          </BaseButton>
-        </BaseTooltip>
-
-        <BaseTooltip
-          :content="t('tooltip.delete')"
-          placement="bottom"
-        >
-          <BaseButton
-            :disabled="!selectedId"
-            size="sm"
-            variant="error"
-            @click="deleteSelected()"
-          >
-            <IconTrash
-              :size="16"
-              :aria-label="t('aria.delete')"
-            />
-          </BaseButton>
-        </BaseTooltip>
-
-        <BaseTooltip
-          :content="geodesic ? t('tooltip.geodesic') : t('tooltip.flat')"
-          placement="bottom"
-        >
-          <BaseButton
-            size="sm"
-            variant="secondary"
-            @click="toggleGeodesic()"
-          >
-            <IconGeodesic
-              :size="16"
-              :aria-label="t('aria.geodesic')"
-            />
-            {{ geodesic ? t('mode.geodesic') : t('mode.flat') }}
-          </BaseButton>
-        </BaseTooltip>
-      </div>
-    </div>
-
     <MapLibre
       :center="[0, 20]"
       :map-style="MAP_STYLE"
       :zoom="1.5"
       class="showcase__map"
     >
-      <MapDraw
-        ref="mapDrawRef"
-        v-model="features"
-        :geodesic="geodesic"
-        :mode="mode"
-        @select="onSelect"
-        @update:mode="mode = $event"
-        @update:geodesic="geodesic = $event"
-      />
-    </MapLibre>
+      <MapDraw>
+        <template #toolbar="{ drawing }">
+          <div class="toolbar">
+            <div class="toolbar__row">
+              <span class="toolbar__label">{{ t('label.draw') }}</span>
+              <BaseTooltip
+                v-for="m in drawModes"
+                :key="String(m.value)"
+                :content="m.label"
+                placement="bottom"
+              >
+                <BaseButton
+                  :variant="drawing.mode === m.value ? 'primary' : 'secondary'"
+                  size="sm"
+                  @click="setMode(drawing, m.value)"
+                >
+                  <component
+                    :is="m.icon"
+                    v-if="m.icon"
+                    :aria-label="m.label"
+                    :size="16"
+                  />
+                  <span v-else>{{ m.label }}</span>
+                </BaseButton>
+              </BaseTooltip>
+            </div>
 
-    <BaseCollapse :summary="t('geojson-summary', { count: features.length })">
-      <BaseCodeBlock
-        :code="JSON.stringify({ type: 'FeatureCollection', features }, null, 2)"
-        :show-copy-button="false"
-        :show-line-numbers="true"
-        class="showcase__geojson"
-        language="json"
-      />
-    </BaseCollapse>
+            <div class="toolbar__row">
+              <span class="toolbar__label">{{ t('label.edit') }}</span>
+              <span
+                :class="{ 'toolbar__status--joining': joiningFromId }"
+                class="toolbar__status"
+              >
+                {{
+                  joiningFromId
+                    ? t('status.joining', { id: joiningFromId })
+                    : drawing.selectedId
+                      ? t('status.selected', { id: drawing.selectedId })
+                      : t('status.none')
+                }}
+              </span>
+
+              <BaseTooltip
+                :content="t('tooltip.scale-up')"
+                placement="bottom"
+              >
+                <BaseButton
+                  :disabled="!drawing.selectedId"
+                  size="sm"
+                  variant="secondary"
+                  @click="drawing.scaleSelected(1.5)"
+                >
+                  <IconScaleUp
+                    :size="16"
+                    :aria-label="t('aria.scale-up')"
+                  />
+                </BaseButton>
+              </BaseTooltip>
+
+              <BaseTooltip
+                :content="t('tooltip.scale-down')"
+                placement="bottom"
+              >
+                <BaseButton
+                  :disabled="!drawing.selectedId"
+                  size="sm"
+                  variant="secondary"
+                  @click="drawing.scaleSelected(0.75)"
+                >
+                  <IconScaleDown
+                    :size="16"
+                    :aria-label="t('aria.scale-down')"
+                  />
+                </BaseButton>
+              </BaseTooltip>
+
+              <BaseTooltip
+                :content="t('tooltip.rotate-cw')"
+                placement="bottom"
+              >
+                <BaseButton
+                  :disabled="!drawing.selectedId"
+                  size="sm"
+                  variant="secondary"
+                  @click="drawing.rotateSelected(45)"
+                >
+                  <IconRotateCw
+                    :size="16"
+                    :aria-label="t('aria.rotate-cw')"
+                  />
+                </BaseButton>
+              </BaseTooltip>
+
+              <BaseTooltip
+                :content="t('tooltip.rotate-ccw')"
+                placement="bottom"
+              >
+                <BaseButton
+                  :disabled="!drawing.selectedId"
+                  size="sm"
+                  variant="secondary"
+                  @click="drawing.rotateSelected(-45)"
+                >
+                  <IconRotateCcw
+                    :size="16"
+                    :aria-label="t('aria.rotate-ccw')"
+                  />
+                </BaseButton>
+              </BaseTooltip>
+
+              <BaseTooltip
+                :content="t('tooltip.split')"
+                placement="bottom"
+              >
+                <BaseButton
+                  :disabled="!(drawing.selectedId && isLine(drawing))"
+                  size="sm"
+                  variant="secondary"
+                  @click="drawing.splitSelected()"
+                >
+                  <IconSplit
+                    :size="16"
+                    :aria-label="t('aria.split')"
+                  />
+                </BaseButton>
+              </BaseTooltip>
+
+              <BaseTooltip
+                :content="joiningFromId ? t('tooltip.join-active') : t('tooltip.join')"
+                placement="bottom"
+              >
+                <BaseButton
+                  :disabled="!(drawing.selectedId && isLine(drawing))"
+                  :variant="joiningFromId ? 'primary' : 'secondary'"
+                  size="sm"
+                  @click="startJoin(drawing)"
+                >
+                  <IconJoin
+                    :size="16"
+                    :aria-label="t('aria.join')"
+                  />
+                </BaseButton>
+              </BaseTooltip>
+
+              <BaseTooltip
+                :content="t('tooltip.delete')"
+                placement="bottom"
+              >
+                <BaseButton
+                  :disabled="!drawing.selectedId"
+                  size="sm"
+                  variant="error"
+                  @click="deleteSelected(drawing)"
+                >
+                  <IconTrash
+                    :size="16"
+                    :aria-label="t('aria.delete')"
+                  />
+                </BaseButton>
+              </BaseTooltip>
+
+              <BaseTooltip
+                :content="drawing.geodesic ? t('tooltip.geodesic') : t('tooltip.flat')"
+                placement="bottom"
+              >
+                <BaseButton
+                  size="sm"
+                  variant="secondary"
+                  @click="toggleGeodesic(drawing)"
+                >
+                  <IconGeodesic
+                    :size="16"
+                    :aria-label="t('aria.geodesic')"
+                  />
+                  {{ drawing.geodesic ? t('mode.geodesic') : t('mode.flat') }}
+                </BaseButton>
+              </BaseTooltip>
+            </div>
+
+            <BaseCollapse :summary="t('geojson-summary', { count: featureCount(drawing) })">
+              <BaseCodeBlock
+                :code="JSON.stringify(drawing.features, null, 2)"
+                :show-copy-button="false"
+                :show-line-numbers="true"
+                class="showcase__geojson"
+                language="json"
+              />
+            </BaseCollapse>
+          </div>
+        </template>
+      </MapDraw>
+    </MapLibre>
   </div>
 </template>
 

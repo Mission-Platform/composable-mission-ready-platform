@@ -95,7 +95,7 @@ export {
   type MarkdownInputTab,
 } from './base-markdown-input';
 export { BaseMasonry, type MasonryGap, type MasonryProperties } from './base-masonry';
-export { BaseMenu, type MenuItem, type MenuOrientation, type MenuProperties } from './base-menu';
+export { BaseMenu, type MenuNode, type MenuOrientation, type MenuProperties } from './base-menu';
 export { BaseMenuItem, type MenuItemProperties, type MenuItemVariant } from './base-menu-item';
 export { BaseMenubar, type MenubarProperties } from './base-menubar';
 export { BaseModal, type ModalProperties, type ModalSize } from './base-modal';
@@ -136,7 +136,6 @@ export {
   type ProgressSize,
   type ProgressVariant,
 } from './base-progress-bar';
-export { BaseQrCode, type QrCodeProperties, type QrErrorCorrection } from './base-qr-code';
 export { BaseQuote, type QuoteProperties, type QuoteSize, type QuoteVariant } from './base-quote';
 export { BaseRadio, type RadioProperties } from './base-radio';
 export {

@@ -18,7 +18,7 @@ export interface IconScaleUpProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-scale-up.module.scss`.
  */
-export function IconScaleUp(properties: IconScaleUpProperties): MpElement {
+export function IconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

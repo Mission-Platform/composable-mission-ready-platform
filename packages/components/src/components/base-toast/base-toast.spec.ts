@@ -35,7 +35,7 @@ describe('BaseToast authors the same component for React and Vue', () => {
       expect(html).toContain('Upload failed');
       expect(html).toContain('Try again');
       expect(html).toContain('aria-label="Dismiss"');
-      expect(html).toContain('✕');
+      expect(html).toContain('base-icon-error');
     }
   });
 

@@ -40,7 +40,10 @@ export interface FormWizardProperties extends MpProperties {
   size?: FormWizardSize;
   /** The ordered steps. */
   steps: WizardStep[];
-  /** Active step index (controlled via `modelValue`). Defaults to `0`. */
+  /**
+   * Active step index (controlled via `modelValue`). Defaults to `0`.
+   * @model onUpdateModelValue
+   */
   modelValue?: number;
   /** When `true`, the user may only jump at most one step ahead. Defaults to `true`. */
   linear?: boolean;
@@ -86,7 +89,7 @@ export interface FormWizardProperties extends MpProperties {
  * the `update:modelValue` + `next`/`prev`/`complete` emits become the callback
  * props. The active index stays **controlled** (`modelValue`).
  */
-export function BaseFormWizard(properties: FormWizardProperties): MpElement {
+export function BaseFormWizard(properties: Readonly<FormWizardProperties>): MpElement {
   const {
     steps,
     modelValue = 0,
@@ -138,6 +141,15 @@ export function BaseFormWizard(properties: FormWizardProperties): MpElement {
     properties.onUpdateModelValue?.(index);
     properties.onPrev?.(index);
   };
+
+  // The active step's body (`content`) is arbitrary framework nodes, so it is
+  // rendered through a node-returning **render helper**: this keeps the whole
+  // component on the compiler's render-closure (`h`) path — where node-valued
+  // children render as real vnodes — instead of the flat-template path, which
+  // would stringify the content (`toDisplayString`) and crash on a VNode.
+  const renderContent = (): MpElement => (
+    <div classNames={styles['base-form-wizard__content']}>{activeStep?.content}</div>
+  );
 
   return (
     <div classNames={[styles['base-form-wizard'], sizeStyles[`base-size--${size}`]]}>
@@ -193,7 +205,7 @@ export function BaseFormWizard(properties: FormWizardProperties): MpElement {
         ))}
       </ol>
 
-      <div classNames={styles['base-form-wizard__content']}>{activeStep?.content}</div>
+      {renderContent()}
 
       <div classNames={styles['base-form-wizard__footer']}>
         <Slot name="footer" />

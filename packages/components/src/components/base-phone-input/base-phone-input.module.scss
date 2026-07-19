@@ -55,20 +55,14 @@
       }
     }
 
+    /* Wraps the searchable `BaseSelect` country picker. The select owns its own
+       border/focus ring, so this container only constrains its width and adds the
+       separator that divides it from the national number field. */
     &__country {
       flex-shrink: 0;
-      max-width: 8rem;
-      border: none;
+      width: 11rem;
+      max-width: 45%;
       border-right: 1px solid var(--mp-color-border-default);
-      outline: none;
-      background-color: var(--mp-color-bg-muted);
-      color: var(--mp-color-text-primary);
-      font-family: var(--mp-font-family-sans);
-      cursor: pointer;
-
-      &:disabled {
-        cursor: not-allowed;
-      }
     }
 
     &__dial {
@@ -105,8 +99,7 @@
     }
 
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
-      &--#{$size} .base-phone-input__field,
-      &--#{$size} .base-phone-input__country {
+      &--#{$size} .base-phone-input__field {
         padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
         font-size: var(--mp-size-font-#{$size});
       }

@@ -9,7 +9,10 @@ import styles from './base-radio.module.scss';
 export type RadioSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export interface RadioProperties extends MpProperties {
-  /** The currently selected value of the group (controlled via `modelValue`). */
+  /**
+   * The currently selected value of the group (controlled via `modelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: string | number;
   /** This radio's own value. Selected when it equals `modelValue`. */
   value: string | number;
@@ -42,7 +45,7 @@ export interface RadioProperties extends MpProperties {
  * The original Vue SFC's `v-model` + `change` emit become the established
  * `onUpdateModelValue`/`onChange` callback props.
  */
-export function BaseRadio(properties: RadioProperties): MpElement {
+export function BaseRadio(properties: Readonly<RadioProperties>): MpElement {
   const { modelValue, value, label, labelHidden = false, disabled = false, size = 'md' } = properties;
 
   const isChecked = modelValue === value;

@@ -38,7 +38,7 @@ export interface SkeletonProperties extends MpProperties {
  * `base-skeleton.module.scss`, assembled with the framework-neutral
  * {@link classNames} helper.
  */
-export function BaseSkeleton(properties: SkeletonProperties): MpElement {
+export function BaseSkeleton(properties: Readonly<SkeletonProperties>): MpElement {
   const { shape = 'line', width, height, animated = true, size = 'md', variant = 'neutral' } = properties;
 
   const className = classNames(

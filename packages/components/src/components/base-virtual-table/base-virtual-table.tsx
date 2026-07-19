@@ -1,3 +1,4 @@
+import { IconSort } from '@mission-platform/icons';
 import {
   classNames,
   h,
@@ -103,13 +104,14 @@ const HEADER_HEIGHT = 44;
  * `BaseVirtualTableHead`/`Row`/`Footer` sub-components, used the icons package
  * for the sort glyph, exposed per-column scoped `cell-<key>` slots, and emitted
  * `sort`/`rowClick`. The neutral version uses `Record<string, unknown>` rows,
- * inlines the head/row/footer, substitutes a `▲`/`▼`/`↕` glyph for the icon, and
+ * inlines the head/row/footer, renders the write-once `@mission-platform/icons`
+ * `IconSort` (which fills the active-direction chevron), and
  * uses the `onSort`/`onRowClick` callback props. Per-cell content is driven by
  * each column's optional `render` formatter, with a single scoped `cell` slot
  * (`{ column, row, value }`) replacing the original's per-column `cell-<key>`
  * slots for fully custom (interactive) cell content.
  */
-export function BaseVirtualTable(properties: VirtualTableProperties): MpElement {
+export function BaseVirtualTable(properties: Readonly<VirtualTableProperties>): MpElement {
   const {
     columns,
     rows,
@@ -191,13 +193,6 @@ export function BaseVirtualTable(properties: VirtualTableProperties): MpElement 
     properties.onSort?.(column.key, nextDirection);
   };
 
-  const sortGlyph = (column: VirtualTableColumn): string => {
-    if (sortKey !== column.key) {
-      return '↕';
-    }
-    return sortDirection === 'asc' ? '▲' : '▼';
-  };
-
   return (
     <div
       class={classNames('virtual-table', sizeStyles[`base-size--${size}`])}
@@ -263,7 +258,13 @@ export function BaseVirtualTable(properties: VirtualTableProperties): MpElement 
               onClick={() => toggleSort(column)}
             >
               <span>{column.label}</span>
-              {column.sortable ? <span aria-hidden="true">{sortGlyph(column)}</span> : undefined}
+              {column.sortable ? (
+                <IconSort
+                  active={sortKey === column.key}
+                  direction={sortKey === column.key ? sortDirection : undefined}
+                  size="2xs"
+                />
+              ) : undefined}
             </div>
           ))}
         </div>

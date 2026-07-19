@@ -41,6 +41,17 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string> = new Set(['classNames'
 export const CLASS_NAMES_ATTRIBUTE = 'classNames';
 
 /**
+ * Native JSX attributes whose author-facing camelCase spelling must be lowered
+ * to the HTML spelling Vue's JSX intrinsic-element types expect. Vue types the
+ * `<td>`/`<th>` span attributes as `colspan`/`rowspan` (not React's `colSpan`/
+ * `rowSpan`), so the render-closure JSX would otherwise fail to type-check.
+ */
+export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string> = new Map([
+  ['colSpan', 'colspan'],
+  ['rowSpan', 'rowspan'],
+]);
+
+/**
  * Neutral **value** imports that are pure compile-time markers — they exist only
  * so the authored JSX type-checks and are *consumed* by the emitters (their JSX
  * usages are rewritten to each framework's own mechanism), so they must never be
@@ -74,6 +85,16 @@ export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string> = new Set(['Telep
 export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string> = new Set(['Teleport', 'Transition', 'TransitionGroup']);
 
 /**
+ * Neutral **value** hooks that have an identically-named native counterpart in
+ * each framework's runtime, so they are neither translated (like `useState`/
+ * `useEffect`) nor kept as a neutral import. `useId` is React's own hook (it
+ * falls through to the `react` value import automatically), and Vue exposes the
+ * same `useId` from its runtime — so the Vue emitter imports it straight from
+ * `vue` and leaves the `const id = useId()` call untouched in `setup`.
+ */
+export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string> = new Set(['useId']);
+
+/**
  * Neutral **value** imports that are the context primitives. On React they *are*
  * React's own (`createContext`/`useContext`), so they fall through to the
  * `react` value import; on Vue their import is remapped to the
@@ -84,6 +105,196 @@ export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string> = new Set(['createConte
 
 /** The `@mission-platform/jsx/react` subpath the React framework components are imported from. */
 export const REACT_ADAPTER_MODULE = '@mission-platform/jsx/react';
+
+/**
+ * Neutral **type** imports that have a first-class React equivalent shipped by
+ * `react` itself. On the React target these are rewritten to their React name
+ * (imported `import type { … } from 'react'`) rather than kept as a neutral
+ * `@mission-platform/jsx` type, so React authors see the idiomatic type. Every
+ * reference to the neutral name in the emitted source is renamed to the mapped
+ * React name (see the React emitter). The neutral hook/render primitives each
+ * have an exact React counterpart:
+ *
+ * - `MpChild` (the "anything that may render as a child" union) ⇒ React's
+ *   `ReactNode`.
+ * - `MpElement` (a node in the neutral virtual tree, the return type of a
+ *   neutral component) ⇒ React's `ReactElement`, so a compiled component reads
+ *   as a genuine `(props) => ReactElement` — a valid React function component,
+ *   which the neutral `MpElement` return type is not.
+ * - `MpRef<T>` (the `{ current: T }` container returned by `useRef`) ⇒ React's
+ *   `RefObject<T>`.
+ * - `MpDependencyList` (an effect/memo dependency array) ⇒ React's
+ *   `DependencyList`.
+ */
+export const REACT_TYPE_ALIASES: Readonly<Record<string, string>> = {
+  MpChild: 'ReactNode',
+  MpElement: 'ReactElement',
+  MpRef: 'RefObject',
+  MpDependencyList: 'DependencyList',
+};
+
+/**
+ * Neutral **type** imports that have no single first-class framework equivalent
+ * to alias to (unlike {@link REACT_TYPE_ALIASES}), yet are trivially expressible
+ * in each framework's own vocabulary — the render/props primitives:
+ *
+ * - `MpProperties` — the bag of attributes/props a component accepts (the base
+ *   every component's props interface `extends`), and
+ * - `MpRenderProperty<S>` — a scoped-slot / render-prop function returning a
+ *   slot's content for a given scope.
+ *
+ * Rather than keep these as an `@mission-platform/jsx` import in the generated
+ * code, each framework build emits a tiny co-located module
+ * ({@link LOCAL_JSX_TYPES_MODULE}) that defines **framework-specific variants**
+ * of them — React's over `ReactNode`, Vue's over `VNodeChild` — and both
+ * emitters redirect these two type imports there (see the React and Vue
+ * `imports` builders). So the generated React/Vue sources carry no neutral
+ * `@mission-platform/jsx` render/props **type** import at all.
+ */
+export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string> = new Set(['MpProperties', 'MpRenderProperty']);
+
+/**
+ * The neutral render/props type names the **Vue** build redirects to its
+ * co-located {@link LOCAL_JSX_TYPES_MODULE}. It is a superset of
+ * {@link LOCAL_JSX_TYPE_NAMES}: besides `MpProperties`/`MpRenderProperty`, the
+ * Vue variant also re-declares the neutral **element** primitives `MpChild` and
+ * `MpElement` as Vue's `VNodeChild` / `VNode`. Under `jsxImportSource: 'vue'` a
+ * JSX expression in a generated SFC has type `JSX.Element` (i.e. Vue's `VNode`);
+ * keeping the neutral `@mission-platform/jsx` definitions (branded with
+ * `__mpElement`) would make every `const x: MpElement = <div/>` /
+ * `MpChild[] = items.map(() => <li/>)` fail to type-check under `vue-tsc`. React
+ * instead renames these to `ReactNode`/`ReactElement` (see
+ * {@link REACT_TYPE_ALIASES}); Vue keeps the `Mp*` names but resolves them to
+ * the Vue-native types via the local module, so no reference rewriting is needed.
+ */
+export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string> = new Set([
+  'MpProperties',
+  'MpRenderProperty',
+  'MpChild',
+  'MpElement',
+]);
+
+/** The relative specifier the generated per-framework {@link LOCAL_JSX_TYPES_MODULE} is imported under. */
+export const LOCAL_JSX_TYPES_MODULE = './mp-jsx-types';
+
+/** The file name (with extension) the local JSX types module is written as in the flat generated tree. */
+export const LOCAL_JSX_TYPES_FILE = 'mp-jsx-types.ts';
+
+/**
+ * The source of the co-located {@link LOCAL_JSX_TYPES_MODULE} for a target
+ * framework: framework-specific variants of the neutral render/props primitives
+ * named in {@link LOCAL_JSX_TYPE_NAMES}, so the generated components import
+ * `MpProperties` / `MpRenderProperty` from this local module instead of the
+ * neutral `@mission-platform/jsx` package. The definitions differ per framework:
+ * the "renderable content" position is React's `ReactNode` and Vue's
+ * `VNodeChild`, so each build's declarations read idiomatically for its runtime.
+ */
+export function localJsxTypesModuleSource(framework: 'react' | 'vue'): string {
+  const renderable = framework === 'react' ? 'ReactNode' : 'VNodeChild';
+  const imported =
+    framework === 'react' ? "import type { ReactNode } from 'react';" : "import type { VNode, VNodeChild } from 'vue';";
+  const lines = [
+    '/**',
+    ` * Framework-specific variants of the neutral \`@mission-platform/jsx\` render/props`,
+    ' * primitives, generated for the ' + framework + ' build so the compiled components',
+    ' * carry no neutral-package type import (see `LOCAL_JSX_TYPE_NAMES`).',
+    ' */',
+    imported,
+    '',
+    '/** The bag of attributes/props a component accepts — the ' +
+      framework +
+      ' variant of the neutral `MpProperties`. */',
+    'export type MpProperties = {',
+    '  [key: string]: unknown;',
+    `  children?: ${renderable};`,
+    '  slot?: string;',
+    '};',
+    '',
+    '/** A scoped-slot / render-prop function — the ' + framework + ' variant of the neutral `MpRenderProperty`. */',
+    `export type MpRenderProperty<S = MpProperties> = (scope: S) => ${renderable};`,
+    '',
+  ];
+  // Under `jsxImportSource: 'vue'` a JSX expression in a generated SFC is typed
+  // as Vue's `VNode` (`JSX.Element`); re-declaring the neutral element primitives
+  // over the Vue-native types lets `const x: MpElement = <div/>` and
+  // `MpChild[] = items.map(() => <li/>)` type-check under `vue-tsc` without any
+  // reference rewriting (React instead renames these — see `REACT_TYPE_ALIASES`).
+  if (framework === 'vue') {
+    lines.push(
+      '/** Anything that may render as a child — the Vue variant of the neutral `MpChild`. */',
+      'export type MpChild = VNodeChild;',
+      '',
+      '/** A node in the rendered tree — the Vue variant of the neutral `MpElement`. */',
+      'export type MpElement = VNode;',
+      '',
+    );
+  }
+  return lines.join('\n');
+}
+
+/** The relative specifier the generated Vue {@link LOCAL_EFFECT_MODULE} is imported under. */
+export const LOCAL_EFFECT_MODULE = './mp-effect';
+
+/** The file name (with extension) the local effect helper module is written as in the flat generated tree. */
+export const LOCAL_EFFECT_FILE = 'mp-effect.ts';
+
+/**
+ * The source of the co-located {@link LOCAL_EFFECT_MODULE} for a target
+ * framework, generated once per output tree exactly like the local JSX-types
+ * module (see {@link localJsxTypesModuleSource}).
+ *
+ * It centralises the Vue emitter's `useEffect` → lifecycle translation in a
+ * single generalised watcher (`mpEffect`) built on Vue's native
+ * `watch`/`onMounted`/`onUpdated`/`onUnmounted`, so each component's `setup`
+ * shrinks to a single `mpEffect(callback, () => [deps])` call instead of the
+ * inlined per-effect lifecycle block. The semantics mirror React's
+ * `useEffect(callback, deps?)`: run once after mount, re-run when a dependency
+ * changes (or after every update when deps are omitted), and run the returned
+ * cleanup before each re-run and on unmount.
+ *
+ * The helper is **Vue-only**: the React emitter keeps emitting `useEffect(…)`
+ * verbatim (React's native form), so for `framework === 'react'` this returns an
+ * empty string and the writer skips it.
+ */
+export function localEffectModuleSource(framework: 'react' | 'vue'): string {
+  if (framework === 'react') {
+    return '';
+  }
+  return [
+    '/**',
+    ' * Vue-native generalised effect watcher — the mirror of React\u2019s',
+    ' * `useEffect(callback, deps?)`, generated once per output tree so the compiled',
+    ' * components share one lifecycle helper instead of inlining the wiring per',
+    ' * effect.',
+    ' *',
+    ' * - runs once after mount;',
+    ' * - re-runs when any dependency changes (when `deps` is provided);',
+    ' * - runs after every update when `deps` is omitted;',
+    ' * - runs the returned cleanup before each re-run and on unmount.',
+    ' */',
+    "import { onMounted, onUnmounted, onUpdated, watch } from 'vue';",
+    '',
+    'export function mpEffect(',
+    '  effect: () => void | (() => void),',
+    '  deps?: () => readonly unknown[],',
+    '): void {',
+    '  let cleanup: (() => void) | undefined;',
+    '  const run = () => {',
+    '    cleanup?.();',
+    '    const result = effect();',
+    "    cleanup = typeof result === 'function' ? result : undefined;",
+    '  };',
+    '  onMounted(run);',
+    '  if (deps) {',
+    '    watch(deps, run);',
+    '  } else {',
+    '    onUpdated(run);',
+    '  }',
+    '  onUnmounted(() => cleanup?.());',
+    '}',
+    '',
+  ].join('\n');
+}
 
 /** The `@mission-platform/jsx/vue` subpath the Vue context primitives are imported from. */
 export const VUE_ADAPTER_MODULE = '@mission-platform/jsx/vue';
@@ -149,6 +360,9 @@ const SLOT_TAG = 'Slot';
 
 /** The JSX tag name of the neutral dynamic-component marker element. */
 const DYNAMIC_TAG = 'Dynamic';
+
+/** The JSX tag name of the neutral fragment element (`<Fragment>`). */
+const FRAGMENT_TAG = 'Fragment';
 
 /** The callee name of the neutral slot-presence marker (`hasSlot('x')`). */
 const HAS_SLOT_CALLEE = 'hasSlot';
@@ -342,6 +556,20 @@ export function isSlotElement(node: ts.Node): node is ts.JsxSelfClosingElement |
   }
   if (ts.isJsxElement(node)) {
     return ts.isIdentifier(node.openingElement.tagName) && node.openingElement.tagName.text === SLOT_TAG;
+  }
+  return false;
+}
+
+/**
+ * Whether a node is a neutral `<Fragment>` element — either the self-closing
+ * `<Fragment />` (empty) or `<Fragment>…</Fragment>` (with children) form.
+ */
+export function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement {
+  if (ts.isJsxSelfClosingElement(node)) {
+    return ts.isIdentifier(node.tagName) && node.tagName.text === FRAGMENT_TAG;
+  }
+  if (ts.isJsxElement(node)) {
+    return ts.isIdentifier(node.openingElement.tagName) && node.openingElement.tagName.text === FRAGMENT_TAG;
   }
   return false;
 }
@@ -826,6 +1054,120 @@ export function vueNativeEventTransformer(): ts.TransformerFactory<ts.Node> {
   };
 }
 
+/**
+ * The local part of a Vue `update:<model>` listener for an `onUpdate<Name>`
+ * callback prop, or `undefined` when the name is not an `onUpdate<Name>`
+ * listener. Strips the `onUpdate` prefix and lower-cases the first remaining
+ * letter, matching Vue's `defineModel('<name>')` → `update:<name>` convention:
+ * `onUpdateModelValue` → `modelValue`, `onUpdateOpen` → `open`.
+ */
+function modelUpdateListenerLocalName(name: string): string | undefined {
+  const match = /^onUpdate([A-Z].*)$/.exec(name);
+  if (match === null || match[1] === undefined) {
+    return undefined;
+  }
+  const rest = match[1];
+  return `${rest.charAt(0).toLowerCase()}${rest.slice(1)}`;
+}
+
+/**
+ * Vue's `v-model` update events are named `update:<model>`: a child compiled
+ * from a `@model`-paired `onUpdate<Name>` callback prop declares
+ * `defineModel('<name>')` and therefore **emits `update:<name>`**, whose
+ * listener prop is the string-keyed `onUpdate:<name>` — not the camelCase
+ * `onUpdate<Name>`. A **parent** that forwards the neutral `onUpdate<Name>`
+ * callback down to that child must bind `onUpdate:<name>`, or Vue never wires
+ * the two-way update (and `vue-tsc` reports the prop as unknown, suggesting
+ * `"onUpdate:<name>"`). This transformer rewrites every `onUpdate<Name>`
+ * listener on a **component** element — a JSX attribute (`<Child onUpdateOpen=…>`
+ * → `<Child onUpdate:open=…>`) or an `h(Component, { onUpdateOpen: … })` prop
+ * (→ the `'onUpdate:open'` string key) — into that `onUpdate:<name>` form.
+ * Listeners on native elements and non-`onUpdate` listeners are left untouched,
+ * so it is idempotent and safe to apply universally on the render-closure path.
+ */
+export function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node> {
+  return (context) => {
+    const { factory } = context;
+    const rewriteAttributes = (attributes: ts.JsxAttributes): ts.JsxAttributes =>
+      factory.updateJsxAttributes(
+        attributes,
+        attributes.properties.map((property) => {
+          if (ts.isJsxAttribute(property) && ts.isIdentifier(property.name)) {
+            const local = modelUpdateListenerLocalName(property.name.text);
+            if (local !== undefined) {
+              return factory.updateJsxAttribute(
+                property,
+                factory.createJsxNamespacedName(factory.createIdentifier('onUpdate'), factory.createIdentifier(local)),
+                property.initializer,
+              );
+            }
+          }
+          return property;
+        }),
+      );
+    const visit = (node: ts.Node): ts.Node => {
+      if (ts.isJsxSelfClosingElement(node) && isComponentTagName(node.tagName)) {
+        const updated = factory.updateJsxSelfClosingElement(
+          node,
+          node.tagName,
+          node.typeArguments,
+          rewriteAttributes(node.attributes),
+        );
+        return ts.visitEachChild(updated, visit, context);
+      }
+      if (ts.isJsxElement(node) && isComponentTagName(node.openingElement.tagName)) {
+        const opening = factory.updateJsxOpeningElement(
+          node.openingElement,
+          node.openingElement.tagName,
+          node.openingElement.typeArguments,
+          rewriteAttributes(node.openingElement.attributes),
+        );
+        const updated = factory.updateJsxElement(node, opening, node.children, node.closingElement);
+        return ts.visitEachChild(updated, visit, context);
+      }
+      // `h(Component, { onUpdateOpen: … })` — a component call has a non-string
+      // first argument (a string-literal tag is an intrinsic element, handled by
+      // `vueNativeEventTransformer`).
+      if (
+        ts.isCallExpression(node) &&
+        ts.isIdentifier(node.expression) &&
+        node.expression.text === 'h' &&
+        node.arguments.length >= 2 &&
+        node.arguments[0] !== undefined &&
+        !ts.isStringLiteral(node.arguments[0]) &&
+        node.arguments[1] !== undefined &&
+        ts.isObjectLiteralExpression(node.arguments[1])
+      ) {
+        const props = node.arguments[1];
+        const rewrittenProps = factory.updateObjectLiteralExpression(
+          props,
+          props.properties.map((property) => {
+            if (ts.isPropertyAssignment(property) && ts.isIdentifier(property.name)) {
+              const local = modelUpdateListenerLocalName(property.name.text);
+              if (local !== undefined) {
+                return factory.updatePropertyAssignment(
+                  property,
+                  factory.createStringLiteral(`onUpdate:${local}`),
+                  property.initializer,
+                );
+              }
+            }
+            return property;
+          }),
+        );
+        const updated = factory.updateCallExpression(node, node.expression, node.typeArguments, [
+          node.arguments[0],
+          rewrittenProps,
+          ...node.arguments.slice(2),
+        ]);
+        return ts.visitEachChild(updated, visit, context);
+      }
+      return ts.visitEachChild(node, visit, context);
+    };
+    return (node) => ts.visitNode(node, visit) as ts.Node;
+  };
+}
+
 /** Collect every static slot name declared by `<Slot name="…" />` elements in the module. */
 export function collectSlotNames(sourceFile: ts.SourceFile): Set<string> {
   const names = new Set<string>();
@@ -1098,13 +1440,21 @@ export function createReactSlotCallExpression(
 export interface ComponentImport {
   /** The imported value names. */
   names: string[];
+  /**
+   * The imported **type-only** names — either an `import type { … }` statement's
+   * members or the `type`-prefixed members of a mixed
+   * `import { value, type X } from './helper'`. Kept separate from {@link names}
+   * so a helper import can be re-emitted with its type members preserved (the
+   * Vue emitter would otherwise drop them, leaving those types unresolved).
+   */
+  typeNames: string[];
   /** The base name of the import path, e.g. `base-badge`. */
   base: string;
   /** The original (relative) module specifier, e.g. `../base-badge`. */
   specifier: string;
 }
 
-/** Collect relative (sibling-component) value imports from a module. */
+/** Collect relative (sibling-component) value + type imports from a module. */
 export function readComponentImports(sourceFile: ts.SourceFile): ComponentImport[] {
   const imports: ComponentImport[] = [];
   for (const statement of sourceFile.statements) {
@@ -1119,11 +1469,23 @@ export function readComponentImports(sourceFile: ts.SourceFile): ComponentImport
     if (bindings === undefined || !ts.isNamedImports(bindings)) {
       continue;
     }
-    const names = bindings.elements.filter((element) => !element.isTypeOnly).map((element) => element.name.text);
+    // A statement-level `import type { … }` marks every member type-only; a mixed
+    // statement marks only the `type`-prefixed members. Either way the type
+    // members are kept apart from the value names so they can be re-emitted.
+    const statementIsTypeOnly = statement.importClause?.isTypeOnly === true;
+    const names: string[] = [];
+    const typeNames: string[] = [];
+    for (const element of bindings.elements) {
+      if (statementIsTypeOnly || element.isTypeOnly) {
+        typeNames.push(element.name.text);
+      } else {
+        names.push(element.name.text);
+      }
+    }
     const segments = specifier
       .split('/')
       .filter((segment) => segment !== '.' && segment !== '..' && segment.length > 0);
-    imports.push({ names, base: segments.at(-1) ?? specifier, specifier });
+    imports.push({ names, typeNames, base: segments.at(-1) ?? specifier, specifier });
   }
   return imports;
 }
@@ -1241,6 +1603,189 @@ export function extractPropertyNames(sourceFile: ts.SourceFile, interfaceName: s
   return names;
 }
 
+/** A single (own) property of a props interface — its name, declared type text, and optionality. */
+export interface PropertySignature {
+  /** The property name, e.g. `variant`. */
+  name: string;
+  /** The declared type as source text, e.g. `AccordionItem[]` or `(openIds: string[]) => void`. */
+  typeText: string;
+  /** Whether the property is optional (declared with `?`). */
+  optional: boolean;
+}
+
+/**
+ * Extract the (own) property signatures declared by a props interface, excluding
+ * `children`. Each entry carries the property's declared type text and
+ * optionality so the Vue emitter can render a **type-based** `defineProps<{ … }>()`
+ * that preserves the interface's precise types (an untyped runtime `defineProps`
+ * would collapse them to `{}` / `never[]`). Properties whose type cannot be read
+ * fall back to `unknown`.
+ */
+export function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: string): PropertySignature[] {
+  const signatures: PropertySignature[] = [];
+  for (const statement of sourceFile.statements) {
+    if (!ts.isInterfaceDeclaration(statement) || statement.name.text !== interfaceName) {
+      continue;
+    }
+    for (const member of statement.members) {
+      if (ts.isPropertySignature(member) && ts.isIdentifier(member.name) && member.name.text !== 'children') {
+        signatures.push({
+          name: member.name.text,
+          typeText: member.type === undefined ? 'unknown' : member.type.getText(sourceFile),
+          optional: member.questionToken !== undefined,
+        });
+      }
+    }
+  }
+  return signatures;
+}
+
+/**
+ * A component **event** — a props-interface member named `on<Event>` whose
+ * declared type is an inline function type (e.g. `onChange?: (openIds: string[])
+ * => void`). The Vue emitter turns these into `defineEmits` declarations and
+ * `emit('<event>', …)` calls instead of runtime props.
+ */
+export interface EventSignature {
+  /** The prop name as authored, e.g. `onChange`. */
+  propName: string;
+  /**
+   * The emitted Vue event name, e.g. `change`. Derived by stripping the `on`
+   * prefix and lower-casing the first letter, which is exactly the inverse of
+   * Vue's listener-prop convention (`emit('change')` ⇄ the `onChange` listener
+   * prop) — so an existing consumer passing `onChange` keeps working, and
+   * `onUpdateModelValue` maps to `updateModelValue` (⇄ `onUpdateModelValue`).
+   */
+  eventName: string;
+  /**
+   * The event handler's parameter list as source text, e.g. `openIds: string[]`
+   * — used verbatim as the payload tuple of a typed `defineEmits<{ … }>()`
+   * (`change: [openIds: string[]]`). Empty for a zero-argument event.
+   */
+  paramsText: string;
+  /** The handler's parameter identifier names, e.g. `['openIds']` — used to build a forwarding arrow. */
+  paramNames: string[];
+}
+
+/**
+ * Derive the Vue event name for an `on<Event>` prop: strip the `on` prefix and
+ * lower-case the first remaining letter (`onChange` → `change`,
+ * `onUpdateModelValue` → `updateModelValue`).
+ */
+export function eventNameForProp(propName: string): string {
+  const rest = propName.slice(2);
+  return rest.charAt(0).toLowerCase() + rest.slice(1);
+}
+
+/**
+ * Extract the (own) **event** signatures declared by a props interface — members
+ * named `on<Event>` (an uppercase letter after `on`) whose type is an inline
+ * function type. These are the component's events: the Vue emitter declares them
+ * with `defineEmits` and rewrites their calls/references to `emit(...)` rather
+ * than carrying them as runtime props. A callback prop typed via a named alias
+ * (a type reference rather than an inline function type) is left as a plain prop.
+ */
+export function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string): EventSignature[] {
+  const events: EventSignature[] = [];
+  for (const statement of sourceFile.statements) {
+    if (!ts.isInterfaceDeclaration(statement) || statement.name.text !== interfaceName) {
+      continue;
+    }
+    for (const member of statement.members) {
+      if (
+        ts.isPropertySignature(member) &&
+        ts.isIdentifier(member.name) &&
+        /^on[A-Z]/.test(member.name.text) &&
+        member.type !== undefined &&
+        ts.isFunctionTypeNode(member.type)
+      ) {
+        events.push({
+          propName: member.name.text,
+          eventName: eventNameForProp(member.name.text),
+          paramsText: member.type.parameters.map((parameter) => parameter.getText(sourceFile)).join(', '),
+          paramNames: member.type.parameters.map((parameter, index) =>
+            ts.isIdentifier(parameter.name) ? parameter.name.text : `argument${index}`,
+          ),
+        });
+      }
+    }
+  }
+  return events;
+}
+
+/**
+ * A prop marked with a `@model <onEvent>` JSDoc tag: a two-way (v-model) binding
+ * pairing an **input** prop with its **change event**. The Vue emitter collapses
+ * the pair into a single `defineModel` declaration (dropping both the runtime
+ * prop and the `defineEmits` entry) — a read of the prop becomes `<local>.value`
+ * and a call of the paired event becomes `<local>.value = …`.
+ */
+export interface ModelSignature {
+  /** The input prop name, e.g. `modelValue`, `geodesic`. Also the emitted ref's local name. */
+  propName: string;
+  /**
+   * The `defineModel` model name — the prop name, except `modelValue`, which maps
+   * to `undefined` (Vue's default, nameless `v-model` model). So `geodesic` →
+   * `defineModel('geodesic')` and `modelValue` → `defineModel()`.
+   */
+  modelName: string | undefined;
+  /** The prop's declared type text, e.g. `DrawnFeature[]` — used as `defineModel<T>()`. */
+  typeText: string;
+  /** Whether the source prop is optional (`modelValue?`). */
+  optional: boolean;
+  /** The paired change event's prop name from the `@model` tag, e.g. `onFeaturesChange`. */
+  eventPropName: string;
+}
+
+/**
+ * The value of a property signature's `@model <event>` JSDoc tag (the paired
+ * change-event prop name), or `undefined` when the prop carries no such tag.
+ */
+function readModelTag(member: ts.PropertySignature): string | undefined {
+  for (const tag of ts.getJSDocTags(member)) {
+    if (tag.tagName.text !== 'model') {
+      continue;
+    }
+    const comment = typeof tag.comment === 'string' ? tag.comment : ts.getTextOfJSDocComment(tag.comment);
+    const trimmed = comment?.trim();
+    return trimmed === undefined || trimmed.length === 0 ? undefined : trimmed;
+  }
+  return undefined;
+}
+
+/**
+ * Extract the props-interface members marked `@model <onEvent>` — a prop and its
+ * paired change event that the Vue emitter fuses into a single `defineModel`
+ * two-way binding. The model name is the prop name, except the canonical
+ * `modelValue`, which becomes Vue's default (nameless) model.
+ */
+export function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string): ModelSignature[] {
+  const models: ModelSignature[] = [];
+  for (const statement of sourceFile.statements) {
+    if (!ts.isInterfaceDeclaration(statement) || statement.name.text !== interfaceName) {
+      continue;
+    }
+    for (const member of statement.members) {
+      if (!ts.isPropertySignature(member) || !ts.isIdentifier(member.name)) {
+        continue;
+      }
+      const eventPropName = readModelTag(member);
+      if (eventPropName === undefined) {
+        continue;
+      }
+      const propName = member.name.text;
+      models.push({
+        propName,
+        modelName: propName === 'modelValue' ? undefined : propName,
+        typeText: member.type === undefined ? 'unknown' : member.type.getText(sourceFile),
+        optional: member.questionToken !== undefined,
+        eventPropName,
+      });
+    }
+  }
+  return models;
+}
+
 /** A binding pulled out of a `const { … } = properties` destructuring. */
 export interface DestructuredProp {
   /** The local name bound, e.g. `threshold`. */
@@ -1258,6 +1803,15 @@ export interface RewriteScope {
   propsParamName: string;
   /** Names destructured from props → rewritten to `<props>.<name>` (reactive). */
   destructuredProps: Set<string>;
+  /**
+   * Renamed destructuring bindings (`const { format: formatProperty } =
+   * properties`) → their **local** alias mapped to the **real** prop name. A
+   * reference to the alias must resolve to `<props>.<propName>` (the prop only
+   * exists under its declared name on `defineProps`), so the rewriter looks the
+   * alias up here before building the property access. Non-renamed bindings are
+   * absent (their local name already is the prop name).
+   */
+  propAliases: Map<string, string>;
   /** `useState` value names → reads rewritten to `<name>.value`. */
   stateNames: Set<string>;
   /** `useState` setter name → its state name; calls become `<state>.value = …`. */
@@ -1272,6 +1826,53 @@ export interface RewriteScope {
    * `styles['x']` / `styles[`x`]` reads are rewritten to their key expression.
    */
   styleModuleNames: Set<string>;
+  /**
+   * Event props (`on<Event>` callbacks) keyed by prop name → the emitted event
+   * name and the handler's parameter names. A **call** of an event prop
+   * (`properties.onChange?.(next)` / `onChange?.(next)`) is rewritten to
+   * `emit('change', next)`; a **reference** (e.g. `onLoad` bound to a native
+   * `<img onLoad={onLoad}>`) is rewritten to a forwarding arrow
+   * `(event) => emit('load', event)`, since the callback no longer exists as a
+   * prop. Populated only for the Vue target (empty on React).
+   */
+  eventProps: Map<string, { eventName: string; paramNames: string[] }>;
+  /**
+   * Model props (marked `@model <event>`) → the emitted `defineModel` ref's local
+   * name (identical to the prop name). A **read** of a model prop (a destructured
+   * `modelValue` or `properties.modelValue`) is rewritten to `<local>.value`, like
+   * a `useState`/`useMemo` value. Populated only for the Vue target.
+   */
+  modelProps: Set<string>;
+  /**
+   * The paired change events of model props, keyed by the **event prop name**
+   * (`onFeaturesChange`) → the model ref's local name (`modelValue`). A **call**
+   * (`properties.onFeaturesChange?.(next)`) is rewritten to `<local>.value = next`
+   * and a **reference** to a two-way `(value) => { <local>.value = value; }` arrow,
+   * so the change event drives the model instead of a `defineEmits` emit.
+   */
+  modelEvents: Map<string, string>;
+}
+
+/**
+ * Ensure a rewritten JSX child is a valid `JsxChild`. The reference rewriter
+ * lowers an authored-in-child-position `<Slot>`/`<Dynamic>` to a **bare**
+ * expression (so a top-level `return <Slot/>` stays unwrapped); when such an
+ * expression ends up as an element/fragment child it must be re-wrapped in a
+ * `{ … }` `JsxExpression`, otherwise it is not a valid `JsxChild` and the printer
+ * would emit it as raw text (breaking the generated SFC). Already-valid children
+ * (text, `{ … }` expressions, nested elements/fragments) pass through unchanged.
+ */
+function wrapAsJsxChild(factory: ts.NodeFactory, node: ts.Node): ts.JsxChild {
+  if (
+    ts.isJsxText(node) ||
+    ts.isJsxExpression(node) ||
+    ts.isJsxElement(node) ||
+    ts.isJsxSelfClosingElement(node) ||
+    ts.isJsxFragment(node)
+  ) {
+    return node;
+  }
+  return factory.createJsxExpression(undefined, node as ts.Expression);
 }
 
 /**
@@ -1292,14 +1893,166 @@ export function createReferenceRewriter(scope: RewriteScope): ts.TransformerFact
         [],
       );
 
+    // `emit('<event>', …args)` — the replacement for a call of an event prop.
+    const emitCall = (eventName: string, args: ts.Expression[]): ts.Expression =>
+      factory.createCallExpression(factory.createIdentifier('emit'), undefined, [
+        factory.createStringLiteral(eventName),
+        ...args,
+      ]);
+
+    // `(p0, p1) => emit('<event>', p0, p1)` — the replacement for a *reference*
+    // to an event prop (e.g. `<img onLoad={onLoad}>`), which can no longer read
+    // the prop. Parameter types are omitted so they are inferred contextually
+    // from the binding site (the native element's listener signature).
+    const forwardingArrow = (eventName: string, paramNames: string[]): ts.Expression =>
+      factory.createArrowFunction(
+        undefined,
+        undefined,
+        paramNames.map((name) =>
+          factory.createParameterDeclaration(undefined, undefined, factory.createIdentifier(name)),
+        ),
+        undefined,
+        factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+        emitCall(
+          eventName,
+          paramNames.map((name) => factory.createIdentifier(name)),
+        ),
+      );
+
+    // The event a call/reference targets, if it is an event prop: either
+    // `properties.on<Event>` or a destructured `on<Event>` local.
+    const eventFor = (expression: ts.Expression): { eventName: string; paramNames: string[] } | undefined => {
+      if (
+        ts.isPropertyAccessExpression(expression) &&
+        ts.isIdentifier(expression.expression) &&
+        expression.expression.text === scope.propsParamName
+      ) {
+        return scope.eventProps.get(expression.name.text);
+      }
+      if (ts.isIdentifier(expression) && scope.destructuredProps.has(expression.text)) {
+        return scope.eventProps.get(expression.text);
+      }
+      return undefined;
+    };
+
+    // The model ref local a call/reference targets, if it is a model prop's
+    // paired change event: either `properties.on<Event>` or a destructured
+    // `on<Event>` local.
+    const modelEventFor = (expression: ts.Expression): string | undefined => {
+      if (
+        ts.isPropertyAccessExpression(expression) &&
+        ts.isIdentifier(expression.expression) &&
+        expression.expression.text === scope.propsParamName
+      ) {
+        return scope.modelEvents.get(expression.name.text);
+      }
+      if (ts.isIdentifier(expression) && scope.destructuredProps.has(expression.text)) {
+        return scope.modelEvents.get(expression.text);
+      }
+      return undefined;
+    };
+
+    // `<local>.value` — the reactive read/write target of a model ref.
+    const modelValueAccess = (local: string): ts.Expression =>
+      factory.createPropertyAccessExpression(factory.createIdentifier(local), 'value');
+
+    // `(value) => { <local>.value = value; }` — the replacement for a *reference*
+    // to a model prop's change event (a call is rewritten to the assignment
+    // directly). The single parameter's type is inferred contextually.
+    const modelWriteArrow = (local: string): ts.Expression =>
+      factory.createArrowFunction(
+        undefined,
+        undefined,
+        [factory.createParameterDeclaration(undefined, undefined, factory.createIdentifier('value'))],
+        undefined,
+        factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+        factory.createBlock(
+          [
+            factory.createExpressionStatement(
+              factory.createBinaryExpression(
+                modelValueAccess(local),
+                factory.createToken(ts.SyntaxKind.EqualsToken),
+                factory.createIdentifier('value'),
+              ),
+            ),
+          ],
+          true,
+        ),
+      );
+
     const visit = (node: ts.Node): ts.Node => {
-      // `<Slot name="x" />` → `{ slots.x?.() }` (default slot → `slots.default?.()`);
+      // A concise-body arrow whose expression is a `useState` setter call
+      // (`(value: number): void => setValue(value)`) is rewritten below to an
+      // assignment (`value.value = value`). A concise body *is* the arrow's
+      // return value, so under the source's explicit return-type annotation
+      // (invariably `: void`, since a React setter returns `void`) the
+      // assignment's value would violate the annotation. Emit a block body so
+      // the assignment becomes a statement with no returned value.
+      if (
+        ts.isArrowFunction(node) &&
+        node.type !== undefined &&
+        !ts.isBlock(node.body) &&
+        ts.isCallExpression(node.body) &&
+        ts.isIdentifier(node.body.expression) &&
+        scope.setterToState.has(node.body.expression.text)
+      ) {
+        const rewrittenBody = ts.visitNode(node.body, visit) as ts.Expression;
+        return factory.updateArrowFunction(
+          node,
+          node.modifiers,
+          node.typeParameters,
+          node.parameters,
+          node.type,
+          node.equalsGreaterThanToken,
+          factory.createBlock([factory.createExpressionStatement(rewrittenBody)], true),
+        );
+      }
+
+      // A **call** of a model prop's change event (`properties.onFeaturesChange?.(next)`
+      // / a destructured `onFeaturesChange?.(next)`) → `<local>.value = next`, so
+      // the change event drives the two-way `defineModel` ref. Handled at the call
+      // node (before the generic event case) so the callee is never visited alone.
+      if (ts.isCallExpression(node)) {
+        const modelLocal = modelEventFor(node.expression);
+        if (modelLocal !== undefined) {
+          const argument = node.arguments[0];
+          const value =
+            argument === undefined
+              ? factory.createIdentifier('undefined')
+              : (ts.visitNode(argument, visit) as ts.Expression);
+          return factory.createBinaryExpression(
+            modelValueAccess(modelLocal),
+            factory.createToken(ts.SyntaxKind.EqualsToken),
+            value,
+          );
+        }
+      }
+      // A **call** of an event prop (`properties.onChange?.(next)` / a
+      // destructured `onChange?.(next)`) → `emit('change', next)`. Handled at the
+      // call node so the callee is never visited on its own (which would
+      // otherwise turn it into a forwarding arrow); only the arguments recurse.
+      if (ts.isCallExpression(node)) {
+        const event = eventFor(node.expression);
+        if (event !== undefined) {
+          return emitCall(
+            event.eventName,
+            node.arguments.map((argument) => ts.visitNode(argument, visit) as ts.Expression),
+          );
+        }
+      }
+      // `<Slot name="x" />` → `slots.x?.()` (default slot → `slots.default?.()`);
       // any extra attributes become the scoped-slot argument `slots.x?.(scope)`.
+      // Always lowered to the **bare** expression: as a top-level return / arrow
+      // body / ternary branch it must stay unwrapped (otherwise the render closure
+      // would emit an invalid `return {slots.default?.()};`), and in JSX **child**
+      // position the enclosing `JsxElement`/`JsxFragment` branch below re-wraps it
+      // in `{ … }`. (Parent-pointer inspection is unreliable here — the render
+      // closure is re-synthesised, so `node.parent` is often unset.)
       if (isSlotElement(node)) {
         const name = readSlotName(node);
         const fallback = slotFallbackChildren(node).map((child) => ts.visitNode(child, visit) as ts.JsxChild);
         const slotScope = readSlotScope(factory, node, visit);
-        return factory.createJsxExpression(undefined, createVueSlotExpression(factory, name, fallback, slotScope));
+        return createVueSlotExpression(factory, name, fallback, slotScope);
       }
 
       // `h(Slot, { name: 'x' }, …fallback)` — the call form of the marker — →
@@ -1313,17 +2066,13 @@ export function createReferenceRewriter(scope: RewriteScope): ts.TransformerFact
         return createVueSlotCallExpression(factory, name, fallback, slotScope);
       }
 
-      // `<Dynamic is={X} …>` → `h(X, { … }, …children)`. In JSX **child** position
-      // the call is wrapped in `{ … }`; as a bare expression (arrow body, ternary
-      // branch, return) it stays unwrapped. Vue's JSX transform compiles
-      // `h(X, …)` to a native `<component :is>` render.
+      // `<Dynamic is={X} …>` → `h(X, { … }, …children)`. Always lowered to the
+      // **bare** call: as a top-level return / arrow body / ternary branch it must
+      // stay unwrapped, and in JSX **child** position the enclosing
+      // `JsxElement`/`JsxFragment` branch below re-wraps it in `{ … }`. Vue's JSX
+      // transform compiles `h(X, …)` to a native `<component :is>` render.
       if (isDynamicElement(node)) {
-        const call = dynamicToHCall(factory, node, (expression) => ts.visitNode(expression, visit) as ts.Expression);
-        const parent = node.parent;
-        if (parent !== undefined && (ts.isJsxElement(parent) || ts.isJsxFragment(parent))) {
-          return factory.createJsxExpression(undefined, call);
-        }
-        return call;
+        return dynamicToHCall(factory, node, (expression) => ts.visitNode(expression, visit) as ts.Expression);
       }
 
       // `properties.children` → `slots.default?.()`
@@ -1364,6 +2113,43 @@ export function createReferenceRewriter(scope: RewriteScope): ts.TransformerFact
         return ts.visitNode(node.argumentExpression, visit) as ts.Expression;
       }
 
+      // A **read** of a model prop via the props object (`properties.modelValue`) →
+      // `<local>.value` (a destructured read is handled at the bare identifier
+      // below). The two-way `defineModel` ref replaces the runtime prop.
+      if (
+        ts.isPropertyAccessExpression(node) &&
+        ts.isIdentifier(node.expression) &&
+        node.expression.text === scope.propsParamName &&
+        scope.modelProps.has(node.name.text)
+      ) {
+        return modelValueAccess(node.name.text);
+      }
+
+      // A **reference** to a model prop's change event (`properties.onFeaturesChange`,
+      // not a call) → the two-way write arrow `(value) => { <local>.value = value; }`
+      // (a call is already rewritten to the assignment at the call node above).
+      if (
+        ts.isPropertyAccessExpression(node) &&
+        ts.isIdentifier(node.expression) &&
+        node.expression.text === scope.propsParamName &&
+        scope.modelEvents.has(node.name.text)
+      ) {
+        return modelWriteArrow(scope.modelEvents.get(node.name.text) as string);
+      }
+
+      // A **reference** to an event prop (`properties.onLoad`, not a call) →
+      // forwarding arrow `(event) => emit('load', event)`, since the callback is
+      // no longer a prop (a call is already handled at the call node above).
+      if (
+        ts.isPropertyAccessExpression(node) &&
+        ts.isIdentifier(node.expression) &&
+        node.expression.text === scope.propsParamName &&
+        scope.eventProps.has(node.name.text)
+      ) {
+        const event = scope.eventProps.get(node.name.text) as { eventName: string; paramNames: string[] };
+        return forwardingArrow(event.eventName, event.paramNames);
+      }
+
       // Generic property access: rewrite the object, keep the member name.
       if (ts.isPropertyAccessExpression(node)) {
         return factory.updatePropertyAccessExpression(
@@ -1384,10 +2170,17 @@ export function createReferenceRewriter(scope: RewriteScope): ts.TransformerFact
         const argument = node.arguments[0];
         let value: ts.Expression;
         if (argument !== undefined && (ts.isArrowFunction(argument) || ts.isFunctionExpression(argument))) {
+          // `setState(updater)` → `state.value = updater(state.value)`. The
+          // previous value is forwarded only when the updater actually declares a
+          // parameter for it; a zero-parameter updater (`() => next`) is called
+          // with no argument so the generated Vue stays type-correct.
+          const forwardsPrevious = argument.parameters.length > 0;
           value = factory.createCallExpression(
             factory.createParenthesizedExpression(ts.visitNode(argument, visit) as ts.Expression),
             undefined,
-            [factory.createPropertyAccessExpression(factory.createIdentifier(stateName), 'value')],
+            forwardsPrevious
+              ? [factory.createPropertyAccessExpression(factory.createIdentifier(stateName), 'value')]
+              : [],
           );
         } else {
           value =
@@ -1429,10 +2222,18 @@ export function createReferenceRewriter(scope: RewriteScope): ts.TransformerFact
         if (node.initializer === undefined) {
           return node;
         }
-        const name =
-          ts.isIdentifier(node.name) && node.name.text === CLASS_NAMES_ATTRIBUTE
-            ? factory.createIdentifier('class')
-            : node.name;
+        let name = node.name;
+        if (ts.isIdentifier(node.name)) {
+          if (node.name.text === CLASS_NAMES_ATTRIBUTE) {
+            name = factory.createIdentifier('class');
+          } else if (JSX_ATTRIBUTE_RENAMES.has(node.name.text)) {
+            // Vue's JSX intrinsic elements type native attributes by their HTML
+            // (lowercase) name, unlike React's camelCase aliases. Lower the few
+            // camelCase attributes vue-tsc rejects (`colSpan` → `colspan`), so the
+            // render-closure JSX type-checks against Vue's element definitions.
+            name = factory.createIdentifier(JSX_ATTRIBUTE_RENAMES.get(node.name.text) as string);
+          }
+        }
         return factory.updateJsxAttribute(node, name, ts.visitNode(node.initializer, visit) as ts.JsxAttributeValue);
       }
 
@@ -1464,17 +2265,235 @@ export function createReferenceRewriter(scope: RewriteScope): ts.TransformerFact
         return node;
       }
 
+      // A JSX element/fragment: rewrite its children, then re-wrap any child that
+      // came back as a **bare expression** (e.g. a lowered `<Slot>`/`<Dynamic>`
+      // that was authored in child position) in a `{ … }` `JsxExpression`, since a
+      // bare expression is not a valid `JsxChild` and would otherwise be printed
+      // as raw text. This makes the child-vs-return decision robust without
+      // relying on the (unset) `node.parent` inside the transform.
+      if (ts.isJsxElement(node)) {
+        return factory.updateJsxElement(
+          node,
+          ts.visitNode(node.openingElement, visit) as ts.JsxOpeningElement,
+          node.children.map((child) => wrapAsJsxChild(factory, ts.visitNode(child, visit) as ts.Node)),
+          ts.visitNode(node.closingElement, visit) as ts.JsxClosingElement,
+        );
+      }
+      if (ts.isJsxFragment(node)) {
+        return factory.updateJsxFragment(
+          node,
+          node.openingFragment,
+          node.children.map((child) => wrapAsJsxChild(factory, ts.visitNode(child, visit) as ts.Node)),
+          node.closingFragment,
+        );
+      }
+
       // Bare identifier reads.
       if (ts.isIdentifier(node)) {
-        if (scope.stateNames.has(node.text) || scope.memoNames.has(node.text)) {
+        // A model prop read (a destructured `modelValue`/`mode`/`geodesic`) reads
+        // the two-way `defineModel` ref through `.value`, like `useState`/`useMemo`.
+        if (scope.stateNames.has(node.text) || scope.memoNames.has(node.text) || scope.modelProps.has(node.text)) {
           return factory.createPropertyAccessExpression(node, 'value');
         }
+        // A **reference** to a destructured model change event → the two-way write
+        // arrow `(value) => { <local>.value = value; }`; a *call* was already
+        // rewritten to the assignment at the call node above.
+        if (scope.destructuredProps.has(node.text) && scope.modelEvents.has(node.text)) {
+          return modelWriteArrow(scope.modelEvents.get(node.text) as string);
+        }
+        // A **reference** to a destructured event prop (e.g. `onLoad` bound to a
+        // native `<img onLoad={onLoad}>`) → forwarding arrow; a *call* was
+        // already rewritten to `emit(...)` at the call node above.
+        if (scope.destructuredProps.has(node.text) && scope.eventProps.has(node.text)) {
+          const event = scope.eventProps.get(node.text) as { eventName: string; paramNames: string[] };
+          return forwardingArrow(event.eventName, event.paramNames);
+        }
         if (scope.destructuredProps.has(node.text)) {
-          return factory.createPropertyAccessExpression(factory.createIdentifier(scope.propsParamName), node.text);
+          // A renamed binding (`const { format: formatProperty } = properties`)
+          // resolves to the real prop name; a plain binding uses its own name.
+          const propName = scope.propAliases.get(node.text) ?? node.text;
+          return factory.createPropertyAccessExpression(factory.createIdentifier(scope.propsParamName), propName);
         }
         return node;
       }
 
+      return ts.visitEachChild(node, visit, context);
+    };
+
+    return (node) => ts.visitNode(node, visit) as ts.Node;
+  };
+}
+
+/** The assignment operators whose left-hand side is a *write* target. */
+const ASSIGNMENT_OPERATORS: ReadonlySet<ts.SyntaxKind> = new Set([
+  ts.SyntaxKind.EqualsToken,
+  ts.SyntaxKind.PlusEqualsToken,
+  ts.SyntaxKind.MinusEqualsToken,
+  ts.SyntaxKind.AsteriskEqualsToken,
+  ts.SyntaxKind.SlashEqualsToken,
+  ts.SyntaxKind.PercentEqualsToken,
+  ts.SyntaxKind.AmpersandEqualsToken,
+  ts.SyntaxKind.BarEqualsToken,
+  ts.SyntaxKind.CaretEqualsToken,
+  ts.SyntaxKind.LessThanLessThanEqualsToken,
+  ts.SyntaxKind.GreaterThanGreaterThanEqualsToken,
+  ts.SyntaxKind.GreaterThanGreaterThanGreaterThanEqualsToken,
+  ts.SyntaxKind.AsteriskAsteriskEqualsToken,
+  ts.SyntaxKind.AmpersandAmpersandEqualsToken,
+  ts.SyntaxKind.BarBarEqualsToken,
+  ts.SyntaxKind.QuestionQuestionEqualsToken,
+]);
+
+/**
+ * Preserve TypeScript control-flow narrowing of `useState` / `useMemo` values
+ * across nested closures, which the `<name>` → `<name>.value` rewrite otherwise
+ * breaks.
+ *
+ * In the neutral JSX a state value is a `const` local, so a guard that narrows
+ * it (`if (sortKey === undefined) return; … rows.toSorted((a) => a[sortKey])`)
+ * keeps the narrowing inside nested callbacks — `const`s are never reassigned,
+ * so TypeScript trusts the narrowing through function boundaries. After the Vue
+ * rewrite the read becomes `sortKey.value`, a **mutable property access**, whose
+ * narrowing TypeScript discards on entering any nested function — so the guarded
+ * `a[sortKey.value]` / `draft.value.uid` fails to type-check.
+ *
+ * For each block-bodied function this pass snapshots every such value read
+ * *inside a nested closure* into a leading `const <name>$ = <name>.value;`, and
+ * rewrites the value **reads** (not the `<name>.value = …` write targets) within
+ * the function to that `const` alias. The snapshot restores the original `const`
+ * semantics — narrowing flows into the nested closures again — while the `.value`
+ * access at the top keeps the read reactive (a `computed` still re-tracks it).
+ */
+export function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<ts.Node> {
+  const candidates = new Set<string>([...scope.stateNames, ...scope.memoNames]);
+  if (candidates.size === 0) {
+    return () => (node) => node;
+  }
+
+  return (context) => {
+    const { factory } = context;
+
+    // A `<name>.value` access for a candidate state — the shape both reads and
+    // write targets take after the reference rewrite.
+    const valueAccessName = (node: ts.Node): string | undefined =>
+      ts.isPropertyAccessExpression(node) &&
+      node.name.text === 'value' &&
+      ts.isIdentifier(node.expression) &&
+      candidates.has(node.expression.text)
+        ? node.expression.text
+        : undefined;
+
+    // Collect the `<name>.value` nodes that are assignment / update **targets**
+    // (writes), so they are never rewritten to the read-only snapshot alias.
+    const collectWriteTargets = (root: ts.Node): Set<ts.Node> => {
+      const writes = new Set<ts.Node>();
+      const walk = (node: ts.Node): void => {
+        if (ts.isBinaryExpression(node) && ASSIGNMENT_OPERATORS.has(node.operatorToken.kind)) {
+          writes.add(node.left);
+        } else if (
+          (ts.isPrefixUnaryExpression(node) || ts.isPostfixUnaryExpression(node)) &&
+          (node.operator === ts.SyntaxKind.PlusPlusToken || node.operator === ts.SyntaxKind.MinusMinusToken)
+        ) {
+          writes.add(node.operand);
+        }
+        ts.forEachChild(node, walk);
+      };
+      walk(root);
+      return writes;
+    };
+
+    // The candidate states whose value is **read inside a nested closure** of
+    // this function body and is **never written inside a nested closure** (an
+    // inner write would make a hoisted snapshot stale). These are exactly the
+    // reads whose narrowing the snapshot must restore.
+    const namesToHoist = (body: ts.Block, writeTargets: Set<ts.Node>): string[] => {
+      const readInNested = new Set<string>();
+      const writtenInNested = new Set<string>();
+      const walk = (node: ts.Node, depth: number): void => {
+        const name = valueAccessName(node);
+        if (name !== undefined && depth > 0) {
+          if (writeTargets.has(node)) {
+            writtenInNested.add(name);
+          } else {
+            readInNested.add(name);
+          }
+        }
+        const nextDepth =
+          ts.isArrowFunction(node) || ts.isFunctionExpression(node) || ts.isFunctionDeclaration(node)
+            ? depth + 1
+            : depth;
+        ts.forEachChild(node, (child) => walk(child, nextDepth));
+      };
+      // Depth 0 is the function's own statement scope; a read only needs a
+      // snapshot once it is used one or more closures deep.
+      for (const statement of body.statements) {
+        walk(statement, 0);
+      }
+      return [...readInNested].filter((name) => !writtenInNested.has(name));
+    };
+
+    // Rewrite every read `<name>.value` (leaving write targets intact) to the
+    // snapshot alias `<name>$`, throughout the given subtree.
+    const aliasReads = (root: ts.Node, hoist: Set<string>, writeTargets: Set<ts.Node>): ts.Node => {
+      const rewriteValue: ts.Visitor = (node) => {
+        const name = valueAccessName(node);
+        if (name !== undefined && hoist.has(name) && !writeTargets.has(node)) {
+          return factory.createIdentifier(`${name}$`);
+        }
+        return ts.visitEachChild(node, rewriteValue, context);
+      };
+      return ts.visitNode(root, rewriteValue) as ts.Node;
+    };
+
+    const visit = (node: ts.Node): ts.Node => {
+      if ((ts.isArrowFunction(node) || ts.isFunctionExpression(node)) && ts.isBlock(node.body)) {
+        const writeTargets = collectWriteTargets(node.body);
+        const hoist = namesToHoist(node.body, writeTargets);
+        if (hoist.length > 0) {
+          const hoistSet = new Set(hoist);
+          const aliased = aliasReads(node.body, hoistSet, writeTargets) as ts.Block;
+          const snapshots = hoist.map((name) =>
+            factory.createVariableStatement(
+              undefined,
+              factory.createVariableDeclarationList(
+                [
+                  factory.createVariableDeclaration(
+                    factory.createIdentifier(`${name}$`),
+                    undefined,
+                    undefined,
+                    factory.createPropertyAccessExpression(factory.createIdentifier(name), 'value'),
+                  ),
+                ],
+                ts.NodeFlags.Const,
+              ),
+            ),
+          );
+          const body = factory.updateBlock(aliased, [...snapshots, ...aliased.statements]);
+          // Recurse into the (already aliased) body so nested functions with
+          // their own deeper narrowing get the same treatment.
+          const visitedBody = ts.visitEachChild(body, visit, context);
+          return ts.isArrowFunction(node)
+            ? factory.updateArrowFunction(
+                node,
+                node.modifiers,
+                node.typeParameters,
+                node.parameters,
+                node.type,
+                node.equalsGreaterThanToken,
+                visitedBody,
+              )
+            : factory.updateFunctionExpression(
+                node,
+                node.modifiers,
+                node.asteriskToken,
+                node.name,
+                node.typeParameters,
+                node.parameters,
+                node.type,
+                visitedBody,
+              );
+        }
+      }
       return ts.visitEachChild(node, visit, context);
     };
 

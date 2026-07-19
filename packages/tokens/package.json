@@ -27,7 +27,8 @@
     "tokens/*.tokens.json"
   ],
   "scripts": {
-    "build": "vite build && tsc --project tsconfig.build.json --declaration --declarationDir dist --emitDeclarationOnly --noEmit false --rootDir src",
+    "build:bundle": "vite build",
+    "build:types": "tsc --project tsconfig.build.json --declaration --declarationDir dist --emitDeclarationOnly --noEmit false --rootDir src",
     "build:watch": "vite build --watch",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",

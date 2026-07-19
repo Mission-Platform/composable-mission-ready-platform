@@ -41,6 +41,7 @@ export {
   useEffect,
   useMemo,
   useCallback,
+  useId,
   type MpRef,
   type MpSetState,
   type MpEffectCallback,

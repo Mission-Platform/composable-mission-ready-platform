@@ -51,8 +51,15 @@ WORKDIR /build
 #                   This avoids the need for consumers to configure WASM URL
 #                   resolution in their bundler or worker environment.
 #  MODULARIZE=1   – wraps the output in a factory function `createHunspell()`.
-#  EXPORT_ES6=1   – emits an ES module with a default export.
+#  EXPORT_ES6=1   – emits an ES module with a default export. Emitting to a
+#                   `.mjs` file makes the ES-module output unambiguous so
+#                   bundlers never treat it as CommonJS.
 #  ENVIRONMENT    – limits polyfill surface to web + worker contexts only.
+#
+#  After linking, we strip Emscripten's vendored MiniLZ4 UMD tail
+#  (`if(typeof module!="undefined"){module.exports=MiniLZ4}`). In an ES module
+#  `module` is undefined, so that CommonJS fallback is dead code; leaving it in
+#  makes bundlers (Vite/Rollup) emit a COMMONJS_VARIABLE_IN_ESM warning.
 COPY hunspell_wrapper.cpp .
 
 RUN --mount=type=cache,target=/root/.npm \
@@ -68,7 +75,7 @@ RUN --mount=type=cache,target=/root/.ccache \
     -O2 \
     -flto \
     --bind \
-    --emit-tsd /output/hunspell.d.ts \
+    --emit-tsd /output/hunspell.d.mts \
     -s WASM=1 \
     -s MODULARIZE=1 \
     -s EXPORT_ES6=1 \
@@ -84,7 +91,8 @@ RUN --mount=type=cache,target=/root/.ccache \
     hunspell_wrapper.cpp \
     textparser.o \
     libhunspell.a \
-    -o /output/hunspell.js
+    -o /output/hunspell.mjs \
+  && sed -i 's|if(typeof module!="undefined"){module.exports=MiniLZ4}||g' /output/hunspell.mjs
 
 FROM scratch
 COPY --from=build /output /

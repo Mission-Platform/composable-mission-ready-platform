@@ -6,11 +6,11 @@ import type { HunspellModule } from '../types';
  * The import is dynamic so that the WASM bundle is only fetched when
  * spell-checking is actually enabled — it is never part of the initial chunk.
  *
- * The `.wasm` file is resolved at runtime relative to `hunspell.js` via the
+ * The `.wasm` file is resolved at runtime relative to `hunspell.mjs` via the
  * `locateFile` hook so that bundlers (Vite, webpack) can handle the asset URL.
  */
 export async function createHunspell(): Promise<HunspellModule> {
-  const { default: factory } = await import('./hunspell.js');
+  const { default: factory } = await import('./hunspell.mjs');
 
   return await factory();
 }

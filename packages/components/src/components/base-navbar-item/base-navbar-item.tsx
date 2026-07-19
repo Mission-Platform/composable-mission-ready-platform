@@ -52,7 +52,7 @@ export interface NavbarItemProperties extends MpProperties {
   /** Dropdown entries; presence turns the item into a dropdown trigger. */
   dropdownItems?: NavbarItemChild[];
   /** Fired when a childless item is activated. */
-  onClick?: (event: unknown) => void;
+  onClick?: (event: MouseEvent) => void;
 }
 
 /**
@@ -79,7 +79,7 @@ export interface NavbarItemProperties extends MpProperties {
  * the write-once `@mission-platform/icons` `IconChevron` (rotated via its
  * own `direction` prop), and the `onClick` callback prop.
  */
-export function BaseNavbarItem(properties: NavbarItemProperties): MpElement {
+export function BaseNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement {
   const { label, href, disabled = false, active = false, variant = 'default', dropdownItems, size = 'md' } = properties;
 
   const hasChildren = Boolean(dropdownItems && dropdownItems.length > 0);
@@ -109,7 +109,7 @@ export function BaseNavbarItem(properties: NavbarItemProperties): MpElement {
     };
   }, []);
 
-  const handleClick = (event: unknown): void => {
+  const handleClick = (event: MouseEvent): void => {
     if (disabled) {
       return;
     }

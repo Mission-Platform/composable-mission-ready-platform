@@ -81,12 +81,12 @@ const preview: Preview = {
 
   initialGlobals: {
     theme: 'light',
+    viewport: { value: 'md', isRotated: false },
   },
 
   parameters: {
     viewport: {
       options: mpViewports,
-      defaultViewport: 'md',
     },
 
     controls: {

@@ -4,19 +4,21 @@
  * Canonical home of the `2xs … 2xl` t-shirt size scale exposed as `font-size`
  * modifier classes, each resolving to a named `--mp-size-font-*` design token.
  * Consumed by the write-once component packages (e.g. `@mission-platform/forms`)
- * through a thin `.module.scss` that `@use`s this partial
- * (`@use '@mission-platform/tokens/scss/size'`), so the CSS-Module-localised
- * `base-size--<step>` classes are emitted per component.
+ * through a thin `.module.scss` that `@use`s this partial and `@include`s the
+ * `size-classes` mixin, so the CSS-Module-localised `base-size--<step>` classes
+ * are emitted per component.
  *
- * The rules live in the shared `mp.components` cascade layer so unlayered
- * application styles win over them. Only `var(--mp-*)` design-token custom
- * properties are used.
+ * The mixin takes the target cascade `$layer` so each package can emit the
+ * scale into its own `mp.<package>` layer (e.g. `mp.forms`); it defaults to
+ * `mp.components`. Only `var(--mp-*)` design-token custom properties are used.
  */
 
-@layer mp.components {
-  @each $step in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
-    .base-size--#{$step} {
-      font-size: var(--mp-size-font-#{$step});
+@mixin size-classes($layer: 'mp.components') {
+  @layer #{$layer} {
+    @each $step in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+      .base-size--#{$step} {
+        font-size: var(--mp-size-font-#{$step});
+      }
     }
   }
 }

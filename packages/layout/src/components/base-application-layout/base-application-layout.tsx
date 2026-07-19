@@ -56,11 +56,11 @@ function resolveStatusRole(level: StatusLevel): string | undefined {
  *
  * It owns its styling through the co-located CSS Module
  * `base-application-layout.module.scss` (carried onto every framework by the
- * two-stage compiler, so the component ships its own `@layer mp.components`
+ * two-stage compiler, so the component ships its own `@layer mp.layout`
  * CSS). The hashed module class names are assembled with the framework-neutral
  * {@link classNames} helper.
  */
-export function BaseApplicationLayout(properties: ApplicationLayoutProperties): MpElement {
+export function BaseApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement {
   const { statusLevel = 'none', stickyHeader = false } = properties;
 
   const statusColor = STATUS_BACKGROUND[statusLevel];

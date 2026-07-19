@@ -50,7 +50,7 @@ export interface SeparatorProperties extends MpProperties {
  * hashed module class names are assembled with the framework-neutral
  * {@link classNames} helper.
  */
-export function BaseSeparator(properties: SeparatorProperties): MpElement {
+export function BaseSeparator(properties: Readonly<SeparatorProperties>): MpElement {
   const {
     orientation = 'horizontal',
     variant = 'solid',

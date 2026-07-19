@@ -113,7 +113,7 @@ const MIN_SIZE_REM = 12;
  * slots (`<Slot>`, presence detected with the framework-neutral {@link hasSlot}
  * helper) and a `closeLabel` prop in place of i18n.
  */
-export function BaseDrawer(properties: DrawerProperties): MpElement {
+export function BaseDrawer(properties: Readonly<DrawerProperties>): MpElement {
   const {
     open = false,
     placement = 'start',
@@ -297,9 +297,13 @@ export function BaseDrawer(properties: DrawerProperties): MpElement {
 
   // An overlay drawer is a modal dialog; an always-open `inline` panel is a
   // static complementary region, so it carries neither `dialog` nor `aria-modal`.
+  // The overlay uses a plain `<div>` so `role="dialog"` is allowed (an
+  // `<aside>`'s implicit `complementary` role disallows an overriding `dialog`
+  // role — `aria-allowed-role`); an inline panel keeps `<aside>` for its
+  // complementary landmark.
   const panel = isVisible
     ? h(
-        'aside',
+        isInline ? 'aside' : 'div',
         {
           ref: rootReference,
           class: rootClass,

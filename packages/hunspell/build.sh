@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Compile Hunspell to WebAssembly using Emscripten inside a Docker container.
-# Output: packages/hunspell/src/wasm/ (hunspell.js + hunspell.wasm + hunspell.d.ts)
+# Output: packages/hunspell/src/wasm/ (hunspell.mjs + hunspell.wasm + hunspell.d.mts)
 #
 # Usage: ./build.sh [--no-cache]
 #

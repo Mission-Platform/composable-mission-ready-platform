@@ -42,7 +42,14 @@ import type { Plugin } from 'vite';
  * A Vite plugin that configures the classic `h` / `Fragment` JSX factory for the
  * generated **React** sources (their JSX is authored in the neutral dialect and
  * `h` is imported as `React.createElement`). The Vue target instead uses
- * `@vitejs/plugin-vue` + `@vitejs/plugin-vue-jsx` and needs no esbuild JSX config.
+ * `@vitejs/plugin-vue` + `@vitejs/plugin-vue-jsx` and needs no JSX-transform config.
+ *
+ * The factory is configured through Vite's **`oxc`** transform option (Vite 8 /
+ * Rolldown transforms JS/TS with Oxc, not esbuild). The neutral→React source
+ * uses the classic `h(…)` factory, so the JSX transform runs in `classic`
+ * runtime with `pragma: 'h'` / `pragmaFrag: 'Fragment'` — the Oxc equivalents of
+ * the former `esbuild.jsxFactory` / `esbuild.jsxFragment` (which is now
+ * deprecated and warns under Rolldown-Vite).
  */
 export function reactJsxPlugin(): Plugin {
   return {
@@ -50,9 +57,12 @@ export function reactJsxPlugin(): Plugin {
     enforce: 'pre',
     config() {
       return {
-        esbuild: {
-          jsxFactory: 'h',
-          jsxFragment: 'Fragment',
+        oxc: {
+          jsx: {
+            runtime: 'classic',
+            pragma: 'h',
+            pragmaFrag: 'Fragment',
+          },
         },
       };
     },
@@ -61,7 +71,9 @@ export function reactJsxPlugin(): Plugin {
 
 export {
   compileComponentModule,
+  compileHookModule,
   type CompiledModule,
+  type CompileHookOptions,
   type CompileOptions,
   type JsxFramework,
 } from './compiler/compile.js';
@@ -86,10 +98,19 @@ export {
   generateFrameworkSources,
   generateStoryblokBloks,
   jsxComponentsCssImportPlugin,
+  jsxComponentsDtsPlugin,
   jsxComponentsEntryDtsPlugin,
   type GenerateFrameworkSourcesOptions,
   type GenerateStoryblokBloksOptions,
+  type JsxComponentsDtsOptions,
   type JsxComponentsEntryDtsOptions,
 } from './generate.js';
+
+export {
+  generateHookLibrarySources,
+  hookLibraryDtsPlugin,
+  type GenerateHookLibrarySourcesOptions,
+  type HookLibraryDtsOptions,
+} from './generate-hooks.js';
 
 export default reactJsxPlugin;

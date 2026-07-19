@@ -1,0 +1,75 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "service-monitor",
+  "main": "src/worker.tsx",
+  "compatibility_date": "2026-06-07",
+  "compatibility_flags": ["nodejs_compat"],
+  "first_party_worker": true,
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "public"
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "MONITOR",
+        "class_name": "MonitorDurableObject"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["MonitorDurableObject"]
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true
+    }
+  },
+  "vars": {
+    // JSON array used to SEED the runtime `monitors` table (afterwards monitors
+    // are managed via the API / dashboard). When empty the defaults from
+    // `src/monitoring/config.ts` are used instead. Each monitor supports a
+    // `type` (http | json | graphql | dns | tcp | mqtt | udp | ntp) and its own
+    // `intervalSeconds`. Examples:
+    //   [{ "id": "docs", "name": "Docs", "type": "json", "url": "https://example.com/health",
+    //      "jsonPath": "status", "expect": "ok", "intervalSeconds": 15 },
+    //    { "id": "dns", "name": "DNS", "type": "dns", "host": "example.com", "recordType": "A" },
+    //    { "id": "broker", "name": "MQTT", "type": "tcp", "host": "broker.example.com", "port": 1883 }]
+    "MONITOR_TARGETS": "",
+    // Default interval for monitors without their own `intervalSeconds`, in seconds.
+    "MONITOR_INTERVAL_SECONDS": "30",
+    // How long individual samples are retained, in hours.
+    "MONITOR_RETENTION_HOURS": "24",
+    // Set to "false" to disable scheduled server-side speed tests.
+    "SPEED_TEST_ENABLED": "true",
+    // Interval between scheduled speed tests, in seconds.
+    "SPEED_TEST_INTERVAL_SECONDS": "300",
+    // Payload size for each download measurement, in bytes.
+    "SPEED_TEST_BYTES": "10000000"
+  },
+  "env": {
+    "staging": {
+      "name": "service-monitor-staging",
+      "workers_dev": true,
+      "durable_objects": {
+        "bindings": [
+          {
+            "name": "MONITOR",
+            "class_name": "MonitorDurableObject"
+          }
+        ]
+      },
+      "migrations": [
+        {
+          "tag": "v1",
+          "new_sqlite_classes": ["MonitorDurableObject"]
+        }
+      ]
+    }
+  }
+}

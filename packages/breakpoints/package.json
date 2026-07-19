@@ -12,6 +12,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./core": {
+      "types": "./dist/breakpoints.d.ts",
+      "import": "./dist/breakpoints.js"
     }
   },
   "main": "./dist/index.js",
@@ -20,7 +24,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "vue-tsc -b && vite build && vue-tsc --project tsconfig.build.json --emitDeclarationOnly",
+    "build:check": "vue-tsc -b",
+    "build:bundle": "vite build",
+    "build:types": "vue-tsc --project tsconfig.build.json --emitDeclarationOnly",
     "build:watch": "vite build --watch",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -46,7 +52,7 @@
     "@vitest/coverage-v8": "catalog:testing",
     "@vue/test-utils": "catalog:vue",
     "eslint": "catalog:eslint",
-    "i18next-vue": "catalog:vue",
+    "i18next-vue": "catalog:i18next",
     "jsdom": "catalog:testing",
     "postcss-html": "catalog:stylelint",
     "postcss-scss": "catalog:stylelint",

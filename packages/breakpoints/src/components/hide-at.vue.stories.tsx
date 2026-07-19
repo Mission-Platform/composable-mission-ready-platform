@@ -42,26 +42,26 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const AlwaysHidden: Story = {
-  parameters: { viewport: { defaultViewport: 'md' } },
+  globals: { viewport: { value: 'md', isRotated: false } },
   args: {},
 };
 
 export const HideFromLg: Story = {
-  parameters: { viewport: { defaultViewport: 'lg' } },
+  globals: { viewport: { value: 'lg', isRotated: false } },
   args: { min: 'lg' },
 };
 
 export const HideFromXl: Story = {
-  parameters: { viewport: { defaultViewport: 'xl' } },
+  globals: { viewport: { value: 'xl', isRotated: false } },
   args: { min: 'xl' },
 };
 
 export const HideBelowMd: Story = {
-  parameters: { viewport: { defaultViewport: '2xs' } },
+  globals: { viewport: { value: '2xs', isRotated: false } },
   args: { max: 'md' },
 };
 
 export const HideBetweenSmAndXl: Story = {
-  parameters: { viewport: { defaultViewport: 'sm' } },
+  globals: { viewport: { value: 'sm', isRotated: false } },
   args: { min: 'sm', max: 'xl' },
 };

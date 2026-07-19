@@ -46,7 +46,7 @@ export interface CollapseProperties extends MpProperties {
  * dropped, consistent with how the other migrated components dropped slots that
  * collide with same-named props).
  */
-export function BaseCollapse(properties: CollapseProperties): MpElement {
+export function BaseCollapse(properties: Readonly<CollapseProperties>): MpElement {
   const { summary = 'Details', open = false, disabled = false, variant = 'neutral', size = 'md' } = properties;
 
   const className = classNames(

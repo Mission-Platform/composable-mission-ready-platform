@@ -18,7 +18,7 @@ export interface IconMinusProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-minus.module.scss`.
  */
-export function IconMinus(properties: IconMinusProperties): MpElement {
+export function IconMinus(properties: Readonly<IconMinusProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

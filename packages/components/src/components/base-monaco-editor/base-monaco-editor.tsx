@@ -35,7 +35,10 @@ export type MonacoEditorSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export interface MonacoEditorProperties extends MpProperties {
   /** Size token controlling the wrapper's font scale. Defaults to `'md'`. */
   size?: MonacoEditorSize;
-  /** Editor contents (controlled via `modelValue`). */
+  /**
+   * Editor contents (controlled via `modelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: string;
   /** Editor language id. Defaults to `'plaintext'`. */
   language?: string;
@@ -107,7 +110,7 @@ export interface MonacoEditorProperties extends MpProperties {
  * them onto the live editor — kept out of the synchronous module graph (heavy
  * browser-only WASM), exactly like the Monaco runtime itself.
  */
-export function BaseMonacoEditor(properties: MonacoEditorProperties): MpElement {
+export function BaseMonacoEditor(properties: Readonly<MonacoEditorProperties>): MpElement {
   const {
     modelValue = '',
     language = 'plaintext',
@@ -302,6 +305,7 @@ export function BaseMonacoEditor(properties: MonacoEditorProperties): MpElement 
       aria-label="Code editor"
       classNames={[styles['base-monaco-editor'], sizeStyles[`base-size--${size}`]]}
       data-language={language}
+      role="group"
       style={{ height }}
     />
   );

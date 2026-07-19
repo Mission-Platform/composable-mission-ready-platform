@@ -11,7 +11,7 @@
     "format:write": "prettier --write ."
   },
   "dependencies": {
-    "@vue/compiler-sfc": "catalog:",
+    "@vue/compiler-sfc": "catalog:vue",
     "js-yaml": "catalog:"
   },
   "devDependencies": {

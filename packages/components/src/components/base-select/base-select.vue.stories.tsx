@@ -19,12 +19,13 @@ const meta = {
     docs: {
       description: {
         component:
-          'Cross-framework `Select` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). The original SFC used `BaseDropdown` (Teleport + floating-ui), which the neutral dialect does not model, so the listbox is rendered **in-place** (absolutely positioned) and toggled by internal `useState`; a hidden native `<select>` is kept for autofill/form submission. The selected value is controlled via `modelValue` and the original `v-model` + `change` emit become the `onUpdateModelValue`/`onChange` callback props. Styling comes from the co-located `base-select.module.scss`.',
+          'Cross-framework `Select` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/components/vue`) and React (`@mission-platform/components/react`). By default it is **searchable**: the trigger is a text field that filters the options as you type (like `Multiselect`); pass `searchable={false}` for a plain button trigger. The floating listbox is rendered through the write-once `BaseDropdown` (Teleport + CSS Anchor Positioning) and toggled by internal `useState`; a hidden native `<select>` is kept for autofill/form submission. The selected value is controlled via `modelValue` and the original `v-model` + `change` emit become the `onUpdateModelValue`/`onChange` callback props. Styling comes from the co-located `base-select.module.scss`.',
       },
     },
   },
   argTypes: {
     size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    searchable: { control: 'boolean' },
     disabled: { control: 'boolean' },
     required: { control: 'boolean' },
     labelHidden: { control: 'boolean' },
@@ -33,6 +34,7 @@ const meta = {
     label: 'Favourite colour',
     placeholder: 'Choose a colour',
     size: 'md',
+    searchable: true,
     disabled: false,
     required: false,
     labelHidden: false,
@@ -59,6 +61,23 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 export const Preselected: Story = { args: { modelValue: 'green' } };
+
+export const Searchable: Story = {
+  args: {
+    hint: 'Start typing to filter the options.',
+    options: [
+      { label: 'Red', value: 'red' },
+      { label: 'Orange', value: 'orange' },
+      { label: 'Yellow', value: 'yellow' },
+      { label: 'Green', value: 'green' },
+      { label: 'Blue', value: 'blue' },
+      { label: 'Indigo', value: 'indigo' },
+      { label: 'Violet', value: 'violet' },
+    ],
+  },
+};
+
+export const NonSearchable: Story = { args: { searchable: false, modelValue: 'green' } };
 
 export const Required: Story = { args: { required: true } };
 

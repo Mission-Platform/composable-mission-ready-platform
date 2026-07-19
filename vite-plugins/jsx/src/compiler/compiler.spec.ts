@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseTsx } from './ast';
-import { compileComponentModule, moduleTargetsFramework, readFrameworkDirective } from './compile';
+import { localEffectModuleSource, localJsxTypesModuleSource, parseTsx } from './ast';
+import { compileComponentModule, compileHookModule, moduleTargetsFramework, readFrameworkDirective } from './compile';
 
 const BADGE = [
   "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
@@ -114,9 +114,10 @@ const SCOPED_LIST = [
   '  const { items } = properties;',
   '  return (',
   '    <ul class="list">',
-  '      {items.map((item, index) => (',
-  '        <li class="list__row"><Slot item={item} index={index} /></li>',
-  '      ))}',
+  '      {items.map((item, index) => {',
+  '        const badge = <b class="list__badge">{index}</b>;',
+  '        return <li class="list__row">{badge}<Slot item={item} index={index} /></li>;',
+  '      })}',
   '    </ul>',
   '  );',
   '}',
@@ -168,10 +169,237 @@ describe('the emitters remap the neutral `Teleport` import to each framework por
   });
 });
 
-// A render-closure drag-and-drop board (the `.map()`-built columns force the
-// `<script setup>` render-closure fallback, the shape the form builder uses). It
-// mixes multi-word DOM events on **native** elements (`onDragOver`/`onDrop`/
-// `onDragEnter`) with a multi-word **component** event (`onValueChange`).
+// A panel whose `<Slot name="content">` declares **fallback** content — a
+// conditional expression (`image ? <img/> : label`). The React emitter wraps
+// slot fallback in a `<>…</>` fragment (`properties.content?.(…) ?? <>…</>`),
+// which the classic-`h` JSX transform lowers to `createElement(Fragment, …)`, so
+// the `react` value import must include `Fragment`.
+const SLOT_FALLBACK = [
+  "import { h, Slot, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/jsx';",
+  '',
+  'export interface PanelScope {',
+  '  index: number;',
+  '}',
+  '',
+  'export interface PanelProperties extends MpProperties {',
+  '  label?: string;',
+  '  image?: string;',
+  '  content?: MpRenderProperty<PanelScope>;',
+  '}',
+  '',
+  'export function BasePanel(properties: PanelProperties): MpElement {',
+  '  const { label = "", image } = properties;',
+  '  return (',
+  '    <div class="panel">',
+  '      <Slot name="content" index={0}>',
+  '        {image ? <img class="panel__img" src={image} alt={label} /> : label}',
+  '      </Slot>',
+  '    </div>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the React emitter imports `Fragment` when slot fallback compiles to a `<>…</>` fragment', () => {
+  const react = compileComponentModule(SLOT_FALLBACK, { framework: 'react', componentName: 'BasePanel' });
+
+  it('adds `Fragment` to the `react` value import so the emitted fragment resolves at runtime', () => {
+    expect(react.code).toMatch(/import \{[^}]*\bFragment\b[^}]*\} from ["']react["']/);
+  });
+
+  it('emits the slot fallback as a `<>…</>` fragment reading the render prop', () => {
+    expect(react.code).toContain('properties.content');
+    expect(react.code).toContain('<>');
+  });
+
+  it('does not import a stray `Fragment` when no fragment is emitted', () => {
+    const layout = compileComponentModule(LAYOUT, { framework: 'react', componentName: 'BaseLayout' });
+    expect(layout.code).not.toMatch(/import \{[^}]*\bFragment\b[^}]*\} from ["']react["']/);
+  });
+});
+
+// A side-effect-only component that renders nothing, returning an empty neutral
+// `<Fragment />` (the neutral render-nothing form). React's idiom for rendering
+// nothing is `null`, so the React emitter collapses the empty fragment to it.
+const EMPTY_FRAGMENT = [
+  "import { Fragment, h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface MarkerProperties extends MpProperties {',
+  '  id: string;',
+  '}',
+  '',
+  'export function BaseMarker(properties: MarkerProperties): MpElement {',
+  '  void properties.id;',
+  '  return <Fragment />;',
+  '}',
+].join('\n');
+
+// A grouping component that returns a neutral `<Fragment>` wrapping several
+// children. The React emitter rewrites the named `<Fragment>` element to the
+// `<>…</>` shorthand.
+const FRAGMENT_GROUP = [
+  "import { Fragment, h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface GroupProperties extends MpProperties {',
+  '  title: string;',
+  '}',
+  '',
+  'export function BaseGroup(properties: GroupProperties): MpElement {',
+  '  return (',
+  '    <Fragment>',
+  '      <h2>{properties.title}</h2>',
+  '      <p>body</p>',
+  '    </Fragment>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the React emitter maps a neutral `<Fragment>` to React idioms', () => {
+  const emptyReact = compileComponentModule(EMPTY_FRAGMENT, { framework: 'react', componentName: 'BaseMarker' });
+  const groupReact = compileComponentModule(FRAGMENT_GROUP, { framework: 'react', componentName: 'BaseGroup' });
+
+  it('collapses an empty `<Fragment />` to `null` (React renders nothing) rather than an empty `<></>`', () => {
+    expect(emptyReact.code).toContain('return null');
+    expect(emptyReact.code).not.toContain('<Fragment');
+    expect(emptyReact.code).not.toContain('<>');
+  });
+
+  it('drops the now-unused `Fragment` import when the only fragment collapsed to `null`', () => {
+    expect(emptyReact.code).not.toMatch(/import \{[^}]*\bFragment\b[^}]*\} from ["']react["']/);
+    expect(emptyReact.code).not.toMatch(/import \{[^}]*\bFragment\b[^}]*\} from ["']@mission-platform\/jsx["']/);
+  });
+
+  it('rewrites a non-empty `<Fragment>…</Fragment>` to the `<>…</>` shorthand', () => {
+    expect(groupReact.code).toContain('<>');
+    expect(groupReact.code).toContain('</>');
+    expect(groupReact.code).not.toContain('<Fragment');
+    expect(groupReact.code).not.toContain('</Fragment>');
+  });
+
+  it('imports `Fragment` from `react` for the emitted `<>…</>` shorthand', () => {
+    expect(groupReact.code).toMatch(/import \{[^}]*\bFragment\b[^}]*\} from ["']react["']/);
+  });
+});
+
+// A grouping component authored with the neutral `<>…</>` fragment **shorthand**
+// (the canonical multi-root form — `Fragment` is imported only as the classic
+// transform's fragment factory). Both emitters must lower it: React keeps the
+// `<>…</>` shorthand, Vue inlines the children with no wrapper element.
+const FRAGMENT_SHORTHAND = [
+  "import { Fragment, h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface StackProperties extends MpProperties {',
+  '  title: string;',
+  '}',
+  '',
+  'export function BaseStack(properties: StackProperties): MpElement {',
+  '  return (',
+  '    <>',
+  '      <h2 class="stack__title">{properties.title}</h2>',
+  '      <p class="stack__body">body</p>',
+  '    </>',
+  '  );',
+  '}',
+].join('\n');
+
+// A side-effect-only component that renders nothing. The empty render is
+// authored as `null` (not an empty fragment): React returns `null` verbatim and
+// Vue's render returns `null`, so neither framework outputs any markup.
+const EMPTY_RENDER_NULL = [
+  "import { type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface ProbeProperties extends MpProperties {',
+  '  id: string;',
+  '}',
+  '',
+  'export function BaseProbe(properties: ProbeProperties): MpElement | null {',
+  '  void properties.id;',
+  '  return null;',
+  '}',
+].join('\n');
+
+describe('the emitters lower the neutral `<>` fragment shorthand', () => {
+  const react = compileComponentModule(FRAGMENT_SHORTHAND, { framework: 'react', componentName: 'BaseStack' });
+  const vue = compileComponentModule(FRAGMENT_SHORTHAND, { framework: 'vue', componentName: 'BaseStack' });
+
+  it('keeps the `<>…</>` shorthand on React and imports `Fragment` from `react`', () => {
+    expect(react.code).toContain('<>');
+    expect(react.code).toContain('</>');
+    expect(react.code).toMatch(/import \{[^}]*\bFragment\b[^}]*\} from ["']react["']/);
+  });
+
+  it('inlines the fragment children on Vue with no wrapper element', () => {
+    expect(vue.code).toContain('<h2 class="stack__title">');
+    expect(vue.code).toContain('<p class="stack__body">');
+    expect(vue.code).not.toContain('<Fragment');
+    expect(vue.code).not.toContain('</Fragment>');
+  });
+});
+
+describe('the emitters lower a `null` (empty) render', () => {
+  const react = compileComponentModule(EMPTY_RENDER_NULL, { framework: 'react', componentName: 'BaseProbe' });
+  const vue = compileComponentModule(EMPTY_RENDER_NULL, { framework: 'vue', componentName: 'BaseProbe' });
+
+  it('returns `null` on React (React renders nothing)', () => {
+    expect(react.code).toContain('return null');
+    expect(react.code).not.toContain('<>');
+  });
+
+  it('omits the `<template>` block entirely on Vue (no `{{ null }}`, no render closure)', () => {
+    // A render-nothing component produces a clean SFC with no `<template>`: the
+    // `void properties.id;` no-op is dropped and the `null` root yields empty
+    // markup, so the assembler skips the block rather than emitting `{{ null }}`.
+    expect(vue.code).not.toContain('<template>');
+    expect(vue.code).not.toContain('{{ null }}');
+    expect(vue.code).not.toContain('const render = () =>');
+    expect(vue.code).not.toContain('<Fragment');
+  });
+});
+
+// A pass-through wrapper (mirrors `@mission-platform/map`'s `BaseMapSource`): a
+// side-effect call (`registerThing(...)` — a per-render statement) forces the
+// Vue **render-closure** fallback, and the body ends in a top-level
+// `return <Slot />;`. The slot lowering must emit the **bare** expression in
+// return position — `return slots.default?.();` (Vue) / `return properties.children;`
+// (React) — never the JSX-child `{ … }` wrapper, which would print the invalid
+// `return {slots.default?.()};` that broke the map Vue build.
+const SLOT_RETURN_CLOSURE = [
+  "import { Slot, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  "import { registerThing } from '@acme/thing';",
+  '',
+  'export interface WrapProperties extends MpProperties {',
+  '  id: string;',
+  '}',
+  '',
+  'export function BaseWrap(properties: WrapProperties): MpElement {',
+  '  registerThing(properties.id);',
+  '  return <Slot />;',
+  '}',
+].join('\n');
+
+describe('the emitters lower a top-level `<Slot>` return to a bare expression', () => {
+  const react = compileComponentModule(SLOT_RETURN_CLOSURE, { framework: 'react', componentName: 'BaseWrap' });
+  const vue = compileComponentModule(SLOT_RETURN_CLOSURE, { framework: 'vue', componentName: 'BaseWrap' });
+
+  it('emits `return slots.default?.();` (bare) on Vue, never the invalid `return {slots.default?.()};`', () => {
+    // The side-effect statement pushes this component onto the render-closure
+    // fallback, where the top-level slot return is printed directly.
+    expect(vue.code).toContain('const render = () =>');
+    expect(vue.code).toContain('return slots.default?.();');
+    expect(vue.code).not.toContain('return {slots.default?.()}');
+  });
+
+  it('emits the bare `return properties.children;` on React (no `{ … }` wrapper)', () => {
+    expect(react.code).toContain('return properties.children');
+    expect(react.code).not.toContain('return {properties.children}');
+  });
+});
+
+// A drag-and-drop board rendered as a native `v-for`. The `.map()` callback
+// declares a **node-valued** intermediate const (`heading`), which is now
+// inlined structurally into the row element rather than forcing the render
+// closure. It mixes multi-word DOM events on **native** elements
+// (`onDragOver`/`onDrop`/`onDragEnter`) with a multi-word **component** event
+// (`onValueChange`).
 const DRAG_BOARD = [
   "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
   "import BaseColumn from './base-column';",
@@ -184,11 +412,16 @@ const DRAG_BOARD = [
   '  const { columns } = properties;',
   '  return (',
   '    <div class="board" onDragOver={(event) => event.preventDefault()}>',
-  '      {columns.map((column, index) => (',
-  '        <section key={index} class="board__column" onDrop={() => undefined} onDragEnter={() => undefined} onClick={() => undefined}>',
-  '          <BaseColumn onValueChange={() => undefined} />',
-  '        </section>',
-  '      ))}',
+  '      {columns.map((column, index) => {',
+  '        const columnLabel = `${column}-${index}`;',
+  '        const heading = <h3 class="board__heading">{columnLabel}</h3>;',
+  '        return (',
+  '          <section key={index} class="board__column" title={columnLabel} onDrop={() => undefined} onDragEnter={() => undefined} onClick={() => undefined}>',
+  '            {heading}',
+  '            <BaseColumn onValueChange={() => undefined} />',
+  '          </section>',
+  '        );',
+  '      })}',
   '    </div>',
   '  );',
   '}',
@@ -217,27 +450,30 @@ describe('the Vue emitter lowercases multi-word DOM event listeners on native el
   const vueBoard = compileComponentModule(DRAG_BOARD, { framework: 'vue', componentName: 'BaseBoard' });
   const vueTile = compileComponentModule(DRAG_TILE, { framework: 'vue', componentName: 'BaseTile' });
 
-  it('falls back to the render closure for the `.map()`-built board', () => {
-    expect(vueBoard.code).toContain('const render = () => {');
+  it('renders the `.map()`-built board as a native `v-for` (node const inlined)', () => {
+    expect(vueBoard.code).toContain('v-for="(column, index) in columns"');
+    expect(vueBoard.code).not.toContain('const render = () => {');
+    // The node-valued `heading` const is inlined into the row markup.
+    expect(vueBoard.code).toContain('<h3 class="board__heading">');
   });
 
-  it('lowercases native multi-word events so Vue binds the real DOM event (render-closure path)', () => {
-    // `onDragOver` would otherwise hyphenate to the dead `drag-over` event, so
-    // drops never fire; `onDragover` hyphenates back to the real `dragover`.
-    expect(vueBoard.code).toContain('onDragover=');
-    expect(vueBoard.code).toContain('onDragenter=');
-    expect(vueBoard.code).not.toContain('onDragOver');
-    expect(vueBoard.code).not.toContain('onDragEnter');
+  it('lowercases native multi-word events to `@<event>` so Vue binds the real DOM event', () => {
+    // `@dragOver` would otherwise hyphenate to the dead `drag-over` event, so
+    // drops never fire; `@dragover` hyphenates back to the real `dragover`.
+    expect(vueBoard.code).toContain('@dragover=');
+    expect(vueBoard.code).toContain('@dragenter=');
+    expect(vueBoard.code).not.toContain('@dragOver');
+    expect(vueBoard.code).not.toContain('@dragEnter');
   });
 
-  it('leaves single-word native events untouched (render-closure path)', () => {
-    expect(vueBoard.code).toContain('onDrop=');
-    expect(vueBoard.code).toContain('onClick=');
+  it('leaves single-word native events untouched', () => {
+    expect(vueBoard.code).toContain('@drop=');
+    expect(vueBoard.code).toContain('@click=');
   });
 
   it('preserves a multi-word **component** event listener (it matches the child emit)', () => {
-    expect(vueBoard.code).toContain('onValueChange=');
-    expect(vueBoard.code).not.toContain('onValuechange');
+    expect(vueBoard.code).toContain('@valueChange=');
+    expect(vueBoard.code).not.toContain('@valuechange');
   });
 
   it('keeps the React event casing untouched on the React target', () => {
@@ -261,13 +497,15 @@ describe('the emitters translate **scoped** `<Slot>` elements', () => {
     expect(react.code).toContain('properties.children?.({ item: item, index: index })');
   });
 
-  it('invokes the Vue default slot as a scoped slot with the scope object', () => {
-    expect(vue.code).toContain('slots.default?.({ item: item, index: index })');
+  it('invokes the Vue default slot as a native scoped `<slot>` with the scope object', () => {
+    expect(vue.code).toContain('<slot :item="item" :index="index" />');
   });
 
-  it('falls back to the `<script setup>` render closure for a `.map()`-built list', () => {
-    expect(vue.code).toContain('const render = () => {');
-    expect(vue.code).toContain('<component :is="render" v-bind="$attrs" />');
+  it('renders the `.map()`-built list as a native `v-for` (node const inlined)', () => {
+    expect(vue.code).toContain('v-for="(item, index) in items"');
+    expect(vue.code).not.toContain('const render = () => {');
+    // The node-valued `badge` const is inlined into the row markup.
+    expect(vue.code).toContain('<b class="list__badge">');
   });
 });
 
@@ -285,7 +523,54 @@ describe('the emitters translate named `<Slot>` elements', () => {
   it('renders named/default `<Slot>` as native `<slot>` and keeps slot names out of runtime props', () => {
     expect(vue.code).toContain('<slot name="header" />');
     expect(vue.code).toContain('<slot />');
-    expect(vue.code).toContain("defineProps(['sticky'])");
+    // The (non-slot) `sticky` prop keeps its declared type via a type-based
+    // macro; the slot-backed `header` stays out of the runtime props macro.
+    expect(vue.code).toContain('defineProps<{\n  sticky?: boolean;\n}>();');
+    expect(vue.code).not.toContain('header?: MpChild;\n}>');
+  });
+
+  it('rewrites the neutral `MpChild` type to React `ReactNode`, imported from `react`', () => {
+    // The prop annotation reads idiomatically for React…
+    expect(react.code).toContain('header?: ReactNode');
+    expect(react.code).not.toContain('MpChild');
+    // …and `ReactNode` is a type-only import from `react` (not the neutral package).
+    expect(react.code).toMatch(/import type \{[^}]*\bReactNode\b[^}]*\} from ["']react["']/);
+    expect(react.code).not.toMatch(/import type \{[^}]*\bMpChild\b[^}]*\} from ["']@mission-platform\/jsx["']/);
+    // The render/props primitive `MpProperties` has no first-class React
+    // equivalent, so it is imported from the co-located local variants module
+    // (`./mp-jsx-types`) — never from the neutral package.
+    expect(react.code).toMatch(/import type \{[^}]*\bMpProperties\b[^}]*\} from ["']\.\/mp-jsx-types["']/);
+    expect(react.code).not.toMatch(/import type \{[^}]*\bMpProperties\b[^}]*\} from ["']@mission-platform\/jsx["']/);
+  });
+
+  it('does not apply the React `ReactNode` rename on the Vue target', () => {
+    expect(vue.code).not.toContain('ReactNode');
+  });
+});
+
+// A component whose props parameter is wrapped in the `Readonly<…>` utility
+// type. The wrapper must be unwrapped so the props interface is still resolved
+// and a type-based `defineProps` is emitted.
+const READONLY_PROPS = [
+  "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface TagProperties extends MpProperties {',
+  '  label: string;',
+  '  muted?: boolean;',
+  '}',
+  '',
+  'export function BaseTag(properties: Readonly<TagProperties>): MpElement {',
+  '  return <span class="tag" data-muted={properties.muted ?? false}>{properties.label}</span>;',
+  '}',
+].join('\n');
+
+describe('the Vue emitter resolves a `Readonly<…>`-wrapped props parameter', () => {
+  const vue = compileComponentModule(READONLY_PROPS, { framework: 'vue', componentName: 'BaseTag' });
+
+  it('unwraps `Readonly<…>` and still emits a type-based `defineProps`', () => {
+    expect(vue.code).toContain('defineProps<{');
+    expect(vue.code).toContain('label: string;');
+    expect(vue.code).toContain('muted?: boolean;');
   });
 });
 
@@ -309,8 +594,10 @@ const HAS_SLOT_CARD = [
   '}',
 ].join('\n');
 
-// A render-closure card: the `.map()`-built list forces the `<script setup>`
-// render-closure fallback, exercising the `hasSlot(…)` → `!!slots.x` rewrite.
+// A render-closure card: the `.map()` callback has an **imperative body** (an
+// early-return `if` guard before the returned element), which has no native
+// `v-for` form, so it forces the `<script setup>` render-closure fallback —
+// exercising the `hasSlot(…)` → `!!slots.x` rewrite.
 const HAS_SLOT_CLOSURE = [
   "import { h, hasSlot, Slot, type MpElement, type MpProperties } from '@mission-platform/jsx';",
   '',
@@ -324,9 +611,11 @@ const HAS_SLOT_CLOSURE = [
   '    <div class="feed">',
   '      {hasSlot("header") ? <header class="feed__header"><Slot name="header" /></header> : undefined}',
   '      <ul class="feed__list">',
-  '        {items.map((item, index) => (',
-  '          <li key={index} class="feed__row">{item}</li>',
-  '        ))}',
+  '        {items.map((item, index) => {',
+  '          if (item === "") { return undefined; }',
+  '          const row = <span class="feed__row-label">{item}</span>;',
+  '          return <li key={index} class="feed__row">{row}</li>;',
+  '        })}',
   '      </ul>',
   '    </div>',
   '  );',
@@ -359,11 +648,12 @@ describe('the emitters translate the `hasSlot(…)` presence marker', () => {
   });
 });
 
-// A render-closure shell that declares its slots with the **call form** of the
-// marker — `h(Slot, { name: 'x' })` rather than `<Slot name="x" />` — and uses a
-// **kebab-case** slot name (`start-header`). The node-valued `const start` forces
-// the `<script setup>` render-closure fallback (so this exercises the
-// `createReferenceRewriter`, not the `<template>` path).
+// A shell that declares its slots with the **call form** of the marker —
+// `h(Slot, { name: 'x' })` rather than `<Slot name="x" />` — and uses a
+// **kebab-case** slot name (`start-header`). The single element tree (with the
+// node-valued `start` const inlined) takes the `<template>` path, so both slot
+// forms render as native `<slot>` tags and the kebab presence check uses bracket
+// access.
 const SLOT_CALL_LAYOUT = [
   "import { h, hasSlot, Slot, type MpElement, type MpProperties } from '@mission-platform/jsx';",
   '',
@@ -387,15 +677,15 @@ describe('the emitters translate the `h(Slot, …)` call form of the named-slot 
   const vue = compileComponentModule(SLOT_CALL_LAYOUT, { framework: 'vue', componentName: 'BaseShell' });
   const react = compileComponentModule(SLOT_CALL_LAYOUT, { framework: 'react', componentName: 'BaseShell' });
 
-  it('rewrites `h(Slot, …)` to Vue slot calls (default, named, kebab) and never leaves the `Slot` marker', () => {
-    expect(vue.code).toContain('slots.default?.()');
-    expect(vue.code).toContain('slots.start?.()');
-    // The kebab slot name must use bracket access — dot access would mis-parse
-    // as a subtraction (`slots.start-header` → `slots.start - header`).
-    expect(vue.code).toContain('slots["start-header"]?.()');
-    expect(vue.code).not.toContain('slots.start-header');
+  it('renders `h(Slot, …)` as native `<slot>` tags (default, named, kebab) and never leaves the `Slot` marker', () => {
+    expect(vue.code).toContain('<slot />');
+    expect(vue.code).toContain('<slot name="start" />');
+    expect(vue.code).toContain('<slot name="start-header" />');
+    // The kebab presence check must use bracket access — dot access would
+    // mis-parse as a subtraction (`$slots.start-header` → `$slots.start - header`).
+    expect(vue.code).toContain('v-if="$slots[\'start-header\']"');
     expect(vue.code).not.toContain('h(Slot');
-    expect(vue.code).toContain('const slots = useSlots();');
+    expect(vue.code).not.toContain('<component :is="Slot"');
   });
 
   it('rewrites `h(Slot, …)` to React props reads (default, named, kebab) and never leaves the `Slot` marker', () => {
@@ -449,6 +739,86 @@ describe('the Vue emitter partitions relative imports into components and helper
   });
 });
 
+// A component importing both a **value** and a **type** from a helper module in
+// one mixed statement — the type is used in the props interface, so it must
+// survive into the emitted source (and its declaration), not be dropped.
+const HELPER_TYPE_CONSUMER = [
+  "import { h, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  "import { getCount, type CountSnapshot } from '../counter-store';",
+  '',
+  'export interface CounterProperties extends MpProperties {',
+  '  snapshot?: CountSnapshot;',
+  '}',
+  '',
+  'export function BaseCounter(properties: CounterProperties): MpElement {',
+  '  const [count, setCount] = useState(getCount());',
+  "  return <span class='counter'>{count}</span>;",
+  '}',
+].join('\n');
+
+describe('the emitters preserve the type-only members of a mixed relative helper import', () => {
+  it('emits the value and the type-only member as separate imports on the Vue target', () => {
+    const vue = compileComponentModule(HELPER_TYPE_CONSUMER, {
+      framework: 'vue',
+      componentName: 'BaseCounter',
+      componentFolders: new Set(['base-counter']),
+    });
+    // The value keeps its runtime import…
+    expect(vue.code).toContain("import { getCount } from './counter-store';");
+    // …and the type-only member is preserved as an `import type` (regression: the
+    // Vue emitter used to drop it, leaving `CountSnapshot` unresolved → TS2304).
+    expect(vue.code).toContain("import type { CountSnapshot } from './counter-store';");
+    expect(vue.code).toContain('snapshot?: CountSnapshot');
+  });
+
+  it('keeps the mixed helper import intact on the React target', () => {
+    const react = compileComponentModule(HELPER_TYPE_CONSUMER, {
+      framework: 'react',
+      componentName: 'BaseCounter',
+      componentFolders: new Set(['base-counter']),
+    });
+    expect(react.code).toMatch(
+      /import \{[^}]*\bgetCount\b[^}]*\btype CountSnapshot\b[^}]*\} from ["']\.\/counter-store["']/,
+    );
+  });
+});
+
+// A component importing both a sibling **component** and one of that
+// component's public **types** in one statement — the type is used in the props
+// interface, so on Vue it must be preserved as an `import type` from the child's
+// compiled `.vue` module (not dropped alongside the default component import).
+const CHILD_TYPE_CONSUMER = [
+  "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  "import { BaseTypography, type TypographyVariant } from '../base-typography';",
+  '',
+  'export interface QuoteProperties extends MpProperties {',
+  '  variant?: TypographyVariant;',
+  '}',
+  '',
+  'export function BaseQuote(properties: QuoteProperties): MpElement {',
+  '  return <BaseTypography>{properties.variant}</BaseTypography>;',
+  '}',
+].join('\n');
+
+describe('the Vue emitter preserves a type imported alongside a sibling component', () => {
+  const folders = new Set(['base-quote', 'base-typography']);
+
+  it('keeps the default component import and re-imports its type from the `.vue` module', () => {
+    const vue = compileComponentModule(CHILD_TYPE_CONSUMER, {
+      framework: 'vue',
+      componentName: 'BaseQuote',
+      componentFolders: folders,
+    });
+    expect(vue.code).toContain("import BaseTypography from './base-typography.vue';");
+    // Regression: the type member used to be dropped, leaving `TypographyVariant`
+    // unresolved in the SFC and its declaration (TS2304).
+    expect(vue.code).toContain("import type { TypographyVariant } from './base-typography.vue';");
+    expect(vue.code).toContain('variant?: TypographyVariant');
+  });
+});
+
 const EXTERNAL_DEFAULT = [
   "import { DEFAULT_TYPES, type Descriptor } from '@scope/forms-core';",
   "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
@@ -480,7 +850,8 @@ describe('the emitters carry external (bare package) imports referenced by prop 
     // import, leaving `types: { default: DEFAULT_TYPES }` referencing an
     // undefined binding (`ReferenceError: DEFAULT_TYPES is not defined`).
     expect(vue.code).toMatch(/import \{[^}]*\bDEFAULT_TYPES\b[^}]*\} from ["']@scope\/forms-core["']/);
-    expect(vue.code).toContain('types: { default: DEFAULT_TYPES }');
+    // The default moved into `withDefaults`, still referencing the external binding.
+    expect(vue.code).toContain('types: DEFAULT_TYPES');
   });
 
   it('keeps the external value import on the React target too', () => {
@@ -557,7 +928,8 @@ const SLOT_PASS_TEMPLATE = [
   '}',
 ].join('\n');
 
-// The render-closure variant (the `.map()` forces the fallback path).
+// The render-closure variant (the imperative `.map()` callback forces the
+// fallback path).
 const SLOT_PASS_CLOSURE = [
   "import { h, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';",
   '',
@@ -571,7 +943,10 @@ const SLOT_PASS_CLOSURE = [
   'export function BasePicker(properties: PickerProperties): MpElement {',
   '  const { label, options = [] } = properties;',
   '  const [open, setOpen] = useState<boolean>(false);',
-  '  const items = options.map((option) => <li key={option}>{option}</li>);',
+  '  const items = options.map((option) => {',
+  '    if (option === "") { return undefined; }',
+  '    return <li key={option}>{option}</li>;',
+  '  });',
   '  return (',
   '    <BaseDropdown open={open} onUpdateOpen={(next: boolean) => setOpen(next)}>',
   '      <button slot="trigger" type="button" onClick={() => setOpen(!open)}>{label}</button>',
@@ -629,15 +1004,151 @@ describe('the React emitter', () => {
     expect(react.lang).toBe('tsx');
   });
 
-  it('rewrites the neutral value import to React (h → createElement) and keeps the types', () => {
+  it('rewrites the neutral value import to React (h → createElement) and converts the render/props types', () => {
     expect(react.code).toContain('import { createElement as h } from "react"');
-    expect(react.code).toContain('import type { MpElement, MpProperties } from "@mission-platform/jsx"');
-    // The neutral package must no longer provide any *value* binding.
+    // `MpElement` has a first-class React equivalent (`ReactElement`), so it is
+    // imported from `react` and renamed; `MpProperties` has none, so it is
+    // imported from the co-located local variants module (`./mp-jsx-types`).
+    expect(react.code).toMatch(/import type \{[^}]*\bReactElement\b[^}]*\} from ["']react["']/);
+    expect(react.code).toContain('import type { MpProperties } from "./mp-jsx-types"');
+    expect(react.code).not.toMatch(/import type \{[^}]*\bMpElement\b[^}]*\} from ["']@mission-platform\/jsx["']/);
+    // The compiled component reads as a genuine React component: `() => ReactElement`.
+    expect(react.code).toContain('): ReactElement {');
+    // The neutral package must no longer provide any *value* binding, nor the
+    // render/props **type** `MpProperties`.
     expect(react.code).not.toMatch(/import \{[^}]*\bh\b[^}]*\} from ["']@mission-platform\/jsx["']/);
+    expect(react.code).not.toMatch(/import type \{[^}]*\bMpProperties\b[^}]*\} from ["']@mission-platform\/jsx["']/);
   });
 
   it('aliases `class` to `className` in JSX', () => {
     expect(react.code).toContain('className={className}');
+  });
+
+  it('never emits a default `import React from "react"` — only the named bindings it needs', () => {
+    // React 17+'s automatic JSX runtime makes the historical `import React from
+    // 'react'` unnecessary; the emitter must only import what the module uses
+    // (`createElement`, `Fragment`, hooks, …) as named bindings from `react`.
+    expect(react.code).not.toMatch(/^\s*import\s+React\b/m);
+    expect(react.code).not.toMatch(/import\s+React\s*,?\s*(\{[^}]*\})?\s*from\s+["']react["']/);
+  });
+});
+
+describe('the React emitter imports hooks as named bindings from `react` (never a default `React`)', () => {
+  const react = compileComponentModule(IN_VIEW, { framework: 'react', componentName: 'BaseInView' });
+
+  it('imports the used hooks by name from `react`', () => {
+    // The neutral hooks (`useEffect`, `useRef`, `useState`) are React's own, so
+    // they are imported by name from `react` alongside `createElement as h` —
+    // exactly what the module needs, nothing more.
+    expect(react.code).toContain('import { createElement as h, useEffect, useRef, useState } from "react"');
+  });
+
+  it('never emits a default `import React from "react"`', () => {
+    expect(react.code).not.toMatch(/^\s*import\s+React\b/m);
+    expect(react.code).not.toMatch(/import\s+React\s*,?\s*(\{[^}]*\})?\s*from\s+["']react["']/);
+  });
+});
+
+// A component whose props `extend MpProperties` and expose a scoped-slot
+// render-prop (`MpRenderProperty<Scope>`) — the two render/props primitives that
+// have no single first-class framework equivalent and are instead redirected to
+// each build's co-located `./mp-jsx-types` variants module.
+const RENDER_PROPS_PANEL = [
+  "import { h, Slot, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/jsx';",
+  '',
+  'export interface PanelScope {',
+  '  index: number;',
+  '}',
+  '',
+  'export interface PanelProperties extends MpProperties {',
+  '  items: string[];',
+  '  item?: MpRenderProperty<PanelScope>;',
+  '}',
+  '',
+  'export function BasePanel(properties: PanelProperties): MpElement {',
+  '  return (',
+  '    <ul class="panel">',
+  '      {properties.items.map((entry, index) => (',
+  '        <li key={index}><Slot name="item" index={index}>{entry}</Slot></li>',
+  '      ))}',
+  '    </ul>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the render/props primitives (`MpProperties`, `MpRenderProperty`) are converted to framework variants', () => {
+  const react = compileComponentModule(RENDER_PROPS_PANEL, { framework: 'react', componentName: 'BasePanel' });
+  const vue = compileComponentModule(RENDER_PROPS_PANEL, { framework: 'vue', componentName: 'BasePanel' });
+
+  it('imports both render/props types from the co-located `./mp-jsx-types` on React, never the neutral package', () => {
+    expect(react.code).toMatch(/import type \{[^}]*\bMpProperties\b[^}]*\} from ["']\.\/mp-jsx-types["']/);
+    expect(react.code).toMatch(/import type \{[^}]*\bMpRenderProperty\b[^}]*\} from ["']\.\/mp-jsx-types["']/);
+    // The prop annotations still read with the same names…
+    expect(react.code).toContain('extends MpProperties');
+    expect(react.code).toContain('MpRenderProperty<PanelScope>');
+    // …but no render/props type import points at the neutral package.
+    expect(react.code).not.toMatch(
+      /import type \{[^}]*\bMp(Properties|RenderProperty)\b[^}]*\} from ["']@mission-platform\/jsx["']/,
+    );
+  });
+
+  it('imports both render/props types from the co-located `./mp-jsx-types` on Vue, never the neutral package', () => {
+    expect(vue.code).toMatch(/import type \{[^}]*\bMpProperties\b[^}]*\} from ["']\.\/mp-jsx-types["']/);
+    expect(vue.code).toMatch(/import type \{[^}]*\bMpRenderProperty\b[^}]*\} from ["']\.\/mp-jsx-types["']/);
+    expect(vue.code).not.toMatch(
+      /import type \{[^}]*\bMp(Properties|RenderProperty)\b[^}]*\} from ["']@mission-platform\/jsx["']/,
+    );
+  });
+});
+
+describe('the local JSX types module source (`localJsxTypesModuleSource`)', () => {
+  it('defines the React variants over `ReactNode`, imported from `react`', () => {
+    const source = localJsxTypesModuleSource('react');
+    expect(source).toContain("import type { ReactNode } from 'react';");
+    expect(source).toContain('export type MpProperties = {');
+    expect(source).toContain('children?: ReactNode;');
+    expect(source).toContain('export type MpRenderProperty<S = MpProperties> = (scope: S) => ReactNode;');
+    // The variants are self-contained — no *import* from the neutral package.
+    expect(source).not.toMatch(/from ['"]@mission-platform\/jsx['"]/);
+  });
+
+  it('defines the Vue variants over `VNodeChild`/`VNode`, imported from `vue`', () => {
+    const source = localJsxTypesModuleSource('vue');
+    expect(source).toContain("import type { VNode, VNodeChild } from 'vue';");
+    expect(source).toContain('children?: VNodeChild;');
+    expect(source).toContain('export type MpRenderProperty<S = MpProperties> = (scope: S) => VNodeChild;');
+    // The neutral element primitives are re-declared over the Vue-native types so
+    // the compiled bodies' `MpChild`/`MpElement` annotations accept Vue JSX.
+    expect(source).toContain('export type MpChild = VNodeChild;');
+    expect(source).toContain('export type MpElement = VNode;');
+    // The variants are self-contained — no *import* from the neutral package.
+    expect(source).not.toMatch(/from ['"]@mission-platform\/jsx['"]/);
+    expect(source).not.toContain('ReactNode');
+  });
+});
+
+describe('the local effect helper module source (`localEffectModuleSource`)', () => {
+  it('generates a Vue-only `mpEffect` built on native `watch`/lifecycle', () => {
+    const source = localEffectModuleSource('vue');
+    // Exports the generalised watcher with the `(effect, deps?)` signature.
+    expect(source).toContain("import { onMounted, onUnmounted, onUpdated, watch } from 'vue';");
+    expect(source).toContain('export function mpEffect(');
+    expect(source).toContain('effect: () => void | (() => void),');
+    expect(source).toContain('deps?: () => readonly unknown[],');
+    // Mount → run once; deps → `watch`; no deps → `onUpdated`; cleanup on re-run
+    // and unmount — the exact semantics the inlined block used to emit per effect.
+    expect(source).toContain('onMounted(run);');
+    expect(source).toContain('watch(deps, run);');
+    expect(source).toContain('onUpdated(run);');
+    expect(source).toContain('onUnmounted(() => cleanup?.());');
+    // It is a generalised Vue-native watcher: nothing is imported from `react`
+    // (the docblock may still reference React's `useEffect` as the conceptual mirror).
+    expect(source).not.toMatch(/from ['"]react['"]/);
+  });
+
+  it('is Vue-only: React gets an empty source (the writer skips it)', () => {
+    // React keeps emitting `useEffect(…)` verbatim, so no helper is generated.
+    expect(localEffectModuleSource('react')).toBe('');
   });
 });
 
@@ -674,7 +1185,10 @@ describe('the Vue emitter', () => {
 
   it('emits a `.vue` SFC using `<script setup>` (no `defineComponent`)', () => {
     expect(vue.lang).toBe('vue');
-    expect(vue.code).toContain('<script setup lang="tsx">');
+    // A native-`<template>` component keeps no JSX in its `<script>` (only
+    // reactive declarations), so the block is plain TypeScript (`lang="ts"`).
+    expect(vue.code).toContain('<script setup lang="ts">');
+    expect(vue.code).not.toContain('<script setup lang="tsx">');
     expect(vue.code).toContain("defineOptions({ name: 'BaseBadge', inheritAttrs: false });");
     expect(vue.code).not.toContain('export default defineComponent(');
   });
@@ -715,28 +1229,433 @@ describe('the Vue emitter rewrites JSX attribute values without touching the att
 describe('the Vue emitter translates hooks to Vue reactivity', () => {
   const vue = compileComponentModule(IN_VIEW, { framework: 'vue', componentName: 'BaseInView' });
 
-  it('turns useRef/useState into refs and reads through `.value`', () => {
-    expect(vue.code).toContain('const wrapperReference = ref<HTMLElement | null>(null)');
+  it('turns useState into a `ref` and reads through `.value`', () => {
     expect(vue.code).toContain('const inView = ref(false)');
     expect(vue.code).toContain('inView.value = true');
     expect(vue.code).toContain('wrapperReference.value');
   });
 
-  it('turns useEffect into onMounted + watch(deps) + onUnmounted', () => {
-    expect(vue.code).toContain('onMounted(__effect0)');
-    expect(vue.code).toContain('watch(() => [properties.threshold, properties.once], __effect0)');
-    expect(vue.code).toContain('onUnmounted(');
+  it('declares the element-bound `useRef` as a `useTemplateRef<Element>(…)` template ref', () => {
+    // `wrapperReference` is bound to the (dynamic) root element via `ref=`, so it
+    // is a template ref: a string-keyed `useTemplateRef` (its `| null` stripped),
+    // matched by the `ref="wrapperReference"` binding in the markup.
+    expect(vue.code).toContain("const wrapperReference = useTemplateRef<HTMLElement>('wrapperReference');");
+    expect(vue.code).toContain('ref="wrapperReference"');
+    expect(vue.code).not.toContain('const wrapperReference = ref<HTMLElement | null>(null)');
   });
 
-  it('moves destructured prop defaults into the runtime props declaration', () => {
-    expect(vue.code).toContain('threshold: { default: 0.15 }');
-    expect(vue.code).toContain('tag: { default: "div" }');
-    expect(vue.code).toContain('onEnter: {}');
+  it('routes useEffect through the generated `mpEffect` helper with a deps factory', () => {
+    // The per-effect `onMounted`/`watch`/`onUnmounted` lifecycle block is now
+    // centralised in the generated Vue-only `./mp-effect` helper; each effect
+    // collapses to a single `mpEffect(callback, () => [deps])` call.
+    expect(vue.code).toContain("import { mpEffect } from './mp-effect';");
+    expect(vue.code).toContain('mpEffect(');
+    expect(vue.code).toContain('}, () => [properties.threshold, properties.once]);');
+    // The inlined lifecycle wiring no longer appears in the component.
+    expect(vue.code).not.toContain('onMounted(__effect0)');
+    expect(vue.code).not.toContain('__cleanup0');
+  });
+
+  it('moves destructured prop defaults into a `withDefaults` type-based props declaration', () => {
+    // The macro is type-based (`defineProps<{ … }>()`), so each prop keeps its
+    // declared type and the destructuring defaults move into `withDefaults`.
+    expect(vue.code).toContain('withDefaults(defineProps<{');
+    expect(vue.code).toContain('threshold?: number;');
+    expect(vue.code).toContain('threshold: 0.15');
+    expect(vue.code).toContain('tag: "div"');
+    expect(vue.code).toContain('once: true');
+    // A prop without a destructuring default gets no `withDefaults` entry.
+    expect(vue.code).not.toContain('onEnter: {}');
   });
 
   it('rewrites prop reads to reactive `properties.<name>` (script) and bare names (template)', () => {
-    expect(vue.code).toContain('properties.onEnter?.()');
     expect(vue.code).toContain(':is="tag"');
+    // A non-event prop stays a reactive `properties.<name>` read.
+    expect(vue.code).toContain('properties.threshold');
+  });
+
+  it('declares the `on<Event>` prop as an emit and rewrites its call to `emit(...)`', () => {
+    // `onEnter?: () => void` is a component **event**, not a prop: it is declared
+    // with a typed `defineEmits` (empty payload tuple) and its call becomes
+    // `emit('enter')`, so it is dropped from the runtime `defineProps`.
+    expect(vue.code).toContain('const emit = defineEmits<{');
+    expect(vue.code).toContain('enter: [];');
+    expect(vue.code).toContain('emit("enter")');
+    expect(vue.code).not.toContain('properties.onEnter');
+    // The event is not a runtime prop (the `defineProps` type literal omits it).
+    expect(vue.code).not.toMatch(/defineProps<\{[^}]*\bonEnter\b/s);
+    // The carried-over props interface is pruned to match `defineProps`, so the
+    // event no longer appears there either (`onEnter?: () => void;` is dropped).
+    expect(vue.code).not.toContain('onEnter');
+  });
+});
+
+// A component whose input props are marked `@model <onEvent>`: each fuses with
+// its paired change event into a single `defineModel` two-way binding. It mixes
+// the canonical `modelValue` (→ Vue's default, nameless model), a named scalar
+// model (`geodesic`), and an **unpaired** event (`onSelect`, which stays a plain
+// `defineEmits` emit). Model reads/writes live in the setup body (effects) so
+// the reference rewriter — not the template printer — exercises the mapping.
+const MODEL_EDITOR = [
+  "import { h, useEffect, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface EditorProperties extends MpProperties {',
+  '  /**',
+  '   * Committed values.',
+  '   * @model onValueChange',
+  '   */',
+  '  modelValue?: string[];',
+  '  /**',
+  '   * Whether transforms are geodesic.',
+  '   * @model onGeodesicChange',
+  '   */',
+  '  geodesic?: boolean;',
+  '  /** Fired when a row is selected. */',
+  '  onSelect?: (id: string | null) => void;',
+  '}',
+  '',
+  'export function BaseEditor(properties: EditorProperties): MpElement {',
+  '  const { modelValue = [], geodesic = true, onSelect } = properties;',
+  '  useEffect(() => {',
+  "    properties.onValueChange?.([...modelValue, 'next']);",
+  '  }, [modelValue]);',
+  '  useEffect(() => {',
+  '    properties.onGeodesicChange?.(!geodesic);',
+  '  }, [geodesic]);',
+  '  useEffect(() => {',
+  '    onSelect?.(null);',
+  '  }, []);',
+  "  return <div class='editor' />;",
+  '}',
+].join('\n');
+
+describe('the Vue emitter fuses a `@model`-tagged prop and its change event into `defineModel`', () => {
+  const vue = compileComponentModule(MODEL_EDITOR, { framework: 'vue', componentName: 'BaseEditor' });
+
+  it('declares the canonical `modelValue` as Vue’s default (nameless) `defineModel`, with its default as a factory', () => {
+    // `modelValue` maps to the nameless default model; its array destructuring
+    // default moves onto the `{ default }` option, wrapped as a factory.
+    expect(vue.code).toContain('const modelValue = defineModel<string[]>({ default: () => ([]) });');
+  });
+
+  it('declares a named prop as `defineModel(\'<prop>\', …)` carrying its primitive default', () => {
+    expect(vue.code).toContain("const geodesic = defineModel<boolean>('geodesic', { default: true });");
+  });
+
+  it('rewrites a model change-event call to a `<local>.value = …` assignment (not an emit)', () => {
+    // The paired event drives the two-way ref: its call becomes an assignment and
+    // reads of the prop resolve through the ref's `.value`.
+    expect(vue.code).toContain("modelValue.value = [...modelValue.value, 'next']");
+    expect(vue.code).toContain('geodesic.value = !geodesic.value');
+    expect(vue.code).not.toContain('properties.onValueChange');
+    expect(vue.code).not.toContain('properties.onGeodesicChange');
+  });
+
+  it('keeps an unpaired event as a `defineEmits` emit and drops the model events from it', () => {
+    expect(vue.code).toContain('const emit = defineEmits<{');
+    expect(vue.code).toContain('select: [id: string | null];');
+    expect(vue.code).toContain('emit("select", null)');
+    // The paired change events are declared via `defineModel`, not `defineEmits`.
+    expect(vue.code).not.toContain('valueChange');
+    expect(vue.code).not.toContain('geodesicChange');
+  });
+
+  it('drops the model props from `defineProps` and the carried-over interface', () => {
+    // `modelValue`/`geodesic` are declared with `defineModel`, so they are neither
+    // runtime `defineProps` members nor left on the pruned props interface.
+    expect(vue.code).not.toMatch(/defineProps<\{[^}]*\bmodelValue\b/s);
+    expect(vue.code).not.toMatch(/defineProps<\{[^}]*\bgeodesic\b/s);
+  });
+});
+
+// A parent forced onto the render-closure fallback (an imperative `.map()`) that
+// forwards a controlled-value callback to a **child component**. A child compiled
+// from a `@model`-paired `onUpdate<Name>` prop declares `defineModel('<name>')`
+// and emits `update:<name>`, so the listener the parent must bind is the
+// string-keyed `onUpdate:<name>` — not the camelCase `onUpdate<Name>`, which Vue
+// never wires to the model (and `vue-tsc` rejects as an unknown prop).
+const MODEL_FORWARD_CLOSURE = [
+  "import { h, useState, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface ForwardProperties extends MpProperties {',
+  '  items: string[];',
+  '}',
+  '',
+  'export function BaseForward(properties: ForwardProperties): MpElement {',
+  '  const [open, setOpen] = useState(false);',
+  '  const rows: MpChild[] = [];',
+  '  for (const item of properties.items.filter((entry) => entry !== "")) {',
+  '    rows.push(<BaseChild key={item} open={open} onUpdateOpen={(next: boolean) => setOpen(next)}>{item}</BaseChild>);',
+  '  }',
+  '  return <div class="forward">{rows}</div>;',
+  '}',
+].join('\n');
+
+describe('the Vue emitter binds a forwarded `@model` listener as `onUpdate:<name>` (render-closure JSX)', () => {
+  const vue = compileComponentModule(MODEL_FORWARD_CLOSURE, { framework: 'vue', componentName: 'BaseForward' });
+
+  it('takes the render-closure fallback', () => {
+    expect(vue.code).toContain('const render = () => {');
+  });
+
+  it('rewrites the child `onUpdateOpen` listener to the namespaced `onUpdate:open`', () => {
+    // Vue's `v-model` update event for a model named `open` is `update:open`, whose
+    // listener prop is `onUpdate:open` — the camelCase `onUpdateOpen` is unknown.
+    expect(vue.code).toContain('onUpdate:open={');
+    expect(vue.code).not.toContain('onUpdateOpen');
+  });
+});
+
+// A single-element parent (the `<template>` path) that forwards a controlled-value
+// callback to a child component — exercising the template emitter's listener
+// rewrite (`@update:<name>`) rather than the render-closure JSX path above.
+const MODEL_FORWARD_TEMPLATE = [
+  "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface WrapProperties extends MpProperties {',
+  '  value?: string;',
+  '  onChange?: (value: string) => void;',
+  '}',
+  '',
+  'export function BaseWrap(properties: WrapProperties): MpElement {',
+  '  const handleUpdate = (value: string): void => {',
+  '    properties.onChange?.(value);',
+  '  };',
+  '  return <BaseChild modelValue={properties.value} onUpdateModelValue={handleUpdate} />;',
+  '}',
+].join('\n');
+
+describe('the Vue emitter binds a forwarded `@model` listener as `@update:<name>` (template path)', () => {
+  const vue = compileComponentModule(MODEL_FORWARD_TEMPLATE, { framework: 'vue', componentName: 'BaseWrap' });
+
+  it('takes the `<template>` path', () => {
+    expect(vue.code).toContain('<template>');
+    expect(vue.code).not.toContain('const render = () =>');
+  });
+
+  it('rewrites the child `onUpdateModelValue` listener to `@update:modelValue`', () => {
+    expect(vue.code).toContain('@update:modelValue="handleUpdate"');
+    expect(vue.code).not.toContain('@updateModelValue');
+  });
+});
+
+// A single-element component (the `<template>` path) whose `useRef` is bound to
+// a DOM node via `ref={boxReference}` — a genuine **template ref**.
+const TEMPLATE_REF = [
+  "import { h, useEffect, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface PanelProperties extends MpProperties {',
+  '  label?: string;',
+  '}',
+  '',
+  'export function BasePanel(properties: PanelProperties): MpElement {',
+  '  const boxReference = useRef<HTMLDivElement | null>(null);',
+  '  useEffect(() => {',
+  '    boxReference.current?.focus();',
+  '  }, []);',
+  '  return <div ref={boxReference} class="panel">{properties.label}</div>;',
+  '}',
+].join('\n');
+
+describe('the Vue emitter declares a `<template>`-bound ref with `useTemplateRef`', () => {
+  const vue = compileComponentModule(TEMPLATE_REF, { framework: 'vue', componentName: 'BasePanel' });
+
+  it('takes the `<template>` path with a string `ref="…"` binding', () => {
+    expect(vue.code).toContain('<template>');
+    expect(vue.code).toContain('ref="boxReference"');
+    expect(vue.code).not.toContain('const render = () =>');
+  });
+
+  it('declares the template ref with `useTemplateRef<Element>(…)` instead of `ref<Element | null>(null)`', () => {
+    // The `useRef<HTMLDivElement | null>(null)` becomes a string-keyed template
+    // ref; the `| null` is stripped from the element type (Vue's template ref is
+    // always nullable until mounted).
+    expect(vue.code).toContain("const boxReference = useTemplateRef<HTMLDivElement>('boxReference');");
+    expect(vue.code).not.toContain('const boxReference = ref<HTMLDivElement | null>(null)');
+    // `.current` reads still lower to `.value` (a template ref is a `Ref`).
+    expect(vue.code).toContain('boxReference.value?.focus()');
+  });
+
+  it('imports `useTemplateRef` from `vue` and no longer imports the now-unused `ref`', () => {
+    expect(vue.code).toMatch(/import \{[^}]*\buseTemplateRef\b[^}]*\} from 'vue';/);
+    expect(vue.code).not.toMatch(/import \{[^}]*\bref\b[^}]*\} from 'vue';/);
+  });
+});
+
+// A single-element component (the `<template>` path) whose click handler is a
+// **conditional expression** selecting one of two methods (`cond ? a : b`) — the
+// neutral form React uses directly as the listener. Vue would compile a bare
+// `@click="cond ? a : b"` as an *inline statement* (evaluated, never invoked), so
+// the emitter must wrap it so the resolved handler is actually called.
+const CONDITIONAL_HANDLER = [
+  "import { h, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface ToggleProperties extends MpProperties {',
+  '  onStart?: () => void;',
+  '  onStop?: () => void;',
+  '}',
+  '',
+  'export function BaseToggle(properties: ToggleProperties): MpElement {',
+  '  const { onStart, onStop } = properties;',
+  '  const [active, setActive] = useState(false);',
+  '  const start = (): void => { setActive(true); onStart?.(); };',
+  '  const stop = (): void => { setActive(false); onStop?.(); };',
+  '  return <button type="button" onClick={active ? stop : start}>{active ? "Stop" : "Start"}</button>;',
+  '}',
+].join('\n');
+
+describe('the Vue emitter invokes a conditional (non-method-reference) event handler', () => {
+  const vue = compileComponentModule(CONDITIONAL_HANDLER, { framework: 'vue', componentName: 'BaseToggle' });
+
+  it('takes the `<template>` path', () => {
+    expect(vue.code).toContain('<template>');
+    expect(vue.code).not.toContain('const render = () =>');
+  });
+
+  it('wraps the conditional handler so the resolved function is actually called', () => {
+    // A bare `@click="active ? stop : start"` is a Vue *inline statement*: it
+    // would only evaluate the ternary (yielding a function) and never call it.
+    // The emitter wraps it so the selected handler is invoked with the event,
+    // casting the callee so the arg forwarding type-checks for any arity.
+    expect(vue.code).toContain(
+      '@click="(...args: unknown[]) => ((active ? stop : start) as ((...a: unknown[]) => unknown) | undefined)?.(...args)"',
+    );
+    expect(vue.code).not.toContain('@click="active ? stop : start"');
+  });
+});
+
+// A component forced onto the render-closure fallback (an imperative `.map()`
+// callback) whose root element still carries a `ref={rootReference}` — an
+// **object** ref binding inside the render closure's JSX, not a string template ref.
+const RENDER_CLOSURE_REF = [
+  "import { h, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface GalleryProperties extends MpProperties {',
+  '  items: string[];',
+  '}',
+  '',
+  'export function BaseGallery(properties: GalleryProperties): MpElement {',
+  '  const rootReference = useRef<HTMLElement | null>(null);',
+  '  const { items } = properties;',
+  '  return (',
+  '    <div ref={rootReference} class="gallery">',
+  '      {items.map((item, index) => {',
+  '        if (item === "") { return undefined; }',
+  '        const cell = <em class="gallery__cell">{item}</em>;',
+  '        return <span key={index} class="gallery__row">{cell}</span>;',
+  '      })}',
+  '    </div>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the Vue emitter keeps a render-closure (object) ref as a plain `ref(null)`', () => {
+  const vue = compileComponentModule(RENDER_CLOSURE_REF, { framework: 'vue', componentName: 'BaseGallery' });
+
+  it('takes the render-closure fallback', () => {
+    expect(vue.code).toContain('const render = () => {');
+  });
+
+  it('keeps `<script setup lang="tsx">` because the render closure still contains JSX', () => {
+    // The fallback `render` arrow returns JSX (`<em>`/`<span>`), so the script
+    // needs the JSX-enabled language (`tsx`), unlike a native-`<template>`
+    // component whose script is plain TypeScript (`ts`).
+    expect(vue.code).toContain('<script setup lang="tsx">');
+    expect(vue.code).not.toContain('<script setup lang="ts">');
+  });
+
+  it('leaves the object-bound ref as `ref<Element | null>(null)` (never `useTemplateRef`)', () => {
+    // Inside the render closure the ref is bound as an object (`ref={rootReference}`
+    // in JSX), the idiomatic Vue object-ref form, so it stays a plain `ref(…)`.
+    expect(vue.code).toContain('const rootReference = ref<HTMLElement | null>(null)');
+    expect(vue.code).not.toContain('useTemplateRef');
+  });
+});
+
+// A `BaseMapDraw`-shaped derivation: a `let x = <default>; if (…) x = …; else if
+// (…) x = …` imperative build (a "non-const derived statement" that used to force
+// the render-closure fallback) plus a scoped `<Slot>`. The new `liftConditionalConsts`
+// pre-pass folds the build into a reactive `computed`, keeping the whole component
+// on the native `<template>` path — where the scoped slot renders as a native
+// `<slot name="toolbar" :mode="mode">` element (the form the original request asked for).
+const CONDITIONAL_LET_SLOT = [
+  "import { Slot, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface DrawProperties extends MpProperties {',
+  '  mode?: string;',
+  '}',
+  '',
+  'export function BaseDraw(properties: DrawProperties): MpElement {',
+  "  const mode = properties.mode ?? 'idle';",
+  "  let label: string = 'Idle';",
+  "  if (mode === 'draw') {",
+  "    label = 'Drawing';",
+  "  } else if (mode === 'edit') {",
+  "    label = 'Editing';",
+  '  }',
+  '  return (',
+  '    <div class="draw">',
+  '      <span class="draw__label">{label}</span>',
+  '      <Slot name="toolbar" mode={mode} />',
+  '    </div>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the Vue emitter widens native-`<template>` coverage for `let`+`if` derivations (Step 3)', () => {
+  const vue = compileComponentModule(CONDITIONAL_LET_SLOT, { framework: 'vue', componentName: 'BaseDraw' });
+
+  it('folds the imperative `let`+`if` build into a reactive `computed` (no render closure)', () => {
+    // The `let label = …; if (…) label = …` build is folded to a single
+    // `const label = (() => { let __lifted = …; …; return __lifted; })()` and
+    // lifted to a `computed`, so the component stays on the native `<template>`.
+    expect(vue.code).not.toContain('const render = () =>');
+    expect(vue.code).toContain('const label = computed(');
+    expect(vue.code).toContain('let __lifted');
+    // The imperative reassignment is folded onto the internal accumulator, never
+    // left as a top-level `let label` reassignment.
+    expect(vue.code).not.toMatch(/\blet label\b/);
+  });
+
+  it('renders the scoped slot as a native `<slot name="toolbar" :mode="mode">` element', () => {
+    expect(vue.code).toContain('<slot name="toolbar" :mode="mode"');
+    // The functional render-closure slot call form must not appear on this path.
+    expect(vue.code).not.toContain('slots.toolbar');
+    // The folded label renders as a plain interpolation in the native template.
+    expect(vue.code).toContain('{{ label }}');
+  });
+});
+
+// A component that genuinely cannot be expressed as native `<template>` markup:
+// a JSX spread attribute (`{...properties.rest}`) has no `<template>` form, so
+// `buildVueTemplate` throws `UnsupportedTemplate('JSX spread attribute')` and the
+// emitter takes the render-closure fallback — now annotated with the reason.
+const SPREAD_FALLBACK = [
+  "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface SpreadProperties extends MpProperties {',
+  '  rest?: Record<string, unknown>;',
+  '}',
+  '',
+  'export function BaseSpread(properties: SpreadProperties): MpElement {',
+  '  return <div class="spread" {...properties.rest} />;',
+  '}',
+].join('\n');
+
+describe('the Vue emitter annotates a render-closure fallback with the reason it could not use a native `<template>` (Step 4)', () => {
+  const vue = compileComponentModule(SPREAD_FALLBACK, { framework: 'vue', componentName: 'BaseSpread' });
+  const nativeBadge = compileComponentModule(BADGE, { framework: 'vue', componentName: 'BaseBadge' });
+
+  it('prepends a comment naming the specific `UnsupportedTemplate` reason', () => {
+    expect(vue.code).toContain('const render = () => {');
+    expect(vue.code).toContain('<!-- @mission-platform/jsx: native <template> unavailable — JSX spread attribute -->');
+    // The comment leads the SFC (it travels with the affected component).
+    expect(vue.code.trimStart().startsWith('<!-- @mission-platform/jsx:')).toBe(true);
+  });
+
+  it('emits no such comment for a component that compiles to a native `<template>`', () => {
+    expect(nativeBadge.code).not.toContain('const render = () =>');
+    expect(nativeBadge.code).not.toContain('native <template> unavailable');
   });
 });
 
@@ -762,9 +1681,10 @@ const EFFECT_DERIVED = [
   '    const timer = setInterval(() => { commit((current + 1) % slideCount); }, interval);',
   '    return () => clearInterval(timer);',
   '  }, [slideCount, current, interval]);',
-  '  const items: MpChild[] = slides.map((slide, index) => (',
-  '    <li key={index} class="carousel__item" aria-current={current === index}>{slide}</li>',
-  '  ));',
+  '  const items: MpChild[] = slides.map((slide, index) => {',
+  '    if (slide === "") { return undefined; }',
+  '    return <li key={index} class="carousel__item" aria-current={current === index}>{slide}</li>;',
+  '  });',
   '  return <ul class="carousel" onClick={() => goTo(current + 1)}>{items}</ul>;',
   '}',
 ].join('\n');
@@ -774,7 +1694,8 @@ describe('the Vue emitter hoists derived declarations an effect depends on into 
 
   it('takes the render-closure fallback (the `.map()` list)', () => {
     expect(vue.code).toContain('const render = () => {');
-    expect(vue.code).toContain('<component :is="render" v-bind="$attrs" />');
+    expect(vue.code).toContain('<render v-bind="$attrs" />');
+    expect(vue.code).not.toContain('<component :is="render"');
   });
 
   it('lifts an effect-referenced derived **value** const into a `setup` `computed`', () => {
@@ -791,8 +1712,9 @@ describe('the Vue emitter hoists derived declarations an effect depends on into 
     expect(vue.code.indexOf('const commit =')).toBeLessThan(vue.code.indexOf('const render = () => {'));
   });
 
-  it('rewrites the effect body and deps to the hoisted reactive reads', () => {
-    expect(vue.code).toContain('watch(() => [slideCount.value, current.value, properties.interval], __effect0)');
+  it('rewrites the effect body and deps to the hoisted reactive reads (via the `mpEffect` deps factory)', () => {
+    expect(vue.code).toContain('mpEffect(');
+    expect(vue.code).toContain('}, () => [slideCount.value, current.value, properties.interval]);');
     expect(vue.code).not.toContain('slideCount <= 1)'); // never the bare (undefined) name
   });
 
@@ -833,12 +1755,13 @@ describe('the Vue emitter hoists derived declarations a hook initialiser depends
   });
 
   it('reads the hoisted reactive value through `.value` in the `ref` initialisers', () => {
-    expect(vue.code).toContain('const localH = ref(initial.value.h)');
-    expect(vue.code).toContain('const localM = ref(initial.value.m)');
+    // The explicit `useState<number>` type argument is preserved as `ref<number>(…)`.
+    expect(vue.code).toContain('const localH = ref<number>(initial.value.h)');
+    expect(vue.code).toContain('const localM = ref<number>(initial.value.m)');
   });
 
   it('emits the hoisted `initial` before the `ref`s that consume it', () => {
-    expect(vue.code.indexOf('const initial =')).toBeLessThan(vue.code.indexOf('const localH = ref('));
+    expect(vue.code.indexOf('const initial =')).toBeLessThan(vue.code.indexOf('const localH = ref<number>('));
   });
 });
 
@@ -1026,6 +1949,64 @@ describe('the emitters map the context primitives to each framework provide/inje
   });
 });
 
+const CUSTOM_HOOK_NULL = [
+  "import { type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  "import { useThing } from './use-thing';",
+  "import { useRegister } from './use-register';",
+  '',
+  'export interface WidgetProperties extends MpProperties {',
+  '  value: number;',
+  '}',
+  '',
+  'export function BaseWidget(properties: Readonly<WidgetProperties>): MpElement | null {',
+  '  const thing = useThing();',
+  '  useRegister(thing, { value: properties.value });',
+  '  return null;',
+  '}',
+].join('\n');
+
+describe('the Vue emitter runs custom composable hooks in `setup` (not the render closure)', () => {
+  // A `Base*` component that mirrors the map primitives (`BaseMapMarker`): it
+  // reads a custom composable (`useThing`), calls a bare side-effecting hook
+  // (`useRegister`) whose internal `onMounted`/`watch` must register during
+  // `setup`, and renders no DOM of its own (`return null`). Left inside the Vue
+  // per-render closure those hooks would never run.
+  const vue = compileComponentModule(CUSTOM_HOOK_NULL, { framework: 'vue', componentName: 'BaseWidget' });
+
+  it('emits the `useThing()` declaration as a synchronous `setup` const (never a `computed`)', () => {
+    expect(vue.code).toContain('const thing = useThing();');
+    expect(vue.code).not.toContain('const thing = computed(');
+  });
+
+  it('emits the bare `useRegister(...)` call as a top-level `setup` statement', () => {
+    // A top-level statement line (`<script setup>` body === setup) runs once on
+    // mount; before the fix the whole body was deferred into a render arrow.
+    expect(vue.code).toContain('useRegister(thing, {');
+    const registerIndex = vue.code.indexOf('useRegister(thing');
+    const renderIndex = vue.code.indexOf('const render = () =>');
+    expect(renderIndex === -1 || registerIndex < renderIndex).toBe(true);
+  });
+
+  it('rewrites the composable’s object-argument props into getters so they stay reactive', () => {
+    // Vue `setup` runs once, so an inline `{ value: properties.value }` would
+    // snapshot the prop at construction time and the composable’s internal
+    // `watch(() => [.., options.value])` would never re-fire. Emitting a getter
+    // re-reads the (reactive) prop on every access — matching React’s
+    // re-run-on-render semantics.
+    expect(vue.code).toMatch(/useRegister\(thing, \{\s*get value\(\) \{\s*return properties\.value;\s*\},?\s*\}\);/);
+    expect(vue.code).not.toContain('useRegister(thing, { value: properties.value });');
+  });
+
+  it('does not defer the hooks into a per-render closure', () => {
+    const registerIndex = vue.code.indexOf('useRegister(thing');
+    const renderIndex = vue.code.indexOf('const render = () =>');
+    expect(registerIndex).toBeGreaterThan(-1);
+    // Either there is no render closure at all, or the hook precedes it.
+    expect(renderIndex === -1 || registerIndex < renderIndex).toBe(true);
+  });
+});
+
 const TREE = [
   "import { h, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';",
   '',
@@ -1042,12 +2023,15 @@ const TREE = [
   '  const { nodes } = properties;',
   '  return (',
   '    <ul class="tree">',
-  '      {nodes.map((node) => (',
-  '        <li class="tree__node">',
-  '          {node.label}',
-  '          {node.children ? <BaseTree nodes={node.children} /> : undefined}',
-  '        </li>',
-  '      ))}',
+  '      {nodes.map((node) => {',
+  '        const subtree = node.children ? <BaseTree nodes={node.children} /> : undefined;',
+  '        return (',
+  '          <li class="tree__node">',
+  '            {node.label}',
+  '            {subtree}',
+  '          </li>',
+  '        );',
+  '      })}',
   '    </ul>',
   '  );',
   '}',
@@ -1061,10 +2045,60 @@ describe('the emitters support a recursive (self-referencing) component', () => 
     expect(react.code).toContain('<BaseTree nodes={node.children}/>');
   });
 
-  it('resolves the self-reference by name in the Vue render closure (backed by `defineOptions({ name })`)', () => {
+  it('renders the self-reference as a native recursive tag (backed by `defineOptions({ name })`)', () => {
+    // The `.map()` templatizes to a `v-for`; Vue resolves the `<BaseTree>` tag to
+    // the component itself by its `name`, so no `resolveComponent` shim is needed.
     expect(vue.code).toContain("defineOptions({ name: 'BaseTree', inheritAttrs: false });");
-    expect(vue.code).toContain("const BaseTree = resolveComponent('BaseTree');");
-    expect(vue.code).toMatch(/import \{[^}]*\bresolveComponent\b[^}]*\} from ['"]vue['"]/);
+    expect(vue.code).toContain('<BaseTree v-if="node.children" :nodes="node.children" />');
+    expect(vue.code).not.toContain("resolveComponent('BaseTree')");
+  });
+});
+
+// Node-valued derived consts — a single element (`heading`) and a `.map()`
+// projection (`list`) — declared before the return. Neither has a Vue
+// `<template>` binding form, so both are inlined **structurally** into the
+// return tree at their use sites (the projection becoming a native `v-for`),
+// keeping the whole component on the `<template>` path (no render closure).
+const NODE_CONST_INLINE = [
+  "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface PanelProperties extends MpProperties {',
+  '  title: string;',
+  '  rows: string[];',
+  '}',
+  '',
+  'export function BasePanel(properties: PanelProperties): MpElement {',
+  '  const { title, rows } = properties;',
+  '  const heading = <h2 class="panel__title">{title}</h2>;',
+  '  const list = rows.map((row, index) => <li key={index} class="panel__row">{row}</li>);',
+  '  return (',
+  '    <section class="panel">',
+  '      {heading}',
+  '      <ul class="panel__list">{list}</ul>',
+  '    </section>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the Vue emitter inlines node-valued derived consts into the template', () => {
+  const vue = compileComponentModule(NODE_CONST_INLINE, { framework: 'vue', componentName: 'BasePanel' });
+
+  it('stays on the `<template>` path (no render closure)', () => {
+    expect(vue.code).not.toContain('const render = () => {');
+    expect(vue.code).toContain('<template>');
+  });
+
+  it('inlines a single-element const into the markup at its use site', () => {
+    expect(vue.code).toContain('<h2 class="panel__title">');
+    expect(vue.code).toContain('{{ title }}');
+    // The const is inlined, not lifted to a declaration.
+    expect(vue.code).not.toContain('const heading =');
+  });
+
+  it('inlines a `.map()`-valued const as a native `v-for`', () => {
+    expect(vue.code).toContain('v-for="(row, index) in rows"');
+    expect(vue.code).toContain('class="panel__row"');
+    expect(vue.code).not.toContain('const list =');
   });
 });
 
@@ -1108,6 +2142,50 @@ describe('the Vue emitter lowers JSX ternaries to `v-if` / `v-else`', () => {
   });
 });
 
+// A `.map()`-built list whose callback has a **statement body**: a leading scalar
+// `const` (`selected`) before the single returned element. Vue `<template>` has
+// no per-item statement scope, so the emitter inlines that const into the printed
+// template expressions and still renders the projection as a native `v-for`
+// (rather than the render-closure fallback).
+const V_FOR_LIST = [
+  "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface RowsProperties extends MpProperties {',
+  '  rows: string[];',
+  '  active?: string;',
+  '}',
+  '',
+  'export function BaseRows(properties: RowsProperties): MpElement {',
+  '  const { rows, active } = properties;',
+  '  return (',
+  '    <ul class="rows">',
+  '      {rows.map((row, index) => {',
+  '        const selected = row === active;',
+  '        return <li key={index} class={selected ? "rows__row rows__row--active" : "rows__row"}>{row}</li>;',
+  '      })}',
+  '    </ul>',
+  '  );',
+  '}',
+].join('\n');
+
+describe("the Vue emitter inlines a `.map()` callback's leading scalar consts into a native `v-for`", () => {
+  const vue = compileComponentModule(V_FOR_LIST, { framework: 'vue', componentName: 'BaseRows' });
+
+  it('renders the projection as a `v-for` element (never the `.map()` render closure)', () => {
+    expect(vue.code).toContain('v-for="(row, index) in rows"');
+    expect(vue.code).toContain(':key="index"');
+    expect(vue.code).not.toContain('const render = () => {');
+    expect(vue.code).not.toContain('.map(');
+  });
+
+  it("inlines the callback's leading scalar const into the bound template expression", () => {
+    // `const selected = row === active;` has no per-item statement scope in a Vue
+    // `<template>`, so its reads are inlined as `(row === active)` in the bind.
+    expect(vue.code).toContain('(row === active)');
+    expect(vue.code).not.toMatch(/\bconst selected\b/);
+  });
+});
+
 const USE_VUE_WIDGET = [
   '"use vue";',
   "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
@@ -1146,5 +2224,616 @@ describe('the compiler reads and applies `"use <framework>";` module directives'
     const vue = compileComponentModule(USE_VUE_WIDGET, { framework: 'vue', componentName: 'BaseWidget' });
     expect(vue.code).not.toContain('use vue');
     expect(vue.code).toContain('class="widget"');
+  });
+});
+
+// Regression fixtures for constructs that surface once node-valued consts are
+// inlined. Each must render as native `<template>` markup (or, where it has no
+// faithful flat form, take the `<script setup>` render-closure fallback) rather
+// than splice JSX/`h()` into a `{{ … }}` interpolation — the malformed output
+// that previously broke the components-library build.
+
+// A single-call **render helper**: a callee-only, non-recursive function-valued
+// const (`renderItems`) whose body is one expression (`entries.map(…)`), invoked
+// exactly once (`renderItems(items, '', false)`). It has no `<template>` binding
+// form, but its argument-bound body can be spliced into the call site, so the
+// surrounding tree templates natively (the `.map()` becomes a `v-for`).
+const RENDER_HELPER = [
+  "import { h, Slot, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface MenuNode { label: string; children?: MenuNode[]; }',
+  'export interface MenubarProperties extends MpProperties { items?: MenuNode[]; }',
+  '',
+  'export function BaseMenubar(properties: MenubarProperties): MpElement {',
+  '  const { items } = properties;',
+  '  const renderItems = (entries: MenuNode[], parentPath: string, nested: boolean): MpElement[] =>',
+  '    entries.map((item, index) => {',
+  '      const path = parentPath === "" ? `${index}` : `${parentPath}.${index}`;',
+  '      return <li key={path} class="menubar__item" data-nested={nested}>{item.label}</li>;',
+  '    });',
+  '  return (',
+  '    <menu class="menubar">',
+  "      {items ? renderItems(items, '', false) : undefined}",
+  '      <Slot />',
+  '    </menu>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the Vue emitter inlines a single-call function-valued node helper', () => {
+  const vue = compileComponentModule(RENDER_HELPER, { framework: 'vue', componentName: 'BaseMenubar' });
+
+  it('splices the helper body into the call site as native `<template>` markup', () => {
+    expect(vue.code).not.toContain('const render = () =>');
+    // The `renderItems(items, …)` call becomes a guarded `v-for` (the `.map()`),
+    // with the helper declaration itself dropped from the script.
+    expect(vue.code).toContain('v-for="(item, index) in (items)"');
+    expect(vue.code).toContain('<slot />');
+    expect(vue.code).not.toContain('const renderItems');
+    // The helper call is never spliced into a `{{ … }}` interpolation.
+    expect(vue.code).not.toMatch(/\{\{[^}]*renderItems/);
+    expect(vue.code).not.toContain('renderItems(');
+  });
+});
+
+// A function-valued node helper that is **not** callee-only — it is also passed
+// as a value (`const alias = renderItems;`) — cannot be inlined at its call sites
+// (the surviving value reference would dangle), so it keeps the safe render-closure
+// fallback rather than splice a JSX body into an interpolation.
+const VALUE_REFERENCED_HELPER = [
+  "import { type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface ListProperties extends MpProperties { items?: string[]; }',
+  '',
+  'export function BaseList(properties: ListProperties): MpElement {',
+  '  const { items = [] } = properties;',
+  '  const renderItems = (entries: string[]): MpElement[] =>',
+  '    entries.map((item, index) => <li key={index}>{item}</li>);',
+  '  const alias = renderItems;',
+  '  return (',
+  '    <ul>',
+  '      {renderItems(items)}',
+  '      {alias(items)}',
+  '    </ul>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the Vue emitter keeps the fallback for a helper referenced as a value', () => {
+  const vue = compileComponentModule(VALUE_REFERENCED_HELPER, { framework: 'vue', componentName: 'BaseList' });
+
+  it('emits the render closure rather than inlining a non-callee-only helper', () => {
+    expect(vue.code).toContain('const render = () => {');
+    expect(vue.code).toContain('<render v-bind="$attrs" />');
+    // The helper is never spliced into a `{{ … }}` interpolation.
+    expect(vue.code).not.toMatch(/\{\{[^}]*renderItems/);
+  });
+});
+
+// A conditional whose branches both **build nodes** but are neither elements nor
+// the `map`/`nothing` pair the two-arm template path handles: an array literal of
+// elements opposite a `.map()` projection. Each arm has no single host for the
+// guard, so it is wrapped in a `<template v-if>` / `<template v-else>` block —
+// never stringified into an interpolation of the raw JSX.
+const ARRAY_OR_MAP_CONDITIONAL = [
+  "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface TableProperties extends MpProperties { rows: string[]; empty?: string; }',
+  '',
+  'export function BaseTable(properties: TableProperties): MpElement {',
+  '  const { rows, empty = "No rows" } = properties;',
+  '  return (',
+  '    <tbody>',
+  '      {rows.length === 0',
+  '        ? [<tr class="row row--empty"><td>{empty}</td></tr>]',
+  '        : rows.map((row, index) => <tr key={index} class="row"><td>{row}</td></tr>)}',
+  '    </tbody>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the Vue emitter templates a conditional between an element array and a `.map()`', () => {
+  const vue = compileComponentModule(ARRAY_OR_MAP_CONDITIONAL, { framework: 'vue', componentName: 'BaseTable' });
+
+  it('emits a native `v-if` / `v-else` chain rather than a render closure', () => {
+    expect(vue.code).not.toContain('const render = () =>');
+    // The array-literal arm is wrapped in a guarded `<template>`; the `.map()`
+    // arm becomes a `v-else` `v-for` element.
+    expect(vue.code).toContain('<template v-if="rows.length === 0">');
+    expect(vue.code).toContain('v-else');
+    expect(vue.code).toContain('v-for="(row, index) in rows"');
+    // Neither the array branch nor the `.map()` branch leaks into a `{{ … }}`.
+    expect(vue.code).not.toMatch(/\{\{[^}]*\.map\(/);
+    expect(vue.code).not.toMatch(/\{\{[^}]*<tr/);
+  });
+});
+
+// A fixed-length list built with `Array.from({ length: n }, (_, index) => <el/>)`
+// — a `.map()` equivalent that isn't a `.map()` — becomes a `v-for` over the
+// materialised `Array.from({ length: n })`, rather than a raw interpolation.
+const ARRAY_FROM_LIST = [
+  "import { type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface RulerProperties extends MpProperties { count?: number; }',
+  '',
+  'export function BaseRuler(properties: RulerProperties): MpElement {',
+  '  const { count = 0 } = properties;',
+  '  return (',
+  '    <div class="ruler">',
+  '      {Array.from({ length: count }, (_, index) => (',
+  '        <span key={index} class="ruler__tick">{index + 1}</span>',
+  '      ))}',
+  '    </div>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the Vue emitter templates an `Array.from(length, mapper)` list as a `v-for`', () => {
+  const vue = compileComponentModule(ARRAY_FROM_LIST, { framework: 'vue', componentName: 'BaseRuler' });
+
+  it('loops the materialised array rather than emitting a render closure', () => {
+    expect(vue.code).not.toContain('const render = () =>');
+    expect(vue.code).toContain('v-for="(_, index) in Array.from({ length: count })"');
+    expect(vue.code).toContain(':key="index"');
+    expect(vue.code).toContain('{{ index + 1 }}');
+  });
+});
+
+// A chained ternary in child position (`error ? <p/> : hint ? <p/> : null`) —
+// the shape shared by every form input — flattens into a sibling
+// `v-if` / `v-else-if` chain (with no trailing `v-else` for the `null` arm),
+// rather than falling back to a render closure.
+const NESTED_CONDITIONAL_CHAIN = [
+  "import { type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface FieldProperties extends MpProperties { error?: string; hint?: string; }',
+  '',
+  'export function BaseField(properties: FieldProperties): MpElement {',
+  '  const { error, hint } = properties;',
+  '  return (',
+  '    <div class="field">',
+  '      {error ? (',
+  '        <p class="field__error">{error}</p>',
+  '      ) : hint ? (',
+  '        <p class="field__hint">{hint}</p>',
+  '      ) : null}',
+  '    </div>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the Vue emitter flattens a chained conditional into `v-if` / `v-else-if`', () => {
+  const vue = compileComponentModule(NESTED_CONDITIONAL_CHAIN, { framework: 'vue', componentName: 'BaseField' });
+
+  it('emits sibling guarded elements with no render closure', () => {
+    expect(vue.code).not.toContain('const render = () =>');
+    expect(vue.code).toContain('<p v-if="error" class="field__error">');
+    expect(vue.code).toContain('<p v-else-if="hint" class="field__hint">');
+    // The trailing `null` arm contributes no `v-else`.
+    expect(vue.code).not.toContain('v-else>');
+    expect(vue.code).not.toMatch(/\{\{[^}]*<p/);
+  });
+});
+
+// A destructuring const (`const [lo, hi] = …`) is expanded into a synthetic
+// source computed plus a per-name computed reading each element off it, so the
+// bound names stay usable in the template rather than forcing a fallback.
+const DESTRUCTURING_CONST = [
+  "import { type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface RangeProperties extends MpProperties { from: number; to: number; }',
+  '',
+  'export function BaseRange(properties: RangeProperties): MpElement {',
+  '  const { from, to } = properties;',
+  '  const [lo, hi] = from <= to ? [from, to] : [to, from];',
+  '  return (',
+  '    <p class="range">{lo} to {hi}</p>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the Vue emitter expands a destructuring const into computeds', () => {
+  const vue = compileComponentModule(DESTRUCTURING_CONST, { framework: 'vue', componentName: 'BaseRange' });
+
+  it('lifts a synthetic source plus per-name computeds rather than falling back', () => {
+    expect(vue.code).not.toContain('const render = () =>');
+    // A synthetic source computed holds the whole expression.
+    expect(vue.code).toMatch(/const mpDestructured0 = computed\(\(\) => \(properties\.from <= properties\.to/);
+    // Each bound name reads its element off the source.
+    expect(vue.code).toContain('const lo = computed(() => (mpDestructured0.value[0]));');
+    expect(vue.code).toContain('const hi = computed(() => (mpDestructured0.value[1]));');
+    expect(vue.code).toContain('{{ lo }}');
+    expect(vue.code).toContain('{{ hi }}');
+  });
+});
+
+// --- Step 1a: template-path expansions --------------------------------------
+// Node-valued consts spread/placed as children of an element / `h()` parent, and
+// a `.flatMap()` returning a fixed element array, now render as native
+// `<template>` markup rather than falling back to a render closure.
+
+// A `base-hero`-shaped component: a node-valued `content` const containing a
+// nested `...childList` spread of the normalised `properties.children`, plus a
+// conditional node const (`eyebrow ? <div/> : undefined`) placed as a child.
+// Inlining `content` structurally must emit the nested `...childList` as the
+// default `<slot>` and the conditional node const as a `v-if` element.
+const HERO_VARIADIC_NODE_CONSTS = [
+  "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface HeroProperties extends MpProperties { title?: string; eyebrow?: string; }',
+  '',
+  'export function BaseHero(properties: HeroProperties): MpElement {',
+  '  const { title, eyebrow } = properties;',
+  '  const children = properties.children;',
+  '  const childList = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];',
+  '  const eyebrowNode = eyebrow ? <p class="hero__eyebrow">{eyebrow}</p> : undefined;',
+  "  const content = h('div', { class: 'hero__content' }, eyebrowNode, <h1 class=\"hero__title\">{title}</h1>, ...childList);",
+  "  return h('section', { class: 'hero' }, content);",
+  '}',
+].join('\n');
+
+describe('the Vue emitter renders variadic node-const children as native markup (Step 1a)', () => {
+  const vue = compileComponentModule(HERO_VARIADIC_NODE_CONSTS, { framework: 'vue', componentName: 'BaseHero' });
+
+  it('emits native `<template>` markup with no render closure', () => {
+    expect(vue.code).not.toContain('const render = () =>');
+    expect(vue.code).toContain('<section class="hero" v-bind="$attrs">');
+    expect(vue.code).toContain('<div class="hero__content">');
+  });
+
+  it('maps a conditional node const to `v-if` and the nested `...childList` to the default slot', () => {
+    expect(vue.code).toContain('v-if="eyebrow"');
+    expect(vue.code).toContain('<slot />');
+    // No JSX / spread ever leaks into a `{{ … }}` interpolation.
+    expect(vue.code).not.toMatch(/\{\{[^}]*<\w/);
+    expect(vue.code).not.toContain('...childList');
+  });
+});
+
+// A `base-list`-shaped component: a dynamic local `tag` const, a conditional
+// node const (`itemNodes`) whose branches are a `.flatMap()` returning a fixed
+// element array and a `.map()`, spread as `...itemNodes`, plus the normalised
+// children spread `...extraChildren`.
+const LIST_FLATMAP_ELEMENT_ARRAY = [
+  "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface ListItem { label?: string; term?: string; content?: string; }',
+  'export interface ListProperties extends MpProperties { items?: ListItem[]; variant?: string; }',
+  '',
+  'export function BaseList(properties: ListProperties): MpElement {',
+  "  const { items = [], variant = 'unordered' } = properties;",
+  "  const tag = variant === 'description' ? 'dl' : 'ul';",
+  '  const itemNodes =',
+  "    variant === 'description'",
+  '      ? items.flatMap((item) => [',
+  '          <dt class="list__term">{item.term}</dt>,',
+  '          <dd class="list__detail">{item.content}</dd>,',
+  '        ])',
+  '      : items.map((item) => <li class="list__item">{item.label}</li>);',
+  '  const children = properties.children;',
+  '  const extraChildren = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];',
+  '  return h(tag, { class: "list" }, ...itemNodes, ...extraChildren);',
+  '}',
+].join('\n');
+
+describe('the Vue emitter renders a flatMap element array + map conditional as `v-for` (Step 1a)', () => {
+  const vue = compileComponentModule(LIST_FLATMAP_ELEMENT_ARRAY, { framework: 'vue', componentName: 'BaseList' });
+
+  it('emits native `<template>` markup with no render closure', () => {
+    expect(vue.code).not.toContain('const render = () =>');
+    // The dynamic local tag const becomes `<component :is="tag">`.
+    expect(vue.code).toContain(':is="tag"');
+  });
+
+  it('renders the flatMap element array under a shared `<template v-for>` and the map as `v-for`', () => {
+    expect(vue.code).toContain('<template v-for="item in items">');
+    expect(vue.code).toContain('<dt class="list__term">');
+    expect(vue.code).toContain('<dd class="list__detail">');
+    expect(vue.code).toContain('<li v-for="item in items" class="list__item">');
+    // The conditional between the two node arrays is split into `v-if`/`v-else`.
+    expect(vue.code).toContain(`v-if="variant === 'description'"`);
+    expect(vue.code).toContain('v-else');
+    // The normalised children spread becomes the default slot; nothing leaks.
+    expect(vue.code).toContain('<slot />');
+    expect(vue.code).not.toContain('...itemNodes');
+    expect(vue.code).not.toMatch(/\{\{[^}]*\.map\(/);
+  });
+});
+
+// --- Step 1b: dynamic-tag children & imperative style-object computeds -------
+
+// A dynamic-tag component with children: `h(properties.as, props, …children)`
+// (dynamic first argument) renders via `<component :is="as">` wrapping the
+// converted child markup.
+const DYNAMIC_TAG_WITH_CHILDREN = [
+  "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface BoxProperties extends MpProperties { as?: string; label?: string; }',
+  '',
+  'export function BaseBox(properties: BoxProperties): MpElement {',
+  "  const { as = 'div', label } = properties;",
+  '  return h(as, { class: \'box\' }, <span class="box__label">{label}</span>);',
+  '}',
+].join('\n');
+
+describe('the Vue emitter renders a dynamic-tag component with children via `<component :is>` (Step 1b)', () => {
+  const vue = compileComponentModule(DYNAMIC_TAG_WITH_CHILDREN, { framework: 'vue', componentName: 'BaseBox' });
+
+  it('emits `<component :is="as">` wrapping the child markup with no render closure', () => {
+    expect(vue.code).not.toContain('const render = () =>');
+    expect(vue.code).toContain(':is="as"');
+    expect(vue.code).toContain('<span class="box__label">');
+    expect(vue.code).toContain('{{ label }}');
+  });
+});
+
+// A `base-skeleton`-shaped component: an imperative style-object build
+// (`const style = {}; if (width !== undefined) style.width = width; …`) lifted to
+// a reactive `computed` bound via `:style`.
+const IMPERATIVE_STYLE_OBJECT = [
+  "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface SkeletonProperties extends MpProperties { width?: string; height?: string; }',
+  '',
+  'export function BaseSkeleton(properties: SkeletonProperties): MpElement {',
+  '  const { width, height } = properties;',
+  '  const style: Record<string, string> = {};',
+  '  if (width !== undefined) {',
+  '    style.width = width;',
+  '  }',
+  '  if (height !== undefined) {',
+  '    style.height = height;',
+  '  }',
+  '  return <span class="skeleton" style={style} aria-hidden="true" />;',
+  '}',
+].join('\n');
+
+describe('the Vue emitter lifts an imperative style-object build to a reactive `:style` computed (Step 1b)', () => {
+  const vue = compileComponentModule(IMPERATIVE_STYLE_OBJECT, { framework: 'vue', componentName: 'BaseSkeleton' });
+
+  it('emits a `computed` style object bound as `:style` with no render closure', () => {
+    expect(vue.code).not.toContain('const render = () =>');
+    expect(vue.code).toContain('const style = computed(() => (');
+    // Each mutation becomes a conditional spread into the object.
+    expect(vue.code).toContain('properties.width !== undefined ? { width: properties.width } : {}');
+    expect(vue.code).toContain('properties.height !== undefined ? { height: properties.height } : {}');
+    expect(vue.code).toContain(':style="style"');
+    // The mutation `if` statements never survive as raw statements.
+    expect(vue.code).not.toContain('style.width = width');
+  });
+});
+
+// --- Step 2: recursive helper components with lifted state (multi-SFC) -------
+
+// A `base-menubar`-shaped component: a self-recursive, state-capturing render
+// helper (`renderItems`) invoked from the return tree. It has no flat-`<template>`
+// form, so the emitter extracts an auxiliary self-recursive component
+// (`BaseMenusItem`) — the captured node helper (`renderIcon`) inlined, the
+// captured handlers (`isPathOpen`/`handleItemClick`) lifted to props — and
+// rewrites the parent to render it via `v-for`.
+const RECURSIVE_MENU = [
+  "import { h, Slot, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface MenusNode { label: string; icon?: string; href?: string; children?: MenusNode[]; }',
+  'export interface MenusProperties extends MpProperties { items?: MenusNode[]; }',
+  '',
+  'export function BaseMenus(properties: MenusProperties): MpElement {',
+  '  const { items } = properties;',
+  "  const [openPath, setOpenPath] = useState('');",
+  '  const isPathOpen = (path: string): boolean => openPath === path || openPath.startsWith(`${path}.`);',
+  '  const handleItemClick = (item: MenusNode, path: string): void => {',
+  '    if (item.children && item.children.length > 0) {',
+  '      setOpenPath(isPathOpen(path) ? "" : path);',
+  '    }',
+  '  };',
+  '  const renderIcon = (item: MenusNode): MpElement | undefined =>',
+  '    item.icon ? <span class="menus__icon">{item.icon}</span> : undefined;',
+  '  const renderItems = (entries: MenusNode[], parentPath: string, nested: boolean): MpElement[] =>',
+  '    entries.map((item, index) => {',
+  '      const path = parentPath === "" ? `${index}` : `${parentPath}.${index}`;',
+  '      const hasChildren = Boolean(item.children && item.children.length > 0);',
+  '      const open = hasChildren && isPathOpen(path);',
+  '      return (',
+  '        <li key={path} class="menus__item" data-nested={nested}>',
+  '          <button type="button" onClick={() => handleItemClick(item, path)}>',
+  '            {renderIcon(item)}',
+  '            <span class="menus__label">{item.label}</span>',
+  '          </button>',
+  '          {open ? <menu class="menus__submenu">{renderItems(item.children as MenusNode[], path, true)}</menu> : undefined}',
+  '        </li>',
+  '      );',
+  '    });',
+  '  return (',
+  '    <menu class="menus">',
+  "      {items ? renderItems(items, '', false) : undefined}",
+  '      <Slot />',
+  '    </menu>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the Vue emitter extracts a recursive helper into an auxiliary component (Step 2)', () => {
+  const vue = compileComponentModule(RECURSIVE_MENU, { framework: 'vue', componentName: 'BaseMenus' });
+  const aux = (vue.extraModules ?? []).find((module) => module.name === 'base-menus-item');
+
+  it('emits the parent as native markup with no render closure', () => {
+    expect(vue.code).not.toContain('const render = () =>');
+    // The parent renders the auxiliary component via `v-for`, importing it.
+    expect(vue.code).toContain("import BaseMenusItem from './base-menus-item.vue';");
+    expect(vue.code).toContain('<BaseMenusItem');
+    expect(vue.code).toContain('v-for="(item, index) in (items)"');
+    // The captured handlers are forwarded onto the child.
+    expect(vue.code).toContain(':isPathOpen="isPathOpen"');
+    expect(vue.code).toContain(':handleItemClick="handleItemClick"');
+  });
+
+  it('emits an auxiliary module that recurses into itself and lifts captured state to props', () => {
+    expect(aux).toBeDefined();
+    const code = aux?.code ?? '';
+    expect(code).not.toContain('const render = () =>');
+    expect(code).toContain("defineOptions({ name: 'BaseMenusItem'");
+    // Per-node data + captured handlers become props.
+    expect(code).toContain('item: MenusNode;');
+    expect(code).toContain('isPathOpen: (path: string) => boolean;');
+    expect(code).toContain('handleItemClick: (item: MenusNode, path: string) => void;');
+    // The recursion is a native `v-for` of the component referencing itself.
+    expect(code).toContain('<BaseMenusItem v-for="(child, index) in (item.children as MenusNode[])"');
+    // The captured node helper (`renderIcon`) is inlined as a `v-if`, not called.
+    expect(code).not.toContain('renderIcon(');
+    expect(code).toContain('<span v-if="item.icon"');
+    // No JSX leaks into an interpolation.
+    expect(code).not.toMatch(/\{\{[^}]*<\w/);
+  });
+});
+
+// --- Step 3: imperative bodies — early-return split -------------------------
+
+// A `base-typography`-shaped component: an early-return guard (`if (!truncatePopup)
+// return h(tag, …)`) produces two whole render paths. It is split into top-level
+// `v-if`/`v-else` roots, and the normalised children rendered a second time in the
+// popup (`{childList}`) becomes a second default `<slot />`.
+const EARLY_RETURN_BRANCHES = [
+  "import { h, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface TextProperties extends MpProperties { as?: string; truncatePopup?: boolean; }',
+  '',
+  'export function BaseText(properties: TextProperties): MpElement {',
+  "  const { as = 'span', truncatePopup = false } = properties;",
+  '  const tag = as;',
+  '  const textReference = useRef<HTMLElement | null>(null);',
+  '  const [popupVisible, setPopupVisible] = useState(false);',
+  '  const children = properties.children;',
+  '  const childList = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];',
+  "  const className = 'text';",
+  '  if (!truncatePopup) {',
+  '    return h(tag, { class: className }, ...childList);',
+  '  }',
+  '  const showPopup = (): void => setPopupVisible(true);',
+  '  const hidePopup = (): void => setPopupVisible(false);',
+  '  return (',
+  '    <span class="text-wrapper">',
+  '      {h(tag, { ref: textReference, class: className, onMouseenter: showPopup, onMouseleave: hidePopup }, ...childList)}',
+  '      {popupVisible ? <span class="text-popup" role="tooltip">{childList}</span> : undefined}',
+  '    </span>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the Vue emitter splits an early-return guard into `v-if`/`v-else` roots (Step 3)', () => {
+  const vue = compileComponentModule(EARLY_RETURN_BRANCHES, { framework: 'vue', componentName: 'BaseText' });
+
+  it('emits two top-level branches with no render closure', () => {
+    expect(vue.code).not.toContain('const render = () =>');
+    // Branch A: the guard's returned element under `v-if`.
+    expect(vue.code).toContain('<component v-if="!truncatePopup" :is="tag"');
+    // Branch B: the final return under `v-else`.
+    expect(vue.code).toContain('<span v-else class="text-wrapper"');
+  });
+
+  it('renders the normalised children as `<slot />` in both the anchor and the popup', () => {
+    // Two default slots (anchor + popup) — the `{childList}` array child becomes a slot.
+    expect((vue.code.match(/<slot \/>/g) ?? []).length).toBeGreaterThanOrEqual(2);
+    expect(vue.code).toContain('@mouseenter="showPopup"');
+    expect(vue.code).toContain('<span v-if="popupVisible"');
+    // No JSX / children array leaks into an interpolation.
+    expect(vue.code).not.toMatch(/\{\{[^}]*childList/);
+  });
+});
+
+// --- Vue hook module: source-order preservation -----------------------------
+
+// A `usePopup`-shaped composable: it destructures its `options` parameter at the
+// top, then registers effects that read the destructured locals. The Vue
+// composable must run once top-to-bottom, so the destructuring has to be emitted
+// **before** the effects — the component setup-vs-render split would move it
+// below them and the `watch(() => [lngLat], …)` getter (evaluated eagerly on
+// setup) would hit `lngLat` in the temporal dead zone at runtime.
+const POPUP_HOOK = [
+  "import { useEffect, useRef, useState } from '@mission-platform/jsx';",
+  '',
+  'export interface UsePopupOptions {',
+  '  lngLat: [number, number];',
+  '  content: string;',
+  '}',
+  '',
+  'export function usePopup(options: UsePopupOptions) {',
+  '  const { lngLat, content } = options;',
+  '  const [popup, setPopup] = useState<string | undefined>(undefined);',
+  '  const popupReference = useRef<string | undefined>(undefined);',
+  '  useEffect(() => {',
+  '    popupReference.current = content;',
+  '    setPopup(content);',
+  '  }, [content]);',
+  '  useEffect(() => {',
+  '    popupReference.current = String(lngLat);',
+  '  }, [lngLat]);',
+  '  return { popup };',
+  '}',
+].join('\n');
+
+describe('the Vue hook emitter preserves the authored statement order of a composable', () => {
+  const vue = compileHookModule(POPUP_HOOK, { framework: 'vue', fileName: 'use-popup.ts' });
+
+  it('emits the options destructuring before any effect setup (no temporal-dead-zone)', () => {
+    const destructureIndex = vue.code.indexOf('const { lngLat, content } = options;');
+    const firstEffectIndex = vue.code.indexOf('mpEffect(');
+    expect(destructureIndex).toBeGreaterThanOrEqual(0);
+    expect(firstEffectIndex).toBeGreaterThan(destructureIndex);
+  });
+
+  it('routes the effects through the generated `mpEffect` helper within the composable body', () => {
+    // The composable pulls `mpEffect` from the generated Vue-only `./mp-effect`
+    // helper and each effect collapses to a single `mpEffect(callback, () => [deps])`.
+    expect(vue.code).toContain("import { mpEffect } from './mp-effect';");
+    expect(vue.code).toContain('}, () => [content]);');
+    expect(vue.code).toContain('}, () => [lngLat]);');
+    expect(vue.code).not.toContain('onMounted(');
+  });
+});
+
+// --- Neutral `useId` → each framework's native hook -------------------------
+
+// A field-shaped component using the neutral `useId` hook for a stable
+// label/`aria-describedby` id. Both frameworks ship an identically-named
+// `useId`, so — unlike `useState`/`useEffect` — it is neither translated nor
+// kept as a neutral import: React imports it from `react`, Vue from `vue`, and
+// the `const generatedId = useId()` call is preserved verbatim in both.
+const USE_ID_FIELD = [
+  "import { h, useId, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface FieldProperties extends MpProperties {',
+  '  id?: string;',
+  '  label?: string;',
+  '}',
+  '',
+  'export function BaseField(properties: FieldProperties): MpElement {',
+  '  const generatedId = useId();',
+  '  const resolvedId = properties.id ?? generatedId;',
+  '  return (',
+  '    <div>',
+  '      <label for={resolvedId}>{properties.label}</label>',
+  '      <input id={resolvedId} />',
+  '    </div>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the compiler maps the neutral `useId` hook to each framework native `useId`', () => {
+  const react = compileComponentModule(USE_ID_FIELD, { framework: 'react', componentName: 'BaseField' });
+  const vue = compileComponentModule(USE_ID_FIELD, { framework: 'vue', componentName: 'BaseField' });
+
+  it('imports `useId` from `react` and keeps the call (React)', () => {
+    expect(react.code).toMatch(/import\s*\{[^}]*\buseId\b[^}]*\}\s*from\s*"react"/);
+    expect(react.code).toContain('const generatedId = useId();');
+    expect(react.code).toContain('const resolvedId = properties.id ?? generatedId;');
+    // The id hook must never fall back to the neutral package or a helper.
+    expect(react.code).not.toContain("from '@mission-platform/jsx'");
+    expect(react.code).not.toContain('nextFieldId');
+  });
+
+  it('imports `useId` from `vue` and keeps the call in `setup` (Vue)', () => {
+    expect(vue.code).toMatch(/import\s*\{[^}]*\buseId\b[^}]*\}\s*from\s*'vue'/);
+    expect(vue.code).toContain('const generatedId = useId();');
+    expect(vue.code).not.toContain('nextFieldId');
   });
 });

@@ -51,7 +51,7 @@ export interface ButtonProperties extends MpProperties {
  * assembled with the framework-neutral {@link classNames} helper, including its
  * `{ className: boolean }` object form for the conditional loading modifier.
  */
-export function BaseButton(properties: ButtonProperties): MpElement {
+export function BaseButton(properties: Readonly<ButtonProperties>): MpElement {
   const variant = properties.variant ?? 'primary';
   const size = properties.size ?? 'md';
   const disabled = properties.disabled ?? false;

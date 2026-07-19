@@ -1,3 +1,4 @@
+import { IconChevron } from '@mission-platform/icons';
 import { h, Slot, useState, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
@@ -62,12 +63,12 @@ function hasChildren(node: TreeViewNode): boolean {
  * `renderNode` walk into a child `<ul role="group">` rather than flattening the
  * visible tree into one list. A single root-level `openMap` (keyed by
  * `node.id`, exactly like the Vue root state) drives every node's expanded
- * state. The only substitution from the Vue original is the chevron — a `▾`/`▸`
- * glyph stands in for the `@mission-platform/icons` `IconChevron`; the scoped
- * `label` slot, the `aria-selected`/`aria-expanded` semantics, and the
- * `onSelect`/`onToggle` callback props otherwise match.
+ * state. The chevron is the write-once `@mission-platform/icons` `IconChevron`
+ * (rotated via its `direction` prop); the scoped `label` slot, the
+ * `aria-selected`/`aria-expanded` semantics, and the `onSelect`/`onToggle`
+ * callback props otherwise match.
  */
-export function BaseTreeView(properties: TreeViewProperties): MpElement {
+export function BaseTreeView(properties: Readonly<TreeViewProperties>): MpElement {
   const { nodes, defaultOpen = false, size = 'md' } = properties;
 
   const [openMap, setOpenMap] = useState<Record<string | number, boolean>>({});
@@ -127,7 +128,10 @@ export function BaseTreeView(properties: TreeViewProperties): MpElement {
               toggle(node);
             }}
           >
-            {isOpen(node) ? '▾' : '▸'}
+            <IconChevron
+              direction={isOpen(node) ? 'down' : 'right'}
+              size="2xs"
+            />
           </button>
         ) : (
           <span

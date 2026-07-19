@@ -1,0 +1,73 @@
+# @mission-platform/vite-plugin-assemblyscript
+
+A Vite plugin that compiles an AssemblyScript (https://www.assemblyscript.org/)
+entry to WebAssembly and emits a single self-contained ES module with the wasm
+binary inlined as base64. Consuming packages then import a dependency-free
+module with no `.wasm` URL resolution (works in browsers and Web Workers).
+
+Compilation runs the AssemblyScript compiler (`asc`) programmatically in the
+rollup `buildStart` hook, so the module is produced during `vite build`,
+`vite build --watch`, and dev-server start alike — making `vite build` the
+single entry point for building AssemblyScript.
+
+## Entry point
+
+- `.` → the plugin factory plus reusable helpers.
+
+## Exports
+
+- `assemblyScriptPlugin(options): Plugin` — default export and named export.
+- `compileAssemblyScript(options): Promise<void>` — the underlying compile +
+  codegen step (usable outside Vite).
+- `extractInstantiate(bindingsSource): string` — strips the URL auto-instantiation
+  from `asc` ESM bindings, keeping only the `instantiate()` function.
+- `buildGeneratedModule(wasmBase64, instantiateSource): string` — builds the
+  self-contained module text (base64 wasm + memoised `loadModule()`).
+- Types: `AssemblyScriptPluginOptions`, `AssemblyScriptCompileOptions`.
+
+## Options (AssemblyScriptCompileOptions)
+
+- `entry: string` — AssemblyScript entry `.ts`, relative to `rootDir`.
+- `outFile: string` — generated self-contained ES module to emit.
+- `wasmFile?: string` — intermediate `.wasm` path (default `build/module.wasm`).
+- `rootDir?: string` — base dir for relative paths (default `process.cwd()`).
+- `optimizeLevel?: number` — `asc` optimize level (default `3`).
+- `shrinkLevel?: number` — `asc` shrink level (default `1`).
+- `emitText?: boolean` — also emit `.wat` (default `false`).
+
+## Generated module
+
+```ts
+import { loadModule } from './generated/module.js';
+
+const wasm = await loadModule(); // memoised; returns the raw AssemblyScript exports
+```
+
+Provide a hand-maintained `.d.ts` next to the generated `.js` to type the raw
+exports — the plugin only writes the `.js`.
+
+## Example
+
+```ts
+// vite.config.ts
+import { assemblyScriptPlugin } from '@mission-platform/vite-plugin-assemblyscript';
+import { defineLibraryConfig } from '@mission-platform/vite-config';
+
+export default defineLibraryConfig({
+  rootDir: __dirname,
+  entry: { index: 'src/index.ts' },
+  preserveModules: false,
+  overrides: {
+    plugins: [
+      assemblyScriptPlugin({
+        rootDir: __dirname,
+        entry: 'assembly/index.ts',
+        wasmFile: 'build/module.wasm',
+        outFile: 'src/generated/module.js',
+      }),
+    ],
+  },
+});
+```
+
+Used by `@mission-platform/phone-number` to build its libphonenumber port.

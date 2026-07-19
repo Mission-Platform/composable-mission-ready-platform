@@ -1,0 +1,40 @@
+# @mission-platform/mcp
+
+Model Context Protocol (MCP) server that helps AI assistants use the Mission
+Platform monorepo. No runtime dependencies; compiled with `tsc` via Turborepo
+and run from its built output on Node.js 24+ (`node mcp/dist/index.js`). Speaks
+JSON-RPC 2.0 over stdio.
+
+## What it is for
+
+Give an AI assistant grounded, repo-specific help with the seven core workflows:
+
+1. Component usage — discover components and their props, get Vue/React imports.
+2. Package creation — scaffold a convention-compliant `packages/<name>`.
+3. Package development — layout, public API, build/test/lint, changesets.
+4. App creation — scaffold a `apps/<name>` Vite + Vue 3 app.
+5. App development — compose packages; deploy via Cloudflare/base-spa.
+6. Worker creation — scaffold a `workers/<name>` Cloudflare Worker.
+7. Worker development — typed `fetch` handler; keep workers thin.
+
+## Capabilities
+
+- Tools: `get_guide`, `list_docs`, `read_doc`, `search_docs`, `list_components`,
+  `get_component_usage`, `list_packages`, `list_apps`, `list_workers`,
+  `get_member_info`, `scaffold_package`, `scaffold_app`, `scaffold_worker`.
+- Resources: `mission://guide/<id>`, `mission://inventory`, `mission://docs/<slug>`.
+- Prompts: `use-component`, `create-package`, `develop-package`, `create-app`,
+  `develop-app`, `create-worker`, `develop-worker`.
+
+## Safety
+
+All repo inspection is read-only. Scaffolding tools are dry-run unless
+`apply: true`, and never overwrite an existing folder.
+
+## Run
+
+```bash
+pnpm exec turbo run build --filter @mission-platform/mcp  # build to dist/
+node mcp/dist/index.js                                    # start the stdio server
+pnpm --dir mcp test                                       # node --test
+```

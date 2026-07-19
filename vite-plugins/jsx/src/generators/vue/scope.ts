@@ -8,7 +8,7 @@
  */
 import ts from 'typescript';
 
-import { type RewriteScope } from '../../compiler/ast.js';
+import { type EventSignature, type ModelSignature, type RewriteScope } from '../../compiler/ast.js';
 
 import { singleDeclaration } from './shared.js';
 
@@ -17,15 +17,30 @@ export function analyseScope(
   body: ts.Block,
   propertiesParameterName: string,
   styleModuleNames: Set<string>,
+  eventSignatures: readonly EventSignature[] = [],
+  models: readonly ModelSignature[] = [],
 ): RewriteScope {
   const scope: RewriteScope = {
     propsParamName: propertiesParameterName,
     destructuredProps: new Set(),
+    propAliases: new Map(),
     stateNames: new Set(),
     setterToState: new Map(),
     refNames: new Set(),
     memoNames: new Set(),
     styleModuleNames,
+    // Event props (`on<Event>`) are declared with `defineEmits`, so their calls
+    // become `emit(...)` and references become forwarding arrows (see the
+    // reference rewriter). Keyed by prop name → the emitted event + its params.
+    eventProps: new Map(
+      eventSignatures.map((event) => [event.propName, { eventName: event.eventName, paramNames: event.paramNames }]),
+    ),
+    // Model props (marked `@model <event>`) are declared with `defineModel`, so a
+    // read of the prop becomes `<local>.value` and a call of the paired change
+    // event becomes `<local>.value = …` (see the reference rewriter). The ref's
+    // local name is the prop name.
+    modelProps: new Set(models.map((model) => model.propName)),
+    modelEvents: new Map(models.map((model) => [model.eventPropName, model.propName])),
   };
 
   for (const statement of body.statements) {
@@ -44,6 +59,11 @@ export function analyseScope(
       for (const element of declaration.name.elements) {
         if (ts.isIdentifier(element.name)) {
           scope.destructuredProps.add(element.name.text);
+          // `const { format: formatProperty } = properties` — record the local
+          // alias → real prop name so references resolve to `properties.format`.
+          if (element.propertyName !== undefined && ts.isIdentifier(element.propertyName)) {
+            scope.propAliases.set(element.name.text, element.propertyName.text);
+          }
         }
       }
       continue;

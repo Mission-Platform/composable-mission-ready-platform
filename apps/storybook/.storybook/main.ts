@@ -16,6 +16,10 @@ const config: StorybookConfig = {
     '../../../packages/icons/src/**/*.vue.stories.@(js|jsx|mjs|ts|tsx)',
     '../../../packages/layout/src/**/*.vue.stories.@(js|jsx|mjs|ts|tsx)',
     '../../../packages/map/src/**/*.vue.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/qr-code/src/**/*.vue.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/matrix-code/src/**/*.vue.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/barcode/src/**/*.vue.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/code-scanner/src/**/*.vue.stories.@(js|jsx|mjs|ts|tsx)',
   ],
   addons: [
     '@chromatic-com/storybook',

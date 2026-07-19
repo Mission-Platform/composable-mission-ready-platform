@@ -30,7 +30,7 @@ const ROTATION: Record<IconDirection, number> = {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-chevron.module.scss`.
  */
-export function IconChevron(properties: IconChevronProperties): MpElement {
+export function IconChevron(properties: Readonly<IconChevronProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

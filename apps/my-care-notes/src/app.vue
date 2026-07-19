@@ -332,7 +332,7 @@
       @add="addTab"
       @close="closeTab"
       @rename="onRenameTab"
-      @update:model-value="setActiveTab"
+      @update:model-value="(id?: string) => id !== undefined && setActiveTab(id)"
     >
       <template #panel="{ tab }">
         <ClientOnly>

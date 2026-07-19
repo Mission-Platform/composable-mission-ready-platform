@@ -18,7 +18,7 @@ export interface IconBellProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-bell.module.scss`.
  */
-export function IconBell(properties: IconBellProperties): MpElement {
+export function IconBell(properties: Readonly<IconBellProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

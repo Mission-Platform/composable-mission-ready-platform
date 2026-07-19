@@ -18,7 +18,7 @@ export interface IconHeadingSixProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-heading-six.module.scss`.
  */
-export function IconHeadingSix(properties: IconHeadingSixProperties): MpElement {
+export function IconHeadingSix(properties: Readonly<IconHeadingSixProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

@@ -1,0 +1,16 @@
+# Workspace-wide Cargo configuration for the Mission Platform Rust crates.
+#
+# Crates live under `crates/<name>` and are wired into the root `Cargo.toml`
+# workspace. The shipped wasm is produced with `wasm-pack` (which passes the
+# `wasm32-unknown-unknown` target explicitly), so no default build target is
+# forced here — that keeps native `cargo test` working for the same crates.
+
+[build]
+# Emit all build artifacts under the workspace-root `target/` directory.
+target-dir = "target"
+
+[term]
+color = "always"
+
+[net]
+git-fetch-with-cli = true

@@ -1,7 +1,8 @@
-import { h, useRef, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { IconCheck, IconError } from '@mission-platform/icons';
+import { h, useId, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
+import { BaseSelect, type SelectOption } from '../base-select';
 import { BaseTypography } from '../base-typography';
-import { nextFieldId } from '../field-id';
 
 import styles from './base-phone-input.module.scss';
 import { dialCode, exampleNumber, formatAsYouType, isValid, listCountries, toE164, type PhoneCountry } from './phone';
@@ -22,11 +23,17 @@ export interface PhoneChange {
 }
 
 export interface PhoneInputProperties extends MpProperties {
-  /** The national-format phone text (controlled via `modelValue` + `onUpdateModelValue`). */
+  /**
+   * The national-format phone text (controlled via `modelValue` + `onUpdateModelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: string;
-  /** The selected ISO 3166-1 alpha-2 region (controlled via `country` + `onUpdateCountry`). Defaults to `'US'`. */
+  /**
+   * The selected ISO 3166-1 alpha-2 region (controlled via `country` + `onUpdateCountry`). Defaults to `'US'`.
+   * @model onUpdateCountry
+   */
   country?: string;
-  /** Override the country picker's option list. Defaults to every region `google-libphonenumber` supports. */
+  /** Override the country picker's option list. Defaults to every region `@mission-platform/phone-number` supports. */
   countries?: PhoneCountry[];
   /** Visible label text. */
   label?: string;
@@ -63,25 +70,27 @@ export interface PhoneInputProperties extends MpProperties {
  * neutral JSX dialect and compiled straight to React or Vue by
  * `@mission-platform/vite-plugin-jsx`.
  *
- * A country picker (native `<select>` of flag + name + dial code) sits beside a
+ * A country picker — the searchable {@link BaseSelect} listing flag + name +
+ * dial code, so a region can be found by typing — sits beside a
  * `type="tel"` field. As the user types, the input is formatted as-you-type for
  * the selected country (`@mission-platform/components`'s framework-agnostic
- * `phone.ts` helper, built on **`google-libphonenumber`**), and the canonical
+ * `phone.ts` helper, built on **`@mission-platform/phone-number`**), and the canonical
  * E.164 form + validity are derived each render. The national text is controlled
  * via `modelValue`/`onUpdateModelValue` and the region via `country`/
  * `onUpdateCountry`; `onChange` reports the full parsed result and a hidden
  * `name` input submits the E.164 value. It owns its styling through the
  * co-located CSS Module `base-phone-input.module.scss`.
  *
- * The `google-libphonenumber` integration lives in the co-located, framework-
+ * The `@mission-platform/phone-number` integration lives in the co-located, framework-
  * agnostic `phone.ts` helper (no neutral/JSX imports), so the two-stage compiler
  * copies it verbatim onto both the React and Vue builds and the library is
  * bundled by each framework's own toolchain. Substitutions from a typical Vue
- * SFC: the `useId` composable becomes the shared `nextFieldId` helper resolved
- * once in a `useRef`; the icons become `✓`/`✕` glyphs; and `v-model` + emits
- * become the `onUpdateModelValue`/`onUpdateCountry`/`onChange` callback props.
+ * SFC: the `useId` composable maps straight to the framework-native `useId`
+ * hook; the validity marker is the write-once `@mission-platform/icons`
+ * `IconCheck`/`IconError`; and `v-model` + emits become the
+ * `onUpdateModelValue`/`onUpdateCountry`/`onChange` callback props.
  */
-export function BasePhoneInput(properties: PhoneInputProperties): MpElement {
+export function BasePhoneInput(properties: Readonly<PhoneInputProperties>): MpElement {
   const {
     modelValue = '',
     country = 'US',
@@ -97,8 +106,8 @@ export function BasePhoneInput(properties: PhoneInputProperties): MpElement {
     countryLabel = 'Country',
   } = properties;
 
-  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-phone'));
-  const resolvedId = idReference.current;
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
   const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
 
   const countryList = properties.countries ?? listCountries();
@@ -122,24 +131,20 @@ export function BasePhoneInput(properties: PhoneInputProperties): MpElement {
     emitChange(formatAsYouType((event.target as HTMLInputElement).value, country), country);
   };
 
-  const handleCountryChange = (event: Event): void => {
-    const nextCountry = (event.target as HTMLSelectElement).value;
+  const handleCountryChange = (next: string | number): void => {
+    const nextCountry = String(next);
     properties.onUpdateCountry?.(nextCountry);
     emitChange(formatAsYouType(modelValue, nextCountry), nextCountry);
   };
 
-  const countryOptions: MpChild[] = countryList.map((option) => (
-    <option
-      key={option.region}
-      selected={option.region === country}
-      value={option.region}
-    >
-      {`${option.flag} ${option.name} (+${option.dialCode})`}
-    </option>
-  ));
+  const countryOptions: SelectOption[] = countryList.map((option) => ({
+    value: option.region,
+    label: `${option.flag} ${option.name} (+${option.dialCode})`,
+  }));
 
   return (
     <div
+      aria-disabled={disabled ? 'true' : undefined}
       classNames={[
         styles['base-phone-input'],
         styles[`base-phone-input--${size}`],
@@ -178,14 +183,18 @@ export function BasePhoneInput(properties: PhoneInputProperties): MpElement {
         </label>
       ) : undefined}
       <div classNames={styles['base-phone-input__wrapper']}>
-        <select
-          aria-label={countryLabel}
-          classNames={styles['base-phone-input__country']}
-          disabled={disabled}
-          onChange={handleCountryChange}
-        >
-          {countryOptions}
-        </select>
+        <div classNames={styles['base-phone-input__country']}>
+          <BaseSelect
+            disabled={disabled}
+            label={countryLabel}
+            labelHidden={true}
+            modelValue={country}
+            options={countryOptions}
+            placeholder={countryLabel}
+            size={size}
+            onUpdateModelValue={handleCountryChange}
+          />
+        </div>
         <span
           aria-hidden="true"
           classNames={styles['base-phone-input__dial']}
@@ -212,7 +221,7 @@ export function BasePhoneInput(properties: PhoneInputProperties): MpElement {
             role="img"
             aria-label={valid ? 'Valid number' : 'Invalid number'}
           >
-            {valid ? '✓' : '✕'}
+            {valid ? <IconCheck size="xs" /> : <IconError size="xs" />}
           </span>
         ) : undefined}
       </div>

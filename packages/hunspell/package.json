@@ -22,8 +22,9 @@
     "src/dictionaries"
   ],
   "scripts": {
-    "build": "pnpm build:ts",
-    "build:ts": "vue-tsc -b && vite build && vue-tsc --project tsconfig.build.json --emitDeclarationOnly",
+    "build:check": "vue-tsc -b",
+    "build:bundle": "vite build",
+    "build:types": "vue-tsc --project tsconfig.build.json --emitDeclarationOnly",
     "build:watch": "vite build --watch",
     "build:wasm": "bash build.sh",
     "build:wasm:clean": "bash build.sh --no-cache",
@@ -38,7 +39,7 @@
     "vue": "^3.5.0"
   },
   "dependencies": {
-    "monaco-editor": "catalog:"
+    "monaco-editor": "catalog:code"
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",

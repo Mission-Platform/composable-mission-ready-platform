@@ -18,7 +18,7 @@ export interface IconRotateCcwProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-rotate-ccw.module.scss`.
  */
-export function IconRotateCcw(properties: IconRotateCcwProperties): MpElement {
+export function IconRotateCcw(properties: Readonly<IconRotateCcwProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

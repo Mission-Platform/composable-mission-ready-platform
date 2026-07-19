@@ -127,7 +127,7 @@ const TAG_MAP: Record<TypographyVariant, string> = {
  * actually overflows), positioned with **CSS Anchor Positioning** instead of
  * `@floating-ui`, and driven by the neutral `useRef`/`useState` hooks.
  */
-export function BaseTypography(properties: TypographyProperties): MpElement {
+export function BaseTypography(properties: Readonly<TypographyProperties>): MpElement {
   const {
     variant = 'body-md',
     as,

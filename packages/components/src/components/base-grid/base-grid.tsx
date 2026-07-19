@@ -70,7 +70,7 @@ export interface GridProperties extends MpProperties {
  * lives in the co-located `base-grid.module.scss` (imported by
  * `base-grid.stories.tsx`).
  */
-export function BaseGrid(properties: GridProperties): MpElement {
+export function BaseGrid(properties: Readonly<GridProperties>): MpElement {
   const {
     rows = 1,
     cols = 1,

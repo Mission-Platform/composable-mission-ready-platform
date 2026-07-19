@@ -71,6 +71,7 @@
     &__field {
       flex: 1;
       width: 100%;
+      min-width: 0;
       border: none;
       outline: none;
       background: transparent;
@@ -79,6 +80,12 @@
       line-height: var(--mp-line-height-normal);
       cursor: pointer;
       text-align: left;
+
+      /* The searchable trigger is a text input: allow text entry and grey the
+         placeholder that mirrors the selection/prompt. */
+      &::placeholder {
+        color: var(--mp-color-text-tertiary);
+      }
 
       &--placeholder {
         color: var(--mp-color-text-tertiary);

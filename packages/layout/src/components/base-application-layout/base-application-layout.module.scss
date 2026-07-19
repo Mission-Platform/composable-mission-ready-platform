@@ -5,14 +5,14 @@
  * the stylesheet so its layout appearance ships in the built package CSS (the
  * two-stage compiler carries the import onto both the React and Vue builds).
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package. Only `var(--mp-*)` design-token custom
+ * The rules live in the package's own `mp.layout` cascade layer. Only
+ * `var(--mp-*)` design-token custom
  * properties are used (the `mp-font-label` mixin and `bp-up('sm')` breakpoint
  * from the original SFC are inlined as their resolved token values / media
  * query, since this package does not depend on `@mission-platform/tokens`).
  */
 
-@layer mp.components {
+@layer mp.layout {
   .application-layout {
     display: flex;
     flex-direction: column;
@@ -27,7 +27,12 @@
 
       &:not(:empty) {
         // Resolved `mp-font-label`: label font size, medium weight, snug leading.
-        font-family: var(--mp-font-family-sans);
+        font-family:
+          var(--mp-font-family-sans) system-ui,
+          -apple-system,
+          'Segoe UI',
+          roboto,
+          sans-serif;
         font-size: var(--mp-font-size-sm);
         font-weight: var(--mp-font-weight-medium);
         line-height: var(--mp-line-height-snug);

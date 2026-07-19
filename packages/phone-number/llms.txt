@@ -1,0 +1,79 @@
+# @mission-platform/phone-number
+
+A focused reimplementation of the core of Google libphonenumber
+(https://github.com/google/libphonenumber), written in AssemblyScript
+(https://www.assemblyscript.org/) and compiled to WebAssembly. Parses,
+validates, classifies and formats international phone numbers. Ships as a
+self-contained ES module (wasm inlined as base64) with no runtime dependencies.
+
+## Installation
+
+Internal workspace package:
+
+```
+"@mission-platform/phone-number": "workspace:*"
+```
+
+## Entry point
+
+- `.` → typed `PhoneNumberUtil` façade over the WebAssembly core.
+
+## Getting an instance
+
+The WebAssembly module is instantiated asynchronously and memoised:
+
+```ts
+import { getPhoneNumberUtil } from '@mission-platform/phone-number';
+
+const util = await getPhoneNumberUtil();
+// equivalently: await PhoneNumberUtil.getInstance();
+```
+
+Every call after `defaultRegion` is an ISO 3166-1 alpha-2 region code (e.g.
+`'US'`, `'GB'`). It is only used when the input is not already international
+(`+…`, `00…`, `011…`).
+
+## API — PhoneNumberUtil
+
+- `getCountryCodeForRegion(region: string): number` — ITU calling code, `0` if unknown.
+- `getRegionCodeForCountryCode(code: number): string | undefined` — primary region for a code.
+- `getRegionCodeForNumber(input: string, defaultRegion: string): string | undefined`
+- `getNationalSignificantNumber(input: string, defaultRegion: string): string`
+- `isPossibleNumber(input: string, defaultRegion: string): boolean` — length plausibility only.
+- `isValidNumber(input: string, defaultRegion: string): boolean` — valid/dialable.
+- `getNumberType(input: string, defaultRegion: string): PhoneNumberType`
+- `format(input: string, defaultRegion: string, format: PhoneNumberFormat): string | undefined`
+
+## Enums (const objects)
+
+- `PhoneNumberType`: `FIXED_LINE = 0`, `MOBILE = 1`, `FIXED_LINE_OR_MOBILE = 2`, `UNKNOWN = -1`.
+- `PhoneNumberFormat`: `E164 = 0`, `INTERNATIONAL = 1`, `NATIONAL = 2`, `RFC3966 = 3`.
+
+## Examples
+
+```ts
+util.isValidNumber('+14155552671', 'US'); // true
+util.getNumberType('07911 123456', 'GB'); // PhoneNumberType.MOBILE
+util.getRegionCodeForNumber('+44 20 7946 0958', 'US'); // 'GB'
+util.format('4155552671', 'US', PhoneNumberFormat.NATIONAL); // '(415) 555-2671'
+util.format('07911 123456', 'GB', PhoneNumberFormat.E164); // '+447911123456'
+```
+
+## Build pipeline
+
+- Source: `assembly/index.ts` + `assembly/metadata.ts` (AssemblyScript).
+- AssemblyScript is compiled **by Vite** via
+  `@mission-platform/vite-plugin-assemblyscript` (runs `asc` in the Vite
+  `buildStart` hook and regenerates `src/generated/phone-number.js`, base64-inlined).
+- `pnpm --filter @mission-platform/phone-number build` → typecheck + vite build
+  (asc → wasm) + `.d.ts`.
+- `pnpm --filter @mission-platform/phone-number exec vite build` → just
+  recompile AssemblyScript and regenerate `src/generated`.
+
+## Scope
+
+Curated subset of regions: US, CA, GB, FR, DE, AU, IN, JP, BR, CN, RU.
+Validation is length- and leading-digit based (no regex, unavailable in
+AssemblyScript); formatting uses per-region digit grouping. This is a plausible
+approximation of libphonenumber rather than byte-for-byte parity. Add regions in
+`assembly/metadata.ts`.

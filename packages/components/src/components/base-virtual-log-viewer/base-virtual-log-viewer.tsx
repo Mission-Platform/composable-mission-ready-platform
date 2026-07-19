@@ -80,7 +80,7 @@ const LEVEL_COLORS: Record<LogLevel, string> = {
  * uses the `onSelect` callback prop; the original's manual-scroll follow-tail
  * suppression is dropped.
  */
-export function BaseVirtualLogViewer(properties: VirtualLogViewerProperties): MpElement {
+export function BaseVirtualLogViewer(properties: Readonly<VirtualLogViewerProperties>): MpElement {
   const {
     entries,
     itemHeight = 24,

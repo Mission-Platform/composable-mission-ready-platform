@@ -1,10 +1,14 @@
 /**
- * `useEffect` → Vue lifecycle translation for the Vue emitter.
+ * `useEffect` → Vue effect-helper translation for the Vue emitter.
  *
- * React's `useEffect(callback, deps?)` is mirrored with Vue lifecycle hooks
- * (`onMounted`/`watch`/`onUpdated`/`onUnmounted`), preserving the
- * run-once / run-on-dependency-change / run-on-every-commit semantics and the
- * returned cleanup function.
+ * React's `useEffect(callback, deps?)` is routed through the generated Vue-only
+ * `mpEffect` helper (see `localEffectModuleSource` in `../../compiler/ast.ts`),
+ * which is built on Vue's native `watch`/`onMounted`/`onUpdated`/`onUnmounted`
+ * and preserves the run-once / run-on-dependency-change / run-on-every-update
+ * semantics and the returned cleanup function. Each effect therefore collapses
+ * to a single `mpEffect(callback, () => [deps])` call instead of the inlined
+ * per-effect lifecycle block, shrinking each component's `setup` and centralising
+ * the wiring in one place.
  */
 import ts from 'typescript';
 
@@ -12,44 +16,17 @@ import { type RewriteScope } from '../../compiler/ast.js';
 
 import { rewrite } from './shared.js';
 
-/** Translate a `useEffect(callback, deps?)` call into Vue lifecycle statements. */
-export function emitEffect(
-  call: ts.CallExpression,
-  index: number,
-  scope: RewriteScope,
-  sourceFile: ts.SourceFile,
-  vueImports: Set<string>,
-): string[] {
+/** Translate a `useEffect(callback, deps?)` call into a single `mpEffect(...)` call. */
+export function emitEffect(call: ts.CallExpression, scope: RewriteScope, sourceFile: ts.SourceFile): string[] {
   const callback = call.arguments[0];
   const deps = call.arguments[1];
   const callbackText = rewrite(callback, scope, sourceFile);
-  const cleanup = `__cleanup${index}`;
-  const runner = `__effect${index}`;
 
-  vueImports.add('onMounted');
-  vueImports.add('onUnmounted');
-
-  const lines = [
-    `let ${cleanup}: (() => void) | undefined;`,
-    `const ${runner} = () => {`,
-    `  ${cleanup}?.();`,
-    `  const __result${index} = (${callbackText})();`,
-    `  ${cleanup} = typeof __result${index} === 'function' ? __result${index} : undefined;`,
-    `};`,
-    `onMounted(${runner});`,
-  ];
-
+  // A dependency array → a `watch` source factory the helper subscribes to (Vue
+  // re-runs the effect when any listed value changes). No dependency array → the
+  // helper falls back to `onUpdated`, running the effect after every update.
   if (deps !== undefined && ts.isArrayLiteralExpression(deps)) {
-    // React re-runs the effect when a dependency changes; mirror with `watch`
-    // (after mount, so template refs are populated by the initial `onMounted`).
-    vueImports.add('watch');
-    lines.push(`watch(() => ${rewrite(deps, scope, sourceFile)}, ${runner});`);
-  } else {
-    // No dependency array → run after every commit.
-    vueImports.add('onUpdated');
-    lines.push(`onUpdated(${runner});`);
+    return [`mpEffect(${callbackText}, () => ${rewrite(deps, scope, sourceFile)});`];
   }
-
-  lines.push(`onUnmounted(() => { ${cleanup}?.(); });`);
-  return lines;
+  return [`mpEffect(${callbackText});`];
 }

@@ -69,7 +69,10 @@ export interface SchemaFormProperties extends MpProperties {
    * A single object is a one-step form; an array is a multi-step wizard.
    */
   schema: SchemaFormDefinition;
-  /** The current values (controlled via `modelValue`). */
+  /**
+   * The current values (controlled via `modelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: FormValues;
   /** Size token controlling the form's font scale. Defaults to `'md'`. */
   size?: SchemaFormSize;
@@ -152,7 +155,7 @@ function withPath(values: FormValues, path: string, value: unknown): FormValues 
  * neutral dialect has no i18n); and `v-model`/emits become callback props with
  * an overridable `actions` slot.
  */
-export function BaseSchemaForm(properties: SchemaFormProperties): MpElement {
+export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement {
   const { schema, modelValue = {}, disabled = false, validationMode = 'per-step', size = 'md' } = properties;
 
   // Derive the render-ready steps, validators, step conditions, and merged
@@ -698,12 +701,14 @@ export function BaseSchemaForm(properties: SchemaFormProperties): MpElement {
       <div classNames={styles['base-schema-form__actions']}>
         <Slot name="actions">
           <BaseButton
+            disabled={disabled}
             type="reset"
             variant="secondary"
           >
             Reset
           </BaseButton>
           <BaseButton
+            disabled={disabled}
             type="submit"
             variant="primary"
           >

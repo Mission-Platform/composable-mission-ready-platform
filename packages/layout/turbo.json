@@ -1,0 +1,22 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": [
+        "build:check",
+        "build:vue",
+        "build:react",
+        "build:storyblok-vue",
+        "build:storyblok-react",
+        "build:types"
+      ]
+    },
+    "build:storyblok-vue": {
+      "dependsOn": ["^build", "build:vue"]
+    },
+    "build:storyblok-react": {
+      "dependsOn": ["^build", "build:react"]
+    }
+  }
+}

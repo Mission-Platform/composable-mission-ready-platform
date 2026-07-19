@@ -1,7 +1,6 @@
-import { h, hasSlot, Slot, useRef, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, hasSlot, Slot, useId, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
-import { nextFieldId } from '../field-id';
 
 import styles from './base-input.module.scss';
 
@@ -13,7 +12,10 @@ export type InputType = 'text' | 'email' | 'password' | 'number' | 'search' | 'u
 export type InputAutocapitalize = 'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters';
 
 export interface InputProperties extends MpProperties {
-  /** Field value (controlled via `modelValue` + `onUpdateModelValue`). */
+  /**
+   * Field value (controlled via `modelValue` + `onUpdateModelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: string | number;
   /** Native input type. Defaults to `'text'`. */
   type?: InputType;
@@ -76,14 +78,14 @@ export interface InputProperties extends MpProperties {
  * It owns its styling through the co-located CSS Module `base-input.module.scss`
  * and composes the neutral {@link BaseTypography} for the label/hint/error text.
  *
- * Substitutions from the original Vue SFC: the `useId` composable becomes the
- * shared `nextFieldId` helper resolved once in a `useRef`; the `start`/`prefix`/
+ * Substitutions from the original Vue SFC: the `useId` composable maps straight
+ * to the framework-native `useId` hook; the `start`/`prefix`/
  * `suffix`/`end` regions are authored as named slots (`<Slot>`), with their
  * presence detected through the framework-neutral {@link hasSlot} helper; and
  * the `v-model` + `change`/`blur`/`focus` emits become the
  * `onUpdateModelValue`/`onChange`/`onBlur`/`onFocus` callback props.
  */
-export function BaseInput(properties: InputProperties): MpElement {
+export function BaseInput(properties: Readonly<InputProperties>): MpElement {
   const {
     modelValue = '',
     type = 'text',
@@ -104,8 +106,8 @@ export function BaseInput(properties: InputProperties): MpElement {
     list,
   } = properties;
 
-  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-input'));
-  const resolvedId = idReference.current;
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
   const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
   const hasList = Array.isArray(list) && list.length > 0;
 

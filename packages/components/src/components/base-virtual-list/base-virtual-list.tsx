@@ -56,7 +56,7 @@ export interface VirtualListProperties extends MpProperties {
  * the call site) and a named `row` slot (the cross-framework runtime adapters
  * forward named — but not default — slots as scoped functions).
  */
-export function BaseVirtualList(properties: VirtualListProperties): MpElement {
+export function BaseVirtualList(properties: Readonly<VirtualListProperties>): MpElement {
   const { items, itemHeight, overscan = 3, height = 400, size = 'md' } = properties;
 
   const [scrollTop, setScrollTop] = useState(0);

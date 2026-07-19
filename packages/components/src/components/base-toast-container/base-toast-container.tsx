@@ -63,7 +63,7 @@ export interface ToastContainerProperties extends MpProperties {
  * neutral `<Teleport>` portal primitive; the `useZIndex('notification')`
  * composable → the static `notification` z-index layer applied in CSS.
  */
-export function BaseToastContainer(properties: ToastContainerProperties): MpElement {
+export function BaseToastContainer(properties: Readonly<ToastContainerProperties>): MpElement {
   const { position = 'top-right', ariaLabel = 'Notifications', teleport = true, size = 'md' } = properties;
 
   const [toasts, setToasts] = useState(getToastsSnapshot());

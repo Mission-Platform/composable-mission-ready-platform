@@ -38,7 +38,7 @@ export interface FieldSetProperties extends MpProperties {
  * becomes a plain flex `<div>`, and the `legend` named slot is reduced to the
  * `legend` prop (the neutral dialect cannot introspect named-slot presence).
  */
-export function BaseFieldSet(properties: FieldSetProperties): MpElement {
+export function BaseFieldSet(properties: Readonly<FieldSetProperties>): MpElement {
   const { legend, description, disabled = false, flush = false, size = 'md' } = properties;
 
   return (

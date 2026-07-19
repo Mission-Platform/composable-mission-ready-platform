@@ -62,7 +62,7 @@ export const Breadcrumbs: Story = {
         <template #content>
           <div style="${CONTENT}">
             <Container variant="responsive">
-              <nav style="${BREADCRUMB}"><span>Projects</span><span>/</span><span>Apollo</span><span>/</span><span>Overview</span></nav>
+              <nav aria-label="Breadcrumb" style="${BREADCRUMB}"><span>Projects</span><span>/</span><span>Apollo</span><span>/</span><span>Overview</span></nav>
               <div style="${OUTLET}">
                 <h1 style="margin-top: 0;">Apollo · Overview</h1>
                 <p>The router outlet renders here for the matched route.</p>
@@ -87,9 +87,9 @@ export const TabbedSections: Story = {
         <template #content>
           <div style="${CONTENT}">
             <Container variant="responsive">
-              <nav style="${BREADCRUMB}"><span>Projects</span><span>/</span><span>Apollo</span></nav>
+              <nav aria-label="Breadcrumb" style="${BREADCRUMB}"><span>Projects</span><span>/</span><span>Apollo</span></nav>
               <h1 style="margin-top: 0;">Apollo</h1>
-              <nav style="${TABS}">
+              <nav aria-label="Sections" style="${TABS}">
                 <a style="${TAB_ACTIVE}">Overview</a>
                 <a style="${TAB}">Activity</a>
                 <a style="${TAB}">Members</a>

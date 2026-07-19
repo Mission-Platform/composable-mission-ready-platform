@@ -18,7 +18,7 @@ export interface IconTableProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-table.module.scss`.
  */
-export function IconTable(properties: IconTableProperties): MpElement {
+export function IconTable(properties: Readonly<IconTableProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

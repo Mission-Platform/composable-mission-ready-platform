@@ -18,7 +18,7 @@ export interface IconRefreshProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-refresh.module.scss`.
  */
-export function IconRefresh(properties: IconRefreshProperties): MpElement {
+export function IconRefresh(properties: Readonly<IconRefreshProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

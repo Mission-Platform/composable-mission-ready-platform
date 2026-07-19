@@ -1,2 +1,1 @@
-export { default } from './map-draw.vue';
-export type { MapDrawProps } from './map-draw.vue';
+export { BaseMapDraw, type MapDrawProperties } from './map-draw';

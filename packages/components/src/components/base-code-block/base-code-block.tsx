@@ -1,3 +1,4 @@
+import { IconCheck, IconCopy } from '@mission-platform/icons';
 import { h, useEffect, useMemo, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
 import hljs from 'highlight.js/lib/core';
 import bash from 'highlight.js/lib/languages/bash';
@@ -108,10 +109,11 @@ export interface CodeBlockProperties extends MpProperties {
  * — so the highlighted markup is injected on the client and the SSR markup is
  * the static shell; the `computed` highlight becomes {@link useMemo}; the copy
  * `ref` + `setTimeout` become {@link useState} + a {@link useRef} timer; the
- * inline copy SVGs become `⧉`/`✓` glyphs; and the global hljs theme `<style>`
+ * inline copy SVGs are the write-once `@mission-platform/icons`
+ * `IconCopy`/`IconCheck`; and the global hljs theme `<style>`
  * `@import` becomes the bare-side-effect `base-code-block.hljs.css` import.
  */
-export function BaseCodeBlock(properties: CodeBlockProperties): MpElement {
+export function BaseCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement {
   const {
     code,
     language = 'plaintext',
@@ -190,7 +192,7 @@ export function BaseCodeBlock(properties: CodeBlockProperties): MpElement {
               type="button"
               onClick={copyCode}
             >
-              <span aria-hidden="true">{copied ? '✓' : '⧉'}</span>
+              {copied ? <IconCheck size="xs" /> : <IconCopy size="xs" />}
               <BaseTypography
                 as="span"
                 color="inherit"

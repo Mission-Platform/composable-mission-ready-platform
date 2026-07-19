@@ -1,3 +1,4 @@
+import { IconStar } from '@mission-platform/icons';
 import { h, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import styles from './base-rating.module.scss';
@@ -6,7 +7,10 @@ import styles from './base-rating.module.scss';
 export type RatingSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export interface RatingProperties extends MpProperties {
-  /** Current rating value (controlled via `modelValue` + `onUpdateModelValue`). */
+  /**
+   * Current rating value (controlled via `modelValue` + `onUpdateModelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: number;
   /** Maximum number of stars. Defaults to `5`. */
   max?: number;
@@ -38,12 +42,13 @@ export interface RatingProperties extends MpProperties {
  * control (`role="slider"` when interactive, `role="img"` when read-only). It
  * owns its styling through the co-located CSS Module `base-rating.module.scss`.
  *
- * Substitutions from the original Vue SFC: the inline star SVGs become a `★`
- * text glyph (the empty layer tinted via CSS, the fill layer clipped by width);
- * the hover preview uses the neutral `useState` hook; and the `v-model` +
- * `change` emit become the `onUpdateModelValue`/`onChange` callback props.
+ * Substitutions from the original Vue SFC: the stars are the write-once
+ * `@mission-platform/icons` `IconStar` (the empty layer tinted via CSS, the fill
+ * layer clipped by width, both scaled to the row's `1em`); the hover preview
+ * uses the neutral `useState` hook; and the `v-model` + `change` emit become the
+ * `onUpdateModelValue`/`onChange` callback props.
  */
-export function BaseRating(properties: RatingProperties): MpElement {
+export function BaseRating(properties: Readonly<RatingProperties>): MpElement {
   const {
     modelValue = 0,
     max = 5,
@@ -141,12 +146,16 @@ export function BaseRating(properties: RatingProperties): MpElement {
       key={star}
       classNames={styles['base-rating__star']}
     >
-      <span classNames={[styles['base-rating__icon'], styles['base-rating__icon--empty']]}>★</span>
+      <span classNames={[styles['base-rating__icon'], styles['base-rating__icon--empty']]}>
+        <IconStar />
+      </span>
       <span
         classNames={styles['base-rating__fill']}
         style={{ width: `${fillFor(star)}%` }}
       >
-        <span classNames={[styles['base-rating__icon'], styles['base-rating__icon--filled']]}>★</span>
+        <span classNames={[styles['base-rating__icon'], styles['base-rating__icon--filled']]}>
+          <IconStar />
+        </span>
       </span>
       {interactive && allowHalf ? (
         <span

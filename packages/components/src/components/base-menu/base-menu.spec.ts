@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { createSSRApp, h as vueH } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 
-import { BaseMenu, type MenuItem } from './base-menu';
+import { BaseMenu, type MenuNode } from './base-menu';
 
 /**
  * Exercises the **neutral** `BaseMenu` authored in this package, rendering it on
@@ -17,7 +17,7 @@ import { BaseMenu, type MenuItem } from './base-menu';
 const ReactMenu = toReactComponent(BaseMenu, 'Menu');
 const VueMenu = toVueComponent(BaseMenu, 'Menu');
 
-const items: MenuItem[] = [
+const items: MenuNode[] = [
   { label: 'Home', href: '/' },
   {
     label: 'Products',

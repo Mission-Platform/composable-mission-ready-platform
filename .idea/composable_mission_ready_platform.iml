@@ -1,7 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/crates/barcode-common/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/barcode-decode/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/barcode-decode/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/barcode-encode/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/barcode-encode/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/barcode/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/barcode/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/code-scan/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/code-scan/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/console-panic-hook/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/matrix-code-common/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/matrix-code-decode/examples" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/matrix-code-decode/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/matrix-code-decode/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/matrix-code-encode/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/matrix-code-encode/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/matrix-code/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/matrix-code/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/qr-code-common/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/qr-code-decode/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/qr-code-decode/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/qr-code-encode/examples" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/qr-code-encode/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/qr-code-encode/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/qr-code/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/qr-code/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/gs1-databar-common/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/gs1-databar-decode/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/gs1-databar-decode/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/gs1-databar-encode/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/maxicode-common/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/maxicode-decode/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/maxicode-decode/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/maxicode-encode/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/pdf417-common/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/pdf417-common/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/pdf417-decode/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/pdf417-decode/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/pdf417-encode/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

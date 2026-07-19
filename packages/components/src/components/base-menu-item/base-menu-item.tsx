@@ -45,7 +45,7 @@ export interface MenuItemProperties extends MpProperties {
  * a `click` emit; the neutral version renders a plain `<a href>` (the
  * established router substitution) and exposes the `onClick` callback prop.
  */
-export function BaseMenuItem(properties: MenuItemProperties): MpElement {
+export function BaseMenuItem(properties: Readonly<MenuItemProperties>): MpElement {
   const { label, disabled = false, variant = 'default', active = false, href, size = 'md' } = properties;
 
   const isLink = !disabled && !!href;

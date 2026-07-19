@@ -18,7 +18,7 @@ export interface IconCalendarProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-calendar.module.scss`.
  */
-export function IconCalendar(properties: IconCalendarProperties): MpElement {
+export function IconCalendar(properties: Readonly<IconCalendarProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

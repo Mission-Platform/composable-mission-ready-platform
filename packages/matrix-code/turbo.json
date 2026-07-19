@@ -1,0 +1,77 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": [
+        "build:wasm:encode",
+        "build:wasm:decode",
+        "build:check",
+        "build:bundle",
+        "build:vue",
+        "build:react",
+        "build:types"
+      ]
+    },
+    "build:wasm:encode": {
+      "command": [
+        "wasm-pack",
+        "build",
+        "../../crates/matrix-code-encode",
+        "--target",
+        "web",
+        "--release",
+        "--weak-refs",
+        "--reference-types",
+        "--no-pack",
+        "--out-dir",
+        "../../packages/matrix-code/src/generated/encode",
+        "--out-name",
+        "matrix-code-encode"
+      ],
+      "outputs": ["src/generated/encode/**"]
+    },
+    "build:wasm:decode": {
+      "command": [
+        "wasm-pack",
+        "build",
+        "../../crates/matrix-code-decode",
+        "--target",
+        "web",
+        "--release",
+        "--weak-refs",
+        "--reference-types",
+        "--no-pack",
+        "--out-dir",
+        "../../packages/matrix-code/src/generated/decode",
+        "--out-name",
+        "matrix-code-decode"
+      ],
+      "outputs": ["src/generated/decode/**"]
+    },
+    "build:check": {
+      "dependsOn": ["^build", "build:wasm:encode", "build:wasm:decode"]
+    },
+    "build:bundle": {
+      "dependsOn": ["^build", "build:wasm:encode", "build:wasm:decode"]
+    },
+    "build:types": {
+      "dependsOn": ["^build", "build:wasm:encode", "build:wasm:decode", "build:bundle"]
+    },
+    "build:vue": {
+      "dependsOn": ["^build", "build:bundle", "build:types"]
+    },
+    "build:react": {
+      "dependsOn": ["^build", "build:bundle", "build:types"]
+    },
+    "test:wasm": {
+      "dependsOn": ["test:wasm:encode", "test:wasm:decode"]
+    },
+    "test:wasm:encode": {
+      "command": ["wasm-pack", "test", "--node", "../../crates/matrix-code-encode"]
+    },
+    "test:wasm:decode": {
+      "command": ["wasm-pack", "test", "--node", "../../crates/matrix-code-decode"]
+    }
+  }
+}

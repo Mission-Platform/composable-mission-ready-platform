@@ -1,6 +1,5 @@
-import { h, Slot, Teleport, useEffect, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, Slot, Teleport, useEffect, useId, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
-import { nextFieldId } from '../field-id';
 import sizeStyles from '../size.module.scss';
 
 import styles from './base-dropdown.module.scss';
@@ -12,7 +11,10 @@ export type DropdownSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type DropdownPlacement = 'bottom-start' | 'bottom-end' | 'bottom' | 'top-start' | 'top-end' | 'top';
 
 export interface DropdownProperties extends MpProperties {
-  /** Whether the dropdown is open (controlled). Defaults to `false`. */
+  /**
+   * Whether the dropdown is open (controlled). Defaults to `false`.
+   * @model onUpdateOpen
+   */
   open?: boolean;
   /** Size token controlling the panel's scale. Defaults to `'md'`. */
   size?: DropdownSize;
@@ -74,7 +76,7 @@ const POSITION_AREA: Readonly<Record<DropdownPlacement, string>> = {
  * props. It owns its styling through the co-located CSS Module
  * `base-dropdown.module.scss`.
  */
-export function BaseDropdown(properties: DropdownProperties): MpElement {
+export function BaseDropdown(properties: Readonly<DropdownProperties>): MpElement {
   const {
     open = false,
     placement = 'bottom-start',
@@ -84,9 +86,9 @@ export function BaseDropdown(properties: DropdownProperties): MpElement {
     size = 'md',
   } = properties;
 
-  const idReference = useRef<string>(nextFieldId('mp-dropdown'));
-  const anchorName = `--${idReference.current}`;
-  const panelId = `${idReference.current}-panel`;
+  const resolvedId = useId();
+  const anchorName = `--${resolvedId}`;
+  const panelId = `${resolvedId}-panel`;
   const triggerReference = useRef<HTMLElement | null>(null);
   const panelReference = useRef<HTMLElement | null>(null);
 

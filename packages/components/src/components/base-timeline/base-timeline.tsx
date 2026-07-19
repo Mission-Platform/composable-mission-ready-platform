@@ -78,7 +78,7 @@ export interface TimelineProperties extends MpProperties {
  * The per-item `marker`/`time`/`title`/default slots become four scoped slots
  * (`marker`/`time`/`title`/`content`) that fall back to the item's fields.
  */
-export function BaseTimeline(properties: TimelineProperties): MpElement {
+export function BaseTimeline(properties: Readonly<TimelineProperties>): MpElement {
   const { items, orientation = 'vertical', align = 'start', size = 'md' } = properties;
 
   const isAlternate = orientation === 'vertical' && align === 'alternate';

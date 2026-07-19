@@ -14,7 +14,10 @@ export type RangeValue = [number, number];
 type Thumb = 'min' | 'max';
 
 export interface RangeInputProperties extends MpProperties {
-  /** Current `[lower, upper]` selection (controlled via `modelValue`). Defaults to `[0, 100]`. */
+  /**
+   * Current `[lower, upper]` selection (controlled via `modelValue`). Defaults to `[0, 100]`.
+   * @model onUpdateModelValue
+   */
   modelValue?: RangeValue;
   /** Minimum selectable value. Defaults to `0`. */
   min?: number;
@@ -63,7 +66,7 @@ export interface RangeInputProperties extends MpProperties {
  * `v-model` + `change` emit become the `onUpdateModelValue`/`onChange` callback
  * props.
  */
-export function BaseRangeInput(properties: RangeInputProperties): MpElement {
+export function BaseRangeInput(properties: Readonly<RangeInputProperties>): MpElement {
   const {
     modelValue = [0, 100],
     min = 0,
@@ -239,7 +242,7 @@ export function BaseRangeInput(properties: RangeInputProperties): MpElement {
         />
         <div
           aria-disabled={disabled || undefined}
-          aria-label={ariaLabelMin}
+          aria-label={ariaLabelMin ?? 'Minimum'}
           aria-valuemax={upper}
           aria-valuemin={min}
           aria-valuenow={lower}
@@ -255,7 +258,7 @@ export function BaseRangeInput(properties: RangeInputProperties): MpElement {
         </div>
         <div
           aria-disabled={disabled || undefined}
-          aria-label={ariaLabelMax}
+          aria-label={ariaLabelMax ?? 'Maximum'}
           aria-valuemax={max}
           aria-valuemin={lower}
           aria-valuenow={upper}

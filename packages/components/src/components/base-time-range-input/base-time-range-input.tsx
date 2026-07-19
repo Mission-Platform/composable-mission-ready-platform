@@ -3,7 +3,7 @@ import {
   hasSlot,
   Slot,
   useEffect,
-  useRef,
+  useId,
   useState,
   type MpChild,
   type MpElement,
@@ -13,7 +13,6 @@ import {
 import { BaseDropdown } from '../base-dropdown';
 import { BaseTypography } from '../base-typography';
 import { HOURS, MINUTES, SECONDS, formatTime, formatTimeRange, pad, parseTime, type TimeRange } from '../date-time';
-import { nextFieldId } from '../field-id';
 
 import styles from './base-time-range-input.module.scss';
 
@@ -24,7 +23,10 @@ export type TimeRangeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl
 type Endpoint = 'start' | 'end';
 
 export interface TimeRangeInputProperties extends MpProperties {
-  /** Selected `{ start, end }` time range, controlled via `modelValue`. */
+  /**
+   * Selected `{ start, end }` time range, controlled via `modelValue`.
+   * @model onUpdateModelValue
+   */
   modelValue?: TimeRange;
   /** Visible label text. */
   label?: string;
@@ -70,13 +72,13 @@ export interface TimeRangeInputProperties extends MpProperties {
  * inline parse/format logic is
  * delegated to the co-located framework-agnostic `date-time.ts`; the local
  * `ref`s become {@link useState} resynced from `modelValue` via a
- * {@link useEffect}; the `useId` composable becomes `nextFieldId`; the `start`/
+ * {@link useEffect}; the `useId` composable maps to the framework-native `useId` hook; the `start`/
  * `end` SFC slots become the `startContent`/`endContent` named slots (`<Slot>`,
  * presence detected with the framework-neutral {@link hasSlot} helper; the
  * `start`/`end` names are reserved for the range endpoints); and the `v-model` +
  * `change` emits become the `onUpdateModelValue`/`onChange` callback props.
  */
-export function BaseTimeRangeInput(properties: TimeRangeInputProperties): MpElement {
+export function BaseTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): MpElement {
   const {
     modelValue = { start: '', end: '' },
     label,
@@ -89,8 +91,8 @@ export function BaseTimeRangeInput(properties: TimeRangeInputProperties): MpElem
     showSeconds = false,
   } = properties;
 
-  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-time-range-input'));
-  const resolvedId = idReference.current;
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
   const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
 
   const [open, setOpen] = useState<boolean>(false);

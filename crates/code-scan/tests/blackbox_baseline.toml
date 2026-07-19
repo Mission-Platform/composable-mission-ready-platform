@@ -1,0 +1,318 @@
+# ZXING blackbox corpus baseline — committed per-folder pass counts.
+# Positive folders: correct decodes per rotation (a floor; the harness
+# fails if the pipeline decodes fewer). Negative folders
+# (falsepositives*, unsupported): false-positive counts (a ceiling).
+# Regenerate with BLACKBOX_WRITE_BASELINE=1 (see blackbox.rs).
+
+[aztec-1]
+rot0 = 0
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[aztec-2]
+rot0 = 0
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[codabar-1]
+rot0 = 3
+rot90 = 1
+rot180 = 1
+rot270 = 3
+
+[code128-1]
+rot0 = 4
+rot90 = 4
+rot180 = 4
+rot270 = 4
+
+[code128-2]
+rot0 = 13
+rot90 = 9
+rot180 = 8
+rot270 = 10
+
+[code128-3]
+rot0 = 2
+rot90 = 2
+rot180 = 2
+rot270 = 2
+
+[code39-1]
+rot0 = 2
+rot90 = 2
+rot180 = 2
+rot270 = 3
+
+[code39-2]
+rot0 = 0
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[code39-3]
+rot0 = 12
+rot90 = 11
+rot180 = 11
+rot270 = 12
+
+[code93-1]
+rot0 = 0
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[datamatrix-1]
+rot0 = 6
+rot90 = 5
+rot180 = 5
+rot270 = 5
+
+[datamatrix-2]
+rot0 = 3
+rot90 = 3
+rot180 = 3
+rot270 = 2
+
+[datamatrix-3]
+rot0 = 0
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[ean13-1]
+rot0 = 29
+rot90 = 29
+rot180 = 28
+rot270 = 29
+
+[ean13-2]
+rot0 = 19
+rot90 = 18
+rot180 = 18
+rot270 = 18
+
+[ean13-3]
+rot0 = 54
+rot90 = 44
+rot180 = 45
+rot270 = 44
+
+[ean13-4]
+rot0 = 8
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[ean13-5]
+rot0 = 0
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[ean8-1]
+rot0 = 8
+rot90 = 5
+rot180 = 5
+rot270 = 8
+
+[falsepositives]
+rot0 = 0
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[falsepositives-2]
+rot0 = 0
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[inverted]
+rot0 = 0
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[itf-1]
+rot0 = 11
+rot90 = 6
+rot180 = 8
+rot270 = 9
+
+[itf-2]
+rot0 = 12
+rot90 = 13
+rot180 = 13
+rot270 = 12
+
+[maxicode-1]
+rot0 = 9
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[pdf417-1]
+rot0 = 8
+rot90 = 0
+rot180 = 8
+rot270 = 0
+
+[pdf417-2]
+rot0 = 13
+rot90 = 0
+rot180 = 13
+rot270 = 0
+
+[pdf417-3]
+rot0 = 8
+rot90 = 0
+rot180 = 8
+rot270 = 0
+
+[qrcode-1]
+rot0 = 0
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[qrcode-2]
+rot0 = 14
+rot90 = 13
+rot180 = 14
+rot270 = 14
+
+[qrcode-3]
+rot0 = 5
+rot90 = 3
+rot180 = 7
+rot270 = 4
+
+[qrcode-4]
+rot0 = 24
+rot90 = 25
+rot180 = 23
+rot270 = 26
+
+[qrcode-5]
+rot0 = 4
+rot90 = 3
+rot180 = 3
+rot270 = 1
+
+[qrcode-6]
+rot0 = 0
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[rss14-1]
+rot0 = 4
+rot90 = 4
+rot180 = 0
+rot270 = 0
+
+[rss14-2]
+rot0 = 2
+rot90 = 2
+rot180 = 2
+rot270 = 2
+
+[rssexpanded-1]
+rot0 = 0
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[rssexpanded-2]
+rot0 = 0
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[rssexpanded-3]
+rot0 = 0
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[rssexpandedstacked-1]
+rot0 = 0
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[rssexpandedstacked-2]
+rot0 = 0
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[unsupported]
+rot0 = 0
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[upca-1]
+rot0 = 15
+rot90 = 16
+rot180 = 16
+rot270 = 16
+
+[upca-2]
+rot0 = 31
+rot90 = 22
+rot180 = 21
+rot270 = 21
+
+[upca-3]
+rot0 = 7
+rot90 = 6
+rot180 = 8
+rot270 = 8
+
+[upca-4]
+rot0 = 10
+rot90 = 14
+rot180 = 14
+rot270 = 11
+
+[upca-5]
+rot0 = 26
+rot90 = 23
+rot180 = 26
+rot270 = 25
+
+[upca-6]
+rot0 = 0
+rot90 = 0
+rot180 = 0
+rot270 = 0
+
+[upce-1]
+rot0 = 3
+rot90 = 2
+rot180 = 3
+rot270 = 3
+
+[upce-2]
+rot0 = 37
+rot90 = 35
+rot180 = 35
+rot270 = 34
+
+[upce-3]
+rot0 = 5
+rot90 = 1
+rot180 = 1
+rot270 = 1
+
+[upcean-extension-1]
+rot0 = 2
+rot90 = 2
+rot180 = 2
+rot270 = 2
+

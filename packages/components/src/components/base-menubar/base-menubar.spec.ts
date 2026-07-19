@@ -8,7 +8,7 @@ import { renderToString } from 'vue/server-renderer';
 
 import { BaseMenubar } from './base-menubar';
 
-import type { MenuItem } from '../base-menu';
+import type { MenuNode } from '../base-menu';
 
 /**
  * Exercises the **neutral** `BaseMenubar` authored in this package, rendering it
@@ -19,7 +19,7 @@ import type { MenuItem } from '../base-menu';
 const ReactMenubar = toReactComponent(BaseMenubar, 'Menubar');
 const VueMenubar = toVueComponent(BaseMenubar, 'Menubar');
 
-const items: MenuItem[] = [
+const items: MenuNode[] = [
   {
     label: 'File',
     children: [
@@ -59,7 +59,10 @@ describe('BaseMenubar authors the same component for React and Vue', () => {
     );
 
     for (const html of [react, vue]) {
-      expect(html).toContain('role="menubar"');
+      // With no `items` the bar exposes only its default slot; it deliberately
+      // drops `role="menubar"` (and its `aria-label`) so it doesn't assert an
+      // empty menubar with no `menuitem` children (`aria-required-children`).
+      expect(html).not.toContain('role="menubar"');
       expect(html).toContain('Custom bar');
     }
   });

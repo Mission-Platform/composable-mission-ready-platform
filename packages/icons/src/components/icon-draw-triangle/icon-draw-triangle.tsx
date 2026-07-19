@@ -18,7 +18,7 @@ export interface IconDrawTriangleProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-draw-triangle.module.scss`.
  */
-export function IconDrawTriangle(properties: IconDrawTriangleProperties): MpElement {
+export function IconDrawTriangle(properties: Readonly<IconDrawTriangleProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

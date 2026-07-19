@@ -1,0 +1,5 @@
+---
+'@mission-platform/code-scanner': patch
+---
+
+Improve the 1D-barcode locator for real camera photos, where the bars are one block inside a cluttered scene. Vertically the scanner now finds the *transition band* — the tallest stripe of edge-dense rows — so the scan lines land on the bars rather than the human-readable digit row or plain background (the previous whole-frame ink bounds ballooned onto both). Horizontally, each scan line is trimmed to its densest run of narrow alternating elements, splitting away the quiet zones and any wide background object beside the symbol. The unit-width estimate now rejects rare specks by requiring a candidate module width to recur, so a lone stray run can no longer inflate the module count. Finally the locator emits a ranked shortlist of candidate scan lines and the decode stage tries each until one reads — a single "cleanest" line is a poor proxy for a decodable one on a photo. Validated against genuine barcode photos from the zxing blackbox corpus (EAN-13/8, UPC-A, Code 128/39), lifting the decode rate several-fold; a new cluttered-frame pipeline test locks in the behaviour. Tightly-cropped file uploads are unaffected.

@@ -59,7 +59,7 @@ export interface MasonryProperties extends MpProperties {
  * two-stage compiler, so the component ships its own `@layer mp.components`
  * CSS); the dynamic multi-column properties are applied inline.
  */
-export function BaseMasonry(properties: MasonryProperties): MpElement {
+export function BaseMasonry(properties: Readonly<MasonryProperties>): MpElement {
   const { columns = 3, minColumnWidth, gap = 'md', tag = 'div', padding, margin, size = 'md' } = properties;
 
   const columnCount = Math.max(1, Math.floor(columns));

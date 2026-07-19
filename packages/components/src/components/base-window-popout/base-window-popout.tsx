@@ -69,7 +69,7 @@ export interface WindowPopoutProperties extends MpProperties {
  * named slot (`<Slot>`, with a default message as its fallback), and the labels
  * are plain props.
  */
-export function BaseWindowPopout(properties: WindowPopoutProperties): MpElement {
+export function BaseWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElement {
   const {
     title,
     width = 800,

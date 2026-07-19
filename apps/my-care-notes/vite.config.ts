@@ -8,10 +8,11 @@ import { APP_LOCALE_BCP47, APP_ORIGIN } from './src/seo-app';
 
 // Stub `monaco-editor` itself (incl. its deep `esm/...` entries and `?worker`
 // imports) — the sole source of the browser-only `.css` side-effect imports
-// that break Node's ESM loader. The harper/hunspell packages, which only
-// *re-export composables* alongside their static `monaco-editor` import, are
-// intentionally left real so their named exports (e.g. `useHarperMonaco`,
-// `useHunspellMonaco`) still resolve during the SSR build's static analysis.
+// that break Node's ESM loader. The harper/hunspell packages only *re-export
+// composables* and load `monaco-editor` lazily (dynamic `import()`), so they no
+// longer drag Monaco into the SSR static graph and are intentionally left real
+// so their named exports (e.g. `useHarperMonaco`, `useHunspellMonaco`) still
+// resolve during the SSR build's static analysis.
 function shouldStubForSsr(id: string): boolean {
   const base = id.split('?')[0] ?? id;
   return base === 'monaco-editor' || base.startsWith('monaco-editor/');
@@ -21,15 +22,19 @@ function shouldStubForSsr(id: string): boolean {
  * During the `vite-ssg` *server* build (and the JSDOM prerender that follows),
  * Vite runs the app through Node. `monaco-editor` pulls in browser-only ESM
  * with `.css` side-effect imports that Node's ESM loader cannot link, crashing
- * the prerender. It reaches the SSR graph both directly (the editor component)
- * and transitively — `@mission-platform/harper` and `@mission-platform/hunspell`
- * statically import `monaco-editor`.
+ * the prerender. It can reach the SSR graph directly (the editor component) and,
+ * defensively, via any transitive `monaco-editor` reference.
  *
  * The editor is rendered client-only (see `<ClientOnly>` + the async
  * `MonacoEditor`/`SnippetEditorModal`), so Monaco is never needed to produce
  * the prerendered HTML. This plugin replaces `monaco-editor` (and its deep
  * entries / `?worker` imports) with an inert stub in the SSR environment only,
  * leaving the client build (the real, shipped bundle) completely untouched.
+ *
+ * The exported named members below mirror Monaco's public API surface so any
+ * top-level access (`monaco.editor`, `monaco.Range`, `monaco.MarkerSeverity`,
+ * …) resolves to a harmless no-op when a chunk that references them is linked
+ * under SSR.
  */
 function ssrStubBrowserOnlyEditorPlugin(): Plugin {
   const STUB_ID = '\0mp-ssr-editor-stub';
@@ -44,10 +49,9 @@ function ssrStubBrowserOnlyEditorPlugin(): Plugin {
     load(id) {
       if (id === STUB_ID) {
         // A self-returning Proxy that is callable / `new`-able, so any access
-        // shape resolves to a harmless no-op during SSR. `@mission-platform/harper`
-        // and `@mission-platform/hunspell` do `import * as monaco from 'monaco-editor'`
-        // and touch `monaco.MarkerSeverity.Error`, `monaco.editor`, `monaco.Range`,
-        // `monaco.languages` at *module top-level*, so those have to exist as named
+        // shape resolves to a harmless no-op during SSR. Anything importing
+        // `monaco-editor` may touch `monaco.MarkerSeverity.Error`, `monaco.editor`,
+        // `monaco.Range`, `monaco.languages`, etc., so those have to exist as named
         // exports on the stub namespace or the chunk throws when it is linked.
         return [
           'const handler = { get: () => stub, apply: () => stub, construct: () => ({}) };',

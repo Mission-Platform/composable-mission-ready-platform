@@ -1,4 +1,4 @@
-import { IconClose } from '@mission-platform/icons';
+import { IconCheck, IconClose, IconError, IconInfo, IconWarning } from '@mission-platform/icons';
 import { h, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import sizeStyles from '../size.module.scss';
@@ -31,18 +31,24 @@ export interface ToastProperties extends MpProperties {
   onDismiss?: () => void;
 }
 
-/** Maps each {@link ToastVariant} onto its status glyph (substituted for the original inline SVG). */
-const VARIANT_GLYPH: Record<ToastVariant, string> = {
-  neutral: 'ℹ',
-  primary: 'ℹ',
-  secondary: 'ℹ',
-  tertiary: 'ℹ',
-  success: '✓',
-  warning: '⚠',
-  info: 'ℹ',
-  error: '✕',
-  critical: '⛔',
-};
+/** Renders the `@mission-platform/icons` status icon for a given {@link ToastVariant}. */
+function variantIcon(variant: ToastVariant): MpElement {
+  switch (variant) {
+    case 'success': {
+      return <IconCheck size="sm" />;
+    }
+    case 'warning': {
+      return <IconWarning size="sm" />;
+    }
+    case 'error':
+    case 'critical': {
+      return <IconError size="sm" />;
+    }
+    default: {
+      return <IconInfo size="sm" />;
+    }
+  }
+}
 
 /**
  * `BaseToast` — a single toast notification card authored once in the neutral
@@ -59,9 +65,10 @@ const VARIANT_GLYPH: Record<ToastVariant, string> = {
  * The original Vue SFC used a `dismiss` emit and `icon` named slot, and rendered
  * the intent icon as an inline SVG; the neutral version uses the cross-framework
  * callback-prop `onDismiss`, the `iconContent` named slot (`<Slot>`, with the
- * intent glyph as its fallback), and a text glyph (`✓`/`✕`/`⚠`/`ℹ`).
+ * intent icon as its fallback), and the write-once `@mission-platform/icons`
+ * set (`IconCheck`/`IconError`/`IconWarning`/`IconInfo`).
  */
-export function BaseToast(properties: ToastProperties): MpElement {
+export function BaseToast(properties: Readonly<ToastProperties>): MpElement {
   const {
     variant = 'info',
     title,
@@ -90,7 +97,7 @@ export function BaseToast(properties: ToastProperties): MpElement {
         aria-hidden="true"
         classNames={styles['base-toast__icon']}
       >
-        <Slot name="iconContent">{VARIANT_GLYPH[variant]}</Slot>
+        <Slot name="iconContent">{variantIcon(variant)}</Slot>
       </span>
       <div classNames={styles['base-toast__content']}>
         {title ? <p classNames={styles['base-toast__title']}>{title}</p> : undefined}

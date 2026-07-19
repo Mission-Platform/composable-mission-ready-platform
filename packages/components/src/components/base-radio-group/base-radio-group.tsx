@@ -1,9 +1,8 @@
-import { h, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useId, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseRadio } from '../base-radio';
 import { BaseStack } from '../base-stack';
 import { BaseTypography } from '../base-typography';
-import { nextFieldId } from '../field-id';
 import sizeStyles from '../size.module.scss';
 
 import styles from './base-radio-group.module.scss';
@@ -25,7 +24,10 @@ export interface RadioOption {
 export type RadioGroupDirection = 'vertical' | 'horizontal';
 
 export interface RadioGroupProperties extends MpProperties {
-  /** The currently selected value (controlled via `modelValue`). */
+  /**
+   * The currently selected value (controlled via `modelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: string | number;
   /** The selectable options. */
   options?: RadioOption[];
@@ -66,13 +68,13 @@ export interface RadioGroupProperties extends MpProperties {
  * primitives and owns its styling through the co-located CSS Module
  * `base-radio-group.module.scss`.
  *
- * Substitutions from the original Vue SFC: the `useId`/random group name becomes
- * the shared `nextFieldId` helper resolved once in the render body; the
+ * Substitutions from the original Vue SFC: the `useId`/random group name maps
+ * to the framework-native `useId` hook; the
  * `useI18n` "required" title becomes a plain string; and the `v-model` + emits
  * become the callback props. Any default-slot content renders after the
  * options.
  */
-export function BaseRadioGroup(properties: RadioGroupProperties): MpElement {
+export function BaseRadioGroup(properties: Readonly<RadioGroupProperties>): MpElement {
   const {
     modelValue,
     options = [],
@@ -86,10 +88,13 @@ export function BaseRadioGroup(properties: RadioGroupProperties): MpElement {
     size = 'md',
   } = properties;
 
-  const groupId = properties.name ?? nextFieldId('radio-group');
+  const generatedId = useId();
+  const groupId = properties.name ?? generatedId;
 
-  const handleUpdate = (value: string | number): void => {
-    properties.onUpdateModelValue?.(value);
+  const handleUpdate = (value: string | number | undefined): void => {
+    if (value !== undefined) {
+      properties.onUpdateModelValue?.(value);
+    }
   };
 
   const handleChange = (event: Event): void => {

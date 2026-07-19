@@ -1,6 +1,7 @@
 import {
   h,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -11,7 +12,6 @@ import {
 import { marked } from 'marked';
 
 import { BaseTypography } from '../base-typography';
-import { nextFieldId } from '../field-id';
 
 import styles from './base-markdown-input.module.scss';
 
@@ -41,7 +41,10 @@ const TOOLBAR: readonly ToolbarItem[] = [
 ];
 
 export interface MarkdownInputProperties extends MpProperties {
-  /** Markdown source (controlled via `modelValue`). */
+  /**
+   * Markdown source (controlled via `modelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: string;
   /** Visible rows of the textarea. Defaults to `6`. */
   rows?: number;
@@ -91,10 +94,10 @@ export interface MarkdownInputProperties extends MpProperties {
  * markup is the static shell; the `computed` render becomes {@link useMemo}; the
  * active tab `ref` becomes {@link useState}; the `@mission-platform/icons`
  * toolbar SVGs become text glyphs; the `useI18n` labels become plain strings;
- * the `useId` composable becomes `nextFieldId`; and the `v-model` + `change`/
+ * the `useId` composable maps to the framework-native `useId` hook; and the `v-model` + `change`/
  * `blur`/`focus` emits become the callback props.
  */
-export function BaseMarkdownInput(properties: MarkdownInputProperties): MpElement {
+export function BaseMarkdownInput(properties: Readonly<MarkdownInputProperties>): MpElement {
   const {
     modelValue = '',
     rows = 6,
@@ -109,8 +112,8 @@ export function BaseMarkdownInput(properties: MarkdownInputProperties): MpElemen
     required = false,
   } = properties;
 
-  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-markdown-input'));
-  const resolvedId = idReference.current;
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
   const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
 
   const textareaReference = useRef<HTMLTextAreaElement | null>(null);

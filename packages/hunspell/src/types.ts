@@ -6,4 +6,4 @@ export type {
   StringVector,
   TokenResult,
   TokenResultVector,
-} from './wasm/hunspell';
+} from './wasm/hunspell.mjs';

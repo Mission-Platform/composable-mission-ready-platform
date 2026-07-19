@@ -3,7 +3,7 @@ import {
   hasSlot,
   Slot,
   useEffect,
-  useRef,
+  useId,
   useState,
   type MpChild,
   type MpElement,
@@ -13,7 +13,6 @@ import {
 import { BaseDropdown } from '../base-dropdown';
 import { BaseTypography } from '../base-typography';
 import { HOURS, MINUTES, SECONDS, clamp, displayTime, formatTime, pad, parseTime } from '../date-time';
-import { nextFieldId } from '../field-id';
 
 import styles from './base-time-input.module.scss';
 
@@ -21,7 +20,10 @@ import styles from './base-time-input.module.scss';
 export type TimeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export interface TimeInputProperties extends MpProperties {
-  /** Selected time (`HH:MM` or `HH:MM:SS`), controlled via `modelValue`. */
+  /**
+   * Selected time (`HH:MM` or `HH:MM:SS`), controlled via `modelValue`.
+   * @model onUpdateModelValue
+   */
   modelValue?: string;
   /** Visible label text. */
   label?: string;
@@ -65,13 +67,13 @@ export interface TimeInputProperties extends MpProperties {
  * inline parse/format logic is
  * delegated to the co-located framework-agnostic `date-time.ts`; the local
  * `ref`s become {@link useState} resynced from `modelValue` via a
- * {@link useEffect}; the `useId` composable becomes `nextFieldId`; the inline
+ * {@link useEffect}; the `useId` composable maps to the framework-native `useId` hook; the inline
  * clock SVG becomes a `🕒` glyph; the `start`/`end` regions are authored as named
  * slots (`<Slot>`) with their presence detected through the framework-neutral
  * {@link hasSlot} helper; and the `v-model` + `change` emits become the
  * `onUpdateModelValue`/`onChange` callback props.
  */
-export function BaseTimeInput(properties: TimeInputProperties): MpElement {
+export function BaseTimeInput(properties: Readonly<TimeInputProperties>): MpElement {
   const {
     modelValue = '',
     label,
@@ -84,8 +86,8 @@ export function BaseTimeInput(properties: TimeInputProperties): MpElement {
     showSeconds = false,
   } = properties;
 
-  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-time-input'));
-  const resolvedId = idReference.current;
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
   const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
 
   const [open, setOpen] = useState<boolean>(false);
@@ -165,6 +167,7 @@ export function BaseTimeInput(properties: TimeInputProperties): MpElement {
 
   return (
     <div
+      aria-disabled={disabled ? 'true' : undefined}
       classNames={[
         styles['base-time-input'],
         styles[`base-time-input--${size}`],

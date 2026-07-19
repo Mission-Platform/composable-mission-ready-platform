@@ -18,7 +18,7 @@ export interface IconStarProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-star.module.scss`.
  */
-export function IconStar(properties: IconStarProperties): MpElement {
+export function IconStar(properties: Readonly<IconStarProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

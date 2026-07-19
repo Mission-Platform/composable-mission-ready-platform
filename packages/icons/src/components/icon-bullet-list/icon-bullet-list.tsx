@@ -18,7 +18,7 @@ export interface IconBulletListProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-bullet-list.module.scss`.
  */
-export function IconBulletList(properties: IconBulletListProperties): MpElement {
+export function IconBulletList(properties: Readonly<IconBulletListProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

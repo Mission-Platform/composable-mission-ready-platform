@@ -22,7 +22,10 @@ export interface VirtualTabsProperties extends MpProperties {
   tabs: TabItem[];
   /** Size token controlling the tabs' scale. Defaults to `'md'`. */
   size?: VirtualTabsSize;
-  /** Currently active tab `id` (controlled via `modelValue`). Defaults to the first tab. */
+  /**
+   * Currently active tab `id` (controlled via `modelValue`). Defaults to the first tab.
+   * @model onUpdateModelValue
+   */
   modelValue?: string;
   /** Visual treatment. Defaults to `'line'`. */
   variant?: TabsVariant;
@@ -65,7 +68,7 @@ export interface VirtualTabsProperties extends MpProperties {
  * plain `panel={({ tab }) => …}` attribute), and uses the established
  * `modelValue` + callback-prop convention.
  */
-export function BaseVirtualTabs(properties: VirtualTabsProperties): MpElement {
+export function BaseVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElement {
   const { tabs, modelValue, variant = 'line', closable = false, addable = false, size = 'md' } = properties;
 
   const listReference = useRef<HTMLElement | null>(null);
@@ -123,6 +126,25 @@ export function BaseVirtualTabs(properties: VirtualTabsProperties): MpElement {
     select(nextTab.id);
     focusTab(nextTab.id);
   };
+
+  // The active panel is built by a node-returning **render helper** (rather than
+  // an inline node in the return): the `panel` render-prop returns arbitrary
+  // framework nodes, so the component must compile through the render-closure
+  // (`h`) path — where a render-prop call renders as real child vnodes — instead
+  // of the flat-template path, which would stringify the returned node
+  // (`toDisplayString`). Authoring the panel as a node helper keeps the whole
+  // component on that render-closure path.
+  const renderPanel = (): MpElement | undefined =>
+    activeTab ? (
+      <div
+        id={`panel-${activeTab.id}`}
+        aria-labelledby={`tab-${activeTab.id}`}
+        classNames={styles['base-virtual-tabs__panel']}
+        role="tabpanel"
+      >
+        {properties.panel?.({ tab: activeTab })}
+      </div>
+    ) : undefined;
 
   return (
     <div
@@ -199,16 +221,7 @@ export function BaseVirtualTabs(properties: VirtualTabsProperties): MpElement {
         ) : undefined}
       </div>
 
-      {activeTab ? (
-        <div
-          id={`panel-${activeTab.id}`}
-          aria-labelledby={`tab-${activeTab.id}`}
-          classNames={styles['base-virtual-tabs__panel']}
-          role="tabpanel"
-        >
-          {properties.panel?.({ tab: activeTab })}
-        </div>
-      ) : undefined}
+      {renderPanel()}
     </div>
   );
 }

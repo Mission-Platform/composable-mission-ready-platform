@@ -18,7 +18,7 @@ export interface IconLockOpenProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-lock-open.module.scss`.
  */
-export function IconLockOpen(properties: IconLockOpenProperties): MpElement {
+export function IconLockOpen(properties: Readonly<IconLockOpenProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

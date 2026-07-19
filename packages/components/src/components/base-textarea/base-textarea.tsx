@@ -1,7 +1,6 @@
-import { h, hasSlot, Slot, useRef, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, hasSlot, Slot, useId, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
-import { nextFieldId } from '../field-id';
 
 import styles from './base-textarea.module.scss';
 
@@ -13,7 +12,10 @@ export type TextareaResize = 'none' | 'vertical' | 'horizontal' | 'both';
 export type TextareaAutocapitalize = 'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters';
 
 export interface TextareaProperties extends MpProperties {
-  /** Field value (controlled via `modelValue` + `onUpdateModelValue`). */
+  /**
+   * Field value (controlled via `modelValue` + `onUpdateModelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: string;
   /** Visible number of text rows. Defaults to `4`. */
   rows?: number;
@@ -65,14 +67,14 @@ export interface TextareaProperties extends MpProperties {
  * styling through the co-located CSS Module `base-textarea.module.scss` and
  * composes the neutral {@link BaseTypography} for the label/hint/error text.
  *
- * Substitutions from the original Vue SFC: the `useId` composable becomes the
- * shared `nextFieldId` helper resolved once in a `useRef`; the `start`/`end`
+ * Substitutions from the original Vue SFC: the `useId` composable maps straight
+ * to the framework-native `useId` hook; the `start`/`end`
  * regions are authored as named slots (`<Slot>`) with their presence detected
  * through the framework-neutral {@link hasSlot} helper; and the `v-model` +
  * `change`/`blur`/`focus` emits become the
  * `onUpdateModelValue`/`onChange`/`onBlur`/`onFocus` callback props.
  */
-export function BaseTextarea(properties: TextareaProperties): MpElement {
+export function BaseTextarea(properties: Readonly<TextareaProperties>): MpElement {
   const {
     modelValue = '',
     rows = 4,
@@ -89,8 +91,8 @@ export function BaseTextarea(properties: TextareaProperties): MpElement {
     autocapitalize,
   } = properties;
 
-  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-textarea'));
-  const resolvedId = idReference.current;
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
   const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
 
   const handleInput = (event: Event): void => {

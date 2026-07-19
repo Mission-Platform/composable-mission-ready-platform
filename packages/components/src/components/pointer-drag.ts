@@ -16,7 +16,7 @@
  * This module sits next to the component folders rather than inside one, so
  * `@mission-platform/vite-plugin-jsx` recognises it is **not** a sibling
  * component and copies it verbatim into both generated trees (re-pointing the
- * import) — exactly like `date-time.ts` / `field-id.ts`. It touches only the
+ * import) — exactly like `date-time.ts`. It touches only the
  * DOM (no framework imports), so it is SSG-safe: every entry point guards
  * `globalThis.window`/`document` and is a no-op on the server.
  */

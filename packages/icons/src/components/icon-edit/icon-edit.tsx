@@ -18,7 +18,7 @@ export interface IconEditProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-edit.module.scss`.
  */
-export function IconEdit(properties: IconEditProperties): MpElement {
+export function IconEdit(properties: Readonly<IconEditProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

@@ -234,6 +234,10 @@ en:
           description: >-
             A unified SEO package — page metadata, Open Graph, Twitter Card, and JSON-LD — plus prerendered SSG output
             keeps every route SEO-ready and shareable.
+        - title: Native-speed WebAssembly
+          description: >-
+            Dependency-free Rust and AssemblyScript compiled to WebAssembly powers QR, Data Matrix and 1D barcode
+            encoding/decoding, camera code scanning, and phone-number parsing.
     packages:
       title: Building blocks
       lead: Every package is independently versioned and published. Mix, match, and compose.
@@ -244,11 +248,19 @@ en:
         - Write-once SVG icon components
         - Write-once application layouts
         - Write-once form builder & schema forms
+        - Framework-agnostic forms core — JSON Schema derivation, Ajv validation & conditional visibility
         - Framework-agnostic router with Vue adapter
         - Calendar & scheduling core (RFC 5545 recurrence)
         - Responsive utilities & composables
         - i18n integration & base locales
         - MapLibre GL map wrapper
+        - Write-once D3 integration & responsive chart helpers
+        - Write-once RxJS integration (useObservable / useSubscription)
+        - QR Code encoder & decoder (Rust → WebAssembly)
+        - 1D (linear) barcode encoder & decoder (Rust → WebAssembly)
+        - Data Matrix 2D encoder & decoder (Rust → WebAssembly)
+        - Image & camera code scanner — QR, Data Matrix & 1D barcodes (Rust → WebAssembly)
+        - Phone-number parse, validate & format (libphonenumber → WebAssembly)
         - Harper grammar checker for Monaco
         - Hunspell spell checker (WASM)
         - 'Unified SEO: page metadata, Open Graph, Twitter Card & JSON-LD'

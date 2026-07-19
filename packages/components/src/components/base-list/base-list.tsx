@@ -50,7 +50,7 @@ export interface ListProperties extends MpProperties {
  * drops that scoped slot — rows are driven by `items` — consistent with how the
  * other migrated components dropped scoped slots.
  */
-export function BaseList(properties: ListProperties): MpElement {
+export function BaseList(properties: Readonly<ListProperties>): MpElement {
   const { items = [], variant = 'unordered', tone = 'neutral', size = 'md', divided = false } = properties;
 
   const tag = variant === 'description' ? 'dl' : variant === 'ordered' ? 'ol' : 'ul';

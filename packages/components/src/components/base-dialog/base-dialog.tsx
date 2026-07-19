@@ -20,7 +20,10 @@ import styles from './base-dialog.module.scss';
 export type DialogSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export interface DialogProperties extends MpProperties {
-  /** Whether the dialog is open (controlled). Defaults to `false`. */
+  /**
+   * Whether the dialog is open (controlled). Defaults to `false`.
+   * @model onUpdateOpen
+   */
   open?: boolean;
   /** Size token controlling the dialog's scale. Defaults to `'md'`. */
   size?: DialogSize;
@@ -71,7 +74,7 @@ type DialogElement = HTMLDialogElement & {
  * props. It owns its styling through the co-located CSS Module
  * `base-dialog.module.scss`.
  */
-export function BaseDialog(properties: DialogProperties): MpElement {
+export function BaseDialog(properties: Readonly<DialogProperties>): MpElement {
   const { open = false, title, closeOnBackdrop = true, closeLabel = 'Close', size = 'md' } = properties;
 
   const dialogReference = useRef<HTMLDialogElement | null>(null);

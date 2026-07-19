@@ -18,7 +18,7 @@ export interface IconHeadingOneProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-heading-one.module.scss`.
  */
-export function IconHeadingOne(properties: IconHeadingOneProperties): MpElement {
+export function IconHeadingOne(properties: Readonly<IconHeadingOneProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

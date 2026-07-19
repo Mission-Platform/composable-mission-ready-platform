@@ -35,7 +35,7 @@ export interface IconButtonProperties extends MpProperties {
  * `base-icon-button.module.scss`, assembled with the framework-neutral
  * {@link classNames} helper.
  */
-export function BaseIconButton(properties: IconButtonProperties): MpElement {
+export function BaseIconButton(properties: Readonly<IconButtonProperties>): MpElement {
   const { label, variant = 'ghost', size = 'md', disabled = false, type = 'button' } = properties;
 
   const className = classNames(

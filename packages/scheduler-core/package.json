@@ -16,7 +16,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc --project tsconfig.build.json --noEmit && vite build && tsc --project tsconfig.build.json --emitDeclarationOnly",
+    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "build:bundle": "vite build",
+    "build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly",
     "build:watch": "vite build --watch",
     "test": "vitest run",
     "test:watch": "vitest",

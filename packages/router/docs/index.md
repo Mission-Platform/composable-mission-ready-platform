@@ -129,6 +129,41 @@ The React adapter provides integration with React Router.
 - **`useMpRoute`**: Hook to access current route information
 - **`MpLink`**: Framework-neutral link component for React
 
+### RedwoodSDK Adapter (`./redwood`)
+
+The RedwoodSDK adapter provides integration with `rwsdk/router` — the flat,
+request/response route table used by RedwoodSDK (React on Cloudflare Workers).
+
+**Main Exports:**
+
+- **`toRedwoodRoutes`**: Translates the neutral `MpRoute` tree into a flat list
+  of `rwsdk` route definitions (nested routes are flattened to absolute paths).
+- **`renderRoutes`**: Wraps the translated routes in a Document, mirroring
+  `rwsdk`'s `render(Document, routes, options)`.
+- **`toRedwoodPath`**: Converts a neutral path pattern into Redwood's grammar
+  (`:param` and `*` wildcards only; `:param?` → `:param`, `:param*` / `:param+`
+  → `*`).
+- **`redwoodHref`** / **`createRedwoodLinks`**: Build app-relative hrefs from
+  neutral locations, since RedwoodSDK navigates with plain anchors.
+
+**Example:**
+
+```tsx
+// worker.tsx
+import { defineApp } from 'rwsdk/worker';
+import { renderRoutes } from '@mission-platform/router/redwood';
+import { Document } from '@/app/Document';
+import { HomePage } from '@/app/pages/HomePage';
+import { UserPage } from '@/app/pages/UserPage';
+
+const routes = [
+  { path: '/', component: HomePage },
+  { path: '/users/:id', name: 'user', component: UserPage },
+];
+
+export default defineApp([renderRoutes(Document, routes)]);
+```
+
 ## Technical Details
 
 ### Dependencies

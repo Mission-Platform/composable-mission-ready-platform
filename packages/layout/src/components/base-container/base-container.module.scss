@@ -8,43 +8,46 @@
  * `.base-container--responsive` class the component applies through its hashed
  * CSS-Module class map.
  *
- * Matching the other write-once layouts, this module is self-contained: it
- * does not `@use` the `@mission-platform/tokens` breakpoint mixins but inlines
- * the platform breakpoints (xs 480 / sm 768 / md 1024 / lg 1920 / xl 2560 /
- * 2xl 3840) as range-notation `min-width` media queries. The rules live in the shared
- * `mp.components` cascade layer so unlayered application styles win over them.
+ * The breakpoint-stepped `max-width` values are driven by the platform
+ * breakpoint design tokens through the `@mission-platform/tokens` `bp-up`
+ * mixin (xs 480 / sm 768 / md 1024 / lg 1920 / xl 2560 / 2xl 3840), so the
+ * thresholds always track the token source of truth. The rules live in the
+ * package's own `mp.layout` cascade layer so unlayered application styles win
+ * over them.
  *
  * The `*-demo-*` classes only dress the Storybook examples (a framed viewport
  * and a filled content block) and are consumed through the hashed class map by
  * `base-container.stories.tsx`.
  */
 
-@layer mp.components {
+@use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
+
+@layer mp.layout {
   .base-container--responsive {
     width: 100%;
     max-width: 100%;
 
-    @media (width >= 480px) {
+    @include bp.bp-up('xs') {
       max-width: 460px;
     }
 
-    @media (width >= 768px) {
+    @include bp.bp-up('sm') {
       max-width: 720px;
     }
 
-    @media (width >= 1024px) {
+    @include bp.bp-up('md') {
       max-width: 960px;
     }
 
-    @media (width >= 1920px) {
+    @include bp.bp-up('lg') {
       max-width: 1820px;
     }
 
-    @media (width >= 2560px) {
+    @include bp.bp-up('xl') {
       max-width: 2400px;
     }
 
-    @media (width >= 3840px) {
+    @include bp.bp-up('2xl') {
       max-width: 3600px;
     }
   }

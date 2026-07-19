@@ -70,7 +70,7 @@ export interface ContainerProperties extends MpProperties {
  * gutter/centring are emitted as inline styles; the `responsive` step-ups live
  * in the CSS Module (which inlines the platform breakpoints as media queries).
  */
-export function BaseContainer(properties: ContainerProperties): MpElement {
+export function BaseContainer(properties: Readonly<ContainerProperties>): MpElement {
   const {
     variant = 'responsive',
     maxWidth = 'lg',

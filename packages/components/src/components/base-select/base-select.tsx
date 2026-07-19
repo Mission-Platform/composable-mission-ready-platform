@@ -1,9 +1,17 @@
 import { IconChevron } from '@mission-platform/icons';
-import { h, Slot, useRef, useState, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import {
+  h,
+  Slot,
+  useId,
+  useRef,
+  useState,
+  type MpChild,
+  type MpElement,
+  type MpProperties,
+} from '@mission-platform/jsx';
 
 import { BaseDropdown } from '../base-dropdown';
 import { BaseTypography } from '../base-typography';
-import { nextFieldId } from '../field-id';
 
 import styles from './base-select.module.scss';
 
@@ -21,7 +29,10 @@ export interface SelectOption {
 }
 
 export interface SelectProperties extends MpProperties {
-  /** Selected value (controlled via `modelValue`). */
+  /**
+   * Selected value (controlled via `modelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: string | number;
   /** The selectable options. */
   options?: SelectOption[];
@@ -37,6 +48,12 @@ export interface SelectProperties extends MpProperties {
   error?: string;
   /** Placeholder shown when no option is selected. */
   placeholder?: string;
+  /**
+   * Allow the user to filter the options by typing in the trigger, like
+   * {@link BaseMultiselect}. Defaults to `true`; set to `false` for a plain
+   * button trigger without a search field.
+   */
+  searchable?: boolean;
   /** Disable the control. */
   disabled?: boolean;
   /** Mark the field as required (renders a `*` after the label). */
@@ -62,9 +79,12 @@ export interface SelectProperties extends MpProperties {
  * dialect and compiled straight to React or Vue by
  * `@mission-platform/vite-plugin-jsx`.
  *
- * It renders a button trigger plus a listbox of options, backed by a visually
- * hidden native `<select>` so browser autofill and native form submission keep
- * working. Selection is controlled with the established `modelValue` +
+ * By default (`searchable`, the default) the trigger is a text field that filters
+ * the options as the user types — mirroring {@link BaseMultiselect} — so a value
+ * can be found by searching rather than scrolling; set `searchable={false}` for a
+ * plain button trigger. Either way the listbox is backed by a visually hidden
+ * native `<select>` so browser autofill and native form submission keep working.
+ * Selection is controlled with the established `modelValue` +
  * `onUpdateModelValue`/`onChange` callback-prop convention. It owns its styling
  * through the co-located CSS Module `base-select.module.scss`.
  *
@@ -77,14 +97,14 @@ export interface SelectProperties extends MpProperties {
  * `useState` open flag is kept in sync with the dropdown via its
  * `onUpdateOpen` callback.
  *
- * Other substitutions from the original Vue SFC: the `useId` composable becomes
- * the shared `nextFieldId` helper; the chevron is the write-once
+ * Other substitutions from the original Vue SFC: the `useId` composable maps to
+ * the framework-native `useId` hook; the chevron is the write-once
  * `@mission-platform/icons` `IconChevron` (rotated via its `direction` prop,
  * itself compiled to React/Vue); the `useI18n` strings become plain text; and
  * the `v-model` + emits become callback props. The `start`/`end` named slots are
  * preserved as neutral named slots.
  */
-export function BaseSelect(properties: SelectProperties): MpElement {
+export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
   const {
     modelValue = '',
     options = [],
@@ -94,36 +114,55 @@ export function BaseSelect(properties: SelectProperties): MpElement {
     hint,
     error,
     placeholder,
+    searchable = true,
     disabled = false,
     required = false,
     name,
     autocomplete,
   } = properties;
 
-  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-select'));
-  const resolvedId = idReference.current;
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
   const triggerReference = useRef<HTMLButtonElement | null>(null);
+  const searchReference = useRef<HTMLInputElement | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const selectedOption = options.find((option) => option.value === modelValue);
   const displayLabel = selectedOption ? selectedOption.label : (placeholder ?? '');
   const hasPlaceholder = selectedOption === undefined;
 
+  // When searchable and open, the trigger becomes a filtering text field.
+  const visibleOptions =
+    searchable && searchQuery
+      ? options.filter((option) => option.label.toLowerCase().includes(searchQuery.toLowerCase()))
+      : options;
+
   const openDropdown = (): void => {
     if (disabled) {
       return;
     }
+    setSearchQuery('');
     setIsOpen(true);
     properties.onFocus?.(new FocusEvent('focus'));
   };
 
   const closeDropdown = (): void => {
     setIsOpen(false);
+    setSearchQuery('');
   };
 
   const commit = (value: string | number): void => {
     properties.onUpdateModelValue?.(value);
     properties.onChange?.(value);
+  };
+
+  const focusTrigger = (): void => {
+    if (searchable) {
+      searchReference.current?.focus();
+    } else {
+      triggerReference.current?.focus();
+    }
   };
 
   const selectOption = (option: SelectOption): void => {
@@ -132,31 +171,57 @@ export function BaseSelect(properties: SelectProperties): MpElement {
     }
     commit(option.value);
     closeDropdown();
-    triggerReference.current?.focus();
+    focusTrigger();
   };
 
   const selectAdjacentOption = (direction: 1 | -1): void => {
-    const enabled = options.filter((option) => !option.disabled);
+    const enabled = visibleOptions.filter((option) => !option.disabled);
     if (enabled.length === 0) {
       return;
     }
     const currentIndex = enabled.findIndex((option) => option.value === modelValue);
-    const nextIndex = Math.max(0, Math.min(enabled.length - 1, currentIndex + direction));
+    // Default to the first option when the selection is not part of the filtered set.
+    const baseIndex = currentIndex === -1 ? (direction === 1 ? -1 : 0) : currentIndex;
+    const nextIndex = Math.max(0, Math.min(enabled.length - 1, baseIndex + direction));
     const next = enabled[nextIndex];
     if (next) {
       commit(next.value);
     }
   };
 
+  const selectFirstVisibleOption = (): void => {
+    const first = visibleOptions.find((option) => !option.disabled);
+    if (first) {
+      selectOption(first);
+    }
+  };
+
   const handleKeydown = (event: KeyboardEvent): void => {
     switch (event.key) {
-      case 'Enter':
-      case ' ': {
+      case 'Enter': {
         event.preventDefault();
         if (isOpen) {
-          closeDropdown();
+          if (searchable) {
+            selectFirstVisibleOption();
+          } else {
+            closeDropdown();
+          }
         } else {
           openDropdown();
+        }
+
+        break;
+      }
+      case ' ': {
+        // In searchable mode a space is a literal query character; only the
+        // button trigger toggles the dropdown on Space.
+        if (!searchable) {
+          event.preventDefault();
+          if (isOpen) {
+            closeDropdown();
+          } else {
+            openDropdown();
+          }
         }
 
         break;
@@ -183,6 +248,13 @@ export function BaseSelect(properties: SelectProperties): MpElement {
         break;
       }
       // No default
+    }
+  };
+
+  const handleSearchInput = (event: Event): void => {
+    setSearchQuery((event.target as HTMLInputElement).value);
+    if (!isOpen) {
+      setIsOpen(true);
     }
   };
 
@@ -213,7 +285,7 @@ export function BaseSelect(properties: SelectProperties): MpElement {
     )),
   ];
 
-  const listItems: MpChild[] = options.map((option) => (
+  const listItems: MpChild[] = visibleOptions.map((option) => (
     <li
       key={option.value}
       aria-disabled={option.disabled || undefined}
@@ -235,7 +307,7 @@ export function BaseSelect(properties: SelectProperties): MpElement {
       {option.label}
     </li>
   ));
-  if (options.length === 0) {
+  if (visibleOptions.length === 0) {
     listItems.push(
       <li
         aria-disabled="true"
@@ -244,10 +316,68 @@ export function BaseSelect(properties: SelectProperties): MpElement {
         role="option"
         tabindex={-1}
       >
-        No options available
+        {searchQuery ? `No results for "${searchQuery}"` : 'No options available'}
       </li>,
     );
   }
+
+  // Text shown/typed in the search trigger: the live query while open,
+  // otherwise the selected option's label (never the placeholder text).
+  const searchValue = isOpen ? searchQuery : selectedOption ? selectedOption.label : '';
+  // While open, keep the current selection visible as the input placeholder.
+  const searchPlaceholder = isOpen && selectedOption ? selectedOption.label : (placeholder ?? '');
+
+  const triggerControl: MpChild = searchable ? (
+    <input
+      ref={searchReference}
+      id={resolvedId}
+      aria-autocomplete="list"
+      aria-describedby={describedBy}
+      aria-invalid={error ? 'true' : undefined}
+      autocomplete="off"
+      classNames={[
+        styles['base-select__field'],
+        {
+          [styles['base-select__field--placeholder']]: hasPlaceholder && !searchValue,
+        },
+      ]}
+      disabled={disabled}
+      placeholder={searchPlaceholder}
+      required={required}
+      type="text"
+      value={searchValue}
+      onBlur={(event: FocusEvent) => properties.onBlur?.(event)}
+      onFocus={openDropdown}
+      onInput={handleSearchInput}
+      onKeydown={handleKeydown}
+    />
+  ) : (
+    <button
+      ref={triggerReference}
+      id={resolvedId}
+      aria-describedby={describedBy}
+      aria-invalid={error ? 'true' : undefined}
+      classNames={[
+        styles['base-select__field'],
+        {
+          [styles['base-select__field--placeholder']]: hasPlaceholder,
+        },
+      ]}
+      disabled={disabled}
+      type="button"
+      onBlur={(event: FocusEvent) => properties.onBlur?.(event)}
+      onClick={() => {
+        if (isOpen) {
+          closeDropdown();
+        } else {
+          openDropdown();
+        }
+      }}
+      onKeydown={handleKeydown}
+    >
+      {displayLabel || '\u00A0'}
+    </button>
+  );
 
   return (
     <div
@@ -317,35 +447,17 @@ export function BaseSelect(properties: SelectProperties): MpElement {
           classNames={styles['base-select__wrapper']}
           role="combobox"
           slot="trigger"
+          onClick={() => {
+            if (searchable && !disabled && !isOpen) {
+              openDropdown();
+              searchReference.current?.focus();
+            }
+          }}
         >
           <span classNames={[styles['base-select__extension'], styles['base-select__extension--start']]}>
             <Slot name="start" />
           </span>
-          <button
-            ref={triggerReference}
-            id={resolvedId}
-            aria-describedby={describedBy}
-            aria-invalid={error ? 'true' : undefined}
-            classNames={[
-              styles['base-select__field'],
-              {
-                [styles['base-select__field--placeholder']]: hasPlaceholder,
-              },
-            ]}
-            disabled={disabled}
-            type="button"
-            onBlur={(event: FocusEvent) => properties.onBlur?.(event)}
-            onClick={() => {
-              if (isOpen) {
-                closeDropdown();
-              } else {
-                openDropdown();
-              }
-            }}
-            onKeydown={handleKeydown}
-          >
-            {displayLabel || '\u00A0'}
-          </button>
+          {triggerControl}
           <span classNames={[styles['base-select__extension'], styles['base-select__extension--end']]}>
             <Slot name="end" />
           </span>

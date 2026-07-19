@@ -38,8 +38,8 @@ describe('BaseAlertBanner authors the same component for React and Vue', () => {
       expect(html).toContain('Failed');
       expect(html).toContain('Something broke');
       expect(html).toContain('aria-label="Dismiss"');
-      // The error glyph substitutes the original inline SVG.
-      expect(html).toContain('✕');
+      // The error status icon is drawn with the `@mission-platform/icons` set.
+      expect(html).toContain('base-icon-error');
     }
   });
 

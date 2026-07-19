@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
-    "storybook": "storybook dev -p 6006",
+    "storybook:cert": "node --experimental-strip-types ../../scripts/generate-dev-cert.ts .storybook/certs",
+    "storybook": "pnpm run storybook:cert && storybook dev -p 6006 --https --ssl-cert .storybook/certs/cert.pem --ssl-key .storybook/certs/key.pem",
     "build-storybook": "storybook build",
     "deploy": "chromatic --project-token=chpt_c79f311b83ab8e0",
     "test": "vitest run --project storybook",
@@ -29,7 +30,10 @@
     "@mission-platform/components": "workspace:*",
     "@mission-platform/forms": "workspace:*",
     "@mission-platform/layouts": "workspace:*",
-    "i18next-vue": "catalog:vue",
+    "@mission-platform/qr-code": "workspace:*",
+    "@mission-platform/barcode": "workspace:*",
+    "@mission-platform/code-scanner": "workspace:*",
+    "i18next-vue": "catalog:i18next",
     "vue": "catalog:vue",
     "vue-router": "catalog:vue",
     "maplibre-gl": "catalog:map"
@@ -66,10 +70,10 @@
     "stylelint-config-standard-scss": "catalog:stylelint",
     "typescript": "catalog:typescript",
     "vite": "catalog:vite",
-    "vite-svg-loader": "^5.1.1",
+    "vite-svg-loader": "catalog:vite",
     "vitest": "catalog:testing",
     "vue-tsc": "catalog:vue",
-    "react-dom": "^19.2.7",
-    "react": "^19.2.7"
+    "react-dom": "catalog:react",
+    "react": "catalog:react"
   }
 }

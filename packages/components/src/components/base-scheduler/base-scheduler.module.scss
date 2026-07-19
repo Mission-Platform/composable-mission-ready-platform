@@ -197,18 +197,34 @@
       border: 1px solid var(--mp-color-border-default);
       margin: -0.5px;
       background: transparent;
-      cursor: pointer;
       text-align: left;
       color: var(--mp-color-text-primary);
 
       &--outside {
-        color: var(--mp-color-text-tertiary);
+        color: var(--mp-color-text-secondary);
         background-color: var(--mp-color-bg-muted);
       }
 
       &--today {
         outline: 2px solid var(--mp-color-primary-default);
         outline-offset: -2px;
+      }
+    }
+
+    &__month-cell-create {
+      display: flex;
+      align-self: flex-start;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      color: inherit;
+      font: inherit;
+
+      &:focus-visible {
+        outline: 2px solid var(--mp-color-primary-default);
+        outline-offset: 2px;
+        border-radius: var(--mp-radius-sm);
       }
     }
 
@@ -276,11 +292,14 @@
       aspect-ratio: 1;
       font-size: 0.625rem;
       border-radius: 50%;
-      color: var(--mp-color-text-secondary);
+      color: var(--mp-color-text-primary);
 
+      // Outside-of-month days are de-emphasised via a lighter weight rather than
+      // a dimming `opacity`/tertiary tint, which dropped the tiny numbers below
+      // the 4.5:1 contrast threshold (`color-contrast`).
       &--outside {
-        color: var(--mp-color-text-tertiary);
-        opacity: 0.4;
+        color: var(--mp-color-text-secondary);
+        font-weight: var(--mp-font-weight-light);
       }
 
       &--busy {

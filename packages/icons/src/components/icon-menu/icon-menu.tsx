@@ -18,7 +18,7 @@ export interface IconMenuProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-menu.module.scss`.
  */
-export function IconMenu(properties: IconMenuProperties): MpElement {
+export function IconMenu(properties: Readonly<IconMenuProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

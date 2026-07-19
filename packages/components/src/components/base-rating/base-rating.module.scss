@@ -5,8 +5,9 @@
  * stylesheet so its BEM appearance ships in the built package CSS (the
  * two-stage compiler carries the import onto both the React and Vue builds).
  *
- * The inline star SVGs are substituted with a `★` text glyph; the empty layer
- * is tinted and the fill layer is clipped by width.
+ * The stars are the write-once `@mission-platform/icons` `IconStar`, scaled to
+ * the row's `1em`; the empty layer is tinted (outline) and the fill layer is
+ * clipped by width and painted solid.
  *
  * The rules live in the shared `mp.components` cascade layer, matching the
  * `@mission-platform/components` package.
@@ -75,8 +76,18 @@
       line-height: 1;
       text-align: center;
 
+      svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+      }
+
       &--empty {
         color: var(--mp-color-border-default);
+      }
+
+      &--filled svg {
+        fill: currentColor;
       }
     }
 

@@ -18,7 +18,7 @@ export interface IconPlusProperties extends MpProperties {
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-plus.module.scss`.
  */
-export function IconPlus(properties: IconPlusProperties): MpElement {
+export function IconPlus(properties: Readonly<IconPlusProperties>): MpElement {
   const size = properties.size ?? 'md';
   const sizeValue = typeof size === 'number' ? size : mapTokenToPixels(size);
   const color = properties.color ?? 'currentColor';

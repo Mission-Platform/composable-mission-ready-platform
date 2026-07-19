@@ -37,37 +37,37 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const AlwaysVisible: Story = {
-  parameters: { viewport: { defaultViewport: 'md' } },
+  globals: { viewport: { value: 'md', isRotated: false } },
   args: {},
 };
 
 export const ShowFromMd: Story = {
-  parameters: { viewport: { defaultViewport: 'md' } },
+  globals: { viewport: { value: 'md', isRotated: false } },
   args: { min: 'md' },
 };
 
 export const ShowFromMdOnMobile: Story = {
   name: 'ShowFrom md — hidden on mobile (2xs)',
-  parameters: { viewport: { defaultViewport: '2xs' } },
+  globals: { viewport: { value: '2xs', isRotated: false } },
   args: { min: 'md' },
 };
 
 export const ShowFromLg: Story = {
-  parameters: { viewport: { defaultViewport: 'lg' } },
+  globals: { viewport: { value: 'lg', isRotated: false } },
   args: { min: 'lg' },
 };
 
 export const ShowFromXl: Story = {
-  parameters: { viewport: { defaultViewport: 'xl' } },
+  globals: { viewport: { value: 'xl', isRotated: false } },
   args: { min: 'xl' },
 };
 
 export const ShowBelowLg: Story = {
-  parameters: { viewport: { defaultViewport: 'sm' } },
+  globals: { viewport: { value: 'sm', isRotated: false } },
   args: { max: 'lg' },
 };
 
 export const ShowBetweenSmAndXl: Story = {
-  parameters: { viewport: { defaultViewport: 'sm' } },
+  globals: { viewport: { value: 'sm', isRotated: false } },
   args: { min: 'sm', max: 'xl' },
 };
