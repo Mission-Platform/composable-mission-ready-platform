@@ -8,12 +8,12 @@
  * and apply `sizeStyles['base-size--<step>']`, so the element's `font-size`
  * (and any `em`-relative box derived from it) scales with the requested size.
  *
- * The rules live in the shared `mp.components` cascade layer (matching the
- * `@mission-platform/components` package) so unlayered application styles win
- * over them. Only `var(--mp-*)` design-token custom properties are used.
+ * The rules live in the package's own `mp.layout` cascade layer so unlayered
+ * application styles win over them. Only `var(--mp-*)` design-token custom
+ * properties are used.
  */
 
-@layer mp.components {
+@layer mp.layout {
   @each $step in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
     .base-size--#{$step} {
       font-size: var(--mp-size-font-#{$step});
