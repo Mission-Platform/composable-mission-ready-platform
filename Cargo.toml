@@ -1,0 +1,54 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/console-panic-hook",
+    "crates/qr-code-common", "crates/qr-code-encode", "crates/qr-code-decode",
+    "crates/barcode-common", "crates/barcode-encode", "crates/barcode-decode",
+    "crates/matrix-code-common", "crates/matrix-code-encode", "crates/matrix-code-decode",
+    "crates/gs1-databar-common", "crates/gs1-databar-encode", "crates/gs1-databar-decode",
+    "crates/pdf417-common", "crates/pdf417-encode", "crates/pdf417-decode",
+    "crates/maxicode-common", "crates/maxicode-encode", "crates/maxicode-decode",
+    "crates/code-scan"
+]
+
+# Centralised dependency versions for the whole workspace. Member crates opt in
+# with `<dep>.workspace = true`, so versions are defined in exactly one place.
+[workspace.dependencies]
+wasm-bindgen = { version = "0.2", features = ["serde"] }
+wasm-bindgen-test = { version = "0.3", features = [] }
+# Diagnostics are instrumented with `tracing`; `tracing-wasm` installs a
+# subscriber that forwards spans/events to the browser devtools console (behind
+# each crate's optional `tracing` feature).
+tracing = { version = "0.1", features = [] }
+tracing-wasm = { version = "0.2", features = [] }
+# `shadow-rs` is used both at build time (to collect git/build info) and at
+# runtime (for the `shadow!` macro). Default features pull the `git2` C backend,
+# which can't cross-compile to wasm — so keep defaults off here and re-enable
+# `git2` only for the (host-compiled) build-dependency.
+shadow-rs = { version = "2.0", default-features = false }
+# In-house replacement for the archived `console_error_panic_hook` crate.
+mission-platform-console-panic-hook = { path = "crates/console-panic-hook" }
+# Internal split crates (shared `-common` libraries + the encoder, which the
+# decoder crate uses in its round-trip tests). Referenced with `.workspace =
+# true` so the paths live in exactly one place.
+mission-platform-qr-code-common = { path = "crates/qr-code-common" }
+mission-platform-qr-code-encode = { path = "crates/qr-code-encode" }
+mission-platform-barcode-common = { path = "crates/barcode-common" }
+mission-platform-matrix-code-common = { path = "crates/matrix-code-common" }
+mission-platform-matrix-code-encode = { path = "crates/matrix-code-encode" }
+mission-platform-barcode-encode = { path = "crates/barcode-encode" }
+mission-platform-gs1-databar-common = { path = "crates/gs1-databar-common" }
+mission-platform-gs1-databar-encode = { path = "crates/gs1-databar-encode" }
+mission-platform-pdf417-common = { path = "crates/pdf417-common" }
+mission-platform-pdf417-encode = { path = "crates/pdf417-encode" }
+mission-platform-maxicode-common = { path = "crates/maxicode-common" }
+mission-platform-maxicode-encode = { path = "crates/maxicode-encode" }
+
+# Shared release profile for every crate in the workspace. The emitted wasm is
+# shipped inside the JS packages, so optimise aggressively for size.
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
