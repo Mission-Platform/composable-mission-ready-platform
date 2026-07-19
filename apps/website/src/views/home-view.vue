@@ -26,6 +26,7 @@
     IconLightning,
     IconPalette,
     IconPuzzle,
+    IconQrCode,
     IconSearch,
   } from '@mission-platform/icons/vue';
   import { BaseApplicationLayout } from '@mission-platform/layouts/vue';
@@ -104,6 +105,7 @@
     IconDebug,
     IconGlobe,
     IconSearch,
+    IconQrCode,
   ];
   const features = computed<Feature[]>(() =>
     featureIcons.map((icon, index) => ({
@@ -153,11 +155,19 @@
     '@mission-platform/icons',
     '@mission-platform/layouts',
     '@mission-platform/forms',
+    '@mission-platform/forms-core',
     '@mission-platform/router',
     '@mission-platform/scheduler-core',
     '@mission-platform/breakpoints',
     '@mission-platform/i18n',
     '@mission-platform/map',
+    '@mission-platform/d3',
+    '@mission-platform/rxjs',
+    '@mission-platform/qr-code',
+    '@mission-platform/barcode',
+    '@mission-platform/matrix-code',
+    '@mission-platform/code-scanner',
+    '@mission-platform/phone-number',
     '@mission-platform/harper',
     '@mission-platform/hunspell',
     '@mission-platform/seo',
@@ -770,7 +780,7 @@ en:
   hero:
     badge: Composable · Write Once · Mission Ready
     title: The composable, mission-ready platform for modern web products.
-    lead: Mission Platform is a monorepo of reusable, framework-neutral building blocks — write-once components that compile straight to Vue 3 and React, plus design tokens, layouts, forms, routing, scheduling, i18n, maps, and SEO primitives. Assemble polished, fast, discoverable apps without reinventing the basics.
+    lead: Mission Platform is a monorepo of reusable, framework-neutral building blocks — write-once components that compile straight to Vue 3 and React, plus design tokens, layouts, forms, routing, scheduling, i18n, maps, charts, SEO primitives, and native-speed WebAssembly barcode, QR and code-scanning packages. Assemble polished, fast, discoverable apps without reinventing the basics.
     cta-primary: Explore the platform
     cta-secondary: Read the docs
   features:
@@ -790,6 +800,8 @@ en:
         description: First-class Cloudflare Workers support, with the base-spa worker for static and SPA-fallback hosting.
       - title: Discoverable by default
         description: A unified SEO package — page metadata, Open Graph, Twitter Card, and JSON-LD — plus prerendered SSG output keeps every route SEO-ready and shareable.
+      - title: Native-speed WebAssembly
+        description: Dependency-free Rust and AssemblyScript compiled to WebAssembly powers QR, Data Matrix and 1D barcode encoding/decoding, camera code scanning, and phone-number parsing.
   packages:
     title: Building blocks
     lead: Every package is independently versioned and published. Mix, match, and compose.
@@ -800,11 +812,19 @@ en:
       - Write-once SVG icon components
       - Write-once application layouts
       - Write-once form builder & schema forms
+      - Framework-agnostic forms core — JSON Schema derivation, Ajv validation & conditional visibility
       - Framework-agnostic router with Vue adapter
       - Calendar & scheduling core (RFC 5545 recurrence)
       - Responsive utilities & composables
       - i18n integration & base locales
       - MapLibre GL map wrapper
+      - Write-once D3 integration & responsive chart helpers
+      - Write-once RxJS integration (useObservable / useSubscription)
+      - QR Code encoder & decoder (Rust → WebAssembly)
+      - 1D (linear) barcode encoder & decoder (Rust → WebAssembly)
+      - Data Matrix 2D encoder & decoder (Rust → WebAssembly)
+      - Image & camera code scanner — QR, Data Matrix & 1D barcodes (Rust → WebAssembly)
+      - Phone-number parse, validate & format (libphonenumber → WebAssembly)
       - Harper grammar checker for Monaco
       - Hunspell spell checker (WASM)
       - 'Unified SEO: page metadata, Open Graph, Twitter Card & JSON-LD'
