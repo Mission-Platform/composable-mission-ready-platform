@@ -30,6 +30,114 @@ import { rewrite, singleDeclaration, type VueAnalysis } from './shared.js';
 /** The hook callees whose `const` declarations are translated as hooks (never derived). */
 const HOOK_CALLEES: ReadonlySet<string> = new Set(['useState', 'useRef', 'useMemo', 'useCallback', 'useContext']);
 
+/**
+ * Whether a callee name is a React-style hook (`use` + an uppercase letter,
+ * e.g. `useMap`, `useMarker`). Custom composables obey the rules of hooks — they
+ * run **once, at the top level** of the component (React's model) — so, like the
+ * primitive hooks and `useEffect`, they must be emitted in Vue's `setup` (where
+ * their internal `onMounted`/`watch`/`inject` register) rather than deferred into
+ * the per-render closure (where those lifecycle registrations would silently
+ * never run).
+ */
+function isHookCallee(name: string): boolean {
+  return /^use[A-Z]/.test(name);
+}
+
+/**
+ * Make the object-literal arguments of a **custom composable** call reactive for
+ * the Vue target.
+ *
+ * In React a component body re-runs on every render, so an argument object built
+ * inline — `useSource(map, { id: properties.id, source: properties.source })` —
+ * is rebuilt each render and the composable's `useEffect` deps observe the fresh
+ * values. Vue's `setup` runs **once**, so the same object literal would snapshot
+ * each `properties.*` read at construction time and never update: the
+ * composable's internal `watch(() => [.., options.source])` would compare an
+ * unchanging value and never re-run (e.g. `GeoJSONSource.setData` would fire only
+ * on mount).
+ *
+ * Rewriting each property into a **getter** — `{ get source() { return
+ * properties.source; } }` — restores React's semantics: every read of
+ * `options.source` inside the composable re-evaluates the (reactive) prop, so the
+ * dependency getter sees the live value and the effect re-runs on change.
+ *
+ * Applied only to custom composables (`use[A-Z]`, excluding the primitive hooks
+ * such as `useState`/`useRef`, whose object arguments are one-time state
+ * snapshots that must **not** be re-evaluated).
+ */
+function reactiveHookCall(call: ts.CallExpression): ts.CallExpression {
+  const { factory } = ts;
+  let changed = false;
+  const rewrittenArguments = call.arguments.map((argument) => {
+    if (!ts.isObjectLiteralExpression(argument)) {
+      return argument;
+    }
+    const properties = argument.properties.map((property) => {
+      if (
+        ts.isPropertyAssignment(property) &&
+        !ts.isComputedPropertyName(property.name) &&
+        // Event-handler props are not reactive data: an inline handler already
+        // reads live state via its closure, and an `on…` prop is rewritten into a
+        // Vue `emit(…)` arrow by the pipeline that runs after this. Wrapping
+        // either in a getter is pointless and strips the handler parameter's
+        // contextual typing (`(lngLat) => …` → an implicit-`any` param), so leave
+        // them as plain assignments.
+        !ts.isArrowFunction(property.initializer) &&
+        !ts.isFunctionExpression(property.initializer) &&
+        !(ts.isIdentifier(property.name) && /^on[A-Z]/.test(property.name.text))
+      ) {
+        changed = true;
+        return factory.createGetAccessorDeclaration(
+          undefined,
+          property.name,
+          [],
+          undefined,
+          factory.createBlock([factory.createReturnStatement(property.initializer)], true),
+        );
+      }
+      if (ts.isShorthandPropertyAssignment(property)) {
+        changed = true;
+        return factory.createGetAccessorDeclaration(
+          undefined,
+          property.name,
+          [],
+          undefined,
+          factory.createBlock([factory.createReturnStatement(factory.createIdentifier(property.name.text))], true),
+        );
+      }
+      // Spreads, methods and existing accessors are already lazy (or cannot be
+      // expressed as a simple getter) — leave them untouched.
+      return property;
+    });
+    return factory.createObjectLiteralExpression(properties, true);
+  });
+  return changed
+    ? factory.createCallExpression(call.expression, call.typeArguments, rewrittenArguments)
+    : call;
+}
+
+/**
+ * The element type of a `useRef<T>` type argument, with any `| null` / `|
+ * undefined` union member stripped — Vue's `useTemplateRef<Element>('name')`
+ * takes the bare element type (it is always nullable until mounted). Returns
+ * `undefined` for an untyped ref or a type that is only `null`/`undefined`.
+ */
+function elementRefType(typeArgument: ts.TypeNode | undefined, sourceFile: ts.SourceFile): string | undefined {
+  if (typeArgument === undefined) {
+    return undefined;
+  }
+  const members = ts.isUnionTypeNode(typeArgument) ? [...typeArgument.types] : [typeArgument];
+  const kept = members.filter(
+    (member) =>
+      member.kind !== ts.SyntaxKind.UndefinedKeyword &&
+      !(ts.isLiteralTypeNode(member) && member.literal.kind === ts.SyntaxKind.NullKeyword),
+  );
+  if (kept.length === 0) {
+    return undefined;
+  }
+  return kept.map((member) => printNode(member, sourceFile)).join(' | ');
+}
+
 /** A derived (non-hook) `const <id> = …` declaration in the component body. */
 interface DerivedDeclaration {
   /** The declared identifier name. */
@@ -74,7 +182,8 @@ function collectDerivedDeclarations(body: ts.Block): Map<string, DerivedDeclarat
     if (
       ts.isCallExpression(declaration.initializer) &&
       ts.isIdentifier(declaration.initializer.expression) &&
-      HOOK_CALLEES.has(declaration.initializer.expression.text)
+      (HOOK_CALLEES.has(declaration.initializer.expression.text) ||
+        isHookCallee(declaration.initializer.expression.text))
     ) {
       continue;
     }
@@ -100,25 +209,28 @@ function collectSetupHoistedNames(body: ts.Block, derived: Map<string, DerivedDe
     }
   };
   for (const statement of body.statements) {
-    // `useEffect(…)` runs in `setup`, so its derived references must too.
+    // `useEffect(…)` and bare custom-hook calls (`useMarker(…)`) run in `setup`,
+    // so their derived references must too.
     if (
       ts.isExpressionStatement(statement) &&
       ts.isCallExpression(statement.expression) &&
       ts.isIdentifier(statement.expression.expression) &&
-      statement.expression.expression.text === 'useEffect'
+      (statement.expression.expression.text === 'useEffect' || isHookCallee(statement.expression.expression.text))
     ) {
       seed(statement.expression);
       continue;
     }
     // A hook declaration's initialiser is emitted in `setup` too, so a derived
-    // local it reads (e.g. `useState(initial.h)`) must be hoisted alongside it.
+    // local it reads (e.g. `useState(initial.h)`, `useMarker(map, …)`) must be
+    // hoisted alongside it.
     const declaration = singleDeclaration(statement);
     if (
       declaration !== undefined &&
       declaration.initializer !== undefined &&
       ts.isCallExpression(declaration.initializer) &&
       ts.isIdentifier(declaration.initializer.expression) &&
-      HOOK_CALLEES.has(declaration.initializer.expression.text)
+      (HOOK_CALLEES.has(declaration.initializer.expression.text) ||
+        isHookCallee(declaration.initializer.expression.text))
     ) {
       for (const argument of declaration.initializer.arguments) {
         seed(argument);
@@ -150,12 +262,26 @@ export function analyseBody(body: ts.Block, scope: RewriteScope, sourceFile: ts.
   const analysis: VueAnalysis = {
     setupLines: [],
     renderLines: [],
+    orderedLines: [],
     returnText: 'null',
     propDefaults: new Map(),
     // `defineProps`/`defineOptions`/`defineSlots` are `<script setup>` compiler
     // macros (no import); only real runtime values are collected here.
     vueImports: new Set<string>(),
     renderStatements: [],
+    refElementTypes: new Map<string, string | undefined>(),
+  };
+
+  // Every emitted line is recorded both in its setup/render bucket (the
+  // component path's setup-vs-render split) **and**, via these helpers, in
+  // `orderedLines` — the interleaved source order the composable path replays.
+  const pushSetup = (...emitted: string[]): void => {
+    analysis.setupLines.push(...emitted);
+    analysis.orderedLines.push(...emitted);
+  };
+  const pushRender = (emitted: string): void => {
+    analysis.renderLines.push(emitted);
+    analysis.orderedLines.push(emitted);
   };
 
   // Derived declarations an effect closes over must live in `setup` (where the
@@ -171,8 +297,6 @@ export function analyseBody(body: ts.Block, scope: RewriteScope, sourceFile: ts.
     }
   }
 
-  let effectIndex = 0;
-
   for (const statement of body.statements) {
     const declaration = singleDeclaration(statement);
 
@@ -186,7 +310,14 @@ export function analyseBody(body: ts.Block, scope: RewriteScope, sourceFile: ts.
     ) {
       for (const element of declaration.name.elements) {
         if (ts.isIdentifier(element.name) && element.initializer !== undefined) {
-          analysis.propDefaults.set(element.name.text, printNode(element.initializer, sourceFile));
+          // `defineProps` declares the prop under its **real** name, so a renamed
+          // binding (`const { format: formatProperty = 'dd' }`) must key its
+          // default by the property name (`format`), not the local alias.
+          const propName =
+            element.propertyName !== undefined && ts.isIdentifier(element.propertyName)
+              ? element.propertyName.text
+              : element.name.text;
+          analysis.propDefaults.set(propName, printNode(element.initializer, sourceFile));
         }
       }
       continue;
@@ -205,8 +336,16 @@ export function analyseBody(body: ts.Block, scope: RewriteScope, sourceFile: ts.
           const valueName = (declaration.name.elements[0] as ts.BindingElement).name;
           const initial = callExpression.arguments[0];
           analysis.vueImports.add('ref');
-          analysis.setupLines.push(
-            `const ${(valueName as ts.Identifier).text} = ref(${initial === undefined ? '' : rewrite(initial, scope, sourceFile)});`,
+          // Preserve the explicit `useState<T>(…)` type argument as `ref<T>(…)`.
+          // Without it a `useState<string | undefined>(undefined)` collapses to
+          // `ref(undefined)` (a `Ref<undefined>`), so every later read/assignment
+          // of the state fails to type-check against its real element type.
+          const typeArguments =
+            callExpression.typeArguments === undefined
+              ? ''
+              : `<${callExpression.typeArguments.map((argument) => printNode(argument, sourceFile)).join(', ')}>`;
+          pushSetup(
+            `const ${(valueName as ts.Identifier).text} = ref${typeArguments}(${initial === undefined ? '' : rewrite(initial, scope, sourceFile)});`,
           );
           continue;
         }
@@ -217,7 +356,14 @@ export function analyseBody(body: ts.Block, scope: RewriteScope, sourceFile: ts.
               : `<${callExpression.typeArguments.map((argument) => printNode(argument, sourceFile)).join(', ')}>`;
           const initial = callExpression.arguments[0];
           analysis.vueImports.add('ref');
-          analysis.setupLines.push(
+          // Record the ref's element type (its `useRef<T>` argument, `| null` /
+          // `| undefined` stripped) so a ref bound to an element as a template
+          // `ref="name"` can later be re-declared as `useTemplateRef<Element>(…)`.
+          analysis.refElementTypes.set(
+            declaration.name.text,
+            elementRefType(callExpression.typeArguments?.[0], sourceFile),
+          );
+          pushSetup(
             `const ${declaration.name.text} = ref${typeArguments}(${initial === undefined ? '' : rewrite(initial, scope, sourceFile)});`,
           );
           continue;
@@ -225,21 +371,29 @@ export function analyseBody(body: ts.Block, scope: RewriteScope, sourceFile: ts.
         if (callee.text === 'useMemo' && ts.isIdentifier(declaration.name)) {
           const factory = callExpression.arguments[0];
           analysis.vueImports.add('computed');
-          analysis.setupLines.push(
-            `const ${declaration.name.text} = computed(${rewrite(factory, scope, sourceFile)});`,
-          );
+          pushSetup(`const ${declaration.name.text} = computed(${rewrite(factory, scope, sourceFile)});`);
           continue;
         }
         if (callee.text === 'useCallback' && ts.isIdentifier(declaration.name)) {
           const function_ = callExpression.arguments[0];
-          analysis.setupLines.push(`const ${declaration.name.text} = ${rewrite(function_, scope, sourceFile)};`);
+          pushSetup(`const ${declaration.name.text} = ${rewrite(function_, scope, sourceFile)};`);
           continue;
         }
         // `useContext(ctx)` → `inject(...)` must run **synchronously in setup**,
         // so it is emitted as a plain setup const (never lifted to a `computed`,
         // which would call `inject()` outside setup).
         if (callee.text === 'useContext' && ts.isIdentifier(declaration.name)) {
-          analysis.setupLines.push(`const ${declaration.name.text} = ${rewrite(callExpression, scope, sourceFile)};`);
+          pushSetup(`const ${declaration.name.text} = ${rewrite(callExpression, scope, sourceFile)};`);
+          continue;
+        }
+        // A custom composable declaration (`const map = useMap()`, `const { marker }
+        // = useMarker(…)`) obeys the rules of hooks: it runs once in `setup`, where
+        // its internal `inject`/`onMounted`/`watch` register. Emit it verbatim as a
+        // setup `const` (visible to the render closure, which shares the scope).
+        if (isHookCallee(callee.text)) {
+          pushSetup(
+            `const ${printNode(declaration.name, sourceFile)} = ${rewrite(reactiveHookCall(callExpression), scope, sourceFile)};`,
+          );
           continue;
         }
       }
@@ -252,10 +406,20 @@ export function analyseBody(body: ts.Block, scope: RewriteScope, sourceFile: ts.
       ts.isIdentifier(statement.expression.expression) &&
       statement.expression.expression.text === 'useEffect'
     ) {
-      analysis.setupLines.push(
-        ...emitEffect(statement.expression, effectIndex, scope, sourceFile, analysis.vueImports),
-      );
-      effectIndex += 1;
+      pushSetup(...emitEffect(statement.expression, scope, sourceFile));
+      continue;
+    }
+
+    // A bare custom-hook call (`useMarker(map, …)`) runs once in `setup`, so its
+    // internal lifecycle (`onMounted`/`watch`) registers. Left in the per-render
+    // closure those registrations would silently never run.
+    if (
+      ts.isExpressionStatement(statement) &&
+      ts.isCallExpression(statement.expression) &&
+      ts.isIdentifier(statement.expression.expression) &&
+      isHookCallee(statement.expression.expression.text)
+    ) {
+      pushSetup(`${rewrite(reactiveHookCall(statement.expression), scope, sourceFile)};`);
       continue;
     }
 
@@ -270,10 +434,10 @@ export function analyseBody(body: ts.Block, scope: RewriteScope, sourceFile: ts.
     ) {
       const rewritten = rewrite(declaration.initializer, scope, sourceFile);
       if ((derived.get(declaration.name.text) as DerivedDeclaration).isFunction) {
-        analysis.setupLines.push(`const ${declaration.name.text} = ${rewritten};`);
+        pushSetup(`const ${declaration.name.text} = ${rewritten};`);
       } else {
         analysis.vueImports.add('computed');
-        analysis.setupLines.push(`const ${declaration.name.text} = computed(() => ${rewritten});`);
+        pushSetup(`const ${declaration.name.text} = computed(() => ${rewritten});`);
       }
       continue;
     }
@@ -288,7 +452,7 @@ export function analyseBody(body: ts.Block, scope: RewriteScope, sourceFile: ts.
     // Every other statement is per-render work → render closure body. The raw
     // node is kept too, so the `<template>` path can turn it into a `computed`.
     analysis.renderStatements.push(statement);
-    analysis.renderLines.push(rewrite(statement, scope, sourceFile));
+    pushRender(rewrite(statement, scope, sourceFile));
   }
 
   return analysis;

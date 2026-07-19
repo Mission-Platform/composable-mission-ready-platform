@@ -10,7 +10,9 @@ import ts from 'typescript';
 
 import {
   createReferenceRewriter,
+  createStateSnapshotHoister,
   printNode,
+  vueComponentModelListenerTransformer,
   vueJsxSlotTransformer,
   vueNativeEventTransformer,
   type RewriteScope,
@@ -20,6 +22,16 @@ import {
 export interface VueAnalysis {
   setupLines: string[];
   renderLines: string[];
+  /**
+   * Every emitted body line in **source order** (setup and render statements
+   * interleaved as authored), excluding the final `return`. The component path
+   * uses the {@link VueAnalysis.setupLines}/{@link VueAnalysis.renderLines} split
+   * (setup runs once, render re-runs); a **composable** runs once top-to-bottom,
+   * so its emitter uses this list instead — preserving the authored order avoids
+   * a temporal-dead-zone crash when a hook/effect references a local (e.g. a
+   * destructured option) that the split would otherwise move below it.
+   */
+  orderedLines: string[];
   returnText: string;
   propDefaults: Map<string, string>;
   vueImports: Set<string>;
@@ -32,6 +44,15 @@ export interface VueAnalysis {
   renderStatements: ts.Statement[];
   /** The raw (pre-rewrite) returned expression, consumed by the `<template>` path. */
   returnExpression?: ts.Expression;
+  /**
+   * Every `useRef` local (name → its element type, i.e. the `useRef<T>` type
+   * argument with any `| null` / `| undefined` stripped, or `undefined` when the
+   * ref is untyped). A ref bound to an element via a `ref="name"` string binding
+   * on the `<template>` path is a **template ref** and is re-declared with
+   * `useTemplateRef<Element>('name')` (see `emit-module.ts`); anything else keeps
+   * its plain `ref(…)` declaration.
+   */
+  refElementTypes: Map<string, string | undefined>;
 }
 
 /**
@@ -46,8 +67,15 @@ export interface VueAnalysis {
 export function rewrite(node: ts.Node, scope: RewriteScope, sourceFile: ts.SourceFile): string {
   const result = ts.transform(node, [
     vueNativeEventTransformer(),
+    // A `@model`-paired `onUpdate<Name>` callback forwarded to a child component
+    // must bind Vue's `update:<name>` listener (`onUpdate:<name>`), not the
+    // camelCase `onUpdate<Name>`, or the two-way update is never wired.
+    vueComponentModelListenerTransformer(),
     vueJsxSlotTransformer(),
     createReferenceRewriter(scope),
+    // Runs after the reference rewriter so it can see the `<name>.value` reads it
+    // produced and restore their control-flow narrowing inside nested closures.
+    createStateSnapshotHoister(scope),
   ]);
   const text = printNode(result.transformed[0], sourceFile);
   result.dispose();
