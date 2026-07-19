@@ -2,17 +2,14 @@
   "$schema": "https://turborepo.com/schema.json",
   "extends": ["//"],
   "tasks": {
-    "build:ts": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+    "build": {
+      "dependsOn": ["build:check", "build:bundle", "build:types"]
     },
-    "build:wasm": {
-      "inputs": ["build.sh", "docker/**", "src/wasm/**"],
-      "outputs": ["src/generated/**", "dist/wasm/**"],
-      "cache": true
+    "build:bundle": {
+      "dependsOn": ["^build", "build:check"]
     },
-    "build:wasm:clean": {
-      "cache": false
+    "build:types": {
+      "dependsOn": ["^build", "build:bundle"]
     }
   }
 }
