@@ -13,7 +13,7 @@ import type { PhoneCountry } from './phone';
 /**
  * Exercises the **neutral** `BasePhoneInput` authored in this package, rendering
  * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
- * Covers the `google-libphonenumber`-derived national value, dial code, E.164
+ * Covers the `@mission-platform/phone-number`-derived national value, dial code, E.164
  * hidden input, and validity indicator.
  *
  * A small explicit `countries` list keeps the SSR markup compact and the
@@ -47,7 +47,7 @@ describe('BasePhoneInput authors the same component for React and Vue', () => {
     const properties = { country: 'US', modelValue: '(415) 555-2671', countries, name: 'phone', id: 'ph-2' };
     for (const html of await renderBoth(properties)) {
       expect(html).toContain('value="(415) 555-2671"');
-      // Hidden input submits the canonical E.164 value parsed by google-libphonenumber.
+      // Hidden input submits the canonical E.164 value parsed by @mission-platform/phone-number.
       expect(html).toContain('type="hidden"');
       expect(html).toContain('value="+14155552671"');
       expect(html).toContain('aria-label="Valid number"');

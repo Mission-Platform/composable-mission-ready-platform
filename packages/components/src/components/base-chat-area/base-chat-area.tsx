@@ -39,7 +39,7 @@ export interface ChatAreaProperties extends MpProperties {
  * dropped, since the neutral dialect models no exposed instance methods —
  * auto-scroll covers the common case.
  */
-export function BaseChatArea(properties: ChatAreaProperties): MpElement {
+export function BaseChatArea(properties: Readonly<ChatAreaProperties>): MpElement {
   const { autoScroll = true, autoScrollThreshold = 80, ariaLabel, size = 'md' } = properties;
 
   const logReference = useRef<HTMLElement | null>(null);
@@ -96,7 +96,10 @@ export function BaseChatArea(properties: ChatAreaProperties): MpElement {
         role="log"
         onScroll={onScroll}
       >
-        <ul classNames={styles['base-chat-area__messages']}>
+        <ul
+          classNames={styles['base-chat-area__messages']}
+          role="list"
+        >
           <Slot />
         </ul>
       </div>

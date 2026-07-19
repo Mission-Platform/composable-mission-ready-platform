@@ -19,7 +19,10 @@ import styles from './base-modal.module.scss';
 export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
 
 export interface ModalProperties extends MpProperties {
-  /** Whether the modal is open (controlled). Defaults to `false`. */
+  /**
+   * Whether the modal is open (controlled). Defaults to `false`.
+   * @model onUpdateOpen
+   */
   open?: boolean;
   /** Title rendered in the header. When omitted (and no `header`), the header is hidden. */
   title?: string;
@@ -70,7 +73,7 @@ type DialogElement = HTMLDialogElement & {
  * `onUpdateOpen`/`onClose` callback props. It owns its styling through the
  * co-located CSS Module `base-modal.module.scss`.
  */
-export function BaseModal(properties: ModalProperties): MpElement {
+export function BaseModal(properties: Readonly<ModalProperties>): MpElement {
   const {
     open = false,
     title,

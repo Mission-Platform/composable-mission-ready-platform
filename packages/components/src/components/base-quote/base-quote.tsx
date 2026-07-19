@@ -57,7 +57,7 @@ function textVariantFor(size: QuoteSize): TypographyVariant {
  * drops that scoped slot — attribution is driven by the `author`/`source` props
  * — consistent with how the other migrated components dropped scoped slots.
  */
-export function BaseQuote(properties: QuoteProperties): MpElement {
+export function BaseQuote(properties: Readonly<QuoteProperties>): MpElement {
   const { variant = 'default', tone = 'neutral', size = 'md', author, source, cite } = properties;
 
   const className = classNames(

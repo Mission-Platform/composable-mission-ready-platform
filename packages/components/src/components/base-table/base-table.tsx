@@ -1,3 +1,4 @@
+import { IconChevron } from '@mission-platform/icons';
 import { classNames, h, useMemo, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
@@ -75,7 +76,7 @@ export interface TableProperties extends MpProperties {
  * `render` formatter (the scoped cell slots are dropped) — consistent with how
  * the other migrated components dropped scoped slots.
  */
-export function BaseTable(properties: TableProperties): MpElement {
+export function BaseTable(properties: Readonly<TableProperties>): MpElement {
   const {
     columns,
     rows,
@@ -154,7 +155,12 @@ export function BaseTable(properties: TableProperties): MpElement {
             {column.label}
           </BaseTypography>
           {column.sortable && isActive ? (
-            <span classNames={styles['base-table__sort-icon']}>{sortDirection === 'asc' ? '▲' : '▼'}</span>
+            <span classNames={styles['base-table__sort-icon']}>
+              <IconChevron
+                direction={sortDirection === 'asc' ? 'up' : 'down'}
+                size="2xs"
+              />
+            </span>
           ) : undefined}
         </span>
       </th>

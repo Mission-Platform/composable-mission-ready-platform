@@ -1,8 +1,7 @@
 import { IconUpload } from '@mission-platform/icons';
-import { h, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useId, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
-import { nextFieldId } from '../field-id';
 
 import styles from './base-file-input.module.scss';
 
@@ -10,7 +9,10 @@ import styles from './base-file-input.module.scss';
 export type FileInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export interface FileInputProperties extends MpProperties {
-  /** Selected file(s) (controlled via `modelValue` + `onUpdateModelValue`). */
+  /**
+   * Selected file(s) (controlled via `modelValue` + `onUpdateModelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: File | File[];
   /** Allow selecting multiple files. */
   multiple?: boolean;
@@ -57,14 +59,14 @@ export interface FileInputProperties extends MpProperties {
  * trio. It owns its styling through the co-located CSS Module
  * `base-file-input.module.scss` and composes the neutral {@link BaseTypography}.
  *
- * Substitutions from the original Vue SFC: the `useId` composable becomes the
- * shared `nextFieldId` helper resolved once in a `useRef`; the drag/selection
+ * Substitutions from the original Vue SFC: the `useId` composable maps straight
+ * to the framework-native `useId` hook; the drag/selection
  * state uses the neutral `useState` hook; the upload icon is the write-once
  * `@mission-platform/icons` `IconUpload` (itself compiled to React/Vue); the
  * `useI18n` labels become plain string props; and the `v-model` + `change` emit
  * become the `onUpdateModelValue`/`onChange` callback props.
  */
-export function BaseFileInput(properties: FileInputProperties): MpElement {
+export function BaseFileInput(properties: Readonly<FileInputProperties>): MpElement {
   const {
     multiple = false,
     accept,
@@ -82,8 +84,8 @@ export function BaseFileInput(properties: FileInputProperties): MpElement {
     noFileLabel = 'No file chosen',
   } = properties;
 
-  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-file-input'));
-  const resolvedId = idReference.current;
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
   const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
 
   const [isDragging, setIsDragging] = useState(false);

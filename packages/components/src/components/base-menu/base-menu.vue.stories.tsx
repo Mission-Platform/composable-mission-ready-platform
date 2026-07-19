@@ -1,9 +1,9 @@
 import { Menu } from '@mission-platform/components/vue';
 
-import type { MenuItem } from './base-menu';
+import type { MenuNode } from './base-menu';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-const items: MenuItem[] = [
+const items: MenuNode[] = [
   { label: 'Dashboard', icon: '▦', href: '/' },
   {
     label: 'Reports',

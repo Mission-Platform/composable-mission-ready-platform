@@ -9,7 +9,10 @@ export type OtpInputType = 'numeric' | 'alphanumeric' | 'text';
 export type OtpInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export interface OtpInputProperties extends MpProperties {
-  /** The current code (controlled via `modelValue` + `onUpdateModelValue`). */
+  /**
+   * The current code (controlled via `modelValue` + `onUpdateModelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: string;
   /** Number of cells / expected code length. Defaults to `6`. */
   length?: number;
@@ -49,7 +52,7 @@ export interface OtpInputProperties extends MpProperties {
  * and the `v-model` + `complete` emit become the `onUpdateModelValue`/
  * `onComplete` callback props.
  */
-export function BaseOtpInput(properties: OtpInputProperties): MpElement {
+export function BaseOtpInput(properties: Readonly<OtpInputProperties>): MpElement {
   const {
     modelValue = '',
     length = 6,

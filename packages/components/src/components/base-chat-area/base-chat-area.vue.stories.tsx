@@ -40,9 +40,9 @@ const meta = {
       <div style="height: 360px; max-width: 420px;">
         <ChatArea v-bind="args">
           <template #header><strong>Support chat</strong></template>
-          <li><ChatBubble side="start">Hi! How can I help you today?</ChatBubble></li>
-          <li><ChatBubble side="end" variant="primary">I have a question about my order.</ChatBubble></li>
-          <li><ChatBubble side="start">Of course — what is your order number?</ChatBubble></li>
+          <ChatBubble side="start">Hi! How can I help you today?</ChatBubble>
+          <ChatBubble side="end" variant="primary">I have a question about my order.</ChatBubble>
+          <ChatBubble side="start">Of course — what is your order number?</ChatBubble>
           <template #footer><em>Type a message…</em></template>
         </ChatArea>
       </div>
@@ -64,8 +64,8 @@ export const WithoutChrome: Story = {
     template: `
       <div style="height: 320px; max-width: 420px;">
         <ChatArea v-bind="args">
-          <li><ChatBubble side="start">A bare conversation, with no header or footer.</ChatBubble></li>
-          <li><ChatBubble side="end" variant="primary">Looks good!</ChatBubble></li>
+          <ChatBubble side="start">A bare conversation, with no header or footer.</ChatBubble>
+          <ChatBubble side="end" variant="primary">Looks good!</ChatBubble>
         </ChatArea>
       </div>
     `,

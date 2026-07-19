@@ -3,7 +3,7 @@ import {
   h,
   hasSlot,
   Slot,
-  useRef,
+  useId,
   useState,
   type MpChild,
   type MpElement,
@@ -14,7 +14,6 @@ import { BaseCalendar } from '../base-calendar';
 import { BaseDropdown } from '../base-dropdown';
 import { BaseTypography } from '../base-typography';
 import { formatDateRange, type DateRange } from '../date-time';
-import { nextFieldId } from '../field-id';
 
 import styles from './base-date-range-input.module.scss';
 
@@ -22,7 +21,10 @@ import styles from './base-date-range-input.module.scss';
 export type DateRangeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export interface DateRangeInputProperties extends MpProperties {
-  /** Selected `{ start, end }` ISO-date range, controlled via `modelValue`. */
+  /**
+   * Selected `{ start, end }` ISO-date range, controlled via `modelValue`.
+   * @model onUpdateModelValue
+   */
   modelValue?: DateRange;
   /** Visible label text. */
   label?: string;
@@ -72,14 +74,14 @@ export interface DateRangeInputProperties extends MpProperties {
  * panel plus the outside-click/`Escape` dismissal), replacing `useZIndex`; the
  * bespoke hover-driven
  * dual-month range grid is substituted with **two composed `BaseCalendar`s**
- * with ordering enforced via `min`/`max`; the `useId` composable becomes
- * `nextFieldId`; the calendar glyph is the write-once `@mission-platform/icons`
+ * with ordering enforced via `min`/`max`; the `useId` composable maps to the
+ * framework-native `useId` hook; the calendar glyph is the write-once `@mission-platform/icons`
  * `IconCalendar`; the `start`/`end` regions are authored as named slots
  * (`<Slot>`) with their presence detected through the framework-neutral
  * {@link hasSlot} helper; and the `v-model` + `change` emits become the
  * `onUpdateModelValue`/`onChange` callback props.
  */
-export function BaseDateRangeInput(properties: DateRangeInputProperties): MpElement {
+export function BaseDateRangeInput(properties: Readonly<DateRangeInputProperties>): MpElement {
   const {
     modelValue = { start: '', end: '' },
     label,
@@ -93,8 +95,8 @@ export function BaseDateRangeInput(properties: DateRangeInputProperties): MpElem
     max,
   } = properties;
 
-  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-date-range-input'));
-  const resolvedId = idReference.current;
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
   const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
 
   const [open, setOpen] = useState<boolean>(false);
@@ -108,13 +110,14 @@ export function BaseDateRangeInput(properties: DateRangeInputProperties): MpElem
     properties.onChange?.(next);
   };
 
-  const handleStart = (value: string): void => {
-    const nextEnd = modelValue.end && modelValue.end < value ? value : modelValue.end;
-    emitRange({ start: value, end: nextEnd });
+  const handleStart = (value: string | undefined): void => {
+    const next = value ?? '';
+    const nextEnd = modelValue.end && modelValue.end < next ? next : modelValue.end;
+    emitRange({ start: next, end: nextEnd });
   };
 
-  const handleEnd = (value: string): void => {
-    emitRange({ start: modelValue.start, end: value });
+  const handleEnd = (value: string | undefined): void => {
+    emitRange({ start: modelValue.start, end: value ?? '' });
   };
 
   const toggleOpen = (): void => {

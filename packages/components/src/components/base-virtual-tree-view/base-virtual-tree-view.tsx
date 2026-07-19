@@ -1,3 +1,4 @@
+import { IconChevron } from '@mission-platform/icons';
 import {
   h,
   Slot,
@@ -79,11 +80,12 @@ interface FlatNode {
  *
  * The original Vue SFC composed `BaseTreeNodeLabel`, used a scoped **default**
  * slot, and `select`/`toggle` emits. The neutral version inlines the label,
- * substitutes a `▸`/`▾` glyph for the icons-package chevron, uses a named `row`
- * scoped slot (the runtime adapters forward named — not default — slots with
- * scope), and the `onSelect`/`onToggle` callback props.
+ * renders the write-once `@mission-platform/icons` `IconChevron` (rotated via
+ * its `direction` prop), uses a named `row` scoped slot (the runtime adapters
+ * forward named — not default — slots with scope), and the `onSelect`/`onToggle`
+ * callback props.
  */
-export function BaseVirtualTreeView(properties: VirtualTreeViewProperties): MpElement {
+export function BaseVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): MpElement {
   const { nodes, itemHeight = 32, overscan = 3, height = 400, defaultOpen = false, size = 'md' } = properties;
 
   const [scrollTop, setScrollTop] = useState(0);
@@ -180,7 +182,10 @@ export function BaseVirtualTreeView(properties: VirtualTreeViewProperties): MpEl
                       toggle(node);
                     }}
                   >
-                    {isOpen(node) ? '▾' : '▸'}
+                    <IconChevron
+                      direction={isOpen(node) ? 'down' : 'right'}
+                      size="2xs"
+                    />
                   </button>
                 ) : (
                   <span

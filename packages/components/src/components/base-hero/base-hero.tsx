@@ -50,7 +50,7 @@ export interface HeroProperties extends MpProperties {
  * (`<Slot>`, presence detected with the framework-neutral {@link hasSlot}
  * helper) and `eyebrow`/`title`/`subtitle` are string props.
  */
-export function BaseHero(properties: HeroProperties): MpElement {
+export function BaseHero(properties: Readonly<HeroProperties>): MpElement {
   const {
     eyebrow,
     title,

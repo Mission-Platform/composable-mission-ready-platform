@@ -40,7 +40,7 @@ export interface NavbarProperties extends MpProperties {
  * header + drawer under a single `display: contents` host (the neutral dialect
  * has no multi-root fragment return).
  */
-export function BaseNavbar(properties: NavbarProperties): MpElement {
+export function BaseNavbar(properties: Readonly<NavbarProperties>): MpElement {
   const { brand, sticky = false, mobileTitle, align = 'start', size = 'md' } = properties;
 
   const [sidebarOpen, setSidebarOpen] = useState(false);

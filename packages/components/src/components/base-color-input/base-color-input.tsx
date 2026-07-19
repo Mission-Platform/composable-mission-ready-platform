@@ -1,7 +1,6 @@
-import { h, useEffect, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useEffect, useId, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
-import { nextFieldId } from '../field-id';
 
 import styles from './base-color-input.module.scss';
 
@@ -12,7 +11,10 @@ export type ColorInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 const HEX_PATTERN = /^#[0-9a-fA-F]{6}$/;
 
 export interface ColorInputProperties extends MpProperties {
-  /** Colour value (controlled via `modelValue` + `onUpdateModelValue`). Defaults to `'#000000'`. */
+  /**
+   * Colour value (controlled via `modelValue` + `onUpdateModelValue`). Defaults to `'#000000'`.
+   * @model onUpdateModelValue
+   */
   modelValue?: string;
   /** Visible label text. */
   label?: string;
@@ -46,13 +48,13 @@ export interface ColorInputProperties extends MpProperties {
  * its styling through the co-located CSS Module `base-color-input.module.scss`
  * and composes the neutral {@link BaseTypography} for the label/hint/error text.
  *
- * Substitutions from the original Vue SFC: the `useId` composable becomes the
- * shared `nextFieldId` helper resolved once in a `useRef`; the local hex `ref`
+ * Substitutions from the original Vue SFC: the `useId` composable maps straight
+ * to the framework-native `useId` hook; the local hex `ref`
  * becomes a {@link useState} kept in sync with external `modelValue` changes via
  * a {@link useEffect}; and the `v-model` + `change` emit become the
  * `onUpdateModelValue`/`onChange` callback props.
  */
-export function BaseColorInput(properties: ColorInputProperties): MpElement {
+export function BaseColorInput(properties: Readonly<ColorInputProperties>): MpElement {
   const {
     modelValue = '#000000',
     label,
@@ -64,8 +66,8 @@ export function BaseColorInput(properties: ColorInputProperties): MpElement {
     size = 'md',
   } = properties;
 
-  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-color-input'));
-  const resolvedId = idReference.current;
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
   const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
 
   const [hexText, setHexText] = useState<string>(modelValue);

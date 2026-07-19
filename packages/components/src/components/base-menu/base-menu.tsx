@@ -1,3 +1,4 @@
+import { IconChevron, type IconDirection } from '@mission-platform/icons';
 import { h, useEffect, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import sizeStyles from '../size.module.scss';
@@ -8,7 +9,7 @@ import styles from './base-menu.module.scss';
 export type MenuSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 /** A single menu entry; may contain one level of `children` (a submenu). */
-export interface MenuItem {
+export interface MenuNode {
   /** Display label. */
   label: string;
   /** Optional leading glyph/text icon. */
@@ -20,7 +21,7 @@ export interface MenuItem {
   /** Activation handler for leaf entries (no `href`/`children`). */
   onClick?: () => void;
   /** Nested entries; presence turns the item into an expandable submenu. */
-  children?: MenuItem[];
+  children?: MenuNode[];
 }
 
 /** Orientation of the menu list. */
@@ -34,7 +35,7 @@ function parentOfPath(path: string): string {
 
 export interface MenuProperties extends MpProperties {
   /** Top-level menu entries. */
-  items: MenuItem[];
+  items: MenuNode[];
   /** Size token controlling the menu's scale. Defaults to `'md'`. */
   size?: MenuSize;
   /** List orientation. Defaults to `'vertical'`. */
@@ -61,11 +62,11 @@ export interface MenuProperties extends MpProperties {
  * neutral version reproduces that arbitrary-depth recursion with a single
  * `renderItems(items, parentPath)` walk and a single path-keyed `openPath` in
  * `useState` (e.g. `'1.0.2'`), keeping the same one-open-per-level semantics. It
- * substitutes `▾`/`▸`/`◂` chevron glyphs for the `@mission-platform/icons`
- * `IconChevron` and renders a plain `<a href>` (the established `vue-router`
+ * renders the write-once `@mission-platform/icons` `IconChevron` (rotated via
+ * its `direction` prop) and a plain `<a href>` (the established `vue-router`
  * substitution), otherwise matching the roles/ARIA of the Vue markup.
  */
-export function BaseMenu(properties: MenuProperties): MpElement {
+export function BaseMenu(properties: Readonly<MenuProperties>): MpElement {
   const { items, orientation = 'vertical', ariaLabel, size = 'md' } = properties;
 
   const navReference = useRef<HTMLElement | null>(null);
@@ -101,7 +102,7 @@ export function BaseMenu(properties: MenuProperties): MpElement {
     setOpenPath(isPathOpen(path) ? parentOfPath(path) : path);
   };
 
-  const handleItemClick = (item: MenuItem, path: string): void => {
+  const handleItemClick = (item: MenuNode, path: string): void => {
     if (item.disabled) {
       return;
     }
@@ -113,7 +114,7 @@ export function BaseMenu(properties: MenuProperties): MpElement {
     setOpenPath('');
   };
 
-  const renderIcon = (item: MenuItem): MpElement | undefined =>
+  const renderIcon = (item: MenuNode): MpElement | undefined =>
     item.icon ? (
       <span
         aria-hidden="true"
@@ -123,14 +124,14 @@ export function BaseMenu(properties: MenuProperties): MpElement {
       </span>
     ) : undefined;
 
-  const renderItems = (entries: MenuItem[], parentPath: string, nested: boolean): MpElement[] =>
+  const renderItems = (entries: MenuNode[], parentPath: string, nested: boolean): MpElement[] =>
     entries.map((item, index) => {
       const path = parentPath === '' ? `${index}` : `${parentPath}.${index}`;
       const hasChildren = Boolean(item.children && item.children.length > 0);
       const open = hasChildren && isPathOpen(path);
-      // Closed: down (top level) / right (nested). Open: up / left — matching the
-      // Vue `IconChevron` directions, expressed as glyphs.
-      const chevron = nested ? (open ? '◂' : '▸') : open ? '▾' : '▸';
+      // Nested: right when closed, left when open. Top level: right when closed,
+      // down when open — matching the Vue `IconChevron` directions.
+      const chevronDirection: IconDirection = nested ? (open ? 'left' : 'right') : open ? 'down' : 'right';
       return (
         <li
           key={path}
@@ -171,7 +172,10 @@ export function BaseMenu(properties: MenuProperties): MpElement {
                   aria-hidden="true"
                   classNames={styles['base-menu__chevron']}
                 >
-                  {chevron}
+                  <IconChevron
+                    direction={chevronDirection}
+                    size="2xs"
+                  />
                 </span>
               ) : undefined}
             </button>
@@ -187,7 +191,7 @@ export function BaseMenu(properties: MenuProperties): MpElement {
               ]}
               role="menu"
             >
-              {renderItems(item.children as MenuItem[], path, true)}
+              {renderItems(item.children as MenuNode[], path, true)}
             </menu>
           ) : undefined}
         </li>

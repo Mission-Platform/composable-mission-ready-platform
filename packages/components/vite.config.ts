@@ -1,4 +1,5 @@
 import { copyFileSync, mkdirSync, readdirSync, readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 
 import { defineLibraryConfig } from '@mission-platform/vite-config';
@@ -6,7 +7,7 @@ import {
   generateFrameworkSources,
   generateStoryblokBloks,
   jsxComponentsCssImportPlugin,
-  jsxComponentsEntryDtsPlugin,
+  jsxComponentsDtsPlugin,
   reactJsxPlugin,
 } from '@mission-platform/vite-plugin-jsx';
 import vueJsx from '@vitejs/plugin-vue-jsx';
@@ -39,19 +40,36 @@ import { defineConfig, type Plugin, type UserConfig } from 'vite';
  * build script clears `dist` once up front, so each framework build only needs
  * to manage its own subtree.
  *
- * `tsc` then emits the neutral components' own declarations into
- * `dist/components/**`, which the synthesised entry `.d.ts` files import from.
+ * Each framework build gets its **own** genuine declarations from
+ * {@link jsxComponentsDtsPlugin}, a post-build step that runs the framework's
+ * declaration toolchain over the generated tree (the TypeScript compiler API
+ * over the React `.tsx` tree; `vue-tsc` over the Vue `.vue` tree). The React
+ * declarations reference React's own types (`ReactNode`/`RefObject`/…) and the
+ * Vue declarations each SFC's precise `DefineComponent` — rather than both
+ * re-importing one shared neutral props declaration. `tsc` still emits the
+ * neutral components' own declarations into `dist/components/**` for the
+ * package's neutral `.` / `./base-drawer` entry points.
  */
 const componentsModule = path.resolve(__dirname, 'src/components/index.ts');
 const cacheRoot = path.resolve(__dirname, 'node_modules/.cache');
 
+/**
+ * The `vue-tsc` CLI used to emit the Vue build's declarations. It ships as a
+ * dependency of `@mission-platform/jsx` (this package's direct dependency), so
+ * it is resolved from the jsx package directory rather than assumed hoisted.
+ */
+const vueTscBin = createRequire(path.join(__dirname, 'vite.config.ts')).resolve('vue-tsc/bin/vue-tsc.js', {
+  paths: [path.join(__dirname, 'node_modules/@mission-platform/jsx')],
+});
+
 /** Build the per-framework library config (shared between the Vue and React modes). */
 function defineFrameworkConfig(framework: 'react' | 'vue'): UserConfig {
   const cacheName = `components-${framework}`;
+  const generatedDir = path.join(cacheRoot, cacheName);
   const entry = generateFrameworkSources({
     framework,
     componentsModule,
-    outDir: path.join(cacheRoot, cacheName),
+    outDir: generatedDir,
   });
 
   const stagePlugins: Plugin[] = framework === 'react' ? [reactJsxPlugin()] : [vueJsx()];
@@ -76,12 +94,14 @@ function defineFrameworkConfig(framework: 'react' | 'vue'): UserConfig {
         // Re-attach each component's extracted CSS to its JS chunk (Vite lib mode
         // emits the CSS asset but does not import it), so per-component styles load.
         jsxComponentsCssImportPlugin(),
-        jsxComponentsEntryDtsPlugin({
+        // Emit each framework's own genuine declarations from its generated tree
+        // (React via the TS compiler API, Vue via `vue-tsc`), so React consumers
+        // see React types and Vue consumers see each SFC's `DefineComponent`.
+        jsxComponentsDtsPlugin({
           framework,
-          componentsModule,
-          declarationFileName: 'index',
-          // `dist/<framework>/index.d.ts` imports the neutral props types from `dist/components`.
-          declarationModule: '../components',
+          generatedDir,
+          outDir: path.resolve(__dirname, `dist/${framework}`),
+          vueTscBin,
         }),
       ],
     },

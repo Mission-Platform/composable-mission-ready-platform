@@ -1,10 +1,9 @@
 import { IconChevron } from '@mission-platform/icons';
-import { h, Slot, useRef, useState, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, Slot, useId, useState, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseDropdown } from '../base-dropdown';
 import { BaseTag } from '../base-tag';
 import { BaseTypography } from '../base-typography';
-import { nextFieldId } from '../field-id';
 
 import styles from './base-multiselect.module.scss';
 
@@ -22,7 +21,10 @@ export interface MultiselectOption {
 }
 
 export interface MultiselectProperties extends MpProperties {
-  /** Selected values (controlled via `modelValue`). */
+  /**
+   * Selected values (controlled via `modelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: (string | number)[];
   /** The selectable options. */
   options?: MultiselectOption[];
@@ -76,13 +78,13 @@ export interface MultiselectProperties extends MpProperties {
  * kept in sync with the dropdown via its `onUpdateOpen` callback.
  *
  * Other substitutions from the original Vue SFC: the search query becomes an
- * internal `useState` string; the `useId` composable becomes the shared
- * `nextFieldId` helper; the chevron is the write-once `@mission-platform/icons`
+ * internal `useState` string; the `useId` composable maps to the
+ * framework-native `useId` hook; the chevron is the write-once `@mission-platform/icons`
  * `IconChevron` (rotated via its `direction` prop, itself compiled to
  * React/Vue); the `useI18n` strings become plain text; and the `v-model` + emits
  * become callback props.
  */
-export function BaseMultiselect(properties: MultiselectProperties): MpElement {
+export function BaseMultiselect(properties: Readonly<MultiselectProperties>): MpElement {
   const {
     modelValue = [],
     options = [],
@@ -98,8 +100,8 @@ export function BaseMultiselect(properties: MultiselectProperties): MpElement {
     autocomplete,
   } = properties;
 
-  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-multiselect'));
-  const resolvedId = idReference.current;
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
 

@@ -30,7 +30,7 @@ export interface SpinnerProperties extends MpProperties {
  * the neutral version (i18n is not part of this library) defaults the `label` to
  * `'Loading…'`.
  */
-export function BaseSpinner(properties: SpinnerProperties): MpElement {
+export function BaseSpinner(properties: Readonly<SpinnerProperties>): MpElement {
   const { size = 'md', variant = 'primary', label } = properties;
 
   const className = classNames(

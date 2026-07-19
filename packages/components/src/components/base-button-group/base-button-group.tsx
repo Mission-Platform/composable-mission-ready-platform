@@ -45,7 +45,7 @@ export interface ButtonGroupProperties extends MpProperties {
  * `base-button-group.module.scss`, assembled with the framework-neutral
  * {@link classNames} helper.
  */
-export function BaseButtonGroup(properties: ButtonGroupProperties): MpElement {
+export function BaseButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElement {
   const {
     orientation = 'horizontal',
     attached = false,

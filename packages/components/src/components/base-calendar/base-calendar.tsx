@@ -18,7 +18,10 @@ import styles from './base-calendar.module.scss';
 export type CalendarSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export interface CalendarProperties extends MpProperties {
-  /** ISO date string (YYYY-MM-DD) — the selected date. */
+  /**
+   * ISO date string (YYYY-MM-DD) — the selected date.
+   * @model onUpdateModelValue
+   */
   modelValue?: string;
   /** Earliest selectable ISO date (YYYY-MM-DD). */
   min?: string;
@@ -175,7 +178,7 @@ function buildCells(
  * `@mission-platform/icons` chevrons become text glyphs; and the `v-model` +
  * `change` emits become the `onUpdateModelValue`/`onChange` callback props.
  */
-export function BaseCalendar(properties: CalendarProperties): MpElement {
+export function BaseCalendar(properties: Readonly<CalendarProperties>): MpElement {
   const {
     modelValue,
     min,
@@ -189,7 +192,14 @@ export function BaseCalendar(properties: CalendarProperties): MpElement {
     timezone,
   } = properties;
 
-  const initialBase = parseISO(modelValue, timezone) ?? DateTime.now().setZone(resolveZone(timezone));
+  // Anchor the initially visible month on the selected value, then fall back to
+  // a supplied range endpoint (so a range picker opens on the range's month),
+  // and only then to today.
+  const initialBase =
+    parseISO(modelValue, timezone) ??
+    parseISO(rangeStart, timezone) ??
+    parseISO(rangeEnd, timezone) ??
+    DateTime.now().setZone(resolveZone(timezone));
   const initialView = initialBase.startOf('month');
 
   const [viewYear, setViewYear] = useState<number>(initialView.year);

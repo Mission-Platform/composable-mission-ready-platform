@@ -32,7 +32,7 @@ describe('BaseStatusIcon authors the same component for React and Vue', () => {
       expect(html).toContain('base-status-icon--lg');
       expect(html).toContain('role="img"');
       expect(html).toContain('aria-label="Complete"');
-      expect(html).toContain('✓');
+      expect(html).toContain('base-icon-check');
     }
   });
 
@@ -43,7 +43,7 @@ describe('BaseStatusIcon authors the same component for React and Vue', () => {
     for (const html of [react, vue]) {
       expect(html).toContain('base-status-icon--error');
       expect(html).toContain('aria-hidden="true"');
-      expect(html).toContain('✕');
+      expect(html).toContain('base-icon-error');
     }
   });
 });

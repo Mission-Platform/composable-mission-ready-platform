@@ -54,7 +54,7 @@ export interface CardProperties extends MpProperties {
  * React's prop-presence check) so presence detection works identically on both
  * frameworks.
  */
-export function BaseCard(properties: CardProperties): MpElement {
+export function BaseCard(properties: Readonly<CardProperties>): MpElement {
   const { padding = 'md', shadow = false, bordered = true, variant = 'neutral', size = 'md', margin } = properties;
 
   // The optional outer `margin` (named `2xs … 2xl` scale) resolves to a shared

@@ -1,9 +1,8 @@
-import { h, useEffect, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useEffect, useId, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseInput } from '../base-input';
 import { BaseSelect } from '../base-select';
 import { BaseTypography } from '../base-typography';
-import { nextFieldId } from '../field-id';
 
 import styles from './base-location-input.module.scss';
 import { emptyLocation, formatAxis, parseAxis } from './location';
@@ -16,7 +15,10 @@ export type { LocationFormat, LocationValue } from './location';
 export type LocationInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export interface LocationInputProperties extends MpProperties {
-  /** The canonical location value (signed decimal-degree `lat`/`lng`). */
+  /**
+   * The canonical location value (signed decimal-degree `lat`/`lng`).
+   * @model onUpdateModelValue
+   */
   modelValue?: LocationValue | null;
   /** Visible group legend. */
   label?: string;
@@ -81,8 +83,8 @@ function placeholdersFor(format: LocationFormat): { lat: string; lng: string } {
  * CSS Module `base-location-input.module.scss`. The conversion/parsing logic
  * ships with this package as the framework-agnostic, co-located `location.ts`.
  *
- * Substitutions from the original Vue SFC: `useId` becomes the shared
- * `nextFieldId` helper resolved once in a `useRef`; the local text buffers
+ * Substitutions from the original Vue SFC: `useId` maps straight to the
+ * framework-native `useId` hook; the local text buffers
  * (`latText`/`lngText`) become non-lazy {@link useState} (so the initial render
  * — including SSR — already shows the formatted coordinates) resynced from the
  * model with a {@link useEffect}; and the `v-model` + `change` emits become the
@@ -90,7 +92,7 @@ function placeholdersFor(format: LocationFormat): { lat: string; lng: string } {
  * applied to wrapper `<div>`s rather than passed through to the composed
  * components.
  */
-export function BaseLocationInput(properties: LocationInputProperties): MpElement {
+export function BaseLocationInput(properties: Readonly<LocationInputProperties>): MpElement {
   const {
     modelValue,
     label,
@@ -104,8 +106,8 @@ export function BaseLocationInput(properties: LocationInputProperties): MpElemen
     size = 'md',
   } = properties;
 
-  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-location-input'));
-  const resolvedId = idReference.current;
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
 
   const activeFormat: LocationFormat = modelValue?.format ?? formatProperty;
 

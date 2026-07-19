@@ -1,24 +1,28 @@
 /**
  * Shared, framework-agnostic phone-number helpers for the write-once
- * `BasePhoneInput`, built on Google's `google-libphonenumber`.
+ * `BasePhoneInput`, built on `@mission-platform/phone-number` — the platform's
+ * own AssemblyScript/WebAssembly reimplementation of Google's libphonenumber.
  *
- * Like `field-id.ts` and `theme-store.ts`, this module sits **inside** the
+ * Like `theme-store.ts`, this module sits **inside** the
  * component folder but is a plain (non-component) helper: it imports no neutral
  * `@mission-platform/jsx` primitives and no JSX, so `@mission-platform/vite-plugin-jsx`
  * recognises it is not a sibling component and copies it **verbatim** into both
  * the React and the Vue generated trees (re-pointing the `./phone` import). The
- * `google-libphonenumber` dependency therefore travels unchanged onto both
- * frameworks and is bundled by each framework's own Stage-2 build.
+ * `@mission-platform/phone-number` dependency therefore travels unchanged onto
+ * both frameworks and is bundled by each framework's own Stage-2 build.
  *
- * The neutral component is authored once against these pure functions, which all
- * swallow `google-libphonenumber`'s parse exceptions so a partial / invalid
- * number never throws during render.
+ * The package exposes a **synchronous** `PhoneNumberUtil` instance (the inlined
+ * wasm is compiled with the synchronous `WebAssembly` constructors), so these
+ * pure functions can parse/format/validate during render without an async
+ * boundary. They all swallow unparseable input so a partial / invalid number
+ * never throws.
  */
-import libphonenumber from 'google-libphonenumber';
+import { PhoneNumberFormat, getPhoneNumberUtilSync, type PhoneNumberUtil } from '@mission-platform/phone-number';
 
-const { PhoneNumberUtil, PhoneNumberFormat, AsYouTypeFormatter } = libphonenumber;
-
-const phoneNumberUtility = PhoneNumberUtil.getInstance();
+/** The shared, memoised synchronous util instance. */
+function util(): PhoneNumberUtil {
+  return getPhoneNumberUtilSync();
+}
 
 /** Human-readable region names, when the runtime ships `Intl.DisplayNames`. */
 const regionDisplayNames =
@@ -54,19 +58,16 @@ export function regionName(region: string): string {
 
 /** The international calling code (no `+`) for a region, or `''` when unknown. */
 export function dialCode(region: string): string {
-  try {
-    return String(phoneNumberUtility.getCountryCodeForRegion(region));
-  } catch {
-    return '';
-  }
+  const code = util().getCountryCodeForRegion(region);
+  return code > 0 ? String(code) : '';
 }
 
 /**
- * Every region `google-libphonenumber` supports, as a `PhoneCountry` list sorted
- * by localised name — the default option set for the country picker.
+ * Every region `@mission-platform/phone-number` supports, as a `PhoneCountry`
+ * list sorted by localised name — the default option set for the country picker.
  */
 export function listCountries(): PhoneCountry[] {
-  return phoneNumberUtility
+  return util()
     .getSupportedRegions()
     .map((region) => ({ region, name: regionName(region), dialCode: dialCode(region), flag: regionToFlag(region) }))
     .toSorted((a, b) => a.name.localeCompare(b.name));
@@ -74,16 +75,10 @@ export function listCountries(): PhoneCountry[] {
 
 /** Format a (possibly partial) input as the user types it for the given region. */
 export function formatAsYouType(input: string, region: string): string {
-  const cleaned = input.replaceAll(/[^\d+]/g, '');
-  if (cleaned.length === 0) {
+  if (input.length === 0) {
     return '';
   }
-  const formatter = new AsYouTypeFormatter(region);
-  let formatted = '';
-  for (const character of cleaned) {
-    formatted = formatter.inputDigit(character);
-  }
-  return formatted;
+  return util().formatAsYouType(input, region);
 }
 
 /** Format an input in the region's national format (falls back to the raw input). */
@@ -91,11 +86,7 @@ export function formatNational(input: string, region: string): string {
   if (input.trim().length === 0) {
     return '';
   }
-  try {
-    return phoneNumberUtility.format(phoneNumberUtility.parse(input, region), PhoneNumberFormat.NATIONAL);
-  } catch {
-    return input;
-  }
+  return util().format(input, region, PhoneNumberFormat.NATIONAL) ?? input;
 }
 
 /** Parse an input to its canonical E.164 form (`+…`), or `undefined` when unparseable. */
@@ -103,11 +94,7 @@ export function toE164(input: string, region: string): string | undefined {
   if (input.trim().length === 0) {
     return undefined;
   }
-  try {
-    return phoneNumberUtility.format(phoneNumberUtility.parse(input, region), PhoneNumberFormat.E164);
-  } catch {
-    return undefined;
-  }
+  return util().format(input, region, PhoneNumberFormat.E164);
 }
 
 /** Whether an input is a valid phone number for the given region. */
@@ -115,18 +102,14 @@ export function isValid(input: string, region: string): boolean {
   if (input.trim().length === 0) {
     return false;
   }
-  try {
-    return phoneNumberUtility.isValidNumberForRegion(phoneNumberUtility.parse(input, region), region);
-  } catch {
-    return false;
-  }
+  return util().isValidNumberForRegion(input, region);
 }
 
 /** A national-format example number for the region (handy as a placeholder), or `''`. */
 export function exampleNumber(region: string): string {
-  try {
-    return phoneNumberUtility.format(phoneNumberUtility.getExampleNumber(region), PhoneNumberFormat.NATIONAL);
-  } catch {
+  const example = util().getExampleNumber(region);
+  if (example === undefined) {
     return '';
   }
+  return util().format(example, region, PhoneNumberFormat.NATIONAL) ?? '';
 }

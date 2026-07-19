@@ -58,7 +58,7 @@ function nextTheme(theme: Theme): Theme {
  * `change` through the `onChange` callback prop. The label is overridable
  * through the default slot.
  */
-export function BaseThemeToggle(properties: ThemeToggleProperties): MpElement {
+export function BaseThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement {
   const { ariaLabel, onChange, size = 'md' } = properties;
 
   const [snapshot, setSnapshot] = useState(getThemeSnapshot());

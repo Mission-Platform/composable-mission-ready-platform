@@ -1,1 +1,1 @@
-export { BaseMenu, type MenuItem, type MenuOrientation, type MenuProperties } from './base-menu';
+export { BaseMenu, type MenuNode, type MenuOrientation, type MenuProperties } from './base-menu';

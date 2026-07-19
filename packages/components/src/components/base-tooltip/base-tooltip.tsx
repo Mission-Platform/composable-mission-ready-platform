@@ -1,7 +1,6 @@
-import { h, Slot, Teleport, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, Slot, Teleport, useId, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
-import { nextFieldId } from '../field-id';
 import sizeStyles from '../size.module.scss';
 
 import styles from './base-tooltip.module.scss';
@@ -55,15 +54,14 @@ const POSITION_AREA: Readonly<Record<TooltipPlacement, string>> = {
  * Substitutions from the original Vue SFC: `@floating-ui/vue` → CSS anchor
  * positioning; `<Teleport>` → the neutral `<Teleport>` portal primitive;
  * `<Transition>` → a CSS fade (`@starting-style`); the arrow middleware is
- * dropped (a CSS triangle could be re-added later); `useId` → `nextFieldId`; and
+ * dropped (a CSS triangle could be re-added later); `useId` → the framework-native `useId` hook; and
  * `useZIndex('tooltip')` → the static `tooltip` z-index layer applied in CSS. It
  * owns its styling through the co-located CSS Module `base-tooltip.module.scss`.
  */
-export function BaseTooltip(properties: TooltipProperties): MpElement {
+export function BaseTooltip(properties: Readonly<TooltipProperties>): MpElement {
   const { content, placement = 'top', disabled = false, delay = 0, size = 'md' } = properties;
 
-  const idReference = useRef<string>(nextFieldId('mp-tooltip'));
-  const baseId = idReference.current;
+  const baseId = useId();
   const tooltipId = `${baseId}-tip`;
   const anchorName = `--${baseId}`;
 

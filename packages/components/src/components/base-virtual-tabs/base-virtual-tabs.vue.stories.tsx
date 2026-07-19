@@ -47,7 +47,7 @@ const meta = {
     setup() {
       const active = ref(arguments_.modelValue ?? 'inbox');
       // `panel` is a render-prop (not a Vue slot): it receives `{ tab }` and
-      // returns the active panel's content.
+      // returns the active panel's content as VNodes.
       const panel = ({ tab }: { tab: TabItem }) =>
         h('p', { style: 'margin: 0;' }, ['Virtualised content for ', h('strong', tab.label), '.']);
       return { args: arguments_, active, panel };

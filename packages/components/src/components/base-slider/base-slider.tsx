@@ -8,7 +8,10 @@ import styles from './base-slider.module.scss';
 export type SliderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export interface SliderProperties extends MpProperties {
-  /** Current value (controlled via `modelValue` + `onUpdateModelValue`). Defaults to `0`. */
+  /**
+   * Current value (controlled via `modelValue` + `onUpdateModelValue`). Defaults to `0`.
+   * @model onUpdateModelValue
+   */
   modelValue?: number;
   /** Minimum value. Defaults to `0`. */
   min?: number;
@@ -50,7 +53,7 @@ export interface SliderProperties extends MpProperties {
  * `useRef`s and the `v-model` + `change` emit become the
  * `onUpdateModelValue`/`onChange` callback props.
  */
-export function BaseSlider(properties: SliderProperties): MpElement {
+export function BaseSlider(properties: Readonly<SliderProperties>): MpElement {
   const {
     modelValue = 0,
     min = 0,

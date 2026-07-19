@@ -3,7 +3,7 @@ import {
   h,
   hasSlot,
   Slot,
-  useRef,
+  useId,
   useState,
   type MpChild,
   type MpElement,
@@ -25,7 +25,6 @@ import {
   type DateTimeRange,
   type TimezoneMode,
 } from '../date-time';
-import { nextFieldId } from '../field-id';
 
 import styles from './base-date-time-range-input.module.scss';
 
@@ -36,7 +35,10 @@ export type DateTimeRangeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 
 type Endpoint = 'start' | 'end';
 
 export interface DateTimeRangeInputProperties extends MpProperties {
-  /** Selected `{ start, end, timezone }` range, controlled via `modelValue`. */
+  /**
+   * Selected `{ start, end, timezone }` range, controlled via `modelValue`.
+   * @model onUpdateModelValue
+   */
   modelValue?: DateTimeRange;
   /** Visible label text. */
   label?: string;
@@ -89,14 +91,14 @@ export interface DateTimeRangeInputProperties extends MpProperties {
  * bespoke hover-driven
  * dual-month grid is substituted with **composed `BaseCalendar`s** per endpoint;
  * the inline parse/format/timezone logic is delegated to the co-located
- * framework-agnostic `date-time.ts`; the `useId` composable becomes
- * `nextFieldId`; the calendar/timezone glyphs are the write-once
+ * framework-agnostic `date-time.ts`; the `useId` composable maps to the
+ * framework-native `useId` hook; the calendar/timezone glyphs are the write-once
  * `@mission-platform/icons` `IconCalendar`/`IconGlobe`; the `start`/`end` SFC
  * slots become the `startContent`/`endContent` named slots (`<Slot>`, presence
  * detected with the framework-neutral {@link hasSlot} helper); and the `v-model`
  * + `change` emits become the `onUpdateModelValue`/`onChange` callback props.
  */
-export function BaseDateTimeRangeInput(properties: DateTimeRangeInputProperties): MpElement {
+export function BaseDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperties>): MpElement {
   const {
     modelValue = { start: '', end: '', timezone: 'browser' },
     label,
@@ -111,8 +113,8 @@ export function BaseDateTimeRangeInput(properties: DateTimeRangeInputProperties)
     max,
   } = properties;
 
-  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-date-time-range-input'));
-  const resolvedId = idReference.current;
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
   const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
 
   const [open, setOpen] = useState<boolean>(false);
@@ -137,9 +139,9 @@ export function BaseDateTimeRangeInput(properties: DateTimeRangeInputProperties)
 
   const setDate =
     (endpoint: Endpoint) =>
-    (date: string): void => {
+    (date: string | undefined): void => {
       const parts = endpoint === 'start' ? startParts : endParts;
-      emitRange(composeEndpoint(endpoint, date, parts.h, parts.m, parts.s));
+      emitRange(composeEndpoint(endpoint, date ?? '', parts.h, parts.m, parts.s));
     };
 
   const setTimeUnit = (endpoint: Endpoint, unit: 'h' | 'm' | 's', value: number): void => {

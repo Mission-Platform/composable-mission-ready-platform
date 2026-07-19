@@ -1,6 +1,5 @@
-import { h, Slot, Teleport, useEffect, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, Slot, Teleport, useEffect, useId, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
-import { nextFieldId } from '../field-id';
 import sizeStyles from '../size.module.scss';
 
 import styles from './base-popover.module.scss';
@@ -24,7 +23,10 @@ export type PopoverPlacement =
   | 'right-end';
 
 export interface PopoverProperties extends MpProperties {
-  /** Whether the popover is open (controlled). Defaults to `false`. */
+  /**
+   * Whether the popover is open (controlled). Defaults to `false`.
+   * @model onUpdateOpen
+   */
   open?: boolean;
   /** Size token controlling the panel's scale. Defaults to `'md'`. */
   size?: PopoverSize;
@@ -93,7 +95,7 @@ const POSITION_AREA: Readonly<Record<PopoverPlacement, string>> = {
  * callback props. It owns its styling through the co-located CSS Module
  * `base-popover.module.scss`.
  */
-export function BasePopover(properties: PopoverProperties): MpElement {
+export function BasePopover(properties: Readonly<PopoverProperties>): MpElement {
   const {
     open = false,
     placement = 'bottom-start',
@@ -103,9 +105,9 @@ export function BasePopover(properties: PopoverProperties): MpElement {
     size = 'md',
   } = properties;
 
-  const idReference = useRef<string>(nextFieldId('mp-popover'));
-  const anchorName = `--${idReference.current}`;
-  const panelId = `${idReference.current}-panel`;
+  const resolvedId = useId();
+  const anchorName = `--${resolvedId}`;
+  const panelId = `${resolvedId}-panel`;
   const triggerReference = useRef<HTMLElement | null>(null);
   const panelReference = useRef<HTMLElement | null>(null);
 

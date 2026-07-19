@@ -36,7 +36,7 @@ export interface BadgeProperties extends MpProperties {
  * assembled with the framework-neutral {@link classNames} helper, which accepts
  * plain strings as well as the `{ className: boolean }` object form.
  */
-export function BaseBadge(properties: BadgeProperties): MpElement {
+export function BaseBadge(properties: Readonly<BadgeProperties>): MpElement {
   const variant = properties.variant ?? 'neutral';
   const size = properties.size ?? 'md';
   const className = classNames(styles['base-badge'], styles[`base-badge--${variant}`], styles[`base-badge--${size}`], {

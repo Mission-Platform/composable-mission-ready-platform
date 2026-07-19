@@ -3,7 +3,7 @@ import {
   h,
   hasSlot,
   Slot,
-  useRef,
+  useId,
   useState,
   type MpChild,
   type MpElement,
@@ -13,7 +13,6 @@ import {
 import { BaseCalendar } from '../base-calendar';
 import { BaseDropdown } from '../base-dropdown';
 import { BaseTypography } from '../base-typography';
-import { nextFieldId } from '../field-id';
 
 import styles from './base-date-input.module.scss';
 
@@ -21,7 +20,10 @@ import styles from './base-date-input.module.scss';
 export type DateInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export interface DateInputProperties extends MpProperties {
-  /** Selected ISO date (`YYYY-MM-DD`), controlled via `modelValue`. */
+  /**
+   * Selected ISO date (`YYYY-MM-DD`), controlled via `modelValue`.
+   * @model onUpdateModelValue
+   */
   modelValue?: string;
   /** Visible label text. */
   label?: string;
@@ -67,14 +69,14 @@ export interface DateInputProperties extends MpProperties {
  * the write-once {@link BaseDropdown} (which owns the teleported, CSS-anchored
  * panel plus the outside-click/`Escape` dismissal), replacing `useZIndex`; the
  * inline month grid is delegated to `BaseCalendar`; the `useId` composable
- * becomes `nextFieldId`; the
+ * maps to the framework-native `useId` hook; the
  * calendar glyph is the write-once `@mission-platform/icons` `IconCalendar`
  * (itself compiled to React/Vue); the `start`/`end` regions are authored as
  * named slots (`<Slot>`) with their presence detected through the
  * framework-neutral {@link hasSlot} helper; and the `v-model` + `change` emits
  * become the `onUpdateModelValue`/`onChange` callback props.
  */
-export function BaseDateInput(properties: DateInputProperties): MpElement {
+export function BaseDateInput(properties: Readonly<DateInputProperties>): MpElement {
   const {
     modelValue = '',
     label,
@@ -89,8 +91,8 @@ export function BaseDateInput(properties: DateInputProperties): MpElement {
     max,
   } = properties;
 
-  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-date-input'));
-  const resolvedId = idReference.current;
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
   const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
 
   const [open, setOpen] = useState<boolean>(false);
@@ -102,14 +104,16 @@ export function BaseDateInput(properties: DateInputProperties): MpElement {
     setOpen(!open);
   };
 
-  const handleSelect = (value: string): void => {
-    properties.onUpdateModelValue?.(value);
-    properties.onChange?.(value);
+  const handleSelect = (value: string | undefined): void => {
+    const next = value ?? '';
+    properties.onUpdateModelValue?.(next);
+    properties.onChange?.(next);
     setOpen(false);
   };
 
   return (
     <div
+      aria-disabled={disabled ? 'true' : undefined}
       classNames={[
         styles['base-date-input'],
         styles[`base-date-input--${size}`],

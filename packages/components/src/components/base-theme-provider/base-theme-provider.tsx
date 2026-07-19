@@ -53,7 +53,7 @@ export interface ThemeProviderProperties extends MpProperties {
  * the standalone (non-singleton) store are intentionally reduced to the single
  * document-level store with a fixed `<div>` wrapper.
  */
-export function BaseThemeProvider(properties: ThemeProviderProperties): MpElement {
+export function BaseThemeProvider(properties: Readonly<ThemeProviderProperties>): MpElement {
   const { defaultTheme = 'auto', storageKey = 'mp-theme', persist = true, size = 'md' } = properties;
 
   useEffect(() => {

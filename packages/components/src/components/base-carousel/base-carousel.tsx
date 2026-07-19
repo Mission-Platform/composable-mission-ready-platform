@@ -1,3 +1,4 @@
+import { IconChevron, IconPause, IconPlay } from '@mission-platform/icons';
 import {
   h,
   Slot,
@@ -46,7 +47,10 @@ export interface CarouselProperties extends MpProperties {
   size?: CarouselSize;
   /** Ordered list of slides. */
   slides: CarouselSlide[];
-  /** Index of the initially visible slide. */
+  /**
+   * Index of the initially visible slide.
+   * @model onUpdateModelValue
+   */
   modelValue?: number;
   /** Show previous/next navigation controls. Defaults to `true`. */
   controls?: boolean;
@@ -95,7 +99,7 @@ export interface CarouselProperties extends MpProperties {
  * start coordinates become a `useRef`; `defineExpose` is dropped; and the
  * `v-model` + emits become callback props.
  */
-export function BaseCarousel(properties: CarouselProperties): MpElement {
+export function BaseCarousel(properties: Readonly<CarouselProperties>): MpElement {
   const {
     slides,
     modelValue = 0,
@@ -309,7 +313,10 @@ export function BaseCarousel(properties: CarouselProperties): MpElement {
           type="button"
           onClick={previous}
         >
-          <span aria-hidden="true">‹</span>
+          <IconChevron
+            direction="left"
+            size="sm"
+          />
         </button>
       ) : undefined}
       {controls && slideCount > 1 ? (
@@ -320,7 +327,10 @@ export function BaseCarousel(properties: CarouselProperties): MpElement {
           type="button"
           onClick={next}
         >
-          <span aria-hidden="true">›</span>
+          <IconChevron
+            direction="right"
+            size="sm"
+          />
         </button>
       ) : undefined}
 
@@ -341,7 +351,7 @@ export function BaseCarousel(properties: CarouselProperties): MpElement {
           type="button"
           onClick={() => setUserPaused(!userPaused)}
         >
-          <span aria-hidden="true">{userPaused ? '▶' : '❙❙'}</span>
+          {userPaused ? <IconPlay size="sm" /> : <IconPause size="sm" />}
         </button>
       ) : undefined}
     </section>

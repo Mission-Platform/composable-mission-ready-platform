@@ -1,4 +1,4 @@
-import { IconClose } from '@mission-platform/icons';
+import { IconCheck, IconClose, IconError, IconInfo, IconWarning } from '@mission-platform/icons';
 import { h, hasSlot, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
@@ -14,7 +14,10 @@ export type AlertBannerVariant =
   'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
 export interface AlertBannerProperties extends MpProperties {
-  /** Controls visibility (the controlled `v-model` substitute). Defaults to `true`. */
+  /**
+   * Controls visibility (the controlled `v-model` substitute). Defaults to `true`.
+   * @model onUpdateModelValue
+   */
   modelValue?: boolean;
   /** Intent / colour treatment. Defaults to `'info'`. */
   variant?: AlertBannerVariant;
@@ -38,18 +41,24 @@ export interface AlertBannerProperties extends MpProperties {
   onDismiss?: () => void;
 }
 
-/** Maps each {@link AlertBannerVariant} onto its status glyph (substituted for the original inline SVG). */
-const VARIANT_GLYPH: Record<AlertBannerVariant, string> = {
-  neutral: 'ℹ',
-  primary: 'ℹ',
-  secondary: 'ℹ',
-  tertiary: 'ℹ',
-  success: '✓',
-  warning: '⚠',
-  info: 'ℹ',
-  error: '✕',
-  critical: '⛔',
-};
+/** Renders the `@mission-platform/icons` status icon for a given {@link AlertBannerVariant}. */
+function variantIcon(variant: AlertBannerVariant): MpElement {
+  switch (variant) {
+    case 'success': {
+      return <IconCheck size="sm" />;
+    }
+    case 'warning': {
+      return <IconWarning size="sm" />;
+    }
+    case 'error':
+    case 'critical': {
+      return <IconError size="sm" />;
+    }
+    default: {
+      return <IconInfo size="sm" />;
+    }
+  }
+}
 
 /**
  * `BaseAlertBanner` — an inline alert / notification banner authored once in the
@@ -67,12 +76,13 @@ const VARIANT_GLYPH: Record<AlertBannerVariant, string> = {
  * **controlled** component (`modelValue` + `onUpdateModelValue`), uses the
  * cross-framework callback-prop `onDismiss`, exposes the `iconContent`/`actions`
  * named slots (presence detected with the framework-neutral {@link hasSlot}
- * helper), and substitutes the inline status SVGs with text glyphs
- * (`✓`/`✕`/`⚠`/`ℹ`). It is wrapped in a `display: contents`
+ * helper), and draws the status icon with the write-once
+ * `@mission-platform/icons` set (`IconCheck`/`IconError`/`IconWarning`/
+ * `IconInfo`). It is wrapped in a `display: contents`
  * host so visibility can toggle without an extra layout box (the neutral dialect
  * has no conditional-root return).
  */
-export function BaseAlertBanner(properties: AlertBannerProperties): MpElement {
+export function BaseAlertBanner(properties: Readonly<AlertBannerProperties>): MpElement {
   const {
     modelValue = true,
     variant = 'info',
@@ -110,7 +120,7 @@ export function BaseAlertBanner(properties: AlertBannerProperties): MpElement {
           aria-hidden="true"
           classNames={styles['base-alert-banner__icon']}
         >
-          <Slot name="iconContent">{VARIANT_GLYPH[variant]}</Slot>
+          <Slot name="iconContent">{variantIcon(variant)}</Slot>
         </span>
       ) : undefined}
       <div classNames={styles['base-alert-banner__content']}>

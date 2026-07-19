@@ -55,7 +55,7 @@ const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
  * `base-background-video.module.scss`, assembled with the framework-neutral
  * {@link classNames} helper.
  */
-export function BaseBackgroundVideo(properties: BackgroundVideoProperties): MpElement {
+export function BaseBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): MpElement {
   const { src, sources = [], poster, fit = 'cover', overlay = false, minHeight = '24rem', size = 'md' } = properties;
 
   const videoReference = useRef<HTMLVideoElement | null>(null);

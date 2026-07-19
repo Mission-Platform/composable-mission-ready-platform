@@ -80,7 +80,7 @@ export interface StackProperties extends MpProperties {
  * styling lives in the co-located `base-stack.module.scss` (imported by
  * `base-stack.stories.tsx`).
  */
-export function BaseStack(properties: StackProperties): MpElement {
+export function BaseStack(properties: Readonly<StackProperties>): MpElement {
   const {
     direction = 'vertical',
     gap = 'md',

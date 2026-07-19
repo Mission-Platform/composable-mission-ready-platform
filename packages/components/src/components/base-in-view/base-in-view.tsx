@@ -81,7 +81,7 @@ function wrapperStyle(
  * is conveyed purely through the wrapper's animated style and the
  * `onEnter`/`onLeave` callbacks, which map cleanly onto both frameworks.
  */
-export function BaseInView(properties: InViewProperties): MpElement {
+export function BaseInView(properties: Readonly<InViewProperties>): MpElement {
   const {
     threshold = 0.15,
     rootMargin = '0px',

@@ -78,4 +78,30 @@ describe('BaseSelect authors the same component for React and Vue', () => {
       expect(html).toContain('role="alert"');
     }
   });
+
+  it('renders a searchable text input carrying the selected label by default on both frameworks', async () => {
+    const properties = { options: OPTIONS, modelValue: 'green', id: 'sel-5' };
+    const react = renderToStaticMarkup(createElement(ReactSelect, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueSelect, properties) }));
+
+    for (const html of [react, vue]) {
+      // The trigger is a filtering text field (combobox with list autocomplete).
+      expect(html).toContain('aria-autocomplete="list"');
+      // The selected option's label seeds the search field so it shows the value.
+      expect(html).toContain('value="Green"');
+    }
+  });
+
+  it('falls back to a plain button trigger when searchable is disabled on both frameworks', async () => {
+    const properties = { options: OPTIONS, modelValue: 'green', searchable: false, id: 'sel-6' };
+    const react = renderToStaticMarkup(createElement(ReactSelect, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueSelect, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('type="button"');
+      expect(html).not.toContain('aria-autocomplete="list"');
+      // The selected option's label shows in the button trigger.
+      expect(html).toContain('Green');
+    }
+  });
 });

@@ -1,8 +1,7 @@
 import { IconMinus, IconPlus } from '@mission-platform/icons';
-import { h, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useId, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
-import { nextFieldId } from '../field-id';
 
 import styles from './base-number-stepper.module.scss';
 
@@ -10,7 +9,10 @@ import styles from './base-number-stepper.module.scss';
 export type NumberStepperSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export interface NumberStepperProperties extends MpProperties {
-  /** The numeric value, or `''`/`undefined` when empty (controlled via `modelValue`). */
+  /**
+   * The numeric value, or `''`/`undefined` when empty (controlled via `modelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: number | '' | undefined;
   /** Visible label text. */
   label?: string;
@@ -57,14 +59,14 @@ export interface NumberStepperProperties extends MpProperties {
  * through the co-located CSS Module `base-number-stepper.module.scss` and
  * composes the neutral {@link BaseTypography} for the label/hint/error text.
  *
- * Substitutions from the original Vue SFC: the `useId` composable becomes the
- * shared `nextFieldId` helper resolved once in a `useRef`; the `BaseStack`
+ * Substitutions from the original Vue SFC: the `useId` composable maps straight
+ * to the framework-native `useId` hook; the `BaseStack`
  * wrapper becomes a plain flex `<div>`; the decrement/increment glyphs are the
  * write-once `@mission-platform/icons` `IconMinus`/`IconPlus`; and the
  * `v-model` + `change` emit become the established `onUpdateModelValue`/`onChange`
  * callback props.
  */
-export function BaseNumberStepper(properties: NumberStepperProperties): MpElement {
+export function BaseNumberStepper(properties: Readonly<NumberStepperProperties>): MpElement {
   const {
     modelValue = undefined,
     label,
@@ -83,8 +85,8 @@ export function BaseNumberStepper(properties: NumberStepperProperties): MpElemen
     precision,
   } = properties;
 
-  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-number-stepper'));
-  const resolvedId = idReference.current;
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
   const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
 
   const effectiveMin = unsigned ? Math.max(0, min ?? 0) : min;

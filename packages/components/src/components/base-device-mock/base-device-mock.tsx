@@ -54,7 +54,7 @@ const defaultLabels: Record<DeviceMockType, string> = {
  * `browser` frame renders a title bar with traffic-light controls and an
  * `url` address bar. The default slot is projected onto the device's screen.
  */
-export function BaseDeviceMock(properties: DeviceMockProperties): MpElement {
+export function BaseDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement {
   const { device = 'mobile', orientation = 'portrait', url, size = 'md', ariaLabel } = properties;
 
   const isHandheld = device === 'mobile' || device === 'tablet';

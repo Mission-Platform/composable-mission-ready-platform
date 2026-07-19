@@ -97,7 +97,7 @@ const VARIANT_COLOR_MAP: Record<AvatarVariant, string> = {
  * CSS Module of its own; the co-located `base-avatar.module.scss` only dresses
  * the Storybook demo content.
  */
-export function BaseAvatar(properties: AvatarProperties): MpElement {
+export function BaseAvatar(properties: Readonly<AvatarProperties>): MpElement {
   const { src, alt = '', initials, size = 'md', shape = 'circle', status, variant = 'primary', color } = properties;
 
   const dimension = SIZE_MAP[size];

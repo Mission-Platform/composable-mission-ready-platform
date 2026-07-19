@@ -55,7 +55,7 @@ export interface ChatBubbleProperties extends MpProperties {
  * become the `avatarContent`/`footer` named slots (`<Slot>`), with their
  * presence detected through the framework-neutral {@link hasSlot} helper.
  */
-export function BaseChatBubble(properties: ChatBubbleProperties): MpElement {
+export function BaseChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement {
   const {
     side = 'start',
     variant = 'default',

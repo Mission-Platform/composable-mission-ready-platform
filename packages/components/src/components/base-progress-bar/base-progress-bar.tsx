@@ -38,7 +38,7 @@ export interface ProgressBarProperties extends MpProperties {
  * `base-progress-bar.module.scss`, assembled with the framework-neutral
  * {@link classNames} helper.
  */
-export function BaseProgressBar(properties: ProgressBarProperties): MpElement {
+export function BaseProgressBar(properties: Readonly<ProgressBarProperties>): MpElement {
   const {
     value = 0,
     max = 100,

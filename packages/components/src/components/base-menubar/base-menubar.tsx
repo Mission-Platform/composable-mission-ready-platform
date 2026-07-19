@@ -1,10 +1,11 @@
+import { IconChevron, type IconDirection } from '@mission-platform/icons';
 import { h, Slot, useEffect, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import sizeStyles from '../size.module.scss';
 
 import styles from './base-menubar.module.scss';
 
-import type { MenuItem } from '../base-menu';
+import type { MenuNode } from '../base-menu';
 
 /** Size token — canonical 2xs → 2xl scale. */
 export type MenubarSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
@@ -23,7 +24,7 @@ export interface MenubarProperties extends MpProperties {
   /** Draw a border around the menubar. */
   bordered?: boolean;
   /** Top-level menubar entries. When omitted, the default slot is rendered. */
-  items?: MenuItem[];
+  items?: MenuNode[];
 }
 
 /**
@@ -44,11 +45,12 @@ export interface MenubarProperties extends MpProperties {
  * `BaseMenuSubmenu` (the submenu recursing into itself). The neutral version
  * reproduces that arbitrary-depth recursion with a single
  * `renderItems(items, parentPath)` walk and a single path-keyed `openPath` in
- * `useState`, keeping the same one-open-per-level semantics. It substitutes
- * `▾`/`▸`/`◂` chevron glyphs for the `@mission-platform/icons` `IconChevron` and
- * renders a plain `<a href>` (the established `vue-router` substitution).
+ * `useState`, keeping the same one-open-per-level semantics. It renders the
+ * write-once `@mission-platform/icons` `IconChevron` (rotated via its
+ * `direction` prop) and a plain `<a href>` (the established `vue-router`
+ * substitution).
  */
-export function BaseMenubar(properties: MenubarProperties): MpElement {
+export function BaseMenubar(properties: Readonly<MenubarProperties>): MpElement {
   const { label = 'Menu', bordered = false, items, size = 'md' } = properties;
 
   const menubarReference = useRef<HTMLElement | null>(null);
@@ -82,7 +84,7 @@ export function BaseMenubar(properties: MenubarProperties): MpElement {
     setOpenPath(isPathOpen(path) ? parentOfPath(path) : path);
   };
 
-  const handleItemClick = (item: MenuItem, path: string): void => {
+  const handleItemClick = (item: MenuNode, path: string): void => {
     if (item.disabled) {
       return;
     }
@@ -94,7 +96,7 @@ export function BaseMenubar(properties: MenubarProperties): MpElement {
     setOpenPath('');
   };
 
-  const renderIcon = (item: MenuItem): MpElement | undefined =>
+  const renderIcon = (item: MenuNode): MpElement | undefined =>
     item.icon ? (
       <span
         aria-hidden="true"
@@ -104,13 +106,14 @@ export function BaseMenubar(properties: MenubarProperties): MpElement {
       </span>
     ) : undefined;
 
-  const renderItems = (entries: MenuItem[], parentPath: string, nested: boolean): MpElement[] =>
+  const renderItems = (entries: MenuNode[], parentPath: string, nested: boolean): MpElement[] =>
     entries.map((item, index) => {
       const path = parentPath === '' ? `${index}` : `${parentPath}.${index}`;
       const hasChildren = Boolean(item.children && item.children.length > 0);
       const open = hasChildren && isPathOpen(path);
-      // Closed: down (top level) / right (nested). Open: up / left.
-      const chevron = nested ? (open ? '◂' : '▸') : open ? '▾' : '▸';
+      // Nested: right when closed, left when open. Top level: right when closed,
+      // down when open.
+      const chevronDirection: IconDirection = nested ? (open ? 'left' : 'right') : open ? 'down' : 'right';
       return (
         <li
           key={path}
@@ -150,7 +153,10 @@ export function BaseMenubar(properties: MenubarProperties): MpElement {
                   aria-hidden="true"
                   classNames={styles['base-menubar__chevron']}
                 >
-                  {chevron}
+                  <IconChevron
+                    direction={chevronDirection}
+                    size="2xs"
+                  />
                 </span>
               ) : undefined}
             </button>
@@ -166,7 +172,7 @@ export function BaseMenubar(properties: MenubarProperties): MpElement {
               ]}
               role="menu"
             >
-              {renderItems(item.children as MenuItem[], path, true)}
+              {renderItems(item.children as MenuNode[], path, true)}
             </menu>
           ) : undefined}
         </li>
@@ -176,7 +182,7 @@ export function BaseMenubar(properties: MenubarProperties): MpElement {
   return (
     <menu
       ref={menubarReference}
-      aria-label={label}
+      aria-label={items ? label : undefined}
       classNames={[
         styles['base-menubar'],
         sizeStyles[`base-size--${size}`],
@@ -184,7 +190,7 @@ export function BaseMenubar(properties: MenubarProperties): MpElement {
           [styles['base-menubar--bordered']]: bordered,
         },
       ]}
-      role="menubar"
+      role={items ? 'menubar' : undefined}
     >
       {items ? renderItems(items, '', false) : undefined}
       <Slot />

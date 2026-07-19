@@ -31,7 +31,10 @@ export interface TabPanelScope {
 export interface TabsProperties extends MpProperties {
   /** Ordered list of tabs to render. */
   tabs: TabItem[];
-  /** Currently active tab `id` (controlled via `modelValue`). Defaults to the first tab. */
+  /**
+   * Currently active tab `id` (controlled via `modelValue`). Defaults to the first tab.
+   * @model onUpdateModelValue
+   */
   modelValue?: string;
   /** Visual treatment. Defaults to `'line'`. */
   variant?: TabsVariant;
@@ -85,7 +88,7 @@ export interface TabsProperties extends MpProperties {
  * compiled neutral parent, leaving the panels blank. It uses the established
  * `modelValue` + callback-prop convention.
  */
-export function BaseTabs(properties: TabsProperties): MpElement {
+export function BaseTabs(properties: Readonly<TabsProperties>): MpElement {
   const { tabs, modelValue, variant = 'line', closable = false, addable = false, size = 'md' } = properties;
 
   const listReference = useRef<HTMLElement | null>(null);
@@ -144,21 +147,26 @@ export function BaseTabs(properties: TabsProperties): MpElement {
   };
 
   // Every tab gets a panel (inactive ones `hidden`) so panel state survives tab
-  // switches, matching the Vue SFC's `v-show` panels. Holding the list in a
-  // node-valued local const renders it through the compiler's render-closure
-  // path, which supports a sibling list alongside the tab bar.
-  const panels = tabs.map((tab) => (
-    <div
-      key={tab.id}
-      id={`panel-${tab.id}`}
-      aria-labelledby={`tab-${tab.id}`}
-      classNames={styles['base-tabs__panel']}
-      hidden={activeId !== tab.id}
-      role="tabpanel"
-    >
-      {properties.panel?.({ tab })}
-    </div>
-  ));
+  // switches, matching the Vue SFC's `v-show` panels. The panels are built by a
+  // node-returning **render helper** (rather than a template-able node const):
+  // the `panel` render-prop returns arbitrary framework nodes, so the component
+  // must compile through the render-closure (`h`) path — where a render-prop
+  // call renders as real child vnodes — instead of the flat-template path, which
+  // would stringify the returned node (`toDisplayString`). Authoring the panels
+  // as a node helper keeps the whole component on that render-closure path.
+  const renderPanels = (): MpElement[] =>
+    tabs.map((tab) => (
+      <div
+        key={tab.id}
+        id={`panel-${tab.id}`}
+        aria-labelledby={`tab-${tab.id}`}
+        classNames={styles['base-tabs__panel']}
+        hidden={activeId !== tab.id}
+        role="tabpanel"
+      >
+        {properties.panel?.({ tab })}
+      </div>
+    ));
 
   return (
     <div classNames={[styles['base-tabs'], styles[`base-tabs--${variant}`], sizeStyles[`base-size--${size}`]]}>
@@ -230,7 +238,7 @@ export function BaseTabs(properties: TabsProperties): MpElement {
         ) : undefined}
       </div>
 
-      {panels}
+      {renderPanels()}
     </div>
   );
 }

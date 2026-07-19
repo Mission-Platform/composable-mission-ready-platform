@@ -1,7 +1,5 @@
 import { IconClose, IconSearch } from '@mission-platform/icons';
-import { h, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
-
-import { nextFieldId } from '../field-id';
+import { h, useId, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import styles from './base-search-input.module.scss';
 
@@ -9,7 +7,10 @@ import styles from './base-search-input.module.scss';
 export type SearchInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export interface SearchInputProperties extends MpProperties {
-  /** Query value (controlled via `modelValue` + `onUpdateModelValue`). */
+  /**
+   * Query value (controlled via `modelValue` + `onUpdateModelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: string;
   /** Placeholder text. Defaults to `'Search…'`. */
   placeholder?: string;
@@ -42,14 +43,14 @@ export interface SearchInputProperties extends MpProperties {
  * Escape clears. It owns its styling through the co-located CSS Module
  * `base-search-input.module.scss`.
  *
- * Substitutions from the original Vue SFC: the `useId` composable becomes the
- * shared `nextFieldId` helper resolved once in a `useRef`; the search/clear icons
+ * Substitutions from the original Vue SFC: the `useId` composable maps straight
+ * to the framework-native `useId` hook; the search/clear icons
  * are the write-once `@mission-platform/icons` `IconSearch`/`IconClose`
  * (themselves compiled to React/Vue); the `useI18n` labels become plain string
  * props; and the `v-model` + `search`/`clear` emits become the
  * `onUpdateModelValue`/`onSearch`/`onClear` callback props.
  */
-export function BaseSearchInput(properties: SearchInputProperties): MpElement {
+export function BaseSearchInput(properties: Readonly<SearchInputProperties>): MpElement {
   const {
     modelValue = '',
     placeholder = 'Search…',
@@ -60,8 +61,8 @@ export function BaseSearchInput(properties: SearchInputProperties): MpElement {
     loadingLabel = 'Searching…',
   } = properties;
 
-  const idReference = useRef<string>(properties.id ?? nextFieldId('mp-search'));
-  const resolvedId = idReference.current;
+  const generatedId = useId();
+  const resolvedId = properties.id ?? generatedId;
   const inputReference = useRef<HTMLInputElement | null>(null);
 
   const hasValue = modelValue.length > 0;

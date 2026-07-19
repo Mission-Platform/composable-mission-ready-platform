@@ -32,6 +32,12 @@ const meta = {
   argTypes: {
     size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
     linear: { control: 'boolean' },
+    // `steps` carry framework VNodes in their `content` (e.g. `h('p', …)`),
+    // which are circular structures. Storybook's Controls panel serialises arg
+    // values (JSON.stringify) to render an ObjectControl, so exposing this arg
+    // crashes the panel ("Converting circular structure to JSON") and triggers
+    // Vue's "enumerating keys on a component instance" warnings. Disable it.
+    steps: { control: false },
   },
   args: {
     steps: STEPS,

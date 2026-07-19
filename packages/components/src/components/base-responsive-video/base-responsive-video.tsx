@@ -76,7 +76,7 @@ export interface ResponsiveVideoProperties extends MpProperties {
  * (consistent with the callback-prop convention used across the migrated
  * components).
  */
-export function BaseResponsiveVideo(properties: ResponsiveVideoProperties): MpElement {
+export function BaseResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): MpElement {
   const {
     src,
     sources = [],

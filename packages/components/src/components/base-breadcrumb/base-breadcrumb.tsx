@@ -39,7 +39,7 @@ export interface BreadcrumbProperties extends MpProperties {
  * neutral version renders a plain `<a href>` (the established router
  * substitution), so only the `href` link form is carried over.
  */
-export function BaseBreadcrumb(properties: BreadcrumbProperties): MpElement {
+export function BaseBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement {
   const { items, separator = '/', size = 'md' } = properties;
 
   return (

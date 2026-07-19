@@ -1,3 +1,4 @@
+import { IconChevron, IconChevrons } from '@mission-platform/icons';
 import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import styles from './base-pagination.module.scss';
@@ -15,14 +16,17 @@ type PaginationControl =
   | {
       kind: 'nav';
       ariaLabel: string;
-      glyph: string;
+      direction: 'left' | 'right';
       target: number;
       disabled: boolean;
       modifier: 'edge' | 'prev' | 'next';
     };
 
 export interface PaginationProperties extends MpProperties {
-  /** Current page (1-based; controlled via `modelValue` + `onUpdateModelValue`). */
+  /**
+   * Current page (1-based; controlled via `modelValue` + `onUpdateModelValue`).
+   * @model onUpdateModelValue
+   */
   modelValue?: number;
   /** Total number of pages. Ignored when `total` is provided. */
   pageCount?: number;
@@ -71,7 +75,7 @@ function range(start: number, end: number): number[] {
  * The original Vue SFC used `v-model` + a `change` emit; the neutral version
  * uses the established controlled `modelValue` + callback-prop convention.
  */
-export function BasePagination(properties: PaginationProperties): MpElement {
+export function BasePagination(properties: Readonly<PaginationProperties>): MpElement {
   const {
     modelValue = 1,
     pageCount,
@@ -144,7 +148,7 @@ export function BasePagination(properties: PaginationProperties): MpElement {
     controls.push({
       kind: 'nav',
       ariaLabel: 'Go to first page',
-      glyph: '«',
+      direction: 'left',
       target: 1,
       disabled: disabled || !canGoPrevious,
       modifier: 'edge',
@@ -154,7 +158,7 @@ export function BasePagination(properties: PaginationProperties): MpElement {
     controls.push({
       kind: 'nav',
       ariaLabel: 'Go to previous page',
-      glyph: '‹',
+      direction: 'left',
       target: currentPage - 1,
       disabled: disabled || !canGoPrevious,
       modifier: 'prev',
@@ -167,7 +171,7 @@ export function BasePagination(properties: PaginationProperties): MpElement {
     controls.push({
       kind: 'nav',
       ariaLabel: 'Go to next page',
-      glyph: '›',
+      direction: 'right',
       target: currentPage + 1,
       disabled: disabled || !canGoNext,
       modifier: 'next',
@@ -177,7 +181,7 @@ export function BasePagination(properties: PaginationProperties): MpElement {
     controls.push({
       kind: 'nav',
       ariaLabel: 'Go to last page',
-      glyph: '»',
+      direction: 'right',
       target: resolvedPageCount,
       disabled: disabled || !canGoNext,
       modifier: 'edge',
@@ -227,7 +231,17 @@ export function BasePagination(properties: PaginationProperties): MpElement {
                 type="button"
                 onClick={() => goTo(control.target)}
               >
-                {control.glyph}
+                {control.modifier === 'edge' ? (
+                  <IconChevrons
+                    direction={control.direction}
+                    size="2xs"
+                  />
+                ) : (
+                  <IconChevron
+                    direction={control.direction}
+                    size="2xs"
+                  />
+                )}
               </button>
             )}
           </li>

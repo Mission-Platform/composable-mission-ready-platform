@@ -28,8 +28,8 @@ describe('BaseRating authors the same component for React and Vue', () => {
       expect(html).toContain('aria-label="Product rating"');
       expect(html).toContain('aria-valuenow="3"');
       expect(html).toContain('aria-valuemax="5"');
-      // Five star glyphs are rendered (each as an empty + filled layer).
-      expect(html.split('★').length - 1).toBe(10);
+      // Five `IconStar` icons are rendered (each as an empty + filled layer).
+      expect(html.split('base-icon-star').length - 1).toBe(10);
     }
   });
 

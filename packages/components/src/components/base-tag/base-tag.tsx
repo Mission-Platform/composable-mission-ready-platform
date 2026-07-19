@@ -1,3 +1,4 @@
+import { IconClose } from '@mission-platform/icons';
 import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
@@ -35,12 +36,11 @@ export interface TagProperties extends MpProperties {
  * Module `base-tag.module.scss`, assembled with the framework-neutral
  * {@link classNames} helper.
  *
- * The original Vue SFC used the `@mission-platform/icons` `IconClose` in the
- * remove button and a Vue `remove` emit; the neutral version substitutes a
- * plain `×` glyph (the icons package is not part of this library) and the
- * cross-framework callback-prop convention (`onRemove`).
+ * The remove button renders the write-once `@mission-platform/icons`
+ * `IconClose` (itself compiled to React/Vue) and fires the cross-framework
+ * callback-prop `onRemove` (the Vue `remove` emit substitute).
  */
-export function BaseTag(properties: TagProperties): MpElement {
+export function BaseTag(properties: Readonly<TagProperties>): MpElement {
   const { label, size = 'md', variant = 'neutral', disabled = false, removable = false } = properties;
 
   const className = classNames(styles['base-tag'], styles[`base-tag--${size}`], styles[`base-tag--${variant}`], {
@@ -70,7 +70,7 @@ export function BaseTag(properties: TagProperties): MpElement {
           aria-label={`Remove ${label}`}
           onClick={handleRemove}
         >
-          <span aria-hidden="true">✕</span>
+          <IconClose size="2xs" />
         </button>
       ) : undefined}
     </span>
