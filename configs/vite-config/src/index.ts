@@ -153,6 +153,7 @@ function buildLibraryOutput(
 ): Record<string, unknown> {
   const output: Record<string, unknown> = {
     globals: { ...DEFAULT_LIBRARY_GLOBALS, ...globals },
+    // codeSplitting: true,
   };
 
   if (preserveModules) {
@@ -213,7 +214,7 @@ export function defineLibraryConfig(options: LibraryConfigOptions): UserConfig {
         external: createExternalMatcher(externalNames),
         output: buildLibraryOutput(rootDir, globals, preserveModules, preserveModulesRoot),
       },
-      cssCodeSplit: false,
+      cssCodeSplit: true,
     },
   });
 
@@ -236,6 +237,13 @@ export function defineAppConfig(options: AppConfigOptions = {}): UserConfig {
       postcss: postcssConfig,
     },
     plugins: [vue(), ignoreVueI18nBlocksPlugin()],
+    build: {
+      rolldownOptions: {
+        output: {
+          codeSplitting: true,
+        },
+      },
+    },
   });
 
   return options.overrides ? mergeConfig(base, options.overrides) : base;
