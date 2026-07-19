@@ -1,0 +1,61 @@
+[package]
+name = "mission-platform-qr-code-decode"
+version = "0.1.0"
+edition = "2021"
+description = "Dependency-free QR Code decoder compiled to WebAssembly for @mission-platform/qr-code"
+license = "MIT"
+publish = false
+
+[lib]
+# `cdylib` for the shipped wasm; `rlib` so the crate can also be unit-tested
+# natively with `cargo test`.
+crate-type = ["cdylib", "rlib"]
+
+[features]
+# The crate's own wasm build ships the `wasm-bindgen` `decode` export, so
+# `wasm-api` is on by default. Consumers that link this crate into another
+# cdylib (e.g. `mission-platform-code-scan`) depend with `default-features =
+# false` so the duplicate `decode`/`start` exports are dropped and only the
+# dependency-free `decode_qr` entry point is compiled.
+default = ["wasm-api"]
+# Emit the `wasm-bindgen` `decode` (and `start`) exports. Off when the crate is
+# used purely as a native/rlib decode library.
+wasm-api = []
+# Optional in-browser diagnostics: compile in a `tracing-wasm` subscriber that
+# forwards events to the devtools console and install a panic hook that prints
+# readable stack traces. Kept off by default so production builds stay lean.
+# Implies `wasm-api`, since the panic hook / subscriber install from the
+# wasm-bindgen `start` entry point.
+console = [
+    "wasm-api",
+    "dep:tracing-wasm",
+    "dep:mission-platform-console-panic-hook",
+]
+
+[dependencies]
+mission-platform-qr-code-common.workspace = true
+wasm-bindgen.workspace = true
+# Diagnostics (`tracing` instrumentation + the `tracing-wasm` subscriber) are
+# pulled in only under the optional `console` feature, so they add nothing to
+# the shipped build.
+tracing = { workspace = true }
+tracing-wasm = { workspace = true, optional = true }
+mission-platform-console-panic-hook = { workspace = true, optional = true }
+# Runtime use is only the `shadow!` macro, so default (git2/C) features stay off.
+shadow-rs.workspace = true
+
+[dev-dependencies]
+# In-crate wasm-bindgen tests run under `wasm-pack test`; the encoder is used to
+# produce matrices to round-trip through the decoder.
+wasm-bindgen-test.workspace = true
+mission-platform-qr-code-encode.workspace = true
+
+[build-dependencies]
+# Re-enable the build-script API (`build`) and the `git2` backend at build time
+# (host-compiled) to capture commit info.
+shadow-rs = { workspace = true, features = ["build", "git2"] }
+
+# Skip wasm-pack's bundled `wasm-opt` post-pass; size optimisation already comes
+# from the workspace release profile.
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false
