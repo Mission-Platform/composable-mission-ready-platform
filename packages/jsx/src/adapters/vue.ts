@@ -81,6 +81,14 @@ function toVueChildren(children: readonly (MpChild | VNode)[]): VNodeChild[] {
 export function renderToVue(element: MpElement): VNode {
   const { type, properties, children } = element;
 
+  // A fragment (`<>…</>`) renders its children with no wrapper element. It is a
+  // function-component marker, so it must be intercepted here — by identity —
+  // before the generic `typeof type === 'function'` component-call branch, which
+  // would otherwise invoke the throw-on-call marker.
+  if (type === Fragment) {
+    return createVueElement(VueFragment, undefined, toVueChildren(children));
+  }
+
   // A `<Slot name="…" />` resolves against the enclosing component's slot scope.
   if (type === Slot) {
     const resolved = resolveSlot(properties as MpSlotProperties, children);
@@ -140,10 +148,6 @@ export function renderToVue(element: MpElement): VNode {
 
   const vueChildren = toVueChildren(children);
 
-  if (type === Fragment) {
-    return createVueElement(VueFragment, undefined, vueChildren);
-  }
-
   return createVueElement(type, toVueProperties(properties), vueChildren);
 }
 
@@ -175,7 +179,12 @@ export function toVueComponent<P extends MpProperties>(
     }
     pushSlotScope(merged);
     try {
-      return renderToVue(component(merged as P));
+      // A component may render nothing by returning `null` (the neutral
+      // render-nothing form, matching the compiled Vue output); a functional
+      // component returning `null` renders nothing, so it is forwarded verbatim
+      // rather than fed into `renderToVue` (which expects a real element).
+      const rendered = component(merged as P) as MpElement | null;
+      return rendered === null ? null : renderToVue(rendered);
     } finally {
       popSlotScope();
     }

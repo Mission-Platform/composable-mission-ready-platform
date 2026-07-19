@@ -10,8 +10,25 @@
  * `React.createElement` or Vue's `h` at render time.
  */
 
-/** Marker used as the element `type` for fragments (`<>…</>`). */
-export const Fragment: unique symbol = Symbol.for('@mission-platform/jsx.Fragment');
+/**
+ * Marker used as the element `type` for fragments (`<>…</>`), i.e. the classic
+ * transform's `jsxFragmentFactory`.
+ *
+ * Like {@link Slot}, {@link Transition} and {@link TransitionGroup}, it is a
+ * function-component marker rather than a bare `symbol`: under the classic `h`
+ * factory the fragment factory has to be a **callable** JSX type, otherwise
+ * authoring `<>…</>` (or an explicit `<Fragment>`) fails type-checking with
+ * TS2604 ("does not have any construct or call signatures"). It is never
+ * actually invoked, though — the runtime adapters intercept it by identity
+ * (`type === Fragment`) and the build-time compiler
+ * (`@mission-platform/vite-plugin-jsx`) lowers fragments to each framework's
+ * own form (React's `<>`, Vue's inlined children). Calling it directly is a bug.
+ */
+export const Fragment: MpFragment = () => {
+  throw new Error(
+    '@mission-platform/jsx: <Fragment> / <> is a compile-time / adapter marker and must not be rendered directly.',
+  );
+};
 
 /** The bag of attributes/props passed to an element or component. */
 export interface MpProperties {
@@ -34,11 +51,20 @@ export interface MpProperties {
 export type MpComponent<P extends MpProperties = MpProperties> = (properties: P) => MpElement;
 
 /**
+ * The type of the {@link Fragment} factory. Its only prop is `children`; unlike
+ * {@link MpProperties} it deliberately has **no** index signature, because the
+ * classic transform synthesises a `{ children }` object for a `<>…</>` fragment
+ * and type-checks it (not as a fresh object literal) against the factory's
+ * parameter — an index-signature-bearing parameter would reject it with TS2322
+ * ("Index signature for type 'string' is missing").
+ */
+export type MpFragment = (properties?: { readonly children?: MpChild | readonly MpChild[] }) => MpElement;
+
+/**
  * Marker used as the element `type` for a named slot (`<Slot name="…" />`).
  *
- * Unlike {@link Fragment}, a slot is authored as a JSX **element**
- * (`<Slot name="…" />`), so the marker must be a valid JSX component type under
- * the classic `h` factory — hence a function component rather than a `symbol`.
+ * Like {@link Fragment}, it is a function-component marker so the classic `h`
+ * factory accepts `<Slot name="…" />` as a valid JSX element type.
  * It is never actually invoked, though: the build-time compiler
  * (`@mission-platform/vite-plugin-jsx`) rewrites every `<Slot>` to the target
  * framework's own slot mechanism, and the runtime adapters intercept it by
@@ -51,7 +77,7 @@ export const Slot: MpComponent = () => {
 };
 
 /** Anything that may appear as an element type in the neutral tree. */
-export type MpElementType = string | typeof Fragment | MpComponent;
+export type MpElementType = string | MpFragment | MpComponent;
 
 /** A single child slot in the neutral tree. */
 export type MpChild = MpElement | string | number | boolean | null | undefined;

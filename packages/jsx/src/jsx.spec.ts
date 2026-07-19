@@ -31,6 +31,21 @@ const SlotPasser: MpComponent = () =>
     h('ul', { class: 'list' }, h('li', undefined, 'One')),
   );
 
+// A side-effect-only component that renders nothing. The neutral render-nothing
+// form is `null` (the same value the compiler emits for an empty render, e.g.
+// `<MapLayer>`): React renders `null` as nothing and a Vue functional component
+// returning `null` renders nothing. Typed `MpElement | null`, so it is cast to
+// the `MpComponent` shape the adapters accept.
+const Blank = (() => null) as MpComponent;
+// The equivalent authored as an empty fragment (`<></>` → `h(Fragment)`): a
+// fragment with no children renders nothing on both frameworks.
+const BlankFragment: MpComponent = () => h(Fragment);
+
+// Vue SSR represents an empty render with comment anchors (`<!---->` for a null
+// render, `<!--[--><!--]-->` for an empty fragment) rather than real markup;
+// stripping the comments leaves the empty string, matching React's `''`.
+const withoutComments = (html: string): string => html.replace(/<!--.*?-->/g, '');
+
 describe('@mission-platform/jsx runtime', () => {
   it('builds a framework-neutral element tree', () => {
     const element = h('div', { class: 'x', id: 'y' }, 'hi');
@@ -90,5 +105,25 @@ describe('@mission-platform/jsx adapters render the same tree on React and Vue',
       // …and the `slot` marker is stripped (never emitted as a real attribute).
       expect(html).not.toContain('slot="trigger"');
     }
+  });
+});
+
+describe('@mission-platform/jsx adapters render nothing for an empty (null) render on both frameworks', () => {
+  it('renders no markup for a `null`-returning component (React `null` / Vue nothing)', async () => {
+    const react = renderToStaticMarkup(createElement(toReactComponent(Blank), {}));
+    const vue = await renderToString(createSSRApp(toVueComponent(Blank)));
+
+    expect(react).toBe('');
+    // Only Vue's comment anchor remains — no real element markup is emitted.
+    expect(withoutComments(vue)).toBe('');
+  });
+
+  it('renders no markup for an empty `<Fragment>` (h(Fragment)) on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(toReactComponent(BlankFragment), {}));
+    const vue = await renderToString(createSSRApp(toVueComponent(BlankFragment)));
+
+    expect(react).toBe('');
+    // Only Vue's empty-fragment comment anchors remain — no real element markup.
+    expect(withoutComments(vue)).toBe('');
   });
 });
