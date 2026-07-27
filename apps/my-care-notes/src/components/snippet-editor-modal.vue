@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-  import { BaseButton, BaseInput, BaseModal, BaseMonacoEditor, BaseStack } from '@mission-platform/components/vue';
+  import { BaseButton, BaseModal, BaseStack } from '@mission-platform/components/vue';
+  import { SchemaForm, type FormValues, type SchemaFormDefinition } from '@mission-platform/forms/vue';
   import { useI18n } from '@mission-platform/i18n/vue';
   import { computed, ref, watch } from 'vue';
   import { useRoute } from 'vue-router';
 
-  import { useMonacoTheme } from '../composables/use-monaco-theme';
   import { useSnippets } from '../composables/use-snippets';
 
   import type { Snippet } from '../types';
@@ -31,35 +31,82 @@
     return snippets.value.find((s) => s.id === id);
   });
 
-  const name = ref('');
-  const content = ref('');
-
-  const { monacoTheme } = useMonacoTheme();
+  const values = ref<FormValues>({ name: '', content: '' });
 
   const isEditing = computed(() => !!snippet.value);
-  const modalTitle = computed(() => (isEditing.value ? t('title.edit') : t('title.new')));
-  const commandPreview = computed(() => `/${name.value.trim().replace(/\s+/g, '_') || 'my_snippet'}`);
+  const modalTitle = computed(() =>
+    isEditing.value
+      ? t(($) => $.title.edit, { ns: 'mp.my-care-notes', defaultValue: 'Edit Snippet' })
+      : t(($) => $.title.new, { ns: 'mp.my-care-notes', defaultValue: 'New Snippet' }),
+  );
+  const commandPreview = computed(() => {
+    const name = typeof values.value['name'] === 'string' ? values.value['name'] : '';
+    return `/${name.trim().replace(/\s+/g, '_') || 'my_snippet'}`;
+  });
+
+  const hintText = computed(() =>
+    t(($) => $.name.hint, {
+      ns: 'mp.my-care-notes',
+      defaultValue: 'Type {preview} in the editor to insert this snippet',
+      preview: commandPreview.value,
+    }),
+  );
+  const labelText = computed(() => t(($) => $.name.label, { ns: 'mp.my-care-notes', defaultValue: 'Snippet name' }));
+  const placeholderText = computed(() =>
+    t(($) => $.name.placeholder, { ns: 'mp.my-care-notes', defaultValue: 'e.g. greeting' }),
+  );
+  const contentLabelText = computed(() =>
+    t(($) => $.content_label, { ns: 'mp.my-care-notes', defaultValue: 'Content' }),
+  );
+  const deleteBtnText = computed(() => t(($) => $.btn.delete, { ns: 'mp.my-care-notes', defaultValue: 'Delete' }));
+  const cancelBtnText = computed(() => t(($) => $.btn.cancel, { ns: 'mp.my-care-notes', defaultValue: 'Cancel' }));
+  const saveBtnText = computed(() => t(($) => $.btn.save, { ns: 'mp.my-care-notes', defaultValue: 'Save' }));
+  const schema = computed<SchemaFormDefinition>(() => ({
+    type: 'object',
+    properties: {
+      name: {
+        type: 'string',
+        title: labelText.value,
+        minLength: 1,
+        ui: { hint: hintText.value, placeholder: placeholderText.value },
+      },
+      content: {
+        type: 'string',
+        title: contentLabelText.value,
+        ui: {
+          widget: 'code',
+          language: 'markdown',
+          height: '280px',
+          lineNumbers: true,
+          minimap: false,
+          spellCheck: true,
+          wordWrap: true,
+        },
+      },
+    },
+    required: ['name'],
+  }));
 
   watch(
     snippet,
     (s) => {
-      name.value = s?.name ?? '';
-      content.value = s?.content ?? '';
+      values.value = { name: s?.name ?? '', content: s?.content ?? '' };
     },
     { immediate: true },
   );
 
   watch(visible, (v) => {
     if (v && !snippet.value) {
-      name.value = '';
-      content.value = '';
+      values.value = { name: '', content: '' };
     }
   });
 
-  function onSave(): void {
-    const trimmedName = name.value.trim().replace(/\s+/g, '_');
-    if (!trimmedName) return;
-    emit('save', trimmedName, content.value);
+  function onSave(nextValues: FormValues, isValid: boolean): void {
+    const name = typeof nextValues['name'] === 'string' ? nextValues['name'] : '';
+    const content = typeof nextValues['content'] === 'string' ? nextValues['content'] : '';
+    const trimmedName = name.trim().replace(/\s+/g, '_');
+    if (!isValid || !trimmedName) return;
+    emit('save', trimmedName, content);
   }
 
   function onDelete(): void {
@@ -77,96 +124,53 @@
     @close="emit('close')"
     @update:open="(v: boolean) => !v && emit('close')"
   >
-    <div class="snippet-form">
-      <BaseInput
-        id="snippet-name"
-        v-model="name"
-        :hint="t('name.hint', { preview: commandPreview })"
-        autocomplete="off"
-        :label="t('name.label')"
-        :placeholder="t('name.placeholder')"
-      />
-
-      <div class="snippet-editor">
-        <p
-          id="snippet-content-label"
-          class="snippet-editor__label"
-        >
-          {{ t('content-label') }}
-        </p>
-        <BaseMonacoEditor
-          id="snippet-content"
-          v-model="content"
-          :line-numbers="true"
-          :minimap="false"
-          :spell-check="true"
-          :theme="monacoTheme"
-          :word-wrap="true"
-          aria-labelledby="snippet-content-label"
-          height="280px"
-          language="markdown"
-        />
-      </div>
-    </div>
-
-    <template #footer>
-      <BaseStack
-        align="center"
-        class="snippet-modal-footer"
-        direction="horizontal"
-        justify="between"
-      >
-        <BaseButton
-          v-if="isEditing"
-          variant="error"
-          @click="onDelete"
-        >
-          {{ t('btn.delete') }}
-        </BaseButton>
+    <SchemaForm
+      :model-value="values"
+      :schema="schema"
+      @submit="onSave"
+      @update:model-value="values = $event"
+    >
+      <template #actions>
         <BaseStack
-          class="snippet-modal-footer__right"
+          align="center"
+          class="snippet-modal-footer"
           direction="horizontal"
-          gap="xs"
+          justify="between"
         >
           <BaseButton
-            variant="tertiary"
-            @click="emit('close')"
+            v-if="isEditing"
+            type="button"
+            variant="error"
+            @click="onDelete"
           >
-            {{ t('btn.cancel') }}
+            {{ deleteBtnText }}
           </BaseButton>
-          <BaseButton
-            :disabled="!name.trim()"
-            variant="primary"
-            @click="onSave"
+          <BaseStack
+            class="snippet-modal-footer__right"
+            direction="horizontal"
+            gap="xs"
           >
-            {{ t('btn.save') }}
-          </BaseButton>
+            <BaseButton
+              type="button"
+              variant="tertiary"
+              @click="emit('close')"
+            >
+              {{ cancelBtnText }}
+            </BaseButton>
+            <BaseButton
+              type="submit"
+              variant="primary"
+            >
+              {{ saveBtnText }}
+            </BaseButton>
+          </BaseStack>
         </BaseStack>
-      </BaseStack>
-    </template>
+      </template>
+    </SchemaForm>
   </BaseModal>
 </template>
 
 <style lang="scss" scoped>
-  .snippet-form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-space-4, 16px);
-    padding: var(--mp-space-2, 8px) 0;
-  }
-
-  .snippet-editor {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mp-space-1, 4px);
-
-    &__label {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--mp-color-text-primary);
-    }
-  }
-
   .snippet-modal-footer {
     width: 100%;
 
@@ -175,19 +179,3 @@
     }
   }
 </style>
-
-<i18n lang="yaml">
-en:
-  title:
-    new: New Snippet
-    edit: Edit Snippet
-  name:
-    label: Snippet name
-    placeholder: 'e.g. greeting'
-    hint: 'Type {preview} in the editor to insert this snippet'
-  content-label: Content
-  btn:
-    delete: Delete
-    cancel: Cancel
-    save: Save
-</i18n>

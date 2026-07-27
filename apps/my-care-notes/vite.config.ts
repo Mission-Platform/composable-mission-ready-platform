@@ -1,5 +1,6 @@
 /// <reference types="vitest/config" />
 import { defineAppConfig } from '@mission-platform/vite-config';
+import i18nPlugin from '@mission-platform/vite-plugin-i18n';
 import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 import { type Plugin, type UserConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -102,6 +103,7 @@ interface SsgUserConfig extends UserConfig {
 const config = defineAppConfig({
   overrides: {
     plugins: [
+      i18nPlugin({ defaultLocale: 'en' }),
       // SSR-only: keep Monaco / harper / hunspell out of the prerender pass.
       ssrStubBrowserOnlyEditorPlugin(),
       // Single-route SPA: advertise the root URL with its locale alternate.
@@ -198,7 +200,7 @@ const ssgConfig: SsgUserConfig = {
   ...config,
   ssgOptions: {
     // Single-route SPA — only the root needs prerendering.
-    includedRoutes: () => ['/'],
+    includedRoutes: () => ['/', '/en/', '/ar/', '/de/', '/es/', '/fr/', '/he/', '/it/', '/ja/', '/ko/', '/nl/', '/zh/'],
     // Minify the generated HTML file.
     formatting: 'minify',
     // Inline critical CSS into the prerendered HTML and lazy-load the rest via

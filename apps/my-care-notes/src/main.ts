@@ -8,29 +8,23 @@ import '@mission-platform/tokens/scss/themes/light';
 import '@mission-platform/tokens/scss/themes/dark';
 import '@mission-platform/components/styles';
 
-import { createMpI18n, localeNamespaces, mpNamespace } from '@mission-platform/i18n';
+import { createMpI18n, mpNamespace } from '@mission-platform/i18n';
 import { createMpI18nVue } from '@mission-platform/i18n/vue';
 import { useSeo } from '@mission-platform/seo';
-import yaml from 'js-yaml';
+import { resources as defaultLocaleResources } from 'virtual:i18n-resources';
 import { ViteSSG } from 'vite-ssg';
 import { effectScope, h, type VNode } from 'vue';
 import { RouterView } from 'vue-router';
+
+import { routerOptions } from './router';
+
+import type { Resource } from 'i18next';
 
 // NOTE: Monaco editor + Harper workers are intentionally NOT imported here.
 // They are wired up lazily by `./monaco-environment.ts`, which is itself
 // imported only by the editor component the first time it mounts. This keeps
 // Monaco and its language/grammar workers out of the app's initial bundle and
 // out of the `vite-ssg` server build entirely.
-
-import enLocaleSource from './locales/en.yaml?raw';
-import { routerOptions } from './router';
-
-import type { MpMessageObject } from '@mission-platform/i18n';
-
-// The runtime `en.yaml` is grouped by `mp.<workspace>` namespace; each top-level
-// key is a namespace (`mp.my-care-notes` for the app's own strings, `mp.breakpoints`
-// for the breakpoints package, …). The app owns the `mp.my-care-notes` namespace.
-const enBundles = (yaml.load(enLocaleSource) ?? {}) as Record<string, MpMessageObject>;
 
 /** Root render function — keeps the `useSeo`-bearing route view in a stable scope. */
 const renderRoot = (): VNode => h(RouterView);
@@ -49,15 +43,42 @@ export const createApp = ViteSSG(
   // Root component — just the active route's view.
   { setup: () => renderRoot },
   routerOptions,
-  ({ app }) => {
-    app.use(
-      createMpI18nVue(
-        createMpI18n({
-          namespace: mpNamespace('my-care-notes'),
-          namespaces: localeNamespaces('en', enBundles),
-        }),
-      ),
-    );
+  async ({ app, router }) => {
+    // Seed English (source-of-truth) messages at creation time.
+    const i18n = createMpI18n({
+      locale: 'en',
+      fallbackLocale: 'en',
+      namespace: mpNamespace('my-care-notes'),
+      resources: defaultLocaleResources,
+    });
+    app.use(createMpI18nVue(i18n));
+
+    const localeBundles: Record<string, () => Promise<{ resources: Resource }>> = {
+      ar: () => import('virtual:i18n-locale-ar'),
+      de: () => import('virtual:i18n-locale-de'),
+      es: () => import('virtual:i18n-locale-es'),
+      fr: () => import('virtual:i18n-locale-fr'),
+      he: () => import('virtual:i18n-locale-he'),
+      it: () => import('virtual:i18n-locale-it'),
+      ja: () => import('virtual:i18n-locale-ja'),
+      ko: () => import('virtual:i18n-locale-ko'),
+      nl: () => import('virtual:i18n-locale-nl'),
+      zh: () => import('virtual:i18n-locale-zh'),
+    };
+
+    router.beforeEach(async (to) => {
+      const routeLocale = typeof to.params['lang'] === 'string' ? to.params['lang'] : 'en';
+      const locale = routeLocale === 'en' || routeLocale in localeBundles ? routeLocale : 'en';
+
+      if (locale !== 'en' && !i18n.hasResourceBundle(locale, 'mp.my-care-notes')) {
+        const { resources } = await localeBundles[locale]!();
+        for (const [namespace, messages] of Object.entries(resources[locale] ?? {})) {
+          i18n.addResourceBundle(locale, namespace, messages, true, true);
+        }
+      }
+
+      if (i18n.language !== locale) await i18n.changeLanguage(locale);
+    });
 
     // Inject the SEO surface (standard page meta + Open Graph / Twitter Card
     // meta) into <head> via the unified `@mission-platform/seo` composable.

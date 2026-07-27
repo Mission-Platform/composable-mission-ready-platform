@@ -8,7 +8,7 @@ import type { RouterOptions, RouteRecordRaw } from 'vue-router';
  */
 export const routes: RouteRecordRaw[] = [
   {
-    path: '/',
+    path: '/:lang?/',
     component: () => import('../app.vue'),
   },
 ];
