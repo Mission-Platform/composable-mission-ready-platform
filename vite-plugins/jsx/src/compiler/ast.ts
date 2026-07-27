@@ -538,7 +538,7 @@ export function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean
     if (
       ts.isJsxAttribute(node) &&
       ts.isIdentifier(node.name) &&
-      node.name.text === CLASS_NAME_ATTRIBUTE &&
+      (node.name.text === CLASS_NAME_ATTRIBUTE || node.name.text === 'classNames') &&
       node.initializer !== undefined &&
       ts.isJsxExpression(node.initializer) &&
       node.initializer.expression !== undefined &&
@@ -2408,7 +2408,7 @@ export function createReferenceRewriter(scope: RewriteScope): ts.TransformerFact
         }
         let name = node.name;
         if (ts.isIdentifier(node.name)) {
-          if (node.name.text === CLASS_NAME_ATTRIBUTE) {
+          if (node.name.text === CLASS_NAME_ATTRIBUTE || node.name.text === 'classNames') {
             name = factory.createIdentifier('class');
           } else if (JSX_ATTRIBUTE_RENAMES.has(node.name.text)) {
             // Vue's JSX intrinsic elements type native attributes by their HTML

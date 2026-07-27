@@ -736,7 +736,7 @@ function emitAttr(attr: Attr, context: Context, isNativeElement: boolean): strin
   // array/object forms directly, so the (CSS-Module-collapsed) value passes
   // straight through as `:class="…"` (or a static `class="…"` when it reduces
   // to a literal).
-  const outName = name === 'className' || name === CLASS_NAME_ATTRIBUTE ? 'class' : name;
+  const outName = name === 'className' || name === 'classNames' || name === CLASS_NAME_ATTRIBUTE ? 'class' : name;
   if (value.kind === 'none') {
     return outName;
   }
