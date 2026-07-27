@@ -1,8 +1,52 @@
+import { AsyncLocalStorage } from 'node:async_hooks';
+
 import i18next, { type i18n as I18nInstance, type InitOptions, type Resource } from 'i18next';
 
 import { deepMergeLocales, mergeLocales } from './merge-locales';
 
 import type { MpLocaleModule, MpLocales, MpMessageObject, MpNamespaceLocales } from './types';
+
+let serverI18nStorage: AsyncLocalStorage<I18nInstance> | undefined;
+try {
+  if (AsyncLocalStorage !== undefined) {
+    serverI18nStorage = new AsyncLocalStorage<I18nInstance>();
+  }
+} catch {
+  // Ignored in environments without node:async_hooks
+}
+
+let globalServerI18n: I18nInstance | undefined;
+
+/**
+ * Configures the global fallback server-side i18n instance.
+ */
+export function setServerI18n(i18n: I18nInstance): void {
+  globalServerI18n = i18n;
+}
+
+/**
+ * Retrieves the current server-side i18n instance from request context (AsyncLocalStorage),
+ * falling back to the configured global server instance if set.
+ */
+export function getServerI18n(): I18nInstance | undefined {
+  return serverI18nStorage?.getStore() ?? globalServerI18n;
+}
+
+/**
+ * Runs a callback within a request-scoped i18n context on the server.
+ */
+export function runWithI18n<T>(i18n: I18nInstance, callback: () => T): T {
+  if (serverI18nStorage) {
+    return serverI18nStorage.run(i18n, callback);
+  }
+  const previous = globalServerI18n;
+  try {
+    globalServerI18n = i18n;
+    return callback();
+  } finally {
+    globalServerI18n = previous;
+  }
+}
 
 /**
  * Default i18next namespace messages are registered under when no explicit
@@ -77,7 +121,10 @@ export interface CreateMpI18nOptions {
    * while keeping the rest of the package's bundle.
    */
   overrides?: MpNamespaceLocales;
-  /** Pre-built i18next resource bundles (locale -> namespace -> messages). */
+  /**
+   * Resource bundles in i18next shape (`{ [locale]: { [namespace]: messages } }`),
+   * e.g. imported directly from `virtual:i18n-resources`.
+   */
   resources?: Resource;
   /** Escape hatch for any additional i18next `InitOptions`. */
   init?: Partial<InitOptions>;
@@ -132,7 +179,7 @@ export function createMpI18n(options: CreateMpI18nOptions = {}): I18nInstance {
     namespace = MP_DEFAULT_NAMESPACE,
     namespaces = {},
     overrides = {},
-    resources: inputResources = {},
+    resources: rawResources = {},
     init = {},
   } = options;
 
@@ -142,12 +189,23 @@ export function createMpI18n(options: CreateMpI18nOptions = {}): I18nInstance {
     byNamespace[ns] = deepMergeLocales(byNamespace[ns] ?? {}, locales);
   };
 
-  // 1. Explicit per-namespace bundles.
+  // 1. Explicit per-locale, per-namespace `resources` map (e.g. from `virtual:i18n-resources`).
+  for (const [loc, nsMap] of Object.entries(rawResources)) {
+    if (nsMap && typeof nsMap === 'object') {
+      for (const [ns, msgs] of Object.entries(nsMap)) {
+        if (msgs && typeof msgs === 'object') {
+          mergeInto(ns, { [loc]: msgs as MpMessageObject });
+        }
+      }
+    }
+  }
+
+  // 2. Explicit per-namespace bundles.
   for (const [ns, locales] of Object.entries(namespaces)) {
     mergeInto(ns, locales);
   }
 
-  // 2. Legacy `modules` + `messages`, layered into the default namespace.
+  // 3. Legacy `modules` + `messages`, layered into the default namespace.
   const defaultMerged = mergeLocales(modules);
   for (const [loc, msgs] of Object.entries(messages)) {
     defaultMerged[loc] = { ...defaultMerged[loc], ...(msgs as MpMessageObject) };
@@ -156,7 +214,7 @@ export function createMpI18n(options: CreateMpI18nOptions = {}): I18nInstance {
     mergeInto(namespace, defaultMerged);
   }
 
-  // 3. Per-namespace overrides, deep-merged on top so apps win key-by-key.
+  // 4. Per-namespace overrides, deep-merged on top so apps win key-by-key.
   for (const [ns, locales] of Object.entries(overrides)) {
     mergeInto(ns, locales);
   }
@@ -169,15 +227,6 @@ export function createMpI18n(options: CreateMpI18nOptions = {}): I18nInstance {
   for (const [ns, locales] of Object.entries(byNamespace)) {
     for (const [loc, msgs] of Object.entries(locales)) {
       (resources[loc] ??= {})[ns] = msgs;
-    }
-  }
-
-  for (const [loc, namespacesMap] of Object.entries(inputResources)) {
-    if (namespacesMap && typeof namespacesMap === 'object') {
-      const locResources = (resources[loc] ??= {});
-      for (const [ns, msgs] of Object.entries(namespacesMap)) {
-        locResources[ns] = Object.assign({}, locResources[ns] as object, msgs as object);
-      }
     }
   }
 
@@ -201,6 +250,10 @@ export function createMpI18n(options: CreateMpI18nOptions = {}): I18nInstance {
     returnNull: false,
     ...init,
   });
+
+  if (!globalServerI18n) {
+    setServerI18n(instance);
+  }
 
   return instance;
 }
