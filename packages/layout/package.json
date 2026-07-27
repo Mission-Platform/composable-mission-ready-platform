@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/layouts",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Sample write-once Mission Platform layouts authored with @mission-platform/jsx and shipped as both Vue 3 and React components",
   "type": "module",
   "sideEffects": [

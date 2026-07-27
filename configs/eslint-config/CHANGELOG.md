@@ -1,5 +1,27 @@
 # @mission-platform/eslint-config
 
+## 1.0.0
+
+### Major Changes
+
+- 9920e47: swap the vue-i18n ESLint plugin for eslint-plugin-i18next
+
+  The shared flat config now registers [`eslint-plugin-i18next`](https://github.com/edvardchen/eslint-plugin-i18next)
+  (its `i18next/no-literal-string` rule registered but disabled by default, leaving
+  it available for opt-in per workspace) instead of `@intlify/eslint-plugin-vue-i18n`.
+
+  BREAKING CHANGE: the `@intlify/vue-i18n/*` rules (`no-raw-text`, `no-missing-keys`,
+  …) and the `vue-i18n` settings block are removed. Workspaces relying on those
+  rules should switch to `eslint-plugin-i18next`'s `i18next/no-literal-string`.
+
+### Minor Changes
+
+- 6a01720: add `eslint-plugin-sonarjs` to `@mission-platform/eslint-config`
+
+  Registers `eslint-plugin-sonarjs` in the shared ESLint flat configuration, enabling SonarJS recommended rules across all packages and apps in the monorepo.
+
+- 66bd057: enforce dependency direction so apps and packages cannot import from each other
+
 ## 0.3.2
 
 ### Patch Changes

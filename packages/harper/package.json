@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/harper",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Harper grammar and style checker integration for Monaco editor",
   "type": "module",
   "sideEffects": false,

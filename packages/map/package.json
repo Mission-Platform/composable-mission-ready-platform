@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/map",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "MapLibre GL map components and composables authored with @mission-platform/jsx and shipped as both Vue 3 and React builds",
   "type": "module",
   "sideEffects": [

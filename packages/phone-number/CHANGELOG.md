@@ -1,5 +1,30 @@
 # @mission-platform/phone-number
 
+## 0.3.0
+
+### Minor Changes
+
+- 9cdfef1: Add a synchronous instantiation path and higher-level phone helpers so
+  `@mission-platform/phone-number` can be a drop-in replacement for
+  `google-libphonenumber` in render-time code.
+
+  - `vite-plugin-assemblyscript`: the generated module now also exposes a memoised
+    synchronous `loadModuleSync()` (derived from the async bindings by swapping the
+    single `await WebAssembly.instantiate(...)` for the synchronous
+    `new WebAssembly.Instance(...)`), alongside the existing async `loadModule()`.
+  - `phone-number`: add `PhoneNumberUtil.getInstanceSync()` /
+    `getPhoneNumberUtilSync()` and the new methods `isValidNumberForRegion`,
+    `getSupportedRegions`, `getExampleNumber` and `formatAsYouType` (an as-you-type
+    national formatter), plus example numbers for every curated region.
+
+### Patch Changes
+
+- 9cdfef1: Removed the vendored upstream libphonenumber sources (`vendor/`) and the
+  `src/metadata/upstream-loader.ts` build-time loader that evaluated them. The
+  regex pattern corpus they provided is now captured directly in
+  `src/metadata/pattern-corpus.ts` as self-contained TypeScript data, so the regex
+  compiler/VM diff-tests run without any external reference sources.
+
 ## 0.2.0
 
 ### Minor Changes

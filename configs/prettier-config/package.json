@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/prettier-config",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Shared Prettier configuration for all Mission Platform packages and apps",
   "type": "module",
   "exports": {

@@ -1,5 +1,11 @@
 # @mission-platform/seo
 
+## 0.3.2
+
+### Patch Changes
+
+- 6551abb: reformat source files to match the shared prettier configuration
+
 ## 0.3.1
 
 ### Patch Changes

@@ -1,5 +1,23 @@
 # @mission-platform/hunspell
 
+## 0.4.0
+
+### Minor Changes
+
+- edb785f: extract a framework-agnostic `attachHunspellMonaco` core
+
+  The imperative Hunspell ↔ Monaco integration (worker spawn, debounced checking,
+  marker mapping, quick-fix code-action provider) is now a framework-agnostic
+  `attachHunspellMonaco(editor, monaco, language)` helper returning a
+  `{ dispose, recheck }` handle. The Vue `useHunspellMonaco` composable delegates
+  to it, and it is exported so non-Vue consumers (e.g. the write-once
+  `@mission-platform/components` `BaseMonacoEditor`) can wire spell checking
+  from a single shared implementation.
+
+### Patch Changes
+
+- d39b6fc: add per-workspace reference documentation and refresh llms.txt/README metadata
+
 ## 0.3.2
 
 ### Patch Changes

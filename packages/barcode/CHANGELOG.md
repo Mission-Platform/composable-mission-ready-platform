@@ -368,3 +368,126 @@
   - @mission-platform/components@1.0.0
   - @mission-platform/icons@0.2.0
   - @mission-platform/jsx@0.2.0
+
+## 0.2.0
+
+### Minor Changes
+
+- 3e48edf: Add `@mission-platform/barcode`: a new dependency-free **1D (linear) barcode
+  encoder** written in Rust (`crates/barcode`) and compiled to WebAssembly, with a
+  typed ES module wrapper. `encodeBarcode(symbology, data)` returns a `Barcode`
+  whose `modules` are a flat run of bits (`1` = bar, `0` = space) ready to render
+  as SVG/canvas. Symbologies: `code128` (Code B + Code C fast path), `code39`,
+  `ean13`, `ean8`, `upca`, `itf`, and `codabar`, with automatic check-digit
+  computation/verification for the retail formats and validation (invalid payloads
+  throw a `RangeError`). Like `@mission-platform/qr-code`, the wasm is inlined as a
+  base64 `data:` URI so the encoder is synchronous and self-contained (with
+  `encodeBarcodeAsync` / `initBarcode` / `initBarcodeSync` for non-inlined
+  environments), and the Rust→wasm build runs via the `build:wasm` Turbo task.
+
+### Patch Changes
+
+- b4a8da8: Make the inlined-wasm synchronous initialisation portable: the base64 decode now prefers the native `Uint8Array.fromBase64` and falls back to `Buffer`/`atob`, so `encodeQr`/`encodeBarcode` work synchronously (incl. SSR) on runtimes without the newest `Uint8Array.fromBase64`. The underlying Rust crates were also migrated from `log`/`console_log` to `tracing`/`tracing-wasm` for diagnostics (unchanged encoder output).
+- Updated dependencies [e1a9272]
+- Updated dependencies [e1a9272]
+- Updated dependencies [4218ce5]
+- Updated dependencies [c99c4cc]
+- Updated dependencies [338c7db]
+- Updated dependencies [fb5e319]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [7534f50]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [23c0463]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [429d400]
+- Updated dependencies [1c73a0e]
+- Updated dependencies [bbc9903]
+- Updated dependencies [edb785f]
+- Updated dependencies [18bd49a]
+- Updated dependencies [76ebb1f]
+- Updated dependencies [13cfc7f]
+- Updated dependencies [13cfc7f]
+- Updated dependencies [13cfc7f]
+- Updated dependencies [13cfc7f]
+- Updated dependencies [0a5d7dd]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [94f9acf]
+- Updated dependencies [edb785f]
+- Updated dependencies [94f9acf]
+- Updated dependencies [94f9acf]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [94f9acf]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [94f9acf]
+- Updated dependencies [94f9acf]
+- Updated dependencies [edb785f]
+- Updated dependencies [18bd49a]
+- Updated dependencies [ca1d98b]
+- Updated dependencies [d39b6fc]
+- Updated dependencies [6551abb]
+- Updated dependencies [18bd49a]
+- Updated dependencies [8d64a2b]
+- Updated dependencies [4218ce5]
+- Updated dependencies [7534f50]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+  - @mission-platform/components@1.0.0
+  - @mission-platform/icons@0.2.0
+  - @mission-platform/jsx@0.2.0
