@@ -6,16 +6,14 @@
 import '@mission-platform/tokens/scss/tokens';
 import '@mission-platform/components/styles';
 
-import { createMpI18n, localeNamespaces, mpNamespace, type MpMessageObject } from '@mission-platform/i18n';
+import { createMpI18n, mpNamespace } from '@mission-platform/i18n';
 import { createMpI18nVue } from '@mission-platform/i18n/vue';
 import { organization, useSeo, webSite } from '@mission-platform/seo';
-import yaml from 'js-yaml';
+import { resources as defaultLocaleResources } from 'virtual:i18n-resources';
 import { ViteSSG } from 'vite-ssg';
 import { computed, effectScope, h, type VNode } from 'vue';
 import { RouterView } from 'vue-router';
 
-import enLocaleSource from './locales/en.yaml?raw';
-import { loadLocaleMessages } from './locales/load-locale';
 import { DEFAULT_LOCALE, routerOptions, SUPPORTED_LOCALES, type SupportedLocale } from './router';
 import {
   canonicalFor,
@@ -29,12 +27,9 @@ import {
   SITE_TITLE,
 } from './seo-site';
 
-import './styles/global.scss';
+import type { Resource } from 'i18next';
 
-// The runtime `en.yaml` is grouped by `mp.<workspace>` namespace; the website
-// owns `mp.website`, while package strings (e.g. `mp.breakpoints`) come from the
-// packages it depends on. Additional locales are layered on lazily per route.
-const enBundles = (yaml.load(enLocaleSource) ?? {}) as Record<string, MpMessageObject>;
+import './styles/global.scss';
 
 /** Root render function — keeps `useHead`-bearing setup in a stable scope. */
 const renderRoot = (): VNode => h(RouterView);
@@ -49,7 +44,7 @@ export const createApp = ViteSSG(
   // Root component — just the active route's view.
   { setup: () => renderRoot },
   routerOptions,
-  ({ app, router }) => {
+  async ({ app, router }) => {
     // Restore persisted theme (client only, before mount, to avoid a flash
     // of the wrong colour scheme). Skipped during SSG.
     if (!import.meta.env.SSR) {
@@ -65,20 +60,41 @@ export const createApp = ViteSSG(
       }
     }
 
+    // Synchronise the active route's `:locale` segment with i18next's active
+    // locale on every navigation (both client and server side).
+    const localeBundles: Record<string, () => Promise<{ resources: Resource }>> = {
+      es: () => import('virtual:i18n-locale-es'),
+      fr: () => import('virtual:i18n-locale-fr'),
+      nl: () => import('virtual:i18n-locale-nl'),
+      it: () => import('virtual:i18n-locale-it'),
+      de: () => import('virtual:i18n-locale-de'),
+      ko: () => import('virtual:i18n-locale-ko'),
+      ja: () => import('virtual:i18n-locale-ja'),
+      zh: () => import('virtual:i18n-locale-zh'),
+      ar: () => import('virtual:i18n-locale-ar'),
+      he: () => import('virtual:i18n-locale-he'),
+    };
+
     // Seed English (source-of-truth) messages at creation time so the first
     // paint resolves them. Additional locales are loaded lazily per route.
     const i18n = createMpI18n({
       locale: DEFAULT_LOCALE,
+      fallbackLocale: DEFAULT_LOCALE,
       namespace: mpNamespace('website'),
-      namespaces: localeNamespaces('en', enBundles),
+      resources: defaultLocaleResources,
     });
     app.use(createMpI18nVue(i18n));
 
-    // Synchronise the active route's `:locale` segment with i18next's active
-    // locale on every navigation (both client and server side).
     router.beforeEach(async (to) => {
       const locale = resolveLocale(to.params.locale);
-      await loadLocaleMessages(i18n, locale);
+
+      if (locale !== DEFAULT_LOCALE && !i18n.hasResourceBundle(locale, 'mp.website')) {
+        const { resources } = await localeBundles[locale]();
+        for (const [namespace, messages] of Object.entries(resources[locale] ?? {})) {
+          i18n.addResourceBundle(locale, namespace, messages, true, true);
+        }
+      }
+
       if (i18n.language !== locale) {
         await i18n.changeLanguage(locale);
       }

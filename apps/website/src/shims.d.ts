@@ -10,8 +10,14 @@ declare module '@mission-platform/tokens/scss/tokens' {}
 declare module '@mission-platform/tokens/scss/themes/light' {}
 declare module '@mission-platform/tokens/scss/themes/dark' {}
 
-// YAML locale resources imported as raw strings and parsed with js-yaml.
-declare module '*.yaml?raw' {
-  const source: string;
-  export default source;
+// Virtual locale modules.
+declare module 'virtual:i18n-resources' {
+  import type { Resource } from 'i18next';
+  export const resources: Resource;
+}
+
+// Virtual locale modules.
+declare module 'virtual:i18n-locale-*' {
+  import type { Resource } from 'i18next';
+  export const resources: Resource;
 }

@@ -15,9 +15,8 @@
     BaseTag,
     BaseThemeToggle,
     BaseTypography,
-    BaseAlertBanner,
+    LanguageSwitcher,
   } from '@mission-platform/components/vue';
-  import { QrCode as BaseQrCode } from '@mission-platform/qr-code/vue';
   import { useI18n } from '@mission-platform/i18n/vue';
   import {
     IconDebug,
@@ -30,6 +29,7 @@
     IconSearch,
   } from '@mission-platform/icons/vue';
   import { BaseApplicationLayout } from '@mission-platform/layouts/vue';
+  import { QrCode as BaseQrCode } from '@mission-platform/qr-code/vue';
   import { organizationId, useSeo, webPage, webSiteId } from '@mission-platform/seo';
   import { type Component, computed, onBeforeUnmount, onMounted, ref } from 'vue';
   import { useRouter } from 'vue-router';
@@ -97,25 +97,74 @@
     ],
   }));
 
-  const featureIcons: Component[] = [
-    IconPuzzle,
-    IconLightning,
-    IconPalette,
-    IconLanguage,
-    IconDebug,
-    IconGlobe,
-    IconSearch,
-    IconQrCode,
-  ];
-  const features = computed<Feature[]>(() =>
-    featureIcons.map((icon, index) => ({
-      icon,
-      title: t(`features.items.${index}.title`),
-      description: t(`features.items.${index}.description`),
-    })),
-  );
+  const features = computed<Feature[]>(() => [
+    {
+      icon: IconPuzzle,
+      title: t(($) => $.features.composable.title, { defaultValue: 'Composable', ns: 'mp.website' }),
+      description: t(($) => $.features.composable.description, {
+        defaultValue: 'Build applications from small, independent building blocks.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      icon: IconLightning,
+      title: t(($) => $.features.performance.title, { defaultValue: 'Performance', ns: 'mp.website' }),
+      description: t(($) => $.features.performance.description, {
+        defaultValue: 'Optimized for speed and minimal load times.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      icon: IconPalette,
+      title: t(($) => $.features.theming.title, { defaultValue: 'Theming', ns: 'mp.website' }),
+      description: t(($) => $.features.theming.description, {
+        defaultValue: 'Easily customizable look and feel.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      icon: IconLanguage,
+      title: t(($) => $.features.i18n.title, { defaultValue: 'Internationalization', ns: 'mp.website' }),
+      description: t(($) => $.features.i18n.description, {
+        defaultValue: 'Built-in support for multiple languages.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      icon: IconDebug,
+      title: t(($) => $.features.debugging.title, { defaultValue: 'Debugging', ns: 'mp.website' }),
+      description: t(($) => $.features.debugging.description, {
+        defaultValue: 'Advanced debugging tools integrated into the platform.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      icon: IconGlobe,
+      title: t(($) => $.features.global.title, { defaultValue: 'Global Scale', ns: 'mp.website' }),
+      description: t(($) => $.features.global.description, {
+        defaultValue: 'Ready for global deployment.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      icon: IconSearch,
+      title: t(($) => $.features.search.title, { defaultValue: 'Search', ns: 'mp.website' }),
+      description: t(($) => $.features.search.description, {
+        defaultValue: 'Powerful integrated search functionality.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      icon: IconQrCode,
+      title: t(($) => $.features.barcode.title, { defaultValue: 'Barcode', ns: 'mp.website' }),
+      description: t(($) => $.features.barcode.description, {
+        defaultValue: 'Support for barcode and QR code scanning.',
+        ns: 'mp.website',
+      }),
+    },
+  ]);
 
-  // ── Language toggle ──────────────────────────────────────────────────────────
+  // ── Language selector ────────────────────────────────────────────────────────
   const languages = [
     { code: 'en', label: 'English' },
     { code: 'fr', label: 'Français' },
@@ -129,73 +178,188 @@
     { code: 'ar', label: 'العربية' },
     { code: 'he', label: 'עברית' },
   ];
-  const languageChildren = computed(() =>
-    languages.map((lang) => ({
-      label: lang.label,
-      onClick: async () => {
-        // Drive the locale entirely through the URL: the router guard in
-        // `main.ts` loads messages and updates `<html lang>` / vue-i18n.
-        const code = lang.code as SupportedLocale;
-        try {
-          localStorage.setItem('mp-locale', code);
-        } catch {
-          // ignore
-        }
-        await router.push(code === DEFAULT_LOCALE ? '/' : `/${code}`);
-      },
-    })),
-  );
-  const currentLanguageLabel = computed(() => languages.find((l) => l.code === locale.value)?.label ?? 'English');
+  async function switchLanguage(nextLocale: string): Promise<void> {
+    // Drive the locale entirely through the URL: the router guard in
+    // `main.ts` loads messages and updates `<html lang>` / vue-i18n.
+    const code = nextLocale as SupportedLocale;
+    try {
+      localStorage.setItem('mp-locale', code);
+    } catch {
+      // ignore
+    }
+    await router.push(code === DEFAULT_LOCALE ? '/' : `/${code}`);
+  }
+
   const isAiTranslation = computed(() => locale.value !== 'en');
 
-  const packageNames = [
-    '@mission-platform/components',
-    '@mission-platform/jsx',
-    '@mission-platform/tokens',
-    '@mission-platform/icons',
-    '@mission-platform/layouts',
-    '@mission-platform/forms',
-    '@mission-platform/forms-core',
-    '@mission-platform/router',
-    '@mission-platform/scheduler-core',
-    '@mission-platform/breakpoints',
-    '@mission-platform/i18n',
-    '@mission-platform/map',
-    '@mission-platform/d3',
-    '@mission-platform/rxjs',
-    '@mission-platform/qr-code',
-    '@mission-platform/barcode',
-    '@mission-platform/matrix-code',
-    '@mission-platform/code-scanner',
-    '@mission-platform/phone-number',
-    '@mission-platform/harper',
-    '@mission-platform/hunspell',
-    '@mission-platform/seo',
-    '@mission-platform/base-spa',
-  ];
-  const packages = computed<Pkg[]>(() =>
-    packageNames.map((name, index) => ({
-      name,
-      description: t(`packages.items.${index}`),
-    })),
-  );
-
-  const projects = computed<Project[]>(() => [
+  const packages = computed<Pkg[]>(() => [
     {
-      name: t('projects.items.my-care-notes.name'),
-      description: t('projects.items.my-care-notes.description'),
-      href: 'https://care-notes.mission-platform.com/',
-      cta: t('projects.items.my-care-notes.cta'),
+      name: '@mission-platform/components',
+      description: t(($) => $.packages.items.components, {
+        defaultValue: 'Reusable UI building blocks.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      name: '@mission-platform/jsx',
+      description: t(($) => $.packages.items.jsx, { defaultValue: 'JSX support for Vue.', ns: 'mp.website' }),
+    },
+    {
+      name: '@mission-platform/tokens',
+      description: t(($) => $.packages.items.tokens, { defaultValue: 'Design tokens and theming.', ns: 'mp.website' }),
+    },
+    {
+      name: '@mission-platform/icons',
+      description: t(($) => $.packages.items.icons, { defaultValue: 'Icon library.', ns: 'mp.website' }),
+    },
+    {
+      name: '@mission-platform/layouts',
+      description: t(($) => $.packages.items.layouts, {
+        defaultValue: 'Pre-built application layouts.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      name: '@mission-platform/forms',
+      description: t(($) => $.packages.items.forms, { defaultValue: 'Form handling utilities.', ns: 'mp.website' }),
+    },
+    {
+      name: '@mission-platform/forms-core',
+      description: t(($) => $.packages.items['forms-core'], { defaultValue: 'Core form logic.', ns: 'mp.website' }),
+    },
+    {
+      name: '@mission-platform/router',
+      description: t(($) => $.packages.items.router, { defaultValue: 'Routing utilities.', ns: 'mp.website' }),
+    },
+    {
+      name: '@mission-platform/scheduler-core',
+      description: t(($) => $.packages.items['scheduler-core'], { defaultValue: 'Task scheduling.', ns: 'mp.website' }),
+    },
+    {
+      name: '@mission-platform/breakpoints',
+      description: t(($) => $.packages.items.breakpoints, {
+        defaultValue: 'Responsive breakpoints.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      name: '@mission-platform/i18n',
+      description: t(($) => $.packages.items.i18n, { defaultValue: 'Internationalization support.', ns: 'mp.website' }),
+    },
+    {
+      name: '@mission-platform/map',
+      description: t(($) => $.packages.items.map, { defaultValue: 'Map component.', ns: 'mp.website' }),
+    },
+    {
+      name: '@mission-platform/d3',
+      description: t(($) => $.packages.items.d3, { defaultValue: 'D3 integration.', ns: 'mp.website' }),
+    },
+    {
+      name: '@mission-platform/rxjs',
+      description: t(($) => $.packages.items.rxjs, { defaultValue: 'RxJS support.', ns: 'mp.website' }),
+    },
+    {
+      name: '@mission-platform/qr-code',
+      description: t(($) => $.packages.items['qr-code'], { defaultValue: 'QR code generation.', ns: 'mp.website' }),
+    },
+    {
+      name: '@mission-platform/barcode',
+      description: t(($) => $.packages.items.barcode, { defaultValue: 'Barcode support.', ns: 'mp.website' }),
+    },
+    {
+      name: '@mission-platform/matrix-code',
+      description: t(($) => $.packages.items['matrix-code'], {
+        defaultValue: 'Matrix code generation.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      name: '@mission-platform/code-scanner',
+      description: t(($) => $.packages.items['code-scanner'], {
+        defaultValue: 'Code scanning utilities.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      name: '@mission-platform/phone-number',
+      description: t(($) => $.packages.items['phone-number'], {
+        defaultValue: 'Phone number formatting.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      name: '@mission-platform/harper',
+      description: t(($) => $.packages.items.harper, { defaultValue: 'Data handling utilities.', ns: 'mp.website' }),
+    },
+    {
+      name: '@mission-platform/hunspell',
+      description: t(($) => $.packages.items.hunspell, { defaultValue: 'Spell checking support.', ns: 'mp.website' }),
+    },
+    {
+      name: '@mission-platform/seo',
+      description: t(($) => $.packages.items.seo, { defaultValue: 'SEO management.', ns: 'mp.website' }),
+    },
+    {
+      name: '@mission-platform/base-spa',
+      description: t(($) => $.packages.items['base-spa'], { defaultValue: 'Base SPA setup.', ns: 'mp.website' }),
     },
   ]);
 
-  const faqKeys = ['affiliation', 'composable', 'vue-version', 'deploy'] as const;
-  const faqs = computed<Faq[]>(() =>
-    faqKeys.map((key) => ({
-      question: t(`faq.items.${key}.question`),
-      answer: t(`faq.items.${key}.answer`),
-    })),
-  );
+  const projects = computed<Project[]>(() => [
+    {
+      name: t(($) => $.projects.items['my-care-notes'].name, { defaultValue: 'My Care Notes', ns: 'mp.website' }),
+      description: t(($) => $.projects.items['my-care-notes'].description, {
+        defaultValue: 'A patient-centric care notes application built on the Mission Platform.',
+        ns: 'mp.website',
+      }),
+      href: 'https://care-notes.mission-platform.com/',
+      cta: t(($) => $.projects.items['my-care-notes'].cta, { defaultValue: 'Learn More', ns: 'mp.website' }),
+    },
+  ]);
+
+  const faqs = computed<Faq[]>(() => [
+    {
+      question: t(($) => $.faq.items.affiliation.question, {
+        defaultValue: 'Are you affiliated with the Mission Platform project?',
+        ns: 'mp.website',
+      }),
+      answer: t(($) => $.faq.items.affiliation.answer, {
+        defaultValue: 'We are an independent implementation of the Mission Platform architecture.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      question: t(($) => $.faq.items.composable.question, {
+        defaultValue: "What does 'composable' mean?",
+        ns: 'mp.website',
+      }),
+      answer: t(($) => $.faq.items.composable.answer, {
+        defaultValue: 'It means we build the UI from small, reusable, and independent building blocks.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      question: t(($) => $.faq.items['vue-version'].question, {
+        defaultValue: 'Which version of Vue is used?',
+        ns: 'mp.website',
+      }),
+      answer: t(($) => $.faq.items['vue-version'].answer, {
+        defaultValue: 'We use Vue 3 with the Composition API.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      question: t(($) => $.faq.items.deploy.question, {
+        defaultValue: 'How do I deploy this?',
+        ns: 'mp.website',
+      }),
+      answer: t(($) => $.faq.items.deploy.answer, {
+        defaultValue:
+          'The platform is designed to be deployed to Cloudflare Workers or similar serverless environments.',
+        ns: 'mp.website',
+      }),
+    },
+  ]);
   // BaseAccordion is driven by a flat `items` array (with scoped `summary`/
   // `content` slots) rather than nested `BaseAccordionItem`s.
   const faqItems = computed(() =>
@@ -266,9 +430,9 @@
       v-if="isAiTranslation"
       #status
     >
-      <BaseAlertBanner variant="warning">
-        {{ t('ai-translation-warning') }}
-      </BaseAlertBanner>
+      <!-- <BaseAlertBanner variant="warning">
+        {{ t(($) => $.ai_translation_warning, { ns: 'mp.website', defaultValue: 'AI-generated translation' }) }}
+      </BaseAlertBanner> -->
     </template>
 
     <template #navbar>
@@ -302,38 +466,35 @@
         </template>
         <BaseNavbarItem
           :active="activeSection === 'features'"
-          :label="t('nav.features')"
+          :label="t(($) => $.nav.features, { defaultValue: 'Features', ns: 'mp.website' })"
           href="#features"
           @click="(e: MouseEvent) => scrollToSection(e, 'features')"
         />
         <BaseNavbarItem
           :active="activeSection === 'packages'"
-          :label="t('nav.packages')"
+          :label="t(($) => $.nav.packages, { defaultValue: 'Packages', ns: 'mp.website' })"
           href="#packages"
           @click="(e: MouseEvent) => scrollToSection(e, 'packages')"
         />
         <BaseNavbarItem
           :active="activeSection === 'about'"
-          :label="t('nav.about')"
+          :label="t(($) => $.nav.about, { defaultValue: 'About', ns: 'mp.website' })"
           href="#about"
           @click="(e: MouseEvent) => scrollToSection(e, 'about')"
         />
         <BaseNavbarItem
           :active="activeSection === 'faq'"
-          :label="t('nav.faq')"
+          :label="t(($) => $.nav.faq, { defaultValue: 'FAQ', ns: 'mp.website' })"
           href="#faq"
           @click="(e: MouseEvent) => scrollToSection(e, 'faq')"
         />
 
         <template #end>
-          <BaseNavbarItem
-            :dropdown-items="languageChildren"
-            :label="currentLanguageLabel"
-          >
-            <template #icon>
-              <IconLanguage size="sm" />
-            </template>
-          </BaseNavbarItem>
+          <LanguageSwitcher
+            :locale="locale"
+            :locales="languages"
+            :on-locale-change="switchLanguage"
+          />
           <BaseThemeToggle
             aria-label="Toggle colour theme"
             @change="handleThemeChange"
@@ -348,14 +509,16 @@
         class="home__hero"
       >
         <BaseInView animation="slide-up">
-          <BaseBadge variant="info">{{ t('hero.badge') }}</BaseBadge>
+          <BaseBadge variant="info">
+            {{ t(($) => $.hero.badge, { defaultValue: 'Beta', ns: 'mp.website' }) }}
+          </BaseBadge>
           <BaseTypography
             variant="display"
             weight="bold"
             align="center"
             class="home__title"
           >
-            {{ t('hero.title') }}
+            {{ t(($) => $.hero.title, { defaultValue: 'Composable. Mission Ready.', ns: 'mp.website' }) }}
           </BaseTypography>
           <BaseTypography
             variant="body-lg"
@@ -363,7 +526,12 @@
             align="center"
             class="home__lead"
           >
-            {{ t('hero.lead') }}
+            {{
+              t(($) => $.hero.lead, {
+                defaultValue: 'A platform for building applications from small, independent building blocks.',
+                ns: 'mp.website',
+              })
+            }}
           </BaseTypography>
           <BaseStack
             class="home__cta"
@@ -377,14 +545,14 @@
               size="lg"
               @click="() => {}"
             >
-              {{ t('hero.cta-primary') }}
+              {{ t(($) => $.hero['cta-primary'], { defaultValue: 'Get Started', ns: 'mp.website' }) }}
             </BaseButton>
             <BaseButton
               variant="secondary"
               size="lg"
               @click="() => {}"
             >
-              {{ t('hero.cta-secondary') }}
+              {{ t(($) => $.hero['cta-secondary'], { defaultValue: 'Documentation', ns: 'mp.website' }) }}
             </BaseButton>
           </BaseStack>
         </BaseInView>
@@ -400,7 +568,7 @@
             weight="bold"
             class="home__section-title"
           >
-            {{ t('features.title') }}
+            {{ t(($) => $.features.title, { defaultValue: 'Features', ns: 'mp.website' }) }}
           </BaseTypography>
           <BaseGrid
             min-column-width="16rem"
@@ -446,14 +614,19 @@
             weight="bold"
             class="home__section-title"
           >
-            {{ t('packages.title') }}
+            {{ t(($) => $.packages.title, { defaultValue: 'Packages', ns: 'mp.website' }) }}
           </BaseTypography>
           <BaseTypography
             variant="body-lg"
             color="secondary"
             class="home__section-lead"
           >
-            {{ t('packages.lead') }}
+            {{
+              t(($) => $.packages.lead, {
+                defaultValue: 'Reusable building blocks for your applications.',
+                ns: 'mp.website',
+              })
+            }}
           </BaseTypography>
           <BaseMasonry
             class="home__packages"
@@ -493,18 +666,24 @@
             weight="bold"
             class="home__section-title"
           >
-            {{ t('about.title') }}
+            {{ t(($) => $.about.title, { defaultValue: 'About', ns: 'mp.website' }) }}
           </BaseTypography>
           <BaseTypography
             variant="body-lg"
             color="secondary"
             class="home__section-lead"
           >
-            {{ t('about.lead') }}
+            {{
+              t(($) => $.about.lead, {
+                defaultValue:
+                  'The Mission Platform is a set of reusable UI building blocks and tools for building applications.',
+                ns: 'mp.website',
+              })
+            }}
           </BaseTypography>
           <div class="home__projects">
             <BaseCarousel
-              :aria-label="t('projects.aria-label')"
+              :aria-label="t(($) => $.about.projects['aria-label'], { defaultValue: 'Project list', ns: 'mp.website' })"
               :slides="projectSlides"
               :loop="projects.length > 1"
               :controls="projects.length > 1"
@@ -565,7 +744,7 @@
             weight="bold"
             class="home__section-title"
           >
-            {{ t('faq.title') }}
+            {{ t(($) => $.faq.title, { defaultValue: 'FAQ', ns: 'mp.website' }) }}
           </BaseTypography>
           <BaseAccordion
             class="home__faq"
@@ -601,23 +780,29 @@
           color="secondary"
           class="home__disclaimer"
         >
-          <i18next
-            :translation="t('footer.disclaimer')"
-            tag="span"
-          >
-            <template #brand>
-              <strong>Mission Platform</strong>
-            </template>
-            <template #not-affiliated>
-              <em>{{ t('footer.not-affiliated') }}</em>
-            </template>
-          </i18next>
+          <strong>{{ t(($) => $.footer.brand, { defaultValue: 'Mission Platform', ns: 'mp.website' }) }}</strong>
+          {{ t(($) => $.footer['disclaimer-start'], { defaultValue: 'is an independent project.', ns: 'mp.website' }) }}
+          <em>
+            {{
+              t(($) => $.footer['not-affiliated'], {
+                defaultValue: 'Not affiliated with the Mission Platform project.',
+                ns: 'mp.website',
+              })
+            }}
+          </em>
+          {{ t(($) => $.footer['disclaimer-end'], { defaultValue: '.', ns: 'mp.website' }) }}
         </BaseTypography>
         <BaseTypography
           variant="caption"
           color="tertiary"
         >
-          {{ t('footer.copyright', { year: new Date().getFullYear() }) }}
+          {{
+            t(($) => $.footer.copyright, {
+              year: new Date().getFullYear(),
+              defaultValue: '© {year} Mission Platform.',
+              ns: 'mp.website',
+            })
+          }}
         </BaseTypography>
       </div>
     </template>
@@ -768,94 +953,3 @@
     padding: 10px 24px;
   }
 </style>
-
-<i18n lang="yaml">
-en:
-  ai-translation-warning: This page was translated by AI, so some wording may be imprecise. The English version is authoritative.
-  nav:
-    features: Features
-    packages: Packages
-    about: About
-    faq: FAQ
-  hero:
-    badge: Composable · Write Once · Mission Ready
-    title: The composable, mission-ready platform for modern web products.
-    lead: Mission Platform is a monorepo of reusable, framework-neutral building blocks — write-once components that compile straight to Vue 3 and React, plus design tokens, layouts, forms, routing, scheduling, i18n, maps, charts, SEO primitives, and native-speed WebAssembly barcode, QR and code-scanning packages. Assemble polished, fast, discoverable apps without reinventing the basics.
-    cta-primary: Explore the platform
-    cta-secondary: Read the docs
-  features:
-    title: Why Mission Platform?
-    items:
-      - title: Composable by design
-        description: Every capability ships as an independent, versioned package. Take only what you need and compose your own product.
-      - title: Mission-ready performance
-        description: Built on Vite and modern web standards — offline-first, PWA-friendly, and ready for the edge.
-      - title: Write once, ship everywhere
-        description: Author each component once in a framework-neutral JSX dialect, then compile it straight to both Vue 3 and React. No per-framework rewrites.
-      - title: i18n & a11y first
-        description: First-class i18n integration, RTL-aware layouts, and accessibility-tested components let your product speak every user’s language.
-      - title: Developer experience
-        description: A Storybook workbench, shared ESLint/Prettier/Stylelint configs, and Vitest + Playwright — all wired up and ready to go.
-      - title: Edge-native deployment
-        description: First-class Cloudflare Workers support, with the base-spa worker for static and SPA-fallback hosting.
-      - title: Discoverable by default
-        description: A unified SEO package — page metadata, Open Graph, Twitter Card, and JSON-LD — plus prerendered SSG output keeps every route SEO-ready and shareable.
-      - title: Native-speed WebAssembly
-        description: Dependency-free Rust and AssemblyScript compiled to WebAssembly powers QR, Data Matrix and 1D barcode encoding/decoding, camera code scanning, and phone-number parsing.
-  packages:
-    title: Building blocks
-    lead: Every package is independently versioned and published. Mix, match, and compose.
-    items:
-      - Write-once component library (Vue 3 + React)
-      - Framework-neutral JSX runtime & adapters
-      - DTCG design tokens & SCSS themes
-      - Write-once SVG icon components
-      - Write-once application layouts
-      - Write-once form builder & schema forms
-      - Framework-agnostic forms core — JSON Schema derivation, Ajv validation & conditional visibility
-      - Framework-agnostic router with Vue adapter
-      - Calendar & scheduling core (RFC 5545 recurrence)
-      - Responsive utilities & composables
-      - i18n integration & base locales
-      - MapLibre GL map wrapper
-      - Write-once D3 integration & responsive chart helpers
-      - Write-once RxJS integration (useObservable / useSubscription)
-      - QR Code encoder & decoder (Rust → WebAssembly)
-      - 1D (linear) barcode encoder & decoder (Rust → WebAssembly)
-      - Data Matrix 2D encoder & decoder (Rust → WebAssembly)
-      - Image & camera code scanner — QR, Data Matrix & 1D barcodes (Rust → WebAssembly)
-      - Phone-number parse, validate & format (libphonenumber → WebAssembly)
-      - Harper grammar checker for Monaco
-      - Hunspell spell checker (WASM)
-      - 'Unified SEO: page metadata, Open Graph, Twitter Card & JSON-LD'
-      - base-spa Cloudflare Worker
-  about:
-    title: What we’re building
-    lead: Mission Platform powers real applications across many domains. Our goal is to make polished, mission-ready experiences repeatable, composable, and easy to ship.
-  projects:
-    aria-label: Projects built with Mission Platform
-    items:
-      my-care-notes:
-        name: My Care Notes
-        description: An offline-first clinical notes editor with WebAssembly spell checking (Hunspell) and grammar assistance (Harper), built on Mission Platform packages.
-        cta: Open the live app
-  faq:
-    title: Frequently asked
-    items:
-      affiliation:
-        question: Is Mission Platform affiliated with any other project?
-        answer: No. Mission Platform is an independent open-source project and organisation. It is not affiliated with, endorsed by, or associated with any other project, product, company, or organisation that may share the same or a similar name.
-      composable:
-        question: What does “composable” actually mean here?
-        answer: Every capability — components, tokens, i18n, maps, spell checking — lives in its own versioned package. Pull in only what you need and assemble your own product instead of adopting a monolithic framework.
-      vue-version:
-        question: Which frameworks are supported?
-        answer: Components are authored once in a framework-neutral JSX dialect and compiled straight to native components for the framework of your choice — no per-framework rewrites. Every package is written in TypeScript and ships full type definitions.
-      deploy:
-        question: How do I deploy a Mission Platform app?
-        answer: Apps are Vite-built single-page apps. A first-class base-spa Cloudflare Worker is included for edge-native static and SPA-fallback hosting, but anything that serves static assets works.
-  footer:
-    disclaimer: '<<brand>> is an independent open-source project and organisation. It is <<not-affiliated>> any other project, product, company, or organisation that may share the same or a similar name. Any resemblance to existing names is coincidental.'
-    not-affiliated: not affiliated with, endorsed by, or associated with
-    copyright: © {year} Mission Platform contributors.
-</i18n>
