@@ -36,6 +36,10 @@ export function Document({ children }: { children: ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <title>{pageMeta.title ?? APP_NAME}</title>
+        <meta
+          content="light dark"
+          name="color-scheme"
+        />
         {pageMeta.metaTags.map((tag) =>
           createElement('meta', { key: `${tag.attr}`, [tag.key]: tag.attr, content: tag.content }),
         )}
@@ -52,6 +56,11 @@ export function Document({ children }: { children: ReactNode }) {
           href="/favicon.svg"
           type="image/svg+xml"
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var d=document.documentElement,t=localStorage.getItem('mp-theme')||'auto';if(t==='light'||t==='dark'){d.setAttribute('data-theme',t);d.style.colorScheme=t;}else{d.removeAttribute('data-theme');d.style.colorScheme='light dark';}}catch(e){}})();`,
+          }}
+        />
         <link
           rel="stylesheet"
           href={styles}
@@ -63,7 +72,7 @@ export function Document({ children }: { children: ReactNode }) {
       </head>
       <body>
         <div id="root">{children}</div>
-        <script>import("/src/client.tsx")</script>
+        <script type="module">import("/src/client.tsx")</script>
       </body>
     </html>
   );

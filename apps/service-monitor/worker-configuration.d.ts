@@ -4,7 +4,7 @@
 // checked in here so the app type-checks without a network round-trip; keep
 // them in sync with `wrangler.jsonc`.
 declare namespace Cloudflare {
-  interface Env {
+  interface Environment {
     /** Static asset binding serving the built client bundle. */
     ASSETS: Fetcher;
     /** Durable Object that performs server-side monitoring and stores the time series. */
@@ -24,4 +24,4 @@ declare namespace Cloudflare {
   }
 }
 
-interface Env extends Cloudflare.Env {}
+interface Environment extends Cloudflare.Env {}

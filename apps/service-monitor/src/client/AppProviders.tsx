@@ -1,5 +1,6 @@
 'use client';
 
+import { ThemeProvider } from '@mission-platform/components/react';
 import { MpI18nProvider } from '@mission-platform/i18n/react';
 import { type ReactNode, useMemo } from 'react';
 
@@ -12,5 +13,9 @@ import { createAppI18n } from '@/app/i18n';
  */
 export function AppProviders({ children }: { readonly children: ReactNode }) {
   const i18n = useMemo(() => createAppI18n(), []);
-  return <MpI18nProvider i18n={i18n}>{children}</MpI18nProvider>;
+  return (
+    <MpI18nProvider i18n={i18n}>
+      <ThemeProvider>{children}</ThemeProvider>
+    </MpI18nProvider>
+  );
 }

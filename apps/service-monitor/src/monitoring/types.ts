@@ -14,11 +14,22 @@
  * - `mqtt`     — TCP reachability of an MQTT broker's `host:port`.
  * - `udp`      — UDP reachability (unsupported on the Workers runtime).
  * - `ntp`      — NTP time sync over UDP (unsupported on the Workers runtime).
+ * - `network`  — TCP ping/latency paired with the bandwidth test subsystem.
  */
-export type ProbeType = 'http' | 'json' | 'graphql' | 'dns' | 'tcp' | 'mqtt' | 'udp' | 'ntp';
+export type ProbeType = 'http' | 'json' | 'graphql' | 'dns' | 'tcp' | 'mqtt' | 'udp' | 'ntp' | 'network';
 
 /** All supported probe types, in display order. */
-export const PROBE_TYPES: readonly ProbeType[] = ['http', 'json', 'graphql', 'dns', 'tcp', 'mqtt', 'udp', 'ntp'];
+export const PROBE_TYPES: readonly ProbeType[] = [
+  'http',
+  'json',
+  'graphql',
+  'dns',
+  'tcp',
+  'mqtt',
+  'udp',
+  'ntp',
+  'network',
+];
 
 /** A service the platform should keep an eye on. */
 export interface MonitorTarget {
@@ -51,6 +62,50 @@ export interface MonitorTarget {
   expect?: string;
   /** DNS record type for `dns` probes (defaults to `A`). */
   recordType?: string;
+  /** Whether repeated failures should automatically open an incident. */
+  autoIncident?: boolean;
+  /** Consecutive failures required before an automatic incident opens. */
+  failThreshold?: number;
+  /** Consecutive healthy checks required before an automatic incident resolves. */
+  successThreshold?: number;
+}
+
+export type IncidentStatus = 'investigating' | 'identified' | 'monitoring' | 'resolved';
+export type IncidentSeverity = 'minor' | 'major' | 'critical';
+
+export interface IncidentUpdate {
+  id: string;
+  incidentId: string;
+  message: string;
+  status: IncidentStatus | null;
+  createdAt: number;
+}
+
+export interface Incident {
+  id: string;
+  serviceId: string | null;
+  title: string;
+  description: string;
+  status: IncidentStatus;
+  severity: IncidentSeverity;
+  openedAt: number;
+  resolvedAt: number | null;
+  automatic: boolean;
+  updates: IncidentUpdate[];
+  postIncidentReport: string | null;
+}
+
+export type MaintenanceStatus = 'scheduled' | 'active' | 'completed' | 'cancelled';
+
+export interface MaintenanceWindow {
+  id: string;
+  title: string;
+  description: string;
+  serviceId: string | null;
+  startsAt: number;
+  endsAt: number;
+  cancelledAt: number | null;
+  createdAt: number;
 }
 
 /** Health classification derived from a single probe. */

@@ -1,3 +1,4 @@
+import '@/app/styles.css';
 import { initClient } from 'rwsdk/client';
 
 // Hydrate the server-rendered React tree so that `"use client"` components

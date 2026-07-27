@@ -17,9 +17,11 @@ export const DEFAULT_TARGETS: readonly MonitorTarget[] = [
   },
   {
     id: 'github',
-    name: 'GitHub API',
-    type: 'http',
-    url: 'https://api.github.com/zen',
+    name: 'GitHub API health',
+    type: 'json',
+    url: 'https://api.github.com/meta',
+    jsonPath: 'verifiable_password_authentication',
+    expect: 'true',
     degradedAboveMs: 1000,
   },
   {
@@ -28,6 +30,17 @@ export const DEFAULT_TARGETS: readonly MonitorTarget[] = [
     type: 'http',
     url: 'https://registry.npmjs.org/-/ping',
     degradedAboveMs: 1000,
+  },
+  {
+    id: 'automated-incident-example',
+    name: 'Automated incident · example.com',
+    type: 'http',
+    url: 'https://example.com/',
+    intervalSeconds: 60,
+    degradedAboveMs: 1000,
+    autoIncident: true,
+    failThreshold: 3,
+    successThreshold: 2,
   },
   {
     id: 'countries-graphql',
@@ -45,6 +58,50 @@ export const DEFAULT_TARGETS: readonly MonitorTarget[] = [
     host: 'example.com',
     recordType: 'A',
     intervalSeconds: 120,
+  },
+  {
+    id: 'tcp-example',
+    name: 'TCP · example.com HTTPS',
+    type: 'tcp',
+    host: 'example.com',
+    port: 443,
+    intervalSeconds: 60,
+  },
+  {
+    id: 'mqtt-example',
+    name: 'MQTT · Mosquitto test broker',
+    type: 'mqtt',
+    host: 'test.mosquitto.org',
+    port: 1883,
+    intervalSeconds: 60,
+  },
+  {
+    id: 'udp-example',
+    name: 'UDP · Cloudflare DNS',
+    type: 'udp',
+    host: '1.1.1.1',
+    port: 53,
+    intervalSeconds: 120,
+  },
+  {
+    id: 'ntp-example',
+    name: 'NTP · Cloudflare',
+    type: 'ntp',
+    host: 'time.cloudflare.com',
+    port: 123,
+    intervalSeconds: 120,
+  },
+  {
+    id: 'network-example',
+    name: 'Network · Cloudflare',
+    type: 'network',
+    host: 'cloudflare.com',
+    port: 443,
+    degradedAboveMs: 250,
+    intervalSeconds: 60,
+    autoIncident: true,
+    failThreshold: 3,
+    successThreshold: 2,
   },
 ];
 
@@ -125,7 +182,7 @@ export function sanitizeMonitor(value: unknown): MonitorTarget | null {
   if (type === 'graphql' && typeof raw.query === 'string' && raw.query.trim()) {
     target.query = raw.query.trim();
   }
-  if (type === 'dns' || type === 'tcp' || type === 'mqtt' || type === 'udp' || type === 'ntp') {
+  if (type === 'dns' || type === 'tcp' || type === 'mqtt' || type === 'udp' || type === 'ntp' || type === 'network') {
     if (typeof raw.host !== 'string' || !raw.host.trim()) {
       return null;
     }
@@ -134,9 +191,17 @@ export function sanitizeMonitor(value: unknown): MonitorTarget | null {
   if (type === 'dns' && typeof raw.recordType === 'string' && raw.recordType.trim()) {
     target.recordType = raw.recordType.trim().toUpperCase();
   }
-  if ((type === 'tcp' || type === 'mqtt' || type === 'udp' || type === 'ntp') && typeof raw.port === 'number') {
+  if (
+    (type === 'tcp' || type === 'mqtt' || type === 'udp' || type === 'ntp' || type === 'network') &&
+    typeof raw.port === 'number'
+  ) {
     target.port = Math.round(raw.port);
   }
+  if (typeof raw.autoIncident === 'boolean') target.autoIncident = raw.autoIncident;
+  if (typeof raw.failThreshold === 'number' && raw.failThreshold > 0)
+    target.failThreshold = Math.round(raw.failThreshold);
+  if (typeof raw.successThreshold === 'number' && raw.successThreshold > 0)
+    target.successThreshold = Math.round(raw.successThreshold);
 
   return target;
 }

@@ -1,14 +1,19 @@
+@import '@mission-platform/tokens/scss/tokens';
+@import '@mission-platform/tokens/scss/themes/light';
+@import '@mission-platform/tokens/scss/themes/dark';
+@import '@mission-platform/components/styles';
+
 :root {
-  --bg: #0d1117;
-  --surface: #161b22;
-  --surface-hover: #1c232d;
-  --border: #30363d;
-  --text: #e6edf3;
-  --muted: #8b949e;
-  --up: #3fb950;
-  --degraded: #d29922;
-  --down: #f85149;
-  --accent: #58a6ff;
+  --bg: var(--mp-color-bg-base, #0d1117);
+  --surface: var(--mp-color-bg-surface, #161b22);
+  --surface-hover: var(--mp-color-bg-raised, #1c232d);
+  --border: var(--mp-color-border-default, #30363d);
+  --text: var(--mp-color-text-primary, #e6edf3);
+  --muted: var(--mp-color-text-secondary, #8b949e);
+  --up: var(--mp-color-success-default, #3fb950);
+  --degraded: var(--mp-color-warning-default, #d29922);
+  --down: var(--mp-color-danger-default, #f85149);
+  --accent: var(--mp-color-primary-default, #58a6ff);
 }
 
 * {
@@ -26,6 +31,118 @@ body {
     roboto,
     sans-serif;
   line-height: 1.5;
+}
+
+.status-page,
+.incidents-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.app-shell__status,
+.app-shell__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  width: min(900px, calc(100% - 2.5rem));
+  margin: 0 auto;
+  padding: 0.85rem 0;
+}
+
+.app-shell__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-shell__footer a {
+  color: var(--accent);
+}
+
+.app-shell__brand {
+  color: var(--text) !important;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.app-shell__status a {
+  color: inherit;
+  font-weight: 700;
+}
+
+.app-shell__footer {
+  color: var(--muted);
+}
+
+.status-hero {
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border);
+  border-left: 6px solid var(--up);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.status-hero--degraded {
+  border-left-color: var(--degraded);
+}
+.status-hero--down {
+  border-left-color: var(--down);
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.75rem;
+}
+
+.status-service,
+.incident-list article,
+.incident-summary article,
+.incident-form {
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.status-service,
+.incident-list header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.incident-summary,
+.incident-list {
+  margin-top: 2rem;
+}
+.incident-list {
+  display: grid;
+  gap: 0.75rem;
+}
+.incident-form {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1rem 0 2rem;
+}
+.incident-form input,
+.incident-form textarea,
+.incident-form select {
+  padding: 0.65rem;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.monitors__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--muted);
+  font-size: 0.8rem;
 }
 
 .dashboard {
@@ -249,6 +366,31 @@ body {
   fill: var(--accent);
 }
 
+.chart__interaction {
+  fill: transparent;
+  cursor: crosshair;
+}
+
+.chart__hover-line {
+  stroke: var(--muted);
+  stroke-dasharray: 3 3;
+}
+
+.chart__hover-dot {
+  stroke: var(--surface);
+  stroke-width: 2px;
+}
+
+.chart__hover-label {
+  fill: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-linejoin: round;
+  stroke-width: 4px;
+}
+
 .chart__grid {
   stroke: var(--border);
   stroke-width: 1;
@@ -257,7 +399,7 @@ body {
 
 .chart__label {
   fill: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .chart__empty {
@@ -370,7 +512,7 @@ body {
   font-size: 0.72rem;
 }
 
-.speed-card__download {
+.speed-card__bandwidth {
   margin-top: 0.35rem;
   font-size: 1.7rem;
   font-weight: 700;
@@ -383,9 +525,10 @@ body {
   color: var(--muted);
 }
 
-.speed-card__meta {
-  display: flex;
-  gap: 0.75rem;
+.speed-card__metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.25rem 0.75rem;
   color: var(--text);
   font-size: 0.85rem;
   font-variant-numeric: tabular-nums;
@@ -407,8 +550,14 @@ body {
   font-size: 0.85rem;
 }
 
-.speed__chart {
+.speed__charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
   margin-top: 1rem;
+}
+
+.speed__chart {
   padding: 1rem 1.25rem 1.25rem;
   background: var(--surface);
   border: 1px solid var(--border);

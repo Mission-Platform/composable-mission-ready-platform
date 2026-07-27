@@ -1,17 +1,21 @@
 'use client';
 
+import { Typography } from '@mission-platform/components/react';
 import { useI18n } from '@mission-platform/i18n/react';
+import { Container } from '@mission-platform/layouts/react';
 import { useObservable } from '@mission-platform/rxjs/react';
 import { useCallback, useMemo, useState } from 'react';
 
-import type { MonitorTarget, ServicesResponse } from '@/monitoring/types';
+import { deleteMonitor, saveMonitor, servicesStream } from '../hooks/streams';
+import { ServiceMonitorShell } from '../layouts/service-monitor-shell';
 
-import { MonitorManager } from './MonitorManager';
-import { Container, Typography } from './mp';
-import { deleteMonitor, saveMonitor, servicesStream } from './streams';
+import { MonitorManager } from './monitor-manager';
 
-interface MonitorsViewProps {
+import type { Incident, MonitorTarget, ServicesResponse } from '@/monitoring/types';
+
+interface MonitorsViewProperties {
   readonly initialMonitors: MonitorTarget[];
+  readonly initialIncidents: Incident[];
   readonly intervalSeconds: number;
   readonly initialNow: number;
 }
@@ -20,9 +24,14 @@ interface MonitorsViewProps {
  * The `/monitors` management page. Kept separate from the dashboard so runtime
  * monitor CRUD has its own route. The current monitor list stays live through
  * an RxJS `servicesStream` (bridged with `@mission-platform/rxjs/react`), and a
- * `reloadNonce` forces an immediate re-poll right after a create/delete.
+ * `reloadNonce` forces an immediate re-poll right after a create/update/delete.
  */
-export function MonitorsView({ initialMonitors, intervalSeconds, initialNow }: MonitorsViewProps) {
+export function MonitorsView({
+  initialMonitors,
+  initialIncidents,
+  intervalSeconds,
+  initialNow,
+}: MonitorsViewProperties) {
   const { t } = useI18n();
   const intervalMs = intervalSeconds * 1000;
 
@@ -64,32 +73,28 @@ export function MonitorsView({ initialMonitors, intervalSeconds, initialNow }: M
   }, []);
 
   return (
-    <Container
-      variant="responsive"
-      className="monitors-page"
-    >
-      <header className="monitors-page__header">
-        <Typography
-          as="h1"
-          variant="h1"
-          className="monitors-page__title"
-        >
-          {t('nav.monitors')}
-        </Typography>
-        <a
-          className="dashboard__nav"
-          href="/"
-        >
-          {t('monitors.backToDashboard')}
-        </a>
-      </header>
+    <ServiceMonitorShell incidents={initialIncidents}>
+      <Container
+        variant="responsive"
+        className="monitors-page"
+      >
+        <header className="monitors-page__header">
+          <Typography
+            as="h1"
+            variant="h1"
+            className="monitors-page__title"
+          >
+            {t(($) => $.nav.monitors, { ns: 'mp.service-monitor', defaultValue: 'Monitors' })}
+          </Typography>
+        </header>
 
-      <MonitorManager
-        monitors={monitors}
-        defaultIntervalSeconds={intervalSeconds}
-        onSave={onSave}
-        onDelete={onDelete}
-      />
-    </Container>
+        <MonitorManager
+          monitors={monitors}
+          defaultIntervalSeconds={intervalSeconds}
+          onSave={onSave}
+          onDelete={onDelete}
+        />
+      </Container>
+    </ServiceMonitorShell>
   );
 }
