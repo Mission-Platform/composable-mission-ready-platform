@@ -13,12 +13,13 @@
  * - Prefer consistent naming conventions for CSS variables
  * - Limit hex color length to 6 characters
  */
-import { plugin } from '@mission-platform/stylelint-config';
+import baseConfig from '@mission-platform/stylelint-config';
 
-export default plugin({
-  // Custom rules can be added here
+export default {
+  ...baseConfig,
   rules: {
+    ...baseConfig.rules,
     'color-no-invalid-hex': true,
     'selector-class-pattern': '[a-z][a-z0-9]*(?:[-][a-z0-9]+)*',
   },
-});
+};

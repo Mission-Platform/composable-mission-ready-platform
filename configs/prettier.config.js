@@ -14,8 +14,8 @@
  * - End of line: lf
  * - Insert final newline
  */
-import { plugin } from '@mission-platform/prettier-config';
+import baseConfig from '@mission-platform/prettier-config';
 
-export default plugin({}
-  // Additional configuration can be added here
-);
+export default {
+  ...baseConfig,
+};
