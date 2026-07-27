@@ -27,6 +27,7 @@
     "eslint-import-resolver-typescript": "catalog:eslint",
     "eslint-plugin-i18next": "catalog:i18next",
     "eslint-plugin-import-x": "catalog:eslint",
+    "eslint-plugin-sonarjs": "catalog:eslint",
     "eslint-plugin-unicorn": "catalog:eslint",
     "eslint-plugin-vue": "catalog:eslint",
     "eslint-plugin-vuejs-accessibility": "catalog:eslint",
