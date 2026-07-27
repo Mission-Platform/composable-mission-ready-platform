@@ -1,8 +1,9 @@
-import { MapLayer, MapLibre, MapSource } from '@mission-platform/map/vue';
 import { defineComponent } from 'vue';
 
-import type { FeatureCollection } from 'geojson';
+import { MapLayer, MapLibre, MapSource } from '@mission-platform/map/vue';
+
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import type { FeatureCollection } from 'geojson';
 
 // ─── Shared fixtures ────────────────────────────────────────────────────────
 

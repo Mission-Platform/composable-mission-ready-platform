@@ -74,6 +74,11 @@ export {
 } from './base-icon-button';
 export { BaseInView, type InViewAnimation, type InViewProperties } from './base-in-view';
 export {
+  BaseLanguageSwitcher,
+  type LanguageSwitcherOption,
+  type LanguageSwitcherProperties,
+} from './base-language-switcher';
+export {
   BaseInput,
   type InputAutocapitalize,
   type InputProperties,

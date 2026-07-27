@@ -179,49 +179,66 @@ export function BaseTabs(properties: Readonly<TabsProperties>): MpElement {
           {tabs.map((tab) => (
             <div
               key={tab.id}
-              id={`tab-${tab.id}`}
-              aria-controls={`panel-${tab.id}`}
-              aria-disabled={tab.disabled ? 'true' : undefined}
-              aria-selected={activeId === tab.id}
               classNames={[
-                styles['base-tabs__tab'],
-                styles[`base-tabs__tab--${variant}`],
+                styles['base-tabs__tab-wrapper'],
+                styles[`base-tabs__tab-wrapper--${variant}`],
                 {
-                  [styles['base-tabs__tab--active']]: activeId === tab.id,
-                  [styles['base-tabs__tab--disabled']]: Boolean(tab.disabled),
-                  [styles['base-tabs__tab--closable']]: closable,
+                  [styles['base-tabs__tab-wrapper--active']]: activeId === tab.id,
+                  [styles['base-tabs__tab-wrapper--disabled']]: Boolean(tab.disabled),
+                  [styles['base-tabs__tab-wrapper--closable']]: closable,
                 },
               ]}
-              data-tab-id={tab.id}
-              role="tab"
-              tabindex={tab.disabled ? -1 : activeId === tab.id ? 0 : -1}
-              onClick={() => select(tab.id)}
-              onDblclick={() => {
-                if (!tab.disabled) {
-                  properties.onRename?.(tab.id);
-                }
-              }}
-              onKeydown={(event: KeyboardEvent) => onKeydown(event, tab.id)}
+              role="presentation"
             >
-              <BaseTypography
-                as="span"
-                color="inherit"
-                variant="label"
+              <button
+                id={`tab-${tab.id}`}
+                aria-controls={`panel-${tab.id}`}
+                aria-disabled={tab.disabled ? 'true' : undefined}
+                aria-selected={activeId === tab.id}
+                classNames={[
+                  styles['base-tabs__tab'],
+                  styles[`base-tabs__tab--${variant}`],
+                  {
+                    [styles['base-tabs__tab--active']]: activeId === tab.id,
+                    [styles['base-tabs__tab--disabled']]: Boolean(tab.disabled),
+                  },
+                ]}
+                data-tab-id={tab.id}
+                disabled={tab.disabled}
+                role="tab"
+                tabindex={tab.disabled ? -1 : activeId === tab.id ? 0 : -1}
+                type="button"
+                onClick={() => select(tab.id)}
+                onDblclick={() => {
+                  if (!tab.disabled) {
+                    properties.onRename?.(tab.id);
+                  }
+                }}
+                onKeydown={(event: KeyboardEvent) => onKeydown(event, tab.id)}
               >
-                {tab.label}
-              </BaseTypography>
+                <BaseTypography
+                  as="span"
+                  color="inherit"
+                  variant="label"
+                >
+                  {tab.label}
+                </BaseTypography>
+              </button>
               {closable ? (
-                <span
-                  aria-hidden="true"
+                <button
+                  aria-label={`Close ${tab.label}`}
                   classNames={styles['base-tabs__close-icon']}
                   data-close-tab-id={tab.id}
+                  role="tab"
+                  tabindex={-1}
+                  type="button"
                   onClick={(event: MouseEvent) => {
                     event.stopPropagation();
                     properties.onClose?.(tab.id);
                   }}
                 >
                   <IconClose size="xs" />
-                </span>
+                </button>
               ) : undefined}
             </div>
           ))}

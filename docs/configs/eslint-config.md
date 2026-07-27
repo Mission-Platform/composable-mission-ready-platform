@@ -1,38 +1,61 @@
 # ESLint Configuration
 
 ## Overview
-This configuration extends [`@mission-platform/eslint-config`](https://github.com/mission-platform/eslint-config) with project-specific rules and conventions.
 
-## Key Rules
-- Enforce consistent import styles (prefer destructured imports)
-- Disallow unused variables
-- Enforce camelCase naming for all identifiers
-- Require explicit return types in TypeScript
-- Prefer ternary expressions over simple if-else statements
+The `@mission-platform/eslint-config` workspace package provides the centralized, flat ESLint configuration (`eslint.config.js`) used across all applications, packages, and workers in the Mission Platform monorepo.
 
-## Customization
-To extend this configuration:
+## Key Rules & Plugins
+
+- **TypeScript Support**: Powered by `typescript-eslint` with type-aware linting.
+  - Enforces explicit type imports (`@typescript-eslint/consistent-type-imports`).
+  - Flag unused variables while ignoring variables with leading underscore (`_`).
+- **Vue 3 SFC Enforcement**: Powered by `eslint-plugin-vue`.
+  - Enforces `script-setup` syntax (`vue/component-api-style`).
+  - Standardizes macro order (`defineOptions`, `defineProps`, `defineEmits`, `defineSlots`).
+- **Import Rules & Sorting**: Powered by `eslint-plugin-import-x` with TypeScript resolver (`eslint-import-resolver-typescript`).
+  - Enforces organized import order and prohibits duplicates and useless path segments.
+- **Monorepo & Turborepo Guidelines**: Enforces Turborepo environment variable dependencies via `eslint-config-turbo`.
+- **Accessibility & Quality**: Integrates `eslint-plugin-vuejs-accessibility`, `eslint-plugin-i18next`, and `eslint-plugin-sonarjs`.
+
+## Integration in Workspaces
+
+In any workspace (`apps/*`, `packages/*`, `configs/*`, `workers/*`), create an `eslint.config.js` file importing the base configuration array:
+
 ```js
-import { plugin } from '@mission-platform/eslint-config';
+// eslint.config.js
+import baseConfig from '@mission-platform/eslint-config';
 
-export default plugin({
-  rules: {
-    // Add project-specific rules here
-    'no-console': 'warn',
-  },
-});
+export default [
+  ...baseConfig,
+];
 ```
 
-## Integration
-This config is automatically applied to all projects via:
-```js
-// vite.config.ts
-import eslintConfig from '@mission-platform/eslint-config';
+## Customization & Rule Overrides
 
-export default defineConfig({
-  esbuild: {
-    // Apply ESLint rules during build
-    plugins: [eslintConfig],
+To add workspace-specific rules or custom ignore patterns, extend the flat config array:
+
+```js
+// eslint.config.js
+import baseConfig from '@mission-platform/eslint-config';
+
+export default [
+  ...baseConfig,
+  {
+    rules: {
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+    },
   },
-});
+];
+```
+
+## Running ESLint
+
+Run linting across the monorepo using Turborepo:
+
+```bash
+# Run linting on all workspaces
+pnpm exec turbo run lint
+
+# Automatically fix lint issues
+pnpm exec turbo run lint:fix
 ```

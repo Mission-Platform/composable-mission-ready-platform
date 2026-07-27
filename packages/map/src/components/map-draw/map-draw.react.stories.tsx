@@ -1,10 +1,11 @@
 import { BaseButton } from '@mission-platform/components/react';
-import { MapDraw, MapLibre } from '@mission-platform/map/react';
 import { useState } from 'react';
 
+import { MapDraw, MapLibre } from '@mission-platform/map/react';
+
 import type { DrawMode, DrawnFeature, UseDrawingReturn } from '@mission-platform/map';
-import type { CSSProperties, ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { CSSProperties, ReactNode } from 'react';
 
 // ─── Shared fixtures ────────────────────────────────────────────────────────
 
@@ -82,7 +83,7 @@ function modeStory(initialMode: DrawMode, strokeColor?: string): Story {
 }
 
 /** An idle drawing tool ready for selecting and editing features on the map. */
-export const Idle: Story = modeStory(undefined);
+export const Idle: Story = modeStory();
 
 /** Freehand line mode: click to add points, double-click to finish. */
 export const LineMode: Story = modeStory('line', '#2563eb');

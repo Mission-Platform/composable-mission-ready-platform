@@ -1,0 +1,85 @@
+dashboard:
+  latency: '{name} · レイテンシ'
+  live: ライブ
+  reconnecting: 再接続中…
+  servicesLabel: 監視対象サービス
+  stat:
+    avgLatency: 平均レイテンシ
+    interval: 間隔
+    lastStatus: 最終ステータス
+    samples: サンプル数
+    type: タイプ
+    uptime: 稼働時間
+  subtitle: サーバーサイドのヘルスチェック（デフォルトは {interval} 秒ごと、モニターごとの上書き可能）。エッジ上の時系列データとして保存されます。
+  title: サービスモニター
+incidents:
+  addPostReport: 事後レポートを追加
+  addProgressUpdate: 進捗状況の更新を追加
+  cancel: キャンセル
+  edit: 編集
+  editMaintenance: ' メンテナンスを編集'
+  editPostReport: 事後レポートを編集
+  plannedMaintenance: ' 計画メンテナンス'
+  postIncidentReport: 事後レポート
+  reportAnIncident: インシデントを報告
+  reportButton: インシデントを報告
+  scheduleMaintenance: ' メンテナンスをスケジュール'
+  title: インシデント
+monitors:
+  add: モニターを追加
+  configuration: モニター設定
+  edit: 編集
+  editAria: '{name} を編集'
+  editTitle: モニターを編集
+  error:
+    rejected: サーバーがこのモニターを拒否しました。入力内容を確認して再試行してください。
+    required: ID、名前、URL (HTTP/JSON/GraphQL) またはホストを指定してください。
+  remove: 削除
+  removeAria: '{name} を削除'
+  subtitle: 実行時に設定 · デフォルトの間隔は {interval} 秒。
+  title: モニター
+nav:
+  dashboard: ダッシュボード
+  incidents: インシデントとメンテナンス
+  monitors: モニター
+  status: ステータス
+shell:
+  activeIncidents_zero: '{count} 件の発生中インシデント'
+  activeIncidents_one: '{count} 件の発生中インシデント'
+  activeIncidents_other: '{count} 件の発生中インシデント'
+  currentStatus: 現在のシステムステータス
+  title: Service Monitor
+  viewIncidentDetails: インシデントの詳細を表示
+speed:
+  bandwidth: 帯域幅 {value} Mbps
+  chartEmpty: このプロバイダーのチャートを表示するには、いくつかテストを実行してください…
+  disabled: スケジュールされたスピードテストは無効です。必要に応じて実行してください。
+  down: '{value} Mbps ダウンロード'
+  enabled: サーバーサイドのスピードテストを {interval} 秒ごとに実行 (Cloudflare, Fast.com, Speedtest)。
+  failed: 失敗
+  graphTitle: '{name} · 時間経過による {metric}'
+  latency: '{value} ms'
+  pending: 測定値なし
+  ping: Ping {value} ms
+  reportsTitle: ' ネットワーク速度レポート'
+  run: テストを実行
+  running: 実行中…
+  summary_zero: 平均 {average} · 最大 {maximum} · n={count}
+  summary_one: 平均 {average} · 最大 {maximum} · n={count}
+  summary_other: 平均 {average} · 最大 {maximum} · n={count}
+  title: ネットワーク速度
+  up: '{value} Mbps アップロード'
+  uploadUnavailable: アップロード利用不可
+  viewReports: ' 速度テストレポートを表示'
+state:
+  down: ダウン
+summary:
+  activeIncidentsTitle: 発生中のインシデント
+  allOperational: すべてのシステムが正常に稼働中
+  degradedPerformance: パフォーマンス低下
+  monitoredServicesAndIncidents: '{servicesCount} 件の監視対象サービス · {incidentsCount} 件の発生中インシデント'
+  noActiveIncidents: 発生中のインシデントはありません。
+  noUpcomingMaintenance: 予定されているメンテナンスはありません。
+  plannedMaintenance: 計画メンテナンス
+  serviceDisruption: ' サービス中断'
+  systemStatus: システムステータス

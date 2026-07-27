@@ -13,11 +13,6 @@
  * - Disallow unused variables
  * - Enforce camelCase naming
  */
-import { plugin } from '@mission-platform/eslint-config';
+import baseConfig from '@mission-platform/eslint-config';
 
-export default plugin({
-  // Custom rules can be added here
-  rules: {
-    'unicorn/prefer-ternary': 'error',
-  },
-});
+export default baseConfig;

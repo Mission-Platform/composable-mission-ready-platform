@@ -1,0 +1,42 @@
+aria:
+  delete: Supprimer
+  geodesic: Mode géodésique
+  join: Joindre les lignes
+  rotate-ccw: Tourner dans le sens antihoraire
+  rotate-cw: Tourner dans le sens horaire
+  scale-down: Réduire l'échelle
+  scale-up: Augmenter l'échelle
+  split: Diviser la ligne
+draw:
+  circle: Cercle
+  line: Ligne
+  none: Aucun
+  polygon: Polygone
+  square: Carré
+  triangle: Triangle
+geojson-summary_zero: geojson-summary
+geojson-summary_one: geojson-summary
+geojson-summary_many: ''
+geojson-summary_other: geojson-summary
+label:
+  draw: 'Dessiner :'
+  edit: 'Modifier :'
+mode:
+  flat: Plat
+  geodesic: Géodésique
+status:
+  joining: ⚡ Cliquez sur une autre ligne pour la joindre avec {id}
+  none: Cliquez sur une forme pour la sélectionner
+  selected: 'Sélectionné : {id}'
+title: Barre d'outils de dessin de carte
+tooltip:
+  delete: Supprimer l'entité sélectionnée
+  flat: "Mode plat : le déplacement/la mise à l'échelle préserve la forme visuelle. Cliquez pour le mode géodésique."
+  geodesic: "Mode géodésique : le déplacement/la mise à l'échelle respecte les distances au sol. Cliquez pour le mode plat/visuel."
+  join: Joindre deux lignes aux extrémités les plus proches
+  join-active: Jonction en cours — sélectionnez une autre ligne pour terminer la jonction
+  rotate-ccw: Tourner de −45°
+  rotate-cw: Tourner de +45°
+  scale-down: Réduire l'échelle ×0,75
+  scale-up: Augmenter l'échelle ×1,5
+  split: Diviser la ligne au point milieu

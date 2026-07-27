@@ -12,6 +12,9 @@ const dirname = typeof __dirname === 'undefined' ? path.dirname(fileURLToPath(im
 
 export default defineAppConfig({
   overrides: {
+    optimizeDeps: {
+      include: ['storybook/test'],
+    },
     plugins: [
       vueJsx(),
       svgLoader({
@@ -31,6 +34,7 @@ export default defineAppConfig({
           ],
           test: {
             name: 'storybook',
+            fileParallelism: false,
             browser: {
               enabled: true,
               headless: true,

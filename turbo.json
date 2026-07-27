@@ -11,12 +11,9 @@
     "tsconfig*.json",
     "Cargo.toml",
     "Cargo.lock",
-    ".cargo/config.toml",
-    "crates/*/Cargo.toml",
-    "crates/*/build.rs",
-    "crates/*/src/**"
+    ".cargo/config.toml"
   ],
-  "globalEnv": ["NODE_ENV", "CI", "SSR"],
+  "globalEnv": ["NODE_ENV", "CI", "SSR", "MISSION_REPO_ROOT", "NODE_OPTIONS"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -176,6 +173,69 @@
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"]
     },
+    "build:wasm:encode": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/Cargo.toml",
+        "$TURBO_ROOT$/Cargo.lock",
+        "$TURBO_ROOT$/.cargo/config.toml",
+        "$TURBO_ROOT$/crates/**"
+      ],
+      "outputs": ["src/generated/encode/**", "$TURBO_ROOT$/target/**"]
+    },
+    "build:wasm:decode": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/Cargo.toml",
+        "$TURBO_ROOT$/Cargo.lock",
+        "$TURBO_ROOT$/.cargo/config.toml",
+        "$TURBO_ROOT$/crates/**"
+      ],
+      "outputs": ["src/generated/decode/**", "$TURBO_ROOT$/target/**"]
+    },
+    "build:wasm:scan": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/Cargo.toml",
+        "$TURBO_ROOT$/Cargo.lock",
+        "$TURBO_ROOT$/.cargo/config.toml",
+        "$TURBO_ROOT$/crates/**"
+      ],
+      "outputs": ["src/generated/scan/**", "$TURBO_ROOT$/target/**"]
+    },
+    "test:wasm": {
+      "dependsOn": ["^build"]
+    },
+    "test:wasm:encode": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/Cargo.toml",
+        "$TURBO_ROOT$/Cargo.lock",
+        "$TURBO_ROOT$/.cargo/config.toml",
+        "$TURBO_ROOT$/crates/**"
+      ],
+      "outputs": ["$TURBO_ROOT$/target/**"]
+    },
+    "test:wasm:decode": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/Cargo.toml",
+        "$TURBO_ROOT$/Cargo.lock",
+        "$TURBO_ROOT$/.cargo/config.toml",
+        "$TURBO_ROOT$/crates/**"
+      ],
+      "outputs": ["$TURBO_ROOT$/target/**"]
+    },
+    "test:wasm:scan": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/Cargo.toml",
+        "$TURBO_ROOT$/Cargo.lock",
+        "$TURBO_ROOT$/.cargo/config.toml",
+        "$TURBO_ROOT$/crates/**"
+      ],
+      "outputs": ["$TURBO_ROOT$/target/**"]
+    },
     "transit": {
       "dependsOn": ["^transit"]
     },
@@ -197,6 +257,17 @@
     "deploy": {
       "dependsOn": ["build"],
       "cache": false
+    },
+    "i18n:extract": {
+      "dependsOn": ["^i18n:extract"],
+      "outputs": ["locales/*.yaml", "i18n-meta.json"]
+    },
+    "i18n:types": {
+      "dependsOn": ["i18n:extract", "^i18n:types"],
+      "outputs": ["src/locales/types.d.ts", "src/locales/resources.d.ts"]
+    },
+    "i18n:lint": {
+      "dependsOn": ["i18n:extract"]
     }
   }
 }

@@ -184,6 +184,7 @@ export function toVueComponent<P extends MpProperties>(
       // component returning `null` renders nothing, so it is forwarded verbatim
       // rather than fed into `renderToVue` (which expects a real element).
       const rendered = component(merged as P) as MpElement | null;
+      // eslint-disable-next-line unicorn/no-null
       return rendered === null ? null : renderToVue(rendered);
     } finally {
       popSlotScope();

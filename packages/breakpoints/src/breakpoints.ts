@@ -66,7 +66,6 @@ export function maxMediaQuery(key: BreakpointKey): string {
  */
 export function resolveBreakpoint(width: number): BreakpointKey {
   const reversed = [...(Object.entries(breakpoints) as [BreakpointKey, number][])]
-    // eslint-disable-next-line unicorn/no-array-reverse
     .reverse()
     .filter(([_key, value]) => width >= value)
     .map(([key, _value]) => key)

@@ -9,6 +9,7 @@
 
 @layer mp.components {
   .base-icon-button {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -25,6 +26,16 @@
       color 150ms ease,
       box-shadow 150ms ease,
       opacity 150ms ease;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: max(100%, 44px);
+      height: max(100%, 44px);
+      transform: translate(-50%, -50%);
+    }
 
     &:focus-visible {
       outline: none;

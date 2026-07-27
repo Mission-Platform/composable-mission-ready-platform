@@ -34,13 +34,16 @@ const routeQuery = ref<Record<string, unknown>>({});
 vi.mock('@mission-platform/components/vue', () => ({
   BaseButton: StubComponent,
   BaseInput: StubComponent,
-  BaseModal: BaseModalStub,
   BaseMonacoEditor: StubComponent,
+  BaseModal: BaseModalStub,
   BaseStack: StubComponent,
+  BaseTypography: StubComponent,
 }));
 
 vi.mock('@mission-platform/i18n/vue', () => ({
-  useI18n: () => ({ t: (key: string) => key }),
+  useI18n: () => ({
+    t: (_key: unknown, options?: { defaultValue?: string }) => options?.defaultValue ?? '',
+  }),
 }));
 
 vi.mock('vue-router', () => ({

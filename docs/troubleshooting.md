@@ -65,21 +65,10 @@
 
 ## Debugging Tools
 
-### Chrome DevTools MCP Setup
-1. Configure [chrome-devtools-mcp](https://github.com/your-repo/chrome-devtools-mcp)
-2. Set up workspace mappings:
-   ```js
-   // .vscode/settings.json
-   "mcp.servers": {
-     "chrome": {
-       "cmd": "npx", 
-       "args": ["@your-repo/chrome-devtools-mcp"]
-     }
-   }
-   ```
-3. Start debugging session:
-   - Open Command Palette > "MCP: Start Debugging"
-   - Select target page and profiling options
+### MCP Server Setup
+1. Build the MCP server using `pnpm exec turbo run build --filter @mission-platform/mcp`
+2. Start the MCP server using `node mcp/dist/index.js` or configure your AI client / IDE to run it.
+3. Refer to [mcp/README.md](../mcp/README.md) for full usage and capability details.
 
 ### Network Analysis
 **Problem**: Slow API responses

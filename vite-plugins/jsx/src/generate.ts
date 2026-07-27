@@ -14,7 +14,7 @@
  * props types from the neutral components' own emitted declarations.
  */
 import { execFileSync } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import ts from 'typescript';
@@ -229,6 +229,14 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
 
   rmSync(options.outDir, { recursive: true, force: true });
   mkdirSync(options.outDir, { recursive: true });
+
+  // Locale declarations augment i18next's selector types ambiently, so they
+  // cannot be discovered by following the components' explicit imports. Carry
+  // them into the Stage-2 source tree where tsc / vue-tsc includes them.
+  const localesDir = path.join(path.dirname(componentsDir), 'locales');
+  if (existsSync(localesDir)) {
+    cpSync(localesDir, path.join(options.outDir, 'locales'), { recursive: true });
+  }
 
   // Type-origin resolution inputs (see `generateEntry`'s `TypeOriginResolver`):
   // the type names each component's own module declares, and those each copied

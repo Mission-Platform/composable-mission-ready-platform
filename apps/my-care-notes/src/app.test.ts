@@ -65,6 +65,7 @@ vi.mock('@mission-platform/components/vue', () => ({
   BaseThemeToggle: StubComponent,
   BaseVirtualTable: StubComponent,
   BaseVirtualTabs: EmptyComponent,
+  LanguageSwitcher: StubComponent,
 }));
 
 vi.mock('@mission-platform/layouts/vue', () => ({
@@ -72,7 +73,12 @@ vi.mock('@mission-platform/layouts/vue', () => ({
 }));
 
 vi.mock('@mission-platform/i18n/vue', () => ({
-  useI18n: () => ({ t: (key: string) => key }),
+  LanguageSwitcher: StubComponent,
+  useI18n: () => ({
+    t: (_key: unknown, options?: { defaultValue?: string }) => options?.defaultValue ?? '',
+    locale: ref('en'),
+    setLocale: vi.fn(),
+  }),
 }));
 
 vi.mock('@mission-platform/icons/vue', () => ({

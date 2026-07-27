@@ -20,22 +20,30 @@ export async function runProbe(target: MonitorTarget): Promise<Sample> {
   const start = Date.now();
   try {
     switch (type) {
-      case 'http':
+      case 'http': {
         return await httpProbe(target, start);
-      case 'json':
+      }
+      case 'json': {
         return await jsonProbe(target, start);
-      case 'graphql':
+      }
+      case 'graphql': {
         return await graphqlProbe(target, start);
-      case 'dns':
+      }
+      case 'dns': {
         return await dnsProbe(target, start);
+      }
       case 'tcp':
       case 'mqtt':
+      case 'network': {
         return await socketProbe(target, start);
+      }
       case 'udp':
-      case 'ntp':
+      case 'ntp': {
         return unsupported(target, start, type);
-      default:
+      }
+      default: {
         return unsupported(target, start, type);
+      }
     }
   } catch (error) {
     return failed(target, start, error);
@@ -238,7 +246,7 @@ function readPath(value: unknown, path: string): unknown {
     if (current !== null && typeof current === 'object' && key in (current as Record<string, unknown>)) {
       return (current as Record<string, unknown>)[key];
     }
-    return undefined;
+    return;
   }, value);
 }
 

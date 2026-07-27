@@ -71,10 +71,10 @@ const OPTION_WIDGETS = new Set<FormFieldType>(['select', 'radio', 'multiselect']
  * String-typed widgets that accept the text constraints (`minLength` /
  * `maxLength` / `pattern`) in the inspector.
  */
-const TEXT_WIDGETS = new Set<FormFieldType>(['text', 'textarea', 'markdown', 'email', 'password', 'url', 'tel']);
+const TEXT_WIDGETS = new Set<FormFieldType>(['text', 'textarea', 'markdown', 'code', 'email', 'password', 'url', 'tel']);
 
 /** Widgets rendered as a multi-line area (expose a `rows` control). */
-const MULTILINE_WIDGETS = new Set<FormFieldType>(['textarea', 'markdown']);
+const MULTILINE_WIDGETS = new Set<FormFieldType>(['textarea', 'markdown', 'code']);
 
 /** Widgets that capture a calendar date (expose `minDate` / `maxDate` bounds). */
 const DATE_WIDGETS = new Set<FormFieldType>(['date', 'datetime', 'daterange', 'datetimerange']);

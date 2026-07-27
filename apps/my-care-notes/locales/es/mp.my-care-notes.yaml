@@ -1,0 +1,40 @@
+btn:
+  cancel: Cancelar
+  delete: Eliminar
+  save: Guardar
+col:
+  actions: Acciones
+  content: Contenido
+  name: Nombre
+content_label: Contenido
+date_row_content: Fecha actual (DD/MM/AAAA)
+menu:
+  export-all: Exportar todo
+  import: Importar
+  import-all: Importar todo
+  new: Nuevo
+name:
+  hint: Escribe {preview} en el editor para insertar este fragmento
+  label: Nombre del fragmento
+  placeholder: ej. greeting
+nav:
+  export-note: Exportar nota
+  import-note: Importar nota
+  notes: Notas
+  reopen-closed: Reabrir pestaña cerrada
+  restore-tab: 'Restaurar: {title}'
+  snippets: Fragmentos
+rename:
+  cancel: Cancelar
+  confirm: Renombar
+  label: Nombre de pestaña
+  title: Renombrar pestaña
+sidebar:
+  title: Fragmentos
+snippet:
+  edit: Editar fragmento
+  export: Exportar fragmento
+theme_toggle: Cambiar tema de color
+title:
+  edit: Editar fragmento
+  new: Nuevo fragmento

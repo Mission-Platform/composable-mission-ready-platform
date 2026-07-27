@@ -1,0 +1,72 @@
+base_alert_banner:
+  dismiss_label: Chiudi
+base_breadcrumb:
+  breadcrumb_label: Percorso di navigazione
+base_calendar:
+  select_month_label: Seleziona mese
+  select_year_label: Seleziona anno
+base_carousel:
+  carousel_role_description: carosello
+  next_slide_label: Diapositiva successiva
+  previous_slide_label: Diapositiva precedente
+  slide_role_description: diapositiva
+base_checkbox:
+  required_indicator_label: obbligatorio
+base_color_input:
+  open_picker_label: Apri selettore colore
+  required_indicator_label: obbligatorio
+base_date_input:
+  required_indicator_label: obbligatorio
+base_date_range_input:
+  required_indicator_label: obbligatorio
+base_date_time_range_input:
+  required_indicator_label: obbligatorio
+base_file_input:
+  required_indicator_label: obbligatorio
+base_input:
+  required_indicator_label: obbligatorio
+base_markdown_input:
+  preview_tab_label: Anteprima
+  required_indicator_label: obbligatorio
+  write_tab_label: Scrivi
+base_monaco_editor:
+  code_editor_label: Editor di codice
+base_multiselect:
+  required_indicator_label: obbligatorio
+base_navbar:
+  main_navigation_label: Navigazione principale
+  mobile_navigation_label: Navigazione mobile
+base_number_stepper:
+  decrease_label: Riduci
+  increase_label: Aumenta
+base_radio_group:
+  required_indicator_label: obbligatorio
+base_scheduler:
+  calendar_view_label: Vista calendario
+  more_events_label_zero: altri
+  more_events_label_one: altri
+  more_events_label_many: ''
+  more_events_label_other: altri
+base_select:
+  required_indicator_label: obbligatorio
+base_table:
+  loading_label: Caricamento dati della tabella
+  loading_spinner_label: Caricamento…
+base_tabs:
+  new_tab_label: Nuova scheda
+base_textarea:
+  required_indicator_label: obbligatorio
+base_time_input:
+  done_label: Fatto
+  required_indicator_label: obbligatorio
+base_time_range_input:
+  done_label: Fatto
+  required_indicator_label: obbligatorio
+base_virtual_table:
+  row_count_zero: '{{formattedCount}} righe'
+  row_count_one: '{{formattedCount}} righe'
+  row_count_many: ''
+  row_count_other: '{{formattedCount}} righe'
+  sorted_by_label: Ordinato per
+base_virtual_tabs:
+  new_tab_label: Nuova scheda

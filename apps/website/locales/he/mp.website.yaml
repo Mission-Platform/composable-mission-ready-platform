@@ -1,0 +1,97 @@
+about:
+  lead: Mission Platform היא אוסף של אבני בניין לממשק משתמש לשימוש חוזר וכלים לבניית אפליקציות.
+  projects:
+    aria-label: רשימת פרויקטים
+  title: אודות
+ai_translation_warning: תרגום זה נוצר על ידי בינה מלאכותית ועשוי להכיל טעויות.
+faq:
+  items:
+    affiliation:
+      answer: אנחנו מימוש עצמאי של הארכיטקטורה של Mission Platform.
+      question: האם אתם קשורים לפרויקט Mission Platform?
+    composable:
+      answer: המשמעות היא שאנחנו בונים את הממשק מאבני בניין קטנות, לשימוש חוזר ועצמאיות.
+      question: מה המשמעות של 'composable'?
+    deploy:
+      answer: הפלטפורמה מיועדת לפריסה על Cloudflare Workers או סביבות serverless דומות.
+      question: כיצד פורסים את זה?
+    vue-version:
+      answer: אנחנו משתמשים ב-Vue 3 עם Composition API.
+      question: באיזו גרסה של Vue נעשה שימוש?
+  title: שאלות נפוצות
+features:
+  barcode:
+    description: תמיכה בסריקת קודים פסים וקודי QR.
+    title: קוד פס
+  composable:
+    description: בנו אפליקציות מאבני בניין קטנות ועצמאיות.
+    title: Composable
+  debugging:
+    description: כלי ניפוי שגיאות מתקדמים המשולבים בפלטפורמה.
+    title: ניפוי שגיאות
+  global:
+    description: מוכנה לפריסה גלובלית.
+    title: קנה מידה גלובלי
+  i18n:
+    description: תמיכה מובנית במספר שפות.
+    title: בינאום
+  performance:
+    description: מותאמת למהירות ולזמני טעינה מינימליים.
+    title: ביצועים
+  search:
+    description: פונקציית חיפוש משולבת ועוצמתית.
+    title: חיפוש
+  theming:
+    description: מראה שניתן להתאים בקלות.
+    title: עיצוב נושאי
+  title: תכונות
+footer:
+  brand: Mission Platform
+  copyright: © {year} Mission Platform.
+  disclaimer-end: .
+  disclaimer-start: הוא פרויקט עצמאי.
+  not-affiliated: לא קשור לפרויקט Mission Platform.
+hero:
+  badge: בטא
+  cta-primary: התחילו כאן
+  cta-secondary: תיעוד
+  lead: פלטפורמה לבניית אפליקציות מאבני בניין קטנות ועצמאיות.
+  title: Composable. מוכנה למשימה.
+nav:
+  about: אודות
+  faq: שאלות נפוצות
+  features: תכונות
+  packages: חבילות
+packages:
+  items:
+    barcode: תמיכה בקודים פסים.
+    base-spa: הגדרת בסיס ל-SPA.
+    breakpoints: נקודות שבירה רספונסיביות.
+    code-scanner: כלים לסריקת קודים.
+    components: אבני בניין לממשק משתמש לשימוש חוזר.
+    d3: שילוב עם D3.
+    forms: כלים לטיפול בטפסים.
+    forms-core: הלוגיקה המרכזית של הטפסים.
+    harper: כלים לטיפול בנתונים.
+    hunspell: תמיכה בבדיקת איות.
+    i18n: תמיכה בבינאום.
+    icons: ספריית אייקונים.
+    jsx: תמיכה ב-JSX עבור Vue.
+    layouts: פריסות אפליקציה מוכנות מראש.
+    map: רכיב מפה.
+    matrix-code: יצירת קודי מטריצה.
+    phone-number: פורמט למספרי טלפון.
+    qr-code: יצירת קודי QR.
+    router: כלי ניתוב.
+    rxjs: תמיכה ב-RxJS.
+    scheduler-core: תזמון משימות.
+    seo: ניהול SEO.
+    tokens: טוקנים לעיצוב ולנושאים.
+  lead: אבני בניין לשימוש חוזר לאפליקציות שלכם.
+  title: חבילות
+projects:
+  items:
+    my-care-notes:
+      cta: למידע נוסף
+      description: אפליקציה לרישום הערות טיפול המתמקדת במטופל, שנבנתה על גבי Mission Platform.
+      name: My Care Notes

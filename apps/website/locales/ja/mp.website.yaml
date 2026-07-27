@@ -1,0 +1,97 @@
+about:
+  lead: Mission Platform は、アプリケーションを構築するための再利用可能なUIビルディングブロックとツールのセットです。
+  projects:
+    aria-label: プロジェクト一覧
+  title: 概要
+ai_translation_warning: この翻訳はAIによって生成されたものであり、誤りが含まれる可能性があります。
+faq:
+  items:
+    affiliation:
+      answer: 私たちはMission Platformアーキテクチャの独立した実装です。
+      question: Mission Platformプロジェクトと提携していますか?
+    composable:
+      answer: 小さく再利用可能で独立したビルディングブロックからUIを構築することを意味します。
+      question: 「composable」とはどういう意味ですか?
+    deploy:
+      answer: このプラットフォームは、Cloudflare Workersや同様のサーバーレス環境にデプロイできるように設計されています。
+      question: どのようにデプロイしますか?
+    vue-version:
+      answer: Composition APIを備えたVue 3を使用しています。
+      question: どのバージョンのVueが使用されていますか?
+  title: よくある質問
+features:
+  barcode:
+    description: バーコードおよびQRコードのスキャンに対応しています。
+    title: バーコード
+  composable:
+    description: 小さく独立したビルディングブロックからアプリケーションを構築します。
+    title: Composable
+  debugging:
+    description: プラットフォームに統合された高度なデバッグツール。
+    title: デバッグ
+  global:
+    description: グローバル展開に対応。
+    title: グローバルスケール
+  i18n:
+    description: 複数言語への標準対応。
+    title: 国際化
+  performance:
+    description: 速度と最小限の読み込み時間に最適化。
+    title: パフォーマンス
+  search:
+    description: 強力な統合検索機能。
+    title: 検索
+  theming:
+    description: 見た目を簡単にカスタマイズ可能。
+    title: テーマ設定
+  title: 機能
+footer:
+  brand: Mission Platform
+  copyright: © {year} Mission Platform.
+  disclaimer-end: 。
+  disclaimer-start: は独立したプロジェクトです。
+  not-affiliated: Mission Platformプロジェクトとは提携していません。
+hero:
+  badge: ベータ
+  cta-primary: 始める
+  cta-secondary: ドキュメント
+  lead: 小さく独立したビルディングブロックからアプリケーションを構築するためのプラットフォーム。
+  title: Composable. ミッションレディ。
+nav:
+  about: 概要
+  faq: よくある質問
+  features: 機能
+  packages: パッケージ
+packages:
+  items:
+    barcode: バーコード対応。
+    base-spa: 基本的なSPA構成。
+    breakpoints: レスポンシブなブレークポイント。
+    code-scanner: コードスキャンユーティリティ。
+    components: 再利用可能なUIビルディングブロック。
+    d3: D3との統合。
+    forms: フォーム処理ユーティリティ。
+    forms-core: フォームのコアロジック。
+    harper: データ処理ユーティリティ。
+    hunspell: スペルチェック対応。
+    i18n: 国際化対応。
+    icons: アイコンライブラリ。
+    jsx: Vue用のJSX対応。
+    layouts: 事前構築済みのアプリケーションレイアウト。
+    map: マップコンポーネント。
+    matrix-code: マトリックスコード生成。
+    phone-number: 電話番号のフォーマット。
+    qr-code: QRコード生成。
+    router: ルーティングユーティリティ。
+    rxjs: RxJS対応。
+    scheduler-core: タスクスケジューリング。
+    seo: SEO管理。
+    tokens: デザイントークンとテーマ設定。
+  lead: アプリケーションのための再利用可能なビルディングブロック。
+  title: パッケージ
+projects:
+  items:
+    my-care-notes:
+      cta: 詳しく見る
+      description: Mission Platform上に構築された、患者中心のケアノートアプリケーション。
+      name: My Care Notes

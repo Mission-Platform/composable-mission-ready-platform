@@ -1,6 +1,7 @@
-import { innerDimensions } from '@mission-platform/d3';
 import { scaleBand, scaleLinear, select } from 'd3';
 import { defineComponent, ref, watchEffect, type PropType } from 'vue';
+
+import { innerDimensions } from '@mission-platform/d3';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
@@ -24,11 +25,11 @@ const D3BarChart = defineComponent({
     color: { type: String, default: '#4f46e5' },
   },
   setup(properties) {
-    const svg = ref<SVGSVGElement | null>(null);
+    const svg = ref<SVGSVGElement>();
 
     watchEffect(() => {
       const element = svg.value;
-      if (element === null) {
+      if (element === undefined) {
         return;
       }
 

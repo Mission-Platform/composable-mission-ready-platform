@@ -20,7 +20,7 @@
 import { PhoneNumberFormat, getPhoneNumberUtilSync, type PhoneNumberUtil } from '@mission-platform/phone-number';
 
 /** The shared, memoised synchronous util instance. */
-function util(): PhoneNumberUtil {
+function utility(): PhoneNumberUtil {
   return getPhoneNumberUtilSync();
 }
 
@@ -58,7 +58,7 @@ export function regionName(region: string): string {
 
 /** The international calling code (no `+`) for a region, or `''` when unknown. */
 export function dialCode(region: string): string {
-  const code = util().getCountryCodeForRegion(region);
+  const code = utility().getCountryCodeForRegion(region);
   return code > 0 ? String(code) : '';
 }
 
@@ -67,7 +67,7 @@ export function dialCode(region: string): string {
  * list sorted by localised name — the default option set for the country picker.
  */
 export function listCountries(): PhoneCountry[] {
-  return util()
+  return utility()
     .getSupportedRegions()
     .map((region) => ({ region, name: regionName(region), dialCode: dialCode(region), flag: regionToFlag(region) }))
     .toSorted((a, b) => a.name.localeCompare(b.name));
@@ -78,7 +78,7 @@ export function formatAsYouType(input: string, region: string): string {
   if (input.length === 0) {
     return '';
   }
-  return util().formatAsYouType(input, region);
+  return utility().formatAsYouType(input, region);
 }
 
 /** Format an input in the region's national format (falls back to the raw input). */
@@ -86,7 +86,7 @@ export function formatNational(input: string, region: string): string {
   if (input.trim().length === 0) {
     return '';
   }
-  return util().format(input, region, PhoneNumberFormat.NATIONAL) ?? input;
+  return utility().format(input, region, PhoneNumberFormat.NATIONAL) ?? input;
 }
 
 /** Parse an input to its canonical E.164 form (`+…`), or `undefined` when unparseable. */
@@ -94,7 +94,7 @@ export function toE164(input: string, region: string): string | undefined {
   if (input.trim().length === 0) {
     return undefined;
   }
-  return util().format(input, region, PhoneNumberFormat.E164);
+  return utility().format(input, region, PhoneNumberFormat.E164);
 }
 
 /** Whether an input is a valid phone number for the given region. */
@@ -102,14 +102,14 @@ export function isValid(input: string, region: string): boolean {
   if (input.trim().length === 0) {
     return false;
   }
-  return util().isValidNumberForRegion(input, region);
+  return utility().isValidNumberForRegion(input, region);
 }
 
 /** A national-format example number for the region (handy as a placeholder), or `''`. */
 export function exampleNumber(region: string): string {
-  const example = util().getExampleNumber(region);
+  const example = utility().getExampleNumber(region);
   if (example === undefined) {
     return '';
   }
-  return util().format(example, region, PhoneNumberFormat.NATIONAL) ?? '';
+  return utility().format(example, region, PhoneNumberFormat.NATIONAL) ?? '';
 }

@@ -1,9 +1,11 @@
+import { LanguageSwitcher } from '@mission-platform/components/react';
 import { createMpI18n } from '@mission-platform/i18n';
 import { MpI18nProvider, useI18n } from '@mission-platform/i18n/react';
 import { useState } from 'react';
 
-import type { CSSProperties, ReactElement } from 'react';
+import type Resources from '../../locales/resources';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { CSSProperties, ReactElement } from 'react';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -16,7 +18,17 @@ const mono: CSSProperties = { fontFamily: 'monospace', fontSize: 13, lineHeight:
  */
 function LocaleInspector(): ReactElement {
   const { t, locale } = useI18n();
-  const keys = ['title', 'draw.line', 'draw.polygon', 'status.selected', 'tooltip.split'];
+  const keys: {
+    label: string;
+    defaultValue: string;
+    selector: (resources: Resources['mp.storybook-react']) => string;
+  }[] = [
+    { label: 'title', defaultValue: 'Mission Platform Components', selector: ($) => $.title },
+    { label: 'button.primary', defaultValue: 'Primary', selector: ($) => $.button.primary },
+    { label: 'button.secondary', defaultValue: 'Secondary', selector: ($) => $.button.secondary },
+    { label: 'badge.success', defaultValue: 'Success', selector: ($) => $.badge.success },
+    { label: 'badge.pill', defaultValue: 'Pill badge', selector: ($) => $.badge.pill },
+  ];
   return (
     <div style={mono}>
       <p>
@@ -31,9 +43,11 @@ function LocaleInspector(): ReactElement {
         </thead>
         <tbody>
           {keys.map((key) => (
-            <tr key={key}>
-              <td style={{ padding: '6px 12px', border: '1px solid #ddd', color: '#555' }}>{key}</td>
-              <td style={{ padding: '6px 12px', border: '1px solid #ddd' }}>{t(key, { id: 'feature-1' })}</td>
+            <tr key={key.label}>
+              <td style={{ padding: '6px 12px', border: '1px solid #ddd', color: '#555' }}>{key.label}</td>
+              <td style={{ padding: '6px 12px', border: '1px solid #ddd' }}>
+                {t(key.selector, { ns: 'mp.storybook-react', defaultValue: key.defaultValue })}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -100,12 +114,37 @@ function CustomMessages(): ReactElement {
         ))}
       </div>
       <p>
-        <strong>greeting:</strong> {i18n.t('greeting', { name: 'World' })}
+        <strong>greeting:</strong>{' '}
+        {i18n.t(($: Record<string, unknown>) => $.greeting as string, {
+          ns: 'mp.storybook-react',
+          name: 'World',
+          defaultValue: 'Hello World',
+        })}
       </p>
       <p>
-        <strong>farewell:</strong> {i18n.t('farewell')}
+        <strong>farewell:</strong>{' '}
+        {i18n.t(($: Record<string, unknown>) => $.farewell as string, {
+          ns: 'mp.storybook-react',
+          defaultValue: 'Goodbye',
+        })}
       </p>
     </div>
+  );
+}
+
+function LanguageSwitcherExample(): ReactElement {
+  const [locale, setLocale] = useState('en');
+  return (
+    <LanguageSwitcher
+      locale={locale}
+      locales={[
+        { code: 'en', label: 'English' },
+        { code: 'fr', label: 'Français' },
+        { code: 'es', label: 'Español' },
+      ]}
+      labelHidden={false}
+      onLocaleChange={setLocale}
+    />
   );
 }
 
@@ -205,4 +244,9 @@ export const DefaultSetup: StoryObj = {
 export const CustomMessagesStory: StoryObj = {
   name: 'createMpI18n — custom messages',
   render: () => <CustomMessages />,
+};
+
+export const LanguageSwitcherStory: StoryObj = {
+  name: 'Language switcher',
+  render: () => <LanguageSwitcherExample />,
 };

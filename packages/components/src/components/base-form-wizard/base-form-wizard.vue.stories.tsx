@@ -47,9 +47,12 @@ const meta = {
     components: { FormWizard },
     setup() {
       const active = ref(arguments_.modelValue ?? 0);
-      return { args: arguments_, active };
+      const arguments__ = { ...arguments_ };
+      delete arguments__.modelValue;
+      delete arguments__.onUpdateModelValue;
+      return { args: arguments__, active };
     },
-    template: '<FormWizard v-bind="args" :model-value="active" @update-model-value="active = $event" />',
+    template: '<FormWizard v-bind="args" v-model="active" />',
   }),
 } satisfies Meta<typeof FormWizard>;
 

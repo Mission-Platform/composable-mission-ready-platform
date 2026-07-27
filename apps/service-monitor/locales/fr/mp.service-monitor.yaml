@@ -1,0 +1,87 @@
+dashboard:
+  latency: '{name} · latence'
+  live: En direct
+  reconnecting: Reconnexion…
+  servicesLabel: Services surveillés
+  stat:
+    avgLatency: Latence moy.
+    interval: Intervalle
+    lastStatus: Dernier état
+    samples: Échantillons
+    type: Type
+    uptime: Temps de fonctionnement
+  subtitle: Contrôles de santé côté serveur (par défaut toutes les {interval}s, modifications par moniteur), stockés sous forme de séries chronologiques en périphérie (Edge).
+  title: Moniteur de Service
+incidents:
+  addPostReport: Ajouter un rapport post-incident
+  addProgressUpdate: Ajouter une mise à jour de progression
+  cancel: Annuler
+  edit: Modifier
+  editMaintenance: Modifier la maintenance
+  editPostReport: Modifier le rapport post-incident
+  plannedMaintenance: Maintenance planifiée
+  postIncidentReport: Rapport post-incident
+  reportAnIncident: Signaler un incident
+  reportButton: Signaler un incident
+  scheduleMaintenance: Planifier une maintenance
+  title: Incidents
+monitors:
+  add: Ajouter un moniteur
+  configuration: Configuration du moniteur
+  edit: Modifier
+  editAria: Modifier {name}
+  editTitle: Modifier le moniteur
+  error:
+    rejected: Le serveur a rejeté ce moniteur. Vérifiez les champs et réessayez.
+    required: Fournissez un id, un nom et une URL (HTTP/JSON/GraphQL) ou un hôte.
+  remove: Supprimer
+  removeAria: Supprimer {name}
+  subtitle: Configuré au moment de l'exécution · intervalle par défaut {interval}s.
+  title: Moniteurs
+nav:
+  dashboard: Tableau de bord
+  incidents: Incidents et maintenance
+  monitors: Moniteurs
+  status: Statut
+shell:
+  activeIncidents_zero: '{count} incidents actifs'
+  activeIncidents_one: '{count} incident actif'
+  activeIncidents_many: ''
+  activeIncidents_other: '{count} incidents actifs'
+  currentStatus: Statut actuel du système
+  title: Service Monitor
+  viewIncidentDetails: Afficher les détails de l'incident
+speed:
+  bandwidth: Bande passante {value} Mbps
+  chartEmpty: Effectuez quelques tests pour cartographier ce fournisseur…
+  disabled: Les tests de vitesse planifiés sont désactivés — lancez-en un à la demande.
+  down: '{value} Mbps descendants'
+  enabled: Tests de vitesse côté serveur toutes les {interval}s (Cloudflare, Fast.com, Speedtest).
+  failed: Échoué
+  graphTitle: '{name} · {metric} au fil du temps'
+  latency: '{value} ms'
+  pending: Aucune mesure pour l'instant
+  ping: Ping {value} ms
+  reportsTitle: Rapports de vitesse réseau
+  run: Lancer le test
+  running: Exécution…
+  summary_zero: moy {average} · max {maximum} · n={count}
+  summary_one: moy {average} · max {maximum} · n={count}
+  summary_many: ''
+  summary_other: moy {average} · max {maximum} · n={count}
+  title: Vitesse du réseau
+  up: '{value} Mbps ascendants'
+  uploadUnavailable: Envoi indisponible
+  viewReports: Afficher les rapports de test de vitesse
+state:
+  down: Hors service
+summary:
+  activeIncidentsTitle: Incidents actifs
+  allOperational: Tous les systèmes sont opérationnels
+  degradedPerformance: Performances dégradées
+  monitoredServicesAndIncidents: '{servicesCount} services surveillés · {incidentsCount} incidents actifs'
+  noActiveIncidents: Aucun incident actif.
+  noUpcomingMaintenance: Aucune maintenance à venir.
+  plannedMaintenance: Maintenance planifiée
+  serviceDisruption: Interruption de service
+  systemStatus: Statut du système

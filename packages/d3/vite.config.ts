@@ -46,11 +46,11 @@ function defineNeutralConfig(): UserConfig {
 /** The React (`./react`) build: the neutral hooks compiled to a live React hook library. */
 function defineReactConfig(): UserConfig {
   const cacheName = 'd3-react';
-  const generatedDir = path.join(cacheRoot, cacheName);
+  const generatedDirectory = path.join(cacheRoot, cacheName);
   const entry = generateHookLibrarySources({
     framework: 'react',
     entryModule,
-    outDir: generatedDir,
+    outDir: generatedDirectory,
   });
 
   return defineLibraryConfig({
@@ -66,7 +66,7 @@ function defineReactConfig(): UserConfig {
       plugins: [
         reactJsxPlugin(),
         // Emit React's own declarations from the generated tree (post-build).
-        hookLibraryDtsPlugin({ framework: 'react', generatedDir, outDir: path.resolve(__dirname, 'dist/react') }),
+        hookLibraryDtsPlugin({ framework: 'react', generatedDir: generatedDirectory, outDir: path.resolve(__dirname, 'dist/react') }),
       ],
     },
   });
@@ -75,11 +75,11 @@ function defineReactConfig(): UserConfig {
 /** The Vue (`./vue`) build: the neutral hooks translated to a live Vue composable library. */
 function defineVueConfig(): UserConfig {
   const cacheName = 'd3-vue';
-  const generatedDir = path.join(cacheRoot, cacheName);
+  const generatedDirectory = path.join(cacheRoot, cacheName);
   const entry = generateHookLibrarySources({
     framework: 'vue',
     entryModule,
-    outDir: generatedDir,
+    outDir: generatedDirectory,
   });
 
   return defineLibraryConfig({
@@ -94,7 +94,7 @@ function defineVueConfig(): UserConfig {
       },
       plugins: [
         // Emit Vue's own declarations from the generated tree (post-build).
-        hookLibraryDtsPlugin({ framework: 'vue', generatedDir, outDir: path.resolve(__dirname, 'dist/vue') }),
+        hookLibraryDtsPlugin({ framework: 'vue', generatedDir: generatedDirectory, outDir: path.resolve(__dirname, 'dist/vue') }),
       ],
     },
   });

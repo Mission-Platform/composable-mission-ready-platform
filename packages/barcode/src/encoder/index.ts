@@ -169,7 +169,7 @@ function toBarcode(symbology: BarcodeSymbology, modules: Uint8Array | undefined)
   if (modules === undefined || modules.length === 0) {
     throw new RangeError(`Invalid payload for the "${symbology}" barcode symbology`);
   }
-  return { symbology, modules: Array.from(modules), width: modules.length };
+  return { symbology, modules: [...modules], width: modules.length };
 }
 
 /**

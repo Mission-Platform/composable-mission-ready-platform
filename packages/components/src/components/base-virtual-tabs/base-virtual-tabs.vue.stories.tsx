@@ -1,4 +1,4 @@
-import { h, ref } from 'vue';
+import { h, markRaw, ref } from 'vue';
 
 import { VirtualTabs } from '@mission-platform/components/vue';
 
@@ -48,12 +48,20 @@ const meta = {
       const active = ref(arguments_.modelValue ?? 'inbox');
       // `panel` is a render-prop (not a Vue slot): it receives `{ tab }` and
       // returns the active panel's content as VNodes.
-      const panel = ({ tab }: { tab: TabItem }) =>
-        h('p', { style: 'margin: 0;' }, ['Virtualised content for ', h('strong', tab.label), '.']);
-      return { args: arguments_, active, panel };
+      const panel = markRaw(({ tab }: { tab: TabItem }) =>
+        h('p', { style: 'margin: 0;' }, ['Virtualised content for ', h('strong', tab.label), '.'])
+      );
+      return {
+        tabs: arguments_.tabs,
+        variant: arguments_.variant,
+        closable: arguments_.closable,
+        addable: arguments_.addable,
+        active,
+        panel,
+      };
     },
     template: `
-      <VirtualTabs v-bind="args" :model-value="active" :panel="panel" @update-model-value="active = $event" />
+      <VirtualTabs :tabs="tabs" :variant="variant" :closable="closable" :addable="addable" v-model="active" :panel="panel" />
     `,
   }),
 } satisfies Meta<typeof VirtualTabs>;

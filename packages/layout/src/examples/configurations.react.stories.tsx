@@ -1,7 +1,7 @@
 import { VerticalLayout } from '@mission-platform/layouts/react';
 
-import type { CSSProperties, ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { CSSProperties, ReactNode } from 'react';
 
 /**
  * **Configurations** — example settings / preferences layouts assembled from the

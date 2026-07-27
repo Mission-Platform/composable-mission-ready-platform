@@ -1,0 +1,87 @@
+dashboard:
+  latency: '{name} · latencia'
+  live: En vivo
+  reconnecting: Reconectando…
+  servicesLabel: Servicios monitoreados
+  stat:
+    avgLatency: Latencia promedio
+    interval: Intervalo
+    lastStatus: Último estado
+    samples: Muestras
+    type: Tipo
+    uptime: Tiempo de actividad
+  subtitle: Verificaciones de salud del lado del servidor (por defecto cada {interval}s, con ajustes por monitor), almacenadas como series temporales en el borde.
+  title: Monitor de Servicio
+incidents:
+  addPostReport: Añadir informe posincidente
+  addProgressUpdate: Añadir actualización de progreso
+  cancel: Cancelar
+  edit: Editar
+  editMaintenance: Editar mantenimiento
+  editPostReport: Editar informe posincidente
+  plannedMaintenance: Mantenimiento planificado
+  postIncidentReport: Informe posincidente
+  reportAnIncident: Informar de un incidente
+  reportButton: Informar incidente
+  scheduleMaintenance: Programar mantenimiento
+  title: Incidentes
+monitors:
+  add: Añadir monitor
+  configuration: Configuración del monitor
+  edit: Editar
+  editAria: Editar {name}
+  editTitle: Editar monitor
+  error:
+    rejected: El servidor rechazó este monitor. Revise los campos e inténtelo de nuevo.
+    required: Proporcione un id, un nombre y una URL (HTTP/JSON/GraphQL) o host.
+  remove: Eliminar
+  removeAria: Eliminar {name}
+  subtitle: Configurado en tiempo de ejecución · intervalo predeterminado {interval}s.
+  title: Monitoreos
+nav:
+  dashboard: Panel de control
+  incidents: Incidentes y mantenimiento
+  monitors: Monitoreos
+  status: Estado
+shell:
+  activeIncidents_zero: '{count} incidentes activos'
+  activeIncidents_one: '{count} incidente activo'
+  activeIncidents_many: ''
+  activeIncidents_other: '{count} incidentes activos'
+  currentStatus: Estado actual del sistema
+  title: Service Monitor
+  viewIncidentDetails: Ver detalles del incidente
+speed:
+  bandwidth: Ancho de banda {value} Mbps
+  chartEmpty: Realice algunas pruebas para graficar este proveedor…
+  disabled: Las pruebas de velocidad programadas están desactivadas; ejecute una bajo demanda.
+  down: '{value} Mbps de bajada'
+  enabled: Pruebas de velocidad del lado del servidor cada {interval}s (Cloudflare, Fast.com, Speedtest).
+  failed: Fallido
+  graphTitle: '{name} · {metric} a lo largo del tiempo'
+  latency: '{value} ms'
+  pending: Sin mediciones aún
+  ping: Ping {value} ms
+  reportsTitle: Informes de velocidad de red
+  run: Ejecutar prueba
+  running: Ejecutando…
+  summary_zero: prom {average} · máx {maximum} · n={count}
+  summary_one: prom {average} · máx {maximum} · n={count}
+  summary_many: ''
+  summary_other: prom {average} · máx {maximum} · n={count}
+  title: Velocidad de red
+  up: '{value} Mbps de subida'
+  uploadUnavailable: Carga no disponible
+  viewReports: Ver informes de prueba de velocidad
+state:
+  down: Caído
+summary:
+  activeIncidentsTitle: Incidentes activos
+  allOperational: Todos los sistemas operativos
+  degradedPerformance: Rendimiento degradado
+  monitoredServicesAndIncidents: '{servicesCount} servicios monitoreados · {incidentsCount} incidentes activos'
+  noActiveIncidents: Sin incidentes activos.
+  noUpcomingMaintenance: Sin mantenimientos próximos.
+  plannedMaintenance: Mantenimiento planificado
+  serviceDisruption: Interrupción del servicio
+  systemStatus: Estado del sistema

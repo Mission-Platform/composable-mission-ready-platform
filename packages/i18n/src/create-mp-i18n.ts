@@ -77,6 +77,8 @@ export interface CreateMpI18nOptions {
    * while keeping the rest of the package's bundle.
    */
   overrides?: MpNamespaceLocales;
+  /** Pre-built i18next resource bundles (locale -> namespace -> messages). */
+  resources?: Resource;
   /** Escape hatch for any additional i18next `InitOptions`. */
   init?: Partial<InitOptions>;
 }
@@ -130,6 +132,7 @@ export function createMpI18n(options: CreateMpI18nOptions = {}): I18nInstance {
     namespace = MP_DEFAULT_NAMESPACE,
     namespaces = {},
     overrides = {},
+    resources: inputResources = {},
     init = {},
   } = options;
 
@@ -166,6 +169,15 @@ export function createMpI18n(options: CreateMpI18nOptions = {}): I18nInstance {
   for (const [ns, locales] of Object.entries(byNamespace)) {
     for (const [loc, msgs] of Object.entries(locales)) {
       (resources[loc] ??= {})[ns] = msgs;
+    }
+  }
+
+  for (const [loc, namespacesMap] of Object.entries(inputResources)) {
+    if (namespacesMap && typeof namespacesMap === 'object') {
+      const locResources = (resources[loc] ??= {});
+      for (const [ns, msgs] of Object.entries(namespacesMap)) {
+        locResources[ns] = Object.assign({}, locResources[ns] as object, msgs as object);
+      }
     }
   }
 

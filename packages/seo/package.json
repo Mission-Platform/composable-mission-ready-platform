@@ -45,6 +45,7 @@
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/i18n-config": "workspace:*",
     "@unhead/vue": "catalog:vue",
     "@mission-platform/prettier-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",

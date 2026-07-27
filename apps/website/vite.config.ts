@@ -1,6 +1,7 @@
 /// <reference types="vitest/config" />
 import postcssConfig from '@mission-platform/postcss-config';
 import { ignoreVueI18nBlocksPlugin } from '@mission-platform/vite-config';
+import i18nPlugin from '@mission-platform/vite-plugin-i18n';
 import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 import vue from '@vitejs/plugin-vue';
 import { defineConfig, type UserConfig } from 'vite';
@@ -106,6 +107,7 @@ const config: SsgUserConfig = {
     postcss: postcssConfig,
   },
   plugins: [
+    i18nPlugin({ defaultLocale: 'en' }),
     seoPlugin({
       sitemap: { urls: sitemapUrls },
       robots: {

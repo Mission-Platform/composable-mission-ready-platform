@@ -1,0 +1,85 @@
+dashboard:
+  latency: '{name} · 지연 시간'
+  live: 라이브
+  reconnecting: 재연결 중…
+  servicesLabel: 모니터링 중인 서비스
+  stat:
+    avgLatency: 평균 지연 시간
+    interval: 간격
+    lastStatus: 마지막 상태
+    samples: 샘플
+    type: 유형
+    uptime: 가동 시간
+  subtitle: 서버 측 상태 확인(기본값 {interval}초마다, 모니터별 재설정 가능), 에지에서 시계열로 저장됩니다.
+  title: 서비스 모니터
+incidents:
+  addPostReport: 사후 보고서 추가
+  addProgressUpdate: 진행 상황 업데이트 추가
+  cancel: 취소
+  edit: 편집
+  editMaintenance: 유지 보수 편집
+  editPostReport: 사후 보고서 편집
+  plannedMaintenance: 계획된 유지 보수
+  postIncidentReport: 사후 보고서
+  reportAnIncident: 장애 보고
+  reportButton: 장애 보고
+  scheduleMaintenance: 유지 보수 일정 등록
+  title: 장애/인시던트
+monitors:
+  add: 모니터 추가
+  configuration: 모니터 설정
+  edit: 편집
+  editAria: '{name} 편집'
+  editTitle: 모니터 편집
+  error:
+    rejected: 서버가 이 모니터를 거부했습니다. 필드를 확인하고 다시 시도하십시오.
+    required: ID, 이름, URL(HTTP/JSON/GraphQL) 또는 호스트를 제공하십시오.
+  remove: 제거
+  removeAria: '{name} 제거'
+  subtitle: 런타임에 구성됨 · 기본 간격 {interval}초.
+  title: 모니터
+nav:
+  dashboard: 대시보드
+  incidents: 장애 및 유지 보수
+  monitors: 모니터
+  status: 상태
+shell:
+  activeIncidents_zero: '{count}개의 활성 장애'
+  activeIncidents_one: '{count}개의 활성 장애'
+  activeIncidents_other: '{count}개의 활성 장애'
+  currentStatus: 현재 시스템 상태
+  title: Service Monitor
+  viewIncidentDetails: 장애 상세 정보 보기
+speed:
+  bandwidth: 대역폭 {value} Mbps
+  chartEmpty: 이 공급자를 차트로 표시하려면 테스트를 몇 번 실행하십시오…
+  disabled: 예약된 속도 테스트가 비활성화되었습니다. 필요할 때 실행하십시오.
+  down: '{value} Mbps 다운로드'
+  enabled: '{interval}초마다 서버 측 속도 테스트(Cloudflare, Fast.com, Speedtest).'
+  failed: 실패
+  graphTitle: '{name} · 시간별 {metric}'
+  latency: '{value} ms'
+  pending: 아직 측정값 없음
+  ping: 핑 {value} ms
+  reportsTitle: 네트워크 속도 보고서
+  run: 테스트 실행
+  running: 실행 중…
+  summary_zero: 평균 {average} · 최대 {maximum} · n={count}
+  summary_one: 평균 {average} · 최대 {maximum} · n={count}
+  summary_other: 평균 {average} · 최대 {maximum} · n={count}
+  title: 네트워크 속도
+  up: '{value} Mbps 업로드'
+  uploadUnavailable: 업로드 사용할 수 없음
+  viewReports: 속도 테스트 보고서 보기
+state:
+  down: 작동 중지
+summary:
+  activeIncidentsTitle: 활성 장애
+  allOperational: 모든 시스템 정상 작동 중
+  degradedPerformance: 성능 저하
+  monitoredServicesAndIncidents: '{servicesCount}개 모니터링 서비스 · {incidentsCount}개 활성 장애'
+  noActiveIncidents: 활성 장애가 없습니다.
+  noUpcomingMaintenance: 예정된 유지 보수가 없습니다.
+  plannedMaintenance: 계획된 유지 보수
+  serviceDisruption: 서비스 중단
+  systemStatus: 시스템 상태

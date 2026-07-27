@@ -63,10 +63,7 @@ function collectSubjectAltNames(): string[] {
     }
   }
 
-  return [
-    ...[...dnsNames].map((name) => `DNS:${name}`),
-    ...[...ipAddresses].map((ip) => `IP:${ip}`),
-  ];
+  return [...[...dnsNames].map((name) => `DNS:${name}`), ...[...ipAddresses].map((ip) => `IP:${ip}`)];
 }
 
 /**

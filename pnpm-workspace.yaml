@@ -48,6 +48,7 @@ catalogs:
     'harper.js': ^2.4.0
 
   eslint:
+    eslint-plugin-sonarjs: ^4.0.2
     eslint-plugin-unicorn: ^64.0.0
     '@typescript-eslint/eslint-plugin': ^8.64.0
     '@typescript-eslint/parser': ^8.64.0

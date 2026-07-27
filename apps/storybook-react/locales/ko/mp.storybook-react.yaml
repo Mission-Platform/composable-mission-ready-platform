@@ -1,0 +1,12 @@
+badge:
+  pill: 알약 배지
+  success: 성공
+button:
+  primary: 기본
+  secondary: 보조
+  tertiary: 알림
+components: 구성 요소
+description:
+  after: Storybook을 열어 전체 구성 요소 라이브러리를 탐색하세요.
+  before: 다음을 위한 React 쇼케이스
+title: Mission Platform 구성 요소

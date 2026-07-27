@@ -62,7 +62,7 @@ export class McpServer {
 
     try {
       switch (message.method) {
-        case 'initialize':
+        case 'initialize': {
           return this.ok(id, {
             protocolVersion: PROTOCOL_VERSION,
             capabilities: {
@@ -72,15 +72,18 @@ export class McpServer {
             },
             serverInfo: this.info,
           });
+        }
 
         case 'notifications/initialized':
-        case 'notifications/cancelled':
+        case 'notifications/cancelled': {
           return null;
+        }
 
-        case 'ping':
+        case 'ping': {
           return this.ok(id, {});
+        }
 
-        case 'tools/list':
+        case 'tools/list': {
           return this.ok(id, {
             tools: [...this.tools.values()].map((tool) => ({
               name: tool.name,
@@ -88,11 +91,13 @@ export class McpServer {
               inputSchema: tool.inputSchema,
             })),
           });
+        }
 
-        case 'tools/call':
+        case 'tools/call': {
           return await this.callTool(id, message.params);
+        }
 
-        case 'resources/list':
+        case 'resources/list': {
           return this.ok(id, {
             resources: (await this.listResources()).map((resource) => ({
               uri: resource.uri,
@@ -101,11 +106,13 @@ export class McpServer {
               mimeType: resource.mimeType,
             })),
           });
+        }
 
-        case 'resources/read':
+        case 'resources/read': {
           return await this.readResource(id, message.params);
+        }
 
-        case 'prompts/list':
+        case 'prompts/list': {
           return this.ok(id, {
             prompts: [...this.prompts.values()].map((prompt) => ({
               name: prompt.name,
@@ -113,15 +120,18 @@ export class McpServer {
               arguments: prompt.arguments,
             })),
           });
+        }
 
-        case 'prompts/get':
+        case 'prompts/get': {
           return await this.getPrompt(id, message.params);
+        }
 
-        default:
+        default: {
           if (isNotification) {
             return null;
           }
           return this.fail(id, ErrorCode.MethodNotFound, `Unknown method: ${message.method}`);
+        }
       }
     } catch (error) {
       if (isNotification) {
@@ -133,9 +143,9 @@ export class McpServer {
 
   private async callTool(
     id: string | number | null,
-    params: Record<string, unknown> | undefined,
+    parameters: Record<string, unknown> | undefined,
   ): Promise<JsonRpcResponse> {
-    const name = typeof params?.['name'] === 'string' ? (params['name'] as string) : undefined;
+    const name = typeof parameters?.['name'] === 'string' ? (parameters['name'] as string) : undefined;
     if (!name) {
       return this.fail(id, ErrorCode.InvalidParams, 'tools/call requires a string "name"');
     }
@@ -143,9 +153,9 @@ export class McpServer {
     if (!tool) {
       return this.fail(id, ErrorCode.MethodNotFound, `Unknown tool: ${name}`);
     }
-    const args = (params?.['arguments'] as Record<string, unknown> | undefined) ?? {};
+    const arguments_ = (parameters?.['arguments'] as Record<string, unknown> | undefined) ?? {};
     try {
-      const result = await tool.handler(args);
+      const result = await tool.handler(arguments_);
       return this.ok(id, result);
     } catch (error) {
       // Tool-level failures are reported inside the result, not as protocol errors.
@@ -160,9 +170,9 @@ export class McpServer {
 
   private async readResource(
     id: string | number | null,
-    params: Record<string, unknown> | undefined,
+    parameters: Record<string, unknown> | undefined,
   ): Promise<JsonRpcResponse> {
-    const uri = typeof params?.['uri'] === 'string' ? (params['uri'] as string) : undefined;
+    const uri = typeof parameters?.['uri'] === 'string' ? (parameters['uri'] as string) : undefined;
     if (!uri) {
       return this.fail(id, ErrorCode.InvalidParams, 'resources/read requires a string "uri"');
     }
@@ -178,9 +188,9 @@ export class McpServer {
 
   private async getPrompt(
     id: string | number | null,
-    params: Record<string, unknown> | undefined,
+    parameters: Record<string, unknown> | undefined,
   ): Promise<JsonRpcResponse> {
-    const name = typeof params?.['name'] === 'string' ? (params['name'] as string) : undefined;
+    const name = typeof parameters?.['name'] === 'string' ? (parameters['name'] as string) : undefined;
     if (!name) {
       return this.fail(id, ErrorCode.InvalidParams, 'prompts/get requires a string "name"');
     }
@@ -188,8 +198,8 @@ export class McpServer {
     if (!prompt) {
       return this.fail(id, ErrorCode.MethodNotFound, `Unknown prompt: ${name}`);
     }
-    const args = (params?.['arguments'] as Record<string, string> | undefined) ?? {};
-    const result = await prompt.build(args);
+    const arguments_ = (parameters?.['arguments'] as Record<string, string> | undefined) ?? {};
+    const result = await prompt.build(arguments_);
     return this.ok(id, result);
   }
 

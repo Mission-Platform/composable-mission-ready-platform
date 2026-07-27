@@ -14,7 +14,7 @@ export default {
       url.hostname = 'api.example.com';
       
       // Create new request with same method and headers
-      constnewRequest = new Request(url.toString(), {
+      const newRequest = new Request(url.toString(), {
         method: request.method,
         headers: request.headers,
         body: request.body,

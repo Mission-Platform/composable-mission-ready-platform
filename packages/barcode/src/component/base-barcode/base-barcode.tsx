@@ -1,6 +1,7 @@
 import { BaseButton, BaseTypography } from '@mission-platform/components';
 import { IconCheck, IconCopy, IconDownload, IconImage } from '@mission-platform/icons';
 import { h, useEffect, useMemo, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+
 import { encodeBarcode, type BarcodeSymbology } from '@mission-platform/barcode';
 
 import styles from './base-barcode.module.scss';

@@ -40,7 +40,8 @@ const meta = {
   render: (arguments_) => ({
     components: { Toast },
     setup() {
-      return { args: arguments_ };
+      const arguments__ = { ...arguments_ };
+      return { args: arguments__ };
     },
     template: `<Toast v-bind="args" />`,
   }),

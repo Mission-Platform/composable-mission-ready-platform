@@ -4,7 +4,6 @@
     BaseDialog,
     BaseDrawer,
     BaseIconButton,
-    BaseInput,
     BaseMenubar,
     BaseNavbar,
     BaseNavbarItem,
@@ -12,7 +11,9 @@
     BaseThemeToggle,
     BaseVirtualTable,
     BaseVirtualTabs,
+    LanguageSwitcher,
   } from '@mission-platform/components/vue';
+  import { type FormValues, SchemaForm, type SchemaFormDefinition } from '@mission-platform/forms/vue';
   import { useI18n } from '@mission-platform/i18n/vue';
   import { IconDownload, IconPencil } from '@mission-platform/icons/vue';
   import { BaseVerticalLayout } from '@mission-platform/layouts/vue';
@@ -81,26 +82,46 @@
     importAllSnippets,
   } = useSnippets();
 
-  const { t } = useI18n();
+  const { t, locale, setLocale } = useI18n();
+  const locales = ['ar', 'de', 'en', 'es', 'fr', 'he', 'it', 'ja', 'ko', 'nl', 'zh'];
 
   const route = useRoute();
   const router = useRouter();
 
+  async function switchLanguage(nextLocale: string): Promise<void> {
+    await setLocale(nextLocale);
+    await router.push(nextLocale === 'en' ? '/' : `/${nextLocale}/`);
+  }
+
   // ── Rename-tab modal state ────────────────────────────────────────────────
   const renamingTabId = ref<string | undefined>(undefined);
-  const renameTabTitle = ref('');
+  const renameTabValues = ref<FormValues>({ title: '' });
+
+  const renameTabSchema = computed<SchemaFormDefinition>(() => ({
+    type: 'object',
+    properties: {
+      title: {
+        type: 'string',
+        title: t(($) => $.rename.label, { ns: 'mp.my-care-notes', defaultValue: 'Tab name' }),
+        minLength: 1,
+      },
+    },
+    required: ['title'],
+  }));
 
   function openRenameTabModal(id: string): void {
     const tab = visibleTabs.value.find((t) => t.id === id);
     if (!tab) return;
     renamingTabId.value = id;
-    renameTabTitle.value = tab.title;
+    renameTabValues.value = { title: tab.title };
   }
 
-  function confirmRenameTab(): void {
-    if (renamingTabId.value && renameTabTitle.value.trim()) {
-      updateTabTitle(renamingTabId.value, renameTabTitle.value.trim());
+  function confirmRenameTab(values: FormValues, isValid: boolean): void {
+    const title = typeof values['title'] === 'string' ? values['title'].trim() : '';
+    if (!isValid || !renamingTabId.value || !title) {
+      return;
     }
+    updateTabTitle(renamingTabId.value, title);
     renamingTabId.value = undefined;
   }
 
@@ -110,9 +131,7 @@
   }
 
   function onRenameTabKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      confirmRenameTab();
-    } else if (event.key === 'Escape') {
+    if (event.key === 'Escape') {
       cancelRenameTab();
     }
   }
@@ -226,13 +245,28 @@
 
   const snippetColumns = computed(() => [
     // { key: 'id', sortable: true, label: 'ID', hidden: true },
-    { key: 'name', sortable: true, label: t('col.name') },
-    { key: 'content', sortable: true, label: t('col.content') },
-    { key: 'actions', sortable: false, label: t('col.actions') },
+    { key: 'name', sortable: true, label: t(($) => $.col.name, { ns: 'mp.my-care-notes', defaultValue: 'Name' }) },
+    {
+      key: 'content',
+      sortable: true,
+      label: t(($) => $.col.content, { ns: 'mp.my-care-notes', defaultValue: 'Content' }),
+    },
+    {
+      key: 'actions',
+      sortable: false,
+      label: t(($) => $.col.actions, { ns: 'mp.my-care-notes', defaultValue: 'Actions' }),
+    },
   ]);
 
   const snippetRows = computed<SnippetRow[]>(() => {
-    return [{ id: undefined, name: '/date', content: t('date-row-content') }, ...snippets.value];
+    return [
+      {
+        id: undefined,
+        name: '/date',
+        content: t(($) => $.date_row_content, { ns: 'mp.my-care-notes', defaultValue: 'Current date (DD/MM/YYYY)' }),
+      },
+      ...snippets.value,
+    ];
   });
 </script>
 
@@ -241,32 +275,55 @@
     <BaseNavbar brand="My Care Notes">
       <template #default>
         <BaseNavbarItem
-          :children="[
-            { label: t('nav.import-note'), onClick: onImportNote },
-            { label: t('nav.export-note'), onClick: onExportNote, disabled: !activeTab },
+          :dropdown-items="[
+            {
+              label: t(($) => $.nav['import-note'], { ns: 'mp.my-care-notes', defaultValue: 'Import Note' }),
+              onClick: onImportNote,
+            },
+            {
+              label: t(($) => $.nav['export-note'], { ns: 'mp.my-care-notes', defaultValue: 'Export Note' }),
+              onClick: onExportNote,
+              disabled: !activeTab,
+            },
             ...(closedTabs.length > 0
               ? [
                   { label: '\u2500'.repeat(8), disabled: true },
                   {
-                    label: t('nav.reopen-closed'),
-                    onClick: () => restoreTab(closedTabs[0]!.id),
+                    label: t(($) => $.nav['reopen-closed'], {
+                      ns: 'mp.my-care-notes',
+                      defaultValue: 'Reopen Closed Tab',
+                    }),
+                    onClick: () => {
+                      if (closedTabs[0]) restoreTab(closedTabs[0].id);
+                    },
                   },
                   ...closedTabs.slice(0, 10).map((tab) => ({
-                    label: t('nav.restore-tab', { title: tab.title }),
+                    label: t(($) => $.nav['restore-tab'], {
+                      ns: 'mp.my-care-notes',
+                      defaultValue: 'Restore: {title}',
+                      title: tab.title,
+                    }),
                     onClick: () => restoreTab(tab.id),
                   })),
                 ]
               : []),
           ]"
         >
-          {{ t('nav.notes') }}
+          {{ t(($) => $.nav.notes, { ns: 'mp.my-care-notes', defaultValue: 'Notes' }) }}
         </BaseNavbarItem>
         <BaseNavbarItem @click="onToggleSnippetsPanelVisible">
-          {{ t('nav.snippets') }}
+          {{ t(($) => $.nav.snippets, { ns: 'mp.my-care-notes', defaultValue: 'Snippets' }) }}
         </BaseNavbarItem>
       </template>
       <template #end>
-        <BaseThemeToggle :aria-label="t('theme-toggle')" />
+        <LanguageSwitcher
+          :locale="locale"
+          :locales="locales"
+          :on-locale-change="switchLanguage"
+        />
+        <BaseThemeToggle
+          :aria-label="t(($) => $.theme_toggle, { ns: 'mp.my-care-notes', defaultValue: 'Toggle colour theme' })"
+        />
       </template>
     </BaseNavbar>
 
@@ -275,19 +332,28 @@
       :open="snippetsPanelVisible"
       placement="start"
       size="xl"
-      :title="t('sidebar.title')"
+      :title="t(($) => $.sidebar.title, { ns: 'mp.my-care-notes', defaultValue: 'Snippets' })"
       @update:open="onSnippetsPanelUpdate"
     >
       <BaseMenubar
         :items="[
-          { label: t('menu.import'), onClick: onImportSnippet },
-          { label: t('menu.import-all'), onClick: onImportAllSnippets },
           {
-            label: t('menu.export-all'),
+            label: t(($) => $.menu.import, { ns: 'mp.my-care-notes', defaultValue: 'Import' }),
+            onClick: onImportSnippet,
+          },
+          {
+            label: t(($) => $.menu['import-all'], { ns: 'mp.my-care-notes', defaultValue: 'Import all' }),
+            onClick: onImportAllSnippets,
+          },
+          {
+            label: t(($) => $.menu['export-all'], { ns: 'mp.my-care-notes', defaultValue: 'Export all' }),
             onClick: onExportAllSnippets,
             disabled: snippets.length === 0,
           },
-          { label: t('menu.new'), onClick: openNewSnippet },
+          {
+            label: t(($) => $.menu.new, { ns: 'mp.my-care-notes', defaultValue: 'New' }),
+            onClick: openNewSnippet,
+          },
         ]"
       />
 
@@ -299,8 +365,8 @@
           <template v-if="column.key === 'actions'">
             <template v-if="(rawRow as SnippetRow).id !== undefined">
               <BaseIconButton
-                :label="t('snippet.export')"
-                :title="t('snippet.export')"
+                :label="t(($) => $.snippet.export, { ns: 'mp.my-care-notes', defaultValue: 'Export snippet' })"
+                :title="t(($) => $.snippet.export, { ns: 'mp.my-care-notes', defaultValue: 'Export snippet' })"
                 size="sm"
                 variant="ghost"
                 @click="exportSnippet((rawRow as SnippetRow).id as string)"
@@ -308,8 +374,8 @@
                 <IconDownload size="xs" />
               </BaseIconButton>
               <BaseIconButton
-                :label="t('snippet.edit')"
-                :title="t('snippet.edit')"
+                :label="t(($) => $.snippet.edit, { ns: 'mp.my-care-notes', defaultValue: 'Edit Snippet' })"
+                :title="t(($) => $.snippet.edit, { ns: 'mp.my-care-notes', defaultValue: 'Edit Snippet' })"
                 size="sm"
                 variant="ghost"
                 @click="openEditSnippet(rawRow as SnippetRow as Snippet)"
@@ -357,39 +423,40 @@
   <!-- Rename-tab dialog -->
   <BaseDialog
     :open="renamingTabId !== undefined"
-    :title="t('rename.title')"
+    :title="t(($) => $.rename.title, { ns: 'mp.my-care-notes', defaultValue: 'Rename tab' })"
     @close="cancelRenameTab"
     @update:open="(opened: boolean) => !opened && cancelRenameTab()"
   >
-    <BaseInput
-      id="rename-tab-input"
-      v-model="renameTabTitle"
-      :label="t('rename.label')"
-      autocomplete="off"
+    <SchemaForm
+      :model-value="renameTabValues"
+      :schema="renameTabSchema"
+      @submit="confirmRenameTab"
+      @update:model-value="renameTabValues = $event"
       @keydown="onRenameTabKeydown"
-    />
-    <template #footer>
-      <BaseStack
-        class="rename-modal-footer"
-        direction="horizontal"
-        gap="xs"
-        justify="end"
-      >
-        <BaseButton
-          variant="tertiary"
-          @click="cancelRenameTab"
+    >
+      <template #actions>
+        <BaseStack
+          class="rename-modal-footer"
+          direction="horizontal"
+          gap="xs"
+          justify="end"
         >
-          {{ t('rename.cancel') }}
-        </BaseButton>
-        <BaseButton
-          :disabled="!renameTabTitle.trim()"
-          variant="primary"
-          @click="confirmRenameTab"
-        >
-          {{ t('rename.confirm') }}
-        </BaseButton>
-      </BaseStack>
-    </template>
+          <BaseButton
+            type="button"
+            variant="tertiary"
+            @click="cancelRenameTab"
+          >
+            {{ t(($) => $.rename.cancel, { ns: 'mp.my-care-notes', defaultValue: 'Cancel' }) }}
+          </BaseButton>
+          <BaseButton
+            type="submit"
+            variant="primary"
+          >
+            {{ t(($) => $.rename.confirm, { ns: 'mp.my-care-notes', defaultValue: 'Rename' }) }}
+          </BaseButton>
+        </BaseStack>
+      </template>
+    </SchemaForm>
   </BaseDialog>
 </template>
 
@@ -398,35 +465,3 @@
     width: 100%;
   }
 </style>
-
-<i18n lang="yaml">
-en:
-  nav:
-    notes: Notes
-    snippets: Snippets
-    import-note: Import Note
-    export-note: Export Note
-    reopen-closed: Reopen Closed Tab
-    restore-tab: 'Restore: {title}'
-  theme-toggle: Toggle colour theme
-  sidebar:
-    title: Snippets
-  menu:
-    import: Import
-    import-all: Import all
-    export-all: Export all
-    new: New
-  col:
-    name: Name
-    content: Content
-    actions: Actions
-  snippet:
-    export: Export snippet
-    edit: Edit Snippet
-  date-row-content: Current date (DD/MM/YYYY)
-  rename:
-    title: Rename tab
-    label: Tab name
-    cancel: Cancel
-    confirm: Rename
-</i18n>

@@ -1,7 +1,7 @@
+import { AppProviders } from '@/client/AppProviders';
+import { LiveDashboard } from '@/client/components/live-dashboard';
 import { resolveIntervalSeconds, resolveSpeedEnabled, resolveSpeedIntervalSeconds } from '@/monitoring/config';
 import { getMonitor } from '@/monitoring/store';
-import { AppProviders } from '@/client/AppProviders';
-import { LiveDashboard } from '@/client/LiveDashboard';
 
 /**
  * Server component for `/`. It reads the current status straight from the
@@ -25,6 +25,7 @@ export async function DashboardPage() {
     <AppProviders>
       <LiveDashboard
         initialServices={services}
+        initialIncidents={await monitor.listIncidents()}
         initialSpeed={speed}
         intervalSeconds={resolveIntervalSeconds()}
         speedIntervalSeconds={resolveSpeedIntervalSeconds()}

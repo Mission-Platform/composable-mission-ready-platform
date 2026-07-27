@@ -16,6 +16,22 @@
 - **Vue adapter**: `createMpRouter()`, `useMpRoute()` composables
 - **Path syntax**: `:param`, `:param?`, `:param*`, `*`
 
+### @mission-platform/hunspell
+- **WebAssembly spell checker**: WebAssembly build of Hunspell engine
+- **API**: `initHunspell()`, `spell()`, `suggest()`
+
+### @mission-platform/harper
+- **Grammar checker**: Monaco editor integration for Harper grammar engine
+- **API**: `createHarperLinter()`, `registerHarperMonaco()`
+
+### @mission-platform/map
+- **MapLibre wrapper**: Reactive Vue 3 wrapper for MapLibre GL
+- **Components**: `<MpMap>`, `<MpMapMarker>`, `<MpMapPopup>`
+
+### @mission-platform/code-scanner
+- **Camera scanner**: Camera-based barcode and matrix code scanner
+- **Components**: `<MpCodeScanner>`
+
 ## Framework Adapters
 
 ### React

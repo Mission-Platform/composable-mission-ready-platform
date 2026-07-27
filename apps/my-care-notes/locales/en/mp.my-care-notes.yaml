@@ -1,0 +1,40 @@
+btn:
+  cancel: Cancel
+  delete: Delete
+  save: Save
+col:
+  actions: Actions
+  content: Content
+  name: Name
+content_label: Content
+date_row_content: Current date (DD/MM/YYYY)
+menu:
+  export-all: Export all
+  import: Import
+  import-all: Import all
+  new: New
+name:
+  hint: Type {preview} in the editor to insert this snippet
+  label: Snippet name
+  placeholder: e.g. greeting
+nav:
+  export-note: Export Note
+  import-note: Import Note
+  notes: Notes
+  reopen-closed: Reopen Closed Tab
+  restore-tab: 'Restore: {title}'
+  snippets: Snippets
+rename:
+  cancel: Cancel
+  confirm: Rename
+  label: Tab name
+  title: Rename tab
+sidebar:
+  title: Snippets
+snippet:
+  edit: Edit Snippet
+  export: Export snippet
+theme_toggle: Toggle colour theme
+title:
+  edit: Edit Snippet
+  new: New Snippet

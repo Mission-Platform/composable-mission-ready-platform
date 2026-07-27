@@ -1,0 +1,42 @@
+aria:
+  delete: Elimina
+  geodesic: Modalità geodetica
+  join: Unisca linee
+  rotate-ccw: Ruota in senso antiorario
+  rotate-cw: Ruota in senso orario
+  scale-down: Riduci scala
+  scale-up: Aumenta scala
+  split: Dividi linea
+draw:
+  circle: Cerchio
+  line: Linea
+  none: Nessuno
+  polygon: Poligono
+  square: Quadrato
+  triangle: Triangolo
+geojson-summary_zero: geojson-summary
+geojson-summary_one: geojson-summary
+geojson-summary_many: ''
+geojson-summary_other: geojson-summary
+label:
+  draw: 'Disegna:'
+  edit: 'Modifica:'
+mode:
+  flat: Piatto
+  geodesic: Geodetico
+status:
+  joining: ⚡ Fai clic su un'altra linea per unirla a {id}
+  none: Fai clic su una forma per selezionarla
+  selected: 'Selezionato: {id}'
+title: Barra degli strumenti di disegno sulla mappa
+tooltip:
+  delete: Elimina elemento selezionato
+  flat: 'Modalità piatta: lo spostamento/la scalatura preserva la forma visiva. Fai clic per la modalità geodetica.'
+  geodesic: 'Modalità geodetica: lo spostamento/la scalatura rispetta le distanze al suolo. Fai clic per la modalità piatta/visiva.'
+  join: Unisci due linee ai punti finali più vicini
+  join-active: Unione in corso — seleziona un'altra linea per completare l'unione
+  rotate-ccw: Ruota di −45°
+  rotate-cw: Ruota di +45°
+  scale-down: Riduci scala ×0,75
+  scale-up: Aumenta scala ×1,5
+  split: Dividi la linea nel punto medio

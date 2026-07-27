@@ -1,0 +1,12 @@
+badge:
+  pill: 药丸徽章
+  success: 成功
+button:
+  primary: 主要
+  secondary: 次要
+  tertiary: 通知
+components: 组件
+description:
+  after: 打开 Storybook 以浏览完整的组件库。
+  before: 一个用于
+title: Mission Platform 组件

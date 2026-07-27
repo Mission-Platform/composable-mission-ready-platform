@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/i18n-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",

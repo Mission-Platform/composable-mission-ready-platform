@@ -20,6 +20,7 @@ function Chart(): MpElement {
 describe('useD3 (neutral render-once baseline)', () => {
   it('returns an empty ref container', () => {
     const reference = useD3(() => {});
+    // eslint-disable-next-line unicorn/no-null
     expect(reference).toEqual({ current: null });
   });
 

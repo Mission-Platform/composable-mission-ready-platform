@@ -17,3 +17,5 @@ apps/*/public/sitemap.xml
 **/.junie/memory/
 **/.junie/plans/
 **/.junie/mcp/
+
+.env.local

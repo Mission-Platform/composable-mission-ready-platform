@@ -1,0 +1,91 @@
+dashboard:
+  latency: '{name} · وقت الاستجابة'
+  live: مباشر
+  reconnecting: إعادة الاتصال…
+  servicesLabel: الخدمات المراقبة
+  stat:
+    avgLatency: متوسط وقت الاستجابة
+    interval: الفاصل الزمني
+    lastStatus: الحالة الأخيرة
+    samples: العينات
+    type: النوع
+    uptime: وقت التشغيل
+  subtitle: فحوصات الحالة من جانب الخادم (افتراضياً كل {interval} ثانية، مع إمكانية التجاوز لكل مراقب)، يتم تخزينها كسلسلة زمنية على الحافة (Edge).
+  title: مراقب الخدمة
+incidents:
+  addPostReport: إضافة تقرير ما بعد الحادث
+  addProgressUpdate: إضافة تحديث التقدم
+  cancel: إلغاء
+  edit: تعديل
+  editMaintenance: تعديل الصيانة
+  editPostReport: تعديل تقرير ما بعد الحادث
+  plannedMaintenance: صيانة مخططة
+  postIncidentReport: تقرير ما بعد الحادث
+  reportAnIncident: الإبلاغ عن حادث
+  reportButton: الإبلاغ عن حادث
+  scheduleMaintenance: جدولة صيانة
+  title: الحوادث
+monitors:
+  add: إضافة مراقب
+  configuration: إعدادات المراقب
+  edit: تعديل
+  editAria: تعديل {name}
+  editTitle: تعديل المراقب
+  error:
+    rejected: رفض الخادم هذا المراقب. تحقق من الحقول وحاول مرة أخرى.
+    required: يرجى تقديم معرف، واسم، ورابط (HTTP/JSON/GraphQL) أو مضيف.
+  remove: إزالة
+  removeAria: إزالة {name}
+  subtitle: تم الإعداد وقت التشغيل · الفاصل الزمني الافتراضي {interval} ثانية.
+  title: أدوات المراقبة
+nav:
+  dashboard: لوحة التحكم
+  incidents: الحوادث والصيانة
+  monitors: أدوات المراقبة
+  status: الحالة
+shell:
+  activeIncidents_zero: '{count} حوادث نشطة'
+  activeIncidents_one: حادث نشط واحد
+  activeIncidents_two: ''
+  activeIncidents_few: ''
+  activeIncidents_many: ''
+  activeIncidents_other: '{count} حوادث نشطة'
+  currentStatus: حالة النظام الحالية
+  title: Service Monitor
+  viewIncidentDetails: عرض تفاصيل الحادث
+speed:
+  bandwidth: عرض النطاق الترددي {value} ميغابت/ثانية
+  chartEmpty: قم بإجراء بعض الاختبارات لرسم مخطط لهذا المزود…
+  disabled: اختبارات السرعة المجدولة معطلة — قم بإجراء اختبار عند الطلب.
+  down: '{value} ميجابت في الثانية تنزيل'
+  enabled: اختبارات سرعة من جانب الخادم كل {interval} ثانية (Cloudflare، Fast.com، Speedtest).
+  failed: فشل
+  graphTitle: '{name} · {metric} مع مرور الوقت'
+  latency: '{value} مللي ثانية'
+  pending: لا توجد قياسات بعد
+  ping: استجابة الشبكة (Ping) {value} مللي ثانية
+  reportsTitle: تقارير سرعة الشبكة
+  run: تشغيل الاختبار
+  running: جاري التشغيل…
+  summary_zero: المتوسط {average} · الأقصى {maximum} · n={count}
+  summary_one: المتوسط {average} · الأقصى {maximum} · n={count}
+  summary_two: المتوسط {average} · الأقصى {maximum} · n={count}
+  summary_few: المتوسط {average} · الأقصى {maximum} · n={count}
+  summary_many: المتوسط {average} · الأقصى {maximum} · n={count}
+  summary_other: المتوسط {average} · الأقصى {maximum} · n={count}
+  title: سرعة الشبكة
+  up: '{value} ميجابت في الثانية رفع'
+  uploadUnavailable: الرفع غير متاح
+  viewReports: عرض تقارير اختبار السرعة
+state:
+  down: متوقف
+summary:
+  activeIncidentsTitle: الحوادث النشطة
+  allOperational: جميع الأنظمة تعمل بشكل طبيعي
+  degradedPerformance: تراجع في الأداء
+  monitoredServicesAndIncidents: '{servicesCount} خدمات مرافبة · {incidentsCount} حوادث نشطة'
+  noActiveIncidents: لا توجد حوادث نشطة.
+  noUpcomingMaintenance: لا توجد صيانة قادمة.
+  plannedMaintenance: صيانة مخططة
+  serviceDisruption: انقطاع في الخدمة
+  systemStatus: حالة النظام

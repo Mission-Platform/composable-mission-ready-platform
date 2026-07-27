@@ -25,6 +25,7 @@
   "dependencies": {
     "@mission-platform/breakpoints": "workspace:*",
     "@mission-platform/components": "workspace:*",
+    "@mission-platform/forms": "workspace:*",
     "@mission-platform/harper": "workspace:*",
     "@mission-platform/hunspell": "workspace:*",
     "@mission-platform/i18n": "workspace:*",
@@ -33,6 +34,7 @@
     "@mission-platform/seo": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
     "@unhead/vue": "catalog:vue",
+    "i18next": "catalog:i18next",
     "i18next-vue": "catalog:i18next",
     "js-yaml": "catalog:",
     "monaco-editor": "catalog:code",
@@ -42,10 +44,12 @@
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/i18n-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
     "@mission-platform/stylelint-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
+    "@mission-platform/vite-plugin-i18n": "workspace:*",
     "@mission-platform/vite-plugin-seo": "workspace:*",
     "@types/js-yaml": "catalog:typescript",
     "@types/node": "catalog:typescript",

@@ -1,5 +1,6 @@
-import { FormBuilder } from '@mission-platform/forms/react';
 import { useState } from 'react';
+
+import { FormBuilder } from '@mission-platform/forms/react';
 
 import type { SchemaFormDefinition } from './base-form-builder';
 import type { Meta, StoryObj } from '@storybook/react-vite';

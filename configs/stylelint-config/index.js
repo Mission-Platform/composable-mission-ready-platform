@@ -46,6 +46,8 @@ const config = {
     'scss/no-duplicate-dollar-variables': true,
     'scss/dollar-variable-pattern': '^[a-z][a-z0-9-]*$',
     'import-notation': 'string',
+    'layer-name-pattern': null, // eslint-disable-line unicorn/no-null -- SCSS interpolation in layer names
+    'property-no-deprecated': [true, { ignoreProperties: ['clip'] }],
   },
 };
 

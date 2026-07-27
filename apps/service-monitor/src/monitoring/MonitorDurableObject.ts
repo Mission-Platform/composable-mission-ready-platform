@@ -10,8 +10,19 @@ import {
 } from './config';
 import { runProbe } from './probes';
 import { SPEED_PROVIDER_META, SPEED_PROVIDERS } from './speed/providers';
+
 import type { SpeedProviderId, SpeedResult, SpeedStatus } from './speed/types';
-import type { HealthState, MonitorTarget, Sample, ServiceStatus } from './types';
+import type {
+  HealthState,
+  Incident,
+  IncidentSeverity,
+  IncidentStatus,
+  IncidentUpdate,
+  MaintenanceWindow,
+  MonitorTarget,
+  Sample,
+  ServiceStatus,
+} from './types';
 
 /** Storage key holding the timestamp of the last completed speed-test run. */
 const LAST_SPEED_TEST_KEY = 'lastSpeedTestAt';
@@ -52,6 +63,40 @@ type MonitorRow = {
   [column: string]: SqlStorageValue;
 };
 
+type IncidentRow = {
+  id: string;
+  service_id: string | null;
+  title: string;
+  description: string;
+  status: string;
+  severity: string;
+  opened_at: number;
+  resolved_at: number | null;
+  automatic: number;
+  post_incident_report: string | null;
+  [column: string]: SqlStorageValue;
+};
+
+type IncidentUpdateRow = {
+  id: string;
+  incident_id: string;
+  message: string;
+  status: string | null;
+  created_at: number;
+  [column: string]: SqlStorageValue;
+};
+type MaintenanceRow = {
+  id: string;
+  title: string;
+  description: string;
+  service_id: string | null;
+  starts_at: number;
+  ends_at: number;
+  cancelled_at: number | null;
+  created_at: number;
+  [column: string]: SqlStorageValue;
+};
+
 /** A monitor plus its scheduling bookkeeping. */
 interface ScheduledMonitor {
   target: MonitorTarget;
@@ -71,8 +116,8 @@ interface ScheduledMonitor {
  * over the JSON API.
  */
 export class MonitorDurableObject extends DurableObject<Env> {
-  constructor(ctx: DurableObjectState, env: Env) {
-    super(ctx, env);
+  constructor(context: DurableObjectState, environment: Env) {
+    super(context, environment);
 
     // Ensure the schema exists, monitors are seeded and an alarm is scheduled
     // before any request is served by this instance.
@@ -118,6 +163,37 @@ export class MonitorDurableObject extends DurableObject<Env> {
         id TEXT PRIMARY KEY,
         config TEXT NOT NULL,
         last_run_at INTEGER NOT NULL DEFAULT 0
+      );`,
+    );
+    this.ctx.storage.sql.exec(
+      `CREATE TABLE IF NOT EXISTS incidents (
+        id TEXT PRIMARY KEY, service_id TEXT, title TEXT NOT NULL, description TEXT NOT NULL,
+        status TEXT NOT NULL, severity TEXT NOT NULL, opened_at INTEGER NOT NULL,
+        resolved_at INTEGER, automatic INTEGER NOT NULL DEFAULT 0, post_incident_report TEXT
+      );`,
+    );
+    const incidentColumns = this.ctx.storage.sql.exec<{ name: string }>(`PRAGMA table_info(incidents);`).toArray();
+    if (!incidentColumns.some((column) => column.name === 'post_incident_report')) {
+      this.ctx.storage.sql.exec(`ALTER TABLE incidents ADD COLUMN post_incident_report TEXT;`);
+    }
+    this.ctx.storage.sql.exec(
+      `CREATE TABLE IF NOT EXISTS incident_updates (
+        id TEXT PRIMARY KEY, incident_id TEXT NOT NULL, message TEXT NOT NULL, status TEXT,
+        created_at INTEGER NOT NULL, FOREIGN KEY (incident_id) REFERENCES incidents(id)
+      );`,
+    );
+    this.ctx.storage.sql.exec(
+      `CREATE INDEX IF NOT EXISTS idx_incident_updates_incident ON incident_updates (incident_id, created_at);`,
+    );
+    this.ctx.storage.sql.exec(
+      `CREATE TABLE IF NOT EXISTS maintenance_windows (
+        id TEXT PRIMARY KEY, title TEXT NOT NULL, description TEXT NOT NULL, service_id TEXT,
+        starts_at INTEGER NOT NULL, ends_at INTEGER NOT NULL, cancelled_at INTEGER, created_at INTEGER NOT NULL
+      );`,
+    );
+    this.ctx.storage.sql.exec(
+      `CREATE TABLE IF NOT EXISTS probe_counters (
+        service_id TEXT PRIMARY KEY, failures INTEGER NOT NULL DEFAULT 0, successes INTEGER NOT NULL DEFAULT 0
       );`,
     );
   }
@@ -256,7 +332,227 @@ export class MonitorDurableObject extends DurableObject<Env> {
   private async probeAndStore(target: MonitorTarget): Promise<void> {
     const sample = await runProbe(target);
     this.insert(sample);
+    this.updateAutomaticIncident(target, sample);
     this.ctx.storage.sql.exec(`UPDATE monitors SET last_run_at = ? WHERE id = ?;`, sample.ts, target.id);
+  }
+
+  private updateAutomaticIncident(target: MonitorTarget, sample: Sample): void {
+    const previous = this.ctx.storage.sql
+      .exec<{ failures: number; successes: number }>(
+        `SELECT failures, successes FROM probe_counters WHERE service_id = ?;`,
+        target.id,
+      )
+      .toArray()[0] ?? { failures: 0, successes: 0 };
+    const failures = sample.state === 'down' ? previous.failures + 1 : 0;
+    const successes = sample.state === 'up' ? previous.successes + 1 : 0;
+    this.ctx.storage.sql.exec(
+      `INSERT INTO probe_counters (service_id, failures, successes) VALUES (?, ?, ?)
+       ON CONFLICT(service_id) DO UPDATE SET failures = excluded.failures, successes = excluded.successes;`,
+      target.id,
+      failures,
+      successes,
+    );
+    const active = this.ctx.storage.sql
+      .exec<IncidentRow>(
+        `SELECT * FROM incidents WHERE service_id = ? AND automatic = 1 AND status != 'resolved' LIMIT 1;`,
+        target.id,
+      )
+      .toArray()[0];
+    if (target.autoIncident && failures >= (target.failThreshold ?? 3) && !active) {
+      this.createIncident({
+        serviceId: target.id,
+        title: `${target.name} is unavailable`,
+        description: sample.error ?? 'Repeated monitor failures detected.',
+        severity: 'major',
+        automatic: true,
+      });
+    } else if (active && successes >= (target.successThreshold ?? 2)) {
+      this.updateIncident(active.id, { status: 'resolved' });
+    }
+  }
+
+  listIncidents(): Incident[] {
+    const incidents = this.ctx.storage.sql
+      .exec<IncidentRow>(
+        `SELECT * FROM incidents ORDER BY CASE WHEN status = 'resolved' THEN 1 ELSE 0 END, opened_at DESC;`,
+      )
+      .toArray()
+      .map(toIncident);
+    const updates = this.ctx.storage.sql
+      .exec<IncidentUpdateRow>(`SELECT * FROM incident_updates ORDER BY created_at ASC;`)
+      .toArray();
+    return incidents.map((incident) => ({
+      ...incident,
+      updates: updates.filter((update) => update.incident_id === incident.id).map(toIncidentUpdate),
+    }));
+  }
+
+  createIncident(input: {
+    serviceId?: string | null;
+    title: string;
+    description?: string;
+    severity?: IncidentSeverity;
+    automatic?: boolean;
+  }): Incident {
+    const incident: Incident = {
+      id: crypto.randomUUID(),
+      serviceId: input.serviceId ?? null,
+      title: input.title,
+      description: input.description ?? '',
+      status: 'investigating',
+      severity: input.severity ?? 'minor',
+      openedAt: Date.now(),
+      resolvedAt: null,
+      automatic: input.automatic ?? false,
+      updates: [],
+      postIncidentReport: null,
+    };
+    this.ctx.storage.sql.exec(
+      `INSERT INTO incidents (id, service_id, title, description, status, severity, opened_at, resolved_at, automatic)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+      incident.id,
+      incident.serviceId,
+      incident.title,
+      incident.description,
+      incident.status,
+      incident.severity,
+      incident.openedAt,
+      incident.resolvedAt,
+      incident.automatic ? 1 : 0,
+    );
+    this.addIncidentUpdate(incident.id, {
+      message: incident.automatic
+        ? 'Incident opened automatically after repeated probe failures.'
+        : 'Incident reported.',
+      status: 'investigating',
+    });
+    incident.updates = this.listIncidentUpdates(incident.id);
+    return incident;
+  }
+
+  updateIncident(
+    id: string,
+    input: { status?: IncidentStatus; description?: string; severity?: IncidentSeverity },
+  ): Incident | null {
+    const current = this.listIncidents().find((incident) => incident.id === id);
+    if (!current) return null;
+    const incident = {
+      ...current,
+      ...input,
+      resolvedAt: input.status === 'resolved' ? Date.now() : current.resolvedAt,
+    };
+    this.ctx.storage.sql.exec(
+      `UPDATE incidents SET description = ?, status = ?, severity = ?, resolved_at = ? WHERE id = ?;`,
+      incident.description,
+      incident.status,
+      incident.severity,
+      incident.resolvedAt,
+      id,
+    );
+    if (input.status && input.status !== current.status) {
+      this.addIncidentUpdate(id, {
+        message: `Status changed from ${current.status} to ${input.status}.`,
+        status: input.status,
+      });
+      incident.updates = this.listIncidentUpdates(id);
+    }
+    return incident;
+  }
+
+  private listIncidentUpdates(incidentId: string): IncidentUpdate[] {
+    return this.ctx.storage.sql
+      .exec<IncidentUpdateRow>(
+        `SELECT * FROM incident_updates WHERE incident_id = ? ORDER BY created_at ASC;`,
+        incidentId,
+      )
+      .toArray()
+      .map(toIncidentUpdate);
+  }
+
+  addIncidentUpdate(
+    incidentId: string,
+    input: { message: string; status?: IncidentStatus | null },
+  ): IncidentUpdate | null {
+    const current = this.ctx.storage.sql
+      .exec<{ id: string }>(`SELECT id FROM incidents WHERE id = ?;`, incidentId)
+      .toArray()[0];
+    if (!current) return null;
+    const update: IncidentUpdate = {
+      id: crypto.randomUUID(),
+      incidentId,
+      message: input.message,
+      status: input.status ?? null,
+      createdAt: Date.now(),
+    };
+    this.ctx.storage.sql.exec(
+      `INSERT INTO incident_updates (id, incident_id, message, status, created_at) VALUES (?, ?, ?, ?, ?);`,
+      update.id,
+      update.incidentId,
+      update.message,
+      update.status,
+      update.createdAt,
+    );
+    if (input.status) {
+      this.ctx.storage.sql.exec(
+        `UPDATE incidents SET status = ?, resolved_at = ? WHERE id = ?;`,
+        input.status,
+        input.status === 'resolved' ? update.createdAt : null,
+        incidentId,
+      );
+    }
+    return update;
+  }
+
+  updatePostIncidentReport(id: string, report: string): Incident | null {
+    const current = this.listIncidents().find((incident) => incident.id === id);
+    if (!current || current.status !== 'resolved') return null;
+    this.ctx.storage.sql.exec(`UPDATE incidents SET post_incident_report = ? WHERE id = ?;`, report, id);
+    return { ...current, postIncidentReport: report };
+  }
+
+  listMaintenance(): MaintenanceWindow[] {
+    return this.ctx.storage.sql
+      .exec<MaintenanceRow>(`SELECT * FROM maintenance_windows ORDER BY starts_at ASC;`)
+      .toArray()
+      .map(toMaintenance);
+  }
+
+  createMaintenance(input: Omit<MaintenanceWindow, 'id' | 'createdAt' | 'cancelledAt'>): MaintenanceWindow {
+    const window: MaintenanceWindow = { ...input, id: crypto.randomUUID(), cancelledAt: null, createdAt: Date.now() };
+    this.ctx.storage.sql.exec(
+      `INSERT INTO maintenance_windows (id, title, description, service_id, starts_at, ends_at, cancelled_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
+      window.id,
+      window.title,
+      window.description,
+      window.serviceId,
+      window.startsAt,
+      window.endsAt,
+      window.cancelledAt,
+      window.createdAt,
+    );
+    return window;
+  }
+
+  updateMaintenance(
+    id: string,
+    input: Partial<
+      Pick<MaintenanceWindow, 'title' | 'description' | 'serviceId' | 'startsAt' | 'endsAt' | 'cancelledAt'>
+    >,
+  ): MaintenanceWindow | null {
+    const current = this.listMaintenance().find((window) => window.id === id);
+    if (!current) return null;
+    const window = { ...current, ...input };
+    this.ctx.storage.sql.exec(
+      `UPDATE maintenance_windows SET title = ?, description = ?, service_id = ?, starts_at = ?, ends_at = ?, cancelled_at = ? WHERE id = ?;`,
+      window.title,
+      window.description,
+      window.serviceId,
+      window.startsAt,
+      window.endsAt,
+      window.cancelledAt,
+      id,
+    );
+    return window;
   }
 
   /** Append one sample to the time series. */
@@ -444,5 +740,44 @@ function toSpeedResult(row: SpeedRow): SpeedResult {
     bytes: row.bytes,
     ok: row.ok === 1,
     error: row.error,
+  };
+}
+
+function toIncident(row: IncidentRow): Incident {
+  return {
+    id: row.id,
+    serviceId: row.service_id,
+    title: row.title,
+    description: row.description,
+    status: row.status as IncidentStatus,
+    severity: row.severity as IncidentSeverity,
+    openedAt: row.opened_at,
+    resolvedAt: row.resolved_at,
+    automatic: row.automatic === 1,
+    updates: [],
+    postIncidentReport: row.post_incident_report,
+  };
+}
+
+function toIncidentUpdate(row: IncidentUpdateRow): IncidentUpdate {
+  return {
+    id: row.id,
+    incidentId: row.incident_id,
+    message: row.message,
+    status: row.status as IncidentStatus | null,
+    createdAt: row.created_at,
+  };
+}
+
+function toMaintenance(row: MaintenanceRow): MaintenanceWindow {
+  return {
+    id: row.id,
+    title: row.title,
+    description: row.description,
+    serviceId: row.service_id,
+    startsAt: row.starts_at,
+    endsAt: row.ends_at,
+    cancelledAt: row.cancelled_at,
+    createdAt: row.created_at,
   };
 }

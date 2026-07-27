@@ -1,0 +1,85 @@
+dashboard:
+  latency: '{name} · Latenz'
+  live: Live
+  reconnecting: Verbindung wird wiederhergestellt…
+  servicesLabel: Überwachte Dienste
+  stat:
+    avgLatency: Durchschn. Latenz
+    interval: Intervall
+    lastStatus: Letzter Status
+    samples: Stichproben
+    type: Typ
+    uptime: Betriebszeit
+  subtitle: Serverseitige Health-Checks (Standard alle {interval}s, Überschreibungen pro Monitor möglich), gespeichert als Zeitserie an der Edge.
+  title: Service Monitor
+incidents:
+  addPostReport: Bericht nach Vorfall hinzufügen
+  addProgressUpdate: Fortschrittsaktualisierung hinzufügen
+  cancel: Abbrechen
+  edit: Bearbeiten
+  editMaintenance: Wartung bearbeiten
+  editPostReport: Bericht nach Vorfall bearbeiten
+  plannedMaintenance: Geplante Wartung
+  postIncidentReport: Bericht nach Vorfall
+  reportAnIncident: Vorfall melden
+  reportButton: Vorfall melden
+  scheduleMaintenance: Wartung planen
+  title: Vorfälle
+monitors:
+  add: Monitor hinzufügen
+  configuration: Monitor-Konfiguration
+  edit: Bearbeiten
+  editAria: '{name} bearbeiten'
+  editTitle: Monitor bearbeiten
+  error:
+    rejected: Der Server hat diesen Monitor abgelehnt. Überprüfen Sie die Felder und versuchen Sie es erneut.
+    required: Geben Sie eine ID, einen Namen und eine URL (HTTP/JSON/GraphQL) oder einen Host an.
+  remove: Entfernen
+  removeAria: '{name} entfernen'
+  subtitle: Zur Laufzeit konfiguriert · Standardintervall {interval}s.
+  title: Monitore
+nav:
+  dashboard: Dashboard
+  incidents: Vorfälle & Wartung
+  monitors: Monitore
+  status: Status
+shell:
+  activeIncidents_zero: '{count} aktive Vorfälle'
+  activeIncidents_one: '{count} aktiver Vorfall'
+  activeIncidents_other: '{count} aktive Vorfälle'
+  currentStatus: Aktueller Systemstatus
+  title: Service Monitor
+  viewIncidentDetails: Vorfall-Details anzeigen
+speed:
+  bandwidth: Bandbreite {value} Mbps
+  chartEmpty: Führen Sie einige Tests durch, um diesen Anbieter darzustellen…
+  disabled: Geplante Geschwindigkeitstests sind deaktiviert – führen Sie einen bei Bedarf aus.
+  down: '{value} Mbps Down'
+  enabled: Serverseitige Geschwindigkeitstests alle {interval}s (Cloudflare, Fast.com, Speedtest).
+  failed: Fehlgeschlagen
+  graphTitle: '{name} · {metric} im Zeitverlauf'
+  latency: '{value} ms'
+  pending: Noch keine Messung
+  ping: Ping {value} ms
+  reportsTitle: Netzwerk-Geschwindigkeitsberichte
+  run: Test ausführen
+  running: Läuft…
+  summary_zero: Durchschn. {average} · Max. {maximum} · n={count}
+  summary_one: Durchschn. {average} · Max. {maximum} · n={count}
+  summary_other: Durchschn. {average} · Max. {maximum} · n={count}
+  title: Netzgeschwindigkeit
+  up: '{value} Mbps Up'
+  uploadUnavailable: Upload nicht verfügbar
+  viewReports: Geschwindigkeitstest-Berichte anzeigen
+state:
+  down: Inaktiv
+summary:
+  activeIncidentsTitle: Aktive Vorfälle
+  allOperational: Alle Systeme betriebsbereit
+  degradedPerformance: Eingeschränkte Leistung
+  monitoredServicesAndIncidents: '{servicesCount} überwachte Dienste · {incidentsCount} aktive Vorfälle'
+  noActiveIncidents: Keine aktiven Vorfälle.
+  noUpcomingMaintenance: Keine anstehende Wartung.
+  plannedMaintenance: Geplante Wartung
+  serviceDisruption: Dienstunterbrechung
+  systemStatus: Systemstatus

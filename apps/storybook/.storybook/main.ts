@@ -1,4 +1,5 @@
 import { ignoreVueI18nBlocksPlugin } from '@mission-platform/vite-config';
+import i18nPlugin from '@mission-platform/vite-plugin-i18n';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { mergeConfig } from 'vite';
 
@@ -39,7 +40,7 @@ const config: StorybookConfig = {
   },
   viteFinal: (config) =>
     mergeConfig(config, {
-      plugins: [vueJsx(), ignoreVueI18nBlocksPlugin()],
+      plugins: [i18nPlugin({ defaultLocale: 'en' }), vueJsx(), ignoreVueI18nBlocksPlugin()],
       optimizeDeps: {
         exclude: ['i18next-vue'],
       },

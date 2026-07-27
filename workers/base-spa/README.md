@@ -1,38 +1,64 @@
 # @mission-platform/base-spa
 
-A baseline Cloudflare Worker that serves a single-page application from the
-`ASSETS` binding and exposes a small JSON API under `/api/*`.
+A baseline Cloudflare Worker entrypoint that serves single-page applications and static site generation (SSG) outputs from the Cloudflare Workers `ASSETS` binding.
 
-This workspace is intended as a reusable starting point for new SPA-backed
-Workers in the Mission Platform monorepo.
+## Purpose & Usage
 
-The worker is not deployed on its own — each consuming app owns its own
-`wrangler.jsonc` (e.g. `apps/my-care-notes/wrangler.jsonc`,
-`apps/website/wrangler.jsonc`) that points `main` at this worker's build
-output (`../../workers/base-spa/dist/index.js`) and serves the app's `dist/`
-through the `ASSETS` binding. Each app config defines `production` and
-`staging` environments.
+This workspace serves as a shared worker runtime entrypoint for SPA and SSG applications in the Mission Platform monorepo. It is not deployed independently; instead, consuming applications reference this worker's compiled build output in their own `wrangler.jsonc`.
 
-## Scripts
+Consuming apps (such as `apps/my-care-notes` and `apps/website`):
 
-```bash
-# Type-check / build the worker bundle consumed by the apps
-pnpm --filter @mission-platform/base-spa build
+1. Configure `main: "../../workers/base-spa/dist/index.js"` in `wrangler.jsonc`.
+2. Configure `assets` binding with `directory: "./dist/"` and `not_found_handling: "single-page-application"`.
+3. Target `production` and `staging` custom domains or preview URLs in their respective `wrangler.jsonc` environment definitions.
 
-# Deploy a consuming app (builds this worker + the app, then deploys)
-pnpm deploy:my-care-notes            # production
-pnpm deploy:my-care-notes:staging    # staging
-pnpm deploy:website                  # production
-pnpm deploy:website:staging          # staging
+## Code Architecture
+
+- **`src/index.ts`**: The Worker entrypoint. Receives incoming HTTP requests and delegates asset resolution to `environment.ASSETS.fetch(request)`.
+- **`dist/index.js`**: Transpiled ESM JavaScript artifact consumed by Wrangler at application deployment time.
+
+```typescript
+import type { fetch, Request, Response } from '@cloudflare/workers-types';
+
+export default {
+  async fetch(request: Request, environment: Record<string, { fetch: typeof fetch }>): Promise<Response> {
+    return environment.ASSETS.fetch(request);
+  },
+};
 ```
 
-## Layout
+## Workflows & Scripts
 
-- `src/index.ts` — Worker entry; routes `/api/*` to a JSON handler and
-  delegates everything else to the static asset binding.
-- `public/` — Static assets served by the `ASSETS` binding (place your SPA
-  build output here).
+### Building the Worker
 
-The SPA-aware Wrangler configuration (`assets` binding with
-`not_found_handling: "single-page-application"`) lives in each consuming app's
-`wrangler.jsonc`, not in this workspace.
+Before deploying or running local Wrangler servers for consuming apps, build the `@mission-platform/base-spa` bundle:
+
+```bash
+# Using Turborepo (recommended)
+pnpm exec turbo run build --filter=@mission-platform/base-spa
+
+# Or using pnpm workspace filtering directly
+pnpm --filter @mission-platform/base-spa build
+```
+
+### Deploying Consuming Apps
+
+Deploying a consuming app automatically builds both `@mission-platform/base-spa` and the app target via Turbo dependencies defined in Wrangler config (`turbo run build --filter=<app> --filter=@mission-platform/base-spa`):
+
+```bash
+# Deploy My Care Notes app
+pnpm --filter @mission-platform/my-care-notes deploy            # production
+pnpm --filter @mission-platform/my-care-notes deploy:staging    # staging
+
+# Deploy Website app
+pnpm --filter @mission-platform/website deploy                  # production
+pnpm --filter @mission-platform/website deploy:staging          # staging
+```
+
+## Available Scripts
+
+| Command                             | Description                                                                                |
+| ----------------------------------- | ------------------------------------------------------------------------------------------ |
+| `pnpm build`                        | Transpiles TypeScript source (`src/index.ts`) to `dist/index.js` via `tsconfig.build.json` |
+| `pnpm lint` / `pnpm lint:fix`       | Lints codebase using ESLint                                                                |
+| `pnpm format` / `pnpm format:write` | Checks or fixes code formatting with Prettier                                              |

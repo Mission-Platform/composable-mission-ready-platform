@@ -1,5 +1,6 @@
-import { ThemeComposer } from '@mission-platform/components/react';
 import { useState } from 'react';
+
+import { ThemeComposer } from '@mission-platform/components/react';
 
 import type { ThemeComposerConfig } from './base-theme-composer';
 import type { Meta, StoryObj } from '@storybook/react-vite';

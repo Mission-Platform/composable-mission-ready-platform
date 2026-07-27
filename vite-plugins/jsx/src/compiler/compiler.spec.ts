@@ -28,8 +28,8 @@ const CLASS_NAMES = [
   'export function BaseChip(properties: ChipProperties): MpElement {',
   "  const tone = properties.tone ?? 'neutral';",
   '  return (',
-  "    <span classNames={['chip', `chip--${tone}`, { 'chip--active': properties.active ?? false }]}>",
-  '      <i classNames={tone} />',
+  "    <span className={['chip', `chip--${tone}`, { 'chip--active': properties.active ?? false }]}>",
+  '      <i className={tone} />',
   '      {properties.children}',
   '    </span>',
   '  );',
@@ -493,8 +493,10 @@ describe('the emitters translate **scoped** `<Slot>` elements', () => {
   const react = compileComponentModule(SCOPED_LIST, { framework: 'react', componentName: 'BaseList' });
   const vue = compileComponentModule(SCOPED_LIST, { framework: 'vue', componentName: 'BaseList' });
 
-  it('invokes the React default slot as a render-prop with the scope object', () => {
-    expect(react.code).toContain('properties.children?.({ item: item, index: index })');
+  it('invokes the React default slot as a render-prop or forwards it directly when a React node', () => {
+    expect(react.code).toContain(
+      'typeof properties.children === "function" ? properties.children({ item: item, index: index }) : properties.children',
+    );
   });
 
   it('invokes the Vue default slot as a native scoped `<slot>` with the scope object', () => {
@@ -525,7 +527,9 @@ describe('the emitters translate named `<Slot>` elements', () => {
     expect(vue.code).toContain('<slot />');
     // The (non-slot) `sticky` prop keeps its declared type via a type-based
     // macro; the slot-backed `header` stays out of the runtime props macro.
-    expect(vue.code).toContain('defineProps<{\n  sticky?: boolean;\n}>();');
+    expect(vue.code).toContain(
+      "defineProps<{\n  sticky?: boolean;\n  className?: import('@mission-platform/jsx').ClassValue;\n}>();",
+    );
     expect(vue.code).not.toContain('header?: MpChild;\n}>');
   });
 
@@ -1024,6 +1028,27 @@ describe('the React emitter', () => {
     expect(react.code).toContain('className={className}');
   });
 
+  it('aliases SVG attributes to React DOM property names', () => {
+    const source = BADGE.replace(
+      '<span class={className}>',
+      '<svg stroke-linecap="round" stroke-linejoin="round" stroke-width={2}>',
+    ).replace('</span>', '</svg>');
+    const icon = compileComponentModule(source, { framework: 'react', componentName: 'BaseBadge' });
+
+    expect(icon.code).toContain('strokeLinecap="round"');
+    expect(icon.code).toContain('strokeLinejoin="round"');
+    expect(icon.code).toContain('strokeWidth={2}');
+    expect(icon.code).not.toMatch(/stroke-(?:linecap|linejoin|width)=/);
+  });
+
+  it('aliases `tabindex` to `tabIndex` in JSX', () => {
+    const source = BADGE.replace('<span class={className}>', '<span class={className} tabindex={0}>');
+    const badge = compileComponentModule(source, { framework: 'react', componentName: 'BaseBadge' });
+
+    expect(badge.code).toContain('tabIndex={0}');
+    expect(badge.code).not.toContain('tabindex=');
+  });
+
   it('never emits a default `import React from "react"` — only the named bindings it needs', () => {
     // React 17+'s automatic JSX runtime makes the historical `import React from
     // 'react'` unnecessary; the emitter must only import what the module uses
@@ -1036,6 +1061,10 @@ describe('the React emitter', () => {
 describe('the React emitter imports hooks as named bindings from `react` (never a default `React`)', () => {
   const react = compileComponentModule(IN_VIEW, { framework: 'react', componentName: 'BaseInView' });
 
+  it('marks hook-based output as a client component', () => {
+    expect(react.code.startsWith('"use client";')).toBe(true);
+  });
+
   it('imports the used hooks by name from `react`', () => {
     // The neutral hooks (`useEffect`, `useRef`, `useState`) are React's own, so
     // they are imported by name from `react` alongside `createElement as h` —
@@ -1046,6 +1075,54 @@ describe('the React emitter imports hooks as named bindings from `react` (never 
   it('never emits a default `import React from "react"`', () => {
     expect(react.code).not.toMatch(/^\s*import\s+React\b/m);
     expect(react.code).not.toMatch(/import\s+React\s*,?\s*(\{[^}]*\})?\s*from\s+["']react["']/);
+  });
+});
+
+describe('the React emitter creates RSC boundaries', () => {
+  it('keeps presentational components server-compatible', () => {
+    const react = compileComponentModule(BADGE, { framework: 'react', componentName: 'BaseBadge' });
+
+    expect(react.code).not.toContain('"use client";');
+  });
+
+  it('marks event-handler output as a client component', () => {
+    const source = BADGE.replace('<span class={className}>', '<span class={className} onClick={() => undefined}>');
+    const react = compileComponentModule(source, { framework: 'react', componentName: 'BaseBadge' });
+
+    expect(react.code.startsWith('"use client";')).toBe(true);
+  });
+
+  it('preserves a single author-supplied client directive', () => {
+    const react = compileComponentModule(`'use client';\n${IN_VIEW}`, {
+      framework: 'react',
+      componentName: 'BaseInView',
+    });
+
+    expect(react.code.match(/["']use client["'];/g)).toHaveLength(1);
+  });
+
+  it('preserves a use server directive without adding use client', () => {
+    const react = compileComponentModule(`'use server';\n${BADGE}`, {
+      framework: 'react',
+      componentName: 'BaseBadge',
+    });
+
+    expect(react.code).toMatch(/['"]use server['"];/);
+    expect(react.code).not.toContain('"use client";');
+  });
+
+  it('detects interactive event handlers in JSX props and marks as client component', () => {
+    const source = BADGE.replace('<span class={className}>', '<span class={className} onChange={() => undefined}>');
+    const react = compileComponentModule(source, { framework: 'react', componentName: 'BaseBadge' });
+
+    expect(react.code.startsWith('"use client";')).toBe(true);
+  });
+
+  it('remaps framework-split re-exports', () => {
+    const source = `${BADGE}\nexport { BaseDrawer } from '@mission-platform/components';`;
+    const react = compileComponentModule(source, { framework: 'react', componentName: 'BaseBadge' });
+
+    expect(react.code).toContain('export { BaseDrawer } from "@mission-platform/components/react";');
   });
 });
 
@@ -1152,7 +1229,7 @@ describe('the local effect helper module source (`localEffectModuleSource`)', ()
   });
 });
 
-describe('the `classNames` attribute', () => {
+describe('the `className` attribute', () => {
   const react = compileComponentModule(CLASS_NAMES, { framework: 'react', componentName: 'BaseChip' });
   const vue = compileComponentModule(CLASS_NAMES, { framework: 'vue', componentName: 'BaseChip' });
 
@@ -1160,8 +1237,8 @@ describe('the `classNames` attribute', () => {
     expect(react.code).toContain(
       "className={classNames('chip', `chip--${tone}`, { 'chip--active': properties.active ?? false })}",
     );
-    // The attribute itself is never emitted as a literal `classNames` prop.
-    expect(react.code).not.toMatch(/classNames=\{\[/);
+    // The attribute value itself is never emitted as a literal array.
+    expect(react.code).not.toMatch(/className=\{\[/);
   });
 
   it('re-injects the neutral `classNames` runtime import on React (the author never imports it)', () => {
@@ -1338,7 +1415,7 @@ describe('the Vue emitter fuses a `@model`-tagged prop and its change event into
     expect(vue.code).toContain('const modelValue = defineModel<string[]>({ default: () => ([]) });');
   });
 
-  it('declares a named prop as `defineModel(\'<prop>\', …)` carrying its primitive default', () => {
+  it("declares a named prop as `defineModel('<prop>', …)` carrying its primitive default", () => {
     expect(vue.code).toContain("const geodesic = defineModel<boolean>('geodesic', { default: true });");
   });
 
@@ -2835,5 +2912,36 @@ describe('the compiler maps the neutral `useId` hook to each framework native `u
     expect(vue.code).toMatch(/import\s*\{[^}]*\buseId\b[^}]*\}\s*from\s*'vue'/);
     expect(vue.code).toContain('const generatedId = useId();');
     expect(vue.code).not.toContain('nextFieldId');
+  });
+});
+
+const I18N_CHECKBOX = [
+  "import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  "import i18next from 'i18next';",
+  '',
+  'export interface CheckboxProperties extends MpProperties {',
+  '  required?: boolean;',
+  '}',
+  '',
+  'export function BaseCheckbox(properties: CheckboxProperties): MpElement {',
+  "  const label = i18next.t('required_label', { defaultValue: 'Required' });",
+  '  return <span>{label}</span>;',
+  '}',
+].join('\n');
+
+describe('the compiler rewrites `i18next.t(...)` to `useI18n()` and `t(...)`', () => {
+  const react = compileComponentModule(I18N_CHECKBOX, { framework: 'react', componentName: 'BaseCheckbox' });
+  const vue = compileComponentModule(I18N_CHECKBOX, { framework: 'vue', componentName: 'BaseCheckbox' });
+
+  it('imports `useI18n` from `@mission-platform/i18n/react` and injects hook call (React)', () => {
+    expect(react.code).toMatch(/import\s*\{\s*useI18n\s*\}\s*from\s*["']@mission-platform\/i18n\/react["']/);
+    expect(react.code).toContain('const { t } = useI18n();');
+    expect(react.code).toContain("const label = t('required_label', { defaultValue: 'Required' });");
+  });
+
+  it('imports `useI18n` from `@mission-platform/i18n/vue` and injects hook call (Vue)', () => {
+    expect(vue.code).toContain("import { useI18n } from '@mission-platform/i18n/vue';");
+    expect(vue.code).toContain('const { t } = useI18n();');
+    expect(vue.code).toContain("t('required_label', { defaultValue: 'Required' })");
   });
 });

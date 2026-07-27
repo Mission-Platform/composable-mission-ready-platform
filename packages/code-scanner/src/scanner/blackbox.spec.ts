@@ -11,14 +11,15 @@
 // (`crates/code-scan/tests/blackbox.rs`): the expected value is the sibling
 // `.txt` sidecar with only its trailing CR/LF trimmed, and control characters in
 // the payload (GS/RS/FS) are preserved for an exact comparison.
-import { inflateSync } from 'node:zlib';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { inflateSync } from 'node:zlib';
 
 import { describe, expect, it } from 'vitest';
 
-import type { ImageLike, ScanFormat } from '../types';
 import { scanImageData, scanImageDataAsync } from './index';
+
+import type { ImageLike, ScanFormat } from '../types';
 
 /** Absolute path of a vendored corpus image, relative to the package root. */
 const CORPUS = resolve(process.cwd(), '../../crates/code-scan/tests/fixtures/zxing-blackbox');
@@ -34,17 +35,21 @@ function unfilter(type: number, line: Uint8Array, prev: Uint8Array, bpp: number)
     const b = prev[i];
     const c = i >= bpp ? prev[i - bpp] : 0;
     switch (type) {
-      case 0:
+      case 0: {
         break;
-      case 1:
+      }
+      case 1: {
         line[i] = (line[i] + a) & 0xff;
         break;
-      case 2:
+      }
+      case 2: {
         line[i] = (line[i] + b) & 0xff;
         break;
-      case 3:
+      }
+      case 3: {
         line[i] = (line[i] + ((a + b) >> 1)) & 0xff;
         break;
+      }
       case 4: {
         const p = a + b - c;
         const pa = Math.abs(p - a);
@@ -54,8 +59,9 @@ function unfilter(type: number, line: Uint8Array, prev: Uint8Array, bpp: number)
         line[i] = (line[i] + pr) & 0xff;
         break;
       }
-      default:
+      default: {
         throw new Error(`unsupported PNG filter ${type}`);
+      }
     }
   }
 }

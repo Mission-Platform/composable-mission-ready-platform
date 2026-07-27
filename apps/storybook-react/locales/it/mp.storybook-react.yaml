@@ -1,0 +1,12 @@
+badge:
+  pill: Badge a pillola
+  success: Successo
+button:
+  primary: Primario
+  secondary: Secondario
+  tertiary: Notifiche
+components: Componenti
+description:
+  after: Apri Storybook per esplorare la libreria completa dei componenti.
+  before: Una vetrina React per
+title: Componenti di Mission Platform

@@ -4,9 +4,9 @@ This document explains the project's worker configuration and usage guidelines.
 
 ## Current Status
 
-The `workers/` directory contains several Cloudflare Worker implementations, including:
-- `base-spa`: Base SPA worker for serving static assets with an SPA-style fallback.
-- `api-proxy`: Worker for proxying requests to external services.
+The `workers/` directory contains Cloudflare Worker implementations, including:
+- `base-spa`: Base SPA worker for serving static assets with SPA fallback (`workers/base-spa/src/index.ts`).
+- `api-proxy`: Worker for proxying requests to external services (`workers/api-proxy/index.js`).
 
 ## When to Add Workers
 

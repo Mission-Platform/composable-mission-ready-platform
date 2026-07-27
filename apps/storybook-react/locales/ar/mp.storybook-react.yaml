@@ -1,0 +1,12 @@
+badge:
+  pill: شارة حبة
+  success: نجاح
+button:
+  primary: أساسي
+  secondary: ثانوي
+  tertiary: إشعارات
+components: المكونات
+description:
+  after: افتح Storybook لاستكشاف مكتبة المكونات الكاملة.
+  before: عرض React لـ
+title: مكونات Mission Platform

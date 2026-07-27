@@ -93,7 +93,7 @@ import baseConfig from '@mission-platform/eslint-config'
 #### ❌ Invalid (package importing app)
 ```ts
 // packages/components/Button.vue
-import AppLayout from '@/apps/main/Layout.vue' # BLOCKED BY LINT
+import AppLayout from '@/apps/main/Layout.vue' // BLOCKED BY LINT
 ```
 
 #### ✅ Correct (app importing package)
@@ -105,7 +105,7 @@ import { useExample } from '@mission-platform/example-package'
 #### ❌ Invalid (app importing package from wrong location)
 ```ts
 // apps/my-care-notes/src/utils/helpers.ts
-import Button from '../packages/components/Button.vue' # BLOCKED BY LINT
+import Button from '../packages/components/Button.vue' // BLOCKED BY LINT
 ```
 
 1. **Framework-Agnostic Design**:
@@ -160,7 +160,8 @@ To use a package in an application or another package, add it as a dependency:
 
 ## Dependency Direction
 
-- Packages must never import from `apps/`. The dependency flow is strictly one-directional: `apps` → `packages`.
+- Code in `packages/`, `configs/`, `vite-plugins/`, and `workers/` must never import from `apps/`.
+- The dependency flow is strictly one-way: `apps` → `packages`/`vite-plugins`/`workers` → `configs`.
 - Packages can import from other packages, configs, vite-plugins, and workers.
 
 ## Shared Tooling Configurations
@@ -183,7 +184,7 @@ All packages should extend the shared tooling configurations:
 
 - **Stylelint**:
   ```js
-  // stylelint.config.js
+  // stylelint.config.mjs
   import baseConfig from '@mission-platform/stylelint-config'
   export default { ...baseConfig }
   ```

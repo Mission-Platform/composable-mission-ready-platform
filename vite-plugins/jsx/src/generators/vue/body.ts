@@ -111,9 +111,7 @@ function reactiveHookCall(call: ts.CallExpression): ts.CallExpression {
     });
     return factory.createObjectLiteralExpression(properties, true);
   });
-  return changed
-    ? factory.createCallExpression(call.expression, call.typeArguments, rewrittenArguments)
-    : call;
+  return changed ? factory.createCallExpression(call.expression, call.typeArguments, rewrittenArguments) : call;
 }
 
 /**

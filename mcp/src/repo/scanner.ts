@@ -141,6 +141,6 @@ export function listDocs(): { slug: string; path: string }[] {
 }
 
 export function readDoc(slug: string): string | undefined {
-  const doc = listDocs().find((candidate) => candidate.slug === slug);
-  return doc ? readFileSync(doc.path, 'utf8') : undefined;
+  const document = listDocs().find((candidate) => candidate.slug === slug);
+  return document ? readFileSync(document.path, 'utf8') : undefined;
 }

@@ -1,0 +1,40 @@
+btn:
+  cancel: Abbrechen
+  delete: Löschen
+  save: Speichern
+col:
+  actions: Aktionen
+  content: Inhalt
+  name: Name
+content_label: Inhalt
+date_row_content: Aktuelles Datum (TT/MM/JJJJ)
+menu:
+  export-all: Alle exportieren
+  import: Importieren
+  import-all: Alle importieren
+  new: Neu
+name:
+  hint: Geben Sie {preview} im Editor ein, um dieses Snippet einzufügen
+  label: Snippet-Name
+  placeholder: z. B. greeting
+nav:
+  export-note: Notiz exportieren
+  import-note: Notiz importieren
+  notes: Notizen
+  reopen-closed: Geschlossenes Tab wiederöffnen
+  restore-tab: 'Wiederherstellen: {title}'
+  snippets: Textbausteine
+rename:
+  cancel: Abbrechen
+  confirm: Umbenennen
+  label: Tab-Name
+  title: Tab umbenennen
+sidebar:
+  title: Textbausteine
+snippet:
+  edit: Textbaustein bearbeiten
+  export: Textbaustein exportieren
+theme_toggle: Farbdesign umschalten
+title:
+  edit: Snippet bearbeiten
+  new: Neues Snippet

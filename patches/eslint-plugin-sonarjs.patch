@@ -1,0 +1,23 @@
+diff --git a/cjs/helpers/dependency-manifests/resolvers/package-json.js b/cjs/helpers/dependency-manifests/resolvers/package-json.js
+index 6af0b8212a59af92aac03346f4e04a8bcbb2c341..5450c80ee586406997c91d955bd21051074efcd9 100644
+--- a/cjs/helpers/dependency-manifests/resolvers/package-json.js
++++ b/cjs/helpers/dependency-manifests/resolvers/package-json.js
+@@ -28,10 +28,17 @@ exports.packageJsonManifestResolver = {
+         }
+         else {
+             // No parent package.json with catalogs found, we check if there's a pnpm workspace file that we can use as a catalog source.
+-            const pnpmWorkspaceFile = closest_js_1.closestPatternCache
++            let pnpmWorkspaceFile = closest_js_1.closestPatternCache
+                 .get(index_js_1.PNPM_WORKSPACE_YAML, fileSystem)
+                 .get(topDir)
+                 .get(dir);
++            if (!pnpmWorkspaceFile) {
++                const fsRoot = (0, files_js_1.getPathRoot)(dir);
++                pnpmWorkspaceFile = closest_js_1.closestPatternCache
++                    .get(index_js_1.PNPM_WORKSPACE_YAML, fileSystem)
++                    .get(fsRoot)
++                    .get(dir);
++            }
+             const parsedPnpmWorkspace = pnpmWorkspaceFile
+                 ? (0, parsed_dependency_files_js_1.parsePnpmWorkspace)(pnpmWorkspaceFile)
+                 : undefined;

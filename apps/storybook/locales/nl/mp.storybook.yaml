@@ -1,0 +1,41 @@
+aria:
+  delete: Verwijderen
+  geodesic: Geodetische modus
+  join: Lijnen samenvoegen
+  rotate-ccw: Tegen de klok in draaien
+  rotate-cw: Met de klok mee draaien
+  scale-down: Kleiner maken
+  scale-up: Groter maken
+  split: Lijn splitsen
+draw:
+  circle: Cirkel
+  line: Lijn
+  none: Geen
+  polygon: Polygoon
+  square: Vierkant
+  triangle: Driehoek
+geojson-summary_zero: geojson-summary
+geojson-summary_one: geojson-summary
+geojson-summary_other: geojson-summary
+label:
+  draw: 'Tekenen:'
+  edit: 'Bewerken:'
+mode:
+  flat: Plat
+  geodesic: Geodetisch
+status:
+  joining: ⚡ Klik op een andere lijn om samen te voegen met {id}
+  none: Klik op een vorm om te selecteren
+  selected: 'Geselecteerd: {id}'
+title: Tekenwerkbalk kaart
+tooltip:
+  delete: Geselecteerd object verwijderen
+  flat: 'Platte modus: verplaatsen/schalen behoudt visuele vorm. Klik voor geodetische modus.'
+  geodesic: 'Geodetische modus: verplaatsen/schalen houdt rekening met grondafstanden. Klik voor platte/visuele modus.'
+  join: Twee lijnen samenvoegen bij de dichtstbijzijnde eindpunten
+  join-active: Samenvoegen — selecteer een andere lijn om het samenvoegen te voltooien
+  rotate-ccw: −45° draaien
+  rotate-cw: +45° draaien
+  scale-down: Kleiner maken ×0,75
+  scale-up: Groter maken ×1,5
+  split: Lijn splitsen in het midden

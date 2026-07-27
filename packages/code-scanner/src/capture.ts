@@ -4,6 +4,7 @@
 // environment-agnostic for SSR / tests).
 
 import { scanImageData, scanImageDataAsync } from './scanner';
+
 import type { ImageLike, ScanResult } from './types';
 
 /**

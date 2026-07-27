@@ -24,8 +24,10 @@ Applications are self-contained packages that compose functionality from the sha
 
 **Current Applications:**
 - **`my-care-notes/`**: A Vue 3 note-taking application with spell checking (Hunspell/WebAssembly), grammar checking (Harper), Monaco editor, i18next integration, and Cloudflare Pages deployment.
-- **`storybook/`**: A Storybook instance for developing, documenting, and visually testing cross-framework components.
+- **`service-monitor/`**: Service health and status monitoring dashboard.
+- **`storybook/`**: A Storybook instance for developing, documenting, and visually testing Vue 3 components.
 - **`storybook-react/`**: A React counterpart of Storybook, cataloguing the React builds of cross-framework components.
+- **`website/`**: Platform website and documentation portal.
 
 **Conventions:**
 - Each app lives in its own subdirectory: `apps/<app-name>/`
@@ -38,12 +40,14 @@ Applications are self-contained packages that compose functionality from the sha
 Shared linting, formatting, and build-tooling configuration packages consumed by both `packages/` and `apps/`.
 
 **Current Configs:**
-- **`eslint-config/`**: Base ESLint flat config for TypeScript, Vue 3, and JavaScript
+- **`eslint-config/`**: Base ESLint flat config for TypeScript, Vue 3, React, and JavaScript
+- **`i18n-config/`**: Shared i18n configuration and locale definitions
+- **`i18next-cli-vue/`**: i18next CLI Vue extractor configuration
 - **`postcss-config/`**: Shared PostCSS configuration
 - **`prettier-config/`**: Base Prettier config for formatting
 - **`stylelint-config/`**: Base Stylelint config for SCSS and Vue SFC style blocks
 - **`typescript-config/`**: Shared TypeScript base configs (base, app, library, node, test)
-- **`vite-config/`**: Shared Vite/Vitest helpers
+- **`vite-config/`**: Shared Vite and Vitest helpers
 
 **Conventions:**
 - Each config lives in its own subdirectory: `configs/<config-name>/`
@@ -56,15 +60,27 @@ Shared linting, formatting, and build-tooling configuration packages consumed by
 Shared libraries that apps consume as dependencies. These packages are the composable building blocks of the platform.
 
 **Current Packages:**
+- **`barcode/`**: 1D/2D Barcode generation and barcode rendering utilities
 - **`breakpoints/`**: Responsive breakpoint utilities, composables, and Vue components
+- **`code-scanner/`**: Camera-based barcode and matrix code scanner
+- **`components/`**: Cross-framework component library built to both Vue 3 and React
+- **`d3/`**: Reactive D3.js visualization wrappers
+- **`forms/`**: Form primitives and validation components
+- **`forms-core/`**: Core form validation schema engine
 - **`harper/`**: Harper grammar checker integration for Monaco editor
 - **`hunspell/`**: Hunspell spell checker compiled to WebAssembly via Emscripten
 - **`i18n/`**: Framework-agnostic i18next wrapper with Vue and React adapters
 - **`icons/`**: Write-once SVG icon components for Vue 3 and React
 - **`jsx/`**: Framework-neutral JSX runtime with React-style hooks
-- **`components/`**: Write-once component library built to both Vue 3 and React
+- **`layout/`**: Layout primitives (stacks, grids, separators)
 - **`map/`**: MapLibre GL Vue 3 wrapper with full reactivity support
+- **`matrix-code/`**: DataMatrix and QR code rendering utilities
+- **`phone-number/`**: Phone number formatting and validation
+- **`qr-code/`**: SVG/Canvas QR code generator
 - **`router/`**: Framework-agnostic routing system with Vue adapter
+- **`rxjs/`**: RxJS composables and utilities for Vue 3
+- **`scheduler-core/`**: Scheduler engine and timeline utilities
+- **`seo/`**: Framework-agnostic meta tag and SEO composables
 - **`tokens/`**: Design tokens authored in DTCG format with OKLab colors
 
 **Conventions:**
@@ -89,6 +105,8 @@ Scripts for repository-wide operations such as i18n extraction, build automation
 Vite plugins consumed by deployable apps at build time.
 
 **Current Vite Plugins:**
+- **`assemblyscript/`**: AssemblyScript compilation plugin for Vite
+- **`i18n/`**: Vite plugin for i18n locale loading and extraction
 - **`jsx/`**: Two-stage compiler for framework-neutral JSX components
 - **`seo/`**: Vite plugin that generates `robots.txt` and `sitemap.xml`
 - **`tokens/`**: Vite plugin that generates design-token artifacts from DTCG sources

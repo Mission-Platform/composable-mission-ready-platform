@@ -4,8 +4,21 @@ This document explains the purpose and usage of utility scripts in the `scripts/
 
 ## Current Status
 
-The `scripts/` directory contains several utility scripts used for project maintenance and automation, including:
-- `i18n-extract.ts`: Utility for extracting internationalization strings.
+The `scripts/` directory contains utility scripts used for monorepo maintenance and local development automation:
+- `i18n-extract.ts`: Utility for extracting i18n translation keys across packages and apps.
+- `generate-dev-cert.ts`: Utility for generating local development SSL/TLS certificates.
+
+## Execution
+
+Scripts are written in TypeScript and executed using `tsx`:
+
+```bash
+# Run i18n extraction
+pnpm exec tsx scripts/i18n-extract.ts
+
+# Generate local SSL certificate
+pnpm exec tsx scripts/generate-dev-cert.ts
+```
 
 ## Purpose
 

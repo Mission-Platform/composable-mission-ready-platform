@@ -1,5 +1,6 @@
-import { VirtualTabs } from '@mission-platform/components/react';
 import { useState } from 'react';
+
+import { VirtualTabs } from '@mission-platform/components/react';
 
 import type { TabItem } from '../base-tabs';
 import type { Meta, StoryObj } from '@storybook/react-vite';

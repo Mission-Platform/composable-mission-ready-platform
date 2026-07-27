@@ -72,7 +72,7 @@ pnpm --filter @mission-platform/my-care-notes format
 
 1. Create `apps/<app-name>/`.
 2. Add `package.json` with `"name": "@mission-platform/<app-name>"` and `"private": true`.
-3. Wire up shared configs: `eslint.config.js`, `prettier.config.js`, `stylelint.config.js`.
+3. Wire up shared configs: `eslint.config.js`, `prettier.config.js`, `stylelint.config.mjs`.
 4. Add workspace dependencies in `package.json` using `"workspace:*"` protocol.
 5. Run `pnpm install` from the repo root to link workspace packages.
 6. Add Storybook stories in `apps/storybook` for any new components introduced.

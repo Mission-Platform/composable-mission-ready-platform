@@ -37,9 +37,12 @@ const meta = {
     components: { FormBuilder },
     setup() {
       const schema = ref(arguments_.modelValue);
-      return { args: arguments_, schema };
+      const arguments__ = { ...arguments_ };
+      delete arguments__.modelValue;
+      delete arguments__.onUpdateModelValue;
+      return { args: arguments__, schema };
     },
-    template: '<FormBuilder v-bind="args" :model-value="schema" @update-model-value="schema = $event" />',
+    template: '<FormBuilder v-bind="args" v-model="schema" />',
   }),
 } satisfies Meta<typeof FormBuilder>;
 

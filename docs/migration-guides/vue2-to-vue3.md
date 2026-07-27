@@ -9,7 +9,7 @@ Before starting the migration, ensure all packages only import from `configs/`:
 
 ```bash
 # Run ESLint to check for invalid imports
-npm run lint -- --fix
+pnpm run lint -- --fix
 
 # Look for errors like:
 # 'import AppLayout from '@/apps/main/Layout.vue' # BLOCKED BY LINT'
@@ -71,7 +71,7 @@ export default {
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const message = 'Hello Vue 3'
 </script>
 ```
@@ -80,7 +80,7 @@ const message = 'Hello Vue 3'
 Refactor utility functions to use Composition API patterns:
 
 **Vue 2:**
-```js
+```ts
 export function useCounter() {
   return {
     count: 0,
@@ -90,7 +90,7 @@ export function useCounter() {
 ```
 
 **Vue 3:**
-```js
+```ts
 import { ref } from 'vue'
 
 export function useCounter() {
@@ -123,9 +123,9 @@ After migration, verify all packages maintain proper dependency direction:
 
 ```bash
 # Run comprehensive checks
-npm run lint -- --fix
-npm run test
+pnpm exec turbo run lint
+pnpm exec turbo run test
 
-# Check for any circular dependencies
-npm run lint -- --max-warnings=0
+# Check for any lint warnings or errors
+pnpm exec turbo run lint -- --max-warnings=0
 ```

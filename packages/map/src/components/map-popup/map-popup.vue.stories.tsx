@@ -1,5 +1,6 @@
-import { MapLibre, MapPopup } from '@mission-platform/map/vue';
 import { defineComponent, ref } from 'vue';
+
+import { MapLibre, MapPopup } from '@mission-platform/map/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 

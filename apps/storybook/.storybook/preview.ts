@@ -6,25 +6,15 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import './preview.scss';
 
 import { breakpointKeys, breakpoints } from '@mission-platform/breakpoints';
-import { createMpI18n, localeNamespaces, mpNamespace } from '@mission-platform/i18n';
+import { createMpI18n, mpNamespace } from '@mission-platform/i18n';
 import { createMpI18nVue } from '@mission-platform/i18n/vue';
 import { withThemeByDataAttribute } from '@storybook/addon-themes';
 import { setup } from '@storybook/vue3-vite';
-import yaml from 'js-yaml';
+import { resources } from 'virtual:i18n-resources';
 import { createMemoryHistory, createRouter } from 'vue-router';
 
-import enLocaleSource from '../src/locales/en.yaml?raw';
-
-import type { MpMessageObject } from '@mission-platform/i18n';
 import type { Preview, VueRenderer } from '@storybook/vue3-vite';
 import type { ViewportMap } from 'storybook/viewport';
-
-// English source strings extracted from every component's <i18n> block, grouped
-// by `mp.<workspace>` namespace and loaded once so all stories resolve
-// translations against a single i18next instance. Storybook owns the
-// `mp.storybook` namespace; package strings (e.g. `mp.breakpoints`) come from
-// the dependency packages whose components are catalogued here.
-const enBundles = (yaml.load(enLocaleSource) ?? {}) as Record<string, MpMessageObject>;
 
 function getViewportType(width: number): 'mobile' | 'tablet' | 'desktop' {
   if (width < 768) return 'mobile';
@@ -60,7 +50,7 @@ setup((app) => {
     createMpI18nVue(
       createMpI18n({
         namespace: mpNamespace('storybook'),
-        namespaces: localeNamespaces('en', enBundles),
+        resources,
       }),
     ),
   );

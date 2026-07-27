@@ -5,13 +5,15 @@ import {
   resolveSpeedIntervalSeconds,
   sanitizeMonitor,
 } from '@/monitoring/config';
+import { isIncidentSeverity, isIncidentStatus, validMaintenanceRange } from '@/monitoring/incidents';
 import { getMonitor } from '@/monitoring/store';
+
 import type { SpeedProviderId, SpeedResponse, SpeedSeriesResponse } from '@/monitoring/speed/types';
 import type { MetricsResponse, MonitorsResponse, ServicesResponse } from '@/monitoring/types';
 
 /** Serialize a value as a JSON `Response` with sensible caching headers. */
 function json(body: unknown, init?: ResponseInit): Response {
-  return new Response(JSON.stringify(body), {
+  return Response.json(body, {
     ...init,
     headers: {
       'content-type': 'application/json; charset=utf-8',
@@ -49,8 +51,8 @@ export async function handleMetrics(request: Request): Promise<Response> {
     return json({ error: 'Missing required "service" query parameter.' }, { status: 400 });
   }
 
-  const sinceParam = Number.parseInt(url.searchParams.get('since') ?? '', 10);
-  const since = Number.isFinite(sinceParam) ? sinceParam : Date.now() - resolveRetentionMs();
+  const sinceParameter = Number.parseInt(url.searchParams.get('since') ?? '', 10);
+  const since = Number.isFinite(sinceParameter) ? sinceParameter : Date.now() - resolveRetentionMs();
 
   const monitor = getMonitor();
   const samples = await monitor.getMetrics(service, since);
@@ -136,13 +138,108 @@ export async function handleMonitorDelete(request: Request): Promise<Response> {
 export function handleMonitorsRoute(request: Request): Promise<Response> {
   switch (request.method) {
     case 'POST':
-    case 'PUT':
+    case 'PUT': {
       return handleMonitorUpsert(request);
-    case 'DELETE':
+    }
+    case 'DELETE': {
       return handleMonitorDelete(request);
-    default:
+    }
+    default: {
       return handleMonitors();
+    }
   }
+}
+
+/** Runtime incident listing, reporting, and status updates. */
+export async function handleIncidentsRoute(request: Request): Promise<Response> {
+  const monitor = getMonitor();
+  if (request.method === 'GET') return json({ incidents: await monitor.listIncidents() });
+  let body: Record<string, unknown>;
+  try {
+    body = (await request.json()) as Record<string, unknown>;
+  } catch {
+    return json({ error: 'Request body must be valid JSON.' }, { status: 400 });
+  }
+  if (request.method === 'POST') {
+    if (typeof body.title !== 'string' || !body.title.trim())
+      return json({ error: 'A title is required.' }, { status: 400 });
+    if (body.severity !== undefined && !isIncidentSeverity(body.severity))
+      return json({ error: 'Invalid incident severity.' }, { status: 400 });
+    const incident = await monitor.createIncident({
+      title: body.title.trim(),
+      description: typeof body.description === 'string' ? body.description.trim() : '',
+      serviceId: typeof body.serviceId === 'string' && body.serviceId ? body.serviceId : null,
+      severity: isIncidentSeverity(body.severity) ? body.severity : 'minor',
+    });
+    return json({ incident }, { status: 201 });
+  }
+  if (request.method === 'PATCH' && typeof body.id === 'string') {
+    if (body.operation === 'update') {
+      if (typeof body.message !== 'string' || !body.message.trim())
+        return json({ error: 'An update message is required.' }, { status: 400 });
+      if (body.status !== undefined && body.status !== null && !isIncidentStatus(body.status))
+        return json({ error: 'Invalid incident status.' }, { status: 400 });
+      const update = await monitor.addIncidentUpdate(body.id, {
+        message: body.message.trim(),
+        status: isIncidentStatus(body.status) ? body.status : null,
+      });
+      return update ? json({ update }) : json({ error: 'Incident not found.' }, { status: 404 });
+    }
+    if (body.operation === 'post-report') {
+      if (typeof body.report !== 'string')
+        return json({ error: 'A post-incident report is required.' }, { status: 400 });
+      const incident = await monitor.updatePostIncidentReport(body.id, body.report.trim());
+      return incident
+        ? json({ incident })
+        : json({ error: 'Only resolved incidents can have a post-incident report.' }, { status: 409 });
+    }
+    if (body.status !== undefined && !isIncidentStatus(body.status))
+      return json({ error: 'Invalid incident status.' }, { status: 400 });
+    if (body.severity !== undefined && !isIncidentSeverity(body.severity))
+      return json({ error: 'Invalid incident severity.' }, { status: 400 });
+    const incident = await monitor.updateIncident(body.id, {
+      status: isIncidentStatus(body.status) ? body.status : undefined,
+      description: typeof body.description === 'string' ? body.description : undefined,
+      severity: isIncidentSeverity(body.severity) ? body.severity : undefined,
+    });
+    return incident ? json({ incident }) : json({ error: 'Incident not found.' }, { status: 404 });
+  }
+  return json({ error: 'Unsupported incident operation.' }, { status: 405 });
+}
+
+/** Planned maintenance listing, creation, and updates. */
+export async function handleMaintenanceRoute(request: Request): Promise<Response> {
+  const monitor = getMonitor();
+  if (request.method === 'GET') return json({ maintenance: await monitor.listMaintenance() });
+  let body: Record<string, unknown>;
+  try {
+    body = (await request.json()) as Record<string, unknown>;
+  } catch {
+    return json({ error: 'Request body must be valid JSON.' }, { status: 400 });
+  }
+  if (typeof body.title !== 'string' || !body.title.trim())
+    return json({ error: 'A title is required.' }, { status: 400 });
+  if (!validMaintenanceRange(body.startsAt, body.endsAt))
+    return json({ error: 'startsAt and endsAt must be finite numbers with startsAt before endsAt.' }, { status: 400 });
+  const input = {
+    title: body.title.trim(),
+    description: typeof body.description === 'string' ? body.description.trim() : '',
+    serviceId: typeof body.serviceId === 'string' && body.serviceId ? body.serviceId : null,
+    startsAt: body.startsAt,
+    endsAt: body.endsAt as number,
+  };
+  if (request.method === 'POST') return json({ maintenance: await monitor.createMaintenance(input) }, { status: 201 });
+  if (request.method === 'PATCH' && typeof body.id === 'string') {
+    const update =
+      body.cancelled === true
+        ? { ...input, cancelledAt: Date.now() }
+        : body.cancelled === false
+          ? { ...input, cancelledAt: null }
+          : input;
+    const maintenance = await monitor.updateMaintenance(body.id, update);
+    return maintenance ? json({ maintenance }) : json({ error: 'Maintenance window not found.' }, { status: 404 });
+  }
+  return json({ error: 'Unsupported maintenance operation.' }, { status: 405 });
 }
 
 /**
@@ -173,8 +270,8 @@ export async function handleSpeedSeries(request: Request): Promise<Response> {
     return json({ error: 'Missing required "provider" query parameter.' }, { status: 400 });
   }
 
-  const sinceParam = Number.parseInt(url.searchParams.get('since') ?? '', 10);
-  const since = Number.isFinite(sinceParam) ? sinceParam : Date.now() - resolveRetentionMs();
+  const sinceParameter = Number.parseInt(url.searchParams.get('since') ?? '', 10);
+  const since = Number.isFinite(sinceParameter) ? sinceParameter : Date.now() - resolveRetentionMs();
 
   const monitor = getMonitor();
   const samples = await monitor.getSpeedSeries(provider, since);

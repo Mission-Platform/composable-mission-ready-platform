@@ -9,8 +9,12 @@ This repository contains comprehensive documentation for the Mission Platform, a
 - **[DOCUMENTATION.md](DOCUMENTATION.md)**: This document - comprehensive documentation structure
 - **[CONTRIBUTING.md](CONTRIBUTING.md)**: Guidelines for contributing to the project
 - **[AGENTS.md](AGENTS.md)**: Agent-specific guidelines and instructions
+- **[mcp/README.md](mcp/README.md)**: Model Context Protocol (MCP) server documentation
 
 ### Core Documentation
+#### Platform Overview
+- **[docs/overview.md](docs/overview.md)**: High-level overview of the Mission Platform principles, technology stack, and features
+
 #### Development Setup
 - **[docs/development-setup.md](docs/development-setup.md)**: Detailed instructions for setting up your development environment
 
@@ -24,6 +28,12 @@ This repository contains comprehensive documentation for the Mission Platform, a
 #### Build System
 - **[docs/build-system.md](docs/build-system.md)**: Overview of the build system and configuration
 
+#### Tooling & Configs
+- **[docs/configs/index.md](docs/configs/index.md)**: Overview of centralized configuration packages
+- **[docs/configs/eslint-config.md](docs/configs/eslint-config.md)**: Centralized ESLint configuration
+- **[docs/configs/scripts-config.md](docs/configs/scripts-config.md)**: Utility scripts configuration and usage
+- **[docs/configs/workers-config.md](docs/configs/workers-config.md)**: Cloudflare Workers configuration guidelines
+
 ### Advanced Documentation
 #### Architecture
 - **[docs/architecture.md](docs/architecture.md)**: Detailed architecture documentation
@@ -32,13 +42,14 @@ This repository contains comprehensive documentation for the Mission Platform, a
 - **[docs/api-reference.md](docs/api-reference.md)**: References for all Mission Platform packages and framework adapters
 
 #### Migration Guides
-- **[docs/migration-guides/vue2-to-vue3.md](docs/migration-guides/vue2-to-vue3.m)**: Step-by-step guide for migrating from Vue 2 to Vue 3
+- **[docs/migration-guides/vue2-to-vue3.md](docs/migration-guides/vue2-to-vue3.md)**: Step-by-step guide for migrating from Vue 2 to Vue 3
 
 ### Best Practices
 - **[docs/best-practices.md](docs/best-practices.md)**: Essential guidelines for developing, testing, and maintaining applications in the Mission Platform monorepo
 
 ### Troubleshooting
 - **[docs/troubleshooting.md](docs/troubleshooting.md)**: Common issues and solutions for debugging and performance optimization
+- **[docs/circular-dependencies.md](docs/circular-dependencies.md)**: Detecting, preventing, and resolving circular dependencies
 
 ## How to Contribute Documentation
 

@@ -10,9 +10,9 @@ The Mission Platform is a VueJS 3 monorepo managed with pnpm workspaces. It foll
 
 ### Essential Guides
 - **[Best Practices](docs/best-practices.md)**: Essential guidelines for developing, testing, and maintaining applications in the Mission Platform monorepo
-- **Migration Guide**: Step-by-step guide for migrating from Vue 2 to Vue 3 ([docs/migration-guides/vue2-to-vue3.md](docs/migration-guides/vue2-to-vue3.md))
-- **API Reference**: References for all Mission Platform packages and framework adapters ([docs/api-reference.md](docs/api-reference.md))
-- **Troubleshooting**: Common issues and solutions for debugging and performance optimization ([docs/troubleshooting.md](docs/troubleshooting.md))
+- **[Migration Guide](docs/migration-guides/vue2-to-vue3.md)**: Step-by-step guide for migrating from Vue 2 to Vue 3
+- **[API Reference](docs/api-reference.md)**: References for all Mission Platform packages and framework adapters
+- **[Troubleshooting](docs/troubleshooting.md)**: Common issues and solutions for debugging and performance optimization
 
 ### Development Setup
 - **[Development Setup](docs/development-setup.md)**: Detailed instructions for setting up your development environment
@@ -29,7 +29,7 @@ The Mission Platform is a VueJS 3 monorepo managed with pnpm workspaces. It foll
 ## Core Principles
 
 ### Dependency Direction
-Code in `packages/`, `configs/`, `vite-plugins/`, and `workers/` must never import from `apps/`. The dependency flow is strictly one-way: `apps` → `packages`/`vite-plugins`/`workers` → `configs` (and ` apps` → `configs` directly for tooling).
+Code in `packages/`, `configs/`, `vite-plugins/`, and `workers/` must never import from `apps/`. The dependency flow is strictly one-way: `apps` → `packages`/`vite-plugins`/`workers` → `configs` (and `apps` → `configs` directly for tooling).
 
 ### Isolation of Concerns
 New UI components, composables, utilities, or design tokens belong in `packages/`, not embedded inside an app. New shared lint/format/build tooling belongs in `configs/`.
@@ -53,7 +53,7 @@ When adding or modifying components in `packages/`, add or update corresponding 
 - `[ADVANCED_CHAT]` → switch to `[CODE]` if, after analysis/answer, user explicitly asks to implement changes or modify project
 - `[FAST_CODE]` → must switch to `[CODE]` if can't finish after 3 steps
 - `[CODE]` → switching modes is strictly forbidden
-- `[RUN_VERIFY]` → must switch to `[code]` if can't finish after 3 steps
+- `[RUN_VERIFY]` → must switch to `[CODE]` if can't finish after 3 steps
 - `[SETUP]` → may switch to `[CODE]` if modification code is required after setup
 - `[NICHE]` → may switch to `[CODE]` if task reveals need for significant code implementation
 

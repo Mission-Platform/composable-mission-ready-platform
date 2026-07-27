@@ -1,7 +1,9 @@
+
 import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';
 import { toVueComponent } from '@mission-platform/jsx/vue';
-import { useObservable } from '@mission-platform/rxjs';
 import { BehaviorSubject, type Observable } from 'rxjs';
+
+import { useObservable } from '@mission-platform/rxjs';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 

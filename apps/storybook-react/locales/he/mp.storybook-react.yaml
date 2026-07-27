@@ -1,0 +1,12 @@
+badge:
+  pill: תג גלולה
+  success: הצלחה
+button:
+  primary: ראשי
+  secondary: משני
+  tertiary: התראות
+components: רכיבים
+description:
+  after: פתח את Storybook כדי לחקור את ספריית הרכיבים המלאה.
+  before: תצוגת React עבור
+title: רכיבי Mission Platform

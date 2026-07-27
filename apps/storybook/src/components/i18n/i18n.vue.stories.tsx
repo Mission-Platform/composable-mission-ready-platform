@@ -1,3 +1,4 @@
+import { LanguageSwitcher } from '@mission-platform/components/vue';
 import { createMpI18n } from '@mission-platform/i18n';
 import { useI18n } from '@mission-platform/i18n/vue';
 import { defineComponent, ref } from 'vue';
@@ -16,7 +17,13 @@ const LocaleInspector = defineComponent({
   setup() {
     const { t, locale } = useI18n();
 
-    const keys = ['title', 'draw.line', 'draw.polygon', 'status.selected', 'tooltip.split'];
+    const keys: { label: string; defaultValue: string; selector: ($: any) => any }[] = [
+      { label: 'title', defaultValue: 'Map Draw Toolbar', selector: (s) => s.title },
+      { label: 'draw.line', defaultValue: 'Line', selector: (s) => s.draw.line },
+      { label: 'draw.polygon', defaultValue: 'Polygon', selector: (s) => s.draw.polygon },
+      { label: 'status.selected', defaultValue: 'Selected: {id}', selector: (s) => s.status.selected },
+      { label: 'tooltip.split', defaultValue: 'Split line at midpoint', selector: (s) => s.tooltip.split },
+    ];
 
     return () => (
       <div style="font-family: monospace; font-size: 13px; line-height: 1.8;">
@@ -31,10 +38,16 @@ const LocaleInspector = defineComponent({
             </tr>
           </thead>
           <tbody>
-            {keys.map((key) => (
-              <tr key={key}>
-                <td style="padding: 6px 12px; border: 1px solid #ddd; color: #555;">{key}</td>
-                <td style="padding: 6px 12px; border: 1px solid #ddd;">{t(key, { id: 'feature-1' })}</td>
+            {keys.map((k) => (
+              <tr key={k.label}>
+                <td style="padding: 6px 12px; border: 1px solid #ddd; color: #555;">{k.label}</td>
+                <td style="padding: 6px 12px; border: 1px solid #ddd;">
+                  {t(($) => k.selector($), {
+                    ns: 'mp.storybook',
+                    defaultValue: k.defaultValue,
+                    id: 'feature-1',
+                  })}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -86,12 +99,40 @@ const CustomMessages = defineComponent({
           ))}
         </div>
         <p>
-          <strong>greeting:</strong> {i18n.t('greeting', { name: 'World' })}
+          <strong>greeting:</strong>{' '}
+          {i18n.t(($: any) => $.greeting, {
+            defaultValue: 'Hello World',
+            name: 'World',
+          })}
         </p>
         <p>
-          <strong>farewell:</strong> {i18n.t('farewell')}
+          <strong>farewell:</strong>{' '}
+          {i18n.t(($: any) => $.farewell, {
+            defaultValue: 'Goodbye',
+          })}
         </p>
       </div>
+    );
+  },
+});
+
+const LanguageSwitcherExample = defineComponent({
+  name: 'LanguageSwitcherExample',
+  setup() {
+    const locale = ref('en');
+    return () => (
+      <LanguageSwitcher
+        locale={locale.value}
+        locales={[
+          { code: 'en', label: 'English' },
+          { code: 'fr', label: 'Français' },
+          { code: 'es', label: 'Español' },
+        ]}
+        labelHidden={false}
+        onLocaleChange={(nextLocale) => {
+          locale.value = nextLocale;
+        }}
+      />
     );
   },
 });
@@ -199,5 +240,13 @@ export const CustomMessagesStory: StoryObj = {
   render: () => ({
     components: { CustomMessages },
     template: '<CustomMessages />',
+  }),
+};
+
+export const LanguageSwitcherStory: StoryObj = {
+  name: 'Language switcher',
+  render: () => ({
+    components: { LanguageSwitcherExample },
+    template: '<LanguageSwitcherExample />',
   }),
 };

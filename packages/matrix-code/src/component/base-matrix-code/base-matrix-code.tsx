@@ -368,7 +368,7 @@ export function BaseMatrixCode(properties: Readonly<MatrixCodeProperties>): MpEl
       ref={svgReference}
       aria-hidden={ariaLabel ? undefined : 'true'}
       aria-label={ariaLabel}
-      classNames={styles['base-matrix-code']}
+      className={styles['base-matrix-code']}
       height={pixelHeight}
       role={ariaLabel ? 'img' : undefined}
       shape-rendering={shapeRendering}
@@ -411,7 +411,7 @@ export function BaseMatrixCode(properties: Readonly<MatrixCodeProperties>): MpEl
         </defs>
       ) : null}
       <rect
-        classNames={styles['base-matrix-code__background']}
+        className={styles['base-matrix-code__background']}
         fill={background}
         height={heightDimension}
         width={widthDimension}
@@ -419,13 +419,13 @@ export function BaseMatrixCode(properties: Readonly<MatrixCodeProperties>): MpEl
         y="0"
       />
       <path
-        classNames={styles['base-matrix-code__modules']}
+        className={styles['base-matrix-code__modules']}
         d={path}
         fill={moduleFill}
       />
       {logo && logoLayout ? (
         <rect
-          classNames={styles['base-matrix-code__logo-plate']}
+          className={styles['base-matrix-code__logo-plate']}
           fill={logo.background ?? background}
           height={logoLayout.plate}
           rx={logoLayout.radius}

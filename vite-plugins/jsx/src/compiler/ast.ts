@@ -28,17 +28,20 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string> = new Set(['classNames'
 
 /**
  * The neutral JSX attribute that drives class-name management. Authors write
- * `classNames={…}` (the `class` attribute is reserved for static strings),
+ * `className={…}` (the `class` attribute is reserved for static strings),
  * passing the same arguments the `classNames` runtime helper accepts — most
- * commonly an **array** of class values (`classNames={['base', { active }]}`),
+ * commonly an **array** of class values (`className={['base', { active }]}`),
  * but any single {@link import('@mission-platform/jsx').ClassValue} works too.
- * The plugin *owns* this attribute (`classNames` itself is never imported by the
- * author): the React emitter collapses an array form to a `className={classNames(…)}`
- * string call (and re-injects the neutral `classNames` import), while the Vue
- * emitter maps it straight onto Vue's native `class` binding, which already
- * understands the array/object forms.
+ * The attribute is spelled the same as React's own `className` (unlike the
+ * runtime helper, which stays `classNames`) so a component can merge its own
+ * computed classes with a forwarded `properties.className` without a naming
+ * mismatch: `className={[classNames('base', …), properties.className]}`. The
+ * React emitter collapses an array form to a `className={classNames(…)}` string
+ * call (re-injecting the neutral `classNames` import), while the Vue emitter
+ * maps it straight onto Vue's native `class` binding, which already understands
+ * the array/object forms.
  */
-export const CLASS_NAMES_ATTRIBUTE = 'classNames';
+export const CLASS_NAME_ATTRIBUTE = 'className';
 
 /**
  * Native JSX attributes whose author-facing camelCase spelling must be lowered
@@ -326,7 +329,11 @@ export function iconsJsxFrameworkModule(framework: 'react' | 'vue'): string {
  * matching per-framework entry. (The built entry re-exports each component under
  * **both** its public and neutral `Base*` name, so the `Base*` imports resolve.)
  */
-export const COMPONENTS_JSX_MODULES = ['@mission-platform/components', '@mission-platform/layouts'] as const;
+export const COMPONENTS_JSX_MODULES = [
+  '@mission-platform/components',
+  '@mission-platform/layouts',
+  '@mission-platform/i18n',
+] as const;
 
 /**
  * For a write-once, framework-split workspace package import, return the
@@ -500,10 +507,10 @@ export function usesHFactoryCall(sourceFile: ts.SourceFile): boolean {
 }
 
 /**
- * Collapse a `classNames={…}` attribute value into the **React** `className`
+ * Collapse a `className={…}` attribute value into the **React** `className`
  * value. React's `className` only accepts a string, so the conditional/array/
  * object forms must be reduced *before* they reach the element. An **array
- * literal** (the canonical form — `classNames={['base', { active }]}`) is
+ * literal** (the canonical form — `className={['base', { active }]}`) is
  * spread into a `classNames(…)` runtime call (`classNames('base', { active })`),
  * matching the variadic helper signature; any other expression is already a
  * single class value (a CSS-Module read, a precomputed string, a `… .join(' ')`,
@@ -517,7 +524,7 @@ export function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expressio
 }
 
 /**
- * Whether the module carries a `classNames={[…]}` attribute whose value is an
+ * Whether the module carries a `className={[…]}` attribute whose value is an
  * **array literal** — the only form that compiles to a `classNames(…)` runtime
  * call on the React target, so the emitter must (re-)inject the neutral
  * `classNames` import for it (the author never imports the helper themselves).
@@ -531,7 +538,7 @@ export function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean
     if (
       ts.isJsxAttribute(node) &&
       ts.isIdentifier(node.name) &&
-      node.name.text === CLASS_NAMES_ATTRIBUTE &&
+      (node.name.text === CLASS_NAME_ATTRIBUTE || node.name.text === 'classNames') &&
       node.initializer !== undefined &&
       ts.isJsxExpression(node.initializer) &&
       node.initializer.expression !== undefined &&
@@ -709,12 +716,14 @@ function createSlotMemberAccess(factory: ts.NodeFactory, object: string, key: st
 
 /** `slots.<name>` — Vue's `useSlots()` presence read for `hasSlot('name')` (`!!slots.x`). */
 export function createVueHasSlotExpression(factory: ts.NodeFactory, name: string | undefined): ts.Expression {
+  const slotsId = factory.createIdentifier('slots');
+  const slotName = name ?? 'default';
+  const access = /^[A-Za-z_$][\w$]*$/.test(slotName)
+    ? factory.createPropertyAccessExpression(slotsId, slotName)
+    : factory.createElementAccessExpression(slotsId, factory.createStringLiteral(slotName, true));
   return factory.createPrefixUnaryExpression(
     ts.SyntaxKind.ExclamationToken,
-    factory.createPrefixUnaryExpression(
-      ts.SyntaxKind.ExclamationToken,
-      createSlotMemberAccess(factory, 'slots', name ?? 'default'),
-    ),
+    factory.createPrefixUnaryExpression(ts.SyntaxKind.ExclamationToken, access),
   );
 }
 
@@ -1246,6 +1255,7 @@ export function dynamicToHCall(
   node: ts.JsxSelfClosingElement | ts.JsxElement,
   visitExpression: (expression: ts.Expression) => ts.Expression,
   aliasAttribute: (name: string) => string = (name) => name,
+  variadicChildren = false,
 ): ts.CallExpression {
   let isExpression: ts.Expression | undefined;
   const properties: ts.ObjectLiteralElementLike[] = [];
@@ -1292,10 +1302,16 @@ export function dynamicToHCall(
     .map((child) => jsxChildToArgument(factory, child, visitExpression))
     .filter((argument): argument is ts.Expression => argument !== undefined);
 
+  const finalChildren = variadicChildren
+    ? childArguments
+    : childArguments.length <= 1
+      ? childArguments
+      : [factory.createArrayLiteralExpression(childArguments, false)];
+
   return factory.createCallExpression(factory.createIdentifier('h'), undefined, [
     tag,
     propertiesArgument,
-    ...childArguments,
+    ...finalChildren,
   ]);
 }
 
@@ -1358,9 +1374,33 @@ export function createVueSlotExpression(
 }
 
 /**
+ * Safely invoke or forward a React slot when a scope object is provided:
+ * `typeof <access> === 'function' ? <access>(scope) : <access>`.
+ * Handles both render-prop functions (`(scope) => nodes`) and plain React nodes.
+ */
+function createReactScopedSlotRead(
+  factory: ts.NodeFactory,
+  access: ts.Expression,
+  scope: ts.Expression,
+): ts.Expression {
+  return factory.createConditionalExpression(
+    factory.createBinaryExpression(
+      factory.createTypeOfExpression(access),
+      factory.createToken(ts.SyntaxKind.EqualsEqualsEqualsToken),
+      factory.createStringLiteral('function'),
+    ),
+    factory.createToken(ts.SyntaxKind.QuestionToken),
+    factory.createCallExpression(access, undefined, [scope]),
+    factory.createToken(ts.SyntaxKind.ColonToken),
+    access,
+  );
+}
+
+/**
  * `<props>.<name>` (with `?? <fallback>` when the slot declares fallback
- * content). When `scope` is supplied the slot prop is a render-prop function and
- * is invoked with it (`<props>.<name>?.(scope)`).
+ * content). When `scope` is supplied the slot prop is invoked if it is a
+ * render-prop function, or evaluated directly if it is a React node
+ * (`typeof <props>.<name> === 'function' ? <props>.<name>(scope) : <props>.<name>`).
  */
 export function createReactSlotExpression(
   factory: ts.NodeFactory,
@@ -1370,10 +1410,7 @@ export function createReactSlotExpression(
   scope?: ts.Expression,
 ): ts.Expression {
   const access = createSlotMemberAccess(factory, propsParamName, name ?? 'children');
-  const read: ts.Expression =
-    scope === undefined
-      ? access
-      : factory.createCallChain(access, factory.createToken(ts.SyntaxKind.QuestionDotToken), undefined, [scope]);
+  const read: ts.Expression = scope === undefined ? access : createReactScopedSlotRead(factory, access, scope);
   if (fallback.length === 0) {
     return read;
   }
@@ -1418,8 +1455,9 @@ export function createVueSlotCallExpression(
 }
 
 /**
- * `<props>.<name>?.(scope) ?? <fallback>` — the React translation of the
- * `h(Slot, …)` call form (the `h()` counterpart of {@link createReactSlotExpression}).
+ * `typeof <props>.<name> === 'function' ? <props>.<name>(scope) : <props>.<name>`
+ * (with `?? <fallback>`) — the React translation of the `h(Slot, …)` call form
+ * (the `h()` counterpart of {@link createReactSlotExpression}).
  */
 export function createReactSlotCallExpression(
   factory: ts.NodeFactory,
@@ -1429,10 +1467,7 @@ export function createReactSlotCallExpression(
   scope?: ts.Expression,
 ): ts.Expression {
   const access = createSlotMemberAccess(factory, propsParamName, name ?? 'children');
-  const read: ts.Expression =
-    scope === undefined
-      ? access
-      : factory.createCallChain(access, factory.createToken(ts.SyntaxKind.QuestionDotToken), undefined, [scope]);
+  const read: ts.Expression = scope === undefined ? access : createReactScopedSlotRead(factory, access, scope);
   return appendExpressionFallback(factory, read, fallback);
 }
 
@@ -1552,12 +1587,19 @@ export function readStyleImports(sourceFile: ts.SourceFile): StyleImport[] {
  */
 export function readExternalImports(sourceFile: ts.SourceFile, framework: 'react' | 'vue'): string[] {
   const imports: string[] = [];
+  let needsI18nImport = usesI18nextT(sourceFile);
+
   for (const statement of sourceFile.statements) {
     if (!ts.isImportDeclaration(statement) || !ts.isStringLiteral(statement.moduleSpecifier)) {
       continue;
     }
     const specifier = statement.moduleSpecifier.text;
     if (specifier.startsWith('.') || specifier === NEUTRAL_MODULE || STYLE_EXTENSIONS.test(specifier)) {
+      continue;
+    }
+    if (specifier === 'i18next') {
+      imports.push(printNode(statement, sourceFile));
+      needsI18nImport = true;
       continue;
     }
     const frameworkModule = frameworkSplitModule(specifier, framework);
@@ -1574,7 +1616,148 @@ export function readExternalImports(sourceFile: ts.SourceFile, framework: 'react
     }
     imports.push(printNode(statement, sourceFile));
   }
+
+  if (needsI18nImport) {
+    const i18nModule = `@mission-platform/i18n/${framework}`;
+    if (!imports.some((imp) => imp.includes(i18nModule))) {
+      imports.push(`import { useI18n } from '${i18nModule}';`);
+    }
+  }
+
   return imports;
+}
+
+/** Whether a module or AST node calls `i18next.t(...)`. */
+export function usesI18nextT(node: ts.Node): boolean {
+  let found = false;
+  const visit = (child: ts.Node): void => {
+    if (found) return;
+    if (
+      ts.isCallExpression(child) &&
+      ts.isPropertyAccessExpression(child.expression) &&
+      ts.isIdentifier(child.expression.expression) &&
+      child.expression.expression.text === 'i18next' &&
+      ts.isIdentifier(child.expression.name) &&
+      child.expression.name.text === 't'
+    ) {
+      found = true;
+      return;
+    }
+    ts.forEachChild(child, visit);
+  };
+  ts.forEachChild(node, visit);
+  return found;
+}
+
+/** Check if a block statement or function body calls `useI18n()`. */
+function bodyCallsUseI18n(body: ts.Block): boolean {
+  let found = false;
+  const visit = (child: ts.Node): void => {
+    if (found) return;
+    if (ts.isCallExpression(child) && ts.isIdentifier(child.expression) && child.expression.text === 'useI18n') {
+      found = true;
+      return;
+    }
+    ts.forEachChild(child, visit);
+  };
+  ts.forEachChild(body, visit);
+  return found;
+}
+
+/**
+ * Ensure component functions that call `i18next.t(...)` have a top-level `const { t } = useI18n();` statement.
+ */
+export function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: ts.SourceFile): ts.SourceFile {
+  if (!usesI18nextT(sourceFile)) {
+    return sourceFile;
+  }
+
+  const transformer: ts.TransformerFactory<ts.SourceFile> = () => {
+    const visit = (node: ts.Node): ts.Node => {
+      if (
+        (ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node) || ts.isArrowFunction(node)) &&
+        node.body !== undefined &&
+        ts.isBlock(node.body) &&
+        usesI18nextT(node.body) &&
+        !bodyCallsUseI18n(node.body)
+      ) {
+        const useI18nStatement = factory.createVariableStatement(
+          undefined,
+          factory.createVariableDeclarationList(
+            [
+              factory.createVariableDeclaration(
+                factory.createObjectBindingPattern([
+                  factory.createBindingElement(undefined, undefined, factory.createIdentifier('t')),
+                ]),
+                undefined,
+                undefined,
+                factory.createCallExpression(factory.createIdentifier('useI18n'), undefined, []),
+              ),
+            ],
+            ts.NodeFlags.Const,
+          ),
+        );
+        const updatedBody = factory.updateBlock(node.body, [useI18nStatement, ...node.body.statements]);
+        if (ts.isFunctionDeclaration(node)) {
+          return factory.updateFunctionDeclaration(
+            node,
+            node.modifiers,
+            node.asteriskToken,
+            node.name,
+            node.typeParameters,
+            node.parameters,
+            node.type,
+            updatedBody,
+          );
+        }
+        if (ts.isFunctionExpression(node)) {
+          return factory.updateFunctionExpression(
+            node,
+            node.modifiers,
+            node.asteriskToken,
+            node.name,
+            node.typeParameters,
+            node.parameters,
+            node.type,
+            updatedBody,
+          );
+        }
+        if (ts.isArrowFunction(node)) {
+          return factory.updateArrowFunction(
+            node,
+            node.modifiers,
+            node.typeParameters,
+            node.parameters,
+            node.type,
+            node.equalsGreaterThanToken,
+            updatedBody,
+          );
+        }
+      }
+      return ts.visitEachChild(node, visit, undefined);
+    };
+    return (file) => ts.visitNode(file, visit) as ts.SourceFile;
+  };
+
+  const result = ts.transform(sourceFile, [transformer]);
+  const transformed = result.transformed[0];
+  result.dispose();
+  return transformed;
+}
+
+/** Rewrite `i18next.t(...)` call expressions to `t(...)`. */
+export function transformI18nextCalls(factory: ts.NodeFactory, node: ts.Node): ts.Node {
+  if (
+    ts.isCallExpression(node) &&
+    ts.isPropertyAccessExpression(node.expression) &&
+    ts.isIdentifier(node.expression.expression) &&
+    node.expression.expression.text === 'i18next' &&
+    ts.isIdentifier(node.expression.name) &&
+    node.expression.name.text === 't'
+  ) {
+    return factory.createCallExpression(factory.createIdentifier('t'), node.typeArguments, node.arguments);
+  }
+  return node;
 }
 
 /** Find the exported function declaration for a neutral component by name. */
@@ -2214,17 +2397,18 @@ export function createReferenceRewriter(scope: RewriteScope): ts.TransformerFact
       // name is a plain identifier (e.g. `src`, `alt`, `type`) that can collide
       // with a destructured prop name; without this guard the bare-identifier
       // rule below would rewrite `src={src}` to `properties.src={properties.src}`.
-      // The one deliberate name rewrite is `classNames` → Vue's native `class`
-      // binding: Vue understands the array/object forms directly, so the
-      // attribute value (with its CSS-Module reads collapsed by the rules above)
-      // passes straight through to `class={…}` in the render-closure JSX.
+      // The one deliberate name rewrite is the neutral `className` attribute →
+      // Vue's native `class` binding: Vue understands the array/object forms
+      // directly, so the attribute value (with its CSS-Module reads collapsed by
+      // the rules above) passes straight through to `class={…}` in the
+      // render-closure JSX.
       if (ts.isJsxAttribute(node)) {
         if (node.initializer === undefined) {
           return node;
         }
         let name = node.name;
         if (ts.isIdentifier(node.name)) {
-          if (node.name.text === CLASS_NAMES_ATTRIBUTE) {
+          if (node.name.text === CLASS_NAME_ATTRIBUTE || node.name.text === 'classNames') {
             name = factory.createIdentifier('class');
           } else if (JSX_ATTRIBUTE_RENAMES.has(node.name.text)) {
             // Vue's JSX intrinsic elements type native attributes by their HTML

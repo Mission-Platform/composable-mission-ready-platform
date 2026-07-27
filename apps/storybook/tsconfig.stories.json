@@ -3,5 +3,5 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.stories.tsbuildinfo"
   },
-  "include": ["src/**/*.stories.ts", "src/**/*.stories.tsx"]
+  "include": ["src/**/*.stories.ts", "src/**/*.stories.tsx", "src/**/*.d.ts"]
 }
