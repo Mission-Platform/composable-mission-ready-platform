@@ -169,13 +169,17 @@ export function BaseMultiselect(properties: Readonly<MultiselectProperties>): Mp
     <input
       id={resolvedId}
       aria-autocomplete="list"
+      aria-controls={`${resolvedId}-listbox`}
       aria-describedby={describedBy}
+      aria-expanded={isOpen}
+      aria-haspopup="listbox"
       aria-invalid={error ? 'true' : undefined}
       autocomplete="off"
       classNames={styles['base-multiselect__input']}
       disabled={disabled}
       placeholder={selectedOptions.length === 0 ? (placeholder ?? 'Select options…') : undefined}
       required={required && modelValue.length === 0}
+      role="combobox"
       type="text"
       value={searchQuery}
       onFocus={() => setIsOpen(true)}
@@ -278,11 +282,7 @@ export function BaseMultiselect(properties: Readonly<MultiselectProperties>): Mp
         onUpdateOpen={(open: boolean) => setIsOpen(open)}
       >
         <div
-          aria-controls={`${resolvedId}-listbox`}
-          aria-expanded={isOpen}
-          aria-haspopup="listbox"
           classNames={styles['base-multiselect__wrapper']}
-          role="combobox"
           slot="trigger"
           onClick={() => {
             if (!disabled) {

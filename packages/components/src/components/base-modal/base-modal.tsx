@@ -4,6 +4,7 @@ import {
   hasSlot,
   Slot,
   useEffect,
+  useId,
   useRef,
   type MpChild,
   type MpElement,
@@ -128,19 +129,21 @@ export function BaseModal(properties: Readonly<ModalProperties>): MpElement {
     }
   };
 
+  const headerId = `${useId()}-header`;
   const hasHeader = title !== undefined || hasSlot('header');
 
   return (
     <dialog
       ref={dialogReference}
       aria-label={title}
+      aria-labelledby={title === undefined && hasHeader ? headerId : undefined}
       classNames={[styles['base-modal'], styles[`base-modal--${size}`]]}
       onCancel={handleCancel}
       onClick={handleClick}
       onClose={requestClose}
     >
       {hasHeader ? (
-        <header classNames={styles['base-modal__header']}>
+        <header id={headerId} classNames={styles['base-modal__header']}>
           <Slot name="header">
             <BaseTypography
               as="h2"

@@ -332,8 +332,13 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
       ref={searchReference}
       id={resolvedId}
       aria-autocomplete="list"
+      aria-controls={`${resolvedId}-listbox`}
       aria-describedby={describedBy}
+      aria-expanded={isOpen}
+      aria-haspopup="listbox"
       aria-invalid={error ? 'true' : undefined}
+      aria-labelledby={label ? `${resolvedId}-label` : undefined}
+      aria-required={required || undefined}
       autocomplete="off"
       classNames={[
         styles['base-select__field'],
@@ -344,6 +349,7 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
       disabled={disabled}
       placeholder={searchPlaceholder}
       required={required}
+      role="combobox"
       type="text"
       value={searchValue}
       onBlur={(event: FocusEvent) => properties.onBlur?.(event)}
@@ -355,8 +361,13 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
     <button
       ref={triggerReference}
       id={resolvedId}
+      aria-controls={`${resolvedId}-listbox`}
       aria-describedby={describedBy}
+      aria-expanded={isOpen}
+      aria-haspopup="listbox"
       aria-invalid={error ? 'true' : undefined}
+      aria-labelledby={label ? `${resolvedId}-label` : undefined}
+      aria-required={required || undefined}
       classNames={[
         styles['base-select__field'],
         {
@@ -364,6 +375,7 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
         },
       ]}
       disabled={disabled}
+      role="combobox"
       type="button"
       onBlur={(event: FocusEvent) => properties.onBlur?.(event)}
       onClick={() => {
@@ -439,13 +451,7 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
         onUpdateOpen={(open: boolean) => setIsOpen(open)}
       >
         <div
-          aria-controls={`${resolvedId}-listbox`}
-          aria-expanded={isOpen}
-          aria-haspopup="listbox"
-          aria-labelledby={label ? `${resolvedId}-label` : undefined}
-          aria-required={required || undefined}
           classNames={styles['base-select__wrapper']}
-          role="combobox"
           slot="trigger"
           onClick={() => {
             if (searchable && !disabled && !isOpen) {
