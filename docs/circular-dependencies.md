@@ -13,9 +13,9 @@ Circular dependencies occur when Package A imports from Package B, and Package B
 
 The Mission Platform uses ESLint with the `no-restricted-paths` rule to detect and prevent dependency violations, including potential circular dependencies.
 
-Run this command to check for import issues:
+Run this command to check and fix import issues:
 ```bash
-npm run lint -- --fix
+pnpm lint:fix
 ```
 
 ## Fixing Circular Dependencies

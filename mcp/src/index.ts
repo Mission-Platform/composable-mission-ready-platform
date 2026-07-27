@@ -7,10 +7,10 @@
  * runs `tsc`) and run the compiled output with `node dist/index.js`.
  */
 import { registerPrompts } from './prompts/index.ts';
-import { registerResources } from './resources/index.ts';
-import { registerTools } from './tools/index.ts';
 import { McpServer } from './protocol/server.ts';
 import { serveStdio } from './protocol/stdio.ts';
+import { registerResources } from './resources/index.ts';
+import { registerTools } from './tools/index.ts';
 
 export function createServer(): McpServer {
   const server = new McpServer({ name: 'mission-platform-mcp', version: '0.1.0' });

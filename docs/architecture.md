@@ -24,26 +24,45 @@ Built-in support for design tokens, theming, and responsive breakpoints ensures 
 composable_mission_ready_platform/
 ├── apps/                   # Deployable applications
 │   ├── my-care-notes/      # Vue 3 note-taking application with spell checking
-│   ├── storybook/          # Storybook instance for developing, documenting, and visually testing the cross-framework components
-│   └── storybook-react/    # React counterpart of Storybook, cataloguing the React builds of the cross-framework components
+│   ├── service-monitor/    # Service health and status monitoring dashboard
+│   ├── storybook/          # Vue 3 Storybook component catalogue and visual tests
+│   ├── storybook-react/    # React Storybook catalogue for cross-framework components
+│   └── website/            # Platform website and documentation portal
 ├── configs/                # Shared tooling configurations
 │   ├── eslint-config/      # Base ESLint flat config
+│   ├── i18n-config/        # Shared i18n configuration
+│   ├── i18next-cli-vue/    # i18next CLI Vue extractor configuration
 │   ├── postcss-config/     # Shared PostCSS configuration
 │   ├── prettier-config/    # Base Prettier config
 │   ├── stylelint-config/   # Base Stylelint config
-│   └── typescript-config/  # Shared TypeScript base configs
+│   ├── typescript-config/  # Shared TypeScript base configs
+│   └── vite-config/        # Shared Vite and Vitest helpers
 ├── packages/               # Reusable building blocks
+│   ├── barcode/            # 1D/2D Barcode generation and utilities
 │   ├── breakpoints/        # Responsive breakpoint utilities, composables, and Vue components
+│   ├── code-scanner/       # Camera-based barcode and matrix code scanner
+│   ├── components/         # Cross-framework UI component library
+│   ├── d3/                 # Reactive D3.js visualization wrappers
+│   ├── forms/              # Form primitives and validation components
+│   ├── forms-core/         # Core form validation schema engine
 │   ├── harper/             # Harper grammar checker integration for Monaco editor
 │   ├── hunspell/           # Hunspell spell checker compiled to WebAssembly
 │   ├── i18n/               # Framework-agnostic i18next wrapper and adapters
 │   ├── icons/              # Write-once SVG icon components for Vue 3 and React
 │   ├── jsx/                # Framework-neutral JSX runtime and adapters
-│   ├── components/         # Cross-framework component library
+│   ├── layout/             # Layout primitives (stacks, grids, separators)
 │   ├── map/                # MapLibre GL Vue 3 wrapper
+│   ├── matrix-code/        # DataMatrix and QR code rendering utilities
+│   ├── phone-number/       # Phone number formatting and validation
+│   ├── qr-code/            # SVG/Canvas QR code generator
 │   ├── router/             # Framework-agnostic routing system
+│   ├── rxjs/               # RxJS composables and utilities for Vue 3
+│   ├── scheduler-core/     # Scheduler engine and timeline utilities
+│   ├── seo/                # Framework-agnostic meta tag and SEO composables
 │   └── tokens/             # Design tokens authored in DTCG format with OKLab colors
 ├── vite-plugins/           # Vite build plugins
+│   ├── assemblyscript/     # AssemblyScript compilation plugin for Vite
+│   ├── i18n/               # Vite plugin for i18n locale loading and extraction
 │   ├── jsx/                # Two-stage compiler for framework-neutral JSX components
 │   ├── seo/                # Vite plugin that generates robots.txt and sitemap.xml
 │   └── tokens/             # Vite plugin that generates design-token artifacts from DTCG sources

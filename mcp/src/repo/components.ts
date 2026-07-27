@@ -83,7 +83,7 @@ function toPascalCase(slug: string): string {
 }
 
 /** Extract the props interface source and preceding doc comment, if present. */
-function extractPropsInterface(source: string): { propsInterface?: string; docComment?: string } {
+function extractPropertiesInterface(source: string): { propsInterface?: string; docComment?: string } {
   const interfaceStart = source.search(/export\s+interface\s+\w*Properties\b/);
   if (interfaceStart === -1) {
     return {};
@@ -108,20 +108,20 @@ function extractPropsInterface(source: string): { propsInterface?: string; docCo
       }
     }
   }
-  const propsInterface = source.slice(interfaceStart, end).trim();
+  const propertiesInterface = source.slice(interfaceStart, end).trim();
 
   // Grab the doc comment immediately preceding the exported function, if any.
   const functionMatch = /\/\*\*[\s\S]*?\*\/\s*export\s+function\s+\w+/.exec(source);
-  const docComment = functionMatch ? (/\/\*\*[\s\S]*?\*\//.exec(functionMatch[0])?.[0] ?? undefined) : undefined;
+  const documentComment = functionMatch ? (/\/\*\*[\s\S]*?\*\//.exec(functionMatch[0])?.[0] ?? undefined) : undefined;
 
-  return { propsInterface, docComment };
+  return { propsInterface: propertiesInterface, docComment: documentComment };
 }
 
 /** Build a full usage description for a single component. */
 export function getComponentUsage(nameOrSlug: string): ComponentUsage | undefined {
   const slug = nameOrSlug
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/\s+/g, '-')
+    .replaceAll(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replaceAll(/\s+/g, '-')
     .toLowerCase();
 
   const summary = listComponents().find(
@@ -135,7 +135,7 @@ export function getComponentUsage(nameOrSlug: string): ComponentUsage | undefine
   const sourceFile = [`${summary.slug}.tsx`, `${summary.slug}.vue`]
     .map((file) => join(dir, file))
     .find((file) => existsSync(file));
-  const { propsInterface, docComment } = sourceFile ? extractPropsInterface(readFileSync(sourceFile, 'utf8')) : {};
+  const { propsInterface, docComment } = sourceFile ? extractPropertiesInterface(readFileSync(sourceFile, 'utf8')) : {};
 
   const stories = readdirSync(dir).filter((file) => file.includes('.stories.'));
   const componentName = summary.exports.find((name) => name.startsWith('Base')) ?? toPascalCase(summary.slug);

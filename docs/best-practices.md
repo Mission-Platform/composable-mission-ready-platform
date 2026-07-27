@@ -24,8 +24,8 @@ This document outlines essential best practices for developing, testing, and mai
     'error',
     { 
       zones: [
-        { target: './packages/**', from: ./apps/** },
-        { target: ./apps/**, from: ./packages/** }
+        { target: './packages/**', from: './apps/**' },
+        { target: './configs/**', from: './apps/**' }
       ]
     }
   ]

@@ -17,7 +17,7 @@ Mission Platform employs a robust testing strategy to ensure the reliability and
 To run tests across the entire workspace:
 
 ```bash
-turbo run test
+pnpm exec turbo run test
 ```
 
 ### Running Tests for a Specific Package
@@ -25,7 +25,7 @@ turbo run test
 To run tests for a specific package:
 
 ```bash
-turbo run test --filter=@mission-platform/<package-name>
+pnpm exec turbo run test --filter @mission-platform/<package-name>
 ```
 
 ### Running Tests for Affected Packages
@@ -33,7 +33,7 @@ turbo run test --filter=@mission-platform/<package-name>
 To run tests only for packages affected by recent changes:
 
 ```bash
-turbo run test --affected
+pnpm exec turbo run test --affected
 ```
 
 ## Writing Unit Tests
@@ -87,7 +87,7 @@ Storybook is the primary environment for developing and testing components. It a
 To start the Storybook development server:
 
 ```bash
-turbo run storybook --filter=@mission-platform/storybook
+pnpm exec turbo run storybook --filter @mission-platform/storybook
 ```
 
 ### Writing Stories

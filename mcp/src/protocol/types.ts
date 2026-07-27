@@ -42,11 +42,11 @@ export type JsonRpcResponse = JsonRpcSuccess | JsonRpcErrorResponse;
 
 /** Standard JSON-RPC error codes plus MCP conventions. */
 export const ErrorCode = {
-  ParseError: -32700,
-  InvalidRequest: -32600,
-  MethodNotFound: -32601,
-  InvalidParams: -32602,
-  InternalError: -32603,
+  ParseError: -32_700,
+  InvalidRequest: -32_600,
+  MethodNotFound: -32_601,
+  InvalidParams: -32_602,
+  InternalError: -32_603,
 } as const;
 
 /** A single block of tool / prompt content. Only text is used here. */
@@ -66,7 +66,7 @@ export interface ToolDefinition {
   name: string;
   description: string;
   inputSchema: JsonSchema;
-  handler: (args: Record<string, unknown>) => ToolResult | Promise<ToolResult>;
+  handler: (arguments_: Record<string, unknown>) => ToolResult | Promise<ToolResult>;
 }
 
 /** Contents returned by `resources/read`. */
@@ -107,7 +107,7 @@ export interface PromptDefinition {
   name: string;
   description: string;
   arguments: PromptArgument[];
-  build: (args: Record<string, string>) => PromptResult | Promise<PromptResult>;
+  build: (arguments_: Record<string, string>) => PromptResult | Promise<PromptResult>;
 }
 
 /** Metadata reported to the client during `initialize`. */

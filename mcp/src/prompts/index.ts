@@ -3,9 +3,10 @@
  * that embeds the relevant curated guide, so an AI assistant can be dropped
  * straight into one of the seven Mission Platform workflows.
  */
-import { getComponentUsage, listComponents } from '../repo/components.ts';
 import { getGuide, type GuideId } from '../knowledge/guides.ts';
+import { getComponentUsage, listComponents } from '../repo/components.ts';
 import { listGroup } from '../repo/scanner.ts';
+
 import type { McpServer } from '../protocol/server.ts';
 import type { PromptDefinition, PromptResult } from '../protocol/types.ts';
 
@@ -25,9 +26,9 @@ const PROMPTS: PromptDefinition[] = [
       { name: 'component', description: 'Component name or slug, e.g. "BaseButton".', required: false },
       { name: 'framework', description: 'Target framework: "vue" or "react". Defaults to vue.', required: false },
     ],
-    build(args) {
-      const framework = (args['framework'] ?? 'vue').toLowerCase() === 'react' ? 'react' : 'vue';
-      const component = args['component'];
+    build(arguments_) {
+      const framework = (arguments_['framework'] ?? 'vue').toLowerCase() === 'react' ? 'react' : 'vue';
+      const component = arguments_['component'];
       const parts = [guideBody('component-usage')];
       if (component) {
         const usage = getComponentUsage(component);
@@ -53,9 +54,9 @@ const PROMPTS: PromptDefinition[] = [
       { name: 'name', description: 'Kebab-case package name.', required: false },
       { name: 'purpose', description: 'What the package should do.', required: false },
     ],
-    build(args) {
-      const name = args['name'] ?? '<name>';
-      const purpose = args['purpose'] ?? '(describe the package purpose)';
+    build(arguments_) {
+      const name = arguments_['name'] ?? '<name>';
+      const purpose = arguments_['purpose'] ?? '(describe the package purpose)';
       return userMessage(
         `${guideBody('package-creation')}\n\n---\nTask: Create the package \`@mission-platform/${name}\`.\nPurpose: ${purpose}\n\nUse the \`scaffold_package\` tool (dry-run first, then apply=true), then wire up the real implementation and update \`llms.txt\`.`,
       );
@@ -65,8 +66,8 @@ const PROMPTS: PromptDefinition[] = [
     name: 'develop-package',
     description: 'Guide the assistant to develop or extend an existing package.',
     arguments: [{ name: 'name', description: 'Package folder or scoped name.', required: false }],
-    build(args) {
-      const name = args['name'];
+    build(arguments_) {
+      const name = arguments_['name'];
       const known = listGroup('packages')
         .map((member) => member.name)
         .join(', ');
@@ -82,9 +83,9 @@ const PROMPTS: PromptDefinition[] = [
       { name: 'name', description: 'Kebab-case app name.', required: false },
       { name: 'purpose', description: 'What the app should do.', required: false },
     ],
-    build(args) {
-      const name = args['name'] ?? '<name>';
-      const purpose = args['purpose'] ?? '(describe the app purpose)';
+    build(arguments_) {
+      const name = arguments_['name'] ?? '<name>';
+      const purpose = arguments_['purpose'] ?? '(describe the app purpose)';
       return userMessage(
         `${guideBody('app-creation')}\n\n---\nTask: Create the app \`@mission-platform/${name}\`.\nPurpose: ${purpose}\n\nUse the \`scaffold_app\` tool (dry-run first, then apply=true), then compose the needed packages.`,
       );
@@ -94,8 +95,8 @@ const PROMPTS: PromptDefinition[] = [
     name: 'develop-app',
     description: 'Guide the assistant to develop an existing application.',
     arguments: [{ name: 'name', description: 'App folder or scoped name.', required: false }],
-    build(args) {
-      const name = args['name'];
+    build(arguments_) {
+      const name = arguments_['name'];
       const known = listGroup('apps')
         .map((member) => member.name)
         .join(', ');
@@ -111,9 +112,9 @@ const PROMPTS: PromptDefinition[] = [
       { name: 'name', description: 'Kebab-case worker name.', required: false },
       { name: 'purpose', description: 'What the worker should do.', required: false },
     ],
-    build(args) {
-      const name = args['name'] ?? '<name>';
-      const purpose = args['purpose'] ?? '(describe the worker purpose)';
+    build(arguments_) {
+      const name = arguments_['name'] ?? '<name>';
+      const purpose = arguments_['purpose'] ?? '(describe the worker purpose)';
       return userMessage(
         `${guideBody('worker-creation')}\n\n---\nTask: Create the worker \`@mission-platform/${name}\`.\nPurpose: ${purpose}\n\nUse the \`scaffold_worker\` tool (dry-run first, then apply=true), then implement the \`fetch\` handler.`,
       );
@@ -123,8 +124,8 @@ const PROMPTS: PromptDefinition[] = [
     name: 'develop-worker',
     description: 'Guide the assistant to develop an existing Cloudflare Worker.',
     arguments: [{ name: 'name', description: 'Worker folder or scoped name.', required: false }],
-    build(args) {
-      const name = args['name'];
+    build(arguments_) {
+      const name = arguments_['name'];
       const known = listGroup('workers')
         .map((member) => member.name)
         .join(', ');

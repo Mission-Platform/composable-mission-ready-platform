@@ -49,7 +49,8 @@ The root `turbo.json` defines global tasks and their dependencies:
 
 ```json
 {
-  "pipeline": {
+  "$schema": "https://turborepo.com/schema.json",
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".vite/**"]
@@ -92,7 +93,7 @@ Common build tasks include:
 To build all workspaces in the monorepo:
 
 ```bash
-turbo run build
+pnpm exec turbo run build
 ```
 
 This command respects the dependency graph defined in `turbo.json` and caches outputs for faster subsequent builds.
@@ -102,13 +103,13 @@ This command respects the dependency graph defined in `turbo.json` and caches ou
 To build a specific package:
 
 ```bash
-turbo run build --filter=@mission-platform/<package>
+pnpm exec turbo run build --filter @mission-platform/<package>
 ```
 
 For example, to build the `components` package:
 
 ```bash
-turbo run build --filter=@mission-platform/components
+pnpm exec turbo run build --filter @mission-platform/components
 ```
 
 ### Building Affected Packages
@@ -116,7 +117,7 @@ turbo run build --filter=@mission-platform/components
 To build only the packages affected by recent changes:
 
 ```bash
-turbo run build --affected
+pnpm exec turbo run build --affected
 ```
 
 This command compares the current state with the default branch and builds only the necessary packages.
@@ -140,7 +141,7 @@ This command compares the current state with the default branch and builds only 
 To enable watch mode for a workspace:
 
 ```bash
-turbo run build:watch --filter=@mission-platform/<package>
+pnpm exec turbo run build:watch --filter @mission-platform/<package>
 ```
 
 This starts the development server with hot reloading enabled.
@@ -149,12 +150,12 @@ This starts the development server with hot reloading enabled.
 
 - **Storybook**:
   ```bash
-  turbo run storybook --filter=@mission-platform/storybook
+  pnpm exec turbo run storybook --filter @mission-platform/storybook
   ```
 
 - **My Care Notes**:
   ```bash
-  turbo run dev --filter=@mission-platform/my-care-notes
+  pnpm exec turbo run dev --filter @mission-platform/my-care-notes
   ```
 
 ## Advanced Topics

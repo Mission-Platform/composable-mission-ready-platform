@@ -18,24 +18,26 @@ The Mission Platform is a VueJS 3 monorepo managed with pnpm workspaces. It foll
 - **Changesets**: Versioning and changelog automation
 
 ## Quick Start
-1. Install Node.js (version specified in `.nvmrc`)
+1. Install Node.js v24.18.0 (version specified in `.nvmrc`)
 2. Run `nvm use` to select the correct Node version
 3. Install dependencies: `pnpm install`
 4. Start development servers:
-   - Storybook: `turbo run storybook --filter=@mission-platform/storybook`
-   - My Care Notes: `turbo run dev --filter=@mission-platform/my-care-notes`
+   - Storybook: `pnpm exec turbo run storybook --filter @mission-platform/storybook`
+   - My Care Notes: `pnpm exec turbo run dev --filter @mission-platform/my-care-notes`
 
 ### Available Documentation
-- **[Best Practices](docs/best-practices.md)**: Essential guidelines for developing, testing, and maintaining applications in the Mission Platform monorepo
-- **[Migration Guide](docs/migration-guides/vue2-to-vue3.md)**: Step-by-step guide for migrating from Vue 2 to Vue 3
-- **[API Reference](docs/api-reference.md)**: References for all Mission Platform packages and framework adapters
-- **[Troubleshooting](docs/troubleshooting.md)**: Common issues and solutions for debugging and performance optimization
+- **[Overview](docs/overview.md)**: Mission Platform architecture principles and key features
 - **[Development Setup](docs/development-setup.md)**: Detailed instructions for setting up your development environment
 - **[Workspace Structure](docs/workspace-structure.md)**: Overview of the repository's directory structure
+- **[Architecture](docs/architecture.md)**: Detailed architecture documentation
 - **[Package Development](docs/package-development.md)**: Guidelines for developing and publishing packages
+- **[Best Practices](docs/best-practices.md)**: Essential guidelines for developing, testing, and maintaining applications
 - **[Testing](docs/testing.md)**: Comprehensive testing strategies and tools
 - **[Build System](docs/build-system.md)**: Overview of the build system and configuration
-- **[Architecture](docs/architecture.md)**: Detailed architecture documentation
+- **[API Reference](docs/api-reference.md)**: References for all Mission Platform packages and framework adapters
+- **[Troubleshooting](docs/troubleshooting.md)**: Common issues and solutions for debugging and performance optimization
+- **[Circular Dependencies](docs/circular-dependencies.md)**: Identifying and resolving circular dependency issues
+- **[Migration Guide](docs/migration-guides/vue2-to-vue3.md)**: Step-by-step guide for migrating from Vue 2 to Vue 3
 
 ## Getting Started
 
@@ -47,16 +49,16 @@ nvm use
 pnpm install
 
 # Run Storybook
-turbo run storybook --filter=@mission-platform/storybook
+pnpm exec turbo run storybook --filter @mission-platform/storybook
 
 # Run My Care Notes app
-turbo run dev --filter=@mission-platform/my-care-notes
+pnpm exec turbo run dev --filter @mission-platform/my-care-notes
 
 # Build all apps
-turbo run build --filter="./apps/*"
+pnpm exec turbo run build --filter "./apps/*"
 
 # Run tests
-turbo run test
+pnpm exec turbo run test
 ```
 
 ## Package Development

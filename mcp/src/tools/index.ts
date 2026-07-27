@@ -6,11 +6,12 @@
 import { getGuide, GUIDE_IDS } from '../knowledge/guides.ts';
 import { appFiles, packageFiles, workerFiles } from '../knowledge/templates.ts';
 import { getComponentUsage, listComponents } from '../repo/components.ts';
-import { findMember, listDocs, listGroup, readDoc, readMemberDetails } from '../repo/scanner.ts';
-import type { WorkspaceGroup } from '../repo/paths.ts';
+import { findMember, listDocs, listGroup, readDoc as readDocument, readMemberDetails } from '../repo/scanner.ts';
 import { writeScaffold } from '../scaffold/writer.ts';
+
 import type { McpServer } from '../protocol/server.ts';
 import type { ToolDefinition, ToolResult } from '../protocol/types.ts';
+import type { WorkspaceGroup } from '../repo/paths.ts';
 
 function text(value: string): ToolResult {
   return { content: [{ type: 'text', text: value }] };
@@ -20,13 +21,13 @@ function json(value: unknown): ToolResult {
   return text(JSON.stringify(value, null, 2));
 }
 
-function getString(args: Record<string, unknown>, key: string): string | undefined {
-  const value = args[key];
+function getString(arguments_: Record<string, unknown>, key: string): string | undefined {
+  const value = arguments_[key];
   return typeof value === 'string' && value.trim().length > 0 ? value.trim() : undefined;
 }
 
-function getBoolean(args: Record<string, unknown>, key: string): boolean {
-  return args[key] === true;
+function getBoolean(arguments_: Record<string, unknown>, key: string): boolean {
+  return arguments_[key] === true;
 }
 
 const TOOLS: ToolDefinition[] = [
@@ -42,8 +43,8 @@ const TOOLS: ToolDefinition[] = [
       },
       required: ['area'],
     },
-    handler(args) {
-      const area = getString(args, 'area');
+    handler(arguments_) {
+      const area = getString(arguments_, 'area');
       if (!area) {
         return text('Provide an "area". One of: ' + GUIDE_IDS.join(', '));
       }
@@ -59,7 +60,7 @@ const TOOLS: ToolDefinition[] = [
     description: 'List the Markdown documents available under the repository `docs/` directory.',
     inputSchema: { type: 'object', properties: {} },
     handler() {
-      return json(listDocs().map((doc) => doc.slug));
+      return json(listDocs().map((document) => document.slug));
     },
   },
   {
@@ -71,13 +72,13 @@ const TOOLS: ToolDefinition[] = [
       properties: { slug: { type: 'string', description: 'Document slug from `list_docs`.' } },
       required: ['slug'],
     },
-    handler(args) {
-      const slug = getString(args, 'slug');
+    handler(arguments_) {
+      const slug = getString(arguments_, 'slug');
       if (!slug) {
         return text('Provide a document "slug" (see the list_docs tool).');
       }
-      const doc = readDoc(slug);
-      return doc ? text(doc) : text(`No document with slug "${slug}". Use list_docs to see available slugs.`);
+      const document = readDocument(slug);
+      return document ? text(document) : text(`No document with slug "${slug}". Use list_docs to see available slugs.`);
     },
   },
   {
@@ -89,22 +90,22 @@ const TOOLS: ToolDefinition[] = [
       properties: { query: { type: 'string', description: 'Text to search for.' } },
       required: ['query'],
     },
-    handler(args) {
-      const query = getString(args, 'query');
+    handler(arguments_) {
+      const query = getString(arguments_, 'query');
       if (!query) {
         return text('Provide a "query" to search for.');
       }
       const needle = query.toLowerCase();
       const hits: { slug: string; matches: string[] }[] = [];
-      for (const doc of listDocs()) {
-        const body = readDoc(doc.slug) ?? '';
+      for (const document of listDocs()) {
+        const body = readDocument(document.slug) ?? '';
         const matches = body
           .split('\n')
           .filter((line) => line.toLowerCase().includes(needle))
           .slice(0, 8)
           .map((line) => line.trim());
         if (matches.length > 0) {
-          hits.push({ slug: doc.slug, matches });
+          hits.push({ slug: document.slug, matches });
         }
       }
       return hits.length > 0 ? json(hits) : text(`No matches for "${query}".`);
@@ -119,8 +120,8 @@ const TOOLS: ToolDefinition[] = [
       type: 'object',
       properties: { filter: { type: 'string', description: 'Optional substring to filter component slugs.' } },
     },
-    handler(args) {
-      const filter = getString(args, 'filter')?.toLowerCase();
+    handler(arguments_) {
+      const filter = getString(arguments_, 'filter')?.toLowerCase();
       const components = listComponents().filter((component) => !filter || component.slug.includes(filter));
       if (components.length === 0) {
         return text(filter ? `No components match "${filter}".` : 'No components found.');
@@ -139,8 +140,8 @@ const TOOLS: ToolDefinition[] = [
       },
       required: ['component'],
     },
-    handler(args) {
-      const component = getString(args, 'component');
+    handler(arguments_) {
+      const component = getString(arguments_, 'component');
       if (!component) {
         return text('Provide a "component" name or slug (see list_components).');
       }
@@ -228,9 +229,9 @@ const TOOLS: ToolDefinition[] = [
       },
       required: ['group', 'name'],
     },
-    handler(args) {
-      const group = getString(args, 'group') as WorkspaceGroup | undefined;
-      const name = getString(args, 'name');
+    handler(arguments_) {
+      const group = getString(arguments_, 'group') as WorkspaceGroup | undefined;
+      const name = getString(arguments_, 'name');
       if (!group || !name) {
         return text('Provide both "group" and "name".');
       }
@@ -272,17 +273,17 @@ const TOOLS: ToolDefinition[] = [
       },
       required: ['name'],
     },
-    handler(args) {
-      const name = getString(args, 'name');
+    handler(arguments_) {
+      const name = getString(arguments_, 'name');
       if (!name) {
         return text('Provide a kebab-case "name".');
       }
       const files = packageFiles({
         name,
-        description: getString(args, 'description') ?? '',
-        vue: getBoolean(args, 'vue'),
+        description: getString(arguments_, 'description') ?? '',
+        vue: getBoolean(arguments_, 'vue'),
       });
-      const result = writeScaffold({ group: 'packages', name, files, apply: getBoolean(args, 'apply') });
+      const result = writeScaffold({ group: 'packages', name, files, apply: getBoolean(arguments_, 'apply') });
       return json(result);
     },
   },
@@ -299,13 +300,13 @@ const TOOLS: ToolDefinition[] = [
       },
       required: ['name'],
     },
-    handler(args) {
-      const name = getString(args, 'name');
+    handler(arguments_) {
+      const name = getString(arguments_, 'name');
       if (!name) {
         return text('Provide a kebab-case "name".');
       }
-      const files = appFiles({ name, description: getString(args, 'description') ?? '' });
-      const result = writeScaffold({ group: 'apps', name, files, apply: getBoolean(args, 'apply') });
+      const files = appFiles({ name, description: getString(arguments_, 'description') ?? '' });
+      const result = writeScaffold({ group: 'apps', name, files, apply: getBoolean(arguments_, 'apply') });
       return json(result);
     },
   },
@@ -322,13 +323,13 @@ const TOOLS: ToolDefinition[] = [
       },
       required: ['name'],
     },
-    handler(args) {
-      const name = getString(args, 'name');
+    handler(arguments_) {
+      const name = getString(arguments_, 'name');
       if (!name) {
         return text('Provide a kebab-case "name".');
       }
-      const files = workerFiles({ name, description: getString(args, 'description') ?? '' });
-      const result = writeScaffold({ group: 'workers', name, files, apply: getBoolean(args, 'apply') });
+      const files = workerFiles({ name, description: getString(arguments_, 'description') ?? '' });
+      const result = writeScaffold({ group: 'workers', name, files, apply: getBoolean(arguments_, 'apply') });
       return json(result);
     },
   },

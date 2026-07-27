@@ -8,7 +8,7 @@ Before you begin, ensure you have the following installed on your system:
 
 ### Required Tools
 
-1. **Node.js** (version specified in `.nvmrc`)
+1. **Node.js** (version specified in `.nvmrc`: v24.18.0)
    - Recommended: Use [nvm](https://github.com/nvm-sh/nvm) to manage Node versions
    ```bash
    nvm install
@@ -55,13 +55,13 @@ Check that everything is set up correctly:
 ```bash
 # Check Node version
 node --version
-# Should match the version in .nvmrc
+# Should match the version in .nvmrc (v24.18.0)
 
 # Check pnpm version
 pnpm --version
 
 # Run a quick build test
-turbo run build --filter=@mission-platform/jsx
+pnpm exec turbo run build --filter @mission-platform/jsx
 ```
 
 ## Development Workflow
@@ -72,10 +72,10 @@ Storybook is the primary environment for developing and testing components:
 
 ```bash
 # Start Vue 3 Storybook on port 6006
-turbo run storybook --filter=@mission-platform/storybook
+pnpm exec turbo run storybook --filter @mission-platform/storybook
 
 # Start React Storybook on port 6007 (optional)
-turbo run storybook-react --filter=@mission-platform/storybook-react
+pnpm exec turbo run storybook-react --filter @mission-platform/storybook-react
 ```
 
 ### Running My Care Notes App
@@ -84,7 +84,7 @@ The My Care Notes application demonstrates the platform in action:
 
 ```bash
 # Start development server
-turbo run dev --filter=@mission-platform/my-care-notes
+pnpm exec turbo run dev --filter @mission-platform/my-care-notes
 
 # The app will be available at http://localhost:5173
 ```
@@ -95,13 +95,13 @@ Build individual packages or the entire workspace:
 
 ```bash
 # Build a specific package
-turbo run build --filter=@mission-platform/jsx
+pnpm exec turbo run build --filter @mission-platform/jsx
 
 # Build all packages
-turbo run build --filter="./packages/*"
+pnpm exec turbo run build --filter "./packages/*"
 
 # Build everything (apps + packages + configs)
-turbo run build
+pnpm exec turbo run build
 ```
 
 ### Running Tests

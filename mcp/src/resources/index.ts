@@ -5,7 +5,8 @@
  */
 import { allGuides } from '../knowledge/guides.ts';
 import { listComponents } from '../repo/components.ts';
-import { listDocs, listGroup, readDoc } from '../repo/scanner.ts';
+import { listDocs, listGroup, readDoc as readDocument } from '../repo/scanner.ts';
+
 import type { McpServer } from '../protocol/server.ts';
 import type { ResourceDefinition } from '../protocol/types.ts';
 
@@ -52,13 +53,13 @@ function buildResources(): ResourceDefinition[] {
   });
 
   // Raw repository docs.
-  for (const doc of listDocs()) {
+  for (const document of listDocs()) {
     resources.push({
-      uri: `mission://docs/${doc.slug}`,
-      name: `Docs: ${doc.slug}`,
-      description: `Repository documentation: docs/${doc.slug}.md`,
+      uri: `mission://docs/${document.slug}`,
+      name: `Docs: ${document.slug}`,
+      description: `Repository documentation: docs/${document.slug}.md`,
       mimeType: 'text/markdown',
-      read: () => readDoc(doc.slug) ?? '',
+      read: () => readDocument(document.slug) ?? '',
     });
   }
 

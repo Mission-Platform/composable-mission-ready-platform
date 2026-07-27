@@ -7,21 +7,22 @@ import { after, describe, it } from 'node:test';
 
 import { createServer } from '../src/index.ts';
 import { validateName } from '../src/scaffold/writer.ts';
+
 import type { JsonRpcRequest, JsonRpcSuccess } from '../src/protocol/types.ts';
 
 const server = createServer();
 
 let nextId = 0;
-async function call(method: string, params?: Record<string, unknown>): Promise<JsonRpcSuccess> {
-  const request: JsonRpcRequest = { jsonrpc: '2.0', id: (nextId += 1), method, params };
+async function call(method: string, parameters?: Record<string, unknown>): Promise<JsonRpcSuccess> {
+  const request: JsonRpcRequest = { jsonrpc: '2.0', id: (nextId += 1), method, params: parameters };
   const response = await server.handle(request);
   assert.ok(response, `expected a response for ${method}`);
   assert.ok('result' in response, `expected a success result for ${method}, got ${JSON.stringify(response)}`);
   return response as JsonRpcSuccess;
 }
 
-async function callTool(name: string, args: Record<string, unknown> = {}): Promise<string> {
-  const response = await call('tools/call', { name, arguments: args });
+async function callTool(name: string, arguments_: Record<string, unknown> = {}): Promise<string> {
+  const response = await call('tools/call', { name, arguments: arguments_ });
   const result = response.result as { content: { type: string; text: string }[]; isError?: boolean };
   return result.content.map((entry) => entry.text).join('\n');
 }
@@ -48,7 +49,7 @@ describe('protocol', () => {
 describe('tools', () => {
   it('lists the expected tools', async () => {
     const { result } = await call('tools/list');
-    const names = (result as { tools: { name: string }[] }).tools.map((tool) => tool.name);
+    const names = new Set((result as { tools: { name: string }[] }).tools.map((tool) => tool.name));
     for (const expected of [
       'get_guide',
       'list_components',
@@ -60,7 +61,7 @@ describe('tools', () => {
       'scaffold_app',
       'scaffold_worker',
     ]) {
-      assert.ok(names.includes(expected), `missing tool ${expected}`);
+      assert.ok(names.has(expected), `missing tool ${expected}`);
     }
   });
 
@@ -121,9 +122,9 @@ describe('resources', () => {
 describe('prompts', () => {
   it('lists the workflow prompts', async () => {
     const { result } = await call('prompts/list');
-    const names = (result as { prompts: { name: string }[] }).prompts.map((prompt) => prompt.name);
+    const names = new Set((result as { prompts: { name: string }[] }).prompts.map((prompt) => prompt.name));
     for (const expected of ['use-component', 'create-package', 'develop-package', 'create-app', 'create-worker']) {
-      assert.ok(names.includes(expected), `missing prompt ${expected}`);
+      assert.ok(names.has(expected), `missing prompt ${expected}`);
     }
   });
 

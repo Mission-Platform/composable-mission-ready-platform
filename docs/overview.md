@@ -69,10 +69,13 @@ Built-in support for design tokens, theming, and responsive breakpoints ensures 
 ```
 composable_mission_ready_platform/
 ├── apps/                   # Deployable applications
-│   ├── my-care-notes/      # Vue 3 note-taking application
-│   └── storybook/          # Component catalogue and visual tests
+│   ├── my-care-notes/      # Vue 3 note-taking application with spell checking
+│   ├── service-monitor/    # Service health and status monitoring dashboard
+│   ├── storybook/          # Vue 3 Storybook component catalogue and visual tests
+│   ├── storybook-react/    # React Storybook catalogue for cross-framework components
+│   └── website/            # Platform website and documentation portal
 ├── configs/                # Shared tooling configurations
-│   ├── eslint-config/      # ESLint configuration
+│   ├── eslint-config/      # ESLint flat configuration
 │   ├── prettier-config/    # Prettier configuration
 │   └── ...                 # Other shared configs
 ├── packages/               # Reusable building blocks
@@ -110,8 +113,4 @@ To start using Mission Platform, see the [Development Setup](development-setup.m
 
 For package authors, check out the [Package Development](package-development.md) guide to learn how to create new packages.
 
-For application developers, the [App Development](app-development.md) guide provides step-by-step instructions for building applications.
-
----
-
-**Last updated**: 2024-12-15
+For workspace organization and application architecture, see the [Workspace Structure](workspace-structure.md) guide.

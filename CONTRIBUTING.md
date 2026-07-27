@@ -2,11 +2,11 @@
 
 ## Getting Started
 
-1. **Install dependencies**: `pnpm install`
-2. **Select correct Node version**: `nvm use` (uses .nvmrc)
-3. **Run tests**: `turbo test`
-4. **Run linting**: `turbo lint`
-5. **Format code**: `turbo format`
+1. **Select correct Node version**: `nvm use` (uses `.nvmrc` - Node.js 24.18.0)
+2. **Install dependencies**: `pnpm install`
+3. **Run tests**: `pnpm test` (or `pnpm exec turbo run test`)
+4. **Run linting**: `pnpm lint` (or `pnpm exec turbo run lint`)
+5. **Format code**: `pnpm format` (or `pnpm exec turbo run format`)
 
 ## Development Workflow
 

@@ -1,171 +1,144 @@
-# Project Configuration Files
+# Project Configuration Packages
 
-This document explains the project-wide configuration files located in the `configs/` directory and how to use them across different packages.
+This document explains the project-wide configuration packages located in the `configs/` directory and how to use them across applications and packages in the monorepo.
 
 ## Overview
 
-The Mission Platform uses a centralized configuration system that standardizes development tooling across all packages in the monorepo. These configurations are designed to be:
+The Mission Platform uses a centralized configuration system housed under `configs/` that standardizes development tooling across all workspaces. These configuration packages are designed to be:
 
-- **Consistent**: Same rules and settings across all projects
-- **Extensible**: Easy to customize for specific package needs
-- **Documented**: Clear explanations of each configuration option
+- **Consistent**: Uniform rules, TypeScript targets, and code style across all projects.
+- **Extensible**: Easily extended for workspace-specific requirements.
+- **Maintainable**: Updated once at the root to propagate across all apps and packages.
 
-## Configuration Files
+## Configuration Packages
 
-### ESLint Configuration (`configs/eslint.config.js`)
+### 1. ESLint Configuration (`@mission-platform/eslint-config`)
 
-Our ESLint configuration extends multiple plugin configurations:
-
-```js
-import { plugin } from '@mission-platform/eslint-config';
-
-export default plugin({
-  // Custom rules can be added here
-  rules: {
-    'unicorn/prefer-ternary': 'error',
-  },
-});
-```
-
-**Key Rules:**
-- Enforce consistent import styles
-- Prefer destructured imports
-- Disallow unused variables
-- Enforce camelCase naming
-- Use default parameters over explicit undefined checks
-- Prefer template literals over string concatenation
-
-### Stylelint Configuration (`configs/stylelint.config.js`)
-
-Standardizes CSS and SCSS formatting:
+Provides the base flat ESLint configuration array (`eslint.config.js`):
 
 ```js
-import { plugin } from '@mission-platform/stylelint-config';
+// eslint.config.js
+import baseConfig from '@mission-platform/eslint-config';
 
-export default plugin({
-  // Custom rules can be added here
-  rules: {
-    'color-no-invalid-hex': true,
-    'selector-class-pattern': '[a-z][a-z0-9]*(?:[-][a-z0-9]+)*',
-  },
-});
-```
-
-**Key Rules:**
-- Enforce consistent spacing around colons and brackets
-- Disallow unused CSS selectors
-- Prefer consistent naming conventions for CSS variables
-- Limit hex color length to 6 characters
-- Use BEM naming convention for class names
-- Order CSS properties in a consistent way
-
-### Prettier Configuration (`configs/prettier.config.js`)
-
-Standardizes code formatting:
-
-```js
-import { plugin } from '@mission-platform/prettier-config';
-
-export default plugin({
-  // Additional configuration can be added here
-  semi: false,
-  singleQuote: true,
-  trailingComma: 'all',
-});
-```
-
-**Default Settings:**
-- Use single quotes for strings
-- Print width: 100 characters
-- Tab width: 2 spaces
-- End of line: lf
-- Insert final newline
-- Use single quotes instead of double quotes
-- Remove trailing commas where possible
-
-### Vitest Configuration (`configs/vitest.config.ts`)
-
-Standardizes testing setup:
-
-```js
-import { plugin } from '@mission-platform/vitest-config';
-
-export default plugin({
-  environment: 'jsdom',
-  coverage: {
-    provider: 'v8',
-    thresholds: {
-      lines: 80,
-      functions: 80,
-      branches: 80,
-      statements: 80,
-    },
-  },
-  globals: true,
-  test: {
-    include: ['**/*.test.{js,ts,vue}'],
-    name: 'vitest',
-  },
-});
+export default [
+  ...baseConfig,
+  // Add project-specific rule overrides here
+];
 ```
 
 **Key Features:**
-- Component testing with Vue 3
-- Mocking of Node.js modules
-- Coverage reporting with 80% thresholds
-- Environment variables support
-- Snapshot testing capabilities
-- Test timeout configuration
+- TypeScript parser and `typescript-eslint` recommended rules with project service support.
+- Vue 3 SFC flat recommended rules, enforcing `script-setup` syntax.
+- Organized import order via `eslint-plugin-import-x` and `eslint-import-resolver-typescript`.
+- Accessibility, i18n, and SonarJS code quality rules.
 
-## Usage in Projects
+### 2. Prettier Configuration (`@mission-platform/prettier-config`)
 
-To use these configurations in your project:
-
-1. **Install the config package** (if not already installed):
-   ```bash
-   pnpm add -D @mission-platform/eslint-config @mission-platform/stylelint-config @mission-platform/prettier-config @mission-platform/vitest-config
-   ```
-
-2. **Configure your tooling** to use the configs:
-   
-   For ESLint:
-   ```js
-   // vite.config.ts
-   import eslintConfig from '@mission-platform/eslint-config';
-
-   export default defineConfig({
-     esbuild: {
-       plugins: [eslintConfig],
-     },
-   }); 
-   ```
-
-3. **Run your tools** - they will automatically use the standardized configurations.
-
-## Customization
-
-Each configuration file exports a `plugin` function that accepts an options object. You can extend these configurations by adding your custom rules:
+Standardizes code formatting across all JS/TS, Vue, JSON, and CSS files:
 
 ```js
-import { plugin } from '@mission-platform/eslint-config';
+// prettier.config.js
+import baseConfig from '@mission-platform/prettier-config';
 
-export default plugin({
-  rules: {
-    // Add project-specific rules here
-    'no-console': 'warn',
-    'vue/multi-word-component-names': 'off',
-    '@typescript-eslint/explicit-module-boundary-types': 'error',
-  },
-});
+export default baseConfig;
 ```
+
+**Default Settings:**
+- Print width: 120 characters
+- Tab width: 2 spaces
+- Single quotes: `true`
+- Semicolons: `true`
+- Trailing comma: `'all'`
+- HTML whitespace sensitivity: `'ignore'`
+- End of line: `'lf'`
+
+### 3. Stylelint Configuration (`@mission-platform/stylelint-config`)
+
+Standardizes CSS, SCSS, and Vue `<style>` block formatting:
+
+```js
+// stylelint.config.js
+import baseConfig from '@mission-platform/stylelint-config';
+
+export default baseConfig;
+```
+
+**Key Rules:**
+- Extends `stylelint-config-standard-scss` and `stylelint-config-recommended-vue`.
+- Enforces BEM naming conventions for CSS class names.
+- Validates SCSS variable patterns and disallows duplicate properties.
+
+### 4. TypeScript Configuration (`@mission-platform/typescript-config`)
+
+Provides base `tsconfig` presets for different workspace targets:
+
+```json
+// tsconfig.json in an app
+{
+  "extends": "@mission-platform/typescript-config/app",
+  "compilerOptions": {
+    "baseUrl": "."
+  }
+}
+```
+
+**Available Presets:**
+- `@mission-platform/typescript-config/base`: General TypeScript defaults.
+- `@mission-platform/typescript-config/app`: Target for Vue 3 frontend applications.
+- `@mission-platform/typescript-config/library`: Target for shared package libraries.
+- `@mission-platform/typescript-config/node`: Target for Node.js scripts and server tooling.
+- `@mission-platform/typescript-config/react`: Target for React applications.
+- `@mission-platform/typescript-config/test`: Target for Vitest test suites.
+
+### 5. Vite & Vitest Configuration (`@mission-platform/vite-config`)
+
+Provides shared Vite build configurations and Vitest testing setups:
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite';
+import { createViteConfig } from '@mission-platform/vite-config';
+
+export default defineConfig(createViteConfig());
+```
+
+### 6. PostCSS Configuration (`@mission-platform/postcss-config`)
+
+Provides shared PostCSS configuration for Tailwind CSS and Autoprefixer integration.
+
+### 7. i18n Configuration (`@mission-platform/i18n-config`)
+
+Provides shared internationalization constants and configuration options.
+
+### 8. i18next CLI Vue (`@mission-platform/i18next-cli-vue`)
+
+CLI tool and extraction utilities for extracting i18n translation keys from Vue templates and source code.
+
+## Usage in Workspaces
+
+To use these configuration packages in a workspace:
+
+1. **Reference the workspace dependency** in your `package.json`:
+   ```json
+   {
+     "devDependencies": {
+       "@mission-platform/eslint-config": "workspace:*",
+       "@mission-platform/prettier-config": "workspace:*",
+       "@mission-platform/typescript-config": "workspace:*"
+     }
+   }
+   ```
+
+2. **Add configuration files** pointing to the central packages (e.g., `eslint.config.js`, `prettier.config.js`, `tsconfig.json`).
+
+3. **Run your tools via Turborepo**:
+   ```bash
+   pnpm exec turbo run lint
+   pnpm exec turbo run typecheck
+   ```
 
 ## Best Practices
 
-- **Don't duplicate configurations** - always use the centralized configs
-- **Update regularly** - check for config updates when upgrading packages
-- **Document changes** - if you need to customize, document why in the project README
-- **Test your configuration** - verify it works as expected in a test project
-- **Keep configurations DRY** - avoid repeating the same rules across multiple files
-- **Use environment-specific overrides** when needed for different deployment environments
-
-This standardized approach ensures consistent code quality across all Mission Platform projects while allowing for necessary customization where specific project needs require it.
+- **Never duplicate configuration rules** across workspace config files; extend the centralized package instead.
+- **Maintain single-direction dependencies**: Code in `configs/` must never depend on `apps/` or `packages/`.
+- **Document any custom overrides** directly in the workspace `README.md` or configuration file comments.
