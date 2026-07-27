@@ -1,0 +1,70 @@
+base_alert_banner:
+  dismiss_label: Schließen
+base_breadcrumb:
+  breadcrumb_label: Brotkrumen
+base_calendar:
+  select_month_label: Monat auswählen
+  select_year_label: Jahr auswählen
+base_carousel:
+  carousel_role_description: Karussell
+  next_slide_label: Nächste Folie
+  previous_slide_label: Vorherige Folie
+  slide_role_description: Folie
+base_checkbox:
+  required_indicator_label: erforderlich
+base_color_input:
+  open_picker_label: Farbauswahl öffnen
+  required_indicator_label: erforderlich
+base_date_input:
+  required_indicator_label: erforderlich
+base_date_range_input:
+  required_indicator_label: erforderlich
+base_date_time_range_input:
+  required_indicator_label: erforderlich
+base_file_input:
+  required_indicator_label: erforderlich
+base_input:
+  required_indicator_label: erforderlich
+base_markdown_input:
+  preview_tab_label: Vorschau
+  required_indicator_label: erforderlich
+  write_tab_label: Schreiben
+base_monaco_editor:
+  code_editor_label: Code-Editor
+base_multiselect:
+  required_indicator_label: erforderlich
+base_navbar:
+  main_navigation_label: Hauptnavigation
+  mobile_navigation_label: Mobile Navigation
+base_number_stepper:
+  decrease_label: Verringern
+  increase_label: Erhöhen
+base_radio_group:
+  required_indicator_label: erforderlich
+base_scheduler:
+  calendar_view_label: Kalenderansicht
+  more_events_label_zero: weitere
+  more_events_label_one: weitere
+  more_events_label_other: weitere
+base_select:
+  required_indicator_label: erforderlich
+base_table:
+  loading_label: Tabellendaten werden geladen
+  loading_spinner_label: Wird geladen…
+base_tabs:
+  new_tab_label: Neuer Tab
+base_textarea:
+  required_indicator_label: erforderlich
+base_time_input:
+  done_label: Fertig
+  required_indicator_label: erforderlich
+base_time_range_input:
+  done_label: Fertig
+  required_indicator_label: erforderlich
+base_virtual_table:
+  row_count_zero: '{{formattedCount}} Zeilen'
+  row_count_one: '{{formattedCount}} Zeilen'
+  row_count_other: '{{formattedCount}} Zeilen'
+  sorted_by_label: Sortiert nach
+base_virtual_tabs:
+  new_tab_label: Neuer Tab

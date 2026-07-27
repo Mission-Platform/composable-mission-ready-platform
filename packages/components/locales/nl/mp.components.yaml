@@ -1,0 +1,70 @@
+base_alert_banner:
+  dismiss_label: Sluiten
+base_breadcrumb:
+  breadcrumb_label: Kruimelpad
+base_calendar:
+  select_month_label: Selecteer maand
+  select_year_label: Selecteer jaar
+base_carousel:
+  carousel_role_description: carrousel
+  next_slide_label: Volgende dia
+  previous_slide_label: Vorige dia
+  slide_role_description: dia
+base_checkbox:
+  required_indicator_label: verplicht
+base_color_input:
+  open_picker_label: Kleurkiezer openen
+  required_indicator_label: verplicht
+base_date_input:
+  required_indicator_label: verplicht
+base_date_range_input:
+  required_indicator_label: verplicht
+base_date_time_range_input:
+  required_indicator_label: verplicht
+base_file_input:
+  required_indicator_label: verplicht
+base_input:
+  required_indicator_label: verplicht
+base_markdown_input:
+  preview_tab_label: Voorbeeld
+  required_indicator_label: verplicht
+  write_tab_label: Schrijven
+base_monaco_editor:
+  code_editor_label: Code-editor
+base_multiselect:
+  required_indicator_label: verplicht
+base_navbar:
+  main_navigation_label: Hoofdnavigatie
+  mobile_navigation_label: Mobiele navigatie
+base_number_stepper:
+  decrease_label: Verlagen
+  increase_label: Verhogen
+base_radio_group:
+  required_indicator_label: verplicht
+base_scheduler:
+  calendar_view_label: Kalenderweergave
+  more_events_label_zero: meer
+  more_events_label_one: meer
+  more_events_label_other: meer
+base_select:
+  required_indicator_label: verplicht
+base_table:
+  loading_label: Tabelgegevens laden
+  loading_spinner_label: Laden…
+base_tabs:
+  new_tab_label: Nieuw tabblad
+base_textarea:
+  required_indicator_label: verplicht
+base_time_input:
+  done_label: Klaar
+  required_indicator_label: verplicht
+base_time_range_input:
+  done_label: Klaar
+  required_indicator_label: verplicht
+base_virtual_table:
+  row_count_zero: '{{formattedCount}} rijen'
+  row_count_one: '{{formattedCount}} rijen'
+  row_count_other: '{{formattedCount}} rijen'
+  sorted_by_label: Gesorteerd op
+base_virtual_tabs:
+  new_tab_label: Nieuw tabblad
