@@ -1,6 +1,12 @@
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import i18nPlugin from '@mission-platform/vite-plugin-i18n';
 import { mergeConfig } from 'vite';
 
 import type { StorybookConfig } from '@storybook/react-vite';
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const config: StorybookConfig = {
   stories: [
@@ -30,6 +36,17 @@ const config: StorybookConfig = {
     developmentModeForBuild: false,
     sidebarOnboardingChecklist: false,
   },
+  typescript: {
+    reactDocgen: 'react-docgen-typescript',
+    reactDocgenTypescriptOptions: {
+      compilerOptions: {
+        allowSyntheticDefaultImports: false,
+        esModuleInterop: false,
+      },
+      propFilter: (property) =>
+        property.parent ? !/node_modules/.test(property.parent.fileName) : true,
+    },
+  },
   framework: '@storybook/react-vite',
   core: {
     disableTelemetry: true,
@@ -37,6 +54,32 @@ const config: StorybookConfig = {
   },
   viteFinal: (config) =>
     mergeConfig(config, {
+      cacheDir: 'node_modules/.vite-storybook-react',
+      plugins: [i18nPlugin({ defaultLocale: 'en' })],
+      resolve: {
+        alias: [
+          {
+            find: '@mission-platform/components/react',
+            replacement: path.join(dirname, '../../../packages/components/dist/react/index.js'),
+          },
+          {
+            find: '@mission-platform/code-scanner/react',
+            replacement: path.join(dirname, '../../../packages/code-scanner/dist/react/index.js'),
+          },
+          {
+            find: '@mission-platform/breakpoints/react',
+            replacement: path.join(dirname, '../../../packages/breakpoints/dist/react/index.js'),
+          },
+          {
+            find: '@mission-platform/breakpoints',
+            replacement: path.join(dirname, '../../../packages/breakpoints/dist/react/index.js'),
+          },
+          {
+            find: /^react(\/.*)?$/,
+            replacement: `${path.join(dirname, '../node_modules/react')}$1`,
+          },
+        ],
+      },
       build: {
         // Disable CSS code splitting so component module styles are inlined into
         // their JS chunks rather than emitted as separate CSS files. Without

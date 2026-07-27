@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+  import type {} from './locales/types';
+
   import { BaseButton, BaseCodeBlock, BaseCollapse, BaseTooltip } from '@mission-platform/components/vue';
   import { useI18n } from '@mission-platform/i18n/vue';
   import {
@@ -27,6 +29,62 @@
 
   const { t } = useI18n();
 
+  const title = t(($) => $.title, { ns: 'mp.storybook', defaultValue: 'Map Draw Toolbar' });
+  const labelDraw = t(($) => $.label.draw, { ns: 'mp.storybook', defaultValue: 'Draw:' });
+  const labelEdit = t(($) => $.label.edit, { ns: 'mp.storybook', defaultValue: 'Edit:' });
+
+  const tooltipScaleUp = t(($) => $.tooltip['scale-up'], { ns: 'mp.storybook', defaultValue: 'Scale Up ×1.5' });
+  const ariaScaleUp = t(($) => $.aria['scale-up'], { ns: 'mp.storybook', defaultValue: 'Scale Up' });
+  const tooltipScaleDown = t(($) => $.tooltip['scale-down'], { ns: 'mp.storybook', defaultValue: 'Scale Down ×0.75' });
+  const ariaScaleDown = t(($) => $.aria['scale-down'], { ns: 'mp.storybook', defaultValue: 'Scale Down' });
+  const tooltipRotateCw = t(($) => $.tooltip['rotate-cw'], { ns: 'mp.storybook', defaultValue: 'Rotate +45°' });
+  const ariaRotateCw = t(($) => $.aria['rotate-cw'], { ns: 'mp.storybook', defaultValue: 'Rotate Clockwise' });
+  const tooltipRotateCcw = t(($) => $.tooltip['rotate-ccw'], { ns: 'mp.storybook', defaultValue: 'Rotate −45°' });
+  const ariaRotateCcw = t(($) => $.aria['rotate-ccw'], {
+    ns: 'mp.storybook',
+    defaultValue: 'Rotate Counter-Clockwise',
+  });
+  const tooltipSplit = t(($) => $.tooltip.split, { ns: 'mp.storybook', defaultValue: 'Split line at midpoint' });
+  const ariaSplit = t(($) => $.aria.split, { ns: 'mp.storybook', defaultValue: 'Split Line' });
+  const tooltipJoin = t(($) => $.tooltip.join, {
+    ns: 'mp.storybook',
+    defaultValue: 'Join two lines at nearest endpoints',
+  });
+  const tooltipJoinActive = t(($) => $.tooltip['join-active'], {
+    ns: 'mp.storybook',
+    defaultValue: 'Joining — select another line to complete join',
+  });
+  const ariaJoin = t(($) => $.aria.join, { ns: 'mp.storybook', defaultValue: 'Join Lines' });
+  const tooltipDelete = t(($) => $.tooltip.delete, { ns: 'mp.storybook', defaultValue: 'Delete selected feature' });
+  const ariaDelete = t(($) => $.aria.delete, { ns: 'mp.storybook', defaultValue: 'Delete' });
+
+  // Status messages are dynamic based on selectedId or joiningFromId
+  const statusNone = t(($) => $.status.none, { ns: 'mp.storybook', defaultValue: 'Click a shape to select' });
+  const statusSelected = (id: string) =>
+    t(($) => $.status.selected, { ns: 'mp.storybook', defaultValue: 'Selected: {id}', id });
+  const statusJoining = (id: string) =>
+    t(($) => $.status.joining, { ns: 'mp.storybook', defaultValue: '⚡ Click another line to join with {id}', id });
+
+  const tooltipGeodesic = t(($) => $.tooltip.geodesic, {
+    ns: 'mp.storybook',
+    defaultValue: 'Geodesic mode: move/scale respects ground distances. Click for flat/visual mode.',
+  });
+  const tooltipFlat = t(($) => $.tooltip.flat, {
+    ns: 'mp.storybook',
+    defaultValue: 'Flat mode: move/scale preserves visual shape. Click for geodesic mode.',
+  });
+  const ariaGeodesic = t(($) => $.aria.geodesic, { ns: 'mp.storybook', defaultValue: 'Geodesic mode' });
+  const modeGeodesic = t(($) => $.mode.geodesic, { ns: 'mp.storybook', defaultValue: 'Geodesic' });
+  const modeFlat = t(($) => $.mode.flat, { ns: 'mp.storybook', defaultValue: 'Flat' });
+
+  function geojsonSummary(count: number) {
+    return t(($) => $['geojson-summary'], {
+      ns: 'mp.storybook',
+      defaultValue: 'GeoJSON output ({count} features)',
+      count,
+    });
+  }
+
   // The live drawing controller is exposed by `<MapDraw>` through its `toolbar`
   // scoped slot (`{ drawing }`), so the toolbar below is rendered inside that
   // slot and drives every action straight through the controller. Only the
@@ -34,12 +92,28 @@
   const joiningFromId = ref<FeatureId | null>(null);
 
   const drawModes = computed<{ label: string; value: DrawMode; icon: unknown }[]>(() => [
-    { label: t('draw.none'), value: undefined, icon: null },
-    { label: t('draw.line'), value: 'line', icon: IconDrawLine },
-    { label: t('draw.polygon'), value: 'polygon', icon: IconDrawPolygon },
-    { label: t('draw.square'), value: 'square', icon: IconDrawSquare },
-    { label: t('draw.circle'), value: 'circle', icon: IconDrawCircle },
-    { label: t('draw.triangle'), value: 'triangle', icon: IconDrawTriangle },
+    { label: t(($) => $.draw.none, { ns: 'mp.storybook', defaultValue: 'None' }), value: undefined, icon: null },
+    { label: t(($) => $.draw.line, { ns: 'mp.storybook', defaultValue: 'Line' }), value: 'line', icon: IconDrawLine },
+    {
+      label: t(($) => $.draw.polygon, { ns: 'mp.storybook', defaultValue: 'Polygon' }),
+      value: 'polygon',
+      icon: IconDrawPolygon,
+    },
+    {
+      label: t(($) => $.draw.square, { ns: 'mp.storybook', defaultValue: 'Square' }),
+      value: 'square',
+      icon: IconDrawSquare,
+    },
+    {
+      label: t(($) => $.draw.circle, { ns: 'mp.storybook', defaultValue: 'Circle' }),
+      value: 'circle',
+      icon: IconDrawCircle,
+    },
+    {
+      label: t(($) => $.draw.triangle, { ns: 'mp.storybook', defaultValue: 'Triangle' }),
+      value: 'triangle',
+      icon: IconDrawTriangle,
+    },
   ]);
 
   function setMode(drawing: UseDrawingReturn, m: DrawMode) {
@@ -82,7 +156,7 @@
 
 <template>
   <div class="showcase">
-    <h1>{{ t('title') }}</h1>
+    <h1>{{ title }}</h1>
 
     <MapLibre
       :center="[0, 20]"
@@ -94,7 +168,7 @@
         <template #toolbar="{ drawing }">
           <div class="toolbar">
             <div class="toolbar__row">
-              <span class="toolbar__label">{{ t('label.draw') }}</span>
+              <span class="toolbar__label">{{ labelDraw }}</span>
               <BaseTooltip
                 v-for="m in drawModes"
                 :key="String(m.value)"
@@ -118,22 +192,22 @@
             </div>
 
             <div class="toolbar__row">
-              <span class="toolbar__label">{{ t('label.edit') }}</span>
+              <span class="toolbar__label">{{ labelEdit }}</span>
               <span
                 :class="{ 'toolbar__status--joining': joiningFromId }"
                 class="toolbar__status"
               >
                 {{
                   joiningFromId
-                    ? t('status.joining', { id: joiningFromId })
+                    ? statusJoining(String(joiningFromId))
                     : drawing.selectedId
-                      ? t('status.selected', { id: drawing.selectedId })
-                      : t('status.none')
+                      ? statusSelected(String(drawing.selectedId))
+                      : statusNone
                 }}
               </span>
 
               <BaseTooltip
-                :content="t('tooltip.scale-up')"
+                :content="tooltipScaleUp"
                 placement="bottom"
               >
                 <BaseButton
@@ -144,13 +218,13 @@
                 >
                   <IconScaleUp
                     :size="16"
-                    :aria-label="t('aria.scale-up')"
+                    :aria-label="ariaScaleUp"
                   />
                 </BaseButton>
               </BaseTooltip>
 
               <BaseTooltip
-                :content="t('tooltip.scale-down')"
+                :content="tooltipScaleDown"
                 placement="bottom"
               >
                 <BaseButton
@@ -161,13 +235,13 @@
                 >
                   <IconScaleDown
                     :size="16"
-                    :aria-label="t('aria.scale-down')"
+                    :aria-label="ariaScaleDown"
                   />
                 </BaseButton>
               </BaseTooltip>
 
               <BaseTooltip
-                :content="t('tooltip.rotate-cw')"
+                :content="tooltipRotateCw"
                 placement="bottom"
               >
                 <BaseButton
@@ -178,13 +252,13 @@
                 >
                   <IconRotateCw
                     :size="16"
-                    :aria-label="t('aria.rotate-cw')"
+                    :aria-label="ariaRotateCw"
                   />
                 </BaseButton>
               </BaseTooltip>
 
               <BaseTooltip
-                :content="t('tooltip.rotate-ccw')"
+                :content="tooltipRotateCcw"
                 placement="bottom"
               >
                 <BaseButton
@@ -195,13 +269,13 @@
                 >
                   <IconRotateCcw
                     :size="16"
-                    :aria-label="t('aria.rotate-ccw')"
+                    :aria-label="ariaRotateCcw"
                   />
                 </BaseButton>
               </BaseTooltip>
 
               <BaseTooltip
-                :content="t('tooltip.split')"
+                :content="tooltipSplit"
                 placement="bottom"
               >
                 <BaseButton
@@ -212,13 +286,13 @@
                 >
                   <IconSplit
                     :size="16"
-                    :aria-label="t('aria.split')"
+                    :aria-label="ariaSplit"
                   />
                 </BaseButton>
               </BaseTooltip>
 
               <BaseTooltip
-                :content="joiningFromId ? t('tooltip.join-active') : t('tooltip.join')"
+                :content="joiningFromId ? tooltipJoinActive : tooltipJoin"
                 placement="bottom"
               >
                 <BaseButton
@@ -229,13 +303,13 @@
                 >
                   <IconJoin
                     :size="16"
-                    :aria-label="t('aria.join')"
+                    :aria-label="ariaJoin"
                   />
                 </BaseButton>
               </BaseTooltip>
 
               <BaseTooltip
-                :content="t('tooltip.delete')"
+                :content="tooltipDelete"
                 placement="bottom"
               >
                 <BaseButton
@@ -246,13 +320,13 @@
                 >
                   <IconTrash
                     :size="16"
-                    :aria-label="t('aria.delete')"
+                    :aria-label="ariaDelete"
                   />
                 </BaseButton>
               </BaseTooltip>
 
               <BaseTooltip
-                :content="drawing.geodesic ? t('tooltip.geodesic') : t('tooltip.flat')"
+                :content="drawing.geodesic ? tooltipGeodesic : tooltipFlat"
                 placement="bottom"
               >
                 <BaseButton
@@ -262,14 +336,14 @@
                 >
                   <IconGeodesic
                     :size="16"
-                    :aria-label="t('aria.geodesic')"
+                    :aria-label="ariaGeodesic"
                   />
-                  {{ drawing.geodesic ? t('mode.geodesic') : t('mode.flat') }}
+                  {{ drawing.geodesic ? modeGeodesic : modeFlat }}
                 </BaseButton>
               </BaseTooltip>
             </div>
 
-            <BaseCollapse :summary="t('geojson-summary', { count: featureCount(drawing) })">
+            <BaseCollapse :summary="geojsonSummary(featureCount(drawing))">
               <BaseCodeBlock
                 :code="JSON.stringify(drawing.features, null, 2)"
                 :show-copy-button="false"
@@ -334,46 +408,3 @@
     overflow: auto;
   }
 </style>
-
-<i18n lang="yaml">
-en:
-  title: Map Draw Toolbar
-  label:
-    draw: 'Draw:'
-    edit: 'Edit:'
-  draw:
-    none: None
-    line: Line
-    polygon: Polygon
-    square: Square
-    circle: Circle
-    triangle: Triangle
-  status:
-    none: Click a shape to select
-    selected: 'Selected: {id}'
-    joining: '⚡ Click another line to join with {id}'
-  tooltip:
-    scale-up: Scale Up ×1.5
-    scale-down: Scale Down ×0.75
-    rotate-cw: Rotate +45°
-    rotate-ccw: Rotate −45°
-    split: Split line at midpoint
-    join: Join two lines at nearest endpoints
-    join-active: Joining — select another line to complete join
-    delete: Delete selected feature
-    geodesic: 'Geodesic mode: move/scale respects ground distances. Click for flat/visual mode.'
-    flat: 'Flat mode: move/scale preserves visual shape. Click for geodesic mode.'
-  aria:
-    scale-up: Scale Up
-    scale-down: Scale Down
-    rotate-cw: Rotate Clockwise
-    rotate-ccw: Rotate Counter-Clockwise
-    split: Split Line
-    join: Join Lines
-    delete: Delete
-    geodesic: Geodesic mode
-  mode:
-    geodesic: Geodesic
-    flat: Flat
-  geojson-summary: 'GeoJSON output ({count} features)'
-</i18n>

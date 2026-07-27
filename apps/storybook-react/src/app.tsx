@@ -1,4 +1,5 @@
 import { Avatar, Badge, Button } from '@mission-platform/components/react';
+import { useI18n } from '@mission-platform/i18n/react';
 
 import { Card, Stack } from './jsx-react';
 
@@ -9,20 +10,25 @@ import { Card, Stack } from './jsx-react';
  * `pnpm dev` shows something useful.
  */
 export default function App() {
+  const { t } = useI18n();
   return (
     <main>
       <header className="app__header">
-        <h1>Mission Platform — React</h1>
+        <h1>{t(($) => $.title, { ns: 'mp.storybook-react', defaultValue: 'Mission Platform Components' })}</h1>
         <p>
-          Write-once components from <code>@mission-platform/components/react</code>. Explore the full catalogue in
-          Storybook.
+          {t(($) => $.description.before, { ns: 'mp.storybook-react', defaultValue: 'A React showcase for' })}{' '}
+          <code>@mission-platform/components/react</code>.{' '}
+          {t(($) => $.description.after, {
+            ns: 'mp.storybook-react',
+            defaultValue: 'Open Storybook to explore the full component library.',
+          })}
         </p>
       </header>
 
       <Card
         padding="lg"
         shadow
-        header={<strong>Components</strong>}
+        header={<strong>{t(($) => $.components, { ns: 'mp.storybook-react', defaultValue: 'Components' })}</strong>}
       >
         <Stack
           direction="horizontal"
@@ -30,20 +36,26 @@ export default function App() {
           align="center"
           wrap
         >
-          <Button variant="primary">Primary</Button>
-          <Button variant="secondary">Secondary</Button>
+          <Button variant="primary">
+            {t(($) => $.button.primary, { ns: 'mp.storybook-react', defaultValue: 'Primary' })}
+          </Button>
+          <Button variant="secondary">
+            {t(($) => $.button.secondary, { ns: 'mp.storybook-react', defaultValue: 'Secondary' })}
+          </Button>
           <Button
             variant="tertiary"
             badge={3}
           >
-            Tertiary
+            {t(($) => $.button.tertiary, { ns: 'mp.storybook-react', defaultValue: 'Notifications' })}
           </Button>
-          <Badge variant="success">Success</Badge>
+          <Badge variant="success">
+            {t(($) => $.badge.success, { ns: 'mp.storybook-react', defaultValue: 'Success' })}
+          </Badge>
           <Badge
             variant="primary"
             pill
           >
-            Pill
+            {t(($) => $.badge.pill, { ns: 'mp.storybook-react', defaultValue: 'Pill badge' })}
           </Badge>
           <Avatar
             initials="MP"

@@ -4,10 +4,19 @@ import '@mission-platform/tokens/scss/themes/dark';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './preview.scss';
 
+import { createMpI18n, mpNamespace } from '@mission-platform/i18n';
+import { MpI18nProvider } from '@mission-platform/i18n/react';
 import { withThemeByDataAttribute } from '@storybook/addon-themes';
+import { createElement } from 'react';
+import { resources } from 'virtual:i18n-resources';
 
 import type { Preview, ReactRenderer } from '@storybook/react-vite';
 import type { ViewportMap } from 'storybook/viewport';
+
+const i18n = createMpI18n({
+  namespace: mpNamespace('storybook-react'),
+  resources,
+});
 
 // Mission Platform responsive breakpoints (min-width thresholds, in px).
 // Mirrors `@mission-platform/breakpoints` — inlined here so this React app does
@@ -48,6 +57,7 @@ const mpViewports: ViewportMap = Object.fromEntries(
 
 const preview: Preview = {
   decorators: [
+    (Story) => createElement(MpI18nProvider, { i18n }, createElement(Story)),
     withThemeByDataAttribute<ReactRenderer>({
       themes: {
         light: 'light',
