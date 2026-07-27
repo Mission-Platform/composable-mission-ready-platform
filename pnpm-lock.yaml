@@ -85,6 +85,9 @@ catalogs:
     eslint-plugin-import-x:
       specifier: ^4.17.1
       version: 4.17.1
+    eslint-plugin-sonarjs:
+      specifier: ^4.0.2
+      version: 4.2.0
     eslint-plugin-unicorn:
       specifier: ^64.0.0
       version: 64.0.0
@@ -349,6 +352,9 @@ importers:
       '@mission-platform/components':
         specifier: workspace:*
         version: link:../../packages/components
+      '@mission-platform/forms':
+        specifier: workspace:*
+        version: link:../../packages/forms
       '@mission-platform/harper':
         specifier: workspace:*
         version: link:../../packages/harper
@@ -373,6 +379,9 @@ importers:
       '@unhead/vue':
         specifier: catalog:vue
         version: 2.1.15(vue@3.5.40(typescript@6.0.3))
+      i18next:
+        specifier: catalog:i18next
+        version: 26.3.6(typescript@6.0.3)
       i18next-vue:
         specifier: catalog:i18next
         version: 5.4.0(i18next@26.3.6(typescript@6.0.3))(vue@3.5.40(typescript@6.0.3))
@@ -395,6 +404,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -407,6 +419,9 @@ importers:
       '@mission-platform/vite-config':
         specifier: workspace:*
         version: link:../../configs/vite-config
+      '@mission-platform/vite-plugin-i18n':
+        specifier: workspace:*
+        version: link:../../vite-plugins/i18n
       '@mission-platform/vite-plugin-seo':
         specifier: workspace:*
         version: link:../../vite-plugins/seo
@@ -476,6 +491,9 @@ importers:
       '@mission-platform/d3':
         specifier: workspace:*
         version: link:../../packages/d3
+      '@mission-platform/forms':
+        specifier: workspace:*
+        version: link:../../packages/forms
       '@mission-platform/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -531,6 +549,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -540,6 +561,9 @@ importers:
       '@mission-platform/typescript-config':
         specifier: workspace:*
         version: link:../../configs/typescript-config
+      '@mission-platform/vite-plugin-i18n':
+        specifier: workspace:*
+        version: link:../../vite-plugins/i18n
       '@types/d3':
         specifier: catalog:d3
         version: 7.4.3
@@ -615,6 +639,9 @@ importers:
       '@mission-platform/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
+      i18next:
+        specifier: catalog:i18next
+        version: 26.3.6(typescript@6.0.3)
       i18next-vue:
         specifier: catalog:i18next
         version: 5.4.0(i18next@26.3.6(typescript@6.0.3))(vue@3.5.40(typescript@6.0.3))
@@ -634,6 +661,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -646,6 +676,9 @@ importers:
       '@mission-platform/vite-config':
         specifier: workspace:*
         version: link:../../configs/vite-config
+      '@mission-platform/vite-plugin-i18n':
+        specifier: workspace:*
+        version: link:../../vite-plugins/i18n
       '@storybook/addon-a11y':
         specifier: catalog:storybook
         version: 10.5.2(storybook@10.5.2(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.7))
@@ -763,6 +796,9 @@ importers:
       '@mission-platform/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
+      i18next:
+        specifier: catalog:i18next
+        version: 26.3.6(typescript@6.0.3)
       maplibre-gl:
         specifier: catalog:map
         version: 5.24.0
@@ -779,6 +815,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/postcss-config':
         specifier: workspace:*
         version: link:../../configs/postcss-config
@@ -791,6 +830,9 @@ importers:
       '@mission-platform/typescript-config':
         specifier: workspace:*
         version: link:../../configs/typescript-config
+      '@mission-platform/vite-plugin-i18n':
+        specifier: workspace:*
+        version: link:../../vite-plugins/i18n
       '@storybook/addon-a11y':
         specifier: catalog:storybook
         version: 10.5.2(storybook@10.5.2(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.7))
@@ -893,6 +935,9 @@ importers:
       '@mission-platform/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
+      i18next:
+        specifier: catalog:i18next
+        version: 26.3.6(typescript@6.0.3)
       i18next-vue:
         specifier: catalog:i18next
         version: 5.4.0(i18next@26.3.6(typescript@6.0.3))(vue@3.5.40(typescript@6.0.3))
@@ -909,6 +954,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/postcss-config':
         specifier: workspace:*
         version: link:../../configs/postcss-config
@@ -924,6 +972,9 @@ importers:
       '@mission-platform/vite-config':
         specifier: workspace:*
         version: link:../../configs/vite-config
+      '@mission-platform/vite-plugin-i18n':
+        specifier: workspace:*
+        version: link:../../vite-plugins/i18n
       '@mission-platform/vite-plugin-seo':
         specifier: workspace:*
         version: link:../../vite-plugins/seo
@@ -1005,6 +1056,9 @@ importers:
       eslint-plugin-import-x:
         specifier: catalog:eslint
         version: 4.17.1(@typescript-eslint/utils@8.64.0(eslint@10.7.0(jiti@2.6.1)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.6.1)(supports-color@10.2.2))(supports-color@10.2.2)
+      eslint-plugin-sonarjs:
+        specifier: catalog:eslint
+        version: 4.2.0(eslint@10.7.0(jiti@2.6.1)(supports-color@10.2.2))
       eslint-plugin-unicorn:
         specifier: catalog:eslint
         version: 64.0.0(eslint@10.7.0(jiti@2.6.1)(supports-color@10.2.2))
@@ -1027,6 +1081,27 @@ importers:
       prettier:
         specifier: catalog:prettier
         version: 3.9.5
+      typescript:
+        specifier: catalog:typescript
+        version: 6.0.3
+
+  configs/i18n-config:
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.3
+      eslint:
+        specifier: catalog:eslint
+        version: 10.7.0(jiti@2.6.1)(supports-color@10.2.2)
       typescript:
         specifier: catalog:typescript
         version: 6.0.3
@@ -1206,6 +1281,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -1289,14 +1367,16 @@ importers:
         version: 3.5.40(typescript@6.0.3)
 
   packages/breakpoints:
-    dependencies:
-      '@mission-platform/i18n':
-        specifier: workspace:*
-        version: link:../i18n
     devDependencies:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -1309,12 +1389,18 @@ importers:
       '@mission-platform/vite-config':
         specifier: workspace:*
         version: link:../../configs/vite-config
+      '@storybook/react-vite':
+        specifier: catalog:storybook
+        version: 10.5.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rollup@4.62.2)(storybook@10.5.2(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.7))(supports-color@10.2.2)(typescript@6.0.3)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.6.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.0)(yaml@2.9.0))(webpack@5.108.4(clean-css@5.3.3)(csso@5.0.5)(esbuild@0.28.1)(html-minifier-terser@7.2.0)(lightningcss@1.32.0)(postcss@8.5.19))
       '@storybook/vue3-vite':
         specifier: catalog:storybook
         version: 10.5.2(esbuild@0.28.1)(rollup@4.62.2)(storybook@10.5.2(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.7))(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.6.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.0)(yaml@2.9.0))(vue@3.5.40(typescript@6.0.3))(webpack@5.108.4(clean-css@5.3.3)(csso@5.0.5)(esbuild@0.28.1)(html-minifier-terser@7.2.0)(lightningcss@1.32.0)(postcss@8.5.19))
       '@types/node':
         specifier: catalog:typescript
         version: 24.13.3
+      '@types/react':
+        specifier: catalog:react
+        version: 19.2.17
       '@vitest/coverage-v8':
         specifier: catalog:testing
         version: 4.1.10(@vitest/browser@4.1.10)(vitest@4.1.10)
@@ -1521,6 +1607,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -1618,6 +1707,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -1736,6 +1828,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -1876,6 +1971,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -1928,6 +2026,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -2050,6 +2151,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -2240,6 +2344,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -2530,6 +2637,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -2730,6 +2840,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -2800,6 +2913,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -2839,6 +2955,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -2884,6 +3003,9 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -2995,6 +3117,49 @@ importers:
         specifier: catalog:testing
         version: 4.1.10(@types/node@24.13.3)(@vitest/browser-playwright@4.1.10)(@vitest/coverage-v8@4.1.10)(happy-dom@20.10.6)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.6.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.0)(yaml@2.9.0))
 
+  vite-plugins/i18n:
+    dependencies:
+      '@mission-platform/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      js-yaml:
+        specifier: 'catalog:'
+        version: 4.3.0
+    devDependencies:
+      '@mission-platform/eslint-config':
+        specifier: workspace:*
+        version: link:../../configs/eslint-config
+      '@mission-platform/prettier-config':
+        specifier: workspace:*
+        version: link:../../configs/prettier-config
+      '@mission-platform/typescript-config':
+        specifier: workspace:*
+        version: link:../../configs/typescript-config
+      '@mission-platform/vite-config':
+        specifier: workspace:*
+        version: link:../../configs/vite-config
+      '@types/js-yaml':
+        specifier: catalog:typescript
+        version: 4.0.9
+      '@types/node':
+        specifier: catalog:typescript
+        version: 24.13.3
+      eslint:
+        specifier: catalog:eslint
+        version: 10.7.0(jiti@2.6.1)(supports-color@10.2.2)
+      prettier:
+        specifier: catalog:prettier
+        version: 3.9.5
+      typescript:
+        specifier: catalog:typescript
+        version: 6.0.3
+      vite:
+        specifier: catalog:vite
+        version: 8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.6.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.0)(yaml@2.9.0)
+      vitest:
+        specifier: catalog:testing
+        version: 4.1.10(@types/node@24.13.3)(@vitest/browser-playwright@4.1.10)(@vitest/coverage-v8@4.1.10)(happy-dom@20.10.6)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.6.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.0)(yaml@2.9.0))
+
   vite-plugins/jsx:
     dependencies:
       '@mission-platform/jsx':
@@ -3025,6 +3190,9 @@ importers:
       '@types/react-dom':
         specifier: catalog:react
         version: 19.2.3(@types/react@19.2.17)
+      '@vitejs/plugin-vue-jsx':
+        specifier: catalog:vue
+        version: 5.1.6(supports-color@10.2.2)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.6.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.0)(yaml@2.9.0))(vue@3.5.40(typescript@6.0.3))
       '@vitest/coverage-v8':
         specifier: catalog:testing
         version: 4.1.10(@vitest/browser@4.1.10)(vitest@4.1.10)
@@ -6893,6 +7061,10 @@ packages:
   buffer@5.7.1:
     resolution: {integrity: sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==}
 
+  builtin-modules@3.3.0:
+    resolution: {integrity: sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==}
+    engines: {node: '>=6'}
+
   builtin-modules@5.3.0:
     resolution: {integrity: sha512-hMQUl2bUFG339QygPM97E+mc8OY1IAchORZxm4a/frcYwKzozMzRVDBwHW0NjOqGElLm2O37AVQE8ikxlZHrMQ==}
     engines: {node: '>=18.20'}
@@ -6900,6 +7072,10 @@ packages:
   bundle-name@4.1.0:
     resolution: {integrity: sha512-tjwM5exMg6BGRI+kNmTntNsvdZS1X8BFYS6tnJ2hdH0kVxM6/eVZ2xy+FqStSWvYmtfFMDLIxurorHwDKfDz5Q==}
     engines: {node: '>=18'}
+
+  bytes@3.1.2:
+    resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
+    engines: {node: '>= 0.8'}
 
   cac@6.7.14:
     resolution: {integrity: sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ==}
@@ -7670,6 +7846,11 @@ packages:
       eslint-import-resolver-node:
         optional: true
 
+  eslint-plugin-sonarjs@4.2.0:
+    resolution: {integrity: sha512-bqADfuNtTL7VK6RU29eoiFTtaaBKIpVPuX3bOl+rBpWSBa0zIBVZlqZNZQjfP6s4iXkAJokv5IsD8OsACkwApg==}
+    peerDependencies:
+      eslint: ^8.0.0 || ^9.0.0 || ^10.0.0
+
   eslint-plugin-turbo@2.10.5:
     resolution: {integrity: sha512-4a1hbA04A4D5ZdSpzTAVn2JL0RqEOava+u6MJzxMoY5ckWfqdgcmJnez7a83gj4bUTomBqDP6vlb4Q7LqrfYaw==}
     peerDependencies:
@@ -7958,6 +8139,9 @@ packages:
   function.prototype.name@1.2.0:
     resolution: {integrity: sha512-jObKIik1P2QjPHP5nz5BaOtUlfgS0fWo8IUByNXkM+o+02sJOi94em77GwJKQSJ3gfPHdgzLNrHc1uokV4P/ew==}
     engines: {node: '>= 0.4'}
+
+  functional-red-black-tree@1.0.1:
+    resolution: {integrity: sha512-dsKNQNdj6xA3T+QlADDA7mOSlX0qiMINjn0cgr+eGHGsbSHzTabcIogz2+p/iqP1Xs6EP/sS2SbqH+brGTbq0g==}
 
   functions-have-names@1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
@@ -8611,6 +8795,10 @@ packages:
     resolution: {integrity: sha512-x2wSZHEBK20CY+Wy+BPE7MrFQHW6sIsdaGUMEqmGAio+3gFzQaBYPwLRonUfQf9Ak8pBieqj9tUofX1+WtAEIg==}
     engines: {node: '>= 12'}
 
+  jsx-ast-utils-x@0.1.0:
+    resolution: {integrity: sha512-eQQBjBnsVtGacsG9uJNB8qOr3yA8rga4wAaGG1qRcBzSIvfhERLrWxMAM1hp5fcS6Abo8M4+bUBTekYR0qTPQw==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
   kdbush@4.1.0:
     resolution: {integrity: sha512-e9vurzrXJQrFX6ckpHP3bvj5l+9CnYzkxDNnNQ1h2QTqdWsUAJgXiKdGNcOa1EY85dU8KbQ+z/FdQdB7P+9yfQ==}
 
@@ -8749,6 +8937,9 @@ packages:
 
   lodash.debounce@4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
+
+  lodash.merge@4.6.2:
+    resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
 
   lodash.startcase@4.4.0:
     resolution: {integrity: sha512-+WKqsK294HMSc2jEbNgpHpd0JfIBhp7rEV4aqXWqFr6AlXov+SlcgB1Fv01y2kGe3Gc8nMW7VA0SrGuSkRfIEg==}
@@ -9649,6 +9840,10 @@ packages:
     resolution: {integrity: sha512-6tDA8g98We0zd0GvVeMT9arEOnTw9qM03L9cJXaCjrip1OO764RDBLBfrB4cwzNGDj5OA5ioymC9GkizgWJDUg==}
     engines: {node: '>=8'}
 
+  refa@0.12.1:
+    resolution: {integrity: sha512-J8rn6v4DBb2nnFqkqwy6/NnTYMcgLA+sLr0iIO41qpv0n+ngb7ksag2tMRl0inb1bbO/esUwzW1vbJi7K0sI0g==}
+    engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
+
   reflect.getprototypeof@1.0.10:
     resolution: {integrity: sha512-00o4I+DVrefhv+nX0ulyi3biSHCPDe+yLv5o/p6d/UVlirijB8E16FtfwSAi4g3tcqrQ4lRAqQSoFEZJehYEcw==}
     engines: {node: '>= 0.4'}
@@ -9659,6 +9854,10 @@ packages:
 
   regenerate@1.4.2:
     resolution: {integrity: sha512-zrceR/XhGYU/d/opr2EKO7aRHUeiBI8qjtfHqADTwZd6Szfy16la6kqD0MIUs5z5hx6AaKa+PixpPrR289+I0A==}
+
+  regexp-ast-analysis@0.7.1:
+    resolution: {integrity: sha512-sZuz1dYW/ZsfG17WSAG7eS85r5a0dDsvg+7BiiYR5o6lKCAtUrEwdmRmaGF6rwVj3LcmAeYkOWKEPlbPzN3Y3A==}
+    engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
 
   regexp-tree@0.1.27:
     resolution: {integrity: sha512-iETxpjK6YoRWJG5o6hXLwvjYAoW+FEZn9os0PD/b6AP6xQwsa/Y7lCVgIixBbUPMfhu+i2LtdeAqVTgGlQarfA==}
@@ -9941,6 +10140,10 @@ packages:
   schema-utils@4.3.3:
     resolution: {integrity: sha512-eflK8wEtyOE6+hsaRVPxvUKYCpRgzLqDTb8krvAsRIwOGlHoSgYLgBXoubGgLd2fT41/OUYdb48v4k4WWHQurA==}
     engines: {node: '>= 10.13.0'}
+
+  scslre@0.3.0:
+    resolution: {integrity: sha512-3A6sD0WYP7+QrjbfNA2FN3FsOaGGFoekCVgTyypy53gPxhbkCIjtO6YWgdrfM+n/8sI8JeXZOIxsHjMTNxQ4nQ==}
+    engines: {node: ^14.0.0 || >=16.0.0}
 
   seek-bzip@1.0.6:
     resolution: {integrity: sha512-e1QtP3YL5tWww8uKaOCQ18UxIT2laNBXHjV/S2WYCiK4udiv8lkG89KRIoCjUagnAmCBurjF4zEVX2ByBbnCjQ==}
@@ -15729,11 +15932,15 @@ snapshots:
       base64-js: 1.5.1
       ieee754: 1.2.1
 
+  builtin-modules@3.3.0: {}
+
   builtin-modules@5.3.0: {}
 
   bundle-name@4.1.0:
     dependencies:
       run-applescript: 7.1.0
+
+  bytes@3.1.2: {}
 
   cac@6.7.14: {}
 
@@ -16595,6 +16802,23 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  eslint-plugin-sonarjs@4.2.0(eslint@10.7.0(jiti@2.6.1)(supports-color@10.2.2)):
+    dependencies:
+      '@eslint-community/regexpp': 4.12.2
+      builtin-modules: 3.3.0
+      bytes: 3.1.2
+      eslint: 10.7.0(jiti@2.6.1)(supports-color@10.2.2)
+      functional-red-black-tree: 1.0.1
+      globals: 17.7.0
+      jsx-ast-utils-x: 0.1.0
+      lodash.merge: 4.6.2
+      minimatch: 10.2.5
+      scslre: 0.3.0
+      semver: 7.8.5
+      ts-api-utils: 2.5.0(typescript@6.0.3)
+      typescript: 6.0.3
+      yaml: 2.9.0
+
   eslint-plugin-turbo@2.10.5(eslint@10.7.0(jiti@2.6.1)(supports-color@10.2.2))(turbo@2.10.5):
     dependencies:
       dotenv: 16.0.3
@@ -16940,6 +17164,8 @@ snapshots:
       hasown: 2.0.4
       is-callable: 1.2.7
       is-document.all: 1.0.0
+
+  functional-red-black-tree@1.0.1: {}
 
   functions-have-names@1.2.3: {}
 
@@ -17630,6 +17856,8 @@ snapshots:
 
   jsts@2.7.1: {}
 
+  jsx-ast-utils-x@0.1.0: {}
+
   kdbush@4.1.0: {}
 
   keyv@4.5.4:
@@ -17731,6 +17959,8 @@ snapshots:
       p-locate: 6.0.0
 
   lodash.debounce@4.0.8: {}
+
+  lodash.merge@4.6.2: {}
 
   lodash.startcase@4.4.0: {}
 
@@ -18900,6 +19130,10 @@ snapshots:
       indent-string: 4.0.0
       strip-indent: 3.0.0
 
+  refa@0.12.1:
+    dependencies:
+      '@eslint-community/regexpp': 4.12.2
+
   reflect.getprototypeof@1.0.10:
     dependencies:
       call-bind: 1.0.9
@@ -18916,6 +19150,11 @@ snapshots:
       regenerate: 1.4.2
 
   regenerate@1.4.2: {}
+
+  regexp-ast-analysis@0.7.1:
+    dependencies:
+      '@eslint-community/regexpp': 4.12.2
+      refa: 0.12.1
 
   regexp-tree@0.1.27: {}
 
@@ -19271,6 +19510,12 @@ snapshots:
       ajv: 8.20.0
       ajv-formats: 2.1.1(ajv@8.20.0)
       ajv-keywords: 5.1.0(ajv@8.20.0)
+
+  scslre@0.3.0:
+    dependencies:
+      '@eslint-community/regexpp': 4.12.2
+      refa: 0.12.1
+      regexp-ast-analysis: 0.7.1
 
   seek-bzip@1.0.6:
     dependencies:
@@ -20640,8 +20885,7 @@ snapshots:
 
   yallist@3.1.1: {}
 
-  yaml@2.9.0:
-    optional: true
+  yaml@2.9.0: {}
 
   yargs-parser@21.1.1: {}
 
