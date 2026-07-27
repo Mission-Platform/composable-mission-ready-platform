@@ -1,0 +1,97 @@
+about:
+  lead: Mission Platform 是一套用于构建应用程序的可复用 UI 构建块和工具。
+  projects:
+    aria-label: 项目列表
+  title: 关于我们
+ai_translation_warning: 此翻译由人工智能生成，可能包含错误。
+faq:
+  items:
+    affiliation:
+      answer: 我们是 Mission Platform 架构的一个独立实现。
+      question: 你们与 Mission Platform 项目有关联吗？
+    composable:
+      answer: 这意味着我们用小型、可复用且独立的构建块来构建界面。
+      question: “composable”是什么意思？
+    deploy:
+      answer: 该平台设计用于部署到 Cloudflare Workers 或类似的无服务器环境。
+      question: 如何部署它？
+    vue-version:
+      answer: 我们使用带有 Composition API 的 Vue 3。
+      question: 使用的是哪个版本的 Vue？
+  title: 常见问题
+features:
+  barcode:
+    description: 支持条形码和二维码扫描。
+    title: 条形码
+  composable:
+    description: 用小型、独立的构建块构建应用程序。
+    title: Composable
+  debugging:
+    description: 集成在平台中的高级调试工具。
+    title: 调试
+  global:
+    description: 已为全球部署做好准备。
+    title: 全球规模
+  i18n:
+    description: 内置对多语言的支持。
+    title: 国际化
+  performance:
+    description: 针对速度和最短加载时间进行了优化。
+    title: 性能
+  search:
+    description: 强大的集成搜索功能。
+    title: 搜索
+  theming:
+    description: 外观可轻松自定义。
+    title: 主题
+  title: 功能
+footer:
+  brand: Mission Platform
+  copyright: © {year} Mission Platform.
+  disclaimer-end: 。
+  disclaimer-start: 是一个独立项目。
+  not-affiliated: 与 Mission Platform 项目无关联。
+hero:
+  badge: 测试版
+  cta-primary: 开始使用
+  cta-secondary: 文档
+  lead: 一个用小型、独立的构建块来构建应用程序的平台。
+  title: Composable。随时待命。
+nav:
+  about: 关于我们
+  faq: 常见问题
+  features: 功能
+  packages: 包
+packages:
+  items:
+    barcode: 条形码支持。
+    base-spa: 基础 SPA 配置。
+    breakpoints: 响应式断点。
+    code-scanner: 代码扫描工具。
+    components: 可复用的 UI 构建块。
+    d3: D3 集成。
+    forms: 表单处理工具。
+    forms-core: 表单核心逻辑。
+    harper: 数据处理工具。
+    hunspell: 拼写检查支持。
+    i18n: 国际化支持。
+    icons: 图标库。
+    jsx: 面向 Vue 的 JSX 支持。
+    layouts: 预置的应用布局。
+    map: 地图组件。
+    matrix-code: 矩阵码生成。
+    phone-number: 电话号码格式化。
+    qr-code: 二维码生成。
+    router: 路由工具。
+    rxjs: RxJS 支持。
+    scheduler-core: 任务调度。
+    seo: SEO 管理。
+    tokens: 设计令牌与主题。
+  lead: 为你的应用程序提供可复用的构建块。
+  title: 包
+projects:
+  items:
+    my-care-notes:
+      cta: 了解更多
+      description: 一款基于 Mission Platform 构建的以患者为中心的护理记录应用程序。
+      name: My Care Notes

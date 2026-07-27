@@ -1,0 +1,41 @@
+aria:
+  delete: Delete
+  geodesic: Geodesic mode
+  join: Join Lines
+  rotate-ccw: Rotate Counter-Clockwise
+  rotate-cw: Rotate Clockwise
+  scale-down: Scale Down
+  scale-up: Scale Up
+  split: Split Line
+draw:
+  circle: Circle
+  line: Line
+  none: None
+  polygon: Polygon
+  square: Square
+  triangle: Triangle
+geojson-summary_zero: GeoJSON output ({count} features)
+geojson-summary_one: GeoJSON output ({count} feature)
+geojson-summary_other: GeoJSON output ({count} features)
+label:
+  draw: 'Draw:'
+  edit: 'Edit:'
+mode:
+  flat: Flat
+  geodesic: Geodesic
+status:
+  joining: ⚡ Click another line to join with {id}
+  none: Click a shape to select
+  selected: 'Selected: {id}'
+title: Map Draw Toolbar
+tooltip:
+  delete: Delete selected feature
+  flat: 'Flat mode: move/scale preserves visual shape. Click for geodesic mode.'
+  geodesic: 'Geodesic mode: move/scale respects ground distances. Click for flat/visual mode.'
+  join: Join two lines at nearest endpoints
+  join-active: Joining — select another line to complete join
+  rotate-ccw: Rotate −45°
+  rotate-cw: Rotate +45°
+  scale-down: Scale Down ×0.75
+  scale-up: Scale Up ×1.5
+  split: Split line at midpoint

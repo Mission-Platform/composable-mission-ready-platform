@@ -1,0 +1,42 @@
+aria:
+  delete: מחק
+  geodesic: מצב גיאודזי
+  join: חבר קווים
+  rotate-ccw: סובב נגד כיוון השעון
+  rotate-cw: סובב עם כיוון השעון
+  scale-down: הקטן
+  scale-up: הגדל
+  split: פצל קו
+draw:
+  circle: עיגול
+  line: קו
+  none: ללא
+  polygon: פוליגון
+  square: ריבוע
+  triangle: משולש
+geojson-summary_zero: סיכום geojson
+geojson-summary_one: סיכום geojson
+geojson-summary_two: סיכום geojson
+geojson-summary_other: סיכום geojson
+label:
+  draw: 'צייר:'
+  edit: 'ערוך:'
+mode:
+  flat: שטוח
+  geodesic: גיאודזי
+status:
+  joining: ⚡ לחץ על קו אחר כדי לחבר עם {id}
+  none: לחץ על צורה כדי לבחור
+  selected: 'נבחר: {id}'
+title: סרגל כלי ציור במפה
+tooltip:
+  delete: מחק פריט נבחר
+  flat: 'מצב שטוח: הזזה/שינוי גודל שומרים על הצורה החזותית. לחץ למעבר למצב גיאודזי.'
+  geodesic: 'מצב גיאודזי: הזזה/שינוי גודל מכבדים מרחקי קרקע. לחץ למעבר למצב שטוח/חזותי.'
+  join: חבר שני קווים בנקודות הקצה הקרובות ביותר
+  join-active: מחבר — בחר קו אחר כדי להשלים את החיבור
+  rotate-ccw: סובב −45°
+  rotate-cw: סובב +45°
+  scale-down: הקטן ×0.75
+  scale-up: הגדל ×1.5
+  split: פצל קו בנקודת האמצע

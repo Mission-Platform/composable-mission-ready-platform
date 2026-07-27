@@ -1,0 +1,85 @@
+dashboard:
+  latency: '{name} · latentie'
+  live: Live
+  reconnecting: Opnieuw verbinden…
+  servicesLabel: Gemonitorde services
+  stat:
+    avgLatency: Gem. latentie
+    interval: Interval
+    lastStatus: Laatste status
+    samples: Monsters
+    type: Type
+    uptime: Uptime
+  subtitle: Server-side statuscontroles (standaard elke {interval}s, per monitor aanpasbaar), opgeslagen als tijdreeks op de edge.
+  title: Service Monitor
+incidents:
+  addPostReport: Rapport na incident toevoegen
+  addProgressUpdate: Voortgangsupdate toevoegen
+  cancel: Annuleren
+  edit: Bewerken
+  editMaintenance: Onderhoud bewerken
+  editPostReport: Rapport na incident bewerken
+  plannedMaintenance: Gepland onderhoud
+  postIncidentReport: Rapport na incident
+  reportAnIncident: Incident melden
+  reportButton: Incident melden
+  scheduleMaintenance: Onderhoud inplannen
+  title: Incidenten
+monitors:
+  add: Monitor toevoegen
+  configuration: Monitorconfiguratie
+  edit: Bewerken
+  editAria: '{name} bewerken'
+  editTitle: Monitor bewerken
+  error:
+    rejected: De server heeft deze monitor geweigerd. Controleer de velden en probeer het opnieuw.
+    required: Geef een id, een naam en een URL (HTTP/JSON/GraphQL) of host op.
+  remove: Verwijderen
+  removeAria: '{name} verwijderen'
+  subtitle: Geconfigureerd tijdens runtime · standaardinterval {interval}s.
+  title: Monitors
+nav:
+  dashboard: Dashboard
+  incidents: Incidenten & onderhoud
+  monitors: Monitors
+  status: Status
+shell:
+  activeIncidents_zero: '{count} actieve incidenten'
+  activeIncidents_one: '{count} actief incident'
+  activeIncidents_other: '{count} actieve incidenten'
+  currentStatus: Huidige systeemstatus
+  title: Service Monitor
+  viewIncidentDetails: Incidentdetails bekijken
+speed:
+  bandwidth: Bandbreedte {value} Mbps
+  chartEmpty: Voer een paar tests uit om deze provider in kaart te brengen…
+  disabled: Geplande snelheidstests zijn uitgeschakeld — voer er een uit op aanvraag.
+  down: '{value} Mbps down'
+  enabled: Server-side snelheidstests elke {interval}s (Cloudflare, Fast.com, Speedtest).
+  failed: Mislukt
+  graphTitle: '{name} · {metric} in de loop van de tijd'
+  latency: '{value} ms'
+  pending: Nog geen meting
+  ping: Ping {value} ms
+  reportsTitle: Netwerksnelheidsrapporten
+  run: Test uitvoeren
+  running: Bezig…
+  summary_zero: gem {average} · max {maximum} · n={count}
+  summary_one: gem {average} · max {maximum} · n={count}
+  summary_other: gem {average} · max {maximum} · n={count}
+  title: Netwerksnelheid
+  up: '{value} Mbps up'
+  uploadUnavailable: Upload niet beschikbaar
+  viewReports: Snelheidstestrapporten bekijken
+state:
+  down: Plat
+summary:
+  activeIncidentsTitle: Actieve incidenten
+  allOperational: Alle systemen operationeel
+  degradedPerformance: Verminderde prestaties
+  monitoredServicesAndIncidents: '{servicesCount} gemonitorde diensten · {incidentsCount} actieve incidenten'
+  noActiveIncidents: Geen actieve incidenten.
+  noUpcomingMaintenance: Geen aankomend onderhoud.
+  plannedMaintenance: Gepland onderhoud
+  serviceDisruption: Dienstonderbreking
+  systemStatus: Systeemstatus

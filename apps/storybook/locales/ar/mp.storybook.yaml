@@ -1,0 +1,44 @@
+aria:
+  delete: حذف
+  geodesic: الوضع الجيوديسي
+  join: دمج الخطوط
+  rotate-ccw: تدوير عكس عقارب الساعة
+  rotate-cw: تدوير مع عقارب الساعة
+  scale-down: تصغير
+  scale-up: تكبير
+  split: تقسيم الخط
+draw:
+  circle: دائرة
+  line: خط
+  none: لا شيء
+  polygon: مضلع
+  square: مربع
+  triangle: مثلث
+geojson-summary_zero: ملخص geojson
+geojson-summary_one: ملخص geojson
+geojson-summary_two: ملخص geojson
+geojson-summary_few: ملخص geojson
+geojson-summary_many: ملخص geojson
+geojson-summary_other: ملخص geojson
+label:
+  draw: 'رسم:'
+  edit: 'تعديل:'
+mode:
+  flat: مسطح
+  geodesic: جيوديسي
+status:
+  joining: ⚡ انقر فوق خط آخر للدمج مع {id}
+  none: انقر فوق شكل لتحديده
+  selected: 'محدد: {id}'
+title: شريط أدوات رسم الخريطة
+tooltip:
+  delete: حذف الميزة المحددة
+  flat: 'الوضع المسطح: النقل/التحجيم يحافظ على الشكل المرئي. انقر للوضع الجيوديسي.'
+  geodesic: 'الوضع الجيوديسي: النقل/التحجيم يراعي المسافات الأرضية. انقر للوضع المسطح/المرئي.'
+  join: دمج خطين عند أقرب نقاط النهاية
+  join-active: جاري الدمج — اختر خطاً آخر لإكمال الدمج
+  rotate-ccw: تدوير -45 درجة
+  rotate-cw: تدوير +45 درجة
+  scale-down: تصغير ×0.75
+  scale-up: تكبير ×1.5
+  split: تقسيم الخط عند نقطة المنتصف

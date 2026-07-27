@@ -1,0 +1,87 @@
+dashboard:
+  latency: '{name} · latenza'
+  live: Live
+  reconnecting: Riconnessione…
+  servicesLabel: Servizi monitorati
+  stat:
+    avgLatency: Latenza media
+    interval: Intervallo
+    lastStatus: Ultimo stato
+    samples: Campioni
+    type: Tipo
+    uptime: Uptime
+  subtitle: Controlli dello stato lato server (predefinito ogni {interval}s, sovrascritture per monitor), memorizzati come serie temporale sull'edge.
+  title: Monitoraggio Servizi
+incidents:
+  addPostReport: Aggiungi report post-incidente
+  addProgressUpdate: Aggiungi aggiornamento sullo stato di avanzamento
+  cancel: Annulla
+  edit: Modifica
+  editMaintenance: Modifica manutenzione
+  editPostReport: Modifica report post-incidente
+  plannedMaintenance: Manutenzione programmata
+  postIncidentReport: Report post-incidente
+  reportAnIncident: Segnala un incidente
+  reportButton: Segnala incidente
+  scheduleMaintenance: Programma manutenzione
+  title: Incidenti
+monitors:
+  add: Aggiungi monitor
+  configuration: Configurazione monitor
+  edit: Modifica
+  editAria: Modifica {name}
+  editTitle: Modifica monitor
+  error:
+    rejected: Il server ha rifiutato questo monitor. Controlla i campi e riprova.
+    required: Fornisci un id, un nome e un URL (HTTP/JSON/GraphQL) o host.
+  remove: Rimuovi
+  removeAria: Rimuovi {name}
+  subtitle: Configurato in runtime · intervallo predefinito {interval}s.
+  title: Monitor
+nav:
+  dashboard: Dashboard
+  incidents: Incidenti e manutenzione
+  monitors: Monitor
+  status: Stato
+shell:
+  activeIncidents_zero: '{count} incidenti attivi'
+  activeIncidents_one: '{count} incidente attivo'
+  activeIncidents_many: ''
+  activeIncidents_other: '{count} incidenti attivi'
+  currentStatus: Stato attuale del sistema
+  title: Service Monitor
+  viewIncidentDetails: Visualizza dettagli incidente
+speed:
+  bandwidth: Larghezza di banda {value} Mbps
+  chartEmpty: Esegui alcuni test per tracciare questo provider…
+  disabled: I test di velocità programmati sono disabilitati — eseguine uno su richiesta.
+  down: '{value} Mbps in download'
+  enabled: Test di velocità lato server ogni {interval}s (Cloudflare, Fast.com, Speedtest).
+  failed: Fallito
+  graphTitle: '{name} · {metric} nel tempo'
+  latency: '{value} ms'
+  pending: Nessuna misurazione ancora
+  ping: Ping {value} ms
+  reportsTitle: Report sulla velocità della rete
+  run: Esegui test
+  running: In corso…
+  summary_zero: media {average} · max {maximum} · n={count}
+  summary_one: media {average} · max {maximum} · n={count}
+  summary_many: ''
+  summary_other: media {average} · max {maximum} · n={count}
+  title: Velocità di rete
+  up: '{value} Mbps in upload'
+  uploadUnavailable: Upload non disponibile
+  viewReports: Visualizza report sui test di velocità
+state:
+  down: Non attivo
+summary:
+  activeIncidentsTitle: Incidenti attivi
+  allOperational: Tutti i sistemi operativi
+  degradedPerformance: Prestazioni ridotte
+  monitoredServicesAndIncidents: '{servicesCount} servizi monitorati · {incidentsCount} incidenti attivi'
+  noActiveIncidents: Nessun incidente attivo.
+  noUpcomingMaintenance: Nessuna manutenzione imminente.
+  plannedMaintenance: Manutenzione programmata
+  serviceDisruption: Interruzione del servizio
+  systemStatus: Stato del sistema

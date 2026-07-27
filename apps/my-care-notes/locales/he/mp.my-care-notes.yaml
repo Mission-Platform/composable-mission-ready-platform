@@ -1,0 +1,40 @@
+btn:
+  cancel: ביטול
+  delete: מחיקה
+  save: שמירה
+col:
+  actions: פעולות
+  content: תוכן
+  name: שם
+content_label: תוכן
+date_row_content: תאריך נוכחי (DD/MM/YYYY)
+menu:
+  export-all: ייצא הכל
+  import: ייבא
+  import-all: ייבא הכל
+  new: חדש
+name:
+  hint: הקלד {preview} בעורך כדי להוסיף את הקטע הזה
+  label: שם הקטע
+  placeholder: לדוגמה greeting
+nav:
+  export-note: ייצא הערה
+  import-note: ייבא הערה
+  notes: הערות
+  reopen-closed: פתח מחדש כרטיסייה שנסגרה
+  restore-tab: 'שחזר: {title}'
+  snippets: קטיעי קוד
+rename:
+  cancel: ביטול
+  confirm: שנה שם
+  label: שם כרטיסייה
+  title: שנה שם כרטיסייה
+sidebar:
+  title: קטיעי קוד
+snippet:
+  edit: ערוך קטע קוד
+  export: ייצא קטע קוד
+theme_toggle: החלף ערכת נושא
+title:
+  edit: עריכת קטע
+  new: קטע חדש

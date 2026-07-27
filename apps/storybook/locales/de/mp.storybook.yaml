@@ -1,0 +1,41 @@
+aria:
+  delete: Löschen
+  geodesic: Geodätischer Modus
+  join: Linien verbinden
+  rotate-ccw: Gegen den Uhrzeigersinn drehen
+  rotate-cw: Im Uhrzeigersinn drehen
+  scale-down: Verkleinern
+  scale-up: Vergrößern
+  split: Linie teilen
+draw:
+  circle: Kreis
+  line: Linie
+  none: Keine
+  polygon: Polygon
+  square: Quadrat
+  triangle: Dreieck
+geojson-summary_zero: geojson-summary
+geojson-summary_one: geojson-summary
+geojson-summary_other: geojson-summary
+label:
+  draw: 'Zeichnen:'
+  edit: 'Bearbeiten:'
+mode:
+  flat: Flach
+  geodesic: Geodätisch
+status:
+  joining: ⚡ Klicken Sie auf eine andere Linie, um sie mit {id} zu verbinden
+  none: Klicken Sie auf eine Form zum Auswählen
+  selected: 'Ausgewählt: {id}'
+title: Kartenzeichnungs-Symbolleiste
+tooltip:
+  delete: Ausgewähltes Feature löschen
+  flat: 'Flachmodus: Verschieben/Skalieren bewahrt die visuelle Form. Klicken für geodätischen Modus.'
+  geodesic: 'Geodätischer Modus: Verschieben/Skalieren berücksichtigt Bodenabstände. Klicken für Flach-/Visuellen Modus.'
+  join: Zwei Linien an den nächsten Endpunkten verbinden
+  join-active: Verbinden — wählen Sie eine andere Linie aus, um das Verbinden abzuschließen
+  rotate-ccw: Um −45° drehen
+  rotate-cw: Um +45° drehen
+  scale-down: Verkleinern ×0,75
+  scale-up: Vergrößern ×1,5
+  split: Linie am Mittelpunkt teilen

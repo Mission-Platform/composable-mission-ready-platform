@@ -1,0 +1,85 @@
+dashboard:
+  latency: '{name} · latency'
+  live: Live
+  reconnecting: Reconnecting…
+  servicesLabel: Monitored services
+  stat:
+    avgLatency: Avg latency
+    interval: Interval
+    lastStatus: Last status
+    samples: Samples
+    type: Type
+    uptime: Uptime
+  subtitle: Server-side health checks (default every {interval}s, per-monitor overrides), stored as a time series on the edge.
+  title: Service Monitor
+incidents:
+  addPostReport: Add post-incident report
+  addProgressUpdate: Add progress update
+  cancel: Cancel
+  edit: Edit
+  editMaintenance: Edit maintenance
+  editPostReport: Edit post-incident report
+  plannedMaintenance: Planned maintenance
+  postIncidentReport: Post-incident report
+  reportAnIncident: Report an incident
+  reportButton: Report incident
+  scheduleMaintenance: Schedule maintenance
+  title: Incidents
+monitors:
+  add: Add monitor
+  configuration: Monitor configuration
+  edit: Edit
+  editAria: Edit {name}
+  editTitle: Edit monitor
+  error:
+    rejected: The server rejected this monitor. Check the fields and try again.
+    required: Provide an id, a name, and a URL (HTTP/JSON/GraphQL) or host.
+  remove: Remove
+  removeAria: Remove {name}
+  subtitle: Configured at runtime · default interval {interval}s.
+  title: Monitors
+nav:
+  dashboard: Dashboard
+  incidents: Incidents & maintenance
+  monitors: Monitors
+  status: Status
+shell:
+  activeIncidents_zero: '{count} active incidents'
+  activeIncidents_one: '{count} active incident'
+  activeIncidents_other: '{count} active incidents'
+  currentStatus: Current system status
+  title: Service Monitor
+  viewIncidentDetails: View incident details
+speed:
+  bandwidth: Bandwidth {value} Mbps
+  chartEmpty: Run a few tests to chart this provider…
+  disabled: Scheduled speed tests are disabled — run one on demand.
+  down: Download {value} Mbps
+  enabled: Server-side speed tests every {interval}s (Cloudflare, Fast.com, Speedtest).
+  failed: Failed
+  graphTitle: '{name} · {metric} over time'
+  latency: Latency {value} ms
+  pending: No measurement yet
+  ping: Ping {value} ms
+  reportsTitle: Network speed reports
+  run: Run test
+  running: Running…
+  summary_zero: avg {average} · max {maximum} · n={count}
+  summary_one: avg {average} · max {maximum} · n={count}
+  summary_other: avg {average} · max {maximum} · n={count}
+  title: Network speed
+  up: Upload {value} Mbps
+  uploadUnavailable: Upload unavailable
+  viewReports: View speed-test reports
+state:
+  down: Down
+summary:
+  activeIncidentsTitle: Active incidents
+  allOperational: All systems operational
+  degradedPerformance: Degraded performance
+  monitoredServicesAndIncidents: '{servicesCount} monitored services · {incidentsCount} active incidents'
+  noActiveIncidents: No active incidents.
+  noUpcomingMaintenance: No upcoming maintenance.
+  plannedMaintenance: Planned maintenance
+  serviceDisruption: Service disruption
+  systemStatus: System status

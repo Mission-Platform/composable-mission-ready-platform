@@ -1,0 +1,41 @@
+aria:
+  delete: 삭제
+  geodesic: 측지선 모드
+  join: 선 결합
+  rotate-ccw: 시계 반대 방향으로 회전
+  rotate-cw: 시계 방향으로 회전
+  scale-down: 축소
+  scale-up: 확대
+  split: 선 분할
+draw:
+  circle: 원
+  line: 선
+  none: 없음
+  polygon: 다각형
+  square: 정사각형
+  triangle: 삼각형
+geojson-summary_zero: geojson-summary
+geojson-summary_one: GeoJSON 출력 ({count}개 요소)
+geojson-summary_other: geojson-summary
+label:
+  draw: '그리기:'
+  edit: '편집:'
+mode:
+  flat: 평면
+  geodesic: 측지선
+status:
+  joining: ⚡ {id}와 결합할 다른 선을 클릭하세요
+  none: 도형을 클릭하여 선택하세요
+  selected: '선택됨: {id}'
+title: 지도 그리기 도구 모음
+tooltip:
+  delete: 선택한 피처 삭제
+  flat: '평면 모드: 이동/크기 조절 시 시각적 모양이 유지됩니다. 측지선 모드를 사용하려면 클릭하세요.'
+  geodesic: '측지선 모드: 이동/크기 조절 시 지표면 거리가 고려됩니다. 평면/시각 모드를 사용하려면 클릭하세요.'
+  join: 가장 가까운 끝점에서 두 선 결합
+  join-active: 결합 중 — 결합을 완료하려면 다른 선을 선택하세요
+  rotate-ccw: −45° 회전
+  rotate-cw: +45° 회전
+  scale-down: 0.75배로 축소
+  scale-up: 1.5배로 확대
+  split: 중간 지점에서 선 분할

@@ -1,0 +1,12 @@
+badge:
+  pill: ピルバッジ
+  success: 成功
+button:
+  primary: プライマリ
+  secondary: セカンダリ
+  tertiary: 通知
+components: コンポーネント
+description:
+  after: Storybookを開いて、コンポーネントライブラリ全体を確認してください。
+  before: 次のためのReactショーケース
+title: Mission Platform コンポーネント

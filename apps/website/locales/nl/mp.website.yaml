@@ -1,0 +1,97 @@
+about:
+  lead: Mission Platform is een verzameling herbruikbare UI-bouwstenen en tools voor het bouwen van applicaties.
+  projects:
+    aria-label: Projectenlijst
+  title: Over ons
+ai_translation_warning: Deze vertaling is gegenereerd door AI en kan fouten bevatten.
+faq:
+  items:
+    affiliation:
+      answer: Wij zijn een onafhankelijke implementatie van de Mission Platform-architectuur.
+      question: Zijn jullie aangesloten bij het Mission Platform-project?
+    composable:
+      answer: Dit betekent dat we de interface opbouwen uit kleine, herbruikbare en onafhankelijke bouwstenen.
+      question: Wat betekent 'composable'?
+    deploy:
+      answer: Het platform is ontworpen om te worden geïmplementeerd op Cloudflare Workers of vergelijkbare serverless omgevingen.
+      question: Hoe implementeer ik dit?
+    vue-version:
+      answer: We gebruiken Vue 3 met de Composition API.
+      question: Welke versie van Vue wordt gebruikt?
+  title: Veelgestelde vragen
+features:
+  barcode:
+    description: Ondersteuning voor het scannen van barcodes en QR-codes.
+    title: Barcode
+  composable:
+    description: Bouw applicaties uit kleine, onafhankelijke bouwstenen.
+    title: Composable
+  debugging:
+    description: Geavanceerde debugtools geïntegreerd in het platform.
+    title: Debuggen
+  global:
+    description: Klaar voor wereldwijde implementatie.
+    title: Wereldwijde schaal
+  i18n:
+    description: Ingebouwde ondersteuning voor meerdere talen.
+    title: Internationalisatie
+  performance:
+    description: Geoptimaliseerd voor snelheid en minimale laadtijden.
+    title: Prestaties
+  search:
+    description: Krachtige geïntegreerde zoekfunctionaliteit.
+    title: Zoeken
+  theming:
+    description: Eenvoudig aan te passen uiterlijk.
+    title: Thema's
+  title: Functies
+footer:
+  brand: Mission Platform
+  copyright: © {year} Mission Platform.
+  disclaimer-end: .
+  disclaimer-start: is een onafhankelijk project.
+  not-affiliated: Niet aangesloten bij het Mission Platform-project.
+hero:
+  badge: Beta
+  cta-primary: Aan de slag
+  cta-secondary: Documentatie
+  lead: Een platform voor het bouwen van applicaties uit kleine, onafhankelijke bouwstenen.
+  title: Composable. Missiegereed.
+nav:
+  about: Over ons
+  faq: Veelgestelde vragen
+  features: Functies
+  packages: Packages
+packages:
+  items:
+    barcode: Ondersteuning voor barcodes.
+    base-spa: Basisconfiguratie voor SPA.
+    breakpoints: Responsieve breakpoints.
+    code-scanner: Hulpmiddelen voor het scannen van codes.
+    components: Herbruikbare UI-bouwstenen.
+    d3: Integratie met D3.
+    forms: Hulpmiddelen voor formulierverwerking.
+    forms-core: Kernlogica voor formulieren.
+    harper: Hulpmiddelen voor gegevensverwerking.
+    hunspell: Ondersteuning voor spellingscontrole.
+    i18n: Ondersteuning voor internationalisatie.
+    icons: Icoonbibliotheek.
+    jsx: JSX-ondersteuning voor Vue.
+    layouts: Voorgebouwde applicatielay-outs.
+    map: Kaartcomponent.
+    matrix-code: Genereren van matrixcodes.
+    phone-number: Opmaak van telefoonnummers.
+    qr-code: Genereren van QR-codes.
+    router: Hulpmiddelen voor routering.
+    rxjs: Ondersteuning voor RxJS.
+    scheduler-core: Taakplanning.
+    seo: SEO-beheer.
+    tokens: Designtokens en thema's.
+  lead: Herbruikbare bouwstenen voor je applicaties.
+  title: Packages
+projects:
+  items:
+    my-care-notes:
+      cta: Meer informatie
+      description: Een patiëntgerichte zorgnotitie-applicatie, gebouwd op Mission Platform.
+      name: My Care Notes

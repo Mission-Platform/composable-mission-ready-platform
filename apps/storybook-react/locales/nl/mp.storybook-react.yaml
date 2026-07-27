@@ -1,0 +1,12 @@
+badge:
+  pill: Pil-badge
+  success: Succes
+button:
+  primary: Primair
+  secondary: Secundair
+  tertiary: Meldingen
+components: Componenten
+description:
+  after: Open Storybook om de volledige componentenbibliotheek te verkennen.
+  before: Een React-showcase voor
+title: Mission Platform Componenten

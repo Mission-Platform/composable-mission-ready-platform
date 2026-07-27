@@ -1,0 +1,40 @@
+btn:
+  cancel: Annuleren
+  delete: Verwijderen
+  save: Opslaan
+col:
+  actions: Acties
+  content: Inhoud
+  name: Naam
+content_label: Inhoud
+date_row_content: Huidige datum (DD/MM/JJJJ)
+menu:
+  export-all: Alles exporteren
+  import: Importeren
+  import-all: Alles importeren
+  new: Nieuw
+name:
+  hint: Typ {preview} in de editor om dit fragment in te voegen
+  label: Fragmentnaam
+  placeholder: bijv. greeting
+nav:
+  export-note: Notitie exporteren
+  import-note: Notitie importeren
+  notes: Notities
+  reopen-closed: Gesloten tabblad heropenen
+  restore-tab: 'Herstellen: {title}'
+  snippets: Snippets
+rename:
+  cancel: Annuleren
+  confirm: Hernoemen
+  label: Tabbladnaam
+  title: Tabblad hernoemen
+sidebar:
+  title: Snippets
+snippet:
+  edit: Snippet bewerken
+  export: Snippet exporteren
+theme_toggle: Kleurthema wisselen
+title:
+  edit: Fragment bewerken
+  new: Nieuw fragment

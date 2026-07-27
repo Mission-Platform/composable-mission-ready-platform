@@ -1,0 +1,87 @@
+dashboard:
+  latency: '{name} · שהיה (Latency)'
+  live: חי
+  reconnecting: מתחבר מחדש…
+  servicesLabel: שירותים מנוטרים
+  stat:
+    avgLatency: שהיה ממוצעת
+    interval: מרווח זמן
+    lastStatus: סטטוס אחרון
+    samples: דגימות
+    type: סוג
+    uptime: זמן פעילות
+  subtitle: בדיקות תקינות מצד השרת (ברירת מחדל כל {interval} שניות, עם אפשרות לדריסה לכל ניטור), נשמרות כסדרת זמן בקצה (Edge).
+  title: ניטור שירותים
+incidents:
+  addPostReport: הוסף דוח לאחר תקרית
+  addProgressUpdate: הוסף עדכון התקדמות
+  cancel: ביטול
+  edit: ערוך
+  editMaintenance: ערוך תחזוקה
+  editPostReport: ערוך דוח לאחר תקרית
+  plannedMaintenance: תחזוקה מתוכננת
+  postIncidentReport: דוח לאחר תקרית
+  reportAnIncident: דווח על תקרית
+  reportButton: דווח על תקרית
+  scheduleMaintenance: תזמן תחזוקה
+  title: תקריות
+monitors:
+  add: הוסף צג
+  configuration: הגדרות ניטור
+  edit: ערוך
+  editAria: ערוך את {name}
+  editTitle: ערוך צג
+  error:
+    rejected: השרת דחה את הניטור הזה. בדוק את השדות ונסה שוב.
+    required: יש לספק מזהה (id), שם, וכתובת URL (HTTP/JSON/GraphQL) או מארח (host).
+  remove: הסר
+  removeAria: הסר את {name}
+  subtitle: מוגדר בזמן ריצה · מרווח ברירת מחדל {interval} שניות.
+  title: ניטורים
+nav:
+  dashboard: לוח בקרה
+  incidents: תקריות ותחזוקה
+  monitors: ניטורים
+  status: סטטוס
+shell:
+  activeIncidents_zero: '{count} תקריות פעילות'
+  activeIncidents_one: תקרית פעילה אחת
+  activeIncidents_two: ''
+  activeIncidents_other: '{count} תקריות פעילות'
+  currentStatus: סטטוס מערכת נוכחי
+  title: Service Monitor
+  viewIncidentDetails: הצג פרטי תקרית
+speed:
+  bandwidth: רוחב פס {value} Mbps
+  chartEmpty: הרץ מספר בדיקות כדי להציג גרף עבור ספק זה…
+  disabled: בדיקות מהירות מתוזמנות מושבתות — הרץ בדיקה לפי דרישה.
+  down: '{value} Mbps הורדה'
+  enabled: בדיקות מהירות מצד השרת כל {interval} שניות (Cloudflare, Fast.com, Speedtest).
+  failed: נכשל
+  graphTitle: '{name} · {metric} לאורך זמן'
+  latency: '{value} מילי-שנייה'
+  pending: אין מדידות עדיין
+  ping: פינג {value} ms
+  reportsTitle: דוחות מהירות רשת
+  run: הרץ בדיקה
+  running: רץ…
+  summary_zero: ממוצע {average} · מקסימום {maximum} · n={count}
+  summary_one: ממוצע {average} · מקסימום {maximum} · n={count}
+  summary_two: ממוצע {average} · מקסימום {maximum} · n={count}
+  summary_other: ממוצע {average} · מקסימום {maximum} · n={count}
+  title: מהירות רשת
+  up: '{value} Mbps העלאה'
+  uploadUnavailable: העלאה אינה זמינה
+  viewReports: הצג דוחות בדיקת מהירות
+state:
+  down: למטה
+summary:
+  activeIncidentsTitle: תקריות פעילות
+  allOperational: כל המערכות פועלות כסדרן
+  degradedPerformance: ביצועים ירודים
+  monitoredServicesAndIncidents: '{servicesCount} שירותים במעקב · {incidentsCount} תקריות פעילות'
+  noActiveIncidents: אין תקריות פעילות.
+  noUpcomingMaintenance: אין תחزוקה קרובה.
+  plannedMaintenance: תחזוקה מתוכננת
+  serviceDisruption: הפרעה בשירות
+  systemStatus: סטטוס מערכת

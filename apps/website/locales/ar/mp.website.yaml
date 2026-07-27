@@ -1,0 +1,97 @@
+about:
+  lead: منصة Mission Platform هي مجموعة من مكونات واجهة المستخدم القابلة لإعادة الاستخدام والأدوات اللازمة لبناء التطبيقات.
+  projects:
+    aria-label: قائمة المشاريع
+  title: نبذة عنا
+ai_translation_warning: تمت ترجمة هذا المحتوى بواسطة الذكاء الاصطناعي وقد يحتوي على أخطاء.
+faq:
+  items:
+    affiliation:
+      answer: نحن تنفيذ مستقل لبنية منصة Mission Platform.
+      question: هل أنتم منتسبون إلى مشروع Mission Platform؟
+    composable:
+      answer: هذا يعني أننا نبني واجهة المستخدم من مكونات صغيرة وقابلة لإعادة الاستخدام ومستقلة.
+      question: ماذا يعني مصطلح 'composable'؟
+    deploy:
+      answer: صُممت المنصة لتُنشر على Cloudflare Workers أو بيئات مشابهة بدون خوادم.
+      question: كيف يمكنني نشر هذا؟
+    vue-version:
+      answer: نستخدم Vue 3 مع Composition API.
+      question: ما إصدار Vue المُستخدم؟
+  title: الأسئلة الشائعة
+features:
+  barcode:
+    description: دعم لمسح الرموز الشريطية وأكواد QR.
+    title: الرمز الشريطي
+  composable:
+    description: أنشئ التطبيقات من مكونات صغيرة ومستقلة.
+    title: Composable
+  debugging:
+    description: أدوات تصحيح أخطاء متقدمة مدمجة في المنصة.
+    title: تصحيح الأخطاء
+  global:
+    description: جاهزة للانتشار على مستوى العالم.
+    title: النطاق العالمي
+  i18n:
+    description: دعم مدمج للغات متعددة.
+    title: التدويل
+  performance:
+    description: مُحسّنة للسرعة وأقل زمن تحميل.
+    title: الأداء
+  search:
+    description: وظيفة بحث مدمجة وقوية.
+    title: البحث
+  theming:
+    description: مظهر يمكن تخصيصه بسهولة.
+    title: التنسيق
+  title: المزايا
+footer:
+  brand: Mission Platform
+  copyright: © {year} Mission Platform.
+  disclaimer-end: .
+  disclaimer-start: مشروع مستقل.
+  not-affiliated: غير منتسب إلى مشروع Mission Platform.
+hero:
+  badge: تجريبي
+  cta-primary: ابدأ الآن
+  cta-secondary: التوثيق
+  lead: منصة لبناء التطبيقات من مكونات صغيرة ومستقلة.
+  title: Composable. جاهزة للمهمة.
+nav:
+  about: نبذة عنا
+  faq: الأسئلة الشائعة
+  features: المزايا
+  packages: الحزم
+packages:
+  items:
+    barcode: دعم الرموز الشريطية.
+    base-spa: إعداد أساسي لتطبيق صفحة واحدة.
+    breakpoints: نقاط توقف متجاوبة.
+    code-scanner: أدوات مسح الرموز.
+    components: مكونات واجهة مستخدم قابلة لإعادة الاستخدام.
+    d3: تكامل مع D3.
+    forms: أدوات معالجة النماذج.
+    forms-core: المنطق الأساسي للنماذج.
+    harper: أدوات معالجة البيانات.
+    hunspell: دعم التحقق من الإملاء.
+    i18n: دعم التدويل.
+    icons: مكتبة الأيقونات.
+    jsx: دعم JSX لـ Vue.
+    layouts: تخطيطات تطبيقات جاهزة مسبقًا.
+    map: مكوّن الخريطة.
+    matrix-code: توليد رموز المصفوفة.
+    phone-number: تنسيق أرقام الهاتف.
+    qr-code: توليد رموز QR.
+    router: أدوات التوجيه.
+    rxjs: دعم RxJS.
+    scheduler-core: جدولة المهام.
+    seo: إدارة تحسين محركات البحث.
+    tokens: رموز التصميم والتنسيق.
+  lead: مكونات قابلة لإعادة الاستخدام لتطبيقاتك.
+  title: الحزم
+projects:
+  items:
+    my-care-notes:
+      cta: اعرف المزيد
+      description: تطبيق لملاحظات الرعاية يركّز على المريض، مبني على منصة Mission Platform.
+      name: My Care Notes

@@ -1,0 +1,97 @@
+about:
+  lead: Mission Platform는 애플리케이션을 구축하기 위한 재사용 가능한 UI 빌딩 블록과 도구 모음입니다.
+  projects:
+    aria-label: 프로젝트 목록
+  title: 소개
+ai_translation_warning: 이 번역은 AI가 생성한 것으로 오류가 포함될 수 있습니다.
+faq:
+  items:
+    affiliation:
+      answer: 저희는 Mission Platform 아키텍처의 독립적인 구현체입니다.
+      question: Mission Platform 프로젝트와 제휴 관계에 있나요?
+    composable:
+      answer: 작고 재사용 가능하며 독립적인 빌딩 블록으로 UI를 구성한다는 의미입니다.
+      question: 여기서 'composable'이란 무엇을 의미하나요?
+    deploy:
+      answer: 이 플랫폼은 Cloudflare Workers 또는 유사한 서버리스 환경에 배포되도록 설계되었습니다.
+      question: 이것을 어떻게 배포하나요?
+    vue-version:
+      answer: Composition API가 적용된 Vue 3를 사용합니다.
+      question: 어떤 버전의 Vue를 사용하나요?
+  title: 자주 묻는 질문
+features:
+  barcode:
+    description: 바코드 및 QR 코드 스캔을 지원합니다.
+    title: 바코드
+  composable:
+    description: 작고 독립적인 빌딩 블록으로 애플리케이션을 구축하세요.
+    title: Composable
+  debugging:
+    description: 플랫폼에 통합된 고급 디버깅 도구.
+    title: 디버깅
+  global:
+    description: 글로벌 배포를 위한 준비.
+    title: 글로벌 확장성
+  i18n:
+    description: 다국어에 대한 기본 지원.
+    title: 국제화
+  performance:
+    description: 속도와 최소한의 로딩 시간에 최적화됨.
+    title: 성능
+  search:
+    description: 강력한 통합 검색 기능.
+    title: 검색
+  theming:
+    description: 손쉽게 사용자화할 수 있는 디자인.
+    title: 테마 설정
+  title: 기능
+footer:
+  brand: Mission Platform
+  copyright: © {year} Mission Platform.
+  disclaimer-end: .
+  disclaimer-start: 는 독립적인 프로젝트입니다.
+  not-affiliated: Mission Platform 프로젝트와 제휴 관계가 아닙니다.
+hero:
+  badge: 베타
+  cta-primary: 시작하기
+  cta-secondary: 문서
+  lead: 작고 독립적인 빌딩 블록으로 애플리케이션을 구축하는 플랫폼입니다.
+  title: Composable. 미션 레디.
+nav:
+  about: 소개
+  faq: 자주 묻는 질문
+  features: 기능
+  packages: 패키지
+packages:
+  items:
+    barcode: 바코드 지원.
+    base-spa: 기본 SPA 설정.
+    breakpoints: 반응형 브레이크포인트.
+    code-scanner: 코드 스캔 유틸리티.
+    components: 재사용 가능한 UI 빌딩 블록.
+    d3: D3 통합.
+    forms: 폼 처리 유틸리티.
+    forms-core: 폼 핵심 로직.
+    harper: 데이터 처리 유틸리티.
+    hunspell: 맞춤법 검사 지원.
+    i18n: 국제화 지원.
+    icons: 아이콘 라이브러리.
+    jsx: Vue용 JSX 지원.
+    layouts: 사전 구축된 애플리케이션 레이아웃.
+    map: 지도 컴포넌트.
+    matrix-code: 매트릭스 코드 생성.
+    phone-number: 전화번호 형식 지정.
+    qr-code: QR 코드 생성.
+    router: 라우팅 유틸리티.
+    rxjs: RxJS 지원.
+    scheduler-core: 작업 스케줄링.
+    seo: SEO 관리.
+    tokens: 디자인 토큰 및 테마 설정.
+  lead: 애플리케이션을 위한 재사용 가능한 빌딩 블록.
+  title: 패키지
+projects:
+  items:
+    my-care-notes:
+      cta: 더 알아보기
+      description: Mission Platform 위에 구축된 환자 중심의 케어 노트 애플리케이션.
+      name: My Care Notes

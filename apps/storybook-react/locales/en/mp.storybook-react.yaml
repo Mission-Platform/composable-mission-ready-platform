@@ -1,0 +1,12 @@
+badge:
+  pill: Pill badge
+  success: Success
+button:
+  primary: Primary
+  secondary: Secondary
+  tertiary: Notifications
+components: Components
+description:
+  after: Open Storybook to explore the full component library.
+  before: A React showcase for
+title: Mission Platform Components
