@@ -9,6 +9,7 @@
 // a {@link ScanResult}; no second decoder wasm module and no re-crossing of the
 // wasm↔JS boundary are involved.
 
+import { scannerLog } from '../debug';
 import scanInit, {
   initSync as scanInitSync,
   scan_and_decode as wasmScanAndDecode,
@@ -20,10 +21,10 @@ import scanInit, {
 // a base64 `data:` URI (the package raises `assetsInlineLimit`); in dev/test it
 // resolves to a plain URL instead — see `WasmModule` for how each is handled.
 import scanWasmUrl from '../generated/scan/code-scan_bg.wasm?url';
-import { scannerLog } from '../debug';
 import { contrastStretchLuma, imageDataToLuma } from '../image';
-import type { ImageLike, Roi, ScanFormat, ScanResult } from '../types';
 import { type AsyncInit, type InitInput, type SyncInit, type SyncInitInput, WasmModule } from '../wasm-module';
+
+import type { ImageLike, Roi, ScanFormat, ScanResult } from '../types';
 
 /**
  * Format tags emitted by the wasm `scan_and_decode` entry point (see the Rust

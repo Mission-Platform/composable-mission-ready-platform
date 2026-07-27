@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { ReactNode } from 'react';
 
 /**
  * `HideAt` (React) mirrors the Vue `HideAt` from `@mission-platform/breakpoints`.
@@ -26,7 +26,7 @@ const breakpoints = {
 type BreakpointKey = keyof typeof breakpoints;
 
 function useViewportWidth(): number {
-  const [width, setWidth] = useState(() => (typeof window === 'undefined' ? 1024 : window.innerWidth));
+  const [width, setWidth] = useState(() => (globalThis.window === undefined ? 1024 : window.innerWidth));
   useEffect(() => {
     const onResize = (): void => setWidth(window.innerWidth);
     window.addEventListener('resize', onResize);
@@ -36,7 +36,7 @@ function useViewportWidth(): number {
   return width;
 }
 
-interface HideAtProps {
+interface HideAtProperties {
   /** Hide children when the viewport is at or above this breakpoint. */
   min?: BreakpointKey;
   /** Hide children when the viewport is strictly below this breakpoint. */
@@ -44,7 +44,7 @@ interface HideAtProps {
   children?: ReactNode;
 }
 
-function HideAt({ min, max, children }: HideAtProps): ReactNode {
+function HideAt({ min, max, children }: HideAtProperties): ReactNode {
   const width = useViewportWidth();
   const aboveMin = min === undefined || width >= breakpoints[min];
   const belowMax = max === undefined || width < breakpoints[max];

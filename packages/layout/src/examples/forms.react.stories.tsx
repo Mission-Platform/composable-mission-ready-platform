@@ -1,7 +1,7 @@
 import { Container } from '@mission-platform/layouts/react';
 
-import type { CSSProperties } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { CSSProperties } from 'react';
 
 /**
  * **Forms** — example page layouts assembled from the `@mission-platform/layouts`

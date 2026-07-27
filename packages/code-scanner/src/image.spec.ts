@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { contrastStretchLuma, imageDataToLuma, type LumaImage } from './image';
+
 import type { ImageLike } from './types';
 
 describe('imageDataToLuma', () => {

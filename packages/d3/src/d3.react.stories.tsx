@@ -1,6 +1,7 @@
-import { innerDimensions } from '@mission-platform/d3';
 import { scaleBand, scaleLinear, select } from 'd3';
 import { useEffect, useRef } from 'react';
+
+import { innerDimensions } from '@mission-platform/d3';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -15,7 +16,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * demo uses the pure `innerDimensions` helper with a `useEffect` + a `useRef` to
  * draw the same chart.
  */
-interface D3BarChartProps {
+interface D3BarChartProperties {
   width?: number;
   height?: number;
   margin?: number;
@@ -29,7 +30,7 @@ function D3BarChart({
   margin = 24,
   data = [12, 25, 18, 32, 9, 27, 21],
   color = '#4f46e5',
-}: D3BarChartProps): React.ReactElement {
+}: D3BarChartProperties): React.ReactElement {
   const svg = useRef<SVGSVGElement | null>(null);
 
   useEffect(() => {

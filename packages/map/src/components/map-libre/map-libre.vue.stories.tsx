@@ -1,9 +1,10 @@
-import { MapLayer, MapLibre, MapMarker, MapPopup, MapSource } from '@mission-platform/map/vue';
 import { defineComponent, ref } from 'vue';
 
+import { MapLayer, MapLibre, MapMarker, MapPopup, MapSource } from '@mission-platform/map/vue';
+
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import type { FeatureCollection } from 'geojson';
 import type { LngLatLike, Map } from 'maplibre-gl';
-import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
 // ─── Shared fixtures ────────────────────────────────────────────────────────
 

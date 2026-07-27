@@ -1,3 +1,7 @@
+import { BaseButton, BaseTypography } from '@mission-platform/components';
+import { IconCamera, IconClose, IconUpload } from '@mission-platform/icons';
+import { h, useEffect, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+
 import {
   scanFile,
   scanImageData,
@@ -5,9 +9,6 @@ import {
   videoFrameToImageData,
   type ScanResult,
 } from '@mission-platform/code-scanner';
-import { BaseButton, BaseTypography } from '@mission-platform/components';
-import { IconCamera, IconClose, IconUpload } from '@mission-platform/icons';
-import { h, useEffect, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { scannerLog } from '../../debug';
 
@@ -255,6 +256,7 @@ export function BaseCodeScanner(properties: Readonly<CodeScannerProperties>): Mp
             <input
               ref={fileInputReference}
               accept="image/*"
+              aria-label={uploadLabel}
               classNames={styles['base-code-scanner__file-input']}
               type="file"
               onChange={onFileChange}

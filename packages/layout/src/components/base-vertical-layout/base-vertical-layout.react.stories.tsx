@@ -1,7 +1,7 @@
 import { VerticalLayout } from '@mission-platform/layouts/react';
 
-import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { ReactNode } from 'react';
 
 /**
  * `VerticalLayout` is the **React** build of the write-once `BaseVerticalLayout`

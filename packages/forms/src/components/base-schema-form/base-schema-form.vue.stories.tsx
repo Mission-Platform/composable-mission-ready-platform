@@ -28,10 +28,13 @@ const meta = {
     components: { SchemaForm },
     setup() {
       const values = ref<Record<string, unknown>>({});
-      return { args: arguments_, values };
+      const arguments__ = { ...arguments_ };
+      delete arguments__.modelValue;
+      delete arguments__.onUpdateModelValue;
+      return { args: arguments__, values };
     },
     template:
-      '<SchemaForm v-bind="args" :model-value="values" @update-model-value="values = $event" @submit="(v, valid) => console.log(\'submit\', v, valid)" />',
+      '<SchemaForm v-bind="args" v-model="values" @submit="(v, valid) => console.log(\'submit\', v, valid)" />',
   }),
 } satisfies Meta<typeof SchemaForm>;
 

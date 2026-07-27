@@ -62,6 +62,7 @@ export type FormFieldType =
   | 'tel'
   | 'textarea'
   | 'markdown'
+  | 'code'
   | 'checkbox'
   | 'switch'
   | 'select'

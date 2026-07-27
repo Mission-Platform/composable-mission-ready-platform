@@ -1055,7 +1055,7 @@ export class DrawingStore {
           this.selectFeature(featureId);
         }
       } else {
-        this.selectFeature(undefined);
+        this.selectFeature();
       }
       return;
     }

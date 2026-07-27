@@ -1,8 +1,9 @@
-import { MapLibre, MapMarker } from '@mission-platform/map/vue';
 import { defineComponent, ref } from 'vue';
 
-import type { LngLatLike } from 'maplibre-gl';
+import { MapLibre, MapMarker } from '@mission-platform/map/vue';
+
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import type { LngLatLike } from 'maplibre-gl';
 
 // ─── Shared fixtures ────────────────────────────────────────────────────────
 

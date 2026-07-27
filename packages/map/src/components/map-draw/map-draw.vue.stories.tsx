@@ -1,6 +1,7 @@
 import { BaseButton } from '@mission-platform/components/vue';
-import { MapDraw, MapLibre } from '@mission-platform/map/vue';
 import { defineComponent, ref } from 'vue';
+
+import { MapDraw, MapLibre } from '@mission-platform/map/vue';
 
 import type { DrawMode, DrawnFeature, UseDrawingReturn } from '@mission-platform/map';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
@@ -82,7 +83,7 @@ function modeStory(mode: DrawMode, strokeColor?: string): Story {
 }
 
 /** An idle drawing tool ready for selecting and editing features on the map. */
-export const Idle: Story = modeStory(undefined);
+export const Idle: Story = modeStory();
 
 /** Freehand line mode: click to add points, double-click to finish. */
 export const LineMode: Story = modeStory('line', '#2563eb');

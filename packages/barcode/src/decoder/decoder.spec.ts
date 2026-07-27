@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import { type BarcodeSymbology, encodeBarcode } from '../encoder';
-import { decodeBarcode, decodeBarcodeAsync } from './index';
+
+import { decodeBarcode, decodeBarcodeAsync } from ".";
 
 // The encoder and decoder wasm modules are instantiated once in
 // `src/test-setup.ts` (a Vitest `setupFiles` entry) before any spec runs.
@@ -50,7 +51,7 @@ describe('decodeBarcode', () => {
 
   it('returns null for an invalid or unknown module run', () => {
     expect(decodeBarcode('code128', [1, 0, 1, 1, 0])).toBeNull();
-    expect(decodeBarcode('ean13', new Array(40).fill(1))).toBeNull();
+    expect(decodeBarcode('ean13', Array.from({length: 40}).fill(1))).toBeNull();
   });
 
   it('decodes asynchronously to the same result', async () => {

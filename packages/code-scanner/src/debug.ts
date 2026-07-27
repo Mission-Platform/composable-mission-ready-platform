@@ -47,6 +47,6 @@ export function isCodeScannerDebugEnabled(): boolean {
  * is enabled). Accepts the same variadic arguments as `console.debug`.
  */
 export function scannerLog(...args: readonly unknown[]): void {
-  // eslint-disable-next-line no-console -- intentional, opt-in diagnostic output.
+   
   console.debug(LOG_PREFIX, ...args);
 }

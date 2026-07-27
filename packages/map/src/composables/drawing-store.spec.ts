@@ -141,7 +141,7 @@ describe('DrawingStore double-click zoom handling', () => {
     const map = {
       on: vi.fn(),
       off: vi.fn(),
-      getCanvas: vi.fn(() => undefined),
+      getCanvas: vi.fn(() => {}),
       doubleClickZoom,
     } as unknown as Map;
     return { map, doubleClickZoom };
@@ -192,7 +192,7 @@ describe('DrawingStore flat move preserves viewport shape', () => {
     return {
       on: vi.fn(),
       off: vi.fn(),
-      getCanvas: vi.fn(() => undefined),
+      getCanvas: vi.fn(() => {}),
       doubleClickZoom: { enable: vi.fn(), disable: vi.fn() },
       dragPan: { enable: vi.fn(), disable: vi.fn() },
       project: vi.fn(project),
@@ -266,9 +266,9 @@ describe('DrawingStore flat move preserves viewport shape', () => {
     // Every vertex must shift by the same pixel offset (rigid translation).
     const dx = pixelsAfter[0].x - pixelsBefore[0].x;
     const dy = pixelsAfter[0].y - pixelsBefore[0].y;
-    for (let index = 0; index < pixelsBefore.length; index++) {
-      expect(pixelsAfter[index].x - pixelsBefore[index].x).toBeCloseTo(dx, 6);
-      expect(pixelsAfter[index].y - pixelsBefore[index].y).toBeCloseTo(dy, 6);
+    for (const [index, element] of pixelsBefore.entries()) {
+      expect(pixelsAfter[index].x - element.x).toBeCloseTo(dx, 6);
+      expect(pixelsAfter[index].y - element.y).toBeCloseTo(dy, 6);
     }
     // The move was purely north/south, so there is no horizontal shift.
     expect(dx).toBeCloseTo(0, 6);

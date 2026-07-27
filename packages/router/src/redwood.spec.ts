@@ -15,6 +15,7 @@ const { createRedwoodLinks, redwoodHref, renderRoutes, toRedwoodPath, toRedwoodR
 
 const Home = (): string => 'home';
 const User = (): string => 'user';
+const Document = (): string => 'doc';
 
 describe('toRedwoodPath', () => {
   it('passes static and single-parameter segments through', () => {
@@ -82,7 +83,6 @@ describe('toRedwoodRoutes', () => {
 
 describe('renderRoutes', () => {
   it('wraps translated routes with the Document via rwsdk render', () => {
-    const Document = (): string => 'doc';
     const result = renderRoutes(Document as never, [{ path: '/', component: Home }], { ssr: true }) as unknown as {
       Document: unknown;
       routes: Array<{ path: string }>;

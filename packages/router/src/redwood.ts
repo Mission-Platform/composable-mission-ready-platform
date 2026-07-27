@@ -81,7 +81,7 @@ function redwoodHandlerFor(route_: MpRoute, routes: readonly MpRoute[]): Redwood
   if (route_.redirect !== undefined) {
     const location = resolveLocation(route_.redirect, routes).fullPath;
     return (() =>
-      new Response(null, { status: 302, headers: { Location: location } })) as unknown as RedwoodRouteHandler;
+      new Response(undefined, { status: 302, headers: { Location: location } })) as unknown as RedwoodRouteHandler;
   }
   if (route_.component !== undefined) {
     return route_.component as RedwoodRouteHandler;

@@ -3,8 +3,9 @@ import { encodeMatrix } from '@mission-platform/matrix-code';
 import { encodeQr, type QrErrorCorrection } from '@mission-platform/qr-code';
 import { describe, expect, it } from 'vitest';
 
-import type { ImageLike } from '../types';
 import { scanImageData, scanImageDataAll, scanImageDataAsync } from './index';
+
+import type { ImageLike } from '../types';
 
 /** Module pixel size and quiet-zone width used when rendering test images. */
 const SCALE = 8;
@@ -57,7 +58,7 @@ const QR_DEGRADATION: Degradation = {
     { dx: 0.002, dy: 0.0015, dz: 0.008 },
     { dx: -0.0015, dy: 0.002, dz: -0.005 },
     { dx: 0.002, dy: -0.0015, dz: 0.008 },
-    { dx: -0.0015, dy: -0.0015, dz: 0.0 },
+    { dx: -0.0015, dy: -0.0015, dz: 0 },
   ],
   noiseEvery: 900,
 };
@@ -79,7 +80,7 @@ const DATA_MATRIX_DEGRADATION: Degradation = {
     { dx: 0.004, dy: 0.004, dz: 0.02 },
     { dx: -0.004, dy: 0.004, dz: -0.01 },
     { dx: 0.004, dy: -0.004, dz: 0.02 },
-    { dx: -0.004, dy: -0.004, dz: 0.0 },
+    { dx: -0.004, dy: -0.004, dz: 0 },
   ],
   noiseEvery: 1400,
 };
@@ -100,7 +101,7 @@ const AZTEC_DEGRADATION: Degradation = {
     { dx: 0.003, dy: 0.003, dz: 0.012 },
     { dx: -0.003, dy: 0.003, dz: -0.008 },
     { dx: 0.003, dy: -0.003, dz: 0.012 },
-    { dx: -0.003, dy: -0.003, dz: 0.0 },
+    { dx: -0.003, dy: -0.003, dz: 0 },
   ],
   noiseEvery: 1600,
 };
@@ -121,7 +122,7 @@ const BARCODE_DEGRADATION: Degradation = {
     { dx: 0.01, dy: 0.01, dz: 0.05 },
     { dx: -0.01, dy: 0.01, dz: -0.03 },
     { dx: 0.01, dy: -0.01, dz: 0.05 },
-    { dx: -0.01, dy: -0.01, dz: 0.0 },
+    { dx: -0.01, dy: -0.01, dz: 0 },
   ],
   noiseEvery: 1400,
 };
@@ -291,7 +292,7 @@ function speckle(image: ImageLike, every: number, seed: number): ImageLike {
   const { data } = image;
   let state = seed >>> 0;
   for (let index = 0; index < data.length; index += 4) {
-    state = (Math.imul(state, 1103515245) + 12345) >>> 0;
+    state = (Math.imul(state, 1_103_515_245) + 12_345) >>> 0;
     if ((state >>> 16) % every === 0) {
       const value = data[index] > 127 ? 0 : 255;
       data[index] = value;
@@ -313,9 +314,9 @@ function degrade(image: ImageLike, seed: number, profile: Degradation): ImageLik
 
 /** Derive a stable noise seed from a payload string. */
 function seedFor(value: string): number {
-  let hash = 0x811c9dc5;
+  let hash = 0x81_1c_9d_c5;
   for (let index = 0; index < value.length; index += 1) {
-    hash = Math.imul(hash ^ value.charCodeAt(index), 0x01000193);
+    hash = Math.imul(hash ^ value.charCodeAt(index), 0x01_00_01_93);
   }
   return hash >>> 0;
 }
@@ -420,8 +421,8 @@ function renderBarcodeImage(bits: readonly number[]): ImageLike {
   const width = (bits.length + 2 * QUIET) * SCALE;
   const height = barHeight + 2 * QUIET * SCALE;
   const data = new Uint8ClampedArray(width * height * 4).fill(255);
-  for (let index = 0; index < bits.length; index += 1) {
-    if (bits[index] === 0) {
+  for (const [index, bit] of bits.entries()) {
+    if (bit === 0) {
       continue;
     }
     const x0 = (index + QUIET) * SCALE;
@@ -434,9 +435,9 @@ function renderBarcodeImage(bits: readonly number[]): ImageLike {
       }
     }
   }
-  let seed = 0x811c9dc5;
+  let seed = 0x81_1c_9d_c5;
   for (const bit of bits) {
-    seed = Math.imul(seed ^ bit, 0x01000193);
+    seed = Math.imul(seed ^ bit, 0x01_00_01_93);
   }
   return degrade({ width, height, data }, seed >>> 0, BARCODE_DEGRADATION);
 }

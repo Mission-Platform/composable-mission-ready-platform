@@ -1,7 +1,7 @@
 import { ApplicationLayout, Container } from '@mission-platform/layouts/react';
 
-import type { CSSProperties } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { CSSProperties } from 'react';
 
 /**
  * **Routing** — example navigation-shell layouts assembled from the

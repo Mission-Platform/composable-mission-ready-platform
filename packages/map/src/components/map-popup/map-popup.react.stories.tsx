@@ -1,8 +1,9 @@
-import { MapLibre, MapPopup } from '@mission-platform/map/react';
 import { useState } from 'react';
 
-import type { ReactNode } from 'react';
+import { MapLibre, MapPopup } from '@mission-platform/map/react';
+
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { ReactNode } from 'react';
 
 // ─── Shared fixtures ────────────────────────────────────────────────────────
 

@@ -1,8 +1,8 @@
 import { MapLayer, MapLibre, MapSource } from '@mission-platform/map/react';
 
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { FeatureCollection } from 'geojson';
 import type { ReactNode } from 'react';
-import type { Meta, StoryObj } from '@storybook/react-vite';
 
 // ─── Shared fixtures ────────────────────────────────────────────────────────
 

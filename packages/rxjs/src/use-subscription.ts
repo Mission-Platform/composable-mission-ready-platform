@@ -7,6 +7,7 @@
 // streams never leak — identically on both frameworks.
 
 import { useEffect, type MpDependencyList } from '@mission-platform/jsx';
+
 import type { Observable, Observer } from 'rxjs';
 
 /** Anything that can be unsubscribed — matches RxJS's `Unsubscribable`. */

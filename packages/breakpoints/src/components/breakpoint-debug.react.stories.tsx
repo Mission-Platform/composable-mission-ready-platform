@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import type { CSSProperties, ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { CSSProperties, ReactNode } from 'react';
 
 /**
  * `BreakpointDebug` (React) mirrors the Vue `BreakpointDebug` from
@@ -27,7 +27,7 @@ type BreakpointKey = keyof typeof breakpoints;
 const breakpointKeys = Object.keys(breakpoints) as BreakpointKey[];
 
 function useViewportWidth(): number {
-  const [width, setWidth] = useState(() => (typeof window === 'undefined' ? 1024 : window.innerWidth));
+  const [width, setWidth] = useState(() => (globalThis.window === undefined ? 1024 : window.innerWidth));
   useEffect(() => {
     const onResize = (): void => setWidth(window.innerWidth);
     window.addEventListener('resize', onResize);
