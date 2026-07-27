@@ -1,5 +1,6 @@
-import { NumberStepper } from '@mission-platform/components/react';
 import { useState } from 'react';
+
+import { NumberStepper } from '@mission-platform/components/react';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 

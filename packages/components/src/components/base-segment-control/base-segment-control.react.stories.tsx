@@ -1,5 +1,6 @@
-import { SegmentControl } from '@mission-platform/components/react';
 import { useState } from 'react';
+
+import { SegmentControl } from '@mission-platform/components/react';
 
 import type { SegmentOption } from './base-segment-control';
 import type { Meta, StoryObj } from '@storybook/react-vite';

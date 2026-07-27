@@ -81,6 +81,8 @@ export function BaseButton(properties: Readonly<ButtonProperties>): MpElement {
       type={properties.type ?? 'button'}
       disabled={disabled || loading}
       aria-busy={loading}
+      aria-label={properties['aria-label'] ?? properties.ariaLabel}
+      aria-pressed={properties['aria-pressed'] ?? properties.ariaPressed}
       onClick={handleClick}
     >
       {loading ? (

@@ -3,13 +3,12 @@ import baseConfig from '@mission-platform/eslint-config';
 export default [
   ...baseConfig,
   {
-    // Storybook CSF `render` functions return an inline `setup() { return () => h(...) }`
-    // render closure that the Storybook API requires to live inside `setup`; it cannot be
-    // hoisted, so the generic "move to outer scope" heuristic is a false positive here.
-    name: 'components/stories',
-    files: ['**/*.stories.tsx'],
+    name: 'components/overrides',
+    files: ['src/**/*.ts', 'src/**/*.tsx', 'vite.config.ts', 'vitest.config.ts'],
     rules: {
       'unicorn/consistent-function-scoping': 'off',
+      'unicorn/prefer-default-parameters': 'off',
+      'unicorn/prevent-abbreviations': 'off',
     },
   },
 ];

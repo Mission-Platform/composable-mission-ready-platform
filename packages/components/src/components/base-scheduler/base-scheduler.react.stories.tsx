@@ -1,5 +1,6 @@
-import { Scheduler } from '@mission-platform/components/react';
 import { useState } from 'react';
+
+import { Scheduler } from '@mission-platform/components/react';
 
 import type { VEvent } from './base-scheduler';
 import type { Meta, StoryObj } from '@storybook/react-vite';

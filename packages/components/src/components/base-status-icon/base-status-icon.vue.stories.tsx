@@ -36,9 +36,13 @@ const meta = {
   render: (arguments_) => ({
     components: { StatusIcon },
     setup() {
-      return { args: arguments_ };
+      return {
+        status: arguments_.status,
+        size: arguments_.size,
+        label: arguments_.label,
+      };
     },
-    template: '<StatusIcon v-bind="args" />',
+    template: '<StatusIcon :status="status" :size="size" :label="label" />',
   }),
 } satisfies Meta<typeof StatusIcon>;
 

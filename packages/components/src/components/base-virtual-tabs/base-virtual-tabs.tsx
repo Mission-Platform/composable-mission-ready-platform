@@ -127,37 +127,18 @@ export function BaseVirtualTabs(properties: Readonly<VirtualTabsProperties>): Mp
     focusTab(nextTab.id);
   };
 
-  // The active panel is built by a node-returning **render helper** (rather than
-  // an inline node in the return): the `panel` render-prop returns arbitrary
-  // framework nodes, so the component must compile through the render-closure
-  // (`h`) path — where a render-prop call renders as real child vnodes — instead
-  // of the flat-template path, which would stringify the returned node
-  // (`toDisplayString`). Authoring the panel as a node helper keeps the whole
-  // component on that render-closure path.
-  const renderPanel = (): MpElement | undefined =>
-    activeTab ? (
-      <div
-        id={`panel-${activeTab.id}`}
-        aria-labelledby={`tab-${activeTab.id}`}
-        classNames={styles['base-virtual-tabs__panel']}
-        role="tabpanel"
-      >
-        {properties.panel?.({ tab: activeTab })}
-      </div>
-    ) : undefined;
-
   return (
     <div
-      classNames={[
+      className={[
         styles['base-virtual-tabs'],
         styles[`base-virtual-tabs--${variant}`],
         sizeStyles[`base-size--${size}`],
       ]}
     >
-      <div classNames={[styles['base-virtual-tabs__bar'], styles[`base-virtual-tabs__bar--${variant}`]]}>
+      <div className={[styles['base-virtual-tabs__bar'], styles[`base-virtual-tabs__bar--${variant}`]]}>
         <div
           ref={listReference}
-          classNames={[styles['base-virtual-tabs__list'], styles[`base-virtual-tabs__list--${variant}`]]}
+          className={[styles['base-virtual-tabs__list'], styles[`base-virtual-tabs__list--${variant}`]]}
           role="tablist"
         >
           {tabs.map((tab) => (
@@ -167,7 +148,7 @@ export function BaseVirtualTabs(properties: Readonly<VirtualTabsProperties>): Mp
               aria-controls={`panel-${tab.id}`}
               aria-disabled={tab.disabled ? 'true' : undefined}
               aria-selected={activeId === tab.id}
-              classNames={[
+              className={[
                 styles['base-virtual-tabs__tab'],
                 styles[`base-virtual-tabs__tab--${variant}`],
                 {
@@ -196,7 +177,7 @@ export function BaseVirtualTabs(properties: Readonly<VirtualTabsProperties>): Mp
               {closable ? (
                 <span
                   aria-hidden="true"
-                  classNames={styles['base-virtual-tabs__close-icon']}
+                  className={styles['base-virtual-tabs__close-icon']}
                   data-close-tab-id={tab.id}
                   onClick={(event: MouseEvent) => {
                     event.stopPropagation();
@@ -211,7 +192,7 @@ export function BaseVirtualTabs(properties: Readonly<VirtualTabsProperties>): Mp
         </div>
         {addable ? (
           <button
-            classNames={[styles['base-virtual-tabs__add'], styles[`base-virtual-tabs__add--${variant}`]]}
+            className={[styles['base-virtual-tabs__add'], styles[`base-virtual-tabs__add--${variant}`]]}
             aria-label="New tab"
             type="button"
             onClick={() => properties.onAdd?.()}
@@ -221,7 +202,16 @@ export function BaseVirtualTabs(properties: Readonly<VirtualTabsProperties>): Mp
         ) : undefined}
       </div>
 
-      {renderPanel()}
+      {activeTab ? (
+        <div
+          id={`panel-${activeTab.id}`}
+          aria-labelledby={`tab-${activeTab.id}`}
+          className={styles['base-virtual-tabs__panel']}
+          role="tabpanel"
+        >
+          {properties.panel?.({ tab: activeTab })}
+        </div>
+      ) : undefined}
     </div>
   );
 }

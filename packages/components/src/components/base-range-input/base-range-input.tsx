@@ -223,7 +223,7 @@ export function BaseRangeInput(properties: Readonly<RangeInputProperties>): MpEl
 
   return (
     <div
-      classNames={[
+      className={[
         styles['base-range-input'],
         styles[`base-range-input--${size}`],
         {
@@ -233,11 +233,11 @@ export function BaseRangeInput(properties: Readonly<RangeInputProperties>): MpEl
     >
       <div
         ref={trackReference}
-        classNames={styles['base-range-input__track']}
+        className={styles['base-range-input__track']}
         onPointerdown={handleTrackPointerDown}
       >
         <div
-          classNames={styles['base-range-input__fill']}
+          className={styles['base-range-input__fill']}
           style={{ left: `${lowerPercent}%`, right: `${100 - upperPercent}%` }}
         />
         <div
@@ -247,14 +247,14 @@ export function BaseRangeInput(properties: Readonly<RangeInputProperties>): MpEl
           aria-valuemin={min}
           aria-valuenow={lower}
           aria-valuetext={formatValue ? displayLower : undefined}
-          classNames={[styles['base-range-input__thumb'], styles['base-range-input__thumb--min']]}
+          className={[styles['base-range-input__thumb'], styles['base-range-input__thumb--min']]}
           role="slider"
           style={{ left: `${lowerPercent}%` }}
           tabindex={disabled ? -1 : 0}
           onKeydown={handleKeydown('min')}
           onPointerdown={handleThumbPointerDown('min')}
         >
-          {showValue ? <span classNames={styles['base-range-input__value']}>{displayLower}</span> : undefined}
+          {showValue ? <span className={styles['base-range-input__value']}>{displayLower}</span> : undefined}
         </div>
         <div
           aria-disabled={disabled || undefined}
@@ -263,14 +263,14 @@ export function BaseRangeInput(properties: Readonly<RangeInputProperties>): MpEl
           aria-valuemin={lower}
           aria-valuenow={upper}
           aria-valuetext={formatValue ? displayUpper : undefined}
-          classNames={[styles['base-range-input__thumb'], styles['base-range-input__thumb--max']]}
+          className={[styles['base-range-input__thumb'], styles['base-range-input__thumb--max']]}
           role="slider"
           style={{ left: `${upperPercent}%` }}
           tabindex={disabled ? -1 : 0}
           onKeydown={handleKeydown('max')}
           onPointerdown={handleThumbPointerDown('max')}
         >
-          {showValue ? <span classNames={styles['base-range-input__value']}>{displayUpper}</span> : undefined}
+          {showValue ? <span className={styles['base-range-input__value']}>{displayUpper}</span> : undefined}
         </div>
       </div>
     </div>

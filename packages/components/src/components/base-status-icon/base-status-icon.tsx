@@ -18,43 +18,6 @@ export interface StatusIconProperties extends MpProperties {
   label?: string;
 }
 
-/** Renders the `@mission-platform/icons` glyph for a given {@link StatusIconLevel}. */
-function statusIcon(status: StatusIconLevel, size: StatusIconSize): MpElement {
-  switch (status) {
-    case 'success': {
-      return <IconCheck size={size} />;
-    }
-    case 'warning': {
-      return <IconWarning size={size} />;
-    }
-    case 'error':
-    case 'critical': {
-      return <IconError size={size} />;
-    }
-    case 'neutral': {
-      return <IconMinus size={size} />;
-    }
-    default: {
-      return <IconInfo size={size} />;
-    }
-  }
-}
-
-/**
- * `BaseStatusIcon` — a small status indicator authored once in the neutral JSX
- * dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
- *
- * It renders a toned icon for the chosen `status` at a given `size`, exposing
- * `role="img"` with an `aria-label` when a `label` is supplied (otherwise it is
- * `aria-hidden`/decorative). It owns its styling through the co-located CSS
- * Module `base-status-icon.module.scss`, assembled with the framework-neutral
- * {@link classNames} helper.
- *
- * The status icon is drawn with the write-once `@mission-platform/icons` set
- * (`IconCheck`/`IconWarning`/`IconError`/`IconInfo`/`IconMinus`), itself
- * compiled to React/Vue.
- */
 export function BaseStatusIcon(properties: Readonly<StatusIconProperties>): MpElement {
   const { status = 'neutral', size = 'md', label } = properties;
 
@@ -64,14 +27,27 @@ export function BaseStatusIcon(properties: Readonly<StatusIconProperties>): MpEl
     styles[`base-status-icon--${size}`],
   );
 
+  const iconNode =
+    status === 'success' ? (
+      <IconCheck size={size} />
+    ) : status === 'warning' ? (
+      <IconWarning size={size} />
+    ) : status === 'error' || status === 'critical' ? (
+      <IconError size={size} />
+    ) : status === 'neutral' ? (
+      <IconMinus size={size} />
+    ) : (
+      <IconInfo size={size} />
+    );
+
   return (
     <span
       aria-hidden={label ? undefined : 'true'}
       aria-label={label}
-      classNames={className}
+      className={className}
       role="img"
     >
-      {statusIcon(status, size)}
+      {iconNode}
     </span>
   );
 }

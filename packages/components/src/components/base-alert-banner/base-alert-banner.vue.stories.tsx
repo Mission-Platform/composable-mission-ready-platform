@@ -43,9 +43,12 @@ const meta = {
     components: { AlertBanner },
     setup() {
       const value = ref(arguments_.modelValue ?? true);
-      return { args: arguments_, value };
+      const arguments__ = { ...arguments_ };
+      delete arguments__.modelValue;
+      delete arguments__.onUpdateModelValue;
+      return { args: arguments__, value };
     },
-    template: `<AlertBanner v-bind="args" :model-value="value" @update-model-value="value = $event">Your changes have been saved.</AlertBanner>`,
+    template: `<AlertBanner v-bind="args" v-model="value">Your changes have been saved.</AlertBanner>`,
   }),
 } satisfies Meta<typeof AlertBanner>;
 
