@@ -64,6 +64,7 @@
     "react": "catalog:react",
     "react-dom": "catalog:react",
     "vite": "catalog:vite",
+    "@vitejs/plugin-vue-jsx": "catalog:vue",
     "vitest": "catalog:testing",
     "vue": "catalog:vue"
   }

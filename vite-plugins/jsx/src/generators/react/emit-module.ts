@@ -21,11 +21,12 @@
 import ts from 'typescript';
 
 import {
-  CLASS_NAMES_ATTRIBUTE,
+  CLASS_NAME_ATTRIBUTE,
   createReactHasSlotExpression,
   createReactSlotCallExpression,
   createReactSlotExpression,
   dynamicToHCall,
+  ensureI18nHookInComponent,
   findComponentFunction,
   frameworkSplitModule,
   hasSlottedChildren,
@@ -49,6 +50,7 @@ import {
   slotFallbackChildren,
   slotHCallFallback,
   stripSlotAttribute,
+  transformI18nextCalls,
   usesClassNamesArrayAttribute,
 } from '../../compiler/ast.js';
 
@@ -62,10 +64,11 @@ function flattenComponentSpecifier(specifier: string): string {
 }
 
 /** Transform the whole module into the React target source. */
-export function emitReactModule(sourceFile: ts.SourceFile, componentName?: string): string {
+export function emitReactModule(rawSourceFile: ts.SourceFile, componentName?: string): string {
+  const sourceFile = ensureI18nHookInComponent(ts.factory, rawSourceFile);
   const neutral = readNeutralImports(sourceFile);
 
-  // The `classNames={[…]}` array form collapses to a `classNames(…)` runtime
+  // The `className={[…]}` array form collapses to a `classNames(…)` runtime
   // call (see `reactClassNameValue`), so the neutral helper must be imported —
   // the author drives the attribute without ever importing `classNames`.
   if (usesClassNamesArrayAttribute(sourceFile) && !neutral.values.includes('classNames')) {
@@ -106,6 +109,11 @@ export function emitReactModule(sourceFile: ts.SourceFile, componentName?: strin
     };
 
     const visit = (node: ts.Node): ts.Node | ts.Node[] => {
+      const transformedI18n = transformI18nextCalls(factory, node);
+      if (transformedI18n !== node) {
+        return transformedI18n;
+      }
+
       // A neutral `<Fragment>` maps to React's idiomatic forms: an **empty**
       // `<Fragment />` renders nothing, so it collapses to `null` (the value
       // React expects for "render nothing", cleaner than an empty `<></>`); a
@@ -198,6 +206,7 @@ export function emitReactModule(sourceFile: ts.SourceFile, componentName?: strin
           node,
           (expression) => ts.visitNode(expression, visit) as ts.Expression,
           (name) => REACT_ALIASES[name] ?? name,
+          true,
         );
         const parent = node.parent;
         if (parent !== undefined && (ts.isJsxElement(parent) || ts.isJsxFragment(parent))) {
@@ -230,12 +239,44 @@ export function emitReactModule(sourceFile: ts.SourceFile, componentName?: strin
       // per-framework builds, so the neutral imports (e.g. `<IconX />` tags or a
       // reused `BaseDrawer`) resolve to the native React components.
       if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
+        if (node.moduleSpecifier.text === 'i18next') {
+          const i18nImport = factory.createImportDeclaration(
+            undefined,
+            factory.createImportClause(
+              false,
+              undefined,
+              factory.createNamedImports([
+                factory.createImportSpecifier(false, undefined, factory.createIdentifier('useI18n')),
+              ]),
+            ),
+            factory.createStringLiteral('@mission-platform/i18n/react'),
+          );
+          return [i18nImport, node];
+        }
         const frameworkModule = frameworkSplitModule(node.moduleSpecifier.text, 'react');
         if (frameworkModule !== undefined) {
           return factory.updateImportDeclaration(
             node,
             node.modifiers,
             node.importClause,
+            factory.createStringLiteral(frameworkModule),
+            node.attributes,
+          );
+        }
+      }
+
+      if (
+        ts.isExportDeclaration(node) &&
+        node.moduleSpecifier !== undefined &&
+        ts.isStringLiteral(node.moduleSpecifier)
+      ) {
+        const frameworkModule = frameworkSplitModule(node.moduleSpecifier.text, 'react');
+        if (frameworkModule !== undefined) {
+          return factory.updateExportDeclaration(
+            node,
+            node.modifiers,
+            node.isTypeOnly,
+            node.exportClause,
             factory.createStringLiteral(frameworkModule),
             node.attributes,
           );
@@ -257,15 +298,16 @@ export function emitReactModule(sourceFile: ts.SourceFile, componentName?: strin
         );
       }
 
-      // `classNames={…}` → `className={…}`. The array form is collapsed to a
-      // `classNames(…)` string call (`reactClassNameValue`); any other value is
-      // already a single class string and is passed straight through. The value
-      // expression is visited first so nested rewrites (e.g. a `<Slot>` read)
-      // still apply.
+      // The neutral `className={…}` attribute already matches React's own
+      // spelling, so only its *value* needs collapsing: the array form is
+      // reduced to a `classNames(…)` string call (`reactClassNameValue`); any
+      // other value is already a single class string and is passed straight
+      // through. The value expression is visited first so nested rewrites
+      // (e.g. a `<Slot>` read) still apply.
       if (
         ts.isJsxAttribute(node) &&
         ts.isIdentifier(node.name) &&
-        node.name.text === CLASS_NAMES_ATTRIBUTE &&
+        node.name.text === CLASS_NAME_ATTRIBUTE &&
         node.initializer !== undefined &&
         ts.isJsxExpression(node.initializer) &&
         node.initializer.expression !== undefined
@@ -273,28 +315,33 @@ export function emitReactModule(sourceFile: ts.SourceFile, componentName?: strin
         const value = reactClassNameValue(factory, ts.visitNode(node.initializer.expression, visit) as ts.Expression);
         return factory.updateJsxAttribute(
           node,
-          factory.createIdentifier('className'),
+          factory.createIdentifier(CLASS_NAME_ATTRIBUTE),
           factory.updateJsxExpression(node.initializer, value),
         );
       }
 
-      // `class`/`for` → React aliases in JSX attributes.
+      // `class`/`for`/`tabindex`/SVG attributes → React aliases in JSX attributes.
       if (ts.isJsxAttribute(node) && ts.isIdentifier(node.name)) {
         const alias = REACT_ALIASES[node.name.text];
+        const visitedInitializer = ts.visitNode(node.initializer, visit) as
+          ts.JsxExpression | ts.StringLiteral | undefined;
         if (alias !== undefined) {
-          return factory.updateJsxAttribute(node, factory.createIdentifier(alias), node.initializer);
+          return factory.updateJsxAttribute(node, factory.createIdentifier(alias), visitedInitializer);
+        }
+        if (visitedInitializer !== node.initializer) {
+          return factory.updateJsxAttribute(node, node.name, visitedInitializer);
         }
       }
 
-      // `class`/`for` → React aliases in object-literal props passed to `h(…)`.
+      // `class`/`for`/`tabindex`/SVG attributes → React aliases in object-literal props passed to `h(…)`.
       if (ts.isPropertyAssignment(node) && ts.isIdentifier(node.name)) {
         const alias = REACT_ALIASES[node.name.text];
+        const visitedInitializer = ts.visitNode(node.initializer, visit) as ts.Expression;
         if (alias !== undefined) {
-          return factory.updatePropertyAssignment(
-            node,
-            factory.createIdentifier(alias),
-            ts.visitNode(node.initializer, visit) as ts.Expression,
-          );
+          return factory.updatePropertyAssignment(node, factory.createIdentifier(alias), visitedInitializer);
+        }
+        if (visitedInitializer !== node.initializer) {
+          return factory.updatePropertyAssignment(node, node.name, visitedInitializer);
         }
       }
 
@@ -345,10 +392,86 @@ export function emitReactModule(sourceFile: ts.SourceFile, componentName?: strin
   };
 
   const importResult = ts.transform(rewritten, [importTransformer]);
-  const output = printSourceFile(importResult.transformed[0]);
+  const imported = importResult.transformed[0];
+  const outputFile =
+    isInteractiveReactModule(imported) && !hasUseClientDirective(imported) && !hasUseServerDirective(imported)
+      ? ts.factory.updateSourceFile(imported, [
+          ts.factory.createExpressionStatement(ts.factory.createStringLiteral('use client')),
+          ...imported.statements,
+        ])
+      : imported;
+  const output = printSourceFile(outputFile);
   importResult.dispose();
   bodyResult.dispose();
   return output;
+}
+
+const CLIENT_HOOKS = new Set([
+  'useEffect',
+  'useLayoutEffect',
+  'useInsertionEffect',
+  'useReducer',
+  'useRef',
+  'useState',
+  'useImperativeHandle',
+  'useContext',
+  'createContext',
+  'useSyncExternalStore',
+  'useTransition',
+  'useDeferredValue',
+  'useActionState',
+  'useOptimistic',
+  'useFormStatus',
+]);
+
+function hasUseClientDirective(sourceFile: ts.SourceFile): boolean {
+  for (const statement of sourceFile.statements) {
+    if (!ts.isExpressionStatement(statement) || !ts.isStringLiteralLike(statement.expression)) {
+      break;
+    }
+    if (statement.expression.text === 'use client') {
+      return true;
+    }
+  }
+  return false;
+}
+
+function hasUseServerDirective(sourceFile: ts.SourceFile): boolean {
+  for (const statement of sourceFile.statements) {
+    if (!ts.isExpressionStatement(statement) || !ts.isStringLiteralLike(statement.expression)) {
+      break;
+    }
+    if (statement.expression.text === 'use server') {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isInteractiveReactModule(sourceFile: ts.SourceFile): boolean {
+  let interactive = false;
+  const walk = (node: ts.Node): void => {
+    if (interactive) return;
+    if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && CLIENT_HOOKS.has(node.expression.text)) {
+      interactive = true;
+      return;
+    }
+    if (ts.isJsxAttribute(node) && ts.isIdentifier(node.name) && /^on[A-Z]/.test(node.name.text)) {
+      interactive = true;
+      return;
+    }
+    if (
+      (ts.isPropertyAssignment(node) || ts.isShorthandPropertyAssignment(node)) &&
+      ts.isIdentifier(node.name) &&
+      /^on[A-Z]/.test(node.name.text)
+    ) {
+      interactive = true;
+      return;
+    }
+    ts.forEachChild(node, walk);
+  };
+  walk(sourceFile);
+  return interactive;
 }
 
 /** Whether any `<>…</>` fragment is present in (or below) `root`. */

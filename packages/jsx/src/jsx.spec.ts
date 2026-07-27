@@ -36,6 +36,7 @@ const SlotPasser: MpComponent = () =>
 // `<MapLayer>`): React renders `null` as nothing and a Vue functional component
 // returning `null` renders nothing. Typed `MpElement | null`, so it is cast to
 // the `MpComponent` shape the adapters accept.
+// eslint-disable-next-line unicorn/no-null
 const Blank = (() => null) as MpComponent;
 // The equivalent authored as an empty fragment (`<></>` → `h(Fragment)`): a
 // fragment with no children renders nothing on both frameworks.
@@ -44,7 +45,7 @@ const BlankFragment: MpComponent = () => h(Fragment);
 // Vue SSR represents an empty render with comment anchors (`<!---->` for a null
 // render, `<!--[--><!--]-->` for an empty fragment) rather than real markup;
 // stripping the comments leaves the empty string, matching React's `''`.
-const withoutComments = (html: string): string => html.replace(/<!--.*?-->/g, '');
+const withoutComments = (html: string): string => html.replaceAll(/<!--.*?-->/g, '');
 
 describe('@mission-platform/jsx runtime', () => {
   it('builds a framework-neutral element tree', () => {

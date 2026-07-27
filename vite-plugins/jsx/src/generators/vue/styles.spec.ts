@@ -5,6 +5,7 @@ import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { type StyleImport, parseTsx } from '../../compiler/ast';
+
 import { buildStyles } from './styles';
 
 // `buildStyles` reads the imported stylesheet from disk relative to the neutral

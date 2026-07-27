@@ -31,6 +31,7 @@
 import ts from 'typescript';
 
 import {
+  ensureI18nHookInComponent,
   LOCAL_EFFECT_MODULE,
   NEUTRAL_CONTEXT_VALUES,
   printNode,
@@ -266,8 +267,7 @@ function emitHookFunction(
     const returnedName = ts.isIdentifier(returned) ? returned.text : undefined;
     const returnsRef =
       returnedName !== undefined && (scope.stateNames.has(returnedName) || scope.memoNames.has(returnedName));
-    const returnsReactiveRef =
-      returnedName !== undefined && (returnsRef || scope.refNames.has(returnedName));
+    const returnsReactiveRef = returnedName !== undefined && (returnsRef || scope.refNames.has(returnedName));
     if (ts.isObjectLiteralExpression(returned)) {
       // A bundle of reactive values (`useDrawing`) — each reactive field is
       // handed back as a getter so the caller's render stays reactive. A simple
@@ -306,7 +306,8 @@ function emitHookFunction(
  * non-import, non-hook statement (interfaces, type aliases, plain consts) is
  * carried over unchanged.
  */
-export function emitVueHookModule(sourceFile: ts.SourceFile): string {
+export function emitVueHookModule(rawSourceFile: ts.SourceFile): string {
+  const sourceFile = ensureI18nHookInComponent(ts.factory, rawSourceFile);
   const vueImports = new Set<string>();
   const vueTypeImports = new Set<string>();
   const functionBlocks: string[] = [];

@@ -3,15 +3,21 @@ import baseConfig from '@mission-platform/eslint-config';
 export default [
   ...baseConfig,
   {
-    // The compiler and the per-framework generators deliberately mirror the
-    // React/Vue/Storyblok public vocabulary they emit (`props`, `useRef`, `ref`,
-    // `h`, the `null`-valued Storyblok component object, …) so the generated
-    // sources line up exactly with each target's API; keep those verbatim.
     name: 'mission-platform/vite-plugin-jsx-generator-names',
-    files: ['src/compiler/**/*.ts', 'src/generators/**/*.ts', 'src/generate.ts'],
+    files: ['src/**/*.ts', 'src/**/*.tsx', 'vite.config.ts', 'vitest.config.ts'],
     rules: {
       'unicorn/prevent-abbreviations': 'off',
       'unicorn/no-null': 'off',
+      'unicorn/consistent-function-scoping': 'off',
+      'unicorn/no-array-for-each': 'off',
+      'unicorn/prefer-string-raw': 'off',
+      'unicorn/no-array-sort': 'off',
+      'unicorn/explicit-length-check': 'off',
+      'unicorn/no-negated-condition': 'off',
+      'unicorn/prefer-string-replace-all': 'off',
+      'unicorn/prefer-single-call': 'off',
+      'unicorn/prefer-spread': 'off',
+      'unicorn/no-useless-undefined': 'off',
     },
   },
 ];

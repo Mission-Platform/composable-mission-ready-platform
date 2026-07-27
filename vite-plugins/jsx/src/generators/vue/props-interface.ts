@@ -9,6 +9,8 @@
  */
 import ts from 'typescript';
 
+import { printNode } from '../../compiler/ast.js';
+
 /** Prop names whose declared type holds framework nodes (`MpChild`/`MpElement`/`MpNode`/`MpRenderProperty`). */
 export function nodeTypedPropertyNames(sourceFile: ts.SourceFile, interfaceName: string | undefined): Set<string> {
   const names = new Set<string>();
@@ -24,9 +26,37 @@ export function nodeTypedPropertyNames(sourceFile: ts.SourceFile, interfaceName:
         ts.isPropertySignature(member) &&
         ts.isIdentifier(member.name) &&
         member.type !== undefined &&
-        /\bMp(Child|Element|Node|RenderProperty)\b/.test(member.type.getText(sourceFile))
+        /\bMp(Child|Element|Node|RenderProperty)\b/.test(printNode(member.type, sourceFile))
       ) {
         names.add(member.name.text);
+      }
+    }
+  }
+  return names;
+}
+
+/** All property names across all interfaces and type literals in `sourceFile` whose declared type holds framework nodes. */
+export function allNodeTypedPropertyNames(sourceFile: ts.SourceFile): Set<string> {
+  const names = new Set<string>();
+  const scanType = (typeNode: ts.TypeNode | undefined, name: string): void => {
+    if (typeNode !== undefined && /\bMp(Child|Element|Node|RenderProperty)\b/.test(printNode(typeNode, sourceFile))) {
+      names.add(name);
+    }
+  };
+
+  for (const statement of sourceFile.statements) {
+    if (ts.isInterfaceDeclaration(statement)) {
+      for (const member of statement.members) {
+        if (ts.isPropertySignature(member) && ts.isIdentifier(member.name)) {
+          scanType(member.type, member.name.text);
+        }
+      }
+    }
+    if (ts.isTypeAliasDeclaration(statement) && ts.isTypeLiteralNode(statement.type)) {
+      for (const member of statement.type.members) {
+        if (ts.isPropertySignature(member) && ts.isIdentifier(member.name)) {
+          scanType(member.type, member.name.text);
+        }
       }
     }
   }

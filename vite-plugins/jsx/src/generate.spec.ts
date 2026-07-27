@@ -1,7 +1,12 @@
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 
+import { generateEntry, generateFrameworkSources, jsxComponentsCssImportPlugin } from './generate';
+
 import type { DiscoveredComponent, DiscoveredHelperExport } from './compiler/discover';
-import { generateEntry, jsxComponentsCssImportPlugin } from './generate';
 
 /**
  * Minimal stand-in for a Rollup output chunk, carrying only the fields the
@@ -66,6 +71,30 @@ function component(
     folder: overrides.folder ?? `base-${publicName.toLowerCase()}`,
   };
 }
+
+describe('generateFrameworkSources', () => {
+  it('carries locale type declarations into the generated tree', () => {
+    const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-jsx-generate-'));
+    const componentsDir = path.join(packageDir, 'src', 'components');
+    const componentDir = path.join(componentsDir, 'base-badge');
+    const localesDir = path.join(packageDir, 'src', 'locales');
+    const outDir = path.join(packageDir, 'generated', 'vue');
+
+    try {
+      mkdirSync(componentDir, { recursive: true });
+      mkdirSync(localesDir, { recursive: true });
+      writeFileSync(path.join(componentsDir, 'index.ts'), "export { BaseBadge } from './base-badge';\n");
+      writeFileSync(path.join(componentDir, 'base-badge.tsx'), 'export function BaseBadge(): null { return null; }\n');
+      writeFileSync(path.join(localesDir, 'types.d.ts'), "declare module 'i18next' {}\n");
+
+      generateFrameworkSources({ framework: 'vue', componentsModule: path.join(componentsDir, 'index.ts'), outDir });
+
+      expect(readFileSync(path.join(outDir, 'locales', 'types.d.ts'), 'utf8')).toBe("declare module 'i18next' {}\n");
+    } finally {
+      rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
+});
 
 describe('generateEntry', () => {
   it('re-exports each component under both its public and neutral names', () => {

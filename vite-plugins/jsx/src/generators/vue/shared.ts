@@ -12,6 +12,7 @@ import {
   createReferenceRewriter,
   createStateSnapshotHoister,
   printNode,
+  transformI18nextCalls,
   vueComponentModelListenerTransformer,
   vueJsxSlotTransformer,
   vueNativeEventTransformer,
@@ -66,6 +67,13 @@ export interface VueAnalysis {
  */
 export function rewrite(node: ts.Node, scope: RewriteScope, sourceFile: ts.SourceFile): string {
   const result = ts.transform(node, [
+    (context) => (nodeToVisit) => {
+      const visit = (child: ts.Node): ts.Node => {
+        const transformed = transformI18nextCalls(context.factory, child);
+        return ts.visitEachChild(transformed, visit, context);
+      };
+      return ts.visitNode(nodeToVisit, visit) as ts.Node;
+    },
     vueNativeEventTransformer(),
     // A `@model`-paired `onUpdate<Name>` callback forwarded to a child component
     // must bind Vue's `update:<name>` listener (`onUpdate:<name>`), not the

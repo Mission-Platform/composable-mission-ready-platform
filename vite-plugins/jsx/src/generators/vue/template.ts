@@ -33,7 +33,7 @@
 import ts from 'typescript';
 
 import {
-  CLASS_NAMES_ATTRIBUTE,
+  CLASS_NAME_ATTRIBUTE,
   hasSlottedChildren,
   isDynamicElement,
   isHasSlotCall,
@@ -87,12 +87,52 @@ function escapeExpr(text: string): string {
   return text.replaceAll('"', '&quot;');
 }
 
+/** Find the body or initializer for a function or variable declared with `name` under `root`. */
+function findDeclarationBody(name: string, root: ts.Node): ts.Node | undefined {
+  let result: ts.Node | undefined;
+  const visit = (current: ts.Node): void => {
+    if (result !== undefined) {
+      return;
+    }
+    if (ts.isFunctionDeclaration(current) && current.name?.text === name && current.body !== undefined) {
+      result = current.body;
+      return;
+    }
+    if (ts.isVariableDeclaration(current) && ts.isIdentifier(current.name) && current.name.text === name) {
+      result = current.initializer;
+      return;
+    }
+    ts.forEachChild(current, visit);
+  };
+  visit(root);
+  return result;
+}
+
 /** Whether an expression's subtree builds framework nodes (JSX, `h(…)`, or a `.map`/`.flatMap`). */
-function producesNodes(node: ts.Node): boolean {
+function producesNodes(
+  node: ts.Node,
+  sourceFile?: ts.SourceFile,
+  nodeTypedProps?: Set<string>,
+  visited = new Set<string>(),
+): boolean {
+  const sf = sourceFile ?? (typeof node.getSourceFile === 'function' ? node.getSourceFile() : undefined);
   let found = false;
+
   const visit = (current: ts.Node): void => {
     if (found) {
       return;
+    }
+    if (nodeTypedProps !== undefined && nodeTypedProps.size > 0) {
+      let propName: string | undefined;
+      if (ts.isPropertyAccessExpression(current)) {
+        propName = current.name.text;
+      } else if (ts.isIdentifier(current)) {
+        propName = current.text;
+      }
+      if (propName !== undefined && nodeTypedProps.has(propName)) {
+        found = true;
+        return;
+      }
     }
     if (ts.isJsxElement(current) || ts.isJsxSelfClosingElement(current) || ts.isJsxFragment(current)) {
       found = true;
@@ -109,6 +149,17 @@ function producesNodes(node: ts.Node): boolean {
       ) {
         found = true;
         return;
+      }
+    }
+    if (ts.isIdentifier(current) && sf !== undefined) {
+      const name = current.text;
+      if (!visited.has(name)) {
+        visited.add(name);
+        const bodyNode = findDeclarationBody(name, sf);
+        if (bodyNode !== undefined && producesNodes(bodyNode, sf, nodeTypedProps, visited)) {
+          found = true;
+          return;
+        }
       }
     }
     ts.forEachChild(current, visit);
@@ -685,7 +736,7 @@ function emitAttr(attr: Attr, context: Context, isNativeElement: boolean): strin
   // array/object forms directly, so the (CSS-Module-collapsed) value passes
   // straight through as `:class="…"` (or a static `class="…"` when it reduces
   // to a literal).
-  const outName = name === 'className' || name === CLASS_NAMES_ATTRIBUTE ? 'class' : name;
+  const outName = name === 'className' || name === CLASS_NAME_ATTRIBUTE ? 'class' : name;
   if (value.kind === 'none') {
     return outName;
   }
@@ -902,7 +953,10 @@ function emitConditional(conditional: ts.ConditionalExpression, depth: number, c
   // above — a nested `cond ? … : hint ? … : null` chain, or a `.map()` opposite a
   // non-`nothing` element branch — flattens into a `v-if`/`v-else-if`/`v-else`
   // chain rather than being stringified into an interpolation.
-  if (producesNodes(whenTrue) || producesNodes(whenFalse)) {
+  if (
+    producesNodes(whenTrue, context.sourceFile, context.nodeTypedProps) ||
+    producesNodes(whenFalse, context.sourceFile, context.nodeTypedProps)
+  ) {
     return emitConditionalChain(conditional, depth, context);
   }
   // Neither branch is an element → a plain text interpolation.
@@ -922,7 +976,7 @@ function emitLogicalAnd(expression: ts.BinaryExpression, depth: number, context:
   if (!isElementLike(right)) {
     // A node-producing right side that isn't a handled structural form must not
     // be stringified into an interpolation, so fall back.
-    if (producesNodes(right)) {
+    if (producesNodes(right, context.sourceFile, context.nodeTypedProps)) {
       throw new UnsupportedTemplate('node-producing logical-and branch');
     }
     return `${pad(depth)}{{ ${escapeExpr(templateExpr(expression, context))} }}`;
@@ -1363,23 +1417,21 @@ function emitExpressionChild(expr: ts.Expression, depth: number, context: Contex
   if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node) || ts.isNumericLiteral(node)) {
     return `${pad(depth)}${node.text}`;
   }
-  // A node-typed prop rendered as a child (`{header}`, an `MpChild`) would be
-  // stringified by an interpolation; fall back so it renders correctly.
-  if (ts.isIdentifier(node) && context.nodeTypedProps.has(node.text)) {
-    throw new UnsupportedTemplate('node-typed prop rendered as child');
+  // A node-typed prop / property rendered as a child (`{header}`, `{activeStep?.content}`, an `MpChild`)
+  // would be stringified by an interpolation; fall back so it renders correctly.
+  let nodePropName: string | undefined;
+  if (ts.isIdentifier(node)) {
+    nodePropName = node.text;
+  } else if (ts.isPropertyAccessExpression(node)) {
+    nodePropName = node.name.text;
   }
-  if (
-    ts.isPropertyAccessExpression(node) &&
-    ts.isIdentifier(node.expression) &&
-    node.expression.text === context.propsParamName &&
-    context.nodeTypedProps.has(node.name.text)
-  ) {
+  if (nodePropName !== undefined && context.nodeTypedProps.has(nodePropName)) {
     throw new UnsupportedTemplate('node-typed prop rendered as child');
   }
   // Any expression that builds nodes but isn't a structural form we handle
   // (e.g. a `.map()` whose callback returns something other than a single
   // element) must not become a text interpolation.
-  if (producesNodes(node)) {
+  if (producesNodes(node, context.sourceFile, context.nodeTypedProps)) {
     throw new UnsupportedTemplate('unhandled node-producing child expression');
   }
   // Any other expression renders as a text interpolation.
@@ -1835,6 +1887,8 @@ function countNameRefs(name: string, node: ts.Node): { total: number; callee: nu
 function collectInlinableHelpers(
   statements: readonly ts.Statement[],
   returnExpression: ts.Expression,
+  sourceFile?: ts.SourceFile,
+  nodeTypedProps?: Set<string>,
 ): Map<string, InlinableHelper> {
   const candidates = new Map<string, { declaration: ts.VariableDeclaration; helper: InlinableHelper }>();
   for (const statement of statements) {
@@ -1845,7 +1899,7 @@ function collectInlinableHelpers(
     if (!ts.isIdentifier(declaration.name) || declaration.initializer === undefined) {
       continue;
     }
-    if (!producesNodes(declaration.initializer)) {
+    if (!producesNodes(declaration.initializer, sourceFile, nodeTypedProps)) {
       continue;
     }
     const body = readHelperBody(declaration.initializer);
@@ -1962,8 +2016,10 @@ function destructureToComputeds(
   name: ts.BindingName,
   initializer: ts.Expression,
   nextSourceName: () => string,
+  sourceFile?: ts.SourceFile,
+  nodeTypedProps?: Set<string>,
 ): DerivedConst[] | undefined {
-  if (ts.isIdentifier(name) || producesNodes(initializer)) {
+  if (ts.isIdentifier(name) || producesNodes(initializer, sourceFile, nodeTypedProps)) {
     return undefined;
   }
   const factory = ts.factory;
@@ -2039,7 +2095,7 @@ export function buildVueTemplate(
   // () => tabs.map(…)`, invoked once as `{renderPanels()}`) have no `<template>`
   // binding form, but their (argument-bound) bodies can be spliced into each call
   // site so the surrounding tree templates natively.
-  const inlinableHelpers = collectInlinableHelpers(liftedStatements, returnExpression);
+  const inlinableHelpers = collectInlinableHelpers(liftedStatements, returnExpression, sourceFile, nodeTypedProps);
   // A single leading early-return guard (`if (!truncatePopup) return h(tag, …);`)
   // splits the body into two whole render paths; captured here and emitted as
   // top-level `v-if`/`v-else` roots below. More than one guard has no faithful
@@ -2097,6 +2153,8 @@ export function buildVueTemplate(
         declaration.name,
         initializer,
         () => `mpDestructured${destructureCounter++}`,
+        sourceFile,
+        nodeTypedProps,
       );
       if (expanded === undefined) {
         throw new UnsupportedTemplate('non-identifier / uninitialised const');
@@ -2104,7 +2162,7 @@ export function buildVueTemplate(
       derived.push(...expanded);
       continue;
     }
-    if (producesNodes(initializer)) {
+    if (producesNodes(initializer, sourceFile, nodeTypedProps)) {
       // A **function-valued** const that builds nodes (`const renderItems = (…) =>
       // …<li/>…`) which is *not* an inlinable helper (used as a value, recursive,
       // or a multi-statement body) has no template form: inlining it would splice

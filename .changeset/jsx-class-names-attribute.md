@@ -5,9 +5,9 @@
 '@mission-platform/icons': patch
 ---
 
-add the platform-owned `classNames={…}` JSX attribute for class management
+add the platform-owned `className={…}` JSX attribute for class management
 
-Neutral components now drive dynamic classes with a `classNames={…}` attribute
+Neutral components now drive dynamic classes with a `className={…}` attribute
 (reserving the plain `class="…"` for static strings) instead of calling the
 `classNames` helper inline — the author never imports the helper. The canonical
 value is an array holding the same arguments the helper accepts.
@@ -23,4 +23,4 @@ helper is still exported for the rare precompute and `h(tag, { class: … })`
 object form.
 
 `@mission-platform/components` and `@mission-platform/icons` migrate
-their components' `class={…}` attributes to `classNames={…}` accordingly.
+their components' `class={…}` attributes to `className={…}` accordingly.

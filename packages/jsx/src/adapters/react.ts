@@ -178,6 +178,7 @@ export function toReactComponent<P extends MpProperties>(
       // `null` as nothing, so it is forwarded verbatim rather than fed into
       // `renderToReact` (which expects a real element).
       const rendered = component(properties) as MpElement | null;
+      // eslint-disable-next-line unicorn/no-null
       return rendered === null ? null : renderToReact(rendered);
     } finally {
       popSlotScope();

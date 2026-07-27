@@ -8,7 +8,6 @@
  * render-closure fallback assemble their SFC through {@link assembleSfc}; they
  * differ only in the `bodyLines`/`markup`/`scoped` they pass in.
  */
-import ts from 'typescript';
 
 import {
   type EventSignature,
@@ -20,6 +19,8 @@ import {
 
 import { buildEmitsMacro, buildImports, buildModelsMacro, buildPropsMacro } from './imports.js';
 import { buildStyles } from './styles.js';
+
+import type ts from 'typescript';
 
 /** A relative import descriptor as read from the neutral module (component or helper). */
 type RelativeImport = { names: string[]; typeNames?: string[]; base: string };
@@ -84,7 +85,7 @@ export function assembleSfc(parts: SfcParts, bodyLines: string[], markup: string
   if (bodyLines.some((line) => /\bh\(/.test(line))) {
     parts.vueImports.add('h');
   }
-  const referencesSlots = bodyLines.some((line) => /\bslots[.[]/.test(line));
+  const referencesSlots = bodyLines.some((line) => /\$slots|\bslots/.test(line)) || /\$slots|\bslots/.test(markup);
   if (referencesSlots) {
     parts.vueImports.add('useSlots');
   }

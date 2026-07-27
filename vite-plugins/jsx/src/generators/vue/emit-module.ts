@@ -41,6 +41,7 @@ import ts from 'typescript';
 
 import {
   collectSlotNames,
+  ensureI18nHookInComponent,
   extractEventSignatures,
   extractModelSignatures,
   extractPropertySignatures,
@@ -61,7 +62,7 @@ import {
 import { assembleSfc, type SfcParts } from './assemble.js';
 import { analyseBody } from './body.js';
 import { buildCarryOver } from './carry-over.js';
-import { nodeTypedPropertyNames, resolvePropertiesTypeName } from './props-interface.js';
+import { allNodeTypedPropertyNames, nodeTypedPropertyNames, resolvePropertiesTypeName } from './props-interface.js';
 import { trySynthesizeRecursiveHelper } from './recursive-helper.js';
 import { analyseScope } from './scope.js';
 import { applyTemplateRefs } from './template-refs.js';
@@ -135,10 +136,11 @@ function trySynthesizeRecursiveHelperGuarded(
 
 /** Transform a neutral component module into a Vue SFC (plus any auxiliary SFCs). */
 export function emitVueModule(
-  sourceFile: ts.SourceFile,
+  rawSourceFile: ts.SourceFile,
   componentName: string,
   componentFolders?: ReadonlySet<string>,
 ): EmittedVueModule {
+  const sourceFile = ensureI18nHookInComponent(ts.factory, rawSourceFile);
   const extraModules: EmittedExtraModule[] = [];
   const component = findComponentFunction(sourceFile, componentName);
   if (component?.body === undefined) {
@@ -162,6 +164,13 @@ export function emitVueModule(
     parameter !== undefined && ts.isIdentifier(parameter.name) ? parameter.name.text : 'properties';
   const propertiesType = resolvePropertiesTypeName(parameter?.type);
   const propertySignatures = propertiesType === undefined ? [] : extractPropertySignatures(sourceFile, propertiesType);
+  if (!propertySignatures.some((signature) => signature.name === 'className')) {
+    propertySignatures.push({
+      name: 'className',
+      typeText: "import('@mission-platform/jsx').ClassValue",
+      optional: true,
+    });
+  }
   // Event props (`on<Event>` callbacks) are declared with `defineEmits`, not
   // `defineProps`: their calls become `emit('<event>', …)` and their references
   // become forwarding arrows (see the reference rewriter), so they are excluded
@@ -211,13 +220,7 @@ export function emitVueModule(
     styleModuleImports.map((styleImport) => styleImport.name).filter((name): name is string => name !== undefined),
   );
 
-  const scope = analyseScope(
-    component.body,
-    propertiesParameterName,
-    styleModuleNames,
-    emittedEventSignatures,
-    models,
-  );
+  const scope = analyseScope(component.body, propertiesParameterName, styleModuleNames, emittedEventSignatures, models);
   const analysis = analyseBody(component.body, scope, sourceFile);
   // A destructuring default captured for an event prop is dropped — the prop no
   // longer exists on `defineProps`, so it cannot carry a `withDefaults` entry.
@@ -314,7 +317,7 @@ export function emitVueModule(
       analysis.returnExpression,
       scope,
       sourceFile,
-      nodeTypedPropertyNames(sourceFile, propertiesType),
+      allNodeTypedPropertyNames(sourceFile),
     );
   } catch (error) {
     if (!(error instanceof UnsupportedTemplate)) {

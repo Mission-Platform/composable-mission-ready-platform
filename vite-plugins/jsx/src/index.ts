@@ -36,7 +36,7 @@
  * });
  * ```
  */
-import type { Plugin } from 'vite';
+export { reactJsxPlugin as default } from './config.js';
 
 /**
  * A Vite plugin that configures the classic `h` / `Fragment` JSX factory for the
@@ -51,23 +51,15 @@ import type { Plugin } from 'vite';
  * the former `esbuild.jsxFactory` / `esbuild.jsxFragment` (which is now
  * deprecated and warns under Rolldown-Vite).
  */
-export function reactJsxPlugin(): Plugin {
-  return {
-    name: '@mission-platform/vite-plugin-jsx:react',
-    enforce: 'pre',
-    config() {
-      return {
-        oxc: {
-          jsx: {
-            runtime: 'classic',
-            pragma: 'h',
-            pragmaFrag: 'Fragment',
-          },
-        },
-      };
-    },
-  };
-}
+export {
+  defineJsxHookLibraryConfig,
+  defineJsxLibraryConfig,
+  defineJsxStoryblokLibraryConfig,
+  reactJsxPlugin,
+  type JsxHookLibraryConfigOptions,
+  type JsxLibraryConfigOptions,
+  type JsxStoryblokLibraryConfigOptions,
+} from './config.js';
 
 export {
   compileComponentModule,
@@ -112,5 +104,3 @@ export {
   type GenerateHookLibrarySourcesOptions,
   type HookLibraryDtsOptions,
 } from './generate-hooks.js';
-
-export default reactJsxPlugin;
