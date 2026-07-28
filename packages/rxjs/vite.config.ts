@@ -1,8 +1,15 @@
 import path from 'node:path';
 
 import { defineLibraryConfig } from '@mission-platform/vite-config';
-import { generateHookLibrarySources, hookLibraryDtsPlugin, reactJsxPlugin } from '@mission-platform/vite-plugin-jsx';
-import { defineConfig, type UserConfig } from 'vite';
+import {
+  generateHookLibrarySources,
+  hookLibraryDtsPlugin,
+  reactJsxPlugin,
+  solidJsxPlugin,
+  sveltePlugin,
+  type JsxFramework,
+} from '@mission-platform/vite-plugin-jsx';
+import { defineConfig, type Plugin, type UserConfig } from 'vite';
 
 /**
  * `@mission-platform/rxjs` ships a **framework-neutral** root entry (`.`, the
@@ -43,58 +50,63 @@ function defineNeutralConfig(): UserConfig {
   });
 }
 
-/** The React (`./react`) build: the neutral hooks compiled to a live React hook library. */
-function defineReactConfig(): UserConfig {
-  const cacheName = 'rxjs-react';
+/** The framework (`./react`, `./vue`, `./solid`, `./svelte`, `./web-components`) build. */
+function defineFrameworkHookConfig(framework: JsxFramework): UserConfig {
+  const cacheName = `rxjs-${framework}`;
   const generatedDirectory = path.join(cacheRoot, cacheName);
   const entry = generateHookLibrarySources({
-    framework: 'react',
+    framework,
     entryModule,
     outDir: generatedDirectory,
   });
 
+  const frameworkSuffix =
+    framework === 'react'
+      ? 'React'
+      : framework === 'vue'
+        ? 'Vue'
+        : framework === 'solid'
+          ? 'Solid'
+          : framework === 'svelte'
+            ? 'Svelte'
+            : 'WebComponents';
+
+  const frameworkExternals =
+    framework === 'react'
+      ? ['react', 'react-dom']
+      : framework === 'vue'
+        ? ['vue']
+        : framework === 'solid'
+          ? ['solid-js']
+          : framework === 'svelte'
+            ? ['svelte']
+            : framework === 'web-components'
+              ? ['lit']
+              : [];
+
+  const stagePlugins: Plugin[] =
+    framework === 'react'
+      ? [reactJsxPlugin()]
+      : framework === 'solid'
+        ? solidJsxPlugin()
+        : framework === 'svelte'
+          ? sveltePlugin()
+          : [];
+
   return defineLibraryConfig({
     rootDir: __dirname,
-    name: 'MissionPlatformRxjsReact',
+    name: `MissionPlatformRxjs${frameworkSuffix}`,
     entry,
     preserveModules: true,
     preserveModulesRoot: path.join('node_modules/.cache', cacheName),
+    external: frameworkExternals,
     overrides: {
       build: {
-        outDir: 'dist/react',
+        outDir: `dist/${framework}`,
       },
       plugins: [
-        reactJsxPlugin(),
-        // Emit React's own declarations from the generated tree (post-build).
-        hookLibraryDtsPlugin({ framework: 'react', generatedDir: generatedDirectory, outDir: path.resolve(__dirname, 'dist/react') }),
-      ],
-    },
-  });
-}
-
-/** The Vue (`./vue`) build: the neutral hooks translated to a live Vue composable library. */
-function defineVueConfig(): UserConfig {
-  const cacheName = 'rxjs-vue';
-  const generatedDirectory = path.join(cacheRoot, cacheName);
-  const entry = generateHookLibrarySources({
-    framework: 'vue',
-    entryModule,
-    outDir: generatedDirectory,
-  });
-
-  return defineLibraryConfig({
-    rootDir: __dirname,
-    name: 'MissionPlatformRxjsVue',
-    entry,
-    preserveModules: true,
-    preserveModulesRoot: path.join('node_modules/.cache', cacheName),
-    overrides: {
-      build: {
-        outDir: 'dist/vue',
-      },
-      plugins: [
-        // Emit Vue's own declarations from the generated tree (post-build).
-        hookLibraryDtsPlugin({ framework: 'vue', generatedDir: generatedDirectory, outDir: path.resolve(__dirname, 'dist/vue') }),
+        ...stagePlugins,
+        hookLibraryDtsPlugin({ framework, generatedDir: generatedDirectory, outDir: path.resolve(__dirname, `dist/${framework}`) }),
       ],
     },
   });
@@ -102,11 +114,12 @@ function defineVueConfig(): UserConfig {
 
 export default defineConfig(({ mode }): UserConfig => {
   switch (mode) {
-    case 'react': {
-      return defineReactConfig();
-    }
-    case 'vue': {
-      return defineVueConfig();
+    case 'react':
+    case 'vue':
+    case 'solid':
+    case 'svelte':
+    case 'web-components': {
+      return defineFrameworkHookConfig(mode);
     }
     default: {
       return defineNeutralConfig();

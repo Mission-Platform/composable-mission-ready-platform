@@ -16,6 +16,18 @@
       "types": "./dist/react/index.d.ts",
       "import": "./dist/react/index.js"
     },
+    "./solid": {
+      "types": "./dist/solid/index.d.ts",
+      "import": "./dist/solid/index.js"
+    },
+    "./svelte": {
+      "types": "./dist/svelte/index.d.ts",
+      "import": "./dist/svelte/index.js"
+    },
+    "./web-components": {
+      "types": "./dist/web-components/index.d.ts",
+      "import": "./dist/web-components/index.js"
+    },
     "./vue": {
       "types": "./dist/vue/index.d.ts",
       "import": "./dist/vue/index.js"
@@ -40,6 +52,9 @@
     "build:check": "tsc --project tsconfig.build.json --noEmit",
     "build:vue": "vite build --mode vue",
     "build:react": "vite build --mode react",
+    "build:solid": "vite build --mode solid",
+    "build:svelte": "vite build --mode svelte",
+    "build:web-components": "vite build --mode web-components",
     "build:storyblok-vue": "vite build --mode storyblok-vue",
     "build:storyblok-react": "vite build --mode storyblok-react",
     "build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly",
@@ -72,8 +87,11 @@
   "peerDependencies": {
     "@storyblok/react": "^6.1.11",
     "@storyblok/vue": "^10.1.10",
+    "lit": "^3.0.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
+    "solid-js": "^1.9.0",
+    "svelte": "^5.0.0",
     "vue": "^3.5.0"
   },
   "peerDependenciesMeta": {
@@ -83,10 +101,19 @@
     "@storyblok/vue": {
       "optional": true
     },
+    "lit": {
+      "optional": true
+    },
     "react": {
       "optional": true
     },
     "react-dom": {
+      "optional": true
+    },
+    "solid-js": {
+      "optional": true
+    },
+    "svelte": {
       "optional": true
     },
     "vue": {
@@ -110,15 +137,18 @@
     "@vitest/coverage-v8": "catalog:testing",
     "eslint": "catalog:eslint",
     "jsdom": "catalog:testing",
+    "lit": "catalog:webcomponents",
     "postcss-html": "catalog:stylelint",
     "postcss-scss": "catalog:stylelint",
     "prettier": "catalog:prettier",
     "react": "catalog:react",
     "react-dom": "catalog:react",
+    "solid-js": "catalog:solid",
     "storybook": "catalog:storybook",
     "stylelint": "catalog:stylelint",
     "stylelint-config-recommended-vue": "catalog:stylelint",
     "stylelint-config-standard-scss": "catalog:stylelint",
+    "svelte": "catalog:svelte",
     "typescript": "catalog:typescript",
     "vite": "catalog:vite",
     "vitest": "catalog:testing",

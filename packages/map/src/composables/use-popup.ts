@@ -37,6 +37,7 @@ export interface UsePopupReturn {
  */
 export function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupReturn {
   const { lngLat, content, isText = false, open = true, onClose, ...popupOptions } = options;
+  // eslint-disable-next-line unicorn/no-useless-undefined
   const [popup, setPopup] = useState<Popup | undefined>(undefined);
   const popupReference = useRef<Popup | undefined>(undefined);
 

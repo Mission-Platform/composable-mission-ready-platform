@@ -10,16 +10,22 @@
  */
 // eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
 import { emitReactModule } from '../generators/react/index.js';
+// eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
+import { emitSolidHookModule, emitSolidModule } from '../generators/solid/index.js';
+// eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
+import { emitSvelteHookModule, emitSvelteModule } from '../generators/svelte/index.js';
 import { emitVueHookModule } from '../generators/vue/hook-module.js';
 // eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
 import { emitVueModule } from '../generators/vue/index.js';
+// eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
+import { emitWebComponentHookModule, emitWebComponentModule } from '../generators/web-components/index.js';
 
 import { parseTsx, stripFrameworkDirective } from './ast.js';
 
 export { moduleTargetsFramework, readFrameworkDirective } from './ast.js';
 
 /** A framework the neutral components can be compiled to. */
-export type JsxFramework = 'react' | 'vue';
+export type JsxFramework = 'react' | 'vue' | 'svelte' | 'solid' | 'web-components';
 
 /** Options for {@link compileComponentModule}. */
 export interface CompileOptions {
@@ -47,7 +53,7 @@ export interface ExtraModule {
   /** The emitted SFC source. */
   code: string;
   /** The extension/language the module is written under. */
-  lang: 'vue';
+  lang: 'vue' | 'svelte' | 'ts' | 'tsx';
 }
 
 /** The Stage-1 result: emitted source and the extension it should be written under. */
@@ -55,11 +61,10 @@ export interface CompiledModule {
   /** The emitted per-framework source. */
   code: string;
   /**
-   * The file extension/language of {@link CompiledModule.code}: `tsx` for a React
-   * component/hook module, `vue` for a Vue SFC, or `ts` for a Vue hook module
-   * (a plain composable, not an SFC).
+   * The file extension/language of {@link CompiledModule.code}: `tsx` for a React/Solid
+   * component/hook module, `vue` for a Vue SFC, `svelte` for a Svelte SFC, or `ts` for a hook module.
    */
-  lang: 'tsx' | 'vue' | 'ts';
+  lang: 'tsx' | 'vue' | 'svelte' | 'ts';
   /**
    * Auxiliary SFCs generated alongside the primary module (e.g. the recursive
    * helper components the Vue emitter extracts from a self-recursive,
@@ -84,6 +89,18 @@ export function compileComponentModule(source: string, options: CompileOptions):
   if (options.framework === 'react') {
     return { code: emitReactModule(sourceFile, options.componentName), lang: 'tsx' };
   }
+  if (options.framework === 'solid') {
+    const emitted = emitSolidModule(sourceFile, options.componentName, options.componentFolders);
+    return { code: emitted.code, lang: 'tsx', extraModules: emitted.extraModules };
+  }
+  if (options.framework === 'svelte') {
+    const emitted = emitSvelteModule(sourceFile, options.componentName, options.componentFolders);
+    return { code: emitted.code, lang: 'svelte', extraModules: emitted.extraModules };
+  }
+  if (options.framework === 'web-components') {
+    const emitted = emitWebComponentModule(sourceFile, options.componentName, options.componentFolders);
+    return { code: emitted.code, lang: 'ts', extraModules: emitted.extraModules };
+  }
   const emitted = emitVueModule(sourceFile, options.componentName, options.componentFolders);
   return {
     code: emitted.code,
@@ -104,22 +121,36 @@ export interface CompileHookOptions {
  * Compile one neutral **hook module** (a write-once composable authored against
  * `@mission-platform/jsx`'s React-style hooks, *not* a UI component) to its
  * per-framework source (Stage 1).
- *
- * - **React** — a neutral hook module already *is* a React hook module (the
- *   neutral hooks share React's signatures), so the generic {@link emitReactModule}
- *   import rewrite (`@mission-platform/jsx` → `react`) suffices; the output keeps
- *   the neutral type signatures.
- * - **Vue** — {@link emitVueHookModule} translates the hooks to Vue reactivity
- *   and lifecycle, emitting an idiomatic composable module (values become refs).
- *
- * Emitted as `.tsx` for React (harmless when the hook returns no JSX, correct
- * when it does) and `.ts` for Vue.
  */
 export function compileHookModule(source: string, options: CompileHookOptions): CompiledModule {
   const parsed = parseTsx(options.fileName ?? 'hook.tsx', source);
   const sourceFile = stripFrameworkDirective(parsed);
-  if (options.framework === 'react') {
-    return { code: emitReactModule(sourceFile), lang: 'tsx' };
+  if (options.framework === 'vue') {
+    return { code: emitVueHookModule(sourceFile), lang: 'ts' };
   }
-  return { code: emitVueHookModule(sourceFile), lang: 'ts' };
+  if (options.framework === 'solid') {
+    return { code: emitSolidHookModule(sourceFile), lang: 'ts' };
+  }
+  if (options.framework === 'svelte') {
+    return { code: emitSvelteHookModule(sourceFile), lang: 'ts' };
+  }
+  if (options.framework === 'web-components') {
+    return { code: emitWebComponentHookModule(sourceFile), lang: 'ts' };
+  }
+  return { code: emitReactModule(sourceFile), lang: 'tsx' };
+}
+
+/** Compile neutral TSX component to Svelte 5. */
+export function compileToSvelte(source: string, options: Omit<CompileOptions, 'framework'>): CompiledModule {
+  return compileComponentModule(source, { ...options, framework: 'svelte' });
+}
+
+/** Compile neutral TSX component to SolidJS. */
+export function compileToSolid(source: string, options: Omit<CompileOptions, 'framework'>): CompiledModule {
+  return compileComponentModule(source, { ...options, framework: 'solid' });
+}
+
+/** Compile neutral TSX component to Web Component Custom Element. */
+export function compileToWebComponent(source: string, options: Omit<CompileOptions, 'framework'>): CompiledModule {
+  return compileComponentModule(source, { ...options, framework: 'web-components' });
 }

@@ -57,6 +57,8 @@ import {
 import { REACT_ALIASES } from './aliases.js';
 import { buildReactImports } from './imports.js';
 
+import type { JsxFramework } from '../../compiler/compile.js';
+
 /** Rewrite a relative sibling-component import to the flat generated layout (`./<base>`). */
 function flattenComponentSpecifier(specifier: string): string {
   const segments = specifier.split('/').filter((segment) => segment !== '.' && segment !== '..' && segment.length > 0);
@@ -64,7 +66,11 @@ function flattenComponentSpecifier(specifier: string): string {
 }
 
 /** Transform the whole module into the React target source. */
-export function emitReactModule(rawSourceFile: ts.SourceFile, componentName?: string): string {
+export function emitReactModule(
+  rawSourceFile: ts.SourceFile,
+  componentName?: string,
+  targetFramework: JsxFramework = 'react',
+): string {
   const sourceFile = ensureI18nHookInComponent(ts.factory, rawSourceFile);
   const neutral = readNeutralImports(sourceFile);
 
@@ -249,11 +255,11 @@ export function emitReactModule(rawSourceFile: ts.SourceFile, componentName?: st
                 factory.createImportSpecifier(false, undefined, factory.createIdentifier('useI18n')),
               ]),
             ),
-            factory.createStringLiteral('@mission-platform/i18n/react'),
+            factory.createStringLiteral(`@mission-platform/i18n/${targetFramework}`),
           );
           return [i18nImport, node];
         }
-        const frameworkModule = frameworkSplitModule(node.moduleSpecifier.text, 'react');
+        const frameworkModule = frameworkSplitModule(node.moduleSpecifier.text, targetFramework);
         if (frameworkModule !== undefined) {
           return factory.updateImportDeclaration(
             node,
@@ -270,7 +276,7 @@ export function emitReactModule(rawSourceFile: ts.SourceFile, componentName?: st
         node.moduleSpecifier !== undefined &&
         ts.isStringLiteral(node.moduleSpecifier)
       ) {
-        const frameworkModule = frameworkSplitModule(node.moduleSpecifier.text, 'react');
+        const frameworkModule = frameworkSplitModule(node.moduleSpecifier.text, targetFramework);
         if (frameworkModule !== undefined) {
           return factory.updateExportDeclaration(
             node,

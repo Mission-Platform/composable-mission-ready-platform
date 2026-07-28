@@ -3,8 +3,10 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 
 import { defineLibraryConfig } from '@mission-platform/vite-config';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { mergeConfig, type Plugin, type UserConfig } from 'vite';
+import solidPlugin from 'vite-plugin-solid';
 
 import { generateHookLibrarySources, hookLibraryDtsPlugin } from './generate-hooks.js';
 import {
@@ -25,14 +27,41 @@ export function reactJsxPlugin(): Plugin {
       return {
         oxc: {
           jsx: {
-            runtime: 'classic',
-            pragma: 'h',
-            pragmaFrag: 'Fragment',
+            runtime: 'automatic',
+            importSource: 'react',
           },
         },
       };
     },
   };
+}
+
+/**
+ * The `@sveltejs/vite-plugin-svelte` plugin set that compiles the generated
+ * `.svelte` sources natively. Re-exported (rather than requiring every
+ * `svelte`-target consumer to depend on `@sveltejs/vite-plugin-svelte`/`svelte`
+ * themselves) so a hand-rolled `vite.config.ts` — one that assembles its own
+ * `stagePlugins` instead of calling {@link defineJsxLibraryConfig} — can wire
+ * Svelte compilation the same way {@link reactJsxPlugin} lets it wire the
+ * React JSX transform, without pulling in a new direct dependency.
+ */
+export function sveltePlugin(): Plugin[] {
+  return svelte();
+}
+
+/**
+ * The `vite-plugin-solid` plugin that compiles the generated Solid `.tsx`
+ * sources natively (Babel `babel-preset-solid`), turning the neutral JSX into
+ * SolidJS fine-grained DOM operations. Re-exported so a hand-rolled
+ * `vite.config.ts` — one that assembles its own `stagePlugins` instead of
+ * calling {@link defineJsxLibraryConfig} — can wire the Solid transform the
+ * same way {@link reactJsxPlugin}/{@link sveltePlugin} let it wire React/Svelte,
+ * without pulling in a new direct dependency. **Required** for the `solid`
+ * target: without it, Vite's default Oxc JSX transform compiles the Solid
+ * sources against `react/jsx-runtime`, producing non-functional output.
+ */
+export function solidJsxPlugin(): Plugin[] {
+  return [solidPlugin() as unknown as Plugin];
 }
 
 export interface JsxLibraryConfigOptions {
@@ -59,6 +88,7 @@ export interface JsxLibraryConfigOptions {
   /** Extra Vite configuration overrides to merge. */
   overrides?: UserConfig;
 }
+
 
 export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig {
   const {
@@ -94,12 +124,46 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
     outDir: generatedDir,
   });
 
-  const stagePlugins: Plugin[] = framework === 'react' ? [reactJsxPlugin()] : [vueJsx()];
+  const stagePlugins: Plugin[] =
+    framework === 'vue'
+      ? [vueJsx()]
+      : framework === 'react'
+        ? [reactJsxPlugin()]
+        : framework === 'solid'
+          ? [solidPlugin()]
+          : framework === 'svelte'
+            ? sveltePlugin()
+            : [];
 
-  const displayName = name.endsWith(framework === 'react' ? 'React' : 'Vue')
-    ? name
-    : `${name}${framework === 'react' ? 'React' : 'Vue'}`;
+  const frameworkSuffix =
+    framework === 'react'
+      ? 'React'
+      : framework === 'vue'
+        ? 'Vue'
+        : framework === 'solid'
+          ? 'Solid'
+          : framework === 'svelte'
+            ? 'Svelte'
+            : 'WebComponents';
 
+  const displayName = name.endsWith(frameworkSuffix) ? name : `${name}${frameworkSuffix}`;
+
+  const frameworkExternals =
+    framework === 'react'
+      ? ['react', 'react-dom']
+      : framework === 'vue'
+        ? ['vue']
+        : framework === 'solid'
+          ? ['solid-js']
+          : framework === 'svelte'
+            ? ['svelte']
+            : [];
+
+  // `useEntryDts`/`declarationModule` are deliberate caller opt-outs (a
+  // synthesised entry declaration whose props types are re-imported from the
+  // shared neutral declarations, rather than each framework's own genuine
+  // types); every other build — react, vue, solid, svelte, web-components —
+  // gets its own native `.d.ts` from {@link jsxComponentsDtsPlugin}.
   const dtsPlugin =
     useEntryDts || declarationModule
       ? jsxComponentsEntryDtsPlugin({
@@ -113,6 +177,7 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
           generatedDir,
           outDir: path.resolve(rootDir, `dist/${framework}`),
           vueTscBin,
+          componentsModule: resolvedComponentsModule,
         });
 
   return defineLibraryConfig({
@@ -121,7 +186,7 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
     entry,
     preserveModules: true,
     preserveModulesRoot: path.join('node_modules/.cache', cacheName),
-    external: [...(framework === 'react' ? ['react', 'react-dom'] : ['vue']), ...external],
+    external: [...frameworkExternals, ...external],
     overrides: mergeConfig(
       {
         build: {
@@ -154,54 +219,56 @@ export function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions)
   const { rootDir, mode, name, entryModule, external = [], overrides } = options;
   const resolvedEntry = entryModule ?? path.resolve(rootDir, 'src/index.ts');
 
-  if (mode === 'react') {
-    const cacheName = `${path.basename(rootDir)}-react`;
+  if (mode === 'react' || mode === 'vue' || mode === 'solid' || mode === 'svelte' || mode === 'web-components') {
+    const framework = mode as JsxFramework;
+    const cacheName = `${path.basename(rootDir)}-${framework}`;
     const generatedDir = path.join(rootDir, 'node_modules/.cache', cacheName);
     const entry = generateHookLibrarySources({
-      framework: 'react',
+      framework,
       entryModule: resolvedEntry,
       outDir: generatedDir,
     });
-    return defineLibraryConfig({
-      rootDir,
-      name: name.endsWith('React') ? name : `${name}React`,
-      entry,
-      preserveModules: true,
-      preserveModulesRoot: path.join('node_modules/.cache', cacheName),
-      external,
-      overrides: mergeConfig(
-        {
-          build: { outDir: 'dist/react' },
-          plugins: [
-            reactJsxPlugin(),
-            hookLibraryDtsPlugin({ framework: 'react', generatedDir, outDir: path.resolve(rootDir, 'dist/react') }),
-          ],
-        },
-        overrides ?? {},
-      ),
-    });
-  }
+    const frameworkSuffix =
+      framework === 'react'
+        ? 'React'
+        : framework === 'vue'
+          ? 'Vue'
+          : framework === 'solid'
+            ? 'Solid'
+            : framework === 'svelte'
+              ? 'Svelte'
+              : 'WebComponents';
 
-  if (mode === 'vue') {
-    const cacheName = `${path.basename(rootDir)}-vue`;
-    const generatedDir = path.join(rootDir, 'node_modules/.cache', cacheName);
-    const entry = generateHookLibrarySources({
-      framework: 'vue',
-      entryModule: resolvedEntry,
-      outDir: generatedDir,
-    });
+    const frameworkExternals =
+      framework === 'react'
+        ? ['react', 'react-dom']
+        : framework === 'vue'
+          ? ['vue']
+          : framework === 'solid'
+            ? ['solid-js']
+            : framework === 'svelte'
+              ? ['svelte']
+              : [];
+
     return defineLibraryConfig({
       rootDir,
-      name: name.endsWith('Vue') ? name : `${name}Vue`,
+      name: name.endsWith(frameworkSuffix) ? name : `${name}${frameworkSuffix}`,
       entry,
       preserveModules: true,
       preserveModulesRoot: path.join('node_modules/.cache', cacheName),
-      external,
+      external: [...frameworkExternals, ...external],
       overrides: mergeConfig(
         {
-          build: { outDir: 'dist/vue' },
+          build: { outDir: `dist/${framework}` },
           plugins: [
-            hookLibraryDtsPlugin({ framework: 'vue', generatedDir, outDir: path.resolve(rootDir, 'dist/vue') }),
+            ...(framework === 'react'
+              ? [reactJsxPlugin()]
+              : framework === 'solid'
+                ? [solidPlugin()]
+                : framework === 'svelte'
+                  ? sveltePlugin()
+                  : []),
+            hookLibraryDtsPlugin({ framework, generatedDir, outDir: path.resolve(rootDir, `dist/${framework}`) }),
           ],
         },
         overrides ?? {},

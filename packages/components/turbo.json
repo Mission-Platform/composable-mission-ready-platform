@@ -7,6 +7,9 @@
         "build:check",
         "build:vue",
         "build:react",
+        "build:solid",
+        "build:svelte",
+        "build:web-components",
         "build:storyblok-vue",
         "build:storyblok-react",
         "build:types"

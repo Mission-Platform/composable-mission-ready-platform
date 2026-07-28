@@ -53,6 +53,9 @@
         "dist/**",
         "!dist/vue/**",
         "!dist/react/**",
+        "!dist/solid/**",
+        "!dist/svelte/**",
+        "!dist/web-components/**",
         "!dist/storyblok/**",
         "!dist/**/*.d.ts",
         "!dist/**/*.d.ts.map"
@@ -94,6 +97,42 @@
       ],
       "outputs": ["dist/react/**"]
     },
+    "build:solid": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": ["dist/solid/**"]
+    },
+    "build:svelte": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": ["dist/svelte/**"]
+    },
+    "build:web-components": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": ["dist/web-components/**"]
+    },
     "build:storyblok-vue": {
       "dependsOn": ["^build"],
       "inputs": [
@@ -133,6 +172,9 @@
         "dist/**/*.d.ts.map",
         "!dist/vue/**",
         "!dist/react/**",
+        "!dist/solid/**",
+        "!dist/svelte/**",
+        "!dist/web-components/**",
         "!dist/storyblok/**"
       ]
     },

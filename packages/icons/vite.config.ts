@@ -6,6 +6,9 @@ import {
   jsxComponentsCssImportPlugin,
   jsxComponentsEntryDtsPlugin,
   reactJsxPlugin,
+  solidJsxPlugin,
+  sveltePlugin,
+  type JsxFramework,
 } from '@mission-platform/vite-plugin-jsx';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { defineConfig, type Plugin, type UserConfig } from 'vite';
@@ -37,8 +40,8 @@ import { defineConfig, type Plugin, type UserConfig } from 'vite';
 const componentsModule = path.resolve(__dirname, 'src/components/index.ts');
 const cacheRoot = path.resolve(__dirname, 'node_modules/.cache');
 
-/** Build the per-framework library config (shared between the Vue and React modes). */
-function defineFrameworkConfig(framework: 'react' | 'vue'): UserConfig {
+/** Build the per-framework library config (shared between all framework modes). */
+function defineFrameworkConfig(framework: JsxFramework): UserConfig {
   const cacheName = `icons-${framework}`;
   const entry = generateFrameworkSources({
     framework,
@@ -46,16 +49,49 @@ function defineFrameworkConfig(framework: 'react' | 'vue'): UserConfig {
     outDir: path.join(cacheRoot, cacheName),
   });
 
-  const stagePlugins: Plugin[] = framework === 'react' ? [reactJsxPlugin()] : [vueJsx()];
+  const stagePlugins: Plugin[] =
+    framework === 'vue'
+      ? [vueJsx()]
+      : framework === 'react'
+        ? [reactJsxPlugin()]
+        : framework === 'solid'
+          ? solidJsxPlugin()
+          : framework === 'svelte'
+            ? sveltePlugin()
+            : [];
+
+  const frameworkSuffix =
+    framework === 'react'
+      ? 'React'
+      : framework === 'vue'
+        ? 'Vue'
+        : framework === 'solid'
+          ? 'Solid'
+          : framework === 'svelte'
+            ? 'Svelte'
+            : 'WebComponents';
+
+  const frameworkExternals =
+    framework === 'react'
+      ? ['react', 'react-dom']
+      : framework === 'vue'
+        ? ['vue']
+        : framework === 'solid'
+          ? ['solid-js']
+          : framework === 'svelte'
+            ? ['svelte']
+            : framework === 'web-components'
+              ? ['lit']
+              : [];
 
   return defineLibraryConfig({
     rootDir: __dirname,
-    name: framework === 'react' ? 'MissionPlatformIconsJsxReact' : 'MissionPlatformIconsJsxVue',
+    name: `MissionPlatformIconsJsx${frameworkSuffix}`,
     entry,
     // Each icon keeps its own JS chunk + CSS asset for tree shaking.
     preserveModules: true,
     preserveModulesRoot: path.join('node_modules/.cache', cacheName),
-    external: framework === 'react' ? ['react', 'react-dom'] : ['vue'],
+    external: frameworkExternals,
     overrides: {
       build: {
         // Per-framework subtree, so the identically-named chunks never collide.
@@ -81,6 +117,16 @@ function defineFrameworkConfig(framework: 'react' | 'vue'): UserConfig {
 }
 
 export default defineConfig(({ mode }): UserConfig => {
-  // Read --mode from the command line; default to the Vue build.
-  return defineFrameworkConfig(mode === 'react' ? 'react' : 'vue');
+  switch (mode) {
+    case 'react':
+    case 'vue':
+    case 'solid':
+    case 'svelte':
+    case 'web-components': {
+      return defineFrameworkConfig(mode);
+    }
+    default: {
+      return defineFrameworkConfig('vue');
+    }
+  }
 });

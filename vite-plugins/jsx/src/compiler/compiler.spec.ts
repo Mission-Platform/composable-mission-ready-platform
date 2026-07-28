@@ -2945,3 +2945,160 @@ describe('the compiler rewrites `i18next.t(...)` to `useI18n()` and `t(...)`', (
     expect(vue.code).toContain("t('required_label', { defaultValue: 'Required' })");
   });
 });
+
+// A JSX-returning component (unlike `IN_VIEW`, whose return is a raw `h(…)`
+// call and so never reaches the JSX → Svelte markup conversion at all) that
+// exercises `useState`/`useMemo`, a ternary, a `.map()`, and a click handler —
+// every construct the emitted `<template>`-equivalent markup must convert.
+const TOGGLE_PANEL = [
+  "import { h, useMemo, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface TogglePanelProperties extends MpProperties {',
+  '  items: string[];',
+  '}',
+  '',
+  'export function BaseTogglePanel(properties: TogglePanelProperties): MpElement {',
+  '  const { items } = properties;',
+  '  const [expanded, setExpanded] = useState(false);',
+  "  const label = useMemo(() => (expanded ? 'Hide' : 'Show'), [expanded]);",
+  '  return (',
+  '    <div className="toggle-panel">',
+  '      <button type="button" onClick={() => setExpanded(!expanded)}>{label}</button>',
+  '      {expanded ? (',
+  '        <ul className="toggle-panel__list">',
+  '          {items.map((item) => <li className="toggle-panel__item">{item}</li>)}',
+  '        </ul>',
+  '      ) : (',
+  '        <p className="toggle-panel__hint">Collapsed</p>',
+  '      )}',
+  '    </div>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the compiler emits Svelte 5 components with runes', () => {
+  const svelte = compileComponentModule(IN_VIEW, { framework: 'svelte', componentName: 'BaseInView' });
+  const panel = compileComponentModule(TOGGLE_PANEL, { framework: 'svelte', componentName: 'BaseTogglePanel' });
+
+  it('emits Svelte 5 SFC with script setup and $props / $state / $effect runes', () => {
+    expect(svelte.lang).toBe('svelte');
+    expect(svelte.code).not.toContain("@mission-platform/jsx");
+    expect(svelte.code).not.toContain('from "react"');
+    expect(svelte.code).toContain("<script");
+    expect(svelte.code).toContain("$props");
+    expect(svelte.code).toContain("$state");
+    expect(svelte.code).toContain("$effect");
+  });
+
+  it('converts the returned JSX to real Svelte markup: `{#if}`, `{#each}`, `{expr}`, and lowercase `onclick`', () => {
+    expect(panel.lang).toBe('svelte');
+    expect(panel.code).not.toContain('@mission-platform/jsx');
+    // Runes: the destructured prop, the `useState` pair, and the `useMemo` derivation.
+    expect(panel.code).toContain('$props()');
+    expect(panel.code).toContain('$state(false)');
+    expect(panel.code).toContain('$derived.by(');
+    // The ternary around a `<ul>` becomes a real `{#if}/{:else}` block, not a
+    // printed (JSX-laden) expression.
+    expect(panel.code).toMatch(/\{#if expanded\}[\s\S]*\{:else\}[\s\S]*\{\/if\}/);
+    // The (real) else branch renders its element; an `undefined`/empty branch
+    // would instead be dropped entirely (never emitted as a `{undefined}` text
+    // node, which Svelte rejects inside structural elements like `<table>`).
+    expect(panel.code).toContain('Collapsed');
+    expect(panel.code).not.toContain('{undefined}');
+    // `items.map(…)` becomes a real `{#each}` block.
+    expect(panel.code).toMatch(/\{#each items as item\}[\s\S]*\{\/each\}/);
+    // A plain expression hole and the lowercase Svelte 5 event-attribute form.
+    expect(panel.code).toContain('{label}');
+    expect(panel.code).toContain('onclick={');
+    // No raw JSX (the neutral `className=` spelling) survives anywhere — it is
+    // always aliased to the native Svelte/DOM `class=`.
+    expect(panel.code).not.toContain('className');
+    // The script block itself holds no JSX literal (a leaked ternary/`.map()`
+    // would otherwise print its `<tag>` markup right inside a script `{expr}`).
+    const scriptBodyStart = panel.code.indexOf('>', panel.code.indexOf('<script')) + 1;
+    const scriptOnly = panel.code.slice(scriptBodyStart, panel.code.indexOf('</script>'));
+    expect(scriptOnly).not.toMatch(/<[a-z][\s\S]*?\/?>/iu);
+  });
+});
+
+// A component whose render is a hyperscript `h(tag, props, ...children)` call
+// with a *dynamic* tag, plus an early `return` guard and a variadic `children`
+// normalisation — every construct the Svelte emitter must fold into markup
+// (rather than leak a bare `return`/`h(…)` into the `<script>`), modelled on
+// `base-typography`.
+const HYPERSCRIPT_TEXT = [
+  "import { classNames, h, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';",
+  '',
+  'export interface TextProperties extends MpProperties {',
+  '  as?: string;',
+  '  popup?: boolean;',
+  '}',
+  '',
+  'export function BaseText(properties: Readonly<TextProperties>): MpElement {',
+  "  const { as = 'span', popup = false } = properties;",
+  '  const [open, setOpen] = useState(false);',
+  '  const children = properties.children;',
+  '  const childList = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];',
+  "  const className = classNames('text');",
+  '  if (!popup) {',
+  '    return h(as, { class: className }, ...childList);',
+  '  }',
+  '  return (',
+  '    <span className="wrapper">',
+  '      {h(as, { class: className, onMouseenter: () => setOpen(true) }, ...childList)}',
+  '      {open ? <span role="tooltip">{childList}</span> : undefined}',
+  '    </span>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the compiler emits Svelte markup for hyperscript `h(…)` renders and early returns', () => {
+  const text = compileComponentModule(HYPERSCRIPT_TEXT, { framework: 'svelte', componentName: 'BaseText' });
+
+  it('folds `h(tag, …)`, the early return, and the `children` normalisation into valid markup', () => {
+    expect(text.lang).toBe('svelte');
+    // A dynamic-tag `h(tag, …)` render becomes `<svelte:element this={tag} …>`.
+    expect(text.code).toContain('<svelte:element this={as}');
+    // The variadic `childList` normalisation renders the `children` snippet.
+    expect(text.code).toContain('{@render children?.()}');
+    // The early `if (!popup) return h(…)` folds into an `{#if}/{:else}` chain.
+    expect(text.code).toMatch(/\{#if !popup\}[\s\S]*\{:else\}[\s\S]*\{\/if\}/);
+    // `h(…)` props map like JSX: `class` and the lowercase Svelte event form.
+    expect(text.code).toContain('class={className}');
+    expect(text.code).toContain('onmouseenter={');
+    // No bare `return` or `h(…)` call ever leaks into the `<script>` block.
+    const scriptStart = text.code.indexOf('>', text.code.indexOf('<script')) + 1;
+    const scriptOnly = text.code.slice(scriptStart, text.code.indexOf('</script>'));
+    expect(scriptOnly).not.toMatch(/\breturn\b/);
+    expect(scriptOnly).not.toMatch(/\bh\(/);
+  });
+});
+
+describe('the compiler emits SolidJS components with signals', () => {
+  const solid = compileComponentModule(IN_VIEW, { framework: 'solid', componentName: 'BaseInView' });
+
+  it('emits SolidJS TSX module mapping hooks to Solid primitives', () => {
+    expect(solid.lang).toBe('tsx');
+    expect(solid.code).not.toContain("@mission-platform/jsx");
+    expect(solid.code).not.toContain('from "react"');
+    expect(solid.code).toContain('from "solid-js"');
+    expect(solid.code).toContain("createSignal");
+    expect(solid.code).toContain("createEffect");
+  });
+});
+
+describe('the compiler emits Web Components custom elements', () => {
+  const wc = compileComponentModule(IN_VIEW, { framework: 'web-components', componentName: 'BaseInView' });
+
+  it('emits a LitElement subclass with an html`…` render() registered via customElements.define', () => {
+    // Lit templates are plain tagged-template TypeScript, so the module is `.ts`.
+    expect(wc.lang).toBe('ts');
+    expect(wc.code).not.toContain('@mission-platform/jsx');
+    expect(wc.code).not.toContain('from "react"');
+    expect(wc.code).toContain("import { LitElement, html, nothing } from 'lit';");
+    expect(wc.code).toContain('class BaseInViewElement extends LitElement');
+    expect(wc.code).toContain('render()');
+    expect(wc.code).toContain('return html`');
+    expect(wc.code).toContain("customElements.define('base-in-view', BaseInViewElement);");
+  });
+});

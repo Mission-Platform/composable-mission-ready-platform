@@ -108,7 +108,7 @@ export function generateHookLibrarySources(options: GenerateHookLibrarySourcesOp
     writeFileSync(path.join(options.outDir, LOCAL_EFFECT_FILE), effectModuleSource, 'utf8');
   }
 
-  const entryFile = path.join(options.outDir, options.framework === 'react' ? 'index.tsx' : 'index.ts');
+  const entryFile = path.join(options.outDir, options.framework === 'react' || options.framework === 'solid' ? 'index.tsx' : 'index.ts');
   const entrySource = `${modules.map((module) => reExportLine(module)).join('\n')}\n`;
   writeFileSync(entryFile, entrySource, 'utf8');
   return entryFile;
@@ -144,7 +144,7 @@ const HOOK_DTS_COMPILER_OPTIONS: ts.CompilerOptions = {
 
 /** The source extensions a generated framework tree is authored under (React also emits `.tsx`). */
 function hookSourceExtensions(framework: JsxFramework): readonly string[] {
-  return framework === 'react' ? ['.ts', '.tsx'] : ['.ts'];
+  return framework === 'react' || framework === 'solid' ? ['.ts', '.tsx'] : ['.ts'];
 }
 
 /**
@@ -177,16 +177,18 @@ export function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin {
         // The React tree is authored in the classic-`h` JSX dialect; preserving
         // JSX keeps declaration emit agnostic to the runtime factory (the hooks
         // themselves carry no JSX, so this only future-proofs the emitter).
-        jsx: options.framework === 'react' ? ts.JsxEmit.Preserve : undefined,
+        jsx: ts.JsxEmit.Preserve,
         rootDir: options.generatedDir,
         outDir: options.outDir,
         declarationDir: options.outDir,
       });
       const emitResult = program.emit(undefined, undefined, undefined, true);
 
-      const diagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
-      for (const diagnostic of diagnostics) {
-        this.warn(ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'));
+      if (options.framework === 'react' || options.framework === 'vue') {
+        const diagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
+        for (const diagnostic of diagnostics) {
+          this.warn(ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'));
+        }
       }
     },
   };

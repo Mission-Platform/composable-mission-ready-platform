@@ -7,6 +7,9 @@ import {
   jsxComponentsCssImportPlugin,
   jsxComponentsDtsPlugin,
   reactJsxPlugin,
+  solidJsxPlugin,
+  sveltePlugin,
+  type JsxFramework,
 } from '@mission-platform/vite-plugin-jsx';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { defineConfig, type Plugin, type UserConfig } from 'vite';
@@ -95,8 +98,8 @@ function defineScannerConfig(): UserConfig {
   });
 }
 
-/** The per-framework `BaseCodeScanner` component build (`dist/react` / `dist/vue`). */
-function defineFrameworkConfig(framework: 'react' | 'vue'): UserConfig {
+/** The per-framework `BaseCodeScanner` component build (`dist/react`, `dist/vue`, `dist/solid`, `dist/svelte`, `dist/web-components`). */
+function defineFrameworkConfig(framework: JsxFramework): UserConfig {
   const cacheName = `code-scanner-${framework}`;
   const generatedDir = path.join(cacheRoot, cacheName);
   const entry = generateFrameworkSources({
@@ -105,11 +108,44 @@ function defineFrameworkConfig(framework: 'react' | 'vue'): UserConfig {
     outDir: generatedDir,
   });
 
-  const stagePlugins: Plugin[] = framework === 'react' ? [reactJsxPlugin()] : [vueJsx()];
+  const stagePlugins: Plugin[] =
+    framework === 'vue'
+      ? [vueJsx()]
+      : framework === 'react'
+        ? [reactJsxPlugin()]
+        : framework === 'solid'
+          ? solidJsxPlugin()
+          : framework === 'svelte'
+            ? sveltePlugin()
+            : [];
+
+  const frameworkSuffix =
+    framework === 'react'
+      ? 'React'
+      : framework === 'vue'
+        ? 'Vue'
+        : framework === 'solid'
+          ? 'Solid'
+          : framework === 'svelte'
+            ? 'Svelte'
+            : 'WebComponents';
+
+  const frameworkExternals =
+    framework === 'react'
+      ? ['react', 'react-dom']
+      : framework === 'vue'
+        ? ['vue']
+        : framework === 'solid'
+          ? ['solid-js']
+          : framework === 'svelte'
+            ? ['svelte']
+            : framework === 'web-components'
+              ? ['lit']
+              : [];
 
   return defineLibraryConfig({
     rootDir: __dirname,
-    name: framework === 'react' ? 'MissionPlatformCodeScannerReact' : 'MissionPlatformCodeScannerVue',
+    name: `MissionPlatformCodeScanner${frameworkSuffix}`,
     entry,
     // Each component keeps its own JS chunk + CSS asset for tree shaking.
     preserveModules: true,
@@ -117,7 +153,7 @@ function defineFrameworkConfig(framework: 'react' | 'vue'): UserConfig {
     // The scanner façade is consumed through the package's own `.` entry, kept
     // external so the shipped component references it rather than re-inlining the
     // wasm.
-    external: [...(framework === 'react' ? ['react', 'react-dom'] : ['vue']), '@mission-platform/code-scanner'],
+    external: [...frameworkExternals, '@mission-platform/code-scanner'],
     overrides: {
       build: {
         // Per-framework subtree, so the identically-named chunks never collide.
@@ -137,6 +173,7 @@ function defineFrameworkConfig(framework: 'react' | 'vue'): UserConfig {
           generatedDir,
           outDir: path.resolve(__dirname, `dist/${framework}`),
           vueTscBin,
+          componentsModule,
         }),
       ],
     },
@@ -145,11 +182,12 @@ function defineFrameworkConfig(framework: 'react' | 'vue'): UserConfig {
 
 export default defineConfig(({ mode }): UserConfig => {
   switch (mode) {
-    case 'react': {
-      return defineFrameworkConfig('react');
-    }
-    case 'vue': {
-      return defineFrameworkConfig('vue');
+    case 'react':
+    case 'vue':
+    case 'solid':
+    case 'svelte':
+    case 'web-components': {
+      return defineFrameworkConfig(mode);
     }
     default: {
       return defineScannerConfig();

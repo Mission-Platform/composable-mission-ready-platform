@@ -74,6 +74,7 @@ export function BaseMapLibre(properties: Readonly<MapLibreProperties>): MpElemen
 
   const containerReference = useRef<HTMLDivElement | null>(null);
   const mapReference = useRef<Map | undefined>(undefined);
+  // eslint-disable-next-line unicorn/no-useless-undefined
   const [map, setMap] = useState<Map | undefined>(undefined);
 
   useEffect(() => {

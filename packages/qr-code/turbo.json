@@ -10,6 +10,9 @@
         "build:bundle",
         "build:vue",
         "build:react",
+        "build:solid",
+        "build:svelte",
+        "build:web-components",
         "build:types"
       ]
     },
@@ -62,6 +65,15 @@
       "dependsOn": ["^build", "build:bundle", "build:types"]
     },
     "build:react": {
+      "dependsOn": ["^build", "build:bundle", "build:types"]
+    },
+    "build:solid": {
+      "dependsOn": ["^build", "build:bundle", "build:types"]
+    },
+    "build:svelte": {
+      "dependsOn": ["^build", "build:bundle", "build:types"]
+    },
+    "build:web-components": {
       "dependsOn": ["^build", "build:bundle", "build:types"]
     },
     "test:wasm": {

@@ -15,6 +15,8 @@
  */
 import ts from 'typescript';
 
+import type { JsxFramework } from './compile.js';
+
 /** The neutral package the components import their primitives from. */
 export const NEUTRAL_MODULE = '@mission-platform/jsx';
 
@@ -192,7 +194,72 @@ export const LOCAL_JSX_TYPES_FILE = 'mp-jsx-types.ts';
  * the "renderable content" position is React's `ReactNode` and Vue's
  * `VNodeChild`, so each build's declarations read idiomatically for its runtime.
  */
-export function localJsxTypesModuleSource(framework: 'react' | 'vue'): string {
+export function localJsxTypesModuleSource(framework: JsxFramework): string {
+  if (framework === 'solid') {
+    return [
+      '/**',
+      ' * Framework-specific variants of the neutral `@mission-platform/jsx` render/props',
+      ' * primitives, generated for the solid build so the compiled components',
+      ' * carry no neutral-package type import (see `LOCAL_JSX_TYPE_NAMES`).',
+      ' */',
+      "import type { JSX } from 'solid-js';",
+      '',
+      '/** The bag of attributes/props a component accepts — the solid variant of the neutral `MpProperties`. */',
+      'export type MpProperties = {',
+      '  [key: string]: unknown;',
+      '  children?: JSX.Element;',
+      '  slot?: string;',
+      '};',
+      '',
+      '/** A scoped-slot / render-prop function — the solid variant of the neutral `MpRenderProperty`. */',
+      'export type MpRenderProperty<S = MpProperties> = (scope: S) => JSX.Element;',
+      '',
+      '/** Anything that may render as a child — the solid variant of the neutral `MpChild`. */',
+      'export type MpChild = JSX.Element;',
+      '',
+      '/** A node in the rendered tree — the solid variant of the neutral `MpElement`. */',
+      'export type MpElement = JSX.Element;',
+      '',
+    ].join('\n');
+  }
+  if (framework === 'svelte') {
+    return [
+      '/**',
+      ' * Framework-specific variants of the neutral `@mission-platform/jsx` render/props',
+      ' * primitives, generated for the svelte build so the compiled components',
+      ' * carry no neutral-package type import (see `LOCAL_JSX_TYPE_NAMES`).',
+      ' */',
+      'export type MpProperties = {',
+      '  [key: string]: unknown;',
+      '  children?: any;',
+      '  slot?: string;',
+      '};',
+      '',
+      'export type MpRenderProperty<S = MpProperties> = (scope: S) => any;',
+      'export type MpChild = any;',
+      'export type MpElement = any;',
+      '',
+    ].join('\n');
+  }
+  if (framework === 'web-components') {
+    return [
+      '/**',
+      ' * Framework-specific variants of the neutral `@mission-platform/jsx` render/props',
+      ' * primitives, generated for the web-components build so the compiled components',
+      ' * carry no neutral-package type import (see `LOCAL_JSX_TYPE_NAMES`).',
+      ' */',
+      'export type MpProperties = {',
+      '  [key: string]: unknown;',
+      '  children?: any;',
+      '  slot?: string;',
+      '};',
+      '',
+      'export type MpRenderProperty<S = MpProperties> = (scope: S) => any;',
+      'export type MpChild = any;',
+      'export type MpElement = any;',
+      '',
+    ].join('\n');
+  }
   const renderable = framework === 'react' ? 'ReactNode' : 'VNodeChild';
   const imported =
     framework === 'react' ? "import type { ReactNode } from 'react';" : "import type { VNode, VNodeChild } from 'vue';";
@@ -259,8 +326,8 @@ export const LOCAL_EFFECT_FILE = 'mp-effect.ts';
  * verbatim (React's native form), so for `framework === 'react'` this returns an
  * empty string and the writer skips it.
  */
-export function localEffectModuleSource(framework: 'react' | 'vue'): string {
-  if (framework === 'react') {
+export function localEffectModuleSource(framework: JsxFramework): string {
+  if (framework !== 'vue') {
     return '';
   }
   return [
@@ -314,7 +381,7 @@ export const VUE_ADAPTER_MODULE = '@mission-platform/jsx/vue';
 export const ICONS_JSX_MODULE = '@mission-platform/icons';
 
 /** The per-framework subpath the compiled `@mission-platform/icons` icons are imported from. */
-export function iconsJsxFrameworkModule(framework: 'react' | 'vue'): string {
+export function iconsJsxFrameworkModule(framework: JsxFramework): string {
   return `${ICONS_JSX_MODULE}/${framework}`;
 }
 
@@ -347,7 +414,7 @@ export const COMPONENTS_JSX_MODULES = [
  * `@mission-platform/components/base-drawer`). Each is remapped to the matching
  * `…/<framework>` entry; an already-framework subpath is left untouched.
  */
-export function frameworkSplitModule(specifier: string, framework: 'react' | 'vue'): string | undefined {
+export function frameworkSplitModule(specifier: string, framework: JsxFramework): string | undefined {
   if (specifier === ICONS_JSX_MODULE) {
     return iconsJsxFrameworkModule(framework);
   }
@@ -429,7 +496,7 @@ export function readFrameworkDirective(sourceFile: ts.SourceFile): 'react' | 'vu
  * (no `"use <framework>"` directive) is emitted for every target; a gated module
  * is emitted **only** for the framework its directive names.
  */
-export function moduleTargetsFramework(sourceFile: ts.SourceFile, framework: 'react' | 'vue'): boolean {
+export function moduleTargetsFramework(sourceFile: ts.SourceFile, framework: JsxFramework): boolean {
   const directive = readFrameworkDirective(sourceFile);
   return directive === undefined || directive === framework;
 }

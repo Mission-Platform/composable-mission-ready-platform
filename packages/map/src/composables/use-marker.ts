@@ -30,6 +30,7 @@ export interface UseMarkerReturn {
  */
 export function useMarker(map: Map | undefined, options: UseMarkerOptions): UseMarkerReturn {
   const { lngLat, onDragend, ...markerOptions } = options;
+  // eslint-disable-next-line unicorn/no-useless-undefined
   const [marker, setMarker] = useState<Marker | undefined>(undefined);
   const markerReference = useRef<Marker | undefined>(undefined);
 

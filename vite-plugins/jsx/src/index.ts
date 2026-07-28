@@ -56,6 +56,8 @@ export {
   defineJsxLibraryConfig,
   defineJsxStoryblokLibraryConfig,
   reactJsxPlugin,
+  solidJsxPlugin,
+  sveltePlugin,
   type JsxHookLibraryConfigOptions,
   type JsxLibraryConfigOptions,
   type JsxStoryblokLibraryConfigOptions,
@@ -64,11 +66,21 @@ export {
 export {
   compileComponentModule,
   compileHookModule,
+  compileToSolid,
+  compileToSvelte,
+  compileToWebComponent,
   type CompiledModule,
   type CompileHookOptions,
   type CompileOptions,
   type JsxFramework,
 } from './compiler/compile.js';
+
+// eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
+export { emitSvelteModule } from './generators/svelte/index.js';
+// eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
+export { emitSolidModule } from './generators/solid/index.js';
+// eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
+export { emitWebComponentModule } from './generators/web-components/index.js';
 
 export {
   analyzeStoryblokComponent,

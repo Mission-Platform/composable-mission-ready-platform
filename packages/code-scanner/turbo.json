@@ -3,7 +3,17 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["build:wasm:scan", "build:check", "build:bundle", "build:vue", "build:react", "build:types"]
+      "dependsOn": [
+        "build:wasm:scan",
+        "build:check",
+        "build:bundle",
+        "build:vue",
+        "build:react",
+        "build:solid",
+        "build:svelte",
+        "build:web-components",
+        "build:types"
+      ]
     },
     "build:wasm:scan": {
       "command": [
@@ -37,6 +47,15 @@
       "dependsOn": ["^build", "build:bundle", "build:types"]
     },
     "build:react": {
+      "dependsOn": ["^build", "build:bundle", "build:types"]
+    },
+    "build:solid": {
+      "dependsOn": ["^build", "build:bundle", "build:types"]
+    },
+    "build:svelte": {
+      "dependsOn": ["^build", "build:bundle", "build:types"]
+    },
+    "build:web-components": {
       "dependsOn": ["^build", "build:bundle", "build:types"]
     },
     "test:wasm": {

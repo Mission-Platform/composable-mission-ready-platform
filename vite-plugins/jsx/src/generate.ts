@@ -15,8 +15,10 @@
  */
 import { execFileSync } from 'node:child_process';
 import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 
+import { emitDts } from 'svelte2tsx';
 import ts from 'typescript';
 
 import {
@@ -73,9 +75,16 @@ function helperReExportLine(helper: DiscoveredHelperExport): string {
  * name; Vue re-exports the SFC's `default` export.
  */
 function componentReExportLine(framework: JsxFramework, component: DiscoveredComponent, as: string): string {
-  return framework === 'react'
-    ? `export { ${component.neutralName} as ${as} } from './${component.folder}';`
-    : `export { default as ${as} } from './${component.folder}.vue';`;
+  if (framework === 'vue') {
+    return `export { default as ${as} } from './${component.folder}.vue';`;
+  }
+  if (framework === 'svelte') {
+    return `export { default as ${as} } from './${component.folder}.svelte';`;
+  }
+  if (framework === 'web-components') {
+    return `export { ${component.neutralName}Element as ${as} } from './${component.folder}';`;
+  }
+  return `export { ${component.neutralName} as ${as} } from './${component.folder}';`;
 }
 
 /**
@@ -114,7 +123,8 @@ const defaultTypeOriginResolver: TypeOriginResolver = (folder) => ({ base: folde
  * false`) is a plain `.ts` re-exported without the `.vue` suffix.
  */
 function componentTypesReExportLine(framework: JsxFramework, origin: TypeOrigin, types: readonly string[]): string {
-  const specifier = framework === 'react' || !origin.isComponent ? `./${origin.base}` : `./${origin.base}.vue`;
+  const ext = framework === 'vue' ? '.vue' : framework === 'svelte' ? '.svelte' : '';
+  const specifier = origin.isComponent ? `./${origin.base}${ext}` : `./${origin.base}`;
   const names = types.map((type) => `type ${type}`).join(', ');
   return `export { ${names} } from '${specifier}';`;
 }
@@ -270,7 +280,13 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
       const compiled = compileHookModule(source, { framework: options.framework, fileName: sourcePath });
       writeFileSync(path.join(options.outDir, `${base}.${compiled.lang}`), compiled.code, 'utf8');
     } else {
-      copyFileSync(sourcePath, path.join(options.outDir, path.basename(sourcePath)));
+      let helperCode = source;
+      helperCode = helperCode.replace(/from\s+["'](\.\.?\/[^"']+)["'];?/g, (match, specifier: string) => {
+        const segments = specifier.split('/').filter((s: string) => s !== '.' && s !== '..' && s.length > 0);
+        const flatSpecifier = `./${segments.at(-1) ?? specifier}`;
+        return match.replace(specifier, flatSpecifier);
+      });
+      writeFileSync(path.join(options.outDir, path.basename(sourcePath)), helperCode, 'utf8');
     }
 
     // Record the helper's exported types so companion types declared there
@@ -433,6 +449,9 @@ interface AnalyzedBlok {
 const BLOK_DECLARATION = {
   react: { componentType: 'FunctionComponent', frameworkImport: 'react', storyblokImport: '@storyblok/react' },
   vue: { componentType: 'DefineComponent', frameworkImport: 'vue', storyblokImport: '@storyblok/vue' },
+  svelte: { componentType: 'any', frameworkImport: 'svelte', storyblokImport: '@storyblok/svelte' },
+  solid: { componentType: 'Component', frameworkImport: 'solid-js', storyblokImport: '@storyblok/solid' },
+  'web-components': { componentType: 'any', frameworkImport: 'ts', storyblokImport: '@storyblok/js' },
 } as const;
 
 /**
@@ -658,11 +677,32 @@ function generateEntryDeclaration(
   components: readonly DiscoveredComponent[],
   helpers: readonly DiscoveredHelperExport[] = [],
 ): string {
-  const componentType = framework === 'react' ? 'FunctionComponent' : 'DefineComponent';
-  const frameworkImport = framework === 'react' ? 'react' : 'vue';
+  const componentType =
+    framework === 'react'
+      ? 'FunctionComponent'
+      : framework === 'vue'
+        ? 'DefineComponent'
+        : framework === 'solid'
+          ? 'Component'
+          : framework === 'svelte'
+            ? 'Component'
+            : 'CustomElementConstructor';
+  const frameworkImport =
+    framework === 'react'
+      ? 'react'
+      : framework === 'vue'
+        ? 'vue'
+        : framework === 'solid'
+          ? 'solid-js'
+          : framework === 'svelte'
+            ? 'svelte'
+            : '';
 
   const propertyTypes = [...new Set(components.map((component) => component.propertiesType).filter(Boolean))];
-  const lines: string[] = [`import type { ${componentType} } from ${JSON.stringify(frameworkImport)};`];
+  const lines: string[] = [];
+  if (frameworkImport.length > 0) {
+    lines.push(`import type { ${componentType} } from ${JSON.stringify(frameworkImport)};`);
+  }
   if (propertyTypes.length > 0) {
     lines.push(`import type { ${propertyTypes.join(', ')} } from ${JSON.stringify(declarationModule)};`);
   }
@@ -723,18 +763,28 @@ export interface JsxComponentsDtsOptions {
   framework: JsxFramework;
   /**
    * Absolute path of the generated per-framework source tree (the `outDir`
-   * handed to {@link generateFrameworkSources}): React `.tsx` modules, or Vue
-   * `.vue` SFCs, plus their shared helper `.ts` modules and the entry.
+   * handed to {@link generateFrameworkSources}): React/Solid `.tsx` modules,
+   * Vue/Svelte SFCs (`.vue` / `.svelte`), or Web-Components `.ts` modules,
+   * plus their shared helper `.ts` modules and the entry.
    */
   generatedDir: string;
-  /** Absolute path of the directory the emitted `.d.ts` files are written to (e.g. `dist/react`, `dist/vue`). */
+  /**
+   * Absolute path of the directory the emitted `.d.ts` files are written to
+   * (e.g. `dist/react`, `dist/vue`, `dist/solid`, `dist/svelte`, `dist/web-components`).
+   */
   outDir: string;
   /**
    * Absolute path of the `vue-tsc` CLI (`vue-tsc/bin/vue-tsc.js`), used to emit
    * declarations for the Vue `.vue` tree. **Required** when `framework` is
-   * `'vue'` (plain `tsc` cannot read single-file components); ignored for React.
+   * `'vue'` (plain `tsc` cannot read single-file components); ignored otherwise.
    */
   vueTscBin?: string;
+  /**
+   * Path to the neutral components barrel module. Used by the Svelte path to
+   * synthesise a fallback `index.d.ts` (via {@link generateEntryDeclaration})
+   * when `svelte2tsx`'s `emitDts` does not leave a usable one behind.
+   */
+  componentsModule?: string;
 }
 
 /**
@@ -748,6 +798,7 @@ const CSS_MODULE_SHIM = [
   "declare module '*.module.css' { const classes: Record<string, string>; export default classes; }",
   "declare module '*.scss' { const classes: Record<string, string>; export default classes; }",
   "declare module '*.css' { const classes: Record<string, string>; export default classes; }",
+  "declare module '*.svelte' { const component: any; export default component; }",
   '',
 ].join('\n');
 
@@ -813,10 +864,22 @@ function isBodyLevelDiagnostic(diagnostic: ts.Diagnostic): boolean {
   return false;
 }
 
-/** Emit React declarations for the generated `.tsx` tree in-process with the TypeScript compiler API. */
-function emitReactComponentDeclarations(
+/**
+ * Emit declarations for a generated `.ts`/`.tsx` tree in-process with the
+ * TypeScript compiler API, writing the CSS-module shim first so co-located
+ * style imports resolve. Shared by every in-process toolchain (React, Solid,
+ * Web-Components): each passes the `compilerOverrides` its own JSX dialect
+ * needs — React relies on the base options' `jsx: preserve` as-is, Solid
+ * additionally points the JSX namespace at `solid-js`, and Web-Components
+ * needs no override at all (its generated tree is plain Lit `.ts`, no JSX).
+ * Diagnostics rooted in a function body are filtered by {@link
+ * isBodyLevelDiagnostic} (they never reach the body-elided `.d.ts`); genuine,
+ * declaration-affecting diagnostics surface as build warnings.
+ */
+function emitTscComponentDeclarations(
   this: { warn: (message: string) => void },
   options: JsxComponentsDtsOptions,
+  compilerOverrides: ts.CompilerOptions = {},
 ): void {
   const shimPath = path.join(options.generatedDir, CSS_MODULE_SHIM_FILE);
   writeFileSync(shimPath, CSS_MODULE_SHIM, 'utf8');
@@ -827,6 +890,7 @@ function emitReactComponentDeclarations(
 
   const program = ts.createProgram([...rootNames, shimPath], {
     ...COMPONENT_DTS_COMPILER_OPTIONS,
+    ...compilerOverrides,
     rootDir: options.generatedDir,
     outDir: options.outDir,
     declarationDir: options.outDir,
@@ -836,14 +900,58 @@ function emitReactComponentDeclarations(
   const diagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
   for (const diagnostic of diagnostics) {
     // Skip diagnostics rooted in a function body: they are the neutral tree's
-    // JSX bodies checked against React's stricter JSX types and never reach the
-    // emitted (body-elided) `.d.ts`. Genuine, declaration-affecting diagnostics
-    // (duplicate exports, unresolved imports, non-portable signatures) remain.
+    // JSX bodies checked against the framework's stricter JSX types and never
+    // reach the emitted (body-elided) `.d.ts`. Genuine, declaration-affecting
+    // diagnostics (duplicate exports, unresolved imports, non-portable
+    // signatures) remain.
     if (isBodyLevelDiagnostic(diagnostic)) {
       continue;
     }
     this.warn(ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'));
   }
+}
+
+/** Emit React declarations for the generated `.tsx` tree in-process with the TypeScript compiler API. */
+function emitReactComponentDeclarations(
+  this: { warn: (message: string) => void },
+  options: JsxComponentsDtsOptions,
+): void {
+  emitTscComponentDeclarations.call(this, options);
+}
+
+/**
+ * Emit Solid declarations for the generated `.tsx` tree in-process with the
+ * TypeScript compiler API. The Solid emitter renders genuine Solid JSX
+ * (`<div onClick={…}>`, no synthetic event system), so the JSX namespace must
+ * resolve against `solid-js` (`jsxImportSource: 'solid-js'`) rather than the
+ * base options' implicit `JSX` global — otherwise every element is reported
+ * untyped. Body-level JSX diagnostics are filtered exactly as for React; the
+ * generated `index.tsx` entry yields `index.d.ts`.
+ */
+function emitSolidComponentDeclarations(
+  this: { warn: (message: string) => void },
+  options: JsxComponentsDtsOptions,
+): void {
+  emitTscComponentDeclarations.call(this, options, {
+    jsx: ts.JsxEmit.Preserve,
+    jsxImportSource: 'solid-js',
+  });
+}
+
+/**
+ * Emit Web-Components declarations for the generated `.ts` tree in-process
+ * with the TypeScript compiler API. The generated tree carries no JSX at all
+ * (each component is a Lit `LitElement` subclass authored in plain `.ts`), so
+ * the shared toolchain needs no compiler overrides — it is the same emitter
+ * React uses, run over a tree that happens to be JSX-free. The generated
+ * `index.ts` entry re-exports each `<Neutral>Element` class, so `tsc` emits
+ * `index.d.ts` from it.
+ */
+function emitWebComponentsComponentDeclarations(
+  this: { warn: (message: string) => void },
+  options: JsxComponentsDtsOptions,
+): void {
+  emitTscComponentDeclarations.call(this, options);
 }
 
 /**
@@ -913,6 +1021,136 @@ function emitVueComponentDeclarations(
 }
 
 /**
+ * Whether `svelte2tsx`'s `emitDts` output in `outDir` is actually usable.
+ *
+ * `emitDts` writes a `.svelte.d.ts` sidecar per component that types the
+ * default export as `Component<XxxProperties, …>`, where `XxxProperties` is
+ * the props interface the component itself declares (via `export interface`)
+ * inside its (non-`module`) `<script lang="ts">` block. In practice `emitDts`
+ * reliably *references* that type name in the sidecar without ever
+ * *declaring or importing* it there — every such sidecar ships a dangling
+ * `Component<XxxProperties, …>` that fails with `TS2304: Cannot find name
+ * 'XxxProperties'` for any real consumer. This is checked directly (does the
+ * identifier fed to `Component<…>` appear anywhere else — as a declaration or
+ * an import — in the same file?) rather than assumed, so a future
+ * `svelte2tsx` fix is picked up automatically instead of a permanent bypass.
+ */
+function svelteDtsOutputIsUsable(outDir: string): boolean {
+  const indexDtsPath = path.join(outDir, 'index.d.ts');
+  if (!existsSync(indexDtsPath) || readFileSync(indexDtsPath, 'utf8').trim().length === 0) {
+    return false;
+  }
+  const sidecarFiles = readdirSync(outDir).filter((file) => file.endsWith('.svelte.d.ts'));
+  if (sidecarFiles.length === 0) {
+    return false;
+  }
+  return sidecarFiles.every((file) => {
+    const content = readFileSync(path.join(outDir, file), 'utf8');
+    const propsTypeMatch = /\bComponent<(\w+)/.exec(content);
+    if (propsTypeMatch === null) {
+      return true;
+    }
+    const propsType = propsTypeMatch[1];
+    const isDeclared = new RegExp(`\\b(?:interface|type|class)\\s+${propsType}\\b`).test(content);
+    const isImported = new RegExp(`\\bimport\\b[^;]*[{,]\\s*(?:type\\s+)?${propsType}\\b`).test(content);
+    return isDeclared || isImported;
+  });
+}
+
+/**
+ * Emit Svelte declarations for the generated `.svelte` + `.ts` tree using
+ * `svelte2tsx`'s async `emitDts`, the Svelte-language-tools' own SFC-aware
+ * declaration emitter (the `.svelte` counterpart of `vue-tsc`'s emit above):
+ * it converts each SFC to virtual TSX, type-checks the whole tree, and writes
+ * a `.svelte.d.ts` sidecar per component plus `index.d.ts` from the generated
+ * `index.ts` entry.
+ *
+ * Unlike `vue-tsc`, `emitDts` takes no compiler options directly — it searches
+ * for a tsconfig at `libRoot` (the generated tree) — so one is written there
+ * first, mirroring the Vue tsconfig's shape. The CSS-module shim is written
+ * beforehand for the same reason the React/Vue paths write it: so `import
+ * styles from './x.module.scss'` resolves.
+ *
+ * `emitDts` can throw rather than cleanly surface diagnostics the way the
+ * other toolchains do here, so any error is caught and surfaced as a warning
+ * instead of failing the build. The output is then verified with {@link
+ * svelteDtsOutputIsUsable}: as of the `svelte2tsx` version this plugin
+ * currently depends on, every emitted `.svelte.d.ts` sidecar ships a dangling
+ * `Component<XxxProperties, …>` reference the file never declares or imports
+ * (`XxxProperties` is the component's own props interface, declared in its
+ * `<script>` block — `emitDts` does not surface it in the sidecar), which
+ * breaks for real consumers with `TS2304: Cannot find name`. Until that is
+ * fixed upstream, this **falls back to the synthesised entry declaration**
+ * ({@link generateEntryDeclaration}) for Svelte, which re-exports each
+ * component's props type from the neutral tree's own (already-valid) `tsc`
+ * declarations instead of from the broken `.svelte.d.ts` sidecars, so the
+ * Svelte build always ships a valid `index.d.ts`.
+ */
+async function emitSvelteComponentDeclarations(
+  this: { warn: (message: string) => void },
+  options: JsxComponentsDtsOptions,
+): Promise<void> {
+  writeFileSync(path.join(options.generatedDir, CSS_MODULE_SHIM_FILE), CSS_MODULE_SHIM, 'utf8');
+
+  const tsconfig = {
+    compilerOptions: {
+      module: 'esnext',
+      moduleResolution: 'bundler',
+      target: 'es2023',
+      lib: ['es2023', 'dom', 'dom.iterable'],
+      skipLibCheck: true,
+      strict: true,
+      declaration: true,
+      emitDeclarationOnly: true,
+      noEmitOnError: false,
+      types: [],
+      rootDir: '.',
+      declarationDir: options.outDir,
+    },
+    include: ['**/*.ts', '**/*.svelte'],
+  };
+  const tsconfigFileName = 'tsconfig.dts.json';
+  writeFileSync(path.join(options.generatedDir, tsconfigFileName), JSON.stringify(tsconfig, undefined, 2), 'utf8');
+
+  try {
+    await emitDts({
+      declarationDir: options.outDir,
+      svelteShimsPath: createRequire(import.meta.url).resolve('svelte2tsx/svelte-shims-v4.d.ts'),
+      libRoot: options.generatedDir,
+      tsconfig: tsconfigFileName,
+    });
+  } catch (error) {
+    this.warn(error instanceof Error ? error.message : String(error));
+  }
+
+  if (svelteDtsOutputIsUsable(options.outDir)) {
+    return;
+  }
+  this.warn(
+    "jsxComponentsDtsPlugin: svelte2tsx's emitDts did not produce usable declarations " +
+      '(dangling props-type references in the generated .svelte.d.ts sidecars); ' +
+      'falling back to the synthesised entry declaration for the Svelte build.',
+  );
+  // Discard whatever broken sidecars `emitDts` left behind (they are unused by
+  // the synthesised entry declaration below and would otherwise ship dead,
+  // dangling `.d.ts` files alongside the real, valid `index.d.ts`).
+  if (existsSync(options.outDir)) {
+    for (const file of readdirSync(options.outDir).filter((entry) => entry.endsWith('.d.ts'))) {
+      rmSync(path.join(options.outDir, file));
+    }
+  }
+  if (options.componentsModule === undefined) {
+    return;
+  }
+  const barrelSource = readFileSync(options.componentsModule, 'utf8');
+  const components = discoverComponents(barrelSource, 'Base');
+  const helpers = discoverHelperExports(barrelSource, new Set(components.map((c) => c.folder)));
+  const dtsContent = generateEntryDeclaration(options.framework, '../components', components, helpers);
+  mkdirSync(options.outDir, { recursive: true });
+  writeFileSync(path.join(options.outDir, 'index.d.ts'), dtsContent, 'utf8');
+}
+
+/**
  * A post-build Vite plugin that emits **genuine, per-framework** declarations
  * for a neutral components package's generated source tree.
  *
@@ -920,10 +1158,10 @@ function emitVueComponentDeclarations(
  * Stage-2 bundler) produces JS but no declarations, since the generated tree is
  * not a `tsc`-visible source file. Rather than synthesise a single entry
  * declaration whose props types are re-imported from the **shared neutral**
- * declarations (so React and Vue consumers would both see `MpChild` / `MpRef`),
- * this plugin runs the framework's own declaration toolchain over the generated
- * tree in `closeBundle` and writes the resulting `.d.ts` files into the build's
- * own `outDir`:
+ * declarations (so every framework's consumers would see the same `MpChild` /
+ * `MpRef`), this plugin runs each framework's own declaration toolchain over
+ * the generated tree in `closeBundle` and writes the resulting `.d.ts` files
+ * into the build's own `outDir`:
  *
  * - **React** — the TypeScript compiler API over the `.tsx` tree, in-process.
  *   Because the React emitter already rewrites the neutral render/hook types to
@@ -933,6 +1171,19 @@ function emitVueComponentDeclarations(
  * - **Vue** — the `vue-tsc` CLI over the `.vue` tree, which emits each SFC's
  *   precise `DefineComponent` (props, slots, emits) plus its `.vue.d.ts`
  *   sidecar.
+ * - **Solid** — the same in-process TypeScript compiler API as React, over the
+ *   generated `.tsx` tree, but with the JSX namespace pointed at `solid-js` so
+ *   the Solid-flavoured JSX the emitter renders resolves against Solid's own
+ *   `JSX.Element` vocabulary.
+ * - **Web-Components** — the same in-process TypeScript compiler API, over the
+ *   generated (JSX-free) `.ts` tree of `LitElement` subclasses.
+ * - **Svelte** — attempts `svelte2tsx`'s async `emitDts` over the generated
+ *   `.svelte` + `.ts` tree first (the SFC-aware declaration emitter from the
+ *   Svelte language tools), but as of the currently depended-on `svelte2tsx`
+ *   version its per-component `.svelte.d.ts` sidecars ship a dangling
+ *   props-type reference they never declare or import (see {@link
+ *   svelteDtsOutputIsUsable}), so this currently always falls back to the
+ *   synthesised entry declaration for a valid `index.d.ts`.
  *
  * Type diagnostics are surfaced as build warnings rather than failures so a
  * `.d.ts` is always produced (mirroring {@link hookLibraryDtsPlugin}).
@@ -940,11 +1191,24 @@ function emitVueComponentDeclarations(
 export function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin {
   return {
     name: '@mission-platform/vite-plugin-jsx:components-dts',
-    closeBundle() {
+    async closeBundle() {
       if (options.framework === 'react') {
         emitReactComponentDeclarations.call(this, options);
-      } else {
+      } else if (options.framework === 'vue') {
         emitVueComponentDeclarations.call(this, options);
+      } else if (options.framework === 'solid') {
+        emitSolidComponentDeclarations.call(this, options);
+      } else if (options.framework === 'web-components') {
+        emitWebComponentsComponentDeclarations.call(this, options);
+      } else if (options.framework === 'svelte') {
+        await emitSvelteComponentDeclarations.call(this, options);
+      } else if (options.componentsModule) {
+        const barrelSource = readFileSync(options.componentsModule, 'utf8');
+        const components = discoverComponents(barrelSource, 'Base');
+        const helpers = discoverHelperExports(barrelSource, new Set(components.map((c) => c.folder)));
+        const dtsContent = generateEntryDeclaration(options.framework, '../components', components, helpers);
+        mkdirSync(options.outDir, { recursive: true });
+        writeFileSync(path.join(options.outDir, 'index.d.ts'), dtsContent, 'utf8');
       }
     },
   };
