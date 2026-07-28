@@ -9,8 +9,8 @@ import { toVueComponent } from './adapters/vue';
 import { Fragment, h, isMpElement, Slot, type MpComponent } from './runtime';
 
 const HostTree: MpComponent = () => h('div', { class: 'x', id: 'y' }, 'hi');
-// A component whose `classNames` array/object forms collapse to a `class` string.
-const Chip: MpComponent = () => h('span', { classNames: ['chip', { 'chip--active': true, 'chip--off': false }] }, 'x');
+// A component whose `className` array/object forms collapse to a `class` string.
+const Chip: MpComponent = () => h('span', { className: ['chip', { 'chip--active': true, 'chip--off': false }] }, 'x');
 const Inner: MpComponent = (properties) => h('em', undefined, properties.children);
 const Outer: MpComponent = () => h(Fragment, undefined, h('b', undefined, 'a'), h(Inner, undefined, 'b'));
 
@@ -73,7 +73,7 @@ describe('@mission-platform/jsx adapters render the same tree on React and Vue',
     expect(vue).toBe('<div class="x" id="y">hi</div>');
   });
 
-  it('collapses the `classNames` attribute (array/object forms) to an identical `class` string on both frameworks', async () => {
+  it('collapses the `className` attribute (array/object forms) to an identical `class` string on both frameworks', async () => {
     const react = renderToStaticMarkup(createElement(toReactComponent(Chip), {}));
     const vue = await renderToString(createSSRApp(toVueComponent(Chip)));
 

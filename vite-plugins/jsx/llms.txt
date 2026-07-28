@@ -196,7 +196,7 @@ compiled natively by Stage 2 like the framework sources).
   identically on every target — currently `classNames` — are *not* translated
   like `h`/the hooks; their `import { classNames } from '@mission-platform/jsx'`
   is preserved verbatim in both the React and Vue output.
-- **The `classNames={…}` attribute.** The platform-owned class attribute (the
+- **The `className={…}` attribute.** The platform-owned class attribute (the
   neutral counterpart of `className`/`class`, the author never imports the
   helper) is consumed by the compiler: on **React** an **array** value collapses
   to a `className={classNames(…)}` string call (the variadic helper) — and the

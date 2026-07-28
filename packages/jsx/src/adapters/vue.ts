@@ -9,44 +9,51 @@
  */
 import {
   defineComponent,
-  h as createVueElement,
   Fragment as VueFragment,
+  type FunctionalComponent,
+  h as createVueElement,
   inject,
+  type InjectionKey,
   isVNode,
   provide,
-  type FunctionalComponent,
-  type InjectionKey,
   type VNode,
   type VNodeChild,
 } from 'vue';
 
-import { isContextProvider, MP_CONTEXT } from '../runtime/context';
+import {
+  Fragment,
+  h,
+  isContextProvider,
+  MP_CONTEXT,
+  type MpChild,
+  type MpComponent,
+  type MpElement,
+  type MpProperties,
+} from '../runtime';
 import { Dynamic as DynamicMarker, type MpDynamicProperties } from '../runtime/dynamic';
-import { h } from '../runtime/h';
 import {
   collectSlottedChildren,
+  type MpSlotProperties,
   popSlotScope,
   pushSlotScope,
   resolveSlot,
   resolveSlotMarkers,
   Slot,
-  type MpSlotProperties,
 } from '../runtime/slots';
 import { Teleport as TeleportMarker } from '../runtime/teleport';
 import { Transition as TransitionMarker, TransitionGroup as TransitionGroupMarker } from '../runtime/transition';
-import { Fragment, type MpChild, type MpComponent, type MpElement, type MpProperties } from '../runtime/types';
 
 /**
- * Map the neutral props onto Vue's `h` props. The neutral `classNames={…}`
+ * Map the neutral props onto Vue's `h` props. The neutral `className={…}`
  * attribute becomes Vue's native `class` binding — Vue understands the
  * string/array/object forms directly, so the value passes straight through,
  * matching the native `:class` the two-stage compiler emits for the Vue target.
  */
 function toVueProperties(properties: MpProperties): Record<string, unknown> {
-  if (!('classNames' in properties)) {
+  if (!('className' in properties)) {
     return properties as Record<string, unknown>;
   }
-  const { classNames: classValue, ...rest } = properties as Record<string, unknown>;
+  const { className: classValue, ...rest } = properties as Record<string, unknown>;
   return { ...rest, class: classValue };
 }
 
@@ -198,7 +205,7 @@ export function toVueComponent<P extends MpProperties>(
 /** A Vue context handle: a `provide()`-backed `Provider` plus the `inject()` key. */
 export interface VueContext<T> {
   /** The provider component (`<Ctx.Provider value={…}>…</Ctx.Provider>`). */
-  readonly Provider: ReturnType<typeof defineComponent>;
+  readonly Provider: ReturnType<typeof defineComponent<{ value: T }>>;
   /** The Vue injection key the value is provided/injected under. */
   readonly key: InjectionKey<T>;
   /** The value {@link useContext} returns when no Provider is above the reader. */
@@ -215,12 +222,12 @@ export interface VueContext<T> {
  */
 export function createContext<T>(defaultValue: T): VueContext<T> {
   const key: InjectionKey<T> = Symbol('mp-context');
-  const Provider = defineComponent({
+  const Provider = defineComponent<{ value: T }>({
     name: 'MpContextProvider',
     inheritAttrs: false,
     props: { value: { required: true } },
     setup(properties, { slots }) {
-      provide(key, (properties as { value: T }).value);
+      provide<T>(key, properties.value);
       return () => slots.default?.();
     },
   });
@@ -233,5 +240,5 @@ export function createContext<T>(defaultValue: T): VueContext<T> {
  * Provider supplied one.
  */
 export function useContext<T>(context: VueContext<T>): T {
-  return inject(context.key, context.defaultValue);
+  return inject<T>(context.key, context.defaultValue);
 }

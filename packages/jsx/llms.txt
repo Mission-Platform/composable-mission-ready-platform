@@ -49,7 +49,7 @@ build). Author against the neutral hooks; pick the behaviour via the build.
 
 ## Class names
 
-Author dynamic classes with the **`classNames={…}` JSX attribute** — the
+Author dynamic classes with the **`className={…}` JSX attribute** — the
 neutral counterpart of React's `className` / Vue's `class`. The canonical value
 is an **array** holding the same arguments the `classNames` helper accepts (a
 space-separated string `'a b'`, a truthiness map `{ a: true, b: false }`, an
@@ -57,7 +57,7 @@ array, plus any nesting), but a single class value works too. Reserve the plain
 `class="…"` attribute for **static** string literals.
 
 ```tsx
-<span classNames={[styles['base-badge'], { [styles['base-badge--pill']]: pill }]} />
+<span className={[styles['base-badge'], { [styles['base-badge--pill']]: pill }]} />
 ```
 
 The attribute is owned by the platform: you **never import `classNames`
@@ -263,7 +263,7 @@ import styles from './fade.module.scss';
   leaveActiveClass={styles['fade-leave-active']}
   leaveToClass={styles['fade-leave-to']}
 >
-  {open ? <div classNames={styles.panel}>…</div> : undefined}
+  {open ? <div className={styles.panel}>…</div> : undefined}
 </Transition>
 ```
 
@@ -337,7 +337,7 @@ export function ThemeProvider(properties): MpElement {
 
 export function ThemedButton(): MpElement {
   const theme = useContext(ThemeContext);
-  return <button classNames={`btn btn--${theme}`}><Slot /></button>;
+  return <button className={`btn btn--${theme}`}><Slot /></button>;
 }
 ```
 

@@ -12,6 +12,5 @@
 /** Neutral (React-style) attribute names that differ from SolidJS's DOM vocabulary. */
 export const SOLID_ALIASES: Readonly<Record<string, string>> = {
   className: 'class',
-  classNames: 'class',
   htmlFor: 'for',
 };

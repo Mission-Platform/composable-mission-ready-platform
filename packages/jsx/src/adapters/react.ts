@@ -49,11 +49,11 @@ const REACT_PROPERTY_ALIASES: Readonly<Record<string, string>> = {
 function toReactProperties(properties: MpProperties): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(properties)) {
-    // The neutral `classNames={…}` attribute collapses to React's string-only
+    // The neutral `className={…}` attribute collapses to React's string-only
     // `className` via the `classNames` helper — the same string the two-stage
     // compiler bakes in for the React target (`classNames(...)`), so the ad-hoc
     // adapter render matches the compiled output.
-    if (key === 'classNames') {
+    if (key === 'className') {
       out.className = classNames(value as ClassValue);
       continue;
     }

@@ -731,12 +731,11 @@ function emitAttr(attr: Attr, context: Context, isNativeElement: boolean): strin
     throw new UnsupportedTemplate('non-identifier ref');
   }
 
-  // `className` (a stray React-style alias) and the neutral `classNames={…}`
-  // attribute both map onto Vue's native `class` binding — Vue understands the
-  // array/object forms directly, so the (CSS-Module-collapsed) value passes
-  // straight through as `:class="…"` (or a static `class="…"` when it reduces
-  // to a literal).
-  const outName = name === 'className' || name === 'classNames' || name === CLASS_NAME_ATTRIBUTE ? 'class' : name;
+  // The neutral `className={…}` attribute maps onto Vue's native `class`
+  // binding — Vue understands the array/object forms directly, so the
+  // (CSS-Module-collapsed) value passes straight through as `:class="…"` (or a
+  // static `class="…"` when it reduces to a literal).
+  const outName = name === CLASS_NAME_ATTRIBUTE ? 'class' : name;
   if (value.kind === 'none') {
     return outName;
   }
@@ -918,8 +917,7 @@ function emitConditionalChain(conditional: ts.ConditionalExpression, depth: numb
     }
   }
   const lines = arms.map((arm, index) => {
-    const directive =
-      index === 0 ? `v-if="${escapeExpr(arm.condition)}"` : `v-else-if="${escapeExpr(arm.condition)}"`;
+    const directive = index === 0 ? `v-if="${escapeExpr(arm.condition)}"` : `v-else-if="${escapeExpr(arm.condition)}"`;
     return emitConditionalArm(arm.expr, depth, context, directive);
   });
   if (elseExpr !== undefined) {
@@ -1845,7 +1843,11 @@ function readHelperBody(initializer: ts.Expression): ts.Expression | undefined {
   if (!ts.isArrowFunction(initializer) && !ts.isFunctionExpression(initializer)) {
     return undefined;
   }
-  if (initializer.parameters.some((parameter) => !ts.isIdentifier(parameter.name) || parameter.dotDotDotToken !== undefined)) {
+  if (
+    initializer.parameters.some(
+      (parameter) => !ts.isIdentifier(parameter.name) || parameter.dotDotDotToken !== undefined,
+    )
+  ) {
     return undefined;
   }
   if (!ts.isBlock(initializer.body)) {
@@ -1959,7 +1961,8 @@ function inlineHelperCalls(expr: ts.Expression, helpers: Map<string, InlinableHe
             return;
           }
           const argument = node.arguments[index];
-          const value = argument === undefined ? parameter.initializer : (ts.visitNode(argument, visit) as ts.Expression);
+          const value =
+            argument === undefined ? parameter.initializer : (ts.visitNode(argument, visit) as ts.Expression);
           if (value !== undefined) {
             bindings.set(parameter.name.text, value);
           }
@@ -2026,7 +2029,12 @@ function destructureToComputeds(
   const sourceName = nextSourceName();
   const makeEntry = (entryName: string, entryInit: ts.Expression): DerivedConst => ({
     name: entryName,
-    declaration: factory.createVariableDeclaration(factory.createIdentifier(entryName), undefined, undefined, entryInit),
+    declaration: factory.createVariableDeclaration(
+      factory.createIdentifier(entryName),
+      undefined,
+      undefined,
+      entryInit,
+    ),
     initializer: entryInit,
     isHandler: false,
   });

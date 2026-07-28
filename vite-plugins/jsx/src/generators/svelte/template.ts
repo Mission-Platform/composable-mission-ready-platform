@@ -34,7 +34,6 @@ import { isHasSlotCall, isSlotElement, readHasSlotName, readSlotName } from '../
 /** Attribute-name aliases (neutral React vocabulary → Svelte/DOM). */
 const ATTRIBUTE_ALIASES: Readonly<Record<string, string>> = {
   className: 'class',
-  classNames: 'class',
   htmlFor: 'for',
 };
 
@@ -171,7 +170,12 @@ function callbackYieldsJsx(call: ts.CallExpression): boolean {
   const body = callback.body;
   if (ts.isBlock(body)) {
     const last = body.statements.at(-1);
-    return last !== undefined && ts.isReturnStatement(last) && last.expression !== undefined && isJsxYielding(last.expression);
+    return (
+      last !== undefined &&
+      ts.isReturnStatement(last) &&
+      last.expression !== undefined &&
+      isJsxYielding(last.expression)
+    );
   }
   return isJsxYielding(body as ts.Expression);
 }
@@ -203,11 +207,7 @@ export function rewriteScopedNode(node: ts.Node, context: SvelteTemplateContext)
   ) {
     return factory.createIdentifier(node.expression.text);
   }
-  if (
-    ts.isPropertyAccessExpression(node) &&
-    ts.isIdentifier(node.expression) &&
-    node.expression.text === propsParam
-  ) {
+  if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === propsParam) {
     return factory.createIdentifier(propAliasMap.get(node.name.text) ?? node.name.text);
   }
   return undefined;
@@ -227,13 +227,20 @@ export function scopeExpression(expression: ts.Expression, context: SvelteTempla
   };
   const result = ts.transform(expression, [transform]);
   const printer = ts.createPrinter();
-  const out = printer.printNode(ts.EmitHint.Expression, result.transformed[0] as ts.Expression, expression.getSourceFile());
+  const out = printer.printNode(
+    ts.EmitHint.Expression,
+    result.transformed[0] as ts.Expression,
+    expression.getSourceFile(),
+  );
   result.dispose();
   return out;
 }
 
 /** Build Svelte markup for a JSX node. */
-export function jsxToSvelte(node: ts.JsxChild | ts.JsxElement | ts.JsxFragment, context: SvelteTemplateContext): string {
+export function jsxToSvelte(
+  node: ts.JsxChild | ts.JsxElement | ts.JsxFragment,
+  context: SvelteTemplateContext,
+): string {
   if (ts.isJsxText(node)) {
     return normalizeJsxText(node.text);
   }
@@ -459,7 +466,10 @@ function conditionalChainMarkup(expression: ts.ConditionalExpression, context: S
     currentUnwrapped = unwrap(current);
   }
   const elseMarkup = branchMarkup(current, context);
-  const [first, ...rest] = branches as [{ condition: string; markup: string }, ...{ condition: string; markup: string }[]];
+  const [first, ...rest] = branches as [
+    { condition: string; markup: string },
+    ...{ condition: string; markup: string }[],
+  ];
   const restMarkup = rest.map((branch) => `{:else if ${branch.condition}}${branch.markup}`).join('');
   // Omit an empty `{:else}` entirely — an `undefined`/`null` (or otherwise
   // empty) else branch would otherwise emit a stray text node, which Svelte

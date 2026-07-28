@@ -11,7 +11,6 @@ export const REACT_ALIASES: Readonly<Record<string, string>> = {
   autocapitalize: 'autoCapitalize',
   autocomplete: 'autoComplete',
   class: 'className',
-  classNames: 'className',
   fetchpriority: 'fetchPriority',
   for: 'htmlFor',
   inputmode: 'inputMode',
