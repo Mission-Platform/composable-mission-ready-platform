@@ -25,11 +25,14 @@ function json(value: unknown) {
 
 export function registerTools(server: McpServer): void {
   // ---- Discovery & guidance -------------------------------------------------
-  server.tool(
+  server.registerTool(
     'get_guide',
-    'Return a curated, repository-specific guide for a Mission Platform workflow (component usage, package/app/worker creation & development, conventions, overview).',
     {
-      area: z.string().describe('The workflow to explain.'),
+      description:
+        'Return a curated, repository-specific guide for a Mission Platform workflow (component usage, package/app/worker creation & development, conventions, overview).',
+      inputSchema: {
+        area: z.string().describe('The workflow to explain.'),
+      },
     },
     async (args) => {
       const area = args.area?.trim();
@@ -44,20 +47,25 @@ export function registerTools(server: McpServer): void {
     },
   );
 
-  server.tool(
+  server.registerTool(
     'list_docs',
-    'List the Markdown documents available under the repository `docs/` directory.',
-    {},
+    {
+      description: 'List the Markdown documents available under the repository `docs/` directory.',
+      inputSchema: {},
+    },
     async () => {
       return json(listDocs().map((document) => document.slug));
     },
   );
 
-  server.tool(
+  server.registerTool(
     'read_doc',
-    'Read a single repository document by its slug (see `list_docs`), e.g. "best-practices" or "configs/eslint-config".',
     {
-      slug: z.string().describe('Document slug from `list_docs`.'),
+      description:
+        'Read a single repository document by its slug (see `list_docs`), e.g. "best-practices" or "configs/eslint-config".',
+      inputSchema: {
+        slug: z.string().describe('Document slug from `list_docs`.'),
+      },
     },
     async (args) => {
       const slug = args.slug?.trim();
@@ -69,11 +77,14 @@ export function registerTools(server: McpServer): void {
     },
   );
 
-  server.tool(
+  server.registerTool(
     'search_docs',
-    'Case-insensitive search across all repository docs. Returns matching documents with the lines that matched.',
     {
-      query: z.string().describe('Text to search for.'),
+      description:
+        'Case-insensitive search across all repository docs. Returns matching documents with the lines that matched.',
+      inputSchema: {
+        query: z.string().describe('Text to search for.'),
+      },
     },
     async (args) => {
       const query = args.query?.trim();
@@ -98,11 +109,13 @@ export function registerTools(server: McpServer): void {
   );
 
   // ---- Component usage ------------------------------------------------------
-  server.tool(
+  server.registerTool(
     'list_components',
-    'List every component in @mission-platform/components with its exported symbols.',
     {
-      filter: z.string().optional().describe('Optional substring to filter component slugs.'),
+      description: 'List every component in @mission-platform/components with its exported symbols.',
+      inputSchema: {
+        filter: z.string().optional().describe('Optional substring to filter component slugs.'),
+      },
     },
     async (args) => {
       const filter = args.filter?.trim().toLowerCase();
@@ -114,11 +127,14 @@ export function registerTools(server: McpServer): void {
     },
   );
 
-  server.tool(
+  server.registerTool(
     'get_component_usage',
-    'Describe how to use a component: its exported symbols, props interface, doc comment, available Storybook stories, and Vue/React import snippets.',
     {
-      component: z.string().describe('Component name or slug, e.g. "BaseButton" or "base-button".'),
+      description:
+        'Describe how to use a component: its exported symbols, props interface, doc comment, available Storybook stories, and Vue/React import snippets.',
+      inputSchema: {
+        component: z.string().describe('Component name or slug, e.g. "BaseButton" or "base-button".'),
+      },
     },
     async (args) => {
       const component = args.component?.trim();
@@ -151,10 +167,12 @@ export function registerTools(server: McpServer): void {
   );
 
   // ---- Inventory ------------------------------------------------------------
-  server.tool(
+  server.registerTool(
     'list_packages',
-    'List all packages in packages/ with name, version and description.',
-    {},
+    {
+      description: 'List all packages in packages/ with name, version and description.',
+      inputSchema: {},
+    },
     async () => {
       return json(
         listGroup('packages').map((member) => ({
@@ -166,10 +184,12 @@ export function registerTools(server: McpServer): void {
     },
   );
 
-  server.tool(
+  server.registerTool(
     'list_apps',
-    'List all applications in apps/.',
-    {},
+    {
+      description: 'List all applications in apps/.',
+      inputSchema: {},
+    },
     async () => {
       return json(
         listGroup('apps').map((member) => ({
@@ -181,10 +201,12 @@ export function registerTools(server: McpServer): void {
     },
   );
 
-  server.tool(
+  server.registerTool(
     'list_workers',
-    'List all Cloudflare Workers in workers/.',
-    {},
+    {
+      description: 'List all Cloudflare Workers in workers/.',
+      inputSchema: {},
+    },
     async () => {
       return json(
         listGroup('workers').map((member) => ({
@@ -196,12 +218,17 @@ export function registerTools(server: McpServer): void {
     },
   );
 
-  server.tool(
+  server.registerTool(
     'get_member_info',
-    'Get detailed info for a workspace member: its manifest scripts and dependencies, plus its llms.txt/README when present.',
     {
-      group: z.enum(['packages', 'apps', 'workers', 'vite-plugins', 'configs', 'crates']).describe('Workspace group.'),
-      name: z.string().describe('Folder name or scoped package name.'),
+      description:
+        'Get detailed info for a workspace member: its manifest scripts and dependencies, plus its llms.txt/README when present.',
+      inputSchema: {
+        group: z
+          .enum(['packages', 'apps', 'workers', 'vite-plugins', 'configs', 'crates'])
+          .describe('Workspace group.'),
+        name: z.string().describe('Folder name or scoped package name.'),
+      },
     },
     async (args) => {
       const group = args.group as WorkspaceGroup;
@@ -230,14 +257,20 @@ export function registerTools(server: McpServer): void {
   );
 
   // ---- Scaffolding ----------------------------------------------------------
-  server.tool(
+  server.registerTool(
     'scaffold_package',
-    'Generate a convention-compliant packages/<name> skeleton (manifest, tsconfig set, shared configs, vite/vitest/turbo config, src barrel, spec, llms.txt, docs). Dry-run unless apply=true.',
     {
-      name: z.string().describe('Kebab-case package name, e.g. "date-utils".'),
-      description: z.string().optional().describe('Short package description.'),
-      vue: z.boolean().optional().describe('Set true if the package ships Vue components (adds stylelint + vue deps). Defaults to false.'),
-      apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
+      description:
+        'Generate a convention-compliant packages/<name> skeleton (manifest, tsconfig set, shared configs, vite/vitest/turbo config, src barrel, spec, llms.txt, docs). Dry-run unless apply=true.',
+      inputSchema: {
+        name: z.string().describe('Kebab-case package name, e.g. "date-utils".'),
+        description: z.string().optional().describe('Short package description.'),
+        vue: z
+          .boolean()
+          .optional()
+          .describe('Set true if the package ships Vue components (adds stylelint + vue deps). Defaults to false.'),
+        apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
+      },
     },
     async (args) => {
       const name = args.name?.trim();
@@ -261,13 +294,16 @@ export function registerTools(server: McpServer): void {
     },
   );
 
-  server.tool(
+  server.registerTool(
     'scaffold_app',
-    'Generate a convention-compliant apps/<name> Vite + Vue 3 skeleton (private manifest, tsconfig set, shared configs, vite/turbo config, index.html, src entry). Dry-run unless apply=true.',
     {
-      name: z.string().describe('Kebab-case app name, e.g. "admin-portal".'),
-      description: z.string().optional().describe('Short app description.'),
-      apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
+      description:
+        'Generate a convention-compliant apps/<name> Vite + Vue 3 skeleton (private manifest, tsconfig set, shared configs, vite/turbo config, index.html, src entry). Dry-run unless apply=true.',
+      inputSchema: {
+        name: z.string().describe('Kebab-case app name, e.g. "admin-portal".'),
+        description: z.string().optional().describe('Short app description.'),
+        apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
+      },
     },
     async (args) => {
       const name = args.name?.trim();
@@ -287,13 +323,16 @@ export function registerTools(server: McpServer): void {
     },
   );
 
-  server.tool(
+  server.registerTool(
     'scaffold_worker',
-    'Generate a convention-compliant workers/<name> Cloudflare Worker skeleton (private manifest, tsconfig set, shared configs, typed fetch handler). Dry-run unless apply=true.',
     {
-      name: z.string().describe('Kebab-case worker name, e.g. "asset-proxy".'),
-      description: z.string().optional().describe('Short worker description.'),
-      apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
+      description:
+        'Generate a convention-compliant workers/<name> Cloudflare Worker skeleton (private manifest, tsconfig set, shared configs, typed fetch handler). Dry-run unless apply=true.',
+      inputSchema: {
+        name: z.string().describe('Kebab-case worker name, e.g. "asset-proxy".'),
+        description: z.string().optional().describe('Short worker description.'),
+        apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
+      },
     },
     async (args) => {
       const name = args.name?.trim();
@@ -313,13 +352,16 @@ export function registerTools(server: McpServer): void {
     },
   );
 
-  server.tool(
+  server.registerTool(
     'scaffold_crate',
-    'Generate a convention-compliant crates/<name> Rust/WASM crate skeleton (Cargo.toml, src/lib.rs, build.rs, WASM tests, README). Dry-run unless apply=true.',
     {
-      name: z.string().describe('Kebab-case crate name, e.g. "image-processor".'),
-      description: z.string().optional().describe('Short crate description.'),
-      apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
+      description:
+        'Generate a convention-compliant crates/<name> Rust/WASM crate skeleton (Cargo.toml, src/lib.rs, build.rs, WASM tests, README). Dry-run unless apply=true.',
+      inputSchema: {
+        name: z.string().describe('Kebab-case crate name, e.g. "image-processor".'),
+        description: z.string().optional().describe('Short crate description.'),
+        apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
+      },
     },
     async (args) => {
       const name = args.name?.trim();

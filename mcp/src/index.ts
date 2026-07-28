@@ -13,9 +13,9 @@ import { fileURLToPath } from 'node:url';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
-import { registerPrompts } from './prompts';
-import { registerResources } from './resources';
-import { registerTools } from './tools';
+import { registerPrompts } from './prompts/index.ts';
+import { registerResources } from './resources/index.ts';
+import { registerTools } from './tools/index.ts';
 
 export function createServer(): McpServer {
   const server = new McpServer({ name: 'mission-platform-mcp', version: '0.1.0' });

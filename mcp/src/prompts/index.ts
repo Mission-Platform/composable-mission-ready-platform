@@ -21,12 +21,14 @@ function guideBody(id: GuideId): string {
 }
 
 export function registerPrompts(server: McpServer): void {
-  server.prompt(
+  server.registerPrompt(
     'use-component',
-    'Guide the assistant to correctly use a Mission Platform component in an app.',
     {
-      component: z.string().optional().describe('Component name or slug, e.g. "BaseButton".'),
-      framework: z.string().optional().describe('Target framework: "vue" or "react". Defaults to vue.'),
+      description: 'Guide the assistant to correctly use a Mission Platform component in an app.',
+      argsSchema: {
+        component: z.string().optional().describe('Component name or slug, e.g. "BaseButton".'),
+        framework: z.string().optional().describe('Target framework: "vue" or "react". Defaults to vue.'),
+      },
     },
     (args) => {
       const framework = (args.framework ?? 'vue').toLowerCase() === 'react' ? 'react' : 'vue';
@@ -50,12 +52,14 @@ export function registerPrompts(server: McpServer): void {
     },
   );
 
-  server.prompt(
+  server.registerPrompt(
     'create-package',
-    'Guide the assistant to create a new package in packages/.',
     {
-      name: z.string().optional().describe('Kebab-case package name.'),
-      purpose: z.string().optional().describe('What the package should do.'),
+      description: 'Guide the assistant to create a new package in packages/.',
+      argsSchema: {
+        name: z.string().optional().describe('Kebab-case package name.'),
+        purpose: z.string().optional().describe('What the package should do.'),
+      },
     },
     (args) => {
       const name = args.name ?? '<name>';
@@ -66,11 +70,13 @@ export function registerPrompts(server: McpServer): void {
     },
   );
 
-  server.prompt(
+  server.registerPrompt(
     'develop-package',
-    'Guide the assistant to develop or extend an existing package.',
     {
-      name: z.string().optional().describe('Package folder or scoped name.'),
+      description: 'Guide the assistant to develop or extend an existing package.',
+      argsSchema: {
+        name: z.string().optional().describe('Package folder or scoped name.'),
+      },
     },
     (args) => {
       const name = args.name;
@@ -83,12 +89,14 @@ export function registerPrompts(server: McpServer): void {
     },
   );
 
-  server.prompt(
+  server.registerPrompt(
     'create-app',
-    'Guide the assistant to create a new application in apps/.',
     {
-      name: z.string().optional().describe('Kebab-case app name.'),
-      purpose: z.string().optional().describe('What the app should do.'),
+      description: 'Guide the assistant to create a new application in apps/.',
+      argsSchema: {
+        name: z.string().optional().describe('Kebab-case app name.'),
+        purpose: z.string().optional().describe('What the app should do.'),
+      },
     },
     (args) => {
       const name = args.name ?? '<name>';
@@ -99,11 +107,13 @@ export function registerPrompts(server: McpServer): void {
     },
   );
 
-  server.prompt(
+  server.registerPrompt(
     'develop-app',
-    'Guide the assistant to develop an existing application.',
     {
-      name: z.string().optional().describe('App folder or scoped name.'),
+      description: 'Guide the assistant to develop an existing application.',
+      argsSchema: {
+        name: z.string().optional().describe('App folder or scoped name.'),
+      },
     },
     (args) => {
       const name = args.name;
@@ -116,12 +126,14 @@ export function registerPrompts(server: McpServer): void {
     },
   );
 
-  server.prompt(
+  server.registerPrompt(
     'create-worker',
-    'Guide the assistant to create a new Cloudflare Worker in workers/.',
     {
-      name: z.string().optional().describe('Kebab-case worker name.'),
-      purpose: z.string().optional().describe('What the worker should do.'),
+      description: 'Guide the assistant to create a new Cloudflare Worker in workers/.',
+      argsSchema: {
+        name: z.string().optional().describe('Kebab-case worker name.'),
+        purpose: z.string().optional().describe('What the worker should do.'),
+      },
     },
     (args) => {
       const name = args.name ?? '<name>';
@@ -132,11 +144,13 @@ export function registerPrompts(server: McpServer): void {
     },
   );
 
-  server.prompt(
+  server.registerPrompt(
     'develop-worker',
-    'Guide the assistant to develop an existing Cloudflare Worker.',
     {
-      name: z.string().optional().describe('Worker folder or scoped name.'),
+      description: 'Guide the assistant to develop an existing Cloudflare Worker.',
+      argsSchema: {
+        name: z.string().optional().describe('Worker folder or scoped name.'),
+      },
     },
     (args) => {
       const name = args.name;

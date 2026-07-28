@@ -33,9 +33,14 @@ function inventory(): string {
 export function registerResources(server: McpServer): void {
   // Curated guides.
   for (const guide of allGuides()) {
-    server.resource(
+    server.registerResource(
       `guide-${guide.id}`,
       `mission://guide/${guide.id}`,
+      {
+        title: `Guide: ${guide.title}`,
+        description: `Curated Mission Platform guidance — ${guide.title}.`,
+        mimeType: 'text/markdown',
+      },
       async (uri) => ({
         contents: [
           {
@@ -51,9 +56,14 @@ export function registerResources(server: McpServer): void {
   }
 
   // Live workspace inventory.
-  server.resource(
+  server.registerResource(
     'inventory',
     'mission://inventory',
+    {
+      title: 'Workspace inventory',
+      description: 'Live inventory of every workspace member and component in the monorepo.',
+      mimeType: 'application/json',
+    },
     async (uri) => ({
       contents: [
         {
@@ -69,9 +79,14 @@ export function registerResources(server: McpServer): void {
 
   // Raw repository docs.
   for (const document of listDocs()) {
-    server.resource(
+    server.registerResource(
       `docs-${document.slug}`,
       `mission://docs/${document.slug}`,
+      {
+        title: `Docs: ${document.slug}`,
+        description: `Repository documentation: docs/${document.slug}.md`,
+        mimeType: 'text/markdown',
+      },
       async (uri) => ({
         contents: [
           {
