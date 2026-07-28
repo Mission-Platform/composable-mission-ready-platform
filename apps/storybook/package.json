@@ -11,6 +11,7 @@
     "storybook": "pnpm run storybook:cert && NODE_OPTIONS=\"--max-old-space-size=8192\" storybook dev -p 6006 --https --ssl-cert .storybook/certs/cert.pem --ssl-key .storybook/certs/key.pem",
     "build-storybook": "NODE_OPTIONS=\"--max-old-space-size=8192\" storybook build",
     "deploy": "chromatic --project-token=chpt_c79f311b83ab8e0",
+    "chromatic:deploy": "chromatic --exit-zero-on-changes",
     "test": "vitest run --project storybook",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",

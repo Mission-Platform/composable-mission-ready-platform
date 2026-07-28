@@ -1,0 +1,3 @@
+pnpm exec turbo run format --affected
+pnpm exec turbo run lint:style --affected
+pnpm exec turbo run lint --affected

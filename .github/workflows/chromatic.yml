@@ -1,0 +1,57 @@
+name: Chromatic Visual Regression
+
+on:
+  pull_request:
+    paths:
+      - 'packages/**'
+      - 'apps/storybook/**'
+      - 'apps/storybook-react/**'
+      - 'pnpm-lock.yaml'
+
+concurrency:
+  group: chromatic-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  chromatic:
+    name: Run Chromatic Visual Diff
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Publish Vue Storybook to Chromatic
+        uses: chromaui/action@v11
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_VUE || secrets.CHROMATIC_PROJECT_TOKEN }}
+          workingDir: apps/storybook
+          storybookBuildDir: storybook-static
+          exitZeroOnChanges: true
+        continue-on-error: true
+
+      - name: Publish React Storybook to Chromatic
+        uses: chromaui/action@v11
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_REACT || secrets.CHROMATIC_PROJECT_TOKEN }}
+          workingDir: apps/storybook-react
+          storybookBuildDir: storybook-static
+          exitZeroOnChanges: true
+        continue-on-error: true

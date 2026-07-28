@@ -12,6 +12,7 @@
     "i18n:extract": "pnpm --filter @mission-platform/scripts i18n:extract",
     "storybook": "pnpm exec turbo run --filter @mission-platform/storybook storybook",
     "storybook-react": "pnpm exec turbo run --filter @mission-platform/storybook-react storybook",
+    "chromatic:deploy": "pnpm exec turbo run chromatic:deploy",
     "build": "pnpm exec turbo run build",
     "build:force": "pnpm exec turbo run build --force",
     "test": "pnpm exec turbo run test",
