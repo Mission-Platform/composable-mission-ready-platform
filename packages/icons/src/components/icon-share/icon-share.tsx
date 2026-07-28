@@ -24,7 +24,7 @@ export function IconShare(properties: Readonly<IconShareProperties>): MpElement 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-share']}>
+    <div className={styles['base-icon-share']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

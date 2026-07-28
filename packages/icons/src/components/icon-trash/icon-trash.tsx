@@ -24,7 +24,7 @@ export function IconTrash(properties: Readonly<IconTrashProperties>): MpElement 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-trash']}>
+    <div className={styles['base-icon-trash']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

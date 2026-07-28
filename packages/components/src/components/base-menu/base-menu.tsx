@@ -118,7 +118,7 @@ export function BaseMenu(properties: Readonly<MenuProperties>): MpElement {
     item.icon ? (
       <span
         aria-hidden="true"
-        classNames={styles['base-menu__icon']}
+        className={styles['base-menu__icon']}
       >
         {item.icon}
       </span>
@@ -135,7 +135,7 @@ export function BaseMenu(properties: Readonly<MenuProperties>): MpElement {
       return (
         <li
           key={path}
-          classNames={[
+          className={[
             styles['base-menu__item'],
             {
               [styles['base-menu__item--has-children']]: hasChildren,
@@ -148,29 +148,29 @@ export function BaseMenu(properties: Readonly<MenuProperties>): MpElement {
           {item.href && !hasChildren ? (
             <a
               href={item.href}
-              classNames={styles['base-menu__link']}
+              className={styles['base-menu__link']}
               role="menuitem"
             >
               {renderIcon(item)}
-              <span classNames={styles['base-menu__label']}>{item.label}</span>
+              <span className={styles['base-menu__label']}>{item.label}</span>
             </a>
           ) : (
             <button
               aria-disabled={item.disabled ? 'true' : undefined}
               aria-expanded={hasChildren ? open : undefined}
               aria-haspopup={hasChildren ? 'menu' : undefined}
-              classNames={styles['base-menu__link']}
+              className={styles['base-menu__link']}
               disabled={item.disabled}
               role="menuitem"
               type="button"
               onClick={() => handleItemClick(item, path)}
             >
               {renderIcon(item)}
-              <span classNames={styles['base-menu__label']}>{item.label}</span>
+              <span className={styles['base-menu__label']}>{item.label}</span>
               {hasChildren ? (
                 <span
                   aria-hidden="true"
-                  classNames={styles['base-menu__chevron']}
+                  className={styles['base-menu__chevron']}
                 >
                   <IconChevron
                     direction={chevronDirection}
@@ -183,7 +183,7 @@ export function BaseMenu(properties: Readonly<MenuProperties>): MpElement {
           {open ? (
             <menu
               aria-label={item.label}
-              classNames={[
+              className={[
                 styles['base-menu__submenu'],
                 {
                   [styles['base-menu__submenu--nested']]: nested,
@@ -202,11 +202,11 @@ export function BaseMenu(properties: Readonly<MenuProperties>): MpElement {
     <nav
       ref={navReference}
       aria-label={ariaLabel}
-      classNames={[styles['base-menu'], styles[`base-menu--${orientation}`], sizeStyles[`base-size--${size}`]]}
+      className={[styles['base-menu'], styles[`base-menu--${orientation}`], sizeStyles[`base-size--${size}`]]}
     >
       <menu
         aria-orientation={orientation}
-        classNames={styles['base-menu__list']}
+        className={styles['base-menu__list']}
         role="menubar"
       >
         {renderItems(items, '', false)}

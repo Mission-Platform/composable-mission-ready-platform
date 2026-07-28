@@ -180,13 +180,13 @@ export function BaseDateTimeRangeInput(properties: Readonly<DateTimeRangeInputPr
     active: number,
     onPick: (unit: number) => void,
   ): MpChild => (
-    <div classNames={styles['base-date-time-range-input__col']}>
-      <div classNames={styles['base-date-time-range-input__col-header']}>{header}</div>
-      <div classNames={styles['base-date-time-range-input__scroll']}>
+    <div className={styles['base-date-time-range-input__col']}>
+      <div className={styles['base-date-time-range-input__col-header']}>{header}</div>
+      <div className={styles['base-date-time-range-input__scroll']}>
         {units.map((unit) => (
           <button
             key={unit}
-            classNames={[
+            className={[
               styles['base-date-time-range-input__unit-btn'],
               {
                 [styles['base-date-time-range-input__unit-btn--active']]: active === unit,
@@ -223,11 +223,11 @@ export function BaseDateTimeRangeInput(properties: Readonly<DateTimeRangeInputPr
   const timeColumns = (endpoint: Endpoint): MpChild => {
     const parts = endpoint === 'start' ? startParts : endParts;
     return (
-      <div classNames={styles['base-date-time-range-input__columns']}>
+      <div className={styles['base-date-time-range-input__columns']}>
         {column('HH', HOURS, parts.h, (unit) => setTimeUnit(endpoint, 'h', unit))}
-        <span classNames={styles['base-date-time-range-input__sep']}>:</span>
+        <span className={styles['base-date-time-range-input__sep']}>:</span>
         {column('MM', MINUTES, parts.m, (unit) => setTimeUnit(endpoint, 'm', unit))}
-        {showSeconds ? <span classNames={styles['base-date-time-range-input__sep']}>:</span> : undefined}
+        {showSeconds ? <span className={styles['base-date-time-range-input__sep']}>:</span> : undefined}
         {showSeconds ? column('SS', SECONDS, parts.s, (unit) => setTimeUnit(endpoint, 's', unit)) : undefined}
       </div>
     );
@@ -235,7 +235,7 @@ export function BaseDateTimeRangeInput(properties: Readonly<DateTimeRangeInputPr
 
   // A captioned (`Start`/`End`) endpoint column shared by both wizard steps.
   const endpointPane = (title: string, child: MpChild): MpChild => (
-    <div classNames={styles['base-date-time-range-input__pane']}>
+    <div className={styles['base-date-time-range-input__pane']}>
       <BaseTypography
         as="span"
         color="secondary"
@@ -249,7 +249,7 @@ export function BaseDateTimeRangeInput(properties: Readonly<DateTimeRangeInputPr
 
   // Wizard step 1 — pick the start and end dates.
   const datePane = (): MpChild => (
-    <div classNames={styles['base-date-time-range-input__panes']}>
+    <div className={styles['base-date-time-range-input__panes']}>
       {endpointPane('Start', dateCalendar('start'))}
       {endpointPane('End', dateCalendar('end'))}
     </div>
@@ -257,7 +257,7 @@ export function BaseDateTimeRangeInput(properties: Readonly<DateTimeRangeInputPr
 
   // Wizard step 2 — pick the start and end times.
   const timePane = (): MpChild => (
-    <div classNames={styles['base-date-time-range-input__panes']}>
+    <div className={styles['base-date-time-range-input__panes']}>
       {endpointPane('Start', timeColumns('start'))}
       {endpointPane('End', timeColumns('end'))}
     </div>
@@ -265,7 +265,7 @@ export function BaseDateTimeRangeInput(properties: Readonly<DateTimeRangeInputPr
 
   return (
     <div
-      classNames={[
+      className={[
         styles['base-date-time-range-input'],
         styles[`base-date-time-range-input--${size}`],
         {
@@ -276,7 +276,7 @@ export function BaseDateTimeRangeInput(properties: Readonly<DateTimeRangeInputPr
     >
       {label ? (
         <label
-          classNames={[
+          className={[
             styles['base-date-time-range-input__label'],
             {
               [styles['base-date-time-range-input__label--hidden']]: labelHidden,
@@ -294,7 +294,7 @@ export function BaseDateTimeRangeInput(properties: Readonly<DateTimeRangeInputPr
           {required ? (
             <span
               aria-hidden="true"
-              classNames={styles['base-date-time-range-input__required']}
+              className={styles['base-date-time-range-input__required']}
               title="required"
             >
               *
@@ -310,12 +310,12 @@ export function BaseDateTimeRangeInput(properties: Readonly<DateTimeRangeInputPr
         onUpdateOpen={(next: boolean) => setOpen(next)}
       >
         <div
-          classNames={styles['base-date-time-range-input__wrapper']}
+          className={styles['base-date-time-range-input__wrapper']}
           slot="trigger"
         >
           {hasSlot('startContent') ? (
             <span
-              classNames={[
+              className={[
                 styles['base-date-time-range-input__extension'],
                 styles['base-date-time-range-input__extension--start'],
               ]}
@@ -330,12 +330,12 @@ export function BaseDateTimeRangeInput(properties: Readonly<DateTimeRangeInputPr
             aria-haspopup="dialog"
             aria-invalid={error ? 'true' : undefined}
             aria-label={label ?? 'Date and time range picker'}
-            classNames={styles['base-date-time-range-input__trigger']}
+            className={styles['base-date-time-range-input__trigger']}
             type="button"
             onClick={toggleOpen}
           >
             <span
-              classNames={[
+              className={[
                 styles['base-date-time-range-input__value'],
                 {
                   [styles['base-date-time-range-input__value--placeholder']]: !summary,
@@ -346,14 +346,14 @@ export function BaseDateTimeRangeInput(properties: Readonly<DateTimeRangeInputPr
             </span>
             <span
               aria-hidden="true"
-              classNames={styles['base-date-time-range-input__icon']}
+              className={styles['base-date-time-range-input__icon']}
             >
               <IconCalendar size="sm" />
             </span>
           </button>
           {hasSlot('endContent') ? (
             <span
-              classNames={[
+              className={[
                 styles['base-date-time-range-input__extension'],
                 styles['base-date-time-range-input__extension--end'],
               ]}
@@ -364,16 +364,16 @@ export function BaseDateTimeRangeInput(properties: Readonly<DateTimeRangeInputPr
         </div>
         <div
           aria-label={`${label ?? 'Date and time'} range picker`}
-          classNames={styles['base-date-time-range-input__popover']}
+          className={styles['base-date-time-range-input__popover']}
           role="dialog"
         >
           <div
-            classNames={styles['base-date-time-range-input__tz']}
+            className={styles['base-date-time-range-input__tz']}
             role="group"
           >
             <button
               aria-pressed={timezone === 'browser'}
-              classNames={[
+              className={[
                 styles['base-date-time-range-input__tz-btn'],
                 {
                   [styles['base-date-time-range-input__tz-btn--active']]: timezone === 'browser',
@@ -386,7 +386,7 @@ export function BaseDateTimeRangeInput(properties: Readonly<DateTimeRangeInputPr
             </button>
             <button
               aria-pressed={timezone === 'utc'}
-              classNames={[
+              className={[
                 styles['base-date-time-range-input__tz-btn'],
                 {
                   [styles['base-date-time-range-input__tz-btn--active']]: timezone === 'utc',
@@ -414,7 +414,7 @@ export function BaseDateTimeRangeInput(properties: Readonly<DateTimeRangeInputPr
       {error ? (
         <p
           id={`${resolvedId}-error`}
-          classNames={styles['base-date-time-range-input__error']}
+          className={styles['base-date-time-range-input__error']}
           role="alert"
         >
           <BaseTypography
@@ -428,7 +428,7 @@ export function BaseDateTimeRangeInput(properties: Readonly<DateTimeRangeInputPr
       ) : hint ? (
         <p
           id={`${resolvedId}-hint`}
-          classNames={styles['base-date-time-range-input__hint']}
+          className={styles['base-date-time-range-input__hint']}
         >
           <BaseTypography
             as="span"

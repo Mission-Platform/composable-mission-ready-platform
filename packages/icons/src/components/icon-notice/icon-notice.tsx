@@ -24,7 +24,7 @@ export function IconNotice(properties: Readonly<IconNoticeProperties>): MpElemen
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-notice']}>
+    <div className={styles['base-icon-notice']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Notice'}

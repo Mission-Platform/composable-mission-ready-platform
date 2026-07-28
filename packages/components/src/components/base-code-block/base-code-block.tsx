@@ -161,12 +161,12 @@ export function BaseCodeBlock(properties: Readonly<CodeBlockProperties>): MpElem
   const gutter = showLineNumbers ? (
     <div
       aria-hidden="true"
-      classNames={styles['base-code-block__gutter']}
+      className={styles['base-code-block__gutter']}
     >
       {Array.from({ length: lineCount }, (_, index) => (
         <span
           key={index}
-          classNames={styles['base-code-block__line-no']}
+          className={styles['base-code-block__line-no']}
         >
           {index + 1}
         </span>
@@ -176,19 +176,19 @@ export function BaseCodeBlock(properties: Readonly<CodeBlockProperties>): MpElem
 
   return (
     <div
-      classNames={[styles['base-code-block'], styles[`base-code-block--${variant}`], sizeStyles[`base-size--${size}`]]}
+      className={[styles['base-code-block'], styles[`base-code-block--${variant}`], sizeStyles[`base-size--${size}`]]}
     >
       {hasHeader ? (
-        <div classNames={styles['base-code-block__header']}>
+        <div className={styles['base-code-block__header']}>
           {filename ? (
-            <span classNames={styles['base-code-block__filename']}>{filename}</span>
+            <span className={styles['base-code-block__filename']}>{filename}</span>
           ) : (
-            <span classNames={styles['base-code-block__language']}>{language}</span>
+            <span className={styles['base-code-block__language']}>{language}</span>
           )}
           {showCopyButton ? (
             <button
               aria-label={copied ? 'Copied' : 'Copy code'}
-              classNames={styles['base-code-block__copy']}
+              className={styles['base-code-block__copy']}
               type="button"
               onClick={copyCode}
             >
@@ -206,7 +206,7 @@ export function BaseCodeBlock(properties: Readonly<CodeBlockProperties>): MpElem
       ) : undefined}
 
       <div
-        classNames={[
+        className={[
           styles['base-code-block__body'],
           {
             [styles['base-code-block__body--numbered']]: showLineNumbers,
@@ -216,10 +216,10 @@ export function BaseCodeBlock(properties: Readonly<CodeBlockProperties>): MpElem
         tabindex={0}
       >
         {gutter}
-        <pre classNames={styles['base-code-block__pre']}>
+        <pre className={styles['base-code-block__pre']}>
           <code
             ref={codeReference}
-            classNames={[styles['base-code-block__code'], 'hljs']}
+            className={[styles['base-code-block__code'], 'hljs']}
           />
         </pre>
       </div>

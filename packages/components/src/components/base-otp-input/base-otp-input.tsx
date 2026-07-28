@@ -185,7 +185,7 @@ export function BaseOtpInput(properties: Readonly<OtpInputProperties>): MpElemen
     <fieldset
       ref={containerReference}
       aria-label={ariaLabel}
-      classNames={[
+      className={[
         styles['base-otp-input'],
         styles[`base-otp-input--${size}`],
         {
@@ -198,7 +198,7 @@ export function BaseOtpInput(properties: Readonly<OtpInputProperties>): MpElemen
           key={index}
           aria-label={`Digit ${index + 1} of ${length}`}
           autocomplete={index === 0 ? 'one-time-code' : 'off'}
-          classNames={styles['base-otp-input__cell']}
+          className={styles['base-otp-input__cell']}
           disabled={disabled}
           inputmode={inputMode}
           maxlength={1}

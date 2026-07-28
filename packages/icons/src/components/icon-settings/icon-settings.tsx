@@ -24,7 +24,7 @@ export function IconSettings(properties: Readonly<IconSettingsProperties>): MpEl
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-settings']}>
+    <div className={styles['base-icon-settings']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

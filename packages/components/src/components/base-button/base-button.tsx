@@ -81,7 +81,7 @@ export function BaseButton(properties: Readonly<ButtonProperties>): MpElement {
 
   return (
     <button
-      classNames={className}
+      className={className}
       type={properties.type ?? 'button'}
       disabled={disabled || loading}
       aria-busy={loading}
@@ -91,7 +91,7 @@ export function BaseButton(properties: Readonly<ButtonProperties>): MpElement {
     >
       {loading ? (
         <span
-          classNames={styles['base-button__spinner']}
+          className={styles['base-button__spinner']}
           role="status"
           aria-label={properties.loadingLabel ?? 'Loading…'}
           aria-live="off"

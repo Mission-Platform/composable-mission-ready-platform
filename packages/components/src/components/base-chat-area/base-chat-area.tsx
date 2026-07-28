@@ -84,26 +84,26 @@ export function BaseChatArea(properties: Readonly<ChatAreaProperties>): MpElemen
   }, []);
 
   return (
-    <div classNames={[styles['base-chat-area'], sizeStyles[`base-size--${size}`]]}>
-      <header classNames={styles['base-chat-area__header']}>
+    <div className={[styles['base-chat-area'], sizeStyles[`base-size--${size}`]]}>
+      <header className={styles['base-chat-area__header']}>
         <Slot name="header" />
       </header>
       <div
         ref={logReference}
         aria-label={ariaLabel}
         aria-live="polite"
-        classNames={styles['base-chat-area__log']}
+        className={styles['base-chat-area__log']}
         role="log"
         onScroll={onScroll}
       >
         <ul
-          classNames={styles['base-chat-area__messages']}
+          className={styles['base-chat-area__messages']}
           role="list"
         >
           <Slot />
         </ul>
       </div>
-      <footer classNames={styles['base-chat-area__footer']}>
+      <footer className={styles['base-chat-area__footer']}>
         <Slot name="footer" />
       </footer>
     </div>

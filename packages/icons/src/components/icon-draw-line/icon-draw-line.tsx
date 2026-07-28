@@ -24,7 +24,7 @@ export function IconDrawLine(properties: Readonly<IconDrawLineProperties>): MpEl
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-draw-line']}>
+    <div className={styles['base-icon-draw-line']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

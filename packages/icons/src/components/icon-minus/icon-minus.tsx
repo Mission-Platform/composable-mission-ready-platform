@@ -24,7 +24,7 @@ export function IconMinus(properties: Readonly<IconMinusProperties>): MpElement 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-minus']}>
+    <div className={styles['base-icon-minus']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

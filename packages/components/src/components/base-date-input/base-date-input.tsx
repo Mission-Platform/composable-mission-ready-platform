@@ -114,7 +114,7 @@ export function BaseDateInput(properties: Readonly<DateInputProperties>): MpElem
   return (
     <div
       aria-disabled={disabled ? 'true' : undefined}
-      classNames={[
+      className={[
         styles['base-date-input'],
         styles[`base-date-input--${size}`],
         {
@@ -125,7 +125,7 @@ export function BaseDateInput(properties: Readonly<DateInputProperties>): MpElem
     >
       {label ? (
         <label
-          classNames={[
+          className={[
             styles['base-date-input__label'],
             {
               [styles['base-date-input__label--hidden']]: labelHidden,
@@ -143,7 +143,7 @@ export function BaseDateInput(properties: Readonly<DateInputProperties>): MpElem
           {required ? (
             <span
               aria-hidden="true"
-              classNames={styles['base-date-input__required']}
+              className={styles['base-date-input__required']}
               title="required"
             >
               *
@@ -159,11 +159,11 @@ export function BaseDateInput(properties: Readonly<DateInputProperties>): MpElem
         onUpdateOpen={(next: boolean) => setOpen(next)}
       >
         <div
-          classNames={styles['base-date-input__wrapper']}
+          className={styles['base-date-input__wrapper']}
           slot="trigger"
         >
           {hasSlot('start') ? (
-            <span classNames={[styles['base-date-input__extension'], styles['base-date-input__extension--start']]}>
+            <span className={[styles['base-date-input__extension'], styles['base-date-input__extension--start']]}>
               <Slot name="start" />
             </span>
           ) : undefined}
@@ -174,12 +174,12 @@ export function BaseDateInput(properties: Readonly<DateInputProperties>): MpElem
             aria-haspopup="dialog"
             aria-invalid={error ? 'true' : undefined}
             aria-label={label ?? 'Date picker'}
-            classNames={styles['base-date-input__trigger']}
+            className={styles['base-date-input__trigger']}
             type="button"
             onClick={toggleOpen}
           >
             <span
-              classNames={[
+              className={[
                 styles['base-date-input__value'],
                 {
                   [styles['base-date-input__value--placeholder']]: !modelValue,
@@ -190,20 +190,20 @@ export function BaseDateInput(properties: Readonly<DateInputProperties>): MpElem
             </span>
             <span
               aria-hidden="true"
-              classNames={styles['base-date-input__icon']}
+              className={styles['base-date-input__icon']}
             >
               <IconCalendar size="sm" />
             </span>
           </button>
           {hasSlot('end') ? (
-            <span classNames={[styles['base-date-input__extension'], styles['base-date-input__extension--end']]}>
+            <span className={[styles['base-date-input__extension'], styles['base-date-input__extension--end']]}>
               <Slot name="end" />
             </span>
           ) : undefined}
         </div>
         <div
           aria-label={`${label ?? 'Date'} calendar`}
-          classNames={styles['base-date-input__calendar']}
+          className={styles['base-date-input__calendar']}
           role="dialog"
         >
           <BaseCalendar
@@ -219,7 +219,7 @@ export function BaseDateInput(properties: Readonly<DateInputProperties>): MpElem
       {error ? (
         <p
           id={`${resolvedId}-error`}
-          classNames={styles['base-date-input__error']}
+          className={styles['base-date-input__error']}
           role="alert"
         >
           <BaseTypography
@@ -233,7 +233,7 @@ export function BaseDateInput(properties: Readonly<DateInputProperties>): MpElem
       ) : hint ? (
         <p
           id={`${resolvedId}-hint`}
-          classNames={styles['base-date-input__hint']}
+          className={styles['base-date-input__hint']}
         >
           <BaseTypography
             as="span"

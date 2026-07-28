@@ -338,14 +338,14 @@ export function BaseCalendar(properties: Readonly<CalendarProperties>): MpElemen
 
   const weekdayHeader: MpChild = (
     <div
-      classNames={styles['base-calendar__row']}
+      className={styles['base-calendar__row']}
       role="row"
     >
       {DAYS.map((day) => (
         <span
           key={day}
           aria-label={day}
-          classNames={styles['base-calendar__weekday']}
+          className={styles['base-calendar__weekday']}
           role="columnheader"
         >
           {day}
@@ -357,7 +357,7 @@ export function BaseCalendar(properties: Readonly<CalendarProperties>): MpElemen
   const weekRows: MpChild[] = weeks.map((week, weekIndex) => (
     <div
       key={weekIndex}
-      classNames={styles['base-calendar__row']}
+      className={styles['base-calendar__row']}
       role="row"
     >
       {week.map((cell, cellIndex) => (
@@ -366,7 +366,7 @@ export function BaseCalendar(properties: Readonly<CalendarProperties>): MpElemen
           aria-current={isToday(cell.iso) ? 'date' : undefined}
           aria-label={cell.iso ?? undefined}
           aria-selected={rangeActive ? isRangeStart(cell.iso) || isRangeEnd(cell.iso) : isSelected(cell.iso)}
-          classNames={[
+          className={[
             styles['base-calendar__day'],
             {
               [styles['base-calendar__day--empty']]: !cell.day,
@@ -396,7 +396,7 @@ export function BaseCalendar(properties: Readonly<CalendarProperties>): MpElemen
   return (
     <div
       aria-label={`Calendar, ${monthLabel}`}
-      classNames={[
+      className={[
         styles['base-calendar'],
         styles[`base-calendar--${size}`],
         {
@@ -405,10 +405,10 @@ export function BaseCalendar(properties: Readonly<CalendarProperties>): MpElemen
       ]}
       role="application"
     >
-      <div classNames={styles['base-calendar__header']}>
+      <div className={styles['base-calendar__header']}>
         <button
           aria-label={view === 'days' ? 'Previous month' : view === 'months' ? 'Previous year' : 'Previous decade'}
-          classNames={styles['base-calendar__nav-btn']}
+          className={styles['base-calendar__nav-btn']}
           type="button"
           onClick={goPrevious}
         >
@@ -417,7 +417,7 @@ export function BaseCalendar(properties: Readonly<CalendarProperties>): MpElemen
             size="sm"
           />
         </button>
-        <span classNames={styles['base-calendar__month-label']}>
+        <span className={styles['base-calendar__month-label']}>
           {view === 'years' ? (
             <BaseTypography
               as="span"
@@ -429,7 +429,7 @@ export function BaseCalendar(properties: Readonly<CalendarProperties>): MpElemen
           ) : view === 'months' ? (
             <button
               aria-label="Select year"
-              classNames={styles['base-calendar__label-btn']}
+              className={styles['base-calendar__label-btn']}
               type="button"
               onClick={() => setView('years')}
             >
@@ -442,10 +442,10 @@ export function BaseCalendar(properties: Readonly<CalendarProperties>): MpElemen
               </BaseTypography>
             </button>
           ) : (
-            <span classNames={styles['base-calendar__label-group']}>
+            <span className={styles['base-calendar__label-group']}>
               <button
                 aria-label="Select month"
-                classNames={styles['base-calendar__label-btn']}
+                className={styles['base-calendar__label-btn']}
                 type="button"
                 onClick={() => setView('months')}
               >
@@ -459,7 +459,7 @@ export function BaseCalendar(properties: Readonly<CalendarProperties>): MpElemen
               </button>
               <button
                 aria-label="Select year"
-                classNames={styles['base-calendar__label-btn']}
+                className={styles['base-calendar__label-btn']}
                 type="button"
                 onClick={() => setView('years')}
               >
@@ -476,7 +476,7 @@ export function BaseCalendar(properties: Readonly<CalendarProperties>): MpElemen
         </span>
         <button
           aria-label={view === 'days' ? 'Next month' : view === 'months' ? 'Next year' : 'Next decade'}
-          classNames={styles['base-calendar__nav-btn']}
+          className={styles['base-calendar__nav-btn']}
           type="button"
           onClick={goNext}
         >
@@ -490,7 +490,7 @@ export function BaseCalendar(properties: Readonly<CalendarProperties>): MpElemen
       {view === 'days' ? (
         <div
           aria-label={monthLabel}
-          classNames={styles['base-calendar__grid']}
+          className={styles['base-calendar__grid']}
           role="grid"
           onMouseleave={() => hoverDate(undefined, false)}
         >
@@ -499,7 +499,7 @@ export function BaseCalendar(properties: Readonly<CalendarProperties>): MpElemen
       ) : view === 'months' ? (
         <div
           aria-label={`Select month, ${viewYear}`}
-          classNames={styles['base-calendar__months']}
+          className={styles['base-calendar__months']}
           role="grid"
         >
           {MONTHS_SHORT.map((monthName, index) => (
@@ -507,7 +507,7 @@ export function BaseCalendar(properties: Readonly<CalendarProperties>): MpElemen
               key={monthName}
               aria-label={MONTHS[index]}
               aria-selected={index + 1 === viewMonth}
-              classNames={[
+              className={[
                 styles['base-calendar__cell'],
                 {
                   [styles['base-calendar__cell--current']]: index + 1 === viewMonth,
@@ -523,7 +523,7 @@ export function BaseCalendar(properties: Readonly<CalendarProperties>): MpElemen
       ) : (
         <div
           aria-label={`Select year, ${decadeLabel}`}
-          classNames={styles['base-calendar__years']}
+          className={styles['base-calendar__years']}
           role="grid"
         >
           {decadeYears.map((year) => (
@@ -531,7 +531,7 @@ export function BaseCalendar(properties: Readonly<CalendarProperties>): MpElemen
               key={year}
               aria-label={`${year}`}
               aria-selected={year === viewYear}
-              classNames={[
+              className={[
                 styles['base-calendar__cell'],
                 {
                   [styles['base-calendar__cell--current']]: year === viewYear,

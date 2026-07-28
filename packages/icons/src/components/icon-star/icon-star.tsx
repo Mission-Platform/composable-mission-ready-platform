@@ -24,7 +24,7 @@ export function IconStar(properties: Readonly<IconStarProperties>): MpElement {
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-star']}>
+    <div className={styles['base-icon-star']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

@@ -24,7 +24,7 @@ export function IconBlockquote(properties: Readonly<IconBlockquoteProperties>): 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-blockquote']}>
+    <div className={styles['base-icon-blockquote']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Blockquote'}

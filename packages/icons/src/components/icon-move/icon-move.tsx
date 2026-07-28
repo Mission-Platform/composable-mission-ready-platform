@@ -24,7 +24,7 @@ export function IconMove(properties: Readonly<IconMoveProperties>): MpElement {
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-move']}>
+    <div className={styles['base-icon-move']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

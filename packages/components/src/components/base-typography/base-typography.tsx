@@ -169,7 +169,7 @@ export function BaseTypography(properties: Readonly<TypographyProperties>): MpEl
     return (
       <Dynamic
         is={tag}
-        classNames={className}
+        className={className}
       >
         {children}
       </Dynamic>
@@ -185,11 +185,11 @@ export function BaseTypography(properties: Readonly<TypographyProperties>): MpEl
   const hidePopup = (): void => setPopupVisible(false);
 
   return (
-    <span classNames={styles['base-typography-popup-wrapper']}>
+    <span className={styles['base-typography-popup-wrapper']}>
       <Dynamic
         is={tag}
         ref={textReference}
-        classNames={classNames(className, styles['base-typography--popup-anchor'])}
+        className={classNames(className, styles['base-typography--popup-anchor'])}
         onMouseenter={showPopup}
         onMouseleave={hidePopup}
         onFocusin={showPopup}
@@ -199,7 +199,7 @@ export function BaseTypography(properties: Readonly<TypographyProperties>): MpEl
       </Dynamic>
       {popupVisible ? (
         <span
-          classNames={styles['base-typography-popup']}
+          className={styles['base-typography-popup']}
           role="tooltip"
         >
           {children}

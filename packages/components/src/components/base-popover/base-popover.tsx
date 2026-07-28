@@ -144,10 +144,10 @@ export function BasePopover(properties: Readonly<PopoverProperties>): MpElement 
   }, [open, closeOnOutsideClick]);
 
   return (
-    <div classNames={styles['base-popover']}>
+    <div className={styles['base-popover']}>
       <div
         ref={triggerReference}
-        classNames={styles['base-popover__trigger']}
+        className={styles['base-popover__trigger']}
         style={{ anchorName }}
       >
         <Slot name="trigger" />
@@ -158,7 +158,7 @@ export function BasePopover(properties: Readonly<PopoverProperties>): MpElement 
             ref={panelReference}
             id={panelId}
             aria-label={label}
-            classNames={[styles['base-popover__panel'], sizeStyles[`base-size--${size}`]]}
+            className={[styles['base-popover__panel'], sizeStyles[`base-size--${size}`]]}
             data-placement={placement}
             role="dialog"
             style={{ positionAnchor: anchorName, positionArea: POSITION_AREA[placement], margin: `${offset}px` }}

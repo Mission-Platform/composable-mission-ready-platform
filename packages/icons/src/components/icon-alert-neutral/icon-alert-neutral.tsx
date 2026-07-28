@@ -26,7 +26,7 @@ export function IconAlertNeutral(properties: Readonly<IconAlertNeutralProperties
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-alert-neutral']}>
+    <div className={styles['base-icon-alert-neutral']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Notice'}

@@ -24,7 +24,7 @@ export function IconBulletList(properties: Readonly<IconBulletListProperties>): 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-bullet-list']}>
+    <div className={styles['base-icon-bullet-list']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Bullet List'}

@@ -25,7 +25,7 @@ export function IconPlay(properties: Readonly<IconPlayProperties>): MpElement {
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-play']}>
+    <div className={styles['base-icon-play']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

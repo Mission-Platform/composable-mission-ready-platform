@@ -114,14 +114,12 @@ export function BaseBackgroundVideo(properties: Readonly<BackgroundVideoProperti
   const childList = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];
 
   const content =
-    childList.length > 0 ? (
-      <div classNames={styles['base-background-video__content']}>{childList}</div>
-    ) : undefined;
+    childList.length > 0 ? <div className={styles['base-background-video__content']}>{childList}</div> : undefined;
 
   const video = (
     <video
       ref={videoReference}
-      classNames={styles['base-background-video__video']}
+      className={styles['base-background-video__video']}
       autoplay={!reducedMotion}
       poster={poster}
       src={sources.length > 0 ? undefined : src}
@@ -139,7 +137,7 @@ export function BaseBackgroundVideo(properties: Readonly<BackgroundVideoProperti
 
   return (
     <div
-      classNames={className}
+      className={className}
       style={{ minHeight }}
     >
       {video}

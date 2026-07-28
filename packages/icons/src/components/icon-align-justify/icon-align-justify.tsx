@@ -24,7 +24,7 @@ export function IconAlignJustify(properties: Readonly<IconAlignJustifyProperties
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-align-justify']}>
+    <div className={styles['base-icon-align-justify']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

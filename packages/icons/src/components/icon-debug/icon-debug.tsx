@@ -24,7 +24,7 @@ export function IconDebug(properties: Readonly<IconDebugProperties>): MpElement 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-debug']}>
+    <div className={styles['base-icon-debug']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Debug'}

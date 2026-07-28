@@ -42,7 +42,7 @@ export function BaseSpinner(properties: Readonly<SpinnerProperties>): MpElement 
   return (
     <span
       aria-label={label ?? 'Loading…'}
-      classNames={className}
+      className={className}
       role="status"
     />
   );

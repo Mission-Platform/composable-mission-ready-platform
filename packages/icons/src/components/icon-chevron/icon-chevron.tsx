@@ -37,7 +37,7 @@ export function IconChevron(properties: Readonly<IconChevronProperties>): MpElem
   const direction = properties.direction ?? 'down';
 
   return (
-    <div classNames={styles['base-icon-chevron']}>
+    <div className={styles['base-icon-chevron']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? `Chevron ${direction}`}

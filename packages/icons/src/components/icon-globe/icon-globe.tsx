@@ -24,7 +24,7 @@ export function IconGlobe(properties: Readonly<IconGlobeProperties>): MpElement 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-globe']}>
+    <div className={styles['base-icon-globe']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

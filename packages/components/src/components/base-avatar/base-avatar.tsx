@@ -139,7 +139,7 @@ export function BaseAvatar(properties: Readonly<AvatarProperties>): MpElement {
       style={{ position: 'relative', display: 'inline-flex' }}
     >
       <div
-        classNames={['avatar__image', `avatar--${size}`, `avatar--${shape}`].join(' ')}
+        className={['avatar__image', `avatar--${size}`, `avatar--${shape}`].join(' ')}
         style={avatarStyle}
       >
         {inner}

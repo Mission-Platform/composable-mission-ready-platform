@@ -25,7 +25,7 @@ export function IconPause(properties: Readonly<IconPauseProperties>): MpElement 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-pause']}>
+    <div className={styles['base-icon-pause']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

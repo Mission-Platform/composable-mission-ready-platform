@@ -102,7 +102,7 @@ export function BaseTextarea(properties: Readonly<TextareaProperties>): MpElemen
 
   return (
     <div
-      classNames={[
+      className={[
         styles['base-textarea'],
         styles[`base-textarea--${size}`],
         {
@@ -113,7 +113,7 @@ export function BaseTextarea(properties: Readonly<TextareaProperties>): MpElemen
     >
       {label ? (
         <label
-          classNames={[
+          className={[
             styles['base-textarea__label'],
             {
               [styles['base-textarea__label--hidden']]: labelHidden,
@@ -131,7 +131,7 @@ export function BaseTextarea(properties: Readonly<TextareaProperties>): MpElemen
           {required ? (
             <span
               aria-hidden="true"
-              classNames={styles['base-textarea__required']}
+              className={styles['base-textarea__required']}
               title="required"
             >
               *
@@ -139,9 +139,9 @@ export function BaseTextarea(properties: Readonly<TextareaProperties>): MpElemen
           ) : undefined}
         </label>
       ) : undefined}
-      <div classNames={styles['base-textarea__wrapper']}>
+      <div className={styles['base-textarea__wrapper']}>
         {hasSlot('start') ? (
-          <span classNames={[styles['base-textarea__extension'], styles['base-textarea__extension--start']]}>
+          <span className={[styles['base-textarea__extension'], styles['base-textarea__extension--start']]}>
             <Slot name="start" />
           </span>
         ) : undefined}
@@ -151,7 +151,7 @@ export function BaseTextarea(properties: Readonly<TextareaProperties>): MpElemen
           aria-invalid={error ? 'true' : undefined}
           autocapitalize={autocapitalize}
           autocomplete={autocomplete}
-          classNames={styles['base-textarea__field']}
+          className={styles['base-textarea__field']}
           disabled={disabled}
           placeholder={placeholder}
           required={required}
@@ -164,7 +164,7 @@ export function BaseTextarea(properties: Readonly<TextareaProperties>): MpElemen
           onInput={handleInput}
         />
         {hasSlot('end') ? (
-          <span classNames={[styles['base-textarea__extension'], styles['base-textarea__extension--end']]}>
+          <span className={[styles['base-textarea__extension'], styles['base-textarea__extension--end']]}>
             <Slot name="end" />
           </span>
         ) : undefined}
@@ -172,7 +172,7 @@ export function BaseTextarea(properties: Readonly<TextareaProperties>): MpElemen
       {error ? (
         <p
           id={`${resolvedId}-error`}
-          classNames={styles['base-textarea__error']}
+          className={styles['base-textarea__error']}
           role="alert"
         >
           <BaseTypography
@@ -186,7 +186,7 @@ export function BaseTextarea(properties: Readonly<TextareaProperties>): MpElemen
       ) : hint ? (
         <p
           id={`${resolvedId}-hint`}
-          classNames={styles['base-textarea__hint']}
+          className={styles['base-textarea__hint']}
         >
           <BaseTypography
             as="span"

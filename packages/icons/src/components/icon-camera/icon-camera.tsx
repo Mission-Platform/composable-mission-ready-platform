@@ -24,7 +24,7 @@ export function IconCamera(properties: Readonly<IconCameraProperties>): MpElemen
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-camera']}>
+    <div className={styles['base-icon-camera']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

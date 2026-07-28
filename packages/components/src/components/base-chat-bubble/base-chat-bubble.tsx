@@ -72,7 +72,7 @@ export function BaseChatBubble(properties: Readonly<ChatBubbleProperties>): MpEl
 
   return (
     <li
-      classNames={[
+      className={[
         styles['base-chat-bubble'],
         styles[`base-chat-bubble--${side}`],
         styles[`base-chat-bubble--${variant}`],
@@ -81,7 +81,7 @@ export function BaseChatBubble(properties: Readonly<ChatBubbleProperties>): MpEl
       ]}
     >
       {hasAvatar ? (
-        <div classNames={styles['base-chat-bubble__avatar']}>
+        <div className={styles['base-chat-bubble__avatar']}>
           <Slot name="avatarContent">
             <BaseAvatar
               alt={avatarAlt}
@@ -92,9 +92,9 @@ export function BaseChatBubble(properties: Readonly<ChatBubbleProperties>): MpEl
           </Slot>
         </div>
       ) : undefined}
-      <div classNames={styles['base-chat-bubble__column']}>
+      <div className={styles['base-chat-bubble__column']}>
         {hasMeta ? (
-          <div classNames={styles['base-chat-bubble__meta']}>
+          <div className={styles['base-chat-bubble__meta']}>
             {author ? (
               <BaseTypography
                 as="span"
@@ -116,9 +116,9 @@ export function BaseChatBubble(properties: Readonly<ChatBubbleProperties>): MpEl
             ) : undefined}
           </div>
         ) : undefined}
-        <div classNames={styles['base-chat-bubble__body']}>{properties.children}</div>
+        <div className={styles['base-chat-bubble__body']}>{properties.children}</div>
         {hasSlot('footer') ? (
-          <div classNames={styles['base-chat-bubble__footer']}>
+          <div className={styles['base-chat-bubble__footer']}>
             <Slot name="footer" />
           </div>
         ) : undefined}

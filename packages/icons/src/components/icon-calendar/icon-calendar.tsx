@@ -24,7 +24,7 @@ export function IconCalendar(properties: Readonly<IconCalendarProperties>): MpEl
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-calendar']}>
+    <div className={styles['base-icon-calendar']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

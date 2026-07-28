@@ -48,7 +48,7 @@ export function BaseNavbar(properties: Readonly<NavbarProperties>): MpElement {
   return (
     <div className={styles['base-navbar-host']}>
       <header
-        classNames={[
+        className={[
           styles['base-navbar'],
           sizeStyles[`base-size--${size}`],
           { [styles['base-navbar--sticky']]: sticky },
@@ -56,9 +56,9 @@ export function BaseNavbar(properties: Readonly<NavbarProperties>): MpElement {
       >
         <nav
           aria-label="Main navigation"
-          classNames={styles['base-navbar__container']}
+          className={styles['base-navbar__container']}
         >
-          <div classNames={styles['base-navbar__start']}>
+          <div className={styles['base-navbar__start']}>
             <Slot name="brand">
               {brand ? (
                 <BaseTypography
@@ -71,22 +71,22 @@ export function BaseNavbar(properties: Readonly<NavbarProperties>): MpElement {
               ) : undefined}
             </Slot>
           </div>
-          <div classNames={[styles['base-navbar__center'], styles[`base-navbar__center--${align}`]]}>
+          <div className={[styles['base-navbar__center'], styles[`base-navbar__center--${align}`]]}>
             <Slot />
           </div>
-          <div classNames={styles['base-navbar__end']}>
+          <div className={styles['base-navbar__end']}>
             <Slot name="end" />
           </div>
           <button
             type="button"
-            classNames={styles['base-navbar__hamburger']}
+            className={styles['base-navbar__hamburger']}
             aria-expanded={sidebarOpen}
             aria-label={sidebarOpen ? 'Close menu' : 'Open menu'}
             onClick={() => setSidebarOpen(!sidebarOpen)}
           >
-            <span classNames={styles['base-navbar__hamburger-bar']} />
-            <span classNames={styles['base-navbar__hamburger-bar']} />
-            <span classNames={styles['base-navbar__hamburger-bar']} />
+            <span className={styles['base-navbar__hamburger-bar']} />
+            <span className={styles['base-navbar__hamburger-bar']} />
+            <span className={styles['base-navbar__hamburger-bar']} />
           </button>
         </nav>
       </header>
@@ -100,12 +100,12 @@ export function BaseNavbar(properties: Readonly<NavbarProperties>): MpElement {
       >
         <nav
           aria-label="Mobile navigation"
-          classNames={styles['base-navbar__mobile-nav']}
+          className={styles['base-navbar__mobile-nav']}
         >
-          <div classNames={styles['base-navbar__mobile-nav-items']}>
+          <div className={styles['base-navbar__mobile-nav-items']}>
             <Slot />
           </div>
-          <div classNames={styles['base-navbar__mobile-nav-end']}>
+          <div className={styles['base-navbar__mobile-nav-end']}>
             <Slot name="end" />
           </div>
         </nav>

@@ -152,8 +152,8 @@ export function BaseVirtualLogViewer(properties: Readonly<VirtualLogViewerProper
   }, [entries.length, followTail]);
 
   const toolbar = filter ? (
-    <div classNames={classNames(styles['log-viewer__toolbar'])}>
-      <span classNames={classNames(styles['log-viewer__filter-badge'])}>
+    <div className={classNames(styles['log-viewer__toolbar'])}>
+      <span className={classNames(styles['log-viewer__filter-badge'])}>
         {`${filteredEntries.length} / ${entries.length} matching "${filter}"`}
       </span>
     </div>
@@ -161,13 +161,13 @@ export function BaseVirtualLogViewer(properties: Readonly<VirtualLogViewerProper
 
   return (
     <div
-      classNames={[styles['log-viewer'], sizeStyles[`base-size--${size}`]]}
+      className={[styles['log-viewer'], sizeStyles[`base-size--${size}`]]}
       style={{ height: `${height}px` }}
     >
       {toolbar}
       <div
         ref={containerReference}
-        classNames={[styles['log-viewer__scroll']]}
+        className={[styles['log-viewer__scroll']]}
         style={{ height: filter ? `calc(${height}px - 32px)` : `${height}px`, overflowY: 'auto', position: 'relative' }}
       >
         <div
@@ -184,7 +184,7 @@ export function BaseVirtualLogViewer(properties: Readonly<VirtualLogViewerProper
             <button
               key={entry.id}
               type="button"
-              classNames={[styles['log-viewer__row'], styles[`log-viewer__row--${entry.level}`]]}
+              className={[styles['log-viewer__row'], styles[`log-viewer__row--${entry.level}`]]}
               style={{ height: `${itemHeight}px`, boxSizing: 'border-box' }}
               aria-label={`Log entry ${index + 1}: ${entry.level} — ${entry.message}`}
               onClick={() => properties.onSelect?.(entry)}
@@ -193,7 +193,7 @@ export function BaseVirtualLogViewer(properties: Readonly<VirtualLogViewerProper
                 as="span"
                 variant="code"
                 color="tertiary"
-                classNames={[styles['log-viewer__line-no']]}
+                className={[styles['log-viewer__line-no']]}
               >
                 {index + 1}
               </BaseTypography>
@@ -202,14 +202,14 @@ export function BaseVirtualLogViewer(properties: Readonly<VirtualLogViewerProper
                   as="span"
                   variant="code"
                   color="tertiary"
-                  classNames={[styles['log-viewer__timestamp']]}
+                  className={[styles['log-viewer__timestamp']]}
                 >
                   {entry.timestamp}
                 </BaseTypography>
               ) : undefined}
               {showLevel ? (
                 <span
-                  classNames={[styles['log-viewer__level']]}
+                  className={[styles['log-viewer__level']]}
                   style={{ color: LEVEL_COLORS[entry.level] }}
                 >
                   <span aria-hidden="true">●</span>
@@ -217,7 +217,7 @@ export function BaseVirtualLogViewer(properties: Readonly<VirtualLogViewerProper
                     as="span"
                     variant="code"
                     color="inherit"
-                    classNames={[styles['log-viewer__level-label']]}
+                    className={[styles['log-viewer__level-label']]}
                   >
                     {entry.level.toUpperCase()}
                   </BaseTypography>
@@ -227,7 +227,7 @@ export function BaseVirtualLogViewer(properties: Readonly<VirtualLogViewerProper
                 as="span"
                 variant="code"
                 color="inherit"
-                classNames={[styles['log-viewer__message']]}
+                className={[styles['log-viewer__message']]}
               >
                 {entry.message}
               </BaseTypography>

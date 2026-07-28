@@ -227,37 +227,37 @@ export function BaseCodeScanner(properties: Readonly<CodeScannerProperties>): Mp
   return (
     <div
       aria-label={ariaLabel}
-      classNames={styles['base-code-scanner']}
+      className={styles['base-code-scanner']}
       role="group"
     >
-      <div classNames={styles['base-code-scanner__viewport']}>
+      <div className={styles['base-code-scanner__viewport']}>
         <video
           ref={videoReference}
           aria-hidden="true"
-          classNames={styles['base-code-scanner__video']}
+          className={styles['base-code-scanner__video']}
         />
         {cameraActive ? null : (
-          <div classNames={styles['base-code-scanner__placeholder']}>
+          <div className={styles['base-code-scanner__placeholder']}>
             <IconCamera size="lg" />
           </div>
         )}
         {cameraActive && scanRoi > 0 && scanRoi < 1 ? (
           <div
             aria-hidden="true"
-            classNames={styles['base-code-scanner__reticle']}
+            className={styles['base-code-scanner__reticle']}
             style={{ width: `${scanRoi * 100}%`, height: `${scanRoi * 100}%` }}
           />
         ) : null}
       </div>
 
-      <div classNames={styles['base-code-scanner__actions']}>
+      <div className={styles['base-code-scanner__actions']}>
         {showFileUpload ? (
-          <span classNames={styles['base-code-scanner__upload']}>
+          <span className={styles['base-code-scanner__upload']}>
             <input
               ref={fileInputReference}
               accept="image/*"
               aria-label={uploadLabel}
-              classNames={styles['base-code-scanner__file-input']}
+              className={styles['base-code-scanner__file-input']}
               type="file"
               onChange={onFileChange}
             />
@@ -300,7 +300,7 @@ export function BaseCodeScanner(properties: Readonly<CodeScannerProperties>): Mp
 
       {result ? (
         <div
-          classNames={styles['base-code-scanner__result']}
+          className={styles['base-code-scanner__result']}
           role="status"
         >
           <BaseTypography

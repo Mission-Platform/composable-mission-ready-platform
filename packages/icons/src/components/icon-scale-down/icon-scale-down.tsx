@@ -24,7 +24,7 @@ export function IconScaleDown(properties: Readonly<IconScaleDownProperties>): Mp
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-scale-down']}>
+    <div className={styles['base-icon-scale-down']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

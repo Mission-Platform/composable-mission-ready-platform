@@ -148,14 +148,14 @@ export function BaseSegmentControl(properties: Readonly<SegmentControlProperties
     <div
       ref={containerReference}
       aria-label={ariaLabel}
-      classNames={containerClass}
+      className={containerClass}
       role="radiogroup"
     >
       {options.map((option, index) => (
         <button
           key={option.value}
           aria-checked={isSelected(option)}
-          classNames={[
+          className={[
             styles['base-segment-control__segment'],
             {
               [styles['base-segment-control__segment--selected']]: isSelected(option),

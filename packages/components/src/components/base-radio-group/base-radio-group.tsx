@@ -122,7 +122,7 @@ export function BaseRadioGroup(properties: Readonly<RadioGroupProperties>): MpEl
 
   return (
     <fieldset
-      classNames={[
+      className={[
         styles['base-radio-group'],
         sizeStyles[`base-size--${size}`],
         {
@@ -133,7 +133,7 @@ export function BaseRadioGroup(properties: Readonly<RadioGroupProperties>): MpEl
     >
       {legend ? (
         <legend
-          classNames={[
+          className={[
             styles['base-radio-group__legend'],
             {
               [styles['base-radio-group__legend--hidden']]: legendHidden,
@@ -150,7 +150,7 @@ export function BaseRadioGroup(properties: Readonly<RadioGroupProperties>): MpEl
           {required ? (
             <span
               aria-hidden="true"
-              classNames={styles['base-radio-group__required']}
+              className={styles['base-radio-group__required']}
               title="required"
             >
               *
@@ -168,7 +168,7 @@ export function BaseRadioGroup(properties: Readonly<RadioGroupProperties>): MpEl
       </BaseStack>
       {error ? (
         <p
-          classNames={styles['base-radio-group__error']}
+          className={styles['base-radio-group__error']}
           role="alert"
         >
           <BaseTypography
@@ -180,7 +180,7 @@ export function BaseRadioGroup(properties: Readonly<RadioGroupProperties>): MpEl
           </BaseTypography>
         </p>
       ) : hint ? (
-        <p classNames={styles['base-radio-group__hint']}>
+        <p className={styles['base-radio-group__hint']}>
           <BaseTypography
             as="span"
             color="secondary"

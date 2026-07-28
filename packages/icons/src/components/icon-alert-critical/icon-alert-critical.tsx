@@ -25,7 +25,7 @@ export function IconAlertCritical(properties: Readonly<IconAlertCriticalProperti
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-alert-critical']}>
+    <div className={styles['base-icon-alert-critical']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Critical'}

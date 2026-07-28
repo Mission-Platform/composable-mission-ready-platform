@@ -24,7 +24,7 @@ export function IconExternalLink(properties: Readonly<IconExternalLinkProperties
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-external-link']}>
+    <div className={styles['base-icon-external-link']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

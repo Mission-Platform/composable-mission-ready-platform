@@ -25,7 +25,7 @@ export function IconAlertWarning(properties: Readonly<IconAlertWarningProperties
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-alert-warning']}>
+    <div className={styles['base-icon-alert-warning']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Warning'}

@@ -24,7 +24,7 @@ export function IconAlignLeft(properties: Readonly<IconAlignLeftProperties>): Mp
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-align-left']}>
+    <div className={styles['base-icon-align-left']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

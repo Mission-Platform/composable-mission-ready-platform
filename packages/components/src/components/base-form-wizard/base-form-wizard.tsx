@@ -148,23 +148,23 @@ export function BaseFormWizard(properties: Readonly<FormWizardProperties>): MpEl
   // children render as real vnodes — instead of the flat-template path, which
   // would stringify the content (`toDisplayString`) and crash on a VNode.
   const renderContent = (): MpElement => (
-    <div classNames={styles['base-form-wizard__content']}>{activeStep?.content}</div>
+    <div className={styles['base-form-wizard__content']}>{activeStep?.content}</div>
   );
 
   return (
-    <div classNames={[styles['base-form-wizard'], sizeStyles[`base-size--${size}`]]}>
+    <div className={[styles['base-form-wizard'], sizeStyles[`base-size--${size}`]]}>
       <ol
-        classNames={styles['base-form-wizard__steps']}
+        className={styles['base-form-wizard__steps']}
         role="list"
       >
         {visibleSteps.map((step, index) => (
           <li
             key={step.id}
-            classNames={styles['base-form-wizard__step']}
+            className={styles['base-form-wizard__step']}
           >
             <button
               aria-current={index === current ? 'step' : undefined}
-              classNames={[
+              className={[
                 styles['base-form-wizard__step-btn'],
                 {
                   [styles['base-form-wizard__step-btn--active']]: index === current,
@@ -178,11 +178,11 @@ export function BaseFormWizard(properties: Readonly<FormWizardProperties>): MpEl
             >
               <span
                 aria-hidden="true"
-                classNames={styles['base-form-wizard__step-index']}
+                className={styles['base-form-wizard__step-index']}
               >
                 {index + 1}
               </span>
-              <span classNames={styles['base-form-wizard__step-text']}>
+              <span className={styles['base-form-wizard__step-text']}>
                 <BaseTypography
                   as="span"
                   color="inherit"
@@ -207,11 +207,11 @@ export function BaseFormWizard(properties: Readonly<FormWizardProperties>): MpEl
 
       {renderContent()}
 
-      <div classNames={styles['base-form-wizard__footer']}>
+      <div className={styles['base-form-wizard__footer']}>
         <Slot name="footer" />
-        <div classNames={styles['base-form-wizard__nav']}>
+        <div className={styles['base-form-wizard__nav']}>
           <button
-            classNames={[styles['base-form-wizard__button'], styles['base-form-wizard__button--secondary']]}
+            className={[styles['base-form-wizard__button'], styles['base-form-wizard__button--secondary']]}
             disabled={isFirst}
             type="button"
             onClick={previous}
@@ -219,7 +219,7 @@ export function BaseFormWizard(properties: Readonly<FormWizardProperties>): MpEl
             {backLabel}
           </button>
           <button
-            classNames={[styles['base-form-wizard__button'], styles['base-form-wizard__button--primary']]}
+            className={[styles['base-form-wizard__button'], styles['base-form-wizard__button--primary']]}
             disabled={!canAdvance}
             type="button"
             onClick={next}

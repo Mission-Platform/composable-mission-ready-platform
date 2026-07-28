@@ -62,7 +62,7 @@ export function BaseSwitch(properties: Readonly<SwitchProperties>): MpElement {
 
   return (
     <div
-      classNames={[
+      className={[
         styles['base-switch'],
         styles[`base-switch--${size}`],
         {
@@ -71,8 +71,8 @@ export function BaseSwitch(properties: Readonly<SwitchProperties>): MpElement {
         },
       ]}
     >
-      <label classNames={styles['base-switch__row']}>
-        <span classNames={styles['base-switch__track-wrapper']}>
+      <label className={styles['base-switch__row']}>
+        <span className={styles['base-switch__track-wrapper']}>
           <input
             id={resolvedId}
             aria-checked={modelValue}
@@ -80,7 +80,7 @@ export function BaseSwitch(properties: Readonly<SwitchProperties>): MpElement {
             aria-invalid={error ? 'true' : undefined}
             aria-label={label ? undefined : ariaLabel}
             checked={modelValue}
-            classNames={styles['base-switch__input']}
+            className={styles['base-switch__input']}
             disabled={disabled}
             role="switch"
             type="checkbox"
@@ -88,13 +88,13 @@ export function BaseSwitch(properties: Readonly<SwitchProperties>): MpElement {
           />
           <span
             aria-hidden="true"
-            classNames={styles['base-switch__track']}
+            className={styles['base-switch__track']}
           >
-            <span classNames={styles['base-switch__thumb']} />
+            <span className={styles['base-switch__thumb']} />
           </span>
         </span>
         {label ? (
-          <span classNames={styles['base-switch__label']}>
+          <span className={styles['base-switch__label']}>
             <BaseTypography
               as="span"
               color="primary"
@@ -108,7 +108,7 @@ export function BaseSwitch(properties: Readonly<SwitchProperties>): MpElement {
       {error ? (
         <p
           id={`${resolvedId}-error`}
-          classNames={styles['base-switch__error']}
+          className={styles['base-switch__error']}
           role="alert"
         >
           <BaseTypography
@@ -122,7 +122,7 @@ export function BaseSwitch(properties: Readonly<SwitchProperties>): MpElement {
       ) : hint ? (
         <p
           id={`${resolvedId}-hint`}
-          classNames={styles['base-switch__hint']}
+          className={styles['base-switch__hint']}
         >
           <BaseTypography
             as="span"

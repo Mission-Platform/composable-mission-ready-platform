@@ -24,7 +24,7 @@ export function IconMapPin(properties: Readonly<IconMapPinProperties>): MpElemen
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-map-pin']}>
+    <div className={styles['base-icon-map-pin']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

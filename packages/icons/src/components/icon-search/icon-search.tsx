@@ -24,7 +24,7 @@ export function IconSearch(properties: Readonly<IconSearchProperties>): MpElemen
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-search']}>
+    <div className={styles['base-icon-search']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

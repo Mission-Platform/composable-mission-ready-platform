@@ -85,7 +85,7 @@ export function BaseTimeline(properties: Readonly<TimelineProperties>): MpElemen
 
   return (
     <ol
-      classNames={[
+      className={[
         styles['base-timeline'],
         styles[`base-timeline--${orientation}`],
         sizeStyles[`base-size--${size}`],
@@ -97,7 +97,7 @@ export function BaseTimeline(properties: Readonly<TimelineProperties>): MpElemen
       {items.map((item, index) => (
         <li
           key={item.id}
-          classNames={[
+          className={[
             styles['base-timeline-item'],
             styles[`base-timeline-item--${orientation}`],
             styles[`base-timeline-item--${item.variant ?? 'primary'}`],
@@ -107,20 +107,20 @@ export function BaseTimeline(properties: Readonly<TimelineProperties>): MpElemen
             },
           ]}
         >
-          <div classNames={styles['base-timeline-item__marker']}>
+          <div className={styles['base-timeline-item__marker']}>
             <Slot
               name="marker"
               index={index}
               item={item}
             >
-              <span classNames={styles['base-timeline-item__dot']} />
+              <span className={styles['base-timeline-item__dot']} />
             </Slot>
           </div>
-          <div classNames={styles['base-timeline-item__content']}>
+          <div className={styles['base-timeline-item__content']}>
             {item.time ? (
               <BaseTypography
                 as="span"
-                classNames={styles['base-timeline-item__time']}
+                className={styles['base-timeline-item__time']}
                 color="tertiary"
                 variant="caption"
               >
@@ -136,7 +136,7 @@ export function BaseTimeline(properties: Readonly<TimelineProperties>): MpElemen
             {item.title ? (
               <BaseTypography
                 as="h3"
-                classNames={styles['base-timeline-item__title']}
+                className={styles['base-timeline-item__title']}
                 color="primary"
                 variant="h6"
                 weight="semibold"
@@ -151,7 +151,7 @@ export function BaseTimeline(properties: Readonly<TimelineProperties>): MpElemen
               </BaseTypography>
             ) : undefined}
             {item.body ? (
-              <div classNames={styles['base-timeline-item__body']}>
+              <div className={styles['base-timeline-item__body']}>
                 <Slot
                   name="content"
                   index={index}

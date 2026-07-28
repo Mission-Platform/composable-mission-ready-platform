@@ -290,7 +290,7 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
       key={option.value}
       aria-disabled={option.disabled || undefined}
       aria-selected={option.value === modelValue}
-      classNames={[
+      className={[
         styles['base-select__option'],
         {
           [styles['base-select__option--selected']]: option.value === modelValue,
@@ -312,7 +312,7 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
       <li
         aria-disabled="true"
         aria-selected="false"
-        classNames={styles['base-select__empty']}
+        className={styles['base-select__empty']}
         role="option"
         tabindex={-1}
       >
@@ -340,7 +340,7 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
       aria-labelledby={label ? `${resolvedId}-label` : undefined}
       aria-required={required || undefined}
       autocomplete="off"
-      classNames={[
+      className={[
         styles['base-select__field'],
         {
           [styles['base-select__field--placeholder']]: hasPlaceholder && !searchValue,
@@ -368,7 +368,7 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
       aria-invalid={error ? 'true' : undefined}
       aria-labelledby={label ? `${resolvedId}-label` : undefined}
       aria-required={required || undefined}
-      classNames={[
+      className={[
         styles['base-select__field'],
         {
           [styles['base-select__field--placeholder']]: hasPlaceholder,
@@ -393,7 +393,7 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
 
   return (
     <div
-      classNames={[
+      className={[
         styles['base-select'],
         styles[`base-select--${size}`],
         {
@@ -406,7 +406,7 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
       {label ? (
         <label
           id={`${resolvedId}-label`}
-          classNames={[
+          className={[
             styles['base-select__label'],
             {
               [styles['base-select__label--hidden']]: labelHidden,
@@ -424,7 +424,7 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
           {required ? (
             <span
               aria-hidden="true"
-              classNames={styles['base-select__required']}
+              className={styles['base-select__required']}
               title="required"
             >
               *
@@ -436,7 +436,7 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
         id={`${resolvedId}-native`}
         aria-hidden="true"
         autocomplete={autocomplete}
-        classNames={styles['base-select__native']}
+        className={styles['base-select__native']}
         disabled={disabled}
         name={name}
         required={required}
@@ -451,7 +451,7 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
         onUpdateOpen={(open: boolean) => setIsOpen(open)}
       >
         <div
-          classNames={styles['base-select__wrapper']}
+          className={styles['base-select__wrapper']}
           slot="trigger"
           onClick={() => {
             if (searchable && !disabled && !isOpen) {
@@ -460,16 +460,16 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
             }
           }}
         >
-          <span classNames={[styles['base-select__extension'], styles['base-select__extension--start']]}>
+          <span className={[styles['base-select__extension'], styles['base-select__extension--start']]}>
             <Slot name="start" />
           </span>
           {triggerControl}
-          <span classNames={[styles['base-select__extension'], styles['base-select__extension--end']]}>
+          <span className={[styles['base-select__extension'], styles['base-select__extension--end']]}>
             <Slot name="end" />
           </span>
           <span
             aria-hidden="true"
-            classNames={styles['base-select__chevron']}
+            className={styles['base-select__chevron']}
           >
             <IconChevron
               direction={isOpen ? 'up' : 'down'}
@@ -480,7 +480,7 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
         <ul
           id={`${resolvedId}-listbox`}
           aria-labelledby={label ? `${resolvedId}-label` : undefined}
-          classNames={styles['base-select__listbox']}
+          className={styles['base-select__listbox']}
           role="listbox"
         >
           {listItems}
@@ -489,7 +489,7 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
       {error ? (
         <p
           id={`${resolvedId}-error`}
-          classNames={styles['base-select__error']}
+          className={styles['base-select__error']}
           role="alert"
         >
           <BaseTypography
@@ -503,7 +503,7 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
       ) : hint ? (
         <p
           id={`${resolvedId}-hint`}
-          classNames={styles['base-select__hint']}
+          className={styles['base-select__hint']}
         >
           <BaseTypography
             as="span"

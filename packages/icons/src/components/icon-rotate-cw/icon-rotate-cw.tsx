@@ -24,7 +24,7 @@ export function IconRotateCw(properties: Readonly<IconRotateCwProperties>): MpEl
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-rotate-cw']}>
+    <div className={styles['base-icon-rotate-cw']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

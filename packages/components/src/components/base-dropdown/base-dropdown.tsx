@@ -125,10 +125,10 @@ export function BaseDropdown(properties: Readonly<DropdownProperties>): MpElemen
   }, [open, closeOnOutsideClick]);
 
   return (
-    <div classNames={styles['base-dropdown']}>
+    <div className={styles['base-dropdown']}>
       <div
         ref={triggerReference}
-        classNames={styles['base-dropdown__trigger']}
+        className={styles['base-dropdown__trigger']}
         style={{ anchorName }}
       >
         <Slot name="trigger" />
@@ -138,7 +138,7 @@ export function BaseDropdown(properties: Readonly<DropdownProperties>): MpElemen
           <div
             ref={panelReference}
             id={panelId}
-            classNames={[
+            className={[
               styles['base-dropdown__panel'],
               sizeStyles[`base-size--${size}`],
               {

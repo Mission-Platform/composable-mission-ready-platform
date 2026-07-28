@@ -24,7 +24,7 @@ export function IconLink(properties: Readonly<IconLinkProperties>): MpElement {
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-link']}>
+    <div className={styles['base-icon-link']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

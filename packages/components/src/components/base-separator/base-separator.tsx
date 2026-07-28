@@ -71,7 +71,7 @@ export function BaseSeparator(properties: Readonly<SeparatorProperties>): MpElem
 
   return hasLabel ? (
     <div
-      classNames={[
+      className={[
         styles['base-separator'],
         styles['base-separator--labelled'],
         styles[`base-separator--${variant}`],
@@ -83,13 +83,13 @@ export function BaseSeparator(properties: Readonly<SeparatorProperties>): MpElem
       role={role}
       aria-orientation={decorative ? undefined : 'horizontal'}
     >
-      <span classNames={styles['base-separator__line']} />
-      <span classNames={styles['base-separator__label']}>{properties.children}</span>
-      <span classNames={styles['base-separator__line']} />
+      <span className={styles['base-separator__line']} />
+      <span className={styles['base-separator__label']}>{properties.children}</span>
+      <span className={styles['base-separator__line']} />
     </div>
   ) : (
     <hr
-      classNames={[
+      className={[
         styles['base-separator'],
         styles[`base-separator--${orientation}`],
         styles[`base-separator--${variant}`],

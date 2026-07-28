@@ -24,7 +24,7 @@ export function IconTableColumnRemove(properties: Readonly<IconTableColumnRemove
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-table-column-remove']}>
+    <div className={styles['base-icon-table-column-remove']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Remove Table Column'}

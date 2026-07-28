@@ -111,7 +111,7 @@ export function BaseResponsiveVideo(properties: Readonly<ResponsiveVideoProperti
 
   return (
     <video
-      classNames={className}
+      className={className}
       aria-label={label}
       autoplay={autoplay}
       controls={controls}

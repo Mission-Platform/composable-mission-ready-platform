@@ -175,7 +175,7 @@ export function BaseMultiselect(properties: Readonly<MultiselectProperties>): Mp
       aria-haspopup="listbox"
       aria-invalid={error ? 'true' : undefined}
       autocomplete="off"
-      classNames={styles['base-multiselect__input']}
+      className={styles['base-multiselect__input']}
       disabled={disabled}
       placeholder={selectedOptions.length === 0 ? (placeholder ?? 'Select options…') : undefined}
       required={required && modelValue.length === 0}
@@ -193,7 +193,7 @@ export function BaseMultiselect(properties: Readonly<MultiselectProperties>): Mp
       key={option.value}
       aria-disabled={option.disabled || undefined}
       aria-selected="false"
-      classNames={[
+      className={[
         styles['base-multiselect__option'],
         {
           [styles['base-multiselect__option--disabled']]: option.disabled,
@@ -214,7 +214,7 @@ export function BaseMultiselect(properties: Readonly<MultiselectProperties>): Mp
       <li
         aria-disabled="true"
         aria-selected="false"
-        classNames={styles['base-multiselect__empty']}
+        className={styles['base-multiselect__empty']}
         role="option"
         tabindex={-1}
       >
@@ -225,7 +225,7 @@ export function BaseMultiselect(properties: Readonly<MultiselectProperties>): Mp
 
   return (
     <div
-      classNames={[
+      className={[
         styles['base-multiselect'],
         styles[`base-multiselect--${size}`],
         {
@@ -237,7 +237,7 @@ export function BaseMultiselect(properties: Readonly<MultiselectProperties>): Mp
     >
       {label ? (
         <label
-          classNames={[
+          className={[
             styles['base-multiselect__label'],
             {
               [styles['base-multiselect__label--hidden']]: labelHidden,
@@ -255,7 +255,7 @@ export function BaseMultiselect(properties: Readonly<MultiselectProperties>): Mp
           {required ? (
             <span
               aria-hidden="true"
-              classNames={styles['base-multiselect__required']}
+              className={styles['base-multiselect__required']}
               title="required"
             >
               *
@@ -267,7 +267,7 @@ export function BaseMultiselect(properties: Readonly<MultiselectProperties>): Mp
         id={`${resolvedId}-native`}
         aria-hidden="true"
         autocomplete={autocomplete}
-        classNames={styles['base-multiselect__native']}
+        className={styles['base-multiselect__native']}
         disabled={disabled}
         multiple
         name={name}
@@ -282,7 +282,7 @@ export function BaseMultiselect(properties: Readonly<MultiselectProperties>): Mp
         onUpdateOpen={(open: boolean) => setIsOpen(open)}
       >
         <div
-          classNames={styles['base-multiselect__wrapper']}
+          className={styles['base-multiselect__wrapper']}
           slot="trigger"
           onClick={() => {
             if (!disabled) {
@@ -290,17 +290,17 @@ export function BaseMultiselect(properties: Readonly<MultiselectProperties>): Mp
             }
           }}
         >
-          <div classNames={styles['base-multiselect__control']}>
-            <span classNames={[styles['base-multiselect__extension'], styles['base-multiselect__extension--start']]}>
+          <div className={styles['base-multiselect__control']}>
+            <span className={[styles['base-multiselect__extension'], styles['base-multiselect__extension--start']]}>
               <Slot name="start" />
             </span>
-            <div classNames={styles['base-multiselect__tags']}>{tagChips}</div>
-            <span classNames={[styles['base-multiselect__extension'], styles['base-multiselect__extension--end']]}>
+            <div className={styles['base-multiselect__tags']}>{tagChips}</div>
+            <span className={[styles['base-multiselect__extension'], styles['base-multiselect__extension--end']]}>
               <Slot name="end" />
             </span>
             <span
               aria-hidden="true"
-              classNames={styles['base-multiselect__chevron']}
+              className={styles['base-multiselect__chevron']}
             >
               <IconChevron
                 direction={isOpen ? 'up' : 'down'}
@@ -311,7 +311,7 @@ export function BaseMultiselect(properties: Readonly<MultiselectProperties>): Mp
         </div>
         <ul
           id={`${resolvedId}-listbox`}
-          classNames={styles['base-multiselect__listbox']}
+          className={styles['base-multiselect__listbox']}
           role="listbox"
         >
           {listItems}
@@ -320,7 +320,7 @@ export function BaseMultiselect(properties: Readonly<MultiselectProperties>): Mp
       {error ? (
         <p
           id={`${resolvedId}-error`}
-          classNames={styles['base-multiselect__error']}
+          className={styles['base-multiselect__error']}
           role="alert"
         >
           <BaseTypography
@@ -334,7 +334,7 @@ export function BaseMultiselect(properties: Readonly<MultiselectProperties>): Mp
       ) : hint ? (
         <p
           id={`${resolvedId}-hint`}
-          classNames={styles['base-multiselect__hint']}
+          className={styles['base-multiselect__hint']}
         >
           <BaseTypography
             as="span"

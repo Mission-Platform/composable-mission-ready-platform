@@ -24,7 +24,7 @@ export function IconSend(properties: Readonly<IconSendProperties>): MpElement {
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-send']}>
+    <div className={styles['base-icon-send']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

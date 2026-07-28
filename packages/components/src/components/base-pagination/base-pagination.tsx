@@ -195,16 +195,16 @@ export function BasePagination(properties: Readonly<PaginationProperties>): MpEl
   return (
     <nav
       aria-label={ariaLabel}
-      classNames={navClass}
+      className={navClass}
     >
-      <ul classNames={styles['base-pagination__list']}>
+      <ul className={styles['base-pagination__list']}>
         {controls.map((control, index) => (
           <li key={index}>
             {control.kind === 'page' ? (
               <button
                 aria-current={control.page === currentPage ? 'page' : undefined}
                 aria-label={`Go to page ${control.page}`}
-                classNames={[
+                className={[
                   styles['base-pagination__btn'],
                   {
                     [styles['base-pagination__btn--active']]: control.page === currentPage,
@@ -219,14 +219,14 @@ export function BasePagination(properties: Readonly<PaginationProperties>): MpEl
             ) : control.kind === 'ellipsis' ? (
               <span
                 aria-hidden="true"
-                classNames={styles['base-pagination__ellipsis']}
+                className={styles['base-pagination__ellipsis']}
               >
                 …
               </span>
             ) : (
               <button
                 aria-label={control.ariaLabel}
-                classNames={[styles['base-pagination__btn'], styles[`base-pagination__btn--${control.modifier}`]]}
+                className={[styles['base-pagination__btn'], styles[`base-pagination__btn--${control.modifier}`]]}
                 disabled={control.disabled}
                 type="button"
                 onClick={() => goTo(control.target)}

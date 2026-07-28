@@ -24,7 +24,7 @@ export function IconFilter(properties: Readonly<IconFilterProperties>): MpElemen
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-filter']}>
+    <div className={styles['base-icon-filter']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

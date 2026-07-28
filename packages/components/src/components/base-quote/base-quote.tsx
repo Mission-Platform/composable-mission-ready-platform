@@ -69,9 +69,9 @@ export function BaseQuote(properties: Readonly<QuoteProperties>): MpElement {
   const hasAttribution = Boolean(author) || Boolean(source);
 
   return (
-    <figure classNames={className}>
+    <figure className={className}>
       <blockquote
-        classNames={styles['base-quote__content']}
+        className={styles['base-quote__content']}
         cite={cite}
       >
         <BaseTypography
@@ -83,7 +83,7 @@ export function BaseQuote(properties: Readonly<QuoteProperties>): MpElement {
         </BaseTypography>
       </blockquote>
       {hasAttribution ? (
-        <figcaption classNames={styles['base-quote__attribution']}>
+        <figcaption className={styles['base-quote__attribution']}>
           <BaseTypography
             as="span"
             color="secondary"
@@ -93,7 +93,7 @@ export function BaseQuote(properties: Readonly<QuoteProperties>): MpElement {
             {author}
           </BaseTypography>
           {source ? (
-            <cite classNames={styles['base-quote__source']}>
+            <cite className={styles['base-quote__source']}>
               <BaseTypography
                 as="span"
                 color="tertiary"

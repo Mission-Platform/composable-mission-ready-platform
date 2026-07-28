@@ -317,7 +317,7 @@ export function BaseQrCode(properties: Readonly<QrCodeProperties>): MpElement {
     return (
       <svg
         aria-hidden="true"
-        classNames={styles['base-qr-code']}
+        className={styles['base-qr-code']}
         height="0"
         width="0"
         xmlns="http://www.w3.org/2000/svg"
@@ -447,7 +447,7 @@ export function BaseQrCode(properties: Readonly<QrCodeProperties>): MpElement {
       ref={svgReference}
       aria-hidden={ariaLabel ? undefined : 'true'}
       aria-label={ariaLabel}
-      classNames={styles['base-qr-code']}
+      className={styles['base-qr-code']}
       height={pixelHeight}
       role={ariaLabel ? 'img' : undefined}
       shape-rendering={shapeRendering}
@@ -490,7 +490,7 @@ export function BaseQrCode(properties: Readonly<QrCodeProperties>): MpElement {
         </defs>
       ) : null}
       <rect
-        classNames={styles['base-qr-code__background']}
+        className={styles['base-qr-code__background']}
         fill={background}
         height={viewHeight}
         width={viewWidth}
@@ -498,13 +498,13 @@ export function BaseQrCode(properties: Readonly<QrCodeProperties>): MpElement {
         y="0"
       />
       <path
-        classNames={styles['base-qr-code__modules']}
+        className={styles['base-qr-code__modules']}
         d={path}
         fill={moduleFill}
       />
       {logo && logoLayout ? (
         <rect
-          classNames={styles['base-qr-code__logo-plate']}
+          className={styles['base-qr-code__logo-plate']}
           fill={logo.background ?? background}
           height={logoLayout.plate}
           rx={logoLayout.radius}
@@ -516,7 +516,7 @@ export function BaseQrCode(properties: Readonly<QrCodeProperties>): MpElement {
       ) : null}
       {logo && logoLayout ? (
         <image
-          classNames={styles['base-qr-code__logo']}
+          className={styles['base-qr-code__logo']}
           height={logoLayout.logoSize}
           href={logo.href}
           preserveAspectRatio="xMidYMid meet"
@@ -568,9 +568,9 @@ export function BaseQrCode(properties: Readonly<QrCodeProperties>): MpElement {
   }
 
   return (
-    <div classNames={styles['base-qr-code-figure']}>
+    <div className={styles['base-qr-code-figure']}>
       {qrSvg}
-      <div classNames={styles['base-qr-code__actions']}>
+      <div className={styles['base-qr-code__actions']}>
         {visibleActions.map((action) => {
           const isDone = completed === action.key;
           return (

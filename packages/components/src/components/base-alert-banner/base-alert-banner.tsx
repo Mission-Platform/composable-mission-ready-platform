@@ -108,7 +108,7 @@ export function BaseAlertBanner(properties: Readonly<AlertBannerProperties>): Mp
   const banner = modelValue ? (
     <div
       aria-live={ariaLive}
-      classNames={[
+      className={[
         styles['base-alert-banner'],
         styles[`base-alert-banner--${variant}`],
         sizeStyles[`base-size--${size}`],
@@ -118,12 +118,12 @@ export function BaseAlertBanner(properties: Readonly<AlertBannerProperties>): Mp
       {icon ? (
         <span
           aria-hidden="true"
-          classNames={styles['base-alert-banner__icon']}
+          className={styles['base-alert-banner__icon']}
         >
           <Slot name="iconContent">{variantIcon(variant)}</Slot>
         </span>
       ) : undefined}
-      <div classNames={styles['base-alert-banner__content']}>
+      <div className={styles['base-alert-banner__content']}>
         {title ? (
           <BaseTypography
             as="p"
@@ -144,7 +144,7 @@ export function BaseAlertBanner(properties: Readonly<AlertBannerProperties>): Mp
           </BaseTypography>
         )}
         {hasSlot('actions') ? (
-          <div classNames={styles['base-alert-banner__actions']}>
+          <div className={styles['base-alert-banner__actions']}>
             <Slot name="actions" />
           </div>
         ) : undefined}
@@ -152,7 +152,7 @@ export function BaseAlertBanner(properties: Readonly<AlertBannerProperties>): Mp
       {dismissible ? (
         <button
           aria-label={dismissLabel}
-          classNames={styles['base-alert-banner__dismiss']}
+          className={styles['base-alert-banner__dismiss']}
           type="button"
           onClick={dismiss}
         >
@@ -162,9 +162,5 @@ export function BaseAlertBanner(properties: Readonly<AlertBannerProperties>): Mp
     </div>
   ) : undefined;
 
-  return (
-    <div classNames={styles['base-alert-banner-host']}>
-      {banner}
-    </div>
-  );
+  return <div className={styles['base-alert-banner-host']}>{banner}</div>;
 }

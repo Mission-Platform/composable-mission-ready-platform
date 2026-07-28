@@ -82,7 +82,7 @@ export function BaseToastContainer(properties: Readonly<ToastContainerProperties
     >
       <div
         aria-label={ariaLabel}
-        classNames={[
+        className={[
           styles['base-toast-container'],
           styles[`base-toast-container--${position}`],
           sizeStyles[`base-size--${size}`],

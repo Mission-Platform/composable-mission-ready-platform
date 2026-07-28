@@ -303,7 +303,7 @@ export function BaseMonacoEditor(properties: Readonly<MonacoEditorProperties>): 
     <div
       ref={containerReference}
       aria-label="Code editor"
-      classNames={[styles['base-monaco-editor'], sizeStyles[`base-size--${size}`]]}
+      className={[styles['base-monaco-editor'], sizeStyles[`base-size--${size}`]]}
       data-language={language}
       role="group"
       style={{ height }}

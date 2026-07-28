@@ -134,14 +134,14 @@ export function BaseNavbarItem(properties: Readonly<NavbarItemProperties>): MpEl
   return hasChildren ? (
     <div
       ref={hostReference}
-      classNames={styles['base-navbar-item-dropdown-host']}
+      className={styles['base-navbar-item-dropdown-host']}
     >
       <button
         aria-current={active ? 'page' : undefined}
         aria-disabled={disabled ? 'true' : undefined}
         aria-expanded={open}
         aria-haspopup="true"
-        classNames={itemClass}
+        className={itemClass}
         disabled={disabled}
         type="button"
         onClick={handleClick}
@@ -150,7 +150,7 @@ export function BaseNavbarItem(properties: Readonly<NavbarItemProperties>): MpEl
         <Slot>{label}</Slot>
         <span
           aria-hidden="true"
-          classNames={styles['base-navbar-item__chevron']}
+          className={styles['base-navbar-item__chevron']}
         >
           <IconChevron
             direction={open ? 'up' : 'down'}
@@ -160,26 +160,26 @@ export function BaseNavbarItem(properties: Readonly<NavbarItemProperties>): MpEl
       </button>
       {open ? (
         <ul
-          classNames={styles['base-navbar-item__dropdown-list']}
+          className={styles['base-navbar-item__dropdown-list']}
           role="menu"
         >
           {(dropdownItems ?? []).map((child, index) => (
             <li
               key={index}
-              classNames={styles['base-navbar-item__dropdown-item-wrapper']}
+              className={styles['base-navbar-item__dropdown-item-wrapper']}
               role="none"
             >
               {child.href && !child.disabled ? (
                 <a
                   href={child.href}
-                  classNames={styles['base-navbar-item__dropdown-item']}
+                  className={styles['base-navbar-item__dropdown-item']}
                   role="menuitem"
                   onClick={() => setOpen(false)}
                 >
                   {child.icon ? (
                     <span
                       aria-hidden="true"
-                      classNames={styles['base-navbar-item__dropdown-icon']}
+                      className={styles['base-navbar-item__dropdown-icon']}
                     >
                       {child.icon}
                     </span>
@@ -189,7 +189,7 @@ export function BaseNavbarItem(properties: Readonly<NavbarItemProperties>): MpEl
               ) : (
                 <button
                   aria-disabled={child.disabled ? 'true' : undefined}
-                  classNames={[
+                  className={[
                     styles['base-navbar-item__dropdown-item'],
                     {
                       [styles['base-navbar-item__dropdown-item--disabled']]: Boolean(child.disabled),
@@ -208,7 +208,7 @@ export function BaseNavbarItem(properties: Readonly<NavbarItemProperties>): MpEl
                   {child.icon ? (
                     <span
                       aria-hidden="true"
-                      classNames={styles['base-navbar-item__dropdown-icon']}
+                      className={styles['base-navbar-item__dropdown-icon']}
                     >
                       {child.icon}
                     </span>
@@ -226,7 +226,7 @@ export function BaseNavbarItem(properties: Readonly<NavbarItemProperties>): MpEl
       is={tag}
       aria-current={active ? 'page' : undefined}
       aria-disabled={disabled ? 'true' : undefined}
-      classNames={itemClass}
+      className={itemClass}
       disabled={tag === 'button' ? disabled || undefined : undefined}
       href={tag === 'a' ? (disabled ? undefined : href) : undefined}
       tabindex={disabled ? -1 : undefined}

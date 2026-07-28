@@ -53,7 +53,7 @@ export function BaseIconButton(properties: Readonly<IconButtonProperties>): MpEl
   return (
     <button
       aria-label={label}
-      classNames={className}
+      className={className}
       disabled={disabled}
       type={type}
       onClick={handleClick}

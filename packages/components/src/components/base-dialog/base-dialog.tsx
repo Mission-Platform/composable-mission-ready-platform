@@ -109,17 +109,17 @@ export function BaseDialog(properties: Readonly<DialogProperties>): MpElement {
   return (
     <dialog
       ref={dialogReference}
-      classNames={[styles['base-dialog'], sizeStyles[`base-size--${size}`]]}
+      className={[styles['base-dialog'], sizeStyles[`base-size--${size}`]]}
       onClick={handleClick}
       onClose={requestClose}
     >
-      <div classNames={styles['base-dialog__panel']}>
+      <div className={styles['base-dialog__panel']}>
         {hasHeader ? (
-          <header classNames={styles['base-dialog__header']}>
+          <header className={styles['base-dialog__header']}>
             <Slot name="header">
               <BaseTypography
                 as="h2"
-                classNames={styles['base-dialog__title']}
+                className={styles['base-dialog__title']}
                 color="primary"
                 variant="h5"
               >
@@ -135,9 +135,9 @@ export function BaseDialog(properties: Readonly<DialogProperties>): MpElement {
             </BaseIconButton>
           </header>
         ) : undefined}
-        <div classNames={styles['base-dialog__body']}>{properties.children}</div>
+        <div className={styles['base-dialog__body']}>{properties.children}</div>
         {hasSlot('footer') ? (
-          <footer classNames={styles['base-dialog__footer']}>
+          <footer className={styles['base-dialog__footer']}>
             <Slot name="footer" />
           </footer>
         ) : undefined}

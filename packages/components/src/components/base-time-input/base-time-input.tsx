@@ -143,13 +143,13 @@ export function BaseTimeInput(properties: Readonly<TimeInputProperties>): MpElem
     active: number,
     onPick: (unit: number) => void,
   ): MpChild => (
-    <div classNames={styles['base-time-input__col']}>
-      <div classNames={styles['base-time-input__col-header']}>{header}</div>
-      <div classNames={styles['base-time-input__scroll']}>
+    <div className={styles['base-time-input__col']}>
+      <div className={styles['base-time-input__col-header']}>{header}</div>
+      <div className={styles['base-time-input__scroll']}>
         {units.map((unit) => (
           <button
             key={unit}
-            classNames={[
+            className={[
               styles['base-time-input__unit-btn'],
               {
                 [styles['base-time-input__unit-btn--active']]: active === unit,
@@ -168,7 +168,7 @@ export function BaseTimeInput(properties: Readonly<TimeInputProperties>): MpElem
   return (
     <div
       aria-disabled={disabled ? 'true' : undefined}
-      classNames={[
+      className={[
         styles['base-time-input'],
         styles[`base-time-input--${size}`],
         {
@@ -179,7 +179,7 @@ export function BaseTimeInput(properties: Readonly<TimeInputProperties>): MpElem
     >
       {label ? (
         <label
-          classNames={[
+          className={[
             styles['base-time-input__label'],
             {
               [styles['base-time-input__label--hidden']]: labelHidden,
@@ -197,7 +197,7 @@ export function BaseTimeInput(properties: Readonly<TimeInputProperties>): MpElem
           {required ? (
             <span
               aria-hidden="true"
-              classNames={styles['base-time-input__required']}
+              className={styles['base-time-input__required']}
               title="required"
             >
               *
@@ -212,11 +212,11 @@ export function BaseTimeInput(properties: Readonly<TimeInputProperties>): MpElem
         onUpdateOpen={(next: boolean) => setOpen(next)}
       >
         <div
-          classNames={styles['base-time-input__wrapper']}
+          className={styles['base-time-input__wrapper']}
           slot="trigger"
         >
           {hasSlot('start') ? (
-            <span classNames={[styles['base-time-input__extension'], styles['base-time-input__extension--start']]}>
+            <span className={[styles['base-time-input__extension'], styles['base-time-input__extension--start']]}>
               <Slot name="start" />
             </span>
           ) : undefined}
@@ -227,12 +227,12 @@ export function BaseTimeInput(properties: Readonly<TimeInputProperties>): MpElem
             aria-haspopup="dialog"
             aria-invalid={error ? 'true' : undefined}
             aria-label={label ?? 'Time picker'}
-            classNames={styles['base-time-input__trigger']}
+            className={styles['base-time-input__trigger']}
             type="button"
             onClick={toggleOpen}
           >
             <span
-              classNames={[
+              className={[
                 styles['base-time-input__value'],
                 {
                   [styles['base-time-input__value--placeholder']]: !value,
@@ -243,32 +243,32 @@ export function BaseTimeInput(properties: Readonly<TimeInputProperties>): MpElem
             </span>
             <span
               aria-hidden="true"
-              classNames={styles['base-time-input__icon']}
+              className={styles['base-time-input__icon']}
             >
               🕒
             </span>
           </button>
           {hasSlot('end') ? (
-            <span classNames={[styles['base-time-input__extension'], styles['base-time-input__extension--end']]}>
+            <span className={[styles['base-time-input__extension'], styles['base-time-input__extension--end']]}>
               <Slot name="end" />
             </span>
           ) : undefined}
         </div>
         <div
           aria-label={`${label ?? 'Time'} picker`}
-          classNames={styles['base-time-input__popover']}
+          className={styles['base-time-input__popover']}
           role="dialog"
         >
-          <div classNames={styles['base-time-input__columns']}>
+          <div className={styles['base-time-input__columns']}>
             {column('HH', HOURS, localH, setHour)}
-            <span classNames={styles['base-time-input__sep']}>:</span>
+            <span className={styles['base-time-input__sep']}>:</span>
             {column('MM', MINUTES, localM, setMinute)}
-            {showSeconds ? <span classNames={styles['base-time-input__sep']}>:</span> : undefined}
+            {showSeconds ? <span className={styles['base-time-input__sep']}>:</span> : undefined}
             {showSeconds ? column('SS', SECONDS, localS, setSecond) : undefined}
           </div>
-          <div classNames={styles['base-time-input__footer']}>
+          <div className={styles['base-time-input__footer']}>
             <button
-              classNames={styles['base-time-input__done-btn']}
+              className={styles['base-time-input__done-btn']}
               type="button"
               onClick={() => setOpen(false)}
             >
@@ -281,7 +281,7 @@ export function BaseTimeInput(properties: Readonly<TimeInputProperties>): MpElem
       {error ? (
         <p
           id={`${resolvedId}-error`}
-          classNames={styles['base-time-input__error']}
+          className={styles['base-time-input__error']}
           role="alert"
         >
           <BaseTypography
@@ -295,7 +295,7 @@ export function BaseTimeInput(properties: Readonly<TimeInputProperties>): MpElem
       ) : hint ? (
         <p
           id={`${resolvedId}-hint`}
-          classNames={styles['base-time-input__hint']}
+          className={styles['base-time-input__hint']}
         >
           <BaseTypography
             as="span"

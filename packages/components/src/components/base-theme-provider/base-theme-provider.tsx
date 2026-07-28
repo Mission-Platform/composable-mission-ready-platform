@@ -71,7 +71,7 @@ export function BaseThemeProvider(properties: Readonly<ThemeProviderProperties>)
   const systemTheme = snapshot.systemTheme;
 
   return (
-    <div classNames={[styles['base-theme-provider'], sizeStyles[`base-size--${size}`]]}>
+    <div className={[styles['base-theme-provider'], sizeStyles[`base-size--${size}`]]}>
       <Slot
         theme={theme}
         resolvedTheme={resolvedTheme}

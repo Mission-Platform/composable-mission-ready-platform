@@ -24,7 +24,7 @@ export function IconError(properties: Readonly<IconErrorProperties>): MpElement 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-error']}>
+    <div className={styles['base-icon-error']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Error'}

@@ -109,7 +109,7 @@ export function BaseColorInput(properties: Readonly<ColorInputProperties>): MpEl
 
   return (
     <div
-      classNames={[
+      className={[
         styles['base-color-input'],
         styles[`base-color-input--${size}`],
         {
@@ -120,7 +120,7 @@ export function BaseColorInput(properties: Readonly<ColorInputProperties>): MpEl
     >
       {label ? (
         <label
-          classNames={[
+          className={[
             styles['base-color-input__label'],
             {
               [styles['base-color-input__label--hidden']]: labelHidden,
@@ -138,7 +138,7 @@ export function BaseColorInput(properties: Readonly<ColorInputProperties>): MpEl
           {required ? (
             <span
               aria-hidden="true"
-              classNames={styles['base-color-input__required']}
+              className={styles['base-color-input__required']}
               title="required"
             >
               *
@@ -147,16 +147,16 @@ export function BaseColorInput(properties: Readonly<ColorInputProperties>): MpEl
         </label>
       ) : undefined}
 
-      <div classNames={styles['base-color-input__wrapper']}>
+      <div className={styles['base-color-input__wrapper']}>
         <label
           aria-label="Open colour picker"
-          classNames={styles['base-color-input__swatch-label']}
+          className={styles['base-color-input__swatch-label']}
           for={resolvedId}
           style={{ backgroundColor: modelValue }}
         />
         <input
           id={resolvedId}
-          classNames={styles['base-color-input__picker']}
+          className={styles['base-color-input__picker']}
           disabled={disabled}
           required={required}
           type="color"
@@ -168,7 +168,7 @@ export function BaseColorInput(properties: Readonly<ColorInputProperties>): MpEl
           id={`${resolvedId}-text`}
           aria-describedby={describedBy}
           aria-invalid={error ? 'true' : undefined}
-          classNames={styles['base-color-input__text']}
+          className={styles['base-color-input__text']}
           disabled={disabled}
           maxlength={7}
           placeholder="#000000"
@@ -184,7 +184,7 @@ export function BaseColorInput(properties: Readonly<ColorInputProperties>): MpEl
       {error ? (
         <p
           id={`${resolvedId}-error`}
-          classNames={styles['base-color-input__error']}
+          className={styles['base-color-input__error']}
           role="alert"
         >
           <BaseTypography
@@ -198,7 +198,7 @@ export function BaseColorInput(properties: Readonly<ColorInputProperties>): MpEl
       ) : hint ? (
         <p
           id={`${resolvedId}-hint`}
-          classNames={styles['base-color-input__hint']}
+          className={styles['base-color-input__hint']}
         >
           <BaseTypography
             as="span"

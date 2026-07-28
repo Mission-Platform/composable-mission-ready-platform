@@ -24,7 +24,7 @@ export function IconCodeBlock(properties: Readonly<IconCodeBlockProperties>): Mp
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-code-block']}>
+    <div className={styles['base-icon-code-block']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Code Block'}

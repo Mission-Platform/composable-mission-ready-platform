@@ -24,7 +24,7 @@ export function IconSplit(properties: Readonly<IconSplitProperties>): MpElement 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-split']}>
+    <div className={styles['base-icon-split']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

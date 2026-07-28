@@ -78,13 +78,13 @@ export function BaseMenuItem(properties: Readonly<MenuItemProperties>): MpElemen
 
   return (
     <li
-      classNames={liClass}
+      className={liClass}
       role="none"
     >
       {isLink ? (
         <a
           href={href}
-          classNames={styles['base-menu-item__link']}
+          className={styles['base-menu-item__link']}
           role="menuitem"
           tabindex={disabled ? -1 : 0}
         >
@@ -102,7 +102,7 @@ export function BaseMenuItem(properties: Readonly<MenuItemProperties>): MpElemen
       ) : (
         <span
           aria-disabled={disabled ? 'true' : undefined}
-          classNames={styles['base-menu-item__button']}
+          className={styles['base-menu-item__button']}
           role="menuitem"
           tabindex={0}
           onClick={handleClick}

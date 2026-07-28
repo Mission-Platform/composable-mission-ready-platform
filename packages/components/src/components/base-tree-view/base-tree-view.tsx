@@ -100,7 +100,7 @@ export function BaseTreeView(properties: Readonly<TreeViewProperties>): MpElemen
   const renderNode = (node: TreeViewNode, depth: number): MpElement => (
     <li
       key={node.id}
-      classNames={[styles['tree-node']]}
+      className={[styles['tree-node']]}
       role="none"
     >
       <span
@@ -108,7 +108,7 @@ export function BaseTreeView(properties: Readonly<TreeViewProperties>): MpElemen
         aria-expanded={hasChildren(node) ? isOpen(node) : undefined}
         aria-selected={false}
         tabindex={0}
-        classNames={[styles['tree-node__label']]}
+        className={[styles['tree-node__label']]}
         style={{ paddingLeft: `${depth * 20}px` }}
         onClick={() => select(node)}
         onKeyDown={(event: KeyboardEvent) => onKeyDown(event, node)}
@@ -116,7 +116,7 @@ export function BaseTreeView(properties: Readonly<TreeViewProperties>): MpElemen
         {hasChildren(node) ? (
           <button
             type="button"
-            classNames={[
+            className={[
               styles['tree-node__toggle'],
               {
                 [styles['tree-node__toggle--open']]: isOpen(node),
@@ -135,7 +135,7 @@ export function BaseTreeView(properties: Readonly<TreeViewProperties>): MpElemen
           </button>
         ) : (
           <span
-            classNames={[styles['tree-node__spacer']]}
+            className={[styles['tree-node__spacer']]}
             aria-hidden="true"
           />
         )}
@@ -155,7 +155,7 @@ export function BaseTreeView(properties: Readonly<TreeViewProperties>): MpElemen
       </span>
       {hasChildren(node) && isOpen(node) ? (
         <ul
-          classNames={[styles['tree-node__children']]}
+          className={[styles['tree-node__children']]}
           role="group"
         >
           {(node.children as TreeViewNode[]).map((child) => renderNode(child, depth + 1))}
@@ -166,7 +166,7 @@ export function BaseTreeView(properties: Readonly<TreeViewProperties>): MpElemen
 
   return (
     <ul
-      classNames={[styles['tree-view'], sizeStyles[`base-size--${size}`]]}
+      className={[styles['tree-view'], sizeStyles[`base-size--${size}`]]}
       role="tree"
     >
       {nodes.map((node) => renderNode(node, 0))}

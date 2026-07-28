@@ -61,7 +61,7 @@ export function BaseSkeleton(properties: Readonly<SkeletonProperties>): MpElemen
 
   return (
     <span
-      classNames={className}
+      className={className}
       style={style}
       aria-hidden="true"
     />

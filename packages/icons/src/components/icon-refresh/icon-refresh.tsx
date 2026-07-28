@@ -24,7 +24,7 @@ export function IconRefresh(properties: Readonly<IconRefreshProperties>): MpElem
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-refresh']}>
+    <div className={styles['base-icon-refresh']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

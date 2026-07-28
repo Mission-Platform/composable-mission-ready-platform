@@ -24,7 +24,7 @@ export function IconDrawCircle(properties: Readonly<IconDrawCircleProperties>): 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-draw-circle']}>
+    <div className={styles['base-icon-draw-circle']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

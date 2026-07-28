@@ -508,15 +508,15 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
       <li
         key={`drop-ghost-${key}`}
         aria-hidden="true"
-        classNames={[styles['base-form-builder__field'], styles['base-form-builder__field--ghost']]}
+        className={[styles['base-form-builder__field'], styles['base-form-builder__field--ghost']]}
         onDragOver={holdGhostDragOver}
         onDrop={onGhostDrop}
       >
-        <div classNames={styles['base-form-builder__field-row']}>
-          <span classNames={styles['base-form-builder__field-select']}>
+        <div className={styles['base-form-builder__field-row']}>
+          <span className={styles['base-form-builder__field-select']}>
             <span
               aria-hidden="true"
-              classNames={styles['base-form-builder__field-handle']}
+              className={styles['base-form-builder__field-handle']}
             >
               ⠿
             </span>
@@ -527,7 +527,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
             >
               {preview?.label ?? 'New field'}
             </BaseTypography>
-            {preview ? <span classNames={styles['base-form-builder__field-type']}>{preview.type}</span> : undefined}
+            {preview ? <span className={styles['base-form-builder__field-type']}>{preview.type}</span> : undefined}
           </span>
         </div>
       </li>
@@ -554,22 +554,22 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
   // ─── Render: palette ──────────────────────────────────────────────────────────
 
   const renderPalette = (): MpElement => (
-    <section classNames={styles['base-form-builder__palette']}>
+    <section className={styles['base-form-builder__palette']}>
       <ul
-        classNames={styles['base-form-builder__palette-list']}
+        className={styles['base-form-builder__palette-list']}
         role="list"
       >
         {fieldTypes.map((descriptor) => (
           <li
             key={descriptor.type}
             aria-label={descriptor.label}
-            classNames={styles['base-form-builder__palette-item']}
+            className={styles['base-form-builder__palette-item']}
             draggable={!disabled}
             onDragEnd={clearDropIndicator}
             onDragStart={onPaletteDragStart(descriptor.type)}
           >
             <button
-              classNames={styles['base-form-builder__palette-add']}
+              className={styles['base-form-builder__palette-add']}
               disabled={disabled}
               type="button"
               onClick={() => addFromPalette(descriptor.type)}
@@ -605,7 +605,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
       <li
         key={field.id}
         aria-current={field.id === selectedId ? 'true' : undefined}
-        classNames={[
+        className={[
           styles['base-form-builder__field'],
           {
             [styles['base-form-builder__field--selected']]: field.id === selectedId,
@@ -618,15 +618,15 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
         onDragStart={onFieldDragStart(field.id)}
         onDrop={onDropOnField(field)}
       >
-        <div classNames={styles['base-form-builder__field-row']}>
+        <div className={styles['base-form-builder__field-row']}>
           <button
-            classNames={styles['base-form-builder__field-select']}
+            className={styles['base-form-builder__field-select']}
             type="button"
             onClick={() => setSelectedId(field.id)}
           >
             <span
               aria-hidden="true"
-              classNames={styles['base-form-builder__field-handle']}
+              className={styles['base-form-builder__field-handle']}
             >
               ⠿
             </span>
@@ -637,12 +637,12 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
             >
               {field.label || field.key}
             </BaseTypography>
-            <span classNames={styles['base-form-builder__field-type']}>{field.type}</span>
+            <span className={styles['base-form-builder__field-type']}>{field.type}</span>
           </button>
-          <div classNames={styles['base-form-builder__field-actions']}>
+          <div className={styles['base-form-builder__field-actions']}>
             <button
               aria-label={`Move ${field.label} up`}
-              classNames={styles['base-form-builder__field-action']}
+              className={styles['base-form-builder__field-action']}
               disabled={disabled}
               type="button"
               onClick={() => commitSteps(shiftField(steps, field.id, -1))}
@@ -651,7 +651,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
             </button>
             <button
               aria-label={`Move ${field.label} down`}
-              classNames={styles['base-form-builder__field-action']}
+              className={styles['base-form-builder__field-action']}
               disabled={disabled}
               type="button"
               onClick={() => commitSteps(shiftField(steps, field.id, 1))}
@@ -661,7 +661,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
             {isFieldset ? (
               <button
                 aria-label={`Add field to ${field.label}`}
-                classNames={styles['base-form-builder__field-action']}
+                className={styles['base-form-builder__field-action']}
                 disabled={disabled}
                 type="button"
                 onClick={() => onAddChild(field.id)}
@@ -671,7 +671,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
             ) : undefined}
             <button
               aria-label={`Duplicate ${field.label}`}
-              classNames={styles['base-form-builder__field-action']}
+              className={styles['base-form-builder__field-action']}
               disabled={disabled}
               type="button"
               onClick={() => onDuplicate(field.id)}
@@ -680,7 +680,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
             </button>
             <button
               aria-label={`Remove ${field.label}`}
-              classNames={styles['base-form-builder__field-remove']}
+              className={styles['base-form-builder__field-remove']}
               disabled={disabled}
               type="button"
               onClick={() => onRemove(field.id)}
@@ -691,13 +691,13 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
         </div>
         {isFieldset ? (
           <ul
-            classNames={styles['base-form-builder__nested']}
+            className={styles['base-form-builder__nested']}
             role="list"
             onDragOver={onContainerDragOver(step, field.id)}
             onDrop={onDropOnContainer(step, field.id)}
           >
             {(field.children ?? []).length === 0 && !isGhostAtEnd(dropIndicator, field.id, step, 0) ? (
-              <li classNames={styles['base-form-builder__nested-empty']}>
+              <li className={styles['base-form-builder__nested-empty']}>
                 <BaseTypography
                   as="span"
                   color="secondary"
@@ -716,13 +716,13 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
 
   const renderStepList = (list: BuilderField[], step: number): MpElement => (
     <ul
-      classNames={styles['base-form-builder__field-list']}
+      className={styles['base-form-builder__field-list']}
       role="list"
       onDragOver={onContainerDragOver(step)}
       onDrop={onDropOnContainer(step)}
     >
       {list.length === 0 && !isGhostAtEnd(dropIndicator, undefined, step, 0) ? (
-        <li classNames={styles['base-form-builder__empty']}>
+        <li className={styles['base-form-builder__empty']}>
           <BaseTypography
             as="p"
             color="secondary"
@@ -737,16 +737,16 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
   );
 
   const renderCanvas = (): MpElement => (
-    <div classNames={styles['base-form-builder__panel']}>
+    <div className={styles['base-form-builder__panel']}>
       {wizard
         ? steps.map((list, step) => (
             <div
               key={`step-${step}`}
-              classNames={styles['base-form-builder__step']}
+              className={styles['base-form-builder__step']}
             >
               <BaseTypography
                 as="h3"
-                classNames={styles['base-form-builder__step-heading']}
+                className={styles['base-form-builder__step-heading']}
                 variant="label"
               >
                 {stepTitles[step] || `Step ${step + 1}`}
@@ -782,8 +782,8 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
       );
     };
     return (
-      <fieldset classNames={styles['base-form-builder__condition']}>
-        <legend classNames={styles['base-form-builder__condition-legend']}>{legend}</legend>
+      <fieldset className={styles['base-form-builder__condition']}>
+        <legend className={styles['base-form-builder__condition-legend']}>{legend}</legend>
         <BaseCheckbox
           disabled={disabled}
           label={toggleLabel}
@@ -793,7 +793,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
           }
         />
         {enabled ? (
-          <div classNames={styles['base-form-builder__condition-body']}>
+          <div className={styles['base-form-builder__condition-body']}>
             <BaseSelect
               disabled={disabled}
               label="Match"
@@ -804,7 +804,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
             {group.leaves.map((leaf, index) => (
               <div
                 key={index}
-                classNames={styles['base-form-builder__condition-rule']}
+                className={styles['base-form-builder__condition-rule']}
               >
                 <BaseInput
                   disabled={disabled}
@@ -829,7 +829,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
                 />
                 <button
                   aria-label="Remove rule"
-                  classNames={styles['base-form-builder__field-remove']}
+                  className={styles['base-form-builder__field-remove']}
                   disabled={disabled}
                   type="button"
                   onClick={() =>
@@ -862,7 +862,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
   const renderOptionsEditor = (field: BuilderField): MpElement => {
     const setOptions = (options: BuilderFieldOption[]): void => onUpdateField(field.id, { options });
     return (
-      <div classNames={styles['base-form-builder__options']}>
+      <div className={styles['base-form-builder__options']}>
         <BaseTypography
           as="span"
           variant="label"
@@ -872,7 +872,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
         {field.options.map((option, index) => (
           <div
             key={index}
-            classNames={styles['base-form-builder__option-row']}
+            className={styles['base-form-builder__option-row']}
           >
             <BaseInput
               disabled={disabled}
@@ -894,7 +894,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
             />
             <button
               aria-label={`Remove option ${index + 1}`}
-              classNames={styles['base-form-builder__field-remove']}
+              className={styles['base-form-builder__field-remove']}
               disabled={disabled}
               type="button"
               onClick={() => setOptions(field.options.filter((_, index_) => index_ !== index))}
@@ -929,7 +929,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
     keyError: string | undefined,
     selectedStep: number | undefined,
   ): MpElement => (
-    <div classNames={styles['base-form-builder__properties']}>
+    <div className={styles['base-form-builder__properties']}>
       <BaseSelect
         disabled={disabled}
         label="Field type"
@@ -986,7 +986,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
         />
       ) : undefined}
       {isTextWidget(field.type) ? (
-        <div classNames={styles['base-form-builder__numeric']}>
+        <div className={styles['base-form-builder__numeric']}>
           <BaseNumberStepper
             disabled={disabled}
             label="Minimum length"
@@ -1011,7 +1011,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
         </div>
       ) : undefined}
       {isNumberWidget(field.type) ? (
-        <div classNames={styles['base-form-builder__numeric']}>
+        <div className={styles['base-form-builder__numeric']}>
           <BaseNumberStepper
             disabled={disabled}
             label="Minimum"
@@ -1047,7 +1047,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
         </div>
       ) : undefined}
       {isDateWidget(field.type) ? (
-        <div classNames={styles['base-form-builder__numeric']}>
+        <div className={styles['base-form-builder__numeric']}>
           <BaseInput
             disabled={disabled}
             label="Earliest date"
@@ -1077,7 +1077,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
         />
       ) : undefined}
       {isFileWidget(field.type) ? (
-        <div classNames={styles['base-form-builder__numeric']}>
+        <div className={styles['base-form-builder__numeric']}>
           <BaseInput
             disabled={disabled}
             hint="Comma-separated MIME types or extensions (e.g. image/*, .pdf)."
@@ -1125,7 +1125,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
   );
 
   const renderFormSettings = (): MpElement => (
-    <div classNames={styles['base-form-builder__properties']}>
+    <div className={styles['base-form-builder__properties']}>
       <BaseInput
         disabled={disabled}
         label="Form title"
@@ -1152,10 +1152,10 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
       ? fieldKeyError(selectedField.key, siblingKeysOf(steps, selectedField.id))
       : undefined;
     return (
-      <div classNames={styles['base-form-builder__inspector']}>
+      <div className={styles['base-form-builder__inspector']}>
         <BaseTypography
           as="h2"
-          classNames={styles['base-form-builder__inspector-title']}
+          className={styles['base-form-builder__inspector-title']}
           variant="label"
           weight="semibold"
         >
@@ -1169,11 +1169,11 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
   // ─── Render: wizard steps editor ────────────────────────────────────────────
 
   const renderSteps = (): MpElement => (
-    <div classNames={styles['base-form-builder__panel']}>
+    <div className={styles['base-form-builder__panel']}>
       {steps.map((_, index) => (
         <div
           key={`step-config-${index}`}
-          classNames={styles['base-form-builder__step-config']}
+          className={styles['base-form-builder__step-config']}
         >
           <BaseInput
             disabled={disabled}
@@ -1249,7 +1249,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
       }
       case 'preview': {
         return (
-          <div classNames={styles['base-form-builder__panel']}>
+          <div className={styles['base-form-builder__panel']}>
             {hasFields ? (
               <BaseSchemaForm schema={definition} />
             ) : (
@@ -1266,7 +1266,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
       }
       case 'schema': {
         return (
-          <div classNames={styles['base-form-builder__panel']}>
+          <div className={styles['base-form-builder__panel']}>
             <BaseCodeBlock
               code={JSON.stringify(definition, undefined, 2)}
               language="json"
@@ -1285,7 +1285,7 @@ export function BaseFormBuilder(properties: Readonly<FormBuilderProperties>): Mp
   return (
     <div
       aria-disabled={disabled ? 'true' : undefined}
-      classNames={[
+      className={[
         styles['base-form-builder'],
         sizeStyles[`base-size--${size}`],
         {

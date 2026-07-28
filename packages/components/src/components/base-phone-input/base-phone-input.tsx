@@ -145,7 +145,7 @@ export function BasePhoneInput(properties: Readonly<PhoneInputProperties>): MpEl
   return (
     <div
       aria-disabled={disabled ? 'true' : undefined}
-      classNames={[
+      className={[
         styles['base-phone-input'],
         styles[`base-phone-input--${size}`],
         {
@@ -157,7 +157,7 @@ export function BasePhoneInput(properties: Readonly<PhoneInputProperties>): MpEl
     >
       {label ? (
         <label
-          classNames={[
+          className={[
             styles['base-phone-input__label'],
             {
               [styles['base-phone-input__label--hidden']]: labelHidden,
@@ -175,15 +175,15 @@ export function BasePhoneInput(properties: Readonly<PhoneInputProperties>): MpEl
           {required ? (
             <span
               aria-hidden="true"
-              classNames={styles['base-phone-input__required']}
+              className={styles['base-phone-input__required']}
             >
               *
             </span>
           ) : undefined}
         </label>
       ) : undefined}
-      <div classNames={styles['base-phone-input__wrapper']}>
-        <div classNames={styles['base-phone-input__country']}>
+      <div className={styles['base-phone-input__wrapper']}>
+        <div className={styles['base-phone-input__country']}>
           <BaseSelect
             disabled={disabled}
             label={countryLabel}
@@ -197,7 +197,7 @@ export function BasePhoneInput(properties: Readonly<PhoneInputProperties>): MpEl
         </div>
         <span
           aria-hidden="true"
-          classNames={styles['base-phone-input__dial']}
+          className={styles['base-phone-input__dial']}
         >
           +{dial}
         </span>
@@ -206,7 +206,7 @@ export function BasePhoneInput(properties: Readonly<PhoneInputProperties>): MpEl
           aria-describedby={describedBy}
           aria-invalid={error ? 'true' : undefined}
           autocomplete="tel-national"
-          classNames={styles['base-phone-input__field']}
+          className={styles['base-phone-input__field']}
           disabled={disabled}
           inputmode="tel"
           placeholder={placeholderText}
@@ -217,7 +217,7 @@ export function BasePhoneInput(properties: Readonly<PhoneInputProperties>): MpEl
         />
         {hasValue ? (
           <span
-            classNames={styles['base-phone-input__status']}
+            className={styles['base-phone-input__status']}
             role="img"
             aria-label={valid ? 'Valid number' : 'Invalid number'}
           >
@@ -235,7 +235,7 @@ export function BasePhoneInput(properties: Readonly<PhoneInputProperties>): MpEl
       {error ? (
         <p
           id={`${resolvedId}-error`}
-          classNames={styles['base-phone-input__error']}
+          className={styles['base-phone-input__error']}
           role="alert"
         >
           <BaseTypography
@@ -249,7 +249,7 @@ export function BasePhoneInput(properties: Readonly<PhoneInputProperties>): MpEl
       ) : hint ? (
         <p
           id={`${resolvedId}-hint`}
-          classNames={styles['base-phone-input__hint']}
+          className={styles['base-phone-input__hint']}
         >
           <BaseTypography
             as="span"

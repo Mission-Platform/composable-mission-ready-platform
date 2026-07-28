@@ -264,14 +264,14 @@ export function BaseDrawer(properties: Readonly<DrawerProperties>): MpElement {
   // (e.g. `BaseVerticalLayout`'s start + end columns) would duplicate them.
   const headerNode =
     title || hasSlot('header') ? (
-      <div classNames={styles['base-drawer__header']}>
+      <div className={styles['base-drawer__header']}>
         <Slot name="header">
-          <h2 classNames={styles['base-drawer__title']}>{title}</h2>
+          <h2 className={styles['base-drawer__title']}>{title}</h2>
         </Slot>
         {isInline ? undefined : (
           <button
             type="button"
-            classNames={styles['base-drawer__close']}
+            className={styles['base-drawer__close']}
             aria-label={closeLabel}
             onClick={handleClose}
           >
@@ -282,14 +282,14 @@ export function BaseDrawer(properties: Readonly<DrawerProperties>): MpElement {
     ) : undefined;
 
   const footerNode = hasSlot('footer') ? (
-    <div classNames={styles['base-drawer__footer']}>
+    <div className={styles['base-drawer__footer']}>
       <Slot name="footer" />
     </div>
   ) : undefined;
 
   const resizeHandle = canResize ? (
     <div
-      classNames={[styles['base-drawer__resize-handle'], styles[`base-drawer__resize-handle--${placement}`]]}
+      className={[styles['base-drawer__resize-handle'], styles[`base-drawer__resize-handle--${placement}`]]}
       aria-hidden="true"
       role="separator"
       onPointerdown={handleResizeStart}
@@ -306,14 +306,14 @@ export function BaseDrawer(properties: Readonly<DrawerProperties>): MpElement {
     <Dynamic
       is={isInline ? 'aside' : 'div'}
       ref={rootReference}
-      classNames={rootClass}
+      className={rootClass}
       role={isInline ? undefined : 'dialog'}
       aria-modal={isInline ? undefined : 'true'}
       aria-label={title}
       style={resizeStyle}
     >
       {headerNode}
-      <div classNames={styles['base-drawer__body']}>{bodyChildren}</div>
+      <div className={styles['base-drawer__body']}>{bodyChildren}</div>
       {footerNode}
       {resizeHandle}
     </Dynamic>
@@ -322,7 +322,7 @@ export function BaseDrawer(properties: Readonly<DrawerProperties>): MpElement {
   const backdrop = showBackdrop ? (
     <button
       type="button"
-      classNames={styles['base-drawer-backdrop']}
+      className={styles['base-drawer-backdrop']}
       aria-label={closeLabel}
       onClick={() => {
         if (closeOnBackdrop) {
@@ -342,7 +342,7 @@ export function BaseDrawer(properties: Readonly<DrawerProperties>): MpElement {
   // SFC's `scoped` `<style>` — no `:global()` rules); the unstyled
   // `-enter-to`/`-leave-from` markers fall back to the `name`-derived defaults.
   return (
-    <div classNames={styles['base-drawer-host']}>
+    <div className={styles['base-drawer-host']}>
       <Transition
         name="base-drawer-fade"
         enterFromClass={styles['base-drawer-fade-enter-from']}

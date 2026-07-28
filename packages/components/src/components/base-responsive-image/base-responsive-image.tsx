@@ -111,7 +111,7 @@ export function BaseResponsiveImage(properties: Readonly<ResponsiveImageProperti
 
   const fallbackImage = (
     <img
-      classNames={styles['base-responsive-image__img']}
+      className={styles['base-responsive-image__img']}
       src={src}
       alt={alt}
       srcset={srcset}
@@ -128,7 +128,10 @@ export function BaseResponsiveImage(properties: Readonly<ResponsiveImageProperti
   );
 
   return (
-    <picture classNames={className} style={pictureStyle}>
+    <picture
+      className={className}
+      style={pictureStyle}
+    >
       {sourceElements}
       {fallbackImage}
     </picture>

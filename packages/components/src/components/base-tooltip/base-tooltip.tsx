@@ -91,7 +91,7 @@ export function BaseTooltip(properties: Readonly<TooltipProperties>): MpElement 
 
   return (
     <span
-      classNames={styles['base-tooltip']}
+      className={styles['base-tooltip']}
       role="presentation"
       onFocusin={() => show(0)}
       onFocusout={hide}
@@ -100,7 +100,7 @@ export function BaseTooltip(properties: Readonly<TooltipProperties>): MpElement 
     >
       <span
         aria-describedby={isOpen ? tooltipId : undefined}
-        classNames={styles['base-tooltip__trigger']}
+        className={styles['base-tooltip__trigger']}
         style={{ anchorName }}
       >
         <Slot />
@@ -109,7 +109,7 @@ export function BaseTooltip(properties: Readonly<TooltipProperties>): MpElement 
         <Teleport to="body">
           <span
             id={tooltipId}
-            classNames={[
+            className={[
               styles['base-tooltip__panel'],
               styles[`base-tooltip__panel--${placement}`],
               sizeStyles[`base-size--${size}`],

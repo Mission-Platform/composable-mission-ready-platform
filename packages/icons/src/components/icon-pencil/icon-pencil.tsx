@@ -24,7 +24,7 @@ export function IconPencil(properties: Readonly<IconPencilProperties>): MpElemen
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-pencil']}>
+    <div className={styles['base-icon-pencil']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

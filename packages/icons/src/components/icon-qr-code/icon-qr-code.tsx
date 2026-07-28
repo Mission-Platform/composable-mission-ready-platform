@@ -24,7 +24,7 @@ export function IconQrCode(properties: Readonly<IconQrCodeProperties>): MpElemen
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-qr-code']}>
+    <div className={styles['base-icon-qr-code']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

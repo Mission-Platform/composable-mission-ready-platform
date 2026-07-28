@@ -100,7 +100,7 @@ export function BaseMenubar(properties: Readonly<MenubarProperties>): MpElement 
     item.icon ? (
       <span
         aria-hidden="true"
-        classNames={styles['base-menubar__icon']}
+        className={styles['base-menubar__icon']}
       >
         {item.icon}
       </span>
@@ -117,7 +117,7 @@ export function BaseMenubar(properties: Readonly<MenubarProperties>): MpElement 
       return (
         <li
           key={path}
-          classNames={[
+          className={[
             styles['base-menubar__item'],
             {
               [styles['base-menubar__item--open']]: open,
@@ -129,29 +129,29 @@ export function BaseMenubar(properties: Readonly<MenubarProperties>): MpElement 
           {item.href && !hasChildren ? (
             <a
               href={item.href}
-              classNames={styles['base-menubar__link']}
+              className={styles['base-menubar__link']}
               role="menuitem"
             >
               {renderIcon(item)}
-              <span classNames={styles['base-menubar__label']}>{item.label}</span>
+              <span className={styles['base-menubar__label']}>{item.label}</span>
             </a>
           ) : (
             <button
               aria-disabled={item.disabled ? 'true' : undefined}
               aria-expanded={hasChildren ? open : undefined}
               aria-haspopup={hasChildren ? 'menu' : undefined}
-              classNames={styles['base-menubar__link']}
+              className={styles['base-menubar__link']}
               disabled={item.disabled}
               role="menuitem"
               type="button"
               onClick={() => handleItemClick(item, path)}
             >
               {renderIcon(item)}
-              <span classNames={styles['base-menubar__label']}>{item.label}</span>
+              <span className={styles['base-menubar__label']}>{item.label}</span>
               {hasChildren ? (
                 <span
                   aria-hidden="true"
-                  classNames={styles['base-menubar__chevron']}
+                  className={styles['base-menubar__chevron']}
                 >
                   <IconChevron
                     direction={chevronDirection}
@@ -164,7 +164,7 @@ export function BaseMenubar(properties: Readonly<MenubarProperties>): MpElement 
           {open ? (
             <menu
               aria-label={item.label}
-              classNames={[
+              className={[
                 styles['base-menubar__submenu'],
                 {
                   [styles['base-menubar__submenu--nested']]: nested,
@@ -183,7 +183,7 @@ export function BaseMenubar(properties: Readonly<MenubarProperties>): MpElement 
     <menu
       ref={menubarReference}
       aria-label={items ? label : undefined}
-      classNames={[
+      className={[
         styles['base-menubar'],
         sizeStyles[`base-size--${size}`],
         {

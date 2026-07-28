@@ -65,14 +65,14 @@ export function BaseCollapse(properties: Readonly<CollapseProperties>): MpElemen
 
   return (
     <details
-      classNames={className}
+      className={className}
       open={open}
       onToggle={handleToggle}
     >
-      <summary classNames={styles['base-collapse__summary']}>
-        <span classNames={styles['base-collapse__label']}>{summary}</span>
+      <summary className={styles['base-collapse__summary']}>
+        <span className={styles['base-collapse__label']}>{summary}</span>
         <span
-          classNames={styles['base-collapse__chevron']}
+          className={styles['base-collapse__chevron']}
           aria-hidden="true"
         >
           <IconChevron
@@ -81,7 +81,7 @@ export function BaseCollapse(properties: Readonly<CollapseProperties>): MpElemen
           />
         </span>
       </summary>
-      <div classNames={styles['base-collapse__content']}>{properties.children}</div>
+      <div className={styles['base-collapse__content']}>{properties.children}</div>
     </details>
   );
 }

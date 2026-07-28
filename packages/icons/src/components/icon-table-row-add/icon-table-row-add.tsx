@@ -24,7 +24,7 @@ export function IconTableRowAdd(properties: Readonly<IconTableRowAddProperties>)
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-table-row-add']}>
+    <div className={styles['base-icon-table-row-add']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Add Table Row'}

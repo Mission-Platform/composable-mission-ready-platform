@@ -144,23 +144,23 @@ export function BaseRating(properties: Readonly<RatingProperties>): MpElement {
   const starItems = stars.map((star) => (
     <span
       key={star}
-      classNames={styles['base-rating__star']}
+      className={styles['base-rating__star']}
     >
-      <span classNames={[styles['base-rating__icon'], styles['base-rating__icon--empty']]}>
+      <span className={[styles['base-rating__icon'], styles['base-rating__icon--empty']]}>
         <IconStar />
       </span>
       <span
-        classNames={styles['base-rating__fill']}
+        className={styles['base-rating__fill']}
         style={{ width: `${fillFor(star)}%` }}
       >
-        <span classNames={[styles['base-rating__icon'], styles['base-rating__icon--filled']]}>
+        <span className={[styles['base-rating__icon'], styles['base-rating__icon--filled']]}>
           <IconStar />
         </span>
       </span>
       {interactive && allowHalf ? (
         <span
           aria-hidden="true"
-          classNames={[styles['base-rating__hit'], styles['base-rating__hit--half']]}
+          className={[styles['base-rating__hit'], styles['base-rating__hit--half']]}
           onClick={() => onStarClick(star, true)}
           onMousemove={() => onStarHover(star, true)}
         />
@@ -168,7 +168,7 @@ export function BaseRating(properties: Readonly<RatingProperties>): MpElement {
       {interactive ? (
         <span
           aria-hidden="true"
-          classNames={[styles['base-rating__hit'], styles['base-rating__hit--full']]}
+          className={[styles['base-rating__hit'], styles['base-rating__hit--full']]}
           onClick={() => onStarClick(star, false)}
           onMousemove={() => onStarHover(star, false)}
         />
@@ -183,7 +183,7 @@ export function BaseRating(properties: Readonly<RatingProperties>): MpElement {
       aria-valuemin={0}
       aria-valuenow={modelValue}
       aria-valuetext={valueText}
-      classNames={[styles['base-rating'], styles[`base-rating--${size}`]]}
+      className={[styles['base-rating'], styles[`base-rating--${size}`]]}
       role="slider"
       tabindex={0}
       onBlur={clearHover}
@@ -195,7 +195,7 @@ export function BaseRating(properties: Readonly<RatingProperties>): MpElement {
   ) : (
     <div
       aria-label={`${ariaLabel}: ${valueText}`}
-      classNames={[
+      className={[
         styles['base-rating'],
         styles[`base-rating--${size}`],
         {

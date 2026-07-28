@@ -24,7 +24,7 @@ export function IconPalette(properties: Readonly<IconPaletteProperties>): MpElem
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-palette']}>
+    <div className={styles['base-icon-palette']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

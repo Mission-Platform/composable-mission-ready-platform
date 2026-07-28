@@ -24,7 +24,7 @@ export function IconLock(properties: Readonly<IconLockProperties>): MpElement {
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-lock']}>
+    <div className={styles['base-icon-lock']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

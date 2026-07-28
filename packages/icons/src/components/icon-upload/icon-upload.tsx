@@ -24,7 +24,7 @@ export function IconUpload(properties: Readonly<IconUploadProperties>): MpElemen
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-upload']}>
+    <div className={styles['base-icon-upload']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

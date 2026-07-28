@@ -24,7 +24,7 @@ export function IconScaleUp(properties: Readonly<IconScaleUpProperties>): MpElem
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-scale-up']}>
+    <div className={styles['base-icon-scale-up']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

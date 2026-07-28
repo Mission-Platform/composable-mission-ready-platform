@@ -349,7 +349,7 @@ styling **by that framework's own idiomatic mechanism**:
 
 - **React** keeps the **CSS Module**: the generated React source imports
   `./<name>.module.scss` and applies the **hashed** class names (the source's
-  `classNames={[styles[...], …]}` attribute compiles to `className={classNames(…)}`).
+  `className={[styles[...], …]}` attribute compiles to `className={classNames(…)}`).
 - **Vue** inlines the same SCSS as a **non-scoped `<style lang="scss">`** block
   in the generated SFC, so the Vue build uses **plain (BEM) class names** (the
   `@layer mp.components` wrapper is preserved). The compiler rewrites every
@@ -392,7 +392,7 @@ Either way, two authoring patterns are used:
   `BaseModal`, `BaseCodeBlock`, `BaseMarkdownInput`, `BaseMonacoEditor`,
   `BaseSchemaForm`, `BaseFormWizard`, `BaseFormBuilder`, `BaseScheduler`) import
   their module (`import styles from './x.module.scss'`) and assemble class names
-  with the platform-owned `classNames={[…]}` attribute (string / array /
+  with the platform-owned `className={[…]}` attribute (string / array /
   `{ class: boolean }` forms — the author never imports the helper). The build
   emits **one CSS asset per component** and wires each
   component's JS chunk to import its own stylesheet (React via the copied module,
@@ -530,14 +530,14 @@ shared `dist/components/**` declarations, but no neutral `index`.
 1. Create the folder `src/components/<name>/` and add
    `<name>.tsx` (import `h`, any hooks, and types from
    `@mission-platform/jsx`; author it in JSX returning an `MpElement`, driving
-   dynamic classes with the platform-owned `classNames={[…]}` attribute — never
+   dynamic classes with the platform-owned `className={[…]}` attribute — never
    import the `classNames` helper), an
    `index.ts` that re-exports the component and its prop types (export the props
    interface as `<PublicName>Properties` so the generated entry can type it),
    and — when it needs styling — a `<name>.module.scss` (a CSS Module in
    `@layer mp.components`, **no `:global`**). For a component that owns its
    styling, `import styles from './<name>.module.scss'` and build the class with
-   the `classNames={[styles['…'], …]}` attribute; for an inline-styled primitive whose module is
+   the `className={[styles['…'], …]}` attribute; for an inline-styled primitive whose module is
    only demo decoration, leave the module to be consumed by the story instead.
 2. Re-export the folder from `src/components/index.ts`. **That's it for wiring**
    — the `react` / `vue` entries (and the matching `storyblok/{react,vue}` blok

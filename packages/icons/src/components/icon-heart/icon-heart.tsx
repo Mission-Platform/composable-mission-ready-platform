@@ -24,7 +24,7 @@ export function IconHeart(properties: Readonly<IconHeartProperties>): MpElement 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-heart']}>
+    <div className={styles['base-icon-heart']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

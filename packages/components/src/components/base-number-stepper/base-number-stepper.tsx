@@ -153,7 +153,7 @@ export function BaseNumberStepper(properties: Readonly<NumberStepperProperties>)
 
   return (
     <div
-      classNames={[
+      className={[
         styles['base-number-stepper'],
         styles[`base-number-stepper--${size}`],
         {
@@ -164,7 +164,7 @@ export function BaseNumberStepper(properties: Readonly<NumberStepperProperties>)
     >
       {label ? (
         <label
-          classNames={[
+          className={[
             styles['base-number-stepper__label'],
             {
               [styles['base-number-stepper__label--hidden']]: labelHidden,
@@ -182,17 +182,17 @@ export function BaseNumberStepper(properties: Readonly<NumberStepperProperties>)
           {required ? (
             <span
               aria-hidden="true"
-              classNames={styles['base-number-stepper__required']}
+              className={styles['base-number-stepper__required']}
             >
               *
             </span>
           ) : undefined}
         </label>
       ) : undefined}
-      <div classNames={styles['base-number-stepper__wrapper']}>
+      <div className={styles['base-number-stepper__wrapper']}>
         <button
           aria-label="Decrease"
-          classNames={styles['base-number-stepper__btn']}
+          className={styles['base-number-stepper__btn']}
           disabled={!canDecrement}
           tabindex={-1}
           type="button"
@@ -204,7 +204,7 @@ export function BaseNumberStepper(properties: Readonly<NumberStepperProperties>)
           id={resolvedId}
           aria-describedby={describedBy}
           aria-invalid={error ? 'true' : undefined}
-          classNames={styles['base-number-stepper__field']}
+          className={styles['base-number-stepper__field']}
           disabled={disabled}
           inputmode="decimal"
           max={max}
@@ -218,7 +218,7 @@ export function BaseNumberStepper(properties: Readonly<NumberStepperProperties>)
         />
         <button
           aria-label="Increase"
-          classNames={styles['base-number-stepper__btn']}
+          className={styles['base-number-stepper__btn']}
           disabled={!canIncrement}
           tabindex={-1}
           type="button"
@@ -230,7 +230,7 @@ export function BaseNumberStepper(properties: Readonly<NumberStepperProperties>)
       {error ? (
         <p
           id={`${resolvedId}-error`}
-          classNames={styles['base-number-stepper__error']}
+          className={styles['base-number-stepper__error']}
           role="alert"
         >
           <BaseTypography
@@ -244,7 +244,7 @@ export function BaseNumberStepper(properties: Readonly<NumberStepperProperties>)
       ) : hint ? (
         <p
           id={`${resolvedId}-hint`}
-          classNames={styles['base-number-stepper__hint']}
+          className={styles['base-number-stepper__hint']}
         >
           <BaseTypography
             as="span"

@@ -82,7 +82,7 @@ export function BaseMasonry(properties: Readonly<MasonryProperties>): MpElement 
   return (
     <Dynamic
       is={tag}
-      classNames={className}
+      className={className}
       style={style}
     >
       {properties.children}

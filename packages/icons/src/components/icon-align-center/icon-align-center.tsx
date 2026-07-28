@@ -24,7 +24,7 @@ export function IconAlignCenter(properties: Readonly<IconAlignCenterProperties>)
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-align-center']}>
+    <div className={styles['base-icon-align-center']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

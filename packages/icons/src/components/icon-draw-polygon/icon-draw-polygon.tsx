@@ -24,7 +24,7 @@ export function IconDrawPolygon(properties: Readonly<IconDrawPolygonProperties>)
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-draw-polygon']}>
+    <div className={styles['base-icon-draw-polygon']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

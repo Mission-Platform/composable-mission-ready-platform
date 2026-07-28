@@ -105,7 +105,7 @@ export function BaseThemeComposer(properties: Readonly<ThemeComposerProperties>)
 
   return (
     <div
-      classNames={[styles['base-theme-composer'], sizeStyles[`base-size--${size}`]]}
+      className={[styles['base-theme-composer'], sizeStyles[`base-size--${size}`]]}
       style={wrapperStyle}
     >
       <Slot

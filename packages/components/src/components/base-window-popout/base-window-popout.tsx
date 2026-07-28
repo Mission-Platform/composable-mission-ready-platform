@@ -151,7 +151,7 @@ export function BaseWindowPopout(properties: Readonly<WindowPopoutProperties>): 
   const inlineNode = (
     <div
       ref={contentReference}
-      classNames={classNames(styles['base-window-popout__inline'], {
+      className={classNames(styles['base-window-popout__inline'], {
         [styles['base-window-popout__inline--hidden']]: isPopped,
       })}
     >
@@ -161,7 +161,7 @@ export function BaseWindowPopout(properties: Readonly<WindowPopoutProperties>): 
 
   const placeholderNode = isPopped ? (
     <output
-      classNames={styles['base-window-popout__placeholder']}
+      className={styles['base-window-popout__placeholder']}
       aria-label={title ?? placeholderLabel}
       aria-live="polite"
     >
@@ -178,13 +178,13 @@ export function BaseWindowPopout(properties: Readonly<WindowPopoutProperties>): 
   ) : undefined;
 
   return (
-    <div classNames={classNames(styles['base-window-popout'], sizeStyles[`base-size--${size}`])}>
+    <div className={classNames(styles['base-window-popout'], sizeStyles[`base-size--${size}`])}>
       {inlineNode}
       {placeholderNode}
-      <div classNames={styles['base-window-popout__controls']}>
+      <div className={styles['base-window-popout__controls']}>
         <button
           type="button"
-          classNames={styles['base-window-popout__toggle']}
+          className={styles['base-window-popout__toggle']}
           aria-pressed={isPopped}
           onClick={() => (isPopped ? closePopout() : openPopout())}
         >

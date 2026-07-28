@@ -67,7 +67,7 @@ export function BaseButtonGroup(properties: Readonly<ButtonGroupProperties>): Mp
   return (
     <div
       aria-label={ariaLabel}
-      classNames={className}
+      className={className}
       role="group"
     >
       {properties.children}

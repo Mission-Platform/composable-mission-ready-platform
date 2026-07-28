@@ -24,7 +24,7 @@ export function IconMail(properties: Readonly<IconMailProperties>): MpElement {
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-mail']}>
+    <div className={styles['base-icon-mail']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

@@ -44,7 +44,7 @@ export function BaseBadge(properties: Readonly<BadgeProperties>): MpElement {
   });
 
   return (
-    <span classNames={className}>
+    <span className={className}>
       <BaseTypography
         as="span"
         color="inherit"

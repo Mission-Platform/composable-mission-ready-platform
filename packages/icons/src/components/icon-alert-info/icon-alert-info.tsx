@@ -25,7 +25,7 @@ export function IconAlertInfo(properties: Readonly<IconAlertInfoProperties>): Mp
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-alert-info']}>
+    <div className={styles['base-icon-alert-info']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Info'}

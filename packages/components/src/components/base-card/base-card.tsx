@@ -72,17 +72,17 @@ export function BaseCard(properties: Readonly<CardProperties>): MpElement {
   );
 
   return (
-    <article classNames={className}>
+    <article className={className}>
       {hasSlot('header') ? (
-        <div classNames={styles['base-card__header']}>
+        <div className={styles['base-card__header']}>
           <Slot name="header" />
         </div>
       ) : undefined}
-      <div classNames={styles['base-card__body']}>
+      <div className={styles['base-card__body']}>
         <Slot />
       </div>
       {hasSlot('footer') ? (
-        <div classNames={styles['base-card__footer']}>
+        <div className={styles['base-card__footer']}>
           <Slot name="footer" />
         </div>
       ) : undefined}

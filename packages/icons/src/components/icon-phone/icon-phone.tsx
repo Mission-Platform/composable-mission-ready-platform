@@ -24,7 +24,7 @@ export function IconPhone(properties: Readonly<IconPhoneProperties>): MpElement 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-phone']}>
+    <div className={styles['base-icon-phone']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

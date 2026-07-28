@@ -235,7 +235,7 @@ export function BaseMatrixCode(properties: Readonly<MatrixCodeProperties>): MpEl
     return (
       <svg
         aria-hidden="true"
-        classNames={styles['base-matrix-code']}
+        className={styles['base-matrix-code']}
         height="0"
         width="0"
         xmlns="http://www.w3.org/2000/svg"
@@ -437,7 +437,7 @@ export function BaseMatrixCode(properties: Readonly<MatrixCodeProperties>): MpEl
       ) : null}
       {logo && logoLayout ? (
         <image
-          classNames={styles['base-matrix-code__logo']}
+          className={styles['base-matrix-code__logo']}
           height={logoLayout.logoSize}
           href={logo.href}
           preserveAspectRatio="xMidYMid meet"
@@ -489,9 +489,9 @@ export function BaseMatrixCode(properties: Readonly<MatrixCodeProperties>): MpEl
   }
 
   return (
-    <div classNames={styles['base-matrix-code-figure']}>
+    <div className={styles['base-matrix-code-figure']}>
       {matrixSvg}
-      <div classNames={styles['base-matrix-code__actions']}>
+      <div className={styles['base-matrix-code__actions']}>
         {visibleActions.map((action) => {
           const isDone = completed === action.key;
           return (

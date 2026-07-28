@@ -24,7 +24,7 @@ export function IconPuzzle(properties: Readonly<IconPuzzleProperties>): MpElemen
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-puzzle']}>
+    <div className={styles['base-icon-puzzle']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

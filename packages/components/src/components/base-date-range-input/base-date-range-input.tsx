@@ -135,7 +135,7 @@ export function BaseDateRangeInput(properties: Readonly<DateRangeInputProperties
 
   return (
     <div
-      classNames={[
+      className={[
         styles['base-date-range-input'],
         styles[`base-date-range-input--${size}`],
         {
@@ -146,7 +146,7 @@ export function BaseDateRangeInput(properties: Readonly<DateRangeInputProperties
     >
       {label ? (
         <label
-          classNames={[
+          className={[
             styles['base-date-range-input__label'],
             {
               [styles['base-date-range-input__label--hidden']]: labelHidden,
@@ -164,7 +164,7 @@ export function BaseDateRangeInput(properties: Readonly<DateRangeInputProperties
           {required ? (
             <span
               aria-hidden="true"
-              classNames={styles['base-date-range-input__required']}
+              className={styles['base-date-range-input__required']}
               title="required"
             >
               *
@@ -185,12 +185,12 @@ export function BaseDateRangeInput(properties: Readonly<DateRangeInputProperties
         }}
       >
         <div
-          classNames={styles['base-date-range-input__wrapper']}
+          className={styles['base-date-range-input__wrapper']}
           slot="trigger"
         >
           {hasSlot('start') ? (
             <span
-              classNames={[
+              className={[
                 styles['base-date-range-input__extension'],
                 styles['base-date-range-input__extension--start'],
               ]}
@@ -205,12 +205,12 @@ export function BaseDateRangeInput(properties: Readonly<DateRangeInputProperties
             aria-haspopup="dialog"
             aria-invalid={error ? 'true' : undefined}
             aria-label={label ?? 'Date range picker'}
-            classNames={styles['base-date-range-input__trigger']}
+            className={styles['base-date-range-input__trigger']}
             type="button"
             onClick={toggleOpen}
           >
             <span
-              classNames={[
+              className={[
                 styles['base-date-range-input__value'],
                 {
                   [styles['base-date-range-input__value--placeholder']]: !summary,
@@ -221,14 +221,14 @@ export function BaseDateRangeInput(properties: Readonly<DateRangeInputProperties
             </span>
             <span
               aria-hidden="true"
-              classNames={styles['base-date-range-input__icon']}
+              className={styles['base-date-range-input__icon']}
             >
               <IconCalendar size="sm" />
             </span>
           </button>
           {hasSlot('end') ? (
             <span
-              classNames={[styles['base-date-range-input__extension'], styles['base-date-range-input__extension--end']]}
+              className={[styles['base-date-range-input__extension'], styles['base-date-range-input__extension--end']]}
             >
               <Slot name="end" />
             </span>
@@ -236,11 +236,11 @@ export function BaseDateRangeInput(properties: Readonly<DateRangeInputProperties
         </div>
         <div
           aria-label={`${label ?? 'Date'} range calendar`}
-          classNames={styles['base-date-range-input__calendar']}
+          className={styles['base-date-range-input__calendar']}
           role="dialog"
         >
-          <div classNames={styles['base-date-range-input__panes']}>
-            <div classNames={styles['base-date-range-input__pane']}>
+          <div className={styles['base-date-range-input__panes']}>
+            <div className={styles['base-date-range-input__pane']}>
               <BaseTypography
                 as="span"
                 color="secondary"
@@ -260,7 +260,7 @@ export function BaseDateRangeInput(properties: Readonly<DateRangeInputProperties
                 onUpdateModelValue={handleStart}
               />
             </div>
-            <div classNames={styles['base-date-range-input__pane']}>
+            <div className={styles['base-date-range-input__pane']}>
               <BaseTypography
                 as="span"
                 color="secondary"
@@ -287,7 +287,7 @@ export function BaseDateRangeInput(properties: Readonly<DateRangeInputProperties
       {error ? (
         <p
           id={`${resolvedId}-error`}
-          classNames={styles['base-date-range-input__error']}
+          className={styles['base-date-range-input__error']}
           role="alert"
         >
           <BaseTypography
@@ -301,7 +301,7 @@ export function BaseDateRangeInput(properties: Readonly<DateRangeInputProperties
       ) : hint ? (
         <p
           id={`${resolvedId}-hint`}
-          classNames={styles['base-date-range-input__hint']}
+          className={styles['base-date-range-input__hint']}
         >
           <BaseTypography
             as="span"

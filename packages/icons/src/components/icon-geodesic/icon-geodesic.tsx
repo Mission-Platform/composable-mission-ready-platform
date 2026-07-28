@@ -24,7 +24,7 @@ export function IconGeodesic(properties: Readonly<IconGeodesicProperties>): MpEl
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-geodesic']}>
+    <div className={styles['base-icon-geodesic']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

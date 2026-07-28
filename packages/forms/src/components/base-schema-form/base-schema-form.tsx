@@ -280,7 +280,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
         <BaseInput
           autocapitalize={field.autocapitalize}
           autocomplete={field.autocomplete}
-          classNames={styles['base-schema-form__field']}
+          className={styles['base-schema-form__field']}
           disabled={fieldDisabled}
           error={error}
           hint={field.hint}
@@ -300,7 +300,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
       case 'tel': {
         return (
           <BasePhoneInput
-            classNames={styles['base-schema-form__field']}
+            className={styles['base-schema-form__field']}
             disabled={fieldDisabled}
             error={error}
             hint={field.hint}
@@ -316,7 +316,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
       case 'stepper': {
         return (
           <BaseNumberStepper
-            classNames={styles['base-schema-form__field']}
+            className={styles['base-schema-form__field']}
             disabled={fieldDisabled}
             error={error}
             hint={field.hint}
@@ -337,7 +337,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
       case 'textarea': {
         return (
           <BaseTextarea
-            classNames={styles['base-schema-form__field']}
+            className={styles['base-schema-form__field']}
             disabled={fieldDisabled}
             error={error}
             hint={field.hint}
@@ -353,7 +353,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
       case 'markdown': {
         return (
           <BaseMarkdownInput
-            classNames={styles['base-schema-form__field']}
+            className={styles['base-schema-form__field']}
             disabled={fieldDisabled}
             error={error}
             hint={field.hint}
@@ -369,7 +369,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
       case 'checkbox': {
         return (
           <BaseCheckbox
-            classNames={styles['base-schema-form__field']}
+            className={styles['base-schema-form__field']}
             disabled={fieldDisabled}
             error={error}
             hint={field.hint}
@@ -383,7 +383,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
       case 'switch': {
         return (
           <BaseSwitch
-            classNames={styles['base-schema-form__field']}
+            className={styles['base-schema-form__field']}
             disabled={fieldDisabled}
             error={error}
             hint={field.hint}
@@ -396,7 +396,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
       case 'select': {
         return (
           <BaseSelect
-            classNames={styles['base-schema-form__field']}
+            className={styles['base-schema-form__field']}
             disabled={fieldDisabled}
             error={error}
             hint={field.hint}
@@ -412,7 +412,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
       case 'radio': {
         return (
           <BaseRadioGroup
-            classNames={styles['base-schema-form__field']}
+            className={styles['base-schema-form__field']}
             disabled={fieldDisabled}
             error={error}
             hint={field.hint}
@@ -427,7 +427,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
       case 'multiselect': {
         return (
           <BaseMultiselect
-            classNames={styles['base-schema-form__field']}
+            className={styles['base-schema-form__field']}
             disabled={fieldDisabled}
             error={error}
             hint={field.hint}
@@ -447,9 +447,9 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
           onUpdate(merged.date || merged.time ? `${merged.date}T${merged.time}` : '');
         };
         return (
-          <fieldset classNames={[styles['base-schema-form__field'], styles['base-schema-form__datetime']]}>
+          <fieldset className={[styles['base-schema-form__field'], styles['base-schema-form__datetime']]}>
             {field.label ? (
-              <legend classNames={styles['base-schema-form__datetime-legend']}>
+              <legend className={styles['base-schema-form__datetime-legend']}>
                 <BaseTypography
                   as="span"
                   variant="label"
@@ -459,7 +459,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
                 </BaseTypography>
               </legend>
             ) : undefined}
-            <div classNames={styles['base-schema-form__datetime-controls']}>
+            <div className={styles['base-schema-form__datetime-controls']}>
               <BaseDateInput
                 disabled={fieldDisabled}
                 label="Date"
@@ -480,7 +480,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
             {field.hint || error ? (
               <BaseTypography
                 as="p"
-                classNames={[
+                className={[
                   styles['base-schema-form__datetime-hint'],
                   {
                     [styles['base-schema-form__datetime-hint--error']]: Boolean(error),
@@ -498,7 +498,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
       case 'date': {
         return (
           <BaseDateInput
-            classNames={styles['base-schema-form__field']}
+            className={styles['base-schema-form__field']}
             disabled={fieldDisabled}
             error={error}
             hint={field.hint}
@@ -515,7 +515,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
       case 'time': {
         return (
           <BaseTimeInput
-            classNames={styles['base-schema-form__field']}
+            className={styles['base-schema-form__field']}
             disabled={fieldDisabled}
             error={error}
             hint={field.hint}
@@ -530,7 +530,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
       case 'daterange': {
         return (
           <BaseDateRangeInput
-            classNames={styles['base-schema-form__field']}
+            className={styles['base-schema-form__field']}
             disabled={fieldDisabled}
             error={error}
             hint={field.hint}
@@ -546,7 +546,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
       case 'timerange': {
         return (
           <BaseTimeRangeInput
-            classNames={styles['base-schema-form__field']}
+            className={styles['base-schema-form__field']}
             disabled={fieldDisabled}
             error={error}
             hint={field.hint}
@@ -561,7 +561,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
       case 'datetimerange': {
         return (
           <BaseDateTimeRangeInput
-            classNames={styles['base-schema-form__field']}
+            className={styles['base-schema-form__field']}
             disabled={fieldDisabled}
             error={error}
             hint={field.hint}
@@ -584,7 +584,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
       case 'location': {
         return (
           <BaseLocationInput
-            classNames={styles['base-schema-form__field']}
+            className={styles['base-schema-form__field']}
             disabled={fieldDisabled}
             error={error}
             format={field.locationFormat}
@@ -599,7 +599,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
       case 'fieldset': {
         return (
           <BaseFieldSet
-            classNames={styles['base-schema-form__field']}
+            className={styles['base-schema-form__field']}
             description={field.hint}
             disabled={fieldDisabled}
             legend={field.label}
@@ -613,7 +613,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
           <BaseFileInput
             accept={field.accept}
             capture={field.capture}
-            classNames={styles['base-schema-form__field']}
+            className={styles['base-schema-form__field']}
             disabled={fieldDisabled}
             error={error}
             hint={field.hint}
@@ -628,7 +628,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
       default: {
         return (
           <BaseInput
-            classNames={styles['base-schema-form__field']}
+            className={styles['base-schema-form__field']}
             disabled={fieldDisabled}
             error={error}
             hint={field.hint}
@@ -656,14 +656,14 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
         error: stepHasErrors[stepIndex],
         content:
           position === currentVisiblePosition ? (
-            <div classNames={styles['base-schema-form__fields']}>{fieldNodes}</div>
+            <div className={styles['base-schema-form__fields']}>{fieldNodes}</div>
           ) : undefined,
       };
     });
 
     return (
       <form
-        classNames={[
+        className={[
           styles['base-schema-form'],
           styles['base-schema-form--wizard'],
           sizeStyles[`base-size--${size}`],
@@ -687,7 +687,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
   // Single-step form.
   return (
     <form
-      classNames={[
+      className={[
         styles['base-schema-form'],
         sizeStyles[`base-size--${size}`],
         {
@@ -697,8 +697,8 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
       onReset={handleReset}
       onSubmit={handleSubmit}
     >
-      <div classNames={styles['base-schema-form__fields']}>{fieldNodes}</div>
-      <div classNames={styles['base-schema-form__actions']}>
+      <div className={styles['base-schema-form__fields']}>{fieldNodes}</div>
+      <div className={styles['base-schema-form__actions']}>
         <Slot name="actions">
           <BaseButton
             disabled={disabled}

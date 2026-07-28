@@ -24,7 +24,7 @@ export function IconCodeInline(properties: Readonly<IconCodeInlineProperties>): 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-code-inline']}>
+    <div className={styles['base-icon-code-inline']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Inline Code'}

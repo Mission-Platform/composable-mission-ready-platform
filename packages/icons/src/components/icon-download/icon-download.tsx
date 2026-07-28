@@ -24,7 +24,7 @@ export function IconDownload(properties: Readonly<IconDownloadProperties>): MpEl
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-download']}>
+    <div className={styles['base-icon-download']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

@@ -1,4 +1,13 @@
-import { classNames, Dynamic, h, hasSlot, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import {
+  classNames,
+  Dynamic,
+  h,
+  hasSlot,
+  Slot,
+  type MpChild,
+  type MpElement,
+  type MpProperties,
+} from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
 
@@ -74,7 +83,7 @@ export function BaseHero(properties: Readonly<HeroProperties>): MpElement {
   );
 
   const eyebrowNode = eyebrow ? (
-    <div classNames={styles['base-hero__eyebrow']}>
+    <div className={styles['base-hero__eyebrow']}>
       <BaseTypography
         variant="label"
         weight="semibold"
@@ -93,7 +102,7 @@ export function BaseHero(properties: Readonly<HeroProperties>): MpElement {
     </BaseTypography>
   ) : undefined;
   const subtitleNode = subtitle ? (
-    <div classNames={styles['base-hero__subtitle']}>
+    <div className={styles['base-hero__subtitle']}>
       <BaseTypography
         variant="body-lg"
         color={hasMedia ? 'inverse' : 'secondary'}
@@ -103,13 +112,13 @@ export function BaseHero(properties: Readonly<HeroProperties>): MpElement {
     </div>
   ) : undefined;
   const actionsNode = hasSlot('actions') ? (
-    <div classNames={styles['base-hero__actions']}>
+    <div className={styles['base-hero__actions']}>
       <Slot name="actions" />
     </div>
   ) : undefined;
 
   const content = (
-    <div classNames={styles['base-hero__content']}>
+    <div className={styles['base-hero__content']}>
       {eyebrowNode}
       {titleNode}
       {subtitleNode}
@@ -120,11 +129,11 @@ export function BaseHero(properties: Readonly<HeroProperties>): MpElement {
 
   return (
     <Dynamic
-      classNames={rootClass}
+      className={rootClass}
       is={as}
     >
       {hasMedia ? (
-        <div classNames={styles['base-hero__media']}>
+        <div className={styles['base-hero__media']}>
           <Slot name="media" />
         </div>
       ) : undefined}

@@ -60,9 +60,9 @@ export function BaseProgressBar(properties: Readonly<ProgressBarProperties>): Mp
   );
 
   return (
-    <div classNames={[styles['base-progress-bar'], styles[`base-progress-bar--${size}`]]}>
+    <div className={[styles['base-progress-bar'], styles[`base-progress-bar--${size}`]]}>
       {label || showLabel ? (
-        <div classNames={styles['base-progress-bar__header']}>
+        <div className={styles['base-progress-bar__header']}>
           {label ? (
             <BaseTypography
               as="span"
@@ -86,7 +86,7 @@ export function BaseProgressBar(properties: Readonly<ProgressBarProperties>): Mp
       ) : undefined}
       <progress
         aria-label={label}
-        classNames={trackClassName}
+        className={trackClassName}
         max={max}
         value={indeterminate ? undefined : value}
       />

@@ -87,7 +87,7 @@ export function BaseSearchInput(properties: Readonly<SearchInputProperties>): Mp
 
   return (
     <div
-      classNames={[
+      className={[
         styles['base-search-input'],
         styles[`base-search-input--${size}`],
         {
@@ -95,15 +95,15 @@ export function BaseSearchInput(properties: Readonly<SearchInputProperties>): Mp
         },
       ]}
     >
-      <div classNames={styles['base-search-input__wrapper']}>
+      <div className={styles['base-search-input__wrapper']}>
         <span
           aria-hidden={loading ? undefined : 'true'}
-          classNames={styles['base-search-input__search-icon']}
+          className={styles['base-search-input__search-icon']}
         >
           {loading ? (
             <span
               aria-label={loadingLabel}
-              classNames={styles['base-search-input__spinner']}
+              className={styles['base-search-input__spinner']}
               role="status"
             />
           ) : (
@@ -114,7 +114,7 @@ export function BaseSearchInput(properties: Readonly<SearchInputProperties>): Mp
           ref={inputReference}
           id={resolvedId}
           aria-busy={loading ? 'true' : undefined}
-          classNames={styles['base-search-input__field']}
+          className={styles['base-search-input__field']}
           disabled={disabled}
           placeholder={placeholder}
           type="search"
@@ -125,7 +125,7 @@ export function BaseSearchInput(properties: Readonly<SearchInputProperties>): Mp
         {hasValue ? (
           <button
             aria-label={clearLabel}
-            classNames={styles['base-search-input__clear']}
+            className={styles['base-search-input__clear']}
             type="button"
             onClick={handleClear}
           >

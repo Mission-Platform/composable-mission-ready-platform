@@ -24,7 +24,7 @@ export function IconCopy(properties: Readonly<IconCopyProperties>): MpElement {
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-copy']}>
+    <div className={styles['base-icon-copy']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

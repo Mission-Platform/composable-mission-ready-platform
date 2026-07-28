@@ -89,15 +89,13 @@ export function BaseAccordion(properties: Readonly<AccordionProperties>): MpElem
   };
 
   return (
-    <div
-      classNames={[styles['base-accordion'], styles[`base-accordion--${variant}`], sizeStyles[`base-size--${size}`]]}
-    >
+    <div className={[styles['base-accordion'], styles[`base-accordion--${variant}`], sizeStyles[`base-size--${size}`]]}>
       {items.map((item) => {
         const open = openIds.includes(item.id);
         return (
           <details
             key={item.id}
-            classNames={[
+            className={[
               styles['base-accordion__item'],
               {
                 [styles['base-accordion__item--disabled']]: item.disabled,
@@ -107,7 +105,7 @@ export function BaseAccordion(properties: Readonly<AccordionProperties>): MpElem
           >
             <summary
               aria-disabled={item.disabled ? 'true' : undefined}
-              classNames={styles['base-accordion__summary']}
+              className={styles['base-accordion__summary']}
               tabindex={0}
               onClick={(event: MouseEvent) => {
                 event.preventDefault();
@@ -140,7 +138,7 @@ export function BaseAccordion(properties: Readonly<AccordionProperties>): MpElem
               </BaseTypography>
               <span
                 aria-hidden="true"
-                classNames={styles['base-accordion__chevron']}
+                className={styles['base-accordion__chevron']}
               >
                 <IconChevron
                   direction={open ? 'up' : 'down'}
@@ -149,7 +147,7 @@ export function BaseAccordion(properties: Readonly<AccordionProperties>): MpElem
               </span>
             </summary>
             {open ? (
-              <div classNames={styles['base-accordion__content']}>
+              <div className={styles['base-accordion__content']}>
                 <Slot
                   name="content"
                   item={item}

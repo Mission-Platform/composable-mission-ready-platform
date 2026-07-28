@@ -38,7 +38,7 @@ export function IconChevrons(properties: Readonly<IconChevronsProperties>): MpEl
   const direction = properties.direction ?? 'right';
 
   return (
-    <div classNames={styles['base-icon-chevrons']}>
+    <div className={styles['base-icon-chevrons']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? `Chevrons ${direction}`}

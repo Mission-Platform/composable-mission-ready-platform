@@ -24,7 +24,7 @@ export function IconMenu(properties: Readonly<IconMenuProperties>): MpElement {
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-menu']}>
+    <div className={styles['base-icon-menu']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

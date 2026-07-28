@@ -24,7 +24,7 @@ export function IconItalic(properties: Readonly<IconItalicProperties>): MpElemen
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-italic']}>
+    <div className={styles['base-icon-italic']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Italic'}

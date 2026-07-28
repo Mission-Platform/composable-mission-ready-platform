@@ -333,16 +333,16 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
     const todayIso = isoDate(new Date());
 
     return (
-      <div classNames={styles['base-scheduler__time-grid']}>
+      <div className={styles['base-scheduler__time-grid']}>
         <div
-          classNames={styles['base-scheduler__grid-header']}
+          className={styles['base-scheduler__grid-header']}
           style={{ gridTemplateColumns: `4rem repeat(${dayCount}, minmax(0, 1fr))` }}
         >
-          <div classNames={styles['base-scheduler__gutter-corner']} />
+          <div className={styles['base-scheduler__gutter-corner']} />
           {days.map((day) => (
             <button
               key={isoDate(day)}
-              classNames={[
+              className={[
                 styles['base-scheduler__day-heading'],
                 {
                   [styles['base-scheduler__day-heading--today']]: isoDate(day) === todayIso,
@@ -351,23 +351,23 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
               type="button"
               onClick={() => switchView('day', day)}
             >
-              <span classNames={styles['base-scheduler__day-weekday']}>
+              <span className={styles['base-scheduler__day-weekday']}>
                 {day.toLocaleDateString(undefined, { weekday: 'short' })}
               </span>
-              <span classNames={styles['base-scheduler__day-number']}>{day.getDate()}</span>
+              <span className={styles['base-scheduler__day-number']}>{day.getDate()}</span>
             </button>
           ))}
         </div>
 
         <div
-          classNames={styles['base-scheduler__grid-body']}
+          className={styles['base-scheduler__grid-body']}
           style={{ gridTemplateColumns: `4rem repeat(${dayCount}, minmax(0, 1fr))` }}
         >
-          <div classNames={styles['base-scheduler__hours']}>
+          <div className={styles['base-scheduler__hours']}>
             {HOURS.map((hour) => (
               <div
                 key={hour}
-                classNames={styles['base-scheduler__hour-label']}
+                className={styles['base-scheduler__hour-label']}
                 style={{ height: `${HOUR_HEIGHT}px` }}
               >
                 {formatHour(hour)}
@@ -381,7 +381,7 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
             return (
               <div
                 key={dayIso}
-                classNames={styles['base-scheduler__day-column']}
+                className={styles['base-scheduler__day-column']}
                 data-scheduler-day={dayIso}
                 style={{ height: `${HOUR_HEIGHT * 24}px` }}
                 onClick={(clickEvent: MouseEvent) => {
@@ -396,7 +396,7 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
                 {HOURS.map((hour) => (
                   <div
                     key={hour}
-                    classNames={styles['base-scheduler__hour-line']}
+                    className={styles['base-scheduler__hour-line']}
                     style={{ height: `${HOUR_HEIGHT}px` }}
                   />
                 ))}
@@ -409,7 +409,7 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
                   return (
                     <div
                       key={event.recurrenceId ?? event.uid}
-                      classNames={styles['base-scheduler__event']}
+                      className={styles['base-scheduler__event']}
                       role="button"
                       style={{
                         top: `${(startMinutes / 60) * HOUR_HEIGHT}px`,
@@ -425,12 +425,12 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
                       }}
                       onPointerdown={startMove(event.masterUid ?? event.uid)}
                     >
-                      <span classNames={styles['base-scheduler__event-time']}>{timeLabel(event.dtstart)}</span>
-                      <span classNames={styles['base-scheduler__event-title']}>{event.summary || '(no title)'}</span>
-                      <span classNames={styles['base-scheduler__event-duration']}>{formatDuration(event)}</span>
+                      <span className={styles['base-scheduler__event-time']}>{timeLabel(event.dtstart)}</span>
+                      <span className={styles['base-scheduler__event-title']}>{event.summary || '(no title)'}</span>
+                      <span className={styles['base-scheduler__event-duration']}>{formatDuration(event)}</span>
                       <span
                         aria-hidden="true"
-                        classNames={styles['base-scheduler__event-resize']}
+                        className={styles['base-scheduler__event-resize']}
                         onPointerdown={startResize(event.masterUid ?? event.uid)}
                       />
                     </div>
@@ -455,18 +455,18 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
     const todayIso = isoDate(new Date());
 
     return (
-      <div classNames={styles['base-scheduler__month']}>
-        <div classNames={styles['base-scheduler__month-weekdays']}>
+      <div className={styles['base-scheduler__month']}>
+        <div className={styles['base-scheduler__month-weekdays']}>
           {weekdayLabels.map((label) => (
             <div
               key={label}
-              classNames={styles['base-scheduler__month-weekday']}
+              className={styles['base-scheduler__month-weekday']}
             >
               {label}
             </div>
           ))}
         </div>
-        <div classNames={styles['base-scheduler__month-grid']}>
+        <div className={styles['base-scheduler__month-grid']}>
           {cells.map((day) => {
             const dayIso = isoDate(day);
             const dayEvents = eventsForDay(events, day);
@@ -474,7 +474,7 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
             return (
               <div
                 key={dayIso}
-                classNames={[
+                className={[
                   styles['base-scheduler__month-cell'],
                   {
                     [styles['base-scheduler__month-cell--outside']]: !inMonth,
@@ -484,17 +484,17 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
               >
                 <button
                   aria-label={`Create event on ${dayIso}`}
-                  classNames={styles['base-scheduler__month-cell-create']}
+                  className={styles['base-scheduler__month-cell-create']}
                   type="button"
                   onClick={() => openCreate(`${dayIso}T09:00`)}
                 >
-                  <span classNames={styles['base-scheduler__month-day-number']}>{day.getDate()}</span>
+                  <span className={styles['base-scheduler__month-day-number']}>{day.getDate()}</span>
                 </button>
-                <span classNames={styles['base-scheduler__month-events']}>
+                <span className={styles['base-scheduler__month-events']}>
                   {dayEvents.slice(0, 3).map((event) => (
                     <span
                       key={event.recurrenceId ?? event.uid}
-                      classNames={styles['base-scheduler__month-chip']}
+                      className={styles['base-scheduler__month-chip']}
                       role="button"
                       style={{ backgroundColor: event.color || undefined, color: readableTextColor(event.color) }}
                       tabindex={0}
@@ -508,7 +508,7 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
                   ))}
                   {dayEvents.length > 3 ? (
                     <span
-                      classNames={styles['base-scheduler__month-more']}
+                      className={styles['base-scheduler__month-more']}
                       role="button"
                       tabindex={0}
                       onClick={(clickEvent: MouseEvent) => {
@@ -536,7 +536,7 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
     const todayIso = isoDate(new Date());
 
     return (
-      <div classNames={styles['base-scheduler__year']}>
+      <div className={styles['base-scheduler__year']}>
         {MONTH_NAMES.map((monthName, monthIndex) => {
           const firstOfMonth = new Date(year, monthIndex, 1);
           const gridStart = startOfWeek(firstOfMonth, weekStartsOn);
@@ -544,21 +544,21 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
           return (
             <button
               key={monthName}
-              classNames={styles['base-scheduler__mini-month']}
+              className={styles['base-scheduler__mini-month']}
               type="button"
               onClick={() => switchView('month', firstOfMonth)}
             >
-              <span classNames={styles['base-scheduler__mini-title']}>{monthName}</span>
+              <span className={styles['base-scheduler__mini-title']}>{monthName}</span>
               <span
                 aria-hidden="true"
-                classNames={styles['base-scheduler__mini-grid']}
+                className={styles['base-scheduler__mini-grid']}
               >
                 {cells.map((day) => {
                   const dayIso = isoDate(day);
                   return (
                     <span
                       key={dayIso}
-                      classNames={[
+                      className={[
                         styles['base-scheduler__mini-day'],
                         {
                           [styles['base-scheduler__mini-day--outside']]: day.getMonth() !== monthIndex,
@@ -586,8 +586,8 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
   };
 
   return (
-    <div classNames={[styles['base-scheduler'], sizeStyles[`base-size--${size}`]]}>
-      <div classNames={styles['base-scheduler__toolbar']}>
+    <div className={[styles['base-scheduler'], sizeStyles[`base-size--${size}`]]}>
+      <div className={styles['base-scheduler__toolbar']}>
         <BaseButton
           size="sm"
           variant="secondary"
@@ -595,7 +595,7 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
         >
           Today
         </BaseButton>
-        <div classNames={styles['base-scheduler__nav']}>
+        <div className={styles['base-scheduler__nav']}>
           <BaseButton
             aria-label="Previous"
             size="sm"
@@ -621,12 +621,12 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
         </div>
         <BaseTypography
           as="h2"
-          classNames={styles['base-scheduler__title']}
+          className={styles['base-scheduler__title']}
           variant="h5"
         >
           {toolbarTitle}
         </BaseTypography>
-        <div classNames={styles['base-scheduler__spacer']} />
+        <div className={styles['base-scheduler__spacer']} />
         <BaseButton
           size="sm"
           variant="primary"
@@ -636,14 +636,14 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
         </BaseButton>
         <div
           aria-label="Calendar view"
-          classNames={styles['base-scheduler__view-switcher']}
+          className={styles['base-scheduler__view-switcher']}
           role="group"
         >
           {VIEWS.map((option) => (
             <BaseButton
               key={option.id}
               aria-pressed={view === option.id}
-              classNames={styles['base-scheduler__view-btn']}
+              className={styles['base-scheduler__view-btn']}
               size="sm"
               variant={view === option.id ? 'primary' : 'tertiary'}
               onClick={() => switchView(option.id)}
@@ -656,7 +656,7 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
 
       <div
         aria-label={`${view} view`}
-        classNames={styles['base-scheduler__body']}
+        className={styles['base-scheduler__body']}
         data-view={view}
       >
         {renderBody()}
@@ -671,14 +671,14 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
         }}
       >
         {draft ? (
-          <div classNames={styles['base-scheduler__form']}>
+          <div className={styles['base-scheduler__form']}>
             <BaseInput
               label="Title"
               modelValue={draft.summary}
               placeholder="Event title"
               onUpdateModelValue={(value: string | number) => patchDraft({ summary: String(value) })}
             />
-            <div classNames={styles['base-scheduler__form-row']}>
+            <div className={styles['base-scheduler__form-row']}>
               <BaseInput
                 hint="YYYY-MM-DDTHH:MM"
                 label="Start"
@@ -703,7 +703,7 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
               rows={3}
               onUpdateModelValue={(value: string) => patchDraft({ description: value })}
             />
-            <div classNames={styles['base-scheduler__form-actions']}>
+            <div className={styles['base-scheduler__form-actions']}>
               {draft.uid ? (
                 <BaseButton
                   type="button"
@@ -713,7 +713,7 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
                   Delete
                 </BaseButton>
               ) : undefined}
-              <div classNames={styles['base-scheduler__spacer']} />
+              <div className={styles['base-scheduler__spacer']} />
               <BaseButton
                 type="button"
                 variant="secondary"

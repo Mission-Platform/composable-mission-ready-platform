@@ -155,7 +155,7 @@ export function BaseLocationInput(properties: Readonly<LocationInputProperties>)
 
   return (
     <fieldset
-      classNames={[
+      className={[
         styles['base-location-input'],
         {
           [styles['base-location-input--error']]: !!error,
@@ -165,7 +165,7 @@ export function BaseLocationInput(properties: Readonly<LocationInputProperties>)
     >
       {label ? (
         <legend
-          classNames={[
+          className={[
             styles['base-location-input__legend'],
             {
               [styles['base-location-input__legend--hidden']]: labelHidden,
@@ -182,7 +182,7 @@ export function BaseLocationInput(properties: Readonly<LocationInputProperties>)
           {required ? (
             <span
               aria-hidden="true"
-              classNames={styles['base-location-input__required']}
+              className={styles['base-location-input__required']}
             >
               *
             </span>
@@ -190,9 +190,9 @@ export function BaseLocationInput(properties: Readonly<LocationInputProperties>)
         </legend>
       ) : undefined}
 
-      <div classNames={styles['base-location-input__row']}>
+      <div className={styles['base-location-input__row']}>
         {allowFormatChange ? (
-          <div classNames={styles['base-location-input__format']}>
+          <div className={styles['base-location-input__format']}>
             <BaseSelect
               disabled={disabled}
               label="Coordinate format"
@@ -204,7 +204,7 @@ export function BaseLocationInput(properties: Readonly<LocationInputProperties>)
             />
           </div>
         ) : undefined}
-        <div classNames={styles['base-location-input__coord']}>
+        <div className={styles['base-location-input__coord']}>
           <BaseInput
             aria-describedby={describedBy}
             disabled={disabled}
@@ -216,7 +216,7 @@ export function BaseLocationInput(properties: Readonly<LocationInputProperties>)
             onUpdateModelValue={handleLatInput}
           />
         </div>
-        <div classNames={styles['base-location-input__coord']}>
+        <div className={styles['base-location-input__coord']}>
           <BaseInput
             disabled={disabled}
             label="Longitude"
@@ -231,7 +231,7 @@ export function BaseLocationInput(properties: Readonly<LocationInputProperties>)
 
       {error ? (
         <p
-          classNames={styles['base-location-input__error']}
+          className={styles['base-location-input__error']}
           id={`${resolvedId}-error`}
           role="alert"
         >
@@ -245,7 +245,7 @@ export function BaseLocationInput(properties: Readonly<LocationInputProperties>)
         </p>
       ) : hint ? (
         <p
-          classNames={styles['base-location-input__hint']}
+          className={styles['base-location-input__hint']}
           id={`${resolvedId}-hint`}
         >
           <BaseTypography

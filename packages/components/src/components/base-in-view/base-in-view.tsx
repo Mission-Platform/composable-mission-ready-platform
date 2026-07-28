@@ -1,4 +1,13 @@
-import { classNames, Dynamic, h, useEffect, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import {
+  classNames,
+  Dynamic,
+  h,
+  useEffect,
+  useRef,
+  useState,
+  type MpElement,
+  type MpProperties,
+} from '@mission-platform/jsx';
 
 import sizeStyles from '../size.module.scss';
 
@@ -127,7 +136,7 @@ export function BaseInView(properties: Readonly<InViewProperties>): MpElement {
     <Dynamic
       is={tag}
       ref={wrapperReference}
-      classNames={classNames('in-view', sizeStyles[`base-size--${size}`])}
+      className={classNames('in-view', sizeStyles[`base-size--${size}`])}
       style={wrapperStyle(animation, duration, delay, inView)}
     >
       {properties.children}

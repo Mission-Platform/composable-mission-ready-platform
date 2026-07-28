@@ -164,7 +164,7 @@ export function BaseSlider(properties: Readonly<SliderProperties>): MpElement {
 
   return (
     <div
-      classNames={[
+      className={[
         styles['base-slider'],
         styles[`base-slider--${size}`],
         {
@@ -174,11 +174,11 @@ export function BaseSlider(properties: Readonly<SliderProperties>): MpElement {
     >
       <div
         ref={trackReference}
-        classNames={styles['base-slider__track']}
+        className={styles['base-slider__track']}
         onPointerdown={handlePointerDown}
       >
         <div
-          classNames={styles['base-slider__fill']}
+          className={styles['base-slider__fill']}
           style={{ width: `${percent}%` }}
         />
         <div
@@ -188,13 +188,13 @@ export function BaseSlider(properties: Readonly<SliderProperties>): MpElement {
           aria-valuemin={min}
           aria-valuenow={clampedValue}
           aria-valuetext={formatValue ? displayValue : undefined}
-          classNames={styles['base-slider__thumb']}
+          className={styles['base-slider__thumb']}
           role="slider"
           style={{ left: `${percent}%` }}
           tabindex={disabled ? -1 : 0}
           onKeydown={handleKeydown}
         >
-          {showValue ? <span classNames={styles['base-slider__value']}>{displayValue}</span> : undefined}
+          {showValue ? <span className={styles['base-slider__value']}>{displayValue}</span> : undefined}
         </div>
       </div>
     </div>

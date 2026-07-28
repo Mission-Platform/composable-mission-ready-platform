@@ -24,7 +24,7 @@ export function IconHeadingThree(properties: Readonly<IconHeadingThreeProperties
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-heading-three']}>
+    <div className={styles['base-icon-heading-three']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Heading 3'}

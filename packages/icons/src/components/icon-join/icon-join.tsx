@@ -24,7 +24,7 @@ export function IconJoin(properties: Readonly<IconJoinProperties>): MpElement {
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-join']}>
+    <div className={styles['base-icon-join']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

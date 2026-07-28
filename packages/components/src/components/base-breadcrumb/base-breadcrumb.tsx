@@ -45,20 +45,20 @@ export function BaseBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpEl
   return (
     <nav
       aria-label="Breadcrumb"
-      classNames={[styles['base-breadcrumb'], sizeStyles[`base-size--${size}`]]}
+      className={[styles['base-breadcrumb'], sizeStyles[`base-size--${size}`]]}
     >
-      <ol classNames={styles['base-breadcrumb__list']}>
+      <ol className={styles['base-breadcrumb__list']}>
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
           return (
             <li
               key={index}
-              classNames={styles['base-breadcrumb__item']}
+              className={styles['base-breadcrumb__item']}
             >
               {index > 0 ? (
                 <span
                   aria-hidden="true"
-                  classNames={styles['base-breadcrumb__separator']}
+                  className={styles['base-breadcrumb__separator']}
                 >
                   {separator}
                 </span>
@@ -66,13 +66,13 @@ export function BaseBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpEl
               {item.href && !isLast ? (
                 <a
                   href={item.href}
-                  classNames={styles['base-breadcrumb__link']}
+                  className={styles['base-breadcrumb__link']}
                 >
                   {item.label}
                 </a>
               ) : (
                 <span
-                  classNames={styles['base-breadcrumb__current']}
+                  className={styles['base-breadcrumb__current']}
                   aria-current={isLast ? 'page' : undefined}
                 >
                   <BaseTypography

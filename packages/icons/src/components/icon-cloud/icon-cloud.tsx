@@ -24,7 +24,7 @@ export function IconCloud(properties: Readonly<IconCloudProperties>): MpElement 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-cloud']}>
+    <div className={styles['base-icon-cloud']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

@@ -24,7 +24,7 @@ export function IconLightning(properties: Readonly<IconLightningProperties>): Mp
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-lightning']}>
+    <div className={styles['base-icon-lightning']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

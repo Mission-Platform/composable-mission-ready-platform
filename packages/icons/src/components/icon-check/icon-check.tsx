@@ -24,7 +24,7 @@ export function IconCheck(properties: Readonly<IconCheckProperties>): MpElement 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-check']}>
+    <div className={styles['base-icon-check']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

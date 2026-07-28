@@ -24,7 +24,7 @@ export function IconEyeOff(properties: Readonly<IconEyeOffProperties>): MpElemen
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-eye-off']}>
+    <div className={styles['base-icon-eye-off']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

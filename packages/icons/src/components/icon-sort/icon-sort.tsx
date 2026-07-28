@@ -34,7 +34,7 @@ export function IconSort(properties: Readonly<IconSortProperties>): MpElement {
   const direction = properties.direction;
 
   return (
-    <div classNames={styles['base-icon-sort']}>
+    <div className={styles['base-icon-sort']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

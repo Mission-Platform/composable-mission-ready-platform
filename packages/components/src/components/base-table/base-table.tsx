@@ -139,13 +139,13 @@ export function BaseTable(properties: Readonly<TableProperties>): MpElement {
     );
     return (
       <th
-        classNames={thClass}
+        className={thClass}
         scope="col"
         style={column.width ? { width: column.width } : undefined}
         aria-sort={isActive ? (sortDirection === 'asc' ? 'ascending' : 'descending') : undefined}
         onClick={() => toggleSort(column)}
       >
-        <span classNames={styles['base-table__th-content']}>
+        <span className={styles['base-table__th-content']}>
           <BaseTypography
             as="span"
             color="primary"
@@ -155,7 +155,7 @@ export function BaseTable(properties: Readonly<TableProperties>): MpElement {
             {column.label}
           </BaseTypography>
           {column.sortable && isActive ? (
-            <span classNames={styles['base-table__sort-icon']}>
+            <span className={styles['base-table__sort-icon']}>
               <IconChevron
                 direction={sortDirection === 'asc' ? 'up' : 'down'}
                 size="2xs"
@@ -170,9 +170,9 @@ export function BaseTable(properties: Readonly<TableProperties>): MpElement {
   const bodyRows =
     sortedRows.length === 0
       ? [
-          <tr classNames={styles['base-table__row']}>
+          <tr className={styles['base-table__row']}>
             <td
-              classNames={styles['base-table__empty']}
+              className={styles['base-table__empty']}
               colSpan={columns.length}
             >
               <BaseTypography
@@ -186,7 +186,7 @@ export function BaseTable(properties: Readonly<TableProperties>): MpElement {
           </tr>,
         ]
       : sortedRows.map((row) => (
-          <tr classNames={styles['base-table__row']}>
+          <tr className={styles['base-table__row']}>
             {columns.map((column) => {
               const value = row[column.key];
               const text = column.render ? column.render(value, row) : String(value ?? '');
@@ -194,7 +194,7 @@ export function BaseTable(properties: Readonly<TableProperties>): MpElement {
                 [styles[`base-table__td--align-${column.align ?? 'left'}`]]: true,
               });
               return (
-                <td classNames={tdClass}>
+                <td className={tdClass}>
                   <BaseTypography
                     as="span"
                     color="primary"
@@ -209,23 +209,23 @@ export function BaseTable(properties: Readonly<TableProperties>): MpElement {
         ));
 
   return (
-    <div classNames={[styles['base-table-wrapper'], sizeStyles[`base-size--${size}`]]}>
+    <div className={[styles['base-table-wrapper'], sizeStyles[`base-size--${size}`]]}>
       {loading ? (
         <div
-          classNames={styles['base-table__loading']}
+          className={styles['base-table__loading']}
           aria-busy="true"
           aria-label="Loading table data"
         >
           <span
-            classNames={styles['base-table__spinner']}
+            className={styles['base-table__spinner']}
             role="status"
             aria-label="Loading…"
           />
         </div>
       ) : undefined}
-      <table classNames={tableClass}>
+      <table className={tableClass}>
         {caption ? (
-          <caption classNames={styles['base-table__caption']}>
+          <caption className={styles['base-table__caption']}>
             <BaseTypography
               as="span"
               color="primary"
@@ -236,7 +236,7 @@ export function BaseTable(properties: Readonly<TableProperties>): MpElement {
             </BaseTypography>
           </caption>
         ) : undefined}
-        <thead classNames={styles['base-table__head']}>
+        <thead className={styles['base-table__head']}>
           <tr>{headCells}</tr>
         </thead>
         <tbody>{bodyRows}</tbody>

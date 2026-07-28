@@ -90,23 +90,23 @@ export function BaseToast(properties: Readonly<ToastProperties>): MpElement {
   return (
     <div
       aria-live={ariaLive}
-      classNames={[styles['base-toast'], styles[`base-toast--${variant}`], sizeStyles[`base-size--${size}`]]}
+      className={[styles['base-toast'], styles[`base-toast--${variant}`], sizeStyles[`base-size--${size}`]]}
       role={role}
     >
       <span
         aria-hidden="true"
-        classNames={styles['base-toast__icon']}
+        className={styles['base-toast__icon']}
       >
         <Slot name="iconContent">{variantIcon(variant)}</Slot>
       </span>
-      <div classNames={styles['base-toast__content']}>
-        {title ? <p classNames={styles['base-toast__title']}>{title}</p> : undefined}
-        <div classNames={styles['base-toast__message']}>{body}</div>
+      <div className={styles['base-toast__content']}>
+        {title ? <p className={styles['base-toast__title']}>{title}</p> : undefined}
+        <div className={styles['base-toast__message']}>{body}</div>
       </div>
       {dismissible ? (
         <button
           aria-label={dismissLabel}
-          classNames={styles['base-toast__dismiss']}
+          className={styles['base-toast__dismiss']}
           type="button"
           onClick={() => onDismiss?.()}
         >

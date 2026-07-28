@@ -24,7 +24,7 @@ export function IconEdit(properties: Readonly<IconEditProperties>): MpElement {
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-edit']}>
+    <div className={styles['base-icon-edit']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

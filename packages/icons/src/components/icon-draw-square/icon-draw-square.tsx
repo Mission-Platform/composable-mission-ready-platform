@@ -24,7 +24,7 @@ export function IconDrawSquare(properties: Readonly<IconDrawSquareProperties>): 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-draw-square']}>
+    <div className={styles['base-icon-draw-square']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

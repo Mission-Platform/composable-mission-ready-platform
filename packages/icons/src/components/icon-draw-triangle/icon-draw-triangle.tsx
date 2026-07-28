@@ -24,7 +24,7 @@ export function IconDrawTriangle(properties: Readonly<IconDrawTriangleProperties
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-draw-triangle']}>
+    <div className={styles['base-icon-draw-triangle']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

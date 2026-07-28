@@ -24,7 +24,7 @@ export function IconClock(properties: Readonly<IconClockProperties>): MpElement 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-clock']}>
+    <div className={styles['base-icon-clock']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

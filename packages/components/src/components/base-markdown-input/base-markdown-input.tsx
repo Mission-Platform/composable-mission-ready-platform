@@ -157,7 +157,7 @@ export function BaseMarkdownInput(properties: Readonly<MarkdownInputProperties>)
 
   return (
     <div
-      classNames={[
+      className={[
         styles['markdown-input'],
         styles[`markdown-input--${size}`],
         {
@@ -169,7 +169,7 @@ export function BaseMarkdownInput(properties: Readonly<MarkdownInputProperties>)
     >
       {label ? (
         <label
-          classNames={[
+          className={[
             styles['markdown-input__label'],
             {
               [styles['markdown-input__label--hidden']]: labelHidden,
@@ -187,7 +187,7 @@ export function BaseMarkdownInput(properties: Readonly<MarkdownInputProperties>)
           {required ? (
             <span
               aria-hidden="true"
-              classNames={styles['markdown-input__required']}
+              className={styles['markdown-input__required']}
               title="required"
             >
               *
@@ -196,16 +196,16 @@ export function BaseMarkdownInput(properties: Readonly<MarkdownInputProperties>)
         </label>
       ) : undefined}
 
-      <div classNames={styles['markdown-input__editor']}>
+      <div className={styles['markdown-input__editor']}>
         {locked ? undefined : (
           <div
-            classNames={styles['markdown-input__tabs']}
+            className={styles['markdown-input__tabs']}
             role="tablist"
           >
             <button
               aria-controls={`${resolvedId}-write-panel`}
               aria-selected={effectiveTab === 'write'}
-              classNames={[
+              className={[
                 styles['markdown-input__tab'],
                 {
                   [styles['markdown-input__tab--active']]: effectiveTab === 'write',
@@ -220,7 +220,7 @@ export function BaseMarkdownInput(properties: Readonly<MarkdownInputProperties>)
             <button
               aria-controls={`${resolvedId}-preview-panel`}
               aria-selected={effectiveTab === 'preview'}
-              classNames={[
+              className={[
                 styles['markdown-input__tab'],
                 {
                   [styles['markdown-input__tab--active']]: effectiveTab === 'preview',
@@ -238,14 +238,14 @@ export function BaseMarkdownInput(properties: Readonly<MarkdownInputProperties>)
         {effectiveTab === 'write' ? (
           <div
             aria-label={label ?? 'Markdown toolbar'}
-            classNames={styles['markdown-input__toolbar']}
+            className={styles['markdown-input__toolbar']}
             role="toolbar"
           >
             {TOOLBAR.map((item) => (
               <button
                 key={item.key}
                 aria-label={item.label}
-                classNames={styles['markdown-input__tool']}
+                className={styles['markdown-input__tool']}
                 disabled={disabled}
                 title={item.label}
                 type="button"
@@ -260,14 +260,14 @@ export function BaseMarkdownInput(properties: Readonly<MarkdownInputProperties>)
         {effectiveTab === 'write' ? (
           <div
             id={`${resolvedId}-write-panel`}
-            classNames={styles['markdown-input__panel']}
+            className={styles['markdown-input__panel']}
           >
             <textarea
               id={resolvedId}
               ref={textareaReference}
               aria-describedby={describedBy}
               aria-invalid={error ? 'true' : undefined}
-              classNames={styles['markdown-input__textarea']}
+              className={styles['markdown-input__textarea']}
               disabled={disabled}
               placeholder={placeholder}
               readonly={readonly}
@@ -284,7 +284,7 @@ export function BaseMarkdownInput(properties: Readonly<MarkdownInputProperties>)
           <div
             id={`${resolvedId}-preview-panel`}
             ref={previewReference}
-            classNames={styles['markdown-input__preview']}
+            className={styles['markdown-input__preview']}
           />
         )}
       </div>
@@ -292,7 +292,7 @@ export function BaseMarkdownInput(properties: Readonly<MarkdownInputProperties>)
       {error ? (
         <p
           id={`${resolvedId}-error`}
-          classNames={styles['markdown-input__error']}
+          className={styles['markdown-input__error']}
           role="alert"
         >
           <BaseTypography
@@ -306,7 +306,7 @@ export function BaseMarkdownInput(properties: Readonly<MarkdownInputProperties>)
       ) : hint ? (
         <p
           id={`${resolvedId}-hint`}
-          classNames={styles['markdown-input__hint']}
+          className={styles['markdown-input__hint']}
         >
           <BaseTypography
             as="span"

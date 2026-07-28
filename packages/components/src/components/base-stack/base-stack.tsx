@@ -117,7 +117,7 @@ export function BaseStack(properties: Readonly<StackProperties>): MpElement {
   return (
     <Dynamic
       is={tag}
-      classNames={className}
+      className={className}
       style={style}
     >
       {properties.children}

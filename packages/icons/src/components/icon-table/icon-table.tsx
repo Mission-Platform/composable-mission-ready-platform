@@ -24,7 +24,7 @@ export function IconTable(properties: Readonly<IconTableProperties>): MpElement 
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-table']}>
+    <div className={styles['base-icon-table']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Table'}

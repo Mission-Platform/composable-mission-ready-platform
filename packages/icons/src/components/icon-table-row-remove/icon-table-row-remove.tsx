@@ -24,7 +24,7 @@ export function IconTableRowRemove(properties: Readonly<IconTableRowRemoveProper
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-table-row-remove']}>
+    <div className={styles['base-icon-table-row-remove']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Remove Table Row'}

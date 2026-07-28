@@ -160,7 +160,7 @@ export function BaseTabs(properties: Readonly<TabsProperties>): MpElement {
         key={tab.id}
         id={`panel-${tab.id}`}
         aria-labelledby={`tab-${tab.id}`}
-        classNames={styles['base-tabs__panel']}
+        className={styles['base-tabs__panel']}
         hidden={activeId !== tab.id}
         role="tabpanel"
       >
@@ -169,17 +169,17 @@ export function BaseTabs(properties: Readonly<TabsProperties>): MpElement {
     ));
 
   return (
-    <div classNames={[styles['base-tabs'], styles[`base-tabs--${variant}`], sizeStyles[`base-size--${size}`]]}>
-      <div classNames={[styles['base-tabs__bar'], styles[`base-tabs__bar--${variant}`]]}>
+    <div className={[styles['base-tabs'], styles[`base-tabs--${variant}`], sizeStyles[`base-size--${size}`]]}>
+      <div className={[styles['base-tabs__bar'], styles[`base-tabs__bar--${variant}`]]}>
         <div
           ref={listReference}
-          classNames={[styles['base-tabs__list'], styles[`base-tabs__list--${variant}`]]}
+          className={[styles['base-tabs__list'], styles[`base-tabs__list--${variant}`]]}
           role="tablist"
         >
           {tabs.map((tab) => (
             <div
               key={tab.id}
-              classNames={[
+              className={[
                 styles['base-tabs__tab-wrapper'],
                 styles[`base-tabs__tab-wrapper--${variant}`],
                 {
@@ -195,7 +195,7 @@ export function BaseTabs(properties: Readonly<TabsProperties>): MpElement {
                 aria-controls={`panel-${tab.id}`}
                 aria-disabled={tab.disabled ? 'true' : undefined}
                 aria-selected={activeId === tab.id}
-                classNames={[
+                className={[
                   styles['base-tabs__tab'],
                   styles[`base-tabs__tab--${variant}`],
                   {
@@ -227,7 +227,7 @@ export function BaseTabs(properties: Readonly<TabsProperties>): MpElement {
               {closable ? (
                 <button
                   aria-label={`Close ${tab.label}`}
-                  classNames={styles['base-tabs__close-icon']}
+                  className={styles['base-tabs__close-icon']}
                   data-close-tab-id={tab.id}
                   role="tab"
                   tabindex={-1}
@@ -245,7 +245,7 @@ export function BaseTabs(properties: Readonly<TabsProperties>): MpElement {
         </div>
         {addable ? (
           <button
-            classNames={[styles['base-tabs__add'], styles[`base-tabs__add--${variant}`]]}
+            className={[styles['base-tabs__add'], styles[`base-tabs__add--${variant}`]]}
             aria-label="New tab"
             type="button"
             onClick={() => properties.onAdd?.()}

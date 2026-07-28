@@ -24,7 +24,7 @@ export function IconBell(properties: Readonly<IconBellProperties>): MpElement {
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-bell']}>
+    <div className={styles['base-icon-bell']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

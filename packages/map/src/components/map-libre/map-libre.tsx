@@ -158,7 +158,7 @@ export function BaseMapLibre(properties: Readonly<MapLibreProperties>): MpElemen
   return (
     <div
       ref={containerReference}
-      classNames={classNames(styles['map-libre'])}
+      className={classNames(styles['map-libre'])}
     >
       {map ? (
         <MapContext.Provider value={map}>

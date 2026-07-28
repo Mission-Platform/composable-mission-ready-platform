@@ -88,16 +88,16 @@ export function BaseThemeToggle(properties: Readonly<ThemeToggleProperties>): Mp
       type="button"
       aria-label={resolvedAriaLabel}
       aria-pressed={theme === 'dark'}
-      classNames={[styles['theme-toggle'], sizeStyles[`base-size--${size}`]]}
+      className={[styles['theme-toggle'], sizeStyles[`base-size--${size}`]]}
       onClick={handleClick}
     >
       <span
         aria-hidden="true"
-        classNames={[styles['theme-toggle__icon']]}
+        className={[styles['theme-toggle__icon']]}
       >
         {themeGlyph(theme)}
       </span>
-      <span classNames={[styles['theme-toggle__label']]}>
+      <span className={[styles['theme-toggle__label']]}>
         <Slot>{defaultLabel}</Slot>
       </span>
     </button>

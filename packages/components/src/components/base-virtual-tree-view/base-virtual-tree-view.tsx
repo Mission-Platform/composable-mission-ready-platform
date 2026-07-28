@@ -139,7 +139,7 @@ export function BaseVirtualTreeView(properties: Readonly<VirtualTreeViewProperti
   return (
     <div
       ref={containerReference}
-      classNames={[styles['virtual-tree'], sizeStyles[`base-size--${size}`]]}
+      className={[styles['virtual-tree'], sizeStyles[`base-size--${size}`]]}
       role="tree"
       tabindex={0}
       style={{ height: `${height}px`, overflowY: 'auto', position: 'relative' }}
@@ -153,7 +153,7 @@ export function BaseVirtualTreeView(properties: Readonly<VirtualTreeViewProperti
           <div
             key={node.id}
             role="none"
-            classNames={[styles['virtual-tree__row']]}
+            className={[styles['virtual-tree__row']]}
             style={{ height: `${itemHeight}px`, boxSizing: 'border-box' }}
           >
             <Slot
@@ -168,14 +168,14 @@ export function BaseVirtualTreeView(properties: Readonly<VirtualTreeViewProperti
                 role="treeitem"
                 aria-expanded={Boolean(node.children?.length) ? isOpen(node) : undefined}
                 tabindex={0}
-                classNames={[styles['virtual-tree__label']]}
+                className={[styles['virtual-tree__label']]}
                 style={{ paddingLeft: `${depth * 16 + 8}px` }}
                 onClick={() => select(node)}
               >
                 {node.children?.length ? (
                   <button
                     type="button"
-                    classNames={[styles['virtual-tree__toggle']]}
+                    className={[styles['virtual-tree__toggle']]}
                     aria-label={isOpen(node) ? 'Collapse' : 'Expand'}
                     onClick={(event: MouseEvent) => {
                       event.stopPropagation();
@@ -189,7 +189,7 @@ export function BaseVirtualTreeView(properties: Readonly<VirtualTreeViewProperti
                   </button>
                 ) : (
                   <span
-                    classNames={[styles['virtual-tree__spacer']]}
+                    className={[styles['virtual-tree__spacer']]}
                     aria-hidden="true"
                   />
                 )}

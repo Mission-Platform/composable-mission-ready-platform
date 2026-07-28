@@ -128,7 +128,7 @@ export function BaseFileInput(properties: Readonly<FileInputProperties>): MpElem
 
   return (
     <div
-      classNames={[
+      className={[
         styles['base-file-input'],
         styles[`base-file-input--${size}`],
         {
@@ -139,7 +139,7 @@ export function BaseFileInput(properties: Readonly<FileInputProperties>): MpElem
     >
       {label ? (
         <label
-          classNames={[
+          className={[
             styles['base-file-input__label'],
             {
               [styles['base-file-input__label--hidden']]: labelHidden,
@@ -157,7 +157,7 @@ export function BaseFileInput(properties: Readonly<FileInputProperties>): MpElem
           {required ? (
             <span
               aria-hidden="true"
-              classNames={styles['base-file-input__required']}
+              className={styles['base-file-input__required']}
               title="required"
             >
               *
@@ -167,7 +167,7 @@ export function BaseFileInput(properties: Readonly<FileInputProperties>): MpElem
       ) : undefined}
       {dragDrop ? (
         <div
-          classNames={[
+          className={[
             styles['base-file-input__dropzone'],
             {
               [styles['base-file-input__dropzone--active']]: isDragging,
@@ -180,11 +180,11 @@ export function BaseFileInput(properties: Readonly<FileInputProperties>): MpElem
         >
           <span
             aria-hidden="true"
-            classNames={styles['base-file-input__icon']}
+            className={styles['base-file-input__icon']}
           >
             <IconUpload size="lg" />
           </span>
-          <p classNames={styles['base-file-input__drop-text']}>
+          <p className={styles['base-file-input__drop-text']}>
             <BaseTypography
               as="span"
               color="secondary"
@@ -193,14 +193,14 @@ export function BaseFileInput(properties: Readonly<FileInputProperties>): MpElem
               {`${dragLabel} `}
             </BaseTypography>
             <label
-              classNames={styles['base-file-input__browse-link']}
+              className={styles['base-file-input__browse-link']}
               for={resolvedId}
             >
               {browseLabel}
             </label>
           </p>
           {displayName ? (
-            <p classNames={styles['base-file-input__file-name']}>
+            <p className={styles['base-file-input__file-name']}>
               <BaseTypography
                 as="span"
                 variant="body-sm"
@@ -212,9 +212,9 @@ export function BaseFileInput(properties: Readonly<FileInputProperties>): MpElem
           ) : undefined}
         </div>
       ) : (
-        <div classNames={styles['base-file-input__row']}>
+        <div className={styles['base-file-input__row']}>
           <label
-            classNames={[
+            className={[
               styles['base-file-input__button'],
               {
                 [styles['base-file-input__button--disabled']]: disabled,
@@ -224,7 +224,7 @@ export function BaseFileInput(properties: Readonly<FileInputProperties>): MpElem
           >
             {browseLabel}
           </label>
-          <span classNames={styles['base-file-input__name']}>
+          <span className={styles['base-file-input__name']}>
             <BaseTypography
               as="span"
               color="secondary"
@@ -241,7 +241,7 @@ export function BaseFileInput(properties: Readonly<FileInputProperties>): MpElem
         aria-describedby={describedBy}
         aria-invalid={error ? 'true' : undefined}
         capture={capture}
-        classNames={styles['base-file-input__native']}
+        className={styles['base-file-input__native']}
         disabled={disabled}
         multiple={multiple}
         required={required}
@@ -251,7 +251,7 @@ export function BaseFileInput(properties: Readonly<FileInputProperties>): MpElem
       {error ? (
         <p
           id={`${resolvedId}-error`}
-          classNames={styles['base-file-input__error']}
+          className={styles['base-file-input__error']}
           role="alert"
         >
           <BaseTypography
@@ -265,7 +265,7 @@ export function BaseFileInput(properties: Readonly<FileInputProperties>): MpElem
       ) : hint ? (
         <p
           id={`${resolvedId}-hint`}
-          classNames={styles['base-file-input__hint']}
+          className={styles['base-file-input__hint']}
         >
           <BaseTypography
             as="span"

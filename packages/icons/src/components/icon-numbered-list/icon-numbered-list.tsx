@@ -24,7 +24,7 @@ export function IconNumberedList(properties: Readonly<IconNumberedListProperties
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-numbered-list']}>
+    <div className={styles['base-icon-numbered-list']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Numbered List'}

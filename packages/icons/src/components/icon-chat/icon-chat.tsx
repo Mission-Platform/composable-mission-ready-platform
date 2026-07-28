@@ -24,7 +24,7 @@ export function IconChat(properties: Readonly<IconChatProperties>): MpElement {
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-chat']}>
+    <div className={styles['base-icon-chat']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

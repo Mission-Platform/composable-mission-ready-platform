@@ -67,50 +67,50 @@ export function BaseDeviceMock(properties: Readonly<DeviceMockProperties>): MpEl
   );
 
   const screen = (
-    <div classNames={styles['base-device-mock__screen']}>
+    <div className={styles['base-device-mock__screen']}>
       <Slot />
     </div>
   );
 
   return (
     <div
-      classNames={className}
+      className={className}
       role="img"
       aria-label={ariaLabel ?? defaultLabels[device]}
     >
       {device === 'browser' ? (
-        <div classNames={styles['base-device-mock__chrome']}>
+        <div className={styles['base-device-mock__chrome']}>
           <div
-            classNames={styles['base-device-mock__controls']}
+            className={styles['base-device-mock__controls']}
             aria-hidden="true"
           >
-            <span classNames={styles['base-device-mock__control']} />
-            <span classNames={styles['base-device-mock__control']} />
-            <span classNames={styles['base-device-mock__control']} />
+            <span className={styles['base-device-mock__control']} />
+            <span className={styles['base-device-mock__control']} />
+            <span className={styles['base-device-mock__control']} />
           </div>
-          <div classNames={styles['base-device-mock__address']}>{url}</div>
+          <div className={styles['base-device-mock__address']}>{url}</div>
         </div>
       ) : undefined}
       {device === 'mobile' ? (
         <div
-          classNames={styles['base-device-mock__notch']}
+          className={styles['base-device-mock__notch']}
           aria-hidden="true"
         />
       ) : undefined}
       {device === 'tablet' ? (
         <div
-          classNames={styles['base-device-mock__camera']}
+          className={styles['base-device-mock__camera']}
           aria-hidden="true"
         />
       ) : undefined}
-      <div classNames={styles['base-device-mock__frame']}>{screen}</div>
+      <div className={styles['base-device-mock__frame']}>{screen}</div>
       {device === 'desktop' ? (
         <div
-          classNames={styles['base-device-mock__stand']}
+          className={styles['base-device-mock__stand']}
           aria-hidden="true"
         >
-          <span classNames={styles['base-device-mock__neck']} />
-          <span classNames={styles['base-device-mock__base']} />
+          <span className={styles['base-device-mock__neck']} />
+          <span className={styles['base-device-mock__base']} />
         </div>
       ) : undefined}
     </div>

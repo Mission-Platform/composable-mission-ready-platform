@@ -24,7 +24,7 @@ export function IconHeading(properties: Readonly<IconHeadingProperties>): MpElem
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-heading']}>
+    <div className={styles['base-icon-heading']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Heading'}

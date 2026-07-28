@@ -24,7 +24,7 @@ export function IconWrench(properties: Readonly<IconWrenchProperties>): MpElemen
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-wrench']}>
+    <div className={styles['base-icon-wrench']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

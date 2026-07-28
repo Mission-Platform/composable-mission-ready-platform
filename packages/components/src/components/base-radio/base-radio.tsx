@@ -57,7 +57,7 @@ export function BaseRadio(properties: Readonly<RadioProperties>): MpElement {
 
   return (
     <label
-      classNames={[
+      className={[
         styles['base-radio'],
         sizeStyles[`base-size--${size}`],
         {
@@ -66,11 +66,11 @@ export function BaseRadio(properties: Readonly<RadioProperties>): MpElement {
         },
       ]}
     >
-      <span classNames={styles['base-radio__control-wrapper']}>
+      <span className={styles['base-radio__control-wrapper']}>
         <input
           id={properties.id}
           checked={isChecked}
-          classNames={styles['base-radio__input']}
+          className={styles['base-radio__input']}
           disabled={disabled}
           type="radio"
           value={value}
@@ -78,12 +78,12 @@ export function BaseRadio(properties: Readonly<RadioProperties>): MpElement {
         />
         <span
           aria-hidden="true"
-          classNames={styles['base-radio__circle']}
+          className={styles['base-radio__circle']}
         />
       </span>
       {label ? (
         <span
-          classNames={[
+          className={[
             styles['base-radio__label'],
             {
               [styles['base-radio__label--hidden']]: labelHidden,
@@ -99,7 +99,7 @@ export function BaseRadio(properties: Readonly<RadioProperties>): MpElement {
           </BaseTypography>
         </span>
       ) : undefined}
-      {properties.children ? <span classNames={styles['base-radio__slot']}>{properties.children}</span> : undefined}
+      {properties.children ? <span className={styles['base-radio__slot']}>{properties.children}</span> : undefined}
     </label>
   );
 }

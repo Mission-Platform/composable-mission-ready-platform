@@ -177,7 +177,7 @@ export function BaseBarcode(properties: Readonly<BarcodeProperties>): MpElement 
     return (
       <svg
         aria-hidden="true"
-        classNames={styles['base-barcode']}
+        className={styles['base-barcode']}
         height="0"
         width="0"
         xmlns="http://www.w3.org/2000/svg"
@@ -192,7 +192,7 @@ export function BaseBarcode(properties: Readonly<BarcodeProperties>): MpElement 
       ref={svgReference}
       aria-hidden={ariaLabel ? undefined : 'true'}
       aria-label={ariaLabel}
-      classNames={styles['base-barcode']}
+      className={styles['base-barcode']}
       height={dimensionY}
       role={ariaLabel ? 'img' : undefined}
       shape-rendering="crispEdges"
@@ -201,7 +201,7 @@ export function BaseBarcode(properties: Readonly<BarcodeProperties>): MpElement 
       xmlns="http://www.w3.org/2000/svg"
     >
       <rect
-        classNames={styles['base-barcode__background']}
+        className={styles['base-barcode__background']}
         fill={background}
         height={dimensionY}
         width={dimensionX}
@@ -211,7 +211,7 @@ export function BaseBarcode(properties: Readonly<BarcodeProperties>): MpElement 
       {bars.map((bar) => (
         <rect
           key={`${bar.x}`}
-          classNames={styles['base-barcode__bar']}
+          className={styles['base-barcode__bar']}
           fill={color}
           height={barHeight}
           width={bar.width}
@@ -221,7 +221,7 @@ export function BaseBarcode(properties: Readonly<BarcodeProperties>): MpElement 
       ))}
       {displayValue ? (
         <text
-          classNames={styles['base-barcode__text']}
+          className={styles['base-barcode__text']}
           dominant-baseline="text-after-edge"
           fill={color}
           font-family="monospace"
@@ -362,9 +362,9 @@ export function BaseBarcode(properties: Readonly<BarcodeProperties>): MpElement 
   }
 
   return (
-    <div classNames={styles['base-barcode-figure']}>
+    <div className={styles['base-barcode-figure']}>
       {barcodeSvg}
-      <div classNames={styles['base-barcode__actions']}>
+      <div className={styles['base-barcode__actions']}>
         {visibleActions.map((action) => {
           const isDone = completed === action.key;
           return (

@@ -233,7 +233,7 @@ export function BaseCarousel(properties: Readonly<CarouselProperties>): MpElemen
       key={slideItem.id}
       aria-label={`Go to slide ${index + 1}`}
       aria-selected={currentIndex === index}
-      classNames={[
+      className={[
         styles['base-carousel__indicator'],
         {
           [styles['base-carousel__indicator--active']]: currentIndex === index,
@@ -251,7 +251,7 @@ export function BaseCarousel(properties: Readonly<CarouselProperties>): MpElemen
       aria-hidden={currentIndex === index ? undefined : 'true'}
       aria-label={`${index + 1} of ${slideCount}`}
       aria-roledescription="slide"
-      classNames={styles['base-carousel__slide']}
+      className={styles['base-carousel__slide']}
       role="group"
     >
       <Slot
@@ -262,7 +262,7 @@ export function BaseCarousel(properties: Readonly<CarouselProperties>): MpElemen
         {slideItem.image ? (
           <img
             alt={slideItem.alt ?? ''}
-            classNames={styles['base-carousel__image']}
+            className={styles['base-carousel__image']}
             src={slideItem.image}
           />
         ) : (
@@ -276,7 +276,7 @@ export function BaseCarousel(properties: Readonly<CarouselProperties>): MpElemen
     <section
       aria-label={ariaLabel}
       aria-roledescription="carousel"
-      classNames={[styles['base-carousel'], styles[`base-carousel--${variant}`], sizeStyles[`base-size--${size}`]]}
+      className={[styles['base-carousel'], styles[`base-carousel--${variant}`], sizeStyles[`base-size--${size}`]]}
       tabindex={0}
       onKeydown={handleKeydown}
       onMouseenter={() => {
@@ -291,14 +291,14 @@ export function BaseCarousel(properties: Readonly<CarouselProperties>): MpElemen
       }}
     >
       <div
-        classNames={styles['base-carousel__viewport']}
+        className={styles['base-carousel__viewport']}
         onPointercancel={handlePointerCancel}
         onPointerdown={handlePointerDown}
         onPointerleave={handlePointerCancel}
         onPointerup={handlePointerUp}
       >
         <div
-          classNames={styles['base-carousel__track']}
+          className={styles['base-carousel__track']}
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
           {slideNodes}
@@ -308,7 +308,7 @@ export function BaseCarousel(properties: Readonly<CarouselProperties>): MpElemen
       {controls && slideCount > 1 ? (
         <button
           aria-label="Previous slide"
-          classNames={[styles['base-carousel__control'], styles['base-carousel__control--prev']]}
+          className={[styles['base-carousel__control'], styles['base-carousel__control--prev']]}
           disabled={!loop && currentIndex === 0}
           type="button"
           onClick={previous}
@@ -322,7 +322,7 @@ export function BaseCarousel(properties: Readonly<CarouselProperties>): MpElemen
       {controls && slideCount > 1 ? (
         <button
           aria-label="Next slide"
-          classNames={[styles['base-carousel__control'], styles['base-carousel__control--next']]}
+          className={[styles['base-carousel__control'], styles['base-carousel__control--next']]}
           disabled={!loop && currentIndex === slideCount - 1}
           type="button"
           onClick={next}
@@ -336,7 +336,7 @@ export function BaseCarousel(properties: Readonly<CarouselProperties>): MpElemen
 
       {indicators && slideCount > 1 ? (
         <div
-          classNames={styles['base-carousel__indicators']}
+          className={styles['base-carousel__indicators']}
           role="tablist"
         >
           {indicatorButtons}
@@ -347,7 +347,7 @@ export function BaseCarousel(properties: Readonly<CarouselProperties>): MpElemen
         <button
           aria-label={userPaused ? 'Start automatic slide rotation' : 'Pause automatic slide rotation'}
           aria-pressed={userPaused}
-          classNames={styles['base-carousel__autoplay']}
+          className={styles['base-carousel__autoplay']}
           type="button"
           onClick={() => setUserPaused(!userPaused)}
         >

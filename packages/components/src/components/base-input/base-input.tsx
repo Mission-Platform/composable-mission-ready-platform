@@ -118,7 +118,7 @@ export function BaseInput(properties: Readonly<InputProperties>): MpElement {
 
   return (
     <div
-      classNames={[
+      className={[
         styles['base-input'],
         styles[`base-input--${size}`],
         {
@@ -129,7 +129,7 @@ export function BaseInput(properties: Readonly<InputProperties>): MpElement {
     >
       {label ? (
         <label
-          classNames={[
+          className={[
             styles['base-input__label'],
             {
               [styles['base-input__label--hidden']]: labelHidden,
@@ -147,7 +147,7 @@ export function BaseInput(properties: Readonly<InputProperties>): MpElement {
           {required ? (
             <span
               aria-hidden="true"
-              classNames={styles['base-input__required']}
+              className={styles['base-input__required']}
               title="required"
             >
               *
@@ -155,9 +155,9 @@ export function BaseInput(properties: Readonly<InputProperties>): MpElement {
           ) : undefined}
         </label>
       ) : undefined}
-      <div classNames={styles['base-input__wrapper']}>
+      <div className={styles['base-input__wrapper']}>
         {hasSlot('start') ? (
-          <span classNames={[styles['base-input__extension'], styles['base-input__extension--start']]}>
+          <span className={[styles['base-input__extension'], styles['base-input__extension--start']]}>
             <Slot name="start" />
           </span>
         ) : undefined}
@@ -168,7 +168,7 @@ export function BaseInput(properties: Readonly<InputProperties>): MpElement {
           aria-invalid={error ? 'true' : undefined}
           autocapitalize={autocapitalize}
           autocomplete={autocomplete}
-          classNames={styles['base-input__field']}
+          className={styles['base-input__field']}
           disabled={disabled}
           list={hasList ? `${resolvedId}-list` : undefined}
           max={max}
@@ -196,7 +196,7 @@ export function BaseInput(properties: Readonly<InputProperties>): MpElement {
         ) : undefined}
         <Slot name="suffix" />
         {hasSlot('end') ? (
-          <span classNames={[styles['base-input__extension'], styles['base-input__extension--end']]}>
+          <span className={[styles['base-input__extension'], styles['base-input__extension--end']]}>
             <Slot name="end" />
           </span>
         ) : undefined}
@@ -204,7 +204,7 @@ export function BaseInput(properties: Readonly<InputProperties>): MpElement {
       {error ? (
         <p
           id={`${resolvedId}-error`}
-          classNames={styles['base-input__error']}
+          className={styles['base-input__error']}
           role="alert"
         >
           <BaseTypography
@@ -218,7 +218,7 @@ export function BaseInput(properties: Readonly<InputProperties>): MpElement {
       ) : hint ? (
         <p
           id={`${resolvedId}-hint`}
-          classNames={styles['base-input__hint']}
+          className={styles['base-input__hint']}
         >
           <BaseTypography
             as="span"

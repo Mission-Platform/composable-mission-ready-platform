@@ -109,7 +109,7 @@ export function BaseCheckbox(properties: Readonly<CheckboxProperties>): MpElemen
 
   return (
     <div
-      classNames={[
+      className={[
         styles['base-checkbox'],
         sizeStyles[`base-size--${size}`],
         {
@@ -119,17 +119,17 @@ export function BaseCheckbox(properties: Readonly<CheckboxProperties>): MpElemen
       ]}
     >
       <label
-        classNames={styles['base-checkbox__row']}
+        className={styles['base-checkbox__row']}
         for={resolvedId}
       >
-        <span classNames={styles['base-checkbox__control-wrapper']}>
+        <span className={styles['base-checkbox__control-wrapper']}>
           <input
             ref={inputReference}
             id={resolvedId}
             aria-describedby={describedBy}
             aria-invalid={error ? 'true' : undefined}
             checked={isChecked}
-            classNames={styles['base-checkbox__input']}
+            className={styles['base-checkbox__input']}
             disabled={disabled}
             required={required}
             type="checkbox"
@@ -138,16 +138,16 @@ export function BaseCheckbox(properties: Readonly<CheckboxProperties>): MpElemen
           />
           <span
             aria-hidden="true"
-            classNames={styles['base-checkbox__box']}
+            className={styles['base-checkbox__box']}
           >
-            <span classNames={styles['base-checkbox__glyph']}>
+            <span className={styles['base-checkbox__glyph']}>
               {indeterminate ? <IconMinus size="2xs" /> : <IconCheck size="2xs" />}
             </span>
           </span>
         </span>
         {label ? (
           <span
-            classNames={[
+            className={[
               styles['base-checkbox__label'],
               {
                 [styles['base-checkbox__label--hidden']]: labelHidden,
@@ -164,7 +164,7 @@ export function BaseCheckbox(properties: Readonly<CheckboxProperties>): MpElemen
             {required ? (
               <span
                 aria-hidden="true"
-                classNames={styles['base-checkbox__required']}
+                className={styles['base-checkbox__required']}
                 title="required"
               >
                 *
@@ -176,7 +176,7 @@ export function BaseCheckbox(properties: Readonly<CheckboxProperties>): MpElemen
       {error ? (
         <p
           id={`${resolvedId}-error`}
-          classNames={styles['base-checkbox__error']}
+          className={styles['base-checkbox__error']}
           role="alert"
         >
           <BaseTypography
@@ -190,7 +190,7 @@ export function BaseCheckbox(properties: Readonly<CheckboxProperties>): MpElemen
       ) : hint ? (
         <p
           id={`${resolvedId}-hint`}
-          classNames={styles['base-checkbox__hint']}
+          className={styles['base-checkbox__hint']}
         >
           <BaseTypography
             as="span"

@@ -24,7 +24,7 @@ export function IconLanguage(properties: Readonly<IconLanguageProperties>): MpEl
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-language']}>
+    <div className={styles['base-icon-language']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel}

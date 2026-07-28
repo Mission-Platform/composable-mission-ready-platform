@@ -43,7 +43,7 @@ export function BaseFieldSet(properties: Readonly<FieldSetProperties>): MpElemen
 
   return (
     <fieldset
-      classNames={[
+      className={[
         styles['base-field-set'],
         sizeStyles[`base-size--${size}`],
         { [styles['base-field-set--flush']]: flush },
@@ -51,7 +51,7 @@ export function BaseFieldSet(properties: Readonly<FieldSetProperties>): MpElemen
       disabled={disabled ? true : undefined}
     >
       {legend ? (
-        <legend classNames={styles['base-field-set__legend']}>
+        <legend className={styles['base-field-set__legend']}>
           <BaseTypography
             as="span"
             variant="label"
@@ -62,7 +62,7 @@ export function BaseFieldSet(properties: Readonly<FieldSetProperties>): MpElemen
         </legend>
       ) : undefined}
       {description ? (
-        <p classNames={styles['base-field-set__description']}>
+        <p className={styles['base-field-set__description']}>
           <BaseTypography
             as="span"
             color="secondary"
@@ -72,7 +72,7 @@ export function BaseFieldSet(properties: Readonly<FieldSetProperties>): MpElemen
           </BaseTypography>
         </p>
       ) : undefined}
-      <div classNames={styles['base-field-set__content']}>{properties.children}</div>
+      <div className={styles['base-field-set__content']}>{properties.children}</div>
     </fieldset>
   );
 }

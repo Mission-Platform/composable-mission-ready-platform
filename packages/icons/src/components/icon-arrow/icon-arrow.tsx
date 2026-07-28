@@ -37,7 +37,7 @@ export function IconArrow(properties: Readonly<IconArrowProperties>): MpElement 
   const direction = properties.direction ?? 'up';
 
   return (
-    <div classNames={styles['base-icon-arrow']}>
+    <div className={styles['base-icon-arrow']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? `Arrow ${direction}`}

@@ -24,7 +24,7 @@ export function IconBold(properties: Readonly<IconBoldProperties>): MpElement {
   const color = properties.color ?? 'currentColor';
 
   return (
-    <div classNames={styles['base-icon-bold']}>
+    <div className={styles['base-icon-bold']}>
       <svg
         aria-hidden={!properties.ariaLabel}
         aria-label={properties.ariaLabel ?? 'Bold'}

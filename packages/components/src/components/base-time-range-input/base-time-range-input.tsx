@@ -153,13 +153,13 @@ export function BaseTimeRangeInput(properties: Readonly<TimeRangeInputProperties
     active: number,
     onPick: (unit: number) => void,
   ): MpChild => (
-    <div classNames={styles['base-time-range-input__col']}>
-      <div classNames={styles['base-time-range-input__col-header']}>{header}</div>
-      <div classNames={styles['base-time-range-input__scroll']}>
+    <div className={styles['base-time-range-input__col']}>
+      <div className={styles['base-time-range-input__col-header']}>{header}</div>
+      <div className={styles['base-time-range-input__scroll']}>
         {units.map((unit) => (
           <button
             key={unit}
-            classNames={[
+            className={[
               styles['base-time-range-input__unit-btn'],
               {
                 [styles['base-time-range-input__unit-btn--active']]: active === unit,
@@ -181,7 +181,7 @@ export function BaseTimeRangeInput(properties: Readonly<TimeRangeInputProperties
     const second = endpoint === 'start' ? startS : endS;
     const update = endpoint === 'start' ? updateStart : updateEnd;
     return (
-      <div classNames={styles['base-time-range-input__group']}>
+      <div className={styles['base-time-range-input__group']}>
         <BaseTypography
           as="span"
           color="secondary"
@@ -189,11 +189,11 @@ export function BaseTimeRangeInput(properties: Readonly<TimeRangeInputProperties
         >
           {title}
         </BaseTypography>
-        <div classNames={styles['base-time-range-input__columns']}>
+        <div className={styles['base-time-range-input__columns']}>
           {column('HH', HOURS, hour, (unit) => update(unit, minute, second))}
-          <span classNames={styles['base-time-range-input__sep']}>:</span>
+          <span className={styles['base-time-range-input__sep']}>:</span>
           {column('MM', MINUTES, minute, (unit) => update(hour, unit, second))}
-          {showSeconds ? <span classNames={styles['base-time-range-input__sep']}>:</span> : undefined}
+          {showSeconds ? <span className={styles['base-time-range-input__sep']}>:</span> : undefined}
           {showSeconds ? column('SS', SECONDS, second, (unit) => update(hour, minute, unit)) : undefined}
         </div>
       </div>
@@ -202,7 +202,7 @@ export function BaseTimeRangeInput(properties: Readonly<TimeRangeInputProperties
 
   return (
     <div
-      classNames={[
+      className={[
         styles['base-time-range-input'],
         styles[`base-time-range-input--${size}`],
         {
@@ -213,7 +213,7 @@ export function BaseTimeRangeInput(properties: Readonly<TimeRangeInputProperties
     >
       {label ? (
         <label
-          classNames={[
+          className={[
             styles['base-time-range-input__label'],
             {
               [styles['base-time-range-input__label--hidden']]: labelHidden,
@@ -231,7 +231,7 @@ export function BaseTimeRangeInput(properties: Readonly<TimeRangeInputProperties
           {required ? (
             <span
               aria-hidden="true"
-              classNames={styles['base-time-range-input__required']}
+              className={styles['base-time-range-input__required']}
               title="required"
             >
               *
@@ -246,12 +246,12 @@ export function BaseTimeRangeInput(properties: Readonly<TimeRangeInputProperties
         onUpdateOpen={(next: boolean) => setOpen(next)}
       >
         <div
-          classNames={styles['base-time-range-input__wrapper']}
+          className={styles['base-time-range-input__wrapper']}
           slot="trigger"
         >
           {hasSlot('startContent') ? (
             <span
-              classNames={[
+              className={[
                 styles['base-time-range-input__extension'],
                 styles['base-time-range-input__extension--start'],
               ]}
@@ -266,12 +266,12 @@ export function BaseTimeRangeInput(properties: Readonly<TimeRangeInputProperties
             aria-haspopup="dialog"
             aria-invalid={error ? 'true' : undefined}
             aria-label={label ?? 'Time range picker'}
-            classNames={styles['base-time-range-input__trigger']}
+            className={styles['base-time-range-input__trigger']}
             type="button"
             onClick={toggleOpen}
           >
             <span
-              classNames={[
+              className={[
                 styles['base-time-range-input__value'],
                 {
                   [styles['base-time-range-input__value--placeholder']]: !summary,
@@ -282,14 +282,14 @@ export function BaseTimeRangeInput(properties: Readonly<TimeRangeInputProperties
             </span>
             <span
               aria-hidden="true"
-              classNames={styles['base-time-range-input__icon']}
+              className={styles['base-time-range-input__icon']}
             >
               🕒
             </span>
           </button>
           {hasSlot('endContent') ? (
             <span
-              classNames={[styles['base-time-range-input__extension'], styles['base-time-range-input__extension--end']]}
+              className={[styles['base-time-range-input__extension'], styles['base-time-range-input__extension--end']]}
             >
               <Slot name="endContent" />
             </span>
@@ -297,16 +297,16 @@ export function BaseTimeRangeInput(properties: Readonly<TimeRangeInputProperties
         </div>
         <div
           aria-label={`${label ?? 'Time'} range picker`}
-          classNames={styles['base-time-range-input__popover']}
+          className={styles['base-time-range-input__popover']}
           role="dialog"
         >
-          <div classNames={styles['base-time-range-input__groups']}>
+          <div className={styles['base-time-range-input__groups']}>
             {group('Start', 'start')}
             {group('End', 'end')}
           </div>
-          <div classNames={styles['base-time-range-input__footer']}>
+          <div className={styles['base-time-range-input__footer']}>
             <button
-              classNames={styles['base-time-range-input__done-btn']}
+              className={styles['base-time-range-input__done-btn']}
               type="button"
               onClick={() => setOpen(false)}
             >
@@ -319,7 +319,7 @@ export function BaseTimeRangeInput(properties: Readonly<TimeRangeInputProperties
       {error ? (
         <p
           id={`${resolvedId}-error`}
-          classNames={styles['base-time-range-input__error']}
+          className={styles['base-time-range-input__error']}
           role="alert"
         >
           <BaseTypography
@@ -333,7 +333,7 @@ export function BaseTimeRangeInput(properties: Readonly<TimeRangeInputProperties
       ) : hint ? (
         <p
           id={`${resolvedId}-hint`}
-          classNames={styles['base-time-range-input__hint']}
+          className={styles['base-time-range-input__hint']}
         >
           <BaseTypography
             as="span"

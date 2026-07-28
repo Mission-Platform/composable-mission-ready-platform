@@ -52,8 +52,8 @@ export function BaseTag(properties: Readonly<TagProperties>): MpElement {
   };
 
   return (
-    <span classNames={className}>
-      <span classNames={styles['base-tag__label']}>
+    <span className={className}>
+      <span className={styles['base-tag__label']}>
         <BaseTypography
           as="span"
           color="inherit"
@@ -65,7 +65,7 @@ export function BaseTag(properties: Readonly<TagProperties>): MpElement {
       </span>
       {removable && !disabled ? (
         <button
-          classNames={styles['base-tag__remove']}
+          className={styles['base-tag__remove']}
           type="button"
           aria-label={`Remove ${label}`}
           onClick={handleRemove}

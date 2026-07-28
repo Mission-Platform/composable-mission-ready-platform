@@ -120,7 +120,7 @@ export function BaseGrid(properties: Readonly<GridProperties>): MpElement {
 
   return (
     <Dynamic
-      classNames={className}
+      className={className}
       is={tag}
       style={style}
     >

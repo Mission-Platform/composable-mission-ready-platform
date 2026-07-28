@@ -137,17 +137,20 @@ export function BaseModal(properties: Readonly<ModalProperties>): MpElement {
       ref={dialogReference}
       aria-label={title}
       aria-labelledby={title === undefined && hasHeader ? headerId : undefined}
-      classNames={[styles['base-modal'], styles[`base-modal--${size}`]]}
+      className={[styles['base-modal'], styles[`base-modal--${size}`]]}
       onCancel={handleCancel}
       onClick={handleClick}
       onClose={requestClose}
     >
       {hasHeader ? (
-        <header id={headerId} classNames={styles['base-modal__header']}>
+        <header
+          id={headerId}
+          className={styles['base-modal__header']}
+        >
           <Slot name="header">
             <BaseTypography
               as="h2"
-              classNames={styles['base-modal__title']}
+              className={styles['base-modal__title']}
               color="primary"
               variant="h5"
             >
@@ -163,9 +166,9 @@ export function BaseModal(properties: Readonly<ModalProperties>): MpElement {
           </BaseIconButton>
         </header>
       ) : undefined}
-      <div classNames={styles['base-modal__body']}>{properties.children}</div>
+      <div className={styles['base-modal__body']}>{properties.children}</div>
       {hasSlot('footer') ? (
-        <footer classNames={styles['base-modal__footer']}>
+        <footer className={styles['base-modal__footer']}>
           <Slot name="footer" />
         </footer>
       ) : undefined}
