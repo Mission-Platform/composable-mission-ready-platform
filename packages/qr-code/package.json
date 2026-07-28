@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/qr-code",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Dependency-free QR Code encoder and decoder written in Rust and compiled to WebAssembly, with a typed ES module wrapper and a write-once React/Vue component",
   "type": "module",
   "sideEffects": [

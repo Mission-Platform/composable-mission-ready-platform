@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/components",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Sample write-once Mission Platform components authored with @mission-platform/jsx and shipped as both Vue 3 and React components",
   "type": "module",
   "sideEffects": [

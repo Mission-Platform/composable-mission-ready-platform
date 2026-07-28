@@ -1,5 +1,23 @@
 # @mission-platform/harper
 
+## 0.2.0
+
+### Minor Changes
+
+- edb785f: extract a framework-agnostic `attachHarperMonaco` core
+
+  The imperative Harper ↔ Monaco integration (worker spawn, debounced checking,
+  marker mapping, quick-fix code-action provider) is now a framework-agnostic
+  `attachHarperMonaco(editor, monaco, language)` helper returning a
+  `{ dispose, recheck }` handle. The Vue `useHarperMonaco` composable delegates to
+  it, and it is exported so non-Vue consumers (e.g. the write-once
+  `@mission-platform/components` `BaseMonacoEditor`) can wire grammar checking
+  from a single shared implementation.
+
+### Patch Changes
+
+- d39b6fc: add per-workspace reference documentation and refresh llms.txt/README metadata
+
 ## 0.1.5
 
 ### Patch Changes

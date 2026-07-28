@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/icons",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "SVG icon components for Mission Platform, authored once in JSX and compiled to Vue 3 and React",
   "type": "module",
   "sideEffects": [

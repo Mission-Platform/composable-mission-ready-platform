@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/phone-number",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Google libphonenumber core (parse, validate, format) reimplemented in AssemblyScript and compiled to WebAssembly, with a typed ES module wrapper",
   "type": "module",
   "sideEffects": false,

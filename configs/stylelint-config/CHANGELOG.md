@@ -1,5 +1,11 @@
 # @mission-platform/stylelint-config
 
+## 0.1.2
+
+### Patch Changes
+
+- 7e74f71: import default config export in prettier and stylelint configurations
+
 ## 0.1.1
 
 ### Patch Changes

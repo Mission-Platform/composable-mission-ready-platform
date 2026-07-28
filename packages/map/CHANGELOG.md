@@ -1,5 +1,82 @@
 # @mission-platform/map
 
+## 0.4.0
+
+### Minor Changes
+
+- 2a307f6: wrap component styles in the `@layer mp.map` cascade layer
+
+  Every `@mission-platform/map` SFC `<style>` block now wraps its rules in the
+  `@layer mp.map` cascade layer (any leading `@use` stays outside the layer), so
+  unlayered application styles win over the map component styles without specificity
+  battles.
+
+### Patch Changes
+
+- 2e24c62: drop redundant `undefined` argument from `shallowRef` calls in `MapLibre`
+- 8a590fd: emit `update:mode` from `MapDraw` when the internal drawing mode resets so `:mode` / `v-model:mode` stays in sync and drawing can restart after a shape is committed
+- 8a590fd: consume `@mission-platform/icons` in the stories instead of the removed Vue `@mission-platform/icons` package (`IconRotateCCW`/`IconRotateCW` are now `IconRotateCcw`/`IconRotateCw`)
+- edb785f: use @mission-platform/components in stories instead of @mission-platform/components
+- ca1d98b: reformat sources with updated prettier print width and import ordering
+- d39b6fc: add per-workspace reference documentation and refresh llms.txt/README metadata
+- f681d82: rename storybook stories to the .vue.stories suffix for framework clarity
+- 4218ce5: generate one SCSS partial and TS module per token source, with barrels
+
+  - The generated token output is now split per DTCG source: every
+    `tokens/<file>.tokens.json` produces `src/generated/scss/_<file>.scss` (a
+    self-contained partial with its `$`-variables, `--mp-*` custom properties, and
+    `@property` registrations whose `initial-value`s resolve to the matching local
+    `$`-variables) and `src/generated/ts/<file>.ts` (a single nested `as const`
+    object). The aggregate `src/generated/_tokens.scss` (`@forward` barrel) and
+    `src/generated/tokens.ts` (re-export barrel) replace the previous
+    `_structural.scss`, `flat.ts`, and `tokens.css` artefacts.
+  - **BREAKING:** the TypeScript API is now a flat set of per-source nested objects
+    (`palette`, `size`, `font`, `typography`, `borderWidth`, `breakpoint`, `motion`,
+    `opacity`, `radius`, `shadow`, `spacing`, `zIndex`, `themeLight`, `themeDark`),
+    replacing the previous bespoke exports (`colors`, `spacing`, `fontFamilies`,
+    `sizeIcons`, `radii`, `shadows`, …). The standalone `@mission-platform/tokens/css`
+    bundle export is removed; consume the SCSS entry points instead.
+  - `@mission-platform/components`, `@mission-platform/map`, and
+    `@mission-platform/icons` are updated to the new token exports (`font.font.family`,
+    `palette.color`, and `size.icon` respectively).
+
+- Updated dependencies [4218ce5]
+- Updated dependencies [4218ce5]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [94f9acf]
+- Updated dependencies [94f9acf]
+- Updated dependencies [94f9acf]
+- Updated dependencies [edb785f]
+- Updated dependencies [edb785f]
+- Updated dependencies [94f9acf]
+- Updated dependencies [edb785f]
+- Updated dependencies [94f9acf]
+- Updated dependencies [94f9acf]
+- Updated dependencies [ca1d98b]
+- Updated dependencies [d39b6fc]
+- Updated dependencies [4218ce5]
+- Updated dependencies [be8ab67]
+- Updated dependencies [4218ce5]
+- Updated dependencies [4218ce5]
+- Updated dependencies [4218ce5]
+- Updated dependencies [4218ce5]
+- Updated dependencies [be8ab67]
+- Updated dependencies [4218ce5]
+- Updated dependencies [4218ce5]
+- Updated dependencies [4218ce5]
+- Updated dependencies [4218ce5]
+- Updated dependencies [be8ab67]
+- Updated dependencies [be8ab67]
+- Updated dependencies [be8ab67]
+- Updated dependencies [be8ab67]
+  - @mission-platform/tokens@1.0.0
+  - @mission-platform/jsx@0.2.0
+
 ## 0.2.2
 
 ### Patch Changes
