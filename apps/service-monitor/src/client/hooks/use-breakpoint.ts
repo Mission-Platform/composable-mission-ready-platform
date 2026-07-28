@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 /**
  * `true` when the viewport is at or below the `sm` breakpoint, tracked live via
  * `matchMedia`. Built on `@mission-platform/breakpoints`' framework-neutral
- * `maxMediaQuery` helper (its `useBreakpoints` composable is Vue-only), so the
- * React charts can shrink on small screens. Starts `false` for SSR parity and
- * resolves after mount.
+ * `maxMediaQuery` helper (the legacy Vue-only `useBreakpoints` composable was
+ * removed), so the React charts can shrink on small screens. Starts `false` for
+ * SSR parity and resolves after mount.
  */
 export function useCompactViewport(): boolean {
   const [compact, setCompact] = useState(false);

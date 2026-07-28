@@ -5,7 +5,7 @@ import '@mission-platform/components/styles';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './preview.scss';
 
-import { breakpointKeys, breakpoints } from '@mission-platform/breakpoints';
+import { breakpointKeys, breakpoints } from '@mission-platform/breakpoints/core';
 import { createMpI18n, mpNamespace } from '@mission-platform/i18n';
 import { createMpI18nVue } from '@mission-platform/i18n/vue';
 import { withThemeByDataAttribute } from '@storybook/addon-themes';
