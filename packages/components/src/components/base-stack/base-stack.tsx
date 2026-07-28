@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, Dynamic, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import sizeStyles from '../size.module.scss';
 import spacingStyles from '../spacing.module.scss';
@@ -114,10 +114,13 @@ export function BaseStack(properties: Readonly<StackProperties>): MpElement {
     width: direction === 'vertical' ? '100%' : 'auto',
   };
 
-  // Children must reach `h` as variadic args (the compile-time runtimes read
-  // `...children`, not `properties.children`), so normalise the slot first.
-  const children = properties.children;
-  const childList = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];
-
-  return h(tag, { class: className, style }, ...childList);
+  return (
+    <Dynamic
+      is={tag}
+      classNames={className}
+      style={style}
+    >
+      {properties.children}
+    </Dynamic>
+  );
 }

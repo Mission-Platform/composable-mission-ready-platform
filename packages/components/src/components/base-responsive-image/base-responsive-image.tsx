@@ -127,8 +127,10 @@ export function BaseResponsiveImage(properties: Readonly<ResponsiveImageProperti
     />
   );
 
-  // The mapped `<source>` array and the fallback `<img>` are siblings, so the
-  // tree is assembled with `h(...)` (spreading the variadic source children)
-  // rather than embedding an array directly in JSX.
-  return h('picture', { class: className, style: pictureStyle }, ...sourceElements, fallbackImage);
+  return (
+    <picture classNames={className} style={pictureStyle}>
+      {sourceElements}
+      {fallbackImage}
+    </picture>
+  );
 }

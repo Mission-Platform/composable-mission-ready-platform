@@ -1,4 +1,4 @@
-import { classNames, h, hasSlot, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, Dynamic, h, hasSlot, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
 
@@ -73,10 +73,6 @@ export function BaseHero(properties: Readonly<HeroProperties>): MpElement {
     { [styles['base-hero--overlay']]: overlay },
   );
 
-  // The default slot is the free-form body; normalise it for variadic use.
-  const children = properties.children;
-  const childList = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];
-
   const eyebrowNode = eyebrow ? (
     <div classNames={styles['base-hero__eyebrow']}>
       <BaseTypography
@@ -112,24 +108,27 @@ export function BaseHero(properties: Readonly<HeroProperties>): MpElement {
     </div>
   ) : undefined;
 
-  const content = h(
-    'div',
-    { class: styles['base-hero__content'] },
-    eyebrowNode,
-    titleNode,
-    subtitleNode,
-    ...childList,
-    actionsNode,
+  const content = (
+    <div classNames={styles['base-hero__content']}>
+      {eyebrowNode}
+      {titleNode}
+      {subtitleNode}
+      {properties.children}
+      {actionsNode}
+    </div>
   );
 
-  return h(
-    as,
-    { class: rootClass },
-    hasMedia ? (
-      <div classNames={styles['base-hero__media']}>
-        <Slot name="media" />
-      </div>
-    ) : undefined,
-    content,
+  return (
+    <Dynamic
+      classNames={rootClass}
+      is={as}
+    >
+      {hasMedia ? (
+        <div classNames={styles['base-hero__media']}>
+          <Slot name="media" />
+        </div>
+      ) : undefined}
+      {content}
+    </Dynamic>
   );
 }

@@ -148,18 +148,15 @@ export function BaseWindowPopout(properties: Readonly<WindowPopoutProperties>): 
     onClose?.();
   };
 
-  const children = properties.children;
-  const contentChildren = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];
-
-  const inlineNode = h(
-    'div',
-    {
-      ref: contentReference,
-      class: classNames(styles['base-window-popout__inline'], {
+  const inlineNode = (
+    <div
+      ref={contentReference}
+      classNames={classNames(styles['base-window-popout__inline'], {
         [styles['base-window-popout__inline--hidden']]: isPopped,
-      }),
-    },
-    ...contentChildren,
+      })}
+    >
+      {properties.children}
+    </div>
   );
 
   const placeholderNode = isPopped ? (
@@ -180,26 +177,26 @@ export function BaseWindowPopout(properties: Readonly<WindowPopoutProperties>): 
     </output>
   ) : undefined;
 
-  return h(
-    'div',
-    { class: classNames(styles['base-window-popout'], sizeStyles[`base-size--${size}`]) },
-    inlineNode,
-    placeholderNode,
-    <div classNames={styles['base-window-popout__controls']}>
-      <button
-        type="button"
-        classNames={styles['base-window-popout__toggle']}
-        aria-pressed={isPopped}
-        onClick={() => (isPopped ? closePopout() : openPopout())}
-      >
-        <BaseTypography
-          as="span"
-          variant="body-sm"
-          color="inherit"
+  return (
+    <div classNames={classNames(styles['base-window-popout'], sizeStyles[`base-size--${size}`])}>
+      {inlineNode}
+      {placeholderNode}
+      <div classNames={styles['base-window-popout__controls']}>
+        <button
+          type="button"
+          classNames={styles['base-window-popout__toggle']}
+          aria-pressed={isPopped}
+          onClick={() => (isPopped ? closePopout() : openPopout())}
         >
-          {isPopped ? popinLabel : popoutLabel}
-        </BaseTypography>
-      </button>
-    </div>,
+          <BaseTypography
+            as="span"
+            variant="body-sm"
+            color="inherit"
+          >
+            {isPopped ? popinLabel : popoutLabel}
+          </BaseTypography>
+        </button>
+      </div>
+    </div>
   );
 }

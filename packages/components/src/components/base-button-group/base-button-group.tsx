@@ -64,8 +64,13 @@ export function BaseButtonGroup(properties: Readonly<ButtonGroupProperties>): Mp
     { [styles['base-button-group--attached']]: attached },
   );
 
-  const children = properties.children;
-  const childList = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];
-
-  return h('div', { class: className, role: 'group', 'aria-label': ariaLabel }, ...childList);
+  return (
+    <div
+      aria-label={ariaLabel}
+      classNames={className}
+      role="group"
+    >
+      {properties.children}
+    </div>
+  );
 }

@@ -50,8 +50,15 @@ export function BaseIconButton(properties: Readonly<IconButtonProperties>): MpEl
     }
   };
 
-  const children = properties.children;
-  const childList = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];
-
-  return h('button', { class: className, 'aria-label': label, disabled, type, onClick: handleClick }, ...childList);
+  return (
+    <button
+      aria-label={label}
+      classNames={className}
+      disabled={disabled}
+      type={type}
+      onClick={handleClick}
+    >
+      {properties.children}
+    </button>
+  );
 }

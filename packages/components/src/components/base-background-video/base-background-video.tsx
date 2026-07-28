@@ -108,33 +108,42 @@ export function BaseBackgroundVideo(properties: Readonly<BackgroundVideoProperti
     />
   ));
 
-  // The default slot is the foreground content; normalise it for variadic use.
+  // The default slot is the foreground content; normalise it so we can test for
+  // presence before wrapping it in the content overlay.
   const children = properties.children;
   const childList = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];
 
   const content =
-    childList.length > 0 ? h('div', { class: styles['base-background-video__content'] }, ...childList) : undefined;
+    childList.length > 0 ? (
+      <div classNames={styles['base-background-video__content']}>{childList}</div>
+    ) : undefined;
 
-  // The mapped `<source>` children are spread through `h(...)` rather than
-  // embedded as an array directly in JSX.
-  const video = h(
-    'video',
-    {
-      ref: videoReference,
-      class: styles['base-background-video__video'],
-      autoplay: !reducedMotion,
-      poster,
-      src: sources.length > 0 ? undefined : src,
-      style: { objectFit: fit },
-      'aria-hidden': 'true',
-      loop: true,
-      muted: true,
-      playsinline: true,
-      preload: 'auto',
-      tabindex: -1,
-    },
-    ...sourceElements,
+  const video = (
+    <video
+      ref={videoReference}
+      classNames={styles['base-background-video__video']}
+      autoplay={!reducedMotion}
+      poster={poster}
+      src={sources.length > 0 ? undefined : src}
+      style={{ objectFit: fit }}
+      aria-hidden="true"
+      loop={true}
+      muted={true}
+      playsinline={true}
+      preload="auto"
+      tabindex={-1}
+    >
+      {sourceElements}
+    </video>
   );
 
-  return h('div', { class: className, style: { minHeight } }, video, content);
+  return (
+    <div
+      classNames={className}
+      style={{ minHeight }}
+    >
+      {video}
+      {content}
+    </div>
+  );
 }

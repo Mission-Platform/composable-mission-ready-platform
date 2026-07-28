@@ -1,6 +1,7 @@
 import { IconClose } from '@mission-platform/icons';
 import {
   classNames,
+  Dynamic,
   h,
   hasSlot,
   Slot,
@@ -301,23 +302,22 @@ export function BaseDrawer(properties: Readonly<DrawerProperties>): MpElement {
   // `<aside>`'s implicit `complementary` role disallows an overriding `dialog`
   // role — `aria-allowed-role`); an inline panel keeps `<aside>` for its
   // complementary landmark.
-  const panel = isVisible
-    ? h(
-        isInline ? 'aside' : 'div',
-        {
-          ref: rootReference,
-          class: rootClass,
-          role: isInline ? undefined : 'dialog',
-          'aria-modal': isInline ? undefined : 'true',
-          'aria-label': title,
-          style: resizeStyle,
-        },
-        headerNode,
-        h('div', { class: styles['base-drawer__body'] }, ...bodyChildren),
-        footerNode,
-        resizeHandle,
-      )
-    : undefined;
+  const panel = isVisible ? (
+    <Dynamic
+      is={isInline ? 'aside' : 'div'}
+      ref={rootReference}
+      classNames={rootClass}
+      role={isInline ? undefined : 'dialog'}
+      aria-modal={isInline ? undefined : 'true'}
+      aria-label={title}
+      style={resizeStyle}
+    >
+      {headerNode}
+      <div classNames={styles['base-drawer__body']}>{bodyChildren}</div>
+      {footerNode}
+      {resizeHandle}
+    </Dynamic>
+  ) : undefined;
 
   const backdrop = showBackdrop ? (
     <button

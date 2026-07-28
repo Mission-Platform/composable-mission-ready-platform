@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, Dynamic, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import { BaseTypography } from '../base-typography';
 
@@ -100,7 +100,14 @@ export function BaseList(properties: Readonly<ListProperties>): MpElement {
         ));
 
   const children = properties.children;
-  const extraChildren = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];
+  const childList = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];
 
-  return h(tag, { class: className }, ...itemNodes, ...extraChildren);
+  return (
+    <Dynamic
+      classNames={className}
+      is={tag}
+    >
+      {[...itemNodes, ...childList]}
+    </Dynamic>
+  );
 }

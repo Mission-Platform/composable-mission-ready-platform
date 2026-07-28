@@ -162,5 +162,9 @@ export function BaseAlertBanner(properties: Readonly<AlertBannerProperties>): Mp
     </div>
   ) : undefined;
 
-  return h('div', { class: styles['base-alert-banner-host'] }, banner);
+  return (
+    <div classNames={styles['base-alert-banner-host']}>
+      {banner}
+    </div>
+  );
 }

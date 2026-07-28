@@ -1,4 +1,4 @@
-import { classNames, h, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, Dynamic, h, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import sizeStyles from '../size.module.scss';
 
@@ -148,10 +148,7 @@ export function BaseTypography(properties: Readonly<TypographyProperties>): MpEl
   const textReference = useRef<HTMLElement | null>(null);
   const [popupVisible, setPopupVisible] = useState(false);
 
-  // Children must reach `h` as variadic args (the compile-time runtimes read
-  // `...children`, not `properties.children`), so normalise the slot first.
   const children = properties.children;
-  const childList = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];
 
   const className = classNames(
     styles['base-typography'],
@@ -169,7 +166,14 @@ export function BaseTypography(properties: Readonly<TypographyProperties>): MpEl
   );
 
   if (!truncatePopup) {
-    return h(tag, { class: className }, ...childList);
+    return (
+      <Dynamic
+        is={tag}
+        classNames={className}
+      >
+        {children}
+      </Dynamic>
+    );
   }
 
   const showPopup = (): void => {
@@ -182,24 +186,23 @@ export function BaseTypography(properties: Readonly<TypographyProperties>): MpEl
 
   return (
     <span classNames={styles['base-typography-popup-wrapper']}>
-      {h(
-        tag,
-        {
-          ref: textReference,
-          class: classNames(className, styles['base-typography--popup-anchor']),
-          onMouseenter: showPopup,
-          onMouseleave: hidePopup,
-          onFocusin: showPopup,
-          onFocusout: hidePopup,
-        },
-        ...childList,
-      )}
+      <Dynamic
+        is={tag}
+        ref={textReference}
+        classNames={classNames(className, styles['base-typography--popup-anchor'])}
+        onMouseenter={showPopup}
+        onMouseleave={hidePopup}
+        onFocusin={showPopup}
+        onFocusout={hidePopup}
+      >
+        {children}
+      </Dynamic>
       {popupVisible ? (
         <span
           classNames={styles['base-typography-popup']}
           role="tooltip"
         >
-          {childList}
+          {children}
         </span>
       ) : undefined}
     </span>

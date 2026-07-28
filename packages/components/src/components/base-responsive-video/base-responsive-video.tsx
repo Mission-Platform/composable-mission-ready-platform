@@ -109,26 +109,24 @@ export function BaseResponsiveVideo(properties: Readonly<ResponsiveVideoProperti
     />
   ));
 
-  // The mapped `<source>` children are spread through `h(...)` rather than
-  // embedded as an array directly in JSX.
-  return h(
-    'video',
-    {
-      class: className,
-      'aria-label': label,
-      autoplay,
-      controls,
-      loop,
-      muted,
-      playsinline,
-      poster,
-      preload,
-      src: sources.length > 0 ? undefined : src,
-      style: { aspectRatio, objectFit: fit },
-      onPlay,
-      onPause,
-      onEnded,
-    },
-    ...sourceElements,
+  return (
+    <video
+      classNames={className}
+      aria-label={label}
+      autoplay={autoplay}
+      controls={controls}
+      loop={loop}
+      muted={muted}
+      playsinline={playsinline}
+      poster={poster}
+      preload={preload}
+      src={sources.length > 0 ? undefined : src}
+      style={{ aspectRatio, objectFit: fit }}
+      onPlay={onPlay}
+      onPause={onPause}
+      onEnded={onEnded}
+    >
+      {sourceElements}
+    </video>
   );
 }

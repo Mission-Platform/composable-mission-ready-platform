@@ -151,17 +151,13 @@ export function BaseVirtualLogViewer(properties: Readonly<VirtualLogViewerProper
     return () => cancelAnimationFrame(frame);
   }, [entries.length, followTail]);
 
-  const toolbar = filter
-    ? h(
-        'div',
-        { class: classNames(styles['log-viewer__toolbar']) },
-        h(
-          'span',
-          { class: classNames(styles['log-viewer__filter-badge']) },
-          `${filteredEntries.length} / ${entries.length} matching "${filter}"`,
-        ),
-      )
-    : undefined;
+  const toolbar = filter ? (
+    <div classNames={classNames(styles['log-viewer__toolbar'])}>
+      <span classNames={classNames(styles['log-viewer__filter-badge'])}>
+        {`${filteredEntries.length} / ${entries.length} matching "${filter}"`}
+      </span>
+    </div>
+  ) : undefined;
 
   return (
     <div

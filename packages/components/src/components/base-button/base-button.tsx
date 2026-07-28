@@ -25,13 +25,9 @@ export interface ButtonProperties extends MpProperties {
   loading?: boolean;
   /** Accessible label for the loading spinner. Defaults to `'Loading…'`. */
   loadingLabel?: string;
-  /** Accessible label forwarded to the button. */
-  'aria-label'?: string;
-  /** CamelCase alias for `aria-label`. */
+  /** Accessible label forwarded to the button's `aria-label`. */
   ariaLabel?: string;
-  /** Accessible pressed state for toggle buttons. */
-  'aria-pressed'?: boolean | 'true' | 'false' | 'mixed';
-  /** CamelCase alias for `aria-pressed`. */
+  /** Accessible pressed state for toggle buttons, forwarded to `aria-pressed`. */
   ariaPressed?: boolean | 'true' | 'false' | 'mixed';
   /** Click handler forwarded to the underlying `<button>`. Suppressed while `disabled` or `loading`. */
   onClick?: (event: unknown) => void;
@@ -89,8 +85,8 @@ export function BaseButton(properties: Readonly<ButtonProperties>): MpElement {
       type={properties.type ?? 'button'}
       disabled={disabled || loading}
       aria-busy={loading}
-      aria-label={properties['aria-label'] ?? properties.ariaLabel}
-      aria-pressed={properties['aria-pressed'] ?? properties.ariaPressed}
+      aria-label={properties.ariaLabel}
+      aria-pressed={properties.ariaPressed}
       onClick={handleClick}
     >
       {loading ? (

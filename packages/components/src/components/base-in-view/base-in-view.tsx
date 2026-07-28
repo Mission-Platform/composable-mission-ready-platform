@@ -1,4 +1,4 @@
-import { classNames, h, useEffect, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, Dynamic, h, useEffect, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
 import sizeStyles from '../size.module.scss';
 
@@ -123,18 +123,14 @@ export function BaseInView(properties: Readonly<InViewProperties>): MpElement {
     return () => observer.disconnect();
   }, [threshold, rootMargin, once]);
 
-  // Children must reach `h` as variadic args (the compile-time runtimes read
-  // `...children`, not `properties.children`), so normalise the slot first.
-  const children = properties.children;
-  const childList = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];
-
-  return h(
-    tag,
-    {
-      ref: wrapperReference,
-      class: classNames('in-view', sizeStyles[`base-size--${size}`]),
-      style: wrapperStyle(animation, duration, delay, inView),
-    },
-    ...childList,
+  return (
+    <Dynamic
+      is={tag}
+      ref={wrapperReference}
+      classNames={classNames('in-view', sizeStyles[`base-size--${size}`])}
+      style={wrapperStyle(animation, duration, delay, inView)}
+    >
+      {properties.children}
+    </Dynamic>
   );
 }

@@ -45,73 +45,71 @@ export function BaseNavbar(properties: Readonly<NavbarProperties>): MpElement {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const header = (
-    <header
-      classNames={[
-        styles['base-navbar'],
-        sizeStyles[`base-size--${size}`],
-        { [styles['base-navbar--sticky']]: sticky },
-      ]}
-    >
-      <nav
-        aria-label="Main navigation"
-        classNames={styles['base-navbar__container']}
+  return (
+    <div className={styles['base-navbar-host']}>
+      <header
+        classNames={[
+          styles['base-navbar'],
+          sizeStyles[`base-size--${size}`],
+          { [styles['base-navbar--sticky']]: sticky },
+        ]}
       >
-        <div classNames={styles['base-navbar__start']}>
-          <Slot name="brand">
-            {brand ? (
-              <BaseTypography
-                as="span"
-                variant="h6"
-                color="primary"
-              >
-                {brand}
-              </BaseTypography>
-            ) : undefined}
-          </Slot>
-        </div>
-        <div classNames={[styles['base-navbar__center'], styles[`base-navbar__center--${align}`]]}>
-          <Slot />
-        </div>
-        <div classNames={styles['base-navbar__end']}>
-          <Slot name="end" />
-        </div>
-        <button
-          type="button"
-          classNames={styles['base-navbar__hamburger']}
-          aria-expanded={sidebarOpen}
-          aria-label={sidebarOpen ? 'Close menu' : 'Open menu'}
-          onClick={() => setSidebarOpen(!sidebarOpen)}
+        <nav
+          aria-label="Main navigation"
+          classNames={styles['base-navbar__container']}
         >
-          <span classNames={styles['base-navbar__hamburger-bar']} />
-          <span classNames={styles['base-navbar__hamburger-bar']} />
-          <span classNames={styles['base-navbar__hamburger-bar']} />
-        </button>
-      </nav>
-    </header>
-  );
+          <div classNames={styles['base-navbar__start']}>
+            <Slot name="brand">
+              {brand ? (
+                <BaseTypography
+                  as="span"
+                  variant="h6"
+                  color="primary"
+                >
+                  {brand}
+                </BaseTypography>
+              ) : undefined}
+            </Slot>
+          </div>
+          <div classNames={[styles['base-navbar__center'], styles[`base-navbar__center--${align}`]]}>
+            <Slot />
+          </div>
+          <div classNames={styles['base-navbar__end']}>
+            <Slot name="end" />
+          </div>
+          <button
+            type="button"
+            classNames={styles['base-navbar__hamburger']}
+            aria-expanded={sidebarOpen}
+            aria-label={sidebarOpen ? 'Close menu' : 'Open menu'}
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            <span classNames={styles['base-navbar__hamburger-bar']} />
+            <span classNames={styles['base-navbar__hamburger-bar']} />
+            <span classNames={styles['base-navbar__hamburger-bar']} />
+          </button>
+        </nav>
+      </header>
 
-  const drawer = (
-    <BaseDrawer
-      open={sidebarOpen}
-      title={mobileTitle ?? brand}
-      placement="start"
-      size="sm"
-      onOpenChange={(next: boolean) => setSidebarOpen(next)}
-    >
-      <nav
-        aria-label="Mobile navigation"
-        classNames={styles['base-navbar__mobile-nav']}
+      <BaseDrawer
+        open={sidebarOpen}
+        title={mobileTitle ?? brand}
+        placement="start"
+        size="sm"
+        onOpenChange={(next: boolean) => setSidebarOpen(next)}
       >
-        <div classNames={styles['base-navbar__mobile-nav-items']}>
-          <Slot />
-        </div>
-        <div classNames={styles['base-navbar__mobile-nav-end']}>
-          <Slot name="end" />
-        </div>
-      </nav>
-    </BaseDrawer>
+        <nav
+          aria-label="Mobile navigation"
+          classNames={styles['base-navbar__mobile-nav']}
+        >
+          <div classNames={styles['base-navbar__mobile-nav-items']}>
+            <Slot />
+          </div>
+          <div classNames={styles['base-navbar__mobile-nav-end']}>
+            <Slot name="end" />
+          </div>
+        </nav>
+      </BaseDrawer>
+    </div>
   );
-
-  return h('div', { class: styles['base-navbar-host'] }, header, drawer);
 }
