@@ -1,6 +1,7 @@
 {
   "name": "@mission-platform/components",
   "version": "1.0.0",
+  "license": "BSD-4-Clause",
   "description": "Sample write-once Mission Platform components authored with @mission-platform/jsx and shipped as both Vue 3 and React components",
   "type": "module",
   "sideEffects": [

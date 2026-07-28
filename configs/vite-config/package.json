@@ -1,6 +1,7 @@
 {
   "name": "@mission-platform/vite-config",
   "version": "1.0.0",
+  "license": "BSD-4-Clause",
   "description": "Shared Vite and Vitest configuration helpers for all Mission Platform packages and apps",
   "type": "module",
   "exports": {

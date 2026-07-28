@@ -2,6 +2,7 @@
   "name": "@mission-platform/mcp",
   "private": true,
   "version": "0.1.0",
+  "license": "BSD-4-Clause",
   "description": "Model Context Protocol server that helps AI assistants use the Mission Platform monorepo: component usage, and package/app/worker creation and development.",
   "type": "module",
   "bin": {

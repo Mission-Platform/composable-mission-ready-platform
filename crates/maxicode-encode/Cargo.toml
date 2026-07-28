@@ -3,7 +3,7 @@ name = "mission-platform-maxicode-encode"
 version = "0.1.0"
 edition = "2021"
 description = "Dependency-free MaxiCode encoder compiled to WebAssembly for @mission-platform/code-scanner"
-license = "MIT"
+license = "BSD-4-Clause"
 publish = false
 
 [lib]

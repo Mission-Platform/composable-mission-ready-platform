@@ -1,6 +1,7 @@
 {
   "name": "@mission-platform/scheduler-core",
   "version": "0.2.0",
+  "license": "BSD-4-Clause",
   "description": "Framework-agnostic scheduler core for Mission Platform — RFC 5545 (iCalendar) event model + recurrence (RRULE/RDATE/EXDATE) expansion, view range/navigation math, event selectors, and time-grid collision layout shared by the Vue components and the write-once JSX components",
   "type": "module",
   "sideEffects": false,

@@ -1,6 +1,7 @@
 {
   "name": "@mission-platform/typescript-config",
   "version": "0.3.0",
+  "license": "BSD-4-Clause",
   "description": "Shared TypeScript base configurations for all Mission Platform packages and apps",
   "type": "module",
   "exports": {

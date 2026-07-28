@@ -2,6 +2,7 @@
   "name": "@mission-platform/scripts",
   "private": true,
   "version": "0.0.0",
+  "license": "BSD-4-Clause",
   "type": "module",
   "scripts": {
     "i18n:extract": "node --experimental-strip-types i18n-extract.ts",

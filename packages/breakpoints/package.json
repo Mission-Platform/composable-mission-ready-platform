@@ -1,6 +1,7 @@
 {
   "name": "@mission-platform/breakpoints",
   "version": "4.0.0",
+  "license": "BSD-4-Clause",
   "description": "Responsive breakpoint utilities, composables, and Vue components for Mission Platform",
   "type": "module",
   "sideEffects": [

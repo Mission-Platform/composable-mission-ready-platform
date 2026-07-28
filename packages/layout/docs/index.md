@@ -246,4 +246,4 @@ Bootstrap migration is straightforward:
 
 ## License
 
-MIT
+BSD-4-Clause

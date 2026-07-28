@@ -1,6 +1,7 @@
 {
   "name": "@mission-platform/hunspell",
   "version": "0.4.0",
+  "license": "BSD-4-Clause",
   "description": "Hunspell spell checker compiled to WebAssembly via Emscripten",
   "type": "module",
   "sideEffects": false,

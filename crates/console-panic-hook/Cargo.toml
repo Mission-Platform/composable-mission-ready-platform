@@ -3,7 +3,7 @@ name = "mission-platform-console-panic-hook"
 version = "0.1.0"
 edition = "2021"
 description = "Tiny panic hook that forwards Rust panics to the browser devtools console (in-house replacement for the archived console_error_panic_hook)"
-license = "MIT"
+license = "BSD-4-Clause"
 publish = false
 
 [dependencies]

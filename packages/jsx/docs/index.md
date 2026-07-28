@@ -279,4 +279,4 @@ export function Button({ children }) {
 
 ## License
 
-MIT
+BSD-4-Clause

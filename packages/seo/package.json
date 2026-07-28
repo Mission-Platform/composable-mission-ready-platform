@@ -1,6 +1,7 @@
 {
   "name": "@mission-platform/seo",
   "version": "0.3.2",
+  "license": "BSD-4-Clause",
   "type": "module",
   "sideEffects": false,
   "files": [

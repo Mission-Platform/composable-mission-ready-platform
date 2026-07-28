@@ -3,7 +3,7 @@ name = "mission-platform-pdf417-common"
 version = "0.1.0"
 edition = "2021"
 description = "Shared PDF417 primitives (symbol tables, GF(929) Reed-Solomon) for the encode/decode crates"
-license = "MIT"
+license = "BSD-4-Clause"
 publish = false
 
 [lib]

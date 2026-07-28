@@ -1,6 +1,7 @@
 {
   "name": "@mission-platform/eslint-config",
   "version": "1.0.0",
+  "license": "BSD-4-Clause",
   "description": "Shared ESLint flat configuration for all Mission Platform packages and apps",
   "type": "module",
   "exports": {

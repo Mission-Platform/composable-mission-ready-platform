@@ -2,6 +2,7 @@
   "name": "@mission-platform/my-care-notes",
   "private": true,
   "version": "0.0.12",
+  "license": "BSD-4-Clause",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -147,4 +147,4 @@
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the project's MIT license. See the LICENSE file for details.
+By contributing, you agree that your contributions will be licensed under the project's BSD 4-Clause license. See the LICENSE file for details.

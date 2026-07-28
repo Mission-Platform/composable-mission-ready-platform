@@ -2,6 +2,7 @@
   "name": "@mission-platform/base-spa",
   "private": true,
   "version": "0.0.0",
+  "license": "BSD-4-Clause",
   "type": "module",
   "exports": {
     ".": {

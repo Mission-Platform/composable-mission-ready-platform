@@ -3,7 +3,7 @@ name = "mission-platform-matrix-code-decode"
 version = "0.1.0"
 edition = "2021"
 description = "2D matrix barcode decoder compiled to WebAssembly for @mission-platform/matrix-code (scaffold)"
-license = "MIT"
+license = "BSD-4-Clause"
 publish = false
 
 [lib]

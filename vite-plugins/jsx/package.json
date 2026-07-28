@@ -1,6 +1,7 @@
 {
   "name": "@mission-platform/vite-plugin-jsx",
   "version": "0.1.0",
+  "license": "BSD-4-Clause",
   "description": "A Vite plugin that compiles the framework-neutral @mission-platform/jsx components straight to React or Vue 3 at build time, replacing the runtime toReactComponent/toVueComponent adapters",
   "type": "module",
   "sideEffects": false,

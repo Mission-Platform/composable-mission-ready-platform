@@ -3,7 +3,7 @@ name = "mission-platform-barcode-decode"
 version = "0.1.0"
 edition = "2021"
 description = "1D (linear) barcode decoder compiled to WebAssembly for @mission-platform/barcode (scaffold)"
-license = "MIT"
+license = "BSD-4-Clause"
 publish = false
 
 [lib]

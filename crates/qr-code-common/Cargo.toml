@@ -3,7 +3,7 @@ name = "mission-platform-qr-code-common"
 version = "0.1.0"
 edition = "2021"
 description = "Shared QR Code primitives (Galois-field arithmetic, spec tables, matrix builder) for the encode/decode crates"
-license = "MIT"
+license = "BSD-4-Clause"
 publish = false
 
 [lib]

@@ -3,7 +3,7 @@ name = "mission-platform-gs1-databar-common"
 version = "0.1.0"
 edition = "2021"
 description = "Shared GS1 DataBar (RSS) primitives for the encode/decode crates"
-license = "MIT"
+license = "BSD-4-Clause"
 publish = false
 
 [lib]

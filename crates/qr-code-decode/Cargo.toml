@@ -3,7 +3,7 @@ name = "mission-platform-qr-code-decode"
 version = "0.1.0"
 edition = "2021"
 description = "Dependency-free QR Code decoder compiled to WebAssembly for @mission-platform/qr-code"
-license = "MIT"
+license = "BSD-4-Clause"
 publish = false
 
 [lib]

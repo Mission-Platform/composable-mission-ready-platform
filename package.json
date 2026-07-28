@@ -1,6 +1,7 @@
 {
   "name": "mission-platform",
   "private": true,
+  "license": "BSD-4-Clause",
   "version": "0.1.0",
   "type": "module",
   "engines": {
