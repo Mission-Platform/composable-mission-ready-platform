@@ -9,9 +9,9 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 /** The workspace groups understood by the tooling. */
-export type WorkspaceGroup = 'packages' | 'apps' | 'workers' | 'vite-plugins' | 'configs';
+export type WorkspaceGroup = 'packages' | 'apps' | 'workers' | 'vite-plugins' | 'configs' | 'crates';
 
-export const WORKSPACE_GROUPS: readonly WorkspaceGroup[] = ['packages', 'apps', 'workers', 'vite-plugins', 'configs'];
+export const WORKSPACE_GROUPS: readonly WorkspaceGroup[] = ['packages', 'apps', 'workers', 'vite-plugins', 'configs', 'crates'];
 
 let cachedRoot: string | undefined;
 

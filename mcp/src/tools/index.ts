@@ -1,50 +1,38 @@
 /**
- * Tool definitions exposed to MCP clients. Tools are grouped by the seven
- * workflows this server assists with: component usage, and the creation and
- * development of packages, apps and workers, plus cross-cutting discovery.
+ * Tool definitions exposed to MCP clients using `@modelcontextprotocol/sdk`.
+ * Tools are grouped by the seven workflows this server assists with: component
+ * usage, and the creation and development of packages, apps and workers, plus
+ * cross-cutting discovery.
  */
+import { z } from 'zod';
+
 import { getGuide, GUIDE_IDS } from '../knowledge/guides.ts';
-import { appFiles, packageFiles, workerFiles } from '../knowledge/templates.ts';
+import { appFiles, crateFiles, packageFiles, workerFiles } from '../knowledge/templates.ts';
 import { getComponentUsage, listComponents } from '../repo/components.ts';
 import { findMember, listDocs, listGroup, readDoc as readDocument, readMemberDetails } from '../repo/scanner.ts';
 import { writeScaffold } from '../scaffold/writer.ts';
 
-import type { McpServer } from '../protocol/server.ts';
-import type { ToolDefinition, ToolResult } from '../protocol/types.ts';
 import type { WorkspaceGroup } from '../repo/paths.ts';
+import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
-function text(value: string): ToolResult {
-  return { content: [{ type: 'text', text: value }] };
+function text(value: string) {
+  return { content: [{ type: 'text' as const, text: value }] };
 }
 
-function json(value: unknown): ToolResult {
+function json(value: unknown) {
   return text(JSON.stringify(value, null, 2));
 }
 
-function getString(arguments_: Record<string, unknown>, key: string): string | undefined {
-  const value = arguments_[key];
-  return typeof value === 'string' && value.trim().length > 0 ? value.trim() : undefined;
-}
-
-function getBoolean(arguments_: Record<string, unknown>, key: string): boolean {
-  return arguments_[key] === true;
-}
-
-const TOOLS: ToolDefinition[] = [
+export function registerTools(server: McpServer): void {
   // ---- Discovery & guidance -------------------------------------------------
-  {
-    name: 'get_guide',
-    description:
-      'Return a curated, repository-specific guide for a Mission Platform workflow (component usage, package/app/worker creation & development, conventions, overview).',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        area: { type: 'string', enum: GUIDE_IDS, description: 'The workflow to explain.' },
-      },
-      required: ['area'],
+  server.tool(
+    'get_guide',
+    'Return a curated, repository-specific guide for a Mission Platform workflow (component usage, package/app/worker creation & development, conventions, overview).',
+    {
+      area: z.string().describe('The workflow to explain.'),
     },
-    handler(arguments_) {
-      const area = getString(arguments_, 'area');
+    async (args) => {
+      const area = args.area?.trim();
       if (!area) {
         return text('Provide an "area". One of: ' + GUIDE_IDS.join(', '));
       }
@@ -54,44 +42,41 @@ const TOOLS: ToolDefinition[] = [
       }
       return text(guide.body);
     },
-  },
-  {
-    name: 'list_docs',
-    description: 'List the Markdown documents available under the repository `docs/` directory.',
-    inputSchema: { type: 'object', properties: {} },
-    handler() {
+  );
+
+  server.tool(
+    'list_docs',
+    'List the Markdown documents available under the repository `docs/` directory.',
+    {},
+    async () => {
       return json(listDocs().map((document) => document.slug));
     },
-  },
-  {
-    name: 'read_doc',
-    description:
-      'Read a single repository document by its slug (see `list_docs`), e.g. "best-practices" or "configs/eslint-config".',
-    inputSchema: {
-      type: 'object',
-      properties: { slug: { type: 'string', description: 'Document slug from `list_docs`.' } },
-      required: ['slug'],
+  );
+
+  server.tool(
+    'read_doc',
+    'Read a single repository document by its slug (see `list_docs`), e.g. "best-practices" or "configs/eslint-config".',
+    {
+      slug: z.string().describe('Document slug from `list_docs`.'),
     },
-    handler(arguments_) {
-      const slug = getString(arguments_, 'slug');
+    async (args) => {
+      const slug = args.slug?.trim();
       if (!slug) {
         return text('Provide a document "slug" (see the list_docs tool).');
       }
       const document = readDocument(slug);
       return document ? text(document) : text(`No document with slug "${slug}". Use list_docs to see available slugs.`);
     },
-  },
-  {
-    name: 'search_docs',
-    description:
-      'Case-insensitive search across all repository docs. Returns matching documents with the lines that matched.',
-    inputSchema: {
-      type: 'object',
-      properties: { query: { type: 'string', description: 'Text to search for.' } },
-      required: ['query'],
+  );
+
+  server.tool(
+    'search_docs',
+    'Case-insensitive search across all repository docs. Returns matching documents with the lines that matched.',
+    {
+      query: z.string().describe('Text to search for.'),
     },
-    handler(arguments_) {
-      const query = getString(arguments_, 'query');
+    async (args) => {
+      const query = args.query?.trim();
       if (!query) {
         return text('Provide a "query" to search for.');
       }
@@ -110,38 +95,33 @@ const TOOLS: ToolDefinition[] = [
       }
       return hits.length > 0 ? json(hits) : text(`No matches for "${query}".`);
     },
-  },
+  );
 
   // ---- Component usage ------------------------------------------------------
-  {
-    name: 'list_components',
-    description: 'List every component in @mission-platform/components with its exported symbols.',
-    inputSchema: {
-      type: 'object',
-      properties: { filter: { type: 'string', description: 'Optional substring to filter component slugs.' } },
+  server.tool(
+    'list_components',
+    'List every component in @mission-platform/components with its exported symbols.',
+    {
+      filter: z.string().optional().describe('Optional substring to filter component slugs.'),
     },
-    handler(arguments_) {
-      const filter = getString(arguments_, 'filter')?.toLowerCase();
+    async (args) => {
+      const filter = args.filter?.trim().toLowerCase();
       const components = listComponents().filter((component) => !filter || component.slug.includes(filter));
       if (components.length === 0) {
         return text(filter ? `No components match "${filter}".` : 'No components found.');
       }
       return json(components);
     },
-  },
-  {
-    name: 'get_component_usage',
-    description:
-      'Describe how to use a component: its exported symbols, props interface, doc comment, available Storybook stories, and Vue/React import snippets.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        component: { type: 'string', description: 'Component name or slug, e.g. "BaseButton" or "base-button".' },
-      },
-      required: ['component'],
+  );
+
+  server.tool(
+    'get_component_usage',
+    'Describe how to use a component: its exported symbols, props interface, doc comment, available Storybook stories, and Vue/React import snippets.',
+    {
+      component: z.string().describe('Component name or slug, e.g. "BaseButton" or "base-button".'),
     },
-    handler(arguments_) {
-      const component = getString(arguments_, 'component');
+    async (args) => {
+      const component = args.component?.trim();
       if (!component) {
         return text('Provide a "component" name or slug (see list_components).');
       }
@@ -168,14 +148,14 @@ const TOOLS: ToolDefinition[] = [
       }
       return text(sections.join('\n'));
     },
-  },
+  );
 
   // ---- Inventory ------------------------------------------------------------
-  {
-    name: 'list_packages',
-    description: 'List all packages in packages/ with name, version and description.',
-    inputSchema: { type: 'object', properties: {} },
-    handler() {
+  server.tool(
+    'list_packages',
+    'List all packages in packages/ with name, version and description.',
+    {},
+    async () => {
       return json(
         listGroup('packages').map((member) => ({
           name: member.name,
@@ -184,12 +164,13 @@ const TOOLS: ToolDefinition[] = [
         })),
       );
     },
-  },
-  {
-    name: 'list_apps',
-    description: 'List all applications in apps/.',
-    inputSchema: { type: 'object', properties: {} },
-    handler() {
+  );
+
+  server.tool(
+    'list_apps',
+    'List all applications in apps/.',
+    {},
+    async () => {
       return json(
         listGroup('apps').map((member) => ({
           name: member.name,
@@ -198,12 +179,13 @@ const TOOLS: ToolDefinition[] = [
         })),
       );
     },
-  },
-  {
-    name: 'list_workers',
-    description: 'List all Cloudflare Workers in workers/.',
-    inputSchema: { type: 'object', properties: {} },
-    handler() {
+  );
+
+  server.tool(
+    'list_workers',
+    'List all Cloudflare Workers in workers/.',
+    {},
+    async () => {
       return json(
         listGroup('workers').map((member) => ({
           name: member.name,
@@ -212,26 +194,18 @@ const TOOLS: ToolDefinition[] = [
         })),
       );
     },
-  },
-  {
-    name: 'get_member_info',
-    description:
-      'Get detailed info for a workspace member: its manifest scripts and dependencies, plus its llms.txt/README when present.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        group: {
-          type: 'string',
-          enum: ['packages', 'apps', 'workers', 'vite-plugins', 'configs'],
-          description: 'Workspace group.',
-        },
-        name: { type: 'string', description: 'Folder name or scoped package name.' },
-      },
-      required: ['group', 'name'],
+  );
+
+  server.tool(
+    'get_member_info',
+    'Get detailed info for a workspace member: its manifest scripts and dependencies, plus its llms.txt/README when present.',
+    {
+      group: z.enum(['packages', 'apps', 'workers', 'vite-plugins', 'configs', 'crates']).describe('Workspace group.'),
+      name: z.string().describe('Folder name or scoped package name.'),
     },
-    handler(arguments_) {
-      const group = getString(arguments_, 'group') as WorkspaceGroup | undefined;
-      const name = getString(arguments_, 'name');
+    async (args) => {
+      const group = args.group as WorkspaceGroup;
+      const name = args.name?.trim();
       if (!group || !name) {
         return text('Provide both "group" and "name".');
       }
@@ -253,92 +227,115 @@ const TOOLS: ToolDefinition[] = [
         readme: details.readme,
       });
     },
-  },
+  );
 
   // ---- Scaffolding ----------------------------------------------------------
-  {
-    name: 'scaffold_package',
-    description:
-      'Generate a convention-compliant packages/<name> skeleton (manifest, tsconfig set, shared configs, vite/vitest/turbo config, src barrel, spec, llms.txt, docs). Dry-run unless apply=true.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        name: { type: 'string', description: 'Kebab-case package name, e.g. "date-utils".' },
-        description: { type: 'string', description: 'Short package description.' },
-        vue: {
-          type: 'boolean',
-          description: 'Set true if the package ships Vue components (adds stylelint + vue deps). Defaults to false.',
-        },
-        apply: { type: 'boolean', description: 'Write files to disk. Defaults to false (dry run).' },
-      },
-      required: ['name'],
+  server.tool(
+    'scaffold_package',
+    'Generate a convention-compliant packages/<name> skeleton (manifest, tsconfig set, shared configs, vite/vitest/turbo config, src barrel, spec, llms.txt, docs). Dry-run unless apply=true.',
+    {
+      name: z.string().describe('Kebab-case package name, e.g. "date-utils".'),
+      description: z.string().optional().describe('Short package description.'),
+      vue: z.boolean().optional().describe('Set true if the package ships Vue components (adds stylelint + vue deps). Defaults to false.'),
+      apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
     },
-    handler(arguments_) {
-      const name = getString(arguments_, 'name');
+    async (args) => {
+      const name = args.name?.trim();
       if (!name) {
         return text('Provide a kebab-case "name".');
       }
-      const files = packageFiles({
-        name,
-        description: getString(arguments_, 'description') ?? '',
-        vue: getBoolean(arguments_, 'vue'),
-      });
-      const result = writeScaffold({ group: 'packages', name, files, apply: getBoolean(arguments_, 'apply') });
-      return json(result);
-    },
-  },
-  {
-    name: 'scaffold_app',
-    description:
-      'Generate a convention-compliant apps/<name> Vite + Vue 3 skeleton (private manifest, tsconfig set, shared configs, vite/turbo config, index.html, src entry). Dry-run unless apply=true.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        name: { type: 'string', description: 'Kebab-case app name, e.g. "admin-portal".' },
-        description: { type: 'string', description: 'Short app description.' },
-        apply: { type: 'boolean', description: 'Write files to disk. Defaults to false (dry run).' },
-      },
-      required: ['name'],
-    },
-    handler(arguments_) {
-      const name = getString(arguments_, 'name');
-      if (!name) {
-        return text('Provide a kebab-case "name".');
+      try {
+        const files = packageFiles({
+          name,
+          description: args.description?.trim() ?? '',
+          vue: args.vue === true,
+        });
+        const result = writeScaffold({ group: 'packages', name, files, apply: args.apply === true });
+        return json(result);
+      } catch (error) {
+        return {
+          content: [{ type: 'text' as const, text: error instanceof Error ? error.message : String(error) }],
+          isError: true,
+        };
       }
-      const files = appFiles({ name, description: getString(arguments_, 'description') ?? '' });
-      const result = writeScaffold({ group: 'apps', name, files, apply: getBoolean(arguments_, 'apply') });
-      return json(result);
     },
-  },
-  {
-    name: 'scaffold_worker',
-    description:
-      'Generate a convention-compliant workers/<name> Cloudflare Worker skeleton (private manifest, tsconfig set, shared configs, typed fetch handler). Dry-run unless apply=true.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        name: { type: 'string', description: 'Kebab-case worker name, e.g. "asset-proxy".' },
-        description: { type: 'string', description: 'Short worker description.' },
-        apply: { type: 'boolean', description: 'Write files to disk. Defaults to false (dry run).' },
-      },
-      required: ['name'],
-    },
-    handler(arguments_) {
-      const name = getString(arguments_, 'name');
-      if (!name) {
-        return text('Provide a kebab-case "name".');
-      }
-      const files = workerFiles({ name, description: getString(arguments_, 'description') ?? '' });
-      const result = writeScaffold({ group: 'workers', name, files, apply: getBoolean(arguments_, 'apply') });
-      return json(result);
-    },
-  },
-];
+  );
 
-export function registerTools(server: McpServer): void {
-  for (const tool of TOOLS) {
-    server.registerTool(tool);
-  }
+  server.tool(
+    'scaffold_app',
+    'Generate a convention-compliant apps/<name> Vite + Vue 3 skeleton (private manifest, tsconfig set, shared configs, vite/turbo config, index.html, src entry). Dry-run unless apply=true.',
+    {
+      name: z.string().describe('Kebab-case app name, e.g. "admin-portal".'),
+      description: z.string().optional().describe('Short app description.'),
+      apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
+    },
+    async (args) => {
+      const name = args.name?.trim();
+      if (!name) {
+        return text('Provide a kebab-case "name".');
+      }
+      try {
+        const files = appFiles({ name, description: args.description?.trim() ?? '' });
+        const result = writeScaffold({ group: 'apps', name, files, apply: args.apply === true });
+        return json(result);
+      } catch (error) {
+        return {
+          content: [{ type: 'text' as const, text: error instanceof Error ? error.message : String(error) }],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'scaffold_worker',
+    'Generate a convention-compliant workers/<name> Cloudflare Worker skeleton (private manifest, tsconfig set, shared configs, typed fetch handler). Dry-run unless apply=true.',
+    {
+      name: z.string().describe('Kebab-case worker name, e.g. "asset-proxy".'),
+      description: z.string().optional().describe('Short worker description.'),
+      apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
+    },
+    async (args) => {
+      const name = args.name?.trim();
+      if (!name) {
+        return text('Provide a kebab-case "name".');
+      }
+      try {
+        const files = workerFiles({ name, description: args.description?.trim() ?? '' });
+        const result = writeScaffold({ group: 'workers', name, files, apply: args.apply === true });
+        return json(result);
+      } catch (error) {
+        return {
+          content: [{ type: 'text' as const, text: error instanceof Error ? error.message : String(error) }],
+          isError: true,
+        };
+      }
+    },
+  );
+
+  server.tool(
+    'scaffold_crate',
+    'Generate a convention-compliant crates/<name> Rust/WASM crate skeleton (Cargo.toml, src/lib.rs, build.rs, WASM tests, README). Dry-run unless apply=true.',
+    {
+      name: z.string().describe('Kebab-case crate name, e.g. "image-processor".'),
+      description: z.string().optional().describe('Short crate description.'),
+      apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
+    },
+    async (args) => {
+      const name = args.name?.trim();
+      if (!name) {
+        return text('Provide a kebab-case "name".');
+      }
+      try {
+        const files = crateFiles({ name, description: args.description?.trim() ?? '' });
+        const result = writeScaffold({ group: 'crates', name, files, apply: args.apply === true });
+        return json(result);
+      } catch (error) {
+        return {
+          content: [{ type: 'text' as const, text: error instanceof Error ? error.message : String(error) }],
+          isError: true,
+        };
+      }
+    },
+  );
 }
-
-export { TOOLS };

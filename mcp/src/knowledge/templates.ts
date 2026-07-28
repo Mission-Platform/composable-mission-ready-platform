@@ -25,6 +25,12 @@ export interface WorkerScaffoldOptions {
   description: string;
 }
 
+export interface CrateScaffoldOptions {
+  /** Kebab-case crate folder name, e.g. `barcode-encode`. */
+  name: string;
+  description: string;
+}
+
 function toPascalCase(name: string): string {
   return name
     .split(/[-_\s]+/)
@@ -472,6 +478,91 @@ ${description}
 A Cloudflare Worker. Build with \`pnpm exec turbo run build --filter ${scoped}\`.
 Local dev and deployment are driven from the consuming app via \`wrangler\`.
 `,
+  };
+}
+
+/** Files for a new `crates/<name>` Rust/WASM crate. */
+export function crateFiles(options: CrateScaffoldOptions): Record<string, string> {
+  const { name, description } = options;
+
+  const cargoToml = `[package]
+name = "mission-platform-${name}"
+version = "0.1.0"
+edition = "2021"
+description = "${description}"
+license = "MIT"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+console = [
+    "dep:tracing-wasm",
+    "dep:mission-platform-console-panic-hook",
+]
+
+[dependencies]
+wasm-bindgen.workspace = true
+tracing = { workspace = true }
+tracing-wasm = { workspace = true, optional = true }
+mission-platform-console-panic-hook = { workspace = true, optional = true }
+shadow-rs.workspace = true
+
+[dev-dependencies]
+wasm-bindgen-test.workspace = true
+
+[build-dependencies]
+shadow-rs = { workspace = true, features = ["build", "git2"] }
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false
+`;
+
+  const libRs = `use wasm_bindgen::prelude::*;
+
+#[wasm_bindgen]
+pub fn version() -> String {
+    env!("CARGO_PKG_VERSION").to_string()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_version() {
+        assert_eq!(version(), "0.1.0");
+    }
+}
+`;
+
+  const buildRs = `fn main() {
+    shadow_rs::new().unwrap();
+}
+`;
+
+  const wasmTestRs = `use wasm_bindgen_test::*;
+
+wasm_bindgen_test_configure!(run_in_browser);
+
+#[wasm_bindgen_test]
+fn pass() {
+    assert_eq!(1 + 1, 2);
+}
+`;
+
+  const readme = `# mission-platform-${name}
+
+${description}
+`;
+
+  return {
+    'Cargo.toml': cargoToml,
+    'src/lib.rs': libRs,
+    'build.rs': buildRs,
+    'tests/wasm.rs': wasmTestRs,
+    'README.md': readme,
   };
 }
 

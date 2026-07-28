@@ -1,16 +1,21 @@
 #!/usr/bin/env node
 /**
- * Entry point for the Mission Platform MCP server.
+ * Entry point for the Mission Platform MCP server using `@modelcontextprotocol/sdk`.
  *
  * Assembles the server core with all tools, resources and prompts, then serves
  * the Model Context Protocol over stdio. Build with `pnpm build` (Turborepo
  * runs `tsc`) and run the compiled output with `node dist/index.js`.
  */
-import { registerPrompts } from './prompts/index.ts';
-import { McpServer } from './protocol/server.ts';
-import { serveStdio } from './protocol/stdio.ts';
-import { registerResources } from './resources/index.ts';
-import { registerTools } from './tools/index.ts';
+import { realpathSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+
+import { registerPrompts } from './prompts';
+import { registerResources } from './resources';
+import { registerTools } from './tools';
 
 export function createServer(): McpServer {
   const server = new McpServer({ name: 'mission-platform-mcp', version: '0.1.0' });
@@ -20,14 +25,29 @@ export function createServer(): McpServer {
   return server;
 }
 
-function main(): void {
+export async function main(): Promise<void> {
   const server = createServer();
+  const transport = new StdioServerTransport();
   process.stderr.write('[mission-mcp] Mission Platform MCP server ready (stdio).\n');
-  serveStdio(server);
+  await server.connect(transport);
+}
+
+function isDirectExecution(): boolean {
+  if (!process.argv[1]) return false;
+  try {
+    const entryPath = realpathSync(resolve(process.argv[1]));
+    const modulePath = realpathSync(fileURLToPath(import.meta.url));
+    return entryPath === modulePath;
+  } catch {
+    const entryPath = resolve(process.argv[1]);
+    const modulePath = fileURLToPath(import.meta.url);
+    return entryPath === modulePath || entryPath + '.js' === modulePath || entryPath + '.ts' === modulePath;
+  }
 }
 
 // Only start the stdio transport when executed as a program, not when imported
 // by tests.
-if (process.argv[1] && import.meta.url === `file://${process.argv[1]}`) {
-  main();
+if (isDirectExecution()) {
+  // eslint-disable-next-line unicorn/prefer-top-level-await
+  void main();
 }

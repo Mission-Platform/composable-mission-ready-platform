@@ -1,17 +1,18 @@
 /**
- * Resource definitions. Resources are read-only reference material addressable
- * by URI: the curated guides, the live workspace inventory, and the raw
- * repository documentation under `docs/`.
+ * Resource definitions using `@modelcontextprotocol/sdk`.
+ * Resources are read-only reference material addressable by URI: the curated
+ * guides, the live workspace inventory, and the raw repository documentation
+ * under `docs/`.
  */
+
 import { allGuides } from '../knowledge/guides.ts';
 import { listComponents } from '../repo/components.ts';
 import { listDocs, listGroup, readDoc as readDocument } from '../repo/scanner.ts';
 
-import type { McpServer } from '../protocol/server.ts';
-import type { ResourceDefinition } from '../protocol/types.ts';
+import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
 function inventory(): string {
-  const groups = (['packages', 'apps', 'workers', 'vite-plugins', 'configs'] as const).map((group) => ({
+  const groups = (['packages', 'apps', 'workers', 'vite-plugins', 'configs', 'crates'] as const).map((group) => ({
     group,
     members: listGroup(group).map((member) => ({
       name: member.name,
@@ -29,47 +30,59 @@ function inventory(): string {
   );
 }
 
-function buildResources(): ResourceDefinition[] {
-  const resources: ResourceDefinition[] = [];
-
+export function registerResources(server: McpServer): void {
   // Curated guides.
   for (const guide of allGuides()) {
-    resources.push({
-      uri: `mission://guide/${guide.id}`,
-      name: `Guide: ${guide.title}`,
-      description: `Curated Mission Platform guidance — ${guide.title}.`,
-      mimeType: 'text/markdown',
-      read: () => guide.body,
-    });
+    server.resource(
+      `guide-${guide.id}`,
+      `mission://guide/${guide.id}`,
+      async (uri) => ({
+        contents: [
+          {
+            uri: uri.href,
+            name: `Guide: ${guide.title}`,
+            description: `Curated Mission Platform guidance — ${guide.title}.`,
+            mimeType: 'text/markdown',
+            text: guide.body,
+          },
+        ],
+      }),
+    );
   }
 
   // Live workspace inventory.
-  resources.push({
-    uri: 'mission://inventory',
-    name: 'Workspace inventory',
-    description: 'Live inventory of every workspace member and component in the monorepo.',
-    mimeType: 'application/json',
-    read: () => inventory(),
-  });
+  server.resource(
+    'inventory',
+    'mission://inventory',
+    async (uri) => ({
+      contents: [
+        {
+          uri: uri.href,
+          name: 'Workspace inventory',
+          description: 'Live inventory of every workspace member and component in the monorepo.',
+          mimeType: 'application/json',
+          text: inventory(),
+        },
+      ],
+    }),
+  );
 
   // Raw repository docs.
   for (const document of listDocs()) {
-    resources.push({
-      uri: `mission://docs/${document.slug}`,
-      name: `Docs: ${document.slug}`,
-      description: `Repository documentation: docs/${document.slug}.md`,
-      mimeType: 'text/markdown',
-      read: () => readDocument(document.slug) ?? '',
-    });
+    server.resource(
+      `docs-${document.slug}`,
+      `mission://docs/${document.slug}`,
+      async (uri) => ({
+        contents: [
+          {
+            uri: uri.href,
+            name: `Docs: ${document.slug}`,
+            description: `Repository documentation: docs/${document.slug}.md`,
+            mimeType: 'text/markdown',
+            text: readDocument(document.slug) ?? '',
+          },
+        ],
+      }),
+    );
   }
-
-  return resources;
 }
-
-export function registerResources(server: McpServer): void {
-  // The provider is evaluated lazily on each `resources/list`, so the inventory
-  // and docs always reflect the current state of the repository.
-  server.registerResourceProvider({ list: () => buildResources() });
-}
-
-export { buildResources };

@@ -31,6 +31,10 @@
     "format": "prettier --check .",
     "format:write": "prettier --write ."
   },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "catalog:mcp",
+    "zod": "catalog:mcp"
+  },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
