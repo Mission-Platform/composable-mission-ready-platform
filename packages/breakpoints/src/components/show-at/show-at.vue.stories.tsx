@@ -1,7 +1,12 @@
-import ShowAt from './show-at.vue';
+import { ShowAt } from '@mission-platform/breakpoints/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * Cross-framework `ShowAt` — authored once in the neutral JSX dialect and
+ * shipped to both Vue 3 (this story, via `@mission-platform/breakpoints/vue`)
+ * and React (`@mission-platform/breakpoints/react`).
+ */
 const meta = {
   title: 'Breakpoints/ShowAt',
   component: ShowAt,

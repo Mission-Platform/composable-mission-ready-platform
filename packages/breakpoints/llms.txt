@@ -1,6 +1,13 @@
 # @mission-platform/breakpoints
 
-Responsive breakpoint utilities, composables, and Vue components for Mission Platform.
+Responsive breakpoint utilities and **write-once** viewport components for Mission Platform. The components (`ShowAt`, `HideAt`, `BreakpointDebug`) are authored once in the neutral `@mission-platform/jsx` dialect and compiled to **both Vue 3 and React** by `@mission-platform/vite-plugin-jsx`.
+
+## Subpath Exports
+
+- `@mission-platform/breakpoints/vue` — compiled native Vue 3 components.
+- `@mission-platform/breakpoints/react` — compiled native React components.
+- `@mission-platform/breakpoints/core` — framework-agnostic utilities and types (`breakpointKeys`, `breakpoints`, `getBreakpointValue`, `mediaQuery`, `maxMediaQuery`, `resolveBreakpoint`, `BreakpointKey`, `BreakpointValues`).
+- `@mission-platform/breakpoints` — the neutral JSX source barrel (compiled by `@mission-platform/vite-plugin-jsx`).
 
 ## Features
 
@@ -20,29 +27,9 @@ Seven-step responsive scale based on viewport width:
 - `xl` — extra-large: ≥ 2560 px (QHD)
 - `2xl` — extra-extra-large: ≥ 3840 px (4K UHD)
 
-### Composables
+### Core Utilities (`/core`)
 
-#### `useBreakpoints()`
-
-Reactive composable that tracks the current viewport breakpoint using native `matchMedia` listeners.
-
-```ts
-import { useBreakpoints } from '@mission-platform/breakpoints'
-
-const { current, active, isAbove, isBelow, isOnly } = useBreakpoints()
-
-// Examples:
-const isDesktop = computed(() => isAbove('lg'))
-const isMobileOnly = computed(() => isOnly('sm'))
-console.log(active.value.md) // true when viewport ≥ 1024px
-```
-
-**Return values:**
-- `current` — The currently active breakpoint key (reactive)
-- `active` — A reactive map of `{ [key]: boolean }`
-- `isAbove(breakpoint)` — Returns `true` when viewport is at or above the given breakpoint
-- `isBelow(breakpoint)` — Returns `true` when viewport is strictly below the given breakpoint
-- `isOnly(breakpoint)` — Returns `true` only when viewport falls exactly within the given band
+The Vue-only `useBreakpoints` composable has been **removed**. Build custom reactive viewport logic on the framework-agnostic `/core` helpers with your framework's own hooks (e.g. `apps/service-monitor`'s React `useCompactViewport`, built on `maxMediaQuery`).
 
 ### Utility Functions
 
@@ -69,7 +56,7 @@ Conditionally renders slot content when the viewport meets specified breakpoint 
 </template>
 
 <script setup lang="ts">
-import ShowAt from '@mission-platform/breakpoints/components/show-at.vue'
+import { ShowAt } from '@mission-platform/breakpoints/vue'
 </script>
 ```
 
@@ -121,7 +108,8 @@ The breakpoint SCSS layer (variables, `bp-up`/`bp-down`/`bp-between`/`bp-only` m
 @use '@mission-platform/tokens/scss/breakpoints-utilities';
 ```
 
-This package continues to export the responsive composables and components (`useBreakpoints`,
-`<ShowAt>`, `<HideAt>`, `<BreakpointDebug>`) described above.
+This package exports the framework-agnostic `/core` utilities and the write-once components
+(`<ShowAt>`, `<HideAt>`, `<BreakpointDebug>`) — imported from `@mission-platform/breakpoints/vue`
+or `@mission-platform/breakpoints/react` — described above.
 
 ## Usage

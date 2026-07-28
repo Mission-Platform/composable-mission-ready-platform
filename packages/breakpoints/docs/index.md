@@ -1,6 +1,13 @@
 # @mission-platform/breakpoints
 
-`@mission-platform/breakpoints` provides responsive breakpoint utilities, composables, and Vue components to handle viewport-based logic in a consistent way across the Mission Platform.
+`@mission-platform/breakpoints` provides responsive breakpoint utilities and **write-once** viewport components for the Mission Platform. The components (`ShowAt`, `HideAt`, `BreakpointDebug`) are authored once in the neutral `@mission-platform/jsx` dialect and compiled to **both Vue 3 and React** by `@mission-platform/vite-plugin-jsx`.
+
+## Subpath Exports
+
+- `@mission-platform/breakpoints/vue` — compiled native Vue 3 components.
+- `@mission-platform/breakpoints/react` — compiled native React components.
+- `@mission-platform/breakpoints/core` — framework-agnostic utilities and types.
+- `@mission-platform/breakpoints` — the neutral JSX source barrel (for write-once components compiled by `@mission-platform/vite-plugin-jsx`).
 
 ## Breakpoint Scale
 
@@ -16,60 +23,58 @@ The platform uses a seven-step responsive scale based on viewport width threshol
 | `xl`  | Extra-large       | $\ge 2560$ px | QHD                             |
 | `2xl` | Extra-extra-large | $\ge 3840$ px | 4K UHD                          |
 
-## Composables
+## Core Utilities (`/core`)
 
-### `useBreakpoints()`
+Framework-agnostic helpers, safe to use from any framework (or none):
 
-A reactive composable that tracks the current viewport breakpoint using native `matchMedia` listeners.
-
-#### Usage
+- `breakpointKeys` — the ordered array of breakpoint keys.
+- `breakpoints` — a map of keys to their min-width pixel thresholds.
+- `getBreakpointValue(key)` — the pixel threshold for a breakpoint.
+- `mediaQuery(key)` — a `min-width` media query string (`'(min-width: 1920px)'`), or `'all'` for `2xs`.
+- `maxMediaQuery(key)` — a `max-width` upper-bound media query string, or `'not all'` for `2xs`.
+- `resolveBreakpoint(width)` — given a pixel width, the active breakpoint key.
 
 ```ts
-import { useBreakpoints } from '@mission-platform/breakpoints';
+import { mediaQuery, resolveBreakpoint } from '@mission-platform/breakpoints/core';
 
-const { current, active, isAbove, isBelow, isOnly } = useBreakpoints();
-
-// Examples:
-const isDesktop = computed(() => isAbove('lg'));
-const isMobileOnly = computed(() => isOnly('sm'));
-console.log(active.value.md); // true when viewport ≥ 1024px
+resolveBreakpoint(1024); // → 'md'
+mediaQuery('lg'); // → '(min-width: 1920px)'
 ```
 
-#### API Reference
-
-- `current`: A reactive value containing the currently active breakpoint key (e.g., `'md'`).
-- `active`: A reactive map `{ [key]: boolean }` where each key is a breakpoint and its value indicates if that threshold is met.
-- `isAbove(breakpoint)`: Returns `true` when the viewport is at or above the specified breakpoint.
-- `isBelow(breakpoint)`: Returns `true` when the viewport is strictly below the specified breakpoint.
-- `isOnly(breakpoint)`: Returns `true` only when the viewport falls exactly within the band of the specified breakpoint.
+The Vue-only `useBreakpoints` composable has been removed. For custom reactive viewport logic, build on these `/core` helpers with your framework's own hooks (see, for example, `apps/service-monitor`'s React `useCompactViewport` hook built on `maxMediaQuery`).
 
 ## Components
 
 ### `<ShowAt>`
 
-Conditionally renders slot content when the viewport meets specified breakpoint criteria.
+Conditionally renders slot/children content when the viewport meets the specified breakpoint criteria.
 
 #### Usage
 
 ```vue
-<template>
-  <!-- Visible on medium screens and above -->
-  <ShowAt min="md">
-    <p>This is visible on medium screens and above</p>
-  </ShowAt>
+<!-- Vue 3 -->
+<script setup lang="ts">
+  import { ShowAt } from '@mission-platform/breakpoints/vue';
+</script>
 
-  <!-- Visible only on small and medium screens -->
+<template>
+  <ShowAt min="md"><p>Visible on medium screens and above</p></ShowAt>
   <ShowAt
     min="sm"
     max="lg"
   >
-    <p>This is visible only on small and medium screens</p>
+    <p>Visible only on small and medium screens</p>
   </ShowAt>
 </template>
+```
 
-<script setup lang="ts">
-  import ShowAt from '@mission-platform/breakpoints/components/show-at.vue';
-</script>
+```tsx
+// React
+import { ShowAt } from '@mission-platform/breakpoints/react';
+
+<ShowAt min="md">
+  <p>Visible on medium screens and above</p>
+</ShowAt>;
 ```
 
 #### Props
@@ -79,21 +84,16 @@ Conditionally renders slot content when the viewport meets specified breakpoint 
 
 ### `<HideAt>`
 
-Conditionally hides slot content when the viewport meets specified breakpoint criteria.
-
-#### Usage
+The inverse of `<ShowAt>`: conditionally hides slot/children content when the viewport meets the specified breakpoint criteria.
 
 ```vue
-<template>
-  <!-- Hidden on large screens and above -->
-  <HideAt min="lg">
-    <p>This is hidden on large screens and above</p>
-  </HideAt>
-</template>
-
 <script setup lang="ts">
-  import HideAt from '@mission-platform/breakpoints/components/hide-at.vue';
+  import { HideAt } from '@mission-platform/breakpoints/vue';
 </script>
+
+<template>
+  <HideAt min="lg"><p>Hidden on large screens and above</p></HideAt>
+</template>
 ```
 
 #### Props
@@ -102,27 +102,20 @@ Same as `<ShowAt>`.
 
 ### `<BreakpointDebug>`
 
-A development utility component that displays the current active breakpoint in a small overlay in the corner of the screen. Useful for testing responsive layouts during development.
+A development-only overlay pinned to the bottom-right corner that displays the current active breakpoint and which breakpoints are active. Its labels are localised through i18next (`mp.breakpoints` namespace) with English defaults.
 
-#### Usage
+```tsx
+// React
+import { BreakpointDebug } from '@mission-platform/breakpoints/react';
 
-```vue
-<template>
-  <BreakpointDebug />
-</template>
-
-<script setup lang="ts">
-  import BreakpointDebug from '@mission-platform/breakpoints/components/breakpoint-debug.vue';
-</script>
+<BreakpointDebug />;
 ```
 
 ## SCSS Utilities
 
-The breakpoint SCSS layer has been moved to `@mission-platform/tokens` for better centralization of design tokens.
+The breakpoint SCSS layer lives in `@mission-platform/tokens`.
 
 ### Mixins
-
-To use the `$breakpoints` map and responsive mixins (without emitting CSS):
 
 ```scss
 @use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
@@ -135,8 +128,6 @@ To use the `$breakpoints` map and responsive mixins (without emitting CSS):
 ```
 
 ### Visibility Utility Classes
-
-To use the pre-generated visibility classes (`.bp-show-*`, `.bp-hide-*`, `.bp-only-*`):
 
 ```scss
 @use '@mission-platform/tokens/scss/breakpoints-utilities';

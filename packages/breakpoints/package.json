@@ -2,46 +2,69 @@
   "name": "@mission-platform/breakpoints",
   "version": "4.0.0",
   "license": "BSD-4-Clause",
-  "description": "Responsive breakpoint utilities, composables, and Vue components for Mission Platform",
+  "description": "Responsive breakpoint utilities and write-once (Vue 3 + React) components for Mission Platform, authored once in JSX",
   "type": "module",
   "sideEffects": [
     "**/*.css",
-    "**/*.scss",
-    "**/*.vue"
+    "**/*.scss"
   ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./dist/components/index.d.ts",
+      "import": "./src/components/index.ts"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js"
+    },
+    "./vue": {
+      "types": "./dist/vue/index.d.ts",
+      "import": "./dist/vue/index.js"
     },
     "./core": {
       "types": "./dist/breakpoints.d.ts",
-      "import": "./dist/breakpoints.js"
+      "import": "./src/breakpoints.ts"
     }
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
-    "build:check": "vue-tsc -b",
-    "build:bundle": "vite build",
-    "build:types": "vue-tsc --project tsconfig.build.json --emitDeclarationOnly",
+    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "build:vue": "vite build --mode vue",
+    "build:react": "vite build --mode react",
+    "build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly",
     "build:watch": "vite build --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "lint:style": "stylelint \"src/**/*.{vue,scss}\"",
-    "lint:style:fix": "stylelint --fix \"src/**/*.{vue,scss}\"",
+    "lint:style": "stylelint \"src/**/*.scss\"",
+    "lint:style:fix": "stylelint --fix \"src/**/*.scss\"",
     "format": "prettier --check .",
     "format:write": "prettier --write ."
   },
+  "dependencies": {
+    "@mission-platform/jsx": "workspace:*"
+  },
   "peerDependencies": {
     "@mission-platform/i18n": "workspace:*",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
     "vue": "^3.5.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
@@ -51,18 +74,24 @@
     "@mission-platform/stylelint-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
+    "@mission-platform/vite-plugin-jsx": "workspace:*",
     "@storybook/react-vite": "catalog:storybook",
     "@storybook/vue3-vite": "catalog:storybook",
     "@types/node": "catalog:typescript",
     "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "@vitejs/plugin-vue": "catalog:vue",
+    "@vitejs/plugin-vue-jsx": "catalog:vue",
     "@vitest/coverage-v8": "catalog:testing",
-    "@vue/test-utils": "catalog:vue",
     "eslint": "catalog:eslint",
+    "i18next": "catalog:i18next",
     "i18next-vue": "catalog:i18next",
     "jsdom": "catalog:testing",
     "postcss-html": "catalog:stylelint",
     "postcss-scss": "catalog:stylelint",
     "prettier": "catalog:prettier",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
     "sass-embedded": "catalog:vite",
     "stylelint": "catalog:stylelint",
     "stylelint-config-recommended-vue": "catalog:stylelint",
@@ -70,7 +99,6 @@
     "typescript": "catalog:typescript",
     "vite": "catalog:vite",
     "vitest": "catalog:testing",
-    "vue": "catalog:vue",
-    "vue-tsc": "catalog:vue"
+    "vue": "catalog:vue"
   }
 }

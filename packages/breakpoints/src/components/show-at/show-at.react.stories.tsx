@@ -1,56 +1,13 @@
-import { useEffect, useState } from 'react';
+import { ShowAt } from '@mission-platform/breakpoints/react';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { ReactNode } from 'react';
 
 /**
- * `ShowAt` (React) mirrors the Vue `ShowAt` from `@mission-platform/breakpoints`.
- * The original ships as a Vue SFC backed by the `useBreakpoints` composable; this
- * self-contained React version reproduces the same behaviour with a `matchMedia`
- * hook over the shared seven-step breakpoint scale, so a Vue and React story
- * exist side by side. It renders its children only when the viewport is at or
- * above `min` and strictly below `max`.
+ * Cross-framework `ShowAt` — authored once in the neutral JSX dialect and
+ * shipped to both React (this story, via `@mission-platform/breakpoints/react`)
+ * and Vue 3 (`@mission-platform/breakpoints/vue`). It renders its children only
+ * when the viewport is at or above `min` and strictly below `max`.
  */
-
-// The shared min-width pixel thresholds (mirrors `@mission-platform/breakpoints`).
-const breakpoints = {
-  '2xs': 0,
-  xs: 480,
-  sm: 768,
-  md: 1024,
-  lg: 1920,
-  xl: 2560,
-  '2xl': 3840,
-} as const;
-
-type BreakpointKey = keyof typeof breakpoints;
-
-function useViewportWidth(): number {
-  const [width, setWidth] = useState(() => (globalThis.window === undefined ? 1024 : window.innerWidth));
-  useEffect(() => {
-    const onResize = (): void => setWidth(window.innerWidth);
-    window.addEventListener('resize', onResize);
-    onResize();
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
-  return width;
-}
-
-interface ShowAtProperties {
-  /** Show children when the viewport is at or above this breakpoint. */
-  min?: BreakpointKey;
-  /** Show children when the viewport is strictly below this breakpoint. */
-  max?: BreakpointKey;
-  children?: ReactNode;
-}
-
-function ShowAt({ min, max, children }: ShowAtProperties): ReactNode {
-  const width = useViewportWidth();
-  const aboveMin = min === undefined || width >= breakpoints[min];
-  const belowMax = max === undefined || width < breakpoints[max];
-  return aboveMin && belowMax ? <>{children}</> : null;
-}
-
 const meta = {
   title: 'Breakpoints/ShowAt',
   component: ShowAt,

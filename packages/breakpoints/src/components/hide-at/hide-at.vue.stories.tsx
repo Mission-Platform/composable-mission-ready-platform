@@ -1,7 +1,12 @@
-import HideAt from './hide-at.vue';
+import { HideAt } from '@mission-platform/breakpoints/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * Cross-framework `HideAt` — authored once in the neutral JSX dialect and
+ * shipped to both Vue 3 (this story, via `@mission-platform/breakpoints/vue`)
+ * and React (`@mission-platform/breakpoints/react`).
+ */
 const meta = {
   title: 'Breakpoints/HideAt',
   component: HideAt,

@@ -1,7 +1,12 @@
-import BreakpointDebug from './breakpoint-debug.vue';
+import { BreakpointDebug } from '@mission-platform/breakpoints/vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
+/**
+ * Cross-framework `BreakpointDebug` — authored once in the neutral JSX dialect
+ * and shipped to both Vue 3 (this story, via `@mission-platform/breakpoints/vue`)
+ * and React (`@mission-platform/breakpoints/react`).
+ */
 const meta = {
   title: 'Breakpoints/BreakpointDebug',
   component: BreakpointDebug,
