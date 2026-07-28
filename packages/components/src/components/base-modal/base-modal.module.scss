@@ -10,12 +10,16 @@
  * near-full-width bottom sheet (rounded top corners); on `sm`+ (768px) it is a
  * centred dialog sized by the `size` variant. The enter/exit fade + scale is
  * pure CSS (`@starting-style` + `allow-discrete` on `display`/`overlay`),
- * replacing the original Vue `<Transition>`. The `bp-up('sm')` mixin from the
- * original SFC is inlined as a 768px media query.
+ * replacing the original Vue `<Transition>`. The `sm` breakpoint is consumed
+ * through the platform breakpoint design tokens via the
+ * `@mission-platform/tokens` `bp-up` mixin, so the threshold always tracks the
+ * token source of truth.
  *
  * The rules live in the shared `mp.components` cascade layer, matching the
  * `@mission-platform/components` package.
  */
+
+@use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 
 @layer mp.components {
   .base-modal {
@@ -67,8 +71,8 @@
       }
     }
 
-    /* Tablet+ (sm, 768px): centred dialog, rounded all corners, width by size. */
-    @media (width >= 768px) {
+    /* Tablet+ (sm): centred dialog, rounded all corners, width by size. */
+    @include bp.bp-up('sm') {
       margin: auto;
       max-height: calc(100vh - var(--mp-spacing-8));
       border-radius: var(--mp-radius-xl);
@@ -103,7 +107,7 @@
       justify-content: space-between;
       gap: var(--mp-spacing-4);
       padding: var(--mp-spacing-4) var(--mp-spacing-6);
-      border-bottom: 1px solid var(--mp-color-border-default);
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
 
     &__title {
@@ -123,7 +127,7 @@
       justify-content: flex-end;
       gap: var(--mp-spacing-3);
       padding: var(--mp-spacing-4) var(--mp-spacing-6);
-      border-top: 1px solid var(--mp-color-border-default);
+      border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
 
     /* Respect users who prefer reduced motion. */

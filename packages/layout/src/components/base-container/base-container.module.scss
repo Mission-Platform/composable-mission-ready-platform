@@ -54,7 +54,7 @@
 
   .container-demo-viewport {
     padding-block: var(--mp-spacing-4);
-    border: 1px dashed var(--mp-color-border-default);
+    border: var(--mp-border-width-thin) dashed var(--mp-color-border-default);
     border-radius: var(--mp-radius-md);
     background: repeating-linear-gradient(
       45deg,
@@ -71,7 +71,7 @@
     justify-content: center;
     min-height: 8rem;
     padding: var(--mp-spacing-4);
-    border: 1px solid var(--mp-color-border-default);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     border-radius: var(--mp-radius-md);
     background: var(--mp-color-surface-raised);
     color: var(--mp-color-text-primary);

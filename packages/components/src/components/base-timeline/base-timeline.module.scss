@@ -14,7 +14,7 @@
 @layer mp.components {
   .base-timeline {
     --mp-timeline-marker-size: 0.875rem;
-    --mp-timeline-line-thickness: 2px;
+    --mp-timeline-line-thickness: var(--mp-border-width-thick);
     --mp-timeline-gutter: var(--mp-spacing-6);
 
     list-style: none;

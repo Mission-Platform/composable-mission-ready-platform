@@ -10,7 +10,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--mp-spacing-3);
-    border: 1px solid var(--mp-color-border-default);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     border-radius: var(--mp-radius-lg);
     background-color: var(--mp-color-bg-surface);
     padding: var(--mp-spacing-3);
@@ -61,11 +61,11 @@
       top: 0;
       z-index: 1;
       background-color: var(--mp-color-bg-surface);
-      border-bottom: 1px solid var(--mp-color-border-default);
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
 
     &__gutter-corner {
-      border-right: 1px solid var(--mp-color-border-default);
+      border-right: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
 
     &__day-heading {
@@ -75,7 +75,7 @@
       gap: var(--mp-spacing-1);
       padding: var(--mp-spacing-2);
       border: none;
-      border-left: 1px solid var(--mp-color-border-default);
+      border-left: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       background: transparent;
       cursor: pointer;
       color: var(--mp-color-text-primary);
@@ -110,18 +110,18 @@
       align-items: flex-start;
       justify-content: flex-end;
       padding-right: var(--mp-spacing-2);
-      border-right: 1px solid var(--mp-color-border-default);
+      border-right: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       font-size: var(--mp-font-size-xs);
       color: var(--mp-color-text-tertiary);
     }
 
     &__day-column {
       position: relative;
-      border-left: 1px solid var(--mp-color-border-default);
+      border-left: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
 
     &__hour-line {
-      border-bottom: 1px solid var(--mp-color-border-subtle, var(--mp-color-border-default));
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-subtle, var(--mp-color-border-default));
     }
 
     &__event {
@@ -130,8 +130,8 @@
       flex-direction: column;
       overflow: hidden;
       padding: var(--mp-spacing-1);
-      border: 1px solid var(--mp-color-primary-default);
-      border-inline-start: 3px solid var(--mp-color-primary-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-primary-default);
+      border-inline-start: var(--mp-border-width-heavy) solid var(--mp-color-primary-default);
       border-radius: var(--mp-radius-sm);
       background-color: var(--mp-color-primary-subtle, var(--mp-color-bg-muted));
       cursor: grab;
@@ -184,7 +184,7 @@
       text-align: center;
       font-size: var(--mp-font-size-xs);
       color: var(--mp-color-text-tertiary);
-      border-bottom: 1px solid var(--mp-color-border-default);
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
 
     &__month-cell {
@@ -194,7 +194,7 @@
       align-items: stretch;
       min-height: 6rem;
       padding: var(--mp-spacing-1);
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       margin: -0.5px;
       background: transparent;
       text-align: left;
@@ -206,7 +206,7 @@
       }
 
       &--today {
-        outline: 2px solid var(--mp-color-primary-default);
+        outline: var(--mp-border-width-thick) solid var(--mp-color-primary-default);
         outline-offset: -2px;
       }
     }
@@ -222,7 +222,7 @@
       font: inherit;
 
       &:focus-visible {
-        outline: 2px solid var(--mp-color-primary-default);
+        outline: var(--mp-border-width-thick) solid var(--mp-color-primary-default);
         outline-offset: 2px;
         border-radius: var(--mp-radius-sm);
       }
@@ -267,7 +267,7 @@
       flex-direction: column;
       gap: var(--mp-spacing-1);
       padding: var(--mp-spacing-2);
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
       background: transparent;
       cursor: pointer;
@@ -309,7 +309,7 @@
       }
 
       &--today {
-        outline: 1px solid var(--mp-color-primary-default);
+        outline: var(--mp-border-width-thin) solid var(--mp-color-primary-default);
       }
     }
 

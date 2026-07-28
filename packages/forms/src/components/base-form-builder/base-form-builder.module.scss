@@ -40,7 +40,7 @@
       gap: var(--mp-spacing-1);
       width: 100%;
       padding: var(--mp-spacing-2) var(--mp-spacing-3);
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-sm);
       background-color: var(--mp-color-bg-muted);
       cursor: pointer;
@@ -73,7 +73,7 @@
     &__nested {
       margin-left: var(--mp-spacing-4);
       padding: var(--mp-spacing-2);
-      border-left: 2px solid var(--mp-color-border-default);
+      border-left: var(--mp-border-width-thick) solid var(--mp-color-border-default);
     }
 
     // A generous drop target: at least three field-rows tall so dropping a field
@@ -88,7 +88,7 @@
       align-items: center;
       justify-content: center;
       min-height: 4rem;
-      border: 2px dashed var(--mp-color-border-default);
+      border: var(--mp-border-width-thick) dashed var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
       text-align: center;
       padding: var(--mp-spacing-3);
@@ -117,7 +117,7 @@
       flex-direction: column;
       gap: var(--mp-spacing-2);
       list-style: none;
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-sm);
       background-color: var(--mp-color-bg-surface);
       cursor: grab;
@@ -209,7 +209,7 @@
       }
 
       &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
+        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
         outline-offset: 2px;
       }
     }
@@ -251,7 +251,7 @@
       gap: var(--mp-spacing-2);
       padding: var(--mp-spacing-3);
       margin: 0;
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
     }
 
@@ -281,7 +281,7 @@
       flex-direction: column;
       gap: var(--mp-spacing-2);
       padding: var(--mp-spacing-3);
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
     }
   }

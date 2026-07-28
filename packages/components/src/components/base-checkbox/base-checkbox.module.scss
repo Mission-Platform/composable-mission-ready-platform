@@ -36,7 +36,7 @@
       justify-content: center;
       width: 18px;
       height: 18px;
-      border: 2px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thick) solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-sm);
       background-color: var(--mp-color-bg-surface);
       color: transparent;
@@ -51,6 +51,13 @@
       font-size: 12px;
       line-height: 1;
       font-weight: var(--mp-font-weight-bold, 700);
+
+      svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+        fill: currentcolor;
+      }
     }
 
     &__label {
@@ -88,7 +95,7 @@
       cursor: pointer;
 
       &:focus-visible ~ .base-checkbox__box {
-        outline: 2px solid var(--mp-color-border-focus);
+        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
         outline-offset: 2px;
       }
 

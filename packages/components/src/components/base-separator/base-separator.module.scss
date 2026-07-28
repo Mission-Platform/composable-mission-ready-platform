@@ -19,7 +19,7 @@
 
   .base-separator--horizontal {
     width: 100%;
-    border-top-width: 1px;
+    border-top-width: var(--mp-border-width-thin);
     border-top-color: var(--mp-color-border-default);
 
     &.base-separator--solid {
@@ -40,7 +40,7 @@
     height: auto;
     min-height: 1em;
     margin-inline: var(--mp-separator-spacing, var(--mp-spacing-4));
-    border-left-width: 1px;
+    border-left-width: var(--mp-border-width-thin);
     border-left-color: var(--mp-color-border-default);
 
     &.base-separator--solid {
@@ -65,7 +65,7 @@
 
   .base-separator__line {
     flex: 1 1 auto;
-    border-top-width: 1px;
+    border-top-width: var(--mp-border-width-thin);
     border-top-color: var(--mp-color-border-default);
   }
 

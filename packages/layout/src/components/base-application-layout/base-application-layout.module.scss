@@ -6,11 +6,14 @@
  * two-stage compiler carries the import onto both the React and Vue builds).
  *
  * The rules live in the package's own `mp.layout` cascade layer. Only
- * `var(--mp-*)` design-token custom
- * properties are used (the `mp-font-label` mixin and `bp-up('sm')` breakpoint
- * from the original SFC are inlined as their resolved token values / media
- * query, since this package does not depend on `@mission-platform/tokens`).
+ * `var(--mp-*)` design-token custom properties are used (the `mp-font-label`
+ * mixin from the original SFC is inlined as its resolved token values). The
+ * responsive breakpoint is consumed through the platform breakpoint design
+ * tokens via the `@mission-platform/tokens` `bp-up` mixin, so the threshold
+ * always tracks the token source of truth.
  */
+
+@use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 
 @layer mp.layout {
   .application-layout {
@@ -39,8 +42,7 @@
         letter-spacing: var(--mp-letter-spacing-normal);
         padding: var(--mp-spacing-2) var(--mp-spacing-4);
 
-        // Resolved `bp-up('sm')` (480px).
-        @media (width >= 480px) {
+        @include bp.bp-up('xs') {
           padding: var(--mp-spacing-2) var(--mp-spacing-6);
         }
       }

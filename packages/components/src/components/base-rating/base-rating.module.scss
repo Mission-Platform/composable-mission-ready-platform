@@ -80,6 +80,7 @@
         display: block;
         width: 1em;
         height: 1em;
+        fill: currentcolor;
       }
 
       &--empty {
@@ -87,7 +88,7 @@
       }
 
       &--filled svg {
-        fill: currentColor;
+        fill: currentcolor;
       }
     }
 

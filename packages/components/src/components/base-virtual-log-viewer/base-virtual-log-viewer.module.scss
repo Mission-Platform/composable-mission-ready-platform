@@ -13,7 +13,7 @@
     flex-direction: column;
     overflow: hidden;
     background: var(--mp-color-bg-sunken);
-    border: 1px solid var(--mp-color-border-default);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     border-radius: var(--mp-radius-md);
   }
 
@@ -24,7 +24,7 @@
     height: 32px;
     padding: 0 var(--mp-spacing-4);
     background: var(--mp-color-bg-surface);
-    border-bottom: 1px solid var(--mp-color-border-strong);
+    border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-strong);
   }
 
   .log-viewer__filter-badge {
@@ -53,7 +53,7 @@
     cursor: default;
     background: none;
     border: 0;
-    border-bottom: 1px solid transparent;
+    border-bottom: var(--mp-border-width-thin) solid transparent;
     outline: none;
     transition: background-color 80ms ease;
 
@@ -81,7 +81,7 @@
     min-width: 44px;
     padding-right: var(--mp-spacing-2);
     text-align: right;
-    border-right: 1px solid var(--mp-color-border-default);
+    border-right: var(--mp-border-width-thin) solid var(--mp-color-border-default);
   }
 
   .log-viewer__timestamp {

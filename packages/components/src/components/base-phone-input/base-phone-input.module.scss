@@ -41,7 +41,7 @@
     &__wrapper {
       display: flex;
       align-items: stretch;
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
       background-color: var(--mp-color-bg-surface);
       overflow: hidden;
@@ -62,7 +62,7 @@
       flex-shrink: 0;
       width: 11rem;
       max-width: 45%;
-      border-right: 1px solid var(--mp-color-border-default);
+      border-right: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
 
     &__dial {

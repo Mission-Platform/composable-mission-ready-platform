@@ -15,7 +15,7 @@
     padding: var(--mp-spacing-4);
     margin: 0;
     background-color: var(--mp-color-bg-surface);
-    border: 1px solid var(--mp-color-border-default);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     border-radius: var(--mp-radius-lg);
 
     &--flush {

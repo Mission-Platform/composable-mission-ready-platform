@@ -99,7 +99,7 @@
     /* Never exceed the viewport so an edge-anchored menu stays on-screen on mobile. */
     max-width: calc(100vw - var(--mp-spacing-4));
     background-color: var(--mp-color-bg-surface);
-    border: 1px solid var(--mp-color-border-default);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     border-radius: var(--mp-radius-md);
     box-shadow: var(--mp-shadow-md);
   }

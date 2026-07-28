@@ -6,17 +6,19 @@
  * rules live in the shared `mp.components` cascade layer (matching the
  * `@mission-platform/components` package).
  *
- * Unlike the original Vue SFC this module is self-contained (no `@use` of the
- * tokens SCSS mixins): the body font size uses the `--mp-size-font-sm` token
- * directly and the `bp-up('sm')` cell-padding step-up is inlined as a 768px
- * media query, matching how the other migrated components style themselves.
+ * The body font size uses the `--mp-size-font-sm` token directly, and the
+ * `bp-up('sm')` cell-padding step-up is consumed through the platform
+ * breakpoint design tokens via the `@mission-platform/tokens` `bp-up` mixin, so
+ * the threshold always tracks the token source of truth.
  */
+
+@use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 
 @layer mp.components {
   .base-table-wrapper {
     position: relative;
     overflow-x: auto;
-    border: 1px solid var(--mp-color-border-default);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     border-radius: var(--mp-radius-md);
   }
 
@@ -35,7 +37,7 @@
     display: inline-block;
     width: var(--mp-size-icon-lg);
     height: var(--mp-size-icon-lg);
-    border: 0.214rem solid var(--mp-color-primary-default);
+    border: var(--mp-border-width-heavy) solid var(--mp-color-primary-default);
     border-top-color: transparent;
     border-radius: var(--mp-radius-full);
     animation: mp-spin 0.65s linear infinite;
@@ -60,9 +62,9 @@
       padding: var(--mp-spacing-2) var(--mp-spacing-3);
       text-align: left;
       white-space: nowrap;
-      border-bottom: 1px solid var(--mp-color-border-default);
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
 
-      @media (width >= 768px) {
+      @include bp.bp-up('sm') {
         padding: var(--mp-spacing-3) var(--mp-spacing-4);
       }
 
@@ -100,7 +102,7 @@
       padding: var(--mp-spacing-2) var(--mp-spacing-3);
       vertical-align: middle;
 
-      @media (width >= 768px) {
+      @include bp.bp-up('sm') {
         padding: var(--mp-spacing-3) var(--mp-spacing-4);
       }
 
@@ -114,7 +116,7 @@
     }
 
     &__row {
-      border-bottom: 1px solid var(--mp-color-border-default);
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
 
       &:last-child {
         border-bottom: none;
@@ -135,7 +137,7 @@
     &--bordered {
       .base-table__th,
       .base-table__td {
-        border: 1px solid var(--mp-color-border-default);
+        border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       }
     }
 

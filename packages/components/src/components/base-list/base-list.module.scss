@@ -11,6 +11,10 @@
   .base-list {
     margin: 0;
 
+    @supports (container-type: inline-size) {
+      container: base-list / inline-size;
+    }
+
     &__item {
       line-height: var(--mp-line-height-normal);
     }
@@ -34,6 +38,16 @@
       display: grid;
       grid-template-columns: max-content 1fr;
       padding: 0;
+
+      @container base-list (width >= 40rem) {
+        grid-template-columns: 10rem 1fr;
+        gap: 0 var(--mp-spacing-6);
+      }
+
+      @container base-list (width >= 60rem) {
+        grid-template-columns: 15rem 1fr;
+        gap: 0 var(--mp-spacing-8);
+      }
     }
 
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
@@ -45,6 +59,10 @@
         .base-list__term,
         .base-list__detail {
           padding: var(--mp-size-pad-block-#{$size}) 0;
+
+          @container base-list (width >= 48rem) {
+            padding: calc(var(--mp-size-pad-block-#{$size}) * 1.5) 0;
+          }
         }
       }
     }
@@ -54,7 +72,7 @@
       &.base-list--none .base-list__item + .base-list__item,
       &.base-list--unordered .base-list__item + .base-list__item,
       &.base-list--ordered .base-list__item + .base-list__item {
-        border-top: 1px solid var(--mp-color-border-default);
+        border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       }
     }
 

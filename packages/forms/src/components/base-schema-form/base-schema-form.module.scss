@@ -55,12 +55,12 @@
       justify-content: flex-end;
       gap: var(--mp-spacing-2);
       padding-top: var(--mp-spacing-2);
-      border-top: 1px solid var(--mp-color-border-default);
+      border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
 
     &__button {
       padding: var(--mp-spacing-2) var(--mp-spacing-4);
-      border: 1px solid transparent;
+      border: var(--mp-border-width-thin) solid transparent;
       border-radius: var(--mp-radius-md);
       cursor: pointer;
       transition:
@@ -68,7 +68,7 @@
         background-color 150ms ease;
 
       &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
+        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
         outline-offset: 2px;
       }
 

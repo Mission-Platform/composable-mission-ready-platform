@@ -21,7 +21,7 @@
     }
 
     &:focus-visible {
-      outline: 2px solid var(--mp-color-primary-default);
+      outline: var(--mp-border-width-thick) solid var(--mp-color-primary-default);
       outline-offset: 2px;
       border-radius: var(--mp-radius-lg);
     }
@@ -58,7 +58,7 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       background: var(--mp-color-bg-surface);
       color: var(--mp-color-text-default);
       font-size: 24px;
@@ -68,6 +68,13 @@
       justify-content: center;
       cursor: pointer;
       box-shadow: var(--mp-shadow-sm);
+
+      svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+        fill: currentcolor;
+      }
 
       &--prev {
         left: var(--mp-spacing-2);
@@ -122,7 +129,7 @@
       }
 
       &:focus-visible {
-        outline: 2px solid var(--mp-color-primary-default);
+        outline: var(--mp-border-width-thick) solid var(--mp-color-primary-default);
         outline-offset: 2px;
       }
     }
@@ -137,7 +144,7 @@
       height: 28px;
       margin: var(--mp-spacing-2) auto 0;
       padding: 0;
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       border-radius: 50%;
       background: var(--mp-color-bg-surface);
       color: var(--mp-color-text-default);
@@ -146,12 +153,19 @@
       cursor: pointer;
       box-shadow: var(--mp-shadow-sm);
 
+      svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+        fill: currentcolor;
+      }
+
       &:hover {
         background: var(--mp-color-bg-base-alt);
       }
 
       &:focus-visible {
-        outline: 2px solid var(--mp-color-primary-default);
+        outline: var(--mp-border-width-thick) solid var(--mp-color-primary-default);
         outline-offset: 2px;
       }
     }

@@ -30,6 +30,13 @@
       transition:
         background-color 100ms ease,
         color 100ms ease;
+
+      svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+        fill: currentcolor;
+      }
     }
 
     &__link:hover,

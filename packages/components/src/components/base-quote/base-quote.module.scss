@@ -42,7 +42,7 @@
     /* Variants */
     &--bordered {
       padding-left: var(--mp-spacing-4);
-      border-left: 3px solid var(--mp-color-primary-default);
+      border-left: var(--mp-border-width-heavy) solid var(--mp-color-primary-default);
     }
 
     &--default {

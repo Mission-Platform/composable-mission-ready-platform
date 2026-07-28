@@ -42,7 +42,7 @@
     &__wrapper {
       display: flex;
       align-items: center;
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
       background-color: var(--mp-color-bg-surface);
       transition:
@@ -103,6 +103,13 @@
       display: flex;
       align-items: center;
       flex-shrink: 0;
+
+      svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+        fill: currentcolor;
+      }
     }
 
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
@@ -163,7 +170,7 @@
     &__tz-btn {
       font-size: var(--mp-font-size-xs);
       padding: var(--mp-spacing-1) var(--mp-spacing-2);
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       background: transparent;
       border-radius: var(--mp-radius-sm);
       cursor: pointer;
@@ -215,7 +222,7 @@
       text-align: center;
       margin-bottom: var(--mp-spacing-1);
       padding-bottom: var(--mp-spacing-1);
-      border-bottom: 1px solid var(--mp-color-border-default);
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
 
     &__scroll {
@@ -261,7 +268,7 @@
       }
 
       &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
+        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
         outline-offset: 2px;
       }
 
@@ -275,7 +282,7 @@
       justify-content: flex-end;
       margin-top: var(--mp-spacing-2);
       padding-top: var(--mp-spacing-2);
-      border-top: 1px solid var(--mp-color-border-default);
+      border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
 
     &__done-btn {
@@ -294,7 +301,7 @@
       }
 
       &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
+        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
         outline-offset: 2px;
       }
     }

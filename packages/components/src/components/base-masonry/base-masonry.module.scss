@@ -23,19 +23,27 @@
   .base-masonry {
     width: 100%;
     min-width: 0;
+
+    @supports (container-type: inline-size) {
+      container: base-masonry / inline-size;
+    }
   }
 
   /* Keep free-form (default-slot) children from splitting across columns. */
   .base-masonry > * {
     break-inside: avoid;
     margin-bottom: var(--mp-masonry-gap);
+
+    @container base-masonry (width >= 48rem) {
+      margin-bottom: calc(var(--mp-masonry-gap) * 1.5);
+    }
   }
 
   .masonry-demo-item {
     break-inside: avoid;
     margin-bottom: var(--mp-masonry-gap, var(--mp-spacing-4));
     padding: var(--mp-spacing-4);
-    border: 1px solid var(--mp-color-border-default);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     border-radius: var(--mp-radius-md);
     background: var(--mp-color-surface-raised);
     color: var(--mp-color-text-primary);

@@ -38,7 +38,7 @@
     }
 
     &__editor {
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
       background-color: var(--mp-color-bg-surface);
       overflow: hidden;
@@ -51,7 +51,7 @@
 
     &__tabs {
       display: flex;
-      border-bottom: 1px solid var(--mp-color-border-default);
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       background-color: var(--mp-color-bg-muted);
     }
 
@@ -63,7 +63,7 @@
       color: var(--mp-color-text-secondary);
       font-family: var(--mp-font-family-sans);
       font-size: var(--mp-font-size-sm);
-      border-bottom: 2px solid transparent;
+      border-bottom: var(--mp-border-width-thick) solid transparent;
 
       &--active {
         color: var(--mp-color-primary-default);
@@ -71,7 +71,7 @@
       }
 
       &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
+        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
         outline-offset: -2px;
       }
     }
@@ -81,7 +81,7 @@
       flex-wrap: wrap;
       gap: var(--mp-spacing-1);
       padding: var(--mp-spacing-1) var(--mp-spacing-2);
-      border-bottom: 1px solid var(--mp-color-border-default);
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       background-color: var(--mp-color-bg-muted);
     }
 
@@ -92,7 +92,7 @@
       min-width: 28px;
       height: 28px;
       padding: 0 var(--mp-spacing-2);
-      border: 1px solid transparent;
+      border: var(--mp-border-width-thin) solid transparent;
       border-radius: var(--mp-radius-sm);
       background: transparent;
       cursor: pointer;
@@ -101,6 +101,13 @@
       font-size: var(--mp-font-size-xs);
       font-weight: var(--mp-font-weight-semibold);
 
+      svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+        fill: currentcolor;
+      }
+
       &:hover:not(:disabled) {
         background-color: var(--mp-color-bg-surface);
         border-color: var(--mp-color-border-default);
@@ -108,7 +115,7 @@
       }
 
       &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
+        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
         outline-offset: 2px;
       }
 

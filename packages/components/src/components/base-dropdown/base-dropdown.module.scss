@@ -47,14 +47,31 @@
       padding: var(--mp-spacing-1) 0;
       overflow-y: auto;
       background-color: var(--mp-color-bg-surface);
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
       box-shadow: var(--mp-shadow-md);
       outline: none;
       position-try-fallbacks: flip-block, flip-inline, --mp-dropdown-shift;
+      opacity: 1;
+      translate: 0 0;
+      transition:
+        opacity var(--mp-duration-fast) var(--mp-easing-standard),
+        translate var(--mp-duration-fast) var(--mp-easing-standard);
+
+      @starting-style {
+        opacity: 0;
+        translate: 0 0.5rem;
+      }
 
       &--match-width {
         min-width: anchor-size(width);
+      }
+    }
+
+    /* Respect users who prefer reduced motion. */
+    @media (prefers-reduced-motion: reduce) {
+      &__panel {
+        transition: none;
       }
     }
   }

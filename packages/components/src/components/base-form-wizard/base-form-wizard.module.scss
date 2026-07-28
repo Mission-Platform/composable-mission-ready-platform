@@ -11,6 +11,10 @@
     flex-direction: column;
     gap: var(--mp-spacing-6);
 
+    @supports (container-type: inline-size) {
+      container: base-form-wizard / inline-size;
+    }
+
     &__steps {
       display: flex;
       flex-wrap: wrap;
@@ -18,6 +22,10 @@
       margin: 0;
       padding: 0;
       list-style: none;
+
+      @container base-form-wizard (width >= 40rem) {
+        gap: var(--mp-spacing-4);
+      }
     }
 
     &__step {
@@ -31,7 +39,7 @@
       gap: var(--mp-spacing-2);
       width: 100%;
       padding: var(--mp-spacing-2) var(--mp-spacing-3);
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
       background: transparent;
       cursor: pointer;
@@ -42,13 +50,18 @@
         color 150ms ease,
         background-color 150ms ease;
 
+      @container base-form-wizard (width >= 40rem) {
+        padding: var(--mp-spacing-3) var(--mp-spacing-4);
+        gap: var(--mp-spacing-4);
+      }
+
       &:disabled {
         opacity: 0.5;
         cursor: not-allowed;
       }
 
       &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
+        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
         outline-offset: 2px;
       }
 
@@ -98,7 +111,12 @@
       flex-direction: column;
       gap: var(--mp-spacing-3);
       padding-top: var(--mp-spacing-3);
-      border-top: 1px solid var(--mp-color-border-default);
+      border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+
+      @container base-form-wizard (width >= 48rem) {
+        padding-top: var(--mp-spacing-6);
+        gap: var(--mp-spacing-4);
+      }
     }
 
     &__nav {
@@ -109,7 +127,7 @@
 
     &__button {
       padding: var(--mp-spacing-2) var(--mp-spacing-4);
-      border: 1px solid transparent;
+      border: var(--mp-border-width-thin) solid transparent;
       border-radius: var(--mp-radius-md);
       cursor: pointer;
       font-family: var(--mp-font-family-sans);
@@ -124,7 +142,7 @@
       }
 
       &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
+        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
         outline-offset: 2px;
       }
 

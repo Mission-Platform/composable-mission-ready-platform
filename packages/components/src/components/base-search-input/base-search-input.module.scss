@@ -17,7 +17,7 @@
     &__wrapper {
       display: flex;
       align-items: center;
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
       background-color: var(--mp-color-bg-surface);
       transition:
@@ -84,7 +84,7 @@
       display: inline-block;
       width: 14px;
       height: 14px;
-      border: 2px solid currentcolor;
+      border: var(--mp-border-width-thick) solid currentcolor;
       border-top-color: transparent;
       border-radius: var(--mp-radius-full);
       animation: mp-search-spin 0.6s linear infinite;

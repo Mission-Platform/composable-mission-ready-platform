@@ -17,6 +17,13 @@
     flex-shrink: 0;
     line-height: 1;
 
+    svg {
+      display: block;
+      width: 1em;
+      height: 1em;
+      fill: currentcolor;
+    }
+
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. The
        original rendered a sized icon component; the substituted glyph scales
        with the wrapper's font-size instead. */

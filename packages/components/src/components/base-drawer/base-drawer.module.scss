@@ -16,8 +16,12 @@
  * `<style>` (no `:global()`). Relative to the original only `<Teleport>` is
  * dropped (the neutral dialect cannot model it), so the panel is a
  * `position: fixed` overlay rendered in place rather than teleported to
- * `<body>`. The `bp-up('sm')` mixin is inlined as a 768px media query.
+ * `<body>`. The responsive `sm` breakpoint is consumed through the platform
+ * breakpoint design tokens via the `@mission-platform/tokens` `bp-up` mixin, so
+ * the threshold always tracks the token source of truth.
  */
+
+@use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 
 @layer mp.components {
   $drawer-sizes: (
@@ -66,12 +70,12 @@
 
     &--start {
       inset-inline-start: 0;
-      border-inline-end: 1px solid var(--mp-color-border-default);
+      border-inline-end: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
 
     &--end {
       inset-inline-end: 0;
-      border-inline-start: 1px solid var(--mp-color-border-default);
+      border-inline-start: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
 
     &--top,
@@ -85,15 +89,15 @@
 
     &--top {
       top: 0;
-      border-bottom: 1px solid var(--mp-color-border-default);
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
 
     &--bottom {
       bottom: 0;
-      border-top: 1px solid var(--mp-color-border-default);
+      border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
 
-    @media (width >= 768px) {
+    @include bp.bp-up('sm') {
       @each $size, $width in $drawer-sizes {
         &--start.base-drawer--#{$size},
         &--end.base-drawer--#{$size} {
@@ -124,7 +128,7 @@
       align-items: center;
       justify-content: space-between;
       padding: var(--mp-spacing-4) var(--mp-spacing-6);
-      border-bottom: 1px solid var(--mp-color-border-default);
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       flex-shrink: 0;
       gap: var(--mp-spacing-4);
     }
@@ -170,7 +174,7 @@
       justify-content: flex-end;
       gap: var(--mp-spacing-3);
       padding: var(--mp-spacing-4) var(--mp-spacing-6);
-      border-top: 1px solid var(--mp-color-border-default);
+      border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       flex-shrink: 0;
     }
 

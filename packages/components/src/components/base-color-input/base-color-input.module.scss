@@ -38,7 +38,7 @@
       display: flex;
       align-items: center;
       gap: var(--mp-spacing-2);
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
       background-color: var(--mp-color-bg-surface);
       transition:
@@ -64,7 +64,7 @@
       display: block;
       flex-shrink: 0;
       border-radius: calc(var(--mp-radius-md) - 2px) 0 0 calc(var(--mp-radius-md) - 2px);
-      border-right: 1px solid var(--mp-color-border-default);
+      border-right: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       cursor: pointer;
       transition: opacity 150ms ease;
 

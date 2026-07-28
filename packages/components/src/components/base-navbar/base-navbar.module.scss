@@ -7,9 +7,12 @@
  *
  * The rules live in the shared `mp.components` cascade layer, matching the
  * `@mission-platform/components` package. Only `var(--mp-*)` design-token custom
- * properties are used. The `bp-up('sm')` / `bp-down('sm')` mixins are inlined as
- * 768px media queries.
+ * properties are used. The responsive `sm` breakpoint is consumed through the
+ * platform breakpoint design tokens via the `@mission-platform/tokens` `bp-up` /
+ * `bp-down` mixins, so the thresholds always track the token source of truth.
  */
+
+@use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 
 @layer mp.components {
   .base-navbar-host {
@@ -18,10 +21,14 @@
 
   .base-navbar {
     background-color: var(--mp-color-bg-surface);
-    border-bottom: 1px solid var(--mp-color-border-default);
+    border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     z-index: 100;
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
+
+    @supports (container-type: inline-size) {
+      container: base-navbar / inline-size;
+    }
 
     &--sticky {
       position: sticky;
@@ -36,9 +43,14 @@
       gap: var(--mp-spacing-3);
       max-width: 100%;
 
-      @media (width >= 768px) {
+      @include bp.bp-up('sm') {
         padding: 0 var(--mp-spacing-6);
         gap: var(--mp-spacing-4);
+      }
+
+      @container base-navbar (width >= 60rem) {
+        padding: 0 var(--mp-spacing-8);
+        gap: var(--mp-spacing-6);
       }
     }
 
@@ -55,8 +67,12 @@
       gap: var(--mp-spacing-3);
       flex: 1;
 
-      @media (width >= 768px) {
+      @include bp.bp-up('sm') {
         gap: var(--mp-spacing-4);
+      }
+
+      @container base-navbar (width >= 60rem) {
+        gap: var(--mp-spacing-6);
       }
 
       &--start {
@@ -139,11 +155,11 @@
     flex-direction: column;
     gap: var(--mp-spacing-2);
     padding-top: var(--mp-spacing-4);
-    border-top: 1px solid var(--mp-color-border-default);
+    border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
   }
 
   /* On mobile (below the sm breakpoint): hide center/end, show the hamburger. */
-  @media (width <= 767.98px) {
+  @include bp.bp-down('sm') {
     .base-navbar__center,
     .base-navbar__end {
       display: none;
@@ -151,6 +167,17 @@
 
     .base-navbar__hamburger {
       display: flex;
+    }
+  }
+
+  @container base-navbar (width >= 48rem) {
+    .base-navbar__center,
+    .base-navbar__end {
+      display: flex;
+    }
+
+    .base-navbar__hamburger {
+      display: none;
     }
   }
 }

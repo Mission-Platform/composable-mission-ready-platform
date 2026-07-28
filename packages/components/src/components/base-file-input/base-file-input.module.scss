@@ -68,7 +68,7 @@
       font-weight: var(--mp-font-weight-medium);
       color: var(--mp-color-text-primary);
       background-color: var(--mp-color-bg-surface);
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
       cursor: pointer;
       white-space: nowrap;
@@ -101,7 +101,7 @@
       justify-content: center;
       gap: var(--mp-spacing-2);
       padding: var(--mp-spacing-8) var(--mp-spacing-4);
-      border: 2px dashed var(--mp-color-border-default);
+      border: var(--mp-border-width-thick) dashed var(--mp-color-border-default);
       border-radius: var(--mp-radius-lg);
       background-color: var(--mp-color-bg-surface);
       transition:
@@ -120,6 +120,13 @@
       color: var(--mp-color-text-tertiary);
       font-size: 2rem;
       line-height: 1;
+
+      svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+        fill: currentcolor;
+      }
     }
 
     &__drop-text {

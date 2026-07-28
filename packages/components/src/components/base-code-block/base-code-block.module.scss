@@ -11,7 +11,7 @@
 
 @layer mp.components {
   .base-code-block {
-    border: 1px solid var(--mp-color-border-default);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     border-radius: var(--mp-radius-md);
     background-color: var(--mp-color-bg-sunken);
     overflow: hidden;
@@ -26,7 +26,7 @@
       align-items: center;
       justify-content: space-between;
       padding: var(--mp-spacing-2) var(--mp-spacing-4);
-      border-bottom: 1px solid var(--mp-color-border-default);
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       background-color: var(--mp-color-bg-muted);
       gap: var(--mp-spacing-3);
     }
@@ -56,7 +56,7 @@
       align-items: center;
       gap: var(--mp-spacing-1);
       padding: var(--mp-spacing-1) var(--mp-spacing-2);
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-sm);
       background: transparent;
       color: var(--mp-color-text-tertiary);
@@ -71,6 +71,13 @@
       white-space: nowrap;
       flex-shrink: 0;
 
+      svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+        fill: currentcolor;
+      }
+
       &:hover {
         color: var(--mp-color-text-primary);
         border-color: var(--mp-color-border-strong);
@@ -78,7 +85,7 @@
       }
 
       &:focus-visible {
-        outline: 2px solid var(--mp-color-border-focus);
+        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
         outline-offset: 2px;
       }
     }

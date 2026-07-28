@@ -13,7 +13,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid transparent;
+    border: var(--mp-border-width-thin) solid transparent;
     border-radius: var(--mp-radius-sm);
     background: transparent;
     color: var(--mp-color-text-secondary);
@@ -26,6 +26,13 @@
       color 150ms ease,
       box-shadow 150ms ease,
       opacity 150ms ease;
+
+    svg {
+      display: block;
+      width: 1em;
+      height: 1em;
+      fill: currentcolor;
+    }
 
     &::after {
       content: '';

@@ -73,7 +73,7 @@
       justify-content: space-between;
       gap: var(--mp-spacing-4);
       padding: var(--mp-spacing-4) var(--mp-spacing-6);
-      border-bottom: 1px solid var(--mp-color-border-default);
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
 
     &__title {
@@ -92,7 +92,7 @@
       justify-content: flex-end;
       gap: var(--mp-spacing-3);
       padding: var(--mp-spacing-4) var(--mp-spacing-6);
-      border-top: 1px solid var(--mp-color-border-default);
+      border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
 
     /* Respect users who prefer reduced motion. */

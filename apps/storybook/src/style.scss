@@ -11,6 +11,7 @@
 @use '@mission-platform/tokens/scss/themes/light';
 @use '@mission-platform/tokens/scss/themes/dark';
 @use '@mission-platform/tokens/scss/mixins' as mp;
+@use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 
 /* ─── Base reset & typography ────────────────────────────────────────────────── */
 :root {
@@ -19,7 +20,7 @@
   color: var(--mp-color-text-primary);
   background: var(--mp-color-bg-base);
 
-  @media (width <= 1024px) {
+  @include bp.bp-down('md') {
     font-size: 1rem; /* 16px */
   }
 }
@@ -42,7 +43,7 @@ h1 {
   letter-spacing: -0.03em;
   margin: 2rem 0;
 
-  @media (width <= 1024px) {
+  @include bp.bp-down('md') {
     font-size: 2.25rem; /* 36px */
     margin: 1.25rem 0;
   }
@@ -55,7 +56,7 @@ h2 {
   letter-spacing: -0.01em;
   margin: 0 0 0.5rem;
 
-  @media (width <= 1024px) {
+  @include bp.bp-down('md') {
     font-size: 1.25rem; /* 20px */
   }
 }
@@ -88,7 +89,7 @@ code {
   border-radius: 0.3125rem;
   color: var(--mp-color-primary-default);
   background: var(--mp-color-primary-subtle);
-  border: 2px solid transparent;
+  border: var(--mp-border-width-thick) solid transparent;
   transition: border-color 0.3s;
   margin-bottom: 1.5rem;
 
@@ -97,7 +98,7 @@ code {
   }
 
   &:focus-visible {
-    outline: 2px solid var(--mp-color-border-focus);
+    outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
     outline-offset: 2px;
   }
 }
@@ -146,7 +147,7 @@ code {
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
-  border-inline: 1px solid var(--mp-color-border-default);
+  border-inline: var(--mp-border-width-thin) solid var(--mp-color-border-default);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -162,7 +163,7 @@ code {
   place-items: center;
   flex-grow: 1;
 
-  @media (width <= 1024px) {
+  @include bp.bp-down('md') {
     padding: 2rem 1.25rem 1.5rem;
     gap: 18px;
   }
@@ -171,14 +172,14 @@ code {
 /* ─── Next steps panel ───────────────────────────────────────────────────────── */
 #next-steps {
   display: flex;
-  border-top: 1px solid var(--mp-color-border-default);
+  border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
   text-align: left;
 
   & > div {
     flex: 1 1 0;
     padding: 2rem;
 
-    @media (width <= 1024px) {
+    @include bp.bp-down('md') {
       padding: 1.5rem 1.25rem;
     }
   }
@@ -189,18 +190,18 @@ code {
     height: 22px;
   }
 
-  @media (width <= 1024px) {
+  @include bp.bp-down('md') {
     flex-direction: column;
     text-align: center;
   }
 }
 
 #docs {
-  border-right: 1px solid var(--mp-color-border-default);
+  border-right: var(--mp-border-width-thin) solid var(--mp-color-border-default);
 
-  @media (width <= 1024px) {
+  @include bp.bp-down('md') {
     border-right: none;
-    border-bottom: 1px solid var(--mp-color-border-default);
+    border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
   }
 }
 
@@ -237,7 +238,7 @@ code {
     }
   }
 
-  @media (width <= 1024px) {
+  @include bp.bp-down('md') {
     margin-top: 1.25rem;
     flex-wrap: wrap;
     justify-content: center;
@@ -257,9 +258,9 @@ code {
 /* ─── Spacer ─────────────────────────────────────────────────────────────────── */
 #spacer {
   height: 88px;
-  border-top: 1px solid var(--mp-color-border-default);
+  border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
 
-  @media (width <= 1024px) {
+  @include bp.bp-down('md') {
     height: 48px;
   }
 }

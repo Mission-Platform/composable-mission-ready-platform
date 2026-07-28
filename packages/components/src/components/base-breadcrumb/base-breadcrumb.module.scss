@@ -11,6 +11,10 @@
 
 @layer mp.components {
   .base-breadcrumb {
+    @supports (container-type: inline-size) {
+      container: base-breadcrumb / inline-size;
+    }
+
     &__list {
       display: flex;
       align-items: center;
@@ -19,12 +23,20 @@
       list-style: none;
       margin: 0;
       padding: 0;
+
+      @container base-breadcrumb (width >= 30rem) {
+        gap: var(--mp-spacing-2);
+      }
     }
 
     &__item {
       display: flex;
       align-items: center;
       gap: var(--mp-spacing-1);
+
+      @container base-breadcrumb (width >= 30rem) {
+        gap: var(--mp-spacing-2);
+      }
     }
 
     &__separator {

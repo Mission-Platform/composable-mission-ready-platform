@@ -54,7 +54,7 @@
     left: 50%;
     box-sizing: border-box;
     pointer-events: none;
-    border: 2px solid var(--mp-color-border-strong, rgb(255 255 255 / 75%));
+    border: var(--mp-border-width-thick, 2px) solid var(--mp-color-border-strong, rgb(255 255 255 / 75%));
     border-radius: var(--mp-radius-sm, 0.25rem);
     transform: translate(-50%, -50%);
   }

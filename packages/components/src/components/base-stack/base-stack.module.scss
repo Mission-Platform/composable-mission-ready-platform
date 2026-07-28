@@ -14,7 +14,7 @@
   .stack-demo-container {
     min-height: 10rem;
     padding: var(--mp-spacing-4);
-    border: 1px dashed var(--mp-color-border-default);
+    border: var(--mp-border-width-thin) dashed var(--mp-color-border-default);
     border-radius: var(--mp-radius-md);
   }
 
@@ -25,7 +25,7 @@
     min-width: 4rem;
     min-height: 3rem;
     padding: var(--mp-spacing-2) var(--mp-spacing-4);
-    border: 1px solid var(--mp-color-border-default);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     border-radius: var(--mp-radius-md);
     background: var(--mp-color-surface-raised);
     color: var(--mp-color-text-primary);

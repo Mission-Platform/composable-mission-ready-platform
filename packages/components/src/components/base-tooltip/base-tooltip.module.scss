@@ -49,6 +49,16 @@
       background-color: var(--mp-color-text-primary);
       border-radius: var(--mp-radius-sm);
       position-try-fallbacks: flip-block, flip-inline, --mp-tooltip-shift;
+      opacity: 1;
+      scale: 1;
+      transition:
+        opacity var(--mp-duration-fast) var(--mp-easing-standard),
+        scale var(--mp-duration-fast) var(--mp-easing-standard);
+
+      @starting-style {
+        opacity: 0;
+        scale: 0.9;
+      }
 
       &--top {
         margin-bottom: var(--mp-spacing-2);
@@ -64,6 +74,13 @@
 
       &--right {
         margin-left: var(--mp-spacing-2);
+      }
+    }
+
+    /* Respect users who prefer reduced motion. */
+    @media (prefers-reduced-motion: reduce) {
+      &__panel {
+        transition: none;
       }
     }
   }

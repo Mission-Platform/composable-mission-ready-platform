@@ -15,6 +15,10 @@
   .base-button-group {
     display: inline-flex;
 
+    @supports (container-type: inline-size) {
+      container: base-button-group / inline-size;
+    }
+
     &--horizontal {
       flex-direction: row;
       align-items: center;
@@ -23,6 +27,13 @@
     &--vertical {
       flex-direction: column;
       align-items: stretch;
+
+      &:not(.base-button-group--attached) {
+        @container base-button-group (width >= 20rem) {
+          flex-direction: row;
+          align-items: center;
+        }
+      }
     }
 
     /* Gaps (only when not attached) */
@@ -36,6 +47,12 @@
     @each $name, $value in $gap-map {
       &--gap-#{$name}:not(.base-button-group--attached) {
         gap: #{$value};
+
+        @if $name != 'none' {
+          @container base-button-group (width >= 30rem) {
+            gap: calc(#{$value} * 1.5);
+          }
+        }
       }
     }
 

@@ -105,7 +105,7 @@
     /* States */
     &--error {
       .base-switch__track {
-        outline: 1px solid var(--mp-color-danger-default);
+        outline: var(--mp-border-width-thin) solid var(--mp-color-danger-default);
       }
     }
 
@@ -118,7 +118,7 @@
       cursor: pointer;
 
       &:focus-visible ~ .base-switch__track {
-        outline: 2px solid var(--mp-color-border-focus);
+        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
         outline-offset: 2px;
       }
 

@@ -22,6 +22,10 @@
     border-radius: var(--mp-radius-xl);
     isolation: isolate;
 
+    @supports (container-type: inline-size) {
+      container: base-hero / inline-size;
+    }
+
     /* Vertical padding scale — canonical 2xs → 2xl. */
     &--2xs {
       padding: var(--mp-spacing-4) var(--mp-spacing-4);
@@ -37,18 +41,34 @@
 
     &--md {
       padding: var(--mp-spacing-16) var(--mp-spacing-8);
+
+      @container base-hero (width >= 48rem) {
+        padding: var(--mp-spacing-20) var(--mp-spacing-12);
+      }
     }
 
     &--lg {
       padding: var(--mp-spacing-24) var(--mp-spacing-10);
+
+      @container base-hero (width >= 48rem) {
+        padding: var(--mp-spacing-24) var(--mp-spacing-16);
+      }
     }
 
     &--xl {
       padding: var(--mp-spacing-24) var(--mp-spacing-12);
+
+      @container base-hero (width >= 48rem) {
+        padding: var(--mp-spacing-24) var(--mp-spacing-20);
+      }
     }
 
     &--2xl {
       padding: var(--mp-spacing-24) var(--mp-spacing-16);
+
+      @container base-hero (width >= 48rem) {
+        padding: var(--mp-spacing-24) var(--mp-spacing-24);
+      }
     }
 
     &--full-height {
@@ -82,6 +102,10 @@
       gap: var(--mp-spacing-4);
       max-width: 48rem;
       width: 100%;
+
+      @container base-hero (width >= 40rem) {
+        gap: var(--mp-spacing-6);
+      }
     }
 
     &--align-start &__content {
@@ -116,6 +140,10 @@
       flex-wrap: wrap;
       gap: var(--mp-spacing-3);
       margin-top: var(--mp-spacing-2);
+
+      @container base-hero (width >= 40rem) {
+        gap: var(--mp-spacing-4);
+      }
     }
 
     /*

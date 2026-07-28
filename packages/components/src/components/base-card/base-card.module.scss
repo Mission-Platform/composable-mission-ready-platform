@@ -12,13 +12,20 @@
     /* Become an inline-size container so the inner padding responds to the */
 
     /* card's own width (e.g. in a narrow grid cell) rather than the viewport. */
-    container: base-card / inline-size;
+
+    /* Guarded so browsers without container-query support fall back to the static */
+
+    /* padding baselines below rather than getting an unknown value. */
+    @supports (container-type: inline-size) {
+      container: base-card / inline-size;
+    }
+
     background-color: var(--mp-color-bg-surface);
     border-radius: var(--mp-radius-lg);
     overflow: hidden;
 
     &--bordered {
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
 
     &--shadow {
@@ -106,11 +113,11 @@
     }
 
     &__header {
-      border-bottom: 1px solid var(--mp-color-border-default);
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
 
     &__footer {
-      border-top: 1px solid var(--mp-color-border-default);
+      border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
     }
   }
 }

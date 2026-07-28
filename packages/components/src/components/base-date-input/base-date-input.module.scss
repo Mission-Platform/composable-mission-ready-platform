@@ -41,7 +41,7 @@
     &__wrapper {
       display: flex;
       align-items: center;
-      border: 1px solid var(--mp-color-border-default);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-md);
       background-color: var(--mp-color-bg-surface);
       transition:
@@ -106,6 +106,13 @@
       display: flex;
       align-items: center;
       flex-shrink: 0;
+
+      svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+        fill: currentcolor;
+      }
     }
 
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */

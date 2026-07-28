@@ -20,7 +20,7 @@
     align-items: flex-start;
     gap: var(--mp-spacing-3);
     padding: var(--mp-spacing-3) var(--mp-spacing-4);
-    border: 1px solid transparent;
+    border: var(--mp-border-width-thin) solid transparent;
     border-radius: var(--mp-radius-md);
     font-family: var(--mp-font-family-sans);
 
@@ -30,6 +30,13 @@
       margin-top: 1px;
       font-size: 1.25rem;
       line-height: 1;
+
+      svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+        fill: currentcolor;
+      }
     }
 
     &__content {
@@ -63,12 +70,19 @@
       transition: opacity 150ms ease;
       line-height: 1;
 
+      svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+        fill: currentcolor;
+      }
+
       &:hover {
         opacity: 1;
       }
 
       &:focus-visible {
-        outline: 2px solid currentcolor;
+        outline: var(--mp-border-width-thick) solid currentcolor;
         outline-offset: 1px;
       }
     }
