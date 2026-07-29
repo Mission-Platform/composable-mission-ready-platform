@@ -161,7 +161,11 @@ export function BaseMapLibre(properties: Readonly<MapLibreProperties>): MpElemen
       className={classNames(styles['map-libre'])}
     >
       {map ? (
-        <MapContext.Provider value={map}>
+        // Vue compiles `useState` to `ref`, whose template unwrap widens class
+        // instances to their public shape and drops maplibre's private fields
+        // (`_setupResizeObserver`, `_resolveContainer`). Assert back to `Map` so
+        // the generated SFC type-checks against `MapContext`'s `Map | undefined`.
+        <MapContext.Provider value={map as Map}>
           <Slot />
         </MapContext.Provider>
       ) : undefined}
