@@ -8,19 +8,19 @@ packages:
   - mcp
 
 catalog:
-  '@types/js-yaml': ^4.0.9
-  'js-yaml': ^4.3.0
-  'luxon': ^3.7.2
-  '@types/luxon': ^3.7.2
+  "@types/js-yaml": ^4.0.9
+  "js-yaml": ^4.3.0
+  "luxon": ^3.7.2
+  "@types/luxon": ^3.7.2
   nanoid: ^5.1.16
   rxjs: ^7.8.2
   capnweb: 0.5.0
 
 catalogs:
   utilities:
-    '@changesets/cli': ^2.31.1
-    '@commitlint/cli': ^21.2.1
-    '@commitlint/config-conventional': ^21.2.0
+    "@changesets/cli": ^2.31.1
+    "@commitlint/cli": ^21.2.1
+    "@commitlint/config-conventional": ^21.2.0
     turbo: ^2.10.7
     assemblyscript: ^0.28.20
     husky: ^9.1.7
@@ -37,21 +37,21 @@ catalogs:
 
   d3:
     d3: ^7.9.0
-    '@types/d3': ^7.4.3
+    "@types/d3": ^7.4.3
     d3-selection: ^3.0.0
-    '@types/d3-selection': ^3.0.11
+    "@types/d3-selection": ^3.0.11
 
   code:
-    'highlight.js': ^11.11.1
-    'monaco-editor': ^0.55.1
+    "highlight.js": ^11.11.1
+    "monaco-editor": ^0.55.1
     marked: ^18.0.7
-    'harper.js': ^2.4.0
+    "harper.js": ^2.4.0
 
   eslint:
     eslint-plugin-sonarjs: ^4.2.0
     eslint-plugin-unicorn: ^64.0.0
-    '@typescript-eslint/eslint-plugin': ^8.65.0
-    '@typescript-eslint/parser': ^8.65.0
+    "@typescript-eslint/eslint-plugin": ^8.65.0
+    "@typescript-eslint/parser": ^8.65.0
     eslint: ^10.8.0
     eslint-config-prettier: ^10.1.8
     eslint-config-turbo: ^2.10.7
@@ -74,24 +74,24 @@ catalogs:
     prettier: ^3.9.6
 
   solid:
-    solid-js: ^1.9.9
-    vite-plugin-solid: ^2.11.10
+    solid-js: ^1.9.14
+    vite-plugin-solid: ^2.11.14
 
   svelte:
-    svelte: ^5.43.2
-    '@sveltejs/vite-plugin-svelte': ^6.2.1
-    svelte2tsx: ^0.7.44
+    svelte: ^5.56.8
+    "@sveltejs/vite-plugin-svelte": ^6.2.4
+    svelte2tsx: ^0.7.59
 
   webcomponents:
-    lit: ^3.3.2
+    lit: ^3.3.3
 
   vue:
-    '@vue/compiler-sfc': ^3.5.40
-    '@unhead/vue': ^2.1.16
-    '@vue/test-utils': ^2.4.11
-    '@vue/tsconfig': ^0.9.1
-    '@vitejs/plugin-vue': ^6.0.8
-    '@vitejs/plugin-vue-jsx': ^5.1.6
+    "@vue/compiler-sfc": ^3.5.40
+    "@unhead/vue": ^2.1.16
+    "@vue/test-utils": ^2.4.11
+    "@vue/tsconfig": ^0.9.1
+    "@vitejs/plugin-vue": ^6.0.8
+    "@vitejs/plugin-vue-jsx": ^5.1.6
     vue: ^3.5.40
     vue-router: ^4.6.4
     vue-tsc: ^3.3.8
@@ -107,51 +107,51 @@ catalogs:
     vite-svg-loader: ^5.1.1
 
   storybook:
-    '@chromatic-com/storybook': ^5.2.1
+    "@chromatic-com/storybook": ^5.2.1
     "chromatic": "^17.8.0"
-    '@storybook/addon-a11y': ^10.5.4
-    '@storybook/addon-docs': ^10.5.4
-    '@storybook/addon-themes': ^10.5.4
-    '@storybook/addon-vitest': ^10.5.4
-    '@storybook/react-vite': ^10.5.4
-    '@storybook/vue3-vite': ^10.5.4
-    storybook: ^10.5.4
+    "@storybook/addon-a11y": ^10.5.5
+    "@storybook/addon-docs": ^10.5.5
+    "@storybook/addon-themes": ^10.5.5
+    "@storybook/addon-vitest": ^10.5.5
+    "@storybook/react-vite": ^10.5.5
+    "@storybook/vue3-vite": ^10.5.5
+    storybook: ^10.5.5
 
   react:
-    '@vitejs/plugin-react': ^6.0.4
-    '@types/react': ^19.2.17
-    '@types/react-dom': ^19.2.3
+    "@vitejs/plugin-react": ^6.0.4
+    "@types/react": ^19.2.17
+    "@types/react-dom": ^19.2.3
     react: ^19.2.8
     react-dom: ^19.2.8
     react-server-dom-webpack: ^19.2.8
 
   testing:
-    '@vitest/browser-playwright': ^4.1.10
-    '@vitest/coverage-v8': ^4.1.10
+    "@vitest/browser-playwright": ^4.1.10
+    "@vitest/coverage-v8": ^4.1.10
     axe-core: ^4.12.1
     jsdom: ^29.1.1
     playwright: ^1.62.0
     vitest: ^4.1.10
 
   map:
-    '@types/geojson': ^7946.0.16
-    '@turf/turf': ^7.3.5
+    "@types/geojson": ^7946.0.16
+    "@turf/turf": ^7.3.5
     maplibre-gl: ^5.24.0
 
   typescript:
-    '@types/js-yaml': ^4.0.9
-    '@types/node': ^24.13.3
+    "@types/js-yaml": ^4.0.9
+    "@types/node": ^24.13.3
     typescript: ~6.0.3
 
   cloudflare:
     rwsdk: ^1.5.9
     wrangler: ^4.114.0
     "@cloudflare/vite-plugin": ^1.47.0
-    "@cloudflare/workers-types": ^5.20260726.1
+    "@cloudflare/workers-types": ^5.20260728.1
 
   mcp:
-    '@modelcontextprotocol/sdk': ^1.6.0
-    zod: ^3.24.2
+    "@modelcontextprotocol/sdk": ^1.30.0
+    zod: ^3.25.76
 
 trustPolicy: no-downgrade
 
@@ -165,11 +165,11 @@ trustPolicyExclude:
   - tinyexec
   - ast-v8-to-istanbul
   - semver@6.3.1
-  - '@trickfilm400/rollup-plugin-off-main-thread'
+  - "@trickfilm400/rollup-plugin-off-main-thread"
   - rwsdk
 
 allowBuilds:
-  '@parcel/watcher': true
+  "@parcel/watcher": true
   esbuild: true
   sharp: true
   unrs-resolver: true
@@ -183,13 +183,5 @@ overrides:
   DOMPurify: ^3.4.9
   nanoid: ^5.1.16
 
-minimumReleaseAgeExclude:
-  - '@turbo/darwin-64@2.10.5'
-  - '@turbo/darwin-arm64@2.10.5'
-  - '@turbo/linux-64@2.10.5'
-  - '@turbo/linux-arm64@2.10.5'
-  - '@turbo/windows-64@2.10.5'
-  - '@turbo/windows-arm64@2.10.5'
-  - eslint-config-turbo@2.10.5
-  - eslint-plugin-turbo@2.10.5
-  - turbo@2.10.5
+patchedDependencies:
+  "eslint-plugin-sonarjs@4.2.0": patches/eslint-plugin-sonarjs.patch
