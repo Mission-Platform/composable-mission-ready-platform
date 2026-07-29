@@ -268,7 +268,7 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
 
   const nativeOptions: MpChild[] = [
     <option
-      selected={hasPlaceholder}
+      key="__placeholder__"
       value=""
     >
       {placeholder}
@@ -277,7 +277,6 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
       <option
         key={option.value}
         disabled={option.disabled}
-        selected={option.value === modelValue}
         value={option.value}
       >
         {option.label}
@@ -441,6 +440,7 @@ export function BaseSelect(properties: Readonly<SelectProperties>): MpElement {
         name={name}
         required={required}
         tabindex={-1}
+        value={modelValue}
         onChange={handleNativeChange}
       >
         {nativeOptions}

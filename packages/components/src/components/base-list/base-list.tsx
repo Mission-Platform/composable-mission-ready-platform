@@ -66,8 +66,11 @@ export function BaseList(properties: Readonly<ListProperties>): MpElement {
 
   const itemNodes =
     variant === 'description'
-      ? items.flatMap((item) => [
-          <dt className={styles['base-list__term']}>
+      ? items.flatMap((item, index) => [
+          <dt
+            key={`term-${index}`}
+            className={styles['base-list__term']}
+          >
             <BaseTypography
               as="span"
               color="primary"
@@ -77,7 +80,10 @@ export function BaseList(properties: Readonly<ListProperties>): MpElement {
               {item.term ?? item.label}
             </BaseTypography>
           </dt>,
-          <dd className={styles['base-list__detail']}>
+          <dd
+            key={`detail-${index}`}
+            className={styles['base-list__detail']}
+          >
             <BaseTypography
               as="span"
               color="secondary"
@@ -87,8 +93,11 @@ export function BaseList(properties: Readonly<ListProperties>): MpElement {
             </BaseTypography>
           </dd>,
         ])
-      : items.map((item) => (
-          <li className={styles['base-list__item']}>
+      : items.map((item, index) => (
+          <li
+            key={index}
+            className={styles['base-list__item']}
+          >
             <BaseTypography
               as="span"
               color="primary"
