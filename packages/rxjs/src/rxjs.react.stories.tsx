@@ -1,4 +1,3 @@
-
 import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';
 import { toReactComponent } from '@mission-platform/jsx/react';
 import { BehaviorSubject, type Observable } from 'rxjs';

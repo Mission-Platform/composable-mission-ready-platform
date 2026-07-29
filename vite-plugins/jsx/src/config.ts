@@ -89,7 +89,6 @@ export interface JsxLibraryConfigOptions {
   overrides?: UserConfig;
 }
 
-
 export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig {
   const {
     rootDir,

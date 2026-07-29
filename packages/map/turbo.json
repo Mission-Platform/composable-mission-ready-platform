@@ -3,7 +3,15 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["build:check", "build:vue", "build:react", "build:solid", "build:svelte", "build:web-components", "build:types"]
+      "dependsOn": [
+        "build:check",
+        "build:vue",
+        "build:react",
+        "build:solid",
+        "build:svelte",
+        "build:web-components",
+        "build:types"
+      ]
     },
     "build:storyblok-vue": {
       "dependsOn": ["^build", "build:vue"]

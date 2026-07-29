@@ -100,7 +100,7 @@ The fix was a small, mechanical refactor — **all four steps are now done**:
    is no clash — verified by rebuilding the scanner wasm.
 3. **`scan_and_decode`** in `crates/code-scan/src/lib.rs` locates, then calls the
    decoders' plain-Rust cores in-process and returns a `ScanOutcome { format,
-   value }` (a `#[wasm_bindgen]` struct; `value` is `undefined` when undecodable).
+value }` (a `#[wasm_bindgen]` struct; `value` is `undefined` when undecodable).
 4. **The JS façade is slimmed**: the `decodeTagged` routing and the imports of the
    three decoder packages are gone, replaced by a single `scan_and_decode` call.
 
@@ -249,9 +249,9 @@ harness (`crates/code-scan/tests/blackbox.rs`) runs the whole native
 `scan_and_decode` pipeline over every image at the four quarter-turn rotations
 (0/90/180/270) and compares each per-folder, per-rotation pass count against a
 committed baseline (`tests/blackbox_baseline.toml`), failing only on a
-*regression* — so unfixable outliers never block progress while genuine wins are
+_regression_ — so unfixable outliers never block progress while genuine wins are
 measured. `falsepositives*` / `unsupported` folders are the inverse guard: their
-baseline is a *ceiling* on false positives.
+baseline is a _ceiling_ on false positives.
 
 ### Step 1 — corpus + generalized loader + harness _(done)_
 
@@ -265,8 +265,8 @@ test (`tests/png_loader.rs`), and the baseline is committed.
 Triage (per-folder classification of every image/rotation as decoded /
 wrong-value / located-but-not-decoded / not-located) surfaced a clear pattern:
 the pipeline now **locates almost everything** but **decodes only the clean
-captures**. The remaining failures are overwhelmingly *located-but-not-decoded*,
-not *not-located*.
+captures**. The remaining failures are overwhelmingly _located-but-not-decoded_,
+not _not-located_.
 
 **Landed this step:**
 
@@ -323,7 +323,7 @@ A new crate trio mirrors the repo's `*-common` / `*-encode` / `*-decode` split:
 - **`gs1-databar-decode`** — a faithful port of ZXing's `RSS14Reader`: finder
   detection, `parseFoundFinderPattern`, `decodeDataCharacter` (with the odd/even
   count adjustment) and the mod-79 checksum, reconstructing the 14-digit GTIN.
-  Because DataBar characters are decoded from element-width *ratios* (not a fixed
+  Because DataBar characters are decoded from element-width _ratios_ (not a fixed
   glyph grid), the row decoder reads run lengths directly off a scan line — so it
   tolerates the varying module width of a foreshortened capture that defeats the
   global-quantisation 1D path (§2).
@@ -377,7 +377,7 @@ porting `com.google.zxing.pdf417.*` (Apache-2.0):
   array (for codeword-level round-trips) and the packed module bitmap (for
   image-path tests).
 
-The scanner gained `crates/code-scan/src/pdf417.rs`. PDF417 is a *stacked linear*
+The scanner gained `crates/code-scan/src/pdf417.rs`. PDF417 is a _stacked linear_
 symbology, so the locator works a scan line at a time: on each image row it finds
 the start guard, reads 17-module codewords (8 bar/space runs each) up to the stop
 guard, votes the column/row-count/EC-level metadata from the row indicators,
@@ -390,11 +390,11 @@ Two robustness details proved essential:
 
 - **Exact-only sampling in the hot path.** The per-run sampler uses the exact
   match only (`sample_codeword_symbol_exact`); a run that does not sample cleanly
-  becomes a `-1` *hole* that preserves column alignment and is skipped in voting.
+  becomes a `-1` _hole_ that preserves column alignment and is skipped in voting.
   This keeps scanning every row of every image cheap — the O(table-size)
   closest-ratio fallback would otherwise dominate the corpus sweep.
 - **A hole guard against RS over-correction.** With high EC levels Reed–Solomon
-  will happily fabricate a *valid-but-wrong* codeword from a mostly-empty
+  will happily fabricate a _valid-but-wrong_ codeword from a mostly-empty
   assembly (observed as garbage `"AAAA…"` decodes). The locator therefore refuses
   to decode when the number of holes exceeds `num_ec / 2` (the RS correction
   budget), which removed **every** garbage decode while keeping all correct ones —
@@ -444,7 +444,7 @@ porting `com.google.zxing.maxicode.*` (Apache-2.0):
   144 codewords into the module grid via the shared `BITNR` map.
 
 The scanner gained `crates/code-scan/src/maxicode.rs`. MaxiCode is read as a
-*pure* symbol, exactly as ZXing's `MaxiCodeReader` does: the locator takes the
+_pure_ symbol, exactly as ZXing's `MaxiCodeReader` does: the locator takes the
 enclosing rectangle of the dark pixels and samples the fixed 30×33 grid over it,
 shifting the sample x-position half a module on odd rows to follow the hexagonal
 offset. A cheap square-aspect guard skips obviously non-MaxiCode regions (1D
@@ -505,7 +505,7 @@ against a **single global module unit**. That is exact on a clean upload, but on
 a camera photo the module width is not constant across the symbol — perspective,
 blur and uneven printing stretch it — so one global unit rounds many elements
 against the wrong grid and the rigid EAN/UPC cell decoder rejects the result. The
-symbol is *located* (`scan` returns candidate scan lines) but never *decoded*.
+symbol is _located_ (`scan` returns candidate scan lines) but never _decoded_.
 
 The fix is a new `crates/code-scan/src/barcode_row.rs`, a faithful port of
 ZXing's `UPCEANReader` family. It never quantises to a global grid: it walks the
@@ -515,7 +515,7 @@ the L/G/R width tables (`patternMatchVariance` with `MAX_AVG_VARIANCE` /
 `MAX_INDIVIDUAL_VARIANCE`). Because every digit carries its own local unit,
 gradual drift across the symbol no longer defeats the read. It covers **EAN-13 /
 UPC-A** (via EAN-13, with the leading digit recovered from the six left-half
-parity bits), **EAN-8** and **UPC-E** (which had *no* decode path before — it is
+parity bits), **EAN-8** and **UPC-E** (which had _no_ decode path before — it is
 absent from `barcode-decode`'s symbology list), reusing the shared barcode-band
 detector to pick the scan rows. It runs in `decode_barcode_frame` as a fallback
 **after** the grid decoder fails, so clean uploads keep the fast path.
@@ -525,7 +525,7 @@ far more permissive than the grid quantiser, so both were essential:
 
 - **Quiet zones on both sides.** ZXing requires a trailing quiet zone at least as
   wide as the end guard (mirroring the existing start-guard quiet zone). Without
-  it a `1:1:1` run *inside* an unrelated symbol frames a spurious "barcode" that,
+  it a `1:1:1` run _inside_ an unrelated symbol frames a spurious "barcode" that,
   combined with a coincidentally valid checksum, decodes — the source of the
   initial 9 + 12 false positives on `falsepositives*`.
 - **Multi-row consensus for the short symbologies.** The 8-digit EAN-8 / UPC-E
@@ -548,10 +548,10 @@ clean false-positive guard, and the JS smoke suite gains UPC-E + EAN-13 camera
 photos through both the upload and streaming paths.
 
 **Note — `img.png`.** The workspace-root real-world capture (`real_world.rs`) is
-now *located* cleanly, but it encodes the classic generator sample `01234567`
+now _located_ cleanly, but it encodes the classic generator sample `01234567`
 whose trailing digit is **not** a valid mod-10 check (`0123456` → `01234565`). A
 spec-compliant reader — this one, and ZXing itself — rejects a barcode that fails
-its own checksum, so the pipeline returns no value there *by design*; that test
+its own checksum, so the pipeline returns no value there _by design_; that test
 stays `#[ignore]` as documentation of the intentional rejection (dropping the
 checksum guard to read it would re-open the false positives the guard removes).
 

@@ -132,11 +132,7 @@ export function synthesiseElementClass(
   const bodyTransformer = (context: ts.TransformationContext): ts.Transformer<ts.Node> => {
     const visit = (node: ts.Node): ts.Node => {
       // `setX(value)` → `this.x = value`.
-      if (
-        ts.isCallExpression(node) &&
-        ts.isIdentifier(node.expression) &&
-        setterToGetter.has(node.expression.text)
-      ) {
+      if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && setterToGetter.has(node.expression.text)) {
         const getter = setterToGetter.get(node.expression.text)!;
         const argument = node.arguments[0]
           ? (ts.visitNode(node.arguments[0], visit) as ts.Expression)
@@ -206,8 +202,7 @@ export function synthesiseElementClass(
   }
 
   const tag = kebabCase(componentName);
-  const lines: string[] = [];
-  lines.push(`export class ${componentName}Element extends LitElement {`);
+  const lines: string[] = [`export class ${componentName}Element extends LitElement {`];
 
   // Reactive property + state declarations.
   const staticProps: string[] = [];

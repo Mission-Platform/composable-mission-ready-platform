@@ -91,7 +91,9 @@ function buildNeutralReplacement(factory: ts.NodeFactory, neutral: NeutralImport
           true,
           undefined,
           factory.createNamedImports(
-            localTypeNames.map((name) => factory.createImportSpecifier(false, undefined, factory.createIdentifier(name))),
+            localTypeNames.map((name) =>
+              factory.createImportSpecifier(false, undefined, factory.createIdentifier(name)),
+            ),
           ),
         ),
         factory.createStringLiteral(LOCAL_JSX_TYPES_MODULE),

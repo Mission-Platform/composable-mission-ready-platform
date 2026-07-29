@@ -26,14 +26,14 @@ spent.
 
 ## Stage → tier mapping
 
-| Stage                                  | Work                                                  | Tier |
-| -------------------------------------- | ----------------------------------------------------- | ---- |
-| 1 Vendor corpus + loader + harness     | copy/attribution (C), loader + harness logic (B)      | C→B  |
-| 2 Raise supported-format read-rate     | locator tuning + retry paths                          | A→B  |
-| 3 GS1 DataBar family                   | tables/encoders (B), RSS-14 locator + RS (A)          | A/B  |
-| 4 PDF417                               | tables/encoder (B), row-scan locator + GF(929) EC (A) | A/B  |
-| 5 MaxiCode                             | hex-grid locator + GF(64) RS (A), tables (B)          | A/B  |
-| 6 Wire-up + JS + docs                  | boilerplate/docs + wiring (C), wasm rebuild + smoke (B) | C→B |
+| Stage                              | Work                                                    | Tier |
+| ---------------------------------- | ------------------------------------------------------- | ---- |
+| 1 Vendor corpus + loader + harness | copy/attribution (C), loader + harness logic (B)        | C→B  |
+| 2 Raise supported-format read-rate | locator tuning + retry paths                            | A→B  |
+| 3 GS1 DataBar family               | tables/encoders (B), RSS-14 locator + RS (A)            | A/B  |
+| 4 PDF417                           | tables/encoder (B), row-scan locator + GF(929) EC (A)   | A/B  |
+| 5 MaxiCode                         | hex-grid locator + GF(64) RS (A), tables (B)            | A/B  |
+| 6 Wire-up + JS + docs              | boilerplate/docs + wiring (C), wasm rebuild + smoke (B) | C→B  |
 
 ## Cost principle
 

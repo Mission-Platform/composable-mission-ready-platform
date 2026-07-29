@@ -294,9 +294,7 @@ export function emitSolidModule(
       if (ts.isJsxAttribute(node) && ts.isIdentifier(node.name)) {
         const alias = SOLID_ALIASES[node.name.text];
         const visitedInitializer = ts.visitNode(node.initializer, visit) as
-          | ts.JsxExpression
-          | ts.StringLiteral
-          | undefined;
+          ts.JsxExpression | ts.StringLiteral | undefined;
         if (alias !== undefined) {
           return factory.updateJsxAttribute(node, factory.createIdentifier(alias), visitedInitializer);
         }

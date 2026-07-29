@@ -19,7 +19,18 @@
     flex-shrink: 0;
 
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
-    @each $size, $border-width in ('2xs': var(--mp-border-width-thick), 'xs': var(--mp-border-width-thick), 'sm': var(--mp-border-width-thick), 'md': var(--mp-border-width-heavy), 'lg': var(--mp-border-width-heavy), 'xl': 4px, '2xl': 4px) {
+    @each $size,
+      $border-width
+        in (
+          '2xs': var(--mp-border-width-thick),
+          'xs': var(--mp-border-width-thick),
+          'sm': var(--mp-border-width-thick),
+          'md': var(--mp-border-width-heavy),
+          'lg': var(--mp-border-width-heavy),
+          'xl': 4px,
+          '2xl': 4px
+        )
+    {
       &--#{$size} {
         width: var(--mp-size-height-#{$size});
         height: var(--mp-size-height-#{$size});

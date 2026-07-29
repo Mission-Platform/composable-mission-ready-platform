@@ -108,7 +108,10 @@ export function generateHookLibrarySources(options: GenerateHookLibrarySourcesOp
     writeFileSync(path.join(options.outDir, LOCAL_EFFECT_FILE), effectModuleSource, 'utf8');
   }
 
-  const entryFile = path.join(options.outDir, options.framework === 'react' || options.framework === 'solid' ? 'index.tsx' : 'index.ts');
+  const entryFile = path.join(
+    options.outDir,
+    options.framework === 'react' || options.framework === 'solid' ? 'index.tsx' : 'index.ts',
+  );
   const entrySource = `${modules.map((module) => reExportLine(module)).join('\n')}\n`;
   writeFileSync(entryFile, entrySource, 'utf8');
   return entryFile;

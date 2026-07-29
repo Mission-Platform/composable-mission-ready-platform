@@ -1,4 +1,3 @@
-
 import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';
 import { toVueComponent } from '@mission-platform/jsx/vue';
 import { BehaviorSubject, type Observable } from 'rxjs';

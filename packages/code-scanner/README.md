@@ -16,15 +16,15 @@ scan-line runs), samples
 its module grid, **and decodes it** — the located modules never cross back into JS
 to be decoded. It does this by linking each format's decoder crate directly:
 
-| Format             | Decoder crate                          |
-| ------------------ | -------------------------------------- |
-| QR                 | `mission-platform-qr-code-decode`      |
-| Data Matrix        | `mission-platform-matrix-code-decode`  |
-| Aztec (compact)    | `mission-platform-matrix-code-decode`  |
-| 1D barcode         | `mission-platform-barcode-decode`      |
-| PDF417             | `mission-platform-pdf417-decode`       |
+| Format               | Decoder crate                         |
+| -------------------- | ------------------------------------- |
+| QR                   | `mission-platform-qr-code-decode`     |
+| Data Matrix          | `mission-platform-matrix-code-decode` |
+| Aztec (compact)      | `mission-platform-matrix-code-decode` |
+| 1D barcode           | `mission-platform-barcode-decode`     |
+| PDF417               | `mission-platform-pdf417-decode`      |
 | GS1 DataBar (RSS-14) | `mission-platform-gs1-databar-decode` |
-| MaxiCode           | `mission-platform-maxicode-decode`     |
+| MaxiCode             | `mission-platform-maxicode-decode`    |
 
 Those crates still ship their own standalone wasm for `@mission-platform/qr-code`
 / `-/matrix-code` / `-/barcode`; the scanner just links their dependency-free
@@ -99,15 +99,15 @@ import { CodeScanner } from '@mission-platform/code-scanner/vue';
 
 ### Props
 
-| Prop             | Type                        | Default         | Description                                             |
-| ---------------- | --------------------------- | --------------- | ------------------------------------------------------- |
-| `facingMode`     | `'environment' \| 'user'`   | `'environment'` | Which camera to prefer for the live stream.             |
-| `scanIntervalMs` | `number`                    | `300`           | Milliseconds between live-camera frame scans.           |
-| `showFileUpload` | `boolean`                   | `true`          | Show the "upload image" control.                        |
-| `showCamera`     | `boolean`                   | `true`          | Show the "scan with camera" control.                    |
-| `stopOnDecode`   | `boolean`                   | `true`          | Stop the camera once a payload is decoded.              |
-| `onResult`       | `(result: ScanResult) => void` | —            | Fired with each successful detection.                   |
-| `onError`        | `(error: Error) => void`    | —               | Fired when reading a file / frame or the camera fails.  |
+| Prop             | Type                           | Default         | Description                                            |
+| ---------------- | ------------------------------ | --------------- | ------------------------------------------------------ |
+| `facingMode`     | `'environment' \| 'user'`      | `'environment'` | Which camera to prefer for the live stream.            |
+| `scanIntervalMs` | `number`                       | `300`           | Milliseconds between live-camera frame scans.          |
+| `showFileUpload` | `boolean`                      | `true`          | Show the "upload image" control.                       |
+| `showCamera`     | `boolean`                      | `true`          | Show the "scan with camera" control.                   |
+| `stopOnDecode`   | `boolean`                      | `true`          | Stop the camera once a payload is decoded.             |
+| `onResult`       | `(result: ScanResult) => void` | —               | Fired with each successful detection.                  |
+| `onError`        | `(error: Error) => void`       | —               | Fired when reading a file / frame or the camera fails. |
 
 > The live-camera path uses `getUserMedia`, so it needs a secure context
 > (HTTPS or `localhost`) and camera permission.

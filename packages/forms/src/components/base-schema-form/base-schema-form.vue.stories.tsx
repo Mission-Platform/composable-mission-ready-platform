@@ -33,8 +33,7 @@ const meta = {
       delete arguments__.onUpdateModelValue;
       return { args: arguments__, values };
     },
-    template:
-      '<SchemaForm v-bind="args" v-model="values" @submit="(v, valid) => console.log(\'submit\', v, valid)" />',
+    template: '<SchemaForm v-bind="args" v-model="values" @submit="(v, valid) => console.log(\'submit\', v, valid)" />',
   }),
 } satisfies Meta<typeof SchemaForm>;
 

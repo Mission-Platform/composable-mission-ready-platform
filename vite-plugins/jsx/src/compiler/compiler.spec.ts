@@ -2982,12 +2982,12 @@ describe('the compiler emits Svelte 5 components with runes', () => {
 
   it('emits Svelte 5 SFC with script setup and $props / $state / $effect runes', () => {
     expect(svelte.lang).toBe('svelte');
-    expect(svelte.code).not.toContain("@mission-platform/jsx");
+    expect(svelte.code).not.toContain('@mission-platform/jsx');
     expect(svelte.code).not.toContain('from "react"');
-    expect(svelte.code).toContain("<script");
-    expect(svelte.code).toContain("$props");
-    expect(svelte.code).toContain("$state");
-    expect(svelte.code).toContain("$effect");
+    expect(svelte.code).toContain('<script');
+    expect(svelte.code).toContain('$props');
+    expect(svelte.code).toContain('$state');
+    expect(svelte.code).toContain('$effect');
   });
 
   it('converts the returned JSX to real Svelte markup: `{#if}`, `{#each}`, `{expr}`, and lowercase `onclick`', () => {
@@ -3079,11 +3079,11 @@ describe('the compiler emits SolidJS components with signals', () => {
 
   it('emits SolidJS TSX module mapping hooks to Solid primitives', () => {
     expect(solid.lang).toBe('tsx');
-    expect(solid.code).not.toContain("@mission-platform/jsx");
+    expect(solid.code).not.toContain('@mission-platform/jsx');
     expect(solid.code).not.toContain('from "react"');
     expect(solid.code).toContain('from "solid-js"');
-    expect(solid.code).toContain("createSignal");
-    expect(solid.code).toContain("createEffect");
+    expect(solid.code).toContain('createSignal');
+    expect(solid.code).toContain('createEffect');
   });
 });
 

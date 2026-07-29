@@ -117,7 +117,9 @@ function siblingHasValueBinding(statement: ts.ImportDeclaration): boolean {
     return true;
   }
   const bindings = clause.namedBindings;
-  return bindings !== undefined && ts.isNamedImports(bindings) && bindings.elements.some((element) => !element.isTypeOnly);
+  return (
+    bindings !== undefined && ts.isNamedImports(bindings) && bindings.elements.some((element) => !element.isTypeOnly)
+  );
 }
 
 /**
@@ -589,7 +591,10 @@ export function emitSvelteModule(
           const sameName = sameNamePropDefault(declaration.name.text, initializer, propsParam);
           if (sameName !== undefined) {
             if (sameName.fallback !== undefined) {
-              propEntries.set(sameName.propName, `${sameName.propName} = ${scopeExpression(sameName.fallback, context)}`);
+              propEntries.set(
+                sameName.propName,
+                `${sameName.propName} = ${scopeExpression(sameName.fallback, context)}`,
+              );
             }
             continue;
           }
@@ -615,7 +620,10 @@ export function emitSvelteModule(
             const [first, second] = declaration.name.elements;
             if (first && ts.isBindingElement(first) && ts.isIdentifier(first.name)) {
               const getter = first.name.text;
-              const setter = second && ts.isBindingElement(second) && ts.isIdentifier(second.name) ? second.name.text : `set${getter}`;
+              const setter =
+                second && ts.isBindingElement(second) && ts.isIdentifier(second.name)
+                  ? second.name.text
+                  : `set${getter}`;
               const initArgument = initializer.arguments[0];
               // `useState(properties.title ?? '')` seeds the state from its
               // own same-named prop (`const [title, setTitle] = …`) — printing
@@ -813,11 +821,7 @@ function scopeStatement(
   const { factory } = context;
   const transform = (transformContext: ts.TransformationContext): ts.Transformer<ts.Node> => {
     const visit = (node: ts.Node): ts.Node => {
-      if (
-        ts.isCallExpression(node) &&
-        ts.isIdentifier(node.expression) &&
-        setterToGetter.has(node.expression.text)
-      ) {
+      if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && setterToGetter.has(node.expression.text)) {
         const getter = setterToGetter.get(node.expression.text)!;
         const argument = node.arguments[0]
           ? (ts.visitNode(node.arguments[0], visit) as ts.Expression)

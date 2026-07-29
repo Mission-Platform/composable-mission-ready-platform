@@ -106,7 +106,11 @@ function defineFrameworkHookConfig(framework: JsxFramework): UserConfig {
       },
       plugins: [
         ...stagePlugins,
-        hookLibraryDtsPlugin({ framework, generatedDir: generatedDirectory, outDir: path.resolve(__dirname, `dist/${framework}`) }),
+        hookLibraryDtsPlugin({
+          framework,
+          generatedDir: generatedDirectory,
+          outDir: path.resolve(__dirname, `dist/${framework}`),
+        }),
       ],
     },
   });

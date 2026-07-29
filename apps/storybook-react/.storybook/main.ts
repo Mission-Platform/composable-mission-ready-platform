@@ -43,8 +43,7 @@ const config: StorybookConfig = {
         allowSyntheticDefaultImports: false,
         esModuleInterop: false,
       },
-      propFilter: (property) =>
-        property.parent ? !/node_modules/.test(property.parent.fileName) : true,
+      propFilter: (property) => (property.parent ? !/node_modules/.test(property.parent.fileName) : true),
     },
   },
   framework: '@storybook/react-vite',

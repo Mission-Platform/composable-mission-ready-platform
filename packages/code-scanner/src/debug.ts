@@ -47,6 +47,5 @@ export function isCodeScannerDebugEnabled(): boolean {
  * is enabled). Accepts the same variadic arguments as `console.debug`.
  */
 export function scannerLog(...args: readonly unknown[]): void {
-   
   console.debug(LOG_PREFIX, ...args);
 }

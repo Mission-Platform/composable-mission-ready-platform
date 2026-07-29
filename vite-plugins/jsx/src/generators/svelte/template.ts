@@ -96,8 +96,8 @@ function unwrap(expression: ts.Expression): ts.Expression {
 function normalizeJsxText(raw: string): string {
   const lines = raw.split(/\r\n|\n|\r/);
   let lastNonEmpty = -1;
-  for (let index = 0; index < lines.length; index += 1) {
-    if (/[^ \t]/.test(lines[index]!)) {
+  for (const [index, line] of lines.entries()) {
+    if (/[^ \t]/.test(line!)) {
       lastNonEmpty = index;
     }
   }

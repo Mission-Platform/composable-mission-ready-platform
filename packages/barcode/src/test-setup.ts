@@ -7,7 +7,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-import { initBarcodeDecodeSync, initBarcodeSync } from ".";
+import { initBarcodeDecodeSync, initBarcodeSync } from '.';
 
 initBarcodeSync(readFileSync(resolve(process.cwd(), 'src/generated/encode/barcode-encode_bg.wasm')));
 initBarcodeDecodeSync(readFileSync(resolve(process.cwd(), 'src/generated/decode/barcode-decode_bg.wasm')));

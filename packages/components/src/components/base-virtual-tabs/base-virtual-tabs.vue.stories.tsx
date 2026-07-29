@@ -49,7 +49,7 @@ const meta = {
       // `panel` is a render-prop (not a Vue slot): it receives `{ tab }` and
       // returns the active panel's content as VNodes.
       const panel = markRaw(({ tab }: { tab: TabItem }) =>
-        h('p', { style: 'margin: 0;' }, ['Virtualised content for ', h('strong', tab.label), '.'])
+        h('p', { style: 'margin: 0;' }, ['Virtualised content for ', h('strong', tab.label), '.']),
       );
       return {
         tabs: arguments_.tabs,
