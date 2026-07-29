@@ -10,6 +10,7 @@ export default defineLibraryConfig({
     'runtime/index': 'src/runtime/index.ts',
     'adapters/react': 'src/adapters/react.ts',
     'adapters/vue': 'src/adapters/vue.ts',
+    'adapters/solid': 'src/adapters/solid.ts',
   },
   overrides: {
     // The package authors its components in JSX compiled by the classic
