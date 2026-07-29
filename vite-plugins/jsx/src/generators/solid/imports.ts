@@ -18,7 +18,6 @@
  *   `MpRenderProperty` redirected to the co-located `./mp-jsx-types` module, and
  *   any remaining neutral types kept against `@mission-platform/jsx`.
  */
-import ts from 'typescript';
 
 import {
   LOCAL_JSX_TYPE_NAMES,
@@ -32,6 +31,7 @@ import {
 } from '../../compiler/ast.js';
 
 import type { SolidPrimitiveUsage } from './signals.js';
+import type ts from 'typescript';
 
 /** The `@mission-platform/jsx/solid` subpath the Solid framework components are imported from. */
 const SOLID_ADAPTER_MODULE = '@mission-platform/jsx/solid';
@@ -74,17 +74,14 @@ export function buildSolidImports(
   }
 
   // Explicit hyperscript `h(…)` calls resolve to Solid's runtime hyperscript.
+  // `solid-js/h` ships `h` as its **default** export (`export default h`), so it
+  // must be imported as a default binding — a named `{ h }` import fails with
+  // `Module '"solid-js/h"' has no exported member 'h'`.
   if (neutral.values.includes('h')) {
     imports.push(
       factory.createImportDeclaration(
         undefined,
-        factory.createImportClause(
-          false,
-          undefined,
-          factory.createNamedImports([
-            factory.createImportSpecifier(false, undefined, factory.createIdentifier('h')),
-          ]),
-        ),
+        factory.createImportClause(false, factory.createIdentifier('h'), undefined),
         factory.createStringLiteral('solid-js/h'),
       ),
     );
@@ -100,7 +97,9 @@ export function buildSolidImports(
           false,
           undefined,
           factory.createNamedImports(
-            runtimeValues.map((name) => factory.createImportSpecifier(false, undefined, factory.createIdentifier(name))),
+            runtimeValues.map((name) =>
+              factory.createImportSpecifier(false, undefined, factory.createIdentifier(name)),
+            ),
           ),
         ),
         factory.createStringLiteral(NEUTRAL_MODULE),
@@ -143,7 +142,9 @@ export function buildSolidImports(
           false,
           undefined,
           factory.createNamedImports(
-            contextValues.map((name) => factory.createImportSpecifier(false, undefined, factory.createIdentifier(name))),
+            contextValues.map((name) =>
+              factory.createImportSpecifier(false, undefined, factory.createIdentifier(name)),
+            ),
           ),
         ),
         factory.createStringLiteral('solid-js'),
@@ -180,7 +181,9 @@ export function buildSolidImports(
           true,
           undefined,
           factory.createNamedImports(
-            localTypeNames.map((name) => factory.createImportSpecifier(false, undefined, factory.createIdentifier(name))),
+            localTypeNames.map((name) =>
+              factory.createImportSpecifier(false, undefined, factory.createIdentifier(name)),
+            ),
           ),
         ),
         factory.createStringLiteral(LOCAL_JSX_TYPES_MODULE),

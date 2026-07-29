@@ -26,7 +26,15 @@ import {
 import { synthesiseElementClass } from './element.js';
 import { containsJsx, printWithJsxConverted, type TemplateContext } from './template.js';
 
-/** The neutral element/child type names that carry no meaning once JSX is lowered (see `localJsxTypesModuleSource`). */
+/**
+ * The neutral element/child type names. Their **function return-type**
+ * annotations are relaxed to `unknown` (a helper now returns a lit-html
+ * `TemplateResult`), but every *other* reference (a props-interface member such
+ * as `media?: MpChild`, or a render-body annotation such as
+ * `const rows: MpChild[]`) is kept and resolved against the co-located
+ * {@link LOCAL_JSX_TYPES_MODULE}, which declares web-components variants of
+ * both (`type MpChild = any` / `type MpElement = any`).
+ */
 const DROPPED_ELEMENT_TYPE_NAMES = new Set(['MpElement', 'MpChild']);
 
 /** Whether a function declaration's return type annotation is the dropped neutral `MpElement`/`MpChild`. */
@@ -115,6 +123,14 @@ export function emitWebComponentModule(
         if (componentFolders.has(base)) {
           // Sibling component → register its custom element via a side-effect import.
           kept.push(`import '${flatten(specifier)}.js';`);
+          // Preserve any type-only exports the sibling contributes (e.g.
+          // `import type { TabItem, TabsVariant } from '../base-tabs'`): the
+          // side-effect import alone would drop them, leaving the names
+          // dangling in this module's emitted declarations.
+          const siblingTypeNames = typeOnlyNamedImports(statement);
+          if (siblingTypeNames.length > 0) {
+            kept.push(`import type { ${siblingTypeNames.join(', ')} } from '${flatten(specifier)}.js';`);
+          }
         } else {
           // CSS module / shared helper → keep (flattened), preserving its clause.
           const clause = statement.importClause ? `${printClause(statement.importClause)} from ` : '';
@@ -145,6 +161,18 @@ export function emitWebComponentModule(
 
   const classSource = synthesiseElementClass(rawSourceFile, componentName, componentFolders);
 
+  // The neutral element types (`MpChild`/`MpElement`) survive in kept
+  // declarations (a props-interface member, a retained helper) and in the
+  // synthesised class' render body (e.g. `const rows: MpChild[] = …`). Their
+  // function return-type annotations were relaxed to `unknown`, but every
+  // remaining reference must resolve — so import the ones actually used from
+  // the co-located per-framework module, which declares both.
+  const bodyText = [...kept, classSource].join('\n');
+  const elementTypeImports = [...DROPPED_ELEMENT_TYPE_NAMES].filter((name) => referencesIdentifier(bodyText, name));
+  if (elementTypeImports.length > 0) {
+    kept.push(`import type { ${elementTypeImports.join(', ')} } from '${LOCAL_JSX_TYPES_MODULE}';`);
+  }
+
   const code = [...header, '', ...kept, '', classSource, ''].join('\n');
   return { code };
 }
@@ -152,4 +180,28 @@ export function emitWebComponentModule(
 /** Print an import clause (default and/or named bindings) back to source. */
 function printClause(clause: ts.ImportClause): string {
   return clause.getText(clause.getSourceFile());
+}
+
+/**
+ * The **type-only** named specifiers of an import — either the whole clause is
+ * `import type { … }` or individual `import { type X }` specifiers. Used to
+ * carry a sibling component's type exports (e.g. `import type { TabItem,
+ * TabsVariant } from '../base-tabs'`) across to the Web-Components build, whose
+ * side-effect sibling import would otherwise drop them and leave the names
+ * dangling in the emitted declarations.
+ */
+function typeOnlyNamedImports(statement: ts.ImportDeclaration): string[] {
+  const clause = statement.importClause;
+  if (clause?.namedBindings === undefined || !ts.isNamedImports(clause.namedBindings)) {
+    return [];
+  }
+  const wholeClauseTypeOnly = clause.isTypeOnly;
+  return clause.namedBindings.elements
+    .filter((element) => wholeClauseTypeOnly || element.isTypeOnly)
+    .map((element) => element.name.text);
+}
+
+/** Whether the assembled module text references a bare identifier `name`. */
+function referencesIdentifier(text: string, name: string): boolean {
+  return new RegExp(`\\b${name}\\b`).test(text);
 }

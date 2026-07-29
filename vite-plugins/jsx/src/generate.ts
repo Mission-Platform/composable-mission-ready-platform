@@ -50,6 +50,20 @@ import {
 
 import type { Plugin } from 'vite';
 
+/**
+ * Retry options for the recursive `rmSync` that wipes a generated tree before a
+ * fresh Stage-1 emit.
+ *
+ * A recursive delete drains the tree entry-by-entry and then `rmdir`s the
+ * directory; if the tree is still being touched — a sibling framework build
+ * writing under the same package's `node_modules/.cache`, or macOS/APFS lag
+ * (Spotlight, fsevents) — the final `rmdir` intermittently fails with
+ * `ENOTEMPTY` (also `EBUSY`/`EPERM`). Node's built-in linear backoff retries the
+ * operation on exactly those errors, turning a hard crash into a transient
+ * settle-and-retry.
+ */
+const RM_RETRY_OPTIONS = { maxRetries: 5, retryDelay: 100 } as const;
+
 /** Options for {@link generateFrameworkSources}. */
 export interface GenerateFrameworkSourcesOptions {
   /** Target framework the neutral components are compiled to. */
@@ -237,7 +251,7 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   // verbatim into the flat tree below).
   const componentFolders = new Set(components.map((component) => component.folder));
 
-  rmSync(options.outDir, { recursive: true, force: true });
+  rmSync(options.outDir, { recursive: true, force: true, ...RM_RETRY_OPTIONS });
   mkdirSync(options.outDir, { recursive: true });
 
   // Locale declarations augment i18next's selector types ambiently, so they
@@ -501,7 +515,7 @@ export function generateStoryblokBloks(options: GenerateStoryblokBloksOptions): 
   const components = discoverComponents(readFileSync(options.componentsModule, 'utf8'), stripPrefix);
   const componentsDir = path.dirname(options.componentsModule);
 
-  rmSync(options.outDir, { recursive: true, force: true });
+  rmSync(options.outDir, { recursive: true, force: true, ...RM_RETRY_OPTIONS });
   mkdirSync(options.outDir, { recursive: true });
 
   const bloks: StoryblokComponent[] = [];
@@ -812,7 +826,7 @@ const CSS_MODULE_SHIM_FILE = '__mp-css-shim.d.ts';
  * `noEmitOnError: false` guarantees a `.d.ts` is produced even though the
  * generated components' JSX bodies are checked against React's stricter JSX
  * typing. Those body-level mismatches never reach the emitted `.d.ts` (every
- * function body is elided) and are filtered out by {@link isBodyLevelDiagnostic}
+ * function body is elided) and are filtered out by {@link isElidedDiagnostic}
  * so only genuine, declaration-affecting diagnostics surface as build warnings.
  */
 const COMPONENT_DTS_COMPILER_OPTIONS: ts.CompilerOptions = {
@@ -831,18 +845,27 @@ const COMPONENT_DTS_COMPILER_OPTIONS: ts.CompilerOptions = {
 };
 
 /**
- * Whether a diagnostic originates inside a function/method/arrow **body** (JSX
- * only ever appears inside one). Declaration emit elides every function body, so
- * such diagnostics never affect the emitted `.d.ts`: they are the neutral tree's
- * JSX bodies being type-checked against the framework's stricter JSX vocabulary
- * — native `Event` handlers vs React's `SyntheticEvent`, lowercase DOM
- * attributes (`tabindex`, `onMouseenter`) vs React's camelCase, `MpElement`
- * children vs `ReactNode`, `RefObject<HTMLElement>` vs `Ref<HTMLDivElement>`, …
+ * Whether a diagnostic originates in a position that declaration emit **elides**,
+ * so it never affects the emitted `.d.ts` and must not surface as a build warning:
  *
- * Top-level diagnostics (a duplicate export, an unresolved import, a
- * non-portable exported signature) are *not* body-level and remain reported.
+ * - Inside a function/method/arrow **body** (JSX only ever appears in one). These
+ *   are the neutral tree's JSX bodies being type-checked against the framework's
+ *   stricter JSX vocabulary — native `Event` handlers vs React's `SyntheticEvent`,
+ *   lowercase DOM attributes (`tabindex`, `onMouseenter`) vs React's camelCase,
+ *   `MpElement` children vs `ReactNode`, `RefObject<HTMLElement>` vs
+ *   `Ref<HTMLDivElement>`, …
+ * - Inside a **class property initializer** whose property carries an explicit
+ *   type annotation. The initializer is dropped from the `.d.ts` (only the
+ *   annotation is kept), so a name it references that is out of scope — e.g. the
+ *   Web-Components element synthesiser seeding a reactive-state field from a
+ *   destructured prop default (`openIds: any = defaultOpen`) — is invisible to
+ *   consumers, exactly like a body-level reference.
+ *
+ * Genuinely declaration-affecting diagnostics (a duplicate export, an unresolved
+ * import, a non-portable exported signature, a dangling type in a kept
+ * interface) are *not* elided and remain reported.
  */
-function isBodyLevelDiagnostic(diagnostic: ts.Diagnostic): boolean {
+function isElidedDiagnostic(diagnostic: ts.Diagnostic): boolean {
   const { file, start } = diagnostic;
   if (file === undefined || start === undefined) {
     return false;
@@ -859,6 +882,17 @@ function isBodyLevelDiagnostic(diagnostic: ts.Diagnostic): boolean {
     if (parent !== undefined && ts.isFunctionLike(parent) && (parent as ts.FunctionLikeDeclarationBase).body === node) {
       return true;
     }
+    // A class-property initializer is elided from the `.d.ts` when the property
+    // has an explicit type annotation (the annotation is emitted, the value is
+    // not), so a name it references cannot reach a consumer.
+    if (
+      parent !== undefined &&
+      ts.isPropertyDeclaration(parent) &&
+      parent.type !== undefined &&
+      parent.initializer === node
+    ) {
+      return true;
+    }
     node = parent;
   }
   return false;
@@ -872,9 +906,10 @@ function isBodyLevelDiagnostic(diagnostic: ts.Diagnostic): boolean {
  * needs — React relies on the base options' `jsx: preserve` as-is, Solid
  * additionally points the JSX namespace at `solid-js`, and Web-Components
  * needs no override at all (its generated tree is plain Lit `.ts`, no JSX).
- * Diagnostics rooted in a function body are filtered by {@link
- * isBodyLevelDiagnostic} (they never reach the body-elided `.d.ts`); genuine,
- * declaration-affecting diagnostics surface as build warnings.
+ * Diagnostics rooted in an elided position (a function body, or a typed class
+ * property's initializer) are filtered by {@link isElidedDiagnostic} (they
+ * never reach the `.d.ts`); genuine, declaration-affecting diagnostics surface
+ * as build warnings.
  */
 function emitTscComponentDeclarations(
   this: { warn: (message: string) => void },
@@ -904,7 +939,7 @@ function emitTscComponentDeclarations(
     // reach the emitted (body-elided) `.d.ts`. Genuine, declaration-affecting
     // diagnostics (duplicate exports, unresolved imports, non-portable
     // signatures) remain.
-    if (isBodyLevelDiagnostic(diagnostic)) {
+    if (isElidedDiagnostic(diagnostic)) {
       continue;
     }
     this.warn(ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'));
@@ -1192,23 +1227,42 @@ export function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin
   return {
     name: '@mission-platform/vite-plugin-jsx:components-dts',
     async closeBundle() {
-      if (options.framework === 'react') {
-        emitReactComponentDeclarations.call(this, options);
-      } else if (options.framework === 'vue') {
-        emitVueComponentDeclarations.call(this, options);
-      } else if (options.framework === 'solid') {
-        emitSolidComponentDeclarations.call(this, options);
-      } else if (options.framework === 'web-components') {
-        emitWebComponentsComponentDeclarations.call(this, options);
-      } else if (options.framework === 'svelte') {
-        await emitSvelteComponentDeclarations.call(this, options);
-      } else if (options.componentsModule) {
-        const barrelSource = readFileSync(options.componentsModule, 'utf8');
-        const components = discoverComponents(barrelSource, 'Base');
-        const helpers = discoverHelperExports(barrelSource, new Set(components.map((c) => c.folder)));
-        const dtsContent = generateEntryDeclaration(options.framework, '../components', components, helpers);
-        mkdirSync(options.outDir, { recursive: true });
-        writeFileSync(path.join(options.outDir, 'index.d.ts'), dtsContent, 'utf8');
+      switch (options.framework) {
+        case 'react': {
+          emitReactComponentDeclarations.call(this, options);
+
+          break;
+        }
+        case 'vue': {
+          emitVueComponentDeclarations.call(this, options);
+
+          break;
+        }
+        case 'solid': {
+          emitSolidComponentDeclarations.call(this, options);
+
+          break;
+        }
+        case 'web-components': {
+          emitWebComponentsComponentDeclarations.call(this, options);
+
+          break;
+        }
+        case 'svelte': {
+          await emitSvelteComponentDeclarations.call(this, options);
+
+          break;
+        }
+        default: {
+          if (options.componentsModule) {
+            const barrelSource = readFileSync(options.componentsModule, 'utf8');
+            const components = discoverComponents(barrelSource, 'Base');
+            const helpers = discoverHelperExports(barrelSource, new Set(components.map((c) => c.folder)));
+            const dtsContent = generateEntryDeclaration(options.framework, '../components', components, helpers);
+            mkdirSync(options.outDir, { recursive: true });
+            writeFileSync(path.join(options.outDir, 'index.d.ts'), dtsContent, 'utf8');
+          }
+        }
       }
     },
   };
