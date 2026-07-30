@@ -613,23 +613,38 @@ function hasConditionalFields(properties: Record<string, JsonSchemaProperty>): b
  * submission.
  */
 export function createFormValidator(schema: FormJsonSchema, translate?: SchemaFormTranslate): FormValidator {
-  const ajv = new Ajv({ allErrors: true, coerceTypes: true, strict: false });
-  addFormats(ajv);
-
   // The exposed schema is the full, unconditional one (every field visible).
   const jsonSchema = toStandardJsonSchema(schema);
-  const baseValidate: ValidateFunction = ajv.compile(jsonSchema);
 
   // When the form has conditional fields the effective schema depends on the
   // current values (hidden fields drop out of `properties`/`required`), so the
   // validator is recompiled per call; otherwise the precompiled one is reused.
   const conditional = hasConditionalFields(schema.properties);
 
+  // Ajv compiles schemas with `new Function(...)`, which the Cloudflare Workers
+  // runtime forbids ("Code generation from strings disallowed for this
+  // context"). Compilation is therefore deferred until `validate()` is first
+  // called: validation only ever runs in response to client interaction, never
+  // during SSR, so the worker never triggers runtime code generation.
+  let ajv: Ajv | undefined;
+  let baseValidate: ValidateFunction | undefined;
+
+  const getAjv = (): Ajv => {
+    if (!ajv) {
+      ajv = new Ajv({ allErrors: true, coerceTypes: true, strict: false });
+      addFormats(ajv);
+    }
+    return ajv;
+  };
+
   return {
     jsonSchema,
     validate(values: FormValues): FormErrors {
       const errors: FormErrors = {};
-      const validateFunction = conditional ? ajv.compile(toStandardJsonSchema(schema, values)) : baseValidate;
+      const instance = getAjv();
+      const validateFunction = conditional
+        ? instance.compile(toStandardJsonSchema(schema, values))
+        : (baseValidate ??= instance.compile(jsonSchema));
       // Validate a pruned clone so empty optional fields pass and the caller's
       // reactive state is never mutated by Ajv's type coercion.
       const data = pruneEmptyValues(values, schema);

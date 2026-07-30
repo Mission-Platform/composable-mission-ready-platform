@@ -4,6 +4,31 @@ import { createFormValidator, jsonSchemaDefaults, jsonSchemaToFields } from './j
 
 import type { FormJsonSchema } from './types';
 
+/**
+ * Emulate the Cloudflare Workers runtime, which forbids runtime code
+ * generation from strings (`new Function(bodyString)`) — exactly what Ajv
+ * uses to compile a schema, and what crashed the service-monitor Worker at
+ * SSR time with `EvalError: Code generation from strings disallowed`.
+ */
+function withCodegenDisallowed<T>(run: () => T): T {
+  const OriginalFunction = globalThis.Function;
+  const guarded = function (...arguments_: unknown[]): unknown {
+    // Building a function from a source string is the disallowed codegen.
+    if (arguments_.length > 0) {
+      throw new EvalError('Code generation from strings disallowed for this context');
+    }
+    // eslint-disable-next-line unicorn/new-for-builtins
+    return OriginalFunction();
+  } as unknown as FunctionConstructor;
+  guarded.prototype = OriginalFunction.prototype;
+  globalThis.Function = guarded;
+  try {
+    return run();
+  } finally {
+    globalThis.Function = OriginalFunction;
+  }
+}
+
 describe('jsonSchemaToFields (widget derivation)', () => {
   it('derives numeric metadata for stepper / number fields', () => {
     const schema: FormJsonSchema = {
@@ -205,6 +230,70 @@ describe('createFormValidator', () => {
     it('enforces the field once its condition holds', () => {
       const errors = createFormValidator(schema).validate({ hasReferral: true, referralCode: '' });
       expect(errors.referralCode).toBeTruthy();
+    });
+  });
+
+  describe('deferred Ajv compilation', () => {
+    const schema: FormJsonSchema = {
+      type: 'object',
+      properties: { name: { type: 'string', title: 'Name' } },
+      required: ['name'],
+    };
+
+    const conditionalSchema: FormJsonSchema = {
+      type: 'object',
+      properties: {
+        hasReferral: { type: 'boolean', title: 'Has referral' },
+        referralCode: {
+          type: 'string',
+          title: 'Referral code',
+          ui: { visibleWhen: { field: 'hasReferral', equals: true } },
+        },
+      },
+      required: ['referralCode'],
+    };
+
+    it('never compiles when codegen is disallowed but never validated (the SSR path)', () => {
+      withCodegenDisallowed(() => {
+        // Constructing the validator (as SSR does) must not trigger `new Function`.
+        const validator = createFormValidator(schema);
+        // The standards-compliant schema is produced eagerly, without codegen.
+        expect(validator.jsonSchema).toMatchObject({ type: 'object', required: ['name'] });
+      });
+    });
+
+    it('defers compilation to the first validate() call', () => {
+      const validator = createFormValidator(schema);
+      // Compilation happens only inside validate(), so it fails under the ban …
+      withCodegenDisallowed(() => {
+        expect(() => validator.validate({ name: '' })).toThrow(/Code generation from strings/);
+      });
+      // … and a normal environment compiles lazily and validates as before.
+      expect(validator.validate({ name: '' }).name).toBeTruthy();
+      expect(validator.validate({ name: 'Ada' })).toEqual({});
+    });
+
+    it('defers compilation for conditional schemas too', () => {
+      const validator = createFormValidator(conditionalSchema);
+      withCodegenDisallowed(() => {
+        expect(() => validator.validate({ hasReferral: true, referralCode: '' })).toThrow(
+          /Code generation from strings/,
+        );
+      });
+      // Once codegen is allowed, per-call compilation works as expected.
+      expect(validator.validate({ hasReferral: true, referralCode: '' }).referralCode).toBeTruthy();
+      expect(validator.validate({ hasReferral: false, referralCode: '' })).toEqual({});
+    });
+
+    it('reuses the compiled validator across validate() calls (non-conditional schema)', () => {
+      const validator = createFormValidator(schema);
+      // Prime the lazily-compiled validator with a first call.
+      expect(validator.validate({ name: '' }).name).toBeTruthy();
+      // A second call must reuse the cached compiled function, i.e. it needs no
+      // further code generation — so it still succeeds under the codegen ban.
+      withCodegenDisallowed(() => {
+        expect(validator.validate({ name: 'Ada' })).toEqual({});
+      });
     });
   });
 });
