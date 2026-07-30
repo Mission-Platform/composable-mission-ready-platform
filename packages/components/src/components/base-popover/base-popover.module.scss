@@ -41,6 +41,13 @@
     &__panel {
       position: fixed;
       inset: auto;
+
+      /*
+       * `z-index` is the fallback ordering; while open the panel is promoted into
+       * the browser top layer via the Popover API (`popover="manual"`) so it
+       * renders above an open native `<dialog>` modal/dialog. `color` is pinned
+       * to override the UA `[popover]` default (`CanvasText`).
+       */
       z-index: 300;
       min-width: 160px;
 
@@ -48,6 +55,7 @@
       max-width: calc(100vw - var(--mp-spacing-4));
       margin: 0;
       padding: var(--mp-spacing-1) 0;
+      color: var(--mp-color-text-primary);
       background-color: var(--mp-color-bg-surface);
       border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       border-radius: var(--mp-radius-lg);

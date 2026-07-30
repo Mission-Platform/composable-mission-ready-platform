@@ -53,6 +53,34 @@ type DialogElement = HTMLDialogElement & {
 };
 
 /**
+ * How many modals currently hold the body-scroll lock. Stacked modals share a
+ * single lock (the native `<dialog>` top layer lets them stack), so the body is
+ * unlocked only once the **last** open modal releases it — closing an inner
+ * modal must not restore page scrolling while an outer one is still open.
+ */
+let bodyScrollLockCount = 0;
+
+/** Acquire the shared body-scroll lock (locks the body on the first holder). */
+function acquireBodyScrollLock(): void {
+  if (typeof document === 'undefined') {
+    return;
+  }
+  bodyScrollLockCount += 1;
+  document.body.style.overflow = 'hidden';
+}
+
+/** Release the shared body-scroll lock (unlocks the body once none remain). */
+function releaseBodyScrollLock(): void {
+  if (typeof document === 'undefined') {
+    return;
+  }
+  bodyScrollLockCount = Math.max(0, bodyScrollLockCount - 1);
+  if (bodyScrollLockCount === 0) {
+    document.body.style.overflow = '';
+  }
+}
+
+/**
  * `BaseModal` — a centred modal authored once in the neutral JSX dialect and
  * compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
  *
@@ -99,14 +127,16 @@ export function BaseModal(properties: Readonly<ModalProperties>): MpElement {
     }
   }, [open]);
 
-  // Lock body scroll while the modal is open (mirrors the original SFC).
+  // Lock body scroll while the modal is open (mirrors the original SFC). The
+  // lock is reference-counted so stacked modals share it: closing an inner
+  // modal keeps the body locked while an outer modal is still open.
   useEffect(() => {
-    if (typeof document === 'undefined') {
+    if (typeof document === 'undefined' || !open) {
       return;
     }
-    document.body.style.overflow = open ? 'hidden' : '';
+    acquireBodyScrollLock();
     return () => {
-      document.body.style.overflow = '';
+      releaseBodyScrollLock();
     };
   }, [open]);
 

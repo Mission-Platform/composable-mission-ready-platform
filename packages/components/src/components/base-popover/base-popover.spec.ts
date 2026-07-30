@@ -83,6 +83,33 @@ describe('BasePopover authors the same component for React and Vue', () => {
     }
   });
 
+  it('opts the teleported dialog panel into the browser top layer via the Popover API on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(
+        ReactPopover,
+        { open: true, label: 'Account menu', trigger: createElement('button', undefined, 'Open') },
+        createElement('p', undefined, 'Body content'),
+      ),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () =>
+          vueH(
+            VuePopover,
+            { open: true, label: 'Account menu' },
+            { trigger: () => vueH('button', undefined, 'Open'), default: () => vueH('p', undefined, 'Body content') },
+          ),
+      }),
+    );
+
+    for (const html of [react, vue]) {
+      // `popover="manual"` promotes the panel into the browser top layer so it
+      // renders above an open native `<dialog>` modal/dialog; the runtime calls
+      // `showPopover()` while open, with the CSS `z-index` as the fallback.
+      expect(html).toContain('popover="manual"');
+    }
+  });
+
   it('omits the teleported dialog panel while closed on both frameworks', async () => {
     const react = renderToStaticMarkup(
       createElement(

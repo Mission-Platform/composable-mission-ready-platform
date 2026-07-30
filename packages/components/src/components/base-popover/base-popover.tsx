@@ -1,5 +1,6 @@
 import { h, Slot, Teleport, useEffect, useId, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
 
+import { resolvePortalTarget } from '../portal-target';
 import sizeStyles from '../size.module.scss';
 
 import styles from './base-popover.module.scss';
@@ -87,10 +88,25 @@ const POSITION_AREA: Readonly<Record<PopoverPlacement, string>> = {
  * `onUpdateOpen`/`onClose`): the panel is gated on `open`, and a `useEffect`
  * wires outside-click + `Escape` dismissal while open.
  *
+ * The teleported panel is also promoted into the browser **top layer** via the
+ * native Popover API (`popover="manual"` + `showPopover()`): a plain `z-index`
+ * can never rise above an open native `<dialog>` modal/dialog (which lives in
+ * the top layer), so the panel opts into the same top layer to stay above
+ * `BaseModal`/`BaseDialog`. The static `z-index` in CSS remains the fallback
+ * for browsers without Popover API support.
+ *
+ * When the trigger is inside an open modal `<dialog>` the panel is portalled
+ * **into that dialog** (via {@link resolvePortalTarget}) rather than `body`: a
+ * modal dialog makes everything outside its subtree `inert`, so a panel sent to
+ * `body` would be inert (invisible/unclickable) and mis-stacked — even more so
+ * when modals are nested. Keeping it inside the nearest dialog lets the Popover
+ * API stack it above that (possibly stacked) dialog.
+ *
  * Substitutions from the original Vue SFC: `@floating-ui/vue` → CSS anchor
  * positioning; `<Teleport>` → the neutral `<Teleport>` portal primitive;
- * `<Transition>` → a CSS fade; `useZIndex('popover')` → the static `popover`
- * z-index layer in CSS; the `trigger` slot is preserved as a neutral named slot;
+ * `<Transition>` → a CSS fade; `useZIndex('popover')` → the browser top layer
+ * (Popover API) with a static `popover` z-index layer in CSS as the fallback;
+ * the `trigger` slot is preserved as a neutral named slot;
  * and the `update:open`/`close` emits become the `onUpdateOpen`/`onClose`
  * callback props. It owns its styling through the co-located CSS Module
  * `base-popover.module.scss`.
@@ -108,6 +124,7 @@ export function BasePopover(properties: Readonly<PopoverProperties>): MpElement 
   const resolvedId = useId();
   const anchorName = `--${resolvedId}`;
   const panelId = `${resolvedId}-panel`;
+  const triggerId = `${resolvedId}-trigger`;
   const triggerReference = useRef<HTMLElement | null>(null);
   const panelReference = useRef<HTMLElement | null>(null);
 
@@ -143,23 +160,55 @@ export function BasePopover(properties: Readonly<PopoverProperties>): MpElement 
     };
   }, [open, closeOnOutsideClick]);
 
+  // Promote the teleported panel into the browser top layer while open so it
+  // renders above any open native `<dialog>` (`BaseModal`/`BaseDialog`), whose
+  // top layer would otherwise cover a plain `z-index` panel. Deferred to the
+  // next frame so it runs *after* the panel is mounted/teleported on every
+  // framework (the Vue effect fires before the DOM is patched, when the panel
+  // ref is still empty).
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    const showInTopLayer = (): void => {
+      const panel = panelReference.current as (HTMLElement & { showPopover?: () => void }) | null;
+      if (panel && typeof panel.showPopover === 'function') {
+        try {
+          panel.showPopover();
+        } catch {
+          // The panel is already shown (or not yet connected) — safe to ignore.
+        }
+      }
+    };
+    if (typeof requestAnimationFrame !== 'function') {
+      showInTopLayer();
+      return;
+    }
+    const frame = requestAnimationFrame(showInTopLayer);
+    return () => {
+      cancelAnimationFrame(frame);
+    };
+  }, [open]);
+
   return (
     <div className={styles['base-popover']}>
       <div
         ref={triggerReference}
+        id={triggerId}
         className={styles['base-popover__trigger']}
         style={{ anchorName }}
       >
         <Slot name="trigger" />
       </div>
       {open ? (
-        <Teleport to="body">
+        <Teleport to={resolvePortalTarget(triggerId)}>
           <div
             ref={panelReference}
             id={panelId}
             aria-label={label}
             className={[styles['base-popover__panel'], sizeStyles[`base-size--${size}`]]}
             data-placement={placement}
+            popover="manual"
             role="dialog"
             style={{ positionAnchor: anchorName, positionArea: POSITION_AREA[placement], margin: `${offset}px` }}
           >

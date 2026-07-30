@@ -87,6 +87,36 @@ describe('BaseDropdown authors the same component for React and Vue', () => {
     }
   });
 
+  it('opts the teleported panel into the browser top layer via the Popover API on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(
+        ReactDropdown,
+        { open: true, trigger: createElement('button', undefined, 'Menu') },
+        createElement('ul', undefined, createElement('li', undefined, 'Profile')),
+      ),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () =>
+          vueH(
+            VueDropdown,
+            { open: true },
+            {
+              trigger: () => vueH('button', undefined, 'Menu'),
+              default: () => vueH('ul', undefined, vueH('li', undefined, 'Profile')),
+            },
+          ),
+      }),
+    );
+
+    for (const html of [react, vue]) {
+      // `popover="manual"` promotes the panel into the browser top layer so it
+      // renders above an open native `<dialog>` modal/dialog; the runtime calls
+      // `showPopover()` while open, with the CSS `z-index` as the fallback.
+      expect(html).toContain('popover="manual"');
+    }
+  });
+
   it('omits the teleported panel while closed on both frameworks', async () => {
     const react = renderToStaticMarkup(
       createElement(

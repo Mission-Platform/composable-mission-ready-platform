@@ -40,6 +40,13 @@
     &__panel {
       position: fixed;
       inset: auto;
+
+      /*
+       * `z-index` is the fallback ordering; while visible the hint is promoted
+       * into the browser top layer via the Popover API (`popover="manual"`) so it
+       * renders above an open native `<dialog>` modal/dialog. `border` is reset
+       * to override the UA `[popover]` default (`border: solid`).
+       */
       z-index: 500;
       max-width: 240px;
       margin: 0;
@@ -47,6 +54,7 @@
       color: var(--mp-color-text-inverse);
       pointer-events: none;
       background-color: var(--mp-color-text-primary);
+      border: none;
       border-radius: var(--mp-radius-sm);
       position-try-fallbacks: flip-block, flip-inline, --mp-tooltip-shift;
       opacity: 1;
