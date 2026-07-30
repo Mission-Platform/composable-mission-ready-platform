@@ -597,7 +597,7 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
         </BaseButton>
         <div className={styles['base-scheduler__nav']}>
           <BaseButton
-            aria-label="Previous"
+            ariaLabel="Previous"
             size="sm"
             variant="tertiary"
             onClick={goPrevious}
@@ -608,7 +608,7 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
             />
           </BaseButton>
           <BaseButton
-            aria-label="Next"
+            ariaLabel="Next"
             size="sm"
             variant="tertiary"
             onClick={goNext}
@@ -642,7 +642,7 @@ export function BaseScheduler(properties: Readonly<SchedulerProperties>): MpElem
           {VIEWS.map((option) => (
             <BaseButton
               key={option.id}
-              aria-pressed={view === option.id}
+              ariaPressed={view === option.id}
               className={styles['base-scheduler__view-btn']}
               size="sm"
               variant={view === option.id ? 'primary' : 'tertiary'}
