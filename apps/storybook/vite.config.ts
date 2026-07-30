@@ -34,7 +34,6 @@ export default defineAppConfig({
           ],
           test: {
             name: 'storybook',
-            fileParallelism: false,
             browser: {
               enabled: true,
               headless: true,
