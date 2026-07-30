@@ -205,27 +205,40 @@ export interface TeleportProperties {
  * import this component, so a write-once `<Teleport to="body">…</Teleport>`
  * compiles to a native React portal.
  *
- * The portal target is resolved on the client (after mount) so the component is
- * SSR-safe: during the server render — and the first client render — it renders
- * nothing (or, when `disabled`, the children in place), and `createPortal` only
- * runs once a DOM target exists.
+ * When `to` is already a DOM **element** (the common client case — e.g. the
+ * resolved `<dialog>` or `document.body` handed in by a caller) the children are
+ * portalled into it **synchronously during render**, so they mount in the same
+ * commit that opened them. This matches Vue's `<Teleport>` (which resolves its
+ * target synchronously) and is required for correctness: a portalled panel that
+ * promotes itself into the browser top layer with the Popover API
+ * (`popover="manual"` + `showPopover()` on the next frame) must already be
+ * mounted when that frame runs — deferring the portal by a render loses that
+ * race, leaving the panel `display:none` (the UA default for an unshown
+ * popover) and therefore invisible.
+ *
+ * Only a selector **string** needs a post-mount `document.querySelector`, which
+ * keeps the component SSR-safe: during the server render — and the first client
+ * render for a string target — it renders nothing (or, when `disabled`, the
+ * children in place), and `createPortal` only runs once a DOM target exists.
  */
 export function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode {
-  const [target, setTarget] = useState<Element>();
+  const [resolvedFromSelector, setResolvedFromSelector] = useState<Element>();
 
   useEffect(() => {
-    if (typeof document === 'undefined') {
+    if (typeof document === 'undefined' || typeof to !== 'string') {
       return;
     }
-    const resolved = typeof to === 'string' ? document.querySelector(to) : to;
-    setTarget(resolved ?? document.body);
+    setResolvedFromSelector(document.querySelector(to) ?? document.body);
   }, [to]);
 
   if (disabled) {
     return children;
   }
+  // An element target portals synchronously; a string target waits for the
+  // post-mount lookup above.
+  const target = typeof to === 'string' ? resolvedFromSelector : to;
   if (target === undefined) {
-    // Before the portal target is resolved (SSR + first client render), render
+    // Before a string target is resolved (SSR + first client render), render
     // nothing — an empty fragment, so no DOM and no `null` literal.
     return createElement(ReactFragment);
   }
