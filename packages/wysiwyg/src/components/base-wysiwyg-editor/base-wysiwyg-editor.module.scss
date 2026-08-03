@@ -1,0 +1,49 @@
+@layer mp.components {
+  .wysiwyg {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+    background-color: var(--mp-color-surface-default);
+    color: var(--mp-color-text-default);
+  }
+
+  .wysiwyg--disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  // Positioned container so the per-block controls overlay can anchor to the
+  // block rectangles inside the (scrolling) editing surface.
+  .wysiwyg__body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .wysiwyg__surface {
+    flex: 1 1 auto;
+    padding: var(--mp-spacing-sm);
+    overflow-y: auto;
+    line-height: 1.5;
+    outline: none;
+  }
+
+  .wysiwyg__surface:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--mp-color-primary-default);
+  }
+
+  .wysiwyg__surface[data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: var(--mp-color-text-subtle);
+    pointer-events: none;
+  }
+
+  // A non-editable, portalled code block sits as an atomic block in the flow.
+  .wysiwyg__surface [data-mp-code-block] {
+    margin: var(--mp-spacing-sm) 0;
+    user-select: none;
+  }
+}

@@ -1,0 +1,99 @@
+# @mission-platform/wysiwyg
+
+Framework-agnostic **WYSIWYG rich-text editor** for Mission Platform. Authored
+once in the neutral JSX dialect (`@mission-platform/forge`) and compiled to both
+**Vue 3** (`./vue`) and **React** (`./react`) by `@mission-platform/vite-plugin-forge`.
+
+## Install / import
+
+```ts
+// Vue app
+import { WysiwygEditor } from '@mission-platform/wysiwyg/vue';
+// React app
+import { WysiwygEditor } from '@mission-platform/wysiwyg/react';
+```
+
+## What it uses
+
+- **`@mission-platform/forge`** — write-once authoring (neutral `h` + hooks).
+- **`@mission-platform/components`** — composes `BaseButton` for the toolbar,
+  `BaseDropdown` for the block-format menu, `BaseCodeBlock` for the non-editable
+  code-block embeds, and `BaseMonacoEditor` for the HTML **source view** (which,
+  with `spellCheck`, enables Hunspell spelling + Harper grammar checking via
+  `@mission-platform/hunspell` / `@mission-platform/harper`).
+- **`@mission-platform/forms`** — composes `BaseSchemaFormDialog` for the
+  **code-block insertion dialog** (a JSON-Schema-driven form with a Monaco
+  `code` field and a language selector), replacing the old `window.prompt`.
+- **`@mission-platform/icons`** — toolbar glyphs (including the new
+  `IconUnderline` / `IconStrikethrough`).
+- **`@mission-platform/tokens`** — design tokens via `var(--mp-*)` in the
+  co-located CSS Modules (`@layer mp.components`).
+- **`rxjs`** — a debounced, de-duplicated change stream powering the live
+  word/character counter (bridge it into your own state with
+  `@mission-platform/rxjs`'s `useObservable`).
+
+## Components
+
+- `WysiwygEditor` — the editor: a native `contenteditable` surface, a formatting
+  toolbar, per-block hover/caret controls, a customisable status bar, and an
+  optional Monaco-backed HTML source view.
+- `WysiwygToolbar` — the toolbar: a **block-format dropdown**
+  (`WysiwygBlockMenu`) followed by grouped icon buttons. Fully **user
+  configurable**: pass an `items: WysiwygToolbarItem[]` array
+  (`{ label, state, disabled, action }`, `action` being the click handler) to
+  replace the built-in controls with your own. Block-format picks are reported
+  via `onSelectBlock`; the code-block control via `onInsertCodeBlock`.
+- `WysiwygBlockMenu` — the block-style dropdown: **Paragraph, Headings 1-6,
+  Block Quote, Monospace** (an editable `<pre>`). Emits a `WysiwygCommand` via
+  `onSelect`.
+- `WysiwygStatusBar` — the status bar, its own **fully customisable** component:
+  shows the live word/character counts by default, or pass an
+  `items: WysiwygStatusItem[]` array (`{ id, label, value? }`) to replace them.
+- `WysiwygBlockControls` — the per-block overlay: outlines the hovered/active
+  block and floats a bar to move it up/down and change its alignment.
+- `WysiwygToolbarButton` — a single icon toolbar control (wraps `BaseButton`);
+  its click is reported through `onClick`.
+
+### Code blocks
+
+The toolbar's **code-block** control opens a **Monaco dialog** — the
+`BaseSchemaFormDialog` from `@mission-platform/forms`, driven by a JSON Schema
+with a language selector and a Monaco-backed `code` field — to author the
+snippet (the caret position is saved/restored so the block lands where you were
+editing). The `code` field's **syntax highlighting follows the selected
+language** (the picker drives the editor, not just the inserted block). On
+submit the editor inserts a non-editable `contenteditable="false"`
+placeholder (carrying the code in `data-mp-code` / `data-mp-language`); it then
+portals a real `BaseCodeBlock` into each placeholder with the neutral
+`<Teleport>`. The serialized `modelValue` keeps only the (empty) placeholder, so
+persisted HTML stays clean and round-trips.
+
+## `WysiwygEditor` props
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `modelValue` | `string` | `''` | HTML content (two-way `v-model`). |
+| `placeholder` | `string` | `''` | Shown while empty. |
+| `readonly` | `boolean` | `false` | Hides the toolbar; surface not editable. |
+| `disabled` | `boolean` | `false` | Disables toolbar + surface. |
+| `minHeight` | `string` | `'12rem'` | Any CSS length. |
+| `spellCheck` | `boolean` | `false` | Native spellcheck; Hunspell+Harper in source view. |
+| `showStatusBar` | `boolean` | `true` | Show the `WysiwygStatusBar`. |
+| `allowSourceView` | `boolean` | `true` | Toggle to the Monaco HTML source view. |
+| `showBlockControls` | `boolean` | `true` | Per-block hover/caret move + align overlay. |
+| `labels` | `Partial<WysiwygLabels>` | English defaults | Override any UI string (e.g. from `@mission-platform/i18n`). |
+| `toolbarItems` | `WysiwygToolbarItem[]` | built-in controls | Replace the toolbar with your own `{ label, state, disabled, action }` buttons. |
+| `statusItems` | `WysiwygStatusItem[]` | word/character counters | Replace the status-bar segments with your own. |
+| `statsDebounceMs` | `number` | `200` | Debounce for the stats stream. |
+| `onUpdateModelValue` / `onChange` | `(html: string) => void` | — | Content change. |
+| `onStats` | `(stats: EditorStats) => void` | — | Word/character stats. |
+| `onFocus` / `onBlur` | `() => void` | — | Surface focus events. |
+
+## Notes
+
+- The editing surface uses the browser's native editing commands
+  (`document.execCommand`) through a guarded, framework-neutral command layer,
+  so it is dependency-free and SSR/SSG-safe (content is written on the client).
+- Labels default to English and can be overridden with translations; the editor
+  takes no hard i18n dependency (matching the `@mission-platform/components`
+  convention).

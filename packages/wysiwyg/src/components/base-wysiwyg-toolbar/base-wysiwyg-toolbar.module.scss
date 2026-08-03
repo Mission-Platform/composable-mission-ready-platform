@@ -1,0 +1,27 @@
+@layer mp.components {
+  .wysiwyg-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--mp-spacing-xs);
+    padding: var(--mp-spacing-xs);
+    border-bottom: 1px solid var(--mp-color-border-default);
+    background-color: var(--mp-color-surface-default);
+  }
+
+  .wysiwyg-toolbar__group {
+    display: flex;
+    align-items: center;
+    gap: var(--mp-spacing-2xs);
+  }
+
+  .wysiwyg-toolbar__group:not(:last-child) {
+    padding-right: var(--mp-spacing-xs);
+    border-right: 1px solid var(--mp-color-border-subtle);
+  }
+
+  .wysiwyg-toolbar__group--end {
+    margin-left: auto;
+    border-right: none;
+  }
+}
