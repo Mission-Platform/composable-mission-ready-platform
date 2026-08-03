@@ -17,7 +17,7 @@
 '@mission-platform/hunspell': patch
 '@mission-platform/i18n': patch
 '@mission-platform/icons': patch
-'@mission-platform/jsx': patch
+'@mission-platform/forge': patch
 '@mission-platform/layouts': patch
 '@mission-platform/map': patch
 '@mission-platform/matrix-code': patch
@@ -30,7 +30,7 @@
 '@mission-platform/tokens': patch
 '@mission-platform/vite-plugin-assemblyscript': patch
 '@mission-platform/vite-plugin-i18n': patch
-'@mission-platform/vite-plugin-jsx': patch
+'@mission-platform/vite-plugin-forge': patch
 '@mission-platform/vite-plugin-seo': patch
 '@mission-platform/vite-plugin-tokens': patch
 ---

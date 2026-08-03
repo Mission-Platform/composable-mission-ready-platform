@@ -11,7 +11,7 @@
 '@mission-platform/matrix-code': patch
 '@mission-platform/qr-code': patch
 '@mission-platform/rxjs': patch
-'@mission-platform/vite-plugin-jsx': patch
+'@mission-platform/vite-plugin-forge': patch
 ---
 
 reformat sources with prettier
