@@ -2,7 +2,7 @@
 // Icon component library for Mission Platform, authored once in JSX.
 //
 // Each icon is a framework-neutral JSX component that compiles to both Vue 3 and
-// React via the vite-plugin-jsx two-stage compiler.
+// React via the vite-plugin-forge two-stage compiler.
 //
 // Usage:
 //   import { IconAlert } from '@mission-platform/icons/vue';
@@ -96,12 +96,14 @@ export { IconShare, type IconShareProperties } from './icon-share';
 export { IconSort, type IconSortProperties, type SortDirection } from './icon-sort';
 export { IconSplit, type IconSplitProperties } from './icon-split';
 export { IconStar, type IconStarProperties } from './icon-star';
+export { IconStrikethrough, type IconStrikethroughProperties } from './icon-strikethrough';
 export { IconTable, type IconTableProperties } from './icon-table';
 export { IconTableColumnAdd, type IconTableColumnAddProperties } from './icon-table-column-add';
 export { IconTableColumnRemove, type IconTableColumnRemoveProperties } from './icon-table-column-remove';
 export { IconTableRowAdd, type IconTableRowAddProperties } from './icon-table-row-add';
 export { IconTableRowRemove, type IconTableRowRemoveProperties } from './icon-table-row-remove';
 export { IconTrash, type IconTrashProperties } from './icon-trash';
+export { IconUnderline, type IconUnderlineProperties } from './icon-underline';
 export { IconUpload, type IconUploadProperties } from './icon-upload';
 export { IconUser, type IconUserProperties } from './icon-user';
 export { IconWarning, type IconWarningProperties } from './icon-warning';

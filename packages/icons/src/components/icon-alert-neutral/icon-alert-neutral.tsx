@@ -1,4 +1,4 @@
-import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import styles from './icon-alert-neutral.module.scss';
 
@@ -16,7 +16,7 @@ export interface IconAlertNeutralProperties extends MpProperties {
  * authored once in the neutral JSX dialect, for informational messages with no
  * positive or negative connotation.
  *
- * It compiles cleanly to both Vue 3 and React via the vite-plugin-jsx
+ * It compiles cleanly to both Vue 3 and React via the vite-plugin-forge
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-alert-neutral.module.scss`.
  */

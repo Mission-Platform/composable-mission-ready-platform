@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/jsx/react';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -8,11 +8,11 @@ import { renderToString } from 'vue/server-renderer';
 
 import { IconAlert, IconArrow, IconDrawCircle, IconHeadingOne, IconSort } from '.';
 
-import type { MpComponent } from '@mission-platform/jsx';
+import type { MpComponent } from '@mission-platform/forge';
 
 /**
  * Smoke-tests a representative slice of the generated icon set, rendering each
- * neutral icon on **both** frameworks through the `@mission-platform/jsx`
+ * neutral icon on **both** frameworks through the `@mission-platform/forge`
  * runtime adapters. Covers a plain stroke icon, an embedded `<text>` glyph, a
  * `fill={color}` child, the rotating `direction` prop, and the conditional
  * per-path fills — i.e. every distinct shape the generator emits.

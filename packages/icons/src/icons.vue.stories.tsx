@@ -8,8 +8,8 @@ import type { Component } from 'vue';
 
 /**
  * The Mission Platform icons, authored **once** in the framework-neutral JSX
- * dialect (`@mission-platform/jsx`) and compiled straight to both Vue 3 and
- * React at build time by `@mission-platform/vite-plugin-jsx`. This overview
+ * dialect (`@mission-platform/forge`) and compiled straight to both Vue 3 and
+ * React at build time by `@mission-platform/vite-plugin-forge`. This overview
  * consumes the Vue 3 build via `@mission-platform/icons/vue`; the very same
  * sources also ship as React components through the package's `./react` subpath
  * (see the React Storybook). Every individual icon also has its own story,

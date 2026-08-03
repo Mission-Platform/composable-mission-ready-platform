@@ -9,13 +9,13 @@ import {
   solidJsxPlugin,
   sveltePlugin,
   type JsxFramework,
-} from '@mission-platform/vite-plugin-jsx';
+} from '@mission-platform/vite-plugin-forge';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { defineConfig, type Plugin, type UserConfig } from 'vite';
 
 /**
  * The package ships **only** framework-specific builds (no neutral artifact),
- * produced by the two-stage compiler in `@mission-platform/vite-plugin-jsx`:
+ * produced by the two-stage compiler in `@mission-platform/vite-plugin-forge`:
  *
  * - **Stage 1** — `generateFrameworkSources` reads the neutral icons barrel
  *   (`src/components/index.ts`) and emits a per-framework source tree into a

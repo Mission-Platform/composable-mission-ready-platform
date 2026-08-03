@@ -2,12 +2,12 @@
 
 "Write once, run on both frameworks" SVG icon components for Mission Platform.
 Each icon is authored once in the framework-neutral JSX dialect
-(`@mission-platform/jsx`) and shipped as **both** a Vue 3 component and a React
+(`@mission-platform/forge`) and shipped as **both** a Vue 3 component and a React
 component.
 
 The `./react` and `./vue` subpaths are produced by **compiling the neutral
 icons to each framework at build time** with the two-stage compiler in
-`@mission-platform/vite-plugin-jsx` (source-to-source → native compile), not the
+`@mission-platform/vite-plugin-forge` (source-to-source → native compile), not the
 runtime `toReactComponent` / `toVueComponent` adapters. A single `pnpm build`
 produces the Vue and the React artifacts together (one per-icon JS chunk + one
 per-icon CSS asset, so consumers tree-shake to just the icons they import).
@@ -15,10 +15,10 @@ per-icon CSS asset, so consumers tree-shake to just the icons they import).
 The package also exposes a **framework-neutral `.` entry** that re-exports the
 neutral icon source (typed against the built `dist/components` declarations; the
 package `src` is published so the entry resolves). It is **not** a runnable
-standalone build — it exists so a write-once `@mission-platform/jsx` component
+standalone build — it exists so a write-once `@mission-platform/forge` component
 can `import { IconX } from '@mission-platform/icons'` and have it (a) type-check,
 (b) render through the runtime adapters in unit tests, and (c) be remapped by
-`@mission-platform/vite-plugin-jsx` to the matching `./react` / `./vue` build in
+`@mission-platform/vite-plugin-forge` to the matching `./react` / `./vue` build in
 the emitted per-framework output. App/library code that is not itself written in
 the neutral dialect should keep importing the explicit `./react` / `./vue` subpath.
 
@@ -35,7 +35,7 @@ import { IconAlert, IconArrow } from '@mission-platform/icons/vue';
 // React
 import { IconAlert, IconArrow } from '@mission-platform/icons/react';
 
-// Write-once neutral component (compiled per framework by vite-plugin-jsx)
+// Write-once neutral component (compiled per framework by vite-plugin-forge)
 import { IconAlert, IconArrow } from '@mission-platform/icons';
 ```
 

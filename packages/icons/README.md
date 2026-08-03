@@ -1,6 +1,6 @@
 # `@mission-platform/icons`
 
-Write-once SVG icon components for Mission Platform, authored in a framework-neutral JSX dialect (`@mission-platform/jsx`) and compiled into native **Vue 3** and **React** components.
+Write-once SVG icon components for Mission Platform, authored in a framework-neutral JSX dialect (`@mission-platform/forge`) and compiled into native **Vue 3** and **React** components.
 
 ## Features
 
@@ -73,7 +73,7 @@ export function IconBar() {
 
 ### Framework-Neutral Components (`@mission-platform/icons`)
 
-When authoring write-once components compiled by `@mission-platform/vite-plugin-jsx`:
+When authoring write-once components compiled by `@mission-platform/vite-plugin-forge`:
 
 ```tsx
 import { IconAlert, IconCheck } from '@mission-platform/icons';

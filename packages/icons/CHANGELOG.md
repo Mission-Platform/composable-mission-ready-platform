@@ -25,9 +25,9 @@
   The package now exposes a framework-neutral `.` export (the neutral icon source,
   typed against the built `dist/components` declarations) alongside the existing
   compiled `./react` / `./vue` subpaths. This lets a write-once
-  `@mission-platform/jsx` component import an icon from `@mission-platform/icons`
+  `@mission-platform/forge` component import an icon from `@mission-platform/icons`
   so it type-checks and renders through the runtime adapters in unit tests, while
-  `@mission-platform/vite-plugin-jsx` remaps that specifier to the matching
+  `@mission-platform/vite-plugin-forge` remaps that specifier to the matching
   per-framework build for the emitted React/Vue output. The package `src` is now
   published so the neutral entry resolves.
 
@@ -53,11 +53,11 @@
   `classNames` helper inline — the author never imports the helper. The canonical
   value is an array holding the same arguments the helper accepts.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler owns the transform: on
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler owns the transform: on
   React an array value collapses to a `className={classNames(…)}` string call
   (re-injecting the neutral `classNames` import), while any other value passes
   through as `className`; on Vue it maps onto the native `class` binding, which
-  understands the array/object forms (no helper needed). `@mission-platform/jsx`'s
+  understands the array/object forms (no helper needed). `@mission-platform/forge`'s
   `./react` and `./vue` runtime adapters apply the same mapping at render time so
   the ad-hoc/SSR output matches the compiled output. The `classNames(...values)`
   helper is still exported for the rare precompute and `h(tag, { class: … })`
@@ -131,7 +131,7 @@ false })` (so multi-root / render-closure components don't warn), but it never
 - Updated dependencies [94f9acf]
 - Updated dependencies [ca1d98b]
 - Updated dependencies [d39b6fc]
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
 
 ## 0.2.0
 
@@ -158,9 +158,9 @@ false })` (so multi-root / render-closure components don't warn), but it never
   The package now exposes a framework-neutral `.` export (the neutral icon source,
   typed against the built `dist/components` declarations) alongside the existing
   compiled `./react` / `./vue` subpaths. This lets a write-once
-  `@mission-platform/jsx` component import an icon from `@mission-platform/icons`
+  `@mission-platform/forge` component import an icon from `@mission-platform/icons`
   so it type-checks and renders through the runtime adapters in unit tests, while
-  `@mission-platform/vite-plugin-jsx` remaps that specifier to the matching
+  `@mission-platform/vite-plugin-forge` remaps that specifier to the matching
   per-framework build for the emitted React/Vue output. The package `src` is now
   published so the neutral entry resolves.
 
@@ -186,11 +186,11 @@ false })` (so multi-root / render-closure components don't warn), but it never
   `classNames` helper inline — the author never imports the helper. The canonical
   value is an array holding the same arguments the helper accepts.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler owns the transform: on
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler owns the transform: on
   React an array value collapses to a `className={classNames(…)}` string call
   (re-injecting the neutral `classNames` import), while any other value passes
   through as `className`; on Vue it maps onto the native `class` binding, which
-  understands the array/object forms (no helper needed). `@mission-platform/jsx`'s
+  understands the array/object forms (no helper needed). `@mission-platform/forge`'s
   `./react` and `./vue` runtime adapters apply the same mapping at render time so
   the ad-hoc/SSR output matches the compiled output. The `classNames(...values)`
   helper is still exported for the rare precompute and `h(tag, { class: … })`
@@ -264,7 +264,7 @@ false })` (so multi-root / render-closure components don't warn), but it never
 - Updated dependencies [94f9acf]
 - Updated dependencies [ca1d98b]
 - Updated dependencies [d39b6fc]
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
 
 ## 0.2.0
 
@@ -291,9 +291,9 @@ false })` (so multi-root / render-closure components don't warn), but it never
   The package now exposes a framework-neutral `.` export (the neutral icon source,
   typed against the built `dist/components` declarations) alongside the existing
   compiled `./react` / `./vue` subpaths. This lets a write-once
-  `@mission-platform/jsx` component import an icon from `@mission-platform/icons`
+  `@mission-platform/forge` component import an icon from `@mission-platform/icons`
   so it type-checks and renders through the runtime adapters in unit tests, while
-  `@mission-platform/vite-plugin-jsx` remaps that specifier to the matching
+  `@mission-platform/vite-plugin-forge` remaps that specifier to the matching
   per-framework build for the emitted React/Vue output. The package `src` is now
   published so the neutral entry resolves.
 
@@ -319,11 +319,11 @@ false })` (so multi-root / render-closure components don't warn), but it never
   `classNames` helper inline — the author never imports the helper. The canonical
   value is an array holding the same arguments the helper accepts.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler owns the transform: on
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler owns the transform: on
   React an array value collapses to a `className={classNames(…)}` string call
   (re-injecting the neutral `classNames` import), while any other value passes
   through as `className`; on Vue it maps onto the native `class` binding, which
-  understands the array/object forms (no helper needed). `@mission-platform/jsx`'s
+  understands the array/object forms (no helper needed). `@mission-platform/forge`'s
   `./react` and `./vue` runtime adapters apply the same mapping at render time so
   the ad-hoc/SSR output matches the compiled output. The `classNames(...values)`
   helper is still exported for the rare precompute and `h(tag, { class: … })`
@@ -397,7 +397,7 @@ false })` (so multi-root / render-closure components don't warn), but it never
 - Updated dependencies [94f9acf]
 - Updated dependencies [ca1d98b]
 - Updated dependencies [d39b6fc]
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
 
 ## 0.2.0
 
@@ -424,9 +424,9 @@ false })` (so multi-root / render-closure components don't warn), but it never
   The package now exposes a framework-neutral `.` export (the neutral icon source,
   typed against the built `dist/components` declarations) alongside the existing
   compiled `./react` / `./vue` subpaths. This lets a write-once
-  `@mission-platform/jsx` component import an icon from `@mission-platform/icons`
+  `@mission-platform/forge` component import an icon from `@mission-platform/icons`
   so it type-checks and renders through the runtime adapters in unit tests, while
-  `@mission-platform/vite-plugin-jsx` remaps that specifier to the matching
+  `@mission-platform/vite-plugin-forge` remaps that specifier to the matching
   per-framework build for the emitted React/Vue output. The package `src` is now
   published so the neutral entry resolves.
 
@@ -452,11 +452,11 @@ false })` (so multi-root / render-closure components don't warn), but it never
   `classNames` helper inline — the author never imports the helper. The canonical
   value is an array holding the same arguments the helper accepts.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler owns the transform: on
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler owns the transform: on
   React an array value collapses to a `className={classNames(…)}` string call
   (re-injecting the neutral `classNames` import), while any other value passes
   through as `className`; on Vue it maps onto the native `class` binding, which
-  understands the array/object forms (no helper needed). `@mission-platform/jsx`'s
+  understands the array/object forms (no helper needed). `@mission-platform/forge`'s
   `./react` and `./vue` runtime adapters apply the same mapping at render time so
   the ad-hoc/SSR output matches the compiled output. The `classNames(...values)`
   helper is still exported for the rare precompute and `h(tag, { class: … })`
@@ -530,4 +530,4 @@ false })` (so multi-root / render-closure components don't warn), but it never
 - Updated dependencies [94f9acf]
 - Updated dependencies [ca1d98b]
 - Updated dependencies [d39b6fc]
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0

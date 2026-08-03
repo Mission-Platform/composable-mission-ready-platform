@@ -1,4 +1,4 @@
-import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import styles from './icon-move.module.scss';
 
@@ -14,7 +14,7 @@ export interface IconMoveProperties extends MpProperties {
 /**
  * `IconMove` — an icon authored once in the neutral JSX dialect.
  *
- * It compiles cleanly to both Vue 3 and React via the vite-plugin-jsx
+ * It compiles cleanly to both Vue 3 and React via the vite-plugin-forge
  * two-stage compiler. The icon ships its own `@layer mp.icons` CSS through the
  * co-located CSS Module `icon-move.module.scss`.
  */

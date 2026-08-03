@@ -5,8 +5,8 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 /**
  * `IconWrench` is the Vue 3 build of the cross-framework icon
  * `IconWrench` in `@mission-platform/icons`, authored once in the neutral JSX
- * dialect (`@mission-platform/jsx`) and compiled straight to both frameworks by
- * `@mission-platform/vite-plugin-jsx`. The very same source also ships via the
+ * dialect (`@mission-platform/forge`) and compiled straight to both frameworks by
+ * `@mission-platform/vite-plugin-forge`. The very same source also ships via the
  * package's `./react` subpath.
  */
 const meta = {

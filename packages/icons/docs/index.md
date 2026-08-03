@@ -4,7 +4,7 @@
 
 ## Architecture & Distribution
 
-The package leverages `@mission-platform/vite-plugin-jsx` to provide high-performance, tree-shakable icons for both frameworks:
+The package leverages `@mission-platform/vite-plugin-forge` to provide high-performance, tree-shakable icons for both frameworks:
 
 - **Compilation**: A single `pnpm build` emits two distinct subpaths (`./vue` and `./react`). Each icon is split into its own JS chunk and CSS asset.
 - **Neutral Entry**: The package provides a neutral root entry (`@mission-platform/icons`) that re-exports the neutral source. This is intended for use within other "write-once" components; standard app code should continue using the framework-specific subpaths.
@@ -29,7 +29,7 @@ import { IconAlert, IconArrow } from '@mission-platform/icons/react';
 
 ### Neutral Component Imports
 
-When authoring a framework-neutral component (compiled by `vite-plugin-jsx`):
+When authoring a framework-neutral component (compiled by `vite-plugin-forge`):
 
 ```tsx
 import { IconAlert, IconArrow } from '@mission-platform/icons';
