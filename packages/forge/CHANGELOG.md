@@ -1,4 +1,4 @@
-# @mission-platform/jsx
+# @mission-platform/forge
 
 ## 0.2.0
 
@@ -6,12 +6,12 @@
 
 - edb785f: add a framework-neutral `classNames` helper and move component CSS Modules to the `mp.components` layer
 
-  `@mission-platform/jsx` now exports a `classNames(...values)` helper (and its
+  `@mission-platform/forge` now exports a `classNames(...values)` helper (and its
   `ClassValue` type) for assembling class names the same way on every framework
   from the string (`'a b'`), object (`{ 'class': boolean }`), and array
   (`['class']`) forms — falsy entries are dropped and duplicates de-duplicated.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler now (1) preserves
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler now (1) preserves
   neutral framework-agnostic value imports such as `classNames` verbatim (instead
   of translating them like `h`/the hooks), and (2) carries each component's
   own relative stylesheet imports (CSS Modules and bare CSS) onto both the React
@@ -32,11 +32,11 @@
   `classNames` helper inline — the author never imports the helper. The canonical
   value is an array holding the same arguments the helper accepts.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler owns the transform: on
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler owns the transform: on
   React an array value collapses to a `className={classNames(…)}` string call
   (re-injecting the neutral `classNames` import), while any other value passes
   through as `className`; on Vue it maps onto the native `class` binding, which
-  understands the array/object forms (no helper needed). `@mission-platform/jsx`'s
+  understands the array/object forms (no helper needed). `@mission-platform/forge`'s
   `./react` and `./vue` runtime adapters apply the same mapping at render time so
   the ad-hoc/SSR output matches the compiled output. The `classNames(...values)`
   helper is still exported for the rare precompute and `h(tag, { class: … })`
@@ -50,7 +50,7 @@
   `@mission-platform/components` gains `BaseApplicationLayout` (public
   `ApplicationLayout`) — the top-level application shell (status banner, header,
   scrollable content, footer) authored once in the neutral JSX dialect and
-  compiled straight to both React and Vue by `@mission-platform/vite-plugin-jsx`.
+  compiled straight to both React and Vue by `@mission-platform/vite-plugin-forge`.
   It is the first migrated component to use the framework-neutral **named-slot**
   primitive (`<Slot name="status" | "navbar" | "content" | "footer" />`), derives
   the status banner's colour/ARIA role from `statusLevel`, and ships its own
@@ -58,7 +58,7 @@
   (`JSX Components/Layout/BaseApplicationLayout`) and cross-framework SSR specs are
   included.
 
-  `@mission-platform/jsx`'s `Slot` marker is now a (never-invoked) function
+  `@mission-platform/forge`'s `Slot` marker is now a (never-invoked) function
   component instead of a `unique symbol`, so `<Slot name="…" />` type-checks as a
   JSX element under the classic `h` factory. The runtime adapters still intercept
   it by identity (`type === Slot`) and the build-time compiler still rewrites it
@@ -66,7 +66,7 @@
 
 - edb785f: add a write-once JSX layer that renders on both Vue 3 and React
 
-  Introduces `@mission-platform/jsx`, a tiny dependency-free runtime whose classic
+  Introduces `@mission-platform/forge`, a tiny dependency-free runtime whose classic
   JSX factory (`h`) builds a framework-neutral element tree, plus `./react` and
   `./vue` adapters (`toReactComponent` / `toVueComponent`) that map that tree onto
   `React.createElement` or Vue's `h` at render time — a hand-rolled alternative to
@@ -78,11 +78,11 @@
 
 - edb785f: add scoped-slot (render-prop) support and migrate the self-contained Data components to write-once JSX
 
-  `@mission-platform/jsx` gains a `MpRenderProperty<Scope>` type and the neutral
+  `@mission-platform/forge` gains a `MpRenderProperty<Scope>` type and the neutral
   `<Slot>` element now accepts **scope props** (`<Slot name="row" item={item}
 index={i} />`) so a write-once component can drive a **scoped slot**.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler translates a scoped
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler translates a scoped
   `<Slot>` to a Vue scoped slot (`slots.x?.(scope)`) and a React render-prop call
   (`properties.x?.(scope)`), reusing the existing named-slot path. Both emitters
   have a regression test.
@@ -107,7 +107,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
 
 - edb785f: add a `hasSlot` slot-presence helper and move the component content props to named slots
 
-  `@mission-platform/jsx` now exports `hasSlot('x')` — the neutral counterpart of
+  `@mission-platform/forge` now exports `hasSlot('x')` — the neutral counterpart of
   Vue's `$slots.x` / a React `properties.x != null` check (an omitted name targets
   the default slot) — so a write-once component can render an optional wrapper
   region only when a slot is filled. The runtime adapters also gain
@@ -115,7 +115,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   against the forwarding component before handing children to a child component,
   so a component can forward its own slots into a child's slots.
 
-  `@mission-platform/vite-plugin-jsx` compiles `hasSlot('x')` to each framework's
+  `@mission-platform/vite-plugin-forge` compiles `hasSlot('x')` to each framework's
   native presence check — Vue's `v-if="$slots.x"` (template path) / `!!slots.x`
   (render-closure path, pulling in `useSlots()`) and React's `properties.x != null`
   — and consumes the `hasSlot` import (never emitting it).
@@ -141,12 +141,12 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
 
 - 94f9acf: add framework-neutral React-style hooks and an opt-in JSX globals typings export
 
-  `@mission-platform/jsx` now exposes neutral, render-once hooks (`useState`,
+  `@mission-platform/forge` now exposes neutral, render-once hooks (`useState`,
   `useRef`, `useEffect`, `useMemo`, `useCallback`) so neutral components can hold
-  state and run effects; `@mission-platform/vite-plugin-jsx` compiles them to
+  state and run effects; `@mission-platform/vite-plugin-forge` compiles them to
   React's own hooks or a Vue hook shim at build time. The package also ships the
   ambient JSX typings (previously duplicated in consumers) as an **opt-in**
-  `@mission-platform/jsx/jsx-globals` export — add it to a consumer's
+  `@mission-platform/forge/jsx-globals` export — add it to a consumer's
   `compilerOptions.types` to wire the classic `h` JSX factory's global `JSX`
   namespace to `MpElement`.
 
@@ -163,12 +163,12 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   removed (component CSS now loads automatically with the component), and the
   `./vue` / `./react` exports resolve to `dist/<framework>/index.js`.
 
-  `@mission-platform/vite-plugin-jsx` gains `jsxComponentsCssImportPlugin`, which
+  `@mission-platform/vite-plugin-forge` gains `jsxComponentsCssImportPlugin`, which
   re-links each component's extracted CSS to its JS chunk (Vite library builds
   emit per-chunk CSS but do not inject the import), and its two-stage compiler now
   translates the new named-slot marker.
 
-  `@mission-platform/jsx` adds a framework-neutral named-slot primitive `Slot`
+  `@mission-platform/forge` adds a framework-neutral named-slot primitive `Slot`
   (`<Slot name="…" />`, with the nameless `<Slot />` for the default slot, scoped
   slots, and fallback children). The runtime adapters resolve slots against a
   per-component scope, and the build-time compiler rewrites `<Slot name="x" />` to
@@ -190,7 +190,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   ships its own per-component `@layer mp.components` CSS, with co-located stories
   (`JSX Components/<Category>/…`) and cross-framework SSR specs.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler now scopes styling per
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler now scopes styling per
   framework: the **React** build keeps the hashed **CSS Module**, while the **Vue**
   build inlines each component's `*.module.scss` as a scoped
   `<style scoped lang="scss">` block in the generated SFC (preserving the
@@ -198,14 +198,14 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   `styles[`x`]` read — including computed object keys — to its literal class name,
   so `classNames(...)` produces plain, `data-v-`-scoped classes.
 
-  `@mission-platform/jsx`'s `Slot` marker is a (never-invoked) function component
+  `@mission-platform/forge`'s `Slot` marker is a (never-invoked) function component
   so `<Slot name="…" />` type-checks under the classic `h` factory.
 
 - 94f9acf: add the `Transition` (enter/leave), `Dynamic` (dynamic component), and context (`createContext`/`useContext`) neutral primitives, and verify recursive self-referencing components — the React/Vue adapters intercept the new markers for SSR, ship a CSS-class React `Transition`, and provide a `provide`/`inject`-backed Vue `createContext`/`useContext`
 - edb785f: add a framework-neutral `Teleport`/portal primitive and migrate the popup overlays with CSS anchor positioning
 
-  - `@mission-platform/jsx`: add the neutral `<Teleport to="…">` portal element (`MpTeleportProperties`) — a compile-time/adapter marker like `Slot`. The runtime adapters render its children in place (SSR parity), and `@mission-platform/jsx/react` now also exports a real `createPortal`-backed `Teleport` component (SSR-safe; resolves its target after mount).
-  - `@mission-platform/vite-plugin-jsx`: remap the neutral `Teleport` import per framework — Vue resolves it from the `vue` runtime (built-in `<Teleport>`) and React imports it from `@mission-platform/jsx/react` (the `createPortal` wrapper) — while leaving the `<Teleport>` JSX usage intact.
+  - `@mission-platform/forge`: add the neutral `<Teleport to="…">` portal element (`MpTeleportProperties`) — a compile-time/adapter marker like `Slot`. The runtime adapters render its children in place (SSR parity), and `@mission-platform/forge/react` now also exports a real `createPortal`-backed `Teleport` component (SSR-safe; resolves its target after mount).
+  - `@mission-platform/vite-plugin-forge`: remap the neutral `Teleport` import per framework — Vue resolves it from the `vue` runtime (built-in `<Teleport>`) and React imports it from `@mission-platform/forge/react` (the `createPortal` wrapper) — while leaving the `<Teleport>` JSX usage intact.
   - `@mission-platform/components`: migrate the `Components/Overlays` popups `BaseTooltip`, `BasePopover`, and `BaseDropdown` from `@mission-platform/components` to the write-once neutral package. Each teleports its panel to `document.body` and positions it with the CSS Anchor Positioning API (`anchor-name`/`position-anchor`/`position-area` + `position-try-fallbacks` + `@position-try`, plus `anchor-size(width)` for the dropdown's trigger-width match) instead of `@floating-ui`; `<Transition>` is dropped. The popover's and dropdown's compound (`-start`/`-end`) placements use **fully-logical** `position-area` values (e.g. `block-end span-inline-end`) — mixing a physical side keyword with a logical span (`bottom span-inline-end`) is an invalid value that browsers silently drop, which would leave the teleported panel un-anchored at its static position. The modal overlays (`BaseDialog`/`BaseModal`) remain Vue-only.
 
 - 94f9acf: add explicit per-phase transition-class props for scoped (non-global) transitions
@@ -242,12 +242,12 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
 
 - edb785f: add a framework-neutral `classNames` helper and move component CSS Modules to the `mp.components` layer
 
-  `@mission-platform/jsx` now exports a `classNames(...values)` helper (and its
+  `@mission-platform/forge` now exports a `classNames(...values)` helper (and its
   `ClassValue` type) for assembling class names the same way on every framework
   from the string (`'a b'`), object (`{ 'class': boolean }`), and array
   (`['class']`) forms — falsy entries are dropped and duplicates de-duplicated.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler now (1) preserves
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler now (1) preserves
   neutral framework-agnostic value imports such as `classNames` verbatim (instead
   of translating them like `h`/the hooks), and (2) carries each component's
   own relative stylesheet imports (CSS Modules and bare CSS) onto both the React
@@ -268,11 +268,11 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   `classNames` helper inline — the author never imports the helper. The canonical
   value is an array holding the same arguments the helper accepts.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler owns the transform: on
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler owns the transform: on
   React an array value collapses to a `className={classNames(…)}` string call
   (re-injecting the neutral `classNames` import), while any other value passes
   through as `className`; on Vue it maps onto the native `class` binding, which
-  understands the array/object forms (no helper needed). `@mission-platform/jsx`'s
+  understands the array/object forms (no helper needed). `@mission-platform/forge`'s
   `./react` and `./vue` runtime adapters apply the same mapping at render time so
   the ad-hoc/SSR output matches the compiled output. The `classNames(...values)`
   helper is still exported for the rare precompute and `h(tag, { class: … })`
@@ -286,7 +286,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   `@mission-platform/components` gains `BaseApplicationLayout` (public
   `ApplicationLayout`) — the top-level application shell (status banner, header,
   scrollable content, footer) authored once in the neutral JSX dialect and
-  compiled straight to both React and Vue by `@mission-platform/vite-plugin-jsx`.
+  compiled straight to both React and Vue by `@mission-platform/vite-plugin-forge`.
   It is the first migrated component to use the framework-neutral **named-slot**
   primitive (`<Slot name="status" | "navbar" | "content" | "footer" />`), derives
   the status banner's colour/ARIA role from `statusLevel`, and ships its own
@@ -294,7 +294,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   (`JSX Components/Layout/BaseApplicationLayout`) and cross-framework SSR specs are
   included.
 
-  `@mission-platform/jsx`'s `Slot` marker is now a (never-invoked) function
+  `@mission-platform/forge`'s `Slot` marker is now a (never-invoked) function
   component instead of a `unique symbol`, so `<Slot name="…" />` type-checks as a
   JSX element under the classic `h` factory. The runtime adapters still intercept
   it by identity (`type === Slot`) and the build-time compiler still rewrites it
@@ -302,7 +302,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
 
 - edb785f: add a write-once JSX layer that renders on both Vue 3 and React
 
-  Introduces `@mission-platform/jsx`, a tiny dependency-free runtime whose classic
+  Introduces `@mission-platform/forge`, a tiny dependency-free runtime whose classic
   JSX factory (`h`) builds a framework-neutral element tree, plus `./react` and
   `./vue` adapters (`toReactComponent` / `toVueComponent`) that map that tree onto
   `React.createElement` or Vue's `h` at render time — a hand-rolled alternative to
@@ -314,11 +314,11 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
 
 - edb785f: add scoped-slot (render-prop) support and migrate the self-contained Data components to write-once JSX
 
-  `@mission-platform/jsx` gains a `MpRenderProperty<Scope>` type and the neutral
+  `@mission-platform/forge` gains a `MpRenderProperty<Scope>` type and the neutral
   `<Slot>` element now accepts **scope props** (`<Slot name="row" item={item}
 index={i} />`) so a write-once component can drive a **scoped slot**.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler translates a scoped
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler translates a scoped
   `<Slot>` to a Vue scoped slot (`slots.x?.(scope)`) and a React render-prop call
   (`properties.x?.(scope)`), reusing the existing named-slot path. Both emitters
   have a regression test.
@@ -343,7 +343,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
 
 - edb785f: add a `hasSlot` slot-presence helper and move the component content props to named slots
 
-  `@mission-platform/jsx` now exports `hasSlot('x')` — the neutral counterpart of
+  `@mission-platform/forge` now exports `hasSlot('x')` — the neutral counterpart of
   Vue's `$slots.x` / a React `properties.x != null` check (an omitted name targets
   the default slot) — so a write-once component can render an optional wrapper
   region only when a slot is filled. The runtime adapters also gain
@@ -351,7 +351,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   against the forwarding component before handing children to a child component,
   so a component can forward its own slots into a child's slots.
 
-  `@mission-platform/vite-plugin-jsx` compiles `hasSlot('x')` to each framework's
+  `@mission-platform/vite-plugin-forge` compiles `hasSlot('x')` to each framework's
   native presence check — Vue's `v-if="$slots.x"` (template path) / `!!slots.x`
   (render-closure path, pulling in `useSlots()`) and React's `properties.x != null`
   — and consumes the `hasSlot` import (never emitting it).
@@ -377,12 +377,12 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
 
 - 94f9acf: add framework-neutral React-style hooks and an opt-in JSX globals typings export
 
-  `@mission-platform/jsx` now exposes neutral, render-once hooks (`useState`,
+  `@mission-platform/forge` now exposes neutral, render-once hooks (`useState`,
   `useRef`, `useEffect`, `useMemo`, `useCallback`) so neutral components can hold
-  state and run effects; `@mission-platform/vite-plugin-jsx` compiles them to
+  state and run effects; `@mission-platform/vite-plugin-forge` compiles them to
   React's own hooks or a Vue hook shim at build time. The package also ships the
   ambient JSX typings (previously duplicated in consumers) as an **opt-in**
-  `@mission-platform/jsx/jsx-globals` export — add it to a consumer's
+  `@mission-platform/forge/jsx-globals` export — add it to a consumer's
   `compilerOptions.types` to wire the classic `h` JSX factory's global `JSX`
   namespace to `MpElement`.
 
@@ -399,12 +399,12 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   removed (component CSS now loads automatically with the component), and the
   `./vue` / `./react` exports resolve to `dist/<framework>/index.js`.
 
-  `@mission-platform/vite-plugin-jsx` gains `jsxComponentsCssImportPlugin`, which
+  `@mission-platform/vite-plugin-forge` gains `jsxComponentsCssImportPlugin`, which
   re-links each component's extracted CSS to its JS chunk (Vite library builds
   emit per-chunk CSS but do not inject the import), and its two-stage compiler now
   translates the new named-slot marker.
 
-  `@mission-platform/jsx` adds a framework-neutral named-slot primitive `Slot`
+  `@mission-platform/forge` adds a framework-neutral named-slot primitive `Slot`
   (`<Slot name="…" />`, with the nameless `<Slot />` for the default slot, scoped
   slots, and fallback children). The runtime adapters resolve slots against a
   per-component scope, and the build-time compiler rewrites `<Slot name="x" />` to
@@ -426,7 +426,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   ships its own per-component `@layer mp.components` CSS, with co-located stories
   (`JSX Components/<Category>/…`) and cross-framework SSR specs.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler now scopes styling per
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler now scopes styling per
   framework: the **React** build keeps the hashed **CSS Module**, while the **Vue**
   build inlines each component's `*.module.scss` as a scoped
   `<style scoped lang="scss">` block in the generated SFC (preserving the
@@ -434,14 +434,14 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   `styles[`x`]` read — including computed object keys — to its literal class name,
   so `classNames(...)` produces plain, `data-v-`-scoped classes.
 
-  `@mission-platform/jsx`'s `Slot` marker is a (never-invoked) function component
+  `@mission-platform/forge`'s `Slot` marker is a (never-invoked) function component
   so `<Slot name="…" />` type-checks under the classic `h` factory.
 
 - 94f9acf: add the `Transition` (enter/leave), `Dynamic` (dynamic component), and context (`createContext`/`useContext`) neutral primitives, and verify recursive self-referencing components — the React/Vue adapters intercept the new markers for SSR, ship a CSS-class React `Transition`, and provide a `provide`/`inject`-backed Vue `createContext`/`useContext`
 - edb785f: add a framework-neutral `Teleport`/portal primitive and migrate the popup overlays with CSS anchor positioning
 
-  - `@mission-platform/jsx`: add the neutral `<Teleport to="…">` portal element (`MpTeleportProperties`) — a compile-time/adapter marker like `Slot`. The runtime adapters render its children in place (SSR parity), and `@mission-platform/jsx/react` now also exports a real `createPortal`-backed `Teleport` component (SSR-safe; resolves its target after mount).
-  - `@mission-platform/vite-plugin-jsx`: remap the neutral `Teleport` import per framework — Vue resolves it from the `vue` runtime (built-in `<Teleport>`) and React imports it from `@mission-platform/jsx/react` (the `createPortal` wrapper) — while leaving the `<Teleport>` JSX usage intact.
+  - `@mission-platform/forge`: add the neutral `<Teleport to="…">` portal element (`MpTeleportProperties`) — a compile-time/adapter marker like `Slot`. The runtime adapters render its children in place (SSR parity), and `@mission-platform/forge/react` now also exports a real `createPortal`-backed `Teleport` component (SSR-safe; resolves its target after mount).
+  - `@mission-platform/vite-plugin-forge`: remap the neutral `Teleport` import per framework — Vue resolves it from the `vue` runtime (built-in `<Teleport>`) and React imports it from `@mission-platform/forge/react` (the `createPortal` wrapper) — while leaving the `<Teleport>` JSX usage intact.
   - `@mission-platform/components`: migrate the `Components/Overlays` popups `BaseTooltip`, `BasePopover`, and `BaseDropdown` from `@mission-platform/components` to the write-once neutral package. Each teleports its panel to `document.body` and positions it with the CSS Anchor Positioning API (`anchor-name`/`position-anchor`/`position-area` + `position-try-fallbacks` + `@position-try`, plus `anchor-size(width)` for the dropdown's trigger-width match) instead of `@floating-ui`; `<Transition>` is dropped. The popover's and dropdown's compound (`-start`/`-end`) placements use **fully-logical** `position-area` values (e.g. `block-end span-inline-end`) — mixing a physical side keyword with a logical span (`bottom span-inline-end`) is an invalid value that browsers silently drop, which would leave the teleported panel un-anchored at its static position. The modal overlays (`BaseDialog`/`BaseModal`) remain Vue-only.
 
 - 94f9acf: add explicit per-phase transition-class props for scoped (non-global) transitions
@@ -478,12 +478,12 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
 
 - edb785f: add a framework-neutral `classNames` helper and move component CSS Modules to the `mp.components` layer
 
-  `@mission-platform/jsx` now exports a `classNames(...values)` helper (and its
+  `@mission-platform/forge` now exports a `classNames(...values)` helper (and its
   `ClassValue` type) for assembling class names the same way on every framework
   from the string (`'a b'`), object (`{ 'class': boolean }`), and array
   (`['class']`) forms — falsy entries are dropped and duplicates de-duplicated.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler now (1) preserves
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler now (1) preserves
   neutral framework-agnostic value imports such as `classNames` verbatim (instead
   of translating them like `h`/the hooks), and (2) carries each component's
   own relative stylesheet imports (CSS Modules and bare CSS) onto both the React
@@ -504,11 +504,11 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   `classNames` helper inline — the author never imports the helper. The canonical
   value is an array holding the same arguments the helper accepts.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler owns the transform: on
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler owns the transform: on
   React an array value collapses to a `className={classNames(…)}` string call
   (re-injecting the neutral `classNames` import), while any other value passes
   through as `className`; on Vue it maps onto the native `class` binding, which
-  understands the array/object forms (no helper needed). `@mission-platform/jsx`'s
+  understands the array/object forms (no helper needed). `@mission-platform/forge`'s
   `./react` and `./vue` runtime adapters apply the same mapping at render time so
   the ad-hoc/SSR output matches the compiled output. The `classNames(...values)`
   helper is still exported for the rare precompute and `h(tag, { class: … })`
@@ -522,7 +522,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   `@mission-platform/components` gains `BaseApplicationLayout` (public
   `ApplicationLayout`) — the top-level application shell (status banner, header,
   scrollable content, footer) authored once in the neutral JSX dialect and
-  compiled straight to both React and Vue by `@mission-platform/vite-plugin-jsx`.
+  compiled straight to both React and Vue by `@mission-platform/vite-plugin-forge`.
   It is the first migrated component to use the framework-neutral **named-slot**
   primitive (`<Slot name="status" | "navbar" | "content" | "footer" />`), derives
   the status banner's colour/ARIA role from `statusLevel`, and ships its own
@@ -530,7 +530,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   (`JSX Components/Layout/BaseApplicationLayout`) and cross-framework SSR specs are
   included.
 
-  `@mission-platform/jsx`'s `Slot` marker is now a (never-invoked) function
+  `@mission-platform/forge`'s `Slot` marker is now a (never-invoked) function
   component instead of a `unique symbol`, so `<Slot name="…" />` type-checks as a
   JSX element under the classic `h` factory. The runtime adapters still intercept
   it by identity (`type === Slot`) and the build-time compiler still rewrites it
@@ -538,7 +538,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
 
 - edb785f: add a write-once JSX layer that renders on both Vue 3 and React
 
-  Introduces `@mission-platform/jsx`, a tiny dependency-free runtime whose classic
+  Introduces `@mission-platform/forge`, a tiny dependency-free runtime whose classic
   JSX factory (`h`) builds a framework-neutral element tree, plus `./react` and
   `./vue` adapters (`toReactComponent` / `toVueComponent`) that map that tree onto
   `React.createElement` or Vue's `h` at render time — a hand-rolled alternative to
@@ -550,11 +550,11 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
 
 - edb785f: add scoped-slot (render-prop) support and migrate the self-contained Data components to write-once JSX
 
-  `@mission-platform/jsx` gains a `MpRenderProperty<Scope>` type and the neutral
+  `@mission-platform/forge` gains a `MpRenderProperty<Scope>` type and the neutral
   `<Slot>` element now accepts **scope props** (`<Slot name="row" item={item}
 index={i} />`) so a write-once component can drive a **scoped slot**.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler translates a scoped
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler translates a scoped
   `<Slot>` to a Vue scoped slot (`slots.x?.(scope)`) and a React render-prop call
   (`properties.x?.(scope)`), reusing the existing named-slot path. Both emitters
   have a regression test.
@@ -579,7 +579,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
 
 - edb785f: add a `hasSlot` slot-presence helper and move the component content props to named slots
 
-  `@mission-platform/jsx` now exports `hasSlot('x')` — the neutral counterpart of
+  `@mission-platform/forge` now exports `hasSlot('x')` — the neutral counterpart of
   Vue's `$slots.x` / a React `properties.x != null` check (an omitted name targets
   the default slot) — so a write-once component can render an optional wrapper
   region only when a slot is filled. The runtime adapters also gain
@@ -587,7 +587,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   against the forwarding component before handing children to a child component,
   so a component can forward its own slots into a child's slots.
 
-  `@mission-platform/vite-plugin-jsx` compiles `hasSlot('x')` to each framework's
+  `@mission-platform/vite-plugin-forge` compiles `hasSlot('x')` to each framework's
   native presence check — Vue's `v-if="$slots.x"` (template path) / `!!slots.x`
   (render-closure path, pulling in `useSlots()`) and React's `properties.x != null`
   — and consumes the `hasSlot` import (never emitting it).
@@ -613,12 +613,12 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
 
 - 94f9acf: add framework-neutral React-style hooks and an opt-in JSX globals typings export
 
-  `@mission-platform/jsx` now exposes neutral, render-once hooks (`useState`,
+  `@mission-platform/forge` now exposes neutral, render-once hooks (`useState`,
   `useRef`, `useEffect`, `useMemo`, `useCallback`) so neutral components can hold
-  state and run effects; `@mission-platform/vite-plugin-jsx` compiles them to
+  state and run effects; `@mission-platform/vite-plugin-forge` compiles them to
   React's own hooks or a Vue hook shim at build time. The package also ships the
   ambient JSX typings (previously duplicated in consumers) as an **opt-in**
-  `@mission-platform/jsx/jsx-globals` export — add it to a consumer's
+  `@mission-platform/forge/jsx-globals` export — add it to a consumer's
   `compilerOptions.types` to wire the classic `h` JSX factory's global `JSX`
   namespace to `MpElement`.
 
@@ -635,12 +635,12 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   removed (component CSS now loads automatically with the component), and the
   `./vue` / `./react` exports resolve to `dist/<framework>/index.js`.
 
-  `@mission-platform/vite-plugin-jsx` gains `jsxComponentsCssImportPlugin`, which
+  `@mission-platform/vite-plugin-forge` gains `jsxComponentsCssImportPlugin`, which
   re-links each component's extracted CSS to its JS chunk (Vite library builds
   emit per-chunk CSS but do not inject the import), and its two-stage compiler now
   translates the new named-slot marker.
 
-  `@mission-platform/jsx` adds a framework-neutral named-slot primitive `Slot`
+  `@mission-platform/forge` adds a framework-neutral named-slot primitive `Slot`
   (`<Slot name="…" />`, with the nameless `<Slot />` for the default slot, scoped
   slots, and fallback children). The runtime adapters resolve slots against a
   per-component scope, and the build-time compiler rewrites `<Slot name="x" />` to
@@ -662,7 +662,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   ships its own per-component `@layer mp.components` CSS, with co-located stories
   (`JSX Components/<Category>/…`) and cross-framework SSR specs.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler now scopes styling per
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler now scopes styling per
   framework: the **React** build keeps the hashed **CSS Module**, while the **Vue**
   build inlines each component's `*.module.scss` as a scoped
   `<style scoped lang="scss">` block in the generated SFC (preserving the
@@ -670,14 +670,14 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   `styles[`x`]` read — including computed object keys — to its literal class name,
   so `classNames(...)` produces plain, `data-v-`-scoped classes.
 
-  `@mission-platform/jsx`'s `Slot` marker is a (never-invoked) function component
+  `@mission-platform/forge`'s `Slot` marker is a (never-invoked) function component
   so `<Slot name="…" />` type-checks under the classic `h` factory.
 
 - 94f9acf: add the `Transition` (enter/leave), `Dynamic` (dynamic component), and context (`createContext`/`useContext`) neutral primitives, and verify recursive self-referencing components — the React/Vue adapters intercept the new markers for SSR, ship a CSS-class React `Transition`, and provide a `provide`/`inject`-backed Vue `createContext`/`useContext`
 - edb785f: add a framework-neutral `Teleport`/portal primitive and migrate the popup overlays with CSS anchor positioning
 
-  - `@mission-platform/jsx`: add the neutral `<Teleport to="…">` portal element (`MpTeleportProperties`) — a compile-time/adapter marker like `Slot`. The runtime adapters render its children in place (SSR parity), and `@mission-platform/jsx/react` now also exports a real `createPortal`-backed `Teleport` component (SSR-safe; resolves its target after mount).
-  - `@mission-platform/vite-plugin-jsx`: remap the neutral `Teleport` import per framework — Vue resolves it from the `vue` runtime (built-in `<Teleport>`) and React imports it from `@mission-platform/jsx/react` (the `createPortal` wrapper) — while leaving the `<Teleport>` JSX usage intact.
+  - `@mission-platform/forge`: add the neutral `<Teleport to="…">` portal element (`MpTeleportProperties`) — a compile-time/adapter marker like `Slot`. The runtime adapters render its children in place (SSR parity), and `@mission-platform/forge/react` now also exports a real `createPortal`-backed `Teleport` component (SSR-safe; resolves its target after mount).
+  - `@mission-platform/vite-plugin-forge`: remap the neutral `Teleport` import per framework — Vue resolves it from the `vue` runtime (built-in `<Teleport>`) and React imports it from `@mission-platform/forge/react` (the `createPortal` wrapper) — while leaving the `<Teleport>` JSX usage intact.
   - `@mission-platform/components`: migrate the `Components/Overlays` popups `BaseTooltip`, `BasePopover`, and `BaseDropdown` from `@mission-platform/components` to the write-once neutral package. Each teleports its panel to `document.body` and positions it with the CSS Anchor Positioning API (`anchor-name`/`position-anchor`/`position-area` + `position-try-fallbacks` + `@position-try`, plus `anchor-size(width)` for the dropdown's trigger-width match) instead of `@floating-ui`; `<Transition>` is dropped. The popover's and dropdown's compound (`-start`/`-end`) placements use **fully-logical** `position-area` values (e.g. `block-end span-inline-end`) — mixing a physical side keyword with a logical span (`bottom span-inline-end`) is an invalid value that browsers silently drop, which would leave the teleported panel un-anchored at its static position. The modal overlays (`BaseDialog`/`BaseModal`) remain Vue-only.
 
 - 94f9acf: add explicit per-phase transition-class props for scoped (non-global) transitions
@@ -714,12 +714,12 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
 
 - edb785f: add a framework-neutral `classNames` helper and move component CSS Modules to the `mp.components` layer
 
-  `@mission-platform/jsx` now exports a `classNames(...values)` helper (and its
+  `@mission-platform/forge` now exports a `classNames(...values)` helper (and its
   `ClassValue` type) for assembling class names the same way on every framework
   from the string (`'a b'`), object (`{ 'class': boolean }`), and array
   (`['class']`) forms — falsy entries are dropped and duplicates de-duplicated.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler now (1) preserves
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler now (1) preserves
   neutral framework-agnostic value imports such as `classNames` verbatim (instead
   of translating them like `h`/the hooks), and (2) carries each component's
   own relative stylesheet imports (CSS Modules and bare CSS) onto both the React
@@ -740,11 +740,11 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   `classNames` helper inline — the author never imports the helper. The canonical
   value is an array holding the same arguments the helper accepts.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler owns the transform: on
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler owns the transform: on
   React an array value collapses to a `className={classNames(…)}` string call
   (re-injecting the neutral `classNames` import), while any other value passes
   through as `className`; on Vue it maps onto the native `class` binding, which
-  understands the array/object forms (no helper needed). `@mission-platform/jsx`'s
+  understands the array/object forms (no helper needed). `@mission-platform/forge`'s
   `./react` and `./vue` runtime adapters apply the same mapping at render time so
   the ad-hoc/SSR output matches the compiled output. The `classNames(...values)`
   helper is still exported for the rare precompute and `h(tag, { class: … })`
@@ -758,7 +758,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   `@mission-platform/components` gains `BaseApplicationLayout` (public
   `ApplicationLayout`) — the top-level application shell (status banner, header,
   scrollable content, footer) authored once in the neutral JSX dialect and
-  compiled straight to both React and Vue by `@mission-platform/vite-plugin-jsx`.
+  compiled straight to both React and Vue by `@mission-platform/vite-plugin-forge`.
   It is the first migrated component to use the framework-neutral **named-slot**
   primitive (`<Slot name="status" | "navbar" | "content" | "footer" />`), derives
   the status banner's colour/ARIA role from `statusLevel`, and ships its own
@@ -766,7 +766,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   (`JSX Components/Layout/BaseApplicationLayout`) and cross-framework SSR specs are
   included.
 
-  `@mission-platform/jsx`'s `Slot` marker is now a (never-invoked) function
+  `@mission-platform/forge`'s `Slot` marker is now a (never-invoked) function
   component instead of a `unique symbol`, so `<Slot name="…" />` type-checks as a
   JSX element under the classic `h` factory. The runtime adapters still intercept
   it by identity (`type === Slot`) and the build-time compiler still rewrites it
@@ -774,7 +774,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
 
 - edb785f: add a write-once JSX layer that renders on both Vue 3 and React
 
-  Introduces `@mission-platform/jsx`, a tiny dependency-free runtime whose classic
+  Introduces `@mission-platform/forge`, a tiny dependency-free runtime whose classic
   JSX factory (`h`) builds a framework-neutral element tree, plus `./react` and
   `./vue` adapters (`toReactComponent` / `toVueComponent`) that map that tree onto
   `React.createElement` or Vue's `h` at render time — a hand-rolled alternative to
@@ -786,11 +786,11 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
 
 - edb785f: add scoped-slot (render-prop) support and migrate the self-contained Data components to write-once JSX
 
-  `@mission-platform/jsx` gains a `MpRenderProperty<Scope>` type and the neutral
+  `@mission-platform/forge` gains a `MpRenderProperty<Scope>` type and the neutral
   `<Slot>` element now accepts **scope props** (`<Slot name="row" item={item}
 index={i} />`) so a write-once component can drive a **scoped slot**.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler translates a scoped
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler translates a scoped
   `<Slot>` to a Vue scoped slot (`slots.x?.(scope)`) and a React render-prop call
   (`properties.x?.(scope)`), reusing the existing named-slot path. Both emitters
   have a regression test.
@@ -815,7 +815,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
 
 - edb785f: add a `hasSlot` slot-presence helper and move the component content props to named slots
 
-  `@mission-platform/jsx` now exports `hasSlot('x')` — the neutral counterpart of
+  `@mission-platform/forge` now exports `hasSlot('x')` — the neutral counterpart of
   Vue's `$slots.x` / a React `properties.x != null` check (an omitted name targets
   the default slot) — so a write-once component can render an optional wrapper
   region only when a slot is filled. The runtime adapters also gain
@@ -823,7 +823,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   against the forwarding component before handing children to a child component,
   so a component can forward its own slots into a child's slots.
 
-  `@mission-platform/vite-plugin-jsx` compiles `hasSlot('x')` to each framework's
+  `@mission-platform/vite-plugin-forge` compiles `hasSlot('x')` to each framework's
   native presence check — Vue's `v-if="$slots.x"` (template path) / `!!slots.x`
   (render-closure path, pulling in `useSlots()`) and React's `properties.x != null`
   — and consumes the `hasSlot` import (never emitting it).
@@ -849,12 +849,12 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
 
 - 94f9acf: add framework-neutral React-style hooks and an opt-in JSX globals typings export
 
-  `@mission-platform/jsx` now exposes neutral, render-once hooks (`useState`,
+  `@mission-platform/forge` now exposes neutral, render-once hooks (`useState`,
   `useRef`, `useEffect`, `useMemo`, `useCallback`) so neutral components can hold
-  state and run effects; `@mission-platform/vite-plugin-jsx` compiles them to
+  state and run effects; `@mission-platform/vite-plugin-forge` compiles them to
   React's own hooks or a Vue hook shim at build time. The package also ships the
   ambient JSX typings (previously duplicated in consumers) as an **opt-in**
-  `@mission-platform/jsx/jsx-globals` export — add it to a consumer's
+  `@mission-platform/forge/jsx-globals` export — add it to a consumer's
   `compilerOptions.types` to wire the classic `h` JSX factory's global `JSX`
   namespace to `MpElement`.
 
@@ -871,12 +871,12 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   removed (component CSS now loads automatically with the component), and the
   `./vue` / `./react` exports resolve to `dist/<framework>/index.js`.
 
-  `@mission-platform/vite-plugin-jsx` gains `jsxComponentsCssImportPlugin`, which
+  `@mission-platform/vite-plugin-forge` gains `jsxComponentsCssImportPlugin`, which
   re-links each component's extracted CSS to its JS chunk (Vite library builds
   emit per-chunk CSS but do not inject the import), and its two-stage compiler now
   translates the new named-slot marker.
 
-  `@mission-platform/jsx` adds a framework-neutral named-slot primitive `Slot`
+  `@mission-platform/forge` adds a framework-neutral named-slot primitive `Slot`
   (`<Slot name="…" />`, with the nameless `<Slot />` for the default slot, scoped
   slots, and fallback children). The runtime adapters resolve slots against a
   per-component scope, and the build-time compiler rewrites `<Slot name="x" />` to
@@ -898,7 +898,7 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   ships its own per-component `@layer mp.components` CSS, with co-located stories
   (`JSX Components/<Category>/…`) and cross-framework SSR specs.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler now scopes styling per
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler now scopes styling per
   framework: the **React** build keeps the hashed **CSS Module**, while the **Vue**
   build inlines each component's `*.module.scss` as a scoped
   `<style scoped lang="scss">` block in the generated SFC (preserving the
@@ -906,14 +906,14 @@ index={i} />`) so a write-once component can drive a **scoped slot**.
   `styles[`x`]` read — including computed object keys — to its literal class name,
   so `classNames(...)` produces plain, `data-v-`-scoped classes.
 
-  `@mission-platform/jsx`'s `Slot` marker is a (never-invoked) function component
+  `@mission-platform/forge`'s `Slot` marker is a (never-invoked) function component
   so `<Slot name="…" />` type-checks under the classic `h` factory.
 
 - 94f9acf: add the `Transition` (enter/leave), `Dynamic` (dynamic component), and context (`createContext`/`useContext`) neutral primitives, and verify recursive self-referencing components — the React/Vue adapters intercept the new markers for SSR, ship a CSS-class React `Transition`, and provide a `provide`/`inject`-backed Vue `createContext`/`useContext`
 - edb785f: add a framework-neutral `Teleport`/portal primitive and migrate the popup overlays with CSS anchor positioning
 
-  - `@mission-platform/jsx`: add the neutral `<Teleport to="…">` portal element (`MpTeleportProperties`) — a compile-time/adapter marker like `Slot`. The runtime adapters render its children in place (SSR parity), and `@mission-platform/jsx/react` now also exports a real `createPortal`-backed `Teleport` component (SSR-safe; resolves its target after mount).
-  - `@mission-platform/vite-plugin-jsx`: remap the neutral `Teleport` import per framework — Vue resolves it from the `vue` runtime (built-in `<Teleport>`) and React imports it from `@mission-platform/jsx/react` (the `createPortal` wrapper) — while leaving the `<Teleport>` JSX usage intact.
+  - `@mission-platform/forge`: add the neutral `<Teleport to="…">` portal element (`MpTeleportProperties`) — a compile-time/adapter marker like `Slot`. The runtime adapters render its children in place (SSR parity), and `@mission-platform/forge/react` now also exports a real `createPortal`-backed `Teleport` component (SSR-safe; resolves its target after mount).
+  - `@mission-platform/vite-plugin-forge`: remap the neutral `Teleport` import per framework — Vue resolves it from the `vue` runtime (built-in `<Teleport>`) and React imports it from `@mission-platform/forge/react` (the `createPortal` wrapper) — while leaving the `<Teleport>` JSX usage intact.
   - `@mission-platform/components`: migrate the `Components/Overlays` popups `BaseTooltip`, `BasePopover`, and `BaseDropdown` from `@mission-platform/components` to the write-once neutral package. Each teleports its panel to `document.body` and positions it with the CSS Anchor Positioning API (`anchor-name`/`position-anchor`/`position-area` + `position-try-fallbacks` + `@position-try`, plus `anchor-size(width)` for the dropdown's trigger-width match) instead of `@floating-ui`; `<Transition>` is dropped. The popover's and dropdown's compound (`-start`/`-end`) placements use **fully-logical** `position-area` values (e.g. `block-end span-inline-end`) — mixing a physical side keyword with a logical span (`bottom span-inline-end`) is an invalid value that browsers silently drop, which would leave the teleported panel un-anchored at its static position. The modal overlays (`BaseDialog`/`BaseModal`) remain Vue-only.
 
 - 94f9acf: add explicit per-phase transition-class props for scoped (non-global) transitions

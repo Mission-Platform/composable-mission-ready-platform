@@ -1,5 +1,5 @@
 /**
- * Framework-neutral **named slots** for the `@mission-platform/jsx` dialect.
+ * Framework-neutral **named slots** for the `@mission-platform/forge` dialect.
  *
  * A write-once component declares a slot in its returned tree with the neutral
  * {@link Slot} element:
@@ -13,11 +13,11 @@
  * </main>
  * ```
  *
- * `@mission-platform/vite-plugin-jsx` rewrites each `<Slot name="x" />` straight
+ * `@mission-platform/vite-plugin-forge` rewrites each `<Slot name="x" />` straight
  * to the framework's own mechanism at build time — Vue's `slots.x?.()` and a
  * React render-prop lookup (`properties.x`) — so the compiled output has no
  * neutral runtime. The implementation **here** is the baseline used by the
- * runtime adapters (`@mission-platform/jsx/react`, `.../vue`) and SSR: each
+ * runtime adapters (`@mission-platform/forge/react`, `.../vue`) and SSR: each
  * adapter pushes the props of the component it is expanding onto a small scope
  * stack, and a `<Slot name="x" />` resolves to that scope's `x` entry (the
  * nameless default slot resolves to `children`), exactly mirroring how the
@@ -28,7 +28,7 @@ import { isMpElement, Slot as SlotMarker, type MpChild, type MpElement, type MpP
 /**
  * Re-export the `Slot` marker used as the element `type` for a named slot
  * (`<Slot name="…" />`). Authored components import it from
- * `@mission-platform/jsx`; both the runtime adapters and the build-time compiler
+ * `@mission-platform/forge`; both the runtime adapters and the build-time compiler
  * recognise it specially. It lives in `./types` so it can participate in
  * `MpElementType`.
  */
@@ -124,7 +124,7 @@ export function collectSlottedChildren(children: readonly MpChild[]): SlottedChi
  * {hasSlot('footer') ? <footer><Slot name="footer" /></footer> : undefined}
  * ```
  *
- * `@mission-platform/vite-plugin-jsx` rewrites the call straight to each
+ * `@mission-platform/vite-plugin-forge` rewrites the call straight to each
  * framework's native presence check — Vue's `!!slots.x` (`$slots.x` inside a
  * `v-if`) and React's `properties.x != null` — so a write-once component can
  * render an optional wrapper region only when the slot is filled, on both

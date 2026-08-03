@@ -1,6 +1,6 @@
 /**
  * Framework-neutral **dynamic component** primitive for the
- * `@mission-platform/jsx` dialect.
+ * `@mission-platform/forge` dialect.
  *
  * A write-once component renders an element whose tag/component is only known at
  * runtime — a navbar item that is a `<button>`, an `<a>`, or a router link; a
@@ -13,12 +13,12 @@
  * </Dynamic>
  * ```
  *
- * `@mission-platform/vite-plugin-jsx` rewrites a `<Dynamic is={…} …>` element to
+ * `@mission-platform/vite-plugin-forge` rewrites a `<Dynamic is={…} …>` element to
  * each framework's own dynamic-component mechanism at build time — an
  * `h(is, …)` / `React.createElement(is, …)` call on React and a
  * `<component :is="…">` on Vue — so the compiled output has no neutral runtime.
  * The implementation **here** is the baseline used by the runtime adapters
- * (`@mission-platform/jsx/react`, `.../vue`) and SSR: the adapters intercept the
+ * (`@mission-platform/forge/react`, `.../vue`) and SSR: the adapters intercept the
  * marker by identity (`type === Dynamic`), read `is`, and render
  * `is` with the remaining properties and children, exactly mirroring the
  * compiled output.
@@ -41,7 +41,7 @@ export interface MpDynamicProperties extends MpProperties {
  * Marker used as the element `type` for a dynamic component
  * (`<Dynamic is={…}>…</Dynamic>`).
  *
- * Authored components import it from `@mission-platform/jsx`; both the runtime
+ * Authored components import it from `@mission-platform/forge`; both the runtime
  * adapters and the build-time compiler recognise it specially. It is never
  * rendered directly — the adapters intercept it (rendering `is` with the
  * forwarded properties/children) and the compiler rewrites it to the target
@@ -49,6 +49,6 @@ export interface MpDynamicProperties extends MpProperties {
  */
 export const Dynamic: MpComponent<MpDynamicProperties> = () => {
   throw new Error(
-    '@mission-platform/jsx: <Dynamic> is a compile-time / adapter marker and must not be rendered directly.',
+    '@mission-platform/forge: <Dynamic> is a compile-time / adapter marker and must not be rendered directly.',
   );
 };

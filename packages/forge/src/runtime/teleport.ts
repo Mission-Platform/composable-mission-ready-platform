@@ -1,6 +1,6 @@
 /**
  * Framework-neutral **portal / teleport** primitive for the
- * `@mission-platform/jsx` dialect.
+ * `@mission-platform/forge` dialect.
  *
  * A write-once component renders content into a different part of the DOM tree
  * (typically `document.body`, so an overlay escapes its parent's `overflow` /
@@ -14,12 +14,12 @@
  * )}
  * ```
  *
- * `@mission-platform/vite-plugin-jsx` rewrites the `Teleport` **import** to each
+ * `@mission-platform/vite-plugin-forge` rewrites the `Teleport` **import** to each
  * framework's own portal mechanism at build time — React's
- * `createPortal` (via `@mission-platform/jsx/react`) and Vue's built-in
+ * `createPortal` (via `@mission-platform/forge/react`) and Vue's built-in
  * `<Teleport>` (`import { Teleport } from 'vue'`) — so the compiled output uses
  * the native portal with no neutral runtime. The implementation **here** is the
- * baseline used by the runtime adapters (`@mission-platform/jsx/react`,
+ * baseline used by the runtime adapters (`@mission-platform/forge/react`,
  * `.../vue`) and SSR: a portal has no meaningful inline server output, so the
  * adapters render the teleported children **in place** (a real portal only
  * matters in the live DOM), which keeps the cross-framework SSR parity intact.
@@ -48,13 +48,13 @@ export interface MpTeleportProperties extends MpProperties {
 /**
  * Marker used as the element `type` for a portal (`<Teleport to="…">…</Teleport>`).
  *
- * Authored components import it from `@mission-platform/jsx`; both the runtime
+ * Authored components import it from `@mission-platform/forge`; both the runtime
  * adapters and the build-time compiler recognise it specially. It is never
  * rendered directly — the adapters intercept it (rendering its children in
  * place) and the compiler remaps its import to the target framework's portal.
  */
 export const Teleport: MpComponent<MpTeleportProperties> = () => {
   throw new Error(
-    '@mission-platform/jsx: <Teleport> is a compile-time / adapter marker and must not be rendered directly.',
+    '@mission-platform/forge: <Teleport> is a compile-time / adapter marker and must not be rendered directly.',
   );
 };

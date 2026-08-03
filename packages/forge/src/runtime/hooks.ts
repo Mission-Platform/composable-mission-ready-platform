@@ -1,15 +1,15 @@
 /**
- * Framework-neutral, React-style hooks for the `@mission-platform/jsx` dialect.
+ * Framework-neutral, React-style hooks for the `@mission-platform/forge` dialect.
  *
  * Components are authored once against these hooks (`useState`, `useRef`,
  * `useEffect`, `useMemo`, `useCallback`) and compiled by
- * `@mission-platform/vite-plugin-jsx` straight to each framework at build time:
+ * `@mission-platform/vite-plugin-forge` straight to each framework at build time:
  * the React build rewrites these imports to React's own hooks, while the Vue
  * build rewrites them to a small hook runtime implemented on Vue's reactivity
  * and lifecycle.
  *
  * The implementations **here** are the framework-neutral baseline used by the
- * runtime adapters (`@mission-platform/jsx/react`, `.../vue`) and by SSR: they
+ * runtime adapters (`@mission-platform/forge/react`, `.../vue`) and by SSR: they
  * are deliberately render-once and side-effect-free, so a neutral component
  * rendered through an adapter produces its initial markup (no effects run,
  * state stays at its initial value). Identical initial markup on both

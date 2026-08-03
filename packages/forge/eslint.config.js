@@ -10,7 +10,7 @@ export default [
   },
   {
     // The neutral hooks deliberately mirror React's public hook API
-    // (`useRef`/`MpRef`, `…args`) so `@mission-platform/vite-plugin-jsx` can
+    // (`useRef`/`MpRef`, `…args`) so `@mission-platform/vite-plugin-forge` can
     // re-export React's hooks verbatim; keep those exact names.
     name: 'mission-platform/jsx-hooks-names',
     files: ['src/runtime/hooks.ts'],

@@ -1,8 +1,8 @@
 /**
  * SolidJS adapter primitives for the framework-neutral JSX runtime.
  *
- * `@mission-platform/vite-plugin-jsx` rewrites a write-once component's
- * `import { Teleport, Transition, TransitionGroup } from '@mission-platform/jsx'`
+ * `@mission-platform/vite-plugin-forge` rewrites a write-once component's
+ * `import { Teleport, Transition, TransitionGroup } from '@mission-platform/forge'`
  * to import these Solid builds, so a single `<Teleport>` / `<Transition>` /
  * `<TransitionGroup>` authoring surface compiles to native Solid components.
  *
@@ -26,8 +26,8 @@ export interface TeleportProperties {
 
 /**
  * The Solid build of the neutral `<Teleport>` primitive — a thin wrapper around
- * Solid's {@link Portal}. `@mission-platform/vite-plugin-jsx` rewrites a
- * component's `import { Teleport } from '@mission-platform/jsx'` to import this
+ * Solid's {@link Portal}. `@mission-platform/vite-plugin-forge` rewrites a
+ * component's `import { Teleport } from '@mission-platform/forge'` to import this
  * component, so a write-once `<Teleport to="body">…</Teleport>` compiles to a
  * native Solid portal.
  *
@@ -97,8 +97,8 @@ export interface TransitionProperties extends TransitionClassOverrides {
  * the prop surface already matches Vue/React (`name`, `appear`, `duration`, and
  * the per-phase class overrides).
  *
- * `@mission-platform/vite-plugin-jsx` rewrites a component's
- * `import { Transition } from '@mission-platform/jsx'` to import this on the
+ * `@mission-platform/vite-plugin-forge` rewrites a component's
+ * `import { Transition } from '@mission-platform/forge'` to import this on the
  * Solid target.
  */
 export function Transition(properties: TransitionProperties): JSX.Element {
@@ -130,8 +130,8 @@ export interface TransitionGroupProperties extends TransitionClassOverrides {
  * `appear`, `duration`, and the per-phase class overrides) for write-once
  * parity.
  *
- * `@mission-platform/vite-plugin-jsx` rewrites a component's
- * `import { TransitionGroup } from '@mission-platform/jsx'` to import this on the
+ * `@mission-platform/vite-plugin-forge` rewrites a component's
+ * `import { TransitionGroup } from '@mission-platform/forge'` to import this on the
  * Solid target.
  */
 export function TransitionGroup(properties: TransitionGroupProperties): JSX.Element {

@@ -1,25 +1,25 @@
 /**
  * Ambient JSX typings for the classic (`jsxFactory: 'h'`) transform used to
- * author components against `@mission-platform/jsx`. JSX expressions compile
+ * author components against `@mission-platform/forge`. JSX expressions compile
  * into `h(...)` calls that return the framework-neutral `MpElement`, so the
  * global `JSX` namespace is wired up to that type rather than to any concrete
  * framework.
  *
  * This is **opt-in**: it is not pulled in automatically by importing
- * `@mission-platform/jsx` (that would leak a global `JSX` namespace into apps
+ * `@mission-platform/forge` (that would leak a global `JSX` namespace into apps
  * that author React/Vue JSX). A package that authors neutral components enables
  * it explicitly — e.g. via `compilerOptions.types` or a triple-slash reference:
  *
  * ```jsonc
  * // tsconfig.json
- * { "compilerOptions": { "types": ["@mission-platform/jsx/jsx-globals"] } }
+ * { "compilerOptions": { "types": ["@mission-platform/forge/jsx-globals"] } }
  * ```
  *
  * React 19's types no longer declare a global `JSX` namespace (they expose
  * `React.JSX` instead), so this declaration is free of conflicts even when
  * `@types/react` is installed.
  */
-import type { MpChild, MpElement } from '@mission-platform/jsx';
+import type { MpChild, MpElement } from '@mission-platform/forge';
 
 declare global {
   namespace JSX {

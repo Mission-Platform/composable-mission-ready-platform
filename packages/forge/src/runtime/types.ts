@@ -6,7 +6,7 @@
  * transform into calls to {@link h}. Those calls produce the plain,
  * serialisable {@link MpElement} tree defined here — a structure that is
  * deliberately framework-agnostic so the per-framework adapters
- * (`@mission-platform/jsx/react`, `@mission-platform/jsx/vue`) can map it onto
+ * (`@mission-platform/forge/react`, `@mission-platform/forge/vue`) can map it onto
  * `React.createElement` or Vue's `h` at render time.
  */
 
@@ -21,12 +21,12 @@
  * TS2604 ("does not have any construct or call signatures"). It is never
  * actually invoked, though — the runtime adapters intercept it by identity
  * (`type === Fragment`) and the build-time compiler
- * (`@mission-platform/vite-plugin-jsx`) lowers fragments to each framework's
+ * (`@mission-platform/vite-plugin-forge`) lowers fragments to each framework's
  * own form (React's `<>`, Vue's inlined children). Calling it directly is a bug.
  */
 export const Fragment: MpFragment = () => {
   throw new Error(
-    '@mission-platform/jsx: <Fragment> / <> is a compile-time / adapter marker and must not be rendered directly.',
+    '@mission-platform/forge: <Fragment> / <> is a compile-time / adapter marker and must not be rendered directly.',
   );
 };
 
@@ -66,13 +66,13 @@ export type MpFragment = (properties?: { readonly children?: MpChild | readonly 
  * Like {@link Fragment}, it is a function-component marker so the classic `h`
  * factory accepts `<Slot name="…" />` as a valid JSX element type.
  * It is never actually invoked, though: the build-time compiler
- * (`@mission-platform/vite-plugin-jsx`) rewrites every `<Slot>` to the target
+ * (`@mission-platform/vite-plugin-forge`) rewrites every `<Slot>` to the target
  * framework's own slot mechanism, and the runtime adapters intercept it by
  * identity (`type === Slot`) before any call. Calling it directly is a bug.
  */
 export const Slot: MpComponent = () => {
   throw new Error(
-    '@mission-platform/jsx: <Slot> is a compile-time / adapter marker and must not be rendered directly.',
+    '@mission-platform/forge: <Slot> is a compile-time / adapter marker and must not be rendered directly.',
   );
 };
 

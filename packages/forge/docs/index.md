@@ -1,4 +1,4 @@
-# @mission-platform/jsx
+# @mission-platform/forge
 
 A tiny, dependency-free "write once, run on Vue 3 and React" layer for Mission Platform. Components are authored once in JSX and rendered on either framework through small adapters — no build-time codegen, no external compiler (this is a hand-rolled alternative to tools like Mitosis).
 
@@ -25,11 +25,11 @@ author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ to
 ## Installation
 
 ```bash
-npm install @mission-platform/jsx
+npm install @mission-platform/forge
 # or
-yarn add @mission-platform/jsx
+yarn add @mission-platform/forge
 # or
-pnpm add @mission-platform/jsx
+pnpm add @mission-platform/forge
 ```
 
 ## Basic Usage
@@ -38,8 +38,8 @@ pnpm add @mission-platform/jsx
 
 ```tsx
 // MyComponent.tsx
-import { h, Fragment } from '@mission-platform/jsx';
-import { useState } from '@mission-platform/jsx';
+import { h, Fragment } from '@mission-platform/forge';
+import { useState } from '@mission-platform/forge';
 
 export function MyComponent({ name }: { name: string }) {
   const [count, setCount] = useState(0);
@@ -58,7 +58,7 @@ export function MyComponent({ name }: { name: string }) {
 
 ```vue
 <script setup lang="ts">
-  import { toVueComponent } from '@mission-platform/jsx/vue';
+  import { toVueComponent } from '@mission-platform/forge/vue';
   import MyComponent from './MyComponent.tsx';
 
   const MyVueComponent = toVueComponent(MyComponent);
@@ -72,7 +72,7 @@ export function MyComponent({ name }: { name: string }) {
 ### 3. Use it in React
 
 ```tsx
-import { toReactComponent } from '@mission-platform/jsx/react';
+import { toReactComponent } from '@mission-platform/forge/react';
 import MyComponent from './MyComponent.tsx';
 
 const MyReactComponent = toReactComponent(MyComponent);
@@ -182,7 +182,7 @@ Converts a framework-neutral component to a React component.
 The package includes full TypeScript declarations. You can use JSX with proper type checking:
 
 ```tsx
-import { h } from '@mission-platform/jsx';
+import { h } from '@mission-platform/forge';
 
 type Props = {
   title: string;
@@ -212,7 +212,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [vue(), react()],
   optimizeDeps: {
-    include: ['@mission-platform/jsx'],
+    include: ['@mission-platform/forge'],
   },
 });
 ```
@@ -223,7 +223,7 @@ For TypeScript projects, you can configure global JSX settings:
 
 ```ts
 // jsx-globals.d.ts
-import '@mission-platform/jsx/jsx-globals';
+import '@mission-platform/forge/jsx-globals';
 ```
 
 This configures the global `JSX` namespace to use `MpElement`.
@@ -242,7 +242,7 @@ function Button({ children }) {
 }
 
 // After (Framework-neutral)
-import { h, Fragment, useState } from '@mission-platform/jsx';
+import { h, Fragment, useState } from '@mission-platform/forge';
 
 export function Button({ children }) {
   const [count, setCount] = useState(0);

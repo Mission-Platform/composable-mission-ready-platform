@@ -1,6 +1,6 @@
 /**
  * Framework-neutral **enter/leave transition** primitive for the
- * `@mission-platform/jsx` dialect.
+ * `@mission-platform/forge` dialect.
  *
  * A write-once component animates a single conditionally-rendered child — an
  * overlay panel, an alert banner, a carousel slide — by wrapping it in the
@@ -13,12 +13,12 @@
  * </Transition>
  * ```
  *
- * `@mission-platform/vite-plugin-jsx` rewrites the `Transition` **import** to each
+ * `@mission-platform/vite-plugin-forge` rewrites the `Transition` **import** to each
  * framework's own mechanism at build time — Vue's built-in `<Transition>`
  * (`import { Transition } from 'vue'`) and a small CSS-class driver
- * (`@mission-platform/jsx/react`) — so the compiled output uses the native
+ * (`@mission-platform/forge/react`) — so the compiled output uses the native
  * transition with no neutral runtime. The implementation **here** is the
- * baseline used by the runtime adapters (`@mission-platform/jsx/react`,
+ * baseline used by the runtime adapters (`@mission-platform/forge/react`,
  * `.../vue`) and SSR: a transition has no meaningful server output (the enter
  * animation only runs in the live DOM after mount), so the adapters render the
  * child **in place**, which keeps the cross-framework SSR parity intact.
@@ -66,14 +66,14 @@ export interface MpTransitionProperties extends MpProperties {
  * Marker used as the element `type` for an enter/leave transition
  * (`<Transition name="…">…</Transition>`).
  *
- * Authored components import it from `@mission-platform/jsx`; both the runtime
+ * Authored components import it from `@mission-platform/forge`; both the runtime
  * adapters and the build-time compiler recognise it specially. It is never
  * rendered directly — the adapters intercept it (rendering its child in place)
  * and the compiler remaps its import to the target framework's transition.
  */
 export const Transition: MpComponent<MpTransitionProperties> = () => {
   throw new Error(
-    '@mission-platform/jsx: <Transition> is a compile-time / adapter marker and must not be rendered directly.',
+    '@mission-platform/forge: <Transition> is a compile-time / adapter marker and must not be rendered directly.',
   );
 };
 
@@ -127,12 +127,12 @@ export interface MpTransitionGroupProperties extends MpProperties {
  * list — by wrapping the mapped children in `<TransitionGroup>`, exactly as
  * Vue's built-in `<TransitionGroup>` does. Like {@link Transition} it is never
  * invoked directly: the adapters intercept it by identity (rendering its
- * children in place for SSR) and `@mission-platform/vite-plugin-jsx` remaps its
+ * children in place for SSR) and `@mission-platform/vite-plugin-forge` remaps its
  * import to each framework's native group transition — Vue's built-in
- * `<TransitionGroup>` and the `@mission-platform/jsx/react` CSS-class driver.
+ * `<TransitionGroup>` and the `@mission-platform/forge/react` CSS-class driver.
  */
 export const TransitionGroup: MpComponent<MpTransitionGroupProperties> = () => {
   throw new Error(
-    '@mission-platform/jsx: <TransitionGroup> is a compile-time / adapter marker and must not be rendered directly.',
+    '@mission-platform/forge: <TransitionGroup> is a compile-time / adapter marker and must not be rendered directly.',
   );
 };

@@ -47,7 +47,7 @@ const BlankFragment: MpComponent = () => h(Fragment);
 // stripping the comments leaves the empty string, matching React's `''`.
 const withoutComments = (html: string): string => html.replaceAll(/<!--.*?-->/g, '');
 
-describe('@mission-platform/jsx runtime', () => {
+describe('@mission-platform/forge runtime', () => {
   it('builds a framework-neutral element tree', () => {
     const element = h('div', { class: 'x', id: 'y' }, 'hi');
 
@@ -64,7 +64,7 @@ describe('@mission-platform/jsx runtime', () => {
   });
 });
 
-describe('@mission-platform/jsx adapters render the same tree on React and Vue', () => {
+describe('@mission-platform/forge adapters render the same tree on React and Vue', () => {
   it('renders a host element identically (mapping `class`) on both frameworks', async () => {
     const react = renderToStaticMarkup(createElement(toReactComponent(HostTree), {}));
     const vue = await renderToString(createSSRApp(toVueComponent(HostTree)));
@@ -109,7 +109,7 @@ describe('@mission-platform/jsx adapters render the same tree on React and Vue',
   });
 });
 
-describe('@mission-platform/jsx adapters render nothing for an empty (null) render on both frameworks', () => {
+describe('@mission-platform/forge adapters render nothing for an empty (null) render on both frameworks', () => {
   it('renders no markup for a `null`-returning component (React `null` / Vue nothing)', async () => {
     const react = renderToStaticMarkup(createElement(toReactComponent(Blank), {}));
     const vue = await renderToString(createSSRApp(toVueComponent(Blank)));

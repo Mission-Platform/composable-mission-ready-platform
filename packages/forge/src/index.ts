@@ -1,5 +1,5 @@
 /**
- * `@mission-platform/jsx` — a tiny, dependency-free "write once, run on Vue
+ * `@mission-platform/forge` — a tiny, dependency-free "write once, run on Vue
  * and React" layer.
  *
  * This package provides only the framework-neutral primitives:
@@ -13,8 +13,8 @@
  * `@mission-platform/components`) and rendered through the adapters:
  *
  * ```ts
- * import { toReactComponent } from '@mission-platform/jsx/react';
- * import { toVueComponent } from '@mission-platform/jsx/vue';
+ * import { toReactComponent } from '@mission-platform/forge/react';
+ * import { toVueComponent } from '@mission-platform/forge/vue';
  * import { MyComponent } from '@mission-platform/components';
  *
  * const ReactComponent = toReactComponent(MyComponent);

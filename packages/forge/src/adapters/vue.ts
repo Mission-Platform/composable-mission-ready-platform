@@ -216,8 +216,8 @@ export interface VueContext<T> {
  * The Vue build of the neutral `createContext` primitive. Returns a handle whose
  * `Provider` is a real component that `provide()`s its `value` to the default
  * slot, so a write-once `<Ctx.Provider value={…}><Slot /></Ctx.Provider>`
- * compiles to native Vue provide. `@mission-platform/vite-plugin-jsx` rewrites a
- * component's `import { createContext, useContext } from '@mission-platform/jsx'`
+ * compiles to native Vue provide. `@mission-platform/vite-plugin-forge` rewrites a
+ * component's `import { createContext, useContext } from '@mission-platform/forge'`
  * to import these on the Vue target.
  */
 export function createContext<T>(defaultValue: T): VueContext<T> {

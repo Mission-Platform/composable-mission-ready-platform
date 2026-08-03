@@ -1,6 +1,6 @@
 /**
  * Framework-neutral **context** (provide/inject) primitive for the
- * `@mission-platform/jsx` dialect.
+ * `@mission-platform/forge` dialect.
  *
  * A write-once component shares a value with an arbitrarily deep subtree —
  * without threading it through every intermediate component's props — by
@@ -20,19 +20,19 @@
  * }
  * ```
  *
- * `@mission-platform/vite-plugin-jsx` maps the primitives to each framework's
+ * `@mission-platform/vite-plugin-forge` maps the primitives to each framework's
  * native mechanism at build time:
  *
  * - **React** — `createContext`/`useContext` *are* React's own, so their import
  *   is rewritten to `react` and a `<Ctx.Provider value={…}>` compiles to a
  *   native React context provider with no neutral runtime.
- * - **Vue** — their import is rewritten to `@mission-platform/jsx/vue`, whose
+ * - **Vue** — their import is rewritten to `@mission-platform/forge/vue`, whose
  *   `createContext` returns a `Provider` component backed by `provide()` and
  *   whose `useContext` is `inject()`, so the same source compiles to native Vue
  *   provide/inject.
  *
  * The implementation **here** is the baseline used by the runtime adapters
- * (`@mission-platform/jsx/react`, `.../vue`) and SSR: a `createContext` carries a
+ * (`@mission-platform/forge/react`, `.../vue`) and SSR: a `createContext` carries a
  * small synchronous provide stack, the adapters push a `<Ctx.Provider>`'s value
  * while expanding its subtree (and pop afterwards), and `useContext` reads the
  * top of that stack — so a neutral component tree resolves context identically
@@ -44,7 +44,7 @@ import { type MpChild, type MpComponent, type MpProperties } from './types';
  * The property the runtime adapters use to recognise a context {@link MpContext.Provider}
  * function (and recover the context it provides) while walking a neutral tree.
  */
-export const MP_CONTEXT: unique symbol = Symbol.for('@mission-platform/jsx.context');
+export const MP_CONTEXT: unique symbol = Symbol.for('@mission-platform/forge.context');
 
 /** The properties accepted by an {@link MpContext.Provider} element. */
 export interface MpContextProviderProperties<T> extends MpProperties {
@@ -78,7 +78,7 @@ export function createContext<T>(defaultValue: T): MpContext<T> {
   const stack: T[] = [];
   const Provider = (() => {
     throw new Error(
-      '@mission-platform/jsx: a context <Provider> is a compile-time / adapter marker and must not be rendered directly.',
+      '@mission-platform/forge: a context <Provider> is a compile-time / adapter marker and must not be rendered directly.',
     );
   }) as unknown as { -readonly [K in keyof MpContextProvider<T>]: MpContextProvider<T>[K] };
   const context: MpContext<T> = { Provider: Provider as MpContextProvider<T>, defaultValue, stack };

@@ -1,5 +1,5 @@
 {
-  "name": "@mission-platform/jsx",
+  "name": "@mission-platform/forge",
   "version": "0.2.0",
   "license": "BSD-4-Clause",
   "description": "A tiny framework-neutral JSX runtime and Vue 3 / React adapters that let Mission Platform components be authored once and rendered on either framework",

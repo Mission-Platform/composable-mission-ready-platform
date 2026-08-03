@@ -200,8 +200,8 @@ export interface TeleportProperties {
 
 /**
  * The React build of the neutral `<Teleport>` primitive — a thin wrapper around
- * `react-dom`'s {@link createPortal}. `@mission-platform/vite-plugin-jsx`
- * rewrites a component's `import { Teleport } from '@mission-platform/jsx'` to
+ * `react-dom`'s {@link createPortal}. `@mission-platform/vite-plugin-forge`
+ * rewrites a component's `import { Teleport } from '@mission-platform/forge'` to
  * import this component, so a write-once `<Teleport to="body">…</Teleport>`
  * compiles to a native React portal.
  *
@@ -366,8 +366,8 @@ function runTransitionPhase(
  * driver that mirrors Vue's built-in `<Transition>`. It animates a single
  * conditionally-rendered child by toggling `<name>-enter-*` / `<name>-leave-*`
  * classes (so the same stylesheet drives both frameworks) and keeps the child
- * mounted through its leave animation. `@mission-platform/vite-plugin-jsx`
- * rewrites a component's `import { Transition } from '@mission-platform/jsx'` to
+ * mounted through its leave animation. `@mission-platform/vite-plugin-forge`
+ * rewrites a component's `import { Transition } from '@mission-platform/forge'` to
  * import this component on the React target.
  *
  * It is SSR-safe: the server render (and first client paint) renders the child
@@ -502,8 +502,8 @@ function applyFlipMove(node: HTMLElement, dx: number, dy: number, moveClass: str
  * list**: entering children get `<name>-enter-*`, leaving children stay mounted
  * through their `<name>-leave-*` animation, and surviving children that change
  * position are FLIP-animated with `<name>-move` (the same stylesheet drives both
- * frameworks). `@mission-platform/vite-plugin-jsx` rewrites a component's
- * `import { TransitionGroup } from '@mission-platform/jsx'` to import this on the
+ * frameworks). `@mission-platform/vite-plugin-forge` rewrites a component's
+ * `import { TransitionGroup } from '@mission-platform/forge'` to import this on the
  * React target.
  *
  * It is SSR-safe: the server render (and first client paint) renders the
