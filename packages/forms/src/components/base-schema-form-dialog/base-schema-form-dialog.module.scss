@@ -1,0 +1,16 @@
+/**
+ * Styling for the write-once `BaseSchemaFormDialog`.
+ *
+ * The rules live in the package's own `mp.forms` cascade layer. The dialog
+ * itself is the shared `BaseModal`; only the action row inside the hosted
+ * `BaseSchemaForm`'s `actions` slot needs layout here.
+ */
+
+@layer mp.forms {
+  .base-schema-form-dialog {
+    &__actions {
+      display: flex;
+      gap: var(--mp-spacing-2);
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # `@mission-platform/forms`
 
-Write-once form orchestration components (`BaseSchemaForm`, `BaseFormBuilder`) authored with `@mission-platform/jsx` and shipped as native Vue 3 (`@mission-platform/forms/vue`) and React (`@mission-platform/forms/react`) components.
+Write-once form orchestration components (`BaseSchemaForm`, `BaseFormBuilder`) authored with `@mission-platform/forge` and shipped as native Vue 3 (`@mission-platform/forms/vue`) and React (`@mission-platform/forms/react`) components.
 
 ## Features
 

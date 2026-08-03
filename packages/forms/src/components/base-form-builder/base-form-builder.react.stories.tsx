@@ -14,7 +14,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * (built through the shared `@mission-platform/forms-core`) via `modelValue` +
  * `onUpdateModelValue`, ready to feed straight into `SchemaForm`. Authored once
  * in the neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Forms/BaseFormBuilder',

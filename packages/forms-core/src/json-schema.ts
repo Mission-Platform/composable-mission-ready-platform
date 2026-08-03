@@ -159,6 +159,7 @@ function propertyToField(key: string, property: JsonSchemaProperty, isRequired: 
     disabled: property.ui?.disabled,
     options: resolveOptions(property),
     rows: property.ui?.rows,
+    language: property.ui?.language,
     accept: property.ui?.accept,
     multiple: property.ui?.multiple,
     capture: property.ui?.capture,

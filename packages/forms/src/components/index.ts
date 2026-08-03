@@ -16,3 +16,4 @@ export {
   type SchemaFormProperties,
   type SchemaFormValidationMode,
 } from './base-schema-form';
+export { BaseSchemaFormDialog, type SchemaFormDialogProperties } from './base-schema-form-dialog';

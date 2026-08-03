@@ -36,7 +36,7 @@ import {
   schemaToFields,
   widgetHasOptions,
 } from '@mission-platform/forms-core';
-import { h, type MpChild, type MpElement, type MpProperties, useRef, useState } from '@mission-platform/jsx';
+import { h, type MpChild, type MpElement, type MpProperties, useRef, useState } from '@mission-platform/forge';
 import { BaseVerticalLayout } from '@mission-platform/layouts';
 
 import { BaseSchemaForm } from '../base-schema-form';
@@ -209,7 +209,7 @@ function buildLeaf(field: string, operator: string, raw: string): FieldCondition
  * `BaseFormBuilder` — a visual, drag-and-drop authoring surface for JSON-Schema
  * forms (the counterpart to `BaseSchemaForm`), authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * Laid out as a three-column `BaseVerticalLayout`: a field **palette**, a tabbed
  * centre (**Editor** canvas, a wizard-only **Steps** tab, a live **Preview**

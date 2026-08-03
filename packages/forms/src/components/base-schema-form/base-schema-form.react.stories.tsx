@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * shared `@mission-platform/forms-core` package (so both frameworks validate
  * identically). A single object renders a one-step form; a top-level array
  * renders a multi-step wizard. Authored once in the neutral JSX dialect and
- * compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Forms/BaseSchemaForm',

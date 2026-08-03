@@ -8,7 +8,7 @@
 
   Adds the write-once `@mission-platform/forms` package containing
   `BaseFormBuilder` (public `FormBuilder`) and `BaseSchemaForm` (public
-  `SchemaForm`), authored once in the neutral `@mission-platform/jsx` dialect and
+  `SchemaForm`), authored once in the neutral `@mission-platform/forge` dialect and
   compiled to both Vue 3 (`./vue`) and React (`./react`). The package depends on
   **both** `@mission-platform/components` (field widgets + `BaseDrawer`) and
   `@mission-platform/layouts` (`BaseVerticalLayout`), which is why it lives in its
@@ -177,7 +177,7 @@
   - @mission-platform/harper@0.2.0
   - @mission-platform/hunspell@0.4.0
   - @mission-platform/icons@0.2.0
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
   - @mission-platform/phone-number@0.3.0
 
 ## 0.2.0
@@ -188,7 +188,7 @@
 
   Adds the write-once `@mission-platform/forms` package containing
   `BaseFormBuilder` (public `FormBuilder`) and `BaseSchemaForm` (public
-  `SchemaForm`), authored once in the neutral `@mission-platform/jsx` dialect and
+  `SchemaForm`), authored once in the neutral `@mission-platform/forge` dialect and
   compiled to both Vue 3 (`./vue`) and React (`./react`). The package depends on
   **both** `@mission-platform/components` (field widgets + `BaseDrawer`) and
   `@mission-platform/layouts` (`BaseVerticalLayout`), which is why it lives in its
@@ -357,7 +357,7 @@
   - @mission-platform/harper@0.2.0
   - @mission-platform/hunspell@0.4.0
   - @mission-platform/icons@0.2.0
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
   - @mission-platform/phone-number@0.3.0
 
 ## 0.2.0
@@ -368,7 +368,7 @@
 
   Adds the write-once `@mission-platform/forms` package containing
   `BaseFormBuilder` (public `FormBuilder`) and `BaseSchemaForm` (public
-  `SchemaForm`), authored once in the neutral `@mission-platform/jsx` dialect and
+  `SchemaForm`), authored once in the neutral `@mission-platform/forge` dialect and
   compiled to both Vue 3 (`./vue`) and React (`./react`). The package depends on
   **both** `@mission-platform/components` (field widgets + `BaseDrawer`) and
   `@mission-platform/layouts` (`BaseVerticalLayout`), which is why it lives in its
@@ -537,7 +537,7 @@
   - @mission-platform/harper@0.2.0
   - @mission-platform/hunspell@0.4.0
   - @mission-platform/icons@0.2.0
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
   - @mission-platform/phone-number@0.3.0
 
 ## 0.2.0
@@ -548,7 +548,7 @@
 
   Adds the write-once `@mission-platform/forms` package containing
   `BaseFormBuilder` (public `FormBuilder`) and `BaseSchemaForm` (public
-  `SchemaForm`), authored once in the neutral `@mission-platform/jsx` dialect and
+  `SchemaForm`), authored once in the neutral `@mission-platform/forge` dialect and
   compiled to both Vue 3 (`./vue`) and React (`./react`). The package depends on
   **both** `@mission-platform/components` (field widgets + `BaseDrawer`) and
   `@mission-platform/layouts` (`BaseVerticalLayout`), which is why it lives in its
@@ -717,5 +717,5 @@
   - @mission-platform/harper@0.2.0
   - @mission-platform/hunspell@0.4.0
   - @mission-platform/icons@0.2.0
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
   - @mission-platform/phone-number@0.3.0

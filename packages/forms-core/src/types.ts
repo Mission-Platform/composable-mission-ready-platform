@@ -302,6 +302,12 @@ export interface FieldUiOptions {
   hint?: string;
   /** Number of visible rows (textarea / markdown). */
   rows?: number;
+  /**
+   * Syntax language id for the `code` widget (e.g. `'typescript'`, `'json'`).
+   * Passed straight through to the underlying Monaco editor; defaults to
+   * `'plaintext'` when omitted.
+   */
+  language?: string;
   /** Accepted file types for the `file` widget (the input's `accept` attr). */
   accept?: string;
   /**
@@ -498,6 +504,8 @@ export interface FormFieldSchema {
   options?: Array<{ label: string; value: string | number }>;
   /** Number of visible rows (textarea / markdown). */
   rows?: number;
+  /** Syntax language id for the `code` widget (defaults to `'plaintext'`). */
+  language?: string;
   /** Accepted file types for the `file` widget. */
   accept?: string;
   /** Whether the `file` widget accepts multiple files / the `email` widget multiple addresses. */

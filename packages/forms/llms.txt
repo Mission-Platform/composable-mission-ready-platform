@@ -1,8 +1,8 @@
 # @mission-platform/forms
 
 Write-once Mission Platform **form** components — authored once in the
-framework-neutral `@mission-platform/jsx` dialect and compiled straight to both
-Vue 3 (`./vue`) and React (`./react`) by `@mission-platform/vite-plugin-jsx`'s
+framework-neutral `@mission-platform/forge` dialect and compiled straight to both
+Vue 3 (`./vue`) and React (`./react`) by `@mission-platform/vite-plugin-forge`'s
 two-stage compiler (there is no neutral runtime build). The package was split out
 of `@mission-platform/components` so it can depend on **both**
 `@mission-platform/components` (for the field widgets and `BaseDrawer`) and
@@ -23,13 +23,20 @@ dependency cycle.
   `@mission-platform/forms-core`, so Vue and React validate identically). A
   single object renders a one-step form; a top-level array renders a multi-step
   wizard. Supports nested field sets, `ui.visibleWhen` conditional visibility,
-  and per-field error surfacing.
+  and per-field error surfacing. The `code` widget (`ui.widget: 'code'`, with an
+  optional `ui.language`) renders a `BaseMonacoEditor` code field.
+- **BaseSchemaFormDialog** (`./components/base-schema-form-dialog`) — a
+  `BaseSchemaForm` hosted inside a `BaseModal`, with Cancel / Submit actions
+  wired to the form's own validation (the primary button is the form's
+  `type="submit"`, so submitting validates through `@mission-platform/forms-core`
+  and fires `onSubmit(values, isValid)`). Open state is controlled (`open` +
+  `onUpdateOpen`/`onClose`). Handy for e.g. a Monaco code-insertion dialog.
 
 ## Consuming
 
-- Vue: `import { FormBuilder, SchemaForm } from '@mission-platform/forms/vue'`
-- React: `import { FormBuilder, SchemaForm } from '@mission-platform/forms/react'`
-  (both names are also exported under their neutral `Base*` aliases).
+- Vue: `import { FormBuilder, SchemaForm, SchemaFormDialog } from '@mission-platform/forms/vue'`
+- React: `import { FormBuilder, SchemaForm, SchemaFormDialog } from '@mission-platform/forms/react'`
+  (all names are also exported under their neutral `Base*` aliases).
 - Styles: `import '@mission-platform/forms/styles'` for the shared a11y helpers;
   each component additionally ships its own co-located CSS Module.
 

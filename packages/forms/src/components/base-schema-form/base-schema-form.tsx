@@ -8,6 +8,7 @@ import {
   BaseFileInput,
   BaseInput,
   BaseMarkdownInput,
+  BaseMonacoEditor,
   BaseMultiselect,
   BaseNumberStepper,
   BasePhoneInput,
@@ -35,7 +36,7 @@ import {
   type SchemaFormDefinition,
   type SchemaFormValidationMode,
 } from '@mission-platform/forms-core';
-import { h, Slot, useMemo, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, Slot, useMemo, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -137,7 +138,7 @@ function withPath(values: FormValues, path: string, value: unknown): FormValues 
 /**
  * `BaseSchemaForm` — a JSON-Schema-driven form authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * Like the Vue original it is driven entirely by a JSON Schema: both the
  * rendered fields and the validation rules are derived from it through the
@@ -364,6 +365,45 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
             rows={field.rows}
             onUpdateModelValue={onUpdate}
           />
+        );
+      }
+      case 'code': {
+        return (
+          <fieldset className={[styles['base-schema-form__field'], styles['base-schema-form__code']]}>
+            {field.label ? (
+              <legend className={styles['base-schema-form__code-legend']}>
+                <BaseTypography
+                  as="span"
+                  variant="label"
+                >
+                  {field.label}
+                  {field.required ? <span aria-hidden="true"> *</span> : undefined}
+                </BaseTypography>
+              </legend>
+            ) : undefined}
+            <BaseMonacoEditor
+              height={field.rows ? `${field.rows * 1.5}rem` : '16rem'}
+              language={field.language ?? 'plaintext'}
+              modelValue={(value as string) ?? ''}
+              readonly={fieldDisabled}
+              onUpdateModelValue={onUpdate}
+            />
+            {field.hint || error ? (
+              <BaseTypography
+                as="p"
+                className={[
+                  styles['base-schema-form__code-hint'],
+                  {
+                    [styles['base-schema-form__code-hint--error']]: Boolean(error),
+                  },
+                ]}
+                color="inherit"
+                variant="caption"
+              >
+                {error || field.hint}
+              </BaseTypography>
+            ) : undefined}
+          </fieldset>
         );
       }
       case 'checkbox': {
