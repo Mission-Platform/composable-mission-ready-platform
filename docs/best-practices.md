@@ -43,7 +43,7 @@ This document outlines essential best practices for developing, testing, and mai
   ```
 
 ### Component Development
-- **Write once, run anywhere**: Use the framework-neutral `@mission-platform/jsx` dialect
+- **Write once, run anywhere**: Use the framework-neutral `@mission-platform/forge` dialect
 - **Props validation**: Always validate props with type checking
 - **Default values**: Provide sensible defaults for all props
 - **Events naming**: Use `update:modelValue` for v-model compatibility

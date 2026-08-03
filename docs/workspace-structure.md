@@ -130,6 +130,37 @@ Cloudflare Worker packages consumed by deployable apps for serving static assets
 - Workers are always `"private": true` and never published to a registry
 - Workers consume `configs/` as devDependencies and may consume `packages/` as runtime dependencies
 
+## Standard `src/` Layout Convention
+
+To maintain consistency across the monorepo, all source code within the `src/` directory of packages and apps must follow a hierarchical structure.
+
+### 1. Packages (`packages/<name>/src/`)
+
+Packages are organized by functional type. Each subdirectory must contain an `index.ts` barrel file to manage internal exports, and the top-level `src/index.ts` re-exports the public API.
+
+- **`components/`**: UI components (Vue, React, or framework-neutral JSX).
+- **`composables/`**: Reusable reactive logic. UI packages that ship components **must** also ship corresponding composables authored against `@mission-platform/forge` neutral hooks.
+- **`locales/`**: i18n translation files and definitions.
+- **`utils/`**: Framework-agnostic utility functions and helpers.
+
+### 2. Apps (`apps/<name>/src/`)
+
+Apps follow a standard frontend application structure, as applicable to their specific needs.
+
+- **`client/`**: Client-side entry points and logic.
+- **`server/`**: Server-side logic (e.g., SSR, API routes).
+- **`pages/`**: Routable page components.
+- **`views/`**: Significant UI sections or layout parts.
+- **`components/`**: App-specific UI components.
+- **`composables/`**: App-specific reactive logic.
+- **`locales/`**: App-specific i18n translations.
+- **`utils/`**: App-specific utility functions.
+- **`routes/`**: Route definitions and configuration.
+
+### Barrel Convention (`index.ts`)
+
+Every subdirectory in a `src/` hierarchy should have an `index.ts` barrel file. This allows for clean imports and encapsulates the internal structure of the subdirectory. The root `src/index.ts` serves as the primary entry point for the entire workspace member.
+
 ## Root-Level Files
 
 ### Configuration Files

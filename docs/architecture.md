@@ -88,7 +88,7 @@ This ensures a clear separation of concerns and prevents circular dependencies.
 ## Key Components
 
 ### Framework-Neutral JSX Runtime
-The `@mission-platform/jsx` package provides a tiny, dependency-free framework-neutral JSX runtime. It includes:
+The `@mission-platform/forge` package provides a tiny, dependency-free framework-neutral JSX runtime. It includes:
 
 - A classic `h`/`Fragment` factory that builds a serializable `MpElement` tree.
 - Framework-neutral React-style hooks (`useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`).
@@ -96,7 +96,7 @@ The `@mission-platform/jsx` package provides a tiny, dependency-free framework-n
 - Optional ambient typings that wire the classic `h` JSX factory's global `JSX` namespace to `MpElement`.
 
 ### Cross-Framework Component Library
-The `@mission-platform/components` package is the platform's write-once component library. Each component is authored once in the framework-neutral `@mission-platform/jsx` dialect and built straight to both Vue 3 and React by the `@mission-platform/vite-plugin-jsx` two-stage compiler.
+The `@mission-platform/components` package is the platform's write-once component library. Each component is authored once in the framework-neutral `@mission-platform/forge` dialect and built straight to both Vue 3 and React by the `@mission-platform/vite-plugin-forge` two-stage compiler.
 
 #### Build Process
 1. **Stage 1**: Parses each neutral `.tsx` with the TypeScript compiler API and emits a per-framework source tree:

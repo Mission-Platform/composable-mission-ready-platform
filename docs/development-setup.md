@@ -61,7 +61,7 @@ node --version
 pnpm --version
 
 # Run a quick build test
-pnpm exec turbo run build --filter @mission-platform/jsx
+pnpm exec turbo run build --filter @mission-platform/forge
 ```
 
 ## Development Workflow
@@ -95,7 +95,7 @@ Build individual packages or the entire workspace:
 
 ```bash
 # Build a specific package
-pnpm exec turbo run build --filter @mission-platform/jsx
+pnpm exec turbo run build --filter @mission-platform/forge
 
 # Build all packages
 pnpm exec turbo run build --filter "./packages/*"
@@ -242,7 +242,7 @@ turbo run build
 
 Now that your development environment is set up, you can:
 
-1. **Explore the codebase** - Start with the core packages like `@mission-platform/jsx` and `@mission-platform/components`
+1. **Explore the codebase** - Start with the core packages like `@mission-platform/forge` and `@mission-platform/components`
 2. **Run Storybook** to see available components and their documentation
 3. **Build and run My Care Notes** to experience a complete application built with Mission Platform
 4. **Check out the contribution guidelines** in [Contributing](contributing.md)

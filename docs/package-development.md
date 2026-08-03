@@ -60,23 +60,34 @@ To create a new package, follow these steps:
 
 ## Package Structure
 
-A typical package structure looks like this:
+A typical package structure follows a hierarchical layout to ensure consistency and maintainability. Each functional area has its own directory with an `index.ts` barrel file.
+
 ```
 packages/<package-name>/
 ├── src/
-│   ├── components/
-│   │   └── Component.vue
-│   ├── composables/
-│   │   └── useExample.ts
-│   ├── utils/
-│   │   └── helper.ts
-│   ├── index.ts
-│   └── llms.txt
+│   ├── components/      # UI components (Vue, React, JSX)
+│   │   ├── MyComponent.vue
+│   │   └── index.ts     # Exports all components
+│   ├── composables/     # Reactive logic and hooks
+│   │   ├── useExample.ts
+│   │   └── index.ts     # Exports all composables
+│   ├── locales/         # i18n translation files
+│   │   ├── en.json
+│   │   └── index.ts     # Exports locale definitions
+│   ├── utils/           # Utility functions and helpers
+│   │   ├── helper.ts
+│   │   └── index.ts     # Exports all utilities
+│   ├── index.ts         # Top-level barrel re-exporting public API
+│   └── llms.txt         # LLM-readable package documentation
 ├── package.json
 ├── tsconfig.json
 ├── vite.config.ts
 └── README.md
 ```
+
+### UI Package Composables Rule
+
+Every UI package that ships components **MUST** also provide corresponding composables under `src/composables/` with an `index.ts` barrel. These composables should be authored write-once against `@mission-platform/forge` neutral hooks so they can be compiled to every supported framework (e.g. Vue 3, React). This ensures reactive logic remains portable and consistent across the platform.
 
 ## Best Practices
 
@@ -110,7 +121,7 @@ import Button from '../packages/components/Button.vue' // BLOCKED BY LINT
 
 1. **Framework-Agnostic Design**:
    - Where possible, design packages to be framework-agnostic.
-   - Use the `@mission-platform/jsx` package for writing components that can be compiled to both Vue and React.
+   - Use the `@mission-platform/forge` package for writing components that can be compiled to both Vue and React.
 
 2. **TypeScript**:
    - All code should be written in TypeScript to ensure type safety.
