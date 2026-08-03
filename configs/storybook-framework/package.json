@@ -1,0 +1,57 @@
+{
+  "name": "@mission-platform/storybook-framework",
+  "version": "0.1.0",
+  "license": "BSD-4-Clause",
+  "description": "Env-driven Storybook framework preset for the Mission Platform write-once ecosystem: one Storybook app renders neutral stories on any supported framework, selected by a FRAMEWORK env var.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
+  },
+  "peerDependencies": {
+    "@storybook/react-vite": "*",
+    "@storybook/vue3-vite": "*",
+    "@vitejs/plugin-vue-jsx": "*",
+    "vite": "*"
+  },
+  "peerDependenciesMeta": {
+    "@storybook/react-vite": {
+      "optional": true
+    },
+    "@storybook/vue3-vite": {
+      "optional": true
+    },
+    "@vitejs/plugin-vue-jsx": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@mission-platform/vite-config": "workspace:*",
+    "@mission-platform/vite-plugin-i18n": "workspace:*"
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@storybook/react-vite": "catalog:storybook",
+    "@storybook/vue3-vite": "catalog:storybook",
+    "@types/node": "catalog:typescript",
+    "@vitejs/plugin-vue-jsx": "catalog:vue",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite"
+  }
+}
