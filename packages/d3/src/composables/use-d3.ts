@@ -1,13 +1,13 @@
 // ─── useD3 ────────────────────────────────────────────────────────────────────
 //
-// Framework-neutral: written once against the `@mission-platform/jsx` hooks and
-// compiled to React / Vue by `@mission-platform/vite-plugin-jsx`. Bridge D3's
+// Framework-neutral: written once against the `@mission-platform/forge` hooks and
+// compiled to React / Vue by `@mission-platform/vite-plugin-forge`. Bridge D3's
 // imperative, selection-based rendering into the write-once component model:
 // `useD3` returns a ref to attach to an element and runs a `draw` callback
 // against that element's D3 selection after mount (and whenever the dependency
 // list changes), so the same chart code renders on both frameworks.
 
-import { useEffect, useRef, type MpDependencyList, type MpRef } from '@mission-platform/jsx';
+import { useEffect, useRef, type MpDependencyList, type MpRef } from '@mission-platform/forge';
 // Only the selection API is needed at runtime — depend on `d3-selection`
 // directly rather than the full `d3` umbrella so consumers bundle just this.
 import { select, type Selection } from 'd3-selection';

@@ -6,8 +6,8 @@
 
 This package bridges imperative D3 selection-based rendering with declarative reactive UI trees:
 
-- **Neutral Implementation**: Built on top of `@mission-platform/jsx` hooks (`useRef`, `useEffect`).
-- **Dual-Framework Target**: Transpiled by `@mission-platform/vite-plugin-jsx` into native React (`./react`) and Vue 3 (`./vue`) composables.
+- **Neutral Implementation**: Built on top of `@mission-platform/forge` hooks (`useRef`, `useEffect`).
+- **Dual-Framework Target**: Transpiled by `@mission-platform/vite-plugin-forge` into native React (`./react`) and Vue 3 (`./vue`) composables.
 - **Selective Dependency**: Imports `d3-selection` directly to keep client bundle sizes minimal.
 
 ## Key APIs

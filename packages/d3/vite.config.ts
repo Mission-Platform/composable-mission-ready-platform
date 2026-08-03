@@ -8,15 +8,15 @@ import {
   solidJsxPlugin,
   sveltePlugin,
   type JsxFramework,
-} from '@mission-platform/vite-plugin-jsx';
+} from '@mission-platform/vite-plugin-forge';
 import { defineConfig, type Plugin, type UserConfig } from 'vite';
 
 /**
  * `@mission-platform/d3` ships a **framework-neutral** root entry (`.`, the
- * write-once `useD3` authored against `@mission-platform/jsx`'s render-once
+ * write-once `useD3` authored against `@mission-platform/forge`'s render-once
  * hooks, for SSR/neutral use) **and** live **React** (`./react`) and **Vue**
  * (`./vue`) entries, produced by the two-stage compiler in
- * `@mission-platform/vite-plugin-jsx`:
+ * `@mission-platform/vite-plugin-forge`:
  *
  * - **Default mode** — bundles the neutral source (`src/index.ts`) as-is into
  *   `dist/` (`tsc` emits the matching neutral declarations).

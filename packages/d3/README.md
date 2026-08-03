@@ -1,6 +1,6 @@
 # `@mission-platform/d3`
 
-Framework-neutral D3 integration for Mission Platform. It provides a write-once `useD3` composable authored against `@mission-platform/jsx` hooks and compiled to both React (`@mission-platform/d3/react`) and Vue 3 (`@mission-platform/d3/vue`), along with pure margin-convention layout utilities.
+Framework-neutral D3 integration for Mission Platform. It provides a write-once `useD3` composable authored against `@mission-platform/forge` hooks and compiled to both React (`@mission-platform/d3/react`) and Vue 3 (`@mission-platform/d3/vue`), along with pure margin-convention layout utilities.
 
 ## Features
 

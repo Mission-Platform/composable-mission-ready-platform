@@ -25,4 +25,4 @@
 - Updated dependencies [94f9acf]
 - Updated dependencies [ca1d98b]
 - Updated dependencies [d39b6fc]
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
