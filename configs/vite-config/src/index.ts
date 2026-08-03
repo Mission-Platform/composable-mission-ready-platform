@@ -221,6 +221,62 @@ export function defineLibraryConfig(options: LibraryConfigOptions): UserConfig {
   return overrides ? mergeConfig(base, overrides) : base;
 }
 
+/**
+ * The set of frameworks a Mission Platform app can target. Selecting one drives
+ * both Vite bundling (via `resolve.conditions`) and — through the matching
+ * `customConditions` tsconfig preset — the TypeScript language service so bare
+ * `@mission-platform/<pkg>` imports resolve to that framework's built output.
+ */
+export type MissionPlatformFramework = 'vue' | 'react' | 'solid' | 'svelte' | 'web-component';
+
+/**
+ * Map a {@link MissionPlatformFramework} to the custom export condition the
+ * `@mission-platform/*` packages declare in their `exports` map. Keeping the
+ * `mp:` prefix namespaces the condition so it never collides with the standard
+ * Node/Vite conditions (`import`, `default`, `browser`, ...).
+ */
+export function frameworkCondition(framework: MissionPlatformFramework): string {
+  return `mp:${framework}`;
+}
+
+/**
+ * Build the ordered `resolve.conditions` list an app should use to select a
+ * framework build. The framework-specific condition is placed first so it wins
+ * over the generic `import`/`default` fallback, and the standard browser/ESM
+ * conditions are appended so everything else resolves normally.
+ *
+ * Pass the result to Vite's `resolve.conditions` (see {@link defineFrameworkAppConfig}).
+ */
+export function frameworkResolveConditions(framework: MissionPlatformFramework): string[] {
+  return [frameworkCondition(framework), 'module', 'browser', 'import', 'default'];
+}
+
+export interface FrameworkAppConfigOptions extends AppConfigOptions {
+  /**
+   * The single framework this app targets. Bare `@mission-platform/<pkg>`
+   * imports resolve to this framework's built artifact for both the Vite build
+   * and (with the matching `customConditions` tsconfig) the editor/LSP.
+   */
+  framework: MissionPlatformFramework;
+}
+
+/**
+ * Wrap {@link defineAppConfig} with the `resolve.conditions` needed to make bare
+ * `@mission-platform/<pkg>` imports resolve to a single chosen framework build.
+ * This is the one app-level switch consumers set; external projects that do not
+ * use this helper can set the same `resolve.conditions` directly.
+ */
+export function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig {
+  const { framework, overrides } = options;
+  const conditionsConfig = defineConfig({
+    resolve: {
+      conditions: frameworkResolveConditions(framework),
+    },
+  });
+  const base = defineAppConfig({ overrides: conditionsConfig });
+  return overrides ? mergeConfig(base, overrides) : base;
+}
+
 export interface AppConfigOptions {
   /** Extra config merged on top of the defaults. */
   overrides?: UserConfig;

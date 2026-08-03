@@ -10,7 +10,7 @@ for Vue components.
 
 | Subpath                                | Helpers                                                                                          |
 | -------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `@mission-platform/vite-config`        | `defineLibraryConfig`, `defineAppConfig`, `ignoreVueI18nBlocksPlugin`, default externals/globals |
+| `@mission-platform/vite-config`        | `defineLibraryConfig`, `defineAppConfig`, `defineFrameworkAppConfig`, `frameworkResolveConditions`, `frameworkCondition`, `ignoreVueI18nBlocksPlugin`, default externals/globals |
 | `@mission-platform/vite-config/vitest` | `defineVitestConfig`                                                                             |
 
 ## Library package usage
@@ -55,6 +55,55 @@ export default defineAppConfig({
   },
 });
 ```
+
+## Framework auto-resolution
+
+Every framework-shipping `@mission-platform/*` package declares custom export
+conditions (`mp:vue`, `mp:react`, `mp:solid`, `mp:svelte`, `mp:web-component`)
+on its bare `.` entry that point at the matching built artifact. An app selects
+**one** framework and then imports packages with **no** framework subpath:
+
+```ts
+// apps/<app-name>/vite.config.ts
+import { defineFrameworkAppConfig } from '@mission-platform/vite-config';
+
+export default defineFrameworkAppConfig({
+  framework: 'react', // 'vue' | 'react' | 'solid' | 'svelte' | 'web-component'
+});
+```
+
+```ts
+// Anywhere in the app — resolves to the React build automatically:
+import { BaseButton } from '@mission-platform/components';
+```
+
+Pair it with the matching TypeScript preset so the editor/LSP resolves the same
+build (see `@mission-platform/typescript-config/framework-<name>`).
+
+### External projects (no shared config)
+
+Projects outside this monorepo do not need the helper — set the same ordered
+`resolve.conditions` directly in Vite, and `customConditions` in tsconfig:
+
+```ts
+// vite.config.ts
+export default {
+  resolve: {
+    // mirrors frameworkResolveConditions('vue')
+    conditions: ['mp:vue', 'module', 'browser', 'import', 'default'],
+  },
+};
+```
+
+```jsonc
+// tsconfig.json (requires "moduleResolution": "bundler" | "node16" | "nodenext")
+{
+  "compilerOptions": { "customConditions": ["mp:vue"] }
+}
+```
+
+Bundlers or tools that ignore custom conditions fall back to the explicit
+`@mission-platform/<pkg>/<framework>` subpath exports, which remain available.
 
 ## Vitest usage
 
