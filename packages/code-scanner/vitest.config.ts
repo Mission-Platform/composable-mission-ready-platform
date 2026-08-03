@@ -12,7 +12,7 @@ export default defineVitestConfig({
     'src/**/*.stories.*',
   ],
   overrides: {
-    // The neutral `BaseCodeScanner` is authored in the `@mission-platform/jsx`
+    // The neutral `BaseCodeScanner` is authored in the `@mission-platform/forge`
     // dialect (the classic `h` factory), so its spec is transformed with that
     // JSX factory rather than React's automatic runtime.
     esbuild: {

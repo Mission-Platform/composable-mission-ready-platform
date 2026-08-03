@@ -1,6 +1,6 @@
 import { BaseButton, BaseTypography } from '@mission-platform/components';
 import { IconCamera, IconClose, IconUpload } from '@mission-platform/icons';
-import { h, useEffect, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useEffect, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import {
   scanFile,
@@ -58,7 +58,7 @@ export interface CodeScannerProperties extends MpProperties {
  * `BaseCodeScanner` — locates and decodes a QR code, Data Matrix, or 1D barcode
  * from either an **uploaded image** or a **live camera stream**, authored once
  * in the neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * Detection runs entirely on the client in the dependency-free Rust/WebAssembly
  * scanner from `@mission-platform/code-scanner` (binarise → locate the finder

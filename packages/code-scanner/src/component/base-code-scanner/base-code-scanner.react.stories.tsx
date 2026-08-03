@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * uploaded image or a live camera stream — detection runs entirely on the client
  * in the dependency-free Rust/WebAssembly `@mission-platform/code-scanner`
  * engine. Authored once in the neutral JSX dialect and compiled straight to
- * React by `@mission-platform/vite-plugin-jsx`.
+ * React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Inputs/BaseCodeScanner',

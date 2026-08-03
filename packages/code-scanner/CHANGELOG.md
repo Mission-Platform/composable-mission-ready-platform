@@ -117,7 +117,7 @@
   - @mission-platform/components@1.0.0
   - @mission-platform/qr-code@0.1.1
   - @mission-platform/icons@0.2.0
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
   - @mission-platform/matrix-code@0.2.0
 
 ## 0.2.0
@@ -237,7 +237,7 @@
   - @mission-platform/components@1.0.0
   - @mission-platform/qr-code@0.1.1
   - @mission-platform/icons@0.2.0
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
   - @mission-platform/matrix-code@0.2.0
 
 ## 0.2.0
@@ -357,7 +357,7 @@
   - @mission-platform/components@1.0.0
   - @mission-platform/qr-code@0.1.1
   - @mission-platform/icons@0.2.0
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
   - @mission-platform/matrix-code@0.2.0
 
 ## 0.2.0
@@ -477,5 +477,5 @@
   - @mission-platform/components@1.0.0
   - @mission-platform/qr-code@0.1.1
   - @mission-platform/icons@0.2.0
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
   - @mission-platform/matrix-code@0.2.0

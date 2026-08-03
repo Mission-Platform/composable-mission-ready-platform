@@ -5,8 +5,8 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 /**
  * `CodeScanner` is the Vue 3 build of the write-once `BaseCodeScanner` in this
  * package. The component is authored **once** in the framework-neutral JSX
- * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
- * build time by `@mission-platform/vite-plugin-jsx`; the very same source also
+ * dialect (`@mission-platform/forge`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-forge`; the very same source also
  * ships as a React component via the package's `./react` subpath. It decodes a
  * QR code, Data Matrix, or 1D barcode from an uploaded image or a live camera
  * stream using the dependency-free Rust/WebAssembly scanner engine.
