@@ -1,6 +1,6 @@
 import { BaseButton, BaseTypography } from '@mission-platform/components';
 import { IconCheck, IconCopy, IconDownload, IconImage } from '@mission-platform/icons';
-import { h, useEffect, useMemo, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useEffect, useMemo, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 import { encodeMatrix, type MatrixSymbology } from '@mission-platform/matrix-code';
 
 import styles from './base-matrix-code.module.scss';
@@ -132,7 +132,7 @@ function stableId(prefix: string, seed: string): string {
 /**
  * `BaseMatrixCode` — renders a scannable 2D matrix barcode (Data Matrix ECC
  * 200), authored once in the neutral JSX dialect and compiled straight to React
- * or Vue by `@mission-platform/vite-plugin-jsx`.
+ * or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * The payload (`value`) is encoded entirely on the client by the
  * {@link encodeMatrix} encoder from `@mission-platform/matrix-code` — a

@@ -10,6 +10,11 @@
   ],
   "exports": {
     ".": {
+      "mp:vue": { "types": "./dist/vue/index.d.ts", "import": "./dist/vue/index.js" },
+      "mp:react": { "types": "./dist/react/index.d.ts", "import": "./dist/react/index.js" },
+      "mp:solid": { "types": "./dist/solid/index.d.ts", "import": "./dist/solid/index.js" },
+      "mp:svelte": { "types": "./dist/svelte/index.d.ts", "import": "./dist/svelte/index.js" },
+      "mp:web-component": { "types": "./dist/web-components/index.d.ts", "import": "./dist/web-components/index.js" },
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
@@ -62,7 +67,7 @@
   "dependencies": {
     "@mission-platform/components": "workspace:*",
     "@mission-platform/icons": "workspace:*",
-    "@mission-platform/jsx": "workspace:*"
+    "@mission-platform/forge": "workspace:*"
   },
   "peerDependencies": {
     "lit": "^3.0.0",
@@ -98,7 +103,7 @@
     "@mission-platform/stylelint-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
-    "@mission-platform/vite-plugin-jsx": "workspace:*",
+    "@mission-platform/vite-plugin-forge": "workspace:*",
     "@storybook/react-vite": "catalog:storybook",
     "@storybook/vue3-vite": "catalog:storybook",
     "@types/node": "catalog:typescript",

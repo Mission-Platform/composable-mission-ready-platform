@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * package. The payload is encoded entirely on the client by the WebAssembly
  * `@mission-platform/matrix-code` encoder and drawn as a crisp SVG; the `error`
  * case becomes the `onError` callback prop. Authored once in the neutral JSX
- * dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Data Display/BaseMatrixCode',
