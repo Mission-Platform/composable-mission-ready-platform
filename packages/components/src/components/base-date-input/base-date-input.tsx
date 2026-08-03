@@ -8,7 +8,7 @@ import {
   type MpChild,
   type MpElement,
   type MpProperties,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import { BaseCalendar } from '../base-calendar';
 import { BaseDropdown } from '../base-dropdown';
@@ -59,7 +59,7 @@ export interface DateInputProperties extends MpProperties {
 
 /**
  * `BaseDateInput` — a date picker authored once in the neutral JSX dialect and
- * compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * A trigger button shows the selected ISO date (or a placeholder) and opens a
  * popover that composes the already-migrated {@link BaseCalendar} month grid. It

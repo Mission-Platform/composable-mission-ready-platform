@@ -7,8 +7,8 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 /**
  * `DateTimeRangeInput` is the Vue 3 build of the write-once
  * `BaseDateTimeRangeInput` in this package. The component is authored **once** in
- * the framework-neutral JSX dialect (`@mission-platform/jsx`) and compiled
- * straight to a Vue component at build time by `@mission-platform/vite-plugin-jsx`.
+ * the framework-neutral JSX dialect (`@mission-platform/forge`) and compiled
+ * straight to a Vue component at build time by `@mission-platform/vite-plugin-forge`.
  * The very same source also ships as a React component via the `./react` subpath.
  */
 const meta = {

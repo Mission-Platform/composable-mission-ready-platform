@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `@mission-platform/components` — a native `<progress>` track with a tone/size,
  * an optional label row (via the composed neutral `Typography`), and an
  * indeterminate mode. Authored once in the neutral JSX dialect and compiled
- * straight to React by `@mission-platform/vite-plugin-jsx`.
+ * straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Feedback/BaseProgressBar',

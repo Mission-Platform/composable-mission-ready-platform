@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * first/previous/next/last controls and MUI-style truncation ellipses. The page
  * is controlled via `modelValue`; the `v-model` + `change` emit become the
  * `onUpdateModelValue`/`onChange` callback props. Authored once in the neutral
- * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Navigation/BasePagination',

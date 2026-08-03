@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/jsx/react';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { BaseScheduler, type VEvent } from './base-scheduler';
 
 /**
  * Exercises the **neutral** `BaseScheduler` authored in this package, rendering
- * it on both frameworks through the `@mission-platform/jsx` adapters. Like the
+ * it on both frameworks through the `@mission-platform/forge` adapters. Like the
  * Vue original it is driven by RFC 5545 `VEvent`s and the shared
  * `@mission-platform/scheduler-core` (view ranges, recurrence expansion,
  * collision layout), so the day/week/month/year grids must render identically

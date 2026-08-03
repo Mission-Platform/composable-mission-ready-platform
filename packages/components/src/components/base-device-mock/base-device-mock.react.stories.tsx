@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * slot) in a decorative device frame — `mobile`, `tablet`, `desktop`, or
  * `browser`. Frames are drawn purely with design tokens and authored in `em`, so
  * the shared `size` token scales the whole mock. Authored once in the neutral
- * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Display/BaseDeviceMock',

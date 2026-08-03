@@ -1,6 +1,6 @@
 # `@mission-platform/components`
 
-Write-once, framework-neutral component library for Mission Platform. Components are authored once in JSX using `@mission-platform/jsx` and compiled into native **Vue 3** and **React** components.
+Write-once, framework-neutral component library for Mission Platform. Components are authored once in JSX using `@mission-platform/forge` and compiled into native **Vue 3** and **React** components.
 
 ## Features
 
@@ -77,7 +77,7 @@ export function UserForm() {
 
 ### Framework-Neutral Components
 
-When building higher-level write-once components using `@mission-platform/jsx`, import directly from `@mission-platform/components`:
+When building higher-level write-once components using `@mission-platform/forge`, import directly from `@mission-platform/components`:
 
 ```tsx
 import { BaseButton, BaseCard } from '@mission-platform/components';

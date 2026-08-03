@@ -6,7 +6,7 @@ import {
   useState,
   type MpElement,
   type MpProperties,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import { BaseToast } from '../base-toast';
 import sizeStyles from '../size.module.scss';
@@ -31,7 +31,7 @@ export interface ToastContainerProperties extends MpProperties {
 /**
  * `BaseToastContainer` — renders the toasts held in the shared `toast-store`,
  * authored once in the neutral JSX dialect and compiled straight to React or Vue
- * by `@mission-platform/vite-plugin-jsx`.
+ * by `@mission-platform/vite-plugin-forge`.
  *
  * Mount a single instance near the root of your application. It teleports a
  * fixed-position stack to `<body>` (through the framework-neutral
@@ -47,7 +47,7 @@ export interface ToastContainerProperties extends MpProperties {
  *
  * Enter/leave animation matches the Vue SFC via the neutral
  * **`<TransitionGroup>`** primitive, which compiles to Vue's built-in
- * `<TransitionGroup>` and the `@mission-platform/jsx/react` CSS-class group
+ * `<TransitionGroup>` and the `@mission-platform/forge/react` CSS-class group
  * driver. The four styled enter/leave phase classes are passed as **hashed
  * CSS-Module classes** (via the `<TransitionGroup>` class props), so the
  * animation styling stays component-scoped instead of relying on global

@@ -1,5 +1,5 @@
 import { IconChevron } from '@mission-platform/icons';
-import { h, Slot, useState, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/jsx';
+import { h, Slot, useState, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
@@ -50,7 +50,7 @@ function hasChildren(node: TreeViewNode): boolean {
 /**
  * `BaseTreeView` — a recursive, accessible tree authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`. Each node may be expanded/collapsed and
+ * `@mission-platform/vite-plugin-forge`. Each node may be expanded/collapsed and
  * clicked; the open state is held with the neutral {@link useState} hook, and
  * each label may be customised through the scoped `label` slot
  * (`{ node, depth }`) which falls back to the node's text. Keyboard support

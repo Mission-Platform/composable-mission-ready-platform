@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 

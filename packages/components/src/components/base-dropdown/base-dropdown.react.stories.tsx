@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * Positioning API; `matchTriggerWidth` uses CSS `anchor-size(width)`. This
  * example composes the package's own `Button` (trigger) and `Stack` + ghost
  * `Button`s (menu items). Authored once in the neutral JSX dialect and compiled
- * straight to React by `@mission-platform/vite-plugin-jsx`.
+ * straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Overlays/BaseDropdown',

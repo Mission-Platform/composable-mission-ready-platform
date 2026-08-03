@@ -18,7 +18,7 @@ const SLIDES = [
  * `useEffect` interval; the active index is controlled via `modelValue` and the
  * `v-model` + `change` emit become the `onUpdateModelValue`/`onChange` callback
  * props. Authored once in the neutral JSX dialect and compiled straight to React
- * by `@mission-platform/vite-plugin-jsx`.
+ * by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Display/BaseCarousel',

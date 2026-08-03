@@ -1,4 +1,4 @@
-import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 /** Canonical 2xs → 2xl size scale shared across the display components. */
 export type AvatarSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
@@ -88,7 +88,7 @@ const VARIANT_COLOR_MAP: Record<AvatarVariant, string> = {
 
 /**
  * `BaseAvatar` — a user/entity avatar authored once in the neutral JSX dialect
- * and compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * and compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * It shows (in priority order) an `src` image, fallback `initials`, or the
  * default slot, sized by the canonical `2xs … 2xl` scale, optionally with a

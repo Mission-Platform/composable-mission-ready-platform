@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * glyph (or spinner) and a clear `✕` button; the value is controlled via
  * `modelValue`, Enter fires `onSearch` and Escape clears, and the `v-model` +
  * `search`/`clear` emits become callback props. Authored once in the neutral JSX
- * dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Forms/BaseSearchInput',

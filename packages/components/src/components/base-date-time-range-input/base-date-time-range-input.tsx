@@ -8,7 +8,7 @@ import {
   type MpChild,
   type MpElement,
   type MpProperties,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import { BaseCalendar } from '../base-calendar';
 import { BaseDropdown } from '../base-dropdown';
@@ -75,7 +75,7 @@ export interface DateTimeRangeInputProperties extends MpProperties {
 /**
  * `BaseDateTimeRangeInput` — a date-time-range picker authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * A trigger button shows the `start → end (timezone)` summary and opens a
  * popover with a browser/UTC toggle above a two-step {@link BaseFormWizard}

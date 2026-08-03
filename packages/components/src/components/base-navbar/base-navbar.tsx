@@ -1,4 +1,4 @@
-import { h, Slot, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, Slot, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseDrawer } from '../base-drawer';
 import { BaseTypography } from '../base-typography';
@@ -28,7 +28,7 @@ export interface NavbarProperties extends MpProperties {
 /**
  * `BaseNavbar` — the top application navigation bar authored once in the neutral
  * JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It lays out a `brand` slot, the centred default slot (navigation items), and
  * an `end` slot, collapsing on mobile (below the `sm` breakpoint, via CSS) to a

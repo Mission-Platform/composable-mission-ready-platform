@@ -23,7 +23,7 @@ const Card = RawCard as unknown as FunctionComponent<
  * `Card` is the **React** build of the write-once `BaseCard` in
  * `@mission-platform/components` — a surface container with optional
  * header/footer regions, authored once in the neutral JSX dialect and compiled
- * straight to React by `@mission-platform/vite-plugin-jsx`.
+ * straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Display/BaseCard',

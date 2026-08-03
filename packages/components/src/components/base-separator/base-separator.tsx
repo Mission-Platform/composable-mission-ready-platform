@@ -1,4 +1,4 @@
-import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 import spacingStyles from '../spacing.module.scss';
@@ -36,7 +36,7 @@ export interface SeparatorProperties extends MpProperties {
 /**
  * `BaseSeparator` — a visual separator / divider authored once in the neutral
  * JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * Renders a horizontal or vertical rule (`<hr>`) used to separate groups of
  * content. When default-slot content is provided (horizontal only) it renders

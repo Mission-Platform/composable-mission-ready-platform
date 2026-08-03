@@ -30,7 +30,7 @@ const items: MenuNode[] = [
  * `Menubar` is the **React** build of the write-once `BaseMenubar` in
  * `@mission-platform/components` — a horizontal `role="menubar"` whose items open
  * dropdown submenus that nest to any depth. Authored once in the neutral JSX
- * dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Navigation/BaseMenubar',

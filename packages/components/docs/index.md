@@ -1,13 +1,13 @@
 # @mission-platform/components
 
-`@mission-platform/components` is the core write-once component library for the Mission Platform. Every component in this library is authored once using a framework-neutral JSX dialect (via `@mission-platform/jsx`) and then compiled at build time into native **Vue 3** and **React** components.
+`@mission-platform/components` is the core write-once component library for the Mission Platform. Every component in this library is authored once using a framework-neutral JSX dialect (via `@mission-platform/forge`) and then compiled at build time into native **Vue 3** and **React** components.
 
 ## Architecture: "Write Once, Run Anywhere"
 
 This package demonstrates a high-efficiency cross-framework architecture:
 
-- **Neutral Source**: Components are written in `.tsx` files using `@mission-platform/jsx`.
-- **Two-Stage Compilation**: Using `@mission-platform/vite-plugin-jsx`, the neutral source is transformed into framework-specific source code (Vue SFCs and React TSX) and then compiled by the respective native toolchains.
+- **Neutral Source**: Components are written in `.tsx` files using `@mission-platform/forge`.
+- **Two-Stage Compilation**: Using `@mission-platform/vite-plugin-forge`, the neutral source is transformed into framework-specific source code (Vue SFCs and React TSX) and then compiled by the respective native toolchains.
 - **Zero Runtime Overhead**: There are no runtime adapters; consumers import native components from the `./vue` or `./react` subpaths.
 - **Storyblok Integration**: The build process also generates Storyblok blok configurations and wrappers, enabling CMS-driven layouts using these same components.
 

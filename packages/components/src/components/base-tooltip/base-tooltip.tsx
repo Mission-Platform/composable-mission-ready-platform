@@ -8,7 +8,7 @@ import {
   useState,
   type MpElement,
   type MpProperties,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 import { resolvePortalTarget } from '../portal-target';
@@ -49,11 +49,11 @@ const POSITION_AREA: Readonly<Record<TooltipPlacement, string>> = {
 /**
  * `BaseTooltip` — a short contextual hint anchored to its trigger, authored once
  * in the neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * The hint is rendered through the framework-neutral **`<Teleport>`** portal
  * (compiled to React's `createPortal` / Vue's built-in `<Teleport>` by
- * `@mission-platform/vite-plugin-jsx`), so it renders into `document.body` and
+ * `@mission-platform/vite-plugin-forge`), so it renders into `document.body` and
  * escapes any `overflow`/stacking context; the portal is mounted only while the
  * hint is visible. Positioning no longer depends on `@floating-ui`: the trigger
  * declares a unique CSS `anchor-name` (set inline so each instance is distinct),

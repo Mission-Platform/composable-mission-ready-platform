@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/jsx/react';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { BaseTabs, type TabItem } from './base-tabs';
 
 /**
  * Exercises the **neutral** `BaseTabs` authored in this package, rendering it on
- * both frameworks through the `@mission-platform/jsx` runtime adapters. Covers
+ * both frameworks through the `@mission-platform/forge` runtime adapters. Covers
  * the ARIA `tablist`/`tab`/`tabpanel` roles, the selected tab, the scoped panel
  * render-prop, and the closable/addable affordances.
  */

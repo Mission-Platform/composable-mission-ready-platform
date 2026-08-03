@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -30,7 +30,7 @@ export interface SkeletonProperties extends MpProperties {
 /**
  * `BaseSkeleton` — a loading placeholder authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It renders an `aria-hidden` block in one of three shapes (`line`/`circle`/
  * `block`) with an optional shimmer animation, accepting explicit `width`/

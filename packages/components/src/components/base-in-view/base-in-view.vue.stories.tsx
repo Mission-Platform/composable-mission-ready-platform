@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
  * `InView` is the Vue 3 build of the write-once `BaseInView`. It is authored
  * **once** in the framework-neutral JSX dialect and uses the neutral hooks
  * (`useState`/`useRef`/`useEffect`) for its `IntersectionObserver` lifecycle;
- * `@mission-platform/vite-plugin-jsx` compiles those hooks to the Vue hook shim
+ * `@mission-platform/vite-plugin-forge` compiles those hooks to the Vue hook shim
  * here (and to React's own hooks for the `./react` build). It reveals its
  * content with the configured animation once it scrolls into view.
  */

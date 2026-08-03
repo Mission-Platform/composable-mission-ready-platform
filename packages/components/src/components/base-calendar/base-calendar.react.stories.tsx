@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * aware rendering via `luxon`. The neutral `ref`/`computed`/`watch` become React
  * `useState`/`useMemo`/`useEffect`, and the `v-model` + `change` emits become the
  * `onUpdateModelValue`/`onChange` callback props. Authored once in the neutral
- * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Forms/BaseCalendar',

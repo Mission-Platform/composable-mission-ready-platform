@@ -1,4 +1,4 @@
-import { classNames, h, useEffect, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, useEffect, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -41,7 +41,7 @@ const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 /**
  * `BaseBackgroundVideo` — a decorative full-bleed background video authored once
  * in the neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It renders an autoplaying, muted, looping `<video>` that covers its container,
  * with optional foreground content (the default slot) layered on top and an

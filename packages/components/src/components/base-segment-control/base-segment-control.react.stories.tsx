@@ -17,7 +17,7 @@ const options: SegmentOption[] = [
  * a `role="radiogroup"` with roving `tabindex` + arrow-key navigation. The value
  * is controlled via `modelValue`; the `v-model` + `change` emit become the
  * `onUpdateModelValue`/`onChange` callback props. Authored once in the neutral
- * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Navigation/BaseSegmentControl',

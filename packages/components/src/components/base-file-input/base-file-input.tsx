@@ -1,5 +1,5 @@
 import { IconUpload } from '@mission-platform/icons';
-import { h, useId, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useId, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 
@@ -52,7 +52,7 @@ export interface FileInputProperties extends MpProperties {
 
 /**
  * `BaseFileInput` — file input authored once in the neutral JSX dialect and
- * compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * Wraps a visually-hidden native `<input type="file">` with either a browse
  * button row or a drag-and-drop dropzone (`dragDrop`), plus a label/hint/error

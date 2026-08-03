@@ -6,10 +6,10 @@ import { BaseBadge } from './base-badge';
 
 /**
  * Exercises the **neutral** `BaseBadge` authored in this package, rendering it
- * on both frameworks through the `@mission-platform/jsx` runtime adapters via
+ * on both frameworks through the `@mission-platform/forge` runtime adapters via
  * the shared {@link expectSsrParity} helper. That keeps the assertions
  * independent of the build-time plugin (whose React/Vue parity is covered in
- * `@mission-platform/vite-plugin-jsx`), while proving the component itself is
+ * `@mission-platform/vite-plugin-forge`), while proving the component itself is
  * correct and framework-portable: the helper asserts the React and Vue SSR
  * output is the **same DOM** before the per-component assertions run.
  */

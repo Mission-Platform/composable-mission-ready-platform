@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import styles from './base-icon-button.module.scss';
 
@@ -26,7 +26,7 @@ export interface IconButtonProperties extends MpProperties {
 /**
  * `BaseIconButton` — a compact, square, icon-only button authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It renders a native `<button>` whose icon is supplied through the default
  * slot. Because it has no visible text, an accessible name is **required** via

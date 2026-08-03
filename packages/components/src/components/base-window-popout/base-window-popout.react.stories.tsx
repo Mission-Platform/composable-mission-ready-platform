@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * toggle button; clicking the button opens the content in a separate browser
  * window and shows an in-page placeholder. The open/close state is reported via
  * the `onOpen`/`onClose` callback props. Authored once in the neutral JSX dialect
- * and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Layout/BaseWindowPopout',

@@ -8,7 +8,7 @@ import {
   type MpChild,
   type MpElement,
   type MpProperties,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import { BaseDropdown } from '../base-dropdown';
 import { BaseTypography } from '../base-typography';
@@ -77,7 +77,7 @@ export interface SelectProperties extends MpProperties {
 /**
  * `BaseSelect` — a custom combobox/select authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * By default (`searchable`, the default) the trigger is a text field that filters
  * the options as the user types — mirroring {@link BaseMultiselect} — so a value

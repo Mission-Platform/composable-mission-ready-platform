@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/jsx/react';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { BaseMarkdownInput } from './base-markdown-input';
 
 /**
  * Exercises the **neutral** `BaseMarkdownInput` authored in this package,
- * rendering it on both frameworks through the `@mission-platform/jsx` adapters.
+ * rendering it on both frameworks through the `@mission-platform/forge` adapters.
  * The preview HTML is injected client-side (no `v-html`), so the SSR markup is
  * the static shell: the label, the write/preview tabs, the toolbar, and the
  * textarea carrying the value.

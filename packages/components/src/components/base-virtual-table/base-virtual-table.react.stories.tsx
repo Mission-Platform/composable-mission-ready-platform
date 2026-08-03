@@ -37,7 +37,7 @@ const columns: VirtualTableColumn[] = [
  * a sticky header offers click-to-sort columns (asc → desc → unsorted) and a
  * `footer` named slot falls back to a row-count + sort summary. Authored once in
  * the neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Data/BaseVirtualTable',

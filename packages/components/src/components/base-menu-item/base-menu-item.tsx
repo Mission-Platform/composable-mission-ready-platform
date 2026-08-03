@@ -1,4 +1,4 @@
-import { classNames, h, Slot, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, Slot, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
@@ -31,7 +31,7 @@ export interface MenuItemProperties extends MpProperties {
 
 /**
  * `BaseMenuItem` — a single menu entry authored once in the neutral JSX dialect
- * and compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * and compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * It renders an `<li role="none">` containing a `role="menuitem"` element: a
  * link (`<a href>`) when `href` is set and the item is enabled, otherwise an

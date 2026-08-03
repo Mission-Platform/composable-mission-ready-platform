@@ -5,8 +5,8 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 /**
  * `ThemeProvider` is the Vue 3 build of the write-once `BaseThemeProvider` in
  * this package. The component is authored **once** in the framework-neutral JSX
- * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
- * build time by `@mission-platform/vite-plugin-jsx`; the very same source also
+ * dialect (`@mission-platform/forge`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-forge`; the very same source also
  * ships as a React component via the package's `./react` subpath.
  *
  * It configures the shared observable theme store (the substitute for the

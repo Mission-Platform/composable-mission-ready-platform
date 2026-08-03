@@ -7,7 +7,7 @@ import {
   useState,
   type MpElement,
   type MpProperties,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -84,7 +84,7 @@ function wrapperStyle(
  * a configurable animation once it scrolls into view. Authored once in the
  * neutral JSX dialect; the cross-framework state/lifecycle is provided by the
  * neutral hooks (`useState`/`useRef`/`useEffect`), which compile to React hooks
- * or the Vue hook shim via `@mission-platform/vite-plugin-jsx`.
+ * or the Vue hook shim via `@mission-platform/vite-plugin-forge`.
  *
  * Note: unlike the Vue original it does not expose a scoped slot — reveal state
  * is conveyed purely through the wrapper's animated style and the

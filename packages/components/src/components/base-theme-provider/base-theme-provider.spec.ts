@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/jsx/react';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { BaseThemeProvider } from './base-theme-provider';
 
 /**
  * Exercises the **neutral** `BaseThemeProvider` through the
- * `@mission-platform/jsx` runtime adapters. The provider is renderless aside
+ * `@mission-platform/forge` runtime adapters. The provider is renderless aside
  * from its `display: contents` wrapper, and renders its default slot. The
  * scoped-slot *data* handoff is exercised by the compiled Vue build in the
  * Storybook story (the runtime adapters invoke the default slot without scope),

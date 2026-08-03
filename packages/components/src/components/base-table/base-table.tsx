@@ -1,5 +1,5 @@
 import { IconChevron } from '@mission-platform/icons';
-import { classNames, h, useMemo, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, useMemo, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
@@ -59,7 +59,7 @@ export interface TableProperties extends MpProperties {
 
 /**
  * `BaseTable` — a sortable data table authored once in the neutral JSX dialect
- * and compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * and compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * It renders the `columns`/`rows` as a semantic `<table>`, with click-to-sort
  * headers (cycling asc → desc → unsorted) that fire the `onSort` callback, an

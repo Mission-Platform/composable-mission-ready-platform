@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `@mission-platform/components` — a disclosure built on the native
  * `<details>` element with a clickable `summary` and a default-slot body.
  * Authored once in the neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Display/BaseCollapse',

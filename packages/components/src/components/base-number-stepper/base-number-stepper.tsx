@@ -1,5 +1,5 @@
 import { IconMinus, IconPlus } from '@mission-platform/icons';
-import { h, useId, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useId, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 
@@ -52,7 +52,7 @@ export interface NumberStepperProperties extends MpProperties {
 
 /**
  * `BaseNumberStepper` — numeric stepper authored once in the neutral JSX dialect
- * and compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * and compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * A number field flanked by decrement/increment buttons, configurable as a
  * signed/unsigned integer or a fixed-`precision` float. It owns its styling

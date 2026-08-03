@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `@mission-platform/components` — a single component driven by an `items` array,
  * with the layout state flowing from props onto each `<li>`. Authored once in
  * the neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Data Display/BaseTimeline',

@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * point in DD, DM, or DMS form; the canonical model always carries signed
  * decimal-degree `lat`/`lng`. The `v-model` + `change` emits become the
  * `onUpdateModelValue`/`onChange` callback props. Authored once in the neutral
- * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Forms/BaseLocationInput',

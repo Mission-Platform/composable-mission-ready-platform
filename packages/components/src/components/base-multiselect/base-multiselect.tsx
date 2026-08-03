@@ -1,5 +1,5 @@
 import { IconChevron } from '@mission-platform/icons';
-import { h, Slot, useId, useState, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, Slot, useId, useState, type MpChild, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseDropdown } from '../base-dropdown';
 import { BaseTag } from '../base-tag';
@@ -59,7 +59,7 @@ export interface MultiselectProperties extends MpProperties {
 /**
  * `BaseMultiselect` — a tag-based multi-select combobox with a search field,
  * authored once in the neutral JSX dialect and compiled straight to React or
- * Vue by `@mission-platform/vite-plugin-jsx`.
+ * Vue by `@mission-platform/vite-plugin-forge`.
  *
  * Selected values render as removable {@link BaseTag} chips; an inline search
  * input filters the remaining options shown in the listbox. Selection is

@@ -30,7 +30,7 @@ const nodes: TreeViewNode[] = [
 /**
  * `TreeView` is the Vue 3 build of the write-once `BaseTreeView` in this
  * package, authored **once** in the framework-neutral JSX dialect and compiled
- * straight to Vue and React by `@mission-platform/vite-plugin-jsx`.
+ * straight to Vue and React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Data/BaseTreeView',

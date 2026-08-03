@@ -1,4 +1,4 @@
-import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
@@ -24,7 +24,7 @@ export interface FieldSetProperties extends MpProperties {
 /**
  * `BaseFieldSet` — a semantic grouping container authored once in the neutral
  * JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * Renders a native `<fieldset>` with an optional `<legend>` and description,
  * giving related controls an accessible label and a consistent frame. It is

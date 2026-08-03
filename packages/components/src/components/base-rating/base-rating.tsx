@@ -1,5 +1,5 @@
 import { IconStar } from '@mission-platform/icons';
-import { h, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import styles from './base-rating.module.scss';
 
@@ -35,7 +35,7 @@ export interface RatingProperties extends MpProperties {
 /**
  * `BaseRating` — star rating input/display authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * Renders a row of stars representing a value from `0` to `max`, with optional
  * half-star precision, a read-only display mode, hover preview, and keyboard

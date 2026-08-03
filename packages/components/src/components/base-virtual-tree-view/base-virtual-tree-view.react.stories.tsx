@@ -20,7 +20,7 @@ const nodes = buildTree('n', 4, 5);
  * `VirtualTreeView` is the **React** build of the write-once
  * `BaseVirtualTreeView` in `@mission-platform/components`, authored **once** in
  * the framework-neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Data/BaseVirtualTreeView',

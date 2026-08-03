@@ -1,4 +1,4 @@
-import { classNames, h, Slot, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, Slot, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -44,9 +44,9 @@ const defaultLabels: Record<DeviceMockType, string> = {
 /**
  * `BaseDeviceMock` — a decorative device frame that wraps arbitrary screen
  * content (the default slot) in a `mobile`, `tablet`, `desktop`, or `browser`
- * chrome, authored once in the neutral JSX dialect (`@mission-platform/jsx`)
+ * chrome, authored once in the neutral JSX dialect (`@mission-platform/forge`)
  * and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * The frame is drawn entirely with CSS design tokens and sized in `em` units,
  * so the shared `size` token (`2xs … 2xl`) scales the whole device. The

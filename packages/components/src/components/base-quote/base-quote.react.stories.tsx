@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `@mission-platform/components`. The quotation goes in the default slot
  * (rendered via the composed neutral `Typography`); optional `author`/`source`
  * populate the attribution footer. Authored once in the neutral JSX dialect and
- * compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Display/BaseQuote',

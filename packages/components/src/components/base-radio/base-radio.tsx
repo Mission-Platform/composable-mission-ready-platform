@@ -1,4 +1,4 @@
-import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
@@ -34,7 +34,7 @@ export interface RadioProperties extends MpProperties {
 
 /**
  * `BaseRadio` — radio control authored once in the neutral JSX dialect and
- * compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * A single radio is selected when its `value` equals the group's `modelValue`.
  * It owns its styling through the co-located CSS Module `base-radio.module.scss`

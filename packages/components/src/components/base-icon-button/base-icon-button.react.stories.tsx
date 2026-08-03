@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `@mission-platform/components` — a square, icon-only button. Place the icon in
  * the default slot; an accessible name is required via `label`. Authored once in
  * the neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Display/BaseIconButton',

@@ -1,5 +1,5 @@
 import { IconLanguage } from '@mission-platform/icons';
-import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseSelect } from '../base-select/base-select';
 

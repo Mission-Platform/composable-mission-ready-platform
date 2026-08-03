@@ -1,4 +1,4 @@
-import { h, hasSlot, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, hasSlot, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseAvatar } from '../base-avatar';
 import { BaseTypography } from '../base-typography';
@@ -41,7 +41,7 @@ export interface ChatBubbleProperties extends MpProperties {
 /**
  * `BaseChatBubble` — a single message bubble authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * Lays out an optional avatar alongside a speech bubble holding the message body
  * (default slot). `side` anchors the bubble to the start (incoming) or end

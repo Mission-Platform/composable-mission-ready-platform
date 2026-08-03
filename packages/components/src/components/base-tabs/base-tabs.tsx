@@ -1,5 +1,5 @@
 import { IconClose, IconPlus } from '@mission-platform/icons';
-import { h, useRef, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/jsx';
+import { h, useRef, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
@@ -61,7 +61,7 @@ export interface TabsProperties extends MpProperties {
 /**
  * `BaseTabs` — an accessible, controlled tabs container authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It renders an ARIA `tablist` of tab buttons (label composed via the migrated
  * {@link BaseTypography}) with roving `tabindex` + Arrow/Home/End keyboard

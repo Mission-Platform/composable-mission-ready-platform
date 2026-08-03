@@ -1,5 +1,5 @@
 import { IconCheck, IconError, IconInfo, IconMinus, IconWarning } from '@mission-platform/icons';
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import styles from './base-status-icon.module.scss';
 

@@ -5,7 +5,7 @@
  *
  * Like `theme-store.ts`, this module sits **inside** the
  * component folder but is a plain (non-component) helper: it imports no neutral
- * `@mission-platform/jsx` primitives and no JSX, so `@mission-platform/vite-plugin-jsx`
+ * `@mission-platform/forge` primitives and no JSX, so `@mission-platform/vite-plugin-forge`
  * recognises it is not a sibling component and copies it **verbatim** into both
  * the React and the Vue generated trees (re-pointing the `./phone` import). The
  * `@mission-platform/phone-number` dependency therefore travels unchanged onto

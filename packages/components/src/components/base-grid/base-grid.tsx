@@ -1,4 +1,4 @@
-import { classNames, Dynamic, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, Dynamic, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 import spacingStyles from '../spacing.module.scss';
@@ -58,7 +58,7 @@ export interface GridProperties extends MpProperties {
  * `BaseGrid` — a CSS Grid layout primitive that arranges its content into a
  * grid of `rows` (m) by `cols` (n) with a configurable `gap` (overridable per
  * axis via `rowGap` / `columnGap`). Authored once in the neutral JSX dialect
- * and compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * and compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * Children supplied through the default slot flow into the grid cells in source
  * order and may span multiple tracks with the standard `grid-column` /

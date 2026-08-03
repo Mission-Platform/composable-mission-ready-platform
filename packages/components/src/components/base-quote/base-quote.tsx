@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseTypography, type TypographyVariant } from '../base-typography';
 
@@ -44,7 +44,7 @@ function textVariantFor(size: QuoteSize): TypographyVariant {
 /**
  * `BaseQuote` — a semantic blockquote / pull-quote authored once in the neutral
  * JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It renders its default-slot content as the quotation (via the composed
  * neutral {@link BaseTypography}) with optional `author`/`source` attribution

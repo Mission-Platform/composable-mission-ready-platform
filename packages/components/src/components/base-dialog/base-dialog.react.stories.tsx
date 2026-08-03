@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `update:open`; the `title`/`header` and `footer` are content props and the
  * body is the default slot. The examples below compose other components from
  * this package (`Button`, `Stack`, `Typography`). Authored once in the neutral
- * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Overlays/BaseDialog',

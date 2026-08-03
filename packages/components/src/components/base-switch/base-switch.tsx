@@ -1,4 +1,4 @@
-import { h, useId, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useId, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 
@@ -35,7 +35,7 @@ export interface SwitchProperties extends MpProperties {
 
 /**
  * `BaseSwitch` — toggle switch authored once in the neutral JSX dialect and
- * compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * A `role="switch"` checkbox styled as a sliding track/thumb across the
  * canonical `2xs … 2xl` size scale. It owns its styling through the co-located

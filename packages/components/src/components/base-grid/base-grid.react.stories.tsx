@@ -9,7 +9,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `@mission-platform/components`. It arranges its default-slot children into a
  * `rows` × `cols` CSS Grid with a configurable `gap`. Authored once in the
  * neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Layout/BaseGrid',

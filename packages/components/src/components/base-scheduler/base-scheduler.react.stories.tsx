@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * week), a month grid, or a year grid. Events are RFC 5545 `VEvent`s and all the
  * heavy logic — recurrence expansion, view ranges, collision layout — comes from
  * the shared `@mission-platform/scheduler-core`. Authored once in the neutral JSX
- * dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Forms/BaseScheduler',

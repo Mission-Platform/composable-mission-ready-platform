@@ -1,5 +1,5 @@
 import { IconClose, IconSearch } from '@mission-platform/icons';
-import { h, useId, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useId, useRef, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import styles from './base-search-input.module.scss';
 
@@ -36,7 +36,7 @@ export interface SearchInputProperties extends MpProperties {
 
 /**
  * `BaseSearchInput` — search field authored once in the neutral JSX dialect and
- * compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * A `type="search"` field with a leading search glyph (or loading spinner) and a
  * trailing clear button shown when there is a value. Enter fires `onSearch`,

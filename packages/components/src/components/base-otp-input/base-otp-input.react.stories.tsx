@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * string `modelValue`; typing advances focus, Backspace steps back, and pasting
  * distributes the code. The `v-model` + `complete` emit become the
  * `onUpdateModelValue`/`onComplete` callback props. Authored once in the neutral
- * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Forms/BaseOtpInput',

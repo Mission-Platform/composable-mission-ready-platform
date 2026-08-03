@@ -11,7 +11,7 @@ const SAMPLE_VIDEO = 'https://interactive-examples.mdn.mozilla.net/media/cc0-vid
  * sources, a poster, and playback controls; the `play`/`pause`/`ended` emits
  * become the `onPlay`/`onPause`/`onEnded` callback props. Authored once in the
  * neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Media/BaseResponsiveVideo',

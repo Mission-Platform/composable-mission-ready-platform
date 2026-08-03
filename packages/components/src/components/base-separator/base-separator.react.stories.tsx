@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `@mission-platform/components`. It renders a horizontal/vertical rule, or a
  * centred label between two lines when default-slot content is supplied.
  * Authored once in the neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Layout/BaseSeparator',

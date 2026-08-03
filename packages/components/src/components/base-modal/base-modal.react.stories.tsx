@@ -35,7 +35,7 @@ const expectPanelVisible = async (option: HTMLElement): Promise<void> => {
  * `title`/`header` and `footer` are content props and the body is the default
  * slot. The examples compose the package's own `Button`, `Stack`, `Typography`.
  * Authored once in the neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Overlays/BaseModal',

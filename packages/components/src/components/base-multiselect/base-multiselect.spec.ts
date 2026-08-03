@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/jsx/react';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { BaseMultiselect } from './base-multiselect';
 
 /**
  * Exercises the **neutral** `BaseMultiselect` authored in this package,
- * rendering it on both frameworks through the `@mission-platform/jsx` runtime
+ * rendering it on both frameworks through the `@mission-platform/forge` runtime
  * adapters. Covers the selected chips, the hidden native multi-select, and the
  * error association. The available-options listbox is rendered through
  * `BaseDropdown`, whose panel is mounted only while open, so the closed

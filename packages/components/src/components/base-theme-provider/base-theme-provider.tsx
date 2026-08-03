@@ -1,4 +1,4 @@
-import { h, Slot, useEffect, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, Slot, useEffect, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 import {
@@ -37,7 +37,7 @@ export interface ThemeProviderProperties extends MpProperties {
  * `BaseThemeProvider` — configures the shared theme store from its props and
  * exposes the current theme state and mutators to its default (scoped) slot.
  * Authored once in the neutral JSX dialect and compiled straight to React or Vue
- * by `@mission-platform/vite-plugin-jsx`.
+ * by `@mission-platform/vite-plugin-forge`.
  *
  * The original Vue SFC created a reactive store and shared it with descendants
  * via `provide`/`inject` (with an opt-in subtree-scoped mode). The neutral

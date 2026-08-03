@@ -11,7 +11,7 @@ import {
   type MpElement,
   type MpProperties,
   type MpRenderProperty,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -89,7 +89,7 @@ const HEADER_HEIGHT = 44;
  * `BaseVirtualTable` — a virtual-scrolling, sortable data table that renders
  * only the rows within the viewport, so an arbitrarily long `rows` array stays
  * cheap to render. Authored once in the neutral JSX dialect and compiled
- * straight to React or Vue by `@mission-platform/vite-plugin-jsx`; the sort and
+ * straight to React or Vue by `@mission-platform/vite-plugin-forge`; the sort and
  * scroll state use the neutral {@link useState}/{@link useMemo}/{@link useRef}/
  * {@link useEffect} hooks.
  *

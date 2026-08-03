@@ -1,4 +1,4 @@
-import { h, useEffect, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useEffect, useRef, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import styles from './base-otp-input.module.scss';
 
@@ -37,7 +37,7 @@ export interface OtpInputProperties extends MpProperties {
 /**
  * `BaseOtpInput` — segmented one-time-password input authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * Renders `length` single-character cells bound to a single string
  * `modelValue`. Typing advances focus, `Backspace` steps back, arrow keys move

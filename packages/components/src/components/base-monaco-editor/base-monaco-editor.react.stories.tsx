@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * on a `useRef` host via a dynamic `import("monaco-editor")`; per-prop
  * `useEffect`s mirror options, and the emits become callback props. Authored
  * once in the neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Forms/BaseMonacoEditor',

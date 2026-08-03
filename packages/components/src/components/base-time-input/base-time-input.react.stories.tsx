@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * popover with scrollable hour/minute(/second) lists; the `HH:MM[:SS]` value is
  * controlled via `modelValue`, and the `v-model` + `change` emit become the
  * `onUpdateModelValue`/`onChange` callback props. Authored once in the neutral
- * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Forms/BaseTimeInput',

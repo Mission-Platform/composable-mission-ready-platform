@@ -7,7 +7,7 @@ import {
   type MpChild,
   type MpElement,
   type MpProperties,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 
@@ -44,7 +44,7 @@ export interface HeroProperties extends MpProperties {
 /**
  * `BaseHero` — a page hero / banner section authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It renders a prominent banner with an optional eyebrow, title, subtitle,
  * free-form body content (the default slot), and a row of `actions`. A `media`

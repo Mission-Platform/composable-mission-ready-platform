@@ -12,7 +12,7 @@ import {
   type MpChild,
   type MpElement,
   type MpProperties,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import { beginPointerDrag, clamp, rootFontSize } from '../pointer-drag';
 
@@ -90,7 +90,7 @@ const MIN_SIZE_REM = 12;
 
 /**
  * `BaseDrawer` — a sliding panel authored once in the neutral JSX dialect and
- * compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * An `overlay` drawer (default) is a `position: fixed` panel anchored to a
  * viewport edge (`placement`), gated by `open` and backed by a click-to-close

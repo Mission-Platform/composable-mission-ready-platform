@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/jsx/react';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { BaseHero } from './base-hero';
 
 /**
  * Exercises the **neutral** `BaseHero` (which composes the neutral
- * `BaseTypography`) on both frameworks through the `@mission-platform/jsx`
+ * `BaseTypography`) on both frameworks through the `@mission-platform/forge`
  * runtime adapters. Covers the eyebrow/title/subtitle props, the body default
  * slot, the `media` region + `has-media` modifier, and the alignment/size
  * modifiers.

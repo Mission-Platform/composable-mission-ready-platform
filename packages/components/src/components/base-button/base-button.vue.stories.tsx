@@ -6,7 +6,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
  * `Button` is the Vue 3 build of the write-once `BaseButton` in this package.
  * Like `Badge`, it is authored **once** in the framework-neutral JSX dialect
  * and compiled straight to a Vue functional component at build time by
- * `@mission-platform/vite-plugin-jsx`, while the same source also ships to
+ * `@mission-platform/vite-plugin-forge`, while the same source also ships to
  * React via the package's `./react` subpath. It mirrors the
  * `@mission-platform/components` `BaseButton`: the canonical colour variants
  * plus a transparent `ghost` treatment, the `2xs → 2xl` size scale, and

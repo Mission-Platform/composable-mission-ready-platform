@@ -1,5 +1,5 @@
 import { IconChevron, IconChevrons } from '@mission-platform/icons';
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import styles from './base-pagination.module.scss';
 
@@ -62,7 +62,7 @@ function range(start: number, end: number): number[] {
 /**
  * `BasePagination` — page navigation control authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It renders a list of page buttons with optional first/previous/next/last
  * controls and MUI-style truncation ellipses for large page counts. The current

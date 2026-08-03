@@ -9,7 +9,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `@mission-platform/components` — a native `<fieldset>` with an optional
  * `<legend>`/description that groups its default-slot content; `disabled` uses
  * the native `<fieldset disabled>` behaviour. Authored once in the neutral JSX
- * dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Forms/BaseFieldSet',

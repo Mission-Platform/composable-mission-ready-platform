@@ -1,4 +1,4 @@
-import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
@@ -27,7 +27,7 @@ export interface BreadcrumbProperties extends MpProperties {
 
 /**
  * `BaseBreadcrumb` — breadcrumb trail authored once in the neutral JSX dialect
- * and compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * and compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * It renders an ordered list inside a labelled `<nav>`: every entry except the
  * last with an `href` is a link, the last entry is the current page

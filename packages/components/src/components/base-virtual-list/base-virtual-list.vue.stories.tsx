@@ -9,8 +9,8 @@ const items = Array.from({ length: 1000 }, (_, index) => ({ index, label: `Row $
 /**
  * `VirtualList` is the Vue 3 build of the write-once `BaseVirtualList` in this
  * package. The component is authored **once** in the framework-neutral JSX
- * dialect (`@mission-platform/jsx`) and compiled straight to a Vue component at
- * build time by `@mission-platform/vite-plugin-jsx`. The very same source also
+ * dialect (`@mission-platform/forge`) and compiled straight to a Vue component at
+ * build time by `@mission-platform/vite-plugin-forge`. The very same source also
  * ships as a React component via the package's `./react` subpath.
  *
  * Only the rows within the viewport are rendered; each row is provided through

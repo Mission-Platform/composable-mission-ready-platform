@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/jsx/react';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { BaseRadioGroup } from './base-radio-group';
 
 /**
  * Exercises the **neutral** `BaseRadioGroup` authored in this package, rendering
- * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * it on both frameworks through the `@mission-platform/forge` runtime adapters.
  * Covers the legend, the rendered options, the selected state, and the error.
  */
 const ReactRadioGroup = toReactComponent(BaseRadioGroup, 'RadioGroup');

@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `@mission-platform/components` — a user/entity avatar that shows (in
  * priority order) an image, fallback initials, or its default slot, optionally
  * with a presence-status corner dot. Authored once in the neutral JSX dialect
- * and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Display/BaseAvatar',

@@ -1,4 +1,4 @@
-import { classNames, Dynamic, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, Dynamic, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 import spacingStyles from '../spacing.module.scss';
@@ -43,7 +43,7 @@ export interface MasonryProperties extends MpProperties {
 /**
  * `BaseMasonry` — a CSS multi-column masonry layout primitive authored once in
  * the neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It flows its default-slot children into balanced columns where each item
  * keeps its natural height and packs tightly top-to-bottom. Provide a fixed

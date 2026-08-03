@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * glyph, an optional title, the message, and an optional dismiss button (firing
  * `onDismiss`). For live notifications, use the shared `useToast` store +
  * `ToastContainer`. Authored once in the neutral JSX dialect and compiled
- * straight to React by `@mission-platform/vite-plugin-jsx`.
+ * straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Feedback/BaseToast',

@@ -13,7 +13,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `v-model`), and exposes `{ config, cssVariables, styleString, setConfig,
  * setAttribute, setToken, removeToken, reset }` to its default scoped slot (a
  * render-prop child). Authored once in the neutral JSX dialect and compiled
- * straight to React by `@mission-platform/vite-plugin-jsx`.
+ * straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Theme/BaseThemeComposer',

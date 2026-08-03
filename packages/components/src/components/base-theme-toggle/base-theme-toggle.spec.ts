@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/jsx/react';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -9,7 +9,7 @@ import { renderToString } from 'vue/server-renderer';
 import { BaseThemeToggle } from './base-theme-toggle';
 
 /**
- * Exercises the **neutral** `BaseThemeToggle` through the `@mission-platform/jsx`
+ * Exercises the **neutral** `BaseThemeToggle` through the `@mission-platform/forge`
  * runtime adapters, where the neutral hooks render the component once in its
  * initial (`'auto'`) state — no store subscription fires during SSR. The point
  * is cross-framework parity of that initial markup; the live cycling behaviour

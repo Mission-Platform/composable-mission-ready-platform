@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -33,7 +33,7 @@ export interface ButtonGroupProperties extends MpProperties {
 /**
  * `BaseButtonGroup` — groups related buttons into a single visual unit. Authored
  * once in the neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It wraps its default-slot children (typically `Button` / `IconButton`
  * instances) in a flex container; when `attached` is set the children are

@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/jsx/react';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { BaseButtonGroup } from './base-button-group';
 
 /**
  * Exercises the **neutral** `BaseButtonGroup` authored in this package,
- * rendering it on both frameworks through the `@mission-platform/jsx` runtime
+ * rendering it on both frameworks through the `@mission-platform/forge` runtime
  * adapters. Covers the group role, orientation, and the attached modifier.
  */
 const ReactButtonGroup = toReactComponent(BaseButtonGroup, 'ButtonGroup');

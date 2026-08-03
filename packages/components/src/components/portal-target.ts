@@ -21,7 +21,7 @@
  * can be resolved **synchronously during render**: this keeps the panel teleported
  * to its final home from the very first render — avoiding a re-parent that would
  * drop the panel out of the browser top layer — and it is authored this way
- * because `@mission-platform/vite-plugin-jsx` cannot compile a `ref.current` read
+ * because `@mission-platform/vite-plugin-forge` cannot compile a `ref.current` read
  * inside a render expression on the Vue target. On the server (`document`
  * undefined) it returns `'body'`, keeping SSR output framework-neutral.
  */

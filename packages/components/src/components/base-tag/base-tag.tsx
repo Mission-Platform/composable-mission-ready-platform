@@ -1,5 +1,5 @@
 import { IconClose } from '@mission-platform/icons';
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 
@@ -28,7 +28,7 @@ export interface TagProperties extends MpProperties {
 
 /**
  * `BaseTag` — a compact, rounded label authored once in the neutral JSX dialect
- * and compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * and compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * It renders its `label` (via the composed neutral {@link BaseTypography}) with
  * a tone/size, and — when `removable` and not `disabled` — a remove button that

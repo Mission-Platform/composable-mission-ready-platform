@@ -9,7 +9,7 @@ const SAMPLE_VIDEO = 'https://interactive-examples.mdn.mozilla.net/media/cc0-vid
  * `BaseBackgroundVideo` in `@mission-platform/components` — a decorative,
  * autoplaying, muted, looping full-bleed video with optional overlaid content
  * and a scrim. Authored once in the neutral JSX dialect and compiled straight to
- * React by `@mission-platform/vite-plugin-jsx`.
+ * React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Media/BaseBackgroundVideo',

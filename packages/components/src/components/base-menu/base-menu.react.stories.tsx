@@ -31,7 +31,7 @@ const items: MenuNode[] = [
  * `@mission-platform/components` — a `role="menubar"` whose items expand
  * arbitrarily deep submenus (one open per level, the ancestor chain staying
  * open). Authored once in the neutral JSX dialect and compiled straight to React
- * by `@mission-platform/vite-plugin-jsx`.
+ * by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Navigation/BaseMenu',

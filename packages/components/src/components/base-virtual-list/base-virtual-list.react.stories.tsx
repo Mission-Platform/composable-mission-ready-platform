@@ -11,7 +11,7 @@ const items = Array.from({ length: 1000 }, (_unused, index) => ({ index, label: 
  * `@mission-platform/components`. Only the rows within the viewport are rendered;
  * each row is provided through the scoped `row` slot, which compiles to a React
  * render-prop. Authored once in the neutral JSX dialect and compiled straight to
- * React by `@mission-platform/vite-plugin-jsx`.
+ * React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Data/BaseVirtualList',

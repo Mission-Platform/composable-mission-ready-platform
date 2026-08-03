@@ -8,7 +8,7 @@ import {
   type MpElement,
   type MpProperties,
   type MpRenderProperty,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -73,7 +73,7 @@ interface FlatNode {
  * nodes into a single list and renders only the rows within the viewport, so
  * trees with tens of thousands of nodes stay smooth. Authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`; the open state and scroll position use
+ * `@mission-platform/vite-plugin-forge`; the open state and scroll position use
  * the neutral hooks. Each row may be customised through the scoped `row` slot
  * (`{ node, depth, isOpen, toggle, select }`) and falls back to a built-in label
  * with an expand/collapse chevron. Owns its styling through `base-virtual-tree-view.module.scss`.

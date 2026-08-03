@@ -8,7 +8,7 @@ import {
   type MpChild,
   type MpElement,
   type MpProperties,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import { BaseDropdown } from '../base-dropdown';
 import { BaseTypography } from '../base-typography';
@@ -55,7 +55,7 @@ export interface TimeInputProperties extends MpProperties {
 
 /**
  * `BaseTimeInput` — a time picker authored once in the neutral JSX dialect and
- * compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * A trigger button shows the selected `HH:MM[:SS]` time and opens a popover with
  * scrollable hour/minute(/second) lists. It owns its styling through the

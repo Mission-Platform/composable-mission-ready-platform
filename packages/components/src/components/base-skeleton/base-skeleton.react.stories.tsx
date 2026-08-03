@@ -6,7 +6,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `Skeleton` is the **React** build of the write-once `BaseSkeleton` in
  * `@mission-platform/components` — an `aria-hidden` loading placeholder in one of
  * three shapes with an optional shimmer animation. Authored once in the neutral
- * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Feedback/BaseSkeleton',

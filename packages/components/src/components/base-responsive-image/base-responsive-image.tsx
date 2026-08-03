@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -60,7 +60,7 @@ export interface ResponsiveImageProperties extends MpProperties {
 /**
  * `BaseResponsiveImage` — an art-directed, responsive `<picture>` element
  * authored once in the neutral JSX dialect and compiled straight to React or
- * Vue by `@mission-platform/vite-plugin-jsx`.
+ * Vue by `@mission-platform/vite-plugin-forge`.
  *
  * It renders a `<picture>` with one `<source>` per entry in `sources` (for art
  * direction / format negotiation) and a fallback `<img>`, supporting native

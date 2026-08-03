@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/jsx/react';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,9 +10,9 @@ import { BaseButton } from './base-button';
 
 /**
  * Exercises the **neutral** `BaseButton` authored in this package, rendering it
- * on both frameworks through the `@mission-platform/jsx` runtime adapters. That
+ * on both frameworks through the `@mission-platform/forge` runtime adapters. That
  * keeps the assertions independent of the build-time plugin (whose React/Vue
- * parity is covered in `@mission-platform/vite-plugin-jsx`), while proving the
+ * parity is covered in `@mission-platform/vite-plugin-forge`), while proving the
  * component itself — mirroring the `@mission-platform/components` `BaseButton`
  * (nine variants, the `2xs → 2xl` size scale, and a loading spinner) — is
  * correct and framework-portable.

@@ -1,4 +1,4 @@
-import { h, hasSlot, Slot, useId, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, hasSlot, Slot, useId, type MpChild, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 
@@ -71,7 +71,7 @@ export interface InputProperties extends MpProperties {
 
 /**
  * `BaseInput` — text field authored once in the neutral JSX dialect and
- * compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * Supports the canonical `2xs … 2xl` size scale, a label/hint/error trio, an
  * optional `<datalist>` (from `list`), and leading/trailing extension content.

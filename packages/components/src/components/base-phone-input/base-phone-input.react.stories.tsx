@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * render, and the `v-model` + emits become the
  * `onUpdateModelValue`/`onUpdateCountry`/`onChange` callback props. Authored once
  * in the neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Forms/BasePhoneInput',

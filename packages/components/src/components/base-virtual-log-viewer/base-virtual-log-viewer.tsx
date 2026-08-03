@@ -7,7 +7,7 @@ import {
   useState,
   type MpElement,
   type MpProperties,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
@@ -67,7 +67,7 @@ const LEVEL_COLORS: Record<LogLevel, string> = {
 /**
  * `BaseVirtualLogViewer` — a high-performance virtual-scrolling log viewer.
  * Authored once in the neutral JSX dialect and compiled straight to React or
- * Vue by `@mission-platform/vite-plugin-jsx`; it renders only the rows within
+ * Vue by `@mission-platform/vite-plugin-forge`; it renders only the rows within
  * the viewport while a full-height spacer represents the entire (optionally
  * filtered) log. Scroll position uses the neutral hooks, follow-tail is driven
  * by a {@link useEffect} keyed on the entry count, and each row's click fires

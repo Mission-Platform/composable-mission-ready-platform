@@ -9,7 +9,7 @@ import {
   type MpElement,
   type MpProperties,
   type MpRenderProperty,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -81,7 +81,7 @@ export interface CarouselProperties extends MpProperties {
 /**
  * `BaseCarousel` — a horizontally-scrollable slide deck authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It shows one slide at a time with optional previous/next controls, indicator
  * dots, keyboard (Arrow/Home/End) navigation, pointer-swipe, and optional

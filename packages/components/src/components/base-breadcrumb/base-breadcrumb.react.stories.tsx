@@ -15,7 +15,7 @@ const items: BreadcrumbItem[] = [
  * `@mission-platform/components` — an ordered navigation trail inside a labelled
  * `<nav>`, with `href` entries as links and the last entry as the current page.
  * Authored once in the neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Navigation/BaseBreadcrumb',

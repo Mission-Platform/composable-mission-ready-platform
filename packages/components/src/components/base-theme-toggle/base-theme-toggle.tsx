@@ -1,4 +1,4 @@
-import { h, Slot, useEffect, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, Slot, useEffect, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 import { cycleTheme, getThemeSnapshot, subscribeTheme, type Theme } from '../theme-store';
@@ -42,7 +42,7 @@ function nextTheme(theme: Theme): Theme {
 /**
  * `BaseThemeToggle` — cycles the active theme through `light → dark → auto`,
  * authored once in the neutral JSX dialect and compiled straight to React or Vue
- * by `@mission-platform/vite-plugin-jsx`.
+ * by `@mission-platform/vite-plugin-forge`.
  *
  * It is backed by the shared observable theme store (`../theme-store`): clicking
  * it drives the same singleton that `BaseThemeProvider` configures, so it

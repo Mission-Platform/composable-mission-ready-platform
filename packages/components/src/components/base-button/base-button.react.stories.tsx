@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `@mission-platform/components`. It demonstrates event handlers, boolean
  * attributes, conditional children, and composition of another neutral
  * component (`BaseBadge`), all authored once in the neutral JSX dialect and
- * compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Display/BaseButton',

@@ -1,4 +1,4 @@
-import { classNames, h, hasSlot, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, hasSlot, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 import spacingStyles from '../spacing.module.scss';
@@ -41,7 +41,7 @@ export interface CardProperties extends MpProperties {
 /**
  * `BaseCard` — a surface container with optional header/footer regions, authored
  * once in the neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * The card is an inline-size container, so its padding responds to the card's
  * own width. It owns its styling through the co-located CSS Module

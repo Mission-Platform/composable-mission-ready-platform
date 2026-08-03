@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import styles from './base-spinner.module.scss';
 
@@ -20,7 +20,7 @@ export interface SpinnerProperties extends MpProperties {
 /**
  * `BaseSpinner` — an indeterminate loading spinner authored once in the neutral
  * JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It renders a `role="status"` ring with a tone/size and an accessible label.
  * It owns its styling through the co-located CSS Module `base-spinner.module.scss`,

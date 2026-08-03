@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/jsx/react';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { BaseCodeBlock } from './base-code-block';
 
 /**
  * Exercises the **neutral** `BaseCodeBlock` authored in this package, rendering
- * it on both frameworks through the `@mission-platform/jsx` adapters. The
+ * it on both frameworks through the `@mission-platform/forge` adapters. The
  * highlighted markup is injected into the `<code>` host on the client (no
  * `v-html`), so the SSR markup is the static shell: the header (filename /
  * language + copy button) and the `pre > code.hljs` container.

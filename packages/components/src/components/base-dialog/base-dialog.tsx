@@ -8,7 +8,7 @@ import {
   type MpChild,
   type MpElement,
   type MpProperties,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import { BaseIconButton } from '../base-icon-button';
 import { BaseTypography } from '../base-typography';
@@ -52,7 +52,7 @@ type DialogElement = HTMLDialogElement & {
 
 /**
  * `BaseDialog` — a modal dialog authored once in the neutral JSX dialect and
- * compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * It renders a **native `<dialog>`** driven with `showModal()`/`close()`, so the
  * browser handles the **top layer**, the `::backdrop` scrim, focus trapping, and

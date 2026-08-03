@@ -15,7 +15,7 @@ const entries: LogEntry[] = Array.from({ length: 500 }, (_, index) => ({
 /**
  * `VirtualLogViewer` is the Vue 3 build of the write-once `BaseVirtualLogViewer`
  * in this package, authored **once** in the framework-neutral JSX dialect and
- * compiled straight to Vue and React by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to Vue and React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Data/BaseVirtualLogViewer',

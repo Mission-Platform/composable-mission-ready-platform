@@ -1,4 +1,4 @@
-import { h, useEffect, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useEffect, useRef, type MpElement, type MpProperties } from '@mission-platform/forge';
 import { font } from '@mission-platform/tokens';
 
 import sizeStyles from '../size.module.scss';
@@ -88,7 +88,7 @@ export interface MonacoEditorProperties extends MpProperties {
 /**
  * `BaseMonacoEditor` — the Monaco code editor authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * Monaco is mounted **imperatively**: a `useRef` host `<div>` plus a mount
  * `useEffect` that `await import('monaco-editor')` (kept out of the synchronous
@@ -132,6 +132,14 @@ export function BaseMonacoEditor(properties: Readonly<MonacoEditorProperties>): 
   const containerReference = useRef<HTMLDivElement | null>(null);
   const editorReference = useRef<monaco.editor.IStandaloneCodeEditor | undefined>(undefined);
   const monacoReference = useRef<MonacoRuntime | undefined>(undefined);
+  // `true` while the value-mirror effect below is imperatively pushing an
+  // incoming `modelValue` into the editor. Monaco fires `onDidChangeModelContent`
+  // *synchronously* from `setValue`, so without this guard that programmatic edit
+  // would re-emit `onUpdateModelValue`, feeding the new value straight back into
+  // the controlled `modelValue` and re-triggering this (pre-flush) effect — an
+  // unbounded pre-flush loop that silently freezes the host (no framework
+  // recursion warning, since pre-flush jobs are not recursion-capped).
+  const applyingModelValueReference = useRef<boolean>(false);
   const completionDisposableReference = useRef<monaco.IDisposable | undefined>(undefined);
   // Disposers for the lazily-attached spell/grammar checkers.
   const hunspellDisposeReference = useRef<(() => void) | undefined>(undefined);
@@ -216,6 +224,11 @@ export function BaseMonacoEditor(properties: Readonly<MonacoEditorProperties>): 
       editorReference.current = editor;
 
       editor.onDidChangeModelContent(() => {
+        // Ignore the synchronous change event fired by our own `setValue` in the
+        // value-mirror effect; only genuine user edits should emit outward.
+        if (applyingModelValueReference.current) {
+          return;
+        }
         const value = editor.getValue();
         properties.onUpdateModelValue?.(value);
         properties.onChange?.(value);
@@ -253,7 +266,14 @@ export function BaseMonacoEditor(properties: Readonly<MonacoEditorProperties>): 
   useEffect(() => {
     const editor = editorReference.current;
     if (editor && editor.getValue() !== modelValue) {
-      editor.setValue(modelValue);
+      // Suppress the change event this `setValue` fires synchronously so it is
+      // never re-emitted back into `modelValue` (which would loop forever).
+      applyingModelValueReference.current = true;
+      try {
+        editor.setValue(modelValue);
+      } finally {
+        applyingModelValueReference.current = false;
+      }
     }
   }, [modelValue]);
 

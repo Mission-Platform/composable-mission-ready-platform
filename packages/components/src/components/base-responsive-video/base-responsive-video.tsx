@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -60,7 +60,7 @@ export interface ResponsiveVideoProperties extends MpProperties {
 /**
  * `BaseResponsiveVideo` — a responsive `<video>` element authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It renders a `<video>` that scales to its container while preserving a fixed
  * `aspectRatio` (avoiding layout shift), supporting multiple `<source>` entries

@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/jsx/react';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { BaseFormWizard, type WizardStep } from './base-form-wizard';
 
 /**
  * Exercises the **neutral** `BaseFormWizard` authored in this package, rendering
- * it on both frameworks through the `@mission-platform/jsx` adapters. It renders
+ * it on both frameworks through the `@mission-platform/forge` adapters. It renders
  * the step indicator, the active step's content, and the navigation footer.
  */
 const ReactFormWizard = toReactComponent(BaseFormWizard, 'FormWizard');

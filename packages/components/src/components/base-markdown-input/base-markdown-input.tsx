@@ -8,7 +8,7 @@ import {
   type MpChild,
   type MpElement,
   type MpProperties,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 import { marked } from 'marked';
 
 import { BaseTypography } from '../base-typography';
@@ -81,7 +81,7 @@ export interface MarkdownInputProperties extends MpProperties {
 /**
  * `BaseMarkdownInput` — a Markdown editor with a live preview authored once in
  * the neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * A write/preview tab bar fronts a formatting toolbar + textarea (write) and a
  * rendered preview (preview), with the HTML produced by **`marked`** (kept

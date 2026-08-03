@@ -1,5 +1,5 @@
 import { IconCheck, IconClose, IconError, IconInfo, IconWarning } from '@mission-platform/icons';
-import { h, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -53,7 +53,7 @@ function variantIcon(variant: ToastVariant): MpElement {
 /**
  * `BaseToast` — a single toast notification card authored once in the neutral
  * JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It shows an intent glyph, an optional title, the message (the default slot
  * overrides the `message` prop), and an optional dismiss button, rendering

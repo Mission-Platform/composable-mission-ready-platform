@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `@mission-platform/components` — a syntax-highlighted code surface (via
  * `highlight.js`) with an optional filename label, line numbers, and a copy
  * button. Authored once in the neutral JSX dialect and compiled straight to
- * React by `@mission-platform/vite-plugin-jsx`.
+ * React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Display/BaseCodeBlock',

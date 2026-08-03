@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * eyebrow/title/subtitle and renders free-form body content (default slot), an
  * optional `media` background slot, and an `actions` slot (both exposed as
  * content props). Authored once in the neutral JSX dialect and compiled straight
- * to React by `@mission-platform/vite-plugin-jsx`.
+ * to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Layout/BaseHero',

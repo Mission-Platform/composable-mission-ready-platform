@@ -6,7 +6,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `Spinner` is the **React** build of the write-once `BaseSpinner` in
  * `@mission-platform/components` — a `role="status"` ring with a tone/size; the
  * accessible `label` defaults to `Loading…`. Authored once in the neutral JSX
- * dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Feedback/BaseSpinner',

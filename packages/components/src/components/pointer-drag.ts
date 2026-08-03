@@ -14,7 +14,7 @@
  * once and run unchanged on both the React and the Vue build.
  *
  * This module sits next to the component folders rather than inside one, so
- * `@mission-platform/vite-plugin-jsx` recognises it is **not** a sibling
+ * `@mission-platform/vite-plugin-forge` recognises it is **not** a sibling
  * component and copies it verbatim into both generated trees (re-pointing the
  * import) — exactly like `date-time.ts`. It touches only the
  * DOM (no framework imports), so it is SSG-safe: every entry point guards

@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import spacingStyles from '../spacing.module.scss';
 
@@ -39,7 +39,7 @@ export interface ButtonProperties extends MpProperties {
 
 /**
  * `BaseButton` — a button authored once in the neutral JSX dialect and compiled
- * straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * It mirrors the `@mission-platform/components` `BaseButton`: the canonical
  * colour variants plus a transparent `ghost` treatment, the canonical

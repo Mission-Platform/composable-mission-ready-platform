@@ -21,7 +21,7 @@ const tabs: TabItem[] = [
  * `panel` prop); `v-model` + emits become
  * `onUpdateModelValue`/`onChange`/`onClose`/`onAdd`/`onRename`. Authored once in
  * the neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Navigation/BaseTabs',

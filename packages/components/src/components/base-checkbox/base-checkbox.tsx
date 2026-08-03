@@ -1,5 +1,5 @@
 import { IconCheck, IconMinus } from '@mission-platform/icons';
-import { h, useEffect, useId, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useEffect, useId, useRef, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
@@ -45,7 +45,7 @@ export interface CheckboxProperties extends MpProperties {
 
 /**
  * `BaseCheckbox` — checkbox control authored once in the neutral JSX dialect and
- * compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * Supports both a standalone boolean and a `string[]` group (toggling its
  * `value` in/out of the array). It owns its styling through the co-located CSS

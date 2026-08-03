@@ -1,5 +1,5 @@
 import { IconCheck, IconError } from '@mission-platform/icons';
-import { h, useId, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useId, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseSelect, type SelectOption } from '../base-select';
 import { BaseTypography } from '../base-typography';
@@ -68,7 +68,7 @@ export interface PhoneInputProperties extends MpProperties {
 /**
  * `BasePhoneInput` — an international phone-number field authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * A country picker — the searchable {@link BaseSelect} listing flag + name +
  * dial code, so a region can be found by typing — sits beside a

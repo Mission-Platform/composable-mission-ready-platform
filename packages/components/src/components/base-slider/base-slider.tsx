@@ -1,4 +1,4 @@
-import { h, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useRef, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { beginPointerDrag, clamp } from '../pointer-drag';
 
@@ -37,7 +37,7 @@ export interface SliderProperties extends MpProperties {
 
 /**
  * `BaseSlider` — range slider authored once in the neutral JSX dialect and
- * compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * Lets the user pick a numeric value from a continuous (or stepped) range by
  * dragging a thumb along a track or using the keyboard, mirroring the original

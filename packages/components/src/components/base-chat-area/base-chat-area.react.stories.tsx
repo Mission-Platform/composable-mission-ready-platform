@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * slot, typically `ChatBubble`s) with optional `header`/`footer` slots; the
  * auto-scroll is reproduced with a single neutral `useEffect`. Authored once in
  * the neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Communication/BaseChatArea',

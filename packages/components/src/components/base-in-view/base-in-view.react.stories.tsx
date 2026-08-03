@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `InView` is the **React** build of the write-once `BaseInView`. It uses the
  * neutral hooks (`useState`/`useRef`/`useEffect`) for its `IntersectionObserver`
  * lifecycle — compiled straight to React's own hooks by
- * `@mission-platform/vite-plugin-jsx` — revealing its content with the configured
+ * `@mission-platform/vite-plugin-forge` — revealing its content with the configured
  * animation once it scrolls into view.
  */
 const meta = {

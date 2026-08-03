@@ -17,7 +17,7 @@ const tabs: TabItem[] = [
  * active tab's panel** (virtualised), suited to heavy panel content. The per-tab
  * panel becomes one scoped `panel` render-prop, and `v-model` + emits become
  * callback props. Authored once in the neutral JSX dialect and compiled straight
- * to React by `@mission-platform/vite-plugin-jsx`.
+ * to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Navigation/BaseVirtualTabs',

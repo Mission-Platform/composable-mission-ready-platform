@@ -1,5 +1,5 @@
 import { IconChevron, type IconDirection } from '@mission-platform/icons';
-import { h, useEffect, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useEffect, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -46,7 +46,7 @@ export interface MenuProperties extends MpProperties {
 
 /**
  * `BaseMenu` — an accessible menu authored once in the neutral JSX dialect and
- * compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * It renders a `role="menubar"` of items; an item with `children` becomes an
  * expandable submenu that nests **to any depth** (the `renderItems` walk

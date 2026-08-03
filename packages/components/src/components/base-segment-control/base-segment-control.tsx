@@ -1,4 +1,4 @@
-import { classNames, h, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, useRef, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import styles from './base-segment-control.module.scss';
 
@@ -40,7 +40,7 @@ export interface SegmentControlProperties extends MpProperties {
 /**
  * `BaseSegmentControl` — segmented control (single-select switcher) authored
  * once in the neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It presents a small set of mutually exclusive options as a joined row of
  * segments. The selected value is **controlled** via `modelValue`. It exposes

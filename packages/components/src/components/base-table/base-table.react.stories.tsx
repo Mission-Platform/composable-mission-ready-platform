@@ -20,7 +20,7 @@ const rows: Record<string, unknown>[] = [
  * `@mission-platform/components`. It renders `columns`/`rows` with click-to-sort
  * headers (firing `onSort`), an optional caption, loading overlay, and empty
  * state. Authored once in the neutral JSX dialect and compiled straight to React
- * by `@mission-platform/vite-plugin-jsx`.
+ * by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Display/BaseTable',

@@ -16,7 +16,7 @@ const dropdownItems: NavbarItemChild[] = [
  * (enabled + `href`) or `<button>`; with `dropdownItems` it renders a dropdown
  * trigger + `role="menu"` panel that closes on outside-click/Escape. Authored
  * once in the neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Navigation/BaseNavbarItem',

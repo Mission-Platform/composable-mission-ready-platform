@@ -1,4 +1,4 @@
-import { classNames, Dynamic, h, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, Dynamic, h, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -111,7 +111,7 @@ const TAG_MAP: Record<TypographyVariant, string> = {
 /**
  * `BaseTypography` — the text-styling primitive authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It renders its default-slot content in the semantic tag for the chosen
  * `variant` (overridable with `as`), applying the variant's type-scale plus the

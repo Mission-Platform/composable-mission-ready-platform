@@ -8,7 +8,7 @@ import {
   type MpChild,
   type MpElement,
   type MpProperties,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import { BaseDropdown } from '../base-dropdown';
 import { BaseTypography } from '../base-typography';
@@ -59,7 +59,7 @@ export interface TimeRangeInputProperties extends MpProperties {
 /**
  * `BaseTimeRangeInput` — a time-range picker authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * A trigger button shows the `start → end` summary and opens a teleported
  * popover with two sets of scrollable hour/minute(/second) lists (one per

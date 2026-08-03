@@ -1,4 +1,4 @@
-import { h, Slot, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/jsx';
+import { h, Slot, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
@@ -64,7 +64,7 @@ export interface TimelineProperties extends MpProperties {
 /**
  * `BaseTimeline` — an ordered, chronological list of events authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * The original Vue pair (`BaseTimeline` + `BaseTimelineItem`) shared the
  * orientation/alternating rhythm through a `provide`/`inject` context. The

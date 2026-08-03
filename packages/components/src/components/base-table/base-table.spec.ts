@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/jsx/react';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { BaseTable, type TableColumn } from './base-table';
 
 /**
  * Exercises the **neutral** `BaseTable` authored in this package, rendering it
- * on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * on both frameworks through the `@mission-platform/forge` runtime adapters.
  * Covers the column headers, data rows (via the composed `BaseTypography`), the
  * caption, and the empty state.
  */

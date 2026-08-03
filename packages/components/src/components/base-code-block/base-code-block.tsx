@@ -1,5 +1,5 @@
 import { IconCheck, IconCopy } from '@mission-platform/icons';
-import { h, useEffect, useMemo, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useEffect, useMemo, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 import hljs from 'highlight.js/lib/core';
 import bash from 'highlight.js/lib/languages/bash';
 import css from 'highlight.js/lib/languages/css';
@@ -96,7 +96,7 @@ export interface CodeBlockProperties extends MpProperties {
 /**
  * `BaseCodeBlock` — a syntax-highlighted code viewer authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It highlights `code` with **`highlight.js`** (kept verbatim) and renders a
  * header (filename/language + copy button) above a scrollable body. It owns its

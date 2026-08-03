@@ -1,4 +1,4 @@
-import { h, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useRef, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { beginPointerDrag, clamp } from '../pointer-drag';
 
@@ -48,7 +48,7 @@ export interface RangeInputProperties extends MpProperties {
 /**
  * `BaseRangeInput` — a dual-thumb min/max range selector authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * Lets the user pick a lower and upper bound within a continuous (or stepped)
  * range by dragging either thumb or using the keyboard, mirroring the original

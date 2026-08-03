@@ -1,4 +1,4 @@
-import { h, useEffect, useId, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useEffect, useId, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 
@@ -40,7 +40,7 @@ export interface ColorInputProperties extends MpProperties {
 
 /**
  * `BaseColorInput` — colour picker authored once in the neutral JSX dialect and
- * compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * Pairs a native `<input type="color">` (presented as a swatch) with a hex text
  * field. The colour is controlled via `modelValue`; the swatch and the hex

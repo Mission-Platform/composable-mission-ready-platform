@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 
@@ -30,7 +30,7 @@ export interface ProgressBarProperties extends MpProperties {
 /**
  * `BaseProgressBar` — a determinate or indeterminate progress indicator authored
  * once in the neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It renders a native `<progress>` track with a tone/size, an optional label
  * row (label + percentage via the composed neutral {@link BaseTypography}), and

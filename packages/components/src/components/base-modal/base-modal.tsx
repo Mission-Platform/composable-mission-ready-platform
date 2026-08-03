@@ -9,7 +9,7 @@ import {
   type MpChild,
   type MpElement,
   type MpProperties,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import { BaseIconButton } from '../base-icon-button';
 import { BaseTypography } from '../base-typography';
@@ -82,7 +82,7 @@ function releaseBodyScrollLock(): void {
 
 /**
  * `BaseModal` — a centred modal authored once in the neutral JSX dialect and
- * compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * Like `BaseDialog` it renders a **native `<dialog>`** driven with
  * `showModal()`/`close()` (top layer, `::backdrop` scrim, focus trap), but adds

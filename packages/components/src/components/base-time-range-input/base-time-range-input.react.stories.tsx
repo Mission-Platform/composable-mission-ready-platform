@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `{ start, end }` range is controlled via `modelValue`, and the `v-model` +
  * `change` emit become the `onUpdateModelValue`/`onChange` callback props.
  * Authored once in the neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Forms/BaseTimeRangeInput',

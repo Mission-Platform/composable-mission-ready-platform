@@ -7,7 +7,7 @@ import {
   type MpChild,
   type MpElement,
   type MpProperties,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 import { DateTime } from 'luxon';
 
 import { BaseTypography } from '../base-typography';
@@ -157,7 +157,7 @@ function buildCells(
 /**
  * `BaseCalendar` — a month-grid date picker authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It renders a navigable month grid (Sunday-first) of selectable days, honouring
  * `min`/`max` bounds and an explicit `disabledDates` list, with IANA-timezone

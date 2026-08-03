@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `@mission-platform/components` — it renders an `items` array as an
  * ordered/unordered/description/plain list (each row via the composed neutral
  * `Typography`). Authored once in the neutral JSX dialect and compiled straight
- * to React by `@mission-platform/vite-plugin-jsx`.
+ * to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Display/BaseList',

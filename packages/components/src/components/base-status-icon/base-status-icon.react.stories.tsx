@@ -6,7 +6,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `StatusIcon` is the **React** build of the write-once `BaseStatusIcon` in
  * `@mission-platform/components` — a toned glyph per status (`✓`/`⚠`/`✕`/`ℹ`/`–`)
  * with `role="img"` when labelled. Authored once in the neutral JSX dialect and
- * compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Feedback/BaseStatusIcon',

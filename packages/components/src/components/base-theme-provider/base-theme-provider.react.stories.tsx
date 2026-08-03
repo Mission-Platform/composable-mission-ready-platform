@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * from its props and exposes the live theme state and mutators to its default
  * scoped slot (a render-prop child), so a `ThemeToggle` (or any other consumer)
  * placed inside it shares the same theme. Authored once in the neutral JSX
- * dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Theme/BaseThemeProvider',

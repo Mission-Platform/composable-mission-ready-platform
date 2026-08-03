@@ -9,7 +9,7 @@ import {
   type MpElement,
   type MpProperties,
   type MpRenderProperty,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -43,7 +43,7 @@ export interface VirtualListProperties extends MpProperties {
  * `BaseVirtualList` — renders only the rows visible within the scroll container,
  * so an arbitrarily long `items` array stays cheap to render. Authored once in
  * the neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`; the scroll position is held with the
+ * `@mission-platform/vite-plugin-forge`; the scroll position is held with the
  * neutral {@link useState}/{@link useRef}/{@link useMemo}/{@link useEffect}
  * hooks.
  *

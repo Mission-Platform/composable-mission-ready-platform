@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/jsx/react';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { BaseDropdown } from './base-dropdown';
 
 /**
  * Exercises the **neutral** `BaseDropdown` authored in this package, rendering
- * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * it on both frameworks through the `@mission-platform/forge` runtime adapters.
  * The panel is portalled through the neutral `<Teleport>` primitive (the
  * adapters render teleported children in place for SSR parity) and gated on
  * `open`, so it only ships in the markup while open; when open it stays anchored

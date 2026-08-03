@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * prop, labels are plain props, and the `v-model` + `next`/`prev`/`complete`
  * emits become callback props. A step can be **conditional** (`when: false`) and
  * **validated** (`valid: false` blocks Next/Finish). Authored once in the neutral
- * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const STEPS = [
   { id: 'account', title: 'Account', description: 'Login details', content: <p>Step 1 — create your account.</p> },

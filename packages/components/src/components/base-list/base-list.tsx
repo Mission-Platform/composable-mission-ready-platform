@@ -1,4 +1,4 @@
-import { classNames, Dynamic, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, Dynamic, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 
@@ -36,7 +36,7 @@ export interface ListProperties extends MpProperties {
 /**
  * `BaseList` — an ordered/unordered/description/plain list authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It renders the supplied `items` as the appropriate semantic element (`ul` /
  * `ol` / `dl`), each row's text rendered through the composed neutral

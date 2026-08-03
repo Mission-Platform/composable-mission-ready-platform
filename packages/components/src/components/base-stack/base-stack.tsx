@@ -1,4 +1,4 @@
-import { classNames, Dynamic, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, Dynamic, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 import spacingStyles from '../spacing.module.scss';
@@ -74,7 +74,7 @@ export interface StackProperties extends MpProperties {
  * a single line, either **vertically** (a column) or **horizontally** (a row),
  * with a consistent `gap` between them. Authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It emits BEM class names plus the computed flexbox inline style; the demo
  * styling lives in the co-located `base-stack.module.scss` (imported by

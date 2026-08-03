@@ -8,7 +8,7 @@ import {
   type MpChild,
   type MpElement,
   type MpProperties,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
@@ -51,7 +51,7 @@ export interface WindowPopoutProperties extends MpProperties {
 /**
  * `BaseWindowPopout` — pops its content out into a separate browser window,
  * authored once in the neutral JSX dialect and compiled straight to React or Vue
- * by `@mission-platform/vite-plugin-jsx`.
+ * by `@mission-platform/vite-plugin-forge`.
  *
  * Inline, it renders its default-slot content plus a toggle button. When popped
  * out it opens a real second window (`window.open`), shows an in-page

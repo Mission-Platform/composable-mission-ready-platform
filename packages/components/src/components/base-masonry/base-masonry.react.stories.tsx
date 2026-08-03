@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `Masonry` is the **React** build of the write-once `BaseMasonry` in
  * `@mission-platform/components` — it flows its default-slot children into
  * balanced, tightly-packed CSS multi-columns. Authored once in the neutral JSX
- * dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Layout/BaseMasonry',

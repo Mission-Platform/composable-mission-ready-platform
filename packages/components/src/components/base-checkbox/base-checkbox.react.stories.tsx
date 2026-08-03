@@ -9,7 +9,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `@mission-platform/components`. The checked state is controlled via
  * `modelValue`; the `v-model` + `change` emit become the
  * `onUpdateModelValue`/`onChange` callback props. Authored once in the neutral
- * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * JSX dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Forms/BaseCheckbox',

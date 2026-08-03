@@ -9,7 +9,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * async decoding, a fixed aspect ratio, and `object-fit` control; the
  * `load`/`error` emits become the `onLoad`/`onError` callback props. Authored
  * once in the neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Media/BaseResponsiveImage',

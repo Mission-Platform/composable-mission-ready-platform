@@ -1,5 +1,5 @@
 import { IconChevron } from '@mission-platform/icons';
-import { h, Slot, useState, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/jsx';
+import { h, Slot, useState, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
@@ -55,7 +55,7 @@ export interface AccordionProperties extends MpProperties {
 /**
  * `BaseAccordion` — a vertically stacked container of collapsible rows authored
  * once in the neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * The original Vue pair (`BaseAccordion` + `BaseAccordionItem`) shared open
  * state through `provide`/`inject`. The neutral version **flattens** that

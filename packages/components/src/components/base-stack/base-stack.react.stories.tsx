@@ -19,7 +19,7 @@ const Stack = RawStack as unknown as FunctionComponent<
  * in `@mission-platform/components` — a flexbox stack that lays its children
  * out vertically or horizontally with a consistent `gap`, authored once in the
  * neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const Box = ({ children }: { children: ReactNode }) => (
   <div

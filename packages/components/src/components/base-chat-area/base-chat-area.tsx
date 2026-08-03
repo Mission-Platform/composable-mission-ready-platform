@@ -1,4 +1,4 @@
-import { h, Slot, useEffect, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, Slot, useEffect, useRef, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -21,7 +21,7 @@ export interface ChatAreaProperties extends MpProperties {
 /**
  * `BaseChatArea` — a scrollable conversation surface authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It provides the chrome around a chat: an optional `header` slot, a scrollable
  * `aria-live="polite"` `role="log"` message list (the default slot — typically a

@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/jsx/react';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { BaseDeviceMock } from './base-device-mock';
 
 /**
  * Exercises the **neutral** `BaseDeviceMock` authored in this package, rendering
- * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * it on both frameworks through the `@mission-platform/forge` runtime adapters.
  * Covers the per-device chrome (browser controls/address bar, mobile notch,
  * tablet camera, desktop stand) and the default-slot screen.
  */

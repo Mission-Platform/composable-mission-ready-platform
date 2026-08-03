@@ -1,5 +1,5 @@
 import { IconChevron } from '@mission-platform/icons';
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -30,7 +30,7 @@ export interface CollapseProperties extends MpProperties {
 /**
  * `BaseCollapse` — a native `<details>`-based disclosure authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * The clickable summary text comes from the `summary` prop; the body is the
  * default slot. Toggling fires the `onToggle` callback with the new open state.

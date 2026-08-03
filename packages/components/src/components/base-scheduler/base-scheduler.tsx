@@ -1,5 +1,5 @@
 import { IconChevron } from '@mission-platform/icons';
-import { h, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 import {
   addDays,
   applyEventPatch,
@@ -168,7 +168,7 @@ function readableTextColor(background: string | undefined): string | undefined {
 /**
  * `BaseScheduler` — a full calendar/scheduler authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * At full parity with the Vue original: a toolbar (Today / prev-next / title /
  * new-event / five-view switcher) sits above the active view — a **time grid**

@@ -5,8 +5,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 /**
  * `Badge` is the **React** build of the write-once `BaseBadge` in
  * `@mission-platform/components`. The component is authored **once** in the
- * framework-neutral JSX dialect (`@mission-platform/jsx`) and compiled straight
- * to a React component at build time by `@mission-platform/vite-plugin-jsx`.
+ * framework-neutral JSX dialect (`@mission-platform/forge`) and compiled straight
+ * to a React component at build time by `@mission-platform/vite-plugin-forge`.
  * The very same source also ships as a Vue 3 component via the package's
  * `./vue` subpath (see the Vue Storybook).
  */

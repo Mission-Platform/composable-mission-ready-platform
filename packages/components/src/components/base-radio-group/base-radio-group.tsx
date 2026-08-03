@@ -1,4 +1,4 @@
-import { h, useId, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useId, type MpChild, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseRadio } from '../base-radio';
 import { BaseStack } from '../base-stack';
@@ -58,7 +58,7 @@ export interface RadioGroupProperties extends MpProperties {
 /**
  * `BaseRadioGroup` — groups several {@link BaseRadio} controls under a shared
  * legend, authored once in the neutral JSX dialect and compiled straight to
- * React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * Selection is controlled with the established `modelValue` +
  * `onUpdateModelValue`/`onChange` callback-prop convention; the radios are

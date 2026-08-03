@@ -1,4 +1,4 @@
-import { h, Slot, useEffect, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, Slot, useEffect, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 import {
@@ -40,7 +40,7 @@ export interface ThemeComposerProperties extends MpProperties {
  * colours, text/surface/border colours, fonts, base size/radius, plus a raw
  * token escape hatch) and applies them to its scope. Authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * The original Vue SFC shared a reactive store via `provide`/`inject` and `v-model`.
  * The neutral dialect has neither, so this version is a **controlled** component:

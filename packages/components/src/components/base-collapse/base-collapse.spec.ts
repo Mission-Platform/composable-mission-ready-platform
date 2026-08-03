@@ -1,5 +1,5 @@
-import { toReactComponent } from '@mission-platform/jsx/react';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -10,7 +10,7 @@ import { BaseCollapse } from './base-collapse';
 
 /**
  * Exercises the **neutral** `BaseCollapse` authored in this package, rendering
- * it on both frameworks through the `@mission-platform/jsx` runtime adapters.
+ * it on both frameworks through the `@mission-platform/forge` runtime adapters.
  * Covers the `<details>` shell, the fallback summary, the disabled modifier, and
  * the default-slot body.
  */

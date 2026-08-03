@@ -1,5 +1,5 @@
 import { IconCheck, IconClose, IconError, IconInfo, IconWarning } from '@mission-platform/icons';
-import { h, hasSlot, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, hasSlot, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
@@ -63,7 +63,7 @@ function variantIcon(variant: AlertBannerVariant): MpElement {
 /**
  * `BaseAlertBanner` — an inline alert / notification banner authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It communicates contextual feedback with an optional title, status icon,
  * dismiss button, and actions, rendering `role="alert"` (assertive) for

@@ -30,7 +30,7 @@ const nodes: TreeViewNode[] = [
 /**
  * `TreeView` is the **React** build of the write-once `BaseTreeView` in
  * `@mission-platform/components`, authored **once** in the framework-neutral JSX
- * dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Data/BaseTreeView',

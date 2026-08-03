@@ -1,4 +1,4 @@
-import { h, useEffect, useId, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useEffect, useId, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { BaseInput } from '../base-input';
 import { BaseSelect } from '../base-select';
@@ -71,7 +71,7 @@ function placeholdersFor(format: LocationFormat): { lat: string; lng: string } {
 /**
  * `BaseLocationInput` — a geographic coordinate input authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It captures a latitude/longitude point in one of three representations —
  * Decimal Degrees (DD), Degrees Decimal Minutes (DM), or Degrees Minutes

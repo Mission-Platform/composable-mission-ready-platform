@@ -9,7 +9,7 @@ import {
   useState,
   type MpElement,
   type MpProperties,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -57,7 +57,7 @@ export interface NavbarItemProperties extends MpProperties {
 
 /**
  * `BaseNavbarItem` — a navbar entry authored once in the neutral JSX dialect and
- * compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * With no `dropdownItems` it renders a single item — a link (`<a href>`) when
  * enabled and `href` is set, otherwise an activatable `<button>` firing

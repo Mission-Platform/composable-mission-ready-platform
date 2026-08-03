@@ -1,4 +1,4 @@
-import { h, Slot, Teleport, useEffect, useId, useRef, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, Slot, Teleport, useEffect, useId, useRef, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { resolvePortalTarget } from '../portal-target';
 import sizeStyles from '../size.module.scss';
@@ -73,11 +73,11 @@ const POSITION_AREA: Readonly<Record<PopoverPlacement, string>> = {
 /**
  * `BasePopover` — a floating dialog anchored to a trigger, authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * The panel is rendered through the framework-neutral **`<Teleport>`** portal
  * (compiled to React's `createPortal` / Vue's built-in `<Teleport>` by
- * `@mission-platform/vite-plugin-jsx`), so it renders into `document.body` and
+ * `@mission-platform/vite-plugin-forge`), so it renders into `document.body` and
  * escapes any `overflow`/stacking context; the portal is mounted only while
  * `open`. It stays anchored to its trigger with the CSS Anchor Positioning API
  * rather than `@floating-ui`: the trigger declares a unique inline `anchor-name`,

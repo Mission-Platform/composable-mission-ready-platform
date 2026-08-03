@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * menu) and `Typography` (brand), with a `brand` slot, the centred default slot,
  * and an `end` slot that collapse to a hamburger-toggled drawer below the `sm`
  * breakpoint. Authored once in the neutral JSX dialect and compiled straight to
- * React by `@mission-platform/vite-plugin-jsx`.
+ * React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Layout/BaseNavbar',

@@ -1,5 +1,5 @@
 import { IconClose, IconPlus } from '@mission-platform/icons';
-import { h, useRef, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/jsx';
+import { h, useRef, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/forge';
 
 import { BaseTypography } from '../base-typography';
 import sizeStyles from '../size.module.scss';
@@ -50,7 +50,7 @@ export interface VirtualTabsProperties extends MpProperties {
 /**
  * `BaseVirtualTabs` — a controlled tabs container that renders **only the active
  * tab's panel** (virtualised), authored once in the neutral JSX dialect and
- * compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * It behaves like {@link BaseTabs} (ARIA `tablist`/`tab`/`tabpanel`, roving
  * `tabindex`, Arrow/Home/End keyboard navigation, closable/addable affordances,
