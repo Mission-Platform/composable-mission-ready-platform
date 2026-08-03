@@ -6,7 +6,7 @@ import {
   type MpElement,
   type MpProperties,
   type MpRenderProperty,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 import { palette } from '@mission-platform/tokens';
 
 import {

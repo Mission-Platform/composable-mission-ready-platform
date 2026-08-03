@@ -1,13 +1,13 @@
 // ─── useDrawing ────────────────────────────────────────────────────────────────
 //
-// Framework-neutral: authored once against the `@mission-platform/jsx` hooks and
-// compiled to React / Vue by `@mission-platform/vite-plugin-jsx`. A thin wrapper
+// Framework-neutral: authored once against the `@mission-platform/forge` hooks and
+// compiled to React / Vue by `@mission-platform/vite-plugin-forge`. A thin wrapper
 // over the framework-agnostic {@link DrawingStore}: it mirrors the store's
 // getters into `useState` (so a state change re-renders the owning component),
 // forwards the current map instance to the store (which wires its own map event
 // listeners and cursor), and exposes the store's imperative actions/handlers.
 
-import { useEffect, useRef, useState } from '@mission-platform/jsx';
+import { useEffect, useRef, useState } from '@mission-platform/forge';
 
 import { DrawingStore } from './drawing-store';
 

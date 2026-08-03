@@ -1,4 +1,4 @@
-import { h, Slot, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, Slot, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { useMap } from '../../composables/use-map';
 import { useSource } from '../../composables/use-source';

@@ -75,7 +75,7 @@
 - Updated dependencies [be8ab67]
 - Updated dependencies [be8ab67]
   - @mission-platform/tokens@1.0.0
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
 
 ## 0.2.2
 

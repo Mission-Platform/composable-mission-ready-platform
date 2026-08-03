@@ -7,7 +7,7 @@ import {
   useState,
   type MpElement,
   type MpProperties,
-} from '@mission-platform/jsx';
+} from '@mission-platform/forge';
 import { LngLat, Map, type MapMouseEvent, type MapOptions } from 'maplibre-gl';
 
 import { centerDiffers, scalarDiffers } from '../../utils/camera';
@@ -50,7 +50,7 @@ export interface MapLibreProperties extends MpProperties {
 /**
  * `BaseMapLibre` — a MapLibre GL map container authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It creates the MapLibre `Map` after mount, provides the loaded instance to its
  * descendants through {@link MapContext} (only rendering its children — the

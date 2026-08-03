@@ -1,6 +1,6 @@
 # `@mission-platform/map`
 
-MapLibre GL components and composables authored with `@mission-platform/jsx` and shipped as both Vue 3 and React builds.
+MapLibre GL components and composables authored with `@mission-platform/forge` and shipped as both Vue 3 and React builds.
 
 ---
 

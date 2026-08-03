@@ -1,4 +1,4 @@
-import { type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { useMap } from '../../composables/use-map';
 import { usePopup } from '../../composables/use-popup';

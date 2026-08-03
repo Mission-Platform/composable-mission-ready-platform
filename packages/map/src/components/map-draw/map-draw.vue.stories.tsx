@@ -38,7 +38,7 @@ const meta = {
       description: {
         component: [
           'The `@mission-platform/map` package is authored once in the neutral',
-          '`@mission-platform/jsx` dialect and dual-built to **Vue** and **React**.',
+          '`@mission-platform/forge` dialect and dual-built to **Vue** and **React**.',
           'These stories use the Vue build (`@mission-platform/map/vue`). A matching',
           'set of React stories lives alongside in `map-draw.react.stories.tsx`.',
         ].join(' '),
