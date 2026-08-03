@@ -1,13 +1,13 @@
 # @mission-platform/breakpoints
 
-`@mission-platform/breakpoints` provides responsive breakpoint utilities and **write-once** viewport components for the Mission Platform. The components (`ShowAt`, `HideAt`, `BreakpointDebug`) are authored once in the neutral `@mission-platform/jsx` dialect and compiled to **both Vue 3 and React** by `@mission-platform/vite-plugin-jsx`.
+`@mission-platform/breakpoints` provides responsive breakpoint utilities and **write-once** viewport components for the Mission Platform. The components (`ShowAt`, `HideAt`, `BreakpointDebug`) are authored once in the neutral `@mission-platform/forge` dialect and compiled to **both Vue 3 and React** by `@mission-platform/vite-plugin-forge`.
 
 ## Subpath Exports
 
 - `@mission-platform/breakpoints/vue` — compiled native Vue 3 components.
 - `@mission-platform/breakpoints/react` — compiled native React components.
 - `@mission-platform/breakpoints/core` — framework-agnostic utilities and types.
-- `@mission-platform/breakpoints` — the neutral JSX source barrel (for write-once components compiled by `@mission-platform/vite-plugin-jsx`).
+- `@mission-platform/breakpoints` — the neutral JSX source barrel (for write-once components compiled by `@mission-platform/vite-plugin-forge`).
 
 ## Breakpoint Scale
 

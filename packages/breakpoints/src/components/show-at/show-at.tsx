@@ -1,4 +1,4 @@
-import { Fragment, h, type MpElement, type MpProperties, Slot, useEffect, useState } from '@mission-platform/jsx';
+import { Fragment, h, type MpElement, type MpProperties, Slot, useEffect, useState } from '@mission-platform/forge';
 
 import { type BreakpointKey, breakpoints } from '../../breakpoints';
 
@@ -13,7 +13,7 @@ export interface ShowAtProperties extends MpProperties {
  * `ShowAt` — conditionally renders its default slot only when the viewport is at
  * or above `min` (and/or strictly below `max`) on the shared seven-step
  * breakpoint scale. Authored once in the neutral JSX dialect and compiled
- * straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * The reactive viewport width is tracked through the neutral hooks
  * (`useState`/`useEffect`), which compile to React hooks or the Vue hook shim.

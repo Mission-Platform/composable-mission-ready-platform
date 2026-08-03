@@ -1,4 +1,4 @@
-import { h, type MpElement, type MpProperties, useEffect, useState } from '@mission-platform/jsx';
+import { h, type MpElement, type MpProperties, useEffect, useState } from '@mission-platform/forge';
 import i18next from 'i18next';
 
 import { breakpointKeys, breakpoints, resolveBreakpoint } from '../../breakpoints';
@@ -11,12 +11,12 @@ export type BreakpointDebugProperties = MpProperties;
  * `BreakpointDebug` — a development-time overlay pinned to the bottom-right
  * corner that displays the current active breakpoint and which breakpoints are
  * active for the live viewport width. Authored once in the neutral JSX dialect
- * and compiled straight to React or Vue by `@mission-platform/vite-plugin-jsx`.
+ * and compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
  *
  * The reactive viewport width is tracked through the neutral hooks
  * (`useState`/`useEffect`). Its labels are localised through i18next: each
  * `i18next.t(...)` call carries a `defaultValue` (the English fallback), and
- * `@mission-platform/vite-plugin-jsx` injects the framework `useI18n()` hook so
+ * `@mission-platform/vite-plugin-forge` injects the framework `useI18n()` hook so
  * the same source resolves against the package's `mp.breakpoints` namespace on
  * both React and Vue.
  */

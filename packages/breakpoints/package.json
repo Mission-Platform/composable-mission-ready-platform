@@ -10,6 +10,8 @@
   ],
   "exports": {
     ".": {
+      "mp:vue": { "types": "./dist/vue/index.d.ts", "import": "./dist/vue/index.js" },
+      "mp:react": { "types": "./dist/react/index.d.ts", "import": "./dist/react/index.js" },
       "types": "./dist/components/index.d.ts",
       "import": "./src/components/index.ts"
     },
@@ -47,7 +49,7 @@
     "format:write": "prettier --write ."
   },
   "dependencies": {
-    "@mission-platform/jsx": "workspace:*"
+    "@mission-platform/forge": "workspace:*"
   },
   "peerDependencies": {
     "@mission-platform/i18n": "workspace:*",
@@ -74,7 +76,7 @@
     "@mission-platform/stylelint-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
-    "@mission-platform/vite-plugin-jsx": "workspace:*",
+    "@mission-platform/vite-plugin-forge": "workspace:*",
     "@storybook/react-vite": "catalog:storybook",
     "@storybook/vue3-vite": "catalog:storybook",
     "@types/node": "catalog:typescript",
