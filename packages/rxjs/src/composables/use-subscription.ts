@@ -1,12 +1,12 @@
 // ─── useSubscription ──────────────────────────────────────────────────────────
 //
-// Framework-neutral: written once against the `@mission-platform/jsx` hooks and
-// compiled to React / Vue by `@mission-platform/vite-plugin-jsx`. Tie the
+// Framework-neutral: written once against the `@mission-platform/forge` hooks and
+// compiled to React / Vue by `@mission-platform/vite-plugin-forge`. Tie the
 // lifetime of an RxJS subscription to a component's effect: it is created after
 // mount and torn down on unmount (or when the dependency list changes), so
 // streams never leak — identically on both frameworks.
 
-import { useEffect, type MpDependencyList } from '@mission-platform/jsx';
+import { useEffect, type MpDependencyList } from '@mission-platform/forge';
 
 import type { Observable, Observer } from 'rxjs';
 

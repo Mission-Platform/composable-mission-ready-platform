@@ -1,5 +1,5 @@
-import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';
-import { toReactComponent } from '@mission-platform/jsx/react';
+import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { toReactComponent } from '@mission-platform/forge/react';
 import { BehaviorSubject, type Observable } from 'rxjs';
 
 import { useObservable } from '@mission-platform/rxjs';

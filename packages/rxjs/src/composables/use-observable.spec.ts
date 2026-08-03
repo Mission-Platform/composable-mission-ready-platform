@@ -1,6 +1,6 @@
-import { h, type MpElement } from '@mission-platform/jsx';
-import { toReactComponent } from '@mission-platform/jsx/react';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { h, type MpElement } from '@mission-platform/forge';
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { BehaviorSubject, Subject } from 'rxjs';

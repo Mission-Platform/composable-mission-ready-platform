@@ -1,12 +1,12 @@
 // ─── useObservable ────────────────────────────────────────────────────────────
 //
-// Framework-neutral: written once against the `@mission-platform/jsx` hooks and
-// compiled to React / Vue by `@mission-platform/vite-plugin-jsx`. Subscribe to
+// Framework-neutral: written once against the `@mission-platform/forge` hooks and
+// compiled to React / Vue by `@mission-platform/vite-plugin-forge`. Subscribe to
 // an RxJS `Observable` and expose its latest emission as component state, so a
 // write-once component can render stream values reactively on both frameworks
 // while the subscription is torn down automatically on unmount.
 
-import { useEffect, useState } from '@mission-platform/jsx';
+import { useEffect, useState } from '@mission-platform/forge';
 
 import type { Observable } from 'rxjs';
 

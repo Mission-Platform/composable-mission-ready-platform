@@ -1,14 +1,14 @@
 # @mission-platform/rxjs
 
 Framework-neutral RxJS integration for Mission Platform. It is authored **once**
-against the `@mission-platform/jsx` neutral hooks and compiled to both React and
-Vue by `@mission-platform/vite-plugin-jsx`, so a single write-once component can
+against the `@mission-platform/forge` neutral hooks and compiled to both React and
+Vue by `@mission-platform/vite-plugin-forge`, so a single write-once component can
 compose event/data streams with the full RxJS operator vocabulary and render
 their values on either framework. Observables flow into component state, and
 subscriptions are tied to the component's effect lifecycle so nothing leaks on
 unmount.
 
-Its only runtime dependencies are `rxjs` and `@mission-platform/jsx`; `react`,
+Its only runtime dependencies are `rxjs` and `@mission-platform/forge`; `react`,
 `react-dom`, and `vue` are optional peers supplied by the consuming app.
 
 ## Exports (`@mission-platform/rxjs`)

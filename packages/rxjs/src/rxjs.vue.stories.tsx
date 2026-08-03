@@ -1,5 +1,5 @@
-import { h, type MpElement, type MpProperties } from '@mission-platform/jsx';
-import { toVueComponent } from '@mission-platform/jsx/vue';
+import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { toVueComponent } from '@mission-platform/forge/vue';
 import { BehaviorSubject, type Observable } from 'rxjs';
 
 import { useObservable } from '@mission-platform/rxjs';
@@ -24,7 +24,7 @@ function StatusBadge(properties: StatusBadgeProperties): MpElement {
 
 // Rendered on Vue through the neutral runtime adapter. The adapter (like SSR) is
 // render-once, so the story shows the seeded value; the live subscription runs
-// once the component is compiled per-framework by @mission-platform/vite-plugin-jsx.
+// once the component is compiled per-framework by @mission-platform/vite-plugin-forge.
 const StatusBadgeVue = toVueComponent(StatusBadge, 'StatusBadge');
 
 const meta = {
