@@ -4,6 +4,11 @@ declare module 'virtual:i18n-resources' {
   export const resources: Resource;
 }
 
+declare module '*?worker' {
+  const workerConstructor: new () => Worker;
+  export default workerConstructor;
+}
+
 declare module '*.css' {}
 declare module '*.scss' {}
 declare module '@mission-platform/components/styles' {}

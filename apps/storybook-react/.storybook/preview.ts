@@ -10,8 +10,15 @@ import { withThemeByDataAttribute } from '@storybook/addon-themes';
 import { createElement } from 'react';
 import { resources } from 'virtual:i18n-resources';
 
+import { ensureMonacoEnvironment } from './monaco-environment';
+
 import type { Preview, ReactRenderer } from '@storybook/react-vite';
 import type { ViewportMap } from 'storybook/viewport';
+
+// Wire Monaco's web workers up front so the WYSIWYG editor (and any other
+// `BaseMonacoEditor` story) runs its language services off the main thread
+// instead of freezing the preview iframe — see `./monaco-environment.ts`.
+ensureMonacoEnvironment();
 
 const i18n = createMpI18n({
   namespace: mpNamespace('storybook-react'),

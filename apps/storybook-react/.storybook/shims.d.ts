@@ -2,6 +2,11 @@
 // These are resolved and processed by Vite at runtime; TypeScript only needs
 // to know the modules exist (no runtime value is imported from them).
 
+declare module '*?worker' {
+  const workerConstructor: new () => Worker;
+  export default workerConstructor;
+}
+
 declare module '*.css' {}
 declare module '*.scss' {}
 

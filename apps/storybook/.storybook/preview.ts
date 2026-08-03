@@ -13,8 +13,15 @@ import { setup } from '@storybook/vue3-vite';
 import { resources } from 'virtual:i18n-resources';
 import { createMemoryHistory, createRouter } from 'vue-router';
 
+import { ensureMonacoEnvironment } from './monaco-environment';
+
 import type { Preview, VueRenderer } from '@storybook/vue3-vite';
 import type { ViewportMap } from 'storybook/viewport';
+
+// Wire Monaco's web workers up front so the WYSIWYG editor (and any other
+// `BaseMonacoEditor` story) runs its language services off the main thread
+// instead of freezing the preview iframe — see `./monaco-environment.ts`.
+ensureMonacoEnvironment();
 
 function getViewportType(width: number): 'mobile' | 'tablet' | 'desktop' {
   if (width < 768) return 'mobile';

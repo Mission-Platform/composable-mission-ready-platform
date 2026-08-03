@@ -24,6 +24,7 @@ const config: StorybookConfig = {
     '../../../packages/matrix-code/src/**/*.react.stories.@(js|jsx|mjs|ts|tsx)',
     '../../../packages/barcode/src/**/*.react.stories.@(js|jsx|mjs|ts|tsx)',
     '../../../packages/code-scanner/src/**/*.react.stories.@(js|jsx|mjs|ts|tsx)',
+    '../../../packages/wysiwyg/src/**/*.react.stories.@(js|jsx|mjs|ts|tsx)',
   ],
   addons: [
     '@chromatic-com/storybook',
@@ -55,6 +56,12 @@ const config: StorybookConfig = {
     mergeConfig(config, {
       cacheDir: 'node_modules/.vite-storybook-react',
       plugins: [i18nPlugin({ defaultLocale: 'en' })],
+      // Emit Monaco's `?worker` entries as ES-module workers so their internal
+      // `import` statements resolve — required for the editor to run its
+      // language services in web workers (see `.storybook/monaco-environment.ts`).
+      worker: {
+        format: 'es',
+      },
       resolve: {
         alias: [
           {
