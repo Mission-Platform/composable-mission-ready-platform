@@ -19,11 +19,143 @@
       "skillPath": "skills/github-actions-efficiency/SKILL.md",
       "computedHash": "92628da7f3eb2ae5625168f31587712a3cd77ac9ba5a23ffc24e86fd12c4408c"
     },
+    "lsp-concurrency-audit": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-concurrency-audit/SKILL.md",
+      "computedHash": "c2eefcea586dd8a5b5be26ab37ac2576014f6eac692d76bfc52e4a5f7622b411"
+    },
+    "lsp-cross-repo": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-cross-repo/SKILL.md",
+      "computedHash": "21eb2c93ac1adab344e1ca2a804e249386cefb612aa01e994ef6fd6009c10c00"
+    },
+    "lsp-dead-code": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-dead-code/SKILL.md",
+      "computedHash": "521b9a3850459c648811966dd6019751ecf50a97c772dc06cf9fb351b91e26fb"
+    },
+    "lsp-docs": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-docs/SKILL.md",
+      "computedHash": "e9ec50308c6a9c25a50b33e2134760650364ea3150a22a94a59dca555f1b5a4b"
+    },
+    "lsp-edit-export": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-edit-export/SKILL.md",
+      "computedHash": "4094064db8ca9ce35dad0c434e0bd3718e261809d5e9743b2c7c60b27892ad89"
+    },
+    "lsp-edit-symbol": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-edit-symbol/SKILL.md",
+      "computedHash": "b6b5e9e798eb3a0c94a09f9fb2661f290355919d503d136c0ccaed51755484ca"
+    },
+    "lsp-extract-function": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-extract-function/SKILL.md",
+      "computedHash": "e7329c67b44ee241035d64a64ff9b8f496838f1ecc17091d7334516bd8db6add"
+    },
+    "lsp-fix-all": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-fix-all/SKILL.md",
+      "computedHash": "d293efb854eefaa0889947cf454f522b0bc6b2d79897706b0e4afc11083f26cf"
+    },
+    "lsp-format-code": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-format-code/SKILL.md",
+      "computedHash": "f53d9105b467fb370cbf944f4116bdcf544f0e96c714d348b526af08b3b121a2"
+    },
+    "lsp-generate": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-generate/SKILL.md",
+      "computedHash": "e56e53d663bfc62161e0faf1ba05f57894eb7b1ac972b1f2ae3c0adab2d9f4ac"
+    },
+    "lsp-impact": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-impact/SKILL.md",
+      "computedHash": "7ac1ea716de730c3fb2818816cc98cce82c3df99d4e8f6dd470843fba66b710f"
+    },
+    "lsp-implement": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-implement/SKILL.md",
+      "computedHash": "05ecf2e5763c782c4a0a484f7e1fc2525a725c2e4b815d95a44e4a92163b1efa"
+    },
+    "lsp-inspect": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-inspect/SKILL.md",
+      "computedHash": "5d0d1d9a5c00171abf7a6f536f981067c3f63592cb731f13b4cf80928d1239f3"
+    },
+    "lsp-local-symbols": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-local-symbols/SKILL.md",
+      "computedHash": "71c6a144a6ee23ffb56f951d727edf699d0fa811983e752a155f04c4cd7f5d94"
+    },
+    "lsp-onboard": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-onboard/SKILL.md",
+      "computedHash": "5660292b05a0f7d45e65ac71fc691b2d486cb484dc1e8c7a6a17590adc0f4dba"
+    },
+    "lsp-refactor": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-refactor/SKILL.md",
+      "computedHash": "c91f587003dcc504eb46ec83e15e3b32b9d4333681bc9fe6dea9e6a5dbe787cc"
+    },
+    "lsp-rename": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-rename/SKILL.md",
+      "computedHash": "12d4bace904fe891d94d6eafe2586a748fbf480dcf4d0d19963c20d30d5fbb10"
+    },
+    "lsp-safe-edit": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-safe-edit/SKILL.md",
+      "computedHash": "3f2839b5eea6453e4bcc8842c73face38a0482cd0fac658a2f9f14c80ee4e507"
+    },
+    "lsp-simulate": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-simulate/SKILL.md",
+      "computedHash": "0863b103c5953318310811efd2d6673b792f645f4e55f03004bd96b35841e923"
+    },
+    "lsp-test-correlation": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-test-correlation/SKILL.md",
+      "computedHash": "22bbf3a351acf4599f3d451425d9239af1fd267ff567cb0d195aa6601dafdc0f"
+    },
+    "lsp-verify": {
+      "source": "blackwell-systems/agent-lsp",
+      "sourceType": "github",
+      "skillPath": "skills/lsp-verify/SKILL.md",
+      "computedHash": "4cecda8fe8f9e1e93a9b2cd57c89444b72a347e40cc823b191ea62535b295e53"
+    },
     "turborepo": {
       "source": "vercel/turborepo",
       "sourceType": "github",
       "skillPath": "skills/turborepo/SKILL.md",
-      "computedHash": "b7c3165ae67a2892d6195a5b2cba15c8d96341f5c64ddd0d3ce4225c94a2ae83"
+      "computedHash": "c34cdc86e98c1063cf802b09edbafa40d0236d5e57a48fe16d871c75cb87e4fd"
+    },
+    "typescript-advanced-types": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/javascript-typescript/skills/typescript-advanced-types/SKILL.md",
+      "computedHash": "8cbf2bf600f392d7260e476e3202932a876e2281cda3b15a8b6a5a43f383252d"
     },
     "wrangler": {
       "source": "cloudflare/skills",
