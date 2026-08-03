@@ -2,7 +2,7 @@
   "name": "@mission-platform/layouts",
   "version": "0.2.0",
   "license": "BSD-4-Clause",
-  "description": "Sample write-once Mission Platform layouts authored with @mission-platform/jsx and shipped as both Vue 3 and React components",
+  "description": "Sample write-once Mission Platform layouts authored with @mission-platform/forge and shipped as both Vue 3 and React components",
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -10,6 +10,11 @@
   ],
   "exports": {
     ".": {
+      "mp:vue": { "types": "./dist/vue/index.d.ts", "import": "./dist/vue/index.js" },
+      "mp:react": { "types": "./dist/react/index.d.ts", "import": "./dist/react/index.js" },
+      "mp:solid": { "types": "./dist/solid/index.d.ts", "import": "./dist/solid/index.js" },
+      "mp:svelte": { "types": "./dist/svelte/index.d.ts", "import": "./dist/svelte/index.js" },
+      "mp:web-component": { "types": "./dist/web-components/index.d.ts", "import": "./dist/web-components/index.js" },
       "types": "./dist/components/index.d.ts",
       "import": "./src/components/index.ts"
     },
@@ -75,7 +80,7 @@
     "@mission-platform/harper": "workspace:*",
     "@mission-platform/hunspell": "workspace:*",
     "@mission-platform/icons": "workspace:*",
-    "@mission-platform/jsx": "workspace:*",
+    "@mission-platform/forge": "workspace:*",
     "@mission-platform/scheduler-core": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
     "@mission-platform/components": "workspace:*",
@@ -128,7 +133,7 @@
     "@mission-platform/stylelint-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
-    "@mission-platform/vite-plugin-jsx": "workspace:*",
+    "@mission-platform/vite-plugin-forge": "workspace:*",
     "@storybook/vue3-vite": "catalog:storybook",
     "@types/luxon": "catalog:",
     "@types/node": "catalog:typescript",

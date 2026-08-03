@@ -1,12 +1,12 @@
 # @mission-platform/components
 
 Sample "write once, run on both frameworks" components for Mission Platform.
-Each component is authored once in JSX with `@mission-platform/jsx` and shipped
+Each component is authored once in JSX with `@mission-platform/forge` and shipped
 as both a Vue 3 component and a React component.
 
-This package is the demonstration/reference consumer of `@mission-platform/jsx`
+This package is the demonstration/reference consumer of `@mission-platform/forge`
 (the framework-neutral runtime + adapters live there, the components live here)
-and of `@mission-platform/vite-plugin-jsx`: the `./react` and `./vue` subpaths
+and of `@mission-platform/vite-plugin-forge`: the `./react` and `./vue` subpaths
 are produced by **compiling the neutral components to each framework at build
 time** with that plugin's **two-stage compiler** (source-to-source → native
 compile), instead of the runtime `toReactComponent` / `toVueComponent` adapters.
@@ -274,7 +274,7 @@ now models Vue `<Teleport>` via the neutral `<Teleport>` primitive (compiled to
 React `createPortal` / Vue's built-in `<Teleport>`), the enter/leave
 `<Transition>` and the keyed-list `<TransitionGroup>` (enter/leave/move) via the
 neutral transition primitives (compiled to Vue's built-ins / the
-`@mission-platform/jsx/react` CSS-class drivers — e.g. `BaseDrawer`'s slide/fade
+`@mission-platform/forge/react` CSS-class drivers — e.g. `BaseDrawer`'s slide/fade
 and `BaseToastContainer`'s stack), the dynamic host tag via `<Dynamic is>`, and
 provide/inject via the neutral context primitives; it also replaces the
 `@floating-ui` popup with the **CSS Anchor Positioning API** (as the migrated
@@ -291,7 +291,7 @@ src/components/<component-name>/
 ├── <component-name>.tsx          # the write-once neutral component (JSX → MpElement)
 ├── <component-name>.module.scss  # co-located CSS Module, @layer mp.components (no :global)
 ├── <component-name>.stories.tsx  # Storybook story (consumes the built ./vue subpath)
-├── <component-name>.spec.ts      # cross-framework SSR parity test (via the @mission-platform/jsx adapters)
+├── <component-name>.spec.ts      # cross-framework SSR parity test (via the @mission-platform/forge adapters)
 └── index.ts                      # re-exports the component + its prop types
 ```
 
@@ -308,7 +308,7 @@ because it imports no neutral/JSX primitives, so the external
 and `src/components/date-time.ts`, the parse/format/clamp/range helpers shared
 by the five date/time pickers).
 A component imports such a helper with a normal
-relative import (`import { … } from '../theme-store'`); `@mission-platform/vite-plugin-jsx`
+relative import (`import { … } from '../theme-store'`); `@mission-platform/vite-plugin-forge`
 recognises it is **not** a sibling component and copies it verbatim into both the
 React and Vue generated trees (re-pointing the import), so the shared logic is
 authored once and runs unchanged on both frameworks.
@@ -316,7 +316,7 @@ authored once and runs unchanged on both frameworks.
 `src/components/index.ts` is the aggregate barrel that re-exports every
 component folder. There are **no** `src/react.ts` / `src/vue.ts` files: the
 per-framework entries are generated from that barrel by
-`@mission-platform/vite-plugin-jsx` at build time (see "How it is built").
+`@mission-platform/vite-plugin-forge` at build time (see "How it is built").
 
 ## Layout examples
 
@@ -412,8 +412,8 @@ Either way, two authoring patterns are used:
 
 | Subpath | Exports |
 |---|---|
-| `@mission-platform/components/react` | `Badge`, `Button`, `InView`, `Stack`, `Grid`, `Separator`, `Masonry`, `ApplicationLayout`, `Typography`, `Hero`, `Drawer`, `Navbar`, `VerticalLayout`, `WindowPopout`, `Avatar`, `ButtonGroup`, `IconButton`, `Tag`, `Quote`, `List`, `Card`, `Collapse`, `Table`, `Skeleton`, `Spinner`, `StatusIcon`, `ProgressBar`, `AlertBanner`, `Toast`, `Checkbox`, `Radio`, `RadioGroup`, `Switch`, `Input`, `Textarea`, `NumberStepper`, `Slider`, `RangeInput`, `ColorInput`, `OtpInput`, `Rating`, `SearchInput`, `FieldSet`, `FileInput`, `Select`, `Multiselect`, `PhoneInput`, `ChatBubble`, `ChatArea`, `Accordion`, `Carousel`, `Timeline`, `QrCode`, `LocationInput`, `Calendar`, `DateInput`, `DateRangeInput`, `DateTimeRangeInput`, `TimeInput`, `TimeRangeInput`, `Tooltip`, `Popover`, `Dropdown`, `Dialog`, `Modal`, `CodeBlock`, `MarkdownInput`, `MonacoEditor`, `SchemaForm`, `FormWizard`, `FormBuilder`, `Scheduler` (the public name of each `Base*` component) — compiled to React function components at build time by `@mission-platform/vite-plugin-jsx` (`dist/react/index.js`). Each component is its own ESM chunk that imports its own CSS, so the library tree-shakes (unused components, styles included, are dropped). |
-| `@mission-platform/components/vue` | `Badge`, `Button`, `InView`, `Stack`, `Grid`, `Separator`, `Masonry`, `ApplicationLayout`, `Typography`, `Hero`, `Drawer`, `Navbar`, `VerticalLayout`, `WindowPopout`, `Avatar`, `ButtonGroup`, `IconButton`, `Tag`, `Quote`, `List`, `Card`, `Collapse`, `Table`, `Skeleton`, `Spinner`, `StatusIcon`, `ProgressBar`, `AlertBanner`, `Toast`, `Checkbox`, `Radio`, `RadioGroup`, `Switch`, `Input`, `Textarea`, `NumberStepper`, `Slider`, `RangeInput`, `ColorInput`, `OtpInput`, `Rating`, `SearchInput`, `FieldSet`, `FileInput`, `Select`, `Multiselect`, `PhoneInput`, `ChatBubble`, `ChatArea`, `Accordion`, `Carousel`, `Timeline`, `QrCode`, `LocationInput`, `Calendar`, `DateInput`, `DateRangeInput`, `DateTimeRangeInput`, `TimeInput`, `TimeRangeInput`, `Tooltip`, `Popover`, `Dropdown`, `Dialog`, `Modal`, `CodeBlock`, `MarkdownInput`, `MonacoEditor`, `SchemaForm`, `FormWizard`, `FormBuilder`, `Scheduler` (the public name of each `Base*` component) — compiled to Vue components at build time by `@mission-platform/vite-plugin-jsx` (`dist/vue/index.js`). Each component is its own ESM chunk that imports its own CSS, so the library tree-shakes. |
+| `@mission-platform/components/react` | `Badge`, `Button`, `InView`, `Stack`, `Grid`, `Separator`, `Masonry`, `ApplicationLayout`, `Typography`, `Hero`, `Drawer`, `Navbar`, `VerticalLayout`, `WindowPopout`, `Avatar`, `ButtonGroup`, `IconButton`, `Tag`, `Quote`, `List`, `Card`, `Collapse`, `Table`, `Skeleton`, `Spinner`, `StatusIcon`, `ProgressBar`, `AlertBanner`, `Toast`, `Checkbox`, `Radio`, `RadioGroup`, `Switch`, `Input`, `Textarea`, `NumberStepper`, `Slider`, `RangeInput`, `ColorInput`, `OtpInput`, `Rating`, `SearchInput`, `FieldSet`, `FileInput`, `Select`, `Multiselect`, `PhoneInput`, `ChatBubble`, `ChatArea`, `Accordion`, `Carousel`, `Timeline`, `QrCode`, `LocationInput`, `Calendar`, `DateInput`, `DateRangeInput`, `DateTimeRangeInput`, `TimeInput`, `TimeRangeInput`, `Tooltip`, `Popover`, `Dropdown`, `Dialog`, `Modal`, `CodeBlock`, `MarkdownInput`, `MonacoEditor`, `SchemaForm`, `FormWizard`, `FormBuilder`, `Scheduler` (the public name of each `Base*` component) — compiled to React function components at build time by `@mission-platform/vite-plugin-forge` (`dist/react/index.js`). Each component is its own ESM chunk that imports its own CSS, so the library tree-shakes (unused components, styles included, are dropped). |
+| `@mission-platform/components/vue` | `Badge`, `Button`, `InView`, `Stack`, `Grid`, `Separator`, `Masonry`, `ApplicationLayout`, `Typography`, `Hero`, `Drawer`, `Navbar`, `VerticalLayout`, `WindowPopout`, `Avatar`, `ButtonGroup`, `IconButton`, `Tag`, `Quote`, `List`, `Card`, `Collapse`, `Table`, `Skeleton`, `Spinner`, `StatusIcon`, `ProgressBar`, `AlertBanner`, `Toast`, `Checkbox`, `Radio`, `RadioGroup`, `Switch`, `Input`, `Textarea`, `NumberStepper`, `Slider`, `RangeInput`, `ColorInput`, `OtpInput`, `Rating`, `SearchInput`, `FieldSet`, `FileInput`, `Select`, `Multiselect`, `PhoneInput`, `ChatBubble`, `ChatArea`, `Accordion`, `Carousel`, `Timeline`, `QrCode`, `LocationInput`, `Calendar`, `DateInput`, `DateRangeInput`, `DateTimeRangeInput`, `TimeInput`, `TimeRangeInput`, `Tooltip`, `Popover`, `Dropdown`, `Dialog`, `Modal`, `CodeBlock`, `MarkdownInput`, `MonacoEditor`, `SchemaForm`, `FormWizard`, `FormBuilder`, `Scheduler` (the public name of each `Base*` component) — compiled to Vue components at build time by `@mission-platform/vite-plugin-forge` (`dist/vue/index.js`). Each component is its own ESM chunk that imports its own CSS, so the library tree-shakes. |
 | `@mission-platform/components/storyblok/react` | `ApplicationLayoutBlok`, `BadgeBlok`, `ButtonBlok`, `InViewBlok`, `StackBlok`, `GridBlok`, `SeparatorBlok`, `MasonryBlok` — React **blok wrappers** that bind Storyblok's `blok` prop onto the built `./react` component (`storyblokEditable`, nested `StoryblokComponent`) (`dist/storyblok/react/index.js`). Each wrapper's `blok` prop is **precisely typed** (`SbBlokData & { … }`, one member per schema field), not an open `Record<string, unknown>`. Requires the `@storyblok/react` peer. |
 | `@mission-platform/components/storyblok/vue` | `ApplicationLayoutBlok`, `BadgeBlok`, `ButtonBlok`, `InViewBlok`, `StackBlok`, `GridBlok`, `SeparatorBlok`, `MasonryBlok` — Vue **blok wrappers** that bind Storyblok's `blok` prop onto the built `./vue` component (`v-editable`, nested `StoryblokComponent`) (`dist/storyblok/vue/index.js`). Each wrapper's `blok` prop is **precisely typed** (`SbBlokData & { … }`, one member per schema field), not an open `Record<string, unknown>`. Requires the `@storyblok/vue` peer. |
 | `@mission-platform/components/storyblok/components.json` | The aggregate Storyblok **blok configuration** — `{ "components": [ … ] }`, the shape `storyblok push-components` consumes. The framework-agnostic create-shape `<component>.json` files sit alongside it in `dist/storyblok/`. |
@@ -473,7 +473,7 @@ import { Badge, Button } from '@mission-platform/components/vue';
 ## How it is built
 
 `vite.config.ts` builds **both frameworks together** with the
-`@mission-platform/vite-plugin-jsx` **two-stage compiler** — there is no neutral
+`@mission-platform/vite-plugin-forge` **two-stage compiler** — there is no neutral
 build and there are **no hand-authored `react.ts` / `vue.ts` entry files**. The
 `build` script clears `dist` once up front, then runs the config once per target
 framework (selected by `--mode`), each emitting into its own subtree:
@@ -529,7 +529,7 @@ shared `dist/components/**` declarations, but no neutral `index`.
 
 1. Create the folder `src/components/<name>/` and add
    `<name>.tsx` (import `h`, any hooks, and types from
-   `@mission-platform/jsx`; author it in JSX returning an `MpElement`, driving
+   `@mission-platform/forge`; author it in JSX returning an `MpElement`, driving
    dynamic classes with the platform-owned `className={[…]}` attribute — never
    import the `classNames` helper), an
    `index.ts` that re-exports the component and its prop types (export the props
@@ -547,7 +547,7 @@ shared `dist/components/**` declarations, but no neutral `index`.
    `defineComponent` SFC, the React build to a function component, and the
    Storyblok build derives its `<Name>Blok` wrapper + `<name>.json` config).
 3. Add `<name>.spec.ts` (a cross-framework SSR parity test via the
-   `@mission-platform/jsx` adapters) and `<name>.stories.tsx` (importing the
+   `@mission-platform/forge` adapters) and `<name>.stories.tsx` (importing the
    built `@mission-platform/components/vue` subpath; a story for an
    inline-styled primitive also imports its `.module.scss` as a hashed map and
    binds `:class="styles['…']"`) in the same folder. The story is picked up by

@@ -10,7 +10,7 @@ import type { ReactNode } from 'react';
  * inline `Drawer`: fixed-open grid tracks at/above `breakpoint`, collapsing to
  * overlay drawers below it. The side columns (`start` / `end`) are `MpChild`
  * **props** (not slots). Authored once in the neutral JSX dialect and compiled
- * straight to React by `@mission-platform/vite-plugin-jsx`.
+ * straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Layouts/BaseVerticalLayout',

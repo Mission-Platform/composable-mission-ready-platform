@@ -1,6 +1,6 @@
 import { type DrawerDraggable, type DrawerSize } from '@mission-platform/components/base-drawer';
 import { BaseDrawer } from '@mission-platform/components/base-drawer';
-import { h, hasSlot, Slot, useEffect, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, hasSlot, Slot, useEffect, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import styles from './base-vertical-layout.module.scss';
 
@@ -59,7 +59,7 @@ const BREAKPOINT_PX: Record<VerticalLayoutBreakpoint, number> = {
 /**
  * `BaseVerticalLayout` — a responsive three-column shell authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It arranges an optional `start` column, the main content (the default slot),
  * and an optional `end` column. Each side column is backed by an inline

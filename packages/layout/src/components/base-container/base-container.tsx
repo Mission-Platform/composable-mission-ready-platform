@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import sizeStyles from '../size.module.scss';
 
@@ -66,7 +66,7 @@ export interface ContainerProperties extends MpProperties {
  *   (mobile-first), driven by the co-located `base-container.module.scss`.
  *
  * Authored once in the neutral JSX dialect and compiled straight to React or
- * Vue by `@mission-platform/vite-plugin-jsx`. The `fixed`/`fluid` widths and the
+ * Vue by `@mission-platform/vite-plugin-forge`. The `fixed`/`fluid` widths and the
  * gutter/centring are emitted as inline styles; the `responsive` step-ups live
  * in the CSS Module (which inlines the platform breakpoints as media queries).
  */

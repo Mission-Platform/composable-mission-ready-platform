@@ -1,4 +1,4 @@
-import { classNames, h, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { classNames, h, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import styles from './base-application-layout.module.scss';
 
@@ -46,7 +46,7 @@ function resolveStatusRole(level: StatusLevel): string | undefined {
 /**
  * `BaseApplicationLayout` — the top-level application shell authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * It lays out four stacked regions — a colour-coded status banner, a header (for
  * a navbar), the scrollable main content, and a footer — each exposed as a

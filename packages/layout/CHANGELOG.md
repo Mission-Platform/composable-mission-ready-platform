@@ -20,8 +20,8 @@
   Adds the write-once `@mission-platform/layouts` package containing the common
   layout primitives — `BaseApplicationLayout` (public `ApplicationLayout`) and
   `BaseVerticalLayout` (public `VerticalLayout`) — authored once in the neutral
-  `@mission-platform/jsx` dialect and compiled straight to both Vue 3 (`./vue`)
-  and React (`./react`) by the two-stage `@mission-platform/vite-plugin-jsx`
+  `@mission-platform/forge` dialect and compiled straight to both Vue 3 (`./vue`)
+  and React (`./react`) by the two-stage `@mission-platform/vite-plugin-forge`
   compiler, with co-located `JSX Components/Layout/<Name>` stories and
   cross-framework SSR specs.
 
@@ -32,7 +32,7 @@
   gains a neutral `.` root export and a neutral `./base-drawer` subpath so the
   write-once layouts can reuse `BaseDrawer` across packages.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler now remaps neutral
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler now remaps neutral
   imports of the framework-split component libraries (`@mission-platform/components`
   and `@mission-platform/layouts`, in addition to `@mission-platform/icons`) — from
   their root or a neutral subpath — to the matching built `./react` / `./vue`
@@ -197,7 +197,7 @@
   - @mission-platform/harper@0.2.0
   - @mission-platform/hunspell@0.4.0
   - @mission-platform/icons@0.2.0
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
   - @mission-platform/phone-number@0.3.0
 
 ## 0.2.0
@@ -220,8 +220,8 @@
   Adds the write-once `@mission-platform/layouts` package containing the common
   layout primitives — `BaseApplicationLayout` (public `ApplicationLayout`) and
   `BaseVerticalLayout` (public `VerticalLayout`) — authored once in the neutral
-  `@mission-platform/jsx` dialect and compiled straight to both Vue 3 (`./vue`)
-  and React (`./react`) by the two-stage `@mission-platform/vite-plugin-jsx`
+  `@mission-platform/forge` dialect and compiled straight to both Vue 3 (`./vue`)
+  and React (`./react`) by the two-stage `@mission-platform/vite-plugin-forge`
   compiler, with co-located `JSX Components/Layout/<Name>` stories and
   cross-framework SSR specs.
 
@@ -232,7 +232,7 @@
   gains a neutral `.` root export and a neutral `./base-drawer` subpath so the
   write-once layouts can reuse `BaseDrawer` across packages.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler now remaps neutral
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler now remaps neutral
   imports of the framework-split component libraries (`@mission-platform/components`
   and `@mission-platform/layouts`, in addition to `@mission-platform/icons`) — from
   their root or a neutral subpath — to the matching built `./react` / `./vue`
@@ -397,7 +397,7 @@
   - @mission-platform/harper@0.2.0
   - @mission-platform/hunspell@0.4.0
   - @mission-platform/icons@0.2.0
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
   - @mission-platform/phone-number@0.3.0
 
 ## 0.2.0
@@ -420,8 +420,8 @@
   Adds the write-once `@mission-platform/layouts` package containing the common
   layout primitives — `BaseApplicationLayout` (public `ApplicationLayout`) and
   `BaseVerticalLayout` (public `VerticalLayout`) — authored once in the neutral
-  `@mission-platform/jsx` dialect and compiled straight to both Vue 3 (`./vue`)
-  and React (`./react`) by the two-stage `@mission-platform/vite-plugin-jsx`
+  `@mission-platform/forge` dialect and compiled straight to both Vue 3 (`./vue`)
+  and React (`./react`) by the two-stage `@mission-platform/vite-plugin-forge`
   compiler, with co-located `JSX Components/Layout/<Name>` stories and
   cross-framework SSR specs.
 
@@ -432,7 +432,7 @@
   gains a neutral `.` root export and a neutral `./base-drawer` subpath so the
   write-once layouts can reuse `BaseDrawer` across packages.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler now remaps neutral
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler now remaps neutral
   imports of the framework-split component libraries (`@mission-platform/components`
   and `@mission-platform/layouts`, in addition to `@mission-platform/icons`) — from
   their root or a neutral subpath — to the matching built `./react` / `./vue`
@@ -597,7 +597,7 @@
   - @mission-platform/harper@0.2.0
   - @mission-platform/hunspell@0.4.0
   - @mission-platform/icons@0.2.0
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
   - @mission-platform/phone-number@0.3.0
 
 ## 0.2.0
@@ -620,8 +620,8 @@
   Adds the write-once `@mission-platform/layouts` package containing the common
   layout primitives — `BaseApplicationLayout` (public `ApplicationLayout`) and
   `BaseVerticalLayout` (public `VerticalLayout`) — authored once in the neutral
-  `@mission-platform/jsx` dialect and compiled straight to both Vue 3 (`./vue`)
-  and React (`./react`) by the two-stage `@mission-platform/vite-plugin-jsx`
+  `@mission-platform/forge` dialect and compiled straight to both Vue 3 (`./vue`)
+  and React (`./react`) by the two-stage `@mission-platform/vite-plugin-forge`
   compiler, with co-located `JSX Components/Layout/<Name>` stories and
   cross-framework SSR specs.
 
@@ -632,7 +632,7 @@
   gains a neutral `.` root export and a neutral `./base-drawer` subpath so the
   write-once layouts can reuse `BaseDrawer` across packages.
 
-  `@mission-platform/vite-plugin-jsx`'s two-stage compiler now remaps neutral
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler now remaps neutral
   imports of the framework-split component libraries (`@mission-platform/components`
   and `@mission-platform/layouts`, in addition to `@mission-platform/icons`) — from
   their root or a neutral subpath — to the matching built `./react` / `./vue`
@@ -797,5 +797,5 @@
   - @mission-platform/harper@0.2.0
   - @mission-platform/hunspell@0.4.0
   - @mission-platform/icons@0.2.0
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
   - @mission-platform/phone-number@0.3.0

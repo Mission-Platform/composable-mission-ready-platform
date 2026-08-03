@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * `max-width` from the `sm … 2xl` scale), **`fluid`** (always 100% of the
  * available width), and **`responsive`** (a `max-width` that steps up at each
  * platform breakpoint). Authored once in the neutral JSX dialect and compiled
- * straight to React by `@mission-platform/vite-plugin-jsx`.
+ * straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Layouts/BaseContainer',

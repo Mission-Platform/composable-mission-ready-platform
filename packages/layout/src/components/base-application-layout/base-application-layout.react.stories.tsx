@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * colour-coded status banner, a header (navbar), the scrollable main content,
  * and a footer, each exposed as a named slot (`status`, `navbar`, `content`,
  * `footer`) — here passed as content props. Authored once in the neutral JSX
- * dialect and compiled straight to React by `@mission-platform/vite-plugin-jsx`.
+ * dialect and compiled straight to React by `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Layouts/BaseApplicationLayout',
