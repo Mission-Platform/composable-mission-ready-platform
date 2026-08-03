@@ -1,6 +1,6 @@
 import { BaseButton, BaseTypography } from '@mission-platform/components';
 import { IconCheck, IconCopy, IconDownload, IconImage } from '@mission-platform/icons';
-import { h, useEffect, useMemo, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useEffect, useMemo, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 import { encodeMicroQr, encodeQr, encodeRmqr, type QrErrorCorrection } from '@mission-platform/qr-code';
 
 import styles from './base-qr-code.module.scss';
@@ -201,7 +201,7 @@ function stableId(prefix: string, seed: string): string {
 /**
  * `BaseQrCode` — renders a scannable QR Code, authored once in the neutral JSX
  * dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * The payload (`value`) is encoded entirely on the client by the
  * `@mission-platform/qr-code` encoders — dependency-free encoders written in

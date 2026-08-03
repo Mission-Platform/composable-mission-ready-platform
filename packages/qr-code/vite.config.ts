@@ -10,7 +10,7 @@ import {
   solidJsxPlugin,
   sveltePlugin,
   type JsxFramework,
-} from '@mission-platform/vite-plugin-jsx';
+} from '@mission-platform/vite-plugin-forge';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { defineConfig, type Plugin, type UserConfig } from 'vite';
 
@@ -24,7 +24,7 @@ import { defineConfig, type Plugin, type UserConfig } from 'vite';
  *   stay synchronous (SSR- and test-safe). This is the package's `.` export.
  * - **`vue` / `react`** — the write-once `BaseQrCode` **component** compiled to
  *   native Vue 3 / React by the two-stage compiler in
- *   `@mission-platform/vite-plugin-jsx` (Stage 1 generates the per-framework
+ *   `@mission-platform/vite-plugin-forge` (Stage 1 generates the per-framework
  *   source tree from the neutral barrel `src/component/index.ts`; Stage 2 is the
  *   framework's own toolchain). These are the package's `./vue` / `./react`
  *   exports. The component imports the encoder from the package's own `.` entry
@@ -37,11 +37,11 @@ const cacheRoot = path.resolve(__dirname, 'node_modules/.cache');
 
 /**
  * The `vue-tsc` CLI used to emit the Vue build's declarations. It ships as a
- * dependency of `@mission-platform/jsx` (a transitive dependency here), so it is
+ * dependency of `@mission-platform/forge` (a transitive dependency here), so it is
  * resolved from the jsx package directory rather than assumed hoisted.
  */
 const vueTscBin = createRequire(path.join(__dirname, 'vite.config.ts')).resolve('vue-tsc/bin/vue-tsc.js', {
-  paths: [path.join(__dirname, 'node_modules/@mission-platform/jsx')],
+  paths: [path.join(__dirname, 'node_modules/@mission-platform/forge')],
 });
 
 /**

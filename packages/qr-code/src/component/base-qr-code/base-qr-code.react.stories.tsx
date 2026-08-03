@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
  * by the WebAssembly `@mission-platform/qr-code` encoder and drawn as a crisp
  * SVG; the `error` emit becomes the `onError` callback prop. Authored once in
  * the neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  */
 const meta = {
   title: 'Components/Data Display/BaseQrCode',

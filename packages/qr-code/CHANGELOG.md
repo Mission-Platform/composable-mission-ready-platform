@@ -107,7 +107,7 @@
 - Updated dependencies [edb785f]
   - @mission-platform/components@1.0.0
   - @mission-platform/icons@0.2.0
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
 
 ## 0.1.1
 
@@ -216,7 +216,7 @@
 - Updated dependencies [edb785f]
   - @mission-platform/components@1.0.0
   - @mission-platform/icons@0.2.0
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
 
 ## 0.1.1
 
@@ -325,7 +325,7 @@
 - Updated dependencies [edb785f]
   - @mission-platform/components@1.0.0
   - @mission-platform/icons@0.2.0
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
 
 ## 0.1.1
 
@@ -434,4 +434,4 @@
 - Updated dependencies [edb785f]
   - @mission-platform/components@1.0.0
   - @mission-platform/icons@0.2.0
-  - @mission-platform/jsx@0.2.0
+  - @mission-platform/forge@0.2.0
