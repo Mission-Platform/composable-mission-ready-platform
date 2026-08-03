@@ -76,7 +76,7 @@ const CONVENTIONS = `# Conventions & Naming
 const COMPONENT_USAGE = `# Using Components
 
 Components live in \`@mission-platform/components\`. They are **write-once**: authored
-in the neutral JSX dialect (\`@mission-platform/jsx\`) and compiled to **both Vue 3 and React**.
+in the neutral JSX dialect (\`@mission-platform/forge\`) and compiled to **both Vue 3 and React**.
 
 ## Discover
 - Use the \`list_components\` tool to enumerate every component and its exports.
@@ -157,7 +157,7 @@ packages/<name>/
   (packages typically split into \`build:check\`, \`build:bundle\`, \`build:types\`).
 - Test: \`pnpm exec turbo run test --filter @mission-platform/<name>\` (Vitest; Playwright for browser-level).
 - Lint/format: \`pnpm exec turbo run lint lint:style format --filter @mission-platform/<name>\`.
-- Framework-agnostic components: author with \`@mission-platform/jsx\` so they compile to Vue and React.
+- Framework-agnostic components: author with \`@mission-platform/forge\` so they compile to Vue and React.
 - Update \`llms.txt\` whenever the public API changes, and add/refresh Storybook stories.
 - Add a changeset for every published change and run downstream consumers' tests.`;
 

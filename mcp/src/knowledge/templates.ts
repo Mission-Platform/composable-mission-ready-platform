@@ -219,16 +219,30 @@ export default defineVitestConfig({
   }
 }
 `,
-    'src/index.ts': `export { ${camel} } from './${name}';
+    'src/index.ts': `export * from './components/index.ts';
+export * from './composables/index.ts';
+export * from './locales/index.ts';
+export * from './utils/index.ts';
 `,
-    [`src/${name}.ts`]: `/**
+    'src/components/index.ts': `// Export UI components from here
+export {};
+`,
+    'src/composables/index.ts': `// Export reactive logic and hooks from here (authored against @mission-platform/forge)
+export {};
+`,
+    'src/locales/index.ts': `// Export i18n translations from here
+export {};
+`,
+    'src/utils/index.ts': `export { ${camel} } from './${name}';
+`,
+    [`src/utils/${name}.ts`]: `/**
  * ${description || `Public API for the ${scoped} package.`}
  */
 export function ${camel}(): string {
   return '${name}';
 }
 `,
-    [`src/${name}.spec.ts`]: `import { describe, expect, it } from 'vitest';
+    [`src/utils/${name}.spec.ts`]: `import { describe, expect, it } from 'vitest';
 
 import { ${camel} } from './${name}';
 
@@ -400,6 +414,15 @@ import { BaseButton } from '@mission-platform/components/vue';
   </main>
 </template>
 `,
+    'src/client/index.ts': `// Client entry points\nexport {};\n`,
+    'src/server/index.ts': `// Server-side logic\nexport {};\n`,
+    'src/pages/index.ts': `// Routable page components\nexport {};\n`,
+    'src/views/index.ts': `// View components\nexport {};\n`,
+    'src/components/index.ts': `// App-specific components\nexport {};\n`,
+    'src/composables/index.ts': `// App-specific composables\nexport {};\n`,
+    'src/locales/index.ts': `// App-specific locales\nexport {};\n`,
+    'src/utils/index.ts': `// App-specific utilities\nexport {};\n`,
+    'src/routes/index.ts': `// Route definitions\nexport {};\n`,
   };
 }
 
