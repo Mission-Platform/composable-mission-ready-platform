@@ -1,6 +1,6 @@
 import { BaseButton, BaseTypography } from '@mission-platform/components';
 import { IconCheck, IconCopy, IconDownload, IconImage } from '@mission-platform/icons';
-import { h, useEffect, useMemo, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/jsx';
+import { h, useEffect, useMemo, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import { encodeBarcode, type BarcodeSymbology } from '@mission-platform/barcode';
 
@@ -74,7 +74,7 @@ const TEXT_HEIGHT = 20;
 /**
  * `BaseBarcode` — renders a scannable 1D (linear) barcode, authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
- * `@mission-platform/vite-plugin-jsx`.
+ * `@mission-platform/vite-plugin-forge`.
  *
  * The payload (`value`) is encoded entirely on the client by the
  * {@link encodeBarcode} encoder from `@mission-platform/barcode` — a
