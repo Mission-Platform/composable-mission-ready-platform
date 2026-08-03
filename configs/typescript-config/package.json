@@ -13,7 +13,12 @@
     "./test": "./tsconfig.test.json",
     "./library": "./tsconfig.library.json",
     "./stories": "./tsconfig.stories.json",
-    "./stories-react": "./tsconfig.stories-react.json"
+    "./stories-react": "./tsconfig.stories-react.json",
+    "./framework-vue": "./tsconfig.framework-vue.json",
+    "./framework-react": "./tsconfig.framework-react.json",
+    "./framework-solid": "./tsconfig.framework-solid.json",
+    "./framework-svelte": "./tsconfig.framework-svelte.json",
+    "./framework-web-component": "./tsconfig.framework-web-component.json"
   },
   "files": [
     "tsconfig.base.json",
@@ -23,7 +28,12 @@
     "tsconfig.test.json",
     "tsconfig.library.json",
     "tsconfig.stories.json",
-    "tsconfig.stories-react.json"
+    "tsconfig.stories-react.json",
+    "tsconfig.framework-vue.json",
+    "tsconfig.framework-react.json",
+    "tsconfig.framework-solid.json",
+    "tsconfig.framework-svelte.json",
+    "tsconfig.framework-web-component.json"
   ],
   "scripts": {
     "lint": "eslint .",

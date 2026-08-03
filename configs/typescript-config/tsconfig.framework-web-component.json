@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Mission Platform — Framework: Web Components (mp:web-component custom condition)",
+  "compilerOptions": {
+    "customConditions": ["mp:web-component"]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Mission Platform — Framework: React (mp:react custom condition)",
+  "compilerOptions": {
+    "customConditions": ["mp:react"]
+  }
+}
