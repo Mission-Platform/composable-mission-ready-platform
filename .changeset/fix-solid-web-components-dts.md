@@ -1,5 +1,5 @@
 ---
-'@mission-platform/vite-plugin-jsx': patch
+'@mission-platform/vite-plugin-forge': patch
 ---
 
 fix dangling declaration references in the Solid and Web Components builds

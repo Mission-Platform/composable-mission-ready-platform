@@ -1,5 +1,5 @@
 ---
-'@mission-platform/vite-plugin-jsx': minor
+'@mission-platform/vite-plugin-forge': minor
 '@mission-platform/barcode': minor
 '@mission-platform/code-scanner': minor
 '@mission-platform/components': minor

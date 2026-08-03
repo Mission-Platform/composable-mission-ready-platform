@@ -1,5 +1,5 @@
 ---
-'@mission-platform/vite-plugin-jsx': patch
+'@mission-platform/vite-plugin-forge': patch
 ---
 
 retry the generated-tree cleanup on transient `ENOTEMPTY` errors
