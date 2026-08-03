@@ -75,7 +75,7 @@ The app consumes the platform's shared packages instead of bespoke UI:
 | `@mission-platform/breakpoints/core`          | Responsive chart width via `maxMediaQuery` (framework-neutral entry).                                    |
 
 > The `rxjs`/`d3` React entries are generated from a single write-once source by
-> `@mission-platform/vite-plugin-jsx`'s hook-library compiler; the app imports
+> `@mission-platform/vite-plugin-forge`'s hook-library compiler; the app imports
 > the `./react` build. Vue-flavoured barrels (`seo`, `breakpoints`) are imported
 > through their framework-neutral subpaths so no Vue is pulled into this React
 > worker.

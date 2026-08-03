@@ -201,7 +201,7 @@
       }),
     },
     {
-      name: '@mission-platform/jsx',
+      name: '@mission-platform/forge',
       description: t(($) => $.packages.items.jsx, { defaultValue: 'JSX support for Vue.', ns: 'mp.website' }),
     },
     {
