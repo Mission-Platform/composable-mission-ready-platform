@@ -1,0 +1,22 @@
+# @mission-platform/observers
+
+Framework-neutral browser observer composables for Mission Platform.
+
+## Core Hooks
+
+### useIntersectionObserver
+`useIntersectionObserver(target: MpRef<Element | null>, callback: IntersectionObserverCallback, options?: IntersectionObserverInit): void`
+Watches for changes in the intersection of a target element.
+
+### useMutationObserver
+`useMutationObserver(target: MpRef<Node | null>, callback: MutationCallback, options?: MutationObserverInit): void`
+Watches for changes being made to the DOM tree.
+
+### usePerformanceObserver
+`usePerformanceObserver(callback: PerformanceObserverCallback, options?: PerformanceObserverInit): void`
+Watches for new performance entries.
+
+## Implementation Details
+- Authored against `@mission-platform/forge` neutral hooks.
+- SSR-safe (no-op when window/Observer is undefined).
+- Automatic cleanup on unmount.
