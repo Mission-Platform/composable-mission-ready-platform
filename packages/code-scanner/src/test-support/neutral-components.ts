@@ -9,5 +9,5 @@
 // straight from the components package source. This file is never shipped; the
 // real per-framework builds import from the built
 // `@mission-platform/components/react` / `/vue` subpaths.
-export { BaseButton } from '../../../components/src/components/base-button';
-export { BaseTypography } from '../../../components/src/components/base-typography';
+export { BaseButton } from '../../../components/src/components/atoms/base-button';
+export { BaseTypography } from '../../../components/src/components/atoms/base-typography';

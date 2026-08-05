@@ -9,20 +9,17 @@
 // a {@link ScanResult}; no second decoder wasm module and no re-crossing of the
 // wasm↔JS boundary are involved.
 
-import { scannerLog } from '../debug';
-import scanInit, {
-  initSync as scanInitSync,
+// The `-wasm` package inlines its wasm binary and instantiates it synchronously
+// at import, so these scan functions are ready to call with no init step.
+import {
   scan_and_decode as wasmScanAndDecode,
   scan_and_decode_all as wasmScanAndDecodeAll,
   scan_and_decode_roi as wasmScanAndDecodeRoi,
   type ScanOutcome,
-} from '../generated/scan/code-scan.js';
-// The compiled scanner wasm binary. In a production bundle Vite inlines this as
-// a base64 `data:` URI (the package raises `assetsInlineLimit`); in dev/test it
-// resolves to a plain URL instead — see `WasmModule` for how each is handled.
-import scanWasmUrl from '../generated/scan/code-scan_bg.wasm?url';
+} from '@mission-platform/code-scan-wasm';
+
+import { scannerLog } from '../debug';
 import { contrastStretchLuma, imageDataToLuma } from '../image';
-import { type AsyncInit, type InitInput, type SyncInit, type SyncInitInput, WasmModule } from '../wasm-module';
 
 import type { ImageLike, Roi, ScanFormat, ScanResult } from '../types';
 
@@ -50,12 +47,6 @@ function outcomeToResult(outcome: ScanOutcome): ScanResult {
   outcome.free();
   return { format, value: decoded ?? null };
 }
-
-/**
- * The lazily-instantiated scanner wasm module. Exported so the package entry
- * (`index.ts`) can re-export it and drive the `initCodeScanner*` helpers.
- */
-export const scanner = new WasmModule(scanInit as AsyncInit, scanInitSync as SyncInit, scanWasmUrl, 'scanner');
 
 /**
  * Run the wasm locate-and-decode over a luma image, returning the decoded
@@ -115,25 +106,6 @@ function locateAndDecodeAll(image: ImageLike): ScanResult[] {
 }
 
 /**
- * Instantiate the scanner WebAssembly module synchronously from raw bytes (or a
- * precompiled `WebAssembly.Module`). Use this in non-bundled environments — e.g.
- * Node or a test runner — where the inlined `data:` URI isn't available, so the
- * synchronous {@link scanImageData} can be used afterwards.
- */
-export function initCodeScannerSync(wasm: SyncInitInput): void {
-  scanner.instantiateSync(wasm);
-}
-
-/**
- * Instantiate the scanner WebAssembly module asynchronously, resolving once it
- * is ready. Call it yourself to warm the module up front; {@link scanImageDataAsync}
- * calls it automatically.
- */
-export function initCodeScanner(input?: InitInput): Promise<void> {
-  return scanner.instantiate(input);
-}
-
-/**
  * Locate and decode the first supported code (QR, Data Matrix, Aztec or 1D
  * barcode) in `image`, instantiating the WebAssembly scanner synchronously on
  * first use.
@@ -144,8 +116,6 @@ export function initCodeScanner(input?: InitInput): Promise<void> {
  *   is located but its payload can't be decoded, `result.value` is `null`.
  */
 export function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null {
-  scanner.ensureSyncInit();
-  scanner.assertInitialised();
   return locateAndDecode(image, roi);
 }
 
@@ -156,9 +126,8 @@ export function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null {
  * @param roi optional region of interest — see {@link scanImageData}.
  * @returns the {@link ScanResult}, or `null` when no code is found.
  */
-export async function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null> {
-  await initCodeScanner();
-  return locateAndDecode(image, roi);
+export function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null> {
+  return Promise.resolve(locateAndDecode(image, roi));
 }
 
 /**
@@ -169,8 +138,6 @@ export async function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<S
  *   empty when nothing is decoded.
  */
 export function scanImageDataAll(image: ImageLike): ScanResult[] {
-  scanner.ensureSyncInit();
-  scanner.assertInitialised();
   return locateAndDecodeAll(image);
 }
 
@@ -180,7 +147,6 @@ export function scanImageDataAll(image: ImageLike): ScanResult[] {
  *
  * @returns the decoded {@link ScanResult}s in discovery order, deduplicated.
  */
-export async function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]> {
-  await initCodeScanner();
-  return locateAndDecodeAll(image);
+export function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]> {
+  return Promise.resolve(locateAndDecodeAll(image));
 }

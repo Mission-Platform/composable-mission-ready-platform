@@ -1,68 +1,19 @@
 {
   "$schema": "https://turborepo.com/schema.json",
-  "extends": ["//"],
+  "extends": [
+    "//"
+  ],
   "tasks": {
     "build": {
       "dependsOn": [
-        "build:wasm:scan",
-        "build:check",
-        "build:bundle",
-        "build:vue",
-        "build:react",
-        "build:solid",
-        "build:svelte",
-        "build:web-components",
-        "build:types"
+        "^build",
+        "build:check"
       ]
     },
-    "build:wasm:scan": {
-      "command": [
-        "wasm-pack",
-        "build",
-        "../../crates/code-scan",
-        "--target",
-        "web",
-        "--release",
-        "--weak-refs",
-        "--reference-types",
-        "--no-pack",
-        "--panic-unwind",
-        "--out-dir",
-        "../../packages/code-scanner/src/generated/scan",
-        "--out-name",
-        "code-scan"
-      ],
-      "outputs": ["src/generated/scan/**"]
-    },
     "build:check": {
-      "dependsOn": ["^build", "build:wasm:scan"]
-    },
-    "build:bundle": {
-      "dependsOn": ["^build", "build:wasm:scan"]
-    },
-    "build:types": {
-      "dependsOn": ["^build", "build:wasm:scan", "build:bundle"]
-    },
-    "build:vue": {
-      "dependsOn": ["^build", "build:bundle", "build:types"]
-    },
-    "build:react": {
-      "dependsOn": ["^build", "build:bundle", "build:types"]
-    },
-    "build:solid": {
-      "dependsOn": ["^build", "build:bundle", "build:types"]
-    },
-    "build:svelte": {
-      "dependsOn": ["^build", "build:bundle", "build:types"]
-    },
-    "build:web-components": {
-      "dependsOn": ["^build", "build:bundle", "build:types"]
-    },
-    "test:wasm": {
-      "dependsOn": ["test:wasm:scan"]
-    },
-    "test:wasm:scan": {
-      "command": ["wasm-pack", "test", "--node", "../../crates/code-scan"]
+      "dependsOn": [
+        "^build"
+      ]
     }
   }
 }

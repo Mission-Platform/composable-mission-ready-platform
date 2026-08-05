@@ -20,16 +20,8 @@ export type { ImageLike, Roi, ScanFormat, ScanResult } from './types';
 /** The luma + contrast-stretch helpers and their image type (handy for custom capture pipelines). */
 export { contrastStretchLuma, imageDataToLuma, type LumaImage } from './image';
 
-/** The core scanning façade + package-wide initialisation API. */
-export {
-  initCodeScanner,
-  initCodeScannerSync,
-  scanImageData,
-  scanImageDataAll,
-  scanImageDataAllAsync,
-  scanImageDataAsync,
-  scanner,
-} from './scanner';
+/** The core scanning façade. */
+export { scanImageData, scanImageDataAll, scanImageDataAllAsync, scanImageDataAsync } from './scanner';
 
 /**
  * Opt-in diagnostic logging. Enable it (or set `globalThis.__CODE_SCANNER_DEBUG__`

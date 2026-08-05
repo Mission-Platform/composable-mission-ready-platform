@@ -1,16 +1,16 @@
 import { BaseButton, BaseTypography } from '@mission-platform/components';
+import { h, type MpElement, type MpProperties, useEffect, useRef, useState } from '@mission-platform/forge';
 import { IconCamera, IconClose, IconUpload } from '@mission-platform/icons';
-import { h, useEffect, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
 import {
   scanFile,
   scanImageData,
+  type ScanResult,
   setCodeScannerDebug,
   videoFrameToImageData,
-  type ScanResult,
 } from '@mission-platform/code-scanner';
 
-import { scannerLog } from '../../debug';
+import { scannerLog } from '../../../debug';
 
 import styles from './base-code-scanner.module.scss';
 

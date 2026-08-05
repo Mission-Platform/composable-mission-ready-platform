@@ -4,12 +4,33 @@
 
 ### Minor Changes
 
-- b0c25e6: Add opt-in diagnostic logging to help debug codes that are located but fail to decode (the common Data Matrix / 1D-barcode symptom). The JS façade now traces each scan stage — capture size, the located format, its sampled payload (module counts) and each decoder's verdict — via a new `setCodeScannerDebug(true)` toggle (also enabled by the `__CODE_SCANNER_DEBUG__` global or the `BaseCodeScanner` `debug` prop). The wasm scanner emits matching `tracing` events at every decision point (Otsu threshold, dense bounds, inferred Data Matrix size and module geometry, barcode scan-line quality, and each rejection reason), visible in the devtools console. Logging is off by default so production output stays quiet.
+- b0c25e6: Add opt-in diagnostic logging to help debug codes that are located but fail to decode (the common Data
+  Matrix / 1D-barcode symptom). The JS façade now traces each scan stage — capture size, the located format, its sampled
+  payload (module counts) and each decoder's verdict — via a new `setCodeScannerDebug(true)` toggle (also enabled by the
+  `__CODE_SCANNER_DEBUG__` global or the `BaseCodeScanner` `debug` prop). The wasm scanner emits matching `tracing`
+  events at every decision point (Otsu threshold, dense bounds, inferred Data Matrix size and module geometry, barcode
+  scan-line quality, and each rejection reason), visible in the devtools console. Logging is off by default so
+  production output stays quiet.
 
 ### Patch Changes
 
-- b0c25e6: Improve the 1D-barcode locator for real camera photos, where the bars are one block inside a cluttered scene. Vertically the scanner now finds the _transition band_ — the tallest stripe of edge-dense rows — so the scan lines land on the bars rather than the human-readable digit row or plain background (the previous whole-frame ink bounds ballooned onto both). Horizontally, each scan line is trimmed to its densest run of narrow alternating elements, splitting away the quiet zones and any wide background object beside the symbol. The unit-width estimate now rejects rare specks by requiring a candidate module width to recur, so a lone stray run can no longer inflate the module count. Finally the locator emits a ranked shortlist of candidate scan lines and the decode stage tries each until one reads — a single "cleanest" line is a poor proxy for a decodable one on a photo. Validated against genuine barcode photos from the zxing blackbox corpus (EAN-13/8, UPC-A, Code 128/39), lifting the decode rate several-fold; a new cluttered-frame pipeline test locks in the behaviour. Tightly-cropped file uploads are unaffected.
-- b0c25e6: Fix Data Matrix and 1D-barcode captures that were located but failed to decode. The scanner now localises from an ink-_density_ bounding box (so stray speckle or clutter in the quiet zone no longer explodes the symbol bounds), infers the Data Matrix size from the mode of several timing-edge probes instead of a single line, reads each Data Matrix module by a small majority vote (falling back to a single centre sample for very small modules), and picks the cleanest of several barcode scan-lines rather than blindly trusting the middle one. QR scanning is unchanged. Native end-to-end tests now drive real encoders → scanner → real decoders across clean, downscaled, cluttered and noisy images.
+- b0c25e6: Improve the 1D-barcode locator for real camera photos, where the bars are one block inside a cluttered scene.
+  Vertically the scanner now finds the _transition band_ — the tallest stripe of edge-dense rows — so the scan lines
+  land on the bars rather than the human-readable digit row or plain background (the previous whole-frame ink bounds
+  ballooned onto both). Horizontally, each scan line is trimmed to its densest run of narrow alternating elements,
+  splitting away the quiet zones and any wide background object beside the symbol. The unit-width estimate now rejects
+  rare specks by requiring a candidate module width to recur, so a lone stray run can no longer inflate the module
+  count. Finally the locator emits a ranked shortlist of candidate scan lines and the decode stage tries each until one
+  reads — a single "cleanest" line is a poor proxy for a decodable one on a photo. Validated against genuine barcode
+  photos from the zxing blackbox corpus (EAN-13/8, UPC-A, Code 128/39), lifting the decode rate several-fold; a new
+  cluttered-frame pipeline test locks in the behaviour. Tightly-cropped file uploads are unaffected.
+- b0c25e6: Fix Data Matrix and 1D-barcode captures that were located but failed to decode. The scanner now localises
+  from an ink- _density_ bounding box (so stray speckle or clutter in the quiet zone no longer explodes the symbol
+  bounds), infers the Data Matrix size from the mode of several timing-edge probes instead of a single line, reads each
+  Data Matrix module by a small majority vote (falling back to a single centre sample for very small modules), and picks
+  the cleanest of several barcode scan-lines rather than blindly trusting the middle one. QR scanning is unchanged.
+  Native end-to-end tests now drive real encoders → scanner → real decoders across clean, downscaled, cluttered and
+  noisy images.
 - Updated dependencies [3e48edf]
 - Updated dependencies [e1a9272]
 - Updated dependencies [e1a9272]
@@ -124,12 +145,33 @@
 
 ### Minor Changes
 
-- b0c25e6: Add opt-in diagnostic logging to help debug codes that are located but fail to decode (the common Data Matrix / 1D-barcode symptom). The JS façade now traces each scan stage — capture size, the located format, its sampled payload (module counts) and each decoder's verdict — via a new `setCodeScannerDebug(true)` toggle (also enabled by the `__CODE_SCANNER_DEBUG__` global or the `BaseCodeScanner` `debug` prop). The wasm scanner emits matching `tracing` events at every decision point (Otsu threshold, dense bounds, inferred Data Matrix size and module geometry, barcode scan-line quality, and each rejection reason), visible in the devtools console. Logging is off by default so production output stays quiet.
+- b0c25e6: Add opt-in diagnostic logging to help debug codes that are located but fail to decode (the common Data
+  Matrix / 1D-barcode symptom). The JS façade now traces each scan stage — capture size, the located format, its sampled
+  payload (module counts) and each decoder's verdict — via a new `setCodeScannerDebug(true)` toggle (also enabled by the
+  `__CODE_SCANNER_DEBUG__` global or the `BaseCodeScanner` `debug` prop). The wasm scanner emits matching `tracing`
+  events at every decision point (Otsu threshold, dense bounds, inferred Data Matrix size and module geometry, barcode
+  scan-line quality, and each rejection reason), visible in the devtools console. Logging is off by default so
+  production output stays quiet.
 
 ### Patch Changes
 
-- b0c25e6: Improve the 1D-barcode locator for real camera photos, where the bars are one block inside a cluttered scene. Vertically the scanner now finds the _transition band_ — the tallest stripe of edge-dense rows — so the scan lines land on the bars rather than the human-readable digit row or plain background (the previous whole-frame ink bounds ballooned onto both). Horizontally, each scan line is trimmed to its densest run of narrow alternating elements, splitting away the quiet zones and any wide background object beside the symbol. The unit-width estimate now rejects rare specks by requiring a candidate module width to recur, so a lone stray run can no longer inflate the module count. Finally the locator emits a ranked shortlist of candidate scan lines and the decode stage tries each until one reads — a single "cleanest" line is a poor proxy for a decodable one on a photo. Validated against genuine barcode photos from the zxing blackbox corpus (EAN-13/8, UPC-A, Code 128/39), lifting the decode rate several-fold; a new cluttered-frame pipeline test locks in the behaviour. Tightly-cropped file uploads are unaffected.
-- b0c25e6: Fix Data Matrix and 1D-barcode captures that were located but failed to decode. The scanner now localises from an ink-_density_ bounding box (so stray speckle or clutter in the quiet zone no longer explodes the symbol bounds), infers the Data Matrix size from the mode of several timing-edge probes instead of a single line, reads each Data Matrix module by a small majority vote (falling back to a single centre sample for very small modules), and picks the cleanest of several barcode scan-lines rather than blindly trusting the middle one. QR scanning is unchanged. Native end-to-end tests now drive real encoders → scanner → real decoders across clean, downscaled, cluttered and noisy images.
+- b0c25e6: Improve the 1D-barcode locator for real camera photos, where the bars are one block inside a cluttered scene.
+  Vertically the scanner now finds the _transition band_ — the tallest stripe of edge-dense rows — so the scan lines
+  land on the bars rather than the human-readable digit row or plain background (the previous whole-frame ink bounds
+  ballooned onto both). Horizontally, each scan line is trimmed to its densest run of narrow alternating elements,
+  splitting away the quiet zones and any wide background object beside the symbol. The unit-width estimate now rejects
+  rare specks by requiring a candidate module width to recur, so a lone stray run can no longer inflate the module
+  count. Finally the locator emits a ranked shortlist of candidate scan lines and the decode stage tries each until one
+  reads — a single "cleanest" line is a poor proxy for a decodable one on a photo. Validated against genuine barcode
+  photos from the zxing blackbox corpus (EAN-13/8, UPC-A, Code 128/39), lifting the decode rate several-fold; a new
+  cluttered-frame pipeline test locks in the behaviour. Tightly-cropped file uploads are unaffected.
+- b0c25e6: Fix Data Matrix and 1D-barcode captures that were located but failed to decode. The scanner now localises
+  from an ink- _density_ bounding box (so stray speckle or clutter in the quiet zone no longer explodes the symbol
+  bounds), infers the Data Matrix size from the mode of several timing-edge probes instead of a single line, reads each
+  Data Matrix module by a small majority vote (falling back to a single centre sample for very small modules), and picks
+  the cleanest of several barcode scan-lines rather than blindly trusting the middle one. QR scanning is unchanged.
+  Native end-to-end tests now drive real encoders → scanner → real decoders across clean, downscaled, cluttered and
+  noisy images.
 - Updated dependencies [3e48edf]
 - Updated dependencies [e1a9272]
 - Updated dependencies [e1a9272]
@@ -244,12 +286,33 @@
 
 ### Minor Changes
 
-- b0c25e6: Add opt-in diagnostic logging to help debug codes that are located but fail to decode (the common Data Matrix / 1D-barcode symptom). The JS façade now traces each scan stage — capture size, the located format, its sampled payload (module counts) and each decoder's verdict — via a new `setCodeScannerDebug(true)` toggle (also enabled by the `__CODE_SCANNER_DEBUG__` global or the `BaseCodeScanner` `debug` prop). The wasm scanner emits matching `tracing` events at every decision point (Otsu threshold, dense bounds, inferred Data Matrix size and module geometry, barcode scan-line quality, and each rejection reason), visible in the devtools console. Logging is off by default so production output stays quiet.
+- b0c25e6: Add opt-in diagnostic logging to help debug codes that are located but fail to decode (the common Data
+  Matrix / 1D-barcode symptom). The JS façade now traces each scan stage — capture size, the located format, its sampled
+  payload (module counts) and each decoder's verdict — via a new `setCodeScannerDebug(true)` toggle (also enabled by the
+  `__CODE_SCANNER_DEBUG__` global or the `BaseCodeScanner` `debug` prop). The wasm scanner emits matching `tracing`
+  events at every decision point (Otsu threshold, dense bounds, inferred Data Matrix size and module geometry, barcode
+  scan-line quality, and each rejection reason), visible in the devtools console. Logging is off by default so
+  production output stays quiet.
 
 ### Patch Changes
 
-- b0c25e6: Improve the 1D-barcode locator for real camera photos, where the bars are one block inside a cluttered scene. Vertically the scanner now finds the _transition band_ — the tallest stripe of edge-dense rows — so the scan lines land on the bars rather than the human-readable digit row or plain background (the previous whole-frame ink bounds ballooned onto both). Horizontally, each scan line is trimmed to its densest run of narrow alternating elements, splitting away the quiet zones and any wide background object beside the symbol. The unit-width estimate now rejects rare specks by requiring a candidate module width to recur, so a lone stray run can no longer inflate the module count. Finally the locator emits a ranked shortlist of candidate scan lines and the decode stage tries each until one reads — a single "cleanest" line is a poor proxy for a decodable one on a photo. Validated against genuine barcode photos from the zxing blackbox corpus (EAN-13/8, UPC-A, Code 128/39), lifting the decode rate several-fold; a new cluttered-frame pipeline test locks in the behaviour. Tightly-cropped file uploads are unaffected.
-- b0c25e6: Fix Data Matrix and 1D-barcode captures that were located but failed to decode. The scanner now localises from an ink-_density_ bounding box (so stray speckle or clutter in the quiet zone no longer explodes the symbol bounds), infers the Data Matrix size from the mode of several timing-edge probes instead of a single line, reads each Data Matrix module by a small majority vote (falling back to a single centre sample for very small modules), and picks the cleanest of several barcode scan-lines rather than blindly trusting the middle one. QR scanning is unchanged. Native end-to-end tests now drive real encoders → scanner → real decoders across clean, downscaled, cluttered and noisy images.
+- b0c25e6: Improve the 1D-barcode locator for real camera photos, where the bars are one block inside a cluttered scene.
+  Vertically the scanner now finds the _transition band_ — the tallest stripe of edge-dense rows — so the scan lines
+  land on the bars rather than the human-readable digit row or plain background (the previous whole-frame ink bounds
+  ballooned onto both). Horizontally, each scan line is trimmed to its densest run of narrow alternating elements,
+  splitting away the quiet zones and any wide background object beside the symbol. The unit-width estimate now rejects
+  rare specks by requiring a candidate module width to recur, so a lone stray run can no longer inflate the module
+  count. Finally the locator emits a ranked shortlist of candidate scan lines and the decode stage tries each until one
+  reads — a single "cleanest" line is a poor proxy for a decodable one on a photo. Validated against genuine barcode
+  photos from the zxing blackbox corpus (EAN-13/8, UPC-A, Code 128/39), lifting the decode rate several-fold; a new
+  cluttered-frame pipeline test locks in the behaviour. Tightly-cropped file uploads are unaffected.
+- b0c25e6: Fix Data Matrix and 1D-barcode captures that were located but failed to decode. The scanner now localises
+  from an ink- _density_ bounding box (so stray speckle or clutter in the quiet zone no longer explodes the symbol
+  bounds), infers the Data Matrix size from the mode of several timing-edge probes instead of a single line, reads each
+  Data Matrix module by a small majority vote (falling back to a single centre sample for very small modules), and picks
+  the cleanest of several barcode scan-lines rather than blindly trusting the middle one. QR scanning is unchanged.
+  Native end-to-end tests now drive real encoders → scanner → real decoders across clean, downscaled, cluttered and
+  noisy images.
 - Updated dependencies [3e48edf]
 - Updated dependencies [e1a9272]
 - Updated dependencies [e1a9272]
@@ -364,12 +427,33 @@
 
 ### Minor Changes
 
-- b0c25e6: Add opt-in diagnostic logging to help debug codes that are located but fail to decode (the common Data Matrix / 1D-barcode symptom). The JS façade now traces each scan stage — capture size, the located format, its sampled payload (module counts) and each decoder's verdict — via a new `setCodeScannerDebug(true)` toggle (also enabled by the `__CODE_SCANNER_DEBUG__` global or the `BaseCodeScanner` `debug` prop). The wasm scanner emits matching `tracing` events at every decision point (Otsu threshold, dense bounds, inferred Data Matrix size and module geometry, barcode scan-line quality, and each rejection reason), visible in the devtools console. Logging is off by default so production output stays quiet.
+- b0c25e6: Add opt-in diagnostic logging to help debug codes that are located but fail to decode (the common Data
+  Matrix / 1D-barcode symptom). The JS façade now traces each scan stage — capture size, the located format, its sampled
+  payload (module counts) and each decoder's verdict — via a new `setCodeScannerDebug(true)` toggle (also enabled by the
+  `__CODE_SCANNER_DEBUG__` global or the `BaseCodeScanner` `debug` prop). The wasm scanner emits matching `tracing`
+  events at every decision point (Otsu threshold, dense bounds, inferred Data Matrix size and module geometry, barcode
+  scan-line quality, and each rejection reason), visible in the devtools console. Logging is off by default so
+  production output stays quiet.
 
 ### Patch Changes
 
-- b0c25e6: Improve the 1D-barcode locator for real camera photos, where the bars are one block inside a cluttered scene. Vertically the scanner now finds the _transition band_ — the tallest stripe of edge-dense rows — so the scan lines land on the bars rather than the human-readable digit row or plain background (the previous whole-frame ink bounds ballooned onto both). Horizontally, each scan line is trimmed to its densest run of narrow alternating elements, splitting away the quiet zones and any wide background object beside the symbol. The unit-width estimate now rejects rare specks by requiring a candidate module width to recur, so a lone stray run can no longer inflate the module count. Finally the locator emits a ranked shortlist of candidate scan lines and the decode stage tries each until one reads — a single "cleanest" line is a poor proxy for a decodable one on a photo. Validated against genuine barcode photos from the zxing blackbox corpus (EAN-13/8, UPC-A, Code 128/39), lifting the decode rate several-fold; a new cluttered-frame pipeline test locks in the behaviour. Tightly-cropped file uploads are unaffected.
-- b0c25e6: Fix Data Matrix and 1D-barcode captures that were located but failed to decode. The scanner now localises from an ink-_density_ bounding box (so stray speckle or clutter in the quiet zone no longer explodes the symbol bounds), infers the Data Matrix size from the mode of several timing-edge probes instead of a single line, reads each Data Matrix module by a small majority vote (falling back to a single centre sample for very small modules), and picks the cleanest of several barcode scan-lines rather than blindly trusting the middle one. QR scanning is unchanged. Native end-to-end tests now drive real encoders → scanner → real decoders across clean, downscaled, cluttered and noisy images.
+- b0c25e6: Improve the 1D-barcode locator for real camera photos, where the bars are one block inside a cluttered scene.
+  Vertically the scanner now finds the _transition band_ — the tallest stripe of edge-dense rows — so the scan lines
+  land on the bars rather than the human-readable digit row or plain background (the previous whole-frame ink bounds
+  ballooned onto both). Horizontally, each scan line is trimmed to its densest run of narrow alternating elements,
+  splitting away the quiet zones and any wide background object beside the symbol. The unit-width estimate now rejects
+  rare specks by requiring a candidate module width to recur, so a lone stray run can no longer inflate the module
+  count. Finally the locator emits a ranked shortlist of candidate scan lines and the decode stage tries each until one
+  reads — a single "cleanest" line is a poor proxy for a decodable one on a photo. Validated against genuine barcode
+  photos from the zxing blackbox corpus (EAN-13/8, UPC-A, Code 128/39), lifting the decode rate several-fold; a new
+  cluttered-frame pipeline test locks in the behaviour. Tightly-cropped file uploads are unaffected.
+- b0c25e6: Fix Data Matrix and 1D-barcode captures that were located but failed to decode. The scanner now localises
+  from an ink- _density_ bounding box (so stray speckle or clutter in the quiet zone no longer explodes the symbol
+  bounds), infers the Data Matrix size from the mode of several timing-edge probes instead of a single line, reads each
+  Data Matrix module by a small majority vote (falling back to a single centre sample for very small modules), and picks
+  the cleanest of several barcode scan-lines rather than blindly trusting the middle one. QR scanning is unchanged.
+  Native end-to-end tests now drive real encoders → scanner → real decoders across clean, downscaled, cluttered and
+  noisy images.
 - Updated dependencies [3e48edf]
 - Updated dependencies [e1a9272]
 - Updated dependencies [e1a9272]
