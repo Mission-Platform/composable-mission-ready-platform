@@ -19,7 +19,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc --project tsconfig.build.json",
+    "build": "tsdown",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --check .",
@@ -41,10 +41,12 @@
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@types/node": "catalog:typescript",
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",
+    "tsdown": "catalog:build",
     "typescript": "catalog:typescript",
     "vite": "catalog:vite",
     "vitest": "catalog:testing"

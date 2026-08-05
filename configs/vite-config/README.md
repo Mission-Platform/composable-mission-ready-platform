@@ -8,10 +8,10 @@ for Vue components.
 
 ## Exports
 
-| Subpath                                | Helpers                                                                                          |
-| -------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Subpath                                | Helpers                                                                                                                                                                          |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `@mission-platform/vite-config`        | `defineLibraryConfig`, `defineAppConfig`, `defineFrameworkAppConfig`, `frameworkResolveConditions`, `frameworkCondition`, `ignoreVueI18nBlocksPlugin`, default externals/globals |
-| `@mission-platform/vite-config/vitest` | `defineVitestConfig`                                                                             |
+| `@mission-platform/vite-config/vitest` | `defineVitestConfig`                                                                                                                                                             |
 
 ## Library package usage
 
@@ -98,7 +98,7 @@ export default {
 ```jsonc
 // tsconfig.json (requires "moduleResolution": "bundler" | "node16" | "nodenext")
 {
-  "compilerOptions": { "customConditions": ["mp:vue"] }
+  "compilerOptions": { "customConditions": ["mp:vue"] },
 }
 ```
 
