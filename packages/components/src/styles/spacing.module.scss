@@ -1,0 +1,70 @@
+/**
+ * CSS-module entry for the shared spacing utility classes.
+ *
+ * Components import this file as a CSS module:
+ *   `import spacingStyles from '../../../styles/spacing.module.scss'`
+ * and apply `spacingStyles['base-spacing--padding-<step>']` /
+ * `spacingStyles['base-spacing--margin-<step>']`.
+ *
+ * The rules mirror `_spacing.scss` (the SCSS partial source of truth). They are
+ * inlined here rather than `@use`d because vite-plugin-forge copies only this
+ * file into its per-framework cache by basename; a `@use './spacing'` would
+ * fail there when `_spacing.scss` is not copied alongside.
+ */
+@layer mp.components {
+  .base-spacing--padding-2xs {
+    padding: var(--mp-spacing-2xs);
+  }
+
+  .base-spacing--padding-xs {
+    padding: var(--mp-spacing-xs);
+  }
+
+  .base-spacing--padding-sm {
+    padding: var(--mp-spacing-sm);
+  }
+
+  .base-spacing--padding-md {
+    padding: var(--mp-spacing-md);
+  }
+
+  .base-spacing--padding-lg {
+    padding: var(--mp-spacing-lg);
+  }
+
+  .base-spacing--padding-xl {
+    padding: var(--mp-spacing-xl);
+  }
+
+  .base-spacing--padding-2xl {
+    padding: var(--mp-spacing-2xl);
+  }
+
+  .base-spacing--margin-2xs {
+    margin: var(--mp-spacing-2xs);
+  }
+
+  .base-spacing--margin-xs {
+    margin: var(--mp-spacing-xs);
+  }
+
+  .base-spacing--margin-sm {
+    margin: var(--mp-spacing-sm);
+  }
+
+  .base-spacing--margin-md {
+    margin: var(--mp-spacing-md);
+  }
+
+  .base-spacing--margin-lg {
+    margin: var(--mp-spacing-lg);
+  }
+
+  .base-spacing--margin-xl {
+    margin: var(--mp-spacing-xl);
+  }
+
+  .base-spacing--margin-2xl {
+    margin: var(--mp-spacing-2xl);
+  }
+}

@@ -1,0 +1,77 @@
+/**
+ * Styling for the write-once `BaseSkeleton`.
+ *
+ * `BaseSkeleton` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its BEM appearance ships in the built package CSS (the
+ * two-stage compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package.
+ */
+
+@layer mp.components {
+  .base-skeleton {
+    display: block;
+    background-color: var(--mp-color-bg-muted);
+    border-radius: var(--mp-radius-sm);
+    position: relative;
+    overflow: hidden;
+
+    &--animated::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 0%, var(--mp-color-skeleton-shimmer) 50%, transparent 100%);
+      animation: mp-skeleton-shimmer 1.6s ease-in-out infinite;
+    }
+
+    /* Shapes */
+    &--line {
+      width: 100%;
+      height: 1em;
+      border-radius: var(--mp-radius-sm);
+    }
+
+    &--circle {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: var(--mp-radius-full);
+    }
+
+    &--block {
+      width: 100%;
+      height: 8rem;
+      border-radius: var(--mp-radius-md);
+    }
+
+    /**
+     * Colour variants — tint the placeholder fill. `neutral` is omitted so it
+     * keeps the plain grey (`--mp-color-bg-muted`).
+     */
+    @each $name,
+    $family in (
+      'primary': 'primary',
+      'secondary': 'secondary',
+      'tertiary': 'tertiary',
+      'success': 'success',
+      'warning': 'warning',
+      'info': 'info',
+      'error': 'error',
+      'critical': 'critical'
+    ) {
+      &--#{$name} {
+        background-color: var(--mp-color-#{$family}-muted);
+      }
+    }
+  }
+
+  @keyframes mp-skeleton-shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}

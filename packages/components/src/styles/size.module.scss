@@ -1,0 +1,19 @@
+/**
+ * CSS-module entry for the shared size utility classes.
+ *
+ * Components import this file as a CSS module:
+ *   `import sizeStyles from '../../../styles/size.module.scss'`
+ * and apply `sizeStyles['base-size--<step>']`.
+ *
+ * The rules mirror `_size.scss` (the SCSS partial source of truth). They are
+ * inlined here rather than `@use`d because vite-plugin-forge copies only this
+ * file into its per-framework cache by basename; a `@use './size'` would fail
+ * there when `_size.scss` is not copied alongside.
+ */
+@layer mp.components {
+  @each $step in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+    .base-size--#{$step} {
+      font-size: var(--mp-size-font-#{$step});
+    }
+  }
+}

@@ -1,0 +1,118 @@
+import { h } from '@mission-platform/forge';
+import { useArgs } from 'storybook/preview-api';
+
+import { Drawer } from '@mission-platform/components';
+
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+/**
+ * `Drawer` is the write-once component of `@mission-platform/components`.
+ * It is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/forge`) and compiled at build time by
+ * `@mission-platform/vite-plugin-forge` to every supported framework (Vue 3,
+ * React, SolidJS, Svelte, and Web Components).
+ *
+ * This is a single, framework-agnostic story: the bare
+ * `@mission-platform/components` import auto-resolves to the framework selected
+ * by the `STORYBOOK_FRAMEWORK` env var, and the JSX in `render` is compiled by
+ * that framework's own transform — so the same story renders on every framework.
+ */
+const meta = {
+  title: 'Organisms/Layout/BaseDrawer',
+  component: Drawer,
+  tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Cross-framework `Drawer` — authored once in the neutral JSX dialect and shipped to all supported frameworks. An `overlay` drawer is a fixed panel gated by `open` with a click-to-close scrim; an `inline` drawer is fixed-open at/above `inlineBreakpoint`. Set `draggable` to resize the panel. Styling comes from the co-located `base-drawer.module.scss`.',
+      },
+    },
+  },
+  argTypes: {
+    placement: { control: 'inline-radio', options: ['start', 'end', 'top', 'bottom'] },
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    title: { control: 'text' },
+    closeOnBackdrop: { control: 'boolean' },
+    draggable: { control: 'boolean' },
+  },
+  args: {
+    placement: 'start',
+    size: 'md',
+    title: 'Drawer title',
+    closeOnBackdrop: true,
+    open: false,
+  },
+} satisfies Meta<typeof Drawer>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+/** An interactive overlay drawer toggled by a trigger button. */
+export const Overlay: Story = {
+  render: (arguments_) => {
+    const [{ open }, updateArguments] = useArgs();
+    return (
+      <div style={{ padding: 'var(--mp-spacing-4)' }}>
+        <button type="button" onClick={() => updateArguments({ open: true })}>
+          Open drawer
+        </button>
+        <Drawer
+          {...arguments_}
+          open={Boolean(open)}
+          onOpenChange={(value) => updateArguments({ open: value })}
+        >
+          The drawer body content scrolls independently.
+        </Drawer>
+      </div>
+    );
+  },
+};
+
+/** An always-open overlay drawer (useful for visual inspection). */
+export const Open: Story = {
+  args: { open: true },
+  render: (arguments_) => (
+    <Drawer {...arguments_} open>
+      A drawer rendered open, with a header, scrollable body, and a footer.
+    </Drawer>
+  ),
+};
+
+/** A resizable overlay drawer — drag the inner edge to resize it. */
+export const Draggable: Story = {
+  args: { draggable: true, title: 'Resizable drawer', open: true },
+  render: (arguments_) => {
+    const [{ open }, updateArguments] = useArgs();
+    return (
+      <Drawer
+        {...arguments_}
+        open={open ?? true}
+        onOpenChange={(value) => updateArguments({ open: value })}
+      >
+        Drag the strip on the inner edge to resize this drawer.
+      </Drawer>
+    );
+  },
+};
+
+/** A responsive `inline` drawer that is fixed-open at/above its breakpoint. */
+export const Inline: Story = {
+  args: { variant: 'inline', inlineBreakpoint: 'xs', title: 'Inline panel' },
+  render: (arguments_) => (
+    <div
+      style={{
+        height: '18rem',
+        display: 'flex',
+        border: '1px solid var(--mp-color-border-default)',
+      }}
+    >
+      <Drawer {...arguments_} style={{ width: '16rem' }}>
+        Fixed-open inline panel content.
+      </Drawer>
+      <div style={{ flex: 1, padding: 'var(--mp-spacing-4)' }}>
+        Main content area beside the inline drawer.
+      </div>
+    </div>
+  ),
+};

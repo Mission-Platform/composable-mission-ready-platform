@@ -1,0 +1,209 @@
+/**
+ * Styling for the write-once `BaseSelect`.
+ *
+ * `BaseSelect` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its BEM appearance ships in the built package CSS (the
+ * two-stage compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package. The floating listbox is rendered by
+ * the write-once `BaseDropdown` (a `<Teleport>` panel anchored with CSS Anchor
+ * Positioning), so the `__listbox` here is a plain `<ul>` that fills the
+ * dropdown panel; the chevron is the write-once `IconChevron` (rotated via its
+ * own `direction` prop).
+ */
+
+@layer mp.components {
+  .base-select {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mp-spacing-1);
+
+    &__label {
+      &--hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border: 0;
+      }
+    }
+
+    &__required {
+      color: var(--mp-color-danger-default);
+      margin-left: 2px;
+    }
+
+    /* Hidden native <select> backing the combobox for autofill / form submission. */
+    &__native {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    &__wrapper {
+      display: flex;
+      align-items: center;
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-md);
+      background-color: var(--mp-color-bg-surface);
+      transition: border-color 150ms ease,
+      box-shadow 150ms ease;
+      cursor: pointer;
+
+      &:focus-within {
+        border-color: var(--mp-color-border-focus);
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+    }
+
+    &__field {
+      flex: 1;
+      width: 100%;
+      min-width: 0;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--mp-color-text-primary);
+      font-family: var(--mp-font-family-sans);
+      line-height: var(--mp-line-height-normal);
+      cursor: pointer;
+      text-align: left;
+
+      /* The searchable trigger is a text input: allow text entry and grey the
+         placeholder that mirrors the selection/prompt. */
+      &::placeholder {
+        color: var(--mp-color-text-tertiary);
+      }
+
+      &--placeholder {
+        color: var(--mp-color-text-tertiary);
+      }
+    }
+
+    &__chevron {
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+      color: var(--mp-color-text-secondary);
+      flex-shrink: 0;
+    }
+
+    /* Leading / trailing extension areas (icons, units, or buttons). */
+    &__extension {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      color: var(--mp-color-text-secondary);
+
+      &:empty {
+        display: none;
+      }
+
+      &--start {
+        margin-inline-start: var(--mp-spacing-2);
+      }
+
+      &--end {
+        margin-inline-end: var(--mp-spacing-1);
+      }
+    }
+
+    /* Plain list filling the BaseDropdown panel (which owns the surface,
+       border, shadow, scrolling, and anchored positioning). */
+    &__listbox {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    &__option {
+      padding: var(--mp-spacing-2) var(--mp-spacing-3);
+      font-size: var(--mp-font-size-sm);
+      color: var(--mp-color-text-primary);
+      cursor: pointer;
+
+      &--selected {
+        font-weight: var(--mp-font-weight-medium);
+      }
+
+      &--disabled {
+        color: var(--mp-color-text-disabled);
+        cursor: not-allowed;
+      }
+
+      &:hover:not(.base-select__option--disabled) {
+        background-color: var(--mp-color-bg-muted);
+      }
+    }
+
+    &__empty {
+      padding: var(--mp-spacing-2) var(--mp-spacing-3);
+      font-size: var(--mp-font-size-sm);
+      color: var(--mp-color-text-secondary);
+      font-style: italic;
+    }
+
+    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+      &--#{$size} {
+        .base-select__field {
+          padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+          font-size: var(--mp-size-font-#{$size});
+        }
+
+        .base-select__chevron {
+          padding-right: var(--mp-size-pad-inline-#{$size});
+        }
+      }
+    }
+
+    /* States */
+    &--error {
+      .base-select__wrapper {
+        border-color: var(--mp-color-danger-default);
+
+        &:focus-within {
+          box-shadow: var(--mp-shadow-focus-danger);
+        }
+      }
+    }
+
+    &--disabled {
+      pointer-events: none;
+
+      .base-select__wrapper {
+        background-color: var(--mp-color-bg-muted);
+        cursor: not-allowed;
+      }
+
+      .base-select__field {
+        color: var(--mp-color-text-disabled);
+        cursor: not-allowed;
+      }
+
+      .base-select__chevron {
+        color: var(--mp-color-text-disabled);
+      }
+    }
+
+    &__error {
+      color: var(--mp-color-danger-text);
+      margin: 0;
+    }
+
+    &__hint {
+      margin: 0;
+    }
+  }
+}

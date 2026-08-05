@@ -1,0 +1,120 @@
+/**
+ * Styling for the write-once `BaseAccordion`.
+ *
+ * `BaseAccordion` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its BEM appearance ships in the built package CSS (the
+ * two-stage compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package. They merge the original
+ * `BaseAccordion` container and `BaseAccordionItem` styles, with the chevron
+ * provided by the write-once `IconChevron` (rotated via its own `direction`
+ * prop).
+ */
+
+@layer mp.components {
+  .base-accordion {
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+    overflow: hidden;
+
+    &__item {
+      background-color: var(--mp-color-bg-surface);
+
+      & + .base-accordion__item {
+        border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      }
+
+      &--disabled {
+        background-color: var(--mp-color-bg-muted);
+
+        .base-accordion__summary {
+          color: var(--mp-color-text-disabled);
+          cursor: not-allowed;
+
+          &:hover {
+            background-color: var(--mp-color-bg-muted);
+          }
+        }
+      }
+    }
+
+    &__summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--mp-spacing-3) var(--mp-spacing-4);
+      cursor: pointer;
+      color: var(--mp-color-text-primary);
+      list-style: none;
+      user-select: none;
+      gap: var(--mp-spacing-2);
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      &:hover {
+        background-color: var(--mp-color-bg-muted);
+      }
+
+      &:focus-visible {
+        outline: none;
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+    }
+
+    &__chevron {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    &__content {
+      padding: var(--mp-spacing-3) var(--mp-spacing-4);
+      border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      opacity: 1;
+      transition: opacity var(--mp-duration-fast) var(--mp-easing-standard);
+
+      @starting-style {
+        opacity: 0;
+      }
+    }
+
+    /**
+     * Colour variants — tint the container border, dividers and summary text.
+     * `neutral` is omitted so it keeps the plain treatment.
+     */
+    @each $name,
+    $family in (
+      'primary': 'primary',
+      'secondary': 'secondary',
+      'tertiary': 'tertiary',
+      'success': 'success',
+      'warning': 'warning',
+      'info': 'info',
+      'error': 'error',
+      'critical': 'critical'
+    ) {
+      &--#{$name} {
+        border-color: var(--mp-color-#{$family}-subtle);
+
+        .base-accordion__item + .base-accordion__item,
+        .base-accordion__content {
+          border-top-color: var(--mp-color-#{$family}-subtle);
+        }
+
+        .base-accordion__summary {
+          color: var(--mp-color-#{$family}-text);
+        }
+      }
+    }
+
+    /* Respect users who prefer reduced motion. */
+    @media (prefers-reduced-motion: reduce) {
+      &__content {
+        transition: none;
+      }
+    }
+  }
+}

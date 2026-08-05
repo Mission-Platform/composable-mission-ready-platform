@@ -1,6 +1,7 @@
 # `@mission-platform/components`
 
-Write-once, framework-neutral component library for Mission Platform. Components are authored once in JSX using `@mission-platform/forge` and compiled into native **Vue 3** and **React** components.
+Write-once, framework-neutral component library for Mission Platform. Components are authored once in JSX using
+`@mission-platform/forge` and compiled into native **Vue 3** and **React** components.
 
 ## Features
 
@@ -77,7 +78,8 @@ export function UserForm() {
 
 ### Framework-Neutral Components
 
-When building higher-level write-once components using `@mission-platform/forge`, import directly from `@mission-platform/components`:
+When building higher-level write-once components using `@mission-platform/forge`, import directly from
+`@mission-platform/components`:
 
 ```tsx
 import { BaseButton, BaseCard } from '@mission-platform/components';
@@ -91,16 +93,21 @@ import { BaseButton, BaseCard } from '@mission-platform/components';
 - `@mission-platform/components/base-drawer`: Subpath for `BaseDrawer` component.
 - `@mission-platform/components/storyblok/vue`: Storyblok wrappers for Vue 3.
 - `@mission-platform/components/storyblok/react`: Storyblok wrappers for React.
-- `@mission-platform/components/styles`: Shared CSS accessibility helpers (`src/styles/a11y.scss`).
+- `@mission-platform/components/styles`: Shared CSS accessibility helpers (`src/styles/_a11y.scss`).
 
 ## Component Categories
 
 - **Layout & Structure**: `BaseStack`, `BaseGrid`, `BaseSeparator`, `BaseMasonry`
-- **Application Shell & Navigation**: `BaseApplicationLayout`, `BaseNavbar`, `BaseDrawer`, `BasePagination`, `BaseTabs`, `BaseMenu`, `BaseMenubar`, `BaseBreadcrumb`
+- **Application Shell & Navigation**: `BaseApplicationLayout`, `BaseNavbar`, `BaseDrawer`, `BasePagination`, `BaseTabs`,
+  `BaseMenu`, `BaseMenubar`, `BaseBreadcrumb`
 - **Typography & Content**: `BaseTypography`, `BaseHero`, `BaseQuote`, `BaseList`
-- **Forms & Inputs**: `BaseButton`, `BaseIconButton`, `BaseInput`, `BaseTextarea`, `BaseCheckbox`, `BaseRadio`, `BaseSwitch`, `BaseNumberStepper`, `BaseSlider`, `BaseDateInput`, `BaseColorInput`
-- **Data Display**: `BaseTable`, `BaseVirtualList`, `BaseVirtualTable`, `BaseVirtualTreeView`, `BaseTreeView`, `BaseTimeline`
-- **Feedback & Overlays**: `BaseAlertBanner`, `BaseToast`, `BaseSpinner`, `BaseSkeleton`, `BaseProgressBar`, `BaseStatusIcon`
-- **Media & Theme**: `BaseResponsiveImage`, `BaseResponsiveVideo`, `BaseBackgroundVideo`, `BaseDeviceMock`, `BaseThemeToggle`, `BaseThemeProvider`
+- **Forms & Inputs**: `BaseButton`, `BaseIconButton`, `BaseInput`, `BaseTextarea`, `BaseCheckbox`, `BaseRadio`,
+  `BaseSwitch`, `BaseNumberStepper`, `BaseSlider`, `BaseDateInput`, `BaseColorInput`
+- **Data Display**: `BaseTable`, `BaseVirtualList`, `BaseVirtualTable`, `BaseVirtualTreeView`, `BaseTreeView`,
+  `BaseTimeline`
+- **Feedback & Overlays**: `BaseAlertBanner`, `BaseToast`, `BaseSpinner`, `BaseSkeleton`, `BaseProgressBar`,
+  `BaseStatusIcon`
+- **Media & Theme**: `BaseResponsiveImage`, `BaseResponsiveVideo`, `BaseBackgroundVideo`, `BaseDeviceMock`,
+  `BaseThemeToggle`, `BaseThemeProvider`
 
 For detailed component props and architecture guides, see [docs/index.md](docs/index.md).

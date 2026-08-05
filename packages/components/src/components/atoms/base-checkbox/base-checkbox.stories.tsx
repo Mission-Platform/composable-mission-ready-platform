@@ -1,0 +1,74 @@
+import { h } from '@mission-platform/forge';
+import { useArgs } from 'storybook/preview-api';
+
+import { Checkbox } from '@mission-platform/components';
+
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+/**
+ * `Checkbox` is the write-once component of `@mission-platform/components`.
+ * It is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/forge`) and compiled at build time by
+ * `@mission-platform/vite-plugin-forge` to every supported framework (Vue 3,
+ * React, SolidJS, Svelte, and Web Components).
+ *
+ * This is a single, framework-agnostic story: the bare
+ * `@mission-platform/components` import auto-resolves to the framework selected
+ * by the `STORYBOOK_FRAMEWORK` env var, and the JSX in `render` is compiled by
+ * that framework's own transform — so the same story renders on every framework.
+ */
+const meta = {
+  title: 'Atoms/Forms/BaseCheckbox',
+  component: Checkbox,
+  tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Cross-framework `Checkbox` — authored once in the neutral JSX dialect and shipped to all supported frameworks. The checked state is controlled via `modelValue`; the original `v-model` + `change` emit become the `onUpdateModelValue`/`onChange` callback props. The check/indeterminate SVGs are substituted with a CSS-coloured `✓`/`−` glyph. Styling comes from the co-located `base-checkbox.module.scss`.',
+      },
+    },
+  },
+  argTypes: {
+    size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
+    disabled: { control: 'boolean' },
+    required: { control: 'boolean' },
+    indeterminate: { control: 'boolean' },
+    labelHidden: { control: 'boolean' },
+  },
+  args: {
+    label: 'Accept terms and conditions',
+    size: 'md',
+    disabled: false,
+    required: false,
+    indeterminate: false,
+    labelHidden: false,
+  },
+  render: (arguments_) => {
+    const [{ modelValue }, updateArguments] = useArgs();
+    return (
+      <Checkbox
+        {...arguments_}
+        modelValue={modelValue}
+        onUpdateModelValue={(value) => updateArguments({ modelValue: value })}
+      />
+    );
+  },
+} satisfies Meta<typeof Checkbox>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {};
+
+export const Checked: Story = { args: { modelValue: true } };
+
+export const Required: Story = { args: { required: true } };
+
+export const Indeterminate: Story = { args: { indeterminate: true } };
+
+export const WithHint: Story = { args: { hint: 'You can change this later in settings.' } };
+
+export const WithError: Story = { args: { error: 'You must accept to continue.' } };
+
+export const Disabled: Story = { args: { disabled: true } };
