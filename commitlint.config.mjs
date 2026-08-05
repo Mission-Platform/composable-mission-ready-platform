@@ -35,7 +35,7 @@ export default {
     'subject-empty': [2, 'never'],
     'subject-full-stop': [2, 'never', '.'],
     // Disallow a capitalised first letter (mirrors the CI `[^A-Z]` check)
-    // while still permitting mixed-case identifiers like `add BaseTooltip`.
+    // while still permitting mixed-case identifiers like `add ForgeTooltip`.
     'subject-case': [2, 'never', ['sentence-case', 'start-case', 'pascal-case', 'upper-case']],
     // Whole subject (header) must be at most 72 characters, as enforced in CI.
     'header-max-length': [2, 'always', 72],

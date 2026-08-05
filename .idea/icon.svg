@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+  <!-- Background -->
+  <rect width="128" height="128" rx="24" fill="#0F172A"/>
+
+  <!-- MODULE 1 — nose cone -->
+  <path d="M64 11 L82 42 L46 42 Z" fill="#93C5FD"/>
+
+  <!-- MODULE 2 — upper body (crew/payload section) -->
+  <rect x="46" y="42" width="36" height="24" rx="3" fill="#3B82F6"/>
+  <!-- Porthole -->
+  <circle cx="64" cy="54" r="8" fill="#0F172A" opacity="0.55"/>
+  <circle cx="64" cy="54" r="5" fill="#BFDBFE"/>
+
+  <!-- Connector dots at nose/body seam -->
+  <circle cx="54" cy="42" r="3" fill="#60A5FA"/>
+  <circle cx="74" cy="42" r="3" fill="#60A5FA"/>
+
+  <!-- MODULE 3 — engine block -->
+  <rect x="46" y="66" width="36" height="20" rx="3" fill="#1D4ED8"/>
+
+  <!-- Connector dots at body/engine seam -->
+  <circle cx="54" cy="66" r="3" fill="#60A5FA"/>
+  <circle cx="74" cy="66" r="3" fill="#60A5FA"/>
+
+  <!-- MODULE 4 — left wing -->
+  <path d="M46 68 L24 88 L46 83 Z" fill="#2563EB"/>
+
+  <!-- MODULE 4 — right wing (mirror) -->
+  <path d="M82 68 L104 88 L82 83 Z" fill="#2563EB"/>
+
+  <!-- MODULE 5 — nozzle -->
+  <rect x="55" y="86" width="18" height="9" rx="2" fill="#1E3A5F"/>
+
+  <!-- Connector dots at engine/nozzle seam -->
+  <circle cx="60" cy="86" r="2.5" fill="#60A5FA"/>
+  <circle cx="68" cy="86" r="2.5" fill="#60A5FA"/>
+
+  <!-- Exhaust flame — amber/orange accent -->
+  <ellipse cx="64" cy="99" rx="11" ry="7" fill="#F59E0B" opacity="0.9"/>
+  <ellipse cx="64" cy="106" rx="7" ry="7" fill="#FB923C" opacity="0.75"/>
+  <ellipse cx="64" cy="112" rx="4" ry="5" fill="#FDE68A" opacity="0.55"/>
+</svg>
