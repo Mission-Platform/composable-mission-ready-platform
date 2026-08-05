@@ -16,7 +16,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const packagesDir = path.join(repoRoot, 'packages');
+const packagesDirectory = path.join(repoRoot, 'packages');
 
 /** Map custom condition -> explicit subpath export key. */
 const CONDITION_TO_SUBPATH = {
@@ -30,16 +30,16 @@ const CONDITION_TO_SUBPATH = {
 /** Resolve the concrete `import` target of an exports entry (string or object). */
 function importTargetOf(entry) {
   if (typeof entry === 'string') return entry;
-  if (entry && typeof entry === 'object') return entry.import ?? entry.default ?? null;
-  return null;
+  if (entry && typeof entry === 'object') return entry.import ?? entry.default ?? undefined;
+  return;
 }
 
 let failures = 0;
 let checked = 0;
 const rows = [];
 
-for (const name of fs.readdirSync(packagesDir)) {
-  const manifestPath = path.join(packagesDir, name, 'package.json');
+for (const name of fs.readdirSync(packagesDirectory)) {
+  const manifestPath = path.join(packagesDirectory, name, 'package.json');
   if (!fs.existsSync(manifestPath)) continue;
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
   const exportsMap = manifest.exports;
@@ -55,21 +55,23 @@ for (const name of fs.readdirSync(packagesDir)) {
     const subpathKey = CONDITION_TO_SUBPATH[condition];
     const conditionTarget = importTargetOf(dot[condition]);
     const subpathTarget = importTargetOf(exportsMap[subpathKey]);
-    const ok = Boolean(subpathKey) && conditionTarget != null && conditionTarget === subpathTarget;
+    const ok = Boolean(subpathKey) && conditionTarget != undefined && conditionTarget === subpathTarget;
     if (!ok) failures += 1;
     rows.push({ pkg: name, condition, conditionTarget, subpathTarget, ok });
   }
 
   // The plain (condition-less) fallback must still expose an `import`/`default`.
-  if (importTargetOf({ import: dot.import, default: dot.default }) == null) {
+  if (importTargetOf({ import: dot.import, default: dot.default }) == undefined) {
     failures += 1;
-    rows.push({ pkg: name, condition: '(fallback)', conditionTarget: null, subpathTarget: null, ok: false });
+    rows.push({ pkg: name, condition: '(fallback)', conditionTarget: undefined, subpathTarget: undefined, ok: false });
   }
 }
 
 for (const r of rows) {
   const status = r.ok ? 'ok ' : 'ERR';
-  console.log(`[${status}] ${r.pkg.padEnd(14)} ${r.condition.padEnd(18)} ${r.conditionTarget ?? '—'} == ${r.subpathTarget ?? '—'}`);
+  console.log(
+    `[${status}] ${r.pkg.padEnd(14)} ${r.condition.padEnd(18)} ${r.conditionTarget ?? '—'} == ${r.subpathTarget ?? '—'}`,
+  );
 }
 
 console.log(`\nChecked ${checked} framework conditions across packages; ${failures} failure(s).`);
