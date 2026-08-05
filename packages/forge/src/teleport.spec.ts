@@ -6,7 +6,7 @@ import { renderToString } from 'vue/server-renderer';
 
 import { Teleport as ReactTeleport, toReactComponent } from './adapters/react';
 import { toVueComponent } from './adapters/vue';
-import { h, Teleport, type MpComponent } from './runtime';
+import { h, type MpComponent, Teleport } from './runtime';
 
 /** A neutral component that teleports a panel when "open". */
 const Overlay: MpComponent = (properties) =>

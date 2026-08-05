@@ -1,12 +1,14 @@
 # `@mission-platform/forge`
 
-A tiny, framework-neutral JSX runtime and Vue 3 / React adapters that allow components to be authored once in JSX and rendered seamlessly on either framework without build-time code generation.
+A tiny, framework-neutral JSX runtime and Vue 3 / React adapters that allow components to be authored once in JSX and
+rendered seamlessly on either framework without build-time code generation.
 
 ---
 
 ## Overview
 
-`@mission-platform/forge` provides framework-agnostic JSX runtime primitives (`h`, `Fragment`, hooks, context, slots, transitions, portals) along with runtime adapters for React and Vue 3.
+`@mission-platform/forge` provides framework-agnostic JSX runtime primitives (`h`, `Fragment`, hooks, context, slots,
+transitions, portals) along with runtime adapters for React and Vue 3.
 
 ```
 Author .tsx (classic jsx `h`) ──▶ MpElement tree ──┬──▶ toReactComponent ──▶ React Component
@@ -19,8 +21,10 @@ Author .tsx (classic jsx `h`) ──▶ MpElement tree ──┬──▶ toReac
 
 The package provides the following entry points:
 
-- **`@mission-platform/forge`**: Main entry point exporting the JSX factory (`h`, `Fragment`), component utilities, and framework-neutral hooks (`useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`, `useId`).
-- **`@mission-platform/forge/runtime`**: Low-level JSX runtime primitives, element definitions, context, and slot utilities.
+- **`@mission-platform/forge`**: Main entry point exporting the JSX factory (`h`, `Fragment`), component utilities, and
+  framework-neutral hooks (`useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`, `useId`).
+- **`@mission-platform/forge/runtime`**: Low-level JSX runtime primitives, element definitions, context, and slot
+  utilities.
 - **`@mission-platform/forge/vue`**: Vue 3 adapter (`toVueComponent`, `renderToVue`).
 - **`@mission-platform/forge/react`**: React adapter (`toReactComponent`, `renderToReact`).
 - **`@mission-platform/forge/jsx-globals`**: Global TypeScript JSX ambient declarations.
@@ -100,7 +104,8 @@ export function App() {
 - **`Fragment`**: JSX fragment marker.
 - **`classNames(...values)`**: Idempotent utility for merging conditional class names.
 - **`Slot` / `hasSlot`**: Neutral slot rendering and capability check.
-- **`Teleport` / `Transition` / `TransitionGroup` / `Dynamic`**: Neutral markers for dynamic structure and portal rendering.
+- **`Teleport` / `Transition` / `TransitionGroup` / `Dynamic`**: Neutral markers for dynamic structure and portal
+  rendering.
 - **`createContext` / `useContext`**: Framework-neutral context system.
 
 ### Hooks

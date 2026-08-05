@@ -23,7 +23,7 @@
  * nameless default slot resolves to `children`), exactly mirroring how the
  * compiled output reads its slots.
  */
-import { isMpElement, Slot as SlotMarker, type MpChild, type MpElement, type MpProperties } from './types';
+import { isMpElement, type MpChild, type MpElement, type MpProperties, Slot as SlotMarker } from './types';
 
 /**
  * Re-export the `Slot` marker used as the element `type` for a named slot

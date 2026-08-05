@@ -5,12 +5,12 @@ import { createSSRApp } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 
 import {
+  toReactComponent,
   Transition as ReactTransition,
   TransitionGroup as ReactTransitionGroup,
-  toReactComponent,
 } from './adapters/react';
 import { toVueComponent } from './adapters/vue';
-import { h, Transition, TransitionGroup, type MpComponent } from './runtime';
+import { h, type MpComponent, Transition, TransitionGroup } from './runtime';
 
 /** A neutral component that transitions a panel when "open". */
 const Fade: MpComponent = (properties) =>

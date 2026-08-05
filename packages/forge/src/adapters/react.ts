@@ -11,15 +11,15 @@ import {
   cloneElement,
   createElement,
   Fragment as ReactFragment,
+  type FunctionComponent,
   isValidElement,
+  type Key,
+  type ReactElement,
+  type ReactNode,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
-  type FunctionComponent,
-  type Key,
-  type ReactElement,
-  type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -29,12 +29,12 @@ import { Dynamic as DynamicMarker, type MpDynamicProperties } from '../runtime/d
 import { h } from '../runtime/h';
 import {
   collectSlottedChildren,
+  type MpSlotProperties,
   popSlotScope,
   pushSlotScope,
   resolveSlot,
   resolveSlotMarkers,
   Slot,
-  type MpSlotProperties,
 } from '../runtime/slots';
 import { Teleport as TeleportMarker } from '../runtime/teleport';
 import { Transition as TransitionMarker, TransitionGroup as TransitionGroupMarker } from '../runtime/transition';

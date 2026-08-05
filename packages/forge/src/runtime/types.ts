@@ -32,7 +32,6 @@ export const Fragment: MpFragment = () => {
 
 /** The bag of attributes/props passed to an element or component. */
 export interface MpProperties {
-  [key: string]: unknown;
   children?: MpChild | readonly MpChild[];
   /**
    * Routes this child into a parent component's **named slot**
@@ -42,6 +41,8 @@ export interface MpProperties {
    * `collectSlottedChildren`). Omitted (or `"default"`) means the default slot.
    */
   slot?: string;
+
+  [key: string]: unknown;
 }
 
 /**

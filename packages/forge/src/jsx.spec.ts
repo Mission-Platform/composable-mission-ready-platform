@@ -6,7 +6,7 @@ import { renderToString } from 'vue/server-renderer';
 
 import { toReactComponent } from './adapters/react';
 import { toVueComponent } from './adapters/vue';
-import { Fragment, h, isMpElement, Slot, type MpComponent } from './runtime';
+import { Fragment, h, isMpElement, type MpComponent, Slot } from './runtime';
 
 const HostTree: MpComponent = () => h('div', { class: 'x', id: 'y' }, 'hi');
 // A component whose `className` array/object forms collapse to a `class` string.

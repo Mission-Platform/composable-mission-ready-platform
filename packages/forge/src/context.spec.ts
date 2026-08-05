@@ -6,7 +6,7 @@ import { renderToString } from 'vue/server-renderer';
 
 import { toReactComponent } from './adapters/react';
 import { toVueComponent } from './adapters/vue';
-import { createContext, h, useContext, type MpComponent } from './runtime';
+import { createContext, h, type MpComponent, useContext } from './runtime';
 
 const ThemeContext = createContext('light');
 

@@ -26,6 +26,10 @@
       "types": "./dist/adapters/solid.d.ts",
       "import": "./dist/adapters/solid.js"
     },
+    "./web-components": {
+      "types": "./dist/adapters/web-components.d.ts",
+      "import": "./dist/adapters/web-components.js"
+    },
     "./jsx-globals": {
       "types": "./jsx-globals.d.ts"
     }
@@ -37,10 +41,9 @@
     "jsx-globals.d.ts"
   ],
   "scripts": {
+    "build": "tsdown",
     "build:check": "vue-tsc --project tsconfig.build.json --noEmit",
-    "build:bundle": "vite build",
-    "build:types": "vue-tsc --project tsconfig.build.json --emitDeclarationOnly",
-    "build:watch": "vite build --watch",
+    "build:watch": "tsdown --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -72,6 +75,7 @@
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@types/node": "catalog:typescript",
@@ -84,6 +88,7 @@
     "react": "catalog:react",
     "react-dom": "catalog:react",
     "solid-js": "catalog:solid",
+    "tsdown": "catalog:build",
     "typescript": "catalog:typescript",
     "vite": "catalog:vite",
     "vitest": "catalog:testing",

@@ -1,6 +1,8 @@
 # @mission-platform/forge
 
-A tiny, dependency-free "write once, run on Vue 3 and React" layer for Mission Platform. Components are authored once in JSX and rendered on either framework through small adapters — no build-time codegen, no external compiler (this is a hand-rolled alternative to tools like Mitosis).
+A tiny, dependency-free "write once, run on Vue 3 and React" layer for Mission Platform. Components are authored once in
+JSX and rendered on either framework through small adapters — no build-time codegen, no external compiler (this is a
+hand-rolled alternative to tools like Mitosis).
 
 ## How it works
 
@@ -9,7 +11,8 @@ author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ to
                                                           └──▶ toVueComponent  ──▶ Vue 3
 ```
 
-1. Components are written in JSX compiled by the **classic** JSX transform (`jsxFactory: 'h'`, `jsxFragmentFactory: 'Fragment'`).
+1. Components are written in JSX compiled by the **classic** JSX transform (`jsxFactory: 'h'`,
+   `jsxFragmentFactory: 'Fragment'`).
 2. `h(...)` builds a framework-neutral, serialisable `MpElement` tree instead of a React/Vue element.
 3. The per-framework adapters walk that tree and map every node onto `React.createElement` or Vue's `h` at render time.
 
@@ -18,8 +21,10 @@ author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ to
 - **Framework-Neutral JSX Runtime**: A tiny, dependency-free runtime that builds serializable `MpElement` trees
 - **Vue 3 Adapter**: Converts neutral components to native Vue 3 SFCs with proper reactivity
 - **React Adapter**: Converts neutral components to native React components
-- **Hooks Support**: Framework-neutral React-style hooks (`useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`) that compile to their framework equivalents
-- **No Build-Time Codegen**: Unlike Mitosis or similar tools, this approach uses runtime adapters instead of build-time transformation
+- **Hooks Support**: Framework-neutral React-style hooks (`useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`)
+  that compile to their framework equivalents
+- **No Build-Time Codegen**: Unlike Mitosis or similar tools, this approach uses runtime adapters instead of build-time
+  transformation
 - **TypeScript First**: Full TypeScript support with proper type inference
 
 ## Installation
