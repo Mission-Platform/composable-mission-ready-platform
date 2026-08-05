@@ -1,17 +1,17 @@
 import {
   classNames,
   h,
+  type MpElement,
+  type MpProperties,
   Slot,
   useEffect,
   useRef,
   useState,
-  type MpElement,
-  type MpProperties,
 } from '@mission-platform/forge';
 import { LngLat, Map, type MapMouseEvent, type MapOptions } from 'maplibre-gl';
 
-import { centerDiffers, scalarDiffers } from '../../utils/camera';
-import { MapContext } from '../map-context';
+import { centerDiffers, scalarDiffers } from '../../../utils/camera';
+import { MapContext } from '../../map-context';
 
 import styles from './map-libre.module.scss';
 

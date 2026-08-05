@@ -1,10 +1,13 @@
 # @mission-platform/map
 
-A Vue 3 wrapper for MapLibre GL that provides full reactivity support and seamless integration with the Mission Platform ecosystem.
+A Vue 3 wrapper for MapLibre GL that provides full reactivity support and seamless integration with the Mission Platform
+ecosystem.
 
 ## Overview
 
-The `@mission-platform/map` package provides a composable, reactive wrapper around [MapLibre GL](https://maplibre.org/), enabling developers to create interactive maps with Vue 3's Composition API. It abstracts away the complexity of managing MapLibre instances while maintaining full access to MapLibre's powerful features.
+The `@mission-platform/map` package provides a composable, reactive wrapper around [MapLibre GL](https://maplibre.org/),
+enabling developers to create interactive maps with Vue 3's Composition API. It abstracts away the complexity of
+managing MapLibre instances while maintaining full access to MapLibre's powerful features.
 
 ## Key Features
 

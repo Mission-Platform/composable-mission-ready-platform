@@ -1,6 +1,7 @@
 # `@mission-platform/map`
 
-MapLibre GL components and composables authored with `@mission-platform/forge` and shipped as both Vue 3 and React builds.
+MapLibre GL components and composables authored with `@mission-platform/forge` and shipped as both Vue 3 and React
+builds.
 
 ---
 
@@ -10,9 +11,12 @@ The `@mission-platform/map` package provides MapLibre GL integrations for Missio
 
 Component & helper entry points:
 
-- **`@mission-platform/map`**: Framework-neutral JSX components (`BaseMapLibre`, `BaseMapMarker`, `BaseMapPopup`, `BaseMapSource`, `BaseMapLayer`, `BaseMapDraw`).
-- **`@mission-platform/map/vue`**: Vue 3 components (`MapLibre`, `MapMarker`, `MapPopup`, `MapSource`, `MapLayer`, `MapDraw`) and composables.
-- **`@mission-platform/map/react`**: React components (`MapLibre`, `MapMarker`, `MapPopup`, `MapSource`, `MapLayer`, `MapDraw`) and hooks.
+- **`@mission-platform/map`**: Framework-neutral JSX components (`BaseMapLibre`, `BaseMapMarker`, `BaseMapPopup`,
+  `BaseMapSource`, `BaseMapLayer`, `BaseMapDraw`).
+- **`@mission-platform/map/vue`**: Vue 3 components (`MapLibre`, `MapMarker`, `MapPopup`, `MapSource`, `MapLayer`,
+  `MapDraw`) and composables.
+- **`@mission-platform/map/react`**: React components (`MapLibre`, `MapMarker`, `MapPopup`, `MapSource`, `MapLayer`,
+  `MapDraw`) and hooks.
 - **`@mission-platform/map/styles`**: Re-exports MapLibre GL CSS (`maplibre-gl/dist/maplibre-gl.css`).
 
 ---

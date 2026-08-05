@@ -1,23 +1,23 @@
 import {
   Fragment,
   h,
-  Slot,
-  useEffect,
   type MpElement,
   type MpProperties,
   type MpRenderProperty,
+  Slot,
+  useEffect,
 } from '@mission-platform/forge';
 import { palette } from '@mission-platform/tokens';
 
 import {
-  useDrawing,
   type DrawMode,
   type DrawnFeature,
   type FeatureId,
+  useDrawing,
   type UseDrawingReturn,
-} from '../../composables/use-drawing';
-import { useMap } from '../../composables/use-map';
-import { toMapColor } from '../../utils/to-map-color';
+} from '../../../composables/use-drawing';
+import { useMap } from '../../../composables/use-map';
+import { toMapColor } from '../../../utils/to-map-color';
 import { BaseMapLayer } from '../map-layer';
 import { BaseMapSource } from '../map-source';
 

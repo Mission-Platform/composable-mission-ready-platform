@@ -1,7 +1,7 @@
 import { type MpElement, type MpProperties } from '@mission-platform/forge';
 
-import { useMap } from '../../composables/use-map';
-import { useMarker } from '../../composables/use-marker';
+import { useMap } from '../../../composables/use-map';
+import { useMarker } from '../../../composables/use-marker';
 
 import type { LngLatLike, MarkerOptions } from 'maplibre-gl';
 

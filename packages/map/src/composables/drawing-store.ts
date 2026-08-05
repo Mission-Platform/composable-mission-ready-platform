@@ -373,13 +373,6 @@ export class DrawingStore {
     };
   }
 
-  private notify(): void {
-    this.applyCursor();
-    for (const listener of this.listeners) listener();
-  }
-
-  // ── Map wiring ────────────────────────────────────────────────────────────
-
   /** Attach the store to a map instance, wiring (or unwiring) its event handlers. */
   setMap(map: Map | undefined): void {
     if (this.map === map) return;
@@ -413,21 +406,7 @@ export class DrawingStore {
     }
   }
 
-  private applyCursor(): void {
-    const canvas = this.map?.getCanvas();
-    if (!canvas) return;
-    if (this.mode) {
-      canvas.style.cursor = 'crosshair';
-    } else if (this.dragging) {
-      canvas.style.cursor = 'grabbing';
-    } else if (this.selectedId) {
-      canvas.style.cursor = 'grab';
-    } else {
-      canvas.style.cursor = '';
-    }
-  }
-
-  // ── Getters (snapshots for the neutral hook) ────────────────────────────────
+  // ── Map wiring ────────────────────────────────────────────────────────────
 
   getMode(): DrawMode {
     return this.mode;
@@ -436,6 +415,8 @@ export class DrawingStore {
   getSelectedId(): FeatureId | undefined {
     return this.selectedId;
   }
+
+  // ── Getters (snapshots for the neutral hook) ────────────────────────────────
 
   getGeodesic(): boolean {
     return this.geodesic;
@@ -518,23 +499,6 @@ export class DrawingStore {
     return featureCollection(labelFeatures);
   }
 
-  // ── Measurement stamping ────────────────────────────────────────────────────
-
-  private stampMeasure(f: DrawnFeature): DrawnFeature {
-    const geom = f.geometry;
-    if (geom.type === 'LineString') {
-      const metres = length(f, { units: 'kilometres' }) * 1000;
-      return { ...f, properties: { ...f.properties, _length: metres } };
-    }
-    if (geom.type === 'Polygon') {
-      const sqm = area(f);
-      return { ...f, properties: { ...f.properties, _area: sqm } };
-    }
-    return f;
-  }
-
-  // ── Drawing actions ─────────────────────────────────────────────────────────
-
   startDrawing = (newMode: DrawMode): void => {
     this.draftVertices = [];
     this.mode = newMode;
@@ -554,13 +518,15 @@ export class DrawingStore {
     this.notify();
   };
 
+  // ── Measurement stamping ────────────────────────────────────────────────────
+
   cancelDrawing = (): void => {
     this.draftVertices = [];
     this.mode = undefined;
     this.notify();
   };
 
-  // ── Selection ─────────────────────────────────────────────────────────────
+  // ── Drawing actions ─────────────────────────────────────────────────────────
 
   selectFeature = (id?: FeatureId): void => {
     if (this.mode) {
@@ -570,8 +536,6 @@ export class DrawingStore {
     this.selectedId = id;
     this.notify();
   };
-
-  // ── Deletion ────────────────────────────────────────────────────────────────
 
   deleteFeature = (id: FeatureId): void => {
     this.committedFeatures = this.committedFeatures.filter((f) => f.id !== id);
@@ -583,7 +547,470 @@ export class DrawingStore {
     if (this.selectedId) this.deleteFeature(this.selectedId);
   };
 
+  // ── Selection ─────────────────────────────────────────────────────────────
+
+  setGeodesic = (value: boolean): void => {
+    if (this.geodesic === value) return;
+    this.geodesic = value;
+    this.notify();
+  };
+
+  // ── Deletion ────────────────────────────────────────────────────────────────
+
+  moveSelected = (deltaLng: number, deltaLat: number): void => {
+    if (this.geodesic) {
+      this.replaceSelected((f) => {
+        const distribution = distance(point([0, 0]), point([deltaLng, deltaLat]), { units: 'kilometres' });
+        const bear = bearing(point([0, 0]), point([deltaLng, deltaLat]));
+        const moved = transformTranslate(f, distribution, bear, { units: 'kilometres' }) as DrawnFeature;
+        moved.id = f.id;
+        moved.properties = { ...f.properties };
+        return moved;
+      });
+    } else {
+      this.replaceSelected((f) => this.translateFeatureFlat(f, deltaLng, deltaLat));
+    }
+    this.notify();
+  };
+
+  scaleSelected = (factor: number): void => {
+    if (this.geodesic) {
+      this.replaceSelected((f) => {
+        const scaled = transformScale(f, factor) as DrawnFeature;
+        scaled.id = f.id;
+        scaled.properties = { ...f.properties };
+        return this.stampMeasure(scaled);
+      });
+    } else {
+      this.replaceSelected((f) => this.stampMeasure(this.scaleFeatureFlat(f, factor)));
+    }
+    this.notify();
+  };
+
   // ── Transform operations ────────────────────────────────────────────────────
+
+  rotateSelected = (degrees: number): void => {
+    this.replaceSelected((f) => {
+      const rotated = transformRotate(f, degrees) as DrawnFeature;
+      rotated.id = f.id;
+      rotated.properties = { ...f.properties };
+      return rotated;
+    });
+    this.notify();
+  };
+
+  updateVertex = (vertexIndex: number, position: Position): void => {
+    if (!this.selectedId) return;
+    const feature = this.committedFeatures.find((f) => f.id === this.selectedId);
+    if (!feature) return;
+
+    const geom = feature.geometry as LineString | Polygon;
+    if (geom.type === 'LineString') {
+      const coords = [...geom.coordinates];
+      if (vertexIndex < 0 || vertexIndex >= coords.length) return;
+      coords[vertexIndex] = position;
+      const updated = this.stampMeasure({
+        ...feature,
+        geometry: { ...geom, coordinates: coords },
+        properties: { ...feature.properties },
+      });
+      this.committedFeatures = this.committedFeatures.map((f) => (f.id === this.selectedId ? updated : f));
+    } else if (geom.type === 'Polygon') {
+      const rings = geom.coordinates.map((ring: Position[]) => [...ring]);
+      const outerRing = rings[0];
+      if (!outerRing || vertexIndex < 0 || vertexIndex >= outerRing.length - 1) return;
+      outerRing[vertexIndex] = position;
+      if (vertexIndex === 0) outerRing[outerRing.length - 1] = position;
+      const updated = this.stampMeasure({
+        ...feature,
+        geometry: { ...geom, coordinates: rings },
+        properties: { ...feature.properties },
+      });
+      this.committedFeatures = this.committedFeatures.map((f) => (f.id === this.selectedId ? updated : f));
+    }
+    this.notify();
+  };
+
+  removeVertex = (featureId: FeatureId, vertexIndex: number): void => {
+    const feature = this.committedFeatures.find((f) => f.id === featureId);
+    if (!feature) return;
+
+    const geom = feature.geometry as LineString | Polygon;
+
+    if (geom.type === 'LineString') {
+      if (geom.coordinates.length <= 2) return;
+      const coords = geom.coordinates.filter((_, index) => index !== vertexIndex);
+      this.committedFeatures = this.committedFeatures.map((f) =>
+        f.id === featureId
+          ? this.stampMeasure({
+              ...feature,
+              geometry: { ...geom, coordinates: coords },
+              properties: { ...feature.properties },
+            } as DrawnFeature)
+          : f,
+      );
+    } else if (geom.type === 'Polygon') {
+      const ring = [...(geom.coordinates[0] ?? [])];
+      if (ring.length - 1 <= 3) return;
+      ring.splice(vertexIndex, 1);
+      if (vertexIndex === 0) ring[ring.length - 1] = ring[0];
+      this.committedFeatures = this.committedFeatures.map((f) =>
+        f.id === featureId
+          ? this.stampMeasure({
+              ...feature,
+              geometry: { ...geom, coordinates: [ring] },
+              properties: { ...feature.properties },
+            } as DrawnFeature)
+          : f,
+      );
+    }
+    this.notify();
+  };
+
+  insertVertex = (featureId: FeatureId, clickPos: Position): void => {
+    const feature = this.committedFeatures.find((f) => f.id === featureId);
+    if (!feature) return;
+
+    const geom = feature.geometry as LineString | Polygon;
+
+    if (geom.type === 'LineString') {
+      const coords = [...geom.coordinates];
+      const index = nearestSegmentIndex(coords, clickPos);
+      coords.splice(index, 0, clickPos);
+      this.committedFeatures = this.committedFeatures.map((f) =>
+        f.id === featureId
+          ? this.stampMeasure({
+              ...feature,
+              geometry: { ...geom, coordinates: coords },
+              properties: { ...feature.properties },
+            } as DrawnFeature)
+          : f,
+      );
+    } else if (geom.type === 'Polygon') {
+      const ring = [...(geom.coordinates[0] ?? [])];
+      const index = nearestSegmentIndex(ring, clickPos);
+      ring.splice(index, 0, clickPos);
+      this.committedFeatures = this.committedFeatures.map((f) =>
+        f.id === featureId
+          ? this.stampMeasure({
+              ...feature,
+              geometry: { ...geom, coordinates: [ring] },
+              properties: { ...feature.properties },
+            } as DrawnFeature)
+          : f,
+      );
+    }
+    this.notify();
+  };
+
+  splitSelected = (): void => {
+    if (!this.selectedId) return;
+    const feature = this.committedFeatures.find((f) => f.id === this.selectedId);
+    if (feature?.geometry.type !== 'LineString') return;
+
+    let coords = [...feature.geometry.coordinates];
+    if (coords.length < 2) return;
+
+    if (coords.length === 2) {
+      const mid: Position = [(coords[0][0] + coords[1][0]) / 2, (coords[0][1] + coords[1][1]) / 2];
+      coords = [coords[0], mid, coords[1]];
+    }
+
+    const midIndex = Math.floor(coords.length / 2);
+    const coords1 = coords.slice(0, midIndex + 1);
+    const coords2 = coords.slice(midIndex);
+
+    const id1 = nextId();
+    const feat1 = lineString(coords1, { drawMode: 'line', id: id1 }) as DrawnFeature;
+    feat1.id = id1;
+
+    const id2 = nextId();
+    const feat2 = lineString(coords2, { drawMode: 'line', id: id2 }) as DrawnFeature;
+    feat2.id = id2;
+
+    this.committedFeatures = [...this.committedFeatures.filter((f) => f.id !== this.selectedId), feat1, feat2];
+    this.selectedId = id1;
+    this.notify();
+  };
+
+  joinLines = (id1: FeatureId, id2: FeatureId): void => {
+    const f1 = this.committedFeatures.find((f) => f.id === id1);
+    const f2 = this.committedFeatures.find((f) => f.id === id2);
+    if (!f1 || !f2) return;
+    if (f1.geometry.type !== 'LineString' || f2.geometry.type !== 'LineString') return;
+
+    const c1 = [...f1.geometry.coordinates];
+    const c2 = [...f2.geometry.coordinates];
+
+    const distribution2 = (a: Position, b: Position): number => {
+      const dx = a[0] - b[0];
+      const dy = a[1] - b[1];
+      return dx * dx + dy * dy;
+    };
+
+    const start1 = c1[0];
+    const end1 = c1.at(-1) ?? [0, 0];
+    const start2 = c2[0];
+    const end2 = c2.at(-1) ?? [0, 0];
+
+    const options: { d: number; merged: Position[] }[] = [
+      { d: distribution2(end1, start2), merged: [...c1, ...c2] },
+      { d: distribution2(end1, end2), merged: [...c1, ...c2.toReversed()] },
+      { d: distribution2(start1, end2), merged: [...c2, ...c1] },
+      { d: distribution2(start1, start2), merged: [...c2.toReversed(), ...c1] },
+    ];
+    let best: { d: number; merged: Position[] } = { d: Number.POSITIVE_INFINITY, merged: [] };
+    for (const option of options) {
+      if (option.d < best.d) best = option;
+    }
+
+    const newId = nextId();
+    const merged = lineString(best.merged, { drawMode: 'line', id: newId }) as DrawnFeature;
+    merged.id = newId;
+
+    this.committedFeatures = [...this.committedFeatures.filter((f) => f.id !== id1 && f.id !== id2), merged];
+    this.selectedId = newId;
+    this.notify();
+  };
+
+  setFeatures = (newFeatures: DrawnFeature[]): void => {
+    // Guard against redundant hydration: callers frequently pass a *new* array
+    // reference holding the same features (e.g. a `modelValue = []` prop default
+    // that is re-created on every render). Without this shallow-equality check,
+    // `notify()` would re-render the owner, which re-creates the array, which
+    // re-invokes `setFeatures` — an infinite update loop. Only notify when the
+    // committed feature set has actually changed.
+    const current = this.committedFeatures;
+    if (current.length === newFeatures.length && current.every((f, index) => f === newFeatures[index])) {
+      return;
+    }
+    this.committedFeatures = newFeatures;
+    this.notify();
+  };
+
+  // ── Vertex editing ──────────────────────────────────────────────────────────
+
+  handleMapMouseMove = (event: MapMouseEvent): void => {
+    const { lng, lat } = event.lngLat;
+    this.cursorPos = [lng, lat];
+
+    if (!this.dragging || !this.dragTarget) {
+      this.notify();
+      return;
+    }
+
+    if (this.dragTarget.type === 'feature') {
+      const deltaLng = lng - this.dragTarget.startLng;
+      const deltaLat = lat - this.dragTarget.startLat;
+      this.dragTarget.startLng = lng;
+      this.dragTarget.startLat = lat;
+      this.moveSelected(deltaLng, deltaLat);
+    } else if (this.dragTarget.type === 'vertex') {
+      this.updateVertex(this.dragTarget.vertexIndex, [lng, lat]);
+    }
+  };
+
+  handleMapMouseDown = (event: MapMouseEvent): void => {
+    if (this.mode) return;
+
+    const map = this.map;
+    if (!map) return;
+
+    const { x, y } = event.point;
+    const buffer = 8;
+    const bbox: [[number, number], [number, number]] = [
+      [x - buffer, y - buffer],
+      [x + buffer, y + buffer],
+    ];
+
+    const vertexHits = map.queryRenderedFeatures(bbox, { layers: ['map-draw-vertices-circle'] });
+    if (vertexHits.length > 0 && this.selectedId) {
+      const vertexIndex = vertexHits[0].properties?.vertexIndex as number | undefined;
+      if (vertexIndex != undefined) {
+        const { lng, lat } = event.lngLat;
+        this.dragging = true;
+        this.dragTarget = { type: 'vertex', featureId: this.selectedId, vertexIndex, startLng: lng, startLat: lat };
+        map.dragPan?.disable();
+        this.notify();
+        return;
+      }
+    }
+
+    const shapeHits = map.queryRenderedFeatures(bbox, { layers: ['map-draw-fill', 'map-draw-line'] });
+    if (shapeHits.length > 0) {
+      const rawId = shapeHits[0].id ?? shapeHits[0].properties?.id;
+      const featureId = rawId == undefined ? undefined : String(rawId);
+      if (featureId) {
+        const { lng, lat } = event.lngLat;
+        if (this.selectedId !== featureId) this.selectFeature(featureId);
+        this.dragging = true;
+        this.dragTarget = { type: 'feature', featureId, startLng: lng, startLat: lat };
+        map.dragPan?.disable();
+        this.notify();
+      }
+    }
+  };
+
+  handleMapMouseUp = (): void => {
+    if (!this.dragging) return;
+    this.dragging = false;
+    this.dragTarget = undefined;
+    this.map?.dragPan?.enable();
+    this.notify();
+  };
+
+  // ── Line split / join ───────────────────────────────────────────────────────
+
+  handleMapMoveEnd = (): void => {
+    const map = this.map;
+    if (!map) return;
+    this.committedFeatures = this.committedFeatures.map((f) => {
+      const { drawMode, _anchor, _edge } = f.properties ?? {};
+      if (!_anchor || !_edge) return f;
+      let rebuilt: DrawnFeature;
+      switch (drawMode) {
+        case 'square': {
+          rebuilt = buildSquare(_anchor as Position, _edge as Position, map, f.id);
+          break;
+        }
+        case 'circle': {
+          rebuilt = buildCircle(_anchor as Position, _edge as Position, map, f.id);
+          break;
+        }
+        case 'triangle': {
+          rebuilt = buildTriangle(_anchor as Position, _edge as Position, map, f.id);
+          break;
+        }
+        default: {
+          return f;
+        }
+      }
+      if (typeof f.properties._area === 'number') {
+        rebuilt = { ...rebuilt, properties: { ...rebuilt.properties, _area: f.properties._area } };
+      }
+      return rebuilt;
+    });
+    this.notify();
+  };
+
+  handleMapClick = (event: MapMouseEvent): void => {
+    if (!this.mode) {
+      const map = this.map;
+      if (!map) return;
+
+      const { x, y } = event.point;
+      const buffer = 6;
+      const bbox: [[number, number], [number, number]] = [
+        [x - buffer, y - buffer],
+        [x + buffer, y + buffer],
+      ];
+      const hits = map.queryRenderedFeatures(bbox, { layers: ['map-draw-fill', 'map-draw-line'] });
+
+      if (hits.length > 0) {
+        const rawId = hits[0].id ?? hits[0].properties?.id;
+        const featureId = rawId == undefined ? undefined : String(rawId);
+        if (featureId) {
+          this.selectFeature(featureId);
+        }
+      } else {
+        this.selectFeature();
+      }
+      return;
+    }
+
+    const { lng, lat } = event.lngLat;
+    const vertex: Position = [lng, lat];
+
+    if (['square', 'circle', 'triangle'].includes(this.mode)) {
+      if (this.draftVertices.length === 0) {
+        this.draftVertices = [vertex];
+        this.notify();
+      } else {
+        this.draftVertices = [...this.draftVertices, vertex];
+        this.finishDrawing();
+      }
+      return;
+    }
+
+    this.draftVertices = [...this.draftVertices, vertex];
+    this.notify();
+  };
+
+  // ── External hydration ────────────────────────────────────────────────────
+
+  handleMapDblClick = (event: MapMouseEvent): void => {
+    if (!this.mode) {
+      const map = this.map;
+      if (!map) return;
+
+      const { x, y } = event.point;
+      const buffer = 8;
+      const bbox: [[number, number], [number, number]] = [
+        [x - buffer, y - buffer],
+        [x + buffer, y + buffer],
+      ];
+
+      const vertexHits = map.queryRenderedFeatures(bbox, { layers: ['map-draw-vertices-circle'] });
+      if (vertexHits.length > 0 && this.selectedId) {
+        const vertexIndex = vertexHits[0].properties?.vertexIndex as number | undefined;
+        if (vertexIndex != undefined) {
+          this.removeVertex(this.selectedId, vertexIndex);
+          event.originalEvent?.preventDefault();
+          return;
+        }
+      }
+
+      const shapeHits = map.queryRenderedFeatures(bbox, { layers: ['map-draw-fill', 'map-draw-line'] });
+      if (shapeHits.length > 0) {
+        const rawId = shapeHits[0].id ?? shapeHits[0].properties?.id;
+        const featureId = rawId == undefined ? undefined : String(rawId);
+        if (featureId) {
+          const { lng, lat } = event.lngLat;
+          this.insertVertex(featureId, [lng, lat]);
+          this.selectFeature(featureId);
+          event.originalEvent?.preventDefault();
+        }
+      }
+      return;
+    }
+
+    this.draftVertices = this.draftVertices.slice(0, -1);
+    this.finishDrawing();
+  };
+
+  // ── Map event handlers ──────────────────────────────────────────────────────
+
+  private notify(): void {
+    this.applyCursor();
+    for (const listener of this.listeners) listener();
+  }
+
+  private applyCursor(): void {
+    const canvas = this.map?.getCanvas();
+    if (!canvas) return;
+    if (this.mode) {
+      canvas.style.cursor = 'crosshair';
+    } else if (this.dragging) {
+      canvas.style.cursor = 'grabbing';
+    } else if (this.selectedId) {
+      canvas.style.cursor = 'grab';
+    } else {
+      canvas.style.cursor = '';
+    }
+  }
+
+  private stampMeasure(f: DrawnFeature): DrawnFeature {
+    const geom = f.geometry;
+    if (geom.type === 'LineString') {
+      const metres = length(f, { units: 'kilometres' }) * 1000;
+      return { ...f, properties: { ...f.properties, _length: metres } };
+    }
+    if (geom.type === 'Polygon') {
+      const sqm = area(f);
+      return { ...f, properties: { ...f.properties, _area: sqm } };
+    }
+    return f;
+  }
 
   private replaceSelected(transform: (f: DrawnFeature) => DrawnFeature): void {
     if (!this.selectedId) return;
@@ -690,431 +1117,4 @@ export class DrawingStore {
     }
     return { ...f, geometry: newGeom, properties };
   }
-
-  setGeodesic = (value: boolean): void => {
-    if (this.geodesic === value) return;
-    this.geodesic = value;
-    this.notify();
-  };
-
-  moveSelected = (deltaLng: number, deltaLat: number): void => {
-    if (this.geodesic) {
-      this.replaceSelected((f) => {
-        const distribution = distance(point([0, 0]), point([deltaLng, deltaLat]), { units: 'kilometres' });
-        const bear = bearing(point([0, 0]), point([deltaLng, deltaLat]));
-        const moved = transformTranslate(f, distribution, bear, { units: 'kilometres' }) as DrawnFeature;
-        moved.id = f.id;
-        moved.properties = { ...f.properties };
-        return moved;
-      });
-    } else {
-      this.replaceSelected((f) => this.translateFeatureFlat(f, deltaLng, deltaLat));
-    }
-    this.notify();
-  };
-
-  scaleSelected = (factor: number): void => {
-    if (this.geodesic) {
-      this.replaceSelected((f) => {
-        const scaled = transformScale(f, factor) as DrawnFeature;
-        scaled.id = f.id;
-        scaled.properties = { ...f.properties };
-        return this.stampMeasure(scaled);
-      });
-    } else {
-      this.replaceSelected((f) => this.stampMeasure(this.scaleFeatureFlat(f, factor)));
-    }
-    this.notify();
-  };
-
-  rotateSelected = (degrees: number): void => {
-    this.replaceSelected((f) => {
-      const rotated = transformRotate(f, degrees) as DrawnFeature;
-      rotated.id = f.id;
-      rotated.properties = { ...f.properties };
-      return rotated;
-    });
-    this.notify();
-  };
-
-  // ── Vertex editing ──────────────────────────────────────────────────────────
-
-  updateVertex = (vertexIndex: number, position: Position): void => {
-    if (!this.selectedId) return;
-    const feature = this.committedFeatures.find((f) => f.id === this.selectedId);
-    if (!feature) return;
-
-    const geom = feature.geometry as LineString | Polygon;
-    if (geom.type === 'LineString') {
-      const coords = [...geom.coordinates];
-      if (vertexIndex < 0 || vertexIndex >= coords.length) return;
-      coords[vertexIndex] = position;
-      const updated = this.stampMeasure({
-        ...feature,
-        geometry: { ...geom, coordinates: coords },
-        properties: { ...feature.properties },
-      });
-      this.committedFeatures = this.committedFeatures.map((f) => (f.id === this.selectedId ? updated : f));
-    } else if (geom.type === 'Polygon') {
-      const rings = geom.coordinates.map((ring: Position[]) => [...ring]);
-      const outerRing = rings[0];
-      if (!outerRing || vertexIndex < 0 || vertexIndex >= outerRing.length - 1) return;
-      outerRing[vertexIndex] = position;
-      if (vertexIndex === 0) outerRing[outerRing.length - 1] = position;
-      const updated = this.stampMeasure({
-        ...feature,
-        geometry: { ...geom, coordinates: rings },
-        properties: { ...feature.properties },
-      });
-      this.committedFeatures = this.committedFeatures.map((f) => (f.id === this.selectedId ? updated : f));
-    }
-    this.notify();
-  };
-
-  removeVertex = (featureId: FeatureId, vertexIndex: number): void => {
-    const feature = this.committedFeatures.find((f) => f.id === featureId);
-    if (!feature) return;
-
-    const geom = feature.geometry as LineString | Polygon;
-
-    if (geom.type === 'LineString') {
-      if (geom.coordinates.length <= 2) return;
-      const coords = geom.coordinates.filter((_, index) => index !== vertexIndex);
-      this.committedFeatures = this.committedFeatures.map((f) =>
-        f.id === featureId
-          ? this.stampMeasure({
-              ...feature,
-              geometry: { ...geom, coordinates: coords },
-              properties: { ...feature.properties },
-            } as DrawnFeature)
-          : f,
-      );
-    } else if (geom.type === 'Polygon') {
-      const ring = [...(geom.coordinates[0] ?? [])];
-      if (ring.length - 1 <= 3) return;
-      ring.splice(vertexIndex, 1);
-      if (vertexIndex === 0) ring[ring.length - 1] = ring[0];
-      this.committedFeatures = this.committedFeatures.map((f) =>
-        f.id === featureId
-          ? this.stampMeasure({
-              ...feature,
-              geometry: { ...geom, coordinates: [ring] },
-              properties: { ...feature.properties },
-            } as DrawnFeature)
-          : f,
-      );
-    }
-    this.notify();
-  };
-
-  insertVertex = (featureId: FeatureId, clickPos: Position): void => {
-    const feature = this.committedFeatures.find((f) => f.id === featureId);
-    if (!feature) return;
-
-    const geom = feature.geometry as LineString | Polygon;
-
-    if (geom.type === 'LineString') {
-      const coords = [...geom.coordinates];
-      const index = nearestSegmentIndex(coords, clickPos);
-      coords.splice(index, 0, clickPos);
-      this.committedFeatures = this.committedFeatures.map((f) =>
-        f.id === featureId
-          ? this.stampMeasure({
-              ...feature,
-              geometry: { ...geom, coordinates: coords },
-              properties: { ...feature.properties },
-            } as DrawnFeature)
-          : f,
-      );
-    } else if (geom.type === 'Polygon') {
-      const ring = [...(geom.coordinates[0] ?? [])];
-      const index = nearestSegmentIndex(ring, clickPos);
-      ring.splice(index, 0, clickPos);
-      this.committedFeatures = this.committedFeatures.map((f) =>
-        f.id === featureId
-          ? this.stampMeasure({
-              ...feature,
-              geometry: { ...geom, coordinates: [ring] },
-              properties: { ...feature.properties },
-            } as DrawnFeature)
-          : f,
-      );
-    }
-    this.notify();
-  };
-
-  // ── Line split / join ───────────────────────────────────────────────────────
-
-  splitSelected = (): void => {
-    if (!this.selectedId) return;
-    const feature = this.committedFeatures.find((f) => f.id === this.selectedId);
-    if (feature?.geometry.type !== 'LineString') return;
-
-    let coords = [...feature.geometry.coordinates];
-    if (coords.length < 2) return;
-
-    if (coords.length === 2) {
-      const mid: Position = [(coords[0][0] + coords[1][0]) / 2, (coords[0][1] + coords[1][1]) / 2];
-      coords = [coords[0], mid, coords[1]];
-    }
-
-    const midIndex = Math.floor(coords.length / 2);
-    const coords1 = coords.slice(0, midIndex + 1);
-    const coords2 = coords.slice(midIndex);
-
-    const id1 = nextId();
-    const feat1 = lineString(coords1, { drawMode: 'line', id: id1 }) as DrawnFeature;
-    feat1.id = id1;
-
-    const id2 = nextId();
-    const feat2 = lineString(coords2, { drawMode: 'line', id: id2 }) as DrawnFeature;
-    feat2.id = id2;
-
-    this.committedFeatures = [...this.committedFeatures.filter((f) => f.id !== this.selectedId), feat1, feat2];
-    this.selectedId = id1;
-    this.notify();
-  };
-
-  joinLines = (id1: FeatureId, id2: FeatureId): void => {
-    const f1 = this.committedFeatures.find((f) => f.id === id1);
-    const f2 = this.committedFeatures.find((f) => f.id === id2);
-    if (!f1 || !f2) return;
-    if (f1.geometry.type !== 'LineString' || f2.geometry.type !== 'LineString') return;
-
-    const c1 = [...f1.geometry.coordinates];
-    const c2 = [...f2.geometry.coordinates];
-
-    const distribution2 = (a: Position, b: Position): number => {
-      const dx = a[0] - b[0];
-      const dy = a[1] - b[1];
-      return dx * dx + dy * dy;
-    };
-
-    const start1 = c1[0];
-    const end1 = c1.at(-1) ?? [0, 0];
-    const start2 = c2[0];
-    const end2 = c2.at(-1) ?? [0, 0];
-
-    const options: { d: number; merged: Position[] }[] = [
-      { d: distribution2(end1, start2), merged: [...c1, ...c2] },
-      { d: distribution2(end1, end2), merged: [...c1, ...c2.toReversed()] },
-      { d: distribution2(start1, end2), merged: [...c2, ...c1] },
-      { d: distribution2(start1, start2), merged: [...c2.toReversed(), ...c1] },
-    ];
-    let best: { d: number; merged: Position[] } = { d: Number.POSITIVE_INFINITY, merged: [] };
-    for (const option of options) {
-      if (option.d < best.d) best = option;
-    }
-
-    const newId = nextId();
-    const merged = lineString(best.merged, { drawMode: 'line', id: newId }) as DrawnFeature;
-    merged.id = newId;
-
-    this.committedFeatures = [...this.committedFeatures.filter((f) => f.id !== id1 && f.id !== id2), merged];
-    this.selectedId = newId;
-    this.notify();
-  };
-
-  // ── External hydration ────────────────────────────────────────────────────
-
-  setFeatures = (newFeatures: DrawnFeature[]): void => {
-    // Guard against redundant hydration: callers frequently pass a *new* array
-    // reference holding the same features (e.g. a `modelValue = []` prop default
-    // that is re-created on every render). Without this shallow-equality check,
-    // `notify()` would re-render the owner, which re-creates the array, which
-    // re-invokes `setFeatures` — an infinite update loop. Only notify when the
-    // committed feature set has actually changed.
-    const current = this.committedFeatures;
-    if (current.length === newFeatures.length && current.every((f, index) => f === newFeatures[index])) {
-      return;
-    }
-    this.committedFeatures = newFeatures;
-    this.notify();
-  };
-
-  // ── Map event handlers ──────────────────────────────────────────────────────
-
-  handleMapMouseMove = (event: MapMouseEvent): void => {
-    const { lng, lat } = event.lngLat;
-    this.cursorPos = [lng, lat];
-
-    if (!this.dragging || !this.dragTarget) {
-      this.notify();
-      return;
-    }
-
-    if (this.dragTarget.type === 'feature') {
-      const deltaLng = lng - this.dragTarget.startLng;
-      const deltaLat = lat - this.dragTarget.startLat;
-      this.dragTarget.startLng = lng;
-      this.dragTarget.startLat = lat;
-      this.moveSelected(deltaLng, deltaLat);
-    } else if (this.dragTarget.type === 'vertex') {
-      this.updateVertex(this.dragTarget.vertexIndex, [lng, lat]);
-    }
-  };
-
-  handleMapMouseDown = (event: MapMouseEvent): void => {
-    if (this.mode) return;
-
-    const map = this.map;
-    if (!map) return;
-
-    const { x, y } = event.point;
-    const buffer = 8;
-    const bbox: [[number, number], [number, number]] = [
-      [x - buffer, y - buffer],
-      [x + buffer, y + buffer],
-    ];
-
-    const vertexHits = map.queryRenderedFeatures(bbox, { layers: ['map-draw-vertices-circle'] });
-    if (vertexHits.length > 0 && this.selectedId) {
-      const vertexIndex = vertexHits[0].properties?.vertexIndex as number | undefined;
-      if (vertexIndex != undefined) {
-        const { lng, lat } = event.lngLat;
-        this.dragging = true;
-        this.dragTarget = { type: 'vertex', featureId: this.selectedId, vertexIndex, startLng: lng, startLat: lat };
-        map.dragPan?.disable();
-        this.notify();
-        return;
-      }
-    }
-
-    const shapeHits = map.queryRenderedFeatures(bbox, { layers: ['map-draw-fill', 'map-draw-line'] });
-    if (shapeHits.length > 0) {
-      const rawId = shapeHits[0].id ?? shapeHits[0].properties?.id;
-      const featureId = rawId == undefined ? undefined : String(rawId);
-      if (featureId) {
-        const { lng, lat } = event.lngLat;
-        if (this.selectedId !== featureId) this.selectFeature(featureId);
-        this.dragging = true;
-        this.dragTarget = { type: 'feature', featureId, startLng: lng, startLat: lat };
-        map.dragPan?.disable();
-        this.notify();
-      }
-    }
-  };
-
-  handleMapMouseUp = (): void => {
-    if (!this.dragging) return;
-    this.dragging = false;
-    this.dragTarget = undefined;
-    this.map?.dragPan?.enable();
-    this.notify();
-  };
-
-  handleMapMoveEnd = (): void => {
-    const map = this.map;
-    if (!map) return;
-    this.committedFeatures = this.committedFeatures.map((f) => {
-      const { drawMode, _anchor, _edge } = f.properties ?? {};
-      if (!_anchor || !_edge) return f;
-      let rebuilt: DrawnFeature;
-      switch (drawMode) {
-        case 'square': {
-          rebuilt = buildSquare(_anchor as Position, _edge as Position, map, f.id);
-          break;
-        }
-        case 'circle': {
-          rebuilt = buildCircle(_anchor as Position, _edge as Position, map, f.id);
-          break;
-        }
-        case 'triangle': {
-          rebuilt = buildTriangle(_anchor as Position, _edge as Position, map, f.id);
-          break;
-        }
-        default: {
-          return f;
-        }
-      }
-      if (typeof f.properties._area === 'number') {
-        rebuilt = { ...rebuilt, properties: { ...rebuilt.properties, _area: f.properties._area } };
-      }
-      return rebuilt;
-    });
-    this.notify();
-  };
-
-  handleMapClick = (event: MapMouseEvent): void => {
-    if (!this.mode) {
-      const map = this.map;
-      if (!map) return;
-
-      const { x, y } = event.point;
-      const buffer = 6;
-      const bbox: [[number, number], [number, number]] = [
-        [x - buffer, y - buffer],
-        [x + buffer, y + buffer],
-      ];
-      const hits = map.queryRenderedFeatures(bbox, { layers: ['map-draw-fill', 'map-draw-line'] });
-
-      if (hits.length > 0) {
-        const rawId = hits[0].id ?? hits[0].properties?.id;
-        const featureId = rawId == undefined ? undefined : String(rawId);
-        if (featureId) {
-          this.selectFeature(featureId);
-        }
-      } else {
-        this.selectFeature();
-      }
-      return;
-    }
-
-    const { lng, lat } = event.lngLat;
-    const vertex: Position = [lng, lat];
-
-    if (['square', 'circle', 'triangle'].includes(this.mode)) {
-      if (this.draftVertices.length === 0) {
-        this.draftVertices = [vertex];
-        this.notify();
-      } else {
-        this.draftVertices = [...this.draftVertices, vertex];
-        this.finishDrawing();
-      }
-      return;
-    }
-
-    this.draftVertices = [...this.draftVertices, vertex];
-    this.notify();
-  };
-
-  handleMapDblClick = (event: MapMouseEvent): void => {
-    if (!this.mode) {
-      const map = this.map;
-      if (!map) return;
-
-      const { x, y } = event.point;
-      const buffer = 8;
-      const bbox: [[number, number], [number, number]] = [
-        [x - buffer, y - buffer],
-        [x + buffer, y + buffer],
-      ];
-
-      const vertexHits = map.queryRenderedFeatures(bbox, { layers: ['map-draw-vertices-circle'] });
-      if (vertexHits.length > 0 && this.selectedId) {
-        const vertexIndex = vertexHits[0].properties?.vertexIndex as number | undefined;
-        if (vertexIndex != undefined) {
-          this.removeVertex(this.selectedId, vertexIndex);
-          event.originalEvent?.preventDefault();
-          return;
-        }
-      }
-
-      const shapeHits = map.queryRenderedFeatures(bbox, { layers: ['map-draw-fill', 'map-draw-line'] });
-      if (shapeHits.length > 0) {
-        const rawId = shapeHits[0].id ?? shapeHits[0].properties?.id;
-        const featureId = rawId == undefined ? undefined : String(rawId);
-        if (featureId) {
-          const { lng, lat } = event.lngLat;
-          this.insertVertex(featureId, [lng, lat]);
-          this.selectFeature(featureId);
-          event.originalEvent?.preventDefault();
-        }
-      }
-      return;
-    }
-
-    this.draftVertices = this.draftVertices.slice(0, -1);
-    this.finishDrawing();
-  };
 }

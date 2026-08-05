@@ -7,15 +7,16 @@
 - 2a307f6: wrap component styles in the `@layer mp.map` cascade layer
 
   Every `@mission-platform/map` SFC `<style>` block now wraps its rules in the
-  `@layer mp.map` cascade layer (any leading `@use` stays outside the layer), so
-  unlayered application styles win over the map component styles without specificity
-  battles.
+  `@layer mp.map` cascade layer (any leading `@use` stays outside the layer), so unlayered application styles win over
+  the map component styles without specificity battles.
 
 ### Patch Changes
 
 - 2e24c62: drop redundant `undefined` argument from `shallowRef` calls in `MapLibre`
-- 8a590fd: emit `update:mode` from `MapDraw` when the internal drawing mode resets so `:mode` / `v-model:mode` stays in sync and drawing can restart after a shape is committed
-- 8a590fd: consume `@mission-platform/icons` in the stories instead of the removed Vue `@mission-platform/icons` package (`IconRotateCCW`/`IconRotateCW` are now `IconRotateCcw`/`IconRotateCw`)
+- 8a590fd: emit `update:mode` from `MapDraw` when the internal drawing mode resets so `:mode` / `v-model:mode` stays in
+  sync and drawing can restart after a shape is committed
+- 8a590fd: consume `@mission-platform/icons` in the stories instead of the removed Vue `@mission-platform/icons` package
+  (`IconRotateCCW`/`IconRotateCW` are now `IconRotateCcw`/`IconRotateCw`)
 - edb785f: use @mission-platform/components in stories instead of @mission-platform/components
 - ca1d98b: reformat sources with updated prettier print width and import ordering
 - d39b6fc: add per-workspace reference documentation and refresh llms.txt/README metadata
@@ -23,17 +24,17 @@
 - 4218ce5: generate one SCSS partial and TS module per token source, with barrels
 
   - The generated token output is now split per DTCG source: every
-    `tokens/<file>.tokens.json` produces `src/generated/scss/_<file>.scss` (a
-    self-contained partial with its `$`-variables, `--mp-*` custom properties, and
+    `tokens/<file>.tokens.json` produces `src/generated/scss/_<file>.scss` (a self-contained partial with its `$`
+    -variables, `--mp-*` custom properties, and
     `@property` registrations whose `initial-value`s resolve to the matching local
     `$`-variables) and `src/generated/ts/<file>.ts` (a single nested `as const`
     object). The aggregate `src/generated/_tokens.scss` (`@forward` barrel) and
     `src/generated/tokens.ts` (re-export barrel) replace the previous
     `_structural.scss`, `flat.ts`, and `tokens.css` artefacts.
-  - **BREAKING:** the TypeScript API is now a flat set of per-source nested objects
-    (`palette`, `size`, `font`, `typography`, `borderWidth`, `breakpoint`, `motion`,
-    `opacity`, `radius`, `shadow`, `spacing`, `zIndex`, `themeLight`, `themeDark`),
-    replacing the previous bespoke exports (`colors`, `spacing`, `fontFamilies`,
+  - **BREAKING:** the TypeScript API is now a flat set of per-source nested objects (`palette`, `size`, `font`,
+    `typography`, `borderWidth`, `breakpoint`, `motion`,
+    `opacity`, `radius`, `shadow`, `spacing`, `zIndex`, `themeLight`, `themeDark`), replacing the previous bespoke
+    exports (`colors`, `spacing`, `fontFamilies`,
     `sizeIcons`, `radii`, `shadows`, …). The standalone `@mission-platform/tokens/css`
     bundle export is removed; consume the SCSS entry points instead.
   - `@mission-platform/components`, `@mission-platform/map`, and
@@ -83,7 +84,8 @@
 
 - 075a5a2: normalize source formatting and import ordering
 
-  Apply the repo-wide Prettier/ESLint formatting pass (line reflow, attribute and import ordering, barrel-import paths, and simplified GeoJSON `Feature` typings in `map`). No runtime behaviour changes.
+  Apply the repo-wide Prettier/ESLint formatting pass (line reflow, attribute and import ordering, barrel-import paths,
+  and simplified GeoJSON `Feature` typings in `map`). No runtime behaviour changes.
 
 - Updated dependencies [776e32c]
 - Updated dependencies [90bb7dc]
@@ -162,12 +164,11 @@
 
 - f0a0e11: emit code-split, tree-shakeable library builds
 
-  `defineLibraryConfig` now preserves the source module graph (one output file per
-  module) and externalises each package's own `dependencies`/`peerDependencies` by
-  default, so consumers get first-class tree shaking and code splitting. Packages
-  that ship a single self-contained artifact (workers, WASM entries, the flat token
-  bundle) opt out via the new `preserveModules: false` option. The main entry of
-  each preserved-module package is now emitted as `dist/index.js`.
+  `defineLibraryConfig` now preserves the source module graph (one output file per module) and externalises each
+  package's own `dependencies`/`peerDependencies` by default, so consumers get first-class tree shaking and code
+  splitting. Packages that ship a single self-contained artifact (workers, WASM entries, the flat token bundle) opt out
+  via the new `preserveModules: false` option. The main entry of each preserved-module package is now emitted as
+  `dist/index.js`.
 
 ### Patch Changes
 
@@ -225,9 +226,8 @@
 - 65106e2: use shared `@mission-platform/typescript-config` and `@mission-platform/vite-config`
 
   Migrates `vite.config.ts`, `vitest.config.ts`, and the `tsconfig.*.json`
-  files (build, node, test, storybook) to extend the shared workspaces
-  under `configs/`. `maplibre-gl` is added as a Rollup external via the
-  helper's `external`/`globals` options. No runtime or public-API change.
+  files (build, node, test, storybook) to extend the shared workspaces under `configs/`. `maplibre-gl` is added as a
+  Rollup external via the helper's `external`/`globals` options. No runtime or public-API change.
 
 - 05d31c9: normalize lint and format scripts across all workspaces
 
@@ -238,22 +238,19 @@
 
   Each package that ships Storybook stories now has a dedicated
   `tsconfig.stories.json` extending
-  `@mission-platform/typescript-config/stories` and is registered as a
-  project reference from the workspace's root `tsconfig.json`. This gives
-  `src/**/*.stories.{ts,tsx}` files a dedicated TypeScript project so
-  ESLint's `projectService` can type-check them out of the box, and
-  removes the legacy `tsconfig.storybook.json` from
+  `@mission-platform/typescript-config/stories` and is registered as a project reference from the workspace's root
+  `tsconfig.json`. This gives
+  `src/**/*.stories.{ts,tsx}` files a dedicated TypeScript project so ESLint's `projectService` can type-check them out
+  of the box, and removes the legacy `tsconfig.storybook.json` from
   `@mission-platform/map` in favour of the shared name.
 
 - cf89515: enable tree shaking support when consumed by apps
 
-  Declares `"sideEffects"` in each package's `package.json` so app bundlers
-  (Vite/Rollup) can safely drop unused exports. Pure-TypeScript packages
-  (`harper`, `hunspell`, `i18n`) opt out of side effects entirely with
-  `"sideEffects": false`. Packages that ship styles and/or Vue SFCs
-  (`breakpoints`, `components`, `icons`, `map`, `tokens`) keep `*.css`,
-  `*.scss`, and `*.vue` files marked as side-effectful so component
-  styles and SCSS entrypoints are preserved.
+  Declares `"sideEffects"` in each package's `package.json` so app bundlers (Vite/Rollup) can safely drop unused
+  exports. Pure-TypeScript packages (`harper`, `hunspell`, `i18n`) opt out of side effects entirely with
+  `"sideEffects": false`. Packages that ship styles and/or Vue SFCs (`breakpoints`, `components`, `icons`, `map`,
+  `tokens`) keep `*.css`,
+  `*.scss`, and `*.vue` files marked as side-effectful so component styles and SCSS entrypoints are preserved.
 
 - Updated dependencies [a77eafa]
 - Updated dependencies [d2bf0e1]
@@ -274,11 +271,10 @@
 
 ### Patch Changes
 
-- 5dee755: docs(map): add Storybook stories for all map components
+- 5dee755: docs (map): add Storybook stories for all map components
 
-  Add stories for MapLibre, MapLayer, MapMarker, MapPopup, and MapSource
-  components with realistic args and controls so each component is browsable
-  and visually testable in the Storybook catalogue.
+  Add stories for MapLibre, MapLayer, MapMarker, MapPopup, and MapSource components with realistic args and controls so
+  each component is browsable and visually testable in the Storybook catalogue.
 
 - Updated dependencies [ee616a0]
 - Updated dependencies [8687deb]
@@ -292,8 +288,8 @@
 - ba565b3: remove empty locales placeholder and ./locales export
 
   The map package had a placeholder `src/locales/index.ts` that depended on
-  `defineLocales` from `@mission-platform/i18n`. Since that API has been removed
-  and the map package has no translated strings, the file and its `./locales`
+  `defineLocales` from `@mission-platform/i18n`. Since that API has been removed and the map package has no translated
+  strings, the file and its `./locales`
   package export are dropped.
 
 - Updated dependencies [ba565b3]

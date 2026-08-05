@@ -1,11 +1,12 @@
-import { BaseButton } from '@mission-platform/components/react';
-import { useState } from 'react';
+import { BaseButton } from '@mission-platform/components';
+import { h, type MpChild } from '@mission-platform/forge';
+import { useArgs } from 'storybook/preview-api';
 
-import { MapDraw, MapLibre } from '@mission-platform/map/react';
+import { MapDraw, MapLibre } from '@mission-platform/map';
 
-import type { DrawMode, DrawnFeature, UseDrawingReturn } from '@mission-platform/map';
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { CSSProperties, ReactNode } from 'react';
+
+import type { DrawMode } from '@mission-platform/map';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 // ─── Shared fixtures ────────────────────────────────────────────────────────
 
@@ -17,29 +18,23 @@ const MAP_STYLE = 'https://demotiles.maplibre.org/style.json';
  * which has no intrinsic height, so a sized wrapper is required for the canvas
  * to appear.
  */
-function Frame({ children }: { readonly children?: ReactNode }): ReactNode {
-  return (
-    <div style={{ width: '100%', height: 480, borderRadius: 'var(--mp-radius-md, 8px)', overflow: 'hidden' }}>
-      {children}
-    </div>
-  );
-}
+const Frame = ({ children }: { children?: MpChild }) => (
+  <div style={{ width: '100%', height: '480px', borderRadius: 'var(--mp-radius-md, 8px)', overflow: 'hidden' }}>
+    {children}
+  </div>
+);
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: 'Map/MapDraw',
+  title: 'Molecules/Mapping/MapDraw',
   component: MapDraw,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
-        component: [
-          'The `@mission-platform/map` package is authored once in the neutral',
-          '`@mission-platform/forge` dialect and dual-built to **Vue** and **React**.',
-          'These stories use the React build (`@mission-platform/map/react`). A matching',
-          'set of Vue stories lives alongside in `map-draw.vue.stories.tsx`.',
-        ].join(' '),
+        component:
+          'The `@mission-platform/map` package is authored once in the neutral `@mission-platform/forge` dialect and dual-built to **Vue** and **React**.',
       },
     },
   },
@@ -56,24 +51,20 @@ type Story = StoryObj<typeof meta>;
  * The map's double-click-to-zoom is suppressed while the tool is active, so
  * adding or modifying points never zooms the map.
  */
-function modeStory(initialMode: DrawMode, strokeColor?: string): Story {
+function modeStory(mode?: DrawMode, strokeColor?: string): Story {
   return {
-    render: () => {
-      const [mode, setMode] = useState<DrawMode>(initialMode);
-      const [features, setFeatures] = useState<DrawnFeature[]>([]);
+    render: (arguments_) => {
+      const [{ mode: activeMode, modelValue: features }, updateArguments] = useArgs();
       return (
         <Frame>
-          <MapLibre
-            mapStyle={MAP_STYLE}
-            center={[8, 50]}
-            zoom={4}
-          >
+          <MapLibre mapStyle={MAP_STYLE} center={[8, 50]} zoom={4}>
             <MapDraw
-              mode={mode}
-              modelValue={features}
+              {...arguments_}
+              mode={activeMode ?? mode}
+              onModeChange={(value) => updateArguments({ mode: value })}
+              modelValue={features ?? []}
+              onFeaturesChange={(value) => updateArguments({ modelValue: value })}
               strokeColor={strokeColor}
-              onModeChange={setMode}
-              onFeaturesChange={setFeatures}
             />
           </MapLibre>
         </Frame>
@@ -102,29 +93,24 @@ export const TriangleMode: Story = modeStory('triangle', '#7c3aed');
 
 /**
  * Geodesic mode (the default): transforms such as move and scale use
- * ground-accurate (great-circle) maths. Pass `geodesic={false}` to fall back to
+ * ground-accurate (great-circle) maths. Set `:geodesic="false"` to fall back to
  * flat/planar maths on the raw longitude/latitude values.
  */
 export const Geodesic: Story = {
-  render: () => {
-    const [mode, setMode] = useState<DrawMode>('polygon');
-    const [features, setFeatures] = useState<DrawnFeature[]>([]);
-    const [geodesic, setGeodesic] = useState(true);
+  render: (arguments_) => {
+    const [{ mode, modelValue: features, geodesic }, updateArguments] = useArgs();
     return (
       <Frame>
-        <MapLibre
-          mapStyle={MAP_STYLE}
-          center={[8, 50]}
-          zoom={4}
-        >
+        <MapLibre mapStyle={MAP_STYLE} center={[8, 50]} zoom={4}>
           <MapDraw
-            mode={mode}
-            modelValue={features}
-            geodesic={geodesic}
+            {...arguments_}
+            mode={mode ?? 'polygon'}
+            onModeChange={(value) => updateArguments({ mode: value })}
+            modelValue={features ?? []}
+            onFeaturesChange={(value) => updateArguments({ modelValue: value })}
+            geodesic={geodesic ?? true}
+            onGeodesicChange={(value) => updateArguments({ geodesic: value })}
             strokeColor="#0891b2"
-            onModeChange={setMode}
-            onFeaturesChange={setFeatures}
-            onGeodesicChange={setGeodesic}
           />
         </MapLibre>
       </Frame>
@@ -132,75 +118,51 @@ export const Geodesic: Story = {
   },
 };
 
-const DRAW_MODES: { label: string; value: DrawMode }[] = [
-  { label: 'Select', value: undefined },
-  { label: 'Line', value: 'line' },
-  { label: 'Polygon', value: 'polygon' },
-  { label: 'Square', value: 'square' },
-  { label: 'Circle', value: 'circle' },
-  { label: 'Triangle', value: 'triangle' },
-];
-
-function applyMode(drawing: UseDrawingReturn, value: DrawMode): void {
-  if (value === undefined) {
-    drawing.cancelDrawing();
-  } else {
-    drawing.startDrawing(value);
-  }
-}
-
-const TOOLBAR_STYLE: CSSProperties = {
-  position: 'absolute',
-  top: 12,
-  left: 12,
-  zIndex: 2,
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: 6,
-  alignItems: 'center',
-  maxWidth: 'calc(100% - 24px)',
-  padding: 8,
-  borderRadius: 8,
-  background: 'rgba(255, 255, 255, 0.95)',
-  boxShadow: '0 1px 4px rgba(0, 0, 0, 0.25)',
-};
-
 /**
  * A drawing tool with an interactive **toolbar** rendered through the
- * component's `toolbar` render prop. The toolbar is built from
+ * component's `toolbar` scoped slot. The toolbar is built from
  * `@mission-platform/components` `BaseButton`s and receives the live `drawing`
  * controller, which it uses to switch the active draw mode, toggle geodesic
- * mode, and delete the currently selected feature (click a committed shape on
- * the map to select it first — the delete button stays disabled until
- * something is selected).
+ * mode, and delete the currently selected feature.
  */
 export const Toolbar: Story = {
-  render: () => {
-    const [features, setFeatures] = useState<DrawnFeature[]>([]);
+  render: (arguments_) => {
+    const [{ modelValue: features }, updateArguments] = useArgs();
+    const drawModes: { label: string; value: DrawMode }[] = [
+      { label: 'Select', value: undefined },
+      { label: 'Line', value: 'line' },
+      { label: 'Polygon', value: 'polygon' },
+      { label: 'Square', value: 'square' },
+      { label: 'Circle', value: 'circle' },
+      { label: 'Triangle', value: 'triangle' },
+    ];
     return (
       <Frame>
-        <MapLibre
-          mapStyle={MAP_STYLE}
-          center={[8, 50]}
-          zoom={4}
-        >
+        <MapLibre mapStyle={MAP_STYLE} center={[8, 50]} zoom={4}>
           <MapDraw
-            modelValue={features}
-            onFeaturesChange={setFeatures}
+            {...arguments_}
+            modelValue={features ?? []}
+            onFeaturesChange={(value) => updateArguments({ modelValue: value })}
             toolbar={({ drawing }) => (
-              <div style={TOOLBAR_STYLE}>
-                {DRAW_MODES.map((m) => (
+              <div style={{ position: 'absolute', top: '12px', left: '12px', zIndex: 2, display: 'flex', flexWrap: 'wrap', gap: '6px', alignItems: 'center', maxWidth: 'calc(100% - 24px)', padding: '8px', borderRadius: '8px', background: 'rgba(255, 255, 255, 0.95)', boxShadow: '0 1px 4px rgba(0, 0, 0, 0.25)' }}>
+                {drawModes.map((m) => (
                   <BaseButton
                     key={String(m.value)}
                     size="sm"
                     variant={drawing.mode === m.value ? 'primary' : 'secondary'}
-                    onClick={() => applyMode(drawing, m.value)}
+                    onClick={() => {
+                      if (m.value === undefined) {
+                        drawing.cancelDrawing();
+                      } else {
+                        drawing.startDrawing(m.value);
+                      }
+                    }}
                   >
                     {m.label}
                   </BaseButton>
                 ))}
 
-                <span style={{ width: 1, height: 20, background: '#cbd5e1' }} />
+                <span style={{ width: '1px', height: '20px', background: '#cbd5e1' }}></span>
 
                 <BaseButton
                   size="sm"

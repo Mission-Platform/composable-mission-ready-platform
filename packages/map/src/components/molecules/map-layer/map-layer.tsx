@@ -1,7 +1,7 @@
 import { type MpElement, type MpProperties } from '@mission-platform/forge';
 
-import { useLayer } from '../../composables/use-layer';
-import { useMap } from '../../composables/use-map';
+import { useLayer } from '../../../composables/use-layer';
+import { useMap } from '../../../composables/use-map';
 
 import type { LayerSpecification } from 'maplibre-gl';
 

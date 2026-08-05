@@ -1,8 +1,8 @@
-import { defineComponent } from 'vue';
+import { h, type MpChild } from '@mission-platform/forge';
 
-import { MapLayer, MapLibre, MapSource } from '@mission-platform/map/vue';
+import { MapLayer, MapLibre, MapSource } from '@mission-platform/map';
 
-import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 import type { FeatureCollection } from 'geojson';
 
 // ─── Shared fixtures ────────────────────────────────────────────────────────
@@ -38,32 +38,23 @@ const POLYGON: FeatureCollection = {
  * which has no intrinsic height, so a sized wrapper is required for the canvas
  * to appear.
  */
-const Frame = defineComponent({
-  name: 'MapFrame',
-  setup(_, { slots }) {
-    return () => (
-      <div style="width: 100%; height: 480px; border-radius: var(--mp-radius-md, 8px); overflow: hidden;">
-        {slots.default?.()}
-      </div>
-    );
-  },
-});
+const Frame = ({ children }: { children?: MpChild }) => (
+  <div style={{ width: '100%', height: '480px', borderRadius: 'var(--mp-radius-md, 8px)', overflow: 'hidden' }}>
+    {children}
+  </div>
+);
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: 'Map/MapLayer',
+  title: 'Molecules/Mapping/MapLayer',
   component: MapLayer,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
-        component: [
-          'The `@mission-platform/map` package is authored once in the neutral',
-          '`@mission-platform/forge` dialect and dual-built to **Vue** and **React**.',
-          'These stories use the Vue build (`@mission-platform/map/vue`). A matching',
-          'set of React stories lives alongside in `map-layer.react.stories.tsx`.',
-        ].join(' '),
+        component:
+          'The `@mission-platform/map` package is authored once in the neutral `@mission-platform/forge` dialect and dual-built to **Vue** and **React**.',
       },
     },
   },
@@ -76,52 +67,44 @@ type Story = StoryObj<typeof meta>;
 
 /** A translucent fill layer rendered from the demo polygon source. */
 export const FillLayer: Story = {
-  render: () => ({
-    components: { Frame, MapLibre, MapSource, MapLayer },
-    setup: () => ({
-      MAP_STYLE,
-      polygon: { type: 'geojson' as const, data: POLYGON },
-      fillLayer: {
-        id: 'demo-fill',
-        type: 'fill' as const,
-        source: 'demo',
-        paint: { 'fill-color': '#2563eb', 'fill-opacity': 0.25 },
-      },
-    }),
-    template: `
+  render: () => {
+    const polygon = { type: 'geojson' as const, data: POLYGON };
+    const fillLayer = {
+      id: 'demo-fill',
+      type: 'fill' as const,
+      source: 'demo',
+      paint: { 'fill-color': '#2563eb', 'fill-opacity': 0.25 },
+    };
+    return (
       <Frame>
-        <MapLibre :map-style="MAP_STYLE" :center="[8, 50]" :zoom="3">
-          <MapSource id="demo" :source="polygon">
-            <MapLayer :layer="fillLayer" />
+        <MapLibre mapStyle={MAP_STYLE} center={[8, 50]} zoom={3}>
+          <MapSource id="demo" source={polygon}>
+            <MapLayer layer={fillLayer} />
           </MapSource>
         </MapLibre>
       </Frame>
-    `,
-  }),
+    );
+  },
 };
 
 /** A three-pixel line layer rendered from the demo polygon source. */
 export const LineLayer: Story = {
-  render: () => ({
-    components: { Frame, MapLibre, MapSource, MapLayer },
-    setup: () => ({
-      MAP_STYLE,
-      polygon: { type: 'geojson' as const, data: POLYGON },
-      lineLayer: {
-        id: 'demo-line',
-        type: 'line' as const,
-        source: 'demo',
-        paint: { 'line-color': '#e11d48', 'line-width': 3 },
-      },
-    }),
-    template: `
+  render: () => {
+    const polygon = { type: 'geojson' as const, data: POLYGON };
+    const lineLayer = {
+      id: 'demo-line',
+      type: 'line' as const,
+      source: 'demo',
+      paint: { 'line-color': '#e11d48', 'line-width': 3 },
+    };
+    return (
       <Frame>
-        <MapLibre :map-style="MAP_STYLE" :center="[8, 50]" :zoom="3">
-          <MapSource id="demo" :source="polygon">
-            <MapLayer :layer="lineLayer" />
+        <MapLibre mapStyle={MAP_STYLE} center={[8, 50]} zoom={3}>
+          <MapSource id="demo" source={polygon}>
+            <MapLayer layer={lineLayer} />
           </MapSource>
         </MapLibre>
       </Frame>
-    `,
-  }),
+    );
+  },
 };

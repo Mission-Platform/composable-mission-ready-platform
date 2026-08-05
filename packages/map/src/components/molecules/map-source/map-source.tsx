@@ -1,7 +1,7 @@
-import { h, Slot, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { h, type MpElement, type MpProperties, Slot } from '@mission-platform/forge';
 
-import { useMap } from '../../composables/use-map';
-import { useSource } from '../../composables/use-source';
+import { useMap } from '../../../composables/use-map';
+import { useSource } from '../../../composables/use-source';
 
 import type { SourceSpecification } from 'maplibre-gl';
 

@@ -37,7 +37,11 @@ function specValuesEqual(a: unknown, b: unknown): boolean {
 
 /** The `source` a layer references, as a stable comparison key. */
 function layerSourceKey(spec: LayerSpecification): string | undefined {
-  return 'source' in spec ? JSON.stringify(spec.source) : undefined;
+  if (typeof spec !== 'object' || spec === null) {
+    return undefined;
+  }
+  const nonPrimitive: object = spec;
+  return 'source' in nonPrimitive ? JSON.stringify((nonPrimitive as { source: unknown }).source) : undefined;
 }
 
 /**
@@ -154,7 +158,13 @@ export function useLayer(map: Map | undefined, options: UseLayerOptions): void {
 
     // The source a layer references (a string ID). Background layers and layers
     // with an inline source object have none, so there is nothing to await.
-    const sourceId = 'source' in spec && typeof spec.source === 'string' ? spec.source : undefined;
+    let sourceId: string | undefined;
+    if (typeof spec === 'object' && spec !== null) {
+      const nonPrimitive: object = spec;
+      if ('source' in nonPrimitive && typeof (nonPrimitive as { source: unknown }).source === 'string') {
+        sourceId = (nonPrimitive as { source: string }).source;
+      }
+    }
 
     if (!map.getLayer(spec.id)) {
       if (sourceId && !map.getSource(sourceId)) {
