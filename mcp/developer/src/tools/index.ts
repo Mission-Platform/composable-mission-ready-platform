@@ -4,15 +4,37 @@
  * usage, and the creation and development of packages, apps and workers, plus
  * cross-cutting discovery.
  */
+
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+
+import { getGuide, GUIDE_IDS } from '@mission-platform/mcp-shared/knowledge/guides';
+import {
+  appFiles,
+  componentFiles,
+  composableFiles,
+  crateFiles,
+  normalizeComposableName,
+  packageFiles,
+  storeFiles,
+  utilFiles,
+  workerFiles,
+  type ScaffoldAtomicLevel,
+} from '@mission-platform/mcp-shared/knowledge/templates';
+import { getComponentUsage, listComponents } from '@mission-platform/mcp-shared/repo/components';
+import { groupDir, type WorkspaceGroup } from '@mission-platform/mcp-shared/repo/paths';
+import {
+  findMember,
+  listDocs,
+  listGroup,
+  readDoc as readDocument,
+  readMemberDetails,
+} from '@mission-platform/mcp-shared/repo/scanner';
+import { readTokens } from '@mission-platform/mcp-shared/repo/tokens';
 import { z } from 'zod';
 
-import { getGuide, GUIDE_IDS } from '../knowledge/guides.ts';
-import { appFiles, crateFiles, packageFiles, workerFiles } from '../knowledge/templates.ts';
-import { getComponentUsage, listComponents } from '../repo/components.ts';
-import { findMember, listDocs, listGroup, readDoc as readDocument, readMemberDetails } from '../repo/scanner.ts';
-import { writeScaffold } from '../scaffold/writer.ts';
+import { validateName, writeIntoPackage, writeScaffold } from '../scaffold/writer.ts';
 
-import type { WorkspaceGroup } from '../repo/paths.ts';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
 function text(value: string) {
@@ -21,6 +43,38 @@ function text(value: string) {
 
 function json(value: unknown) {
   return text(JSON.stringify(value, null, 2));
+}
+
+function toolError(error: unknown) {
+  return {
+    content: [{ type: 'text' as const, text: error instanceof Error ? error.message : String(error) }],
+    isError: true,
+  };
+}
+
+/** Resolve `packages/<name>` (accepts bare folder or `@mission-platform/<name>`). */
+function resolvePackageTarget(packageName: string): { packageDir: string; relativePackageDir: string; folder: string } {
+  const folder = packageName.replace(/^@mission-platform\//, '').trim();
+  if (!folder) {
+    throw new Error('Provide a package folder name (e.g. "components").');
+  }
+  const nameError = validateName(folder);
+  if (nameError) {
+    throw new Error(nameError);
+  }
+  const packageDir = join(groupDir('packages'), folder);
+  const relativePackageDir = `packages/${folder}`;
+  if (!existsSync(packageDir)) {
+    throw new Error(`Package "${relativePackageDir}" does not exist.`);
+  }
+  return { packageDir, relativePackageDir, folder };
+}
+
+function normalizeUnitName(raw: string): string {
+  return raw
+    .replaceAll(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replaceAll(/[\s_]+/g, '-')
+    .toLowerCase();
 }
 
 export function registerTools(server: McpServer): void {
@@ -108,18 +162,42 @@ export function registerTools(server: McpServer): void {
     },
   );
 
+  server.registerTool(
+    'get_tokens',
+    {
+      description: 'reads Mission Platform design tokens (optionally one category) from @mission-platform/tokens.',
+      inputSchema: {
+        category: z.string().optional().describe('Token category (e.g. palette, spacing, typography).'),
+      },
+    },
+    async (args) => {
+      try {
+        return json(readTokens(args.category));
+      } catch (error) {
+        return text(error instanceof Error ? error.message : String(error));
+      }
+    },
+  );
+
   // ---- Component usage ------------------------------------------------------
   server.registerTool(
     'list_components',
     {
-      description: 'List every component in @mission-platform/components with its exported symbols.',
+      description:
+        'List every component in @mission-platform/components with its exported symbols and atomic-design level (atoms/molecules/organisms/templates/pages).',
       inputSchema: {
         filter: z.string().optional().describe('Optional substring to filter component slugs.'),
       },
     },
     async (args) => {
       const filter = args.filter?.trim().toLowerCase();
-      const components = listComponents().filter((component) => !filter || component.slug.includes(filter));
+      const components = listComponents().filter(
+        (component) =>
+          !filter ||
+          component.slug.includes(filter) ||
+          component.level.includes(filter) ||
+          component.relativePath.includes(filter),
+      );
       if (components.length === 0) {
         return text(filter ? `No components match "${filter}".` : 'No components found.');
       }
@@ -147,6 +225,8 @@ export function registerTools(server: McpServer): void {
       }
       const sections = [
         `# ${usage.componentName}  (\`${usage.slug}\`)`,
+        `Level: ${usage.level}`,
+        `Path: src/components/${usage.relativePath}`,
         `Exports: ${usage.exports.join(', ')}`,
         `Stories: ${usage.stories.length > 0 ? usage.stories.join(', ') : 'none found'}`,
         '',
@@ -373,10 +453,192 @@ export function registerTools(server: McpServer): void {
         const result = writeScaffold({ group: 'crates', name, files, apply: args.apply === true });
         return json(result);
       } catch (error) {
-        return {
-          content: [{ type: 'text' as const, text: error instanceof Error ? error.message : String(error) }],
-          isError: true,
-        };
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'scaffold_component',
+    {
+      description:
+        'Generate a convention-compliant atomic-design component under packages/<package>/src/components/<level>/<name>/ (tsx + stories + spec + folder index, barrel update). Levels: atom|molecule|organism|template|page. Story title <Level>/<Area>/<Comp>. Dry-run unless apply=true.',
+      inputSchema: {
+        name: z.string().describe('Kebab-case component name, e.g. "base-input".'),
+        level: z
+          .enum(['atom', 'molecule', 'organism', 'template', 'page'])
+          .describe('Atomic design level (singular).'),
+        area: z
+          .string()
+          .optional()
+          .describe('Functional area for the Storybook title (e.g. "Forms", "Data"). Defaults to "General".'),
+        package: z
+          .string()
+          .optional()
+          .describe('Target package folder under packages/ (default: "components").'),
+        description: z.string().optional().describe('Short component description.'),
+        apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
+      },
+    },
+    async (args) => {
+      const name = normalizeUnitName(args.name?.trim() ?? '');
+      if (!name) {
+        return text('Provide a kebab-case "name".');
+      }
+      const nameError = validateName(name);
+      if (nameError) {
+        return toolError(new Error(nameError));
+      }
+      try {
+        const target = resolvePackageTarget(args.package?.trim() || 'components');
+        const scaffold = componentFiles({
+          name,
+          level: args.level as ScaffoldAtomicLevel,
+          area: args.area?.trim() || 'General',
+          description: args.description?.trim(),
+        });
+        const result = writeIntoPackage({
+          packageDir: target.packageDir,
+          relativePackageDir: target.relativePackageDir,
+          files: scaffold.files,
+          barrelUpdates: [{ relativePath: 'src/components/index.ts', exportLine: scaffold.barrelExport }],
+          apply: args.apply === true,
+        });
+        return json({
+          ...result,
+          componentName: scaffold.componentName,
+          storyTitle: scaffold.storyTitle,
+          levelFolder: scaffold.levelFolder,
+        });
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'scaffold_composable',
+    {
+      description:
+        'Generate a convention-compliant composable under packages/<package>/src/composables/<name>/ (<name>.ts + .spec.ts + barrel). Write-once forge hooks. Dry-run unless apply=true.',
+      inputSchema: {
+        name: z.string().describe('Kebab-case composable name, e.g. "use-focus-trap" (use- prefix added if missing).'),
+        package: z.string().describe('Target package folder under packages/, e.g. "observers".'),
+        description: z.string().optional().describe('Short composable description.'),
+        apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
+      },
+    },
+    async (args) => {
+      const rawName = args.name?.trim() ?? '';
+      if (!rawName) {
+        return text('Provide a kebab-case "name".');
+      }
+      const packageName = args.package?.trim();
+      if (!packageName) {
+        return text('Provide a target "package" folder under packages/.');
+      }
+      try {
+        const name = normalizeComposableName(normalizeUnitName(rawName));
+        const nameError = validateName(name);
+        if (nameError) {
+          throw new Error(nameError);
+        }
+        const target = resolvePackageTarget(packageName);
+        const scaffold = composableFiles({ name, description: args.description?.trim() });
+        const result = writeIntoPackage({
+          packageDir: target.packageDir,
+          relativePackageDir: target.relativePackageDir,
+          files: scaffold.files,
+          barrelUpdates: [{ relativePath: 'src/composables/index.ts', exportLine: scaffold.barrelExport }],
+          apply: args.apply === true,
+        });
+        return json({ ...result, functionName: scaffold.functionName, name: scaffold.name });
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'scaffold_store',
+    {
+      description:
+        'Generate a convention-compliant framework-neutral store under packages/<package>/src/stores/<name>/ (<name>.ts + .spec.ts + barrel). Dry-run unless apply=true.',
+      inputSchema: {
+        name: z.string().describe('Kebab-case store name, e.g. "theme".'),
+        package: z.string().describe('Target package folder under packages/, e.g. "components".'),
+        description: z.string().optional().describe('Short store description.'),
+        apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
+      },
+    },
+    async (args) => {
+      const name = normalizeUnitName(args.name?.trim() ?? '');
+      if (!name) {
+        return text('Provide a kebab-case "name".');
+      }
+      const packageName = args.package?.trim();
+      if (!packageName) {
+        return text('Provide a target "package" folder under packages/.');
+      }
+      const nameError = validateName(name);
+      if (nameError) {
+        return toolError(new Error(nameError));
+      }
+      try {
+        const target = resolvePackageTarget(packageName);
+        const scaffold = storeFiles({ name, description: args.description?.trim() });
+        const result = writeIntoPackage({
+          packageDir: target.packageDir,
+          relativePackageDir: target.relativePackageDir,
+          files: scaffold.files,
+          barrelUpdates: [{ relativePath: 'src/stores/index.ts', exportLine: scaffold.barrelExport }],
+          apply: args.apply === true,
+        });
+        return json({ ...result, name: scaffold.name, pascal: scaffold.pascal });
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'scaffold_util',
+    {
+      description:
+        'Generate a convention-compliant util under packages/<package>/src/utils/<name>/ (<name>.ts + .spec.ts + barrel). Dry-run unless apply=true.',
+      inputSchema: {
+        name: z.string().describe('Kebab-case util name, e.g. "format-date".'),
+        package: z.string().describe('Target package folder under packages/, e.g. "d3".'),
+        description: z.string().optional().describe('Short util description.'),
+        apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
+      },
+    },
+    async (args) => {
+      const name = normalizeUnitName(args.name?.trim() ?? '');
+      if (!name) {
+        return text('Provide a kebab-case "name".');
+      }
+      const packageName = args.package?.trim();
+      if (!packageName) {
+        return text('Provide a target "package" folder under packages/.');
+      }
+      const nameError = validateName(name);
+      if (nameError) {
+        return toolError(new Error(nameError));
+      }
+      try {
+        const target = resolvePackageTarget(packageName);
+        const scaffold = utilFiles({ name, description: args.description?.trim() });
+        const result = writeIntoPackage({
+          packageDir: target.packageDir,
+          relativePackageDir: target.relativePackageDir,
+          files: scaffold.files,
+          barrelUpdates: [{ relativePath: 'src/utils/index.ts', exportLine: scaffold.barrelExport }],
+          apply: args.apply === true,
+        });
+        return json({ ...result, name: scaffold.name, functionName: scaffold.functionName });
+      } catch (error) {
+        return toolError(error);
       }
     },
   );

@@ -1,0 +1,9 @@
+{
+  "extends": "@mission-platform/typescript-config/node",
+  "compilerOptions": {
+    "types": ["node"],
+    "resolveJsonModule": true,
+    "isolatedModules": true
+  },
+  "include": ["src/**/*.ts", "../shared/**/*.ts", "*.config.ts", "*.config.js", "*.config.mjs"]
+}

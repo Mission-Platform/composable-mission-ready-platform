@@ -1,0 +1,15 @@
+{
+  "name": "@mission-platform/mcp-shared",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    "./repo/*": "./src/repo/*.ts",
+    "./knowledge/*": "./src/knowledge/*.ts",
+    "./resources/*": "./src/resources/*.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "catalog:mcp",
+    "zod": "catalog:mcp"
+  }
+}

@@ -1,99 +1,44 @@
-# @mission-platform/mcp
+# Mission Platform MCP Servers
 
-A **Model Context Protocol (MCP)** server that helps AI assistants use the
-Mission Platform monorepo. It exposes the repository's conventions, live
-inventory, and scaffolding as MCP **tools**, **resources**, and **prompts** so
-an assistant can correctly:
+The Mission Platform provides two Model Context Protocol (MCP) servers to assist both internal developers and external consumers.
 
-- **use components** from `@mission-platform/components`,
-- **create** and **develop** packages,
-- **create** and **develop** apps,
-- **create** and **develop** Cloudflare Workers.
+## Server Split
 
-The server has **no runtime dependencies**. It is compiled with TypeScript
-(`tsc`) via Turborepo and run from its built `dist/` output on **Node.js 24+**.
+- **[Developer Server](./developer/README.md)** (`@mission-platform/mcp-developer`):
+  Focused on development WITHIN the Mission Platform monorepo. It includes tools for scaffolding new packages/apps/workers, atomic-design components, composables/stores/utils, curated guides, and deep repository inspection.
+- **[Consumer Server](./consumer/README.md)** (`@mission-platform/mcp-consumer`):
+  Focused on building apps ON TOP of the published Mission Platform packages. It includes tools for package installation, framework selection via conditions, and component usage.
 
-## Building & running
+## Shared Logic
 
+Genuine shared logic (workspace scanning, component discovery, curated guides, scaffold templates) is extracted into `mcp/shared/` and used by both servers.
+
+## Building & Running
+
+Build all servers from the root:
 ```bash
-# From the repo root — build via Turborepo (caches + honours the pipeline)
-pnpm exec turbo run build --filter @mission-platform/mcp
-
-# Run the compiled server
-node mcp/dist/index.js
-# or, from mcp/
-pnpm build          # → tsc --project tsconfig.build.json
-pnpm start          # → node dist/index.js
-pnpm test           # → node --test
+pnpm exec turbo run build --filter @mission-platform/mcp-*
 ```
 
-> During development you can run the raw TypeScript source with `pnpm dev`
-> (`node --watch src/index.ts`), which relies on Node's native type-stripping.
-> The published/registered entry point is always the compiled `dist/index.js`.
+Run specific server:
+```bash
+# Developer
+node mcp/developer/dist/index.js
 
-The server speaks JSON-RPC 2.0 over **stdio** (newline-delimited). Diagnostics go
-to `stderr`; only protocol messages are written to `stdout`.
-
-The repository root is auto-detected by walking up to the nearest
-`pnpm-workspace.yaml`. Override it with the `MISSION_REPO_ROOT` environment
-variable if needed.
-
-## Registering with an MCP client
-
-Most MCP clients accept a command + args. Point them at this entry file:
-
-```jsonc
-{
-  "mcpServers": {
-    "mission-platform": {
-      "command": "node",
-      "args": ["/absolute/path/to/composable_mission_ready_platform/mcp/dist/index.js"],
-    },
-  },
-}
+# Consumer
+node mcp/consumer/dist/index.js
 ```
 
-## Tools
+## Developer highlights
 
-| Tool                                                    | Purpose                                                                                                                                                                                             |
-| ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `get_guide`                                             | Curated guide for a workflow (`overview`, `conventions`, `component-usage`, `package-creation`, `package-development`, `app-creation`, `app-development`, `worker-creation`, `worker-development`). |
-| `list_docs` / `read_doc` / `search_docs`                | Browse and search the repository `docs/`.                                                                                                                                                           |
-| `list_components`                                       | Every component in `@mission-platform/components` with its exports.                                                                                                                                 |
-| `get_component_usage`                                   | Props interface, doc comment, stories, and Vue/React import snippets for a component.                                                                                                               |
-| `list_packages` / `list_apps` / `list_workers`          | Live workspace inventory.                                                                                                                                                                           |
-| `get_member_info`                                       | Manifest scripts/deps plus `llms.txt`/`README` for one member.                                                                                                                                      |
-| `scaffold_package` / `scaffold_app` / `scaffold_worker` | Generate a convention-compliant skeleton. Dry-run by default; pass `apply: true` to write files.                                                                                                    |
+- Guides: `atomic-component-design`, `composable-authoring`, `store-authoring`, `util-authoring` (plus package/app/worker workflows).
+- Scaffold tools: `scaffold_component`, `scaffold_composable`, `scaffold_store`, `scaffold_util` (dry-run by default; `apply: true` to write).
+- `list_components` surfaces each component's atomic **level** (`atoms` / `molecules` / …).
 
-## Resources
-
-- `mission://guide/<id>` — each curated guide.
-- `mission://inventory` — live JSON inventory of every workspace member and component.
-- `mission://docs/<slug>` — the raw repository documentation.
-
-## Prompts
-
-Ready-to-run, guide-embedded prompts for each workflow: `use-component`,
-`create-package`, `develop-package`, `create-app`, `develop-app`,
-`create-worker`, `develop-worker`.
-
-## Design
-
-```
-mcp/
-├── src/
-│   ├── index.ts            # entry point — assembles + serves over stdio
-│   ├── protocol/           # dependency-free MCP/JSON-RPC core + stdio transport
-│   ├── repo/               # read-only workspace/component/doc scanning
-│   ├── knowledge/          # curated guides + scaffolding templates
-│   ├── scaffold/           # safe file writer (dry-run by default)
-│   ├── tools/              # tool registry
-│   ├── resources/          # resource provider
-│   └── prompts/            # prompt registry
-├── test/                   # node --test suite (zero dependencies)
-└── dist/                   # compiled output (tsc) — the run entry point
-```
-
-All repository inspection is **read-only**; the only write path is the
-scaffolding tools, which refuse to overwrite an existing folder and require an
-explicit `apply: true`.
+## Documentation
+- [External Consumer Setup](../docs/external-consumer-setup.md)
+- [Framework Best Practices](../docs/framework-best-practices.md)
+- [Atomic Component Design](../docs/atomic-component-design.md)
+- [Composable Authoring](../docs/composable-authoring.md)
+- [Store Authoring](../docs/store-authoring.md)
+- [Util Authoring](../docs/util-authoring.md)

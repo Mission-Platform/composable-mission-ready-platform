@@ -4,11 +4,11 @@
  * relevant curated guide, so an AI assistant can be dropped straight into one
  * of the seven Mission Platform workflows.
  */
-import { z } from 'zod';
 
-import { getGuide, type GuideId } from '../knowledge/guides.ts';
-import { getComponentUsage, listComponents } from '../repo/components.ts';
-import { listGroup } from '../repo/scanner.ts';
+import { getGuide, type GuideId } from '@mission-platform/mcp-shared/knowledge/guides';
+import { getComponentUsage, listComponents } from '@mission-platform/mcp-shared/repo/components';
+import { listGroup } from '@mission-platform/mcp-shared/repo/scanner';
+import { z } from 'zod';
 
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 

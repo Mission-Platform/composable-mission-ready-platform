@@ -10,11 +10,11 @@ import { realpathSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { registerResources } from '@mission-platform/mcp-shared/resources/index';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
 import { registerPrompts } from './prompts/index.ts';
-import { registerResources } from './resources/index.ts';
 import { registerTools } from './tools/index.ts';
 
 export function createServer(): McpServer {

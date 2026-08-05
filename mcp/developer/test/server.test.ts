@@ -49,6 +49,10 @@ describe('tools', () => {
       'scaffold_app',
       'scaffold_worker',
       'scaffold_crate',
+      'scaffold_component',
+      'scaffold_composable',
+      'scaffold_store',
+      'scaffold_util',
     ]) {
       assert.ok(names.has(expected), `missing tool ${expected}`);
     }
@@ -59,15 +63,23 @@ describe('tools', () => {
     assert.match(body, /Creating a Package/);
   });
 
-  it('lists components from the components package', async () => {
+  it('returns the atomic component design guide', async () => {
+    const body = await callTool('get_guide', { area: 'atomic-component-design' });
+    assert.match(body, /Atomic Component Design/);
+    assert.match(body, /Atoms\/Forms\/BaseInput/);
+  });
+
+  it('lists components from the components package with atomic level', async () => {
     const body = await callTool('list_components');
     assert.match(body, /base-button/);
+    assert.match(body, /"level": "atoms"/);
   });
 
   it('describes a component with its props and imports', async () => {
     const body = await callTool('get_component_usage', { component: 'BaseButton' });
     assert.match(body, /@mission-platform\/components\/vue/);
     assert.match(body, /ButtonProperties|Props/);
+    assert.match(body, /Level: atoms/);
   });
 
   it('lists packages, apps and workers', async () => {
@@ -92,6 +104,59 @@ describe('tools', () => {
     assert.ok(result.files.includes('src/lib.rs'));
     assert.ok(result.files.includes('build.rs'));
     assert.ok(result.files.includes('tests/wasm.rs'));
+  });
+
+  it('scaffolds a component as a dry run without writing files', async () => {
+    const body = await callTool('scaffold_component', {
+      name: 'base-mcp-probe',
+      level: 'atom',
+      area: 'Forms',
+    });
+    const result = JSON.parse(body) as {
+      applied: boolean;
+      files: string[];
+      storyTitle: string;
+      levelFolder: string;
+    };
+    assert.equal(result.applied, false);
+    assert.equal(result.levelFolder, 'atoms');
+    assert.equal(result.storyTitle, 'Atoms/Forms/BaseMcpProbe');
+    assert.ok(result.files.some((file) => file.endsWith('base-mcp-probe.tsx')));
+    assert.ok(result.files.some((file) => file.endsWith('base-mcp-probe.stories.tsx')));
+    assert.ok(result.files.some((file) => file.endsWith('base-mcp-probe.spec.ts')));
+  });
+
+  it('scaffolds a composable as a dry run without writing files', async () => {
+    const body = await callTool('scaffold_composable', {
+      name: 'focus-trap',
+      package: 'observers',
+    });
+    const result = JSON.parse(body) as { applied: boolean; files: string[]; name: string; functionName: string };
+    assert.equal(result.applied, false);
+    assert.equal(result.name, 'use-focus-trap');
+    assert.equal(result.functionName, 'useFocusTrap');
+    assert.ok(result.files.some((file) => file.includes('src/composables/use-focus-trap/')));
+  });
+
+  it('scaffolds a store as a dry run without writing files', async () => {
+    const body = await callTool('scaffold_store', {
+      name: 'mcp-probe',
+      package: 'components',
+    });
+    const result = JSON.parse(body) as { applied: boolean; files: string[] };
+    assert.equal(result.applied, false);
+    assert.ok(result.files.some((file) => file.includes('src/stores/mcp-probe/')));
+  });
+
+  it('scaffolds a util as a dry run without writing files', async () => {
+    const body = await callTool('scaffold_util', {
+      name: 'mcp-probe-util',
+      package: 'd3',
+    });
+    const result = JSON.parse(body) as { applied: boolean; files: string[]; functionName: string };
+    assert.equal(result.applied, false);
+    assert.equal(result.functionName, 'mcpProbeUtil');
+    assert.ok(result.files.some((file) => file.includes('src/utils/mcp-probe-util/')));
   });
 
   it('reports a tool error for an invalid scaffold name', async () => {

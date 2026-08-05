@@ -31,6 +31,28 @@ export interface CrateScaffoldOptions {
   description: string;
 }
 
+/** Atomic-design levels accepted by `scaffold_component`. */
+export type ScaffoldAtomicLevel = 'atom' | 'molecule' | 'organism' | 'template' | 'page';
+
+export interface ComponentScaffoldOptions {
+  /** Kebab-case component folder name, e.g. `base-input`. */
+  name: string;
+  /** Atomic level (singular). */
+  level: ScaffoldAtomicLevel;
+  /**
+   * Functional area segment of the Storybook title
+   * (`<Level>/<Area>/<Component>`), e.g. `Forms`, `Data`, `Display`.
+   */
+  area: string;
+  description?: string;
+}
+
+export interface NamedUnitScaffoldOptions {
+  /** Kebab-case unit name, e.g. `use-focus-trap` or `format-date`. */
+  name: string;
+  description?: string;
+}
+
 function toPascalCase(name: string): string {
   return name
     .split(/[-_\s]+/)
@@ -42,6 +64,41 @@ function toPascalCase(name: string): string {
 function toCamelCase(name: string): string {
   const pascal = toPascalCase(name);
   return pascal.charAt(0).toLowerCase() + pascal.slice(1);
+}
+
+/** Map singular scaffold level → plural folder name (`atom` → `atoms`). */
+export function atomicLevelFolder(level: ScaffoldAtomicLevel): string {
+  return level === 'page' ? 'pages' : `${level}s`;
+}
+
+/** Capitalised plural used in Storybook titles (`Atoms`, `Pages`). */
+export function atomicLevelTitle(level: ScaffoldAtomicLevel): string {
+  const folder = atomicLevelFolder(level);
+  return folder.charAt(0).toUpperCase() + folder.slice(1);
+}
+
+/** Normalise a functional-area token to PascalCase (`forms` → `Forms`). */
+export function toAreaTitle(area: string): string {
+  return area
+    .split(/[-_/\s]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('');
+}
+
+/** Strip a leading `Base` from a PascalCase name for `*Properties` types. */
+function toPropertiesName(pascal: string): string {
+  const stem = pascal.startsWith('Base') && pascal.length > 4 ? pascal.slice(4) : pascal;
+  return `${stem}Properties`;
+}
+
+/** Ensure composable folder/function names start with `use-` / `use`. */
+export function normalizeComposableName(name: string): string {
+  const kebab = name
+    .replaceAll(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replaceAll(/[\s_]+/g, '-')
+    .toLowerCase();
+  return kebab.startsWith('use-') || kebab === 'use' ? kebab : `use-${kebab}`;
 }
 
 const ESLINT_CONFIG = `import baseConfig from '@mission-platform/eslint-config';
@@ -222,6 +279,7 @@ export default defineVitestConfig({
     'src/index.ts': `export * from './components/index.ts';
 export * from './composables/index.ts';
 export * from './locales/index.ts';
+export * from './stores/index.ts';
 export * from './utils/index.ts';
 `,
     'src/components/index.ts': `// Export UI components from here
@@ -233,16 +291,19 @@ export {};
     'src/locales/index.ts': `// Export i18n translations from here
 export {};
 `,
-    'src/utils/index.ts': `export { ${camel} } from './${name}';
+    'src/stores/index.ts': `// Export framework-neutral stores from here
+export {};
 `,
-    [`src/utils/${name}.ts`]: `/**
+    'src/utils/index.ts': `export { ${camel} } from './${name}/${name}';
+`,
+    [`src/utils/${name}/${name}.ts`]: `/**
  * ${description || `Public API for the ${scoped} package.`}
  */
 export function ${camel}(): string {
   return '${name}';
 }
 `,
-    [`src/utils/${name}.spec.ts`]: `import { describe, expect, it } from 'vitest';
+    [`src/utils/${name}/${name}.spec.ts`]: `import { describe, expect, it } from 'vitest';
 
 import { ${camel} } from './${name}';
 
@@ -587,6 +648,284 @@ ${description}
     'tests/wasm.rs': wasmTestRs,
     'README.md': readme,
   };
+}
+
+/**
+ * Files for a new atomic-design component under
+ * `src/components/<level>/<name>/` (paths relative to the target package).
+ */
+export function componentFiles(options: ComponentScaffoldOptions): {
+  files: Record<string, string>;
+  barrelExport: string;
+  levelFolder: string;
+  componentName: string;
+  storyTitle: string;
+} {
+  const { name, level } = options;
+  const description = options.description?.trim() || `Write-once ${toPascalCase(name)} component.`;
+  const levelFolder = atomicLevelFolder(level);
+  const levelTitle = atomicLevelTitle(level);
+  const areaTitle = toAreaTitle(options.area || 'General');
+  const componentName = toPascalCase(name);
+  const propertiesName = toPropertiesName(componentName);
+  const storyTitle = `${levelTitle}/${areaTitle}/${componentName}`;
+  const baseDir = `src/components/${levelFolder}/${name}`;
+
+  const files: Record<string, string> = {
+    [`${baseDir}/${name}.tsx`]: `import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
+
+export interface ${propertiesName} extends MpProperties {
+  /** Optional accessible label forwarded to the root element. */
+  ariaLabel?: string;
+}
+
+/**
+ * \`${componentName}\` — ${description}
+ *
+ * Authored once in the neutral JSX dialect (\`@mission-platform/forge\`) and
+ * compiled to every supported framework by \`@mission-platform/vite-plugin-forge\`.
+ */
+export function ${componentName}(properties: Readonly<${propertiesName}>): MpElement {
+  return (
+    <div className="${name}" aria-label={properties.ariaLabel}>
+      {properties.children}
+    </div>
+  );
+}
+`,
+    [`${baseDir}/${name}.stories.tsx`]: `import { h } from '@mission-platform/forge';
+
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ${componentName} } from './${name}';
+
+/**
+ * Storybook entry for \`${componentName}\`.
+ * Title convention: \`<Level>/<FunctionalArea>/<Component>\`.
+ */
+const meta = {
+  title: '${storyTitle}',
+  component: ${componentName},
+  tags: ['autodocs'],
+  args: {},
+  render: (arguments_) => <${componentName} {...arguments_}>Content</${componentName}>,
+} satisfies Meta<typeof ${componentName}>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {};
+`,
+    [`${baseDir}/${name}.spec.ts`]: `import { describe, expect, it } from 'vitest';
+
+import { ${componentName} } from './${name}';
+
+describe('${componentName}', () => {
+  it('is a callable write-once component', () => {
+    expect(typeof ${componentName}).toBe('function');
+  });
+});
+`,
+    [`${baseDir}/index.ts`]: `export { ${componentName}, type ${propertiesName} } from './${name}';
+`,
+  };
+
+  const barrelExport = `export { ${componentName}, type ${propertiesName} } from './${levelFolder}/${name}';`;
+
+  return { files, barrelExport, levelFolder, componentName, storyTitle };
+}
+
+/**
+ * Files for a new composable under `src/composables/<name>/`
+ * (paths relative to the target package).
+ */
+export function composableFiles(options: NamedUnitScaffoldOptions): {
+  files: Record<string, string>;
+  barrelExport: string;
+  name: string;
+  functionName: string;
+} {
+  const name = normalizeComposableName(options.name);
+  const functionName = toCamelCase(name);
+  const description = options.description?.trim() || `Framework-neutral ${functionName} composable.`;
+  const baseDir = `src/composables/${name}`;
+
+  const files: Record<string, string> = {
+    [`${baseDir}/${name}.ts`]: `import { useState } from '@mission-platform/forge';
+
+/**
+ * ${description}
+ *
+ * Write-once against \`@mission-platform/forge\` neutral hooks so the same source
+ * compiles to every supported framework.
+ */
+export function ${functionName}(initial = false): {
+  value: boolean;
+  setValue: (next: boolean) => void;
+  toggle: () => void;
+} {
+  const [value, setValue] = useState(initial);
+  return {
+    value,
+    setValue,
+    toggle: () => setValue(!value),
+  };
+}
+`,
+    [`${baseDir}/${name}.spec.ts`]: `import { describe, expect, it } from 'vitest';
+
+import { ${functionName} } from './${name}';
+
+describe('${functionName}', () => {
+  it('is a callable composable', () => {
+    expect(typeof ${functionName}).toBe('function');
+  });
+});
+`,
+  };
+
+  const barrelExport = `export { ${functionName} } from './${name}/${name}';`;
+  return { files, barrelExport, name, functionName };
+}
+
+/**
+ * Files for a new framework-neutral store under `src/stores/<name>/`.
+ */
+export function storeFiles(options: NamedUnitScaffoldOptions): {
+  files: Record<string, string>;
+  barrelExport: string;
+  name: string;
+  pascal: string;
+} {
+  const name = options.name;
+  const pascal = toPascalCase(name);
+  const camel = toCamelCase(name);
+  const description = options.description?.trim() || `Framework-neutral ${pascal} store.`;
+  const baseDir = `src/stores/${name}`;
+
+  const files: Record<string, string> = {
+    [`${baseDir}/${name}.ts`]: `/**
+ * ${description}
+ *
+ * Plain module store (no framework reactivity). Components subscribe with
+ * forge \`useState\`/\`useEffect\` so the same source stays portable.
+ */
+
+export interface ${pascal}Snapshot {
+  /** Example flag held by the store. */
+  enabled: boolean;
+}
+
+const listeners = new Set<() => void>();
+
+let snapshot: ${pascal}Snapshot = {
+  enabled: false,
+};
+
+function notify(): void {
+  for (const listener of listeners) {
+    listener();
+  }
+}
+
+/** Immutable snapshot of the current store state. */
+export function get${pascal}Snapshot(): ${pascal}Snapshot {
+  return snapshot;
+}
+
+/** Replace the enabled flag and notify subscribers. */
+export function set${pascal}Enabled(enabled: boolean): void {
+  if (snapshot.enabled === enabled) {
+    return;
+  }
+  snapshot = { ...snapshot, enabled };
+  notify();
+}
+
+/** Subscribe to store changes. Returns an unsubscribe function. */
+export function subscribe${pascal}(listener: () => void): () => void {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+/** Camel-case alias helpers for ergonomic imports. */
+export const ${camel}Store = {
+  getSnapshot: get${pascal}Snapshot,
+  setEnabled: set${pascal}Enabled,
+  subscribe: subscribe${pascal},
+};
+`,
+    [`${baseDir}/${name}.spec.ts`]: `import { describe, expect, it } from 'vitest';
+
+import { get${pascal}Snapshot, set${pascal}Enabled, subscribe${pascal} } from './${name}';
+
+describe('${name} store', () => {
+  it('updates snapshot and notifies subscribers', () => {
+    let calls = 0;
+    const unsubscribe = subscribe${pascal}(() => {
+      calls += 1;
+    });
+
+    set${pascal}Enabled(true);
+    expect(get${pascal}Snapshot().enabled).toBe(true);
+    expect(calls).toBeGreaterThanOrEqual(1);
+
+    unsubscribe();
+  });
+});
+`,
+  };
+
+  const barrelExport = `export {
+  get${pascal}Snapshot,
+  set${pascal}Enabled,
+  subscribe${pascal},
+  ${camel}Store,
+  type ${pascal}Snapshot,
+} from './${name}/${name}';`;
+
+  return { files, barrelExport, name, pascal };
+}
+
+/**
+ * Files for a new util under `src/utils/<name>/`.
+ */
+export function utilFiles(options: NamedUnitScaffoldOptions): {
+  files: Record<string, string>;
+  barrelExport: string;
+  name: string;
+  functionName: string;
+} {
+  const name = options.name;
+  const functionName = toCamelCase(name);
+  const description = options.description?.trim() || `Utility helper: ${functionName}.`;
+  const baseDir = `src/utils/${name}`;
+
+  const files: Record<string, string> = {
+    [`${baseDir}/${name}.ts`]: `/**
+ * ${description}
+ */
+export function ${functionName}<T>(value: T): T {
+  return value;
+}
+`,
+    [`${baseDir}/${name}.spec.ts`]: `import { describe, expect, it } from 'vitest';
+
+import { ${functionName} } from './${name}';
+
+describe('${functionName}', () => {
+  it('returns the input value', () => {
+    expect(${functionName}('ok')).toBe('ok');
+    expect(${functionName}(42)).toBe(42);
+  });
+});
+`,
+  };
+
+  const barrelExport = `export { ${functionName} } from './${name}/${name}';`;
+  return { files, barrelExport, name, functionName };
 }
 
 export { toPascalCase, toCamelCase, TURBO_LEAF };

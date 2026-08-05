@@ -1,0 +1,616 @@
+/**
+ * Curated, task-focused guidance for the seven workflows this server assists
+ * with. The text is distilled from the repository's own documentation
+ * (`docs/`, `AGENTS.md`, `CONTRIBUTING.md`) and the observed conventions of the
+ * existing workspaces, so the advice matches how the monorepo actually works.
+ */
+
+export type GuideId =
+  | 'overview'
+  | 'conventions'
+  | 'component-usage'
+  | 'atomic-component-design'
+  | 'composable-authoring'
+  | 'store-authoring'
+  | 'util-authoring'
+  | 'package-creation'
+  | 'package-development'
+  | 'app-creation'
+  | 'app-development'
+  | 'worker-creation'
+  | 'worker-development'
+  | 'framework-vue'
+  | 'framework-react'
+  | 'framework-solid'
+  | 'framework-svelte'
+  | 'framework-web-components'
+  | 'external-setup';
+
+export interface Guide {
+  id: GuideId;
+  title: string;
+  body: string;
+}
+
+const OVERVIEW = `# Mission Platform — Overview
+
+The Mission Platform is a **VueJS 3 monorepo** managed with **pnpm workspaces** and
+orchestrated by **Turborepo**. It follows a composable, package-driven architecture:
+reusable building blocks live in \`packages/\` and deployable applications are
+assembled from those blocks in \`apps/\`.
+
+## Workspace groups
+- \`apps/\` — deployable applications (always \`"private": true\`).
+- \`packages/\` — reusable, independently versioned building blocks.
+- \`workers/\` — Cloudflare Workers (always \`"private": true\`).
+- \`vite-plugins/\` — Vite build plugins consumed by apps.
+- \`configs/\` — shared lint/format/build tooling (never imports from apps/packages).
+- \`scripts/\` — repository-wide tooling scripts.
+
+## Golden rules
+1. **Dependency direction is one-way:** \`apps\` → \`packages\`/\`vite-plugins\`/\`workers\` → \`configs\`.
+   Code in \`packages/\`, \`configs/\`, \`vite-plugins/\`, and \`workers/\` must **never** import from \`apps/\`.
+2. **TypeScript everywhere:** new files are \`.ts\`, \`.tsx\`, or \`.vue\` (\`<script setup lang="ts">\`). No plain \`.js\`/\`.jsx\` source.
+3. **Isolation of concerns:** new UI/composables/utilities/tokens belong in \`packages/\`, not embedded in an app. New shared tooling belongs in \`configs/\`.
+4. **Storybook as workbench:** when adding/changing components in \`packages/\`, add or update stories in \`apps/storybook\`.
+5. **Changesets:** every change to a published workspace needs a changeset (\`pnpm changeset\`).`;
+
+const CONVENTIONS = `# Conventions & Naming
+
+## Naming
+- Folder per member: \`<group>/<name>/\` (kebab-case folder names).
+- Package name is scoped: \`@mission-platform/<name>\`
+  (vite plugins use \`@mission-platform/vite-plugin-<name>\`).
+- Apps and workers are \`"private": true\` and never published.
+
+## Dependency protocol
+- Reference other workspace members with the \`workspace:*\` protocol.
+- Pin third-party versions through the pnpm **catalog** (\`catalog:\`, \`catalog:vue\`,
+  \`catalog:testing\`, \`catalog:cloudflare\`, …) defined in \`pnpm-workspace.yaml\` — do not hardcode versions.
+
+## Shared tooling (re-export the base configs)
+- \`eslint.config.js\`  → \`import baseConfig from '@mission-platform/eslint-config'; export default [...baseConfig];\`
+- \`prettier.config.js\` → \`import baseConfig from '@mission-platform/prettier-config'; export default { ...baseConfig };\`
+- \`stylelint.config.js\`→ \`import baseConfig from '@mission-platform/stylelint-config'; export default { ...baseConfig };\`
+
+## TypeScript project layout (packages)
+- \`tsconfig.json\` references \`tsconfig.build.json\`, \`tsconfig.node.json\`, \`tsconfig.test.json\`.
+- Each extends a base from \`@mission-platform/typescript-config\` (\`library\`, \`node\`, \`test\`, \`app\`).
+
+## Turborepo
+- Per-member \`turbo.json\` uses \`"extends": ["//"]\` and only adds member-specific task wiring.
+- Common tasks: \`build\`, \`dev\`, \`test\`, \`lint\`, \`lint:style\`, \`format\`, \`storybook\`.
+- Run from the root: \`pnpm build\`, \`pnpm test\`, \`pnpm lint\`, or scope with
+  \`pnpm exec turbo run <task> --filter @mission-platform/<name>\`.`;
+
+const COMPONENT_USAGE = `# Using Components
+
+Components live in \`@mission-platform/components\`. They are **write-once**: authored
+in the neutral JSX dialect (\`@mission-platform/forge\`) and compiled to **both Vue 3 and React**.
+
+## Discover
+- Use the \`list_components\` tool to enumerate every component and its exports.
+- Use the \`get_component_usage\` tool for a specific component to see its props
+  interface, doc comment, available stories, and import snippets.
+
+## Import
+\`\`\`ts
+// Vue app
+import { BaseButton } from '@mission-platform/components/vue';
+// React app
+import { BaseButton } from '@mission-platform/components/react';
+\`\`\`
+
+## Use (Vue)
+\`\`\`vue
+<script setup lang="ts">
+import { BaseButton } from '@mission-platform/components/vue';
+</script>
+
+<template>
+  <BaseButton variant="primary" size="md" @click="onClick">Save</BaseButton>
+</template>
+\`\`\`
+
+## Notes
+- Props follow a canonical \`2xs → 2xl\` size scale and named design-token spacing.
+- Styling ships with the component via co-located CSS Modules (\`@layer mp.components\`).
+- Prefer existing components over re-implementing UI. If a component is missing,
+  add it to \`packages/components\` (see the package-development guide) and add a story.`;
+
+const ATOMIC_COMPONENT_DESIGN = `# Atomic Component Design
+
+Components in \`@mission-platform/components\` (and other component packages) are
+organised by **atomic design**. Each component lives in its own folder under a
+level directory, is authored **write-once** in the neutral JSX dialect
+(\`@mission-platform/forge\`), and ships with a co-located story and test.
+
+See also the repository doc: \`docs/atomic-component-design.md\`.
+
+## Levels
+
+| Level | Folder | Role |
+| --- | --- | --- |
+| **Atom** | \`src/components/atoms/<comp>/\` | Smallest UI primitive (button, input, badge, spinner). No business layout. |
+| **Molecule** | \`src/components/molecules/<comp>/\` | Small composition of atoms (field set, search input, card header). |
+| **Organism** | \`src/components/organisms/<comp>/\` | Distinct section of UI (navbar, table, dialog, form wizard). |
+| **Template** | \`src/components/templates/<comp>/\` | Page-level layout shell with slots/regions (hero, app shell). |
+| **Page** | \`src/components/pages/<comp>/\` | Page-scaffold component wired for a concrete route/screen composition. |
+
+Choose the **lowest** level that still matches the component's responsibility.
+Promote only when composition or layout complexity genuinely grows.
+
+## Folder layout
+
+\`\`\`
+src/components/
+├── atoms/
+│   └── base-input/
+│       ├── base-input.tsx          # write-once forge component
+│       ├── base-input.stories.tsx  # Storybook story
+│       ├── base-input.spec.ts      # Vitest unit/SSR parity test
+│       ├── base-input.module.scss  # optional co-located CSS module
+│       └── index.ts                # re-exports public symbols
+├── molecules/
+├── organisms/
+├── templates/
+├── pages/
+└── index.ts                        # package barrel — re-exports each via ./<level>/<comp>
+\`\`\`
+
+## Story title convention
+
+Storybook titles follow:
+
+\`\`\`
+<Level>/<FunctionalArea>/<Component>
+\`\`\`
+
+Examples:
+- \`Atoms/Forms/BaseInput\`
+- \`Atoms/Feedback/BaseSpinner\`
+- \`Molecules/Navigation/BaseBreadcrumb\`
+- \`Organisms/Data/BaseVirtualTable\`
+- \`Templates/Marketing/BaseHero\`
+- \`Pages/Settings/AccountSettingsPage\`
+
+\`Level\` is the capitalised plural of the atomic folder (\`Atoms\`, \`Pages\`).
+\`FunctionalArea\` groups related UI (Forms, Data, Navigation, Feedback, Display, …).
+\`Component\` is the PascalCase component name.
+
+## Authoring rules
+
+1. **Write-once:** implement with \`@mission-platform/forge\` (\`h\`, \`MpProperties\`, neutral hooks). Never hand-write separate Vue/React sources.
+2. **Barrel:** export the component and its \`*Properties\` type from the folder \`index.ts\`, and re-export from \`src/components/index.ts\` via \`./<level>/<comp>\`.
+3. **Tests required:** every component ships a co-located \`<comp>.spec.ts\` (minimal passing skeleton is fine to start).
+4. **Stories required:** co-located \`<comp>.stories.tsx\` with the atomic title convention above.
+5. **Scaffolding:** use the \`scaffold_component\` tool (\`level\`, \`area\`, dry-run then \`apply: true\`).
+
+## Discovery
+
+- \`list_components\` returns each component's \`level\` (derived from its folder path).
+- \`get_component_usage\` shows props, stories, and Vue/React import snippets.`;
+
+const COMPOSABLE_AUTHORING = `# Authoring Composables
+
+Composables hold reusable reactive logic. They are **write-once** against
+\`@mission-platform/forge\` neutral hooks so the same source compiles to every
+supported framework.
+
+See also: \`docs/composable-authoring.md\`.
+
+## Layout
+
+\`\`\`
+src/composables/
+├── use-focus-trap/
+│   ├── use-focus-trap.ts       # implementation
+│   └── use-focus-trap.spec.ts  # required co-located test
+└── index.ts                    # barrel re-exports
+\`\`\`
+
+Convention: \`src/composables/<name>/<name>.ts\` + \`<name>.spec.ts\`.
+Names are kebab-case and should start with \`use-\` (the scaffold tool prefixes
+\`use-\` when missing).
+
+## Rules
+
+1. Import hooks only from \`@mission-platform/forge\` (\`useState\`, \`useEffect\`,
+   \`useMemo\`, \`type MpRef\`, …) — not from \`vue\` or \`react\` directly.
+2. Keep composables pure and SSR-safe (guard \`window\`/\`document\` access).
+3. **Every composable ships a co-located test** (\`.spec.ts\`).
+4. Export from \`src/composables/index.ts\`, and from the package root barrel.
+5. Scaffold with \`scaffold_composable\` (dry-run by default; \`apply: true\` to write).
+
+## Example
+
+\`\`\`ts
+import { type MpRef, useEffect } from '@mission-platform/forge';
+
+export function useEventListener(
+  target: MpRef<EventTarget | null>,
+  type: string,
+  listener: EventListener,
+): void {
+  useEffect(() => {
+    const element = target.current;
+    if (!element) return;
+    element.addEventListener(type, listener);
+    return () => element.removeEventListener(type, listener);
+  }, [target, type, listener]);
+}
+\`\`\``;
+
+const STORE_AUTHORING = `# Authoring Stores
+
+Stores are **framework-neutral** observable modules shared by write-once
+components and composables. Prefer plain module state + subscribe over
+framework-specific stores (Pinia/Redux) inside portable packages.
+
+See also: \`docs/store-authoring.md\`.
+
+## Layout
+
+\`\`\`
+src/stores/
+├── theme/
+│   ├── theme.ts       # implementation
+│   └── theme.spec.ts  # required co-located test
+└── index.ts           # barrel re-exports
+\`\`\`
+
+Convention: \`src/stores/<name>/<name>.ts\` + \`<name>.spec.ts\`.
+
+## Pattern
+
+1. Hold state in module scope (plain values, not framework refs).
+2. Expose \`get<Name>Snapshot()\`, mutators, and \`subscribe<Name>(listener)\`.
+3. Notify listeners on every change; return an unsubscribe function.
+4. Components bridge with forge hooks:
+
+\`\`\`ts
+const [snapshot, setSnapshot] = useState(getThemeSnapshot());
+useEffect(() => subscribeTheme(() => setSnapshot(getThemeSnapshot())), []);
+\`\`\`
+
+5. **Every store ships a co-located test**.
+6. Export from \`src/stores/index.ts\` and the package root barrel.
+7. Scaffold with \`scaffold_store\` (dry-run by default; \`apply: true\` to write).
+
+## Guardrails
+
+- No Vue/React imports inside the store module.
+- SSR-safe: guard \`document\`/\`localStorage\` access.
+- Keep the public surface explicit and typed.`;
+
+const UTIL_AUTHORING = `# Authoring Utils
+
+Utils are pure, framework-agnostic helpers. They must not depend on DOM APIs
+unless clearly named and documented as browser-only.
+
+See also: \`docs/util-authoring.md\`.
+
+## Layout
+
+\`\`\`
+src/utils/
+├── format-date/
+│   ├── format-date.ts       # implementation
+│   └── format-date.spec.ts  # required co-located test
+└── index.ts                 # barrel re-exports
+\`\`\`
+
+Convention: \`src/utils/<name>/<name>.ts\` + \`<name>.spec.ts\`.
+
+## Rules
+
+1. Prefer pure functions with explicit TypeScript types.
+2. **Every util ships a co-located test** (\`.spec.ts\`).
+3. Export from \`src/utils/index.ts\` and the package root barrel.
+4. Do not pull in \`vue\`/\`react\` or forge hooks — those belong in composables.
+5. Scaffold with \`scaffold_util\` (dry-run by default; \`apply: true\` to write).
+
+## Example
+
+\`\`\`ts
+export function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+\`\`\``;
+
+const PACKAGE_CREATION = `# Creating a Package
+
+Packages are reusable building blocks in \`packages/<name>/\`, scoped as
+\`@mission-platform/<name>\`, framework-agnostic where possible.
+
+## Fastest path
+Use the \`scaffold_package\` tool. It writes a convention-compliant skeleton
+(manifest with \`catalog:\`/\`workspace:*\` deps, the \`tsconfig\` set, re-exported
+shared configs, \`vite.config.ts\`, \`vitest.config.ts\`, \`turbo.json\`, \`src/index.ts\`,
+a spec, \`llms.txt\`, and \`docs/index.md\`). Pass \`apply: true\` to write files.
+
+## Manual steps
+1. \`mkdir packages/<name>\` and add \`package.json\` (name \`@mission-platform/<name>\`,
+   \`"type": "module"\`, \`exports\`/\`main\`/\`types\` pointing at \`dist\`, \`files: ["dist"]\`).
+2. Add the \`tsconfig\` set (\`tsconfig.json\` + \`tsconfig.build.json\` + \`tsconfig.node.json\` + \`tsconfig.test.json\`).
+3. Re-export the shared eslint/prettier/stylelint configs.
+4. Add \`vite.config.ts\` (\`defineLibraryConfig\`) and \`vitest.config.ts\` (\`defineVitestConfig\`).
+5. Add \`turbo.json\` with \`"extends": ["//"]\`.
+6. Add \`src/index.ts\` as the public barrel, a unit spec, an \`llms.txt\`, and \`docs/index.md\`.
+7. Run \`pnpm install\` (to link the workspace), then \`pnpm exec turbo run build lint test --filter @mission-platform/<name>\`.
+8. Create a changeset: \`pnpm changeset\`.
+
+## Guardrails
+- Never import from \`apps/\`.
+- Prefer \`catalog:\` versions and \`workspace:*\` for internal deps.
+- If it renders UI, add a matching story in \`apps/storybook\`.`;
+
+const PACKAGE_DEVELOPMENT = `# Developing a Package
+
+## Layout
+\`\`\`
+packages/<name>/
+├── src/
+│   ├── components/              # atomic design: atoms|molecules|organisms|templates|pages
+│   │   └── <level>/<comp>/      # <comp>.tsx + .stories.tsx + .spec.ts + index.ts
+│   ├── composables/<name>/      # <name>.ts + <name>.spec.ts (forge-neutral)
+│   ├── stores/<name>/           # <name>.ts + <name>.spec.ts (framework-neutral)
+│   ├── utils/<name>/            # <name>.ts + <name>.spec.ts
+│   ├── locales/
+│   └── index.ts                 # public barrel — only export the public API
+├── llms.txt                     # human/LLM usage doc
+├── docs/index.md
+├── package.json / tsconfig*.json / vite.config.ts / vitest.config.ts / turbo.json
+\`\`\`
+
+## Workflow
+- Keep the public surface in \`src/index.ts\`; export explicit types for every public API.
+- Build: \`pnpm exec turbo run build --filter @mission-platform/<name>\`
+  (packages typically split into \`build:check\`, \`build:bundle\`, \`build:types\`).
+- Test: \`pnpm exec turbo run test --filter @mission-platform/<name>\` (Vitest; Playwright for browser-level).
+- Lint/format: \`pnpm exec turbo run lint lint:style format --filter @mission-platform/<name>\`.
+- Framework-agnostic components: author with \`@mission-platform/forge\` so they compile to Vue and React.
+- Prefer the scaffold tools for units: \`scaffold_component\`, \`scaffold_composable\`,
+  \`scaffold_store\`, \`scaffold_util\` (see the atomic / composable / store / util guides).
+- Update \`llms.txt\` whenever the public API changes, and add/refresh Storybook stories.
+- Add a changeset for every published change and run downstream consumers' tests.`;
+
+const APP_CREATION = `# Creating an App
+
+Apps live in \`apps/<name>/\`, are \`"private": true\`, scoped \`@mission-platform/<name>\`,
+and are thin orchestration layers that compose \`packages/\`.
+
+## Fastest path
+Use the \`scaffold_app\` tool (\`apply: true\` to write). It creates a Vite + Vue 3 app
+skeleton: manifest with app scripts, \`tsconfig\` set (app + node), re-exported configs,
+\`vite.config.ts\` (\`defineAppConfig\`), \`turbo.json\`, \`index.html\`, and \`src/\` entry.
+
+## Manual steps
+1. \`mkdir apps/<name>\`; add \`package.json\` (\`"private": true\`, app scripts:
+   \`dev\`, \`build\`, \`preview\`, \`test\`, \`lint\`, \`format\`).
+2. Add consumed packages as \`dependencies\` via \`workspace:*\` (e.g. components, tokens, i18n).
+3. Add \`tsconfig.json\` referencing \`tsconfig.app.json\` and \`tsconfig.node.json\`.
+4. Re-export shared eslint/prettier/stylelint configs.
+5. Add \`vite.config.ts\` using \`defineAppConfig\`, plus \`index.html\` and \`src/main.ts\`/\`src/App.vue\`.
+6. Add \`turbo.json\` with \`"extends": ["//"]\`.
+7. \`pnpm install\`, then \`pnpm exec turbo run build --filter @mission-platform/<name>\`.
+
+## For Cloudflare deployment
+Add a \`wrangler.jsonc\` and wire the \`@mission-platform/base-spa\` worker (see the my-care-notes app).`;
+
+const APP_DEVELOPMENT = `# Developing an App
+
+## Principles
+- Apps **compose** packages; they should contain orchestration, routing, and app-specific glue only.
+- New reusable UI/logic belongs in a package, not in the app.
+- Consume components from \`@mission-platform/components/vue\`, tokens from \`@mission-platform/tokens\`, etc.
+
+## Workflow
+- Dev server: \`pnpm exec turbo run dev --filter @mission-platform/<name>\` (or \`pnpm --filter <name> dev\`).
+- Build: \`pnpm exec turbo run build --filter @mission-platform/<name>\`.
+- Test: \`pnpm exec turbo run test --filter @mission-platform/<name>\`.
+- Lint/format & style checks mirror the package workflow.
+
+## Deployment (Cloudflare)
+- Apps deploy to Cloudflare via \`wrangler\` with a \`base-spa\` worker serving static assets
+  with an SPA fallback. See \`deploy\`/\`deploy:staging\` scripts and \`wrangler.jsonc\`.
+- The app's \`turbo.json\` \`deploy\` task depends on \`@mission-platform/base-spa#build\`.`;
+
+const WORKER_CREATION = `# Creating a Worker
+
+Workers live in \`workers/<name>/\`, are \`"private": true\`, scoped \`@mission-platform/<name>\`,
+and serve static assets / handle SPA fallbacks (or proxy APIs) on Cloudflare.
+
+## Fastest path
+Use the \`scaffold_worker\` tool (\`apply: true\` to write). It creates the worker skeleton:
+manifest, \`tsconfig.json\` + \`tsconfig.build.json\` (extends \`.../library\`, \`types: ["@cloudflare/workers-types"]\`),
+re-exported eslint/prettier configs, and \`src/index.ts\` with a typed \`fetch\` handler.
+
+## Manual steps
+1. \`mkdir workers/<name>\`; add \`package.json\` (\`"private": true\`, \`"type": "module"\`,
+   \`exports\`/\`types\` → \`dist\`, \`build\`: \`tsc --project tsconfig.build.json\`).
+2. Add \`@cloudflare/workers-types\` (\`catalog:cloudflare\`) and the shared configs/typescript-config as devDependencies.
+3. Add \`tsconfig.json\` (references \`tsconfig.build.json\`) and \`tsconfig.build.json\`
+   (extends \`@mission-platform/typescript-config/library\`, \`types: ["@cloudflare/workers-types"]\`).
+4. Re-export eslint/prettier configs.
+5. Add \`src/index.ts\` exporting \`{ async fetch(request, env) { ... } }\`.
+6. \`pnpm install\`, then \`pnpm exec turbo run build --filter @mission-platform/<name>\`.
+
+## Guardrails
+- Workers may consume \`packages/\` at runtime and \`configs/\` as devDependencies, but never import from \`apps/\`.`;
+
+const WORKER_DEVELOPMENT = `# Developing a Worker
+
+## Layout
+\`\`\`
+workers/<name>/
+├── src/index.ts        # default export with an async fetch(request, env) handler
+├── package.json
+├── tsconfig.json / tsconfig.build.json
+├── eslint.config.js / prettier.config.js
+└── README.md
+\`\`\`
+
+## Workflow
+- Type the handler with \`@cloudflare/workers-types\` (\`Request\`, \`Response\`, \`fetch\`).
+- Build: \`pnpm exec turbo run build --filter @mission-platform/<name>\` (\`tsc --project tsconfig.build.json\`).
+- Local dev / deploy is driven from the consuming app via \`wrangler\` (\`wrangler dev\`, \`wrangler deploy\`).
+- Keep workers thin: asset serving, SPA fallback, or API proxying. Share logic via \`packages/\`.
+- Lint/format: \`pnpm exec turbo run lint format --filter @mission-platform/<name>\`.`;
+
+const EXTERNAL_SETUP = `# External Consumer Setup
+
+This guide explains how to consume published \`@mission-platform/*\` packages in external (out-of-monorepo) projects.
+
+## Framework Selection via Conditions
+Mission Platform packages provide framework-specific implementations via **export conditions**. Configure your bundler and TypeScript to use the corresponding \`mp:<framework>\` condition.
+
+### Vite Configuration
+Use \`frameworkResolveConditions\` from \`@mission-platform/vite-config\`:
+\`\`\`ts
+import { defineConfig } from 'vite';
+import { frameworkResolveConditions } from '@mission-platform/vite-config';
+
+export default defineConfig({
+  resolve: {
+    conditions: [...frameworkResolveConditions('mp:vue'), 'import', 'module', 'browser', 'default'],
+  },
+});
+\`\`\`
+
+### TypeScript Configuration
+Extend a framework preset from \`@mission-platform/typescript-config\`:
+\`\`\`json
+{
+  "extends": "@mission-platform/typescript-config/framework-vue",
+  "compilerOptions": {
+    "customConditions": ["mp:vue"]
+  }
+}
+\`\`\`
+
+## Package Installation
+\`\`\`bash
+pnpm add @mission-platform/components @mission-platform/tokens
+\`\`\`
+
+## Component Usage
+With conditions set, use bare specifiers:
+\`\`\`ts
+import { BaseButton } from '@mission-platform/components';
+\`\`\`
+
+## Design Token Overrides
+Override via CSS custom properties:
+\`\`\`css
+:root {
+  --mp-color-brand-primary: #ff0000;
+}
+\`\`\``;
+
+const FRAMEWORK_VUE = `# Vue 3 Best Practices
+
+## Patterns
+- **Composition API:** Use \`<script setup lang="ts">\`.
+- **Composables:** Extract logic into \`useXxx\` functions.
+
+## Performance
+1. **\`shallowRef\`:** Use for large objects to reduce proxy overhead.
+2. **\`v-memo\`:** Skip updates for expensive sub-trees.
+3. **Async Components:** Use \`defineAsyncComponent\` for code-splitting.
+4. **\`markRaw\`:** Use for third-party instances.
+5. **Scoped CSS:** Use \`<style scoped>\` or CSS Modules.`;
+
+const FRAMEWORK_REACT = `# React Best Practices
+
+## Patterns
+- **Functional Components:** Use Hooks (\`useState\`, \`useEffect\`).
+- **Custom Hooks:** Extract reusable logic.
+
+## Performance
+1. **\`memo\`:** Skip re-renders if props haven't changed.
+2. **\`useCallback\` / \`useMemo\`:** Maintain referential identity.
+3. **\`useTransition\`:** Use for non-urgent updates.
+4. **List Keys:** Use stable, unique keys.
+5. **Virtualization:** Use \`react-window\` for long lists.`;
+
+const FRAMEWORK_SOLID = `# SolidJS Best Practices
+
+## Patterns
+- **Signals:** Use \`createSignal\` for state.
+- **Fine-grained Updates:** Updates happen at DOM node level.
+
+## Performance
+1. **Signal Granularity:** Keep signals focused.
+2. **Batching:** Use \`batch()\` for multiple updates.
+3. **\`For\` vs \`Index\`:** Use \`<For>\` for dynamic order, \`<Index>\` for stable order.
+4. **Avoid Destructuring:** Access props as \`props.name\`.
+5. **Untrack:** Read signals without creating dependencies.`;
+
+const FRAMEWORK_SVELTE = `# Svelte 5 Best Practices
+
+## Patterns
+- **Runes:** Use \`$state\`, \`$derived\`, and \`$effect\`.
+- **Snippets:** Use \`{#snippet}\` for reusable UI.
+
+## Performance
+1. **Immutable Data:** Treat state as immutable.
+2. **Keys:** Always provide keys in \`{#each}\` blocks.
+3. **Bind Sparingly:** Prefer one-way flow for clarity.
+4. **Lazy Loading:** Use dynamic imports.`;
+
+const FRAMEWORK_WEB_COMPONENTS = `# Web Components (Lit) Best Practices
+
+## Patterns
+- **LitElement:** Extend for reactive components.
+- **Shadow DOM:** Use for style isolation.
+
+## Performance
+1. **\`repeat\` directive:** Use for efficient list rendering.
+2. **\`nothing\` sentinel:** Conditionally render nothing.
+3. **Lightweight Styles:** Use static \`styles\` property.
+4. **Attribute Reflection:** Reflect only when necessary.`;
+
+const GUIDES: Record<GuideId, Guide> = {
+  overview: { id: 'overview', title: 'Overview', body: OVERVIEW },
+  conventions: { id: 'conventions', title: 'Conventions & Naming', body: CONVENTIONS },
+  'component-usage': { id: 'component-usage', title: 'Using Components', body: COMPONENT_USAGE },
+  'atomic-component-design': {
+    id: 'atomic-component-design',
+    title: 'Atomic Component Design',
+    body: ATOMIC_COMPONENT_DESIGN,
+  },
+  'composable-authoring': {
+    id: 'composable-authoring',
+    title: 'Authoring Composables',
+    body: COMPOSABLE_AUTHORING,
+  },
+  'store-authoring': { id: 'store-authoring', title: 'Authoring Stores', body: STORE_AUTHORING },
+  'util-authoring': { id: 'util-authoring', title: 'Authoring Utils', body: UTIL_AUTHORING },
+  'package-creation': { id: 'package-creation', title: 'Creating a Package', body: PACKAGE_CREATION },
+  'package-development': { id: 'package-development', title: 'Developing a Package', body: PACKAGE_DEVELOPMENT },
+  'app-creation': { id: 'app-creation', title: 'Creating an App', body: APP_CREATION },
+  'app-development': { id: 'app-development', title: 'Developing an App', body: APP_DEVELOPMENT },
+  'worker-creation': { id: 'worker-creation', title: 'Creating a Worker', body: WORKER_CREATION },
+  'worker-development': { id: 'worker-development', title: 'Developing a Worker', body: WORKER_DEVELOPMENT },
+  'framework-vue': { id: 'framework-vue', title: 'Vue 3 Best Practices', body: FRAMEWORK_VUE },
+  'framework-react': { id: 'framework-react', title: 'React Best Practices', body: FRAMEWORK_REACT },
+  'framework-solid': { id: 'framework-solid', title: 'SolidJS Best Practices', body: FRAMEWORK_SOLID },
+  'framework-svelte': { id: 'framework-svelte', title: 'Svelte 5 Best Practices', body: FRAMEWORK_SVELTE },
+  'framework-web-components': {
+    id: 'framework-web-components',
+    title: 'Web Components (Lit) Best Practices',
+    body: FRAMEWORK_WEB_COMPONENTS,
+  },
+  'external-setup': { id: 'external-setup', title: 'External Consumer Setup', body: EXTERNAL_SETUP },
+};
+
+export const GUIDE_IDS = Object.keys(GUIDES) as GuideId[];
+
+export function getGuide(id: string): Guide | undefined {
+  return GUIDES[id as GuideId];
+}
+
+export function allGuides(): Guide[] {
+  return GUIDE_IDS.map((id) => GUIDES[id]);
+}

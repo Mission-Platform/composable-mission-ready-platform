@@ -1,0 +1,44 @@
+# @mission-platform/mcp-developer
+
+Model Context Protocol (MCP) server that helps AI assistants develop inside the
+Mission Platform monorepo. No runtime dependencies; compiled via Turborepo and
+run from its built output on Node.js 24+ (`node mcp/developer/dist/index.js`).
+Speaks JSON-RPC 2.0 over stdio.
+
+## What it is for
+
+Give an AI assistant grounded, repo-specific help with core workflows:
+
+1. Component usage — discover components (with atomic level), props, Vue/React imports.
+2. Atomic component design — atoms/molecules/organisms/templates/pages + story titles.
+3. Composable / store / util authoring — nested `src/<kind>/<name>/` + required tests.
+4. Package creation — scaffold a convention-compliant `packages/<name>`.
+5. Package development — layout, public API, build/test/lint, changesets.
+6. App creation — scaffold a `apps/<name>` Vite + Vue 3 app.
+7. App development — compose packages; deploy via Cloudflare/base-spa.
+8. Worker creation — scaffold a `workers/<name>` Cloudflare Worker.
+9. Worker development — typed `fetch` handler; keep workers thin.
+
+## Capabilities
+
+- Tools: `get_guide`, `list_docs`, `read_doc`, `search_docs`, `list_components`,
+  `get_component_usage`, `list_packages`, `list_apps`, `list_workers`,
+  `get_member_info`, `scaffold_package`, `scaffold_app`, `scaffold_worker`,
+  `scaffold_crate`, `scaffold_component`, `scaffold_composable`, `scaffold_store`,
+  `scaffold_util`.
+- Resources: `mission://guide/<id>`, `mission://inventory`, `mission://docs/<slug>`.
+- Prompts: `use-component`, `create-package`, `develop-package`, `create-app`,
+  `develop-app`, `create-worker`, `develop-worker`.
+
+## Safety
+
+All repo inspection is read-only. Scaffolding tools are dry-run unless
+`apply: true`, and never overwrite existing files/folders.
+
+## Run
+
+```bash
+pnpm exec turbo run build --filter @mission-platform/mcp-*
+node mcp/developer/dist/index.js
+pnpm --dir mcp/developer test
+```

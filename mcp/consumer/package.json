@@ -1,0 +1,51 @@
+{
+  "name": "@mission-platform/mcp-consumer",
+  "private": true,
+  "version": "0.1.0",
+  "license": "BSD-4-Clause",
+  "description": "CONSUMER MCP: Model Context Protocol server for external teams building apps on top of Mission Platform packages. Focuses on package installation, framework selection via export conditions, and component usage.",
+  "type": "module",
+  "bin": {
+    "mission-mcp-consumer": "./dist/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "start": "node dist/index.js",
+    "dev": "node --watch src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
+  },
+  "dependencies": {
+    "@mission-platform/mcp-shared": "workspace:*",
+    "@modelcontextprotocol/sdk": "catalog:mcp",
+    "zod": "catalog:mcp"
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@types/node": "catalog:typescript",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "tsdown": "catalog:build",
+    "typescript": "catalog:typescript"
+  }
+}
