@@ -17,7 +17,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc --project tsconfig.build.json",
+    "build": "tsdown",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",
@@ -40,12 +40,14 @@
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@types/js-yaml": "catalog:typescript",
     "@types/node": "catalog:typescript",
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",
+    "tsdown": "catalog:build",
     "typescript": "catalog:typescript",
     "vite": "catalog:vite",
     "vitest": "catalog:testing"
