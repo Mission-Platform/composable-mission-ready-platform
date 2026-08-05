@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { type MatrixCode, type MatrixSymbology, encodeMatrix, encodeMatrixAsync } from './index';
+import { encodeMatrix, encodeMatrixAsync, type MatrixCode, type MatrixSymbology } from './index';
 
 // The wasm module is instantiated once in `src/test-setup.ts` (a Vitest
 // `setupFiles` entry) before any spec runs.

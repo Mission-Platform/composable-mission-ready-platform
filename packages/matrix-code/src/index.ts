@@ -7,12 +7,5 @@
 // `crates/matrix-code-common`) into two wasm modules under `generated/encode`
 // and `generated/decode`. The per-feature `component/` sibling (a write-once
 // `BaseMatrixCode`) is added in a follow-up and re-exported here when present.
-export {
-  type MatrixCode,
-  type MatrixSymbology,
-  encodeMatrix,
-  encodeMatrixAsync,
-  initMatrix,
-  initMatrixSync,
-} from './encoder';
-export { decodeMatrix, decodeMatrixAsync, initMatrixDecode, initMatrixDecodeSync } from './decoder';
+export { type MatrixCode, type MatrixSymbology, encodeMatrix, encodeMatrixAsync } from './encoder';
+export { decodeMatrix, decodeMatrixAsync } from './decoder';

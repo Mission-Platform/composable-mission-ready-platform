@@ -12,4 +12,4 @@ export {
   type MatrixLogo,
   type MatrixModuleShape,
   type MatrixSymbology,
-} from './base-matrix-code';
+} from './molecules/base-matrix-code';

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { type MatrixCode, decodeMatrix, decodeMatrixAsync, encodeMatrix } from '../index';
+import { decodeMatrix, decodeMatrixAsync, encodeMatrix, type MatrixCode } from '../index';
 
 // The encoder and decoder wasm modules are instantiated once in
 // `src/test-setup.ts` (a Vitest `setupFiles` entry) before any spec runs.

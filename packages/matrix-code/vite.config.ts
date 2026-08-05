@@ -6,10 +6,10 @@ import {
   generateFrameworkSources,
   jsxComponentsCssImportPlugin,
   jsxComponentsDtsPlugin,
+  type JsxFramework,
   reactJsxPlugin,
   solidJsxPlugin,
   sveltePlugin,
-  type JsxFramework,
 } from '@mission-platform/vite-plugin-forge';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { defineConfig, type Plugin, type UserConfig } from 'vite';
@@ -33,7 +33,7 @@ import { defineConfig, type Plugin, type UserConfig } from 'vite';
  *   `BaseTypography` from `@mission-platform/components`.
  */
 
-const componentsModule = path.resolve(__dirname, 'src/component/index.ts');
+const componentsModule = path.resolve(__dirname, 'src/components/index.ts');
 const cacheRoot = path.resolve(__dirname, 'node_modules/.cache');
 
 /**

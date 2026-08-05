@@ -1,23 +1,27 @@
-import { MatrixCode } from '@mission-platform/matrix-code/vue';
+import { MatrixCode } from '@mission-platform/matrix-code';
 
-import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
- * `MatrixCode` is the Vue 3 build of the write-once `BaseMatrixCode` in this
- * package. The component is authored **once** in the framework-neutral JSX
- * dialect (`@mission-platform/forge`) and compiled straight to a Vue component at
- * build time by `@mission-platform/vite-plugin-forge`. The very same source also
- * ships as a React component via the package's `./react` subpath.
+ * `MatrixCode` is the write-once `BaseMatrixCode` in
+ * `@mission-platform/matrix-code`. The component is authored **once** in the
+ * framework-neutral JSX dialect (`@mission-platform/forge`) and compiled at
+ * build time by `@mission-platform/vite-plugin-forge` to every supported
+ * framework.
+ *
+ * This is a single, framework-agnostic story: the bare
+ * `@mission-platform/matrix-code` import auto-resolves to the framework selected
+ * by the `STORYBOOK_FRAMEWORK` env var.
  */
 const meta = {
-  title: 'Components/Data Display/BaseMatrixCode',
+  title: 'Molecules/Data Display/BaseMatrixCode',
   component: MatrixCode,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          'Cross-framework `MatrixCode` — a 2D Data Matrix (ECC 200) symbol authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/matrix-code/vue`) and React (`@mission-platform/matrix-code/react`). The payload is encoded entirely on the client by the WebAssembly `@mission-platform/matrix-code` encoder (automatic symbol sizing and Reed-Solomon error correction) and drawn as a crisp SVG. The `error` case becomes the `onError` callback prop. Opt into a save/copy toolbar via `showActions` (or the individual `show*Button` props). Styling comes from the co-located `base-matrix-code.module.scss`.',
+          'Cross-framework `MatrixCode` — a 2D Data Matrix (ECC 200) symbol authored once in the neutral JSX dialect and shipped to all supported frameworks. The payload is encoded entirely on the client by the WebAssembly `@mission-platform/matrix-code` encoder (automatic symbol sizing and Reed-Solomon error correction) and drawn as a crisp SVG. The `error` case becomes the `onError` callback prop. Opt into a save/copy toolbar via `showActions` (or the individual `show*Button` props). Styling comes from the co-located `base-matrix-code.module.scss`.',
       },
     },
   },
