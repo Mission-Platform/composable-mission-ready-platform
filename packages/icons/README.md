@@ -1,12 +1,14 @@
 # `@mission-platform/icons`
 
-Write-once SVG icon components for Mission Platform, authored in a framework-neutral JSX dialect (`@mission-platform/forge`) and compiled into native **Vue 3** and **React** components.
+Write-once SVG icon components for Mission Platform, authored in a framework-neutral JSX dialect
+(`@mission-platform/forge`) and compiled into native **Vue 3** and **React** components.
 
 ## Features
 
 - **Write Once, Run Anywhere**: Neutral icon JSX compiled to framework-native subpaths with zero runtime overhead.
 - **Tree-Shakable**: Each icon is compiled into its own module for minimal bundle footprint.
-- **Universal Props**: Standardized `size` tokens (`2xs`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl` or explicit numeric values), `color`, and accessibility `ariaLabel`.
+- **Universal Props**: Standardized `size` tokens (`2xs`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl` or explicit numeric
+  values), `color`, and accessibility `ariaLabel`.
 - **Specialized Behavior**: Directional transforms (`IconArrow`, `IconChevron`) and state indicators (`IconSort`).
 
 ## Installation
@@ -88,7 +90,7 @@ import { IconAlert, IconCheck } from '@mission-platform/icons';
 ## Universal Props
 
 | Prop        | Type               | Default            | Description                                                 |
-| :---------- | :----------------- | :----------------- | :---------------------------------------------------------- |
+|:------------|:-------------------|:-------------------|:------------------------------------------------------------|
 | `size`      | `number \| string` | `'md'`             | Named token (`2xs`–`2xl`) or pixel number.                  |
 | `color`     | `string`           | `'currentColor'`   | Icon stroke or fill color.                                  |
 | `ariaLabel` | `string`           | _Default per icon_ | Accessible label (marks `aria-hidden="true"` when omitted). |

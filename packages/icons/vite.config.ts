@@ -5,10 +5,10 @@ import {
   generateFrameworkSources,
   jsxComponentsCssImportPlugin,
   jsxComponentsEntryDtsPlugin,
+  type JsxFramework,
   reactJsxPlugin,
   solidJsxPlugin,
   sveltePlugin,
-  type JsxFramework,
 } from '@mission-platform/vite-plugin-forge';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { defineConfig, type Plugin, type UserConfig } from 'vite';

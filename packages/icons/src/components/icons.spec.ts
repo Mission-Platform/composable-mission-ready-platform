@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { createSSRApp, h as vueH } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 
-import { IconAlert, IconArrow, IconDrawCircle, IconHeadingOne, IconSort } from '.';
+import { IconAlert, IconArrow, IconDrawCircle, IconHeadingOne, IconSort } from ".";
 
 import type { MpComponent } from '@mission-platform/forge';
 
