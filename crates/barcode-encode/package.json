@@ -1,0 +1,11 @@
+{
+  "name": "@mission-platform/barcode-encode-crate",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Rust crate build for barcode-encode (wasm-pack \u2192 packages/barcode-encode-wasm)",
+  "license": "BSD-4-Clause",
+  "scripts": {
+    "build": "wasm-pack build . --target bundler --release --weak-refs --reference-types --no-pack --out-dir ../../packages/barcode-encode-wasm/src/wasm --out-name barcode-encode",
+    "test": "wasm-pack test --node ."
+  }
+}
