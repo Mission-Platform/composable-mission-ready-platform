@@ -109,7 +109,10 @@ mod tests {
         let computed = encode_itf14("1234567890123").expect("13 digits, check computed");
         let verified = encode_itf14("12345678901231").expect("14 digits, check verified");
         assert_eq!(computed, verified, "check digit should match");
-        assert!(encode_itf14("12345678901239").is_none(), "bad check digit is rejected");
+        assert!(
+            encode_itf14("12345678901239").is_none(),
+            "bad check digit is rejected"
+        );
         assert!(encode_itf14("123").is_none(), "wrong length is rejected");
     }
 }

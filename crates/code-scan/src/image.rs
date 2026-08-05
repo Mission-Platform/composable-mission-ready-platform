@@ -158,7 +158,10 @@ impl Bitmap {
                     for dx in -1..=1i64 {
                         let nx = x as i64 + dx;
                         let ny = y as i64 + dy;
-                        if nx < 0 || ny < 0 || nx as usize >= self.width || ny as usize >= self.height
+                        if nx < 0
+                            || ny < 0
+                            || nx as usize >= self.width
+                            || ny as usize >= self.height
                         {
                             continue;
                         }
@@ -254,7 +257,12 @@ pub fn binarize(width: usize, height: usize, luma: &[u8]) -> Option<Bitmap> {
 /// accurate upright pipeline instead of chasing sub-pixel corner precision on the
 /// rotated grid. Returns `(new_width, new_height, luma)`.
 #[tracing::instrument(skip_all)]
-pub fn rotate_luma(width: usize, height: usize, luma: &[u8], angle: f64) -> (usize, usize, Vec<u8>) {
+pub fn rotate_luma(
+    width: usize,
+    height: usize,
+    luma: &[u8],
+    angle: f64,
+) -> (usize, usize, Vec<u8>) {
     if width == 0 || height == 0 || luma.len() != width * height {
         return (width, height, luma.to_vec());
     }

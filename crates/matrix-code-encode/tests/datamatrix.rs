@@ -10,7 +10,11 @@ fn decode_symbol(symbol: &[u8]) -> (usize, usize, &[u8]) {
     let width = symbol[0] as usize;
     let height = symbol[1] as usize;
     let modules = &symbol[2..];
-    assert_eq!(modules.len(), width * height, "module count matches width*height");
+    assert_eq!(
+        modules.len(),
+        width * height,
+        "module count matches width*height"
+    );
     assert!(modules.iter().all(|&bit| bit <= 1), "modules are 0/1");
     (width, height, modules)
 }
@@ -19,14 +23,22 @@ fn decode_symbol(symbol: &[u8]) -> (usize, usize, &[u8]) {
 fn encodes_a_data_matrix_symbol() {
     let symbol = encode_modules("datamatrix", "123456").expect("valid payload");
     let (width, height, _) = decode_symbol(&symbol);
-    assert_eq!((width, height), (10, 10), "small numeric payload uses the 10x10 symbol");
+    assert_eq!(
+        (width, height),
+        (10, 10),
+        "small numeric payload uses the 10x10 symbol"
+    );
 }
 
 #[test]
 fn encodes_a_rectangular_data_matrix_symbol() {
     let symbol = encode_modules("datamatrixrectangular", "123456").expect("valid payload");
     let (width, height, _) = decode_symbol(&symbol);
-    assert_eq!((width, height), (18, 8), "small numeric payload uses the 8x18 symbol");
+    assert_eq!(
+        (width, height),
+        (18, 8),
+        "small numeric payload uses the 8x18 symbol"
+    );
 }
 
 #[test]

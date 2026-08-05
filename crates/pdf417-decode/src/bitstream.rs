@@ -79,7 +79,12 @@ pub fn decode(codewords: &[i32]) -> Option<String> {
     Some(result)
 }
 
-fn text_compaction(codewords: &[i32], mut code_index: usize, count: usize, result: &mut String) -> usize {
+fn text_compaction(
+    codewords: &[i32],
+    mut code_index: usize,
+    count: usize,
+    result: &mut String,
+) -> usize {
     let mut text_data: Vec<i32> = Vec::new();
     let mut byte_data: Vec<i32> = Vec::new();
     let mut end = false;
@@ -249,15 +254,16 @@ fn byte_compaction(
                 value = 900 * value + codewords[code_index] as u64;
                 code_index += 1;
                 n += 1;
-                if !(n < 5 && code_index < count && codewords[code_index] < TEXT_COMPACTION_MODE_LATCH)
+                if !(n < 5
+                    && code_index < count
+                    && codewords[code_index] < TEXT_COMPACTION_MODE_LATCH)
                 {
                     break;
                 }
             }
             if n == 5
                 && (mode == BYTE_COMPACTION_MODE_LATCH_6
-                    || (code_index < count
-                        && codewords[code_index] < TEXT_COMPACTION_MODE_LATCH))
+                    || (code_index < count && codewords[code_index] < TEXT_COMPACTION_MODE_LATCH))
             {
                 for i in 0..6 {
                     bytes.push((value >> (8 * (5 - i))) as u8);
@@ -303,14 +309,13 @@ fn numeric_compaction(
             n += 1;
         } else if matches!(
             code,
-            TEXT_COMPACTION_MODE_LATCH
-                | BYTE_COMPACTION_MODE_LATCH
-                | BYTE_COMPACTION_MODE_LATCH_6
+            TEXT_COMPACTION_MODE_LATCH | BYTE_COMPACTION_MODE_LATCH | BYTE_COMPACTION_MODE_LATCH_6
         ) {
             code_index -= 1;
             end = true;
         }
-        if (n % MAX_NUMERIC_CODEWORDS == 0 || code == NUMERIC_COMPACTION_MODE_LATCH || end) && n > 0 {
+        if (n % MAX_NUMERIC_CODEWORDS == 0 || code == NUMERIC_COMPACTION_MODE_LATCH || end) && n > 0
+        {
             result.push_str(&decode_base900_to_base10(&numeric[..n])?);
             n = 0;
         }

@@ -214,7 +214,10 @@ mod tests {
                 let widths = get_rss_widths(value, n, elements, max_width, no_narrow);
                 assert_eq!(widths.iter().map(|&w| w as i64).sum::<i64>(), n);
                 let back = get_rss_value(&widths, max_width, no_narrow);
-                assert_eq!(back, value, "n={n} el={elements} mw={max_width} nn={no_narrow}");
+                assert_eq!(
+                    back, value,
+                    "n={n} el={elements} mw={max_width} nn={no_narrow}"
+                );
             }
         }
     }

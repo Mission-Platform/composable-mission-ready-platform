@@ -83,7 +83,11 @@ mod tests {
     #[test]
     #[tracing::instrument(skip_all)]
     fn upper_cases_input_and_rejects_unknown_characters() {
-        assert_eq!(encode("code93"), encode("CODE93"), "lower-case is upper-cased");
+        assert_eq!(
+            encode("code93"),
+            encode("CODE93"),
+            "lower-case is upper-cased"
+        );
         assert!(encode("a*b").is_none(), "`*` is not in the base alphabet");
     }
 
@@ -91,7 +95,10 @@ mod tests {
     #[tracing::instrument(skip_all)]
     fn extended_accepts_lower_case_and_symbols() {
         assert!(encode_extended("Hello, World!").is_some());
-        assert!(encode("Hello, World!").is_none(), "standard rejects lower-case punctuation set");
+        assert!(
+            encode("Hello, World!").is_none(),
+            "standard rejects lower-case punctuation set"
+        );
         assert!(encode_extended("").is_none(), "empty payload is rejected");
     }
 }

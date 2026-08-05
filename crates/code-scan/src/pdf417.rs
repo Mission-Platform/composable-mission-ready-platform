@@ -117,7 +117,9 @@ fn decode_oriented(bitmap: &Bitmap, reversed: bool) -> Option<String> {
         for c in 0..cols {
             let value = read.codewords[1 + c];
             if value >= 0 {
-                *cell_votes[read.row_number * cols + c].entry(value).or_default() += 1;
+                *cell_votes[read.row_number * cols + c]
+                    .entry(value)
+                    .or_default() += 1;
             }
         }
     }
@@ -222,7 +224,7 @@ fn read_row(row: &[bool]) -> Option<RowRead> {
 fn argmax(votes: &HashMap<i32, usize>) -> Option<i32> {
     votes
         .iter()
-        .max_by_key(|(_, &count)| count)
+        .max_by_key(|&(_, &count)| count)
         .map(|(&value, _)| value)
 }
 
@@ -296,7 +298,8 @@ fn find_guard_pattern(row: &[bool], from: usize, pattern: &[u16]) -> Option<(usi
         }
         x += 1;
     }
-    if counter_position == len - 1 && pattern_match_variance(&counters, pattern) < MAX_AVG_VARIANCE {
+    if counter_position == len - 1 && pattern_match_variance(&counters, pattern) < MAX_AVG_VARIANCE
+    {
         return Some((pattern_start, x));
     }
     None

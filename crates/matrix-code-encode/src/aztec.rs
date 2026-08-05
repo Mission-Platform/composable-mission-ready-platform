@@ -184,7 +184,11 @@ fn bits_to_words(bits: &[bool], word_size: usize, total_words: usize) -> Vec<u16
 /// that fills a symbol of `total_bits` bits with `word_size`-bit codewords.
 /// Returns `(message_bits, data_word_count)`.
 #[tracing::instrument(skip_all)]
-fn generate_check_words(stuffed: &[bool], total_bits: usize, word_size: usize) -> (Vec<bool>, usize) {
+fn generate_check_words(
+    stuffed: &[bool],
+    total_bits: usize,
+    word_size: usize,
+) -> (Vec<bool>, usize) {
     let message_words = stuffed.len() / word_size;
     let total_words = total_bits / word_size;
     let mut words = bits_to_words(stuffed, word_size, total_words);
@@ -323,7 +327,8 @@ fn draw_data(matrix: &mut Matrix, size: usize, layers: usize, message: &[bool]) 
                     matrix.set(i * 2 + j, size - 1 - i * 2 - k, true); // bottom row
                 }
                 if message[row_offset + row_size * 4 + column_offset + k] {
-                    matrix.set(size - 1 - i * 2 - k, size - 1 - i * 2 - j, true); // right column
+                    matrix.set(size - 1 - i * 2 - k, size - 1 - i * 2 - j, true);
+                    // right column
                 }
                 if message[row_offset + row_size * 6 + column_offset + k] {
                     matrix.set(size - 1 - i * 2 - j, i * 2 + k, true); // top row

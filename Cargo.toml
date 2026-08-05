@@ -11,6 +11,15 @@ members = [
     "crates/code-scan"
 ]
 
+[workspace.package]
+license-file = "LICENSE"
+publish = false
+categories = ["algorithms", "wasm"]
+edition = "2024"
+keywords = ["wasm", "codes"]
+version = "0.1.0"
+repository = "https://github.com/Mission-Platform/composable-mission-ready-platform"
+
 # Centralised dependency versions for the whole workspace. Member crates opt in
 # with `<dep>.workspace = true`, so versions are defined in exactly one place.
 [workspace.dependencies]

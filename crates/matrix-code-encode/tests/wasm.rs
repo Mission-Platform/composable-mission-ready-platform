@@ -12,8 +12,16 @@ fn encodes_a_data_matrix_symbol() {
     let symbol = encode("datamatrix", "123456").expect("valid payload");
     let width = symbol[0] as usize;
     let height = symbol[1] as usize;
-    assert_eq!((width, height), (10, 10), "small numeric payload uses the 10x10 symbol");
-    assert_eq!(symbol.len(), 2 + width * height, "module count matches width*height");
+    assert_eq!(
+        (width, height),
+        (10, 10),
+        "small numeric payload uses the 10x10 symbol"
+    );
+    assert_eq!(
+        symbol.len(),
+        2 + width * height,
+        "module count matches width*height"
+    );
 }
 
 #[wasm_bindgen_test]

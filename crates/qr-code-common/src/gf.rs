@@ -203,8 +203,7 @@ pub fn correct_block_with_erasures(block: &mut [u8], ecc_len: usize, erasures: &
     }
 
     // Deduplicate and bound-check the erasure positions.
-    let mut erasure_positions: Vec<usize> =
-        erasures.iter().copied().filter(|&p| p < n).collect();
+    let mut erasure_positions: Vec<usize> = erasures.iter().copied().filter(|&p| p < n).collect();
     erasure_positions.sort_unstable();
     erasure_positions.dedup();
     let erasure_count = erasure_positions.len();

@@ -34,7 +34,11 @@ pub fn decode(modules: &[u8], extended: bool) -> Option<String> {
         if pattern == START_STOP {
             values.push(usize::MAX); // Sentinel for the start/stop delimiter.
         } else {
-            values.push(PATTERNS.iter().position(|&candidate| candidate == pattern)?);
+            values.push(
+                PATTERNS
+                    .iter()
+                    .position(|&candidate| candidate == pattern)?,
+            );
         }
     }
 

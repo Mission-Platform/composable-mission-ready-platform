@@ -155,7 +155,10 @@ mod tests {
     #[tracing::instrument(skip_all)]
     fn code39_extended_recovers_exact_text() {
         let modules = encode_modules("code39ext", "Mission-42!").expect("encode");
-        assert_eq!(decode_modules("code39ext", &modules).as_deref(), Some("Mission-42!"));
+        assert_eq!(
+            decode_modules("code39ext", &modules).as_deref(),
+            Some("Mission-42!")
+        );
     }
 
     #[test]

@@ -159,7 +159,8 @@ pub fn decode_upce(modules: &[u8]) -> Option<String> {
 
     // Number system 0 uses the parity table directly; number system 1 inverts it.
     let inverted: [bool; 6] = std::array::from_fn(|index| !parity[index]);
-    let (number_system, check) = if let Some(check) = UPCE_PARITY.iter().position(|c| *c == parity) {
+    let (number_system, check) = if let Some(check) = UPCE_PARITY.iter().position(|c| *c == parity)
+    {
         (0u8, check as u8)
     } else if let Some(check) = UPCE_PARITY.iter().position(|c| *c == inverted) {
         (1u8, check as u8)

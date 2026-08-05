@@ -395,7 +395,12 @@ impl ModulusPoly {
         ModulusPoly::new(coefficients)
     }
 
-    fn multiply_by_monomial(&self, field: &ModulusGf, degree: i64, coefficient: i64) -> ModulusPoly {
+    fn multiply_by_monomial(
+        &self,
+        field: &ModulusGf,
+        degree: i64,
+        coefficient: i64,
+    ) -> ModulusPoly {
         if coefficient == 0 {
             return ModulusPoly::zero();
         }
@@ -419,7 +424,11 @@ fn build_monomial(degree: i64, coefficient: i64) -> ModulusPoly {
 /// Correct up to `num_ec_codewords`/2 errors in `received` in place using the
 /// GF(929) Reed–Solomon code, returning the number of errors corrected, or
 /// `None` if correction failed. Port of `ErrorCorrection.decode`.
-pub fn ec_decode(received: &mut [i32], num_ec_codewords: usize, erasures: &[usize]) -> Option<usize> {
+pub fn ec_decode(
+    received: &mut [i32],
+    num_ec_codewords: usize,
+    erasures: &[usize],
+) -> Option<usize> {
     let field = ModulusGf::new(NUMBER_OF_CODEWORDS, 3);
     if received.len() as i64 > field.modulus {
         return None;
@@ -498,7 +507,10 @@ fn run_euclidean_algorithm(
             let degree_diff = r.degree() - r_last.degree();
             let scale = field.multiply(r.coefficient(r.degree()), dlt_inverse);
             q = q.add(field, &build_monomial(degree_diff, scale));
-            r = r.subtract(field, &r_last.multiply_by_monomial(field, degree_diff, scale));
+            r = r.subtract(
+                field,
+                &r_last.multiply_by_monomial(field, degree_diff, scale),
+            );
         }
 
         t = q

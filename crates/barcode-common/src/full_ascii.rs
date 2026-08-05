@@ -49,15 +49,11 @@ pub fn decode_sequence(base: &str) -> Option<String> {
             let follower = chars.next()?;
             let pair = [character, follower];
             let target: String = pair.iter().collect();
-            let byte = FULL_ASCII
-                .iter()
-                .position(|&sequence| sequence == target)?;
+            let byte = FULL_ASCII.iter().position(|&sequence| sequence == target)?;
             out.push(byte as u8 as char);
         } else {
             let single = character.to_string();
-            let byte = FULL_ASCII
-                .iter()
-                .position(|&sequence| sequence == single)?;
+            let byte = FULL_ASCII.iter().position(|&sequence| sequence == single)?;
             out.push(byte as u8 as char);
         }
     }

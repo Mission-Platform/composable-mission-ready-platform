@@ -262,7 +262,8 @@ pub fn decode_rectangular(matrix: &[u8]) -> Option<Vec<u8>> {
     let total = symbol.data + symbol.ecc;
     // Rectangular symbols are produced by the encoder but not (yet) located by
     // the scanner, so they carry no erasure mask: pass an empty one.
-    let (mut block, _erased) = UnPlacement::new(&bits, &[], mapping_rows, mapping_cols, total).run();
+    let (mut block, _erased) =
+        UnPlacement::new(&bits, &[], mapping_rows, mapping_cols, total).run();
 
     if !reed_solomon::correct(&mut block, symbol.ecc) {
         tracing::trace!("datamatrix: uncorrectable Reed-Solomon block");
@@ -341,7 +342,13 @@ struct UnPlacement<'a> {
 
 impl<'a> UnPlacement<'a> {
     #[tracing::instrument(skip_all)]
-    fn new(bits: &'a [bool], erased_bits: &'a [bool], rows: usize, cols: usize, total: usize) -> Self {
+    fn new(
+        bits: &'a [bool],
+        erased_bits: &'a [bool],
+        rows: usize,
+        cols: usize,
+        total: usize,
+    ) -> Self {
         UnPlacement {
             bits,
             erased_bits,
@@ -547,9 +554,18 @@ mod tests {
     #[test]
     #[tracing::instrument(skip_all)]
     fn round_trips_letters_and_symbols() {
-        for text in ["HELLO", "https://mission-platform.dev", "A1B2C3", "Order #42!"] {
+        for text in [
+            "HELLO",
+            "https://mission-platform.dev",
+            "A1B2C3",
+            "Order #42!",
+        ] {
             let decoded = decode(&matrix_for(text)).expect("should decode");
-            assert_eq!(String::from_utf8(decoded).unwrap(), text, "round-trip {text:?}");
+            assert_eq!(
+                String::from_utf8(decoded).unwrap(),
+                text,
+                "round-trip {text:?}"
+            );
         }
     }
 
@@ -620,7 +636,11 @@ mod tests {
             let matrix = encode_modules("datamatrixrectangular", text).expect("fits a symbol");
             assert_ne!(matrix[0], matrix[1], "rectangular symbol is not square");
             let decoded = decode_rectangular(&matrix).expect("should decode");
-            assert_eq!(String::from_utf8(decoded).unwrap(), text, "round-trip {text:?}");
+            assert_eq!(
+                String::from_utf8(decoded).unwrap(),
+                text,
+                "round-trip {text:?}"
+            );
         }
     }
 
@@ -643,7 +663,10 @@ mod tests {
     fn rejects_a_non_square_buffer_as_square() {
         // A rectangular buffer is refused by the square decoder.
         let matrix = encode_modules("datamatrixrectangular", "123456").expect("fits");
-        assert!(decode(&matrix).is_none(), "square decoder rejects rectangular");
+        assert!(
+            decode(&matrix).is_none(),
+            "square decoder rejects rectangular"
+        );
     }
 
     #[test]

@@ -59,7 +59,9 @@ fn row_bools(bitmap: &Bitmap, y: i64) -> Vec<bool> {
 /// Read column `x` of the bitmap into a boolean scan line (top-to-bottom). Lets
 /// the locator read a symbol whose bars run vertically (a 90°/270° capture).
 fn col_bools(bitmap: &Bitmap, x: i64) -> Vec<bool> {
-    (0..bitmap.height as i64).map(|y| bitmap.get(x, y)).collect()
+    (0..bitmap.height as i64)
+        .map(|y| bitmap.get(x, y))
+        .collect()
 }
 
 /// Locate and decode a GS1 DataBar (RSS-14) symbol in the binarised image,

@@ -277,12 +277,7 @@ pub fn rotate270(width: usize, height: usize, luma: &[u8]) -> (usize, usize, Vec
 }
 
 /// Apply the rotation for a ZXING rotation index (0/1/2/3 → 0°/90°/180°/270°).
-pub fn rotate(
-    index: u8,
-    width: usize,
-    height: usize,
-    luma: &[u8],
-) -> (usize, usize, Vec<u8>) {
+pub fn rotate(index: u8, width: usize, height: usize, luma: &[u8]) -> (usize, usize, Vec<u8>) {
     match index {
         0 => (width, height, luma.to_vec()),
         1 => rotate90(width, height, luma),

@@ -266,7 +266,9 @@ fn locate_and_decode_first(width: usize, height: usize, luma: &[u8]) -> Option<S
             (FORMAT_PDF417, &|| try_decode_pdf417(bitmap)),
             (FORMAT_DATABAR, &|| try_decode_databar(bitmap)),
             (FORMAT_MAXICODE, &|| try_decode_maxicode(bitmap)),
-            (FORMAT_BARCODE, &|| try_decode_barcode(bitmap, width, height, luma)),
+            (FORMAT_BARCODE, &|| {
+                try_decode_barcode(bitmap, width, height, luma)
+            }),
         ];
         for (format, attempt) in attempts {
             match attempt() {
@@ -627,12 +629,7 @@ fn decode_matrix_upright(bitmap: &Bitmap, grey: Option<&Grey>) -> DecodeAttempt 
 /// kept as a fallback (e.g. bars running vertically read as a ~0° band that only
 /// a +90° turn resolves).
 #[tracing::instrument(skip_all)]
-fn try_decode_barcode(
-    bitmap: &Bitmap,
-    width: usize,
-    height: usize,
-    luma: &[u8],
-) -> DecodeAttempt {
+fn try_decode_barcode(bitmap: &Bitmap, width: usize, height: usize, luma: &[u8]) -> DecodeAttempt {
     let angle = bitmap.orientation();
 
     // Detected tilt beyond a few degrees: straighten before trusting the frame.

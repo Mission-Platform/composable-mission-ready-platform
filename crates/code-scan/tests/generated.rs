@@ -126,10 +126,10 @@ fn gs1_databar_rss14_round_trips() {
         "12345678901231",
         "00000000000000",
     ] {
-        let modules = encode_databar("databar", gtin)
-            .unwrap_or_else(|| panic!("encode databar {gtin:?}"));
-        let decoded = decode_databar_modules(&modules)
-            .unwrap_or_else(|| panic!("decode databar {gtin:?}"));
+        let modules =
+            encode_databar("databar", gtin).unwrap_or_else(|| panic!("encode databar {gtin:?}"));
+        let decoded =
+            decode_databar_modules(&modules).unwrap_or_else(|| panic!("decode databar {gtin:?}"));
         assert_eq!(decoded, gtin, "databar rss-14 round-trip");
     }
 }
@@ -139,12 +139,7 @@ fn pdf417_codewords_round_trip() {
     // PDF417 encodes via byte compaction and protects the codeword stream with
     // GF(929) Reed–Solomon; a codeword-level round-trip proves the encoder, the
     // EC generator and the decoder's EC correction + bit-stream parser all agree.
-    for payload in [
-        "This is PDF417",
-        "1234567890",
-        "Mixed CASE 42 & text!",
-        "A",
-    ] {
+    for payload in ["This is PDF417", "1234567890", "Mixed CASE 42 & text!", "A"] {
         for ec in 0..=3 {
             let (_cols, _rows, full) = encode_pdf417_codewords(payload, ec)
                 .unwrap_or_else(|| panic!("encode pdf417 ec={ec} {payload:?}"));

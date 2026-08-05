@@ -251,9 +251,19 @@ mod tests {
 
     #[test]
     fn round_trips_short_payloads() {
-        for text in ["A", "HELLO", "12345", "Order #42!", "https://mission-platform.dev"] {
+        for text in [
+            "A",
+            "HELLO",
+            "12345",
+            "Order #42!",
+            "https://mission-platform.dev",
+        ] {
             let decoded = decode(&symbol_for(text)).expect("should decode");
-            assert_eq!(String::from_utf8(decoded).unwrap(), text, "round-trip {text:?}");
+            assert_eq!(
+                String::from_utf8(decoded).unwrap(),
+                text,
+                "round-trip {text:?}"
+            );
         }
     }
 

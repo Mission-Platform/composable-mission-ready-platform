@@ -366,8 +366,7 @@ mod tests {
             "blind decode should fail on damage beyond its capacity"
         );
         // With the damage marked as erasures, the payload is recovered.
-        let decoded =
-            decode_with_erasures(&damaged, &mask).expect("erasure decode should recover");
+        let decoded = decode_with_erasures(&damaged, &mask).expect("erasure decode should recover");
         assert_eq!(String::from_utf8(decoded).unwrap(), text);
     }
 

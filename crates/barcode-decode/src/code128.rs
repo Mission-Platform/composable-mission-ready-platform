@@ -35,7 +35,9 @@ fn symbol_value(block: &[u8]) -> Option<usize> {
         .into_iter()
         .map(|(_, length)| char::from_digit(length as u32, 10).unwrap_or('x'))
         .collect();
-    PATTERNS[..STOP].iter().position(|&pattern| pattern == widths)
+    PATTERNS[..STOP]
+        .iter()
+        .position(|&pattern| pattern == widths)
 }
 
 /// Decode a Code 128 / GS1-128 module run into its payload. Returns `None` when

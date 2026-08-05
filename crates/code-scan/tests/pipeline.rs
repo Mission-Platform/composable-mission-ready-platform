@@ -554,7 +554,13 @@ fn scan_and_decode_reads_aztec_end_to_end() {
     // bullseye locator lets the scanner read it straight through `scan_and_decode`
     // across the compact layer sizes (a short payload is 1-layer 15×15, longer
     // ones grow to 19/23/27).
-    for text in ["A", "HELLO", "Order #42!", "mission-platform-9", &"X".repeat(30)] {
+    for text in [
+        "A",
+        "HELLO",
+        "Order #42!",
+        "mission-platform-9",
+        &"X".repeat(30),
+    ] {
         let packed = encode_matrix("aztec", text).expect("encode aztec");
         let (w, h, luma) = render_matrix(&packed);
         let outcome = scan_and_decode(w, h, &luma).expect("located and decoded");
@@ -722,7 +728,9 @@ fn scan_and_decode_roi_rejects_neighbouring_clutter() {
 
     // The whole frame does not resolve the Data Matrix (the clutter defeats it).
     assert_ne!(
-        scan_and_decode(cw, ch, &canvas).and_then(|o| o.value()).as_deref(),
+        scan_and_decode(cw, ch, &canvas)
+            .and_then(|o| o.value())
+            .as_deref(),
         Some("ROICODE"),
         "whole-frame scan is defeated by the neighbouring clutter"
     );
@@ -773,7 +781,11 @@ fn pdf417_round_trips_through_the_pipeline() {
         let outcome = scan_and_decode(w, h, &luma)
             .unwrap_or_else(|| panic!("located+decoded pdf417 {payload:?}"));
         assert_eq!(outcome.format(), FORMAT_PDF417, "reported as PDF417");
-        assert_eq!(outcome.value().as_deref(), Some(payload), "payload survives");
+        assert_eq!(
+            outcome.value().as_deref(),
+            Some(payload),
+            "payload survives"
+        );
     }
 }
 
@@ -817,9 +829,13 @@ fn row_decoder_reads_camera_upc_ean_photos() {
     for (relative, expected) in cases {
         let path = format!("{CORPUS}/{relative}");
         let (w, h, luma) = png::load_png_luma(&path);
-        let outcome = scan_and_decode(w, h, &luma)
-            .unwrap_or_else(|| panic!("{relative}: located+decoded"));
-        assert_eq!(outcome.format(), FORMAT_BARCODE, "{relative}: reported as 1D barcode");
+        let outcome =
+            scan_and_decode(w, h, &luma).unwrap_or_else(|| panic!("{relative}: located+decoded"));
+        assert_eq!(
+            outcome.format(),
+            FORMAT_BARCODE,
+            "{relative}: reported as 1D barcode"
+        );
         assert_eq!(
             outcome.value().as_deref(),
             Some(expected),
@@ -838,6 +854,9 @@ fn row_decoder_keeps_the_false_positive_guard_clean() {
         let path = format!("{CORPUS}/{relative}");
         let (w, h, luma) = png::load_png_luma(&path);
         let decoded = scan_and_decode(w, h, &luma).and_then(|o| o.value());
-        assert_eq!(decoded, None, "{relative}: must not produce a false positive");
+        assert_eq!(
+            decoded, None,
+            "{relative}: must not produce a false positive"
+        );
     }
 }

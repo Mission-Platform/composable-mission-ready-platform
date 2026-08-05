@@ -160,16 +160,16 @@ pub fn encode_ean8(data: &str) -> Option<Vec<u8>> {
 /// parity (G code), `false` = odd parity (L code). Number system `1` inverts
 /// each entry.
 const UPCE_PARITY: [[bool; 6]; 10] = [
-    [true, true, true, false, false, false],  // 0: EEEOOO
-    [true, true, false, true, false, false],  // 1: EEOEOO
-    [true, true, false, false, true, false],  // 2: EEOOEO
-    [true, true, false, false, false, true],  // 3: EEOOOE
-    [true, false, true, true, false, false],  // 4: EOEEOO
-    [true, false, false, true, true, false],  // 5: EOOEEO
-    [true, false, false, false, true, true],  // 6: EOOOEE
-    [true, false, true, false, true, false],  // 7: EOEOEO
-    [true, false, true, false, false, true],  // 8: EOEOOE
-    [true, false, false, true, false, true],  // 9: EOOEOE
+    [true, true, true, false, false, false], // 0: EEEOOO
+    [true, true, false, true, false, false], // 1: EEOEOO
+    [true, true, false, false, true, false], // 2: EEOOEO
+    [true, true, false, false, false, true], // 3: EEOOOE
+    [true, false, true, true, false, false], // 4: EOEEOO
+    [true, false, false, true, true, false], // 5: EOOEEO
+    [true, false, false, false, true, true], // 6: EOOOEE
+    [true, false, true, false, true, false], // 7: EOEOEO
+    [true, false, true, false, false, true], // 8: EOEOOE
+    [true, false, false, true, false, true], // 9: EOOEOE
 ];
 
 /// Expand a UPC-E number system (`0`/`1`) and six digits into the equivalent
@@ -316,7 +316,10 @@ mod tests {
         // 8-digit form (number system + 6 + check) must agree with the 7-digit form.
         let seven = encode_upce("0123456").expect("valid 7-digit UPC-E");
         assert_eq!(short, seven, "number system 0 is the default");
-        assert!(encode_upce("2123456").is_none(), "number system must be 0 or 1");
+        assert!(
+            encode_upce("2123456").is_none(),
+            "number system must be 0 or 1"
+        );
         assert!(encode_upce("123").is_none(), "wrong length is rejected");
     }
 }

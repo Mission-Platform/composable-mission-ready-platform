@@ -485,14 +485,14 @@ fn decode_upce(row: &Row) -> Option<String> {
     // digit (number system 0 uses the table directly; 1 inverts it).
     let parity: [bool; 6] = std::array::from_fn(|x| (lg_pattern >> (5 - x)) & 1 == 1);
     let inverted: [bool; 6] = std::array::from_fn(|x| !parity[x]);
-    let (number_system, check) =
-        if let Some(check) = UPCE_PARITY.iter().position(|c| *c == parity) {
-            (0u8, check as u8)
-        } else if let Some(check) = UPCE_PARITY.iter().position(|c| *c == inverted) {
-            (1u8, check as u8)
-        } else {
-            return None;
-        };
+    let (number_system, check) = if let Some(check) = UPCE_PARITY.iter().position(|c| *c == parity)
+    {
+        (0u8, check as u8)
+    } else if let Some(check) = UPCE_PARITY.iter().position(|c| *c == inverted) {
+        (1u8, check as u8)
+    } else {
+        return None;
+    };
 
     let value = format!("{number_system}{digits}{check}");
     let upca = upce_to_upca(&value)?;

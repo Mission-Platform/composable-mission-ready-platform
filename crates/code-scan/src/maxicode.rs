@@ -52,8 +52,7 @@ fn sample_pure_bits(bitmap: &Bitmap) -> Option<Vec<u8>> {
         let iy = top + ((y * height + height / 2) / HEIGHT).min(height - 1);
         for x in 0..WIDTH {
             // The odd-row half-module x-shift follows the hexagonal offset.
-            let ix = left
-                + ((x * width + width / 2 + (y & 1) * width / 2) / WIDTH).min(width - 1);
+            let ix = left + ((x * width + width / 2 + (y & 1) * width / 2) / WIDTH).min(width - 1);
             if bitmap.get(ix as i64, iy as i64) {
                 modules[y * WIDTH + x] = 1;
             }

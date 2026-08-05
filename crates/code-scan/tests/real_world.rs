@@ -13,7 +13,9 @@
 
 #![cfg(not(target_arch = "wasm32"))]
 
-use mission_platform_code_scan::{scan, scan_and_decode, BARCODE_CANDIDATE_SEPARATOR, FORMAT_BARCODE};
+use mission_platform_code_scan::{
+    scan, scan_and_decode, BARCODE_CANDIDATE_SEPARATOR, FORMAT_BARCODE,
+};
 
 #[path = "support/png.rs"]
 mod png;

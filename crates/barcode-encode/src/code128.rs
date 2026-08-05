@@ -66,7 +66,11 @@ fn render(values: &[usize]) -> Vec<u8> {
 /// FNC1), choosing the Code C digit-pair fast path or Code B. Returns `None`
 /// when a Code B byte is outside the printable ASCII range (0x20–0x7E).
 #[tracing::instrument(skip_all)]
-fn encode_with_prefix(prefix_start_c: &[usize], prefix_start_b: &[usize], bytes: &[u8]) -> Option<Vec<u8>> {
+fn encode_with_prefix(
+    prefix_start_c: &[usize],
+    prefix_start_b: &[usize],
+    bytes: &[u8],
+) -> Option<Vec<u8>> {
     // Code C fast path: an even number of digits packs two per symbol.
     if bytes.len().is_multiple_of(2) && bytes.iter().all(u8::is_ascii_digit) {
         let mut values = prefix_start_c.to_vec();
@@ -148,7 +152,11 @@ mod tests {
         // Same payload: GS1-128 is one extra symbol (FNC1) wider than plain Code 128.
         let plain = encode("1234").expect("valid Code 128 C");
         let gs1 = encode_gs1_128("1234").expect("valid GS1-128");
-        assert_eq!(gs1.len(), plain.len() + 11, "GS1-128 adds one 11-module FNC1 symbol");
+        assert_eq!(
+            gs1.len(),
+            plain.len() + 11,
+            "GS1-128 adds one 11-module FNC1 symbol"
+        );
         assert!(gs1.iter().all(|&bit| bit <= 1), "modules must be 0/1");
     }
 }

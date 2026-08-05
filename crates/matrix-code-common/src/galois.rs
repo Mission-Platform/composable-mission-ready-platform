@@ -97,14 +97,14 @@ impl Field {
     /// Compute `count` Reed-Solomon error-correction symbols for `data`.
     #[tracing::instrument(skip_all)]
     pub fn error_correction(&self, data: &[u16], count: usize) -> Vec<u16> {
-        let gen = self.generator(count);
+        let iterable = self.generator(count);
         let mut remainder = vec![0u16; count];
         for &symbol in data {
             let factor = symbol ^ remainder[0];
             remainder.remove(0);
             remainder.push(0);
             if factor != 0 {
-                for (index, &coefficient) in gen.iter().enumerate().skip(1) {
+                for (index, &coefficient) in iterable.iter().enumerate().skip(1) {
                     remainder[index - 1] ^= self.mul(coefficient, factor);
                 }
             }
@@ -317,7 +317,11 @@ mod tests {
         let field = Field::new(0x409, 1024);
         assert_eq!(field.size(), 1024);
         for value in 1..1024u16 {
-            assert_eq!(field.mul(value, field.inv(value)), 1, "value {value} inverts");
+            assert_eq!(
+                field.mul(value, field.inv(value)),
+                1,
+                "value {value} inverts"
+            );
         }
     }
 }

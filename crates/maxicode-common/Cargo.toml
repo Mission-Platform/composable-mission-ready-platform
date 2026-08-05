@@ -1,10 +1,14 @@
 [package]
 name = "mission-platform-maxicode-common"
 version = "0.1.0"
-edition = "2021"
 description = "Shared MaxiCode primitives (30x33 bit map, GF(64) Reed-Solomon) for the encode/decode crates"
-license = "BSD-4-Clause"
-publish = false
+
+license-file = { workspace = true }
+publish = { workspace = true }
+categories = { workspace = true }
+edition = { workspace = true }
+keywords = { workspace = true }
+repository = { workspace = true }
 
 [lib]
 # A plain library: it is linked into the `-encode` / `-decode` wasm crates and

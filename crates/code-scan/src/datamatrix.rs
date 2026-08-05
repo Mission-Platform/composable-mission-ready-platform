@@ -405,8 +405,8 @@ fn edge_module_count(bitmap: &Bitmap, a: Point, b: Point, centroid: Point, inset
         let smallest = runs
             .iter()
             .enumerate()
-            .filter(|(_, &len)| (len as f64) < threshold)
-            .min_by_key(|(_, &len)| len)
+            .filter(|&(_, &len)| (len as f64) < threshold)
+            .min_by_key(|&(_, &len)| len)
             .map(|(index, _)| index);
         let Some(index) = smallest else { break };
         if index > 0 && index + 1 < runs.len() {

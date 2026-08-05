@@ -104,7 +104,10 @@ mod tests {
     fn dispatches_rectangular_data_matrix() {
         // The rectangular Data Matrix header is width ≠ height.
         let rectangular = encode_modules("datamatrixrectangular", "HELLO").expect("rectangular");
-        assert_ne!(rectangular[0], rectangular[1], "rectangular symbol is not square");
+        assert_ne!(
+            rectangular[0], rectangular[1],
+            "rectangular symbol is not square"
+        );
     }
 
     #[test]

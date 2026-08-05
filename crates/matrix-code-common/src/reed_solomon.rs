@@ -101,7 +101,7 @@ pub fn error_correction(data: &[u8], count: usize) -> Vec<u8> {
         data.len()
     );
     let field = GaloisField::new();
-    let gen = generator(&field, count);
+    let iterable = generator(&field, count);
 
     let mut remainder = vec![0u8; count];
     for &byte in data {
@@ -110,7 +110,7 @@ pub fn error_correction(data: &[u8], count: usize) -> Vec<u8> {
         remainder.push(0);
         if factor != 0 {
             // `gen[0]` is 1, so skip it and start from the next coefficient.
-            for (index, &coefficient) in gen.iter().enumerate().skip(1) {
+            for (index, &coefficient) in iterable.iter().enumerate().skip(1) {
                 remainder[index - 1] ^= field.mul(coefficient, factor);
             }
         }
