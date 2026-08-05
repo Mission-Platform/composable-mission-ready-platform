@@ -5,4 +5,4 @@
 // each component compiled straight to native React or Vue. The barrel is never
 // shipped as-is; only the compiled framework builds are exposed (through the
 // package's `./react` and `./vue` subpath exports).
-export { BaseQrCode, type QrCodeProperties, type QrErrorCorrection } from './base-qr-code';
+export { BaseQrCode, type QrCodeProperties, type QrErrorCorrection } from './molecules/base-qr-code';

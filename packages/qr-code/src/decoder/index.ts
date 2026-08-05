@@ -3,30 +3,16 @@
 // The decoder recovers the format info, unmasks the data region, reads the
 // codewords and Reed-Solomon-corrects up to the level's error capacity, so it
 // tolerates a damaged matrix. It is compiled from the `crates/qr-code-decode`
-// Rust crate into a wasm module emitted under `../generated/decode`.
+// Rust crate and published as `@mission-platform/qr-code-decode-wasm`.
 //
-// This module owns the decoder wasm instance (`decoder`) and the public
-// `decodeQr` / `decodeQrAsync` helpers, plus the package-wide initialisation
-// helpers (`initQr` / `initQrSync`) that instantiate both wasm modules. For that
-// coordination it imports the encoder's singleton (`../encoder`) — a one-way
-// dependency (the encoder never imports the decoder), so the two paths still
-// never form an import cycle. `index.ts` re-exports the public decode + init API.
+// The `-wasm` package inlines its wasm binary and instantiates it synchronously
+// at import, so `decode` is ready to call with no initialisation step. This
+// module owns the public `decodeQr` / `decodeQrAsync` helpers, which `index.ts`
+// re-exports.
 
-import { encoder } from '../encoder';
-import decodeInit, { decode as wasmDecode, initSync as decodeInitSync } from '../generated/decode/qr-code-decode.js';
-// The compiled decoder wasm binary. In a production bundle Vite inlines this as
-// a base64 `data:` URI (the package raises `assetsInlineLimit`); in dev/test it
-// resolves to a plain URL instead — see `WasmModule` for how each is handled.
-import decodeWasmUrl from '../generated/decode/qr-code-decode_bg.wasm?url';
+import { decode as wasmDecode } from '@mission-platform/qr-code-decode-wasm';
+
 import type { QrMatrix } from '../types';
-import { WasmModule, type AsyncInit, type SyncInit, type SyncInitInput } from '../wasm-module';
-
-/**
- * The lazily-instantiated decoder wasm module. Exported so the package entry
- * (`index.ts`) can re-export it; it is also driven by the co-located
- * `initQr`/`initQrSync` helpers below alongside the encoder singleton.
- */
-export const decoder = new WasmModule(decodeInit as AsyncInit, decodeInitSync as SyncInit, decodeWasmUrl, 'decoder');
 
 /** Pack a {@link QrMatrix} into the decoder's `[size, ...modules]` buffer. */
 function packMatrix(matrix: QrMatrix): Uint8Array {
@@ -54,8 +40,6 @@ function packMatrix(matrix: QrMatrix): Uint8Array {
  * @returns the decoded text, or `null` when the matrix cannot be decoded.
  */
 export function decodeQr(matrix: QrMatrix): string | null {
-  decoder.ensureSyncInit();
-  decoder.assertInitialised();
   return wasmDecode(packMatrix(matrix)) ?? null;
 }
 
@@ -65,30 +49,6 @@ export function decodeQr(matrix: QrMatrix): string | null {
  *
  * @returns the decoded text, or `null` when the matrix cannot be decoded.
  */
-export async function decodeQrAsync(matrix: QrMatrix): Promise<string | null> {
-  await decoder.instantiate();
-  return wasmDecode(packMatrix(matrix)) ?? null;
-}
-
-/**
- * Instantiate the encoder WebAssembly module synchronously from raw bytes (or a
- * precompiled `WebAssembly.Module`), and optionally the decoder module too. Use
- * this in non-bundled environments — e.g. Node or a test runner — where the
- * inlined `data:` URI isn't available, so the synchronous
- * {@link decodeQr} (and the encoder's `encodeQr`) can be used afterwards.
- */
-export function initQrSync(encode: SyncInitInput, decode?: SyncInitInput): void {
-  encoder.instantiateSync(encode);
-  if (decode !== undefined) {
-    decoder.instantiateSync(decode);
-  }
-}
-
-/**
- * Instantiate both WebAssembly modules (encoder + decoder) asynchronously,
- * resolving once they are ready. Called automatically by the `*Async` helpers;
- * call it yourself to warm the modules up front.
- */
-export function initQr(): Promise<void> {
-  return Promise.all([encoder.instantiate(), decoder.instantiate()]).then(() => undefined);
+export function decodeQrAsync(matrix: QrMatrix): Promise<string | null> {
+  return Promise.resolve(wasmDecode(packMatrix(matrix)) ?? null);
 }

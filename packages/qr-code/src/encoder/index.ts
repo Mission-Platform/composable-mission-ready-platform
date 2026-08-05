@@ -6,35 +6,24 @@
 // mask with the lowest penalty score per the QR specification (ISO/IEC 18004).
 //
 // The heavy lifting runs in WebAssembly, compiled from the `crates/qr-code-encode`
-// Rust crate (sharing `crates/qr-code-common`) into a wasm module emitted under
-// `../generated/encode`; the decoder counterpart lives in `../decoder`.
+// Rust crate (sharing `crates/qr-code-common`) and published as
+// `@mission-platform/qr-code-encode-wasm`; the decoder counterpart lives in
+// `../decoder`.
 //
-// This module owns the encoder wasm instance (`encoder`) and the public
-// `encodeQr` / `encodeQrAsync` helpers. It depends only on the shared types and
-// the wasm-module helper — never on the decoder — so the encode path stays pure
-// (the decoder façade imports this module for combined initialisation, one-way,
-// so the two paths never form an import cycle). `index.ts` re-exports the public
-// encode API.
+// The `-wasm` package inlines its wasm binary and instantiates it synchronously
+// at import, so the encoders are ready to call with no initialisation step.
+// This module owns the public `encodeQr` / `encodeQrAsync` helpers (plus the
+// compact Micro QR / rMQR variants). It depends only on the shared types —
+// never on the decoder — so the encode path stays pure (the two paths never
+// form an import cycle). `index.ts` re-exports the public encode API.
 
-import encodeInit, {
+import {
   encode as wasmEncode,
   encode_micro_qr as wasmEncodeMicroQr,
   encode_rmqr as wasmEncodeRmqr,
-  initSync as encodeInitSync,
-} from '../generated/encode/qr-code-encode.js';
-// The compiled encoder wasm binary. In a production bundle Vite inlines this as
-// a base64 `data:` URI (the package raises `assetsInlineLimit`); in dev/test it
-// resolves to a plain URL instead — see `WasmModule` for how each is handled.
-import encodeWasmUrl from '../generated/encode/qr-code-encode_bg.wasm?url';
-import type { CompactQrMatrix, QrErrorCorrection, QrMatrix } from '../types';
-import { WasmModule, type AsyncInit, type SyncInit } from '../wasm-module';
+} from '@mission-platform/qr-code-encode-wasm';
 
-/**
- * The lazily-instantiated encoder wasm module. Exported so the decoder façade
- * can coordinate combined initialisation (`initQr`/`initQrSync`) across both
- * modules without the encoder importing the decoder back.
- */
-export const encoder = new WasmModule(encodeInit as AsyncInit, encodeInitSync as SyncInit, encodeWasmUrl, 'encoder');
+import type { CompactQrMatrix, QrErrorCorrection, QrMatrix } from '../types';
 
 /** Ordinal for each error-correction level, matching the wasm `encode` contract. */
 const ECC_ORDINAL: Record<QrErrorCorrection, number> = { L: 0, M: 1, Q: 2, H: 3 };
@@ -70,8 +59,6 @@ function unpack(packed: Uint8Array | undefined): QrMatrix {
  *   40) QR Code at the chosen error-correction level.
  */
 export function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix {
-  encoder.ensureSyncInit();
-  encoder.assertInitialised();
   return unpack(wasmEncode(text, ECC_ORDINAL[errorCorrection]));
 }
 
@@ -82,9 +69,8 @@ export function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M')
  * @throws {RangeError} if the text is too long to fit in the largest (version
  *   40) QR Code at the chosen error-correction level.
  */
-export async function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix> {
-  await encoder.instantiate();
-  return unpack(wasmEncode(text, ECC_ORDINAL[errorCorrection]));
+export function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix> {
+  return Promise.resolve(unpack(wasmEncode(text, ECC_ORDINAL[errorCorrection])));
 }
 
 /**
@@ -122,8 +108,6 @@ function unpackCompact(packed: Uint8Array | undefined, kind: string): CompactQrM
  *   chosen level (including any request for level `H`).
  */
 export function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix {
-  encoder.ensureSyncInit();
-  encoder.assertInitialised();
   return unpackCompact(wasmEncodeMicroQr(text, ECC_ORDINAL[errorCorrection]), 'Micro QR Code');
 }
 
@@ -134,12 +118,11 @@ export function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection =
  * @throws {RangeError} if the text is too long for any Micro QR version at the
  *   chosen level (including any request for level `H`).
  */
-export async function encodeMicroQrAsync(
+export function encodeMicroQrAsync(
   text: string,
   errorCorrection: QrErrorCorrection = 'M',
 ): Promise<CompactQrMatrix> {
-  await encoder.instantiate();
-  return unpackCompact(wasmEncodeMicroQr(text, ECC_ORDINAL[errorCorrection]), 'Micro QR Code');
+  return Promise.resolve(unpackCompact(wasmEncodeMicroQr(text, ECC_ORDINAL[errorCorrection]), 'Micro QR Code'));
 }
 
 /**
@@ -155,8 +138,6 @@ export async function encodeMicroQrAsync(
  *   chosen level.
  */
 export function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix {
-  encoder.ensureSyncInit();
-  encoder.assertInitialised();
   return unpackCompact(wasmEncodeRmqr(text, ECC_ORDINAL[errorCorrection]), 'rMQR Code');
 }
 
@@ -168,10 +149,9 @@ export function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M
  * @throws {RangeError} if the text is too long for any rMQR version at the
  *   chosen level.
  */
-export async function encodeRmqrAsync(
+export function encodeRmqrAsync(
   text: string,
   errorCorrection: QrErrorCorrection = 'M',
 ): Promise<CompactQrMatrix> {
-  await encoder.instantiate();
-  return unpackCompact(wasmEncodeRmqr(text, ECC_ORDINAL[errorCorrection]), 'rMQR Code');
+  return Promise.resolve(unpackCompact(wasmEncodeRmqr(text, ECC_ORDINAL[errorCorrection]), 'rMQR Code'));
 }

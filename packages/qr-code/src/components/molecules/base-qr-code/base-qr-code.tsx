@@ -1,6 +1,6 @@
 import { BaseButton, BaseTypography } from '@mission-platform/components';
 import { IconCheck, IconCopy, IconDownload, IconImage } from '@mission-platform/icons';
-import { h, useEffect, useMemo, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { h, type MpElement, type MpProperties, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
 import { encodeMicroQr, encodeQr, encodeRmqr, type QrErrorCorrection } from '@mission-platform/qr-code';
 
 import styles from './base-qr-code.module.scss';

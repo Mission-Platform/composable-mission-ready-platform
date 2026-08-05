@@ -8,9 +8,9 @@
 // modules emitted under `src/generated/encode` and `src/generated/decode`.
 //
 // This barrel defines no logic of its own: it re-exports the encode API
-// (`./encoder`), the decode + package-wide initialisation API (`decodeQr`,
-// `decodeQrAsync`, `initQr`, `initQrSync` from `./decoder`), the shared types
-// (`./types`) and the ready-made payload builders (`./formats`). The per-feature
+// (`./encoder`), the decode API (`decodeQr`, `decodeQrAsync` from `./decoder`),
+// the shared types (`./types`) and the ready-made payload builders
+// (`./formats`). The per-feature
 // `component/` sibling (a write-once `BaseQrCode`) is built separately and
 // shipped through the package's `./react` and `./vue` subpath exports.
 
@@ -32,5 +32,5 @@ export type { CompactQrMatrix, QrErrorCorrection, QrMatrix } from './types';
  */
 export { encodeMicroQr, encodeMicroQrAsync, encodeQr, encodeQrAsync, encodeRmqr, encodeRmqrAsync } from './encoder';
 
-/** The decoder + package-wide initialisation API. Implemented in `./decoder`. */
-export { decodeQr, decodeQrAsync, initQr, initQrSync } from './decoder';
+/** The decoder API. Implemented in `./decoder`. */
+export { decodeQr, decodeQrAsync } from './decoder';
