@@ -2,6 +2,23 @@
 
 This repository contains comprehensive documentation for the Mission Platform, a VueJS 3 monorepo managed with pnpm workspaces.
 
+## Browsing the Documentation
+
+All documents under `docs/` can be read directly on GitHub, or browsed in a dedicated documentation site: the **`@mission-platform/docs`** app (`apps/docs`). It is a Vite + Vue 3 single-page app that renders the canonical Markdown in `docs/` at build time, with grouped sidebar navigation, per-page table of contents, syntax-highlighted code, and in-app cross-links.
+
+```bash
+# Start the documentation site locally
+pnpm --filter @mission-platform/docs dev
+
+# Type-check and build the static site
+pnpm --filter @mission-platform/docs build
+
+# Preview the production build
+pnpm --filter @mission-platform/docs preview
+```
+
+Because the site reads the files in `docs/` directly, updating a Markdown document automatically updates the rendered site — there is no separate copy to maintain.
+
 ## Documentation Structure
 
 ### Overview
@@ -21,6 +38,10 @@ This repository contains comprehensive documentation for the Mission Platform, a
 #### Workspace Structure
 - **[docs/workspace-structure.md](docs/workspace-structure.md)**: Overview of the repository's directory structure
 - **[docs/package-development.md](docs/package-development.md)**: Guidelines for developing and publishing packages
+- **[docs/atomic-component-design.md](docs/atomic-component-design.md)**: Atomic design levels, folder layout, and story title convention
+- **[docs/composable-authoring.md](docs/composable-authoring.md)**: Write-once composables under `src/composables/<name>/`
+- **[docs/store-authoring.md](docs/store-authoring.md)**: Framework-neutral stores under `src/stores/<name>/`
+- **[docs/util-authoring.md](docs/util-authoring.md)**: Pure utils under `src/utils/<name>/`
 
 #### Testing
 - **[docs/testing.md](docs/testing.md)**: Comprehensive testing strategies and tools

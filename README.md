@@ -8,7 +8,8 @@ The Mission Platform is a VueJS 3 monorepo managed with pnpm workspaces. It foll
 
 ## Key Features
 
-- **Vue 3 (Composition API / `<script setup>`)**: UI framework for all apps and components
+- **Forge JSX (`@mission-platform/forge`)**: The primary, framework-neutral UI framework in which all shared components (everything except the apps) are authored
+- **Vue 3 (Composition API / `<script setup>`)**: The framework the apps are built with, and the primary native render target for Forge components
 - **TypeScript**: Type-safe JavaScript across every workspace
 - **Vite**: Dev server and production bundler
 - **Vitest + Playwright**: Unit and browser-level testing

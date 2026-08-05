@@ -4,8 +4,17 @@ packages:
   - packages/**
   - vite-plugins/**
   - workers/**
+  - examples/**
   - scripts
-  - mcp
+  - mcp/*
+  # wasm-pack crates (explicit — other Rust-only crates have no package.json)
+  - crates/barcode-encode
+  - crates/barcode-decode
+  - crates/qr-code-encode
+  - crates/qr-code-decode
+  - crates/matrix-code-encode
+  - crates/matrix-code-decode
+  - crates/code-scan
 
 catalog:
   "@types/js-yaml": ^4.0.9
@@ -106,16 +115,25 @@ catalogs:
     vite-ssg: ^28.3.0
     vite-svg-loader: ^5.1.1
 
+  build:
+    tsdown: ^0.22.14
+    "@tsdown/css": ^0.22.14
+    unplugin-vue: ^7.2.0
+
   storybook:
     "@chromatic-com/storybook": ^5.2.1
     "chromatic": "^17.8.0"
-    "@storybook/addon-a11y": ^10.5.5
-    "@storybook/addon-docs": ^10.5.5
-    "@storybook/addon-themes": ^10.5.5
-    "@storybook/addon-vitest": ^10.5.5
-    "@storybook/react-vite": ^10.5.5
-    "@storybook/vue3-vite": ^10.5.5
-    storybook: ^10.5.5
+    "@storybook/addon-a11y": ^10.5.6
+    "@storybook/addon-docs": ^10.5.6
+    "@storybook/addon-themes": ^10.5.6
+    "@storybook/addon-vitest": ^10.5.6
+    "@storybook/react-vite": ^10.5.6
+    "@storybook/vue3-vite": ^10.5.6
+    "@storybook/html-vite": ^10.5.6
+    "@storybook/svelte-vite": ^10.5.6
+    "@storybook/web-components-vite": ^10.5.6
+    "storybook-solidjs-vite": ^10.6.0
+    storybook: ^10.5.6
 
   react:
     "@vitejs/plugin-react": ^6.0.5

@@ -13,10 +13,19 @@
     "Cargo.lock",
     ".cargo/config.toml"
   ],
-  "globalEnv": ["NODE_ENV", "CI", "SSR", "MISSION_REPO_ROOT", "NODE_OPTIONS"],
+  "globalEnv": [
+    "NODE_ENV",
+    "CI",
+    "SSR",
+    "MISSION_REPO_ROOT",
+    "NODE_OPTIONS",
+    "STORYBOOK_FRAMEWORK"
+  ],
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "inputs": [
         "$TURBO_DEFAULT$",
         "!**/*.md",
@@ -25,10 +34,15 @@
         "!**/.vite/**",
         "!**/coverage/**"
       ],
-      "outputs": ["dist/**", ".vite/**"]
+      "outputs": [
+        "dist/**",
+        ".vite/**"
+      ]
     },
     "build:check": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "inputs": [
         "$TURBO_DEFAULT$",
         "!**/*.md",
@@ -40,7 +54,9 @@
       "outputs": []
     },
     "build:neutral": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "inputs": [
         "$TURBO_DEFAULT$",
         "!**/*.md",
@@ -62,103 +78,9 @@
       ]
     },
     "build:bundle": {
-      "dependsOn": ["^build"],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
+      "dependsOn": [
+        "^build"
       ],
-      "outputs": ["dist/**", "!dist/**/*.d.ts", "!dist/**/*.d.ts.map"]
-    },
-    "build:vue": {
-      "dependsOn": ["^build"],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
-      ],
-      "outputs": ["dist/vue/**"]
-    },
-    "build:react": {
-      "dependsOn": ["^build"],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
-      ],
-      "outputs": ["dist/react/**"]
-    },
-    "build:solid": {
-      "dependsOn": ["^build"],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
-      ],
-      "outputs": ["dist/solid/**"]
-    },
-    "build:svelte": {
-      "dependsOn": ["^build"],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
-      ],
-      "outputs": ["dist/svelte/**"]
-    },
-    "build:web-components": {
-      "dependsOn": ["^build"],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
-      ],
-      "outputs": ["dist/web-components/**"]
-    },
-    "build:storyblok-vue": {
-      "dependsOn": ["^build"],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
-      ],
-      "outputs": ["dist/storyblok/vue/**", "dist/storyblok/*.json"]
-    },
-    "build:storyblok-react": {
-      "dependsOn": ["^build"],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
-      ],
-      "outputs": ["dist/storyblok/react/**"]
-    },
-    "build:types": {
-      "dependsOn": ["^build"],
       "inputs": [
         "$TURBO_DEFAULT$",
         "!**/*.md",
@@ -168,124 +90,169 @@
         "!**/coverage/**"
       ],
       "outputs": [
-        "dist/**/*.d.ts",
-        "dist/**/*.d.ts.map",
-        "!dist/vue/**",
-        "!dist/react/**",
-        "!dist/solid/**",
-        "!dist/svelte/**",
-        "!dist/web-components/**",
-        "!dist/storyblok/**"
+        "dist/**",
+        "!dist/**/*.d.ts",
+        "!dist/**/*.d.ts.map"
+      ]
+    },
+    "build:solid": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": [
+        "dist/solid/**"
+      ]
+    },
+    "build:svelte": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": [
+        "dist/svelte/**"
+      ]
+    },
+    "build:web-components": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": [
+        "dist/web-components/**"
+      ]
+    },
+    "build:storyblok-vue": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": [
+        "dist/storyblok/vue/**",
+        "dist/storyblok/*.json"
+      ]
+    },
+    "build:storyblok-react": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": [
+        "dist/storyblok/react/**"
       ]
     },
     "build:watch": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "cache": false,
       "persistent": true
     },
     "dev": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
+      "with": [
+        "@mission-platform/components#build:watch"
+      ],
       "cache": false,
       "persistent": true
     },
     "preview": {
-      "dependsOn": ["build"],
+      "dependsOn": [
+        "build"
+      ],
       "cache": false,
       "persistent": true
     },
     "storybook": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "cache": false,
       "persistent": true
     },
     "storybook-react": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "cache": false,
       "persistent": true
     },
     "test": {
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     },
     "test:watch": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "cache": false,
       "persistent": true
     },
     "test:coverage": {
-      "dependsOn": ["^build"],
-      "outputs": ["coverage/**"]
-    },
-    "build:wasm:encode": {
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "$TURBO_ROOT$/Cargo.toml",
-        "$TURBO_ROOT$/Cargo.lock",
-        "$TURBO_ROOT$/.cargo/config.toml",
-        "$TURBO_ROOT$/crates/**"
+      "dependsOn": [
+        "^build"
       ],
-      "outputs": ["src/generated/encode/**", "$TURBO_ROOT$/target/**"]
-    },
-    "build:wasm:decode": {
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "$TURBO_ROOT$/Cargo.toml",
-        "$TURBO_ROOT$/Cargo.lock",
-        "$TURBO_ROOT$/.cargo/config.toml",
-        "$TURBO_ROOT$/crates/**"
-      ],
-      "outputs": ["src/generated/decode/**", "$TURBO_ROOT$/target/**"]
-    },
-    "build:wasm:scan": {
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "$TURBO_ROOT$/Cargo.toml",
-        "$TURBO_ROOT$/Cargo.lock",
-        "$TURBO_ROOT$/.cargo/config.toml",
-        "$TURBO_ROOT$/crates/**"
-      ],
-      "outputs": ["src/generated/scan/**", "$TURBO_ROOT$/target/**"]
+      "outputs": [
+        "coverage/**"
+      ]
     },
     "test:wasm": {
-      "dependsOn": ["^build"]
-    },
-    "test:wasm:encode": {
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "$TURBO_ROOT$/Cargo.toml",
-        "$TURBO_ROOT$/Cargo.lock",
-        "$TURBO_ROOT$/.cargo/config.toml",
-        "$TURBO_ROOT$/crates/**"
-      ],
-      "outputs": ["$TURBO_ROOT$/target/**"]
-    },
-    "test:wasm:decode": {
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "$TURBO_ROOT$/Cargo.toml",
-        "$TURBO_ROOT$/Cargo.lock",
-        "$TURBO_ROOT$/.cargo/config.toml",
-        "$TURBO_ROOT$/crates/**"
-      ],
-      "outputs": ["$TURBO_ROOT$/target/**"]
-    },
-    "test:wasm:scan": {
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "$TURBO_ROOT$/Cargo.toml",
-        "$TURBO_ROOT$/Cargo.lock",
-        "$TURBO_ROOT$/.cargo/config.toml",
-        "$TURBO_ROOT$/crates/**"
-      ],
-      "outputs": ["$TURBO_ROOT$/target/**"]
+      "dependsOn": [
+        "^build"
+      ]
     },
     "transit": {
-      "dependsOn": ["^transit"]
+      "dependsOn": [
+        "^transit"
+      ]
     },
     "lint": {
-      "dependsOn": ["transit"]
+      "dependsOn": [
+        "transit"
+      ]
     },
     "lint:fix": {
-      "dependsOn": ["transit"],
+      "dependsOn": [
+        "transit"
+      ],
       "cache": false
     },
     "lint:style": {},
@@ -297,19 +264,34 @@
       "cache": false
     },
     "deploy": {
-      "dependsOn": ["build"],
+      "dependsOn": [
+        "build"
+      ],
       "cache": false
     },
     "i18n:extract": {
-      "dependsOn": ["^i18n:extract"],
-      "outputs": ["locales/*.yaml", "i18n-meta.json"]
+      "dependsOn": [
+        "^i18n:extract"
+      ],
+      "outputs": [
+        "locales/*.yaml",
+        "i18n-meta.json"
+      ]
     },
     "i18n:types": {
-      "dependsOn": ["i18n:extract", "^i18n:types"],
-      "outputs": ["src/locales/types.d.ts", "src/locales/resources.d.ts"]
+      "dependsOn": [
+        "i18n:extract",
+        "^i18n:types"
+      ],
+      "outputs": [
+        "src/locales/types.d.ts",
+        "src/locales/resources.d.ts"
+      ]
     },
     "i18n:lint": {
-      "dependsOn": ["i18n:extract"]
+      "dependsOn": [
+        "i18n:extract"
+      ]
     }
   }
 }
