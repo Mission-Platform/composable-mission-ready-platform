@@ -48,19 +48,19 @@ Tests are colocated with the source code and use the `.spec.ts` (or `.spec.tsx`)
 ```typescript
 import { mount } from '@vue/test-utils';
 import { describe, it, expect } from 'vitest';
-import BaseButton from './BaseButton.vue';
+import ForgeButton from './ForgeButton.vue';
 
-describe('BaseButton.vue', () => {
+describe('ForgeButton.vue', () => {
   it('renders props.label when passed', () => {
     const label = 'Click Me';
-    const wrapper = mount(BaseButton, {
+    const wrapper = mount(ForgeButton, {
       props: { label }
     });
     expect(wrapper.text()).toMatch(label);
   });
 
   it('emits click event when clicked', async () => {
-    const wrapper = mount(BaseButton);
+    const wrapper = mount(ForgeButton);
     await wrapper.trigger('click');
     expect(wrapper.emitted()).toHaveProperty('click');
   });

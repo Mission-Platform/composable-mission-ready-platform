@@ -460,7 +460,7 @@ wrangler d1 export my-database --remote --output schema.sql --no-data
 wrangler vectorize create my-index --dimensions 768 --metric cosine
 
 # Create with preset (auto-configures dimensions/metric)
-wrangler vectorize create my-index --preset @cf/baai/bge-base-en-v1.5
+wrangler vectorize create my-index --preset @cf/baai/bge-forge-en-v1.5
 
 # List indexes
 wrangler vectorize list

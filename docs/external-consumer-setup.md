@@ -72,11 +72,11 @@ With the conditions correctly configured, you can import components from the roo
 
 ```vue
 <script setup lang="ts">
-import { BaseButton } from '@mission-platform/components';
+import { ForgeButton } from '@mission-platform/components';
 </script>
 
 <template>
-  <BaseButton variant="primary">Click Me</BaseButton>
+  <ForgeButton variant="primary">Click Me</ForgeButton>
 </template>
 ```
 

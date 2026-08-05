@@ -12,7 +12,7 @@ Each worker is a standalone package with its own `package.json` and build config
 
 ```text
 workers/
-├── base-spa/        # Serves static assets with SPA fallback
+├── forge-spa/        # Serves static assets with SPA fallback
 │   ├── src/
 │   │   └── index.ts # Entry point
 │   ├── package.json

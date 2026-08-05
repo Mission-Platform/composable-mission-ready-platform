@@ -57,7 +57,7 @@ Custom plugins that extend the Vite build process.
 Cloudflare Workers for server-side logic and optimised asset delivery.
 
 - **`api-proxy/`**: Handles secure communication with backend services.
-- **`base-spa/`**: Serves static assets with intelligent SPA routing fallbacks.
+- **`forge-spa/`**: Serves static assets with intelligent SPA routing fallbacks.
 
 ## Internal Package Conventions
 

@@ -56,7 +56,7 @@ Responsive utilities and visibility components.
 Shared UI components authored once and available for multiple frameworks.
 
 - **Subpaths**: `@mission-platform/components/vue`, `@mission-platform/components/react`.
-- **Components**: `BaseButton`, `BaseInput`, `BaseModal`, and more.
+- **Components**: `ForgeButton`, `ForgeInput`, `ForgeModal`, and more.
 
 ## Feature Packages
 
@@ -66,7 +66,7 @@ Internationalization system based on i18next.
 
 | Export | Description |
 | :--- | :--- |
-| `createMpI18n` | Initializes the i18n instance with platform defaults. |
+| `createForgeI18N` | Initializes the i18n instance with platform defaults. |
 | `useI18n` | Hook for translations and locale switching in components. |
 
 ### @mission-platform/seo

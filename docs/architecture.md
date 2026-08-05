@@ -60,7 +60,7 @@ Visual consistency is maintained through a sophisticated design token system man
 Core application services like routing and internationalisation are designed to be framework-agnostic.
 
 - **`@mission-platform/router`**: Defines routes as a plain data structure (`MpRoute`). Adapters for Vue translate these into framework-specific router instances and composables.
-- **`@mission-platform/i18n`**: A wrapper around `i18next` that provides a universal `createMpI18n` factory. Framework-specific adapters provide `useI18n` hooks and components for Vue and React.
+- **`@mission-platform/i18n`**: A wrapper around `i18next` that provides a universal `createForgeI18N` factory. Framework-specific adapters provide `useI18n` hooks and components for Vue and React.
 
 ## Build & Deployment Strategy
 

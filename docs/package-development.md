@@ -54,7 +54,7 @@ packages/<name>/
 ├── src/
 │   ├── components/                 # Atomic components (atoms, molecules, etc.)
 │   │   ├── atoms/
-│   │   │   └── base-button/        # base-button.tsx + .stories.tsx + .spec.ts
+│   │   │   └── forge-button/        # forge-button.tsx + .stories.tsx + .spec.ts
 │   │   └── index.ts                # Component re-exports
 │   ├── composables/
 │   │   └── use-date-format/        # use-date-format.ts + .spec.ts
