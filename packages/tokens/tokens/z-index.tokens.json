@@ -10,6 +10,7 @@
     "overlay": { "$value": 1200, "$description": "1200 — scrims / backdrops behind dialogs and drawers." },
     "modal": { "$value": 1300, "$description": "1300 — modal dialogs and drawers." },
     "popover": { "$value": 1400, "$description": "1400 — popovers and menus that must sit above modals." },
-    "toast": { "$value": 1500, "$description": "1500 — toasts / notifications; always on top." }
+    "toast": { "$value": 1500, "$description": "1500 — toasts / notifications; always on top." },
+    "tooltip": { "$value": 1600, "$description": "1600 — tooltips; sit above everything else." }
   }
 }

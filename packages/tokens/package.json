@@ -28,9 +28,8 @@
     "tokens/*.tokens.json"
   ],
   "scripts": {
-    "build:bundle": "vite build",
-    "build:types": "tsc --project tsconfig.build.json --declaration --declarationDir dist --emitDeclarationOnly --noEmit false --rootDir src",
-    "build:watch": "vite build --watch",
+    "build": "tsdown",
+    "build:watch": "tsdown --watch",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "lint:style": "stylelint \"src/**/*.scss\"",
@@ -43,6 +42,7 @@
     "@mission-platform/i18n-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
     "@mission-platform/stylelint-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@mission-platform/vite-plugin-tokens": "workspace:*",
@@ -53,6 +53,7 @@
     "stylelint-config-standard-scss": "catalog:stylelint",
     "sass-embedded": "catalog:vite",
     "stylelint": "catalog:stylelint",
+    "tsdown": "catalog:build",
     "typescript": "catalog:typescript",
     "vite": "catalog:vite"
   }

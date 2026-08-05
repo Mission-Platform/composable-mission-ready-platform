@@ -3,19 +3,9 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["build:bundle", "build:types"],
-      "inputs": ["tokens/**", "src/**", "vite.config.ts", "tsconfig*.json", ".config/**"],
-      "outputs": ["dist/**", "src/generated/**"]
-    },
-    "build:bundle": {
       "dependsOn": ["^build"],
-      "inputs": ["tokens/**", "src/**", "vite.config.ts", "tsconfig*.json", ".config/**"],
-      "outputs": ["dist/**", "src/generated/**", "!dist/**/*.d.ts", "!dist/**/*.d.ts.map"]
-    },
-    "build:types": {
-      "dependsOn": ["^build", "build:bundle"],
-      "inputs": ["tokens/**", "src/**", "vite.config.ts", "tsconfig*.json", ".config/**"],
-      "outputs": ["dist/**/*.d.ts", "dist/**/*.d.ts.map"]
+      "inputs": ["tokens/**", "src/**", "tsdown.config.ts", "tsconfig*.json"],
+      "outputs": ["dist/**", "src/generated/**"]
     }
   }
 }

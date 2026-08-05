@@ -9,7 +9,8 @@ Design tokens, SCSS theme variables, and font assets for Mission Platform applic
 `@mission-platform/tokens` provides design token exports and SCSS style entry points:
 
 - **JS/TS Tokens**: Default export providing JS/TS design token objects.
-- **SCSS Tokens & Themes**: Light and dark theme definitions, responsive breakpoint mixins, accessibility utilities, and SCSS variables.
+- **SCSS Tokens & Themes**: Light and dark theme definitions, responsive breakpoint mixins, accessibility utilities, and
+  SCSS variables.
 - **Fonts**: Font assets (Comfortaa, Datatype, etc.).
 
 ---
