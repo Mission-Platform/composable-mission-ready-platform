@@ -88,6 +88,10 @@ export const createApp = ViteSSG(
     app.runWithContext(() => {
       effectScope(true).run(() => {
         useSeo({
+          page: {
+            author: 'Mission Platform',
+            generator: 'Mission Platform',
+          },
           openGraph: {
             title: 'My Care Notes',
             description:
