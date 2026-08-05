@@ -3,7 +3,7 @@
 Env-driven Storybook framework preset for the Mission Platform write-once
 ecosystem. One `apps/storybook` renders the platform's stories on any supported
 framework — the renderer, story globs, and shared Vite wiring are all selected
-by a single `FRAMEWORK` env var (or explicit option), removing the duplication
+by a single `STORYBOOK_FRAMEWORK` env var (or explicit option), removing the duplication
 that previously lived in separate `apps/storybook` / `apps/storybook-react`
 configs.
 
@@ -14,13 +14,27 @@ configs.
 import { createStorybookConfig } from '@mission-platform/storybook-framework';
 
 export default createStorybookConfig({
-  packages: ['components', 'icons', 'd3', 'rxjs', 'forms', 'layout', 'map', 'qr-code', 'barcode', 'code-scanner', 'matrix-code', 'breakpoints', 'wysiwyg'],
+  packages: [
+    'components',
+    'icons',
+    'd3',
+    'rxjs',
+    'forms',
+    'layout',
+    'map',
+    'qr-code',
+    'barcode',
+    'code-scanner',
+    'matrix-code',
+    'breakpoints',
+    'wysiwyg',
+  ],
 });
 ```
 
 ```bash
-FRAMEWORK=vue   pnpm --filter @mission-platform/storybook build-storybook
-FRAMEWORK=react pnpm --filter @mission-platform/storybook build-storybook
+STORYBOOK_FRAMEWORK=vue   pnpm --filter @mission-platform/storybook build-storybook
+STORYBOOK_FRAMEWORK=react pnpm --filter @mission-platform/storybook build-storybook
 ```
 
 ## What it wires
@@ -37,9 +51,9 @@ FRAMEWORK=react pnpm --filter @mission-platform/storybook build-storybook
 
 ## API
 
-| Export                       | Purpose                                                        |
-| ---------------------------- | -------------------------------------------------------------- |
-| `createStorybookConfig`      | Build a unified `StorybookConfig` for the active framework.    |
-| `resolveStorybookFramework`  | Resolve the framework from the `FRAMEWORK` env / explicit arg. |
-| `storyGlobs`                 | Build the per-framework + neutral story globs.                 |
-| `StorybookFramework`         | The supported framework union type.                            |
+| Export                      | Purpose                                                        |
+| --------------------------- | -------------------------------------------------------------- |
+| `createStorybookConfig`     | Build a unified `StorybookConfig` for the active framework.    |
+| `resolveStorybookFramework` | Resolve the framework from `STORYBOOK_FRAMEWORK` / explicit arg. |
+| `storyGlobs`                | Build the per-framework + neutral story globs.                 |
+| `StorybookFramework`        | The supported framework union type.                            |

@@ -2,7 +2,7 @@
   "name": "@mission-platform/storybook-framework",
   "version": "0.1.0",
   "license": "BSD-4-Clause",
-  "description": "Env-driven Storybook framework preset for the Mission Platform write-once ecosystem: one Storybook app renders neutral stories on any supported framework, selected by a FRAMEWORK env var.",
+  "description": "Env-driven Storybook framework preset for the Mission Platform write-once ecosystem: one Storybook app renders neutral stories on any supported framework, selected by a STORYBOOK_FRAMEWORK env var.",
   "type": "module",
   "exports": {
     ".": {
@@ -14,44 +14,86 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc --project tsconfig.build.json",
+    "build": "tsdown",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --check .",
     "format:write": "prettier --write ."
   },
   "peerDependencies": {
+    "@storybook/html-vite": "*",
     "@storybook/react-vite": "*",
+    "@storybook/svelte-vite": "*",
     "@storybook/vue3-vite": "*",
+    "@storybook/web-components-vite": "*",
+    "@sveltejs/vite-plugin-svelte": "*",
+    "@vitejs/plugin-react": "*",
     "@vitejs/plugin-vue-jsx": "*",
-    "vite": "*"
+    "storybook-solidjs-vite": "*",
+    "vite": "*",
+    "vite-plugin-solid": "*"
   },
   "peerDependenciesMeta": {
+    "@storybook/html-vite": {
+      "optional": true
+    },
     "@storybook/react-vite": {
+      "optional": true
+    },
+    "@storybook/svelte-vite": {
       "optional": true
     },
     "@storybook/vue3-vite": {
       "optional": true
     },
+    "@storybook/web-components-vite": {
+      "optional": true
+    },
+    "@sveltejs/vite-plugin-svelte": {
+      "optional": true
+    },
+    "@vitejs/plugin-react": {
+      "optional": true
+    },
     "@vitejs/plugin-vue-jsx": {
+      "optional": true
+    },
+    "storybook-solidjs-vite": {
+      "optional": true
+    },
+    "vite-plugin-solid": {
       "optional": true
     }
   },
   "dependencies": {
+    "@mission-platform/breakpoints": "workspace:*",
+    "@mission-platform/i18n": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
-    "@mission-platform/vite-plugin-i18n": "workspace:*"
+    "@mission-platform/vite-plugin-i18n": "workspace:*",
+    "@storybook/addon-themes": "catalog:storybook",
+    "storybook": "catalog:storybook"
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
+    "@storybook/html-vite": "catalog:storybook",
     "@storybook/react-vite": "catalog:storybook",
+    "@storybook/svelte-vite": "catalog:storybook",
     "@storybook/vue3-vite": "catalog:storybook",
+    "@storybook/web-components-vite": "catalog:storybook",
+    "@sveltejs/vite-plugin-svelte": "catalog:svelte",
     "@types/node": "catalog:typescript",
+    "@vitejs/plugin-react": "catalog:react",
     "@vitejs/plugin-vue-jsx": "catalog:vue",
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",
+    "solid-js": "catalog:solid",
+    "storybook-solidjs-vite": "catalog:storybook",
+    "tsdown": "catalog:build",
     "typescript": "catalog:typescript",
-    "vite": "catalog:vite"
+    "vite": "catalog:vite",
+    "vite-plugin-solid": "catalog:solid"
   }
 }
