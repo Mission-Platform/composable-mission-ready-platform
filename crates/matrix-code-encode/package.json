@@ -1,0 +1,11 @@
+{
+  "name": "@mission-platform/matrix-code-encode-crate",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Rust crate build for matrix-code-encode (wasm-pack \u2192 packages/matrix-code-encode-wasm)",
+  "license": "BSD-4-Clause",
+  "scripts": {
+    "build": "$HOME/.cargo/bin/wasm-pack build . --target bundler --release --weak-refs --reference-types --no-pack --out-dir ../../packages/matrix-code-encode-wasm/src/wasm --out-name matrix-code-encode",
+    "test": "wasm-pack test --node ."
+  }
+}
