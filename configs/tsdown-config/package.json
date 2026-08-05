@@ -1,0 +1,40 @@
+{
+  "name": "@mission-platform/tsdown-config",
+  "version": "0.1.0",
+  "license": "BSD-4-Clause",
+  "description": "Shared tsdown configuration helpers for Mission Platform library packages",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
+  },
+  "peerDependencies": {
+    "tsdown": ">=0.22.0"
+  },
+  "dependencies": {
+    "unplugin-vue": "catalog:build"
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@types/node": "catalog:typescript",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "tsdown": "catalog:build",
+    "typescript": "catalog:typescript"
+  }
+}
