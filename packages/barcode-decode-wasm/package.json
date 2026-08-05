@@ -1,0 +1,39 @@
+{
+  "name": "@mission-platform/barcode-decode-wasm",
+  "version": "0.1.0",
+  "license": "BSD-4-Clause",
+  "description": "Self-contained WebAssembly build of the barcode-decode Rust crate: wasm-pack (bundler) glue with the wasm binary inlined as base64 and instantiated synchronously, exposing a typed decode for @mission-platform/barcode",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsdown",
+    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "build:watch": "tsdown --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
+  },
+  "devDependencies": {
+    "@mission-platform/barcode-decode-crate": "workspace:*",
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@types/node": "catalog:typescript",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "tsdown": "catalog:build",
+    "typescript": "catalog:typescript"
+  }
+}
