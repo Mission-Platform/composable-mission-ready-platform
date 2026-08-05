@@ -6,7 +6,7 @@
 // String arguments/returns cross the wasm boundary via AssemblyScript's ESM
 // bindings, so the exported surface uses plain `string`, `bool` and `i32`.
 
-import { REGION_METADATA, CODE_TO_REGION, REGION_LIST, PhoneMetadata } from './metadata';
+import { CODE_TO_REGION, PhoneMetadata, REGION_LIST, REGION_METADATA } from './metadata';
 
 // Re-export the regex bytecode VM test entry points so the wasm module exposes
 // them for diff-testing against the TypeScript reference implementation.

@@ -10,7 +10,7 @@
 // No backreferences, lookaround or named groups are needed by the metadata, so
 // they are intentionally unsupported.
 
-import { INSTR_WIDTH, Op, type CompiledRegex } from './bytecode.js';
+import { type CompiledRegex, INSTR_WIDTH, Op } from './bytecode.js';
 
 type Node =
   | { kind: 'empty' }

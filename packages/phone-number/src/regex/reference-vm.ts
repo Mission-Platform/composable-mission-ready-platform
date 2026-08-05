@@ -8,7 +8,7 @@
 // The matcher is a recursive, leftmost-first backtracker (matching JavaScript
 // `RegExp` priority), with capture slots saved/restored across `SPLIT` branches.
 
-import { INSTR_WIDTH, Op, type CompiledRegex } from './bytecode.js';
+import { type CompiledRegex, INSTR_WIDTH, Op } from './bytecode.js';
 
 /** A successful match: capture slots as `[start0, end0, start1, end1, ...]`. */
 export type Captures = number[];

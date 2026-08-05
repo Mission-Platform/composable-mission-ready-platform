@@ -1,10 +1,9 @@
 # `@mission-platform/phone-number`
 
 A focused reimplementation of the core of Google
-[libphonenumber](https://github.com/google/libphonenumber) — **parse, validate,
-classify and format** international phone numbers — written in
-[AssemblyScript](https://www.assemblyscript.org/) and compiled to
-**WebAssembly**, wrapped in a typed ES module.
+[libphonenumber](https://github.com/google/libphonenumber) — **parse, validate, classify and format** international
+phone numbers — written in
+[AssemblyScript](https://www.assemblyscript.org/) and compiled to **WebAssembly**, wrapped in a typed ES module.
 
 ---
 
@@ -22,10 +21,10 @@ dist/                      ← built artifact (wasm inlined as base64)
 ```
 
 The AssemblyScript core is compiled to a `.wasm` binary **by Vite** (via the
-`@mission-platform/vite-plugin-assemblyscript` plugin), which is then **inlined
-as base64** into a single self-contained JS module (mirroring
-`@mission-platform/hunspell`). This avoids any `.wasm` URL resolution in bundlers
-or Web Workers and keeps the package free of runtime dependencies.
+`@mission-platform/vite-plugin-assemblyscript` plugin), which is then **inlined as base64** into a single self-contained
+JS module (mirroring
+`@mission-platform/hunspell`). This avoids any `.wasm` URL resolution in bundlers or Web Workers and keeps the package
+free of runtime dependencies.
 
 ---
 
@@ -53,14 +52,14 @@ util.getExampleNumber('US'); // '+12015550123'
 util.formatAsYouType('415555', 'US'); // '(415) 555'
 ```
 
-The second argument is the **default region** (an ISO 3166-1 alpha-2 code). It is
-used only when the input is not already in international form (`+…`, `00…` or
+The second argument is the **default region** (an ISO 3166-1 alpha-2 code). It is used only when the input is not
+already in international form (`+…`, `00…` or
 `011…`).
 
 ### Synchronous usage
 
-When an `await` boundary is impractical (e.g. rendering a component), obtain the
-instance synchronously — the inlined wasm is compiled with the synchronous
+When an `await` boundary is impractical (e.g. rendering a component), obtain the instance synchronously — the inlined
+wasm is compiled with the synchronous
 `WebAssembly` constructors:
 
 ```ts
@@ -74,11 +73,11 @@ util.isValidNumberForRegion('(415) 555-2671', 'US'); // true
 
 ## API
 
-`PhoneNumberUtil` (obtained via `getPhoneNumberUtil()` / `PhoneNumberUtil.getInstance()`, or
-synchronously via `getPhoneNumberUtilSync()` / `PhoneNumberUtil.getInstanceSync()`):
+`PhoneNumberUtil` (obtained via `getPhoneNumberUtil()` / `PhoneNumberUtil.getInstance()`, or synchronously via
+`getPhoneNumberUtilSync()` / `PhoneNumberUtil.getInstanceSync()`):
 
 | Method                                         | Returns               | Description                                               |
-| ---------------------------------------------- | --------------------- | --------------------------------------------------------- |
+|------------------------------------------------|-----------------------|-----------------------------------------------------------|
 | `getCountryCodeForRegion(region)`              | `number`              | ITU calling code for a region (`0` if unknown).           |
 | `getRegionCodeForCountryCode(code)`            | `string \| undefined` | Primary region for a calling code.                        |
 | `getRegionCodeForNumber(input, defaultRegion)` | `string \| undefined` | Region the number belongs to.                             |
@@ -97,9 +96,8 @@ synchronously via `getPhoneNumberUtilSync()` / `PhoneNumberUtil.getInstanceSync(
 ## Building
 
 AssemblyScript is compiled **by Vite** — the
-`@mission-platform/vite-plugin-assemblyscript` plugin runs the AssemblyScript
-compiler in the Vite `buildStart` hook and regenerates `src/generated`. No
-Docker or native toolchain is required.
+`@mission-platform/vite-plugin-assemblyscript` plugin runs the AssemblyScript compiler in the Vite `buildStart` hook and
+regenerates `src/generated`. No Docker or native toolchain is required.
 
 ```bash
 # Full build (asc → wasm via Vite + typecheck + bundle + declarations):
@@ -113,24 +111,20 @@ pnpm --filter @mission-platform/phone-number exec vite build
 
 ## Scope
 
-Google's libphonenumber ships exhaustive, machine-generated metadata for every
-ITU region. This port encodes a **curated, hand-verified subset** of regions
-(US, CA, GB, FR, DE, AU, IN, JP, BR, CN, RU) and implements the core operations
-without relying on regular expressions (unavailable in AssemblyScript).
-Validation is length- and leading-digit based, and formatting uses per-region
-grouping rules — plausible approximations rather than byte-for-byte parity with
-upstream. Additional regions can be added in `assembly/metadata.ts`.
+Google's libphonenumber ships exhaustive, machine-generated metadata for every ITU region. This port encodes a
+**curated, hand-verified subset** of regions (US, CA, GB, FR, DE, AU, IN, JP, BR, CN, RU) and implements the core
+operations without relying on regular expressions (unavailable in AssemblyScript). Validation is length- and
+leading-digit based, and formatting uses per-region grouping rules — plausible approximations rather than byte-for-byte
+parity with upstream. Additional regions can be added in `assembly/metadata.ts`.
 
 ---
 
 ## Regex precompilation engine (toward full upstream parity)
 
-Google's libphonenumber drives validation, number-type classification and
-formatting almost entirely with JavaScript `RegExp` applied to per-region
-patterns in its metadata. AssemblyScript has **no native `RegExp`**, so full
-parity uses a **precompile-patterns** approach: patterns are compiled ahead of
-time into compact, flat `i32` bytecode, and a tiny backtracking VM executes that
-bytecode at runtime — keeping the wasm core regex-free.
+Google's libphonenumber drives validation, number-type classification and formatting almost entirely with JavaScript
+`RegExp` applied to per-region patterns in its metadata. AssemblyScript has **no native `RegExp`**, so full parity uses
+a **precompile-patterns** approach: patterns are compiled ahead of time into compact, flat `i32` bytecode, and a tiny
+backtracking VM executes that bytecode at runtime — keeping the wasm core regex-free.
 
 ```
 src/regex/bytecode.ts        ← shared opcode / program contract
@@ -140,21 +134,19 @@ assembly/regex.ts            ← the same VM in AssemblyScript (runs inside wasm
 src/metadata/pattern-corpus.ts ← captured upstream pattern corpus (TypeScript data, for diff-testing)
 ```
 
-Supported syntax (the subset used by the metadata): literals, `.`, character
-classes with ranges/negation, `\d \D \w \W \s \S`, capturing and `(?:)` groups,
-alternation, the quantifiers `* + ?` and `{n} {n,} {n,m}` (greedy/lazy), and the
-`^`/`$` anchors. The compiler and both VMs are validated against the **entire
-upstream pattern corpus** (500+ patterns) and diff-tested against the native
-engine and each other. The corpus is captured directly in
+Supported syntax (the subset used by the metadata): literals, `.`, character classes with ranges/negation,
+`\d \D \w \W \s \S`, capturing and `(?:)` groups, alternation, the quantifiers `* + ?` and `{n} {n,} {n,m}`
+(greedy/lazy), and the
+`^`/`$` anchors. The compiler and both VMs are validated against the **entire upstream pattern corpus** (500+ patterns)
+and diff-tested against the native engine and each other. The corpus is captured directly in
 `src/metadata/pattern-corpus.ts` (no vendored upstream sources are required).
 
 ### Roadmap
 
 The curated runtime API now covers parsing, validity (including
-`isValidNumberForRegion`), classification, formatting, example numbers,
-supported-region listing and an as-you-type national formatter — enough to back
-`BasePhoneInput` without any third-party phone-number library. The precompilation
-engine remains the foundation for the in-progress **full-parity** ports of
-`PhoneNumberUtil`, `AsYouTypeFormatter` and `ShortNumberInfo` over precompiled
-all-region metadata (with the original upstream test suites); until those land,
-the shipped surface stays the curated approximation documented above.
+`isValidNumberForRegion`), classification, formatting, example numbers, supported-region listing and an as-you-type
+national formatter — enough to back
+`BasePhoneInput` without any third-party phone-number library. The precompilation engine remains the foundation for the
+in-progress **full-parity** ports of
+`PhoneNumberUtil`, `AsYouTypeFormatter` and `ShortNumberInfo` over precompiled all-region metadata (with the original
+upstream test suites); until those land, the shipped surface stays the curated approximation documented above.

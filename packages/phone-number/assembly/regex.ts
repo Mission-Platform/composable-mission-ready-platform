@@ -134,6 +134,7 @@ class Runner {
         return false;
       }
     }
+    return false;
   }
 }
 
