@@ -1,115 +1,54 @@
-# Workers Configuration
+# Worker Configuration & Development
 
-This document explains the project's worker configuration and usage guidelines.
+This document outlines the conventions and configuration for Cloudflare Workers within the Mission Platform monorepo.
 
-## Current Status
+## Overview
 
-The `workers/` directory contains Cloudflare Worker implementations, including:
-- `base-spa`: Base SPA worker for serving static assets with SPA fallback (`workers/base-spa/src/index.ts`).
-- `api-proxy`: Worker for proxying requests to external services (`workers/api-proxy/index.js`).
+Workers in the Mission Platform are located in the `workers/` directory. They are used for edge computing tasks such as serving Single Page Applications (SPAs), proxying API requests, and handling scheduled tasks.
 
-## When to Add Workers
+## Project Structure
 
-You should add a worker to the `workers/` directory when:
+Each worker is a standalone package with its own `package.json` and build configuration.
 
-1. **Cloudflare Worker Required**: Your application requires running code on Cloudflare's edge network
-2. **Stateless Operations**: You need to perform stateless operations (e.g., API proxying, scheduled tasks) that benefit from edge computing
-3. **Event-Driven Processing**: You need to respond to events (e.g., HTTP requests, cron schedules, storage changes) at the edge
-
-## Worker Structure
-
-When adding a worker, follow this structure:
-
-```
+```text
 workers/
-├── api-proxy/
-│   ├── index.js
-│   └── README.md
-└── scheduled-tasks/
-    ├── index.js
-    └── schedule.json
+├── base-spa/        # Serves static assets with SPA fallback
+│   ├── src/
+│   │   └── index.ts # Entry point
+│   ├── package.json
+│   └── tsdown.config.ts
+└── api-proxy/       # Proxies requests to external services
+    └── index.js     # Entry point
 ```
 
-## Documentation Requirements
+## Build System
 
-For each worker you add, you must:
+Workers typically use `tsdown` for bundling. This ensures that the worker code and its dependencies are compiled into a single file compatible with the Cloudflare Workers environment.
 
-1. **Create a `README.md` file** in the worker's directory explaining:
-   - Purpose of the worker
-   - Configuration requirements
-   - Deployment instructions
-   - Usage examples
-
-2. **Document API endpoints or schedules** (if applicable)
-
-3. **Provide environment variable documentation** for any configuration needed
-
-## Example Worker Documentation
-
-### API Proxy Worker
-
-This worker proxies requests to external services:
-
-**File Structure:**
-```
-workers/api-proxy/
-├── index.js
-└── README.md
-```
-
-**index.js:**
-```javascript
-export default {
-  async fetch(request, env, ctx) {
-    // Proxy logic here
-  },
-};
-```
-
-**README.md:**
-```markdown
-# API Proxy Worker
-
-This worker proxies requests to external services and adds authentication headers.
+- **Library Mode**: Most workers opt out of module preservation (`preserveModules: false`) to ship a self-contained artifact.
+- **Types**: Use `@cloudflare/workers-types` for TypeScript support.
 
 ## Configuration
 
-- `EXTERNAL_API_URL`: The base URL of the external API
-- `API_KEY`: Authentication key for the external API
+Workers are configured via environment variables and Cloudflare Bindings.
 
-## Usage
+### Local Development
+Use `wrangler dev` to run workers locally. This simulates the Cloudflare environment and allows for local testing of KV, Durable Objects, and other bindings.
 
-Proxy a request to `/api/data` as:
-```
-curl https://api.example.com/api/data \
-  -H "Authorization: Bearer $API_KEY"
-```
-
-## Deployment
-
-Deploy using Wrangler:
-```bash
-wrangler deploy workers/api-proxy
-```
-```
+### Production
+Deployment is handled via `wrangler deploy`. Environment-specific configuration is managed through Cloudflare's dashboard or a `wrangler.toml` file (if provided).
 
 ## Best Practices
 
-- **Keep workers small**: Each worker should have a single, well-defined purpose
-- **Use environment variables**: Never hardcode secrets in worker code
-- **Test locally**: Use `wrangler dev` for local testing
-- **Monitor usage**: Set up analytics to track worker performance
-- **Follow security best practices**: Validate all input and use least-privilege principles
+- **Self-Contained Artifacts**: Always bundle dependencies into the worker output to ensure consistent behavior at the edge.
+- **Environment Variables**: Use the `env` object passed to the `fetch` handler instead of global process variables.
+- **Edge Compatibility**: Avoid using Node.js built-in modules that are not supported by the Cloudflare Workers runtime (e.g., `fs`, `child_process`).
+- **Small Footprint**: Keep worker bundles small to minimize cold start times and stay within Cloudflare's resource limits.
 
-## Troubleshooting
+## Deployment Command
 
-Common issues and solutions:
+To deploy a worker, navigate to its directory and run:
 
-- **Worker not deploying**: Check Wrangler configuration and authentication
-- **Timeouts**: Increase the `timeout` setting in your worker configuration
-- **Memory issues**: Optimize code and reduce memory usage
-
-## See Also
-
-- [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers/)
-- [Wrangler CLI Documentation](https://developers.cloudflare.com/workers/wrangler/)
+```bash
+pnpm exec wrangler deploy
+```

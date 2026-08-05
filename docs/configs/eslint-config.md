@@ -1,61 +1,56 @@
 # ESLint Configuration
 
+The `@mission-platform/eslint-config` package provides a centralized, flat ESLint configuration for the entire monorepo.
+
 ## Overview
 
-The `@mission-platform/eslint-config` workspace package provides the centralized, flat ESLint configuration (`eslint.config.js`) used across all applications, packages, and workers in the Mission Platform monorepo.
+Mission Platform uses the ESLint Flat Config format (`eslint.config.js`). The shared configuration enforces consistent code quality, accessibility, and architectural rules across all packages, applications, and workers.
 
-## Key Rules & Plugins
+## Key Features
 
-- **TypeScript Support**: Powered by `typescript-eslint` with type-aware linting.
-  - Enforces explicit type imports (`@typescript-eslint/consistent-type-imports`).
-  - Flag unused variables while ignoring variables with leading underscore (`_`).
-- **Vue 3 SFC Enforcement**: Powered by `eslint-plugin-vue`.
-  - Enforces `script-setup` syntax (`vue/component-api-style`).
-  - Standardizes macro order (`defineOptions`, `defineProps`, `defineEmits`, `defineSlots`).
-- **Import Rules & Sorting**: Powered by `eslint-plugin-import-x` with TypeScript resolver (`eslint-import-resolver-typescript`).
-  - Enforces organized import order and prohibits duplicates and useless path segments.
-- **Monorepo & Turborepo Guidelines**: Enforces Turborepo environment variable dependencies via `eslint-config-turbo`.
-- **Accessibility & Quality**: Integrates `eslint-plugin-vuejs-accessibility`, `eslint-plugin-i18next`, and `eslint-plugin-sonarjs`.
+- **TypeScript Support**: Type-aware linting powered by `typescript-eslint`.
+- **Vue 3 SFCs**: Enforces `<script setup>` and best practices via `eslint-plugin-vue`.
+- **Accessibility**: Built-in accessibility checks for Vue templates with `eslint-plugin-vuejs-accessibility`.
+- **Import Organization**: Automatic sorting and validation of imports via `eslint-plugin-import-x`.
+- **Monorepo Awareness**: Integration with `eslint-config-turbo` to ensure environment variables are properly declared.
 
-## Integration in Workspaces
+## Built-in Plugins
 
-In any workspace (`apps/*`, `packages/*`, `configs/*`, `workers/*`), create an `eslint.config.js` file importing the base configuration array:
+The configuration includes the following plugins and rule sets:
+
+| Plugin | Purpose |
+| :--- | :--- |
+| `typescript-eslint` | Standard TypeScript rules and type-aware linting. |
+| `eslint-plugin-vue` | Vue 3 SFC linting and template validation. |
+| `eslint-plugin-sonarjs` | Detection of code smells and bug risks. |
+| `eslint-plugin-unicorn` | Dozens of small, useful community rules. |
+| `eslint-plugin-i18next` | Ensures translation keys are used correctly. |
+| `eslint-config-prettier` | Disables rules that conflict with Prettier formatting. |
+
+## Usage
+
+To apply the shared configuration to a workspace, create an `eslint.config.js` file at the root of the workspace:
 
 ```js
-// eslint.config.js
 import baseConfig from '@mission-platform/eslint-config';
 
 export default [
   ...baseConfig,
+  // Add workspace-specific overrides here
 ];
 ```
 
-## Customization & Rule Overrides
+## Running the Linter
 
-To add workspace-specific rules or custom ignore patterns, extend the flat config array:
-
-```js
-// eslint.config.js
-import baseConfig from '@mission-platform/eslint-config';
-
-export default [
-  ...baseConfig,
-  {
-    rules: {
-      'no-console': ['warn', { allow: ['warn', 'error'] }],
-    },
-  },
-];
-```
-
-## Running ESLint
-
-Run linting across the monorepo using Turborepo:
+Use Turborepo to run linting across one or more workspaces:
 
 ```bash
-# Run linting on all workspaces
+# Lint the entire monorepo
 pnpm exec turbo run lint
 
-# Automatically fix lint issues
+# Lint a specific package
+pnpm exec turbo run lint --filter <package-name>
+
+# Automatically fix fixable issues
 pnpm exec turbo run lint:fix
 ```

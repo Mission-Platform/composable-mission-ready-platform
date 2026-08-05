@@ -1,131 +1,151 @@
 # Vue 2 to Vue 3 Migration Guide
 
-This guide provides step-by-step instructions for migrating the Mission Platform from Vue 2 to Vue 3.
+This guide describes how to migrate existing Vue 2 codebases to Vue 3 within the Mission Platform monorepo.
 
-## Migration Checklist
+## Overview
 
-### 1. Verify Dependency Direction
-Before starting the migration, ensure all packages only import from `configs/`:
+The Mission Platform uses Vue 3 with the Composition API and `<script setup>` syntax. Migration involves moving away from the Options API and updating component lifecycle and reactivity patterns.
 
-```bash
-# Run ESLint to check for invalid imports
-pnpm run lint -- --fix
+## Prerequisites
 
-# Look for errors like:
-# 'import AppLayout from '@/apps/main/Layout.vue' # BLOCKED BY LINT'
+Before migrating, ensure your package follows the platform's dependency rules:
+- No imports from `apps/`.
+- All shared logic should reside in `packages/`.
+- Configuration should come from `configs/`.
+
+## Step 1: Update Build Configuration
+
+Ensure your `package.json` and `vite.config.ts` are targeting Vue 3.
+
+```ts
+// vite.config.ts
+import { defineAppConfig } from '@mission-platform/vite-config';
+import { defineConfig } from 'vite';
+
+export default defineConfig(defineAppConfig({
+  // Vue 3 plugin is already included in defineAppConfig
+}));
 ```
 
-**Action Item**: Add this verification step to your migration checklist:
-- ✅ Verify all packages only import from `configs/` directory
-- ✅ Ensure no package imports from `apps/` or other packages directly
+## Step 2: Convert Options API to Composition API
 
-### 2. Update Build Configuration
-Update Vite and TypeScript configurations for Vue 3 compatibility:
+Replace the Vue 2 Options API (`data`, `methods`, `computed`) with the Vue 3 Composition API.
 
-```js
-// vite.config.js
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-
-export default defineConfig({
-  plugins: [
-    vue({
-      templateOptions: {
-        compilerOptions: {
-          // Enable Vue 3 specific features
-          isCustomElement: (tag) => tag.startsWith('custom-'),
-        },
-      },
-    }),
-  ],
-})
-```
-
-### 3. Update Component Syntax
-Convert Single File Components from Vue 2 to Vue 3 syntax:
+### Data to Refs
+In Vue 2, state was defined in the `data()` function. In Vue 3, use `ref()` or `reactive()`.
 
 **Vue 2:**
-```vue
-<template>
-  <div>
-    <h1>{{ message }}</h1>
-  </div>
-</template>
-
-<script>
+```js
 export default {
   data() {
     return {
-      message: 'Hello Vue 2'
+      count: 0
     }
   }
 }
-</script>
 ```
 
 **Vue 3:**
-```vue
-<template>
-  <div>
-    <h1>{{ message }}</h1>
-  </div>
-</template>
+```ts
+import { ref } from 'vue';
 
-<script setup lang="ts">
-const message = 'Hello Vue 3'
-</script>
+const count = ref(0);
 ```
 
-### 4. Update Utility Functions
-Refactor utility functions to use Composition API patterns:
+### Methods to Functions
+Methods become plain functions in the `<script setup>` block.
 
 **Vue 2:**
-```ts
-export function useCounter() {
-  return {
-    count: 0,
-    increment() { this.count++ }
+```js
+methods: {
+  increment() {
+    this.count++;
   }
 }
 ```
 
 **Vue 3:**
 ```ts
-import { ref } from 'vue'
-
-export function useCounter() {
-  const count = ref(0)
-  const increment = () => { count.value++ }
-  return { count, increment }
-}
+const increment = () => {
+  count.value++;
+};
 ```
 
-### 5. Update Testing Configuration
-Update Vitest configuration for Vue 3 testing:
+## Step 3: Update Lifecycle Hooks
 
-```js
-// vitest.config.ts
-import { defineConfig } from 'vitest/config'
-import vue from '@vitejs/plugin-vue'
+Lifecycle hooks have been renamed and must be imported.
 
-export default defineConfig({
-  plugins: [vue()],
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./src/setup-tests.ts'],
-  },
-})
+| Vue 2 | Vue 3 |
+| :--- | :--- |
+| `beforeCreate` / `created` | Use `setup()` / `<script setup>` directly |
+| `beforeMount` | `onBeforeMount` |
+| `mounted` | `onMounted` |
+| `beforeUpdate` | `onBeforeUpdate` |
+| `updated` | `onUpdated` |
+| `beforeDestroy` | `onBeforeUnmount` |
+| `destroyed` | `onUnmounted` |
+
+Example:
+```ts
+import { onMounted } from 'vue';
+
+onMounted(() => {
+  console.log('Component is mounted');
+});
 ```
 
-### 6. Verify All Packages
-After migration, verify all packages maintain proper dependency direction:
+## Step 4: Adopt `<script setup>`
+
+All new and migrated components in the Mission Platform should use the `<script setup>` syntax with TypeScript.
+
+```vue
+<template>
+  <button @click="increment">{{ count }}</button>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+
+const count = ref(0);
+const increment = () => count.value++;
+</script>
+```
+
+## Step 5: Handle Breaking Changes
+
+### V-model
+In Vue 3, the default prop name for `v-model` is `modelValue` and the event is `update:modelValue`.
+
+### Ref access
+`this.$refs` is no longer used. Define a ref with the same name as the `ref` attribute on the element.
+
+```vue
+<template>
+  <div ref="root"></div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+
+const root = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+  console.log(root.value);
+});
+</script>
+```
+
+## Step 6: Verification
+
+Run the following commands to ensure the migration is successful and adheres to platform standards:
 
 ```bash
-# Run comprehensive checks
-pnpm exec turbo run lint
-pnpm exec turbo run test
+# Type-check the package
+pnpm exec turbo run typecheck --filter <your-package>
 
-# Check for any lint warnings or errors
-pnpm exec turbo run lint -- --max-warnings=0
+# Run linting
+pnpm exec turbo run lint --filter <your-package>
+
+# Run tests
+pnpm exec turbo run test --filter <your-package>
 ```

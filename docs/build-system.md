@@ -1,195 +1,91 @@
 # Build System
 
-This document provides an overview of the build system used in the Mission Platform monorepo.
+This document explains the architecture and mechanics of the Mission Platform's build system. It is designed for high performance, incremental builds, and multi-framework package distribution.
 
-## Overview
+## Core Architecture
 
-The Mission Platform uses a modern build system designed for efficiency and scalability. The core components include:
+The Mission Platform uses a tiered build system that separates task orchestration from individual workspace compilation.
 
-- **Vite**: Development server and production bundler for all applications and packages.
-- **TypeScript**: Type-safe JavaScript across every workspace.
-- **pnpm workspaces**: Monorepo dependency management.
-- **Turborepo**: Task orchestration, caching, and incremental builds across workspaces.
+### 1. Task Orchestration (Turborepo)
 
-## Core Components
+**Turborepo** is the top-level orchestrator. It manages the dependency graph between workspaces and provides caching for all tasks.
 
-### Vite
+- **Pipeline defined in `turbo.json`**: Tasks like `build`, `test`, and `lint` are defined with their dependencies (e.g., `build` depends on `^build`, meaning all dependencies must be built first).
+- **Hashing**: Turborepo hashes source files, environment variables, and global dependencies to determine if a task's output can be re-used from the cache.
+- **Parallelism**: Independent tasks are executed concurrently to maximize CPU utilization.
 
-Vite is used as the primary build tool for all applications and packages. It provides:
+### 2. Package Compilation (tsdown)
 
-- **Fast development server**: Hot Module Replacement (HMR) for rapid iteration.
-- **Production builds**: Optimized bundles with code splitting and asset optimization.
-- **Plugin ecosystem**: Support for TypeScript, JSX, CSS preprocessing, and more.
+Most library packages in `packages/` use **tsdown** for compilation.
 
-### TypeScript
+- **Speed**: Built on top of **Rolldown** (the Rust-based successor to Rollup), providing near-instant builds.
+- **Unbundling**: Packages are built with `unbundle: true`, preserving the original module structure in `dist/`. This ensures optimal tree-shaking and better debugging in consumer applications.
+- **CSS Threading**: A custom plugin re-links extracted stylesheets back to their owning JS modules, ensuring that importing a component automatically pulls in its styles.
 
-TypeScript is used throughout the project to ensure type safety. Each workspace has its own `tsconfig.json` that extends from shared configurations in `@mission-platform/typescript-config`.
+### 3. Application Bundling (Vite)
 
-### pnpm Workspaces
+Deployable applications in `apps/` use **Vite** for development and production bundling.
 
-The project is structured as a monorepo using pnpm workspaces. This allows for:
+- **Shared Configs**: Apps extend `@mission-platform/vite-config` to ensure consistent PostCSS pipelines and framework-agnostic resolution.
+- **SSR/SSG Support**: Applications like `my-care-notes` use `vite-ssg` for static site generation.
 
-- **Shared dependencies**: Packages are defined once and reused across workspaces.
-- **Efficient installs**: Only necessary dependencies are installed for each workspace.
-- **Workspace-specific configurations**: Each package can have its own build and test settings.
+## Turborepo Pipeline
 
-### Turborepo
+The root `turbo.json` defines a family of build tasks. Alongside the core tasks, a set of specialized tasks emit only a specific slice of the multi-framework output, which is useful for faster, targeted builds.
 
-Turborepo orchestrates tasks across the monorepo, providing:
+### Core Tasks
 
-- **Task orchestration**: Running builds, tests, and linting across multiple workspaces.
-- **Caching**: Incremental builds by caching task outputs.
-- **Parallel execution**: Running independent tasks concurrently for faster builds.
+| Task | Description |
+| :--- | :--- |
+| `build` | The primary entry point. Compiles the full multi-framework output for a workspace (via `tsdown`). |
+| `build:check` | Validates types for a workspace without emitting output. |
+| `build:watch` | Starts an incremental build in watch mode for a workspace, rebuilding on every change. |
 
-## Build Configuration
+### Targeted Output Tasks
 
-### Root `turbo.json`
+These tasks reuse the same compilation but scope the emitted artifacts in `dist/` to a single concern.
 
-The root `turbo.json` defines global tasks and their dependencies:
-
-```json
-{
-  "$schema": "https://turborepo.com/schema.json",
-  "tasks": {
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".vite/**"]
-    },
-    "dev": {
-      "cache": false
-    },
-    "test": {
-      "dependsOn": ["^build"],
-      "outputs": []
-    },
-    "lint": {
-      "outputs": []
-    }
-  }
-}
-```
-
-### Workspace-Specific `turbo.json` Files
-
-Some workspaces have their own `turbo.json` files that extend the root configuration:
-
-- **hunspell**: Defines tasks for building WebAssembly modules and cleaning build artifacts.
-- **tokens**: Configures the design token generation process.
-- **storybook**: Sets up Storybook-specific tasks.
-
-### Build Tasks and Dependencies
-
-Common build tasks include:
-
-- **build**: Compiles the workspace into production-ready code.
-- **dev**: Starts the development server with hot reloading.
-- **test**: Runs unit and integration tests.
-- **lint**: Checks code quality using ESLint, Prettier, and Stylelint.
-
-## Running Builds
-
-### Building All Workspaces
-
-To build all workspaces in the monorepo:
-
-```bash
-pnpm exec turbo run build
-```
-
-This command respects the dependency graph defined in `turbo.json` and caches outputs for faster subsequent builds.
-
-### Building Specific Packages
-
-To build a specific package:
-
-```bash
-pnpm exec turbo run build --filter @mission-platform/<package>
-```
-
-For example, to build the `components` package:
-
-```bash
-pnpm exec turbo run build --filter @mission-platform/components
-```
-
-### Building Affected Packages
-
-To build only the packages affected by recent changes:
-
-```bash
-pnpm exec turbo run build --affected
-```
-
-This command compares the current state with the default branch and builds only the necessary packages.
-
-## Build Outputs
-
-### Standard Output Directories
-
-- **`dist/`**: Production builds for packages and applications.
-- **`.vite/`**: Intermediate files generated by Vite during the build process.
-
-### Workspace-Specific Outputs
-
-- **Storybook**: Generates a static version of the Storybook at `storybook-static/`.
-- **Tests**: Coverage reports are generated in the `coverage/` directory.
-
-## Development Workflow
-
-### Watch Mode
-
-To enable watch mode for a workspace:
-
-```bash
-pnpm exec turbo run build:watch --filter @mission-platform/<package>
-```
-
-This starts the development server with hot reloading enabled.
-
-### Development Servers for Apps
-
-- **Storybook**:
-  ```bash
-  pnpm exec turbo run storybook --filter @mission-platform/storybook
-  ```
-
-- **My Care Notes**:
-  ```bash
-  pnpm exec turbo run dev --filter @mission-platform/my-care-notes
-  ```
-
-## Advanced Topics
+| Task | Description |
+| :--- | :--- |
+| `build:neutral` | Emits only the framework-neutral output, excluding the per-framework bundles (Vue, React, Solid, Svelte, Web Components, Storyblok) and type declarations. |
+| `build:bundle` | Emits all framework bundles (JS/CSS) but skips the `.d.ts` declaration files. |
+| `build:solid` | Emits only the Solid build (`dist/solid/**`). |
+| `build:svelte` | Emits only the Svelte build (`dist/svelte/**`). |
+| `build:web-components` | Emits only the Web Components build (`dist/web-components/**`). |
+| `build:storyblok-vue` | Emits only the Storyblok Vue build (`dist/storyblok/vue/**` and the Storyblok component manifest JSON). |
+| `build:storyblok-react` | Emits only the Storyblok React build (`dist/storyblok/react/**`). |
 
 ### Caching Strategy
 
-Turborepo caches task outputs in the `.turbo/` directory at both the root and workspace levels. This ensures that only necessary tasks are re-run during subsequent builds.
+Turborepo caches the following artifacts:
+- `dist/**`: Built JS/CSS artifacts.
+- `.vite/**`: Vite's internal cache.
+- `coverage/**`: Test coverage reports.
 
-### Global Dependencies
+To bypass the cache and force a fresh build, use the `--force` flag:
+```bash
+pnpm build:force
+```
 
-Global dependencies are defined in the root `package.json` and are shared across all workspaces. This includes tools like TypeScript, ESLint, and Prettier.
+## Shared Configurations
 
-### Task Dependencies and Topological Ordering
+Build configurations are centralized in the `configs/` directory to maintain consistency across the monorepo.
 
-Turborepo automatically determines the topological order of tasks based on their dependencies. For example, if a package depends on another package, the dependent package will be built first.
+| Package | Purpose |
+| :--- | :--- |
+| `@mission-platform/vite-config` | Shared Vite logic for apps and Vue-specific builds. |
+| `@mission-platform/tsdown-config` | Shared tsdown logic for library packages. |
+| `@mission-platform/typescript-config` | Base `tsconfig.json` presets for apps, libraries, and tests. |
+| `@mission-platform/postcss-config` | Standardized CSS processing (Autoprefixer, etc.). |
 
-## Troubleshooting
+## Local Development vs. Production
 
-### Common Build Issues
+### Development (`dev` task)
+Vite's development server provides Hot Module Replacement (HMR). When an app's `dev` task starts, Turborepo also runs the component library's `build:watch` task alongside it (via the task's `with` key), so edits to `@mission-platform/components` are recompiled automatically and picked up by the running app without a manual rebuild.
 
-- **Cache invalidation**: If a build fails unexpectedly, try clearing the cache:
-  ```bash
-  rm -rf .turbo/
-  turbo run build
-  ```
+### Production (`build` task)
+Turborepo executes builds in topological order. A package is only built after all its internal dependencies have successfully built. The output in `dist/` is what is eventually published or deployed.
 
-- **Dependency management**: Ensure that all workspace dependencies are correctly specified in their respective `package.json` files.
+## Advanced: WASM Integration
 
-### Dependency Management Best Practices
-
-- Use `workspace:*` for dependencies within the monorepo.
-- Avoid circular dependencies between workspaces.
-- Keep third-party dependencies up to date using `pnpm up`.
-
-## Summary
-
-The Mission Platform's build system is designed for efficiency and scalability, leveraging modern tools like Vite, TypeScript, pnpm workspaces, and Turborepo. By following the guidelines in this document, you can ensure that your builds are fast, reliable, and maintainable.
+Certain packages (e.g., `@mission-platform/hunspell`, barcode scanners) involve Rust code compiled to WebAssembly. These builds are orchestrated via specialized tasks that use `wasm-pack` to ensure environment consistency and optimal performance.

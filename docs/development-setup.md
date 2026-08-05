@@ -1,32 +1,39 @@
 # Development Setup
 
-This guide will help you set up your development environment to work with Mission Platform.
+This guide provides a step-by-step tutorial for setting up your local environment to contribute to the Mission Platform. By the end of this guide, you will have a working monorepo and be able to run the development tools.
 
 ## Prerequisites
 
-Before you begin, ensure you have the following installed on your system:
+Before cloning the repository, ensure your system meets the following requirements.
 
-### Required Tools
+### System Requirements
 
-1. **Node.js** (version specified in `.nvmrc`: v24.18.0)
-   - Recommended: Use [nvm](https://github.com/nvm-sh/nvm) to manage Node versions
-   ```bash
-   nvm install
-   nvm use
-   ```
+| Tool | Required Version | Purpose |
+| :--- | :--- | :--- |
+| **Node.js** | `24.19.0` | Runtime environment (Active LTS) |
+| **pnpm** | `11.20.0` | Package manager and workspace orchestrator |
+| **Git** | Latest stable | Version control |
+| **Docker** | Latest stable | Required for WebAssembly builds (e.g., Hunspell) |
 
-2. **pnpm** (package manager)
-   ```bash
-   corepack use pnpm
-   ```
+### Version Management (Recommended)
 
-3. **Git** (version control)
-   - Ensure you have Git installed and configured with your SSH keys
+We recommend using **nvm** (Node Version Manager) to ensure you are using the correct Node.js version specified in the root `.nvmrc` file.
 
-4. **Docker** (optional, for Hunspell WebAssembly build)
-   - Required only if you need to rebuild the Hunspell WebAssembly module
+```bash
+nvm install
+nvm use
+```
 
-## Setting Up the Repository
+Enable **pnpm** using Corepack:
+
+```bash
+corepack enable
+corepack prepare pnpm@11.20.0 --activate
+```
+
+## Initial Setup
+
+Follow these steps to initialize the monorepo on your machine.
 
 ### 1. Clone the Repository
 
@@ -37,216 +44,75 @@ cd composable-mission-ready-platform
 
 ### 2. Install Dependencies
 
-The repository uses pnpm workspaces, so install all dependencies with:
+Install all workspace dependencies and set up git hooks:
 
 ```bash
 pnpm install
 ```
 
-This will:
-- Install all workspace packages and their dependencies
-- Set up Husky git hooks for commit message validation
-- Create necessary build directories
+This command triggers the `prepare` script, which initializes **Husky** for commit linting and ensures all internal package links are correctly established.
 
-### 3. Verify Installation
+### 3. Verify the Installation
 
-Check that everything is set up correctly:
+Run a smoke test to ensure the build system and environment are correctly configured:
 
 ```bash
-# Check Node version
-node --version
-# Should match the version in .nvmrc (v24.18.0)
-
-# Check pnpm version
-pnpm --version
-
-# Run a quick build test
-pnpm exec turbo run build --filter @mission-platform/forge
+pnpm build --filter @mission-platform/forge
 ```
 
 ## Development Workflow
 
-### Running Storybook (Component Development)
+The Mission Platform uses **Turborepo** to orchestrate tasks across applications and packages.
 
-Storybook is the primary environment for developing and testing components:
+### Component Development (Storybook)
+
+Storybook is the primary workbench for building and testing components in isolation. You can target specific frameworks using environment variables:
 
 ```bash
-# Start Vue 3 Storybook on port 6006
-pnpm exec turbo run storybook --filter @mission-platform/storybook
+# Start Vue 3 Storybook
+pnpm storybook:vue
 
-# Start React Storybook on port 6007 (optional)
-pnpm exec turbo run storybook-react --filter @mission-platform/storybook-react
+# Start React Storybook
+pnpm storybook:react
 ```
 
-### Running My Care Notes App
+Other available framework targets include `solid`, `svelte`, and `web-component`.
 
-The My Care Notes application demonstrates the platform in action:
+### Application Development
+
+To start a specific application in development mode:
 
 ```bash
-# Start development server
+# Start My Care Notes (Vue 3)
 pnpm exec turbo run dev --filter @mission-platform/my-care-notes
-
-# The app will be available at http://localhost:5173
 ```
 
-### Building Packages
+The application will typically be available at `http://localhost:5173`.
 
-Build individual packages or the entire workspace:
+### Common Commands
 
-```bash
-# Build a specific package
-pnpm exec turbo run build --filter @mission-platform/forge
-
-# Build all packages
-pnpm exec turbo run build --filter "./packages/*"
-
-# Build everything (apps + packages + configs)
-pnpm exec turbo run build
-```
-
-### Running Tests
-
-Run tests across the entire workspace:
-
-```bash
-# Run all tests
-turbo run test
-
-# Run tests for a specific package
-turbo run test --filter=@mission-platform/components
-
-# Run only affected tests (based on git changes)
-turbo run test --affected
-```
-
-## Code Quality Tools
-
-### Linting
-
-Check code quality across all workspaces:
-
-```bash
-# Run ESLint
-turbo run lint
-
-# Fix auto-fixable issues
-turbo run lint --filter="./packages/*" -- --fix
-```
-
-### Formatting
-
-Format code with Prettier:
-
-```bash
-# Check formatting
-turbo run format:check
-
-# Apply formatting
-turbo run format:write
-```
-
-## Working with Packages
-
-### Adding a New Package
-
-1. Create the package directory:
-   ```bash
-   mkdir packages/my-new-package
-   cd packages/my-new-package
-   ```
-
-2. Initialize package.json:
-   ```bash
-   pnpm init -w --scope=@mission-platform/my-new-package
-   ```
-
-3. Add essential files:
-   ```bash
-   # Create tsconfig.json
-   echo '{"extends": "../../configs/typescript-config/base.json"}' > tsconfig.json
-   
-   # Create vite.config.ts
-   echo 'import { defineLibraryConfig } from "@mission-platform/vite-config"
-export default defineLibraryConfig()' > vite.config.ts
-   ```
-
-4. Add to pnpm-workspace.yaml:
-   ```yaml
-   packages:
-     - "packages/my-new-package"
-   ```
-
-5. Install dependencies:
-   ```bash
-   pnpm add @mission-platform/eslint-config @mission-platform/prettier-config @mission-platform/typescript-config --save-dev --filter=@mission-platform/my-new-package
-   ```
-
-### Developing a Package
-
-```bash
-# Watch mode for development
-pnpm dev --filter=@mission-platform/my-new-package
-
-# Build the package
-pnpm build --filter=@mission-platform/my-new-package
-```
-
-## Environment Variables
-
-Some packages and apps require environment variables. Create a `.env` file in the root directory:
-
-```bash
-# Copy the example file
-cp .env.example .env
-
-# Edit as needed
-nano .env
-```
+| Task | Command | Description |
+| :--- | :--- | :--- |
+| **Build** | `pnpm build` | Build all apps and packages |
+| **Test** | `pnpm test` | Run all Vitest suites |
+| **Lint** | `pnpm lint` | Run ESLint across the monorepo |
+| **Format** | `pnpm format` | Check formatting with Prettier |
 
 ## Troubleshooting
 
-### Node Version Issues
+### Clearing Caches
 
-If you encounter Node version errors:
-
-```bash
-# Make sure you're using the correct Node version
-nvm use
-
-# Or install it if missing
-nvm install
-```
-
-### Dependency Installation Problems
+If you encounter unexpected build errors, clear the Turborepo and Node caches:
 
 ```bash
-# Clear pnpm cache
-pnpm store prune
+# Remove Turborepo cache
+rm -rf .turbo
 
-# Delete node_modules and reinstall
-rm -rf node_modules pnpm-lock.yaml
+# Deep clean all node_modules and reinstall
+pnpm -r exec rm -rf node_modules
 pnpm install
 ```
 
-### Build Failures
+### WASM Build Failures
 
-```bash
-# Clean build artifacts
-pnpm run clean
-
-# Try building again
-turbo run build
-```
-
-## Next Steps
-
-Now that your development environment is set up, you can:
-
-1. **Explore the codebase** - Start with the core packages like `@mission-platform/forge` and `@mission-platform/components`
-2. **Run Storybook** to see available components and their documentation
-3. **Build and run My Care Notes** to experience a complete application built with Mission Platform
-4. **Check out the contribution guidelines** in [Contributing](contributing.md)
-
----
-
-**Last updated**: 2024-12-15
+If packages involving WebAssembly (like `@mission-platform/hunspell`) fail to build, ensure **Docker** is running, as it is used to provide a consistent build environment for Rust-to-WASM compilation.

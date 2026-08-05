@@ -1,106 +1,55 @@
-# Scripts Configuration
+# Shared Utility Scripts
 
-This document explains the purpose and usage of utility scripts in the `scripts/` directory.
+The Mission Platform maintains a set of shared utility scripts in the root `scripts/` directory, managed by the `@mission-platform/scripts` package.
 
-## Current Status
+## Overview
 
-The `scripts/` directory contains utility scripts used for monorepo maintenance and local development automation:
-- `i18n-extract.ts`: Utility for extracting i18n translation keys across packages and apps.
-- `generate-dev-cert.ts`: Utility for generating local development SSL/TLS certificates.
+These scripts automate common monorepo tasks, such as translation extraction, local development setup, and build verification. They are written in TypeScript and executed via the Node.js runner with experimental flag support or through `pnpm` scripts.
 
-## Execution
+## Available Scripts
 
-Scripts are written in TypeScript and executed using `tsx`:
+### i18n Extraction (`i18n:extract`)
+Extracts translation keys from Vue SFCs and TypeScript files across the monorepo. It scans for `$t()` calls and `<i18n>` blocks and generates YAML bundles for `i18next`.
 
 ```bash
-# Run i18n extraction
-pnpm exec tsx scripts/i18n-extract.ts
+pnpm run i18n:extract
+```
 
-# Generate local SSL certificate
+### Dev Certificate Generation (`generate-dev-cert.ts`)
+Generates local SSL/TLS certificates for HTTPS development. This is useful for testing features that require a secure context (e.g., camera access via `@mission-platform/code-scanner`).
+
+```bash
 pnpm exec tsx scripts/generate-dev-cert.ts
 ```
 
-## Purpose
-
-The `scripts/` directory contains reusable command-line utilities that support development, deployment, and maintenance tasks across the Mission Platform monorepo. These scripts help standardize operations and reduce duplication of effort.
-
-## When to Add a Script
-
-Add a script to the `scripts/` directory when:
-
-1. **Reusability**: The script is used across multiple projects or teams
-2. **Complexity**: The task has logic that would be difficult to maintain inline
-3. **Standardization**: You want to create a consistent pattern for common operations
-4. **Documentation**: The script performs a complex operation that needs clear documentation
-
-## Script Template
-
-Each script should include:
+### Framework Resolution Verification (`verify-framework-resolution.mjs`)
+Verifies that `@mission-platform/*` package exports correctly resolve to the intended framework build (Vue, React, etc.) based on the environment's export conditions.
 
 ```bash
-#!/bin/bash
-# script-name.sh
-# Brief description of what the script does
-# 
-# Usage: ./script-name.sh [options]
-#
-# Options:
-#   -h, --help     Show help message
-#   -v, --version  Show version
-#   -c, --config   Path to config file (default: ./config.json)
-#
-# Examples:
-#   ./script-name.sh
-#   ./script-name.sh -c ./my-config.json
-#   ./script-name.sh --help
-
-# Implementation details
-# ... script logic here ...
+node scripts/verify-framework-resolution.mjs
 ```
 
-## Development Guidelines
+## Execution Methods
 
-### 1. Naming Conventions
-- Use kebab-case for script names: `generate-seo-files.sh`
-- Prefix with domain if needed: `ci/run-tests.sh`
-- Avoid generic names that might conflict with system commands
+### Via Package Manager
+Most scripts are available as `pnpm` scripts in the root `package.json`:
 
-### 2. Documentation Requirements
-Every script must include:
-- Clear description of purpose and functionality
-- Usage examples with expected output
-- List of available options and flags
-- Error handling documentation
-- Prerequisites or dependencies
+```bash
+pnpm run <script-name>
+```
 
-### 3. Code Quality
-- Include shebang `#!/bin/bash` at the top
-- Use descriptive variable names
-- Add comments for complex logic sections
-- Implement proper error checking with `set -e` and `set -u`
-- Validate inputs and provide helpful error messages
+### Direct Execution
+Individual TypeScript scripts can be run using `tsx` or `node --experimental-strip-types`:
 
-### 4. Testing
-- Test scripts in a clean environment
-- Verify they work with different input scenarios
-- Document test cases in the script comments
-- Include example outputs for common use cases
+```bash
+pnpm exec tsx scripts/<filename>.ts
+```
 
-## Best Practices
+## Contribution Guidelines
 
-1. **Keep scripts focused**: Each script should do one thing well
-2. **Use descriptive names**: Make it clear what the script does
-3. **Include error handling**: Check for errors and exit appropriately
-4. **Document everything**: Assume no one will read your script without documentation
-5. **Test thoroughly**: Verify scripts work in different environments
-6. **Version control**: All scripts must be committed to version control
-7. **Share across teams**: Make reusable scripts available to all teams
-
-## Cross-Reference Documentation
-
-- [Development Setup](docs/development-setup.md)
-- [Package Development](docs/package-development.md)
-- [Testing](docs/testing.md)
-- [Build System](docs/build-system.md)
-
-This comprehensive approach ensures the `scripts/` directory remains organized, maintainable, and valuable to the entire Mission Platform team.
+When adding a new shared script:
+- Place it in the `scripts/` directory.
+- Use TypeScript where possible.
+- If the script depends on external packages, add them to `scripts/package.json`.
+- Document the script's purpose and usage in this file.
+- Add a corresponding entry in the root `package.json` if it's a frequently used utility.

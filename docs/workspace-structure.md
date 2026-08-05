@@ -1,243 +1,102 @@
 # Workspace Structure
 
-This document provides a detailed overview of the Mission Platform workspace structure, including directories, packages, and their purposes.
+This document provides a technical reference for the Mission Platform monorepo layout, directory purposes, and internal package conventions.
 
-## Root Directory Structure
+## Monorepo Layout Reference
 
-```
+Mission Platform uses pnpm workspaces and Turborepo to manage a multi-package environment. The repository is organised into functional tiers:
+
+```text
 composable_mission_ready_platform/
-├── apps/                   # Deployable applications
-├── configs/                # Shared tooling configurations
-├── docs/                   # Documentation files
-├── packages/               # Reusable building blocks
-├── scripts/                # Repository-wide tooling scripts
-├── vite-plugins/           # Vite build plugins
-├── workers/                # Cloudflare Workers
-└── (root files)            # Configuration and metadata files
+├── apps/                   # Deployable products and catalogues
+├── configs/                # Shared tooling and base configurations
+├── packages/               # Reusable libraries and building blocks
+├── vite-plugins/           # Build-time extensions and compilers
+├── workers/                # Cloudflare Worker edge functions
+├── crates/                 # Rust crates (including Wasm-compiled ones)
+├── mcp/                    # Model Context Protocol servers
+├── scripts/                # Repo-wide automation scripts
+├── examples/               # Example implementations and demos
+└── docs/                   # Platform documentation
 ```
 
-## Detailed Directory Breakdown
+## Primary Directories
 
-### 1. `apps/` - Deployable Applications
+### 1. `apps/` (Applications)
+Applications are deployable units that compose functionality from the `packages/` directory. They are usually private and never published to a registry.
 
-Applications are self-contained packages that compose functionality from the shared `packages/` directory. Each app is a thin orchestration layer that assembles reusable building blocks into working products.
+- **`my-care-notes/`**: The flagship note-taking application.
+- **`service-monitor/`**: Service health dashboard.
+- **`website/`**: The Mission Platform marketing and documentation site.
+- **`storybook/`**: The primary component workbench and visual testing suite.
 
-**Current Applications:**
-- **`my-care-notes/`**: A Vue 3 note-taking application with spell checking (Hunspell/WebAssembly), grammar checking (Harper), Monaco editor, i18next integration, and Cloudflare Pages deployment.
-- **`service-monitor/`**: Service health and status monitoring dashboard.
-- **`storybook/`**: A Storybook instance for developing, documenting, and visually testing Vue 3 components.
-- **`storybook-react/`**: A React counterpart of Storybook, cataloguing the React builds of cross-framework components.
-- **`website/`**: Platform website and documentation portal.
+### 2. `packages/` (Building Blocks)
+Reusable, versioned libraries consumed by apps. These are intended to be framework-agnostic where possible.
 
-**Conventions:**
-- Each app lives in its own subdirectory: `apps/<app-name>/`
-- App package names follow the scoped convention `@mission-platform/<app-name>`
-- Apps are always `"private": true` and never published to a registry
-- Each app has its own `vite.config.ts`, `tsconfig.json`, and test setup
+- **`@mission-platform/forge`**: The framework-neutral JSX runtime.
+- **`@mission-platform/components`**: The multi-framework component library.
+- **`@mission-platform/tokens`**: Design token source-of-truth.
+- **`@mission-platform/router`**: Agnostic routing engine.
+- **`@mission-platform/i18n`**: Agnostic internationalisation wrapper.
 
-### 2. `configs/` - Shared Tooling Configurations
+### 3. `configs/` (Tooling Foundation)
+Shared configurations that ensure consistency across all workspaces. Packages in this directory are typically used as `devDependencies`.
 
-Shared linting, formatting, and build-tooling configuration packages consumed by both `packages/` and `apps/`.
+- **`eslint-config/`**, **`prettier-config/`**, **`stylelint-config/`**: Linting and formatting rules.
+- **`typescript-config/`**: Base `tsconfig.json` files for various environments (Node, DOM, Library).
+- **`vite-config/`**: Common Vite and Vitest build patterns.
 
-**Current Configs:**
-- **`eslint-config/`**: Base ESLint flat config for TypeScript, Vue 3, React, and JavaScript
-- **`i18n-config/`**: Shared i18n configuration and locale definitions
-- **`i18next-cli-vue/`**: i18next CLI Vue extractor configuration
-- **`postcss-config/`**: Shared PostCSS configuration
-- **`prettier-config/`**: Base Prettier config for formatting
-- **`stylelint-config/`**: Base Stylelint config for SCSS and Vue SFC style blocks
-- **`typescript-config/`**: Shared TypeScript base configs (base, app, library, node, test)
-- **`vite-config/`**: Shared Vite and Vitest helpers
+### 4. `vite-plugins/` (Build Extensions)
+Custom plugins that extend the Vite build process.
 
-**Conventions:**
-- Each config lives in its own subdirectory: `configs/<config-name>/`
-- Package names follow the scoped convention `@mission-platform/<config-name>`
-- Configs are consumed as `devDependencies` (`"workspace:*"`)
-- Configs must never import from `apps/` or `packages/`
+- **`forge/`**: The multi-stage compiler for Forge components.
+- **`tokens/`**: Generates code artifacts from DTCG token definitions.
+- **`i18n/`**: Handles locale loading and static extraction.
 
-### 3. `packages/` - Reusable Building Blocks
+### 5. `workers/` (Edge Services)
+Cloudflare Workers for server-side logic and optimised asset delivery.
 
-Shared libraries that apps consume as dependencies. These packages are the composable building blocks of the platform.
+- **`api-proxy/`**: Handles secure communication with backend services.
+- **`base-spa/`**: Serves static assets with intelligent SPA routing fallbacks.
 
-**Current Packages:**
-- **`barcode/`**: 1D/2D Barcode generation and barcode rendering utilities
-- **`breakpoints/`**: Responsive breakpoint utilities, composables, and Vue components
-- **`code-scanner/`**: Camera-based barcode and matrix code scanner
-- **`components/`**: Cross-framework component library built to both Vue 3 and React
-- **`d3/`**: Reactive D3.js visualization wrappers
-- **`forms/`**: Form primitives and validation components
-- **`forms-core/`**: Core form validation schema engine
-- **`harper/`**: Harper grammar checker integration for Monaco editor
-- **`hunspell/`**: Hunspell spell checker compiled to WebAssembly via Emscripten
-- **`i18n/`**: Framework-agnostic i18next wrapper with Vue and React adapters
-- **`icons/`**: Write-once SVG icon components for Vue 3 and React
-- **`jsx/`**: Framework-neutral JSX runtime with React-style hooks
-- **`layout/`**: Layout primitives (stacks, grids, separators)
-- **`map/`**: MapLibre GL Vue 3 wrapper with full reactivity support
-- **`matrix-code/`**: DataMatrix and QR code rendering utilities
-- **`phone-number/`**: Phone number formatting and validation
-- **`qr-code/`**: SVG/Canvas QR code generator
-- **`router/`**: Framework-agnostic routing system with Vue adapter
-- **`rxjs/`**: RxJS composables and utilities for Vue 3
-- **`scheduler-core/`**: Scheduler engine and timeline utilities
-- **`seo/`**: Framework-agnostic meta tag and SEO composables
-- **`tokens/`**: Design tokens authored in DTCG format with OKLab colors
+## Internal Package Conventions
 
-**Conventions:**
-- Each package lives in its own subdirectory: `packages/<package-name>/`
-- Package names follow the scoped convention `@mission-platform/<package-name>`
-- Packages should be framework-agnostic where possible
-- Each package must have its own `package.json`, `tsconfig.json`, and build config
-- Packages are versioned and released independently using Changesets
-- Packages must never import from `apps/`
+To maintain a predictable environment, all packages and apps follow a standard internal layout.
 
-### 4. `scripts/` - Repository-Wide Tooling Scripts
+### Standard `src/` Hierarchy
+Source code is organised by functional type:
 
-Scripts for repository-wide operations such as i18n extraction, build automation, and deployment tasks.
+- **`components/`**: UI logic (SFCs or TSX).
+- **`composables/`**: Reactive logic and hooks.
+- **`utils/`**: Pure functions and framework-agnostic helpers.
+- **`locales/`**: JSON/YAML translation files.
+- **`styles/`**: SCSS partials and design system integrations.
 
-**Current Scripts:**
-- i18n extraction utilities
-- Build and deployment automation scripts
-- Repository maintenance tools
+### Barrel Export Pattern
+Every directory within `src/` must contain an `index.ts` (barrel file).
+- Sub-directories export their internal symbols via their local `index.ts`.
+- The root `src/index.ts` acts as the public entry point for the entire workspace member.
 
-### 5. `vite-plugins/` - Vite Build Plugins
+## Root Configuration Registry
 
-Vite plugins consumed by deployable apps at build time.
+Key files at the repository root govern the monorepo's behaviour:
 
-**Current Vite Plugins:**
-- **`assemblyscript/`**: AssemblyScript compilation plugin for Vite
-- **`i18n/`**: Vite plugin for i18n locale loading and extraction
-- **`jsx/`**: Two-stage compiler for framework-neutral JSX components
-- **`seo/`**: Vite plugin that generates `robots.txt` and `sitemap.xml`
-- **`tokens/`**: Vite plugin that generates design-token artifacts from DTCG sources
+| File | Purpose |
+| :--- | :--- |
+| `pnpm-workspace.yaml` | Defines workspace boundaries, member globs, and dependency catalogs. |
+| `turbo.json` | Orchestrates the build pipeline and task caching. |
+| `package.json` | Root-level scripts and monorepo-wide devDependencies. |
+| `commitlint.config.mjs` | Enforces the Conventional Commits specification. |
 
-**Conventions:**
-- Each plugin lives in its own subdirectory: `vite-plugins/<plugin-name>/`
-- Package names follow the scoped convention `@mission-platform/vite-plugin-<name>`
-- Plugins declare `vite` as an optional peer dependency
-- Plugins are versioned and released independently using Changesets
+## Dependency & Workspace Management
 
-### 6. `workers/` - Cloudflare Workers
+Mission Platform uses the `workspace:*` protocol for internal dependencies. This ensures that packages always use the local version of other workspace members during development.
 
-Cloudflare Worker packages consumed by deployable apps for serving static assets with an SPA-style fallback.
+### PNPM Catalogs
+The repository leverages **pnpm catalogs** (defined in `pnpm-workspace.yaml`) to centralise dependency versions across the monorepo. This prevents version drift and simplifies maintenance.
 
-**Current Workers:**
-- **`base-spa/`**: Base SPA worker for serving static assets with an SPA-style fallback
-
-**Conventions:**
-- Each worker lives in its own subdirectory: `workers/<worker-name>/`
-- Package names follow the scoped convention `@mission-platform/<worker-name>`
-- Workers are always `"private": true` and never published to a registry
-- Workers consume `configs/` as devDependencies and may consume `packages/` as runtime dependencies
-
-## Standard `src/` Layout Convention
-
-To maintain consistency across the monorepo, all source code within the `src/` directory of packages and apps must follow a hierarchical structure.
-
-### 1. Packages (`packages/<name>/src/`)
-
-Packages are organized by functional type. Each subdirectory must contain an `index.ts` barrel file to manage internal exports, and the top-level `src/index.ts` re-exports the public API.
-
-- **`components/`**: UI components (Vue, React, or framework-neutral JSX).
-- **`composables/`**: Reusable reactive logic. UI packages that ship components **must** also ship corresponding composables authored against `@mission-platform/forge` neutral hooks.
-- **`locales/`**: i18n translation files and definitions.
-- **`utils/`**: Framework-agnostic utility functions and helpers.
-
-### 2. Apps (`apps/<name>/src/`)
-
-Apps follow a standard frontend application structure, as applicable to their specific needs.
-
-- **`client/`**: Client-side entry points and logic.
-- **`server/`**: Server-side logic (e.g., SSR, API routes).
-- **`pages/`**: Routable page components.
-- **`views/`**: Significant UI sections or layout parts.
-- **`components/`**: App-specific UI components.
-- **`composables/`**: App-specific reactive logic.
-- **`locales/`**: App-specific i18n translations.
-- **`utils/`**: App-specific utility functions.
-- **`routes/`**: Route definitions and configuration.
-
-### Barrel Convention (`index.ts`)
-
-Every subdirectory in a `src/` hierarchy should have an `index.ts` barrel file. This allows for clean imports and encapsulates the internal structure of the subdirectory. The root `src/index.ts` serves as the primary entry point for the entire workspace member.
-
-## Root-Level Files
-
-### Configuration Files
-- **`.nvmrc`**: Specifies the required Node.js version for the project
-- **`.gitignore`**: Lists files and directories to be ignored by Git
-- **`.editorconfig`**: Defines coding styles for various editors
-- **`commitlint.config.mjs`**: Configuration for commit message validation
-- **`turbo.json`**: TurboRepo configuration for task orchestration and caching
-- **`pnpm-workspace.yaml`**: pnpm workspace configuration defining included directories
-
-### Documentation Files
-- **`README.md`**: Project overview, status, and quick start guide
-- **`CONTRIBUTING.md`**: Guidelines for contributing to the project
-- **`DOCUMENTATION.md`**: Overview of available documentation resources
-- **`AGENTS.md`**: Agent-specific guidelines and instructions
-
-### Package Management Files
-- **`package.json`**: Root workspace manifest (private, tooling only)
-- **`pnpm-lock.yaml`**: Lockfile for pnpm dependency management
-- **`skills-lock.json`**: Configuration for agent skills and capabilities
-
-### Build and Deployment Files
-- **`.husky/`**: Git hooks for commit message validation and other pre-commit tasks
-- **`.turbo/`**: TurboRepo cache directory for incremental builds
-- **`.wrangler/`**: Cloudflare Workers configuration and deployment settings
-
-## Dependency Flow
-
-The dependency flow in Mission Platform is strictly one-directional:
-
-```
-apps → packages/vite-plugins/workers → configs
-```
-
-- **Apps** consume packages, vite-plugins, and workers as dependencies
-- **Packages, vite-plugins, and workers** consume configs as devDependencies
-- **Configs** are shared tooling configurations that should not import from apps or packages
-
-This ensures a clear separation of concerns and prevents circular dependencies.
-
-## Workspace Management
-
-The repository uses pnpm workspaces to manage dependencies across the monorepo. The `pnpm-workspace.yaml` file defines which directories are included in the workspace:
-
-```yaml
-packages:
-  - apps/**
-  - configs/**
-  - packages/**
-  - vite-plugins/**
-  - workers/**
-  - scripts
-```
-
-This configuration allows for efficient dependency management, ensuring that packages reference each other using the `workspace:*` protocol.
-
-## Task Orchestration
-
-Turborepo is used to orchestrate tasks across the workspace. The root `turbo.json` defines generic, cross-cutting tasks (`build`, `dev`, `test`, `lint`, etc.), while workspace-specific tasks live in per-workspace `turbo.json` files that extend the root via `"extends": ["//"]`.
-
-Common tasks include:
-- `build`: Build all packages and applications
-- `dev`: Start development servers for apps
-- `test`: Run tests across all workspaces
-- `lint`: Lint code in all packages and apps
-- `storybook`: Start Storybook development servers
-
-For more details on task orchestration, refer to the [Development Setup](development-setup.md) guide.
-
-## Summary
-
-The Mission Platform workspace is organized into clear directories with specific purposes:
-- **`apps/`**: Deployable applications that compose functionality from packages
-- **`configs/`**: Shared tooling configurations for linting, formatting, and build settings
-- **`packages/`**: Reusable building blocks consumed by apps as dependencies
-- **`scripts/`**: Repository-wide tooling scripts for automation and maintenance
-- **`vite-plugins/`**: Vite build plugins consumed by apps at build time
-- **`workers/`**: Cloudflare Workers for serving static assets and handling SPA fallbacks
-
-This structure ensures a clear separation of concerns, efficient dependency management, and scalable development across the platform.
+### Task Execution
+Cross-workspace tasks are executed via the root `package.json` using Turborepo:
+- `pnpm build`: Build all workspaces in the correct dependency order.
+- `pnpm test`: Run the test suites for all modified packages.
+- `pnpm lint`: Run linting and formatting checks across the entire repo.

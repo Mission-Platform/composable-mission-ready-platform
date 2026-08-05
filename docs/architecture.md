@@ -1,233 +1,78 @@
 # Mission Platform Architecture
 
-## Overview
+Mission Platform is engineered for maximum reusability and cross-framework flexibility. This document explains the architectural principles, the framework-neutral engine, and the build systems that power the platform.
 
-Mission Platform is a composable, package-driven Vue 3 component platform designed for building production-ready applications with reusable building blocks. It follows a monorepo architecture managed with [pnpm workspaces](https://pnpm.io/workspaces) and orchestrated by [Turborepo](https://turborepo.com).
+## Architectural Blueprint
 
-## Architecture Principles
+The platform follows a **composable, package-driven architecture**. This means that applications are not monolithic; instead, they are "composed" from many smaller, independent packages that each handle a specific concern (e.g., routing, internationalisation, UI components).
 
-### 1. Composable Architecture
-Mission Platform emphasizes **composition over inheritance**. Instead of large, monolithic frameworks, the platform provides small, focused packages that can be combined to build applications.
+### The Golden Rule: Dependency Direction
 
-### 2. Cross-Framework Development
-The platform supports writing components once and using them across multiple frameworks (currently Vue 3 and React) through innovative compilation techniques.
+A strict one-way dependency flow is enforced across the monorepo to prevent circular dependencies and maintain clear boundaries:
 
-### 3. Type Safety
-Every package is written in **TypeScript**, ensuring type safety throughout the development process and providing excellent developer experience with autocompletion and error checking.
-
-### 4. Design System Integration
-Built-in support for design tokens, theming, and responsive breakpoints ensures consistent visual appearance across applications.
-
-## Repository Structure
-
-```
-composable_mission_ready_platform/
-├── apps/                   # Deployable applications
-│   ├── my-care-notes/      # Vue 3 note-taking application with spell checking
-│   ├── service-monitor/    # Service health and status monitoring dashboard
-│   ├── storybook/          # Vue 3 Storybook component catalogue and visual tests
-│   ├── storybook-react/    # React Storybook catalogue for cross-framework components
-│   └── website/            # Platform website and documentation portal
-├── configs/                # Shared tooling configurations
-│   ├── eslint-config/      # Base ESLint flat config
-│   ├── i18n-config/        # Shared i18n configuration
-│   ├── i18next-cli-vue/    # i18next CLI Vue extractor configuration
-│   ├── postcss-config/     # Shared PostCSS configuration
-│   ├── prettier-config/    # Base Prettier config
-│   ├── stylelint-config/   # Base Stylelint config
-│   ├── typescript-config/  # Shared TypeScript base configs
-│   └── vite-config/        # Shared Vite and Vitest helpers
-├── packages/               # Reusable building blocks
-│   ├── barcode/            # 1D/2D Barcode generation and utilities
-│   ├── breakpoints/        # Responsive breakpoint utilities, composables, and Vue components
-│   ├── code-scanner/       # Camera-based barcode and matrix code scanner
-│   ├── components/         # Cross-framework UI component library
-│   ├── d3/                 # Reactive D3.js visualization wrappers
-│   ├── forms/              # Form primitives and validation components
-│   ├── forms-core/         # Core form validation schema engine
-│   ├── harper/             # Harper grammar checker integration for Monaco editor
-│   ├── hunspell/           # Hunspell spell checker compiled to WebAssembly
-│   ├── i18n/               # Framework-agnostic i18next wrapper and adapters
-│   ├── icons/              # Write-once SVG icon components for Vue 3 and React
-│   ├── jsx/                # Framework-neutral JSX runtime and adapters
-│   ├── layout/             # Layout primitives (stacks, grids, separators)
-│   ├── map/                # MapLibre GL Vue 3 wrapper
-│   ├── matrix-code/        # DataMatrix and QR code rendering utilities
-│   ├── phone-number/       # Phone number formatting and validation
-│   ├── qr-code/            # SVG/Canvas QR code generator
-│   ├── router/             # Framework-agnostic routing system
-│   ├── rxjs/               # RxJS composables and utilities for Vue 3
-│   ├── scheduler-core/     # Scheduler engine and timeline utilities
-│   ├── seo/                # Framework-agnostic meta tag and SEO composables
-│   └── tokens/             # Design tokens authored in DTCG format with OKLab colors
-├── vite-plugins/           # Vite build plugins
-│   ├── assemblyscript/     # AssemblyScript compilation plugin for Vite
-│   ├── i18n/               # Vite plugin for i18n locale loading and extraction
-│   ├── jsx/                # Two-stage compiler for framework-neutral JSX components
-│   ├── seo/                # Vite plugin that generates robots.txt and sitemap.xml
-│   └── tokens/             # Vite plugin that generates design-token artifacts from DTCG sources
-├── workers/                # Cloudflare Workers
-│   └── base-spa/           # Base SPA worker for serving static assets with an SPA-style fallback
-└── scripts/                # Repo-wide tooling scripts (i18n extraction, etc.)
+```mermaid
+graph TD
+    Apps[apps/] --> Packages[packages/]
+    Apps --> Plugins[vite-plugins/]
+    Apps --> Workers[workers/]
+    Packages --> Configs[configs/]
+    Plugins --> Configs
+    Workers --> Configs
 ```
 
-## Dependency Flow
+1.  **Applications (`apps/`)**: Consume packages, Vite plugins, and workers. They never export code to other parts of the monorepo.
+2.  **Packages (`packages/`)**: Provide reusable logic and components. They can depend on each other but never on applications.
+3.  **Configs (`configs/`)**: Shared tooling settings (ESLint, TypeScript, etc.). They are the foundation and depend on nothing within the monorepo.
 
-The dependency flow in Mission Platform is strictly one-directional:
+## Framework-Neutral Engine: Forge
 
-```
-apps → packages/vite-plugins/workers → configs
-```
+The heart of Mission Platform is `@mission-platform/forge`, a tiny, framework-neutral JSX runtime. It allows developers to author UI components in a dialect that is independent of any specific framework like Vue or React.
 
-- **Apps** consume packages, vite-plugins, and workers as dependencies.
-- **Packages, vite-plugins, and workers** consume configs as devDependencies.
-- **Configs** are shared tooling configurations that should not import from apps or packages.
+### How Forge Works
 
-This ensures a clear separation of concerns and prevents circular dependencies.
+- **Neutral Hooks**: Provides familiar React-style hooks (`useState`, `useEffect`, `useMemo`) that are translated to the target framework's native primitives during compilation.
+- **Serializable VNodes**: Generates a standard `MpElement` tree that can be interpreted by various adapters.
+- **Zero Runtime Overhead**: The neutral code is transformed at build time into native framework code, ensuring optimal performance.
 
-## Key Components
+## Cross-Framework Compilation Pipeline
 
-### Framework-Neutral JSX Runtime
-The `@mission-platform/forge` package provides a tiny, dependency-free framework-neutral JSX runtime. It includes:
+Mission Platform uses a custom two-stage compilation process, orchestrated by `@mission-platform/vite-plugin-forge`, to transform neutral components into multiple framework-specific outputs.
 
-- A classic `h`/`Fragment` factory that builds a serializable `MpElement` tree.
-- Framework-neutral React-style hooks (`useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`).
-- Runtime adapters for React and Vue (`toReactComponent` / `toVueComponent`).
-- Optional ambient typings that wire the classic `h` JSX factory's global `JSX` namespace to `MpElement`.
+### Stage 1: Source Transformation
+The neutral `.tsx` source is parsed using the TypeScript Compiler API. It is then transformed into:
+- **Vue SFCs**: Translating hooks to the Composition API and generating `<script setup>` blocks.
+- **React Components**: Mapping the neutral JSX to standard React modules.
+- **Solid/Svelte/Web Components**: Generating the appropriate native code for each target.
 
-### Cross-Framework Component Library
-The `@mission-platform/components` package is the platform's write-once component library. Each component is authored once in the framework-neutral `@mission-platform/forge` dialect and built straight to both Vue 3 and React by the `@mission-platform/vite-plugin-forge` two-stage compiler.
+### Stage 2: Native Compilation
+The generated source trees are then passed to the native framework toolchains (e.g., `@vitejs/plugin-vue`, `reactJsxPlugin`) to produce the final production bundles.
 
-#### Build Process
-1. **Stage 1**: Parses each neutral `.tsx` with the TypeScript compiler API and emits a per-framework source tree:
-   - React `.tsx` module (`class`→`className`, `h`→`React.createElement`, hooks kept as React's own)
-   - Vue `.vue` SFC (`<script lang="tsx">` `defineComponent`/`setup` with React-style hooks translated to Vue reactivity/lifecycle)
-2. **Stage 2**: Compiles the per-framework source tree with each framework's native toolchain:
-   - Classic `h` React JSX transform (`reactJsxPlugin`)
-   - `@vitejs/plugin-vue` (+ `@vitejs/plugin-vue-jsx`)
+## Design Token System
 
-### Design Tokens
-The `@mission-platform/tokens` package provides design tokens authored in the DTCG (designtokens.org) v2025.10 format with OKLab colors. The tokens are split into:
+Visual consistency is maintained through a sophisticated design token system managed by `@mission-platform/tokens`.
 
-- **Palette**: Colors, including dark surface/border primitives and scrim/shimmer primitives.
-- **Structural Scales**: Breakpoint, spacing, radius, shadow, size, motion (duration + easing), z-index, opacity, border-width.
-- **Typography**: Font family/size/weight/line-height/letter-spacing primitives and composite per-variant styles.
-- **Themes**: Light and dark theme files with palette `{color.*}` aliases.
+- **DTCG Standard**: Tokens are authored in the W3C Design Tokens Community Group format (v2025.10).
+- **OKLab Colour Space**: Primitives use the OKLab colour space for perceptually uniform gradients and themes.
+- **Automated Artifacts**: `@mission-platform/vite-plugin-tokens` automatically generates SCSS variables, CSS custom properties, and TypeScript constants from a single source of truth.
 
-The `@mission-platform/vite-plugin-tokens` emits:
-- Structural SCSS partials (`generated/scss/_<file>.scss`) with `$` variables, `--mp-*` CSS custom properties, and `@property` registrations.
-- Merged theme SCSS (`generated/scss/_theme.scss`) with `color-scheme: light dark` and `light-dark(<light>, <dark>)` interpolations.
-- Nested `as const` TypeScript modules (`generated/ts/<file>.ts`).
-- Aggregate barrels (`generated/_tokens.scss` and `generated/tokens.ts`).
+## Framework-Agnostic Routing & I18n
 
-### Routing System
-The `@mission-platform/router` package provides a framework-agnostic routing system:
+Core application services like routing and internationalisation are designed to be framework-agnostic.
 
-- **Framework-Neutral Route Model**: `MpRoute` tree, `MpRouteLocationRaw`, `MpResolvedLocation`.
-- **Pure Helpers**: Path compiling/matching/building, query string parsing/serializing, route flattening/resolving.
-- **Per-Framework Adapters**: Translate the neutral routes into real routers.
-  - Vue adapter: `createMpRouter` (returns an installable `Router`), `useMpRouter`/`useMpRoute` composables, and `MpRouterLink`.
-  - React adapter: Coming soon.
+- **`@mission-platform/router`**: Defines routes as a plain data structure (`MpRoute`). Adapters for Vue translate these into framework-specific router instances and composables.
+- **`@mission-platform/i18n`**: A wrapper around `i18next` that provides a universal `createMpI18n` factory. Framework-specific adapters provide `useI18n` hooks and components for Vue and React.
 
-### Internationalization
-The `@mission-platform/i18n` package provides a framework-agnostic i18next wrapper:
+## Build & Deployment Strategy
 
-- **Core**: `createMpI18n` for creating i18next instances.
-- **Adapters**: Vue (`./vue`) and React (`./react`) adapters for framework-specific integration.
-- **Base Locales**: Predefined base locales included.
+### Task Orchestration with Turborepo
+Turborepo handles the heavy lifting of building, testing, and linting across the monorepo. It uses a global cache to ensure that tasks are only executed when their inputs have changed.
 
-## Build System
+### Vite-Powered Builds
+Each package and app uses Vite for development and production builds, leveraging a shared base configuration from `@mission-platform/vite-config`.
 
-### Vite Configuration
-Each workspace (apps, packages, configs) has its own `vite.config.ts` that extends shared configurations from `@mission-platform/vite-config`.
-
-### TurboRepo Task Orchestration
-The root `turbo.json` defines generic, cross-cutting tasks (`build`, `dev`, `test`, `lint`, `format`, `preview`, `storybook`, `deploy`).
-
-Workspace-specific tasks live in per-workspace `turbo.json` files that extend the root via `"extends": ["//"]`.
-
-### Changesets
-Changesets are used for versioning and changelog automation:
-- Every PR that changes a published workspace (anything under `configs/` or `packages/`) must include a changeset.
-- Changesets are enforced by the `Conventional Commits` GitHub workflow.
-
-## Deployment
-
-### Cloudflare Workers
-The `workers/` folder contains Cloudflare Worker packages consumed by the deployable apps:
-- **Base SPA Worker**: Serves static assets with an SPA-style fallback.
-
-### Cloudflare Pages
-Applications like My Care Notes are deployed to Cloudflare Pages using Wrangler scripts.
-
-## Development Workflow
-
-### Task Runner
-All cross-workspace tasks are orchestrated by Turborepo:
-
-```bash
-# Build all apps
-turbo run build --filter="./apps/*"
-
-# Build all packages
-turbo run build --filter="./packages/*"
-
-# Run tests across all workspaces
-turbo run test
-
-# Run only the tasks affected by your changes
-turbo run build test lint --affected
-```
-
-### Storybook
-Storybook is the primary environment for developing and testing components:
-
-```bash
-# Start Vue 3 Storybook on port 6006
-turbo run storybook --filter=@mission-platform/storybook
-
-# Start React Storybook on port 6007
-turbo run storybook-react --filter=@mission-platform/storybook-react
-```
-
-### Testing
-- **Unit Tests**: Vitest for unit testing.
-- **Browser Tests**: Playwright for browser-level testing.
-- **Component Tests**: Storybook for visual and interaction testing.
-
-## Git Commit Convention
-
-All commits in this repository must follow the [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) specification:
-
-```
-<type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
-```
-
-### Commit Types
-- `feat`: A new feature (correlates with SemVer MINOR)
-- `fix`: A bug fix (correlates with SemVer PATCH)
-- `refactor`: A code change that is neither a bug fix nor a new feature
-- `style`: Changes that do not affect meaning (formatting, whitespace, etc.)
-- `chore`: Other changes that don't modify source or test files (e.g., config, tooling)
-- `docs`: Documentation-only changes
-- `test`: Adding or updating tests
-- `build`: Changes that affect the build system or external dependencies
-- `ci`: CI configuration changes
-- `perf`: Performance improvements
-
-### Scope
-The scope must be the name of the workspace being changed (e.g., `fix(map):`, `feat(components):`).
-
-### Breaking Changes
-Use `BREAKING CHANGE: <description>` for breaking API changes (correlates with SemVer MAJOR).
-
-### Local Enforcement
-Commit messages are validated locally by a Husky `commit-msg` hook that runs commitlint.
+### Cloudflare Deployment
+Applications are primarily deployed to **Cloudflare Pages**, with **Cloudflare Workers** (under `workers/`) providing specialised logic for API proxying and SPA asset serving.
 
 ## Summary
 
-Mission Platform's architecture is designed to maximize reusability, maintainability, and cross-framework compatibility. By leveraging modern tooling like pnpm workspaces, Turborepo, and Vite, the platform ensures efficient development workflows and fast builds. The strict dependency flow and clear separation of concerns make it easy to maintain and extend the platform over time.
+The Mission Platform architecture prioritises isolation, type safety, and framework flexibility. By decoupling the core logic from the UI framework and enforcing a strict dependency direction, the platform ensures long-term maintainability and scalability for complex application ecosystems.

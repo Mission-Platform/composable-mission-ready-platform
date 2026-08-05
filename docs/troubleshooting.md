@@ -1,143 +1,110 @@
 # Troubleshooting Guide
 
-## Common Issues
+This guide provides solutions for common issues encountered during development, build, and deployment within the Mission Platform monorepo. It is structured as a **How-to guide** for diagnosing and resolving technical problems.
 
-### LCP Performance Issues
-**Problem**: Largest Contentful Paint (LCP) is slow (>2.5s)
+## Performance Issues
+
+### Slow LCP (Largest Contentful Paint)
+**Problem**: LCP is above the 2.5s threshold for a "Good" rating.
+
 **Diagnosis**:
-1. Run Lighthouse audit via Chrome DevTools > Lighthouse tab
-2. Check "Speed Index" and "First Contentful Paint" metrics
-3. Identify the LCP element in Performance trace
+1. Run a Lighthouse audit in Chrome DevTools.
+2. Identify the LCP element in the "Performance" panel.
+3. Check the "Network" tab for resource load delays.
 
 **Solutions**:
-1. Eliminate resource load delay (target: <10% of page load time)
-   - Inline critical CSS
-   - Defer non-critical JavaScript
-   - Preload key resources with `<link rel="preload">
-2. Eliminate element render delay (target: <10%)
-   - Optimize server-side rendering
-   - Reduce main-thread work before LCP
-3. Reduce resource load duration (target: ~40%)
-   - Compress assets with Brotli/Gzip
-   - Use efficient image formats (WebP, AVIF)
-   - Implement code splitting
+- **Inline Critical CSS**: Ensure styles required for above-the-fold content are inlined.
+- **Image Optimization**: Use WebP/AVIF formats and provide `srcset` for responsive images.
+- **Resource Preloading**: Use `<link rel="preload">` for the LCP image or critical fonts.
+- **Minimize Main Thread Work**: Defer non-essential JavaScript using `async` or `defer`.
 
 ### Memory Leaks
-**Problem**: Gradual memory increase over time
+**Problem**: The application consumes increasing amounts of memory over time, eventually leading to crashes.
+
 **Diagnosis**:
-1. Take heap snapshots in Chrome DevTools > Memory tab
-2. Compare snapshots to identify retained objects
-3. Look for detached DOM elements
+1. Take multiple "Heap Snapshots" in the Chrome DevTools Memory tab.
+2. Compare snapshots to identify objects that are growing in number or size.
+3. Look for "Detached DOM Elements".
 
 **Solutions**:
-1. Clear caches properly in components:
-   ```ts
-   // Before unmount
-   cleanup();
-   // In Vue composables
-   onUnmounted(() => clearInterval(timer));
-   ```
-2. Avoid global state mutations:
-   - Use reactive stores with proper cleanup
-   - Clear interval/timeout references
-3. Monitor D3 bindings:
-   - Always call `select(container).selectAll('*').remove()`
+- **Cleanup in Composables**: Always clear timers and remove event listeners in `onUnmounted`.
+- **Store Management**: Ensure reactive state in Pinia or other stores is cleared when no longer needed.
+- **Dispose of Observables**: If using RxJS, ensure all subscriptions are unsubscribed.
 
-### Build Errors
-**Problem**: TypeScript errors during Vite build
-**Common causes**:
-1. Missing type definitions for external libraries
-   ```ts
-   // Add to globals.d.ts
-   declare module 'some-library';
-   ```
-2. Incorrect path mappings
-   ```json
-   // In tsconfig.json
-   "paths": {
-     "@/*": ["./*"]
-   }
-   ```
-3. Missing peer dependencies
-   ```bash
-   pnpm add react react-dom -D
-   ```
+## Build and Workspace Issues
 
-## Debugging Tools
+### Turborepo Caching Errors
+**Problem**: Changes are not being reflected in the build, or the build fails with stale artifacts.
 
-### MCP Server Setup
-1. Build the MCP server using `pnpm exec turbo run build --filter @mission-platform/mcp`
-2. Start the MCP server using `node mcp/dist/index.js` or configure your AI client / IDE to run it.
-3. Refer to [mcp/README.md](../mcp/README.md) for full usage and capability details.
+**Solution**: Force a fresh build by bypassing the cache or manually clearing it.
+```bash
+# Force a build without cache
+pnpm build:force
 
-### Network Analysis
-**Problem**: Slow API responses
-**Diagnosis**:
-1. Check waterfall chart in Network tab
-2. Verify TTFB (Time to First Byte)
-3. Analyze request/response sizes
-
-**Optimizations**:
-- Enable compression (Brotli preferred)
-- Implement caching strategies:
-  ```ts
-  // In Vite config
-  cache: {
-    html: true,
-    css: true,
-    js: true,
-    img: true
-  }
-  ```
-- Use CDN for static assets
-
-## Error Patterns
-
-### "Cannot read property 'x' of undefined"
-**Cause**: Accessing properties before data loads
-**Fix**:
-```ts
-// Instead of:
-console.log(user.profile.name);
-
-// Use:
-console.log(user?.profile?.name);
+# Manually clear the turbo cache
+rm -rf .turbo
 ```
 
-### "Unhandled promise rejection"
-**Cause**: Unawaited async operations
-**Fix**:
-```ts
-// Always handle promises:
+### Module Not Found / Workspace Resolution
+**Problem**: TypeScript or Vite cannot find a package that is defined in the workspace.
+
+**Solutions**:
+1. Verify the package is listed in the consuming workspace's `package.json`.
+2. Ensure the version matches (`workspace:*` is recommended).
+3. Run `pnpm install` to refresh symlinks.
+4. If issues persist, try a deep clean:
+   ```bash
+   pnpm -r exec rm -rf node_modules
+   pnpm install
+   ```
+
+### Type Errors in CI but not Local
+**Problem**: Build fails in CI with TypeScript errors that don't appear in your IDE.
+
+**Solution**: Run the type checker locally across the entire workspace.
+```bash
+pnpm exec turbo run build:check
+```
+This ensures that all package boundaries are correctly respected and that types validate cleanly.
+
+## MCP Server Troubleshooting
+
+### Failed to Connect
+**Problem**: Your AI client or IDE cannot connect to the Mission Platform MCP server.
+
+**Diagnosis**:
+1. Verify the MCP server is built: `pnpm exec turbo run build --filter @mission-platform/mcp-*`.
+2. Check if the server starts manually: `node mcp/developer/dist/index.js`.
+
+**Solutions**:
+- Ensure you are using the absolute path to the node binary and the script in your client configuration.
+- Check the MCP server logs for specific error messages (e.g., missing environment variables).
+
+## Common Error Patterns
+
+### "Cannot read property of undefined"
+**Cause**: Accessing properties on a null or undefined object, often before data has finished loading.
+**Fix**: Use optional chaining (`?.`) or provide default values.
+```typescript
+// Instead of:
+const name = user.profile.name;
+
+// Use:
+const name = user?.profile?.name ?? 'Guest';
+```
+
+### "Unhandled Promise Rejection"
+**Cause**: An async function threw an error that wasn't caught.
+**Fix**: Always wrap async calls in `try/catch` blocks.
+```typescript
 try {
-  await riskyOperation();
+  await fetchData();
 } catch (error) {
-  console.error('Operation failed:', error);
+  handleError(error);
 }
 ```
 
-### "Module not found"
-**Cause**: Incorrect import paths or missing dependencies
-**Fix**:
-1. Verify package is in `package.json` as dependency
-2. Check workspace resolution:
-   ```bash
-   pnpm add @mission-platform/components --workspace
-   ```
-3. Clear caches:
-   ```bash
-   pnpm store prune
-   pnpm install --force
-   ```
-
-## Performance Benchmarks
-
-| Metric | Target | Measurement Tool |
-|--------|--------|------------------|
-| LCP | <2.5s | Lighthouse |
-| FID | <100ms | Chrome DevTools |
-| CLS | <0.1 | Chrome DevTools |
-| TBT | <200ms | Web Perf Plugin |
-| TTFB | <400ms | Network Tab |
-
-*Note: Targets are based on Core Web Vitals thresholds for "Good" rating.*
+## Related Resources
+- [Best Practices](best-practices.md)
+- [Development Setup](development-setup.md)
+- [Testing Guide](testing.md)
