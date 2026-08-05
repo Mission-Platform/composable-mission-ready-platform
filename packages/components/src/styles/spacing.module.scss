@@ -3,8 +3,8 @@
  *
  * Components import this file as a CSS module:
  *   `import spacingStyles from '../../../styles/spacing.module.scss'`
- * and apply `spacingStyles['base-spacing--padding-<step>']` /
- * `spacingStyles['base-spacing--margin-<step>']`.
+ * and apply `spacingStyles['forge-spacing--padding-<step>']` /
+ * `spacingStyles['forge-spacing--margin-<step>']`.
  *
  * The rules mirror `_spacing.scss` (the SCSS partial source of truth). They are
  * inlined here rather than `@use`d because vite-plugin-forge copies only this
@@ -12,59 +12,59 @@
  * fail there when `_spacing.scss` is not copied alongside.
  */
 @layer mp.components {
-  .base-spacing--padding-2xs {
+  .forge-spacing--padding-2xs {
     padding: var(--mp-spacing-2xs);
   }
 
-  .base-spacing--padding-xs {
+  .forge-spacing--padding-xs {
     padding: var(--mp-spacing-xs);
   }
 
-  .base-spacing--padding-sm {
+  .forge-spacing--padding-sm {
     padding: var(--mp-spacing-sm);
   }
 
-  .base-spacing--padding-md {
+  .forge-spacing--padding-md {
     padding: var(--mp-spacing-md);
   }
 
-  .base-spacing--padding-lg {
+  .forge-spacing--padding-lg {
     padding: var(--mp-spacing-lg);
   }
 
-  .base-spacing--padding-xl {
+  .forge-spacing--padding-xl {
     padding: var(--mp-spacing-xl);
   }
 
-  .base-spacing--padding-2xl {
+  .forge-spacing--padding-2xl {
     padding: var(--mp-spacing-2xl);
   }
 
-  .base-spacing--margin-2xs {
+  .forge-spacing--margin-2xs {
     margin: var(--mp-spacing-2xs);
   }
 
-  .base-spacing--margin-xs {
+  .forge-spacing--margin-xs {
     margin: var(--mp-spacing-xs);
   }
 
-  .base-spacing--margin-sm {
+  .forge-spacing--margin-sm {
     margin: var(--mp-spacing-sm);
   }
 
-  .base-spacing--margin-md {
+  .forge-spacing--margin-md {
     margin: var(--mp-spacing-md);
   }
 
-  .base-spacing--margin-lg {
+  .forge-spacing--margin-lg {
     margin: var(--mp-spacing-lg);
   }
 
-  .base-spacing--margin-xl {
+  .forge-spacing--margin-xl {
     margin: var(--mp-spacing-xl);
   }
 
-  .base-spacing--margin-2xl {
+  .forge-spacing--margin-2xl {
     margin: var(--mp-spacing-2xl);
   }
 }

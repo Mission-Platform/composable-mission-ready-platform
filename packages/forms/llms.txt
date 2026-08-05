@@ -5,28 +5,28 @@ framework-neutral `@mission-platform/forge` dialect and compiled straight to bot
 Vue 3 (`./vue`) and React (`./react`) by `@mission-platform/vite-plugin-forge`'s
 two-stage compiler (there is no neutral runtime build). The package was split out
 of `@mission-platform/components` so it can depend on **both**
-`@mission-platform/components` (for the field widgets and `BaseDrawer`) and
-`@mission-platform/layouts` (for `BaseVerticalLayout`) without creating a
+`@mission-platform/components` (for the field widgets and `ForgeDrawer`) and
+`@mission-platform/layouts` (for `ForgeVerticalLayout`) without creating a
 dependency cycle.
 
 ## Components
 
-- **BaseFormBuilder** (`./components/base-form-builder`) — a visual authoring
+- **ForgeFormBuilder** (`./components/forge-form-builder`) — a visual authoring
   surface for JSON-Schema forms: a field palette, a tabbed centre (Editor canvas,
   a wizard-only Steps tab, a live Preview, and a Schema JSON tab), and an
-  inspector. Laid out as a three-column `BaseVerticalLayout` (from
+  inspector. Laid out as a three-column `ForgeVerticalLayout` (from
   `@mission-platform/layouts`). The whole field tree is emitted as a
   `SchemaFormDefinition` (built through `@mission-platform/forms-core`) via the
   controlled `modelValue` / `onUpdateModelValue` callback prop.
-- **BaseSchemaForm** (`./components/base-schema-form`) — renders and validates a
+- **ForgeSchemaForm** (`./components/forge-schema-form`) — renders and validates a
   form entirely from a JSON Schema (fields + Ajv validation derived through
   `@mission-platform/forms-core`, so Vue and React validate identically). A
   single object renders a one-step form; a top-level array renders a multi-step
   wizard. Supports nested field sets, `ui.visibleWhen` conditional visibility,
   and per-field error surfacing. The `code` widget (`ui.widget: 'code'`, with an
-  optional `ui.language`) renders a `BaseMonacoEditor` code field.
-- **BaseSchemaFormDialog** (`./components/base-schema-form-dialog`) — a
-  `BaseSchemaForm` hosted inside a `BaseModal`, with Cancel / Submit actions
+  optional `ui.language`) renders a `ForgeMonacoEditor` code field.
+- **ForgeSchemaFormDialog** (`./components/forge-schema-form-dialog`) — a
+  `ForgeSchemaForm` hosted inside a `ForgeModal`, with Cancel / Submit actions
   wired to the form's own validation (the primary button is the form's
   `type="submit"`, so submitting validates through `@mission-platform/forms-core`
   and fires `onSubmit(values, isValid)`). Open state is controlled (`open` +
@@ -46,8 +46,8 @@ dependency cycle.
   `<name>.module.scss`, `<name>.stories.tsx`, `<name>.spec.ts`, `index.ts`); the
   neutral barrel is `src/components/index.ts`.
 - Neutral sources import sibling widgets from `@mission-platform/components`
-  (remapped to the built `./vue` / `./react` entry at build time), `BaseDrawer`
-  types from `@mission-platform/components/base-drawer`, and `BaseVerticalLayout`
+  (remapped to the built `./vue` / `./react` entry at build time), `ForgeDrawer`
+  types from `@mission-platform/components/forge-drawer`, and `ForgeVerticalLayout`
   from `@mission-platform/layouts`.
 - Co-located Storybook stories (globbed by `apps/storybook`) are titled
   `Forms/<Name>` (the `forms` package has its own top-level Storybook section,

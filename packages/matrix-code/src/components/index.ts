@@ -1,4 +1,4 @@
-// Neutral components barrel for the write-once `BaseMatrixCode`.
+// Neutral components barrel for the write-once `ForgeMatrixCode`.
 //
 // This is the Stage-1 input for `@mission-platform/vite-plugin-forge`: the
 // per-framework builds (`./react` / `./vue`) are generated from this barrel,
@@ -6,10 +6,10 @@
 // shipped as-is; only the compiled framework builds are exposed (through the
 // package's `./react` and `./vue` subpath exports).
 export {
-  BaseMatrixCode,
+  ForgeMatrixCode,
   type MatrixCodeProperties,
   type MatrixGradient,
   type MatrixLogo,
   type MatrixModuleShape,
   type MatrixSymbology,
-} from './molecules/base-matrix-code';
+} from './molecules/forge-matrix-code';

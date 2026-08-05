@@ -11,7 +11,7 @@
 // This barrel re-exports the scanning façade (`./scanner`), the browser capture
 // helpers (`./capture`), the pixel helper (`./image`) and the shared types
 // (`./types`). The per-feature `component/` sibling (a write-once
-// `BaseCodeScanner`) is built separately and shipped through the package's
+// `ForgeCodeScanner`) is built separately and shipped through the package's
 // `./react` and `./vue` subpath exports.
 
 /** The shared result and image types. */

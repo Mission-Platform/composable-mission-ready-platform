@@ -1,0 +1,112 @@
+/**
+ * Styling for the write-once `ForgeSeparator`.
+ *
+ * `ForgeSeparator` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its line / label / spacing styling (ported from the original
+ * Vue component) ships in the built package CSS (the two-stage compiler carries
+ * the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package.
+ */
+
+@layer mp.components {
+  .forge-separator {
+    border: 0;
+    background: transparent;
+    color: var(--mp-color-text-tertiary);
+  }
+
+  .forge-separator--horizontal {
+    width: 100%;
+    border-top-width: var(--mp-border-width-thin);
+    border-top-color: var(--mp-color-border-default);
+
+    &.forge-separator--solid {
+      border-top-style: solid;
+    }
+
+    &.forge-separator--dashed {
+      border-top-style: dashed;
+    }
+
+    &.forge-separator--dotted {
+      border-top-style: dotted;
+    }
+  }
+
+  .forge-separator--vertical {
+    align-self: stretch;
+    height: auto;
+    min-height: 1em;
+    margin-inline: var(--mp-separator-spacing, var(--mp-spacing-4));
+    border-left-width: var(--mp-border-width-thin);
+    border-left-color: var(--mp-color-border-default);
+
+    &.forge-separator--solid {
+      border-left-style: solid;
+    }
+
+    &.forge-separator--dashed {
+      border-left-style: dashed;
+    }
+
+    &.forge-separator--dotted {
+      border-left-style: dotted;
+    }
+  }
+
+  .forge-separator--labelled {
+    display: flex;
+    align-items: center;
+    gap: var(--mp-spacing-3);
+    width: 100%;
+  }
+
+  .forge-separator__line {
+    flex: 1 1 auto;
+    border-top-width: var(--mp-border-width-thin);
+    border-top-color: var(--mp-color-border-default);
+  }
+
+  .forge-separator--labelled.forge-separator--solid .forge-separator__line {
+    border-top-style: solid;
+  }
+
+  .forge-separator--labelled.forge-separator--dashed .forge-separator__line {
+    border-top-style: dashed;
+  }
+
+  .forge-separator--labelled.forge-separator--dotted .forge-separator__line {
+    border-top-style: dotted;
+  }
+
+  .forge-separator__label {
+    flex: 0 0 auto;
+    font-family: var(--mp-font-family-sans);
+    font-size: var(--mp-size-font-sm);
+    line-height: var(--mp-line-height-tight);
+    color: var(--mp-color-text-secondary);
+    white-space: nowrap;
+  }
+
+  /* Spacing — applied along the main axis for the relevant orientation. */
+  $spacing-map: (
+    'none': var(--mp-spacing-0),
+    'sm': var(--mp-spacing-2),
+    'md': var(--mp-spacing-4),
+    'lg': var(--mp-spacing-6),
+    'xl': var(--mp-spacing-8),
+  );
+
+  @each $name, $value in $spacing-map {
+    .forge-separator--spacing-#{$name} {
+      --mp-separator-spacing: #{$value};
+    }
+  }
+
+  .forge-separator--horizontal,
+  .forge-separator--labelled {
+    margin-block: var(--mp-separator-spacing, var(--mp-spacing-4));
+  }
+}

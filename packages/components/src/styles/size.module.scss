@@ -3,7 +3,7 @@
  *
  * Components import this file as a CSS module:
  *   `import sizeStyles from '../../../styles/size.module.scss'`
- * and apply `sizeStyles['base-size--<step>']`.
+ * and apply `sizeStyles['forge-size--<step>']`.
  *
  * The rules mirror `_size.scss` (the SCSS partial source of truth). They are
  * inlined here rather than `@use`d because vite-plugin-forge copies only this
@@ -12,7 +12,7 @@
  */
 @layer mp.components {
   @each $step in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
-    .base-size--#{$step} {
+    .forge-size--#{$step} {
       font-size: var(--mp-size-font-#{$step});
     }
   }

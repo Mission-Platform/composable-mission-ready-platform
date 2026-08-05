@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-  import { BaseMonacoEditor, type MonacoReadyContext } from '@mission-platform/components/vue';
+  import { ForgeMonacoEditor, type MonacoReadyContext } from '@mission-platform/components';
   import { computed } from 'vue';
 
   import { useMonacoTheme } from '../composables/use-monaco-theme';
   import { useSnippets } from '../composables/use-snippets';
 
   // Type-only import: erased at build time. The runtime Monaco module is
-  // loaded lazily — see `loadMonaco()` below and `BaseMonacoEditor` itself.
+  // loaded lazily — see `loadMonaco()` below and `ForgeMonacoEditor` itself.
   // This keeps `monaco-editor` out of the eagerly-loaded module graph so it
   // can be code-split into its own chunk by Vite.
   import type * as monaco from 'monaco-editor';
@@ -162,7 +162,7 @@
 </script>
 
 <template>
-  <BaseMonacoEditor
+  <ForgeMonacoEditor
     :completion-provider="completionProvider"
     :font-size="15"
     :line-numbers="false"

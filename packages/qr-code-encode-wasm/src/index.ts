@@ -8,10 +8,10 @@
 // at import — wiring the instance into the generated bindings exactly like the
 // bundler-target entry would — so consumers just import the ready-to-use
 // `encode` function with no async initialisation step.
-import * as bindings from './wasm/qr-code-encode_bg.js';
-import wasmBase64 from './wasm/qr-code-encode_bg.wasm';
+import * as bindings from "./wasm/qr-code-encode_bg.js";
+import wasmBase64 from "./wasm/qr-code-encode_bg.wasm";
 
-import type * as WasmApi from './wasm/qr-code-encode.js';
+import type * as WasmApi from "./wasm/qr-code-encode.js";
 
 /**
  * Decode a base64 string to bytes. Prefers the native `Uint8Array.fromBase64`
@@ -22,7 +22,7 @@ function toBytes(base64: string): Uint8Array {
   const constructor = Uint8Array as typeof Uint8Array & {
     fromBase64?: (value: string) => Uint8Array;
   };
-  if (typeof constructor.fromBase64 === 'function') {
+  if (typeof constructor.fromBase64 === "function") {
     return constructor.fromBase64(base64);
   }
   const runtime = globalThis as {
@@ -30,7 +30,7 @@ function toBytes(base64: string): Uint8Array {
     atob?: (data: string) => string;
   };
   if (runtime.Buffer !== undefined) {
-    return new Uint8Array(runtime.Buffer.from(base64, 'base64'));
+    return new Uint8Array(runtime.Buffer.from(base64, "base64"));
   }
   const binary = runtime.atob!(base64);
   const bytes = new Uint8Array(binary.length);
@@ -46,9 +46,12 @@ function toBytes(base64: string): Uint8Array {
 const glue = bindings as unknown as typeof WasmApi & {
   __wbg_set_wasm(value: unknown): void;
 };
-const instance = new WebAssembly.Instance(new WebAssembly.Module(toBytes(wasmBase64)), {
-  './qr-code-encode_bg.js': bindings as unknown as WebAssembly.ModuleImports,
-});
+const instance = new WebAssembly.Instance(
+  new WebAssembly.Module(toBytes(wasmBase64)),
+  {
+    "./qr-code-encode_bg.js": bindings as unknown as WebAssembly.ModuleImports,
+  },
+);
 glue.__wbg_set_wasm(instance.exports);
 (instance.exports as { __wbindgen_start: () => void }).__wbindgen_start();
 
@@ -65,7 +68,8 @@ export const encode: typeof WasmApi.encode = glue.encode;
  * matrix. Returns `undefined` when the payload does not fit. The wasm module is
  * already instantiated, so this is fully synchronous.
  */
-export const encode_micro_qr: typeof WasmApi.encode_micro_qr = glue.encode_micro_qr;
+export const encode_micro_qr: typeof WasmApi.encode_micro_qr =
+  glue.encode_micro_qr;
 
 /**
  * Encode UTF-8 `text` into a packed `[width, height, ...modules]` Rectangular

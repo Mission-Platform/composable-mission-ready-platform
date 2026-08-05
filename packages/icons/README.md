@@ -9,7 +9,7 @@ Write-once SVG icon components for Mission Platform, authored in a framework-neu
 - **Tree-Shakable**: Each icon is compiled into its own module for minimal bundle footprint.
 - **Universal Props**: Standardized `size` tokens (`2xs`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl` or explicit numeric
   values), `color`, and accessibility `ariaLabel`.
-- **Specialized Behavior**: Directional transforms (`IconArrow`, `IconChevron`) and state indicators (`IconSort`).
+- **Specialized Behavior**: Directional transforms (`ForgeIconArrow`, `ForgeIconChevron`) and state indicators (`ForgeIconSort`).
 
 ## Installation
 
@@ -23,25 +23,25 @@ pnpm add @mission-platform/icons
 
 ```vue
 <script setup lang="ts">
-  import { IconAlert, IconArrow, IconCheck, IconSearch } from '@mission-platform/icons/vue';
+  import { ForgeIconAlert, ForgeIconArrow, ForgeIconCheck, ForgeIconSearch } from '@mission-platform/icons/vue';
 </script>
 
 <template>
   <div class="flex items-center gap-2">
-    <IconAlert
+    <ForgeIconAlert
       size="lg"
       color="#ef4444"
       aria-label="Warning"
     />
-    <IconArrow
+    <ForgeIconArrow
       direction="right"
       size="sm"
     />
-    <IconCheck
+    <ForgeIconCheck
       size="md"
       color="#22c55e"
     />
-    <IconSearch size="20" />
+    <ForgeIconSearch size="20" />
   </div>
 </template>
 ```
@@ -49,25 +49,25 @@ pnpm add @mission-platform/icons
 ### React (`@mission-platform/icons/react`)
 
 ```tsx
-import { IconAlert, IconArrow, IconCheck, IconSearch } from '@mission-platform/icons/react';
+import { ForgeIconAlert, ForgeIconArrow, ForgeIconCheck, ForgeIconSearch } from '@mission-platform/icons/react';
 
 export function IconBar() {
   return (
     <div style={{ display: 'flex', gap: '8px' }}>
-      <IconAlert
+      <ForgeIconAlert
         size="lg"
         color="#ef4444"
         ariaLabel="Warning"
       />
-      <IconArrow
+      <ForgeIconArrow
         direction="right"
         size="sm"
       />
-      <IconCheck
+      <ForgeIconCheck
         size="md"
         color="#22c55e"
       />
-      <IconSearch size={20} />
+      <ForgeIconSearch size={20} />
     </div>
   );
 }
@@ -78,7 +78,7 @@ export function IconBar() {
 When authoring write-once components compiled by `@mission-platform/vite-plugin-forge`:
 
 ```tsx
-import { IconAlert, IconCheck } from '@mission-platform/icons';
+import { ForgeIconAlert, ForgeIconCheck } from '@mission-platform/icons';
 ```
 
 ## Subpath Exports
@@ -90,7 +90,7 @@ import { IconAlert, IconCheck } from '@mission-platform/icons';
 ## Universal Props
 
 | Prop        | Type               | Default            | Description                                                 |
-|:------------|:-------------------|:-------------------|:------------------------------------------------------------|
+| :---------- | :----------------- | :----------------- | :---------------------------------------------------------- |
 | `size`      | `number \| string` | `'md'`             | Named token (`2xs`–`2xl`) or pixel number.                  |
 | `color`     | `string`           | `'currentColor'`   | Icon stroke or fill color.                                  |
 | `ariaLabel` | `string`           | _Default per icon_ | Accessible label (marks `aria-hidden="true"` when omitted). |

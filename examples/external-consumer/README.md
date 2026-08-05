@@ -14,7 +14,7 @@ This example demonstrates how to consume Mission Platform packages in a plain Vi
 Because of the conditions above, we can import components using bare specifiers:
 
 ```ts
-import { BaseButton } from '@mission-platform/components';
+import { ForgeButton } from '@mission-platform/components';
 ```
 
 ## How to Test (Local)

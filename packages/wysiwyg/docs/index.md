@@ -55,8 +55,8 @@ export function Editor() {
   (`document.execCommand`) — no heavy editor engine dependency.
 - Formatting toolbar (bold/italic/underline/strikethrough, headings, quote and code block, lists, alignment, link,
   image, undo/redo) built from
-  `@mission-platform/icons` glyphs and `@mission-platform/components`' `BaseButton`.
-- Optional **HTML source view** backed by `BaseMonacoEditor`, which — with
+  `@mission-platform/icons` glyphs and `@mission-platform/components`' `ForgeButton`.
+- Optional **HTML source view** backed by `ForgeMonacoEditor`, which — with
   `spellCheck` — brings Hunspell spelling + Harper grammar checking to the markup.
 - Live word/character counter derived from an **RxJS** change stream (debounced and de-duplicated).
 - Fully overridable labels (English defaults) for i18n; SSR/SSG-safe.

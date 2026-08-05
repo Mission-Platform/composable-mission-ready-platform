@@ -6,6 +6,6 @@
 // (`crates/matrix-code-encode` / `crates/matrix-code-decode`, sharing
 // `crates/matrix-code-common`) into two wasm modules under `generated/encode`
 // and `generated/decode`. The per-feature `component/` sibling (a write-once
-// `BaseMatrixCode`) is added in a follow-up and re-exported here when present.
+// `ForgeMatrixCode`) is added in a follow-up and re-exported here when present.
 export { type MatrixCode, type MatrixSymbology, encodeMatrix, encodeMatrixAsync } from './encoder';
 export { decodeMatrix, decodeMatrixAsync } from './decoder';

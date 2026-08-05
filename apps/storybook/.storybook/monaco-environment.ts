@@ -3,7 +3,7 @@
  *
  * Mirrors the My Care Notes app (`apps/my-care-notes/src/monaco-environment.ts`):
  * it centralises Monaco's `?worker` imports and the `globalThis.MonacoEnvironment`
- * wiring so that the `BaseMonacoEditor` used by the WYSIWYG editor (its code-block
+ * wiring so that the `ForgeMonacoEditor` used by the WYSIWYG editor (its code-block
  * dialog and HTML source view) runs its language services **in web workers**
  * rather than falling back to the main thread. Without this, Monaco warns that it
  * "could not create web workers" and does all of its heavy work synchronously on

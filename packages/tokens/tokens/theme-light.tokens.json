@@ -4,10 +4,10 @@
     "$type": "color",
     "bg": {
       "base": {
-        "$value": "{color.base-light}",
-        "$description": "color.base-light"
+        "$value": "{color.forge-light}",
+        "$description": "color.forge-light"
       },
-      "base-alt": {
+      "forge-alt": {
         "$value": "{color.surface.light-alt}",
         "$description": "color.surface.light-alt"
       },

@@ -1,0 +1,123 @@
+/**
+ * Styling for the write-once `ForgeCard`.
+ *
+ * Carried onto both frameworks by the two-stage compiler: React imports this as
+ * a hashed CSS Module, Vue inlines it as a (non-scoped) `<style>` block. The
+ * rules live in the shared `mp.components` cascade layer (matching the
+ * `@mission-platform/components` package).
+ */
+
+@layer mp.components {
+  .forge-card {
+    /* Become an inline-size container so the inner padding responds to the */
+
+    /* card's own width (e.g. in a narrow grid cell) rather than the viewport. */
+
+    /* Guarded so browsers without container-query support fall back to the static */
+
+    /* padding baselines below rather than getting an unknown value. */
+    @supports (container-type: inline-size) {
+      container: forge-card / inline-size;
+    }
+
+    background-color: var(--mp-color-bg-surface);
+    border-radius: var(--mp-radius-lg);
+    overflow: hidden;
+
+    &--bordered {
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    }
+
+    &--shadow {
+      box-shadow: var(--mp-shadow-md);
+    }
+
+    /* Padding variants — compact by default, wider cards get more breathing room */
+    &--padding-none {
+      .forge-card__header,
+      .forge-card__body,
+      .forge-card__footer {
+        padding: 0;
+      }
+    }
+
+    &--padding-sm {
+      .forge-card__header,
+      .forge-card__body,
+      .forge-card__footer {
+        padding: var(--mp-spacing-2) var(--mp-spacing-3);
+
+        @container forge-card (width >= 30rem) {
+          padding: var(--mp-spacing-3) var(--mp-spacing-4);
+        }
+      }
+    }
+
+    &--padding-md {
+      .forge-card__header,
+      .forge-card__body,
+      .forge-card__footer {
+        padding: var(--mp-spacing-3) var(--mp-spacing-4);
+
+        @container forge-card (width >= 30rem) {
+          padding: var(--mp-spacing-4) var(--mp-spacing-6);
+        }
+      }
+    }
+
+    &--padding-lg {
+      .forge-card__header,
+      .forge-card__body,
+      .forge-card__footer {
+        padding: var(--mp-spacing-4) var(--mp-spacing-6);
+
+        @container forge-card (width >= 30rem) {
+          padding: var(--mp-spacing-6) var(--mp-spacing-8);
+        }
+      }
+    }
+
+    /**
+     * Colour variants — tint the surface, dividers and (when bordered) the
+     * border. `neutral` is intentionally omitted so it keeps the plain surface.
+     */
+    @each $name,
+      $family
+        in (
+          'primary': 'primary',
+          'secondary': 'secondary',
+          'tertiary': 'tertiary',
+          'success': 'success',
+          'warning': 'warning',
+          'info': 'info',
+          'error': 'error',
+          'critical': 'critical'
+        )
+    {
+      &--#{$name} {
+        background-color: var(--mp-color-#{$family}-muted);
+        color: var(--mp-color-#{$family}-text);
+
+        &.forge-card--bordered {
+          border-color: var(--mp-color-#{$family}-subtle);
+        }
+
+        .forge-card__header {
+          border-bottom-color: var(--mp-color-#{$family}-subtle);
+        }
+
+        .forge-card__footer {
+          border-top-color: var(--mp-color-#{$family}-subtle);
+        }
+      }
+    }
+
+    &__header {
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    }
+
+    &__footer {
+      border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    }
+  }
+}

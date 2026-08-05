@@ -30,17 +30,17 @@ default `aria-label`, and the same `@layer mp.icons` styling.
 
 ```ts
 // Vue 3
-import { IconAlert, IconArrow } from '@mission-platform/icons/vue';
+import { ForgeIconAlert, ForgeIconArrow } from '@mission-platform/icons/vue';
 
 // React
-import { IconAlert, IconArrow } from '@mission-platform/icons/react';
+import { ForgeIconAlert, ForgeIconArrow } from '@mission-platform/icons/react';
 
 // Write-once neutral component (compiled per framework by vite-plugin-forge)
-import { IconAlert, IconArrow } from '@mission-platform/icons';
+import { ForgeIconAlert, ForgeIconArrow } from '@mission-platform/icons';
 ```
 
 Each icon renders an `<svg role="img">` (inside a centring `<div>` wrapper that
-carries the `base-icon-<name>` BEM class) on a `0 0 24 24` viewBox.
+carries the `forge-icon-<name>` BEM class) on a `0 0 24 24` viewBox.
 
 ## Props
 
@@ -50,37 +50,37 @@ Every icon accepts:
 |---|---|---|---|
 | `size` | `number \| string` | `'md'` | Width/height — a named token (`'2xs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl'` → 12–48px) or a pixel number. |
 | `color` | `string` | `'currentColor'` | Stroke colour (and fill, for the filled-marker icons). |
-| `ariaLabel` | `string` | per-icon default | Accessible name. When omitted the icon is `aria-hidden`; most icons also carry a sensible default label (e.g. `IconAlert` → `Alert`). |
+| `ariaLabel` | `string` | per-icon default | Accessible name. When omitted the icon is `aria-hidden`; most icons also carry a sensible default label (e.g. `ForgeIconAlert` → `Alert`). |
 
 Three icons add behavioural props:
 
 | Icon | Extra props | Description |
 |---|---|---|
-| `IconArrow` | `direction` (`'up' \| 'right' \| 'down' \| 'left'`, default `'up'`) | Rotates the arrow via an inline `transform`. Exports `IconArrowDirection`. |
-| `IconChevron` | `direction` (`'up' \| 'right' \| 'down' \| 'left'`, default `'down'`) | Rotates the chevron via an inline `transform`. Exports `IconDirection`. |
-| `IconSort` | `active` (`boolean`), `direction` (`'asc' \| 'desc' \| undefined`) | Fills the chevron matching the active sort direction. Exports `SortDirection`. |
+| `ForgeIconArrow` | `direction` (`'up' \| 'right' \| 'down' \| 'left'`, default `'up'`) | Rotates the arrow via an inline `transform`. Exports `IconArrowDirection`. |
+| `ForgeIconChevron` | `direction` (`'up' \| 'right' \| 'down' \| 'left'`, default `'down'`) | Rotates the chevron via an inline `transform`. Exports `IconDirection`. |
+| `ForgeIconSort` | `active` (`boolean`), `direction` (`'asc' \| 'desc' \| undefined`) | Fills the chevron matching the active sort direction. Exports `SortDirection`. |
 
 ## Icons
 
-`IconAlert`, `IconAlignCenter`, `IconAlignJustify`, `IconAlignLeft`,
-`IconAlignRight`, `IconArrow`, `IconBell`, `IconBlockquote`, `IconBold`,
-`IconBulletList`, `IconCalendar`, `IconCamera`, `IconChat`, `IconCheck`,
-`IconChevron`, `IconClock`, `IconClose`, `IconCloud`, `IconCodeBlock`,
-`IconCodeInline`, `IconCopy`, `IconDebug`, `IconDownload`, `IconDrawCircle`,
-`IconDrawLine`, `IconDrawPolygon`, `IconDrawSquare`, `IconDrawTriangle`,
-`IconEdit`, `IconError`, `IconExternalLink`, `IconEye`, `IconEyeOff`,
-`IconFilter`, `IconGeodesic`, `IconGlobe`, `IconHeading`, `IconHeadingOne`,
-`IconHeadingTwo`, `IconHeadingThree`, `IconHeadingFour`, `IconHeadingFive`,
-`IconHeadingSix`, `IconHeart`, `IconHome`, `IconImage`, `IconInfo`,
-`IconItalic`, `IconJoin`, `IconLanguage`, `IconLightning`, `IconLink`,
-`IconLock`, `IconLockOpen`, `IconMail`, `IconMapPin`, `IconMenu`, `IconMinus`,
-`IconMove`, `IconNotice`, `IconNumberedList`, `IconPalette`, `IconPencil`,
-`IconPhone`, `IconPlus`, `IconPuzzle`, `IconQrCode`, `IconRefresh`,
-`IconRotateCcw`, `IconRotateCw`, `IconScaleDown`, `IconScaleUp`, `IconSearch`,
-`IconSend`, `IconSettings`, `IconShare`, `IconSort`, `IconSplit`, `IconStar`,
-`IconTable`, `IconTableColumnAdd`, `IconTableColumnRemove`, `IconTableRowAdd`,
-`IconTableRowRemove`, `IconTrash`, `IconUpload`, `IconUser`, `IconWarning`,
-`IconWrench`.
+`ForgeIconAlert`, `ForgeIconAlignCenter`, `ForgeIconAlignJustify`, `ForgeIconAlignLeft`,
+`ForgeIconAlignRight`, `ForgeIconArrow`, `ForgeIconBell`, `ForgeIconBlockquote`, `ForgeIconBold`,
+`ForgeIconBulletList`, `ForgeIconCalendar`, `ForgeIconCamera`, `ForgeIconChat`, `ForgeIconCheck`,
+`ForgeIconChevron`, `ForgeIconClock`, `ForgeIconClose`, `ForgeIconCloud`, `ForgeIconCodeBlock`,
+`ForgeIconCodeInline`, `ForgeIconCopy`, `ForgeIconDebug`, `ForgeIconDownload`, `ForgeIconDrawCircle`,
+`ForgeIconDrawLine`, `ForgeIconDrawPolygon`, `ForgeIconDrawSquare`, `ForgeIconDrawTriangle`,
+`ForgeIconEdit`, `ForgeIconError`, `ForgeIconExternalLink`, `ForgeIconEye`, `ForgeIconEyeOff`,
+`ForgeIconFilter`, `ForgeIconGeodesic`, `ForgeIconGlobe`, `ForgeIconHeading`, `ForgeIconHeadingOne`,
+`ForgeIconHeadingTwo`, `ForgeIconHeadingThree`, `ForgeIconHeadingFour`, `ForgeIconHeadingFive`,
+`ForgeIconHeadingSix`, `ForgeIconHeart`, `ForgeIconHome`, `ForgeIconImage`, `ForgeIconInfo`,
+`ForgeIconItalic`, `ForgeIconJoin`, `ForgeIconLanguage`, `ForgeIconLightning`, `ForgeIconLink`,
+`ForgeIconLock`, `ForgeIconLockOpen`, `ForgeIconMail`, `ForgeIconMapPin`, `ForgeIconMenu`, `ForgeIconMinus`,
+`ForgeIconMove`, `ForgeIconNotice`, `ForgeIconNumberedList`, `ForgeIconPalette`, `ForgeIconPencil`,
+`ForgeIconPhone`, `ForgeIconPlus`, `ForgeIconPuzzle`, `ForgeIconQrCode`, `ForgeIconRefresh`,
+`ForgeIconRotateCcw`, `ForgeIconRotateCw`, `ForgeIconScaleDown`, `ForgeIconScaleUp`, `ForgeIconSearch`,
+`ForgeIconSend`, `ForgeIconSettings`, `ForgeIconShare`, `ForgeIconSort`, `ForgeIconSplit`, `ForgeIconStar`,
+`ForgeIconTable`, `ForgeIconTableColumnAdd`, `ForgeIconTableColumnRemove`, `ForgeIconTableRowAdd`,
+`ForgeIconTableRowRemove`, `ForgeIconTrash`, `ForgeIconUpload`, `ForgeIconUser`, `ForgeIconWarning`,
+`ForgeIconWrench`.
 
 ## Storybook
 
@@ -100,7 +100,7 @@ the `icons` package does not story fall back to `Text Formatting` / `Table` /
   (consuming `@mission-platform/icons/react`).
 
 Each story exposes `size`, `color`, and `ariaLabel` controls; the behavioural
-icons add their own (`IconArrow`/`IconChevron`: `direction`; `IconSort`:
+icons add their own (`ForgeIconArrow`/`ForgeIconChevron`: `direction`; `ForgeIconSort`:
 `active` + `direction`). Both files are generated by `scripts/generate-stories.js`
 (`pnpm stories:generate`) — re-run it whenever icons are added or removed.
 
@@ -116,6 +116,6 @@ node scripts/generate-icons.js
 It re-creates one `src/components/<name>/` folder per source icon
 (`<name>.tsx` + `<name>.module.scss` + `index.ts`) and rewrites the barrel
 `src/components/index.ts` with the named re-exports the compiler discovers. The
-three behavioural icons (`IconArrow`, `IconChevron`, `IconSort`) are emitted from
+three behavioural icons (`ForgeIconArrow`, `ForgeIconChevron`, `ForgeIconSort`) are emitted from
 hand-written templates in the script; every other icon is a direct, faithful
 translation of its source `<svg>`. Re-run it whenever the source icons change.

@@ -1,1 +1,1 @@
-export { BaseThreeCanvas, type BaseThreeCanvasProperties, useThree, type ThreeContext } from "./components";
+export { ForgeThreeCanvas, type ForgeThreeCanvasProperties, useThree, type ThreeContext } from './components';

@@ -1,0 +1,30 @@
+/**
+ * Styling for the write-once `ForgeVerticalLayout`.
+ *
+ * `ForgeVerticalLayout` owns this co-located CSS Module: it side-effect-imports
+ * the stylesheet so its appearance ships in the built package CSS (the two-stage
+ * compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the package's own `mp.layout` cascade layer. The actual `grid-template-columns` /
+ * `gap` are applied inline by the component (derived from the reactive inline
+ * state and the column sizes); the default single-column template here is the
+ * small-screen fallback.
+ */
+
+@layer mp.layout {
+  .vertical-layout {
+    display: grid;
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+
+    &--inline {
+      // At/above the breakpoint the side columns occupy their own grid tracks;
+      // the live `grid-template-columns` is applied inline by the component.
+      align-items: stretch;
+    }
+
+    &__content {
+      min-width: 0;
+    }
+  }
+}

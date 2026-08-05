@@ -2,8 +2,8 @@
 // https://www.rfc-editor.org/rfc/rfc5545
 //
 // This model lives in `@mission-platform/scheduler-core` so the Vue
-// `@mission-platform/components` BaseScheduler and the write-once
-// `@mission-platform/components` BaseScheduler share one definition (parity
+// `@mission-platform/components` ForgeScheduler and the write-once
+// `@mission-platform/components` ForgeScheduler share one definition (parity
 // by construction).
 
 /** Recurrence frequency as defined in RFC 5545 § 3.3.10 */
@@ -152,7 +152,7 @@ export interface VEvent {
   sequence?: number;
 }
 
-/** Calendar view modes available in BaseScheduler. */
+/** Calendar view modes available in ForgeScheduler. */
 export type SchedulerView = 'day' | 'three-day' | 'week' | 'month' | 'year';
 
 /** The first day a week-based view starts on (0 = Sunday … 6 = Saturday). */

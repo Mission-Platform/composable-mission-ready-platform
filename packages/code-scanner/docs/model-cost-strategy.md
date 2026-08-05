@@ -21,7 +21,7 @@ should be spent.
 ## Stage → tier mapping
 
 | Stage                              | Work                                                    | Tier |
-|------------------------------------|---------------------------------------------------------|------|
+| ---------------------------------- | ------------------------------------------------------- | ---- |
 | 1 Vendor corpus + loader + harness | copy/attribution (C), loader + harness logic (B)        | C→B  |
 | 2 Raise supported-format read-rate | locator tuning + retry paths                            | A→B  |
 | 3 GS1 DataBar family               | tables/encoders (B), RSS-14 locator + RS (A)            | A/B  |

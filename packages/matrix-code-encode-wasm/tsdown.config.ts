@@ -1,8 +1,8 @@
-import fs from 'node:fs';
+import fs from "node:fs";
 
-import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
+import { defineTsdownLibrary } from "@mission-platform/tsdown-config";
 
-import type { TsdownPlugin } from 'tsdown';
+import type { TsdownPlugin } from "tsdown";
 
 /**
  * Inline the wasm-pack `_bg.wasm` binary (`src/wasm/*.wasm`) as a base64 string
@@ -11,14 +11,14 @@ import type { TsdownPlugin } from 'tsdown';
  */
 function inlineWasmBase64Plugin(): TsdownPlugin {
   return {
-    name: 'mission-platform:inline-wasm-base64',
-    enforce: 'pre',
+    name: "mission-platform:inline-wasm-base64",
+    enforce: "pre",
     load(id) {
-      const filePath = id.split('?')[0] ?? id;
-      if (!filePath.endsWith('.wasm') || !fs.existsSync(filePath)) {
+      const filePath = id.split("?")[0] ?? id;
+      if (!filePath.endsWith(".wasm") || !fs.existsSync(filePath)) {
         return;
       }
-      const base64 = fs.readFileSync(filePath).toString('base64');
+      const base64 = fs.readFileSync(filePath).toString("base64");
       return `export default ${JSON.stringify(base64)};`;
     },
   };
@@ -32,7 +32,7 @@ function inlineWasmBase64Plugin(): TsdownPlugin {
  */
 export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  entry: { index: 'src/index.ts' },
+  entry: { index: "src/index.ts" },
   unbundle: false,
   clean: true,
   // Bundle the generated glue + inlined wasm into the single output.

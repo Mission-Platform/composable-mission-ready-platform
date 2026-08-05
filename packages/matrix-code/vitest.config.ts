@@ -4,12 +4,7 @@ import { defineVitestConfig } from '@mission-platform/vite-config/vitest';
 
 export default defineVitestConfig({
   coverageInclude: ['src/**/*.ts', 'src/**/*.tsx'],
-  coverageExclude: [
-    'src/**/*.spec.ts',
-    'src/test-setup.ts',
-    'src/test-support/**',
-    'src/**/*.stories.*',
-  ],
+  coverageExclude: ['src/**/*.spec.ts', 'src/test-setup.ts', 'src/test-support/**', 'src/**/*.stories.*'],
   overrides: {
     esbuild: {
       jsxFactory: 'h',

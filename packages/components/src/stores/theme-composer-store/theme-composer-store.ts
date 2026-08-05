@@ -1,7 +1,7 @@
 /**
- * Framework-neutral helpers for the write-once `BaseThemeComposer`.
+ * Framework-neutral helpers for the write-once `ForgeThemeComposer`.
  *
- * The original `@mission-platform/components` `BaseThemeComposer` shared a
+ * The original `@mission-platform/components` `ForgeThemeComposer` shared a
  * reactive store via `provide`/`inject` and `v-model`. The neutral JSX dialect
  * has no provide/inject context primitive, so the migrated component is instead
  * a **controlled** component: it holds the composed configuration in a neutral

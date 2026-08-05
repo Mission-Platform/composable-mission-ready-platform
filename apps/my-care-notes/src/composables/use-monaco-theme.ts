@@ -1,6 +1,6 @@
 import { onMounted, onUnmounted, readonly, ref } from 'vue';
 
-import type { MonacoEditorTheme } from '@mission-platform/components/vue';
+import type { MonacoEditorTheme } from '@mission-platform/components';
 
 /**
  * Returns a reactive Monaco editor theme that mirrors the app's

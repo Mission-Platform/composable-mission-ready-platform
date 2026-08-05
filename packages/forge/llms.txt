@@ -57,7 +57,7 @@ array, plus any nesting), but a single class value works too. Reserve the plain
 `class="…"` attribute for **static** string literals.
 
 ```tsx
-<span className={[styles['base-badge'], { [styles['base-badge--pill']]: pill }]} />
+<span className={[styles['forge-badge'], { [styles['forge-badge--pill']]: pill }]} />
 ```
 
 The attribute is owned by the platform: you **never import `classNames`
@@ -158,14 +158,14 @@ slot:
 ```tsx
 import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
-import { BaseDropdown } from '../base-dropdown';
+import { ForgeDropdown } from '../forge-dropdown';
 
 export function Picker(_properties: MpProperties): MpElement {
   return (
-    <BaseDropdown>
+    <ForgeDropdown>
       <button slot="trigger" type="button">Open</button>
       <ul class="panel">…</ul>
-    </BaseDropdown>
+    </ForgeDropdown>
   );
 }
 ```
@@ -180,7 +180,7 @@ child's props. The marker is never emitted as a real DOM attribute.
 
 A write-once component can also **forward** one of its own slots into a child's
 slot by nesting a `<Slot name="…" />` inside the `slot="…"` content
-(`<BaseDrawer><div slot="header"><Slot name="title" /></div></BaseDrawer>`). The
+(`<ForgeDrawer><div slot="header"><Slot name="title" /></div></ForgeDrawer>`). The
 forwarded `<Slot>` resolves lexically against the forwarding component: the
 compiled output captures it in the parent's render (React `properties.title`,
 Vue `<template #header>` re-emitting the parent slot), and the runtime adapters
@@ -269,7 +269,7 @@ import styles from './fade.module.scss';
 
 Any phase left unset falls back to the conventional `<name>-<phase>` class, so
 the unstyled `-enter-to`/`-leave-from` (and `-move`) markers need no rule. This
-is how `@mission-platform/components`'s `BaseDrawer` and `BaseToastContainer`
+is how `@mission-platform/components`'s `ForgeDrawer` and `ForgeToastContainer`
 keep their enter/leave styling scoped instead of using `:global(…)` rules.
 
 The `<TransitionGroup name="…">{items.map(…)}</TransitionGroup>` element

@@ -1,0 +1,59 @@
+/**
+ * Styling for the write-once `ForgeThemeToggle`, ported from the original
+ * `@mission-platform/components` SFC.
+ *
+ * The rules live in the shared `mp.components` cascade layer (matching the
+ * components package) and are authored as a CSS Module consumed through the
+ * `classNames(styles[…])` helper. On the Vue build the two-stage compiler inlines
+ * this file as a non-scoped `<style>` block and collapses the `styles[…]` reads
+ * to these literal BEM class names; on the React build it ships as a hashed CSS
+ * Module — both resolve to the same visual result.
+ */
+
+@layer mp.components {
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mp-spacing-2);
+    padding: var(--mp-spacing-2) var(--mp-spacing-3);
+    background-color: var(--mp-color-bg-surface);
+    color: var(--mp-color-text-primary);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+    cursor: pointer;
+    font: inherit;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      color 150ms ease;
+
+    &:hover {
+      background-color: var(--mp-color-bg-muted);
+      border-color: var(--mp-color-border-strong);
+    }
+
+    &:focus-visible {
+      outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+      outline-offset: 2px;
+    }
+
+    &__icon {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      font-size: var(--mp-font-size-lg);
+      line-height: 1;
+      color: var(--mp-color-text-secondary);
+    }
+
+    &__label {
+      // Resolved `mp-font-label`: label font size, medium weight, snug leading.
+      font-family: var(--mp-font-family-sans);
+      font-size: var(--mp-font-size-sm);
+      font-weight: var(--mp-font-weight-medium);
+      line-height: var(--mp-line-height-snug);
+      letter-spacing: var(--mp-letter-spacing-normal);
+      white-space: nowrap;
+    }
+  }
+}

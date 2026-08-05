@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-  import { BaseButton, BaseModal, BaseStack } from '@mission-platform/components/vue';
-  import { SchemaForm, type FormValues, type SchemaFormDefinition } from '@mission-platform/forms/vue';
-  import { useI18n } from '@mission-platform/i18n/vue';
+  import { ForgeButton, ForgeModal, ForgeStack } from '@mission-platform/components';
+  import { ForgeSchemaForm, type FormValues, type SchemaFormDefinition } from '@mission-platform/forms';
+  import { useI18n } from '@mission-platform/i18n';
   import { computed, ref, watch } from 'vue';
   import { useRoute } from 'vue-router';
 
@@ -117,57 +117,57 @@
 </script>
 
 <template>
-  <BaseModal
+  <ForgeModal
     :open="visible"
     :title="modalTitle"
     size="lg"
     @close="emit('close')"
     @update:open="(v: boolean) => !v && emit('close')"
   >
-    <SchemaForm
+    <ForgeSchemaForm
       :model-value="values"
       :schema="schema"
       @submit="onSave"
       @update:model-value="values = $event"
     >
       <template #actions>
-        <BaseStack
+        <ForgeStack
           align="center"
           class="snippet-modal-footer"
           direction="horizontal"
           justify="between"
         >
-          <BaseButton
+          <ForgeButton
             v-if="isEditing"
             type="button"
             variant="error"
             @click="onDelete"
           >
             {{ deleteBtnText }}
-          </BaseButton>
-          <BaseStack
+          </ForgeButton>
+          <ForgeStack
             class="snippet-modal-footer__right"
             direction="horizontal"
             gap="xs"
           >
-            <BaseButton
+            <ForgeButton
               type="button"
               variant="tertiary"
               @click="emit('close')"
             >
               {{ cancelBtnText }}
-            </BaseButton>
-            <BaseButton
+            </ForgeButton>
+            <ForgeButton
               type="submit"
               variant="primary"
             >
               {{ saveBtnText }}
-            </BaseButton>
-          </BaseStack>
-        </BaseStack>
+            </ForgeButton>
+          </ForgeStack>
+        </ForgeStack>
       </template>
-    </SchemaForm>
-  </BaseModal>
+    </ForgeSchemaForm>
+  </ForgeModal>
 </template>
 
 <style lang="scss" scoped>

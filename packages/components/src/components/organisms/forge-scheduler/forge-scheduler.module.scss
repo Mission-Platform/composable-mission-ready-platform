@@ -1,0 +1,336 @@
+/**
+ * Styling for the write-once `ForgeScheduler`.
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package.
+ */
+
+@layer mp.components {
+  .forge-scheduler {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mp-spacing-3);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-lg);
+    background-color: var(--mp-color-bg-surface);
+    padding: var(--mp-spacing-3);
+
+    // ── Toolbar ────────────────────────────────────────────────────────────
+    &__toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--mp-spacing-2);
+    }
+
+    &__nav {
+      display: flex;
+      align-items: center;
+      gap: var(--mp-spacing-1);
+    }
+
+    &__title {
+      margin: 0 var(--mp-spacing-2);
+    }
+
+    &__spacer {
+      flex: 1;
+    }
+
+    &__view-switcher {
+      display: inline-flex;
+      gap: var(--mp-spacing-1);
+    }
+
+    // ── Body ───────────────────────────────────────────────────────────────
+    &__body {
+      min-height: 16rem;
+      overflow: auto;
+    }
+
+    // ── Time grid (day / 3-day / week) ───────────────────────────────────────
+    &__time-grid {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    &__grid-header {
+      display: grid;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background-color: var(--mp-color-bg-surface);
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    }
+
+    &__gutter-corner {
+      border-right: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    }
+
+    &__day-heading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--mp-spacing-1);
+      padding: var(--mp-spacing-2);
+      border: none;
+      border-left: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      background: transparent;
+      cursor: pointer;
+      color: var(--mp-color-text-primary);
+
+      &--today {
+        color: var(--mp-color-primary-default);
+        font-weight: var(--mp-font-weight-semibold);
+      }
+    }
+
+    &__day-weekday {
+      font-size: var(--mp-font-size-xs);
+      color: var(--mp-color-text-tertiary);
+    }
+
+    &__day-number {
+      font-size: var(--mp-font-size-lg);
+    }
+
+    &__grid-body {
+      display: grid;
+      position: relative;
+    }
+
+    &__hours {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &__hour-label {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      padding-right: var(--mp-spacing-2);
+      border-right: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      font-size: var(--mp-font-size-xs);
+      color: var(--mp-color-text-tertiary);
+    }
+
+    &__day-column {
+      position: relative;
+      border-left: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    }
+
+    &__hour-line {
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-subtle, var(--mp-color-border-default));
+    }
+
+    &__event {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: var(--mp-spacing-1);
+      border: var(--mp-border-width-thin) solid var(--mp-color-primary-default);
+      border-inline-start: var(--mp-border-width-heavy) solid var(--mp-color-primary-default);
+      border-radius: var(--mp-radius-sm);
+      background-color: var(--mp-color-primary-subtle, var(--mp-color-bg-muted));
+      cursor: grab;
+      font-size: var(--mp-font-size-xs);
+      color: var(--mp-color-text-primary);
+
+      &:active {
+        cursor: grabbing;
+      }
+    }
+
+    &__event-time {
+      font-family: var(--mp-font-family-mono);
+      color: var(--mp-color-text-tertiary);
+    }
+
+    &__event-title {
+      font-weight: var(--mp-font-weight-medium);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    &__event-duration {
+      color: var(--mp-color-text-tertiary);
+    }
+
+    &__event-resize {
+      position: absolute;
+      inset-inline: 0;
+      bottom: 0;
+      height: 6px;
+      cursor: ns-resize;
+    }
+
+    // ── Month grid ───────────────────────────────────────────────────────────
+    &__month {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &__month-weekdays,
+    &__month-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    &__month-weekday {
+      padding: var(--mp-spacing-1);
+      text-align: center;
+      font-size: var(--mp-font-size-xs);
+      color: var(--mp-color-text-tertiary);
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    }
+
+    &__month-cell {
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-spacing-1);
+      align-items: stretch;
+      min-height: 6rem;
+      padding: var(--mp-spacing-1);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      margin: -0.5px;
+      background: transparent;
+      text-align: left;
+      color: var(--mp-color-text-primary);
+
+      &--outside {
+        color: var(--mp-color-text-secondary);
+        background-color: var(--mp-color-bg-muted);
+      }
+
+      &--today {
+        outline: var(--mp-border-width-thick) solid var(--mp-color-primary-default);
+        outline-offset: -2px;
+      }
+    }
+
+    &__month-cell-create {
+      display: flex;
+      align-self: flex-start;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      color: inherit;
+      font: inherit;
+
+      &:focus-visible {
+        outline: var(--mp-border-width-thick) solid var(--mp-color-primary-default);
+        outline-offset: 2px;
+        border-radius: var(--mp-radius-sm);
+      }
+    }
+
+    &__month-day-number {
+      font-size: var(--mp-font-size-sm);
+    }
+
+    &__month-events {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    &__month-chip {
+      padding: 1px var(--mp-spacing-1);
+      border-radius: var(--mp-radius-sm);
+      background-color: var(--mp-color-primary-subtle, var(--mp-color-bg-muted));
+      font-size: var(--mp-font-size-xs);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    &__month-more {
+      font-size: var(--mp-font-size-xs);
+      color: var(--mp-color-text-tertiary);
+      cursor: pointer;
+    }
+
+    // ── Year grid (12 mini-months) ───────────────────────────────────────────
+    &__year {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+      gap: var(--mp-spacing-3);
+    }
+
+    &__mini-month {
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-spacing-1);
+      padding: var(--mp-spacing-2);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-md);
+      background: transparent;
+      cursor: pointer;
+      color: var(--mp-color-text-primary);
+    }
+
+    &__mini-title {
+      font-size: var(--mp-font-size-sm);
+      font-weight: var(--mp-font-weight-semibold);
+    }
+
+    &__mini-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1px;
+    }
+
+    &__mini-day {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 1;
+      font-size: 0.625rem;
+      border-radius: 50%;
+      color: var(--mp-color-text-primary);
+
+      // Outside-of-month days are de-emphasised via a lighter weight rather than
+      // a dimming `opacity`/tertiary tint, which dropped the tiny numbers below
+      // the 4.5:1 contrast threshold (`color-contrast`).
+      &--outside {
+        color: var(--mp-color-text-secondary);
+        font-weight: var(--mp-font-weight-light);
+      }
+
+      &--busy {
+        background-color: var(--mp-color-primary-subtle, var(--mp-color-bg-muted));
+        color: var(--mp-color-primary-default);
+        font-weight: var(--mp-font-weight-semibold);
+      }
+
+      &--today {
+        outline: var(--mp-border-width-thin) solid var(--mp-color-primary-default);
+      }
+    }
+
+    // ── Event dialog form ────────────────────────────────────────────────────
+    &__form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-spacing-3);
+      min-width: min(28rem, 80vw);
+    }
+
+    &__form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--mp-spacing-2);
+    }
+
+    &__form-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--mp-spacing-2);
+    }
+  }
+}

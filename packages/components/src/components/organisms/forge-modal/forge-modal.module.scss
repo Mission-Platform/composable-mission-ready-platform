@@ -1,0 +1,141 @@
+/**
+ * Styling for the write-once `ForgeModal`.
+ *
+ * `ForgeModal` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its appearance ships in the built package CSS (the two-stage
+ * compiler carries the import onto both the React and Vue builds).
+ *
+ * The component is a native `<dialog>` opened with `showModal()`, so the UA
+ * provides the top layer and the `::backdrop` scrim. On mobile it is a
+ * near-full-width bottom sheet (rounded top corners); on `sm`+ (768px) it is a
+ * centred dialog sized by the `size` variant. The enter/exit fade + scale is
+ * pure CSS (`@starting-style` + `allow-discrete` on `display`/`overlay`),
+ * replacing the original Vue `<Transition>`. The `sm` breakpoint is consumed
+ * through the platform breakpoint design tokens via the
+ * `@mission-platform/tokens` `bp-up` mixin, so the threshold always tracks the
+ * token source of truth.
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package.
+ */
+
+@use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
+
+@layer mp.components {
+  .forge-modal {
+    width: 100%;
+    max-height: 90vh;
+    margin: auto auto 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: var(--mp-color-bg-surface);
+    border: none;
+
+    /* Mobile: square bottom corners, rounded top corners only. */
+    border-radius: var(--mp-radius-xl) var(--mp-radius-xl) 0 0;
+    box-shadow: var(--mp-shadow-2xl);
+    opacity: 0;
+    translate: 0 0.5rem;
+    transition:
+      opacity 200ms ease,
+      translate 200ms ease,
+      overlay 200ms ease allow-discrete,
+      display 200ms ease allow-discrete;
+
+    &::backdrop {
+      background-color: var(--mp-color-bg-scrim);
+      opacity: 0;
+      transition:
+        opacity 200ms ease,
+        overlay 200ms ease allow-discrete,
+        display 200ms ease allow-discrete;
+    }
+
+    &[open] {
+      display: flex;
+      flex-direction: column;
+      opacity: 1;
+      translate: 0 0;
+
+      @starting-style {
+        opacity: 0;
+        translate: 0 0.5rem;
+      }
+
+      &::backdrop {
+        opacity: 1;
+
+        @starting-style {
+          opacity: 0;
+        }
+      }
+    }
+
+    /* Tablet+ (sm): centred dialog, rounded all corners, width by size. */
+    @include bp.bp-up('sm') {
+      margin: auto;
+      max-height: calc(100vh - var(--mp-spacing-8));
+      border-radius: var(--mp-radius-xl);
+
+      @each $size,
+        $max-width
+          in (
+            '2xs': 20rem,
+            'xs': 24rem,
+            'sm': var(--mp-size-width-sm),
+            'md': var(--mp-size-width-md),
+            'lg': 51.429rem,
+            'xl': 68.571rem,
+            '2xl': var(--mp-size-width-lg)
+          )
+      {
+        &--#{$size} {
+          max-width: $max-width;
+        }
+      }
+
+      &--full {
+        max-width: calc(100vw - var(--mp-spacing-8));
+        max-height: calc(100vh - var(--mp-spacing-8));
+      }
+    }
+
+    &__header {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--mp-spacing-4);
+      padding: var(--mp-spacing-4) var(--mp-spacing-6);
+      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    }
+
+    &__title {
+      margin: 0;
+    }
+
+    &__body {
+      flex: 1;
+      padding: var(--mp-spacing-6);
+      overflow-y: auto;
+    }
+
+    &__footer {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--mp-spacing-3);
+      padding: var(--mp-spacing-4) var(--mp-spacing-6);
+      border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    }
+
+    /* Respect users who prefer reduced motion. */
+    @media (prefers-reduced-motion: reduce) {
+      &,
+      &::backdrop {
+        transition: none;
+      }
+    }
+  }
+}

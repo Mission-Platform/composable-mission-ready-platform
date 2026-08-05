@@ -23,14 +23,14 @@ import { defineConfig, type Plugin, type UserConfig } from 'vite';
  *   compiled wasm inlined as a base64 `data:` URI so `encodeMatrix` /
  *   `decodeMatrix` stay synchronous (SSR- and test-safe). This is the package's
  *   `.` export.
- * - **`vue` / `react`** — the write-once `BaseMatrixCode` **component** compiled
+ * - **`vue` / `react`** — the write-once `ForgeMatrixCode` **component** compiled
  *   to native Vue 3 / React by the two-stage compiler in
  *   `@mission-platform/vite-plugin-forge` (Stage 1 generates the per-framework
  *   source tree from the neutral barrel `src/component/index.ts`; Stage 2 is the
  *   framework's own toolchain). These are the package's `./vue` / `./react`
  *   exports. The component imports the encoder from the package's own `.` entry
- *   (`@mission-platform/matrix-code`, kept external) and reuses `BaseButton` /
- *   `BaseTypography` from `@mission-platform/components`.
+ *   (`@mission-platform/matrix-code`, kept external) and reuses `ForgeButton` /
+ *   `ForgeTypography` from `@mission-platform/components`.
  */
 
 const componentsModule = path.resolve(__dirname, 'src/components/index.ts');
@@ -97,7 +97,7 @@ function defineEncoderConfig(): UserConfig {
   });
 }
 
-/** The per-framework `BaseMatrixCode` component build (`dist/react`, `dist/vue`, `dist/solid`, `dist/svelte`, `dist/web-components`). */
+/** The per-framework `ForgeMatrixCode` component build (`dist/react`, `dist/vue`, `dist/solid`, `dist/svelte`, `dist/web-components`). */
 function defineFrameworkConfig(framework: JsxFramework): UserConfig {
   const cacheName = `matrix-code-${framework}`;
   const generatedDir = path.join(cacheRoot, cacheName);

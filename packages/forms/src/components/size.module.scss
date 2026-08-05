@@ -1,13 +1,13 @@
 /**
  * Shared size utility classes for this package's write-once components.
  *
- * The actual `base-size--<step>` rules are the canonical scale defined once in
+ * The actual `forge-size--<step>` rules are the canonical scale defined once in
  * `@mission-platform/tokens` (`src/scss/_size.scss`); this thin CSS Module
  * `@use`s that partial and `@include`s its `size-classes` mixin so the classes
  * are emitted (into this package's own `mp.forms` cascade layer) and
  * CSS-Module-localised here. Components import this module
  * (`import sizeStyles from '../size.module.scss'`) and apply
- * `sizeStyles['base-size--<step>']`.
+ * `sizeStyles['forge-size--<step>']`.
  */
 @use '@mission-platform/tokens/scss/size';
 @include size.size-classes('mp.forms');

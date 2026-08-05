@@ -14,11 +14,11 @@
  *
  * ```ts
  * import { expectSsrParity } from '../../test-utils/ssr-parity';
- * import { BaseBadge } from './base-badge';
+ * import { ForgeBadge } from './forge-badge';
  *
  * it('renders identically on React and Vue', async () => {
- *   const { html } = await expectSsrParity(BaseBadge, { variant: 'primary' }, 'New');
- *   expect(html).toContain('base-badge--primary');
+ *   const { html } = await expectSsrParity(ForgeBadge, { variant: 'primary' }, 'New');
+ *   expect(html).toContain('forge-badge--primary');
  * });
  * ```
  */

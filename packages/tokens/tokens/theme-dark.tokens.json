@@ -7,7 +7,7 @@
         "$value": "{color.cyan.950}",
         "$description": "color.cyan.950"
       },
-      "base-alt": {
+      "forge-alt": {
         "$value": "{color.surface.dark-alt}",
         "$description": "color.surface.dark-alt"
       },

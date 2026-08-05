@@ -1,243 +1,289 @@
-export { BaseAccordion, type AccordionItem, type AccordionItemScope, type AccordionProperties } from './molecules/base-accordion';
-export { BaseAlertBanner, type AlertBannerProperties, type AlertBannerVariant } from './molecules/base-alert-banner';
-export { BaseAvatar, type AvatarProperties, type AvatarShape, type AvatarSize, type AvatarStatus } from './atoms/base-avatar';
 export {
-  BaseBackgroundVideo,
+  ForgeAccordion,
+  type AccordionItem,
+  type AccordionItemScope,
+  type AccordionProperties,
+} from './molecules/forge-accordion';
+export { ForgeAlertBanner, type AlertBannerProperties, type AlertBannerVariant } from './molecules/forge-alert-banner';
+export {
+  ForgeAvatar,
+  type AvatarProperties,
+  type AvatarShape,
+  type AvatarSize,
+  type AvatarStatus,
+} from './atoms/forge-avatar';
+export {
+  ForgeBackgroundVideo,
   type BackgroundVideoFit,
   type BackgroundVideoProperties,
   type BackgroundVideoSource,
-} from './atoms/base-background-video';
-export { BaseBadge, type BadgeProperties, type BadgeSize, type BadgeVariant } from './atoms/base-badge';
-export { BaseBreadcrumb, type BreadcrumbItem, type BreadcrumbProperties } from './molecules/base-breadcrumb';
-export { BaseButton, type ButtonProperties, type ButtonVariant } from './atoms/base-button';
+} from './atoms/forge-background-video';
+export { ForgeBadge, type BadgeProperties, type BadgeSize, type BadgeVariant } from './atoms/forge-badge';
+export { ForgeBreadcrumb, type BreadcrumbItem, type BreadcrumbProperties } from './molecules/forge-breadcrumb';
+export { ForgeButton, type ButtonProperties, type ButtonVariant } from './atoms/forge-button';
 export {
-  BaseButtonGroup,
+  ForgeButtonGroup,
   type ButtonGroupGap,
   type ButtonGroupOrientation,
   type ButtonGroupProperties,
-} from './molecules/base-button-group';
-export { BaseCalendar, type CalendarProperties, type CalendarSize } from './molecules/base-calendar';
-export { BaseCard, type CardPadding, type CardProperties } from './molecules/base-card';
-export { BaseCarousel, type CarouselProperties, type CarouselSlide, type CarouselSlideScope } from './organisms/base-carousel';
-export { BaseChatArea, type ChatAreaProperties } from './organisms/base-chat-area';
+} from './molecules/forge-button-group';
+export { ForgeCalendar, type CalendarProperties, type CalendarSize } from './molecules/forge-calendar';
+export { ForgeCard, type CardPadding, type CardProperties } from './molecules/forge-card';
 export {
-  BaseChatBubble,
+  ForgeCarousel,
+  type CarouselProperties,
+  type CarouselSlide,
+  type CarouselSlideScope,
+} from './organisms/forge-carousel';
+export { ForgeChatArea, type ChatAreaProperties } from './organisms/forge-chat-area';
+export {
+  ForgeChatBubble,
   type ChatBubbleProperties,
   type ChatBubbleSide,
   type ChatBubbleVariant,
-} from './molecules/base-chat-bubble';
-export { BaseCheckbox, type CheckboxProperties } from './atoms/base-checkbox';
-export { BaseCodeBlock, type CodeBlockLanguage, type CodeBlockProperties } from './atoms/base-code-block';
-export { BaseCollapse, type CollapseProperties } from './molecules/base-collapse';
-export { BaseColorInput, type ColorInputProperties, type ColorInputSize } from './molecules/base-color-input';
-export { BaseDateInput, type DateInputProperties, type DateInputSize } from './molecules/base-date-input';
+} from './molecules/forge-chat-bubble';
+export { ForgeCheckbox, type CheckboxProperties } from './atoms/forge-checkbox';
+export { ForgeCodeBlock, type CodeBlockLanguage, type CodeBlockProperties } from './atoms/forge-code-block';
+export { ForgeCollapse, type CollapseProperties } from './molecules/forge-collapse';
+export { ForgeColorInput, type ColorInputProperties, type ColorInputSize } from './molecules/forge-color-input';
+export { ForgeDateInput, type DateInputProperties, type DateInputSize } from './molecules/forge-date-input';
 export {
-  BaseDateRangeInput,
+  ForgeDateRangeInput,
   type DateRange,
   type DateRangeInputProperties,
   type DateRangeInputSize,
-} from './molecules/base-date-range-input';
+} from './molecules/forge-date-range-input';
 export {
-  BaseDateTimeRangeInput,
+  ForgeDateTimeRangeInput,
   type DateTimeRange,
   type DateTimeRangeInputProperties,
   type DateTimeRangeInputSize,
   type TimezoneMode,
-} from './organisms/base-date-time-range-input';
+} from './organisms/forge-date-time-range-input';
 export {
-  BaseDeviceMock,
+  ForgeDeviceMock,
   type DeviceMockOrientation,
   type DeviceMockProperties,
   type DeviceMockSize,
   type DeviceMockType,
-} from './molecules/base-device-mock';
-export { BaseDialog, type DialogProperties } from './organisms/base-dialog';
+} from './molecules/forge-device-mock';
+export { ForgeDialog, type DialogProperties } from './organisms/forge-dialog';
 export {
-  BaseDrawer,
+  ForgeDrawer,
   type DrawerBreakpoint,
   type DrawerPlacement,
   type DrawerProperties,
   type DrawerSize,
   type DrawerVariant,
-} from './organisms/base-drawer';
-export { BaseDropdown, type DropdownPlacement, type DropdownProperties } from './molecules/base-dropdown';
-export { BaseFieldSet, type FieldSetProperties } from './molecules/base-field-set';
-export { BaseFileInput, type FileInputProperties, type FileInputSize } from './molecules/base-file-input';
-export { BaseFormWizard, type FormWizardProperties, type WizardStep } from './organisms/base-form-wizard';
-export { BaseGrid, type GridAlignment, type GridGap, type GridProperties } from './molecules/base-grid';
-export { BaseHero, type HeroAlign, type HeroProperties, type HeroSize } from './templates/base-hero';
+} from './organisms/forge-drawer';
+export { ForgeDropdown, type DropdownPlacement, type DropdownProperties } from './molecules/forge-dropdown';
+export { ForgeFieldSet, type FieldSetProperties } from './molecules/forge-field-set';
+export { ForgeFileInput, type FileInputProperties, type FileInputSize } from './molecules/forge-file-input';
+export { ForgeFormWizard, type FormWizardProperties, type WizardStep } from './organisms/forge-form-wizard';
+export { ForgeGrid, type GridAlignment, type GridGap, type GridProperties } from './molecules/forge-grid';
+export { ForgeHero, type HeroAlign, type HeroProperties, type HeroSize } from './templates/forge-hero';
 export {
-  BaseIconButton,
+  ForgeIconButton,
   type IconButtonProperties,
   type IconButtonSize,
   type IconButtonVariant,
-} from './atoms/base-icon-button';
-export { BaseInView, type InViewAnimation, type InViewProperties } from './molecules/base-in-view';
+} from './atoms/forge-icon-button';
+export { ForgeInView, type InViewAnimation, type InViewProperties } from './molecules/forge-in-view';
 export {
-  BaseLanguageSwitcher,
-  type LanguageSwitcherOption,
-  type LanguageSwitcherProperties,
-} from './molecules/base-language-switcher';
+  ForgeLanguageSwitcher,
+  type ForgeLanguageSwitcherOption,
+  type ForgeLanguageSwitcherProperties,
+} from './molecules/forge-language-switcher';
 export {
-  BaseInput,
+  ForgeInput,
   type InputAutocapitalize,
   type InputProperties,
   type InputSize,
   type InputType,
-} from './atoms/base-input';
-export { BaseList, type ListItem, type ListProperties, type ListSize, type ListVariant } from './molecules/base-list';
+} from './atoms/forge-input';
+export { ForgeList, type ListItem, type ListProperties, type ListSize, type ListVariant } from './molecules/forge-list';
 export {
-  BaseLocationInput,
+  ForgeLocationInput,
   type LocationFormat,
   type LocationInputProperties,
   type LocationInputSize,
   type LocationValue,
-} from './molecules/base-location-input';
-export { BaseMarkdown, type MarkdownProperties, type MarkdownSize } from './molecules/base-markdown';
+} from './molecules/forge-location-input';
+export { ForgeMarkdown, type MarkdownProperties, type MarkdownSize } from './molecules/forge-markdown';
 export {
-  BaseMarkdownInput,
+  ForgeMarkdownInput,
   type MarkdownInputProperties,
   type MarkdownInputSize,
   type MarkdownInputTab,
-} from './molecules/base-markdown-input';
-export { BaseMasonry, type MasonryGap, type MasonryProperties } from './molecules/base-masonry';
-export { BaseMenu, type MenuNode, type MenuOrientation, type MenuProperties } from './molecules/base-menu';
-export { BaseMenuItem, type MenuItemProperties, type MenuItemVariant } from './molecules/base-menu-item';
-export { BaseMenubar, type MenubarProperties } from './organisms/base-menubar';
-export { BaseModal, type ModalProperties, type ModalSize } from './organisms/base-modal';
+} from './molecules/forge-markdown-input';
+export { ForgeMasonry, type MasonryGap, type MasonryProperties } from './molecules/forge-masonry';
+export { ForgeMenu, type MenuNode, type MenuOrientation, type MenuProperties } from './molecules/forge-menu';
+export { ForgeMenuItem, type MenuItemProperties, type MenuItemVariant } from './molecules/forge-menu-item';
+export { ForgeMenubar, type MenubarProperties } from './organisms/forge-menubar';
+export { ForgeModal, type ModalProperties, type ModalSize } from './organisms/forge-modal';
 export {
-  BaseMonacoEditor,
+  ForgeMonacoEditor,
   type MonacoEditorCompletionItemProvider,
   type MonacoEditorProperties,
   type MonacoEditorTheme,
   type MonacoReadyContext,
-} from './organisms/base-monaco-editor';
+} from './organisms/forge-monaco-editor';
 export {
-  BaseMultiselect,
+  ForgeMultiselect,
   type MultiselectOption,
   type MultiselectProperties,
   type MultiselectSize,
-} from './molecules/base-multiselect';
-export { BaseNavbar, type NavbarAlign, type NavbarProperties } from './organisms/base-navbar';
+} from './molecules/forge-multiselect';
+export { ForgeNavbar, type NavbarAlign, type NavbarBreakpoint, type NavbarProperties } from './organisms/forge-navbar';
 export {
-  BaseNavbarItem,
+  ForgeNavbarItem,
   type NavbarItemChild,
   type NavbarItemProperties,
   type NavbarItemVariant,
-} from './molecules/base-navbar-item';
-export { BaseNumberStepper, type NumberStepperProperties, type NumberStepperSize } from './molecules/base-number-stepper';
-export { BaseOtpInput, type OtpInputProperties, type OtpInputSize, type OtpInputType } from './molecules/base-otp-input';
-export { BasePagination, type PaginationItem, type PaginationProperties, type PaginationSize } from './molecules/base-pagination';
+} from './molecules/forge-navbar-item';
 export {
-  BasePhoneInput,
+  ForgeNumberStepper,
+  type NumberStepperProperties,
+  type NumberStepperSize,
+} from './molecules/forge-number-stepper';
+export {
+  ForgeOtpInput,
+  type OtpInputProperties,
+  type OtpInputSize,
+  type OtpInputType,
+} from './molecules/forge-otp-input';
+export {
+  ForgePagination,
+  type PaginationItem,
+  type PaginationProperties,
+  type PaginationSize,
+} from './molecules/forge-pagination';
+export {
+  ForgePhoneInput,
   type PhoneChange,
   type PhoneCountry,
   type PhoneInputProperties,
   type PhoneInputSize,
-} from './molecules/base-phone-input';
-export { BasePopover, type PopoverPlacement, type PopoverProperties } from './molecules/base-popover';
+} from './molecules/forge-phone-input';
+export { ForgePopover, type PopoverPlacement, type PopoverProperties } from './molecules/forge-popover';
 export {
-  BaseProgressBar,
+  ForgeProgressBar,
   type ProgressBarProperties,
   type ProgressSize,
   type ProgressVariant,
-} from './atoms/base-progress-bar';
-export { BaseQuote, type QuoteProperties, type QuoteSize, type QuoteVariant } from './atoms/base-quote';
-export { BaseRadio, type RadioProperties } from './atoms/base-radio';
+} from './atoms/forge-progress-bar';
+export { ForgeQuote, type QuoteProperties, type QuoteSize, type QuoteVariant } from './atoms/forge-quote';
+export { ForgeRadio, type RadioProperties } from './atoms/forge-radio';
 export {
-  BaseRadioGroup,
+  ForgeRadioGroup,
   type RadioGroupDirection,
   type RadioGroupProperties,
   type RadioOption,
-} from './molecules/base-radio-group';
-export { BaseRangeInput, type RangeInputProperties, type RangeInputSize, type RangeValue } from './atoms/base-range-input';
-export { BaseRating, type RatingProperties, type RatingSize } from './atoms/base-rating';
+} from './molecules/forge-radio-group';
 export {
-  BaseResponsiveImage,
+  ForgeRangeInput,
+  type RangeInputProperties,
+  type RangeInputSize,
+  type RangeValue,
+} from './atoms/forge-range-input';
+export { ForgeRating, type RatingProperties, type RatingSize } from './atoms/forge-rating';
+export {
+  ForgeResponsiveImage,
   type ResponsiveImageFit,
   type ResponsiveImageProperties,
   type ResponsiveImageSource,
-} from './atoms/base-responsive-image';
+} from './atoms/forge-responsive-image';
 export {
-  BaseResponsiveVideo,
+  ForgeResponsiveVideo,
   type ResponsiveVideoFit,
   type ResponsiveVideoProperties,
   type ResponsiveVideoSource,
-} from './atoms/base-responsive-video';
-export { BaseScheduler, type SchedulerProperties, type SchedulerView, type VEvent } from './organisms/base-scheduler';
-export { BaseSearchInput, type SearchInputProperties, type SearchInputSize } from './molecules/base-search-input';
-export { BaseSelect, type SelectOption, type SelectProperties, type SelectSize } from './molecules/base-select';
+} from './atoms/forge-responsive-video';
+export { ForgeScheduler, type SchedulerProperties, type SchedulerView, type VEvent } from './organisms/forge-scheduler';
+export { ForgeSearchInput, type SearchInputProperties, type SearchInputSize } from './molecules/forge-search-input';
+export { ForgeSelect, type SelectOption, type SelectProperties, type SelectSize } from './molecules/forge-select';
 export {
-  BaseSegmentControl,
+  ForgeSegmentControl,
   type SegmentControlProperties,
   type SegmentControlSize,
   type SegmentOption,
-} from './molecules/base-segment-control';
+} from './molecules/forge-segment-control';
 export {
-  BaseSeparator,
+  ForgeSeparator,
   type SeparatorOrientation,
   type SeparatorProperties,
   type SeparatorSpacing,
   type SeparatorVariant,
-} from './atoms/base-separator';
-export { BaseSkeleton, type SkeletonProperties, type SkeletonShape } from './atoms/base-skeleton';
-export { BaseSlider, type SliderProperties, type SliderSize } from './atoms/base-slider';
-export { BaseSpinner, type SpinnerProperties, type SpinnerSize, type SpinnerVariant } from './atoms/base-spinner';
+} from './atoms/forge-separator';
+export { ForgeSkeleton, type SkeletonProperties, type SkeletonShape } from './atoms/forge-skeleton';
+export { ForgeSlider, type SliderProperties, type SliderSize } from './atoms/forge-slider';
+export { ForgeSpinner, type SpinnerProperties, type SpinnerSize, type SpinnerVariant } from './atoms/forge-spinner';
 export {
-  BaseStack,
+  ForgeStack,
   type StackAlign,
   type StackDirection,
   type StackGap,
   type StackJustify,
   type StackProperties,
-} from './atoms/base-stack';
+} from './atoms/forge-stack';
 export {
-  BaseStatusIcon,
+  ForgeStatusIcon,
   type StatusIconLevel,
   type StatusIconProperties,
   type StatusIconSize,
-} from './atoms/base-status-icon';
-export { BaseSwitch, type SwitchProperties, type SwitchSize } from './atoms/base-switch';
-export { BaseTable, type SortDirection, type TableColumn, type TableProperties } from './organisms/base-table';
-export { BaseTabs, type TabItem, type TabPanelScope, type TabsProperties, type TabsVariant } from './molecules/base-tabs';
-export { BaseTag, type TagProperties, type TagSize, type TagVariant } from './atoms/base-tag';
+} from './atoms/forge-status-icon';
+export { ForgeSwitch, type SwitchProperties, type SwitchSize } from './atoms/forge-switch';
+export { ForgeTable, type SortDirection, type TableColumn, type TableProperties } from './organisms/forge-table';
 export {
-  BaseTextarea,
+  ForgeTabs,
+  type TabItem,
+  type TabPanelScope,
+  type TabsProperties,
+  type TabsVariant,
+} from './molecules/forge-tabs';
+export { ForgeTag, type TagProperties, type TagSize, type TagVariant } from './atoms/forge-tag';
+export {
+  ForgeTextarea,
   type TextareaAutocapitalize,
   type TextareaProperties,
   type TextareaResize,
   type TextareaSize,
-} from './atoms/base-textarea';
+} from './atoms/forge-textarea';
 export {
-  BaseThemeComposer,
+  ForgeThemeComposer,
   type ThemeComposerAttribute,
   type ThemeComposerConfig,
   type ThemeComposerProperties,
-} from './organisms/base-theme-composer';
-export { BaseThemeProvider, type ThemeProviderProperties } from './organisms/base-theme-provider';
-export { BaseThemeToggle, type ThemeToggleProperties } from './atoms/base-theme-toggle';
-export { BaseTimeInput, type TimeInputProperties, type TimeInputSize } from './molecules/base-time-input';
+} from './organisms/forge-theme-composer';
+export { ForgeThemeProvider, type ThemeProviderProperties } from './organisms/forge-theme-provider';
+export { ForgeThemeToggle, type ThemeToggleProperties } from './atoms/forge-theme-toggle';
+export { ForgeTimeInput, type TimeInputProperties, type TimeInputSize } from './molecules/forge-time-input';
 export {
-  BaseTimeRangeInput,
+  ForgeTimeRangeInput,
   type TimeRange,
   type TimeRangeInputProperties,
   type TimeRangeInputSize,
-} from './molecules/base-time-range-input';
+} from './molecules/forge-time-range-input';
 export {
-  BaseTimeline,
+  ForgeTimeline,
   type TimelineAlign,
   type TimelineItem,
   type TimelineItemScope,
   type TimelineItemVariant,
   type TimelineOrientation,
   type TimelineProperties,
-} from './molecules/base-timeline';
-export { BaseToast, type ToastProperties, type ToastVariant } from './molecules/base-toast';
-export { BaseToastContainer, type ToastContainerProperties } from './organisms/base-toast-container';
-export { BaseTooltip, type TooltipPlacement, type TooltipProperties } from './molecules/base-tooltip';
-export { BaseTreeView, type TreeViewLabelScope, type TreeViewNode, type TreeViewProperties } from './organisms/base-tree-view';
+} from './molecules/forge-timeline';
+export { ForgeToast, type ToastProperties, type ToastVariant } from './molecules/forge-toast';
+export { ForgeToastContainer, type ToastContainerProperties } from './organisms/forge-toast-container';
+export { ForgeTooltip, type TooltipPlacement, type TooltipProperties } from './molecules/forge-tooltip';
 export {
-  BaseTypography,
+  ForgeTreeView,
+  type TreeViewLabelScope,
+  type TreeViewNode,
+  type TreeViewProperties,
+} from './organisms/forge-tree-view';
+export {
+  ForgeTypography,
   type TypographyHorizontalAlign,
   type TypographyColor,
   type TypographyLineHeight,
@@ -245,34 +291,42 @@ export {
   type TypographyVariant,
   type TypographyVerticalAlign,
   type TypographyWeight,
-} from './atoms/base-typography';
-export { BaseVirtualList, type VirtualListItemScope, type VirtualListProperties } from './organisms/base-virtual-list';
+} from './atoms/forge-typography';
 export {
-  BaseVirtualLogViewer,
+  ForgeVirtualList,
+  type VirtualListItemScope,
+  type VirtualListProperties,
+} from './organisms/forge-virtual-list';
+export {
+  ForgeVirtualLogViewer,
   type LogEntry,
   type LogLevel,
   type VirtualLogViewerProperties,
-} from './organisms/base-virtual-log-viewer';
+} from './organisms/forge-virtual-log-viewer';
 export {
-  BaseVirtualTable,
+  ForgeVirtualTable,
   type VirtualTableCellScope,
   type VirtualTableColumn,
   type VirtualTableProperties,
-} from './organisms/base-virtual-table';
-export { BaseVirtualTabs, type VirtualTabPanelScope, type VirtualTabsProperties } from './organisms/base-virtual-tabs';
+} from './organisms/forge-virtual-table';
 export {
-  BaseVirtualTreeView,
+  ForgeVirtualTabs,
+  type VirtualTabPanelScope,
+  type VirtualTabsProperties,
+} from './organisms/forge-virtual-tabs';
+export {
+  ForgeVirtualTreeView,
   type TreeNode,
   type TreeRowScope,
   type VirtualTreeViewProperties,
-} from './organisms/base-virtual-tree-view';
-export { BaseWindowPopout, type WindowPopoutProperties } from './molecules/base-window-popout';
+} from './organisms/forge-virtual-tree-view';
+export { ForgeWindowPopout, type WindowPopoutProperties } from './molecules/forge-window-popout';
 
 // ── Shared helper APIs ──────────────────────────────────────────────────────
 // Re-exported through the generated `./react` / `./vue` entry so consumers drive
 // the same per-framework singleton the components use. The toast store is the
 // neutral counterpart of the Vue package's `useToast` composable, rendered by
-// `BaseToastContainer`. (`ToastVariant` is already exported by `base-toast`.)
+// `ForgeToastContainer`. (`ToastVariant` is already exported by `forge-toast`.)
 export {
   clearToasts,
   dismissToast,

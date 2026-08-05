@@ -1,0 +1,27 @@
+/**
+ * Styling for the write-once `ForgeResponsiveImage`.
+ *
+ * `ForgeResponsiveImage` owns this co-located CSS Module: it side-effect-imports
+ * the stylesheet so its BEM appearance ships in the built package CSS (the
+ * two-stage compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package.
+ */
+
+@layer mp.components {
+  .forge-responsive-image {
+    display: block;
+    overflow: hidden;
+
+    &--rounded {
+      border-radius: var(--mp-radius-lg);
+    }
+
+    &__img {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}

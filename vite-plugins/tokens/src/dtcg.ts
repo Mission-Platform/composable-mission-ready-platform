@@ -80,12 +80,15 @@ export function deepMergeTokens(base: DtcgGroup, override: DtcgGroup): DtcgGroup
   const result: DtcgGroup = { ...base };
   for (const [key, value] of Object.entries(override)) {
     const baseValue = result[key];
-    result[key] = value !== null &&
+    result[key] =
+      value !== null &&
       typeof value === 'object' &&
       !Array.isArray(value) &&
       baseValue !== null &&
       typeof baseValue === 'object' &&
-      !Array.isArray(baseValue) ? deepMergeTokens(baseValue as DtcgGroup, value as DtcgGroup) : value;
+      !Array.isArray(baseValue)
+        ? deepMergeTokens(baseValue as DtcgGroup, value as DtcgGroup)
+        : value;
   }
   return result;
 }

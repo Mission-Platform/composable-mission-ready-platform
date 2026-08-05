@@ -1,7 +1,7 @@
 # @mission-platform/breakpoints
 
 `@mission-platform/breakpoints` provides responsive breakpoint utilities and **write-once** viewport components for the
-Mission Platform. The components (`ShowAt`, `HideAt`, `BreakpointDebug`) are authored once in the neutral
+Mission Platform. The components (`ForgeShowAt`, `ForgeHideAt`, `ForgeBreakpointDebug`) are authored once in the neutral
 `@mission-platform/forge` dialect and compiled to **both Vue 3 and React** by `@mission-platform/vite-plugin-forge`.
 
 ## Subpath Exports
@@ -17,7 +17,7 @@ Mission Platform. The components (`ShowAt`, `HideAt`, `BreakpointDebug`) are aut
 The platform uses a seven-step responsive scale based on viewport width thresholds:
 
 | Key   | Label             | Threshold     | Common Device / Use Case        |
-|:------|:------------------|:--------------|:--------------------------------|
+| :---- | :---------------- | :------------ | :------------------------------ |
 | `2xs` | Extra-extra-small | $\ge 0$ px    | All devices                     |
 | `xs`  | Extra-small       | $\ge 480$ px  | Large phones                    |
 | `sm`  | Small             | $\ge 768$ px  | Tablet portrait                 |
@@ -50,7 +50,7 @@ built on `maxMediaQuery`).
 
 ## Components
 
-### `<ShowAt>`
+### `<ForgeShowAt>`
 
 Conditionally renders slot/children content when the viewport meets the specified breakpoint criteria.
 
@@ -59,27 +59,27 @@ Conditionally renders slot/children content when the viewport meets the specifie
 ```vue
 <!-- Vue 3 -->
 <script setup lang="ts">
-  import { ShowAt } from '@mission-platform/breakpoints/vue';
+  import { ForgeShowAt } from '@mission-platform/breakpoints/vue';
 </script>
 
 <template>
-  <ShowAt min="md"><p>Visible on medium screens and above</p></ShowAt>
-  <ShowAt
+  <ForgeShowAt min="md"><p>Visible on medium screens and above</p></ForgeShowAt>
+  <ForgeShowAt
     min="sm"
     max="lg"
   >
     <p>Visible only on small and medium screens</p>
-  </ShowAt>
+  </ForgeShowAt>
 </template>
 ```
 
 ```tsx
 // React
-import { ShowAt } from '@mission-platform/breakpoints/react';
+import { ForgeShowAt } from '@mission-platform/breakpoints/react';
 
-<ShowAt min="md">
+<ForgeShowAt min="md">
   <p>Visible on medium screens and above</p>
-</ShowAt>;
+</ForgeShowAt>;
 ```
 
 #### Props
@@ -87,35 +87,35 @@ import { ShowAt } from '@mission-platform/breakpoints/react';
 - `min?: BreakpointKey`: Show content when viewport is at or above this breakpoint.
 - `max?: BreakpointKey`: Show content when viewport is strictly below this breakpoint.
 
-### `<HideAt>`
+### `<ForgeHideAt>`
 
-The inverse of `<ShowAt>`: conditionally hides slot/children content when the viewport meets the specified breakpoint
+The inverse of `<ForgeShowAt>`: conditionally hides slot/children content when the viewport meets the specified breakpoint
 criteria.
 
 ```vue
 <script setup lang="ts">
-  import { HideAt } from '@mission-platform/breakpoints/vue';
+  import { ForgeHideAt } from '@mission-platform/breakpoints/vue';
 </script>
 
 <template>
-  <HideAt min="lg"><p>Hidden on large screens and above</p></HideAt>
+  <ForgeHideAt min="lg"><p>Hidden on large screens and above</p></ForgeHideAt>
 </template>
 ```
 
 #### Props
 
-Same as `<ShowAt>`.
+Same as `<ForgeShowAt>`.
 
-### `<BreakpointDebug>`
+### `<ForgeBreakpointDebug>`
 
 A development-only overlay pinned to the bottom-right corner that displays the current active breakpoint and which
 breakpoints are active. Its labels are localised through i18next (`mp.breakpoints` namespace) with English defaults.
 
 ```tsx
 // React
-import { BreakpointDebug } from '@mission-platform/breakpoints/react';
+import { ForgeBreakpointDebug } from '@mission-platform/breakpoints/react';
 
-<BreakpointDebug />;
+<ForgeBreakpointDebug />;
 ```
 
 ## SCSS Utilities

@@ -11,7 +11,7 @@
 // (`./encoder`), the decode API (`decodeQr`, `decodeQrAsync` from `./decoder`),
 // the shared types (`./types`) and the ready-made payload builders
 // (`./formats`). The per-feature
-// `component/` sibling (a write-once `BaseQrCode`) is built separately and
+// `component/` sibling (a write-once `ForgeQrCode`) is built separately and
 // shipped through the package's `./react` and `./vue` subpath exports.
 
 /**

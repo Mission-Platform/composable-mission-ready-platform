@@ -2,13 +2,13 @@
 //
 // The drawer's visibility is driven entirely by the URL query
 // (`?panel=snippets`). This test mounts the real `app.vue` with the
-// heavy/contextual dependencies stubbed, and asserts the `BaseDrawer` it
+// heavy/contextual dependencies stubbed, and asserts the `ForgeDrawer` it
 // renders opens for the `?panel=snippets` query and stays closed otherwise.
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createApp, defineComponent, h, ref } from 'vue';
 
-// Capture the props the app passes to BaseDrawer.
+// Capture the props the app passes to ForgeDrawer.
 let receivedDrawerProperties: Record<string, unknown> = {};
 
 // Shared empty render function (kept at module scope to satisfy lint rules).
@@ -29,8 +29,8 @@ const StubComponent = defineComponent({
   },
 });
 
-const BaseDrawerStub = defineComponent({
-  name: 'BaseDrawerStub',
+const ForgeDrawerStub = defineComponent({
+  name: 'ForgeDrawerStub',
   // Mirror the public props the drawer relies on. The drawer's body contains a
   // virtual table with scoped slots that expect row data, so we deliberately do
   // not render the default slot — we only need to capture the props.
@@ -53,27 +53,27 @@ const EmptyComponent = defineComponent({
 const routeQuery = ref<Record<string, unknown>>({});
 
 vi.mock('@mission-platform/components/vue', () => ({
-  BaseButton: StubComponent,
-  BaseDialog: StubComponent,
-  BaseDrawer: BaseDrawerStub,
-  BaseIconButton: StubComponent,
-  BaseInput: StubComponent,
-  BaseMenubar: StubComponent,
-  BaseNavbar: StubComponent,
-  BaseNavbarItem: StubComponent,
-  BaseStack: StubComponent,
-  BaseThemeToggle: StubComponent,
-  BaseVirtualTable: StubComponent,
-  BaseVirtualTabs: EmptyComponent,
-  LanguageSwitcher: StubComponent,
+  ForgeButton: StubComponent,
+  ForgeDialog: StubComponent,
+  ForgeDrawer: ForgeDrawerStub,
+  ForgeIconButton: StubComponent,
+  ForgeInput: StubComponent,
+  ForgeMenubar: StubComponent,
+  ForgeNavbar: StubComponent,
+  ForgeNavbarItem: StubComponent,
+  ForgeStack: StubComponent,
+  ForgeThemeToggle: StubComponent,
+  ForgeVirtualTable: StubComponent,
+  ForgeVirtualTabs: EmptyComponent,
+  ForgeLanguageSwitcher: StubComponent,
 }));
 
 vi.mock('@mission-platform/layouts/vue', () => ({
-  BaseVerticalLayout: StubComponent,
+  ForgeVerticalLayout: StubComponent,
 }));
 
 vi.mock('@mission-platform/i18n/vue', () => ({
-  LanguageSwitcher: StubComponent,
+  ForgeLanguageSwitcher: StubComponent,
   useI18n: () => ({
     t: (_key: unknown, options?: { defaultValue?: string }) => options?.defaultValue ?? '',
     locale: ref('en'),
@@ -82,8 +82,8 @@ vi.mock('@mission-platform/i18n/vue', () => ({
 }));
 
 vi.mock('@mission-platform/icons/vue', () => ({
-  IconDownload: StubComponent,
-  IconPencil: StubComponent,
+  ForgeIconDownload: StubComponent,
+  ForgeIconPencil: StubComponent,
 }));
 
 vi.mock('@mission-platform/seo', () => ({

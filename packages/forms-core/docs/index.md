@@ -66,5 +66,5 @@ This package is intentionally lean and framework-agnostic:
 
 The primary consumer is `@mission-platform/forms`, which uses this core to power:
 
-- **BaseSchemaForm**: Renders fields and validates data using these utilities.
-- **BaseFormBuilder**: Uses the conversion logic to allow users to visually author schemas.
+- **ForgeSchemaForm**: Renders fields and validates data using these utilities.
+- **ForgeFormBuilder**: Uses the conversion logic to allow users to visually author schemas.

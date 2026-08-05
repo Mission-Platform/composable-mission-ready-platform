@@ -8,8 +8,7 @@ import '@mission-platform/tokens/scss/themes/light';
 import '@mission-platform/tokens/scss/themes/dark';
 import '@mission-platform/components/styles';
 
-import { createMpI18n, mpNamespace } from '@mission-platform/i18n';
-import { createMpI18nVue } from '@mission-platform/i18n/vue';
+import { createForgeI18N, forgeNamespace, createForgeI18NVue } from '@mission-platform/i18n';
 import { useSeo } from '@mission-platform/seo';
 import { resources as defaultLocaleResources } from 'virtual:i18n-resources';
 import { ViteSSG } from 'vite-ssg';
@@ -45,13 +44,13 @@ export const createApp = ViteSSG(
   routerOptions,
   async ({ app, router }) => {
     // Seed English (source-of-truth) messages at creation time.
-    const i18n = createMpI18n({
+    const i18n = createForgeI18N({
       locale: 'en',
       fallbackLocale: 'en',
-      namespace: mpNamespace('my-care-notes'),
+      namespace: forgeNamespace('my-care-notes'),
       resources: defaultLocaleResources,
     });
-    app.use(createMpI18nVue(i18n));
+    app.use(createForgeI18NVue(i18n));
 
     const localeBundles: Record<string, () => Promise<{ resources: Resource }>> = {
       ar: () => import('virtual:i18n-locale-ar'),

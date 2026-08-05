@@ -22,7 +22,7 @@ Every component in the library supports a `size` prop that follows a canonical t
 scaling across all UI elements.
 
 | Value | Label             |
-|:------|:------------------|
+| :---- | :---------------- |
 | `2xs` | Extra-extra-small |
 | `xs`  | Extra-small       |
 | `sm`  | Small             |
@@ -32,7 +32,7 @@ scaling across all UI elements.
 | `2xl` | Extra-extra-large |
 
 Most components apply a shared sizing utility that adjusts the `font-size` based on design tokens. Some complex
-components (like `BaseButton` or `BaseHero`) have bespoke per-size styling for padding, margins, and layout.
+components (like `ForgeButton` or `ForgeHero`) have bespoke per-size styling for padding, margins, and layout.
 
 ## Component Catalogue
 
@@ -40,93 +40,93 @@ components (like `BaseButton` or `BaseHero`) have bespoke per-size styling for p
 
 Primitives for arranging content on the page.
 
-| Component       | Description                                               | Key Props                                            |
-|:----------------|:----------------------------------------------------------|:-----------------------------------------------------|
-| `BaseStack`     | Flexbox stack (row/column) with configurable gap.         | `direction`, `gap` (`2xs-2xl`), `justify`, `align`   |
-| `BaseGrid`      | CSS Grid layout primitive.                                | `rows`, `cols`, `gap`, `justify`, `align`            |
-| `BaseSeparator` | Visual divider (horizontal/vertical) with optional label. | `orientation`, `variant` (`solid`/`dashed`/`dotted`) |
-| `BaseMasonry`   | Multi-column masonry layout.                              | `columns`, `minColumnWidth`, `gap`                   |
+| Component        | Description                                               | Key Props                                            |
+| :--------------- | :-------------------------------------------------------- | :--------------------------------------------------- |
+| `ForgeStack`     | Flexbox stack (row/column) with configurable gap.         | `direction`, `gap` (`2xs-2xl`), `justify`, `align`   |
+| `ForgeGrid`      | CSS Grid layout primitive.                                | `rows`, `cols`, `gap`, `justify`, `align`            |
+| `ForgeSeparator` | Visual divider (horizontal/vertical) with optional label. | `orientation`, `variant` (`solid`/`dashed`/`dotted`) |
+| `ForgeMasonry`   | Multi-column masonry layout.                              | `columns`, `minColumnWidth`, `gap`                   |
 
 ### Application Shell & Navigation
 
 High-level components for app structure and routing.
 
-| Component                  | Description                                                      | Key Props                                       |
-|:---------------------------|:-----------------------------------------------------------------|:------------------------------------------------|
-| `BaseApplicationLayout`    | Top-level shell with status banner, navbar, content, and footer. | `statusLevel`, `stickyHeader`                   |
-| `BaseNavbar`               | Responsive top navigation bar with brand and hamburger menu.     | `brand`, `sticky`, `mobileTitle`                |
-| `BaseDrawer`               | Sliding panel (fixed or inline responsive).                      | `open`, `placement`, `size`, `inlineBreakpoint` |
-| `BasePagination`           | Controlled page-navigation control.                              | `modelValue`, `pageCount`/`total`, `pageSize`   |
-| `BaseTabs`                 | ARIA tablist with roving tabindex and panels.                    | `tabs`, `modelValue`, `variant` (`line`/`pill`) |
-| `BaseMenu` / `BaseMenubar` | Accessible recursive menus/menubar with submenus.                | `items`, `orientation`, `ariaLabel`             |
-| `BaseBreadcrumb`           | Hierarchical trail of links.                                     | `items`, `separator`                            |
+| Component                    | Description                                                      | Key Props                                       |
+| :--------------------------- | :--------------------------------------------------------------- | :---------------------------------------------- |
+| `ForgeApplicationLayout`     | Top-level shell with status banner, navbar, content, and footer. | `statusLevel`, `stickyHeader`                   |
+| `ForgeNavbar`                | Responsive top navigation bar with brand and hamburger menu.     | `brand`, `sticky`, `mobileTitle`                |
+| `ForgeDrawer`                | Sliding panel (fixed or inline responsive).                      | `open`, `placement`, `size`, `inlineBreakpoint` |
+| `ForgePagination`            | Controlled page-navigation control.                              | `modelValue`, `pageCount`/`total`, `pageSize`   |
+| `ForgeTabs`                  | ARIA tablist with roving tabindex and panels.                    | `tabs`, `modelValue`, `variant` (`line`/`pill`) |
+| `ForgeMenu` / `ForgeMenubar` | Accessible recursive menus/menubar with submenus.                | `items`, `orientation`, `ariaLabel`             |
+| `ForgeBreadcrumb`            | Hierarchical trail of links.                                     | `items`, `separator`                            |
 
 ### Typography & Content
 
 Text-styling and semantic content blocks.
 
-| Component        | Description                                                      | Key Props                                      |
-|:-----------------|:-----------------------------------------------------------------|:-----------------------------------------------|
-| `BaseTypography` | The primary text primitive for all styles (h1-h6, body, etc.).   | `variant`, `as`, `weight`, `color`, `truncate` |
-| `BaseHero`       | Page banner with title, subtitle, media background, and actions. | `title`, `subtitle`, `media`, `actions`        |
-| `BaseQuote`      | Semantic blockquote with attribution.                            | `variant`, `tone`, `author`, `source`          |
-| `BaseList`       | Generic list (ordered/unordered/description).                    | `items`, `variant`, `tone`, `divided`          |
+| Component         | Description                                                      | Key Props                                      |
+| :---------------- | :--------------------------------------------------------------- | :--------------------------------------------- |
+| `ForgeTypography` | The primary text primitive for all styles (h1-h6, body, etc.).   | `variant`, `as`, `weight`, `color`, `truncate` |
+| `ForgeHero`       | Page banner with title, subtitle, media background, and actions. | `title`, `subtitle`, `media`, `actions`        |
+| `ForgeQuote`      | Semantic blockquote with attribution.                            | `variant`, `tone`, `author`, `source`          |
+| `ForgeList`       | Generic list (ordered/unordered/description).                    | `items`, `variant`, `tone`, `divided`          |
 
 ### Forms & Inputs
 
 Interactive elements for data entry.
 
-| Component                              | Description                                          | Key Props                                    |
-|:---------------------------------------|:-----------------------------------------------------|:---------------------------------------------|
-| `BaseButton`                           | Foundational button with variants and loading state. | `variant`, `size`, `loading`, `disabled`     |
-| `BaseIconButton`                       | Compact icon-only button.                            | `label` (required), `variant`, `size`        |
-| `BaseInput` / `BaseTextarea`           | Text fields with label, hint, and error states.      | `modelValue`, `type`, `placeholder`, `label` |
-| `BaseCheckbox` / `BaseRadio`           | Boolean or group selection inputs.                   | `modelValue`, `value`, `label`               |
-| `BaseSwitch`                           | Toggle switch for boolean settings.                  | `modelValue`, `label`, `size`                |
-| `BaseNumberStepper`                    | Number input with increment/decrement buttons.       | `modelValue`, `min`/`max`, `precision`       |
-| `BaseSlider` / `BaseRangeInput`        | Single or dual-thumb range selectors.                | `modelValue`, `min`/`max`, `step`            |
-| `BaseDateInput` / `BaseDateRangeInput` | Date and date-range pickers with popover calendars.  | `modelValue`, `min`/`max`, `size`            |
-| `BaseColorInput`                       | Colour picker with hex text field.                   | `modelValue`, `size`, `label`                |
+| Component                                | Description                                          | Key Props                                    |
+| :--------------------------------------- | :--------------------------------------------------- | :------------------------------------------- |
+| `ForgeButton`                            | Foundational button with variants and loading state. | `variant`, `size`, `loading`, `disabled`     |
+| `ForgeIconButton`                        | Compact icon-only button.                            | `label` (required), `variant`, `size`        |
+| `ForgeInput` / `ForgeTextarea`           | Text fields with label, hint, and error states.      | `modelValue`, `type`, `placeholder`, `label` |
+| `ForgeCheckbox` / `ForgeRadio`           | Boolean or group selection inputs.                   | `modelValue`, `value`, `label`               |
+| `ForgeSwitch`                            | Toggle switch for boolean settings.                  | `modelValue`, `label`, `size`                |
+| `ForgeNumberStepper`                     | Number input with increment/decrement buttons.       | `modelValue`, `min`/`max`, `precision`       |
+| `ForgeSlider` / `ForgeRangeInput`        | Single or dual-thumb range selectors.                | `modelValue`, `min`/`max`, `step`            |
+| `ForgeDateInput` / `ForgeDateRangeInput` | Date and date-range pickers with popover calendars.  | `modelValue`, `min`/`max`, `size`            |
+| `ForgeColorInput`                        | Colour picker with hex text field.                   | `modelValue`, `size`, `label`                |
 
 ### Data Display & Virtualization
 
 Components for handling large datasets efficiently.
 
-| Component             | Description                                                 | Key Props                                     |
-|:----------------------|:------------------------------------------------------------|:----------------------------------------------|
-| `BaseTable`           | Sortable data table with loading and empty states.          | `columns`, `rows`, `onSort`, `loading`        |
-| `BaseVirtualList`     | Windowed list for large arrays (renders only visible rows). | `items`, `itemHeight`, `height`               |
-| `BaseVirtualTable`    | Virtualized sortable table with sticky header.              | `columns`, `rows`, `rowHeight`, `onSort`      |
-| `BaseVirtualTreeView` | Windowed tree view with expand/collapse logic.              | `nodes`, `itemHeight`, `onSelect`, `onToggle` |
-| `BaseTreeView`        | Recursive accessible tree (non-virtualized).                | `nodes`, `defaultOpen`, `onSelect`            |
-| `BaseTimeline`        | Vertical or horizontal event list.                          | `items`, `orientation`, `align`               |
+| Component              | Description                                                 | Key Props                                     |
+| :--------------------- | :---------------------------------------------------------- | :-------------------------------------------- |
+| `ForgeTable`           | Sortable data table with loading and empty states.          | `columns`, `rows`, `onSort`, `loading`        |
+| `ForgeVirtualList`     | Windowed list for large arrays (renders only visible rows). | `items`, `itemHeight`, `height`               |
+| `ForgeVirtualTable`    | Virtualized sortable table with sticky header.              | `columns`, `rows`, `rowHeight`, `onSort`      |
+| `ForgeVirtualTreeView` | Windowed tree view with expand/collapse logic.              | `nodes`, `itemHeight`, `onSelect`, `onToggle` |
+| `ForgeTreeView`        | Recursive accessible tree (non-virtualized).                | `nodes`, `defaultOpen`, `onSelect`            |
+| `ForgeTimeline`        | Vertical or horizontal event list.                          | `items`, `orientation`, `align`               |
 
 ### Feedback & Overlays
 
 Notification and loading indicators.
 
-| Component         | Description                                         | Key Props                                            |
-|:------------------|:----------------------------------------------------|:-----------------------------------------------------|
-| `BaseAlertBanner` | Controlled notification banner with intent tones.   | `modelValue`, `variant`, `title`, `dismissible`      |
-| `BaseToast`       | Presentational toast item for short-lived messages. | `variant`, `title`, `message`, `onDismiss`           |
-| `BaseSpinner`     | Indeterminate loading ring.                         | `size`, `variant`, `label`                           |
-| `BaseSkeleton`    | Shimmering placeholder for loading content.         | `shape` (`line`/`circle`/`block`), `width`, `height` |
-| `BaseProgressBar` | Determinate or indeterminate progress track.        | `value`, `max`, `variant`, `indeterminate`           |
-| `BaseStatusIcon`  | Small toned status indicator glyph.                 | `status`, `size`, `label`                            |
+| Component          | Description                                         | Key Props                                            |
+| :----------------- | :-------------------------------------------------- | :--------------------------------------------------- |
+| `ForgeAlertBanner` | Controlled notification banner with intent tones.   | `modelValue`, `variant`, `title`, `dismissible`      |
+| `ForgeToast`       | Presentational toast item for short-lived messages. | `variant`, `title`, `message`, `onDismiss`           |
+| `ForgeSpinner`     | Indeterminate loading ring.                         | `size`, `variant`, `label`                           |
+| `ForgeSkeleton`    | Shimmering placeholder for loading content.         | `shape` (`line`/`circle`/`block`), `width`, `height` |
+| `ForgeProgressBar` | Determinate or indeterminate progress track.        | `value`, `max`, `variant`, `indeterminate`           |
+| `ForgeStatusIcon`  | Small toned status indicator glyph.                 | `status`, `size`, `label`                            |
 
 ### Media & Theme
 
 Handling images, video and the platform's look-and-feel.
 
-| Component             | Description                                                   | Key Props                                    |
-|:----------------------|:--------------------------------------------------------------|:---------------------------------------------|
-| `BaseResponsiveImage` | Art-directed `<picture>` with native srcset/sizes.            | `src`, `sources`, `aspectRatio`, `fit`       |
-| `BaseResponsiveVideo` | Responsive video player with fixed aspect ratio.              | `src`, `sources`, `poster`, `autoplay`       |
-| `BaseBackgroundVideo` | Full-bleed background video with reduced-motion support.      | `src`, `overlay`, `minHeight`                |
-| `BaseDeviceMock`      | Device frame (mobile/tablet/desktop/browser) around a screen. | `device`, `orientation`, `url`, `size`       |
-| `BaseThemeToggle`     | Button to cycle light/dark/auto themes via shared store.      | `ariaLabel`, `onChange`                      |
-| `BaseThemeProvider`   | Configures and exposes the global theme state.                | `defaultTheme`, `persist`, `storageKey`      |
-| `BaseThemeComposer`   | Controlled editor for design-token overrides.                 | `modelValue`, `global`, `onUpdateModelValue` |
+| Component              | Description                                                   | Key Props                                    |
+| :--------------------- | :------------------------------------------------------------ | :------------------------------------------- |
+| `ForgeResponsiveImage` | Art-directed `<picture>` with native srcset/sizes.            | `src`, `sources`, `aspectRatio`, `fit`       |
+| `ForgeResponsiveVideo` | Responsive video player with fixed aspect ratio.              | `src`, `sources`, `poster`, `autoplay`       |
+| `ForgeBackgroundVideo` | Full-bleed background video with reduced-motion support.      | `src`, `overlay`, `minHeight`                |
+| `ForgeDeviceMock`      | Device frame (mobile/tablet/desktop/browser) around a screen. | `device`, `orientation`, `url`, `size`       |
+| `ForgeThemeToggle`     | Button to cycle light/dark/auto themes via shared store.      | `ariaLabel`, `onChange`                      |
+| `ForgeThemeProvider`   | Configures and exposes the global theme state.                | `defaultTheme`, `persist`, `storageKey`      |
+| `ForgeThemeComposer`   | Controlled editor for design-token overrides.                 | `modelValue`, `global`, `onUpdateModelValue` |
 
 ## Implementation Details
 
@@ -137,6 +137,6 @@ slots) while others use **Scoped Render-Props** for high-performance virtualizat
 
 ### Theme Integration
 
-Theme-related components (`BaseThemeToggle`, etc.) interact with a singleton theme store that manages `data-theme`
+Theme-related components (`ForgeThemeToggle`, etc.) interact with a singleton theme store that manages `data-theme`
 attributes on the document root, ensuring instant updates across the entire application without needing a global state
 provider in every app.

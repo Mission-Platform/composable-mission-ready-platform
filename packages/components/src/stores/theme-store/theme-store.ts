@@ -1,6 +1,6 @@
 /**
  * Framework-neutral, observable theme store shared by the write-once theme
- * components (`BaseThemeProvider`, `BaseThemeToggle`).
+ * components (`ForgeThemeProvider`, `ForgeThemeToggle`).
  *
  * The original `@mission-platform/components` theme components shared a reactive
  * Vue store via `provide`/`inject`. The neutral JSX dialect (and the two-stage
@@ -191,7 +191,7 @@ export function cycleTheme(): void {
 }
 
 /**
- * (Re)configure the shared store from a `BaseThemeProvider`'s props: switch the
+ * (Re)configure the shared store from a `ForgeThemeProvider`'s props: switch the
  * storage key / persistence and, when nothing has been explicitly chosen yet,
  * adopt the provider's `defaultTheme`. Re-applies and notifies subscribers.
  */

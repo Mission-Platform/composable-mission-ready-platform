@@ -1,0 +1,139 @@
+/**
+ * Styling for the write-once `ForgeApplicationLayout`.
+ *
+ * `ForgeApplicationLayout` owns this co-located CSS Module: it side-effect-imports
+ * the stylesheet so its layout appearance ships in the built package CSS (the
+ * two-stage compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the package's own `mp.layout` cascade layer. Only
+ * `var(--mp-*)` design-token custom properties are used (the `mp-font-label`
+ * mixin from the original SFC is inlined as its resolved token values). The
+ * responsive breakpoint is consumed through the platform breakpoint design
+ * tokens via the `@mission-platform/tokens` `bp-up` mixin, so the threshold
+ * always tracks the token source of truth.
+ */
+
+@use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
+
+@layer mp.layout {
+  .application-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--mp-color-bg-base);
+
+    &__status {
+      transition: background-color 0.2s ease;
+      min-height: 0;
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+
+      &:not(:empty) {
+        // Resolved `mp-font-label`: label font size, medium weight, snug leading.
+        font-family:
+          var(--mp-font-family-sans) system-ui,
+          -apple-system,
+          'Segoe UI',
+          roboto,
+          sans-serif;
+        font-size: var(--mp-font-size-sm);
+        font-weight: var(--mp-font-weight-medium);
+        line-height: var(--mp-line-height-snug);
+        letter-spacing: var(--mp-letter-spacing-normal);
+        padding: var(--mp-spacing-2) var(--mp-spacing-4);
+
+        @include bp.bp-up('xs') {
+          padding: var(--mp-spacing-2) var(--mp-spacing-6);
+        }
+      }
+    }
+
+    &__header {
+      flex-shrink: 0;
+
+      &--sticky {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+    }
+
+    // The body row flanks the main content with the optional start / end
+    // sidebars. It grows to fill the space between the header and footer; the
+    // sidebars stick alongside the content as the page scrolls.
+    &__body {
+      display: flex;
+      align-items: flex-start;
+      flex: 1;
+      min-height: 0;
+    }
+
+    // Optional leading / trailing sidebar column. Rendered only when its slot is
+    // filled. The width is overridable through the
+    // `--mp-application-layout-sidebar-width` custom property, and the sticky
+    // offset (e.g. a sticky header's height) through
+    // `--mp-application-layout-sidebar-top`.
+    &__sidebar {
+      position: sticky;
+      top: var(--mp-application-layout-sidebar-top, 0);
+      flex-shrink: 0;
+      align-self: stretch;
+      width: var(--mp-application-layout-sidebar-width, 16rem);
+      max-height: calc(100vh - var(--mp-application-layout-sidebar-top, 0px));
+      overflow-y: auto;
+      background-color: var(--mp-color-bg-surface);
+
+      &--start {
+        border-right: 1px solid var(--mp-color-border-default);
+      }
+
+      &--end {
+        border-left: 1px solid var(--mp-color-border-default);
+      }
+
+      // Overlay variant: when a host forces a breakpoint-collapsed sidebar open,
+      // it floats above the page (fixed, pinned to the relevant inline edge and
+      // spanning from the sticky-header offset to the viewport bottom) rather
+      // than reserving an inline column. It sits above the content but below a
+      // sticky header (`z-index: 100`) so the header — and its toggle — stay
+      // reachable, and casts a shadow to read as a raised surface.
+      &--overlay {
+        position: fixed;
+        top: var(--mp-application-layout-sidebar-top, 0);
+        bottom: 0;
+        z-index: 90;
+        max-height: none;
+        box-shadow: var(--mp-shadow-lg, 0 0.5rem 1.5rem rgb(0 0 0 / 15%));
+
+        &.application-layout__sidebar--start {
+          inset-inline-start: 0;
+        }
+
+        &.application-layout__sidebar--end {
+          inset-inline-end: 0;
+        }
+      }
+    }
+
+    // Click-to-dismiss scrim shown behind an overlay sidebar. It covers the page
+    // below a sticky header (matching the sidebar's top offset) and sits just
+    // beneath the overlay panel.
+    &__backdrop {
+      position: fixed;
+      inset: var(--mp-application-layout-sidebar-top, 0) 0 0;
+      z-index: 89;
+      background-color: var(--mp-color-overlay-scrim, rgb(0 0 0 / 40%));
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+    }
+
+    &__footer {
+      flex-shrink: 0;
+    }
+  }
+}

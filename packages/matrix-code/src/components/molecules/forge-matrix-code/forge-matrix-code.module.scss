@@ -1,0 +1,41 @@
+/**
+ * Styling for the write-once `ForgeMatrixCode`.
+ *
+ * `ForgeMatrixCode` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its appearance ships in the built package CSS (the two-stage
+ * compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package.
+ */
+
+@layer mp.components {
+  .forge-matrix-code {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  // Wrapper used only when the save/copy action toolbar is enabled.
+  .forge-matrix-code-figure {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--mp-spacing-3);
+  }
+
+  .forge-matrix-code__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--mp-spacing-2);
+  }
+
+  // Backing plate + image for an optional centre logo overlay. Their geometry
+  // (size / position / radius) is set inline from the component so they scale
+  // with the code; the overlay never intercepts pointer events.
+  .forge-matrix-code__logo-plate,
+  .forge-matrix-code__logo {
+    pointer-events: none;
+  }
+}

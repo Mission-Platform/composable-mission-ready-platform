@@ -1,0 +1,44 @@
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
+
+import { ForgeSpinner } from './forge-spinner';
+
+/**
+ * Exercises the **neutral** `ForgeSpinner` authored in this package, rendering it
+ * on both frameworks through the `@mission-platform/forge` runtime adapters.
+ * Covers the tone/size modifiers and the accessible label.
+ */
+const ReactSpinner = toReactComponent(ForgeSpinner, 'Spinner');
+const VueSpinner = toVueComponent(ForgeSpinner, 'Spinner');
+
+describe('ForgeSpinner authors the same component for React and Vue', () => {
+  it('renders a toned, sized status spinner on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactSpinner, { variant: 'success', size: 'lg' }));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueSpinner, { variant: 'success', size: 'lg' }) }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('forge-spinner');
+      expect(html).toContain('forge-spinner--success');
+      expect(html).toContain('forge-spinner--lg');
+      expect(html).toContain('role="status"');
+      // Defaults the accessible label when none is supplied.
+      expect(html).toContain('aria-label="Loading…"');
+    }
+  });
+
+  it('honours an explicit label on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactSpinner, { label: 'Fetching' }));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueSpinner, { label: 'Fetching' }) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('aria-label="Fetching"');
+    }
+  });
+});

@@ -1,6 +1,6 @@
 # @mission-platform/breakpoints
 
-Responsive breakpoint utilities and **write-once** viewport components for Mission Platform. The components (`ShowAt`, `HideAt`, `BreakpointDebug`) are authored once in the neutral `@mission-platform/forge` dialect and compiled to **both Vue 3 and React** by `@mission-platform/vite-plugin-forge`.
+Responsive breakpoint utilities and **write-once** viewport components for Mission Platform. The components (`ForgeShowAt`, `ForgeHideAt`, `ForgeBreakpointDebug`) are authored once in the neutral `@mission-platform/forge` dialect and compiled to **both Vue 3 and React** by `@mission-platform/vite-plugin-forge`.
 
 ## Subpath Exports
 
@@ -40,23 +40,23 @@ The Vue-only `useBreakpoints` composable has been **removed**. Build custom reac
 
 ### Components
 
-#### `<ShowAt>`
+#### `<ForgeShowAt>`
 
 Conditionally renders slot content when the viewport meets specified breakpoint criteria.
 
 ```vue
 <template>
-  <ShowAt min="md">
+  <ForgeShowAt min="md">
     <p>This is visible on medium screens and above</p>
-  </ShowAt>
+  </ForgeShowAt>
 
-  <ShowAt min="sm" max="lg">
+  <ForgeShowAt min="sm" max="lg">
     <p>This is visible only on small and medium screens</p>
-  </ShowAt>
+  </ForgeShowAt>
 </template>
 
 <script setup lang="ts">
-import { ShowAt } from '@mission-platform/breakpoints/vue'
+import { ForgeShowAt } from '@mission-platform/breakpoints/vue'
 </script>
 ```
 
@@ -64,27 +64,27 @@ import { ShowAt } from '@mission-platform/breakpoints/vue'
 - `min?: BreakpointKey` — Show content when viewport is at or above this breakpoint
 - `max?: BreakpointKey` — Show content when viewport is strictly below this breakpoint
 
-#### `<HideAt>`
+#### `<ForgeHideAt>`
 
 Conditionally hides slot content when the viewport meets specified breakpoint criteria.
 
 ```vue
 <template>
-  <HideAt min="lg">
+  <ForgeHideAt min="lg">
     <p>This is hidden on large screens and above</p>
-  </HideAt>
+  </ForgeHideAt>
 </template>
 ```
 
-**Props:** Same as `<ShowAt>`
+**Props:** Same as `<ForgeShowAt>`
 
-#### `<BreakpointDebug>`
+#### `<ForgeBreakpointDebug>`
 
 Development utility component that displays the current breakpoint in the corner of the screen.
 
 ```vue
 <template>
-  <BreakpointDebug />
+  <ForgeBreakpointDebug />
 </template>
 ```
 
@@ -109,7 +109,7 @@ The breakpoint SCSS layer (variables, `bp-up`/`bp-down`/`bp-between`/`bp-only` m
 ```
 
 This package exports the framework-agnostic `/core` utilities and the write-once components
-(`<ShowAt>`, `<HideAt>`, `<BreakpointDebug>`) — imported from `@mission-platform/breakpoints/vue`
+(`<ForgeShowAt>`, `<ForgeHideAt>`, `<ForgeBreakpointDebug>`) — imported from `@mission-platform/breakpoints/vue`
 or `@mission-platform/breakpoints/react` — described above.
 
 ## Usage

@@ -347,6 +347,8 @@ export class ForgeElement extends HTMLElement {
 
   /** The element's template. Overridden by every generated subclass. */
   render(): TemplateResult {
-    return html`<slot></slot>`;
+    return html`
+      <slot></slot>
+    `;
   }
 }

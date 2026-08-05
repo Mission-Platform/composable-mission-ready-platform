@@ -7,12 +7,12 @@
 // the generated `./react` / `./vue` entry alongside the components.
 
 // ── Components ────────────────────────────────────────────────────────────────
-export { BaseMapLibre, type MapLibreProperties } from './organisms/map-libre';
-export { BaseMapMarker, type MapMarkerProperties } from './molecules/map-marker';
-export { BaseMapPopup, type MapPopupProperties } from './molecules/map-popup';
-export { BaseMapSource, type MapSourceProperties } from './molecules/map-source';
-export { BaseMapLayer, type MapLayerProperties } from './molecules/map-layer';
-export { BaseMapDraw, type MapDrawProperties } from './molecules/map-draw';
+export { ForgeMapLibre, type MapLibreProperties } from './organisms/forge-map-libre';
+export { ForgeMapMarker, type MapMarkerProperties } from './molecules/forge-map-marker';
+export { ForgeMapPopup, type MapPopupProperties } from './molecules/forge-map-popup';
+export { ForgeMapSource, type MapSourceProperties } from './molecules/forge-map-source';
+export { ForgeMapLayer, type MapLayerProperties } from './molecules/forge-map-layer';
+export { ForgeMapDraw, type MapDrawProperties } from './molecules/forge-map-draw';
 
 // ── Composables (helper modules) ────────────────────────────────────────────────
 export { useMap } from '../composables/use-map';

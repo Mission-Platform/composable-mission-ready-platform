@@ -1,8 +1,8 @@
 // ─── @mission-platform/scheduler-core ─────────────────────────────────────────
 //
 // Framework-agnostic scheduler core shared by the Vue `@mission-platform/components`
-// BaseScheduler (via `useScheduler`) and the write-once
-// `@mission-platform/components` BaseScheduler. Both frameworks expand
+// ForgeScheduler (via `useScheduler`) and the write-once
+// `@mission-platform/components` ForgeScheduler. Both frameworks expand
 // recurrences, compute view ranges, select/mutate events, and lay out the time
 // grid through this single implementation, so they stay in parity by construction.
 

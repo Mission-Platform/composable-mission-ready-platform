@@ -164,9 +164,9 @@ async function packagesForFramework(
   const condition = `mp:${framework}`;
   return packages.filter((package_) => {
     try {
-      const manifest = JSON.parse(
-        readFileSync(`${repoRoot}/packages/${package_}/package.json`, 'utf8'),
-      ) as { exports?: { '.'?: Record<string, unknown> } };
+      const manifest = JSON.parse(readFileSync(`${repoRoot}/packages/${package_}/package.json`, 'utf8')) as {
+        exports?: { '.'?: Record<string, unknown> };
+      };
       const entry = manifest.exports?.['.'] ?? {};
       return condition in entry;
     } catch {

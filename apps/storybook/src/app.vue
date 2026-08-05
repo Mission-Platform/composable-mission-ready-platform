@@ -1,24 +1,24 @@
 <script lang="ts" setup>
   import type {} from './locales/types';
 
-  import { BaseButton, BaseCodeBlock, BaseCollapse, BaseTooltip } from '@mission-platform/components/vue';
+  import { ForgeButton, ForgeCodeBlock, ForgeCollapse, ForgeTooltip } from '@mission-platform/components/vue';
   import { useI18n } from '@mission-platform/i18n/vue';
   import {
-    IconDrawCircle,
-    IconDrawLine,
-    IconDrawPolygon,
-    IconDrawSquare,
-    IconDrawTriangle,
-    IconGeodesic,
-    IconJoin,
-    IconRotateCcw,
-    IconRotateCw,
-    IconScaleDown,
-    IconScaleUp,
-    IconSplit,
-    IconTrash,
+    ForgeIconDrawCircle,
+    ForgeIconDrawLine,
+    ForgeIconDrawPolygon,
+    ForgeIconDrawSquare,
+    ForgeIconDrawTriangle,
+    ForgeIconGeodesic,
+    ForgeIconJoin,
+    ForgeIconRotateCcw,
+    ForgeIconRotateCw,
+    ForgeIconScaleDown,
+    ForgeIconScaleUp,
+    ForgeIconSplit,
+    ForgeIconTrash,
   } from '@mission-platform/icons/vue';
-  import { MapDraw, MapLibre } from '@mission-platform/map/vue';
+  import { ForgeMapDraw, ForgeMapLibre } from '@mission-platform/map/vue';
   import { computed, ref } from 'vue';
 
   import type { DrawMode, FeatureId, UseDrawingReturn } from '@mission-platform/map/vue';
@@ -85,7 +85,7 @@
     });
   }
 
-  // The live drawing controller is exposed by `<MapDraw>` through its `toolbar`
+  // The live drawing controller is exposed by `<ForgeMapDraw>` through its `toolbar`
   // scoped slot (`{ drawing }`), so the toolbar below is rendered inside that
   // slot and drives every action straight through the controller. Only the
   // in-progress "join" source id needs to live in the showcase itself.
@@ -93,26 +93,30 @@
 
   const drawModes = computed<{ label: string; value: DrawMode; icon: unknown }[]>(() => [
     { label: t(($) => $.draw.none, { ns: 'mp.storybook', defaultValue: 'None' }), value: undefined, icon: null },
-    { label: t(($) => $.draw.line, { ns: 'mp.storybook', defaultValue: 'Line' }), value: 'line', icon: IconDrawLine },
+    {
+      label: t(($) => $.draw.line, { ns: 'mp.storybook', defaultValue: 'Line' }),
+      value: 'line',
+      icon: ForgeIconDrawLine,
+    },
     {
       label: t(($) => $.draw.polygon, { ns: 'mp.storybook', defaultValue: 'Polygon' }),
       value: 'polygon',
-      icon: IconDrawPolygon,
+      icon: ForgeIconDrawPolygon,
     },
     {
       label: t(($) => $.draw.square, { ns: 'mp.storybook', defaultValue: 'Square' }),
       value: 'square',
-      icon: IconDrawSquare,
+      icon: ForgeIconDrawSquare,
     },
     {
       label: t(($) => $.draw.circle, { ns: 'mp.storybook', defaultValue: 'Circle' }),
       value: 'circle',
-      icon: IconDrawCircle,
+      icon: ForgeIconDrawCircle,
     },
     {
       label: t(($) => $.draw.triangle, { ns: 'mp.storybook', defaultValue: 'Triangle' }),
       value: 'triangle',
-      icon: IconDrawTriangle,
+      icon: ForgeIconDrawTriangle,
     },
   ]);
 
@@ -158,24 +162,24 @@
   <div class="showcase">
     <h1>{{ title }}</h1>
 
-    <MapLibre
+    <ForgeMapLibre
       :center="[0, 20]"
       :map-style="MAP_STYLE"
       :zoom="1.5"
       class="showcase__map"
     >
-      <MapDraw>
+      <ForgeMapDraw>
         <template #toolbar="{ drawing }">
           <div class="toolbar">
             <div class="toolbar__row">
               <span class="toolbar__label">{{ labelDraw }}</span>
-              <BaseTooltip
+              <ForgeTooltip
                 v-for="m in drawModes"
                 :key="String(m.value)"
                 :content="m.label"
                 placement="bottom"
               >
-                <BaseButton
+                <ForgeButton
                   :variant="drawing.mode === m.value ? 'primary' : 'secondary'"
                   size="sm"
                   @click="setMode(drawing, m.value)"
@@ -187,8 +191,8 @@
                     :size="16"
                   />
                   <span v-else>{{ m.label }}</span>
-                </BaseButton>
-              </BaseTooltip>
+                </ForgeButton>
+              </ForgeTooltip>
             </div>
 
             <div class="toolbar__row">
@@ -206,156 +210,156 @@
                 }}
               </span>
 
-              <BaseTooltip
+              <ForgeTooltip
                 :content="tooltipScaleUp"
                 placement="bottom"
               >
-                <BaseButton
+                <ForgeButton
                   :disabled="!drawing.selectedId"
                   size="sm"
                   variant="secondary"
                   @click="drawing.scaleSelected(1.5)"
                 >
-                  <IconScaleUp
+                  <ForgeIconScaleUp
                     :size="16"
                     :aria-label="ariaScaleUp"
                   />
-                </BaseButton>
-              </BaseTooltip>
+                </ForgeButton>
+              </ForgeTooltip>
 
-              <BaseTooltip
+              <ForgeTooltip
                 :content="tooltipScaleDown"
                 placement="bottom"
               >
-                <BaseButton
+                <ForgeButton
                   :disabled="!drawing.selectedId"
                   size="sm"
                   variant="secondary"
                   @click="drawing.scaleSelected(0.75)"
                 >
-                  <IconScaleDown
+                  <ForgeIconScaleDown
                     :size="16"
                     :aria-label="ariaScaleDown"
                   />
-                </BaseButton>
-              </BaseTooltip>
+                </ForgeButton>
+              </ForgeTooltip>
 
-              <BaseTooltip
+              <ForgeTooltip
                 :content="tooltipRotateCw"
                 placement="bottom"
               >
-                <BaseButton
+                <ForgeButton
                   :disabled="!drawing.selectedId"
                   size="sm"
                   variant="secondary"
                   @click="drawing.rotateSelected(45)"
                 >
-                  <IconRotateCw
+                  <ForgeIconRotateCw
                     :size="16"
                     :aria-label="ariaRotateCw"
                   />
-                </BaseButton>
-              </BaseTooltip>
+                </ForgeButton>
+              </ForgeTooltip>
 
-              <BaseTooltip
+              <ForgeTooltip
                 :content="tooltipRotateCcw"
                 placement="bottom"
               >
-                <BaseButton
+                <ForgeButton
                   :disabled="!drawing.selectedId"
                   size="sm"
                   variant="secondary"
                   @click="drawing.rotateSelected(-45)"
                 >
-                  <IconRotateCcw
+                  <ForgeIconRotateCcw
                     :size="16"
                     :aria-label="ariaRotateCcw"
                   />
-                </BaseButton>
-              </BaseTooltip>
+                </ForgeButton>
+              </ForgeTooltip>
 
-              <BaseTooltip
+              <ForgeTooltip
                 :content="tooltipSplit"
                 placement="bottom"
               >
-                <BaseButton
+                <ForgeButton
                   :disabled="!(drawing.selectedId && isLine(drawing))"
                   size="sm"
                   variant="secondary"
                   @click="drawing.splitSelected()"
                 >
-                  <IconSplit
+                  <ForgeIconSplit
                     :size="16"
                     :aria-label="ariaSplit"
                   />
-                </BaseButton>
-              </BaseTooltip>
+                </ForgeButton>
+              </ForgeTooltip>
 
-              <BaseTooltip
+              <ForgeTooltip
                 :content="joiningFromId ? tooltipJoinActive : tooltipJoin"
                 placement="bottom"
               >
-                <BaseButton
+                <ForgeButton
                   :disabled="!(drawing.selectedId && isLine(drawing))"
                   :variant="joiningFromId ? 'primary' : 'secondary'"
                   size="sm"
                   @click="startJoin(drawing)"
                 >
-                  <IconJoin
+                  <ForgeIconJoin
                     :size="16"
                     :aria-label="ariaJoin"
                   />
-                </BaseButton>
-              </BaseTooltip>
+                </ForgeButton>
+              </ForgeTooltip>
 
-              <BaseTooltip
+              <ForgeTooltip
                 :content="tooltipDelete"
                 placement="bottom"
               >
-                <BaseButton
+                <ForgeButton
                   :disabled="!drawing.selectedId"
                   size="sm"
                   variant="error"
                   @click="deleteSelected(drawing)"
                 >
-                  <IconTrash
+                  <ForgeIconTrash
                     :size="16"
                     :aria-label="ariaDelete"
                   />
-                </BaseButton>
-              </BaseTooltip>
+                </ForgeButton>
+              </ForgeTooltip>
 
-              <BaseTooltip
+              <ForgeTooltip
                 :content="drawing.geodesic ? tooltipGeodesic : tooltipFlat"
                 placement="bottom"
               >
-                <BaseButton
+                <ForgeButton
                   size="sm"
                   variant="secondary"
                   @click="toggleGeodesic(drawing)"
                 >
-                  <IconGeodesic
+                  <ForgeIconGeodesic
                     :size="16"
                     :aria-label="ariaGeodesic"
                   />
                   {{ drawing.geodesic ? modeGeodesic : modeFlat }}
-                </BaseButton>
-              </BaseTooltip>
+                </ForgeButton>
+              </ForgeTooltip>
             </div>
 
-            <BaseCollapse :summary="geojsonSummary(featureCount(drawing))">
-              <BaseCodeBlock
+            <ForgeCollapse :summary="geojsonSummary(featureCount(drawing))">
+              <ForgeCodeBlock
                 :code="JSON.stringify(drawing.features, null, 2)"
                 :show-copy-button="false"
                 :show-line-numbers="true"
                 class="showcase__geojson"
                 language="json"
               />
-            </BaseCollapse>
+            </ForgeCollapse>
           </div>
         </template>
-      </MapDraw>
-    </MapLibre>
+      </ForgeMapDraw>
+    </ForgeMapLibre>
   </div>
 </template>
 

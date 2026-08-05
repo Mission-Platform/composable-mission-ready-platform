@@ -1,22 +1,22 @@
 <script lang="ts" setup>
   import {
-    BaseButton,
-    BaseDialog,
-    BaseDrawer,
-    BaseIconButton,
-    BaseMenubar,
-    BaseNavbar,
-    BaseNavbarItem,
-    BaseStack,
-    BaseThemeToggle,
-    BaseVirtualTable,
-    BaseVirtualTabs,
-    LanguageSwitcher,
-  } from '@mission-platform/components/vue';
-  import { type FormValues, SchemaForm, type SchemaFormDefinition } from '@mission-platform/forms/vue';
-  import { useI18n } from '@mission-platform/i18n/vue';
-  import { IconDownload, IconPencil } from '@mission-platform/icons/vue';
-  import { BaseVerticalLayout } from '@mission-platform/layouts/vue';
+    ForgeButton,
+    ForgeDialog,
+    ForgeDrawer,
+    ForgeIconButton,
+    ForgeMenubar,
+    ForgeNavbar,
+    ForgeNavbarItem,
+    ForgeStack,
+    ForgeThemeToggle,
+    ForgeVirtualTable,
+    ForgeVirtualTabs,
+    ForgeLanguageSwitcher,
+  } from '@mission-platform/components';
+  import { type FormValues, ForgeSchemaForm, type SchemaFormDefinition } from '@mission-platform/forms';
+  import { useI18n } from '@mission-platform/i18n';
+  import { ForgeIconDownload, ForgeIconPencil } from '@mission-platform/icons';
+  import { ForgeVerticalLayout } from '@mission-platform/layouts';
   import { organizationId, useSeo, webPage } from '@mission-platform/seo';
   import { computed, defineAsyncComponent, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
@@ -271,10 +271,10 @@
 </script>
 
 <template>
-  <BaseVerticalLayout>
-    <BaseNavbar brand="My Care Notes">
+  <ForgeVerticalLayout>
+    <ForgeNavbar brand="My Care Notes">
       <template #default>
-        <BaseNavbarItem
+        <ForgeNavbarItem
           :dropdown-items="[
             {
               label: t(($) => $.nav['import-note'], { ns: 'mp.my-care-notes', defaultValue: 'Import Note' }),
@@ -310,32 +310,32 @@
           ]"
         >
           {{ t(($) => $.nav.notes, { ns: 'mp.my-care-notes', defaultValue: 'Notes' }) }}
-        </BaseNavbarItem>
-        <BaseNavbarItem @click="onToggleSnippetsPanelVisible">
+        </ForgeNavbarItem>
+        <ForgeNavbarItem @click="onToggleSnippetsPanelVisible">
           {{ t(($) => $.nav.snippets, { ns: 'mp.my-care-notes', defaultValue: 'Snippets' }) }}
-        </BaseNavbarItem>
+        </ForgeNavbarItem>
       </template>
       <template #end>
-        <LanguageSwitcher
+        <ForgeLanguageSwitcher
           :locale="locale"
           :locales="locales"
           :on-locale-change="switchLanguage"
         />
-        <BaseThemeToggle
+        <ForgeThemeToggle
           :aria-label="t(($) => $.theme_toggle, { ns: 'mp.my-care-notes', defaultValue: 'Toggle colour theme' })"
         />
       </template>
-    </BaseNavbar>
+    </ForgeNavbar>
 
     <!-- Snippets panel -->
-    <BaseDrawer
+    <ForgeDrawer
       :open="snippetsPanelVisible"
       placement="start"
       size="xl"
       :title="t(($) => $.sidebar.title, { ns: 'mp.my-care-notes', defaultValue: 'Snippets' })"
       @update:open="onSnippetsPanelUpdate"
     >
-      <BaseMenubar
+      <ForgeMenubar
         :items="[
           {
             label: t(($) => $.menu.import, { ns: 'mp.my-care-notes', defaultValue: 'Import' }),
@@ -357,39 +357,39 @@
         ]"
       />
 
-      <BaseVirtualTable
+      <ForgeVirtualTable
         :columns="snippetColumns"
         :rows="snippetRows"
       >
         <template #cell="{ column, row: rawRow, value }">
           <template v-if="column.key === 'actions'">
             <template v-if="(rawRow as SnippetRow).id !== undefined">
-              <BaseIconButton
+              <ForgeIconButton
                 :label="t(($) => $.snippet.export, { ns: 'mp.my-care-notes', defaultValue: 'Export snippet' })"
                 :title="t(($) => $.snippet.export, { ns: 'mp.my-care-notes', defaultValue: 'Export snippet' })"
                 size="sm"
                 variant="ghost"
                 @click="exportSnippet((rawRow as SnippetRow).id as string)"
               >
-                <IconDownload size="xs" />
-              </BaseIconButton>
-              <BaseIconButton
+                <ForgeIconDownload size="xs" />
+              </ForgeIconButton>
+              <ForgeIconButton
                 :label="t(($) => $.snippet.edit, { ns: 'mp.my-care-notes', defaultValue: 'Edit Snippet' })"
                 :title="t(($) => $.snippet.edit, { ns: 'mp.my-care-notes', defaultValue: 'Edit Snippet' })"
                 size="sm"
                 variant="ghost"
                 @click="openEditSnippet(rawRow as SnippetRow as Snippet)"
               >
-                <IconPencil size="xs" />
-              </BaseIconButton>
+                <ForgeIconPencil size="xs" />
+              </ForgeIconButton>
             </template>
           </template>
           <template v-else>{{ value }}</template>
         </template>
-      </BaseVirtualTable>
-    </BaseDrawer>
+      </ForgeVirtualTable>
+    </ForgeDrawer>
 
-    <BaseVirtualTabs
+    <ForgeVirtualTabs
       :model-value="activeTabId"
       :tabs="visibleTabs"
       addable
@@ -409,8 +409,8 @@
           />
         </ClientOnly>
       </template>
-    </BaseVirtualTabs>
-  </BaseVerticalLayout>
+    </ForgeVirtualTabs>
+  </ForgeVerticalLayout>
 
   <ClientOnly>
     <SnippetEditorModal
@@ -421,13 +421,13 @@
   </ClientOnly>
 
   <!-- Rename-tab dialog -->
-  <BaseDialog
+  <ForgeDialog
     :open="renamingTabId !== undefined"
     :title="t(($) => $.rename.title, { ns: 'mp.my-care-notes', defaultValue: 'Rename tab' })"
     @close="cancelRenameTab"
     @update:open="(opened: boolean) => !opened && cancelRenameTab()"
   >
-    <SchemaForm
+    <ForgeSchemaForm
       :model-value="renameTabValues"
       :schema="renameTabSchema"
       @submit="confirmRenameTab"
@@ -435,29 +435,29 @@
       @keydown="onRenameTabKeydown"
     >
       <template #actions>
-        <BaseStack
+        <ForgeStack
           class="rename-modal-footer"
           direction="horizontal"
           gap="xs"
           justify="end"
         >
-          <BaseButton
+          <ForgeButton
             type="button"
             variant="tertiary"
             @click="cancelRenameTab"
           >
             {{ t(($) => $.rename.cancel, { ns: 'mp.my-care-notes', defaultValue: 'Cancel' }) }}
-          </BaseButton>
-          <BaseButton
+          </ForgeButton>
+          <ForgeButton
             type="submit"
             variant="primary"
           >
             {{ t(($) => $.rename.confirm, { ns: 'mp.my-care-notes', defaultValue: 'Rename' }) }}
-          </BaseButton>
-        </BaseStack>
+          </ForgeButton>
+        </ForgeStack>
       </template>
-    </SchemaForm>
-  </BaseDialog>
+    </ForgeSchemaForm>
+  </ForgeDialog>
 </template>
 
 <style lang="scss" scoped>

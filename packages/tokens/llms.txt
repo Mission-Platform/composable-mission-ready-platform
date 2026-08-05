@@ -14,7 +14,7 @@ Edit these DTCG files only; never edit the generated output.
 - `palette.tokens.json`      — primitive colour palette (`color.primary.600`, …), OKLab
 - structural scales — one DTCG file per scale (the plugin merges them by top-level group):
   - `breakpoint.tokens.json`   — responsive `breakpoint.*` thresholds
-  - `spacing.tokens.json`      — `spacing.*` margin/padding/gap scale: the numeric `0…24` 4px base-unit steps plus the named `2xs … 2xl` t-shirt scale consumed by the component `padding`/`margin`/`gap` props
+  - `spacing.tokens.json`      — `spacing.*` margin/padding/gap scale: the numeric `0…24` 4px forge-unit steps plus the named `2xs … 2xl` t-shirt scale consumed by the component `padding`/`margin`/`gap` props
   - `radius.tokens.json`       — `radius.*` border-radius scale (rem; `full` is the `9999px` pill sentinel)
   - `shadow.tokens.json`       — `shadow.*` elevation + focus-ring scale (rem offsets/blur/spread)
   - `size.tokens.json`         — the unified component `size.*` scale (font/pad/gap/icon/height/…)
@@ -109,7 +109,7 @@ SCSS (structural CSS vars + base resets + the `light-dark()` theme — one impor
 element pins that element **and its subtree** to one scheme — no extra import is
 needed (the legacy `scss/themes/{light,dark}` entry points are kept only as
 no-op back-compat shims). Runtime theme switching is handled by
-`@mission-platform/components` (`BaseThemeProvider`/`useTheme`/`BaseThemeToggle`,
+`@mission-platform/components` (`ForgeThemeProvider`/`useTheme`/`ForgeThemeToggle`,
 plus `themeInitScript()` for a flash-free pre-paint init).
 
 Typography mixins (legacy — being retired in Phase 2):
@@ -122,7 +122,7 @@ Typography mixins (legacy — being retired in Phase 2):
 > **Phase 2 (in progress):** the SCSS `mp-font-*` mixin layer is being incrementally
 > retired in favour of composing the generated `--mp-font-*`, `--mp-line-height-*`
 > and `--mp-letter-spacing-*` CSS custom properties directly. New code should prefer
-> the CSS variables; `BaseTypography` (in `@mission-platform/components`) has already
+> the CSS variables; `ForgeTypography` (in `@mission-platform/components`) has already
 > been migrated as the first consumer.
 
 Plain CSS (no SCSS toolchain):

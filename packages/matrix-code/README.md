@@ -37,7 +37,7 @@ Like the encoder, the decoder is **synchronous** and **self-contained** with no 
 ## Supported symbologies
 
 | Symbology               | Notes                                                                                   |
-|-------------------------|-----------------------------------------------------------------------------------------|
+| ----------------------- | --------------------------------------------------------------------------------------- |
 | `datamatrix`            | Data Matrix ECC 200, single-data-region square symbols (10×10 … 26×26).                 |
 | `gs1datamatrix`         | The same, with a leading FNC1 codeword marking a GS1 Application Identifier stream.     |
 | `datamatrixrectangular` | Rectangular Data Matrix ECC 200 (8×18 … 16×48), including the two-region wide sizes.    |

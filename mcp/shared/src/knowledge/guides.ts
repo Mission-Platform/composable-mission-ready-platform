@@ -96,19 +96,19 @@ in the neutral JSX dialect (\`@mission-platform/forge\`) and compiled to **both 
 ## Import
 \`\`\`ts
 // Vue app
-import { BaseButton } from '@mission-platform/components/vue';
+import { ForgeButton } from '@mission-platform/components/vue';
 // React app
-import { BaseButton } from '@mission-platform/components/react';
+import { ForgeButton } from '@mission-platform/components/react';
 \`\`\`
 
 ## Use (Vue)
 \`\`\`vue
 <script setup lang="ts">
-import { BaseButton } from '@mission-platform/components/vue';
+import { ForgeButton } from '@mission-platform/components/vue';
 </script>
 
 <template>
-  <BaseButton variant="primary" size="md" @click="onClick">Save</BaseButton>
+  <ForgeButton variant="primary" size="md" @click="onClick">Save</ForgeButton>
 </template>
 \`\`\`
 
@@ -145,11 +145,11 @@ Promote only when composition or layout complexity genuinely grows.
 \`\`\`
 src/components/
 ├── atoms/
-│   └── base-input/
-│       ├── base-input.tsx          # write-once forge component
-│       ├── base-input.stories.tsx  # Storybook story
-│       ├── base-input.spec.ts      # Vitest unit/SSR parity test
-│       ├── base-input.module.scss  # optional co-located CSS module
+│   └── forge-input/
+│       ├── forge-input.tsx          # write-once forge component
+│       ├── forge-input.stories.tsx  # Storybook story
+│       ├── forge-input.spec.ts      # Vitest unit/SSR parity test
+│       ├── forge-input.module.scss  # optional co-located CSS module
 │       └── index.ts                # re-exports public symbols
 ├── molecules/
 ├── organisms/
@@ -167,11 +167,11 @@ Storybook titles follow:
 \`\`\`
 
 Examples:
-- \`Atoms/Forms/BaseInput\`
-- \`Atoms/Feedback/BaseSpinner\`
-- \`Molecules/Navigation/BaseBreadcrumb\`
-- \`Organisms/Data/BaseVirtualTable\`
-- \`Templates/Marketing/BaseHero\`
+- \`Atoms/Forms/ForgeInput\`
+- \`Atoms/Feedback/ForgeSpinner\`
+- \`Molecules/Navigation/ForgeBreadcrumb\`
+- \`Organisms/Data/ForgeVirtualTable\`
+- \`Templates/Marketing/ForgeHero\`
 - \`Pages/Settings/AccountSettingsPage\`
 
 \`Level\` is the capitalised plural of the atomic folder (\`Atoms\`, \`Pages\`).
@@ -396,7 +396,7 @@ skeleton: manifest with app scripts, \`tsconfig\` set (app + node), re-exported 
 7. \`pnpm install\`, then \`pnpm exec turbo run build --filter @mission-platform/<name>\`.
 
 ## For Cloudflare deployment
-Add a \`wrangler.jsonc\` and wire the \`@mission-platform/base-spa\` worker (see the my-care-notes app).`;
+Add a \`wrangler.jsonc\` and wire the \`@mission-platform/forge-spa\` worker (see the my-care-notes app).`;
 
 const APP_DEVELOPMENT = `# Developing an App
 
@@ -412,9 +412,9 @@ const APP_DEVELOPMENT = `# Developing an App
 - Lint/format & style checks mirror the package workflow.
 
 ## Deployment (Cloudflare)
-- Apps deploy to Cloudflare via \`wrangler\` with a \`base-spa\` worker serving static assets
+- Apps deploy to Cloudflare via \`wrangler\` with a \`forge-spa\` worker serving static assets
   with an SPA fallback. See \`deploy\`/\`deploy:staging\` scripts and \`wrangler.jsonc\`.
-- The app's \`turbo.json\` \`deploy\` task depends on \`@mission-platform/base-spa#build\`.`;
+- The app's \`turbo.json\` \`deploy\` task depends on \`@mission-platform/forge-spa#build\`.`;
 
 const WORKER_CREATION = `# Creating a Worker
 
@@ -497,7 +497,7 @@ pnpm add @mission-platform/components @mission-platform/tokens
 ## Component Usage
 With conditions set, use bare specifiers:
 \`\`\`ts
-import { BaseButton } from '@mission-platform/components';
+import { ForgeButton } from '@mission-platform/components';
 \`\`\`
 
 ## Design Token Overrides

@@ -1,0 +1,57 @@
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
+
+import { ForgeButton } from './forge-button';
+
+/**
+ * Exercises the **neutral** `ForgeButton` authored in this package, rendering it
+ * on both frameworks through the `@mission-platform/forge` runtime adapters. That
+ * keeps the assertions independent of the build-time plugin (whose React/Vue
+ * parity is covered in `@mission-platform/vite-plugin-forge`), while proving the
+ * component itself — mirroring the `@mission-platform/components` `ForgeButton`
+ * (nine variants, the `2xs → 2xl` size scale, and a loading spinner) — is
+ * correct and framework-portable.
+ */
+const ReactButton = toReactComponent(ForgeButton, 'Button');
+const VueButton = toVueComponent(ForgeButton, 'Button');
+
+describe('ForgeButton authors the same component for React and Vue', () => {
+  it('renders the variant and size modifiers to matching markup on both frameworks', async () => {
+    const react = renderToStaticMarkup(
+      createElement(ReactButton, { variant: 'secondary', size: 'lg', disabled: true }, 'Save'),
+    );
+    const vue = await renderToString(
+      createSSRApp({
+        render: () => vueH(VueButton, { variant: 'secondary', size: 'lg', disabled: true }, () => 'Save'),
+      }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('<button');
+      expect(html).toContain('forge-button--secondary');
+      expect(html).toContain('forge-button--lg');
+      expect(html).toContain('Save');
+    }
+  });
+
+  it('renders the accessible loading spinner on both frameworks', async () => {
+    const react = renderToStaticMarkup(createElement(ReactButton, { loading: true }, 'Save'));
+    const vue = await renderToString(
+      createSSRApp({
+        render: () => vueH(VueButton, { loading: true }, () => 'Save'),
+      }),
+    );
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('forge-button--loading');
+      expect(html).toContain('forge-button__spinner');
+      expect(html).toContain('role="status"');
+      expect(html).toContain('aria-label="Loading…"');
+    }
+  });
+});

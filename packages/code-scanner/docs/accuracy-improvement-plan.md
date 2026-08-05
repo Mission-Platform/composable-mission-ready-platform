@@ -191,8 +191,7 @@ Accuracy work must be measured, not asserted by eye.
    decode cooperate in one Rust call.
 4. **Phase 3 — rotation/skew, symbology disambiguation, Aztec, multi-symbol (in progress).** The 1D symbology
    disambiguation (§2 item 5) has landed. Remaining:
-   Data Matrix/1D rotation-skew tolerance (item 4), an Aztec locator (item 6), and multiple-symbol + ROI scanning (item
-   7) — each landed behind its own degradation-matrix delta.
+   Data Matrix/1D rotation-skew tolerance (item 4), an Aztec locator (item 6), and multiple-symbol + ROI scanning (item 7) — each landed behind its own degradation-matrix delta.
 
 ## 5. Documentation follow-ups
 

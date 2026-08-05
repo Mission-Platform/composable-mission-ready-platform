@@ -1,0 +1,177 @@
+/**
+ * Styling for the write-once `ForgeNavbar`.
+ *
+ * `ForgeNavbar` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its appearance ships in the built package CSS (the two-stage
+ * compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package. Only `var(--mp-*)` design-token custom
+ * properties are used. The responsive `sm` breakpoint is consumed through the
+ * platform breakpoint design tokens via the `@mission-platform/tokens` `bp-up` /
+ * `bp-down` mixins, so the thresholds always track the token source of truth.
+ */
+
+@use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
+
+@layer mp.components {
+  .forge-navbar-host {
+    display: contents;
+  }
+
+  .forge-navbar {
+    background-color: var(--mp-color-bg-surface);
+    border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    z-index: 100;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+
+    @supports (container-type: inline-size) {
+      container: forge-navbar / inline-size;
+    }
+
+    &--sticky {
+      position: sticky;
+      top: 0;
+    }
+
+    &__container {
+      display: flex;
+      align-items: center;
+      height: var(--mp-size-height-xl);
+      padding: 0 var(--mp-spacing-4);
+      gap: var(--mp-spacing-3);
+      max-width: 100%;
+
+      @include bp.bp-up('sm') {
+        padding: 0 var(--mp-spacing-6);
+        gap: var(--mp-spacing-4);
+      }
+
+      @container forge-navbar (width >= 60rem) {
+        padding: 0 var(--mp-spacing-8);
+        gap: var(--mp-spacing-6);
+      }
+    }
+
+    &__start {
+      display: flex;
+      align-items: center;
+      gap: var(--mp-spacing-4);
+      flex-shrink: 0;
+    }
+
+    &__center {
+      display: flex;
+      align-items: center;
+      gap: var(--mp-spacing-3);
+      flex: 1;
+
+      @include bp.bp-up('sm') {
+        gap: var(--mp-spacing-4);
+      }
+
+      @container forge-navbar (width >= 60rem) {
+        gap: var(--mp-spacing-6);
+      }
+
+      &--start {
+        justify-content: flex-start;
+      }
+
+      &--center {
+        justify-content: center;
+      }
+
+      &--end {
+        justify-content: flex-end;
+      }
+    }
+
+    &__end {
+      display: flex;
+      align-items: center;
+      gap: var(--mp-spacing-2);
+      flex-shrink: 0;
+    }
+
+    &__brand {
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+
+    &__hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      margin-left: auto;
+      gap: var(--mp-spacing-1);
+      width: var(--mp-size-height-md);
+      height: var(--mp-size-height-md);
+      padding: var(--mp-spacing-2);
+      background: none;
+      border: none;
+      border-radius: var(--mp-radius-md);
+      cursor: pointer;
+      color: var(--mp-color-text-primary);
+      flex-shrink: 0;
+
+      &:hover {
+        background-color: var(--mp-color-bg-subtle, var(--mp-color-bg-surface));
+      }
+
+      &:focus-visible {
+        outline: none;
+        box-shadow: var(--mp-shadow-focus-primary, 0 0 0 2px var(--mp-color-primary-default));
+      }
+    }
+
+    &__hamburger-bar {
+      display: block;
+      width: 100%;
+      height: 2px;
+      border-radius: 1px;
+      background-color: currentcolor;
+    }
+  }
+
+  .forge-navbar__mobile-nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mp-spacing-1);
+    padding: var(--mp-spacing-2) var(--mp-spacing-3);
+    height: 100%;
+  }
+
+  .forge-navbar__mobile-nav-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mp-spacing-1);
+    flex: 1;
+  }
+
+  .forge-navbar__mobile-nav-end {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mp-spacing-2);
+    padding-top: var(--mp-spacing-4);
+    border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+  }
+
+  /* Collapse into the mobile drawer. The transition point is configurable via
+     the `mobileBreakpoint` prop, which drives a reactive `matchMedia` query in
+     the component and toggles the `--mobile` modifier — so the collapse is
+     class-driven rather than tied to a fixed CSS breakpoint. In the mobile
+     state the centre / end regions hide and the hamburger appears; otherwise the
+     hamburger stays hidden (its default) and the full regions show inline. */
+  .forge-navbar--mobile {
+    .forge-navbar__center,
+    .forge-navbar__end {
+      display: none;
+    }
+
+    .forge-navbar__hamburger {
+      display: flex;
+    }
+  }
+}

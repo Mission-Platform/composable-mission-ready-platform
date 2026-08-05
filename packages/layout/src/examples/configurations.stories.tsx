@@ -1,6 +1,6 @@
 import { h } from '@mission-platform/forge';
 
-import { VerticalLayout } from '@mission-platform/layouts';
+import { ForgeVerticalLayout } from '@mission-platform/layouts';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
@@ -8,19 +8,19 @@ import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
  * **Configurations** — example settings / preferences layouts assembled from the
  * `@mission-platform/layouts` primitives.
  *
- * These use the cross-framework {@link VerticalLayout}: a `start` column holds
+ * These use the cross-framework {@link ForgeVerticalLayout}: a `start` column holds
  * the settings section nav, and the main content holds the active settings
  * pane.
  */
 const meta = {
   title: 'Layouts/Examples/Configurations',
-  component: VerticalLayout,
+  component: ForgeVerticalLayout,
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
         component:
-          'Settings layouts built from `@mission-platform/layouts`: a `VerticalLayout` puts a sticky section-nav in the `start` column beside the active settings pane in the main content. The nav stays inline above `breakpoint` and collapses to an overlay drawer below it. Presentational only — the controls are token-styled placeholders.',
+          'Settings layouts built from `@mission-platform/layouts`: a `ForgeVerticalLayout` puts a sticky section-nav in the `start` column beside the active settings pane in the main content. The nav stays inline above `breakpoint` and collapses to an overlay drawer below it. Presentational only — the controls are token-styled placeholders.',
       },
     },
   },
@@ -28,7 +28,7 @@ const meta = {
     breakpoint: { control: 'inline-radio', options: ['xs', 'sm', 'md', 'lg', 'xl'] },
   },
   args: { breakpoint: 'xs', startSize: 'xs', startTitle: 'Settings' },
-} satisfies Meta<typeof VerticalLayout>;
+} satisfies Meta<typeof ForgeVerticalLayout>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -86,5 +86,12 @@ const settingsPane = () => (
 
 /** A two-pane settings screen: a section nav rail beside the active configuration pane. */
 export const SettingsTwoPane: Story = {
-  render: (arguments_) => <VerticalLayout {...arguments_} start={settingsNav()}>{settingsPane()}</VerticalLayout>,
+  render: (arguments_) => (
+    <ForgeVerticalLayout
+      {...arguments_}
+      start={settingsNav()}
+    >
+      {settingsPane()}
+    </ForgeVerticalLayout>
+  ),
 };

@@ -12,7 +12,7 @@ The scanner runs the **entire pipeline in one Rust/WebAssembly call**
 modules never cross back into JS to be decoded. It does this by linking each format's decoder crate directly:
 
 | Format               | Decoder crate                         |
-|----------------------|---------------------------------------|
+| -------------------- | ------------------------------------- |
 | QR                   | `mission-platform-qr-code-decode`     |
 | Data Matrix          | `mission-platform-matrix-code-decode` |
 | Aztec (compact)      | `mission-platform-matrix-code-decode` |
@@ -82,7 +82,7 @@ import { CodeScanner } from '@mission-platform/code-scanner/vue';
 ### Props
 
 | Prop             | Type                           | Default         | Description                                            |
-|------------------|--------------------------------|-----------------|--------------------------------------------------------|
+| ---------------- | ------------------------------ | --------------- | ------------------------------------------------------ |
 | `facingMode`     | `'environment' \| 'user'`      | `'environment'` | Which camera to prefer for the live stream.            |
 | `scanIntervalMs` | `number`                       | `300`           | Milliseconds between live-camera frame scans.          |
 | `showFileUpload` | `boolean`                      | `true`          | Show the "upload image" control.                       |

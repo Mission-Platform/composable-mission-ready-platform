@@ -211,7 +211,7 @@ export function registerTools(server: McpServer): void {
       description:
         'Describe how to use a component: its exported symbols, props interface, doc comment, available Storybook stories, and Vue/React import snippets.',
       inputSchema: {
-        component: z.string().describe('Component name or slug, e.g. "BaseButton" or "base-button".'),
+        component: z.string().describe('Component name or slug, e.g. "ForgeButton" or "forge-button".'),
       },
     },
     async (args) => {
@@ -464,18 +464,13 @@ export function registerTools(server: McpServer): void {
       description:
         'Generate a convention-compliant atomic-design component under packages/<package>/src/components/<level>/<name>/ (tsx + stories + spec + folder index, barrel update). Levels: atom|molecule|organism|template|page. Story title <Level>/<Area>/<Comp>. Dry-run unless apply=true.',
       inputSchema: {
-        name: z.string().describe('Kebab-case component name, e.g. "base-input".'),
-        level: z
-          .enum(['atom', 'molecule', 'organism', 'template', 'page'])
-          .describe('Atomic design level (singular).'),
+        name: z.string().describe('Kebab-case component name, e.g. "forge-input".'),
+        level: z.enum(['atom', 'molecule', 'organism', 'template', 'page']).describe('Atomic design level (singular).'),
         area: z
           .string()
           .optional()
           .describe('Functional area for the Storybook title (e.g. "Forms", "Data"). Defaults to "General".'),
-        package: z
-          .string()
-          .optional()
-          .describe('Target package folder under packages/ (default: "components").'),
+        package: z.string().optional().describe('Target package folder under packages/ (default: "components").'),
         description: z.string().optional().describe('Short component description.'),
         apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
       },

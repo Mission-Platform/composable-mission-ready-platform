@@ -1,5 +1,5 @@
 /// <reference types="vitest/config" />
-import { defineAppConfig } from '@mission-platform/vite-config';
+import { defineFrameworkAppConfig } from '@mission-platform/vite-config';
 import i18nPlugin from '@mission-platform/vite-plugin-i18n';
 import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 import { type Plugin, type UserConfig } from 'vite';
@@ -100,7 +100,8 @@ interface SsgUserConfig extends UserConfig {
   };
 }
 
-const config = defineAppConfig({
+const config = defineFrameworkAppConfig({
+  framework: 'vue',
   overrides: {
     plugins: [
       i18nPlugin({ defaultLocale: 'en' }),

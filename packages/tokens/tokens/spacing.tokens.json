@@ -1,5 +1,5 @@
 {
-  "$description": "Spacing scale for Mission Platform — margin, padding and gap steps. All rem values are relative to the 14px root font-size. The numeric steps are the raw 4px base-unit scale; the named `2xs … 2xl` steps are the canonical t-shirt scale consumed by the component `padding`/`margin`/`gap` props.",
+  "$description": "Spacing scale for Mission Platform — margin, padding and gap steps. All rem values are relative to the 14px root font-size. The numeric steps are the raw 4px forge-unit scale; the named `2xs … 2xl` steps are the canonical t-shirt scale consumed by the component `padding`/`margin`/`gap` props.",
   "spacing": {
     "$description": "Spacing scale for margin, padding and gap. The numeric keys are an ~0.286rem (4px) base unit step; the named `2xs … 2xl` keys are the canonical t-shirt scale used by the components' `padding`/`margin`/`gap` props. All rem values are relative to the 14px root.",
     "$type": "dimension",

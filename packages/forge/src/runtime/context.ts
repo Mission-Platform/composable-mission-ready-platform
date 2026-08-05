@@ -10,11 +10,11 @@
  * ```tsx
  * const ThemeContext = createContext<Theme>('light');
  *
- * export function BaseThemeProvider(properties: Properties): MpElement {
+ * export function ForgeThemeProvider(properties: Properties): MpElement {
  *   return <ThemeContext.Provider value={properties.theme}><Slot /></ThemeContext.Provider>;
  * }
  *
- * export function BaseThemedButton(properties: Properties): MpElement {
+ * export function ForgeThemedButton(properties: Properties): MpElement {
  *   const theme = useContext(ThemeContext);
  *   return <button class={`btn btn--${theme}`}><Slot /></button>;
  * }

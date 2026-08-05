@@ -6,6 +6,6 @@
 // (`crates/barcode-encode` / `crates/barcode-decode`, sharing
 // `crates/barcode-common`) into two wasm modules under `generated/encode` and
 // `generated/decode`. The per-feature `component/` sibling (a write-once
-// `BaseBarcode`) is added in a follow-up and re-exported here when present.
+// `ForgeBarcode`) is added in a follow-up and re-exported here when present.
 export { type Barcode, type BarcodeSymbology, encodeBarcode, encodeBarcodeAsync } from './encoder';
 export { decodeBarcode, decodeBarcodeAsync } from './decoder';

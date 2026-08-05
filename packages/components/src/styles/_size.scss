@@ -19,7 +19,7 @@
 
 @layer mp.components {
   @each $step in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
-    .base-size--#{$step} {
+    .forge-size--#{$step} {
       font-size: var(--mp-size-font-#{$step});
     }
   }

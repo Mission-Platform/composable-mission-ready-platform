@@ -20,7 +20,7 @@
 
 /* the underlying SCSS `$`-variables, so a runtime token override (e.g. via */
 
-/* `BaseThemeComposer`) flows through automatically. */
+/* `ForgeThemeComposer`) flows through automatically. */
 
 /* ============================================================================= */
 
@@ -186,7 +186,7 @@
 
 /* ----------------------------------------------------------------------------- */
 
-/* Variant mixins — one mixin per BaseTypography variant */
+/* Variant mixins — one mixin per ForgeTypography variant */
 
 /* These are the recommended API for component authors. */
 

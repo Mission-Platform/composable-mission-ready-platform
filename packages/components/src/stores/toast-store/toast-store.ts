@@ -1,10 +1,10 @@
 /**
  * Framework-neutral, observable toast store shared by the write-once feedback
- * components (`BaseToast`, `BaseToastContainer`).
+ * components (`ForgeToast`, `ForgeToastContainer`).
  *
  * The original `@mission-platform/components` toast system is a global reactive
  * Vue store (`useToast` in `src/composables/use-toast.ts`) rendered by a
- * `BaseToastContainer` SFC. The neutral JSX dialect (and the two-stage compiler)
+ * `ForgeToastContainer` SFC. The neutral JSX dialect (and the two-stage compiler)
  * has no module-level Vue reactivity, so the same behaviour is modelled instead
  * with a single **observable singleton** store: a plain module (no framework
  * reactivity) holding the active toasts, owning the auto-dismiss timers, and
@@ -12,7 +12,7 @@
  * `show`/`info`/`success`/`warning`/`error`/`dismiss`/`clear` surface of the Vue
  * `useToast` composable.
  *
- * `BaseToastContainer` subscribes to the store from its body with the neutral
+ * `ForgeToastContainer` subscribes to the store from its body with the neutral
  * `useState`/`useEffect` hooks (`const [toasts, setToasts] = useState(getToastsSnapshot());
  * useEffect(() => subscribeToasts(() => setToasts(getToastsSnapshot())), [])`),
  * which the compiler translates to a `ref` + lifecycle on Vue and keeps as React
@@ -176,7 +176,7 @@ export interface UseToastReturn {
 
 /**
  * Imperative helpers to show and dismiss toasts, mirroring the Vue
- * `useToast` composable. Render a single `BaseToastContainer` near the root of
+ * `useToast` composable. Render a single `ForgeToastContainer` near the root of
  * your app to display them.
  */
 export function useToast(): UseToastReturn {

@@ -1,6 +1,6 @@
 import { h } from '@mission-platform/forge';
 
-import { VerticalLayout } from '@mission-platform/layouts';
+import { ForgeVerticalLayout } from '@mission-platform/layouts';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
@@ -8,19 +8,19 @@ import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
  * **Mapping** — example map-centric layouts assembled from the
  * `@mission-platform/layouts` primitives.
  *
- * These pair the cross-framework {@link VerticalLayout} (a `start` results /
+ * These pair the cross-framework {@link ForgeVerticalLayout} (a `start` results /
  * layers panel beside a full-bleed map area) with a token-styled map canvas and
  * floating, absolutely-positioned map controls.
  */
 const meta = {
   title: 'Layouts/Examples/Mapping',
-  component: VerticalLayout,
+  component: ForgeVerticalLayout,
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
         component:
-          'Map-centric layouts built from `@mission-platform/layouts`: a `VerticalLayout` puts a results/layers panel in the `start` column beside a full-bleed map area with floating (absolutely-positioned) zoom controls. The panel stays inline above `breakpoint` and collapses to an overlay drawer below it. The map canvas is a placeholder — drop in `@mission-platform/map` for the real thing.',
+          'Map-centric layouts built from `@mission-platform/layouts`: a `ForgeVerticalLayout` puts a results/layers panel in the `start` column beside a full-bleed map area with floating (absolutely-positioned) zoom controls. The panel stays inline above `breakpoint` and collapses to an overlay drawer below it. The map canvas is a placeholder — drop in `@mission-platform/map` for the real thing.',
       },
     },
   },
@@ -28,7 +28,7 @@ const meta = {
     breakpoint: { control: 'inline-radio', options: ['xs', 'sm', 'md', 'lg', 'xl'] },
   },
   args: { breakpoint: 'xs', startSize: 'xs', startTitle: 'Results' },
-} satisfies Meta<typeof VerticalLayout>;
+} satisfies Meta<typeof ForgeVerticalLayout>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -44,7 +44,8 @@ const MAP_CANVAS = {
   minHeight: '24rem',
   borderRadius: 'var(--mp-radius-sm)',
   backgroundColor: 'var(--mp-color-bg-sunken)',
-  backgroundImage: 'linear-gradient(var(--mp-color-border-default) 1px, transparent 1px), linear-gradient(90deg, var(--mp-color-border-default) 1px, transparent 1px)',
+  backgroundImage:
+    'linear-gradient(var(--mp-color-border-default) 1px, transparent 1px), linear-gradient(90deg, var(--mp-color-border-default) 1px, transparent 1px)',
   backgroundSize: '2rem 2rem',
 };
 const CONTROLS = {
@@ -89,8 +90,18 @@ const mapArea = () => (
     <div style={MAP_CANVAS}>
       <div style={PIN}>3 sites</div>
       <div style={CONTROLS}>
-        <button type="button" style={CONTROL_BTN}>+</button>
-        <button type="button" style={CONTROL_BTN}>−</button>
+        <button
+          type="button"
+          style={CONTROL_BTN}
+        >
+          +
+        </button>
+        <button
+          type="button"
+          style={CONTROL_BTN}
+        >
+          −
+        </button>
       </div>
     </div>
   </div>
@@ -98,10 +109,17 @@ const mapArea = () => (
 
 /** A map view with a results/layers panel beside a full-bleed map canvas and floating controls. */
 export const MapWithSidebar: Story = {
-  render: (arguments_) => <VerticalLayout {...arguments_} start={resultsPanel()}>{mapArea()}</VerticalLayout>,
+  render: (arguments_) => (
+    <ForgeVerticalLayout
+      {...arguments_}
+      start={resultsPanel()}
+    >
+      {mapArea()}
+    </ForgeVerticalLayout>
+  ),
 };
 
 /** A full-bleed map with no side panel — just the canvas and its floating controls. */
 export const MapFullBleed: Story = {
-  render: (arguments_) => <VerticalLayout {...arguments_}>{mapArea()}</VerticalLayout>,
+  render: (arguments_) => <ForgeVerticalLayout {...arguments_}>{mapArea()}</ForgeVerticalLayout>,
 };

@@ -2,13 +2,13 @@
 //
 // The modal's visibility is driven entirely by the URL query (`?overlay=…`).
 // These tests mount the real component with the heavy/contextual dependencies
-// stubbed, and assert the `BaseModal` it renders is open for the relevant
+// stubbed, and assert the `ForgeModal` it renders is open for the relevant
 // overlay query and stays closed otherwise.
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createApp, defineComponent, h, ref } from 'vue';
 
-// Capture the props the component passes to BaseModal.
+// Capture the props the component passes to ForgeModal.
 let receivedModalProperties: Record<string, unknown> = {};
 
 const StubComponent = defineComponent({
@@ -18,8 +18,8 @@ const StubComponent = defineComponent({
   },
 });
 
-const BaseModalStub = defineComponent({
-  name: 'BaseModalStub',
+const ForgeModalStub = defineComponent({
+  name: 'ForgeModalStub',
   // Mirror the public props the modal relies on.
   props: ['open', 'title', 'size'],
   setup(properties, { slots }) {
@@ -32,12 +32,12 @@ const BaseModalStub = defineComponent({
 const routeQuery = ref<Record<string, unknown>>({});
 
 vi.mock('@mission-platform/components/vue', () => ({
-  BaseButton: StubComponent,
-  BaseInput: StubComponent,
-  BaseMonacoEditor: StubComponent,
-  BaseModal: BaseModalStub,
-  BaseStack: StubComponent,
-  BaseTypography: StubComponent,
+  ForgeButton: StubComponent,
+  ForgeInput: StubComponent,
+  ForgeMonacoEditor: StubComponent,
+  ForgeModal: ForgeModalStub,
+  ForgeStack: StubComponent,
+  ForgeTypography: StubComponent,
 }));
 
 vi.mock('@mission-platform/i18n/vue', () => ({

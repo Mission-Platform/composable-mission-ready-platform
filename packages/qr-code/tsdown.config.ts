@@ -37,6 +37,6 @@ export default [
     frameworks: ['vue', 'react', 'solid', 'svelte', 'web-components'],
     componentsModule: path.resolve(import.meta.dirname, 'src/components/index.ts'),
     name: 'MissionPlatformQrCode',
-    external: ['@mission-platform/qr-code'],
+    external: ['@mission-platform/qr-code', '@mission-platform/qr-code/encoder'],
   }),
 ];

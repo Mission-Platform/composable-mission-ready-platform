@@ -66,17 +66,17 @@ describe('tools', () => {
   it('returns the atomic component design guide', async () => {
     const body = await callTool('get_guide', { area: 'atomic-component-design' });
     assert.match(body, /Atomic Component Design/);
-    assert.match(body, /Atoms\/Forms\/BaseInput/);
+    assert.match(body, /Atoms\/Forms\/ForgeInput/);
   });
 
   it('lists components from the components package with atomic level', async () => {
     const body = await callTool('list_components');
-    assert.match(body, /base-button/);
+    assert.match(body, /forge-button/);
     assert.match(body, /"level": "atoms"/);
   });
 
   it('describes a component with its props and imports', async () => {
-    const body = await callTool('get_component_usage', { component: 'BaseButton' });
+    const body = await callTool('get_component_usage', { component: 'ForgeButton' });
     assert.match(body, /@mission-platform\/components\/vue/);
     assert.match(body, /ButtonProperties|Props/);
     assert.match(body, /Level: atoms/);
@@ -84,7 +84,7 @@ describe('tools', () => {
 
   it('lists packages, apps and workers', async () => {
     assert.match(await callTool('list_packages'), /@mission-platform\/components/);
-    assert.match(await callTool('list_workers'), /@mission-platform\/base-spa/);
+    assert.match(await callTool('list_workers'), /@mission-platform\/forge-spa/);
     assert.match(await callTool('list_apps'), /@mission-platform\/my-care-notes/);
   });
 
@@ -108,7 +108,7 @@ describe('tools', () => {
 
   it('scaffolds a component as a dry run without writing files', async () => {
     const body = await callTool('scaffold_component', {
-      name: 'base-mcp-probe',
+      name: 'forge-mcp-probe',
       level: 'atom',
       area: 'Forms',
     });
@@ -120,10 +120,10 @@ describe('tools', () => {
     };
     assert.equal(result.applied, false);
     assert.equal(result.levelFolder, 'atoms');
-    assert.equal(result.storyTitle, 'Atoms/Forms/BaseMcpProbe');
-    assert.ok(result.files.some((file) => file.endsWith('base-mcp-probe.tsx')));
-    assert.ok(result.files.some((file) => file.endsWith('base-mcp-probe.stories.tsx')));
-    assert.ok(result.files.some((file) => file.endsWith('base-mcp-probe.spec.ts')));
+    assert.equal(result.storyTitle, 'Atoms/Forms/ForgeMcpProbe');
+    assert.ok(result.files.some((file) => file.endsWith('forge-mcp-probe.tsx')));
+    assert.ok(result.files.some((file) => file.endsWith('forge-mcp-probe.stories.tsx')));
+    assert.ok(result.files.some((file) => file.endsWith('forge-mcp-probe.spec.ts')));
   });
 
   it('scaffolds a composable as a dry run without writing files', async () => {

@@ -1,0 +1,27 @@
+/**
+ * Demo styling for the write-once `ForgeVirtualList`.
+ *
+ * The component sizes and positions itself via inline styles only; this
+ * co-located CSS Module just dresses the slotted demo rows (token-driven row
+ * boxes) so the Storybook examples are legible.
+ *
+ * The rules live in the shared `mp.components` cascade layer (matching the
+ * `@mission-platform/components` package). The stylesheet is a CSS Module,
+ * consumed through its hashed class map by `forge-virtual-list.stories.tsx`.
+ */
+
+@layer mp.components {
+  .virtual-list-demo-row {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    height: 100%;
+    padding: var(--mp-spacing-2) var(--mp-spacing-4);
+    border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    color: var(--mp-color-text-primary);
+  }
+
+  .virtual-list-demo-row--alt {
+    background: var(--mp-color-surface-raised);
+  }
+}

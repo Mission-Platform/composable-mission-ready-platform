@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { centerDiffers, scalarDiffers } from './camera';
 
-// These predicates guard `BaseMapLibre`'s camera-sync effects: they must treat a
+// These predicates guard `ForgeMapLibre`'s camera-sync effects: they must treat a
 // value echoed back from the map (the controlled `onMove` round-trip) as
 // unchanged so it is never re-applied, which is what stops the map from drifting
 // north and zooming in forever.

@@ -23,21 +23,33 @@ class CounterElement extends ForgeElement {
   }
 
   render(): TemplateResult {
-    return html`<div class="counter">
-      <span class="label">${this.label}</span>
-      <button
-        @click=${() => {
-          this.count = this.count + 1;
-        }}
-      >
-        +
-      </button>
-      <span class="value">${this.count}</span>
-      ${this.count > 0 ? html`<em class="positive">positive</em>` : nothing}
-      <ul>
-        ${[1, 2, 3].map((n) => html`<li>${n}</li>`)}
-      </ul>
-    </div>`;
+    return html`
+      <div class="counter">
+        <span class="label">${this.label}</span>
+        <button
+          @click=${() => {
+            this.count = this.count + 1;
+          }}
+        >
+          +
+        </button>
+        <span class="value">${this.count}</span>
+        ${
+          this.count > 0
+            ? html`
+                <em class="positive">positive</em>
+              `
+            : nothing
+        }
+        <ul>
+          ${[1, 2, 3].map(
+            (n) => html`
+              <li>${n}</li>
+            `,
+          )}
+        </ul>
+      </div>
+    `;
   }
 }
 
@@ -66,14 +78,16 @@ describe('the native `html` tagged template + `render`', () => {
     const container = document.createElement('div');
     const clicks: string[] = [];
     render(
-      html`<button
-        class=${'primary'}
-        ?disabled=${true}
-        .title=${'go'}
-        @click=${() => clicks.push('hit')}
-      >
-        press
-      </button>`,
+      html`
+        <button
+          class=${'primary'}
+          ?disabled=${true}
+          .title=${'go'}
+          @click=${() => clicks.push('hit')}
+        >
+          press
+        </button>
+      `,
       container,
     );
     const button = container.querySelector('button');
@@ -87,15 +101,40 @@ describe('the native `html` tagged template + `render`', () => {
 
   it('renders `nothing` and nested templates/arrays in child position', () => {
     const container = document.createElement('div');
-    render(html`<div>${nothing}${html`<span>a</span>`}${[html`<i>b</i>`, html`<i>c</i>`]}</div>`, container);
+    render(
+      html`
+        <div>
+          ${nothing}${html`
+            <span>a</span>
+          `}${[
+            html`
+              <i>b</i>
+            `,
+            html`
+              <i>c</i>
+            `,
+          ]}
+        </div>
+      `,
+      container,
+    );
     const root = container.querySelector('div');
     expect(root?.querySelector('span')?.textContent).toBe('a');
-    expect([...root?.querySelectorAll('i') ?? []].map((node) => node.textContent)).toEqual(['b', 'c']);
+    expect([...(root?.querySelectorAll('i') ?? [])].map((node) => node.textContent)).toEqual(['b', 'c']);
   });
 
   it('drops an attribute whose value is `false`/`null`/`nothing`', () => {
     const container = document.createElement('div');
-    render(html`<a href=${false} title=${nothing} rel=${'noopener'}></a>`, container);
+    render(
+      html`
+        <a
+          href=${false}
+          title=${nothing}
+          rel=${'noopener'}
+        ></a>
+      `,
+      container,
+    );
     const anchor = container.querySelector('a');
     expect(anchor?.hasAttribute('href')).toBe(false);
     expect(anchor?.hasAttribute('title')).toBe(false);

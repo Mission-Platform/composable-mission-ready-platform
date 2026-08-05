@@ -1,6 +1,6 @@
 import { h } from '@mission-platform/forge';
 
-import { ApplicationLayout, Container } from '@mission-platform/layouts';
+import { ForgeApplicationLayout, ForgeContainer } from '@mission-platform/layouts';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
@@ -9,23 +9,23 @@ import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
  * `@mission-platform/layouts` primitives.
  *
  * These show the chrome a routed app hangs around its router outlet: a top nav
- * inside the {@link ApplicationLayout}, a breadcrumb trail and/or a tab strip
- * for sub-routes inside a {@link Container}, and a content region standing in
+ * inside the {@link ForgeApplicationLayout}, a breadcrumb trail and/or a tab strip
+ * for sub-routes inside a {@link ForgeContainer}, and a content region standing in
  * for the router outlet. Presentational only.
  */
 const meta = {
   title: 'Layouts/Examples/Routing',
-  component: ApplicationLayout,
+  component: ForgeApplicationLayout,
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
         component:
-          'Navigation-shell layouts built from `@mission-platform/layouts`: an `ApplicationLayout` top nav over a `Container` that carries a breadcrumb trail and a tab strip for sub-routes, plus a content region standing in for the router outlet. Presentational only — bind the links/tabs to `@mission-platform/router` in a real app.',
+          'Navigation-shell layouts built from `@mission-platform/layouts`: an `ForgeApplicationLayout` top nav over a `ForgeContainer` that carries a breadcrumb trail and a tab strip for sub-routes, plus a content region standing in for the router outlet. Presentational only — bind the links/tabs to `@mission-platform/router` in a real app.',
       },
     },
   },
-} satisfies Meta<typeof ApplicationLayout>;
+} satisfies Meta<typeof ForgeApplicationLayout>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -76,7 +76,7 @@ const OUTLET = {
 /** A routed app shell with a top nav and a breadcrumb trail above the router outlet. */
 export const Breadcrumbs: Story = {
   render: () => (
-    <ApplicationLayout
+    <ForgeApplicationLayout
       style={{ minHeight: '28rem' }}
       navbar={
         <div style={NAVBAR}>
@@ -88,13 +88,22 @@ export const Breadcrumbs: Story = {
       }
       content={
         <div style={CONTENT}>
-          <Container variant="responsive">
-            <nav aria-label="Breadcrumb" style={BREADCRUMB}><span>Projects</span><span>/</span><span>Apollo</span><span>/</span><span>Overview</span></nav>
+          <ForgeContainer variant="responsive">
+            <nav
+              aria-label="Breadcrumb"
+              style={BREADCRUMB}
+            >
+              <span>Projects</span>
+              <span>/</span>
+              <span>Apollo</span>
+              <span>/</span>
+              <span>Overview</span>
+            </nav>
             <div style={OUTLET}>
               <h1 style={{ marginTop: 0 }}>Apollo · Overview</h1>
               <p>The router outlet renders here for the matched route.</p>
             </div>
-          </Container>
+          </ForgeContainer>
         </div>
       }
     />
@@ -104,15 +113,30 @@ export const Breadcrumbs: Story = {
 /** A routed detail page with a tab strip switching between sibling sub-routes. */
 export const TabbedSections: Story = {
   render: () => (
-    <ApplicationLayout
+    <ForgeApplicationLayout
       style={{ minHeight: '28rem' }}
-      navbar={<div style={NAVBAR}><strong>Mission Platform</strong><a style={NAV_LINK_ACTIVE}>Projects</a></div>}
+      navbar={
+        <div style={NAVBAR}>
+          <strong>Mission Platform</strong>
+          <a style={NAV_LINK_ACTIVE}>Projects</a>
+        </div>
+      }
       content={
         <div style={CONTENT}>
-          <Container variant="responsive">
-            <nav aria-label="Breadcrumb" style={BREADCRUMB}><span>Projects</span><span>/</span><span>Apollo</span></nav>
+          <ForgeContainer variant="responsive">
+            <nav
+              aria-label="Breadcrumb"
+              style={BREADCRUMB}
+            >
+              <span>Projects</span>
+              <span>/</span>
+              <span>Apollo</span>
+            </nav>
             <h1 style={{ marginTop: 0 }}>Apollo</h1>
-            <nav aria-label="Sections" style={TABS}>
+            <nav
+              aria-label="Sections"
+              style={TABS}
+            >
               <a style={TAB_ACTIVE}>Overview</a>
               <a style={TAB}>Activity</a>
               <a style={TAB}>Members</a>
@@ -121,7 +145,7 @@ export const TabbedSections: Story = {
             <div style={OUTLET}>
               <p>The active tab's nested route renders in this outlet.</p>
             </div>
-          </Container>
+          </ForgeContainer>
         </div>
       }
     />

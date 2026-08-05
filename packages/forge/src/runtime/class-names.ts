@@ -11,7 +11,7 @@
  *
  * ```tsx
  * h('span', {
- *   class: classNames('base-badge', `base-badge--${variant}`, { 'base-badge--pill': pill }),
+ *   class: classNames('forge-badge', `forge-badge--${variant}`, { 'forge-badge--pill': pill }),
  * });
  * ```
  *

@@ -1,0 +1,67 @@
+/**
+ * Styling for the write-once `ForgeBreadcrumb`.
+ *
+ * `ForgeBreadcrumb` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its BEM appearance ships in the built package CSS (the
+ * two-stage compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package.
+ */
+
+@layer mp.components {
+  .forge-breadcrumb {
+    @supports (container-type: inline-size) {
+      container: forge-breadcrumb / inline-size;
+    }
+
+    &__list {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--mp-spacing-1);
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      @container forge-breadcrumb (width >= 30rem) {
+        gap: var(--mp-spacing-2);
+      }
+    }
+
+    &__item {
+      display: flex;
+      align-items: center;
+      gap: var(--mp-spacing-1);
+
+      @container forge-breadcrumb (width >= 30rem) {
+        gap: var(--mp-spacing-2);
+      }
+    }
+
+    &__separator {
+      color: var(--mp-color-text-tertiary);
+      user-select: none;
+    }
+
+    &__link {
+      color: var(--mp-color-text-secondary);
+      text-decoration: underline;
+
+      &:hover {
+        color: var(--mp-color-text-primary);
+      }
+
+      &:focus-visible {
+        outline: none;
+        border-radius: var(--mp-radius-xs);
+        box-shadow: var(--mp-shadow-focus-primary);
+      }
+    }
+
+    &__current {
+      display: inline-flex;
+      align-items: center;
+    }
+  }
+}

@@ -2,8 +2,8 @@
 
 Framework-agnostic scheduler core for Mission Platform. It holds the **single
 implementation** of the heavy, framework-independent calendar logic that both
-the Vue `@mission-platform/components` `BaseScheduler` (via `useScheduler`) and
-the write-once `@mission-platform/components` `BaseScheduler` consume, so the
+the Vue `@mission-platform/components` `ForgeScheduler` (via `useScheduler`) and
+the write-once `@mission-platform/components` `ForgeScheduler` consume, so the
 two frameworks stay in parity by construction rather than by duplication.
 
 It is a pure-TypeScript package (no Vue, no React) built straight to ESM + types
@@ -50,9 +50,9 @@ with `vite` + `tsc`. Its only runtime dependencies are `luxon` (date math) and
   time grid.
 
 ## Consumers
-- `@mission-platform/components` — `base-scheduler`'s `use-scheduler.ts` wraps
+- `@mission-platform/components` — `forge-scheduler`'s `use-scheduler.ts` wraps
   these pure helpers with Vue reactivity (`ref`/`computed`), and `types.ts`
   re-exports the model; the time-grid view uses `layoutDay`. Its existing 900+
   line spec stays green as the parity baseline.
-- `@mission-platform/components` — `BaseScheduler` consumes these helpers
+- `@mission-platform/components` — `ForgeScheduler` consumes these helpers
   directly with the neutral hooks (multi-view grids + recurrence).

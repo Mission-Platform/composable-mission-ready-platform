@@ -1,0 +1,119 @@
+/**
+ * Styling for the write-once `ForgeButtonGroup`.
+ *
+ * Carried onto both frameworks by the two-stage compiler: React imports this as
+ * a hashed CSS Module, Vue inlines it as a (non-scoped) `<style>` block. The
+ * rules live in the shared `mp.components` cascade layer (matching the
+ * `@mission-platform/components` package).
+ *
+ * Unlike the original Vue SFC, the child overrides use a plain `> *` child
+ * combinator rather than Vue's scoped `:deep(...)`, since the generated output
+ * is not `data-v-` scoped on either framework.
+ */
+
+@layer mp.components {
+  .forge-button-group {
+    display: inline-flex;
+
+    @supports (container-type: inline-size) {
+      container: forge-button-group / inline-size;
+    }
+
+    &--horizontal {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    &--vertical {
+      flex-direction: column;
+      align-items: stretch;
+
+      &:not(.forge-button-group--attached) {
+        @container forge-button-group (width >= 20rem) {
+          flex-direction: row;
+          align-items: center;
+        }
+      }
+    }
+
+    /* Gaps (only when not attached) */
+    $gap-map: (
+      'none': var(--mp-spacing-0),
+      'xs': var(--mp-spacing-1),
+      'sm': var(--mp-spacing-2),
+      'md': var(--mp-spacing-3),
+    );
+
+    @each $name, $value in $gap-map {
+      &--gap-#{$name}:not(.forge-button-group--attached) {
+        gap: #{$value};
+
+        @if $name != 'none' {
+          @container forge-button-group (width >= 30rem) {
+            gap: calc(#{$value} * 1.5);
+          }
+        }
+      }
+    }
+
+    /* Attached — collapse inner radii and overlap borders. */
+    &--attached {
+      gap: 0;
+
+      &.forge-button-group--horizontal {
+        > *:not(:first-child) {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          margin-left: -1px;
+        }
+
+        > *:not(:last-child) {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+      }
+
+      &.forge-button-group--vertical {
+        > *:not(:first-child) {
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+          margin-top: -1px;
+        }
+
+        > *:not(:last-child) {
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+      }
+
+      /* Keep the focused button above its neighbours so the focus ring is not clipped. */
+      > *:focus-visible,
+      > *:hover {
+        position: relative;
+        z-index: 1;
+      }
+    }
+
+    /**
+     * Colour variants — tint the borders of an `attached` group's children.
+     * `neutral` is omitted so it keeps the plain treatment.
+     */
+    @each $name,
+      $family
+        in (
+          'primary': 'primary',
+          'secondary': 'secondary',
+          'tertiary': 'tertiary',
+          'success': 'success',
+          'warning': 'warning',
+          'info': 'info',
+          'error': 'error',
+          'critical': 'critical'
+        )
+    {
+      &--#{$name}.forge-button-group--attached > * {
+        border-color: var(--mp-color-#{$family}-subtle);
+      }
+    }
+  }
+}

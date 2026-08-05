@@ -10,7 +10,7 @@ An offline-first clinical care notes application built with **Vue 3**, **TypeScr
 - **SSR / SSG Compatibility**: Custom Vite plugin (`ssrStubBrowserOnlyEditorPlugin`) stubs Monaco Editor during static site generation (`vite-ssg`), preventing DOM/browser API failures during prerendering.
 - **Multilingual Support (12 Locales)**: Internationalized via `@mission-platform/i18n` with support for English (`en`), Arabic (`ar`), German (`de`), Spanish (`es`), French (`fr`), Hebrew (`he`), Italian (`it`), Japanese (`ja`), Korean (`ko`), Dutch (`nl`), and Chinese (`zh`).
 - **Progressive Web App (PWA)**: Configured with `vite-plugin-pwa` for offline capability, Web Worker caching, and WebAssembly asset caching.
-- **Cloudflare Workers Deployment**: Hosted on Cloudflare Workers Assets via `@mission-platform/base-spa`.
+- **Cloudflare Workers Deployment**: Hosted on Cloudflare Workers Assets via `@mission-platform/forge-spa`.
 
 ## Design System & Monorepo Packages
 
@@ -71,7 +71,7 @@ pnpm --filter @mission-platform/my-care-notes preview
 
 ### Cloudflare Workers Deployment
 
-Deployment uses `wrangler.jsonc` which points to `@mission-platform/base-spa` as its worker entrypoint and serves the `./dist/` directory via the `ASSETS` binding.
+Deployment uses `wrangler.jsonc` which points to `@mission-platform/forge-spa` as its worker entrypoint and serves the `./dist/` directory via the `ASSETS` binding.
 
 ```bash
 # Deploy to staging environment (staging-care-notes.mission-platform.dev)

@@ -5,7 +5,7 @@ import '@mission-platform/components/styles';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './preview.scss';
 
-import { createMpI18n, mpNamespace } from '@mission-platform/i18n';
+import { createForgeI18N, forgeNamespace } from '@mission-platform/i18n';
 import {
   resolveStorybookFramework,
   sharedPreviewDecorators,
@@ -19,7 +19,7 @@ import type { Decorator, Preview } from '@storybook/vue3-vite';
 import type { ComponentType } from 'react';
 
 // Wire Monaco's web workers up front so the WYSIWYG editor (and any other
-// `BaseMonacoEditor` story) runs its language services off the main thread
+// `ForgeMonacoEditor` story) runs its language services off the main thread
 // instead of freezing the preview iframe — see `./monaco-environment.ts`.
 ensureMonacoEnvironment();
 
@@ -31,7 +31,7 @@ const frameworkDecorators: Decorator[] = [];
 // resolved framework so that for a React build no Vue-only runtime is required
 // at render time and vice versa.
 if (framework === 'vue') {
-  const [{ setup }, { createMpI18nVue }, { createMemoryHistory, createRouter }] = await Promise.all([
+  const [{ setup }, { createForgeI18NVue }, { createMemoryHistory, createRouter }] = await Promise.all([
     import('@storybook/vue3-vite'),
     import('@mission-platform/i18n/vue'),
     import('vue-router'),
@@ -44,9 +44,9 @@ if (framework === 'vue') {
 
   setup((app) => {
     app.use(
-      createMpI18nVue(
-        createMpI18n({
-          namespace: mpNamespace('storybook'),
+      createForgeI18NVue(
+        createForgeI18N({
+          namespace: forgeNamespace('storybook'),
           resources,
         }),
       ),
@@ -54,20 +54,18 @@ if (framework === 'vue') {
     app.use(router);
   });
 } else if (framework === 'react') {
-  const [{ MpI18nProvider }, { createElement }] = await Promise.all([
+  const [{ ForgeI18NProvider }, { createElement }] = await Promise.all([
     import('@mission-platform/i18n/react'),
     import('react'),
   ]);
 
-  const i18n = createMpI18n({
-    namespace: mpNamespace('storybook-react'),
+  const i18n = createForgeI18N({
+    namespace: forgeNamespace('storybook-react'),
     resources,
   });
 
-  frameworkDecorators.push(
-    ((Story: unknown) =>
-      createElement(MpI18nProvider, { i18n }, createElement(Story as ComponentType))) as Decorator,
-  );
+  frameworkDecorators.push(((Story: unknown) =>
+    createElement(ForgeI18NProvider, { i18n }, createElement(Story as ComponentType))) as Decorator);
 }
 
 const preview: Preview = {

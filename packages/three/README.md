@@ -5,12 +5,12 @@ compiled to Vue 3 and React 18/19.
 
 ## Components
 
-- `BaseThreeCanvas` — Renders a `<canvas>` and manages a Three.js `WebGLRenderer`, `Scene`, and `PerspectiveCamera`.
+- `ForgeThreeCanvas` — Renders a `<canvas>` and manages a Three.js `WebGLRenderer`, `Scene`, and `PerspectiveCamera`.
   Exposes an `onReady` callback to interact with the Three.js context.
 
 ## Hooks
 
-- `useThree(canvasRef, onReady?)` — The underlying hook used by `BaseThreeCanvas` to manage the Three.js lifecycle.
+- `useThree(canvasRef, onReady?)` — The underlying hook used by `ForgeThreeCanvas` to manage the Three.js lifecycle.
 
 ## SSR Safety
 

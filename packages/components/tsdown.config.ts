@@ -14,7 +14,7 @@ const rootDirectory = import.meta.dirname;
 const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
 
 /**
- * Neutral component tree (`dist/components/**`, including `./base-drawer`) plus
+ * Neutral component tree (`dist/components/**`, including `./forge-drawer`) plus
  * the five forge framework builds (real per-framework dts via
  * `jsxComponentsDtsPlugin`) and Storyblok wrappers
  * (`dist/storyblok/{react,vue}/` + `components.json`).
@@ -29,12 +29,12 @@ const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
 export default [
   defineTsdownLibrary({
     rootDir: rootDirectory,
-    // Explicit `base-drawer` entry so `./base-drawer` resolves to a real
-    // `dist/components/base-drawer/index.js` (rolldown otherwise inlines the
+    // Explicit `forge-drawer` entry so `./forge-drawer` resolves to a real
+    // `dist/components/forge-drawer/index.js` (rolldown otherwise inlines the
     // barrel into the root components entry and omits the file).
     entry: {
       index: 'src/components/index.ts',
-      'base-drawer/index': 'src/components/organisms/base-drawer/index.ts',
+      'forge-drawer/index': 'src/components/organisms/forge-drawer/index.ts',
     },
     // Emit the same neutral `.d.ts` tree previously produced by
     // `tsc --emitDeclarationOnly` (via tsconfig.build.json declarationDir).

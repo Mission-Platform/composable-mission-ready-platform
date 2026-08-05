@@ -5,5 +5,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "include": ["src/**/*.ts", "../shared/**/*.ts", "*.config.ts", "*.config.js", "*.config.mjs"]
+  "include": [
+    "src/**/*.ts",
+    "../shared/**/*.ts",
+    "*.config.ts",
+    "*.config.js",
+    "*.config.mjs"
+  ]
 }

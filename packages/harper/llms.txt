@@ -120,7 +120,7 @@ useHarperMonaco(editorRef, grammarCheckEnabled, 'markdown')
 of truth for the imperative Harper ↔ Monaco integration (worker spawn, debounced
 checking, marker mapping, quick-fix code-action provider) and returns a
 `{ dispose, recheck }` handle. Non-Vue consumers (e.g. the write-once
-`@mission-platform/components` `BaseMonacoEditor`) import it directly:
+`@mission-platform/components` `ForgeMonacoEditor`) import it directly:
 
 ```ts
 import { attachHarperMonaco } from '@mission-platform/harper'

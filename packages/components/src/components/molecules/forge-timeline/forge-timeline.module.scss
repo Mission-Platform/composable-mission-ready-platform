@@ -1,0 +1,147 @@
+/**
+ * Styling for the write-once `ForgeTimeline`.
+ *
+ * `ForgeTimeline` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its BEM appearance ships in the built package CSS (the
+ * two-stage compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package. They merge the original
+ * `ForgeTimeline` container and `ForgeTimelineItem` styles, since the neutral
+ * version renders both from a single component.
+ */
+
+@layer mp.components {
+  .forge-timeline {
+    --mp-timeline-marker-size: 0.875rem;
+    --mp-timeline-line-thickness: var(--mp-border-width-thick);
+    --mp-timeline-gutter: var(--mp-spacing-6);
+
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+
+    &--vertical {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &--horizontal {
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+    }
+  }
+
+  .forge-timeline-item {
+    --mp-timeline-item-color: var(--mp-color-primary-default);
+
+    position: relative;
+    display: flex;
+
+    @each $family in 'default', 'primary', 'secondary', 'tertiary', 'success', 'warning', 'information', 'error',
+      'critical'
+    {
+      &--#{$family} {
+        --mp-timeline-item-color: var(--mp-color-#{$family}-default);
+      }
+    }
+
+    &__marker {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    &__dot {
+      width: var(--mp-timeline-marker-size);
+      height: var(--mp-timeline-marker-size);
+      border-radius: var(--mp-radius-full, 9999px);
+      background-color: var(--mp-timeline-item-color);
+      box-shadow: 0 0 0 4px var(--mp-color-bg-surface);
+    }
+
+    &--outlined &__dot {
+      background-color: var(--mp-color-bg-surface);
+      border: var(--mp-timeline-line-thickness) solid var(--mp-timeline-item-color);
+    }
+
+    /* ── Vertical ─────────────────────────────────────────────────────────── */
+    &--vertical {
+      flex-direction: row;
+      gap: var(--mp-spacing-4);
+      padding-bottom: var(--mp-timeline-gutter);
+
+      .forge-timeline-item__marker {
+        width: var(--mp-timeline-marker-size);
+        flex-direction: column;
+      }
+
+      /* Connecting line below the marker. */
+      .forge-timeline-item__marker::after {
+        content: '';
+        position: absolute;
+        top: var(--mp-timeline-marker-size);
+        bottom: calc(var(--mp-timeline-gutter) * -1);
+        left: 50%;
+        width: var(--mp-timeline-line-thickness);
+        transform: translateX(-50%);
+        background-color: var(--mp-color-border-default);
+      }
+
+      .forge-timeline-item__content {
+        padding-top: calc((var(--mp-timeline-marker-size) - 1em) / 2);
+      }
+    }
+
+    /* ── Horizontal ───────────────────────────────────────────────────────── */
+    &--horizontal {
+      flex-direction: column;
+      gap: var(--mp-spacing-3);
+      min-width: 12rem;
+      padding-right: var(--mp-timeline-gutter);
+
+      .forge-timeline-item__marker {
+        height: var(--mp-timeline-marker-size);
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .forge-timeline-item__marker::after {
+        content: '';
+        position: absolute;
+        left: var(--mp-timeline-marker-size);
+        right: calc(var(--mp-timeline-gutter) * -1);
+        top: 50%;
+        height: var(--mp-timeline-line-thickness);
+        transform: translateY(-50%);
+        background-color: var(--mp-color-border-default);
+      }
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-spacing-1);
+      min-width: 0;
+    }
+
+    &__title {
+      margin: 0;
+    }
+
+    &__body {
+      margin-top: var(--mp-spacing-1);
+    }
+
+    /* The final item has no following sibling, so hide its connecting line.
+       Declared once, after both orientation `::after` rules, to keep selector
+       specificity ascending. */
+    &:last-child &__marker::after {
+      display: none;
+    }
+  }
+}

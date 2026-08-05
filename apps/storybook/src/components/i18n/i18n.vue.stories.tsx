@@ -1,5 +1,5 @@
-import { LanguageSwitcher } from '@mission-platform/components/vue';
-import { createMpI18n } from '@mission-platform/i18n';
+import { ForgeLanguageSwitcher } from '@mission-platform/components/vue';
+import { createForgeI18N } from '@mission-platform/i18n';
 import { useI18n } from '@mission-platform/i18n/vue';
 import { defineComponent, ref } from 'vue';
 
@@ -58,14 +58,14 @@ const LocaleInspector = defineComponent({
 });
 
 /**
- * Demonstrates a standalone `createMpI18n` instance with inline messages for
+ * Demonstrates a standalone `createForgeI18N` instance with inline messages for
  * multiple locales — used directly (no Vue plugin) to translate and switch
  * locales on the fly.
  */
 const CustomMessages = defineComponent({
   name: 'CustomMessages',
   setup() {
-    const i18n = createMpI18n({
+    const i18n = createForgeI18N({
       locale: 'en',
       messages: {
         en: { greeting: 'Hello {name}', farewell: 'Goodbye' },
@@ -116,12 +116,12 @@ const CustomMessages = defineComponent({
   },
 });
 
-const LanguageSwitcherExample = defineComponent({
-  name: 'LanguageSwitcherExample',
+const ForgeLanguageSwitcherExample = defineComponent({
+  name: 'ForgeLanguageSwitcherExample',
   setup() {
     const locale = ref('en');
     return () => (
-      <LanguageSwitcher
+      <ForgeLanguageSwitcher
         locale={locale.value}
         locales={[
           { code: 'en', label: 'English' },
@@ -152,9 +152,9 @@ in a framework-agnostic core plus thin per-framework adapters.
 
 | Export | Purpose |
 |---|---|
-| \`@mission-platform/i18n\` → \`createMpI18n\` | Build a configured, framework-neutral i18next instance |
-| \`@mission-platform/i18n/vue\` → \`createMpI18nVue\` / \`useI18n\` | Vue 3 plugin + composable (\`i18next-vue\`) |
-| \`@mission-platform/i18n/react\` → \`MpI18nProvider\` / \`useI18n\` | React provider + hook (\`react-i18next\`) |
+| \`@mission-platform/i18n\` → \`createForgeI18N\` | Build a configured, framework-neutral i18next instance |
+| \`@mission-platform/i18n/vue\` → \`createForgeI18NVue\` / \`useI18n\` | Vue 3 plugin + composable (\`i18next-vue\`) |
+| \`@mission-platform/i18n/react\` → \`ForgeI18NProvider\` / \`useI18n\` | React provider + hook (\`react-i18next\`) |
 
 ## Pattern: app-wide instance
 
@@ -162,10 +162,10 @@ Apps build one instance and install it via \`app.use()\`:
 
 \`\`\`ts
 // main.ts
-import { createMpI18n } from '@mission-platform/i18n'
-import { createMpI18nVue } from '@mission-platform/i18n/vue'
+import { createForgeI18N } from '@mission-platform/i18n'
+import { createForgeI18NVue } from '@mission-platform/i18n/vue'
 
-app.use(createMpI18nVue(createMpI18n({ messages: { en } })))
+app.use(createForgeI18NVue(createForgeI18N({ messages: { en } })))
 \`\`\`
 
 \`\`\`vue
@@ -182,15 +182,15 @@ Interpolation uses single-brace delimiters (\`{name}\`), and nested
 
 Strings are grouped into i18next namespaces. Every package lives under
 \`mp.<package_name>\` and every app under \`mp.<app_name>\` (build one with the
-\`mpNamespace\` helper). An app sets its own namespace as the default; it falls
+\`forgeNamespace\` helper). An app sets its own namespace as the default; it falls
 back to every package namespace, so component code keeps resolving the keys it
 owns. Package components resolve their own namespace explicitly:
 
 \`\`\`vue
 <script setup lang="ts">
-import { mpNamespace, useI18n } from '@mission-platform/i18n/vue'
+import { forgeNamespace, useI18n } from '@mission-platform/i18n/vue'
 // Bind \`t\` to this package's namespace.
-const { t } = useI18n(mpNamespace('breakpoints'))
+const { t } = useI18n(forgeNamespace('breakpoints'))
 </script>
 \`\`\`
 
@@ -200,11 +200,11 @@ Apps can override any package/component strings per namespace via \`overrides\`,
 deep-merged on top of the package's own bundle (only the listed keys change):
 
 \`\`\`ts
-createMpI18n({
-  namespace: mpNamespace('my-care-notes'),
+createForgeI18N({
+  namespace: forgeNamespace('my-care-notes'),
   namespaces: localeNamespaces('en', enBundles),
   overrides: {
-    [mpNamespace('breakpoints')]: { en: { breakpoint: 'Viewport:' } },
+    [forgeNamespace('breakpoints')]: { en: { breakpoint: 'Viewport:' } },
   },
 })
 \`\`\`
@@ -232,21 +232,21 @@ export const DefaultSetup: StoryObj = {
 };
 
 /**
- * Demonstrates creating a standalone `createMpI18n` instance with inline
+ * Demonstrates creating a standalone `createForgeI18N` instance with inline
  * messages for several locales — no external locale files required.
  */
 export const CustomMessagesStory: StoryObj = {
-  name: 'createMpI18n — custom messages',
+  name: 'createForgeI18N — custom messages',
   render: () => ({
     components: { CustomMessages },
     template: '<CustomMessages />',
   }),
 };
 
-export const LanguageSwitcherStory: StoryObj = {
+export const ForgeLanguageSwitcherStory: StoryObj = {
   name: 'Language switcher',
   render: () => ({
-    components: { LanguageSwitcherExample },
-    template: '<LanguageSwitcherExample />',
+    components: { ForgeLanguageSwitcherExample },
+    template: '<ForgeLanguageSwitcherExample />',
   }),
 };

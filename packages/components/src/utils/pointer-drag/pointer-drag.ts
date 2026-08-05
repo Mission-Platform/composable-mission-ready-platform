@@ -3,8 +3,8 @@
  * interaction components.
  *
  * Several `@mission-platform/components` Vue components drive a value (or a
- * size) by dragging with a pointer: `BaseSlider`/`BaseRangeInput` move a thumb
- * along a track, and `BaseDrawer`/`BaseVerticalLayout` resize a panel by
+ * size) by dragging with a pointer: `ForgeSlider`/`ForgeRangeInput` move a thumb
+ * along a track, and `ForgeDrawer`/`ForgeVerticalLayout` resize a panel by
  * dragging its inner edge. The Vue sources do this by attaching
  * `pointermove`/`pointerup`/`pointercancel` listeners to `window` for the
  * duration of the gesture (so the drag keeps tracking even when the pointer

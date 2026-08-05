@@ -11,8 +11,8 @@ The `@mission-platform/map` package provides MapLibre GL integrations for Missio
 
 Component & helper entry points:
 
-- **`@mission-platform/map`**: Framework-neutral JSX components (`BaseMapLibre`, `BaseMapMarker`, `BaseMapPopup`,
-  `BaseMapSource`, `BaseMapLayer`, `BaseMapDraw`).
+- **`@mission-platform/map`**: Framework-neutral JSX components (`ForgeMapLibre`, `ForgeMapMarker`, `ForgeMapPopup`,
+  `ForgeMapSource`, `ForgeMapLayer`, `ForgeMapDraw`).
 - **`@mission-platform/map/vue`**: Vue 3 components (`MapLibre`, `MapMarker`, `MapPopup`, `MapSource`, `MapLayer`,
   `MapDraw`) and composables.
 - **`@mission-platform/map/react`**: React components (`MapLibre`, `MapMarker`, `MapPopup`, `MapSource`, `MapLayer`,

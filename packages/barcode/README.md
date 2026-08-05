@@ -9,7 +9,7 @@ It renders a symbology + payload into a flat run of **module bits** (`1` = bar,
 clean module run of any supported symbology back into its payload (see `decodeBarcode`). Supported symbologies:
 
 | Symbology    | Notes                                                                              |
-|--------------|------------------------------------------------------------------------------------|
+| ------------ | ---------------------------------------------------------------------------------- |
 | `code128`    | High density. Code B for printable ASCII; Code C fast path for even-length digits. |
 | `gs1-128`    | Code 128 with a leading FNC1 (a stream of GS1 Application Identifiers).            |
 | `code39`     | Alphanumeric, self-checking; auto-framed with the `*` start/stop.                  |
@@ -81,7 +81,7 @@ const text = decodeBarcode('code93', modules); // -> 'MISSION 93'
 - `src/encoder/` — the typed façade: it imports the generated runtime and the wasm binary (via Vite's `?url`, inlined as
   base64 at build time), instantiates it, and turns the module-bit buffer into a `Barcode`.
 - `src/index.ts` — the package entry, re-exporting the encoder API. The per-feature `component/` sibling (a write-once
-  `BaseBarcode`) is added in a follow-up and re-exported here when present.
+  `ForgeBarcode`) is added in a follow-up and re-exported here when present.
 - `vite.config.ts` — raises `assetsInlineLimit` so the wasm is inlined as a
   `data:` URI (keeping the encoder synchronous and the bundle self-contained), and neutralises the generated glue's dead
   `new URL(...)` init fallback so the binary is embedded exactly once.

@@ -1,0 +1,16 @@
+/**
+ * Styling for the write-once `ForgeSchemaFormDialog`.
+ *
+ * The rules live in the package's own `mp.forms` cascade layer. The dialog
+ * itself is the shared `ForgeModal`; only the action row inside the hosted
+ * `ForgeSchemaForm`'s `actions` slot needs layout here.
+ */
+
+@layer mp.forms {
+  .forge-schema-form-dialog {
+    &__actions {
+      display: flex;
+      gap: var(--mp-spacing-2);
+    }
+  }
+}

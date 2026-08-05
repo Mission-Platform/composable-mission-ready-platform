@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { createSSRApp, h as vueH } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 
-import { IconAlert, IconArrow, IconDrawCircle, IconHeadingOne, IconSort } from ".";
+import { ForgeIconAlert, ForgeIconArrow, ForgeIconDrawCircle, ForgeIconHeadingOne, ForgeIconSort } from '.';
 
 import type { MpComponent } from '@mission-platform/forge';
 
@@ -25,8 +25,8 @@ async function renderBoth(component: MpComponent, properties: Record<string, unk
 
 describe('generated icons author the same component for React and Vue', () => {
   it('renders a plain stroke icon with its BEM wrapper and a 24×24 viewBox', async () => {
-    for (const html of await renderBoth(IconAlert)) {
-      expect(html).toContain('base-icon-alert');
+    for (const html of await renderBoth(ForgeIconAlert)) {
+      expect(html).toContain('forge-icon-alert');
       expect(html).toContain('role="img"');
       expect(html).toContain('viewBox="0 0 24 24"');
       expect(html).toContain('aria-label="Alert"');
@@ -34,7 +34,7 @@ describe('generated icons author the same component for React and Vue', () => {
   });
 
   it('embeds the heading glyph as an SVG <text> node on both frameworks', async () => {
-    for (const html of await renderBoth(IconHeadingOne)) {
+    for (const html of await renderBoth(ForgeIconHeadingOne)) {
       expect(html).toContain('<text');
       expect(html).toContain('>1</text>');
       expect(html).toContain('aria-label="Heading 1"');
@@ -42,21 +42,21 @@ describe('generated icons author the same component for React and Vue', () => {
   });
 
   it('paints the filled marker child with the resolved colour on both frameworks', async () => {
-    for (const html of await renderBoth(IconDrawCircle, { color: 'red' })) {
-      expect(html).toContain('base-icon-draw-circle');
+    for (const html of await renderBoth(ForgeIconDrawCircle, { color: 'red' })) {
+      expect(html).toContain('forge-icon-draw-circle');
       expect(html).toContain('fill="red"');
     }
   });
 
   it('rotates the arrow according to its direction prop on both frameworks', async () => {
-    for (const html of await renderBoth(IconArrow, { direction: 'right' })) {
+    for (const html of await renderBoth(ForgeIconArrow, { direction: 'right' })) {
       expect(html).toContain('rotate(90deg)');
       expect(html).toContain('aria-label="Arrow right"');
     }
   });
 
   it('fills only the active sort chevron on both frameworks', async () => {
-    for (const html of await renderBoth(IconSort, { active: true, direction: 'asc', color: 'blue' })) {
+    for (const html of await renderBoth(ForgeIconSort, { active: true, direction: 'asc', color: 'blue' })) {
       // The ascending chevron is filled; the descending one stays hollow.
       expect(html).toContain('fill="blue"');
       expect(html).toContain('fill="none"');

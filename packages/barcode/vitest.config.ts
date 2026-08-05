@@ -4,14 +4,9 @@ import { defineVitestConfig } from '@mission-platform/vite-config/vitest';
 
 export default defineVitestConfig({
   coverageInclude: ['src/**/*.ts', 'src/**/*.tsx'],
-  coverageExclude: [
-    'src/**/*.spec.ts',
-    'src/test-setup.ts',
-    'src/test-support/**',
-    'src/**/*.stories.*',
-  ],
+  coverageExclude: ['src/**/*.spec.ts', 'src/test-setup.ts', 'src/test-support/**', 'src/**/*.stories.*'],
   overrides: {
-    // The neutral `BaseBarcode` is authored in the `@mission-platform/forge`
+    // The neutral `ForgeBarcode` is authored in the `@mission-platform/forge`
     // dialect (the classic `h` factory), so its spec is transformed with that
     // JSX factory rather than React's automatic runtime.
     esbuild: {

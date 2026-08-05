@@ -1,6 +1,6 @@
 import { h } from '@mission-platform/forge';
 
-import { VerticalLayout } from '@mission-platform/layouts';
+import { ForgeVerticalLayout } from '@mission-platform/layouts';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
@@ -8,19 +8,19 @@ import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
  * **Admin** — example back-office / console layouts assembled from the
  * `@mission-platform/layouts` primitives.
  *
- * These pair the cross-framework {@link VerticalLayout} (a persistent `start`
+ * These pair the cross-framework {@link ForgeVerticalLayout} (a persistent `start`
  * navigation rail beside the main work area) with token-driven inline tables
  * and an optional `end` detail panel. Presentational only.
  */
 const meta = {
   title: 'Layouts/Examples/Admin',
-  component: VerticalLayout,
+  component: ForgeVerticalLayout,
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
         component:
-          'Admin console layouts built from `@mission-platform/layouts`: a `VerticalLayout` provides a persistent `start` nav rail beside a main data-table work area, optionally flanked by an `end` detail/inspector panel. The side columns stay inline above `breakpoint` and collapse to overlay drawers below it. Presentational only.',
+          'Admin console layouts built from `@mission-platform/layouts`: a `ForgeVerticalLayout` provides a persistent `start` nav rail beside a main data-table work area, optionally flanked by an `end` detail/inspector panel. The side columns stay inline above `breakpoint` and collapse to overlay drawers below it. Presentational only.',
       },
     },
   },
@@ -28,7 +28,7 @@ const meta = {
     breakpoint: { control: 'inline-radio', options: ['xs', 'sm', 'md', 'lg', 'xl'] },
   },
   args: { breakpoint: 'xs', startSize: 'xs', startTitle: 'Navigation' },
-} satisfies Meta<typeof VerticalLayout>;
+} satisfies Meta<typeof ForgeVerticalLayout>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -85,7 +85,12 @@ const usersTable = () => (
   <div style={WORK}>
     <div style={TOOLBAR}>
       <h1 style={{ margin: 0 }}>Users</h1>
-      <button type="button" style={PRIMARY}>Invite user</button>
+      <button
+        type="button"
+        style={PRIMARY}
+      >
+        Invite user
+      </button>
     </div>
     <table style={TABLE}>
       <thead>
@@ -117,7 +122,14 @@ const usersTable = () => (
 );
 
 const detailPanel = () => (
-  <div style={{ padding: 'var(--mp-spacing-5)', height: '100%', boxSizing: 'border-box', color: 'var(--mp-color-text-primary)' }}>
+  <div
+    style={{
+      padding: 'var(--mp-spacing-5)',
+      height: '100%',
+      boxSizing: 'border-box',
+      color: 'var(--mp-color-text-primary)',
+    }}
+  >
     <h2 style={{ marginTop: 0 }}>Ada Lovelace</h2>
     <p style={{ color: 'var(--mp-color-text-secondary)' }}>Admin · ada@example.com</p>
     <p>Member since 2021. Last active 2 hours ago.</p>
@@ -126,14 +138,27 @@ const detailPanel = () => (
 
 /** A console with a persistent nav rail beside a data table and toolbar. */
 export const DataTable: Story = {
-  render: (arguments_) => <VerticalLayout {...arguments_} start={adminNav()}>{usersTable()}</VerticalLayout>,
+  render: (arguments_) => (
+    <ForgeVerticalLayout
+      {...arguments_}
+      start={adminNav()}
+    >
+      {usersTable()}
+    </ForgeVerticalLayout>
+  ),
 };
 
 /** The same console with an `end` detail/inspector panel for the selected row. */
 export const WithDetailPanel: Story = {
   render: (arguments_) => (
-    <VerticalLayout {...arguments_} start={adminNav()} end={detailPanel()} endSize="xs" endTitle="Details">
+    <ForgeVerticalLayout
+      {...arguments_}
+      start={adminNav()}
+      end={detailPanel()}
+      endSize="xs"
+      endTitle="Details"
+    >
       {usersTable()}
-    </VerticalLayout>
+    </ForgeVerticalLayout>
   ),
 };

@@ -1,0 +1,40 @@
+/**
+ * Demo styling for the write-once `ForgeGrid`.
+ *
+ * The component arranges its cells via inline CSS Grid styles only; this
+ * co-located CSS Module just dresses the slotted demo content (token-driven
+ * cells and a dashed container) so the Storybook examples are legible.
+ *
+ * The rules live in the shared `mp.components` cascade layer (matching the
+ * `@mission-platform/components` package). The stylesheet is a CSS Module,
+ * consumed through its hashed class map by `forge-grid.stories.tsx`.
+ */
+
+@layer mp.components {
+  .grid-demo-container {
+    padding: var(--mp-spacing-4);
+    border: var(--mp-border-width-thin) dashed var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+
+    @supports (container-type: inline-size) {
+      container: grid-demo / inline-size;
+    }
+  }
+
+  .grid-demo-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3rem;
+    padding: var(--mp-spacing-2) var(--mp-spacing-4);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+    background: var(--mp-color-surface-raised);
+    color: var(--mp-color-text-primary);
+
+    @container grid-demo (width >= 40rem) {
+      min-height: 4.5rem;
+      padding: var(--mp-spacing-4);
+    }
+  }
+}

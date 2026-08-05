@@ -1,7 +1,7 @@
 import { h, type MpElement } from '@mission-platform/forge';
 
 import * as iconsNamespace from '@mission-platform/icons';
-import { IconStar } from '@mission-platform/icons';
+import { ForgeIconStar } from '@mission-platform/icons';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
@@ -20,12 +20,12 @@ type IconComponent = (properties: { size?: number | string }) => MpElement;
 
 /** Every exported icon component, paired with its export name, for the gallery. */
 const galleryEntries = Object.entries(iconsNamespace).filter(
-  ([name, value]) => name.startsWith('Icon') && typeof value === 'function',
+  ([name, value]) => name.startsWith('ForgeIcon') && typeof value === 'function',
 ) as [string, IconComponent][];
 
 const meta = {
   title: 'Icons/Overview',
-  component: IconStar,
+  component: ForgeIconStar,
   tags: ['autodocs'],
   parameters: {
     controls: { disable: true },
@@ -36,7 +36,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof IconStar>;
+} satisfies Meta<typeof ForgeIconStar>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

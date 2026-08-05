@@ -1,12 +1,12 @@
 export {
-  BaseFormBuilder,
+  ForgeFormBuilder,
   type BuilderField,
   type BuilderFieldOption,
   type FieldTypeDescriptor,
   type FormBuilderProperties,
-} from './organisms/base-form-builder';
+} from './organisms/forge-form-builder';
 export {
-  BaseSchemaForm,
+  ForgeSchemaForm,
   type FormErrors,
   type FormFieldSchema,
   type FormFieldType,
@@ -15,5 +15,5 @@ export {
   type SchemaFormDefinition,
   type SchemaFormProperties,
   type SchemaFormValidationMode,
-} from './organisms/base-schema-form';
-export { BaseSchemaFormDialog, type SchemaFormDialogProperties } from './organisms/base-schema-form-dialog';
+} from './organisms/forge-schema-form';
+export { ForgeSchemaFormDialog, type SchemaFormDialogProperties } from './organisms/forge-schema-form-dialog';

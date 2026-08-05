@@ -37,7 +37,7 @@ describe('serializeSurface', () => {
   it('empties portalled code-block markup and strips transient keys', () => {
     const surface = makeSurface(`<p>hi</p>${createCodeBlockHtml('const a = 1;', 'typescript')}`);
     const embed = surface.querySelector('[data-mp-code-block]') as HTMLElement;
-    // Simulate the portalled BaseCodeBlock DOM + the transient render key.
+    // Simulate the portalled ForgeCodeBlock DOM + the transient render key.
     embed.dataset.mpKey = 'cb-0';
     embed.innerHTML = '<pre><code>const a = 1;</code></pre>';
 

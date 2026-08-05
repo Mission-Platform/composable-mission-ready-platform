@@ -194,7 +194,7 @@ function collectCssFiles(directory: string, base: string = directory): string[] 
  * Every forge framework build (react/neutral/solid/svelte/web-components) emits
  * a CSS-Module class map `X.module.js` next to its extracted `X.css`, and every
  * component that uses those classes imports the class map — so the class map is
- * the natural owner (`base-accordion.css` → `base-accordion.module.js`, shared
+ * the natural owner (`forge-accordion.css` → `forge-accordion.module.js`, shared
  * `size.css` → `size.module.js`). Vue instead emits SFC-scoped stylesheets named
  * `X.vue_vue_type_style_index_*.css` alongside a plain `X.js` component chunk, so
  * that chunk is the owner. Returns the owner's path relative to the output dir,

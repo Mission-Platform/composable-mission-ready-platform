@@ -24,13 +24,13 @@ For standard Vue or React applications, import from the corresponding subpath:
 **Vue 3:**
 
 ```vue
-import { IconAlert, IconArrow } from '@mission-platform/icons/vue';
+import { ForgeIconAlert, ForgeIconArrow } from '@mission-platform/icons/vue';
 ```
 
 **React:**
 
 ```tsx
-import { IconAlert, IconArrow } from '@mission-platform/icons/react';
+import { ForgeIconAlert, ForgeIconArrow } from '@mission-platform/icons/react';
 ```
 
 ### Neutral Component Imports
@@ -38,18 +38,18 @@ import { IconAlert, IconArrow } from '@mission-platform/icons/react';
 When authoring a framework-neutral component (compiled by `vite-plugin-forge`):
 
 ```tsx
-import { IconAlert, IconArrow } from '@mission-platform/icons';
+import { ForgeIconAlert, ForgeIconArrow } from '@mission-platform/icons';
 ```
 
 ## API Reference
 
-Each icon renders an `<svg role="img">` within a centering `<div>` wrapper that uses the `.base-icon-<name>` BEM class.
+Each icon renders an `<svg role="img">` within a centering `<div>` wrapper that uses the `.forge-icon-<name>` BEM class.
 All icons are based on a $24 \times 24$ viewbox.
 
 ### Universal Props
 
 | Prop        | Type               | Default            | Description                                                                                                           |
-|:------------|:-------------------|:-------------------|:----------------------------------------------------------------------------------------------------------------------|
+| :---------- | :----------------- | :----------------- | :-------------------------------------------------------------------------------------------------------------------- |
 | `size`      | `number \| string` | `'md'`             | Width and height. Supports named tokens (`'2xs'`, `'xs'`, `'sm'`, `'md'`, `'lg'`, `'xl'`, `'2xl'`) or a pixel number. |
 | `color`     | `string`           | `'currentColor'`   | Stroke colour (and fill for filled-marker icons).                                                                     |
 | `ariaLabel` | `string`           | _Per-icon default_ | Accessible name. If omitted, the icon is marked as `aria-hidden`.                                                     |
@@ -58,23 +58,23 @@ All icons are based on a $24 \times 24$ viewbox.
 
 Certain icons include additional props to control their appearance:
 
-| Icon          | Extra Props                                                           | Description                                                |
-|:--------------|:----------------------------------------------------------------------|:-----------------------------------------------------------|
-| `IconArrow`   | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (default `'up'`)   | Rotates the arrow via an inline transform.                 |
-| `IconChevron` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (default `'down'`) | Rotates the chevron via an inline transform.               |
-| `IconSort`    | `active`: `boolean`, `direction`: `'asc' \| 'desc' \| undefined`      | Highlights the chevron matching the active sort direction. |
+| Icon               | Extra Props                                                           | Description                                                |
+| :----------------- | :-------------------------------------------------------------------- | :--------------------------------------------------------- |
+| `ForgeIconArrow`   | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (default `'up'`)   | Rotates the arrow via an inline transform.                 |
+| `ForgeIconChevron` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (default `'down'`) | Rotates the chevron via an inline transform.               |
+| `ForgeIconSort`    | `active`: `boolean`, `direction`: `'asc' \| 'desc' \| undefined`      | Highlights the chevron matching the active sort direction. |
 
 ## Icon Library
 
 The library includes a wide array of icons covering several categories:
 
-- **State & Status**: `IconAlert`, `IconCheck`, `IconError`, `IconInfo`, `IconWarning`.
-- **Navigation**: `IconArrow`, `IconChevron`, `IconHome`, `IconMenu`, `IconExternalLink`.
-- **Media**: `IconCamera`, `IconImage`, `IconMail`, `IconPhone`.
-- **UI Controls**: `IconClose`, `IconEdit`, `IconPlus`, `IconMinus`, `IconSearch`, `IconSettings`.
-- **Content Formatting**: `IconBold`, `IconItalic`, `IconBulletList`, `IconNumberedList`, `IconHeadingOne`...
-  `IconHeadingSix`.
-- **Specialized Tools**: `IconWrench`, `IconPalette`, `IconDebug`, `IconQrCode`.
+- **State & Status**: `ForgeIconAlert`, `ForgeIconCheck`, `ForgeIconError`, `ForgeIconInfo`, `ForgeIconWarning`.
+- **Navigation**: `ForgeIconArrow`, `ForgeIconChevron`, `ForgeIconHome`, `ForgeIconMenu`, `ForgeIconExternalLink`.
+- **Media**: `ForgeIconCamera`, `ForgeIconImage`, `ForgeIconMail`, `ForgeIconPhone`.
+- **UI Controls**: `ForgeIconClose`, `ForgeIconEdit`, `ForgeIconPlus`, `ForgeIconMinus`, `ForgeIconSearch`, `ForgeIconSettings`.
+- **Content Formatting**: `ForgeIconBold`, `ForgeIconItalic`, `ForgeIconBulletList`, `ForgeIconNumberedList`, `ForgeIconHeadingOne`...
+  `ForgeIconHeadingSix`.
+- **Specialized Tools**: `ForgeIconWrench`, `ForgeIconPalette`, `ForgeIconDebug`, `ForgeIconQrCode`.
 
 ## Development & Maintenance
 

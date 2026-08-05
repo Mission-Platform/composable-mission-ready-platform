@@ -20,7 +20,7 @@ export const CODE_BLOCK_SELECTOR = `[${CODE_BLOCK_ATTRIBUTE}]`;
 export interface CodeBlockEmbed {
   /** Stable render key for the framework list. */
   key: string;
-  /** The (non-editable) host element the `BaseCodeBlock` is portalled into. */
+  /** The (non-editable) host element the `ForgeCodeBlock` is portalled into. */
   host: HTMLElement;
   /** The source code to render. */
   code: string;
@@ -45,7 +45,7 @@ const CSS_TO_ALIGN: Readonly<Record<string, WysiwygBlockAlign>> = {
 /**
  * Build the HTML for a non-editable code-block placeholder. The code + language
  * are stored (URL-encoded) in data attributes — the placeholder's own DOM is
- * left empty so the live `BaseCodeBlock` can be portalled into it without ever
+ * left empty so the live `ForgeCodeBlock` can be portalled into it without ever
  * leaking into the serialized model value.
  */
 export function createCodeBlockHtml(code: string, language = 'plaintext'): string {
@@ -57,7 +57,7 @@ export function createCodeBlockHtml(code: string, language = 'plaintext'): strin
 
 /**
  * Serialize the editing surface to the HTML model value, **emptying** every
- * code-block embed first so the portalled `BaseCodeBlock` markup (and transient
+ * code-block embed first so the portalled `ForgeCodeBlock` markup (and transient
  * bookkeeping attributes) never appear in the persisted value — only the stable
  * `data-mp-code`/`data-mp-language` placeholder is kept.
  */

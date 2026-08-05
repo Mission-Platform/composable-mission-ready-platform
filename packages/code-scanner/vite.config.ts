@@ -24,12 +24,12 @@ import { defineConfig, type Plugin, type UserConfig } from 'vite';
  *   test-safe). The sibling decoder packages (`@mission-platform/qr-code`,
  *   `-/matrix-code`, `-/barcode`) are kept external — each ships its own inlined
  *   wasm. This is the package's `.` export.
- * - **`vue` / `react`** — the write-once `BaseCodeScanner` **component** compiled
+ * - **`vue` / `react`** — the write-once `ForgeCodeScanner` **component** compiled
  *   to native Vue 3 / React by the two-stage compiler in
  *   `@mission-platform/vite-plugin-forge`. These are the package's `./vue` /
  *   `./react` exports. The component consumes the scanner through the package's
  *   own `.` entry (`@mission-platform/code-scanner`, kept external) and reuses
- *   `BaseButton` / `BaseTypography` from `@mission-platform/components`.
+ *   `ForgeButton` / `ForgeTypography` from `@mission-platform/components`.
  */
 
 const componentsModule = path.resolve(__dirname, 'src/components/index.ts');
@@ -98,7 +98,7 @@ function defineScannerConfig(): UserConfig {
   });
 }
 
-/** The per-framework `BaseCodeScanner` component build (`dist/react`, `dist/vue`, `dist/solid`, `dist/svelte`, `dist/web-components`). */
+/** The per-framework `ForgeCodeScanner` component build (`dist/react`, `dist/vue`, `dist/solid`, `dist/svelte`, `dist/web-components`). */
 function defineFrameworkConfig(framework: JsxFramework): UserConfig {
   const cacheName = `code-scanner-${framework}`;
   const generatedDir = path.join(cacheRoot, cacheName);

@@ -92,7 +92,7 @@ export interface SlottedChildren {
 /**
  * Partition a parent component's children by their `slot="…"` marker so a
  * write-once component can **pass** content into a child component's named slot
- * (`<BaseDropdown><button slot="trigger" />…</BaseDropdown>`). Children carrying
+ * (`<ForgeDropdown><button slot="trigger" />…</ForgeDropdown>`). Children carrying
  * a `slot` property are grouped under that name (with the marker stripped, so
  * the resolved content never emits a stray `slot` attribute); everything else
  * stays in {@link SlottedChildren.defaultChildren}. The adapters fold the named
@@ -142,7 +142,7 @@ export function hasSlot(name?: string): boolean {
  * child tree against the **current** (parent) scope, returning a tree of concrete
  * content. This is what lets a write-once component **forward** one of its own
  * named slots into a child component's slot —
- * `<BaseDrawer><div slot="header"><Slot name="startHeader" /></div></BaseDrawer>`
+ * `<ForgeDrawer><div slot="header"><Slot name="startHeader" /></div></ForgeDrawer>`
  * — and have it resolve lexically (against the forwarding component), exactly
  * like the compiled output (React captures `properties.startHeader` in the
  * parent's render; Vue forwards the slot through `<template #header>`).

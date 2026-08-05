@@ -56,7 +56,7 @@ function debounce<T extends unknown[]>(
  *
  * This is the single source of truth shared by the Vue `useHunspellMonaco`
  * composable (which adds reactive enable/language wiring) and the write-once
- * `@mission-platform/components` `BaseMonacoEditor` (which wires it through
+ * `@mission-platform/components` `ForgeMonacoEditor` (which wires it through
  * the neutral `useEffect` hooks) — so both frameworks behave identically.
  *
  * It spawns a worker via `window.HunspellEnvironment.getWorker()`, sends editor

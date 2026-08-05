@@ -1,0 +1,29 @@
+/**
+ * Demo styling for the write-once `ForgeInView`.
+ *
+ * The component animates the wrapper via inline styles only; this co-located
+ * CSS Module just dresses the slotted demo content (a token-driven card) so the
+ * Storybook reveal is visible.
+ *
+ * The rules live in the shared `mp.components` cascade layer (matching the
+ * `@mission-platform/components` package). The stylesheet is a CSS Module,
+ * consumed through its hashed class map by `forge-in-view.stories.tsx`.
+ */
+
+@layer mp.components {
+  .in-view-demo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 8rem;
+    padding: var(--mp-spacing-4);
+    border-radius: var(--mp-radius-lg);
+    background: var(--mp-color-primary-subtle);
+    color: var(--mp-color-primary-text);
+    font-weight: 600;
+  }
+
+  .in-view-spacer {
+    min-height: 120vh;
+  }
+}

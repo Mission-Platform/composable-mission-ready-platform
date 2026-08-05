@@ -53,9 +53,9 @@
       "types": "./dist/vue/index.d.ts",
       "import": "./dist/vue/index.js"
     },
-    "./base-drawer": {
-      "types": "./dist/components/base-drawer/index.d.ts",
-      "import": "./dist/components/base-drawer/index.js"
+    "./forge-drawer": {
+      "types": "./dist/components/forge-drawer/index.d.ts",
+      "import": "./dist/components/forge-drawer/index.js"
     },
     "./storyblok/react": {
       "types": "./dist/storyblok/react/index.d.ts",

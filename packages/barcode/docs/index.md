@@ -1,7 +1,7 @@
 # @mission-platform/barcode
 
 A dependency-free **1D (linear) barcode encoder and decoder** written in Rust and compiled to **WebAssembly**, exposed
-through a small, fully typed ES module wrapper and a write-once `BaseBarcode` UI component.
+through a small, fully typed ES module wrapper and a write-once `ForgeBarcode` UI component.
 
 ## Overview
 
@@ -9,13 +9,13 @@ through a small, fully typed ES module wrapper and a write-once `BaseBarcode` UI
 
 - **Encoder**: Renders symbology + payload into a flat run of module bits (`1` = bar, `0` = space).
 - **Decoder**: Reads a clean module run of any supported symbology back into its payload.
-- **UI Component (`BaseBarcode`)**: Write-once component compiled for Vue 3 (`@mission-platform/barcode/vue`) and React
+- **UI Component (`ForgeBarcode`)**: Write-once component compiled for Vue 3 (`@mission-platform/barcode/vue`) and React
   (`@mission-platform/barcode/react`).
 
 ## Supported Symbologies
 
 | Symbology    | Notes                                                                  |
-|--------------|------------------------------------------------------------------------|
+| ------------ | ---------------------------------------------------------------------- |
 | `code128`    | High density. Code B for printable ASCII; Code C fast path for digits. |
 | `gs1-128`    | Code 128 with leading FNC1 for GS1 Application Identifiers.            |
 | `code39`     | Alphanumeric, self-checking; auto-framed with `*` start/stop.          |
@@ -54,11 +54,11 @@ const payload = decodeBarcode('code128', barcode.modules);
 
 ```vue
 <script setup lang="ts">
-  import { BaseBarcode } from '@mission-platform/barcode/vue';
+  import { ForgeBarcode } from '@mission-platform/barcode/vue';
 </script>
 
 <template>
-  <BaseBarcode
+  <ForgeBarcode
     symbology="code128"
     value="MISSION-128"
     :height="60"
@@ -69,11 +69,11 @@ const payload = decodeBarcode('code128', barcode.modules);
 **React:**
 
 ```tsx
-import { BaseBarcode } from '@mission-platform/barcode/react';
+import { ForgeBarcode } from '@mission-platform/barcode/react';
 
 export function BarcodeViewer() {
   return (
-    <BaseBarcode
+    <ForgeBarcode
       symbology="code128"
       value="MISSION-128"
       height={60}

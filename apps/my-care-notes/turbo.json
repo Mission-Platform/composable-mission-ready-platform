@@ -11,19 +11,19 @@
       "outputs": ["dist/**", ".output/**", ".vite/**", "public/sitemap.xml", "public/robots.txt"]
     },
     "deploy": {
-      "dependsOn": ["build", "@mission-platform/base-spa#build"],
+      "dependsOn": ["build", "@mission-platform/forge-spa#build"],
       "cache": false
     },
     "deploy:staging": {
-      "dependsOn": ["build", "@mission-platform/base-spa#build"],
+      "dependsOn": ["build", "@mission-platform/forge-spa#build"],
       "cache": false
     },
     "version": {
-      "dependsOn": ["build", "@mission-platform/base-spa#build"],
+      "dependsOn": ["build", "@mission-platform/forge-spa#build"],
       "cache": false
     },
     "version:staging": {
-      "dependsOn": ["build", "@mission-platform/base-spa#build"],
+      "dependsOn": ["build", "@mission-platform/forge-spa#build"],
       "cache": false
     }
   }

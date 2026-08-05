@@ -4,21 +4,29 @@
 // Vue 3 (`./vue`) and React (`./react`) by `@mission-platform/vite-plugin-forge`.
 
 export {
-  BaseWysiwygBlockControls,
+  ForgeWysiwygBlockControls,
   type WysiwygBlockAlign,
   type WysiwygBlockControlsGeometry,
   type WysiwygBlockControlsProperties,
-} from './molecules/base-wysiwyg-block-controls';
-export { BaseWysiwygBlockMenu, blockFormatLabel, type WysiwygBlockMenuProperties } from './molecules/base-wysiwyg-block-menu';
-export { BaseWysiwygEditor, type WysiwygEditorProperties } from './organisms/base-wysiwyg-editor';
+} from './molecules/forge-wysiwyg-block-controls';
 export {
-  BaseWysiwygStatusBar,
+  ForgeWysiwygBlockMenu,
+  blockFormatLabel,
+  type WysiwygBlockMenuProperties,
+} from './molecules/forge-wysiwyg-block-menu';
+export { ForgeWysiwygEditor, type WysiwygEditorProperties } from './organisms/forge-wysiwyg-editor';
+export {
+  ForgeWysiwygStatusBar,
   type WysiwygStatusBarAlign,
   type WysiwygStatusBarProperties,
   type WysiwygStatusItem,
-} from './molecules/base-wysiwyg-status-bar';
-export { BaseWysiwygToolbar, type WysiwygToolbarItem, type WysiwygToolbarProperties } from './molecules/base-wysiwyg-toolbar';
-export { BaseWysiwygToolbarButton, type WysiwygToolbarButtonProperties } from './atoms/base-wysiwyg-toolbar-button';
+} from './molecules/forge-wysiwyg-status-bar';
+export {
+  ForgeWysiwygToolbar,
+  type WysiwygToolbarItem,
+  type WysiwygToolbarProperties,
+} from './molecules/forge-wysiwyg-toolbar';
+export { ForgeWysiwygToolbarButton, type WysiwygToolbarButtonProperties } from './atoms/forge-wysiwyg-toolbar-button';
 
 // Public prop/callback types surfaced across the editor's API, re-exported from
 // the package entry so consumers can import them directly (the `labels` prop's

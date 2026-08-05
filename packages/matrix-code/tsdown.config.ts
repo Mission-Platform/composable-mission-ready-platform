@@ -8,7 +8,10 @@ import { defineTsdownForgeComponentsAll } from '@mission-platform/vite-plugin-fo
  * output is bundled into the matrix-code package so the published artifact stays
  * self-contained with no external runtime dependency.
  */
-const WASM_PACKAGES = ['@mission-platform/matrix-code-encode-wasm', '@mission-platform/matrix-code-decode-wasm'] as const;
+const WASM_PACKAGES = [
+  '@mission-platform/matrix-code-encode-wasm',
+  '@mission-platform/matrix-code-decode-wasm',
+] as const;
 
 /**
  * Neutral self-contained encoder/decoder (`dist/index.js` + dts) plus the five

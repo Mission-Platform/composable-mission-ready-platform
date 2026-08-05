@@ -16,12 +16,12 @@ import { WysiwygEditor } from '@mission-platform/wysiwyg/react';
 ## What it uses
 
 - **`@mission-platform/forge`** — write-once authoring (neutral `h` + hooks).
-- **`@mission-platform/components`** — composes `BaseButton` for the toolbar,
-  `BaseDropdown` for the block-format menu, `BaseCodeBlock` for the non-editable
-  code-block embeds, and `BaseMonacoEditor` for the HTML **source view** (which,
+- **`@mission-platform/components`** — composes `ForgeButton` for the toolbar,
+  `ForgeDropdown` for the block-format menu, `ForgeCodeBlock` for the non-editable
+  code-block embeds, and `ForgeMonacoEditor` for the HTML **source view** (which,
   with `spellCheck`, enables Hunspell spelling + Harper grammar checking via
   `@mission-platform/hunspell` / `@mission-platform/harper`).
-- **`@mission-platform/forms`** — composes `BaseSchemaFormDialog` for the
+- **`@mission-platform/forms`** — composes `ForgeSchemaFormDialog` for the
   **code-block insertion dialog** (a JSON-Schema-driven form with a Monaco
   `code` field and a language selector), replacing the old `window.prompt`.
 - **`@mission-platform/icons`** — toolbar glyphs (including the new
@@ -51,20 +51,20 @@ import { WysiwygEditor } from '@mission-platform/wysiwyg/react';
   `items: WysiwygStatusItem[]` array (`{ id, label, value? }`) to replace them.
 - `WysiwygBlockControls` — the per-block overlay: outlines the hovered/active
   block and floats a bar to move it up/down and change its alignment.
-- `WysiwygToolbarButton` — a single icon toolbar control (wraps `BaseButton`);
+- `WysiwygToolbarButton` — a single icon toolbar control (wraps `ForgeButton`);
   its click is reported through `onClick`.
 
 ### Code blocks
 
 The toolbar's **code-block** control opens a **Monaco dialog** — the
-`BaseSchemaFormDialog` from `@mission-platform/forms`, driven by a JSON Schema
+`ForgeSchemaFormDialog` from `@mission-platform/forms`, driven by a JSON Schema
 with a language selector and a Monaco-backed `code` field — to author the
 snippet (the caret position is saved/restored so the block lands where you were
 editing). The `code` field's **syntax highlighting follows the selected
 language** (the picker drives the editor, not just the inserted block). On
 submit the editor inserts a non-editable `contenteditable="false"`
 placeholder (carrying the code in `data-mp-code` / `data-mp-language`); it then
-portals a real `BaseCodeBlock` into each placeholder with the neutral
+portals a real `ForgeCodeBlock` into each placeholder with the neutral
 `<Teleport>`. The serialized `modelValue` keeps only the (empty) placeholder, so
 persisted HTML stays clean and round-trips.
 

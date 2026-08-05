@@ -1,5 +1,5 @@
 {
-  "$description": "Composite typography styles for Mission Platform. Each token is a DTCG `typography` value composed from the primitive font tokens in font.tokens.json plus the `marginBlock`/`marginInline` logical-margin steps from spacing.tokens.json. The variants mirror the `BaseTypography` component variants and resolve, at generation time, to the matching `--mp-typography-<variant>-*` CSS custom properties (which themselves reference the primitive `--mp-font-*`, `--mp-line-height-*`, `--mp-letter-spacing-*` and `--mp-spacing-*` tokens).",
+  "$description": "Composite typography styles for Mission Platform. Each token is a DTCG `typography` value composed from the primitive font tokens in font.tokens.json plus the `marginBlock`/`marginInline` logical-margin steps from spacing.tokens.json. The variants mirror the `ForgeTypography` component variants and resolve, at generation time, to the matching `--mp-typography-<variant>-*` CSS custom properties (which themselves reference the primitive `--mp-font-*`, `--mp-line-height-*`, `--mp-letter-spacing-*` and `--mp-spacing-*` tokens).",
   "typography": {
     "$type": "typography",
     "display": {

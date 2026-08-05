@@ -145,14 +145,14 @@ describe('buildStructuralScss', () => {
 });
 
 describe('buildLightDarkThemeScss', () => {
-  const light = { color: { $type: 'color', bg: { base: { $value: '{color.base-light}' } } } };
+  const light = { color: { $type: 'color', bg: { base: { $value: '{color.forge-light}' } } } };
   const dark = { color: { $type: 'color', bg: { base: { $value: '{color.cyan.950}' } } } };
   const scss = buildLightDarkThemeScss(light, dark, 'mp');
 
   it('emits a :root block with `color-scheme` and `light-dark()` values referencing palette vars', () => {
     expect(scss).toContain(':root {');
     expect(scss).toContain('color-scheme: light dark;');
-    expect(scss).toContain('--mp-color-bg-base: light-dark(var(--mp-color-base-light), var(--mp-color-cyan-950));');
+    expect(scss).toContain('--mp-color-bg-base: light-dark(var(--mp-color-forge-light), var(--mp-color-cyan-950));');
   });
 
   it('wraps the theme `:root` block in the `mp.tokens` cascade layer', () => {

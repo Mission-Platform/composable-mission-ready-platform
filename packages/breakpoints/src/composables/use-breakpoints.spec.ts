@@ -17,7 +17,10 @@ class MockResizeObserver {
 
   static trigger(width: number) {
     if (this.callback) {
-      this.callback([{ contentRect: { width }, target: document.documentElement } as ResizeObserverEntry], {} as ResizeObserver);
+      this.callback(
+        [{ contentRect: { width }, target: document.documentElement } as ResizeObserverEntry],
+        {} as ResizeObserver,
+      );
     }
   }
 }

@@ -5,7 +5,7 @@
  * Floating panels are portalled out of their normal DOM position so they escape
  * any `overflow`/stacking context. By default that target is `document.body`,
  * but that breaks when the trigger sits **inside an open native modal
- * `<dialog>`** (`BaseModal`/`BaseDialog`): a modal dialog renders everything
+ * `<dialog>`** (`ForgeModal`/`ForgeDialog`): a modal dialog renders everything
  * that is **not** part of its own subtree `inert`, so a panel portalled to
  * `body` ends up inert — invisible/non-interactive and mis-stacked — while the
  * (possibly nested) modal is open.

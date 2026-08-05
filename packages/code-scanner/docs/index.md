@@ -20,7 +20,7 @@ const allResults = scanImageDataAll(imageData);
 const resultFromFile = await scanFile(file);
 ```
 
-### UI Component (`BaseCodeScanner`)
+### UI Component (`ForgeCodeScanner`)
 
 Write-once component available for Vue 3 and React via subpath exports.
 
@@ -28,20 +28,20 @@ Write-once component available for Vue 3 and React via subpath exports.
 
 ```vue
 <script setup lang="ts">
-  import { BaseCodeScanner } from '@mission-platform/code-scanner/vue';
+  import { ForgeCodeScanner } from '@mission-platform/code-scanner/vue';
 </script>
 
 <template>
-  <BaseCodeScanner @result="(res) => console.log(res.value)" />
+  <ForgeCodeScanner @result="(res) => console.log(res.value)" />
 </template>
 ```
 
 **React:**
 
 ```tsx
-import { BaseCodeScanner } from '@mission-platform/code-scanner/react';
+import { ForgeCodeScanner } from '@mission-platform/code-scanner/react';
 
 export function CameraScanner() {
-  return <BaseCodeScanner onResult={(result) => console.log(result.value)} />;
+  return <ForgeCodeScanner onResult={(result) => console.log(result.value)} />;
 }
 ```

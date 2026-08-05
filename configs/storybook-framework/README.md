@@ -51,9 +51,9 @@ STORYBOOK_FRAMEWORK=react pnpm --filter @mission-platform/storybook build-storyb
 
 ## API
 
-| Export                      | Purpose                                                        |
-| --------------------------- | -------------------------------------------------------------- |
-| `createStorybookConfig`     | Build a unified `StorybookConfig` for the active framework.    |
+| Export                      | Purpose                                                          |
+| --------------------------- | ---------------------------------------------------------------- |
+| `createStorybookConfig`     | Build a unified `StorybookConfig` for the active framework.      |
 | `resolveStorybookFramework` | Resolve the framework from `STORYBOOK_FRAMEWORK` / explicit arg. |
-| `storyGlobs`                | Build the per-framework + neutral story globs.                 |
-| `StorybookFramework`        | The supported framework union type.                            |
+| `storyGlobs`                | Build the per-framework + neutral story globs.                   |
+| `StorybookFramework`        | The supported framework union type.                              |

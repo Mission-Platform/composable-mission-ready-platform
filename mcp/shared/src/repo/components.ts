@@ -17,7 +17,7 @@ export const ATOMIC_LEVELS = ['atoms', 'molecules', 'organisms', 'templates', 'p
 export type AtomicLevel = (typeof ATOMIC_LEVELS)[number];
 
 export interface ComponentSummary {
-  /** Kebab-case folder name, e.g. `base-button`. */
+  /** Kebab-case folder name, e.g. `forge-button`. */
   slug: string;
   /** Exported symbol names taken from the folder's `index.ts`. */
   exports: string[];
@@ -27,12 +27,12 @@ export interface ComponentSummary {
    * lives outside the atomic hierarchy.
    */
   level: AtomicLevel | 'unknown';
-  /** Path relative to `src/components`, e.g. `atoms/base-button`. */
+  /** Path relative to `src/components`, e.g. `atoms/forge-button`. */
   relativePath: string;
 }
 
 export interface ComponentUsage extends ComponentSummary {
-  /** The primary exported component name, e.g. `BaseButton`. */
+  /** The primary exported component name, e.g. `ForgeButton`. */
   componentName: string;
   /** Source of the primary props interface, if it could be located. */
   propsInterface?: string;
@@ -135,7 +135,7 @@ function extractExports(source: string): string[] {
   return [...names];
 }
 
-/** Convert a kebab-case slug (`base-button`) to PascalCase (`BaseButton`). */
+/** Convert a kebab-case slug (`forge-button`) to PascalCase (`ForgeButton`). */
 function toPascalCase(slug: string): string {
   return slug
     .split('-')
@@ -204,7 +204,7 @@ export function getComponentUsage(nameOrSlug: string): ComponentUsage | undefine
   const { propsInterface, docComment } = sourceFile ? extractPropertiesInterface(readFileSync(sourceFile, 'utf8')) : {};
 
   const stories = existsSync(dir) ? readdirSync(dir).filter((file) => file.includes('.stories.')) : [];
-  const componentName = summary.exports.find((name) => name.startsWith('Base')) ?? toPascalCase(summary.slug);
+  const componentName = summary.exports.find((name) => name.startsWith('Forge')) ?? toPascalCase(summary.slug);
 
   return {
     ...summary,

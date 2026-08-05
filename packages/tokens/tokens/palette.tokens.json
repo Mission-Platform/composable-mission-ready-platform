@@ -17,7 +17,7 @@
       },
       "$description": "Absolute white (OKLab L=1)."
     },
-    "base-light": {
+    "forge-light": {
       "$value": {
         "colorSpace": "oklab",
         "components": [0.95719, -0.0013, -0.00318]

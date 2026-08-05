@@ -1,6 +1,6 @@
 import { h } from '@mission-platform/forge';
 
-import { ApplicationLayout, Container } from '@mission-platform/layouts';
+import { ForgeApplicationLayout, ForgeContainer } from '@mission-platform/layouts';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
@@ -8,25 +8,25 @@ import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
  * **Websites** — example marketing / public-site layouts assembled from the
  * `@mission-platform/layouts` primitives.
  *
- * The page shell is the cross-framework {@link ApplicationLayout} (a sticky
- * nav, the scrollable content, and a multi-column footer); a {@link Container}
- * caps each section's reading width, while a `fluid` `Container` powers the
+ * The page shell is the cross-framework {@link ForgeApplicationLayout} (a sticky
+ * nav, the scrollable content, and a multi-column footer); a {@link ForgeContainer}
+ * caps each section's reading width, while a `fluid` `ForgeContainer` powers the
  * full-bleed hero band. Presentational only.
  */
 const meta = {
   title: 'Layouts/Examples/Websites',
-  component: ApplicationLayout,
+  component: ForgeApplicationLayout,
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
         component:
-          'Marketing-site layouts built from `@mission-platform/layouts`: an `ApplicationLayout` shell with a sticky nav and a multi-column footer, a `fluid` `Container` for the full-bleed hero band, and `responsive` `Container`s capping the feature sections. Presentational only.',
+          'Marketing-site layouts built from `@mission-platform/layouts`: an `ForgeApplicationLayout` shell with a sticky nav and a multi-column footer, a `fluid` `ForgeContainer` for the full-bleed hero band, and `responsive` `ForgeContainer`s capping the feature sections. Presentational only.',
       },
     },
   },
   args: { stickyHeader: true },
-} satisfies Meta<typeof ApplicationLayout>;
+} satisfies Meta<typeof ForgeApplicationLayout>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -80,41 +80,77 @@ const FOOTER_COLS = {
 /** A marketing landing page: a full-bleed hero over a responsive feature grid, with a multi-column footer. */
 export const Marketing: Story = {
   render: (arguments_) => (
-    <ApplicationLayout
+    <ForgeApplicationLayout
       {...arguments_}
       navbar={
         <div style={NAVBAR}>
           <strong>Mission Platform</strong>
-          <nav style={NAV_LINKS}><span>Product</span><span>Pricing</span><span>Docs</span><span>Contact</span></nav>
+          <nav style={NAV_LINKS}>
+            <span>Product</span>
+            <span>Pricing</span>
+            <span>Docs</span>
+            <span>Contact</span>
+          </nav>
         </div>
       }
       content={
         <div>
           <section style={HERO}>
-            <Container variant="fluid">
+            <ForgeContainer variant="fluid">
               <h1 style={{ margin: 0, fontSize: 'var(--mp-size-font-2xl)' }}>Ship composable apps faster</h1>
               <p>One write-once component library for Vue and React.</p>
               <a style={HERO_BTN}>Get started</a>
-            </Container>
+            </ForgeContainer>
           </section>
           <section style={SECTION}>
-            <Container variant="responsive">
+            <ForgeContainer variant="responsive">
               <h2 style={{ marginTop: 0 }}>Features</h2>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(15rem, 1fr))', gap: 'var(--mp-spacing-4)' }}>
-                <div style={FEATURE}><h3 style={{ marginTop: 0 }}>Write once</h3><p>Author components in a neutral dialect.</p></div>
-                <div style={FEATURE}><h3 style={{ marginTop: 0 }}>Ship everywhere</h3><p>Compile straight to Vue and React.</p></div>
-                <div style={FEATURE}><h3 style={{ marginTop: 0 }}>Design tokens</h3><p>Theme it all with DTCG tokens.</p></div>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(15rem, 1fr))',
+                  gap: 'var(--mp-spacing-4)',
+                }}
+              >
+                <div style={FEATURE}>
+                  <h3 style={{ marginTop: 0 }}>Write once</h3>
+                  <p>Author components in a neutral dialect.</p>
+                </div>
+                <div style={FEATURE}>
+                  <h3 style={{ marginTop: 0 }}>Ship everywhere</h3>
+                  <p>Compile straight to Vue and React.</p>
+                </div>
+                <div style={FEATURE}>
+                  <h3 style={{ marginTop: 0 }}>Design tokens</h3>
+                  <p>Theme it all with DTCG tokens.</p>
+                </div>
               </div>
-            </Container>
+            </ForgeContainer>
           </section>
         </div>
       }
       footer={
         <div style={FOOTER_COLS}>
-          <div><strong>Product</strong><p>Features</p><p>Pricing</p></div>
-          <div><strong>Company</strong><p>About</p><p>Careers</p></div>
-          <div><strong>Resources</strong><p>Docs</p><p>Blog</p></div>
-          <div><strong>Legal</strong><p>Privacy</p><p>Terms</p></div>
+          <div>
+            <strong>Product</strong>
+            <p>Features</p>
+            <p>Pricing</p>
+          </div>
+          <div>
+            <strong>Company</strong>
+            <p>About</p>
+            <p>Careers</p>
+          </div>
+          <div>
+            <strong>Resources</strong>
+            <p>Docs</p>
+            <p>Blog</p>
+          </div>
+          <div>
+            <strong>Legal</strong>
+            <p>Privacy</p>
+            <p>Terms</p>
+          </div>
         </div>
       }
     />
@@ -124,19 +160,31 @@ export const Marketing: Story = {
 /** A focused single-call-to-action landing page inside a narrow responsive container. */
 export const Landing: Story = {
   render: (arguments_) => (
-    <ApplicationLayout
+    <ForgeApplicationLayout
       {...arguments_}
-      navbar={<div style={NAVBAR}><strong>Mission Platform</strong><span>Sign in</span></div>}
+      navbar={
+        <div style={NAVBAR}>
+          <strong>Mission Platform</strong>
+          <span>Sign in</span>
+        </div>
+      }
       content={
         <section style={HERO}>
-          <Container variant="fixed" maxWidth="md">
+          <ForgeContainer
+            variant="fixed"
+            maxWidth="md"
+          >
             <h1 style={{ margin: 0, fontSize: 'var(--mp-size-font-2xl)' }}>The platform for mission-ready teams</h1>
             <p>Join thousands of teams building with Mission Platform.</p>
             <a style={HERO_BTN}>Request a demo</a>
-          </Container>
+          </ForgeContainer>
         </section>
       }
-      footer={<div style={FOOTER_COLS}><div>© Mission Platform</div></div>}
+      footer={
+        <div style={FOOTER_COLS}>
+          <div>© Mission Platform</div>
+        </div>
+      }
     />
   ),
 };

@@ -5,7 +5,7 @@
  * modifier classes, each resolving to a named `--mp-size-font-*` design token.
  * Consumed by the write-once component packages (e.g. `@mission-platform/forms`)
  * through a thin `.module.scss` that `@use`s this partial and `@include`s the
- * `size-classes` mixin, so the CSS-Module-localised `base-size--<step>` classes
+ * `size-classes` mixin, so the CSS-Module-localised `forge-size--<step>` classes
  * are emitted per component.
  *
  * The mixin takes the target cascade `$layer` so each package can emit the
@@ -16,7 +16,7 @@
 @mixin size-classes($layer: 'mp.components') {
   @layer #{$layer} {
     @each $step in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
-      .base-size--#{$step} {
+      .forge-size--#{$step} {
         font-size: var(--mp-size-font-#{$step});
       }
     }

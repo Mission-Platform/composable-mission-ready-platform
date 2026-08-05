@@ -1,13 +1,13 @@
 # `@mission-platform/forms`
 
-Write-once form orchestration components (`BaseSchemaForm`, `BaseFormBuilder`) authored with `@mission-platform/forge`
+Write-once form orchestration components (`ForgeSchemaForm`, `ForgeFormBuilder`) authored with `@mission-platform/forge`
 and shipped as native Vue 3 (`@mission-platform/forms/vue`) and React (`@mission-platform/forms/react`) components.
 
 ## Features
 
-- **Data-Driven Schema Forms**: `BaseSchemaForm` renders single-step forms or multi-step form wizards directly from JSON
+- **Data-Driven Schema Forms**: `ForgeSchemaForm` renders single-step forms or multi-step form wizards directly from JSON
   Schema definitions.
-- **Visual Form Builder**: `BaseFormBuilder` provides a visual palette, canvas editor, and inspector for creating and
+- **Visual Form Builder**: `ForgeFormBuilder` provides a visual palette, canvas editor, and inspector for creating and
   editing form schemas.
 - **Ajv Validation Engine**: Powered by `@mission-platform/forms-core` for consistent client-side validation.
 - **Cross-Framework Parity**: Authored once in neutral JSX, compiled to native Vue and React targets.
@@ -24,7 +24,7 @@ pnpm add @mission-platform/forms @mission-platform/forms-core
 
 ```vue
 <script setup lang="ts">
-  import { BaseSchemaForm, BaseFormBuilder } from '@mission-platform/forms/vue';
+  import { ForgeSchemaForm, ForgeFormBuilder } from '@mission-platform/forms/vue';
   import { ref } from 'vue';
 
   const schema = {
@@ -45,7 +45,7 @@ pnpm add @mission-platform/forms @mission-platform/forms-core
 </script>
 
 <template>
-  <BaseSchemaForm
+  <ForgeSchemaForm
     :schema="schema"
     @change="onChange"
   />
@@ -55,7 +55,7 @@ pnpm add @mission-platform/forms @mission-platform/forms-core
 ### React (`@mission-platform/forms/react`)
 
 ```tsx
-import { BaseSchemaForm, BaseFormBuilder } from '@mission-platform/forms/react';
+import { ForgeSchemaForm, ForgeFormBuilder } from '@mission-platform/forms/react';
 import { useState } from 'react';
 
 export function ContactForm() {
@@ -72,7 +72,7 @@ export function ContactForm() {
   };
 
   return (
-    <BaseSchemaForm
+    <ForgeSchemaForm
       schema={schema}
       onChange={setFormData}
     />
@@ -82,7 +82,7 @@ export function ContactForm() {
 
 ## Exports & Subpaths
 
-- `@mission-platform/forms`: Neutral component exports (`BaseSchemaForm`, `BaseFormBuilder`).
+- `@mission-platform/forms`: Neutral component exports (`ForgeSchemaForm`, `ForgeFormBuilder`).
 - `@mission-platform/forms/vue`: Compiled Vue 3 components.
 - `@mission-platform/forms/react`: Compiled React components.
 - `@mission-platform/forms/styles`: Shared accessibility stylesheet (`src/styles/a11y.scss`).

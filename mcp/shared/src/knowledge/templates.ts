@@ -3,7 +3,7 @@
  *
  * Each factory returns a map of *relative file path* → *file contents*. The
  * templates mirror the real structure of existing members (e.g. the
- * `breakpoints` package, `base-spa` worker and `my-care-notes` app) so
+ * `breakpoints` package, `forge-spa` worker and `my-care-notes` app) so
  * generated skeletons build and lint like hand-written ones.
  */
 
@@ -35,7 +35,7 @@ export interface CrateScaffoldOptions {
 export type ScaffoldAtomicLevel = 'atom' | 'molecule' | 'organism' | 'template' | 'page';
 
 export interface ComponentScaffoldOptions {
-  /** Kebab-case component folder name, e.g. `base-input`. */
+  /** Kebab-case component folder name, e.g. `forge-input`. */
   name: string;
   /** Atomic level (singular). */
   level: ScaffoldAtomicLevel;
@@ -86,9 +86,9 @@ export function toAreaTitle(area: string): string {
     .join('');
 }
 
-/** Strip a leading `Base` from a PascalCase name for `*Properties` types. */
+/** Strip a leading `Forge` from a PascalCase name for `*Properties` types. */
 function toPropertiesName(pascal: string): string {
-  const stem = pascal.startsWith('Base') && pascal.length > 4 ? pascal.slice(4) : pascal;
+  const stem = pascal.startsWith('Forge') && pascal.length > 5 ? pascal.slice(5) : pascal;
   return `${stem}Properties`;
 }
 
@@ -465,13 +465,13 @@ import App from './App.vue';
 createApp(App).mount('#app');
 `,
     'src/App.vue': `<script setup lang="ts">
-import { BaseButton } from '@mission-platform/components/vue';
+import { ForgeButton } from '@mission-platform/components/vue';
 </script>
 
 <template>
   <main>
     <h1>${title}</h1>
-    <BaseButton variant="primary">Get started</BaseButton>
+    <ForgeButton variant="primary">Get started</ForgeButton>
   </main>
 </template>
 `,

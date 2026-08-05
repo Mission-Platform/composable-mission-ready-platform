@@ -12,8 +12,8 @@ containers, and vertical responsive layouts.
 
 Component entry points:
 
-- **`@mission-platform/layouts`**: Framework-neutral JSX components (`BaseApplicationLayout`, `BaseContainer`,
-  `BaseVerticalLayout`).
+- **`@mission-platform/layouts`**: Framework-neutral JSX components (`ForgeApplicationLayout`, `ForgeContainer`,
+  `ForgeVerticalLayout`).
 - **`@mission-platform/layouts/vue`**: Pre-wrapped Vue 3 components.
 - **`@mission-platform/layouts/react`**: Pre-wrapped React components.
 - **`@mission-platform/layouts/storyblok/vue`**: Storyblok CMS integration for Vue 3.
@@ -36,36 +36,36 @@ pnpm add @mission-platform/layouts
 
 ```vue
 <script setup lang="ts">
-  import { BaseApplicationLayout, BaseContainer, BaseVerticalLayout } from '@mission-platform/layouts/vue';
+  import { ForgeApplicationLayout, ForgeContainer, ForgeVerticalLayout } from '@mission-platform/layouts/vue';
 </script>
 
 <template>
-  <BaseApplicationLayout app-title="Mission Platform App">
-    <BaseContainer max-width="lg">
-      <BaseVerticalLayout gap="md">
+  <ForgeApplicationLayout app-title="Mission Platform App">
+    <ForgeContainer max-width="lg">
+      <ForgeVerticalLayout gap="md">
         <h1>Welcome</h1>
         <p>Main content area</p>
-      </BaseVerticalLayout>
-    </BaseContainer>
-  </BaseApplicationLayout>
+      </ForgeVerticalLayout>
+    </ForgeContainer>
+  </ForgeApplicationLayout>
 </template>
 ```
 
 ### React Usage
 
 ```tsx
-import { BaseApplicationLayout, BaseContainer, BaseVerticalLayout } from '@mission-platform/layouts/react';
+import { ForgeApplicationLayout, ForgeContainer, ForgeVerticalLayout } from '@mission-platform/layouts/react';
 
 export function App() {
   return (
-    <BaseApplicationLayout appTitle="Mission Platform App">
-      <BaseContainer maxWidth="lg">
-        <BaseVerticalLayout gap="md">
+    <ForgeApplicationLayout appTitle="Mission Platform App">
+      <ForgeContainer maxWidth="lg">
+        <ForgeVerticalLayout gap="md">
           <h1>Welcome</h1>
           <p>Main content area</p>
-        </BaseVerticalLayout>
-      </BaseContainer>
-    </BaseApplicationLayout>
+        </ForgeVerticalLayout>
+      </ForgeContainer>
+    </ForgeApplicationLayout>
   );
 }
 ```
@@ -74,19 +74,19 @@ export function App() {
 
 ## Exported Components & API
 
-### `BaseApplicationLayout`
+### `ForgeApplicationLayout`
 
 An application shell layout with title, navigation slots, header, and main content section.
 
 - **Props**: `appTitle`, `status`, `statusLevel`, `homeUrl`, `logoUrl`, etc.
 
-### `BaseContainer`
+### `ForgeContainer`
 
 A responsive layout container restricting max-width and providing consistent padding.
 
 - **Props**: `maxWidth` (`'sm'` | `'md'` | `'lg'` | `'xl'` | `'full'`), `gutter`, `variant`, `size`.
 
-### `BaseVerticalLayout`
+### `ForgeVerticalLayout`
 
 A flexbox column layout with responsive gap options.
 

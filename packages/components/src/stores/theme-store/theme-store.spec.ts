@@ -1,13 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import {
-  configureTheme,
-  cycleTheme,
-  getThemeSnapshot,
-  setTheme,
-  subscribeTheme,
-  toggleTheme,
-} from './theme-store';
+import { configureTheme, cycleTheme, getThemeSnapshot, setTheme, subscribeTheme, toggleTheme } from './theme-store';
 
 describe('theme-store', () => {
   beforeEach(() => {

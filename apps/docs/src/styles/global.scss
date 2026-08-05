@@ -1,0 +1,218 @@
+:root {
+  color-scheme: light dark;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+body {
+  font-family: var(--mp-font-family-sans);
+  font-size: var(--mp-font-size-md);
+  background: var(--mp-color-bg-base, #fff);
+  color: var(--mp-color-text-primary, #111);
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+// ─── Rendered Markdown content ───────────────────────────────────────────────
+.markdown-body {
+  line-height: 1.7;
+  overflow-wrap: break-word;
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 1.25;
+    scroll-margin-top: 80px;
+  }
+
+  h1 {
+    margin: 0 0 24px;
+    font-size: 2rem;
+  }
+
+  h2 {
+    margin: 48px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--mp-color-border-default, #e5e7eb);
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    margin: 32px 0 12px;
+    font-size: 1.2rem;
+  }
+
+  p,
+  ul,
+  ol {
+    margin: 0 0 16px;
+  }
+
+  ul,
+  ol {
+    padding-left: 24px;
+  }
+
+  li + li {
+    margin-top: 4px;
+  }
+
+  a {
+    color: var(--mp-color-primary-default, #4a9ebe);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  code {
+    font-family: var(--mp-font-family-mono);
+    font-size: 0.875em;
+    padding: 0.15em 0.4em;
+    border-radius: var(--mp-radius-sm, 4px);
+    background: var(--mp-color-bg-muted, #f1f5f9);
+  }
+
+  pre {
+    margin: 0 0 20px;
+    padding: 16px 20px;
+    border-radius: var(--mp-radius-md, 8px);
+    background: var(--mp-color-bg-muted, #f6f8fa);
+    overflow-x: auto;
+  }
+
+  pre code {
+    padding: 0;
+    background: none;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  blockquote {
+    margin: 0 0 16px;
+    padding: 4px 16px;
+    border-left: 4px solid var(--mp-color-primary-default, #4a9ebe);
+    color: var(--mp-color-text-secondary, #4b5563);
+  }
+
+  table {
+    display: block;
+    width: 100%;
+    margin: 0 0 20px;
+    border-collapse: collapse;
+    overflow-x: auto;
+  }
+
+  th,
+  td {
+    padding: 8px 12px;
+    border: 1px solid var(--mp-color-border-default, #e5e7eb);
+    text-align: left;
+  }
+
+  th {
+    background: var(--mp-color-bg-muted, #f6f8fa);
+    font-weight: 600;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  hr {
+    margin: 32px 0;
+    border: none;
+    border-top: 1px solid var(--mp-color-border-default, #e5e7eb);
+  }
+}
+
+// ─── Code-block syntax theme (dark + auto) ───────────────────────────────────
+// `highlight.js/styles/github.css` (imported in `main.ts`) provides the light
+// palette. These overrides add the GitHub-dark palette so the syntax colours in
+// `ForgeCodeBlock` follow the active colour theme: for an explicit dark theme
+// (`[data-theme='dark']`) and for the default `auto` theme following a dark
+// operating-system preference (`:root:not([data-theme])`), mirroring the
+// `light-dark()` design tokens. An explicit light choice keeps the light theme.
+/* stylelint-disable selector-class-pattern */
+@mixin mp-hljs-dark {
+  .hljs {
+    color: #c9d1d9;
+  }
+
+  .hljs-comment,
+  .hljs-quote {
+    color: #8b949e;
+  }
+
+  .hljs-keyword,
+  .hljs-meta .hljs-keyword,
+  .hljs-template-tag,
+  .hljs-template-variable,
+  .hljs-type,
+  .hljs-variable.language_ {
+    color: #ff7b72;
+  }
+
+  .hljs-string,
+  .hljs-doctag,
+  .hljs-regexp,
+  .hljs-addition {
+    color: #a5d6ff;
+  }
+
+  .hljs-title,
+  .hljs-title.class_,
+  .hljs-title.function_,
+  .hljs-section,
+  .hljs-selector-id {
+    color: #d2a8ff;
+  }
+
+  .hljs-built_in,
+  .hljs-symbol {
+    color: #ffa657;
+  }
+
+  .hljs-number,
+  .hljs-literal,
+  .hljs-attr,
+  .hljs-attribute,
+  .hljs-variable,
+  .hljs-selector-attr,
+  .hljs-selector-class,
+  .hljs-selector-pseudo {
+    color: #79c0ff;
+  }
+
+  .hljs-name,
+  .hljs-tag {
+    color: #7ee787;
+  }
+
+  .hljs-deletion {
+    color: #ffdcd7;
+    background: #67060c;
+  }
+}
+
+[data-theme='dark'] {
+  @include mp-hljs-dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    @include mp-hljs-dark;
+  }
+}
+/* stylelint-enable selector-class-pattern */

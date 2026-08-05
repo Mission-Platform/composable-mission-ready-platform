@@ -1,7 +1,0 @@
-export {
-  BaseTextarea,
-  type TextareaAutocapitalize,
-  type TextareaProperties,
-  type TextareaResize,
-  type TextareaSize,
-} from './base-textarea';

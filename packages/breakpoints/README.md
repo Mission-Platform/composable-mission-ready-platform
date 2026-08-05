@@ -1,7 +1,7 @@
 # @mission-platform/breakpoints
 
 `@mission-platform/breakpoints` provides responsive breakpoint utilities and **write-once** viewport components for the
-Mission Platform. The components (`ShowAt`, `HideAt`, `BreakpointDebug`) are authored once in the neutral
+Mission Platform. The components (`ForgeShowAt`, `ForgeHideAt`, `ForgeBreakpointDebug`) are authored once in the neutral
 `@mission-platform/forge` dialect and compiled to **both Vue 3 and React** by `@mission-platform/vite-plugin-forge`.
 
 ## Subpath Exports
@@ -14,7 +14,7 @@ Mission Platform. The components (`ShowAt`, `HideAt`, `BreakpointDebug`) are aut
 ## Breakpoint Scale
 
 | Key   | Label             | Threshold     | Common Device / Use Case        |
-|:------|:------------------|:--------------|:--------------------------------|
+| :---- | :---------------- | :------------ | :------------------------------ |
 | `2xs` | Extra-extra-small | $\ge 0$ px    | All devices                     |
 | `xs`  | Extra-small       | $\ge 480$ px  | Large phones                    |
 | `sm`  | Small             | $\ge 768$ px  | Tablet portrait                 |
@@ -43,17 +43,17 @@ mediaQuery('lg'); // → '(min-width: 1920px)'
 
 ## Components
 
-- `<ShowAt min="md">`: Conditionally renders children/slot content when the viewport is at or above `min` (and/or
+- `<ForgeShowAt min="md">`: Conditionally renders children/slot content when the viewport is at or above `min` (and/or
   strictly below `max`).
-- `<HideAt min="lg">`: The inverse of `<ShowAt>` — hides children/slot content when the condition is met.
-- `<BreakpointDebug />`: Development-only overlay displaying the current active breakpoint (labels localised via
+- `<ForgeHideAt min="lg">`: The inverse of `<ForgeShowAt>` — hides children/slot content when the condition is met.
+- `<ForgeBreakpointDebug />`: Development-only overlay displaying the current active breakpoint (labels localised via
   i18next, `mp.breakpoints` namespace).
 
 ```tsx
 // React
-import { BreakpointDebug, HideAt, ShowAt } from '@mission-platform/breakpoints/react';
+import { ForgeBreakpointDebug, ForgeHideAt, ForgeShowAt } from '@mission-platform/breakpoints/react';
 // Vue 3
-import { BreakpointDebug, HideAt, ShowAt } from '@mission-platform/breakpoints/vue';
+import { ForgeBreakpointDebug, ForgeHideAt, ForgeShowAt } from '@mission-platform/breakpoints/vue';
 ```
 
 > The Vue-only `useBreakpoints` composable has been removed. Build custom reactive viewport logic on the `/core` helpers

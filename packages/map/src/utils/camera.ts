@@ -1,7 +1,7 @@
 /**
  * Pure helpers for reconciling a controlled MapLibre camera with incoming props.
  *
- * `BaseMapLibre` syncs its `center`, `zoom`, `bearing`, and `pitch` props onto
+ * `ForgeMapLibre` syncs its `center`, `zoom`, `bearing`, and `pitch` props onto
  * the live map through effects. When a consumer drives those props from the
  * map's own `move` event (the standard controlled pattern), naively re-applying
  * every value creates a feedback loop: the programmatic `setCenter`/`setZoom`

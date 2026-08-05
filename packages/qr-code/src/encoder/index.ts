@@ -118,10 +118,7 @@ export function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection =
  * @throws {RangeError} if the text is too long for any Micro QR version at the
  *   chosen level (including any request for level `H`).
  */
-export function encodeMicroQrAsync(
-  text: string,
-  errorCorrection: QrErrorCorrection = 'M',
-): Promise<CompactQrMatrix> {
+export function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix> {
   return Promise.resolve(unpackCompact(wasmEncodeMicroQr(text, ECC_ORDINAL[errorCorrection]), 'Micro QR Code'));
 }
 
@@ -149,9 +146,6 @@ export function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M
  * @throws {RangeError} if the text is too long for any rMQR version at the
  *   chosen level.
  */
-export function encodeRmqrAsync(
-  text: string,
-  errorCorrection: QrErrorCorrection = 'M',
-): Promise<CompactQrMatrix> {
+export function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix> {
   return Promise.resolve(unpackCompact(wasmEncodeRmqr(text, ECC_ORDINAL[errorCorrection]), 'rMQR Code'));
 }

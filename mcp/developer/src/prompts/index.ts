@@ -26,7 +26,7 @@ export function registerPrompts(server: McpServer): void {
     {
       description: 'Guide the assistant to correctly use a Mission Platform component in an app.',
       argsSchema: {
-        component: z.string().optional().describe('Component name or slug, e.g. "BaseButton".'),
+        component: z.string().optional().describe('Component name or slug, e.g. "ForgeButton".'),
         framework: z.string().optional().describe('Target framework: "vue" or "react". Defaults to vue.'),
       },
     },

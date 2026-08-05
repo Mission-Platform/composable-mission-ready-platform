@@ -86,7 +86,7 @@ export function registerTools(server: McpServer): void {
       inputSchema: {
         component: z
           .string()
-          .describe('Component name or slug, e.g. "BaseButton".'),
+          .describe('Component name or slug, e.g. "ForgeButton".'),
       },
     },
     async (args) => {

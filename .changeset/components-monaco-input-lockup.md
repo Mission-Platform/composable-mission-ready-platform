@@ -2,7 +2,7 @@
 '@mission-platform/components': patch
 ---
 
-Fix `BaseMonacoEditor` locking up on input (Vue). Two changes:
+Fix `ForgeMonacoEditor` locking up on input (Vue). Two changes:
 
 - The editor no longer freezes the browser when typing into it (observed via the
   schema-form `code` field / WYSIWYG code-block dialog). The root cause was in the

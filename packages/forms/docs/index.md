@@ -8,7 +8,7 @@ into native Vue 3 and React components.
 
 ## Core Components
 
-### `BaseSchemaForm`
+### `ForgeSchemaForm`
 
 The primary component for rendering data-driven forms. It takes a JSON Schema definition and automatically generates the
 corresponding UI widgets and validation logic.
@@ -55,7 +55,7 @@ const MyComponent = () => (
 
 ---
 
-### `BaseFormBuilder`
+### `ForgeFormBuilder`
 
 A visual authoring tool that allows non-developers to create form schemas without writing JSON manually.
 
@@ -65,11 +65,11 @@ A visual authoring tool that allows non-developers to create form schemas withou
 - **Wizard Configuration**: A dedicated "Steps" tab for managing multi-step flow in wizards.
 - **Live Preview**: Real-time rendering of the form as it is being built.
 - **Schema Export**: Emits a `SchemaFormDefinition` that can be saved to a database or used directly by
-  `BaseSchemaForm`.
+  `ForgeSchemaForm`.
 
 #### Layout:
 
-The builder is structured as a three-column layout using `BaseVerticalLayout`:
+The builder is structured as a three-column layout using `ForgeVerticalLayout`:
 
 1. **Field Palette**: A list of available widgets (inputs, selects, dates, etc.) to add to the form.
 2. **Editor Canvas**: The central area where fields are configured and organized.
@@ -79,8 +79,8 @@ The builder is structured as a three-column layout using `BaseVerticalLayout`:
 
 To avoid dependency cycles while maintaining framework parity:
 
-- `@mission-platform/forms` depends on `@mission-platform/components` (for individual input widgets like `BaseInput`,
-  `BaseCheckbox`) and `@mission-platform/layouts`.
+- `@mission-platform/forms` depends on `@mission-platform/components` (for individual input widgets like `ForgeInput`,
+  `ForgeCheckbox`) and `@mission-platform/layouts`.
 - It delegates all heavy lifting—validation, schema parsing, and conditional logic—to the framework-agnostic
   `@mission-platform/forms-core`.
 

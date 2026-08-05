@@ -1,15 +1,20 @@
-export { BaseApplicationLayout, type ApplicationLayoutProperties, type StatusLevel } from './templates/base-application-layout';
 export {
-  BaseContainer,
+  ForgeApplicationLayout,
+  type ApplicationLayoutProperties,
+  type SidebarBreakpoint,
+  type StatusLevel,
+} from './templates/forge-application-layout';
+export {
+  ForgeContainer,
   type ContainerGutter,
   type ContainerMaxWidth,
   type ContainerProperties,
   type ContainerSize,
   type ContainerVariant,
-} from './atoms/base-container';
+} from './atoms/forge-container';
 export {
-  BaseVerticalLayout,
+  ForgeVerticalLayout,
   type VerticalLayoutBreakpoint,
   type VerticalLayoutProperties,
   type VerticalLayoutSize,
-} from './templates/base-vertical-layout';
+} from './templates/forge-vertical-layout';

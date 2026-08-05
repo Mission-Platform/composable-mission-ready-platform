@@ -7,7 +7,7 @@
 // generated `./react` / `./vue` entry alongside the component.
 
 // ── Components ────────────────────────────────────────────────────────────────
-export { BaseThreeCanvas, type BaseThreeCanvasProperties } from './organisms/three-canvas/three-canvas';
+export { ForgeThreeCanvas, type ForgeThreeCanvasProperties } from './organisms/forge-three-canvas/forge-three-canvas';
 
 // ── Composables (helper modules) ──────────────────────────────────────────────
 export { useThree, type ThreeContext } from '../composables/use-three/use-three';

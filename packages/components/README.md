@@ -24,26 +24,26 @@ Import native Vue 3 components from `@mission-platform/components/vue`:
 
 ```vue
 <script setup lang="ts">
-  import { BaseButton, BaseCard, BaseInput } from '@mission-platform/components/vue';
+  import { ForgeButton, ForgeCard, ForgeInput } from '@mission-platform/components/vue';
   import { ref } from 'vue';
 
   const text = ref('');
 </script>
 
 <template>
-  <BaseCard>
-    <BaseInput
+  <ForgeCard>
+    <ForgeInput
       v-model="text"
       label="Username"
       placeholder="Enter username"
     />
-    <BaseButton
+    <ForgeButton
       variant="primary"
       size="md"
     >
       Submit
-    </BaseButton>
-  </BaseCard>
+    </ForgeButton>
+  </ForgeCard>
 </template>
 ```
 
@@ -52,26 +52,26 @@ Import native Vue 3 components from `@mission-platform/components/vue`:
 Import native React components from `@mission-platform/components/react`:
 
 ```tsx
-import { BaseButton, BaseCard, BaseInput } from '@mission-platform/components/react';
+import { ForgeButton, ForgeCard, ForgeInput } from '@mission-platform/components/react';
 import { useState } from 'react';
 
 export function UserForm() {
   const [text, setText] = useState('');
 
   return (
-    <BaseCard>
-      <BaseInput
+    <ForgeCard>
+      <ForgeInput
         value={text}
         onChange={(e) => setText(e.target.value)}
         label="Username"
       />
-      <BaseButton
+      <ForgeButton
         variant="primary"
         size="md"
       >
         Submit
-      </BaseButton>
-    </BaseCard>
+      </ForgeButton>
+    </ForgeCard>
   );
 }
 ```
@@ -82,7 +82,7 @@ When building higher-level write-once components using `@mission-platform/forge`
 `@mission-platform/components`:
 
 ```tsx
-import { BaseButton, BaseCard } from '@mission-platform/components';
+import { ForgeButton, ForgeCard } from '@mission-platform/components';
 ```
 
 ## Subpath Exports
@@ -90,24 +90,24 @@ import { BaseButton, BaseCard } from '@mission-platform/components';
 - `@mission-platform/components`: Neutral source barrel export for write-once components.
 - `@mission-platform/components/vue`: Compiled native Vue 3 components.
 - `@mission-platform/components/react`: Compiled native React components.
-- `@mission-platform/components/base-drawer`: Subpath for `BaseDrawer` component.
+- `@mission-platform/components/forge-drawer`: Subpath for `ForgeDrawer` component.
 - `@mission-platform/components/storyblok/vue`: Storyblok wrappers for Vue 3.
 - `@mission-platform/components/storyblok/react`: Storyblok wrappers for React.
 - `@mission-platform/components/styles`: Shared CSS accessibility helpers (`src/styles/_a11y.scss`).
 
 ## Component Categories
 
-- **Layout & Structure**: `BaseStack`, `BaseGrid`, `BaseSeparator`, `BaseMasonry`
-- **Application Shell & Navigation**: `BaseApplicationLayout`, `BaseNavbar`, `BaseDrawer`, `BasePagination`, `BaseTabs`,
-  `BaseMenu`, `BaseMenubar`, `BaseBreadcrumb`
-- **Typography & Content**: `BaseTypography`, `BaseHero`, `BaseQuote`, `BaseList`
-- **Forms & Inputs**: `BaseButton`, `BaseIconButton`, `BaseInput`, `BaseTextarea`, `BaseCheckbox`, `BaseRadio`,
-  `BaseSwitch`, `BaseNumberStepper`, `BaseSlider`, `BaseDateInput`, `BaseColorInput`
-- **Data Display**: `BaseTable`, `BaseVirtualList`, `BaseVirtualTable`, `BaseVirtualTreeView`, `BaseTreeView`,
-  `BaseTimeline`
-- **Feedback & Overlays**: `BaseAlertBanner`, `BaseToast`, `BaseSpinner`, `BaseSkeleton`, `BaseProgressBar`,
-  `BaseStatusIcon`
-- **Media & Theme**: `BaseResponsiveImage`, `BaseResponsiveVideo`, `BaseBackgroundVideo`, `BaseDeviceMock`,
-  `BaseThemeToggle`, `BaseThemeProvider`
+- **Layout & Structure**: `ForgeStack`, `ForgeGrid`, `ForgeSeparator`, `ForgeMasonry`
+- **Application Shell & Navigation**: `ForgeApplicationLayout`, `ForgeNavbar`, `ForgeDrawer`, `ForgePagination`, `ForgeTabs`,
+  `ForgeMenu`, `ForgeMenubar`, `ForgeBreadcrumb`
+- **Typography & Content**: `ForgeTypography`, `ForgeHero`, `ForgeQuote`, `ForgeList`
+- **Forms & Inputs**: `ForgeButton`, `ForgeIconButton`, `ForgeInput`, `ForgeTextarea`, `ForgeCheckbox`, `ForgeRadio`,
+  `ForgeSwitch`, `ForgeNumberStepper`, `ForgeSlider`, `ForgeDateInput`, `ForgeColorInput`
+- **Data Display**: `ForgeTable`, `ForgeVirtualList`, `ForgeVirtualTable`, `ForgeVirtualTreeView`, `ForgeTreeView`,
+  `ForgeTimeline`
+- **Feedback & Overlays**: `ForgeAlertBanner`, `ForgeToast`, `ForgeSpinner`, `ForgeSkeleton`, `ForgeProgressBar`,
+  `ForgeStatusIcon`
+- **Media & Theme**: `ForgeResponsiveImage`, `ForgeResponsiveVideo`, `ForgeBackgroundVideo`, `ForgeDeviceMock`,
+  `ForgeThemeToggle`, `ForgeThemeProvider`
 
 For detailed component props and architecture guides, see [docs/index.md](docs/index.md).

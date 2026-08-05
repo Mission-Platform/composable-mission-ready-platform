@@ -77,7 +77,7 @@ util.isValidNumberForRegion('(415) 555-2671', 'US'); // true
 `getPhoneNumberUtilSync()` / `PhoneNumberUtil.getInstanceSync()`):
 
 | Method                                         | Returns               | Description                                               |
-|------------------------------------------------|-----------------------|-----------------------------------------------------------|
+| ---------------------------------------------- | --------------------- | --------------------------------------------------------- |
 | `getCountryCodeForRegion(region)`              | `number`              | ITU calling code for a region (`0` if unknown).           |
 | `getRegionCodeForCountryCode(code)`            | `string \| undefined` | Primary region for a calling code.                        |
 | `getRegionCodeForNumber(input, defaultRegion)` | `string \| undefined` | Region the number belongs to.                             |
@@ -146,7 +146,7 @@ and diff-tested against the native engine and each other. The corpus is captured
 The curated runtime API now covers parsing, validity (including
 `isValidNumberForRegion`), classification, formatting, example numbers, supported-region listing and an as-you-type
 national formatter — enough to back
-`BasePhoneInput` without any third-party phone-number library. The precompilation engine remains the foundation for the
+`ForgePhoneInput` without any third-party phone-number library. The precompilation engine remains the foundation for the
 in-progress **full-parity** ports of
 `PhoneNumberUtil`, `AsYouTypeFormatter` and `ShortNumberInfo` over precompiled all-region metadata (with the original
 upstream test suites); until those land, the shipped surface stays the curated approximation documented above.
