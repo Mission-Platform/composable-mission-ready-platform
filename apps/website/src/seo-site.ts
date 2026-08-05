@@ -17,6 +17,9 @@ export const SITE_TITLE = 'Mission Platform — Composable. Mission Ready.';
 export const SITE_DESCRIPTION =
   'An independent, composable Vue 3 monorepo of design tokens, components, composables, and Cloudflare Workers for building modern, mission-ready web experiences.';
 
+/** Value emitted as the `<meta name="generator">` tag. */
+export const SITE_GENERATOR = 'Mission Platform';
+
 /** Map of locale → BCP-47 tag used for `<html lang>` and `hreflang`. */
 export const LOCALE_BCP47: Record<SupportedLocale, string> = {
   en: 'en-AU',
