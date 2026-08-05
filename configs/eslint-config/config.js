@@ -225,6 +225,15 @@ const config = [
       'sonarjs/cognitive-complexity': 'off',
       'sonarjs/no-duplicate-in-composite': 'off',
       'sonarjs/different-types-comparison': 'off',
+      // Heuristic type-inference rule with frequent false positives on generic
+      // calls and `Array#includes`/`Set#has` with union types (e.g. narrowed
+      // `string | number | boolean`). TypeScript's own type-checker (build:check)
+      // already covers genuine argument-type mismatches.
+      'sonarjs/argument-type': 'off',
+      // Same heuristic family as `argument-type`: false-positives on `key in x`
+      // where `x` is a union of object types, and it fights TypeScript's own
+      // control-flow narrowing (the safe narrowing form is what TS understands).
+      'sonarjs/in-operator-type-error': 'off',
       'sonarjs/function-return-type': 'off',
       'sonarjs/prefer-read-only-props': 'off',
       'sonarjs/no-globals-shadowing': 'off',
