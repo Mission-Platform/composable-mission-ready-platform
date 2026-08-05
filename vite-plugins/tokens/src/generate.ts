@@ -1,7 +1,7 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { flattenTokens, type DtcgGroup } from './dtcg.js';
+import { deepMergeTokens, flattenTokens, type DtcgGroup } from './dtcg.js';
 import {
   buildLightDarkThemeScss,
   buildScssVariablesScss,
@@ -29,6 +29,10 @@ export interface TokensPluginOptions {
   tokensDir: string;
   /** Absolute path to the directory where generated artefacts are written. */
   outDir: string;
+  /** Absolute path to a directory containing per-app token overrides. */
+  overridesDir?: string;
+  /** Manual per-app token overrides to merge over the platform defaults. */
+  overrides?: Record<string, DtcgGroup>;
   /** Prefix applied to generated CSS custom properties (`--mp-*`). Defaults to `'mp'`. */
   prefix?: string;
 }
@@ -141,7 +145,7 @@ function writeSourceArtefacts(descriptor: SourceDescriptor, document_: DtcgGroup
  * Everything is produced by the custom emitters; there is no external CLI.
  */
 export function generateTokens(options: TokensPluginOptions): void {
-  const { tokensDir, outDir: outDirectory, prefix = 'mp' } = options;
+  const { tokensDir, outDir: outDirectory, overridesDir, overrides, prefix = 'mp' } = options;
 
   const descriptors = sourceDescriptors();
 
@@ -150,9 +154,25 @@ export function generateTokens(options: TokensPluginOptions): void {
   mkdirSync(scssDirectory, { recursive: true });
   mkdirSync(tsDirectory, { recursive: true });
 
-  /** Read and parse a DTCG `<file>.tokens.json` source from {@link tokensDir}. */
-  const read = (file: string): DtcgGroup =>
-    JSON.parse(readFileSync(join(tokensDir, `${file}.tokens.json`), 'utf8')) as DtcgGroup;
+  /** Read and parse a DTCG `<file>.tokens.json` source, merging overrides. */
+  const read = (file: string): DtcgGroup => {
+    const base = JSON.parse(readFileSync(join(tokensDir, `${file}.tokens.json`), 'utf8')) as DtcgGroup;
+    let merged = base;
+
+    if (overridesDir) {
+      const overridePath = join(overridesDir, `${file}.tokens.json`);
+      if (existsSync(overridePath)) {
+        const override = JSON.parse(readFileSync(overridePath, 'utf8')) as DtcgGroup;
+        merged = deepMergeTokens(merged, override);
+      }
+    }
+
+    if (overrides && overrides[file]) {
+      merged = deepMergeTokens(merged, overrides[file]);
+    }
+
+    return merged;
+  };
 
   // Parse every DTCG source once. The font + spacing documents are the alias
   // source for the composite typography TS module (font primitives + the

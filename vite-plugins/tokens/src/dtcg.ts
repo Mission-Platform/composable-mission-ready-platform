@@ -22,11 +22,14 @@ export type DtcgGroup = Record<string, unknown>;
 
 /** Type guard: is `value` a DTCG colour value (`{ colorSpace, components, … }`)? */
 export const isColorValue = (value: unknown): value is DtcgColorValue =>
-  typeof value === 'object' && value !== null && 'colorSpace' in value && 'components' in value;
+  typeof value === 'object' &&
+  value !== null &&
+  'colorSpace' in (value as Record<string, unknown>) &&
+  'components' in (value as Record<string, unknown>);
 
 /** Type guard: is `value` a DTCG leaf token (an object carrying a `$value`)? */
 export const isToken = (value: unknown): value is DtcgToken =>
-  typeof value === 'object' && value !== null && '$value' in value;
+  typeof value === 'object' && value !== null && '$value' in (value as Record<string, unknown>);
 
 /** A single resolved DTCG token, flattened out of its nested group. */
 export interface TokenRecord {
@@ -67,6 +70,25 @@ export function camelCase(dashed: string): string {
 
 /** camelCase identifier for a token (`border-width-heavy` → `borderWidthHeavy`). */
 export const camelCaseName = (record: TokenRecord): string => camelCase(dashedName(record));
+
+/**
+ * Deep merge two DTCG groups. Objects are merged recursively; scalar values
+ * (including leaf `$value`s) are overwritten by the override; arrays are
+ * replaced. Returns a new object (does not mutate `base`).
+ */
+export function deepMergeTokens(base: DtcgGroup, override: DtcgGroup): DtcgGroup {
+  const result: DtcgGroup = { ...base };
+  for (const [key, value] of Object.entries(override)) {
+    const baseValue = result[key];
+    result[key] = value !== null &&
+      typeof value === 'object' &&
+      !Array.isArray(value) &&
+      baseValue !== null &&
+      typeof baseValue === 'object' &&
+      !Array.isArray(baseValue) ? deepMergeTokens(baseValue as DtcgGroup, value as DtcgGroup) : value;
+  }
+  return result;
+}
 
 /**
  * Recursively flatten a DTCG document into {@link TokenRecord}s, carrying the

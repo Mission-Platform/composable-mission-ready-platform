@@ -6,6 +6,7 @@ import {
   camelCaseName,
   compareTokens,
   dashedName,
+  deepMergeTokens,
   flattenTokens,
   formatColorValue,
   formatCssColor,
@@ -15,6 +16,7 @@ import {
   isAlias,
   resolveAlias,
   resolveTsValue,
+  type DtcgGroup,
   type TokenRecord,
 } from './dtcg.js';
 
@@ -68,6 +70,40 @@ describe('naming helpers', () => {
   it('quotes non-numeric keys only', () => {
     expect(formatKey('500')).toBe('500');
     expect(formatKey('mono')).toBe("'mono'");
+  });
+});
+
+describe('deepMergeTokens', () => {
+  it('deep-merges two DTCG groups, overwriting scalar values and merging objects', () => {
+    const base: DtcgGroup = {
+      color: {
+        primary: { $value: 'blue', $type: 'color' },
+        neutral: { $value: 'gray' },
+      },
+      spacing: { 1: { $value: '4px' } },
+    };
+    const override: DtcgGroup = {
+      color: {
+        primary: { $value: 'cyan' },
+        secondary: { $value: 'magenta' },
+      },
+    };
+    const result = deepMergeTokens(base, override);
+    expect(result).toEqual({
+      color: {
+        primary: { $value: 'cyan', $type: 'color' },
+        neutral: { $value: 'gray' },
+        secondary: { $value: 'magenta' },
+      },
+      spacing: { 1: { $value: '4px' } },
+    });
+  });
+
+  it('replaces arrays instead of merging them', () => {
+    const base: DtcgGroup = { font: { family: { $value: ['Arial', 'sans-serif'] } } };
+    const override: DtcgGroup = { font: { family: { $value: ['Inter'] } } };
+    const result = deepMergeTokens(base, override);
+    expect(((result.font as DtcgGroup).family as DtcgGroup).$value).toEqual(['Inter']);
   });
 });
 
