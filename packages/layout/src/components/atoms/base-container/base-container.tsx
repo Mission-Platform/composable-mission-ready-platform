@@ -1,6 +1,6 @@
 import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
-import sizeStyles from '../size.module.scss';
+import sizeStyles from '../../size.module.scss';
 
 import styles from './base-container.module.scss';
 

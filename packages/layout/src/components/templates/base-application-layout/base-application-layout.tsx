@@ -1,4 +1,4 @@
-import { classNames, h, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, h, type MpChild, type MpElement, type MpProperties, Slot } from '@mission-platform/forge';
 
 import styles from './base-application-layout.module.scss';
 

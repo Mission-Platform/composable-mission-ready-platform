@@ -1,16 +1,19 @@
 # `@mission-platform/layouts`
 
-Mission Platform application layout components authored with `@mission-platform/forge` and exported for both Vue 3 and React.
+Mission Platform application layout components authored with `@mission-platform/forge` and exported for both Vue 3 and
+React.
 
 ---
 
 ## Overview
 
-The `@mission-platform/layouts` package provides framework-neutral layout components designed for application structure, containers, and vertical responsive layouts.
+The `@mission-platform/layouts` package provides framework-neutral layout components designed for application structure,
+containers, and vertical responsive layouts.
 
 Component entry points:
 
-- **`@mission-platform/layouts`**: Framework-neutral JSX components (`BaseApplicationLayout`, `BaseContainer`, `BaseVerticalLayout`).
+- **`@mission-platform/layouts`**: Framework-neutral JSX components (`BaseApplicationLayout`, `BaseContainer`,
+  `BaseVerticalLayout`).
 - **`@mission-platform/layouts/vue`**: Pre-wrapped Vue 3 components.
 - **`@mission-platform/layouts/react`**: Pre-wrapped React components.
 - **`@mission-platform/layouts/storyblok/vue`**: Storyblok CMS integration for Vue 3.

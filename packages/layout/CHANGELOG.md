@@ -4,56 +4,49 @@
 
 ### Minor Changes
 
-- 18bd49a: Add the write-once `BaseContainer` layout primitive (shipped to both Vue and
-  React as `Container`). It constrains and centres page/section content on the
-  inline axis through three layout options selected by `variant`: **`fixed`** (a
-  constant `max-width` from the `sm … 2xl` scale that never changes with the
-  viewport), **`fluid`** (always 100% of the available width, no `max-width`), and
-  **`responsive`** (a `max-width` that steps up at each platform breakpoint,
-  mobile-first). The `fixed`/`fluid` widths plus the `gutter`/`center` controls are
-  inline styles, while the `responsive` step-ups live in the co-located CSS Module
-  (the platform breakpoints inlined as range-notation `min-width` media queries).
-  Adds the matching Storybook stories (`Layouts/BaseContainer`) and a
-  cross-framework parity spec.
+- 18bd49a: Add the write-once `BaseContainer` layout primitive (shipped to both Vue and React as `Container`). It
+  constrains and centres page/section content on the inline axis through three layout options selected by `variant`: **
+  `fixed`** (a constant `max-width` from the `sm … 2xl` scale that never changes with the viewport), **`fluid`** (always
+  100% of the available width, no `max-width`), and **`responsive`** (a `max-width` that steps up at each platform
+  breakpoint, mobile-first). The `fixed`/`fluid` widths plus the `gutter`/`center` controls are inline styles, while the
+  `responsive` step-ups live in the co-located CSS Module (the platform breakpoints inlined as range-notation
+  `min-width` media queries). Adds the matching Storybook stories (`Layouts/BaseContainer`) and a cross-framework parity
+  spec.
 - 18bd49a: extract the common layouts into a new `@mission-platform/layouts` package
 
-  Adds the write-once `@mission-platform/layouts` package containing the common
-  layout primitives — `BaseApplicationLayout` (public `ApplicationLayout`) and
+  Adds the write-once `@mission-platform/layouts` package containing the common layout primitives —
+  `BaseApplicationLayout` (public `ApplicationLayout`) and
   `BaseVerticalLayout` (public `VerticalLayout`) — authored once in the neutral
   `@mission-platform/forge` dialect and compiled straight to both Vue 3 (`./vue`)
   and React (`./react`) by the two-stage `@mission-platform/vite-plugin-forge`
-  compiler, with co-located `JSX Components/Layout/<Name>` stories and
-  cross-framework SSR specs.
+  compiler, with co-located `JSX Components/Layout/<Name>` stories and cross-framework SSR specs.
 
   **BREAKING (`@mission-platform/components`):** `BaseApplicationLayout` /
-  `ApplicationLayout` and `BaseVerticalLayout` / `VerticalLayout` are no longer
-  exported from `@mission-platform/components` — import them from
+  `ApplicationLayout` and `BaseVerticalLayout` / `VerticalLayout` are no longer exported from
+  `@mission-platform/components` — import them from
   `@mission-platform/layouts/vue` (or `/react`) instead. `@mission-platform/components`
-  gains a neutral `.` root export and a neutral `./base-drawer` subpath so the
-  write-once layouts can reuse `BaseDrawer` across packages.
+  gains a neutral `.` root export and a neutral `./base-drawer` subpath so the write-once layouts can reuse `BaseDrawer`
+  across packages.
 
-  `@mission-platform/vite-plugin-forge`'s two-stage compiler now remaps neutral
-  imports of the framework-split component libraries (`@mission-platform/components`
-  and `@mission-platform/layouts`, in addition to `@mission-platform/icons`) — from
-  their root or a neutral subpath — to the matching built `./react` / `./vue`
-  entry, so write-once components can compose components published by another
-  package.
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler now remaps neutral imports of the framework-split component
+  libraries (`@mission-platform/components`
+  and `@mission-platform/layouts`, in addition to `@mission-platform/icons`) — from their root or a neutral subpath — to
+  the matching built `./react` / `./vue`
+  entry, so write-once components can compose components published by another package.
 
 ### Patch Changes
 
 - e1a9272: Drop the third-party `google-libphonenumber` dependency and power `BasePhoneInput`
   with the platform's own `@mission-platform/phone-number` (AssemblyScript/WebAssembly)
-  package instead. The co-located `phone.ts` helper now parses, formats
-  (national/E.164), validates per region, lists supported regions, provides example
-  numbers and formats as-you-type through the synchronous `PhoneNumberUtil` instance,
-  so behaviour is unchanged while the external dependency is removed.
+  package instead. The co-located `phone.ts` helper now parses, formats (national/E.164), validates per region, lists
+  supported regions, provides example numbers and formats as-you-type through the synchronous `PhoneNumberUtil`
+  instance, so behaviour is unchanged while the external dependency is removed.
 - 10b9e2a: reformat base-container spec SSR render calls onto single lines
-- 18bd49a: Add a `src/examples/` Storybook catalogue of layout composition examples
-  (`Layouts/Examples/<Category>`) that wire the `Container`, `ApplicationLayout`
+- 18bd49a: Add a `src/examples/` Storybook catalogue of layout composition examples (`Layouts/Examples/<Category>`) that
+  wire the `Container`, `ApplicationLayout`
   and `VerticalLayout` primitives into realistic page shells for common domains:
-  forms, dashboards, configurations, admin, websites, mapping, and routing. The
-  examples are Storybook-only and presentational (design-token inline styles, no
-  real widgets), and the package `llms.txt` documents the new catalogue.
+  forms, dashboards, configurations, admin, websites, mapping, and routing. The examples are Storybook-only and
+  presentational (design-token inline styles, no real widgets), and the package `llms.txt` documents the new catalogue.
 - ca1d98b: reformat sources with updated prettier print width and import ordering
 - d39b6fc: add per-workspace reference documentation and refresh llms.txt/README metadata
 - f681d82: rename storybook stories to the .vue.stories suffix for framework clarity
@@ -62,8 +55,8 @@
   The cross-framework catalogue no longer prefixes its sections with `JSX`: the
   `JSX Components/<Category>/<Name>` stories are now `Components/<Category>/<Name>`
   and the `JSX Icons/<Category>/<Name>` stories are now `Icons/<Category>/<Name>`
-  (both Vue and React Storybooks). The components extracted into their own packages
-  get their own top-level Storybook section instead of nesting under `Components`:
+  (both Vue and React Storybooks). The components extracted into their own packages get their own top-level Storybook
+  section instead of nesting under `Components`:
   `@mission-platform/layouts` stories move to `Layouts/<Name>` and
   `@mission-platform/forms` stories move to `Forms/<Name>`.
 
@@ -204,56 +197,49 @@
 
 ### Minor Changes
 
-- 18bd49a: Add the write-once `BaseContainer` layout primitive (shipped to both Vue and
-  React as `Container`). It constrains and centres page/section content on the
-  inline axis through three layout options selected by `variant`: **`fixed`** (a
-  constant `max-width` from the `sm … 2xl` scale that never changes with the
-  viewport), **`fluid`** (always 100% of the available width, no `max-width`), and
-  **`responsive`** (a `max-width` that steps up at each platform breakpoint,
-  mobile-first). The `fixed`/`fluid` widths plus the `gutter`/`center` controls are
-  inline styles, while the `responsive` step-ups live in the co-located CSS Module
-  (the platform breakpoints inlined as range-notation `min-width` media queries).
-  Adds the matching Storybook stories (`Layouts/BaseContainer`) and a
-  cross-framework parity spec.
+- 18bd49a: Add the write-once `BaseContainer` layout primitive (shipped to both Vue and React as `Container`). It
+  constrains and centres page/section content on the inline axis through three layout options selected by `variant`: **
+  `fixed`** (a constant `max-width` from the `sm … 2xl` scale that never changes with the viewport), **`fluid`** (always
+  100% of the available width, no `max-width`), and **`responsive`** (a `max-width` that steps up at each platform
+  breakpoint, mobile-first). The `fixed`/`fluid` widths plus the `gutter`/`center` controls are inline styles, while the
+  `responsive` step-ups live in the co-located CSS Module (the platform breakpoints inlined as range-notation
+  `min-width` media queries). Adds the matching Storybook stories (`Layouts/BaseContainer`) and a cross-framework parity
+  spec.
 - 18bd49a: extract the common layouts into a new `@mission-platform/layouts` package
 
-  Adds the write-once `@mission-platform/layouts` package containing the common
-  layout primitives — `BaseApplicationLayout` (public `ApplicationLayout`) and
+  Adds the write-once `@mission-platform/layouts` package containing the common layout primitives —
+  `BaseApplicationLayout` (public `ApplicationLayout`) and
   `BaseVerticalLayout` (public `VerticalLayout`) — authored once in the neutral
   `@mission-platform/forge` dialect and compiled straight to both Vue 3 (`./vue`)
   and React (`./react`) by the two-stage `@mission-platform/vite-plugin-forge`
-  compiler, with co-located `JSX Components/Layout/<Name>` stories and
-  cross-framework SSR specs.
+  compiler, with co-located `JSX Components/Layout/<Name>` stories and cross-framework SSR specs.
 
   **BREAKING (`@mission-platform/components`):** `BaseApplicationLayout` /
-  `ApplicationLayout` and `BaseVerticalLayout` / `VerticalLayout` are no longer
-  exported from `@mission-platform/components` — import them from
+  `ApplicationLayout` and `BaseVerticalLayout` / `VerticalLayout` are no longer exported from
+  `@mission-platform/components` — import them from
   `@mission-platform/layouts/vue` (or `/react`) instead. `@mission-platform/components`
-  gains a neutral `.` root export and a neutral `./base-drawer` subpath so the
-  write-once layouts can reuse `BaseDrawer` across packages.
+  gains a neutral `.` root export and a neutral `./base-drawer` subpath so the write-once layouts can reuse `BaseDrawer`
+  across packages.
 
-  `@mission-platform/vite-plugin-forge`'s two-stage compiler now remaps neutral
-  imports of the framework-split component libraries (`@mission-platform/components`
-  and `@mission-platform/layouts`, in addition to `@mission-platform/icons`) — from
-  their root or a neutral subpath — to the matching built `./react` / `./vue`
-  entry, so write-once components can compose components published by another
-  package.
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler now remaps neutral imports of the framework-split component
+  libraries (`@mission-platform/components`
+  and `@mission-platform/layouts`, in addition to `@mission-platform/icons`) — from their root or a neutral subpath — to
+  the matching built `./react` / `./vue`
+  entry, so write-once components can compose components published by another package.
 
 ### Patch Changes
 
 - e1a9272: Drop the third-party `google-libphonenumber` dependency and power `BasePhoneInput`
   with the platform's own `@mission-platform/phone-number` (AssemblyScript/WebAssembly)
-  package instead. The co-located `phone.ts` helper now parses, formats
-  (national/E.164), validates per region, lists supported regions, provides example
-  numbers and formats as-you-type through the synchronous `PhoneNumberUtil` instance,
-  so behaviour is unchanged while the external dependency is removed.
+  package instead. The co-located `phone.ts` helper now parses, formats (national/E.164), validates per region, lists
+  supported regions, provides example numbers and formats as-you-type through the synchronous `PhoneNumberUtil`
+  instance, so behaviour is unchanged while the external dependency is removed.
 - 10b9e2a: reformat base-container spec SSR render calls onto single lines
-- 18bd49a: Add a `src/examples/` Storybook catalogue of layout composition examples
-  (`Layouts/Examples/<Category>`) that wire the `Container`, `ApplicationLayout`
+- 18bd49a: Add a `src/examples/` Storybook catalogue of layout composition examples (`Layouts/Examples/<Category>`) that
+  wire the `Container`, `ApplicationLayout`
   and `VerticalLayout` primitives into realistic page shells for common domains:
-  forms, dashboards, configurations, admin, websites, mapping, and routing. The
-  examples are Storybook-only and presentational (design-token inline styles, no
-  real widgets), and the package `llms.txt` documents the new catalogue.
+  forms, dashboards, configurations, admin, websites, mapping, and routing. The examples are Storybook-only and
+  presentational (design-token inline styles, no real widgets), and the package `llms.txt` documents the new catalogue.
 - ca1d98b: reformat sources with updated prettier print width and import ordering
 - d39b6fc: add per-workspace reference documentation and refresh llms.txt/README metadata
 - f681d82: rename storybook stories to the .vue.stories suffix for framework clarity
@@ -262,8 +248,8 @@
   The cross-framework catalogue no longer prefixes its sections with `JSX`: the
   `JSX Components/<Category>/<Name>` stories are now `Components/<Category>/<Name>`
   and the `JSX Icons/<Category>/<Name>` stories are now `Icons/<Category>/<Name>`
-  (both Vue and React Storybooks). The components extracted into their own packages
-  get their own top-level Storybook section instead of nesting under `Components`:
+  (both Vue and React Storybooks). The components extracted into their own packages get their own top-level Storybook
+  section instead of nesting under `Components`:
   `@mission-platform/layouts` stories move to `Layouts/<Name>` and
   `@mission-platform/forms` stories move to `Forms/<Name>`.
 
@@ -404,56 +390,49 @@
 
 ### Minor Changes
 
-- 18bd49a: Add the write-once `BaseContainer` layout primitive (shipped to both Vue and
-  React as `Container`). It constrains and centres page/section content on the
-  inline axis through three layout options selected by `variant`: **`fixed`** (a
-  constant `max-width` from the `sm … 2xl` scale that never changes with the
-  viewport), **`fluid`** (always 100% of the available width, no `max-width`), and
-  **`responsive`** (a `max-width` that steps up at each platform breakpoint,
-  mobile-first). The `fixed`/`fluid` widths plus the `gutter`/`center` controls are
-  inline styles, while the `responsive` step-ups live in the co-located CSS Module
-  (the platform breakpoints inlined as range-notation `min-width` media queries).
-  Adds the matching Storybook stories (`Layouts/BaseContainer`) and a
-  cross-framework parity spec.
+- 18bd49a: Add the write-once `BaseContainer` layout primitive (shipped to both Vue and React as `Container`). It
+  constrains and centres page/section content on the inline axis through three layout options selected by `variant`: **
+  `fixed`** (a constant `max-width` from the `sm … 2xl` scale that never changes with the viewport), **`fluid`** (always
+  100% of the available width, no `max-width`), and **`responsive`** (a `max-width` that steps up at each platform
+  breakpoint, mobile-first). The `fixed`/`fluid` widths plus the `gutter`/`center` controls are inline styles, while the
+  `responsive` step-ups live in the co-located CSS Module (the platform breakpoints inlined as range-notation
+  `min-width` media queries). Adds the matching Storybook stories (`Layouts/BaseContainer`) and a cross-framework parity
+  spec.
 - 18bd49a: extract the common layouts into a new `@mission-platform/layouts` package
 
-  Adds the write-once `@mission-platform/layouts` package containing the common
-  layout primitives — `BaseApplicationLayout` (public `ApplicationLayout`) and
+  Adds the write-once `@mission-platform/layouts` package containing the common layout primitives —
+  `BaseApplicationLayout` (public `ApplicationLayout`) and
   `BaseVerticalLayout` (public `VerticalLayout`) — authored once in the neutral
   `@mission-platform/forge` dialect and compiled straight to both Vue 3 (`./vue`)
   and React (`./react`) by the two-stage `@mission-platform/vite-plugin-forge`
-  compiler, with co-located `JSX Components/Layout/<Name>` stories and
-  cross-framework SSR specs.
+  compiler, with co-located `JSX Components/Layout/<Name>` stories and cross-framework SSR specs.
 
   **BREAKING (`@mission-platform/components`):** `BaseApplicationLayout` /
-  `ApplicationLayout` and `BaseVerticalLayout` / `VerticalLayout` are no longer
-  exported from `@mission-platform/components` — import them from
+  `ApplicationLayout` and `BaseVerticalLayout` / `VerticalLayout` are no longer exported from
+  `@mission-platform/components` — import them from
   `@mission-platform/layouts/vue` (or `/react`) instead. `@mission-platform/components`
-  gains a neutral `.` root export and a neutral `./base-drawer` subpath so the
-  write-once layouts can reuse `BaseDrawer` across packages.
+  gains a neutral `.` root export and a neutral `./base-drawer` subpath so the write-once layouts can reuse `BaseDrawer`
+  across packages.
 
-  `@mission-platform/vite-plugin-forge`'s two-stage compiler now remaps neutral
-  imports of the framework-split component libraries (`@mission-platform/components`
-  and `@mission-platform/layouts`, in addition to `@mission-platform/icons`) — from
-  their root or a neutral subpath — to the matching built `./react` / `./vue`
-  entry, so write-once components can compose components published by another
-  package.
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler now remaps neutral imports of the framework-split component
+  libraries (`@mission-platform/components`
+  and `@mission-platform/layouts`, in addition to `@mission-platform/icons`) — from their root or a neutral subpath — to
+  the matching built `./react` / `./vue`
+  entry, so write-once components can compose components published by another package.
 
 ### Patch Changes
 
 - e1a9272: Drop the third-party `google-libphonenumber` dependency and power `BasePhoneInput`
   with the platform's own `@mission-platform/phone-number` (AssemblyScript/WebAssembly)
-  package instead. The co-located `phone.ts` helper now parses, formats
-  (national/E.164), validates per region, lists supported regions, provides example
-  numbers and formats as-you-type through the synchronous `PhoneNumberUtil` instance,
-  so behaviour is unchanged while the external dependency is removed.
+  package instead. The co-located `phone.ts` helper now parses, formats (national/E.164), validates per region, lists
+  supported regions, provides example numbers and formats as-you-type through the synchronous `PhoneNumberUtil`
+  instance, so behaviour is unchanged while the external dependency is removed.
 - 10b9e2a: reformat base-container spec SSR render calls onto single lines
-- 18bd49a: Add a `src/examples/` Storybook catalogue of layout composition examples
-  (`Layouts/Examples/<Category>`) that wire the `Container`, `ApplicationLayout`
+- 18bd49a: Add a `src/examples/` Storybook catalogue of layout composition examples (`Layouts/Examples/<Category>`) that
+  wire the `Container`, `ApplicationLayout`
   and `VerticalLayout` primitives into realistic page shells for common domains:
-  forms, dashboards, configurations, admin, websites, mapping, and routing. The
-  examples are Storybook-only and presentational (design-token inline styles, no
-  real widgets), and the package `llms.txt` documents the new catalogue.
+  forms, dashboards, configurations, admin, websites, mapping, and routing. The examples are Storybook-only and
+  presentational (design-token inline styles, no real widgets), and the package `llms.txt` documents the new catalogue.
 - ca1d98b: reformat sources with updated prettier print width and import ordering
 - d39b6fc: add per-workspace reference documentation and refresh llms.txt/README metadata
 - f681d82: rename storybook stories to the .vue.stories suffix for framework clarity
@@ -462,8 +441,8 @@
   The cross-framework catalogue no longer prefixes its sections with `JSX`: the
   `JSX Components/<Category>/<Name>` stories are now `Components/<Category>/<Name>`
   and the `JSX Icons/<Category>/<Name>` stories are now `Icons/<Category>/<Name>`
-  (both Vue and React Storybooks). The components extracted into their own packages
-  get their own top-level Storybook section instead of nesting under `Components`:
+  (both Vue and React Storybooks). The components extracted into their own packages get their own top-level Storybook
+  section instead of nesting under `Components`:
   `@mission-platform/layouts` stories move to `Layouts/<Name>` and
   `@mission-platform/forms` stories move to `Forms/<Name>`.
 
@@ -604,56 +583,49 @@
 
 ### Minor Changes
 
-- 18bd49a: Add the write-once `BaseContainer` layout primitive (shipped to both Vue and
-  React as `Container`). It constrains and centres page/section content on the
-  inline axis through three layout options selected by `variant`: **`fixed`** (a
-  constant `max-width` from the `sm … 2xl` scale that never changes with the
-  viewport), **`fluid`** (always 100% of the available width, no `max-width`), and
-  **`responsive`** (a `max-width` that steps up at each platform breakpoint,
-  mobile-first). The `fixed`/`fluid` widths plus the `gutter`/`center` controls are
-  inline styles, while the `responsive` step-ups live in the co-located CSS Module
-  (the platform breakpoints inlined as range-notation `min-width` media queries).
-  Adds the matching Storybook stories (`Layouts/BaseContainer`) and a
-  cross-framework parity spec.
+- 18bd49a: Add the write-once `BaseContainer` layout primitive (shipped to both Vue and React as `Container`). It
+  constrains and centres page/section content on the inline axis through three layout options selected by `variant`: **
+  `fixed`** (a constant `max-width` from the `sm … 2xl` scale that never changes with the viewport), **`fluid`** (always
+  100% of the available width, no `max-width`), and **`responsive`** (a `max-width` that steps up at each platform
+  breakpoint, mobile-first). The `fixed`/`fluid` widths plus the `gutter`/`center` controls are inline styles, while the
+  `responsive` step-ups live in the co-located CSS Module (the platform breakpoints inlined as range-notation
+  `min-width` media queries). Adds the matching Storybook stories (`Layouts/BaseContainer`) and a cross-framework parity
+  spec.
 - 18bd49a: extract the common layouts into a new `@mission-platform/layouts` package
 
-  Adds the write-once `@mission-platform/layouts` package containing the common
-  layout primitives — `BaseApplicationLayout` (public `ApplicationLayout`) and
+  Adds the write-once `@mission-platform/layouts` package containing the common layout primitives —
+  `BaseApplicationLayout` (public `ApplicationLayout`) and
   `BaseVerticalLayout` (public `VerticalLayout`) — authored once in the neutral
   `@mission-platform/forge` dialect and compiled straight to both Vue 3 (`./vue`)
   and React (`./react`) by the two-stage `@mission-platform/vite-plugin-forge`
-  compiler, with co-located `JSX Components/Layout/<Name>` stories and
-  cross-framework SSR specs.
+  compiler, with co-located `JSX Components/Layout/<Name>` stories and cross-framework SSR specs.
 
   **BREAKING (`@mission-platform/components`):** `BaseApplicationLayout` /
-  `ApplicationLayout` and `BaseVerticalLayout` / `VerticalLayout` are no longer
-  exported from `@mission-platform/components` — import them from
+  `ApplicationLayout` and `BaseVerticalLayout` / `VerticalLayout` are no longer exported from
+  `@mission-platform/components` — import them from
   `@mission-platform/layouts/vue` (or `/react`) instead. `@mission-platform/components`
-  gains a neutral `.` root export and a neutral `./base-drawer` subpath so the
-  write-once layouts can reuse `BaseDrawer` across packages.
+  gains a neutral `.` root export and a neutral `./base-drawer` subpath so the write-once layouts can reuse `BaseDrawer`
+  across packages.
 
-  `@mission-platform/vite-plugin-forge`'s two-stage compiler now remaps neutral
-  imports of the framework-split component libraries (`@mission-platform/components`
-  and `@mission-platform/layouts`, in addition to `@mission-platform/icons`) — from
-  their root or a neutral subpath — to the matching built `./react` / `./vue`
-  entry, so write-once components can compose components published by another
-  package.
+  `@mission-platform/vite-plugin-forge`'s two-stage compiler now remaps neutral imports of the framework-split component
+  libraries (`@mission-platform/components`
+  and `@mission-platform/layouts`, in addition to `@mission-platform/icons`) — from their root or a neutral subpath — to
+  the matching built `./react` / `./vue`
+  entry, so write-once components can compose components published by another package.
 
 ### Patch Changes
 
 - e1a9272: Drop the third-party `google-libphonenumber` dependency and power `BasePhoneInput`
   with the platform's own `@mission-platform/phone-number` (AssemblyScript/WebAssembly)
-  package instead. The co-located `phone.ts` helper now parses, formats
-  (national/E.164), validates per region, lists supported regions, provides example
-  numbers and formats as-you-type through the synchronous `PhoneNumberUtil` instance,
-  so behaviour is unchanged while the external dependency is removed.
+  package instead. The co-located `phone.ts` helper now parses, formats (national/E.164), validates per region, lists
+  supported regions, provides example numbers and formats as-you-type through the synchronous `PhoneNumberUtil`
+  instance, so behaviour is unchanged while the external dependency is removed.
 - 10b9e2a: reformat base-container spec SSR render calls onto single lines
-- 18bd49a: Add a `src/examples/` Storybook catalogue of layout composition examples
-  (`Layouts/Examples/<Category>`) that wire the `Container`, `ApplicationLayout`
+- 18bd49a: Add a `src/examples/` Storybook catalogue of layout composition examples (`Layouts/Examples/<Category>`) that
+  wire the `Container`, `ApplicationLayout`
   and `VerticalLayout` primitives into realistic page shells for common domains:
-  forms, dashboards, configurations, admin, websites, mapping, and routing. The
-  examples are Storybook-only and presentational (design-token inline styles, no
-  real widgets), and the package `llms.txt` documents the new catalogue.
+  forms, dashboards, configurations, admin, websites, mapping, and routing. The examples are Storybook-only and
+  presentational (design-token inline styles, no real widgets), and the package `llms.txt` documents the new catalogue.
 - ca1d98b: reformat sources with updated prettier print width and import ordering
 - d39b6fc: add per-workspace reference documentation and refresh llms.txt/README metadata
 - f681d82: rename storybook stories to the .vue.stories suffix for framework clarity
@@ -662,8 +634,8 @@
   The cross-framework catalogue no longer prefixes its sections with `JSX`: the
   `JSX Components/<Category>/<Name>` stories are now `Components/<Category>/<Name>`
   and the `JSX Icons/<Category>/<Name>` stories are now `Icons/<Category>/<Name>`
-  (both Vue and React Storybooks). The components extracted into their own packages
-  get their own top-level Storybook section instead of nesting under `Components`:
+  (both Vue and React Storybooks). The components extracted into their own packages get their own top-level Storybook
+  section instead of nesting under `Components`:
   `@mission-platform/layouts` stories move to `Layouts/<Name>` and
   `@mission-platform/forms` stories move to `Forms/<Name>`.
 

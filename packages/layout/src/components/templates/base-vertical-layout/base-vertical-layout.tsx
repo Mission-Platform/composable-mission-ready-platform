@@ -1,6 +1,5 @@
-import { type DrawerDraggable, type DrawerSize } from '@mission-platform/components/base-drawer';
-import { BaseDrawer } from '@mission-platform/components/base-drawer';
-import { h, hasSlot, Slot, useEffect, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { BaseDrawer, type DrawerDraggable, type DrawerSize } from '@mission-platform/components/base-drawer';
+import { h, hasSlot, type MpElement, type MpProperties, Slot, useEffect, useState } from '@mission-platform/forge';
 
 import styles from './base-vertical-layout.module.scss';
 

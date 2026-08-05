@@ -1,17 +1,16 @@
-import { VerticalLayout } from '@mission-platform/layouts/react';
+import { h } from '@mission-platform/forge';
 
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { CSSProperties, ReactNode } from 'react';
+import { VerticalLayout } from '@mission-platform/layouts';
+
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
  * **Configurations** — example settings / preferences layouts assembled from the
- * `@mission-platform/layouts` primitives (React build).
+ * `@mission-platform/layouts` primitives.
  *
  * These use the cross-framework {@link VerticalLayout}: a `start` column holds
  * the settings section nav, and the main content holds the active settings
- * pane. At/above the (here lowered) `breakpoint` the nav is a fixed-open grid
- * track; below it, it collapses to a toggleable overlay drawer. The columns are
- * `MpChild` **props**.
+ * pane.
  */
 const meta = {
   title: 'Layouts/Examples/Configurations',
@@ -34,65 +33,58 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const navItem = (active = false): CSSProperties => ({
+const NAV_ITEM = (active = false) => ({
   display: 'block',
   padding: 'var(--mp-spacing-2) var(--mp-spacing-3)',
   borderRadius: 'var(--mp-radius-sm)',
   color: active ? 'var(--mp-color-text-on-primary)' : 'var(--mp-color-text-primary)',
   background: active ? 'var(--mp-color-primary-default)' : 'transparent',
+  textDecoration: 'none',
 });
-const PANE: CSSProperties = {
+const PANE = {
   padding: 'var(--mp-spacing-6)',
   background: 'var(--mp-color-bg-base)',
   height: '100%',
-  boxSizing: 'border-box',
+  boxSizing: 'border-box' as const,
   color: 'var(--mp-color-text-primary)',
 };
-const ROW: CSSProperties = {
+const ROW = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
   padding: 'var(--mp-spacing-4) 0',
   borderBottom: '1px solid var(--mp-color-border-default)',
 };
-const MUTED: CSSProperties = { color: 'var(--mp-color-text-secondary)' };
 
-const settingsNav = (): ReactNode => (
+const settingsNav = () => (
   <nav style={{ display: 'flex', flexDirection: 'column', gap: 'var(--mp-spacing-1)', padding: 'var(--mp-spacing-3)' }}>
-    <a style={navItem(true)}>General</a>
-    <a style={navItem()}>Account</a>
-    <a style={navItem()}>Notifications</a>
-    <a style={navItem()}>Security</a>
-    <a style={navItem()}>Integrations</a>
+    <a style={NAV_ITEM(true)}>General</a>
+    <a style={NAV_ITEM()}>Account</a>
+    <a style={NAV_ITEM()}>Notifications</a>
+    <a style={NAV_ITEM()}>Security</a>
+    <a style={NAV_ITEM()}>Integrations</a>
   </nav>
 );
 
-const settingsPane = (): ReactNode => (
+const settingsPane = () => (
   <div style={PANE}>
     <h1 style={{ marginTop: 0 }}>General</h1>
     <div style={ROW}>
       <span>Theme</span>
-      <span style={MUTED}>System</span>
+      <span style={{ color: 'var(--mp-color-text-secondary)' }}>System</span>
     </div>
     <div style={ROW}>
       <span>Language</span>
-      <span style={MUTED}>English</span>
+      <span style={{ color: 'var(--mp-color-text-secondary)' }}>English</span>
     </div>
     <div style={ROW}>
       <span>Time zone</span>
-      <span style={MUTED}>UTC</span>
+      <span style={{ color: 'var(--mp-color-text-secondary)' }}>UTC</span>
     </div>
   </div>
 );
 
 /** A two-pane settings screen: a section nav rail beside the active configuration pane. */
 export const SettingsTwoPane: Story = {
-  render: (arguments_) => (
-    <VerticalLayout
-      {...arguments_}
-      start={settingsNav()}
-    >
-      {settingsPane()}
-    </VerticalLayout>
-  ),
+  render: (arguments_) => <VerticalLayout {...arguments_} start={settingsNav()}>{settingsPane()}</VerticalLayout>,
 };

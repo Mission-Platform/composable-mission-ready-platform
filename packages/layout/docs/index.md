@@ -1,10 +1,13 @@
 # @mission-platform/layout
 
-A comprehensive layout system for Mission Platform applications, providing responsive grid systems, spacing utilities, and flexible container components that work seamlessly with the design token system.
+A comprehensive layout system for Mission Platform applications, providing responsive grid systems, spacing utilities,
+and flexible container components that work seamlessly with the design token system.
 
 ## Overview
 
-The `@mission-platform/layout` package provides a set of utility classes and Vue 3 components designed to create consistent, responsive layouts across all Mission Platform applications. It integrates tightly with the design tokens system for theming and responsiveness.
+The `@mission-platform/layout` package provides a set of utility classes and Vue 3 components designed to create
+consistent, responsive layouts across all Mission Platform applications. It integrates tightly with the design tokens
+system for theming and responsiveness.
 
 ## Features
 

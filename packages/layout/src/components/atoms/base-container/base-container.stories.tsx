@@ -1,27 +1,26 @@
-import { Container } from '@mission-platform/layouts/react';
+import { h } from '@mission-platform/forge';
+
+import { Container } from '@mission-platform/layouts';
 
 import styles from './base-container.module.scss';
 
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
- * `Container` is the **React** build of the write-once `BaseContainer` in
- * `@mission-platform/layouts`. It constrains and centres page/section content on
- * the inline axis through three sizing strategies: **`fixed`** (a constant
- * `max-width` from the `sm … 2xl` scale), **`fluid`** (always 100% of the
- * available width), and **`responsive`** (a `max-width` that steps up at each
- * platform breakpoint). Authored once in the neutral JSX dialect and compiled
- * straight to React by `@mission-platform/vite-plugin-forge`.
+ * `Container` constrains and centres page/section content on the inline axis
+ * through three sizing strategies: **`fixed`** (a constant `max-width` from the
+ * `sm … 2xl` scale), **`fluid`** (always 100% of the available width), and
+ * **`responsive`** (a `max-width` that steps up at each platform breakpoint).
  */
 const meta = {
-  title: 'Layouts/BaseContainer',
+  title: 'Atoms/Layout/BaseContainer',
   component: Container,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          'Cross-framework `Container` — authored once in the neutral JSX dialect and shipped to both React (this story, via `@mission-platform/layouts/react`) and Vue 3 (`@mission-platform/layouts/vue`). It constrains and centres content via three sizing strategies — `fixed`, `fluid`, and `responsive` (a `max-width` that steps up at each platform breakpoint). The framed-viewport and content-block styling comes from the co-located `base-container.module.scss` CSS Module.',
+          'Cross-framework `Container` — authored once in the neutral JSX dialect and shipped to both Vue 3 and React. It constrains and centres page/section content on the inline axis through three sizing strategies: **`fixed`** (a constant `max-width` from the `sm … 2xl` scale), **`fluid`** (always 100% of the available width), and **`responsive`** (a `max-width` that steps up at each platform breakpoint). Resize the preview to watch the `responsive` variant jump between breakpoints. The framed-viewport and content-block styling comes from the co-located `base-container.module.scss` CSS Module (consumed here through its hashed class map).',
       },
     },
   },
@@ -39,9 +38,9 @@ const meta = {
     center: true,
   },
   render: (arguments_) => (
-    <div className={styles['container-demo-viewport']}>
+    <div class={styles['container-demo-viewport']}>
       <Container {...arguments_}>
-        <div className={styles['container-demo-content']}>
+        <div class={styles['container-demo-content']}>
           {arguments_.variant} container — resize the preview to see how it behaves
         </div>
       </Container>

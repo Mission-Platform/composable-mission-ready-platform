@@ -1,11 +1,12 @@
-import { ApplicationLayout, Container } from '@mission-platform/layouts/react';
+import { h } from '@mission-platform/forge';
 
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { CSSProperties } from 'react';
+import { ApplicationLayout, Container } from '@mission-platform/layouts';
+
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
  * **Routing** — example navigation-shell layouts assembled from the
- * `@mission-platform/layouts` primitives (React build).
+ * `@mission-platform/layouts` primitives.
  *
  * These show the chrome a routed app hangs around its router outlet: a top nav
  * inside the {@link ApplicationLayout}, a breadcrumb trail and/or a tab strip
@@ -29,7 +30,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const NAVBAR: CSSProperties = {
+const NAVBAR = {
   display: 'flex',
   alignItems: 'center',
   gap: 'var(--mp-spacing-5)',
@@ -38,33 +39,34 @@ const NAVBAR: CSSProperties = {
   borderBottom: '1px solid var(--mp-color-border-default)',
   color: 'var(--mp-color-text-primary)',
 };
-const NAV_LINK: CSSProperties = { color: 'var(--mp-color-text-secondary)' };
-const NAV_LINK_ACTIVE: CSSProperties = { color: 'var(--mp-color-primary-default)', fontWeight: 600 };
-const CONTENT: CSSProperties = {
+const NAV_LINK = { color: 'var(--mp-color-text-secondary)', textDecoration: 'none' };
+const NAV_LINK_ACTIVE = { color: 'var(--mp-color-primary-default)', fontWeight: 600, textDecoration: 'none' };
+const CONTENT = {
   paddingBlock: 'var(--mp-spacing-6)',
   background: 'var(--mp-color-bg-base)',
   color: 'var(--mp-color-text-primary)',
 };
-const BREADCRUMB: CSSProperties = {
+const BREADCRUMB = {
   display: 'flex',
   gap: 'var(--mp-spacing-2)',
   marginBottom: 'var(--mp-spacing-4)',
   color: 'var(--mp-color-text-secondary)',
   fontSize: 'var(--mp-size-font-sm)',
 };
-const TABS: CSSProperties = {
+const TABS = {
   display: 'flex',
   gap: 'var(--mp-spacing-4)',
   borderBottom: '1px solid var(--mp-color-border-default)',
   marginBottom: 'var(--mp-spacing-5)',
 };
-const TAB: CSSProperties = { padding: 'var(--mp-spacing-2) 0', color: 'var(--mp-color-text-secondary)' };
-const TAB_ACTIVE: CSSProperties = {
+const TAB = { padding: 'var(--mp-spacing-2) 0', color: 'var(--mp-color-text-secondary)', textDecoration: 'none' };
+const TAB_ACTIVE = {
   padding: 'var(--mp-spacing-2) 0',
   color: 'var(--mp-color-text-primary)',
   borderBottom: '2px solid var(--mp-color-primary-default)',
+  textDecoration: 'none',
 };
-const OUTLET: CSSProperties = {
+const OUTLET = {
   padding: 'var(--mp-spacing-5)',
   background: 'var(--mp-color-bg-surface)',
   border: '1px solid var(--mp-color-border-default)',
@@ -87,16 +89,7 @@ export const Breadcrumbs: Story = {
       content={
         <div style={CONTENT}>
           <Container variant="responsive">
-            <nav
-              aria-label="Breadcrumb"
-              style={BREADCRUMB}
-            >
-              <span>Projects</span>
-              <span>/</span>
-              <span>Apollo</span>
-              <span>/</span>
-              <span>Overview</span>
-            </nav>
+            <nav aria-label="Breadcrumb" style={BREADCRUMB}><span>Projects</span><span>/</span><span>Apollo</span><span>/</span><span>Overview</span></nav>
             <div style={OUTLET}>
               <h1 style={{ marginTop: 0 }}>Apollo · Overview</h1>
               <p>The router outlet renders here for the matched route.</p>
@@ -113,28 +106,13 @@ export const TabbedSections: Story = {
   render: () => (
     <ApplicationLayout
       style={{ minHeight: '28rem' }}
-      navbar={
-        <div style={NAVBAR}>
-          <strong>Mission Platform</strong>
-          <a style={NAV_LINK_ACTIVE}>Projects</a>
-        </div>
-      }
+      navbar={<div style={NAVBAR}><strong>Mission Platform</strong><a style={NAV_LINK_ACTIVE}>Projects</a></div>}
       content={
         <div style={CONTENT}>
           <Container variant="responsive">
-            <nav
-              aria-label="Breadcrumb"
-              style={BREADCRUMB}
-            >
-              <span>Projects</span>
-              <span>/</span>
-              <span>Apollo</span>
-            </nav>
+            <nav aria-label="Breadcrumb" style={BREADCRUMB}><span>Projects</span><span>/</span><span>Apollo</span></nav>
             <h1 style={{ marginTop: 0 }}>Apollo</h1>
-            <nav
-              aria-label="Sections"
-              style={TABS}
-            >
+            <nav aria-label="Sections" style={TABS}>
               <a style={TAB_ACTIVE}>Overview</a>
               <a style={TAB}>Activity</a>
               <a style={TAB}>Members</a>

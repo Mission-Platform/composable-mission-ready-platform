@@ -30,12 +30,11 @@
 
       &:not(:empty) {
         // Resolved `mp-font-label`: label font size, medium weight, snug leading.
-        font-family:
-          var(--mp-font-family-sans) system-ui,
-          -apple-system,
-          'Segoe UI',
-          roboto,
-          sans-serif;
+        font-family: var(--mp-font-family-sans) system-ui,
+        -apple-system,
+        'Segoe UI',
+        roboto,
+        sans-serif;
         font-size: var(--mp-font-size-sm);
         font-weight: var(--mp-font-weight-medium);
         line-height: var(--mp-line-height-snug);
