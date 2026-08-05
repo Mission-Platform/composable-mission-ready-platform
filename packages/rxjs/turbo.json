@@ -3,34 +3,7 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "build:check",
-        "build:neutral",
-        "build:react",
-        "build:solid",
-        "build:svelte",
-        "build:web-components",
-        "build:vue",
-        "build:types"
-      ]
-    },
-    "build:react": {
-      "dependsOn": ["^build", "build:neutral"]
-    },
-    "build:solid": {
-      "dependsOn": ["^build", "build:neutral"]
-    },
-    "build:svelte": {
-      "dependsOn": ["^build", "build:neutral"]
-    },
-    "build:web-components": {
-      "dependsOn": ["^build", "build:neutral"]
-    },
-    "build:vue": {
-      "dependsOn": ["^build", "build:neutral"]
-    },
-    "build:types": {
-      "dependsOn": ["^build", "build:neutral"]
+      "dependsOn": ["^build", "build:check"]
     }
   }
 }

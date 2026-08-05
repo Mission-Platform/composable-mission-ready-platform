@@ -7,11 +7,26 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "mp:vue": { "types": "./dist/vue/index.d.ts", "import": "./dist/vue/index.js" },
-      "mp:react": { "types": "./dist/react/index.d.ts", "import": "./dist/react/index.js" },
-      "mp:solid": { "types": "./dist/solid/index.d.ts", "import": "./dist/solid/index.js" },
-      "mp:svelte": { "types": "./dist/svelte/index.d.ts", "import": "./dist/svelte/index.js" },
-      "mp:web-component": { "types": "./dist/web-components/index.d.ts", "import": "./dist/web-components/index.js" },
+      "mp:vue": {
+        "types": "./dist/vue/index.d.ts",
+        "import": "./dist/vue/index.js"
+      },
+      "mp:react": {
+        "types": "./dist/react/index.d.ts",
+        "import": "./dist/react/index.js"
+      },
+      "mp:solid": {
+        "types": "./dist/solid/index.d.ts",
+        "import": "./dist/solid/index.js"
+      },
+      "mp:svelte": {
+        "types": "./dist/svelte/index.d.ts",
+        "import": "./dist/svelte/index.js"
+      },
+      "mp:web-component": {
+        "types": "./dist/web-components/index.d.ts",
+        "import": "./dist/web-components/index.js"
+      },
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
@@ -42,15 +57,9 @@
     "dist"
   ],
   "scripts": {
+    "build": "tsdown",
     "build:check": "tsc --project tsconfig.build.json --noEmit",
-    "build:neutral": "vite build",
-    "build:react": "vite build --mode react",
-    "build:solid": "vite build --mode solid",
-    "build:svelte": "vite build --mode svelte",
-    "build:web-components": "vite build --mode web-components",
-    "build:vue": "vite build --mode vue",
-    "build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly",
-    "build:watch": "vite build --watch",
+    "build:watch": "tsdown --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -95,10 +104,11 @@
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/i18n-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
+    "@mission-platform/storybook-framework": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
-    "@mission-platform/vite-config": "workspace:*",
     "@mission-platform/vite-plugin-forge": "workspace:*",
-    "@storybook/vue3-vite": "catalog:storybook",
+    "@mission-platform/vite-config": "workspace:*",
     "@types/node": "catalog:typescript",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
@@ -112,8 +122,8 @@
     "rxjs": "catalog:",
     "solid-js": "catalog:solid",
     "svelte": "catalog:svelte",
+    "tsdown": "catalog:build",
     "typescript": "catalog:typescript",
-    "vite": "catalog:vite",
     "vitest": "catalog:testing",
     "vue": "catalog:vue"
   }

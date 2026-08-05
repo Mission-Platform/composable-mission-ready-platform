@@ -4,7 +4,8 @@
 
 ### Minor Changes
 
-- 6f9dfef: add a framework-neutral rxjs integration package with useObservable, useSubscription and useSubscribe built on the neutral jsx hooks
+- 6f9dfef: add a framework-neutral rxjs integration package with useObservable, useSubscription and useSubscribe built
+  on the neutral jsx hooks
 
 ### Patch Changes
 

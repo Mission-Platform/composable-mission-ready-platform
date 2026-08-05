@@ -6,7 +6,7 @@
 // mount and torn down on unmount (or when the dependency list changes), so
 // streams never leak — identically on both frameworks.
 
-import { useEffect, type MpDependencyList } from '@mission-platform/forge';
+import { type MpDependencyList, useEffect } from '@mission-platform/forge';
 
 import type { Observable, Observer } from 'rxjs';
 

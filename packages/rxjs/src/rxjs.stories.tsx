@@ -1,10 +1,9 @@
-import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
-import { toReactComponent } from '@mission-platform/forge/react';
+import { type MpProperties } from '@mission-platform/forge';
 import { BehaviorSubject, type Observable } from 'rxjs';
 
 import { useObservable } from '@mission-platform/rxjs';
 
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 interface StatusBadgeProperties extends MpProperties {
   /** The stream whose latest value is shown. */
@@ -15,27 +14,25 @@ interface StatusBadgeProperties extends MpProperties {
 
 /**
  * A framework-neutral write-once component that mirrors an RxJS stream into its
- * rendered output via `@mission-platform/rxjs`'s `useObservable`.
+ * rendered output via `@mission-platform/rxjs`'s `useObservable`. Authored in
+ * JSX (not a direct `h(...)` call) so the active framework's JSX transform
+ * compiles it to that framework's own element — the same write-once pattern the
+ * other neutral stories use.
  */
-function StatusBadge(properties: StatusBadgeProperties): MpElement {
+function StatusBadge(properties: StatusBadgeProperties) {
   const status = useObservable(properties.status$, properties.initial);
-  return h('span', { class: 'status-badge' }, `Status: ${status}`);
+  return <span class="status-badge">Status: {status}</span>;
 }
-
-// Rendered on React through the neutral runtime adapter. Because `useObservable`
-// compiles to React's own hooks, the badge subscribes on mount and updates on
-// every emission, unsubscribing on unmount.
-const StatusBadgeReact = toReactComponent(StatusBadge, 'StatusBadge');
 
 const meta = {
   title: 'Integrations/RxJS/UseObservable',
-  component: StatusBadgeReact,
+  component: StatusBadge,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          '`@mission-platform/rxjs` bridges RxJS `Observable`s into the write-once component model. `useObservable(source, initial)` subscribes to a stream and exposes its latest value as component state. This story renders a neutral component through the React runtime adapter; the badge updates on every emission and unsubscribes on unmount.',
+          '`@mission-platform/rxjs` bridges RxJS `Observable`s into the write-once component model. `useObservable(source, initial)` subscribes to a stream and exposes its latest value as component state. The badge updates on every emission and unsubscribes on unmount.',
       },
     },
   },
@@ -43,7 +40,7 @@ const meta = {
     initial: { control: 'text' },
     status$: { control: false },
   },
-} satisfies Meta<typeof StatusBadgeReact>;
+} satisfies Meta<typeof StatusBadge>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
