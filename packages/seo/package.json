@@ -10,28 +10,28 @@
   ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
-  "types": "./src/index.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./src/index.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
     "./meta": {
-      "types": "./src/build-page-meta.ts",
+      "types": "./dist/build-page-meta.d.ts",
       "import": "./dist/build-page-meta.js"
     },
     "./json-ld": {
-      "types": "./src/build-json-ld.ts",
+      "types": "./dist/build-json-ld.d.ts",
       "import": "./dist/build-json-ld.js"
     },
     "./types": {
-      "types": "./src/types.ts"
+      "types": "./dist/types.d.ts"
     }
   },
   "scripts": {
-    "build:check": "vue-tsc -b tsconfig.build.json",
-    "build:bundle": "vite build",
-    "build:watch": "vite build --watch",
+    "build": "tsdown",
+    "build:check": "vue-tsc --project tsconfig.build.json --noEmit",
+    "build:watch": "tsdown --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -49,12 +49,14 @@
     "@mission-platform/i18n-config": "workspace:*",
     "@unhead/vue": "catalog:vue",
     "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@vitest/coverage-v8": "catalog:testing",
     "eslint": "catalog:eslint",
     "jsdom": "catalog:testing",
     "prettier": "catalog:prettier",
+    "tsdown": "catalog:build",
     "typescript": "catalog:typescript",
     "vite": "catalog:vite",
     "vitest": "catalog:testing",

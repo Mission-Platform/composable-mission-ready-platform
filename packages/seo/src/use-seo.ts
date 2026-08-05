@@ -63,20 +63,47 @@ function openGraphToUnhead(metadata: OpenGraphMetadata): Array<Record<string, st
   return buildOpenGraph(metadata).map((tag) => metaTagToUnhead(tag));
 }
 
+/** Default JSON-LD context used when a graph's nodes carry no `@context`. */
+const DEFAULT_JSON_LD_CONTEXT: JsonLd['@context'] = 'https://schema.org';
+
+/**
+ * Combine every JSON-LD block into a single `<script type="application/ld+json">`
+ * element whose body is one Schema.org `@graph` document, rather than emitting
+ * one script per node.
+ *
+ * A single `@graph` is the idiomatic way to publish several related structured
+ * data entities (e.g. `WebSite`, `Organization`, `WebPage`, `BreadcrumbList`):
+ * search engines merge nodes that share an `@id` across the graph, and a single
+ * script keeps the head compact. The shared `@context` is hoisted to the graph
+ * root and stripped from each node so it is not repeated on every entry.
+ */
 function jsonLdToUnhead(blocks: JsonLd | JsonLd[]): Array<Record<string, string>> {
   const list = Array.isArray(blocks) ? blocks : [blocks];
-  return list.map((block) => ({
-    type: 'application/ld+json',
-    // `innerHTML` is the `@unhead/vue` convention for raw script body content;
-    // it is written into the script element's text without HTML escaping.
-    innerHTML: JSON.stringify(block),
-  }));
+  if (list.length === 0) return [];
+
+  let context: JsonLd['@context'] = DEFAULT_JSON_LD_CONTEXT;
+  const graph = list.map((block) => {
+    const { '@context': blockContext, ...node } = block;
+    // Hoist the last defined `@context` to the graph root. All Mission Platform
+    // builders emit `'https://schema.org'`, so in practice they all agree.
+    if (blockContext !== undefined) context = blockContext;
+    return node;
+  });
+
+  return [
+    {
+      type: 'application/ld+json',
+      // `innerHTML` is the `@unhead/vue` convention for raw script body content;
+      // it is written into the script element's text without HTML escaping.
+      innerHTML: JSON.stringify({ '@context': context, '@graph': graph }),
+    },
+  ];
 }
 
 /**
  * Build the combined `@unhead/vue` head payload from the unified SEO bundle:
- * standard page meta, Open Graph + Twitter Card meta, and one or more JSON-LD
- * structured-data scripts.
+ * standard page meta, Open Graph + Twitter Card meta, and a single JSON-LD
+ * `@graph` structured-data script combining every provided block.
  */
 function toUnheadHead(metadata: SeoMetadata): UnheadShape {
   const meta: Array<Record<string, string>> = [];

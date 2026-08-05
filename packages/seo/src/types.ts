@@ -438,10 +438,11 @@ export interface SeoMetadata {
   /** Open Graph + Twitter Card metadata. */
   openGraph?: OpenGraphMetadata;
   /**
-   * One or more JSON-LD structured-data blocks to emit as
-   * `<script type="application/ld+json">`. Use the `jsonLd` helpers (e.g.
-   * `webSite`, `organization`, `breadcrumbList`) to construct these, or pass
-   * raw {@link JsonLd} objects.
+   * One or more JSON-LD structured-data blocks. They are combined into a
+   * single `<script type="application/ld+json">` whose body is one Schema.org
+   * `@graph` document (shared `@context` hoisted to the root), rather than one
+   * script per block. Use the `jsonLd` helpers (e.g. `webSite`, `organization`,
+   * `breadcrumbList`) to construct these, or pass raw {@link JsonLd} objects.
    */
   jsonLd?: JsonLd | JsonLd[];
 }

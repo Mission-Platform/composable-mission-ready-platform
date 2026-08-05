@@ -49,9 +49,19 @@ describe('useSeo', () => {
     expect(document.head.querySelector('meta[property="og:title"]')?.getAttribute('content')).toBe('Home');
 
     const ldScripts = [...document.head.querySelectorAll('script[type="application/ld+json"]')];
-    expect(ldScripts).toHaveLength(2);
-    const parsed = ldScripts.map((node) => JSON.parse(node.textContent ?? '{}'));
-    expect(parsed.map((entry) => entry['@type'])).toEqual(['WebSite', 'Organization']);
+    // All JSON-LD nodes are combined into a single `@graph` document.
+    expect(ldScripts).toHaveLength(1);
+    const graphDocument = JSON.parse(ldScripts[0].textContent ?? '{}');
+    expect(graphDocument['@context']).toBe('https://schema.org');
+    expect(Array.isArray(graphDocument['@graph'])).toBe(true);
+    expect(graphDocument['@graph'].map((entry: { '@type': string }) => entry['@type'])).toEqual([
+      'WebSite',
+      'Organization',
+    ]);
+    // The shared `@context` is hoisted to the graph root, not repeated per node.
+    for (const node of graphDocument['@graph']) {
+      expect(node['@context']).toBeUndefined();
+    }
 
     app.unmount();
   });

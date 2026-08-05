@@ -125,7 +125,11 @@ function personNode(input: PersonInput): Record<string, unknown> {
 
 /** Disambiguate a `Person | Organization` union by its discriminating shape. */
 function isPersonInput(input: PersonInput | OrganizationInput): input is PersonInput {
-  return 'jobTitle' in input || !('logo' in input);
+  if (typeof input !== 'object' || input === null) {
+    return false;
+  }
+  const nonPrimitive: object = input;
+  return 'jobTitle' in nonPrimitive || !('logo' in nonPrimitive);
 }
 
 /** Build a nested author/organizer reference, picking Person vs Organization. */

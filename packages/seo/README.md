@@ -1,24 +1,20 @@
 # `@mission-platform/seo`
 
-Unified SEO surface for Mission Platform apps. Manages everything that drives
-search-engine ranking and social-share previews from a single composable
-(`useSeo`) or declarative component (`<Seo>`):
+Unified SEO surface for Mission Platform apps. Manages everything that drives search-engine ranking and social-share
+previews from a single composable (`useSeo`) or declarative component (`<Seo>`):
 
-- **Standard page metadata** — `<title>`, `<html lang>`, `<meta>` tags
-  (description, keywords, author, robots, theme-color, viewport,
-  application-name, generator, charset, arbitrary `extra`), and
+- **Standard page metadata** — `<title>`, `<html lang>`, `<meta>` tags (description, keywords, author, robots,
+  theme-color, viewport, application-name, generator, charset, arbitrary `extra`), and
   `<link rel="canonical">` / `<link rel="alternate">` hreflang entries.
-- **Open Graph + Twitter Card metadata** — full OG property graph (title,
-  description, type, url, site_name, locale, locale alternates, images with
-  sub-properties) and a Twitter Card overlay that falls back to OG fields.
+- **Open Graph + Twitter Card metadata** — full OG property graph (title, description, type, url, site_name, locale,
+  locale alternates, images with sub-properties) and a Twitter Card overlay that falls back to OG fields.
 - **JSON-LD structured data** — Schema.org builders for `WebSite`, `WebPage`,
   `Organization`, `LocalBusiness`, `Person`, `BreadcrumbList`, `Article`
   (`BlogPosting`, `NewsArticle`), `Product`, `FAQPage`, `Event`,
   `VideoObject`, `ImageObject`, `SoftwareApplication`, `Recipe`, `Review`.
 
-Internally everything is wired through `@unhead/vue`, so the same definitions
-drive client-side DOM mutation **and** server-side head serialisation (used
-by `vite-ssg` and similar prerenderers to bake the tags into static HTML).
+Internally everything is wired through `@unhead/vue`, so the same definitions drive client-side DOM mutation **and**
+server-side head serialisation (used by `vite-ssg` and similar prerenderers to bake the tags into static HTML).
 
 This package replaces the previous `@mission-platform/page-meta` and
 `@mission-platform/open-graph` packages.
@@ -89,8 +85,8 @@ effectScope(true).run(() => {
 });
 ```
 
-`useSeo` accepts a ref, a getter, or a plain object — so it works equally
-well for static metadata and for reactive route-driven state.
+`useSeo` accepts a ref, a getter, or a plain object — so it works equally well for static metadata and for reactive
+route-driven state.
 
 ## API
 
