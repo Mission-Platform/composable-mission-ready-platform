@@ -8,6 +8,8 @@ export default [
     rules: {
       'unicorn/no-null': 'off',
       'unicorn/no-array-reverse': 'off',
+      // Storybook CSF uses the canonical `StoryObj` type name.
+      'unicorn/prevent-abbreviations': 'off',
     },
   },
 ];

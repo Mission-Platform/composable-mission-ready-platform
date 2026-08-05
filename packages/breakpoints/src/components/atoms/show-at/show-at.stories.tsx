@@ -1,14 +1,16 @@
-import { ShowAt } from '@mission-platform/breakpoints/vue';
+import { h } from '@mission-platform/forge';
 
-import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { ShowAt } from '@mission-platform/breakpoints';
+
+import type { Meta, StoryObj } from '../../../stories.types';
 
 /**
  * Cross-framework `ShowAt` — authored once in the neutral JSX dialect and
- * shipped to both Vue 3 (this story, via `@mission-platform/breakpoints/vue`)
- * and React (`@mission-platform/breakpoints/react`).
+ * shipped to all supported frameworks. It renders its children only when the
+ * viewport is at or above `min` and strictly below `max`.
  */
 const meta = {
-  title: 'Breakpoints/ShowAt',
+  title: 'Atoms/Layout/ShowAt',
   component: ShowAt,
   tags: ['autodocs'],
   argTypes: {
@@ -23,19 +25,21 @@ const meta = {
       description: 'Show slot content when the viewport is strictly below this breakpoint.',
     },
   },
-  render: (arguments_) => ({
-    components: { ShowAt },
-    setup() {
-      return { args: arguments_ };
-    },
-    template: `
-      <ShowAt v-bind="args">
-        <div style="padding: var(--mp-spacing-4); background: var(--mp-color-info-subtle); border-radius: var(--mp-radius-md); font-family: var(--mp-font-family-mono); color: var(--mp-color-info-default);">
-          ✓ Slot content is visible at this viewport width
-        </div>
-      </ShowAt>
-    `,
-  }),
+  render: (arguments_) => (
+    <ShowAt {...arguments_}>
+      <div
+        style={{
+          padding: 'var(--mp-spacing-4)',
+          background: 'var(--mp-color-info-subtle)',
+          borderRadius: 'var(--mp-radius-md)',
+          fontFamily: 'var(--mp-font-family-mono)',
+          color: 'var(--mp-color-info-default)',
+        }}
+      >
+        ✓ Slot content is visible at this viewport width
+      </div>
+    </ShowAt>
+  ),
 } satisfies Meta<typeof ShowAt>;
 
 export default meta;

@@ -1,6 +1,6 @@
 import { Fragment, h, type MpElement, type MpProperties, Slot, useEffect, useState } from '@mission-platform/forge';
 
-import { type BreakpointKey, breakpoints } from '../../breakpoints';
+import { type BreakpointKey, breakpoints } from '../../../breakpoints';
 
 export interface ShowAtProperties extends MpProperties {
   /** Show slot content when the viewport is at or above this breakpoint. */

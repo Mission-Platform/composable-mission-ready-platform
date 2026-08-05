@@ -1,15 +1,16 @@
-import { HideAt } from '@mission-platform/breakpoints/react';
+import { h } from '@mission-platform/forge';
 
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import { HideAt } from '@mission-platform/breakpoints';
+
+import type { Meta, StoryObj } from '../../../stories.types';
 
 /**
  * Cross-framework `HideAt` — authored once in the neutral JSX dialect and
- * shipped to both React (this story, via `@mission-platform/breakpoints/react`)
- * and Vue 3 (`@mission-platform/breakpoints/vue`). It hides its children when
- * the viewport is at or above `min` and strictly below `max`.
+ * shipped to all supported frameworks. It hides its children when the viewport
+ * is at or above `min` and strictly below `max`.
  */
 const meta = {
-  title: 'Breakpoints/HideAt',
+  title: 'Atoms/Layout/HideAt',
   component: HideAt,
   tags: ['autodocs'],
   argTypes: {

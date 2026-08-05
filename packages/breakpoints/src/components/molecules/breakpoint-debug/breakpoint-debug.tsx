@@ -1,7 +1,7 @@
 import { h, type MpElement, type MpProperties, useEffect, useState } from '@mission-platform/forge';
 import i18next from 'i18next';
 
-import { breakpointKeys, breakpoints, resolveBreakpoint } from '../../breakpoints';
+import { breakpointKeys, breakpoints, resolveBreakpoint } from '../../../breakpoints';
 
 import styles from './breakpoint-debug.module.scss';
 

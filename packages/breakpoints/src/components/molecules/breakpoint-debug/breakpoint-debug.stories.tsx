@@ -1,14 +1,17 @@
-import { BreakpointDebug } from '@mission-platform/breakpoints/vue';
+import { h } from '@mission-platform/forge';
 
-import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { BreakpointDebug } from '@mission-platform/breakpoints';
+
+import type { Meta, StoryObj } from '../../../stories.types';
 
 /**
  * Cross-framework `BreakpointDebug` — authored once in the neutral JSX dialect
- * and shipped to both Vue 3 (this story, via `@mission-platform/breakpoints/vue`)
- * and React (`@mission-platform/breakpoints/react`).
+ * and shipped to all supported frameworks. A development-time overlay pinned to
+ * the bottom-right corner showing the current breakpoint and which breakpoints
+ * are active.
  */
 const meta = {
-  title: 'Breakpoints/BreakpointDebug',
+  title: 'Molecules/Layout/BreakpointDebug',
   component: BreakpointDebug,
   tags: ['autodocs'],
   parameters: {
@@ -21,15 +24,25 @@ const meta = {
       },
     },
   },
-  render: () => ({
-    components: { BreakpointDebug },
-    template: `
-      <div style="position: relative; height: 80px; background: var(--mp-color-bg-muted); border: 1px dashed var(--mp-color-border-default); border-radius: var(--mp-radius-md); display: flex; align-items: center; justify-content: center;">
-        <span style="font-family: var(--mp-font-family-mono); color: var(--mp-color-text-secondary);">Resize the viewport to see the debug overlay change</span>
-        <BreakpointDebug />
-      </div>
-    `,
-  }),
+  render: () => (
+    <div
+      style={{
+        position: 'relative',
+        height: '80px',
+        background: 'var(--mp-color-bg-muted)',
+        border: '1px dashed var(--mp-color-border-default)',
+        borderRadius: 'var(--mp-radius-md)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <span style={{ fontFamily: 'var(--mp-font-family-mono)', color: 'var(--mp-color-text-secondary)' }}>
+        Resize the viewport to see the debug overlay change
+      </span>
+      <BreakpointDebug />
+    </div>
+  ),
 } satisfies Meta<typeof BreakpointDebug>;
 
 export default meta;
