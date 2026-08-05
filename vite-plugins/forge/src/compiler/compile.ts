@@ -44,13 +44,13 @@ export type JsxFramework = 'react' | 'vue' | 'svelte' | 'solid' | 'web-component
 export interface CompileOptions {
   /** The target framework. */
   framework: JsxFramework;
-  /** The neutral component's export name (e.g. `BaseBadge`); used by the Vue emitter. */
+  /** The neutral component's export name (e.g. `ForgeBadge`); used by the Vue emitter. */
   componentName: string;
   /** Source file name used for diagnostics. Defaults to `<componentName>.tsx`. */
   fileName?: string;
   /**
    * The folder base names of the package's discovered components (e.g.
-   * `base-typography`). A relative value import whose base is in this set is a
+   * `forge-typography`). A relative value import whose base is in this set is a
    * sibling **component** (the Vue emitter imports it as `./<base>.vue`);
    * everything else is a plain **helper module** (imported by name from
    * `./<base>`). When omitted every relative value import is treated as a
@@ -67,7 +67,7 @@ export interface CompileOptions {
 
 /** An auxiliary SFC emitted alongside a primary module (e.g. a recursive helper component). */
 export interface ExtraModule {
-  /** The flat-tree base name (no extension) the module is written under, e.g. `base-menubar-item`. */
+  /** The flat-tree base name (no extension) the module is written under, e.g. `forge-menubar-item`. */
   name: string;
   /** The emitted SFC source. */
   code: string;
@@ -171,10 +171,7 @@ export function compileHookModule(source: string, options: CompileHookOptions): 
  * Apply Stage-1 optimisations unless the caller opted out. `optimize: false`
  * disables every pass; an options object toggles individual ones.
  */
-function prepareSourceFile(
-  sourceFile: SourceFile,
-  optimize: boolean | OptimizeOptions | undefined,
-): SourceFile {
+function prepareSourceFile(sourceFile: SourceFile, optimize: boolean | OptimizeOptions | undefined): SourceFile {
   if (optimize === false) {
     return sourceFile;
   }

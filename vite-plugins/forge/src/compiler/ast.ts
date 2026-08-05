@@ -388,8 +388,8 @@ export function iconsJsxFrameworkModule(framework: JsxFramework): string {
 /**
  * The write-once **component-library** workspace packages: like
  * `@mission-platform/icons`, neutral authors import their components from these
- * packages (e.g. `BaseDrawer` from `@mission-platform/components/base-drawer`, or
- * `BaseVerticalLayout` from `@mission-platform/layouts`), which type-check
+ * packages (e.g. `ForgeDrawer` from `@mission-platform/components/forge-drawer`, or
+ * `ForgeVerticalLayout` from `@mission-platform/layouts`), which type-check
  * against the neutral source and render through the `@mission-platform/forge`
  * adapters in unit tests — but each package ships **only** the compiled
  * `./react` / `./vue` builds, so the emitters remap the neutral import to the
@@ -412,7 +412,7 @@ export const COMPONENTS_JSX_MODULES = [
  * builds yet are authored against neutrally: `@mission-platform/icons` (imported
  * from its root) and the {@link COMPONENTS_JSX_MODULES} component libraries
  * (imported from their root or a neutral subpath such as
- * `@mission-platform/components/base-drawer`). Each is remapped to the matching
+ * `@mission-platform/components/forge-drawer`). Each is remapped to the matching
  * `…/<framework>` entry; an already-framework subpath is left untouched.
  */
 export function frameworkSplitModule(specifier: string, framework: JsxFramework): string | undefined {
@@ -703,7 +703,7 @@ export function readHasSlotName(call: ts.CallExpression): string | undefined {
  * Whether a node is the **call form** of the named-slot marker — `h(Slot, …)` —
  * the `h()` factory counterpart of the `<Slot … />` JSX element. Some neutral
  * components compose slots with `h(Slot, { name: 'x' }, …fallback)` (e.g. inside
- * `const column = … ? h(BaseDrawer, …, h(Slot, { name: 'start' })) : undefined`)
+ * `const column = … ? h(ForgeDrawer, …, h(Slot, { name: 'start' })) : undefined`)
  * rather than JSX; both forms must rewrite to each framework's native slot read.
  */
 export function isSlotHCall(node: ts.Node): node is ts.CallExpression {
@@ -849,7 +849,7 @@ export function readSlotScope(
 
 /**
  * Whether a JSX tag name refers to a **component** (a capitalised identifier such
- * as `BaseDropdown`, or a member/`this` expression like `Ctx.Provider`) rather
+ * as `ForgeDropdown`, or a member/`this` expression like `Ctx.Provider`) rather
  * than an intrinsic element (`div`, `button`). Named-slot **passing**
  * (`slot="…"`) is only meaningful onto a component, so the slot routing below is
  * gated on this — exactly mirroring the runtime adapters, which fold slotted
@@ -971,8 +971,8 @@ function withoutBlankText(children: readonly ts.JsxChild[]): ts.JsxChild[] {
  * Vue-target transformer that rewrites the named-slot **passing** form — a
  * component element whose children carry `slot="…"` markers — into the
  * `@vitejs/plugin-vue-jsx` object-children syntax. For example
- * `<BaseDropdown><button slot="trigger">…</button><ul>…</ul></BaseDropdown>`
- * becomes `<BaseDropdown>{{ trigger: () => <><button>…</button></>, default: () => <><ul>…</ul></> }}</BaseDropdown>`,
+ * `<ForgeDropdown><button slot="trigger">…</button><ul>…</ul></ForgeDropdown>`
+ * becomes `<ForgeDropdown>{{ trigger: () => <><button>…</button></>, default: () => <><ul>…</ul></> }}</ForgeDropdown>`,
  * which `@vue/babel-plugin-jsx` compiles to native named slots. A component
  * without slotted children is left untouched (its children stay the default
  * slot). This is composed **before** the reference rewriter on the
@@ -1384,8 +1384,8 @@ export function dynamicToHCall(
 }
 
 /**
- * Whether a component references **itself** as a JSX tag (`<BaseTreeView …>`
- * inside `BaseTreeView`) — i.e. it is recursive. The Vue emitter uses this to
+ * Whether a component references **itself** as a JSX tag (`<ForgeTreeView …>`
+ * inside `ForgeTreeView`) — i.e. it is recursive. The Vue emitter uses this to
  * resolve the self-reference (`resolveComponent('<name>')`) in its render
  * closure, so a recursive component compiles natively on both frameworks.
  */
@@ -1539,7 +1539,7 @@ export function createReactSlotCallExpression(
   return appendExpressionFallback(factory, read, fallback);
 }
 
-/** A relative import of a sibling component, e.g. `import { BaseBadge } from '../base-badge'`. */
+/** A relative import of a sibling component, e.g. `import { ForgeBadge } from '../forge-badge'`. */
 export interface ComponentImport {
   /** The imported value names. */
   names: string[];
@@ -1551,9 +1551,9 @@ export interface ComponentImport {
    * Vue emitter would otherwise drop them, leaving those types unresolved).
    */
   typeNames: string[];
-  /** The base name of the import path, e.g. `base-badge`. */
+  /** The base name of the import path, e.g. `forge-badge`. */
   base: string;
-  /** The original (relative) module specifier, e.g. `../base-badge`. */
+  /** The original (relative) module specifier, e.g. `../forge-badge`. */
   specifier: string;
 }
 
@@ -1597,11 +1597,11 @@ export function readComponentImports(sourceFile: ts.SourceFile): ComponentImport
 export interface StyleImport {
   /** The default-import local name (e.g. `styles`), or `undefined` for a bare side-effect import. */
   name: string | undefined;
-  /** The original (relative) module specifier, e.g. `./base-badge.module.scss`. */
+  /** The original (relative) module specifier, e.g. `./forge-badge.module.scss`. */
   specifier: string;
-  /** The flat specifier used in the generated tree, e.g. `./base-badge.module.scss`. */
+  /** The flat specifier used in the generated tree, e.g. `./forge-badge.module.scss`. */
   flatSpecifier: string;
-  /** The final path segment of the specifier, e.g. `base-badge.module.scss`. */
+  /** The final path segment of the specifier, e.g. `forge-badge.module.scss`. */
   base: string;
 }
 
@@ -2547,7 +2547,7 @@ export function createReferenceRewriter(scope: RewriteScope): ts.TransformerFact
 
       // JSX element tag names must never be rewritten. A tag is always either an
       // intrinsic element (`caption`, `span`, …) or an imported component
-      // (`BaseTypography`), never a prop — but a lowercase intrinsic tag can
+      // (`ForgeTypography`), never a prop — but a lowercase intrinsic tag can
       // collide with a destructured prop name (e.g. a `caption` prop alongside a
       // `<caption>` element), which the bare-identifier rule below would
       // otherwise rewrite to `properties.caption`, turning the element into a

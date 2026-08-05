@@ -70,7 +70,7 @@ import { buildVueTemplate, UnsupportedTemplate, type VueTemplate } from './templ
 
 /** An auxiliary SFC the Vue emitter generates alongside the primary module. */
 export interface EmittedExtraModule {
-  /** The flat-tree base name (no extension), e.g. `base-menubar-item`. */
+  /** The flat-tree base name (no extension), e.g. `forge-menubar-item`. */
   name: string;
   /** The emitted SFC source. */
   code: string;

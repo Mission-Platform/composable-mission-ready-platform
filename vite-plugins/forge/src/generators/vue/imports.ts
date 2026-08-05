@@ -128,7 +128,7 @@ export function buildImports(
       lines.push(`import ${name} from './${componentImport.base}.vue';`);
     }
     // A sibling component's own public types (e.g. `TypographyVariant` from
-    // `base-typography`) imported alongside it are preserved as an `import type`
+    // `forge-typography`) imported alongside it are preserved as an `import type`
     // from the compiled `.vue` module (which re-exports them), so they still
     // resolve in the SFC and its emitted declaration rather than being dropped.
     if (componentImport.typeNames !== undefined && componentImport.typeNames.length > 0) {

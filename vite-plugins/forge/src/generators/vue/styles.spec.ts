@@ -23,7 +23,7 @@ describe('the Vue emitter builds `<style>` blocks', () => {
 
   beforeEach(() => {
     sourceDir = mkdtempSync(path.join(tmpdir(), 'mp-styles-'));
-    writeFileSync(path.join(sourceDir, 'base-badge.module.scss'), '.base-badge { color: red; }\n');
+    writeFileSync(path.join(sourceDir, 'forge-badge.module.scss'), '.forge-badge { color: red; }\n');
   });
 
   afterEach(() => {
@@ -31,23 +31,23 @@ describe('the Vue emitter builds `<style>` blocks', () => {
   });
 
   it('emits a **scoped** `<style lang="scss" scoped>` block for native-`<template>` SFCs', () => {
-    const sourceFile = parseTsx(path.join(sourceDir, 'base-badge.tsx'), '');
-    const block = buildStyles([styleImport('./base-badge.module.scss')], sourceFile, true);
+    const sourceFile = parseTsx(path.join(sourceDir, 'forge-badge.tsx'), '');
+    const block = buildStyles([styleImport('./forge-badge.module.scss')], sourceFile, true);
 
     expect(block).toContain('<style lang="scss" scoped>');
-    expect(block).toContain('.base-badge { color: red; }');
+    expect(block).toContain('.forge-badge { color: red; }');
   });
 
   it('emits an **unscoped** `<style lang="scss">` block for the render-closure fallback', () => {
-    const sourceFile = parseTsx(path.join(sourceDir, 'base-badge.tsx'), '');
-    const block = buildStyles([styleImport('./base-badge.module.scss')], sourceFile, false);
+    const sourceFile = parseTsx(path.join(sourceDir, 'forge-badge.tsx'), '');
+    const block = buildStyles([styleImport('./forge-badge.module.scss')], sourceFile, false);
 
     expect(block).toContain('<style lang="scss">');
     expect(block).not.toContain('scoped');
   });
 
   it('skips stylesheet imports whose file is missing on disk', () => {
-    const sourceFile = parseTsx(path.join(sourceDir, 'base-badge.tsx'), '');
+    const sourceFile = parseTsx(path.join(sourceDir, 'forge-badge.tsx'), '');
     const block = buildStyles([styleImport('./does-not-exist.module.scss')], sourceFile, true);
 
     expect(block).toBe('');

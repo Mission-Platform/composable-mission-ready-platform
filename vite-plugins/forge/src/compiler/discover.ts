@@ -6,16 +6,16 @@
  * such as `src/components/atoms/<name>/<name>.tsx`) and re-exported from a
  * single barrel (`src/components/index.ts`). Both the Stage-1 code generator and
  * the declaration synthesiser need to know, for each component: its neutral
- * export name (`BaseBadge`), the public name it ships under (`Badge`), the
- * folder/file base name (`base-badge`, always flat for generated output), the
- * source directory relative to the barrel (`atoms/base-badge` when nested), and
+ * export name (`ForgeBadge`), the public name it ships under (`Badge`), the
+ * folder/file base name (`forge-badge`, always flat for generated output), the
+ * source directory relative to the barrel (`atoms/forge-badge` when nested), and
  * the exported props interface (`BadgeProperties`) — all of which are derived
  * here by parsing the barrel's `export { … } from './…'` re-exports.
  */
 
 /** A neutral component discovered in the barrel, plus its derived public shape. */
 export interface DiscoveredComponent {
-  /** The neutral export name, e.g. `BaseBadge`. */
+  /** The neutral export name, e.g. `ForgeBadge`. */
   neutralName: string;
   /** The public export name, e.g. `Badge`. */
   publicName: string;
@@ -24,15 +24,15 @@ export interface DiscoveredComponent {
   /** Every type re-exported alongside the component, e.g. `['BadgeVariant', 'BadgeProperties']`. */
   typeExports: string[];
   /**
-   * The folder / file base name the component is authored in, e.g. `base-badge`.
-   * Always the **basename** — used for the flat generated output (`dist/<fw>/base-badge.js`)
-   * and entry re-exports (`./base-badge`), regardless of source nesting.
+   * The folder / file base name the component is authored in, e.g. `forge-badge`.
+   * Always the **basename** — used for the flat generated output (`dist/<fw>/forge-badge.js`)
+   * and entry re-exports (`./forge-badge`), regardless of source nesting.
    */
   folder: string;
   /**
    * The re-export specifier relative to the barrel, stripped of a leading `./`
-   * and any trailing `/index`, preserving nested folders — e.g. `./base-badge`
-   * → `base-badge`, `./atoms/base-badge` → `atoms/base-badge`. The Stage-1
+   * and any trailing `/index`, preserving nested folders — e.g. `./forge-badge`
+   * → `forge-badge`, `./atoms/forge-badge` → `atoms/forge-badge`. The Stage-1
    * generator joins this under `componentsDir` to locate the source `.tsx`.
    */
   sourceDir: string;
@@ -73,7 +73,7 @@ function parseReExports(source: string): ReExport[] {
   return result;
 }
 
-/** The final path segment of a module specifier, e.g. `./base-badge` → `base-badge`. */
+/** The final path segment of a module specifier, e.g. `./forge-badge` → `forge-badge`. */
 function moduleBaseName(specifier: string): string {
   const segments = specifier.split('/').filter((segment) => segment.length > 0 && segment !== '.' && segment !== '..');
   return segments.at(-1) ?? specifier;
@@ -96,7 +96,7 @@ function moduleRelativePath(specifier: string): string {
  * Collapse a trailing duplicated path segment, so a file-style component
  * re-export folds onto its containing folder — e.g. `organisms/three-canvas/
  * three-canvas` → `organisms/three-canvas` (the barrel points at the file, not
- * the folder's `index`). A folder-style path (`atoms/base-badge`) is unchanged.
+ * the folder's `index`). A folder-style path (`atoms/forge-badge`) is unchanged.
  */
 function stripTrailingDuplicate(relativePath: string): string {
   const segments = relativePath.split('/');
@@ -183,12 +183,12 @@ function collectHelperValues(barrelSource: string, from: string): string[] {
  * statement (by the `<PublicName>Properties` convention) and the folder it lives
  * in (the re-export's module base name).
  */
-export function discoverComponents(barrelSource: string, stripPrefix = 'Base'): DiscoveredComponent[] {
+export function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): DiscoveredComponent[] {
   const components: DiscoveredComponent[] = [];
   for (const reExport of parseReExports(barrelSource)) {
     const folder = moduleBaseName(reExport.from);
     // The component's source **folder** relative to the barrel. A folder-style
-    // re-export (`./atoms/base-badge`) yields the folder directly; a file-style
+    // re-export (`./atoms/forge-badge`) yields the folder directly; a file-style
     // re-export (`./organisms/three-canvas/three-canvas`, pointing at the file
     // rather than the folder's `index`) ends with the basename twice, so drop
     // the trailing duplicate — the generator appends `<folder>.tsx` itself.

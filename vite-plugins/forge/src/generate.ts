@@ -72,7 +72,7 @@ export interface GenerateFrameworkSourcesOptions {
   componentsModule: string;
   /** Absolute path of the directory the generated sources + entry are written to. */
   outDir: string;
-  /** Prefix stripped from each neutral export name to form its public name. Defaults to `Base`. */
+  /** Prefix stripped from each neutral export name to form its public name. Defaults to `Forge`. */
   stripPrefix?: string;
 }
 
@@ -85,7 +85,7 @@ function helperReExportLine(helper: DiscoveredHelperExport): string {
 /**
  * Re-export one compiled component under a given export name.
  *
- * React re-exports the neutral function binding (`BaseBadge`) under the target
+ * React re-exports the neutral function binding (`ForgeBadge`) under the target
  * name; Vue re-exports the SFC's `default` export.
  */
 function componentReExportLine(framework: JsxFramework, component: DiscoveredComponent, as: string): string {
@@ -146,7 +146,7 @@ function componentTypesReExportLine(framework: JsxFramework, origin: TypeOrigin,
 /**
  * Generate the public entry module re-exporting each compiled component under
  * both its public name (`Badge`) **and** its neutral `Base`-prefixed name
- * (`BaseBadge`), so the package can be consumed under either convention. Every
+ * (`ForgeBadge`), so the package can be consumed under either convention. Every
  * public **type** a component ships alongside it (variants, option shapes, props
  * interfaces, …) is re-exported too — from the flat-tree module that actually
  * declares it (via {@link TypeOriginResolver}) — so the entry, and the
@@ -253,7 +253,7 @@ function findExportedComponentName(sourceFile: ts.SourceFile): string | undefine
  * returning the generated entry module path.
  */
 export function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): string {
-  const stripPrefix = options.stripPrefix ?? 'Base';
+  const stripPrefix = options.stripPrefix ?? 'Forge';
   const componentsDir = path.dirname(options.componentsModule);
   // Framework-gated components (opening with a `"use react";` / `"use vue";`
   // directive) are emitted only for the framework they target; drop the rest so
@@ -340,8 +340,14 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
       return dir === undefined ? specifier : relSpecifier(fromDir, dir, fileName);
     };
     return code
-      .replace(/(\bfrom\s+)(['"])(\.\/[^'"]+)(['"])/g, (_match, pre, quote, specifier) => `${pre}${quote}${rewrite(specifier)}${quote}`)
-      .replace(/(\bimport\s+)(['"])(\.\/[^'"]+)(['"])/g, (_match, pre, quote, specifier) => `${pre}${quote}${rewrite(specifier)}${quote}`);
+      .replace(
+        /(\bfrom\s+)(['"])(\.\/[^'"]+)(['"])/g,
+        (_match, pre, quote, specifier) => `${pre}${quote}${rewrite(specifier)}${quote}`,
+      )
+      .replace(
+        /(\bimport\s+)(['"])(\.\/[^'"]+)(['"])/g,
+        (_match, pre, quote, specifier) => `${pre}${quote}${rewrite(specifier)}${quote}`,
+      );
   };
 
   // Carry a shared **helper module** (a relative value import that is not itself
@@ -398,8 +404,8 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   };
 
   // Discover co-located **sibling components**: a component folder may ship
-  // focused child components authored beside the primary (e.g. `base-tree-view/`
-  // holds `base-tree-view.tsx` + `base-tree-view-item.tsx`). They are not
+  // focused child components authored beside the primary (e.g. `forge-tree-view/`
+  // holds `forge-tree-view.tsx` + `forge-tree-view-item.tsx`). They are not
   // re-exported from the package barrel, so they are found by following each
   // component's relative **PascalCase** value imports to a co-located neutral
   // component `.tsx`, then compiled as first-class components. Their folder base
@@ -582,7 +588,7 @@ export interface GenerateStoryblokBloksOptions {
    * components from, e.g. `@mission-platform/components/vue`.
    */
   componentsImport: string;
-  /** Prefix stripped from each neutral export name to form its public name. Defaults to `Base`. */
+  /** Prefix stripped from each neutral export name to form its public name. Defaults to `Forge`. */
   stripPrefix?: string;
 }
 
@@ -675,7 +681,7 @@ function generateBlokEntryDeclarations(framework: JsxFramework, bloks: readonly 
  * natively).
  */
 export function generateStoryblokBloks(options: GenerateStoryblokBloksOptions): string {
-  const stripPrefix = options.stripPrefix ?? 'Base';
+  const stripPrefix = options.stripPrefix ?? 'Forge';
   const components = discoverComponents(readFileSync(options.componentsModule, 'utf8'), stripPrefix);
   const componentsDir = path.dirname(options.componentsModule);
 
@@ -743,7 +749,7 @@ export interface JsxComponentsEntryDtsOptions {
   declarationFileName: string;
   /** Import specifier for the props types inside the emitted `.d.ts`. Defaults to `./components`. */
   declarationModule?: string;
-  /** Prefix stripped from each neutral export name to form its public name. Defaults to `Base`. */
+  /** Prefix stripped from each neutral export name to form its public name. Defaults to `Forge`. */
   stripPrefix?: string;
 }
 
@@ -918,7 +924,7 @@ function generateEntryDeclaration(
  */
 export function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plugin {
   const declarationModule = options.declarationModule ?? './components';
-  const stripPrefix = options.stripPrefix ?? 'Base';
+  const stripPrefix = options.stripPrefix ?? 'Forge';
 
   return {
     name: '@mission-platform/vite-plugin-forge:entry-dts',
@@ -1342,7 +1348,7 @@ async function emitSvelteComponentDeclarations(
     return;
   }
   const barrelSource = readFileSync(options.componentsModule, 'utf8');
-  const components = discoverComponents(barrelSource, 'Base');
+  const components = discoverComponents(barrelSource, 'Forge');
   const helpers = discoverHelperExports(barrelSource, new Set(components.map((c) => c.folder)));
   const dtsContent = generateEntryDeclaration(options.framework, '../components', components, helpers);
   mkdirSync(options.outDir, { recursive: true });
@@ -1420,7 +1426,7 @@ export function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin
         default: {
           if (options.componentsModule) {
             const barrelSource = readFileSync(options.componentsModule, 'utf8');
-            const components = discoverComponents(barrelSource, 'Base');
+            const components = discoverComponents(barrelSource, 'Forge');
             const helpers = discoverHelperExports(barrelSource, new Set(components.map((c) => c.folder)));
             const dtsContent = generateEntryDeclaration(options.framework, '../components', components, helpers);
             mkdirSync(options.outDir, { recursive: true });

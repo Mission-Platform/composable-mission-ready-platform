@@ -68,10 +68,11 @@ export function isCompileTimeConstant(expression: ts.Expression): boolean {
     return node.elements.every((element) => !ts.isSpreadElement(element) && isCompileTimeConstant(element));
   }
   if (ts.isObjectLiteralExpression(node)) {
-    return node.properties.every((property) =>
-      ts.isPropertyAssignment(property) &&
-      !ts.isComputedPropertyName(property.name) &&
-      isCompileTimeConstant(property.initializer),
+    return node.properties.every(
+      (property) =>
+        ts.isPropertyAssignment(property) &&
+        !ts.isComputedPropertyName(property.name) &&
+        isCompileTimeConstant(property.initializer),
     );
   }
   if (ts.isParenthesizedExpression(node)) {

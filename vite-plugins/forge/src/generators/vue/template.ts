@@ -213,9 +213,7 @@ function resolveExpressionTypeNode(expression: ts.Expression, context: Context):
     return findFunctionReturnType(expr.expression.text, context.sourceFile);
   }
   if (ts.isConditionalExpression(expr)) {
-    return (
-      resolveExpressionTypeNode(expr.whenTrue, context) ?? resolveExpressionTypeNode(expr.whenFalse, context)
-    );
+    return resolveExpressionTypeNode(expr.whenTrue, context) ?? resolveExpressionTypeNode(expr.whenFalse, context);
   }
   if (ts.isPropertyAccessExpression(expr) && ts.isIdentifier(expr.expression) && ts.isIdentifier(expr.name)) {
     const receiverTypeName = typeReferenceName(resolveExpressionTypeNode(expr.expression, context));
@@ -1161,7 +1159,10 @@ function readEarlyReturnGuard(
  * <expr>; })` rather than rejected as a "non-const derived statement". Returns
  * the assignment expression, or `undefined` for any other statement.
  */
-function readRefSyncAssignment(statement: ts.Statement, refNames: ReadonlySet<string>): ts.BinaryExpression | undefined {
+function readRefSyncAssignment(
+  statement: ts.Statement,
+  refNames: ReadonlySet<string>,
+): ts.BinaryExpression | undefined {
   if (!ts.isExpressionStatement(statement) || !ts.isBinaryExpression(statement.expression)) {
     return undefined;
   }
@@ -1568,7 +1569,9 @@ function emitMap(node: ts.CallExpression, depth: number, context: Context, direc
     const indexAlias = aliasParts.length >= 2 ? aliasParts[1] : '__index';
     const loopAlias = aliasParts.length >= 2 ? alias : `(${aliasParts[0]}, ${indexAlias})`;
     const keyedFor = `v-for="${escapeExpr(loopAlias)} in ${iterable}" :key="${indexAlias}"`;
-    const inner = elements.map((element) => emitElement(unwrap(element), depth + 1, childContext, undefined, undefined, true)).join('\n');
+    const inner = elements
+      .map((element) => emitElement(unwrap(element), depth + 1, childContext, undefined, undefined, true))
+      .join('\n');
     const loop = `${pad(depth)}<template ${keyedFor}>\n${inner}\n${pad(depth)}</template>`;
     if (directive === undefined) {
       return loop;
@@ -1604,7 +1607,7 @@ function emitNodeArrayChild(expr: ts.Expression, depth: number, context: Context
   }
   // A bare `properties.children` read (or the `...properties.children` spread /
   // `properties.children as MpChild[]` cast that `unwrap` sees through) is the
-  // component's default slot — e.g. `base-radio-group` appends its own children to
+  // component's default slot — e.g. `forge-radio-group` appends its own children to
   // the folded `radios` array — so it emits the default `<slot>`.
   if (
     ts.isPropertyAccessExpression(node) &&
@@ -2000,7 +2003,7 @@ function emitExpressionChild(expr: ts.Expression, depth: number, context: Contex
   // `<component :is>` renders an already-created VNode as-is (per the official
   // "Using Vnodes in `<template>`" guide), so binding the call result directly
   // mounts the render-prop's output natively while keeping `panel` a **real prop**
-  // (never a Vue named slot) — matching the deliberate `base-tabs`/`base-virtual-tabs`
+  // (never a Vue named slot) — matching the deliberate `forge-tabs`/`forge-virtual-tabs`
   // design. Binding the call expression itself (rather than an arrow wrapper) also
   // keeps any enclosing `v-if` narrowing of the argument (`{ tab: activeTab }`).
   if (isRenderPropCall(node, context)) {
@@ -2018,7 +2021,10 @@ function emitExpressionChild(expr: ts.Expression, depth: number, context: Contex
   // type (`{node.label}` where `TreeNode.label: string`) stays an interpolation.
   if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.name) && ts.isIdentifier(node.expression)) {
     const receiverTypeName = typeReferenceName(context.aliasTypes.get(node.expression.text));
-    if (receiverTypeName !== undefined && (context.nodeTypedFieldsByType.get(receiverTypeName)?.has(node.name.text) ?? false)) {
+    if (
+      receiverTypeName !== undefined &&
+      (context.nodeTypedFieldsByType.get(receiverTypeName)?.has(node.name.text) ?? false)
+    ) {
       return `${pad(depth)}<component :is="${escapeExpr(templateExpr(node, context))}" />`;
     }
   }
@@ -2445,7 +2451,9 @@ function isArrayBuildStatement(statement: ts.Statement, name: string): boolean {
   }
   if (ts.isIfStatement(statement)) {
     const branchOk = (branch: ts.Statement): boolean => arrayBuildBranchOk(branch, name);
-    return branchOk(statement.thenStatement) && (statement.elseStatement === undefined || branchOk(statement.elseStatement));
+    return (
+      branchOk(statement.thenStatement) && (statement.elseStatement === undefined || branchOk(statement.elseStatement))
+    );
   }
   if (ts.isForOfStatement(statement) || ts.isForInStatement(statement) || ts.isForStatement(statement)) {
     return arrayBuildBranchOk(statement.statement, name);
@@ -2460,7 +2468,9 @@ function arrayBuildBranchOk(branch: ts.Statement, name: string): boolean {
     (entry) =>
       isArrayBuildStatement(entry, name) ||
       (ts.isVariableStatement(entry) &&
-        entry.declarationList.declarations.every((declaration) => ts.isIdentifier(declaration.name) && declaration.name.text !== name)),
+        entry.declarationList.declarations.every(
+          (declaration) => ts.isIdentifier(declaration.name) && declaration.name.text !== name,
+        )),
   );
 }
 
@@ -2502,7 +2512,7 @@ function buildEntries(statement: ts.Statement, name: string): ts.Expression[] | 
   const factory = ts.factory;
   if (ts.isExpressionStatement(statement) && isArrayMutationCall(statement.expression, name)) {
     const call = statement.expression as ts.CallExpression;
-    if (((call.expression as ts.PropertyAccessExpression).name.text) !== 'push') {
+    if ((call.expression as ts.PropertyAccessExpression).name.text !== 'push') {
       return undefined;
     }
     return call.arguments.map((argument) => argument);
@@ -2554,11 +2564,9 @@ function buildEntries(statement: ts.Statement, name: string): ts.Expression[] | 
     );
     return [
       factory.createSpreadElement(
-        factory.createCallExpression(
-          factory.createPropertyAccessExpression(statement.expression, 'map'),
-          undefined,
-          [arrow],
-        ),
+        factory.createCallExpression(factory.createPropertyAccessExpression(statement.expression, 'map'), undefined, [
+          arrow,
+        ]),
       ),
     ];
   }
@@ -2788,9 +2796,7 @@ function bodyComparesParamToLiteral(node: ts.Node, paramNames: ReadonlySet<strin
     return false;
   }
   const isLiteral = (expression: ts.Expression): boolean =>
-    ts.isStringLiteral(expression) ||
-    ts.isNoSubstitutionTemplateLiteral(expression) ||
-    ts.isNumericLiteral(expression);
+    ts.isStringLiteral(expression) || ts.isNoSubstitutionTemplateLiteral(expression) || ts.isNumericLiteral(expression);
   const isParam = (expression: ts.Expression): boolean =>
     ts.isIdentifier(expression) && paramNames.has(expression.text);
   let found = false;
@@ -3052,9 +3058,9 @@ export function buildVueTemplate(
   let earlyBranch: { condition: ts.Expression; expression: ts.Expression } | undefined;
   // The consts bound directly to `<props>.children` (`const message =
   // properties.children;`) — the raw source a normalisation build reads from, or
-  // (as in `base-alert-banner`) content rendered directly. Each is folded into
+  // (as in `forge-alert-banner`) content rendered directly. Each is folded into
   // `nodeSubstitutions` **as it is declared** so a *later* node const that reads
-  // it (`const banner = message === undefined ? … : <BaseTypography>{message}…`)
+  // it (`const banner = message === undefined ? … : <ForgeTypography>{message}…`)
   // resolves the reference to `<props>.children`, routing its use sites through
   // the default-slot handling (`{message}` → `<slot/>`, `message === undefined`
   // → `$slots.default === undefined`) instead of leaving a dangling identifier.
@@ -3160,7 +3166,7 @@ export function buildVueTemplate(
   // A child-normalisation const (`const childList = children === undefined ? [] :
   // Array.isArray(children) ? [...children] : [children];`) is a default-`<slot>`
   // source wherever its `...<name>` spread appears — including **nested** inside a
-  // node-valued const that has been inlined into the tree (`base-hero`'s
+  // node-valued const that has been inlined into the tree (`forge-hero`'s
   // `content`), which the return-root scan above cannot see.
   for (const entry of derived) {
     if (isNormalizedChildrenInit(entry.initializer, scope.propsParamName, childrenSourceNames)) {

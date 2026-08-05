@@ -5,7 +5,6 @@ import path from 'node:path';
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import Vue from 'unplugin-vue/rolldown';
 
-
 import { reactJsxPlugin, stagePluginsForTsdown } from './config.js';
 import { generateHookLibrarySources, hookLibraryDtsPlugin } from './generate-hooks.js';
 import {
@@ -293,6 +292,8 @@ export function defineTsdownForgeComponents(options: TsdownForgeComponentsOption
     framework,
     componentsModule: resolvedComponentsModule,
     outDir: generatedDirectory,
+    // Keep the neutral `Forge` prefix on the public API (do not strip it).
+    stripPrefix: '',
   });
 
   // Component packages need real Svelte/Solid compilers. Use the tsdown-safe
@@ -316,6 +317,8 @@ export function defineTsdownForgeComponents(options: TsdownForgeComponentsOption
           componentsModule: resolvedComponentsModule,
           declarationFileName: 'index',
           declarationModule: declarationModule ?? '../components',
+          // Keep the neutral `Forge` prefix on the public API (do not strip it).
+          stripPrefix: '',
         })
       : jsxComponentsDtsPlugin({
           framework,
@@ -538,6 +541,8 @@ export function defineTsdownForgeStoryblok(options: TsdownForgeStoryblokOptions)
     componentsModule: resolvedComponentsModule,
     outDir: cacheDirectory,
     componentsImport: `${packageName}/${framework}`,
+    // Keep the neutral `Forge` prefix on the public API (do not strip it).
+    stripPrefix: '',
   });
 
   // React uses the classic-h transform plugin; Vue wrappers are real SFCs.

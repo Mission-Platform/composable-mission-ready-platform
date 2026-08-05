@@ -14,8 +14,8 @@
  *   its leading `const`s to Svelte `{@const}` inside the block,
  * - `<Slot/>` / `properties.children` → `{@render children?.()}` (named slots →
  *   `{@render name?.()}`),
- * - child neutral components (`<BaseThing/>`) stay capitalised (imported from
- *   `./base-thing.svelte`).
+ * - child neutral components (`<ForgeThing/>`) stay capitalised (imported from
+ *   `./forge-thing.svelte`).
  *
  * Embedded expressions are scoped (see {@link scopeExpression} /
  * {@link rewriteScopedNode}): `properties.x` reads become bare `x`,
@@ -50,7 +50,7 @@ export interface SvelteTemplateContext {
   factory: ts.NodeFactory;
   /** The neutral props parameter name (`properties`) whose member reads collapse to bare names. */
   propsParam: string;
-  /** Component folder bases, so `<BaseThing/>` is recognised as a child component. */
+  /** Component folder bases, so `<ForgeThing/>` is recognised as a child component. */
   componentFolders: ReadonlySet<string>;
   /**
    * `useRef` names declared in the component. Svelte's `$state` ref holds the

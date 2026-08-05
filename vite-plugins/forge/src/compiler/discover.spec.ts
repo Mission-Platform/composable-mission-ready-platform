@@ -3,9 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { discoverComponents, discoverHelperExports } from './discover';
 
 const BARREL = `
-export { BaseBadge, type BadgeProperties } from './base-badge';
-export { BaseToast, type ToastProperties, type ToastVariant } from './base-toast';
-export { BaseToastContainer, type ToastContainerProperties } from './base-toast-container';
+export { ForgeBadge, type BadgeProperties } from './forge-badge';
+export { ForgeToast, type ToastProperties, type ToastVariant } from './forge-toast';
+export { ForgeToastContainer, type ToastContainerProperties } from './forge-toast-container';
 export {
   clearToasts,
   showToast,
@@ -16,8 +16,8 @@ export {
 `;
 
 const NESTED_BARREL = `
-export { BaseBadge, type BadgeProperties } from './atoms/base-badge';
-export { BaseQuote, type QuoteProperties } from './molecules/base-quote';
+export { ForgeBadge, type BadgeProperties } from './atoms/forge-badge';
+export { ForgeQuote, type QuoteProperties } from './molecules/forge-quote';
 export {
   clearToasts,
   showToast,
@@ -30,13 +30,13 @@ export {
 describe('discoverComponents', () => {
   it('keeps folder as the basename and sourceDir flat for a flat re-export', () => {
     const components = discoverComponents(BARREL);
-    const badge = components.find((component) => component.neutralName === 'BaseBadge');
+    const badge = components.find((component) => component.neutralName === 'ForgeBadge');
 
     expect(badge).toMatchObject({
-      neutralName: 'BaseBadge',
+      neutralName: 'ForgeBadge',
       publicName: 'Badge',
-      folder: 'base-badge',
-      sourceDir: 'base-badge',
+      folder: 'forge-badge',
+      sourceDir: 'forge-badge',
       propertiesType: 'BadgeProperties',
     });
   });
@@ -45,13 +45,13 @@ describe('discoverComponents', () => {
     const components = discoverComponents(NESTED_BARREL);
 
     expect(components.map((component) => [component.folder, component.sourceDir])).toEqual([
-      ['base-badge', 'atoms/base-badge'],
-      ['base-quote', 'molecules/base-quote'],
+      ['forge-badge', 'atoms/forge-badge'],
+      ['forge-quote', 'molecules/forge-quote'],
     ]);
-    expect(components.find((component) => component.neutralName === 'BaseBadge')).toMatchObject({
+    expect(components.find((component) => component.neutralName === 'ForgeBadge')).toMatchObject({
       publicName: 'Badge',
-      folder: 'base-badge',
-      sourceDir: 'atoms/base-badge',
+      folder: 'forge-badge',
+      sourceDir: 'atoms/forge-badge',
       propertiesType: 'BadgeProperties',
     });
   });
@@ -92,10 +92,10 @@ export { innerDimensions, type Margin } from './utils/margins';
     const folders = new Set(components.map((component) => component.folder));
     const helpers = discoverHelperExports(BARREL, folders);
 
-    // The PascalCase component lines (base-badge / base-toast / base-toast-container)
+    // The PascalCase component lines (forge-badge / forge-toast / forge-toast-container)
     // are excluded by the component-folder set.
-    expect(helpers.map((helper) => helper.base)).not.toContain('base-toast');
-    expect(helpers.map((helper) => helper.base)).not.toContain('base-toast-container');
+    expect(helpers.map((helper) => helper.base)).not.toContain('forge-toast');
+    expect(helpers.map((helper) => helper.base)).not.toContain('forge-toast-container');
     // …and the helper line never produces a phantom component.
     expect(components.map((component) => component.folder)).not.toContain('toast-store');
   });
@@ -105,8 +105,8 @@ export { innerDimensions, type Margin } from './utils/margins';
     const folders = new Set(components.map((component) => component.folder));
     const helpers = discoverHelperExports(NESTED_BARREL, folders);
 
-    expect(folders.has('base-badge')).toBe(true);
-    expect(folders.has('base-quote')).toBe(true);
+    expect(folders.has('forge-badge')).toBe(true);
+    expect(folders.has('forge-quote')).toBe(true);
     expect(helpers.map((helper) => helper.base)).toEqual(['toast-store']);
   });
 });

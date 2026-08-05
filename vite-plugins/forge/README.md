@@ -39,7 +39,7 @@ import).
 
 The generated entry re-exports the **full** public surface the neutral barrel
 exposes — not just the component bindings (each under both its public `Badge`
-and neutral `BaseBadge` name), but **every companion type** shipped alongside a
+and neutral `ForgeBadge` name), but **every companion type** shipped alongside a
 component (variants, sizes, option shapes, its props interface). Each type is
 re-exported from the flat-tree module that actually declares it: the component's
 own module, or the sibling **helper** it was carried from (e.g. `DateRange` from

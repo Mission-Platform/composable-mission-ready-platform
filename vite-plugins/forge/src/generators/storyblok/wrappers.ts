@@ -196,7 +196,11 @@ function emitSolidBlokWrapper(
   const namedSlots = slots.filter((entry) => entry.slotName !== 'default');
   const namedSlotBindings = namedSlots.map((slot) => `      ${slot.prop}={renderBloks(properties.blok.${slot.prop})}`);
 
-  const openingProperties = [`      {...storyblokEditable(properties.blok)}`, ...propertyBindings, ...namedSlotBindings];
+  const openingProperties = [
+    `      {...storyblokEditable(properties.blok)}`,
+    ...propertyBindings,
+    ...namedSlotBindings,
+  ];
 
   const body =
     defaultSlot === undefined
@@ -271,11 +275,7 @@ function emitSvelteBlokWrapper(
   // Named slots are passed as Svelte 5 snippet props; the default slot renders
   // its bloks as the component's direct children.
   for (const slot of namedSlots) {
-    children.push(
-      `      {#snippet ${slot.slotName}()}`,
-      ...svelteBlokEach(slot.prop, '        '),
-      `      {/snippet}`,
-    );
+    children.push(`      {#snippet ${slot.slotName}()}`, ...svelteBlokEach(slot.prop, '        '), `      {/snippet}`);
   }
   if (defaultSlot !== undefined) {
     children.push(...svelteBlokEach(defaultSlot.prop, '      '));
@@ -324,7 +324,7 @@ function emitWebComponentBlokWrapper(
   });
 
   return [
-    // Side-effect import registers every built custom element (`<base-…>`).
+    // Side-effect import registers every built custom element (`<forge-…>`).
     `import '${componentsImport}';`,
     `import { storyblokEditable, type SbBlokData } from '@storyblok/js';`,
     ``,

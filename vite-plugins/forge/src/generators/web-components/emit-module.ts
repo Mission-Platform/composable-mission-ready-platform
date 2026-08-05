@@ -126,7 +126,7 @@ export function emitWebComponentModule(
           // Sibling component → register its custom element via a side-effect import.
           kept.push(`import '${flatten(specifier)}.js';`);
           // Preserve any type-only exports the sibling contributes (e.g.
-          // `import type { TabItem, TabsVariant } from '../base-tabs'`): the
+          // `import type { TabItem, TabsVariant } from '../forge-tabs'`): the
           // side-effect import alone would drop them, leaving the names
           // dangling in this module's emitted declarations.
           const siblingTypeNames = typeOnlyNamedImports(statement);
@@ -149,7 +149,7 @@ export function emitWebComponentModule(
     }
     // Keep everything else (type aliases, interfaces, other declarations). A
     // module-level helper may itself carry JSX (e.g. a `variantIcon(variant):
-    // MpElement { switch (…) { return <IconCheck/>; … } }` icon-picker), which
+    // MpElement { switch (…) { return <ForgeIconCheck/>; … } }` icon-picker), which
     // must be converted to a lit-html `html\`…\`` template — and its dropped
     // `MpElement`/`MpChild` return-type annotation relaxed to `unknown` — so no
     // residual JSX (or reference to a type this build never imports) survives.
@@ -188,7 +188,7 @@ function printClause(clause: ts.ImportClause): string {
  * The **type-only** named specifiers of an import — either the whole clause is
  * `import type { … }` or individual `import { type X }` specifiers. Used to
  * carry a sibling component's type exports (e.g. `import type { TabItem,
- * TabsVariant } from '../base-tabs'`) across to the Web-Components build, whose
+ * TabsVariant } from '../forge-tabs'`) across to the Web-Components build, whose
  * side-effect sibling import would otherwise drop them and leave the names
  * dangling in the emitted declarations.
  */

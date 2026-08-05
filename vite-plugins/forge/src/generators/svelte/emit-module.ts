@@ -56,7 +56,7 @@ function importBase(specifier: string): string {
   return segments.at(-1) ?? specifier;
 }
 
-/** `base-icon-button` → `BaseIconButton` — the PascalCase fallback for a sibling import with no usable binding. */
+/** `forge-icon-button` → `ForgeIconButton` — the PascalCase fallback for a sibling import with no usable binding. */
 function toPascalCase(base: string): string {
   return base
     .split('-')
@@ -68,8 +68,8 @@ function toPascalCase(base: string): string {
 /**
  * The default-import binding a flattened `.svelte` sibling import uses — the
  * PascalCase component name actually referenced in the template. Neutral
- * components import their siblings by **name** (`import { BaseTypography }
- * from '../base-typography'`), not as a default import, so the binding is
+ * components import their siblings by **name** (`import { ForgeTypography }
+ * from '../forge-typography'`), not as a default import, so the binding is
  * read off that named import (falling back to a default-import's own name, or
  * finally the PascalCase of the file base when neither shape is present).
  */
@@ -103,7 +103,7 @@ function siblingTypeNames(statement: ts.ImportDeclaration): string[] {
 /**
  * Whether a sibling import statement carries any runtime **value** binding at
  * all — `false` for a wholly `import type { … }` statement (e.g. `import type
- * { MenuNode } from '../base-menu'`, which pulls in only a type, never the
+ * { MenuNode } from '../forge-menu'`, which pulls in only a type, never the
  * component itself). Such a statement must not also emit a default `.svelte`
  * value import (there would be nothing to bind it to, and Svelte's script
  * parser doesn't erase `import type` early enough to tolerate the resulting
@@ -295,7 +295,7 @@ function isChildrenListNormalization(initializer: ts.Expression, propsParam: str
  *
  * A leading local computed **from** JSX (e.g. `const wizardSteps =
  * indices.map((i) => ({ …, content: cond ? <jsx/> : undefined }))` ahead of
- * `return <BaseFormWizard steps={wizardSteps} … />;`) has no script-side form
+ * `return <ForgeFormWizard steps={wizardSteps} … />;`) has no script-side form
  * regardless of which branch declares it — same as a top-level one (see the
  * module doc comment's `jsxConstants` note) — so it is registered into
  * `jsxConstants` here exactly as a top-level declaration would be, and the

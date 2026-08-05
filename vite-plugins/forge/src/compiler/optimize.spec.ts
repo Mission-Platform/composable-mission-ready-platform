@@ -29,7 +29,7 @@ const STATIC_SUBTREE = [
   '  title: string;',
   '}',
   '',
-  'export function BaseCard(properties: CardProperties): MpElement {',
+  'export function ForgeCard(properties: CardProperties): MpElement {',
   '  return (',
   '    <div class="card">',
   '      <span class="card__icon">★</span>',
@@ -47,7 +47,7 @@ const CONSTANT_CONDITIONALS = [
   '  label: string;',
   '}',
   '',
-  'export function BaseFlag(properties: FlagProperties): MpElement {',
+  'export function ForgeFlag(properties: FlagProperties): MpElement {',
   '  return (',
   '    <div class="flag">',
   '      {true ? <span class="flag__on">on</span> : <span class="flag__off">off</span>}',
@@ -65,7 +65,7 @@ const STABLE_KEYED_LIST = [
   '',
   'export interface ListProperties extends MpProperties {}',
   '',
-  'export function BaseStableList(properties: ListProperties): MpElement {',
+  'export function ForgeStableList(properties: ListProperties): MpElement {',
   '  void properties;',
   '  return (',
   '    <ul class="list">',
@@ -85,7 +85,7 @@ const MODULE_CONST_LIST = [
   '',
   'export interface RowProperties extends MpProperties {}',
   '',
-  'export function BaseRows(properties: RowProperties): MpElement {',
+  'export function ForgeRows(properties: RowProperties): MpElement {',
   '  void properties;',
   '  return (',
   '    <ul class="rows">',
@@ -105,7 +105,7 @@ const DYNAMIC_LIST = [
   '  items: string[];',
   '}',
   '',
-  'export function BaseDyn(properties: DynProperties): MpElement {',
+  'export function ForgeDyn(properties: DynProperties): MpElement {',
   '  const { items } = properties;',
   '  return (',
   '    <ul class="dyn">',
@@ -137,7 +137,7 @@ const CONSTANT_DERIVED = [
   '  name: string;',
   '}',
   '',
-  'export function BaseTag(properties: TagProperties): MpElement {',
+  'export function ForgeTag(properties: TagProperties): MpElement {',
   "  const prefix = 'tag';",
   '  return <span class={prefix}>{properties.name}</span>;',
   '}',
@@ -149,7 +149,7 @@ const SLOT_LAYOUT = [
   '',
   'export interface LayoutProperties extends MpProperties {}',
   '',
-  'export function BaseLayout(properties: LayoutProperties): MpElement {',
+  'export function ForgeLayout(properties: LayoutProperties): MpElement {',
   '  void properties;',
   '  return (',
   '    <div class="layout">',
@@ -167,7 +167,7 @@ const TELEPORT_PANEL = [
   '  open?: boolean;',
   '}',
   '',
-  'export function BasePanel(properties: PanelProperties): MpElement {',
+  'export function ForgePanel(properties: PanelProperties): MpElement {',
   '  const [open, setOpen] = useState(false);',
   '  return (',
   '    <div class="panel">',
@@ -202,7 +202,7 @@ const FRAMEWORKS: readonly JsxFramework[] = ['react', 'vue', 'solid', 'svelte', 
 
 describe('Stage-1 optimise — dead-branch pruning', () => {
   it('folds `true ? a : b` / `false && x` / `!true && x` out of the neutral AST', () => {
-    const parsed = stripFrameworkDirective(parseTsx('BaseFlag.tsx', CONSTANT_CONDITIONALS));
+    const parsed = stripFrameworkDirective(parseTsx('ForgeFlag.tsx', CONSTANT_CONDITIONALS));
     const optimised = optimizeSourceFile(parsed);
     const printed = printSourceFile(optimised);
 
@@ -220,11 +220,11 @@ describe('Stage-1 optimise — dead-branch pruning', () => {
   it('is a no-op when `optimize: false` is passed to the compiler', () => {
     const withOpt = compileComponentModule(CONSTANT_CONDITIONALS, {
       framework: 'react',
-      componentName: 'BaseFlag',
+      componentName: 'ForgeFlag',
     });
     const without = compileComponentModule(CONSTANT_CONDITIONALS, {
       framework: 'react',
-      componentName: 'BaseFlag',
+      componentName: 'ForgeFlag',
       optimize: false,
     });
     expect(withOpt.code).not.toContain('flag__off');
@@ -234,7 +234,7 @@ describe('Stage-1 optimise — dead-branch pruning', () => {
 
 describe('Stage-1 optimise — static-node marking', () => {
   it('marks a fully-static intrinsic subtree with `__mpStatic`', () => {
-    const parsed = stripFrameworkDirective(parseTsx('BaseCard.tsx', STATIC_SUBTREE));
+    const parsed = stripFrameworkDirective(parseTsx('ForgeCard.tsx', STATIC_SUBTREE));
     const optimised = optimizeSourceFile(parsed);
 
     let staticCount = 0;
@@ -258,11 +258,11 @@ describe('Stage-1 optimise — static-node marking', () => {
   it('does not mark elements with dynamic bindings or event handlers', () => {
     const source = [
       "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
-      'export function BaseBtn(properties: MpProperties): MpElement {',
+      'export function ForgeBtn(properties: MpProperties): MpElement {',
       '  return <button type="button" onClick={() => undefined}>{properties.children}</button>;',
       '}',
     ].join('\n');
-    const parsed = stripFrameworkDirective(parseTsx('BaseBtn.tsx', source));
+    const parsed = stripFrameworkDirective(parseTsx('ForgeBtn.tsx', source));
     const optimised = optimizeSourceFile(parsed);
     expect(printSourceFile(optimised)).not.toContain(MP_STATIC_ATTR);
   });
@@ -270,21 +270,21 @@ describe('Stage-1 optimise — static-node marking', () => {
 
 describe('Stage-1 optimise — stable-key inference', () => {
   it('adds `key={item}` for a primitive array-literal `.map` missing a key', () => {
-    const parsed = stripFrameworkDirective(parseTsx('BaseStableList.tsx', STABLE_KEYED_LIST));
+    const parsed = stripFrameworkDirective(parseTsx('ForgeStableList.tsx', STABLE_KEYED_LIST));
     const optimised = optimizeSourceFile(parsed);
     const printed = printSourceFile(optimised);
     expect(printed).toMatch(/key=\{item\}/);
   });
 
   it('adds `key={index}` when a stable module-const map provides an index param', () => {
-    const parsed = stripFrameworkDirective(parseTsx('BaseRows.tsx', MODULE_CONST_LIST));
+    const parsed = stripFrameworkDirective(parseTsx('ForgeRows.tsx', MODULE_CONST_LIST));
     const optimised = optimizeSourceFile(parsed);
     const printed = printSourceFile(optimised);
     expect(printed).toMatch(/key=\{index\}/);
   });
 
   it('does not invent keys for a dynamic (prop-sourced) `.map`', () => {
-    const parsed = stripFrameworkDirective(parseTsx('BaseDyn.tsx', DYNAMIC_LIST));
+    const parsed = stripFrameworkDirective(parseTsx('ForgeDyn.tsx', DYNAMIC_LIST));
     const optimised = optimizeSourceFile(parsed);
     const printed = printSourceFile(optimised);
     expect(printed).not.toMatch(/key=\{/);
@@ -297,7 +297,7 @@ describe('Stage-2 — React static hoisting', () => {
   it('lifts a static subtree to a module-level `__mpHoist_N` constant', () => {
     const { code } = compileComponentModule(STATIC_SUBTREE, {
       framework: 'react',
-      componentName: 'BaseCard',
+      componentName: 'ForgeCard',
     });
     expect(code).toMatch(/const __mpHoist_\d+/);
     expect(code).toContain('card__icon');
@@ -310,7 +310,7 @@ describe('Stage-2 — Solid static hoisting', () => {
   it('lifts a static subtree to a module-level constant outside reactive scope', () => {
     const { code } = compileComponentModule(STATIC_SUBTREE, {
       framework: 'solid',
-      componentName: 'BaseCard',
+      componentName: 'ForgeCard',
     });
     expect(code).toMatch(/const __mpHoist_\d+/);
     expect(code).not.toContain(MP_STATIC_ATTR);
@@ -321,7 +321,7 @@ describe('Stage-2 — Vue constant derived / dead-branch', () => {
   it('emits a plain `const` (not `computed`) for a compile-time constant derived', () => {
     const { code } = compileComponentModule(CONSTANT_DERIVED, {
       framework: 'vue',
-      componentName: 'BaseTag',
+      componentName: 'ForgeTag',
     });
     expect(code).toMatch(/const prefix = ['"]tag['"]/);
     expect(code).not.toMatch(/const prefix = computed/);
@@ -331,7 +331,7 @@ describe('Stage-2 — Vue constant derived / dead-branch', () => {
   it('drops dead constant branches from the Vue template', () => {
     const { code } = compileComponentModule(CONSTANT_CONDITIONALS, {
       framework: 'vue',
-      componentName: 'BaseFlag',
+      componentName: 'ForgeFlag',
     });
     expect(code).toContain('flag__on');
     expect(code).toContain('flag__yes');
@@ -344,7 +344,7 @@ describe('Stage-2 — Svelte keyed each + constant memo', () => {
   it('emits a keyed `{#each … (key)}` for a stable map with an inferred key', () => {
     const { code } = compileComponentModule(STABLE_KEYED_LIST, {
       framework: 'svelte',
-      componentName: 'BaseStableList',
+      componentName: 'ForgeStableList',
     });
     expect(code).toMatch(/\{#each [^}]+ \(item\)\}/);
     expect(code).not.toContain(MP_STATIC_ATTR);
@@ -353,14 +353,14 @@ describe('Stage-2 — Svelte keyed each + constant memo', () => {
   it('emits a plain `const` (not `$derived`) for a constant `useMemo` in a component', () => {
     const source = [
       "import { h, useMemo, type MpElement, type MpProperties } from '@mission-platform/forge';",
-      'export function BaseLabel(properties: MpProperties): MpElement {',
+      'export function ForgeLabel(properties: MpProperties): MpElement {',
       "  const label = useMemo(() => 'hi', []);",
       '  return <span class="label">{label}</span>;',
       '}',
     ].join('\n');
     const { code } = compileComponentModule(source, {
       framework: 'svelte',
-      componentName: 'BaseLabel',
+      componentName: 'ForgeLabel',
     });
     expect(code).toMatch(/const label = ['"]hi['"]/);
     expect(code).not.toMatch(/\$derived/);
@@ -371,14 +371,14 @@ describe('Stage-2 — Web Components static template hoist', () => {
   it('hoists a fully-static root to a module-level `html` template constant', () => {
     const source = [
       "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
-      'export function BaseIcon(properties: MpProperties): MpElement {',
+      'export function ForgeIcon(properties: MpProperties): MpElement {',
       '  void properties;',
       '  return <span class="icon">★</span>;',
       '}',
     ].join('\n');
     const { code } = compileComponentModule(source, {
       framework: 'web-components',
-      componentName: 'BaseIcon',
+      componentName: 'ForgeIcon',
     });
     expect(code).toContain('const __mpStaticTpl_0 = html`');
     expect(code).toContain('return __mpStaticTpl_0;');
@@ -395,7 +395,7 @@ describe('Stage-1/2 optimisations preserve cross-framework parity', () => {
     for (const framework of FRAMEWORKS) {
       const { code } = compileComponentModule(STATIC_SUBTREE, {
         framework,
-        componentName: 'BaseCard',
+        componentName: 'ForgeCard',
       });
       expect(code.length).toBeGreaterThan(0);
       expect(code).not.toContain(MP_STATIC_ATTR);
@@ -408,7 +408,7 @@ describe('Stage-1/2 optimisations preserve cross-framework parity', () => {
     for (const framework of FRAMEWORKS) {
       const { code } = compileComponentModule(STABLE_KEYED_LIST, {
         framework,
-        componentName: 'BaseStableList',
+        componentName: 'ForgeStableList',
       });
       expect(code.length).toBeGreaterThan(0);
       expect(code).toMatch(/list__item|list/);
@@ -457,9 +457,9 @@ describe('Stage-2 — constant-memo folding in composables', () => {
 
 describe('optimisations do not break previously-supported constructs', () => {
   it('still emits slots correctly across frameworks', () => {
-    const react = compileComponentModule(SLOT_LAYOUT, { framework: 'react', componentName: 'BaseLayout' });
-    const vue = compileComponentModule(SLOT_LAYOUT, { framework: 'vue', componentName: 'BaseLayout' });
-    const svelte = compileComponentModule(SLOT_LAYOUT, { framework: 'svelte', componentName: 'BaseLayout' });
+    const react = compileComponentModule(SLOT_LAYOUT, { framework: 'react', componentName: 'ForgeLayout' });
+    const vue = compileComponentModule(SLOT_LAYOUT, { framework: 'vue', componentName: 'ForgeLayout' });
+    const svelte = compileComponentModule(SLOT_LAYOUT, { framework: 'svelte', componentName: 'ForgeLayout' });
 
     expect(react.code).toMatch(/properties\.header|properties\.children/);
     expect(vue.code).toContain('<slot');
@@ -467,8 +467,8 @@ describe('optimisations do not break previously-supported constructs', () => {
   });
 
   it('still emits Teleport on React and Vue', () => {
-    const react = compileComponentModule(TELEPORT_PANEL, { framework: 'react', componentName: 'BasePanel' });
-    const vue = compileComponentModule(TELEPORT_PANEL, { framework: 'vue', componentName: 'BasePanel' });
+    const react = compileComponentModule(TELEPORT_PANEL, { framework: 'react', componentName: 'ForgePanel' });
+    const vue = compileComponentModule(TELEPORT_PANEL, { framework: 'vue', componentName: 'ForgePanel' });
     expect(react.code).toContain('Teleport');
     expect(vue.code).toContain('Teleport');
   });
@@ -483,7 +483,7 @@ describe('optimisations do not break previously-supported constructs', () => {
   });
 
   it('does not change semantics of a dynamic list (no forced keys)', () => {
-    const react = compileComponentModule(DYNAMIC_LIST, { framework: 'react', componentName: 'BaseDyn' });
+    const react = compileComponentModule(DYNAMIC_LIST, { framework: 'react', componentName: 'ForgeDyn' });
     // No key attribute injected on a prop-sourced map.
     expect(react.code).not.toMatch(/key=\{item\}/);
     expect(react.code).toContain('.map(');

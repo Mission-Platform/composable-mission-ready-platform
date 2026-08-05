@@ -31,7 +31,7 @@ const COMPONENTS_ROOT = path.resolve(
 );
 
 /** Components that still take the Vue render-closure fallback (see file header). */
-const KNOWN_FALLBACKS: ReadonlySet<string> = new Set(['base-date-time-range-input', 'base-time-range-input']);
+const KNOWN_FALLBACKS: ReadonlySet<string> = new Set(['forge-date-time-range-input', 'forge-time-range-input']);
 
 /** Convert a kebab-case component folder to its PascalCase exported name. */
 function pascalCase(name: string): string {

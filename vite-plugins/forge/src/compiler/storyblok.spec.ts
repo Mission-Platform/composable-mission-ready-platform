@@ -26,7 +26,7 @@ const BADGE = [
   '  pill?: boolean;',
   '}',
   '',
-  'export function BaseBadge(properties: BadgeProperties): MpElement {',
+  'export function ForgeBadge(properties: BadgeProperties): MpElement {',
   "  const variant = properties.variant ?? 'default';",
   "  const size = properties.size ?? 'md';",
   '  return <span class="badge">{properties.children}</span>;',
@@ -49,7 +49,7 @@ const BUTTON = [
   '  onClick?: (event: unknown) => void;',
   '}',
   '',
-  'export function BaseButton(properties: ButtonProperties): MpElement {',
+  'export function ForgeButton(properties: ButtonProperties): MpElement {',
   "  const variant = properties.variant ?? 'primary';",
   '  return <button class="button">{properties.children}</button>;',
   '}',
@@ -63,7 +63,7 @@ const GRID = [
   '  rows?: number;',
   '}',
   '',
-  'export function BaseGrid(properties: GridProperties): MpElement {',
+  'export function ForgeGrid(properties: GridProperties): MpElement {',
   '  const rows = properties.rows ?? 3;',
   '  return <div class="grid">{properties.children}</div>;',
   '}',
@@ -79,7 +79,7 @@ const LAYOUT = [
   '  header?: MpChild;',
   '}',
   '',
-  'export function BaseLayout(properties: LayoutProperties): MpElement {',
+  'export function ForgeLayout(properties: LayoutProperties): MpElement {',
   '  return (',
   '    <div class="layout">',
   '      <div class="layout__header"><Slot name="header" /></div>',
@@ -89,10 +89,10 @@ const LAYOUT = [
   '}',
 ].join('\n');
 
-const badgeNames = { neutralName: 'BaseBadge', publicName: 'Badge', propertiesType: 'BadgeProperties' };
-const buttonNames = { neutralName: 'BaseButton', publicName: 'Button', propertiesType: 'ButtonProperties' };
-const gridNames = { neutralName: 'BaseGrid', publicName: 'Grid', propertiesType: 'GridProperties' };
-const layoutNames = { neutralName: 'BaseLayout', publicName: 'Layout', propertiesType: 'LayoutProperties' };
+const badgeNames = { neutralName: 'ForgeBadge', publicName: 'Badge', propertiesType: 'BadgeProperties' };
+const buttonNames = { neutralName: 'ForgeButton', publicName: 'Button', propertiesType: 'ButtonProperties' };
+const gridNames = { neutralName: 'ForgeGrid', publicName: 'Grid', propertiesType: 'GridProperties' };
+const layoutNames = { neutralName: 'ForgeLayout', publicName: 'Layout', propertiesType: 'LayoutProperties' };
 
 describe('the Storyblok name helpers', () => {
   it('derives technical (snake_case) names', () => {
@@ -107,7 +107,7 @@ describe('the Storyblok name helpers', () => {
 });
 
 describe('emitStoryblokComponent maps the props interface to a blok schema', () => {
-  const badge = emitStoryblokComponent(parseTsx('base-badge.tsx', BADGE), badgeNames);
+  const badge = emitStoryblokComponent(parseTsx('forge-badge.tsx', BADGE), badgeNames);
 
   it('emits a nestable, non-root component object with technical + display names', () => {
     expect(badge.name).toBe('badge');
@@ -143,8 +143,8 @@ describe('emitStoryblokComponent maps the props interface to a blok schema', () 
 });
 
 describe('emitStoryblokComponent handles primitives and drops callbacks', () => {
-  const button = emitStoryblokComponent(parseTsx('base-button.tsx', BUTTON), buttonNames);
-  const grid = emitStoryblokComponent(parseTsx('base-grid.tsx', GRID), gridNames);
+  const button = emitStoryblokComponent(parseTsx('forge-button.tsx', BUTTON), buttonNames);
+  const grid = emitStoryblokComponent(parseTsx('forge-grid.tsx', GRID), gridNames);
 
   it('drops function (callback) props such as `onClick`', () => {
     expect(button.schema.onClick).toBeUndefined();
@@ -162,7 +162,7 @@ describe('emitStoryblokComponent handles primitives and drops callbacks', () => 
 });
 
 describe('emitStoryblokComponent maps `MpChild` props to named-slot `bloks` fields', () => {
-  const layout = emitStoryblokComponent(parseTsx('base-layout.tsx', LAYOUT), layoutNames);
+  const layout = emitStoryblokComponent(parseTsx('forge-layout.tsx', LAYOUT), layoutNames);
 
   it('keeps the boolean prop and exposes the `MpChild` prop as `bloks`', () => {
     expect(layout.schema.sticky.type).toBe('boolean');
@@ -175,7 +175,7 @@ describe('emitStoryblokComponent maps `MpChild` props to named-slot `bloks` fiel
 });
 
 describe('the Vue blok wrapper emitter', () => {
-  const analyzed = analyzeStoryblokComponent(parseTsx('base-badge.tsx', BADGE), badgeNames);
+  const analyzed = analyzeStoryblokComponent(parseTsx('forge-badge.tsx', BADGE), badgeNames);
   const vue = emitStoryblokBlokWrapper(analyzed, 'Badge', {
     framework: 'vue',
     componentsImport: '@mission-platform/components/vue',
@@ -208,7 +208,7 @@ describe('the Vue blok wrapper emitter', () => {
 });
 
 describe('the Vue blok wrapper emitter handles named slots', () => {
-  const analyzed = analyzeStoryblokComponent(parseTsx('base-layout.tsx', LAYOUT), layoutNames);
+  const analyzed = analyzeStoryblokComponent(parseTsx('forge-layout.tsx', LAYOUT), layoutNames);
   const vue = emitStoryblokBlokWrapper(analyzed, 'Layout', {
     framework: 'vue',
     componentsImport: '@mission-platform/components/vue',
@@ -221,7 +221,7 @@ describe('the Vue blok wrapper emitter handles named slots', () => {
 });
 
 describe('the React blok wrapper emitter', () => {
-  const analyzed = analyzeStoryblokComponent(parseTsx('base-badge.tsx', BADGE), badgeNames);
+  const analyzed = analyzeStoryblokComponent(parseTsx('forge-badge.tsx', BADGE), badgeNames);
   const react = emitStoryblokBlokWrapper(analyzed, 'Badge', {
     framework: 'react',
     componentsImport: '@mission-platform/components/react',
@@ -255,7 +255,7 @@ describe('the React blok wrapper emitter', () => {
 });
 
 describe('the React blok wrapper emitter handles named slots', () => {
-  const analyzed = analyzeStoryblokComponent(parseTsx('base-layout.tsx', LAYOUT), layoutNames);
+  const analyzed = analyzeStoryblokComponent(parseTsx('forge-layout.tsx', LAYOUT), layoutNames);
   const react = emitStoryblokBlokWrapper(analyzed, 'Layout', {
     framework: 'react',
     componentsImport: '@mission-platform/components/react',
@@ -267,7 +267,7 @@ describe('the React blok wrapper emitter handles named slots', () => {
 });
 
 describe('the Solid blok wrapper emitter', () => {
-  const analyzed = analyzeStoryblokComponent(parseTsx('base-badge.tsx', BADGE), badgeNames);
+  const analyzed = analyzeStoryblokComponent(parseTsx('forge-badge.tsx', BADGE), badgeNames);
   const solid = emitStoryblokBlokWrapper(analyzed, 'Badge', {
     framework: 'solid',
     componentsImport: '@mission-platform/components/solid',
@@ -289,13 +289,15 @@ describe('the Solid blok wrapper emitter', () => {
 
   it('renders the default slot bloks through a `<For>` control-flow loop', () => {
     expect(solid).toContain("import { For } from 'solid-js';");
-    expect(solid).toContain('<For each={items as SbBlokData[]}>{(nested) => <StoryblokComponent blok={nested} />}</For>');
+    expect(solid).toContain(
+      '<For each={items as SbBlokData[]}>{(nested) => <StoryblokComponent blok={nested} />}</For>',
+    );
     expect(solid).toContain('{renderBloks(properties.blok.content)}');
   });
 });
 
 describe('the Svelte blok wrapper emitter', () => {
-  const analyzed = analyzeStoryblokComponent(parseTsx('base-badge.tsx', BADGE), badgeNames);
+  const analyzed = analyzeStoryblokComponent(parseTsx('forge-badge.tsx', BADGE), badgeNames);
   const svelte = emitStoryblokBlokWrapper(analyzed, 'Badge', {
     framework: 'svelte',
     componentsImport: '@mission-platform/components/svelte',
@@ -324,7 +326,7 @@ describe('the Svelte blok wrapper emitter', () => {
 });
 
 describe('the Svelte blok wrapper emitter handles named slots', () => {
-  const analyzed = analyzeStoryblokComponent(parseTsx('base-layout.tsx', LAYOUT), layoutNames);
+  const analyzed = analyzeStoryblokComponent(parseTsx('forge-layout.tsx', LAYOUT), layoutNames);
   const svelte = emitStoryblokBlokWrapper(analyzed, 'Layout', {
     framework: 'svelte',
     componentsImport: '@mission-platform/components/svelte',
@@ -337,7 +339,7 @@ describe('the Svelte blok wrapper emitter handles named slots', () => {
 });
 
 describe('the Web-Component blok wrapper emitter', () => {
-  const analyzed = analyzeStoryblokComponent(parseTsx('base-badge.tsx', BADGE), badgeNames);
+  const analyzed = analyzeStoryblokComponent(parseTsx('forge-badge.tsx', BADGE), badgeNames);
   const wc = emitStoryblokBlokWrapper(analyzed, 'Badge', {
     framework: 'web-components',
     componentsImport: '@mission-platform/components/web-components',
@@ -374,7 +376,7 @@ const REQUIRED = [
   '  subheading?: string;',
   '}',
   '',
-  'export function BaseRequired(properties: RequiredProperties): MpElement {',
+  'export function ForgeRequired(properties: RequiredProperties): MpElement {',
   '  return <h1>{properties.heading}</h1>;',
   '}',
 ].join('\n');
@@ -382,45 +384,45 @@ const REQUIRED = [
 const EMPTY = [
   "import { h, type MpElement } from '@mission-platform/forge';",
   '',
-  'export function BaseEmpty(): MpElement {',
+  'export function ForgeEmpty(): MpElement {',
   '  return <hr />;',
   '}',
 ].join('\n');
 
-const requiredNames = { neutralName: 'BaseRequired', publicName: 'Required', propertiesType: 'RequiredProperties' };
-const emptyNames = { neutralName: 'BaseEmpty', publicName: 'Empty', propertiesType: undefined };
+const requiredNames = { neutralName: 'ForgeRequired', publicName: 'Required', propertiesType: 'RequiredProperties' };
+const emptyNames = { neutralName: 'ForgeEmpty', publicName: 'Empty', propertiesType: undefined };
 
 describe('emitBlokDataType derives a precise `blok` interface', () => {
   it('maps each field kind to its TypeScript type', () => {
-    const badge = analyzeStoryblokComponent(parseTsx('base-badge.tsx', BADGE), badgeNames);
+    const badge = analyzeStoryblokComponent(parseTsx('forge-badge.tsx', BADGE), badgeNames);
     expect(emitBlokDataType(badge)).toBe(
       "SbBlokData & { variant?: 'default' | 'primary' | 'secondary'; size?: 'sm' | 'md' | 'lg'; pill?: boolean; content?: SbBlokData[] }",
     );
   });
 
   it('maps number props and degrades a `string | number` union to `string`', () => {
-    const button = analyzeStoryblokComponent(parseTsx('base-button.tsx', BUTTON), buttonNames);
+    const button = analyzeStoryblokComponent(parseTsx('forge-button.tsx', BUTTON), buttonNames);
     expect(emitBlokDataType(button)).toBe(
       "SbBlokData & { variant?: 'primary' | 'secondary' | 'ghost'; disabled?: boolean; badge?: string; content?: SbBlokData[] }",
     );
-    const grid = analyzeStoryblokComponent(parseTsx('base-grid.tsx', GRID), gridNames);
+    const grid = analyzeStoryblokComponent(parseTsx('forge-grid.tsx', GRID), gridNames);
     expect(emitBlokDataType(grid)).toBe('SbBlokData & { rows?: number; content?: SbBlokData[] }');
   });
 
   it('renders nestable (`bloks`) fields as `SbBlokData[]`', () => {
-    const layout = analyzeStoryblokComponent(parseTsx('base-layout.tsx', LAYOUT), layoutNames);
+    const layout = analyzeStoryblokComponent(parseTsx('forge-layout.tsx', LAYOUT), layoutNames);
     expect(emitBlokDataType(layout)).toBe(
       'SbBlokData & { sticky?: boolean; header?: SbBlokData[]; content?: SbBlokData[] }',
     );
   });
 
   it('keeps non-optional props required (no `?`)', () => {
-    const required = analyzeStoryblokComponent(parseTsx('base-required.tsx', REQUIRED), requiredNames);
+    const required = analyzeStoryblokComponent(parseTsx('forge-required.tsx', REQUIRED), requiredNames);
     expect(emitBlokDataType(required)).toBe('SbBlokData & { heading: string; subheading?: string }');
   });
 
   it('degrades a field-less component to the bare `SbBlokData`', () => {
-    const empty = analyzeStoryblokComponent(parseTsx('base-empty.tsx', EMPTY), emptyNames);
+    const empty = analyzeStoryblokComponent(parseTsx('forge-empty.tsx', EMPTY), emptyNames);
     expect(emitBlokDataType(empty)).toBe('SbBlokData');
   });
 });

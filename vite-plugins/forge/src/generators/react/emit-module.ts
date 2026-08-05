@@ -147,8 +147,8 @@ export function emitReactModule(
       }
 
       // Named-slot **passing**: a component element whose children carry
-      // `slot="x"` markers — `<BaseDropdown><button slot="trigger"/>panel</BaseDropdown>`
-      // — becomes `<BaseDropdown trigger={<button/>}>panel</BaseDropdown>`, so the
+      // `slot="x"` markers — `<ForgeDropdown><button slot="trigger"/>panel</ForgeDropdown>`
+      // — becomes `<ForgeDropdown trigger={<button/>}>panel</ForgeDropdown>`, so the
       // child's `<Slot name="trigger" />` (compiled to `{ properties.trigger }`)
       // resolves. The default-slot children stay as the element's children.
       if (
@@ -245,7 +245,7 @@ export function emitReactModule(
       // `@mission-platform/icons`, or `@mission-platform/components` imported via
       // a neutral subpath) to its `./react` build. Those packages ship only the
       // per-framework builds, so the neutral imports (e.g. `<IconX />` tags or a
-      // reused `BaseDrawer`) resolve to the native React components.
+      // reused `ForgeDrawer`) resolve to the native React components.
       if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
         if (node.moduleSpecifier.text === 'i18next') {
           const i18nImport = factory.createImportDeclaration(

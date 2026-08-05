@@ -73,7 +73,7 @@ export interface AnalyzedStoryblokComponent {
 
 /** Identifying names for a discovered neutral component. */
 export interface StoryblokComponentNames {
-  /** The neutral export name, e.g. `BaseBadge`. */
+  /** The neutral export name, e.g. `ForgeBadge`. */
   neutralName: string;
   /** The public name the component ships under, e.g. `Badge`. */
   publicName: string;

@@ -33,15 +33,15 @@ import { printNode } from '../../compiler/ast.js';
 export interface SynthesizedRecursiveHelper {
   /** The rewritten parent component's neutral source (re-emitted as the primary SFC). */
   parentSource: string;
-  /** The auxiliary component's export name, e.g. `BaseMenubarItem`. */
+  /** The auxiliary component's export name, e.g. `ForgeMenubarItem`. */
   auxName: string;
-  /** The auxiliary module's flat-tree base name, e.g. `base-menubar-item`. */
+  /** The auxiliary module's flat-tree base name, e.g. `forge-menubar-item`. */
   auxBase: string;
   /** The auxiliary component's neutral source (emitted as an extra SFC). */
   auxSource: string;
 }
 
-/** `BaseMenubar` → `base-menubar`. */
+/** `ForgeMenubar` → `forge-menubar`. */
 function pascalToKebab(name: string): string {
   return name
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
@@ -54,9 +54,9 @@ function pascalToKebab(name: string): string {
  * does **not** collide with an existing sibling component folder.
  *
  * The default is `${Component}Item` / `${kebab}-item`, but when the host package
- * already ships a real component at that flat-tree base name (e.g. `BaseMenu`'s
- * recursive helper would otherwise emit `base-menu-item`, clashing with the
- * standalone `BaseMenuItem` component), the parent's `./<auxBase>` import would
+ * already ships a real component at that flat-tree base name (e.g. `ForgeMenu`'s
+ * recursive helper would otherwise emit `forge-menu-item`, clashing with the
+ * standalone `ForgeMenuItem` component), the parent's `./<auxBase>` import would
  * resolve to that unrelated component and silently drop the helper's props. To
  * stay unique we fall back through descriptive suffixes and finally a numeric
  * one, so the emitted auxiliary always resolves to itself.

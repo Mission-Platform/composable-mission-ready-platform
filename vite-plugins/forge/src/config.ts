@@ -242,6 +242,8 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
     framework,
     componentsModule: resolvedComponentsModule,
     outDir: generatedDir,
+    // Keep the neutral `Forge` prefix on the public API (do not strip it).
+    stripPrefix: '',
   });
 
   const stagePlugins: Plugin[] =
@@ -291,6 +293,8 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
           componentsModule: resolvedComponentsModule,
           declarationFileName: 'index',
           declarationModule: declarationModule ?? '../components',
+          // Keep the neutral `Forge` prefix on the public API (do not strip it).
+          stripPrefix: '',
         })
       : jsxComponentsDtsPlugin({
           framework,
@@ -489,6 +493,8 @@ export function defineJsxStoryblokLibraryConfig(options: JsxStoryblokLibraryConf
     componentsModule: resolvedComponentsModule,
     outDir: cacheDirectory,
     componentsImport: `${packageName}/${framework}`,
+    // Keep the neutral `Forge` prefix on the public API (do not strip it).
+    stripPrefix: '',
   });
 
   const stagePlugins: Plugin[] =

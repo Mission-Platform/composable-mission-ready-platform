@@ -10,8 +10,8 @@
  * - boolean attributes → `?attr=${…}`, `value` → `.value=${…}`,
  * - `cond ? a : b` / `cond && a` children → `${cond ? html`…` : nothing}`,
  * - `list.map(item => <li/>)` children → `${list.map(item => html`…`)}`,
- * - child neutral components (`<BaseThing/>`) → their custom-element tag
- *   (`<base-thing></base-thing>`).
+ * - child neutral components (`<ForgeThing/>`) → their custom-element tag
+ *   (`<forge-thing></forge-thing>`).
  *
  * Expressions embedded in the template are scoped to the element instance:
  * every bare reference to a prop / state field is prefixed with `this.` by
@@ -30,7 +30,7 @@ const ATTRIBUTE_ALIASES: Readonly<Record<string, string>> = {
 /** DOM attributes bound as element **properties** (`.prop=`) rather than attributes. */
 const PROPERTY_BOUND = new Set(['value', 'checked', 'selected', 'disabled']);
 
-/** kebab-case a neutral component tag (`BaseIconButton` → `base-icon-button`). */
+/** kebab-case a neutral component tag (`ForgeIconButton` → `forge-icon-button`). */
 export function kebabCase(name: string): string {
   return name
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
@@ -169,7 +169,7 @@ export interface TemplateContext {
   factory: ts.NodeFactory;
   /** Names (props + reactive state) that must be `this.`-scoped inside embedded expressions. */
   scoped: ReadonlySet<string>;
-  /** Sibling component folder bases, so `<BaseThing/>` maps to a custom-element tag. */
+  /** Sibling component folder bases, so `<ForgeThing/>` maps to a custom-element tag. */
   componentFolders: ReadonlySet<string>;
 }
 
@@ -202,7 +202,7 @@ function tagName(tag: ts.JsxTagNameExpression): string {
   if (ts.isIdentifier(tag)) {
     const name = tag.text;
     if (/^[A-Z]/.test(name)) {
-      // A component reference — map `BaseThing` to `base-thing` when it is a sibling component.
+      // A component reference — map `ForgeThing` to `forge-thing` when it is a sibling component.
       return kebabCase(name);
     }
     return name;

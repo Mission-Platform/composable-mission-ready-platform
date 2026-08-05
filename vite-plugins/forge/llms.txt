@@ -48,9 +48,9 @@ performance*, the compilation is split:
        root has no single host to bind and is left untouched.
      - **Render-closure fallback.** Bodies outside that shape — node-valued local
        consts, `.map()`/`.flatMap()` lists, prop spreads, or an `MpChild`-typed
-       prop rendered as a child (the complex layout components: `BaseTable`,
-       `BaseDrawer`, `BaseList`, `BaseHero`, `BaseNavbar`, `BaseVerticalLayout`,
-       `BaseWindowPopout`, `BaseApplicationLayout`, `BaseVirtualList`, …) — keep
+       prop rendered as a child (the complex layout components: `ForgeTable`,
+       `ForgeDrawer`, `ForgeList`, `ForgeHero`, `ForgeNavbar`, `ForgeVerticalLayout`,
+       `ForgeWindowPopout`, `ForgeApplicationLayout`, `ForgeVirtualList`, …) — keep
        the derived work + returned JSX in a `const render = () => …` closure that
        the `<template>` renders via `<component :is="render" v-bind="$attrs" />`
        (the closure is a functional component, so the forwarded `$attrs` land on
@@ -323,10 +323,10 @@ returns the entry path (use it as the Vite `lib.entry`).
 - `options.outDir: string` — absolute path the generated tree is written to
   (cleaned on each run). Use a build-cache directory.
 - `options.stripPrefix?: string` — prefix removed from each neutral name to form
-  its public name. Defaults to `Base` (so `BaseBadge` ships as `Badge`).
+  its public name. Defaults to `Base` (so `ForgeBadge` ships as `Badge`).
 
 The generated entry re-exports each component under **both** its public name
-(`Badge`) **and** its original neutral `stripPrefix`-prefixed name (`BaseBadge`)
+(`Badge`) **and** its original neutral `stripPrefix`-prefixed name (`ForgeBadge`)
 as aliases of the same component, so consumers can import under either
 convention. It also re-exports **every type** each component ships alongside it
 (variants, option shapes, props interfaces, scoped-slot scopes, …) from the

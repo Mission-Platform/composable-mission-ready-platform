@@ -10,9 +10,9 @@ const BADGE = [
   '  variant?: string;',
   '}',
   '',
-  'export function BaseBadge(properties: BadgeProperties): MpElement {',
+  'export function ForgeBadge(properties: BadgeProperties): MpElement {',
   "  const variant = properties.variant ?? 'default';",
-  '  const className = `base-badge base-badge--${variant}`;',
+  '  const className = `forge-badge forge-badge--${variant}`;',
   '  return <span class={className}>{properties.children}</span>;',
   '}',
 ].join('\n');
@@ -25,7 +25,7 @@ const CLASS_NAMES = [
   '  tone?: string;',
   '}',
   '',
-  'export function BaseChip(properties: ChipProperties): MpElement {',
+  'export function ForgeChip(properties: ChipProperties): MpElement {',
   "  const tone = properties.tone ?? 'neutral';",
   '  return (',
   "    <span className={['chip', `chip--${tone}`, { 'chip--active': properties.active ?? false }]}>",
@@ -48,7 +48,7 @@ const INLINE_CLASS_NAMES = [
   '  tone?: string;',
   '}',
   '',
-  'export function BaseTag(properties: TagProperties): MpElement {',
+  'export function ForgeTag(properties: TagProperties): MpElement {',
   "  const tone = properties.tone ?? 'neutral';",
   "  return <span class={classNames('tag', `tag--${tone}`, { 'tag--active': properties.active ?? false })}>{properties.children}</span>;",
   '}',
@@ -64,7 +64,7 @@ const IN_VIEW = [
   '  onEnter?: () => void;',
   '}',
   '',
-  'export function BaseInView(properties: InViewProperties): MpElement {',
+  'export function ForgeInView(properties: InViewProperties): MpElement {',
   '  const { threshold = 0.15, once = true, tag = "div", onEnter } = properties;',
   '  const wrapperReference = useRef<HTMLElement | null>(null);',
   '  const [inView, setInView] = useState(false);',
@@ -92,7 +92,7 @@ const IMAGE = [
   '  caption?: string;',
   '}',
   '',
-  'export function BaseImage(properties: ImageProperties): MpElement {',
+  'export function ForgeImage(properties: ImageProperties): MpElement {',
   "  const { src, alt = '', caption } = properties;",
   '  return (',
   '    <figure class="image">',
@@ -111,7 +111,7 @@ const LAYOUT = [
   '  header?: MpChild;',
   '}',
   '',
-  'export function BaseLayout(properties: LayoutProperties): MpElement {',
+  'export function ForgeLayout(properties: LayoutProperties): MpElement {',
   '  return (',
   '    <div class="layout">',
   '      <div class="layout__header"><Slot name="header" /></div>',
@@ -128,7 +128,7 @@ const SCOPED_LIST = [
   '  items: string[];',
   '}',
   '',
-  'export function BaseList(properties: ListProperties): MpElement {',
+  'export function ForgeList(properties: ListProperties): MpElement {',
   '  const { items } = properties;',
   '  return (',
   '    <ul class="list">',
@@ -148,7 +148,7 @@ const TELEPORT_OVERLAY = [
   '  open?: boolean;',
   '}',
   '',
-  'export function BaseOverlay(properties: OverlayProperties): MpElement {',
+  'export function ForgeOverlay(properties: OverlayProperties): MpElement {',
   '  const [open, setOpen] = useState(false);',
   '  return (',
   '    <div class="overlay">',
@@ -164,8 +164,8 @@ const TELEPORT_OVERLAY = [
 ].join('\n');
 
 describe('the emitters remap the neutral `Teleport` import to each framework portal', () => {
-  const react = compileComponentModule(TELEPORT_OVERLAY, { framework: 'react', componentName: 'BaseOverlay' });
-  const vue = compileComponentModule(TELEPORT_OVERLAY, { framework: 'vue', componentName: 'BaseOverlay' });
+  const react = compileComponentModule(TELEPORT_OVERLAY, { framework: 'react', componentName: 'ForgeOverlay' });
+  const vue = compileComponentModule(TELEPORT_OVERLAY, { framework: 'vue', componentName: 'ForgeOverlay' });
 
   it('imports the React `Teleport` from the `@mission-platform/forge/react` adapter (not React core or the marker)', () => {
     expect(react.code).toContain('import { Teleport } from "@mission-platform/forge/react"');
@@ -205,7 +205,7 @@ const SLOT_FALLBACK = [
   '  content?: MpRenderProperty<PanelScope>;',
   '}',
   '',
-  'export function BasePanel(properties: PanelProperties): MpElement {',
+  'export function ForgePanel(properties: PanelProperties): MpElement {',
   '  const { label = "", image } = properties;',
   '  return (',
   '    <div class="panel">',
@@ -218,7 +218,7 @@ const SLOT_FALLBACK = [
 ].join('\n');
 
 describe('the React emitter imports `Fragment` when slot fallback compiles to a `<>…</>` fragment', () => {
-  const react = compileComponentModule(SLOT_FALLBACK, { framework: 'react', componentName: 'BasePanel' });
+  const react = compileComponentModule(SLOT_FALLBACK, { framework: 'react', componentName: 'ForgePanel' });
 
   it('adds `Fragment` to the `react` value import so the emitted fragment resolves at runtime', () => {
     expect(react.code).toMatch(/import \{[^}]*\bFragment\b[^}]*\} from ["']react["']/);
@@ -230,7 +230,7 @@ describe('the React emitter imports `Fragment` when slot fallback compiles to a 
   });
 
   it('does not import a stray `Fragment` when no fragment is emitted', () => {
-    const layout = compileComponentModule(LAYOUT, { framework: 'react', componentName: 'BaseLayout' });
+    const layout = compileComponentModule(LAYOUT, { framework: 'react', componentName: 'ForgeLayout' });
     expect(layout.code).not.toMatch(/import \{[^}]*\bFragment\b[^}]*\} from ["']react["']/);
   });
 });
@@ -245,7 +245,7 @@ const EMPTY_FRAGMENT = [
   '  id: string;',
   '}',
   '',
-  'export function BaseMarker(properties: MarkerProperties): MpElement {',
+  'export function ForgeMarker(properties: MarkerProperties): MpElement {',
   '  void properties.id;',
   '  return <Fragment />;',
   '}',
@@ -261,7 +261,7 @@ const FRAGMENT_GROUP = [
   '  title: string;',
   '}',
   '',
-  'export function BaseGroup(properties: GroupProperties): MpElement {',
+  'export function ForgeGroup(properties: GroupProperties): MpElement {',
   '  return (',
   '    <Fragment>',
   '      <h2>{properties.title}</h2>',
@@ -272,8 +272,8 @@ const FRAGMENT_GROUP = [
 ].join('\n');
 
 describe('the React emitter maps a neutral `<Fragment>` to React idioms', () => {
-  const emptyReact = compileComponentModule(EMPTY_FRAGMENT, { framework: 'react', componentName: 'BaseMarker' });
-  const groupReact = compileComponentModule(FRAGMENT_GROUP, { framework: 'react', componentName: 'BaseGroup' });
+  const emptyReact = compileComponentModule(EMPTY_FRAGMENT, { framework: 'react', componentName: 'ForgeMarker' });
+  const groupReact = compileComponentModule(FRAGMENT_GROUP, { framework: 'react', componentName: 'ForgeGroup' });
 
   it('collapses an empty `<Fragment />` to `null` (React renders nothing) rather than an empty `<></>`', () => {
     expect(emptyReact.code).toContain('return null');
@@ -309,7 +309,7 @@ const FRAGMENT_SHORTHAND = [
   '  title: string;',
   '}',
   '',
-  'export function BaseStack(properties: StackProperties): MpElement {',
+  'export function ForgeStack(properties: StackProperties): MpElement {',
   '  return (',
   '    <>',
   '      <h2 class="stack__title">{properties.title}</h2>',
@@ -329,15 +329,15 @@ const EMPTY_RENDER_NULL = [
   '  id: string;',
   '}',
   '',
-  'export function BaseProbe(properties: ProbeProperties): MpElement | null {',
+  'export function ForgeProbe(properties: ProbeProperties): MpElement | null {',
   '  void properties.id;',
   '  return null;',
   '}',
 ].join('\n');
 
 describe('the emitters lower the neutral `<>` fragment shorthand', () => {
-  const react = compileComponentModule(FRAGMENT_SHORTHAND, { framework: 'react', componentName: 'BaseStack' });
-  const vue = compileComponentModule(FRAGMENT_SHORTHAND, { framework: 'vue', componentName: 'BaseStack' });
+  const react = compileComponentModule(FRAGMENT_SHORTHAND, { framework: 'react', componentName: 'ForgeStack' });
+  const vue = compileComponentModule(FRAGMENT_SHORTHAND, { framework: 'vue', componentName: 'ForgeStack' });
 
   it('keeps the `<>…</>` shorthand on React and imports `Fragment` from `react`', () => {
     expect(react.code).toContain('<>');
@@ -354,8 +354,8 @@ describe('the emitters lower the neutral `<>` fragment shorthand', () => {
 });
 
 describe('the emitters lower a `null` (empty) render', () => {
-  const react = compileComponentModule(EMPTY_RENDER_NULL, { framework: 'react', componentName: 'BaseProbe' });
-  const vue = compileComponentModule(EMPTY_RENDER_NULL, { framework: 'vue', componentName: 'BaseProbe' });
+  const react = compileComponentModule(EMPTY_RENDER_NULL, { framework: 'react', componentName: 'ForgeProbe' });
+  const vue = compileComponentModule(EMPTY_RENDER_NULL, { framework: 'vue', componentName: 'ForgeProbe' });
 
   it('returns `null` on React (React renders nothing)', () => {
     expect(react.code).toContain('return null');
@@ -373,7 +373,7 @@ describe('the emitters lower a `null` (empty) render', () => {
   });
 });
 
-// A pass-through wrapper (mirrors `@mission-platform/map`'s `BaseMapSource`): a
+// A pass-through wrapper (mirrors `@mission-platform/map`'s `ForgeMapSource`): a
 // side-effect call (`registerThing(...)` — a per-render statement) forces the
 // Vue **render-closure** fallback, and the body ends in a top-level
 // `return <Slot />;`. The slot lowering must emit the **bare** expression in
@@ -388,15 +388,15 @@ const SLOT_RETURN_CLOSURE = [
   '  id: string;',
   '}',
   '',
-  'export function BaseWrap(properties: WrapProperties): MpElement {',
+  'export function ForgeWrap(properties: WrapProperties): MpElement {',
   '  registerThing(properties.id);',
   '  return <Slot />;',
   '}',
 ].join('\n');
 
 describe('the emitters lower a top-level `<Slot>` return to a bare expression', () => {
-  const react = compileComponentModule(SLOT_RETURN_CLOSURE, { framework: 'react', componentName: 'BaseWrap' });
-  const vue = compileComponentModule(SLOT_RETURN_CLOSURE, { framework: 'vue', componentName: 'BaseWrap' });
+  const react = compileComponentModule(SLOT_RETURN_CLOSURE, { framework: 'react', componentName: 'ForgeWrap' });
+  const vue = compileComponentModule(SLOT_RETURN_CLOSURE, { framework: 'vue', componentName: 'ForgeWrap' });
 
   it('emits `return slots.default?.();` (bare) on Vue, never the invalid `return {slots.default?.()};`', () => {
     // The side-effect statement pushes this component onto the render-closure
@@ -420,13 +420,13 @@ describe('the emitters lower a top-level `<Slot>` return to a bare expression', 
 // (`onValueChange`).
 const DRAG_BOARD = [
   "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
-  "import BaseColumn from './base-column';",
+  "import ForgeColumn from './forge-column';",
   '',
   'export interface BoardProperties extends MpProperties {',
   '  columns: string[];',
   '}',
   '',
-  'export function BaseBoard(properties: BoardProperties): MpElement {',
+  'export function ForgeBoard(properties: BoardProperties): MpElement {',
   '  const { columns } = properties;',
   '  return (',
   '    <div class="board" onDragOver={(event) => event.preventDefault()}>',
@@ -436,7 +436,7 @@ const DRAG_BOARD = [
   '        return (',
   '          <section key={index} class="board__column" title={columnLabel} onDrop={() => undefined} onDragEnter={() => undefined} onClick={() => undefined}>',
   '            {heading}',
-  '            <BaseColumn onValueChange={() => undefined} />',
+  '            <ForgeColumn onValueChange={() => undefined} />',
   '          </section>',
   '        );',
   '      })}',
@@ -454,7 +454,7 @@ const DRAG_TILE = [
   '  label?: string;',
   '}',
   '',
-  'export function BaseTile(properties: TileProperties): MpElement {',
+  'export function ForgeTile(properties: TileProperties): MpElement {',
   '  return (',
   '    <div class="tile" draggable={true} onDragStart={() => undefined} onDrop={() => undefined}>',
   '      {properties.label}',
@@ -464,9 +464,9 @@ const DRAG_TILE = [
 ].join('\n');
 
 describe('the Vue emitter lowercases multi-word DOM event listeners on native elements', () => {
-  const reactBoard = compileComponentModule(DRAG_BOARD, { framework: 'react', componentName: 'BaseBoard' });
-  const vueBoard = compileComponentModule(DRAG_BOARD, { framework: 'vue', componentName: 'BaseBoard' });
-  const vueTile = compileComponentModule(DRAG_TILE, { framework: 'vue', componentName: 'BaseTile' });
+  const reactBoard = compileComponentModule(DRAG_BOARD, { framework: 'react', componentName: 'ForgeBoard' });
+  const vueBoard = compileComponentModule(DRAG_BOARD, { framework: 'vue', componentName: 'ForgeBoard' });
+  const vueTile = compileComponentModule(DRAG_TILE, { framework: 'vue', componentName: 'ForgeTile' });
 
   it('renders the `.map()`-built board as a native `v-for` (node const inlined)', () => {
     expect(vueBoard.code).toContain('v-for="(column, index) in columns"');
@@ -508,8 +508,8 @@ describe('the Vue emitter lowercases multi-word DOM event listeners on native el
 });
 
 describe('the emitters translate **scoped** `<Slot>` elements', () => {
-  const react = compileComponentModule(SCOPED_LIST, { framework: 'react', componentName: 'BaseList' });
-  const vue = compileComponentModule(SCOPED_LIST, { framework: 'vue', componentName: 'BaseList' });
+  const react = compileComponentModule(SCOPED_LIST, { framework: 'react', componentName: 'ForgeList' });
+  const vue = compileComponentModule(SCOPED_LIST, { framework: 'vue', componentName: 'ForgeList' });
 
   it('invokes the React default slot as a render-prop or forwards it directly when a React node', () => {
     expect(react.code).toContain(
@@ -530,8 +530,8 @@ describe('the emitters translate **scoped** `<Slot>` elements', () => {
 });
 
 describe('the emitters translate named `<Slot>` elements', () => {
-  const react = compileComponentModule(LAYOUT, { framework: 'react', componentName: 'BaseLayout' });
-  const vue = compileComponentModule(LAYOUT, { framework: 'vue', componentName: 'BaseLayout' });
+  const react = compileComponentModule(LAYOUT, { framework: 'react', componentName: 'ForgeLayout' });
+  const vue = compileComponentModule(LAYOUT, { framework: 'vue', componentName: 'ForgeLayout' });
 
   it('rewrites React slots to props reads and never imports the `Slot` marker', () => {
     expect(react.code).toContain('properties.header');
@@ -581,13 +581,13 @@ const READONLY_PROPS = [
   '  muted?: boolean;',
   '}',
   '',
-  'export function BaseTag(properties: Readonly<TagProperties>): MpElement {',
+  'export function ForgeTag(properties: Readonly<TagProperties>): MpElement {',
   '  return <span class="tag" data-muted={properties.muted ?? false}>{properties.label}</span>;',
   '}',
 ].join('\n');
 
 describe('the Vue emitter resolves a `Readonly<…>`-wrapped props parameter', () => {
-  const vue = compileComponentModule(READONLY_PROPS, { framework: 'vue', componentName: 'BaseTag' });
+  const vue = compileComponentModule(READONLY_PROPS, { framework: 'vue', componentName: 'ForgeTag' });
 
   it('unwraps `Readonly<…>` and still emits a type-based `defineProps`', () => {
     expect(vue.code).toContain('defineProps<{');
@@ -605,7 +605,7 @@ const HAS_SLOT_CARD = [
   '  bordered?: boolean;',
   '}',
   '',
-  'export function BaseCard(properties: CardProperties): MpElement {',
+  'export function ForgeCard(properties: CardProperties): MpElement {',
   '  return (',
   '    <div class="card">',
   '      {hasSlot("header") ? <div class="card__header"><Slot name="header" /></div> : undefined}',
@@ -627,7 +627,7 @@ const HAS_SLOT_CLOSURE = [
   '  items: string[];',
   '}',
   '',
-  'export function BaseFeed(properties: FeedProperties): MpElement {',
+  'export function ForgeFeed(properties: FeedProperties): MpElement {',
   '  const { items } = properties;',
   '  return (',
   '    <div class="feed">',
@@ -645,8 +645,8 @@ const HAS_SLOT_CLOSURE = [
 ].join('\n');
 
 describe('the emitters translate the `hasSlot(…)` presence marker', () => {
-  const react = compileComponentModule(HAS_SLOT_CARD, { framework: 'react', componentName: 'BaseCard' });
-  const vue = compileComponentModule(HAS_SLOT_CARD, { framework: 'vue', componentName: 'BaseCard' });
+  const react = compileComponentModule(HAS_SLOT_CARD, { framework: 'react', componentName: 'ForgeCard' });
+  const vue = compileComponentModule(HAS_SLOT_CARD, { framework: 'vue', componentName: 'ForgeCard' });
 
   it('rewrites `hasSlot("x")` to a React `properties.x != null` check and drops the marker import', () => {
     expect(react.code).toContain('properties.header != null');
@@ -663,7 +663,7 @@ describe('the emitters translate the `hasSlot(…)` presence marker', () => {
   });
 
   it('rewrites a render-closure `hasSlot("x")` to `!!slots.x` and wires `useSlots()`', () => {
-    const closure = compileComponentModule(HAS_SLOT_CLOSURE, { framework: 'vue', componentName: 'BaseFeed' });
+    const closure = compileComponentModule(HAS_SLOT_CLOSURE, { framework: 'vue', componentName: 'ForgeFeed' });
     expect(closure.code).toContain('!!slots.header');
     expect(closure.code).toContain('const slots = useSlots();');
     expect(closure.code).not.toContain('hasSlot(');
@@ -683,7 +683,7 @@ const SLOT_CALL_LAYOUT = [
   '  startTitle?: string;',
   '}',
   '',
-  'export function BaseShell(properties: ShellProperties): MpElement {',
+  'export function ForgeShell(properties: ShellProperties): MpElement {',
   '  const { startTitle } = properties;',
   "  const start = hasSlot('start')",
   "    ? h('aside', { title: startTitle },",
@@ -696,8 +696,8 @@ const SLOT_CALL_LAYOUT = [
 ].join('\n');
 
 describe('the emitters translate the `h(Slot, …)` call form of the named-slot marker', () => {
-  const vue = compileComponentModule(SLOT_CALL_LAYOUT, { framework: 'vue', componentName: 'BaseShell' });
-  const react = compileComponentModule(SLOT_CALL_LAYOUT, { framework: 'react', componentName: 'BaseShell' });
+  const vue = compileComponentModule(SLOT_CALL_LAYOUT, { framework: 'vue', componentName: 'ForgeShell' });
+  const react = compileComponentModule(SLOT_CALL_LAYOUT, { framework: 'react', componentName: 'ForgeShell' });
 
   it('renders `h(Slot, …)` as native `<slot>` tags (default, named, kebab) and never leaves the `Slot` marker', () => {
     expect(vue.code).toContain('<slot />');
@@ -729,7 +729,7 @@ const HELPER_CONSUMER = [
   '  label?: string;',
   '}',
   '',
-  'export function BaseCounter(properties: CounterProperties): MpElement {',
+  'export function ForgeCounter(properties: CounterProperties): MpElement {',
   '  const [count, setCount] = useState(getCount());',
   "  return <span class='counter'>{count}</span>;",
   '}',
@@ -739,23 +739,23 @@ describe('the Vue emitter partitions relative imports into components and helper
   it('emits a non-component relative import as a named helper import when the component set is supplied', () => {
     const vue = compileComponentModule(HELPER_CONSUMER, {
       framework: 'vue',
-      componentName: 'BaseCounter',
-      componentFolders: new Set(['base-counter']),
+      componentName: 'ForgeCounter',
+      componentFolders: new Set(['forge-counter']),
     });
     expect(vue.code).toContain("import { getCount, subscribeCount } from './counter-store';");
     expect(vue.code).not.toContain("from './counter-store.vue'");
   });
 
   it('falls back to treating every relative import as a `.vue` child when no component set is supplied', () => {
-    const vue = compileComponentModule(HELPER_CONSUMER, { framework: 'vue', componentName: 'BaseCounter' });
+    const vue = compileComponentModule(HELPER_CONSUMER, { framework: 'vue', componentName: 'ForgeCounter' });
     expect(vue.code).toContain("from './counter-store.vue';");
   });
 
   it('keeps the named helper import verbatim on the React target', () => {
     const react = compileComponentModule(HELPER_CONSUMER, {
       framework: 'react',
-      componentName: 'BaseCounter',
-      componentFolders: new Set(['base-counter']),
+      componentName: 'ForgeCounter',
+      componentFolders: new Set(['forge-counter']),
     });
     expect(react.code).toContain('import { getCount, subscribeCount } from "./counter-store"');
   });
@@ -773,7 +773,7 @@ const HELPER_TYPE_CONSUMER = [
   '  snapshot?: CountSnapshot;',
   '}',
   '',
-  'export function BaseCounter(properties: CounterProperties): MpElement {',
+  'export function ForgeCounter(properties: CounterProperties): MpElement {',
   '  const [count, setCount] = useState(getCount());',
   "  return <span class='counter'>{count}</span>;",
   '}',
@@ -783,8 +783,8 @@ describe('the emitters preserve the type-only members of a mixed relative helper
   it('emits the value and the type-only member as separate imports on the Vue target', () => {
     const vue = compileComponentModule(HELPER_TYPE_CONSUMER, {
       framework: 'vue',
-      componentName: 'BaseCounter',
-      componentFolders: new Set(['base-counter']),
+      componentName: 'ForgeCounter',
+      componentFolders: new Set(['forge-counter']),
     });
     // The value keeps its runtime import…
     expect(vue.code).toContain("import { getCount } from './counter-store';");
@@ -797,8 +797,8 @@ describe('the emitters preserve the type-only members of a mixed relative helper
   it('keeps the mixed helper import intact on the React target', () => {
     const react = compileComponentModule(HELPER_TYPE_CONSUMER, {
       framework: 'react',
-      componentName: 'BaseCounter',
-      componentFolders: new Set(['base-counter']),
+      componentName: 'ForgeCounter',
+      componentFolders: new Set(['forge-counter']),
     });
     expect(react.code).toMatch(
       /import \{[^}]*\bgetCount\b[^}]*\btype CountSnapshot\b[^}]*\} from ["']\.\/counter-store["']/,
@@ -813,48 +813,48 @@ describe('the emitters preserve the type-only members of a mixed relative helper
 const CHILD_TYPE_CONSUMER = [
   "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
   '',
-  "import { BaseTypography, type TypographyVariant } from '../base-typography';",
+  "import { ForgeTypography, type TypographyVariant } from '../forge-typography';",
   '',
   'export interface QuoteProperties extends MpProperties {',
   '  variant?: TypographyVariant;',
   '}',
   '',
-  'export function BaseQuote(properties: QuoteProperties): MpElement {',
-  '  return <BaseTypography>{properties.variant}</BaseTypography>;',
+  'export function ForgeQuote(properties: QuoteProperties): MpElement {',
+  '  return <ForgeTypography>{properties.variant}</ForgeTypography>;',
   '}',
 ].join('\n');
 
 describe('the Vue emitter preserves a type imported alongside a sibling component', () => {
-  const folders = new Set(['base-quote', 'base-typography']);
+  const folders = new Set(['forge-quote', 'forge-typography']);
 
   it('keeps the default component import and re-imports its type from the `.vue` module', () => {
     const vue = compileComponentModule(CHILD_TYPE_CONSUMER, {
       framework: 'vue',
-      componentName: 'BaseQuote',
+      componentName: 'ForgeQuote',
       componentFolders: folders,
     });
-    expect(vue.code).toContain("import BaseTypography from './base-typography.vue';");
+    expect(vue.code).toContain("import ForgeTypography from './forge-typography.vue';");
     // Regression: the type member used to be dropped, leaving `TypographyVariant`
     // unresolved in the SFC and its declaration (TS2304).
-    expect(vue.code).toContain("import type { TypographyVariant } from './base-typography.vue';");
+    expect(vue.code).toContain("import type { TypographyVariant } from './forge-typography.vue';");
     expect(vue.code).toContain('variant?: TypographyVariant');
   });
 
   it('flattens a deeply nested atomic-design sibling import to `./<basename>.vue`', () => {
-    // After nesting, a molecule reaches an atom via `../../atoms/base-typography`
-    // rather than a single `../base-typography` hop. The emitter must still treat
+    // After nesting, a molecule reaches an atom via `../../atoms/forge-typography`
+    // rather than a single `../forge-typography` hop. The emitter must still treat
     // it as a component import and rewrite it to the flat generated layout.
     const nestedConsumer = CHILD_TYPE_CONSUMER.replace(
-      "from '../base-typography'",
-      "from '../../atoms/base-typography'",
+      "from '../forge-typography'",
+      "from '../../atoms/forge-typography'",
     );
     const vue = compileComponentModule(nestedConsumer, {
       framework: 'vue',
-      componentName: 'BaseQuote',
+      componentName: 'ForgeQuote',
       componentFolders: folders,
     });
-    expect(vue.code).toContain("import BaseTypography from './base-typography.vue';");
-    expect(vue.code).toContain("import type { TypographyVariant } from './base-typography.vue';");
+    expect(vue.code).toContain("import ForgeTypography from './forge-typography.vue';");
+    expect(vue.code).toContain("import type { TypographyVariant } from './forge-typography.vue';");
     expect(vue.code).not.toContain('atoms/');
     expect(vue.code).not.toContain('../');
   });
@@ -868,7 +868,7 @@ const EXTERNAL_DEFAULT = [
   '  types?: Descriptor[];',
   '}',
   '',
-  'export function BasePalette(properties: PaletteProperties): MpElement {',
+  'export function ForgePalette(properties: PaletteProperties): MpElement {',
   '  const { types = DEFAULT_TYPES } = properties;',
   '  return <span class="palette">{types.length}</span>;',
   '}',
@@ -877,13 +877,13 @@ const EXTERNAL_DEFAULT = [
 describe('the emitters carry external (bare package) imports referenced by prop defaults', () => {
   const vue = compileComponentModule(EXTERNAL_DEFAULT, {
     framework: 'vue',
-    componentName: 'BasePalette',
-    componentFolders: new Set(['base-palette']),
+    componentName: 'ForgePalette',
+    componentFolders: new Set(['forge-palette']),
   });
   const react = compileComponentModule(EXTERNAL_DEFAULT, {
     framework: 'react',
-    componentName: 'BasePalette',
-    componentFolders: new Set(['base-palette']),
+    componentName: 'ForgePalette',
+    componentFolders: new Set(['forge-palette']),
   });
 
   it('keeps the external value import in the Vue SFC so the prop default resolves at runtime', () => {
@@ -907,19 +907,19 @@ describe('the emitters carry external (bare package) imports referenced by prop 
 const ICON_CONSUMER = [
   "import { h, useState, type MpElement, type MpProperties } from '@mission-platform/forge';",
   '',
-  "import { IconChevron } from '@mission-platform/icons';",
+  "import { ForgeIconChevron } from '@mission-platform/icons';",
   '',
   'export interface DisclosureProperties extends MpProperties {',
   '  label?: string;',
   '}',
   '',
-  'export function BaseDisclosure(properties: DisclosureProperties): MpElement {',
+  'export function ForgeDisclosure(properties: DisclosureProperties): MpElement {',
   '  const { label } = properties;',
   '  const [open, setOpen] = useState<boolean>(false);',
   '  return (',
   '    <button type="button" onClick={() => setOpen(!open)}>',
   '      {label}',
-  "      <IconChevron direction={open ? 'up' : 'down'} size=\"sm\" />",
+  "      <ForgeIconChevron direction={open ? 'up' : 'down'} size=\"sm\" />",
   '    </button>',
   '  );',
   '}',
@@ -928,26 +928,28 @@ const ICON_CONSUMER = [
 describe('the emitters remap the `@mission-platform/icons` import to each framework build', () => {
   const vue = compileComponentModule(ICON_CONSUMER, {
     framework: 'vue',
-    componentName: 'BaseDisclosure',
-    componentFolders: new Set(['base-disclosure']),
+    componentName: 'ForgeDisclosure',
+    componentFolders: new Set(['forge-disclosure']),
   });
   const react = compileComponentModule(ICON_CONSUMER, {
     framework: 'react',
-    componentName: 'BaseDisclosure',
-    componentFolders: new Set(['base-disclosure']),
+    componentName: 'ForgeDisclosure',
+    componentFolders: new Set(['forge-disclosure']),
   });
 
   it('imports the icon from the `./vue` subpath (not the bare root) on the Vue target', () => {
-    expect(vue.code).toMatch(/import \{[^}]*\bIconChevron\b[^}]*\} from ["']@mission-platform\/icons\/vue["']/);
+    expect(vue.code).toMatch(/import \{[^}]*\bForgeIconChevron\b[^}]*\} from ["']@mission-platform\/icons\/vue["']/);
     expect(vue.code).not.toMatch(/from ["']@mission-platform\/icons["']/);
-    // The `<IconChevron>` tag survives as a (native) component usage.
-    expect(vue.code).toContain('IconChevron');
+    // The `<ForgeIconChevron>` tag survives as a (native) component usage.
+    expect(vue.code).toContain('ForgeIconChevron');
   });
 
   it('imports the icon from the `./react` subpath (not the bare root) on the React target', () => {
-    expect(react.code).toMatch(/import \{[^}]*\bIconChevron\b[^}]*\} from ["']@mission-platform\/icons\/react["']/);
+    expect(react.code).toMatch(
+      /import \{[^}]*\bForgeIconChevron\b[^}]*\} from ["']@mission-platform\/icons\/react["']/,
+    );
     expect(react.code).not.toMatch(/from ["']@mission-platform\/icons["']/);
-    expect(react.code).toContain('IconChevron');
+    expect(react.code).toContain('ForgeIconChevron');
   });
 });
 
@@ -957,14 +959,14 @@ describe('the emitters remap the `@mission-platform/icons` import to each framew
 const SLOT_PASS_TEMPLATE = [
   "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
   '',
-  "import { BaseDropdown } from '../base-dropdown';",
+  "import { ForgeDropdown } from '../forge-dropdown';",
   '',
-  'export function BasePicker(_properties: MpProperties): MpElement {',
+  'export function ForgePicker(_properties: MpProperties): MpElement {',
   '  return (',
-  '    <BaseDropdown open={true}>',
+  '    <ForgeDropdown open={true}>',
   '      <button slot="trigger" type="button">Open</button>',
   '      <ul class="panel"><li>One</li></ul>',
-  '    </BaseDropdown>',
+  '    </ForgeDropdown>',
   '  );',
   '}',
 ].join('\n');
@@ -974,14 +976,14 @@ const SLOT_PASS_TEMPLATE = [
 const SLOT_PASS_CLOSURE = [
   "import { h, useState, type MpElement, type MpProperties } from '@mission-platform/forge';",
   '',
-  "import { BaseDropdown } from '../base-dropdown';",
+  "import { ForgeDropdown } from '../forge-dropdown';",
   '',
   'export interface PickerProperties extends MpProperties {',
   '  label?: string;',
   '  options?: string[];',
   '}',
   '',
-  'export function BasePicker(properties: PickerProperties): MpElement {',
+  'export function ForgePicker(properties: PickerProperties): MpElement {',
   '  const { label, options = [] } = properties;',
   '  const [open, setOpen] = useState<boolean>(false);',
   '  const items = options.map((option) => {',
@@ -989,21 +991,21 @@ const SLOT_PASS_CLOSURE = [
   '    return <li key={option}>{option}</li>;',
   '  });',
   '  return (',
-  '    <BaseDropdown open={open} onUpdateOpen={(next: boolean) => setOpen(next)}>',
+  '    <ForgeDropdown open={open} onUpdateOpen={(next: boolean) => setOpen(next)}>',
   '      <button slot="trigger" type="button" onClick={() => setOpen(!open)}>{label}</button>',
   '      <ul class="panel">{items}</ul>',
-  '    </BaseDropdown>',
+  '    </ForgeDropdown>',
   '  );',
   '}',
 ].join('\n');
 
 describe('the emitters route a child component\u2019s `slot="…"` children into its named slot', () => {
-  const folders = new Set(['base-dropdown', 'base-picker']);
+  const folders = new Set(['forge-dropdown', 'forge-picker']);
 
   it('emits a Vue `<template #name>` block on the template path (and drops the `slot` attribute)', () => {
     const vue = compileComponentModule(SLOT_PASS_TEMPLATE, {
       framework: 'vue',
-      componentName: 'BasePicker',
+      componentName: 'ForgePicker',
       componentFolders: folders,
     });
     expect(vue.code).toContain('<template #trigger>');
@@ -1015,7 +1017,7 @@ describe('the emitters route a child component\u2019s `slot="…"` children into
   it('emits the `@vitejs/plugin-vue-jsx` slots object on the render-closure path', () => {
     const vue = compileComponentModule(SLOT_PASS_CLOSURE, {
       framework: 'vue',
-      componentName: 'BasePicker',
+      componentName: 'ForgePicker',
       componentFolders: folders,
     });
     // The child is rendered with `{{ trigger: () => …, default: () => … }}`.
@@ -1029,17 +1031,17 @@ describe('the emitters route a child component\u2019s `slot="…"` children into
   it('passes the slot content as a `name={…}` prop on the React target', () => {
     const react = compileComponentModule(SLOT_PASS_CLOSURE, {
       framework: 'react',
-      componentName: 'BasePicker',
+      componentName: 'ForgePicker',
       componentFolders: folders,
     });
-    // `<button slot="trigger"/>` becomes `<BaseDropdown trigger={<button/>}>`.
+    // `<button slot="trigger"/>` becomes `<ForgeDropdown trigger={<button/>}>`.
     expect(react.code).toMatch(/trigger=\{<button/);
     expect(react.code).not.toContain('slot="trigger"');
   });
 });
 
 describe('the React emitter', () => {
-  const react = compileComponentModule(BADGE, { framework: 'react', componentName: 'BaseBadge' });
+  const react = compileComponentModule(BADGE, { framework: 'react', componentName: 'ForgeBadge' });
 
   it('emits a `.tsx` module', () => {
     expect(react.lang).toBe('tsx');
@@ -1070,7 +1072,7 @@ describe('the React emitter', () => {
       '<span class={className}>',
       '<svg stroke-linecap="round" stroke-linejoin="round" stroke-width={2}>',
     ).replace('</span>', '</svg>');
-    const icon = compileComponentModule(source, { framework: 'react', componentName: 'BaseBadge' });
+    const icon = compileComponentModule(source, { framework: 'react', componentName: 'ForgeBadge' });
 
     expect(icon.code).toContain('strokeLinecap="round"');
     expect(icon.code).toContain('strokeLinejoin="round"');
@@ -1080,7 +1082,7 @@ describe('the React emitter', () => {
 
   it('aliases `tabindex` to `tabIndex` in JSX', () => {
     const source = BADGE.replace('<span class={className}>', '<span class={className} tabindex={0}>');
-    const badge = compileComponentModule(source, { framework: 'react', componentName: 'BaseBadge' });
+    const badge = compileComponentModule(source, { framework: 'react', componentName: 'ForgeBadge' });
 
     expect(badge.code).toContain('tabIndex={0}');
     expect(badge.code).not.toContain('tabindex=');
@@ -1096,7 +1098,7 @@ describe('the React emitter', () => {
 });
 
 describe('the React emitter imports hooks as named bindings from `react` (never a default `React`)', () => {
-  const react = compileComponentModule(IN_VIEW, { framework: 'react', componentName: 'BaseInView' });
+  const react = compileComponentModule(IN_VIEW, { framework: 'react', componentName: 'ForgeInView' });
 
   it('marks hook-based output as a client component', () => {
     expect(react.code.startsWith('"use client";')).toBe(true);
@@ -1117,14 +1119,14 @@ describe('the React emitter imports hooks as named bindings from `react` (never 
 
 describe('the React emitter creates RSC boundaries', () => {
   it('keeps presentational components server-compatible', () => {
-    const react = compileComponentModule(BADGE, { framework: 'react', componentName: 'BaseBadge' });
+    const react = compileComponentModule(BADGE, { framework: 'react', componentName: 'ForgeBadge' });
 
     expect(react.code).not.toContain('"use client";');
   });
 
   it('marks event-handler output as a client component', () => {
     const source = BADGE.replace('<span class={className}>', '<span class={className} onClick={() => undefined}>');
-    const react = compileComponentModule(source, { framework: 'react', componentName: 'BaseBadge' });
+    const react = compileComponentModule(source, { framework: 'react', componentName: 'ForgeBadge' });
 
     expect(react.code.startsWith('"use client";')).toBe(true);
   });
@@ -1132,7 +1134,7 @@ describe('the React emitter creates RSC boundaries', () => {
   it('preserves a single author-supplied client directive', () => {
     const react = compileComponentModule(`'use client';\n${IN_VIEW}`, {
       framework: 'react',
-      componentName: 'BaseInView',
+      componentName: 'ForgeInView',
     });
 
     expect(react.code.match(/["']use client["'];/g)).toHaveLength(1);
@@ -1141,7 +1143,7 @@ describe('the React emitter creates RSC boundaries', () => {
   it('preserves a use server directive without adding use client', () => {
     const react = compileComponentModule(`'use server';\n${BADGE}`, {
       framework: 'react',
-      componentName: 'BaseBadge',
+      componentName: 'ForgeBadge',
     });
 
     expect(react.code).toMatch(/['"]use server['"];/);
@@ -1150,16 +1152,16 @@ describe('the React emitter creates RSC boundaries', () => {
 
   it('detects interactive event handlers in JSX props and marks as client component', () => {
     const source = BADGE.replace('<span class={className}>', '<span class={className} onChange={() => undefined}>');
-    const react = compileComponentModule(source, { framework: 'react', componentName: 'BaseBadge' });
+    const react = compileComponentModule(source, { framework: 'react', componentName: 'ForgeBadge' });
 
     expect(react.code.startsWith('"use client";')).toBe(true);
   });
 
   it('remaps framework-split re-exports', () => {
-    const source = `${BADGE}\nexport { BaseDrawer } from '@mission-platform/components';`;
-    const react = compileComponentModule(source, { framework: 'react', componentName: 'BaseBadge' });
+    const source = `${BADGE}\nexport { ForgeDrawer } from '@mission-platform/components';`;
+    const react = compileComponentModule(source, { framework: 'react', componentName: 'ForgeBadge' });
 
-    expect(react.code).toContain('export { BaseDrawer } from "@mission-platform/components/react";');
+    expect(react.code).toContain('export { ForgeDrawer } from "@mission-platform/components/react";');
   });
 });
 
@@ -1179,7 +1181,7 @@ const RENDER_PROPS_PANEL = [
   '  item?: MpRenderProperty<PanelScope>;',
   '}',
   '',
-  'export function BasePanel(properties: PanelProperties): MpElement {',
+  'export function ForgePanel(properties: PanelProperties): MpElement {',
   '  return (',
   '    <ul class="panel">',
   '      {properties.items.map((entry, index) => (',
@@ -1191,8 +1193,8 @@ const RENDER_PROPS_PANEL = [
 ].join('\n');
 
 describe('the render/props primitives (`MpProperties`, `MpRenderProperty`) are converted to framework variants', () => {
-  const react = compileComponentModule(RENDER_PROPS_PANEL, { framework: 'react', componentName: 'BasePanel' });
-  const vue = compileComponentModule(RENDER_PROPS_PANEL, { framework: 'vue', componentName: 'BasePanel' });
+  const react = compileComponentModule(RENDER_PROPS_PANEL, { framework: 'react', componentName: 'ForgePanel' });
+  const vue = compileComponentModule(RENDER_PROPS_PANEL, { framework: 'vue', componentName: 'ForgePanel' });
 
   it('imports both render/props types from the co-located `./mp-jsx-types` on React, never the neutral package', () => {
     expect(react.code).toMatch(/import type \{[^}]*\bMpProperties\b[^}]*\} from ["']\.\/mp-jsx-types["']/);
@@ -1267,8 +1269,8 @@ describe('the local effect helper module source (`localEffectModuleSource`)', ()
 });
 
 describe('the `className` attribute', () => {
-  const react = compileComponentModule(CLASS_NAMES, { framework: 'react', componentName: 'BaseChip' });
-  const vue = compileComponentModule(CLASS_NAMES, { framework: 'vue', componentName: 'BaseChip' });
+  const react = compileComponentModule(CLASS_NAMES, { framework: 'react', componentName: 'ForgeChip' });
+  const vue = compileComponentModule(CLASS_NAMES, { framework: 'vue', componentName: 'ForgeChip' });
 
   it('collapses the React array form to a `className={classNames(…)}` string call', () => {
     expect(react.code).toContain(
@@ -1294,7 +1296,7 @@ describe('the `className` attribute', () => {
   });
 
   it('maps the literal-array attribute onto Svelte’s native `class` (clsx) binding', () => {
-    const svelte = compileComponentModule(CLASS_NAMES, { framework: 'svelte', componentName: 'BaseChip' });
+    const svelte = compileComponentModule(CLASS_NAMES, { framework: 'svelte', componentName: 'ForgeChip' });
     // Svelte 5's `class` attribute resolves through `clsx`, so the neutral
     // array/object form passes straight through (like Vue) — no runtime helper.
     expect(svelte.code).toContain("class={['chip', `chip--${tone}`, { 'chip--active': active ?? false }]}");
@@ -1302,7 +1304,7 @@ describe('the `className` attribute', () => {
   });
 
   it('unwraps an inline `classNames(…)` call into a native Svelte clsx `class` array', () => {
-    const svelte = compileComponentModule(INLINE_CLASS_NAMES, { framework: 'svelte', componentName: 'BaseTag' });
+    const svelte = compileComponentModule(INLINE_CLASS_NAMES, { framework: 'svelte', componentName: 'ForgeTag' });
     // The `classNames(a, b, { c })` helper call becomes a Svelte class array so
     // the framework's built-in `clsx` resolves it, matching the Vue `:class`
     // idiom — the wrapping `classNames(` call must not survive in the markup.
@@ -1312,7 +1314,7 @@ describe('the `className` attribute', () => {
 });
 
 describe('the Vue emitter', () => {
-  const vue = compileComponentModule(BADGE, { framework: 'vue', componentName: 'BaseBadge' });
+  const vue = compileComponentModule(BADGE, { framework: 'vue', componentName: 'ForgeBadge' });
 
   it('emits a `.vue` SFC using `<script setup>` (no `defineComponent`)', () => {
     expect(vue.lang).toBe('vue');
@@ -1320,7 +1322,7 @@ describe('the Vue emitter', () => {
     // reactive declarations), so the block is plain TypeScript (`lang="ts"`).
     expect(vue.code).toContain('<script setup lang="ts">');
     expect(vue.code).not.toContain('<script setup lang="tsx">');
-    expect(vue.code).toContain("defineOptions({ name: 'BaseBadge', inheritAttrs: false });");
+    expect(vue.code).toContain("defineOptions({ name: 'ForgeBadge', inheritAttrs: false });");
     expect(vue.code).not.toContain('export default defineComponent(');
   });
 
@@ -1336,7 +1338,7 @@ describe('the Vue emitter', () => {
 });
 
 describe('the Vue emitter rewrites JSX attribute values without touching the attribute name', () => {
-  const vue = compileComponentModule(IMAGE, { framework: 'vue', componentName: 'BaseImage' });
+  const vue = compileComponentModule(IMAGE, { framework: 'vue', componentName: 'ForgeImage' });
 
   it('binds a colliding attribute by its bare prop name and never rewrites the attribute name', () => {
     // `src`/`alt` are props; the template binds them by their bare prop names
@@ -1358,7 +1360,7 @@ describe('the Vue emitter rewrites JSX attribute values without touching the att
 });
 
 describe('the Vue emitter translates hooks to Vue reactivity', () => {
-  const vue = compileComponentModule(IN_VIEW, { framework: 'vue', componentName: 'BaseInView' });
+  const vue = compileComponentModule(IN_VIEW, { framework: 'vue', componentName: 'ForgeInView' });
 
   it('turns useState into a `ref` and reads through `.value`', () => {
     expect(vue.code).toContain('const inView = ref(false)');
@@ -1445,7 +1447,7 @@ const MODEL_EDITOR = [
   '  onSelect?: (id: string | null) => void;',
   '}',
   '',
-  'export function BaseEditor(properties: EditorProperties): MpElement {',
+  'export function ForgeEditor(properties: EditorProperties): MpElement {',
   '  const { modelValue = [], geodesic = true, onSelect } = properties;',
   '  useEffect(() => {',
   "    properties.onValueChange?.([...modelValue, 'next']);",
@@ -1461,7 +1463,7 @@ const MODEL_EDITOR = [
 ].join('\n');
 
 describe('the Vue emitter fuses a `@model`-tagged prop and its change event into `defineModel`', () => {
-  const vue = compileComponentModule(MODEL_EDITOR, { framework: 'vue', componentName: 'BaseEditor' });
+  const vue = compileComponentModule(MODEL_EDITOR, { framework: 'vue', componentName: 'ForgeEditor' });
 
   it('declares the canonical `modelValue` as Vue’s default (nameless) `defineModel`, with its default as a factory', () => {
     // `modelValue` maps to the nameless default model; its array destructuring
@@ -1513,24 +1515,24 @@ const MODEL_FORWARD_CLOSURE = [
   '  items: string[];',
   '}',
   '',
-  'export function BaseForward(properties: ForwardProperties): MpElement {',
+  'export function ForgeForward(properties: ForwardProperties): MpElement {',
   '  const [open, setOpen] = useState(false);',
   '  const rows: MpChild[] = [];',
   '  for (const item of properties.items.filter((entry) => entry !== "")) {',
-  '    rows.push(<BaseChild key={item} open={open} onUpdateOpen={(next: boolean) => setOpen(next)}>{item}</BaseChild>);',
+  '    rows.push(<ForgeChild key={item} open={open} onUpdateOpen={(next: boolean) => setOpen(next)}>{item}</ForgeChild>);',
   '  }',
   '  return <div class="forward">{rows}</div>;',
   '}',
 ].join('\n');
 
 describe('the Vue emitter folds an imperative node-array build to a native `v-for` and binds `@update:<name>`', () => {
-  const vue = compileComponentModule(MODEL_FORWARD_CLOSURE, { framework: 'vue', componentName: 'BaseForward' });
+  const vue = compileComponentModule(MODEL_FORWARD_CLOSURE, { framework: 'vue', componentName: 'ForgeForward' });
 
   it('templates the `const rows = []; for (…) rows.push(<Child/>)` build natively (no render closure)', () => {
     expect(vue.code).toContain('<template>');
     expect(vue.code).not.toContain('const render = () =>');
     // The for-of push build becomes a `v-for` of the child component.
-    expect(vue.code).toMatch(/<BaseChild v-for="item in /);
+    expect(vue.code).toMatch(/<ForgeChild v-for="item in /);
   });
 
   it('rewrites the child `onUpdateOpen` listener to the namespaced `@update:open`', () => {
@@ -1552,16 +1554,16 @@ const MODEL_FORWARD_TEMPLATE = [
   '  onChange?: (value: string) => void;',
   '}',
   '',
-  'export function BaseWrap(properties: WrapProperties): MpElement {',
+  'export function ForgeWrap(properties: WrapProperties): MpElement {',
   '  const handleUpdate = (value: string): void => {',
   '    properties.onChange?.(value);',
   '  };',
-  '  return <BaseChild modelValue={properties.value} onUpdateModelValue={handleUpdate} />;',
+  '  return <ForgeChild modelValue={properties.value} onUpdateModelValue={handleUpdate} />;',
   '}',
 ].join('\n');
 
 describe('the Vue emitter binds a forwarded `@model` listener as `@update:<name>` (template path)', () => {
-  const vue = compileComponentModule(MODEL_FORWARD_TEMPLATE, { framework: 'vue', componentName: 'BaseWrap' });
+  const vue = compileComponentModule(MODEL_FORWARD_TEMPLATE, { framework: 'vue', componentName: 'ForgeWrap' });
 
   it('takes the `<template>` path', () => {
     expect(vue.code).toContain('<template>');
@@ -1583,7 +1585,7 @@ const TEMPLATE_REF = [
   '  label?: string;',
   '}',
   '',
-  'export function BasePanel(properties: PanelProperties): MpElement {',
+  'export function ForgePanel(properties: PanelProperties): MpElement {',
   '  const boxReference = useRef<HTMLDivElement | null>(null);',
   '  useEffect(() => {',
   '    boxReference.current?.focus();',
@@ -1593,7 +1595,7 @@ const TEMPLATE_REF = [
 ].join('\n');
 
 describe('the Vue emitter declares a `<template>`-bound ref with `useTemplateRef`', () => {
-  const vue = compileComponentModule(TEMPLATE_REF, { framework: 'vue', componentName: 'BasePanel' });
+  const vue = compileComponentModule(TEMPLATE_REF, { framework: 'vue', componentName: 'ForgePanel' });
 
   it('takes the `<template>` path with a string `ref="…"` binding', () => {
     expect(vue.code).toContain('<template>');
@@ -1630,7 +1632,7 @@ const CONDITIONAL_HANDLER = [
   '  onStop?: () => void;',
   '}',
   '',
-  'export function BaseToggle(properties: ToggleProperties): MpElement {',
+  'export function ForgeToggle(properties: ToggleProperties): MpElement {',
   '  const { onStart, onStop } = properties;',
   '  const [active, setActive] = useState(false);',
   '  const start = (): void => { setActive(true); onStart?.(); };',
@@ -1640,7 +1642,7 @@ const CONDITIONAL_HANDLER = [
 ].join('\n');
 
 describe('the Vue emitter invokes a conditional (non-method-reference) event handler', () => {
-  const vue = compileComponentModule(CONDITIONAL_HANDLER, { framework: 'vue', componentName: 'BaseToggle' });
+  const vue = compileComponentModule(CONDITIONAL_HANDLER, { framework: 'vue', componentName: 'ForgeToggle' });
 
   it('takes the `<template>` path', () => {
     expect(vue.code).toContain('<template>');
@@ -1669,7 +1671,7 @@ const RENDER_CLOSURE_REF = [
   '  items: string[];',
   '}',
   '',
-  'export function BaseGallery(properties: GalleryProperties): MpElement {',
+  'export function ForgeGallery(properties: GalleryProperties): MpElement {',
   '  const rootReference = useRef<HTMLElement | null>(null);',
   '  const { items } = properties;',
   '  return (',
@@ -1685,7 +1687,7 @@ const RENDER_CLOSURE_REF = [
 ].join('\n');
 
 describe('the Vue emitter keeps a render-closure (object) ref as a plain `ref(null)`', () => {
-  const vue = compileComponentModule(RENDER_CLOSURE_REF, { framework: 'vue', componentName: 'BaseGallery' });
+  const vue = compileComponentModule(RENDER_CLOSURE_REF, { framework: 'vue', componentName: 'ForgeGallery' });
 
   it('takes the render-closure fallback', () => {
     expect(vue.code).toContain('const render = () => {');
@@ -1708,7 +1710,7 @@ describe('the Vue emitter keeps a render-closure (object) ref as a plain `ref(nu
   });
 });
 
-// A `BaseMapDraw`-shaped derivation: a `let x = <default>; if (…) x = …; else if
+// A `ForgeMapDraw`-shaped derivation: a `let x = <default>; if (…) x = …; else if
 // (…) x = …` imperative build (a "non-const derived statement" that used to force
 // the render-closure fallback) plus a scoped `<Slot>`. The new `liftConditionalConsts`
 // pre-pass folds the build into a reactive `computed`, keeping the whole component
@@ -1721,7 +1723,7 @@ const CONDITIONAL_LET_SLOT = [
   '  mode?: string;',
   '}',
   '',
-  'export function BaseDraw(properties: DrawProperties): MpElement {',
+  'export function ForgeDraw(properties: DrawProperties): MpElement {',
   "  const mode = properties.mode ?? 'idle';",
   "  let label: string = 'Idle';",
   "  if (mode === 'draw') {",
@@ -1739,7 +1741,7 @@ const CONDITIONAL_LET_SLOT = [
 ].join('\n');
 
 describe('the Vue emitter widens native-`<template>` coverage for `let`+`if` derivations (Step 3)', () => {
-  const vue = compileComponentModule(CONDITIONAL_LET_SLOT, { framework: 'vue', componentName: 'BaseDraw' });
+  const vue = compileComponentModule(CONDITIONAL_LET_SLOT, { framework: 'vue', componentName: 'ForgeDraw' });
 
   it('folds the imperative `let`+`if` build into a reactive `computed` (no render closure)', () => {
     // The `let label = …; if (…) label = …` build is folded to a single
@@ -1773,14 +1775,14 @@ const SPREAD_FALLBACK = [
   '  rest?: Record<string, unknown>;',
   '}',
   '',
-  'export function BaseSpread(properties: SpreadProperties): MpElement {',
+  'export function ForgeSpread(properties: SpreadProperties): MpElement {',
   '  return <div class="spread" {...properties.rest} />;',
   '}',
 ].join('\n');
 
 describe('the Vue emitter annotates a render-closure fallback with the reason it could not use a native `<template>` (Step 4)', () => {
-  const vue = compileComponentModule(SPREAD_FALLBACK, { framework: 'vue', componentName: 'BaseSpread' });
-  const nativeBadge = compileComponentModule(BADGE, { framework: 'vue', componentName: 'BaseBadge' });
+  const vue = compileComponentModule(SPREAD_FALLBACK, { framework: 'vue', componentName: 'ForgeSpread' });
+  const nativeBadge = compileComponentModule(BADGE, { framework: 'vue', componentName: 'ForgeBadge' });
 
   it('prepends a comment naming the specific `UnsupportedTemplate` reason', () => {
     expect(vue.code).toContain('const render = () => {');
@@ -1806,7 +1808,7 @@ const EFFECT_DERIVED = [
   '  interval?: number;',
   '}',
   '',
-  'export function BaseCarousel(properties: CarouselProperties): MpElement {',
+  'export function ForgeCarousel(properties: CarouselProperties): MpElement {',
   '  const { slides, loop = true, interval = 5000 } = properties;',
   '  const slideCount = slides.length;',
   '  const [current, setCurrent] = useState(0);',
@@ -1828,7 +1830,7 @@ const EFFECT_DERIVED = [
 ].join('\n');
 
 describe('the Vue emitter hoists derived declarations an effect depends on into `setup`', () => {
-  const vue = compileComponentModule(EFFECT_DERIVED, { framework: 'vue', componentName: 'BaseCarousel' });
+  const vue = compileComponentModule(EFFECT_DERIVED, { framework: 'vue', componentName: 'ForgeCarousel' });
 
   it('takes the render-closure fallback (the `.map()` list)', () => {
     expect(vue.code).toContain('const render = () => {');
@@ -1873,7 +1875,7 @@ const HOOK_INITIALISER_DERIVED = [
   '  return { h, m };',
   '}',
   '',
-  'export function BaseTime(properties: TimeProperties): MpElement {',
+  'export function ForgeTime(properties: TimeProperties): MpElement {',
   '  const { modelValue } = properties;',
   '  const initial = parseTime(modelValue);',
   '  const [localH, setLocalH] = useState<number>(initial.h);',
@@ -1883,7 +1885,7 @@ const HOOK_INITIALISER_DERIVED = [
 ].join('\n');
 
 describe('the Vue emitter hoists derived declarations a hook initialiser depends on into `setup`', () => {
-  const vue = compileComponentModule(HOOK_INITIALISER_DERIVED, { framework: 'vue', componentName: 'BaseTime' });
+  const vue = compileComponentModule(HOOK_INITIALISER_DERIVED, { framework: 'vue', componentName: 'ForgeTime' });
 
   it('lifts a derived const read by a `useState` initialiser into a `setup` `computed`', () => {
     // `initial` is read by the `useState(initial.h)` initialisers, which are
@@ -1910,7 +1912,7 @@ const TRANSITION_FADE = [
   '  open?: boolean;',
   '}',
   '',
-  'export function BaseFade(properties: FadeProperties): MpElement {',
+  'export function ForgeFade(properties: FadeProperties): MpElement {',
   '  const { open = false } = properties;',
   '  return (',
   '    <div class="fade">',
@@ -1923,8 +1925,8 @@ const TRANSITION_FADE = [
 ].join('\n');
 
 describe('the emitters remap the neutral `Transition` import to each framework transition', () => {
-  const react = compileComponentModule(TRANSITION_FADE, { framework: 'react', componentName: 'BaseFade' });
-  const vue = compileComponentModule(TRANSITION_FADE, { framework: 'vue', componentName: 'BaseFade' });
+  const react = compileComponentModule(TRANSITION_FADE, { framework: 'react', componentName: 'ForgeFade' });
+  const vue = compileComponentModule(TRANSITION_FADE, { framework: 'vue', componentName: 'ForgeFade' });
 
   it('imports the React `Transition` from the `@mission-platform/forge/react` adapter (not React core or the marker)', () => {
     expect(react.code).toContain('import { Transition } from "@mission-platform/forge/react"');
@@ -1946,7 +1948,7 @@ const TRANSITION_GROUP_LIST = [
   '  items?: { id: number; label: string }[];',
   '}',
   '',
-  'export function BaseList(properties: ListProperties): MpElement {',
+  'export function ForgeList(properties: ListProperties): MpElement {',
   '  const { items = [] } = properties;',
   '  return (',
   '    <ul class="list">',
@@ -1961,8 +1963,8 @@ const TRANSITION_GROUP_LIST = [
 ].join('\n');
 
 describe('the emitters remap the neutral `TransitionGroup` import to each framework group transition', () => {
-  const react = compileComponentModule(TRANSITION_GROUP_LIST, { framework: 'react', componentName: 'BaseList' });
-  const vue = compileComponentModule(TRANSITION_GROUP_LIST, { framework: 'vue', componentName: 'BaseList' });
+  const react = compileComponentModule(TRANSITION_GROUP_LIST, { framework: 'react', componentName: 'ForgeList' });
+  const vue = compileComponentModule(TRANSITION_GROUP_LIST, { framework: 'vue', componentName: 'ForgeList' });
 
   it('imports the React `TransitionGroup` from the `@mission-platform/forge/react` adapter (not React core or the marker)', () => {
     expect(react.code).toContain('import { TransitionGroup } from "@mission-platform/forge/react"');
@@ -1984,7 +1986,7 @@ const DYNAMIC_LINK = [
   '  href?: string;',
   '}',
   '',
-  'export function BaseLink(properties: LinkProperties): MpElement {',
+  'export function ForgeLink(properties: LinkProperties): MpElement {',
   '  const { href } = properties;',
   "  const tag = href === undefined ? 'button' : 'a';",
   '  return <Dynamic is={tag} class="link" href={href}>go</Dynamic>;',
@@ -1992,9 +1994,9 @@ const DYNAMIC_LINK = [
 ].join('\n');
 
 describe('the emitters translate the `<Dynamic is>` marker to each framework dynamic component', () => {
-  const react = compileComponentModule(DYNAMIC_LINK, { framework: 'react', componentName: 'BaseLink' });
-  const vue = compileComponentModule(DYNAMIC_LINK, { framework: 'vue', componentName: 'BaseLink' });
-  const svelte = compileComponentModule(DYNAMIC_LINK, { framework: 'svelte', componentName: 'BaseLink' });
+  const react = compileComponentModule(DYNAMIC_LINK, { framework: 'react', componentName: 'ForgeLink' });
+  const vue = compileComponentModule(DYNAMIC_LINK, { framework: 'vue', componentName: 'ForgeLink' });
+  const svelte = compileComponentModule(DYNAMIC_LINK, { framework: 'svelte', componentName: 'ForgeLink' });
 
   it('rewrites `<Dynamic is={tag}>` to an `h(tag, …)` call on React (with `class`→`className`) and drops the marker import', () => {
     expect(react.code).toContain('h(tag, { className: "link", href: href }, "go")');
@@ -2028,7 +2030,7 @@ const DYNAMIC_ARIA_SLOT = [
   '  active?: boolean;',
   '}',
   '',
-  'export function BaseItem(properties: ItemProperties): MpElement {',
+  'export function ForgeItem(properties: ItemProperties): MpElement {',
   '  const { href, active } = properties;',
   "  const tag = href === undefined ? 'button' : 'a';",
   '  return (',
@@ -2041,8 +2043,8 @@ const DYNAMIC_ARIA_SLOT = [
 ].join('\n');
 
 describe('the `<Dynamic is>` marker supports hyphenated attributes and slotted children', () => {
-  const react = compileComponentModule(DYNAMIC_ARIA_SLOT, { framework: 'react', componentName: 'BaseItem' });
-  const vue = compileComponentModule(DYNAMIC_ARIA_SLOT, { framework: 'vue', componentName: 'BaseItem' });
+  const react = compileComponentModule(DYNAMIC_ARIA_SLOT, { framework: 'react', componentName: 'ForgeItem' });
+  const vue = compileComponentModule(DYNAMIC_ARIA_SLOT, { framework: 'vue', componentName: 'ForgeItem' });
 
   it('quotes the hyphenated `aria-current` prop key so the emitted object literal is valid JS', () => {
     expect(react.code).toContain('"aria-current":');
@@ -2072,15 +2074,15 @@ const CONTEXT_THEMED = [
   '  label?: string;',
   '}',
   '',
-  'export function BaseThemed(properties: ThemedProperties): MpElement {',
+  'export function ForgeThemed(properties: ThemedProperties): MpElement {',
   '  const theme = useContext(ThemeContext);',
   '  return <button class={`btn btn--${theme}`}>{theme}</button>;',
   '}',
 ].join('\n');
 
 describe('the emitters map the context primitives to each framework provide/inject', () => {
-  const react = compileComponentModule(CONTEXT_THEMED, { framework: 'react', componentName: 'BaseThemed' });
-  const vue = compileComponentModule(CONTEXT_THEMED, { framework: 'vue', componentName: 'BaseThemed' });
+  const react = compileComponentModule(CONTEXT_THEMED, { framework: 'react', componentName: 'ForgeThemed' });
+  const vue = compileComponentModule(CONTEXT_THEMED, { framework: 'vue', componentName: 'ForgeThemed' });
 
   it('imports `createContext`/`useContext` straight from `react` (they are React’s own)', () => {
     expect(react.code).toMatch(/import \{[^}]*\bcreateContext\b[^}]*\} from ["']react["']/);
@@ -2109,7 +2111,7 @@ const CUSTOM_HOOK_NULL = [
   '  value: number;',
   '}',
   '',
-  'export function BaseWidget(properties: Readonly<WidgetProperties>): MpElement | null {',
+  'export function ForgeWidget(properties: Readonly<WidgetProperties>): MpElement | null {',
   '  const thing = useThing();',
   '  useRegister(thing, { value: properties.value });',
   '  return null;',
@@ -2117,12 +2119,12 @@ const CUSTOM_HOOK_NULL = [
 ].join('\n');
 
 describe('the Vue emitter runs custom composable hooks in `setup` (not the render closure)', () => {
-  // A `Base*` component that mirrors the map primitives (`BaseMapMarker`): it
+  // A `Base*` component that mirrors the map primitives (`ForgeMapMarker`): it
   // reads a custom composable (`useThing`), calls a bare side-effecting hook
   // (`useRegister`) whose internal `onMounted`/`watch` must register during
   // `setup`, and renders no DOM of its own (`return null`). Left inside the Vue
   // per-render closure those hooks would never run.
-  const vue = compileComponentModule(CUSTOM_HOOK_NULL, { framework: 'vue', componentName: 'BaseWidget' });
+  const vue = compileComponentModule(CUSTOM_HOOK_NULL, { framework: 'vue', componentName: 'ForgeWidget' });
 
   it('emits the `useThing()` declaration as a synchronous `setup` const (never a `computed`)', () => {
     expect(vue.code).toContain('const thing = useThing();');
@@ -2169,12 +2171,12 @@ const TREE = [
   '  nodes: TreeNode[];',
   '}',
   '',
-  'export function BaseTree(properties: TreeProperties): MpElement {',
+  'export function ForgeTree(properties: TreeProperties): MpElement {',
   '  const { nodes } = properties;',
   '  return (',
   '    <ul class="tree">',
   '      {nodes.map((node) => {',
-  '        const subtree = node.children ? <BaseTree nodes={node.children} /> : undefined;',
+  '        const subtree = node.children ? <ForgeTree nodes={node.children} /> : undefined;',
   '        return (',
   '          <li class="tree__node">',
   '            {node.label}',
@@ -2188,19 +2190,19 @@ const TREE = [
 ].join('\n');
 
 describe('the emitters support a recursive (self-referencing) component', () => {
-  const react = compileComponentModule(TREE, { framework: 'react', componentName: 'BaseTree' });
-  const vue = compileComponentModule(TREE, { framework: 'vue', componentName: 'BaseTree' });
+  const react = compileComponentModule(TREE, { framework: 'react', componentName: 'ForgeTree' });
+  const vue = compileComponentModule(TREE, { framework: 'vue', componentName: 'ForgeTree' });
 
   it('keeps the self-reference as a native JSX tag on React', () => {
-    expect(react.code).toContain('<BaseTree nodes={node.children}/>');
+    expect(react.code).toContain('<ForgeTree nodes={node.children}/>');
   });
 
   it('renders the self-reference as a native recursive tag (backed by `defineOptions({ name })`)', () => {
-    // The `.map()` templatizes to a `v-for`; Vue resolves the `<BaseTree>` tag to
+    // The `.map()` templatizes to a `v-for`; Vue resolves the `<ForgeTree>` tag to
     // the component itself by its `name`, so no `resolveComponent` shim is needed.
-    expect(vue.code).toContain("defineOptions({ name: 'BaseTree', inheritAttrs: false });");
-    expect(vue.code).toContain('<BaseTree v-if="node.children" :nodes="node.children" />');
-    expect(vue.code).not.toContain("resolveComponent('BaseTree')");
+    expect(vue.code).toContain("defineOptions({ name: 'ForgeTree', inheritAttrs: false });");
+    expect(vue.code).toContain('<ForgeTree v-if="node.children" :nodes="node.children" />');
+    expect(vue.code).not.toContain("resolveComponent('ForgeTree')");
   });
 });
 
@@ -2217,7 +2219,7 @@ const NODE_CONST_INLINE = [
   '  rows: string[];',
   '}',
   '',
-  'export function BasePanel(properties: PanelProperties): MpElement {',
+  'export function ForgePanel(properties: PanelProperties): MpElement {',
   '  const { title, rows } = properties;',
   '  const heading = <h2 class="panel__title">{title}</h2>;',
   '  const list = rows.map((row, index) => <li key={index} class="panel__row">{row}</li>);',
@@ -2231,7 +2233,7 @@ const NODE_CONST_INLINE = [
 ].join('\n');
 
 describe('the Vue emitter inlines node-valued derived consts into the template', () => {
-  const vue = compileComponentModule(NODE_CONST_INLINE, { framework: 'vue', componentName: 'BasePanel' });
+  const vue = compileComponentModule(NODE_CONST_INLINE, { framework: 'vue', componentName: 'ForgePanel' });
 
   it('stays on the `<template>` path (no render closure)', () => {
     expect(vue.code).not.toContain('const render = () => {');
@@ -2259,7 +2261,7 @@ const TOGGLE = [
   '  on?: boolean;',
   '}',
   '',
-  'export function BaseToggle(properties: ToggleProperties): MpElement {',
+  'export function ForgeToggle(properties: ToggleProperties): MpElement {',
   '  const { on } = properties;',
   '  return (',
   '    <div class="toggle">',
@@ -2271,7 +2273,7 @@ const TOGGLE = [
 ].join('\n');
 
 describe('the Vue emitter lowers JSX ternaries to `v-if` / `v-else`', () => {
-  const vue = compileComponentModule(TOGGLE, { framework: 'vue', componentName: 'BaseToggle' });
+  const vue = compileComponentModule(TOGGLE, { framework: 'vue', componentName: 'ForgeToggle' });
 
   it('renders a `cond ? <a/> : <b/>` ternary as a `v-if` / `v-else` element pair', () => {
     expect(vue.code).toMatch(/<span v-if="on" class="toggle__on">/);
@@ -2286,7 +2288,7 @@ describe('the Vue emitter lowers JSX ternaries to `v-if` / `v-else`', () => {
   });
 
   it('keeps the React target as native JSX ternaries (no `v-if`)', () => {
-    const react = compileComponentModule(TOGGLE, { framework: 'react', componentName: 'BaseToggle' });
+    const react = compileComponentModule(TOGGLE, { framework: 'react', componentName: 'ForgeToggle' });
     expect(react.code).not.toContain('v-if');
     // Static ternary arms may be Stage-2-hoisted to module-level constants
     // (`on ? __mpHoist_0 : __mpHoist_1`); the conditional itself stays a native
@@ -2308,7 +2310,7 @@ const V_FOR_LIST = [
   '  active?: string;',
   '}',
   '',
-  'export function BaseRows(properties: RowsProperties): MpElement {',
+  'export function ForgeRows(properties: RowsProperties): MpElement {',
   '  const { rows, active } = properties;',
   '  return (',
   '    <ul class="rows">',
@@ -2322,7 +2324,7 @@ const V_FOR_LIST = [
 ].join('\n');
 
 describe("the Vue emitter inlines a `.map()` callback's leading scalar consts into a native `v-for`", () => {
-  const vue = compileComponentModule(V_FOR_LIST, { framework: 'vue', componentName: 'BaseRows' });
+  const vue = compileComponentModule(V_FOR_LIST, { framework: 'vue', componentName: 'ForgeRows' });
 
   it('renders the projection as a `v-for` element (never the `.map()` render closure)', () => {
     expect(vue.code).toContain('v-for="(row, index) in rows"');
@@ -2343,7 +2345,7 @@ const USE_VUE_WIDGET = [
   '"use vue";',
   "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
   '',
-  'export function BaseWidget(properties: MpProperties): MpElement {',
+  'export function ForgeWidget(properties: MpProperties): MpElement {',
   '  return <span class="widget">{properties.children}</span>;',
   '}',
 ].join('\n');
@@ -2374,7 +2376,7 @@ describe('the compiler reads and applies `"use <framework>";` module directives'
   });
 
   it('strips the directive from the compiled output so the marker never leaks', () => {
-    const vue = compileComponentModule(USE_VUE_WIDGET, { framework: 'vue', componentName: 'BaseWidget' });
+    const vue = compileComponentModule(USE_VUE_WIDGET, { framework: 'vue', componentName: 'ForgeWidget' });
     expect(vue.code).not.toContain('use vue');
     expect(vue.code).toContain('class="widget"');
   });
@@ -2397,7 +2399,7 @@ const RENDER_HELPER = [
   'export interface MenuNode { label: string; children?: MenuNode[]; }',
   'export interface MenubarProperties extends MpProperties { items?: MenuNode[]; }',
   '',
-  'export function BaseMenubar(properties: MenubarProperties): MpElement {',
+  'export function ForgeMenubar(properties: MenubarProperties): MpElement {',
   '  const { items } = properties;',
   '  const renderItems = (entries: MenuNode[], parentPath: string, nested: boolean): MpElement[] =>',
   '    entries.map((item, index) => {',
@@ -2414,7 +2416,7 @@ const RENDER_HELPER = [
 ].join('\n');
 
 describe('the Vue emitter inlines a single-call function-valued node helper', () => {
-  const vue = compileComponentModule(RENDER_HELPER, { framework: 'vue', componentName: 'BaseMenubar' });
+  const vue = compileComponentModule(RENDER_HELPER, { framework: 'vue', componentName: 'ForgeMenubar' });
 
   it('splices the helper body into the call site as native `<template>` markup', () => {
     expect(vue.code).not.toContain('const render = () =>');
@@ -2438,7 +2440,7 @@ const VALUE_REFERENCED_HELPER = [
   '',
   'export interface ListProperties extends MpProperties { items?: string[]; }',
   '',
-  'export function BaseList(properties: ListProperties): MpElement {',
+  'export function ForgeList(properties: ListProperties): MpElement {',
   '  const { items = [] } = properties;',
   '  const renderItems = (entries: string[]): MpElement[] =>',
   '    entries.map((item, index) => <li key={index}>{item}</li>);',
@@ -2453,7 +2455,7 @@ const VALUE_REFERENCED_HELPER = [
 ].join('\n');
 
 describe('the Vue emitter keeps the fallback for a helper referenced as a value', () => {
-  const vue = compileComponentModule(VALUE_REFERENCED_HELPER, { framework: 'vue', componentName: 'BaseList' });
+  const vue = compileComponentModule(VALUE_REFERENCED_HELPER, { framework: 'vue', componentName: 'ForgeList' });
 
   it('emits the render closure rather than inlining a non-callee-only helper', () => {
     expect(vue.code).toContain('const render = () => {');
@@ -2473,7 +2475,7 @@ const ARRAY_OR_MAP_CONDITIONAL = [
   '',
   'export interface TableProperties extends MpProperties { rows: string[]; empty?: string; }',
   '',
-  'export function BaseTable(properties: TableProperties): MpElement {',
+  'export function ForgeTable(properties: TableProperties): MpElement {',
   '  const { rows, empty = "No rows" } = properties;',
   '  return (',
   '    <tbody>',
@@ -2486,7 +2488,7 @@ const ARRAY_OR_MAP_CONDITIONAL = [
 ].join('\n');
 
 describe('the Vue emitter templates a conditional between an element array and a `.map()`', () => {
-  const vue = compileComponentModule(ARRAY_OR_MAP_CONDITIONAL, { framework: 'vue', componentName: 'BaseTable' });
+  const vue = compileComponentModule(ARRAY_OR_MAP_CONDITIONAL, { framework: 'vue', componentName: 'ForgeTable' });
 
   it('emits a native `v-if` / `v-else` chain rather than a render closure', () => {
     expect(vue.code).not.toContain('const render = () =>');
@@ -2509,7 +2511,7 @@ const ARRAY_FROM_LIST = [
   '',
   'export interface RulerProperties extends MpProperties { count?: number; }',
   '',
-  'export function BaseRuler(properties: RulerProperties): MpElement {',
+  'export function ForgeRuler(properties: RulerProperties): MpElement {',
   '  const { count = 0 } = properties;',
   '  return (',
   '    <div class="ruler">',
@@ -2522,7 +2524,7 @@ const ARRAY_FROM_LIST = [
 ].join('\n');
 
 describe('the Vue emitter templates an `Array.from(length, mapper)` list as a `v-for`', () => {
-  const vue = compileComponentModule(ARRAY_FROM_LIST, { framework: 'vue', componentName: 'BaseRuler' });
+  const vue = compileComponentModule(ARRAY_FROM_LIST, { framework: 'vue', componentName: 'ForgeRuler' });
 
   it('loops the materialised array rather than emitting a render closure', () => {
     expect(vue.code).not.toContain('const render = () =>');
@@ -2541,7 +2543,7 @@ const NESTED_CONDITIONAL_CHAIN = [
   '',
   'export interface FieldProperties extends MpProperties { error?: string; hint?: string; }',
   '',
-  'export function BaseField(properties: FieldProperties): MpElement {',
+  'export function ForgeField(properties: FieldProperties): MpElement {',
   '  const { error, hint } = properties;',
   '  return (',
   '    <div class="field">',
@@ -2556,7 +2558,7 @@ const NESTED_CONDITIONAL_CHAIN = [
 ].join('\n');
 
 describe('the Vue emitter flattens a chained conditional into `v-if` / `v-else-if`', () => {
-  const vue = compileComponentModule(NESTED_CONDITIONAL_CHAIN, { framework: 'vue', componentName: 'BaseField' });
+  const vue = compileComponentModule(NESTED_CONDITIONAL_CHAIN, { framework: 'vue', componentName: 'ForgeField' });
 
   it('emits sibling guarded elements with no render closure', () => {
     expect(vue.code).not.toContain('const render = () =>');
@@ -2576,7 +2578,7 @@ const DESTRUCTURING_CONST = [
   '',
   'export interface RangeProperties extends MpProperties { from: number; to: number; }',
   '',
-  'export function BaseRange(properties: RangeProperties): MpElement {',
+  'export function ForgeRange(properties: RangeProperties): MpElement {',
   '  const { from, to } = properties;',
   '  const [lo, hi] = from <= to ? [from, to] : [to, from];',
   '  return (',
@@ -2586,7 +2588,7 @@ const DESTRUCTURING_CONST = [
 ].join('\n');
 
 describe('the Vue emitter expands a destructuring const into computeds', () => {
-  const vue = compileComponentModule(DESTRUCTURING_CONST, { framework: 'vue', componentName: 'BaseRange' });
+  const vue = compileComponentModule(DESTRUCTURING_CONST, { framework: 'vue', componentName: 'ForgeRange' });
 
   it('lifts a synthetic source plus per-name computeds rather than falling back', () => {
     expect(vue.code).not.toContain('const render = () =>');
@@ -2605,7 +2607,7 @@ describe('the Vue emitter expands a destructuring const into computeds', () => {
 // a `.flatMap()` returning a fixed element array, now render as native
 // `<template>` markup rather than falling back to a render closure.
 
-// A `base-hero`-shaped component: a node-valued `content` const containing a
+// A `forge-hero`-shaped component: a node-valued `content` const containing a
 // nested `...childList` spread of the normalised `properties.children`, plus a
 // conditional node const (`eyebrow ? <div/> : undefined`) placed as a child.
 // Inlining `content` structurally must emit the nested `...childList` as the
@@ -2615,7 +2617,7 @@ const HERO_VARIADIC_NODE_CONSTS = [
   '',
   'export interface HeroProperties extends MpProperties { title?: string; eyebrow?: string; }',
   '',
-  'export function BaseHero(properties: HeroProperties): MpElement {',
+  'export function ForgeHero(properties: HeroProperties): MpElement {',
   '  const { title, eyebrow } = properties;',
   '  const children = properties.children;',
   '  const childList = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];',
@@ -2626,7 +2628,7 @@ const HERO_VARIADIC_NODE_CONSTS = [
 ].join('\n');
 
 describe('the Vue emitter renders variadic node-const children as native markup (Step 1a)', () => {
-  const vue = compileComponentModule(HERO_VARIADIC_NODE_CONSTS, { framework: 'vue', componentName: 'BaseHero' });
+  const vue = compileComponentModule(HERO_VARIADIC_NODE_CONSTS, { framework: 'vue', componentName: 'ForgeHero' });
 
   it('emits native `<template>` markup with no render closure', () => {
     expect(vue.code).not.toContain('const render = () =>');
@@ -2643,7 +2645,7 @@ describe('the Vue emitter renders variadic node-const children as native markup 
   });
 });
 
-// A `base-list`-shaped component: a dynamic local `tag` const, a conditional
+// A `forge-list`-shaped component: a dynamic local `tag` const, a conditional
 // node const (`itemNodes`) whose branches are a `.flatMap()` returning a fixed
 // element array and a `.map()`, spread as `...itemNodes`, plus the normalised
 // children spread `...extraChildren`.
@@ -2653,7 +2655,7 @@ const LIST_FLATMAP_ELEMENT_ARRAY = [
   'export interface ListItem { label?: string; term?: string; content?: string; }',
   'export interface ListProperties extends MpProperties { items?: ListItem[]; variant?: string; }',
   '',
-  'export function BaseList(properties: ListProperties): MpElement {',
+  'export function ForgeList(properties: ListProperties): MpElement {',
   "  const { items = [], variant = 'unordered' } = properties;",
   "  const tag = variant === 'description' ? 'dl' : 'ul';",
   '  const itemNodes =',
@@ -2670,7 +2672,7 @@ const LIST_FLATMAP_ELEMENT_ARRAY = [
 ].join('\n');
 
 describe('the Vue emitter renders a flatMap element array + map conditional as `v-for` (Step 1a)', () => {
-  const vue = compileComponentModule(LIST_FLATMAP_ELEMENT_ARRAY, { framework: 'vue', componentName: 'BaseList' });
+  const vue = compileComponentModule(LIST_FLATMAP_ELEMENT_ARRAY, { framework: 'vue', componentName: 'ForgeList' });
 
   it('emits native `<template>` markup with no render closure', () => {
     expect(vue.code).not.toContain('const render = () =>');
@@ -2706,14 +2708,14 @@ const DYNAMIC_TAG_WITH_CHILDREN = [
   '',
   'export interface BoxProperties extends MpProperties { as?: string; label?: string; }',
   '',
-  'export function BaseBox(properties: BoxProperties): MpElement {',
+  'export function ForgeBox(properties: BoxProperties): MpElement {',
   "  const { as = 'div', label } = properties;",
   '  return h(as, { class: \'box\' }, <span class="box__label">{label}</span>);',
   '}',
 ].join('\n');
 
 describe('the Vue emitter renders a dynamic-tag component with children via `<component :is>` (Step 1b)', () => {
-  const vue = compileComponentModule(DYNAMIC_TAG_WITH_CHILDREN, { framework: 'vue', componentName: 'BaseBox' });
+  const vue = compileComponentModule(DYNAMIC_TAG_WITH_CHILDREN, { framework: 'vue', componentName: 'ForgeBox' });
 
   it('emits `<component :is="as">` wrapping the child markup with no render closure', () => {
     expect(vue.code).not.toContain('const render = () =>');
@@ -2723,7 +2725,7 @@ describe('the Vue emitter renders a dynamic-tag component with children via `<co
   });
 });
 
-// A `base-skeleton`-shaped component: an imperative style-object build
+// A `forge-skeleton`-shaped component: an imperative style-object build
 // (`const style = {}; if (width !== undefined) style.width = width; …`) lifted to
 // a reactive `computed` bound via `:style`.
 const IMPERATIVE_STYLE_OBJECT = [
@@ -2731,7 +2733,7 @@ const IMPERATIVE_STYLE_OBJECT = [
   '',
   'export interface SkeletonProperties extends MpProperties { width?: string; height?: string; }',
   '',
-  'export function BaseSkeleton(properties: SkeletonProperties): MpElement {',
+  'export function ForgeSkeleton(properties: SkeletonProperties): MpElement {',
   '  const { width, height } = properties;',
   '  const style: Record<string, string> = {};',
   '  if (width !== undefined) {',
@@ -2745,7 +2747,7 @@ const IMPERATIVE_STYLE_OBJECT = [
 ].join('\n');
 
 describe('the Vue emitter lifts an imperative style-object build to a reactive `:style` computed (Step 1b)', () => {
-  const vue = compileComponentModule(IMPERATIVE_STYLE_OBJECT, { framework: 'vue', componentName: 'BaseSkeleton' });
+  const vue = compileComponentModule(IMPERATIVE_STYLE_OBJECT, { framework: 'vue', componentName: 'ForgeSkeleton' });
 
   it('emits a `computed` style object bound as `:style` with no render closure', () => {
     expect(vue.code).not.toContain('const render = () =>');
@@ -2761,10 +2763,10 @@ describe('the Vue emitter lifts an imperative style-object build to a reactive `
 
 // --- Step 2: recursive helper components with lifted state (multi-SFC) -------
 
-// A `base-menubar`-shaped component: a self-recursive, state-capturing render
+// A `forge-menubar`-shaped component: a self-recursive, state-capturing render
 // helper (`renderItems`) invoked from the return tree. It has no flat-`<template>`
 // form, so the emitter extracts an auxiliary self-recursive component
-// (`BaseMenusItem`) — the captured node helper (`renderIcon`) inlined, the
+// (`ForgeMenusItem`) — the captured node helper (`renderIcon`) inlined, the
 // captured handlers (`isPathOpen`/`handleItemClick`) lifted to props — and
 // rewrites the parent to render it via `v-for`.
 const RECURSIVE_MENU = [
@@ -2773,7 +2775,7 @@ const RECURSIVE_MENU = [
   'export interface MenusNode { label: string; icon?: string; href?: string; children?: MenusNode[]; }',
   'export interface MenusProperties extends MpProperties { items?: MenusNode[]; }',
   '',
-  'export function BaseMenus(properties: MenusProperties): MpElement {',
+  'export function ForgeMenus(properties: MenusProperties): MpElement {',
   '  const { items } = properties;',
   "  const [openPath, setOpenPath] = useState('');",
   '  const isPathOpen = (path: string): boolean => openPath === path || openPath.startsWith(`${path}.`);',
@@ -2809,14 +2811,14 @@ const RECURSIVE_MENU = [
 ].join('\n');
 
 describe('the Vue emitter extracts a recursive helper into an auxiliary component (Step 2)', () => {
-  const vue = compileComponentModule(RECURSIVE_MENU, { framework: 'vue', componentName: 'BaseMenus' });
-  const aux = (vue.extraModules ?? []).find((module) => module.name === 'base-menus-item');
+  const vue = compileComponentModule(RECURSIVE_MENU, { framework: 'vue', componentName: 'ForgeMenus' });
+  const aux = (vue.extraModules ?? []).find((module) => module.name === 'forge-menus-item');
 
   it('emits the parent as native markup with no render closure', () => {
     expect(vue.code).not.toContain('const render = () =>');
     // The parent renders the auxiliary component via `v-for`, importing it.
-    expect(vue.code).toContain("import BaseMenusItem from './base-menus-item.vue';");
-    expect(vue.code).toContain('<BaseMenusItem');
+    expect(vue.code).toContain("import ForgeMenusItem from './forge-menus-item.vue';");
+    expect(vue.code).toContain('<ForgeMenusItem');
     expect(vue.code).toContain('v-for="(item, index) in (items)"');
     // The captured handlers are forwarded onto the child.
     expect(vue.code).toContain(':isPathOpen="isPathOpen"');
@@ -2827,13 +2829,13 @@ describe('the Vue emitter extracts a recursive helper into an auxiliary componen
     expect(aux).toBeDefined();
     const code = aux?.code ?? '';
     expect(code).not.toContain('const render = () =>');
-    expect(code).toContain("defineOptions({ name: 'BaseMenusItem'");
+    expect(code).toContain("defineOptions({ name: 'ForgeMenusItem'");
     // Per-node data + captured handlers become props.
     expect(code).toContain('item: MenusNode;');
     expect(code).toContain('isPathOpen: (path: string) => boolean;');
     expect(code).toContain('handleItemClick: (item: MenusNode, path: string) => void;');
     // The recursion is a native `v-for` of the component referencing itself.
-    expect(code).toContain('<BaseMenusItem v-for="(child, index) in (item.children as MenusNode[])"');
+    expect(code).toContain('<ForgeMenusItem v-for="(child, index) in (item.children as MenusNode[])"');
     // The captured node helper (`renderIcon`) is inlined as a `v-if`, not called.
     expect(code).not.toContain('renderIcon(');
     expect(code).toContain('<span v-if="item.icon"');
@@ -2844,7 +2846,7 @@ describe('the Vue emitter extracts a recursive helper into an auxiliary componen
 
 // --- Step 3: imperative bodies — early-return split -------------------------
 
-// A `base-typography`-shaped component: an early-return guard (`if (!truncatePopup)
+// A `forge-typography`-shaped component: an early-return guard (`if (!truncatePopup)
 // return h(tag, …)`) produces two whole render paths. It is split into top-level
 // `v-if`/`v-else` roots, and the normalised children rendered a second time in the
 // popup (`{childList}`) becomes a second default `<slot />`.
@@ -2853,7 +2855,7 @@ const EARLY_RETURN_BRANCHES = [
   '',
   'export interface TextProperties extends MpProperties { as?: string; truncatePopup?: boolean; }',
   '',
-  'export function BaseText(properties: TextProperties): MpElement {',
+  'export function ForgeText(properties: TextProperties): MpElement {',
   "  const { as = 'span', truncatePopup = false } = properties;",
   '  const tag = as;',
   '  const textReference = useRef<HTMLElement | null>(null);',
@@ -2876,7 +2878,7 @@ const EARLY_RETURN_BRANCHES = [
 ].join('\n');
 
 describe('the Vue emitter splits an early-return guard into `v-if`/`v-else` roots (Step 3)', () => {
-  const vue = compileComponentModule(EARLY_RETURN_BRANCHES, { framework: 'vue', componentName: 'BaseText' });
+  const vue = compileComponentModule(EARLY_RETURN_BRANCHES, { framework: 'vue', componentName: 'ForgeText' });
 
   it('emits two top-level branches with no render closure', () => {
     expect(vue.code).not.toContain('const render = () =>');
@@ -2962,7 +2964,7 @@ const USE_ID_FIELD = [
   '  label?: string;',
   '}',
   '',
-  'export function BaseField(properties: FieldProperties): MpElement {',
+  'export function ForgeField(properties: FieldProperties): MpElement {',
   '  const generatedId = useId();',
   '  const resolvedId = properties.id ?? generatedId;',
   '  return (',
@@ -2975,8 +2977,8 @@ const USE_ID_FIELD = [
 ].join('\n');
 
 describe('the compiler maps the neutral `useId` hook to each framework native `useId`', () => {
-  const react = compileComponentModule(USE_ID_FIELD, { framework: 'react', componentName: 'BaseField' });
-  const vue = compileComponentModule(USE_ID_FIELD, { framework: 'vue', componentName: 'BaseField' });
+  const react = compileComponentModule(USE_ID_FIELD, { framework: 'react', componentName: 'ForgeField' });
+  const vue = compileComponentModule(USE_ID_FIELD, { framework: 'vue', componentName: 'ForgeField' });
 
   it('imports `useId` from `react` and keeps the call (React)', () => {
     expect(react.code).toMatch(/import\s*\{[^}]*\buseId\b[^}]*\}\s*from\s*"react"/);
@@ -3002,15 +3004,15 @@ const I18N_CHECKBOX = [
   '  required?: boolean;',
   '}',
   '',
-  'export function BaseCheckbox(properties: CheckboxProperties): MpElement {',
+  'export function ForgeCheckbox(properties: CheckboxProperties): MpElement {',
   "  const label = i18next.t('required_label', { defaultValue: 'Required' });",
   '  return <span>{label}</span>;',
   '}',
 ].join('\n');
 
 describe('the compiler rewrites `i18next.t(...)` to `useI18n()` and `t(...)`', () => {
-  const react = compileComponentModule(I18N_CHECKBOX, { framework: 'react', componentName: 'BaseCheckbox' });
-  const vue = compileComponentModule(I18N_CHECKBOX, { framework: 'vue', componentName: 'BaseCheckbox' });
+  const react = compileComponentModule(I18N_CHECKBOX, { framework: 'react', componentName: 'ForgeCheckbox' });
+  const vue = compileComponentModule(I18N_CHECKBOX, { framework: 'vue', componentName: 'ForgeCheckbox' });
 
   it('imports `useI18n` from `@mission-platform/i18n/react` and injects hook call (React)', () => {
     expect(react.code).toMatch(/import\s*\{\s*useI18n\s*\}\s*from\s*["']@mission-platform\/i18n\/react["']/);
@@ -3036,7 +3038,7 @@ const TOGGLE_PANEL = [
   '  items: string[];',
   '}',
   '',
-  'export function BaseTogglePanel(properties: TogglePanelProperties): MpElement {',
+  'export function ForgeTogglePanel(properties: TogglePanelProperties): MpElement {',
   '  const { items } = properties;',
   '  const [expanded, setExpanded] = useState(false);',
   "  const label = useMemo(() => (expanded ? 'Hide' : 'Show'), [expanded]);",
@@ -3056,8 +3058,8 @@ const TOGGLE_PANEL = [
 ].join('\n');
 
 describe('the compiler emits Svelte 5 components with runes', () => {
-  const svelte = compileComponentModule(IN_VIEW, { framework: 'svelte', componentName: 'BaseInView' });
-  const panel = compileComponentModule(TOGGLE_PANEL, { framework: 'svelte', componentName: 'BaseTogglePanel' });
+  const svelte = compileComponentModule(IN_VIEW, { framework: 'svelte', componentName: 'ForgeInView' });
+  const panel = compileComponentModule(TOGGLE_PANEL, { framework: 'svelte', componentName: 'ForgeTogglePanel' });
 
   it('emits Svelte 5 SFC with script setup and $props / $state / $effect runes', () => {
     expect(svelte.lang).toBe('svelte');
@@ -3104,7 +3106,7 @@ describe('the compiler emits Svelte 5 components with runes', () => {
 // with a *dynamic* tag, plus an early `return` guard and a variadic `children`
 // normalisation — every construct the Svelte emitter must fold into markup
 // (rather than leak a bare `return`/`h(…)` into the `<script>`), modelled on
-// `base-typography`.
+// `forge-typography`.
 const HYPERSCRIPT_TEXT = [
   "import { classNames, h, useState, type MpElement, type MpProperties } from '@mission-platform/forge';",
   '',
@@ -3113,7 +3115,7 @@ const HYPERSCRIPT_TEXT = [
   '  popup?: boolean;',
   '}',
   '',
-  'export function BaseText(properties: Readonly<TextProperties>): MpElement {',
+  'export function ForgeText(properties: Readonly<TextProperties>): MpElement {',
   "  const { as = 'span', popup = false } = properties;",
   '  const [open, setOpen] = useState(false);',
   '  const children = properties.children;',
@@ -3132,7 +3134,7 @@ const HYPERSCRIPT_TEXT = [
 ].join('\n');
 
 describe('the compiler emits Svelte markup for hyperscript `h(…)` renders and early returns', () => {
-  const text = compileComponentModule(HYPERSCRIPT_TEXT, { framework: 'svelte', componentName: 'BaseText' });
+  const text = compileComponentModule(HYPERSCRIPT_TEXT, { framework: 'svelte', componentName: 'ForgeText' });
 
   it('folds `h(tag, …)`, the early return, and the `children` normalisation into valid markup', () => {
     expect(text.lang).toBe('svelte');
@@ -3154,7 +3156,7 @@ describe('the compiler emits Svelte markup for hyperscript `h(…)` renders and 
 });
 
 describe('the compiler emits SolidJS components with signals', () => {
-  const solid = compileComponentModule(IN_VIEW, { framework: 'solid', componentName: 'BaseInView' });
+  const solid = compileComponentModule(IN_VIEW, { framework: 'solid', componentName: 'ForgeInView' });
 
   it('emits SolidJS TSX module mapping hooks to Solid primitives', () => {
     expect(solid.lang).toBe('tsx');
@@ -3167,7 +3169,7 @@ describe('the compiler emits SolidJS components with signals', () => {
 });
 
 describe('the compiler emits Web Components custom elements', () => {
-  const wc = compileComponentModule(IN_VIEW, { framework: 'web-components', componentName: 'BaseInView' });
+  const wc = compileComponentModule(IN_VIEW, { framework: 'web-components', componentName: 'ForgeInView' });
 
   it('emits a native ForgeElement subclass with an html`…` render() registered via customElements.define', () => {
     // The tagged-template output is plain TypeScript, so the module is `.ts`.
@@ -3177,15 +3179,15 @@ describe('the compiler emits Web Components custom elements', () => {
     expect(wc.code).not.toContain('LitElement');
     expect(wc.code).not.toContain('from "react"');
     expect(wc.code).toContain("import { ForgeElement, html, nothing } from '@mission-platform/forge/web-components';");
-    expect(wc.code).toContain('class BaseInViewElement extends ForgeElement');
+    expect(wc.code).toContain('class ForgeInViewElement extends ForgeElement');
     expect(wc.code).toContain('render()');
     expect(wc.code).toContain('return html`');
-    expect(wc.code).toContain("customElements.define('base-in-view', BaseInViewElement);");
+    expect(wc.code).toContain("customElements.define('forge-in-view', ForgeInViewElement);");
   });
 });
 
 // A self-recursive component with a scoped `label` render-prop (`MpRenderProperty`),
-// modelled on `base-tree-view-item`. It exercises two subtle Vue-builder concerns:
+// modelled on `forge-tree-view-item`. It exercises two subtle Vue-builder concerns:
 //   1. `{node.label}` is a plain string field read whose trailing name coincides
 //      with the node-typed `label` render-prop — it must render as a normal
 //      `{{ node.label }}` interpolation, not be misread as slot content that
@@ -3263,7 +3265,7 @@ describe('the compiler flattens a recursive render-prop component to native Vue 
 // item as a child (`{item.icon}`, where `ToolbarItem.icon: MpElement`), with the
 // loop source itself an *inlined* node-valued const (`groups`) whose initializer
 // is a `props ? [props.items] : buildGroups()` ternary — exactly the
-// `base-wysiwyg-toolbar` shape. `{item.icon}` holds an already-created VNode, so
+// `forge-wysiwyg-toolbar` shape. `{item.icon}` holds an already-created VNode, so
 // a `{{ … }}` interpolation would `toDisplayString` (JSON-stringify) the circular
 // VNode and throw at render, dropping the whole toolbar; it must instead bind via
 // `<component :is>`. The classification is receiver **type-aware** — resolved
@@ -3289,7 +3291,7 @@ const NODE_TYPED_MAP_ITEM = [
   '}',
   '',
   'function buildGroups(): ToolbarItem[][] {',
-  "  return [[{ label: 'Bold', icon: <i class=\"i\" /> }]];",
+  '  return [[{ label: \'Bold\', icon: <i class="i" /> }]];',
   '}',
   '',
   'export function Toolbar(properties: Readonly<ToolbarProperties>): MpElement {',
@@ -3386,13 +3388,13 @@ const RANGE_SLOTS = [
   '  };',
   '  const renderBody = (): MpElement => {',
   "    if (view === 'a') return <div class=\"a\">{group('start')}</div>;",
-  "    return <div class=\"b\">{group('end')}</div>;",
+  '    return <div class="b">{group(\'end\')}</div>;',
   '  };',
   '  return (',
   '    <div class="range">',
-  "      {hasSlot('start') ? <span class=\"ext\"><Slot name=\"start\" /></span> : undefined}",
+  '      {hasSlot(\'start\') ? <span class="ext"><Slot name="start" /></span> : undefined}',
   '      {renderBody()}',
-  "      {hasSlot('end') ? <span class=\"ext\"><Slot name=\"end\" /></span> : undefined}",
+  '      {hasSlot(\'end\') ? <span class="ext"><Slot name="end" /></span> : undefined}',
   '    </div>',
   '  );',
   '}',
@@ -3421,7 +3423,7 @@ describe('the compiler flattens object-key / data-map / helper false positives t
 
 // (Category B) An array-literal child `{[header, ...rows, ...childList]}` mixing a
 // fixed node const, a spread of a `.map()` projection, and the normalised
-// default-slot spread — modelled on `base-calendar`/`base-list`. It has no
+// default-slot spread — modelled on `forge-calendar`/`forge-list`. It has no
 // `emitExpressionChild` interpolation form and must emit as native child markup.
 const ARRAY_CHILDREN = [
   "import { Dynamic, h, type MpElement, type MpProperties } from '@mission-platform/forge';",
@@ -3430,7 +3432,7 @@ const ARRAY_CHILDREN = [
   '  items?: string[];',
   '}',
   '',
-  'export function BaseGrid(properties: Readonly<GridProperties>): MpElement {',
+  'export function ForgeGrid(properties: Readonly<GridProperties>): MpElement {',
   '  const { items = [] } = properties;',
   '  const header = <div class="head">Header</div>;',
   '  const rows = items.map((item, index) => (',
@@ -3447,7 +3449,7 @@ const ARRAY_CHILDREN = [
 ].join('\n');
 
 describe('the compiler renders an array-literal child natively (Category B)', () => {
-  const out = compileComponentModule(ARRAY_CHILDREN, { framework: 'vue', componentName: 'BaseGrid' });
+  const out = compileComponentModule(ARRAY_CHILDREN, { framework: 'vue', componentName: 'ForgeGrid' });
 
   it('emits native `<template>` with no render closure', () => {
     expect(out.lang).toBe('vue');
@@ -3477,7 +3479,7 @@ const MEMO_SHADOW = [
   '  onChange?: (value: string) => void;',
   '}',
   '',
-  'export function BaseClock(properties: Readonly<ClockProperties>): MpElement {',
+  'export function ForgeClock(properties: Readonly<ClockProperties>): MpElement {',
   '  const { hour = 0, minute = 0 } = properties;',
   '  const display = `${hour}:${minute}`;',
   '  const commit = (): void => {',
@@ -3491,7 +3493,7 @@ const MEMO_SHADOW = [
 ].join('\n');
 
 describe('the Vue memo rewriter is scope-aware for a shadowing handler-local (Category E)', () => {
-  const out = compileComponentModule(MEMO_SHADOW, { framework: 'vue', componentName: 'BaseClock' });
+  const out = compileComponentModule(MEMO_SHADOW, { framework: 'vue', componentName: 'ForgeClock' });
 
   it('emits native `<template>` (no memo-shadowing fallback)', () => {
     expect(out.lang).toBe('vue');
@@ -3516,7 +3518,7 @@ describe('the Vue memo rewriter is scope-aware for a shadowing handler-local (Ca
 
 // (Category C) A `useRef` kept in step with a derived value via a top-level
 // render-scope side effect (`latestValueReference.current = clampedValue;`) —
-// modelled on `base-slider`/`base-range-input`. It is neither a `const` nor a
+// modelled on `forge-slider`/`forge-range-input`. It is neither a `const` nor a
 // node, so it must be lifted to a reactive `watchEffect`, not rejected as a
 // "non-const derived statement".
 const REF_SYNC = [
@@ -3527,7 +3529,7 @@ const REF_SYNC = [
   '  onUpdateModelValue?: (value: number) => void;',
   '}',
   '',
-  'export function BaseSlider(properties: Readonly<SliderProperties>): MpElement {',
+  'export function ForgeSlider(properties: Readonly<SliderProperties>): MpElement {',
   '  const { modelValue = 0 } = properties;',
   '  const latestValueReference = useRef<number>(0);',
   '  const clampedValue = Math.max(0, Math.min(100, modelValue));',
@@ -3542,7 +3544,7 @@ const REF_SYNC = [
 ].join('\n');
 
 describe('the Vue emitter lifts a render-scope ref-sync to a reactive `watchEffect` (Category C)', () => {
-  const out = compileComponentModule(REF_SYNC, { framework: 'vue', componentName: 'BaseSlider' });
+  const out = compileComponentModule(REF_SYNC, { framework: 'vue', componentName: 'ForgeSlider' });
 
   it('emits native `<template>` with no render closure', () => {
     expect(out.lang).toBe('vue');
@@ -3561,7 +3563,7 @@ describe('the Vue emitter lifts a render-scope ref-sync to a reactive `watchEffe
 
 // (Category D2) A module-level, single-parameter element-returning `switch`
 // helper (`variantIcon(variant)`) invoked in child position — modelled on
-// `base-toast`/`base-alert-banner`. It inlines as a native `v-if`/`v-else-if`/
+// `forge-toast`/`forge-alert-banner`. It inlines as a native `v-if`/`v-else-if`/
 // `v-else` chain rather than being stringified.
 const SWITCH_HELPER = [
   "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
@@ -3570,8 +3572,8 @@ const SWITCH_HELPER = [
   '',
   'function variantIcon(variant: Variant): MpElement {',
   '  switch (variant) {',
-  "    case 'success': { return <span class=\"ok\" />; }",
-  "    case 'error': { return <span class=\"err\" />; }",
+  '    case \'success\': { return <span class="ok" />; }',
+  '    case \'error\': { return <span class="err" />; }',
   '    default: { return <span class="info" />; }',
   '  }',
   '}',
@@ -3580,7 +3582,7 @@ const SWITCH_HELPER = [
   '  variant?: Variant;',
   '}',
   '',
-  'export function BaseBanner(properties: Readonly<BannerProperties>): MpElement {',
+  'export function ForgeBanner(properties: Readonly<BannerProperties>): MpElement {',
   "  const { variant = 'info' } = properties;",
   '  return (',
   '    <div class="banner">',
@@ -3591,7 +3593,7 @@ const SWITCH_HELPER = [
 ].join('\n');
 
 describe('the Vue emitter inlines an element-returning `switch` helper as a `v-if` chain (Category D)', () => {
-  const out = compileComponentModule(SWITCH_HELPER, { framework: 'vue', componentName: 'BaseBanner' });
+  const out = compileComponentModule(SWITCH_HELPER, { framework: 'vue', componentName: 'ForgeBanner' });
 
   it('emits native `<template>` with no render closure', () => {
     expect(out.lang).toBe('vue');
@@ -3615,7 +3617,7 @@ describe('the Vue emitter inlines an element-returning `switch` helper as a `v-i
 });
 
 // (Category D1) A scoped render-prop invoked as a child (`properties.panel?.({
-// tab })`) — modelled on `base-tabs`/`base-virtual-tabs`. The returned VNodes
+// tab })`) — modelled on `forge-tabs`/`forge-virtual-tabs`. The returned VNodes
 // render natively via `<component :is>`, and the render-prop must stay a real
 // prop (never a Vue named slot) so a compiled neutral parent can pass it plainly.
 const RENDER_PROP_CALL = [
@@ -3629,7 +3631,7 @@ const RENDER_PROP_CALL = [
   '  panel?: MpRenderProperty<PanelScope>;',
   '}',
   '',
-  'export function BaseTabs(properties: Readonly<TabsProperties>): MpElement {',
+  'export function ForgeTabs(properties: Readonly<TabsProperties>): MpElement {',
   '  const { tabs } = properties;',
   '  return (',
   '    <div class="tabs">',
@@ -3644,7 +3646,7 @@ const RENDER_PROP_CALL = [
 ].join('\n');
 
 describe('the Vue emitter renders a render-prop call natively via `<component :is>` (Category D)', () => {
-  const out = compileComponentModule(RENDER_PROP_CALL, { framework: 'vue', componentName: 'BaseTabs' });
+  const out = compileComponentModule(RENDER_PROP_CALL, { framework: 'vue', componentName: 'ForgeTabs' });
 
   it('emits native `<template>` with no render closure', () => {
     expect(out.lang).toBe('vue');
