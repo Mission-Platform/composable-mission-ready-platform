@@ -1,0 +1,53 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": [
+    "//"
+  ],
+  "tasks": {
+    "build": {
+      "command": [
+        "sh",
+        "-c",
+        "wasm-pack build . --target bundler --release --weak-refs --reference-types --no-pack --out-dir ../../packages/barcode-decode-wasm/src/wasm --out-name barcode-decode"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/.turbo/**",
+        "$TURBO_ROOT$/Cargo.toml",
+        "$TURBO_ROOT$/Cargo.lock",
+        "$TURBO_ROOT$/.cargo/config.toml",
+        "$TURBO_ROOT$/crates/barcode-decode/**",
+        "!$TURBO_ROOT$/crates/barcode-decode/.turbo/**",
+        "$TURBO_ROOT$/crates/barcode-common/**",
+        "!$TURBO_ROOT$/crates/barcode-common/.turbo/**"
+      ],
+      "outputs": [
+        "$TURBO_ROOT$/packages/barcode-decode-wasm/src/wasm/**"
+      ]
+    },
+    "test": {
+      "dependsOn": [
+        "^build"
+      ],
+      "command": [
+        "wasm-pack",
+        "test",
+        "--node",
+        "--release",
+        "."
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/.turbo/**",
+        "$TURBO_ROOT$/Cargo.toml",
+        "$TURBO_ROOT$/Cargo.lock",
+        "$TURBO_ROOT$/.cargo/config.toml",
+        "$TURBO_ROOT$/crates/barcode-decode/**",
+        "!$TURBO_ROOT$/crates/barcode-decode/.turbo/**",
+        "$TURBO_ROOT$/crates/barcode-common/**",
+        "!$TURBO_ROOT$/crates/barcode-common/.turbo/**"
+      ],
+      "outputs": []
+    }
+  }
+}
