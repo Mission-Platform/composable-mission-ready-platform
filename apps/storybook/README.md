@@ -1,6 +1,6 @@
 # @mission-platform/storybook
 
-The primary component workbench for **Vue 3** UI components in the Mission Platform monorepo. Built with **Storybook**, **TypeScript**, and **Vite**, it provides a live, interactive environment for developing, testing, and documenting shared design system building blocks.
+The primary component workbench for the Mission Platform monorepo's framework-neutral **Forge JSX** UI components, previewed across their native render targets (Vue 3, React, Solid, Svelte, and Web Components). Built with **Storybook**, **TypeScript**, and **Vite**, it provides a live, interactive environment for developing, testing, and documenting shared design system building blocks.
 
 ## Purpose & Scope
 

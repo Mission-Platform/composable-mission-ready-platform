@@ -24,7 +24,7 @@ dist-ssr
 *.sw?
 
 *storybook.log
-storybook-static
+storybook-static*/
 
 # Generated self-signed TLS certificate for the HTTPS dev server
 .storybook/certs

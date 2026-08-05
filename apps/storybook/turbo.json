@@ -2,7 +2,7 @@
   "$schema": "https://turborepo.com/schema.json",
   "extends": ["//"],
   "tasks": {
-    "build:storybook": {
+    "build-storybook": {
       "dependsOn": ["^build"],
       "outputs": ["storybook-static/**"]
     }
