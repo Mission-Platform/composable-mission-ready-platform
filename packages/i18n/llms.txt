@@ -6,13 +6,13 @@ Framework-agnostic [i18next](https://www.i18next.com/) integration for Mission P
 
 | Import | Purpose |
 |---|---|
-| `@mission-platform/i18n` | Framework-neutral core. `createMpI18n(options)` builds a configured i18next instance; also exports `mpNamespace`, `localeNamespaces`, `mergeLocales`, `deepMergeMessages`/`deepMergeLocales`, `MP_DEFAULT_NAMESPACE`, `MP_NAMESPACE_PREFIX`, the `MpI18n` instance type, and the `Mp*` message types. |
-| `@mission-platform/i18n/vue` | Vue 3 adapter (built on `i18next-vue`). `createMpI18nVue(i18n)` returns a Vue plugin; `useI18n(namespace?)` returns `{ t, i18next, locale, setLocale }`. |
-| `@mission-platform/i18n/react` | React adapter (built on `react-i18next`). `MpI18nProvider` supplies the instance; `useI18n(namespace?)` returns `{ t, i18n, locale, setLocale }`. |
+| `@mission-platform/i18n` | Framework-neutral core. `createForgeI18N(options)` builds a configured i18next instance; also exports `forgeNamespace`, `localeNamespaces`, `mergeLocales`, `deepMergeMessages`/`deepMergeLocales`, `FORGE_DEFAULT_NAMESPACE`, `FORGE_NAMESPACE_PREFIX`, the `ForgeI18N` instance type, and the `Mp*` message types. |
+| `@mission-platform/i18n/vue` | Vue 3 adapter (built on `i18next-vue`). `createForgeI18NVue(i18n)` returns a Vue plugin; `useI18n(namespace?)` returns `{ t, i18next, locale, setLocale }`. |
+| `@mission-platform/i18n/react` | React adapter (built on `react-i18next`). `ForgeI18NProvider` supplies the instance; `useI18n(namespace?)` returns `{ t, i18n, locale, setLocale }`. |
 
 ## Usage
 
-`createMpI18n` returns a plain, synchronously-initialised i18next instance.
+`createForgeI18N` returns a plain, synchronously-initialised i18next instance.
 Interpolation uses single-brace delimiters (`{name}`) and HTML escaping is left
 to the framework (`escapeValue: false`). Nested (`nav.notes`) and array-indexed
 (`items.0.title`) keys resolve out of the box. With no `namespace`, messages are
@@ -22,30 +22,30 @@ registered under the default `translation` namespace.
 
 Strings are grouped into i18next namespaces: every package lives under
 `mp.<package_name>` and every app under `mp.<app_name>`. Build a namespace name
-with `mpNamespace('<workspace>')` (e.g. `mpNamespace('breakpoints')` →
+with `forgeNamespace('<workspace>')` (e.g. `forgeNamespace('breakpoints')` →
 `'mp.breakpoints'`).
 
-- Apps pass their own `namespace: mpNamespace('<app>')` as the default and the
+- Apps pass their own `namespace: forgeNamespace('<app>')` as the default and the
   per-namespace bundles via `namespaces` (use `localeNamespaces(locale, bundles)`
   to turn the extractor's namespace-keyed runtime `src/locales/<locale>.yaml`
   into the expected shape). The default namespace falls back to every other
   namespace, so component code keeps resolving the keys it owns.
 - Package components resolve their own namespace explicitly with
-  `useI18n(mpNamespace('<package>'))`.
+  `useI18n(forgeNamespace('<package>'))`.
 - Apps override any package/component strings per namespace via `overrides`,
   which is deep-merged on top of the package's own bundle (only the listed keys
   change).
 
 ```ts
-import { createMpI18n, localeNamespaces, mpNamespace } from '@mission-platform/i18n'
+import { createForgeI18N, localeNamespaces, forgeNamespace } from '@mission-platform/i18n'
 
 // `enBundles` is the parsed, namespace-keyed `src/locales/en.yaml`.
-const i18n = createMpI18n({
-  namespace: mpNamespace('my-care-notes'),
+const i18n = createForgeI18N({
+  namespace: forgeNamespace('my-care-notes'),
   namespaces: localeNamespaces('en', enBundles),
   overrides: {
     // Relabel one breakpoints-package string without touching the rest.
-    [mpNamespace('breakpoints')]: { en: { breakpoint: 'Viewport:' } },
+    [forgeNamespace('breakpoints')]: { en: { breakpoint: 'Viewport:' } },
   },
 })
 ```
@@ -54,11 +54,11 @@ const i18n = createMpI18n({
 
 ```ts
 // main.ts
-import { createMpI18n } from '@mission-platform/i18n'
-import { createMpI18nVue } from '@mission-platform/i18n/vue'
+import { createForgeI18N } from '@mission-platform/i18n'
+import { createForgeI18NVue } from '@mission-platform/i18n/vue'
 
-const i18n = createMpI18n({ messages: { en: { hello: 'Hello {name}' } } })
-app.use(createMpI18nVue(i18n))
+const i18n = createForgeI18N({ messages: { en: { hello: 'Hello {name}' } } })
+app.use(createForgeI18NVue(i18n))
 ```
 
 ```vue
@@ -75,10 +75,10 @@ const { t, locale, setLocale } = useI18n()
 ### React
 
 ```tsx
-import { createMpI18n } from '@mission-platform/i18n'
-import { MpI18nProvider, useI18n } from '@mission-platform/i18n/react'
+import { createForgeI18N } from '@mission-platform/i18n'
+import { ForgeI18NProvider, useI18n } from '@mission-platform/i18n/react'
 
-const i18n = createMpI18n({ messages: { en: { hello: 'Hello {name}' } } })
+const i18n = createForgeI18N({ messages: { en: { hello: 'Hello {name}' } } })
 
 function Greeting() {
   const { t } = useI18n()
@@ -86,8 +86,8 @@ function Greeting() {
 }
 
 root.render(
-  <MpI18nProvider i18n={i18n}>
+  <ForgeI18NProvider i18n={i18n}>
     <Greeting />
-  </MpI18nProvider>,
+  </ForgeI18NProvider>,
 )
 ```

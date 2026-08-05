@@ -1,66 +1,72 @@
+// ─── @mission-platform/i18n ──────────────────────────────────────────────────
+// Framework-neutral i18next instance factory plus the server-side request
+// context store used by the framework adapters for SSR-safe resolution.
+
+import { AsyncLocalStorage } from 'node:async_hooks';
+
 import i18next, { type i18n as I18nInstance, type InitOptions, type Resource } from 'i18next';
 
-import { deepMergeLocales, mergeLocales } from './merge-locales';
+import { deepMergeLocales, mergeLocales } from '../utils/merge-locales';
+import { FORGE_DEFAULT_NAMESPACE } from '../utils/namespace';
 
-import type { MpLocaleModule, MpLocales, MpMessageObject, MpNamespaceLocales } from './types';
+import type { ForgeLocaleModule, ForgeLocales, ForgeMessageObject, ForgeNamespaceLocales } from '../utils/types';
+
+let serverI18nStorage: AsyncLocalStorage<I18nInstance> | undefined;
+try {
+  if (AsyncLocalStorage !== undefined) {
+    serverI18nStorage = new AsyncLocalStorage<I18nInstance>();
+  }
+} catch {
+  // Ignored in environments without node:async_hooks
+}
+
+let globalServerI18n: I18nInstance | undefined;
 
 /**
- * Default i18next namespace messages are registered under when no explicit
- * `namespace` is given. Standalone usage (`createMpI18n({ messages })`) keeps
- * resolving nested keys (`nav.notes`) without spelling out a namespace.
+ * Configures the global fallback server-side i18n instance.
  */
-export const MP_DEFAULT_NAMESPACE = 'translation';
-
-/**
- * The reserved prefix for every Mission Platform i18next namespace. Packages
- * live under `mp.<package_name>` and apps under `mp.<app_name>`.
- */
-export const MP_NAMESPACE_PREFIX = 'mp';
-
-/**
- * Builds a Mission Platform i18next namespace for a workspace, e.g.
- * `mpNamespace('breakpoints')` → `'mp.breakpoints'`,
- * `mpNamespace('my-care-notes')` → `'mp.my-care-notes'`.
- *
- * The `name` is the workspace's unscoped package name (the directory under
- * `apps/`, `packages/`, …), without the `@mission-platform/` scope.
- */
-export function mpNamespace(name: string): string {
-  return `${MP_NAMESPACE_PREFIX}.${name}`;
+export function setServerI18n(i18n: I18nInstance): void {
+  globalServerI18n = i18n;
 }
 
 /**
- * Converts a single-locale, namespace-keyed bundle map — the shape the i18n
- * extractor emits into each app's runtime `src/locales/<locale>.yaml`
- * (`{ 'mp.<workspace>': messages }`) — into the per-namespace, per-locale shape
- * the {@link CreateMpI18nOptions.namespaces} (and `overrides`) option expects
- * (`{ 'mp.<workspace>': { [locale]: messages } }`).
- *
- * @example
- * const enBundles = yaml.load(enLocaleSource) // { 'mp.breakpoints': {...}, 'mp.my-care-notes': {...} }
- * createMpI18n({
- *   namespace: mpNamespace('my-care-notes'),
- *   namespaces: localeNamespaces('en', enBundles),
- * })
+ * Retrieves the current server-side i18n instance from request context (AsyncLocalStorage),
+ * falling back to the configured global server instance if set.
  */
-export function localeNamespaces(locale: string, bundles: Record<string, MpMessageObject>): MpNamespaceLocales {
-  return Object.fromEntries(Object.entries(bundles).map(([ns, msgs]) => [ns, { [locale]: msgs }]));
+export function getServerI18n(): I18nInstance | undefined {
+  return serverI18nStorage?.getStore() ?? globalServerI18n;
 }
 
-/** Options accepted by {@link createMpI18n}. */
-export interface CreateMpI18nOptions {
+/**
+ * Runs a callback within a request-scoped i18n context on the server.
+ */
+export function runWithI18n<T>(i18n: I18nInstance, callback: () => T): T {
+  if (serverI18nStorage) {
+    return serverI18nStorage.run(i18n, callback);
+  }
+  const previous = globalServerI18n;
+  try {
+    globalServerI18n = i18n;
+    return callback();
+  } finally {
+    globalServerI18n = previous;
+  }
+}
+
+/** Options accepted by {@link createForgeI18N}. */
+export interface CreateForgeI18NOptions {
   /** Active locale. Defaults to `'en'`. */
   locale?: string;
   /** Fallback locale (or `false` to disable). Defaults to `'en'`. */
   fallbackLocale?: string | readonly string[] | false;
   /** Optional locale modules merged left-to-right into the default namespace. */
-  modules?: MpLocaleModule[];
+  modules?: ForgeLocaleModule[];
   /** Low-level per-locale overrides applied after all modules to the default namespace. */
-  messages?: MpLocales;
+  messages?: ForgeLocales;
   /**
    * The default namespace `modules`/`messages` are registered under and the one
    * `t()` resolves against first. Defaults to `'translation'`. Apps should pass
-   * their own `mpNamespace('<app-name>')`.
+   * their own `forgeNamespace('<app-name>')`.
    */
   namespace?: string;
   /**
@@ -69,15 +75,18 @@ export interface CreateMpI18nOptions {
    * namespace falls back to these so component code keeps resolving keys it
    * owns.
    */
-  namespaces?: MpNamespaceLocales;
+  namespaces?: ForgeNamespaceLocales;
   /**
    * Per-namespace overrides, keyed by namespace (`mp.<workspace>`). Deep-merged
    * on top of the matching namespace's own strings, so an app can override just
    * the keys it needs (e.g. relabel a `@mission-platform/components` string)
    * while keeping the rest of the package's bundle.
    */
-  overrides?: MpNamespaceLocales;
-  /** Pre-built i18next resource bundles (locale -> namespace -> messages). */
+  overrides?: ForgeNamespaceLocales;
+  /**
+   * Resource bundles in i18next shape (`{ [locale]: { [namespace]: messages } }`),
+   * e.g. imported directly from `virtual:i18n-resources`.
+   */
   resources?: Resource;
   /** Escape hatch for any additional i18next `InitOptions`. */
   init?: Partial<InitOptions>;
@@ -96,67 +105,78 @@ export interface CreateMpI18nOptions {
  * the rendering framework (`escapeValue: false`).
  *
  * Strings are grouped into i18next namespaces: each package and app owns a
- * `mp.<workspace>` namespace (see {@link mpNamespace}). The default namespace
+ * `mp.<workspace>` namespace (see {@link forgeNamespace}). The default namespace
  * (an app's own `mp.<app>`) falls back to every other registered namespace, so
  * component code resolves keys it owns without spelling out a namespace, while
  * apps can deep-merge per-namespace `overrides` on top of a package's strings.
  *
  * @example
  * // Framework-neutral usage
- * import { createMpI18n } from '@mission-platform/i18n'
+ * import { createForgeI18N } from '@mission-platform/i18n'
  *
- * const i18n = createMpI18n({ messages: { en: { hello: 'Hello {name}' } } })
+ * const i18n = createForgeI18N({ messages: { en: { hello: 'Hello {name}' } } })
  * i18n.t('hello', { name: 'World' }) // → 'Hello World'
  *
  * @example
  * // Namespaced usage with an app overriding a package's string
- * import { createMpI18n, mpNamespace } from '@mission-platform/i18n'
+ * import { createForgeI18N, forgeNamespace } from '@mission-platform/i18n'
  *
- * const i18n = createMpI18n({
- *   namespace: mpNamespace('my-care-notes'),
+ * const i18n = createForgeI18N({
+ *   namespace: forgeNamespace('my-care-notes'),
  *   namespaces: {
- *     [mpNamespace('my-care-notes')]: { en: { nav: { notes: 'Notes' } } },
- *     [mpNamespace('breakpoints')]: { en: { breakpoint: 'breakpoint:' } },
+ *     [forgeNamespace('my-care-notes')]: { en: { nav: { notes: 'Notes' } } },
+ *     [forgeNamespace('breakpoints')]: { en: { breakpoint: 'breakpoint:' } },
  *   },
  *   overrides: {
- *     [mpNamespace('breakpoints')]: { en: { breakpoint: 'Viewport:' } },
+ *     [forgeNamespace('breakpoints')]: { en: { breakpoint: 'Viewport:' } },
  *   },
  * })
  */
-export function createMpI18n(options: CreateMpI18nOptions = {}): I18nInstance {
+export function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance {
   const {
     locale = 'en',
     fallbackLocale = 'en',
     modules = [],
     messages = {},
-    namespace = MP_DEFAULT_NAMESPACE,
+    namespace = FORGE_DEFAULT_NAMESPACE,
     namespaces = {},
     overrides = {},
-    resources: inputResources = {},
+    resources: rawResources = {},
     init = {},
   } = options;
 
   // namespace → locale → messages, layered in priority order.
-  const byNamespace: MpNamespaceLocales = {};
-  const mergeInto = (ns: string, locales: MpLocales): void => {
+  const byNamespace: ForgeNamespaceLocales = {};
+  const mergeInto = (ns: string, locales: ForgeLocales): void => {
     byNamespace[ns] = deepMergeLocales(byNamespace[ns] ?? {}, locales);
   };
 
-  // 1. Explicit per-namespace bundles.
+  // 1. Explicit per-locale, per-namespace `resources` map (e.g. from `virtual:i18n-resources`).
+  for (const [loc, nsMap] of Object.entries(rawResources)) {
+    if (nsMap && typeof nsMap === 'object') {
+      for (const [ns, msgs] of Object.entries(nsMap)) {
+        if (msgs && typeof msgs === 'object') {
+          mergeInto(ns, { [loc]: msgs as ForgeMessageObject });
+        }
+      }
+    }
+  }
+
+  // 2. Explicit per-namespace bundles.
   for (const [ns, locales] of Object.entries(namespaces)) {
     mergeInto(ns, locales);
   }
 
-  // 2. Legacy `modules` + `messages`, layered into the default namespace.
+  // 3. Legacy `modules` + `messages`, layered into the default namespace.
   const defaultMerged = mergeLocales(modules);
   for (const [loc, msgs] of Object.entries(messages)) {
-    defaultMerged[loc] = { ...defaultMerged[loc], ...(msgs as MpMessageObject) };
+    defaultMerged[loc] = { ...defaultMerged[loc], ...(msgs as ForgeMessageObject) };
   }
   if (Object.keys(defaultMerged).length > 0) {
     mergeInto(namespace, defaultMerged);
   }
 
-  // 3. Per-namespace overrides, deep-merged on top so apps win key-by-key.
+  // 4. Per-namespace overrides, deep-merged on top so apps win key-by-key.
   for (const [ns, locales] of Object.entries(overrides)) {
     mergeInto(ns, locales);
   }
@@ -169,15 +189,6 @@ export function createMpI18n(options: CreateMpI18nOptions = {}): I18nInstance {
   for (const [ns, locales] of Object.entries(byNamespace)) {
     for (const [loc, msgs] of Object.entries(locales)) {
       (resources[loc] ??= {})[ns] = msgs;
-    }
-  }
-
-  for (const [loc, namespacesMap] of Object.entries(inputResources)) {
-    if (namespacesMap && typeof namespacesMap === 'object') {
-      const locResources = (resources[loc] ??= {});
-      for (const [ns, msgs] of Object.entries(namespacesMap)) {
-        locResources[ns] = Object.assign({}, locResources[ns] as object, msgs as object);
-      }
     }
   }
 
@@ -201,6 +212,10 @@ export function createMpI18n(options: CreateMpI18nOptions = {}): I18nInstance {
     returnNull: false,
     ...init,
   });
+
+  if (!globalServerI18n) {
+    setServerI18n(instance);
+  }
 
   return instance;
 }

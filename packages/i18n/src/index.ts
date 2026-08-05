@@ -6,17 +6,18 @@
 //   • Vue 3 → `@mission-platform/i18n/vue`
 //   • React → `@mission-platform/i18n/react`
 
-export {
-  createMpI18n,
-  localeNamespaces,
-  MP_DEFAULT_NAMESPACE,
-  MP_NAMESPACE_PREFIX,
-  mpNamespace,
-} from './create-mp-i18n';
-export type { CreateMpI18nOptions } from './create-mp-i18n';
-export { deepMergeLocales, deepMergeMessages, mergeLocales } from './merge-locales';
-export type { MpLocaleModule, MpLocales, MpMessageObject, MpMessageValue, MpNamespaceLocales } from './types';
+export { createForgeI18N, getServerI18n, runWithI18n, setServerI18n } from './stores/create-forge-i18n';
+export type { CreateForgeI18NOptions } from './stores/create-forge-i18n';
+export { FORGE_DEFAULT_NAMESPACE, FORGE_NAMESPACE_PREFIX, forgeNamespace, localeNamespaces } from './utils/namespace';
+export { deepMergeLocales, deepMergeMessages, mergeLocales } from './utils/merge-locales';
+export type {
+  ForgeLocaleModule,
+  ForgeLocales,
+  ForgeMessageObject,
+  ForgeMessageValue,
+  ForgeNamespaceLocales,
+} from './utils/types';
 
 // Re-export the i18next instance type so consumers can type the wrapper's
 // return value without depending on i18next directly.
-export type { i18n as MpI18n } from 'i18next';
+export type { i18n as ForgeI18N } from 'i18next';

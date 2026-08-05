@@ -5,11 +5,11 @@ Platform, with dedicated Vue 3 (`@mission-platform/i18n/vue`) and React (`@missi
 
 ## Features
 
-- **Framework-Neutral Core**: Standardized `createMpI18n` factory that builds and returns an i18next instance.
-- **Hierarchical Namespacing**: Uses `mp.<workspace>` namespace conventions (`mpNamespace('components')`,
-  `mpNamespace('my-app')`) with fallback and override support.
-- **Vue 3 Adapter**: `createMpI18nVue` plugin and reactive `useI18n` composable built on `i18next-vue`.
-- **React Adapter**: `MpI18nProvider` context provider and `useI18n` hook built on `react-i18next`.
+- **Framework-Neutral Core**: Standardized `createForgeI18N` factory that builds and returns an i18next instance.
+- **Hierarchical Namespacing**: Uses `mp.<workspace>` namespace conventions (`forgeNamespace('components')`,
+  `forgeNamespace('my-app')`) with fallback and override support.
+- **Vue 3 Adapter**: `createForgeI18NVue` plugin and reactive `useI18n` composable built on `i18next-vue`.
+- **React Adapter**: `ForgeI18NProvider` context provider and `useI18n` hook built on `react-i18next`.
 
 ## Installation
 
@@ -22,10 +22,10 @@ pnpm add @mission-platform/i18n
 ### Framework-Neutral Core
 
 ```ts
-import { createMpI18n, mpNamespace } from '@mission-platform/i18n';
+import { createForgeI18N, forgeNamespace } from '@mission-platform/i18n';
 
-const i18n = createMpI18n({
-  namespace: mpNamespace('my-app'),
+const i18n = createForgeI18N({
+  namespace: forgeNamespace('my-app'),
   messages: {
     en: {
       welcome: 'Welcome {name}',
@@ -38,16 +38,16 @@ const i18n = createMpI18n({
 
 ```ts
 // main.ts
-import { createMpI18n } from '@mission-platform/i18n';
-import { createMpI18nVue } from '@mission-platform/i18n/vue';
+import { createForgeI18N } from '@mission-platform/i18n';
+import { createForgeI18NVue } from '@mission-platform/i18n/vue';
 import { createApp } from 'vue';
 
 const app = createApp(App);
-const i18n = createMpI18n({
+const i18n = createForgeI18N({
   messages: { en: { hello: 'Hello {name}' } },
 });
 
-app.use(createMpI18nVue(i18n));
+app.use(createForgeI18NVue(i18n));
 ```
 
 ```vue
@@ -69,10 +69,10 @@ app.use(createMpI18nVue(i18n));
 ### React (`@mission-platform/i18n/react`)
 
 ```tsx
-import { createMpI18n } from '@mission-platform/i18n';
-import { MpI18nProvider, useI18n } from '@mission-platform/i18n/react';
+import { createForgeI18N } from '@mission-platform/i18n';
+import { ForgeI18NProvider, useI18n } from '@mission-platform/i18n/react';
 
-const i18n = createMpI18n({
+const i18n = createForgeI18N({
   messages: { en: { hello: 'Hello {name}' } },
 });
 
@@ -83,18 +83,18 @@ function Greeting() {
 
 export function App() {
   return (
-    <MpI18nProvider i18n={i18n}>
+    <ForgeI18NProvider i18n={i18n}>
       <Greeting />
-    </MpI18nProvider>
+    </ForgeI18NProvider>
   );
 }
 ```
 
 ## Subpath Exports
 
-- `@mission-platform/i18n`: Framework-neutral entry exporting `createMpI18n`, `mpNamespace`, `localeNamespaces`, and
+- `@mission-platform/i18n`: Framework-neutral entry exporting `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, and
   `deepMergeLocales`.
-- `@mission-platform/i18n/vue`: Vue 3 adapter exporting `createMpI18nVue` and `useI18n`.
-- `@mission-platform/i18n/react`: React adapter exporting `MpI18nProvider` and `useI18n`.
+- `@mission-platform/i18n/vue`: Vue 3 adapter exporting `createForgeI18NVue` and `useI18n`.
+- `@mission-platform/i18n/react`: React adapter exporting `ForgeI18NProvider` and `useI18n`.
 
 For full namespacing and fallback architecture details, see [docs/index.md](docs/index.md).
