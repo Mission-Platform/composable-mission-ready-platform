@@ -1,5 +1,9 @@
 import { Dialect, type Lint, LocalLinter } from 'harper.js';
-import { binary } from 'harper.js/binary';
+// Use the first-party base64-inlined WASM entry so the worker bundle stays
+// self-contained under tsdown/rolldown (the non-inlined `harper.js/binary`
+// entry relies on `new URL('*.wasm', import.meta.url)`, which rolldown does
+// not expand the same way Vite's `assetsInlineLimit` did).
+import { binaryInlined as binary } from 'harper.js/binaryInlined';
 
 import type { HarperIssue, HarperWorkerRequest, HarperWorkerResponse } from '../types';
 

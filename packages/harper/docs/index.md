@@ -1,18 +1,23 @@
 # @mission-platform/harper
 
-`@mission-platform/harper` provides an integration between the [Harper](https://writewithharper.com) grammar checker and the Monaco Editor. Harper is a fast, offline, privacy-first English grammar checker powered by WebAssembly that runs entirely in the browser.
+`@mission-platform/harper` provides an integration between the [Harper](https://writewithharper.com) grammar checker and
+the Monaco Editor. Harper is a fast, offline, privacy-first English grammar checker powered by WebAssembly that runs
+entirely in the browser.
 
 ## Features
 
-- **Real-time Grammar Checking**: Issues are detected as you type, with results debounced by 300ms to maintain editor performance.
+- **Real-time Grammar Checking**: Issues are detected as you type, with results debounced by 300ms to maintain editor
+  performance.
 - **Visual Markers**: Grammar and style issues are highlighted directly within the Monaco editor using standard markers.
-- **Quick Fixes**: Integration with Monaco's "lightbulb" code actions allows users to apply suggested corrections instantly.
+- **Quick Fixes**: Integration with Monaco's "lightbulb" code actions allows users to apply suggested corrections
+  instantly.
 - **Privacy First**: All processing happens locally in a Web Worker; no text is ever sent over the network.
 - **Severity Levels**: Supports standard LSP severity levels (Error, Warning, Info, and Hint).
 
 ## Setup & Configuration
 
-Because Harper runs in a Web Worker, your application must configure the worker factory before initializing any editor instances.
+Because Harper runs in a Web Worker, your application must configure the worker factory before initializing any editor
+instances.
 
 ### Global Environment Configuration
 
@@ -30,7 +35,8 @@ window.HarperEnvironment = {
 
 ### Vue 3 (Composition API)
 
-The `useHarperMonaco` composable provides an easy way to attach grammar checking to a Monaco editor instance in Vue components.
+The `useHarperMonaco` composable provides an easy way to attach grammar checking to a Monaco editor instance in Vue
+components.
 
 #### Example
 
@@ -81,7 +87,8 @@ function useHarperMonaco(
 
 ### Framework-Agnostic Integration
 
-For non-Vue consumers (such as components in `@mission-platform/components`), use the imperative `attachHarperMonaco` function.
+For non-Vue consumers (such as components in `@mission-platform/components`), use the imperative `attachHarperMonaco`
+function.
 
 #### Example
 
@@ -117,4 +124,5 @@ interface HarperIssue {
 1. **Worker Spawn**: The package uses the factory provided in `window.HarperEnvironment` to spawn a Harper Web Worker.
 2. **Debounced Checking**: Every change to the editor model triggers a debounced request to the worker.
 3. **Marker Mapping**: Issues returned by Harper are mapped to Monaco markers for visual highlighting.
-4. **Code Actions**: A custom provider is registered in Monaco to present `HarperIssue.suggestions` as quick-fix actions.
+4. **Code Actions**: A custom provider is registered in Monaco to present `HarperIssue.suggestions` as quick-fix
+   actions.

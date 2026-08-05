@@ -21,16 +21,15 @@
     "dist"
   ],
   "scripts": {
-    "build:check": "vue-tsc -b",
-    "build:bundle": "vite build",
-    "build:types": "vue-tsc --project tsconfig.build.json --emitDeclarationOnly",
-    "build:watch": "vite build --watch",
+    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "build:watch": "tsdown --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --check .",
-    "format:write": "prettier --write ."
+    "format:write": "prettier --write .",
+    "build": "tsdown"
   },
   "peerDependencies": {
     "vue": "^3.5.0"
@@ -52,9 +51,10 @@
     "jsdom": "catalog:testing",
     "prettier": "catalog:prettier",
     "typescript": "catalog:typescript",
-    "vite": "catalog:vite",
     "vitest": "catalog:testing",
     "vue": "catalog:vue",
-    "vue-tsc": "catalog:vue"
+    "vue-tsc": "catalog:vue",
+    "@mission-platform/tsdown-config": "workspace:*",
+    "tsdown": "catalog:build"
   }
 }
