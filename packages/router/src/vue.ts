@@ -34,9 +34,9 @@ import type {
   RouteLocationRaw,
   RouteMeta,
   RouteParams,
+  Router,
   RouteRecordName,
   RouteRecordRaw,
-  Router,
   RouterHistory,
   RouterOptions,
 } from 'vue-router';
@@ -94,7 +94,12 @@ export function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw {
 
   const hash = normalizeHash(to.hash ?? '');
   if ('name' in to) {
-    return { name: to.name, params: to.params, query: to.query, hash } as RouteLocationRaw;
+    return {
+      name: to.name,
+      params: to.params,
+      query: to.query,
+      hash,
+    } as RouteLocationRaw;
   }
   return { path: normalizePath(to.path), query: to.query, hash } as RouteLocationRaw;
 }

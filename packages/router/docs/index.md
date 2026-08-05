@@ -1,10 +1,13 @@
 # @mission-platform/router
 
-A framework-agnostic routing library that provides a unified route model and per-framework adapters for Vue, React, and other frameworks.
+A framework-agnostic routing library that provides a unified route model and per-framework adapters for Vue, React, and
+other frameworks.
 
 ## Overview
 
-The `@mission-platform/router` package implements a **framework-neutral routing system** that separates the route definition and matching logic from framework-specific implementation details. This allows you to define your routes once and use them across different frameworks while maintaining consistency.
+The `@mission-platform/router` package implements a **framework-neutral routing system** that separates the route
+definition and matching logic from framework-specific implementation details. This allows you to define your routes once
+and use them across different frameworks while maintaining consistency.
 
 ## Key Features
 
@@ -131,20 +134,20 @@ The React adapter provides integration with React Router.
 
 ### RedwoodSDK Adapter (`./redwood`)
 
-The RedwoodSDK adapter provides integration with `rwsdk/router` — the flat,
-request/response route table used by RedwoodSDK (React on Cloudflare Workers).
+The RedwoodSDK adapter provides integration with `rwsdk/router` — the flat, request/response route table used by
+RedwoodSDK (React on Cloudflare Workers).
 
 **Main Exports:**
 
-- **`toRedwoodRoutes`**: Translates the neutral `MpRoute` tree into a flat list
-  of `rwsdk` route definitions (nested routes are flattened to absolute paths).
+- **`toRedwoodRoutes`**: Translates the neutral `MpRoute` tree into a flat list of `rwsdk` route definitions (nested
+  routes are flattened to absolute paths).
 - **`renderRoutes`**: Wraps the translated routes in a Document, mirroring
   `rwsdk`'s `render(Document, routes, options)`.
-- **`toRedwoodPath`**: Converts a neutral path pattern into Redwood's grammar
-  (`:param` and `*` wildcards only; `:param?` → `:param`, `:param*` / `:param+`
+- **`toRedwoodPath`**: Converts a neutral path pattern into Redwood's grammar (`:param` and `*` wildcards only;
+  `:param?` → `:param`, `:param*` / `:param+`
   → `*`).
-- **`redwoodHref`** / **`createRedwoodLinks`**: Build app-relative hrefs from
-  neutral locations, since RedwoodSDK navigates with plain anchors.
+- **`redwoodHref`** / **`createRedwoodLinks`**: Build app-relative hrefs from neutral locations, since RedwoodSDK
+  navigates with plain anchors.
 
 **Example:**
 

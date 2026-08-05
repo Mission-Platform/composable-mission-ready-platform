@@ -1,12 +1,10 @@
 # `@mission-platform/router`
 
-Framework-agnostic routing for Mission Platform apps. Define your routes and
-navigation targets **once** in a small, framework-neutral model, then let a
-per-framework adapter wire them into a real router.
+Framework-agnostic routing for Mission Platform apps. Define your routes and navigation targets **once** in a small,
+framework-neutral model, then let a per-framework adapter wire them into a real router.
 
-- **Framework-neutral core** (`@mission-platform/router`) — the route/location
-  model (`MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation`) plus pure,
-  dependency-free helpers:
+- **Framework-neutral core** (`@mission-platform/router`) — the route/location model (`MpRoute`, `MpRouteLocationRaw`,
+  `MpResolvedLocation`) plus pure, dependency-free helpers:
   - path patterns: `compilePath`, `matchPath`, `buildPath`, `normalizePath`
   - query strings: `parseQuery`, `stringifyQuery`
   - locations: `parseLocation`, `stringifyLocation`, `normalizeHash`
@@ -19,13 +17,11 @@ per-framework adapter wire them into a real router.
   `rwsdk/router`) — `toRedwoodRoutes`, `renderRoutes`, `toRedwoodPath`, and the
   `redwoodHref` / `createRedwoodLinks` link helpers.
 
-The neutral path grammar (`:param`, `:param?`, `:param*` / `:param+`, and a
-standalone `*` catch-all) mirrors vue-router's, so translation is near
-pass-through. RedwoodSDK's flat route table supports only `:param` and a `*`
+The neutral path grammar (`:param`, `:param?`, `:param*` / `:param+`, and a standalone `*` catch-all) mirrors
+vue-router's, so translation is near pass-through. RedwoodSDK's flat route table supports only `:param` and a `*`
 wildcard, so `toRedwoodPath` downgrades the neutral modifiers (`:param?` →
-`:param`, `:param*` / `:param+` → `*`). The same `MpRoute` tree is designed to
-extend to react-router, TanStack Router, Next.js, and Nuxt as further adapters
-are added.
+`:param`, `:param*` / `:param+` → `*`). The same `MpRoute` tree is designed to extend to react-router, TanStack Router,
+Next.js, and Nuxt as further adapters are added.
 
 ## Install
 
@@ -107,8 +103,8 @@ export default defineApp([
 redwoodHref({ name: 'user', params: { id: 42 } }, routes); // → '/users/42'
 ```
 
-Use `toRedwoodRoutes(routes)` directly when you want to spread the generated
-route definitions into `defineApp` yourself (e.g. alongside JSON API routes).
+Use `toRedwoodRoutes(routes)` directly when you want to spread the generated route definitions into `defineApp` yourself
+(e.g. alongside JSON API routes).
 
 ## Framework-neutral resolution (no framework required)
 
