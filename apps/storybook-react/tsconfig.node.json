@@ -1,7 +1,0 @@
-{
-  "extends": "@mission-platform/typescript-config/node",
-  "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo"
-  },
-  "include": ["vite.config.ts", "i18next.config.ts", "vitest.shims.d.ts", ".storybook/*.ts", ".storybook/*.d.ts"]
-}
