@@ -18,7 +18,10 @@
     "./framework-react": "./tsconfig.framework-react.json",
     "./framework-solid": "./tsconfig.framework-solid.json",
     "./framework-svelte": "./tsconfig.framework-svelte.json",
-    "./framework-web-component": "./tsconfig.framework-web-component.json"
+    "./framework-web-component": "./tsconfig.framework-web-component.json",
+    "./client": {
+      "types": "./client.d.ts"
+    }
   },
   "files": [
     "tsconfig.base.json",
@@ -33,7 +36,8 @@
     "tsconfig.framework-react.json",
     "tsconfig.framework-solid.json",
     "tsconfig.framework-svelte.json",
-    "tsconfig.framework-web-component.json"
+    "tsconfig.framework-web-component.json",
+    "client.d.ts"
   ],
   "scripts": {
     "lint": "eslint .",
