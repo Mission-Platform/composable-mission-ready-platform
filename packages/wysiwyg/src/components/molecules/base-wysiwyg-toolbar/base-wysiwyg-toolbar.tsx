@@ -1,3 +1,4 @@
+import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
 import {
   IconAlignCenter,
   IconAlignJustify,
@@ -16,12 +17,11 @@ import {
   IconStrikethrough,
   IconUnderline,
 } from '@mission-platform/icons';
-import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
-import { type WysiwygCommand } from '../../utils/commands';
-import { resolveLabels, type WysiwygLabels } from '../../utils/labels';
+import { type WysiwygCommand } from '../../../utils/commands';
+import { resolveLabels, type WysiwygLabels } from '../../../utils/labels';
+import { BaseWysiwygToolbarButton } from '../../atoms/base-wysiwyg-toolbar-button';
 import { BaseWysiwygBlockMenu } from '../base-wysiwyg-block-menu';
-import { BaseWysiwygToolbarButton } from '../base-wysiwyg-toolbar-button';
 
 import styles from './base-wysiwyg-toolbar.module.scss';
 

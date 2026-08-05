@@ -1,40 +1,40 @@
 import { BaseCodeBlock, BaseMonacoEditor, type CodeBlockLanguage } from '@mission-platform/components';
-import { BaseSchemaFormDialog, type FormValues, type SchemaFormDefinition } from '@mission-platform/forms';
 import {
   h,
+  type MpElement,
+  type MpProperties,
   Teleport,
   useEffect,
   useMemo,
   useRef,
   useState,
-  type MpElement,
-  type MpProperties,
 } from '@mission-platform/forge';
+import { BaseSchemaFormDialog, type FormValues, type SchemaFormDefinition } from '@mission-platform/forms';
 
 import {
   applyBlockAlign,
+  type CodeBlockEmbed,
   createCodeBlockHtml,
   moveBlock,
   readBlockAlign,
   scanCodeBlocks,
   serializeSurface,
   topLevelBlockFor,
-  type CodeBlockEmbed,
   type WysiwygBlockAlign,
-} from '../../utils/blocks';
+} from '../../../utils/blocks';
 import {
   commandRequiresArgument,
   isCommandActive,
   queryBlockFormat,
   runCommand,
   type WysiwygCommand,
-} from '../../utils/commands';
-import { createEditorChangeStream, type EditorChangeStream } from '../../utils/editor-stream';
-import { resolveLabels, type WysiwygLabels } from '../../utils/labels';
-import { EMPTY_EDITOR_STATS, type EditorStats } from '../../utils/text-stats';
-import { BaseWysiwygBlockControls, type WysiwygBlockControlsGeometry } from '../base-wysiwyg-block-controls';
-import { BaseWysiwygStatusBar, type WysiwygStatusItem } from '../base-wysiwyg-status-bar';
-import { BaseWysiwygToolbar, type WysiwygToolbarItem } from '../base-wysiwyg-toolbar';
+} from '../../../utils/commands';
+import { createEditorChangeStream, type EditorChangeStream } from '../../../utils/editor-stream';
+import { resolveLabels, type WysiwygLabels } from '../../../utils/labels';
+import { type EditorStats, EMPTY_EDITOR_STATS } from '../../../utils/text-stats';
+import { BaseWysiwygBlockControls, type WysiwygBlockControlsGeometry } from '../../molecules/base-wysiwyg-block-controls';
+import { BaseWysiwygStatusBar, type WysiwygStatusItem } from '../../molecules/base-wysiwyg-status-bar';
+import { BaseWysiwygToolbar, type WysiwygToolbarItem } from '../../molecules/base-wysiwyg-toolbar';
 
 import styles from './base-wysiwyg-editor.module.scss';
 

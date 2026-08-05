@@ -1,4 +1,4 @@
-export { type WysiwygBlockAlign } from '../../utils/blocks';
+export { type WysiwygBlockAlign } from '../../../utils/blocks';
 export {
   BaseWysiwygBlockControls,
   type WysiwygBlockControlsGeometry,

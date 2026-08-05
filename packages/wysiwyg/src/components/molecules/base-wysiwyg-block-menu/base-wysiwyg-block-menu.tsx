@@ -1,9 +1,9 @@
 import { BaseDropdown } from '@mission-platform/components';
+import { h, type MpElement, type MpProperties, useState } from '@mission-platform/forge';
 import { IconChevron } from '@mission-platform/icons';
-import { h, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
-import { BLOCK_FORMAT_COMMANDS, type WysiwygCommand } from '../../utils/commands';
-import { blockFormatLabel, resolveLabels, type WysiwygLabels } from '../../utils/labels';
+import { BLOCK_FORMAT_COMMANDS, type WysiwygCommand } from '../../../utils/commands';
+import { blockFormatLabel, resolveLabels, type WysiwygLabels } from '../../../utils/labels';
 
 import styles from './base-wysiwyg-block-menu.module.scss';
 
@@ -46,7 +46,7 @@ export function BaseWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProper
   return (
     <BaseDropdown
       matchTriggerWidth={false}
-      open={open && !disabled}
+      open={open && !disabled ? true : false}
       placement="bottom-start"
       onUpdateOpen={(next: boolean) => setOpen(next)}
     >

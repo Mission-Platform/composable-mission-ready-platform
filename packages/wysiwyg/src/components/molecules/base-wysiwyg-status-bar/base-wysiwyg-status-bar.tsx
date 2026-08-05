@@ -1,7 +1,7 @@
 import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
 
-import { resolveLabels, type WysiwygLabels } from '../../utils/labels';
-import { EMPTY_EDITOR_STATS, type EditorStats } from '../../utils/text-stats';
+import { resolveLabels, type WysiwygLabels } from '../../../utils/labels';
+import { type EditorStats, EMPTY_EDITOR_STATS } from '../../../utils/text-stats';
 
 import styles from './base-wysiwyg-status-bar.module.scss';
 

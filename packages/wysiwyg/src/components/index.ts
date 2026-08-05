@@ -8,17 +8,17 @@ export {
   type WysiwygBlockAlign,
   type WysiwygBlockControlsGeometry,
   type WysiwygBlockControlsProperties,
-} from './base-wysiwyg-block-controls';
-export { BaseWysiwygBlockMenu, blockFormatLabel, type WysiwygBlockMenuProperties } from './base-wysiwyg-block-menu';
-export { BaseWysiwygEditor, type WysiwygEditorProperties } from './base-wysiwyg-editor';
+} from './molecules/base-wysiwyg-block-controls';
+export { BaseWysiwygBlockMenu, blockFormatLabel, type WysiwygBlockMenuProperties } from './molecules/base-wysiwyg-block-menu';
+export { BaseWysiwygEditor, type WysiwygEditorProperties } from './organisms/base-wysiwyg-editor';
 export {
   BaseWysiwygStatusBar,
   type WysiwygStatusBarAlign,
   type WysiwygStatusBarProperties,
   type WysiwygStatusItem,
-} from './base-wysiwyg-status-bar';
-export { BaseWysiwygToolbar, type WysiwygToolbarItem, type WysiwygToolbarProperties } from './base-wysiwyg-toolbar';
-export { BaseWysiwygToolbarButton, type WysiwygToolbarButtonProperties } from './base-wysiwyg-toolbar-button';
+} from './molecules/base-wysiwyg-status-bar';
+export { BaseWysiwygToolbar, type WysiwygToolbarItem, type WysiwygToolbarProperties } from './molecules/base-wysiwyg-toolbar';
+export { BaseWysiwygToolbarButton, type WysiwygToolbarButtonProperties } from './atoms/base-wysiwyg-toolbar-button';
 
 // Public prop/callback types surfaced across the editor's API, re-exported from
 // the package entry so consumers can import them directly (the `labels` prop's

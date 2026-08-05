@@ -1,9 +1,9 @@
-import { IconAlignCenter, IconAlignJustify, IconAlignLeft, IconAlignRight, IconArrow } from '@mission-platform/icons';
 import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { IconAlignCenter, IconAlignJustify, IconAlignLeft, IconAlignRight, IconArrow } from '@mission-platform/icons';
 
-import { type WysiwygBlockAlign } from '../../utils/blocks';
-import { resolveLabels, type WysiwygLabels } from '../../utils/labels';
-import { BaseWysiwygToolbarButton } from '../base-wysiwyg-toolbar-button';
+import { type WysiwygBlockAlign } from '../../../utils/blocks';
+import { resolveLabels, type WysiwygLabels } from '../../../utils/labels';
+import { BaseWysiwygToolbarButton } from '../../atoms/base-wysiwyg-toolbar-button';
 
 import styles from './base-wysiwyg-block-controls.module.scss';
 

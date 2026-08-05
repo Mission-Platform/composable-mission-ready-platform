@@ -1,7 +1,7 @@
 # @mission-platform/wysiwyg
 
-A framework-agnostic **WYSIWYG rich-text editor**, authored once in the neutral
-JSX dialect (`@mission-platform/forge`) and shipped as both **Vue 3** and **React**
+A framework-agnostic **WYSIWYG rich-text editor**, authored once in the neutral JSX dialect (`@mission-platform/forge`)
+and shipped as both **Vue 3** and **React**
 components via `@mission-platform/vite-plugin-forge`.
 
 ## Import
@@ -51,16 +51,14 @@ export function Editor() {
 
 ## Features
 
-- Native `contenteditable` editing surface driven through a guarded,
-  framework-neutral command layer (`document.execCommand`) — no heavy editor
-  engine dependency.
-- Formatting toolbar (bold/italic/underline/strikethrough, headings, quote and
-  code block, lists, alignment, link, image, undo/redo) built from
+- Native `contenteditable` editing surface driven through a guarded, framework-neutral command layer
+  (`document.execCommand`) — no heavy editor engine dependency.
+- Formatting toolbar (bold/italic/underline/strikethrough, headings, quote and code block, lists, alignment, link,
+  image, undo/redo) built from
   `@mission-platform/icons` glyphs and `@mission-platform/components`' `BaseButton`.
 - Optional **HTML source view** backed by `BaseMonacoEditor`, which — with
   `spellCheck` — brings Hunspell spelling + Harper grammar checking to the markup.
-- Live word/character counter derived from an **RxJS** change stream (debounced
-  and de-duplicated).
+- Live word/character counter derived from an **RxJS** change stream (debounced and de-duplicated).
 - Fully overridable labels (English defaults) for i18n; SSR/SSG-safe.
 
 See `llms.txt` for the full prop reference.
