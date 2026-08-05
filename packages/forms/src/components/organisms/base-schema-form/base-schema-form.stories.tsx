@@ -1,39 +1,45 @@
-import { useState } from 'react';
+import { h } from '@mission-platform/forge';
+import { useArgs } from 'storybook/preview-api';
 
-import { SchemaForm } from '@mission-platform/forms/react';
+import { SchemaForm } from '@mission-platform/forms';
 
 import type { SchemaFormDefinition } from './base-schema-form';
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
- * `SchemaForm` is the **React** build of the write-once `BaseSchemaForm` in
- * `@mission-platform/forms`. It is driven entirely by a **JSON Schema**: both
- * the rendered fields and the validation rules are derived from it through the
- * shared `@mission-platform/forms-core` package (so both frameworks validate
- * identically). A single object renders a one-step form; a top-level array
- * renders a multi-step wizard. Authored once in the neutral JSX dialect and
- * compiled straight to React by `@mission-platform/vite-plugin-forge`.
+ * `SchemaForm` is the write-once `BaseSchemaForm` in `@mission-platform/forms`.
+ * It is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/forge`) and compiled at build time by
+ * `@mission-platform/vite-plugin-forge` to every supported framework.
+ *
+ * This is a single, framework-agnostic story: the bare
+ * `@mission-platform/forms` import auto-resolves to the framework selected by
+ * the `STORYBOOK_FRAMEWORK` env var, and the JSX in `render` is compiled by that
+ * framework's own transform — so the same story renders on every framework.
  */
 const meta = {
-  title: 'Forms/BaseSchemaForm',
+  title: 'Organisms/Forms/BaseSchemaForm',
   component: SchemaForm,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          'Cross-framework `SchemaForm` — authored once in the neutral JSX dialect and shipped to both React (this story, via `@mission-platform/forms/react`) and Vue 3 (`@mission-platform/forms/vue`). It is driven entirely by a JSON Schema (fields + validation via the shared `@mission-platform/forms-core`): a single object renders a one-step form; a top-level array renders a multi-step wizard. Fields support nested field sets, `ui.visibleWhen` conditional visibility, and Ajv validation surfaced as per-field errors. Styling comes from the co-located `base-schema-form.module.scss`.',
+          'Cross-framework `SchemaForm` — authored once in the neutral JSX dialect and shipped to all supported frameworks. It is driven entirely by a **JSON Schema**: both the rendered fields and the validation rules are derived from it through the shared `@mission-platform/forms-core` package (so every framework validates identically). A single object renders a one-step form; a top-level array renders a multi-step wizard. Fields support nested field sets, `ui.visibleWhen` conditional visibility, and Ajv validation surfaced as per-field errors. Generated messages use the built-in English fallback (the neutral dialect has no i18n). Styling comes from the co-located `base-schema-form.module.scss`.',
       },
     },
   },
+  args: {
+    modelValue: {},
+  },
   render: (arguments_) => {
-    const [values, setValues] = useState<Record<string, unknown>>({});
+    const [{ modelValue }, updateArguments] = useArgs();
     return (
       <SchemaForm
         {...arguments_}
-        modelValue={values}
-        onUpdateModelValue={setValues}
-        onSubmit={(v, valid) => console.log('submit', v, valid)}
+        modelValue={modelValue}
+        onSubmit={(values, valid) => console.log('submit', values, valid)}
+        onUpdateModelValue={(value) => updateArguments({ modelValue: value })}
       />
     );
   },
@@ -171,7 +177,7 @@ export const GeneratedMessages: Story = {
     docs: {
       description: {
         story:
-          'Validation messages are generated from the JSON Schema. Submit the empty form to see the built-in English fallbacks (the neutral dialect has no i18n; the Vue build localises these via its `<i18n>` block).',
+          'Validation messages are generated from the JSON Schema. Submit the empty form to see the built-in English fallbacks (the neutral dialect has no i18n).',
       },
     },
   },

@@ -86,9 +86,8 @@
       border: var(--mp-border-width-thin) solid transparent;
       border-radius: var(--mp-radius-md);
       cursor: pointer;
-      transition:
-        opacity 150ms ease,
-        background-color 150ms ease;
+      transition: opacity 150ms ease,
+      background-color 150ms ease;
 
       &:focus-visible {
         outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);

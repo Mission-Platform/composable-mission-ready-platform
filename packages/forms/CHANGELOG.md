@@ -8,13 +8,11 @@
 
   Adds the write-once `@mission-platform/forms` package containing
   `BaseFormBuilder` (public `FormBuilder`) and `BaseSchemaForm` (public
-  `SchemaForm`), authored once in the neutral `@mission-platform/forge` dialect and
-  compiled to both Vue 3 (`./vue`) and React (`./react`). The package depends on
-  **both** `@mission-platform/components` (field widgets + `BaseDrawer`) and
-  `@mission-platform/layouts` (`BaseVerticalLayout`), which is why it lives in its
-  own package rather than in `@mission-platform/components` — keeping the
-  dependency graph acyclic. Co-located `JSX Components/Forms/<Name>` stories and
-  cross-framework specs are included.
+  `SchemaForm`), authored once in the neutral `@mission-platform/forge` dialect and compiled to both Vue 3 (`./vue`) and
+  React (`./react`). The package depends on **both** `@mission-platform/components` (field widgets + `BaseDrawer`) and
+  `@mission-platform/layouts` (`BaseVerticalLayout`), which is why it lives in its own package rather than in
+  `@mission-platform/components` — keeping the dependency graph acyclic. Co-located `JSX Components/Forms/<Name>`
+  stories and cross-framework specs are included.
 
   **BREAKING (`@mission-platform/components`):** `BaseFormBuilder` / `FormBuilder`
   and `BaseSchemaForm` / `SchemaForm` are no longer exported from
@@ -25,10 +23,9 @@
 
 - e1a9272: Drop the third-party `google-libphonenumber` dependency and power `BasePhoneInput`
   with the platform's own `@mission-platform/phone-number` (AssemblyScript/WebAssembly)
-  package instead. The co-located `phone.ts` helper now parses, formats
-  (national/E.164), validates per region, lists supported regions, provides example
-  numbers and formats as-you-type through the synchronous `PhoneNumberUtil` instance,
-  so behaviour is unchanged while the external dependency is removed.
+  package instead. The co-located `phone.ts` helper now parses, formats (national/E.164), validates per region, lists
+  supported regions, provides example numbers and formats as-you-type through the synchronous `PhoneNumberUtil`
+  instance, so behaviour is unchanged while the external dependency is removed.
 - ca1d98b: reformat sources with updated prettier print width and import ordering
 - d39b6fc: add per-workspace reference documentation and refresh llms.txt/README metadata
 - f681d82: rename storybook stories to the .vue.stories suffix for framework clarity
@@ -37,8 +34,8 @@
   The cross-framework catalogue no longer prefixes its sections with `JSX`: the
   `JSX Components/<Category>/<Name>` stories are now `Components/<Category>/<Name>`
   and the `JSX Icons/<Category>/<Name>` stories are now `Icons/<Category>/<Name>`
-  (both Vue and React Storybooks). The components extracted into their own packages
-  get their own top-level Storybook section instead of nesting under `Components`:
+  (both Vue and React Storybooks). The components extracted into their own packages get their own top-level Storybook
+  section instead of nesting under `Components`:
   `@mission-platform/layouts` stories move to `Layouts/<Name>` and
   `@mission-platform/forms` stories move to `Forms/<Name>`.
 
@@ -188,13 +185,11 @@
 
   Adds the write-once `@mission-platform/forms` package containing
   `BaseFormBuilder` (public `FormBuilder`) and `BaseSchemaForm` (public
-  `SchemaForm`), authored once in the neutral `@mission-platform/forge` dialect and
-  compiled to both Vue 3 (`./vue`) and React (`./react`). The package depends on
-  **both** `@mission-platform/components` (field widgets + `BaseDrawer`) and
-  `@mission-platform/layouts` (`BaseVerticalLayout`), which is why it lives in its
-  own package rather than in `@mission-platform/components` — keeping the
-  dependency graph acyclic. Co-located `JSX Components/Forms/<Name>` stories and
-  cross-framework specs are included.
+  `SchemaForm`), authored once in the neutral `@mission-platform/forge` dialect and compiled to both Vue 3 (`./vue`) and
+  React (`./react`). The package depends on **both** `@mission-platform/components` (field widgets + `BaseDrawer`) and
+  `@mission-platform/layouts` (`BaseVerticalLayout`), which is why it lives in its own package rather than in
+  `@mission-platform/components` — keeping the dependency graph acyclic. Co-located `JSX Components/Forms/<Name>`
+  stories and cross-framework specs are included.
 
   **BREAKING (`@mission-platform/components`):** `BaseFormBuilder` / `FormBuilder`
   and `BaseSchemaForm` / `SchemaForm` are no longer exported from
@@ -205,10 +200,9 @@
 
 - e1a9272: Drop the third-party `google-libphonenumber` dependency and power `BasePhoneInput`
   with the platform's own `@mission-platform/phone-number` (AssemblyScript/WebAssembly)
-  package instead. The co-located `phone.ts` helper now parses, formats
-  (national/E.164), validates per region, lists supported regions, provides example
-  numbers and formats as-you-type through the synchronous `PhoneNumberUtil` instance,
-  so behaviour is unchanged while the external dependency is removed.
+  package instead. The co-located `phone.ts` helper now parses, formats (national/E.164), validates per region, lists
+  supported regions, provides example numbers and formats as-you-type through the synchronous `PhoneNumberUtil`
+  instance, so behaviour is unchanged while the external dependency is removed.
 - ca1d98b: reformat sources with updated prettier print width and import ordering
 - d39b6fc: add per-workspace reference documentation and refresh llms.txt/README metadata
 - f681d82: rename storybook stories to the .vue.stories suffix for framework clarity
@@ -217,8 +211,8 @@
   The cross-framework catalogue no longer prefixes its sections with `JSX`: the
   `JSX Components/<Category>/<Name>` stories are now `Components/<Category>/<Name>`
   and the `JSX Icons/<Category>/<Name>` stories are now `Icons/<Category>/<Name>`
-  (both Vue and React Storybooks). The components extracted into their own packages
-  get their own top-level Storybook section instead of nesting under `Components`:
+  (both Vue and React Storybooks). The components extracted into their own packages get their own top-level Storybook
+  section instead of nesting under `Components`:
   `@mission-platform/layouts` stories move to `Layouts/<Name>` and
   `@mission-platform/forms` stories move to `Forms/<Name>`.
 
@@ -368,13 +362,11 @@
 
   Adds the write-once `@mission-platform/forms` package containing
   `BaseFormBuilder` (public `FormBuilder`) and `BaseSchemaForm` (public
-  `SchemaForm`), authored once in the neutral `@mission-platform/forge` dialect and
-  compiled to both Vue 3 (`./vue`) and React (`./react`). The package depends on
-  **both** `@mission-platform/components` (field widgets + `BaseDrawer`) and
-  `@mission-platform/layouts` (`BaseVerticalLayout`), which is why it lives in its
-  own package rather than in `@mission-platform/components` — keeping the
-  dependency graph acyclic. Co-located `JSX Components/Forms/<Name>` stories and
-  cross-framework specs are included.
+  `SchemaForm`), authored once in the neutral `@mission-platform/forge` dialect and compiled to both Vue 3 (`./vue`) and
+  React (`./react`). The package depends on **both** `@mission-platform/components` (field widgets + `BaseDrawer`) and
+  `@mission-platform/layouts` (`BaseVerticalLayout`), which is why it lives in its own package rather than in
+  `@mission-platform/components` — keeping the dependency graph acyclic. Co-located `JSX Components/Forms/<Name>`
+  stories and cross-framework specs are included.
 
   **BREAKING (`@mission-platform/components`):** `BaseFormBuilder` / `FormBuilder`
   and `BaseSchemaForm` / `SchemaForm` are no longer exported from
@@ -385,10 +377,9 @@
 
 - e1a9272: Drop the third-party `google-libphonenumber` dependency and power `BasePhoneInput`
   with the platform's own `@mission-platform/phone-number` (AssemblyScript/WebAssembly)
-  package instead. The co-located `phone.ts` helper now parses, formats
-  (national/E.164), validates per region, lists supported regions, provides example
-  numbers and formats as-you-type through the synchronous `PhoneNumberUtil` instance,
-  so behaviour is unchanged while the external dependency is removed.
+  package instead. The co-located `phone.ts` helper now parses, formats (national/E.164), validates per region, lists
+  supported regions, provides example numbers and formats as-you-type through the synchronous `PhoneNumberUtil`
+  instance, so behaviour is unchanged while the external dependency is removed.
 - ca1d98b: reformat sources with updated prettier print width and import ordering
 - d39b6fc: add per-workspace reference documentation and refresh llms.txt/README metadata
 - f681d82: rename storybook stories to the .vue.stories suffix for framework clarity
@@ -397,8 +388,8 @@
   The cross-framework catalogue no longer prefixes its sections with `JSX`: the
   `JSX Components/<Category>/<Name>` stories are now `Components/<Category>/<Name>`
   and the `JSX Icons/<Category>/<Name>` stories are now `Icons/<Category>/<Name>`
-  (both Vue and React Storybooks). The components extracted into their own packages
-  get their own top-level Storybook section instead of nesting under `Components`:
+  (both Vue and React Storybooks). The components extracted into their own packages get their own top-level Storybook
+  section instead of nesting under `Components`:
   `@mission-platform/layouts` stories move to `Layouts/<Name>` and
   `@mission-platform/forms` stories move to `Forms/<Name>`.
 
@@ -548,13 +539,11 @@
 
   Adds the write-once `@mission-platform/forms` package containing
   `BaseFormBuilder` (public `FormBuilder`) and `BaseSchemaForm` (public
-  `SchemaForm`), authored once in the neutral `@mission-platform/forge` dialect and
-  compiled to both Vue 3 (`./vue`) and React (`./react`). The package depends on
-  **both** `@mission-platform/components` (field widgets + `BaseDrawer`) and
-  `@mission-platform/layouts` (`BaseVerticalLayout`), which is why it lives in its
-  own package rather than in `@mission-platform/components` — keeping the
-  dependency graph acyclic. Co-located `JSX Components/Forms/<Name>` stories and
-  cross-framework specs are included.
+  `SchemaForm`), authored once in the neutral `@mission-platform/forge` dialect and compiled to both Vue 3 (`./vue`) and
+  React (`./react`). The package depends on **both** `@mission-platform/components` (field widgets + `BaseDrawer`) and
+  `@mission-platform/layouts` (`BaseVerticalLayout`), which is why it lives in its own package rather than in
+  `@mission-platform/components` — keeping the dependency graph acyclic. Co-located `JSX Components/Forms/<Name>`
+  stories and cross-framework specs are included.
 
   **BREAKING (`@mission-platform/components`):** `BaseFormBuilder` / `FormBuilder`
   and `BaseSchemaForm` / `SchemaForm` are no longer exported from
@@ -565,10 +554,9 @@
 
 - e1a9272: Drop the third-party `google-libphonenumber` dependency and power `BasePhoneInput`
   with the platform's own `@mission-platform/phone-number` (AssemblyScript/WebAssembly)
-  package instead. The co-located `phone.ts` helper now parses, formats
-  (national/E.164), validates per region, lists supported regions, provides example
-  numbers and formats as-you-type through the synchronous `PhoneNumberUtil` instance,
-  so behaviour is unchanged while the external dependency is removed.
+  package instead. The co-located `phone.ts` helper now parses, formats (national/E.164), validates per region, lists
+  supported regions, provides example numbers and formats as-you-type through the synchronous `PhoneNumberUtil`
+  instance, so behaviour is unchanged while the external dependency is removed.
 - ca1d98b: reformat sources with updated prettier print width and import ordering
 - d39b6fc: add per-workspace reference documentation and refresh llms.txt/README metadata
 - f681d82: rename storybook stories to the .vue.stories suffix for framework clarity
@@ -577,8 +565,8 @@
   The cross-framework catalogue no longer prefixes its sections with `JSX`: the
   `JSX Components/<Category>/<Name>` stories are now `Components/<Category>/<Name>`
   and the `JSX Icons/<Category>/<Name>` stories are now `Icons/<Category>/<Name>`
-  (both Vue and React Storybooks). The components extracted into their own packages
-  get their own top-level Storybook section instead of nesting under `Components`:
+  (both Vue and React Storybooks). The components extracted into their own packages get their own top-level Storybook
+  section instead of nesting under `Components`:
   `@mission-platform/layouts` stories move to `Layouts/<Name>` and
   `@mission-platform/forms` stories move to `Forms/<Name>`.
 

@@ -1,11 +1,14 @@
 # `@mission-platform/forms`
 
-Write-once form orchestration components (`BaseSchemaForm`, `BaseFormBuilder`) authored with `@mission-platform/forge` and shipped as native Vue 3 (`@mission-platform/forms/vue`) and React (`@mission-platform/forms/react`) components.
+Write-once form orchestration components (`BaseSchemaForm`, `BaseFormBuilder`) authored with `@mission-platform/forge`
+and shipped as native Vue 3 (`@mission-platform/forms/vue`) and React (`@mission-platform/forms/react`) components.
 
 ## Features
 
-- **Data-Driven Schema Forms**: `BaseSchemaForm` renders single-step forms or multi-step form wizards directly from JSON Schema definitions.
-- **Visual Form Builder**: `BaseFormBuilder` provides a visual palette, canvas editor, and inspector for creating and editing form schemas.
+- **Data-Driven Schema Forms**: `BaseSchemaForm` renders single-step forms or multi-step form wizards directly from JSON
+  Schema definitions.
+- **Visual Form Builder**: `BaseFormBuilder` provides a visual palette, canvas editor, and inspector for creating and
+  editing form schemas.
 - **Ajv Validation Engine**: Powered by `@mission-platform/forms-core` for consistent client-side validation.
 - **Cross-Framework Parity**: Authored once in neutral JSX, compiled to native Vue and React targets.
 

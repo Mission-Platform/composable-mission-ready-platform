@@ -6,7 +6,9 @@ import {
   BaseDateTimeRangeInput,
   BaseFieldSet,
   BaseFileInput,
+  BaseFormWizard,
   BaseInput,
+  BaseLocationInput,
   BaseMarkdownInput,
   BaseMonacoEditor,
   BaseMultiselect,
@@ -19,26 +21,27 @@ import {
   BaseTimeInput,
   BaseTimeRangeInput,
   BaseTypography,
+  type LocationValue,
+  type WizardStep,
 } from '@mission-platform/components';
-import { BaseFormWizard, type WizardStep, BaseLocationInput, type LocationValue } from '@mission-platform/components';
+import { h, type MpElement, type MpProperties, Slot, useMemo, useState } from '@mission-platform/forge';
 import {
   createFormValidator,
   evaluateCondition,
-  isFieldVisible,
-  jsonSchemaDefaults,
-  jsonSchemaToFields,
   type FieldCondition,
   type FormErrors,
   type FormFieldSchema,
   type FormJsonSchema,
-  type FormValues,
   type FormValidator,
+  type FormValues,
+  isFieldVisible,
+  jsonSchemaDefaults,
+  jsonSchemaToFields,
   type SchemaFormDefinition,
   type SchemaFormValidationMode,
 } from '@mission-platform/forms-core';
-import { h, Slot, useMemo, useState, type MpElement, type MpProperties } from '@mission-platform/forge';
 
-import sizeStyles from '../size.module.scss';
+import sizeStyles from '../../size.module.scss';
 
 import styles from './base-schema-form.module.scss';
 
@@ -194,8 +197,17 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
     return indices.length > 0 ? indices : [0];
   })();
 
-  const currentVisiblePosition = Math.max(0, visibleStepIndices.indexOf(currentStep));
-  const activeStepIndex = visibleStepIndices.includes(currentStep) ? currentStep : (visibleStepIndices[0] ?? 0);
+  const visibleStepIndexSet = new Set<number>(visibleStepIndices);
+  let currentVisiblePosition = 0;
+  for (const [position, stepIndex] of visibleStepIndices.entries()) {
+    if (stepIndex === currentStep) {
+      currentVisiblePosition = position;
+      break;
+    }
+  }
+  const activeStepIndex = visibleStepIndexSet.has(currentStep)
+    ? currentStep
+    : (visibleStepIndices[0] ?? 0);
   const currentFields = model.steps[activeStepIndex]?.fields ?? [];
 
   // Per-step flag: `true` when any field on that step currently has an error.
@@ -236,7 +248,7 @@ export function BaseSchemaForm(properties: Readonly<SchemaFormProperties>): MpEl
   };
 
   const goTo = (index: number): void => {
-    if (visibleStepIndices.includes(index)) setCurrentStep(index);
+    if (visibleStepIndexSet.has(index)) setCurrentStep(index);
   };
 
   const handleSubmit = (event: Event): void => {

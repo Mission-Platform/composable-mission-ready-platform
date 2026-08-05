@@ -11,6 +11,7 @@ import {
   BaseTypography,
   type TabItem,
 } from '@mission-platform/components';
+import { h, type MpChild, type MpElement, type MpProperties, useRef, useState } from '@mission-platform/forge';
 import {
   type BuilderField,
   type BuilderFieldOption,
@@ -36,11 +37,10 @@ import {
   schemaToFields,
   widgetHasOptions,
 } from '@mission-platform/forms-core';
-import { h, type MpChild, type MpElement, type MpProperties, useRef, useState } from '@mission-platform/forge';
 import { BaseVerticalLayout } from '@mission-platform/layouts';
 
+import sizeStyles from '../../size.module.scss';
 import { BaseSchemaForm } from '../base-schema-form';
-import sizeStyles from '../size.module.scss';
 
 import styles from './base-form-builder.module.scss';
 import {

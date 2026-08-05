@@ -1,30 +1,31 @@
-import { useState } from 'react';
+import { h } from '@mission-platform/forge';
+import { useArgs } from 'storybook/preview-api';
 
-import { FormBuilder } from '@mission-platform/forms/react';
+import { FormBuilder } from '@mission-platform/forms';
 
 import type { SchemaFormDefinition } from './base-form-builder';
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
- * `FormBuilder` is the **React** build of the write-once `BaseFormBuilder` in
- * `@mission-platform/forms`. It is a visual authoring surface for JSON-Schema
- * forms: a field **palette**, a tabbed centre (**Editor** canvas, a wizard-only
- * **Steps** tab, a live **Preview**, and a **Schema** JSON tab), and an
- * **inspector**. The whole field tree is emitted as a `SchemaFormDefinition`
- * (built through the shared `@mission-platform/forms-core`) via `modelValue` +
- * `onUpdateModelValue`, ready to feed straight into `SchemaForm`. Authored once
- * in the neutral JSX dialect and compiled straight to React by
- * `@mission-platform/vite-plugin-forge`.
+ * `FormBuilder` is the write-once `BaseFormBuilder` in `@mission-platform/forms`.
+ * It is authored **once** in the framework-neutral JSX dialect
+ * (`@mission-platform/forge`) and compiled at build time by
+ * `@mission-platform/vite-plugin-forge` to every supported framework.
+ *
+ * This is a single, framework-agnostic story: the bare
+ * `@mission-platform/forms` import auto-resolves to the framework selected by
+ * the `STORYBOOK_FRAMEWORK` env var, and the JSX in `render` is compiled by that
+ * framework's own transform — so the same story renders on every framework.
  */
 const meta = {
-  title: 'Forms/BaseFormBuilder',
+  title: 'Organisms/Forms/BaseFormBuilder',
   component: FormBuilder,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          'Cross-framework `FormBuilder` — authored once in the neutral JSX dialect and shipped to both React (this story, via `@mission-platform/forms/react`) and Vue 3 (`@mission-platform/forms/vue`). A visual authoring surface for JSON-Schema forms: a field palette, a tabbed centre (Editor / Steps / Preview / Schema), and an inspector; the field tree is emitted as a `SchemaFormDefinition` via `modelValue`, ready for `SchemaForm`. Styling comes from the co-located `base-form-builder.module.scss`.',
+          'Cross-framework `FormBuilder` — authored once in the neutral JSX dialect and shipped to all supported frameworks. It is a visual authoring surface for JSON-Schema forms: a field **palette**, a tabbed centre (**Editor** canvas, a wizard-only **Steps** tab, a live **Preview**, and a **Schema** JSON tab), and an **inspector**. The whole field tree is emitted as a `SchemaFormDefinition` (built through the shared `@mission-platform/forms-core`) via `modelValue` + `onUpdateModelValue`, ready to feed straight into `SchemaForm`. Styling comes from the co-located `base-form-builder.module.scss`.',
       },
     },
   },
@@ -38,12 +39,12 @@ const meta = {
     wizard: false,
   },
   render: (arguments_) => {
-    const [schema, setSchema] = useState(arguments_.modelValue);
+    const [{ modelValue }, updateArguments] = useArgs();
     return (
       <FormBuilder
         {...arguments_}
-        modelValue={schema}
-        onUpdateModelValue={setSchema}
+        modelValue={modelValue}
+        onUpdateModelValue={(value) => updateArguments({ modelValue: value })}
       />
     );
   },

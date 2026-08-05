@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { isGhostAtEnd, isGhostBefore, type InsertTarget } from './form-builder-tree';
+import { type InsertTarget, isGhostAtEnd, isGhostBefore } from './form-builder-tree';
 
 /**
  * Unit tests for the pure drop-placement-ghost positioning helpers that decide,

@@ -4,7 +4,7 @@ export {
   type BuilderFieldOption,
   type FieldTypeDescriptor,
   type FormBuilderProperties,
-} from './base-form-builder';
+} from './organisms/base-form-builder';
 export {
   BaseSchemaForm,
   type FormErrors,
@@ -15,5 +15,5 @@ export {
   type SchemaFormDefinition,
   type SchemaFormProperties,
   type SchemaFormValidationMode,
-} from './base-schema-form';
-export { BaseSchemaFormDialog, type SchemaFormDialogProperties } from './base-schema-form-dialog';
+} from './organisms/base-schema-form';
+export { BaseSchemaFormDialog, type SchemaFormDialogProperties } from './organisms/base-schema-form-dialog';

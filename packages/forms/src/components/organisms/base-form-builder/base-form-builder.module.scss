@@ -121,11 +121,10 @@
       border-radius: var(--mp-radius-sm);
       background-color: var(--mp-color-bg-surface);
       cursor: grab;
-      transition:
-        opacity 150ms ease,
-        border-color 150ms ease,
-        box-shadow 150ms ease,
-        transform 150ms ease;
+      transition: opacity 150ms ease,
+      border-color 150ms ease,
+      box-shadow 150ms ease,
+      transform 150ms ease;
 
       &--selected {
         border-color: var(--mp-color-primary-default);

@@ -1,19 +1,24 @@
 # @mission-platform/forms
 
-`@mission-platform/forms` provides high-level form orchestration components that allow the Mission Platform to render complex forms and wizards entirely from JSON Schema definitions.
+`@mission-platform/forms` provides high-level form orchestration components that allow the Mission Platform to render
+complex forms and wizards entirely from JSON Schema definitions.
 
-Like other shared packages, it follows a "write once" approach, authoring components in neutral JSX and compiling them into native Vue 3 and React components.
+Like other shared packages, it follows a "write once" approach, authoring components in neutral JSX and compiling them
+into native Vue 3 and React components.
 
 ## Core Components
 
 ### `BaseSchemaForm`
 
-The primary component for rendering data-driven forms. It takes a JSON Schema definition and automatically generates the corresponding UI widgets and validation logic.
+The primary component for rendering data-driven forms. It takes a JSON Schema definition and automatically generates the
+corresponding UI widgets and validation logic.
 
 #### Key Features:
 
-- **Schema-Driven**: Entirely configured via JSON Schema. A single object renders a one-step form; an array of objects creates a multi-step wizard.
-- **Consistent Validation**: Uses `@mission-platform/forms-core` (Ajv) to ensure that Vue and React apps validate the same data identically.
+- **Schema-Driven**: Entirely configured via JSON Schema. A single object renders a one-step form; an array of objects
+  creates a multi-step wizard.
+- **Consistent Validation**: Uses `@mission-platform/forms-core` (Ajv) to ensure that Vue and React apps validate the
+  same data identically.
 - **Conditional Visibility**: Supports `ui.visibleWhen` to show or hide fields dynamically based on other input values.
 - **Nested Structures**: Handles nested field sets for complex data models.
 
@@ -59,7 +64,8 @@ A visual authoring tool that allows non-developers to create form schemas withou
 - **Visual Canvas**: Drag-and-drop style editor for arranging fields and defining their properties.
 - **Wizard Configuration**: A dedicated "Steps" tab for managing multi-step flow in wizards.
 - **Live Preview**: Real-time rendering of the form as it is being built.
-- **Schema Export**: Emits a `SchemaFormDefinition` that can be saved to a database or used directly by `BaseSchemaForm`.
+- **Schema Export**: Emits a `SchemaFormDefinition` that can be saved to a database or used directly by
+  `BaseSchemaForm`.
 
 #### Layout:
 
@@ -73,8 +79,10 @@ The builder is structured as a three-column layout using `BaseVerticalLayout`:
 
 To avoid dependency cycles while maintaining framework parity:
 
-- `@mission-platform/forms` depends on `@mission-platform/components` (for individual input widgets like `BaseInput`, `BaseCheckbox`) and `@mission-platform/layouts`.
-- It delegates all heavy lifting—validation, schema parsing, and conditional logic—to the framework-agnostic `@mission-platform/forms-core`.
+- `@mission-platform/forms` depends on `@mission-platform/components` (for individual input widgets like `BaseInput`,
+  `BaseCheckbox`) and `@mission-platform/layouts`.
+- It delegates all heavy lifting—validation, schema parsing, and conditional logic—to the framework-agnostic
+  `@mission-platform/forms-core`.
 
 ## Styles
 

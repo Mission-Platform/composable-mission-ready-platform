@@ -3,23 +3,14 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "build:check",
-        "build:vue",
-        "build:react",
-        "build:solid",
-        "build:svelte",
-        "build:web-components",
-        "build:storyblok-vue",
-        "build:storyblok-react",
-        "build:types"
-      ]
+      "dependsOn": ["^build", "build:check"]
     },
-    "build:storyblok-vue": {
-      "dependsOn": ["^build", "build:vue"]
+    "test": {
+      "dependsOn": ["build"]
     },
-    "build:storyblok-react": {
-      "dependsOn": ["^build", "build:react"]
+    "test:coverage": {
+      "dependsOn": ["build"],
+      "outputs": ["coverage/**"]
     }
   }
 }
