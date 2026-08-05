@@ -1,21 +1,14 @@
 // Public, typed wrapper around the Rust/WebAssembly 1D (linear) barcode encoder.
 //
 // The heavy lifting runs in WebAssembly (compiled from the `crates/barcode-encode`
-// Rust crate, sharing `crates/barcode-common`); this module provides an
-// ergonomic, fully typed façade with a lazily-instantiated singleton so
-// consumers never touch the raw wasm exports. The wasm is emitted under
-// `../generated/encode`; the decoder counterpart lives in `../decoder`.
+// Rust crate, sharing `crates/barcode-common`, and published as
+// `@mission-platform/barcode-encode-wasm`); this module provides an ergonomic,
+// fully typed façade over the encoder. The decoder counterpart lives in
+// `../decoder`.
 
-import wasmInit, {
-  encode as wasmEncode,
-  type InitInput,
-  initSync as wasmInitSync,
-  type SyncInitInput,
-} from '../generated/encode/barcode-encode.js';
-// The compiled encoder wasm binary. In a production bundle Vite inlines this as
-// a base64 `data:` URI (the package raises `assetsInlineLimit`); in dev/test it
-// resolves to a plain URL instead — see `initBarcode`/`initBarcodeSync` below.
-import wasmUrl from '../generated/encode/barcode-encode_bg.wasm?url';
+// The `-wasm` package inlines its wasm binary and instantiates it synchronously
+// at import, so `encode` is ready to call with no initialisation step.
+import { encode as wasmEncode } from '@mission-platform/barcode-encode-wasm';
 
 /**
  * The linear symbologies this encoder supports. Passed as the first argument to
@@ -67,103 +60,6 @@ export interface Barcode {
   width: number;
 }
 
-/** `true` once the wasm module has been instantiated and its exports are live. */
-let initialised = false;
-/** Memoised in-flight async initialisation, so concurrent callers share one load. */
-let initPromise: Promise<void> | undefined;
-
-/**
- * Decode a base64 string to bytes. Prefers the native `Uint8Array.fromBase64`
- * (available on recent runtimes) and falls back to `Buffer` (Node) or `atob`
- * (browser) so the inlined wasm can be instantiated on any target.
- */
-function decodeBase64(base64: string): Uint8Array {
-  const constructor = Uint8Array as typeof Uint8Array & {
-    fromBase64?: (value: string) => Uint8Array;
-  };
-  if (typeof constructor.fromBase64 === 'function') {
-    return constructor.fromBase64(base64);
-  }
-  const runtime = globalThis as {
-    Buffer?: { from(input: string, encoding: string): Uint8Array };
-    atob?: (data: string) => string;
-  };
-  if (runtime.Buffer !== undefined) {
-    return new Uint8Array(runtime.Buffer.from(base64, 'base64'));
-  }
-  const binary = runtime.atob!(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let index = 0; index < binary.length; index += 1) {
-    bytes[index] = binary.charCodeAt(index);
-  }
-  return bytes;
-}
-
-/**
- * Best-effort synchronous init used by the sync {@link encodeBarcode} entry
- * point. When the bundled wasm is an inlined `data:` URI (the shipped build) its
- * bytes are available immediately, so we can instantiate without any async
- * `fetch`; otherwise this is a no-op and the caller must have initialised the
- * module explicitly (see {@link initBarcode}/{@link initBarcodeSync}).
- */
-function ensureSyncInit(): void {
-  if (initialised || !wasmUrl.startsWith('data:')) {
-    return;
-  }
-  wasmInitSync({ module: decodeBase64(wasmUrl.slice(wasmUrl.indexOf(',') + 1)) });
-  initialised = true;
-}
-
-/**
- * Instantiate the WebAssembly module synchronously from raw bytes (or a
- * precompiled `WebAssembly.Module`). Use this in non-bundled environments —
- * e.g. Node or a test runner — where the inlined `data:` URI isn't available,
- * so the synchronous {@link encodeBarcode} can be used afterwards.
- */
-export function initBarcodeSync(wasm: SyncInitInput): void {
-  if (initialised) {
-    return;
-  }
-  wasmInitSync({ module: wasm });
-  initialised = true;
-}
-
-/**
- * Instantiate the WebAssembly module asynchronously, resolving once it is ready.
- * Called automatically by {@link encodeBarcodeAsync}; call it yourself to warm
- * the module up front. Pass `input` (bytes, a URL, a `Response`, …) to load from
- * a custom source; omit it to use the bundled/default binary.
- */
-export function initBarcode(input?: InitInput): Promise<void> {
-  if (initialised) {
-    return Promise.resolve();
-  }
-  if (!initPromise) {
-    const source: InitInput | undefined =
-      input ?? (wasmUrl.startsWith('data:') ? decodeBase64(wasmUrl.slice(wasmUrl.indexOf(',') + 1)) : wasmUrl);
-    initPromise = wasmInit(source === undefined ? undefined : { module_or_path: source })
-      .then(() => {
-        initialised = true;
-      })
-      .catch((error: unknown) => {
-        // Allow a later retry rather than caching the rejection forever.
-        initPromise = undefined;
-        throw error;
-      });
-  }
-  return initPromise;
-}
-
-/** Guard the synchronous entry point with a clear error when uninitialised. */
-function assertInitialised(): void {
-  if (!initialised) {
-    throw new Error(
-      'The barcode WebAssembly module is not initialised. Call `await initBarcode()` (or ' +
-        '`initBarcodeSync(bytes)`) before the synchronous `encodeBarcode`, or use `encodeBarcodeAsync`.',
-    );
-  }
-}
-
 /** Turn the wasm module-bit buffer into a {@link Barcode}, or throw when invalid. */
 function toBarcode(symbology: BarcodeSymbology, modules: Uint8Array | undefined): Barcode {
   if (modules === undefined || modules.length === 0) {
@@ -180,8 +76,6 @@ function toBarcode(symbology: BarcodeSymbology, modules: Uint8Array | undefined)
  *   characters, wrong length, failing check digit, …).
  */
 export function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode {
-  ensureSyncInit();
-  assertInitialised();
   return toBarcode(symbology, wasmEncode(symbology, data));
 }
 
@@ -191,7 +85,6 @@ export function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcod
  *
  * @throws {RangeError} if the payload is invalid for the symbology.
  */
-export async function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode> {
-  await initBarcode();
-  return toBarcode(symbology, wasmEncode(symbology, data));
+export function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode> {
+  return Promise.resolve(toBarcode(symbology, wasmEncode(symbology, data)));
 }

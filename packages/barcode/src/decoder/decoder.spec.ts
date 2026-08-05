@@ -51,7 +51,7 @@ describe('decodeBarcode', () => {
 
   it('returns null for an invalid or unknown module run', () => {
     expect(decodeBarcode('code128', [1, 0, 1, 1, 0])).toBeNull();
-    expect(decodeBarcode('ean13', Array.from({ length: 40 }).fill(1))).toBeNull();
+    expect(decodeBarcode('ean13', new Uint8Array(40).fill(1))).toBeNull();
   });
 
   it('decodes asynchronously to the same result', async () => {

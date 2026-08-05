@@ -1,6 +1,7 @@
 # @mission-platform/barcode
 
-A dependency-free **1D (linear) barcode encoder and decoder** written in Rust and compiled to **WebAssembly**, exposed through a small, fully typed ES module wrapper and a write-once `BaseBarcode` UI component.
+A dependency-free **1D (linear) barcode encoder and decoder** written in Rust and compiled to **WebAssembly**, exposed
+through a small, fully typed ES module wrapper and a write-once `BaseBarcode` UI component.
 
 ## Overview
 
@@ -8,12 +9,13 @@ A dependency-free **1D (linear) barcode encoder and decoder** written in Rust an
 
 - **Encoder**: Renders symbology + payload into a flat run of module bits (`1` = bar, `0` = space).
 - **Decoder**: Reads a clean module run of any supported symbology back into its payload.
-- **UI Component (`BaseBarcode`)**: Write-once component compiled for Vue 3 (`@mission-platform/barcode/vue`) and React (`@mission-platform/barcode/react`).
+- **UI Component (`BaseBarcode`)**: Write-once component compiled for Vue 3 (`@mission-platform/barcode/vue`) and React
+  (`@mission-platform/barcode/react`).
 
 ## Supported Symbologies
 
 | Symbology    | Notes                                                                  |
-| ------------ | ---------------------------------------------------------------------- |
+|--------------|------------------------------------------------------------------------|
 | `code128`    | High density. Code B for printable ASCII; Code C fast path for digits. |
 | `gs1-128`    | Code 128 with leading FNC1 for GS1 Application Identifiers.            |
 | `code39`     | Alphanumeric, self-checking; auto-framed with `*` start/stop.          |

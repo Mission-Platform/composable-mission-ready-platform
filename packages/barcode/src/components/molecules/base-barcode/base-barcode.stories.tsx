@@ -1,23 +1,26 @@
-import { Barcode } from '@mission-platform/barcode/vue';
+import { Barcode } from '@mission-platform/barcode';
 
-import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
- * `Barcode` is the Vue 3 build of the write-once `BaseBarcode` in this package.
+ * `Barcode` is the write-once `BaseBarcode` in `@mission-platform/barcode`.
  * The component is authored **once** in the framework-neutral JSX dialect
- * (`@mission-platform/forge`) and compiled straight to a Vue component at build
- * time by `@mission-platform/vite-plugin-forge`. The very same source also ships
- * as a React component via the package's `./react` subpath.
+ * (`@mission-platform/forge`) and compiled at build time by
+ * `@mission-platform/vite-plugin-forge` to every supported framework.
+ *
+ * This is a single, framework-agnostic story: the bare
+ * `@mission-platform/barcode` import auto-resolves to the framework selected
+ * by the `STORYBOOK_FRAMEWORK` env var.
  */
 const meta = {
-  title: 'Components/Data Display/BaseBarcode',
+  title: 'Molecules/Data Display/BaseBarcode',
   component: Barcode,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          'Cross-framework `Barcode` — authored once in the neutral JSX dialect and shipped to both Vue 3 (this story, via `@mission-platform/barcode/vue`) and React (`@mission-platform/barcode/react`). The payload is encoded entirely on the client by the WebAssembly `@mission-platform/barcode` encoder and drawn as a crisp SVG. The original `computed` render becomes the neutral `useMemo`, and the `error` emit becomes the `onError` callback prop. Opt into a save/copy toolbar via `showActions` (or the individual `show*Button` props). Styling comes from the co-located `base-barcode.module.scss`.',
+          'Cross-framework `Barcode` — authored once in the neutral JSX dialect and shipped to all supported frameworks. The payload is encoded entirely on the client by the WebAssembly `@mission-platform/barcode` encoder and drawn as a crisp SVG. The original `computed` render becomes the neutral `useMemo`, and the `error` emit becomes the `onError` callback prop. Opt into a save/copy toolbar via `showActions` (or the individual `show*Button` props). Styling comes from the co-located `base-barcode.module.scss`.',
       },
     },
   },

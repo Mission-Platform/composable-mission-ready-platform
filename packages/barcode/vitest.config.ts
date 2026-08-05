@@ -6,7 +6,6 @@ export default defineVitestConfig({
   coverageInclude: ['src/**/*.ts', 'src/**/*.tsx'],
   coverageExclude: [
     'src/**/*.spec.ts',
-    'src/generated/**',
     'src/test-setup.ts',
     'src/test-support/**',
     'src/**/*.stories.*',
@@ -24,12 +23,12 @@ export default defineVitestConfig({
         // The self-import the component uses for the encoder must resolve to the
         // same source module the setup file initialises (so the wasm singleton is
         // shared), not the built `dist/index.js`.
-        { find: /^@mission-platform\/barcode$/, replacement: resolve(__dirname, 'src/index.ts') },
+        { find: /^@mission-platform\/barcode$/, replacement: resolve(import.meta.dirname, 'src/index.ts') },
         // Load only the neutral primitives the component needs, not the whole
         // `@mission-platform/components` barrel (see the shim's own note).
         {
           find: /^@mission-platform\/components$/,
-          replacement: resolve(__dirname, 'src/test-support/neutral-components.ts'),
+          replacement: resolve(import.meta.dirname, 'src/test-support/neutral-components.ts'),
         },
       ],
     },
