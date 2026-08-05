@@ -1,0 +1,32 @@
+# @mission-platform/three
+
+Framework-neutral Three.js integration for Mission Platform.
+
+## Components
+
+### BaseThreeCanvas
+`BaseThreeCanvas(properties: Readonly<BaseThreeCanvasProperties>): MpElement`
+Renders a `<canvas>` and manages a Three.js context.
+Props:
+- `onReady?: (ctx: ThreeContext) => void | (() => void)`
+
+## Hooks
+
+### useThree
+`useThree(canvasRef: MpRef<HTMLCanvasElement | null>, onReady?: (ctx: ThreeContext) => void | (() => void)): void`
+Manages a Three.js context bound to a canvas ref.
+
+## Types
+
+### ThreeContext
+```typescript
+interface ThreeContext {
+  renderer: THREE.WebGLRenderer;
+  scene: THREE.Scene;
+  camera: THREE.PerspectiveCamera;
+}
+```
+
+## Implementation Details
+- SSR-safe.
+- Automatic cleanup of renderer and animation frames.
