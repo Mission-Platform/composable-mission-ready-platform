@@ -2,13 +2,15 @@
  * Discovery helpers shared by the two-stage compiler.
  *
  * The neutral components are authored in a per-component folder
- * (`src/components/<name>/<name>.tsx`) and re-exported from a single barrel
- * (`src/components/index.ts`). Both the Stage-1 code generator and the
- * declaration synthesiser need to know, for each component: its neutral export
- * name (`BaseBadge`), the public name it ships under (`Badge`), the folder/file
- * base name (`base-badge`), and the exported props interface (`BadgeProperties`)
- * — all of which are derived here by parsing the barrel's `export { … } from
- * './…'` re-exports.
+ * (`src/components/<name>/<name>.tsx`, or nested under an atomic-design level
+ * such as `src/components/atoms/<name>/<name>.tsx`) and re-exported from a
+ * single barrel (`src/components/index.ts`). Both the Stage-1 code generator and
+ * the declaration synthesiser need to know, for each component: its neutral
+ * export name (`BaseBadge`), the public name it ships under (`Badge`), the
+ * folder/file base name (`base-badge`, always flat for generated output), the
+ * source directory relative to the barrel (`atoms/base-badge` when nested), and
+ * the exported props interface (`BadgeProperties`) — all of which are derived
+ * here by parsing the barrel's `export { … } from './…'` re-exports.
  */
 
 /** A neutral component discovered in the barrel, plus its derived public shape. */
@@ -21,8 +23,19 @@ export interface DiscoveredComponent {
   propertiesType: string | undefined;
   /** Every type re-exported alongside the component, e.g. `['BadgeVariant', 'BadgeProperties']`. */
   typeExports: string[];
-  /** The folder / file base name the component is authored in, e.g. `base-badge`. */
+  /**
+   * The folder / file base name the component is authored in, e.g. `base-badge`.
+   * Always the **basename** — used for the flat generated output (`dist/<fw>/base-badge.js`)
+   * and entry re-exports (`./base-badge`), regardless of source nesting.
+   */
   folder: string;
+  /**
+   * The re-export specifier relative to the barrel, stripped of a leading `./`
+   * and any trailing `/index`, preserving nested folders — e.g. `./base-badge`
+   * → `base-badge`, `./atoms/base-badge` → `atoms/base-badge`. The Stage-1
+   * generator joins this under `componentsDir` to locate the source `.tsx`.
+   */
+  sourceDir: string;
 }
 
 /** A single `export { … } from '…'` re-export parsed from the barrel. */
@@ -77,6 +90,20 @@ function moduleRelativePath(specifier: string): string {
     segments.pop();
   }
   return segments.join('/') || (segments.at(-1) ?? specifier);
+}
+
+/**
+ * Collapse a trailing duplicated path segment, so a file-style component
+ * re-export folds onto its containing folder — e.g. `organisms/three-canvas/
+ * three-canvas` → `organisms/three-canvas` (the barrel points at the file, not
+ * the folder's `index`). A folder-style path (`atoms/base-badge`) is unchanged.
+ */
+function stripTrailingDuplicate(relativePath: string): string {
+  const segments = relativePath.split('/');
+  if (segments.length >= 2 && segments.at(-1) === segments.at(-2)) {
+    segments.pop();
+  }
+  return segments.join('/');
 }
 
 /**
@@ -160,6 +187,12 @@ export function discoverComponents(barrelSource: string, stripPrefix = 'Base'): 
   const components: DiscoveredComponent[] = [];
   for (const reExport of parseReExports(barrelSource)) {
     const folder = moduleBaseName(reExport.from);
+    // The component's source **folder** relative to the barrel. A folder-style
+    // re-export (`./atoms/base-badge`) yields the folder directly; a file-style
+    // re-export (`./organisms/three-canvas/three-canvas`, pointing at the file
+    // rather than the folder's `index`) ends with the basename twice, so drop
+    // the trailing duplicate — the generator appends `<folder>.tsx` itself.
+    const sourceDir = stripTrailingDuplicate(moduleRelativePath(reExport.from));
     for (const neutralName of reExport.values) {
       const publicName = neutralName.startsWith(stripPrefix) ? neutralName.slice(stripPrefix.length) : neutralName;
       const candidate = `${publicName}Properties`;
@@ -169,6 +202,7 @@ export function discoverComponents(barrelSource: string, stripPrefix = 'Base'): 
         propertiesType: reExport.types.has(candidate) ? candidate : undefined,
         typeExports: [...reExport.types],
         folder,
+        sourceDir,
       });
     }
   }

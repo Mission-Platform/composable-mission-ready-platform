@@ -329,6 +329,9 @@ export function emitVueModule(
     if (template.usesComputed) {
       analysis.vueImports.add('computed');
     }
+    if (template.usesWatchEffect) {
+      analysis.vueImports.add('watchEffect');
+    }
     // A `useRef` bound to an element as a `ref="name"` in the markup becomes a
     // string-keyed `useTemplateRef<Element>('name')` template ref.
     const setupLines = applyTemplateRefs(

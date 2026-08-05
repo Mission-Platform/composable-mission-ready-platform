@@ -1,18 +1,21 @@
 /**
- * Component-function → `LitElement` class synthesis for the Web-Components target.
+ * Component-function → native `HTMLElement` class synthesis for the
+ * Web-Components target.
  *
- * A neutral component is a function of its props returning JSX. Lit models a
- * component as a class, so this pass (all AST-driven) lifts the function into a
- * `LitElement` subclass:
+ * A neutral component is a function of its props returning JSX. A custom element
+ * models a component as a class, so this pass (all AST-driven) lifts the function
+ * into a `ForgeElement` subclass (the native, Lit-free base from
+ * `@mission-platform/forge/web-components`):
  * - every `properties.<name>` read becomes a reactive **property** (`this.name`),
  * - every `useState` binding becomes a reactive **state** field, its setter an
  *   assignment (`setX(v)` → `this.x = v`),
  * - the remaining body statements become the head of `render()`, and
- * - the returned JSX becomes a lit-html `html\`…\`` template (see `./template`).
+ * - the returned JSX becomes a tagged `html\`…\`` template (see `./template`).
  */
 import ts from 'typescript';
 
 import { findComponentFunction } from '../../compiler/ast.js';
+import { hasMpStaticMarker } from '../../compiler/optimize.js';
 
 import { isNameNotRead, jsxToLitTemplate, kebabCase, printWithJsxConverted, type TemplateContext } from './template.js';
 
@@ -92,6 +95,18 @@ function isHookDeclaration(statement: ts.Statement): boolean {
   );
 }
 
+/** Whether a statement is a pure no-op (`void x;`, empty) that never affects render. */
+function isNoOpStatement(statement: ts.Statement): boolean {
+  if (ts.isEmptyStatement(statement)) {
+    return true;
+  }
+  if (!ts.isExpressionStatement(statement)) {
+    return false;
+  }
+  // Current TypeScript models `void x` as `VoidExpression`.
+  return ts.isVoidExpression(statement.expression);
+}
+
 /** Synthesise the `LitElement` class + registration source for a neutral component. */
 export function synthesiseElementClass(
   sourceFile: ts.SourceFile,
@@ -103,7 +118,7 @@ export function synthesiseElementClass(
     // No recognisable component function — emit an empty element so the module stays valid.
     const tag = kebabCase(componentName);
     return [
-      `export class ${componentName}Element extends LitElement {`,
+      `export class ${componentName}Element extends ForgeElement {`,
       '  render() {',
       '    return html`<slot></slot>`;',
       '  }',
@@ -175,6 +190,10 @@ export function synthesiseElementClass(
   const headStatements = statements.filter(
     (statement) => !isHookDeclaration(statement) && !ts.isReturnStatement(statement),
   );
+  // Pure no-ops (`void properties;`, empty statements) do not force a dynamic
+  // render path — ignore them when deciding whether a static root can be
+  // hoisted to a module-level lit template.
+  const meaningfulHead = headStatements.filter((statement) => !isNoOpStatement(statement));
   const returnStatement = statements.find((statement): statement is ts.ReturnStatement =>
     ts.isReturnStatement(statement),
   );
@@ -192,28 +211,50 @@ export function synthesiseElementClass(
     .join('\n');
 
   let template = '<slot></slot>';
+  let staticRoot = false;
   if (returnStatement?.expression !== undefined) {
     const expression = ts.isParenthesizedExpression(returnStatement.expression)
       ? returnStatement.expression.expression
       : returnStatement.expression;
     if (ts.isJsxElement(expression) || ts.isJsxSelfClosingElement(expression) || ts.isJsxFragment(expression)) {
       template = jsxToLitTemplate(expression, templateContext);
+      // Stage-2 quality: a fully-static return tree (Stage-1 `__mpStatic` marker
+      // on the root) is cloned once as a module-level lit template rather than
+      // re-built on every `render()` call.
+      staticRoot =
+        (ts.isJsxElement(expression) || ts.isJsxSelfClosingElement(expression)) && hasMpStaticMarker(expression);
     }
   }
 
   const tag = kebabCase(componentName);
-  const lines: string[] = [`export class ${componentName}Element extends LitElement {`];
+  const preamble: string[] = [];
+  const staticTplName = '__mpStaticTpl_0';
+  if (staticRoot && meaningfulHead.length === 0) {
+    preamble.push(`const ${staticTplName} = html\`${template}\`;`);
+  }
+
+  const lines: string[] = [`export class ${componentName}Element extends ForgeElement {`];
 
   // Reactive property + state declarations.
+  // A `useState` binding whose getter shares a name with a reactive property
+  // (a React idiom: local state seeded from a same-named prop) must not be
+  // declared twice on the element class — a class cannot re-declare a field, and
+  // the duplicate `static properties` key / field declaration is a hard parse
+  // error. Emit such names once, as the reactive **property** (the external
+  // input); the setter still writes to `this.<name>` and bare reads still resolve
+  // to it, so behaviour is preserved.
   const staticProps: string[] = [];
   for (const name of propertyNames) {
     staticProps.push(`    ${name}: {},`);
   }
   for (const field of stateFields) {
+    if (propertyNames.has(field.getter)) {
+      continue;
+    }
     staticProps.push(`    ${field.getter}: { state: true },`);
   }
   if (staticProps.length > 0) {
-    lines.push('  static properties = {');
+    lines.push('  static readonly properties = {');
     lines.push(...staticProps);
     lines.push('  };');
   }
@@ -221,6 +262,10 @@ export function synthesiseElementClass(
     lines.push(`  ${name}: any;`);
   }
   for (const field of stateFields) {
+    // Skip a state field that collides with a property (declared above).
+    if (propertyNames.has(field.getter)) {
+      continue;
+    }
     const init =
       field.initializer !== undefined
         ? printer.printNode(ts.EmitHint.Expression, field.initializer, sourceFile)
@@ -233,12 +278,16 @@ export function synthesiseElementClass(
   if (renderHead.length > 0) {
     lines.push(renderHead);
   }
-  lines.push(`    return html\`${template}\`;`);
+  if (staticRoot && meaningfulHead.length === 0) {
+    lines.push(`    return ${staticTplName};`);
+  } else {
+    lines.push(`    return html\`${template}\`;`);
+  }
   lines.push('  }');
   lines.push('}');
   lines.push(`if (!customElements.get('${tag}')) {`);
   lines.push(`  customElements.define('${tag}', ${componentName}Element);`);
   lines.push('}');
 
-  return lines.join('\n');
+  return [...preamble, ...lines].join('\n');
 }

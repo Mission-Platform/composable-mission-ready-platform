@@ -23,6 +23,8 @@
  */
 import ts from 'typescript';
 
+import { isCompileTimeConstant } from '../../compiler/optimize.js';
+
 /** The SolidJS primitives referenced by the rewrites, so the import builder can include them. */
 export interface SolidPrimitiveUsage {
   createSignal: boolean;
@@ -46,7 +48,13 @@ function collectGetterNames(sourceFile: ts.SourceFile): Set<string> {
             getters.add(first.name.text);
           }
         }
-        if (callee.text === 'useMemo' && ts.isIdentifier(node.name)) {
+        // Constant memos fold to plain values (Stage-2) — exclude them so reads
+        // are not rewritten to getter calls.
+        if (
+          callee.text === 'useMemo' &&
+          ts.isIdentifier(node.name) &&
+          constantMemoFactoryBody(node.initializer.arguments[0]) === undefined
+        ) {
           getters.add(node.name.text);
         }
       }
@@ -55,6 +63,31 @@ function collectGetterNames(sourceFile: ts.SourceFile): Set<string> {
   };
   walk(sourceFile);
   return getters;
+}
+
+/**
+ * If a `useMemo` factory is (or returns) a compile-time constant, yield that
+ * constant expression so the emitter can skip `createMemo`.
+ */
+function constantMemoFactoryBody(factory: ts.Expression | undefined): ts.Expression | undefined {
+  if (factory === undefined) {
+    return undefined;
+  }
+  if (isCompileTimeConstant(factory)) {
+    return factory;
+  }
+  if (!(ts.isArrowFunction(factory) || ts.isFunctionExpression(factory))) {
+    return undefined;
+  }
+  const body = factory.body;
+  if (ts.isBlock(body)) {
+    const statements = body.statements.filter((statement) => !ts.isEmptyStatement(statement));
+    if (statements.length !== 1 || !ts.isReturnStatement(statements[0]) || statements[0].expression === undefined) {
+      return undefined;
+    }
+    return isCompileTimeConstant(statements[0].expression) ? statements[0].expression : undefined;
+  }
+  return isCompileTimeConstant(body) ? body : undefined;
 }
 
 /** Whether an identifier reference should be left alone rather than turned into a getter call. */
@@ -166,6 +199,14 @@ export function rewriteHookCalls(
         );
       }
       if (name === 'useMemo') {
+        // Stage-2 quality: a constant memo factory needs no reactive `createMemo`
+        // — fold to the bare constant (and drop it from the getter set so reads
+        // are not rewritten to calls). The parent VariableDeclaration path below
+        // handles the binding when we return a non-call expression here.
+        const constantBody = constantMemoFactoryBody(node.arguments[0]);
+        if (constantBody !== undefined) {
+          return ts.visitNode(constantBody, visit) as ts.Expression;
+        }
         usage.createMemo = true;
         const fn = ts.visitNode(node.arguments[0], visit) as ts.Expression;
         return factory.updateCallExpression(node, factory.createIdentifier('createMemo'), node.typeArguments, [fn]);

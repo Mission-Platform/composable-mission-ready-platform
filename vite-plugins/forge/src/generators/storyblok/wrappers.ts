@@ -179,16 +179,242 @@ function emitReactBlokWrapper(
   return lines.join('\n');
 }
 
+/** Render a SolidJS blok wrapper module for an analysed component. */
+function emitSolidBlokWrapper(
+  analyzed: AnalyzedStoryblokComponent,
+  publicName: string,
+  componentsImport: string,
+): string {
+  const slots = analyzed.fields.filter((entry) => entry.isSlot);
+  // Solid props are reactive — read `properties.blok.<field>` at the use site
+  // (never destructure), mirroring the React binding otherwise.
+  const propertyBindings = analyzed.fields
+    .filter((entry) => !entry.isSlot)
+    .map((entry) => `      ${entry.prop}={properties.blok.${entry.prop}}`);
+
+  const defaultSlot = slots.find((entry) => entry.slotName === 'default');
+  const namedSlots = slots.filter((entry) => entry.slotName !== 'default');
+  const namedSlotBindings = namedSlots.map((slot) => `      ${slot.prop}={renderBloks(properties.blok.${slot.prop})}`);
+
+  const openingProperties = [`      {...storyblokEditable(properties.blok)}`, ...propertyBindings, ...namedSlotBindings];
+
+  const body =
+    defaultSlot === undefined
+      ? [`    <${publicName}`, ...openingProperties, `    />`]
+      : [
+          `    <${publicName}`,
+          ...openingProperties,
+          `    >`,
+          `      {renderBloks(properties.blok.${defaultSlot.prop})}`,
+          `    </${publicName}>`,
+        ];
+
+  const lines = [
+    `import { For } from 'solid-js';`,
+    `import { StoryblokComponent, storyblokEditable, type SbBlokData } from '@storyblok/solid';`,
+    ``,
+    `import { ${publicName} } from '${componentsImport}';`,
+    ``,
+    `export interface ${publicName}BlokProperties {`,
+    `  blok: ${emitBlokDataType(analyzed)};`,
+    `}`,
+    ``,
+  ];
+
+  if (slots.length > 0) {
+    // Solid's `<For>` keys the nested bloks by identity for stable reconciliation.
+    lines.push(
+      `const renderBloks = (items: unknown) =>`,
+      `  Array.isArray(items) ? (`,
+      `    <For each={items as SbBlokData[]}>{(nested) => <StoryblokComponent blok={nested} />}</For>`,
+      `  ) : null;`,
+      ``,
+    );
+  }
+
+  lines.push(
+    `export function ${publicName}Blok(properties: ${publicName}BlokProperties) {`,
+    `  return (`,
+    ...body,
+    `  );`,
+    `}`,
+    ``,
+  );
+
+  return lines.join('\n');
+}
+
+/** Render a `{#each}` loop of `<StoryblokComponent>` for a Svelte wrapper's `bloks` field. */
+function svelteBlokEach(field: string, indent: string): string[] {
+  return [
+    `${indent}{#each (blok.${field} ?? []) as nested (nested._uid)}`,
+    `${indent}  <StoryblokComponent blok={nested} />`,
+    `${indent}{/each}`,
+  ];
+}
+
+/** Render a Svelte 5 blok wrapper SFC for an analysed component. */
+function emitSvelteBlokWrapper(
+  analyzed: AnalyzedStoryblokComponent,
+  publicName: string,
+  componentsImport: string,
+): string {
+  const propertyBindings = analyzed.fields
+    .filter((entry) => !entry.isSlot)
+    .map((entry) => `      ${entry.prop}={blok.${entry.prop}}`);
+
+  const slots = analyzed.fields.filter((entry) => entry.isSlot);
+  const defaultSlot = slots.find((entry) => entry.slotName === 'default');
+  const namedSlots = slots.filter((entry) => entry.slotName !== 'default');
+
+  const children: string[] = [];
+  // Named slots are passed as Svelte 5 snippet props; the default slot renders
+  // its bloks as the component's direct children.
+  for (const slot of namedSlots) {
+    children.push(
+      `      {#snippet ${slot.slotName}()}`,
+      ...svelteBlokEach(slot.prop, '        '),
+      `      {/snippet}`,
+    );
+  }
+  if (defaultSlot !== undefined) {
+    children.push(...svelteBlokEach(defaultSlot.prop, '      '));
+  }
+
+  const componentTag =
+    children.length === 0
+      ? [`    <${publicName}`, ...propertyBindings, `    />`]
+      : [`    <${publicName}`, ...propertyBindings, `    >`, ...children, `    </${publicName}>`];
+
+  return [
+    `<script lang="ts">`,
+    `  import { StoryblokComponent, storyblokEditable, type SbBlokData } from '@storyblok/svelte';`,
+    ``,
+    `  import { ${publicName} } from '${componentsImport}';`,
+    ``,
+    `  const { blok }: { blok: ${emitBlokDataType(analyzed)} } = $props();`,
+    `</script>`,
+    ``,
+    // `storyblokEditable` is a Svelte action; it attaches to an element, so the
+    // component is wrapped in a `display: contents` host that adds no layout box.
+    `<div use:storyblokEditable={blok} style="display: contents;">`,
+    ...componentTag,
+    `</div>`,
+    ``,
+  ].join('\n');
+}
+
+/** Render a native Web-Component blok wrapper module for an analysed component. */
+function emitWebComponentBlokWrapper(
+  analyzed: AnalyzedStoryblokComponent,
+  publicName: string,
+  componentsImport: string,
+): string {
+  const nonSlotFields = analyzed.fields.filter((entry) => !entry.isSlot);
+  const slots = analyzed.fields.filter((entry) => entry.isSlot);
+  const technicalName = analyzed.component.name;
+
+  const propertyAssignments = nonSlotFields.map(
+    (entry) => `    (element as Record<string, unknown>).${entry.prop} = blok.${entry.prop};`,
+  );
+
+  const slotAppends = slots.map((entry) => {
+    const slotAttribute = entry.slotName === 'default' ? '' : `, '${entry.slotName}'`;
+    return `    appendBloks(element, blok.${entry.prop}${slotAttribute});`;
+  });
+
+  return [
+    // Side-effect import registers every built custom element (`<base-…>`).
+    `import '${componentsImport}';`,
+    `import { storyblokEditable, type SbBlokData } from '@storyblok/js';`,
+    ``,
+    `import { ${publicName} } from '${componentsImport}';`,
+    ``,
+    `export interface ${publicName}BlokProperties {`,
+    `  blok: ${emitBlokDataType(analyzed)};`,
+    `}`,
+    ``,
+    // Nested bloks render through their own `<technical>-blok` wrapper element,
+    // registered by this same entry; a named slot sets the `slot` attribute.
+    `function appendBloks(host: HTMLElement, items: unknown, slot?: string): void {`,
+    `  if (!Array.isArray(items)) {`,
+    `    return;`,
+    `  }`,
+    `  for (const nested of items as SbBlokData[]) {`,
+    '    const child = document.createElement(`${nested.component}-blok`) as HTMLElement & { blok?: SbBlokData };',
+    `    child.blok = nested;`,
+    `    if (slot !== undefined) {`,
+    `      child.setAttribute('slot', slot);`,
+    `    }`,
+    `    host.append(child);`,
+    `  }`,
+    `}`,
+    ``,
+    // The wrapper is itself a custom element: assign `.blok`, and it renders the
+    // built component with fields as properties + Storyblok's editable attributes.
+    `export class ${publicName}Blok extends HTMLElement {`,
+    `  #blok?: ${emitBlokDataType(analyzed)};`,
+    ``,
+    `  set blok(value: ${emitBlokDataType(analyzed)}) {`,
+    `    this.#blok = value;`,
+    `    this.render();`,
+    `  }`,
+    ``,
+    `  get blok(): ${emitBlokDataType(analyzed)} | undefined {`,
+    `    return this.#blok;`,
+    `  }`,
+    ``,
+    `  connectedCallback(): void {`,
+    `    this.render();`,
+    `  }`,
+    ``,
+    `  private render(): void {`,
+    `    const blok = this.#blok;`,
+    `    if (blok === undefined) {`,
+    `      return;`,
+    `    }`,
+    `    const element = new ${publicName}();`,
+    ...propertyAssignments,
+    `    for (const [name, value] of Object.entries(storyblokEditable(blok))) {`,
+    `      element.setAttribute(name, String(value));`,
+    `    }`,
+    ...slotAppends,
+    `    this.replaceChildren(element);`,
+    `  }`,
+    `}`,
+    ``,
+    `if (customElements.get('${technicalName}-blok') === undefined) {`,
+    `  customElements.define('${technicalName}-blok', ${publicName}Blok);`,
+    `}`,
+    ``,
+  ].join('\n');
+}
+
 /**
- * Emit the framework blok wrapper source (a React `.tsx` module or a Vue `.vue`
- * SFC) that binds Storyblok's `blok` prop onto the built framework component.
+ * Emit the framework blok wrapper source that binds Storyblok's `blok` prop onto
+ * the built framework component: a React/Solid `.tsx` module, a Vue/Svelte SFC,
+ * or a native Web-Component (`.ts`) custom element.
  */
 export function emitStoryblokBlokWrapper(
   analyzed: AnalyzedStoryblokComponent,
   publicName: string,
   options: StoryblokBlokWrapperOptions,
 ): string {
-  return options.framework === 'react'
-    ? emitReactBlokWrapper(analyzed, publicName, options.componentsImport)
-    : emitVueBlokWrapper(analyzed, publicName, options.componentsImport);
+  switch (options.framework) {
+    case 'react': {
+      return emitReactBlokWrapper(analyzed, publicName, options.componentsImport);
+    }
+    case 'solid': {
+      return emitSolidBlokWrapper(analyzed, publicName, options.componentsImport);
+    }
+    case 'svelte': {
+      return emitSvelteBlokWrapper(analyzed, publicName, options.componentsImport);
+    }
+    case 'web-components': {
+      return emitWebComponentBlokWrapper(analyzed, publicName, options.componentsImport);
+    }
+    default: {
+      return emitVueBlokWrapper(analyzed, publicName, options.componentsImport);
+    }
+  }
 }

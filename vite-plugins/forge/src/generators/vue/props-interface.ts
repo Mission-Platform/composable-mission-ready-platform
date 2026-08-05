@@ -64,6 +64,46 @@ export function allNodeTypedPropertyNames(sourceFile: ts.SourceFile): Set<string
 }
 
 /**
+ * A `typeName → node-typed field names` index over every interface and type
+ * literal alias in `sourceFile`.
+ *
+ * Unlike {@link allNodeTypedPropertyNames} (a flat name set, receiver-agnostic),
+ * this keeps the owning type, so a member read can be classified **receiver
+ * type-aware**: `item.icon` where `item: WysiwygToolbarItem` and
+ * `WysiwygToolbarItem.icon: MpElement` is node-valued, whereas `node.label`
+ * where `node: TreeNode` and `TreeNode.label: string` is a plain field — even
+ * when some *other* type in the same file declares a node-typed `label`.
+ */
+export function nodeTypedFieldsByTypeName(sourceFile: ts.SourceFile): Map<string, Set<string>> {
+  const byType = new Map<string, Set<string>>();
+  const collect = (typeName: string, members: ts.NodeArray<ts.TypeElement>): void => {
+    const names = new Set<string>();
+    for (const member of members) {
+      if (
+        ts.isPropertySignature(member) &&
+        ts.isIdentifier(member.name) &&
+        member.type !== undefined &&
+        /\bMp(Child|Element|Node|RenderProperty)\b/.test(printNode(member.type, sourceFile))
+      ) {
+        names.add(member.name.text);
+      }
+    }
+    if (names.size > 0) {
+      byType.set(typeName, names);
+    }
+  };
+  for (const statement of sourceFile.statements) {
+    if (ts.isInterfaceDeclaration(statement)) {
+      collect(statement.name.text, statement.members);
+    }
+    if (ts.isTypeAliasDeclaration(statement) && ts.isTypeLiteralNode(statement.type)) {
+      collect(statement.name.text, statement.type.members);
+    }
+  }
+  return byType;
+}
+
+/**
  * Resolve the props-interface name referenced by a component's first parameter
  * type. A bare type reference (`FooProps`) yields its name directly; a
  * utility-type wrapper — currently `Readonly<FooProps>` — is unwrapped to the

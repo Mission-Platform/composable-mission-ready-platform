@@ -85,7 +85,9 @@ function rewriteLocalEffectImport(code: string, depth: number): string {
     return code;
   }
   const target = `${'../'.repeat(depth)}mp-effect`;
-  return code.replaceAll(`'${LOCAL_EFFECT_MODULE}'`, `'${target}'`).replaceAll(`"${LOCAL_EFFECT_MODULE}"`, `"${target}"`);
+  return code
+    .replaceAll(`'${LOCAL_EFFECT_MODULE}'`, `'${target}'`)
+    .replaceAll(`"${LOCAL_EFFECT_MODULE}"`, `"${target}"`);
 }
 
 /** Write a generated module to `outDir`, mirroring its nested `relativePath` and creating folders as needed. */

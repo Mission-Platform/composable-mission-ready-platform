@@ -23,6 +23,7 @@ export function reactJsxPlugin(): Plugin {
   return {
     name: '@mission-platform/vite-plugin-forge:react',
     enforce: 'pre',
+    // Vite path: configure Oxc JSX via Vite's `oxc` config namespace.
     config() {
       return {
         oxc: {
@@ -32,6 +33,20 @@ export function reactJsxPlugin(): Plugin {
           },
         },
       };
+    },
+    // Rolldown/tsdown path: Vite's `config()` hook is ignored, so also set the
+    // Rolldown `transform.jsx` input option when the bundler supports it.
+    options(inputOptions) {
+      const current =
+        inputOptions.transform && typeof inputOptions.transform === 'object' ? inputOptions.transform : {};
+      inputOptions.transform = {
+        ...current,
+        jsx: {
+          runtime: 'automatic',
+          importSource: 'react',
+        },
+      };
+      return inputOptions;
     },
   };
 }
@@ -44,9 +59,45 @@ export function reactJsxPlugin(): Plugin {
  * `stagePlugins` instead of calling {@link defineJsxLibraryConfig} — can wire
  * Svelte compilation the same way {@link reactJsxPlugin} lets it wire the
  * React JSX transform, without pulling in a new direct dependency.
+ *
+ * **Vite only** — under tsdown/Rolldown use {@link svelteTsdownPlugin} instead.
  */
 export function sveltePlugin(): Plugin[] {
   return svelte();
+}
+
+/**
+ * Rolldown/tsdown-compatible Svelte compiler plugin. Compiles `.svelte` SFCs via
+ * `svelte/compiler` in a plain `transform` hook — no Vite resolved-config APIs.
+ * Prefer this (or {@link stagePluginsForTsdown}) when building with tsdown.
+ */
+export function svelteTsdownPlugin(): Plugin {
+  return {
+    name: '@mission-platform/vite-plugin-forge:svelte-tsdown',
+    enforce: 'pre',
+    async transform(code, id) {
+      const filename = id.split('?')[0] ?? id;
+      if (!filename.endsWith('.svelte')) {
+        return null;
+      }
+
+      const svelteCompiler = createRequire(import.meta.url)('svelte/compiler') as {
+        compile: (
+          source: string,
+          options: { filename: string; css?: 'injected' | 'external' },
+        ) => { js: { code: string; map?: object }; warnings?: unknown[] };
+      };
+
+      const result = svelteCompiler.compile(code, {
+        filename,
+        css: 'injected',
+      });
+      return {
+        code: result.js.code,
+        map: result.js.map as never,
+      };
+    },
+  };
 }
 
 /**
@@ -59,9 +110,79 @@ export function sveltePlugin(): Plugin[] {
  * without pulling in a new direct dependency. **Required** for the `solid`
  * target: without it, Vite's default Oxc JSX transform compiles the Solid
  * sources against `react/jsx-runtime`, producing non-functional output.
+ *
+ * **Vite only** — under tsdown/Rolldown use {@link solidJsxTsdownPlugin} instead.
  */
 export function solidJsxPlugin(): Plugin[] {
   return [solidPlugin() as unknown as Plugin];
+}
+
+/**
+ * Rolldown/tsdown-compatible Solid JSX plugin. Delegates to `vite-plugin-solid`'s
+ * `transform` hook only (skipping Vite-only `config`/`configResolved` setup) and
+ * sets Rolldown `transform.jsx = 'preserve'` via the `options` hook so Oxc does
+ * not rewrite Solid JSX as React.
+ */
+export function solidJsxTsdownPlugin(): Plugin {
+  // `vite-plugin-solid` is typed against Vite's Plugin; under tsdown we only
+  // need its transform implementation. Cast through `unknown` to avoid
+  // fighting Rolldown vs Vite `TransformResult` / `this` incompatibilities.
+  const solid = solidPlugin() as unknown as {
+    transform?:
+      | ((this: unknown, code: string, id: string, options?: unknown) => unknown)
+      | { handler?: (this: unknown, code: string, id: string, options?: unknown) => unknown };
+  };
+
+  const transformHook =
+    typeof solid.transform === 'function'
+      ? solid.transform
+      : solid.transform && typeof solid.transform.handler === 'function'
+        ? solid.transform.handler
+        : undefined;
+
+  return {
+    name: '@mission-platform/vite-plugin-forge:solid-tsdown',
+    enforce: 'pre',
+    options(inputOptions) {
+      const current =
+        inputOptions.transform && typeof inputOptions.transform === 'object' ? inputOptions.transform : {};
+      inputOptions.transform = {
+        ...current,
+        jsx: 'preserve',
+      };
+      return inputOptions;
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Rolldown/Vite TransformResult diverge
+    async transform(this: unknown, code: string, id: string): Promise<any> {
+      if (!transformHook) {
+        return null;
+      }
+      return transformHook.call(this, code, id);
+    },
+  } as Plugin;
+}
+
+/**
+ * Stage-2 plugins for a forge framework build under **tsdown** (Rolldown).
+ * Prefer this over {@link reactJsxPlugin}/{@link solidJsxPlugin}/{@link sveltePlugin}
+ * when the bundler is not Vite — the Vite-only Svelte/Solid plugins crash because
+ * they require Vite's resolved config.
+ */
+export function stagePluginsForTsdown(framework: JsxFramework): Plugin[] {
+  switch (framework) {
+    case 'react': {
+      return [reactJsxPlugin()];
+    }
+    case 'solid': {
+      return [solidJsxTsdownPlugin()];
+    }
+    case 'svelte': {
+      return [svelteTsdownPlugin()];
+    }
+    default: {
+      return [];
+    }
+  }
 }
 
 export interface JsxLibraryConfigOptions {
@@ -247,7 +368,8 @@ export function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions)
             ? ['solid-js']
             : framework === 'svelte'
               ? ['svelte']
-              : [];
+              : // Web Components import the native runtime from the forge package.
+                ['@mission-platform/forge', '@mission-platform/forge/web-components'];
 
     return defineLibraryConfig({
       rootDir,
@@ -312,10 +434,28 @@ function storyblokConfigAssetsPlugin(rootDir: string, cacheDirectory: string): P
   };
 }
 
+/** Runtime + Storyblok binding externalised for each Storyblok wrapper build. */
+const STORYBLOK_EXTERNALS: Readonly<Record<JsxFramework, readonly string[]>> = {
+  react: ['react', 'react-dom', '@storyblok/react'],
+  vue: ['vue', '@storyblok/vue'],
+  solid: ['solid-js', '@storyblok/solid'],
+  svelte: ['svelte', '@storyblok/svelte'],
+  'web-components': ['@storyblok/js'],
+};
+
+/** Display-name suffix appended per target framework. */
+const STORYBLOK_NAME_SUFFIX: Readonly<Record<JsxFramework, string>> = {
+  react: 'React',
+  vue: 'Vue',
+  solid: 'Solid',
+  svelte: 'Svelte',
+  'web-components': 'WebComponents',
+};
+
 export interface JsxStoryblokLibraryConfigOptions {
   /** Absolute root directory of the package (e.g. `__dirname`). */
   rootDir: string;
-  /** Target framework (`'react' | 'vue'`). */
+  /** Target framework (any of the five forge targets). */
   framework: JsxFramework;
   /** Base UMD/global name (e.g. `'MissionPlatformJsxComponentsStoryblok'`). */
   name: string;
@@ -351,11 +491,19 @@ export function defineJsxStoryblokLibraryConfig(options: JsxStoryblokLibraryConf
     componentsImport: `${packageName}/${framework}`,
   });
 
-  const stagePlugins: Plugin[] = framework === 'react' ? [reactJsxPlugin()] : [vueJsx()];
+  const stagePlugins: Plugin[] =
+    framework === 'react'
+      ? [reactJsxPlugin()]
+      : framework === 'vue'
+        ? [vueJsx()]
+        : framework === 'solid'
+          ? [solidPlugin()]
+          : framework === 'svelte'
+            ? sveltePlugin()
+            : [];
 
-  const displayName = name.endsWith(framework === 'react' ? 'React' : 'Vue')
-    ? name
-    : `${name}${framework === 'react' ? 'React' : 'Vue'}`;
+  const suffix = STORYBLOK_NAME_SUFFIX[framework];
+  const displayName = name.endsWith(suffix) ? name : `${name}${suffix}`;
 
   return defineLibraryConfig({
     rootDir,
@@ -363,11 +511,7 @@ export function defineJsxStoryblokLibraryConfig(options: JsxStoryblokLibraryConf
     entry,
     preserveModules: true,
     preserveModulesRoot: path.join('node_modules/.cache', cacheName),
-    external: [
-      ...(framework === 'react' ? ['react', 'react-dom', '@storyblok/react'] : ['vue', '@storyblok/vue']),
-      packageName,
-      ...external,
-    ],
+    external: [...STORYBLOK_EXTERNALS[framework], packageName, ...external],
     overrides: mergeConfig(
       {
         build: {

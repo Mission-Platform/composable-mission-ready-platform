@@ -53,6 +53,8 @@ import {
   transformI18nextCalls,
   usesClassNamesArrayAttribute,
 } from '../../compiler/ast.js';
+import { hoistStaticJsx } from '../../compiler/hoist-static.js';
+import { MP_STATIC_ATTR, stripMpStaticAttributes } from '../../compiler/optimize.js';
 
 import { REACT_ALIASES } from './aliases.js';
 import { buildReactImports } from './imports.js';
@@ -304,6 +306,13 @@ export function emitReactModule(
         );
       }
 
+      // Drop the Stage-1 static marker here only when it appears on a tree the
+      // hoist pass will not see (defensive); the dedicated hoist pass strips it
+      // from hoisted constants. Skip aliasing so `__mpStatic` is never renamed.
+      if (ts.isJsxAttribute(node) && ts.isIdentifier(node.name) && node.name.text === MP_STATIC_ATTR) {
+        return node;
+      }
+
       // The neutral `className={…}` attribute already matches React's own
       // spelling, so only its *value* needs collapsing: the array form is
       // reduced to a `classNames(…)` string call (`reactClassNameValue`); any
@@ -399,17 +408,55 @@ export function emitReactModule(
 
   const importResult = ts.transform(rewritten, [importTransformer]);
   const imported = importResult.transformed[0];
+  // Stage C — hoist Stage-1 static-marked subtrees to module-level constants
+  // (created once, outside every render), then strip any residual markers.
+  const hoisted = stripResidualStaticMarkers(hoistStaticJsx(imported));
   const outputFile =
-    isInteractiveReactModule(imported) && !hasUseClientDirective(imported) && !hasUseServerDirective(imported)
-      ? ts.factory.updateSourceFile(imported, [
+    isInteractiveReactModule(hoisted) && !hasUseClientDirective(hoisted) && !hasUseServerDirective(hoisted)
+      ? ts.factory.updateSourceFile(hoisted, [
           ts.factory.createExpressionStatement(ts.factory.createStringLiteral('use client')),
-          ...imported.statements,
+          ...hoisted.statements,
         ])
-      : imported;
+      : hoisted;
   const output = printSourceFile(outputFile);
   importResult.dispose();
   bodyResult.dispose();
   return output;
+}
+
+/** Strip any `__mpStatic` markers that the hoist pass did not consume. */
+function stripResidualStaticMarkers(sourceFile: ts.SourceFile): ts.SourceFile {
+  const transformer: ts.TransformerFactory<ts.SourceFile> = (context) => {
+    const { factory } = context;
+    const visit = (node: ts.Node): ts.Node => {
+      if (ts.isJsxSelfClosingElement(node)) {
+        const attributes = stripMpStaticAttributes(factory, node.attributes);
+        const visited = ts.visitEachChild(
+          factory.updateJsxSelfClosingElement(node, node.tagName, node.typeArguments, attributes),
+          visit,
+          context,
+        );
+        return visited;
+      }
+      if (ts.isJsxElement(node)) {
+        const attributes = stripMpStaticAttributes(factory, node.openingElement.attributes);
+        const opening = factory.updateJsxOpeningElement(
+          node.openingElement,
+          node.openingElement.tagName,
+          node.openingElement.typeArguments,
+          attributes,
+        );
+        const replaced = factory.updateJsxElement(node, opening, node.children, node.closingElement);
+        return ts.visitEachChild(replaced, visit, context);
+      }
+      return ts.visitEachChild(node, visit, context);
+    };
+    return (file) => ts.visitNode(file, visit) as ts.SourceFile;
+  };
+  const result = ts.transform(sourceFile, [transformer]);
+  const next = result.transformed[0];
+  result.dispose();
+  return next;
 }
 
 const CLIENT_HOOKS = new Set([

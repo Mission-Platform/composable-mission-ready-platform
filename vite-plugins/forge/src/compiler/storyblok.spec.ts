@@ -266,6 +266,104 @@ describe('the React blok wrapper emitter handles named slots', () => {
   });
 });
 
+describe('the Solid blok wrapper emitter', () => {
+  const analyzed = analyzeStoryblokComponent(parseTsx('base-badge.tsx', BADGE), badgeNames);
+  const solid = emitStoryblokBlokWrapper(analyzed, 'Badge', {
+    framework: 'solid',
+    componentsImport: '@mission-platform/components/solid',
+  });
+
+  it('emits a Solid function component importing the built component and Storyblok helpers', () => {
+    expect(solid).toContain("import { Badge } from '@mission-platform/components/solid';");
+    expect(solid).toContain(
+      "import { StoryblokComponent, storyblokEditable, type SbBlokData } from '@storyblok/solid';",
+    );
+    expect(solid).toContain('export function BadgeBlok(properties: BadgeBlokProperties) {');
+  });
+
+  it('spreads editable attributes and reads reactive fields off `properties.blok`', () => {
+    expect(solid).toContain('{...storyblokEditable(properties.blok)}');
+    expect(solid).toContain('variant={properties.blok.variant}');
+    expect(solid).toContain('pill={properties.blok.pill}');
+  });
+
+  it('renders the default slot bloks through a `<For>` control-flow loop', () => {
+    expect(solid).toContain("import { For } from 'solid-js';");
+    expect(solid).toContain('<For each={items as SbBlokData[]}>{(nested) => <StoryblokComponent blok={nested} />}</For>');
+    expect(solid).toContain('{renderBloks(properties.blok.content)}');
+  });
+});
+
+describe('the Svelte blok wrapper emitter', () => {
+  const analyzed = analyzeStoryblokComponent(parseTsx('base-badge.tsx', BADGE), badgeNames);
+  const svelte = emitStoryblokBlokWrapper(analyzed, 'Badge', {
+    framework: 'svelte',
+    componentsImport: '@mission-platform/components/svelte',
+  });
+
+  it('emits a Svelte 5 SFC importing the built component and Storyblok helpers', () => {
+    expect(svelte).toContain('<script lang="ts">');
+    expect(svelte).toContain(
+      "import { StoryblokComponent, storyblokEditable, type SbBlokData } from '@storyblok/svelte';",
+    );
+    expect(svelte).toContain("import { Badge } from '@mission-platform/components/svelte';");
+    expect(svelte).toContain('const { blok }');
+    expect(svelte).toContain('= $props();');
+  });
+
+  it('applies the editable action on a `display: contents` host and binds each field', () => {
+    expect(svelte).toContain('<div use:storyblokEditable={blok} style="display: contents;">');
+    expect(svelte).toContain('variant={blok.variant}');
+    expect(svelte).toContain('pill={blok.pill}');
+  });
+
+  it('renders the default slot bloks via an `{#each}` block of `<StoryblokComponent>`', () => {
+    expect(svelte).toContain('{#each (blok.content ?? []) as nested (nested._uid)}');
+    expect(svelte).toContain('<StoryblokComponent blok={nested} />');
+  });
+});
+
+describe('the Svelte blok wrapper emitter handles named slots', () => {
+  const analyzed = analyzeStoryblokComponent(parseTsx('base-layout.tsx', LAYOUT), layoutNames);
+  const svelte = emitStoryblokBlokWrapper(analyzed, 'Layout', {
+    framework: 'svelte',
+    componentsImport: '@mission-platform/components/svelte',
+  });
+
+  it('routes a named-slot bloks field into a matching Svelte 5 `{#snippet}`', () => {
+    expect(svelte).toContain('{#snippet header()}');
+    expect(svelte).toContain('{#each (blok.header ?? []) as nested (nested._uid)}');
+  });
+});
+
+describe('the Web-Component blok wrapper emitter', () => {
+  const analyzed = analyzeStoryblokComponent(parseTsx('base-badge.tsx', BADGE), badgeNames);
+  const wc = emitStoryblokBlokWrapper(analyzed, 'Badge', {
+    framework: 'web-components',
+    componentsImport: '@mission-platform/components/web-components',
+  });
+
+  it('emits a native custom element registering the built element + Storyblok helper', () => {
+    expect(wc).toContain("import '@mission-platform/components/web-components';");
+    expect(wc).toContain("import { storyblokEditable, type SbBlokData } from '@storyblok/js';");
+    expect(wc).toContain("import { Badge } from '@mission-platform/components/web-components';");
+    expect(wc).toContain('export class BadgeBlok extends HTMLElement {');
+    expect(wc).toContain("customElements.define('badge-blok', BadgeBlok);");
+  });
+
+  it('constructs the built element and assigns each field as a property', () => {
+    expect(wc).toContain('const element = new Badge();');
+    expect(wc).toContain('(element as Record<string, unknown>).variant = blok.variant;');
+    expect(wc).toContain('(element as Record<string, unknown>).pill = blok.pill;');
+    expect(wc).toContain('storyblokEditable(blok)');
+  });
+
+  it('appends the default slot bloks through nested `<component>-blok` elements', () => {
+    expect(wc).toContain('appendBloks(element, blok.content);');
+    expect(wc).toContain('document.createElement(`${nested.component}-blok`)');
+  });
+});
+
 const REQUIRED = [
   "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
   '',

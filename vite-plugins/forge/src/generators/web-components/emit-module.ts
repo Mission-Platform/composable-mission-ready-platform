@@ -1,16 +1,18 @@
 /**
- * Web-Components (Lit) module emitter for the Stage-1 compiler.
+ * Native Web-Components module emitter for the Stage-1 compiler.
  *
- * Emits a plain `.ts` module (Lit uses `html\`…\`` tagged templates, so there is
- * no JSX for Stage 2 to transform). The neutral module's imports are rewritten:
+ * Emits a plain `.ts` module (the target uses `html\`…\`` tagged templates, so
+ * there is no JSX for Stage 2 to transform). The neutral module's imports are
+ * rewritten:
  * - the `@mission-platform/forge` value import is reduced to the runtime helpers
  *   that survive (`classNames`); its hooks/`h` are dropped (state/JSX are lifted
  *   into the class by `./element`),
  * - relative **sibling-component** imports become side-effect imports of the
  *   sibling's custom-element module (so the child tag is registered),
  *   while other relative imports (CSS modules, shared helpers) are flattened,
- * - a `import { LitElement, html, nothing } from 'lit'` header is prepended.
- * The component function itself is replaced by the synthesised `LitElement`
+ * - a `import { ForgeElement, html, nothing } from '@mission-platform/forge/web-components'`
+ *   header is prepended (the native, Lit-free runtime).
+ * The component function itself is replaced by the synthesised `ForgeElement`
  * subclass (`./element`), and the module's public type declarations are kept.
  */
 import ts from 'typescript';
@@ -28,7 +30,7 @@ import { containsJsx, printWithJsxConverted, type TemplateContext } from './temp
 
 /**
  * The neutral element/child type names. Their **function return-type**
- * annotations are relaxed to `unknown` (a helper now returns a lit-html
+ * annotations are relaxed to `unknown` (a helper now returns a runtime
  * `TemplateResult`), but every *other* reference (a props-interface member such
  * as `media?: MpChild`, or a render-body annotation such as
  * `const rows: MpChild[]`) is kept and resolved against the co-located
@@ -52,7 +54,7 @@ function hasDroppedElementReturnType(statement: ts.Statement): boolean {
  * Replace a module-level helper's `MpElement`/`MpChild` return-type annotation
  * with `unknown` — these neutral types have no Web-Components import (only
  * `MpProperties`/`MpRenderProperty` are redirected to the local types module),
- * and a helper that now returns a lit-html `TemplateResult` no longer matches
+ * and a helper that now returns a runtime `TemplateResult` no longer matches
  * them anyway.
  */
 function stripDroppedElementReturnType(): ts.TransformerFactory<ts.Node> {
@@ -90,7 +92,7 @@ function importBase(specifier: string): string {
   return segments.at(-1) ?? specifier;
 }
 
-/** Transform the whole module into the Web-Components (Lit) target source. */
+/** Transform the whole module into the native Web-Components target source. */
 export function emitWebComponentModule(
   rawSourceFile: ts.SourceFile,
   componentName: string = 'CustomElement',
@@ -99,7 +101,7 @@ export function emitWebComponentModule(
   const neutral = readNeutralImports(rawSourceFile);
   const keptRuntimeValues = neutral.values.filter((name) => NEUTRAL_RUNTIME_VALUES.has(name));
 
-  const header: string[] = [`import { LitElement, html, nothing } from 'lit';`];
+  const header: string[] = [`import { ForgeElement, html, nothing } from '@mission-platform/forge/web-components';`];
   const kept: string[] = [];
 
   for (const statement of rawSourceFile.statements) {

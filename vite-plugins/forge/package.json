@@ -18,7 +18,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc --project tsconfig.build.json",
+    "build": "tsdown",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -32,7 +32,6 @@
     "typescript": "catalog:typescript"
   },
   "peerDependencies": {
-    "lit": "^3.0.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
     "solid-js": "^1.9.0",
@@ -41,9 +40,6 @@
     "vue": "^3.5.0"
   },
   "peerDependenciesMeta": {
-    "lit": {
-      "optional": true
-    },
     "react": {
       "optional": true
     },
@@ -66,6 +62,7 @@
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@sveltejs/vite-plugin-svelte": "catalog:svelte",
@@ -75,13 +72,14 @@
     "@vitejs/plugin-vue-jsx": "catalog:vue",
     "@vitest/coverage-v8": "catalog:testing",
     "eslint": "catalog:eslint",
-    "lit": "catalog:webcomponents",
     "prettier": "catalog:prettier",
     "react": "catalog:react",
     "react-dom": "catalog:react",
     "solid-js": "catalog:solid",
     "svelte": "catalog:svelte",
     "svelte2tsx": "catalog:svelte",
+    "tsdown": "catalog:build",
+    "unplugin-vue": "catalog:build",
     "vite": "catalog:vite",
     "vite-plugin-solid": "catalog:solid",
     "vitest": "catalog:testing",

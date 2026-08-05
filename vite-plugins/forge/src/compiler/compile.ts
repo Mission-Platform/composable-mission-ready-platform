@@ -21,8 +21,21 @@ import { emitVueModule } from '../generators/vue/index.js';
 import { emitWebComponentHookModule, emitWebComponentModule } from '../generators/web-components/index.js';
 
 import { parseTsx, stripFrameworkDirective } from './ast.js';
+import { optimizeSourceFile, type OptimizeOptions } from './optimize.js';
+
+import type { SourceFile } from 'typescript';
 
 export { moduleTargetsFramework, readFrameworkDirective } from './ast.js';
+export {
+  constantBoolean,
+  hasMpStaticMarker,
+  isCompileTimeConstant,
+  MP_STATIC_ATTR,
+  optimizeSourceFile,
+  stripMpStaticAttributes,
+  stripMpStaticMarker,
+  type OptimizeOptions,
+} from './optimize.js';
 
 /** A framework the neutral components can be compiled to. */
 export type JsxFramework = 'react' | 'vue' | 'svelte' | 'solid' | 'web-components';
@@ -44,6 +57,12 @@ export interface CompileOptions {
    * component, preserving the original behaviour.
    */
   componentFolders?: ReadonlySet<string>;
+  /**
+   * Run the Stage-1 (framework-neutral) optimisation passes before emit.
+   * Defaults to `true`. Pass `false` to disable every pass, or an
+   * {@link OptimizeOptions} object to toggle individual ones.
+   */
+  optimize?: boolean | OptimizeOptions;
 }
 
 /** An auxiliary SFC emitted alongside a primary module (e.g. a recursive helper component). */
@@ -85,7 +104,8 @@ export interface CompiledModule {
  */
 export function compileComponentModule(source: string, options: CompileOptions): CompiledModule {
   const parsed = parseTsx(options.fileName ?? `${options.componentName}.tsx`, source);
-  const sourceFile = stripFrameworkDirective(parsed);
+  const stripped = stripFrameworkDirective(parsed);
+  const sourceFile = prepareSourceFile(stripped, options.optimize);
   if (options.framework === 'react') {
     return { code: emitReactModule(sourceFile, options.componentName), lang: 'tsx' };
   }
@@ -115,6 +135,12 @@ export interface CompileHookOptions {
   framework: JsxFramework;
   /** Source file name used for diagnostics. Defaults to `hook.tsx`. */
   fileName?: string;
+  /**
+   * Run the Stage-1 (framework-neutral) optimisation passes before emit.
+   * Defaults to `true`. Pass `false` to disable every pass, or an
+   * {@link OptimizeOptions} object to toggle individual ones.
+   */
+  optimize?: boolean | OptimizeOptions;
 }
 
 /**
@@ -124,7 +150,8 @@ export interface CompileHookOptions {
  */
 export function compileHookModule(source: string, options: CompileHookOptions): CompiledModule {
   const parsed = parseTsx(options.fileName ?? 'hook.tsx', source);
-  const sourceFile = stripFrameworkDirective(parsed);
+  const stripped = stripFrameworkDirective(parsed);
+  const sourceFile = prepareSourceFile(stripped, options.optimize);
   if (options.framework === 'vue') {
     return { code: emitVueHookModule(sourceFile), lang: 'ts' };
   }
@@ -138,6 +165,21 @@ export function compileHookModule(source: string, options: CompileHookOptions): 
     return { code: emitWebComponentHookModule(sourceFile), lang: 'ts' };
   }
   return { code: emitReactModule(sourceFile), lang: 'tsx' };
+}
+
+/**
+ * Apply Stage-1 optimisations unless the caller opted out. `optimize: false`
+ * disables every pass; an options object toggles individual ones.
+ */
+function prepareSourceFile(
+  sourceFile: SourceFile,
+  optimize: boolean | OptimizeOptions | undefined,
+): SourceFile {
+  if (optimize === false) {
+    return sourceFile;
+  }
+  const options: OptimizeOptions = typeof optimize === 'object' && optimize !== null ? optimize : {};
+  return optimizeSourceFile(sourceFile, options);
 }
 
 /** Compile neutral TSX component to Svelte 5. */

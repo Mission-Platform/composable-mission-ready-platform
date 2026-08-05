@@ -23,6 +23,7 @@
 import ts from 'typescript';
 
 import { printNode, type RewriteScope } from '../../compiler/ast.js';
+import { isCompileTimeConstant } from '../../compiler/optimize.js';
 
 import { emitEffect } from './effects.js';
 import { rewrite, singleDeclaration, type VueAnalysis } from './shared.js';
@@ -376,9 +377,19 @@ export function analyseBody(body: ts.Block, scope: RewriteScope, sourceFile: ts.
           continue;
         }
         if (callee.text === 'useMemo' && ts.isIdentifier(declaration.name)) {
-          const factory = callExpression.arguments[0];
+          const factoryArgument = callExpression.arguments[0];
+          // Stage-2 quality: a `useMemo` whose factory is a constant expression
+          // (or `() => <literal>`) needs no reactive `computed` — emit a plain
+          // const so callers read a stable value with zero tracking cost. Drop
+          // the name from `memoNames` so later rewrites do not append `.value`.
+          const constantBody = constantMemoFactoryBody(factoryArgument);
+          if (constantBody !== undefined) {
+            scope.memoNames.delete(declaration.name.text);
+            pushSetup(`const ${declaration.name.text} = ${rewrite(constantBody, scope, sourceFile)};`);
+            continue;
+          }
           analysis.vueImports.add('computed');
-          pushSetup(`const ${declaration.name.text} = computed(${rewrite(factory, scope, sourceFile)});`);
+          pushSetup(`const ${declaration.name.text} = computed(${rewrite(factoryArgument, scope, sourceFile)});`);
           continue;
         }
         if (callee.text === 'useCallback' && ts.isIdentifier(declaration.name)) {
@@ -463,4 +474,32 @@ export function analyseBody(body: ts.Block, scope: RewriteScope, sourceFile: ts.
   }
 
   return analysis;
+}
+
+/**
+ * If a `useMemo` factory is (or returns) a compile-time constant, yield that
+ * constant expression so the emitter can skip `computed`. Handles:
+ * - a bare constant expression (unusual but legal),
+ * - `() => <literal>`,
+ * - `() => { return <literal>; }`.
+ */
+function constantMemoFactoryBody(factory: ts.Expression | undefined): ts.Expression | undefined {
+  if (factory === undefined) {
+    return undefined;
+  }
+  if (isCompileTimeConstant(factory)) {
+    return factory;
+  }
+  if (!(ts.isArrowFunction(factory) || ts.isFunctionExpression(factory))) {
+    return undefined;
+  }
+  const body = factory.body;
+  if (ts.isBlock(body)) {
+    const statements = body.statements.filter((statement) => !ts.isEmptyStatement(statement));
+    if (statements.length !== 1 || !ts.isReturnStatement(statements[0]) || statements[0].expression === undefined) {
+      return undefined;
+    }
+    return isCompileTimeConstant(statements[0].expression) ? statements[0].expression : undefined;
+  }
+  return isCompileTimeConstant(body) ? body : undefined;
 }

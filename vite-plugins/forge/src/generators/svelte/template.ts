@@ -29,7 +29,15 @@
  */
 import ts from 'typescript';
 
-import { isHasSlotCall, isSlotElement, readHasSlotName, readSlotName } from '../../compiler/ast.js';
+import {
+  dynamicToHCall,
+  isDynamicElement,
+  isHasSlotCall,
+  isSlotElement,
+  readHasSlotName,
+  readSlotName,
+} from '../../compiler/ast.js';
+import { MP_STATIC_ATTR } from '../../compiler/optimize.js';
 
 /** Attribute-name aliases (neutral React vocabulary → Svelte/DOM). */
 const ATTRIBUTE_ALIASES: Readonly<Record<string, string>> = {
@@ -250,6 +258,15 @@ export function jsxToSvelte(
   if (ts.isJsxFragment(node)) {
     return node.children.map((child) => jsxToSvelte(child, context)).join('');
   }
+  // A neutral `<Dynamic is={tag} …>…</Dynamic>` marker — the dynamic-tag/
+  // component form. Unlike the Vue/React targets (whose transforms rewrite it to
+  // an `h(is, …)` call before emit), the Svelte template walks the raw neutral
+  // AST, so `<Dynamic>` would otherwise be emitted verbatim as an undefined
+  // `<Dynamic>` component. Convert it to the same `<svelte:element this={tag}>`
+  // (or plain element, for a string tag) the hyperscript path already produces.
+  if (isDynamicElement(node)) {
+    return dynamicToSvelte(node, context);
+  }
   // `isSlotElement` is a broad type guard; used directly it would narrow the
   // element branch to `never`, so it is called through a plain boolean alias.
   const isSlot = isSlotElement as (candidate: ts.Node) => boolean;
@@ -300,6 +317,14 @@ function openTag(
     }
     const rawName = attribute.name.text;
     const initializer = attribute.initializer;
+    // Stage-1 static marker — never leak into Svelte markup.
+    if (rawName === MP_STATIC_ATTR) {
+      continue;
+    }
+    // `key` is consumed by `{#each}` key expressions, not an element attribute.
+    if (rawName === 'key') {
+      continue;
+    }
     // An element ref (`useRef` bound via `ref={x}`) has no Svelte attribute
     // form — it becomes the `bind:this` directive over the same `$state` name.
     if (rawName === 'ref' && initializer && ts.isJsxExpression(initializer) && initializer.expression) {
@@ -320,7 +345,11 @@ function openTag(
       continue;
     }
     if (ts.isJsxExpression(initializer) && initializer.expression) {
-      parts.push(`${attrName}={${scopeExpression(initializer.expression, context)}}`);
+      const inner =
+        attrName === 'class'
+          ? svelteClassValue(initializer.expression, context)
+          : scopeExpression(initializer.expression, context);
+      parts.push(`${attrName}={${inner}}`);
     }
   }
   const attrString = parts.length > 0 ? ` ${parts.join(' ')}` : '';
@@ -351,11 +380,37 @@ function childExpression(expression: ts.Expression, context: SvelteTemplateConte
   if (ts.isIdentifier(expression) && context.childrenAliases.has(expression.text)) {
     return renderSlot('children');
   }
+  // A bare `children` read (`{children}`) — the component destructures the
+  // `children` snippet prop from `$props()` (any `const children =
+  // properties.children;` normalisation is dropped), so it renders as the
+  // default snippet, never a `{children}` text hole (which Svelte would print as
+  // an opaque object).
+  if (ts.isIdentifier(expression) && expression.text === 'children') {
+    return renderSlot('children');
+  }
   // `properties.children` / `children` → `{@render children?.()}`.
   if (ts.isPropertyAccessExpression(expression) && expression.name.text === 'children') {
     return renderSlot('children');
   }
   return branchMarkup(expression, context);
+}
+
+/**
+ * Convert a neutral `<Dynamic is={tag} …>…</Dynamic>` element to Svelte markup by
+ * lowering it to the equivalent hyperscript `h(tag, props, ...children)` call
+ * (identity attribute/expression rewrites — the Svelte scoping is applied by
+ * {@link hyperscriptToSvelte} as it prints) and reusing the hyperscript emitter,
+ * which already maps a dynamic (non-string) tag to `<svelte:element this={tag}>`.
+ */
+function dynamicToSvelte(node: ts.JsxSelfClosingElement | ts.JsxElement, context: SvelteTemplateContext): string {
+  const call = dynamicToHCall(
+    context.factory,
+    node,
+    (expression) => expression,
+    (name) => name,
+    true,
+  );
+  return hyperscriptToSvelte(call, context);
 }
 
 /** Whether a node is a hyperscript `h(tag, props?, ...children)` call. */
@@ -422,9 +477,40 @@ function hyperscriptAttributes(props: ts.ObjectLiteralExpression, context: Svelt
       parts.push(`${name}="${value.text}"`);
       continue;
     }
-    parts.push(`${name}={${scopeExpression(value, context)}}`);
+    const inner = name === 'class' ? svelteClassValue(value, context) : scopeExpression(value, context);
+    parts.push(`${name}={${inner}}`);
   }
   return parts.length > 0 ? ` ${parts.join(' ')}` : '';
+}
+
+/** Whether an expression is a call to the neutral `classNames(...)` helper. */
+function isClassNamesCall(node: ts.Expression): node is ts.CallExpression {
+  return ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === 'classNames';
+}
+
+/**
+ * The inner expression for a Svelte `class={…}` binding.
+ *
+ * Svelte 5's `class` attribute resolves its value through `clsx`, so it accepts
+ * the same array/object-of-truthy-values forms as Vue's `:class` binding. A
+ * neutral `classNames(a, b, { c: cond })` helper call is therefore unwrapped
+ * into a native Svelte class **array** (`[a, b, { c: cond }]`) — letting Svelte's
+ * built-in `clsx` resolve it instead of the forge runtime helper, and matching
+ * the Vue generator, which passes array/object class values straight through to
+ * `:class`. A lone argument passes through directly (it is already a valid
+ * `ClassValue`), and any non-`classNames` expression (a plain string variable,
+ * an array/object literal, a ternary) is emitted unchanged — Svelte's `clsx`
+ * handles those too.
+ */
+function svelteClassValue(expression: ts.Expression, context: SvelteTemplateContext): string {
+  if (isClassNamesCall(expression)) {
+    const args = expression.arguments;
+    if (args.length === 1) {
+      return scopeExpression(args[0]!, context);
+    }
+    return `[${args.map((argument) => scopeExpression(argument, context)).join(', ')}]`;
+  }
+  return scopeExpression(expression, context);
 }
 
 /** Markup for one `h(...)` rest-argument child (`...childrenAlias` → the children snippet). */
@@ -487,6 +573,12 @@ function conditionalChainMarkup(expression: ts.ConditionalExpression, context: S
  */
 function branchMarkup(expression: ts.Expression, context: SvelteTemplateContext): string {
   const inner = unwrap(expression);
+  // A `<Dynamic is={…}>` marker in a branch/child position → `<svelte:element>`
+  // (checked before the generic JSX-element branch, which would otherwise emit
+  // the marker verbatim as an undefined `<Dynamic>` component).
+  if (isDynamicElement(inner)) {
+    return dynamicToSvelte(inner, context);
+  }
   if (isJsxElementLike(inner)) {
     return jsxToSvelte(inner, context);
   }
@@ -542,7 +634,7 @@ function branchMarkup(expression: ts.Expression, context: SvelteTemplateContext)
   return `{${scopeExpression(inner, context)}}`;
 }
 
-/** Build a `{#each <list> as <item>[, <index>]}…{/each}` block from an iteration callback (undefined if not JSX-yielding). */
+/** Build a `{#each <list> as <item>[, <index>][(key)]}…{/each}` block from an iteration callback (undefined if not JSX-yielding). */
 function callbackToEachBlock(
   list: string,
   callback: ts.ArrowFunction | ts.FunctionExpression,
@@ -552,7 +644,13 @@ function callbackToEachBlock(
   const indexParam = callback.parameters[1];
   const itemName = itemParam && ts.isIdentifier(itemParam.name) ? itemParam.name.text : 'item';
   const indexName = indexParam && ts.isIdentifier(indexParam.name) ? indexParam.name.text : undefined;
-  const each = indexName === undefined ? `${list} as ${itemName}` : `${list} as ${itemName}, ${indexName}`;
+  // Stage-2 quality: when Stage-1 (or the author) supplied a `key={…}` on the
+  // projected element, emit Svelte's keyed each form `{#each list as item (key)}`
+  // so list reconciliation stays stable.
+  const keyExpression = readMapCallbackKey(callback, context);
+  const keySuffix = keyExpression === undefined ? '' : ` (${keyExpression})`;
+  const each =
+    indexName === undefined ? `${list} as ${itemName}${keySuffix}` : `${list} as ${itemName}, ${indexName}${keySuffix}`;
   const body = callback.body;
   if (ts.isBlock(body)) {
     const blockMarkup = blockBodyMarkup(body, context);
@@ -563,6 +661,47 @@ function callbackToEachBlock(
     return undefined;
   }
   return `{#each ${each}}${branchMarkup(expressionBody, context)}{/each}`;
+}
+
+/** Read a `key={…}` expression from the JSX element a map callback returns. */
+function readMapCallbackKey(
+  callback: ts.ArrowFunction | ts.FunctionExpression,
+  context: SvelteTemplateContext,
+): string | undefined {
+  const body = callback.body;
+  let expression: ts.Expression | undefined;
+  if (ts.isBlock(body)) {
+    const last = body.statements.at(-1);
+    if (last !== undefined && ts.isReturnStatement(last) && last.expression !== undefined) {
+      expression = unwrap(last.expression);
+    }
+  } else {
+    expression = unwrap(body);
+  }
+  if (expression === undefined) {
+    return undefined;
+  }
+  const attributes = ts.isJsxElement(expression)
+    ? expression.openingElement.attributes
+    : ts.isJsxSelfClosingElement(expression)
+      ? expression.attributes
+      : undefined;
+  if (attributes === undefined) {
+    return undefined;
+  }
+  for (const property of attributes.properties) {
+    if (
+      ts.isJsxAttribute(property) &&
+      ts.isIdentifier(property.name) &&
+      property.name.text === 'key' &&
+      property.initializer !== undefined &&
+      ts.isJsxExpression(property.initializer) &&
+      property.initializer.expression !== undefined
+    ) {
+      return scopeExpression(property.initializer.expression, context);
+    }
+  }
+  return undefined;
 }
 
 /** Convert `list.map((item) => <li/>)` to a Svelte `{#each}` block (undefined if not JSX-valued). */

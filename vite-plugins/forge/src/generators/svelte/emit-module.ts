@@ -34,6 +34,7 @@ import {
   NEUTRAL_RUNTIME_VALUES,
   readNeutralImports,
 } from '../../compiler/ast.js';
+import { isCompileTimeConstant } from '../../compiler/optimize.js';
 
 import {
   isHyperscriptCall,
@@ -663,7 +664,14 @@ export function emitSvelteModule(
           if (hook === 'useMemo' && ts.isIdentifier(declaration.name)) {
             const fnArg = initializer.arguments[0];
             if (fnArg) {
-              derived.push({ name: declaration.name.text, expression: scopeExpression(fnArg, context) });
+              // Stage-2 quality: a constant memo factory needs no `$derived` —
+              // emit a plain `const` so the value is never tracked reactively.
+              const constantBody = constantMemoFactoryBody(fnArg);
+              if (constantBody !== undefined) {
+                headStatements.push(`const ${declaration.name.text} = ${scopeExpression(constantBody, context)};`);
+              } else {
+                derived.push({ name: declaration.name.text, expression: scopeExpression(fnArg, context) });
+              }
             }
             continue;
           }
@@ -809,6 +817,31 @@ export function emitSvelteModule(
 
   const code = `<script lang="ts">\n${scriptBody}\n</script>\n\n${template}\n`;
   return { code };
+}
+
+/**
+ * If a `useMemo` factory is (or returns) a compile-time constant, yield that
+ * constant expression so the emitter can skip `$derived.by`.
+ */
+function constantMemoFactoryBody(factory: ts.Expression | undefined): ts.Expression | undefined {
+  if (factory === undefined) {
+    return undefined;
+  }
+  if (isCompileTimeConstant(factory)) {
+    return factory;
+  }
+  if (!(ts.isArrowFunction(factory) || ts.isFunctionExpression(factory))) {
+    return undefined;
+  }
+  const body = factory.body;
+  if (ts.isBlock(body)) {
+    const statements = body.statements.filter((statement) => !ts.isEmptyStatement(statement));
+    if (statements.length !== 1 || !ts.isReturnStatement(statements[0]) || statements[0].expression === undefined) {
+      return undefined;
+    }
+    return isCompileTimeConstant(statements[0].expression) ? statements[0].expression : undefined;
+  }
+  return isCompileTimeConstant(body) ? body : undefined;
 }
 
 /** Print a setup statement with `properties.x` → `x`, `<ref>.current` → `<ref>`, `hasSlot(…)` → `… != null`, and `setX(v)` → `x = v` rewrites. */

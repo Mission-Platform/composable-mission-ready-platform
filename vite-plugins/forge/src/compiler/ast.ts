@@ -2231,7 +2231,63 @@ export function createReferenceRewriter(scope: RewriteScope): ts.TransformerFact
         ),
       );
 
-    const visit = (node: ts.Node): ts.Node => {
+    // Scope-aware shadowing: a locally-declared binding (a function/arrow
+    // parameter, or an inner `const`/`let`/`var`/loop/catch binding) whose name
+    // coincides with a reactive `useState`/`useMemo`/model value — or a
+    // destructured prop — must be left untouched, since it is a *different*
+    // binding. The stack records the names declared by each enclosing scope as
+    // the visitor descends, so `isShadowed` can skip rewriting such reads.
+    const shadowStack: Set<string>[] = [];
+    const isShadowed = (name: string): boolean => shadowStack.some((names) => names.has(name));
+    const collectBindingNames = (name: ts.BindingName, into: Set<string>): void => {
+      if (ts.isIdentifier(name)) {
+        into.add(name.text);
+        return;
+      }
+      for (const element of name.elements) {
+        if (ts.isBindingElement(element)) {
+          collectBindingNames(element.name, into);
+        }
+      }
+    };
+    const declaredNames = (node: ts.Node): Set<string> | undefined => {
+      const names = new Set<string>();
+      if (
+        ts.isFunctionDeclaration(node) ||
+        ts.isFunctionExpression(node) ||
+        ts.isArrowFunction(node) ||
+        ts.isMethodDeclaration(node) ||
+        ts.isGetAccessorDeclaration(node) ||
+        ts.isSetAccessorDeclaration(node) ||
+        ts.isConstructorDeclaration(node)
+      ) {
+        for (const parameter of node.parameters) {
+          collectBindingNames(parameter.name, names);
+        }
+      } else if (ts.isBlock(node) || ts.isModuleBlock(node)) {
+        for (const statement of node.statements) {
+          if (ts.isVariableStatement(statement)) {
+            for (const declaration of statement.declarationList.declarations) {
+              collectBindingNames(declaration.name, names);
+            }
+          } else if (ts.isFunctionDeclaration(statement) && statement.name !== undefined) {
+            names.add(statement.name.text);
+          }
+        }
+      } else if (ts.isForStatement(node) || ts.isForOfStatement(node) || ts.isForInStatement(node)) {
+        const initializer = node.initializer;
+        if (initializer !== undefined && ts.isVariableDeclarationList(initializer)) {
+          for (const declaration of initializer.declarations) {
+            collectBindingNames(declaration.name, names);
+          }
+        }
+      } else if (ts.isCatchClause(node) && node.variableDeclaration !== undefined) {
+        collectBindingNames(node.variableDeclaration.name, names);
+      }
+      return names.size > 0 ? names : undefined;
+    };
+
+    const visitCore = (node: ts.Node): ts.Node => {
       // A concise-body arrow whose expression is a `useState` setter call
       // (`(value: number): void => setValue(value)`) is rewritten below to an
       // assignment (`value.value = value`). A concise body *is* the arrow's
@@ -2542,6 +2598,13 @@ export function createReferenceRewriter(scope: RewriteScope): ts.TransformerFact
 
       // Bare identifier reads.
       if (ts.isIdentifier(node)) {
+        // A locally-declared binding (a handler parameter or inner `const`) that
+        // shadows a reactive value / prop name is a *different* binding — leave it
+        // as-is so its declaration and reads are not corrupted by a `.value` /
+        // `properties.<name>` rewrite meant for the outer reactive binding.
+        if (isShadowed(node.text)) {
+          return node;
+        }
         // A model prop read (a destructured `modelValue`/`mode`/`geodesic`) reads
         // the two-way `defineModel` ref through `.value`, like `useState`/`useMemo`.
         if (scope.stateNames.has(node.text) || scope.memoNames.has(node.text) || scope.modelProps.has(node.text)) {
@@ -2570,6 +2633,20 @@ export function createReferenceRewriter(scope: RewriteScope): ts.TransformerFact
       }
 
       return ts.visitEachChild(node, visit, context);
+    };
+
+    // Wrap the core visitor with scope-shadow tracking: push the names a
+    // scope-introducing node declares before descending, pop them after, so
+    // `isShadowed` reflects the bindings in effect at each identifier read.
+    const visit = (node: ts.Node): ts.Node => {
+      const declared = declaredNames(node);
+      if (declared !== undefined) {
+        shadowStack.push(declared);
+        const result = visitCore(node);
+        shadowStack.pop();
+        return result;
+      }
+      return visitCore(node);
     };
 
     return (node) => ts.visitNode(node, visit) as ts.Node;

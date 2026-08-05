@@ -36,6 +36,24 @@ const CLASS_NAMES = [
   '}',
 ].join('\n');
 
+// A component that calls the neutral `classNames(a, b, { c })` helper *inline*
+// inside a JSX `class` attribute (as opposed to the literal-array form in
+// `CLASS_NAMES`) — used to check the Svelte emitter unwraps it to a native
+// clsx `class` array.
+const INLINE_CLASS_NAMES = [
+  "import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';",
+  '',
+  'export interface TagProperties extends MpProperties {',
+  '  active?: boolean;',
+  '  tone?: string;',
+  '}',
+  '',
+  'export function BaseTag(properties: TagProperties): MpElement {',
+  "  const tone = properties.tone ?? 'neutral';",
+  "  return <span class={classNames('tag', `tag--${tone}`, { 'tag--active': properties.active ?? false })}>{properties.children}</span>;",
+  '}',
+].join('\n');
+
 const IN_VIEW = [
   "import { h, useEffect, useRef, useState, type MpElement, type MpProperties } from '@mission-platform/forge';",
   '',
@@ -821,6 +839,25 @@ describe('the Vue emitter preserves a type imported alongside a sibling componen
     expect(vue.code).toContain("import type { TypographyVariant } from './base-typography.vue';");
     expect(vue.code).toContain('variant?: TypographyVariant');
   });
+
+  it('flattens a deeply nested atomic-design sibling import to `./<basename>.vue`', () => {
+    // After nesting, a molecule reaches an atom via `../../atoms/base-typography`
+    // rather than a single `../base-typography` hop. The emitter must still treat
+    // it as a component import and rewrite it to the flat generated layout.
+    const nestedConsumer = CHILD_TYPE_CONSUMER.replace(
+      "from '../base-typography'",
+      "from '../../atoms/base-typography'",
+    );
+    const vue = compileComponentModule(nestedConsumer, {
+      framework: 'vue',
+      componentName: 'BaseQuote',
+      componentFolders: folders,
+    });
+    expect(vue.code).toContain("import BaseTypography from './base-typography.vue';");
+    expect(vue.code).toContain("import type { TypographyVariant } from './base-typography.vue';");
+    expect(vue.code).not.toContain('atoms/');
+    expect(vue.code).not.toContain('../');
+  });
 });
 
 const EXTERNAL_DEFAULT = [
@@ -1255,6 +1292,23 @@ describe('the `className` attribute', () => {
     // Vue needs no runtime helper for the attribute.
     expect(vue.code).not.toContain('classNames');
   });
+
+  it('maps the literal-array attribute onto Svelte’s native `class` (clsx) binding', () => {
+    const svelte = compileComponentModule(CLASS_NAMES, { framework: 'svelte', componentName: 'BaseChip' });
+    // Svelte 5's `class` attribute resolves through `clsx`, so the neutral
+    // array/object form passes straight through (like Vue) — no runtime helper.
+    expect(svelte.code).toContain("class={['chip', `chip--${tone}`, { 'chip--active': active ?? false }]}");
+    expect(svelte.code).toContain('class={tone}');
+  });
+
+  it('unwraps an inline `classNames(…)` call into a native Svelte clsx `class` array', () => {
+    const svelte = compileComponentModule(INLINE_CLASS_NAMES, { framework: 'svelte', componentName: 'BaseTag' });
+    // The `classNames(a, b, { c })` helper call becomes a Svelte class array so
+    // the framework's built-in `clsx` resolves it, matching the Vue `:class`
+    // idiom — the wrapping `classNames(` call must not survive in the markup.
+    expect(svelte.code).toContain("class={['tag', `tag--${tone}`, { 'tag--active': active ?? false }]}");
+    expect(svelte.code).not.toContain('class={classNames(');
+  });
 });
 
 describe('the Vue emitter', () => {
@@ -1445,12 +1499,13 @@ describe('the Vue emitter fuses a `@model`-tagged prop and its change event into
   });
 });
 
-// A parent forced onto the render-closure fallback (an imperative `.map()`) that
-// forwards a controlled-value callback to a **child component**. A child compiled
-// from a `@model`-paired `onUpdate<Name>` prop declares `defineModel('<name>')`
-// and emits `update:<name>`, so the listener the parent must bind is the
-// string-keyed `onUpdate:<name>` — not the camelCase `onUpdate<Name>`, which Vue
-// never wires to the model (and `vue-tsc` rejects as an unknown prop).
+// A parent that builds a node array imperatively (`const rows = []; for (…)
+// rows.push(<Child/>)`) and forwards a controlled-value callback to a **child
+// component**. The imperative build now folds to a native `v-for`, and the
+// forwarded `@model` listener binds as `@update:<name>` — a child compiled from a
+// `@model`-paired `onUpdate<Name>` prop declares `defineModel('<name>')` and emits
+// `update:<name>`, so the camelCase `onUpdateOpen` (which Vue never wires to the
+// model, and `vue-tsc` rejects) must not survive.
 const MODEL_FORWARD_CLOSURE = [
   "import { h, useState, type MpChild, type MpElement, type MpProperties } from '@mission-platform/forge';",
   '',
@@ -1468,17 +1523,20 @@ const MODEL_FORWARD_CLOSURE = [
   '}',
 ].join('\n');
 
-describe('the Vue emitter binds a forwarded `@model` listener as `onUpdate:<name>` (render-closure JSX)', () => {
+describe('the Vue emitter folds an imperative node-array build to a native `v-for` and binds `@update:<name>`', () => {
   const vue = compileComponentModule(MODEL_FORWARD_CLOSURE, { framework: 'vue', componentName: 'BaseForward' });
 
-  it('takes the render-closure fallback', () => {
-    expect(vue.code).toContain('const render = () => {');
+  it('templates the `const rows = []; for (…) rows.push(<Child/>)` build natively (no render closure)', () => {
+    expect(vue.code).toContain('<template>');
+    expect(vue.code).not.toContain('const render = () =>');
+    // The for-of push build becomes a `v-for` of the child component.
+    expect(vue.code).toMatch(/<BaseChild v-for="item in /);
   });
 
-  it('rewrites the child `onUpdateOpen` listener to the namespaced `onUpdate:open`', () => {
+  it('rewrites the child `onUpdateOpen` listener to the namespaced `@update:open`', () => {
     // Vue's `v-model` update event for a model named `open` is `update:open`, whose
-    // listener prop is `onUpdate:open` — the camelCase `onUpdateOpen` is unknown.
-    expect(vue.code).toContain('onUpdate:open={');
+    // listener is `@update:open` — the camelCase `onUpdateOpen` is unknown.
+    expect(vue.code).toContain('@update:open=');
     expect(vue.code).not.toContain('onUpdateOpen');
   });
 });
@@ -1726,7 +1784,9 @@ describe('the Vue emitter annotates a render-closure fallback with the reason it
 
   it('prepends a comment naming the specific `UnsupportedTemplate` reason', () => {
     expect(vue.code).toContain('const render = () => {');
-    expect(vue.code).toContain('<!-- @mission-platform/forge: native <template> unavailable — JSX spread attribute -->');
+    expect(vue.code).toContain(
+      '<!-- @mission-platform/forge: native <template> unavailable — JSX spread attribute -->',
+    );
     // The comment leads the SFC (it travels with the affected component).
     expect(vue.code.trimStart().startsWith('<!-- @mission-platform/forge:')).toBe(true);
   });
@@ -1934,6 +1994,7 @@ const DYNAMIC_LINK = [
 describe('the emitters translate the `<Dynamic is>` marker to each framework dynamic component', () => {
   const react = compileComponentModule(DYNAMIC_LINK, { framework: 'react', componentName: 'BaseLink' });
   const vue = compileComponentModule(DYNAMIC_LINK, { framework: 'vue', componentName: 'BaseLink' });
+  const svelte = compileComponentModule(DYNAMIC_LINK, { framework: 'svelte', componentName: 'BaseLink' });
 
   it('rewrites `<Dynamic is={tag}>` to an `h(tag, …)` call on React (with `class`→`className`) and drops the marker import', () => {
     expect(react.code).toContain('h(tag, { className: "link", href: href }, "go")');
@@ -1945,6 +2006,17 @@ describe('the emitters translate the `<Dynamic is>` marker to each framework dyn
     expect(vue.code).toContain('class="link"');
     expect(vue.code).toContain(':href="href"');
     expect(vue.code).not.toMatch(/\bDynamic\b/);
+  });
+
+  it('renders `<Dynamic is={tag}>` as `<svelte:element this={tag}>` on Svelte (never a bare `<Dynamic>` component)', () => {
+    expect(svelte.lang).toBe('svelte');
+    // The dynamic-tag marker becomes Svelte's dynamic element, with the neutral
+    // `class` attribute and the `href` binding carried over.
+    expect(svelte.code).toContain('<svelte:element this={tag}');
+    expect(svelte.code).toContain('class="link"');
+    expect(svelte.code).toContain('href={href}');
+    // The marker must never leak as an (undefined) `<Dynamic>` component tag.
+    expect(svelte.code).not.toContain('<Dynamic');
   });
 });
 
@@ -2216,7 +2288,10 @@ describe('the Vue emitter lowers JSX ternaries to `v-if` / `v-else`', () => {
   it('keeps the React target as native JSX ternaries (no `v-if`)', () => {
     const react = compileComponentModule(TOGGLE, { framework: 'react', componentName: 'BaseToggle' });
     expect(react.code).not.toContain('v-if');
-    expect(react.code).toContain('? <span');
+    // Static ternary arms may be Stage-2-hoisted to module-level constants
+    // (`on ? __mpHoist_0 : __mpHoist_1`); the conditional itself stays a native
+    // JSX ternary either way.
+    expect(react.code).toMatch(/\? (?:<span|__mpHoist_\d+)/);
   });
 });
 
@@ -2326,7 +2401,7 @@ const RENDER_HELPER = [
   '  const { items } = properties;',
   '  const renderItems = (entries: MenuNode[], parentPath: string, nested: boolean): MpElement[] =>',
   '    entries.map((item, index) => {',
-  '      const path = parentPath === "" ? `${index}` : `${parentPath}.${index}`;',
+  '      const path = parentPath.length === 0 ? `${index}` : `${parentPath}.${index}`;',
   '      return <li key={path} class="menubar__item" data-nested={nested}>{item.label}</li>;',
   '    });',
   '  return (',
@@ -2604,7 +2679,10 @@ describe('the Vue emitter renders a flatMap element array + map conditional as `
   });
 
   it('renders the flatMap element array under a shared `<template v-for>` and the map as `v-for`', () => {
-    expect(vue.code).toContain('<template v-for="item in items">');
+    // The flatMap's two-element rows loop under a `<template v-for>` whose `:key`
+    // sits on the `<template>` itself (Vue rejects a key on a looped child); the
+    // callback declares only `item`, so an index alias is synthesised for the key.
+    expect(vue.code).toContain('<template v-for="(item, __index) in items" :key="__index">');
     expect(vue.code).toContain('<dt class="list__term">');
     expect(vue.code).toContain('<dd class="list__detail">');
     expect(vue.code).toContain('<li v-for="item in items" class="list__item">');
@@ -3091,15 +3169,497 @@ describe('the compiler emits SolidJS components with signals', () => {
 describe('the compiler emits Web Components custom elements', () => {
   const wc = compileComponentModule(IN_VIEW, { framework: 'web-components', componentName: 'BaseInView' });
 
-  it('emits a LitElement subclass with an html`…` render() registered via customElements.define', () => {
-    // Lit templates are plain tagged-template TypeScript, so the module is `.ts`.
+  it('emits a native ForgeElement subclass with an html`…` render() registered via customElements.define', () => {
+    // The tagged-template output is plain TypeScript, so the module is `.ts`.
     expect(wc.lang).toBe('ts');
-    expect(wc.code).not.toContain('@mission-platform/forge');
+    // The only forge import is the native web-components runtime — never `lit`.
+    expect(wc.code).not.toContain("from 'lit'");
+    expect(wc.code).not.toContain('LitElement');
     expect(wc.code).not.toContain('from "react"');
-    expect(wc.code).toContain("import { LitElement, html, nothing } from 'lit';");
-    expect(wc.code).toContain('class BaseInViewElement extends LitElement');
+    expect(wc.code).toContain("import { ForgeElement, html, nothing } from '@mission-platform/forge/web-components';");
+    expect(wc.code).toContain('class BaseInViewElement extends ForgeElement');
     expect(wc.code).toContain('render()');
     expect(wc.code).toContain('return html`');
     expect(wc.code).toContain("customElements.define('base-in-view', BaseInViewElement);");
+  });
+});
+
+// A self-recursive component with a scoped `label` render-prop (`MpRenderProperty`),
+// modelled on `base-tree-view-item`. It exercises two subtle Vue-builder concerns:
+//   1. `{node.label}` is a plain string field read whose trailing name coincides
+//      with the node-typed `label` render-prop — it must render as a normal
+//      `{{ node.label }}` interpolation, not be misread as slot content that
+//      forces the render-closure fallback.
+//   2. `label={properties.label}` forwards the scoped slot to the recursive child;
+//      it must become a `<template #label>` forwarding block, not a `:label` prop.
+const RECURSIVE_TREE_ITEM = [
+  "import { h, Slot, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/forge';",
+  '',
+  'export interface TreeNode {',
+  '  id: string;',
+  '  label: string;',
+  '  children?: TreeNode[];',
+  '}',
+  '',
+  'export interface LabelScope {',
+  '  node: TreeNode;',
+  '  depth: number;',
+  '}',
+  '',
+  'export interface TreeItemProperties extends MpProperties {',
+  '  node: TreeNode;',
+  '  depth: number;',
+  '  label?: MpRenderProperty<LabelScope>;',
+  '}',
+  '',
+  'export function TreeItem(properties: Readonly<TreeItemProperties>): MpElement {',
+  '  const { node, depth } = properties;',
+  '  return (',
+  '    <li role="none">',
+  '      <Slot name="label" node={node} depth={depth}>',
+  '        <span>{node.label}</span>',
+  '      </Slot>',
+  '      {node.children !== undefined ? (',
+  '        <ul role="group">',
+  '          {node.children.map((child) => (',
+  '            <TreeItem key={child.id} node={child} depth={depth + 1} label={properties.label} />',
+  '          ))}',
+  '        </ul>',
+  '      ) : undefined}',
+  '    </li>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the compiler flattens a recursive render-prop component to native Vue `<template>`', () => {
+  const item = compileComponentModule(RECURSIVE_TREE_ITEM, { framework: 'vue', componentName: 'TreeItem' });
+
+  it('emits native `<template>` — no render closure — despite a `{node.label}` field colliding with the `label` render-prop', () => {
+    expect(item.lang).toBe('vue');
+    // The receiver-aware node-typed-prop guard no longer misreads `node.label`.
+    expect(item.code).not.toContain('const render = () =>');
+    expect(item.code).not.toContain('<render v-bind="$attrs" />');
+    expect(item.code).not.toContain('native <template> unavailable');
+    // The plain field read renders as an ordinary interpolation …
+    expect(item.code).toMatch(/\{\{\s*node\.label\s*\}\}/);
+    // … while the `<Slot name="label" node depth>` outlet stays a native scoped slot.
+    expect(item.code).toContain('<slot name="label" :node="node" :depth="depth">');
+    // The recursion is a native `v-for` of the child component tag.
+    expect(item.code).toMatch(/<TreeItem v-for="child in [\s\S]*?:node="child"/);
+  });
+
+  it('forwards the scoped `label` render-prop to the recursive child as a `<template #label>` block, not a `:label` bind', () => {
+    // The render-prop passed down (`label={properties.label}`) is a slot, not a
+    // data prop — a `:label` binding would leak into `$attrs` and never populate
+    // the child's `label` slot.
+    expect(item.code).not.toContain(':label="properties.label"');
+    // Instead, the child forwards the current component's `label` slot through.
+    expect(item.code).toContain('<template #label="scope">');
+    expect(item.code).toContain('<slot name="label" v-bind="scope" />');
+  });
+});
+
+// A toolbar whose per-item `.map()` renders a **node-typed field** of the loop
+// item as a child (`{item.icon}`, where `ToolbarItem.icon: MpElement`), with the
+// loop source itself an *inlined* node-valued const (`groups`) whose initializer
+// is a `props ? [props.items] : buildGroups()` ternary — exactly the
+// `base-wysiwyg-toolbar` shape. `{item.icon}` holds an already-created VNode, so
+// a `{{ … }}` interpolation would `toDisplayString` (JSON-stringify) the circular
+// VNode and throw at render, dropping the whole toolbar; it must instead bind via
+// `<component :is>`. The classification is receiver **type-aware** — resolved
+// through the inlined ternary/`buildGroups()` return type down to the item type —
+// so a same-named plain field (`{crumb.icon}` where a *different* item type
+// declares `icon: string`) still renders as a normal interpolation.
+const NODE_TYPED_MAP_ITEM = [
+  "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
+  '',
+  'export interface ToolbarItem {',
+  '  label: string;',
+  '  icon?: MpElement;',
+  '}',
+  '',
+  'export interface Crumb {',
+  '  label: string;',
+  '  icon?: string;',
+  '}',
+  '',
+  'export interface ToolbarProperties extends MpProperties {',
+  '  items?: ToolbarItem[];',
+  '  crumbs?: Crumb[];',
+  '}',
+  '',
+  'function buildGroups(): ToolbarItem[][] {',
+  "  return [[{ label: 'Bold', icon: <i class=\"i\" /> }]];",
+  '}',
+  '',
+  'export function Toolbar(properties: Readonly<ToolbarProperties>): MpElement {',
+  '  const groups: ToolbarItem[][] = properties.items ? [properties.items] : buildGroups();',
+  '  const crumbs: Crumb[] = properties.crumbs ?? [];',
+  '  return (',
+  '    <div role="toolbar">',
+  '      {groups.map((group) => (',
+  '        <div class="group">',
+  '          {group.map((item) => (',
+  '            <button key={item.label} aria-label={item.label}>{item.icon}</button>',
+  '          ))}',
+  '        </div>',
+  '      ))}',
+  '      {crumbs.map((crumb) => (',
+  '        <span key={crumb.label}>{crumb.icon}</span>',
+  '      ))}',
+  '    </div>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the compiler renders a node-typed `.map()` item field as `<component :is>` (receiver type-aware)', () => {
+  const out = compileComponentModule(NODE_TYPED_MAP_ITEM, { framework: 'vue', componentName: 'Toolbar' });
+
+  it('emits native `<template>` with no render-closure fallback', () => {
+    expect(out.lang).toBe('vue');
+    expect(out.code).not.toContain('const render = () =>');
+    expect(out.code).not.toContain('<render v-bind="$attrs" />');
+    expect(out.code).not.toContain('native <template> unavailable');
+  });
+
+  it('binds the node-typed `item.icon` field via `<component :is>` (not a stringifying interpolation)', () => {
+    // The VNode-valued field is mounted as an element …
+    expect(out.code).toContain('<component :is="item.icon" />');
+    // … never stringified into a mustache that would crash `toDisplayString`.
+    expect(out.code).not.toMatch(/\{\{\s*item\.icon\s*\}\}/);
+  });
+
+  it('leaves a same-named plain-typed field (`crumb.icon: string`) as an ordinary interpolation', () => {
+    // `icon` is node-typed on `ToolbarItem` but a plain string on `Crumb`; the
+    // check keys off the receiver's own resolved type, so this one stays text.
+    expect(out.code).toMatch(/\{\{\s*crumb\.icon\s*\}\}/);
+  });
+});
+
+// (Category A) A range picker whose slot props are named `start`/`end` — the same
+// identifiers used as **object-literal keys** in an event handler
+// (`emit({ start: value, end: nextEnd })`) and read as fields of a plain data
+// object (`modelValue.end`) — plus a data `.map()` inside a `void` handler, a
+// block-body render helper (`group`) and an `if`-guard dispatch helper
+// (`renderBody`). None of these should be misread as node-producing, and the two
+// render helpers must inline so the whole component templates natively.
+const RANGE_SLOTS = [
+  "import { h, hasSlot, Slot, type MpChild, type MpElement, type MpProperties, useState } from '@mission-platform/forge';",
+  '',
+  'export interface RangeValue { start: string; end: string; }',
+  '',
+  'export interface RangeProperties extends MpProperties {',
+  '  modelValue?: RangeValue;',
+  '  start?: MpChild;',
+  '  end?: MpChild;',
+  '  view?: string;',
+  '  onUpdateModelValue?: (value: RangeValue) => void;',
+  '}',
+  '',
+  'export function RangePicker(properties: Readonly<RangeProperties>): MpElement {',
+  "  const { modelValue = { start: '', end: '' }, view = 'a' } = properties;",
+  '  const [items, setItems] = useState<string[]>([]);',
+  '  const emit = (next: RangeValue): void => {',
+  '    properties.onUpdateModelValue?.(next);',
+  '  };',
+  '  const handleStart = (value: string): void => {',
+  '    const nextEnd = modelValue.end && modelValue.end < value ? value : modelValue.end;',
+  '    setItems(items.map((entry) => (entry === value ? value : entry)));',
+  '    emit({ start: value, end: nextEnd });',
+  '  };',
+  '  const column = (header: string, values: readonly string[]): MpChild => (',
+  '    <div class="col">',
+  '      <span>{header}</span>',
+  '      {values.map((v) => (',
+  '        <button key={v} type="button" onClick={() => handleStart(v)}>{v}</button>',
+  '      ))}',
+  '    </div>',
+  '  );',
+  '  const group = (title: string): MpChild => {',
+  '    const heading = title.toUpperCase();',
+  '    return (',
+  '      <div class="group">',
+  '        <span>{heading}</span>',
+  "        {column('H', ['1', '2'])}",
+  '      </div>',
+  '    );',
+  '  };',
+  '  const renderBody = (): MpElement => {',
+  "    if (view === 'a') return <div class=\"a\">{group('start')}</div>;",
+  "    return <div class=\"b\">{group('end')}</div>;",
+  '  };',
+  '  return (',
+  '    <div class="range">',
+  "      {hasSlot('start') ? <span class=\"ext\"><Slot name=\"start\" /></span> : undefined}",
+  '      {renderBody()}',
+  "      {hasSlot('end') ? <span class=\"ext\"><Slot name=\"end\" /></span> : undefined}",
+  '    </div>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the compiler flattens object-key / data-map / helper false positives to native Vue `<template>` (Category A)', () => {
+  const out = compileComponentModule(RANGE_SLOTS, { framework: 'vue', componentName: 'RangePicker' });
+
+  it('emits native `<template>` with no render-closure fallback', () => {
+    expect(out.lang).toBe('vue');
+    expect(out.code).not.toContain('const render = () =>');
+    expect(out.code).not.toContain('<render v-bind="$attrs" />');
+    expect(out.code).not.toContain('native <template> unavailable');
+  });
+
+  it('still emits the `start`/`end` named slots natively (they are slots, not misread node reads)', () => {
+    expect(out.code).toContain('<slot name="start" />');
+    expect(out.code).toContain('<slot name="end" />');
+  });
+
+  it('inlines the block-body / guard-chain render helpers as a native `v-if`/`v-else` view dispatch', () => {
+    expect(out.code).toMatch(/v-if="view === 'a'"/);
+    expect(out.code).toContain('v-else');
+  });
+});
+
+// (Category B) An array-literal child `{[header, ...rows, ...childList]}` mixing a
+// fixed node const, a spread of a `.map()` projection, and the normalised
+// default-slot spread — modelled on `base-calendar`/`base-list`. It has no
+// `emitExpressionChild` interpolation form and must emit as native child markup.
+const ARRAY_CHILDREN = [
+  "import { Dynamic, h, type MpElement, type MpProperties } from '@mission-platform/forge';",
+  '',
+  'export interface GridProperties extends MpProperties {',
+  '  items?: string[];',
+  '}',
+  '',
+  'export function BaseGrid(properties: Readonly<GridProperties>): MpElement {',
+  '  const { items = [] } = properties;',
+  '  const header = <div class="head">Header</div>;',
+  '  const rows = items.map((item, index) => (',
+  '    <div key={index} class="row">{item}</div>',
+  '  ));',
+  '  const children = properties.children;',
+  '  const childList = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];',
+  '  return (',
+  '    <Dynamic is="section" class="grid">',
+  '      {[header, ...rows, ...childList]}',
+  '    </Dynamic>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the compiler renders an array-literal child natively (Category B)', () => {
+  const out = compileComponentModule(ARRAY_CHILDREN, { framework: 'vue', componentName: 'BaseGrid' });
+
+  it('emits native `<template>` with no render closure', () => {
+    expect(out.lang).toBe('vue');
+    expect(out.code).not.toContain('const render = () =>');
+    expect(out.code).not.toContain('<render v-bind="$attrs" />');
+    expect(out.code).not.toContain('native <template> unavailable');
+  });
+
+  it('emits the fixed node, the `.map()` as a `v-for`, and the default slot spread', () => {
+    expect(out.code).toContain('class="head"');
+    expect(out.code).toMatch(/<div v-for="\(item, index\) in items"/);
+    expect(out.code).toContain('<slot />');
+  });
+});
+
+// (Category E) A component whose scalar derived const `display` becomes a reactive
+// `computed` (a render-scope memo), while a kept handler declares a **local**
+// `const display` shadowing that memo. The memo `.value` reference rewriter must
+// be scope-aware: it appends `.value` to genuine memo reads but leaves the
+// handler-local binding (and its uses) untouched, so neither is corrupted.
+const MEMO_SHADOW = [
+  "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
+  '',
+  'export interface ClockProperties extends MpProperties {',
+  '  hour?: number;',
+  '  minute?: number;',
+  '  onChange?: (value: string) => void;',
+  '}',
+  '',
+  'export function BaseClock(properties: Readonly<ClockProperties>): MpElement {',
+  '  const { hour = 0, minute = 0 } = properties;',
+  '  const display = `${hour}:${minute}`;',
+  '  const commit = (): void => {',
+  '    const display = `${hour}-${minute}`;',
+  '    properties.onChange?.(display);',
+  '  };',
+  '  return (',
+  '    <button type="button" onClick={commit}>{display}</button>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the Vue memo rewriter is scope-aware for a shadowing handler-local (Category E)', () => {
+  const out = compileComponentModule(MEMO_SHADOW, { framework: 'vue', componentName: 'BaseClock' });
+
+  it('emits native `<template>` (no memo-shadowing fallback)', () => {
+    expect(out.lang).toBe('vue');
+    expect(out.code).not.toContain('const render = () =>');
+    expect(out.code).not.toContain('<render v-bind="$attrs" />');
+    expect(out.code).not.toContain('native <template> unavailable');
+  });
+
+  it('lifts the scalar derived const to a `computed` memo', () => {
+    expect(out.code).toContain('const display = computed(');
+  });
+
+  it('leaves the shadowing handler-local intact (never rewritten to `display.value`)', () => {
+    // The handler re-declares `const display` and emits it bare (the `onChange`
+    // event prop becomes `emit('change', …)`); the scope-aware rewriter must not
+    // append `.value` to that shadowing local or its use.
+    expect(out.code).toContain('emit("change", display)');
+    expect(out.code).not.toContain('emit("change", display.value)');
+    expect(out.code).not.toContain('const display.value');
+  });
+});
+
+// (Category C) A `useRef` kept in step with a derived value via a top-level
+// render-scope side effect (`latestValueReference.current = clampedValue;`) —
+// modelled on `base-slider`/`base-range-input`. It is neither a `const` nor a
+// node, so it must be lifted to a reactive `watchEffect`, not rejected as a
+// "non-const derived statement".
+const REF_SYNC = [
+  "import { h, type MpElement, type MpProperties, useRef } from '@mission-platform/forge';",
+  '',
+  'export interface SliderProperties extends MpProperties {',
+  '  modelValue?: number;',
+  '  onUpdateModelValue?: (value: number) => void;',
+  '}',
+  '',
+  'export function BaseSlider(properties: Readonly<SliderProperties>): MpElement {',
+  '  const { modelValue = 0 } = properties;',
+  '  const latestValueReference = useRef<number>(0);',
+  '  const clampedValue = Math.max(0, Math.min(100, modelValue));',
+  '  latestValueReference.current = clampedValue;',
+  '  const commit = (): void => {',
+  '    properties.onUpdateModelValue?.(latestValueReference.current);',
+  '  };',
+  '  return (',
+  '    <input type="range" value={clampedValue} onChange={commit} />',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the Vue emitter lifts a render-scope ref-sync to a reactive `watchEffect` (Category C)', () => {
+  const out = compileComponentModule(REF_SYNC, { framework: 'vue', componentName: 'BaseSlider' });
+
+  it('emits native `<template>` with no render closure', () => {
+    expect(out.lang).toBe('vue');
+    expect(out.code).not.toContain('const render = () =>');
+    expect(out.code).not.toContain('<render v-bind="$attrs" />');
+    expect(out.code).not.toContain('native <template> unavailable');
+  });
+
+  it('lifts the `<ref>.current = <expr>` side effect into a `watchEffect` (rewriting `.current` → `.value` and the memo read)', () => {
+    expect(out.code).toContain('watchEffect(() => {');
+    expect(out.code).toContain('latestValueReference.value = clampedValue.value');
+    // The `watchEffect` runtime is imported from `vue`.
+    expect(out.code).toMatch(/import \{[^}]*watchEffect[^}]*\} from 'vue'/);
+  });
+});
+
+// (Category D2) A module-level, single-parameter element-returning `switch`
+// helper (`variantIcon(variant)`) invoked in child position — modelled on
+// `base-toast`/`base-alert-banner`. It inlines as a native `v-if`/`v-else-if`/
+// `v-else` chain rather than being stringified.
+const SWITCH_HELPER = [
+  "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
+  '',
+  "export type Variant = 'success' | 'error' | 'info';",
+  '',
+  'function variantIcon(variant: Variant): MpElement {',
+  '  switch (variant) {',
+  "    case 'success': { return <span class=\"ok\" />; }",
+  "    case 'error': { return <span class=\"err\" />; }",
+  '    default: { return <span class="info" />; }',
+  '  }',
+  '}',
+  '',
+  'export interface BannerProperties extends MpProperties {',
+  '  variant?: Variant;',
+  '}',
+  '',
+  'export function BaseBanner(properties: Readonly<BannerProperties>): MpElement {',
+  "  const { variant = 'info' } = properties;",
+  '  return (',
+  '    <div class="banner">',
+  '      {variantIcon(variant)}',
+  '    </div>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the Vue emitter inlines an element-returning `switch` helper as a `v-if` chain (Category D)', () => {
+  const out = compileComponentModule(SWITCH_HELPER, { framework: 'vue', componentName: 'BaseBanner' });
+
+  it('emits native `<template>` with no render closure', () => {
+    expect(out.lang).toBe('vue');
+    expect(out.code).not.toContain('const render = () =>');
+    expect(out.code).not.toContain('<render v-bind="$attrs" />');
+    expect(out.code).not.toContain('native <template> unavailable');
+  });
+
+  it('renders each `switch` arm as a native conditional chain, never a `{{ variantIcon(...) }}` interpolation', () => {
+    // The call is inlined into the template as a conditional chain — the `<template>`
+    // never stringifies the helper call in a `{{ … }}` interpolation.
+    const template = out.code.slice(out.code.indexOf('<template>'));
+    expect(template).not.toContain('variantIcon');
+    expect(out.code).toContain('class="ok"');
+    expect(out.code).toContain('class="err"');
+    expect(out.code).toContain('class="info"');
+    expect(out.code).toMatch(/v-if="\(?variant\)? === 'success'"/);
+    expect(out.code).toMatch(/v-else-if="\(?variant\)? === 'error'"/);
+    expect(out.code).toContain('v-else');
+  });
+});
+
+// (Category D1) A scoped render-prop invoked as a child (`properties.panel?.({
+// tab })`) — modelled on `base-tabs`/`base-virtual-tabs`. The returned VNodes
+// render natively via `<component :is>`, and the render-prop must stay a real
+// prop (never a Vue named slot) so a compiled neutral parent can pass it plainly.
+const RENDER_PROP_CALL = [
+  "import { h, type MpElement, type MpProperties, type MpRenderProperty } from '@mission-platform/forge';",
+  '',
+  'export interface TabItem { id: string; label: string; }',
+  'export interface PanelScope { tab: TabItem; }',
+  '',
+  'export interface TabsProperties extends MpProperties {',
+  '  tabs: TabItem[];',
+  '  panel?: MpRenderProperty<PanelScope>;',
+  '}',
+  '',
+  'export function BaseTabs(properties: Readonly<TabsProperties>): MpElement {',
+  '  const { tabs } = properties;',
+  '  return (',
+  '    <div class="tabs">',
+  '      {tabs.map((tab) => (',
+  '        <div key={tab.id} role="tabpanel">',
+  '          {properties.panel?.({ tab })}',
+  '        </div>',
+  '      ))}',
+  '    </div>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the Vue emitter renders a render-prop call natively via `<component :is>` (Category D)', () => {
+  const out = compileComponentModule(RENDER_PROP_CALL, { framework: 'vue', componentName: 'BaseTabs' });
+
+  it('emits native `<template>` with no render closure', () => {
+    expect(out.lang).toBe('vue');
+    expect(out.code).not.toContain('const render = () =>');
+    expect(out.code).not.toContain('<render v-bind="$attrs" />');
+    expect(out.code).not.toContain('native <template> unavailable');
+  });
+
+  it('binds the render-prop call result to `<component :is>` inside the panel `v-for`', () => {
+    expect(out.code).toMatch(/<div v-for="tab in tabs"/);
+    expect(out.code).toContain('<component :is="properties.panel?.({ tab })" />');
+  });
+
+  it('keeps `panel` a real prop — never a Vue named slot', () => {
+    expect(out.code).not.toContain('name="panel"');
+    expect(out.code).toContain('panel?:');
   });
 });

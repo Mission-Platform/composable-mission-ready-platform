@@ -57,7 +57,10 @@ export {
   defineJsxStoryblokLibraryConfig,
   reactJsxPlugin,
   solidJsxPlugin,
+  solidJsxTsdownPlugin,
+  stagePluginsForTsdown,
   sveltePlugin,
+  svelteTsdownPlugin,
   type JsxHookLibraryConfigOptions,
   type JsxLibraryConfigOptions,
   type JsxStoryblokLibraryConfigOptions,
@@ -116,3 +119,19 @@ export {
   type GenerateHookLibrarySourcesOptions,
   type HookLibraryDtsOptions,
 } from './generate-hooks.js';
+
+export {
+  defineTsdownForgeComponents,
+  defineTsdownForgeComponentsAll,
+  defineTsdownForgeHooks,
+  defineTsdownForgeHooksAll,
+  defineTsdownForgeStoryblok,
+  defineTsdownForgeStoryblokAll,
+  type TsdownForgeComponentsAllOptions,
+  type TsdownForgeComponentsOptions,
+  type TsdownForgeHooksAllOptions,
+  type TsdownForgeHooksOptions,
+  type TsdownForgeStoryblokAllOptions,
+  type TsdownForgeStoryblokFramework,
+  type TsdownForgeStoryblokOptions,
+} from './tsdown.js';

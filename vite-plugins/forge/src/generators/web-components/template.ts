@@ -1,8 +1,9 @@
 /**
- * JSX → lit-html template conversion for the Web-Components (Lit) target.
+ * JSX → tagged-template conversion for the native Web-Components target.
  *
  * Walks the neutral component's returned JSX **AST** (never source text) and
- * produces a lit-html `html\`…\`` tagged-template expression:
+ * produces a `html\`…\`` tagged-template expression in the lit-html template
+ * dialect (interpreted at runtime by `@mission-platform/forge/web-components`):
  * - text and `{expr}` children become template text / `${expr}` holes,
  * - `class`/`className` → `class=${…}`, `htmlFor` → `for=${…}`,
  * - `onX` handlers → `@x=${…}` event bindings,
@@ -17,6 +18,8 @@
  * {@link scopeExpression}.
  */
 import ts from 'typescript';
+
+import { MP_STATIC_ATTR } from '../../compiler/optimize.js';
 
 /** Neutral (React-style) attribute names mapped to their DOM name for Lit. */
 const ATTRIBUTE_ALIASES: Readonly<Record<string, string>> = {
@@ -226,6 +229,10 @@ function openTag(
     }
     const rawName = attribute.name.text;
     const initializer = attribute.initializer;
+    // Stage-1 static marker — never leak into lit-html output.
+    if (rawName === MP_STATIC_ATTR) {
+      continue;
+    }
     // Event handler: `onClick` → `@click`.
     if (/^on[A-Z]/.test(rawName) && initializer && ts.isJsxExpression(initializer) && initializer.expression) {
       const eventName = rawName.slice(2).toLowerCase();

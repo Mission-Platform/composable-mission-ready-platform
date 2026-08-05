@@ -50,7 +50,9 @@ import {
   slotFallbackChildren,
   slotHCallFallback,
 } from '../../compiler/ast.js';
+import { isCompileTimeConstant, MP_STATIC_ATTR } from '../../compiler/optimize.js';
 
+import { nodeTypedFieldsByTypeName } from './props-interface.js';
 import { rewrite } from './shared.js';
 
 /** Thrown when a component's body cannot be expressed as native Vue template markup. */
@@ -64,6 +66,8 @@ export interface VueTemplate {
   declarationLines: string[];
   /** Whether the declarations need `computed` imported from `vue`. */
   usesComputed: boolean;
+  /** Whether the declarations need `watchEffect` imported from `vue` (ref-sync effects). */
+  usesWatchEffect: boolean;
 }
 
 const pad = (depth: number): string => '  '.repeat(depth);
@@ -108,11 +112,158 @@ function findDeclarationBody(name: string, root: ts.Node): ts.Node | undefined {
   return result;
 }
 
+/** Find the declared type annotation of a `const <name>: <T> = …` binding under `root`. */
+function findDeclaredTypeNode(name: string, root: ts.Node): ts.TypeNode | undefined {
+  let result: ts.TypeNode | undefined;
+  const visit = (current: ts.Node): void => {
+    if (result !== undefined) {
+      return;
+    }
+    if (
+      ts.isVariableDeclaration(current) &&
+      ts.isIdentifier(current.name) &&
+      current.name.text === name &&
+      current.type !== undefined
+    ) {
+      result = current.type;
+      return;
+    }
+    ts.forEachChild(current, visit);
+  };
+  visit(root);
+  return result;
+}
+
+/** The element type of an array type (`T[]`, `readonly T[]`, `Array<T>`, `ReadonlyArray<T>`), else `undefined`. */
+function arrayElementTypeNode(typeNode: ts.TypeNode | undefined): ts.TypeNode | undefined {
+  if (typeNode === undefined) {
+    return undefined;
+  }
+  if (ts.isArrayTypeNode(typeNode)) {
+    return typeNode.elementType;
+  }
+  // `readonly T[]`
+  if (ts.isTypeOperatorNode(typeNode) && typeNode.operator === ts.SyntaxKind.ReadonlyKeyword) {
+    return arrayElementTypeNode(typeNode.type);
+  }
+  // `Array<T>` / `ReadonlyArray<T>`
+  if (
+    ts.isTypeReferenceNode(typeNode) &&
+    ts.isIdentifier(typeNode.typeName) &&
+    (typeNode.typeName.text === 'Array' || typeNode.typeName.text === 'ReadonlyArray') &&
+    typeNode.typeArguments?.length === 1
+  ) {
+    return typeNode.typeArguments[0];
+  }
+  return undefined;
+}
+
+/** The referenced type name of a bare `TypeReference` (`WysiwygToolbarItem`), else `undefined`. */
+function typeReferenceName(typeNode: ts.TypeNode | undefined): string | undefined {
+  return typeNode !== undefined && ts.isTypeReferenceNode(typeNode) && ts.isIdentifier(typeNode.typeName)
+    ? typeNode.typeName.text
+    : undefined;
+}
+
+/**
+ * Resolve the declared type of an in-scope identifier: a known `.map(…)` loop
+ * alias (from {@link Context.aliasTypes}) or a `const <name>: <T> = …` binding
+ * with an explicit annotation. Returns `undefined` when it cannot be resolved
+ * syntactically (the caller then keeps the conservative default).
+ */
+function resolveDeclaredTypeNode(name: string, context: Context): ts.TypeNode | undefined {
+  return context.aliasTypes.get(name) ?? findDeclaredTypeNode(name, context.sourceFile);
+}
+
+/** The declared return type annotation of a named `function <name>(…): <T>` under `root`. */
+function findFunctionReturnType(name: string, root: ts.Node): ts.TypeNode | undefined {
+  let result: ts.TypeNode | undefined;
+  const visit = (current: ts.Node): void => {
+    if (result !== undefined) {
+      return;
+    }
+    if (ts.isFunctionDeclaration(current) && current.name?.text === name && current.type !== undefined) {
+      result = current.type;
+      return;
+    }
+    ts.forEachChild(current, visit);
+  };
+  visit(root);
+  return result;
+}
+
+/**
+ * Best-effort syntactic type of an expression, used to classify `.map(…)` loop
+ * aliases receiver type-aware. Only the shapes that actually feed a `v-for`
+ * source in practice are resolved; anything else yields `undefined` (the alias
+ * then carries no known type and every member read on it stays an interpolation):
+ *
+ * - a bare identifier → its `const <name>: <T>` annotation or loop-alias type;
+ * - `f(…)` → the declared return type of a local `function f(): <T>`;
+ * - `a ? b : c` → whichever arm resolves (a node-valued `const` is often inlined
+ *   into the loop source as such a ternary, e.g. `properties.items ? … : build()`);
+ * - `x.field` → the declared type of `field` on `x`'s resolved type.
+ */
+function resolveExpressionTypeNode(expression: ts.Expression, context: Context): ts.TypeNode | undefined {
+  const expr = unwrap(expression);
+  if (ts.isIdentifier(expr)) {
+    return resolveDeclaredTypeNode(expr.text, context);
+  }
+  if (ts.isCallExpression(expr) && ts.isIdentifier(expr.expression)) {
+    return findFunctionReturnType(expr.expression.text, context.sourceFile);
+  }
+  if (ts.isConditionalExpression(expr)) {
+    return (
+      resolveExpressionTypeNode(expr.whenTrue, context) ?? resolveExpressionTypeNode(expr.whenFalse, context)
+    );
+  }
+  if (ts.isPropertyAccessExpression(expr) && ts.isIdentifier(expr.expression) && ts.isIdentifier(expr.name)) {
+    const receiverTypeName = typeReferenceName(resolveExpressionTypeNode(expr.expression, context));
+    return receiverTypeName === undefined
+      ? undefined
+      : interfaceFieldType(receiverTypeName, expr.name.text, context.sourceFile);
+  }
+  return undefined;
+}
+
+/**
+ * The element type node of a `.map(…)`/`.flatMap(…)` iterable expression, so the
+ * loop alias can be classified receiver type-aware. Resolves the iterable's own
+ * type (see {@link resolveExpressionTypeNode}) and strips one array level; any
+ * unresolved shape yields `undefined` (the alias then carries no known type).
+ */
+function resolveIterableElementType(iterableExpr: ts.Expression, context: Context): ts.TypeNode | undefined {
+  return arrayElementTypeNode(resolveExpressionTypeNode(iterableExpr, context));
+}
+
+/** The declared type of a named field on a named interface / type-literal alias in `sourceFile`. */
+function interfaceFieldType(typeName: string, fieldName: string, sourceFile: ts.SourceFile): ts.TypeNode | undefined {
+  for (const statement of sourceFile.statements) {
+    const members = ts.isInterfaceDeclaration(statement)
+      ? statement.name.text === typeName
+        ? statement.members
+        : undefined
+      : ts.isTypeAliasDeclaration(statement) && statement.name.text === typeName && ts.isTypeLiteralNode(statement.type)
+        ? statement.type.members
+        : undefined;
+    if (members === undefined) {
+      continue;
+    }
+    for (const member of members) {
+      if (ts.isPropertySignature(member) && ts.isIdentifier(member.name) && member.name.text === fieldName) {
+        return member.type;
+      }
+    }
+  }
+  return undefined;
+}
+
 /** Whether an expression's subtree builds framework nodes (JSX, `h(…)`, or a `.map`/`.flatMap`). */
 function producesNodes(
   node: ts.Node,
   sourceFile?: ts.SourceFile,
   nodeTypedProps?: Set<string>,
+  propsParamName?: string,
   visited = new Set<string>(),
 ): boolean {
   const sf = sourceFile ?? (typeof node.getSourceFile === 'function' ? node.getSourceFile() : undefined);
@@ -125,7 +276,16 @@ function producesNodes(
     if (nodeTypedProps !== undefined && nodeTypedProps.size > 0) {
       let propName: string | undefined;
       if (ts.isPropertyAccessExpression(current)) {
-        propName = current.name.text;
+        // Only a read on the props parameter (`properties.label`) is a genuine
+        // node-typed prop read; an arbitrary member access (`node.label`) is a
+        // plain field and must not be misclassified. When the props parameter
+        // is unknown, fall back to matching the trailing name.
+        if (
+          propsParamName === undefined ||
+          (ts.isIdentifier(current.expression) && current.expression.text === propsParamName)
+        ) {
+          propName = current.name.text;
+        }
       } else if (ts.isIdentifier(current)) {
         propName = current.text;
       }
@@ -147,7 +307,21 @@ function producesNodes(
         ts.isPropertyAccessExpression(current.expression) &&
         (current.expression.name.text === 'map' || current.expression.name.text === 'flatMap')
       ) {
-        found = true;
+        // A `.map()`/`.flatMap()` only produces nodes when its projection does.
+        // An inline callback is inspected precisely (a data projection such as
+        // `events.map((e) => e.uid === id ? patch(e) : e)` inside a `void` handler
+        // is NOT node-producing); a non-inline callback stays conservatively
+        // treated as node-producing. Either way the receiver keeps being scanned.
+        const callback = current.arguments[0];
+        if (callback === undefined || (!ts.isArrowFunction(callback) && !ts.isFunctionExpression(callback))) {
+          found = true;
+          return;
+        }
+        if (producesNodes(callback.body, sf, nodeTypedProps, propsParamName, visited)) {
+          found = true;
+          return;
+        }
+        visit(current.expression.expression);
         return;
       }
     }
@@ -156,16 +330,62 @@ function producesNodes(
       if (!visited.has(name)) {
         visited.add(name);
         const bodyNode = findDeclarationBody(name, sf);
-        if (bodyNode !== undefined && producesNodes(bodyNode, sf, nodeTypedProps, visited)) {
+        if (bodyNode !== undefined && producesNodes(bodyNode, sf, nodeTypedProps, propsParamName, visited)) {
           found = true;
           return;
         }
       }
     }
+    // A property access only recurses into its receiver: its `.name` is an
+    // identifier whose text may coincide with a node-typed prop (`node.label`),
+    // and must not be re-examined as a bare identifier reference.
+    if (ts.isPropertyAccessExpression(current)) {
+      visit(current.expression);
+      return;
+    }
+    // An object-literal property name is a **key**, not a value reference:
+    // `emitRange({ start: next, end: nextEnd })` (and the shorthand form
+    // `{ start, end }`) must not count `start`/`end` as node-typed-prop reads
+    // merely because their key text coincides with a node-typed slot prop. Only
+    // the initializer value of a full property assignment is a genuine reference.
+    if (ts.isPropertyAssignment(current)) {
+      visit(current.initializer);
+      return;
+    }
+    if (ts.isShorthandPropertyAssignment(current)) {
+      return;
+    }
     ts.forEachChild(current, visit);
   };
   visit(node);
   return found;
+}
+
+/**
+ * A transformer rewriting a `useRef` binding's React-style `.current` access
+ * (`searchReference.current`) inside a **template expression** to the bare ref
+ * identifier (`searchReference`). A `useRef` bound to an element becomes a
+ * `useTemplateRef('name')`, and Vue's template compiler **auto-unwraps** top-level
+ * refs — so inside a `<template>` expression the identifier already denotes the
+ * unwrapped element (`.value`). An inline handler in the markup
+ * (`onClick={() => searchReference.current?.focus()}`) therefore drops both
+ * `.current` and any `?.` optional-chain into `searchReference?.focus()`.
+ */
+function rewriteRefCurrent(refNames: ReadonlySet<string>): ts.TransformerFactory<ts.Node> {
+  return (context) => {
+    const visit = (node: ts.Node): ts.Node => {
+      if (
+        (ts.isPropertyAccessExpression(node) || ts.isPropertyAccessChain(node)) &&
+        node.name.text === 'current' &&
+        ts.isIdentifier(node.expression) &&
+        refNames.has(node.expression.text)
+      ) {
+        return node.expression;
+      }
+      return ts.visitEachChild(node, visit, context);
+    };
+    return (node) => ts.visitNode(node, visit) as ts.Node;
+  };
 }
 
 /** A transformer collapsing `styles['x']` / `styles[`x`]` reads to the bare key expression. */
@@ -438,12 +658,28 @@ interface Context {
   slotSourceNames: Set<string>;
   /** Prop names whose declared type holds framework nodes (`MpChild`, `MpElement`, …). */
   nodeTypedProps: Set<string>;
+  /**
+   * `typeName → node-typed field names` across every interface / type-literal
+   * alias in the source (see {@link nodeTypedFieldsByTypeName}). Used together
+   * with {@link Context.aliasTypes} to render a node-valued member read on a
+   * loop alias (`{item.icon}`) as a native `<component :is>` rather than a
+   * `{{ … }}` interpolation that would stringify the VNode.
+   */
+  nodeTypedFieldsByType: Map<string, Set<string>>;
+  /**
+   * In-scope `.map(…)`/`.flatMap(…)` alias name → its declared element type
+   * node (`item` → `WysiwygToolbarItem`), threaded through nested loops so a
+   * member read on the alias can be classified receiver type-aware.
+   */
+  aliasTypes: Map<string, ts.TypeNode>;
   /** Event props (`on<Event>`) → their emitted event + params, so inline template handlers can call `emit(...)`. */
   eventProps: Map<string, { eventName: string; paramNames: string[] }>;
   /** Renamed destructuring aliases → their real prop name (`formatProperty` → `format`). */
   propAliases: Map<string, string>;
   /** `useState` setter name → its state name, so inline template handlers assign the reactive state. */
   setterToState: Map<string, string>;
+  /** `useRef` binding names, so an inline template handler's `.current` read is rewritten to the template-ref `.value`. */
+  refNames: Set<string>;
   /**
    * Scalar `const`s declared inside the current `.map(…)` callback (before its
    * returned element), inlined into every template expression printed while
@@ -461,6 +697,7 @@ function templateExpr(expr: ts.Expression, context: Context): string {
   const inlined = inlineIdentifiers(expr, context.substitutions);
   const result = ts.transform(inlined, [
     collapseStyles(context.styleModuleNames),
+    rewriteRefCurrent(context.refNames),
     rewriteSetters(context.setterToState),
     emitEvents(context.eventProps, context.propsParamName),
     rewritePropsChildren(context.propsParamName),
@@ -701,6 +938,12 @@ function emitAttr(attr: Attr, context: Context, isNativeElement: boolean): strin
     return undefined;
   }
 
+  // Stage-1 static marker — never leak into the SFC; Vue's compiler already
+  // hoists fully-static trees, and constant derived consts skip `computed`.
+  if (name === MP_STATIC_ATTR) {
+    return undefined;
+  }
+
   // `on<Event>` → `@<event>` listener. Vue hyphenates a DOM listener's event
   // name (`@dragOver` → the dead `drag-over`), and native DOM event names are
   // all-lowercase (`dragover`), so a native element's multi-word event is fully
@@ -742,7 +985,44 @@ function emitAttr(attr: Attr, context: Context, isNativeElement: boolean): strin
   if (value.kind === 'static') {
     return `${outName}="${escapeExpr(value.text)}"`;
   }
+  // A prop bound to a value that embeds framework nodes — e.g. a `:steps` whose
+  // objects carry JSX `content` VNodes, or any expression building elements/`h()`
+  // — has no faithful template form: the VNodes would be stringified as raw JSX
+  // into the attribute. (A render-prop *function* read such as
+  // `label={properties.label}` is not node-producing and is handled separately as
+  // scoped-slot forwarding.) Fall back to the render closure, which renders it.
+  if (producesNodes(value.expr, context.sourceFile, context.nodeTypedProps, context.propsParamName)) {
+    throw new UnsupportedTemplate('node-valued prop binding');
+  }
   return `:${outName}="${escapeExpr(templateExpr(value.expr, context))}"`;
+}
+
+/**
+ * Whether a component-element attribute is a **scoped-slot forwarding** rather
+ * than a data prop: its value is a node-typed render-prop read on the props
+ * parameter (`label={properties.label}`) — the current component's own scoped
+ * `<slot>` passed straight down to a child/recursive component. Such an
+ * attribute has no `:prop` form (the child's `label` is a *slot*, not a declared
+ * prop; a `:label` binding would leak into `$attrs`), so it must instead become
+ * a `<template #<child>="scope"><slot name="<own>" v-bind="scope" /></template>`
+ * block on the child. Returns the child-side slot name (`attr.name`) and the
+ * current component's own slot name (the render-prop read), or `undefined` when
+ * the attribute is an ordinary prop that merely shares a name with a slot.
+ */
+function forwardedRenderSlot(attr: Attr, context: Context): { child: string; own: string } | undefined {
+  if (attr.value.kind !== 'expr') {
+    return undefined;
+  }
+  const expr = unwrap(attr.value.expr);
+  if (
+    ts.isPropertyAccessExpression(expr) &&
+    ts.isIdentifier(expr.expression) &&
+    expr.expression.text === context.propsParamName &&
+    context.nodeTypedProps.has(expr.name.text)
+  ) {
+    return { child: attr.name, own: expr.name.text };
+  }
+  return undefined;
 }
 
 /** The name, scope object, and fallback children of a `<Slot>` element or `h(Slot, …)` call. */
@@ -840,9 +1120,18 @@ function isNoOpVoidStatement(statement: ts.Statement): boolean {
   return !hasCall;
 }
 
-/** Unwrap redundant parentheses around an expression. */
+/**
+ * Unwrap redundant parentheses and type-only wrappers (`(x)`, `x as T`,
+ * `x satisfies T`) around an expression. The `as`/`satisfies` casts carry no
+ * runtime or structural meaning, so structural analysis (element/array/map
+ * detection) must see straight through them — e.g. a folded node array
+ * `([...] as MpChild[])` still resolves to its array literal for the child path.
+ */
 function unwrap(expr: ts.Expression): ts.Expression {
-  return ts.isParenthesizedExpression(expr) ? unwrap(expr.expression) : expr;
+  if (ts.isParenthesizedExpression(expr) || ts.isAsExpression(expr) || ts.isSatisfiesExpression(expr)) {
+    return unwrap(expr.expression);
+  }
+  return expr;
 }
 
 /**
@@ -862,6 +1151,34 @@ function readEarlyReturnGuard(
     return undefined;
   }
   return { condition: statement.expression, expression: inner[0].expression };
+}
+
+/**
+ * Read a top-level ref-sync assignment `<ref>.current = <expr>;` where `<ref>` is
+ * a `useRef` binding — a render-scope side effect (in React it re-runs every
+ * render) that keeps a mutable ref in step with a derived value. It has no
+ * `const` form, so it is lifted to a reactive `watchEffect(() => { <ref>.value =
+ * <expr>; })` rather than rejected as a "non-const derived statement". Returns
+ * the assignment expression, or `undefined` for any other statement.
+ */
+function readRefSyncAssignment(statement: ts.Statement, refNames: ReadonlySet<string>): ts.BinaryExpression | undefined {
+  if (!ts.isExpressionStatement(statement) || !ts.isBinaryExpression(statement.expression)) {
+    return undefined;
+  }
+  const expression = statement.expression;
+  if (expression.operatorToken.kind !== ts.SyntaxKind.EqualsToken) {
+    return undefined;
+  }
+  const target = expression.left;
+  if (
+    ts.isPropertyAccessExpression(target) &&
+    target.name.text === 'current' &&
+    ts.isIdentifier(target.expression) &&
+    refNames.has(target.expression.text)
+  ) {
+    return expression;
+  }
+  return undefined;
 }
 
 /**
@@ -952,8 +1269,8 @@ function emitConditional(conditional: ts.ConditionalExpression, depth: number, c
   // non-`nothing` element branch — flattens into a `v-if`/`v-else-if`/`v-else`
   // chain rather than being stringified into an interpolation.
   if (
-    producesNodes(whenTrue, context.sourceFile, context.nodeTypedProps) ||
-    producesNodes(whenFalse, context.sourceFile, context.nodeTypedProps)
+    producesNodes(whenTrue, context.sourceFile, context.nodeTypedProps, context.propsParamName) ||
+    producesNodes(whenFalse, context.sourceFile, context.nodeTypedProps, context.propsParamName)
   ) {
     return emitConditionalChain(conditional, depth, context);
   }
@@ -974,7 +1291,7 @@ function emitLogicalAnd(expression: ts.BinaryExpression, depth: number, context:
   if (!isElementLike(right)) {
     // A node-producing right side that isn't a handled structural form must not
     // be stringified into an interpolation, so fall back.
-    if (producesNodes(right, context.sourceFile, context.nodeTypedProps)) {
+    if (producesNodes(right, context.sourceFile, context.nodeTypedProps, context.propsParamName)) {
       throw new UnsupportedTemplate('node-producing logical-and branch');
     }
     return `${pad(depth)}{{ ${escapeExpr(templateExpr(expression, context))} }}`;
@@ -1220,9 +1537,21 @@ function emitMap(node: ts.CallExpression, depth: number, context: Context, direc
   // walked with a child context carrying the callback's leading scalar consts so
   // they inline into its template expressions (a nested map keeps the outer set).
   const iterable = escapeExpr(templateExpr(iterableExpr, context));
+  // Record the item alias's declared element type (resolved from the iterable's
+  // type) so a node-valued member read on it inside the loop (`{item.icon}`) is
+  // classified receiver type-aware. Only a simple identifier item parameter (the
+  // callback's first parameter) is tracked; a destructured pattern or the numeric
+  // index parameter carries no element type.
+  const itemParameter = callback.parameters[0]?.name;
+  const elementType = resolveIterableElementType(iterableExpr, context);
+  const aliasTypes =
+    itemParameter !== undefined && ts.isIdentifier(itemParameter) && elementType !== undefined
+      ? new Map([...context.aliasTypes, [itemParameter.text, elementType]])
+      : context.aliasTypes;
   const childContext: Context = {
     ...context,
     substitutions: new Map([...context.substitutions, ...callbackResult.substitutions]),
+    aliasTypes,
   };
   const alias = aliasParts.length === 1 ? aliasParts[0] : `(${aliasParts.join(', ')})`;
   const vFor = `v-for="${escapeExpr(alias)} in ${iterable}"`;
@@ -1232,13 +1561,22 @@ function emitMap(node: ts.CallExpression, depth: number, context: Context, direc
   // hoisted onto an outer `<template>` wrapper.
   if (returnsElementArray) {
     const elements = (callbackResult.element as ts.ArrayLiteralExpression).elements;
-    const inner = elements.map((element) => emitElement(unwrap(element), depth + 1, childContext)).join('\n');
-    const loop = `${pad(depth)}<template ${vFor}>\n${inner}\n${pad(depth)}</template>`;
+    // Vue requires the `:key` of a multi-child `<template v-for>` on the
+    // `<template>` itself (a `:key` on a looped child is a compile error), so the
+    // loop is keyed by the iteration index — synthesising one when the callback
+    // declares only an item parameter — and each child's own `key={…}` is dropped.
+    const indexAlias = aliasParts.length >= 2 ? aliasParts[1] : '__index';
+    const loopAlias = aliasParts.length >= 2 ? alias : `(${aliasParts[0]}, ${indexAlias})`;
+    const keyedFor = `v-for="${escapeExpr(loopAlias)} in ${iterable}" :key="${indexAlias}"`;
+    const inner = elements.map((element) => emitElement(unwrap(element), depth + 1, childContext, undefined, undefined, true)).join('\n');
+    const loop = `${pad(depth)}<template ${keyedFor}>\n${inner}\n${pad(depth)}</template>`;
     if (directive === undefined) {
       return loop;
     }
-    const guarded = elements.map((element) => emitElement(unwrap(element), depth + 2, childContext)).join('\n');
-    return `${pad(depth)}<template ${directive}>\n${pad(depth + 1)}<template ${vFor}>\n${guarded}\n${pad(depth + 1)}</template>\n${pad(depth)}</template>`;
+    const guarded = elements
+      .map((element) => emitElement(unwrap(element), depth + 2, childContext, undefined, undefined, true))
+      .join('\n');
+    return `${pad(depth)}<template ${directive}>\n${pad(depth + 1)}<template ${keyedFor}>\n${guarded}\n${pad(depth + 1)}</template>\n${pad(depth)}</template>`;
   }
   // A single-element `.map()` sitting behind a `v-if`/`v-else` guard carries both
   // directives on the same element (Vue evaluates `v-if` before `v-for` per element).
@@ -1263,6 +1601,23 @@ function emitNodeArrayChild(expr: ts.Expression, depth: number, context: Context
   const node = unwrap(expr);
   if (isMapCall(node)) {
     return emitMap(node, depth, context);
+  }
+  // A bare `properties.children` read (or the `...properties.children` spread /
+  // `properties.children as MpChild[]` cast that `unwrap` sees through) is the
+  // component's default slot — e.g. `base-radio-group` appends its own children to
+  // the folded `radios` array — so it emits the default `<slot>`.
+  if (
+    ts.isPropertyAccessExpression(node) &&
+    ts.isIdentifier(node.expression) &&
+    node.expression.text === context.propsParamName &&
+    node.name.text === 'children'
+  ) {
+    return emitSlot(undefined, depth, context);
+  }
+  // A bare slot-source identifier (a normalised children const, `childList`) is
+  // likewise the default slot.
+  if (ts.isIdentifier(node) && context.slotSourceNames.has(node.text)) {
+    return emitSlot(undefined, depth, context);
   }
   if (ts.isArrayLiteralExpression(node)) {
     if (node.elements.length === 0) {
@@ -1303,6 +1658,7 @@ function emitElement(
   context: Context,
   directive?: string,
   trailingAttr?: string,
+  dropKey?: boolean,
 ): string {
   const ir = parseElement(unwrap(expr), context);
   const attrParts: string[] = [];
@@ -1315,7 +1671,24 @@ function emitElement(
   // A native (intrinsic) element has a lowercase tag and is not a dynamic
   // `<component :is>`; its DOM event listeners need the lowercased event name.
   const isNativeElement = ir.dynamicIs === undefined && /^[a-z]/.test(ir.tag);
+  const isComponentElement = /^[A-Z]/.test(ir.tag);
+  // Render-prop → scoped-slot forwarding: a component attribute whose value is a
+  // node-typed render-prop read (`label={properties.label}`) passes the current
+  // component's own scoped `<slot>` down to the child, so it is diverted from
+  // `emitAttr` into a `<template #name>` forwarding block instead of a `:name` bind.
+  const forwardedSlots: { child: string; own: string }[] = [];
   for (const attr of ir.attrs) {
+    // When the element is looped by a wrapping `<template v-for :key>`, Vue
+    // requires the `key` on that `<template>` — a `:key` on a child is rejected —
+    // so the per-element key attribute is dropped here.
+    if (dropKey === true && attr.name === 'key') {
+      continue;
+    }
+    const forwarded = isComponentElement ? forwardedRenderSlot(attr, context) : undefined;
+    if (forwarded !== undefined) {
+      forwardedSlots.push(forwarded);
+      continue;
+    }
     const rendered = emitAttr(attr, context, isNativeElement);
     if (rendered !== undefined) {
       attrParts.push(rendered);
@@ -1326,13 +1699,18 @@ function emitElement(
   }
   const open = `${ir.tag}${attrParts.length > 0 ? ` ${attrParts.join(' ')}` : ''}`;
 
+  const forwardBlocks = forwardedSlots.map(
+    ({ child, own }) =>
+      `${pad(depth + 1)}<template #${child}="scope">\n${pad(depth + 2)}<slot name="${own}" v-bind="scope" />\n${pad(depth + 1)}</template>`,
+  );
+
   // Named-slot **passing**: a component element whose children carry `slot="x"`
   // markers emits a `<template #x>` block per group (the default-slot children
   // go into `<template #default>`), so each routes to the child's matching slot.
   const jsxChildren = ir.children as ts.JsxChild[];
-  if (/^[A-Z]/.test(ir.tag) && hasSlottedChildren(jsxChildren)) {
+  if (isComponentElement && hasSlottedChildren(jsxChildren)) {
     const { defaultChildren, namedSlots } = partitionSlottedChildren(jsxChildren);
-    const blocks: string[] = [];
+    const blocks: string[] = [...forwardBlocks];
     for (const [name, group] of namedSlots) {
       const body = emitChildren(group, depth + 2, context);
       blocks.push(`${pad(depth + 1)}<template #${name}>\n${body}\n${pad(depth + 1)}</template>`);
@@ -1345,10 +1723,177 @@ function emitElement(
   }
 
   const inner = emitChildren(ir.children, depth + 1, context);
+  // A component with forwarded scoped slots but no `slot=`-marked children still
+  // needs its `<template #name>` forwarding blocks; any plain default children
+  // route to the child's default slot.
+  if (forwardBlocks.length > 0) {
+    const blocks = [...forwardBlocks];
+    if (inner !== '') {
+      blocks.push(`${pad(depth + 1)}<template #default>\n${inner}\n${pad(depth + 1)}</template>`);
+    }
+    return `${pad(depth)}<${open}>\n${blocks.join('\n')}\n${pad(depth)}</${ir.tag}>`;
+  }
   if (inner === '') {
     return `${pad(depth)}<${open} />`;
   }
   return `${pad(depth)}<${open}>\n${inner}\n${pad(depth)}</${ir.tag}>`;
+}
+
+/** Find a top-level `function <name>(…) { … }` declaration in the source file. */
+function findModuleFunction(name: string, sourceFile: ts.SourceFile): ts.FunctionDeclaration | undefined {
+  for (const statement of sourceFile.statements) {
+    if (ts.isFunctionDeclaration(statement) && statement.name?.text === name && statement.body !== undefined) {
+      return statement;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Read the single element a switch/if clause returns: a bare `return <el>;` or a
+ * one-statement block `{ return <el>; }`. Returns `undefined` for any other shape
+ * (multiple statements, a non-`return`, or a non-element return value).
+ */
+function readSingleReturnElement(statements: readonly ts.Statement[]): ts.Expression | undefined {
+  const flat = statements.length === 1 && ts.isBlock(statements[0]) ? statements[0].statements : statements;
+  if (flat.length !== 1) {
+    return undefined;
+  }
+  const only = flat[0];
+  if (!ts.isReturnStatement(only) || only.expression === undefined) {
+    return undefined;
+  }
+  const expr = unwrap(only.expression);
+  return isElementLike(expr) ? expr : undefined;
+}
+
+/**
+ * Convert a `switch (param) { case 'a': return <A/>; case 'b': case 'c': return
+ * <BC/>; default: return <D/>; }` — every clause returning a single element,
+ * discriminating on the bare `paramName` — into the equivalent nested ternary
+ * `param === 'a' ? <A/> : (param === 'b' || param === 'c') ? <BC/> : <D/>`, or
+ * `undefined` for any other shape. A `default` clause is required (it becomes the
+ * final else); fall-through into `default` is rejected.
+ */
+function switchToConditional(statement: ts.SwitchStatement, paramName: string): ts.Expression | undefined {
+  const factory = ts.factory;
+  if (!ts.isIdentifier(statement.expression) || statement.expression.text !== paramName) {
+    return undefined;
+  }
+  const arms: { labels: ts.Expression[]; result: ts.Expression }[] = [];
+  let elseResult: ts.Expression | undefined;
+  let pendingLabels: ts.Expression[] = [];
+  for (const clause of statement.caseBlock.clauses) {
+    if (ts.isCaseClause(clause)) {
+      pendingLabels.push(clause.expression);
+      if (clause.statements.length === 0) {
+        continue;
+      }
+      const result = readSingleReturnElement(clause.statements);
+      if (result === undefined) {
+        return undefined;
+      }
+      arms.push({ labels: pendingLabels, result });
+      pendingLabels = [];
+    } else {
+      if (pendingLabels.length > 0) {
+        return undefined;
+      }
+      const result = readSingleReturnElement(clause.statements);
+      if (result === undefined) {
+        return undefined;
+      }
+      elseResult = result;
+    }
+  }
+  if (elseResult === undefined || arms.length === 0) {
+    return undefined;
+  }
+  let expr: ts.Expression = elseResult;
+  for (let index = arms.length - 1; index >= 0; index -= 1) {
+    const arm = arms[index];
+    const comparisons = arm.labels.map((label) =>
+      factory.createBinaryExpression(
+        factory.createIdentifier(paramName),
+        factory.createToken(ts.SyntaxKind.EqualsEqualsEqualsToken),
+        label,
+      ),
+    );
+    let condition: ts.Expression = comparisons[0];
+    for (let position = 1; position < comparisons.length; position += 1) {
+      condition = factory.createBinaryExpression(
+        condition,
+        factory.createToken(ts.SyntaxKind.BarBarToken),
+        comparisons[position],
+      );
+    }
+    const wrapped = arm.labels.length > 1 ? factory.createParenthesizedExpression(condition) : condition;
+    expr = factory.createConditionalExpression(
+      wrapped,
+      factory.createToken(ts.SyntaxKind.QuestionToken),
+      arm.result,
+      factory.createToken(ts.SyntaxKind.ColonToken),
+      expr,
+    );
+  }
+  return expr;
+}
+
+/**
+ * Inline a call to a module-level, single-parameter element-returning helper
+ * whose body is a lone `switch` returning elements (`variantIcon(variant)`) as
+ * the equivalent nested ternary, with the call argument substituted for the
+ * parameter, so a `{variantIcon(variant)}` child renders as a native
+ * `v-if`/`v-else-if`/`v-else` chain. Returns `undefined` for any other shape.
+ */
+function elementSwitchHelperToConditional(
+  call: ts.CallExpression,
+  sourceFile: ts.SourceFile,
+): ts.Expression | undefined {
+  if (!ts.isIdentifier(call.expression)) {
+    return undefined;
+  }
+  const func = findModuleFunction(call.expression.text, sourceFile);
+  if (func === undefined || func.parameters.length !== 1 || func.body === undefined) {
+    return undefined;
+  }
+  const param = func.parameters[0].name;
+  if (!ts.isIdentifier(param)) {
+    return undefined;
+  }
+  const argument = call.arguments[0];
+  if (argument === undefined) {
+    return undefined;
+  }
+  const body = func.body.statements;
+  if (body.length !== 1 || !ts.isSwitchStatement(body[0])) {
+    return undefined;
+  }
+  const conditional = switchToConditional(body[0], param.text);
+  if (conditional === undefined) {
+    return undefined;
+  }
+  return inlineIdentifiers(conditional, new Map([[param.text, argument]]));
+}
+
+/**
+ * Whether a child expression is a **render-prop call** — a call whose callee is a
+ * node-typed render prop read on the props parameter, with or without an
+ * optional-call (`properties.panel?.({ tab })` / `properties.panel({ tab })`).
+ * Such a call returns framework VNodes and is rendered via a functional-component
+ * `<component :is>` wrapper rather than stringified into an interpolation.
+ */
+function isRenderPropCall(node: ts.Expression, context: Context): boolean {
+  if (!ts.isCallExpression(node)) {
+    return false;
+  }
+  const callee = node.expression;
+  return (
+    (ts.isPropertyAccessExpression(callee) || ts.isPropertyAccessChain(callee)) &&
+    ts.isIdentifier(callee.expression) &&
+    callee.expression.text === context.propsParamName &&
+    context.nodeTypedProps.has(callee.name.text)
+  );
 }
 
 /** Render an expression appearing in child position. */
@@ -1391,6 +1936,13 @@ function emitExpressionChild(expr: ts.Expression, depth: number, context: Contex
   if (isMapCall(node)) {
     return emitMap(node, depth, context);
   }
+  // An array-literal child (`{[weekdayHeader, ...weekRows]}` / `{[...itemNodes,
+  // ...childList]}`) mixing node consts, spreads of node arrays and `.map()`
+  // projections emits each entry as native child markup / `v-for` via the shared
+  // node-array child emitter (which itself handles spreads, maps and conditionals).
+  if (ts.isArrayLiteralExpression(node)) {
+    return emitNodeArrayChild(node, depth, context);
+  }
   if (
     ts.isSpreadElement(node) &&
     ts.isIdentifier(node.expression) &&
@@ -1417,19 +1969,63 @@ function emitExpressionChild(expr: ts.Expression, depth: number, context: Contex
   }
   // A node-typed prop / property rendered as a child (`{header}`, `{activeStep?.content}`, an `MpChild`)
   // would be stringified by an interpolation; fall back so it renders correctly.
+  // The detection is receiver-aware: only a bare destructured prop identifier
+  // (`{header}`) or a read on the props parameter (`{properties.label}`) counts —
+  // an arbitrary member access whose name merely coincides with a render-prop
+  // (`{node.label}`, a plain string field) is a normal interpolation, not slot content.
   let nodePropName: string | undefined;
   if (ts.isIdentifier(node)) {
     nodePropName = node.text;
-  } else if (ts.isPropertyAccessExpression(node)) {
+  } else if (
+    ts.isPropertyAccessExpression(node) &&
+    ts.isIdentifier(node.expression) &&
+    node.expression.text === context.propsParamName
+  ) {
     nodePropName = node.name.text;
   }
   if (nodePropName !== undefined && context.nodeTypedProps.has(nodePropName)) {
     throw new UnsupportedTemplate('node-typed prop rendered as child');
   }
+  // A call to a module-level, single-parameter element-returning `switch` helper
+  // (`variantIcon(variant)`) has no template binding, but its switch inlines as a
+  // native `v-if`/`v-else-if`/`v-else` chain via the equivalent nested ternary.
+  if (ts.isCallExpression(node) && ts.isIdentifier(node.expression)) {
+    const inlined = elementSwitchHelperToConditional(node, context.sourceFile);
+    if (inlined !== undefined) {
+      return emitExpressionChild(inlined, depth, context);
+    }
+  }
+  // A render-prop call in child position (`{properties.panel?.({ tab })}`): the
+  // callee is a node-typed render prop returning framework VNodes. Vue's
+  // `<component :is>` renders an already-created VNode as-is (per the official
+  // "Using Vnodes in `<template>`" guide), so binding the call result directly
+  // mounts the render-prop's output natively while keeping `panel` a **real prop**
+  // (never a Vue named slot) — matching the deliberate `base-tabs`/`base-virtual-tabs`
+  // design. Binding the call expression itself (rather than an arrow wrapper) also
+  // keeps any enclosing `v-if` narrowing of the argument (`{ tab: activeTab }`).
+  if (isRenderPropCall(node, context)) {
+    return `${pad(depth)}<component :is="${escapeExpr(templateExpr(node, context))}" />`;
+  }
+  // A node-valued member read on a `.map(…)` loop alias — e.g. `{item.icon}`
+  // where `item: WysiwygToolbarItem` and `WysiwygToolbarItem.icon: MpElement` —
+  // resolves at runtime to an already-created framework VNode. A `{{ … }}`
+  // interpolation would stringify it, and Vue's `toDisplayString` JSON-serialises
+  // the (circular) VNode and throws, so the whole subtree fails to render.
+  // `<component :is>` renders an existing VNode as-is (the same official "Using
+  // Vnodes in `<template>`" mechanism used for render-prop calls above), so bind
+  // it there. The check is receiver **type-aware** (the field must be node-typed
+  // on the alias's own resolved type), so a same-named plain field on a different
+  // type (`{node.label}` where `TreeNode.label: string`) stays an interpolation.
+  if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.name) && ts.isIdentifier(node.expression)) {
+    const receiverTypeName = typeReferenceName(context.aliasTypes.get(node.expression.text));
+    if (receiverTypeName !== undefined && (context.nodeTypedFieldsByType.get(receiverTypeName)?.has(node.name.text) ?? false)) {
+      return `${pad(depth)}<component :is="${escapeExpr(templateExpr(node, context))}" />`;
+    }
+  }
   // Any expression that builds nodes but isn't a structural form we handle
   // (e.g. a `.map()` whose callback returns something other than a single
   // element) must not become a text interpolation.
-  if (producesNodes(node, context.sourceFile, context.nodeTypedProps)) {
+  if (producesNodes(node, context.sourceFile, context.nodeTypedProps, context.propsParamName)) {
     throw new UnsupportedTemplate('unhandled node-producing child expression');
   }
   // Any other expression renders as a text interpolation.
@@ -1824,6 +2420,237 @@ function liftConditionalConsts(statements: readonly ts.Statement[]): ts.Statemen
   return result;
 }
 
+/** Whether an expression is an array mutation call on `name` (`<name>.push(…)` / `<name>.unshift(…)`). */
+function isArrayMutationCall(expression: ts.Expression, name: string): boolean {
+  return (
+    ts.isCallExpression(expression) &&
+    ts.isPropertyAccessExpression(expression.expression) &&
+    ts.isIdentifier(expression.expression.expression) &&
+    expression.expression.expression.text === name &&
+    (expression.expression.name.text === 'push' || expression.expression.name.text === 'unshift')
+  );
+}
+
+/**
+ * Whether a statement is a **safe** step of a mechanical array build onto `name`:
+ * a bare `<name>.push(…)` / `<name>.unshift(…)`, or an `if`/`for`(-`of`/-`in`)
+ * whose body is itself made only of such steps (intermediate loop/block-local
+ * `const`/`let`s that don't re-declare `name` are allowed). Anything else — a
+ * reassignment of `name`, a mutation of another binding, or arbitrary control
+ * flow — disqualifies the fold so the body stays on the safe fallback.
+ */
+function isArrayBuildStatement(statement: ts.Statement, name: string): boolean {
+  if (ts.isExpressionStatement(statement)) {
+    return isArrayMutationCall(statement.expression, name);
+  }
+  if (ts.isIfStatement(statement)) {
+    const branchOk = (branch: ts.Statement): boolean => arrayBuildBranchOk(branch, name);
+    return branchOk(statement.thenStatement) && (statement.elseStatement === undefined || branchOk(statement.elseStatement));
+  }
+  if (ts.isForOfStatement(statement) || ts.isForInStatement(statement) || ts.isForStatement(statement)) {
+    return arrayBuildBranchOk(statement.statement, name);
+  }
+  return false;
+}
+
+/** A branch (block or single statement) is a valid array-build branch when every entry is a build step or a non-`name` local declaration. */
+function arrayBuildBranchOk(branch: ts.Statement, name: string): boolean {
+  const entries = ts.isBlock(branch) ? branch.statements : [branch];
+  return entries.every(
+    (entry) =>
+      isArrayBuildStatement(entry, name) ||
+      (ts.isVariableStatement(entry) &&
+        entry.declarationList.declarations.every((declaration) => ts.isIdentifier(declaration.name) && declaration.name.text !== name)),
+  );
+}
+
+/** Whether a statement later reassigns or mutates `name` (a bare `name = …` or a `name.push(…)`/`name.unshift(…)`). */
+function mutatesLocal(statement: ts.Statement, name: string): boolean {
+  let found = false;
+  const visit = (node: ts.Node): void => {
+    if (found) {
+      return;
+    }
+    if (
+      ts.isBinaryExpression(node) &&
+      node.operatorToken.kind === ts.SyntaxKind.EqualsToken &&
+      ts.isIdentifier(node.left) &&
+      node.left.text === name
+    ) {
+      found = true;
+      return;
+    }
+    if (isArrayMutationCall(node as ts.Expression, name)) {
+      found = true;
+      return;
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(statement);
+  return found;
+}
+
+/**
+ * Convert one array-build statement into the array-literal **entries** (plain
+ * elements and/or `...spread`s) it contributes, or `undefined` if it isn't a
+ * foldable push/if/for-of step:
+ * - `arr.push(a, ...b)` → `[a, ...b]`,
+ * - `if (c) { arr.push(x); } [else { arr.push(y); }]` → `...(c ? [x] : [y])`,
+ * - `for (const i of xs) arr.push(f(i))` → `...xs.map((i) => (f(i)))`.
+ */
+function buildEntries(statement: ts.Statement, name: string): ts.Expression[] | undefined {
+  const factory = ts.factory;
+  if (ts.isExpressionStatement(statement) && isArrayMutationCall(statement.expression, name)) {
+    const call = statement.expression as ts.CallExpression;
+    if (((call.expression as ts.PropertyAccessExpression).name.text) !== 'push') {
+      return undefined;
+    }
+    return call.arguments.map((argument) => argument);
+  }
+  if (ts.isIfStatement(statement)) {
+    const thenEntries = collectBranchEntries(statement.thenStatement, name);
+    if (thenEntries === undefined) {
+      return undefined;
+    }
+    let elseEntries: ts.Expression[] = [];
+    if (statement.elseStatement !== undefined) {
+      const collected = collectBranchEntries(statement.elseStatement, name);
+      if (collected === undefined) {
+        return undefined;
+      }
+      elseEntries = collected;
+    }
+    const ternary = factory.createConditionalExpression(
+      statement.expression,
+      factory.createToken(ts.SyntaxKind.QuestionToken),
+      factory.createArrayLiteralExpression(thenEntries, false),
+      factory.createToken(ts.SyntaxKind.ColonToken),
+      factory.createArrayLiteralExpression(elseEntries, false),
+    );
+    return [factory.createSpreadElement(factory.createParenthesizedExpression(ternary))];
+  }
+  if (ts.isForOfStatement(statement)) {
+    const initializer = statement.initializer;
+    if (!ts.isVariableDeclarationList(initializer) || initializer.declarations.length !== 1) {
+      return undefined;
+    }
+    const loopName = initializer.declarations[0].name;
+    if (!ts.isIdentifier(loopName)) {
+      return undefined;
+    }
+    const bodyEntries = collectBranchEntries(statement.statement, name);
+    // A `for-of` folds to a single `.map()` only when its body pushes exactly one
+    // (non-spread) projected element per iteration.
+    if (bodyEntries === undefined || bodyEntries.length !== 1 || ts.isSpreadElement(bodyEntries[0])) {
+      return undefined;
+    }
+    const arrow = factory.createArrowFunction(
+      undefined,
+      undefined,
+      [factory.createParameterDeclaration(undefined, undefined, loopName)],
+      undefined,
+      factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+      factory.createParenthesizedExpression(bodyEntries[0]),
+    );
+    return [
+      factory.createSpreadElement(
+        factory.createCallExpression(
+          factory.createPropertyAccessExpression(statement.expression, 'map'),
+          undefined,
+          [arrow],
+        ),
+      ),
+    ];
+  }
+  return undefined;
+}
+
+/** Collect the array-literal entries a branch (block or single statement) contributes, requiring every statement be a foldable build step. */
+function collectBranchEntries(branch: ts.Statement, name: string): ts.Expression[] | undefined {
+  const statements = ts.isBlock(branch) ? branch.statements : [branch];
+  const entries: ts.Expression[] = [];
+  for (const statement of statements) {
+    const built = buildEntries(statement, name);
+    if (built === undefined) {
+      return undefined;
+    }
+    entries.push(...built);
+  }
+  return entries;
+}
+
+/**
+ * Fold a mechanical imperative array build
+ * `const arr = <init>; if (c) arr.push(x); for (i of xs) arr.push(f(i));` into a
+ * single declarative array literal
+ * `const arr = [...<init>, ...(c ? [x] : []), ...xs.map((i) => (f(i)))];`, so the
+ * derived-const path templates it natively — a **data** build lifts to a reactive
+ * `computed` (`v-for`), a **node** build routes through the array-literal child
+ * path — instead of rejecting the `.push()`/`if`/`for` steps as "non-const derived
+ * statements". Only fires for a binding immediately followed by a contiguous run
+ * of foldable push/if/for-of build steps that no later statement reassigns/mutates.
+ */
+function liftImperativeArrayBuilds(statements: readonly ts.Statement[]): ts.Statement[] {
+  const factory = ts.factory;
+  const result: ts.Statement[] = [];
+  for (let index = 0; index < statements.length; index += 1) {
+    const statement = statements[index];
+    if (ts.isVariableStatement(statement) && statement.declarationList.declarations.length === 1) {
+      const declaration = statement.declarationList.declarations[0];
+      if (ts.isIdentifier(declaration.name) && declaration.initializer !== undefined) {
+        const name = declaration.name.text;
+        let cursor = index + 1;
+        while (cursor < statements.length && isArrayBuildStatement(statements[cursor], name)) {
+          cursor += 1;
+        }
+        const consumed = statements.slice(index + 1, cursor);
+        const laterMutates = statements.slice(cursor).some((rest) => mutatesLocal(rest, name));
+        if (consumed.length > 0 && !laterMutates) {
+          const elements: ts.Expression[] = [];
+          const init = declaration.initializer;
+          // Seed with the initializer's own elements (an empty `[]` contributes
+          // nothing; a non-empty init is spread in).
+          if (!(ts.isArrayLiteralExpression(init) && init.elements.length === 0)) {
+            elements.push(factory.createSpreadElement(init));
+          }
+          let foldable = true;
+          for (const entry of consumed) {
+            const built = buildEntries(entry, name);
+            if (built === undefined) {
+              foldable = false;
+              break;
+            }
+            elements.push(...built);
+          }
+          if (foldable) {
+            // Preserve the build's declared element type by asserting the folded
+            // literal `[...] as <T>[]`. Without it the heterogeneous object
+            // literals infer a widened anonymous union, and a discriminated-union
+            // build (e.g. pagination `controls: PaginationControl[]`) loses the
+            // named type so the emitted `v-for` can't narrow member access.
+            const literal = factory.createArrayLiteralExpression(elements, true);
+            const value =
+              declaration.type !== undefined ? factory.createAsExpression(literal, declaration.type) : literal;
+            result.push(
+              factory.createVariableStatement(
+                statement.modifiers,
+                factory.createVariableDeclarationList(
+                  [factory.createVariableDeclaration(declaration.name, undefined, undefined, value)],
+                  ts.NodeFlags.Const,
+                ),
+              ),
+            );
+            index = cursor - 1;
+            continue;
+          }
+        }
+      }
+    }
+    result.push(statement);
+  }
+  return result;
+}
+
 /** A function-valued node helper eligible for call-site inlining. */
 interface InlinableHelper {
   /** The helper's (simple-identifier) parameters, bound positionally to call arguments. */
@@ -1832,12 +2659,29 @@ interface InlinableHelper {
   body: ts.Expression;
 }
 
+/** Whether a statement is a simple `const <identifier> = <expr>` declaration — no `let`, destructuring, or uninitialised binding — that a block-body helper can fold into its returned expression. */
+function isSimpleLocalConst(statement: ts.Statement): boolean {
+  if (!ts.isVariableStatement(statement) || (statement.declarationList.flags & ts.NodeFlags.Const) === 0) {
+    return false;
+  }
+  if (statement.declarationList.declarations.length !== 1) {
+    return false;
+  }
+  const declaration = statement.declarationList.declarations[0];
+  return ts.isIdentifier(declaration.name) && declaration.initializer !== undefined;
+}
+
 /**
  * Read a function-valued const's single returned expression — an arrow with an
  * expression body (`(a) => <li/>`), or an arrow/function whose block body is a
- * lone `return <expr>;`. Returns `undefined` for any multi-statement body or a
- * parameter list that isn't all simple identifiers (destructuring / rest can't
- * be bound positionally by the inliner).
+ * lone `return <expr>;`. A block body that is a run of leading simple
+ * `const <id> = <expr>` declarations followed by a single `return <expr>` is
+ * also accepted: each local is folded into the returned expression (chained
+ * references resolve left-to-right), so a block-body render helper
+ * (`const group = (…) => { const a = …; return <jsx/>; }`) still inlines as a
+ * single node at every call site. Returns `undefined` for any other multi-
+ * statement body or a parameter list that isn't all simple identifiers
+ * (destructuring / rest can't be bound positionally by the inliner).
  */
 function readHelperBody(initializer: ts.Expression): ts.Expression | undefined {
   if (!ts.isArrowFunction(initializer) && !ts.isFunctionExpression(initializer)) {
@@ -1857,7 +2701,116 @@ function readHelperBody(initializer: ts.Expression): ts.Expression | undefined {
   if (statements.length === 1 && ts.isReturnStatement(statements[0]) && statements[0].expression !== undefined) {
     return statements[0].expression;
   }
+  // Peel any run of leading simple `const <id> = <expr>` declarations, folding
+  // each into a substitution map so the remaining body resolves their reads.
+  let index = 0;
+  const bindings = new Map<string, ts.Expression>();
+  while (index < statements.length && isSimpleLocalConst(statements[index])) {
+    const declaration = (statements[index] as ts.VariableStatement).declarationList.declarations[0];
+    bindings.set(
+      (declaration.name as ts.Identifier).text,
+      inlineIdentifiers(declaration.initializer as ts.Expression, bindings),
+    );
+    index += 1;
+  }
+  const rest = statements.slice(index);
+  // A lone `return <expr>` after the consts folds into that expression.
+  if (rest.length === 1 && ts.isReturnStatement(rest[0]) && rest[0].expression !== undefined) {
+    return inlineIdentifiers(rest[0].expression, bindings);
+  }
+  // A guard chain — a run of `if (c) return X;` guards followed by a final
+  // `return Y;` — folds into a nested conditional `c ? X : …`, so a dispatch
+  // helper (`const renderBody = () => { if (view === 'month') return renderMonth(); … }`)
+  // inlines as a single conditional expression at its call site.
+  const chain = foldGuardChain(rest);
+  if (chain !== undefined) {
+    return inlineIdentifiers(chain, bindings);
+  }
   return undefined;
+}
+
+/** The single expression a statement returns — a bare `return <expr>;` or a block wrapping one. */
+function returnedExpression(statement: ts.Statement): ts.Expression | undefined {
+  if (ts.isReturnStatement(statement)) {
+    return statement.expression;
+  }
+  if (ts.isBlock(statement)) {
+    const inner = statement.statements.filter((entry) => !ts.isEmptyStatement(entry));
+    if (inner.length === 1 && ts.isReturnStatement(inner[0])) {
+      return inner[0].expression;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Fold a guard-chain statement list — zero or more `if (cond) return X;` guards
+ * (no `else`) followed by a final `return Y;` — into a nested conditional
+ * expression `cond ? X : … : Y`. Returns `undefined` if the shape doesn't match.
+ */
+function foldGuardChain(statements: readonly ts.Statement[]): ts.Expression | undefined {
+  const last = statements.at(-1);
+  if (last === undefined || !ts.isReturnStatement(last) || last.expression === undefined) {
+    return undefined;
+  }
+  const factory = ts.factory;
+  let accumulator: ts.Expression = last.expression;
+  for (let cursor = statements.length - 2; cursor >= 0; cursor -= 1) {
+    const guard = statements[cursor];
+    if (!ts.isIfStatement(guard) || guard.elseStatement !== undefined) {
+      return undefined;
+    }
+    const thenExpression = returnedExpression(guard.thenStatement);
+    if (thenExpression === undefined) {
+      return undefined;
+    }
+    accumulator = factory.createConditionalExpression(
+      guard.expression,
+      factory.createToken(ts.SyntaxKind.QuestionToken),
+      thenExpression,
+      factory.createToken(ts.SyntaxKind.ColonToken),
+      accumulator,
+    );
+  }
+  // A lone `return Y;` (no guards) is not a chain — leave it to the caller's
+  // single-return handling so this only matches genuine `if`-guard dispatch.
+  return statements.length > 1 ? accumulator : undefined;
+}
+
+/**
+ * Whether a subtree strictly compares one of `paramNames` to a string/number
+ * literal (`side === 'start'`, `n !== 0`). Inlining such a helper with a literal
+ * argument would produce a literal-vs-literal comparison TypeScript rejects
+ * (TS2367), so it must not be treated as inlinable.
+ */
+function bodyComparesParamToLiteral(node: ts.Node, paramNames: ReadonlySet<string>): boolean {
+  if (paramNames.size === 0) {
+    return false;
+  }
+  const isLiteral = (expression: ts.Expression): boolean =>
+    ts.isStringLiteral(expression) ||
+    ts.isNoSubstitutionTemplateLiteral(expression) ||
+    ts.isNumericLiteral(expression);
+  const isParam = (expression: ts.Expression): boolean =>
+    ts.isIdentifier(expression) && paramNames.has(expression.text);
+  let found = false;
+  const visit = (current: ts.Node): void => {
+    if (found) {
+      return;
+    }
+    if (
+      ts.isBinaryExpression(current) &&
+      (current.operatorToken.kind === ts.SyntaxKind.EqualsEqualsEqualsToken ||
+        current.operatorToken.kind === ts.SyntaxKind.ExclamationEqualsEqualsToken) &&
+      ((isParam(current.left) && isLiteral(current.right)) || (isParam(current.right) && isLiteral(current.left)))
+    ) {
+      found = true;
+      return;
+    }
+    ts.forEachChild(current, visit);
+  };
+  visit(node);
+  return found;
 }
 
 /** Count references to `name` in a subtree: total identifier occurrences and those in call-callee position. */
@@ -1914,6 +2867,20 @@ function collectInlinableHelpers(
       continue;
     }
     const parameters = (declaration.initializer as ts.ArrowFunction | ts.FunctionExpression).parameters;
+    // A helper that compares one of its parameters to a string/number literal
+    // (`side === 'start'`) must NOT be inlined: a call with a literal argument
+    // (`renderColumn('end')`) would splice a `'end' === 'start'` literal-vs-literal
+    // comparison into the template, which TypeScript rejects (TS2367). Leaving it
+    // uninlined lets the component fall back to the type-correct render closure.
+    const parameterNames = new Set<string>();
+    for (const parameter of parameters) {
+      if (ts.isIdentifier(parameter.name)) {
+        parameterNames.add(parameter.name.text);
+      }
+    }
+    if (bodyComparesParamToLiteral(body, parameterNames)) {
+      continue;
+    }
     candidates.set(declaration.name.text, { declaration, helper: { params: parameters, body } });
   }
   const helpers = new Map<string, InlinableHelper>();
@@ -1978,32 +2945,6 @@ function inlineHelperCalls(expr: ts.Expression, helpers: Map<string, InlinableHe
   const inlined = result.transformed[0] as ts.Expression;
   result.dispose();
   return inlined;
-}
-
-/**
- * Whether a subtree declares a **local** binding (a nested `const`/`let`, or a
- * function/arrow parameter) whose name is in `names`. Used to detect a handler
- * that locally shadows a render-scope memo — a collision the (scope-unaware) memo
- * reference rewriter would mis-handle by `.value`-rewriting the local declaration.
- */
-function declaresShadowingLocal(node: ts.Node, names: ReadonlySet<string>): boolean {
-  let found = false;
-  const visit = (current: ts.Node): void => {
-    if (found) {
-      return;
-    }
-    if (
-      (ts.isVariableDeclaration(current) || ts.isParameter(current)) &&
-      ts.isIdentifier(current.name) &&
-      names.has(current.name.text)
-    ) {
-      found = true;
-      return;
-    }
-    ts.forEachChild(current, visit);
-  };
-  visit(node);
-  return found;
 }
 
 /**
@@ -2098,7 +3039,7 @@ export function buildVueTemplate(
   // mechanical `let x = <init>; if (…) x = …` derivation into a single
   // `const x = (() => …)()` so it too lifts to a reactive `computed` rather than
   // being rejected as a "non-const derived statement" (widening native coverage).
-  const liftedStatements = liftConditionalConsts(liftStyleObjects(renderStatements));
+  const liftedStatements = liftImperativeArrayBuilds(liftConditionalConsts(liftStyleObjects(renderStatements)));
   // Function-valued node helpers used only as call callees (`const renderPanels =
   // () => tabs.map(…)`, invoked once as `{renderPanels()}`) have no `<template>`
   // binding form, but their (argument-bound) bodies can be spliced into each call
@@ -2118,6 +3059,9 @@ export function buildVueTemplate(
   // the default-slot handling (`{message}` → `<slot/>`, `message === undefined`
   // → `$slots.default === undefined`) instead of leaving a dangling identifier.
   const childrenSourceNames = new Set<string>();
+  // Top-level `<ref>.current = <expr>;` render-scope side effects, lifted below
+  // to reactive `watchEffect(() => { <ref>.value = <expr>; })` calls.
+  const refSyncEffects: ts.BinaryExpression[] = [];
   // Supplies unique synthetic source names for expanded destructuring consts.
   let destructureCounter = 0;
   for (const statement of liftedStatements) {
@@ -2134,6 +3078,11 @@ export function buildVueTemplate(
         throw new UnsupportedTemplate('multiple early-return branches');
       }
       earlyBranch = guard;
+      continue;
+    }
+    const refSync = readRefSyncAssignment(statement, scope.refNames);
+    if (refSync !== undefined) {
+      refSyncEffects.push(refSync);
       continue;
     }
     if (!ts.isVariableStatement(statement) || statement.declarationList.declarations.length !== 1) {
@@ -2170,7 +3119,7 @@ export function buildVueTemplate(
       derived.push(...expanded);
       continue;
     }
-    if (producesNodes(initializer, sourceFile, nodeTypedProps)) {
+    if (producesNodes(initializer, sourceFile, nodeTypedProps, scope.propsParamName)) {
       // A **function-valued** const that builds nodes (`const renderItems = (…) =>
       // …<li/>…`) which is *not* an inlinable helper (used as a value, recursive,
       // or a multi-statement body) has no template form: inlining it would splice
@@ -2227,16 +3176,16 @@ export function buildVueTemplate(
   const kept = derived.filter((entry) => !dropped.has(entry.name));
   // Scalar derived consts become reactive `computed`s; references between them
   // must read `.value`, so add their names to the rewrite scope's memos.
-  const scalarNames = kept.filter((entry) => !entry.isHandler).map((entry) => entry.name);
-  // A kept const (typically an event handler) whose body/params declare a *local*
-  // binding sharing a scalar memo's name (`const value = …` inside a handler while
-  // a render-scope `value` computed also exists) would have that local declaration
-  // wrongly `.value`-rewritten by the (scope-unaware) memo reference rewriter
-  // (`const value.value = …`, invalid script), so fall back rather than emit it.
-  const memoNames = new Set(scalarNames);
-  if (kept.some((entry) => declaresShadowingLocal(entry.initializer, memoNames))) {
-    throw new UnsupportedTemplate('memo-shadowing local binding');
-  }
+  // Compile-time constants stay plain `const`s (Stage-2 quality pass) and must
+  // NOT join the memo set — otherwise reads would incorrectly append `.value`.
+  const scalarNames = kept
+    .filter((entry) => !entry.isHandler && !isCompileTimeConstant(entry.initializer))
+    .map((entry) => entry.name);
+  // A kept const (typically an event handler) may declare a *local* binding
+  // sharing a scalar memo's name (`const value = …` inside a handler while a
+  // render-scope `value` computed also exists). The memo `.value` reference
+  // rewriter is scope-aware (it skips reads that resolve to a shadowing local),
+  // so the collision is safe to emit — no fallback needed.
   const computedScope: RewriteScope = { ...scope, memoNames: new Set([...scope.memoNames, ...scalarNames]) };
 
   let usesComputed = false;
@@ -2244,6 +3193,13 @@ export function buildVueTemplate(
     const body = rewrite(entry.initializer, computedScope, sourceFile);
     if (entry.isHandler) {
       return `const ${entry.name} = ${body};`;
+    }
+    // Stage-2 quality: a compile-time constant never needs a reactive
+    // `computed` wrapper — emit a plain `const` so the template reads a stable
+    // value with no dependency tracking overhead.
+    if (isCompileTimeConstant(entry.initializer)) {
+      const typeText = entry.declaration.type !== undefined ? `: ${printNode(entry.declaration.type, sourceFile)}` : '';
+      return `const ${entry.name}${typeText} = ${body};`;
     }
     usesComputed = true;
     // Preserve the source's explicit type annotation as the computed's return
@@ -2259,15 +3215,28 @@ export function buildVueTemplate(
     return `const ${entry.name} = computed(${head} => (${body}));`;
   });
 
+  // Lift each `<ref>.current = <expr>;` render-scope side effect to a reactive
+  // `watchEffect(() => { <ref>.value = <expr>; })` appended after the computed
+  // declarations it depends on (`rewrite` turns `.current` → `.value` and reads
+  // of scalar memos → `.value`), so the ref stays in step with its derived value
+  // exactly as the render-closure form did.
+  const usesWatchEffect = refSyncEffects.length > 0;
+  for (const effect of refSyncEffects) {
+    declarationLines.push(`watchEffect(() => { ${rewrite(effect, computedScope, sourceFile)}; });`);
+  }
+
   const context: Context = {
     sourceFile,
     styleModuleNames: scope.styleModuleNames,
     propsParamName: scope.propsParamName,
     slotSourceNames,
     nodeTypedProps,
+    nodeTypedFieldsByType: nodeTypedFieldsByTypeName(sourceFile),
+    aliasTypes: new Map(),
     eventProps: scope.eventProps,
     propAliases: scope.propAliases,
     setterToState: scope.setterToState,
+    refNames: scope.refNames,
     substitutions: new Map(),
   };
   // Forward consumer fall-through attributes onto the component's root element.
@@ -2299,19 +3268,19 @@ export function buildVueTemplate(
     const condition = escapeExpr(templateExpr(earlyBranch.condition, context));
     const markupA = emitElement(branchARoot, 1, context, `v-if="${condition}"`, 'v-bind="$attrs"');
     const markupB = emitElement(returnRoot, 1, context, 'v-else', 'v-bind="$attrs"');
-    return { markup: `${markupA}\n${markupB}`, declarationLines, usesComputed };
+    return { markup: `${markupA}\n${markupB}`, declarationLines, usesComputed, usesWatchEffect };
   }
 
   // A render-nothing root (`return null;` / `return undefined;`) has no markup:
   // yield empty markup so the assembler omits the `<template>` block entirely
   // rather than emitting a dangling `{{ null }}` interpolation.
   if (isNothing(returnRoot)) {
-    return { markup: '', declarationLines, usesComputed };
+    return { markup: '', declarationLines, usesComputed, usesWatchEffect };
   }
 
   const markup = rootIsSingleElement
     ? emitElement(returnRoot, 1, context, undefined, 'v-bind="$attrs"')
     : emitChildNode(returnRoot, 1, context);
 
-  return { markup, declarationLines, usesComputed };
+  return { markup, declarationLines, usesComputed, usesWatchEffect };
 }

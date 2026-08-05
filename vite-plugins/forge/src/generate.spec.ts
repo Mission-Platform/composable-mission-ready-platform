@@ -63,13 +63,49 @@ function component(
 ): DiscoveredComponent {
   const neutralName = overrides.neutralName;
   const publicName = overrides.publicName ?? neutralName.replace(/^Base/, '');
+  const folder = overrides.folder ?? `base-${publicName.toLowerCase()}`;
   return {
     neutralName,
     publicName,
     propertiesType: overrides.propertiesType,
     typeExports: overrides.typeExports ?? [],
-    folder: overrides.folder ?? `base-${publicName.toLowerCase()}`,
+    folder,
+    sourceDir: overrides.sourceDir ?? folder,
   };
+}
+
+/** Minimal atom used by the nested/flat generate parity fixtures. */
+const TYPOGRAPHY_SOURCE = [
+  "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
+  '',
+  'export type TypographyVariant = "body" | "caption";',
+  '',
+  'export interface TypographyProperties extends MpProperties {',
+  '  variant?: TypographyVariant;',
+  '}',
+  '',
+  'export function BaseTypography(properties: TypographyProperties): MpElement {',
+  '  return <span data-variant={properties.variant ?? "body"} />;',
+  '}',
+  '',
+].join('\n');
+
+/** Molecule that imports the typography atom via a relative sibling specifier. */
+function quoteSource(typographyImport: string): string {
+  return [
+    "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
+    '',
+    `import { BaseTypography, type TypographyVariant } from '${typographyImport}';`,
+    '',
+    'export interface QuoteProperties extends MpProperties {',
+    '  variant?: TypographyVariant;',
+    '}',
+    '',
+    'export function BaseQuote(properties: QuoteProperties): MpElement {',
+    '  return <BaseTypography variant={properties.variant}>{/* quote */}</BaseTypography>;',
+    '}',
+    '',
+  ].join('\n');
 }
 
 describe('generateFrameworkSources', () => {
@@ -90,6 +126,127 @@ describe('generateFrameworkSources', () => {
       generateFrameworkSources({ framework: 'vue', componentsModule: path.join(componentsDir, 'index.ts'), outDir });
 
       expect(readFileSync(path.join(outDir, 'locales', 'types.d.ts'), 'utf8')).toBe("declare module 'i18next' {}\n");
+    } finally {
+      rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
+
+  it('mirrors nested atomic-design source dirs in the generated cache tree', () => {
+    const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-jsx-generate-nested-'));
+    const flatComponentsDir = path.join(packageDir, 'flat', 'src', 'components');
+    const nestedComponentsDir = path.join(packageDir, 'nested', 'src', 'components');
+    const flatOutDir = path.join(packageDir, 'flat', 'generated', 'vue');
+    const nestedOutDir = path.join(packageDir, 'nested', 'generated', 'vue');
+
+    try {
+      // Flat layout: src/components/<folder>/<folder>.tsx
+      const flatTypographyDir = path.join(flatComponentsDir, 'base-typography');
+      const flatQuoteDir = path.join(flatComponentsDir, 'base-quote');
+      mkdirSync(flatTypographyDir, { recursive: true });
+      mkdirSync(flatQuoteDir, { recursive: true });
+      writeFileSync(
+        path.join(flatComponentsDir, 'index.ts'),
+        [
+          "export { BaseTypography, type TypographyProperties, type TypographyVariant } from './base-typography';",
+          "export { BaseQuote, type QuoteProperties } from './base-quote';",
+          '',
+        ].join('\n'),
+      );
+      writeFileSync(path.join(flatTypographyDir, 'base-typography.tsx'), TYPOGRAPHY_SOURCE);
+      writeFileSync(path.join(flatQuoteDir, 'base-quote.tsx'), quoteSource('../base-typography'));
+
+      // Nested atomic-design layout: src/components/<level>/<folder>/<folder>.tsx
+      const nestedTypographyDir = path.join(nestedComponentsDir, 'atoms', 'base-typography');
+      const nestedQuoteDir = path.join(nestedComponentsDir, 'molecules', 'base-quote');
+      mkdirSync(nestedTypographyDir, { recursive: true });
+      mkdirSync(nestedQuoteDir, { recursive: true });
+      writeFileSync(
+        path.join(nestedComponentsDir, 'index.ts'),
+        [
+          "export { BaseTypography, type TypographyProperties, type TypographyVariant } from './atoms/base-typography';",
+          "export { BaseQuote, type QuoteProperties } from './molecules/base-quote';",
+          '',
+        ].join('\n'),
+      );
+      writeFileSync(path.join(nestedTypographyDir, 'base-typography.tsx'), TYPOGRAPHY_SOURCE);
+      // A molecule importing an atom climbs two levels then into the atoms folder.
+      writeFileSync(path.join(nestedQuoteDir, 'base-quote.tsx'), quoteSource('../../atoms/base-typography'));
+
+      generateFrameworkSources({
+        framework: 'vue',
+        componentsModule: path.join(flatComponentsDir, 'index.ts'),
+        outDir: flatOutDir,
+      });
+      generateFrameworkSources({
+        framework: 'vue',
+        componentsModule: path.join(nestedComponentsDir, 'index.ts'),
+        outDir: nestedOutDir,
+      });
+
+      // Flat layout: each component lives under its own folder in the cache tree,
+      // and a sibling import resolves through that folder.
+      const flatQuote = readFileSync(path.join(flatOutDir, 'base-quote', 'base-quote.vue'), 'utf8');
+      expect(flatQuote).toContain("import BaseTypography from '../base-typography/base-typography.vue';");
+      const flatEntry = readFileSync(path.join(flatOutDir, 'index.ts'), 'utf8');
+      expect(flatEntry).toContain("export { default as Typography } from './base-typography/base-typography.vue';");
+      expect(flatEntry).toContain("export { default as Quote } from './base-quote/base-quote.vue';");
+
+      // Nested atomic-design layout is preserved verbatim in the cache tree.
+      const nestedQuote = readFileSync(path.join(nestedOutDir, 'molecules', 'base-quote', 'base-quote.vue'), 'utf8');
+      // The molecule → atom sibling import climbs to the atoms folder in the mirror.
+      expect(nestedQuote).toContain("import BaseTypography from '../../atoms/base-typography/base-typography.vue';");
+      expect(nestedQuote).toContain(
+        "import type { TypographyVariant } from '../../atoms/base-typography/base-typography.vue';",
+      );
+
+      const nestedEntry = readFileSync(path.join(nestedOutDir, 'index.ts'), 'utf8');
+      expect(nestedEntry).toContain("export { default as Typography } from './atoms/base-typography/base-typography.vue';");
+      expect(nestedEntry).toContain("export { default as Quote } from './molecules/base-quote/base-quote.vue';");
+    } finally {
+      rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
+
+  it('mirrors a co-located helper alongside its nested component in the cache tree', () => {
+    const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-jsx-generate-nested-helper-'));
+    const componentsDir = path.join(packageDir, 'src', 'components');
+    const componentDir = path.join(componentsDir, 'molecules', 'base-counter');
+    const outDir = path.join(packageDir, 'generated', 'vue');
+
+    try {
+      mkdirSync(componentDir, { recursive: true });
+      writeFileSync(path.join(componentsDir, 'index.ts'), "export { BaseCounter } from './molecules/base-counter';\n");
+      writeFileSync(
+        path.join(componentDir, 'counter-store.ts'),
+        ['export function getCount(): number {', '  return 0;', '}', ''].join('\n'),
+      );
+      writeFileSync(
+        path.join(componentDir, 'base-counter.tsx'),
+        [
+          "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
+          '',
+          "import { getCount } from './counter-store';",
+          '',
+          'export function BaseCounter(_properties: MpProperties): MpElement {',
+          '  return <span>{getCount()}</span>;',
+          '}',
+          '',
+        ].join('\n'),
+      );
+
+      generateFrameworkSources({ framework: 'vue', componentsModule: path.join(componentsDir, 'index.ts'), outDir });
+
+      // The component and its co-located helper both live under the mirrored
+      // `molecules/base-counter/` directory, so the helper import stays local.
+      expect(readFileSync(path.join(outDir, 'molecules', 'base-counter', 'base-counter.vue'), 'utf8')).toContain(
+        "import { getCount } from './counter-store';",
+      );
+      expect(
+        readFileSync(path.join(outDir, 'molecules', 'base-counter', 'counter-store.ts'), 'utf8'),
+      ).toContain('export function getCount');
+      expect(readFileSync(path.join(outDir, 'index.ts'), 'utf8')).toContain(
+        "export { default as Counter } from './molecules/base-counter/base-counter.vue';",
+      );
     } finally {
       rmSync(packageDir, { recursive: true, force: true });
     }
@@ -205,6 +362,7 @@ describe('generateEntry', () => {
   it('forwards shared helper-module APIs after the component + type re-exports', () => {
     const helper: DiscoveredHelperExport = {
       base: 'toast-store',
+      relativePath: 'toast-store',
       values: ['useToast', 'showToast'],
       types: ['ToastOptions'],
     };
