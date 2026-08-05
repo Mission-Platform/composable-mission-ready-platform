@@ -1,13 +1,17 @@
 # `@mission-platform/forms-core`
 
-Framework-agnostic forms core shared across Vue and React implementations in Mission Platform. It provides JSON Schema processing, Ajv-based validation, conditional field visibility evaluation, and form builder model conversions.
+Framework-agnostic forms core shared across Vue and React implementations in Mission Platform. It provides JSON Schema
+processing, Ajv-based validation, conditional field visibility evaluation, and form builder model conversions.
 
 ## Features
 
 - **Framework Agnostic**: Zero dependencies on Vue or React. Pure TypeScript core logic.
-- **Ajv Validation Engine**: High-performance JSON Schema validation with custom error formatting and hidden field exclusion.
-- **Conditional Visibility**: Evaluates logical combinators (`allOf`, `anyOf`, `oneOf`) and field-level visibility (`visibleWhen`).
-- **Form Builder Conversion**: Bi-directional conversions between visual field trees and JSON Schema definitions (`fieldsToSchema`, `schemaToFields`).
+- **Ajv Validation Engine**: High-performance JSON Schema validation with custom error formatting and hidden field
+  exclusion.
+- **Conditional Visibility**: Evaluates logical combinators (`allOf`, `anyOf`, `oneOf`) and field-level visibility
+  (`visibleWhen`).
+- **Form Builder Conversion**: Bi-directional conversions between visual field trees and JSON Schema definitions
+  (`fieldsToSchema`, `schemaToFields`).
 
 ## Installation
 

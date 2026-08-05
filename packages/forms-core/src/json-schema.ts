@@ -555,7 +555,7 @@ function resolveMessage(
   // authored literals, so they intentionally bypass translation.
   const override =
     messageFor(property, error.keyword) ??
-    (['required', 'const'].includes(error.keyword) ? messageFor(property, 'required') : undefined) ??
+    (error.keyword === 'required' || error.keyword === 'const' ? messageFor(property, 'required') : undefined) ??
     (error.keyword === 'minLength' && ((error.params as { limit?: number }).limit ?? 0) <= 1
       ? messageFor(property, 'required')
       : undefined);

@@ -17,10 +17,9 @@
     "dist"
   ],
   "scripts": {
+    "build": "tsdown",
     "build:check": "tsc --project tsconfig.build.json --noEmit",
-    "build:bundle": "vite build",
-    "build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly",
-    "build:watch": "vite build --watch",
+    "build:watch": "tsdown --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -37,14 +36,15 @@
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@types/node": "catalog:typescript",
     "@vitest/coverage-v8": "catalog:testing",
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",
+    "tsdown": "catalog:build",
     "typescript": "catalog:typescript",
-    "vite": "catalog:vite",
     "vitest": "catalog:testing"
   }
 }

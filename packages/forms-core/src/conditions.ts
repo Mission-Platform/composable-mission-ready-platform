@@ -11,7 +11,11 @@ import type { FieldCondition, FieldConditionGroup, FieldConditionLeaf, FormValue
 
 /** Whether a condition node is a boolean combinator rather than a leaf. */
 function isGroup(condition: FieldCondition): condition is FieldConditionGroup {
-  return 'allOf' in condition || 'anyOf' in condition || 'oneOf' in condition;
+  if (typeof condition !== 'object' || condition === null) {
+    return false;
+  }
+  const nonPrimitive: object = condition;
+  return 'allOf' in nonPrimitive || 'anyOf' in nonPrimitive || 'oneOf' in nonPrimitive;
 }
 
 /**
@@ -51,8 +55,13 @@ function evaluateLeaf(leaf: FieldConditionLeaf, values: FormValues): boolean {
 
   if (leaf.equals !== undefined && value !== leaf.equals) return false;
   if (leaf.notEquals !== undefined && value === leaf.notEquals) return false;
-  if (leaf.in !== undefined && !leaf.in.includes(value as string | number | boolean)) return false;
-  if (leaf.contains !== undefined && (!Array.isArray(value) || !value.includes(leaf.contains))) return false;
+  if (leaf.in !== undefined) {
+    const isScalar = typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean';
+    if (!isScalar || !leaf.in.includes(value)) return false;
+  }
+  if (leaf.contains !== undefined && (!Array.isArray(value) || !value.includes(leaf.contains))) {
+    return false;
+  }
   if (leaf.truthy !== undefined && isFilled(value) !== leaf.truthy) return false;
 
   if (leaf.gt !== undefined || leaf.gte !== undefined || leaf.lt !== undefined || leaf.lte !== undefined) {
