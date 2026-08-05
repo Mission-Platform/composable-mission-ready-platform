@@ -4,7 +4,8 @@
 
 ### Minor Changes
 
-- 3f0366d: add a framework-neutral d3 integration package with a useD3 selection binding and pure margin-convention helpers
+- 3f0366d: add a framework-neutral d3 integration package with a useD3 selection binding and pure margin-convention
+  helpers
 
 ### Patch Changes
 

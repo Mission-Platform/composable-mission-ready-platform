@@ -1,12 +1,17 @@
 # `@mission-platform/d3`
 
-Framework-neutral D3 integration for Mission Platform. It provides a write-once `useD3` composable authored against `@mission-platform/forge` hooks and compiled to both React (`@mission-platform/d3/react`) and Vue 3 (`@mission-platform/d3/vue`), along with pure margin-convention layout utilities.
+Framework-neutral D3 integration for Mission Platform. It provides a write-once `useD3` composable authored against
+`@mission-platform/forge` hooks and compiled to both React (`@mission-platform/d3/react`) and Vue 3
+(`@mission-platform/d3/vue`), along with pure margin-convention layout utilities.
 
 ## Features
 
-- **Write Once `useD3` Hook**: Binds D3 selection rendering to an element ref with cleanup support, working natively in both React and Vue.
-- **Pure Margin Utilities**: `innerDimensions` and `resolveMargin` helpers to calculate SVG viewbox dimensions using standard D3 margin conventions.
-- **Lean Dependency**: Depends directly on `d3-selection` for runtime element selection without pulling in the entire D3 bundle.
+- **Write Once `useD3` Hook**: Binds D3 selection rendering to an element ref with cleanup support, working natively in
+  both React and Vue.
+- **Pure Margin Utilities**: `innerDimensions` and `resolveMargin` helpers to calculate SVG viewbox dimensions using
+  standard D3 margin conventions.
+- **Lean Dependency**: Depends directly on `d3-selection` for runtime element selection without pulling in the entire D3
+  bundle.
 
 ## Installation
 

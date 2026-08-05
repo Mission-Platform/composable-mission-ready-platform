@@ -7,7 +7,7 @@
 // against that element's D3 selection after mount (and whenever the dependency
 // list changes), so the same chart code renders on both frameworks.
 
-import { useEffect, useRef, type MpDependencyList, type MpRef } from '@mission-platform/forge';
+import { type MpDependencyList, type MpRef, useEffect, useRef } from '@mission-platform/forge';
 // Only the selection API is needed at runtime — depend on `d3-selection`
 // directly rather than the full `d3` umbrella so consumers bundle just this.
 import { select, type Selection } from 'd3-selection';
