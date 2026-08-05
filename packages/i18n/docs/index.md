@@ -1,13 +1,15 @@
 # @mission-platform/i18n
 
-`@mission-platform/i18n` is a framework-agnostic internationalization (i18n) wrapper built on [i18next](https://www.i18next.com/). It provides a unified way to handle translations across the Mission Platform, with dedicated adapters for both Vue 3 and React.
+`@mission-platform/i18n` is a framework-agnostic internationalization (i18n) wrapper built
+on [i18next](https://www.i18next.com/). It provides a unified way to handle translations across the Mission Platform,
+with dedicated adapters for both Vue 3 and React.
 
 ## Entry Points
 
 The package is divided into three main entry points:
 
 | Import                         | Purpose                | Key Exports                                                       |
-| :----------------------------- | :--------------------- | :---------------------------------------------------------------- |
+|:-------------------------------|:-----------------------|:------------------------------------------------------------------|
 | `@mission-platform/i18n`       | Framework-neutral core | `createMpI18n`, `mpNamespace`, `localeNamespaces`, `mergeLocales` |
 | `@mission-platform/i18n/vue`   | Vue 3 adapter          | `createMpI18nVue`, `useI18n`                                      |
 | `@mission-platform/i18n/react` | React adapter          | `MpI18nProvider`, `useI18n`                                       |
@@ -19,7 +21,8 @@ The package is divided into three main entry points:
 The core provides `createMpI18n(options)`, which returns a synchronously initialized i18next instance.
 
 - **Interpolation**: Uses single-brace delimiters (e.g., `{name}`).
-- **HTML Escaping**: Disabled by default (`escapeValue: false`) to allow frameworks to handle escaping according to their own security models.
+- **HTML Escaping**: Disabled by default (`escapeValue: false`) to allow frameworks to handle escaping according to
+  their own security models.
 
 ### Namespacing Strategy
 
@@ -32,7 +35,8 @@ To avoid collisions in a monorepo, translations are grouped into namespaces usin
 
 1. **Default Namespace**: Apps define their own namespace as the default.
 2. **Fallback**: The default namespace falls back to other namespaces, allowing component code to resolve its own keys.
-3. **Overrides**: Apps can provide an `overrides` object in the config to relabel specific strings from a package without affecting others.
+3. **Overrides**: Apps can provide an `overrides` object in the config to relabel specific strings from a package
+   without affecting others.
 
 ## Usage Examples
 
@@ -107,7 +111,8 @@ function Greeting() {
 
 ### `mpNamespace(workspace: string)`
 
-Returns the standardized namespace string for a given workspace (e.g., `'breakpoints'` $\rightarrow$ `'mp.breakpoints'`).
+Returns the standardized namespace string for a given workspace (e.g., `'breakpoints'` $\rightarrow$
+`'mp.breakpoints'`).
 
 ### `localeNamespaces(locale: string, bundles: any)`
 

@@ -13,8 +13,14 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "mp:vue": { "types": "./dist/vue.d.ts", "import": "./dist/vue.js" },
-      "mp:react": { "types": "./dist/react.d.ts", "import": "./dist/react.js" },
+      "mp:vue": {
+        "types": "./dist/vue.d.ts",
+        "import": "./dist/vue.js"
+      },
+      "mp:react": {
+        "types": "./dist/react.d.ts",
+        "import": "./dist/react.js"
+      },
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
@@ -28,10 +34,9 @@
     }
   },
   "scripts": {
-    "build:check": "vue-tsc -b",
-    "build:bundle": "vite build",
-    "build:types": "vue-tsc --project tsconfig.build.json --emitDeclarationOnly",
-    "build:watch": "vite build --watch",
+    "build": "tsdown",
+    "build:check": "vue-tsc --project tsconfig.build.json --noEmit",
+    "build:watch": "tsdown --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -70,6 +75,7 @@
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@types/node": "catalog:typescript",
@@ -84,6 +90,7 @@
     "react": "catalog:react",
     "react-dom": "catalog:react",
     "react-i18next": "catalog:i18next",
+    "tsdown": "catalog:build",
     "typescript": "catalog:typescript",
     "vite": "catalog:vite",
     "vitest": "catalog:testing",

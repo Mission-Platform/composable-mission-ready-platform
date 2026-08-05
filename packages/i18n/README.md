@@ -1,11 +1,13 @@
 # `@mission-platform/i18n`
 
-Framework-agnostic internationalization (i18n) wrapper built on top of [i18next](https://www.i18next.com/) for Mission Platform, with dedicated Vue 3 (`@mission-platform/i18n/vue`) and React (`@mission-platform/i18n/react`) adapters.
+Framework-agnostic internationalization (i18n) wrapper built on top of [i18next](https://www.i18next.com/) for Mission
+Platform, with dedicated Vue 3 (`@mission-platform/i18n/vue`) and React (`@mission-platform/i18n/react`) adapters.
 
 ## Features
 
 - **Framework-Neutral Core**: Standardized `createMpI18n` factory that builds and returns an i18next instance.
-- **Hierarchical Namespacing**: Uses `mp.<workspace>` namespace conventions (`mpNamespace('components')`, `mpNamespace('my-app')`) with fallback and override support.
+- **Hierarchical Namespacing**: Uses `mp.<workspace>` namespace conventions (`mpNamespace('components')`,
+  `mpNamespace('my-app')`) with fallback and override support.
 - **Vue 3 Adapter**: `createMpI18nVue` plugin and reactive `useI18n` composable built on `i18next-vue`.
 - **React Adapter**: `MpI18nProvider` context provider and `useI18n` hook built on `react-i18next`.
 
@@ -90,7 +92,8 @@ export function App() {
 
 ## Subpath Exports
 
-- `@mission-platform/i18n`: Framework-neutral entry exporting `createMpI18n`, `mpNamespace`, `localeNamespaces`, and `deepMergeLocales`.
+- `@mission-platform/i18n`: Framework-neutral entry exporting `createMpI18n`, `mpNamespace`, `localeNamespaces`, and
+  `deepMergeLocales`.
 - `@mission-platform/i18n/vue`: Vue 3 adapter exporting `createMpI18nVue` and `useI18n`.
 - `@mission-platform/i18n/react`: React adapter exporting `MpI18nProvider` and `useI18n`.
 

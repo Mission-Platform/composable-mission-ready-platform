@@ -2,7 +2,7 @@
 // Vue 3 adapter for the framework-agnostic i18next wrapper, built on `i18next-vue`.
 
 import I18NextVue, { useTranslation } from 'i18next-vue';
-import { getCurrentScope, onScopeDispose, ref, type App, type Plugin, type Ref } from 'vue';
+import { type App, getCurrentScope, onScopeDispose, type Plugin, ref, type Ref } from 'vue';
 
 import type { i18n as I18nInstance, TFunction } from 'i18next';
 
