@@ -1,18 +1,21 @@
 # `@mission-platform/scheduler-core`
 
-Framework-agnostic scheduler core for Mission Platform. Provides RFC 5545 (iCalendar) event models, recurrence expansion (RRULE/RDATE/EXDATE), view range calculation, event selection, and time-grid collision layout.
+Framework-agnostic scheduler core for Mission Platform. Provides RFC 5545 (iCalendar) event models, recurrence expansion
+(RRULE/RDATE/EXDATE), view range calculation, event selection, and time-grid collision layout.
 
 ---
 
 ## Overview
 
-`@mission-platform/scheduler-core` provides pure JavaScript/TypeScript logic for scheduling applications, without UI or framework dependencies:
+`@mission-platform/scheduler-core` provides pure JavaScript/TypeScript logic for scheduling applications, without UI or
+framework dependencies:
 
 - **RFC 5545 Event Model**: Support for `VEvent`, `RRule`, `VAlarm`, `VEventAttendee`, etc.
 - **Recurrence Expansion**: `expandRecurrences` handles RRULEs, RDATEs, EXDATEs across date ranges.
 - **View Ranges**: `visibleRangeFor` and `stepAnchor` compute ranges for day, week, work-week, month, and year views.
 - **Time Grid Layout**: `layoutDay` computes overlapping event positions and column widths for rendering.
-- **Event Operations**: `createEvent`, `eventsForRange`, `eventsForDay`, `moveEventPatch`, `resizeEventPatch`, `applyEventPatch`.
+- **Event Operations**: `createEvent`, `eventsForRange`, `eventsForDay`, `moveEventPatch`, `resizeEventPatch`,
+  `applyEventPatch`.
 
 ---
 
@@ -66,7 +69,9 @@ const slots = layoutDay(visibleEvents, '2026-07-27');
 ## Main Exports
 
 - **Types**: `VEvent`, `RRule`, `DateRange`, `SchedulerView`, `SchedulerEventSlot`, `VAlarm`, `VEventAttendee`.
-- **Date Helpers**: `parseDate`, `parseDT`, `startOfDay`, `startOfWeek`, `startOfMonth`, `addDays`, `addMonths`, `addYears`, `dayKey`.
+- **Date Helpers**: `parseDate`, `parseDT`, `startOfDay`, `startOfWeek`, `startOfMonth`, `addDays`, `addMonths`,
+  `addYears`, `dayKey`.
 - **Recurrence**: `expandRecurrences(events, range)`.
 - **Range Math**: `visibleRangeFor(view, anchorDate, options)`, `stepAnchor(view, anchorDate, step)`.
-- **Event Math & Layout**: `createEvent`, `eventsForRange`, `eventsForDay`, `layoutDay`, `moveEventPatch`, `resizeEventPatch`, `applyEventPatch`, `formatDuration`.
+- **Event Math & Layout**: `createEvent`, `eventsForRange`, `eventsForDay`, `layoutDay`, `moveEventPatch`,
+  `resizeEventPatch`, `applyEventPatch`, `formatDuration`.

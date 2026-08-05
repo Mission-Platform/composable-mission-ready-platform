@@ -8,7 +8,7 @@
 import { DateTime, Duration } from 'luxon';
 import { nanoid } from 'nanoid';
 
-import { fmtLike, isAllDay, parseDate, parseDT, startOfDay, addDays as addDaysHelper } from './dates';
+import { addDays as addDaysHelper, fmtLike, isAllDay, parseDate, parseDT, startOfDay } from './dates';
 import { expandRecurrences } from './recurrence';
 
 import type { SchedulerEventSlot, VEvent } from './types';
