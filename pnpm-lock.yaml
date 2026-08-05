@@ -702,6 +702,9 @@ importers:
       '@mission-platform/typescript-config':
         specifier: workspace:*
         version: link:../../configs/typescript-config
+      '@mission-platform/vite-config':
+        specifier: workspace:*
+        version: link:../../configs/vite-config
       '@mission-platform/vite-plugin-i18n':
         specifier: workspace:*
         version: link:../../vite-plugins/i18n
@@ -4465,7 +4468,7 @@ importers:
         specifier: catalog:testing
         version: 4.1.10(@types/node@24.13.3)(@vitest/browser-playwright@4.1.10)(@vitest/coverage-v8@4.1.10)(happy-dom@20.11.1)(jsdom@29.1.1)(vite@8.2.0(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.6.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.0)(yaml@2.9.0))
 
-  workers/base-spa:
+  workers/forge-spa:
     devDependencies:
       '@cloudflare/workers-types':
         specifier: catalog:cloudflare

@@ -9,7 +9,7 @@ The main marketing and showcase website for **Mission Platform** — a composabl
 - **Multilingual Support (11 Locales)**: Configured with `@mission-platform/i18n` supporting English (`en`), Spanish (`es`), French (`fr`), Dutch (`nl`), Italian (`it`), German (`de`), Korean (`ko`), Japanese (`ja`), Chinese (`zh`), Arabic (`ar`), and Hebrew (`he`).
 - **Automated SEO Engine**: Generates locale-aware `sitemap.xml` and `robots.txt` at build time via `@mission-platform/vite-plugin-seo`.
 - **Critical CSS Inlining**: Integrates `beasties` (via `vite-ssg` configuration) to inline critical styling and defer non-critical CSS.
-- **Cloudflare Workers Deployment**: Hosted on Cloudflare Workers Assets via `@mission-platform/base-spa`.
+- **Cloudflare Workers Deployment**: Hosted on Cloudflare Workers Assets via `@mission-platform/forge-spa`.
 
 ## Monorepo Packages Used
 
@@ -64,7 +64,7 @@ pnpm --filter @mission-platform/website preview
 
 ### Cloudflare Deployment
 
-Deployment uses `wrangler.jsonc` pointing to `@mission-platform/base-spa` as its worker entrypoint and serving `./dist/` via Cloudflare Workers Assets.
+Deployment uses `wrangler.jsonc` pointing to `@mission-platform/forge-spa` as its worker entrypoint and serving `./dist/` via Cloudflare Workers Assets.
 
 ```bash
 # Deploy to staging environment (staging.mission-platform.dev)

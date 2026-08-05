@@ -1,6 +1,6 @@
 /// <reference types="vitest/config" />
 import postcssConfig from '@mission-platform/postcss-config';
-import { ignoreVueI18nBlocksPlugin } from '@mission-platform/vite-config';
+import { frameworkResolveConditions, ignoreVueI18nBlocksPlugin } from '@mission-platform/vite-config';
 import i18nPlugin from '@mission-platform/vite-plugin-i18n';
 import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 import vue from '@vitejs/plugin-vue';
@@ -102,9 +102,25 @@ const sitemapUrls: SitemapUrl[] = [
 // instances. Locale YAML bundles under `src/locales/` are imported as raw
 // strings (`?raw`) and parsed with js-yaml at runtime, so no i18n-specific
 // Vite plugin is required.
+// This app targets Vue, so bare `@mission-platform/<pkg>` imports must resolve
+// to each package's Vue build. Mirror the `defineFrameworkAppConfig` wiring
+// here (client `resolve.conditions` + the SSR/prerender condition set, with the
+// workspace packages bundled) since this app hand-rolls its Vite config.
+const frameworkConditions = frameworkResolveConditions('vue');
+
 const config: SsgUserConfig = {
   css: {
     postcss: postcssConfig,
+  },
+  resolve: {
+    conditions: frameworkConditions,
+  },
+  ssr: {
+    noExternal: [/^@mission-platform\//],
+    resolve: {
+      conditions: frameworkConditions,
+      externalConditions: frameworkConditions,
+    },
   },
   plugins: [
     i18nPlugin({ defaultLocale: 'en' }),

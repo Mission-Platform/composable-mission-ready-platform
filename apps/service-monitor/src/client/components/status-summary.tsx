@@ -1,8 +1,8 @@
 'use client';
 
-import { Badge, Typography } from '@mission-platform/components/react';
-import { useI18n } from '@mission-platform/i18n/react';
-import { Container } from '@mission-platform/layouts/react';
+import { ForgeBadge, ForgeTypography } from '@mission-platform/components';
+import { useI18n } from '@mission-platform/i18n';
+import { ForgeContainer } from '@mission-platform/layouts';
 
 import { maintenanceStatus } from '@/monitoring/incidents';
 
@@ -30,12 +30,12 @@ export function StatusSummary({
   );
   return (
     <ServiceMonitorShell incidents={incidents}>
-      <Container
+      <ForgeContainer
         variant="responsive"
         className="status-page"
       >
         <section className={`status-hero status-hero--${healthy ? 'up' : down.length > 0 ? 'down' : 'degraded'}`}>
-          <Typography
+          <ForgeTypography
             as="h1"
             variant="h1"
           >
@@ -53,7 +53,7 @@ export function StatusSummary({
                     ns: 'mp.service-monitor',
                     defaultValue: 'Degraded performance',
                   })}
-          </Typography>
+          </ForgeTypography>
           <p>
             {t(($) => $.summary.monitoredServicesAndIncidents, {
               ns: 'mp.service-monitor',
@@ -73,7 +73,7 @@ export function StatusSummary({
               key={service.target.id}
             >
               <strong>{service.target.name}</strong>
-              <Badge
+              <ForgeBadge
                 variant={
                   service.latest?.state === 'up'
                     ? 'success'
@@ -83,17 +83,17 @@ export function StatusSummary({
                 }
               >
                 {service.latest?.state ?? 'pending'}
-              </Badge>
+              </ForgeBadge>
             </article>
           ))}
         </section>
         <section className="incident-summary">
-          <Typography
+          <ForgeTypography
             as="h2"
             variant="h3"
           >
             {t(($) => $.summary.activeIncidentsTitle, { ns: 'mp.service-monitor', defaultValue: 'Active incidents' })}
-          </Typography>
+          </ForgeTypography>
           {active.length === 0 ? (
             <p>
               {t(($) => $.summary.noActiveIncidents, {
@@ -111,12 +111,12 @@ export function StatusSummary({
           )}
         </section>
         <section className="incident-summary">
-          <Typography
+          <ForgeTypography
             as="h2"
             variant="h3"
           >
             {t(($) => $.summary.plannedMaintenance, { ns: 'mp.service-monitor', defaultValue: 'Planned maintenance' })}
-          </Typography>
+          </ForgeTypography>
           {visibleMaintenance.length === 0 ? (
             <p>
               {t(($) => $.summary.noUpcomingMaintenance, {
@@ -136,7 +136,7 @@ export function StatusSummary({
             ))
           )}
         </section>
-      </Container>
+      </ForgeContainer>
     </ServiceMonitorShell>
   );
 }

@@ -1,9 +1,9 @@
 'use client';
 
-import { Button, Dialog, Typography } from '@mission-platform/components/react';
-import { SchemaForm, type FormValues, type SchemaFormDefinition } from '@mission-platform/forms/react';
-import { useI18n } from '@mission-platform/i18n/react';
-import { Container } from '@mission-platform/layouts/react';
+import { ForgeButton, ForgeDialog, ForgeTypography } from '@mission-platform/components';
+import { ForgeSchemaForm, type FormValues, type SchemaFormDefinition } from '@mission-platform/forms';
+import { useI18n } from '@mission-platform/i18n';
+import { ForgeContainer } from '@mission-platform/layouts';
 import { useState } from 'react';
 
 import { maintenanceStatus, validMaintenanceRange } from '@/monitoring/incidents';
@@ -215,19 +215,19 @@ export function IncidentsView({
   };
   return (
     <ServiceMonitorShell incidents={incidents}>
-      <Container
+      <ForgeContainer
         variant="responsive"
         className="incidents-page"
       >
-        <Typography
+        <ForgeTypography
           as="h1"
           variant="h1"
         >
           {t(($) => $.incidents.title, { ns: 'mp.service-monitor', defaultValue: 'Incidents' })}
-        </Typography>
-        <Button onClick={() => setDialog('incident')}>
+        </ForgeTypography>
+        <ForgeButton onClick={() => setDialog('incident')}>
           {t(($) => $.incidents.reportButton, { ns: 'mp.service-monitor', defaultValue: 'Report incident' })}
-        </Button>
+        </ForgeButton>
         <section className="incident-list">
           {incidents.map((incident) => (
             <article key={incident.id}>
@@ -247,7 +247,7 @@ export function IncidentsView({
                   </li>
                 ))}
               </ol>
-              <Button
+              <ForgeButton
                 size="sm"
                 onClick={() => {
                   setSelectedId(incident.id);
@@ -258,9 +258,9 @@ export function IncidentsView({
                   ns: 'mp.service-monitor',
                   defaultValue: 'Add progress update',
                 })}
-              </Button>
+              </ForgeButton>
               {incident.status === 'resolved' ? (
-                <Button
+                <ForgeButton
                   size="sm"
                   variant="ghost"
                   onClick={() => {
@@ -278,7 +278,7 @@ export function IncidentsView({
                         ns: 'mp.service-monitor',
                         defaultValue: 'Add post-incident report',
                       })}
-                </Button>
+                </ForgeButton>
               ) : null}
               {incident.postIncidentReport ? (
                 <section>
@@ -295,7 +295,7 @@ export function IncidentsView({
           ))}
         </section>
         <header className="maintenance-head">
-          <Typography
+          <ForgeTypography
             as="h2"
             variant="h3"
           >
@@ -303,13 +303,13 @@ export function IncidentsView({
               ns: 'mp.service-monitor',
               defaultValue: 'Planned maintenance',
             })}
-          </Typography>
-          <Button onClick={() => openMaintenance()}>
+          </ForgeTypography>
+          <ForgeButton onClick={() => openMaintenance()}>
             {t(($) => $.incidents.scheduleMaintenance, {
               ns: 'mp.service-monitor',
               defaultValue: 'Schedule maintenance',
             })}
-          </Button>
+          </ForgeButton>
         </header>
         <section className="incident-list">
           {maintenance.map((window) => (
@@ -322,26 +322,26 @@ export function IncidentsView({
               <p>
                 {formatDateTime(window.startsAt)} – {formatDateTime(window.endsAt)}
               </p>
-              <Button
+              <ForgeButton
                 size="sm"
                 variant="ghost"
                 onClick={() => openMaintenance(window)}
               >
                 {t(($) => $.incidents.edit, { ns: 'mp.service-monitor', defaultValue: 'Edit' })}
-              </Button>
+              </ForgeButton>
               {maintenanceStatus(window) === 'scheduled' ? (
-                <Button
+                <ForgeButton
                   size="sm"
                   variant="ghost"
                   onClick={() => cancelMaintenance(window)}
                 >
                   {t(($) => $.incidents.cancel, { ns: 'mp.service-monitor', defaultValue: 'Cancel' })}
-                </Button>
+                </ForgeButton>
               ) : null}
             </article>
           ))}
         </section>
-        <Dialog
+        <ForgeDialog
           open={dialog === 'incident'}
           title={t(($) => $.incidents.reportAnIncident, {
             ns: 'mp.service-monitor',
@@ -349,15 +349,15 @@ export function IncidentsView({
           })}
           onUpdateOpen={(open) => !open && close()}
         >
-          <SchemaForm
+          <ForgeSchemaForm
             className="incident-form"
             schema={incidentSchema(monitors)}
             modelValue={incidentValues}
             onUpdateModelValue={setIncidentValues}
             onSubmit={(values, valid) => void report(values, valid)}
           />
-        </Dialog>
-        <Dialog
+        </ForgeDialog>
+        <ForgeDialog
           open={dialog === 'update'}
           title={t(($) => $.incidents.addProgressUpdate, {
             ns: 'mp.service-monitor',
@@ -365,15 +365,15 @@ export function IncidentsView({
           })}
           onUpdateOpen={(open) => !open && close()}
         >
-          <SchemaForm
+          <ForgeSchemaForm
             className="incident-form"
             schema={UPDATE_SCHEMA}
             modelValue={updateValues}
             onUpdateModelValue={setUpdateValues}
             onSubmit={(values, valid) => void addUpdate(values, valid)}
           />
-        </Dialog>
-        <Dialog
+        </ForgeDialog>
+        <ForgeDialog
           open={dialog === 'report'}
           title={t(($) => $.incidents.postIncidentReport, {
             ns: 'mp.service-monitor',
@@ -381,15 +381,15 @@ export function IncidentsView({
           })}
           onUpdateOpen={(open) => !open && close()}
         >
-          <SchemaForm
+          <ForgeSchemaForm
             className="incident-form"
             schema={REPORT_SCHEMA}
             modelValue={reportValues}
             onUpdateModelValue={setReportValues}
             onSubmit={(values, valid) => void saveReport(values, valid)}
           />
-        </Dialog>
-        <Dialog
+        </ForgeDialog>
+        <ForgeDialog
           open={dialog === 'maintenance'}
           title={
             selectedId
@@ -404,15 +404,15 @@ export function IncidentsView({
           }
           onUpdateOpen={(open) => !open && close()}
         >
-          <SchemaForm
+          <ForgeSchemaForm
             className="incident-form"
             schema={maintenanceSchema(monitors)}
             modelValue={maintenanceValues}
             onUpdateModelValue={setMaintenanceValues}
             onSubmit={(values, valid) => void saveMaintenance(values, valid)}
           />
-        </Dialog>
-      </Container>
+        </ForgeDialog>
+      </ForgeContainer>
     </ServiceMonitorShell>
   );
 }

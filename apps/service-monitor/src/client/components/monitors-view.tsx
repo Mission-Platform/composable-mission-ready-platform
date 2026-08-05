@@ -1,9 +1,9 @@
 'use client';
 
-import { Typography } from '@mission-platform/components/react';
-import { useI18n } from '@mission-platform/i18n/react';
-import { Container } from '@mission-platform/layouts/react';
-import { useObservable } from '@mission-platform/rxjs/react';
+import { ForgeTypography } from '@mission-platform/components';
+import { useI18n } from '@mission-platform/i18n';
+import { ForgeContainer } from '@mission-platform/layouts';
+import { useObservable } from '@mission-platform/rxjs';
 import { useCallback, useMemo, useState } from 'react';
 
 import { deleteMonitor, saveMonitor, servicesStream } from '../hooks/streams';
@@ -74,18 +74,18 @@ export function MonitorsView({
 
   return (
     <ServiceMonitorShell incidents={initialIncidents}>
-      <Container
+      <ForgeContainer
         variant="responsive"
         className="monitors-page"
       >
         <header className="monitors-page__header">
-          <Typography
+          <ForgeTypography
             as="h1"
             variant="h1"
             className="monitors-page__title"
           >
             {t(($) => $.nav.monitors, { ns: 'mp.service-monitor', defaultValue: 'Monitors' })}
-          </Typography>
+          </ForgeTypography>
         </header>
 
         <MonitorManager
@@ -94,7 +94,7 @@ export function MonitorsView({
           onSave={onSave}
           onDelete={onDelete}
         />
-      </Container>
+      </ForgeContainer>
     </ServiceMonitorShell>
   );
 }

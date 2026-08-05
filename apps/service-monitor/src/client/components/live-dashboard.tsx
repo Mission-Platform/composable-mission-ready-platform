@@ -1,10 +1,10 @@
 'use client';
 
-import { Badge, Typography } from '@mission-platform/components/react';
-import { useI18n } from '@mission-platform/i18n/react';
-import { IconClock, IconGlobe } from '@mission-platform/icons/react';
-import { Container } from '@mission-platform/layouts/react';
-import { useObservable } from '@mission-platform/rxjs/react';
+import { ForgeBadge, ForgeTypography } from '@mission-platform/components';
+import { useI18n } from '@mission-platform/i18n';
+import { ForgeIconClock, ForgeIconGlobe } from '@mission-platform/icons';
+import { ForgeContainer } from '@mission-platform/layouts';
+import { useObservable } from '@mission-platform/rxjs';
 import { type ReactNode, useEffect, useMemo, useState } from 'react';
 import { EMPTY } from 'rxjs';
 
@@ -121,24 +121,24 @@ export function LiveDashboard({
 
   return (
     <ServiceMonitorShell incidents={initialIncidents}>
-      <Container
+      <ForgeContainer
         variant="responsive"
         className="dashboard"
       >
         <header className="dashboard__header">
           <div>
-            <Typography
+            <ForgeTypography
               as="h1"
               variant="h1"
               className="dashboard__title"
             >
-              <IconGlobe
+              <ForgeIconGlobe
                 className="dashboard__title-icon"
                 aria-hidden="true"
               />
               {t(($) => $.dashboard.title, { ns: 'mp.service-monitor', defaultValue: 'Service Monitor' })}
-            </Typography>
-            <Typography
+            </ForgeTypography>
+            <ForgeTypography
               as="p"
               variant="body-sm"
               className="dashboard__subtitle"
@@ -149,10 +149,10 @@ export function LiveDashboard({
                   'Server-side health checks (default every {interval}s, per-monitor overrides), stored as a time series on the edge.',
                 interval: intervalSeconds,
               })}
-            </Typography>
+            </ForgeTypography>
           </div>
           <div className="dashboard__actions">
-            <Badge
+            <ForgeBadge
               variant={connected ? 'success' : 'warning'}
               pill
             >
@@ -162,7 +162,7 @@ export function LiveDashboard({
                     ns: 'mp.service-monitor',
                     defaultValue: 'Reconnecting…',
                   })}
-            </Badge>
+            </ForgeBadge>
           </div>
         </header>
 
@@ -189,7 +189,7 @@ export function LiveDashboard({
             aria-live="polite"
           >
             <div className="detail__head">
-              <Typography
+              <ForgeTypography
                 as="h2"
                 variant="h3"
                 className="detail__title"
@@ -199,7 +199,7 @@ export function LiveDashboard({
                   defaultValue: '{name} · latency',
                   name: selected.target.name,
                 })}
-              </Typography>
+              </ForgeTypography>
               {selected.target.url ? (
                 <a
                   className="detail__link"
@@ -228,7 +228,7 @@ export function LiveDashboard({
                   defaultValue: 'Interval',
                 })}
                 value={`${selected.target.intervalSeconds ?? intervalSeconds}s`}
-                icon={<IconClock aria-hidden="true" />}
+                icon={<ForgeIconClock aria-hidden="true" />}
               />
               <Stat
                 label={t(($) => $.dashboard.stat.uptime, {
@@ -272,7 +272,7 @@ export function LiveDashboard({
           onSelectProvider={setSelectedProvider}
           series={speedSeries}
         />
-      </Container>
+      </ForgeContainer>
     </ServiceMonitorShell>
   );
 }
@@ -295,7 +295,7 @@ function ServiceCard({ service, selected, onSelect }: ServiceCardProperties) {
     >
       <span className="card__top">
         <span className="card__name">{service.target.name}</span>
-        <Badge
+        <ForgeBadge
           variant={STATE_VARIANT[state]}
           size="sm"
         >
@@ -303,7 +303,7 @@ function ServiceCard({ service, selected, onSelect }: ServiceCardProperties) {
             ns: 'mp.service-monitor',
             defaultValue: state === 'up' ? 'Operational' : state === 'degraded' ? 'Degraded' : 'Down',
           })}
-        </Badge>
+        </ForgeBadge>
       </span>
       <span className="card__type">{(service.target.type ?? 'http').toUpperCase()}</span>
       <span className="card__metrics">

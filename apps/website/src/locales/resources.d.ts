@@ -88,7 +88,7 @@ export default interface Resources {
     packages: {
       items: {
         barcode: 'Barcode support.';
-        'base-spa': 'Base SPA setup.';
+        'forge-spa': 'Base SPA setup.';
         breakpoints: 'Responsive breakpoints.';
         'code-scanner': 'Code scanning utilities.';
         components: 'Reusable UI building blocks.';

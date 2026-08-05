@@ -49,6 +49,7 @@
     "@mission-platform/prettier-config": "workspace:*",
     "@mission-platform/stylelint-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
+    "@mission-platform/vite-config": "workspace:*",
     "@mission-platform/vite-plugin-i18n": "workspace:*",
     "@types/d3": "catalog:d3",
     "@types/node": "catalog:typescript",

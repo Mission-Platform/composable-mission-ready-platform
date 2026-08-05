@@ -1,4 +1,5 @@
 import { cloudflare } from '@cloudflare/vite-plugin';
+import { frameworkCondition } from '@mission-platform/vite-config';
 import i18nPlugin from '@mission-platform/vite-plugin-i18n';
 import { redwood } from 'rwsdk/vite';
 import { defineConfig } from 'vite';
@@ -8,6 +9,27 @@ import type { Plugin } from 'vite';
 const ssrMonacoId = '\0service-monitor:ssr-monaco';
 const styleSsrId = /^(?:\/@id\/)?virtual:rwsdk:ssr:.*\.(?:css|scss|sass|less|styl)(?:\?.*)?$/;
 const syntheticStyleSsrId = /^(?:\/@id\/)?virtual:rwsdk:ssr:.*\.(?:css|scss|sass|less|styl)\.js(?:\?.*)?$/;
+
+// This app targets React and is built by RedwoodSDK as several isolated Vite
+// environments (client, ssr, worker). A single top-level `resolve.conditions`
+// does not propagate into those child environments, so inject the framework's
+// `mp:react` export condition into every environment individually — prepended,
+// so it *merges* with (rather than replaces) the Cloudflare/worker conditions.
+// This makes bare `@mission-platform/<pkg>` imports resolve to each package's
+// React build across the client, SSR and worker builds alike.
+function frameworkConditionsPlugin(): Plugin {
+  const condition = frameworkCondition('react');
+  return {
+    name: 'service-monitor:framework-conditions',
+    configEnvironment(_name, options) {
+      const resolve = (options.resolve ??= {});
+      const existing = resolve.conditions ?? [];
+      if (!existing.includes(condition)) {
+        resolve.conditions = [condition, ...existing];
+      }
+    },
+  };
+}
 
 function excludeMonacoFromSsr(): Plugin {
   return {
@@ -74,6 +96,7 @@ export default defineConfig(async ({ mode }) => ({
     mode === 'test'
       ? []
       : [
+          frameworkConditionsPlugin(),
           i18nPlugin({ defaultLocale: 'en' }),
           excludeMonacoFromSsr(),
           cloudflare({

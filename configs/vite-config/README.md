@@ -74,7 +74,7 @@ export default defineFrameworkAppConfig({
 
 ```ts
 // Anywhere in the app — resolves to the React build automatically:
-import { BaseButton } from '@mission-platform/components';
+import { ForgeButton } from '@mission-platform/components';
 ```
 
 Pair it with the matching TypeScript preset so the editor/LSP resolves the same

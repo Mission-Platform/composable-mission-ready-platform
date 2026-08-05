@@ -1,9 +1,9 @@
 'use client';
 
-import { Badge, Button, Dialog, Typography } from '@mission-platform/components/react';
-import { SchemaForm, type FormValues, type SchemaFormDefinition } from '@mission-platform/forms/react';
-import { useI18n } from '@mission-platform/i18n/react';
-import { IconPencil, IconPlus, IconTrash } from '@mission-platform/icons/react';
+import { ForgeBadge, ForgeButton, ForgeDialog, ForgeTypography } from '@mission-platform/components';
+import { ForgeSchemaForm, type FormValues, type SchemaFormDefinition } from '@mission-platform/forms';
+import { useI18n } from '@mission-platform/i18n';
+import { ForgeIconPencil, ForgeIconPlus, ForgeIconTrash } from '@mission-platform/icons';
 import { useState } from 'react';
 
 import { type MonitorTarget, PROBE_TYPES, type ProbeType } from '@/monitoring/types';
@@ -235,14 +235,14 @@ export function MonitorManager({ monitors, defaultIntervalSeconds, onSave, onDel
       })}
     >
       <div className="monitors__head">
-        <Typography
+        <ForgeTypography
           as="h2"
           variant="h3"
           className="monitors__title"
         >
           {t(($) => $.monitors.title, { ns: 'mp.service-monitor', defaultValue: 'Monitors' })}
-        </Typography>
-        <Typography
+        </ForgeTypography>
+        <ForgeTypography
           as="p"
           variant="body-sm"
           className="monitors__subtitle"
@@ -252,16 +252,16 @@ export function MonitorManager({ monitors, defaultIntervalSeconds, onSave, onDel
             defaultValue: 'Configured at runtime · default interval {interval}s.',
             interval: defaultIntervalSeconds,
           })}
-        </Typography>
-        <Button
+        </ForgeTypography>
+        <ForgeButton
           onClick={() => {
             cancelEdit();
             setFormOpen(true);
           }}
         >
-          <IconPlus aria-hidden="true" />{' '}
+          <ForgeIconPlus aria-hidden="true" />{' '}
           {t(($) => $.monitors.add, { ns: 'mp.service-monitor', defaultValue: 'Add monitor' })}
-        </Button>
+        </ForgeButton>
       </div>
 
       <ul className="monitors__list">
@@ -271,19 +271,19 @@ export function MonitorManager({ monitors, defaultIntervalSeconds, onSave, onDel
             className="monitors__item"
           >
             <div className="monitors__item-main">
-              <Badge
+              <ForgeBadge
                 variant="info"
                 size="sm"
                 className="monitors__badge"
               >
                 {TYPE_LABELS[monitor.type ?? 'http']}
-              </Badge>
+              </ForgeBadge>
               <span className="monitors__name">{monitor.name}</span>
               <span className="monitors__target">{monitor.url ?? monitor.host}</span>
             </div>
             <div className="monitors__item-side">
               <span className="monitors__interval">{monitor.intervalSeconds ?? defaultIntervalSeconds}s</span>
-              <Button
+              <ForgeButton
                 variant="ghost"
                 size="sm"
                 onClick={() => edit(monitor)}
@@ -293,10 +293,10 @@ export function MonitorManager({ monitors, defaultIntervalSeconds, onSave, onDel
                   name: monitor.name,
                 })}
               >
-                <IconPencil aria-hidden="true" />{' '}
+                <ForgeIconPencil aria-hidden="true" />{' '}
                 {t(($) => $.monitors.edit, { ns: 'mp.service-monitor', defaultValue: 'Edit' })}
-              </Button>
-              <Button
+              </ForgeButton>
+              <ForgeButton
                 variant="ghost"
                 size="sm"
                 onClick={() => void onDelete(monitor.id)}
@@ -307,15 +307,15 @@ export function MonitorManager({ monitors, defaultIntervalSeconds, onSave, onDel
                 })}
                 className="monitors__remove"
               >
-                <IconTrash aria-hidden="true" />{' '}
+                <ForgeIconTrash aria-hidden="true" />{' '}
                 {t(($) => $.monitors.remove, { ns: 'mp.service-monitor', defaultValue: 'Remove' })}
-              </Button>
+              </ForgeButton>
             </div>
           </li>
         ))}
       </ul>
 
-      <Dialog
+      <ForgeDialog
         open={formOpen}
         title={
           editingId
@@ -327,7 +327,7 @@ export function MonitorManager({ monitors, defaultIntervalSeconds, onSave, onDel
           if (!open) cancelEdit();
         }}
       >
-        <SchemaForm
+        <ForgeSchemaForm
           key={editingId ?? 'new'}
           className="monitors__form"
           schema={monitorSchema(editingId !== null, defaultIntervalSeconds)}
@@ -337,7 +337,7 @@ export function MonitorManager({ monitors, defaultIntervalSeconds, onSave, onDel
           disabled={busy}
         />
         {error ? <p className="monitors__error">{error}</p> : null}
-      </Dialog>
+      </ForgeDialog>
     </section>
   );
 }

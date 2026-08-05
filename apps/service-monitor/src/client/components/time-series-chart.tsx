@@ -1,6 +1,6 @@
 'use client';
 
-import { innerDimensions, resolveMargin, useD3 } from '@mission-platform/d3/react';
+import { innerDimensions, resolveMargin, useD3 } from '@mission-platform/d3';
 import { palette } from '@mission-platform/tokens';
 import { area, bisector, extent, line, pointer, scaleLinear, scaleTime } from 'd3';
 

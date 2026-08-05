@@ -268,9 +268,22 @@ export interface FrameworkAppConfigOptions extends AppConfigOptions {
  */
 export function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig {
   const { framework, overrides } = options;
+  const conditions = frameworkResolveConditions(framework);
   const conditionsConfig = defineConfig({
     resolve: {
-      conditions: frameworkResolveConditions(framework),
+      conditions,
+    },
+    // The static-prerender / SSR pass (e.g. `vite-ssg`) resolves modules through
+    // a *separate* condition set that does not inherit `resolve.conditions`.
+    // Mirror the framework conditions here — and bundle the workspace packages
+    // rather than externalising them — so bare `@mission-platform/<pkg>` imports
+    // pick the same framework build server-side as they do in the client build.
+    ssr: {
+      noExternal: [/^@mission-platform\//],
+      resolve: {
+        conditions,
+        externalConditions: conditions,
+      },
     },
   });
   const base = defineAppConfig({ overrides: conditionsConfig });

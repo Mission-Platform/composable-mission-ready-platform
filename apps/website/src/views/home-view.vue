@@ -1,35 +1,35 @@
 <script setup lang="ts">
   import {
-    BaseAccordion,
-    BaseAvatar,
-    BaseBadge,
-    BaseButton,
-    BaseCard,
-    BaseCarousel,
-    BaseGrid,
-    BaseInView,
-    BaseMasonry,
-    BaseNavbar,
-    BaseNavbarItem,
-    BaseStack,
-    BaseTag,
-    BaseThemeToggle,
-    BaseTypography,
-    LanguageSwitcher,
-  } from '@mission-platform/components/vue';
-  import { useI18n } from '@mission-platform/i18n/vue';
+    ForgeAccordion,
+    ForgeAvatar,
+    ForgeBadge,
+    ForgeButton,
+    ForgeCard,
+    ForgeCarousel,
+    ForgeGrid,
+    ForgeInView,
+    ForgeLanguageSwitcher,
+    ForgeMasonry,
+    ForgeNavbar,
+    ForgeNavbarItem,
+    ForgeStack,
+    ForgeTag,
+    ForgeThemeToggle,
+    ForgeTypography,
+  } from '@mission-platform/components';
+  import { useI18n } from '@mission-platform/i18n';
   import {
-    IconDebug,
-    IconGlobe,
-    IconLanguage,
-    IconLightning,
-    IconPalette,
-    IconPuzzle,
-    IconQrCode,
-    IconSearch,
-  } from '@mission-platform/icons/vue';
-  import { BaseApplicationLayout } from '@mission-platform/layouts/vue';
-  import { QrCode as BaseQrCode } from '@mission-platform/qr-code/vue';
+    ForgeIconDebug,
+    ForgeIconGlobe,
+    ForgeIconLanguage,
+    ForgeIconLightning,
+    ForgeIconPalette,
+    ForgeIconPuzzle,
+    ForgeIconQrCode,
+    ForgeIconSearch,
+  } from '@mission-platform/icons';
+  import { ForgeApplicationLayout } from '@mission-platform/layouts';
+  import { ForgeQrCode } from '@mission-platform/qr-code';
   import { organizationId, useSeo, webPage, webSiteId } from '@mission-platform/seo';
   import { type Component, computed, onBeforeUnmount, onMounted, ref } from 'vue';
   import { useRouter } from 'vue-router';
@@ -99,7 +99,7 @@
 
   const features = computed<Feature[]>(() => [
     {
-      icon: IconPuzzle,
+      icon: ForgeIconPuzzle,
       title: t(($) => $.features.composable.title, { defaultValue: 'Composable', ns: 'mp.website' }),
       description: t(($) => $.features.composable.description, {
         defaultValue: 'Build applications from small, independent building blocks.',
@@ -107,7 +107,7 @@
       }),
     },
     {
-      icon: IconLightning,
+      icon: ForgeIconLightning,
       title: t(($) => $.features.performance.title, { defaultValue: 'Performance', ns: 'mp.website' }),
       description: t(($) => $.features.performance.description, {
         defaultValue: 'Optimized for speed and minimal load times.',
@@ -115,7 +115,7 @@
       }),
     },
     {
-      icon: IconPalette,
+      icon: ForgeIconPalette,
       title: t(($) => $.features.theming.title, { defaultValue: 'Theming', ns: 'mp.website' }),
       description: t(($) => $.features.theming.description, {
         defaultValue: 'Easily customizable look and feel.',
@@ -123,7 +123,7 @@
       }),
     },
     {
-      icon: IconLanguage,
+      icon: ForgeIconLanguage,
       title: t(($) => $.features.i18n.title, { defaultValue: 'Internationalization', ns: 'mp.website' }),
       description: t(($) => $.features.i18n.description, {
         defaultValue: 'Built-in support for multiple languages.',
@@ -131,7 +131,7 @@
       }),
     },
     {
-      icon: IconDebug,
+      icon: ForgeIconDebug,
       title: t(($) => $.features.debugging.title, { defaultValue: 'Debugging', ns: 'mp.website' }),
       description: t(($) => $.features.debugging.description, {
         defaultValue: 'Advanced debugging tools integrated into the platform.',
@@ -139,7 +139,7 @@
       }),
     },
     {
-      icon: IconGlobe,
+      icon: ForgeIconGlobe,
       title: t(($) => $.features.global.title, { defaultValue: 'Global Scale', ns: 'mp.website' }),
       description: t(($) => $.features.global.description, {
         defaultValue: 'Ready for global deployment.',
@@ -147,7 +147,7 @@
       }),
     },
     {
-      icon: IconSearch,
+      icon: ForgeIconSearch,
       title: t(($) => $.features.search.title, { defaultValue: 'Search', ns: 'mp.website' }),
       description: t(($) => $.features.search.description, {
         defaultValue: 'Powerful integrated search functionality.',
@@ -155,7 +155,7 @@
       }),
     },
     {
-      icon: IconQrCode,
+      icon: ForgeIconQrCode,
       title: t(($) => $.features.barcode.title, { defaultValue: 'Barcode', ns: 'mp.website' }),
       description: t(($) => $.features.barcode.description, {
         defaultValue: 'Support for barcode and QR code scanning.',
@@ -300,8 +300,8 @@
       description: t(($) => $.packages.items.seo, { defaultValue: 'SEO management.', ns: 'mp.website' }),
     },
     {
-      name: '@mission-platform/base-spa',
-      description: t(($) => $.packages.items['base-spa'], { defaultValue: 'Base SPA setup.', ns: 'mp.website' }),
+      name: '@mission-platform/forge-spa',
+      description: t(($) => $.packages.items['forge-spa'], { defaultValue: 'Base SPA setup.', ns: 'mp.website' }),
     },
   ]);
 
@@ -360,8 +360,8 @@
       }),
     },
   ]);
-  // BaseAccordion is driven by a flat `items` array (with scoped `summary`/
-  // `content` slots) rather than nested `BaseAccordionItem`s.
+  // ForgeAccordion is driven by a flat `items` array (with scoped `summary`/
+  // `content` slots) rather than nested `ForgeAccordionItem`s.
   const faqItems = computed(() =>
     faqs.value.map((faq, index) => ({
       id: `faq-${index}`,
@@ -369,7 +369,7 @@
       content: faq.answer,
     })),
   );
-  // BaseCarousel is driven by a flat `slides` array (with a scoped `slide`
+  // ForgeCarousel is driven by a flat `slides` array (with a scoped `slide`
   // slot) rather than default-slot children; the project for each slide is
   // looked up by index inside the slot.
   const projectSlides = computed(() => projects.value.map((project) => ({ id: project.name })));
@@ -421,7 +421,7 @@
 </script>
 
 <template>
-  <BaseApplicationLayout
+  <ForgeApplicationLayout
     class="home"
     sticky-header
     :status-level="undefined"
@@ -430,13 +430,13 @@
       v-if="isAiTranslation"
       #status
     >
-      <!-- <BaseAlertBanner variant="warning">
+      <!-- <ForgeAlertBanner variant="warning">
         {{ t(($) => $.ai_translation_warning, { ns: 'mp.website', defaultValue: 'AI-generated translation' }) }}
-      </BaseAlertBanner> -->
+      </ForgeAlertBanner> -->
     </template>
 
     <template #navbar>
-      <BaseNavbar
+      <ForgeNavbar
         align="center"
         sticky
         mobile-title="Mission Platform"
@@ -449,40 +449,40 @@
             }"
             class="home__brand"
           >
-            <BaseAvatar
+            <ForgeAvatar
               src="/favicon.svg"
               alt="Mission Platform"
               size="sm"
               shape="square"
             />
-            <BaseTypography
+            <ForgeTypography
               variant="h6"
               weight="bold"
               as="span"
             >
               Mission Platform
-            </BaseTypography>
+            </ForgeTypography>
           </router-link>
         </template>
-        <BaseNavbarItem
+        <ForgeNavbarItem
           :active="activeSection === 'features'"
           :label="t(($) => $.nav.features, { defaultValue: 'Features', ns: 'mp.website' })"
           href="#features"
           @click="(e: MouseEvent) => scrollToSection(e, 'features')"
         />
-        <BaseNavbarItem
+        <ForgeNavbarItem
           :active="activeSection === 'packages'"
           :label="t(($) => $.nav.packages, { defaultValue: 'Packages', ns: 'mp.website' })"
           href="#packages"
           @click="(e: MouseEvent) => scrollToSection(e, 'packages')"
         />
-        <BaseNavbarItem
+        <ForgeNavbarItem
           :active="activeSection === 'about'"
           :label="t(($) => $.nav.about, { defaultValue: 'About', ns: 'mp.website' })"
           href="#about"
           @click="(e: MouseEvent) => scrollToSection(e, 'about')"
         />
-        <BaseNavbarItem
+        <ForgeNavbarItem
           :active="activeSection === 'faq'"
           :label="t(($) => $.nav.faq, { defaultValue: 'FAQ', ns: 'mp.website' })"
           href="#faq"
@@ -490,17 +490,17 @@
         />
 
         <template #end>
-          <LanguageSwitcher
+          <ForgeLanguageSwitcher
             :locale="locale"
             :locales="languages"
             :on-locale-change="switchLanguage"
           />
-          <BaseThemeToggle
+          <ForgeThemeToggle
             aria-label="Toggle colour theme"
             @change="handleThemeChange"
           />
         </template>
-      </BaseNavbar>
+      </ForgeNavbar>
     </template>
 
     <template #content>
@@ -508,19 +508,19 @@
         id="hero"
         class="home__hero"
       >
-        <BaseInView animation="slide-up">
-          <BaseBadge variant="info">
+        <ForgeInView animation="slide-up">
+          <ForgeBadge variant="info">
             {{ t(($) => $.hero.badge, { defaultValue: 'Beta', ns: 'mp.website' }) }}
-          </BaseBadge>
-          <BaseTypography
+          </ForgeBadge>
+          <ForgeTypography
             variant="display"
             weight="bold"
             align="center"
             class="home__title"
           >
             {{ t(($) => $.hero.title, { defaultValue: 'Composable. Mission Ready.', ns: 'mp.website' }) }}
-          </BaseTypography>
-          <BaseTypography
+          </ForgeTypography>
+          <ForgeTypography
             variant="body-lg"
             color="secondary"
             align="center"
@@ -532,49 +532,49 @@
                 ns: 'mp.website',
               })
             }}
-          </BaseTypography>
-          <BaseStack
+          </ForgeTypography>
+          <ForgeStack
             class="home__cta"
             direction="horizontal"
             gap="sm"
             justify="center"
             wrap
           >
-            <BaseButton
+            <ForgeButton
               variant="primary"
               size="lg"
               @click="() => {}"
             >
               {{ t(($) => $.hero['cta-primary'], { defaultValue: 'Get Started', ns: 'mp.website' }) }}
-            </BaseButton>
-            <BaseButton
+            </ForgeButton>
+            <ForgeButton
               variant="secondary"
               size="lg"
               @click="() => {}"
             >
               {{ t(($) => $.hero['cta-secondary'], { defaultValue: 'Documentation', ns: 'mp.website' }) }}
-            </BaseButton>
-          </BaseStack>
-        </BaseInView>
+            </ForgeButton>
+          </ForgeStack>
+        </ForgeInView>
       </section>
 
       <section
         id="features"
         class="home__section"
       >
-        <BaseInView animation="slide-up">
-          <BaseTypography
+        <ForgeInView animation="slide-up">
+          <ForgeTypography
             variant="h2"
             weight="bold"
             class="home__section-title"
           >
             {{ t(($) => $.features.title, { defaultValue: 'Features', ns: 'mp.website' }) }}
-          </BaseTypography>
-          <BaseGrid
+          </ForgeTypography>
+          <ForgeGrid
             min-column-width="16rem"
             gap="lg"
           >
-            <BaseCard
+            <ForgeCard
               v-for="feature in features"
               :key="feature.title"
               class="home__feature"
@@ -586,37 +586,37 @@
                     size="xl"
                   />
                 </div>
-                <BaseTypography
+                <ForgeTypography
                   variant="h4"
                   weight="semibold"
                 >
                   {{ feature.title }}
-                </BaseTypography>
+                </ForgeTypography>
               </template>
-              <BaseTypography
+              <ForgeTypography
                 variant="body-md"
                 color="secondary"
               >
                 {{ feature.description }}
-              </BaseTypography>
-            </BaseCard>
-          </BaseGrid>
-        </BaseInView>
+              </ForgeTypography>
+            </ForgeCard>
+          </ForgeGrid>
+        </ForgeInView>
       </section>
 
       <section
         id="packages"
         class="home__section home__section--alt"
       >
-        <BaseInView animation="slide-up">
-          <BaseTypography
+        <ForgeInView animation="slide-up">
+          <ForgeTypography
             variant="h2"
             weight="bold"
             class="home__section-title"
           >
             {{ t(($) => $.packages.title, { defaultValue: 'Packages', ns: 'mp.website' }) }}
-          </BaseTypography>
-          <BaseTypography
+          </ForgeTypography>
+          <ForgeTypography
             variant="body-lg"
             color="secondary"
             class="home__section-lead"
@@ -627,48 +627,48 @@
                 ns: 'mp.website',
               })
             }}
-          </BaseTypography>
-          <BaseMasonry
+          </ForgeTypography>
+          <ForgeMasonry
             class="home__packages"
             min-column-width="18rem"
             gap="md"
           >
-            <BaseCard
+            <ForgeCard
               v-for="pkg in packages"
               :key="pkg.name"
               class="home__package"
             >
               <div class="home__package-row">
-                <BaseTag
+                <ForgeTag
                   variant="primary"
                   size="sm"
                   :label="pkg.name"
                 />
               </div>
-              <BaseTypography
+              <ForgeTypography
                 variant="body-sm"
                 color="secondary"
               >
                 {{ pkg.description }}
-              </BaseTypography>
-            </BaseCard>
-          </BaseMasonry>
-        </BaseInView>
+              </ForgeTypography>
+            </ForgeCard>
+          </ForgeMasonry>
+        </ForgeInView>
       </section>
 
       <section
         id="about"
         class="home__section"
       >
-        <BaseInView animation="slide-up">
-          <BaseTypography
+        <ForgeInView animation="slide-up">
+          <ForgeTypography
             variant="h2"
             weight="bold"
             class="home__section-title"
           >
             {{ t(($) => $.about.title, { defaultValue: 'About', ns: 'mp.website' }) }}
-          </BaseTypography>
-          <BaseTypography
+          </ForgeTypography>
+          <ForgeTypography
             variant="body-lg"
             color="secondary"
             class="home__section-lead"
@@ -680,9 +680,9 @@
                 ns: 'mp.website',
               })
             }}
-          </BaseTypography>
+          </ForgeTypography>
           <div class="home__projects">
-            <BaseCarousel
+            <ForgeCarousel
               :aria-label="t(($) => $.about.projects['aria-label'], { defaultValue: 'Project list', ns: 'mp.website' })"
               :slides="projectSlides"
               :loop="projects.length > 1"
@@ -690,25 +690,25 @@
               :indicators="projects.length > 1"
             >
               <template #slide="{ index }">
-                <BaseCard
+                <ForgeCard
                   shadow
                   class="home__project"
                 >
                   <template #header>
-                    <BaseTypography
+                    <ForgeTypography
                       variant="h4"
                       weight="semibold"
                     >
                       {{ projects[index].name }}
-                    </BaseTypography>
+                    </ForgeTypography>
                   </template>
-                  <BaseTypography
+                  <ForgeTypography
                     variant="body-md"
                     color="secondary"
                     class="home__project-description"
                   >
                     {{ projects[index].description }}
-                  </BaseTypography>
+                  </ForgeTypography>
                   <div class="home__project-cta">
                     <a
                       :href="projects[index].href"
@@ -716,66 +716,66 @@
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <BaseButton variant="primary">
+                      <ForgeButton variant="primary">
                         {{ projects[index].cta }}
-                      </BaseButton>
+                      </ForgeButton>
                     </a>
-                    <BaseQrCode
+                    <ForgeQrCode
                       :aria-label="projects[index].cta + ': ' + projects[index].name"
                       :size="96"
                       :value="projects[index].href"
                       class="home__project-qr"
                     />
                   </div>
-                </BaseCard>
+                </ForgeCard>
               </template>
-            </BaseCarousel>
+            </ForgeCarousel>
           </div>
-        </BaseInView>
+        </ForgeInView>
       </section>
 
       <section
         id="faq"
         class="home__section home__section--alt"
       >
-        <BaseInView animation="slide-up">
-          <BaseTypography
+        <ForgeInView animation="slide-up">
+          <ForgeTypography
             variant="h2"
             weight="bold"
             class="home__section-title"
           >
             {{ t(($) => $.faq.title, { defaultValue: 'FAQ', ns: 'mp.website' }) }}
-          </BaseTypography>
-          <BaseAccordion
+          </ForgeTypography>
+          <ForgeAccordion
             class="home__faq"
             :items="faqItems"
             :exclusive="false"
           >
             <template #summary="{ item }">
-              <BaseTypography
+              <ForgeTypography
                 variant="h5"
                 weight="semibold"
                 as="span"
               >
                 {{ item.title }}
-              </BaseTypography>
+              </ForgeTypography>
             </template>
             <template #content="{ item }">
-              <BaseTypography
+              <ForgeTypography
                 variant="body-md"
                 color="secondary"
               >
                 {{ item.content }}
-              </BaseTypography>
+              </ForgeTypography>
             </template>
-          </BaseAccordion>
-        </BaseInView>
+          </ForgeAccordion>
+        </ForgeInView>
       </section>
     </template>
 
     <template #footer>
       <div class="home__footer">
-        <BaseTypography
+        <ForgeTypography
           variant="caption"
           color="secondary"
           class="home__disclaimer"
@@ -791,8 +791,8 @@
             }}
           </em>
           {{ t(($) => $.footer['disclaimer-end'], { defaultValue: '.', ns: 'mp.website' }) }}
-        </BaseTypography>
-        <BaseTypography
+        </ForgeTypography>
+        <ForgeTypography
           variant="caption"
           color="tertiary"
         >
@@ -803,10 +803,10 @@
               ns: 'mp.website',
             })
           }}
-        </BaseTypography>
+        </ForgeTypography>
       </div>
     </template>
-  </BaseApplicationLayout>
+  </ForgeApplicationLayout>
 </template>
 
 <style lang="scss" scoped>
@@ -856,7 +856,7 @@
   }
 
   .home__section--alt {
-    background: var(--mp-color-bg-base-alt, #e4e7ea);
+    background: var(--mp-color-bg-forge-alt, #e4e7ea);
     border-radius: var(--mp-radius-lg, 12px);
   }
 
@@ -918,7 +918,7 @@
   }
 
   .home__packages {
-    /* Column layout is handled by BaseMasonry's inline column-* styles. */
+    /* Column layout is handled by ForgeMasonry's inline column-* styles. */
     width: 100%;
   }
 

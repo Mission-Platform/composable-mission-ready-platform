@@ -6,8 +6,7 @@
 import '@mission-platform/tokens/scss/tokens';
 import '@mission-platform/components/styles';
 
-import { createMpI18n, mpNamespace } from '@mission-platform/i18n';
-import { createMpI18nVue } from '@mission-platform/i18n/vue';
+import { createForgeI18N, createForgeI18NVue, forgeNamespace } from '@mission-platform/i18n';
 import { organization, useSeo, webSite } from '@mission-platform/seo';
 import { resources as defaultLocaleResources } from 'virtual:i18n-resources';
 import { ViteSSG } from 'vite-ssg';
@@ -78,13 +77,13 @@ export const createApp = ViteSSG(
 
     // Seed English (source-of-truth) messages at creation time so the first
     // paint resolves them. Additional locales are loaded lazily per route.
-    const i18n = createMpI18n({
+    const i18n = createForgeI18N({
       locale: DEFAULT_LOCALE,
       fallbackLocale: DEFAULT_LOCALE,
-      namespace: mpNamespace('website'),
+      namespace: forgeNamespace('website'),
       resources: defaultLocaleResources,
     });
-    app.use(createMpI18nVue(i18n));
+    app.use(createForgeI18NVue(i18n));
 
     router.beforeEach(async (to) => {
       const locale = resolveLocale(to.params.locale);

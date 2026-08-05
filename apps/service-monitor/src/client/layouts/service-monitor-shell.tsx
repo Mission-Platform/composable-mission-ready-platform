@@ -1,8 +1,8 @@
 'use client';
 
-import { LanguageSwitcher, Navbar, NavbarItem, ThemeToggle } from '@mission-platform/components/react';
-import { useI18n } from '@mission-platform/i18n/react';
-import { ApplicationLayout } from '@mission-platform/layouts/react';
+import { ForgeLanguageSwitcher, ForgeNavbar, ForgeNavbarItem, ForgeThemeToggle } from '@mission-platform/components';
+import { useI18n } from '@mission-platform/i18n';
+import { ForgeApplicationLayout } from '@mission-platform/layouts';
 
 import type { Incident } from '@/monitoring/types';
 import type { Resource } from 'i18next';
@@ -64,7 +64,7 @@ export function ServiceMonitorShell({ incidents, children }: ServiceMonitorShell
   };
 
   return (
-    <ApplicationLayout
+    <ForgeApplicationLayout
       stickyHeader
       statusLevel={activeIncidents.length === 0 ? 'none' : hasCriticalIncident ? 'error' : 'warning'}
       status={
@@ -89,7 +89,7 @@ export function ServiceMonitorShell({ incidents, children }: ServiceMonitorShell
         ) : undefined
       }
       navbar={
-        <Navbar
+        <ForgeNavbar
           brand={
             <a
               className="app-shell__brand"
@@ -100,35 +100,35 @@ export function ServiceMonitorShell({ incidents, children }: ServiceMonitorShell
           }
           end={
             <div className="app-shell__controls">
-              <LanguageSwitcher
+              <ForgeLanguageSwitcher
                 locale={locale}
                 locales={LOCALES}
                 onLocaleChange={handleLocaleChange}
               />
-              <ThemeToggle />
+              <ForgeThemeToggle />
             </div>
           }
         >
-          <NavbarItem
+          <ForgeNavbarItem
             href="/"
             label={t(($) => $.nav.status, { ns: 'mp.service-monitor', defaultValue: 'Status' })}
           />
-          <NavbarItem
+          <ForgeNavbarItem
             href="/dashboard"
             label={t(($) => $.nav.dashboard, { ns: 'mp.service-monitor', defaultValue: 'Dashboard' })}
           />
-          <NavbarItem
+          <ForgeNavbarItem
             href="/monitors"
             label={t(($) => $.nav.monitors, { ns: 'mp.service-monitor', defaultValue: 'Monitors' })}
           />
-          <NavbarItem
+          <ForgeNavbarItem
             href="/incidents"
             label={t(($) => $.nav.incidents, {
               ns: 'mp.service-monitor',
               defaultValue: 'Incidents & maintenance',
             })}
           />
-        </Navbar>
+        </ForgeNavbar>
       }
       content={children}
       footer={

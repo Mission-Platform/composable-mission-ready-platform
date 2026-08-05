@@ -5,7 +5,8 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vite/client", "@cloudflare/workers-types/experimental"]
+    "types": ["vite/client", "@cloudflare/workers-types/experimental"],
+    "customConditions": ["mp:react"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts", "worker-configuration.d.ts"]
 }

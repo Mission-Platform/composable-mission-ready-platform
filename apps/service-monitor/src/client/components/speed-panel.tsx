@@ -1,11 +1,11 @@
 'use client';
 
-import { Badge, Button, Dialog, Spinner, Typography } from '@mission-platform/components/react';
-import { useI18n } from '@mission-platform/i18n/react';
-import { IconLightning, IconRefresh } from '@mission-platform/icons/react';
+import { ForgeBadge, ForgeButton, ForgeDialog, ForgeSpinner, ForgeTypography } from '@mission-platform/components';
+import { useI18n } from '@mission-platform/i18n';
+import { ForgeIconLightning, ForgeIconRefresh } from '@mission-platform/icons';
 import { useState } from 'react';
 
-import { TimeSeriesChart, type ChartPoint } from './time-series-chart';
+import { type ChartPoint, TimeSeriesChart } from './time-series-chart';
 
 import type { SpeedProviderId, SpeedResult, SpeedStatus } from '@/monitoring/speed/types';
 
@@ -74,11 +74,11 @@ export function SpeedPanel({
       className="speed"
       aria-label={t(($) => $.speed.title, { ns: 'mp.service-monitor', defaultValue: 'Network speed' })}
     >
-      <Button onClick={() => setOpen(true)}>
-        <IconLightning aria-hidden="true" />{' '}
+      <ForgeButton onClick={() => setOpen(true)}>
+        <ForgeIconLightning aria-hidden="true" />{' '}
         {t(($) => $.speed.viewReports, { ns: 'mp.service-monitor', defaultValue: 'View speed-test reports' })}
-      </Button>
-      <Dialog
+      </ForgeButton>
+      <ForgeDialog
         open={open}
         title={t(($) => $.speed.reportsTitle, { ns: 'mp.service-monitor', defaultValue: 'Network speed reports' })}
         size="2xl"
@@ -87,18 +87,18 @@ export function SpeedPanel({
       >
         <div className="speed__head">
           <div>
-            <Typography
+            <ForgeTypography
               as="h2"
               variant="h3"
               className="speed__title"
             >
-              <IconLightning
+              <ForgeIconLightning
                 className="speed__title-icon"
                 aria-hidden="true"
               />{' '}
               {t(($) => $.speed.title, { ns: 'mp.service-monitor', defaultValue: 'Network speed' })}
-            </Typography>
-            <Typography
+            </ForgeTypography>
+            <ForgeTypography
               as="p"
               variant="body-sm"
               className="speed__subtitle"
@@ -113,20 +113,20 @@ export function SpeedPanel({
                     ns: 'mp.service-monitor',
                     defaultValue: 'Scheduled speed tests are disabled — run one on demand.',
                   })}
-            </Typography>
+            </ForgeTypography>
           </div>
-          <Button
+          <ForgeButton
             variant="primary"
             onClick={onRun}
             disabled={running}
             loading={running}
             className="speed__run"
           >
-            {running ? <Spinner size="sm" /> : <IconRefresh aria-hidden="true" />}{' '}
+            {running ? <ForgeSpinner size="sm" /> : <ForgeIconRefresh aria-hidden="true" />}{' '}
             {running
               ? t(($) => $.speed.running, { ns: 'mp.service-monitor', defaultValue: 'Running…' })
               : t(($) => $.speed.run, { ns: 'mp.service-monitor', defaultValue: 'Run test' })}
-          </Button>
+          </ForgeButton>
         </div>
 
         <div className="speed__grid">
@@ -148,7 +148,7 @@ export function SpeedPanel({
                 key={graph.key}
               >
                 <div className="speed__chart-head">
-                  <Typography
+                  <ForgeTypography
                     as="h3"
                     variant="h4"
                     className="speed__chart-title"
@@ -162,7 +162,7 @@ export function SpeedPanel({
                         defaultValue: graph.key,
                       }),
                     })}
-                  </Typography>
+                  </ForgeTypography>
                   <span className="speed__chart-hint">{graph.unit}</span>
                 </div>
                 <TimeSeriesChart
@@ -178,7 +178,7 @@ export function SpeedPanel({
             ))}
           </div>
         ) : null}
-      </Dialog>
+      </ForgeDialog>
     </section>
   );
 }
@@ -261,12 +261,12 @@ function SpeedCard({ provider, selected, onSelect }: SpeedCardProperties) {
           </span>
         </>
       ) : failed ? (
-        <Badge
+        <ForgeBadge
           variant="error"
           size="sm"
         >
           {latest?.error ?? t(($) => $.speed.failed, { ns: 'mp.service-monitor', defaultValue: 'Failed' })}
-        </Badge>
+        </ForgeBadge>
       ) : (
         <span className="speed-card__pending">
           {t(($) => $.speed.pending, { ns: 'mp.service-monitor', defaultValue: 'No measurement yet' })}
