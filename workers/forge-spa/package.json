@@ -16,6 +16,7 @@
   ],
   "scripts": {
     "build": "tsdown",
+    "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --check .",
@@ -30,6 +31,7 @@
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",
     "tsdown": "catalog:build",
-    "typescript": "catalog:typescript"
+    "typescript": "catalog:typescript",
+    "vitest": "catalog:testing"
   }
 }
