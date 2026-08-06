@@ -1,4 +1,4 @@
-# @mission-platform/workers/api-proxy
+# @mission-platform/api-proxy
 
 An example Cloudflare Worker implementation that proxies incoming HTTP requests to an upstream API service (`api.example.com`).
 
@@ -7,35 +7,39 @@ An example Cloudflare Worker implementation that proxies incoming HTTP requests 
 This Worker serves as a reference implementation for HTTP reverse proxying on Cloudflare Workers. It intercepts incoming requests, modifies the target destination URL while preserving HTTP methods, headers, and request bodies, and forwards the response back to the client.
 
 Key capabilities:
+
 - **Header & Body Preservation**: Retains request headers, payloads, and HTTP methods across requests.
 - **Redirect Handling**: Configured with `redirect: 'follow'` to handle upstream redirects seamlessly.
 - **Error Boundary**: Catches fetch errors and returns structured HTTP 500 error responses.
 
-## Code Overview (`index.js`)
+## Code Overview (`src/index.ts`)
 
-The Worker exports a default `fetch` handler:
+The Worker is authored in TypeScript and exports a default `fetch` handler. It is built with `tsdown` to `dist/index.js` (see the `build` script), mirroring the `@mission-platform/forge-spa` worker layout:
 
-```javascript
+```typescript
+const TARGET_HOSTNAME = 'api.example.com';
+
 export default {
-  async fetch(request, env, ctx) {
+  async fetch(request: Request, _env: unknown, _ctx: ExecutionContext): Promise<Response> {
     try {
       const url = new URL(request.url);
-      url.hostname = 'api.example.com';
-      
+      url.hostname = TARGET_HOSTNAME;
+
       const newRequest = new Request(url.toString(), {
         method: request.method,
         headers: request.headers,
         body: request.body,
-        redirect: 'follow'
+        redirect: 'follow',
       });
-      
+
       return await fetch(newRequest);
     } catch (error) {
       console.error('Proxy error:', error);
-      return new Response('Proxy error: ' + error.message, { status: 500 });
+      const message = error instanceof Error ? error.message : String(error);
+      return new Response('Proxy error: ' + message, { status: 500 });
     }
-  }
-};
+  },
+} satisfies ExportedHandler;
 ```
 
 ## Configuration (`wrangler.jsonc`)
@@ -46,9 +50,9 @@ To deploy this worker independently, create or configure a `wrangler.jsonc` file
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "api-proxy",
-  "main": "index.js",
+  "main": "dist/index.js",
   "compatibility_date": "2026-06-07",
-  "compatibility_flags": ["nodejs_compat"]
+  "compatibility_flags": ["nodejs_compat"],
 }
 ```
 
