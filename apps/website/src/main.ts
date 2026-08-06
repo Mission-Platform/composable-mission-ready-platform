@@ -139,7 +139,7 @@ export const createApp = ViteSSG(
           page: {
             title: siteTitle,
             description:
-              'Mission Platform is an independent, composable monorepo of framework-neutral write-once components (Vue 3 + React), design tokens, composables, and Cloudflare Workers for building modern, mission-ready web experiences.',
+              'Mission Platform is a composable monorepo of framework-neutral write-once components (Vue 3 + React), design tokens, composables, and Cloudflare Workers for building modern, mission-ready web experiences.',
             keywords: [
               'write once',
               'framework-neutral',
@@ -185,7 +185,7 @@ export const createApp = ViteSSG(
               card: 'summary_large_image',
               title: siteTitle,
               description:
-                'An independent, composable monorepo of framework-neutral write-once components for building modern, mission-ready web experiences.',
+                'A composable monorepo of framework-neutral write-once components for building modern, mission-ready web experiences.',
               image: `${SITE_ORIGIN}/og-image.svg`,
               imageAlt: siteTitle,
             },

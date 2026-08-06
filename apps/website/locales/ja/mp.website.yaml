@@ -1,97 +1,93 @@
 about:
-  lead: Mission Platform は、アプリケーションを構築するための再利用可能なUIビルディングブロックとツールのセットです。
+  lead: 'Mission Platform は、再利用可能な UI ビルディングブロック、WebAssembly モジュール、ツール群で構成されたコンポーザブルなモノレポです。Forge で一度記述すれば、あらゆるフレームワーク向けにビルドできます。'
   projects:
-    aria-label: プロジェクト一覧
-  title: 概要
-ai_translation_warning: この翻訳はAIによって生成されたものであり、誤りが含まれる可能性があります。
+    aria-label: 'プロジェクト一覧'
+  title: '概要'
+ai_translation_warning: 'ai-translation-warning'
 faq:
   items:
-    affiliation:
-      answer: 私たちはMission Platformアーキテクチャの独立した実装です。
-      question: Mission Platformプロジェクトと提携していますか?
     composable:
-      answer: 小さく再利用可能で独立したビルディングブロックからUIを構築することを意味します。
-      question: 「composable」とはどういう意味ですか?
+      answer: '小さく再利用可能でフレームワークに依存しないビルディングブロックからインターフェースを構築し、自由に組み合わせられます。'
+      question: "'コンポーザブル（composable）' とはどういう意味ですか？"
     deploy:
-      answer: このプラットフォームは、Cloudflare Workersや同様のサーバーレス環境にデプロイできるように設計されています。
-      question: どのようにデプロイしますか?
-    vue-version:
-      answer: Composition APIを備えたVue 3を使用しています。
-      question: どのバージョンのVueが使用されていますか?
-  title: よくある質問
+      answer: 'このプラットフォームは、Cloudflare Workers をはじめとするサーバーレスや静的ホスティング環境へのデプロイを想定して設計されています。'
+      question: 'どうやってデプロイしますか？'
+    frameworks:
+      answer: 'コンポーネントはフレームワークに依存しない Forge ランタイムで一度記述し、Vue、React、Svelte、Solid、Web Components 向けにビルドされます。'
+      question: 'どのフレームワークに対応していますか？'
+  title: 'よくある質問'
 features:
   barcode:
-    description: バーコードおよびQRコードのスキャンに対応しています。
-    title: バーコード
+    description: 'WebAssembly を活用して、QR、Data Matrix、1D バーコードの生成とスキャンを行います。'
+    title: 'スキャンとコード'
   composable:
-    description: 小さく独立したビルディングブロックからアプリケーションを構築します。
-    title: Composable
+    description: 'フレームワークに依存しない Forge ランタイムで UI を一度記述し、Vue、React、Svelte、Solid、Web Components 向けにビルドします。'
+    title: '一度書けば、どこでも動く'
   debugging:
-    description: プラットフォームに統合された高度なデバッグツール。
-    title: デバッグ
+    description: 'すべてのパッケージ、アプリ、ワーカーにわたるエンドツーエンドの TypeScript。'
+    title: '型安全'
   global:
-    description: グローバル展開に対応。
-    title: グローバルスケール
+    description: 'Cloudflare Workers をはじめとするサーバーレスプラットフォームへのデプロイを想定して構築されています。'
+    title: 'エッジ対応'
   i18n:
-    description: 複数言語への標準対応。
-    title: 国際化
+    description: '右から左へ記述する言語を完全にサポートする i18next 内蔵の翻訳機能。'
+    title: '国際化'
   performance:
-    description: 速度と最小限の読み込み時間に最適化。
-    title: パフォーマンス
+    description: 'Rust と AssemblyScript を WebAssembly にコンパイルし、ネイティブに近い速度を実現します。'
+    title: 'パフォーマンス'
   search:
-    description: 強力な統合検索機能。
-    title: 検索
+    description: 'フォーム、テーブル、スケジューリング、地図、チャート、リッチテキスト編集を標準で提供します。'
+    title: 'オールインワン'
   theming:
-    description: 見た目を簡単にカスタマイズ可能。
-    title: テーマ設定
-  title: 機能
+    description: '一級のライトモードとダークモードを備えたデザイントークンと SCSS テーマ。'
+    title: 'テーマ'
+  title: '機能'
 footer:
-  brand: Mission Platform
-  copyright: © {year} Mission Platform.
-  disclaimer-end: 。
-  disclaimer-start: は独立したプロジェクトです。
-  not-affiliated: Mission Platformプロジェクトとは提携していません。
+  copyright: '© {year} Mission Platform.'
 hero:
-  badge: ベータ
-  cta-primary: 始める
-  cta-secondary: ドキュメント
-  lead: 小さく独立したビルディングブロックからアプリケーションを構築するためのプラットフォーム。
-  title: Composable. ミッションレディ。
+  badge: 'オープンソース'
+  cta-primary: '使ってみる'
+  cta-secondary: 'ドキュメント'
+  lead: 'フレームワークに依存しない Forge ランタイムでインターフェースを一度記述し、Vue、React、Svelte、Solid、Web Components 向けにビルドします。'
+  title: 'Composable. Mission Ready.'
 nav:
-  about: 概要
-  faq: よくある質問
-  features: 機能
-  packages: パッケージ
+  about: '概要'
+  faq: 'よくある質問'
+  features: '機能'
+  packages: 'パッケージ'
 packages:
   items:
-    barcode: バーコード対応。
-    base-spa: 基本的なSPA構成。
-    breakpoints: レスポンシブなブレークポイント。
-    code-scanner: コードスキャンユーティリティ。
-    components: 再利用可能なUIビルディングブロック。
-    d3: D3との統合。
-    forms: フォーム処理ユーティリティ。
-    forms-core: フォームのコアロジック。
-    harper: データ処理ユーティリティ。
-    hunspell: スペルチェック対応。
-    i18n: 国際化対応。
-    icons: アイコンライブラリ。
-    jsx: Vue用のJSX対応。
-    layouts: 事前構築済みのアプリケーションレイアウト。
-    map: マップコンポーネント。
-    matrix-code: マトリックスコード生成。
-    phone-number: 電話番号のフォーマット。
-    qr-code: QRコード生成。
-    router: ルーティングユーティリティ。
-    rxjs: RxJS対応。
-    scheduler-core: タスクスケジューリング。
-    seo: SEO管理。
-    tokens: デザイントークンとテーマ設定。
-  lead: アプリケーションのための再利用可能なビルディングブロック。
-  title: パッケージ
+    barcode: 'WebAssembly による 1D バーコードのエンコーダーとデコーダー。'
+    breakpoints: 'レスポンシブなブレークポイントのユーティリティとコンポーネント。'
+    code-scanner: '画像またはカメラから QR、Data Matrix、バーコードをスキャンします。'
+    components: '対応するすべてのフレームワーク向けの一度書けば動く UI コンポーネント。'
+    d3: 'フレームワークに依存しない D3 統合。'
+    forms: '一度書けば動くフォームビルダーとスキーマ駆動フォーム。'
+    forms-core: 'フレームワークに依存しない JSON Schema フォームエンジン。'
+    harper: 'Monaco 向けの Harper 文法・スタイルチェック。'
+    hunspell: 'WebAssembly による Hunspell スペルチェック。'
+    i18n: 'i18next を活用した国際化。'
+    icons: 'JSX で一度記述した SVG アイコン。'
+    jsx: '各フレームワーク向けアダプターを備えたフレームワーク中立の JSX ランタイム。'
+    layouts: '一度書けば動くアプリケーションレイアウト。'
+    map: 'MapLibre GL の地図コンポーネントとコンポーザブル。'
+    matrix-code: 'WebAssembly による Data Matrix のエンコーダーとデコーダー。'
+    observers: '一度書けば動く Intersection、Mutation、Performance オブザーバーのフック。'
+    phone-number: '電話番号の解析、検証、フォーマット。'
+    qr-code: 'WebAssembly による QR Code のエンコーダーとデコーダー。'
+    router: 'ルーティングユーティリティ。'
+    rxjs: 'RxJS のオブザーバブルをコンポーネントの状態に橋渡しします。'
+    scheduler-core: 'iCalendar のイベントモデルと繰り返しエンジン。'
+    seo: '構造化データ、メタタグ、サイトマップのヘルパー。'
+    speech-audio: '音声合成、音声認識、オーディオ、Web MIDI のフック。'
+    three: 'フレームワークに依存しない Three.js 統合。'
+    tokens: 'CSS デザイントークンと SCSS テーマ。'
+    wysiwyg: '一度書けば動くリッチテキストエディター。'
+  lead: 'UI やフォームから WebAssembly を活用したツール群まで、コンポーザブルなビルディングブロック。'
+  title: 'パッケージ'
 projects:
   items:
     my-care-notes:
-      cta: 詳しく見る
-      description: Mission Platform上に構築された、患者中心のケアノートアプリケーション。
-      name: My Care Notes
+      cta: '詳細を見る'
+      description: 'Mission Platform 上に構築された、患者中心のケアノートアプリケーション。'
+      name: 'My Care Notes'

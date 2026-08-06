@@ -1,97 +1,93 @@
 about:
-  lead: Mission Platform è un insieme di blocchi UI riutilizzabili e strumenti per creare applicazioni.
+  lead: 'Mission Platform è un monorepo componibile di blocchi di interfaccia riutilizzabili, moduli WebAssembly e strumenti: progetta una volta sola in Forge e compila per ogni framework.'
   projects:
-    aria-label: Elenco progetti
-  title: Chi siamo
-ai_translation_warning: Questa traduzione è stata generata dall'IA e potrebbe contenere errori.
+    aria-label: 'Elenco dei progetti'
+  title: 'Informazioni'
+ai_translation_warning: 'ai-translation-warning'
 faq:
   items:
-    affiliation:
-      answer: Siamo un'implementazione indipendente dell'architettura Mission Platform.
-      question: Siete affiliati al progetto Mission Platform?
     composable:
-      answer: Significa che costruiamo l'interfaccia a partire da piccoli blocchi riutilizzabili e indipendenti.
-      question: Cosa significa 'composable'?
+      answer: "Costruiamo l'interfaccia a partire da piccoli blocchi riutilizzabili e indipendenti dal framework che puoi combinare a piacere."
+      question: "Cosa significa 'componibile'?"
     deploy:
-      answer: La piattaforma è progettata per essere distribuita su Cloudflare Workers o ambienti serverless simili.
-      question: Come si effettua il deploy?
-    vue-version:
-      answer: Utilizziamo Vue 3 con la Composition API.
-      question: Quale versione di Vue viene utilizzata?
-  title: Domande frequenti
+      answer: 'La piattaforma è progettata per essere distribuita su Cloudflare Workers e altri ambienti di hosting serverless o statici.'
+      question: 'Come si distribuisce questo progetto?'
+    frameworks:
+      answer: "I componenti vengono progettati una volta sola nell'ambiente di runtime Forge, indipendente dal framework, e compilati per Vue, React, Svelte, Solid e Web Components."
+      question: 'Quali framework sono supportati?'
+  title: 'FAQ'
 features:
   barcode:
-    description: Supporto per la scansione di codici a barre e codici QR.
-    title: Codice a barre
+    description: 'Genera e scansiona codici QR, Data Matrix e codici a barre 1D, con la potenza di WebAssembly.'
+    title: 'Scansione e codici'
   composable:
-    description: Crea applicazioni a partire da piccoli blocchi indipendenti.
-    title: Composable
+    description: "Progetta la tua interfaccia una volta sola nell'ambiente di runtime Forge, indipendente dal framework, poi compilala per Vue, React, Svelte, Solid e Web Components."
+    title: 'Scrivi una volta, esegui ovunque'
   debugging:
-    description: Strumenti di debug avanzati integrati nella piattaforma.
-    title: Debug
+    description: 'TypeScript end-to-end in ogni package, app e worker.'
+    title: 'Sicurezza dei tipi'
   global:
-    description: Pronta per una distribuzione globale.
-    title: Scala globale
+    description: 'Progettato per essere distribuito su Cloudflare Workers e altre piattaforme serverless.'
+    title: "Pronto per l'edge"
   i18n:
-    description: Supporto integrato per più lingue.
-    title: Internazionalizzazione
+    description: 'Traduzione integrata con i18next e pieno supporto per le lingue da destra a sinistra.'
+    title: 'Internazionalizzazione'
   performance:
-    description: Ottimizzata per la velocità e tempi di caricamento minimi.
-    title: Prestazioni
+    description: 'Rust e AssemblyScript compilati in WebAssembly per una velocità quasi nativa.'
+    title: 'Prestazioni'
   search:
-    description: Funzionalità di ricerca integrata e potente.
-    title: Ricerca
+    description: "Moduli, tabelle, pianificazione, mappe, grafici e modifica di testo formattato, pronti all'uso."
+    title: 'Tutto incluso'
   theming:
-    description: Aspetto facilmente personalizzabile.
-    title: Personalizzazione grafica
-  title: Funzionalità
+    description: 'Token di design e temi SCSS con modalità chiara e scura di prima classe.'
+    title: 'Personalizzazione dei temi'
+  title: 'Funzionalità'
 footer:
-  brand: Mission Platform
-  copyright: © {year} Mission Platform.
-  disclaimer-end: .
-  disclaimer-start: è un progetto indipendente.
-  not-affiliated: Non affiliato al progetto Mission Platform.
+  copyright: '© {year} Mission Platform.'
 hero:
-  badge: Beta
-  cta-primary: Inizia ora
-  cta-secondary: Documentazione
-  lead: Una piattaforma per creare applicazioni a partire da piccoli blocchi indipendenti.
-  title: Composable. Pronta alla missione.
+  badge: 'Open source'
+  cta-primary: 'Inizia ora'
+  cta-secondary: 'Documentazione'
+  lead: "Progetta la tua interfaccia una volta sola nell'ambiente di runtime Forge, indipendente dal framework, poi compilala per Vue, React, Svelte, Solid e Web Components."
+  title: 'Composable. Mission Ready.'
 nav:
-  about: Chi siamo
-  faq: Domande frequenti
-  features: Funzionalità
-  packages: Package
+  about: 'Informazioni'
+  faq: 'FAQ'
+  features: 'Funzionalità'
+  packages: 'Package'
 packages:
   items:
-    barcode: Supporto per i codici a barre.
-    base-spa: Configurazione di base per SPA.
-    breakpoints: Breakpoint responsivi.
-    code-scanner: Utilità per la scansione dei codici.
-    components: Blocchi UI riutilizzabili.
-    d3: Integrazione con D3.
-    forms: Utilità per la gestione dei form.
-    forms-core: Logica principale dei form.
-    harper: Utilità per la gestione dei dati.
-    hunspell: Supporto per il controllo ortografico.
-    i18n: Supporto per l'internazionalizzazione.
-    icons: Libreria di icone.
-    jsx: Supporto JSX per Vue.
-    layouts: Layout applicativi predefiniti.
-    map: Componente mappa.
-    matrix-code: Generazione di codici a matrice.
-    phone-number: Formattazione dei numeri di telefono.
-    qr-code: Generazione di codici QR.
-    router: Utilità di routing.
-    rxjs: Supporto per RxJS.
-    scheduler-core: Pianificazione delle attività.
-    seo: Gestione SEO.
-    tokens: Token di design e personalizzazione grafica.
-  lead: Blocchi riutilizzabili per le tue applicazioni.
-  title: Package
+    barcode: 'Codificatore e decodificatore di codici a barre 1D in WebAssembly.'
+    breakpoints: 'Utility e componenti per i breakpoint responsive.'
+    code-scanner: "Scansiona codici QR, Data Matrix e codici a barre da un'immagine o dalla fotocamera."
+    components: 'Componenti di interfaccia a scrittura unica per ogni framework supportato.'
+    d3: 'Integrazione di D3 indipendente dal framework.'
+    forms: 'Generatore di moduli a scrittura unica e moduli guidati da schema.'
+    forms-core: 'Motore di moduli JSON Schema indipendente dal framework.'
+    harper: 'Controllo grammaticale e stilistico Harper per Monaco.'
+    hunspell: 'Controllo ortografico Hunspell in WebAssembly.'
+    i18n: 'Internazionalizzazione con la potenza di i18next.'
+    icons: 'Icone SVG progettate una volta sola in JSX.'
+    jsx: 'Ambiente di runtime JSX indipendente dal framework con adattatori per ogni framework.'
+    layouts: 'Layout applicativi a scrittura unica.'
+    map: 'Componenti e composable per mappe MapLibre GL.'
+    matrix-code: 'Codificatore e decodificatore Data Matrix in WebAssembly.'
+    observers: 'Hook a scrittura unica per gli observer Intersection, Mutation e Performance.'
+    phone-number: 'Analisi, validazione e formattazione dei numeri di telefono.'
+    qr-code: 'Codificatore e decodificatore di codici QR in WebAssembly.'
+    router: 'Utility di routing.'
+    rxjs: 'Collega gli observable RxJS allo stato dei componenti.'
+    scheduler-core: 'Modello di eventi iCalendar e motore di ricorrenza.'
+    seo: 'Dati strutturati, meta tag e utility per la sitemap.'
+    speech-audio: 'Hook per sintesi vocale, riconoscimento, audio e Web MIDI.'
+    three: 'Integrazione di Three.js indipendente dal framework.'
+    tokens: 'Token di design CSS e temi SCSS.'
+    wysiwyg: 'Editor di testo formattato a scrittura unica.'
+  lead: "Blocchi di costruzione componibili — dall'interfaccia e dai moduli fino agli strumenti con la potenza di WebAssembly."
+  title: 'Package'
 projects:
   items:
     my-care-notes:
-      cta: Scopri di più
-      description: Un'applicazione di note di cura incentrata sul paziente, costruita su Mission Platform.
-      name: My Care Notes
+      cta: 'Scopri di più'
+      description: "Un'applicazione di note di assistenza incentrata sul paziente, costruita su Mission Platform."
+      name: 'My Care Notes'

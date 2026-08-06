@@ -1,9 +1,10 @@
 /// <reference types="vitest/config" />
 import postcssConfig from '@mission-platform/postcss-config';
 import { frameworkResolveConditions, ignoreVueI18nBlocksPlugin } from '@mission-platform/vite-config';
-import i18nPlugin from '@mission-platform/vite-plugin-i18n';
+import i18nPlugin, { readSupportedLocales } from '@mission-platform/vite-plugin-i18n';
 import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 import vue from '@vitejs/plugin-vue';
+import { fileURLToPath } from 'node:url';
 import { defineConfig, type UserConfig } from 'vite';
 
 import type { SitemapAlternate, SitemapUrl } from '@mission-platform/seo';
@@ -35,10 +36,15 @@ interface SsgUserConfig extends UserConfig {
 }
 
 // ─── SEO companion files (robots.txt + sitemap.xml) ──────────────────────────
-// Inlined locale table — keep in sync with `SUPPORTED_LOCALES` / `LOCALE_BCP47`
-// in `src/router/index.ts` and `src/seo-site.ts`. The `@mission-platform/seo`
-// builders run via the `seoPlugin` Vite plugin at build (and dev-server) time.
-const SUPPORTED_LOCALES = ['en', 'es', 'fr', 'nl', 'it', 'de', 'ko', 'ja', 'zh', 'ar', 'he'] as const;
+// The supported-locale list is auto-derived from the top-level `locales/`
+// directory (one `<code>/mp.website.yaml` file per locale) by
+// `@mission-platform/vite-plugin-i18n` — the exact same source of truth that the
+// `virtual:i18n-locales` module serves to the app at runtime — so it can never
+// drift from `src/router/index.ts`. Only the BCP-47 tag table below is declared
+// locally. The `@mission-platform/seo` builders run via the `seoPlugin` Vite
+// plugin at build (and dev-server) time.
+const CONFIG_DIR = fileURLToPath(new URL('.', import.meta.url));
+const SUPPORTED_LOCALES = readSupportedLocales({ root: CONFIG_DIR, localesDir: 'locales', defaultLocale: 'en' });
 type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 const DEFAULT_LOCALE: SupportedLocale = 'en';
 
@@ -99,9 +105,9 @@ const sitemapUrls: SitemapUrl[] = [
 
 // We don't use `defineAppConfig` here so the SEO companion plugin can be
 // ordered alongside the Vue plugin without producing duplicate Vue plugin
-// instances. Locale YAML bundles under `src/locales/` are imported as raw
-// strings (`?raw`) and parsed with js-yaml at runtime, so no i18n-specific
-// Vite plugin is required.
+// instances. Locale YAML bundles live under the top-level `locales/` directory
+// (`<code>/mp.website.yaml`) and are surfaced to the app through the
+// `@mission-platform/vite-plugin-i18n` virtual modules.
 // This app targets Vue, so bare `@mission-platform/<pkg>` imports must resolve
 // to each package's Vue build. Mirror the `defineFrameworkAppConfig` wiring
 // here (client `resolve.conditions` + the SSR/prerender condition set, with the
@@ -123,7 +129,7 @@ const config: SsgUserConfig = {
     },
   },
   plugins: [
-    i18nPlugin({ defaultLocale: 'en' }),
+    i18nPlugin({ defaultLocale: 'en', localesDir: 'locales' }),
     seoPlugin({
       sitemap: { urls: sitemapUrls },
       robots: {
@@ -139,10 +145,12 @@ const config: SsgUserConfig = {
   // `vite-ssg` reads this property at build time. It is not part of Vite's
   // own `UserConfig`, so we extend the type locally via `SsgUserConfig`.
   ssgOptions: {
-    // Default locale at `/`, plus one prerendered route per prefixed locale.
-    // Keep this in sync with `SUPPORTED_LOCALES` / `PREFIXED_LOCALES` in
-    // `src/router/index.ts`.
-    includedRoutes: () => ['/', '/es', '/fr', '/nl', '/it', '/de', '/ko', '/ja', '/zh', '/ar', '/he'],
+    // Default locale at `/`, plus one prerendered route per prefixed locale,
+    // derived from the same auto-discovered `SUPPORTED_LOCALES` list above.
+    includedRoutes: () => [
+      '/',
+      ...SUPPORTED_LOCALES.filter((locale) => locale !== DEFAULT_LOCALE).map((locale) => `/${locale}`),
+    ],
     // Emit `dist/es/index.html` (rather than `dist/es.html`) so prefixed
     // locales work cleanly behind a static file server / SPA worker.
     dirStyle: 'nested',

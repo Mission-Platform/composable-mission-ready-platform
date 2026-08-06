@@ -2,7 +2,7 @@
 export default interface Resources {
   'mp.website': {
     about: {
-      lead: 'The Mission Platform is a set of reusable UI building blocks and tools for building applications.';
+      lead: 'The Mission Platform is a composable monorepo of reusable UI building blocks, WebAssembly modules and tooling — author once in Forge and build for every framework.';
       projects: {
         'aria-label': 'Project list';
       };
@@ -11,72 +11,64 @@ export default interface Resources {
     ai_translation_warning: 'ai-translation-warning';
     faq: {
       items: {
-        affiliation: {
-          answer: 'We are an independent implementation of the Mission Platform architecture.';
-          question: 'Are you affiliated with the Mission Platform project?';
-        };
         composable: {
-          answer: 'It means we build the UI from small, reusable, and independent building blocks.';
+          answer: 'We build the interface from small, reusable, framework-neutral building blocks you can mix and match.';
           question: "What does 'composable' mean?";
         };
         deploy: {
-          answer: 'The platform is designed to be deployed to Cloudflare Workers or similar serverless environments.';
+          answer: 'The platform is designed to deploy to Cloudflare Workers and other serverless or static hosting environments.';
           question: 'How do I deploy this?';
         };
-        'vue-version': {
-          answer: 'We use Vue 3 with the Composition API.';
-          question: 'Which version of Vue is used?';
+        frameworks: {
+          answer: 'Components are authored once in the framework-agnostic Forge runtime and built for Vue, React, Svelte, Solid and Web Components.';
+          question: 'Which frameworks are supported?';
         };
       };
       title: 'FAQ';
     };
     features: {
       barcode: {
-        description: 'Support for barcode and QR code scanning.';
-        title: 'Barcode';
+        description: 'Generate and scan QR, Data Matrix and 1D barcodes, powered by WebAssembly.';
+        title: 'Scanning & Codes';
       };
       composable: {
-        description: 'Build applications from small, independent building blocks.';
-        title: 'Composable';
+        description: 'Author your UI once in the framework-agnostic Forge runtime, then build for Vue, React, Svelte, Solid and Web Components.';
+        title: 'Write Once, Run Anywhere';
       };
       debugging: {
-        description: 'Advanced debugging tools integrated into the platform.';
-        title: 'Debugging';
+        description: 'End-to-end TypeScript across every package, app and worker.';
+        title: 'Type-Safe';
       };
       global: {
-        description: 'Ready for global deployment.';
-        title: 'Global Scale';
+        description: 'Built to deploy to Cloudflare Workers and other serverless platforms.';
+        title: 'Edge-Ready';
       };
       i18n: {
-        description: 'Built-in support for multiple languages.';
+        description: 'Built-in i18next translation with full right-to-left language support.';
         title: 'Internationalization';
       };
       performance: {
-        description: 'Optimized for speed and minimal load times.';
+        description: 'Rust and AssemblyScript compiled to WebAssembly for near-native speed.';
         title: 'Performance';
       };
       search: {
-        description: 'Powerful integrated search functionality.';
-        title: 'Search';
+        description: 'Forms, tables, scheduling, maps, charts and rich-text editing out of the box.';
+        title: 'Batteries Included';
       };
       theming: {
-        description: 'Easily customizable look and feel.';
+        description: 'Design tokens and SCSS themes with first-class light and dark modes.';
         title: 'Theming';
       };
       title: 'Features';
     };
     footer: {
-      brand: 'Mission Platform';
       copyright: '© {year} Mission Platform.';
-      'disclaimer-end': '.';
-      'disclaimer-start': 'is an independent project.';
-      'not-affiliated': 'Not affiliated with the Mission Platform project.';
     };
     hero: {
-      badge: 'Beta';
+      badge: 'Open Source';
       'cta-primary': 'Get Started';
       'cta-secondary': 'Documentation';
-      lead: 'A platform for building applications from small, independent building blocks.';
+      lead: 'Author your interface once in the framework-agnostic Forge runtime, then build for Vue, React, Svelte, Solid and Web Components.';
       title: 'Composable. Mission Ready.';
     };
     nav: {
@@ -87,31 +79,34 @@ export default interface Resources {
     };
     packages: {
       items: {
-        barcode: 'Barcode support.';
-        'forge-spa': 'Base SPA setup.';
-        breakpoints: 'Responsive breakpoints.';
-        'code-scanner': 'Code scanning utilities.';
-        components: 'Reusable UI building blocks.';
-        d3: 'D3 integration.';
-        forms: 'Form handling utilities.';
-        'forms-core': 'Core form logic.';
-        harper: 'Data handling utilities.';
-        hunspell: 'Spell checking support.';
-        i18n: 'Internationalization support.';
-        icons: 'Icon library.';
-        jsx: 'JSX support for Vue.';
-        layouts: 'Pre-built application layouts.';
-        map: 'Map component.';
-        'matrix-code': 'Matrix code generation.';
-        'phone-number': 'Phone number formatting.';
-        'qr-code': 'QR code generation.';
+        barcode: '1D barcode encoder and decoder in WebAssembly.';
+        breakpoints: 'Responsive breakpoint utilities and components.';
+        'code-scanner': 'Scan QR, Data Matrix and barcodes from image or camera.';
+        components: 'Write-once UI components for every supported framework.';
+        d3: 'Framework-neutral D3 integration.';
+        forms: 'Write-once form builder and schema-driven forms.';
+        'forms-core': 'Framework-agnostic JSON Schema forms engine.';
+        harper: 'Harper grammar and style checking for Monaco.';
+        hunspell: 'Hunspell spell checking in WebAssembly.';
+        i18n: 'Internationalization powered by i18next.';
+        icons: 'SVG icons authored once in JSX.';
+        jsx: 'Framework-neutral JSX runtime with adapters for each framework.';
+        layouts: 'Write-once application layouts.';
+        map: 'MapLibre GL map components and composables.';
+        'matrix-code': 'Data Matrix encoder and decoder in WebAssembly.';
+        observers: 'Write-once Intersection, Mutation and Performance observer hooks.';
+        'phone-number': 'Phone number parsing, validation and formatting.';
+        'qr-code': 'QR Code encoder and decoder in WebAssembly.';
         router: 'Routing utilities.';
-        rxjs: 'RxJS support.';
-        'scheduler-core': 'Task scheduling.';
-        seo: 'SEO management.';
-        tokens: 'Design tokens and theming.';
+        rxjs: 'Bridge RxJS observables to component state.';
+        'scheduler-core': 'iCalendar event model and recurrence engine.';
+        seo: 'Structured data, meta tags and sitemap helpers.';
+        'speech-audio': 'Speech synthesis, recognition, audio and Web MIDI hooks.';
+        three: 'Framework-neutral Three.js integration.';
+        tokens: 'CSS design tokens and SCSS themes.';
+        wysiwyg: 'Write-once rich-text editor.';
       };
-      lead: 'Reusable building blocks for your applications.';
+      lead: 'Composable building blocks — from UI and forms to WebAssembly-powered tooling.';
       title: 'Packages';
     };
     projects: {

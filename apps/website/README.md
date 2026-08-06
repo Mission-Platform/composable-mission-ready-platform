@@ -102,7 +102,3 @@ Configuration is managed via `wrangler.jsonc` and `vite.config.ts`:
 | `pnpm i18n:extract` / `pnpm i18n:types` / `pnpm i18n:lint` | i18n extraction, type generation, and validation       |
 | `pnpm cf:dev` / `pnpm cf:dev:production`                   | Runs local Wrangler dev server                         |
 | `pnpm deploy` / `pnpm deploy:staging`                      | Deploys worker and assets to Cloudflare                |
-
-## Disclaimer
-
-**Mission Platform** is an independent open-source project and organisation. It is **not affiliated with, endorsed by, or associated with** any other project, product, company, or organisation that may share the same or a similar name. Any resemblance to existing names is coincidental.

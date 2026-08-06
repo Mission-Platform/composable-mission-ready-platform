@@ -1,97 +1,93 @@
 about:
-  lead: منصة Mission Platform هي مجموعة من مكونات واجهة المستخدم القابلة لإعادة الاستخدام والأدوات اللازمة لبناء التطبيقات.
+  lead: 'إن Mission Platform عبارة عن مستودع أحادي قابل للتركيب يضم لبنات بناء واجهة مستخدم قابلة لإعادة الاستخدام ووحدات WebAssembly وأدوات — اكتب مرة واحدة في Forge وابنِ لكل إطار عمل.'
   projects:
-    aria-label: قائمة المشاريع
-  title: نبذة عنا
-ai_translation_warning: تمت ترجمة هذا المحتوى بواسطة الذكاء الاصطناعي وقد يحتوي على أخطاء.
+    aria-label: 'قائمة المشاريع'
+  title: 'حول'
+ai_translation_warning: 'ai-translation-warning'
 faq:
   items:
-    affiliation:
-      answer: نحن تنفيذ مستقل لبنية منصة Mission Platform.
-      question: هل أنتم منتسبون إلى مشروع Mission Platform؟
     composable:
-      answer: هذا يعني أننا نبني واجهة المستخدم من مكونات صغيرة وقابلة لإعادة الاستخدام ومستقلة.
-      question: ماذا يعني مصطلح 'composable'؟
+      answer: 'نبني الواجهة من لبنات بناء صغيرة قابلة لإعادة الاستخدام ومحايدة تجاه إطار العمل، يمكنك مزجها ومطابقتها كما تشاء.'
+      question: 'ماذا تعني كلمة «قابل للتركيب»؟'
     deploy:
-      answer: صُممت المنصة لتُنشر على Cloudflare Workers أو بيئات مشابهة بدون خوادم.
-      question: كيف يمكنني نشر هذا؟
-    vue-version:
-      answer: نستخدم Vue 3 مع Composition API.
-      question: ما إصدار Vue المُستخدم؟
-  title: الأسئلة الشائعة
+      answer: 'صُممت المنصة للنشر على Cloudflare Workers وغيرها من بيئات الاستضافة عديمة الخوادم أو الثابتة.'
+      question: 'كيف أنشر هذا؟'
+    frameworks:
+      answer: 'تُكتب المكوّنات مرة واحدة في بيئة تشغيل Forge المحايدة تجاه أطر العمل، ثم تُبنى لأطر Vue وReact وSvelte وSolid وWeb Components.'
+      question: 'ما أطر العمل المدعومة؟'
+  title: 'الأسئلة الشائعة'
 features:
   barcode:
-    description: دعم لمسح الرموز الشريطية وأكواد QR.
-    title: الرمز الشريطي
+    description: 'أنشئ وامسح رموز QR وData Matrix والرموز الشريطية أحادية البعد، مدعومة بـ WebAssembly.'
+    title: 'المسح والرموز'
   composable:
-    description: أنشئ التطبيقات من مكونات صغيرة ومستقلة.
-    title: Composable
+    description: 'اكتب واجهتك مرة واحدة في بيئة تشغيل Forge المحايدة تجاه أطر العمل، ثم ابنِ لأطر Vue وReact وSvelte وSolid وWeb Components.'
+    title: 'اكتب مرة، شغّل في كل مكان'
   debugging:
-    description: أدوات تصحيح أخطاء متقدمة مدمجة في المنصة.
-    title: تصحيح الأخطاء
+    description: 'لغة TypeScript من الطرف إلى الطرف عبر كل حزمة وتطبيق وعامل.'
+    title: 'آمن نوعيًا'
   global:
-    description: جاهزة للانتشار على مستوى العالم.
-    title: النطاق العالمي
+    description: 'مُصمم للنشر على Cloudflare Workers وغيرها من المنصات عديمة الخوادم.'
+    title: 'جاهز للحافة'
   i18n:
-    description: دعم مدمج للغات متعددة.
-    title: التدويل
+    description: 'ترجمة i18next مدمجة مع دعم كامل للغات التي تُكتب من اليمين إلى اليسار.'
+    title: 'التدويل'
   performance:
-    description: مُحسّنة للسرعة وأقل زمن تحميل.
-    title: الأداء
+    description: 'لغتا Rust وAssemblyScript مُصرَّفتان إلى WebAssembly لتحقيق سرعة تقارب السرعة الأصلية.'
+    title: 'الأداء'
   search:
-    description: وظيفة بحث مدمجة وقوية.
-    title: البحث
+    description: 'نماذج وجداول وجدولة زمنية وخرائط ومخططات وتحرير نصوص غني جاهزة للاستخدام مباشرة.'
+    title: 'كل ما تحتاجه مضمّن'
   theming:
-    description: مظهر يمكن تخصيصه بسهولة.
-    title: التنسيق
-  title: المزايا
+    description: 'رموز تصميم وسمات SCSS مع دعم من الدرجة الأولى للوضعين الفاتح والداكن.'
+    title: 'التنسيق المرئي'
+  title: 'المزايا'
 footer:
-  brand: Mission Platform
-  copyright: © {year} Mission Platform.
-  disclaimer-end: .
-  disclaimer-start: مشروع مستقل.
-  not-affiliated: غير منتسب إلى مشروع Mission Platform.
+  copyright: '© {year} Mission Platform.'
 hero:
-  badge: تجريبي
-  cta-primary: ابدأ الآن
-  cta-secondary: التوثيق
-  lead: منصة لبناء التطبيقات من مكونات صغيرة ومستقلة.
-  title: Composable. جاهزة للمهمة.
+  badge: 'مفتوح المصدر'
+  cta-primary: 'ابدأ الآن'
+  cta-secondary: 'التوثيق'
+  lead: 'اكتب واجهتك مرة واحدة في بيئة تشغيل Forge المحايدة تجاه أطر العمل، ثم ابنِ لأطر Vue وReact وSvelte وSolid وWeb Components.'
+  title: 'Composable. Mission Ready.'
 nav:
-  about: نبذة عنا
-  faq: الأسئلة الشائعة
-  features: المزايا
-  packages: الحزم
+  about: 'حول'
+  faq: 'الأسئلة الشائعة'
+  features: 'المزايا'
+  packages: 'الحزم'
 packages:
   items:
-    barcode: دعم الرموز الشريطية.
-    base-spa: إعداد أساسي لتطبيق صفحة واحدة.
-    breakpoints: نقاط توقف متجاوبة.
-    code-scanner: أدوات مسح الرموز.
-    components: مكونات واجهة مستخدم قابلة لإعادة الاستخدام.
-    d3: تكامل مع D3.
-    forms: أدوات معالجة النماذج.
-    forms-core: المنطق الأساسي للنماذج.
-    harper: أدوات معالجة البيانات.
-    hunspell: دعم التحقق من الإملاء.
-    i18n: دعم التدويل.
-    icons: مكتبة الأيقونات.
-    jsx: دعم JSX لـ Vue.
-    layouts: تخطيطات تطبيقات جاهزة مسبقًا.
-    map: مكوّن الخريطة.
-    matrix-code: توليد رموز المصفوفة.
-    phone-number: تنسيق أرقام الهاتف.
-    qr-code: توليد رموز QR.
-    router: أدوات التوجيه.
-    rxjs: دعم RxJS.
-    scheduler-core: جدولة المهام.
-    seo: إدارة تحسين محركات البحث.
-    tokens: رموز التصميم والتنسيق.
-  lead: مكونات قابلة لإعادة الاستخدام لتطبيقاتك.
-  title: الحزم
+    barcode: 'مُشفِّر ومُفكِّك للرموز الشريطية أحادية البعد بلغة WebAssembly.'
+    breakpoints: 'أدوات ومكوّنات نقاط التوقف المتجاوبة.'
+    code-scanner: 'امسح رموز QR وData Matrix والرموز الشريطية من صورة أو كاميرا.'
+    components: 'مكوّنات واجهة مستخدم تُكتب مرة واحدة لكل إطار عمل مدعوم.'
+    d3: 'تكامل D3 محايد تجاه أطر العمل.'
+    forms: 'مُنشئ نماذج يُكتب مرة واحدة ونماذج مدفوعة بالمخطط.'
+    forms-core: 'محرك نماذج JSON Schema محايد تجاه أطر العمل.'
+    harper: 'تدقيق القواعد والأسلوب من Harper لمحرر Monaco.'
+    hunspell: 'تدقيق إملائي بـ Hunspell في WebAssembly.'
+    i18n: 'التدويل مدعوم بـ i18next.'
+    icons: 'أيقونات SVG تُكتب مرة واحدة بلغة JSX.'
+    jsx: 'بيئة تشغيل JSX محايدة تجاه أطر العمل مع محوّلات لكل إطار عمل.'
+    layouts: 'تخطيطات تطبيقات تُكتب مرة واحدة.'
+    map: 'مكوّنات وخطافات تركيبية لخرائط MapLibre GL.'
+    matrix-code: 'مُشفِّر ومُفكِّك لرموز Data Matrix بلغة WebAssembly.'
+    observers: 'خطافات مراقِبات Intersection وMutation وPerformance تُكتب مرة واحدة.'
+    phone-number: 'تحليل أرقام الهواتف والتحقق منها وتنسيقها.'
+    qr-code: 'مُشفِّر ومُفكِّك لرموز QR Code بلغة WebAssembly.'
+    router: 'أدوات التوجيه.'
+    rxjs: 'ربط كائنات RxJS القابلة للمراقبة بحالة المكوّن.'
+    scheduler-core: 'نموذج أحداث iCalendar ومحرك التكرار.'
+    seo: 'بيانات منظمة ووسوم وصفية وأدوات مساعدة لخرائط الموقع.'
+    speech-audio: 'خطافات تركيب الكلام والتعرف عليه والصوت وWeb MIDI.'
+    three: 'تكامل Three.js محايد تجاه أطر العمل.'
+    tokens: 'رموز تصميم CSS وسمات SCSS.'
+    wysiwyg: 'محرر نصوص غني يُكتب مرة واحدة.'
+  lead: 'لبنات بناء قابلة للتركيب — من واجهات المستخدم والنماذج إلى الأدوات المدعومة بـ WebAssembly.'
+  title: 'الحزم'
 projects:
   items:
     my-care-notes:
-      cta: اعرف المزيد
-      description: تطبيق لملاحظات الرعاية يركّز على المريض، مبني على منصة Mission Platform.
-      name: My Care Notes
+      cta: 'اعرف المزيد'
+      description: 'تطبيق ملاحظات رعاية يركّز على المريض مبني على Mission Platform.'
+      name: 'My Care Notes'

@@ -1,97 +1,93 @@
 about:
-  lead: Mission Platform היא אוסף של אבני בניין לממשק משתמש לשימוש חוזר וכלים לבניית אפליקציות.
+  lead: 'ה־Mission Platform היא מונו־ריפו רכיבי (composable) של אבני בניין לממשק משתמש הניתנות לשימוש חוזר, מודולי WebAssembly וכלים — כתבו פעם אחת ב־Forge ובנו עבור כל מסגרת עבודה.'
   projects:
-    aria-label: רשימת פרויקטים
-  title: אודות
-ai_translation_warning: תרגום זה נוצר על ידי בינה מלאכותית ועשוי להכיל טעויות.
+    aria-label: 'רשימת פרויקטים'
+  title: 'אודות'
+ai_translation_warning: 'ai-translation-warning'
 faq:
   items:
-    affiliation:
-      answer: אנחנו מימוש עצמאי של הארכיטקטורה של Mission Platform.
-      question: האם אתם קשורים לפרויקט Mission Platform?
     composable:
-      answer: המשמעות היא שאנחנו בונים את הממשק מאבני בניין קטנות, לשימוש חוזר ועצמאיות.
-      question: מה המשמעות של 'composable'?
+      answer: 'אנו בונים את הממשק מאבני בניין קטנות, ניתנות לשימוש חוזר וניטרליות למסגרת עבודה, שאותן אפשר לשלב ולהתאים כרצונכם.'
+      question: 'מה המשמעות של רכיבי (composable)?'
     deploy:
-      answer: הפלטפורמה מיועדת לפריסה על Cloudflare Workers או סביבות serverless דומות.
-      question: כיצד פורסים את זה?
-    vue-version:
-      answer: אנחנו משתמשים ב-Vue 3 עם Composition API.
-      question: באיזו גרסה של Vue נעשה שימוש?
-  title: שאלות נפוצות
+      answer: 'הפלטפורמה תוכננה לפריסה אל Cloudflare Workers ואל סביבות אירוח נטולות שרת או סטטיות נוספות.'
+      question: 'כיצד לפרוס את זה?'
+    frameworks:
+      answer: 'הרכיבים נכתבים פעם אחת בסביבת הריצה Forge הניטרלית למסגרות עבודה, ונבנים עבור Vue, React, Svelte, Solid ו־Web Components.'
+      question: 'אילו מסגרות עבודה נתמכות?'
+  title: 'שאלות נפוצות'
 features:
   barcode:
-    description: תמיכה בסריקת קודים פסים וקודי QR.
-    title: קוד פס
+    description: 'צרו וסרקו ברקודים מסוג QR, Data Matrix וברקודים חד־ממדיים, המופעלים באמצעות WebAssembly.'
+    title: 'סריקה וקודים'
   composable:
-    description: בנו אפליקציות מאבני בניין קטנות ועצמאיות.
-    title: Composable
+    description: 'כתבו את הממשק שלכם פעם אחת בסביבת הריצה Forge הניטרלית למסגרות עבודה, ואז בנו עבור Vue, React, Svelte, Solid ו־Web Components.'
+    title: 'כתבו פעם אחת, הריצו בכל מקום'
   debugging:
-    description: כלי ניפוי שגיאות מתקדמים המשולבים בפלטפורמה.
-    title: ניפוי שגיאות
+    description: 'TypeScript מקצה לקצה בכל חבילה, אפליקציה ו־worker.'
+    title: 'בטוח מבחינת טיפוסים'
   global:
-    description: מוכנה לפריסה גלובלית.
-    title: קנה מידה גלובלי
+    description: 'נבנתה לפריסה אל Cloudflare Workers ואל פלטפורמות נטולות שרת נוספות.'
+    title: 'מוכן לקצה'
   i18n:
-    description: תמיכה מובנית במספר שפות.
-    title: בינאום
+    description: 'תרגום מובנה באמצעות i18next עם תמיכה מלאה בשפות מימין לשמאל.'
+    title: 'בינאום'
   performance:
-    description: מותאמת למהירות ולזמני טעינה מינימליים.
-    title: ביצועים
+    description: 'Rust ו־AssemblyScript מהודרים ל־WebAssembly למהירות קרובה למקורית.'
+    title: 'ביצועים'
   search:
-    description: פונקציית חיפוש משולבת ועוצמתית.
-    title: חיפוש
+    description: 'טפסים, טבלאות, תזמון, מפות, תרשימים ועריכת טקסט עשיר, מוכנים לשימוש מיידי.'
+    title: 'הכול כלול'
   theming:
-    description: מראה שניתן להתאים בקלות.
-    title: עיצוב נושאי
-  title: תכונות
+    description: 'אסימוני עיצוב וערכות נושא ב־SCSS עם תמיכה מהשורה הראשונה במצב בהיר וכהה.'
+    title: 'עיצוב ערכות נושא'
+  title: 'תכונות'
 footer:
-  brand: Mission Platform
-  copyright: © {year} Mission Platform.
-  disclaimer-end: .
-  disclaimer-start: הוא פרויקט עצמאי.
-  not-affiliated: לא קשור לפרויקט Mission Platform.
+  copyright: '© {year} Mission Platform.'
 hero:
-  badge: בטא
-  cta-primary: התחילו כאן
-  cta-secondary: תיעוד
-  lead: פלטפורמה לבניית אפליקציות מאבני בניין קטנות ועצמאיות.
-  title: Composable. מוכנה למשימה.
+  badge: 'קוד פתוח'
+  cta-primary: 'התחילו עכשיו'
+  cta-secondary: 'תיעוד'
+  lead: 'כתבו את הממשק שלכם פעם אחת בסביבת הריצה Forge הניטרלית למסגרות עבודה, ואז בנו עבור Vue, React, Svelte, Solid ו־Web Components.'
+  title: 'Composable. Mission Ready.'
 nav:
-  about: אודות
-  faq: שאלות נפוצות
-  features: תכונות
-  packages: חבילות
+  about: 'אודות'
+  faq: 'שאלות נפוצות'
+  features: 'תכונות'
+  packages: 'חבילות'
 packages:
   items:
-    barcode: תמיכה בקודים פסים.
-    base-spa: הגדרת בסיס ל-SPA.
-    breakpoints: נקודות שבירה רספונסיביות.
-    code-scanner: כלים לסריקת קודים.
-    components: אבני בניין לממשק משתמש לשימוש חוזר.
-    d3: שילוב עם D3.
-    forms: כלים לטיפול בטפסים.
-    forms-core: הלוגיקה המרכזית של הטפסים.
-    harper: כלים לטיפול בנתונים.
-    hunspell: תמיכה בבדיקת איות.
-    i18n: תמיכה בבינאום.
-    icons: ספריית אייקונים.
-    jsx: תמיכה ב-JSX עבור Vue.
-    layouts: פריסות אפליקציה מוכנות מראש.
-    map: רכיב מפה.
-    matrix-code: יצירת קודי מטריצה.
-    phone-number: פורמט למספרי טלפון.
-    qr-code: יצירת קודי QR.
-    router: כלי ניתוב.
-    rxjs: תמיכה ב-RxJS.
-    scheduler-core: תזמון משימות.
-    seo: ניהול SEO.
-    tokens: טוקנים לעיצוב ולנושאים.
-  lead: אבני בניין לשימוש חוזר לאפליקציות שלכם.
-  title: חבילות
+    barcode: 'מקודד ומפענח ברקודים חד־ממדיים ב־WebAssembly.'
+    breakpoints: 'כלים ורכיבים לנקודות שבירה רספונסיביות.'
+    code-scanner: 'סרקו ברקודים מסוג QR, Data Matrix וברקודים מתמונה או ממצלמה.'
+    components: 'רכיבי ממשק משתמש בכתיבה חד־פעמית עבור כל מסגרת עבודה נתמכת.'
+    d3: 'שילוב D3 ניטרלי למסגרות עבודה.'
+    forms: 'בונה טפסים בכתיבה חד־פעמית וטפסים מונחי סכימה.'
+    forms-core: 'מנוע טפסים של JSON Schema הניטרלי למסגרות עבודה.'
+    harper: 'בדיקת דקדוק וסגנון של Harper עבור Monaco.'
+    hunspell: 'בדיקת איות של Hunspell ב־WebAssembly.'
+    i18n: 'בינאום המופעל באמצעות i18next.'
+    icons: 'אייקוני SVG הנכתבים פעם אחת ב־JSX.'
+    jsx: 'סביבת ריצה של JSX ניטרלית למסגרות עבודה עם מתאמים לכל מסגרת.'
+    layouts: 'פריסות אפליקציה בכתיבה חד־פעמית.'
+    map: 'רכיבים ו־composables של מפות MapLibre GL.'
+    matrix-code: 'מקודד ומפענח Data Matrix ב־WebAssembly.'
+    observers: 'הוקים של צופי Intersection, Mutation ו־Performance בכתיבה חד־פעמית.'
+    phone-number: 'ניתוח, אימות ועיצוב של מספרי טלפון.'
+    qr-code: 'מקודד ומפענח QR Code ב־WebAssembly.'
+    router: 'כלי ניתוב.'
+    rxjs: 'גישור בין observables של RxJS למצב הרכיב.'
+    scheduler-core: 'מודל אירועים של iCalendar ומנוע חזרתיות.'
+    seo: 'נתונים מובנים, תגי מטא וכלי עזר למפת אתר.'
+    speech-audio: 'הוקים לסינתזת דיבור, זיהוי דיבור, שמע ו־Web MIDI.'
+    three: 'שילוב Three.js ניטרלי למסגרות עבודה.'
+    tokens: 'אסימוני עיצוב של CSS וערכות נושא של SCSS.'
+    wysiwyg: 'עורך טקסט עשיר בכתיבה חד־פעמית.'
+  lead: 'אבני בניין רכיביות (composable) — מממשקי משתמש וטפסים ועד כלים המופעלים באמצעות WebAssembly.'
+  title: 'חבילות'
 projects:
   items:
     my-care-notes:
-      cta: למידע נוסף
-      description: אפליקציה לרישום הערות טיפול המתמקדת במטופל, שנבנתה על גבי Mission Platform.
-      name: My Care Notes
+      cta: 'למידע נוסף'
+      description: 'אפליקציית רשומות טיפול ממוקדת מטופל הבנויה על גבי ה־Mission Platform.'
+      name: 'My Care Notes'

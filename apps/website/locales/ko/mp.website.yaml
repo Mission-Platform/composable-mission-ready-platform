@@ -1,97 +1,93 @@
 about:
-  lead: Mission Platform는 애플리케이션을 구축하기 위한 재사용 가능한 UI 빌딩 블록과 도구 모음입니다.
+  lead: 'Mission Platform은 재사용 가능한 UI 빌딩 블록, WebAssembly 모듈, 툴링으로 구성된 컴포저블 모노레포입니다. Forge에서 한 번만 작성하면 모든 프레임워크용으로 빌드할 수 있습니다.'
   projects:
-    aria-label: 프로젝트 목록
-  title: 소개
-ai_translation_warning: 이 번역은 AI가 생성한 것으로 오류가 포함될 수 있습니다.
+    aria-label: '프로젝트 목록'
+  title: '소개'
+ai_translation_warning: 'ai-translation-warning'
 faq:
   items:
-    affiliation:
-      answer: 저희는 Mission Platform 아키텍처의 독립적인 구현체입니다.
-      question: Mission Platform 프로젝트와 제휴 관계에 있나요?
     composable:
-      answer: 작고 재사용 가능하며 독립적인 빌딩 블록으로 UI를 구성한다는 의미입니다.
-      question: 여기서 'composable'이란 무엇을 의미하나요?
+      answer: '작고 재사용 가능하며 프레임워크에 종속되지 않는 빌딩 블록으로 인터페이스를 구성하여 자유롭게 조합할 수 있습니다.'
+      question: "'컴포저블(composable)'이란 무엇인가요?"
     deploy:
-      answer: 이 플랫폼은 Cloudflare Workers 또는 유사한 서버리스 환경에 배포되도록 설계되었습니다.
-      question: 이것을 어떻게 배포하나요?
-    vue-version:
-      answer: Composition API가 적용된 Vue 3를 사용합니다.
-      question: 어떤 버전의 Vue를 사용하나요?
-  title: 자주 묻는 질문
+      answer: '이 플랫폼은 Cloudflare Workers를 비롯한 다양한 서버리스 또는 정적 호스팅 환경에 배포하도록 설계되었습니다.'
+      question: '어떻게 배포하나요?'
+    frameworks:
+      answer: '컴포넌트는 프레임워크에 종속되지 않는 Forge 런타임에서 한 번 작성한 뒤 Vue, React, Svelte, Solid, Web Components용으로 빌드됩니다.'
+      question: '어떤 프레임워크를 지원하나요?'
+  title: '자주 묻는 질문'
 features:
   barcode:
-    description: 바코드 및 QR 코드 스캔을 지원합니다.
-    title: 바코드
+    description: 'WebAssembly로 구동되는 QR, Data Matrix, 1D 바코드 생성 및 스캔.'
+    title: '스캔 및 코드'
   composable:
-    description: 작고 독립적인 빌딩 블록으로 애플리케이션을 구축하세요.
-    title: Composable
+    description: '프레임워크에 종속되지 않는 Forge 런타임에서 UI를 한 번 작성한 뒤 Vue, React, Svelte, Solid, Web Components용으로 빌드하세요.'
+    title: '한 번 작성, 어디서나 실행'
   debugging:
-    description: 플랫폼에 통합된 고급 디버깅 도구.
-    title: 디버깅
+    description: '모든 패키지, 앱, 워커에 걸친 엔드투엔드 TypeScript.'
+    title: '타입 안전성'
   global:
-    description: 글로벌 배포를 위한 준비.
-    title: 글로벌 확장성
+    description: 'Cloudflare Workers를 비롯한 다양한 서버리스 플랫폼에 배포하도록 설계되었습니다.'
+    title: '엣지 지원'
   i18n:
-    description: 다국어에 대한 기본 지원.
-    title: 국제화
+    description: '오른쪽에서 왼쪽으로 쓰는 언어를 완벽하게 지원하는 i18next 내장 번역.'
+    title: '국제화'
   performance:
-    description: 속도와 최소한의 로딩 시간에 최적화됨.
-    title: 성능
+    description: 'Rust와 AssemblyScript를 WebAssembly로 컴파일하여 네이티브에 가까운 속도를 제공합니다.'
+    title: '성능'
   search:
-    description: 강력한 통합 검색 기능.
-    title: 검색
+    description: '폼, 테이블, 일정 관리, 지도, 차트, 리치 텍스트 편집을 기본으로 제공합니다.'
+    title: '올인원 구성'
   theming:
-    description: 손쉽게 사용자화할 수 있는 디자인.
-    title: 테마 설정
-  title: 기능
+    description: '일급 라이트 모드와 다크 모드를 갖춘 디자인 토큰과 SCSS 테마.'
+    title: '테마'
+  title: '기능'
 footer:
-  brand: Mission Platform
-  copyright: © {year} Mission Platform.
-  disclaimer-end: .
-  disclaimer-start: 는 독립적인 프로젝트입니다.
-  not-affiliated: Mission Platform 프로젝트와 제휴 관계가 아닙니다.
+  copyright: '© {year} Mission Platform.'
 hero:
-  badge: 베타
-  cta-primary: 시작하기
-  cta-secondary: 문서
-  lead: 작고 독립적인 빌딩 블록으로 애플리케이션을 구축하는 플랫폼입니다.
-  title: Composable. 미션 레디.
+  badge: '오픈 소스'
+  cta-primary: '시작하기'
+  cta-secondary: '문서'
+  lead: '프레임워크에 종속되지 않는 Forge 런타임에서 인터페이스를 한 번 작성한 뒤 Vue, React, Svelte, Solid, Web Components용으로 빌드하세요.'
+  title: 'Composable. Mission Ready.'
 nav:
-  about: 소개
-  faq: 자주 묻는 질문
-  features: 기능
-  packages: 패키지
+  about: '소개'
+  faq: '자주 묻는 질문'
+  features: '기능'
+  packages: '패키지'
 packages:
   items:
-    barcode: 바코드 지원.
-    base-spa: 기본 SPA 설정.
-    breakpoints: 반응형 브레이크포인트.
-    code-scanner: 코드 스캔 유틸리티.
-    components: 재사용 가능한 UI 빌딩 블록.
-    d3: D3 통합.
-    forms: 폼 처리 유틸리티.
-    forms-core: 폼 핵심 로직.
-    harper: 데이터 처리 유틸리티.
-    hunspell: 맞춤법 검사 지원.
-    i18n: 국제화 지원.
-    icons: 아이콘 라이브러리.
-    jsx: Vue용 JSX 지원.
-    layouts: 사전 구축된 애플리케이션 레이아웃.
-    map: 지도 컴포넌트.
-    matrix-code: 매트릭스 코드 생성.
-    phone-number: 전화번호 형식 지정.
-    qr-code: QR 코드 생성.
-    router: 라우팅 유틸리티.
-    rxjs: RxJS 지원.
-    scheduler-core: 작업 스케줄링.
-    seo: SEO 관리.
-    tokens: 디자인 토큰 및 테마 설정.
-  lead: 애플리케이션을 위한 재사용 가능한 빌딩 블록.
-  title: 패키지
+    barcode: 'WebAssembly로 구현한 1D 바코드 인코더 및 디코더.'
+    breakpoints: '반응형 브레이크포인트 유틸리티 및 컴포넌트.'
+    code-scanner: '이미지 또는 카메라에서 QR, Data Matrix, 바코드를 스캔합니다.'
+    components: '지원하는 모든 프레임워크를 위한 한 번 작성 UI 컴포넌트.'
+    d3: '프레임워크에 종속되지 않는 D3 통합.'
+    forms: '한 번 작성하는 폼 빌더와 스키마 기반 폼.'
+    forms-core: '프레임워크에 종속되지 않는 JSON Schema 폼 엔진.'
+    harper: 'Monaco용 Harper 문법 및 스타일 검사.'
+    hunspell: 'WebAssembly로 구현한 Hunspell 맞춤법 검사.'
+    i18n: 'i18next 기반 국제화.'
+    icons: 'JSX로 한 번 작성한 SVG 아이콘.'
+    jsx: '각 프레임워크용 어댑터를 갖춘 프레임워크 중립 JSX 런타임.'
+    layouts: '한 번 작성하는 애플리케이션 레이아웃.'
+    map: 'MapLibre GL 지도 컴포넌트 및 컴포저블.'
+    matrix-code: 'WebAssembly로 구현한 Data Matrix 인코더 및 디코더.'
+    observers: '한 번 작성하는 Intersection, Mutation, Performance 옵저버 훅.'
+    phone-number: '전화번호 파싱, 검증, 포맷팅.'
+    qr-code: 'WebAssembly로 구현한 QR Code 인코더 및 디코더.'
+    router: '라우팅 유틸리티.'
+    rxjs: 'RxJS 옵저버블을 컴포넌트 상태에 연결합니다.'
+    scheduler-core: 'iCalendar 이벤트 모델 및 반복 엔진.'
+    seo: '구조화된 데이터, 메타 태그, 사이트맵 헬퍼.'
+    speech-audio: '음성 합성, 음성 인식, 오디오, Web MIDI 훅.'
+    three: '프레임워크에 종속되지 않는 Three.js 통합.'
+    tokens: 'CSS 디자인 토큰 및 SCSS 테마.'
+    wysiwyg: '한 번 작성하는 리치 텍스트 편집기.'
+  lead: 'UI와 폼부터 WebAssembly 기반 툴링까지, 컴포저블 빌딩 블록.'
+  title: '패키지'
 projects:
   items:
     my-care-notes:
-      cta: 더 알아보기
-      description: Mission Platform 위에 구축된 환자 중심의 케어 노트 애플리케이션.
-      name: My Care Notes
+      cta: '자세히 보기'
+      description: 'Mission Platform으로 구축한 환자 중심 케어 노트 애플리케이션.'
+      name: 'My Care Notes'

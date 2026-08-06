@@ -1,97 +1,93 @@
 about:
-  lead: Mission Platform is een verzameling herbruikbare UI-bouwstenen en tools voor het bouwen van applicaties.
+  lead: 'Het Mission Platform is een composable monorepo van herbruikbare UI-bouwstenen, WebAssembly-modules en tooling — schrijf één keer in Forge en bouw voor elk framework.'
   projects:
-    aria-label: Projectenlijst
-  title: Over ons
-ai_translation_warning: Deze vertaling is gegenereerd door AI en kan fouten bevatten.
+    aria-label: 'Projectenlijst'
+  title: 'Over ons'
+ai_translation_warning: 'ai-translation-warning'
 faq:
   items:
-    affiliation:
-      answer: Wij zijn een onafhankelijke implementatie van de Mission Platform-architectuur.
-      question: Zijn jullie aangesloten bij het Mission Platform-project?
     composable:
-      answer: Dit betekent dat we de interface opbouwen uit kleine, herbruikbare en onafhankelijke bouwstenen.
-      question: Wat betekent 'composable'?
+      answer: 'We bouwen de interface op uit kleine, herbruikbare, framework-neutrale bouwstenen die je naar wens kunt combineren.'
+      question: "Wat betekent 'composable'?"
     deploy:
-      answer: Het platform is ontworpen om te worden geïmplementeerd op Cloudflare Workers of vergelijkbare serverless omgevingen.
-      question: Hoe implementeer ik dit?
-    vue-version:
-      answer: We gebruiken Vue 3 met de Composition API.
-      question: Welke versie van Vue wordt gebruikt?
-  title: Veelgestelde vragen
+      answer: 'Het platform is ontworpen om te deployen naar Cloudflare Workers en andere serverless of statische hostingomgevingen.'
+      question: 'Hoe deploy ik dit?'
+    frameworks:
+      answer: 'Componenten worden één keer geschreven in de framework-onafhankelijke Forge-runtime en gebouwd voor Vue, React, Svelte, Solid en Web Components.'
+      question: 'Welke frameworks worden ondersteund?'
+  title: 'Veelgestelde vragen'
 features:
   barcode:
-    description: Ondersteuning voor het scannen van barcodes en QR-codes.
-    title: Barcode
+    description: 'Genereer en scan QR, Data Matrix en 1D-barcodes, aangedreven door WebAssembly.'
+    title: 'Scannen & codes'
   composable:
-    description: Bouw applicaties uit kleine, onafhankelijke bouwstenen.
-    title: Composable
+    description: 'Schrijf je UI één keer in de framework-onafhankelijke Forge-runtime en bouw daarna voor Vue, React, Svelte, Solid en Web Components.'
+    title: 'Eén keer schrijven, overal draaien'
   debugging:
-    description: Geavanceerde debugtools geïntegreerd in het platform.
-    title: Debuggen
+    description: 'End-to-end TypeScript in elk package, elke app en elke worker.'
+    title: 'Type-veilig'
   global:
-    description: Klaar voor wereldwijde implementatie.
-    title: Wereldwijde schaal
+    description: 'Gebouwd om te deployen naar Cloudflare Workers en andere serverless platformen.'
+    title: 'Klaar voor de edge'
   i18n:
-    description: Ingebouwde ondersteuning voor meerdere talen.
-    title: Internationalisatie
+    description: 'Ingebouwde i18next-vertaling met volledige ondersteuning voor talen van rechts naar links.'
+    title: 'Internationalisatie'
   performance:
-    description: Geoptimaliseerd voor snelheid en minimale laadtijden.
-    title: Prestaties
+    description: 'Rust en AssemblyScript gecompileerd naar WebAssembly voor bijna-native snelheid.'
+    title: 'Prestaties'
   search:
-    description: Krachtige geïntegreerde zoekfunctionaliteit.
-    title: Zoeken
+    description: 'Formulieren, tabellen, planning, kaarten, grafieken en rich-text-bewerking standaard aanwezig.'
+    title: 'Alles inbegrepen'
   theming:
-    description: Eenvoudig aan te passen uiterlijk.
-    title: Thema's
-  title: Functies
+    description: "Design tokens en SCSS-thema's met eersteklas lichte en donkere modi."
+    title: 'Theming'
+  title: 'Functies'
 footer:
-  brand: Mission Platform
-  copyright: © {year} Mission Platform.
-  disclaimer-end: .
-  disclaimer-start: is een onafhankelijk project.
-  not-affiliated: Niet aangesloten bij het Mission Platform-project.
+  copyright: '© {year} Mission Platform.'
 hero:
-  badge: Beta
-  cta-primary: Aan de slag
-  cta-secondary: Documentatie
-  lead: Een platform voor het bouwen van applicaties uit kleine, onafhankelijke bouwstenen.
-  title: Composable. Missiegereed.
+  badge: 'Open source'
+  cta-primary: 'Aan de slag'
+  cta-secondary: 'Documentatie'
+  lead: 'Schrijf je interface één keer in de framework-onafhankelijke Forge-runtime en bouw daarna voor Vue, React, Svelte, Solid en Web Components.'
+  title: 'Composable. Mission Ready.'
 nav:
-  about: Over ons
-  faq: Veelgestelde vragen
-  features: Functies
-  packages: Packages
+  about: 'Over ons'
+  faq: 'Veelgestelde vragen'
+  features: 'Functies'
+  packages: 'Packages'
 packages:
   items:
-    barcode: Ondersteuning voor barcodes.
-    base-spa: Basisconfiguratie voor SPA.
-    breakpoints: Responsieve breakpoints.
-    code-scanner: Hulpmiddelen voor het scannen van codes.
-    components: Herbruikbare UI-bouwstenen.
-    d3: Integratie met D3.
-    forms: Hulpmiddelen voor formulierverwerking.
-    forms-core: Kernlogica voor formulieren.
-    harper: Hulpmiddelen voor gegevensverwerking.
-    hunspell: Ondersteuning voor spellingscontrole.
-    i18n: Ondersteuning voor internationalisatie.
-    icons: Icoonbibliotheek.
-    jsx: JSX-ondersteuning voor Vue.
-    layouts: Voorgebouwde applicatielay-outs.
-    map: Kaartcomponent.
-    matrix-code: Genereren van matrixcodes.
-    phone-number: Opmaak van telefoonnummers.
-    qr-code: Genereren van QR-codes.
-    router: Hulpmiddelen voor routering.
-    rxjs: Ondersteuning voor RxJS.
-    scheduler-core: Taakplanning.
-    seo: SEO-beheer.
-    tokens: Designtokens en thema's.
-  lead: Herbruikbare bouwstenen voor je applicaties.
-  title: Packages
+    barcode: '1D-barcode-encoder en -decoder in WebAssembly.'
+    breakpoints: 'Responsieve breakpoint-utilities en -componenten.'
+    code-scanner: 'Scan QR, Data Matrix en barcodes vanaf afbeelding of camera.'
+    components: 'Write-once UI-componenten voor elk ondersteund framework.'
+    d3: 'Framework-neutrale D3-integratie.'
+    forms: 'Write-once formulierbouwer en schema-gedreven formulieren.'
+    forms-core: 'Framework-onafhankelijke JSON Schema-formulierenengine.'
+    harper: 'Harper grammatica- en stijlcontrole voor Monaco.'
+    hunspell: 'Hunspell-spellingcontrole in WebAssembly.'
+    i18n: 'Internationalisatie aangedreven door i18next.'
+    icons: 'SVG-iconen één keer geschreven in JSX.'
+    jsx: 'Framework-neutrale JSX-runtime met adapters voor elk framework.'
+    layouts: 'Write-once applicatie-layouts.'
+    map: 'MapLibre GL kaartcomponenten en composables.'
+    matrix-code: 'Data Matrix-encoder en -decoder in WebAssembly.'
+    observers: 'Write-once Intersection-, Mutation- en Performance-observer-hooks.'
+    phone-number: 'Parsen, valideren en formatteren van telefoonnummers.'
+    qr-code: 'QR Code-encoder en -decoder in WebAssembly.'
+    router: 'Routing-utilities.'
+    rxjs: 'Koppel RxJS-observables aan componentstatus.'
+    scheduler-core: 'iCalendar-eventmodel en herhalingsengine.'
+    seo: 'Gestructureerde data, meta-tags en sitemap-helpers.'
+    speech-audio: 'Spraaksynthese, -herkenning, audio- en Web MIDI-hooks.'
+    three: 'Framework-neutrale Three.js-integratie.'
+    tokens: "CSS design tokens en SCSS-thema's."
+    wysiwyg: 'Write-once rich-text-editor.'
+  lead: 'Composable bouwstenen — van UI en formulieren tot door WebAssembly aangedreven tooling.'
+  title: 'Packages'
 projects:
   items:
     my-care-notes:
-      cta: Meer informatie
-      description: Een patiëntgerichte zorgnotitie-applicatie, gebouwd op Mission Platform.
-      name: My Care Notes
+      cta: 'Meer informatie'
+      description: 'Een patiëntgerichte zorgnotitie-applicatie gebouwd op het Mission Platform.'
+      name: 'My Care Notes'

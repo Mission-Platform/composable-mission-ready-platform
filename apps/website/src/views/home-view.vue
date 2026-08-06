@@ -100,9 +100,10 @@
   const features = computed<Feature[]>(() => [
     {
       icon: ForgeIconPuzzle,
-      title: t(($) => $.features.composable.title, { defaultValue: 'Composable', ns: 'mp.website' }),
+      title: t(($) => $.features.composable.title, { defaultValue: 'Write Once, Run Anywhere', ns: 'mp.website' }),
       description: t(($) => $.features.composable.description, {
-        defaultValue: 'Build applications from small, independent building blocks.',
+        defaultValue:
+          'Author your UI once in the framework-agnostic Forge runtime, then build for Vue, React, Svelte, Solid and Web Components.',
         ns: 'mp.website',
       }),
     },
@@ -110,7 +111,7 @@
       icon: ForgeIconLightning,
       title: t(($) => $.features.performance.title, { defaultValue: 'Performance', ns: 'mp.website' }),
       description: t(($) => $.features.performance.description, {
-        defaultValue: 'Optimized for speed and minimal load times.',
+        defaultValue: 'Rust and AssemblyScript compiled to WebAssembly for near-native speed.',
         ns: 'mp.website',
       }),
     },
@@ -118,7 +119,7 @@
       icon: ForgeIconPalette,
       title: t(($) => $.features.theming.title, { defaultValue: 'Theming', ns: 'mp.website' }),
       description: t(($) => $.features.theming.description, {
-        defaultValue: 'Easily customizable look and feel.',
+        defaultValue: 'Design tokens and SCSS themes with first-class light and dark modes.',
         ns: 'mp.website',
       }),
     },
@@ -126,39 +127,39 @@
       icon: ForgeIconLanguage,
       title: t(($) => $.features.i18n.title, { defaultValue: 'Internationalization', ns: 'mp.website' }),
       description: t(($) => $.features.i18n.description, {
-        defaultValue: 'Built-in support for multiple languages.',
+        defaultValue: 'Built-in i18next translation with full right-to-left language support.',
         ns: 'mp.website',
       }),
     },
     {
       icon: ForgeIconDebug,
-      title: t(($) => $.features.debugging.title, { defaultValue: 'Debugging', ns: 'mp.website' }),
+      title: t(($) => $.features.debugging.title, { defaultValue: 'Type-Safe', ns: 'mp.website' }),
       description: t(($) => $.features.debugging.description, {
-        defaultValue: 'Advanced debugging tools integrated into the platform.',
+        defaultValue: 'End-to-end TypeScript across every package, app and worker.',
         ns: 'mp.website',
       }),
     },
     {
       icon: ForgeIconGlobe,
-      title: t(($) => $.features.global.title, { defaultValue: 'Global Scale', ns: 'mp.website' }),
+      title: t(($) => $.features.global.title, { defaultValue: 'Edge-Ready', ns: 'mp.website' }),
       description: t(($) => $.features.global.description, {
-        defaultValue: 'Ready for global deployment.',
+        defaultValue: 'Built to deploy to Cloudflare Workers and other serverless platforms.',
         ns: 'mp.website',
       }),
     },
     {
       icon: ForgeIconSearch,
-      title: t(($) => $.features.search.title, { defaultValue: 'Search', ns: 'mp.website' }),
+      title: t(($) => $.features.search.title, { defaultValue: 'Batteries Included', ns: 'mp.website' }),
       description: t(($) => $.features.search.description, {
-        defaultValue: 'Powerful integrated search functionality.',
+        defaultValue: 'Forms, tables, scheduling, maps, charts and rich-text editing out of the box.',
         ns: 'mp.website',
       }),
     },
     {
       icon: ForgeIconQrCode,
-      title: t(($) => $.features.barcode.title, { defaultValue: 'Barcode', ns: 'mp.website' }),
+      title: t(($) => $.features.barcode.title, { defaultValue: 'Scanning & Codes', ns: 'mp.website' }),
       description: t(($) => $.features.barcode.description, {
-        defaultValue: 'Support for barcode and QR code scanning.',
+        defaultValue: 'Generate and scan QR, Data Matrix and 1D barcodes, powered by WebAssembly.',
         ns: 'mp.website',
       }),
     },
@@ -196,36 +197,51 @@
     {
       name: '@mission-platform/components',
       description: t(($) => $.packages.items.components, {
-        defaultValue: 'Reusable UI building blocks.',
+        defaultValue: 'Write-once UI components for every supported framework.',
         ns: 'mp.website',
       }),
     },
     {
       name: '@mission-platform/forge',
-      description: t(($) => $.packages.items.jsx, { defaultValue: 'JSX support for Vue.', ns: 'mp.website' }),
+      description: t(($) => $.packages.items.jsx, {
+        defaultValue: 'Framework-neutral JSX runtime with adapters for each framework.',
+        ns: 'mp.website',
+      }),
     },
     {
       name: '@mission-platform/tokens',
-      description: t(($) => $.packages.items.tokens, { defaultValue: 'Design tokens and theming.', ns: 'mp.website' }),
+      description: t(($) => $.packages.items.tokens, {
+        defaultValue: 'CSS design tokens and SCSS themes.',
+        ns: 'mp.website',
+      }),
     },
     {
       name: '@mission-platform/icons',
-      description: t(($) => $.packages.items.icons, { defaultValue: 'Icon library.', ns: 'mp.website' }),
+      description: t(($) => $.packages.items.icons, {
+        defaultValue: 'SVG icons authored once in JSX.',
+        ns: 'mp.website',
+      }),
     },
     {
       name: '@mission-platform/layouts',
       description: t(($) => $.packages.items.layouts, {
-        defaultValue: 'Pre-built application layouts.',
+        defaultValue: 'Write-once application layouts.',
         ns: 'mp.website',
       }),
     },
     {
       name: '@mission-platform/forms',
-      description: t(($) => $.packages.items.forms, { defaultValue: 'Form handling utilities.', ns: 'mp.website' }),
+      description: t(($) => $.packages.items.forms, {
+        defaultValue: 'Write-once form builder and schema-driven forms.',
+        ns: 'mp.website',
+      }),
     },
     {
       name: '@mission-platform/forms-core',
-      description: t(($) => $.packages.items['forms-core'], { defaultValue: 'Core form logic.', ns: 'mp.website' }),
+      description: t(($) => $.packages.items['forms-core'], {
+        defaultValue: 'Framework-agnostic JSON Schema forms engine.',
+        ns: 'mp.website',
+      }),
     },
     {
       name: '@mission-platform/router',
@@ -233,75 +249,129 @@
     },
     {
       name: '@mission-platform/scheduler-core',
-      description: t(($) => $.packages.items['scheduler-core'], { defaultValue: 'Task scheduling.', ns: 'mp.website' }),
+      description: t(($) => $.packages.items['scheduler-core'], {
+        defaultValue: 'iCalendar event model and recurrence engine.',
+        ns: 'mp.website',
+      }),
     },
     {
       name: '@mission-platform/breakpoints',
       description: t(($) => $.packages.items.breakpoints, {
-        defaultValue: 'Responsive breakpoints.',
+        defaultValue: 'Responsive breakpoint utilities and components.',
         ns: 'mp.website',
       }),
     },
     {
       name: '@mission-platform/i18n',
-      description: t(($) => $.packages.items.i18n, { defaultValue: 'Internationalization support.', ns: 'mp.website' }),
+      description: t(($) => $.packages.items.i18n, {
+        defaultValue: 'Internationalization powered by i18next.',
+        ns: 'mp.website',
+      }),
     },
     {
       name: '@mission-platform/map',
-      description: t(($) => $.packages.items.map, { defaultValue: 'Map component.', ns: 'mp.website' }),
+      description: t(($) => $.packages.items.map, {
+        defaultValue: 'MapLibre GL map components and composables.',
+        ns: 'mp.website',
+      }),
     },
     {
       name: '@mission-platform/d3',
-      description: t(($) => $.packages.items.d3, { defaultValue: 'D3 integration.', ns: 'mp.website' }),
+      description: t(($) => $.packages.items.d3, {
+        defaultValue: 'Framework-neutral D3 integration.',
+        ns: 'mp.website',
+      }),
     },
     {
       name: '@mission-platform/rxjs',
-      description: t(($) => $.packages.items.rxjs, { defaultValue: 'RxJS support.', ns: 'mp.website' }),
+      description: t(($) => $.packages.items.rxjs, {
+        defaultValue: 'Bridge RxJS observables to component state.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      name: '@mission-platform/observers',
+      description: t(($) => $.packages.items.observers, {
+        defaultValue: 'Write-once Intersection, Mutation and Performance observer hooks.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      name: '@mission-platform/speech-audio',
+      description: t(($) => $.packages.items['speech-audio'], {
+        defaultValue: 'Speech synthesis, recognition, audio and Web MIDI hooks.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      name: '@mission-platform/three',
+      description: t(($) => $.packages.items.three, {
+        defaultValue: 'Framework-neutral Three.js integration.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      name: '@mission-platform/wysiwyg',
+      description: t(($) => $.packages.items.wysiwyg, {
+        defaultValue: 'Write-once rich-text editor.',
+        ns: 'mp.website',
+      }),
     },
     {
       name: '@mission-platform/qr-code',
-      description: t(($) => $.packages.items['qr-code'], { defaultValue: 'QR code generation.', ns: 'mp.website' }),
+      description: t(($) => $.packages.items['qr-code'], {
+        defaultValue: 'QR Code encoder and decoder in WebAssembly.',
+        ns: 'mp.website',
+      }),
     },
     {
       name: '@mission-platform/barcode',
-      description: t(($) => $.packages.items.barcode, { defaultValue: 'Barcode support.', ns: 'mp.website' }),
+      description: t(($) => $.packages.items.barcode, {
+        defaultValue: '1D barcode encoder and decoder in WebAssembly.',
+        ns: 'mp.website',
+      }),
     },
     {
       name: '@mission-platform/matrix-code',
       description: t(($) => $.packages.items['matrix-code'], {
-        defaultValue: 'Matrix code generation.',
+        defaultValue: 'Data Matrix encoder and decoder in WebAssembly.',
         ns: 'mp.website',
       }),
     },
     {
       name: '@mission-platform/code-scanner',
       description: t(($) => $.packages.items['code-scanner'], {
-        defaultValue: 'Code scanning utilities.',
+        defaultValue: 'Scan QR, Data Matrix and barcodes from image or camera.',
         ns: 'mp.website',
       }),
     },
     {
       name: '@mission-platform/phone-number',
       description: t(($) => $.packages.items['phone-number'], {
-        defaultValue: 'Phone number formatting.',
+        defaultValue: 'Phone number parsing, validation and formatting.',
         ns: 'mp.website',
       }),
     },
     {
       name: '@mission-platform/harper',
-      description: t(($) => $.packages.items.harper, { defaultValue: 'Data handling utilities.', ns: 'mp.website' }),
+      description: t(($) => $.packages.items.harper, {
+        defaultValue: 'Harper grammar and style checking for Monaco.',
+        ns: 'mp.website',
+      }),
     },
     {
       name: '@mission-platform/hunspell',
-      description: t(($) => $.packages.items.hunspell, { defaultValue: 'Spell checking support.', ns: 'mp.website' }),
+      description: t(($) => $.packages.items.hunspell, {
+        defaultValue: 'Hunspell spell checking in WebAssembly.',
+        ns: 'mp.website',
+      }),
     },
     {
       name: '@mission-platform/seo',
-      description: t(($) => $.packages.items.seo, { defaultValue: 'SEO management.', ns: 'mp.website' }),
-    },
-    {
-      name: '@mission-platform/forge-spa',
-      description: t(($) => $.packages.items['forge-spa'], { defaultValue: 'Base SPA setup.', ns: 'mp.website' }),
+      description: t(($) => $.packages.items.seo, {
+        defaultValue: 'Structured data, meta tags and sitemap helpers.',
+        ns: 'mp.website',
+      }),
     },
   ]);
 
@@ -319,32 +389,24 @@
 
   const faqs = computed<Faq[]>(() => [
     {
-      question: t(($) => $.faq.items.affiliation.question, {
-        defaultValue: 'Are you affiliated with the Mission Platform project?',
-        ns: 'mp.website',
-      }),
-      answer: t(($) => $.faq.items.affiliation.answer, {
-        defaultValue: 'We are an independent implementation of the Mission Platform architecture.',
-        ns: 'mp.website',
-      }),
-    },
-    {
       question: t(($) => $.faq.items.composable.question, {
         defaultValue: "What does 'composable' mean?",
         ns: 'mp.website',
       }),
       answer: t(($) => $.faq.items.composable.answer, {
-        defaultValue: 'It means we build the UI from small, reusable, and independent building blocks.',
+        defaultValue:
+          'We build the interface from small, reusable, framework-neutral building blocks you can mix and match.',
         ns: 'mp.website',
       }),
     },
     {
-      question: t(($) => $.faq.items['vue-version'].question, {
-        defaultValue: 'Which version of Vue is used?',
+      question: t(($) => $.faq.items.frameworks.question, {
+        defaultValue: 'Which frameworks are supported?',
         ns: 'mp.website',
       }),
-      answer: t(($) => $.faq.items['vue-version'].answer, {
-        defaultValue: 'We use Vue 3 with the Composition API.',
+      answer: t(($) => $.faq.items.frameworks.answer, {
+        defaultValue:
+          'Components are authored once in the framework-agnostic Forge runtime and built for Vue, React, Svelte, Solid and Web Components.',
         ns: 'mp.website',
       }),
     },
@@ -355,7 +417,7 @@
       }),
       answer: t(($) => $.faq.items.deploy.answer, {
         defaultValue:
-          'The platform is designed to be deployed to Cloudflare Workers or similar serverless environments.',
+          'The platform is designed to deploy to Cloudflare Workers and other serverless or static hosting environments.',
         ns: 'mp.website',
       }),
     },
@@ -493,7 +555,8 @@
           <ForgeLanguageSwitcher
             :locale="locale"
             :locales="languages"
-            :on-locale-change="switchLanguage"
+            label-hidden
+            @locale-change="switchLanguage"
           />
           <ForgeThemeToggle
             aria-label="Toggle colour theme"
@@ -510,7 +573,7 @@
       >
         <ForgeInView animation="slide-up">
           <ForgeBadge variant="info">
-            {{ t(($) => $.hero.badge, { defaultValue: 'Beta', ns: 'mp.website' }) }}
+            {{ t(($) => $.hero.badge, { defaultValue: 'Open Source', ns: 'mp.website' }) }}
           </ForgeBadge>
           <ForgeTypography
             variant="display"
@@ -528,7 +591,8 @@
           >
             {{
               t(($) => $.hero.lead, {
-                defaultValue: 'A platform for building applications from small, independent building blocks.',
+                defaultValue:
+                  'Author your interface once in the framework-agnostic Forge runtime, then build for Vue, React, Svelte, Solid and Web Components.',
                 ns: 'mp.website',
               })
             }}
@@ -623,7 +687,7 @@
           >
             {{
               t(($) => $.packages.lead, {
-                defaultValue: 'Reusable building blocks for your applications.',
+                defaultValue: 'Composable building blocks — from UI and forms to WebAssembly-powered tooling.',
                 ns: 'mp.website',
               })
             }}
@@ -676,7 +740,7 @@
             {{
               t(($) => $.about.lead, {
                 defaultValue:
-                  'The Mission Platform is a set of reusable UI building blocks and tools for building applications.',
+                  'The Mission Platform is a composable monorepo of reusable UI building blocks, WebAssembly modules and tooling — author once in Forge and build for every framework.',
                 ns: 'mp.website',
               })
             }}
@@ -775,23 +839,6 @@
 
     <template #footer>
       <div class="home__footer">
-        <ForgeTypography
-          variant="caption"
-          color="secondary"
-          class="home__disclaimer"
-        >
-          <strong>{{ t(($) => $.footer.brand, { defaultValue: 'Mission Platform', ns: 'mp.website' }) }}</strong>
-          {{ t(($) => $.footer['disclaimer-start'], { defaultValue: 'is an independent project.', ns: 'mp.website' }) }}
-          <em>
-            {{
-              t(($) => $.footer['not-affiliated'], {
-                defaultValue: 'Not affiliated with the Mission Platform project.',
-                ns: 'mp.website',
-              })
-            }}
-          </em>
-          {{ t(($) => $.footer['disclaimer-end'], { defaultValue: '.', ns: 'mp.website' }) }}
-        </ForgeTypography>
         <ForgeTypography
           variant="caption"
           color="tertiary"
@@ -940,10 +987,6 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-  }
-
-  .home__disclaimer {
-    line-height: 1.55;
   }
 
   .home__ai-warning {
