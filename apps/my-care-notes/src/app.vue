@@ -319,7 +319,7 @@
         <ForgeLanguageSwitcher
           :locale="locale"
           :locales="locales"
-          :on-locale-change="switchLanguage"
+          @locale-change="switchLanguage"
         />
         <ForgeThemeToggle
           :aria-label="t(($) => $.theme_toggle, { ns: 'mp.my-care-notes', defaultValue: 'Toggle colour theme' })"

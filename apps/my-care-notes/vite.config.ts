@@ -1,7 +1,8 @@
 /// <reference types="vitest/config" />
 import { defineFrameworkAppConfig } from '@mission-platform/vite-config';
-import i18nPlugin from '@mission-platform/vite-plugin-i18n';
+import i18nPlugin, { readSupportedLocales } from '@mission-platform/vite-plugin-i18n';
 import { seoPlugin } from '@mission-platform/vite-plugin-seo';
+import { fileURLToPath } from 'node:url';
 import { type Plugin, type UserConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
@@ -79,6 +80,12 @@ function ssrStubBrowserOnlyEditorPlugin(): Plugin {
 const ROOT_URL = APP_ORIGIN.endsWith('/') ? APP_ORIGIN : `${APP_ORIGIN}/`;
 const SITEMAP_URL = `${ROOT_URL}sitemap.xml`;
 
+// Derive the supported-locale list from the same source of truth the i18n
+// plugin uses at runtime, so the prerendered routes stay in sync with the
+// locales discovered under `locales/`.
+const CONFIG_DIR = fileURLToPath(new URL('.', import.meta.url));
+const SUPPORTED_LOCALES = readSupportedLocales({ root: CONFIG_DIR, localesDir: 'locales', defaultLocale: 'en' });
+
 // `vite-ssg` reads `ssgOptions` off the resolved Vite config but does not ship
 // a module augmentation for Vite's own `UserConfig` type, so we cast the final
 // config through an intersection that includes the extra property.
@@ -104,7 +111,7 @@ const config = defineFrameworkAppConfig({
   framework: 'vue',
   overrides: {
     plugins: [
-      i18nPlugin({ defaultLocale: 'en' }),
+      i18nPlugin({ defaultLocale: 'en', localesDir: 'locales' }),
       // SSR-only: keep Monaco / harper / hunspell out of the prerender pass.
       ssrStubBrowserOnlyEditorPlugin(),
       // Single-route SPA: advertise the root URL with its locale alternate.
@@ -201,7 +208,7 @@ const ssgConfig: SsgUserConfig = {
   ...config,
   ssgOptions: {
     // Single-route SPA — only the root needs prerendering.
-    includedRoutes: () => ['/', '/en/', '/ar/', '/de/', '/es/', '/fr/', '/he/', '/it/', '/ja/', '/ko/', '/nl/', '/zh/'],
+    includedRoutes: () => ['/', ...SUPPORTED_LOCALES.map((l) => `/${l}/`)],
     // Minify the generated HTML file.
     formatting: 'minify',
     // Inline critical CSS into the prerendered HTML and lazy-load the rest via

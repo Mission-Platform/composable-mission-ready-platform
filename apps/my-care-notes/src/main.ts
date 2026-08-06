@@ -10,6 +10,7 @@ import '@mission-platform/components/styles';
 
 import { createForgeI18N, forgeNamespace, createForgeI18NVue } from '@mission-platform/i18n';
 import { useSeo } from '@mission-platform/seo';
+import { supportedLocales } from 'virtual:i18n-locales';
 import { resources as defaultLocaleResources } from 'virtual:i18n-resources';
 import { ViteSSG } from 'vite-ssg';
 import { effectScope, h, type VNode } from 'vue';
@@ -67,7 +68,7 @@ export const createApp = ViteSSG(
 
     router.beforeEach(async (to) => {
       const routeLocale = typeof to.params['lang'] === 'string' ? to.params['lang'] : 'en';
-      const locale = routeLocale === 'en' || routeLocale in localeBundles ? routeLocale : 'en';
+      const locale = supportedLocales.includes(routeLocale as (typeof supportedLocales)[number]) ? routeLocale : 'en';
 
       if (locale !== 'en' && !i18n.hasResourceBundle(locale, 'mp.my-care-notes')) {
         const { resources } = await localeBundles[locale]!();
