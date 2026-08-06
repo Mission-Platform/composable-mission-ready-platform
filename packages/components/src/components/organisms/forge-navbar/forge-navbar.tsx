@@ -1,4 +1,4 @@
-import { h, type MpElement, type MpProperties, Slot, useEffect, useState } from '@mission-platform/forge';
+import { h, type MpChild, type MpElement, type MpProperties, Slot, useEffect, useState } from '@mission-platform/forge';
 
 import sizeStyles from '../../../styles/size.module.scss';
 import { ForgeTypography } from '../../atoms/forge-typography';
@@ -22,14 +22,28 @@ export type NavbarBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export interface NavbarProperties extends MpProperties {
   /** Size token controlling the navbar's scale. Defaults to `'md'`. */
   size?: NavbarSize;
-  /** Brand text shown in the start region (overridable via the `brand` slot). */
-  brand?: string;
+  /**
+   * Start-region brand. Pass a `string` for the default typographic treatment
+   * (rendered through {@link ForgeTypography}) or arbitrary content (an
+   * {@link MpChild} — e.g. a logo) via the `brand` named slot.
+   */
+  brand?: string | MpChild;
   /** Stick the navbar to the top of the viewport on scroll. */
   sticky?: boolean;
   /** Title for the mobile navigation drawer (defaults to `brand`). */
   mobileTitle?: string;
   /** Alignment of the default-slot (centre) navigation items. Defaults to `'start'`. */
   align?: NavbarAlign;
+  /**
+   * Centre navigation items — the **default** slot (also mirrored into the
+   * mobile drawer). Provide the nav links/buttons as the component's children.
+   */
+  children?: MpChild | readonly MpChild[];
+  /**
+   * Trailing-region content (e.g. auth actions, a theme toggle) — the `end`
+   * named slot. Also mirrored into the mobile drawer.
+   */
+  end?: MpChild;
   /**
    * Viewport breakpoint below which the navbar collapses into its
    * hamburger-toggled mobile drawer. At/above it the full `brand` / centre /
@@ -135,7 +149,7 @@ export function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement {
 
       <ForgeDrawer
         open={sidebarOpen}
-        title={mobileTitle ?? brand}
+        title={mobileTitle ?? (typeof brand === 'string' ? brand : undefined)}
         placement="start"
         size="sm"
         onOpenChange={(next: boolean) => setSidebarOpen(next)}

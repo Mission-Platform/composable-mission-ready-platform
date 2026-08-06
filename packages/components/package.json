@@ -53,6 +53,22 @@
       "types": "./dist/vue/index.d.ts",
       "import": "./dist/vue/index.js"
     },
+    "./react/*": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/*.js"
+    },
+    "./vue/*": {
+      "types": "./dist/vue/index.d.ts",
+      "import": "./dist/vue/*.js"
+    },
+    "./solid/*": {
+      "types": "./dist/solid/index.d.ts",
+      "import": "./dist/solid/*.js"
+    },
+    "./svelte/*": {
+      "types": "./dist/svelte/index.d.ts",
+      "import": "./dist/svelte/*.js"
+    },
     "./forge-drawer": {
       "types": "./dist/components/forge-drawer/index.d.ts",
       "import": "./dist/components/forge-drawer/index.js"
@@ -67,6 +83,7 @@
     },
     "./storyblok/components.json": "./dist/storyblok/components.json",
     "./styles": "./src/styles/_a11y.scss",
+    "./styles/a11y": "./src/styles/_a11y.scss",
     "./styles/scss": "./src/styles/_a11y.scss"
   },
   "files": [

@@ -85,15 +85,72 @@ When building higher-level write-once components using `@mission-platform/forge`
 import { ForgeButton, ForgeCard } from '@mission-platform/components';
 ```
 
+### Per-Component Imports (avoid pulling in heavy optional components)
+
+The framework barrels (`.../react`, `.../vue`, `.../solid`, `.../svelte`) re-export **every**
+component. Some components are deliberately heavy — e.g. `ForgeMonacoEditor` / `ForgeMarkdownInput`
+pull in `monaco-editor` and its web workers. A bundler that cannot fully tree-shake the barrel (or
+any React Server Components / SSR setup that evaluates the module graph eagerly) may drag those
+chunks into the client bundle even when they are never rendered.
+
+To import a single component in isolation, use its **per-component subpath** —
+`@mission-platform/components/<framework>/<path-to-component>` — which resolves to just that
+component's compiled module (types still come from the framework barrel, so named imports stay fully
+typed):
+
+```tsx
+// Only ForgeBadge's chunk is loaded — Monaco & workers never enter the graph.
+import { ForgeBadge } from '@mission-platform/components/react/atoms/forge-badge/forge-badge';
+```
+
+```vue
+<script setup lang="ts">
+  import { ForgeBadge } from '@mission-platform/components/vue/atoms/forge-badge/forge-badge';
+</script>
+```
+
+The subpath mirrors the source layout (`atoms` / `molecules` / `organisms` / `templates` +
+`<component>/<component>`). The wildcard is available for the `react`, `vue`, `solid`, and `svelte`
+framework builds.
+
+### Typed `ForgeNavbar` slots
+
+`ForgeNavbar` exposes typed named slots so consumers get autocomplete and type-checking for its
+regions:
+
+- `brand` — start-region brand. A `string` gets the default typographic treatment; pass arbitrary
+  content (an `MpChild`, e.g. a logo) via the `brand` slot.
+- default (`children`) — the centred navigation items (also mirrored into the mobile drawer).
+- `end` — trailing-region content such as auth actions or a theme toggle (also mirrored into the
+  mobile drawer).
+
+```tsx
+import { ForgeNavbar } from '@mission-platform/components/react/organisms/forge-navbar/forge-navbar';
+
+<ForgeNavbar
+  brand="Mission"
+  end={<AuthMenu />}
+>
+  <a href="/dashboard">Dashboard</a>
+</ForgeNavbar>;
+```
+
 ## Subpath Exports
 
 - `@mission-platform/components`: Neutral source barrel export for write-once components.
-- `@mission-platform/components/vue`: Compiled native Vue 3 components.
-- `@mission-platform/components/react`: Compiled native React components.
+- `@mission-platform/components/vue`: Compiled native Vue 3 components (barrel).
+- `@mission-platform/components/react`: Compiled native React components (barrel).
+- `@mission-platform/components/solid`: Compiled native Solid components (barrel).
+- `@mission-platform/components/svelte`: Compiled native Svelte components (barrel).
+- `@mission-platform/components/<framework>/<path>`: **Per-component** subpath for `react`, `vue`,
+  `solid`, and `svelte` (e.g. `@mission-platform/components/react/atoms/forge-badge/forge-badge`).
+  Imports only that component's chunk — see [Per-Component Imports](#per-component-imports-avoid-pulling-in-heavy-optional-components).
 - `@mission-platform/components/forge-drawer`: Subpath for `ForgeDrawer` component.
 - `@mission-platform/components/storyblok/vue`: Storyblok wrappers for Vue 3.
 - `@mission-platform/components/storyblok/react`: Storyblok wrappers for React.
-- `@mission-platform/components/styles`: Shared CSS accessibility helpers (`src/styles/_a11y.scss`).
+- `@mission-platform/components/styles/a11y`: Shared SCSS accessibility helpers (`src/styles/_a11y.scss`).
+- `@mission-platform/components/styles`: Alias of `./styles/a11y` (kept for backwards compatibility).
+- `@mission-platform/components/styles/scss`: Alias of `./styles/a11y`.
 
 ## Component Categories
 
