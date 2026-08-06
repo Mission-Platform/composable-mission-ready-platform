@@ -53,14 +53,14 @@ catalogs:
   code:
     "highlight.js": ^11.11.1
     "monaco-editor": ^0.55.1
-    marked: ^18.0.7
+    marked: ^18.0.9
     "harper.js": ^2.7.0
 
   eslint:
     eslint-plugin-sonarjs: ^4.2.0
     eslint-plugin-unicorn: ^64.0.0
-    "@typescript-eslint/eslint-plugin": ^8.65.0
-    "@typescript-eslint/parser": ^8.65.0
+    "@typescript-eslint/eslint-plugin": ^8.66.0
+    "@typescript-eslint/parser": ^8.66.0
     eslint: ^10.8.0
     eslint-config-prettier: ^10.1.8
     eslint-config-turbo: ^2.10.8
@@ -68,7 +68,7 @@ catalogs:
     eslint-plugin-import-x: ^4.17.1
     eslint-plugin-vue: ^10.10.0
     eslint-plugin-vuejs-accessibility: ^2.5.0
-    typescript-eslint: ^8.65.0
+    typescript-eslint: ^8.66.0
     vue-eslint-parser: ^10.4.1
 
   stylelint:
@@ -96,7 +96,7 @@ catalogs:
 
   vue:
     "@vue/compiler-sfc": ^3.5.40
-    "@unhead/vue": ^2.1.16
+    "@unhead/vue": ^2.1.17
     "@vue/test-utils": ^2.4.11
     "@vue/tsconfig": ^0.9.1
     "@vitejs/plugin-vue": ^6.0.8
@@ -153,7 +153,7 @@ catalogs:
 
   map:
     "@types/geojson": ^7946.0.16
-    "@turf/turf": ^7.3.5
+    "@turf/turf": ^7.4.0
     maplibre-gl: ^5.24.0
 
   typescript:
@@ -162,10 +162,10 @@ catalogs:
     typescript: ~6.0.3
 
   cloudflare:
-    rwsdk: ^1.5.9
+    rwsdk: ^1.6.0
     wrangler: ^4.118.0
     "@cloudflare/vite-plugin": ^1.50.0
-    "@cloudflare/workers-types": ^5.20260801.1
+    "@cloudflare/workers-types": ^5.20260804.1
 
   mcp:
     "@modelcontextprotocol/sdk": ^1.30.0
