@@ -1,0 +1,58 @@
+# @mission-platform/vite-plugin-token-overrides
+
+Reusable Vite plugin that auto-generates an app's design-token *override*
+stylesheet. It is the extraction of the former per-app
+`scripts/generate-token-overrides.ts` build step into a shared, installable
+plugin so any app can re-skin the design system.
+
+## What it does
+
+- Input: a DTCG-style override document `*.tokens.json` — a nested tree of
+  `{ $value, $description? }` leaves grouped by category (`color`, `radius`,
+  `shadow`, `font`, …). `$`-prefixed keys are DTCG metadata and are ignored.
+- Transform: flattens each leaf to a `--<prefix>-<path-joined-by-dashes>` custom
+  property. A `{ light, dark }` `$value` becomes `light-dark(<light>, <dark>)`;
+  any other scalar is emitted verbatim.
+- Output: a single `:root { … }` SCSS partial written to `outFile`. Import that
+  generated file from your stylesheet *after* `@mission-platform/tokens` so the
+  overrides win the cascade.
+- No manual generate script: generation runs in the rollup `buildStart` hook
+  (covering `vite build`, `vite build --watch`, and dev-server start) and
+  re-runs when the source document changes in dev. The generated file is a build
+  artefact — gitignore/prettierignore it rather than committing it.
+
+## Why generate a file (not a virtual module)
+
+CSS `@import` statements are resolved by `postcss-import`, which reads the target
+from the filesystem and never reaches a Vite plugin's `resolveId`/`load` hooks —
+so a virtual module cannot be pulled in through a stylesheet `@import`. Emitting a
+real file (the same approach `@mission-platform/vite-plugin-tokens` uses) is what
+lets `styles.css` import the overrides by path.
+
+## API
+
+`tokenOverridesPlugin(options): Plugin`
+
+Options (`TokenOverridesPluginOptions`):
+- `source: string` (required) — path to the override `*.tokens.json`, relative to
+  the Vite root (or absolute).
+- `outFile?: string` — where to write the generated SCSS partial. Defaults to the
+  `source` path with its `.tokens.json` (or `.json`) extension swapped for
+  `.generated.scss`.
+- `prefix?: string` — custom-property prefix. Default `mp`.
+- `header?: string` — leading comment for the generated partial.
+
+Also exported (from `./transform`, re-exported at the package root):
+- `buildTokenOverrideScss(document, options?): string`
+- `flattenOverrides(document, prefix?): FlatOverride[]`
+- types `OverrideGroup`, `OverrideToken`, `OverrideValue`, `LightDarkValue`,
+  `FlatOverride`, `TokenOverrideScssOptions`.
+
+## Consumers
+
+- `apps/service-monitor` — registers the plugin in `vite.config.ts` with
+  `source: 'design-tokens/overrides.tokens.json'`; `src/app/styles.css` imports
+  the generated `../../design-tokens/overrides.generated.scss` after
+  `@mission-platform/tokens`.
+- `@mission-platform/mcp-shared` re-exports the transform helpers from this
+  package (via `/transform`) for the consumer MCP `generate_token_override` tool.

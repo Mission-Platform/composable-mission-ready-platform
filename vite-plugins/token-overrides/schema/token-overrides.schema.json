@@ -1,0 +1,2111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mission-platform.dev/schemas/token-overrides.schema.json",
+  "title": "Mission Platform design-token override document",
+  "description": "DTCG-style override document consumed by @mission-platform/vite-plugin-token-overrides. A nested tree of groups whose leaves are `{ $value, $description? }` tokens. `$`-prefixed keys are DTCG metadata and are ignored by the transform; every other leaf becomes a `--<prefix>-<path-joined-by-dashes>` custom property. The top-level groups and their keys mirror the overridable tokens defined by @mission-platform/tokens; unknown keys are still accepted (validated against the generic node schema) so forward-compatible and app-specific tokens keep working.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Path or URL to this JSON Schema, for editor validation/autocomplete."
+    },
+    "$description": {
+      "type": "string",
+      "description": "Human-readable description of the document (DTCG metadata, ignored by the transform)."
+    },
+    "border-width": {
+      "type": "object",
+      "description": "Named border widths. Values are rem relative to the 14px root.",
+      "properties": {
+        "none": {
+          "$ref": "#/$defs/token",
+          "description": "0 — no border."
+        },
+        "thin": {
+          "$ref": "#/$defs/token",
+          "description": "≈1px — default hairline border (inputs, cards, dividers)."
+        },
+        "thick": {
+          "$ref": "#/$defs/token",
+          "description": "≈2px — emphasis / focus / selected borders."
+        },
+        "heavy": {
+          "$ref": "#/$defs/token",
+          "description": "≈3px — strong emphasis (e.g. active indicators / accents)."
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "breakpoint": {
+      "type": "object",
+      "description": "Seven-step responsive breakpoint min-width thresholds (mobile-first), anchored so that `lg` = 1920×1080 (Full HD). Consumed at compile time by the SCSS bp-up/bp-down/bp-between/bp-only mixins.",
+      "properties": {
+        "2xs": {
+          "$ref": "#/$defs/token",
+          "description": "0 — smallest phones; the mobile-first base, always matches."
+        },
+        "xs": {
+          "$ref": "#/$defs/token",
+          "description": "480px — large phones / small phones in landscape."
+        },
+        "sm": {
+          "$ref": "#/$defs/token",
+          "description": "768px — tablets (portrait)."
+        },
+        "md": {
+          "$ref": "#/$defs/token",
+          "description": "1024px — tablets (landscape) / small laptops."
+        },
+        "lg": {
+          "$ref": "#/$defs/token",
+          "description": "1920px — Full HD (1920×1080) desktops; the design anchor."
+        },
+        "xl": {
+          "$ref": "#/$defs/token",
+          "description": "2560px — QHD / 1440p desktops."
+        },
+        "2xl": {
+          "$ref": "#/$defs/token",
+          "description": "3840px — 4K UHD displays."
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "color": {
+      "type": "object",
+      "description": "Primitive colour swatches in OKLab: the absolute black/white anchors, two named base/primary helpers, and the 10-/11-step hue ramps (50 = lightest, 900/950 = darkest). These are raw values — components consume the semantic theme tokens (theme-light/theme-dark.tokens.json), not these directly.",
+      "properties": {
+        "black": {
+          "$ref": "#/$defs/token",
+          "description": "Absolute black (OKLab L=0)."
+        },
+        "white": {
+          "$ref": "#/$defs/token",
+          "description": "Absolute white (OKLab L=1)."
+        },
+        "forge-light": {
+          "$ref": "#/$defs/token",
+          "description": "light theme base surface — L=0.877"
+        },
+        "primary-light": {
+          "$ref": "#/$defs/token",
+          "description": "Near-white tint used as a light on-primary / primary surface helper."
+        },
+        "primary-dark": {
+          "$ref": "#/$defs/token",
+          "description": "Mid-tone neutral used as a primary helper on dark surfaces."
+        },
+        "neutral": {
+          "type": "object",
+          "description": "Greyscale ramp — surfaces, borders and text in both themes.",
+          "properties": {
+            "50": {
+              "$ref": "#/$defs/token"
+            },
+            "100": {
+              "$ref": "#/$defs/token"
+            },
+            "200": {
+              "$ref": "#/$defs/token"
+            },
+            "300": {
+              "$ref": "#/$defs/token"
+            },
+            "400": {
+              "$ref": "#/$defs/token"
+            },
+            "500": {
+              "$ref": "#/$defs/token"
+            },
+            "600": {
+              "$ref": "#/$defs/token"
+            },
+            "700": {
+              "$ref": "#/$defs/token"
+            },
+            "800": {
+              "$ref": "#/$defs/token"
+            },
+            "900": {
+              "$ref": "#/$defs/token"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "primary": {
+          "type": "object",
+          "description": "Brand violet ramp — the primary action / accent colour.",
+          "properties": {
+            "50": {
+              "$ref": "#/$defs/token"
+            },
+            "100": {
+              "$ref": "#/$defs/token"
+            },
+            "200": {
+              "$ref": "#/$defs/token"
+            },
+            "300": {
+              "$ref": "#/$defs/token"
+            },
+            "400": {
+              "$ref": "#/$defs/token"
+            },
+            "500": {
+              "$ref": "#/$defs/token"
+            },
+            "600": {
+              "$ref": "#/$defs/token"
+            },
+            "700": {
+              "$ref": "#/$defs/token"
+            },
+            "800": {
+              "$ref": "#/$defs/token"
+            },
+            "900": {
+              "$ref": "#/$defs/token"
+            },
+            "default": {
+              "$ref": "#/$defs/token",
+              "description": "color.primary.600"
+            },
+            "hover": {
+              "$ref": "#/$defs/token",
+              "description": "color.primary.700"
+            },
+            "active": {
+              "$ref": "#/$defs/token",
+              "description": "color.primary.700"
+            },
+            "subtle": {
+              "$ref": "#/$defs/token",
+              "description": "color.primary.50"
+            },
+            "muted": {
+              "$ref": "#/$defs/token",
+              "description": "color.primary.100"
+            },
+            "text": {
+              "$ref": "#/$defs/token",
+              "description": "color.primary.700"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "cyan": {
+          "type": "object",
+          "description": "Cyan/teal ramp — the secondary accent; the 950 stop is the dark-theme background base.",
+          "properties": {
+            "50": {
+              "$ref": "#/$defs/token"
+            },
+            "100": {
+              "$ref": "#/$defs/token"
+            },
+            "200": {
+              "$ref": "#/$defs/token"
+            },
+            "300": {
+              "$ref": "#/$defs/token"
+            },
+            "400": {
+              "$ref": "#/$defs/token"
+            },
+            "500": {
+              "$ref": "#/$defs/token"
+            },
+            "600": {
+              "$ref": "#/$defs/token"
+            },
+            "700": {
+              "$ref": "#/$defs/token"
+            },
+            "800": {
+              "$ref": "#/$defs/token"
+            },
+            "900": {
+              "$ref": "#/$defs/token"
+            },
+            "950": {
+              "$ref": "#/$defs/token",
+              "description": "dark theme background base"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "success": {
+          "type": "object",
+          "description": "Green ramp — success / positive status.",
+          "properties": {
+            "50": {
+              "$ref": "#/$defs/token"
+            },
+            "100": {
+              "$ref": "#/$defs/token"
+            },
+            "200": {
+              "$ref": "#/$defs/token"
+            },
+            "300": {
+              "$ref": "#/$defs/token"
+            },
+            "400": {
+              "$ref": "#/$defs/token"
+            },
+            "500": {
+              "$ref": "#/$defs/token"
+            },
+            "600": {
+              "$ref": "#/$defs/token"
+            },
+            "700": {
+              "$ref": "#/$defs/token"
+            },
+            "800": {
+              "$ref": "#/$defs/token"
+            },
+            "900": {
+              "$ref": "#/$defs/token"
+            },
+            "default": {
+              "$ref": "#/$defs/token",
+              "description": "color.success.800"
+            },
+            "hover": {
+              "$ref": "#/$defs/token",
+              "description": "color.success.900"
+            },
+            "subtle": {
+              "$ref": "#/$defs/token",
+              "description": "color.success.50"
+            },
+            "muted": {
+              "$ref": "#/$defs/token",
+              "description": "color.success.100"
+            },
+            "text": {
+              "$ref": "#/$defs/token",
+              "description": "color.success.800"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "warning": {
+          "type": "object",
+          "description": "Amber ramp — warning / caution status.",
+          "properties": {
+            "50": {
+              "$ref": "#/$defs/token"
+            },
+            "100": {
+              "$ref": "#/$defs/token"
+            },
+            "200": {
+              "$ref": "#/$defs/token"
+            },
+            "300": {
+              "$ref": "#/$defs/token"
+            },
+            "400": {
+              "$ref": "#/$defs/token"
+            },
+            "500": {
+              "$ref": "#/$defs/token"
+            },
+            "600": {
+              "$ref": "#/$defs/token"
+            },
+            "700": {
+              "$ref": "#/$defs/token"
+            },
+            "800": {
+              "$ref": "#/$defs/token"
+            },
+            "900": {
+              "$ref": "#/$defs/token"
+            },
+            "default": {
+              "$ref": "#/$defs/token",
+              "description": "color.warning.900"
+            },
+            "hover": {
+              "$ref": "#/$defs/token",
+              "description": "color.warning.900"
+            },
+            "subtle": {
+              "$ref": "#/$defs/token",
+              "description": "color.warning.50"
+            },
+            "muted": {
+              "$ref": "#/$defs/token",
+              "description": "color.warning.100"
+            },
+            "text": {
+              "$ref": "#/$defs/token",
+              "description": "color.warning.900"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "danger": {
+          "type": "object",
+          "description": "Red ramp — danger / destructive actions.",
+          "properties": {
+            "50": {
+              "$ref": "#/$defs/token"
+            },
+            "100": {
+              "$ref": "#/$defs/token"
+            },
+            "200": {
+              "$ref": "#/$defs/token"
+            },
+            "300": {
+              "$ref": "#/$defs/token"
+            },
+            "400": {
+              "$ref": "#/$defs/token"
+            },
+            "500": {
+              "$ref": "#/$defs/token"
+            },
+            "600": {
+              "$ref": "#/$defs/token"
+            },
+            "700": {
+              "$ref": "#/$defs/token"
+            },
+            "800": {
+              "$ref": "#/$defs/token"
+            },
+            "900": {
+              "$ref": "#/$defs/token"
+            },
+            "default": {
+              "$ref": "#/$defs/token",
+              "description": "color.danger.800"
+            },
+            "hover": {
+              "$ref": "#/$defs/token",
+              "description": "color.danger.900"
+            },
+            "subtle": {
+              "$ref": "#/$defs/token",
+              "description": "color.danger.50"
+            },
+            "muted": {
+              "$ref": "#/$defs/token",
+              "description": "color.danger.100"
+            },
+            "text": {
+              "$ref": "#/$defs/token",
+              "description": "color.danger.900"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "info": {
+          "type": "object",
+          "description": "Blue ramp — informational status.",
+          "properties": {
+            "50": {
+              "$ref": "#/$defs/token"
+            },
+            "100": {
+              "$ref": "#/$defs/token"
+            },
+            "200": {
+              "$ref": "#/$defs/token"
+            },
+            "300": {
+              "$ref": "#/$defs/token"
+            },
+            "400": {
+              "$ref": "#/$defs/token"
+            },
+            "500": {
+              "$ref": "#/$defs/token"
+            },
+            "600": {
+              "$ref": "#/$defs/token"
+            },
+            "700": {
+              "$ref": "#/$defs/token"
+            },
+            "800": {
+              "$ref": "#/$defs/token"
+            },
+            "900": {
+              "$ref": "#/$defs/token"
+            },
+            "default": {
+              "$ref": "#/$defs/token",
+              "description": "color.info.900"
+            },
+            "hover": {
+              "$ref": "#/$defs/token",
+              "description": "color.info.900"
+            },
+            "subtle": {
+              "$ref": "#/$defs/token",
+              "description": "color.info.50"
+            },
+            "muted": {
+              "$ref": "#/$defs/token",
+              "description": "color.info.100"
+            },
+            "text": {
+              "$ref": "#/$defs/token",
+              "description": "color.info.900"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "error": {
+          "type": "object",
+          "description": "Red ramp — error status (mirrors the danger hue).",
+          "properties": {
+            "50": {
+              "$ref": "#/$defs/token"
+            },
+            "100": {
+              "$ref": "#/$defs/token"
+            },
+            "200": {
+              "$ref": "#/$defs/token"
+            },
+            "300": {
+              "$ref": "#/$defs/token"
+            },
+            "400": {
+              "$ref": "#/$defs/token"
+            },
+            "500": {
+              "$ref": "#/$defs/token"
+            },
+            "600": {
+              "$ref": "#/$defs/token"
+            },
+            "700": {
+              "$ref": "#/$defs/token"
+            },
+            "800": {
+              "$ref": "#/$defs/token"
+            },
+            "900": {
+              "$ref": "#/$defs/token"
+            },
+            "default": {
+              "$ref": "#/$defs/token",
+              "description": "color.error.800"
+            },
+            "hover": {
+              "$ref": "#/$defs/token",
+              "description": "color.error.900"
+            },
+            "subtle": {
+              "$ref": "#/$defs/token",
+              "description": "color.error.50"
+            },
+            "muted": {
+              "$ref": "#/$defs/token",
+              "description": "color.error.100"
+            },
+            "text": {
+              "$ref": "#/$defs/token",
+              "description": "color.error.900"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "critical": {
+          "type": "object",
+          "description": "Deep red/orange ramp — critical severity, above error.",
+          "properties": {
+            "50": {
+              "$ref": "#/$defs/token"
+            },
+            "100": {
+              "$ref": "#/$defs/token"
+            },
+            "200": {
+              "$ref": "#/$defs/token"
+            },
+            "300": {
+              "$ref": "#/$defs/token"
+            },
+            "400": {
+              "$ref": "#/$defs/token"
+            },
+            "500": {
+              "$ref": "#/$defs/token"
+            },
+            "600": {
+              "$ref": "#/$defs/token"
+            },
+            "700": {
+              "$ref": "#/$defs/token"
+            },
+            "800": {
+              "$ref": "#/$defs/token"
+            },
+            "900": {
+              "$ref": "#/$defs/token"
+            },
+            "default": {
+              "$ref": "#/$defs/token",
+              "description": "color.critical.800"
+            },
+            "hover": {
+              "$ref": "#/$defs/token",
+              "description": "color.critical.900"
+            },
+            "active": {
+              "$ref": "#/$defs/token",
+              "description": "color.critical.900"
+            },
+            "subtle": {
+              "$ref": "#/$defs/token",
+              "description": "color.critical.50"
+            },
+            "muted": {
+              "$ref": "#/$defs/token",
+              "description": "color.critical.100"
+            },
+            "text": {
+              "$ref": "#/$defs/token",
+              "description": "color.critical.800"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "alert": {
+          "type": "object",
+          "description": "Orange ramp — alert severity.",
+          "properties": {
+            "50": {
+              "$ref": "#/$defs/token"
+            },
+            "100": {
+              "$ref": "#/$defs/token"
+            },
+            "200": {
+              "$ref": "#/$defs/token"
+            },
+            "300": {
+              "$ref": "#/$defs/token"
+            },
+            "400": {
+              "$ref": "#/$defs/token"
+            },
+            "500": {
+              "$ref": "#/$defs/token"
+            },
+            "600": {
+              "$ref": "#/$defs/token"
+            },
+            "700": {
+              "$ref": "#/$defs/token"
+            },
+            "800": {
+              "$ref": "#/$defs/token"
+            },
+            "900": {
+              "$ref": "#/$defs/token"
+            },
+            "default": {
+              "$ref": "#/$defs/token",
+              "description": "color.alert.900"
+            },
+            "hover": {
+              "$ref": "#/$defs/token",
+              "description": "color.alert.900"
+            },
+            "subtle": {
+              "$ref": "#/$defs/token",
+              "description": "color.alert.50"
+            },
+            "muted": {
+              "$ref": "#/$defs/token",
+              "description": "color.alert.100"
+            },
+            "text": {
+              "$ref": "#/$defs/token",
+              "description": "color.alert.900"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "notice": {
+          "type": "object",
+          "description": "Indigo/violet ramp — notice severity.",
+          "properties": {
+            "50": {
+              "$ref": "#/$defs/token"
+            },
+            "100": {
+              "$ref": "#/$defs/token"
+            },
+            "200": {
+              "$ref": "#/$defs/token"
+            },
+            "300": {
+              "$ref": "#/$defs/token"
+            },
+            "400": {
+              "$ref": "#/$defs/token"
+            },
+            "500": {
+              "$ref": "#/$defs/token"
+            },
+            "600": {
+              "$ref": "#/$defs/token"
+            },
+            "700": {
+              "$ref": "#/$defs/token"
+            },
+            "800": {
+              "$ref": "#/$defs/token"
+            },
+            "900": {
+              "$ref": "#/$defs/token"
+            },
+            "default": {
+              "$ref": "#/$defs/token",
+              "description": "color.notice.800"
+            },
+            "hover": {
+              "$ref": "#/$defs/token",
+              "description": "color.notice.900"
+            },
+            "subtle": {
+              "$ref": "#/$defs/token",
+              "description": "color.notice.50"
+            },
+            "muted": {
+              "$ref": "#/$defs/token",
+              "description": "color.notice.100"
+            },
+            "text": {
+              "$ref": "#/$defs/token",
+              "description": "color.notice.900"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "debug": {
+          "type": "object",
+          "description": "Blue-violet ramp — debug / developer diagnostics.",
+          "properties": {
+            "50": {
+              "$ref": "#/$defs/token"
+            },
+            "100": {
+              "$ref": "#/$defs/token"
+            },
+            "200": {
+              "$ref": "#/$defs/token"
+            },
+            "300": {
+              "$ref": "#/$defs/token"
+            },
+            "400": {
+              "$ref": "#/$defs/token"
+            },
+            "500": {
+              "$ref": "#/$defs/token"
+            },
+            "600": {
+              "$ref": "#/$defs/token"
+            },
+            "700": {
+              "$ref": "#/$defs/token"
+            },
+            "800": {
+              "$ref": "#/$defs/token"
+            },
+            "900": {
+              "$ref": "#/$defs/token"
+            },
+            "default": {
+              "$ref": "#/$defs/token",
+              "description": "color.debug.800"
+            },
+            "hover": {
+              "$ref": "#/$defs/token",
+              "description": "color.debug.900"
+            },
+            "subtle": {
+              "$ref": "#/$defs/token",
+              "description": "color.debug.50"
+            },
+            "muted": {
+              "$ref": "#/$defs/token",
+              "description": "color.debug.100"
+            },
+            "text": {
+              "$ref": "#/$defs/token",
+              "description": "color.debug.900"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "surface": {
+          "type": "object",
+          "description": "Theme surface & border primitives that fall outside the hue ramps: the light alternating surface plus the dark teal surface/border steps derived from the #111D1C (color.cyan.950) dark base.",
+          "properties": {
+            "light-alt": {
+              "$ref": "#/$defs/token",
+              "description": "#e4e7ea — light theme alternating surface (slightly darker than the base)."
+            },
+            "dark-alt": {
+              "$ref": "#/$defs/token",
+              "description": "#1a2827 — dark theme alternating surface (slightly lighter than the base)."
+            },
+            "dark": {
+              "$ref": "#/$defs/token",
+              "description": "#172423 — dark theme raised surface / muted background."
+            },
+            "dark-raised": {
+              "$ref": "#/$defs/token",
+              "description": "#1e2e2d — dark theme raised surface (cards, popovers)."
+            },
+            "dark-overlay": {
+              "$ref": "#/$defs/token",
+              "description": "#243837 — dark theme overlay surface (menus, tooltips)."
+            },
+            "dark-sunken": {
+              "$ref": "#/$defs/token",
+              "description": "#0b1413 — dark theme sunken surface (wells, inset code)."
+            },
+            "dark-border": {
+              "$ref": "#/$defs/token",
+              "description": "#233130 — dark theme default border (teal-tinted)."
+            },
+            "dark-border-strong": {
+              "$ref": "#/$defs/token",
+              "description": "#2e4140 — dark theme strong border (teal-tinted)."
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "scrim": {
+          "type": "object",
+          "description": "Translucent black/white overlay primitives for scrims, loading overlays and skeleton shimmer. The numeric suffix is the alpha percentage.",
+          "properties": {
+            "black-40": {
+              "$ref": "#/$defs/token",
+              "description": "Black at 40% — soft scrim / dark loading overlay."
+            },
+            "black-50": {
+              "$ref": "#/$defs/token",
+              "description": "Black at 50% — default scrim (light) / soft scrim (dark)."
+            },
+            "black-60": {
+              "$ref": "#/$defs/token",
+              "description": "Black at 60% — default scrim (dark)."
+            },
+            "white-8": {
+              "$ref": "#/$defs/token",
+              "description": "White at 8% — dark theme skeleton shimmer highlight."
+            },
+            "white-40": {
+              "$ref": "#/$defs/token",
+              "description": "White at 40% — light theme skeleton shimmer highlight."
+            },
+            "white-70": {
+              "$ref": "#/$defs/token",
+              "description": "White at 70% — light theme loading overlay."
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "bg": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "$ref": "#/$defs/token",
+              "description": "color.forge-light"
+            },
+            "forge-alt": {
+              "$ref": "#/$defs/token",
+              "description": "color.surface.light-alt"
+            },
+            "surface": {
+              "$ref": "#/$defs/token",
+              "description": "color.white"
+            },
+            "raised": {
+              "$ref": "#/$defs/token",
+              "description": "color.white"
+            },
+            "overlay": {
+              "$ref": "#/$defs/token",
+              "description": "color.white"
+            },
+            "sunken": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.100"
+            },
+            "muted": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.100"
+            },
+            "scrim": {
+              "$ref": "#/$defs/token",
+              "description": "color.scrim.black-50"
+            },
+            "scrim-soft": {
+              "$ref": "#/$defs/token",
+              "description": "color.scrim.black-40"
+            },
+            "loading-overlay": {
+              "$ref": "#/$defs/token",
+              "description": "color.scrim.white-70"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "skeleton": {
+          "type": "object",
+          "properties": {
+            "shimmer": {
+              "$ref": "#/$defs/token",
+              "description": "color.scrim.white-40"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "border": {
+          "type": "object",
+          "properties": {
+            "default": {
+              "$ref": "#/$defs/token",
+              "description": "color.cyan.800"
+            },
+            "strong": {
+              "$ref": "#/$defs/token",
+              "description": "color.cyan.900"
+            },
+            "focus": {
+              "$ref": "#/$defs/token",
+              "description": "color.primary.600"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "text": {
+          "type": "object",
+          "properties": {
+            "primary": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.900"
+            },
+            "secondary": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.700"
+            },
+            "tertiary": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.600"
+            },
+            "disabled": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.600"
+            },
+            "inverse": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.50"
+            },
+            "on-primary": {
+              "$ref": "#/$defs/token",
+              "description": "color.white"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "secondary": {
+          "type": "object",
+          "properties": {
+            "default": {
+              "$ref": "#/$defs/token",
+              "description": "color.cyan.800"
+            },
+            "hover": {
+              "$ref": "#/$defs/token",
+              "description": "color.cyan.900"
+            },
+            "active": {
+              "$ref": "#/$defs/token",
+              "description": "color.cyan.900"
+            },
+            "subtle": {
+              "$ref": "#/$defs/token",
+              "description": "color.cyan.50"
+            },
+            "muted": {
+              "$ref": "#/$defs/token",
+              "description": "color.cyan.100"
+            },
+            "text": {
+              "$ref": "#/$defs/token",
+              "description": "color.cyan.800"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "tertiary": {
+          "type": "object",
+          "properties": {
+            "default": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.500"
+            },
+            "hover": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.600"
+            },
+            "active": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.700"
+            },
+            "subtle": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.50"
+            },
+            "muted": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.100"
+            },
+            "text": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.600"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "default": {
+          "type": "object",
+          "properties": {
+            "default": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.700"
+            },
+            "hover": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.800"
+            },
+            "active": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.900"
+            },
+            "subtle": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.100"
+            },
+            "muted": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.200"
+            },
+            "text": {
+              "$ref": "#/$defs/token",
+              "description": "color.neutral.800"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "information": {
+          "type": "object",
+          "properties": {
+            "default": {
+              "$ref": "#/$defs/token",
+              "description": "color.info.900"
+            },
+            "hover": {
+              "$ref": "#/$defs/token",
+              "description": "color.info.900"
+            },
+            "active": {
+              "$ref": "#/$defs/token",
+              "description": "color.info.900"
+            },
+            "subtle": {
+              "$ref": "#/$defs/token",
+              "description": "color.info.50"
+            },
+            "muted": {
+              "$ref": "#/$defs/token",
+              "description": "color.info.100"
+            },
+            "text": {
+              "$ref": "#/$defs/token",
+              "description": "color.info.900"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "duration": {
+      "type": "object",
+      "description": "Transition/animation duration scale, from fast press-feedback to slow enter/exit. The default UI transition is `fast` (150ms).",
+      "properties": {
+        "instant": {
+          "$ref": "#/$defs/token",
+          "description": "80ms — fast press / hover feedback."
+        },
+        "fast": {
+          "$ref": "#/$defs/token",
+          "description": "150ms — the default UI transition (colour, border, shadow, opacity)."
+        },
+        "moderate": {
+          "$ref": "#/$defs/token",
+          "description": "200ms — medium transitions."
+        },
+        "base": {
+          "$ref": "#/$defs/token",
+          "description": "250ms — medium-slow transitions."
+        },
+        "slow": {
+          "$ref": "#/$defs/token",
+          "description": "400ms — enter/exit of larger surfaces."
+        },
+        "slower": {
+          "$ref": "#/$defs/token",
+          "description": "1000ms — slow, deliberate animation."
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "easing": {
+      "type": "object",
+      "description": "Named easing (timing-function) curves. `standard` is the default UI easing.",
+      "properties": {
+        "linear": {
+          "$ref": "#/$defs/token",
+          "description": "Constant rate — progress bars, spinners."
+        },
+        "standard": {
+          "$ref": "#/$defs/token",
+          "description": "The default UI easing curve."
+        },
+        "in": {
+          "$ref": "#/$defs/token",
+          "description": "Accelerate from rest — exiting elements."
+        },
+        "out": {
+          "$ref": "#/$defs/token",
+          "description": "Decelerate to rest — entering elements."
+        },
+        "in-out": {
+          "$ref": "#/$defs/token",
+          "description": "Accelerate then decelerate — moving elements."
+        },
+        "emphasized": {
+          "$ref": "#/$defs/token",
+          "description": "Emphasized easing — prominent, expressive motion."
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "font": {
+      "type": "object",
+      "description": "Font primitives: family stacks, the modular size scale and the named weight steps.",
+      "properties": {
+        "family": {
+          "type": "object",
+          "description": "Font-family stacks. The first entry is the brand face; the rest are progressive system fallbacks.",
+          "properties": {
+            "sans": {
+              "$ref": "#/$defs/token",
+              "description": "Primary sans-serif stack — Comfortaa is the brand UI/body face, falling back to Inter then the system sans."
+            },
+            "mono": {
+              "$ref": "#/$defs/token",
+              "description": "Primary monospace stack — Datatype is the brand code face, falling back to JetBrains Mono / Fira Code then the system mono."
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "size": {
+          "type": "object",
+          "description": "Modular font-size scale (base + 2xs → 5xl) consumed by the composite typography variants. The `base` step is the absolute root font-size; every other step is rem relative to it.",
+          "properties": {
+            "base": {
+              "$ref": "#/$defs/token",
+              "description": "14px — the root font-size; all rem values in this scale are relative to it."
+            },
+            "2xs": {
+              "$ref": "#/$defs/token",
+              "description": "8.75px — micro labels, legal fine print."
+            },
+            "xs": {
+              "$ref": "#/$defs/token",
+              "description": "10.5px — captions, helper text."
+            },
+            "sm": {
+              "$ref": "#/$defs/token",
+              "description": "12.25px — secondary body, labels, code."
+            },
+            "md": {
+              "$ref": "#/$defs/token",
+              "description": "14px — default body copy / base font size."
+            },
+            "lg": {
+              "$ref": "#/$defs/token",
+              "description": "15.75px — lead/intro body, h5."
+            },
+            "xl": {
+              "$ref": "#/$defs/token",
+              "description": "17.5px — h4."
+            },
+            "2xl": {
+              "$ref": "#/$defs/token",
+              "description": "21px — h3."
+            },
+            "3xl": {
+              "$ref": "#/$defs/token",
+              "description": "26.25px — h2."
+            },
+            "4xl": {
+              "$ref": "#/$defs/token",
+              "description": "31.5px — h1."
+            },
+            "5xl": {
+              "$ref": "#/$defs/token",
+              "description": "42px — hero / marketing display."
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "weight": {
+          "type": "object",
+          "description": "Named font-weight steps (400 → 700) covering the supported Comfortaa/Datatype axes.",
+          "properties": {
+            "regular": {
+              "$ref": "#/$defs/token",
+              "description": "Regular (400) — body copy default."
+            },
+            "medium": {
+              "$ref": "#/$defs/token",
+              "description": "Medium (500) — labels, h3–h6 emphasis."
+            },
+            "semibold": {
+              "$ref": "#/$defs/token",
+              "description": "Semibold (600) — h1–h2 headings."
+            },
+            "bold": {
+              "$ref": "#/$defs/token",
+              "description": "Bold (700) — display / hero headlines."
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "letter-spacing": {
+      "type": "object",
+      "description": "Letter-spacing (tracking) steps in em, from tightened headings to widely-tracked overlines.",
+      "properties": {
+        "tight": {
+          "$ref": "#/$defs/token",
+          "description": "-0.025em — large headings, tightened tracking."
+        },
+        "normal": {
+          "$ref": "#/$defs/token",
+          "description": "0 — default, no tracking adjustment."
+        },
+        "wide": {
+          "$ref": "#/$defs/token",
+          "description": "0.025em — small body / captions for legibility."
+        },
+        "wider": {
+          "$ref": "#/$defs/token",
+          "description": "0.05em — labels, buttons."
+        },
+        "widest": {
+          "$ref": "#/$defs/token",
+          "description": "0.1em — uppercase overlines / eyebrows."
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "line-height": {
+      "type": "object",
+      "description": "Unitless line-height (leading) ratios, from dense headings to loose long-form copy.",
+      "properties": {
+        "tight": {
+          "$ref": "#/$defs/token",
+          "description": "1.3 — large headings / display."
+        },
+        "snug": {
+          "$ref": "#/$defs/token",
+          "description": "1.45 — sub-headings, labels, captions."
+        },
+        "normal": {
+          "$ref": "#/$defs/token",
+          "description": "1.6 — default body copy."
+        },
+        "relaxed": {
+          "$ref": "#/$defs/token",
+          "description": "1.75 — lead / long-form reading."
+        },
+        "loose": {
+          "$ref": "#/$defs/token",
+          "description": "2 — airy, spaced-out text."
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "opacity": {
+      "type": "object",
+      "description": "Named opacity levels (0 → 1).",
+      "properties": {
+        "0": {
+          "$ref": "#/$defs/token",
+          "description": "0 — fully transparent."
+        },
+        "hover": {
+          "$ref": "#/$defs/token",
+          "description": "0.04 — standard hover overlay."
+        },
+        "press": {
+          "$ref": "#/$defs/token",
+          "description": "0.12 — standard press / active overlay."
+        },
+        "disabled": {
+          "$ref": "#/$defs/token",
+          "description": "0.5 — disabled / inactive controls."
+        },
+        "muted": {
+          "$ref": "#/$defs/token",
+          "description": "0.65 — muted / secondary text and icons."
+        },
+        "subtle": {
+          "$ref": "#/$defs/token",
+          "description": "0.85 — subtle de-emphasis (e.g. pending / placeholder states)."
+        },
+        "full": {
+          "$ref": "#/$defs/token",
+          "description": "1 — fully opaque."
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "radius": {
+      "type": "object",
+      "description": "Border-radius scale from square (none) to fully rounded (full = pill/circle). Values are rem relative to the 14px root.",
+      "properties": {
+        "none": {
+          "$ref": "#/$defs/token",
+          "description": "0 — square corners."
+        },
+        "xs": {
+          "$ref": "#/$defs/token",
+          "description": "≈2px — subtle softening (inputs, chips)."
+        },
+        "sm": {
+          "$ref": "#/$defs/token",
+          "description": "≈4px — small controls."
+        },
+        "md": {
+          "$ref": "#/$defs/token",
+          "description": "≈6px — default control/card radius."
+        },
+        "lg": {
+          "$ref": "#/$defs/token",
+          "description": "≈8px — cards, panels."
+        },
+        "xl": {
+          "$ref": "#/$defs/token",
+          "description": "≈12px — large cards, modals."
+        },
+        "2xl": {
+          "$ref": "#/$defs/token",
+          "description": "≈16px — prominent surfaces."
+        },
+        "3xl": {
+          "$ref": "#/$defs/token",
+          "description": "≈24px — hero / feature panels."
+        },
+        "full": {
+          "$ref": "#/$defs/token",
+          "description": "9999px — pills, circular avatars/badges (sentinel value, intentionally px)."
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "shadow": {
+      "type": "object",
+      "description": "Elevation drop-shadow scale (plus inner and focus-ring shadows). Offsets/blur/spread are rem relative to the 14px root; focus rings use the brand/danger colours at 30% alpha.",
+      "properties": {
+        "none": {
+          "$ref": "#/$defs/token",
+          "description": "No shadow — flat / level 0."
+        },
+        "2xs": {
+          "$ref": "#/$defs/token",
+          "description": "Hairline elevation — subtle separation."
+        },
+        "xs": {
+          "$ref": "#/$defs/token",
+          "description": "Very low elevation."
+        },
+        "sm": {
+          "$ref": "#/$defs/token",
+          "description": "Low elevation — buttons, chips."
+        },
+        "md": {
+          "$ref": "#/$defs/token",
+          "description": "Default elevation — cards, dropdowns."
+        },
+        "lg": {
+          "$ref": "#/$defs/token",
+          "description": "Raised elevation — popovers, menus."
+        },
+        "xl": {
+          "$ref": "#/$defs/token",
+          "description": "High elevation — modals, dialogs."
+        },
+        "2xl": {
+          "$ref": "#/$defs/token",
+          "description": "Highest elevation — full-screen overlays."
+        },
+        "inner": {
+          "$ref": "#/$defs/token",
+          "description": "Inset shadow — wells, pressed states."
+        },
+        "focus-primary": {
+          "$ref": "#/$defs/token",
+          "description": "Primary focus ring — keyboard focus on brand controls."
+        },
+        "focus-danger": {
+          "$ref": "#/$defs/token",
+          "description": "Danger focus ring — keyboard focus on destructive controls."
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "size": {
+      "type": "object",
+      "description": "Unified component size scale (2xs → 2xl) covering font, padding, gap, radius, icon, shadow, leading, height and width. Each subgroup is one facet of a component at a given size step, so a `sm` button reads its font, padding, radius, etc. from the matching `sm` key across these subgroups.",
+      "properties": {
+        "font": {
+          "type": "object",
+          "description": "Per-size component font-size (text within a sized control).",
+          "properties": {
+            "2xs": {
+              "$ref": "#/$defs/token"
+            },
+            "xs": {
+              "$ref": "#/$defs/token"
+            },
+            "sm": {
+              "$ref": "#/$defs/token"
+            },
+            "md": {
+              "$ref": "#/$defs/token"
+            },
+            "lg": {
+              "$ref": "#/$defs/token"
+            },
+            "xl": {
+              "$ref": "#/$defs/token"
+            },
+            "2xl": {
+              "$ref": "#/$defs/token"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "leading": {
+          "type": "object",
+          "description": "Per-size line-height (unitless) for text within a sized control.",
+          "properties": {
+            "2xs": {
+              "$ref": "#/$defs/token"
+            },
+            "xs": {
+              "$ref": "#/$defs/token"
+            },
+            "sm": {
+              "$ref": "#/$defs/token"
+            },
+            "md": {
+              "$ref": "#/$defs/token"
+            },
+            "lg": {
+              "$ref": "#/$defs/token"
+            },
+            "xl": {
+              "$ref": "#/$defs/token"
+            },
+            "2xl": {
+              "$ref": "#/$defs/token"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "pad-block": {
+          "type": "object",
+          "description": "Per-size block (top/bottom) padding for sized controls.",
+          "properties": {
+            "2xs": {
+              "$ref": "#/$defs/token"
+            },
+            "xs": {
+              "$ref": "#/$defs/token"
+            },
+            "sm": {
+              "$ref": "#/$defs/token"
+            },
+            "md": {
+              "$ref": "#/$defs/token"
+            },
+            "lg": {
+              "$ref": "#/$defs/token"
+            },
+            "xl": {
+              "$ref": "#/$defs/token"
+            },
+            "2xl": {
+              "$ref": "#/$defs/token"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "pad-inline": {
+          "type": "object",
+          "description": "Per-size inline (left/right) padding for sized controls.",
+          "properties": {
+            "2xs": {
+              "$ref": "#/$defs/token"
+            },
+            "xs": {
+              "$ref": "#/$defs/token"
+            },
+            "sm": {
+              "$ref": "#/$defs/token"
+            },
+            "md": {
+              "$ref": "#/$defs/token"
+            },
+            "lg": {
+              "$ref": "#/$defs/token"
+            },
+            "xl": {
+              "$ref": "#/$defs/token"
+            },
+            "2xl": {
+              "$ref": "#/$defs/token"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "gap": {
+          "type": "object",
+          "description": "Per-size internal gap between elements (e.g. icon-to-label) in sized controls; also reused as the margin scale.",
+          "properties": {
+            "2xs": {
+              "$ref": "#/$defs/token"
+            },
+            "xs": {
+              "$ref": "#/$defs/token"
+            },
+            "sm": {
+              "$ref": "#/$defs/token"
+            },
+            "md": {
+              "$ref": "#/$defs/token"
+            },
+            "lg": {
+              "$ref": "#/$defs/token"
+            },
+            "xl": {
+              "$ref": "#/$defs/token"
+            },
+            "2xl": {
+              "$ref": "#/$defs/token"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "radius": {
+          "type": "object",
+          "description": "Per-size corner radius for sized controls.",
+          "properties": {
+            "2xs": {
+              "$ref": "#/$defs/token"
+            },
+            "xs": {
+              "$ref": "#/$defs/token"
+            },
+            "sm": {
+              "$ref": "#/$defs/token"
+            },
+            "md": {
+              "$ref": "#/$defs/token"
+            },
+            "lg": {
+              "$ref": "#/$defs/token"
+            },
+            "xl": {
+              "$ref": "#/$defs/token"
+            },
+            "2xl": {
+              "$ref": "#/$defs/token"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "icon": {
+          "type": "object",
+          "description": "Per-size icon dimension (square) for sized controls.",
+          "properties": {
+            "2xs": {
+              "$ref": "#/$defs/token"
+            },
+            "xs": {
+              "$ref": "#/$defs/token"
+            },
+            "sm": {
+              "$ref": "#/$defs/token"
+            },
+            "md": {
+              "$ref": "#/$defs/token"
+            },
+            "lg": {
+              "$ref": "#/$defs/token"
+            },
+            "xl": {
+              "$ref": "#/$defs/token"
+            },
+            "2xl": {
+              "$ref": "#/$defs/token"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "shadow": {
+          "type": "object",
+          "description": "Per-size elevation shadow (rem-based mirror of the absolute shadow scale) for sized surfaces.",
+          "properties": {
+            "2xs": {
+              "$ref": "#/$defs/token"
+            },
+            "xs": {
+              "$ref": "#/$defs/token"
+            },
+            "sm": {
+              "$ref": "#/$defs/token"
+            },
+            "md": {
+              "$ref": "#/$defs/token"
+            },
+            "lg": {
+              "$ref": "#/$defs/token"
+            },
+            "xl": {
+              "$ref": "#/$defs/token"
+            },
+            "2xl": {
+              "$ref": "#/$defs/token"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "height": {
+          "type": "object",
+          "description": "Per-size control height (e.g. button / input height).",
+          "properties": {
+            "2xs": {
+              "$ref": "#/$defs/token"
+            },
+            "xs": {
+              "$ref": "#/$defs/token"
+            },
+            "sm": {
+              "$ref": "#/$defs/token"
+            },
+            "md": {
+              "$ref": "#/$defs/token"
+            },
+            "lg": {
+              "$ref": "#/$defs/token"
+            },
+            "xl": {
+              "$ref": "#/$defs/token"
+            },
+            "2xl": {
+              "$ref": "#/$defs/token"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "width": {
+          "type": "object",
+          "description": "Per-size container/overlay max-width (e.g. modal width); 2xs/xs fall back to full viewport width.",
+          "properties": {
+            "2xs": {
+              "$ref": "#/$defs/token"
+            },
+            "xs": {
+              "$ref": "#/$defs/token"
+            },
+            "sm": {
+              "$ref": "#/$defs/token"
+            },
+            "md": {
+              "$ref": "#/$defs/token"
+            },
+            "lg": {
+              "$ref": "#/$defs/token"
+            },
+            "xl": {
+              "$ref": "#/$defs/token"
+            },
+            "2xl": {
+              "$ref": "#/$defs/token"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/node"
+          }
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "spacing": {
+      "type": "object",
+      "description": "Spacing scale for margin, padding and gap. The numeric keys are an ~0.286rem (4px) base unit step; the named `2xs … 2xl` keys are the canonical t-shirt scale used by the components' `padding`/`margin`/`gap` props. All rem values are relative to the 14px root.",
+      "properties": {
+        "0": {
+          "$ref": "#/$defs/token",
+          "description": "0 — no space."
+        },
+        "1": {
+          "$ref": "#/$defs/token",
+          "description": "≈4px — hairline gaps."
+        },
+        "2": {
+          "$ref": "#/$defs/token",
+          "description": "≈8px — tight padding/gaps."
+        },
+        "3": {
+          "$ref": "#/$defs/token",
+          "description": "≈12px — compact padding."
+        },
+        "4": {
+          "$ref": "#/$defs/token",
+          "description": "≈16px — default element padding."
+        },
+        "5": {
+          "$ref": "#/$defs/token",
+          "description": "≈20px."
+        },
+        "6": {
+          "$ref": "#/$defs/token",
+          "description": "≈24px — comfortable block spacing."
+        },
+        "7": {
+          "$ref": "#/$defs/token",
+          "description": "≈28px."
+        },
+        "8": {
+          "$ref": "#/$defs/token",
+          "description": "≈32px — section padding."
+        },
+        "9": {
+          "$ref": "#/$defs/token",
+          "description": "≈36px."
+        },
+        "10": {
+          "$ref": "#/$defs/token",
+          "description": "≈40px."
+        },
+        "12": {
+          "$ref": "#/$defs/token",
+          "description": "≈48px — large section gaps."
+        },
+        "16": {
+          "$ref": "#/$defs/token",
+          "description": "≈64px."
+        },
+        "20": {
+          "$ref": "#/$defs/token",
+          "description": "≈80px."
+        },
+        "24": {
+          "$ref": "#/$defs/token",
+          "description": "≈96px — page-level vertical rhythm."
+        },
+        "2xs": {
+          "$ref": "#/$defs/token",
+          "description": "≈4px — t-shirt 2xs; canonical smallest padding/margin step (mirrors spacing.1)."
+        },
+        "xs": {
+          "$ref": "#/$defs/token",
+          "description": "≈8px — t-shirt xs; tight padding/margin (mirrors spacing.2)."
+        },
+        "sm": {
+          "$ref": "#/$defs/token",
+          "description": "≈12px — t-shirt sm; compact padding/margin (mirrors spacing.3)."
+        },
+        "md": {
+          "$ref": "#/$defs/token",
+          "description": "≈16px — t-shirt md; default padding/margin (mirrors spacing.4)."
+        },
+        "lg": {
+          "$ref": "#/$defs/token",
+          "description": "≈24px — t-shirt lg; comfortable padding/margin (mirrors spacing.6)."
+        },
+        "xl": {
+          "$ref": "#/$defs/token",
+          "description": "≈32px — t-shirt xl; spacious padding/margin (mirrors spacing.8)."
+        },
+        "2xl": {
+          "$ref": "#/$defs/token",
+          "description": "≈48px — t-shirt 2xl; largest padding/margin step (mirrors spacing.12)."
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "typography": {
+      "type": "object",
+      "properties": {
+        "display": {
+          "$ref": "#/$defs/typographyToken",
+          "description": "Hero / marketing headline."
+        },
+        "h1": {
+          "$ref": "#/$defs/typographyToken",
+          "description": "Heading level 1."
+        },
+        "h2": {
+          "$ref": "#/$defs/typographyToken",
+          "description": "Heading level 2."
+        },
+        "h3": {
+          "$ref": "#/$defs/typographyToken",
+          "description": "Heading level 3."
+        },
+        "h4": {
+          "$ref": "#/$defs/typographyToken",
+          "description": "Heading level 4."
+        },
+        "h5": {
+          "$ref": "#/$defs/typographyToken",
+          "description": "Heading level 5."
+        },
+        "h6": {
+          "$ref": "#/$defs/typographyToken",
+          "description": "Heading level 6."
+        },
+        "body-lg": {
+          "$ref": "#/$defs/typographyToken",
+          "description": "Body large — introductory / lead text."
+        },
+        "body-md": {
+          "$ref": "#/$defs/typographyToken",
+          "description": "Body medium — default body copy."
+        },
+        "body-sm": {
+          "$ref": "#/$defs/typographyToken",
+          "description": "Body small — secondary body copy."
+        },
+        "body-xs": {
+          "$ref": "#/$defs/typographyToken",
+          "description": "Body extra-small — fine print."
+        },
+        "label": {
+          "$ref": "#/$defs/typographyToken",
+          "description": "Label — form labels, table headers, navigation items."
+        },
+        "caption": {
+          "$ref": "#/$defs/typographyToken",
+          "description": "Caption — helper text, timestamps, metadata."
+        },
+        "code": {
+          "$ref": "#/$defs/typographyToken",
+          "description": "Code — inline and block code."
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "z-index": {
+      "type": "object",
+      "description": "Named stacking levels, ascending. Use these instead of magic numbers so overlapping surfaces layer predictably.",
+      "properties": {
+        "base": {
+          "$ref": "#/$defs/token",
+          "description": "0 — base content / in-flow elements."
+        },
+        "raised": {
+          "$ref": "#/$defs/token",
+          "description": "1 — slightly raised in-flow elements (e.g. hovered cells)."
+        },
+        "dropdown": {
+          "$ref": "#/$defs/token",
+          "description": "1000 — dropdowns, select menus, autocompletes."
+        },
+        "sticky": {
+          "$ref": "#/$defs/token",
+          "description": "1100 — sticky/affixed headers and table headers."
+        },
+        "overlay": {
+          "$ref": "#/$defs/token",
+          "description": "1200 — scrims / backdrops behind dialogs and drawers."
+        },
+        "modal": {
+          "$ref": "#/$defs/token",
+          "description": "1300 — modal dialogs and drawers."
+        },
+        "popover": {
+          "$ref": "#/$defs/token",
+          "description": "1400 — popovers and menus that must sit above modals."
+        },
+        "toast": {
+          "$ref": "#/$defs/token",
+          "description": "1500 — toasts / notifications; always on top."
+        },
+        "tooltip": {
+          "$ref": "#/$defs/token",
+          "description": "1600 — tooltips; sit above everything else."
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
+    }
+  },
+  "additionalProperties": {
+    "$ref": "#/$defs/node"
+  },
+  "$defs": {
+    "lightDarkValue": {
+      "type": "object",
+      "description": "A scheme-aware value that differs between the light and dark colour schemes. Emitted as `light-dark(<light>, <dark>)`.",
+      "properties": {
+        "light": {
+          "type": "string",
+          "description": "The value used under the light colour scheme."
+        },
+        "dark": {
+          "type": "string",
+          "description": "The value used under the dark colour scheme."
+        }
+      },
+      "required": ["light", "dark"],
+      "additionalProperties": false
+    },
+    "overrideValue": {
+      "description": "A single override `$value` — a scalar (hex, rem, shadow list, font stack, number) emitted verbatim, or a scheme-aware `{ light, dark }` pair.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "$ref": "#/$defs/lightDarkValue"
+        }
+      ]
+    },
+    "typographyValue": {
+      "description": "A composite DTCG `typography` `$value` — the sub-properties of a typography style. Values may be literals or `{token.path}` aliases.",
+      "type": "object",
+      "properties": {
+        "fontFamily": {
+          "type": "string",
+          "description": "Font-family stack."
+        },
+        "fontSize": {
+          "type": ["string", "number"],
+          "description": "Font size (dimension, e.g. `1rem`)."
+        },
+        "fontWeight": {
+          "type": ["string", "number"],
+          "description": "Numeric font weight (e.g. `400`, `700`)."
+        },
+        "lineHeight": {
+          "type": ["string", "number"],
+          "description": "Line height — a dimension or a unitless multiplier."
+        },
+        "letterSpacing": {
+          "type": "string",
+          "description": "Letter spacing (dimension, e.g. `-0.02em`)."
+        },
+        "marginBlock": {
+          "type": "string",
+          "description": "Logical block margin."
+        },
+        "marginInline": {
+          "type": "string",
+          "description": "Logical inline margin."
+        }
+      },
+      "additionalProperties": true
+    },
+    "token": {
+      "type": "object",
+      "description": "A DTCG-style override leaf token, identified by the presence of a `$value`.",
+      "properties": {
+        "$value": {
+          "$ref": "#/$defs/overrideValue"
+        },
+        "$description": {
+          "type": "string",
+          "description": "Optional description, emitted as a comment above the generated declaration."
+        }
+      },
+      "required": ["$value"],
+      "additionalProperties": false
+    },
+    "typographyToken": {
+      "type": "object",
+      "description": "A composite typography leaf token: a `$value` object of typography sub-properties.",
+      "properties": {
+        "$value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/typographyValue"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "$description": {
+          "type": "string",
+          "description": "Optional description, emitted as a comment above the generated declaration."
+        }
+      },
+      "required": ["$value"],
+      "additionalProperties": false
+    },
+    "group": {
+      "type": "object",
+      "description": "A group node: nested groups and/or tokens, plus optional `$`-prefixed DTCG metadata.",
+      "properties": {
+        "$description": {
+          "type": "string",
+          "description": "Optional group description (DTCG metadata, ignored by the transform)."
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "node": {
+      "description": "Either a leaf token (has a `$value`) or a nested group of further nodes.",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/token"
+        },
+        {
+          "$ref": "#/$defs/group"
+        }
+      ]
+    }
+  }
+}
