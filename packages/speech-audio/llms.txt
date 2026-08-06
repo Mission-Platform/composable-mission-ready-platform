@@ -1,0 +1,26 @@
+# @mission-platform/speech-audio
+
+Framework-neutral browser speech & audio composables for Mission Platform.
+
+## Core Hooks
+
+### useSpeechSynthesis
+`useSpeechSynthesis(): SpeechSynthesisControls`
+Text-to-speech via the native SpeechSynthesis API. Returns `{ isSupported, isSpeaking, isPaused, voices, speak, pause, resume, cancel }`.
+
+### useSpeechRecognition
+`useSpeechRecognition(): SpeechRecognitionControls`
+Speech-to-text via the native SpeechRecognition API (`webkitSpeechRecognition` fallback). Returns `{ isSupported, isListening, transcript, error, start, stop, abort }`.
+
+### useSound
+`useSound(src?: string): SoundControls`
+Plays an audio clip from `src` (HTMLAudioElement) and synthesizes tones via the Web Audio API. Returns `{ isSupported, isPlaying, play, stop, playTone }`.
+
+### useMidi
+`useMidi(): MidiControls`
+Web MIDI access and note playback. Returns `{ isSupported, isConnected, inputs, outputs, error, requestAccess, playNote }`.
+
+## Implementation Details
+- Authored against `@mission-platform/forge` neutral hooks and compiled to React, Vue, Solid, Svelte, and Web Components.
+- SSR-safe (`isSupported` is `false` and controls are no-ops when the browser API is undefined).
+- Automatic cleanup on unmount (speech cancelled, recognition aborted, audio stopped, contexts closed).
