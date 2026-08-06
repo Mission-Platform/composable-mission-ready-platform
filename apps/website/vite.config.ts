@@ -1,10 +1,11 @@
 /// <reference types="vitest/config" />
+import { fileURLToPath } from 'node:url';
+
 import postcssConfig from '@mission-platform/postcss-config';
 import { frameworkResolveConditions, ignoreVueI18nBlocksPlugin } from '@mission-platform/vite-config';
 import i18nPlugin, { readSupportedLocales } from '@mission-platform/vite-plugin-i18n';
 import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 import vue from '@vitejs/plugin-vue';
-import { fileURLToPath } from 'node:url';
 import { defineConfig, type UserConfig } from 'vite';
 
 import type { SitemapAlternate, SitemapUrl } from '@mission-platform/seo';

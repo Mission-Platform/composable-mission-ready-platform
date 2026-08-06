@@ -18,7 +18,9 @@
   "scripts": {
     "build": "tsdown",
     "lint": "eslint .",
-    "format": "prettier --check ."
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
@@ -27,6 +29,7 @@
     "@mission-platform/typescript-config": "workspace:*",
     "@types/node": "catalog:typescript",
     "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
     "tsdown": "catalog:build",
     "typescript": "catalog:typescript"
   }

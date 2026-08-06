@@ -1,8 +1,9 @@
 /// <reference types="vitest/config" />
+import { fileURLToPath } from 'node:url';
+
 import { defineFrameworkAppConfig } from '@mission-platform/vite-config';
 import i18nPlugin, { readSupportedLocales } from '@mission-platform/vite-plugin-i18n';
 import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-import { fileURLToPath } from 'node:url';
 import { type Plugin, type UserConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 

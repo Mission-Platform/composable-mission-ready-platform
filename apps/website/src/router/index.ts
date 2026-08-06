@@ -1,4 +1,5 @@
 import { defaultLocale, supportedLocales, type SupportedLocale } from 'virtual:i18n-locales';
+
 import type { RouterOptions, RouteRecordRaw } from 'vue-router';
 
 /**
@@ -14,7 +15,6 @@ import type { RouterOptions, RouteRecordRaw } from 'vue-router';
  * those to `dir="rtl"` on the `<html>` element.
  */
 export const SUPPORTED_LOCALES = supportedLocales;
-export type { SupportedLocale };
 
 export const DEFAULT_LOCALE: SupportedLocale = defaultLocale;
 
@@ -51,3 +51,5 @@ export const routerOptions: Omit<RouterOptions, 'history'> = {
     return { top: 0 };
   },
 };
+
+export { type SupportedLocale } from 'virtual:i18n-locales';

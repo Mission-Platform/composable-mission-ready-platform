@@ -9,8 +9,8 @@ import { FORGE_DEFAULT_NAMESPACE } from '../utils/namespace';
 
 // Type-only import: fully erased at compile time, so it never reaches the
 // browser bundle where Vite externalizes `node:async_hooks`.
-import type { AsyncLocalStorage as AsyncLocalStorageType } from 'node:async_hooks';
 import type { ForgeLocaleModule, ForgeLocales, ForgeMessageObject, ForgeNamespaceLocales } from '../utils/types';
+import type { AsyncLocalStorage as AsyncLocalStorageType } from 'node:async_hooks';
 
 let serverI18nStorage: AsyncLocalStorageType<I18nInstance> | undefined;
 
@@ -26,7 +26,7 @@ let serverI18nStorage: AsyncLocalStorageType<I18nInstance> | undefined;
  * request-scoped isolation via `AsyncLocalStorage`.
  */
 async function initServerI18nStorage(): Promise<void> {
-  if (typeof window !== 'undefined' || serverI18nStorage) {
+  if (globalThis.window !== undefined || serverI18nStorage) {
     return;
   }
   try {
@@ -39,7 +39,7 @@ async function initServerI18nStorage(): Promise<void> {
 
 // Kick off server-side storage initialisation. In the browser this returns
 // immediately without touching `node:async_hooks`.
-void initServerI18nStorage();
+await initServerI18nStorage();
 
 let globalServerI18n: I18nInstance | undefined;
 
