@@ -1,12 +1,16 @@
 'use client';
 
-import { ForgeBadge, ForgeButton, ForgeDialog, ForgeTypography } from '@mission-platform/components';
-import { ForgeSchemaForm, type FormValues, type SchemaFormDefinition } from '@mission-platform/forms';
+import { ForgeButton, ForgeTypography } from '@mission-platform/components';
+import { type FormValues } from '@mission-platform/forms';
 import { useI18n } from '@mission-platform/i18n';
-import { ForgeIconPencil, ForgeIconPlus, ForgeIconTrash } from '@mission-platform/icons';
+import { ForgeIconPlus } from '@mission-platform/icons';
 import { useState } from 'react';
 
-import { type MonitorTarget, PROBE_TYPES, type ProbeType } from '@/monitoring/types';
+import { type MonitorTarget, type ProbeType } from '@/monitoring/types';
+import { sanitizeMonitor } from '@/monitoring/validation';
+
+import { EMPTY_FORM, MonitorForm, TYPE_LABELS, URL_TYPES } from './monitor-form';
+import { MonitorListItem } from './monitor-list-item';
 
 interface MonitorManagerProperties {
   readonly monitors: MonitorTarget[];
@@ -15,111 +19,8 @@ interface MonitorManagerProperties {
   readonly onDelete: (id: string) => Promise<boolean>;
 }
 
-/** Human labels for each probe type shown in the picker. */
-const TYPE_LABELS: Record<ProbeType, string> = {
-  http: 'HTTP',
-  json: 'JSON health',
-  graphql: 'GraphQL',
-  dns: 'DNS (DoH)',
-  tcp: 'TCP',
-  mqtt: 'MQTT',
-  udp: 'UDP',
-  ntp: 'NTP',
-  network: 'Network (ping, latency & bandwidth)',
-};
-
-/** Probe types addressed by a URL rather than a host/port. */
-const URL_TYPES: ReadonlySet<ProbeType> = new Set<ProbeType>(['http', 'json', 'graphql']);
-
-/** DNS resource record types supported by the monitor selector. */
-const DNS_RECORD_TYPES = ['A', 'AAAA', 'CAA', 'CNAME', 'MX', 'NAPTR', 'NS', 'PTR', 'SOA', 'SRV', 'TXT'] as const;
-
-const EMPTY_FORM: FormValues = {
-  id: '',
-  name: '',
-  type: 'http',
-  intervalSeconds: '',
-  url: '',
-  host: '',
-  port: '',
-  query: '',
-  jsonPath: '',
-  expect: '',
-  recordType: 'A',
-  autoIncident: false,
-  failThreshold: '3',
-  successThreshold: '2',
-};
-
 function stringValue(values: FormValues, key: string): string {
   return typeof values[key] === 'string' ? values[key].trim() : '';
-}
-
-function monitorSchema(editing: boolean, defaultIntervalSeconds: number): SchemaFormDefinition {
-  return {
-    type: 'object',
-    properties: {
-      id: { type: 'string', title: 'id', minLength: 1, ui: { disabled: editing } },
-      name: { type: 'string', title: 'Name', minLength: 1 },
-      type: {
-        type: 'string',
-        title: 'Probe type',
-        oneOf: PROBE_TYPES.map((type) => ({ const: type, title: TYPE_LABELS[type] })),
-      },
-      intervalSeconds: {
-        type: 'integer',
-        title: 'Interval in seconds',
-        minimum: 5,
-        ui: { placeholder: `${defaultIntervalSeconds}s` },
-      },
-      url: {
-        type: 'string',
-        title: 'URL',
-        minLength: 1,
-        ui: { placeholder: 'https://example.com/health', visibleWhen: { field: 'type', in: [...URL_TYPES] } },
-      },
-      host: {
-        type: 'string',
-        title: 'Host',
-        minLength: 1,
-        ui: {
-          placeholder: 'host (e.g. example.com)',
-          visibleWhen: { field: 'type', in: ['dns', 'tcp', 'mqtt', 'udp', 'ntp', 'network'] },
-        },
-      },
-      port: {
-        type: 'integer',
-        title: 'Port',
-        ui: { visibleWhen: { field: 'type', in: ['tcp', 'mqtt', 'udp', 'ntp', 'network'] } },
-      },
-      query: { type: 'string', title: 'GraphQL query', ui: { visibleWhen: { field: 'type', equals: 'graphql' } } },
-      jsonPath: { type: 'string', title: 'JSON path', ui: { visibleWhen: { field: 'type', equals: 'json' } } },
-      expect: { type: 'string', title: 'Expected value', ui: { visibleWhen: { field: 'type', equals: 'json' } } },
-      recordType: {
-        type: 'string',
-        title: 'DNS record type',
-        default: 'A',
-        oneOf: DNS_RECORD_TYPES.map((recordType) => ({ const: recordType, title: recordType })),
-        ui: { visibleWhen: { field: 'type', equals: 'dns' } },
-      },
-      autoIncident: { type: 'boolean', title: 'Open incidents automatically', ui: { widget: 'checkbox' } },
-      failThreshold: {
-        type: 'integer',
-        title: 'Failures before opening an incident',
-        minimum: 1,
-        default: 3,
-        ui: { visibleWhen: { field: 'autoIncident', equals: true } },
-      },
-      successThreshold: {
-        type: 'integer',
-        title: 'Successful checks before resolving an incident',
-        minimum: 1,
-        default: 2,
-        ui: { visibleWhen: { field: 'autoIncident', equals: true } },
-      },
-    },
-    required: ['id', 'name', 'url', 'host'],
-  };
 }
 
 /**
@@ -171,35 +72,43 @@ export function MonitorManager({ monitors, defaultIntervalSeconds, onSave, onDel
     const usesUrl = URL_TYPES.has(type);
     if (!isValid) return;
 
-    const monitor: MonitorTarget = { id: stringValue(values, 'id'), name: stringValue(values, 'name'), type };
+    // Assemble the raw form values, then validate and normalise them through
+    // the same routine the server uses so the client and server accept exactly
+    // the same monitors.
+    const draft: Record<string, unknown> = {
+      id: stringValue(values, 'id'),
+      name: stringValue(values, 'name'),
+      type,
+      autoIncident: values['autoIncident'] === true,
+    };
     if (values['intervalSeconds'] !== '' && values['intervalSeconds'] !== undefined) {
-      monitor.intervalSeconds = Number(values['intervalSeconds']);
+      draft.intervalSeconds = Number(values['intervalSeconds']);
     }
     if (usesUrl) {
-      monitor.url = stringValue(values, 'url');
+      draft.url = stringValue(values, 'url');
     } else {
-      monitor.host = stringValue(values, 'host');
+      draft.host = stringValue(values, 'host');
     }
     if (type === 'graphql' && stringValue(values, 'query')) {
-      monitor.query = stringValue(values, 'query');
+      draft.query = stringValue(values, 'query');
     }
     if (type === 'json') {
-      if (stringValue(values, 'jsonPath')) monitor.jsonPath = stringValue(values, 'jsonPath');
-      if (stringValue(values, 'expect')) monitor.expect = stringValue(values, 'expect');
+      if (stringValue(values, 'jsonPath')) draft.jsonPath = stringValue(values, 'jsonPath');
+      if (stringValue(values, 'expect')) draft.expect = stringValue(values, 'expect');
     }
     if (type === 'dns' && stringValue(values, 'recordType')) {
-      monitor.recordType = stringValue(values, 'recordType');
+      draft.recordType = stringValue(values, 'recordType');
     }
     if (!usesUrl && values['port'] !== '' && values['port'] !== undefined) {
-      monitor.port = Number(values['port']);
+      draft.port = Number(values['port']);
     }
-    monitor.autoIncident = values['autoIncident'] === true;
-    if (monitor.autoIncident) {
-      monitor.failThreshold = Number(values['failThreshold']) || 3;
-      monitor.successThreshold = Number(values['successThreshold']) || 2;
+    if (draft.autoIncident) {
+      draft.failThreshold = Number(values['failThreshold']) || 3;
+      draft.successThreshold = Number(values['successThreshold']) || 2;
     }
 
-    if (!monitor.id || !monitor.name || (usesUrl ? !monitor.url : !monitor.host)) {
+    const monitor = sanitizeMonitor(draft);
+    if (!monitor) {
       setError(
         t(($) => $.monitors.error.required, {
           ns: 'mp.service-monitor',
@@ -266,78 +175,28 @@ export function MonitorManager({ monitors, defaultIntervalSeconds, onSave, onDel
 
       <ul className="monitors__list">
         {monitors.map((monitor) => (
-          <li
+          <MonitorListItem
             key={monitor.id}
-            className="monitors__item"
-          >
-            <div className="monitors__item-main">
-              <ForgeBadge
-                variant="info"
-                size="sm"
-                className="monitors__badge"
-              >
-                {TYPE_LABELS[monitor.type ?? 'http']}
-              </ForgeBadge>
-              <span className="monitors__name">{monitor.name}</span>
-              <span className="monitors__target">{monitor.url ?? monitor.host}</span>
-            </div>
-            <div className="monitors__item-side">
-              <span className="monitors__interval">{monitor.intervalSeconds ?? defaultIntervalSeconds}s</span>
-              <ForgeButton
-                variant="ghost"
-                size="sm"
-                onClick={() => edit(monitor)}
-                aria-label={t(($) => $.monitors.editAria, {
-                  ns: 'mp.service-monitor',
-                  defaultValue: 'Edit {name}',
-                  name: monitor.name,
-                })}
-              >
-                <ForgeIconPencil aria-hidden="true" />{' '}
-                {t(($) => $.monitors.edit, { ns: 'mp.service-monitor', defaultValue: 'Edit' })}
-              </ForgeButton>
-              <ForgeButton
-                variant="ghost"
-                size="sm"
-                onClick={() => void onDelete(monitor.id)}
-                aria-label={t(($) => $.monitors.removeAria, {
-                  ns: 'mp.service-monitor',
-                  defaultValue: 'Remove {name}',
-                  name: monitor.name,
-                })}
-                className="monitors__remove"
-              >
-                <ForgeIconTrash aria-hidden="true" />{' '}
-                {t(($) => $.monitors.remove, { ns: 'mp.service-monitor', defaultValue: 'Remove' })}
-              </ForgeButton>
-            </div>
-          </li>
+            monitor={monitor}
+            typeLabel={TYPE_LABELS[monitor.type ?? 'http']}
+            defaultIntervalSeconds={defaultIntervalSeconds}
+            onEdit={() => edit(monitor)}
+            onDelete={() => void onDelete(monitor.id)}
+          />
         ))}
       </ul>
 
-      <ForgeDialog
+      <MonitorForm
         open={formOpen}
-        title={
-          editingId
-            ? t(($) => $.monitors.editTitle, { ns: 'mp.service-monitor', defaultValue: 'Edit monitor' })
-            : t(($) => $.monitors.add, { ns: 'mp.service-monitor', defaultValue: 'Add monitor' })
-        }
-        size="xl"
-        onUpdateOpen={(open) => {
-          if (!open) cancelEdit();
-        }}
-      >
-        <ForgeSchemaForm
-          key={editingId ?? 'new'}
-          className="monitors__form"
-          schema={monitorSchema(editingId !== null, defaultIntervalSeconds)}
-          modelValue={form}
-          onUpdateModelValue={setForm}
-          onSubmit={(values, isValid) => void submit(values, isValid)}
-          disabled={busy}
-        />
-        {error ? <p className="monitors__error">{error}</p> : null}
-      </ForgeDialog>
+        editingId={editingId}
+        defaultIntervalSeconds={defaultIntervalSeconds}
+        form={form}
+        busy={busy}
+        error={error}
+        onUpdateForm={setForm}
+        onSubmit={(values, isValid) => void submit(values, isValid)}
+        onCancel={cancelEdit}
+      />
     </section>
   );
 }

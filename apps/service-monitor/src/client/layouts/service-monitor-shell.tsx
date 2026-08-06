@@ -3,24 +3,31 @@
 import { ForgeLanguageSwitcher, ForgeNavbar, ForgeNavbarItem, ForgeThemeToggle } from '@mission-platform/components';
 import { useI18n } from '@mission-platform/i18n';
 import { ForgeApplicationLayout } from '@mission-platform/layouts';
+import { supportedLocales } from 'virtual:i18n-locales';
 
 import type { Incident } from '@/monitoring/types';
 import type { Resource } from 'i18next';
 import type { ReactNode } from 'react';
 
-const LOCALES = [
-  { code: 'en', label: 'English' },
-  { code: 'fr', label: 'Français' },
-  { code: 'es', label: 'Español' },
-  { code: 'nl', label: 'Nederlands' },
-  { code: 'it', label: 'Italiano' },
-  { code: 'de', label: 'Deutsch' },
-  { code: 'ko', label: '한국어' },
-  { code: 'ja', label: '日本語' },
-  { code: 'zh', label: '中文' },
-  { code: 'ar', label: 'العربية' },
-  { code: 'he', label: 'עברית' },
-];
+// Native/display labels for each locale code. The list of codes itself is
+// derived from the shared `virtual:i18n-locales` module so it stays in sync
+// with the locales discovered under `locales/`; any code without an explicit
+// label falls back to its upper-cased form.
+const LABELS: Record<string, string> = {
+  en: 'English',
+  fr: 'Français',
+  es: 'Español',
+  nl: 'Nederlands',
+  it: 'Italiano',
+  de: 'Deutsch',
+  ko: '한국어',
+  ja: '日本語',
+  zh: '中文',
+  ar: 'العربية',
+  he: 'עברית',
+};
+
+const LOCALES = supportedLocales.map((code) => ({ code, label: LABELS[code] ?? code.toUpperCase() }));
 
 const localeBundles: Record<string, () => Promise<{ resources: Resource }>> = {
   ar: () => import('virtual:i18n-locale-ar'),

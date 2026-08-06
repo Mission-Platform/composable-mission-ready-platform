@@ -1,0 +1,106 @@
+{
+  "$schema": "../../../vite-plugins/token-overrides/schema/token-overrides.schema.json",
+  "$description": "Service Monitor design-token override (DTCG-style). Transformed into `overrides.generated.scss` by `@mission-platform/vite-plugin-token-overrides` on build / dev start and imported after `@mission-platform/tokens` in `styles.css`. Colours use `{ light, dark }` pairs (emitted as `light-dark(...)`); everything else is a literal. Theme: pastel colours, sharp shadows, less rounding, Inter font.",
+  "font": {
+    "family": {
+      "sans": {
+        "$value": "'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', roboto, sans-serif",
+        "$description": "Inter as the primary UI/body face (replaces the brand Comfortaa)."
+      }
+    }
+  },
+  "color": {
+    "bg": {
+      "base": { "$value": { "light": "#f5f4fb", "dark": "#1c1a2b" }, "$description": "App background." },
+      "forge-alt": { "$value": { "light": "#eeecf8", "dark": "#211f33" } },
+      "surface": { "$value": { "light": "#ffffff", "dark": "#242236" }, "$description": "Card/panel surface." },
+      "raised": { "$value": { "light": "#ffffff", "dark": "#2b2842" } },
+      "overlay": { "$value": { "light": "#ffffff", "dark": "#2b2842" } },
+      "sunken": { "$value": { "light": "#edecf7", "dark": "#171522" } },
+      "muted": { "$value": { "light": "#f0eff9", "dark": "#2a2740" } }
+    },
+    "border": {
+      "default": { "$value": { "light": "#e4e1f3", "dark": "#38344f" } },
+      "strong": { "$value": { "light": "#cec7e8", "dark": "#4a4568" } },
+      "focus": { "$value": { "light": "#8b7ff0", "dark": "#a99cf5" } }
+    },
+    "text": {
+      "primary": { "$value": { "light": "#3a3652", "dark": "#ece9f7" } },
+      "secondary": { "$value": { "light": "#6b6686", "dark": "#b3aecb" } },
+      "tertiary": { "$value": { "light": "#938ea9", "dark": "#8b86a3" } },
+      "disabled": { "$value": { "light": "#a9a4bd", "dark": "#736e8c" } },
+      "inverse": { "$value": { "light": "#ffffff", "dark": "#1c1a2b" } },
+      "on-primary": { "$value": "#ffffff" }
+    },
+    "primary": {
+      "default": { "$value": { "light": "#8b7ff0", "dark": "#a99cf5" }, "$description": "Pastel periwinkle brand." },
+      "hover": { "$value": { "light": "#7a6ce8", "dark": "#b8adf8" } },
+      "active": { "$value": { "light": "#6a5cd8", "dark": "#c7bef9" } },
+      "subtle": { "$value": { "light": "#eeecfd", "dark": "#2e2a48" } },
+      "muted": { "$value": { "light": "#ddd8fb", "dark": "#3a3560" } },
+      "text": { "$value": { "light": "#5b4bc4", "dark": "#c3b9f8" } }
+    },
+    "secondary": {
+      "default": { "$value": { "light": "#7fd0cf", "dark": "#92d8d7" }, "$description": "Pastel teal." },
+      "hover": { "$value": { "light": "#66c1c0", "dark": "#a7e0df" } },
+      "active": { "$value": { "light": "#4faaa9", "dark": "#b8e8e7" } },
+      "subtle": { "$value": { "light": "#e6f7f7", "dark": "#1e3333" } },
+      "muted": { "$value": { "light": "#cdefef", "dark": "#274545" } },
+      "text": { "$value": { "light": "#2f8f8e", "dark": "#a2e2e1" } }
+    },
+    "success": {
+      "default": { "$value": { "light": "#6bcf9f", "dark": "#7ed7a9" }, "$description": "Pastel mint." },
+      "hover": { "$value": { "light": "#57bd8d", "dark": "#93dfb8" } },
+      "subtle": { "$value": { "light": "#e6f8ef", "dark": "#1e3329" } },
+      "muted": { "$value": { "light": "#cdf0de", "dark": "#274536" } },
+      "text": { "$value": { "light": "#2f8f63", "dark": "#9fe5c2" } }
+    },
+    "warning": {
+      "default": { "$value": { "light": "#f0c27b", "dark": "#f2cd8e" }, "$description": "Pastel apricot." },
+      "hover": { "$value": { "light": "#e6b062", "dark": "#f4d7a3" } },
+      "subtle": { "$value": { "light": "#fdf4e3", "dark": "#35301e" } },
+      "muted": { "$value": { "light": "#fae9c7", "dark": "#47401f" } },
+      "text": { "$value": { "light": "#a9781f", "dark": "#f2d29a" } }
+    },
+    "danger": {
+      "default": { "$value": { "light": "#f09aa3", "dark": "#f2a9b1" }, "$description": "Pastel coral." },
+      "hover": { "$value": { "light": "#e88089", "dark": "#f4bec4" } },
+      "subtle": { "$value": { "light": "#fdecee", "dark": "#3a2529" } },
+      "muted": { "$value": { "light": "#fad6da", "dark": "#4a2e33" } },
+      "text": { "$value": { "light": "#c04651", "dark": "#f4b8bd" } }
+    },
+    "info": {
+      "default": { "$value": { "light": "#8ec5f0", "dark": "#a1cef2" }, "$description": "Pastel sky." },
+      "hover": { "$value": { "light": "#74b4e8", "dark": "#b6daf4" } },
+      "subtle": { "$value": { "light": "#eaf4fd", "dark": "#1e2f3a" } },
+      "muted": { "$value": { "light": "#d3e8fa", "dark": "#27404a" } },
+      "text": { "$value": { "light": "#2f7bc0", "dark": "#b0d5f5" } }
+    }
+  },
+  "shadow": {
+    "$description": "Sharp elevation: tight offsets, minimal blur, no spread, higher alpha than the soft defaults.",
+    "none": { "$value": "none" },
+    "2xs": { "$value": "0 1px 0 0 rgb(28 26 43 / 8%)" },
+    "xs": { "$value": "0 1px 1px 0 rgb(28 26 43 / 12%)" },
+    "sm": { "$value": "0 2px 1px 0 rgb(28 26 43 / 16%)" },
+    "md": { "$value": "0 3px 2px 0 rgb(28 26 43 / 20%)" },
+    "lg": { "$value": "0 4px 2px 0 rgb(28 26 43 / 22%)" },
+    "xl": { "$value": "0 6px 3px 0 rgb(28 26 43 / 24%)" },
+    "2xl": { "$value": "0 10px 4px 0 rgb(28 26 43 / 28%)" },
+    "inner": { "$value": "inset 0 1px 2px 0 rgb(28 26 43 / 12%)" },
+    "focus-primary": { "$value": "0 0 0 3px rgb(139 127 240 / 45%)" },
+    "focus-danger": { "$value": "0 0 0 3px rgb(240 154 163 / 45%)" }
+  },
+  "radius": {
+    "$description": "Reduced rounding — corners flattened towards square (only `full` keeps the pill sentinel).",
+    "none": { "$value": "0" },
+    "xs": { "$value": "0" },
+    "sm": { "$value": "1px" },
+    "md": { "$value": "2px" },
+    "lg": { "$value": "2px" },
+    "xl": { "$value": "3px" },
+    "2xl": { "$value": "4px" },
+    "3xl": { "$value": "5px" },
+    "full": { "$value": "9999px" }
+  }
+}

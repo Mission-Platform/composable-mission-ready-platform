@@ -8,6 +8,10 @@ coverage/
 apps/*/public/robots.txt
 apps/*/public/sitemap.xml
 
+# Generated design-token override stylesheets (produced by
+# @mission-platform/vite-plugin-token-overrides on build / dev start)
+apps/*/**/*.generated.scss
+
 # Build Output
 .vite-ssg-temp/
 dist/

@@ -3,6 +3,12 @@
 @import '@mission-platform/tokens/scss/themes/dark';
 @import '@mission-platform/components/styles';
 
+/* App-scoped design-token override — pastel colours, sharp shadows, less
+   rounding and the Inter font. Auto-generated from `design-tokens/overrides.tokens.json`
+   by `@mission-platform/vite-plugin-token-overrides` on build / dev start and
+   imported last so it wins the cascade. */
+@import '../../design-tokens/overrides.generated.scss';
+
 :root {
   --bg: var(--mp-color-bg-base, #0d1117);
   --surface: var(--mp-color-bg-surface, #161b22);
@@ -24,12 +30,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family:
-    system-ui,
-    -apple-system,
-    'Segoe UI',
-    roboto,
-    sans-serif;
+  font-family: var(--mp-font-family-sans);
   line-height: 1.5;
 }
 
@@ -83,6 +84,7 @@ body {
   border-left: 6px solid var(--up);
   border-radius: 12px;
   background: var(--surface);
+  box-shadow: var(--mp-shadow-md);
 }
 
 .status-hero--degraded {
@@ -106,6 +108,7 @@ body {
   border: 1px solid var(--border);
   border-radius: 10px;
   background: var(--surface);
+  box-shadow: var(--mp-shadow-sm);
 }
 
 .status-service,
@@ -135,7 +138,7 @@ body {
   color: var(--text);
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--mp-radius-sm);
 }
 .monitors__checkbox {
   display: flex;
@@ -173,7 +176,7 @@ body {
 .pill {
   flex: none;
   padding: 0.25rem 0.7rem;
-  border-radius: 999px;
+  border-radius: var(--mp-radius-full);
   font-size: 0.75rem;
   font-weight: 600;
   border: 1px solid var(--border);
@@ -209,6 +212,7 @@ body {
   color: inherit;
   font: inherit;
   cursor: pointer;
+  box-shadow: var(--mp-shadow-sm);
   transition:
     background 0.15s ease,
     border-color 0.15s ease;
@@ -267,7 +271,7 @@ body {
 
 .badge {
   padding: 0.1rem 0.5rem;
-  border-radius: 999px;
+  border-radius: var(--mp-radius-full);
   font-size: 0.7rem;
   font-weight: 600;
 }
@@ -292,6 +296,7 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
+  box-shadow: var(--mp-shadow-md);
 }
 
 .detail__head {
@@ -480,6 +485,7 @@ body {
   font: inherit;
   text-align: left;
   cursor: pointer;
+  box-shadow: var(--mp-shadow-sm);
   transition:
     background 0.15s ease,
     border-color 0.15s ease;
@@ -562,6 +568,7 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
+  box-shadow: var(--mp-shadow-md);
 }
 
 .speed__chart-head {
@@ -620,6 +627,7 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
+  box-shadow: var(--mp-shadow-xs);
 }
 
 .monitors__item-main {
@@ -632,7 +640,7 @@ body {
 .monitors__badge {
   flex: none;
   padding: 0.1rem 0.45rem;
-  border-radius: 6px;
+  border-radius: var(--mp-radius-sm);
   background: color-mix(in srgb, var(--accent) 15%, transparent);
   color: var(--accent);
   font-size: 0.68rem;
@@ -666,7 +674,7 @@ body {
 
 .monitors__remove {
   padding: 0.25rem 0.6rem;
-  border-radius: 6px;
+  border-radius: var(--mp-radius-sm);
   border: 1px solid color-mix(in srgb, var(--down) 45%, var(--border));
   background: transparent;
   color: var(--down);
@@ -687,6 +695,7 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
+  box-shadow: var(--mp-shadow-md);
 }
 
 .monitors__row {
@@ -780,5 +789,8 @@ body {
 }
 
 .monitors-page__title {
+  margin: 0;
+}
+rs-page__title {
   margin: 0;
 }

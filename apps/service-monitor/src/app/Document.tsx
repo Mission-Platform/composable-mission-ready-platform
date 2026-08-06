@@ -56,6 +56,20 @@ export function Document({ children }: { children: ReactNode }) {
           href="/favicon.svg"
           type="image/svg+xml"
         />
+        {/* Inter — the app's design-token override sets `--mp-font-family-sans` to Inter. */}
+        <link
+          rel="preconnect"
+          href="https://fonts.googleapis.com"
+        />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var d=document.documentElement,t=localStorage.getItem('mp-theme')||'auto';if(t==='light'||t==='dark'){d.setAttribute('data-theme',t);d.style.colorScheme=t;}else{d.removeAttribute('data-theme');d.style.colorScheme='light dark';}}catch(e){}})();`,

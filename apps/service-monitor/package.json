@@ -51,6 +51,7 @@
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@mission-platform/vite-plugin-i18n": "workspace:*",
+    "@mission-platform/vite-plugin-token-overrides": "workspace:*",
     "@types/d3": "catalog:d3",
     "@types/node": "catalog:typescript",
     "@types/react": "catalog:react",

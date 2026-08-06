@@ -1,6 +1,7 @@
 import { cloudflare } from '@cloudflare/vite-plugin';
 import { frameworkCondition } from '@mission-platform/vite-config';
 import i18nPlugin from '@mission-platform/vite-plugin-i18n';
+import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
 import { redwood } from 'rwsdk/vite';
 import { defineConfig } from 'vite';
 
@@ -97,7 +98,8 @@ export default defineConfig(async ({ mode }) => ({
       ? []
       : [
           frameworkConditionsPlugin(),
-          i18nPlugin({ defaultLocale: 'en' }),
+          i18nPlugin({ defaultLocale: 'en', localesDir: 'locales' }),
+          tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' }),
           excludeMonacoFromSsr(),
           cloudflare({
             viteEnvironment: { name: 'worker' },
