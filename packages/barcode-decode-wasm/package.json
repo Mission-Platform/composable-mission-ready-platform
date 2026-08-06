@@ -21,6 +21,7 @@
     "build": "tsdown",
     "build:check": "tsc --project tsconfig.build.json --noEmit",
     "build:watch": "tsdown --watch",
+    "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --check .",
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "@mission-platform/barcode-decode-crate": "workspace:*",
+    "@mission-platform/barcode-encode-wasm": "workspace:*",
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
     "@mission-platform/tsdown-config": "workspace:*",
@@ -36,6 +38,8 @@
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",
     "tsdown": "catalog:build",
-    "typescript": "catalog:typescript"
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite",
+    "vitest": "catalog:testing"
   }
 }

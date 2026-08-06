@@ -23,5 +23,6 @@
     "noEmit": false,
     "emitDeclarationOnly": true
   },
-  "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.d.ts"]
+  "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.d.ts"],
+  "exclude": ["src/**/*.spec.ts"]
 }

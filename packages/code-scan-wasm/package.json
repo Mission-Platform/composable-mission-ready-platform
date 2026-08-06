@@ -36,6 +36,8 @@
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",
     "tsdown": "catalog:build",
-    "typescript": "catalog:typescript"
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite",
+    "vitest": "catalog:testing"
   }
 }
