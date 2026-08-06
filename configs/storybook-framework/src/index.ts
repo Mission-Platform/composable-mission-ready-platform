@@ -234,7 +234,15 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
       import('@mission-platform/vite-plugin-i18n'),
     ]);
 
-  const plugins: Plugin[] = [facadeNeutralResolvePlugin(), i18nPlugin({ defaultLocale: 'en' }) as Plugin];
+  // Storybook always runs from `apps/storybook`, whose translations live in the
+  // nested top-level `locales/<code>/mp.storybook.yaml` tree (not the default
+  // `src/locales`, which only holds the generated `.d.ts` shims). Point the
+  // plugin at `locales` so those bundles actually load — otherwise
+  // `virtual:i18n-resources` resolves to English defaults only.
+  const plugins: Plugin[] = [
+    facadeNeutralResolvePlugin(),
+    i18nPlugin({ defaultLocale: 'en', localesDir: 'locales' }) as Plugin,
+  ];
 
   // Every framework needs a JSX transform for the shared neutral `*.stories.tsx`
   // files. Storybook 10's renderer packages (`@storybook/react-vite`, …) no
