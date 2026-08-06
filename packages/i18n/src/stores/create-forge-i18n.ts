@@ -2,23 +2,44 @@
 // Framework-neutral i18next instance factory plus the server-side request
 // context store used by the framework adapters for SSR-safe resolution.
 
-import { AsyncLocalStorage } from 'node:async_hooks';
-
 import i18next, { type i18n as I18nInstance, type InitOptions, type Resource } from 'i18next';
 
 import { deepMergeLocales, mergeLocales } from '../utils/merge-locales';
 import { FORGE_DEFAULT_NAMESPACE } from '../utils/namespace';
 
+// Type-only import: fully erased at compile time, so it never reaches the
+// browser bundle where Vite externalizes `node:async_hooks`.
+import type { AsyncLocalStorage as AsyncLocalStorageType } from 'node:async_hooks';
 import type { ForgeLocaleModule, ForgeLocales, ForgeMessageObject, ForgeNamespaceLocales } from '../utils/types';
 
-let serverI18nStorage: AsyncLocalStorage<I18nInstance> | undefined;
-try {
-  if (AsyncLocalStorage !== undefined) {
-    serverI18nStorage = new AsyncLocalStorage<I18nInstance>();
+let serverI18nStorage: AsyncLocalStorageType<I18nInstance> | undefined;
+
+/**
+ * Lazily loads `node:async_hooks` on the server only.
+ *
+ * A static named import (`import { AsyncLocalStorage } from 'node:async_hooks'`)
+ * makes bundlers such as Vite externalize the module for the browser and hoist
+ * the property access above any guard, throwing at module load in client code.
+ * Restricting the access to non-browser environments and using a dynamic import
+ * keeps `node:async_hooks` out of the browser's module graph entirely, while the
+ * server (Node, Cloudflare Workers with `nodejs_compat`) still gets real
+ * request-scoped isolation via `AsyncLocalStorage`.
+ */
+async function initServerI18nStorage(): Promise<void> {
+  if (typeof window !== 'undefined' || serverI18nStorage) {
+    return;
   }
-} catch {
-  // Ignored in environments without node:async_hooks
+  try {
+    const { AsyncLocalStorage } = await import('node:async_hooks');
+    serverI18nStorage = new AsyncLocalStorage<I18nInstance>();
+  } catch {
+    // Ignored in environments without node:async_hooks; the global fallback is used instead.
+  }
 }
+
+// Kick off server-side storage initialisation. In the browser this returns
+// immediately without touching `node:async_hooks`.
+void initServerI18nStorage();
 
 let globalServerI18n: I18nInstance | undefined;
 
