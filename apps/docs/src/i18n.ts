@@ -11,15 +11,6 @@
  */
 import { createForgeI18N, type ForgeI18N, type ForgeLocales, forgeNamespace } from '@mission-platform/i18n';
 
-/** Every locale the Mission Platform ships translations for. */
-export const SUPPORTED_LOCALES = ['en', 'ar', 'de', 'es', 'fr', 'he', 'it', 'ja', 'ko', 'nl', 'zh'] as const;
-
-/** A locale supported by the documentation chrome. */
-export type DocumentationLocale = (typeof SUPPORTED_LOCALES)[number];
-
-/** Source-of-truth locale used for prerendering and as the i18next fallback. */
-export const DEFAULT_LOCALE: DocumentationLocale = 'en';
-
 /** The i18next namespace the documentation app registers its messages under. */
 export const DOCS_NAMESPACE = forgeNamespace('docs');
 
@@ -65,7 +56,7 @@ export function resolveDocumentationLocale(value: unknown): DocumentationLocale 
  * creation time (the catalogue is tiny) so every locale resolves instantly on a
  * client-side switch without a lazy fetch.
  */
-const messages: ForgeLocales = {
+const messages = {
   en: {
     search: {
       placeholder: 'Search the docs…',
@@ -319,7 +310,20 @@ const messages: ForgeLocales = {
     },
     nav: { home: '首页', toggleSidebar: '切换文档导航' },
   },
-};
+} satisfies ForgeLocales;
+
+/**
+ * A locale supported by the documentation chrome. Derived from the `messages`
+ * catalogue itself, so the supported-locale set is defined in exactly one place
+ * (the translations) rather than a separately hand-maintained list.
+ */
+export type DocumentationLocale = keyof typeof messages;
+
+/** Every locale the documentation chrome ships translations for (derived from `messages`). */
+export const SUPPORTED_LOCALES = Object.keys(messages) as DocumentationLocale[];
+
+/** Source-of-truth locale used for prerendering and as the i18next fallback. */
+export const DEFAULT_LOCALE: DocumentationLocale = 'en';
 
 /** Build the documentation app's i18next instance, seeded with every locale. */
 export function createDocumentationI18n(locale: DocumentationLocale = DEFAULT_LOCALE): ForgeI18N {
