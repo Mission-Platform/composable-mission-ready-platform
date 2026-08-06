@@ -19,7 +19,7 @@ The Mission Platform is a VueJS 3 monorepo managed with pnpm workspaces. It foll
 - **Changesets**: Versioning and changelog automation
 
 ## Quick Start
-1. Install Node.js v24.18.0 (version specified in `.nvmrc`)
+1. Install Node.js v24.19.0 (version specified in `.nvmrc`)
 2. Run `nvm use` to select the correct Node version
 3. Install dependencies: `pnpm install`
 4. Start development servers:

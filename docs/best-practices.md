@@ -16,8 +16,8 @@ To maintain a maintainable monorepo, we enforce a strict one-way dependency flow
 **Rule:** Code in `packages/` must **never** import from `apps/`. This prevents circular dependencies and ensure packages remain truly reusable.
 
 ### Storybook as Workbench
-When adding or modifying components in `packages/`, use the Storybook app (`apps/storybook`) as your primary development environment.
-- Create or update stories in the component's directory.
+When adding or modifying components in `packages/`, use the Storybook app (`apps/storybook`) as your primary development environment. The `apps/storybook` app does not contain the stories itself — it is the aggregating workbench that discovers and renders the stories that live alongside their components.
+- Co-locate each `.stories.tsx` file with its component inside that component's package directory (e.g. `packages/components/src/components/**/<component>/<component>.stories.tsx`), not under `apps/storybook`. This matches the convention in [Atomic Component Design](atomic-component-design.md).
 - Verify component behavior across different frameworks by switching the `STORYBOOK_FRAMEWORK` environment variable.
 
 ## Development Standards
