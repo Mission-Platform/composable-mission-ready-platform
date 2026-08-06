@@ -22,6 +22,14 @@ import {
   type ScaffoldAtomicLevel,
 } from '@mission-platform/mcp-shared/knowledge/templates';
 import { getComponentUsage, listComponents } from '@mission-platform/mcp-shared/repo/components';
+import {
+  addLocale,
+  localeCoverage,
+  removeLocale,
+  resolveMemberLocales,
+  surveyLocales,
+  updateTranslation,
+} from '@mission-platform/mcp-shared/repo/locales';
 import { groupDir, type WorkspaceGroup } from '@mission-platform/mcp-shared/repo/paths';
 import {
   findMember,
@@ -632,6 +640,176 @@ export function registerTools(server: McpServer): void {
           apply: args.apply === true,
         });
         return json({ ...result, name: scaffold.name, functionName: scaffold.functionName });
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  // ---- i18n / localisation --------------------------------------------------
+  server.registerTool(
+    'list_locales',
+    {
+      description:
+        'Inspect i18n translation coverage. With no "name", surveys every app that ships YAML translations. With a "name", reports the resolved locales directory, layout (nested/flat), namespaces, and — per non-default locale — the key count plus any keys missing or extra relative to the default locale, so you can see what still needs translating.',
+      inputSchema: {
+        name: z
+          .string()
+          .optional()
+          .describe('Workspace member folder (e.g. "website"). Omit to survey all members of the group.'),
+        group: z
+          .enum(['apps', 'packages', 'workers', 'vite-plugins', 'configs', 'crates'])
+          .optional()
+          .describe('Workspace group. Defaults to "apps".'),
+      },
+    },
+    async (args) => {
+      const group = (args.group as WorkspaceGroup | undefined) ?? 'apps';
+      const name = args.name?.trim();
+      try {
+        if (!name) {
+          const survey = surveyLocales(group);
+          return survey.length > 0 ? json(survey) : text(`No members under ${group}/ ship YAML translations.`);
+        }
+        const resolved = resolveMemberLocales(group, name);
+        if (!resolved) {
+          return text(`"${name}" in ${group}/ has no YAML locale files (it may use an inline message catalogue).`);
+        }
+        return json({
+          member: name,
+          localesDir: resolved.relativeLocalesDir,
+          layout: resolved.layout,
+          defaultLocale: resolved.defaultLocale,
+          namespaces: resolved.namespaces,
+          locales: resolved.locales,
+          coverage: localeCoverage(resolved),
+        });
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'add_locale',
+    {
+      description:
+        'Add a new language to an app by cloning the default locale\'s file structure. By default the English source values are copied as a translation starting point (fill="source"); set fill="empty" for blank values. Dry-run unless apply=true. After applying, translate the values (e.g. with update_translation) and run the app\'s "format:write".',
+      inputSchema: {
+        name: z.string().describe('Workspace member folder (e.g. "website").'),
+        locale: z.string().describe('New locale code — a BCP-47 tag such as "pt", "pt-br" or "zh-hans".'),
+        group: z
+          .enum(['apps', 'packages', 'workers', 'vite-plugins', 'configs', 'crates'])
+          .optional()
+          .describe('Workspace group. Defaults to "apps".'),
+        fill: z
+          .enum(['source', 'empty'])
+          .optional()
+          .describe('"source" (default) copies the default-locale values; "empty" writes empty strings.'),
+        apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
+      },
+    },
+    async (args) => {
+      const group = (args.group as WorkspaceGroup | undefined) ?? 'apps';
+      const name = args.name?.trim();
+      const locale = args.locale?.trim();
+      if (!name || !locale) {
+        return text('Provide both "name" (member folder) and "locale" (new locale code).');
+      }
+      try {
+        const resolved = resolveMemberLocales(group, name);
+        if (!resolved) {
+          return text(`"${name}" in ${group}/ has no YAML locale files to clone from.`);
+        }
+        const result = addLocale(resolved, locale, {
+          fill: (args.fill as 'source' | 'empty' | undefined) ?? 'source',
+          apply: args.apply === true,
+        });
+        return json(result);
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'remove_locale',
+    {
+      description:
+        'Remove a language from an app (deletes its nested locale directory or flat file). Refuses to remove the default locale. Dry-run unless apply=true.',
+      inputSchema: {
+        name: z.string().describe('Workspace member folder (e.g. "website").'),
+        locale: z.string().describe('Locale code to remove (e.g. "ko").'),
+        group: z
+          .enum(['apps', 'packages', 'workers', 'vite-plugins', 'configs', 'crates'])
+          .optional()
+          .describe('Workspace group. Defaults to "apps".'),
+        apply: z.boolean().optional().describe('Delete files. Defaults to false (dry run).'),
+      },
+    },
+    async (args) => {
+      const group = (args.group as WorkspaceGroup | undefined) ?? 'apps';
+      const name = args.name?.trim();
+      const locale = args.locale?.trim();
+      if (!name || !locale) {
+        return text('Provide both "name" (member folder) and "locale" (locale code to remove).');
+      }
+      try {
+        const resolved = resolveMemberLocales(group, name);
+        if (!resolved) {
+          return text(`"${name}" in ${group}/ has no YAML locale files.`);
+        }
+        const result = removeLocale(resolved, locale, args.apply === true);
+        return json(result);
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'update_translation',
+    {
+      description:
+        'Update one or more translation values in a single locale. "entries" maps dot-path keys (e.g. "hero.title") to their new values. For nested apps the namespace is inferred when there is only one; otherwise pass "namespace". Dry-run unless apply=true; run the app\'s "format:write" afterwards.',
+      inputSchema: {
+        name: z.string().describe('Workspace member folder (e.g. "website").'),
+        locale: z.string().describe('Locale code to edit (e.g. "es").'),
+        entries: z
+          .record(z.string(), z.string())
+          .describe('Map of dot-path key -> new value, e.g. { "hero.title": "Hola", "nav.about": "Acerca de" }.'),
+        namespace: z.string().optional().describe('i18n namespace (e.g. "mp.website"). Inferred when unambiguous.'),
+        group: z
+          .enum(['apps', 'packages', 'workers', 'vite-plugins', 'configs', 'crates'])
+          .optional()
+          .describe('Workspace group. Defaults to "apps".'),
+        apply: z.boolean().optional().describe('Write files to disk. Defaults to false (dry run).'),
+      },
+    },
+    async (args) => {
+      const group = (args.group as WorkspaceGroup | undefined) ?? 'apps';
+      const name = args.name?.trim();
+      const locale = args.locale?.trim();
+      const entries = args.entries as Record<string, string> | undefined;
+      if (!name || !locale) {
+        return text('Provide both "name" (member folder) and "locale" (locale code to edit).');
+      }
+      if (!entries || Object.keys(entries).length === 0) {
+        return text('Provide "entries": a map of dot-path key -> new value.');
+      }
+      try {
+        const resolved = resolveMemberLocales(group, name);
+        if (!resolved) {
+          return text(`"${name}" in ${group}/ has no YAML locale files.`);
+        }
+        const result = updateTranslation({
+          resolved,
+          code: locale,
+          namespace: args.namespace?.trim() || undefined,
+          entries,
+          apply: args.apply === true,
+        });
+        return json(result);
       } catch (error) {
         return toolError(error);
       }

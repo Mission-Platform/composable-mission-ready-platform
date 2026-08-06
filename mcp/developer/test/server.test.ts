@@ -53,6 +53,10 @@ describe('tools', () => {
       'scaffold_composable',
       'scaffold_store',
       'scaffold_util',
+      'list_locales',
+      'add_locale',
+      'remove_locale',
+      'update_translation',
     ]) {
       assert.ok(names.has(expected), `missing tool ${expected}`);
     }
@@ -157,6 +161,60 @@ describe('tools', () => {
     assert.equal(result.applied, false);
     assert.equal(result.functionName, 'mcpProbeUtil');
     assert.ok(result.files.some((file) => file.includes('src/utils/mcp-probe-util/')));
+  });
+
+  it('surveys locales across apps and details a single member', async () => {
+    const survey = JSON.parse(await callTool('list_locales')) as { name: string; layout: string; locales: string[] }[];
+    const website = survey.find((entry) => entry.name === 'website');
+    assert.ok(website, 'website should appear in the locale survey');
+    assert.equal(website?.layout, 'nested');
+    assert.ok(website?.locales.includes('en'));
+
+    const detail = JSON.parse(await callTool('list_locales', { name: 'website' })) as {
+      layout: string;
+      defaultLocale: string;
+      locales: string[];
+      coverage: { code: string; keyCount: number }[];
+    };
+    assert.equal(detail.layout, 'nested');
+    assert.equal(detail.defaultLocale, 'en');
+    assert.ok(detail.locales.includes('es'));
+    assert.ok(detail.coverage.every((entry) => entry.code !== 'en'));
+  });
+
+  it('adds a locale as a dry run without writing files', async () => {
+    const body = await callTool('add_locale', { name: 'website', locale: 'pt' });
+    const result = JSON.parse(body) as { applied: boolean; files: string[] };
+    assert.equal(result.applied, false);
+    assert.ok(result.files.some((file) => file.includes('/pt/')));
+  });
+
+  it('removes a locale as a dry run without deleting files', async () => {
+    const body = await callTool('remove_locale', { name: 'website', locale: 'ko' });
+    const result = JSON.parse(body) as { applied: boolean; files: string[] };
+    assert.equal(result.applied, false);
+    assert.ok(result.files.some((file) => file.includes('ko')));
+  });
+
+  it('updates a translation as a dry run without writing files', async () => {
+    const body = await callTool('update_translation', {
+      name: 'website',
+      locale: 'es',
+      entries: { 'nav.about': 'Acerca de' },
+    });
+    const result = JSON.parse(body) as { applied: boolean; updatedKeys: string[] };
+    assert.equal(result.applied, false);
+    assert.deepEqual(result.updatedKeys, ['nav.about']);
+  });
+
+  it('refuses to add the default locale', async () => {
+    const result = await client.callTool({ name: 'add_locale', arguments: { name: 'website', locale: 'en' } });
+    assert.equal(result.isError, true);
+  });
+
+  it('refuses to remove the default locale', async () => {
+    const result = await client.callTool({ name: 'remove_locale', arguments: { name: 'website', locale: 'en' } });
+    assert.equal(result.isError, true);
   });
 
   it('reports a tool error for an invalid scaffold name', async () => {

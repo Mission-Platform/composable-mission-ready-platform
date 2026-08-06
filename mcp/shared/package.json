@@ -9,7 +9,12 @@
     "./resources/*": "./src/resources/*.ts"
   },
   "dependencies": {
+    "@mission-platform/vite-plugin-token-overrides": "workspace:*",
     "@modelcontextprotocol/sdk": "catalog:mcp",
+    "js-yaml": "catalog:",
     "zod": "catalog:mcp"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "catalog:typescript"
   }
 }

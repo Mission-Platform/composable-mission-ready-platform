@@ -61,6 +61,9 @@ Most MCP clients accept a command + args. Point them at this entry file:
 | `scaffold_composable`                                                      | Composable under `src/composables/<name>/` (+ `.spec.ts` + barrel).                                                                                                                                                                                                                                                             |
 | `scaffold_store`                                                           | Framework-neutral store under `src/stores/<name>/` (+ `.spec.ts` + barrel).                                                                                                                                                                                                                                                     |
 | `scaffold_util`                                                            | Util under `src/utils/<name>/` (+ `.spec.ts` + barrel).                                                                                                                                                                                                                                                                         |
+| `list_locales`                                                             | Inspect i18n coverage: survey every app's languages, or (with `name`) a member's locales dir, layout, namespaces, and per-locale missing/extra keys vs the default locale.                                                                                                                                                      |
+| `add_locale` / `remove_locale`                                             | Add a language (clones the default locale's structure; `fill: source \| empty`) or remove one (refuses the default). Dry-run by default; pass `apply: true`.                                                                                                                                                                    |
+| `update_translation`                                                       | Set one or more translation values by dot-path key (`entries`) in a single locale/namespace. Dry-run by default; pass `apply: true`.                                                                                                                                                                                            |
 
 ## Resources
 
@@ -93,6 +96,7 @@ mcp/
 └── consumer/           # The consumer-facing server (external apps)
 ```
 
-All repository inspection is **read-only**; the only write path is the
-scaffolding tools, which refuse to overwrite existing targets and require an
-explicit `apply: true`.
+All repository inspection is **read-only**; the only write paths are the
+scaffolding tools and the i18n locale tools (`add_locale`, `remove_locale`,
+`update_translation`), all of which are dry-run previews unless an explicit
+`apply: true` is passed.

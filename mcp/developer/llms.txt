@@ -25,15 +25,17 @@ Give an AI assistant grounded, repo-specific help with core workflows:
   `get_component_usage`, `list_packages`, `list_apps`, `list_workers`,
   `get_member_info`, `scaffold_package`, `scaffold_app`, `scaffold_worker`,
   `scaffold_crate`, `scaffold_component`, `scaffold_composable`, `scaffold_store`,
-  `scaffold_util`.
+  `scaffold_util`, `list_locales`, `add_locale`, `remove_locale`,
+  `update_translation`.
 - Resources: `mission://guide/<id>`, `mission://inventory`, `mission://docs/<slug>`.
 - Prompts: `use-component`, `create-package`, `develop-package`, `create-app`,
   `develop-app`, `create-worker`, `develop-worker`.
 
 ## Safety
 
-All repo inspection is read-only. Scaffolding tools are dry-run unless
-`apply: true`, and never overwrite existing files/folders.
+All repo inspection is read-only. Scaffolding tools and the i18n locale tools
+(`add_locale`, `remove_locale`, `update_translation`) are dry-run unless
+`apply: true`; scaffolding never overwrites existing files/folders.
 
 ## Run
 
