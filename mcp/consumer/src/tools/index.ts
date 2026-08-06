@@ -8,7 +8,16 @@ import {
   getComponentUsage,
   listComponents,
 } from "@mission-platform/mcp-shared/repo/components";
-import { readTokens } from "@mission-platform/mcp-shared/repo/tokens";
+import {
+  buildTokenOverrideScss,
+  type OverrideGroup,
+  readTokenOverrideSchema,
+  validateOverrideDocument,
+} from "@mission-platform/mcp-shared/repo/token-overrides";
+import {
+  listOverridableTokenVariables,
+  readTokens,
+} from "@mission-platform/mcp-shared/repo/tokens";
 import { z } from "zod";
 
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -140,6 +149,97 @@ export function registerTools(server: McpServer): void {
       } catch (error) {
         return text(error instanceof Error ? error.message : String(error));
       }
+    },
+  );
+
+  server.registerTool(
+    "get_token_override_guide",
+    {
+      description:
+        "Explains how to re-skin an app by overriding Mission Platform design tokens, using the recommended DTCG JSON -> generated SCSS workflow.",
+      inputSchema: {},
+    },
+    async () => {
+      const guide = getGuide("design-token-overrides");
+      return text(guide?.body ?? "Design token overrides guide not found.");
+    },
+  );
+
+  server.registerTool(
+    "list_token_variables",
+    {
+      description:
+        "Lists the overridable Mission Platform design-token CSS custom properties (--mp-*) and their descriptions, optionally scoped to one token category (e.g. theme-light, radius, shadow, font).",
+      inputSchema: {
+        category: z
+          .string()
+          .optional()
+          .describe(
+            "Token category to scope to (e.g. theme-light, palette, radius, shadow, font, spacing).",
+          ),
+      },
+    },
+    async (args) => {
+      try {
+        return json(listOverridableTokenVariables(args.category));
+      } catch (error) {
+        return text(error instanceof Error ? error.message : String(error));
+      }
+    },
+  );
+
+  server.registerTool(
+    "get_token_override_schema",
+    {
+      description:
+        "Returns the JSON Schema (Draft 2020-12) for DTCG design-token override documents. It enumerates every overridable token key defined by @mission-platform/tokens (colours, spacing, radius, shadow, typography, motion, …) so editors and agents can validate and autocomplete `*.tokens.json` override documents. Reference it from a document via a `$schema` key.",
+      inputSchema: {},
+    },
+    async () => {
+      try {
+        return json(readTokenOverrideSchema());
+      } catch (error) {
+        return text(error instanceof Error ? error.message : String(error));
+      }
+    },
+  );
+
+  server.registerTool(
+    "generate_token_override",
+    {
+      description:
+        "Transforms a DTCG-style design-token override document into an SCSS/CSS `:root { --mp-*: ... }` partial to import after @mission-platform/tokens. A `{ light, dark }` value becomes `light-dark(...)`; any other scalar is emitted verbatim. Override keys are validated against the known @mission-platform/tokens variables; unknown keys are reported as a non-fatal warning.",
+      inputSchema: {
+        tokens: z
+          .string()
+          .describe(
+            'The override document as a JSON string, e.g. {"color":{"primary":{"default":{"$value":{"light":"#8b7ff0","dark":"#a99cf5"}}}},"radius":{"md":{"$value":"2px"}}}.',
+          ),
+        prefix: z
+          .string()
+          .optional()
+          .describe("Custom-property prefix (defaults to `mp`)."),
+      },
+    },
+    async (args) => {
+      let document: OverrideGroup;
+      try {
+        document = JSON.parse(args.tokens) as OverrideGroup;
+      } catch (error) {
+        return text(
+          `Invalid JSON: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+      const scss = buildTokenOverrideScss(document, { prefix: args.prefix });
+      const { unknownKeys } = validateOverrideDocument(document, args.prefix);
+      if (unknownKeys.length === 0) return text(scss);
+      const warning = [
+        `/* WARNING: ${unknownKeys.length} override key(s) don't match any known`,
+        `   @mission-platform/tokens variable (possible typos or app-specific tokens):`,
+        ...unknownKeys.map((name) => `     ${name}`),
+        `   Use get_token_override_schema or list_token_variables to see valid keys. */`,
+      ].join("\n");
+      return text(`${warning}\n\n${scss}`);
     },
   );
 }

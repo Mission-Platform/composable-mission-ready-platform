@@ -6,25 +6,26 @@
  */
 
 export type GuideId =
-  | 'overview'
-  | 'conventions'
-  | 'component-usage'
-  | 'atomic-component-design'
-  | 'composable-authoring'
-  | 'store-authoring'
-  | 'util-authoring'
-  | 'package-creation'
-  | 'package-development'
-  | 'app-creation'
-  | 'app-development'
-  | 'worker-creation'
-  | 'worker-development'
-  | 'framework-vue'
-  | 'framework-react'
-  | 'framework-solid'
-  | 'framework-svelte'
-  | 'framework-web-components'
-  | 'external-setup';
+  | "overview"
+  | "conventions"
+  | "component-usage"
+  | "atomic-component-design"
+  | "composable-authoring"
+  | "store-authoring"
+  | "util-authoring"
+  | "package-creation"
+  | "package-development"
+  | "app-creation"
+  | "app-development"
+  | "worker-creation"
+  | "worker-development"
+  | "framework-vue"
+  | "framework-react"
+  | "framework-solid"
+  | "framework-svelte"
+  | "framework-web-components"
+  | "external-setup"
+  | "design-token-overrides";
 
 export interface Guide {
   id: GuideId;
@@ -501,12 +502,91 @@ import { ForgeButton } from '@mission-platform/components';
 \`\`\`
 
 ## Design Token Overrides
-Override via CSS custom properties:
+Override via CSS custom properties (see the dedicated \`design-token-overrides\` guide
+for the recommended JSON → SCSS workflow and the \`generate_token_override\` /
+\`list_token_variables\` tools):
 \`\`\`css
 :root {
-  --mp-color-brand-primary: #ff0000;
+  --mp-color-primary-default: #ff0000;
 }
 \`\`\``;
+
+const DESIGN_TOKEN_OVERRIDES = `# Design Token Overrides
+
+Mission Platform ships its design decisions as **DTCG** design tokens
+(\`@mission-platform/tokens\`), generated into \`--mp-*\` **CSS custom properties**
+(colours, radii, shadows, spacing, typography, motion, …). To re-skin an app you
+**override those custom properties** — you never fork or edit the tokens package.
+
+## Recommended workflow: JSON → generated SCSS
+
+Keep overrides declarative and reviewable by authoring a small **DTCG-style
+override JSON** and transforming it into an SCSS/CSS \`:root { … }\` partial that
+is imported *after* the base tokens (so it wins the cascade). This keeps the
+override auditable, diffable, and regenerable.
+
+1. **Author** \`design-tokens/overrides.tokens.json\` — a nested tree grouped by
+   category, each leaf a \`{ "$value": …, "$description"?: … }\`:
+   \`\`\`json
+   {
+     "color": {
+       "primary": {
+         "default": { "$value": { "light": "#8b7ff0", "dark": "#a99cf5" }, "$description": "Brand primary" }
+       }
+     },
+     "radius": { "md": { "$value": "2px" } },
+     "shadow": { "md": { "$value": "0 3px 2px 0 rgb(0 0 0 / 20%)" } },
+     "font": { "family": { "sans": { "$value": "'Inter', ui-sans-serif, system-ui, sans-serif" } } }
+   }
+   \`\`\`
+   - A \`{ "light", "dark" }\` object emits \`light-dark(<light>, <dark>)\` — scheme-aware,
+     exactly like the base semantic colour tokens.
+   - Any other scalar (hex, \`rem\`, a shadow list, a font-family stack, a number) is
+     emitted verbatim.
+   - The custom-property name is the DTCG path joined with \`-\`, prefixed \`--mp-\`
+     (\`color.primary.default\` → \`--mp-color-primary-default\`).
+
+2. **Transform** the JSON into an SCSS partial. Use the \`generate_token_override\`
+   tool (pass the JSON, get back the \`:root { … }\` SCSS), or wire the same
+   transform into a build script that writes \`overrides.generated.scss\`.
+
+3. **Import** the generated partial *after* the base tokens so it overrides them:
+   \`\`\`scss
+   @use '@mission-platform/tokens/scss/tokens';
+   @import './design-tokens/overrides.generated.scss';
+   \`\`\`
+
+## Discovering what you can override
+
+Use the \`list_token_variables\` tool (optionally with a \`category\` such as
+\`theme-light\`, \`radius\`, \`shadow\`, \`font\`) to enumerate every overridable
+\`--mp-*\` custom property and its description, or \`get_tokens\` to read the raw
+DTCG values.
+
+## Validating the override document
+
+A JSON Schema (Draft 2020-12) ships with
+\`@mission-platform/vite-plugin-token-overrides\` (exported at \`./schema\`). It
+enumerates every overridable token key, so editors give you validation and
+autocomplete. Reference it from the document with a \`$schema\` key (a
+\`$\`-prefixed key the transform ignores):
+\`\`\`json
+{
+  "$schema": "../../node_modules/@mission-platform/vite-plugin-token-overrides/schema/token-overrides.schema.json",
+  "color": { "primary": { "default": { "$value": { "light": "#8b7ff0", "dark": "#a99cf5" } } } }
+}
+\`\`\`
+Fetch the schema with the \`get_token_override_schema\` tool. \`generate_token_override\`
+also validates the keys you pass and warns (non-fatally) about any that don't
+match a known \`--mp-*\` token — usually typos.
+
+## Notes
+
+- Override only the tokens you need — unspecified tokens keep their defaults.
+- Font-family overrides just change \`--mp-font-family-sans\`/\`--mp-font-family-mono\`;
+  remember to actually load the web font (e.g. a \`<link>\` or \`@font-face\`).
+- Prefer overriding **semantic** tokens (\`--mp-color-primary-default\`,
+  \`--mp-radius-md\`) over primitives so the whole component library follows.`;
 
 const FRAMEWORK_VUE = `# Vue 3 Best Practices
 
@@ -572,37 +652,102 @@ const FRAMEWORK_WEB_COMPONENTS = `# Web Components (Lit) Best Practices
 4. **Attribute Reflection:** Reflect only when necessary.`;
 
 const GUIDES: Record<GuideId, Guide> = {
-  overview: { id: 'overview', title: 'Overview', body: OVERVIEW },
-  conventions: { id: 'conventions', title: 'Conventions & Naming', body: CONVENTIONS },
-  'component-usage': { id: 'component-usage', title: 'Using Components', body: COMPONENT_USAGE },
-  'atomic-component-design': {
-    id: 'atomic-component-design',
-    title: 'Atomic Component Design',
+  overview: { id: "overview", title: "Overview", body: OVERVIEW },
+  conventions: {
+    id: "conventions",
+    title: "Conventions & Naming",
+    body: CONVENTIONS,
+  },
+  "component-usage": {
+    id: "component-usage",
+    title: "Using Components",
+    body: COMPONENT_USAGE,
+  },
+  "atomic-component-design": {
+    id: "atomic-component-design",
+    title: "Atomic Component Design",
     body: ATOMIC_COMPONENT_DESIGN,
   },
-  'composable-authoring': {
-    id: 'composable-authoring',
-    title: 'Authoring Composables',
+  "composable-authoring": {
+    id: "composable-authoring",
+    title: "Authoring Composables",
     body: COMPOSABLE_AUTHORING,
   },
-  'store-authoring': { id: 'store-authoring', title: 'Authoring Stores', body: STORE_AUTHORING },
-  'util-authoring': { id: 'util-authoring', title: 'Authoring Utils', body: UTIL_AUTHORING },
-  'package-creation': { id: 'package-creation', title: 'Creating a Package', body: PACKAGE_CREATION },
-  'package-development': { id: 'package-development', title: 'Developing a Package', body: PACKAGE_DEVELOPMENT },
-  'app-creation': { id: 'app-creation', title: 'Creating an App', body: APP_CREATION },
-  'app-development': { id: 'app-development', title: 'Developing an App', body: APP_DEVELOPMENT },
-  'worker-creation': { id: 'worker-creation', title: 'Creating a Worker', body: WORKER_CREATION },
-  'worker-development': { id: 'worker-development', title: 'Developing a Worker', body: WORKER_DEVELOPMENT },
-  'framework-vue': { id: 'framework-vue', title: 'Vue 3 Best Practices', body: FRAMEWORK_VUE },
-  'framework-react': { id: 'framework-react', title: 'React Best Practices', body: FRAMEWORK_REACT },
-  'framework-solid': { id: 'framework-solid', title: 'SolidJS Best Practices', body: FRAMEWORK_SOLID },
-  'framework-svelte': { id: 'framework-svelte', title: 'Svelte 5 Best Practices', body: FRAMEWORK_SVELTE },
-  'framework-web-components': {
-    id: 'framework-web-components',
-    title: 'Web Components (Lit) Best Practices',
+  "store-authoring": {
+    id: "store-authoring",
+    title: "Authoring Stores",
+    body: STORE_AUTHORING,
+  },
+  "util-authoring": {
+    id: "util-authoring",
+    title: "Authoring Utils",
+    body: UTIL_AUTHORING,
+  },
+  "package-creation": {
+    id: "package-creation",
+    title: "Creating a Package",
+    body: PACKAGE_CREATION,
+  },
+  "package-development": {
+    id: "package-development",
+    title: "Developing a Package",
+    body: PACKAGE_DEVELOPMENT,
+  },
+  "app-creation": {
+    id: "app-creation",
+    title: "Creating an App",
+    body: APP_CREATION,
+  },
+  "app-development": {
+    id: "app-development",
+    title: "Developing an App",
+    body: APP_DEVELOPMENT,
+  },
+  "worker-creation": {
+    id: "worker-creation",
+    title: "Creating a Worker",
+    body: WORKER_CREATION,
+  },
+  "worker-development": {
+    id: "worker-development",
+    title: "Developing a Worker",
+    body: WORKER_DEVELOPMENT,
+  },
+  "framework-vue": {
+    id: "framework-vue",
+    title: "Vue 3 Best Practices",
+    body: FRAMEWORK_VUE,
+  },
+  "framework-react": {
+    id: "framework-react",
+    title: "React Best Practices",
+    body: FRAMEWORK_REACT,
+  },
+  "framework-solid": {
+    id: "framework-solid",
+    title: "SolidJS Best Practices",
+    body: FRAMEWORK_SOLID,
+  },
+  "framework-svelte": {
+    id: "framework-svelte",
+    title: "Svelte 5 Best Practices",
+    body: FRAMEWORK_SVELTE,
+  },
+  "framework-web-components": {
+    id: "framework-web-components",
+    title: "Web Components (Lit) Best Practices",
     body: FRAMEWORK_WEB_COMPONENTS,
   },
-  'external-setup': { id: 'external-setup', title: 'External Consumer Setup', body: EXTERNAL_SETUP },
+  "external-setup": {
+    id: "external-setup",
+    title: "External Consumer Setup",
+    body: EXTERNAL_SETUP,
+  },
+  "design-token-overrides": {
+    id: "design-token-overrides",
+    title: "Design Token Overrides",
+    body: DESIGN_TOKEN_OVERRIDES,
+  },
 };
 
 export const GUIDE_IDS = Object.keys(GUIDES) as GuideId[];
