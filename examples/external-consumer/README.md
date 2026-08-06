@@ -17,6 +17,18 @@ Because of the conditions above, we can import components using bare specifiers:
 import { ForgeButton } from '@mission-platform/components';
 ```
 
+### Per-Component Imports
+
+To avoid pulling the entire React barrel (and heavy optional components such as the Monaco editor and
+its web workers) into the client bundle, import a single component from its per-component subpath. It
+resolves to just that component's compiled chunk, while types still flow from the framework barrel:
+
+```ts
+import { ForgeBadge } from '@mission-platform/components/react/atoms/forge-badge/forge-badge';
+```
+
+`src/main.tsx` demonstrates both the barrel import and a per-component import side by side.
+
 ## How to Test (Local)
 
 1. Build the packages in the monorepo root:
