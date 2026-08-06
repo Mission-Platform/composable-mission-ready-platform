@@ -34,6 +34,7 @@
     "@mission-platform/hunspell": "workspace:*",
     "@mission-platform/layouts": "workspace:*",
     "@mission-platform/qr-code": "workspace:*",
+    "@mission-platform/speech-audio": "workspace:*",
     "@mission-platform/barcode": "workspace:*",
     "@mission-platform/code-scanner": "workspace:*",
     "@mission-platform/wysiwyg": "workspace:*",
