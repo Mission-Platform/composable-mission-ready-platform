@@ -72,4 +72,5 @@ feature off.
 pnpm exec turbo run build --filter @mission-platform/matrix-code
 ```
 
-This requires the Rust toolchain and `wasm-pack` (`cargo install wasm-pack`).
+This requires the Rust toolchain with the `wasm32-unknown-unknown` target. The pinned `wasm-pack` npm package is
+installed during `pnpm install`.

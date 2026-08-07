@@ -5,7 +5,10 @@
   "description": "Rust crate build for qr-code-decode (wasm-pack \u2192 packages/qr-code-decode-wasm)",
   "license": "BSD-4-Clause",
   "scripts": {
-    "build": "$HOME/.cargo/bin/wasm-pack build . --target bundler --release --weak-refs --reference-types --no-pack --out-dir ../../packages/qr-code-decode-wasm/src/wasm --out-name qr-code-decode",
+    "build": "wasm-pack build . --target bundler --release --weak-refs --reference-types --no-pack --out-dir ../../packages/qr-code-decode-wasm/src/wasm --out-name qr-code-decode",
     "test": "wasm-pack test --node ."
+  },
+  "devDependencies": {
+    "wasm-pack": "0.15.0"
   }
 }

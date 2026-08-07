@@ -84,9 +84,9 @@ The Rust → wasm step is driven by Turbo (it runs before the type-check, bundle
 pnpm exec turbo run build --filter @mission-platform/qr-code
 ```
 
-Prerequisites: a Rust toolchain (the `wasm32-unknown-unknown` target is added automatically by `wasm-pack`) and
-`wasm-pack` itself:
+Prerequisites: a Rust toolchain with the `wasm32-unknown-unknown` target and the pinned `wasm-pack` npm dependency:
 
 ```sh
-cargo install wasm-pack
+rustup target add wasm32-unknown-unknown
+pnpm install
 ```

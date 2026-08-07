@@ -190,6 +190,7 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
   vue-demi: true
+  wasm-pack: true
   workerd: true
 
 overrides:

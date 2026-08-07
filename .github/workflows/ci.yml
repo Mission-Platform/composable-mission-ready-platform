@@ -46,9 +46,6 @@ jobs:
       - name: Cache Rust dependencies & target
         uses: Swatinem/rust-cache@v2
 
-      - name: Install wasm-pack
-        run: cargo install wasm-pack
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 

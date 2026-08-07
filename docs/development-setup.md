@@ -14,7 +14,7 @@ Before cloning the repository, ensure your system meets the following requiremen
 | **pnpm** | `11.20.0` | Package manager and workspace orchestrator |
 | **Git** | Latest stable | Version control |
 | **Rust** | Stable toolchain | Native tests and Rust/WASM crate development |
-| **wasm-pack** | Latest stable | Packaging Rust crates as typed WebAssembly workspaces |
+| **wasm-pack** | `0.15.0` via pnpm | Packaging Rust crates as typed WebAssembly workspaces |
 | **Docker** | Latest stable | Required only for the Emscripten Hunspell build |
 
 ### Version Management (Recommended)
@@ -33,11 +33,11 @@ corepack enable
 corepack prepare pnpm@11.20.0 --activate
 ```
 
-Install the Rust target and WebAssembly packager when working on Rust crates:
+Install the Rust target when working on Rust crates. The WebAssembly packager is
+provided by the pinned `wasm-pack` npm dependency during `pnpm install`:
 
 ```bash
 rustup target add wasm32-unknown-unknown
-cargo install wasm-pack
 ```
 
 ## Initial Setup
@@ -130,7 +130,8 @@ pnpm install
 
 ### WASM Build Failures
 
-If Rust/WASM packages fail to build, check that the stable Rust toolchain,
-`wasm32-unknown-unknown` target, and `wasm-pack` are installed. The
+If Rust/WASM packages fail to build, check that the stable Rust toolchain and
+`wasm32-unknown-unknown` target are installed, then run `pnpm install` to
+restore the pinned `wasm-pack` npm dependency. The
 `@mission-platform/hunspell` Emscripten build additionally requires Docker to
 be running; the other Rust crates build with the local Rust toolchain.

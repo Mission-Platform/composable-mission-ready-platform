@@ -7,5 +7,8 @@
   "scripts": {
     "build": "wasm-pack build . --target bundler --release --weak-refs --reference-types --no-pack --panic-unwind --out-dir ../../packages/code-scan-wasm/src/wasm --out-name code-scan",
     "test": "wasm-pack test --node ."
+  },
+  "devDependencies": {
+    "wasm-pack": "0.15.0"
   }
 }
