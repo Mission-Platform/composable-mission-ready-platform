@@ -76,10 +76,14 @@ export interface GenerateFrameworkSourcesOptions {
   stripPrefix?: string;
 }
 
-/** Re-export one helper module's value + type bindings from the flat generated tree. */
+/** Re-export one helper module's value + type bindings from the mirrored tree. */
 function helperReExportLine(helper: DiscoveredHelperExport): string {
   const names = [...helper.values, ...helper.types.map((type) => `type ${type}`)];
-  return `export { ${names.join(', ')} } from './${helper.base}';`;
+  const relativePath = helper.relativePath
+    .replace(/^\.\//, '')
+    .replace(/^\.\.\//, '')
+    .replace(/^components\//, '');
+  return `export { ${names.join(', ')} } from './${relativePath}';`;
 }
 
 /**
@@ -255,6 +259,7 @@ function findExportedComponentName(sourceFile: ts.SourceFile): string | undefine
 export function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): string {
   const stripPrefix = options.stripPrefix ?? 'Forge';
   const componentsDir = path.dirname(options.componentsModule);
+  const sourceRoot = path.dirname(componentsDir);
   // Framework-gated components (opening with a `"use react";` / `"use vue";`
   // directive) are emitted only for the framework they target; drop the rest so
   // they neither compile nor get re-exported from this framework's entry.
@@ -294,7 +299,7 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   // `''` = tree root) so the generators' flat `./<base>` import specifiers — and
   // the entry barrel's — can be rewritten to the correct nested relative path in
   // a final pass, leaving each generator's own emitter untouched.
-  const moduleRegistry = new Map<string, string>();
+  const moduleRegistry = new Map<string, { dir: string; file: string }>();
   const rewriteTargets: { file: string; dir: string }[] = [];
   const toPosix = (value: string): string => value.split(path.sep).join('/');
   const normaliseDir = (dir: string): string => (dir === '.' || dir === '' ? '' : toPosix(dir));
@@ -305,6 +310,14 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
     const relative = toPosix(path.relative(componentsDir, path.dirname(sourceAbsPath)));
     return relative.startsWith('..') ? '' : normaliseDir(relative);
   };
+  const mirrorHelperDir = (sourceAbsPath: string): string => {
+    const relativeToComponents = toPosix(path.relative(componentsDir, path.dirname(sourceAbsPath)));
+    if (!relativeToComponents.startsWith('..')) {
+      return normaliseDir(relativeToComponents);
+    }
+    const relativeToSource = toPosix(path.relative(sourceRoot, path.dirname(sourceAbsPath)));
+    return relativeToSource.startsWith('..') ? '' : normaliseDir(relativeToSource);
+  };
   const KNOWN_MODULE_EXT = /(\.d\.ts|\.module\.scss|\.module\.css|\.vue|\.svelte|\.tsx|\.ts|\.jsx|\.js|\.scss|\.css)$/;
   const moduleBase = (fileName: string): string => fileName.replace(KNOWN_MODULE_EXT, '');
   // Write a generated module under its mirrored directory, register its base →
@@ -314,7 +327,7 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
     const destination = path.join(options.outDir, normalised, fileName);
     mkdirSync(path.dirname(destination), { recursive: true });
     writeFileSync(destination, code, 'utf8');
-    moduleRegistry.set(moduleBase(fileName), normalised);
+    moduleRegistry.set(moduleBase(fileName), { dir: normalised, file: fileName });
     rewriteTargets.push({ file: destination, dir: normalised });
   };
   // Copy a static asset (e.g. a stylesheet) under its mirrored directory and
@@ -324,7 +337,7 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
     const destination = path.join(options.outDir, normalised, fileName);
     mkdirSync(path.dirname(destination), { recursive: true });
     copyFileSync(sourcePath, destination);
-    moduleRegistry.set(moduleBase(fileName), normalised);
+    moduleRegistry.set(moduleBase(fileName), { dir: normalised, file: fileName });
   };
   // Resolve a flat `./<base>[.ext]` specifier, encountered in a module living in
   // `fromDir`, to the nested relative path of its registered target.
@@ -336,8 +349,12 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
     const rewrite = (specifier: string): string => {
       const rest = specifier.slice(2);
       const fileName = path.posix.basename(rest);
-      const dir = moduleRegistry.get(moduleBase(fileName));
-      return dir === undefined ? specifier : relSpecifier(fromDir, dir, fileName);
+      const target = moduleRegistry.get(moduleBase(fileName));
+      if (target === undefined) {
+        return specifier;
+      }
+      const targetFile = path.extname(fileName) !== '' ? target.file : moduleBase(target.file);
+      return relSpecifier(fromDir, target.dir, targetFile);
     };
     return code
       .replace(
@@ -361,11 +378,40 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   // so a composable that reads another composable or a shared context resolves.
   const carriedHelpers = new Set<string>();
   const carryHelperModule = (sourcePath: string): void => {
-    const base = path.basename(sourcePath, path.extname(sourcePath));
-    if (carriedHelpers.has(base)) {
+    const sourceKey = path.resolve(sourcePath);
+    if (carriedHelpers.has(sourceKey)) {
       return;
     }
-    carriedHelpers.add(base);
+    carriedHelpers.add(sourceKey);
+
+    if (path.basename(sourcePath, path.extname(sourcePath)) === 'index') {
+      const helperDirectory = path.dirname(sourcePath);
+      const helperBase = path.basename(helperDirectory);
+      const helperDir = mirrorHelperDir(sourcePath);
+      const indexSource = readFileSync(sourcePath, 'utf8');
+      const indexParsed = parseTsx(sourcePath, indexSource);
+      const indexNeutral = readNeutralImports(indexParsed);
+      if (indexNeutral.values.length > 0 || indexNeutral.types.length > 0) {
+        const compiled = compileHookModule(indexSource, { framework: options.framework, fileName: sourcePath });
+        writeModule(helperDir, `index.${compiled.lang}`, compiled.code);
+      } else {
+        writeModule(helperDir, 'index.ts', indexSource);
+      }
+      helperExportedTypes.set('index', readExportedTypeNames(indexParsed));
+      for (const entry of readdirSync(helperDirectory, { withFileTypes: true })) {
+        if (!entry.isFile() || !/\.(?:ts|tsx)$/.test(entry.name) || /(?:\.spec|\.test)\.(?:ts|tsx)$/.test(entry.name)) {
+          continue;
+        }
+        carryHelperModule(path.join(helperDirectory, entry.name));
+      }
+      const helperParent = path.posix.dirname(toPosix(helperDir));
+      const aliasPath = path.join(options.outDir, helperParent, `${helperBase}.ts`);
+      mkdirSync(path.dirname(aliasPath), { recursive: true });
+      writeFileSync(aliasPath, `export * from './${helperBase}/index';\n`, 'utf8');
+      moduleRegistry.set(helperBase, { dir: helperDir, file: helperBase });
+      return;
+    }
+    const base = path.basename(sourcePath, path.extname(sourcePath));
 
     const source = readFileSync(sourcePath, 'utf8');
     const parsed = parseTsx(sourcePath, source);
@@ -373,12 +419,12 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
     const usesNeutral = neutral.values.length > 0 || neutral.types.length > 0;
     if (usesNeutral) {
       const compiled = compileHookModule(source, { framework: options.framework, fileName: sourcePath });
-      writeModule(mirrorDir(sourcePath), `${base}.${compiled.lang}`, compiled.code);
+      writeModule(mirrorHelperDir(sourcePath), `${base}.${compiled.lang}`, compiled.code);
     } else {
       // Verbatim helpers keep their authored relative imports; the mirrored tree
       // makes `../`-climbing specifiers resolve as-is, and any flat `./sibling`
       // is nested by the shared rewrite pass below.
-      writeModule(mirrorDir(sourcePath), path.basename(sourcePath), source);
+      writeModule(mirrorHelperDir(sourcePath), path.basename(sourcePath), source);
     }
 
     // Record the helper's exported types so companion types declared there
@@ -397,6 +443,11 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
         const nestedPath = path.join(helperDir, `${relativeImport.specifier}.${extension}`);
         if (existsSync(nestedPath)) {
           carryHelperModule(nestedPath);
+          break;
+        }
+        const nestedIndexPath = path.join(helperDir, relativeImport.specifier, `index.${extension}`);
+        if (existsSync(nestedIndexPath)) {
+          carryHelperModule(nestedIndexPath);
           break;
         }
       }
@@ -497,6 +548,11 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
           carryHelperModule(helperPath);
           break;
         }
+        const helperIndexPath = path.join(componentDir, relativeImport.specifier, `index.${extension}`);
+        if (existsSync(helperIndexPath)) {
+          carryHelperModule(helperIndexPath);
+          break;
+        }
       }
     }
 
@@ -521,6 +577,34 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   // forwarded through the entry; their source files are already carried into the
   // flat tree by the per-component helper-import copy above.
   const helpers = discoverHelperExports(readFileSync(options.componentsModule, 'utf8'), componentFolders);
+  for (const helper of helpers) {
+    const helperCandidates = [
+      path.resolve(componentsDir, helper.relativePath),
+      path.resolve(sourceRoot, helper.relativePath),
+      path.resolve(sourceRoot, helper.relativePath.replace(/^components\//, '')),
+    ];
+    const helperBase = helperCandidates.find((candidate) =>
+      ['ts', 'tsx'].some(
+        (extension) =>
+          existsSync(`${candidate}.${extension}`) || existsSync(path.join(candidate, `index.${extension}`)),
+      ),
+    );
+    if (helperBase === undefined) {
+      continue;
+    }
+    for (const extension of ['ts', 'tsx'] as const) {
+      const helperFile = `${helperBase}.${extension}`;
+      const helperIndex = path.join(helperBase, `index.${extension}`);
+      if (existsSync(helperFile)) {
+        carryHelperModule(helperFile);
+        break;
+      }
+      if (existsSync(helperIndex)) {
+        carryHelperModule(helperIndex);
+        break;
+      }
+    }
+  }
 
   // The co-located local JSX types module: framework-specific variants of the
   // neutral render/props primitives (`MpProperties`, `MpRenderProperty`) the

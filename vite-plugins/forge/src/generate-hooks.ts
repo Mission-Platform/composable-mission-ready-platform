@@ -35,7 +35,7 @@ import {
   readNeutralImports,
 } from './compiler/ast.js';
 import { compileHookModule, type JsxFramework } from './compiler/compile.js';
-import { discoverHelperExports, type DiscoveredHelperExport } from './compiler/discover.js';
+import { type DiscoveredHelperExport } from './compiler/discover.js';
 
 import type { Plugin } from 'vite';
 
@@ -52,12 +52,124 @@ export interface GenerateHookLibrarySourcesOptions {
 /** The extensions a re-exported module's source may be authored under. */
 const SOURCE_EXTENSIONS = ['ts', 'tsx'] as const;
 
-/** Resolve the on-disk source path for a re-exported module base, if it exists. */
-function resolveModuleSource(directory: string, base: string): { path: string; extension: string } | undefined {
+interface HookReExport {
+  values: string[];
+  types: string[];
+  from: string;
+  exportAll: boolean;
+}
+
+function parseHookReExports(source: string): HookReExport[] {
+  const result: HookReExport[] = [];
+  const reExport = /export\s+(type\s+)?(\*|\{([^}]*)\})\s+from\s*['"]([^'"]+)['"]/g;
+  let match: RegExpExecArray | null = reExport.exec(source);
+  while (match !== null) {
+    const values: string[] = [];
+    const types: string[] = [];
+    if (match[2] !== '*') {
+      for (const raw of match[3].split(',')) {
+        const token = raw.trim();
+        if (token.length === 0) {
+          continue;
+        }
+        if (match[1] !== undefined || token.startsWith('type ')) {
+          types.push(match[1] !== undefined ? token : token.slice('type '.length).trim());
+        } else {
+          values.push(token);
+        }
+      }
+    }
+    result.push({ values, types, from: match[4], exportAll: match[2] === '*' });
+    match = reExport.exec(source);
+  }
+  return result;
+}
+
+function resolveSourceModule(directory: string, specifier: string): string | undefined {
+  for (const extension of SOURCE_EXTENSIONS) {
+    const candidate = path.resolve(directory, `${specifier}.${extension}`);
+    if (existsSync(candidate)) {
+      return candidate;
+    }
+  }
+  for (const extension of SOURCE_EXTENSIONS) {
+    const candidate = path.resolve(directory, specifier, `index.${extension}`);
+    if (existsSync(candidate)) {
+      return candidate;
+    }
+  }
+  return undefined;
+}
+
+function moduleRelativePath(rootDirectory: string, sourcePath: string): string {
+  const sourceDirectory = path.dirname(sourcePath);
+  const sourceName = path.basename(sourcePath, path.extname(sourcePath));
+  const parentName = path.basename(sourceDirectory);
+  const isDirectoryBarrel = sourceName === 'index';
+  const isDuplicatedFileWithBarrel = sourceName === parentName && existsSync(path.join(sourceDirectory, 'index.ts'));
+  const modulePath = isDirectoryBarrel || isDuplicatedFileWithBarrel ? sourceDirectory : sourcePath;
+  const relative = path.relative(rootDirectory, modulePath).split(path.sep).join('/');
+  return isDirectoryBarrel || isDuplicatedFileWithBarrel
+    ? relative
+    : relative.slice(0, -path.extname(sourcePath).length);
+}
+
+function discoverHookModules(entryModule: string): DiscoveredHelperExport[] {
+  const rootDirectory = path.dirname(entryModule);
+  const discovered = new Map<string, DiscoveredHelperExport>();
+  const visitedBarrels = new Set<string>();
+
+  const visit = (barrelPath: string): void => {
+    const resolvedBarrel = path.resolve(barrelPath);
+    if (visitedBarrels.has(resolvedBarrel)) {
+      return;
+    }
+    visitedBarrels.add(resolvedBarrel);
+
+    const source = readFileSync(resolvedBarrel, 'utf8');
+    for (const reExport of parseHookReExports(source)) {
+      const target = resolveSourceModule(path.dirname(resolvedBarrel), reExport.from);
+      if (target === undefined) {
+        continue;
+      }
+      if (reExport.exportAll && path.basename(target, path.extname(target)) === 'index') {
+        visit(target);
+        continue;
+      }
+
+      const relativePath = moduleRelativePath(rootDirectory, target);
+      const base = path.basename(relativePath);
+      const current = discovered.get(relativePath) ?? {
+        base,
+        relativePath,
+        values: [],
+        types: [],
+      };
+      current.values.push(...reExport.values.filter((name) => !current.values.includes(name)));
+      current.types.push(...reExport.types.filter((name) => !current.types.includes(name)));
+      discovered.set(relativePath, current);
+    }
+  };
+
+  visit(entryModule);
+  return [...discovered.values()];
+}
+
+/** Resolve a re-exported module, preserving whether it is a file or directory barrel. */
+function resolveModuleSource(
+  directory: string,
+  base: string,
+): { path: string; extension: string; generatedPath: string; directory: boolean } | undefined {
   for (const extension of SOURCE_EXTENSIONS) {
     const candidate = path.join(directory, `${base}.${extension}`);
     if (existsSync(candidate)) {
-      return { path: candidate, extension };
+      return { path: candidate, extension, generatedPath: base, directory: false };
+    }
+  }
+  for (const extension of SOURCE_EXTENSIONS) {
+    const candidate = path.join(directory, base, `index.${extension}`);
+    if (existsSync(candidate)) {
+      return { path: candidate, extension, generatedPath: `${base}/index`, directory: true };
     }
   }
   return undefined;
@@ -97,18 +209,43 @@ function writeGeneratedModule(outDir: string, relativePath: string, extension: s
   writeFileSync(target, contents, 'utf8');
 }
 
-/** Recursively collect the source files (by extension, excluding `.d.ts`) under a generated tree. */
+/** Recursively collect source files, excluding declarations and colocated tests. */
 function collectGeneratedSources(directory: string, extensions: readonly string[]): string[] {
   const collected: string[] = [];
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
     const full = path.join(directory, entry.name);
     if (entry.isDirectory()) {
       collected.push(...collectGeneratedSources(full, extensions));
-    } else if (extensions.some((extension) => entry.name.endsWith(extension)) && !entry.name.endsWith('.d.ts')) {
+    } else if (
+      extensions.some((extension) => entry.name.endsWith(extension)) &&
+      !entry.name.endsWith('.d.ts') &&
+      !/(?:\.spec|\.test)\.(?:ts|tsx)$/.test(entry.name)
+    ) {
       collected.push(full);
     }
   }
   return collected;
+}
+
+/** Compile or copy one source file into its matching location in the cache tree. */
+function emitGeneratedSource(
+  outDir: string,
+  sourcePath: string,
+  generatedPath: string,
+  extension: string,
+  framework: JsxFramework,
+): void {
+  const source = readFileSync(sourcePath, 'utf8');
+  const parsed = parseTsx(sourcePath, source);
+  const neutral = readNeutralImports(parsed);
+  const usesNeutral = neutral.values.length > 0 || neutral.types.length > 0;
+  if (!usesNeutral) {
+    writeGeneratedModule(outDir, generatedPath, extension, source);
+    return;
+  }
+  const compiled = compileHookModule(source, { framework, fileName: sourcePath });
+  const code = rewriteLocalEffectImport(compiled.code, moduleDepth(generatedPath));
+  writeGeneratedModule(outDir, generatedPath, compiled.lang, code);
 }
 
 /**
@@ -116,11 +253,8 @@ function collectGeneratedSources(directory: string, extensions: readonly string[
  * returning the generated entry module path.
  */
 export function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions): string {
+  const modules = discoverHookModules(options.entryModule);
   const directory = path.dirname(options.entryModule);
-  const barrelSource = readFileSync(options.entryModule, 'utf8');
-  // Every re-exported module of a hook library is a "helper" (there are no
-  // components), so discovery with an empty component set yields them all.
-  const modules = discoverHelperExports(barrelSource, new Set());
 
   rmSync(options.outDir, { recursive: true, force: true });
   mkdirSync(options.outDir, { recursive: true });
@@ -130,22 +264,28 @@ export function generateHookLibrarySources(options: GenerateHookLibrarySourcesOp
     if (resolved === undefined) {
       continue;
     }
-    const source = readFileSync(resolved.path, 'utf8');
-    const parsed = parseTsx(resolved.path, source);
-    const neutral = readNeutralImports(parsed);
-    const usesNeutral = neutral.values.length > 0 || neutral.types.length > 0;
-
-    if (!usesNeutral) {
-      // A pure, framework-agnostic module (no neutral import) needs no rewrite —
-      // copy it verbatim into the tree (nested path preserved) so the entry's
-      // `./<relativePath>` resolves and any sibling relative imports stay valid.
-      writeGeneratedModule(options.outDir, module.relativePath, resolved.extension, source);
+    if (!resolved.directory) {
+      emitGeneratedSource(options.outDir, resolved.path, module.relativePath, resolved.extension, options.framework);
       continue;
     }
 
-    const compiled = compileHookModule(source, { framework: options.framework, fileName: resolved.path });
-    const code = rewriteLocalEffectImport(compiled.code, moduleDepth(module.relativePath));
-    writeGeneratedModule(options.outDir, module.relativePath, compiled.lang, code);
+    // Directory-backed composables have a local barrel plus an implementation
+    // file (and may have private support modules). Mirror the complete source
+    // tree so the generated entry resolves its `./<composable>` import through
+    // `index.ts` without flattening away the authored structure.
+    const sourceDirectory = path.dirname(resolved.path);
+    for (const sourcePath of collectGeneratedSources(sourceDirectory, ['.ts', '.tsx'])) {
+      const relativeSourcePath = path.relative(sourceDirectory, sourcePath).split(path.sep).join('/');
+      const sourceExtension = path.extname(relativeSourcePath).slice(1);
+      const relativeSourceBase = relativeSourcePath.slice(0, -(sourceExtension.length + 1));
+      emitGeneratedSource(
+        options.outDir,
+        sourcePath,
+        `${module.relativePath}/${relativeSourceBase}`,
+        sourceExtension,
+        options.framework,
+      );
+    }
   }
 
   // The co-located effect helper module: the Vue-only generalised watcher
