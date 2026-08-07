@@ -22,7 +22,11 @@ interface ThreeSpinningCubeProperties {
   speed?: number;
 }
 
-function ThreeSpinningCube({ color = '#4f46e5', wireframe = false, speed = 0.01 }: ThreeSpinningCubeProperties) {
+function ThreeSpinningCube({
+  color = '#4f46e5',
+  wireframe = false,
+  speed = 0.01,
+}: Readonly<ThreeSpinningCubeProperties>) {
   const onReady = ({ scene }: ThreeContext): (() => void) => {
     const geometry = new THREE.BoxGeometry(2, 2, 2);
     const material = new THREE.MeshBasicMaterial({ color: new THREE.Color(color), wireframe });

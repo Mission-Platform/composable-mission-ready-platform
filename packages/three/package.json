@@ -65,6 +65,7 @@
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-plugin-forge": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
+    "@mission-platform/storybook-framework": "workspace:*",
     "@types/node": "catalog:typescript",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
