@@ -89,8 +89,8 @@ Adapters are **not** exposed as per-framework subpaths. `@mission-platform/route
 `mp:<framework>` export conditions on its single `.` entry, so you select the framework **once** —
 `resolve.conditions` in Vite (see `defineFrameworkAppConfig` / `frameworkResolveConditions` from
 `@mission-platform/vite-config`) and `customConditions` in TypeScript (via the
-`@mission-platform/typescript-config/framework-<name>` presets) — and then import everything with the bare
-specifier. Each adapter build re-exports the whole neutral core as well.
+`@mission-platform/typescript-config/framework-<name>` presets) — and then import everything with the bare specifier.
+Each adapter build re-exports the whole neutral core as well.
 
 ### Vue Adapter (`mp:vue` condition)
 
@@ -141,9 +141,8 @@ The React adapter provides integration with React Router.
 
 ### RedwoodSDK Adapter (`./redwood`)
 
-RedwoodSDK is not one of the `mp:*` frameworks, so it keeps a dedicated subpath. It provides integration
-with `rwsdk/router` — the flat, request/response route table used by RedwoodSDK (React on Cloudflare
-Workers).
+RedwoodSDK is not one of the `mp:*` frameworks, so it keeps a dedicated subpath. It provides integration with
+`rwsdk/router` — the flat, request/response route table used by RedwoodSDK (React on Cloudflare Workers).
 
 **Main Exports:**
 

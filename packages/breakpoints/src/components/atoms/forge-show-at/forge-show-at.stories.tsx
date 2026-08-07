@@ -2,7 +2,7 @@ import { h } from '@mission-platform/forge';
 
 import { ForgeShowAt } from '@mission-platform/breakpoints';
 
-import type { Meta, StoryObj } from '../../../stories.types';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
  * Cross-framework `ForgeShowAt` — authored once in the neutral JSX dialect and

@@ -1246,12 +1246,6 @@ importers:
 
   configs/storybook-framework:
     dependencies:
-      '@mission-platform/breakpoints':
-        specifier: workspace:*
-        version: link:../../packages/breakpoints
-      '@mission-platform/i18n':
-        specifier: workspace:*
-        version: link:../../packages/i18n
       '@mission-platform/vite-config':
         specifier: workspace:*
         version: link:../vite-config
@@ -1866,6 +1860,9 @@ importers:
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
+      '@mission-platform/storybook-framework':
+        specifier: workspace:*
+        version: link:../../configs/storybook-framework
       '@mission-platform/stylelint-config':
         specifier: workspace:*
         version: link:../../configs/stylelint-config

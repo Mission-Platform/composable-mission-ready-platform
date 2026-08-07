@@ -1,7 +1,6 @@
 @import '@mission-platform/tokens/scss/tokens';
 @import '@mission-platform/tokens/scss/themes/light';
 @import '@mission-platform/tokens/scss/themes/dark';
-@import '@mission-platform/components/styles';
 
 /* App-scoped design-token override — pastel colours, sharp shadows, less
    rounding and the Inter font. Auto-generated from `design-tokens/overrides.tokens.json`

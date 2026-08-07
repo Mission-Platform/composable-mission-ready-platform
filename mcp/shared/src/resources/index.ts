@@ -5,11 +5,11 @@
  * under `docs/`.
  */
 
-import { allGuides } from '../knowledge/guides.ts';
-import { listComponents } from '../repo/components.ts';
-import { listDocs, listGroup, readDoc as readDocument } from '../repo/scanner.ts';
+import {allGuides} from '../knowledge/guides.ts';
+import {listComponents} from '../repo/components.ts';
+import {listDocs, listGroup, readDoc as readDocument} from '../repo/scanner.ts';
 
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import type {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 
 function inventory(): string {
   const groups = (['packages', 'apps', 'workers', 'vite-plugins', 'configs', 'crates'] as const).map((group) => ({

@@ -1,7 +1,6 @@
 import '@mission-platform/tokens/scss/tokens';
 import '@mission-platform/tokens/scss/themes/light';
 import '@mission-platform/tokens/scss/themes/dark';
-import '@mission-platform/components/styles';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './preview.scss';
 

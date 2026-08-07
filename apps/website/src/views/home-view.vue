@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   import {
     ForgeAccordion,
     ForgeAvatar,
@@ -484,9 +484,9 @@
 
 <template>
   <ForgeApplicationLayout
+    :status-level="undefined"
     class="home"
     sticky-header
-    :status-level="undefined"
   >
     <template
       v-if="isAiTranslation"
@@ -500,8 +500,8 @@
     <template #navbar>
       <ForgeNavbar
         align="center"
-        sticky
         mobile-title="Mission Platform"
+        sticky
       >
         <template #brand>
           <router-link
@@ -512,15 +512,15 @@
             class="home__brand"
           >
             <ForgeAvatar
-              src="/favicon.svg"
               alt="Mission Platform"
-              size="sm"
               shape="square"
+              size="sm"
+              src="/favicon.svg"
             />
             <ForgeTypography
+              as="span"
               variant="h6"
               weight="bold"
-              as="span"
             >
               Mission Platform
             </ForgeTypography>
@@ -576,18 +576,18 @@
             {{ t(($) => $.hero.badge, { defaultValue: 'Open Source', ns: 'mp.website' }) }}
           </ForgeBadge>
           <ForgeTypography
-            variant="display"
-            weight="bold"
             align="center"
             class="home__title"
+            variant="display"
+            weight="bold"
           >
             {{ t(($) => $.hero.title, { defaultValue: 'Composable. Mission Ready.', ns: 'mp.website' }) }}
           </ForgeTypography>
           <ForgeTypography
-            variant="body-lg"
-            color="secondary"
             align="center"
             class="home__lead"
+            color="secondary"
+            variant="body-lg"
           >
             {{
               t(($) => $.hero.lead, {
@@ -605,15 +605,15 @@
             wrap
           >
             <ForgeButton
-              variant="primary"
               size="lg"
+              variant="primary"
               @click="() => {}"
             >
               {{ t(($) => $.hero['cta-primary'], { defaultValue: 'Get Started', ns: 'mp.website' }) }}
             </ForgeButton>
             <ForgeButton
-              variant="secondary"
               size="lg"
+              variant="secondary"
               @click="() => {}"
             >
               {{ t(($) => $.hero['cta-secondary'], { defaultValue: 'Documentation', ns: 'mp.website' }) }}
@@ -628,15 +628,15 @@
       >
         <ForgeInView animation="slide-up">
           <ForgeTypography
+            class="home__section-title"
             variant="h2"
             weight="bold"
-            class="home__section-title"
           >
             {{ t(($) => $.features.title, { defaultValue: 'Features', ns: 'mp.website' }) }}
           </ForgeTypography>
           <ForgeGrid
-            min-column-width="16rem"
             gap="lg"
+            min-column-width="16rem"
           >
             <ForgeCard
               v-for="feature in features"
@@ -658,8 +658,8 @@
                 </ForgeTypography>
               </template>
               <ForgeTypography
-                variant="body-md"
                 color="secondary"
+                variant="body-md"
               >
                 {{ feature.description }}
               </ForgeTypography>
@@ -674,16 +674,16 @@
       >
         <ForgeInView animation="slide-up">
           <ForgeTypography
+            class="home__section-title"
             variant="h2"
             weight="bold"
-            class="home__section-title"
           >
             {{ t(($) => $.packages.title, { defaultValue: 'Packages', ns: 'mp.website' }) }}
           </ForgeTypography>
           <ForgeTypography
-            variant="body-lg"
-            color="secondary"
             class="home__section-lead"
+            color="secondary"
+            variant="body-lg"
           >
             {{
               t(($) => $.packages.lead, {
@@ -694,8 +694,8 @@
           </ForgeTypography>
           <ForgeMasonry
             class="home__packages"
-            min-column-width="18rem"
             gap="md"
+            min-column-width="18rem"
           >
             <ForgeCard
               v-for="pkg in packages"
@@ -704,14 +704,14 @@
             >
               <div class="home__package-row">
                 <ForgeTag
-                  variant="primary"
-                  size="sm"
                   :label="pkg.name"
+                  size="sm"
+                  variant="primary"
                 />
               </div>
               <ForgeTypography
-                variant="body-sm"
                 color="secondary"
+                variant="body-sm"
               >
                 {{ pkg.description }}
               </ForgeTypography>
@@ -726,16 +726,16 @@
       >
         <ForgeInView animation="slide-up">
           <ForgeTypography
+            class="home__section-title"
             variant="h2"
             weight="bold"
-            class="home__section-title"
           >
             {{ t(($) => $.about.title, { defaultValue: 'About', ns: 'mp.website' }) }}
           </ForgeTypography>
           <ForgeTypography
-            variant="body-lg"
-            color="secondary"
             class="home__section-lead"
+            color="secondary"
+            variant="body-lg"
           >
             {{
               t(($) => $.about.lead, {
@@ -748,15 +748,15 @@
           <div class="home__projects">
             <ForgeCarousel
               :aria-label="t(($) => $.about.projects['aria-label'], { defaultValue: 'Project list', ns: 'mp.website' })"
-              :slides="projectSlides"
-              :loop="projects.length > 1"
               :controls="projects.length > 1"
               :indicators="projects.length > 1"
+              :loop="projects.length > 1"
+              :slides="projectSlides"
             >
               <template #slide="{ index }">
                 <ForgeCard
-                  shadow
                   class="home__project"
+                  shadow
                 >
                   <template #header>
                     <ForgeTypography
@@ -767,9 +767,9 @@
                     </ForgeTypography>
                   </template>
                   <ForgeTypography
-                    variant="body-md"
-                    color="secondary"
                     class="home__project-description"
+                    color="secondary"
+                    variant="body-md"
                   >
                     {{ projects[index].description }}
                   </ForgeTypography>
@@ -777,8 +777,8 @@
                     <a
                       :href="projects[index].href"
                       class="home__project-link"
-                      target="_blank"
                       rel="noopener noreferrer"
+                      target="_blank"
                     >
                       <ForgeButton variant="primary">
                         {{ projects[index].cta }}
@@ -804,30 +804,30 @@
       >
         <ForgeInView animation="slide-up">
           <ForgeTypography
+            class="home__section-title"
             variant="h2"
             weight="bold"
-            class="home__section-title"
           >
             {{ t(($) => $.faq.title, { defaultValue: 'FAQ', ns: 'mp.website' }) }}
           </ForgeTypography>
           <ForgeAccordion
-            class="home__faq"
-            :items="faqItems"
             :exclusive="false"
+            :items="faqItems"
+            class="home__faq"
           >
             <template #summary="{ item }">
               <ForgeTypography
+                as="span"
                 variant="h5"
                 weight="semibold"
-                as="span"
               >
                 {{ item.title }}
               </ForgeTypography>
             </template>
             <template #content="{ item }">
               <ForgeTypography
-                variant="body-md"
                 color="secondary"
+                variant="body-md"
               >
                 {{ item.content }}
               </ForgeTypography>
@@ -840,8 +840,8 @@
     <template #footer>
       <div class="home__footer">
         <ForgeTypography
-          variant="caption"
           color="tertiary"
+          variant="caption"
         >
           {{
             t(($) => $.footer.copyright, {

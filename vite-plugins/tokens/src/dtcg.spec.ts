@@ -7,6 +7,7 @@ import {
   compareTokens,
   dashedName,
   deepMergeTokens,
+  type DtcgGroup,
   flattenTokens,
   formatColorValue,
   formatCssColor,
@@ -16,7 +17,6 @@ import {
   isAlias,
   resolveAlias,
   resolveTsValue,
-  type DtcgGroup,
   type TokenRecord,
 } from './dtcg.js';
 

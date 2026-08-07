@@ -243,6 +243,18 @@ export function render(result: TemplateResult, container: ParentNode): void {
 export class ForgeElement extends HTMLElement {
   /** Reactive property declarations (overridden by each generated subclass). */
   static readonly properties: Record<string, PropertyDeclaration> = {};
+  /** Backing store for reactive property/state values. */
+  private readonly mpValues = new Map<string, unknown>();
+  /** The element's open shadow root, rendered into on every update. */
+  private readonly mpRoot: ShadowRoot;
+  /** Whether a re-render is already scheduled for the current microtask. */
+  private mpDirty = false;
+
+  constructor() {
+    super();
+    (this.constructor as typeof ForgeElement).finalize();
+    this.mpRoot = this.attachShadow({ mode: 'open' });
+  }
 
   /** The observed attributes — the lower-cased names of every non-state property. */
   static get observedAttributes(): string[] {
@@ -251,15 +263,6 @@ export class ForgeElement extends HTMLElement {
       .filter(([, declaration]) => declaration.state !== true)
       .map(([name]) => name.toLowerCase());
   }
-
-  /** Backing store for reactive property/state values. */
-  private readonly mpValues = new Map<string, unknown>();
-
-  /** The element's open shadow root, rendered into on every update. */
-  private readonly mpRoot: ShadowRoot;
-
-  /** Whether a re-render is already scheduled for the current microtask. */
-  private mpDirty = false;
 
   /**
    * Define the reactive accessors for this subclass's `static properties` on the
@@ -292,12 +295,6 @@ export class ForgeElement extends HTMLElement {
     Object.defineProperty(this, 'mpFinalized', { value: true });
   }
 
-  constructor() {
-    super();
-    (this.constructor as typeof ForgeElement).finalize();
-    this.mpRoot = this.attachShadow({ mode: 'open' });
-  }
-
   connectedCallback(): void {
     this.adoptAttributes();
     this.renderRoot();
@@ -308,6 +305,27 @@ export class ForgeElement extends HTMLElement {
     if (propertyName !== undefined) {
       (this as unknown as Record<string, unknown>)[propertyName] = value;
     }
+  }
+
+  /** Schedule a shadow-root re-render on the next microtask (coalescing writes). */
+  requestUpdate(): void {
+    if (this.mpDirty) {
+      return;
+    }
+    this.mpDirty = true;
+    queueMicrotask(() => {
+      this.mpDirty = false;
+      if (this.isConnected) {
+        this.renderRoot();
+      }
+    });
+  }
+
+  /** The element's template. Overridden by every generated subclass. */
+  render(): TemplateResult {
+    return html`
+      <slot></slot>
+    `;
   }
 
   /** Reflect any attributes already present on the host onto their properties. */
@@ -326,29 +344,8 @@ export class ForgeElement extends HTMLElement {
     return Object.keys(properties).find((name) => name.toLowerCase() === attribute);
   }
 
-  /** Schedule a shadow-root re-render on the next microtask (coalescing writes). */
-  requestUpdate(): void {
-    if (this.mpDirty) {
-      return;
-    }
-    this.mpDirty = true;
-    queueMicrotask(() => {
-      this.mpDirty = false;
-      if (this.isConnected) {
-        this.renderRoot();
-      }
-    });
-  }
-
   /** Render the current template into the shadow root. */
   private renderRoot(): void {
     render(this.render(), this.mpRoot);
-  }
-
-  /** The element's template. Overridden by every generated subclass. */
-  render(): TemplateResult {
-    return html`
-      <slot></slot>
-    `;
   }
 }

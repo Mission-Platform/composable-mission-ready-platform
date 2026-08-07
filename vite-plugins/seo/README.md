@@ -1,10 +1,13 @@
 # @mission-platform/vite-plugin-seo
 
-A Vite plugin that generates a site's crawler-facing companion files — `robots.txt` and `sitemap.xml` — at build time (and on dev-server start), using the deterministic builders in [@mission-platform/seo](../../packages/seo).
+A Vite plugin that generates a site's crawler-facing companion files — `robots.txt` and `sitemap.xml` — at build time
+(and on dev-server start), using the deterministic builders in [@mission-platform/seo](../../packages/seo).
 
-It replaces the per-app `scripts/generate-seo-files.ts` + `prebuild` Node scripts, so generation runs as part of `vite build` instead of a separate step.
+It replaces the per-app `scripts/generate-seo-files.ts` + `prebuild` Node scripts, so generation runs as part of
+`vite build` instead of a separate step.
 
-The files are written into the resolved Vite `publicDir` so they are served verbatim by the dev server and copied into the build output (`outDir`) alongside the rest of the static assets.
+The files are written into the resolved Vite `publicDir` so they are served verbatim by the dev server and copied into
+the build output (`outDir`) alongside the rest of the static assets.
 
 ## Installation
 
@@ -160,7 +163,8 @@ export default defineConfig({
 
 ### robots.txt Not Updating in Development
 
-The plugin writes files during the `buildStart` hook, which runs on both build and dev server start. If you're not seeing updates:
+The plugin writes files during the `buildStart` hook, which runs on both build and dev server start. If you're not
+seeing updates:
 
 1. Check that your Vite config is correctly set up
 2. Verify the output directory is correct

@@ -4,7 +4,8 @@ This document outlines the conventions and configuration for Cloudflare Workers 
 
 ## Overview
 
-Workers in the Mission Platform are located in the `workers/` directory. They are used for edge computing tasks such as serving Single Page Applications (SPAs), proxying API requests, and handling scheduled tasks.
+Workers in the Mission Platform are located in the `workers/` directory. They are used for edge computing tasks such as
+serving Single Page Applications (SPAs), proxying API requests, and handling scheduled tasks.
 
 ## Project Structure
 
@@ -23,9 +24,11 @@ workers/
 
 ## Build System
 
-Workers typically use `tsdown` for bundling. This ensures that the worker code and its dependencies are compiled into a single file compatible with the Cloudflare Workers environment.
+Workers typically use `tsdown` for bundling. This ensures that the worker code and its dependencies are compiled into a
+single file compatible with the Cloudflare Workers environment.
 
-- **Library Mode**: Most workers opt out of module preservation (`preserveModules: false`) to ship a self-contained artifact.
+- **Library Mode**: Most workers opt out of module preservation (`preserveModules: false`) to ship a self-contained
+  artifact.
 - **Types**: Use `@cloudflare/workers-types` for TypeScript support.
 
 ## Configuration
@@ -33,17 +36,24 @@ Workers typically use `tsdown` for bundling. This ensures that the worker code a
 Workers are configured via environment variables and Cloudflare Bindings.
 
 ### Local Development
-Use `wrangler dev` to run workers locally. This simulates the Cloudflare environment and allows for local testing of KV, Durable Objects, and other bindings.
+
+Use `wrangler dev` to run workers locally. This simulates the Cloudflare environment and allows for local testing of KV,
+Durable Objects, and other bindings.
 
 ### Production
-Deployment is handled via `wrangler deploy`. Environment-specific configuration is managed through Cloudflare's dashboard or a `wrangler.toml` file (if provided).
+
+Deployment is handled via `wrangler deploy`. Environment-specific configuration is managed through Cloudflare's
+dashboard or a `wrangler.toml` file (if provided).
 
 ## Best Practices
 
-- **Self-Contained Artifacts**: Always bundle dependencies into the worker output to ensure consistent behavior at the edge.
+- **Self-Contained Artifacts**: Always bundle dependencies into the worker output to ensure consistent behavior at the
+  edge.
 - **Environment Variables**: Use the `env` object passed to the `fetch` handler instead of global process variables.
-- **Edge Compatibility**: Avoid using Node.js built-in modules that are not supported by the Cloudflare Workers runtime (e.g., `fs`, `child_process`).
-- **Small Footprint**: Keep worker bundles small to minimize cold start times and stay within Cloudflare's resource limits.
+- **Edge Compatibility**: Avoid using Node.js built-in modules that are not supported by the Cloudflare Workers runtime
+  (e.g., `fs`, `child_process`).
+- **Small Footprint**: Keep worker bundles small to minimize cold start times and stay within Cloudflare's resource
+  limits.
 
 ## Deployment Command
 

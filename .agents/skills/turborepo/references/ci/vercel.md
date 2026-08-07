@@ -4,7 +4,8 @@ Turborepo integrates seamlessly with Vercel for monorepo deployments.
 
 ## Remote Cache
 
-Remote caching is **automatically enabled** when deploying to Vercel. No configuration needed - Vercel detects Turborepo and enables caching.
+Remote caching is **automatically enabled** when deploying to Vercel. No configuration needed - Vercel detects Turborepo
+and enables caching.
 
 This means:
 

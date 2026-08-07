@@ -50,7 +50,8 @@ Custom cache location. Default: `node_modules/.cache/turbo`.
 
 ## daemon
 
-**Deprecated**: The daemon is no longer used for `turbo run` and this option will be removed in version 3.0. The daemon is still used by `turbo watch` and the Turborepo LSP.
+**Deprecated**: The daemon is no longer used for `turbo run` and this option will be removed in version 3.0. The daemon
+is still used by `turbo watch` and the Turborepo LSP.
 
 ## envMode
 
@@ -96,7 +97,7 @@ Configure remote caching.
 ```
 
 | Option          | Default                | Description                                            |
-| --------------- | ---------------------- | ------------------------------------------------------ |
+|-----------------|------------------------|--------------------------------------------------------|
 | `enabled`       | `true`                 | Enable/disable remote caching                          |
 | `signature`     | `false`                | Sign artifacts with `TURBO_REMOTE_CACHE_SIGNATURE_KEY` |
 | `preflight`     | `false`                | Send OPTIONS request before cache requests             |
@@ -144,16 +145,19 @@ When using `outputLogs: "errors-only"`, show task hashes on start/completion:
 
 ### `longerSignatureKey`
 
-Enforce a minimum key length of 32 bytes for `TURBO_REMOTE_CACHE_SIGNATURE_KEY` when `remoteCache.signature` is enabled. Short keys weaken HMAC-SHA256 signatures. Fails the run immediately if the key is too short.
+Enforce a minimum key length of 32 bytes for `TURBO_REMOTE_CACHE_SIGNATURE_KEY` when `remoteCache.signature` is enabled.
+Short keys weaken HMAC-SHA256 signatures. Fails the run immediately if the key is too short.
 
 ### `globalConfiguration`
 
-Moves global configuration keys under a top-level `global` key for clarity and changes how `global.inputs` (formerly `globalDependencies`) affects task hashing.
+Moves global configuration keys under a top-level `global` key for clarity and changes how `global.inputs` (formerly
+`globalDependencies`) affects task hashing.
 
 When enabled:
 
 - Global config keys move under `global` with cleaner names
-- `global.inputs` files are **prepended to every task's inputs** instead of being folded into the global hash — tasks can opt out of specific global inputs using negation globs
+- `global.inputs` files are **prepended to every task's inputs** instead of being folded into the global hash — tasks
+  can opt out of specific global inputs using negation globs
 
 ```json
 {
@@ -180,7 +184,7 @@ When enabled:
 **Key rename mapping:**
 
 | Old (top-level)                                                                                                                  | New (`global.`)           |
-| -------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+|----------------------------------------------------------------------------------------------------------------------------------|---------------------------|
 | `globalDependencies`                                                                                                             | `inputs`                  |
 | `globalEnv`                                                                                                                      | `env`                     |
 | `globalPassThroughEnv`                                                                                                           | `passThroughEnv`          |
@@ -188,9 +192,11 @@ When enabled:
 
 **Behavior change for `global.inputs`:**
 
-With `globalDependencies` (old): files are hashed into the **global hash**, which is embedded in every task's cache key. Changing any of these files invalidates all tasks — there is no opt-out.
+With `globalDependencies` (old): files are hashed into the **global hash**, which is embedded in every task's cache key.
+Changing any of these files invalidates all tasks — there is no opt-out.
 
-With `global.inputs` (new): files are treated as **implicit task inputs** prepended to each task's `inputs` globs. This means:
+With `global.inputs` (new): files are treated as **implicit task inputs** prepended to each task's `inputs` globs. This
+means:
 
 - Tasks can exclude specific global files: `"inputs": ["$TURBO_DEFAULT$", "!$TURBO_ROOT$/tsconfig.json"]`
 - The global hash no longer includes these file hashes (it still includes lockfile, engines, global env, etc.)
@@ -222,7 +228,8 @@ Bypass the `packageManager` field requirement. Use for incremental migration.
 
 ## Git Worktree Cache Sharing
 
-When working in Git worktrees, Turborepo automatically shares local cache between the main worktree and linked worktrees.
+When working in Git worktrees, Turborepo automatically shares local cache between the main worktree and linked
+worktrees.
 
 **How it works:**
 

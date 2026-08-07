@@ -2,10 +2,9 @@
 
 Shared TypeScript base configurations for every Mission Platform workspace.
 
-This package exposes a set of `tsconfig.*.json` presets that capture the
-project-wide TypeScript standards (target, libs, linting flags, Vue/DOM types,
-declaration emit settings, etc.). Apps and packages **must** extend these
-presets rather than redefining the same options locally.
+This package exposes a set of `tsconfig.*.json` presets that capture the project-wide TypeScript standards (target,
+libs, linting flags, Vue/DOM types, declaration emit settings, etc.). Apps and packages **must** extend these presets
+rather than redefining the same options locally.
 
 ## Presets
 
@@ -90,10 +89,8 @@ Add the package as a `devDependency`:
 
 ## Conventions
 
-- Always set a workspace-local `tsBuildInfoFile` so incremental builds are
-  isolated per workspace.
+- Always set a workspace-local `tsBuildInfoFile` so incremental builds are isolated per workspace.
 - Do **not** redefine `lib`, `types`, `noUnusedLocals`, `noUnusedParameters`,
-  `erasableSyntaxOnly`, or `noFallthroughCasesInSwitch` — they come from the
-  preset and are part of the platform standard.
-- Override locally only what is genuinely workspace-specific (e.g. `paths`,
-  extra `types`, `rootDir`).
+  `erasableSyntaxOnly`, or `noFallthroughCasesInSwitch` — they come from the preset and are part of the platform
+  standard.
+- Override locally only what is genuinely workspace-specific (e.g. `paths`, extra `types`, `rootDir`).

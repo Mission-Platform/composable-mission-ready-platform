@@ -4,10 +4,12 @@
 
 ### Patch Changes
 
-- 021a647: Move shared tooling configs from `packages/` into a dedicated `configs/` workspace directory. Package names and public entry points are unchanged; consumers continue to import via `@mission-platform/<config-name>`.
+- 021a647: Move shared tooling configs from `packages/` into a dedicated `configs/` workspace directory. Package names
+  and public entry points are unchanged; consumers continue to import via `@mission-platform/<config-name>`.
 - 05d31c9: normalize lint and format scripts across all workspaces
 
-  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
+  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run
+  `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
 
 - 91deb58: switch `@mission-platform/postcss-config` from `vite build` to pure `tsc`
 

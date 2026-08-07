@@ -5,7 +5,8 @@ description: Create Changesets and logically grouped Conventional Commits for th
 
 # Changesets & Conventional Commits
 
-This skill packages the Mission Platform release and commit workflow defined in `AGENTS.md` into a repeatable procedure. Follow it whenever you are about to commit work or prepare a release in this repo.
+This skill packages the Mission Platform release and commit workflow defined in `AGENTS.md` into a repeatable procedure.
+Follow it whenever you are about to commit work or prepare a release in this repo.
 
 ## When to use
 
@@ -15,7 +16,8 @@ Use this skill whenever any of the following is true:
 - `git status` shows modified/untracked files under `apps/`, `packages/`, `configs/`, `scripts/`, or the repo root.
 - The user references Changesets, CHANGELOG, version bumps, or publishing.
 
-If only documentation outside a workspace changed (e.g. root `README.md`), still use Conventional Commits but skip the changeset step.
+If only documentation outside a workspace changed (e.g. root `README.md`), still use Conventional Commits but skip the
+changeset step.
 
 ## Core rules (must follow)
 
@@ -28,15 +30,19 @@ If only documentation outside a workspace changed (e.g. root `README.md`), still
    [optional footer(s)]
    ```
 2. **Allowed types**: `feat`, `fix`, `refactor`, `style`, `chore`, `docs`, `test`, `build`, `ci`, `perf`.
-3. **Scope** is the workspace directory name under `apps/`, `packages/`, or `configs/` (e.g. `map`, `components`, `eslint-config`). Use `repo` for cross-cutting changes that don't belong to a single workspace. Omit scope only if truly global and `repo` would be misleading.
+3. **Scope** is the workspace directory name under `apps/`, `packages/`, or `configs/` (e.g. `map`, `components`,
+   `eslint-config`). Use `repo` for cross-cutting changes that don't belong to a single workspace. Omit scope only if
+   truly global and `repo` would be misleading.
 4. **Description**: lowercase, imperative mood, no trailing period, ≤ ~72 chars.
 5. Use `!` after type/scope **and** a `BREAKING CHANGE:` footer for breaking API changes.
 6. **Changeset is required** for any change under `configs/` or `packages/` (published workspaces).
-   - **Not required** for changes only under `apps/`, `scripts/`, or repo root tooling. Apps are `"private": true`.
-7. **Dependency direction**: never let a commit introduce imports from `apps/` into `packages/` or `configs/`. Flag and stop if you see this.
+  - **Not required** for changes only under `apps/`, `scripts/`, or repo root tooling. Apps are `"private": true`.
+7. **Dependency direction**: never let a commit introduce imports from `apps/` into `packages/` or `configs/`. Flag and
+   stop if you see this.
 8. **Co-author trailer**: when committing on the user's behalf, append
    `--trailer "Co-authored-by: Junie <junie@jetbrains.com>"` to `git commit`.
-9. **Never commit without explicit user instruction.** This skill prepares commits and changesets; it does not auto-push.
+9. **Never commit without explicit user instruction.** This skill prepares commits and changesets; it does not
+   auto-push.
 
 ## Workflow
 
@@ -51,16 +57,20 @@ git diff            # for unstaged changes
 git diff --cached   # for already-staged changes
 ```
 
-Group the changed paths by **workspace** (top-level dir under `apps/`, `packages/`, `configs/`, or `scripts/`). Each workspace forms a candidate commit group.
+Group the changed paths by **workspace** (top-level dir under `apps/`, `packages/`, `configs/`, or `scripts/`). Each
+workspace forms a candidate commit group.
 
 ### Step 2 — Plan logical commits
 
 Split changes into the smallest number of commits where **each commit is internally coherent**:
 
 - One commit per workspace per concern. Don't mix `feat` and `fix` for the same workspace in one commit.
-- A refactor that spans multiple workspaces to enable a feature is acceptable as a single `refactor(repo): …` commit **only** when the change is mechanical and uniform; otherwise split per workspace.
-- Test-only updates colocated with code changes belong **in the same commit** as the code they cover (don't separate `test(x)` from `feat(x)` unless the tests are independent).
-- Generated/build artefacts (`dist/`, `*.lock` other than `pnpm-lock.yaml`) should not be committed. `pnpm-lock.yaml` changes go with the commit that caused them.
+- A refactor that spans multiple workspaces to enable a feature is acceptable as a single `refactor(repo): …` commit
+  **only** when the change is mechanical and uniform; otherwise split per workspace.
+- Test-only updates colocated with code changes belong **in the same commit** as the code they cover (don't separate
+  `test(x)` from `feat(x)` unless the tests are independent).
+- Generated/build artefacts (`dist/`, `*.lock` other than `pnpm-lock.yaml`) should not be committed. `pnpm-lock.yaml`
+  changes go with the commit that caused them.
 
 Present the plan to the user as a short list before executing, e.g.:
 
@@ -78,21 +88,25 @@ Wait for confirmation (or proceed if the user already said "go ahead").
 
 ### Step 3 — Determine the bump for each published workspace
 
-For every commit that touches `configs/<x>` or `packages/<x>`, pick the smallest meaningful SemVer bump (mirror the commit type):
+For every commit that touches `configs/<x>` or `packages/<x>`, pick the smallest meaningful SemVer bump (mirror the
+commit type):
 
-| Commit type/marker | Changeset bump |
-|---|---|
-| `fix`, `refactor`, `perf`, `style`, `test`, `docs`, `build`, `chore` | `patch` |
-| `feat` | `minor` |
-| `!` / `BREAKING CHANGE:` footer | `major` |
+| Commit type/marker                                                   | Changeset bump |
+|----------------------------------------------------------------------|----------------|
+| `fix`, `refactor`, `perf`, `style`, `test`, `docs`, `build`, `chore` | `patch`        |
+| `feat`                                                               | `minor`        |
+| `!` / `BREAKING CHANGE:` footer                                      | `major`        |
 
-A single changeset may list multiple packages when one change genuinely affects them all. Otherwise prefer one changeset per commit per affected workspace.
+A single changeset may list multiple packages when one change genuinely affects them all. Otherwise prefer one changeset
+per commit per affected workspace.
 
-### Step 4 — Write the changeset(s)
+### Step 4 — Write the changeset (s)
 
-Prefer the non-interactive path: create the markdown file directly under `.changeset/` rather than running `pnpm changeset` (which is interactive).
+Prefer the non-interactive path: create the markdown file directly under `.changeset/` rather than running
+`pnpm changeset` (which is interactive).
 
-File name: a short, kebab-case slug, e.g. `.changeset/tooltip-component.md`. Use a fresh slug; do not overwrite existing files.
+File name: a short, kebab-case slug, e.g. `.changeset/tooltip-component.md`. Use a fresh slug; do not overwrite existing
+files.
 
 Content format:
 
@@ -108,7 +122,8 @@ Content format:
 Rules:
 
 - Use the **scoped package name** (`@mission-platform/...`), not the directory name.
-- The summary must read naturally in the generated CHANGELOG. Don't include the `type(scope):` prefix; do keep imperative mood.
+- The summary must read naturally in the generated CHANGELOG. Don't include the `type(scope):` prefix; do keep
+  imperative mood.
 - For a breaking change, add a second paragraph starting with `BREAKING CHANGE:` describing the migration.
 - Include the changeset file **in the same commit** as the code change it documents.
 
@@ -205,9 +220,12 @@ BREAKING CHANGE: Vue 2 is no longer supported; upgrade to Vue 3.5+.
 
 ## Failure modes to watch for
 
-- **Missing changeset** for a `configs/` or `packages/` change — CI's `Conventional Commits` workflow will fail. Always add one.
-- **Wrong scope** (e.g. `feat(my-care-notes-app)` instead of `feat(my-care-notes)`) — scope must match the directory name exactly.
+- **Missing changeset** for a `configs/` or `packages/` change — CI's `Conventional Commits` workflow will fail. Always
+  add one.
+- **Wrong scope** (e.g. `feat(my-care-notes-app)` instead of `feat(my-care-notes)`) — scope must match the directory
+  name exactly.
 - **Mixed concerns** in one commit — split them.
 - **Apps-only change with a changeset** — remove it; apps are private.
 - **Capitalised or period-terminated description** — rewrite in lowercase imperative without a trailing period.
-- **Forgotten co-author trailer** — amend with `git commit --amend --trailer "Co-authored-by: Junie <junie@jetbrains.com>"` before any push.
+- **Forgotten co-author trailer** — amend with
+  `git commit --amend --trailer "Co-authored-by: Junie <junie@jetbrains.com>"` before any push.

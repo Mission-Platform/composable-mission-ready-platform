@@ -4,11 +4,13 @@ This guide describes how to migrate existing Vue 2 codebases to Vue 3 within the
 
 ## Overview
 
-The Mission Platform uses Vue 3 with the Composition API and `<script setup>` syntax. Migration involves moving away from the Options API and updating component lifecycle and reactivity patterns.
+The Mission Platform uses Vue 3 with the Composition API and `<script setup>` syntax. Migration involves moving away
+from the Options API and updating component lifecycle and reactivity patterns.
 
 ## Prerequisites
 
 Before migrating, ensure your package follows the platform's dependency rules:
+
 - No imports from `apps/`.
 - All shared logic should reside in `packages/`.
 - Configuration should come from `configs/`.
@@ -32,9 +34,11 @@ export default defineConfig(defineAppConfig({
 Replace the Vue 2 Options API (`data`, `methods`, `computed`) with the Vue 3 Composition API.
 
 ### Data to Refs
+
 In Vue 2, state was defined in the `data()` function. In Vue 3, use `ref()` or `reactive()`.
 
 **Vue 2:**
+
 ```js
 export default {
   data() {
@@ -46,6 +50,7 @@ export default {
 ```
 
 **Vue 3:**
+
 ```ts
 import { ref } from 'vue';
 
@@ -53,9 +58,11 @@ const count = ref(0);
 ```
 
 ### Methods to Functions
+
 Methods become plain functions in the `<script setup>` block.
 
 **Vue 2:**
+
 ```js
 methods: {
   increment() {
@@ -65,6 +72,7 @@ methods: {
 ```
 
 **Vue 3:**
+
 ```ts
 const increment = () => {
   count.value++;
@@ -75,17 +83,18 @@ const increment = () => {
 
 Lifecycle hooks have been renamed and must be imported.
 
-| Vue 2 | Vue 3 |
-| :--- | :--- |
+| Vue 2                      | Vue 3                                     |
+|:---------------------------|:------------------------------------------|
 | `beforeCreate` / `created` | Use `setup()` / `<script setup>` directly |
-| `beforeMount` | `onBeforeMount` |
-| `mounted` | `onMounted` |
-| `beforeUpdate` | `onBeforeUpdate` |
-| `updated` | `onUpdated` |
-| `beforeDestroy` | `onBeforeUnmount` |
-| `destroyed` | `onUnmounted` |
+| `beforeMount`              | `onBeforeMount`                           |
+| `mounted`                  | `onMounted`                               |
+| `beforeUpdate`             | `onBeforeUpdate`                          |
+| `updated`                  | `onUpdated`                               |
+| `beforeDestroy`            | `onBeforeUnmount`                         |
+| `destroyed`                | `onUnmounted`                             |
 
 Example:
+
 ```ts
 import { onMounted } from 'vue';
 
@@ -114,9 +123,11 @@ const increment = () => count.value++;
 ## Step 5: Handle Breaking Changes
 
 ### V-model
+
 In Vue 3, the default prop name for `v-model` is `modelValue` and the event is `update:modelValue`.
 
 ### Ref access
+
 `this.$refs` is no longer used. Define a ref with the same name as the `ref` attribute on the element.
 
 ```vue

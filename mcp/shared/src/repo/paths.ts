@@ -4,9 +4,9 @@
  * `MISSION_REPO_ROOT` environment variable; otherwise it is discovered by
  * walking up from this file until a `pnpm-workspace.yaml` is found.
  */
-import { existsSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import {existsSync} from 'node:fs';
+import {dirname, join, resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
 
 /** The workspace groups understood by the tooling. */
 export type WorkspaceGroup = 'packages' | 'apps' | 'workers' | 'vite-plugins' | 'configs' | 'crates';

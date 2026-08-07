@@ -1,7 +1,7 @@
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import {existsSync, readdirSync, readFileSync} from 'node:fs';
+import {join} from 'node:path';
 
-import { findRepoRoot } from './paths.ts';
+import {findRepoRoot} from './paths.ts';
 
 /**
  * Reads the Mission Platform design tokens (DTCG JSON) from @mission-platform/tokens.
@@ -54,7 +54,7 @@ export interface TokenVariable {
  */
 export function listOverridableTokenVariables(category?: string, prefix = 'mp'): TokenVariable[] {
   const documents = category
-    ? { [category]: readTokens(category) }
+    ? {[category]: readTokens(category)}
     : (readTokens() as Record<string, unknown>);
 
   const byName = new Map<string, TokenVariable>();

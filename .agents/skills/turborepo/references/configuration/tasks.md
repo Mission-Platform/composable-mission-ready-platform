@@ -21,7 +21,7 @@ Controls task execution order.
 ```
 
 | Syntax     | Meaning                              |
-| ---------- | ------------------------------------ |
+|------------|--------------------------------------|
 | `^task`    | Run `task` in all dependencies first |
 | `task`     | Run `task` in same package first     |
 | `pkg#task` | Run specific package's task first    |
@@ -42,10 +42,11 @@ For tasks like `lint` and `check-types` that can run in parallel but need depend
 }
 ```
 
-**DO NOT use `dependsOn: ["^lint"]`** - this forces sequential execution.
-**DO NOT use `dependsOn: []`** - this breaks cache invalidation.
+**DO NOT use `dependsOn: ["^lint"]`** - this forces sequential execution. **DO NOT use `dependsOn: []`** - this breaks
+cache invalidation.
 
-The `transit` task creates dependency relationships without running anything (no matching script), so tasks run in parallel with correct caching.
+The `transit` task creates dependency relationships without running anything (no matching script), so tasks run in
+parallel with correct caching.
 
 ## outputs
 
@@ -96,7 +97,7 @@ Files considered when calculating task hash. Defaults to all tracked files in pa
 **Special values:**
 
 | Value                 | Meaning                                 |
-| --------------------- | --------------------------------------- |
+|-----------------------|-----------------------------------------|
 | `$TURBO_DEFAULT$`     | Include default inputs, then add/remove |
 | `$TURBO_ROOT$/<path>` | Reference files from repo root          |
 
@@ -116,9 +117,11 @@ Files considered when calculating task hash. Defaults to all tracked files in pa
 
 ### Interaction with `global.inputs`
 
-When `futureFlags.globalConfiguration` is enabled, files listed in `global.inputs` are prepended to every task's `inputs`. The combined list is then used to compute the task hash.
+When `futureFlags.globalConfiguration` is enabled, files listed in `global.inputs` are prepended to every task's
+`inputs`. The combined list is then used to compute the task hash.
 
-This is different from `globalDependencies`, where files were hashed into the **global** hash and could not be influenced by task-level `inputs`.
+This is different from `globalDependencies`, where files were hashed into the **global** hash and could not be
+influenced by task-level `inputs`.
 
 **With `globalDependencies` (old behavior):**
 
@@ -251,7 +254,8 @@ Run tasks alongside this task. For long-running tasks that need runtime dependen
 }
 ```
 
-Unlike `dependsOn`, `with` runs tasks concurrently (not sequentially). Use for dev servers that need other services running.
+Unlike `dependsOn`, `with` runs tasks concurrently (not sequentially). Use for dev servers that need other services
+running.
 
 ## interruptible
 
@@ -320,6 +324,6 @@ Control task inheritance in Package Configurations.
 ```
 
 | Value            | Behavior                                                       |
-| ---------------- | -------------------------------------------------------------- |
+|------------------|----------------------------------------------------------------|
 | `true` (default) | Inherit from root turbo.json                                   |
 | `false`          | Exclude task from package, or define fresh without inheritance |

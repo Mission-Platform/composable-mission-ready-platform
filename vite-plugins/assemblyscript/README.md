@@ -1,14 +1,12 @@
 # @mission-platform/vite-plugin-assemblyscript
 
 A Vite plugin that compiles an [AssemblyScript](https://www.assemblyscript.org/)
-entry to **WebAssembly** and emits a single self-contained ES module with the
-wasm binary **inlined as base64** — so consuming packages get a dependency-free
-module with no `.wasm` URL resolution in bundlers or Web Workers.
+entry to **WebAssembly** and emits a single self-contained ES module with the wasm binary **inlined as base64** — so
+consuming packages get a dependency-free module with no `.wasm` URL resolution in bundlers or Web Workers.
 
-Compilation runs the AssemblyScript compiler (`asc`) programmatically inside the
-rollup `buildStart` hook, so it is (re)produced for `vite build`,
-`vite build --watch` and the dev server alike — making `vite build` the single
-entry point for building AssemblyScript.
+Compilation runs the AssemblyScript compiler (`asc`) programmatically inside the rollup `buildStart` hook, so it is (re)
+produced for `vite build`,
+`vite build --watch` and the dev server alike — making `vite build` the single entry point for building AssemblyScript.
 
 ## Usage
 
@@ -34,8 +32,7 @@ export default defineLibraryConfig({
 });
 ```
 
-The generated module exports a memoised async `loadModule()` that returns the
-raw AssemblyScript exports:
+The generated module exports a memoised async `loadModule()` that returns the raw AssemblyScript exports:
 
 ```ts
 import { loadModule } from './generated/module.js';
@@ -44,8 +41,8 @@ const wasm = await loadModule();
 wasm.someExportedFunction(/* … */);
 ```
 
-Provide a hand-maintained `.d.ts` next to the generated `.js` to type the raw
-exports (the plugin only writes the `.js`).
+Provide a hand-maintained `.d.ts` next to the generated `.js` to type the raw exports (the plugin only writes the
+`.js`).
 
 ## Options
 

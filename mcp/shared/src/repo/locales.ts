@@ -9,13 +9,13 @@
  * under `locales/` or (legacy) `src/locales/`. Everything here is
  * side-effect-free unless an explicit write function is called.
  */
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
-import { basename, extname, join } from 'node:path';
+import {existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync} from 'node:fs';
+import {basename, extname, join} from 'node:path';
 
 import yaml from 'js-yaml';
 
-import { groupDir, type WorkspaceGroup } from './paths.ts';
-import { findMember } from './scanner.ts';
+import {groupDir, type WorkspaceGroup} from './paths.ts';
+import {findMember} from './scanner.ts';
 
 /** The source-of-truth locale every app falls back to. */
 export const DEFAULT_LOCALE = 'en';
@@ -75,7 +75,7 @@ function probeLayout(dir: string, defaultLocale: string): LayoutProbe | undefine
   const nestedCodes: string[] = [];
   const namespaces = new Set<string>();
   const flatCodes: string[] = [];
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+  for (const entry of readdirSync(dir, {withFileTypes: true})) {
     if (entry.isDirectory()) {
       const localeFiles = readdirSync(join(dir, entry.name)).filter((file) => isYamlFile(file));
       if (localeFiles.length > 0) {
@@ -319,7 +319,7 @@ export function addLocale(
     };
   }
   for (const file of files) {
-    mkdirSync(join(file.path, '..'), { recursive: true });
+    mkdirSync(join(file.path, '..'), {recursive: true});
     writeFileSync(file.path, file.content, 'utf8');
   }
   return {
@@ -340,17 +340,17 @@ export function removeLocale(resolved: ResolvedLocales, code: string, apply: boo
   const targets: { path: string; relative: string }[] =
     resolved.layout === 'nested'
       ? [
-          {
-            path: join(resolved.localesDir, code),
-            relative: `${resolved.relativeLocalesDir}/${code}/`,
-          },
-        ]
+        {
+          path: join(resolved.localesDir, code),
+          relative: `${resolved.relativeLocalesDir}/${code}/`,
+        },
+      ]
       : [
-          {
-            path: flatLocalePath(resolved, code),
-            relative: `${resolved.relativeLocalesDir}/${code}.yaml`,
-          },
-        ];
+        {
+          path: flatLocalePath(resolved, code),
+          relative: `${resolved.relativeLocalesDir}/${code}.yaml`,
+        },
+      ];
 
   const relatives = targets.map((target) => target.relative);
   if (!apply) {
@@ -361,7 +361,7 @@ export function removeLocale(resolved: ResolvedLocales, code: string, apply: boo
     };
   }
   for (const target of targets) {
-    rmSync(target.path, { recursive: true, force: true });
+    rmSync(target.path, {recursive: true, force: true});
   }
   return {
     applied: true,
@@ -382,7 +382,7 @@ export interface UpdateTranslationRequest {
 
 /** Update one or more translation values in a single locale's namespace file. */
 export function updateTranslation(request: UpdateTranslationRequest): WriteResult & { updatedKeys: string[] } {
-  const { resolved, code, entries, apply } = request;
+  const {resolved, code, entries, apply} = request;
   if (!resolved.locales.includes(code)) {
     throw new Error(`Locale "${code}" does not exist in ${resolved.relativeLocalesDir}. Add it first with add_locale.`);
   }
@@ -419,7 +419,7 @@ export function updateTranslation(request: UpdateTranslationRequest): WriteResul
         message: `Dry run — no files written. Pass "apply": true to update ${keys.length} key(s) in ${relative}.`,
       };
     }
-    mkdirSync(join(path, '..'), { recursive: true });
+    mkdirSync(join(path, '..'), {recursive: true});
     writeFileSync(path, content, 'utf8');
     return {
       applied: true,
@@ -472,7 +472,7 @@ export function surveyLocales(group: WorkspaceGroup): {
     layout: LocaleLayout;
     locales: string[];
   }[] = [];
-  for (const entry of readdirSync(base, { withFileTypes: true })) {
+  for (const entry of readdirSync(base, {withFileTypes: true})) {
     if (!entry.isDirectory()) {
       continue;
     }

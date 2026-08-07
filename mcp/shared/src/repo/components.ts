@@ -5,10 +5,10 @@
  * snippets. The snippets are framework-agnostic: a consumer picks the framework
  * build once through the `mp:<framework>` export condition.
  */
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import {existsSync, readdirSync, readFileSync, statSync} from 'node:fs';
+import {join} from 'node:path';
 
-import { groupDir } from './paths.ts';
+import {groupDir} from './paths.ts';
 
 const COMPONENTS_DIR = join(groupDir('packages'), 'components', 'src', 'components');
 
@@ -74,7 +74,7 @@ function readComponentFolder(level: AtomicLevel | 'unknown', slug: string, dir: 
 
   const exports = hasIndex ? extractExports(readFileSync(indexPath, 'utf8')) : [];
   const relativePath = level === 'unknown' ? slug : `${level}/${slug}`;
-  return { slug, exports, level, relativePath };
+  return {slug, exports, level, relativePath};
 }
 
 /** List every component folder alongside its exported symbols and atomic level. */
@@ -182,7 +182,7 @@ function extractPropertiesInterface(source: string): { propsInterface?: string; 
   const functionMatch = /\/\*\*[\s\S]*?\*\/\s*export\s+function\s+\w+/.exec(source);
   const documentComment = functionMatch ? (/\/\*\*[\s\S]*?\*\//.exec(functionMatch[0])?.[0] ?? undefined) : undefined;
 
-  return { propsInterface: propertiesInterface, docComment: documentComment };
+  return {propsInterface: propertiesInterface, docComment: documentComment};
 }
 
 function resolveComponentDirectory(summary: ComponentSummary): string {
@@ -207,7 +207,7 @@ export function getComponentUsage(nameOrSlug: string): ComponentUsage | undefine
   const sourceFile = [`${summary.slug}.tsx`, `${summary.slug}.vue`, `${summary.slug}.ts`]
     .map((file) => join(dir, file))
     .find((file) => existsSync(file));
-  const { propsInterface, docComment } = sourceFile ? extractPropertiesInterface(readFileSync(sourceFile, 'utf8')) : {};
+  const {propsInterface, docComment} = sourceFile ? extractPropertiesInterface(readFileSync(sourceFile, 'utf8')) : {};
 
   const stories = existsSync(dir) ? readdirSync(dir).filter((file) => file.includes('.stories.')) : [];
   const componentName = summary.exports.find((name) => name.startsWith('Forge')) ?? toPascalCase(summary.slug);

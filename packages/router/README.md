@@ -10,8 +10,8 @@ framework-neutral model, then let a per-framework adapter wire them into a real 
   - locations: `parseLocation`, `stringifyLocation`, `normalizeHash`
   - route trees: `defineRoutes`, `flattenRoutes`, `findRouteByName`,
     `matchRoutes`, `resolveLocation`, `createRouteResolver`
-- **Vue 3 adapter** (the same bare `@mission-platform/router` specifier with the `mp:vue` condition active,
-  built on `vue-router` 4) — `createMpRouter`, `useMpRouter`, `useMpRoute`, `MpRouterLink`, plus the
+- **Vue 3 adapter** (the same bare `@mission-platform/router` specifier with the `mp:vue` condition active, built on
+  `vue-router` 4) — `createMpRouter`, `useMpRouter`, `useMpRoute`, `MpRouterLink`, plus the
   `toVueRoutes` / `toVueLocation` translators.
 - **RedwoodSDK adapter** (`@mission-platform/router/redwood`, built on
   `rwsdk/router`) — `toRedwoodRoutes`, `renderRoutes`, `toRedwoodPath`, and the
@@ -26,8 +26,8 @@ Next.js, and Nuxt as further adapters are added.
 Framework adapters are **not** separate subpaths: `@mission-platform/router` carries the `mp:<framework>`
 export conditions, and you pick one **once** for the project — `resolve.conditions` via
 `defineFrameworkAppConfig` / `frameworkResolveConditions` from `@mission-platform/vite-config`, and
-`customConditions` via the `@mission-platform/typescript-config/framework-<name>` presets. Every adapter
-build also re-exports the entire neutral core, so a single bare import is always enough.
+`customConditions` via the `@mission-platform/typescript-config/framework-<name>` presets. Every adapter build also
+re-exports the entire neutral core, so a single bare import is always enough.
 
 ## Install
 

@@ -1,10 +1,8 @@
 # @mission-platform/vite-config
 
-Shared Vite and Vitest configuration helpers for Mission Platform packages and
-apps. Provides standard-ised library and app builds (the Vue plugin, the shared
-PostCSS pipeline, peer-dependency externals, and an `ignoreVueI18nBlocksPlugin`
-that keeps SFC `<i18n>` custom blocks inert) and a Vitest factory preconfigured
-for Vue components.
+Shared Vite and Vitest configuration helpers for Mission Platform packages and apps. Provides standard-ised library and
+app builds (the Vue plugin, the shared PostCSS pipeline, peer-dependency externals, and an `ignoreVueI18nBlocksPlugin`
+that keeps SFC `<i18n>` custom blocks inert) and a Vitest factory preconfigured for Vue components.
 
 ## Exports
 
@@ -26,8 +24,8 @@ export default defineLibraryConfig({
 });
 ```
 
-Pass `external`, `globals`, or `overrides` to extend the defaults without
-re-declaring the shared Vue / PostCSS / lib-build boilerplate:
+Pass `external`, `globals`, or `overrides` to extend the defaults without re-declaring the shared Vue / PostCSS /
+lib-build boilerplate:
 
 ```ts
 import { defineLibraryConfig } from '@mission-platform/vite-config';
@@ -58,10 +56,10 @@ export default defineAppConfig({
 
 ## Framework auto-resolution
 
-Every framework-shipping `@mission-platform/*` package declares custom export
-conditions (`mp:vue`, `mp:react`, `mp:solid`, `mp:web-component`)
-on its bare `.` entry that point at the matching built artifact. An app selects
-**one** framework and then imports packages with **no** framework subpath:
+Every framework-shipping `@mission-platform/*` package declares custom export conditions (`mp:vue`, `mp:react`,
+`mp:solid`, `mp:web-component`)
+on its bare `.` entry that point at the matching built artifact. An app selects **one** framework and then imports
+packages with **no** framework subpath:
 
 ```ts
 // apps/<app-name>/vite.config.ts
@@ -77,8 +75,8 @@ export default defineFrameworkAppConfig({
 import { ForgeButton } from '@mission-platform/components';
 ```
 
-Pair it with the matching TypeScript preset so the editor/LSP resolves the same
-build (see `@mission-platform/typescript-config/framework-<name>`).
+Pair it with the matching TypeScript preset so the editor/LSP resolves the same build (see
+`@mission-platform/typescript-config/framework-<name>`).
 
 ### External projects (no shared config)
 
@@ -124,11 +122,11 @@ export default defineVitestConfig({
 
 - Always supply `rootDir: __dirname` to `defineLibraryConfig` — it resolves
   `entry` paths absolutely.
-- Use the `overrides` option instead of copy-pasting the shared boilerplate.
-  This guarantees workspaces stay in lock-step with platform defaults.
+- Use the `overrides` option instead of copy-pasting the shared boilerplate. This guarantees workspaces stay in
+  lock-step with platform defaults.
 - The library helper externalises `vue`, `vue-router`, and
   `@mission-platform/i18n` by default; declare any additional peer deps via
   `external`.
-- Vue SFC `<i18n>` custom blocks are turned into inert no-op modules by the
-  bundled `ignoreVueI18nBlocksPlugin` (they are consumed only by
+- Vue SFC `<i18n>` custom blocks are turned into inert no-op modules by the bundled `ignoreVueI18nBlocksPlugin` (they
+  are consumed only by
   `scripts/i18n-extract.ts`; runtime translations load from i18next).

@@ -91,7 +91,7 @@ See `filtering/` for complete filter syntax.
 ## Quick Reference
 
 | Goal                | Command                    |
-| ------------------- | -------------------------- |
+|---------------------|----------------------------|
 | Build everything    | `turbo build`              |
 | Build one package   | `turbo build --filter=web` |
 | Multiple tasks      | `turbo build lint test`    |

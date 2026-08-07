@@ -128,7 +128,7 @@ const TURBO_LEAF = `{
 
 /** Files for a new `packages/<name>` package. */
 export function packageFiles(options: PackageScaffoldOptions): Record<string, string> {
-  const { name, description, vue } = options;
+  const {name, description, vue} = options;
   const pascal = toPascalCase(name);
   const camel = toCamelCase(name);
   const scoped = `@mission-platform/${name}`;
@@ -162,18 +162,18 @@ export function packageFiles(options: PackageScaffoldOptions): Record<string, st
       'lint:fix': 'eslint --fix .',
       ...(vue
         ? {
-            'lint:style': 'stylelint "src/**/*.{vue,scss}"',
-            'lint:style:fix': 'stylelint --fix "src/**/*.{vue,scss}"',
-          }
+          'lint:style': 'stylelint "src/**/*.{vue,scss}"',
+          'lint:style:fix': 'stylelint --fix "src/**/*.{vue,scss}"',
+        }
         : {}),
       format: 'prettier --check .',
       'format:write': 'prettier --write .',
     },
-    ...(vue ? { peerDependencies: { vue: '^3.5.0' } } : {}),
+    ...(vue ? {peerDependencies: {vue: '^3.5.0'}} : {}),
     devDependencies: {
       '@mission-platform/eslint-config': 'workspace:*',
       '@mission-platform/prettier-config': 'workspace:*',
-      ...(vue ? { '@mission-platform/stylelint-config': 'workspace:*' } : {}),
+      ...(vue ? {'@mission-platform/stylelint-config': 'workspace:*'} : {}),
       '@mission-platform/typescript-config': 'workspace:*',
       '@mission-platform/vite-config': 'workspace:*',
       '@types/node': 'catalog:typescript',
@@ -181,19 +181,19 @@ export function packageFiles(options: PackageScaffoldOptions): Record<string, st
       eslint: 'catalog:eslint',
       ...(vue
         ? {
-            jsdom: 'catalog:testing',
-            'postcss-html': 'catalog:stylelint',
-            'postcss-scss': 'catalog:stylelint',
-            'sass-embedded': 'catalog:vite',
-            stylelint: 'catalog:stylelint',
-            '@vue/test-utils': 'catalog:vue',
-          }
+          jsdom: 'catalog:testing',
+          'postcss-html': 'catalog:stylelint',
+          'postcss-scss': 'catalog:stylelint',
+          'sass-embedded': 'catalog:vite',
+          stylelint: 'catalog:stylelint',
+          '@vue/test-utils': 'catalog:vue',
+        }
         : {}),
       prettier: 'catalog:prettier',
       typescript: 'catalog:typescript',
       vite: 'catalog:vite',
       vitest: 'catalog:testing',
-      ...(vue ? { vue: 'catalog:vue', 'vue-tsc': 'catalog:vue' } : {}),
+      ...(vue ? {vue: 'catalog:vue', 'vue-tsc': 'catalog:vue'} : {}),
     },
   };
 
@@ -352,7 +352,7 @@ See \`llms.txt\` for the public API and usage examples.
 
 /** Files for a new `apps/<name>` Vite + Vue 3 application. */
 export function appFiles(options: AppScaffoldOptions): Record<string, string> {
-  const { name, description } = options;
+  const {name, description} = options;
   const scoped = `@mission-platform/${name}`;
   const title = toPascalCase(name);
 
@@ -494,7 +494,7 @@ import { ForgeButton } from '@mission-platform/components';
 
 /** Files for a new `workers/<name>` Cloudflare Worker. */
 export function workerFiles(options: WorkerScaffoldOptions): Record<string, string> {
-  const { name, description } = options;
+  const {name, description} = options;
   const scoped = `@mission-platform/${name}`;
 
   const packageJson = {
@@ -572,7 +572,7 @@ Local dev and deployment are driven from the consuming app via \`wrangler\`.
 
 /** Files for a new `crates/<name>` Rust/WASM crate. */
 export function crateFiles(options: CrateScaffoldOptions): Record<string, string> {
-  const { name, description } = options;
+  const {name, description} = options;
 
   const cargoToml = `[package]
 name = "mission-platform-${name}"
@@ -666,7 +666,7 @@ export function componentFiles(options: ComponentScaffoldOptions): {
   componentName: string;
   storyTitle: string;
 } {
-  const { name, level } = options;
+  const {name, level} = options;
   const description = options.description?.trim() || `Write-once ${toPascalCase(name)} component.`;
   const levelFolder = atomicLevelFolder(level);
   const levelTitle = atomicLevelTitle(level);
@@ -737,7 +737,7 @@ describe('${componentName}', () => {
 
   const barrelExport = `export { ${componentName}, type ${propertiesName} } from './${levelFolder}/${name}';`;
 
-  return { files, barrelExport, levelFolder, componentName, storyTitle };
+  return {files, barrelExport, levelFolder, componentName, storyTitle};
 }
 
 /**
@@ -790,7 +790,7 @@ describe('${functionName}', () => {
   };
 
   const barrelExport = `export { ${functionName} } from './${name}/${name}';`;
-  return { files, barrelExport, name, functionName };
+  return {files, barrelExport, name, functionName};
 }
 
 /**
@@ -891,7 +891,7 @@ describe('${name} store', () => {
   type ${pascal}Snapshot,
 } from './${name}/${name}';`;
 
-  return { files, barrelExport, name, pascal };
+  return {files, barrelExport, name, pascal};
 }
 
 /**
@@ -930,7 +930,7 @@ describe('${functionName}', () => {
   };
 
   const barrelExport = `export { ${functionName} } from './${name}/${name}';`;
-  return { files, barrelExport, name, functionName };
+  return {files, barrelExport, name, functionName};
 }
 
-export { toPascalCase, toCamelCase, TURBO_LEAF };
+export {toPascalCase, toCamelCase, TURBO_LEAF};

@@ -33,22 +33,6 @@
       "types": "./dist/components/index.d.ts",
       "import": "./dist/components/index.js"
     },
-    "./forge-drawer": {
-      "types": "./dist/components/forge-drawer/index.d.ts",
-      "import": "./dist/components/forge-drawer/index.js"
-    },
-    "./storyblok/react": {
-      "types": "./dist/storyblok/react/index.d.ts",
-      "import": "./dist/storyblok/react/index.js"
-    },
-    "./storyblok/vue": {
-      "types": "./dist/storyblok/vue/index.d.ts",
-      "import": "./dist/storyblok/vue/index.js"
-    },
-    "./storyblok/components.json": "./dist/storyblok/components.json",
-    "./styles": "./src/styles/_a11y.scss",
-    "./styles/a11y": "./src/styles/_a11y.scss",
-    "./styles/scss": "./src/styles/_a11y.scss",
     "./*": {
       "mp:vue": {
         "types": "./dist/vue/index.d.ts",

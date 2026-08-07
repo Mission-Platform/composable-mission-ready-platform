@@ -1,10 +1,13 @@
 # Util Authoring
 
-Utilities (utils) are pure, framework-agnostic helper functions. They should be free of UI framework imports and, unless explicitly required and documented, free of DOM APIs. This ensures they can be used in any context, including server-side logic and workers.
+Utilities (utils) are pure, framework-agnostic helper functions. They should be free of UI framework imports and, unless
+explicitly required and documented, free of DOM APIs. This ensures they can be used in any context, including
+server-side logic and workers.
 
 ## Directory Layout
 
-Each utility SHOULD reside in its own named subdirectory within `src/utils/`, accompanied by a co-located test file and a local barrel.
+Each utility SHOULD reside in its own named subdirectory within `src/utils/`, accompanied by a co-located test file and
+a local barrel.
 
 ```text
 src/utils/
@@ -17,11 +20,13 @@ src/utils/
 
 ## Authoring Rules
 
-1.  **Purity**: Prefer pure functions that do not have side effects. Given the same input, they should always return the same output.
-2.  **No UI Hooks**: Never import `vue`, `react`, or `@mission-platform/forge` hooks in a util. Logic requiring reactivity belongs in [Composables](composable-authoring.md).
-3.  **Explicit Typing**: Provide full TypeScript types for all arguments and return values.
-4.  **Mandatory Testing**: Every util must have a co-located `.spec.ts` file.
-5.  **Single Responsibility**: Each util folder should focus on a specific, narrow task.
+1. **Purity**: Prefer pure functions that do not have side effects. Given the same input, they should always return the
+   same output.
+2. **No UI Hooks**: Never import `vue`, `react`, or `@mission-platform/forge` hooks in a util. Logic requiring
+   reactivity belongs in [Composables](composable-authoring.md).
+3. **Explicit Typing**: Provide full TypeScript types for all arguments and return values.
+4. **Mandatory Testing**: Every util must have a co-located `.spec.ts` file.
+5. **Single Responsibility**: Each util folder should focus on a specific, narrow task.
 
 ## Basic Example
 

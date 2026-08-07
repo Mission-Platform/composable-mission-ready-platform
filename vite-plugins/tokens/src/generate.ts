@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { deepMergeTokens, flattenTokens, type DtcgGroup } from './dtcg.js';
+import { deepMergeTokens, type DtcgGroup, flattenTokens } from './dtcg.js';
 import {
   buildLightDarkThemeScss,
   buildScssVariablesScss,

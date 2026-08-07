@@ -75,6 +75,7 @@ export {
   type DrawerProperties,
   type DrawerSize,
   type DrawerVariant,
+  type DrawerDraggable,
 } from './organisms/forge-drawer';
 export { ForgeDropdown, type DropdownPlacement, type DropdownProperties } from './molecules/forge-dropdown';
 export { ForgeFieldSet, type FieldSetProperties } from './molecules/forge-field-set';

@@ -52,7 +52,7 @@ Turborepo automatically detects frameworks and includes their conventional env v
 ### Inferred Variables by Framework
 
 | Framework        | Pattern             |
-| ---------------- | ------------------- |
+|------------------|---------------------|
 | Next.js          | `NEXT_PUBLIC_*`     |
 | Vite             | `VITE_*`            |
 | Create React App | `REACT_APP_*`       |

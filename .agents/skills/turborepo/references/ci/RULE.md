@@ -16,7 +16,8 @@ turbo run build test lint
 turbo build test lint
 ```
 
-The shorthand `turbo <tasks>` is only for one-off invocations typed directly in terminal by humans or agents. Anywhere the command is written into code (CI, package.json, scripts), use `turbo run`.
+The shorthand `turbo <tasks>` is only for one-off invocations typed directly in terminal by humans or agents. Anywhere
+the command is written into code (CI, package.json, scripts), use `turbo run`.
 
 ### Enable Remote Caching
 
@@ -55,7 +56,8 @@ This requires Git history to compute what changed.
 
 ### Why Shallow Clones Break --affected
 
-Turborepo compares the current HEAD to the merge base with `main`. If that commit isn't fetched, `--affected` falls back to running everything.
+Turborepo compares the current HEAD to the merge base with `main`. If that commit isn't fetched, `--affected` falls back
+to running everything.
 
 For PRs with many commits, consider:
 
@@ -66,7 +68,7 @@ fetch-depth: 0 # Full history
 ## Environment Variables Reference
 
 | Variable            | Purpose                              |
-| ------------------- | ------------------------------------ |
+|---------------------|--------------------------------------|
 | `TURBO_TOKEN`       | Vercel access token for remote cache |
 | `TURBO_TEAM`        | Your Vercel team slug                |
 | `TURBO_REMOTE_ONLY` | Skip local cache, use remote only    |

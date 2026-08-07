@@ -1,10 +1,13 @@
 # Composable Authoring
 
-Composables are the primary way to encapsulate and reuse reactive logic within the Mission Platform. To ensure these units of logic are portable across all supported UI frameworks, they are authored as **write-once** modules using the framework-neutral hooks provided by `@mission-platform/forge`.
+Composables are the primary way to encapsulate and reuse reactive logic within the Mission Platform. To ensure these
+units of logic are portable across all supported UI frameworks, they are authored as **write-once** modules using the
+framework-neutral hooks provided by `@mission-platform/forge`.
 
 ## Directory Layout
 
-Each composable MUST reside in its own named subdirectory within `src/composables/`, accompanied by a co-located test file and a local barrel.
+Each composable MUST reside in its own named subdirectory within `src/composables/`, accompanied by a co-located test
+file and a local barrel.
 
 ```text
 src/composables/
@@ -17,11 +20,14 @@ src/composables/
 
 ## Authoring Rules
 
-1.  **Use Forge Hooks**: Only import reactive primitives (e.g., `useState`, `useEffect`, `useMemo`, `useRef`) from `@mission-platform/forge`. Never import directly from `vue` or `react`.
-2.  **Naming Convention**: Composable names must use kebab-case and be prefixed with `use-` (e.g., `use-media-query`).
-3.  **SSR Safety**: Ensure logic is safe for Server-Side Rendering. Guard any access to browser-only APIs like `window`, `document`, or `localStorage`.
-4.  **No UI Components**: Composables should focus on logic. Do not return or manipulate UI components directly; instead, return state, refs, or callbacks.
-5.  **Mandatory Testing**: Every composable must have a co-located `.spec.ts` file using Vitest.
+1. **Use Forge Hooks**: Only import reactive primitives (e.g., `useState`, `useEffect`, `useMemo`, `useRef`) from
+   `@mission-platform/forge`. Never import directly from `vue` or `react`.
+2. **Naming Convention**: Composable names must use kebab-case and be prefixed with `use-` (e.g., `use-media-query`).
+3. **SSR Safety**: Ensure logic is safe for Server-Side Rendering. Guard any access to browser-only APIs like `window`,
+   `document`, or `localStorage`.
+4. **No UI Components**: Composables should focus on logic. Do not return or manipulate UI components directly; instead,
+   return state, refs, or callbacks.
+5. **Mandatory Testing**: Every composable must have a co-located `.spec.ts` file using Vitest.
 
 ## Basic Example
 

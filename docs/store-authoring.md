@@ -1,10 +1,13 @@
 # Store Authoring
 
-Stores are used to manage shared, cross-component state within a package. Unlike application-level stores (like Pinia or Redux), package stores in the Mission Platform are designed to be **framework-neutral observable modules**. This allows write-once components to consume them via Forge hooks regardless of the host framework.
+Stores are used to manage shared, cross-component state within a package. Unlike application-level stores (like Pinia or
+Redux), package stores in the Mission Platform are designed to be **framework-neutral observable modules**. This allows
+write-once components to consume them via Forge hooks regardless of the host framework.
 
 ## Directory Layout
 
-Each store MUST reside in its own named subdirectory within `src/stores/`, accompanied by a co-located test file and a local barrel.
+Each store MUST reside in its own named subdirectory within `src/stores/`, accompanied by a co-located test file and a
+local barrel.
 
 ```text
 src/stores/
@@ -19,17 +22,20 @@ src/stores/
 
 Package stores avoid framework-specific dependencies. Instead, they follow a simple observable pattern:
 
-1.  **Private State**: Keep state within the module scope (plain TypeScript values).
-2.  **Snapshot Access**: Provide a `getSnapshot()` function to retrieve the current state.
-3.  **Subscription**: Provide a `subscribe(listener)` function that adds a callback to a list and returns an unsubscribe function.
-4.  **Mutators**: Provide functions to update the state, which MUST notify all listeners after the update.
+1. **Private State**: Keep state within the module scope (plain TypeScript values).
+2. **Snapshot Access**: Provide a `getSnapshot()` function to retrieve the current state.
+3. **Subscription**: Provide a `subscribe(listener)` function that adds a callback to a list and returns an unsubscribe
+   function.
+4. **Mutators**: Provide functions to update the state, which MUST notify all listeners after the update.
 
 ## Authoring Rules
 
-1.  **Framework Agnostic**: Do not import from `vue`, `react`, or `@mission-platform/forge` hooks inside the store module itself.
-2.  **Explicit Types**: Always define and export an interface for the store's state.
-3.  **SSR Safety**: Guard access to browser APIs (e.g., `localStorage`) so the store can be initialized in a Node.js environment.
-4.  **Mandatory Testing**: Every store must have a co-located `.spec.ts` file.
+1. **Framework Agnostic**: Do not import from `vue`, `react`, or `@mission-platform/forge` hooks inside the store module
+   itself.
+2. **Explicit Types**: Always define and export an interface for the store's state.
+3. **SSR Safety**: Guard access to browser APIs (e.g., `localStorage`) so the store can be initialized in a Node.js
+   environment.
+4. **Mandatory Testing**: Every store must have a co-located `.spec.ts` file.
 
 ## Example Store
 

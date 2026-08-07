@@ -4,7 +4,8 @@ The `@mission-platform/eslint-config` package provides a centralized, flat ESLin
 
 ## Overview
 
-Mission Platform uses the ESLint Flat Config format (`eslint.config.js`). The shared configuration enforces consistent code quality, accessibility, and architectural rules across all packages, applications, and workers.
+Mission Platform uses the ESLint Flat Config format (`eslint.config.js`). The shared configuration enforces consistent
+code quality, accessibility, and architectural rules across all packages, applications, and workers.
 
 ## Key Features
 
@@ -18,13 +19,13 @@ Mission Platform uses the ESLint Flat Config format (`eslint.config.js`). The sh
 
 The configuration includes the following plugins and rule sets:
 
-| Plugin | Purpose |
-| :--- | :--- |
-| `typescript-eslint` | Standard TypeScript rules and type-aware linting. |
-| `eslint-plugin-vue` | Vue 3 SFC linting and template validation. |
-| `eslint-plugin-sonarjs` | Detection of code smells and bug risks. |
-| `eslint-plugin-unicorn` | Dozens of small, useful community rules. |
-| `eslint-plugin-i18next` | Ensures translation keys are used correctly. |
+| Plugin                   | Purpose                                                |
+|:-------------------------|:-------------------------------------------------------|
+| `typescript-eslint`      | Standard TypeScript rules and type-aware linting.      |
+| `eslint-plugin-vue`      | Vue 3 SFC linting and template validation.             |
+| `eslint-plugin-sonarjs`  | Detection of code smells and bug risks.                |
+| `eslint-plugin-unicorn`  | Dozens of small, useful community rules.               |
+| `eslint-plugin-i18next`  | Ensures translation keys are used correctly.           |
 | `eslint-config-prettier` | Disables rules that conflict with Prettier formatting. |
 
 ## Usage

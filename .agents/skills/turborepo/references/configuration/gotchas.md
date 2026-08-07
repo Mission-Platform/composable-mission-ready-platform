@@ -24,7 +24,8 @@ Root `package.json` scripts for turbo tasks MUST use `turbo run`, not direct com
 }
 ```
 
-**Why this matters:** Running `bun build` or `npm run build` at root bypasses Turborepo entirely - no parallelization, no caching, no dependency graph awareness.
+**Why this matters:** Running `bun build` or `npm run build` at root bypasses Turborepo entirely - no parallelization,
+no caching, no dependency graph awareness.
 
 ## #2 Using `&&` to Chain Turbo Tasks
 
@@ -46,7 +47,8 @@ Don't use `&&` to chain tasks that turbo should orchestrate.
 }
 ```
 
-If the second command (`changeset publish`) depends on build outputs, the turbo task should run through turbo to get caching and parallelization benefits.
+If the second command (`changeset publish`) depends on build outputs, the turbo task should run through turbo to get
+caching and parallelization benefits.
 
 ## #3 Overly Broad globalDependencies
 
@@ -70,12 +72,14 @@ If the second command (`changeset publish`) depends on build outputs, the turbo 
 }
 ```
 
-**Why this matters:** `**/.env.*local` matches .env files in ALL packages, causing unnecessary cache invalidation. Instead:
+**Why this matters:** `**/.env.*local` matches .env files in ALL packages, causing unnecessary cache invalidation.
+Instead:
 
 - Use `globalDependencies` only for truly global files (root `.env`)
 - Use task-level `inputs` for package-specific .env files with `$TURBO_DEFAULT$` to preserve default behavior
 
-With `futureFlags.globalConfiguration`, this is less of a concern because `global.inputs` acts as implicit task inputs — tasks can opt out of specific files with negation globs. But keeping the list focused is still good practice.
+With `futureFlags.globalConfiguration`, this is less of a concern because `global.inputs` acts as implicit task inputs —
+tasks can opt out of specific files with negation globs. But keeping the list focused is still good practice.
 
 ## #4 Repetitive Task Configuration
 
@@ -186,11 +190,15 @@ When you need to create a task (build, lint, test, typecheck, etc.), default to 
 - Each package's output is cached **individually**
 - You can **filter** to specific packages: `turbo run test --filter=web`
 
-Root Tasks (`//#taskname`) defeat all these benefits when a task can live in packages. Only use them for tasks that truly cannot exist in any package, such as Vitest Projects' `//#test`, repo-wide release scripts, or tooling that does not invoke `turbo` itself.
+Root Tasks (`//#taskname`) defeat all these benefits when a task can live in packages. Only use them for tasks that
+truly cannot exist in any package, such as Vitest Projects' `//#test`, repo-wide release scripts, or tooling that does
+not invoke `turbo` itself.
 
 ## #7 Tasks That Need Parallel Execution + Cache Invalidation
 
-Some tasks can run in parallel (don't need built output from dependencies) but must still invalidate cache when dependency source code changes. Using `dependsOn: ["^taskname"]` forces sequential execution. Using no dependencies breaks cache invalidation.
+Some tasks can run in parallel (don't need built output from dependencies) but must still invalidate cache when
+dependency source code changes. Using `dependsOn: ["^taskname"]` forces sequential execution. Using no dependencies
+breaks cache invalidation.
 
 **Use Transit Nodes for these tasks:**
 
@@ -219,7 +227,8 @@ Some tasks can run in parallel (don't need built output from dependencies) but m
 - Since `transit` completes instantly (no script), tasks run in parallel
 - Cache correctly invalidates when dependency source code changes
 
-**How to identify tasks that need this pattern:** Look for tasks that read source files from dependencies but don't need their build outputs.
+**How to identify tasks that need this pattern:** Look for tasks that read source files from dependencies but don't need
+their build outputs.
 
 ## Missing outputs for File-Producing Tasks
 
@@ -242,7 +251,8 @@ Some tasks can run in parallel (don't need built output from dependencies) but m
 }
 ```
 
-No `outputs` key is fine for stdout-only tasks. For file-producing tasks, missing `outputs` means Turbo has nothing to cache.
+No `outputs` key is fine for stdout-only tasks. For file-producing tasks, missing `outputs` means Turbo has nothing to
+cache.
 
 ## Forgetting ^ in dependsOn
 
@@ -334,7 +344,8 @@ Without `$TURBO_DEFAULT$`, you replace all default file watching.
 
 ## Excluding `global.inputs` Without `$TURBO_DEFAULT$`
 
-When using `futureFlags.globalConfiguration`, `global.inputs` values are prepended to every task's inputs. If you want to exclude a global input from a specific task, you **must** include `$TURBO_DEFAULT$` to preserve default file hashing.
+When using `futureFlags.globalConfiguration`, `global.inputs` values are prepended to every task's inputs. If you want
+to exclude a global input from a specific task, you **must** include `$TURBO_DEFAULT$` to preserve default file hashing.
 
 ```json
 // WRONG - task hashes NO files at all (global input cancelled, no defaults)
@@ -348,7 +359,9 @@ When using `futureFlags.globalConfiguration`, `global.inputs` values are prepend
 }
 ```
 
-Without `$TURBO_DEFAULT$`, the only inclusion glob comes from `global.inputs`, which the negation cancels out. The task ends up with no inclusions and no default file hashing, so it hashes nothing. Changes to source files won't cause cache misses.
+Without `$TURBO_DEFAULT$`, the only inclusion glob comes from `global.inputs`, which the negation cancels out. The task
+ends up with no inclusions and no default file hashing, so it hashes nothing. Changes to source files won't cause cache
+misses.
 
 ## Caching Tasks with Side Effects
 

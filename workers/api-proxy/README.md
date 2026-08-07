@@ -1,10 +1,13 @@
 # @mission-platform/api-proxy
 
-An example Cloudflare Worker implementation that proxies approved read-only routes to an upstream API service (`api.example.com`).
+An example Cloudflare Worker implementation that proxies approved read-only routes to an upstream API service
+(`api.example.com`).
 
 ## Architecture & Overview
 
-This Worker serves as a reference implementation for constrained HTTP reverse proxying on Cloudflare Workers. It accepts `GET` and `HEAD` requests only for `/users` and `/v1` routes, forwards query strings, and strips credentials and hop-by-hop headers.
+This Worker serves as a reference implementation for constrained HTTP reverse proxying on Cloudflare Workers. It accepts
+`GET` and `HEAD` requests only for `/users` and `/v1` routes, forwards query strings, and strips credentials and
+hop-by-hop headers.
 
 Key capabilities:
 
@@ -14,9 +17,12 @@ Key capabilities:
 
 ## Code Overview (`src/index.ts`)
 
-The Worker is authored in TypeScript and exports a default `fetch` handler. It is built with `tsdown` to `dist/index.js` (see the `build` script), mirroring the `@mission-platform/forge-spa` worker layout:
+The Worker is authored in TypeScript and exports a default `fetch` handler. It is built with `tsdown` to `dist/index.js`
+(see the `build` script), mirroring the `@mission-platform/forge-spa` worker layout:
 
-The implementation checks `isAllowedProxyRequest` before constructing an upstream request. It creates the upstream URL from the fixed origin plus the incoming pathname and query, copies only non-sensitive headers, and returns `Bad gateway` with status `502` if request construction or upstream fetch fails.
+The implementation checks `isAllowedProxyRequest` before constructing an upstream request. It creates the upstream URL
+from the fixed origin plus the incoming pathname and query, copies only non-sensitive headers, and returns `Bad gateway`
+with status `502` if request construction or upstream fetch fails.
 
 ## Configuration (`wrangler.jsonc`)
 

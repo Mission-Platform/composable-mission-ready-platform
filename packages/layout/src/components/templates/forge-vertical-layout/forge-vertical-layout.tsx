@@ -1,4 +1,4 @@
-import { ForgeDrawer, type DrawerDraggable, type DrawerSize } from '@mission-platform/components/forge-drawer';
+import { type DrawerDraggable, type DrawerSize, ForgeDrawer } from '@mission-platform/components';
 import { h, hasSlot, type MpElement, type MpProperties, Slot, useEffect, useState } from '@mission-platform/forge';
 
 import styles from './forge-vertical-layout.module.scss';

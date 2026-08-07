@@ -1,4 +1,4 @@
-import { ForgeCodeBlock, ForgeMonacoEditor, type CodeBlockLanguage } from '@mission-platform/components';
+import { type CodeBlockLanguage, ForgeCodeBlock, ForgeMonacoEditor } from '@mission-platform/components';
 import {
   h,
   type MpElement,

@@ -1,8 +1,6 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  ScanOutcome,
-  ScanOutcomeList,
   build_info,
   scan,
   scan_and_decode,
@@ -10,6 +8,8 @@ import {
   scan_barcode,
   scan_matrix,
   scan_qr,
+  ScanOutcome,
+  ScanOutcomeList,
   start,
 } from ".";
 

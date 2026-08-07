@@ -16,7 +16,8 @@ This compares your current branch to the default branch (usually `main` or `mast
 
 ### Why Include Dependents?
 
-If you change `@repo/ui`, packages that import `@repo/ui` (like `apps/web`) need to re-run their tasks to verify they still work with the changes.
+If you change `@repo/ui`, packages that import `@repo/ui` (like `apps/web`) need to re-run their tasks to verify they
+still work with the changes.
 
 ### Customizing --affected
 
@@ -63,7 +64,7 @@ turbo run build --filter=[a1b2c3d...e4f5g6h]
 ### Comparison Syntax
 
 | Syntax        | Meaning                               |
-| ------------- | ------------------------------------- |
+|---------------|---------------------------------------|
 | `[ref]`       | Packages changed since `ref`          |
 | `...[ref]`    | Changed packages + their dependents   |
 | `[ref]...`    | Changed packages + their dependencies |
@@ -102,7 +103,7 @@ Multiple filters combine as a union (packages matching ANY filter run).
 ### By Dependencies/Dependents
 
 | Syntax      | Meaning                                |
-| ----------- | -------------------------------------- |
+|-------------|----------------------------------------|
 | `pkg...`    | Package AND all its dependencies       |
 | `...pkg`    | Package AND all its dependents         |
 | `...pkg...` | Dependencies, package, AND dependents  |
@@ -140,7 +141,7 @@ turbo run build --filter=web --filter=api   # runs in both
 ## Quick Reference: Changed Packages
 
 | Goal                               | Command                                                     |
-| ---------------------------------- | ----------------------------------------------------------- |
+|------------------------------------|-------------------------------------------------------------|
 | Changed + dependents (recommended) | `turbo run build --affected`                                |
 | Custom base branch                 | `turbo run build --affected --affected-base=origin/develop` |
 | Only changed (no dependents)       | `turbo run build --filter=[origin/main]`                    |

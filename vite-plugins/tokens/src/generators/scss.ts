@@ -10,12 +10,12 @@ import {
   aliasToCssVariable,
   compareTokens,
   dashedName,
+  type DtcgGroup,
+  type DtcgToken,
   flattenTokens,
   formatCssValue,
   groupLabel,
   isAlias,
-  type DtcgGroup,
-  type DtcgToken,
   type TokenRecord,
 } from '../dtcg.js';
 

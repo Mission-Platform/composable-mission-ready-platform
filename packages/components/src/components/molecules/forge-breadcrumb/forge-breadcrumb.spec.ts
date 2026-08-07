@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { createSSRApp, h as vueH } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 
-import { ForgeBreadcrumb, type BreadcrumbItem } from './forge-breadcrumb';
+import { type BreadcrumbItem, ForgeBreadcrumb } from './forge-breadcrumb';
 
 /**
  * Exercises the **neutral** `ForgeBreadcrumb` authored in this package, rendering

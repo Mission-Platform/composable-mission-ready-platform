@@ -4,7 +4,6 @@
 // scheme is pinned on <html> by the pre-paint script in index.html before this
 // bundle runs.
 import '@mission-platform/tokens/scss/tokens';
-import '@mission-platform/components/styles';
 
 import { createForgeI18N, createForgeI18NVue, forgeNamespace } from '@mission-platform/i18n';
 import { organization, useSeo, webSite } from '@mission-platform/seo';

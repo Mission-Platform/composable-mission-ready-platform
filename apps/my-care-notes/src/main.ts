@@ -6,7 +6,6 @@
 import '@mission-platform/tokens/scss/tokens';
 import '@mission-platform/tokens/scss/themes/light';
 import '@mission-platform/tokens/scss/themes/dark';
-import '@mission-platform/components/styles';
 
 import { createForgeI18N, forgeNamespace, createForgeI18NVue } from '@mission-platform/i18n';
 import { useSeo } from '@mission-platform/seo';

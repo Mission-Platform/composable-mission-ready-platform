@@ -9,21 +9,21 @@ components at build time.
 The package leverages `@mission-platform/vite-plugin-forge` to provide high-performance, tree-shakable icons for both
 frameworks:
 
-- **Compilation**: A single `pnpm build` emits one framework-native bundle per target. Each icon is split
-  into its own JS chunk and CSS asset.
+- **Compilation**: A single `pnpm build` emits one framework-native bundle per target. Each icon is split into its own
+  JS chunk and CSS asset.
 - **Single Entry, Conditional Resolution**: There is exactly one public entry point,
   `@mission-platform/icons`. It carries the `mp:vue`, `mp:react`, `mp:solid`, and
-  `mp:web-component` export conditions; whichever one your toolchain activates decides which compiled
-  build the bare specifier resolves to. With no condition set it falls back to the neutral forge source,
-  which is what other "write-once" components consume.
+  `mp:web-component` export conditions; whichever one your toolchain activates decides which compiled build the bare
+  specifier resolves to. With no condition set it falls back to the neutral forge source, which is what other
+  "write-once" components consume.
 
 ## Usage
 
 ### Choosing a Framework
 
 Select the framework **once**, not per import — in Vite through `resolve.conditions` (use
-`defineFrameworkAppConfig` or `frameworkResolveConditions` from `@mission-platform/vite-config`) and in
-TypeScript through `customConditions` (extend a `@mission-platform/typescript-config/framework-<name>`
+`defineFrameworkAppConfig` or `frameworkResolveConditions` from `@mission-platform/vite-config`) and in TypeScript
+through `customConditions` (extend a `@mission-platform/typescript-config/framework-<name>`
 preset):
 
 ```ts
@@ -50,8 +50,8 @@ import { ForgeIconAlert, ForgeIconArrow } from '@mission-platform/icons';
 
 ### Neutral Component Imports
 
-When authoring a framework-neutral component (compiled by `vite-plugin-forge`), no `mp:*` condition is
-active and the same specifier gives you the neutral source:
+When authoring a framework-neutral component (compiled by `vite-plugin-forge`), no `mp:*` condition is active and the
+same specifier gives you the neutral source:
 
 ```tsx
 import { ForgeIconAlert, ForgeIconArrow } from '@mission-platform/icons';
@@ -87,8 +87,10 @@ The library includes a wide array of icons covering several categories:
 - **State & Status**: `ForgeIconAlert`, `ForgeIconCheck`, `ForgeIconError`, `ForgeIconInfo`, `ForgeIconWarning`.
 - **Navigation**: `ForgeIconArrow`, `ForgeIconChevron`, `ForgeIconHome`, `ForgeIconMenu`, `ForgeIconExternalLink`.
 - **Media**: `ForgeIconCamera`, `ForgeIconImage`, `ForgeIconMail`, `ForgeIconPhone`.
-- **UI Controls**: `ForgeIconClose`, `ForgeIconEdit`, `ForgeIconPlus`, `ForgeIconMinus`, `ForgeIconSearch`, `ForgeIconSettings`.
-- **Content Formatting**: `ForgeIconBold`, `ForgeIconItalic`, `ForgeIconBulletList`, `ForgeIconNumberedList`, `ForgeIconHeadingOne`...
+- **UI Controls**: `ForgeIconClose`, `ForgeIconEdit`, `ForgeIconPlus`, `ForgeIconMinus`, `ForgeIconSearch`,
+  `ForgeIconSettings`.
+- **Content Formatting**: `ForgeIconBold`, `ForgeIconItalic`, `ForgeIconBulletList`, `ForgeIconNumberedList`,
+  `ForgeIconHeadingOne`...
   `ForgeIconHeadingSix`.
 - **Specialized Tools**: `ForgeIconWrench`, `ForgeIconPalette`, `ForgeIconDebug`, `ForgeIconQrCode`.
 

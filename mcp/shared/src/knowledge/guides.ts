@@ -658,7 +658,7 @@ const FRAMEWORK_WEB_COMPONENTS = `# Web Components (Lit) Best Practices
 4. **Attribute Reflection:** Reflect only when necessary.`;
 
 const GUIDES: Record<GuideId, Guide> = {
-  overview: { id: "overview", title: "Overview", body: OVERVIEW },
+  overview: {id: "overview", title: "Overview", body: OVERVIEW},
   conventions: {
     id: "conventions",
     title: "Conventions & Naming",

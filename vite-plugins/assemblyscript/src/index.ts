@@ -1,4 +1,4 @@
-import { compileAssemblyScript, type AssemblyScriptCompileOptions } from './compile.js';
+import { type AssemblyScriptCompileOptions, compileAssemblyScript } from './compile.js';
 
 import type { Plugin } from 'vite';
 

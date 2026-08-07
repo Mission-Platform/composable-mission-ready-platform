@@ -1,6 +1,7 @@
 # Efficiency Reporting and Follow-Up Review
 
-Load this reference when the user asks what changed, wants a before/after report, or asks for another pass over remaining expensive jobs.
+Load this reference when the user asks what changed, wants a before/after report, or asks for another pass over
+remaining expensive jobs.
 
 ## Reporting Rules
 
@@ -27,7 +28,8 @@ Always separate:
 - Total runner time across jobs
 - Work avoided entirely
 
-These answer different questions. A change can reduce runner spend without materially improving the fastest feedback path.
+These answer different questions. A change can reduce runner spend without materially improving the fastest feedback
+path.
 
 ## Follow-Up Review Pass
 

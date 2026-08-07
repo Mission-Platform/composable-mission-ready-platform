@@ -1,14 +1,21 @@
 # @mission-platform/website
 
-The main marketing and showcase website for **Mission Platform** — a composable, mission-ready Vue 3 platform. Built with **Vue 3**, **TypeScript**, **Vite-SSG**, and **Cloudflare Workers**, it demonstrates how shared platform packages are composed into a production application.
+The main marketing and showcase website for **Mission Platform** — a composable, mission-ready Vue 3 platform. Built
+with **Vue 3**, **TypeScript**, **Vite-SSG**, and **Cloudflare Workers**, it demonstrates how shared platform packages
+are composed into a production application.
 
 ## Architecture & Features
 
 - **Vue 3 Composition API**: Built using Vue 3 `<script setup lang="ts">` and composables.
-- **Static Site Generation (SSG)**: Uses `vite-ssg` to prerender routes for fast initial page load and search engine indexing.
-- **Multilingual Support (11 Locales)**: Configured with `@mission-platform/i18n` supporting English (`en`), Spanish (`es`), French (`fr`), Dutch (`nl`), Italian (`it`), German (`de`), Korean (`ko`), Japanese (`ja`), Chinese (`zh`), Arabic (`ar`), and Hebrew (`he`).
-- **Automated SEO Engine**: Generates locale-aware `sitemap.xml` and `robots.txt` at build time via `@mission-platform/vite-plugin-seo`.
-- **Critical CSS Inlining**: Integrates `beasties` (via `vite-ssg` configuration) to inline critical styling and defer non-critical CSS.
+- **Static Site Generation (SSG)**: Uses `vite-ssg` to prerender routes for fast initial page load and search engine
+  indexing.
+- **Multilingual Support (11 Locales)**: Configured with `@mission-platform/i18n` supporting English (`en`), Spanish
+  (`es`), French (`fr`), Dutch (`nl`), Italian (`it`), German (`de`), Korean (`ko`), Japanese (`ja`), Chinese (`zh`),
+  Arabic (`ar`), and Hebrew (`he`).
+- **Automated SEO Engine**: Generates locale-aware `sitemap.xml` and `robots.txt` at build time via
+  `@mission-platform/vite-plugin-seo`.
+- **Critical CSS Inlining**: Integrates `beasties` (via `vite-ssg` configuration) to inline critical styling and defer
+  non-critical CSS.
 - **Cloudflare Workers Deployment**: Hosted on Cloudflare Workers Assets via `@mission-platform/forge-spa`.
 
 ## Monorepo Packages Used
@@ -64,7 +71,8 @@ pnpm --filter @mission-platform/website preview
 
 ### Cloudflare Deployment
 
-Deployment uses `wrangler.jsonc` pointing to `@mission-platform/forge-spa` as its worker entrypoint and serving `./dist/` via Cloudflare Workers Assets.
+Deployment uses `wrangler.jsonc` pointing to `@mission-platform/forge-spa` as its worker entrypoint and serving
+`./dist/` via Cloudflare Workers Assets.
 
 ```bash
 # Deploy to staging environment (staging.mission-platform.dev)

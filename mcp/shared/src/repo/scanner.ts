@@ -3,10 +3,10 @@
  * of each workspace group and reading their `package.json` manifests, docs and
  * `llms.txt` files.
  */
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import {existsSync, readdirSync, readFileSync, statSync} from 'node:fs';
+import {join} from 'node:path';
 
-import { docsDir, groupDir, WORKSPACE_GROUPS, type WorkspaceGroup } from './paths.ts';
+import {docsDir, groupDir, WORKSPACE_GROUPS, type WorkspaceGroup} from './paths.ts';
 
 export interface PackageManifest {
   name?: string;
@@ -19,6 +19,7 @@ export interface PackageManifest {
   devDependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
   exports?: unknown;
+
   [key: string]: unknown;
 }
 
@@ -132,7 +133,7 @@ export function listDocs(): { slug: string; path: string }[] {
       if (statSync(full).isDirectory()) {
         walk(full, `${prefix}${entry}/`);
       } else if (entry.endsWith('.md')) {
-        results.push({ slug: `${prefix}${entry.replace(/\.md$/, '')}`, path: full });
+        results.push({slug: `${prefix}${entry.replace(/\.md$/, '')}`, path: full});
       }
     }
   };

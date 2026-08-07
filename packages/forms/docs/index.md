@@ -6,8 +6,8 @@ complex forms and wizards entirely from JSON Schema definitions.
 Like other shared packages, it follows a "write once" approach, authoring components in neutral JSX and compiling them
 into native Vue 3 and React components.
 
-All imports use the bare `@mission-platform/forms` specifier. The framework is selected once for the whole
-app through the `mp:<framework>` export condition — `resolve.conditions` (see `defineFrameworkAppConfig` /
+All imports use the bare `@mission-platform/forms` specifier. The framework is selected once for the whole app through
+the `mp:<framework>` export condition — `resolve.conditions` (see `defineFrameworkAppConfig` /
 `frameworkResolveConditions` from `@mission-platform/vite-config`) and `customConditions` (via the
 `@mission-platform/typescript-config/framework-<name>` presets).
 

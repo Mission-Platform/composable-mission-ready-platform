@@ -1,4 +1,5 @@
 import {
+  type DrawerDraggable,
   ForgeButton,
   ForgeCheckbox,
   ForgeCodeBlock,
@@ -62,8 +63,6 @@ import {
   stepOf,
   updateField,
 } from './form-builder-tree';
-
-import type { DrawerDraggable } from '@mission-platform/components/forge-drawer';
 
 // Re-export the shared builder/schema types so consumers of the JSX component
 // can import the same names they used from the Vue component.

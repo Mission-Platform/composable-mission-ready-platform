@@ -6,16 +6,14 @@
 
 - 651c349: drop the bundled vue-i18n plugin and add an i18n-block ignore plugin
 
-  `defineLibraryConfig`, `defineAppConfig`, and `defineVitestConfig` no longer
-  bundle `@intlify/unplugin-vue-i18n`, and `vue-i18n` is removed from
-  `DEFAULT_LIBRARY_EXTERNALS`. A new `ignoreVueI18nBlocksPlugin` export turns Vue
-  SFC `<i18n>` custom blocks into inert no-op modules (those blocks are now only
-  consumed by `scripts/i18n-extract.ts`; translations load from the generated
+  `defineLibraryConfig`, `defineAppConfig`, and `defineVitestConfig` no longer bundle `@intlify/unplugin-vue-i18n`, and
+  `vue-i18n` is removed from
+  `DEFAULT_LIBRARY_EXTERNALS`. A new `ignoreVueI18nBlocksPlugin` export turns Vue SFC `<i18n>` custom blocks into inert
+  no-op modules (those blocks are now only consumed by `scripts/i18n-extract.ts`; translations load from the generated
   `src/locales/*.yaml` bundles via i18next).
 
-  BREAKING CHANGE: Vue SFC `<i18n>` YAML blocks are no longer compiled into
-  vue-i18n message modules, and `vue-i18n` is no longer treated as an external by
-  library builds. Load translations through `@mission-platform/i18n` (i18next)
+  BREAKING CHANGE: Vue SFC `<i18n>` YAML blocks are no longer compiled into vue-i18n message modules, and `vue-i18n` is
+  no longer treated as an external by library builds. Load translations through `@mission-platform/i18n` (i18next)
   instead; apps that build their own Vite config can add `ignoreVueI18nBlocksPlugin()`
   to keep `<i18n>` blocks inert.
 
@@ -32,12 +30,11 @@
 
 - f0a0e11: emit code-split, tree-shakeable library builds
 
-  `defineLibraryConfig` now preserves the source module graph (one output file per
-  module) and externalises each package's own `dependencies`/`peerDependencies` by
-  default, so consumers get first-class tree shaking and code splitting. Packages
-  that ship a single self-contained artifact (workers, WASM entries, the flat token
-  bundle) opt out via the new `preserveModules: false` option. The main entry of
-  each preserved-module package is now emitted as `dist/index.js`.
+  `defineLibraryConfig` now preserves the source module graph (one output file per module) and externalises each
+  package's own `dependencies`/`peerDependencies` by default, so consumers get first-class tree shaking and code
+  splitting. Packages that ship a single self-contained artifact (workers, WASM entries, the flat token bundle) opt out
+  via the new `preserveModules: false` option. The main entry of each preserved-module package is now emitted as
+  `dist/index.js`.
 
 ### Patch Changes
 
@@ -45,8 +42,7 @@
 
   Extract the entry-resolution and Rollup `output` branching into the
   `resolveLibraryEntry` and `buildLibraryOutput` helpers so the main
-  `defineLibraryConfig` function has fewer decision points. Behaviour is
-  unchanged.
+  `defineLibraryConfig` function has fewer decision points. Behaviour is unchanged.
 
 ## 0.2.0
 
@@ -56,22 +52,22 @@
 
   Introduces a new shared tooling workspace under `configs/` that exposes
   `defineLibraryConfig`, `defineAppConfig`, and `defineVitestConfig`
-  (via the `./vitest` subpath) helpers, bundling the standard Vue +
-  vue-i18n plugins, shared PostCSS pipeline, and library build defaults
-  consumed by every Mission Platform workspace. Built with `tsc` against
+  (via the `./vitest` subpath) helpers, bundling the standard Vue + vue-i18n plugins, shared PostCSS pipeline, and
+  library build defaults consumed by every Mission Platform workspace. Built with `tsc` against
   `@mission-platform/typescript-config/library`.
 
 ### Patch Changes
 
 - 05d31c9: normalize lint and format scripts across all workspaces
 
-  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
+  Add consistent `lint:fix`, `lint:style:fix`, and `format:write` scripts to every workspace, and make `format` run
+  `prettier --check` instead of `prettier --write` so it can be used as a non-mutating verification step.
 
 - daf4be2: add `fileName` option to `defineLibraryConfig`
 
   Consumers can now set the Rollup output bundle name (without extension)
-  directly via `defineLibraryConfig({ fileName: 'breakpoints' })` instead
-  of re-declaring the full `build.lib.entry` + `fileName` pair under
+  directly via `defineLibraryConfig({ fileName: 'breakpoints' })` instead of re-declaring the full `build.lib.entry` +
+  `fileName` pair under
   `overrides`. The option is ignored when `entry` is an entry map.
 
 - 5eaacf4: reformat README tables and code samples for consistent column widths
@@ -85,5 +81,4 @@
 ### Minor Changes
 
 - Initial release. Shared Vite and Vitest helpers (`defineLibraryConfig`,
-  `defineAppConfig`, `defineVitestConfig`) for all Mission Platform packages
-  and apps.
+  `defineAppConfig`, `defineVitestConfig`) for all Mission Platform packages and apps.

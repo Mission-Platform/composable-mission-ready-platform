@@ -70,8 +70,6 @@
     }
   },
   "dependencies": {
-    "@mission-platform/breakpoints": "workspace:*",
-    "@mission-platform/i18n": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@mission-platform/vite-plugin-i18n": "workspace:*",
     "@storybook/addon-themes": "catalog:storybook",

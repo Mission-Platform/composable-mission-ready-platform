@@ -1,6 +1,6 @@
-import { defaultLocale, supportedLocales, type SupportedLocale } from 'virtual:i18n-locales';
+import { defaultLocale, type SupportedLocale, supportedLocales } from 'virtual:i18n-locales';
 
-import type { RouterOptions, RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw, RouterOptions } from 'vue-router';
 
 /**
  * Locales supported by the website. The list is the single source of truth

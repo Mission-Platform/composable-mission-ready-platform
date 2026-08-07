@@ -67,8 +67,8 @@ const results = scanImageDataAll(imageData);
 The `CodeScanner` component provides a file-upload button and a live-camera viewport, emitting each detection through
 `onResult`.
 
-It is reached through the bare `@mission-platform/code-scanner` specifier. Which framework build you get is
-decided by the active `mp:<framework>` export condition, selected **once** for the project via
+It is reached through the bare `@mission-platform/code-scanner` specifier. Which framework build you get is decided by
+the active `mp:<framework>` export condition, selected **once** for the project via
 `resolve.conditions` (see `defineFrameworkAppConfig` / `frameworkResolveConditions` from
 `@mission-platform/vite-config`) and `customConditions` (via the
 `@mission-platform/typescript-config/framework-<name>` presets):

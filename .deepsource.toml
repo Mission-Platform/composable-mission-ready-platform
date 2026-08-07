@@ -19,8 +19,8 @@ test_patterns = [
 name = "javascript"
 enabled = true
 
-  [analyzers.meta]
-  plugins = ["vue"]
-  environment = ["nodejs", "browser", "vitest"]
-  dialect = "typescript"
-  module_system = "es-modules"
+[analyzers.meta]
+plugins = ["vue"]
+environment = ["nodejs", "browser", "vitest"]
+dialect = "typescript"
+module_system = "es-modules"

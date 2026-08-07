@@ -250,7 +250,8 @@ packages/
 
 ### No Root tsconfig.json
 
-You likely don't need a `tsconfig.json` in the workspace root. Each package should have its own config extending from the shared config package.
+You likely don't need a `tsconfig.json` in the workspace root. Each package should have its own config extending from
+the shared config package.
 
 ## ESLint Configuration
 

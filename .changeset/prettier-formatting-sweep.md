@@ -16,4 +16,5 @@
 
 reformat sources with prettier
 
-Apply the repository prettier style across sources, config manifests (`tsconfig.test.json`, `turbo.json`, `vite.config.ts`), stories, and documentation. Formatting-only; no runtime or API changes.
+Apply the repository prettier style across sources, config manifests (`tsconfig.test.json`, `turbo.json`,
+`vite.config.ts`), stories, and documentation. Formatting-only; no runtime or API changes.

@@ -1,22 +1,25 @@
 # Atomic Component Design
 
-Mission Platform uses an **Atomic Design** system to organize components into hierarchical levels of complexity. Every component is a "write-once" unit authored in the neutral Forge JSX dialect (`@mission-platform/forge`), ensuring consistency across multiple frameworks.
+Mission Platform uses an **Atomic Design** system to organize components into hierarchical levels of complexity. Every
+component is a "write-once" unit authored in the neutral Forge JSX dialect (`@mission-platform/forge`), ensuring
+consistency across multiple frameworks.
 
 ## Design Levels
 
 Components are categorized into five levels based on their scope and responsibility.
 
-| Level | Folder | Description |
-| :--- | :--- | :--- |
-| **Atoms** | `src/components/atoms/` | Smallest UI primitives (e.g., `ForgeButton`, `ForgeInput`, `ForgeBadge`). They are typically functional units that cannot be broken down further without losing their purpose. |
-| **Molecules** | `src/components/molecules/` | Simple compositions of atoms (e.g., `ForgeSearchInput`, `ForgeFieldSet`). They function together as a unit. |
-| **Organisms** | `src/components/organisms/` | Complex UI sections composed of atoms, molecules, and other organisms (e.g., `ForgeNavbar`, `ForgeTable`, `ForgeModal`). |
-| **Templates** | `src/components/templates/` | Page-level layouts that define the content structure (e.g., `ForgeHero`, `ForgeAppLayout`). They often use slots to define where content should be placed. |
-| **Pages** | `src/components/pages/` | Specific instances of templates populated with concrete content and data (e.g., `AccountSettingsPage`). |
+| Level         | Folder                      | Description                                                                                                                                                                    |
+|:--------------|:----------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Atoms**     | `src/components/atoms/`     | Smallest UI primitives (e.g., `ForgeButton`, `ForgeInput`, `ForgeBadge`). They are typically functional units that cannot be broken down further without losing their purpose. |
+| **Molecules** | `src/components/molecules/` | Simple compositions of atoms (e.g., `ForgeSearchInput`, `ForgeFieldSet`). They function together as a unit.                                                                    |
+| **Organisms** | `src/components/organisms/` | Complex UI sections composed of atoms, molecules, and other organisms (e.g., `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                       |
+| **Templates** | `src/components/templates/` | Page-level layouts that define the content structure (e.g., `ForgeHero`, `ForgeAppLayout`). They often use slots to define where content should be placed.                     |
+| **Pages**     | `src/components/pages/`     | Specific instances of templates populated with concrete content and data (e.g., `AccountSettingsPage`).                                                                        |
 
 ## Component Folder Layout
 
-Each component resides in its own named subdirectory under the appropriate level folder. This directory contains the component source, stories, tests, and optional styles.
+Each component resides in its own named subdirectory under the appropriate level folder. This directory contains the
+component source, stories, tests, and optional styles.
 
 ```text
 src/components/
@@ -36,7 +39,8 @@ src/components/
 
 ## Story Conventions
 
-Storybook stories MUST be co-located with their components and follow a strict title convention to maintain a clean sidebar structure.
+Storybook stories MUST be co-located with their components and follow a strict title convention to maintain a clean
+sidebar structure.
 
 ### Filename
 
@@ -66,11 +70,11 @@ const meta = {
 
 ## Authoring Standards
 
-1.  **Framework Neutrality**: Never author separate Vue and React versions. Use `@mission-platform/forge`.
-2.  **Naming**: Components should use the `Base` prefix (e.g., `ForgeCard`) unless they are specific implementations.
-3.  **Type Safety**: Export a `*Properties` interface for the component's props.
-4.  **Testing**: A co-located `.spec.ts` is required for every component.
-5.  **Scaffolding**: Use the `scaffold_component` MCP tool to ensure the correct directory structure and boilerplate.
+1. **Framework Neutrality**: Never author separate Vue and React versions. Use `@mission-platform/forge`.
+2. **Naming**: Components should use the `Base` prefix (e.g., `ForgeCard`) unless they are specific implementations.
+3. **Type Safety**: Export a `*Properties` interface for the component's props.
+4. **Testing**: A co-located `.spec.ts` is required for every component.
+5. **Scaffolding**: Use the `scaffold_component` MCP tool to ensure the correct directory structure and boilerplate.
 
 ```bash
 # Example: Creating a new 'forge-chip' atom in the 'components' package

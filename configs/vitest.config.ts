@@ -13,12 +13,12 @@
  * - Coverage reporting with thresholds
  * - Environment variables support
  */
-import { plugin } from '@mission-platform/vitest-config';
+import {plugin} from '@mission-platform/vitest-config';
 
 export default plugin({
   // Test environment configuration
   environment: 'jsdom',
-  
+
   // Coverage thresholds
   coverage: {
     provider: 'v8',

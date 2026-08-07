@@ -8,14 +8,13 @@ Mission Platform. The components (`ForgeShowAt`, `ForgeHideAt`, `ForgeBreakpoint
 
 - `@mission-platform/breakpoints` — the single entry point. Which build you get is decided by the active
   `mp:<framework>` export condition (`mp:vue`, `mp:react`, `mp:solid`,
-  `mp:web-component`); with no condition set it resolves to the neutral JSX source barrel (for
-  write-once components compiled by `@mission-platform/vite-plugin-forge`).
+  `mp:web-component`); with no condition set it resolves to the neutral JSX source barrel (for write-once components
+  compiled by `@mission-platform/vite-plugin-forge`).
 - `@mission-platform/breakpoints/core` — framework-agnostic utilities and types.
 
 Pick the framework **once** — `resolve.conditions` via `defineFrameworkAppConfig` /
 `frameworkResolveConditions` from `@mission-platform/vite-config`, and `customConditions` via the
-`@mission-platform/typescript-config/framework-<name>` presets — then import everything with the bare
-package specifier.
+`@mission-platform/typescript-config/framework-<name>` presets — then import everything with the bare package specifier.
 
 ## Breakpoint Scale
 
@@ -94,8 +93,8 @@ import { ForgeShowAt } from '@mission-platform/breakpoints';
 
 ### `<ForgeHideAt>`
 
-The inverse of `<ForgeShowAt>`: conditionally hides slot/children content when the viewport meets the specified breakpoint
-criteria.
+The inverse of `<ForgeShowAt>`: conditionally hides slot/children content when the viewport meets the specified
+breakpoint criteria.
 
 ```vue
 <script setup lang="ts">

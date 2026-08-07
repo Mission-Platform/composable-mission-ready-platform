@@ -10,4 +10,5 @@
 
 add a Vitest test setup
 
-Each WebAssembly package now ships a `test` script, a `vitest.config.ts`, a dedicated `tsconfig.test.json`, and an `index.spec.ts` smoke test covering the compiled bindings, so the packages are exercised in CI.
+Each WebAssembly package now ships a `test` script, a `vitest.config.ts`, a dedicated `tsconfig.test.json`, and an
+`index.spec.ts` smoke test covering the compiled bindings, so the packages are exercised in CI.

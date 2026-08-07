@@ -1,5 +1,4 @@
 import '@mission-platform/tokens/scss/tokens';
-import '@mission-platform/components/styles';
 // highlight.js ships only a light theme here; the dark / auto (system) syntax
 // palettes are layered on in `./styles/global.scss` so code blocks follow the
 // active colour theme like the rest of the UI.
