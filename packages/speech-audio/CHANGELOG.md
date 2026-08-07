@@ -7,4 +7,5 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Initial release of `@mission-platform/speech-audio`.
-- Added `useSpeechSynthesis` (text-to-speech), `useSpeechRecognition` (speech-to-text), `useSound` (audio playback and tone generation), and `useMidi` (Web MIDI).
+- Added `useSpeechSynthesis` (text-to-speech), `useSpeechRecognition` (speech-to-text), `useSound` (audio playback and
+  tone generation), and `useMidi` (Web MIDI).

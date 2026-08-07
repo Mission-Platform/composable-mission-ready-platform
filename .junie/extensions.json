@@ -1,22 +1,22 @@
 {
-  "github-JetBrains-junie-extensions": {
-    "url": "https://github.com/JetBrains/junie-extensions",
-    "extensions": [
-      "context7"
-    ],
-    "source": {
-      "type": "git",
-      "url": "https://github.com/JetBrains/junie-extensions"
+    "github-JetBrains-junie-extensions": {
+        "url": "https://github.com/JetBrains/junie-extensions",
+        "extensions": [
+            "context7"
+        ],
+        "source": {
+            "type": "git",
+            "url": "https://github.com/JetBrains/junie-extensions"
+        }
+    },
+    "github-ChromeDevTools-chrome-devtools-mcp": {
+        "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+        "extensions": [
+            "chrome-devtools-mcp"
+        ],
+        "source": {
+            "type": "git",
+            "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp"
+        }
     }
-  },
-  "github-ChromeDevTools-chrome-devtools-mcp": {
-    "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
-    "extensions": [
-      "chrome-devtools-mcp"
-    ],
-    "source": {
-      "type": "git",
-      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp"
-    }
-  }
 }

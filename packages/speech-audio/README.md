@@ -25,8 +25,8 @@ speech.speak('Hello, Mission Platform', { rate: 1.1 });
 ```
 
 The import above is all you need for every target: `@mission-platform/speech-audio` declares the `mp:vue`,
-`mp:react`, `mp:solid`, and `mp:web-component` export conditions, and the framework is selected
-**once** for the project \u2014 `resolve.conditions` via `defineFrameworkAppConfig` / `frameworkResolveConditions`
+`mp:react`, `mp:solid`, and `mp:web-component` export conditions, and the framework is selected **once** for the project
+\u2014 `resolve.conditions` via `defineFrameworkAppConfig` / `frameworkResolveConditions`
 from `@mission-platform/vite-config`, and `customConditions` via the
 `@mission-platform/typescript-config/framework-<name>` presets.
 
