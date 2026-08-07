@@ -12,13 +12,17 @@ containers, and vertical responsive layouts.
 
 Component entry points:
 
-- **`@mission-platform/layouts`**: Framework-neutral JSX components (`ForgeApplicationLayout`, `ForgeContainer`,
-  `ForgeVerticalLayout`).
-- **`@mission-platform/layouts/vue`**: Pre-wrapped Vue 3 components.
-- **`@mission-platform/layouts/react`**: Pre-wrapped React components.
+- **`@mission-platform/layouts`**: the only component entry point (`ForgeApplicationLayout`,
+  `ForgeContainer`, `ForgeVerticalLayout`). It resolves to the pre-wrapped Vue 3, React, Solid, or
+  web-component build according to the active `mp:<framework>` export condition, and to the
+  framework-neutral JSX components when no condition is set.
 - **`@mission-platform/layouts/storyblok/vue`**: Storyblok CMS integration for Vue 3.
 - **`@mission-platform/layouts/storyblok/react`**: Storyblok CMS integration for React.
 - **`@mission-platform/layouts/styles`**: Accessibility and layout SCSS styles.
+
+The framework is chosen **once** — `resolve.conditions` via `defineFrameworkAppConfig` /
+`frameworkResolveConditions` from `@mission-platform/vite-config`, and `customConditions` via the
+`@mission-platform/typescript-config/framework-<name>` presets — so every component import below is bare.
 
 ---
 
@@ -36,7 +40,7 @@ pnpm add @mission-platform/layouts
 
 ```vue
 <script setup lang="ts">
-  import { ForgeApplicationLayout, ForgeContainer, ForgeVerticalLayout } from '@mission-platform/layouts/vue';
+  import { ForgeApplicationLayout, ForgeContainer, ForgeVerticalLayout } from '@mission-platform/layouts';
 </script>
 
 <template>
@@ -54,7 +58,7 @@ pnpm add @mission-platform/layouts
 ### React Usage
 
 ```tsx
-import { ForgeApplicationLayout, ForgeContainer, ForgeVerticalLayout } from '@mission-platform/layouts/react';
+import { ForgeApplicationLayout, ForgeContainer, ForgeVerticalLayout } from '@mission-platform/layouts';
 
 export function App() {
   return (

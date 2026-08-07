@@ -22,7 +22,6 @@ export type GuideId =
   | "framework-vue"
   | "framework-react"
   | "framework-solid"
-  | "framework-svelte"
   | "framework-web-components"
   | "external-setup"
   | "design-token-overrides";
@@ -95,17 +94,30 @@ in the neutral JSX dialect (\`@mission-platform/forge\`) and compiled to **both 
   interface, doc comment, available stories, and import snippets.
 
 ## Import
+There is **one** specifier for every framework. The framework build is selected
+**once per consumer** through custom export conditions, never by the specifier:
+
+- Vite: \`resolve.conditions\` — use \`defineFrameworkAppConfig({ framework: 'vue' })\`
+  or \`frameworkResolveConditions('react')\` from \`@mission-platform/vite-config\`.
+- TypeScript: \`customConditions\` — extend
+  \`@mission-platform/typescript-config/tsconfig.framework-<name>.json\`.
+- Vitest: pass \`framework\` to \`defineVitestConfig\` (or set \`resolve.conditions\`).
+
+The conditions are \`mp:vue\`, \`mp:react\`, \`mp:solid\` and
+\`mp:web-component\`. Framework subpaths such as \`@mission-platform/components/vue\`
+do **not** exist — importing one is an error.
+
 \`\`\`ts
-// Vue app
-import { ForgeButton } from '@mission-platform/components/vue';
-// React app
-import { ForgeButton } from '@mission-platform/components/react';
+// Any framework — resolves to the build your conditions select.
+import { ForgeButton } from '@mission-platform/components';
+// Per-component deep import (only this component's chunk); still no framework segment.
+import { ForgeBadge } from '@mission-platform/components/atoms/forge-badge/forge-badge';
 \`\`\`
 
 ## Use (Vue)
 \`\`\`vue
 <script setup lang="ts">
-import { ForgeButton } from '@mission-platform/components/vue';
+import { ForgeButton } from '@mission-platform/components';
 </script>
 
 <template>
@@ -384,7 +396,7 @@ and are thin orchestration layers that compose \`packages/\`.
 ## Fastest path
 Use the \`scaffold_app\` tool (\`apply: true\` to write). It creates a Vite + Vue 3 app
 skeleton: manifest with app scripts, \`tsconfig\` set (app + node), re-exported configs,
-\`vite.config.ts\` (\`defineAppConfig\`), \`turbo.json\`, \`index.html\`, and \`src/\` entry.
+\`vite.config.ts\` (\`defineFrameworkAppConfig\`), \`turbo.json\`, \`index.html\`, and \`src/\` entry.
 
 ## Manual steps
 1. \`mkdir apps/<name>\`; add \`package.json\` (\`"private": true\`, app scripts:
@@ -392,7 +404,9 @@ skeleton: manifest with app scripts, \`tsconfig\` set (app + node), re-exported 
 2. Add consumed packages as \`dependencies\` via \`workspace:*\` (e.g. components, tokens, i18n).
 3. Add \`tsconfig.json\` referencing \`tsconfig.app.json\` and \`tsconfig.node.json\`.
 4. Re-export shared eslint/prettier/stylelint configs.
-5. Add \`vite.config.ts\` using \`defineAppConfig\`, plus \`index.html\` and \`src/main.ts\`/\`src/App.vue\`.
+5. Add \`vite.config.ts\` using \`defineFrameworkAppConfig({ framework: 'vue' })\` — this is the
+   single switch that makes bare \`@mission-platform/*\` imports resolve to the chosen
+   framework build — plus \`index.html\` and \`src/main.ts\`/\`src/App.vue\`.
 6. Add \`turbo.json\` with \`"extends": ["//"]\`.
 7. \`pnpm install\`, then \`pnpm exec turbo run build --filter @mission-platform/<name>\`.
 
@@ -404,7 +418,11 @@ const APP_DEVELOPMENT = `# Developing an App
 ## Principles
 - Apps **compose** packages; they should contain orchestration, routing, and app-specific glue only.
 - New reusable UI/logic belongs in a package, not in the app.
-- Consume components from \`@mission-platform/components/vue\`, tokens from \`@mission-platform/tokens\`, etc.
+- Consume components from \`@mission-platform/components\`, tokens from \`@mission-platform/tokens\`, etc.
+- Pick the framework **once** in \`vite.config.ts\` with
+  \`defineFrameworkAppConfig({ framework: 'vue' })\` (and the matching
+  \`tsconfig.framework-<name>.json\` preset); every bare \`@mission-platform/*\`
+  import then resolves to that framework's build.
 
 ## Workflow
 - Dev server: \`pnpm exec turbo run dev --filter @mission-platform/<name>\` (or \`pnpm --filter <name> dev\`).
@@ -627,18 +645,6 @@ const FRAMEWORK_SOLID = `# SolidJS Best Practices
 4. **Avoid Destructuring:** Access props as \`props.name\`.
 5. **Untrack:** Read signals without creating dependencies.`;
 
-const FRAMEWORK_SVELTE = `# Svelte 5 Best Practices
-
-## Patterns
-- **Runes:** Use \`$state\`, \`$derived\`, and \`$effect\`.
-- **Snippets:** Use \`{#snippet}\` for reusable UI.
-
-## Performance
-1. **Immutable Data:** Treat state as immutable.
-2. **Keys:** Always provide keys in \`{#each}\` blocks.
-3. **Bind Sparingly:** Prefer one-way flow for clarity.
-4. **Lazy Loading:** Use dynamic imports.`;
-
 const FRAMEWORK_WEB_COMPONENTS = `# Web Components (Lit) Best Practices
 
 ## Patterns
@@ -727,11 +733,6 @@ const GUIDES: Record<GuideId, Guide> = {
     id: "framework-solid",
     title: "SolidJS Best Practices",
     body: FRAMEWORK_SOLID,
-  },
-  "framework-svelte": {
-    id: "framework-svelte",
-    title: "Svelte 5 Best Practices",
-    body: FRAMEWORK_SVELTE,
   },
   "framework-web-components": {
     id: "framework-web-components",

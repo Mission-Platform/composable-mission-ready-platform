@@ -2,7 +2,7 @@
   "name": "@mission-platform/d3",
   "version": "0.2.0",
   "license": "BSD-4-Clause",
-  "description": "Framework-neutral D3 integration for Mission Platform \u2014 a write-once useD3 composable (authored against @mission-platform/forge hooks and compiled to React (./react) and Vue (./vue)) that binds a D3 selection to an element ref, plus pure margin-convention helpers for responsive chart layout",
+  "description": "Framework-neutral D3 integration for Mission Platform — a write-once useD3 composable (authored against @mission-platform/forge hooks and compiled to React (./react) and Vue (./vue)) that binds a D3 selection to an element ref, plus pure margin-convention helpers for responsive chart layout",
   "type": "module",
   "sideEffects": false,
   "exports": {
@@ -29,26 +29,6 @@
       },
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    },
-    "./react": {
-      "types": "./dist/react/index.d.ts",
-      "import": "./dist/react/index.js"
-    },
-    "./solid": {
-      "types": "./dist/solid/index.d.ts",
-      "import": "./dist/solid/index.js"
-    },
-    "./svelte": {
-      "types": "./dist/svelte/index.d.ts",
-      "import": "./dist/svelte/index.js"
-    },
-    "./web-components": {
-      "types": "./dist/web-components/index.d.ts",
-      "import": "./dist/web-components/index.js"
-    },
-    "./vue": {
-      "types": "./dist/vue/index.d.ts",
-      "import": "./dist/vue/index.js"
     }
   },
   "main": "./dist/index.js",

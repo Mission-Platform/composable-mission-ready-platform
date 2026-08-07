@@ -371,19 +371,15 @@ export const VUE_ADAPTER_MODULE = '@mission-platform/forge/vue';
 
 /**
  * The bare specifier of the write-once icon library `@mission-platform/icons`.
- * Neutral authors import their icons from this root (which type-checks against the
- * neutral icon source and renders through the `@mission-platform/forge` adapters in
- * unit tests), but the package ships **only** the compiled `./react` / `./vue`
- * builds — so the emitters remap the bare specifier to the matching per-framework
- * subpath (see {@link iconsJsxFrameworkModule}), exactly like the
- * {@link NEUTRAL_FRAMEWORK_COMPONENTS} `Teleport`/`Transition` remap.
+ * Neutral authors import their icons from this root, and the generated
+ * per-framework sources keep that exact specifier: every framework-split
+ * `@mission-platform/*` package declares `mp:vue` / `mp:react` / `mp:solid` /
+ * `mp:web-component` custom export conditions on its bare `.` entry, so the
+ * *consumer's* `resolve.conditions` (and the matching
+ * `customConditions` tsconfig preset) select the right build. There is no
+ * per-framework subpath to remap to.
  */
 export const ICONS_JSX_MODULE = '@mission-platform/icons';
-
-/** The per-framework subpath the compiled `@mission-platform/icons` icons are imported from. */
-export function iconsJsxFrameworkModule(framework: JsxFramework): string {
-  return `${ICONS_JSX_MODULE}/${framework}`;
-}
 
 /**
  * The write-once **component-library** workspace packages: like
@@ -391,10 +387,9 @@ export function iconsJsxFrameworkModule(framework: JsxFramework): string {
  * packages (e.g. `ForgeDrawer` from `@mission-platform/components/forge-drawer`, or
  * `ForgeVerticalLayout` from `@mission-platform/layouts`), which type-check
  * against the neutral source and render through the `@mission-platform/forge`
- * adapters in unit tests — but each package ships **only** the compiled
- * `./react` / `./vue` builds, so the emitters remap the neutral import to the
- * matching per-framework entry. (The built entry re-exports each component under
- * **both** its public and neutral `Base*` name, so the `Base*` imports resolve.)
+ * adapters in unit tests. The generated per-framework sources import them under
+ * the very same bare specifier — framework selection happens through each
+ * package's `mp:<framework>` export condition, not through a subpath.
  */
 export const COMPONENTS_JSX_MODULES = [
   '@mission-platform/components',
@@ -402,33 +397,6 @@ export const COMPONENTS_JSX_MODULES = [
   '@mission-platform/forms',
   '@mission-platform/i18n',
 ] as const;
-
-/**
- * For a write-once, framework-split workspace package import, return the
- * per-framework subpath the emitters remap it to — or `undefined` when the
- * specifier is not a framework-split package and should be carried verbatim.
- *
- * The framework-split packages publish only their compiled `./react` / `./vue`
- * builds yet are authored against neutrally: `@mission-platform/icons` (imported
- * from its root) and the {@link COMPONENTS_JSX_MODULES} component libraries
- * (imported from their root or a neutral subpath such as
- * `@mission-platform/components/forge-drawer`). Each is remapped to the matching
- * `…/<framework>` entry; an already-framework subpath is left untouched.
- */
-export function frameworkSplitModule(specifier: string, framework: JsxFramework): string | undefined {
-  if (specifier === ICONS_JSX_MODULE) {
-    return iconsJsxFrameworkModule(framework);
-  }
-  for (const base of COMPONENTS_JSX_MODULES) {
-    if (specifier === `${base}/react` || specifier === `${base}/vue`) {
-      return undefined;
-    }
-    if (specifier === base || specifier.startsWith(`${base}/`)) {
-      return `${base}/${framework}`;
-    }
-  }
-  return undefined;
-}
 
 /** The JSX tag name of the neutral named-slot marker element. */
 const SLOT_TAG = 'Slot';
@@ -1646,14 +1614,13 @@ export function readStyleImports(sourceFile: ts.SourceFile): StyleImport[] {
  * source so values referenced by the body, carried-over helpers, or prop
  * defaults resolve at runtime. Each entry is the printed `import` statement.
  *
- * The one bare specifier that is **not** carried verbatim is the write-once icon
- * library {@link ICONS_JSX_MODULE}: since it publishes only the per-framework
- * `./react` / `./vue` builds, its import is remapped to the target framework's
- * subpath ({@link iconsJsxFrameworkModule}) so the generated source imports the
- * matching native icon component (the React emitter does the same in its own
- * import pass).
+ * Framework-split workspace packages such as the write-once icon library
+ * {@link ICONS_JSX_MODULE} are carried verbatim too: each declares an
+ * `mp:<framework>` export condition on its bare `.` entry, so the consuming app
+ * (or Storybook/Vitest config) resolves the matching native build without the
+ * generated source naming a framework subpath.
  */
-export function readExternalImports(sourceFile: ts.SourceFile, framework: 'react' | 'vue'): string[] {
+export function readExternalImports(sourceFile: ts.SourceFile): string[] {
   const imports: string[] = [];
   let needsI18nImport = usesI18nextT(sourceFile);
 
@@ -1670,23 +1637,11 @@ export function readExternalImports(sourceFile: ts.SourceFile, framework: 'react
       needsI18nImport = true;
       continue;
     }
-    const frameworkModule = frameworkSplitModule(specifier, framework);
-    if (frameworkModule !== undefined) {
-      const remapped = ts.factory.updateImportDeclaration(
-        statement,
-        statement.modifiers,
-        statement.importClause,
-        ts.factory.createStringLiteral(frameworkModule),
-        statement.attributes,
-      );
-      imports.push(printNode(remapped, sourceFile));
-      continue;
-    }
     imports.push(printNode(statement, sourceFile));
   }
 
   if (needsI18nImport) {
-    const i18nModule = `@mission-platform/i18n/${framework}`;
+    const i18nModule = '@mission-platform/i18n';
     if (!imports.some((imp) => imp.includes(i18nModule))) {
       imports.push(`import { useI18n } from '${i18nModule}';`);
     }

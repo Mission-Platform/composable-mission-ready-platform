@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.6",
   "license": "BSD-4-Clause",
+  "description": "Mission Platform public documentation and product website",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,7 +16,7 @@
     "cf:dev:production": "wrangler dev --env production",
     "version": "wrangler versions upload --env production",
     "version:staging": "wrangler versions upload --env staging",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "lint:style": "stylelint \"src/**/*.{vue,scss,css}\"",

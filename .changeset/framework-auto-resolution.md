@@ -21,17 +21,15 @@
 add framework auto-resolution via custom export conditions
 
 Every framework-shipping `@mission-platform/*` package now declares `mp:vue`,
-`mp:react`, `mp:solid`, `mp:svelte`, and `mp:web-component` custom export
+`mp:react`, `mp:solid`, and `mp:web-component` custom export
 conditions on its bare `.` entry (each resolving to the matching built `dist`
 artifact), so consumers can `import { X } from '@mission-platform/<pkg>'` with
 no framework subpath and have Vite and the TypeScript LSP resolve the correct
-framework build from a single app-level setting. The existing explicit
-`./vue`, `./react`, … subpath exports remain as a fallback for tools that
-ignore custom conditions.
+framework build from a single app-level setting.
 
 `@mission-platform/vite-config` adds `defineFrameworkAppConfig`,
 `frameworkResolveConditions`, and `frameworkCondition` (plus the
 `MissionPlatformFramework` type) to set `resolve.conditions` from one
 `framework` option, and `@mission-platform/typescript-config` adds matching
-`framework-vue`, `framework-react`, `framework-solid`, `framework-svelte`, and
-`framework-web-component` presets wiring the equivalent `customConditions`.
+`framework-vue`, `framework-react`, `framework-solid`, and `framework-web-component`
+presets wiring the equivalent `customConditions`.

@@ -17,7 +17,7 @@ import type { SchemaFormDefinition } from '../forge-schema-form';
  *
  * The neutral SSR adapter cannot exercise this (its hooks are single-shot
  * no-ops and never emit), so this suite mounts the **compiled Vue build**
- * (`@mission-platform/forms/vue`) and edits a plain text field — no Monaco
+ * (`@mission-platform/forms`) and edits a plain text field — no Monaco
  * needed — asserting the host receives the update.
  */
 
@@ -45,7 +45,7 @@ describe('ForgeSchemaFormDialog forwards update:modelValue on the compiled Vue b
 
   it('re-emits the host update:modelValue when an inner field changes', async () => {
     const { createApp, h } = await import('vue');
-    const { ForgeSchemaFormDialog } = (await import('@mission-platform/forms/vue')) as unknown as {
+    const { ForgeSchemaFormDialog } = (await import('@mission-platform/forms')) as unknown as {
       ForgeSchemaFormDialog: unknown;
     };
 

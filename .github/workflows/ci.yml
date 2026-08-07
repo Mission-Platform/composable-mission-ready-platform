@@ -15,50 +15,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-        with:
-          # Full history lets `turbo run … --affected` diff against the base.
-          fetch-depth: 0
-
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v6
-        with:
-          run_install: false
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: .nvmrc
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      # Cache Vite's on-disk dependency pre-bundling and Turborepo's local task
-      # cache across runs.  Keyed on the lockfile + workflow file so it
-      # invalidates whenever dependencies or CI configuration change.
-      - name: Cache Vite & Turbo artefacts
-        uses: actions/cache@v5
-        with:
-          path: |
-            **/node_modules/.vite
-            **/.vite
-            **/.turbo
-            .turbo
-          key: ${{ runner.os }}-turbo-${{ hashFiles('pnpm-lock.yaml', '.github/workflows/ci.yml', 'turbo.json') }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-
-
-      - name: Lint
-        run: pnpm exec turbo run lint --affected
-
   build-test:
     name: Build & Test
     runs-on: ubuntu-latest
@@ -111,11 +67,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-turbo-
 
-      - name: Build
-        run: pnpm exec turbo run build --affected
+      - name: Lint all affected workspaces
+        run: pnpm exec turbo run lint --affected
 
-      - name: Run package tests
-        run: pnpm exec turbo run test --filter="./packages/**" --affected
-
-#      - name: Run app tests
-#        run: pnpm exec turbo run test --filter="./apps/**" --affected
+      # test:coverage depends on each workspace's build and runs every affected
+      # package, app, worker, plugin, and config that exposes the task.
+      - name: Run affected coverage tests
+        run: pnpm exec turbo run test:coverage --affected

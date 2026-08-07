@@ -129,7 +129,7 @@ export function storyGlobs(framework: StorybookFramework, packages: readonly str
   const infix = FRAMEWORK_STORY_INFIX[framework];
   const patternsFor = (base: string): string[] => [
     `${base}/**/*.${infix}.stories.${STORY_EXTENSIONS}`,
-    `${base}/**/!(*.vue|*.react|*.solid|*.svelte|*.web-component).stories.${STORY_EXTENSIONS}`,
+    `${base}/**/!(*.vue|*.react|*.solid|*.web-component).stories.${STORY_EXTENSIONS}`,
   ];
   return [
     '../src/**/*.mdx',
@@ -142,7 +142,7 @@ export function storyGlobs(framework: StorybookFramework, packages: readonly str
  * Keep only the packages that actually ship a build for the active framework.
  *
  * Every package ships Vue and React builds, but a few (e.g. `wysiwyg`,
- * `breakpoints`) do not yet emit Solid/Svelte/Web-Component builds, so their bare
+ * `breakpoints`) do not yet emit Solid/Web-Component builds, so their bare
  * `@mission-platform/<pkg>` import falls through the `mp:<framework>` conditions
  * to the package's neutral/source entry — whose barrel exports only the `Base*`
  * names, not the friendly aliases the neutral stories import — and the preview
@@ -157,7 +157,7 @@ async function packagesForFramework(
   repoRoot: string,
 ): Promise<string[]> {
   // Vue and React are shipped by every package — no filtering needed.
-  if (framework === 'vue' || framework === 'react') {
+  if (framework === 'vue' || framework === 'react' || framework === 'svelte') {
     return [...packages];
   }
   const { readFileSync } = await import('node:fs');
@@ -266,19 +266,15 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
       plugins.push(...(react() as unknown as Plugin[]));
       break;
     }
+    case 'svelte': {
+      const { svelte } = await import('@sveltejs/vite-plugin-svelte');
+      plugins.push(svelte() as unknown as Plugin);
+      break;
+    }
     // Solid needs no explicit plugin here: the `storybook-solidjs-vite` framework
     // adapter registers `vite-plugin-solid` itself, so the shared neutral
     // `*.stories.tsx` compile through Solid's JSX transform. Adding it again would
     // double-transform the story JSX.
-    case 'svelte': {
-      // The Svelte renderer ships its decorator/preview harness as `.svelte`
-      // components; register `@sveltejs/vite-plugin-svelte` so those (and any
-      // `*.svelte.stories.*`) are compiled instead of being handed to the JS
-      // parser. Web-Components use the html/lit renderer with no extra transform.
-      const { svelte } = await import('@sveltejs/vite-plugin-svelte');
-      plugins.push(...(svelte() as unknown as Plugin[]));
-      break;
-    }
     default: {
       break;
     }

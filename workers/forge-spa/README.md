@@ -18,13 +18,15 @@ Consuming apps (such as `apps/my-care-notes` and `apps/website`):
 - **`dist/index.js`**: Transpiled ESM JavaScript artifact consumed by Wrangler at application deployment time.
 
 ```typescript
-import type { fetch, Request, Response } from '@cloudflare/workers-types';
+interface Env {
+  ASSETS: Fetcher;
+}
 
 export default {
-  async fetch(request: Request, environment: Record<string, { fetch: typeof fetch }>): Promise<Response> {
+  async fetch(request: Request, environment: Env): Promise<Response> {
     return environment.ASSETS.fetch(request);
   },
-};
+} satisfies ExportedHandler<Env>;
 ```
 
 ## Workflows & Scripts

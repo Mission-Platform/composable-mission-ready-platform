@@ -5,7 +5,7 @@ Write-once SVG icon components for Mission Platform, authored in a framework-neu
 
 ## Features
 
-- **Write Once, Run Anywhere**: Neutral icon JSX compiled to framework-native subpaths with zero runtime overhead.
+- **Write Once, Run Anywhere**: Neutral icon JSX compiled to framework-native builds with zero runtime overhead.
 - **Tree-Shakable**: Each icon is compiled into its own module for minimal bundle footprint.
 - **Universal Props**: Standardized `size` tokens (`2xs`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl` or explicit numeric
   values), `color`, and accessibility `ariaLabel`.
@@ -19,11 +19,16 @@ pnpm add @mission-platform/icons
 
 ## Usage
 
-### Vue 3 (`@mission-platform/icons/vue`)
+There is a single entry point: `@mission-platform/icons`. Pick the framework **once** — `resolve.conditions`
+via `defineFrameworkAppConfig` / `frameworkResolveConditions` from `@mission-platform/vite-config`, and
+`customConditions` via the `@mission-platform/typescript-config/framework-<name>` presets — and the
+`mp:<framework>` export condition resolves the bare specifier to the matching native build.
+
+### Vue 3 (`mp:vue`)
 
 ```vue
 <script setup lang="ts">
-  import { ForgeIconAlert, ForgeIconArrow, ForgeIconCheck, ForgeIconSearch } from '@mission-platform/icons/vue';
+  import { ForgeIconAlert, ForgeIconArrow, ForgeIconCheck, ForgeIconSearch } from '@mission-platform/icons';
 </script>
 
 <template>
@@ -46,10 +51,10 @@ pnpm add @mission-platform/icons
 </template>
 ```
 
-### React (`@mission-platform/icons/react`)
+### React (`mp:react`)
 
 ```tsx
-import { ForgeIconAlert, ForgeIconArrow, ForgeIconCheck, ForgeIconSearch } from '@mission-platform/icons/react';
+import { ForgeIconAlert, ForgeIconArrow, ForgeIconCheck, ForgeIconSearch } from '@mission-platform/icons';
 
 export function IconBar() {
   return (
@@ -73,19 +78,20 @@ export function IconBar() {
 }
 ```
 
-### Framework-Neutral Components (`@mission-platform/icons`)
+### Framework-Neutral Components (no `mp:*` condition)
 
-When authoring write-once components compiled by `@mission-platform/vite-plugin-forge`:
+When authoring write-once components compiled by `@mission-platform/vite-plugin-forge`, the very same
+import yields the neutral JSX source:
 
 ```tsx
 import { ForgeIconAlert, ForgeIconCheck } from '@mission-platform/icons';
 ```
 
-## Subpath Exports
+## Exports
 
-- `@mission-platform/icons`: Neutral JSX source barrel export.
-- `@mission-platform/icons/vue`: Compiled native Vue 3 components.
-- `@mission-platform/icons/react`: Compiled native React components.
+- `@mission-platform/icons`: the only entry point. Resolves to the compiled native Vue 3, React, Solid,
+  or web-component build according to the active `mp:<framework>` condition, and to the neutral
+  JSX source barrel when none is set.
 
 ## Universal Props
 

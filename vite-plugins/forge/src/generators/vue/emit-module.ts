@@ -245,7 +245,7 @@ export function emitVueModule(
   // carried-over helpers, or prop defaults) still resolve in the Vue build. The
   // write-once icon import (`@mission-platform/icons`) is remapped to its
   // `/vue` subpath so the SFC pulls the native Vue icon components.
-  const externalImports = readExternalImports(sourceFile, 'vue');
+  const externalImports = readExternalImports(sourceFile);
   const relativeImports = readComponentImports(sourceFile);
   // A relative value import whose base is a discovered component is rendered as
   // a Vue child (`import X from './base.vue'`); everything else is a plain

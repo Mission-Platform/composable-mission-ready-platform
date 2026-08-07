@@ -10,8 +10,8 @@ framework-neutral model, then let a per-framework adapter wire them into a real 
   - locations: `parseLocation`, `stringifyLocation`, `normalizeHash`
   - route trees: `defineRoutes`, `flattenRoutes`, `findRouteByName`,
     `matchRoutes`, `resolveLocation`, `createRouteResolver`
-- **Vue 3 adapter** (`@mission-platform/router/vue`, built on `vue-router` 4) —
-  `createMpRouter`, `useMpRouter`, `useMpRoute`, `MpRouterLink`, plus the
+- **Vue 3 adapter** (the same bare `@mission-platform/router` specifier with the `mp:vue` condition active,
+  built on `vue-router` 4) — `createMpRouter`, `useMpRouter`, `useMpRoute`, `MpRouterLink`, plus the
   `toVueRoutes` / `toVueLocation` translators.
 - **RedwoodSDK adapter** (`@mission-platform/router/redwood`, built on
   `rwsdk/router`) — `toRedwoodRoutes`, `renderRoutes`, `toRedwoodPath`, and the
@@ -22,6 +22,12 @@ vue-router's, so translation is near pass-through. RedwoodSDK's flat route table
 wildcard, so `toRedwoodPath` downgrades the neutral modifiers (`:param?` →
 `:param`, `:param*` / `:param+` → `*`). The same `MpRoute` tree is designed to extend to react-router, TanStack Router,
 Next.js, and Nuxt as further adapters are added.
+
+Framework adapters are **not** separate subpaths: `@mission-platform/router` carries the `mp:<framework>`
+export conditions, and you pick one **once** for the project — `resolve.conditions` via
+`defineFrameworkAppConfig` / `frameworkResolveConditions` from `@mission-platform/vite-config`, and
+`customConditions` via the `@mission-platform/typescript-config/framework-<name>` presets. Every adapter
+build also re-exports the entire neutral core, so a single bare import is always enough.
 
 ## Install
 
@@ -51,9 +57,9 @@ export const routes = defineRoutes([
 ## Vue 3
 
 ```ts
-// main.ts
+// main.ts — with the mp:vue condition active.
 import { createApp } from 'vue';
-import { createMpRouter } from '@mission-platform/router/vue';
+import { createMpRouter } from '@mission-platform/router';
 import App from './App.vue';
 import { routes } from './routes';
 
@@ -63,7 +69,7 @@ createApp(App).use(router).mount('#app');
 
 ```vue
 <script setup lang="ts">
-  import { MpRouterLink, useMpRoute, useMpRouter } from '@mission-platform/router/vue';
+  import { MpRouterLink, useMpRoute, useMpRouter } from '@mission-platform/router';
 
   const route = useMpRoute();
   const { push } = useMpRouter();
@@ -123,7 +129,7 @@ resolveLocation('/files/a/b', routes).params; // → { pathMatch: ['a', 'b'] }
   `resolveLocation`, `createRouteResolver`, `compilePath`, `matchPath`,
   `buildPath`, `normalizePath`, `parseQuery`, `stringifyQuery`, `parseLocation`,
   `stringifyLocation`, `normalizeHash`.
-- **Vue** — `createMpRouter`, `useMpRouter`, `useMpRoute`, `MpRouterLink`,
+- **Vue** (`mp:vue` condition) — `createMpRouter`, `useMpRouter`, `useMpRoute`, `MpRouterLink`,
   `toVueRoutes`, `toVueLocation` (and a re-export of the entire core).
 - **RedwoodSDK** — `toRedwoodRoutes`, `renderRoutes`, `toRedwoodPath`,
   `redwoodHref`, `createRedwoodLinks` (and a re-export of the entire core).

@@ -1,10 +1,12 @@
 // ─── @mission-platform/i18n ──────────────────────────────────────────────────
 // Framework-agnostic i18next integration for Mission Platform.
 //
-// The root entry is framework-neutral: it builds and returns a plain i18next
-// instance. Pair it with a framework adapter:
-//   • Vue 3 → `@mission-platform/i18n/vue`
-//   • React → `@mission-platform/i18n/react`
+// Without a framework condition this entry is framework-neutral: it builds and
+// returns a plain i18next instance. A consumer that selects a framework — via
+// Vite `resolve.conditions` / TypeScript `customConditions` — resolves the same
+// bare specifier to the matching adapter build instead:
+//   • Vue 3 → `mp:vue`
+//   • React → `mp:react`
 
 export { createForgeI18N, getServerI18n, runWithI18n, setServerI18n } from './stores/create-forge-i18n';
 export type { CreateForgeI18NOptions } from './stores/create-forge-i18n';

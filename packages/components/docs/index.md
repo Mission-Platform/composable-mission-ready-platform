@@ -11,8 +11,11 @@ This package demonstrates a high-efficiency cross-framework architecture:
 - **Neutral Source**: Components are written in `.tsx` files using `@mission-platform/forge`.
 - **Two-Stage Compilation**: Using `@mission-platform/vite-plugin-forge`, the neutral source is transformed into
   framework-specific source code (Vue SFCs and React TSX) and then compiled by the respective native toolchains.
-- **Zero Runtime Overhead**: There are no runtime adapters; consumers import native components from the `./vue` or
-  `./react` subpaths.
+- **Zero Runtime Overhead**: There are no runtime adapters. Consumers import native components with the bare
+  `@mission-platform/components` specifier; the framework is chosen **once** through the `mp:<framework>` export
+  condition — `resolve.conditions` (see `defineFrameworkAppConfig` / `frameworkResolveConditions` from
+  `@mission-platform/vite-config`) and `customConditions` (via the
+  `@mission-platform/typescript-config/framework-<name>` presets).
 - **Storyblok Integration**: The build process also generates Storyblok blok configurations and wrappers, enabling
   CMS-driven layouts using these same components.
 

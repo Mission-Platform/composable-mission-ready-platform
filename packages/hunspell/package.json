@@ -7,17 +7,17 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/hunspell.d.ts",
       "import": "./dist/hunspell.js"
     },
     "./worker": {
-      "types": "./dist/worker/hunspell.worker.d.ts",
+      "types": "./dist/hunspell.worker.d.ts",
       "import": "./dist/hunspell.worker.js"
     },
     "./src/dictionaries/*": "./src/dictionaries/*"
   },
   "main": "./dist/hunspell.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/hunspell.d.ts",
   "files": [
     "dist",
     "src/dictionaries"

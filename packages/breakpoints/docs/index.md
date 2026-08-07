@@ -4,13 +4,18 @@
 Mission Platform. The components (`ForgeShowAt`, `ForgeHideAt`, `ForgeBreakpointDebug`) are authored once in the neutral
 `@mission-platform/forge` dialect and compiled to **both Vue 3 and React** by `@mission-platform/vite-plugin-forge`.
 
-## Subpath Exports
+## Exports
 
-- `@mission-platform/breakpoints/vue` — compiled native Vue 3 components.
-- `@mission-platform/breakpoints/react` — compiled native React components.
+- `@mission-platform/breakpoints` — the single entry point. Which build you get is decided by the active
+  `mp:<framework>` export condition (`mp:vue`, `mp:react`, `mp:solid`,
+  `mp:web-component`); with no condition set it resolves to the neutral JSX source barrel (for
+  write-once components compiled by `@mission-platform/vite-plugin-forge`).
 - `@mission-platform/breakpoints/core` — framework-agnostic utilities and types.
-- `@mission-platform/breakpoints` — the neutral JSX source barrel (for write-once components compiled by
-  `@mission-platform/vite-plugin-forge`).
+
+Pick the framework **once** — `resolve.conditions` via `defineFrameworkAppConfig` /
+`frameworkResolveConditions` from `@mission-platform/vite-config`, and `customConditions` via the
+`@mission-platform/typescript-config/framework-<name>` presets — then import everything with the bare
+package specifier.
 
 ## Breakpoint Scale
 
@@ -57,9 +62,9 @@ Conditionally renders slot/children content when the viewport meets the specifie
 #### Usage
 
 ```vue
-<!-- Vue 3 -->
+<!-- Vue 3 (mp:vue condition active) -->
 <script setup lang="ts">
-  import { ForgeShowAt } from '@mission-platform/breakpoints/vue';
+  import { ForgeShowAt } from '@mission-platform/breakpoints';
 </script>
 
 <template>
@@ -74,8 +79,8 @@ Conditionally renders slot/children content when the viewport meets the specifie
 ```
 
 ```tsx
-// React
-import { ForgeShowAt } from '@mission-platform/breakpoints/react';
+// React (mp:react condition active) — note the identical bare specifier.
+import { ForgeShowAt } from '@mission-platform/breakpoints';
 
 <ForgeShowAt min="md">
   <p>Visible on medium screens and above</p>
@@ -94,7 +99,7 @@ criteria.
 
 ```vue
 <script setup lang="ts">
-  import { ForgeHideAt } from '@mission-platform/breakpoints/vue';
+  import { ForgeHideAt } from '@mission-platform/breakpoints';
 </script>
 
 <template>
@@ -113,7 +118,7 @@ breakpoints are active. Its labels are localised through i18next (`mp.breakpoint
 
 ```tsx
 // React
-import { ForgeBreakpointDebug } from '@mission-platform/breakpoints/react';
+import { ForgeBreakpointDebug } from '@mission-platform/breakpoints';
 
 <ForgeBreakpointDebug />;
 ```

@@ -585,7 +585,7 @@ export interface GenerateStoryblokBloksOptions {
   outDir: string;
   /**
    * Import specifier the generated wrappers import the **built** framework
-   * components from, e.g. `@mission-platform/components/vue`.
+   * components from, e.g. `@mission-platform/components`.
    */
   componentsImport: string;
   /** Prefix stripped from each neutral export name to form its public name. Defaults to `Forge`. */
@@ -990,6 +990,65 @@ const CSS_MODULE_SHIM = [
 const CSS_MODULE_SHIM_FILE = '__mp-css-shim.d.ts';
 
 /**
+ * The custom export condition each framework's build is published under. The
+ * generated per-framework sources import sibling workspace packages by their
+ * **bare** specifier (`@mission-platform/icons`, `@mission-platform/components`,
+ * …), so the declaration compilers must resolve with the matching condition or
+ * they would pick up the packages' neutral (`MpElement`-returning) types instead
+ * of the framework build's. Mirrors `frameworkCondition()` in
+ * `@mission-platform/vite-config` and the `customConditions` tsconfig presets.
+ */
+const FRAMEWORK_DTS_CONDITION: Record<JsxFramework, string> = {
+  vue: 'mp:vue',
+  react: 'mp:react',
+  solid: 'mp:solid',
+  svelte: 'mp:svelte',
+  'web-components': 'mp:web-component',
+};
+
+/**
+ * `paths` overrides mapping the **owning package's own** bare specifier back to
+ * its neutral source.
+ *
+ * A generated tree frequently re-imports its own package by name — the barcode /
+ * qr-code / matrix-code / code-scanner components import their encode/decode
+ * helpers from `@mission-platform/<pkg>`, and the Storyblok wrappers import the
+ * component library they wrap. Those specifiers must keep resolving to the
+ * package's **neutral** entry: under {@link FRAMEWORK_DTS_CONDITION} they would
+ * otherwise resolve to the package's own framework build, which re-exports only
+ * the components (so the helpers vanish) and whose type aliases circle back on
+ * the ones being declared (`TS2303: Circular definition of import alias`).
+ *
+ * The mapping targets the package's already-built **neutral declaration**
+ * (`dist/index.d.ts`, emitted by the neutral `defineTsdownLibrary` config that
+ * runs before the framework configs) rather than its `src/`: a `.d.ts` is exempt
+ * from the `rootDir` containment rule, whereas pulling real source into the
+ * program would fail with `TS6059`.
+ *
+ * Returns an empty object when there is no owning `package.json`, or when its
+ * neutral declaration has not been emitted yet — leaving resolution unchanged.
+ */
+function selfReferencePaths(generatedDir: string): ts.MapLike<string[]> {
+  let directory = generatedDir;
+  while (true) {
+    const manifestPath = path.join(directory, 'package.json');
+    if (existsSync(manifestPath)) {
+      const name = (JSON.parse(readFileSync(manifestPath, 'utf8')) as { name?: string }).name;
+      const neutralDeclaration = path.join(directory, 'dist', 'index.d.ts');
+      if (name === undefined || !existsSync(neutralDeclaration)) {
+        return {};
+      }
+      return { [name]: [neutralDeclaration] };
+    }
+    const parent = path.dirname(directory);
+    if (parent === directory) {
+      return {};
+    }
+    directory = parent;
+  }
+}
+
+/**
  * Base compiler options for emitting a generated component tree's declarations
  * (mirrors the packages' `tsconfig.build.json`). `jsx: preserve` keeps the
  * classic-`h` React tree's JSX agnostic to the runtime factory during emit, and
@@ -1095,6 +1154,8 @@ function emitTscComponentDeclarations(
 
   const program = ts.createProgram([...rootNames, shimPath], {
     ...COMPONENT_DTS_COMPILER_OPTIONS,
+    customConditions: [FRAMEWORK_DTS_CONDITION[options.framework]],
+    paths: selfReferencePaths(options.generatedDir),
     ...compilerOverrides,
     rootDir: options.generatedDir,
     outDir: options.outDir,
@@ -1192,6 +1253,10 @@ function emitVueComponentDeclarations(
       // template virtual code and break component/prop checking wholesale.
       jsx: 'preserve',
       jsxImportSource: 'vue',
+      // Bare `@mission-platform/*` imports in the generated SFCs must resolve to
+      // each package's Vue build, exactly as a consuming app resolves them.
+      customConditions: [FRAMEWORK_DTS_CONDITION.vue],
+      paths: selfReferencePaths(options.generatedDir),
       skipLibCheck: true,
       esModuleInterop: true,
       strict: true,
@@ -1303,6 +1368,9 @@ async function emitSvelteComponentDeclarations(
       moduleResolution: 'bundler',
       target: 'es2023',
       lib: ['es2023', 'dom', 'dom.iterable'],
+      // Resolve bare `@mission-platform/*` imports to each package's Svelte build.
+      customConditions: [FRAMEWORK_DTS_CONDITION.svelte],
+      paths: selfReferencePaths(options.generatedDir),
       skipLibCheck: true,
       strict: true,
       declaration: true,

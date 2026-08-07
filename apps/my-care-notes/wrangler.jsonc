@@ -3,7 +3,7 @@
   "name": "my-care-notes",
   "compatibility_date": "2026-06-07",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "../../workers/base-spa/dist/index.js",
+  "main": "../../workers/forge-spa/dist/index.js",
   "first_party_worker": true,
   "dev": {
     "generate_types": true,
@@ -24,8 +24,8 @@
   },
   "build": {
     "cwd": "../../",
-    "watch_dir": ["./packages/**/src/*", "./apps/my-care-notes/src/*", "./workers/base-spa/src/*"],
-    "command": "turbo run build --filter=@mission-platform/my-care-notes --filter=@mission-platform/base-spa"
+    "watch_dir": ["./packages/**/src/*", "./apps/my-care-notes/src/*", "./workers/forge-spa/src/*"],
+    "command": "turbo run build --filter=@mission-platform/my-care-notes --filter=@mission-platform/forge-spa"
   },
   "assets": {
     "not_found_handling": "single-page-application",

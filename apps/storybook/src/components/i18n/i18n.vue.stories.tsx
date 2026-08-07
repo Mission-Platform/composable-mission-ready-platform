@@ -1,6 +1,5 @@
-import { ForgeLanguageSwitcher } from '@mission-platform/components/vue';
-import { createForgeI18N } from '@mission-platform/i18n';
-import { useI18n } from '@mission-platform/i18n/vue';
+import { ForgeLanguageSwitcher } from '@mission-platform/components';
+import { createForgeI18N, useI18n } from '@mission-platform/i18n';
 import { defineComponent, ref } from 'vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
@@ -152,9 +151,16 @@ in a framework-agnostic core plus thin per-framework adapters.
 
 | Export | Purpose |
 |---|---|
-| \`@mission-platform/i18n\` → \`createForgeI18N\` | Build a configured, framework-neutral i18next instance |
-| \`@mission-platform/i18n/vue\` → \`createForgeI18NVue\` / \`useI18n\` | Vue 3 plugin + composable (\`i18next-vue\`) |
-| \`@mission-platform/i18n/react\` → \`ForgeI18NProvider\` / \`useI18n\` | React provider + hook (\`react-i18next\`) |
+| \`createForgeI18N\` | Build a configured, framework-neutral i18next instance (every framework) |
+| \`createForgeI18NVue\` / \`useI18n\` | Vue 3 plugin + composable (\`i18next-vue\`), under the \`mp:vue\` condition |
+| \`ForgeI18NProvider\` / \`useI18n\` | React provider + hook (\`react-i18next\`), under the \`mp:react\` condition |
+
+There is **one** specifier — \`@mission-platform/i18n\` — for every framework. The
+framework build is selected once per app by its export conditions: Vite
+\`resolve.conditions\` (via \`defineFrameworkAppConfig\` /
+\`frameworkResolveConditions\` from \`@mission-platform/vite-config\`) and TypeScript
+\`customConditions\` (the \`@mission-platform/typescript-config/tsconfig.framework-<name>.json\`
+presets). Never import a \`/vue\` or \`/react\` subpath — they do not exist.
 
 ## Pattern: app-wide instance
 
@@ -162,15 +168,14 @@ Apps build one instance and install it via \`app.use()\`:
 
 \`\`\`ts
 // main.ts
-import { createForgeI18N } from '@mission-platform/i18n'
-import { createForgeI18NVue } from '@mission-platform/i18n/vue'
+import { createForgeI18N, createForgeI18NVue } from '@mission-platform/i18n'
 
 app.use(createForgeI18NVue(createForgeI18N({ messages: { en } })))
 \`\`\`
 
 \`\`\`vue
 <script setup lang="ts">
-import { useI18n } from '@mission-platform/i18n/vue'
+import { useI18n } from '@mission-platform/i18n'
 const { t, locale, setLocale } = useI18n()
 </script>
 \`\`\`
@@ -188,7 +193,7 @@ owns. Package components resolve their own namespace explicitly:
 
 \`\`\`vue
 <script setup lang="ts">
-import { forgeNamespace, useI18n } from '@mission-platform/i18n/vue'
+import { forgeNamespace, useI18n } from '@mission-platform/i18n'
 // Bind \`t\` to this package's namespace.
 const { t } = useI18n(forgeNamespace('breakpoints'))
 </script>

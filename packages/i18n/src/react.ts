@@ -1,5 +1,7 @@
-// ─── @mission-platform/i18n/react ────────────────────────────────────────────
+// ─── @mission-platform/i18n (mp:react build) ─────────────────────────────────
 // React adapter for the framework-agnostic i18next wrapper, built on `react-i18next`.
+// Consumers import the bare `@mission-platform/i18n`; the `mp:react` export
+// condition selects this build.
 
 // Framework-neutral core surface (re-exported for convenience).
 export { createForgeI18N, getServerI18n, runWithI18n, setServerI18n } from './stores/create-forge-i18n';

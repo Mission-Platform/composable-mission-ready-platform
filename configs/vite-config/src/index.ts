@@ -227,7 +227,7 @@ export function defineLibraryConfig(options: LibraryConfigOptions): UserConfig {
  * `customConditions` tsconfig preset — the TypeScript language service so bare
  * `@mission-platform/<pkg>` imports resolve to that framework's built output.
  */
-export type MissionPlatformFramework = 'vue' | 'react' | 'solid' | 'svelte' | 'web-component';
+export type MissionPlatformFramework = 'vue' | 'react' | 'solid' | 'web-component';
 
 /**
  * Map a {@link MissionPlatformFramework} to the custom export condition the

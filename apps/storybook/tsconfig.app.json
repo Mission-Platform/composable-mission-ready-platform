@@ -1,7 +1,11 @@
 {
   "extends": "@mission-platform/typescript-config/app",
   "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo"
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    // The type-check build (`vue-tsc -b`) is Vue-only, matching the Vue Storybook
+    // shell; the `mp:vue` condition resolves each bare `@mission-platform/*`
+    // import to that package's Vue build, exactly as Vite does at runtime.
+    "customConditions": ["mp:vue"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/**/*.d.ts"]
 }

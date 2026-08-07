@@ -85,7 +85,14 @@ console.log(location.path); // '/users/123'
 
 ## Framework Adapters
 
-### Vue Adapter (`./vue`)
+Adapters are **not** exposed as per-framework subpaths. `@mission-platform/router` declares the
+`mp:<framework>` export conditions on its single `.` entry, so you select the framework **once** —
+`resolve.conditions` in Vite (see `defineFrameworkAppConfig` / `frameworkResolveConditions` from
+`@mission-platform/vite-config`) and `customConditions` in TypeScript (via the
+`@mission-platform/typescript-config/framework-<name>` presets) — and then import everything with the bare
+specifier. Each adapter build re-exports the whole neutral core as well.
+
+### Vue Adapter (`mp:vue` condition)
 
 The Vue-specific adapter provides integration with `vue-router`.
 
@@ -109,7 +116,7 @@ The Vue-specific adapter provides integration with `vue-router`.
 </template>
 
 <script setup lang="ts">
-  import { MpRouterLink, createMpRouter } from '@mission-platform/router/vue';
+  import { MpRouterLink, createMpRouter } from '@mission-platform/router';
   import { createApp } from 'vue';
   import routes from './routes';
 
@@ -122,7 +129,7 @@ The Vue-specific adapter provides integration with `vue-router`.
 </script>
 ```
 
-### React Adapter (`./react`)
+### React Adapter (`mp:react` condition)
 
 The React adapter provides integration with React Router.
 
@@ -134,8 +141,9 @@ The React adapter provides integration with React Router.
 
 ### RedwoodSDK Adapter (`./redwood`)
 
-The RedwoodSDK adapter provides integration with `rwsdk/router` — the flat, request/response route table used by
-RedwoodSDK (React on Cloudflare Workers).
+RedwoodSDK is not one of the `mp:*` frameworks, so it keeps a dedicated subpath. It provides integration
+with `rwsdk/router` — the flat, request/response route table used by RedwoodSDK (React on Cloudflare
+Workers).
 
 **Main Exports:**
 
@@ -240,7 +248,7 @@ export default defineRoutes([
 
 ```typescript
 // src/router.ts
-import { createMpRouter } from '@mission-platform/router/vue';
+import { createMpRouter } from '@mission-platform/router';
 import routes from './routes';
 
 export default createMpRouter({
@@ -254,7 +262,7 @@ export default createMpRouter({
 ```vue
 // src/App.vue
 <script setup lang="ts">
-  import { MpRouterLink } from '@mission-platform/router/vue';
+  import { MpRouterLink } from '@mission-platform/router';
 </script>
 
 <template>
@@ -270,7 +278,7 @@ export default createMpRouter({
 
 ```vue
 <script setup lang="ts">
-  import { useMpRoute } from '@mission-platform/router/vue';
+  import { useMpRoute } from '@mission-platform/router';
 
   const route = useMpRoute();
 
@@ -283,7 +291,7 @@ export default createMpRouter({
 
 ```vue
 <script setup lang="ts">
-  import { useMpRouter } from '@mission-platform/router/vue';
+  import { useMpRouter } from '@mission-platform/router';
 
   const router = useMpRouter();
 
@@ -324,7 +332,7 @@ const routes = defineRoutes([
 ### Route Guards (Vue)
 
 ```typescript
-import { createMpRouter } from '@mission-platform/router/vue';
+import { createMpRouter } from '@mission-platform/router';
 
 const router = createMpRouter({
   routes,

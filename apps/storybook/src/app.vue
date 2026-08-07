@@ -1,8 +1,8 @@
 <script lang="ts" setup>
   import type {} from './locales/types';
 
-  import { ForgeButton, ForgeCodeBlock, ForgeCollapse, ForgeTooltip } from '@mission-platform/components/vue';
-  import { useI18n } from '@mission-platform/i18n/vue';
+  import { ForgeButton, ForgeCodeBlock, ForgeCollapse, ForgeTooltip } from '@mission-platform/components';
+  import { useI18n } from '@mission-platform/i18n';
   import {
     ForgeIconDrawCircle,
     ForgeIconDrawLine,
@@ -17,11 +17,11 @@
     ForgeIconScaleUp,
     ForgeIconSplit,
     ForgeIconTrash,
-  } from '@mission-platform/icons/vue';
-  import { ForgeMapDraw, ForgeMapLibre } from '@mission-platform/map/vue';
+  } from '@mission-platform/icons';
+  import { ForgeMapDraw, ForgeMapLibre } from '@mission-platform/map';
   import { computed, ref } from 'vue';
 
-  import type { DrawMode, FeatureId, UseDrawingReturn } from '@mission-platform/map/vue';
+  import type { DrawMode, FeatureId, UseDrawingReturn } from '@mission-platform/map';
 
   defineOptions({ name: 'MapShowcase' });
 

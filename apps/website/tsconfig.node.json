@@ -4,5 +4,5 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "customConditions": ["mp:vue"]
   },
-  "include": ["vite.config.ts", "i18next.config.ts", "scripts/**/*.ts"]
+  "include": ["vite.config.ts", "vitest.config.ts", "i18next.config.ts", "scripts/**/*.ts"]
 }

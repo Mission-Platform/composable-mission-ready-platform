@@ -1,0 +1,3 @@
+# @mission-platform/qr-code-decode-wasm
+
+Generated typed WebAssembly QR decoder used by `@mission-platform/qr-code`.

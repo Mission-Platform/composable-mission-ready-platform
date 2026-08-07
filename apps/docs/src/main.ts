@@ -5,7 +5,7 @@ import '@mission-platform/components/styles';
 // active colour theme like the rest of the UI.
 import 'highlight.js/styles/github.css';
 
-import { createForgeI18NVue } from '@mission-platform/i18n/vue';
+import { createForgeI18NVue } from '@mission-platform/i18n';
 import { organization, useSeo, webSite } from '@mission-platform/seo';
 import { ViteSSG } from 'vite-ssg';
 import { effectScope } from 'vue';

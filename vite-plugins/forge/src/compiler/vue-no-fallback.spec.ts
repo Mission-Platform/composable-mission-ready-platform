@@ -11,11 +11,11 @@
  * - a component that is fixed to native output but left in the allowlist also
  *   fails, prompting the allowlist to shrink toward the zero-fallback goal.
  *
- * The remaining fallbacks are the two range composites whose panels are built by
- * a **function-valued node helper** (a `renderRange`-style closure used as a
- * value, not a single-call inlinable callee) that the builder cannot splice into
- * the tree, so they take the correct `<script setup lang="tsx">` render-closure
- * form.
+ * The range composites use a **function-valued node helper** (a
+ * `renderRange`-style closure used as a value, not a single-call inlinable
+ * callee) that the builder cannot splice into the tree. `ForgeNavbar` has the
+ * same dynamic named-slot shape, so both cases take the correct
+ * `<script setup lang="tsx">` render-closure form.
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
@@ -31,7 +31,11 @@ const COMPONENTS_ROOT = path.resolve(
 );
 
 /** Components that still take the Vue render-closure fallback (see file header). */
-const KNOWN_FALLBACKS: ReadonlySet<string> = new Set(['forge-date-time-range-input', 'forge-time-range-input']);
+const KNOWN_FALLBACKS: ReadonlySet<string> = new Set([
+  'forge-date-time-range-input',
+  'forge-navbar',
+  'forge-time-range-input',
+]);
 
 /** Convert a kebab-case component folder to its PascalCase exported name. */
 function pascalCase(name: string): string {

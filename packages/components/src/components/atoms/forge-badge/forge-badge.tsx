@@ -22,8 +22,9 @@ export interface BadgeProperties extends MpProperties {
 /**
  * `ForgeBadge` — a small status/label chip authored once in the neutral JSX
  * dialect. Render it on a framework with `toReactComponent(ForgeBadge)` or
- * `toVueComponent(ForgeBadge)`, or import the pre-adapted variants from
- * `@mission-platform/components/react` and `.../vue`.
+ * `toVueComponent(ForgeBadge)`, or import the pre-adapted variant from
+ * `@mission-platform/components` — the framework build is selected by the
+ * consumer's `mp:<framework>` export condition, not by the specifier.
  *
  * It mirrors the `@mission-platform/components` `ForgeBadge`: the same nine tone
  * variants, the canonical `2xs → 2xl` size scale, and the label is rendered

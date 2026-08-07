@@ -11,13 +11,16 @@ The `@mission-platform/map` package provides MapLibre GL integrations for Missio
 
 Component & helper entry points:
 
-- **`@mission-platform/map`**: Framework-neutral JSX components (`ForgeMapLibre`, `ForgeMapMarker`, `ForgeMapPopup`,
-  `ForgeMapSource`, `ForgeMapLayer`, `ForgeMapDraw`).
-- **`@mission-platform/map/vue`**: Vue 3 components (`MapLibre`, `MapMarker`, `MapPopup`, `MapSource`, `MapLayer`,
-  `MapDraw`) and composables.
-- **`@mission-platform/map/react`**: React components (`MapLibre`, `MapMarker`, `MapPopup`, `MapSource`, `MapLayer`,
-  `MapDraw`) and hooks.
+- **`@mission-platform/map`**: the only component entry point. With a `mp:<framework>` export condition
+  active it resolves to the native components (`MapLibre`, `MapMarker`, `MapPopup`, `MapSource`,
+  `MapLayer`, `MapDraw`) plus that framework's composables/hooks; with none active it resolves to the
+  framework-neutral JSX components (`ForgeMapLibre`, `ForgeMapMarker`, `ForgeMapPopup`, `ForgeMapSource`,
+  `ForgeMapLayer`, `ForgeMapDraw`).
 - **`@mission-platform/map/styles`**: Re-exports MapLibre GL CSS (`maplibre-gl/dist/maplibre-gl.css`).
+
+The framework is chosen **once** — `resolve.conditions` via `defineFrameworkAppConfig` /
+`frameworkResolveConditions` from `@mission-platform/vite-config`, and `customConditions` via the
+`@mission-platform/typescript-config/framework-<name>` presets — so component imports are always bare.
 
 ---
 
@@ -35,7 +38,7 @@ pnpm add @mission-platform/map maplibre-gl
 
 ```vue
 <script setup lang="ts">
-  import { MapLibre, MapMarker, MapPopup, MapSource, MapLayer } from '@mission-platform/map/vue';
+  import { MapLibre, MapMarker, MapPopup, MapSource, MapLayer } from '@mission-platform/map';
   import '@mission-platform/map/styles';
 
   const mapStyle = 'https://demotiles.maplibre.org/style.json';
@@ -61,7 +64,7 @@ pnpm add @mission-platform/map maplibre-gl
 ### React
 
 ```tsx
-import { MapLibre, MapMarker, MapPopup } from '@mission-platform/map/react';
+import { MapLibre, MapMarker, MapPopup } from '@mission-platform/map';
 import '@mission-platform/map/styles';
 
 export function MapApp() {
@@ -86,7 +89,7 @@ export function MapApp() {
 
 ## Exports & Composables
 
-### Components (`/vue` and `/react`)
+### Components (with an `mp:<framework>` condition active)
 
 - **`MapLibre`**: Container component managing MapLibre instance.
 - **`MapMarker`**: Renders custom HTML or default marker on the map.

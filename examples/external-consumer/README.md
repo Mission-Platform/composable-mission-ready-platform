@@ -19,12 +19,13 @@ import { ForgeButton } from '@mission-platform/components';
 
 ### Per-Component Imports
 
-To avoid pulling the entire React barrel (and heavy optional components such as the Monaco editor and
-its web workers) into the client bundle, import a single component from its per-component subpath. It
-resolves to just that component's compiled chunk, while types still flow from the framework barrel:
+To avoid pulling the entire barrel (and heavy optional components such as the Monaco editor and its web
+workers) into the client bundle, import a single component from its per-component subpath. The subpath is
+condition-aware just like the bare entry, so it resolves to just that component's compiled chunk for the
+active `mp:react` condition, while types still flow from the barrel:
 
 ```ts
-import { ForgeBadge } from '@mission-platform/components/react/atoms/forge-badge/forge-badge';
+import { ForgeBadge } from '@mission-platform/components/atoms/forge-badge/forge-badge';
 ```
 
 `src/main.tsx` demonstrates both the barrel import and a per-component import side by side.

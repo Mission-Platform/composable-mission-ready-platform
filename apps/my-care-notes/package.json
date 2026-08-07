@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.12",
   "license": "BSD-4-Clause",
+  "description": "Mission Platform care-notes application demonstrating composable Vue workflows",
   "type": "module",
   "scripts": {
     "dev": "vite",

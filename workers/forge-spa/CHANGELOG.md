@@ -1,1 +1,1 @@
-# @mission-platform/base-spa
+# @mission-platform/forge-spa

@@ -925,7 +925,7 @@ const ICON_CONSUMER = [
   '}',
 ].join('\n');
 
-describe('the emitters remap the `@mission-platform/icons` import to each framework build', () => {
+describe('the emitters carry the `@mission-platform/icons` import through as a bare specifier', () => {
   const vue = compileComponentModule(ICON_CONSUMER, {
     framework: 'vue',
     componentName: 'ForgeDisclosure',
@@ -937,18 +937,18 @@ describe('the emitters remap the `@mission-platform/icons` import to each framew
     componentFolders: new Set(['forge-disclosure']),
   });
 
-  it('imports the icon from the `./vue` subpath (not the bare root) on the Vue target', () => {
-    expect(vue.code).toMatch(/import \{[^}]*\bForgeIconChevron\b[^}]*\} from ["']@mission-platform\/icons\/vue["']/);
-    expect(vue.code).not.toMatch(/from ["']@mission-platform\/icons["']/);
+  it('keeps the bare `@mission-platform/icons` root on the Vue target', () => {
+    expect(vue.code).toMatch(/import \{[^}]*\bForgeIconChevron\b[^}]*\} from ["']@mission-platform\/icons["']/);
+    // The framework is chosen by the consumer's `mp:vue` resolve condition, so
+    // the generated source must never name a per-framework subpath.
+    expect(vue.code).not.toMatch(/@mission-platform\/icons\/(vue|react|solid|svelte|web-components)/);
     // The `<ForgeIconChevron>` tag survives as a (native) component usage.
     expect(vue.code).toContain('ForgeIconChevron');
   });
 
-  it('imports the icon from the `./react` subpath (not the bare root) on the React target', () => {
-    expect(react.code).toMatch(
-      /import \{[^}]*\bForgeIconChevron\b[^}]*\} from ["']@mission-platform\/icons\/react["']/,
-    );
-    expect(react.code).not.toMatch(/from ["']@mission-platform\/icons["']/);
+  it('keeps the bare `@mission-platform/icons` root on the React target', () => {
+    expect(react.code).toMatch(/import \{[^}]*\bForgeIconChevron\b[^}]*\} from ["']@mission-platform\/icons["']/);
+    expect(react.code).not.toMatch(/@mission-platform\/icons\/(vue|react|solid|svelte|web-components)/);
     expect(react.code).toContain('ForgeIconChevron');
   });
 });
@@ -1157,11 +1157,12 @@ describe('the React emitter creates RSC boundaries', () => {
     expect(react.code.startsWith('"use client";')).toBe(true);
   });
 
-  it('remaps framework-split re-exports', () => {
+  it('carries framework-split re-exports through as bare specifiers', () => {
     const source = `${BADGE}\nexport { ForgeDrawer } from '@mission-platform/components';`;
     const react = compileComponentModule(source, { framework: 'react', componentName: 'ForgeBadge' });
 
-    expect(react.code).toContain('export { ForgeDrawer } from "@mission-platform/components/react";');
+    expect(react.code).toMatch(/export \{ ForgeDrawer \} from ["']@mission-platform\/components["'];/);
+    expect(react.code).not.toMatch(/@mission-platform\/components\/(vue|react|solid|svelte|web-components)/);
   });
 });
 
@@ -3014,14 +3015,14 @@ describe('the compiler rewrites `i18next.t(...)` to `useI18n()` and `t(...)`', (
   const react = compileComponentModule(I18N_CHECKBOX, { framework: 'react', componentName: 'ForgeCheckbox' });
   const vue = compileComponentModule(I18N_CHECKBOX, { framework: 'vue', componentName: 'ForgeCheckbox' });
 
-  it('imports `useI18n` from `@mission-platform/i18n/react` and injects hook call (React)', () => {
-    expect(react.code).toMatch(/import\s*\{\s*useI18n\s*\}\s*from\s*["']@mission-platform\/i18n\/react["']/);
+  it('imports `useI18n` from `@mission-platform/i18n` and injects hook call (React)', () => {
+    expect(react.code).toMatch(/import\s*\{\s*useI18n\s*\}\s*from\s*["']@mission-platform\/i18n["']/);
     expect(react.code).toContain('const { t } = useI18n();');
     expect(react.code).toContain("const label = t('required_label', { defaultValue: 'Required' });");
   });
 
-  it('imports `useI18n` from `@mission-platform/i18n/vue` and injects hook call (Vue)', () => {
-    expect(vue.code).toContain("import { useI18n } from '@mission-platform/i18n/vue';");
+  it('imports `useI18n` from `@mission-platform/i18n` and injects hook call (Vue)', () => {
+    expect(vue.code).toContain("import { useI18n } from '@mission-platform/i18n';");
     expect(vue.code).toContain('const { t } = useI18n();');
     expect(vue.code).toContain("t('required_label', { defaultValue: 'Required' })");
   });

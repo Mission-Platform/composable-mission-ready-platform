@@ -1,0 +1,4 @@
+# @mission-platform/code-scanner
+
+Camera and image scanner for QR, Data Matrix, and 1D barcodes.
+Its write-once component uses the active `mp:<framework>` export condition.

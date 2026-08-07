@@ -5,7 +5,7 @@ Write-once, framework-neutral component library for Mission Platform. Components
 
 ## Features
 
-- **Write Once, Run Anywhere**: Neutral source compiled into native Vue and React subpaths with zero runtime overhead.
+- **Write Once, Run Anywhere**: Neutral source compiled into native Vue and React builds with zero runtime overhead.
 - **Universal Sizing Scale**: Standardized `size` props (`2xs`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl`) across components.
 - **Design Token Integration**: Built-in integration with `@mission-platform/tokens` and design system CSS variables.
 - **Storyblok CMS Ready**: Automatically generates Storyblok blok configurations and wrappers.
@@ -18,13 +18,37 @@ pnpm add @mission-platform/components
 
 ## Usage
 
+### Framework Selection
+
+Pick your framework **once** — there are no per-framework subpaths. The bare `@mission-platform/components`
+specifier resolves to the native build for whichever `mp:<framework>` export condition your toolchain
+activates (`mp:vue`, `mp:react`, `mp:solid`, `mp:web-component`):
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite';
+import { frameworkResolveConditions } from '@mission-platform/vite-config';
+
+export default defineConfig({
+  resolve: { conditions: frameworkResolveConditions('mp:vue') },
+});
+```
+
+```json
+// tsconfig.json
+{ "extends": "@mission-platform/typescript-config/framework-vue" }
+```
+
+Every import below is a **bare** package specifier — the same source works for any framework once the
+condition is set.
+
 ### Vue 3
 
-Import native Vue 3 components from `@mission-platform/components/vue`:
+With `mp:vue` active, `@mission-platform/components` resolves to native Vue 3 components:
 
 ```vue
 <script setup lang="ts">
-  import { ForgeButton, ForgeCard, ForgeInput } from '@mission-platform/components/vue';
+  import { ForgeButton, ForgeCard, ForgeInput } from '@mission-platform/components';
   import { ref } from 'vue';
 
   const text = ref('');
@@ -49,10 +73,10 @@ Import native Vue 3 components from `@mission-platform/components/vue`:
 
 ### React
 
-Import native React components from `@mission-platform/components/react`:
+With `mp:react` active, the very same specifier resolves to native React components:
 
 ```tsx
-import { ForgeButton, ForgeCard, ForgeInput } from '@mission-platform/components/react';
+import { ForgeButton, ForgeCard, ForgeInput } from '@mission-platform/components';
 import { useState } from 'react';
 
 export function UserForm() {
@@ -78,8 +102,8 @@ export function UserForm() {
 
 ### Framework-Neutral Components
 
-When building higher-level write-once components using `@mission-platform/forge`, import directly from
-`@mission-platform/components`:
+When building higher-level write-once components using `@mission-platform/forge`, import from the same
+bare specifier with no `mp:*` condition active — you get the neutral forge source:
 
 ```tsx
 import { ForgeButton, ForgeCard } from '@mission-platform/components';
@@ -87,31 +111,30 @@ import { ForgeButton, ForgeCard } from '@mission-platform/components';
 
 ### Per-Component Imports (avoid pulling in heavy optional components)
 
-The framework barrels (`.../react`, `.../vue`, `.../solid`, `.../svelte`) re-export **every**
-component. Some components are deliberately heavy — e.g. `ForgeMonacoEditor` / `ForgeMarkdownInput`
-pull in `monaco-editor` and its web workers. A bundler that cannot fully tree-shake the barrel (or
-any React Server Components / SSR setup that evaluates the module graph eagerly) may drag those
-chunks into the client bundle even when they are never rendered.
+The package barrel re-exports **every** component. Some components are deliberately heavy — e.g.
+`ForgeMonacoEditor` / `ForgeMarkdownInput` pull in `monaco-editor` and its web workers. A bundler that
+cannot fully tree-shake the barrel (or any React Server Components / SSR setup that evaluates the
+module graph eagerly) may drag those chunks into the client bundle even when they are never rendered.
 
 To import a single component in isolation, use its **per-component subpath** —
-`@mission-platform/components/<framework>/<path-to-component>` — which resolves to just that
-component's compiled module (types still come from the framework barrel, so named imports stay fully
-typed):
+`@mission-platform/components/<path-to-component>` — which is condition-aware just like the barrel and
+resolves to just that component's compiled module for the active framework (types still come from the
+barrel, so named imports stay fully typed):
 
 ```tsx
 // Only ForgeBadge's chunk is loaded — Monaco & workers never enter the graph.
-import { ForgeBadge } from '@mission-platform/components/react/atoms/forge-badge/forge-badge';
+import { ForgeBadge } from '@mission-platform/components/atoms/forge-badge/forge-badge';
 ```
 
 ```vue
 <script setup lang="ts">
-  import { ForgeBadge } from '@mission-platform/components/vue/atoms/forge-badge/forge-badge';
+  import { ForgeBadge } from '@mission-platform/components/atoms/forge-badge/forge-badge';
 </script>
 ```
 
 The subpath mirrors the source layout (`atoms` / `molecules` / `organisms` / `templates` +
-`<component>/<component>`). The wildcard is available for the `react`, `vue`, `solid`, and `svelte`
-framework builds.
+`<component>/<component>`). It honours every `mp:*` framework condition, so the import stays identical
+across Vue, React, Solid, and Web Components.
 
 ### Typed `ForgeNavbar` slots
 
@@ -125,7 +148,7 @@ regions:
   mobile drawer).
 
 ```tsx
-import { ForgeNavbar } from '@mission-platform/components/react/organisms/forge-navbar/forge-navbar';
+import { ForgeNavbar } from '@mission-platform/components/organisms/forge-navbar/forge-navbar';
 
 <ForgeNavbar
   brand="Mission"
@@ -137,14 +160,12 @@ import { ForgeNavbar } from '@mission-platform/components/react/organisms/forge-
 
 ## Subpath Exports
 
-- `@mission-platform/components`: Neutral source barrel export for write-once components.
-- `@mission-platform/components/vue`: Compiled native Vue 3 components (barrel).
-- `@mission-platform/components/react`: Compiled native React components (barrel).
-- `@mission-platform/components/solid`: Compiled native Solid components (barrel).
-- `@mission-platform/components/svelte`: Compiled native Svelte components (barrel).
-- `@mission-platform/components/<framework>/<path>`: **Per-component** subpath for `react`, `vue`,
-  `solid`, and `svelte` (e.g. `@mission-platform/components/react/atoms/forge-badge/forge-badge`).
-  Imports only that component's chunk — see [Per-Component Imports](#per-component-imports-avoid-pulling-in-heavy-optional-components).
+- `@mission-platform/components`: Barrel export. Resolves to the compiled native Vue 3, React, Solid,
+  or web-component build according to the active `mp:<framework>` condition, or to the neutral
+  forge source when none is set.
+- `@mission-platform/components/<path>`: **Per-component** subpath, condition-aware in exactly the same
+  way (e.g. `@mission-platform/components/atoms/forge-badge/forge-badge`). Imports only that
+  component's chunk — see [Per-Component Imports](#per-component-imports-avoid-pulling-in-heavy-optional-components).
 - `@mission-platform/components/forge-drawer`: Subpath for `ForgeDrawer` component.
 - `@mission-platform/components/storyblok/vue`: Storyblok wrappers for Vue 3.
 - `@mission-platform/components/storyblok/react`: Storyblok wrappers for React.

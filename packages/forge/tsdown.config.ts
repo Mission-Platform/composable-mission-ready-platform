@@ -8,9 +8,10 @@ export default defineTsdownLibrary({
     'adapters/react': 'src/adapters/react.ts',
     'adapters/vue': 'src/adapters/vue.ts',
     'adapters/solid': 'src/adapters/solid.ts',
+    'adapters/svelte': 'src/adapters/svelte.ts',
     'adapters/web-components': 'src/adapters/web-components.ts',
   },
-  external: ['react', 'react-dom', 'solid-js'],
+  external: ['react', 'react-dom', 'solid-js', 'svelte'],
   overrides: {
     inputOptions: {
       transform: {

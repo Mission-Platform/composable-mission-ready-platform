@@ -1,7 +1,7 @@
 # @mission-platform/speech-audio
 
 Framework-neutral browser speech & audio composables for Mission Platform. Authored once against the
-`@mission-platform/forge` neutral hooks and compiled to Vue 3, React 18/19, Solid, Svelte 5, and Web Components.
+`@mission-platform/forge` neutral hooks and compiled to Vue 3, React 18/19, Solid, and Web Components.
 
 ## Hooks
 
@@ -24,8 +24,11 @@ const speech = useSpeechSynthesis();
 speech.speak('Hello, Mission Platform', { rate: 1.1 });
 ```
 
-Framework-specific builds are available via subpath exports, e.g. `@mission-platform/speech-audio/vue` and
-`@mission-platform/speech-audio/react`.
+The import above is all you need for every target: `@mission-platform/speech-audio` declares the `mp:vue`,
+`mp:react`, `mp:solid`, and `mp:web-component` export conditions, and the framework is selected
+**once** for the project \u2014 `resolve.conditions` via `defineFrameworkAppConfig` / `frameworkResolveConditions`
+from `@mission-platform/vite-config`, and `customConditions` via the
+`@mission-platform/typescript-config/framework-<name>` presets.
 
 ## SSR Safety
 

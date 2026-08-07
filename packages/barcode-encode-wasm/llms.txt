@@ -1,0 +1,4 @@
+# @mission-platform/barcode-encode-wasm
+
+Generated typed WebAssembly barcode encoder used by `@mission-platform/barcode`.
+The Rust crate owns generation; package tasks own the published wrapper output.

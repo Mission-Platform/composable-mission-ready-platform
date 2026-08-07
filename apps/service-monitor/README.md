@@ -49,8 +49,8 @@ shared `@mission-platform/*` packages.
 - **React + RxJS + D3 client** — `src/client/LiveDashboard.tsx` (`"use client"`)
   subscribes to RxJS streams (`servicesStream`, `metricsStream`, `speedStream`,
   `speedSeriesStream`) that poll the API. Stream values are bridged into React
-  state with **`@mission-platform/rxjs/react`**'s `useObservable`, and
-  `TimeSeriesChart` draws latency/throughput with **`@mission-platform/d3/react`**'s
+  state with **`@mission-platform/rxjs`**'s `useObservable`, and
+  `TimeSeriesChart` draws latency/throughput with **`@mission-platform/d3`**'s
   `useD3` hook (+ its margin helpers).
 - **Two routes** — `/` is the read-only live dashboard; `/monitors`
   (`MonitorsView`) is a dedicated runtime monitor-management page. Both are
@@ -60,25 +60,28 @@ shared `@mission-platform/*` packages.
 
 ## Design system
 
-The app consumes the platform's shared packages instead of bespoke UI:
+The app consumes the platform's shared packages instead of bespoke UI. Every one of them is imported with a
+**bare specifier** — React is selected once, not per import: `tsconfig.app.json` / `tsconfig.node.json` set
+`"customConditions": ["mp:react"]`, and `vite.config.ts` prepends `mp:react` to `resolve.conditions` in every
+environment (client, ssr, worker), so each package's `mp:react` export condition wins.
 
 | Package                                       | Used for                                                                                                 |
 | --------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `@mission-platform/rxjs/react`                | `useObservable` — RxJS streams → React state.                                                            |
-| `@mission-platform/d3/react`                  | `useD3` + margin helpers powering `TimeSeriesChart`.                                                     |
-| `@mission-platform/components/react`          | `Typography`, `Badge`, `Button`, `Spinner`, `Card` (re-typed for React children in `src/client/mp.tsx`). |
-| `@mission-platform/icons/react`               | Inline SVG icons (globe, clock, refresh, trash, plus, …).                                                |
-| `@mission-platform/layouts/react`             | `Container` page shell.                                                                                  |
-| `@mission-platform/i18n` (`/react`)           | All UI strings (`createAppI18n`, `useI18n`) under the `mp.service-monitor` namespace.                    |
+| `@mission-platform/rxjs`                      | `useObservable` — RxJS streams → React state.                                                            |
+| `@mission-platform/d3`                        | `useD3` + margin helpers powering `TimeSeriesChart`.                                                     |
+| `@mission-platform/components`                | `Typography`, `Badge`, `Button`, `Spinner`, `Card` (re-typed for React children in `src/client/mp.tsx`). |
+| `@mission-platform/icons`                     | Inline SVG icons (globe, clock, refresh, trash, plus, …).                                                |
+| `@mission-platform/layouts`                   | `Container` page shell.                                                                                  |
+| `@mission-platform/i18n`                      | All UI strings (`createAppI18n`, `useI18n`) under the `mp.service-monitor` namespace.                    |
 | `@mission-platform/seo` (`/meta`, `/json-ld`) | Server `<head>` metadata + Schema.org JSON-LD in `Document.tsx`.                                         |
 | `@mission-platform/tokens`                    | Chart accent colour from the design tokens.                                                              |
 | `@mission-platform/breakpoints/core`          | Responsive chart width via `maxMediaQuery` (framework-neutral entry).                                    |
 
-> The `rxjs`/`d3` React entries are generated from a single write-once source by
-> `@mission-platform/vite-plugin-forge`'s hook-library compiler; the app imports
-> the `./react` build. Vue-flavoured barrels (`seo`, `breakpoints`) are imported
-> through their framework-neutral subpaths so no Vue is pulled into this React
-> worker.
+> The `rxjs`/`d3` React builds are generated from a single write-once source by
+> `@mission-platform/vite-plugin-forge`'s hook-library compiler; the `mp:react`
+> condition is what routes the bare import to them. `seo` keeps genuine
+> feature subpaths (`/meta`, `/json-ld`) and `breakpoints/core` is its
+> framework-neutral entry, so no Vue is pulled into this React worker.
 
 ## Monitor types
 

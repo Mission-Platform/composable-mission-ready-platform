@@ -17,11 +17,9 @@ packages:
   - crates/code-scan
 
 catalog:
-  "@types/js-yaml": ^4.0.9
   "js-yaml": ^4.3.1
   "luxon": ^3.7.2
   "@types/luxon": ^3.7.3
-  nanoid: ^5.1.16
   rxjs: ^7.8.2
   capnweb: 0.5.0
 
@@ -88,20 +86,19 @@ catalogs:
 
   svelte:
     svelte: ^5.56.8
-    "@sveltejs/vite-plugin-svelte": ^6.2.4
-    svelte2tsx: ^0.7.59
+    "@sveltejs/vite-plugin-svelte": ^7.2.0
 
   webcomponents:
     lit: ^3.3.3
 
   vue:
-    "@vue/compiler-sfc": ^3.5.40
+    "@vue/compiler-sfc": ^3.5.41
     "@unhead/vue": ^2.1.17
     "@vue/test-utils": ^2.4.11
     "@vue/tsconfig": ^0.9.1
     "@vitejs/plugin-vue": ^6.0.8
     "@vitejs/plugin-vue-jsx": ^5.1.6
-    vue: ^3.5.40
+    vue: ^3.5.41
     vue-router: ^4.6.4
     vue-tsc: ^3.3.9
 
@@ -119,6 +116,7 @@ catalogs:
     tsdown: ^0.22.14
     "@tsdown/css": ^0.22.14
     unplugin-vue: ^7.2.0
+    svelte2tsx: ^0.7.59
 
   storybook:
     "@chromatic-com/storybook": ^5.2.1
@@ -128,9 +126,9 @@ catalogs:
     "@storybook/addon-themes": ^10.5.6
     "@storybook/addon-vitest": ^10.5.6
     "@storybook/react-vite": ^10.5.6
+    "@storybook/svelte-vite": ^10.5.6
     "@storybook/vue3-vite": ^10.5.6
     "@storybook/html-vite": ^10.5.6
-    "@storybook/svelte-vite": ^10.5.6
     "@storybook/web-components-vite": ^10.5.6
     "storybook-solidjs-vite": ^10.6.0
     storybook: ^10.5.6
@@ -163,8 +161,8 @@ catalogs:
 
   cloudflare:
     rwsdk: ^1.6.0
-    wrangler: ^4.118.0
-    "@cloudflare/vite-plugin": ^1.50.0
+    wrangler: ^4.119.0
+    "@cloudflare/vite-plugin": ^1.51.0
     "@cloudflare/workers-types": ^5.20260804.1
 
   mcp:

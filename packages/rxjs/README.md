@@ -1,8 +1,8 @@
 # `@mission-platform/rxjs`
 
 Framework-neutral RxJS integration for Mission Platform apps. Write-once composables (`useObservable`,
-`useSubscription`, `useSubscribe`) authored against `@mission-platform/forge` hooks and shipped for React (`./react`),
-Vue (`./vue`), and framework-neutral environments.
+`useSubscription`, `useSubscribe`) authored against `@mission-platform/forge` hooks and shipped for React,
+Vue, and framework-neutral environments — all behind the single bare `@mission-platform/rxjs` specifier.
 
 ---
 
@@ -11,11 +11,16 @@ Vue (`./vue`), and framework-neutral environments.
 `@mission-platform/rxjs` bridges RxJS streams (`Observable`) into component reactivity and lifecycle management without
 framework lock-in.
 
-Exports & Subpaths:
+Exports:
 
-- **`@mission-platform/rxjs`**: Framework-neutral hooks (`useObservable`, `useSubscription`, `useSubscribe`).
-- **`@mission-platform/rxjs/vue`**: Pre-wrapped Vue 3 composables.
-- **`@mission-platform/rxjs/react`**: Pre-wrapped React hooks.
+- **`@mission-platform/rxjs`**: the only entry point, exposing `useObservable`, `useSubscription`, and
+  `useSubscribe`. The active `mp:<framework>` export condition decides whether you get the pre-wrapped Vue 3
+  composables, the React hooks, or the framework-neutral versions (when no condition is set).
+
+The framework is chosen **once** — `resolve.conditions` via `defineFrameworkAppConfig` /
+`frameworkResolveConditions` from `@mission-platform/vite-config`, and `customConditions` via the
+`@mission-platform/typescript-config/framework-<name>` presets — so the imports below are identical for
+every target.
 
 ---
 
@@ -29,10 +34,10 @@ pnpm add @mission-platform/rxjs rxjs
 
 ## Usage Examples
 
-### React Usage
+### React Usage (`mp:react`)
 
 ```tsx
-import { useObservable, useSubscribe } from '@mission-platform/rxjs/react';
+import { useObservable, useSubscribe } from '@mission-platform/rxjs';
 import { timer } from 'rxjs';
 
 const seconds$ = timer(0, 1000);
@@ -48,11 +53,11 @@ export function TimerComponent() {
 }
 ```
 
-### Vue 3 Usage
+### Vue 3 Usage (`mp:vue`)
 
 ```vue
 <script setup lang="ts">
-  import { useObservable, useSubscribe } from '@mission-platform/rxjs/vue';
+  import { useObservable, useSubscribe } from '@mission-platform/rxjs';
   import { timer } from 'rxjs';
 
   const seconds$ = timer(0, 1000);

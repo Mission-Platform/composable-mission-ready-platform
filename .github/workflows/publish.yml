@@ -148,7 +148,7 @@ jobs:
       # version (`steps.changesets.outputs.published == 'true'`).  Ordinary
       # pushes to `main` that don't publish a release (e.g. the release PR
       # simply being (re)generated) must not trigger a production deploy.
-      # `turbo` builds the apps + base-spa worker on demand via the per-app
+      # `turbo` builds the apps + forge-spa worker on demand via the per-app
       # `deploy` task (`wrangler deploy --env production`).
       # ──────────────────────────────────────────────────────────────
       - name: Deploy to production

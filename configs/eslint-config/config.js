@@ -20,20 +20,29 @@ import vueParser from 'vue-eslint-parser';
 const config = [
   {
     name: 'mission-platform/ignores',
-    ignores: ['**/dist/**', '**/node_modules/**', '**/storybook-static/**', '**/.storybook/storybook-static/**'],
+    ignores: [
+      '**/dist/**',
+      '**/node_modules/**',
+      '**/*.d.ts',
+      '**/coverage/**',
+      '**/storybook-static/**',
+      '**/.storybook/storybook-static/**',
+    ],
   },
   {
     name: 'mission-platform/dependency-direction',
     rules: {
-      // 'no-restricted-paths/no-restricted-paths': [
-      //   'error',
-      //   {
-      //     zones: [
-      //       { target: './packages/**', from: './apps/**' },
-      //       { target: './apps/**', from: './packages/**' },
-      //     ],
-      //   },
-      // ],
+      'import-x/no-restricted-paths': [
+        'error',
+        {
+          zones: [
+            { target: './packages/**', from: './apps/**' },
+            { target: './configs/**', from: './apps/**' },
+            { target: './vite-plugins/**', from: './apps/**' },
+            { target: './workers/**', from: './apps/**' },
+          ],
+        },
+      ],
     },
   },
   {

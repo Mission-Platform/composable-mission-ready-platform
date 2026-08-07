@@ -4,12 +4,18 @@
 Mission Platform. The components (`ForgeShowAt`, `ForgeHideAt`, `ForgeBreakpointDebug`) are authored once in the neutral
 `@mission-platform/forge` dialect and compiled to **both Vue 3 and React** by `@mission-platform/vite-plugin-forge`.
 
-## Subpath Exports
+## Exports
 
-- `@mission-platform/breakpoints/vue` — compiled native Vue 3 components.
-- `@mission-platform/breakpoints/react` — compiled native React components.
+- `@mission-platform/breakpoints` — the single entry point. Which build you get is decided by the active
+  `mp:<framework>` export condition (`mp:vue`, `mp:react`, `mp:solid`,
+  `mp:web-component`); with no condition set it resolves to the neutral JSX source barrel (compiled by
+  `@mission-platform/vite-plugin-forge`).
 - `@mission-platform/breakpoints/core` — framework-agnostic utilities and types.
-- `@mission-platform/breakpoints` — the neutral JSX source barrel (compiled by `@mission-platform/vite-plugin-forge`).
+
+Pick the framework **once** — `resolve.conditions` via `defineFrameworkAppConfig` /
+`frameworkResolveConditions` from `@mission-platform/vite-config`, and `customConditions` via the
+`@mission-platform/typescript-config/framework-<name>` presets — then import everything with the bare
+package specifier.
 
 ## Breakpoint Scale
 
@@ -50,10 +56,8 @@ mediaQuery('lg'); // → '(min-width: 1920px)'
   i18next, `mp.breakpoints` namespace).
 
 ```tsx
-// React
-import { ForgeBreakpointDebug, ForgeHideAt, ForgeShowAt } from '@mission-platform/breakpoints/react';
-// Vue 3
-import { ForgeBreakpointDebug, ForgeHideAt, ForgeShowAt } from '@mission-platform/breakpoints/vue';
+// Identical in React, Vue 3, Solid and Web Components — the active mp:<framework> condition picks the build.
+import { ForgeBreakpointDebug, ForgeHideAt, ForgeShowAt } from '@mission-platform/breakpoints';
 ```
 
 > The Vue-only `useBreakpoints` composable has been removed. Build custom reactive viewport logic on the `/core` helpers

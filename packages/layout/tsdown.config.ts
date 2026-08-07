@@ -38,7 +38,7 @@ function emitA11yStyles(): void {
 }
 
 /**
- * Neutral component tree (`dist/components/**`) plus the five forge framework
+ * Neutral component tree (`dist/components/**`) plus the four forge framework
  * builds, Storyblok wrappers (`dist/storyblok/{react,vue}/` + `components.json`),
  * and the compiled `./styles` CSS entry. Framework builds use synthesised entry
  * dts (`declarationModule: '../components'`), matching the prior Vite wiring.

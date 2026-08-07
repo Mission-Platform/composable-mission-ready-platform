@@ -4,15 +4,19 @@
 on [i18next](https://www.i18next.com/). It provides a unified way to handle translations across the Mission Platform,
 with dedicated adapters for both Vue 3 and React.
 
-## Entry Points
+## Entry Point
 
-The package is divided into three main entry points:
+The package has a single entry point, `@mission-platform/i18n`. Which adapter it resolves to is decided by
+the active `mp:<framework>` export condition, which you select **once** for the whole project:
+`resolve.conditions` in Vite (see `defineFrameworkAppConfig` / `frameworkResolveConditions` from
+`@mission-platform/vite-config`) and `customConditions` in TypeScript (via the
+`@mission-platform/typescript-config/framework-<name>` presets). Every import stays bare.
 
-| Import                         | Purpose                | Key Exports                                                             |
-| :----------------------------- | :--------------------- | :---------------------------------------------------------------------- |
-| `@mission-platform/i18n`       | Framework-neutral core | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
-| `@mission-platform/i18n/vue`   | Vue 3 adapter          | `createForgeI18NVue`, `useI18n`                                         |
-| `@mission-platform/i18n/react` | React adapter          | `ForgeI18NProvider`, `useI18n`                                          |
+| Active condition | Resolves to            | Key Exports                                                             |
+| :--------------- | :--------------------- | :---------------------------------------------------------------------- |
+| _(none)_         | Framework-neutral core | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
+| `mp:vue`         | Vue 3 adapter          | the neutral core plus `createForgeI18NVue`, `useI18n`                   |
+| `mp:react`       | React adapter          | the neutral core plus `ForgeI18NProvider`, `useI18n`                    |
 
 ## Core Concepts
 
@@ -61,8 +65,8 @@ const i18n = createForgeI18N({
 **Installation:**
 
 ```ts
-import { createForgeI18N } from '@mission-platform/i18n';
-import { createForgeI18NVue } from '@mission-platform/i18n/vue';
+// With the mp:vue condition active.
+import { createForgeI18N, createForgeI18NVue } from '@mission-platform/i18n';
 
 const i18n = createForgeI18N({ messages: { en: { hello: 'Hello {name}' } } });
 app.use(createForgeI18NVue(i18n));
@@ -72,7 +76,7 @@ app.use(createForgeI18NVue(i18n));
 
 ```vue
 <script setup lang="ts">
-  import { useI18n } from '@mission-platform/i18n/vue';
+  import { useI18n } from '@mission-platform/i18n';
   const { t, locale, setLocale } = useI18n();
 </script>
 
@@ -86,8 +90,8 @@ app.use(createForgeI18NVue(i18n));
 **Provider Setup:**
 
 ```tsx
-import { createForgeI18N } from '@mission-platform/i18n';
-import { ForgeI18NProvider, useI18n } from '@mission-platform/i18n/react';
+// With the mp:react condition active — same bare specifier as the Vue example.
+import { createForgeI18N, ForgeI18NProvider, useI18n } from '@mission-platform/i18n';
 
 const i18n = createForgeI18N({ messages: { en: { hello: 'Hello {name}' } } });
 

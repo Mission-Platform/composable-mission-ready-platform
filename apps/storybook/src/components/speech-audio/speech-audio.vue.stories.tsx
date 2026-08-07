@@ -1,4 +1,4 @@
-import { useMidi, useSound, useSpeechRecognition, useSpeechSynthesis } from '@mission-platform/speech-audio/vue';
+import { useMidi, useSound, useSpeechRecognition, useSpeechSynthesis } from '@mission-platform/speech-audio';
 import { defineComponent, ref } from 'vue';
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
@@ -353,7 +353,7 @@ Web Components.
 
 \`\`\`vue
 <script setup lang="ts">
-import { useSpeechSynthesis } from '@mission-platform/speech-audio/vue'
+import { useSpeechSynthesis } from '@mission-platform/speech-audio'
 const { isSpeaking, speak, cancel } = useSpeechSynthesis()
 </script>
 \`\`\`

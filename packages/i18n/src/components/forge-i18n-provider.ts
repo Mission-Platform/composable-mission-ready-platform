@@ -1,6 +1,6 @@
 'use client';
 
-// ─── @mission-platform/i18n/react ─────────────────────────────────────────────
+// ─── @mission-platform/i18n (mp:react condition) ──────────────────────────────
 // React provider supplying an i18next instance to the tree, built on `react-i18next`.
 
 import { createElement, type ReactElement, type ReactNode } from 'react';
@@ -22,8 +22,7 @@ export interface ForgeI18NProviderProperties {
  * `react-i18next`'s `I18nextProvider`) so descendants can call `useI18n`.
  *
  * @example
- * import { createForgeI18N } from '@mission-platform/i18n'
- * import { ForgeI18NProvider } from '@mission-platform/i18n/react'
+ * import { createForgeI18N, ForgeI18NProvider } from '@mission-platform/i18n'
  *
  * const i18n = createForgeI18N({ messages: { en: { hello: 'Hello' } } })
  * root.render(<ForgeI18NProvider i18n={i18n}><App /></ForgeI18NProvider>)

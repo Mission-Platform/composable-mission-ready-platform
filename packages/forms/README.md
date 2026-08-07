@@ -1,7 +1,8 @@
 # `@mission-platform/forms`
 
 Write-once form orchestration components (`ForgeSchemaForm`, `ForgeFormBuilder`) authored with `@mission-platform/forge`
-and shipped as native Vue 3 (`@mission-platform/forms/vue`) and React (`@mission-platform/forms/react`) components.
+and shipped as native Vue 3, React, Solid and Web Components behind a single bare
+`@mission-platform/forms` entry point.
 
 ## Features
 
@@ -20,11 +21,16 @@ pnpm add @mission-platform/forms @mission-platform/forms-core
 
 ## Usage
 
-### Vue 3 (`@mission-platform/forms/vue`)
+Choose the framework **once** — `resolve.conditions` via `defineFrameworkAppConfig` /
+`frameworkResolveConditions` from `@mission-platform/vite-config`, and `customConditions` via the
+`@mission-platform/typescript-config/framework-<name>` presets — and the `mp:<framework>` export condition
+resolves the bare specifier to the matching native build.
+
+### Vue 3 (`mp:vue`)
 
 ```vue
 <script setup lang="ts">
-  import { ForgeSchemaForm, ForgeFormBuilder } from '@mission-platform/forms/vue';
+  import { ForgeSchemaForm, ForgeFormBuilder } from '@mission-platform/forms';
   import { ref } from 'vue';
 
   const schema = {
@@ -52,10 +58,10 @@ pnpm add @mission-platform/forms @mission-platform/forms-core
 </template>
 ```
 
-### React (`@mission-platform/forms/react`)
+### React (`mp:react`)
 
 ```tsx
-import { ForgeSchemaForm, ForgeFormBuilder } from '@mission-platform/forms/react';
+import { ForgeSchemaForm, ForgeFormBuilder } from '@mission-platform/forms';
 import { useState } from 'react';
 
 export function ContactForm() {
@@ -80,11 +86,11 @@ export function ContactForm() {
 }
 ```
 
-## Exports & Subpaths
+## Exports
 
-- `@mission-platform/forms`: Neutral component exports (`ForgeSchemaForm`, `ForgeFormBuilder`).
-- `@mission-platform/forms/vue`: Compiled Vue 3 components.
-- `@mission-platform/forms/react`: Compiled React components.
+- `@mission-platform/forms`: the only component entry point (`ForgeSchemaForm`, `ForgeFormBuilder`).
+  Resolves to the compiled Vue 3, React, Solid, or web-component build for the active
+  `mp:<framework>` condition, and to the neutral components when none is set.
 - `@mission-platform/forms/styles`: Shared accessibility stylesheet (`src/styles/a11y.scss`).
 
 For details on schema structure and form builder layout, see [docs/index.md](docs/index.md).

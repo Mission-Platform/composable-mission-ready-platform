@@ -1,4 +1,4 @@
-// ─── @mission-platform/i18n/vue ──────────────────────────────────────────────
+// ─── @mission-platform/i18n (mp:vue build) ───────────────────────────────────
 // Vue 3 `useI18n` composable, built on `i18next-vue`.
 
 import defaultI18next from 'i18next';

@@ -6,9 +6,14 @@ components via `@mission-platform/vite-plugin-forge`.
 
 ## Import
 
+There is a single, bare entry point. The framework build is chosen **once** for the project via the
+`mp:<framework>` export condition — `resolve.conditions` (see `defineFrameworkAppConfig` /
+`frameworkResolveConditions` from `@mission-platform/vite-config`) and `customConditions` (via the
+`@mission-platform/typescript-config/framework-<name>` presets):
+
 ```ts
-import { WysiwygEditor } from '@mission-platform/wysiwyg/vue'; // Vue 3
-import { WysiwygEditor } from '@mission-platform/wysiwyg/react'; // React
+// Resolves to the Vue 3, React, Solid or Web Components build depending on the active mp:<framework> condition.
+import { WysiwygEditor } from '@mission-platform/wysiwyg';
 ```
 
 ## Usage (Vue)
@@ -16,7 +21,7 @@ import { WysiwygEditor } from '@mission-platform/wysiwyg/react'; // React
 ```vue
 <script setup lang="ts">
   import { ref } from 'vue';
-  import { WysiwygEditor } from '@mission-platform/wysiwyg/vue';
+  import { WysiwygEditor } from '@mission-platform/wysiwyg';
 
   const html = ref('<p>Hello <strong>world</strong></p>');
 </script>
@@ -34,7 +39,7 @@ import { WysiwygEditor } from '@mission-platform/wysiwyg/react'; // React
 
 ```tsx
 import { useState } from 'react';
-import { WysiwygEditor } from '@mission-platform/wysiwyg/react';
+import { WysiwygEditor } from '@mission-platform/wysiwyg';
 
 export function Editor() {
   const [html, setHtml] = useState('<p>Hello <strong>world</strong></p>');

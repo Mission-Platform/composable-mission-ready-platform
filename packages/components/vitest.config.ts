@@ -9,9 +9,10 @@ export default defineVitestConfig({
       jsxFragment: 'Fragment',
     },
     test: {
-      // The neutral `@mission-platform/icons` is consumed from its source
-      // (its package ships only the per-framework builds), so it must be inlined
-      // and transformed by Vite — with the same `h` JSX factory and CSS-Module
+      // The neutral `@mission-platform/icons` is consumed from its source (its
+      // published entry resolves to a compiled per-framework build via the
+      // `mp:<framework>` export condition), so it must be inlined and
+      // transformed by Vite — with the same `h` JSX factory and CSS-Module
       // handling — rather than externalised and loaded as raw `.tsx` by Node.
       server: {
         deps: {

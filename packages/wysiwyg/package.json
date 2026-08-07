@@ -19,15 +19,7 @@
         "import": "./dist/react/index.js"
       },
       "types": "./dist/components/index.d.ts",
-      "import": "./src/components/index.ts"
-    },
-    "./react": {
-      "types": "./dist/react/index.d.ts",
-      "import": "./dist/react/index.js"
-    },
-    "./vue": {
-      "types": "./dist/vue/index.d.ts",
-      "import": "./dist/vue/index.js"
+      "import": "./dist/components/index.js"
     }
   },
   "files": [

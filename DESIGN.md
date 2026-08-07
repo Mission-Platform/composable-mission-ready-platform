@@ -3,7 +3,7 @@ version: alpha
 name: Mission Platform
 description: >-
   The Mission Platform design system — a calm, rounded, accessible identity for
-  composable Vue/React/Solid/Svelte apps. Tokens are authored in the DTCG format
+  composable Vue/React/Solid/Web Components apps. Tokens are authored in the DTCG format
   (OKLab colour space) in `@mission-platform/tokens`; the values below mirror the
   light colour scheme. Every semantic colour is scheme-aware at runtime via
   `light-dark(...)`, and dimension scales are `rem` relative to a 14px root so the

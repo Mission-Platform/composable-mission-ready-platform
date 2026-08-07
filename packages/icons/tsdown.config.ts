@@ -5,7 +5,7 @@ import { defineTsdownForgeComponentsAll } from '@mission-platform/vite-plugin-fo
 
 /**
  * Neutral component declarations (`dist/components/**`) plus the five forge
- * framework builds (`dist/{vue,react,solid,svelte,web-components}/`). Matches the
+ * framework builds (`dist/{vue,react,solid,web-components}/`). Matches the
  * prior Vite wiring: `generateFrameworkSources` + synthesised entry dts
  * (`declarationModule: '../components'`).
  */

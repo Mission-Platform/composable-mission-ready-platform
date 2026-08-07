@@ -1,7 +1,0 @@
-{
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Mission Platform — Framework: Svelte (mp:svelte custom condition)",
-  "compilerOptions": {
-    "customConditions": ["mp:svelte"]
-  }
-}

@@ -1,8 +1,9 @@
 /**
  * Inspects the `@mission-platform/components` library so the MCP server can
  * describe how a component is used: its exported symbols, its props interface,
- * its documentation comment, atomic-design level, and ready-to-paste Vue and
- * React import snippets.
+ * its documentation comment, atomic-design level, and ready-to-paste import
+ * snippets. The snippets are framework-agnostic: a consumer picks the framework
+ * build once through the `mp:<framework>` export condition.
  */
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
@@ -40,9 +41,14 @@ export interface ComponentUsage extends ComponentSummary {
   docComment?: string;
   /** Names of Storybook story files found in the folder. */
   stories: string[];
-  /** Ready-to-use import examples for both frameworks. */
-  vueImport: string;
-  reactImport: string;
+  /**
+   * Ready-to-use import example. There is a single, framework-agnostic specifier:
+   * the framework build is chosen once per consumer via the `mp:<framework>`
+   * export condition, never by the specifier.
+   */
+  importStatement: string;
+  /** Per-component deep import (only this component's chunk, same conditions). */
+  deepImport: string;
 }
 
 function componentsDirExists(): boolean {
@@ -212,7 +218,7 @@ export function getComponentUsage(nameOrSlug: string): ComponentUsage | undefine
     propsInterface,
     docComment,
     stories,
-    vueImport: `import { ${componentName} } from '@mission-platform/components/vue';`,
-    reactImport: `import { ${componentName} } from '@mission-platform/components/react';`,
+    importStatement: `import { ${componentName} } from '@mission-platform/components';`,
+    deepImport: `import { ${componentName} } from '@mission-platform/components/${summary.relativePath}/${summary.slug}';`,
   };
 }

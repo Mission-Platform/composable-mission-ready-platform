@@ -1,5 +1,7 @@
-// ─── @mission-platform/i18n/vue ──────────────────────────────────────────────
+// ─── @mission-platform/i18n (mp:vue build) ───────────────────────────────────
 // Vue 3 adapter for the framework-agnostic i18next wrapper, built on `i18next-vue`.
+// Consumers import the bare `@mission-platform/i18n`; the `mp:vue` export
+// condition selects this build.
 
 // Framework-neutral core surface (re-exported for convenience).
 export { createForgeI18N, getServerI18n, runWithI18n, setServerI18n } from './stores/create-forge-i18n';

@@ -31,7 +31,7 @@ const ForgeModalStub = defineComponent({
 // Allow tests to drive the route query the component reads.
 const routeQuery = ref<Record<string, unknown>>({});
 
-vi.mock('@mission-platform/components/vue', () => ({
+vi.mock('@mission-platform/components', () => ({
   ForgeButton: StubComponent,
   ForgeInput: StubComponent,
   ForgeMonacoEditor: StubComponent,
@@ -40,7 +40,7 @@ vi.mock('@mission-platform/components/vue', () => ({
   ForgeTypography: StubComponent,
 }));
 
-vi.mock('@mission-platform/i18n/vue', () => ({
+vi.mock('@mission-platform/i18n', () => ({
   useI18n: () => ({
     t: (_key: unknown, options?: { defaultValue?: string }) => options?.defaultValue ?? '',
   }),

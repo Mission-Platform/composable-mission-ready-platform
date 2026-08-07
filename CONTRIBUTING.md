@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-1. **Select correct Node version**: `nvm use` (uses `.nvmrc` - Node.js 24.18.0)
+1. **Select correct Node version**: `nvm use` (uses `.nvmrc` - Node.js 24.19.0)
 2. **Install dependencies**: `pnpm install`
 3. **Run tests**: `pnpm test` (or `pnpm exec turbo run test`)
 4. **Run linting**: `pnpm lint` (or `pnpm exec turbo run lint`)
@@ -19,7 +19,7 @@
    ```bash
    git commit -m "feat(component): add new tooltip component"
    ```
-   Use `pnpm changeset` to create a Changeset for any package changes
+   Use `pnpm exec changeset` to create a Changeset for any package changes
 
 ### Code Review
 - All changes must be reviewed before merging
@@ -100,9 +100,9 @@
 ## Release Process
 
 ### Creating a Release
-1. Create Changesets with `pnpm changeset`
+1. Create Changesets with `pnpm exec changeset`
 2. Review and commit changesets
-3. Run `pnpm changeset version` to bump versions
+3. Run `pnpm exec changeset version` to bump versions
 4. Verify CHANGELOGs are updated
 5. Run `pnpm publish` to publish packages
 

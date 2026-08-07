@@ -2,9 +2,6 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import worker from '.';
 
-// The worker proxies incoming requests to a fixed upstream host. The tests
-// stub the global `fetch` to capture the forwarded request and assert the
-// hostname rewrite, method/header forwarding, and the error → 500 contract.
 const executionContext = {} as ExecutionContext;
 
 afterEach(() => {
@@ -12,14 +9,18 @@ afterEach(() => {
 });
 
 describe('@mission-platform/api-proxy', () => {
-  it('rewrites the hostname to the upstream and forwards method and headers', async () => {
+  it('forwards an allowed route with sanitized headers and query string', async () => {
     const upstream = new Response('upstream-body', { status: 200 });
     const fetchMock = vi.fn(async () => upstream);
     vi.stubGlobal('fetch', fetchMock);
 
     const request = new Request('https://origin.test/users/123?q=1', {
-      method: 'POST',
-      headers: { 'x-test': '1' },
+      headers: {
+        authorization: 'Bearer secret',
+        cookie: 'session=secret',
+        host: 'origin.test',
+        'x-test': '1',
+      },
     });
     const result = await worker.fetch(request, {}, executionContext);
 
@@ -28,14 +29,43 @@ describe('@mission-platform/api-proxy', () => {
 
     const forwarded = fetchMock.mock.calls[0]?.[0] as Request;
     const forwardedUrl = new URL(forwarded.url);
-    expect(forwardedUrl.hostname).toBe('api.example.com');
+    expect(forwardedUrl.origin).toBe('https://api.example.com');
     expect(forwardedUrl.pathname).toBe('/users/123');
     expect(forwardedUrl.search).toBe('?q=1');
-    expect(forwarded.method).toBe('POST');
+    expect(forwarded.method).toBe('GET');
     expect(forwarded.headers.get('x-test')).toBe('1');
+    expect(forwarded.headers.get('authorization')).toBeNull();
+    expect(forwarded.headers.get('cookie')).toBeNull();
+    expect(forwarded.headers.get('host')).toBeNull();
   });
 
-  it('returns a 500 with the error message when the upstream fetch throws', async () => {
+  it('rejects disallowed methods and paths without contacting upstream', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+
+    const disallowedMethod = await worker.fetch(
+      new Request('https://origin.test/users/123', { method: 'POST' }),
+      {},
+      executionContext,
+    );
+    const disallowedPath = await worker.fetch(new Request('https://origin.test/admin'), {}, executionContext);
+
+    expect(disallowedMethod.status).toBe(404);
+    expect(disallowedPath.status).toBe(404);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('rejects encoded path traversal', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+
+    const result = await worker.fetch(new Request('https://origin.test/users/%2e%2e/admin'), {}, executionContext);
+
+    expect(result.status).toBe(404);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('returns an opaque 502 when the upstream fetch throws', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(() => {
@@ -43,9 +73,9 @@ describe('@mission-platform/api-proxy', () => {
       }),
     );
 
-    const result = await worker.fetch(new Request('https://origin.test/'), {}, executionContext);
+    const result = await worker.fetch(new Request('https://origin.test/users/123'), {}, executionContext);
 
-    expect(result.status).toBe(500);
-    expect(await result.text()).toContain('upstream unreachable');
+    expect(result.status).toBe(502);
+    expect(await result.text()).toBe('Bad gateway');
   });
 });

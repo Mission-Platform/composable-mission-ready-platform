@@ -28,7 +28,6 @@ import {
   dynamicToHCall,
   ensureI18nHookInComponent,
   findComponentFunction,
-  frameworkSplitModule,
   hasSlottedChildren,
   isComponentTagName,
   isDynamicElement,
@@ -59,8 +58,6 @@ import { MP_STATIC_ATTR, stripMpStaticAttributes } from '../../compiler/optimize
 import { REACT_ALIASES } from './aliases.js';
 import { buildReactImports } from './imports.js';
 
-import type { JsxFramework } from '../../compiler/compile.js';
-
 /** Rewrite a relative sibling-component import to the flat generated layout (`./<base>`). */
 function flattenComponentSpecifier(specifier: string): string {
   const segments = specifier.split('/').filter((segment) => segment !== '.' && segment !== '..' && segment.length > 0);
@@ -68,11 +65,7 @@ function flattenComponentSpecifier(specifier: string): string {
 }
 
 /** Transform the whole module into the React target source. */
-export function emitReactModule(
-  rawSourceFile: ts.SourceFile,
-  componentName?: string,
-  targetFramework: JsxFramework = 'react',
-): string {
+export function emitReactModule(rawSourceFile: ts.SourceFile, componentName?: string): string {
   const sourceFile = ensureI18nHookInComponent(ts.factory, rawSourceFile);
   const neutral = readNeutralImports(sourceFile);
 
@@ -241,54 +234,28 @@ export function emitReactModule(
         );
       }
 
-      // Remap a write-once, framework-split workspace package (the icon library
+      // Write-once, framework-split workspace packages (the icon library
       // `@mission-platform/icons`, or `@mission-platform/components` imported via
-      // a neutral subpath) to its `./react` build. Those packages ship only the
-      // per-framework builds, so the neutral imports (e.g. `<IconX />` tags or a
-      // reused `ForgeDrawer`) resolve to the native React components.
-      if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
-        if (node.moduleSpecifier.text === 'i18next') {
-          const i18nImport = factory.createImportDeclaration(
-            undefined,
-            factory.createImportClause(
-              false,
-              undefined,
-              factory.createNamedImports([
-                factory.createImportSpecifier(false, undefined, factory.createIdentifier('useI18n')),
-              ]),
-            ),
-            factory.createStringLiteral(`@mission-platform/i18n/${targetFramework}`),
-          );
-          return [i18nImport, node];
-        }
-        const frameworkModule = frameworkSplitModule(node.moduleSpecifier.text, targetFramework);
-        if (frameworkModule !== undefined) {
-          return factory.updateImportDeclaration(
-            node,
-            node.modifiers,
-            node.importClause,
-            factory.createStringLiteral(frameworkModule),
-            node.attributes,
-          );
-        }
-      }
-
+      // a neutral subpath) are carried through verbatim: each declares an
+      // `mp:<framework>` export condition on its bare entry, so the consumer's
+      // `resolve.conditions` selects the native build.
       if (
-        ts.isExportDeclaration(node) &&
-        node.moduleSpecifier !== undefined &&
-        ts.isStringLiteral(node.moduleSpecifier)
+        ts.isImportDeclaration(node) &&
+        ts.isStringLiteral(node.moduleSpecifier) &&
+        node.moduleSpecifier.text === 'i18next'
       ) {
-        const frameworkModule = frameworkSplitModule(node.moduleSpecifier.text, targetFramework);
-        if (frameworkModule !== undefined) {
-          return factory.updateExportDeclaration(
-            node,
-            node.modifiers,
-            node.isTypeOnly,
-            node.exportClause,
-            factory.createStringLiteral(frameworkModule),
-            node.attributes,
-          );
-        }
+        const i18nImport = factory.createImportDeclaration(
+          undefined,
+          factory.createImportClause(
+            false,
+            undefined,
+            factory.createNamedImports([
+              factory.createImportSpecifier(false, undefined, factory.createIdentifier('useI18n')),
+            ]),
+          ),
+          factory.createStringLiteral('@mission-platform/i18n'),
+        );
+        return [i18nImport, node];
       }
 
       // Flatten relative sibling-component imports.

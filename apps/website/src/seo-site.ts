@@ -15,7 +15,7 @@ export const SITE_ORIGIN = 'https://mission-platform.dev';
 export const SITE_NAME = 'Mission Platform';
 export const SITE_TITLE = 'Mission Platform — Composable. Mission Ready.';
 export const SITE_DESCRIPTION =
-  'A composable monorepo of design tokens, components, composables, WebAssembly modules, and Cloudflare Workers — authored once in the framework-agnostic Forge runtime and built for Vue, React, Svelte, Solid, and Web Components.';
+  'A composable monorepo of design tokens, components, composables, WebAssembly modules, and Cloudflare Workers — authored once in the framework-agnostic Forge runtime and built for Vue, React, Solid, and Web Components.';
 
 /** Value emitted as the `<meta name="generator">` tag. */
 export const SITE_GENERATOR = 'Mission Platform';

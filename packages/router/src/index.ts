@@ -4,7 +4,7 @@
 // The root entry is framework-neutral: it defines the route/location model and
 // pure helpers for compiling, matching, building, and resolving routes. Pair it
 // with a framework adapter to wire those routes into a real router:
-//   • Vue 3 (vue-router)        → `@mission-platform/router/vue`
+//   • Vue 3 (vue-router)        → the `mp:vue` build of `@mission-platform/router`
 //   • RedwoodSDK (rwsdk/router) → `@mission-platform/router/redwood`
 //
 // The same neutral `MpRoute` tree is designed to translate to react-router,

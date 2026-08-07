@@ -239,9 +239,16 @@ export function registerTools(server: McpServer): void {
         `Stories: ${usage.stories.length > 0 ? usage.stories.join(', ') : 'none found'}`,
         '',
         '## Import',
+        'The specifier is framework-agnostic: the framework build is selected by the',
+        'consuming workspace via the `mp:<framework>` export condition (Vite',
+        '`resolve.conditions` / TypeScript `customConditions`), never by the specifier.',
         '```ts',
-        `// Vue\n${usage.vueImport}`,
-        `// React\n${usage.reactImport}`,
+        usage.importStatement,
+        '```',
+        '',
+        "Per-component deep import (only this component's chunk, same conditions):",
+        '```ts',
+        usage.deepImport,
         '```',
       ];
       if (usage.docComment) {

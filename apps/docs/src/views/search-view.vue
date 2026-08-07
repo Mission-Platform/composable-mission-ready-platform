@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { ForgeBadge, ForgeCard, ForgeTypography } from '@mission-platform/components/vue';
-  import { useI18n } from '@mission-platform/i18n/vue';
+  import { ForgeBadge, ForgeCard, ForgeTypography } from '@mission-platform/components';
+  import { useI18n } from '@mission-platform/i18n';
   import { useSeo } from '@mission-platform/seo';
   import { computed } from 'vue';
   import { useRoute } from 'vue-router';

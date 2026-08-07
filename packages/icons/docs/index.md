@@ -9,33 +9,49 @@ components at build time.
 The package leverages `@mission-platform/vite-plugin-forge` to provide high-performance, tree-shakable icons for both
 frameworks:
 
-- **Compilation**: A single `pnpm build` emits two distinct subpaths (`./vue` and `./react`). Each icon is split into
-  its own JS chunk and CSS asset.
-- **Neutral Entry**: The package provides a neutral root entry (`@mission-platform/icons`) that re-exports the neutral
-  source. This is intended for use within other "write-once" components; standard app code should continue using the
-  framework-specific subpaths.
+- **Compilation**: A single `pnpm build` emits one framework-native bundle per target. Each icon is split
+  into its own JS chunk and CSS asset.
+- **Single Entry, Conditional Resolution**: There is exactly one public entry point,
+  `@mission-platform/icons`. It carries the `mp:vue`, `mp:react`, `mp:solid`, and
+  `mp:web-component` export conditions; whichever one your toolchain activates decides which compiled
+  build the bare specifier resolves to. With no condition set it falls back to the neutral forge source,
+  which is what other "write-once" components consume.
 
 ## Usage
 
-### Framework-Specific Imports
+### Choosing a Framework
 
-For standard Vue or React applications, import from the corresponding subpath:
+Select the framework **once**, not per import — in Vite through `resolve.conditions` (use
+`defineFrameworkAppConfig` or `frameworkResolveConditions` from `@mission-platform/vite-config`) and in
+TypeScript through `customConditions` (extend a `@mission-platform/typescript-config/framework-<name>`
+preset):
 
-**Vue 3:**
-
-```vue
-import { ForgeIconAlert, ForgeIconArrow } from '@mission-platform/icons/vue';
+```ts
+resolve: {
+  conditions: frameworkResolveConditions('mp:vue'),
+}
 ```
 
-**React:**
+### Imports
+
+Every import is then bare and identical across frameworks:
+
+**Vue 3** (`mp:vue` active):
+
+```vue
+import { ForgeIconAlert, ForgeIconArrow } from '@mission-platform/icons';
+```
+
+**React** (`mp:react` active):
 
 ```tsx
-import { ForgeIconAlert, ForgeIconArrow } from '@mission-platform/icons/react';
+import { ForgeIconAlert, ForgeIconArrow } from '@mission-platform/icons';
 ```
 
 ### Neutral Component Imports
 
-When authoring a framework-neutral component (compiled by `vite-plugin-forge`):
+When authoring a framework-neutral component (compiled by `vite-plugin-forge`), no `mp:*` condition is
+active and the same specifier gives you the neutral source:
 
 ```tsx
 import { ForgeIconAlert, ForgeIconArrow } from '@mission-platform/icons';

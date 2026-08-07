@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "license": "BSD-4-Clause",
+  "description": "Cloudflare SPA asset worker that delegates requests to the ASSETS binding",
   "type": "module",
   "exports": {
     ".": {

@@ -1,0 +1,4 @@
+# @mission-platform/matrix-code
+
+Data Matrix and Aztec encoding and decoding with a framework-neutral component.
+Use the bare package entry and select the target with `mp:<framework>` conditions.

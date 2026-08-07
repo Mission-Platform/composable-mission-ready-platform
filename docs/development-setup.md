@@ -13,7 +13,9 @@ Before cloning the repository, ensure your system meets the following requiremen
 | **Node.js** | `24.19.0` | Runtime environment (Active LTS) |
 | **pnpm** | `11.20.0` | Package manager and workspace orchestrator |
 | **Git** | Latest stable | Version control |
-| **Docker** | Latest stable | Required for WebAssembly builds (e.g., Hunspell) |
+| **Rust** | Stable toolchain | Native tests and Rust/WASM crate development |
+| **wasm-pack** | Latest stable | Packaging Rust crates as typed WebAssembly workspaces |
+| **Docker** | Latest stable | Required only for the Emscripten Hunspell build |
 
 ### Version Management (Recommended)
 
@@ -29,6 +31,13 @@ Enable **pnpm** using Corepack:
 ```bash
 corepack enable
 corepack prepare pnpm@11.20.0 --activate
+```
+
+Install the Rust target and WebAssembly packager when working on Rust crates:
+
+```bash
+rustup target add wasm32-unknown-unknown
+cargo install wasm-pack
 ```
 
 ## Initial Setup
@@ -57,8 +66,14 @@ This command triggers the `prepare` script, which initializes **Husky** for comm
 Run a smoke test to ensure the build system and environment are correctly configured:
 
 ```bash
-pnpm build --filter @mission-platform/forge
+pnpm exec turbo run build --filter @mission-platform/forge...
 ```
+
+The `...` also builds the Forge dependencies required by the package. Rust
+decoder and encoder crates are tested natively with `cargo test`; their
+`wasm-pack` outputs are written into the corresponding `packages/*-wasm/`
+workspace by the crate's package task, which is the checked-in package/build
+contract used by Turborepo.
 
 ## Development Workflow
 
@@ -76,7 +91,7 @@ pnpm storybook:vue
 pnpm storybook:react
 ```
 
-Other available framework targets include `solid`, `svelte`, and `web-component`.
+Other available framework targets include `solid` and `web-component`.
 
 ### Application Development
 
@@ -115,4 +130,7 @@ pnpm install
 
 ### WASM Build Failures
 
-If packages involving WebAssembly (like `@mission-platform/hunspell`) fail to build, ensure **Docker** is running, as it is used to provide a consistent build environment for Rust-to-WASM compilation.
+If Rust/WASM packages fail to build, check that the stable Rust toolchain,
+`wasm32-unknown-unknown` target, and `wasm-pack` are installed. The
+`@mission-platform/hunspell` Emscripten build additionally requires Docker to
+be running; the other Rust crates build with the local Rust toolchain.

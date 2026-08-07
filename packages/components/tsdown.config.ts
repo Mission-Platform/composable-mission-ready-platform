@@ -15,7 +15,7 @@ const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
 
 /**
  * Neutral component tree (`dist/components/**`, including `./forge-drawer`) plus
- * the five forge framework builds (real per-framework dts via
+ * the four forge framework builds (real per-framework dts via
  * `jsxComponentsDtsPlugin`) and Storyblok wrappers
  * (`dist/storyblok/{react,vue}/` + `components.json`).
  *

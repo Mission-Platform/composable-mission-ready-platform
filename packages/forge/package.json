@@ -2,7 +2,7 @@
   "name": "@mission-platform/forge",
   "version": "0.2.0",
   "license": "BSD-4-Clause",
-  "description": "A tiny framework-neutral JSX runtime and Vue 3 / React adapters that let Mission Platform components be authored once and rendered on either framework",
+  "description": "A tiny framework-neutral JSX runtime and Vue, React, Solid, Svelte, and Web Components adapters that let Mission Platform components be authored once and rendered across frameworks",
   "type": "module",
   "sideEffects": false,
   "exports": {
@@ -25,6 +25,10 @@
     "./solid": {
       "types": "./dist/adapters/solid.d.ts",
       "import": "./dist/adapters/solid.js"
+    },
+    "./svelte": {
+      "types": "./dist/adapters/svelte.d.ts",
+      "import": "./dist/adapters/svelte.js"
     },
     "./web-components": {
       "types": "./dist/adapters/web-components.d.ts",
@@ -56,6 +60,7 @@
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
     "solid-js": "^1.9.0",
+    "svelte": "^5.0.0",
     "vue": "^3.5.0"
   },
   "peerDependenciesMeta": {
@@ -66,6 +71,9 @@
       "optional": true
     },
     "solid-js": {
+      "optional": true
+    },
+    "svelte": {
       "optional": true
     },
     "vue": {
@@ -88,6 +96,7 @@
     "react": "catalog:react",
     "react-dom": "catalog:react",
     "solid-js": "catalog:solid",
+    "svelte": "catalog:svelte",
     "tsdown": "catalog:build",
     "typescript": "catalog:typescript",
     "vite": "catalog:vite",

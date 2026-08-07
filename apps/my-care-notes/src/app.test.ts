@@ -52,7 +52,7 @@ const EmptyComponent = defineComponent({
 // Allow tests to drive the route query the component reads.
 const routeQuery = ref<Record<string, unknown>>({});
 
-vi.mock('@mission-platform/components/vue', () => ({
+vi.mock('@mission-platform/components', () => ({
   ForgeButton: StubComponent,
   ForgeDialog: StubComponent,
   ForgeDrawer: ForgeDrawerStub,
@@ -68,11 +68,11 @@ vi.mock('@mission-platform/components/vue', () => ({
   ForgeLanguageSwitcher: StubComponent,
 }));
 
-vi.mock('@mission-platform/layouts/vue', () => ({
+vi.mock('@mission-platform/layouts', () => ({
   ForgeVerticalLayout: StubComponent,
 }));
 
-vi.mock('@mission-platform/i18n/vue', () => ({
+vi.mock('@mission-platform/i18n', () => ({
   ForgeLanguageSwitcher: StubComponent,
   useI18n: () => ({
     t: (_key: unknown, options?: { defaultValue?: string }) => options?.defaultValue ?? '',
@@ -81,7 +81,7 @@ vi.mock('@mission-platform/i18n/vue', () => ({
   }),
 }));
 
-vi.mock('@mission-platform/icons/vue', () => ({
+vi.mock('@mission-platform/icons', () => ({
   ForgeIconDownload: StubComponent,
   ForgeIconPencil: StubComponent,
 }));

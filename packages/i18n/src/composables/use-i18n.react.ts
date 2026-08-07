@@ -1,6 +1,6 @@
 'use client';
 
-// ─── @mission-platform/i18n/react ─────────────────────────────────────────────
+// ─── @mission-platform/i18n (mp:react build) ──────────────────────────────────
 // React `useI18n` hook, built on `react-i18next`.
 
 import i18next from 'i18next';

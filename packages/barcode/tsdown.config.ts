@@ -12,7 +12,7 @@ const WASM_PACKAGES = ['@mission-platform/barcode-encode-wasm', '@mission-platfo
 
 /**
  * Neutral self-contained encoder/decoder (`dist/index.js` + dts) plus the five
- * forge component framework builds (`dist/{vue,react,solid,svelte,web-components}/`).
+ * forge component framework builds (`dist/{vue,react,solid,web-components}/`).
  */
 export default [
   defineTsdownLibrary({

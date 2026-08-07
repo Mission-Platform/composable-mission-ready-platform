@@ -9,8 +9,8 @@ through a small, fully typed ES module wrapper and a write-once `ForgeBarcode` U
 
 - **Encoder**: Renders symbology + payload into a flat run of module bits (`1` = bar, `0` = space).
 - **Decoder**: Reads a clean module run of any supported symbology back into its payload.
-- **UI Component (`ForgeBarcode`)**: Write-once component compiled for Vue 3 (`@mission-platform/barcode/vue`) and React
-  (`@mission-platform/barcode/react`).
+- **UI Component (`ForgeBarcode`)**: Write-once component compiled for Vue 3, React, Solid and Web Components, all
+  served from the bare `@mission-platform/barcode` specifier via the `mp:<framework>` export conditions.
 
 ## Supported Symbologies
 
@@ -50,11 +50,16 @@ const payload = decodeBarcode('code128', barcode.modules);
 
 ### Framework UI Components
 
-**Vue 3:**
+There is no per-framework subpath: pick the framework **once** through `resolve.conditions` (see
+`defineFrameworkAppConfig` / `frameworkResolveConditions` from `@mission-platform/vite-config`) and
+`customConditions` (via the `@mission-platform/typescript-config/framework-<name>` presets), then import
+`ForgeBarcode` from the package root.
+
+**Vue 3** (`mp:vue` active):
 
 ```vue
 <script setup lang="ts">
-  import { ForgeBarcode } from '@mission-platform/barcode/vue';
+  import { ForgeBarcode } from '@mission-platform/barcode';
 </script>
 
 <template>
@@ -66,10 +71,10 @@ const payload = decodeBarcode('code128', barcode.modules);
 </template>
 ```
 
-**React:**
+**React** (`mp:react` active):
 
 ```tsx
-import { ForgeBarcode } from '@mission-platform/barcode/react';
+import { ForgeBarcode } from '@mission-platform/barcode';
 
 export function BarcodeViewer() {
   return (

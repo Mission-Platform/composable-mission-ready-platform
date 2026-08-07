@@ -150,7 +150,8 @@ const entry = generateStoryblokBloks({
   framework: 'vue',
   componentsModule,
   outDir, // <name>.json + <name>.vue wrappers + components.json + typed index.d.ts
-  componentsImport: '@mission-platform/components/vue',
+  // The bare package specifier — the `mp:<framework>` export condition picks the build.
+  componentsImport: '@mission-platform/components',
 });
 export default defineConfig({
   plugins: [vue()],

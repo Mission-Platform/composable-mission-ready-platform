@@ -29,26 +29,6 @@
       },
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    },
-    "./react": {
-      "types": "./dist/react/index.d.ts",
-      "import": "./dist/react/index.js"
-    },
-    "./solid": {
-      "types": "./dist/solid/index.d.ts",
-      "import": "./dist/solid/index.js"
-    },
-    "./svelte": {
-      "types": "./dist/svelte/index.d.ts",
-      "import": "./dist/svelte/index.js"
-    },
-    "./web-components": {
-      "types": "./dist/web-components/index.d.ts",
-      "import": "./dist/web-components/index.js"
-    },
-    "./vue": {
-      "types": "./dist/vue/index.d.ts",
-      "import": "./dist/vue/index.js"
     }
   },
   "main": "./dist/index.js",

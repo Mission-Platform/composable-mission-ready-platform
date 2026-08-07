@@ -178,12 +178,12 @@ describe('the Vue blok wrapper emitter', () => {
   const analyzed = analyzeStoryblokComponent(parseTsx('forge-badge.tsx', BADGE), badgeNames);
   const vue = emitStoryblokBlokWrapper(analyzed, 'Badge', {
     framework: 'vue',
-    componentsImport: '@mission-platform/components/vue',
+    componentsImport: '@mission-platform/components',
   });
 
   it('emits a `<script setup>` SFC importing the built component', () => {
     expect(vue).toContain('<script setup lang="ts">');
-    expect(vue).toContain("import { Badge } from '@mission-platform/components/vue';");
+    expect(vue).toContain("import { Badge } from '@mission-platform/components';");
   });
 
   it('types the `blok` prop with the precise per-field interface', () => {
@@ -211,7 +211,7 @@ describe('the Vue blok wrapper emitter handles named slots', () => {
   const analyzed = analyzeStoryblokComponent(parseTsx('forge-layout.tsx', LAYOUT), layoutNames);
   const vue = emitStoryblokBlokWrapper(analyzed, 'Layout', {
     framework: 'vue',
-    componentsImport: '@mission-platform/components/vue',
+    componentsImport: '@mission-platform/components',
   });
 
   it('routes a named-slot bloks field into the matching `<template #name>`', () => {
@@ -224,11 +224,11 @@ describe('the React blok wrapper emitter', () => {
   const analyzed = analyzeStoryblokComponent(parseTsx('forge-badge.tsx', BADGE), badgeNames);
   const react = emitStoryblokBlokWrapper(analyzed, 'Badge', {
     framework: 'react',
-    componentsImport: '@mission-platform/components/react',
+    componentsImport: '@mission-platform/components',
   });
 
   it('emits a function component importing the built component and Storyblok helpers', () => {
-    expect(react).toContain("import { Badge } from '@mission-platform/components/react';");
+    expect(react).toContain("import { Badge } from '@mission-platform/components';");
     expect(react).toContain(
       "import { StoryblokComponent, storyblokEditable, type SbBlokData } from '@storyblok/react';",
     );
@@ -258,7 +258,7 @@ describe('the React blok wrapper emitter handles named slots', () => {
   const analyzed = analyzeStoryblokComponent(parseTsx('forge-layout.tsx', LAYOUT), layoutNames);
   const react = emitStoryblokBlokWrapper(analyzed, 'Layout', {
     framework: 'react',
-    componentsImport: '@mission-platform/components/react',
+    componentsImport: '@mission-platform/components',
   });
 
   it('passes a named-slot bloks field as a prop of the built component', () => {
@@ -270,11 +270,11 @@ describe('the Solid blok wrapper emitter', () => {
   const analyzed = analyzeStoryblokComponent(parseTsx('forge-badge.tsx', BADGE), badgeNames);
   const solid = emitStoryblokBlokWrapper(analyzed, 'Badge', {
     framework: 'solid',
-    componentsImport: '@mission-platform/components/solid',
+    componentsImport: '@mission-platform/components',
   });
 
   it('emits a Solid function component importing the built component and Storyblok helpers', () => {
-    expect(solid).toContain("import { Badge } from '@mission-platform/components/solid';");
+    expect(solid).toContain("import { Badge } from '@mission-platform/components';");
     expect(solid).toContain(
       "import { StoryblokComponent, storyblokEditable, type SbBlokData } from '@storyblok/solid';",
     );
@@ -300,7 +300,7 @@ describe('the Svelte blok wrapper emitter', () => {
   const analyzed = analyzeStoryblokComponent(parseTsx('forge-badge.tsx', BADGE), badgeNames);
   const svelte = emitStoryblokBlokWrapper(analyzed, 'Badge', {
     framework: 'svelte',
-    componentsImport: '@mission-platform/components/svelte',
+    componentsImport: '@mission-platform/components',
   });
 
   it('emits a Svelte 5 SFC importing the built component and Storyblok helpers', () => {
@@ -308,7 +308,7 @@ describe('the Svelte blok wrapper emitter', () => {
     expect(svelte).toContain(
       "import { StoryblokComponent, storyblokEditable, type SbBlokData } from '@storyblok/svelte';",
     );
-    expect(svelte).toContain("import { Badge } from '@mission-platform/components/svelte';");
+    expect(svelte).toContain("import { Badge } from '@mission-platform/components';");
     expect(svelte).toContain('const { blok }');
     expect(svelte).toContain('= $props();');
   });
@@ -329,7 +329,7 @@ describe('the Svelte blok wrapper emitter handles named slots', () => {
   const analyzed = analyzeStoryblokComponent(parseTsx('forge-layout.tsx', LAYOUT), layoutNames);
   const svelte = emitStoryblokBlokWrapper(analyzed, 'Layout', {
     framework: 'svelte',
-    componentsImport: '@mission-platform/components/svelte',
+    componentsImport: '@mission-platform/components',
   });
 
   it('routes a named-slot bloks field into a matching Svelte 5 `{#snippet}`', () => {
@@ -342,13 +342,13 @@ describe('the Web-Component blok wrapper emitter', () => {
   const analyzed = analyzeStoryblokComponent(parseTsx('forge-badge.tsx', BADGE), badgeNames);
   const wc = emitStoryblokBlokWrapper(analyzed, 'Badge', {
     framework: 'web-components',
-    componentsImport: '@mission-platform/components/web-components',
+    componentsImport: '@mission-platform/components',
   });
 
   it('emits a native custom element registering the built element + Storyblok helper', () => {
-    expect(wc).toContain("import '@mission-platform/components/web-components';");
+    expect(wc).toContain("import '@mission-platform/components';");
     expect(wc).toContain("import { storyblokEditable, type SbBlokData } from '@storyblok/js';");
-    expect(wc).toContain("import { Badge } from '@mission-platform/components/web-components';");
+    expect(wc).toContain("import { Badge } from '@mission-platform/components';");
     expect(wc).toContain('export class BadgeBlok extends HTMLElement {');
     expect(wc).toContain("customElements.define('badge-blok', BadgeBlok);");
   });

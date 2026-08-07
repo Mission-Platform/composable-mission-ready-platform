@@ -366,7 +366,7 @@ export function emitVueHookModule(rawSourceFile: ts.SourceFile): string {
       }
     }
   }
-  importLines.push(...readExternalImports(sourceFile, 'vue'));
+  importLines.push(...readExternalImports(sourceFile));
   // Keep only the neutral types still referenced in the emitted body (return
   // types are dropped, so a type used only there must not linger as an unused
   // import under `noUnusedLocals`).

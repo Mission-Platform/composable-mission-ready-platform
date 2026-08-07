@@ -34,7 +34,8 @@
     "lint:style": "pnpm exec turbo run lint:style",
     "lint:style:fix": "pnpm exec turbo run lint:style:fix",
     "format": "pnpm exec turbo run format",
-    "format:write": "pnpm exec turbo run format:write"
+    "format:write": "pnpm exec turbo run format:write",
+    "validate:exports": "node scripts/validate-package-exports.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "catalog:utilities",

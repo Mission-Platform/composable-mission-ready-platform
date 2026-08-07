@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { ForgeMarkdown } from '@mission-platform/components/vue';
-  import { useI18n } from '@mission-platform/i18n/vue';
+  import { ForgeMarkdown } from '@mission-platform/components';
+  import { useI18n } from '@mission-platform/i18n';
   import { breadcrumbList, organizationId, useSeo, webPage, webSiteId } from '@mission-platform/seo';
   import { computed, onBeforeUnmount, useTemplateRef, watch } from 'vue';
   import { useRoute, useRouter } from 'vue-router';

@@ -59,7 +59,7 @@ export default defineAppConfig({
 ## Framework auto-resolution
 
 Every framework-shipping `@mission-platform/*` package declares custom export
-conditions (`mp:vue`, `mp:react`, `mp:solid`, `mp:svelte`, `mp:web-component`)
+conditions (`mp:vue`, `mp:react`, `mp:solid`, `mp:web-component`)
 on its bare `.` entry that point at the matching built artifact. An app selects
 **one** framework and then imports packages with **no** framework subpath:
 
@@ -68,7 +68,7 @@ on its bare `.` entry that point at the matching built artifact. An app selects
 import { defineFrameworkAppConfig } from '@mission-platform/vite-config';
 
 export default defineFrameworkAppConfig({
-  framework: 'react', // 'vue' | 'react' | 'solid' | 'svelte' | 'web-component'
+  framework: 'react', // 'vue' | 'react' | 'solid' | 'web-component'
 });
 ```
 

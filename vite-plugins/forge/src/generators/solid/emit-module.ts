@@ -28,7 +28,6 @@ import {
   dynamicToHCall,
   ensureI18nHookInComponent,
   findComponentFunction,
-  frameworkSplitModule,
   hasSlottedChildren,
   isComponentTagName,
   isDynamicElement,
@@ -214,50 +213,25 @@ export function emitSolidModule(
         );
       }
 
-      // Remap write-once, framework-split workspace packages to their `./solid` build.
-      if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
-        if (node.moduleSpecifier.text === 'i18next') {
-          const i18nImport = factory.createImportDeclaration(
-            undefined,
-            factory.createImportClause(
-              false,
-              undefined,
-              factory.createNamedImports([
-                factory.createImportSpecifier(false, undefined, factory.createIdentifier('useI18n')),
-              ]),
-            ),
-            factory.createStringLiteral('@mission-platform/i18n/solid'),
-          );
-          return [i18nImport, node];
-        }
-        const frameworkModule = frameworkSplitModule(node.moduleSpecifier.text, 'solid');
-        if (frameworkModule !== undefined) {
-          return factory.updateImportDeclaration(
-            node,
-            node.modifiers,
-            node.importClause,
-            factory.createStringLiteral(frameworkModule),
-            node.attributes,
-          );
-        }
-      }
-
+      // Write-once, framework-split workspace packages are carried through
+      // verbatim; their `mp:solid` export condition picks the Solid build.
       if (
-        ts.isExportDeclaration(node) &&
-        node.moduleSpecifier !== undefined &&
-        ts.isStringLiteral(node.moduleSpecifier)
+        ts.isImportDeclaration(node) &&
+        ts.isStringLiteral(node.moduleSpecifier) &&
+        node.moduleSpecifier.text === 'i18next'
       ) {
-        const frameworkModule = frameworkSplitModule(node.moduleSpecifier.text, 'solid');
-        if (frameworkModule !== undefined) {
-          return factory.updateExportDeclaration(
-            node,
-            node.modifiers,
-            node.isTypeOnly,
-            node.exportClause,
-            factory.createStringLiteral(frameworkModule),
-            node.attributes,
-          );
-        }
+        const i18nImport = factory.createImportDeclaration(
+          undefined,
+          factory.createImportClause(
+            false,
+            undefined,
+            factory.createNamedImports([
+              factory.createImportSpecifier(false, undefined, factory.createIdentifier('useI18n')),
+            ]),
+          ),
+          factory.createStringLiteral('@mission-platform/i18n'),
+        );
+        return [i18nImport, node];
       }
 
       // Flatten relative sibling-component imports.

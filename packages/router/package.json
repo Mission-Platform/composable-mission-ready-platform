@@ -2,6 +2,7 @@
   "name": "@mission-platform/router",
   "version": "0.2.0",
   "license": "BSD-4-Clause",
+  "description": "Framework-neutral route definitions and Vue, React, and Redwood router adapters",
   "type": "module",
   "sideEffects": false,
   "files": [
@@ -19,10 +20,6 @@
       },
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    },
-    "./vue": {
-      "types": "./dist/vue.d.ts",
-      "import": "./dist/vue.js"
     },
     "./redwood": {
       "types": "./dist/redwood.d.ts",

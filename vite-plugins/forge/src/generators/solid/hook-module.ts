@@ -21,7 +21,7 @@
  */
 import ts from 'typescript';
 
-import { frameworkSplitModule, NEUTRAL_MODULE, printSourceFile, readNeutralImports } from '../../compiler/ast.js';
+import { NEUTRAL_MODULE, printSourceFile, readNeutralImports } from '../../compiler/ast.js';
 
 import { buildSolidImports } from './imports.js';
 import { collectSolidGetters, rewriteGetterReads, rewriteHookCalls, type SolidPrimitiveUsage } from './signals.js';
@@ -61,17 +61,6 @@ export function emitSolidHookModule(rawSourceFile: ts.SourceFile): string {
         if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
           if (node.moduleSpecifier.text === NEUTRAL_MODULE) {
             return buildSolidImports(factory, neutral, usage);
-          }
-          // Remap a write-once, framework-split workspace import to its `./solid` build.
-          const frameworkModule = frameworkSplitModule(node.moduleSpecifier.text, 'solid');
-          if (frameworkModule !== undefined) {
-            return factory.updateImportDeclaration(
-              node,
-              node.modifiers,
-              node.importClause,
-              factory.createStringLiteral(frameworkModule),
-              node.attributes,
-            );
           }
           // Flatten a relative sibling import (a fellow composable/context module).
           if (node.moduleSpecifier.text.startsWith('.')) {

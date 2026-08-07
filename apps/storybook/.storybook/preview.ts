@@ -16,7 +16,8 @@ import { resources } from 'virtual:i18n-resources';
 import { ensureMonacoEnvironment } from './monaco-environment';
 
 import type { Decorator, Preview } from '@storybook/vue3-vite';
-import type { ComponentType } from 'react';
+import type { i18n as I18nInstance } from 'i18next';
+import type { ComponentType, ReactNode } from 'react';
 
 // Wire Monaco's web workers up front so the WYSIWYG editor (and any other
 // `ForgeMonacoEditor` story) runs its language services off the main thread
@@ -33,7 +34,7 @@ const frameworkDecorators: Decorator[] = [];
 if (framework === 'vue') {
   const [{ setup }, { createForgeI18NVue }, { createMemoryHistory, createRouter }] = await Promise.all([
     import('@storybook/vue3-vite'),
-    import('@mission-platform/i18n/vue'),
+    import('@mission-platform/i18n'),
     import('vue-router'),
   ]);
 
@@ -54,8 +55,16 @@ if (framework === 'vue') {
     app.use(router);
   });
 } else if (framework === 'react') {
+  // `@mission-platform/i18n` is a single specifier whose build is chosen by the
+  // active `mp:<framework>` condition, so only one framework's surface is ever
+  // visible to TypeScript. This file type-checks under `mp:vue` (see
+  // `tsconfig.node.json`) while still needing to *run* under `mp:react`, so the
+  // React-only export is described locally rather than imported as a type.
+  type ForgeI18NReactModule = {
+    ForgeI18NProvider: ComponentType<{ i18n: I18nInstance; children?: ReactNode }>;
+  };
   const [{ ForgeI18NProvider }, { createElement }] = await Promise.all([
-    import('@mission-platform/i18n/react'),
+    import('@mission-platform/i18n') as unknown as Promise<ForgeI18NReactModule>,
     import('react'),
   ]);
 

@@ -118,8 +118,8 @@ export interface CreateForgeI18NOptions {
  * instance for Mission Platform.
  *
  * The returned instance is plain i18next — it carries no framework binding, so
- * it can be paired with the Vue adapter (`@mission-platform/i18n/vue`), the
- * React adapter (`@mission-platform/i18n/react`), or used directly.
+ * it can be paired with the Vue adapter (the `mp:vue` build of
+ * `@mission-platform/i18n`), the React adapter (`mp:react`), or used directly.
  *
  * Interpolation is configured with single-brace delimiters (`{name}`) to match
  * the locale strings authored across the platform, and HTML escaping is left to

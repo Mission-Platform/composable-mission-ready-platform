@@ -6,6 +6,11 @@ complex forms and wizards entirely from JSON Schema definitions.
 Like other shared packages, it follows a "write once" approach, authoring components in neutral JSX and compiling them
 into native Vue 3 and React components.
 
+All imports use the bare `@mission-platform/forms` specifier. The framework is selected once for the whole
+app through the `mp:<framework>` export condition — `resolve.conditions` (see `defineFrameworkAppConfig` /
+`frameworkResolveConditions` from `@mission-platform/vite-config`) and `customConditions` (via the
+`@mission-platform/typescript-config/framework-<name>` presets).
+
 ## Core Components
 
 ### `ForgeSchemaForm`
@@ -24,11 +29,11 @@ corresponding UI widgets and validation logic.
 
 #### Usage:
 
-**Vue:**
+**Vue** (`mp:vue` active):
 
 ```vue
 <script setup lang="ts">
-  import { SchemaForm } from '@mission-platform/forms/vue';
+  import { SchemaForm } from '@mission-platform/forms';
   const mySchema = {/* JSON Schema */};
 </script>
 
@@ -40,10 +45,10 @@ corresponding UI widgets and validation logic.
 </template>
 ```
 
-**React:**
+**React** (`mp:react` active — note the identical specifier):
 
 ```tsx
-import { SchemaForm } from '@mission-platform/forms/react';
+import { SchemaForm } from '@mission-platform/forms';
 
 const MyComponent = () => (
   <SchemaForm

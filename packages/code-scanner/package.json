@@ -32,26 +32,6 @@
       },
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    },
-    "./react": {
-      "types": "./dist/react/index.d.ts",
-      "import": "./dist/react/index.js"
-    },
-    "./solid": {
-      "types": "./dist/solid/index.d.ts",
-      "import": "./dist/solid/index.js"
-    },
-    "./svelte": {
-      "types": "./dist/svelte/index.d.ts",
-      "import": "./dist/svelte/index.js"
-    },
-    "./web-components": {
-      "types": "./dist/web-components/index.d.ts",
-      "import": "./dist/web-components/index.js"
-    },
-    "./vue": {
-      "types": "./dist/vue/index.d.ts",
-      "import": "./dist/vue/index.js"
     }
   },
   "main": "./dist/index.js",
@@ -137,11 +117,11 @@
     "react-dom": "catalog:react",
     "sass-embedded": "catalog:vite",
     "solid-js": "catalog:solid",
+    "svelte": "catalog:svelte",
     "storybook": "catalog:storybook",
     "stylelint": "catalog:stylelint",
     "stylelint-config-recommended-vue": "catalog:stylelint",
     "stylelint-config-standard-scss": "catalog:stylelint",
-    "svelte": "catalog:svelte",
     "tsdown": "catalog:build",
     "typescript": "catalog:typescript",
     "vite": "catalog:vite",

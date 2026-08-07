@@ -1,4 +1,4 @@
-// ─── @mission-platform/i18n/vue ──────────────────────────────────────────────
+// ─── @mission-platform/i18n (mp:vue condition) ───────────────────────────────
 // Vue 3 plugin wiring an i18next instance into the app, built on `i18next-vue`.
 
 import I18NextVue from 'i18next-vue';
@@ -14,8 +14,7 @@ import type { i18n as I18nInstance } from 'i18next';
  * the `$t` template helper or the `useI18n` composable.
  *
  * @example
- * import { createForgeI18N } from '@mission-platform/i18n'
- * import { createForgeI18NVue } from '@mission-platform/i18n/vue'
+ * import { createForgeI18N, createForgeI18NVue } from '@mission-platform/i18n'
  *
  * const i18n = createForgeI18N({ messages: { en: { hello: 'Hello' } } })
  * app.use(createForgeI18NVue(i18n))

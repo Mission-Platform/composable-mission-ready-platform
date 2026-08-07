@@ -22,13 +22,17 @@ const resultFromFile = await scanFile(file);
 
 ### UI Component (`ForgeCodeScanner`)
 
-Write-once component available for Vue 3 and React via subpath exports.
+Write-once component available for Vue 3, React, Solid and Web Components from the same bare
+`@mission-platform/code-scanner` specifier — the active `mp:<framework>` export condition selects the build.
+Set it **once** through `resolve.conditions` (see `defineFrameworkAppConfig` / `frameworkResolveConditions`
+from `@mission-platform/vite-config`) and `customConditions` (via the
+`@mission-platform/typescript-config/framework-<name>` presets).
 
-**Vue 3:**
+**Vue 3** (`mp:vue` active):
 
 ```vue
 <script setup lang="ts">
-  import { ForgeCodeScanner } from '@mission-platform/code-scanner/vue';
+  import { ForgeCodeScanner } from '@mission-platform/code-scanner';
 </script>
 
 <template>
@@ -36,10 +40,10 @@ Write-once component available for Vue 3 and React via subpath exports.
 </template>
 ```
 
-**React:**
+**React** (`mp:react` active):
 
 ```tsx
-import { ForgeCodeScanner } from '@mission-platform/code-scanner/react';
+import { ForgeCodeScanner } from '@mission-platform/code-scanner';
 
 export function CameraScanner() {
   return <ForgeCodeScanner onResult={(result) => console.log(result.value)} />;

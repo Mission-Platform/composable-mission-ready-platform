@@ -7,7 +7,8 @@
 // the package's Vitest config aliases `@mission-platform/components` to this
 // module — re-exporting only the two neutral primitives the component actually
 // uses, straight from the components package source. This file is never
-// shipped; the real per-framework builds import from the built
-// `@mission-platform/components/react` / `/vue` subpaths.
+// shipped; the real per-framework builds import the bare
+// `@mission-platform/components` specifier, whose `mp:<framework>` export
+// condition resolves to that framework's built barrel.
 export { ForgeButton } from '../../../components/src/components/atoms/forge-button';
 export { ForgeTypography } from '../../../components/src/components/atoms/forge-typography';

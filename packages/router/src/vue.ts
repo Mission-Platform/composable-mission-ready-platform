@@ -1,5 +1,7 @@
-// ─── @mission-platform/router/vue ────────────────────────────────────────────
+// ─── @mission-platform/router (mp:vue condition) ─────────────────────────────
 // Vue 3 adapter for the framework-agnostic router, built on `vue-router` 4.
+// Consumers reach it through the bare `@mission-platform/router` specifier once
+// the `mp:vue` export condition is active — there is no `/vue` subpath.
 //
 // It translates the neutral `MpRoute` tree into vue-router records, builds a
 // ready-to-install `Router`, and exposes neutral composables (`useMpRouter`,
@@ -185,7 +187,7 @@ export interface CreateMpRouterOptions {
  * The returned router is itself a Vue plugin: `app.use(createMpRouter({ … }))`.
  *
  * @example
- * import { createMpRouter } from '@mission-platform/router/vue'
+ * import { createMpRouter } from '@mission-platform/router'
  *
  * const router = createMpRouter({
  *   routes: [{ path: '/', name: 'home', component: Home }],

@@ -38,7 +38,6 @@
 import ts from 'typescript';
 
 import {
-  frameworkSplitModule,
   LOCAL_JSX_TYPE_NAMES,
   LOCAL_JSX_TYPES_MODULE,
   NEUTRAL_COMPILE_TIME_MARKERS,
@@ -132,17 +131,6 @@ export function emitSvelteHookModule(rawSourceFile: ts.SourceFile): string {
         if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
           if (node.moduleSpecifier.text === NEUTRAL_MODULE) {
             return buildNeutralReplacement(factory, neutral);
-          }
-          // Remap a write-once, framework-split workspace import to its `./svelte` build.
-          const frameworkModule = frameworkSplitModule(node.moduleSpecifier.text, 'svelte');
-          if (frameworkModule !== undefined) {
-            return factory.updateImportDeclaration(
-              node,
-              node.modifiers,
-              node.importClause,
-              factory.createStringLiteral(frameworkModule),
-              node.attributes,
-            );
           }
           // Flatten a relative sibling import (a fellow composable/context module).
           if (node.moduleSpecifier.text.startsWith('.')) {

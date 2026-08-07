@@ -1,0 +1,4 @@
+# @mission-platform/barcode
+
+Dependency-free 1D barcode encoder and decoder with framework-neutral components.
+Use the bare package entry and select Vue, React, Solid, or Web Components through `mp:<framework>` conditions.

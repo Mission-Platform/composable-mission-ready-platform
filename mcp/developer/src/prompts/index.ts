@@ -39,7 +39,7 @@ export function registerPrompts(server: McpServer): void {
         parts.push(
           '\n---\n',
           usage
-            ? `Target component: ${usage.componentName} (${usage.slug}).\nImport: ${framework === 'react' ? usage.reactImport : usage.vueImport}\nProps:\n${usage.propsInterface ?? '(props interface not found — inspect the source)'}`
+            ? `Target component: ${usage.componentName} (${usage.slug}).\nImport: ${usage.importStatement}\nThe specifier carries no framework segment: the ${framework} build is selected by the app's \`mp:${framework}\` export condition.\nProps:\n${usage.propsInterface ?? '(props interface not found — inspect the source)'}`
             : `No component matched "${component}". Available components:\n${listComponents()
                 .map((entry) => entry.slug)
                 .join(', ')}`,

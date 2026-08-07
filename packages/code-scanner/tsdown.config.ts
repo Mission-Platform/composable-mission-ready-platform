@@ -12,7 +12,7 @@ const WASM_PACKAGES = ['@mission-platform/code-scan-wasm'] as const;
 
 /**
  * Neutral self-contained scanner façade (`dist/index.js` + dts) plus the five
- * forge component framework builds (`dist/{vue,react,solid,svelte,web-components}/`).
+ * forge component framework builds (`dist/{vue,react,solid,web-components}/`).
  * Sibling decoder packages stay external so their inlined wasm is not re-bundled.
  */
 export default [

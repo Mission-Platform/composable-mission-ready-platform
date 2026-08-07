@@ -426,9 +426,14 @@ export function appFiles(options: AppScaffoldOptions): Record<string, string> {
     'prettier.config.js': PRETTIER_CONFIG,
     'stylelint.config.js': STYLELINT_CONFIG,
     '.prettierignore': PRETTIER_IGNORE,
-    'vite.config.ts': `import { defineAppConfig } from '@mission-platform/vite-config';
+    'vite.config.ts': `import { defineFrameworkAppConfig } from '@mission-platform/vite-config';
 
-export default defineAppConfig({
+// \`framework\` is the single app-level switch: it sets the \`mp:<framework>\`
+// \`resolve.conditions\` so every bare \`@mission-platform/*\` import resolves to
+// that framework's build. Pair it with the matching
+// \`@mission-platform/typescript-config/tsconfig.framework-<name>.json\` preset.
+export default defineFrameworkAppConfig({
+  framework: 'vue',
   rootDir: __dirname,
 });
 `,
@@ -465,7 +470,7 @@ import App from './App.vue';
 createApp(App).mount('#app');
 `,
     'src/App.vue': `<script setup lang="ts">
-import { ForgeButton } from '@mission-platform/components/vue';
+import { ForgeButton } from '@mission-platform/components';
 </script>
 
 <template>

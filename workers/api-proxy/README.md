@@ -1,46 +1,22 @@
 # @mission-platform/api-proxy
 
-An example Cloudflare Worker implementation that proxies incoming HTTP requests to an upstream API service (`api.example.com`).
+An example Cloudflare Worker implementation that proxies approved read-only routes to an upstream API service (`api.example.com`).
 
 ## Architecture & Overview
 
-This Worker serves as a reference implementation for HTTP reverse proxying on Cloudflare Workers. It intercepts incoming requests, modifies the target destination URL while preserving HTTP methods, headers, and request bodies, and forwards the response back to the client.
+This Worker serves as a reference implementation for constrained HTTP reverse proxying on Cloudflare Workers. It accepts `GET` and `HEAD` requests only for `/users` and `/v1` routes, forwards query strings, and strips credentials and hop-by-hop headers.
 
 Key capabilities:
 
-- **Header & Body Preservation**: Retains request headers, payloads, and HTTP methods across requests.
+- **Header Sanitization**: Drops credentials, the original `Host`, and hop-by-hop headers before forwarding.
 - **Redirect Handling**: Configured with `redirect: 'follow'` to handle upstream redirects seamlessly.
-- **Error Boundary**: Catches fetch errors and returns structured HTTP 500 error responses.
+- **Error Boundary**: Catches construction and upstream errors and returns an opaque `502 Bad gateway` response.
 
 ## Code Overview (`src/index.ts`)
 
 The Worker is authored in TypeScript and exports a default `fetch` handler. It is built with `tsdown` to `dist/index.js` (see the `build` script), mirroring the `@mission-platform/forge-spa` worker layout:
 
-```typescript
-const TARGET_HOSTNAME = 'api.example.com';
-
-export default {
-  async fetch(request: Request, _env: unknown, _ctx: ExecutionContext): Promise<Response> {
-    try {
-      const url = new URL(request.url);
-      url.hostname = TARGET_HOSTNAME;
-
-      const newRequest = new Request(url.toString(), {
-        method: request.method,
-        headers: request.headers,
-        body: request.body,
-        redirect: 'follow',
-      });
-
-      return await fetch(newRequest);
-    } catch (error) {
-      console.error('Proxy error:', error);
-      const message = error instanceof Error ? error.message : String(error);
-      return new Response('Proxy error: ' + message, { status: 500 });
-    }
-  },
-} satisfies ExportedHandler;
-```
+The implementation checks `isAllowedProxyRequest` before constructing an upstream request. It creates the upstream URL from the fixed origin plus the incoming pathname and query, copies only non-sensitive headers, and returns `Bad gateway` with status `502` if request construction or upstream fetch fails.
 
 ## Configuration (`wrangler.jsonc`)
 
@@ -82,7 +58,7 @@ pnpm exec wrangler deploy
 # Request to worker
 curl -X GET https://api-proxy.your-subdomain.workers.dev/users/123
 
-# Proxies upstream to:
+# Approved routes proxy upstream to:
 # https://api.example.com/users/123
 ```
 

@@ -81,7 +81,10 @@ describe('tools', () => {
 
   it('describes a component with its props and imports', async () => {
     const body = await callTool('get_component_usage', { component: 'ForgeButton' });
-    assert.match(body, /@mission-platform\/components\/vue/);
+    // One framework-agnostic specifier: the build is chosen by the consumer's
+    // `mp:<framework>` condition, so no per-framework subpath is ever suggested.
+    assert.match(body, /from '@mission-platform\/components'/);
+    assert.doesNotMatch(body, /@mission-platform\/components\/(vue|react|solid|svelte|web-components)/);
     assert.match(body, /ButtonProperties|Props/);
     assert.match(body, /Level: atoms/);
   });

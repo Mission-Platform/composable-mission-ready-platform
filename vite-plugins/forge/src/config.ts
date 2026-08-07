@@ -51,19 +51,9 @@ export function reactJsxPlugin(): Plugin {
   };
 }
 
-/**
- * The `@sveltejs/vite-plugin-svelte` plugin set that compiles the generated
- * `.svelte` sources natively. Re-exported (rather than requiring every
- * `svelte`-target consumer to depend on `@sveltejs/vite-plugin-svelte`/`svelte`
- * themselves) so a hand-rolled `vite.config.ts` — one that assembles its own
- * `stagePlugins` instead of calling {@link defineJsxLibraryConfig} — can wire
- * Svelte compilation the same way {@link reactJsxPlugin} lets it wire the
- * React JSX transform, without pulling in a new direct dependency.
- *
- * **Vite only** — under tsdown/Rolldown use {@link svelteTsdownPlugin} instead.
- */
+/** Vite plugin for compiling generated Svelte components. */
 export function sveltePlugin(): Plugin[] {
-  return svelte();
+  return [svelte() as unknown as Plugin];
 }
 
 /**
@@ -492,7 +482,7 @@ export function defineJsxStoryblokLibraryConfig(options: JsxStoryblokLibraryConf
     framework,
     componentsModule: resolvedComponentsModule,
     outDir: cacheDirectory,
-    componentsImport: `${packageName}/${framework}`,
+    componentsImport: packageName,
     // Keep the neutral `Forge` prefix on the public API (do not strip it).
     stripPrefix: '',
   });

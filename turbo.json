@@ -19,7 +19,8 @@
     "SSR",
     "MISSION_REPO_ROOT",
     "NODE_OPTIONS",
-    "STORYBOOK_FRAMEWORK"
+    "STORYBOOK_FRAMEWORK",
+    "VITE_*"
   ],
   "tasks": {
     "build": {
@@ -70,7 +71,6 @@
         "!dist/vue/**",
         "!dist/react/**",
         "!dist/solid/**",
-        "!dist/svelte/**",
         "!dist/web-components/**",
         "!dist/storyblok/**",
         "!dist/**/*.d.ts",
@@ -216,6 +216,7 @@
     },
     "test": {
       "dependsOn": [
+        "build",
         "^build"
       ]
     },
@@ -228,6 +229,7 @@
     },
     "test:coverage": {
       "dependsOn": [
+        "build",
         "^build"
       ],
       "outputs": [

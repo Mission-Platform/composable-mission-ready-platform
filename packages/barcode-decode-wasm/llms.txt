@@ -1,0 +1,4 @@
+# @mission-platform/barcode-decode-wasm
+
+Generated typed WebAssembly barcode decoder used by `@mission-platform/barcode`.
+Consume the parent package unless direct WASM bindings are specifically required.

@@ -26,9 +26,10 @@
     "@storybook/svelte-vite": "*",
     "@storybook/vue3-vite": "*",
     "@storybook/web-components-vite": "*",
-    "@sveltejs/vite-plugin-svelte": "*",
     "@vitejs/plugin-react": "*",
     "@vitejs/plugin-vue-jsx": "*",
+    "@sveltejs/vite-plugin-svelte": "*",
+    "svelte": "*",
     "storybook-solidjs-vite": "*",
     "vite": "*",
     "vite-plugin-solid": "*"
@@ -49,16 +50,19 @@
     "@storybook/web-components-vite": {
       "optional": true
     },
-    "@sveltejs/vite-plugin-svelte": {
+    "@vitejs/plugin-react": {
       "optional": true
     },
-    "@vitejs/plugin-react": {
+    "@sveltejs/vite-plugin-svelte": {
       "optional": true
     },
     "@vitejs/plugin-vue-jsx": {
       "optional": true
     },
     "storybook-solidjs-vite": {
+      "optional": true
+    },
+    "svelte": {
       "optional": true
     },
     "vite-plugin-solid": {
@@ -83,14 +87,15 @@
     "@storybook/svelte-vite": "catalog:storybook",
     "@storybook/vue3-vite": "catalog:storybook",
     "@storybook/web-components-vite": "catalog:storybook",
-    "@sveltejs/vite-plugin-svelte": "catalog:svelte",
     "@types/node": "catalog:typescript",
     "@vitejs/plugin-react": "catalog:react",
     "@vitejs/plugin-vue-jsx": "catalog:vue",
+    "@sveltejs/vite-plugin-svelte": "catalog:svelte",
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",
     "solid-js": "catalog:solid",
     "storybook-solidjs-vite": "catalog:storybook",
+    "svelte": "catalog:svelte",
     "tsdown": "catalog:build",
     "typescript": "catalog:typescript",
     "vite": "catalog:vite",

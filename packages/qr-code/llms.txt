@@ -1,0 +1,4 @@
+# @mission-platform/qr-code
+
+QR Code encoding and decoding with a framework-neutral component and typed wrapper.
+Select Vue, React, Solid, or Web Components with the active `mp:<framework>` condition.

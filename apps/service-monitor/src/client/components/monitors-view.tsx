@@ -23,7 +23,7 @@ interface MonitorsViewProperties {
 /**
  * The `/monitors` management page. Kept separate from the dashboard so runtime
  * monitor CRUD has its own route. The current monitor list stays live through
- * an RxJS `servicesStream` (bridged with `@mission-platform/rxjs/react`), and a
+ * an RxJS `servicesStream` (bridged with `@mission-platform/rxjs`), and a
  * `reloadNonce` forces an immediate re-poll right after a create/update/delete.
  */
 export function MonitorsView({

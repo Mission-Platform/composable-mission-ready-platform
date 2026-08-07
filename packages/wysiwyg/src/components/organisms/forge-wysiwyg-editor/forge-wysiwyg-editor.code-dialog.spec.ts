@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
  *
  * The freeze never reproduces through the neutral SSR adapter (there the
  * `@mission-platform/forge` hooks are single-shot no-ops), so this suite mounts
- * the **compiled Vue build** (`@mission-platform/wysiwyg/vue`) — where the
+ * the **compiled Vue build** (`@mission-platform/wysiwyg`) — where the
  * neutral `useState`/`useEffect`/`useMemo` become real Vue reactivity — and
  * drives the exact interaction that hangs in the browser: open the code-block
  * dialog, change the language in the picker, then type into the code field.
@@ -29,7 +29,7 @@ const MAX_ECHOES = 2000;
 /** Total value-echoes emitted by the stubbed code editor across the test. */
 let echoCount = 0;
 
-vi.mock('@mission-platform/components/vue', async (importOriginal) => {
+vi.mock('@mission-platform/components', async (importOriginal) => {
   const original = await importOriginal<Record<string, unknown>>();
   const { defineComponent, h, ref, watch } = await import('vue');
 
@@ -111,7 +111,7 @@ describe('ForgeWysiwygEditor code-block dialog (compiled Vue build)', () => {
 
   it('does not lock up when the code-block language is changed and code is typed', async () => {
     const { createApp, h } = await import('vue');
-    const { ForgeWysiwygEditor } = (await import('@mission-platform/wysiwyg/vue')) as unknown as {
+    const { ForgeWysiwygEditor } = (await import('@mission-platform/wysiwyg')) as unknown as {
       ForgeWysiwygEditor: unknown;
     };
 

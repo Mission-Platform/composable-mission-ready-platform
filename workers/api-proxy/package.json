@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "license": "BSD-4-Clause",
+  "description": "Constrained read-only Cloudflare proxy for approved Mission Platform API routes",
   "type": "module",
   "exports": {
     ".": {

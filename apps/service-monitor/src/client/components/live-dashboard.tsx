@@ -32,7 +32,7 @@ interface LiveDashboardProperties {
 /**
  * The interactive monitoring dashboard. All data is produced on the server;
  * this component only *reads* it, driving every live refresh through RxJS
- * streams bridged into React state via `@mission-platform/rxjs/react`'s
+ * streams bridged into React state via `@mission-platform/rxjs`'s
  * `useObservable`. Charts are rendered with `@mission-platform/d3`, and the UI
  * is built from `@mission-platform/components`, `icons`, `layout` and `i18n`.
  */

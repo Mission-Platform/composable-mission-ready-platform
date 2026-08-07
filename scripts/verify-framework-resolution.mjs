@@ -2,12 +2,16 @@
 /**
  * Framework auto-resolution fixture.
  *
- * Verifies that every framework-shipping `@mission-platform/*` package wires a
- * custom `mp:<framework>` export condition on its bare `.` entry that resolves
- * to the SAME built artifact as its explicit `./<framework>` subpath export,
- * and that a plain (condition-less) resolution still falls back to the neutral
- * entry. This proves the "one app-level setting picks the framework build"
- * behaviour deterministically, without needing every package pre-built.
+ * Verifies that every framework-shipping `@mission-platform/*` package selects
+ * its framework build **only** through the custom `mp:<framework>` export
+ * conditions on its bare `.` entry, that each condition points at a real built
+ * artifact, and that a plain (condition-less) resolution still falls back to the
+ * neutral entry. It also asserts the legacy per-framework subpath exports
+ * (`./vue`, `./react`, `./solid`, `./svelte`, `./web-components`) have been
+ * removed, so `@mission-platform/<pkg>/<framework>` can never be imported again.
+ *
+ * This proves the "one app-level setting picks the framework build" behaviour
+ * deterministically, without needing every package pre-built.
  *
  * Run: `node scripts/verify-framework-resolution.mjs`
  */
@@ -18,14 +22,11 @@ import { fileURLToPath } from 'node:url';
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const packagesDirectory = path.join(repoRoot, 'packages');
 
-/** Map custom condition -> explicit subpath export key. */
-const CONDITION_TO_SUBPATH = {
-  'mp:vue': './vue',
-  'mp:react': './react',
-  'mp:solid': './solid',
-  'mp:svelte': './svelte',
-  'mp:web-component': './web-components',
-};
+/** The framework builds a package may expose, keyed by their custom condition. */
+const FRAMEWORK_CONDITIONS = new Set(['mp:vue', 'mp:react', 'mp:solid', 'mp:web-component']);
+
+/** The removed legacy subpath export keys, which must no longer be declared. */
+const LEGACY_SUBPATHS = ['./vue', './react', './solid', './svelte', './web-components'];
 
 /** Resolve the concrete `import` target of an exports entry (string or object). */
 function importTargetOf(entry) {
@@ -47,32 +48,38 @@ for (const name of fs.readdirSync(packagesDirectory)) {
   const dot = exportsMap['.'];
   if (!dot || typeof dot !== 'object') continue;
 
-  const declaredConditions = Object.keys(dot).filter((k) => k.startsWith('mp:'));
+  const declaredConditions = Object.keys(dot).filter((key) => key.startsWith('mp:'));
   if (declaredConditions.length === 0) continue;
 
   for (const condition of declaredConditions) {
     checked += 1;
-    const subpathKey = CONDITION_TO_SUBPATH[condition];
-    const conditionTarget = importTargetOf(dot[condition]);
-    const subpathTarget = importTargetOf(exportsMap[subpathKey]);
-    const ok = Boolean(subpathKey) && conditionTarget != undefined && conditionTarget === subpathTarget;
+    const target = importTargetOf(dot[condition]);
+    const known = FRAMEWORK_CONDITIONS.has(condition);
+    const ok = known && target !== undefined;
     if (!ok) failures += 1;
-    rows.push({ pkg: name, condition, conditionTarget, subpathTarget, ok });
+    rows.push({ pkg: name, condition, detail: target ?? '— (no import target)', ok });
+  }
+
+  // The legacy per-framework subpaths must be gone: framework selection is the
+  // consumer's `resolve.conditions` / `customConditions`, never the specifier.
+  for (const subpath of LEGACY_SUBPATHS) {
+    if (exportsMap[subpath] === undefined) continue;
+    failures += 1;
+    rows.push({ pkg: name, condition: `(legacy ${subpath})`, detail: 'still declared — remove it', ok: false });
   }
 
   // The plain (condition-less) fallback must still expose an `import`/`default`.
   if (importTargetOf({ import: dot.import, default: dot.default }) == undefined) {
     failures += 1;
-    rows.push({ pkg: name, condition: '(fallback)', conditionTarget: undefined, subpathTarget: undefined, ok: false });
+    rows.push({ pkg: name, condition: '(fallback)', detail: '— (no neutral entry)', ok: false });
   }
 }
 
-for (const r of rows) {
-  const status = r.ok ? 'ok ' : 'ERR';
-  console.log(
-    `[${status}] ${r.pkg.padEnd(14)} ${r.condition.padEnd(18)} ${r.conditionTarget ?? '—'} == ${r.subpathTarget ?? '—'}`,
-  );
-}
-
-console.log(`\nChecked ${checked} framework conditions across packages; ${failures} failure(s).`);
+const report = [
+  ...rows.map((row) => `[${row.ok ? 'ok ' : 'ERR'}] ${row.pkg.padEnd(14)} ${row.condition.padEnd(18)} ${row.detail}`),
+  '',
+  `Checked ${checked} framework conditions across packages; ${failures} failure(s).`,
+  '',
+].join('\n');
+process.stdout.write(report);
 process.exit(failures === 0 ? 0 : 1);

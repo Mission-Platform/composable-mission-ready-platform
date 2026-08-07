@@ -440,7 +440,7 @@ export interface TsdownForgeStoryblokOptions {
   framework: TsdownForgeStoryblokFramework;
   /**
    * Package import name used by the generated wrappers, e.g.
-   * `@mission-platform/components` → wrappers import `@mission-platform/components/vue`.
+   * `@mission-platform/components` → wrappers import `@mission-platform/components`.
    */
   packageName: string;
   /**
@@ -540,7 +540,7 @@ export function defineTsdownForgeStoryblok(options: TsdownForgeStoryblokOptions)
     framework,
     componentsModule: resolvedComponentsModule,
     outDir: cacheDirectory,
-    componentsImport: `${packageName}/${framework}`,
+    componentsImport: packageName,
     // Keep the neutral `Forge` prefix on the public API (do not strip it).
     stripPrefix: '',
   });
