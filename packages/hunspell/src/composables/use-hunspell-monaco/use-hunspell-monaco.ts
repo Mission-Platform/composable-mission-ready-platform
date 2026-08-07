@@ -1,6 +1,6 @@
 import { type MaybeRefOrGetter, onBeforeUnmount, toValue, watch } from 'vue';
 
-import { attachHunspellMonaco, type HunspellMonacoHandle } from './attach-hunspell-monaco';
+import { attachHunspellMonaco, type HunspellMonacoHandle } from '../../monaco/attach-hunspell-monaco';
 
 // Type-only import: erased at build time so `monaco-editor` is NOT pulled into
 // this package's synchronous module graph. The runtime module is loaded lazily
@@ -10,7 +10,7 @@ import { attachHunspellMonaco, type HunspellMonacoHandle } from './attach-hunspe
 // editor components and triggering Rollup's INEFFECTIVE_DYNAMIC_IMPORT warning.
 import type * as monaco from 'monaco-editor';
 
-export { attachHunspellMonaco, type HunspellMonacoHandle } from './attach-hunspell-monaco';
+export { attachHunspellMonaco, type HunspellMonacoHandle } from '../../monaco/attach-hunspell-monaco';
 
 /**
  * Vue composable that integrates Hunspell spell-checking into a Monaco editor.

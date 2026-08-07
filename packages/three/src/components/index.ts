@@ -10,4 +10,4 @@
 export { ForgeThreeCanvas, type ForgeThreeCanvasProperties } from './organisms/forge-three-canvas/forge-three-canvas';
 
 // ── Composables (helper modules) ──────────────────────────────────────────────
-export { useThree, type ThreeContext } from '../composables/use-three/use-three';
+export { useThree, type ThreeContext } from '../composables/use-three';

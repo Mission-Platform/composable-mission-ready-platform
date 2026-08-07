@@ -1,10 +1,10 @@
 import { useHead } from '@unhead/vue';
 import { computed, toValue } from 'vue';
 
-import { buildOpenGraph } from './build-open-graph';
-import { buildPageMeta, type BuiltPageMeta } from './build-page-meta';
+import { buildOpenGraph } from '../../build-open-graph';
+import { buildPageMeta, type BuiltPageMeta } from '../../build-page-meta';
 
-import type { JsonLd, OpenGraphMetadata, SeoMetadata, SeoMetaTag } from './types';
+import type { JsonLd, OpenGraphMetadata, SeoMetadata, SeoMetaTag } from '../../types';
 import type { MaybeRefOrGetter } from 'vue';
 
 /**

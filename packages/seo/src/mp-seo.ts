@@ -1,6 +1,6 @@
 import { computed, defineComponent, type PropType } from 'vue';
 
-import { useSeo } from './use-seo';
+import { useSeo } from './composables/use-seo/use-seo';
 
 import type { JsonLd, OpenGraphMetadata, PageMetadata, SeoMetadata } from './types';
 

@@ -5,7 +5,7 @@
 // server-side prerendering.
 
 export { MpSeo, MpSeo as Seo } from './mp-seo';
-export { useSeo } from './use-seo';
+export { useSeo } from './composables';
 
 export { buildPageMeta } from './build-page-meta';
 export type { BuiltPageMeta } from './build-page-meta';

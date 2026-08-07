@@ -20,5 +20,5 @@ export type { i18n as ForgeI18N } from 'i18next';
 // React adapter (provider + hook).
 export { ForgeI18NProvider } from './components/forge-i18n-provider';
 export type { ForgeI18NProviderProperties } from './components/forge-i18n-provider';
-export { useI18n } from './composables/use-i18n.react';
-export type { UseI18nReturn } from './composables/use-i18n.react';
+export { useI18n } from './composables/use-i18n/use-i18n.react';
+export type { UseI18nReturn } from './composables/use-i18n/use-i18n.react';

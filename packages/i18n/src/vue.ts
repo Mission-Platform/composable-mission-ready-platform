@@ -19,5 +19,5 @@ export type { i18n as ForgeI18N } from 'i18next';
 
 // Vue 3 adapter (plugin + composable).
 export { createForgeI18NVue } from './components/forge-i18n-vue';
-export { useI18n } from './composables/use-i18n.vue';
-export type { UseI18nReturn } from './composables/use-i18n.vue';
+export { useI18n } from './composables/use-i18n/use-i18n.vue';
+export type { UseI18nReturn } from './composables/use-i18n/use-i18n.vue';

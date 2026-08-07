@@ -7,7 +7,7 @@
 // margin-convention maths every chart needs for responsive layout.
 
 // Reactive D3 selection binding.
-export { useD3, type D3Draw, type D3Selection } from './composables/use-d3';
+export { useD3, type D3Draw, type D3Selection } from './composables/use-d3/use-d3';
 
 // Margin-convention layout maths.
 export {

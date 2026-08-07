@@ -5,4 +5,4 @@
 // to every supported framework by `@mission-platform/vite-plugin-jsx`.
 
 // Reactive D3 selection binding.
-export { useD3, type D3Draw, type D3Selection } from './use-d3';
+export { useD3, type D3Draw, type D3Selection } from './use-d3/use-d3';

@@ -9,7 +9,7 @@
 // component effect lifecycle (`useSubscription`/`useSubscribe`).
 
 // Subscription lifetime binding.
-export { useSubscribe, useSubscription, type Unsubscribable } from './composables/use-subscription';
+export { useSubscribe, useSubscription, type Unsubscribable } from './composables/use-subscription/use-subscription';
 
 // Observable → component state.
-export { useObservable } from './composables/use-observable';
+export { useObservable } from './composables/use-observable/use-observable';

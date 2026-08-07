@@ -13,3 +13,4 @@
 
 export * from './components';
 export { MapContext } from './components/map-context';
+export * from './composables';
