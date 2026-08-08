@@ -1,5 +1,194 @@
 # @mission-platform/components
 
+## 2.0.0
+
+### Major Changes
+
+- bd88e5e: rename the component library prefix from `Base` to `Forge`
+
+  BREAKING CHANGE: every exported component symbol and its folder/file and CSS class name is renamed from `Base*`/`base-*` to `Forge*`/`forge-*` (e.g. `BaseButton` → `ForgeButton`), and previously-unprefixed components (`HideAt`, `ShowAt`, `BreakpointDebug`) and every icon (`IconStar` → `ForgeIconStar`) now carry the `Forge` prefix. Consumers must update all imports and template usages accordingly.
+
+- 0371781: remove the per-framework subpath exports in favour of `mp:<framework>` conditions
+
+  The legacy `./vue`, `./react`, `./solid`, `./svelte` and `./web-components`
+  subpath exports have been deleted from every framework-shipping package. The framework build is now selected **only** by
+  the `mp:<framework>` custom export condition on the bare `.` entry, so there is exactly one specifier per package and it
+  is impossible for an app to mix two framework builds by importing inconsistently.
+
+  **Breaking.** Replace every framework subpath with the bare specifier and select the framework once, at the app level:
+
+  ```diff
+  -import { ForgeButton } from '@mission-platform/components/vue';
+  -import { ForgeIconChevron } from '@mission-platform/icons/vue';
+  +import { ForgeButton } from '@mission-platform/components';
+  +import { ForgeIconChevron } from '@mission-platform/icons';
+  ```
+
+  ```ts
+  // vite.config.ts
+  export default defineFrameworkAppConfig({ framework: "vue" });
+  ```
+
+  ```jsonc
+  // tsconfig.app.json
+  { "compilerOptions": { "customConditions": ["mp:vue"] } }
+  ```
+
+  `@mission-platform/components` keeps its per-component deep imports, but the wildcard is now condition-aware and carries
+  no framework segment:
+
+  ```diff
+  -import { ForgeBadge } from '@mission-platform/components/react/atoms/forge-badge/forge-badge';
+  +import { ForgeBadge } from '@mission-platform/components/atoms/forge-badge/forge-badge';
+  ```
+
+  The `@mission-platform/forge` adapter subpaths (`/react`, `/vue`, `/solid`,
+  `/web-components`, `/runtime`, `/jsx-globals`), the Storyblok wrappers (`/storyblok/react`, `/storyblok/vue`),
+  `@mission-platform/router/redwood`,
+  `@mission-platform/breakpoints/core` and every `…/styles` entry are unaffected.
+
+  `@mission-platform/vite-plugin-forge` now emits bare `@mission-platform/*`
+  specifiers into the generated per-framework sources (previously it rewrote them to the matching subpath), and passes the
+  framework's `customConditions` to every declaration-emit path so the generated `.d.ts` files resolve sibling packages
+  against the same build the bundler picks.
+
+  `@mission-platform/vite-config` gains `framework` and `frameworkInclude` options on `defineVitestConfig`, so a package
+  can run its compiled-build specs under a framework condition while leaving cross-framework parity specs resolving
+  neutrally.
+
+### Minor Changes
+
+- ddf20bd: add `ForgeMarkdown` — a read-only, framework-neutral Markdown renderer that renders Markdown **as real components** (fenced code → `ForgeCodeBlock`, GFM tables → `ForgeTable`, headings/paragraphs/inline runs → `ForgeTypography`) driven by the `marked` token stream, so there is no `v-html`/`innerHTML` and the output is SSR-safe. Supports a `size` token, heading anchor ids, and an optional `resolveHref` hook for rewriting relative links to in-app routes.
+- c6e83c0: add per-component subpath exports, clearer styles export, typed `ForgeNavbar` slots, and a token-override JSON Schema
+
+  `@mission-platform/components` now exposes **per-component subpath exports** for the `react`, `vue`, `solid`, and `svelte` builds (e.g. `@mission-platform/components/react/atoms/forge-badge/forge-badge`). Importing a single component this way pulls in only that component's compiled chunk instead of the whole framework barrel, so heavy optional components such as `ForgeMonacoEditor` (which brings in `monaco-editor` and its web workers) no longer leak into a client bundle that never renders them. Types still flow from the framework barrel, so named imports stay fully typed.
+
+  The accessibility stylesheet is now exported under the self-describing `@mission-platform/components/styles/a11y`; the existing `./styles` and `./styles/scss` remain as backwards-compatible aliases.
+
+  `ForgeNavbar` now declares typed named slots — `brand` (accepts a `string` or arbitrary `MpChild` content), the default slot (`children`, the centre navigation items), and `end` (trailing content) — so consumers get autocomplete and type-checking for each region.
+
+  `@mission-platform/vite-plugin-token-overrides` ships a JSON Schema (Draft 2020-12) for the override document at its `./schema` export (`schema/token-overrides.schema.json`), giving editors validation/autocomplete for `*.tokens.json`. Reference it from a document via a `$schema` key (a `$`-prefixed key the transform ignores); `apps/service-monitor`'s override document now points at it.
+
+- a4f0f68: portal dropdown, popover and tooltip panels into the nearest dialog so they stay interactive inside modals
+- 6290b4c: add framework auto-resolution via custom export conditions
+
+  Every framework-shipping `@mission-platform/*` package now declares `mp:vue`,
+  `mp:react`, `mp:solid`, and `mp:web-component` custom export
+  conditions on its bare `.` entry (each resolving to the matching built `dist`
+  artifact), so consumers can `import { X } from '@mission-platform/<pkg>'` with
+  no framework subpath and have Vite and the TypeScript LSP resolve the correct
+  framework build from a single app-level setting.
+
+  `@mission-platform/vite-config` adds `defineFrameworkAppConfig`,
+  `frameworkResolveConditions`, and `frameworkCondition` (plus the
+  `MissionPlatformFramework` type) to set `resolve.conditions` from one
+  `framework` option, and `@mission-platform/typescript-config` adds matching
+  `framework-vue`, `framework-react`, `framework-solid`, and `framework-web-component`
+  presets wiring the equivalent `customConditions`.
+
+- 7c91132: add Solid, Svelte, and Web Components code generators and per-framework build targets
+
+  The JSX plugin now emits Solid, Svelte, and Web Components modules alongside the existing Vue and React outputs, and every write-once component package gains matching `build:solid`, `build:svelte`, and `build:web-components` targets plus optional peer dependencies for the new frameworks.
+
+### Patch Changes
+
+- 3fc6203: convert component internals to JSX and drop the redundant kebab-case `aria-*` prop aliases in favour of their camelCase equivalents
+- ca646ea: fix list item keys and native select value binding
+
+  `ForgeList` now assigns a stable `key` to every rendered term/detail/item node, and `ForgeSelect` binds the native
+  `<select>` to its model value (and keys the placeholder option) instead of setting per-option `selected` attributes.
+
+- 9a876eb: Fix `ForgeMonacoEditor` locking up on input (Vue). Two changes:
+
+  - The editor no longer freezes the browser when typing into it (observed via the schema-form `code` field / WYSIWYG
+    code-block dialog). The root cause was in the JSX→Vue compiler (`useRef` deep-proxying the editor instance); this
+    build picks up the `@mission-platform/vite-plugin-forge` fix that maps `useRef` to
+    `shallowRef`, so the Monaco instance is no longer wrapped in Vue reactivity.
+  - Defensive: the value-mirror effect now suppresses the `onDidChangeModelContent`
+    event that its own programmatic `setValue` fires, so an incoming `modelValue` is never immediately re-emitted back out
+    as `update:modelValue`.
+
+- ddf20bd: Split `ForgeTreeView` into `forge-tree-view.tsx` + a recursive `forge-tree-view-item.tsx` sibling (public API and rendered output unchanged), and drop the now-unused `lit` peer dependency now that the Web-Components build uses the native `@mission-platform/forge/web-components` runtime.
+- ddf20bd: regenerate Vue output — several components now compile to native `<template>` markup
+
+  `forge-date-range-input`, `forge-scheduler`, `forge-list`, `forge-calendar`, `forge-pagination`, `forge-multiselect` and `forge-time-input` now build to idiomatic native Vue `<template>` markup (with correct `$attrs` fall-through) instead of a `<render v-bind="$attrs" />` render closure. Rendered output and behaviour are unchanged; the remaining harder cases still fall back cleanly.
+
+- f67e304: fix component styles not loading in apps and Storybook
+
+  `defineTsdownLibrary` now re-links every extracted stylesheet to the JS module that owns it via a `writeBundle` pass (opt out with `cssBundle: false`). Under the tsdown/Rolldown build, co-located `*.module.scss` / `*.scss` imports were extracted to standalone `.css` assets but their side-effect imports were dropped from the JS (left as `/* empty css */`), so importing a component shipped its markup without its styles. Each `X.css` is now imported from its CSS-Module class map (`X.module.js`) — or, for the Vue build, from the component chunk (`X.vue_vue_type_style_*.css` → `X.js`) — so importing a single component (or the package barrel) automatically loads exactly its styles again, matching the historical Vite library build.
+
+- bd88e5e: `ForgeCodeBlock`: the syntax-highlighting theme now follows the operating
+  system's `prefers-color-scheme` when the app is in the default `auto` theme
+  (no explicit `data-theme` pinned on the document root), matching the
+  `light-dark()` design tokens. Previously the highlight.js token colours only
+  switched to dark under an explicit `[data-theme='dark']`/`.theme-dark`, so code
+  stayed on the light palette (dark-on-dark, hard to read) whenever a dark OS was
+  followed via auto mode. An explicit light/dark choice still wins.
+- bd88e5e: use camelCase aria props (ariaLabel, ariaPressed) on ForgeButton in forge-scheduler
+- 1db440e: flatten the remaining Category-C/D neutral components to native Vue `<template>` markup, cutting the render-closure (`<render v-bind="$attrs" />`) fallback count from 9 to 2
+
+  The Vue template builder gained four more AST-driven flattening passes so `forge-select`, `forge-radio-group`, `forge-range-input`, `forge-slider`, `forge-toast`, `forge-alert-banner`, `forge-tabs`, and `forge-virtual-tabs` now compile to native `<template>` (only `forge-time-range-input` / `forge-date-time-range-input` — a separate "function-valued node helper" shape — still fall back):
+
+  - **Render-scope ref-sync lifts to `watchEffect`.** A top-level `<ref>.current = <expr>;` side effect (kept in step with a derived value in React's re-render model) is emitted as a reactive `watchEffect(() => { <ref>.value = <expr>; })` rather than rejected as a "non-const derived statement" (`forge-slider`, `forge-range-input`).
+  - **Inline-handler `useRef` reads are rewritten.** A `.current` read inside an inline template handler (`onClick={() => searchReference.current?.focus()}`) now drops to the bare, auto-unwrapped template-ref identifier, so a `useRef` used only inside markup no longer forces the fallback (`forge-select`).
+  - **A props-children spread in a folded node array maps to the default slot.** `...(properties.children as MpChild[])` appended to a built node array emits as `<slot />` (`forge-radio-group`).
+  - **An element-returning `switch` module helper inlines as a `v-if` chain.** A single-argument `variantIcon(variant)`-style helper is inlined as the equivalent `v-if`/`v-else-if`/`v-else` conditional chain (`forge-toast`, `forge-alert-banner`).
+  - **A render-prop call in child position renders via `<component :is>`.** `{properties.panel?.({ tab })}` binds the returned VNode directly to `<component :is>` (per Vue's "Using Vnodes in `<template>`" guide), keeping `panel` a real prop — never a Vue named slot — so a compiled neutral parent can still pass it plainly (`forge-tabs`, `forge-virtual-tabs`).
+
+  The `vue-no-fallback` audit allowlist shrinks to the two remaining range composites, and per-category compiler assertions cover each new shape.
+
+- 56e0456: modernize component styles with `@supports`, `@container`, `@starting-style`, and `@namespace`, and replace arbitrary box-model and breakpoint values with design tokens
+- ac98203: normalize composable directories, package barrels, and colocated tests
+- 8bd60ae: reformat sources with prettier
+
+  Apply the repository prettier style across sources, config manifests (`tsconfig.test.json`, `turbo.json`,
+  `vite.config.ts`), stories, and documentation. Formatting-only; no runtime or API changes.
+
+- ffa5129: relicense the project from MIT to BSD-4-Clause
+- f67e304: migrate library builds to tsdown
+
+  Every library workspace across `packages/`, `vite-plugins/`, `configs/`, `workers/`, and the MCP servers now builds
+  with [tsdown](https://tsdown.dev) (Rolldown/Oxc)
+  instead of `tsc` / `vite build`. A new shared `@mission-platform/tsdown-config`
+  package exposes the generic `defineTsdownLibrary` / `defineTsdownVueLibrary`
+  helpers, and `@mission-platform/vite-plugin-forge` now additionally exports tsdown-compatible forge helpers
+  (`defineTsdownForgeHooks(All)`,
+  `defineTsdownForgeComponents(All)`, `defineTsdownForgeStoryblok(All)`) plus the Rolldown stage-2 adapters needed to
+  reproduce the write-once multi-framework output under tsdown.
+
+  This is a build-tooling change only: every package's public `exports`, `dist`
+  layout, `types`, and framework auto-resolution (`mp:*` conditions) are unchanged, so consumers are unaffected. The
+  `@mission-platform/forms` `web-components`
+  target remains a hybrid Vite step, and `@mission-platform/hunspell` keeps its
+  `build:wasm` toolchain.
+
+- Updated dependencies [e2525a3]
+- Updated dependencies [f67e304]
+- Updated dependencies [7a1b1a1]
+- Updated dependencies [bd88e5e]
+- Updated dependencies [d952712]
+- Updated dependencies [6290b4c]
+- Updated dependencies [7c91132]
+- Updated dependencies [0c0d5d7]
+- Updated dependencies [ac98203]
+- Updated dependencies [8bd60ae]
+- Updated dependencies [ffa5129]
+- Updated dependencies [0371781]
+- Updated dependencies [3fb8ddb]
+- Updated dependencies [7d95459]
+- Updated dependencies [f67e304]
+- Updated dependencies [b23115e]
+- Updated dependencies [90a72fc]
+- Updated dependencies [90a72fc]
+  - @mission-platform/forge@1.0.0
+  - @mission-platform/icons@1.0.0
+  - @mission-platform/tokens@1.0.1
+  - @mission-platform/forms-core@0.3.0
+  - @mission-platform/scheduler-core@0.2.1
+  - @mission-platform/hunspell@0.4.1
+  - @mission-platform/harper@0.2.1
+  - @mission-platform/phone-number@0.3.1
+
 ## 1.0.0
 
 ### Major Changes

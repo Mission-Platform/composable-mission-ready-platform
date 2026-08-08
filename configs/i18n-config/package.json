@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/i18n-config",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "BSD-4-Clause",
   "description": "Shared i18n configuration for Mission Platform",
   "type": "module",

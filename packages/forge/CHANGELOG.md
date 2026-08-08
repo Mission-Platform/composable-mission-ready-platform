@@ -1,5 +1,67 @@
 # @mission-platform/forge
 
+## 1.0.0
+
+### Major Changes
+
+- e2525a3: rename the neutral class attribute from `classNames` to `className`
+
+  The framework-neutral JSX **class attribute** is now spelled `className={…}` everywhere (matching React's own spelling and the plain `class` static attribute it complements). The runtime **helper** `classNames(...)` is unchanged — it is still exported from `@mission-platform/forge` and still re-injected into the compiled React output.
+
+  - **Authoring:** drive dynamic classes with `className={[…]}` (array / string / `{ class: boolean }` forms); the author still never imports the helper.
+  - **`@mission-platform/forge`:** the `./react` and `./vue` runtime adapters now recognise the `className` prop (React collapses it to a `className={classNames(…)}` string, Vue maps it onto the native `class` binding).
+  - **`@mission-platform/vite-plugin-forge`:** the two-stage compiler recognises only `className` as the neutral class attribute; the legacy `classNames` attribute alias has been removed from every generator (React/Vue/Solid/Svelte).
+  - **Breaking:** neutral components authored with the old `classNames={…}` attribute must be updated to `className={…}`.
+
+- 3fb8ddb: rename the write-once runtime and compiler packages from `jsx` to `forge`
+
+  The neutral runtime `@mission-platform/jsx` is now `@mission-platform/forge`
+  and its two-stage compiler `@mission-platform/vite-plugin-jsx` is now
+  `@mission-platform/vite-plugin-forge`, reflecting that these packages now cover
+  components, composables, and more — not just JSX.
+
+  BREAKING CHANGE: update every import specifier from `@mission-platform/jsx` to
+  `@mission-platform/forge` (including subpaths such as `@mission-platform/jsx/react`
+  → `@mission-platform/forge/react` and `@mission-platform/jsx/jsx-globals` →
+  `@mission-platform/forge/jsx-globals`), swap the dev dependency and Vite plugin
+  import from `@mission-platform/vite-plugin-jsx` to
+  `@mission-platform/vite-plugin-forge`, and update the plugin identifier
+  references accordingly.
+
+### Minor Changes
+
+- 7a1b1a1: Add a native, dependency-free Web Components runtime exported as `@mission-platform/forge/web-components` (`ForgeElement`, `html`, `nothing`, `render`). It replaces Lit as the base for compiled custom elements: `ForgeElement` renders a lit-style tagged template into an open shadow root with reactive `static properties`/state and coalesced microtask updates.
+- 0c0d5d7: add a SolidJS adapter exposing the neutral framework primitives
+
+  The new `@mission-platform/forge/solid` subpath exports `Teleport`, `Transition`, and `TransitionGroup` built for
+  SolidJS, so write-once components compiled to the Solid target can resolve their framework-component imports.
+
+- 7d95459: portal element targets synchronously in Teleport so top-layer panels mount in the same commit
+
+### Patch Changes
+
+- bd88e5e: rename the component library prefix from `Base` to `Forge`
+
+  BREAKING CHANGE: every exported component symbol and its folder/file and CSS class name is renamed from `Base*`/`base-*` to `Forge*`/`forge-*` (e.g. `BaseButton` → `ForgeButton`), and previously-unprefixed components (`HideAt`, `ShowAt`, `BreakpointDebug`) and every icon (`IconStar` → `ForgeIconStar`) now carry the `Forge` prefix. Consumers must update all imports and template usages accordingly.
+
+- ffa5129: relicense the project from MIT to BSD-4-Clause
+- f67e304: migrate library builds to tsdown
+
+  Every library workspace across `packages/`, `vite-plugins/`, `configs/`, `workers/`, and the MCP servers now builds
+  with [tsdown](https://tsdown.dev) (Rolldown/Oxc)
+  instead of `tsc` / `vite build`. A new shared `@mission-platform/tsdown-config`
+  package exposes the generic `defineTsdownLibrary` / `defineTsdownVueLibrary`
+  helpers, and `@mission-platform/vite-plugin-forge` now additionally exports tsdown-compatible forge helpers
+  (`defineTsdownForgeHooks(All)`,
+  `defineTsdownForgeComponents(All)`, `defineTsdownForgeStoryblok(All)`) plus the Rolldown stage-2 adapters needed to
+  reproduce the write-once multi-framework output under tsdown.
+
+  This is a build-tooling change only: every package's public `exports`, `dist`
+  layout, `types`, and framework auto-resolution (`mp:*` conditions) are unchanged, so consumers are unaffected. The
+  `@mission-platform/forms` `web-components`
+  target remains a hybrid Vite step, and `@mission-platform/hunspell` keeps its
+  `build:wasm` toolchain.
+
 ## 0.2.0
 
 ### Minor Changes

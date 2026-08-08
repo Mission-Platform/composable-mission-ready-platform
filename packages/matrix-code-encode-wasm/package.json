@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/matrix-code-encode-wasm",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "BSD-4-Clause",
   "description": "Self-contained WebAssembly build of the matrix-code-encode Rust crate: wasm-pack (bundler) glue with the wasm binary inlined as base64 and instantiated synchronously, exposing a typed encode for @mission-platform/matrix-code",
   "type": "module",

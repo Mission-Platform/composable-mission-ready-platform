@@ -1,5 +1,52 @@
 # @mission-platform/forms-core
 
+## 0.3.0
+
+### Minor Changes
+
+- 90a72fc: Insert WYSIWYG code blocks through a Monaco dialog built from a schema form.
+
+  - `@mission-platform/forms-core`: add an optional `ui.language` hint (surfaced on the resolved
+    `FormFieldSchema.language`) so a `code` field can carry a syntax language.
+  - `@mission-platform/forms`: `ForgeSchemaForm` now renders the `code` widget as a `ForgeMonacoEditor` code field, and a
+    new **`ForgeSchemaFormDialog`** component hosts any schema form inside a `ForgeModal` with Cancel / Submit actions
+    wired to the form's own validation.
+  - `@mission-platform/wysiwyg`: the toolbar's code-block control now opens the new `ForgeSchemaFormDialog` (a language
+    selector + Monaco code editor) instead of a `window.prompt`, preserving the caret position so the inserted block lands
+    where you were editing.
+  - `@mission-platform/vite-plugin-forge`: add `@mission-platform/forms` to the framework-split module allowlist so
+    write-once packages can consume its compiled Vue/React builds.
+
+### Patch Changes
+
+- bd88e5e: rename the component library prefix from `Base` to `Forge`
+
+  BREAKING CHANGE: every exported component symbol and its folder/file and CSS class name is renamed from `Base*`/`base-*` to `Forge*`/`forge-*` (e.g. `BaseButton` → `ForgeButton`), and previously-unprefixed components (`HideAt`, `ShowAt`, `BreakpointDebug`) and every icon (`IconStar` → `ForgeIconStar`) now carry the `Forge` prefix. Consumers must update all imports and template usages accordingly.
+
+- d952712: defer Ajv compilation until first validate so validators work on the Cloudflare Workers runtime
+- 8bd60ae: reformat sources with prettier
+
+  Apply the repository prettier style across sources, config manifests (`tsconfig.test.json`, `turbo.json`,
+  `vite.config.ts`), stories, and documentation. Formatting-only; no runtime or API changes.
+
+- ffa5129: relicense the project from MIT to BSD-4-Clause
+- f67e304: migrate library builds to tsdown
+
+  Every library workspace across `packages/`, `vite-plugins/`, `configs/`, `workers/`, and the MCP servers now builds
+  with [tsdown](https://tsdown.dev) (Rolldown/Oxc)
+  instead of `tsc` / `vite build`. A new shared `@mission-platform/tsdown-config`
+  package exposes the generic `defineTsdownLibrary` / `defineTsdownVueLibrary`
+  helpers, and `@mission-platform/vite-plugin-forge` now additionally exports tsdown-compatible forge helpers
+  (`defineTsdownForgeHooks(All)`,
+  `defineTsdownForgeComponents(All)`, `defineTsdownForgeStoryblok(All)`) plus the Rolldown stage-2 adapters needed to
+  reproduce the write-once multi-framework output under tsdown.
+
+  This is a build-tooling change only: every package's public `exports`, `dist`
+  layout, `types`, and framework auto-resolution (`mp:*` conditions) are unchanged, so consumers are unaffected. The
+  `@mission-platform/forms` `web-components`
+  target remains a hybrid Vite step, and `@mission-platform/hunspell` keeps its
+  `build:wasm` toolchain.
+
 ## 0.2.0
 
 ### Minor Changes

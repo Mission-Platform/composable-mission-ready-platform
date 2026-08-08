@@ -1,5 +1,32 @@
 # @mission-platform/tokens
 
+## 1.0.1
+
+### Patch Changes
+
+- bd88e5e: rename the component library prefix from `Base` to `Forge`
+
+  BREAKING CHANGE: every exported component symbol and its folder/file and CSS class name is renamed from `Base*`/`base-*` to `Forge*`/`forge-*` (e.g. `BaseButton` → `ForgeButton`), and previously-unprefixed components (`HideAt`, `ShowAt`, `BreakpointDebug`) and every icon (`IconStar` → `ForgeIconStar`) now carry the `Forge` prefix. Consumers must update all imports and template usages accordingly.
+
+- ac98203: normalize composable directories, package barrels, and colocated tests
+- ffa5129: relicense the project from MIT to BSD-4-Clause
+- f67e304: migrate library builds to tsdown
+
+  Every library workspace across `packages/`, `vite-plugins/`, `configs/`, `workers/`, and the MCP servers now builds
+  with [tsdown](https://tsdown.dev) (Rolldown/Oxc)
+  instead of `tsc` / `vite build`. A new shared `@mission-platform/tsdown-config`
+  package exposes the generic `defineTsdownLibrary` / `defineTsdownVueLibrary`
+  helpers, and `@mission-platform/vite-plugin-forge` now additionally exports tsdown-compatible forge helpers
+  (`defineTsdownForgeHooks(All)`,
+  `defineTsdownForgeComponents(All)`, `defineTsdownForgeStoryblok(All)`) plus the Rolldown stage-2 adapters needed to
+  reproduce the write-once multi-framework output under tsdown.
+
+  This is a build-tooling change only: every package's public `exports`, `dist`
+  layout, `types`, and framework auto-resolution (`mp:*` conditions) are unchanged, so consumers are unaffected. The
+  `@mission-platform/forms` `web-components`
+  target remains a hybrid Vite step, and `@mission-platform/hunspell` keeps its
+  `build:wasm` toolchain.
+
 ## 1.0.0
 
 ### Major Changes

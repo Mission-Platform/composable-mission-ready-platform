@@ -1,5 +1,108 @@
 # @mission-platform/i18n
 
+## 2.0.0
+
+### Major Changes
+
+- 96f607a: restructure the package into `components`/`composables`/`utils`/`stores` and rebrand the public API from `Mp`/`mp` to `Forge`/`forge`
+
+  BREAKING CHANGE: the shipped implementation now adopts the server-context-aware core, and every public symbol is renamed (`MpI18n` → `ForgeI18N`, `MpI18nProvider` → `ForgeI18NProvider`, `createMpI18n` → `createForgeI18N`, `createMpI18nVue` → `createForgeI18NVue`, `mpNamespace` → `forgeNamespace`, `MP_*` → `FORGE_*`, etc.). Consumers must update all imports; runtime namespace string values (`'mp'`) are unchanged.
+
+- 0371781: remove the per-framework subpath exports in favour of `mp:<framework>` conditions
+
+  The legacy `./vue`, `./react`, `./solid`, `./svelte` and `./web-components`
+  subpath exports have been deleted from every framework-shipping package. The framework build is now selected **only** by
+  the `mp:<framework>` custom export condition on the bare `.` entry, so there is exactly one specifier per package and it
+  is impossible for an app to mix two framework builds by importing inconsistently.
+
+  **Breaking.** Replace every framework subpath with the bare specifier and select the framework once, at the app level:
+
+  ```diff
+  -import { ForgeButton } from '@mission-platform/components/vue';
+  -import { ForgeIconChevron } from '@mission-platform/icons/vue';
+  +import { ForgeButton } from '@mission-platform/components';
+  +import { ForgeIconChevron } from '@mission-platform/icons';
+  ```
+
+  ```ts
+  // vite.config.ts
+  export default defineFrameworkAppConfig({ framework: "vue" });
+  ```
+
+  ```jsonc
+  // tsconfig.app.json
+  { "compilerOptions": { "customConditions": ["mp:vue"] } }
+  ```
+
+  `@mission-platform/components` keeps its per-component deep imports, but the wildcard is now condition-aware and carries
+  no framework segment:
+
+  ```diff
+  -import { ForgeBadge } from '@mission-platform/components/react/atoms/forge-badge/forge-badge';
+  +import { ForgeBadge } from '@mission-platform/components/atoms/forge-badge/forge-badge';
+  ```
+
+  The `@mission-platform/forge` adapter subpaths (`/react`, `/vue`, `/solid`,
+  `/web-components`, `/runtime`, `/jsx-globals`), the Storyblok wrappers (`/storyblok/react`, `/storyblok/vue`),
+  `@mission-platform/router/redwood`,
+  `@mission-platform/breakpoints/core` and every `…/styles` entry are unaffected.
+
+  `@mission-platform/vite-plugin-forge` now emits bare `@mission-platform/*`
+  specifiers into the generated per-framework sources (previously it rewrote them to the matching subpath), and passes the
+  framework's `customConditions` to every declaration-emit path so the generated `.d.ts` files resolve sibling packages
+  against the same build the bundler picks.
+
+  `@mission-platform/vite-config` gains `framework` and `frameworkInclude` options on `defineVitestConfig`, so a package
+  can run its compiled-build specs under a framework condition while leaving cross-framework parity specs resolving
+  neutrally.
+
+### Minor Changes
+
+- 6290b4c: add framework auto-resolution via custom export conditions
+
+  Every framework-shipping `@mission-platform/*` package now declares `mp:vue`,
+  `mp:react`, `mp:solid`, and `mp:web-component` custom export
+  conditions on its bare `.` entry (each resolving to the matching built `dist`
+  artifact), so consumers can `import { X } from '@mission-platform/<pkg>'` with
+  no framework subpath and have Vite and the TypeScript LSP resolve the correct
+  framework build from a single app-level setting.
+
+  `@mission-platform/vite-config` adds `defineFrameworkAppConfig`,
+  `frameworkResolveConditions`, and `frameworkCondition` (plus the
+  `MissionPlatformFramework` type) to set `resolve.conditions` from one
+  `framework` option, and `@mission-platform/typescript-config` adds matching
+  `framework-vue`, `framework-react`, `framework-solid`, and `framework-web-component`
+  presets wiring the equivalent `customConditions`.
+
+### Patch Changes
+
+- 828331e: lazily load `node:async_hooks` so it never enters the browser bundle
+
+  A static `import { AsyncLocalStorage } from 'node:async_hooks'` made bundlers such as Vite externalize the module for
+  the browser and hoist the property access above the environment guard, throwing at module load in client code. The
+  server-side request-context storage is now initialised via a dynamic import restricted to non-browser environments,
+  keeping `node:async_hooks` out of the browser module graph while the server (Node, Cloudflare Workers with
+  `nodejs_compat`) still gets real request-scoped isolation.
+
+- ac98203: normalize composable directories, package barrels, and colocated tests
+- ffa5129: relicense the project from MIT to BSD-4-Clause
+- f67e304: migrate library builds to tsdown
+
+  Every library workspace across `packages/`, `vite-plugins/`, `configs/`, `workers/`, and the MCP servers now builds
+  with [tsdown](https://tsdown.dev) (Rolldown/Oxc)
+  instead of `tsc` / `vite build`. A new shared `@mission-platform/tsdown-config`
+  package exposes the generic `defineTsdownLibrary` / `defineTsdownVueLibrary`
+  helpers, and `@mission-platform/vite-plugin-forge` now additionally exports tsdown-compatible forge helpers
+  (`defineTsdownForgeHooks(All)`,
+  `defineTsdownForgeComponents(All)`, `defineTsdownForgeStoryblok(All)`) plus the Rolldown stage-2 adapters needed to
+  reproduce the write-once multi-framework output under tsdown.
+
+  This is a build-tooling change only: every package's public `exports`, `dist`
+  layout, `types`, and framework auto-resolution (`mp:*` conditions) are unchanged, so consumers are unaffected. The
+  `@mission-platform/forms` `web-components`
+  target remains a hybrid Vite step, and `@mission-platform/hunspell` keeps its
+  `build:wasm` toolchain.
+
 ## 1.0.0
 
 ### Major Changes

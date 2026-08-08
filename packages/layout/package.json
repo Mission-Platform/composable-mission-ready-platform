@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/layouts",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "license": "BSD-4-Clause",
   "description": "Sample write-once Mission Platform layouts authored with @mission-platform/forge and shipped as both Vue 3 and React components",
   "type": "module",

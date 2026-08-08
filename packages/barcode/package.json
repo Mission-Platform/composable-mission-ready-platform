@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/barcode",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "license": "BSD-4-Clause",
   "description": "Dependency-free 1D (linear) barcode encoder and decoder written in Rust and compiled to WebAssembly, with a typed ES module wrapper and a write-once React/Vue component",
   "type": "module",

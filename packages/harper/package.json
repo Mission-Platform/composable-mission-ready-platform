@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/harper",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "BSD-4-Clause",
   "description": "Harper grammar and style checker integration for Monaco editor",
   "type": "module",

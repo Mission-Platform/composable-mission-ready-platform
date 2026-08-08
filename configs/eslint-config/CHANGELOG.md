@@ -1,5 +1,11 @@
 # @mission-platform/eslint-config
 
+## 1.0.1
+
+### Patch Changes
+
+- ffa5129: relicense the project from MIT to BSD-4-Clause
+
 ## 1.0.0
 
 ### Major Changes
