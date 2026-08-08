@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/speech-audio",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "license": "BSD-4-Clause",
   "description": "Framework-neutral browser speech & audio composables for Mission Platform — write-once useSpeechSynthesis (text-to-speech), useSpeechRecognition (speech-to-text), useSound (audio playback + tone generation), and useMidi (Web MIDI) hooks authored against @mission-platform/forge and compiled to React, Vue, Solid, and Web Components",
   "type": "module",

@@ -1,8 +1,8 @@
 {
   "name": "@mission-platform/matrix-code-decode-crate",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
-  "description": "Rust crate build for matrix-code-decode (wasm-pack \u2192 packages/matrix-code-decode-wasm)",
+  "description": "Rust crate build for matrix-code-decode (wasm-pack → packages/matrix-code-decode-wasm)",
   "license": "BSD-4-Clause",
   "scripts": {
     "build": "wasm-pack build . --target bundler --release --weak-refs --reference-types --no-pack --out-dir ../../packages/matrix-code-decode-wasm/src/wasm --out-name matrix-code-decode",

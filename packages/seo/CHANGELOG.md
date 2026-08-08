@@ -1,5 +1,31 @@
 # @mission-platform/seo
 
+## 0.3.3
+
+### Patch Changes
+
+- ac98203: normalize composable directories, package barrels, and colocated tests
+- ffa5129: relicense the project from MIT to BSD-4-Clause
+- 84714b4: emit all JSON-LD blocks as a single `@graph` document instead of one `<script type="application/ld+json">` per node — the shared `@context` is hoisted to the graph root and stripped from each node
+- f67e304: migrate library builds to tsdown
+
+  Every library workspace across `packages/`, `vite-plugins/`, `configs/`, `workers/`, and the MCP servers now builds
+  with [tsdown](https://tsdown.dev) (Rolldown/Oxc)
+  instead of `tsc` / `vite build`. A new shared `@mission-platform/tsdown-config`
+  package exposes the generic `defineTsdownLibrary` / `defineTsdownVueLibrary`
+  helpers, and `@mission-platform/vite-plugin-forge` now additionally exports tsdown-compatible forge helpers
+  (`defineTsdownForgeHooks(All)`,
+  `defineTsdownForgeComponents(All)`, `defineTsdownForgeStoryblok(All)`) plus the Rolldown stage-2 adapters needed to
+  reproduce the write-once multi-framework output under tsdown.
+
+  This is a build-tooling change only: every package's public `exports`, `dist`
+  layout, `types`, and framework auto-resolution (`mp:*` conditions) are unchanged, so consumers are unaffected. The
+  `@mission-platform/forms` `web-components`
+  target remains a hybrid Vite step, and `@mission-platform/hunspell` keeps its
+  `build:wasm` toolchain.
+
+- b23115e: add a workspace-local .prettierignore so build output is excluded from format checks
+
 ## 0.3.2
 
 ### Patch Changes

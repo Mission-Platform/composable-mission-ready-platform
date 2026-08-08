@@ -1,5 +1,30 @@
 # @mission-platform/typescript-config
 
+## 0.4.0
+
+### Minor Changes
+
+- 6290b4c: add framework auto-resolution via custom export conditions
+
+  Every framework-shipping `@mission-platform/*` package now declares `mp:vue`,
+  `mp:react`, `mp:solid`, and `mp:web-component` custom export
+  conditions on its bare `.` entry (each resolving to the matching built `dist`
+  artifact), so consumers can `import { X } from '@mission-platform/<pkg>'` with
+  no framework subpath and have Vite and the TypeScript LSP resolve the correct
+  framework build from a single app-level setting.
+
+  `@mission-platform/vite-config` adds `defineFrameworkAppConfig`,
+  `frameworkResolveConditions`, and `frameworkCondition` (plus the
+  `MissionPlatformFramework` type) to set `resolve.conditions` from one
+  `framework` option, and `@mission-platform/typescript-config` adds matching
+  `framework-vue`, `framework-react`, `framework-solid`, and `framework-web-component`
+  presets wiring the equivalent `customConditions`.
+
+### Patch Changes
+
+- ffa5129: relicense the project from MIT to BSD-4-Clause
+- b23115e: add a workspace-local .prettierignore so build output is excluded from format checks
+
 ## 0.3.0
 
 ### Minor Changes

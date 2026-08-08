@@ -1,5 +1,11 @@
 # @mission-platform/prettier-config
 
+## 0.1.6
+
+### Patch Changes
+
+- ffa5129: relicense the project from MIT to BSD-4-Clause
+
 ## 0.1.5
 
 ### Patch Changes

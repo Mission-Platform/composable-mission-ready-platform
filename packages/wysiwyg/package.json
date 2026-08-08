@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/wysiwyg",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "license": "BSD-4-Clause",
   "description": "Framework-agnostic write-once WYSIWYG rich-text editor for Mission Platform, authored with @mission-platform/forge and shipped as both Vue 3 and React components",
   "type": "module",

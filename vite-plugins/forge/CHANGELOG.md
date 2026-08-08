@@ -1,5 +1,218 @@
 # @mission-platform/vite-plugin-forge
 
+## 1.0.0
+
+### Major Changes
+
+- e2525a3: rename the neutral class attribute from `classNames` to `className`
+
+  The framework-neutral JSX **class attribute** is now spelled `className={…}` everywhere (matching React's own spelling and the plain `class` static attribute it complements). The runtime **helper** `classNames(...)` is unchanged — it is still exported from `@mission-platform/forge` and still re-injected into the compiled React output.
+
+  - **Authoring:** drive dynamic classes with `className={[…]}` (array / string / `{ class: boolean }` forms); the author still never imports the helper.
+  - **`@mission-platform/forge`:** the `./react` and `./vue` runtime adapters now recognise the `className` prop (React collapses it to a `className={classNames(…)}` string, Vue maps it onto the native `class` binding).
+  - **`@mission-platform/vite-plugin-forge`:** the two-stage compiler recognises only `className` as the neutral class attribute; the legacy `classNames` attribute alias has been removed from every generator (React/Vue/Solid/Svelte).
+  - **Breaking:** neutral components authored with the old `classNames={…}` attribute must be updated to `className={…}`.
+
+- 16253a6: keep the `Forge` prefix through compilation instead of stripping it
+
+  BREAKING CHANGE: the compiler no longer strips the component prefix, so the public API of compiled packages now exposes `Forge`-prefixed names (e.g. `ForgeButton`) rather than the previously stripped names (e.g. `Button`). The `stripPrefix` default now defaults to keeping the prefix.
+
+- 0371781: remove the per-framework subpath exports in favour of `mp:<framework>` conditions
+
+  The legacy `./vue`, `./react`, `./solid`, `./svelte` and `./web-components`
+  subpath exports have been deleted from every framework-shipping package. The framework build is now selected **only** by
+  the `mp:<framework>` custom export condition on the bare `.` entry, so there is exactly one specifier per package and it
+  is impossible for an app to mix two framework builds by importing inconsistently.
+
+  **Breaking.** Replace every framework subpath with the bare specifier and select the framework once, at the app level:
+
+  ```diff
+  -import { ForgeButton } from '@mission-platform/components/vue';
+  -import { ForgeIconChevron } from '@mission-platform/icons/vue';
+  +import { ForgeButton } from '@mission-platform/components';
+  +import { ForgeIconChevron } from '@mission-platform/icons';
+  ```
+
+  ```ts
+  // vite.config.ts
+  export default defineFrameworkAppConfig({ framework: "vue" });
+  ```
+
+  ```jsonc
+  // tsconfig.app.json
+  { "compilerOptions": { "customConditions": ["mp:vue"] } }
+  ```
+
+  `@mission-platform/components` keeps its per-component deep imports, but the wildcard is now condition-aware and carries
+  no framework segment:
+
+  ```diff
+  -import { ForgeBadge } from '@mission-platform/components/react/atoms/forge-badge/forge-badge';
+  +import { ForgeBadge } from '@mission-platform/components/atoms/forge-badge/forge-badge';
+  ```
+
+  The `@mission-platform/forge` adapter subpaths (`/react`, `/vue`, `/solid`,
+  `/web-components`, `/runtime`, `/jsx-globals`), the Storyblok wrappers (`/storyblok/react`, `/storyblok/vue`),
+  `@mission-platform/router/redwood`,
+  `@mission-platform/breakpoints/core` and every `…/styles` entry are unaffected.
+
+  `@mission-platform/vite-plugin-forge` now emits bare `@mission-platform/*`
+  specifiers into the generated per-framework sources (previously it rewrote them to the matching subpath), and passes the
+  framework's `customConditions` to every declaration-emit path so the generated `.d.ts` files resolve sibling packages
+  against the same build the bundler picks.
+
+  `@mission-platform/vite-config` gains `framework` and `frameworkInclude` options on `defineVitestConfig`, so a package
+  can run its compiled-build specs under a framework condition while leaving cross-framework parity specs resolving
+  neutrally.
+
+- 3fb8ddb: rename the write-once runtime and compiler packages from `jsx` to `forge`
+
+  The neutral runtime `@mission-platform/jsx` is now `@mission-platform/forge`
+  and its two-stage compiler `@mission-platform/vite-plugin-jsx` is now
+  `@mission-platform/vite-plugin-forge`, reflecting that these packages now cover
+  components, composables, and more — not just JSX.
+
+  BREAKING CHANGE: update every import specifier from `@mission-platform/jsx` to
+  `@mission-platform/forge` (including subpaths such as `@mission-platform/jsx/react`
+  → `@mission-platform/forge/react` and `@mission-platform/jsx/jsx-globals` →
+  `@mission-platform/forge/jsx-globals`), swap the dev dependency and Vite plugin
+  import from `@mission-platform/vite-plugin-jsx` to
+  `@mission-platform/vite-plugin-forge`, and update the plugin identifier
+  references accordingly.
+
+### Minor Changes
+
+- 4cd7197: support nested composables/utils folders in the hook-library compiler
+
+  The write-once hook compiler in `@mission-platform/vite-plugin-forge` now
+  preserves nested module folders instead of flattening hook files to the `src/`
+  root: relative re-exports are kept, the shared effect helper import is rewritten
+  to the correct depth (`../mp-effect`), and per-framework declarations are
+  emitted recursively. This lets hook libraries adopt the same hierarchical
+  `src/{composables,utils}/` layout as component packages.
+
+  `@mission-platform/d3` and `@mission-platform/rxjs` are reorganised onto that
+  layout — their composables move under `src/composables/` (and d3's helpers
+  under `src/utils/`) with `index.ts` barrels — with no change to their public
+  export surface.
+
+- 1db440e: Several compiler improvements:
+
+  - **Native Web Components (no Lit).** The Web-Components generator now emits `class X extends ForgeElement` importing only `@mission-platform/forge/web-components` — never `lit`. `lit` is removed from the plugin's peer dependencies and framework externals.
+  - **Full Storyblok coverage.** `emitStoryblokBlokWrapper` now emits Solid (`.tsx`), Svelte (`.svelte`) and native Web-Component (`.ts`) blok wrappers in addition to React/Vue, and `generateStoryblokBloks`/`defineJsxStoryblokLibraryConfig` accept all five frameworks (externalising the matching `@storyblok/*` binding).
+  - **Structure-preserving cache.** `generateFrameworkSources` now mirrors the source `components/<folder>/…` tree in the generated cache instead of flattening it, rewriting flat `./<base>` imports to the correct nested relative paths.
+  - **Co-located sibling components.** The generator auto-discovers focused child components authored beside a primary (via PascalCase relative imports) and compiles them as first-class components, so a folder can ship e.g. `forge-tree-view.tsx` + `forge-tree-view-item.tsx` without adding the child to the public barrel.
+
+- 1db440e: flatten far more neutral components to native Vue `<template>` markup instead of the `<render v-bind="$attrs" />` render-closure fallback
+
+  The Vue template builder gained several AST-driven flattening passes, taking the component library from 17 render-closure fallbacks down to 9:
+
+  - **Object-literal keys are no longer misread as node-typed slot props.** `producesNodes` ignores identifiers in object-literal key / shorthand position, and a `.map()`/`.flatMap()` is only treated as node-producing when its callback body actually builds nodes — so a `{ start, end }` handler object or a data `.map()` inside a `void` handler no longer forces the fallback (`forge-date-range-input`, `forge-scheduler`).
+  - **Array-literal children template natively.** `emitExpressionChild` now delegates a `{[a, ...b]}` child (node consts, spreads, `.map()` projections) to the node-array child emitter (`forge-list`, `forge-calendar`).
+  - **Imperative array/object builds fold declaratively.** A `const arr = <init>; if (…) arr.push(…); for (…) arr.push(…)` build folds into a single array literal (`...(c ? [x] : [])`, `...xs.map(…)`), preserving its declared element type via an `as <T>[]` assertion so discriminated-union control lists still type-check (`forge-pagination`, `forge-multiselect`, `forge-select`).
+  - **Block-body and `if`-guard-chain render helpers inline.** A helper whose body is leading `const`s + a single `return`, or an `if (c) return X; … return Y;` dispatch, folds to one expression and inlines at its call site.
+  - **The memo `.value` rewriter is scope-aware**, so a handler-local binding that shadows a render-scope `computed` compiles without corruption (`forge-time-input`).
+
+  Several correctness guards were added so a genuinely non-flattenable shape falls back cleanly instead of emitting invalid or type-unsafe markup: a prop bound to a value that embeds VNodes, a helper that would inline a literal-vs-literal comparison, a looped multi-element `flatMap` (key hoisted onto the `<template v-for>`), and an inline handler reading a React-style `.current` on a `useRef`. A new repo-wide `vue-no-fallback` audit spec compiles every component to Vue and pins the remaining fallbacks to an allowlist, so no component can silently regress.
+
+- 1db440e: flatten the remaining Category-C/D neutral components to native Vue `<template>` markup, cutting the render-closure (`<render v-bind="$attrs" />`) fallback count from 9 to 2
+
+  The Vue template builder gained four more AST-driven flattening passes so `forge-select`, `forge-radio-group`, `forge-range-input`, `forge-slider`, `forge-toast`, `forge-alert-banner`, `forge-tabs`, and `forge-virtual-tabs` now compile to native `<template>` (only `forge-time-range-input` / `forge-date-time-range-input` — a separate "function-valued node helper" shape — still fall back):
+
+  - **Render-scope ref-sync lifts to `watchEffect`.** A top-level `<ref>.current = <expr>;` side effect (kept in step with a derived value in React's re-render model) is emitted as a reactive `watchEffect(() => { <ref>.value = <expr>; })` rather than rejected as a "non-const derived statement" (`forge-slider`, `forge-range-input`).
+  - **Inline-handler `useRef` reads are rewritten.** A `.current` read inside an inline template handler (`onClick={() => searchReference.current?.focus()}`) now drops to the bare, auto-unwrapped template-ref identifier, so a `useRef` used only inside markup no longer forces the fallback (`forge-select`).
+  - **A props-children spread in a folded node array maps to the default slot.** `...(properties.children as MpChild[])` appended to a built node array emits as `<slot />` (`forge-radio-group`).
+  - **An element-returning `switch` module helper inlines as a `v-if` chain.** A single-argument `variantIcon(variant)`-style helper is inlined as the equivalent `v-if`/`v-else-if`/`v-else` conditional chain (`forge-toast`, `forge-alert-banner`).
+  - **A render-prop call in child position renders via `<component :is>`.** `{properties.panel?.({ tab })}` binds the returned VNode directly to `<component :is>` (per Vue's "Using Vnodes in `<template>`" guide), keeping `panel` a real prop — never a Vue named slot — so a compiled neutral parent can still pass it plainly (`forge-tabs`, `forge-virtual-tabs`).
+
+  The `vue-no-fallback` audit allowlist shrinks to the two remaining range composites, and per-category compiler assertions cover each new shape.
+
+- 1db440e: compile recursive render-prop components to native Vue `<template>` and forward scoped slots to child components
+
+  The Vue template builder's node-typed-prop-as-child guard is now receiver-aware: a plain field read whose name coincides with a render-prop (e.g. `{node.label}`) renders as a normal `{{ … }}` interpolation instead of forcing the `<render v-bind="$attrs" />` render-closure fallback, so recursive components like `forge-tree-view-item` compile to native `<template>`. A node-typed render-prop passed to a child component (`label={properties.label}`) is now emitted as a real `<template #label="scope"><slot name="label" v-bind="scope" /></template>` forwarding block rather than a `:label` prop binding, so a custom scoped slot renders correctly at every recursion depth.
+
+- 7c91132: add Solid, Svelte, and Web Components code generators and per-framework build targets
+
+  The JSX plugin now emits Solid, Svelte, and Web Components modules alongside the existing Vue and React outputs, and every write-once component package gains matching `build:solid`, `build:svelte`, and `build:web-components` targets plus optional peer dependencies for the new frameworks.
+
+- f67e304: migrate library builds to tsdown
+
+  Every library workspace across `packages/`, `vite-plugins/`, `configs/`, `workers/`, and the MCP servers now builds
+  with [tsdown](https://tsdown.dev) (Rolldown/Oxc)
+  instead of `tsc` / `vite build`. A new shared `@mission-platform/tsdown-config`
+  package exposes the generic `defineTsdownLibrary` / `defineTsdownVueLibrary`
+  helpers, and `@mission-platform/vite-plugin-forge` now additionally exports tsdown-compatible forge helpers
+  (`defineTsdownForgeHooks(All)`,
+  `defineTsdownForgeComponents(All)`, `defineTsdownForgeStoryblok(All)`) plus the Rolldown stage-2 adapters needed to
+  reproduce the write-once multi-framework output under tsdown.
+
+  This is a build-tooling change only: every package's public `exports`, `dist`
+  layout, `types`, and framework auto-resolution (`mp:*` conditions) are unchanged, so consumers are unaffected. The
+  `@mission-platform/forms` `web-components`
+  target remains a hybrid Vite step, and `@mission-platform/hunspell` keeps its
+  `build:wasm` toolchain.
+
+- 90a72fc: Insert WYSIWYG code blocks through a Monaco dialog built from a schema form.
+
+  - `@mission-platform/forms-core`: add an optional `ui.language` hint (surfaced on the resolved
+    `FormFieldSchema.language`) so a `code` field can carry a syntax language.
+  - `@mission-platform/forms`: `ForgeSchemaForm` now renders the `code` widget as a `ForgeMonacoEditor` code field, and a
+    new **`ForgeSchemaFormDialog`** component hosts any schema form inside a `ForgeModal` with Cancel / Submit actions
+    wired to the form's own validation.
+  - `@mission-platform/wysiwyg`: the toolbar's code-block control now opens the new `ForgeSchemaFormDialog` (a language
+    selector + Monaco code editor) instead of a `window.prompt`, preserving the caret position so the inserted block lands
+    where you were editing.
+  - `@mission-platform/vite-plugin-forge`: add `@mission-platform/forms` to the framework-split module allowlist so
+    write-once packages can consume its compiled Vue/React builds.
+
+### Patch Changes
+
+- fec1238: retry the generated-tree cleanup on transient `ENOTEMPTY` errors
+
+  `generateFrameworkSources` and `generateStoryblokBloks` wipe the generated source tree with a recursive `rmSync` before
+  each Stage-1 emit. On macOS/APFS, or when a sibling framework build is still touching the same package's
+  `node_modules/.cache`, the final `rmdir` can intermittently fail with `ENOTEMPTY` (also `EBUSY`/`EPERM`) and crash the
+  build (e.g. `ENOTEMPTY … icons-solid`). Both deletes now pass Node's `maxRetries`/`retryDelay` options so the operation
+  retries with linear backoff on exactly those transient errors instead of failing hard.
+
+- fec1238: fix dangling declaration references in the Solid and Web Components builds
+
+  The Web Components emitter now resolves the neutral `MpChild`/`MpElement` types against the co-located per-framework
+  types module and carries a sibling component's type-only exports (e.g. `TabItem`, `TabsVariant`, `MenuNode`) across its
+  side-effect import, so they no longer dangle in the generated declarations. The Solid emitter imports Solid's
+  hyperscript `h` as a default binding (`import h from 'solid-js/h'`) to match its `export default`. The declaration-emit
+  diagnostic filter also ignores references inside a typed class-field initializer (e.g. `openIds: any = defaultOpen`),
+  which are elided from the emitted `.d.ts`.
+
+- 4cd7197: Compile the neutral `useRef` to Vue's `shallowRef` instead of a deep `ref`.
+
+  `useRef` is a non-reactive, mutable container (React's `useRef` semantics), so a deep, fully-reactive `ref` was the
+  wrong mapping: assigning a large external instance into `.current` (e.g. a Monaco editor) made Vue deep-proxy the whole
+  object, so every internal property access went through a reactivity trap and, when read inside an effect, subscribed
+  that effect to the instance's internals. In the WYSIWYG code editor / schema-form `code` field this produced an
+  unbounded pre-flush watcher storm that silently froze the tab on the first keystroke (no Vue
+  "recursive updates" warning, since pre-flush jobs are not recursion-capped).
+
+  `useRef` now maps to `shallowRef`, which keeps `.value`-reassignment reactivity (harmless) while leaving the stored
+  object un-proxied. The component and hook (composable) emitters both add the `shallowRef` import, and a `useRef` bound
+  to an element still becomes `useTemplateRef`.
+
+- 8bd60ae: reformat sources with prettier
+
+  Apply the repository prettier style across sources, config manifests (`tsconfig.test.json`, `turbo.json`,
+  `vite.config.ts`), stories, and documentation. Formatting-only; no runtime or API changes.
+
+- ffa5129: relicense the project from MIT to BSD-4-Clause
+- Updated dependencies [e2525a3]
+- Updated dependencies [7a1b1a1]
+- Updated dependencies [bd88e5e]
+- Updated dependencies [0c0d5d7]
+- Updated dependencies [ffa5129]
+- Updated dependencies [3fb8ddb]
+- Updated dependencies [7d95459]
+- Updated dependencies [f67e304]
+  - @mission-platform/forge@1.0.0
+
 ## 0.1.0
 
 ### Minor Changes

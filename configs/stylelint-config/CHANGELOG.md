@@ -1,5 +1,11 @@
 # @mission-platform/stylelint-config
 
+## 0.1.3
+
+### Patch Changes
+
+- ffa5129: relicense the project from MIT to BSD-4-Clause
+
 ## 0.1.2
 
 ### Patch Changes

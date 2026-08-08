@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/qr-code-encode-wasm",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "BSD-4-Clause",
   "description": "Self-contained WebAssembly build of the qr-code-encode Rust crate: wasm-pack (bundler) glue with the wasm binary inlined as base64 and instantiated synchronously, exposing typed encoders for @mission-platform/qr-code",
   "type": "module",

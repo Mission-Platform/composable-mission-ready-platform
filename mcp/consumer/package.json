@@ -1,7 +1,7 @@
 {
   "name": "@mission-platform/mcp-consumer",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "BSD-4-Clause",
   "description": "CONSUMER MCP: Model Context Protocol server for external teams building apps on top of Mission Platform packages. Focuses on package installation, framework selection via export conditions, and component usage.",
   "type": "module",

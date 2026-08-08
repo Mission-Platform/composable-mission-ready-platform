@@ -1,8 +1,8 @@
 {
   "name": "@mission-platform/code-scan-crate",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
-  "description": "Rust crate build for code-scan (wasm-pack \u2192 packages/code-scan-wasm)",
+  "description": "Rust crate build for code-scan (wasm-pack → packages/code-scan-wasm)",
   "license": "BSD-4-Clause",
   "scripts": {
     "build": "wasm-pack build . --target bundler --release --weak-refs --reference-types --no-pack --panic-unwind --out-dir ../../packages/code-scan-wasm/src/wasm --out-name code-scan",

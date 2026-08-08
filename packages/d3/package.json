@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/d3",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "license": "BSD-4-Clause",
   "description": "Framework-neutral D3 integration for Mission Platform — a write-once useD3 composable (authored against @mission-platform/forge hooks and compiled to React (./react) and Vue (./vue)) that binds a D3 selection to an element ref, plus pure margin-convention helpers for responsive chart layout",
   "type": "module",

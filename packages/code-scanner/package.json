@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/code-scanner",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "license": "BSD-4-Clause",
   "description": "Dependency-free image/camera code scanner written in Rust and compiled to WebAssembly: locates and decodes QR, Data Matrix and 1D barcodes from a file upload or a live media stream, with a write-once React/Vue component",
   "type": "module",

@@ -1,8 +1,8 @@
 {
   "name": "@mission-platform/qr-code-encode-crate",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
-  "description": "Rust crate build for qr-code-encode (wasm-pack \u2192 packages/qr-code-encode-wasm)",
+  "description": "Rust crate build for qr-code-encode (wasm-pack → packages/qr-code-encode-wasm)",
   "license": "BSD-4-Clause",
   "scripts": {
     "build": "wasm-pack build . --target bundler --release --weak-refs --reference-types --no-pack --out-dir ../../packages/qr-code-encode-wasm/src/wasm --out-name qr-code-encode",
