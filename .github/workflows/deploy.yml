@@ -41,7 +41,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          # Full history lets `turbo` diff against previous runs for caching.
+          # Full history lets `turbo` determine the affected changes.
           fetch-depth: 0
 
       - name: Set up pnpm
@@ -53,8 +53,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
@@ -63,21 +61,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
-      # Cache Vite's on-disk dependency pre-bundling and Turborepo's local task
-      # cache across runs.  Keyed on the lockfile + workflow file so it
-      # invalidates whenever dependencies or this workflow change.
-      - name: Cache Vite & Turbo artefacts
-        uses: actions/cache@v5
-        with:
-          path: |
-            **/node_modules/.vite
-            **/.vite
-            **/.turbo
-            .turbo
-          key: ${{ runner.os }}-turbo-${{ hashFiles('pnpm-lock.yaml', '.github/workflows/deploy.yml', 'turbo.json') }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-
 
       # ──────────────────────────────────────────────────────────────
       # STAGING — changeset-release/main branch
@@ -90,3 +73,4 @@ jobs:
           pnpm exec turbo run deploy:staging
           --filter=@mission-platform/website
           --filter=@mission-platform/my-care-notes
+          --cache=local:,remote:

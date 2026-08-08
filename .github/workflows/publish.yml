@@ -46,8 +46,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
           registry-url: https://npm.pkg.github.com
           scope: "@mission-platform"
 
@@ -59,24 +57,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Cache Vite's on-disk dependency pre-bundling and Turborepo's local task
-      # cache across runs, so releases reuse build artefacts the same way CI
-      # does.  Keyed on the lockfile + workflow file so it invalidates whenever
-      # dependencies or this workflow change.
-      - name: Cache Vite & Turbo artefacts
-        uses: actions/cache@v5
-        with:
-          path: |
-            **/node_modules/.vite
-            **/.vite
-            **/.turbo
-            .turbo
-          key: ${{ runner.os }}-turbo-${{ hashFiles('pnpm-lock.yaml', '.github/workflows/publish.yml', 'turbo.json') }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-
-
       - name: Build packages
-        run: pnpm exec turbo run build --filter="./packages/**"
+        run: pnpm exec turbo run build --filter="./packages/**" --cache=local:,remote:
 
       # ──────────────────────────────────────────────────────────────
       # PRODUCTION — main branch
@@ -92,6 +74,7 @@ jobs:
           title: "chore: release packages"
           commit: "chore: release packages"
         env:
+          HUSKY_SKIP_HOOKS: 1
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -112,6 +95,7 @@ jobs:
         if: github.ref == 'refs/heads/develop'
         run: pnpm changeset publish --tag dev
         env:
+          HUSKY_SKIP_HOOKS: 1
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # ──────────────────────────────────────────────────────────────
@@ -154,6 +138,7 @@ jobs:
           pnpm exec turbo run deploy
           --filter=@mission-platform/website
           --filter=@mission-platform/my-care-notes
+          --cache=local:,remote:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
