@@ -45,9 +45,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint all affected workspaces
-        run: pnpm exec turbo run lint --affected --cache=local:,remote:
+        run: pnpm exec turbo run lint --affected
 
       # test:coverage depends on each workspace's build and runs every affected
       # package, app, worker, plugin, and config that exposes the task.
       - name: Run affected coverage tests
-        run: pnpm exec turbo run test:coverage --affected --cache=local:,remote:
+        run: pnpm exec turbo run test:coverage --affected
