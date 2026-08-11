@@ -6,7 +6,7 @@
   "type": "module",
   "engines": {
     "node": "24.19.0",
-    "pnpm": "11.20.0"
+    "pnpm": "11.21.0"
   },
   "scripts": {
     "prepare": "husky",
@@ -15,11 +15,11 @@
     "dev:website": "pnpm exec turbo run dev --filter @mission-platform/website",
     "dev:my-care-notes": "pnpm exec turbo run dev --filter @mission-platform/my-care-notes",
     "dev:service-monitor": "pnpm exec turbo run dev --filter @mission-platform/service-monitor",
-    "storybook:vue": "STORYBOOK_FRAMEWORK=vue pnpm exec turbo run storybook --filter @mission-platform/storybook",
-    "storybook:react": "STORYBOOK_FRAMEWORK=react pnpm exec turbo run storybook --filter @mission-platform/storybook",
-    "storybook:solid": "STORYBOOK_FRAMEWORK=solid pnpm exec turbo run storybook --filter @mission-platform/storybook",
-    "storybook:svelte": "STORYBOOK_FRAMEWORK=svelte pnpm exec turbo run storybook --filter @mission-platform/storybook",
-    "storybook:web-component": "STORYBOOK_FRAMEWORK=web-component pnpm exec turbo run storybook --filter @mission-platform/storybook",
+    "storybook:vue": "STORYBOOK_FRAMEWORK=vue pnpm exec turbo run storybook --filter @mission-platform/storybook -- -p 6006",
+    "storybook:react": "STORYBOOK_FRAMEWORK=react pnpm exec turbo run storybook --filter @mission-platform/storybook -- -p 6007",
+    "storybook:solid": "STORYBOOK_FRAMEWORK=solid pnpm exec turbo run storybook --filter @mission-platform/storybook -- -p 6008",
+    "storybook:svelte": "STORYBOOK_FRAMEWORK=svelte pnpm exec turbo run storybook --filter @mission-platform/storybook -- -p 6009",
+    "storybook:web-component": "STORYBOOK_FRAMEWORK=web-component pnpm exec turbo run storybook --filter @mission-platform/storybook -- -p 6010",
     "chromatic:deploy": "pnpm exec turbo run chromatic:deploy",
     "build": "pnpm exec turbo run build",
     "build:force": "pnpm exec turbo run build --force",
@@ -47,5 +47,5 @@
     "turbo": "catalog:utilities",
     "wrangler": "catalog:cloudflare"
   },
-  "packageManager": "pnpm@11.20.0+sha512.9a6f330a95b66446ea088faf1521405a8a01f07fde7124cc9958dfed52d4bb436737e65b08f85f37b46fcba375092558ac51262b816844b22f63406ed166bfee"
+  "packageManager": "pnpm@11.21.0+sha512.521705bce689924eac72f5a3587122f362689ef6571e55ba80076fd637c11132ecffada26fad4ea79c485bfddbfd3d5a2a5b05805a77e893de71ec8a6cca3bb1"
 }
