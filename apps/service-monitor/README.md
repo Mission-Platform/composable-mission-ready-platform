@@ -132,6 +132,19 @@ Set in `wrangler.jsonc` under `vars` (or as environment variables):
 | `SPEED_TEST_INTERVAL_SECONDS` | `300`      | Interval between scheduled speed tests.                                                                                                                          |
 | `SPEED_TEST_BYTES`            | `10000000` | Payload size for each download measurement.                                                                                                                      |
 
+Administrative API operations require a bearer token. Provision the token as a
+Worker secret (not a `vars` value):
+
+```bash
+pnpm --filter @mission-platform/service-monitor exec wrangler secret put MONITOR_API_TOKEN
+```
+
+Send it as `Authorization: Bearer <token>` when calling monitor CRUD, incident
+or maintenance mutations, `POST /api/check`, or `POST /api/speed/run`. The
+Worker fails closed with `401` when the secret is missing or the credential is
+invalid. Read-only status and speed-report endpoints remain public for the
+dashboard; monitor, incident, and maintenance APIs are administrative.
+
 ## Development & Workflows
 
 ```bash

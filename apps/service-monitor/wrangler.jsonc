@@ -52,6 +52,8 @@
     // Payload size for each download measurement, in bytes.
     "SPEED_TEST_BYTES": "10000000"
   },
+  // Provision with `wrangler secret put MONITOR_API_TOKEN`; never store the
+  // administrative token in this file or in a public `vars` entry.
   "env": {
     "staging": {
       "name": "service-monitor-staging",

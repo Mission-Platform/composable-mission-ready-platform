@@ -21,6 +21,8 @@ declare namespace Cloudflare {
     SPEED_TEST_INTERVAL_SECONDS: string;
     /** Payload size for each download measurement, in bytes. */
     SPEED_TEST_BYTES: string;
+    /** Secret bearer token required by administrative API endpoints. */
+    MONITOR_API_TOKEN: string;
   }
 }
 

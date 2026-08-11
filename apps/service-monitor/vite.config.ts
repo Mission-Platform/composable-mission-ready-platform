@@ -24,6 +24,7 @@ function frameworkConditionsPlugin(): Plugin {
     name: 'service-monitor:framework-conditions',
     configEnvironment(_name, options) {
       const resolve = (options.resolve ??= {});
+      resolve.tsconfigPaths = true;
       const existing = resolve.conditions ?? [];
       if (!existing.includes(condition)) {
         resolve.conditions = [condition, ...existing];
@@ -84,6 +85,9 @@ function supportStyleSsrModules(plugin: Plugin): Plugin {
 // - `redwood()` adds SSR, React Server Components and Server Functions.
 // React is handled by the redwood plugin, so no separate React plugin is required.
 export default defineConfig(async ({ mode }) => ({
+  resolve: {
+    tsconfigPaths: true,
+  },
   optimizeDeps: {
     include: ['ajv', 'ajv-formats', 'd3', 'd3-selection', 'i18next', 'react-i18next', 'react', 'react-dom', 'rxjs'],
   },
