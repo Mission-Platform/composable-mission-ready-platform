@@ -1,5 +1,6 @@
 <script setup lang="ts">
-  import { ForgeNavbar, ForgeSearchInput, ForgeThemeToggle, ForgeLanguageSwitcher } from '@mission-platform/components';
+  import { ForgeNavbar, ForgeThemeToggle, ForgeLanguageSwitcher } from '@mission-platform/components';
+  import { ForgeSearchInput } from '@mission-platform/forms';
   import { useI18n } from '@mission-platform/i18n';
   import { ForgeApplicationLayout } from '@mission-platform/layouts';
   import { onBeforeUnmount, onMounted, ref, watch } from 'vue';

@@ -19,6 +19,8 @@
   },
   "dependencies": {
     "@mission-platform/components": "workspace:*",
+    "@mission-platform/content": "workspace:*",
+    "@mission-platform/forms": "workspace:*",
     "@mission-platform/i18n": "workspace:*",
     "@mission-platform/layouts": "workspace:*",
     "@mission-platform/seo": "workspace:*",
@@ -26,6 +28,7 @@
     "@unhead/vue": "catalog:vue",
     "highlight.js": "catalog:code",
     "marked": "catalog:code",
+    "mermaid": "catalog:code",
     "vue": "catalog:vue",
     "vue-router": "catalog:vue"
   },

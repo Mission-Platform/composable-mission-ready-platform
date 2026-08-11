@@ -121,7 +121,7 @@ export function descriptionForSlug(slug: string): string {
 // an "Additional" group so nothing is silently hidden.
 const CURATED_GROUPS: NavGroup[] = [
   { label: 'Getting Started', items: ['overview', 'development-setup', 'workspace-structure'] },
-  { label: 'Architecture', items: ['architecture', 'atomic-component-design'] },
+  { label: 'Architecture', items: ['architecture', 'forge-compiler', 'atomic-component-design'] },
   {
     label: 'Authoring',
     items: ['package-development', 'composable-authoring', 'store-authoring', 'util-authoring'],

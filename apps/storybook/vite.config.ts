@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { defineFrameworkAppConfig } from '@mission-platform/vite-config';
+import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { playwright } from '@vitest/browser-playwright';
@@ -23,6 +24,7 @@ export default defineFrameworkAppConfig({
       include: ['storybook/test'],
     },
     plugins: [
+      tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' }),
       vueJsx(),
       svgLoader({
         svgo: true,

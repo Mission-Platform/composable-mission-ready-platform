@@ -1,6 +1,7 @@
 {
   "extends": "@mission-platform/typescript-config/node",
   "compilerOptions": {
+    "paths": { "@/*": ["./src/*"] },
     "types": ["node"],
     "resolveJsonModule": true,
     "isolatedModules": true

@@ -248,9 +248,9 @@
       description: t(($) => $.packages.items.router, { defaultValue: 'Routing utilities.', ns: 'mp.website' }),
     },
     {
-      name: '@mission-platform/scheduler-core',
-      description: t(($) => $.packages.items['scheduler-core'], {
-        defaultValue: 'iCalendar event model and recurrence engine.',
+      name: '@mission-platform/scheduler',
+      description: t(($) => $.packages.items.scheduler, {
+        defaultValue: 'Scheduler UI, iCalendar events and recurrence engine.',
         ns: 'mp.website',
       }),
     },
@@ -311,8 +311,8 @@
       }),
     },
     {
-      name: '@mission-platform/wysiwyg',
-      description: t(($) => $.packages.items.wysiwyg, {
+      name: '@mission-platform/content',
+      description: t(($) => $.packages.items.content, {
         defaultValue: 'Write-once rich-text editor.',
         ns: 'mp.website',
       }),

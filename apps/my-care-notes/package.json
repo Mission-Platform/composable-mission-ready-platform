@@ -27,6 +27,7 @@
   "dependencies": {
     "@mission-platform/breakpoints": "workspace:*",
     "@mission-platform/components": "workspace:*",
+    "@mission-platform/content": "workspace:*",
     "@mission-platform/forms": "workspace:*",
     "@mission-platform/harper": "workspace:*",
     "@mission-platform/hunspell": "workspace:*",

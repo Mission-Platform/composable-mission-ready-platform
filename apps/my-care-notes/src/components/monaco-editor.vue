@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ForgeMonacoEditor, type MonacoReadyContext } from '@mission-platform/components';
+  import { ForgeMonacoEditor, type MonacoReadyContext } from '@mission-platform/content';
   import { computed } from 'vue';
 
   import { useMonacoTheme } from '../composables/use-monaco-theme';

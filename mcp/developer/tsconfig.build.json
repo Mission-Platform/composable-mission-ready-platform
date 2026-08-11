@@ -1,6 +1,7 @@
 {
   "extends": "@mission-platform/typescript-config/base",
   "compilerOptions": {
+    "paths": { "@/*": ["./src/*"] },
     "target": "es2023",
     "lib": ["ES2023"],
     "module": "NodeNext",

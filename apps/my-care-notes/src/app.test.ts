@@ -62,6 +62,7 @@ vi.mock('@mission-platform/components', () => ({
   ForgeNavbar: StubComponent,
   ForgeNavbarItem: StubComponent,
   ForgeStack: StubComponent,
+  ForgeTypography: StubComponent,
   ForgeThemeToggle: StubComponent,
   ForgeVirtualTable: StubComponent,
   ForgeVirtualTabs: EmptyComponent,
@@ -102,7 +103,7 @@ vi.mock('vue-router', () => ({
 }));
 
 vi.mock('./components/monaco-editor.vue', () => ({ default: StubComponent }));
-vi.mock('./components/snippet-editor-modal.vue', () => ({ default: StubComponent }));
+vi.mock('./components/snippet-editor-modal.vue', () => ({ default: StubComponent, __v_isVNode: false }));
 
 vi.mock('./composables/use-snippets', () => ({
   useSnippets: () => ({

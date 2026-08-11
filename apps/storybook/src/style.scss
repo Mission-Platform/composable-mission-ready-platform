@@ -10,6 +10,7 @@
 @use '@mission-platform/tokens/scss/tokens';
 @use '@mission-platform/tokens/scss/themes/light';
 @use '@mission-platform/tokens/scss/themes/dark';
+@use '../design-tokens/overrides.generated';
 @use '@mission-platform/tokens/scss/mixins' as mp;
 @use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 

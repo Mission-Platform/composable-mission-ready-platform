@@ -128,6 +128,7 @@ const ForgeLanguageSwitcherExample = defineComponent({
           { code: 'es', label: 'Español' },
         ]}
         labelHidden={false}
+        // @ts-ignore
         onLocaleChange={(nextLocale) => {
           locale.value = nextLocale;
         }}

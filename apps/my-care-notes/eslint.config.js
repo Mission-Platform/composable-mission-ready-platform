@@ -3,6 +3,10 @@ import baseConfig, { pluginI18next } from '@mission-platform/eslint-config';
 export default [
   ...baseConfig,
   {
+    name: 'my-care-notes/generated',
+    ignores: ['.vite-ssg-temp/**'],
+  },
+  {
     name: 'my-care-notes/i18next',
     plugins: { i18next: pluginI18next },
     rules: {

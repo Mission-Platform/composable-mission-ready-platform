@@ -1,6 +1,7 @@
 {
   "extends": "@mission-platform/typescript-config/app",
   "compilerOptions": {
+    "paths": { "@/*": ["./src/*"] },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "customConditions": ["mp:vue"]
   },

@@ -1,6 +1,7 @@
 {
   "extends": "@mission-platform/typescript-config/stories",
   "compilerOptions": {
+    "paths": { "@/*": ["./src/*"] },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.stories.tsbuildinfo",
     // The type-check build (`vue-tsc -b`) is Vue-only, matching the Vue Storybook
     // shell; the `mp:vue` condition resolves each bare `@mission-platform/*`

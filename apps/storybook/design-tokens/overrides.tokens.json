@@ -1,0 +1,167 @@
+{
+  "$schema": "../../../vite-plugins/token-overrides/schema/token-overrides.schema.json",
+  "$description": "Hide and Seek design-token override (DTCG-style). The source is intended for the Storybook app and is transformed into overrides.generated.scss by @mission-platform/vite-plugin-token-overrides. It captures the reference site's vivid blue, navy, red, warm neutrals, flat geometry, Agrandir display type, and Avenir Next body type. All semantic colours include an explicit dark adaptation because the reference site is light-only.",
+  "font": {
+    "family": {
+      "sans": {
+        "$value": "'Avenir Next', Avenir, 'Segoe UI', ui-sans-serif, system-ui, sans-serif",
+        "$description": "Avenir Next is the primary body and UI face, with a clean system fallback stack."
+      },
+      "heading": {
+        "$value": "'Agrandir Variable', Agrandir, 'Avenir Next', Avenir, ui-sans-serif, sans-serif",
+        "$description": "Agrandir is the display and heading face used by the Hide and Seek identity."
+      },
+      "mono": {
+        "$value": "'Avenir Next', Avenir, ui-monospace, monospace"
+      }
+    }
+  },
+  "color": {
+    "bg": {
+      "base": {
+        "$value": { "light": "#f8f6f4", "dark": "#09122a" },
+        "$description": "Warm page background in light mode and deep navy in dark mode."
+      },
+      "forge-alt": { "$value": { "light": "#efebe5", "dark": "#152c63" } },
+      "surface": { "$value": { "light": "#ffffff", "dark": "#102044" }, "$description": "Primary content surface." },
+      "raised": { "$value": { "light": "#ffffff", "dark": "#152c63" } },
+      "overlay": { "$value": { "light": "#ffffff", "dark": "#1b2f5d" } },
+      "sunken": { "$value": { "light": "#efebe5", "dark": "#061022" } },
+      "muted": { "$value": { "light": "#f3f3f3", "dark": "#1b2f5d" } }
+    },
+    "border": {
+      "default": { "$value": { "light": "#d8d5d1", "dark": "#486096" } },
+      "strong": { "$value": { "light": "#152c63", "dark": "#8fa5df" } },
+      "focus": { "$value": { "light": "#1f51ff", "dark": "#9db0ff" } }
+    },
+    "text": {
+      "primary": { "$value": { "light": "#09122a", "dark": "#ffffff" } },
+      "secondary": { "$value": { "light": "#152c63", "dark": "#e7ebff" } },
+      "tertiary": { "$value": { "light": "#486096", "dark": "#bcc8ed" } },
+      "disabled": { "$value": { "light": "#6c7795", "dark": "#94a0c2" } },
+      "inverse": { "$value": { "light": "#ffffff", "dark": "#09122a" } },
+      "on-primary": { "$value": { "light": "#ffffff", "dark": "#09122a" } }
+    },
+    "primary": {
+      "default": { "$value": { "light": "#1f51ff", "dark": "#6f8dff" }, "$description": "Hide and Seek vivid blue." },
+      "hover": { "$value": { "light": "#153fd1", "dark": "#9db0ff" } },
+      "active": { "$value": { "light": "#0f2eaa", "dark": "#b7c5ff" } },
+      "subtle": { "$value": { "light": "#e8edff", "dark": "#152c63" } },
+      "muted": { "$value": { "light": "#c8d3ff", "dark": "#253f79" } },
+      "text": { "$value": { "light": "#153fd1", "dark": "#b8c6ff" } }
+    },
+    "secondary": {
+      "default": { "$value": { "light": "#e83d32", "dark": "#ff8e84" }, "$description": "Hide and Seek red accent." },
+      "hover": { "$value": { "light": "#c92b25", "dark": "#ffaaa2" } },
+      "active": { "$value": { "light": "#a9201b", "dark": "#ffc0ba" } },
+      "subtle": { "$value": { "light": "#fff0ed", "dark": "#4f2424" } },
+      "muted": { "$value": { "light": "#ffd4cf", "dark": "#71312f" } },
+      "text": { "$value": { "light": "#b5221d", "dark": "#ffb5ae" } }
+    },
+    "success": {
+      "default": { "$value": { "light": "#13795b", "dark": "#63d6ae" } },
+      "hover": { "$value": { "light": "#0d6047", "dark": "#8ae4c5" } },
+      "subtle": { "$value": { "light": "#e7f7f1", "dark": "#123b31" } },
+      "muted": { "$value": { "light": "#c6ebdd", "dark": "#1d5b4b" } },
+      "text": { "$value": { "light": "#0d6047", "dark": "#8ae4c5" } }
+    },
+    "warning": {
+      "default": { "$value": { "light": "#9a5b00", "dark": "#ffd166" } },
+      "hover": { "$value": { "light": "#744500", "dark": "#ffdf8f" } },
+      "subtle": { "$value": { "light": "#fff4d9", "dark": "#45330f" } },
+      "muted": { "$value": { "light": "#ffe6a6", "dark": "#6a4b13" } },
+      "text": { "$value": { "light": "#744500", "dark": "#ffdf8f" } }
+    },
+    "danger": {
+      "default": { "$value": { "light": "#e83d32", "dark": "#ff8e84" } },
+      "hover": { "$value": { "light": "#c92b25", "dark": "#ffaaa2" } },
+      "subtle": { "$value": { "light": "#fff0ed", "dark": "#4f2424" } },
+      "muted": { "$value": { "light": "#ffd4cf", "dark": "#71312f" } },
+      "text": { "$value": { "light": "#b5221d", "dark": "#ffb5ae" } }
+    },
+    "info": {
+      "default": { "$value": { "light": "#1f51ff", "dark": "#8fa5ff" } },
+      "hover": { "$value": { "light": "#153fd1", "dark": "#b0beff" } },
+      "subtle": { "$value": { "light": "#e8edff", "dark": "#152c63" } },
+      "muted": { "$value": { "light": "#c8d3ff", "dark": "#253f79" } },
+      "text": { "$value": { "light": "#153fd1", "dark": "#b8c6ff" } }
+    }
+  },
+  "typography": {
+    "display-font-family": { "$value": "var(--mp-font-family-heading)" },
+    "display-font-size": { "$value": "clamp(2.75rem, 7vw, 6rem)" },
+    "display-font-weight": { "$value": 700 },
+    "display-line-height": { "$value": 1.05 },
+    "display-letter-spacing": { "$value": "-0.04em" },
+    "h1-font-family": { "$value": "var(--mp-font-family-heading)" },
+    "h1-font-size": { "$value": "clamp(2.5rem, 5vw, 4.5rem)" },
+    "h1-font-weight": { "$value": 700 },
+    "h1-line-height": { "$value": 1.08 },
+    "h1-letter-spacing": { "$value": "-0.035em" },
+    "h2-font-family": { "$value": "var(--mp-font-family-heading)" },
+    "h2-font-size": { "$value": "clamp(2rem, 4vw, 3.5rem)" },
+    "h2-font-weight": { "$value": 700 },
+    "h2-line-height": { "$value": 1.1 },
+    "h2-letter-spacing": { "$value": "-0.03em" },
+    "h3-font-family": { "$value": "var(--mp-font-family-heading)" },
+    "h3-font-size": { "$value": "clamp(1.5rem, 2.5vw, 2.5rem)" },
+    "h3-font-weight": { "$value": 600 },
+    "h3-line-height": { "$value": 1.15 },
+    "h3-letter-spacing": { "$value": "-0.02em" },
+    "h4-font-family": { "$value": "var(--mp-font-family-heading)" },
+    "h4-font-weight": { "$value": 600 },
+    "h4-line-height": { "$value": 1.2 },
+    "h4-letter-spacing": { "$value": "-0.015em" },
+    "h5-font-family": { "$value": "var(--mp-font-family-heading)" },
+    "h5-font-weight": { "$value": 600 },
+    "h5-line-height": { "$value": 1.25 },
+    "h6-font-family": { "$value": "var(--mp-font-family-heading)" },
+    "h6-font-weight": { "$value": 600 },
+    "h6-line-height": { "$value": 1.3 },
+    "body-lg-font-family": { "$value": "var(--mp-font-family-sans)" },
+    "body-lg-font-size": { "$value": "1.25rem" },
+    "body-lg-line-height": { "$value": 1.6 },
+    "body-md-font-family": { "$value": "var(--mp-font-family-sans)" },
+    "body-md-font-size": { "$value": "1rem" },
+    "body-md-line-height": { "$value": 1.55 },
+    "body-sm-font-family": { "$value": "var(--mp-font-family-sans)" },
+    "body-sm-font-size": { "$value": "0.9375rem" },
+    "body-sm-line-height": { "$value": 1.5 },
+    "body-xs-font-family": { "$value": "var(--mp-font-family-sans)" },
+    "body-xs-font-size": { "$value": "0.8125rem" },
+    "body-xs-line-height": { "$value": 1.45 },
+    "label-font-family": { "$value": "var(--mp-font-family-sans)" },
+    "label-font-weight": { "$value": 600 },
+    "label-line-height": { "$value": 1.3 },
+    "label-letter-spacing": { "$value": "0.08em" },
+    "caption-font-family": { "$value": "var(--mp-font-family-sans)" },
+    "caption-line-height": { "$value": 1.4 },
+    "caption-letter-spacing": { "$value": "0.05em" }
+  },
+  "shadow": {
+    "$description": "Hide and Seek uses flat surfaces and strong color blocks, so elevation is intentionally minimal; focus rings remain explicit.",
+    "none": { "$value": "none" },
+    "2xs": { "$value": "none" },
+    "xs": { "$value": "0 1px 0 0 rgb(9 18 42 / 12%)" },
+    "sm": { "$value": "0 2px 0 0 rgb(9 18 42 / 14%)" },
+    "md": { "$value": "0 3px 0 0 rgb(9 18 42 / 16%)" },
+    "lg": { "$value": "0 4px 0 0 rgb(9 18 42 / 18%)" },
+    "xl": { "$value": "0 5px 0 0 rgb(9 18 42 / 20%)" },
+    "2xl": { "$value": "0 6px 0 0 rgb(9 18 42 / 22%)" },
+    "inner": { "$value": "inset 0 1px 0 0 rgb(9 18 42 / 12%)" },
+    "focus-primary": { "$value": "0 0 0 3px rgb(31 81 255 / 48%)" },
+    "focus-danger": { "$value": "0 0 0 3px rgb(232 61 50 / 48%)" }
+  },
+  "radius": {
+    "$description": "Mostly square to lightly rounded geometry, with the full sentinel retained for pills and circular controls.",
+    "none": { "$value": "0" },
+    "xs": { "$value": "0" },
+    "sm": { "$value": "2px" },
+    "md": { "$value": "3px" },
+    "lg": { "$value": "4px" },
+    "xl": { "$value": "6px" },
+    "2xl": { "$value": "8px" },
+    "3xl": { "$value": "12px" },
+    "full": { "$value": "9999px" }
+  }
+}
