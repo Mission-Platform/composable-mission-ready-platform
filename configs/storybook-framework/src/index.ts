@@ -5,7 +5,7 @@
  * A single Storybook app can render the platform's stories on any supported
  * framework: the `STORYBOOK_FRAMEWORK` env var (or the explicit `framework` option)
  * selects the Storybook renderer (`@storybook/vue3-vite`,
- * `@storybook/react-vite`, …) and the matching story glob suffix, while the
+ * `@storybook/react-vite`, …) for the shared neutral story inventory, while the
  * shared `viteFinal` wires the common plugins (i18n, Vue JSX for the Vue
  * renderer), ES-module workers (for Monaco) and inlined CSS (so Chromatic can
  * extract stories). This removes the per-framework duplication that previously
@@ -28,15 +28,6 @@ const FRAMEWORK_RENDERER: Record<StorybookFramework, string> = {
   solid: 'storybook-solidjs-vite',
   svelte: '@storybook/svelte-vite',
   'web-component': '@storybook/web-components-vite',
-};
-
-/** The story-file infix a framework's per-framework stories use, e.g. `foo.vue.stories.tsx`. */
-const FRAMEWORK_STORY_INFIX: Record<StorybookFramework, string> = {
-  vue: 'vue',
-  react: 'react',
-  solid: 'solid',
-  svelte: 'svelte',
-  'web-component': 'web-component',
 };
 
 /**
@@ -84,9 +75,8 @@ export interface CreateStorybookConfigOptions {
   /** Explicit framework; defaults to the `STORYBOOK_FRAMEWORK` env var, then `vue`. */
   framework?: StorybookFramework;
   /**
-   * Package folder names under `packages/` whose stories should be included
-   * (e.g. `['components', 'icons']`). The app's own `../src` stories are always
-   * included.
+   * Package folder names under `packages/` whose neutral stories should be included
+   * (e.g. `['components', 'icons']`).
    */
   packages: readonly string[];
   /**
@@ -119,60 +109,21 @@ const SHARED_ADDONS: readonly string[] = [
 
 const STORY_EXTENSIONS = '@(js|jsx|mjs|ts|tsx)';
 
-/**
- * Build the story globs for a framework: the app's own stories plus each
- * requested package's stories, matching both the per-framework infix
- * (`*.<framework>.stories.*`) and neutral (`*.stories.*`, no infix) files so
- * write-once neutral stories render on the active framework too.
- */
-export function storyGlobs(framework: StorybookFramework, packages: readonly string[], packagesRoot: string): string[] {
-  const infix = FRAMEWORK_STORY_INFIX[framework];
-  const patternsFor = (base: string): string[] => [
-    `${base}/**/*.${infix}.stories.${STORY_EXTENSIONS}`,
-    `${base}/**/!(*.vue|*.react|*.solid|*.web-component).stories.${STORY_EXTENSIONS}`,
-  ];
-  return [
-    '../src/**/*.mdx',
-    ...patternsFor('../src'),
-    ...packages.flatMap((package_) => patternsFor(`${packagesRoot}/packages/${package_}/src`)),
-  ];
+function patternsFor(base: string): string[] {
+  return [`${base}/**/!(*.vue|*.react|*.solid|*.svelte|*.web-component).stories.${STORY_EXTENSIONS}`];
 }
 
 /**
- * Keep only the packages that actually ship a build for the active framework.
- *
- * Every package ships Vue and React builds, but a few (e.g. `wysiwyg`,
- * `breakpoints`) do not yet emit Solid/Web-Component builds, so their bare
- * `@mission-platform/<pkg>` import falls through the `mp:<framework>` conditions
- * to the package's neutral/source entry — whose barrel exports only the `Base*`
- * names, not the friendly aliases the neutral stories import — and the preview
- * build fails with `MISSING_EXPORT`. Dropping those packages' stories for the
- * frameworks they don't build lets the non-Vue/React Storybooks build and render
- * the supported subset instead of hard-crashing. Reads `package.json` lazily via
- * a dynamic `node:fs` import so this module stays browser-safe for `preview.ts`.
+ * Build the shared neutral story globs for requested packages.
+ * Framework-specific story suffixes are intentionally not selected here: the
+ * same write-once story inventory must render in every active workbench.
  */
-async function packagesForFramework(
-  framework: StorybookFramework,
+export function storyGlobs(
+  _framework: StorybookFramework,
   packages: readonly string[],
-  repoRoot: string,
-): Promise<string[]> {
-  // Vue and React are shipped by every package — no filtering needed.
-  if (framework === 'vue' || framework === 'react' || framework === 'svelte') {
-    return [...packages];
-  }
-  const { readFileSync } = await import('node:fs');
-  const condition = `mp:${framework}`;
-  return packages.filter((package_) => {
-    try {
-      const manifest = JSON.parse(readFileSync(`${repoRoot}/packages/${package_}/package.json`, 'utf8')) as {
-        exports?: { '.'?: Record<string, unknown> };
-      };
-      const entry = manifest.exports?.['.'] ?? {};
-      return condition in entry;
-    } catch {
-      return false;
-    }
-  });
+  packagesRoot: string,
+): string[] {
+  return [...packages.flatMap((package_) => patternsFor(`${packagesRoot}/packages/${package_}/src`))];
 }
 
 /**
@@ -215,6 +166,15 @@ function facadeNeutralResolvePlugin(): Plugin {
   };
 }
 
+/**
+ * Frameworks whose Storybook preset installs no JSX transform for the shared
+ * neutral `*.stories.tsx`, so the story JSX must be compiled through the slot
+ * helper's own `node()` factory.
+ */
+function needsStoryJsxPragma(framework: StorybookFramework): boolean {
+  return framework === 'svelte' || framework === 'web-component';
+}
+
 /** The shared `viteFinal` every Mission Platform Storybook build layers on. */
 async function sharedViteFinal(framework: StorybookFramework, config: UserConfig): Promise<UserConfig> {
   // Import the node-only build tooling lazily *inside* this config-time function
@@ -247,12 +207,12 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
   // Every framework needs a JSX transform for the shared neutral `*.stories.tsx`
   // files. Storybook 10's renderer packages (`@storybook/react-vite`, …) no
   // longer bundle the framework's Vite JSX plugin, so without an explicit plugin
-  // Vite's core esbuild transforms the story JSX using the stories tsconfig's
-  // `jsxImportSource: "vue"` — emitting Vue vnodes for *every* framework. Under
-  // the Vue renderer that happens to be correct, but under React/Solid it hands a
-  // Vue vnode to the wrong runtime (`Objects are not valid as a React child …
-  // __v_isVNode`). Registering the matching JSX transform per framework makes the
-  // story JSX compile to the active framework's element factory.
+  // Vite's core transform uses the stories tsconfig's `jsxImportSource: "vue"` —
+  // emitting Vue vnodes for *every* framework. Under the Vue renderer that
+  // happens to be correct, but under React/Solid it hands a Vue vnode to the
+  // wrong runtime (`Objects are not valid as a React child … __v_isVNode`).
+  // Registering the matching JSX transform per framework makes the story JSX
+  // compile to the active framework's element factory.
   switch (framework) {
     case 'vue': {
       // The Vue renderer compiles `.vue.stories.tsx` via the Vue JSX transform
@@ -282,13 +242,34 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
 
   return mergeConfig(config, {
     plugins,
+    // Svelte and Web Components have no JSX transform of their own (`svelte()`
+    // only compiles `.svelte` files, and the web-components renderer expects lit
+    // templates), so a neutral `*.stories.tsx` would otherwise compile through
+    // the stories tsconfig's `jsxFactory: h` and hand a forge element tree to a
+    // runtime that cannot render it. Point Vite 8's Oxc classic JSX pragma at
+    // the slot helper's own factory instead: it builds real DOM (web components)
+    // or mountable snippets (Svelte), which both renderers accept. The settings
+    // intentionally live under `oxc`; Vite 8 ignores the legacy `esbuild` JSX
+    // fields when both transformer option sets are present.
+    ...(needsStoryJsxPragma(framework)
+      ? {
+          oxc: {
+            jsx: {
+              runtime: 'classic' as const,
+              pragma: 'node',
+              pragmaFrag: 'MpFragment',
+            },
+            jsxInject: `import { node, Fragment as MpFragment } from '@mission-platform/storybook-framework/slots'`,
+          },
+        }
+      : {}),
     // Resolve bare `@mission-platform/*` imports in stories to the build for the
     // active framework via the `mp:<framework>` export conditions (the same
     // mechanism in-repo apps and external consumers use). Without this the
     // preview resolves the framework-agnostic default build, whose barrel only
     // exports the `Base*` names — so a neutral story importing the friendly alias
     // (`Accordion`, `Avatar`, …) fails with `MISSING_EXPORT`.
-    resolve: { conditions: frameworkResolveConditions(framework) },
+    resolve: { conditions: frameworkResolveConditions(framework), tsconfigPaths: true },
     optimizeDeps: { exclude: ['i18next-vue'] },
     // Emit Monaco's `?worker` entries as ES-module workers so their internal
     // `import` statements resolve.
@@ -314,17 +295,11 @@ export function createStorybookConfig(options: CreateStorybookConfigOptions): St
   // the active framework at render time without access to `process`.
   process.env.STORYBOOK_FRAMEWORK = framework;
 
-  // The unified Storybook always runs from `apps/storybook`, so the repo root is
-  // two segments up from `process.cwd()` (matching `facadeNeutralResolvePlugin`).
-  const repoRoot = process.cwd().split('/').slice(0, -2).join('/');
-
   return {
-    // Resolve the story globs lazily so we can drop packages that don't ship a
-    // build for the active framework (Storybook allows an async `stories`
-    // function). This keeps `packagesForFramework`'s `node:fs` read out of the
-    // browser-safe module top level.
-    stories: async () =>
-      storyGlobs(framework, await packagesForFramework(framework, options.packages, repoRoot), packagesRoot),
+    // Keep the neutral and framework-specific story inventory identical in every
+    // mode. Missing package artifacts are export-validation failures, not a
+    // reason to silently hide stories from a framework's workbench.
+    stories: storyGlobs(framework, options.packages, packagesRoot),
     addons: [...SHARED_ADDONS, ...(options.addons ?? [])],
     env: (config: Record<string, string>) => ({ ...config, STORYBOOK_FRAMEWORK: framework }),
     features: {

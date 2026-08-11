@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, h, type MpElement } from '@mission-platform/forge';
 
 import sizeStyles from '../../../styles/size.module.scss';
 
@@ -20,7 +20,7 @@ export interface ResponsiveVideoSource {
 /** How the video fills its box. */
 export type ResponsiveVideoFit = 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
 
-export interface ResponsiveVideoProperties extends MpProperties {
+export interface ResponsiveVideoProperties {
   /** Single video URL. Use `sources` for multiple formats. */
   src?: string;
   /** Size token controlling the video's font scale. Defaults to `'md'`. */

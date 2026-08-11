@@ -3,7 +3,6 @@ import {
   h,
   type MpChild,
   type MpElement,
-  type MpProperties,
   type MpRenderProperty,
   Slot,
   useEffect,
@@ -47,7 +46,9 @@ export interface VirtualTableCellScope {
   value: unknown;
 }
 
-export interface VirtualTableProperties extends MpProperties {
+export interface VirtualTableProperties {
+  /** The content the consumer fills the component’s slots with. */
+  children?: MpChild | readonly MpChild[];
   /** The column definitions, left-to-right. */
   columns: VirtualTableColumn[];
   /** The full data array. Only the rows in (or near) the viewport are rendered. */

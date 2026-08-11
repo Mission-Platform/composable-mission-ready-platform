@@ -11,10 +11,27 @@
 
 @layer mp.components {
   .forge-menu {
+    /*
+     * The menu is a surface in its own right, legible **at rest**: a background,
+     * hairline border and radius mean it reads as a menu before any pointer
+     * touches it. Previously the root was transparent and only `:hover` painted
+     * a background, so the control looked invisible until hovered.
+     */
     display: inline-block;
+    padding: var(--mp-spacing-2);
+    color: var(--mp-color-text-primary);
+    background-color: var(--mp-color-bg-surface);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
 
-    &--horizontal,
+    /* A vertical menu is a stacked panel; a horizontal one is a full-width bar. */
     &--vertical {
+      width: 100%;
+      max-width: 20rem;
+    }
+
+    &--horizontal {
+      display: block;
       width: 100%;
     }
 
@@ -25,6 +42,21 @@
       display: flex;
       flex-direction: column;
       gap: var(--mp-spacing-1);
+    }
+
+    /*
+     * `orientation` must be visible, not just announced: a horizontal menu lays
+     * its top level out as a row of items whose submenus float beneath them,
+     * while a vertical menu stays the indented stacked tree below.
+     */
+    &--horizontal &__list {
+      flex-flow: row wrap;
+      align-items: center;
+      gap: var(--mp-spacing-2);
+    }
+
+    &--horizontal &__link {
+      width: auto;
     }
 
     &__item {
@@ -39,7 +71,14 @@
       padding: var(--mp-spacing-2) var(--mp-spacing-3);
       border-radius: var(--mp-radius-md);
       color: var(--mp-color-text-primary);
-      background: none;
+
+      /*
+       * A resting tint so each row is discernible as an item on the surface. The
+       * old rule left the link transparent and only painted on `:hover` — and it
+       * reached for `--mp-color-bg-subtle`, which is not a token in the set, so
+       * even the hover state painted nothing.
+       */
+      background-color: var(--mp-color-bg-sunken);
       border: none;
       cursor: pointer;
       text-decoration: none;
@@ -62,8 +101,12 @@
       }
 
       &:hover:not(:disabled, [aria-disabled='true']) {
-        background-color: var(--mp-color-bg-subtle);
+        background-color: var(--mp-color-bg-muted);
         color: var(--mp-color-text-primary);
+      }
+
+      &[aria-expanded='true'] {
+        background-color: var(--mp-color-bg-muted);
       }
     }
 
@@ -101,6 +144,32 @@
 
       &--nested {
         margin-left: var(--mp-spacing-2);
+        border-left: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      }
+    }
+
+    /*
+     * In a horizontal menu a submenu cannot push the bar around, so it floats as
+     * its own panel: the first level drops below its parent item, deeper levels
+     * fly out to the side. The item is the positioning context (`position:
+     * relative` on `&__item`).
+     */
+    &--horizontal &__submenu {
+      position: absolute;
+      inset-block-start: 100%;
+      inset-inline-start: 0;
+      z-index: var(--mp-z-index-dropdown);
+      min-width: 12rem;
+      padding: var(--mp-spacing-2);
+      background-color: var(--mp-color-bg-surface);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      border-radius: var(--mp-radius-md);
+      box-shadow: var(--mp-shadow-md);
+
+      &--nested {
+        inset-block-start: 0;
+        inset-inline-start: 100%;
+        margin-left: 0;
         border-left: var(--mp-border-width-thin) solid var(--mp-color-border-default);
       }
     }

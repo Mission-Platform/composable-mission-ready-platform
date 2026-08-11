@@ -2,8 +2,8 @@ import {
   classNames,
   Dynamic,
   h,
+  type MpChild,
   type MpElement,
-  type MpProperties,
   useEffect,
   useRef,
   useState,
@@ -15,7 +15,9 @@ export type InViewAnimation = 'fade' | 'slide-up' | 'slide-left' | 'slide-right'
 /** Size token — canonical 2xs → 2xl scale. */
 export type InViewSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface InViewProperties extends MpProperties {
+export interface InViewProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** 0–1 intersection ratio required to trigger. */
   threshold?: number;
   /** `IntersectionObserver` `rootMargin`. */

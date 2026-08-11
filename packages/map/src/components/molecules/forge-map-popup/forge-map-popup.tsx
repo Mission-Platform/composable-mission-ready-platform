@@ -1,11 +1,10 @@
-import { type MpElement, type MpProperties } from '@mission-platform/forge';
+import { type MpElement } from '@mission-platform/forge';
 
-import { useMap } from '../../../composables/use-map';
-import { usePopup } from '../../../composables/use-popup';
+import { useMap, usePopup } from '@/composables';
 
 import type { LngLatLike, PopupOptions } from 'maplibre-gl';
 
-export interface MapPopupProperties extends MpProperties {
+export interface MapPopupProperties {
   /** Longitude/latitude position of the popup. */
   lngLat: LngLatLike;
   /** HTML string displayed inside the popup. */

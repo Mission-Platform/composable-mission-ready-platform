@@ -1,0 +1,21 @@
+# @mission-platform/content
+
+Forge Monaco, Markdown, and AST-first WYSIWYG content components
+
+## Installation
+
+Add it to a consuming workspace member:
+
+```json
+{
+  "dependencies": {
+    "@mission-platform/content": "workspace:*"
+  }
+}
+```
+
+## Usage
+
+```ts
+import { content } from '@mission-platform/content';
+```

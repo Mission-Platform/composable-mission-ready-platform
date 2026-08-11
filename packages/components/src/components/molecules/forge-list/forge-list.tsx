@@ -1,6 +1,6 @@
-import { classNames, Dynamic, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, Dynamic, h, type MpChild, type MpElement } from '@mission-platform/forge';
 
-import { ForgeTypography } from '../../atoms/forge-typography';
+import { ForgeTypography } from '@/components/atoms/forge-typography';
 
 import styles from './forge-list.module.scss';
 
@@ -20,7 +20,9 @@ export interface ListItem {
   content?: string;
 }
 
-export interface ListProperties extends MpProperties {
+export interface ListProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** The rows to render. Defaults to `[]`. */
   items?: ListItem[];
   /** Semantic/visual list style. Defaults to `'unordered'`. */

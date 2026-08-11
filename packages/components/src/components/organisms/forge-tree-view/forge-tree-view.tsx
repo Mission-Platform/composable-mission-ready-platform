@@ -1,4 +1,4 @@
-import { h, type MpElement, type MpProperties, type MpRenderProperty, useState } from '@mission-platform/forge';
+import { h, type MpElement, type MpRenderProperty, useState } from '@mission-platform/forge';
 
 import sizeStyles from '../../../styles/size.module.scss';
 
@@ -26,7 +26,7 @@ export interface TreeViewLabelScope {
   depth: number;
 }
 
-export interface TreeViewProperties extends MpProperties {
+export interface TreeViewProperties {
   /** Root-level nodes. */
   nodes: TreeViewNode[];
   /** Expand every node initially. Defaults to `false`. */

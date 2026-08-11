@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, h, type MpChild, type MpElement } from '@mission-platform/forge';
 
 import { ForgeTypography } from '../forge-typography';
 
@@ -10,7 +10,9 @@ export type BadgeVariant =
 /** Canonical 2xs → 2xl size scale, matching the shared size tokens. */
 export type BadgeSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface BadgeProperties extends MpProperties {
+export interface BadgeProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Visual tone of the badge. Defaults to `'neutral'`. */
   variant?: BadgeVariant;
   /** Size step driving padding and font size. Defaults to `'md'`. */

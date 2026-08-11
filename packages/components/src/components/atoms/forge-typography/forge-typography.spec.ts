@@ -98,4 +98,58 @@ describe('ForgeTypography authors the same component for React and Vue', () => {
       expect(html).not.toContain('role="tooltip"');
     }
   });
+
+  it('renders `variant="link"` as an `<a>` with the link treatment at the body scale', async () => {
+    const properties = { variant: 'link', href: '/docs' } as const;
+    const react = renderToStaticMarkup(createElement(ReactTypography, properties, 'Docs'));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueTypography, properties, () => 'Docs') }));
+
+    for (const html of [react, vue]) {
+      expect(html).toMatch(/<a[ >]/);
+      expect(html).toContain('href="/docs"');
+      expect(html).toContain('forge-typography--link');
+      // The standalone link variant borrows the body scale…
+      expect(html).toContain('forge-typography--body-md');
+      // …and defaults to underlining on hover only.
+      expect(html).toContain('forge-typography--underline-hover');
+      // The link colour must not be shadowed by the default colour class.
+      expect(html).not.toContain('forge-typography--color-primary');
+    }
+  });
+
+  it('keeps the variant scale when `href` links a heading on both frameworks', async () => {
+    const properties = { variant: 'h3', href: '/releases', underline: 'always' } as const;
+    const react = renderToStaticMarkup(createElement(ReactTypography, properties, 'Releases'));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueTypography, properties, () => 'Releases') }));
+
+    for (const html of [react, vue]) {
+      expect(html).toMatch(/<a[ >]/);
+      expect(html).toContain('forge-typography--h3');
+      expect(html).toContain('forge-typography--link');
+      expect(html).toContain('forge-typography--underline-always');
+    }
+  });
+
+  it('defaults `rel` to `noopener noreferrer` for `target="_blank"`, and lets an explicit colour win', async () => {
+    const properties = { href: 'https://example.com', target: '_blank', color: 'secondary' } as const;
+    const react = renderToStaticMarkup(createElement(ReactTypography, properties, 'External'));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueTypography, properties, () => 'External') }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('target="_blank"');
+      expect(html).toContain('rel="noopener noreferrer"');
+      expect(html).toContain('forge-typography--color-secondary');
+    }
+  });
+
+  it('adds no link treatment and no `href` attribute for ordinary text', async () => {
+    const react = renderToStaticMarkup(createElement(ReactTypography, {}, 'Plain'));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueTypography, {}, () => 'Plain') }));
+
+    for (const html of [react, vue]) {
+      expect(html).not.toContain('forge-typography--link');
+      expect(html).not.toContain('href');
+      expect(html).not.toContain('rel=');
+    }
+  });
 });

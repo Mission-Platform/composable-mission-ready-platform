@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, h, type MpElement } from '@mission-platform/forge';
 
 import styles from './forge-spinner.module.scss';
 
@@ -8,7 +8,7 @@ export type SpinnerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type SpinnerVariant =
   'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
-export interface SpinnerProperties extends MpProperties {
+export interface SpinnerProperties {
   /** Size token. Defaults to `'md'`. */
   size?: SpinnerSize;
   /** Tone. Defaults to `'primary'`. */

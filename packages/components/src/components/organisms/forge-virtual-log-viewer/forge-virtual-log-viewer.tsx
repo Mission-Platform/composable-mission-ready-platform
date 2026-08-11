@@ -1,16 +1,8 @@
-import {
-  classNames,
-  h,
-  type MpElement,
-  type MpProperties,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from '@mission-platform/forge';
+import { classNames, h, type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
+
+import { ForgeTypography } from '@/components/atoms/forge-typography';
 
 import sizeStyles from '../../../styles/size.module.scss';
-import { ForgeTypography } from '../../atoms/forge-typography';
 
 import styles from './forge-virtual-log-viewer.module.scss';
 
@@ -32,7 +24,7 @@ export interface LogEntry {
   timestamp?: string;
 }
 
-export interface VirtualLogViewerProperties extends MpProperties {
+export interface VirtualLogViewerProperties {
   /** The full list of log entries. Only the visible window is rendered. */
   entries: LogEntry[];
   /** Size token controlling the viewer's font scale. Defaults to `'md'`. */

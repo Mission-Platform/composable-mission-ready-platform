@@ -1,4 +1,4 @@
-import { h, type MpElement, type MpProperties, Slot, useEffect, useState } from '@mission-platform/forge';
+import { h, type MpChild, type MpElement, Slot, useEffect, useState } from '@mission-platform/forge';
 
 import {
   configToCssVariables,
@@ -9,7 +9,8 @@ import {
   setConfigToken,
   type ThemeComposerAttribute,
   type ThemeComposerConfig,
-} from '../../../stores/theme-composer-store/theme-composer-store';
+} from '@/stores/theme-composer-store/theme-composer-store';
+
 import sizeStyles from '../../../styles/size.module.scss';
 
 import styles from './forge-theme-composer.module.scss';
@@ -17,7 +18,9 @@ import styles from './forge-theme-composer.module.scss';
 /** Size token — canonical 2xs → 2xl scale. */
 export type ThemeComposerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface ThemeComposerProperties extends MpProperties {
+export interface ThemeComposerProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Size token controlling the composer's scale. Defaults to `'md'`. */
   size?: ThemeComposerSize;
   /**

@@ -1,8 +1,8 @@
 import {
   classNames,
   h,
+  type MpChild,
   type MpElement,
-  type MpProperties,
   Slot,
   useEffect,
   useRef,
@@ -10,12 +10,14 @@ import {
 } from '@mission-platform/forge';
 import { LngLat, Map, type MapMouseEvent, type MapOptions } from 'maplibre-gl';
 
-import { centerDiffers, scalarDiffers } from '../../../utils/camera';
-import { MapContext } from '../../map-context';
+import { MapContext } from '@/map-context';
+import { centerDiffers, scalarDiffers } from '@/utils/camera';
 
 import styles from './forge-map-libre.module.scss';
 
-export interface MapLibreProperties extends MpProperties {
+export interface MapLibreProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** MapLibre style URL or inline style object. */
   readonly mapStyle: MapOptions['style'];
   /** Initial map center as `[lng, lat]`. Defaults to `[0, 0]`. */
@@ -158,14 +160,14 @@ export function ForgeMapLibre(properties: Readonly<MapLibreProperties>): MpEleme
   return (
     <div
       ref={containerReference}
-      className={classNames(styles['forge-map-libre'])}
+      class={classNames(styles['forge-map-libre'])}
     >
       {map ? (
         // Vue compiles `useState` to `ref`, whose template unwrap widens class
         // instances to their public shape and drops maplibre's private fields
         // (`_setupResizeObserver`, `_resolveContainer`). Assert back to `Map` so
         // the generated SFC type-checks against `MapContext`'s `Map | undefined`.
-        <MapContext.Provider value={map as Map}>
+        <MapContext.Provider value={map as unknown as Map}>
           <Slot />
         </MapContext.Provider>
       ) : undefined}

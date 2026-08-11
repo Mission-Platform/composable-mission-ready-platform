@@ -1,251 +1,126 @@
-# @mission-platform/layout
+# `@mission-platform/layouts`
 
-A comprehensive layout system for Mission Platform applications, providing responsive grid systems, spacing utilities,
-and flexible container components that work seamlessly with the design token system.
+Framework-neutral application and pattern layouts for Vue 3 and React, authored with the Forge JSX dialect and styled
+with Mission Platform design tokens.
 
 ## Overview
 
-The `@mission-platform/layout` package provides a set of utility classes and Vue 3 components designed to create
-consistent, responsive layouts across all Mission Platform applications. It integrates tightly with the design tokens
-system for theming and responsiveness.
+The `@mission-platform/layouts` package contains application shells, containers, vertical layouts, and four reusable
+responsive pattern templates. Its components are exported through the existing framework-conditioned package build, so
+the same source works with Vue 3, React, Solid, Svelte, and Web Components.
 
 ## Features
 
-- **Responsive Grid System**: 12-column fluid grid with breakpoints from `@mission-platform/breakpoints`
-- **Spacing Utilities**: Consistent margin and padding utilities based on spacing tokens
-- **Container Components**: Pre-styled container components for content layout
-- **Flexbox Utilities**: Flexible box layout utilities for modern web design
-- **Responsive Design**: Built-in support for all Mission Platform breakpoints
-- **Design Token Integration**: Automatic theming with light/dark mode support
+- **Application shell**: `ForgeApplicationLayout`, `ForgeContainer`, and `ForgeVerticalLayout`
+- **Bento composition**: A dominant hero with feature and supporting regions
+- **Regular grid**: Ordered named cells for metric and status-card collections
+- **F-pattern composition**: Documentation-style header, intro, article, secondary, and footer regions
+- **Z-pattern composition**: Alternating top, middle, and bottom content regions
+- **CSS-only responsiveness**: Mobile-first reflow without `window`, `matchMedia`, or client state
+- **Design token integration**: Gaps, padding, and margins use Mission Platform spacing tokens
 
 ## Installation
 
 ```bash
-npm install @mission-platform/layout
-# or
-yarn add @mission-platform/layout
-# or
-pnpm add @mission-platform/layout
+pnpm add @mission-platform/layouts
 ```
 
 ## Usage
 
-### Basic Grid System
-
-The layout system provides a 12-column grid with responsive classes:
-
-```vue
-<template>
-  <div class="mp-grid">
-    <!-- Full width on mobile, 6 columns on desktop -->
-    <div class="mp-col mp-col-12@mobile mp-col-6@desktop">Left Column</div>
-
-    <!-- Full width on mobile, 6 columns on desktop -->
-    <div class="mp-col mp-col-12@mobile mp-col-6@desktop">Right Column</div>
-  </div>
-</template>
-```
-
-### Spacing Utilities
-
-Use spacing utilities for consistent margins and padding:
-
-```vue
-<template>
-  <div class="mp-mt-4 mp-mb-6 mp-p-4">Content with spacing</div>
-</template>
-```
-
-### Container Components
-
-The package provides Vue components for common layout patterns:
+### Vue 3
 
 ```vue
 <script setup lang="ts">
-  import { MpContainer, MpRow, MpCol } from '@mission-platform/layout';
+  import { ForgeBentoLayout, ForgeFPatternLayout, ForgeGridLayout } from '@mission-platform/layouts';
 </script>
 
 <template>
-  <MpContainer>
-    <MpRow>
-      <MpCol
-        cols="12"
-        cols-md="6"
-      >
-        Column Content
-      </MpCol>
-      <MpCol
-        cols="12"
-        cols-md="6"
-      >
-        Column Content
-      </MpCol>
-    </MpRow>
-  </MpContainer>
+  <ForgeBentoLayout gap="lg">
+    <template #hero><h1>Mission Platform</h1></template>
+    <template #feature><p>Composable building blocks</p></template>
+    <template #supporting><a href="/docs">Read the docs</a></template>
+  </ForgeBentoLayout>
+
+  <ForgeFPatternLayout>
+    <template #header><nav>Documentation navigation</nav></template>
+    <template #primary><article>Guide content</article></template>
+    <template #secondary><aside>On this page</aside></template>
+  </ForgeFPatternLayout>
+
+  <ForgeGridLayout
+    :rows="2"
+    :columns="2"
+  >
+    <template #cell1><article>Availability</article></template>
+    <template #cell2><article>Latency</article></template>
+  </ForgeGridLayout>
 </template>
+```
+
+### React
+
+```tsx
+import { ForgeBentoLayout, ForgeZPatternLayout } from '@mission-platform/layouts';
+
+export function LandingPage() {
+  return (
+    <>
+      <ForgeBentoLayout
+        hero={<h1>Mission Platform</h1>}
+        feature={<p>Composable building blocks</p>}
+        supporting={<a href="/docs">Read the docs</a>}
+      />
+      <ForgeZPatternLayout
+        topStart={<h2>Build once</h2>}
+        topEnd={
+          <img
+            src="hero.png"
+            alt=""
+          />
+        }
+        middle={<p>Use the same layout from Vue or React.</p>}
+        bottomStart={<a href="/docs">Documentation</a>}
+        bottomEnd={<button type="button">Get started</button>}
+      />
+    </>
+  );
+}
 ```
 
 ## API Reference
 
-### Grid Classes
+### Shared controls
 
-#### Container Classes
+All four pattern templates accept:
 
-- `mp-grid`: Creates a grid container with proper gutters
-- `mp-grid-no-gutters`: Grid container without gutters
+- `tag`: `div`, `section`, `article`, `main`, or `aside`
+- `gap`, `margin`, and `padding`: `2xs`, `xs`, `sm`, `md`, `lg`, `xl`, or `2xl`
+- `breakpoint`: `xs`, `sm`, `md`, `lg`, or `xl`
 
-#### Column Classes
+The components start as one-column or stacked layouts. At the selected breakpoint they apply their pattern-specific
+grid areas. Region wrappers have predictable BEM-style classes and are emitted only when their named slot is present.
 
-- `mp-col`: Base column class (required)
-- `mp-col-{1-12}`: Column width (1-12 columns)
-- `mp-col-{1-12}@{breakpoint}`: Responsive column widths
+### Region contracts
 
-Available breakpoints: `mobile`, `tablet`, `desktop`, `large-desktop`
+| Component             | Named regions                                              | Composition source                                   |
+| --------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
+| `ForgeBentoLayout`    | `hero`, `feature`, `supporting`                            | Website marketing hero and feature sections          |
+| `ForgeGridLayout`     | `cell1` through `cell12`                                   | Service-monitor dashboard cards and status summaries |
+| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer`        | Docs navbar/context, article, sidebar, and footer    |
+| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | Alternating landing-page content and actions         |
 
-### Spacing Classes
+`ForgeGridLayout` accepts `rows` and `columns`, clamps both to one or greater, limits the renderable area to 12 named
+cells, and uses a single-column fallback below its breakpoint. Named cells always render in source order.
 
-#### Margin Utilities
+## Product composition guidance
 
-- `mp-m-{1-8}`: Margin top, bottom, left, and right
-- `mp-mt-{1-8}`: Margin top
-- `mp-mb-{1-8}`: Margin bottom
-- `mp-ml-{1-8}`: Margin left
-- `mp-mr-{1-8}`: Margin right
-- `mp-mx-{1-8}`: Margin left and right
-- `mp-my-{1-8}`: Margin top and bottom
+The templates extract structure, not application behavior. Website package cards and FAQ content, docs navigation and
+routing, and service-monitor polling, forms, and incident state remain owned by their applications. Those applications
+can pass their existing content into the named regions without introducing imports from `apps/` into `packages/layout`.
 
-#### Padding Utilities
-
-- `mp-p-{1-8}`: Padding on all sides
-- `mp-pt-{1-8}`: Padding top
-- `mp-pb-{1-8}`: Padding bottom
-- `mp-pl-{1-8}`: Padding left
-- `mp-pr-{1-8}`: Padding right
-- `mp-px-{1-8}`: Padding left and right
-- `mp-py-{1-8}`: Padding top and bottom
-
-### Vue Components
-
-#### `<MpContainer>`
-
-A responsive container that centers content and provides horizontal padding.
-
-**Props:**
-
-- `fluid`: Boolean to disable max-width constraint (default: `false`)
-- `maxWidth`: Custom maximum width (e.g., `'1400px'`)
-
-#### `<MpRow>`
-
-Creates a flex row for grid layout.
-
-**Props:**
-
-- `noGutters`: Boolean to remove gutters (default: `false`)
-- `align`: Flex alignment (`'start'`, `'center'`, `'end'`, `'stretch'`)
-- `justify`: Flex justification (`'start'`, `'center'`, `'end'`, `'between'`, `'around'`)
-
-#### `<MpCol>`
-
-Creates a responsive grid column.
-
-**Props:**
-
-- `cols`: Base number of columns (1-12)
-- `cols-sm`: Columns at small breakpoint
-- `cols-md`: Columns at medium breakpoint
-- `cols-lg`: Columns at large breakpoint
-- `cols-xl`: Columns at extra-large breakpoint
-- `offset`: Column offset (0-11)
-- `order`: Column ordering
-
-## Responsive Design
-
-The layout system uses the same breakpoints as `@mission-platform/breakpoints`:
-
-```
-mobile:    0px - 599px
-sm:        600px - 959px
-tablet:    600px - 959px (alias for sm)
-desktop:   960px - 1279px
-lg:        960px - 1279px (alias for desktop)
-large-desktop: 1280px+
-xlarge:    1280px+ (alias for large-desktop)
-```
-
-## Customization
-
-### SCSS Variables
-
-You can customize the grid system by overriding SCSS variables:
-
-```scss
-// In your main SCSS file
-$mp-grid-max-widths: (
-  sm: 600px,
-  md: 960px,
-  lg: 1280px,
-  xl: 1440px,
-);
-
-$mp-grid-gutter-width: 1.5rem;
-```
-
-### JavaScript API
-
-For programmatic control, you can use the layout utilities:
-
-```ts
-import { getBreakpoint } from '@mission-platform/layout';
-
-// Get current breakpoint
-const currentBreakpoint = getBreakpoint();
-
-// Check if at specific breakpoint
-if (isDesktop()) {
-  // Desktop-specific logic
-}
-```
-
-## Best Practices
-
-1. **Mobile-First Approach**: Always define mobile styles first, then override for larger breakpoints
-2. **Consistent Spacing**: Use the spacing utilities instead of hard-coded values
-3. **Grid Nesting**: Avoid excessive grid nesting; prefer composition over complexity
-4. **Responsive Testing**: Test layouts at all breakpoints to ensure proper responsiveness
-5. **Accessibility**: Ensure sufficient color contrast and touch target sizes on mobile devices
-
-## Migration Guide
-
-### From Tailwind CSS
-
-If migrating from Tailwind, the class names are similar but use `mp-` prefix:
-
-```diff
-- <div class="container mx-auto px-4">
-+ <div class="mp-container mp-px-4">
-
-- <div class="grid grid-cols-12 gap-4">
-+ <div class="mp-grid">
-
-- <div class="col-span-6 md:col-span-4">
-+ <div class="mp-col mp-col-6@mobile mp-col-4@desktop">
-```
-
-### From Bootstrap
-
-Bootstrap migration is straightforward:
-
-```diff
-- <div class="container">
-+ <div class="mp-container">
-
-- <div class="row">
-+ <div class="mp-row">
-
-- <div class="col-md-6">
-+ <div class="mp-col mp-col-12@mobile mp-col-6@desktop">
-```
+For accessibility, keep the supplied content in semantic reading order and treat CSS grid areas as visual placement only.
+Long content is protected by `min-width: 0` and `overflow-wrap: anywhere`; SSR does not require `window` or
+`matchMedia`.
 
 ## License
 

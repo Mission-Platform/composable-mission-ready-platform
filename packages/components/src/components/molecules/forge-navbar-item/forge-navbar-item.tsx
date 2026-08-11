@@ -2,8 +2,8 @@ import {
   classNames,
   Dynamic,
   h,
+  type MpChild,
   type MpElement,
-  type MpProperties,
   Slot,
   useEffect,
   useRef,
@@ -36,7 +36,9 @@ export interface NavbarItemChild {
   onClick?: () => void;
 }
 
-export interface NavbarItemProperties extends MpProperties {
+export interface NavbarItemProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Item label (rendered when no default slot is provided). */
   label?: string;
   /** Destination URL — renders the item as a link when there are no `children`. */

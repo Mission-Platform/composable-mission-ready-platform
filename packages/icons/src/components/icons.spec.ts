@@ -1,3 +1,4 @@
+import { h as forgeH, type MpComponent, type MpElement } from '@mission-platform/forge';
 import { toReactComponent } from '@mission-platform/forge/react';
 import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
@@ -6,9 +7,30 @@ import { describe, expect, it } from 'vitest';
 import { createSSRApp, h as vueH } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 
-import { ForgeIconAlert, ForgeIconArrow, ForgeIconDrawCircle, ForgeIconHeadingOne, ForgeIconSort } from '.';
+import { IconSpriteProvider } from '../sprite/provider';
 
-import type { MpComponent } from '@mission-platform/forge';
+import {
+  ForgeIconAlert,
+  ForgeIconArrow,
+  ForgeIconDrawCircle,
+  ForgeIconHeadingOne,
+  ForgeIconSort,
+  ForgeIconFlag,
+} from '.';
+
+import type { IconCountryCode } from './maps/countries/forge-icon-flag';
+
+const InlineSpriteDemo: MpComponent = (): MpElement =>
+  forgeH(IconSpriteProvider, {
+    children: [forgeH(ForgeIconAlert, {}), forgeH(ForgeIconArrow, { direction: 'right' })],
+  });
+
+const ExternalSpriteDemo: MpComponent = (): MpElement =>
+  forgeH(IconSpriteProvider, {
+    src: '/assets/icons.svg',
+    inline: false,
+    children: forgeH(ForgeIconAlert, {}),
+  });
 
 /**
  * Smoke-tests a representative slice of the generated icon set, rendering each
@@ -33,18 +55,18 @@ describe('generated icons author the same component for React and Vue', () => {
     }
   });
 
-  it('embeds the heading glyph as an SVG <text> node on both frameworks', async () => {
+  it('references the canonical heading symbol on both frameworks', async () => {
     for (const html of await renderBoth(ForgeIconHeadingOne)) {
-      expect(html).toContain('<text');
-      expect(html).toContain('>1</text>');
+      expect(html).toContain('<use href="#icon-heading-one"');
       expect(html).toContain('aria-label="Heading 1"');
     }
   });
 
-  it('paints the filled marker child with the resolved colour on both frameworks', async () => {
+  it('passes the resolved colour to the canonical drawing symbol on both frameworks', async () => {
     for (const html of await renderBoth(ForgeIconDrawCircle, { color: 'red' })) {
       expect(html).toContain('forge-icon-draw-circle');
-      expect(html).toContain('fill="red"');
+      expect(html).toContain('stroke="red"');
+      expect(html).toContain('<use href="#icon-draw-circle"');
     }
   });
 
@@ -57,9 +79,33 @@ describe('generated icons author the same component for React and Vue', () => {
 
   it('fills only the active sort chevron on both frameworks', async () => {
     for (const html of await renderBoth(ForgeIconSort, { active: true, direction: 'asc', color: 'blue' })) {
-      // The ascending chevron is filled; the descending one stays hollow.
-      expect(html).toContain('fill="blue"');
+      expect(html).toContain('stroke="blue"');
+      expect(html).toContain('data-active="true"');
+      expect(html).toContain('data-direction="asc"');
       expect(html).toContain('fill="none"');
+      expect(html).toContain('<use href="#icon-sort"');
     }
+  });
+
+  it('mounts one inline sprite host for repeated icon references', async () => {
+    const [react, vue] = await renderBoth(InlineSpriteDemo);
+    for (const html of [react, vue]) {
+      expect(html).toContain('<defs>');
+      expect(html).toContain('<symbol id="icon-alert"');
+      expect(html).toContain('<use href="#icon-alert"');
+      expect(html).toContain('<use href="#icon-arrow"');
+    }
+  });
+
+  it('resolves an external sprite URL without mounting duplicate symbols', async () => {
+    const [react, vue] = await renderBoth(ExternalSpriteDemo);
+    for (const html of [react, vue]) {
+      expect(html).not.toContain('<defs>');
+      expect(html).toContain('<use href="/assets/icons.svg#icon-alert"');
+    }
+  });
+
+  it('rejects unsupported country codes predictably', () => {
+    expect(() => ForgeIconFlag({ countryCode: 'ZZ' as IconCountryCode })).toThrow('Unsupported country code');
   });
 });

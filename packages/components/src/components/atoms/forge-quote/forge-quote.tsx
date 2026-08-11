@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, h, type MpChild, type MpElement } from '@mission-platform/forge';
 
 import { ForgeTypography, type TypographyVariant } from '../forge-typography';
 
@@ -12,7 +12,9 @@ export type QuoteTone =
 /** Size token controlling the quote text scale — canonical 2xs → 2xl scale. */
 export type QuoteSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface QuoteProperties extends MpProperties {
+export interface QuoteProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Visual treatment. Defaults to `'default'`. */
   variant?: QuoteVariant;
   /** Colour tone (accent border/text). Defaults to `'neutral'`. */

@@ -6,6 +6,8 @@ export {
   type FormJsonSchema,
   type FormValues,
   type SchemaFormDefinition,
+  type SchemaFormFieldRenderer,
+  type SchemaFormFieldRendererContext,
   type SchemaFormProperties,
   type SchemaFormValidationMode,
 } from './forge-schema-form';

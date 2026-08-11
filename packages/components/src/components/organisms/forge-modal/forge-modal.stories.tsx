@@ -1,4 +1,6 @@
-import { h } from '@mission-platform/forge';
+import { h, type MpChild } from '@mission-platform/forge';
+import { ForgeSelect } from '@mission-platform/forms';
+import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
 import { useArgs } from 'storybook/preview-api';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 
@@ -6,7 +8,6 @@ import {
   ForgeButton,
   ForgeDropdown,
   ForgeModal,
-  ForgeSelect,
   ForgeStack,
   ForgeTooltip,
   ForgeTypography,
@@ -68,6 +69,14 @@ const meta = {
     closeOnEsc: true,
     closeLabel: 'Close',
   },
+  // `header`/`footer` are **named slots**, not props: only the React/Solid
+  // builds read them as `properties.footer`, while Vue renders
+  // `renderSlot($slots, 'footer')`, Svelte expects a snippet and the web
+  // component a light-DOM child. Passing them through `renderWithSlots` is the
+  // one shape that works on all five. A plain string (like `title`) stays a
+  // prop — it works as slot fallback content everywhere. The helper returns the
+  // active renderer's own node (typed `unknown`), so nesting it in JSX needs the
+  // neutral child type.
   render: (arguments_) => {
     const [{ open = false }, updateArguments] = useArgs();
 
@@ -88,6 +97,27 @@ const meta = {
         Save changes
       </ForgeButton>,
     ];
+    const modal = renderWithSlots(
+      ForgeModal,
+      {
+        ...arguments_,
+        open,
+        onUpdateOpen: (value: boolean) => updateArguments({ open: value }),
+        onClose: close,
+      },
+      { footer },
+      <ForgeStack gap="sm">
+        <ForgeTypography variant="body-md">
+          Update the details below and save your changes. The modal traps focus and locks page scroll while open.
+        </ForgeTypography>
+        <ForgeTypography
+          color="secondary"
+          variant="caption"
+        >
+          On small screens this opens as a bottom sheet; on larger screens it is centred.
+        </ForgeTypography>
+      </ForgeStack>,
+    ) as MpChild;
     return (
       <>
         <ForgeButton
@@ -96,25 +126,7 @@ const meta = {
         >
           Open modal
         </ForgeButton>
-        <ForgeModal
-          {...arguments_}
-          open={open}
-          footer={footer}
-          onUpdateOpen={(value) => updateArguments({ open: value })}
-          onClose={close}
-        >
-          <ForgeStack gap="sm">
-            <ForgeTypography variant="body-md">
-              Update the details below and save your changes. The modal traps focus and locks page scroll while open.
-            </ForgeTypography>
-            <ForgeTypography
-              color="secondary"
-              variant="caption"
-            >
-              On small screens this opens as a bottom sheet; on larger screens it is centred.
-            </ForgeTypography>
-          </ForgeStack>
-        </ForgeModal>
+        {modal}
       </>
     );
   },
@@ -209,6 +221,34 @@ export const PopupsAboveModal: Story = {
   render: () => {
     const [{ open = false, modelValue: fruit = '', dropdownOpen = false }, updateArguments] = useArgs();
 
+    // `trigger` is a **named slot** of `ForgeDropdown`, not a prop: only the
+    // React/Solid builds read it as `properties.trigger`, while Vue renders
+    // `renderSlot($slots, 'trigger')`, Svelte expects a snippet and the web
+    // component a light-DOM child. `renderWithSlots` returns the active
+    // renderer's own node (typed `unknown`), so nesting it in JSX needs the
+    // neutral child type.
+    const dropdown = renderWithSlots(
+      ForgeDropdown,
+      {
+        open: dropdownOpen,
+        onUpdateOpen: (value: boolean) => updateArguments({ dropdownOpen: value }),
+      },
+      {
+        trigger: (
+          <ForgeButton
+            variant="secondary"
+            onClick={() => updateArguments({ dropdownOpen: !dropdownOpen })}
+          >
+            Open dropdown
+          </ForgeButton>
+        ),
+      },
+      <ForgeStack gap="xs">
+        <ForgeTypography variant="body-sm">ForgeDropdown item one</ForgeTypography>
+        <ForgeTypography variant="body-sm">ForgeDropdown item two</ForgeTypography>
+      </ForgeStack>,
+    ) as MpChild;
+
     return (
       <>
         <ForgeButton
@@ -238,23 +278,7 @@ export const PopupsAboveModal: Story = {
               placeholder="Pick one"
               onUpdateModelValue={(value) => updateArguments({ modelValue: value })}
             />
-            <ForgeDropdown
-              open={dropdownOpen}
-              trigger={
-                <ForgeButton
-                  variant="secondary"
-                  onClick={() => updateArguments({ dropdownOpen: !dropdownOpen })}
-                >
-                  Open dropdown
-                </ForgeButton>
-              }
-              onUpdateOpen={(value) => updateArguments({ dropdownOpen: value })}
-            >
-              <ForgeStack gap="xs">
-                <ForgeTypography variant="body-sm">ForgeDropdown item one</ForgeTypography>
-                <ForgeTypography variant="body-sm">ForgeDropdown item two</ForgeTypography>
-              </ForgeStack>
-            </ForgeDropdown>
+            {dropdown}
             <ForgeTooltip content="This tooltip renders above the modal too.">
               <ForgeButton variant="tertiary">Hover for a tooltip</ForgeButton>
             </ForgeTooltip>

@@ -12,11 +12,11 @@ time** with that plugin's **two-stage compiler** (source-to-source → native
 compile), instead of the runtime `toReactComponent` / `toVueComponent` adapters.
 
 The same neutral components are **also** projected onto **Storyblok** by the
-plugin's `generateStoryblokBloks`: each component yields a blok configuration
+plugin's `generateCmsArtifacts`: each component yields a blok configuration
 JSON (a Storyblok *component object*) plus a React `.tsx` / Vue `.vue` **blok
 wrapper** that binds Storyblok's `blok` prop onto the already-built framework
-component. These ship under the `./storyblok/react`, `./storyblok/vue`, and
-`./storyblok/components.json` subpaths.
+component. These ship under the `./cms/storyblok/react`, `./cms/storyblok/vue`, and
+`./cms/storyblok/components.json` subpaths.
 
 The package ships **only** these framework + Storyblok builds — there is no
 neutral build and no framework-neutral root export. A single `pnpm build`
@@ -414,9 +414,9 @@ Either way, two authoring patterns are used:
 |---|---|
 | `@mission-platform/components/react` | `Badge`, `Button`, `InView`, `Stack`, `Grid`, `Separator`, `Masonry`, `ApplicationLayout`, `Typography`, `Hero`, `Drawer`, `Navbar`, `VerticalLayout`, `WindowPopout`, `Avatar`, `ButtonGroup`, `IconButton`, `Tag`, `Quote`, `List`, `Card`, `Collapse`, `Table`, `Skeleton`, `Spinner`, `StatusIcon`, `ProgressBar`, `AlertBanner`, `Toast`, `Checkbox`, `Radio`, `RadioGroup`, `Switch`, `Input`, `Textarea`, `NumberStepper`, `Slider`, `RangeInput`, `ColorInput`, `OtpInput`, `Rating`, `SearchInput`, `FieldSet`, `FileInput`, `Select`, `Multiselect`, `PhoneInput`, `ChatBubble`, `ChatArea`, `Accordion`, `Carousel`, `Timeline`, `QrCode`, `LocationInput`, `Calendar`, `DateInput`, `DateRangeInput`, `DateTimeRangeInput`, `TimeInput`, `TimeRangeInput`, `Tooltip`, `Popover`, `Dropdown`, `Dialog`, `Modal`, `CodeBlock`, `MarkdownInput`, `MonacoEditor`, `SchemaForm`, `FormWizard`, `FormBuilder`, `Scheduler` (the public name of each `Base*` component) — compiled to React function components at build time by `@mission-platform/vite-plugin-forge` (`dist/react/index.js`). Each component is its own ESM chunk that imports its own CSS, so the library tree-shakes (unused components, styles included, are dropped). |
 | `@mission-platform/components/vue` | `Badge`, `Button`, `InView`, `Stack`, `Grid`, `Separator`, `Masonry`, `ApplicationLayout`, `Typography`, `Hero`, `Drawer`, `Navbar`, `VerticalLayout`, `WindowPopout`, `Avatar`, `ButtonGroup`, `IconButton`, `Tag`, `Quote`, `List`, `Card`, `Collapse`, `Table`, `Skeleton`, `Spinner`, `StatusIcon`, `ProgressBar`, `AlertBanner`, `Toast`, `Checkbox`, `Radio`, `RadioGroup`, `Switch`, `Input`, `Textarea`, `NumberStepper`, `Slider`, `RangeInput`, `ColorInput`, `OtpInput`, `Rating`, `SearchInput`, `FieldSet`, `FileInput`, `Select`, `Multiselect`, `PhoneInput`, `ChatBubble`, `ChatArea`, `Accordion`, `Carousel`, `Timeline`, `QrCode`, `LocationInput`, `Calendar`, `DateInput`, `DateRangeInput`, `DateTimeRangeInput`, `TimeInput`, `TimeRangeInput`, `Tooltip`, `Popover`, `Dropdown`, `Dialog`, `Modal`, `CodeBlock`, `MarkdownInput`, `MonacoEditor`, `SchemaForm`, `FormWizard`, `FormBuilder`, `Scheduler` (the public name of each `Base*` component) — compiled to Vue components at build time by `@mission-platform/vite-plugin-forge` (`dist/vue/index.js`). Each component is its own ESM chunk that imports its own CSS, so the library tree-shakes. |
-| `@mission-platform/components/storyblok/react` | `ApplicationLayoutBlok`, `BadgeBlok`, `ButtonBlok`, `InViewBlok`, `StackBlok`, `GridBlok`, `SeparatorBlok`, `MasonryBlok` — React **blok wrappers** that bind Storyblok's `blok` prop onto the built `./react` component (`storyblokEditable`, nested `StoryblokComponent`) (`dist/storyblok/react/index.js`). Each wrapper's `blok` prop is **precisely typed** (`SbBlokData & { … }`, one member per schema field), not an open `Record<string, unknown>`. Requires the `@storyblok/react` peer. |
-| `@mission-platform/components/storyblok/vue` | `ApplicationLayoutBlok`, `BadgeBlok`, `ButtonBlok`, `InViewBlok`, `StackBlok`, `GridBlok`, `SeparatorBlok`, `MasonryBlok` — Vue **blok wrappers** that bind Storyblok's `blok` prop onto the built `./vue` component (`v-editable`, nested `StoryblokComponent`) (`dist/storyblok/vue/index.js`). Each wrapper's `blok` prop is **precisely typed** (`SbBlokData & { … }`, one member per schema field), not an open `Record<string, unknown>`. Requires the `@storyblok/vue` peer. |
-| `@mission-platform/components/storyblok/components.json` | The aggregate Storyblok **blok configuration** — `{ "components": [ … ] }`, the shape `storyblok push-components` consumes. The framework-agnostic create-shape `<component>.json` files sit alongside it in `dist/storyblok/`. |
+| `@mission-platform/components/cms/storyblok/react` | `ApplicationLayoutBlok`, `BadgeBlok`, `ButtonBlok`, `InViewBlok`, `StackBlok`, `GridBlok`, `SeparatorBlok`, `MasonryBlok` — React **blok wrappers** that bind Storyblok's `blok` prop onto the built `./react` component (`storyblokEditable`, nested `StoryblokComponent`) (`dist/cms/storyblok/react/index.js`). Each wrapper's `blok` prop is **precisely typed** (`SbBlokData & { … }`, one member per schema field), not an open `Record<string, unknown>`. Requires the `@storyblok/react` peer. |
+| `@mission-platform/components/cms/storyblok/vue` | `ApplicationLayoutBlok`, `BadgeBlok`, `ButtonBlok`, `InViewBlok`, `StackBlok`, `GridBlok`, `SeparatorBlok`, `MasonryBlok` — Vue **blok wrappers** that bind Storyblok's `blok` prop onto the built `./vue` component (`v-editable`, nested `StoryblokComponent`) (`dist/cms/storyblok/vue/index.js`). Each wrapper's `blok` prop is **precisely typed** (`SbBlokData & { … }`, one member per schema field), not an open `Record<string, unknown>`. Requires the `@storyblok/vue` peer. |
+| `@mission-platform/components/cms/storyblok/components.json` | The aggregate Storyblok **blok configuration** — `{ "components": [ … ] }`, the shape `storyblok push-components` consumes. The framework-agnostic create-shape `<component>.json` files sit alongside it in `dist/cms/storyblok/`. |
 | `@mission-platform/components/styles` | A bare side-effect SCSS entry (`src/styles/a11y.scss`) — a global `prefers-reduced-motion` reset mirroring the Vue component library's global a11y safety net. Import it once (`import '@mission-platform/components/styles'`) for the app-wide reduced-motion behaviour, independent of the per-component CSS that loads automatically with each imported component. |
 
 Both the `./react` and `./vue` entries additionally re-export **every component
@@ -480,20 +480,20 @@ framework (selected by `--mode`), each emitting into its own subtree:
 
 - `vue` (default) — the generated `vue` entry → `dist/vue/`.
 - `react` — the generated `react` entry → `dist/react/`.
-- `storyblok-vue` — the generated Vue blok wrappers → `dist/storyblok/vue/`.
-- `storyblok-react` — the generated React blok wrappers → `dist/storyblok/react/`.
+- `cms-storyblok-vue` — the generated Vue blok wrappers → `dist/cms/storyblok/vue/`.
+- `cms-storyblok-react` — the generated React blok wrappers → `dist/cms/storyblok/react/`.
 
-The two Storyblok modes call the plugin's `generateStoryblokBloks` (Stage 1) to
+The two Storyblok modes call the plugin's `generateCmsArtifacts` (Stage 1) to
 emit the blok configuration JSON + the framework blok wrappers into a build
 cache, then compile the wrappers with the same Stage-2 toolchain as the
 matching framework. Each wrapper imports the package's **own built** `./react`
 / `./vue` subpath and `@storyblok/{react,vue}` — all kept **external** — so the
-wrappers stay thin. `generateStoryblokBloks` already synthesises the wrapper
+wrappers stay thin. `generateCmsArtifacts` already synthesises the wrapper
 entry's **precisely typed** `index.d.ts` (each wrapper is a framework component
 taking a single `blok` prop typed `SbBlokData & { … }`, one member per schema
 field), which a small local plugin ships verbatim; another copies the
 framework-agnostic JSON (`components.json` plus one `<component>.json` per
-component) into the shared `dist/storyblok/`.
+component) into the shared `dist/cms/storyblok/`.
 
 Each framework build runs with **`preserveModules` + `cssCodeSplit`**, so every
 component is emitted as its own JS chunk **and** its own CSS asset; a small
@@ -521,8 +521,8 @@ For each framework:
 components' own declarations into `dist/components/**`. `dist` therefore
 contains `dist/vue/` and `dist/react/` (each with `index.js` + per-component
 chunks + per-component CSS + `index.d.ts`), the Storyblok output
-(`dist/storyblok/{vue,react}/` blok wrappers + `index.d.ts`, plus the shared
-`dist/storyblok/components.json` and per-component `<component>.json`), and the
+(`dist/cms/storyblok/{vue,react}/` blok wrappers + `index.d.ts`, plus the shared
+`dist/cms/storyblok/components.json` and per-component `<component>.json`), and the
 shared `dist/components/**` declarations, but no neutral `index`.
 
 ## Adding a new component

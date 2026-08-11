@@ -4,7 +4,6 @@ import {
   hasSlot,
   type MpChild,
   type MpElement,
-  type MpProperties,
   Slot,
   useEffect,
   useState,
@@ -18,7 +17,9 @@ export type StatusLevel = 'none' | 'info' | 'warning' | 'error';
 /** Named viewport breakpoint at/above which the sidebar columns render inline. */
 export type SidebarBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-export interface ApplicationLayoutProperties extends MpProperties {
+export interface ApplicationLayoutProperties {
+  /** The content the consumer fills the component’s slots with. */
+  children?: MpChild | readonly MpChild[];
   /** Severity of the status banner. Defaults to `'none'` (the banner is hidden). */
   statusLevel?: StatusLevel;
   /** When `true`, the header slot sticks to the top of the viewport on scroll. */

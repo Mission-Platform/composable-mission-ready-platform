@@ -1,4 +1,4 @@
-import { h, type MpElement, type MpProperties, Slot, useEffect, useState } from '@mission-platform/forge';
+import { h, type MpChild, type MpElement, Slot, useEffect, useState } from '@mission-platform/forge';
 
 import {
   configureTheme,
@@ -8,7 +8,8 @@ import {
   subscribeTheme,
   type Theme,
   toggleTheme,
-} from '../../../stores/theme-store/theme-store';
+} from '@/stores/theme-store/theme-store';
+
 import sizeStyles from '../../../styles/size.module.scss';
 
 import styles from './forge-theme-provider.module.scss';
@@ -16,7 +17,9 @@ import styles from './forge-theme-provider.module.scss';
 /** Size token — canonical 2xs → 2xl scale (inherited through the renderless wrapper). */
 export type ThemeProviderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface ThemeProviderProperties extends MpProperties {
+export interface ThemeProviderProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Size token controlling the inherited font scale. Defaults to `'md'`. */
   size?: ThemeProviderSize;
   /** Initial theme when nothing is persisted / present in the DOM. Defaults to `'auto'`. */

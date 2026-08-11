@@ -1,6 +1,7 @@
 {
   "extends": "@mission-platform/typescript-config/base",
   "compilerOptions": {
+    "paths": { "@/*": ["./src/*"] },
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "module": "esnext",
     "moduleResolution": "bundler",
@@ -26,6 +27,7 @@
     "src/**/*.stories.ts",
     "src/**/*.stories.tsx",
     "src/**/*.stories.vue",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "vite-plugins/**/*.ts"
   ]
 }

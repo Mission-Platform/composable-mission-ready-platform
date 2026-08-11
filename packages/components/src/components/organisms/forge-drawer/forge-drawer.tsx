@@ -5,7 +5,6 @@ import {
   hasSlot,
   type MpChild,
   type MpElement,
-  type MpProperties,
   Slot,
   Transition,
   useEffect,
@@ -14,7 +13,7 @@ import {
 } from '@mission-platform/forge';
 import { ForgeIconClose } from '@mission-platform/icons';
 
-import { beginPointerDrag, clamp, rootFontSize } from '../../../utils/pointer-drag/pointer-drag';
+import { beginPointerDrag, clamp, rootFontSize } from '@/utils/pointer-drag/pointer-drag';
 
 import styles from './forge-drawer.module.scss';
 
@@ -34,7 +33,9 @@ export type DrawerBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  */
 export type DrawerDraggable = boolean | DrawerSize | number;
 
-export interface DrawerProperties extends MpProperties {
+export interface DrawerProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Whether the (overlay) drawer is open. */
   open?: boolean;
   /** Which viewport edge the drawer is anchored to. Defaults to `'start'`. */

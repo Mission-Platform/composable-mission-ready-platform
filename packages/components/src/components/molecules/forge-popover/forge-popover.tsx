@@ -1,16 +1,8 @@
-import {
-  h,
-  type MpElement,
-  type MpProperties,
-  Slot,
-  Teleport,
-  useEffect,
-  useId,
-  useRef,
-} from '@mission-platform/forge';
+import { h, type MpChild, type MpElement, Slot, Teleport, useEffect, useId, useRef } from '@mission-platform/forge';
+
+import { resolvePortalTarget } from '@/utils/portal-target/portal-target';
 
 import sizeStyles from '../../../styles/size.module.scss';
-import { resolvePortalTarget } from '../../../utils/portal-target/portal-target';
 
 import styles from './forge-popover.module.scss';
 
@@ -32,7 +24,9 @@ export type PopoverPlacement =
   | 'right-start'
   | 'right-end';
 
-export interface PopoverProperties extends MpProperties {
+export interface PopoverProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /**
    * Whether the popover is open (controlled). Defaults to `false`.
    * @model onUpdateOpen

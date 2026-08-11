@@ -3,15 +3,15 @@ import {
   h,
   type MpChild,
   type MpElement,
-  type MpProperties,
   Slot,
   useEffect,
   useRef,
   useState,
 } from '@mission-platform/forge';
 
+import { ForgeTypography } from '@/components/atoms/forge-typography';
+
 import sizeStyles from '../../../styles/size.module.scss';
-import { ForgeTypography } from '../../atoms/forge-typography';
 
 import styles from './forge-window-popout.module.scss';
 
@@ -25,7 +25,9 @@ function copyStyles(targetDocument: Document): void {
   }
 }
 
-export interface WindowPopoutProperties extends MpProperties {
+export interface WindowPopoutProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Size token controlling the wrapper's font scale. Defaults to `'md'`. */
   size?: WindowPopoutSize;
   /** Title set on the popout window's document. Defaults to the host document title. */

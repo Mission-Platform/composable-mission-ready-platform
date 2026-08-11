@@ -1,30 +1,5 @@
-import {
-  ForgeButton,
-  ForgeCheckbox,
-  ForgeDateInput,
-  ForgeDateRangeInput,
-  ForgeDateTimeRangeInput,
-  ForgeFieldSet,
-  ForgeFileInput,
-  ForgeFormWizard,
-  ForgeInput,
-  ForgeLocationInput,
-  ForgeMarkdownInput,
-  ForgeMonacoEditor,
-  ForgeMultiselect,
-  ForgeNumberStepper,
-  ForgePhoneInput,
-  ForgeRadioGroup,
-  ForgeSelect,
-  ForgeSwitch,
-  ForgeTextarea,
-  ForgeTimeInput,
-  ForgeTimeRangeInput,
-  ForgeTypography,
-  type LocationValue,
-  type WizardStep,
-} from '@mission-platform/components';
-import { h, type MpElement, type MpProperties, Slot, useMemo, useState } from '@mission-platform/forge';
+import { ForgeButton, ForgeTypography } from '@mission-platform/components';
+import { h, type MpChild, type MpElement, Slot, useMemo, useState } from '@mission-platform/forge';
 import {
   createFormValidator,
   evaluateCondition,
@@ -41,7 +16,25 @@ import {
   type SchemaFormValidationMode,
 } from '@mission-platform/forms-core';
 
+import { ForgeCheckbox } from '../../atoms/forge-checkbox';
+import { ForgeInput } from '../../atoms/forge-input';
+import { ForgeSwitch } from '../../atoms/forge-switch';
+import { ForgeTextarea } from '../../atoms/forge-textarea';
+import { ForgeDateInput } from '../../molecules/forge-date-input';
+import { ForgeDateRangeInput } from '../../molecules/forge-date-range-input';
+import { ForgeFieldSet } from '../../molecules/forge-field-set';
+import { ForgeFileInput } from '../../molecules/forge-file-input';
+import { ForgeLocationInput, type LocationValue } from '../../molecules/forge-location-input';
+import { ForgeMultiselect } from '../../molecules/forge-multiselect';
+import { ForgeNumberStepper } from '../../molecules/forge-number-stepper';
+import { ForgePhoneInput } from '../../molecules/forge-phone-input';
+import { ForgeRadioGroup } from '../../molecules/forge-radio-group';
+import { ForgeSelect } from '../../molecules/forge-select';
+import { ForgeTimeInput } from '../../molecules/forge-time-input';
+import { ForgeTimeRangeInput } from '../../molecules/forge-time-range-input';
 import sizeStyles from '../../size.module.scss';
+import { ForgeDateTimeRangeInput } from '../forge-date-time-range-input';
+import { ForgeFormWizard, type WizardStep } from '../forge-form-wizard';
 
 import styles from './forge-schema-form.module.scss';
 
@@ -67,7 +60,9 @@ export type {
   SchemaObject,
 } from '@mission-platform/forms-core';
 
-export interface SchemaFormProperties extends MpProperties {
+export interface SchemaFormProperties {
+  /** The content the consumer fills the component’s slots with. */
+  children?: MpChild | readonly MpChild[];
   /**
    * JSON Schema definition driving both the rendered fields and validation.
    * A single object is a one-step form; an array is a multi-step wizard.
@@ -88,11 +83,23 @@ export interface SchemaFormProperties extends MpProperties {
    * on submit. Ignored for single-step forms.
    */
   validationMode?: SchemaFormValidationMode;
+  /** Optional renderer for rich fields supplied by a UI package at composition time. */
+  renderField?: SchemaFormFieldRenderer;
   /** Fired with the next full values bag (the controlled `v-model` update). */
   onUpdateModelValue?: (values: FormValues) => void;
   /** Fired with the values bag and validity on submit. */
   onSubmit?: (values: FormValues, isValid: boolean) => void;
 }
+
+export interface SchemaFormFieldRendererContext {
+  field: FormFieldSchema;
+  value: unknown;
+  error?: string;
+  disabled: boolean;
+  onUpdateModelValue: (value: unknown) => void;
+}
+
+export type SchemaFormFieldRenderer = (context: SchemaFormFieldRendererContext) => MpElement | undefined;
 
 /** A single, render-ready step derived from one {@link FormJsonSchema}. */
 interface SchemaFormStep {
@@ -283,12 +290,23 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
     const error = errors[path];
     const fieldDisabled = disabled || field.disabled || false;
     const onUpdate = (next: unknown): void => onFieldUpdate(path, next);
+    const modelUpdate = { 'onUpdate:modelValue': onUpdate, onUpdateModelValue: onUpdate };
+
+    const renderedField = properties.renderField?.({
+      field,
+      value,
+      error,
+      disabled: fieldDisabled,
+      onUpdateModelValue: onUpdate,
+    });
+    if (renderedField !== undefined) return renderedField;
 
     const type = field.type ?? 'text';
 
     if (TEXT_WIDGETS.has(type)) {
       return (
         <ForgeInput
+          {...modelUpdate}
           autocapitalize={field.autocapitalize}
           autocomplete={field.autocomplete}
           className={styles['forge-schema-form__field']}
@@ -302,7 +320,6 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
           placeholder={field.placeholder}
           required={field.required}
           type={(type === 'text' ? 'text' : type) as 'text' | 'email' | 'password' | 'url'}
-          onUpdateModelValue={onUpdate}
         />
       );
     }
@@ -319,7 +336,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
             modelValue={(value as string) ?? ''}
             placeholder={field.placeholder}
             required={field.required}
-            onUpdateModelValue={onUpdate}
+            {...modelUpdate}
           />
         );
       }
@@ -341,7 +358,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
             required={field.required}
             step={field.step}
             unsigned={field.unsigned}
-            onUpdateModelValue={onUpdate}
+            {...modelUpdate}
           />
         );
       }
@@ -357,13 +374,13 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
             placeholder={field.placeholder}
             required={field.required}
             rows={field.rows}
-            onUpdateModelValue={onUpdate}
+            {...modelUpdate}
           />
         );
       }
       case 'markdown': {
         return (
-          <ForgeMarkdownInput
+          <ForgeTextarea
             className={styles['forge-schema-form__field']}
             disabled={fieldDisabled}
             error={error}
@@ -373,7 +390,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
             placeholder={field.placeholder}
             required={field.required}
             rows={field.rows}
-            onUpdateModelValue={onUpdate}
+            {...modelUpdate}
           />
         );
       }
@@ -391,12 +408,11 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
                 </ForgeTypography>
               </legend>
             ) : undefined}
-            <ForgeMonacoEditor
-              height={field.rows ? `${field.rows * 1.5}rem` : '16rem'}
-              language={field.language ?? 'plaintext'}
+            <ForgeTextarea
+              rows={field.rows ?? 12}
               modelValue={(value as string) ?? ''}
-              readonly={fieldDisabled}
-              onUpdateModelValue={onUpdate}
+              disabled={fieldDisabled}
+              {...modelUpdate}
             />
             {field.hint || error ? (
               <ForgeTypography
@@ -426,7 +442,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
             label={field.label}
             modelValue={Boolean(value)}
             required={field.required}
-            onUpdateModelValue={onUpdate}
+            {...modelUpdate}
           />
         );
       }
@@ -439,7 +455,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
             hint={field.hint}
             label={field.label}
             modelValue={Boolean(value)}
-            onUpdateModelValue={onUpdate}
+            {...modelUpdate}
           />
         );
       }
@@ -455,7 +471,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
             options={field.options ?? []}
             placeholder={field.placeholder}
             required={field.required}
-            onUpdateModelValue={onUpdate}
+            {...modelUpdate}
           />
         );
       }
@@ -470,7 +486,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
             modelValue={(value as string | number) ?? ''}
             options={(field.options ?? []).map((option) => ({ label: option.label, value: String(option.value) }))}
             required={field.required}
-            onUpdateModelValue={onUpdate}
+            {...modelUpdate}
           />
         );
       }
@@ -486,7 +502,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
             options={field.options ?? []}
             placeholder={field.placeholder}
             required={field.required}
-            onUpdateModelValue={onUpdate}
+            {...modelUpdate}
           />
         );
       }
@@ -558,7 +574,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
             modelValue={(value as string) ?? ''}
             placeholder={field.placeholder}
             required={field.required}
-            onUpdateModelValue={onUpdate}
+            {...modelUpdate}
           />
         );
       }
@@ -573,7 +589,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
             modelValue={(value as string) ?? ''}
             required={field.required}
             showSeconds={field.showSeconds}
-            onUpdateModelValue={onUpdate}
+            {...modelUpdate}
           />
         );
       }
@@ -589,7 +605,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
             min={field.minDate}
             modelValue={(value as { start: string; end: string }) ?? { start: '', end: '' }}
             required={field.required}
-            onUpdateModelValue={onUpdate}
+            {...modelUpdate}
           />
         );
       }
@@ -604,7 +620,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
             modelValue={(value as { start: string; end: string }) ?? { start: '', end: '' }}
             required={field.required}
             showSeconds={field.showSeconds}
-            onUpdateModelValue={onUpdate}
+            {...modelUpdate}
           />
         );
       }
@@ -627,7 +643,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
             }
             required={field.required}
             showSeconds={field.showSeconds}
-            onUpdateModelValue={onUpdate}
+            {...modelUpdate}
           />
         );
       }
@@ -642,7 +658,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
             label={field.label}
             modelValue={(value as LocationValue) ?? undefined}
             required={field.required}
-            onUpdateModelValue={onUpdate}
+            {...modelUpdate}
           />
         );
       }
@@ -671,7 +687,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
             modelValue={(value as File[]) ?? []}
             multiple={field.multiple}
             required={field.required}
-            onUpdateModelValue={onUpdate}
+            {...modelUpdate}
           />
         );
       }
@@ -686,14 +702,12 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
             modelValue={(value as string) ?? ''}
             placeholder={field.placeholder}
             required={field.required}
-            onUpdateModelValue={onUpdate}
+            {...modelUpdate}
           />
         );
       }
     }
   };
-
-  const fieldNodes = currentFields.map((field) => renderField(field, field.key));
 
   // Wizard mode: a top-level array of step schemas.
   if (model.isWizard) {
@@ -706,7 +720,9 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
         error: stepHasErrors[stepIndex],
         content:
           position === currentVisiblePosition ? (
-            <div className={styles['forge-schema-form__fields']}>{fieldNodes}</div>
+            <div className={styles['forge-schema-form__fields']}>
+              {currentFields.map((field) => renderField(field, field.key))}
+            </div>
           ) : undefined,
       };
     });
@@ -747,7 +763,9 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
       onReset={handleReset}
       onSubmit={handleSubmit}
     >
-      <div className={styles['forge-schema-form__fields']}>{fieldNodes}</div>
+      <div className={styles['forge-schema-form__fields']}>
+        {currentFields.map((field) => renderField(field, field.key))}
+      </div>
       <div className={styles['forge-schema-form__actions']}>
         <Slot name="actions">
           <ForgeButton

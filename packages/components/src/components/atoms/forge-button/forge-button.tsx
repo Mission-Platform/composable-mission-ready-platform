@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { type ClassValue, classNames, h, type MpChild, type MpElement } from '@mission-platform/forge';
 
 import spacingStyles from '../../../styles/spacing.module.scss';
 
@@ -12,7 +12,11 @@ export type ButtonSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 /** Named `padding`/`margin` scale; each step maps to a named `--mp-spacing-*` design token. */
 export type SpacingScale = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface ButtonProperties extends MpProperties {
+export interface ButtonProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
+  /** Extra class(es) merged onto the rendered `<button>`. */
+  className?: ClassValue;
   /** Visual treatment. Defaults to `'primary'`. */
   variant?: ButtonVariant;
   /** Size token controlling padding and font-size. Defaults to `'md'`. */
@@ -71,6 +75,8 @@ export function ForgeButton(properties: Readonly<ButtonProperties>): MpElement {
     { [styles['forge-button--loading']]: loading },
     properties.padding ? spacingStyles[`forge-spacing--padding-${properties.padding}`] : undefined,
     properties.margin ? spacingStyles[`forge-spacing--margin-${properties.margin}`] : undefined,
+    // The caller's own class(es) come last so they win the cascade.
+    properties.className,
   );
 
   const handleClick = (event: unknown): void => {

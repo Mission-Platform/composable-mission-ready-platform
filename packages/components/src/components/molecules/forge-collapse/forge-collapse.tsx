@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, h, type MpChild, type MpElement } from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
 
 import sizeStyles from '../../../styles/size.module.scss';
@@ -12,7 +12,9 @@ export type CollapseSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type CollapseVariant =
   'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
-export interface CollapseProperties extends MpProperties {
+export interface CollapseProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Summary (disclosure trigger) text. Defaults to `'Details'`. */
   summary?: string;
   /** Colour tone of the disclosure. Defaults to `'neutral'`. */

@@ -87,4 +87,21 @@ describe('ForgeTabs authors the same component for React and Vue', () => {
       expect(html).toContain('aria-label="New tab"');
     }
   });
+
+  it('gives the active line tab a distinct wrapper and a heavier label on both frameworks', async () => {
+    const properties = { tabs, modelValue: 'details', variant: 'line' as const };
+    const react = renderToStaticMarkup(createElement(ReactTabs, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueTabs, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('aria-selected="true"');
+      // The active wrapper carries the active modifier on top of the `line`
+      // variant class, so it can draw its own (unclippable) indicator…
+      expect(html).toContain('forge-tabs__tab-wrapper--line forge-tabs__tab-wrapper--active');
+      // …and the label's weight is bound to the active state, so the change
+      // survives `ForgeTypography`'s own `font-weight` rule.
+      expect(html).toMatch(/weight-semibold"[^>]*>Details</);
+      expect(html).toMatch(/weight-regular"[^>]*>Overview</);
+    }
+  });
 });

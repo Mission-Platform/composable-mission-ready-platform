@@ -1,25 +1,19 @@
-import {
-  h,
-  hasSlot,
-  type MpChild,
-  type MpElement,
-  type MpProperties,
-  Slot,
-  useEffect,
-  useRef,
-} from '@mission-platform/forge';
+import { h, hasSlot, type MpChild, type MpElement, Slot, useEffect, useRef } from '@mission-platform/forge';
 import { ForgeIconClose } from '@mission-platform/icons';
 
+import { ForgeIconButton } from '@/components/atoms/forge-icon-button';
+import { ForgeTypography } from '@/components/atoms/forge-typography';
+
 import sizeStyles from '../../../styles/size.module.scss';
-import { ForgeIconButton } from '../../atoms/forge-icon-button';
-import { ForgeTypography } from '../../atoms/forge-typography';
 
 import styles from './forge-dialog.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
 export type DialogSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface DialogProperties extends MpProperties {
+export interface DialogProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /**
    * Whether the dialog is open (controlled). Defaults to `false`.
    * @model onUpdateOpen

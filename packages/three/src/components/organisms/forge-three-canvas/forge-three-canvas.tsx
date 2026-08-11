@@ -1,8 +1,8 @@
-import { h, type MpElement, type MpProperties, useRef } from '@mission-platform/forge';
+import { h, type MpElement, useRef } from '@mission-platform/forge';
 
-import { type ThreeContext, useThree } from '../../../composables/use-three/use-three';
+import { type ThreeContext, useThree } from '@/composables/use-three';
 
-export interface ForgeThreeCanvasProperties extends MpProperties {
+export interface ForgeThreeCanvasProperties {
   /** Callback invoked when the Three.js context is ready. */
   onReady?: (context: ThreeContext) => void | (() => void);
 }

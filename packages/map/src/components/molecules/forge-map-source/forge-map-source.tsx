@@ -1,11 +1,12 @@
-import { h, type MpElement, type MpProperties, Slot } from '@mission-platform/forge';
+import { h, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
 
-import { useMap } from '../../../composables/use-map';
-import { useSource } from '../../../composables/use-source';
+import { useMap, useSource } from '@/composables';
 
 import type { SourceSpecification } from 'maplibre-gl';
 
-export interface MapSourceProperties extends MpProperties {
+export interface MapSourceProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Unique ID for this source. Referenced by `<MapLayer>` via its `source` field. */
   id: string;
   /** MapLibre source specification. Replaced (or `setData`-swapped) when changed. */

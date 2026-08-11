@@ -1,6 +1,12 @@
 import { type MpRef, useEffect } from '@mission-platform/forge';
 import * as THREE from 'three';
 
+type ReferenceLike<T> = MpRef<T> | Readonly<{ value: T }>;
+
+function referenceValue<T>(reference: ReferenceLike<T>): T {
+  return 'current' in reference ? reference.current : reference.value;
+}
+
 export interface ThreeContext {
   renderer: THREE.WebGLRenderer;
   scene: THREE.Scene;
@@ -15,15 +21,14 @@ export interface ThreeContext {
  * Automatic cleanup: disposes the renderer and cancels the animation frame on unmount.
  */
 export function useThree(
-  canvasReference: MpRef<HTMLCanvasElement | null>,
+  canvasReference: ReferenceLike<HTMLCanvasElement | null>,
   onReady?: (context: ThreeContext) => void | (() => void),
 ): void {
   useEffect(() => {
-    if (globalThis.window === undefined || !canvasReference.current) {
+    const canvas = referenceValue(canvasReference);
+    if (globalThis.window === undefined || !canvas) {
       return;
     }
-
-    const canvas = canvasReference.current;
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);

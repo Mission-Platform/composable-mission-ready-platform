@@ -1,4 +1,5 @@
 import { h } from '@mission-platform/forge';
+import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
 
 import { ForgeApplicationLayout } from '@mission-platform/layouts';
 
@@ -30,47 +31,58 @@ const meta = {
     statusLevel: 'none',
     stickyHeader: false,
   },
-  render: (arguments_) => (
-    <ForgeApplicationLayout
-      {...arguments_}
-      style={{ minHeight: '24rem' }}
-      status="System status: all services operational"
-      navbar={
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: 'var(--mp-spacing-3) var(--mp-spacing-4)',
-            background: 'var(--mp-color-bg-surface)',
-            borderBottom: '1px solid var(--mp-color-border-default)',
-            color: 'var(--mp-color-text-primary)',
-          }}
-        >
-          <strong>Mission Platform</strong>
-          <span>Menu</span>
-        </div>
-      }
-      content={
-        <div style={{ padding: 'var(--mp-spacing-6)', color: 'var(--mp-color-text-primary)' }}>
-          <h1 style={{ marginTop: 0 }}>Page content</h1>
-          <p>The main content region grows to fill the available space and scrolls independently.</p>
-        </div>
-      }
-      footer={
-        <div
-          style={{
-            padding: 'var(--mp-spacing-4)',
-            background: 'var(--mp-color-bg-surface)',
-            borderTop: '1px solid var(--mp-color-border-default)',
-            color: 'var(--mp-color-text-secondary)',
-          }}
-        >
-          © Mission Platform
-        </div>
-      }
-    />
-  ),
+  // `status`, `navbar`, `startSidebar`, `content`, `endSidebar` and `footer` are
+  // **named slots**, not props: only the React/Solid builds read them as
+  // `properties.navbar`, while Vue renders `renderSlot($slots, 'navbar')`,
+  // Svelte expects a snippet and the web component a light-DOM child. Passing
+  // them through `renderWithSlots` is the one shape that works on all five. A
+  // plain string (like `status` here) stays a prop — it works as slot fallback
+  // content everywhere.
+  render: (arguments_) =>
+    renderWithSlots(
+      ForgeApplicationLayout,
+      {
+        ...arguments_,
+        style: { minHeight: '24rem' },
+        status: 'System status: all services operational',
+      },
+      {
+        navbar: (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: 'var(--mp-spacing-3) var(--mp-spacing-4)',
+              background: 'var(--mp-color-bg-surface)',
+              borderBottom: '1px solid var(--mp-color-border-default)',
+              color: 'var(--mp-color-text-primary)',
+            }}
+          >
+            <strong>Mission Platform</strong>
+            <span>Menu</span>
+          </div>
+        ),
+        content: (
+          <div style={{ padding: 'var(--mp-spacing-6)', color: 'var(--mp-color-text-primary)' }}>
+            <h1 style={{ marginTop: 0 }}>Page content</h1>
+            <p>The main content region grows to fill the available space and scrolls independently.</p>
+          </div>
+        ),
+        footer: (
+          <div
+            style={{
+              padding: 'var(--mp-spacing-4)',
+              background: 'var(--mp-color-bg-surface)',
+              borderTop: '1px solid var(--mp-color-border-default)',
+              color: 'var(--mp-color-text-secondary)',
+            }}
+          >
+            © Mission Platform
+          </div>
+        ),
+      },
+    ),
 } satisfies Meta<typeof ForgeApplicationLayout>;
 
 export default meta;
@@ -84,20 +96,24 @@ export const WarningStatus: Story = { args: { statusLevel: 'warning' } };
 
 export const ErrorStatus: Story = {
   args: { statusLevel: 'error' },
-  render: (arguments_) => (
-    <ForgeApplicationLayout
-      {...arguments_}
-      style={{ minHeight: '24rem' }}
-      status="We're experiencing a service disruption"
-      content={
-        <div style={{ padding: 'var(--mp-spacing-6)', color: 'var(--mp-color-text-primary)' }}>
-          <p>
-            The status banner uses <code>role="alert"</code> for the error level.
-          </p>
-        </div>
-      }
-    />
-  ),
+  render: (arguments_) =>
+    renderWithSlots(
+      ForgeApplicationLayout,
+      {
+        ...arguments_,
+        style: { minHeight: '24rem' },
+        status: "We're experiencing a service disruption",
+      },
+      {
+        content: (
+          <div style={{ padding: 'var(--mp-spacing-6)', color: 'var(--mp-color-text-primary)' }}>
+            <p>
+              The status banner uses <code>role="alert"</code> for the error level.
+            </p>
+          </div>
+        ),
+      },
+    ),
 };
 
 export const StickyHeader: Story = { args: { stickyHeader: true, statusLevel: 'info' } };
@@ -109,45 +125,46 @@ export const StickyHeader: Story = { args: { stickyHeader: true, statusLevel: 'i
  * both. Their width is themeable via `--mp-application-layout-sidebar-width`.
  */
 export const WithSidebars: Story = {
-  render: (arguments_) => (
-    <ForgeApplicationLayout
-      {...arguments_}
-      style={{ minHeight: '24rem' }}
-      navbar={
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            padding: 'var(--mp-spacing-3) var(--mp-spacing-4)',
-            background: 'var(--mp-color-bg-surface)',
-            borderBottom: '1px solid var(--mp-color-border-default)',
-            color: 'var(--mp-color-text-primary)',
-          }}
-        >
-          <strong>Mission Platform</strong>
-        </div>
-      }
-      startSidebar={
-        <nav style={{ padding: 'var(--mp-spacing-4)', color: 'var(--mp-color-text-secondary)' }}>
-          <p style={{ marginTop: 0, fontWeight: 700 }}>Navigation</p>
-          <p>Overview</p>
-          <p>Getting started</p>
-          <p>Components</p>
-        </nav>
-      }
-      content={
-        <div style={{ padding: 'var(--mp-spacing-6)', color: 'var(--mp-color-text-primary)' }}>
-          <h1 style={{ marginTop: 0 }}>Page content</h1>
-          <p>The content region sits between the sticky start and end sidebars.</p>
-        </div>
-      }
-      endSidebar={
-        <aside style={{ padding: 'var(--mp-spacing-4)', color: 'var(--mp-color-text-secondary)' }}>
-          <p style={{ marginTop: 0, fontWeight: 700 }}>On this page</p>
-          <p>Introduction</p>
-          <p>Usage</p>
-        </aside>
-      }
-    />
-  ),
+  render: (arguments_) =>
+    renderWithSlots(
+      ForgeApplicationLayout,
+      { ...arguments_, style: { minHeight: '24rem' } },
+      {
+        navbar: (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: 'var(--mp-spacing-3) var(--mp-spacing-4)',
+              background: 'var(--mp-color-bg-surface)',
+              borderBottom: '1px solid var(--mp-color-border-default)',
+              color: 'var(--mp-color-text-primary)',
+            }}
+          >
+            <strong>Mission Platform</strong>
+          </div>
+        ),
+        startSidebar: (
+          <nav style={{ padding: 'var(--mp-spacing-4)', color: 'var(--mp-color-text-secondary)' }}>
+            <p style={{ marginTop: 0, fontWeight: 700 }}>Navigation</p>
+            <p>Overview</p>
+            <p>Getting started</p>
+            <p>Components</p>
+          </nav>
+        ),
+        content: (
+          <div style={{ padding: 'var(--mp-spacing-6)', color: 'var(--mp-color-text-primary)' }}>
+            <h1 style={{ marginTop: 0 }}>Page content</h1>
+            <p>The content region sits between the sticky start and end sidebars.</p>
+          </div>
+        ),
+        endSidebar: (
+          <aside style={{ padding: 'var(--mp-spacing-4)', color: 'var(--mp-color-text-secondary)' }}>
+            <p style={{ marginTop: 0, fontWeight: 700 }}>On this page</p>
+            <p>Introduction</p>
+            <p>Usage</p>
+          </aside>
+        ),
+      },
+    ),
 };

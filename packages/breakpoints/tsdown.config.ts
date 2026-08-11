@@ -1,7 +1,15 @@
 import path from 'node:path';
 
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
+import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
-import { defineTsdownForgeComponentsAll } from '@mission-platform/vite-plugin-forge';
+import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+
+const rootDirectory = import.meta.dirname;
+const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
 
 /**
  * Neutral types/entry (`dist/index.d.ts`, `dist/breakpoints.d.ts`, …) plus the
@@ -14,12 +22,18 @@ export default [
     clean: true,
     external: ['i18next'],
   }),
-  ...defineTsdownForgeComponentsAll({
-    rootDir: import.meta.dirname,
-    frameworks: ['react', 'vue'],
-    componentsModule: path.resolve(import.meta.dirname, 'src/components/index.ts'),
-    name: 'MissionPlatformBreakpoints',
-    declarationModule: '..',
+  ...defineTsdownForgeComponents({
+    rootDir: rootDirectory,
+    frameworks: [
+      forgeReactFramework(),
+      forgeSolidFramework(),
+      forgeSvelteFramework(),
+      forgeWebComponentsFramework(),
+      forgeVueFramework(),
+    ],
+    componentsModule,
+    name: 'MissionPlatformJsxBreakpoints',
     external: ['i18next'],
+    declarationModule: '..',
   }),
 ];

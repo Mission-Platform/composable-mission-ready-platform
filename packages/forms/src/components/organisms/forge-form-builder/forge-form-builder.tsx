@@ -1,18 +1,12 @@
 import {
   type DrawerDraggable,
   ForgeButton,
-  ForgeCheckbox,
-  ForgeCodeBlock,
-  ForgeInput,
-  ForgeNumberStepper,
-  ForgeSelect,
-  ForgeSwitch,
   ForgeTabs,
-  ForgeTextarea,
   ForgeTypography,
   type TabItem,
 } from '@mission-platform/components';
-import { h, type MpChild, type MpElement, type MpProperties, useRef, useState } from '@mission-platform/forge';
+import { ForgeCodeBlock } from '@mission-platform/content';
+import { h, type MpChild, type MpElement, useRef, useState } from '@mission-platform/forge';
 import {
   type BuilderField,
   type BuilderFieldOption,
@@ -40,6 +34,7 @@ import {
 } from '@mission-platform/forms-core';
 import { ForgeVerticalLayout } from '@mission-platform/layouts';
 
+import { ForgeCheckbox, ForgeInput, ForgeNumberStepper, ForgeSelect, ForgeSwitch, ForgeTextarea } from '../..';
 import sizeStyles from '../../size.module.scss';
 import { ForgeSchemaForm } from '../forge-schema-form';
 
@@ -78,7 +73,7 @@ export type {
 /** Size token — canonical 2xs → 2xl scale. */
 export type FormBuilderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface FormBuilderProperties extends MpProperties {
+export interface FormBuilderProperties {
   /** Size token controlling the builder's font scale. Defaults to `'md'`. */
   size?: FormBuilderSize;
   /**

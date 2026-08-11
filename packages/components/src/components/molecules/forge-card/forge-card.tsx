@@ -1,4 +1,4 @@
-import { classNames, h, hasSlot, type MpChild, type MpElement, type MpProperties, Slot } from '@mission-platform/forge';
+import { classNames, h, hasSlot, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
 
 import sizeStyles from '../../../styles/size.module.scss';
 import spacingStyles from '../../../styles/spacing.module.scss';
@@ -15,7 +15,9 @@ export type CardVariant =
 /** Named outer-`margin` scale; each step maps to a named `--mp-spacing-*` design token. */
 export type SpacingScale = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface CardProperties extends MpProperties {
+export interface CardProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Inner padding of the header/body/footer regions. Defaults to `'md'`. */
   padding?: CardPadding;
   /** Colour tone of the card surface. Defaults to `'neutral'` (plain surface). */

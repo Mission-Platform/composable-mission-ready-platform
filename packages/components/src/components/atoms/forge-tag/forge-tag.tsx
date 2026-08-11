@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, h, type MpElement } from '@mission-platform/forge';
 import { ForgeIconClose } from '@mission-platform/icons';
 
 import { ForgeTypography } from '../forge-typography';
@@ -11,7 +11,7 @@ export type TagSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type TagVariant =
   'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
-export interface TagProperties extends MpProperties {
+export interface TagProperties {
   /** The tag's text. */
   label: string;
   /** Size token. Defaults to `'md'`. */

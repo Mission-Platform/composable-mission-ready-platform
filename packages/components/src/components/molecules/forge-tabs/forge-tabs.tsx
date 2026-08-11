@@ -1,8 +1,9 @@
-import { h, type MpElement, type MpProperties, type MpRenderProperty, useRef } from '@mission-platform/forge';
+import { h, type MpElement, type MpRenderProperty, useRef } from '@mission-platform/forge';
 import { ForgeIconClose, ForgeIconPlus } from '@mission-platform/icons';
 
+import { ForgeTypography } from '@/components/atoms/forge-typography';
+
 import sizeStyles from '../../../styles/size.module.scss';
-import { ForgeTypography } from '../../atoms/forge-typography';
 
 import styles from './forge-tabs.module.scss';
 
@@ -28,7 +29,7 @@ export interface TabPanelScope {
   tab: TabItem;
 }
 
-export interface TabsProperties extends MpProperties {
+export interface TabsProperties {
   /** Ordered list of tabs to render. */
   tabs: TabItem[];
   /**
@@ -220,6 +221,7 @@ export function ForgeTabs(properties: Readonly<TabsProperties>): MpElement {
                   as="span"
                   color="inherit"
                   variant="label"
+                  weight={activeId === tab.id ? 'semibold' : 'regular'}
                 >
                   {tab.label}
                 </ForgeTypography>

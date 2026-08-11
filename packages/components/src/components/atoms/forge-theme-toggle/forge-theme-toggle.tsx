@@ -1,6 +1,7 @@
-import { h, type MpElement, type MpProperties, Slot, useEffect, useState } from '@mission-platform/forge';
+import { h, type MpChild, type MpElement, Slot, useEffect, useState } from '@mission-platform/forge';
 
-import { cycleTheme, getThemeSnapshot, subscribeTheme, type Theme } from '../../../stores/theme-store/theme-store';
+import { cycleTheme, getThemeSnapshot, subscribeTheme, type Theme } from '@/stores/theme-store/theme-store';
+
 import sizeStyles from '../../../styles/size.module.scss';
 
 import styles from './forge-theme-toggle.module.scss';
@@ -8,7 +9,9 @@ import styles from './forge-theme-toggle.module.scss';
 /** Size token — canonical 2xs → 2xl scale. */
 export type ThemeToggleSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface ThemeToggleProperties extends MpProperties {
+export interface ThemeToggleProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Size token controlling the toggle's scale. Defaults to `'md'`. */
   size?: ThemeToggleSize;
   /** Overrides the auto-generated `aria-label`. */

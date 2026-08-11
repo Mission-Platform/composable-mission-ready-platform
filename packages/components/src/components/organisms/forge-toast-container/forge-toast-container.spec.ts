@@ -6,8 +6,8 @@ import {
   getToastsSnapshot,
   showToast,
   subscribeToasts,
-} from '../../../stores/toast-store/toast-store';
-import { expectSsrParity, renderReactSsr, renderVueSsr } from '../../../test-utils/ssr-parity';
+} from '@/stores/toast-store/toast-store';
+import { expectSsrParity, renderReactSsr, renderVueSsr } from '@/test-utils/ssr-parity';
 
 import { ForgeToastContainer } from './forge-toast-container';
 

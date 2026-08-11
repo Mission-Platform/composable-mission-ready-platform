@@ -1,25 +1,17 @@
-import {
-  h,
-  hasSlot,
-  type MpChild,
-  type MpElement,
-  type MpProperties,
-  Slot,
-  useEffect,
-  useId,
-  useRef,
-} from '@mission-platform/forge';
+import { h, hasSlot, type MpChild, type MpElement, Slot, useEffect, useId, useRef } from '@mission-platform/forge';
 import { ForgeIconClose } from '@mission-platform/icons';
 
-import { ForgeIconButton } from '../../atoms/forge-icon-button';
-import { ForgeTypography } from '../../atoms/forge-typography';
+import { ForgeIconButton } from '@/components/atoms/forge-icon-button';
+import { ForgeTypography } from '@/components/atoms/forge-typography';
 
 import styles from './forge-modal.module.scss';
 
 /** Width step of the modal on tablet/desktop (`sm`+); mobile is always full-width. */
 export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
 
-export interface ModalProperties extends MpProperties {
+export interface ModalProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /**
    * Whether the modal is open (controlled). Defaults to `false`.
    * @model onUpdateOpen

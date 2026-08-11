@@ -1,7 +1,5 @@
-import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { h, type MpElement } from '@mission-platform/forge';
 import { ForgeIconLanguage } from '@mission-platform/icons';
-
-import { ForgeSelect } from '../forge-select/forge-select';
 
 export interface ForgeLanguageSwitcherOption {
   code: string;
@@ -9,7 +7,7 @@ export interface ForgeLanguageSwitcherOption {
   disabled?: boolean;
 }
 
-export interface ForgeLanguageSwitcherProperties extends MpProperties {
+export interface ForgeLanguageSwitcherProperties {
   locale: string;
   locales: readonly (string | ForgeLanguageSwitcherOption)[];
   label?: string;
@@ -21,37 +19,32 @@ export interface ForgeLanguageSwitcherProperties extends MpProperties {
 }
 
 export function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement {
-  const onLocaleChange = (value: string | number): void => {
-    properties.onLocaleChange?.(String(value));
+  const onLocaleChange = (event: Event): void => {
+    properties.onLocaleChange?.((event.currentTarget as HTMLSelectElement).value);
   };
 
-  const formattedOptions = properties.locales.map((item) =>
-    typeof item === 'string'
-      ? { label: item.toUpperCase(), value: item }
-      : {
-          label: item.label ?? item.code.toUpperCase(),
-          value: item.code,
-          disabled: item.disabled,
-        },
-  );
-
   return (
-    <ForgeSelect
-      id={properties.id}
-      disabled={properties.disabled}
-      label={properties.label ?? 'Language'}
-      labelHidden={properties.labelHidden ?? true}
-      labelPosition="start"
-      modelValue={properties.locale}
-      options={formattedOptions}
-      searchable={false}
-      size={properties.size ?? 'sm'}
-      onUpdateModelValue={onLocaleChange}
-    >
-      <ForgeIconLanguage
-        slot="start"
-        size="sm"
-      />
-    </ForgeSelect>
+    <label for={properties.id}>
+      <ForgeIconLanguage size="sm" />
+      {properties.labelHidden === false ? (properties.label ?? 'Language') : undefined}
+      <select
+        id={properties.id}
+        disabled={properties.disabled}
+        value={properties.locale}
+        onChange={onLocaleChange}
+      >
+        {properties.locales.map((item) => {
+          const option = typeof item === 'string' ? { code: item, label: item.toUpperCase() } : item;
+          return (
+            <option
+              disabled={option.disabled}
+              value={option.code}
+            >
+              {option.label ?? option.code.toUpperCase()}
+            </option>
+          );
+        })}
+      </select>
+    </label>
   );
 }

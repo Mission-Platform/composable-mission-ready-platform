@@ -1,8 +1,9 @@
-import { h, hasSlot, type MpChild, type MpElement, type MpProperties, Slot } from '@mission-platform/forge';
+import { h, hasSlot, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
+
+import { ForgeAvatar } from '@/components/atoms/forge-avatar';
+import { ForgeTypography } from '@/components/atoms/forge-typography';
 
 import sizeStyles from '../../../styles/size.module.scss';
-import { ForgeAvatar } from '../../atoms/forge-avatar';
-import { ForgeTypography } from '../../atoms/forge-typography';
 
 import styles from './forge-chat-bubble.module.scss';
 
@@ -15,7 +16,9 @@ export type ChatBubbleSide = 'start' | 'end';
 /** Bubble colour treatment. */
 export type ChatBubbleVariant = 'default' | 'primary';
 
-export interface ChatBubbleProperties extends MpProperties {
+export interface ChatBubbleProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Conversation side: `start` (incoming) or `end` (outgoing). Defaults to `start`. */
   side?: ChatBubbleSide;
   /** Bubble colour. `primary` is typically used for the current user's messages. */

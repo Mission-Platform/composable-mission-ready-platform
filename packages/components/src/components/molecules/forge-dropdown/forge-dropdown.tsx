@@ -1,16 +1,8 @@
-import {
-  h,
-  type MpElement,
-  type MpProperties,
-  Slot,
-  Teleport,
-  useEffect,
-  useId,
-  useRef,
-} from '@mission-platform/forge';
+import { h, type MpChild, type MpElement, Slot, Teleport, useEffect, useId, useRef } from '@mission-platform/forge';
+
+import { resolvePortalTarget } from '@/utils/portal-target/portal-target';
 
 import sizeStyles from '../../../styles/size.module.scss';
-import { resolvePortalTarget } from '../../../utils/portal-target/portal-target';
 
 import styles from './forge-dropdown.module.scss';
 
@@ -20,7 +12,9 @@ export type DropdownSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 /** Preferred placement of the dropdown panel relative to its trigger. */
 export type DropdownPlacement = 'bottom-start' | 'bottom-end' | 'bottom' | 'top-start' | 'top-end' | 'top';
 
-export interface DropdownProperties extends MpProperties {
+export interface DropdownProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /**
    * Whether the dropdown is open (controlled). Defaults to `false`.
    * @model onUpdateOpen

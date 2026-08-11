@@ -1,0 +1,140 @@
+{
+  "name": "@mission-platform/content",
+  "version": "0.1.0",
+  "description": "Forge Monaco, Markdown, and AST-first WYSIWYG content components",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss",
+    "**/*.vue"
+  ],
+  "exports": {
+    ".": {
+      "mp:vue": {
+        "types": "./dist/vue/index.d.ts",
+        "import": "./dist/vue/index.js"
+      },
+      "mp:react": {
+        "types": "./dist/react/index.d.ts",
+        "import": "./dist/react/index.js"
+      },
+      "mp:solid": {
+        "types": "./dist/solid/index.d.ts",
+        "import": "./dist/solid/index.js"
+      },
+      "mp:svelte": {
+        "types": "./dist/svelte/index.d.ts",
+        "import": "./dist/svelte/index.js"
+      },
+      "mp:web-component": {
+        "types": "./dist/web-components/index.d.ts",
+        "import": "./dist/web-components/index.js"
+      },
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "build": "tsdown",
+    "build:bundle": "tsdown",
+    "build:types": "tsdown",
+    "build:watch": "tsdown --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "lint:style": "stylelint \"src/**/*.{vue,scss}\"",
+    "lint:style:fix": "stylelint --fix \"src/**/*.{vue,scss}\"",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
+  },
+  "peerDependencies": {
+    "lit": "^3.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "solid-js": "^1.9.0",
+    "svelte": "^5.0.0",
+    "vue": "^3.5.0"
+  },
+  "peerDependenciesMeta": {
+    "lit": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "solid-js": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@mission-platform/components": "workspace:*",
+    "@mission-platform/forge": "workspace:*",
+    "@mission-platform/forge-plugin-react": "workspace:*",
+    "@mission-platform/forge-plugin-solid": "workspace:*",
+    "@mission-platform/forge-plugin-svelte": "workspace:*",
+    "@mission-platform/forge-plugin-vue": "workspace:*",
+    "@mission-platform/forge-plugin-web-components": "workspace:*",
+    "@mission-platform/harper": "workspace:*",
+    "@mission-platform/hunspell": "workspace:*",
+    "@mission-platform/icons": "workspace:*",
+    "@mission-platform/tokens": "workspace:*",
+    "highlight.js": "catalog:code",
+    "marked": "catalog:code",
+    "mermaid": "catalog:code",
+    "monaco-editor": "catalog:code"
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/storybook-framework": "workspace:*",
+    "@mission-platform/stylelint-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@mission-platform/vite-config": "workspace:*",
+    "@mission-platform/vite-plugin-forge": "workspace:*",
+    "@types/node": "catalog:typescript",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "@vitejs/plugin-vue-jsx": "catalog:vue",
+    "@vitest/coverage-v8": "catalog:testing",
+    "eslint": "catalog:eslint",
+    "jsdom": "catalog:testing",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
+    "solid-js": "catalog:solid",
+    "svelte": "catalog:svelte",
+    "rxjs": "catalog:",
+    "storybook": "catalog:storybook",
+    "tsdown": "catalog:build",
+    "postcss-html": "catalog:stylelint",
+    "postcss-scss": "catalog:stylelint",
+    "sass-embedded": "catalog:vite",
+    "stylelint": "catalog:stylelint",
+    "stylelint-config-recommended-vue": "catalog:stylelint",
+    "stylelint-config-standard-scss": "catalog:stylelint",
+    "@vue/test-utils": "catalog:vue",
+    "prettier": "catalog:prettier",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite",
+    "vitest": "catalog:testing",
+    "vue": "catalog:vue",
+    "vue-tsc": "catalog:vue"
+  }
+}

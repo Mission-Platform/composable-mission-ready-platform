@@ -1,4 +1,5 @@
 import { h } from '@mission-platform/forge';
+import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
 import { useArgs } from 'storybook/preview-api';
 
 import { ForgeButton, ForgePopover, ForgeStack, ForgeTypography } from '@mission-platform/components';
@@ -19,6 +20,7 @@ const meta = {
   component: ForgePopover,
   tags: ['autodocs'],
   parameters: {
+    layout: 'centered',
     docs: {
       description: {
         component:
@@ -54,40 +56,46 @@ const meta = {
     offset: 6,
     closeOnOutsideClick: true,
     label: 'Account menu',
+    // Declared so the controlled open state is a first-class arg (settable from
+    // the controls panel and the URL), matching `ForgeDropdown`.
+    open: false,
   },
+  // `trigger` is a named slot, not a prop: only the React/Solid builds read it as
+  // `properties.trigger`. `renderWithSlots` fills it the way each of the five
+  // renderers actually consumes a slot.
   render: (arguments_) => {
     const [{ open = false }, updateArguments] = useArgs();
 
-    return (
-      <div style={{ padding: '6rem', display: 'flex', justifyContent: 'center' }}>
-        <ForgePopover
-          {...arguments_}
-          open={open}
-          onUpdateOpen={(value) => updateArguments({ open: value })}
-          onClose={() => updateArguments({ open: false })}
-          trigger={
-            <ForgeButton
-              variant="secondary"
-              onClick={() => updateArguments({ open: !open })}
-            >
-              Toggle popover
-            </ForgeButton>
-          }
-        >
-          <ForgeStack
-            gap="2xs"
-            style={{ padding: '0.5rem 1rem' }}
+    return renderWithSlots(
+      ForgePopover,
+      {
+        ...arguments_,
+        open,
+        onUpdateOpen: (value: boolean) => updateArguments({ open: value }),
+        onClose: () => updateArguments({ open: false }),
+      },
+      {
+        trigger: (
+          <ForgeButton
+            variant="secondary"
+            onClick={() => updateArguments({ open: !open })}
           >
-            <ForgeTypography variant="label">Account</ForgeTypography>
-            <ForgeTypography
-              color="secondary"
-              variant="body-sm"
-            >
-              ForgePopover content lives in the default slot.
-            </ForgeTypography>
-          </ForgeStack>
-        </ForgePopover>
-      </div>
+            Toggle popover
+          </ForgeButton>
+        ),
+      },
+      <ForgeStack
+        gap="2xs"
+        style={{ padding: '0.5rem 1rem' }}
+      >
+        <ForgeTypography variant="label">Account</ForgeTypography>
+        <ForgeTypography
+          color="secondary"
+          variant="body-sm"
+        >
+          ForgePopover content lives in the default slot.
+        </ForgeTypography>
+      </ForgeStack>,
     );
   },
 } satisfies Meta<typeof ForgePopover>;

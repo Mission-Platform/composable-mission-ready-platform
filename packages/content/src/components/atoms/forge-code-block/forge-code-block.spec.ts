@@ -1,0 +1,71 @@
+import { toReactComponent } from '@mission-platform/forge/react';
+import { toVueComponent } from '@mission-platform/forge/vue';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { describe, expect, it } from 'vitest';
+import { createSSRApp, h as vueH } from 'vue';
+import { renderToString } from 'vue/server-renderer';
+
+import { ForgeCodeBlock } from './forge-code-block';
+
+/**
+ * Exercises the **neutral** `ForgeCodeBlock` authored in this package, rendering
+ * it on both frameworks through the `@mission-platform/forge` adapters. The
+ * highlighted markup is injected into the `<code>` host on the client (no
+ * `v-html`), so the SSR markup is the static shell: the header (filename /
+ * language + copy button) and the `pre > code.hljs` container.
+ */
+const ReactCodeBlock = toReactComponent(ForgeCodeBlock, 'CodeBlock');
+const VueCodeBlock = toVueComponent(ForgeCodeBlock, 'CodeBlock');
+
+describe('ForgeCodeBlock authors the same component for React and Vue', () => {
+  it('renders the filename header, copy button, and code host on both frameworks', async () => {
+    const properties = { code: 'const x = 1;\n', language: 'typescript' as const, filename: 'demo.ts' };
+    const react = renderToStaticMarkup(createElement(ReactCodeBlock, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueCodeBlock, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('demo.ts');
+      expect(html).toContain('aria-label="Copy code"');
+      expect(html).toContain('<pre');
+      expect(html).toContain('hljs');
+    }
+  });
+
+  it('shows the language label when no filename is given on both frameworks', async () => {
+    const properties = { code: 'echo hi', language: 'bash' as const };
+    const react = renderToStaticMarkup(createElement(ReactCodeBlock, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueCodeBlock, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('bash');
+      expect(html).toContain('aria-label="Copy code"');
+    }
+  });
+
+  it('numbers one gutter row per line of code, ignoring a trailing newline, on both frameworks', async () => {
+    const properties = {
+      code: 'const a = 1;\nconst b = 2;\nconst c = a + b;\n',
+      language: 'typescript' as const,
+      showLineNumbers: true,
+      showCopyButton: false,
+    };
+    const react = renderToStaticMarkup(createElement(ReactCodeBlock, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueCodeBlock, properties) }));
+
+    for (const html of [react, vue]) {
+      expect([...html.matchAll(/>(\d+)</g)].map(([, digits]) => digits)).toEqual(['1', '2', '3']);
+    }
+  });
+
+  it('hides the copy button when disabled (header still shown via filename) on both frameworks', async () => {
+    const properties = { code: 'echo hi', language: 'bash' as const, filename: 'run.sh', showCopyButton: false };
+    const react = renderToStaticMarkup(createElement(ReactCodeBlock, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueCodeBlock, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('run.sh');
+      expect(html).not.toContain('aria-label="Copy code"');
+    }
+  });
+});

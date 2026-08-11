@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, h, type MpElement } from '@mission-platform/forge';
 
 import sizeStyles from '../../../styles/size.module.scss';
 
@@ -12,7 +12,7 @@ export type SkeletonVariant =
 /** Size token — canonical 2xs → 2xl scale. */
 export type SkeletonSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface SkeletonProperties extends MpProperties {
+export interface SkeletonProperties {
   /** Placeholder shape. Defaults to `'line'`. */
   shape?: SkeletonShape;
   /** Explicit CSS width override (e.g. `'60%'`). */

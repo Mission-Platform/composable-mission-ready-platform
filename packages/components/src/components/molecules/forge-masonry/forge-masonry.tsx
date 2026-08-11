@@ -1,4 +1,4 @@
-import { classNames, Dynamic, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, Dynamic, h, type MpChild, type MpElement } from '@mission-platform/forge';
 
 import sizeStyles from '../../../styles/size.module.scss';
 import spacingStyles from '../../../styles/spacing.module.scss';
@@ -23,7 +23,9 @@ const GAP_SPACING: Record<MasonryGap, string> = {
   '2xl': 'var(--mp-spacing-12)',
 };
 
-export interface MasonryProperties extends MpProperties {
+export interface MasonryProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Size token controlling the masonry's font scale. Defaults to `'md'`. */
   size?: MasonrySize;
   /** Fixed number of columns. Ignored when `minColumnWidth` is set. */

@@ -1,0 +1,49 @@
+@layer mp.layout {
+  .grid-layout {
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+
+    &--xs {
+      @media (width >= 480px) {
+        grid-template-columns: var(--forge-grid-columns);
+        grid-template-rows: var(--forge-grid-rows);
+      }
+    }
+
+    &--sm {
+      @media (width >= 768px) {
+        grid-template-columns: var(--forge-grid-columns);
+        grid-template-rows: var(--forge-grid-rows);
+      }
+    }
+
+    &--md {
+      @media (width >= 1024px) {
+        grid-template-columns: var(--forge-grid-columns);
+        grid-template-rows: var(--forge-grid-rows);
+      }
+    }
+
+    &--lg {
+      @media (width >= 1920px) {
+        grid-template-columns: var(--forge-grid-columns);
+        grid-template-rows: var(--forge-grid-rows);
+      }
+    }
+
+    &--xl {
+      @media (width >= 2560px) {
+        grid-template-columns: var(--forge-grid-columns);
+        grid-template-rows: var(--forge-grid-rows);
+      }
+    }
+
+    &__cell {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+  }
+}

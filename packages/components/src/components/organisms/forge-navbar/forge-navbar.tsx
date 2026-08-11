@@ -1,7 +1,8 @@
-import { h, type MpChild, type MpElement, type MpProperties, Slot, useEffect, useState } from '@mission-platform/forge';
+import { h, type MpChild, type MpElement, Slot, useEffect, useState } from '@mission-platform/forge';
+
+import { ForgeTypography } from '@/components/atoms/forge-typography';
 
 import sizeStyles from '../../../styles/size.module.scss';
-import { ForgeTypography } from '../../atoms/forge-typography';
 import { ForgeDrawer } from '../forge-drawer';
 
 import styles from './forge-navbar.module.scss';
@@ -19,7 +20,7 @@ export type NavbarAlign = 'start' | 'center' | 'end';
  */
 export type NavbarBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-export interface NavbarProperties extends MpProperties {
+export interface NavbarProperties {
   /** Size token controlling the navbar's scale. Defaults to `'md'`. */
   size?: NavbarSize;
   /**

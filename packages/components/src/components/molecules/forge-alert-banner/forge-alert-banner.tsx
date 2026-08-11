@@ -1,4 +1,4 @@
-import { h, hasSlot, type MpChild, type MpElement, type MpProperties, Slot } from '@mission-platform/forge';
+import { h, hasSlot, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
 import {
   ForgeIconCheck,
   ForgeIconClose,
@@ -7,8 +7,9 @@ import {
   ForgeIconWarning,
 } from '@mission-platform/icons';
 
+import { ForgeTypography } from '@/components/atoms/forge-typography';
+
 import sizeStyles from '../../../styles/size.module.scss';
-import { ForgeTypography } from '../../atoms/forge-typography';
 
 import styles from './forge-alert-banner.module.scss';
 
@@ -19,7 +20,9 @@ export type AlertBannerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type AlertBannerVariant =
   'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
-export interface AlertBannerProperties extends MpProperties {
+export interface AlertBannerProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /**
    * Controls visibility (the controlled `v-model` substitute). Defaults to `true`.
    * @model onUpdateModelValue

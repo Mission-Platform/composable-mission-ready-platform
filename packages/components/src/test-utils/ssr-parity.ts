@@ -30,7 +30,7 @@ import { expect } from 'vitest';
 import { createSSRApp, h as vueH } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 
-import type { MpChild, MpComponent, MpProperties } from '@mission-platform/forge';
+import type { MpChild, MpComponent, MpPropertyBag } from '@mission-platform/forge';
 
 /** Children accepted by the parity helpers (plain text/markup only for SSR). */
 export type ParityChildren = string | number | undefined;
@@ -68,7 +68,7 @@ export function normalizeMarkup(html: string): string {
 }
 
 /** Render a neutral component to static React SSR markup. */
-export function renderReactSsr<P extends MpProperties>(
+export function renderReactSsr<P extends MpPropertyBag>(
   component: MpComponent<P>,
   properties: Partial<P> = {},
   children?: ParityChildren,
@@ -80,7 +80,7 @@ export function renderReactSsr<P extends MpProperties>(
 }
 
 /** Render a neutral component to Vue SSR markup. */
-export async function renderVueSsr<P extends MpProperties>(
+export async function renderVueSsr<P extends MpPropertyBag>(
   component: MpComponent<P>,
   properties: Partial<P> = {},
   children?: ParityChildren,
@@ -99,7 +99,7 @@ export async function renderVueSsr<P extends MpProperties>(
  * markup matches. Returns both the raw React/Vue markup and the shared
  * normalised markup so the caller can make further `toContain` assertions.
  */
-export async function expectSsrParity<P extends MpProperties>(
+export async function expectSsrParity<P extends MpPropertyBag>(
   component: MpComponent<P>,
   properties: Partial<P> = {},
   children?: ParityChildren,

@@ -1,7 +1,8 @@
-import { classNames, h, type MpElement, type MpProperties, Slot } from '@mission-platform/forge';
+import { classNames, h, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
+
+import { ForgeTypography } from '@/components/atoms/forge-typography';
 
 import sizeStyles from '../../../styles/size.module.scss';
-import { ForgeTypography } from '../../atoms/forge-typography';
 
 import styles from './forge-menu-item.module.scss';
 
@@ -12,7 +13,9 @@ export type MenuItemSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type MenuItemVariant =
   'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 
-export interface MenuItemProperties extends MpProperties {
+export interface MenuItemProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Item label (rendered when no default slot is provided). */
   label?: string;
   /** Whether the item is non-interactive. */

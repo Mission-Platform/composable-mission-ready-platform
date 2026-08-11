@@ -1,7 +1,15 @@
 import { h, type MpElement } from '@mission-platform/forge';
 
 import * as iconsNamespace from '@mission-platform/icons';
-import { ForgeIconStar } from '@mission-platform/icons';
+import {
+  ForgeIconAlert,
+  ForgeIconArrow,
+  ForgeIconCountryGlobe,
+  ForgeIconFlag,
+  ForgeIconRoute,
+  ForgeIconStar,
+  IconSpriteProvider,
+} from '@mission-platform/icons';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
@@ -18,13 +26,28 @@ type IconComponent = (properties: { size?: number | string }) => MpElement;
  * `JSX Icons`.
  */
 
-/** Every exported icon component, paired with its export name, for the gallery. */
+/**
+ * Every exported icon component, paired with its export name, for the gallery.
+ *
+ * The value check must accept **objects** as well as functions: only the React
+ * and Solid builds export an icon as a plain function — the Vue build exports
+ * `defineComponent({…})` (an object) and the web-component build a custom
+ * element class. Filtering on `typeof value === 'function'` alone left the
+ * gallery empty on the default (Vue) workbench.
+ */
 const galleryEntries = Object.entries(iconsNamespace).filter(
-  ([name, value]) => name.startsWith('ForgeIcon') && typeof value === 'function',
+  ([name, value]) =>
+    name.startsWith('ForgeIcon') && (typeof value === 'function' || (typeof value === 'object' && value !== null)),
 ) as [string, IconComponent][];
 
+if (galleryEntries.length === 0) {
+  throw new Error(
+    '[icons] The overview gallery found no `ForgeIcon*` exports — the active framework build exports a shape this filter does not recognise.',
+  );
+}
+
 const meta = {
-  title: 'Icons/Overview',
+  title: 'icons/overview',
   component: ForgeIconStar,
   tags: ['autodocs'],
   parameters: {
@@ -67,5 +90,38 @@ export const Gallery: Story = {
         </div>
       ))}
     </div>
+  ),
+};
+
+/** Repeated references share one inline symbol host instead of duplicating geometry. */
+export const SpriteProvider: Story = {
+  render: () => (
+    <IconSpriteProvider>
+      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <ForgeIconAlert
+          ariaLabel="Alert"
+          size="lg"
+        />
+        <ForgeIconArrow
+          ariaLabel="Arrow right"
+          direction="right"
+          size="lg"
+        />
+        <ForgeIconRoute
+          ariaLabel="Route"
+          size="lg"
+        />
+        <ForgeIconFlag
+          ariaLabel="United States flag"
+          countryCode="US"
+          size="lg"
+        />
+        <ForgeIconCountryGlobe
+          ariaLabel="United States globe"
+          countryCode="US"
+          size="lg"
+        />
+      </div>
+    </IconSpriteProvider>
   ),
 };

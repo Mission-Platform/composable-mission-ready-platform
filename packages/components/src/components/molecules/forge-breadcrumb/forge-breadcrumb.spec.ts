@@ -47,4 +47,17 @@ describe('ForgeBreadcrumb authors the same component for React and Vue', () => {
       expect(html).toContain('›');
     }
   });
+
+  it('renders the current crumb as plain inline text, in line with the link crumbs', async () => {
+    const react = renderToStaticMarkup(createElement(ReactBreadcrumb, { items }));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueBreadcrumb, { items }) }));
+
+    for (const html of [react, vue]) {
+      // The label is the *direct* text of the current crumb: nesting it in a
+      // smaller typography variant is what made the last crumb read as
+      // supertext, out of line with its sibling links.
+      expect(html).toMatch(/aria-current="page"[^>]*>\s*Data\s*<\/span>/);
+      expect(html).not.toContain('forge-typography');
+    }
+  });
 });

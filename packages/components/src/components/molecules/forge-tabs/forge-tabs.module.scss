@@ -49,24 +49,47 @@
       align-items: center;
       gap: var(--mp-spacing-2);
 
+      /*
+       * The active indicator is drawn as an `::after` **inside** the wrapper's own
+       * box, never as a border pulled outwards with a negative margin: the list
+       * that contains these wrappers is `overflow-x: auto`, and an `overflow`
+       * value other than `visible` clips the block axis too — so the old
+       * `margin-bottom: -2px` underline was cut off and only a faint colour
+       * change survived.
+       */
       &--line {
+        position: relative;
         padding: var(--mp-spacing-2) var(--mp-spacing-4);
-        border-bottom: var(--mp-border-width-thick) solid transparent;
-        margin-bottom: -2px;
         border-radius: var(--mp-radius-sm) var(--mp-radius-sm) 0 0;
         color: var(--mp-color-text-secondary);
-        transition:
-          color 150ms ease,
-          border-color 150ms ease;
+        transition: color 150ms ease;
+
+        &::after {
+          content: '';
+          position: absolute;
+          inset-inline: 0;
+          inset-block-end: 0;
+          block-size: var(--mp-border-width-thick);
+          background-color: transparent;
+          border-radius: var(--mp-radius-2xs) var(--mp-radius-2xs) 0 0;
+          transition: background-color 150ms ease;
+        }
 
         &:hover:not(.forge-tabs__tab-wrapper--disabled) {
           color: var(--mp-color-text-primary);
-          border-bottom-color: var(--mp-color-border-strong);
+
+          &::after {
+            background-color: var(--mp-color-border-strong);
+          }
         }
 
         &.forge-tabs__tab-wrapper--active {
           color: var(--mp-color-primary-text);
-          border-bottom-color: var(--mp-color-primary-text);
+          background-color: var(--mp-color-primary-subtle);
+
+          &::after {
+            background-color: var(--mp-color-primary-text);
+          }
         }
       }
 
@@ -187,9 +210,13 @@
         box-shadow: var(--mp-shadow-focus-primary);
       }
 
+      /*
+       * The “add tab” affordance sits in the bar, outside the scrolling list, so a
+       * plain bottom border is safe here — but it must not be pulled out of its
+       * box either, otherwise it no longer lines up with the bar's own rule.
+       */
       &--line {
         border-bottom: var(--mp-border-width-thick) solid var(--mp-color-border-default);
-        margin-bottom: -2px;
       }
     }
 

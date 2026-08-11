@@ -6,7 +6,7 @@ import {
   breakpoints,
   type BreakpointValues,
   resolveBreakpoint,
-} from '../../breakpoints';
+} from '@/breakpoints';
 
 /**
  * Reactive breakpoint state based on the document element's width.
