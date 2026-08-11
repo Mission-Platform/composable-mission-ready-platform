@@ -1,0 +1,24 @@
+# @mission-platform/vcard
+
+Shared vCard contact payload builder and typed options for Mission Platform
+
+## Installation
+
+Add it to a consuming workspace member:
+
+```json
+{
+  "dependencies": {
+    "@mission-platform/vcard": "workspace:*"
+  }
+}
+```
+
+## Usage
+
+```ts
+import { vCard, type VCardOptions } from '@mission-platform/vcard';
+
+const contact: VCardOptions = { firstName: 'Ada', lastName: 'Lovelace' };
+const payload = vCard(contact);
+```

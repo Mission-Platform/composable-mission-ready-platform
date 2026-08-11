@@ -6,7 +6,7 @@
 import i18next from 'i18next';
 import { useTranslation } from 'react-i18next';
 
-import { getServerI18n } from '../../stores/create-forge-i18n';
+import { getServerI18n } from '@/stores/create-forge-i18n';
 
 import type { i18n as I18nInstance, TFunction } from 'i18next';
 

@@ -5,7 +5,7 @@ import defaultI18next from 'i18next';
 import { useTranslation } from 'i18next-vue';
 import { getCurrentScope, markRaw, onScopeDispose, ref, type Ref } from 'vue';
 
-import { getServerI18n } from '../../stores/create-forge-i18n';
+import { getServerI18n } from '@/stores/create-forge-i18n';
 
 import type { i18n as I18nInstance, TFunction } from 'i18next';
 
