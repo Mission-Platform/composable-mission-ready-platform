@@ -202,6 +202,9 @@ export function defineLibraryConfig(options: LibraryConfigOptions): UserConfig {
     css: {
       postcss: postcssConfig,
     },
+    resolve: {
+      tsconfigPaths: true,
+    },
     plugins: [vue(), ignoreVueI18nBlocksPlugin()],
     build: {
       lib: {
@@ -272,6 +275,7 @@ export function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): Us
   const conditionsConfig = defineConfig({
     resolve: {
       conditions,
+      tsconfigPaths: true,
     },
     // The static-prerender / SSR pass (e.g. `vite-ssg`) resolves modules through
     // a *separate* condition set that does not inherit `resolve.conditions`.
@@ -304,6 +308,9 @@ export function defineAppConfig(options: AppConfigOptions = {}): UserConfig {
   const base = defineConfig({
     css: {
       postcss: postcssConfig,
+    },
+    resolve: {
+      tsconfigPaths: true,
     },
     plugins: [vue(), ignoreVueI18nBlocksPlugin()],
     build: {

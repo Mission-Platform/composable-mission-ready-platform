@@ -1,7 +1,8 @@
 import { ForgeButton, ForgeTypography } from '@mission-platform/components';
-import { h, type MpElement, type MpProperties, useEffect, useRef, useState } from '@mission-platform/forge';
+import { h, type MpElement, useEffect, useRef, useState } from '@mission-platform/forge';
 import { ForgeIconCamera, ForgeIconClose, ForgeIconUpload } from '@mission-platform/icons';
 
+import { scannerLog } from '@/debug';
 import {
   scanFile,
   scanImageData,
@@ -10,13 +11,11 @@ import {
   videoFrameToImageData,
 } from '@mission-platform/code-scanner';
 
-import { scannerLog } from '../../../debug';
-
 import styles from './forge-code-scanner.module.scss';
 
 export type { ScanFormat, ScanResult } from '@mission-platform/code-scanner';
 
-export interface CodeScannerProperties extends MpProperties {
+export interface CodeScannerProperties {
   /** Which camera to prefer for the live stream. Defaults to `'environment'` (rear). */
   facingMode?: 'environment' | 'user';
   /** Milliseconds between live-camera frame scans. Defaults to `300`. */

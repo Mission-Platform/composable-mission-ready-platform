@@ -1,11 +1,10 @@
-import { type MpProperties } from '@mission-platform/forge';
 import { BehaviorSubject, type Observable } from 'rxjs';
 
 import { useObservable } from '@mission-platform/rxjs';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
-interface StatusBadgeProperties extends MpProperties {
+interface StatusBadgeProperties {
   /** The stream whose latest value is shown. */
   status$: Observable<string>;
   /** The value rendered until the first emission. */

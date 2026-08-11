@@ -1,7 +1,15 @@
 import path from 'node:path';
 
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
+import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
-import { defineTsdownForgeComponentsAll } from '@mission-platform/vite-plugin-forge';
+import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+
+const rootDirectory = import.meta.dirname;
+const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
 
 /**
  * Workspace `-wasm` package whose already self-contained (base64-inlined) output
@@ -30,11 +38,18 @@ export default [
       },
     },
   }),
-  ...defineTsdownForgeComponentsAll({
-    rootDir: import.meta.dirname,
-    frameworks: ['vue', 'react', 'solid', 'svelte', 'web-components'],
-    componentsModule: path.resolve(import.meta.dirname, 'src/components/index.ts'),
+  ...defineTsdownForgeComponents({
+    rootDir: rootDirectory,
+    frameworks: [
+      forgeReactFramework(),
+      forgeSolidFramework(),
+      forgeSvelteFramework(),
+      forgeWebComponentsFramework(),
+      forgeVueFramework(),
+    ],
+    componentsModule,
     name: 'MissionPlatformCodeScanner',
-    external: ['@mission-platform/code-scanner'],
+    external: ['i18next'],
+    declarationModule: '..',
   }),
 ];

@@ -40,6 +40,12 @@ function toBytes(base64: string): Uint8Array {
   return bytes;
 }
 
+function toArrayBuffer(bytes: Uint8Array): ArrayBuffer {
+  const buffer = new ArrayBuffer(bytes.byteLength);
+  new Uint8Array(buffer).set(bytes);
+  return buffer;
+}
+
 // The wasm binary imports its JS helpers from the `_bg.js` module, so hand that
 // namespace in as the import object, then give the bindings the live instance
 // exports and run the wasm-bindgen start hook.
@@ -47,7 +53,7 @@ const glue = bindings as unknown as typeof WasmApi & {
   __wbg_set_wasm(value: unknown): void;
 };
 const instance = new WebAssembly.Instance(
-  new WebAssembly.Module(toBytes(wasmBase64)),
+  new WebAssembly.Module(toArrayBuffer(toBytes(String(wasmBase64)))),
   {
     "./barcode-decode_bg.js": bindings as unknown as WebAssembly.ModuleImports,
   },
