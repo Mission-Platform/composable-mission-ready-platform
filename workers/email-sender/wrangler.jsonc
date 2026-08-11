@@ -1,0 +1,14 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "mission-platform-email-sender",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-08",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "vars": {
+    "MAILPIT_HOST": "127.0.0.1",
+    "MAILPIT_PORT": "1025",
+    "MAIL_FROM": "showcase@mission.local",
+    "MAILPIT_UI_URL": "http://localhost:8025"
+  }
+}
