@@ -1,0 +1,103 @@
+{
+  "name": "@mission-platform/email-renderer",
+  "version": "0.1.0",
+  "description": "Framework-agnostic email, Markdown, and browser renderer for Forge component trees",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./vue": {
+      "types": "./dist/adapters/vue.d.ts",
+      "import": "./dist/adapters/vue.js"
+    },
+    "./react": {
+      "types": "./dist/adapters/react.d.ts",
+      "import": "./dist/adapters/react.js"
+    },
+    "./svelte": {
+      "types": "./dist/adapters/svelte.d.ts",
+      "import": "./dist/adapters/svelte.js"
+    },
+    "./solid": {
+      "types": "./dist/adapters/solid.d.ts",
+      "import": "./dist/adapters/solid.js"
+    },
+    "./web-components": {
+      "types": "./dist/adapters/web-components.d.ts",
+      "import": "./dist/adapters/web-components.js"
+    },
+    "./adapters": {
+      "types": "./dist/adapters/index.d.ts",
+      "import": "./dist/adapters/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "build:bundle": "vite build",
+    "build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly",
+    "build:watch": "vite build --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
+  },
+  "dependencies": {
+    "@mission-platform/forge": "workspace:*",
+    "marked": "catalog:code"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "solid-js": "^1.9.0",
+    "svelte": "^5.0.0",
+    "vue": "^3.5.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "solid-js": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@mission-platform/vite-config": "workspace:*",
+    "@types/node": "catalog:typescript",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
+    "solid-js": "catalog:solid",
+    "svelte": "catalog:svelte",
+    "vue": "catalog:vue",
+    "@vitest/coverage-v8": "catalog:testing",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite",
+    "vitest": "catalog:testing"
+  }
+}

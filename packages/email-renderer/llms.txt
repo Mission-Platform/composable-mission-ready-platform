@@ -1,0 +1,26 @@
+# @mission-platform/email-renderer
+
+Framework-agnostic email, Markdown, and browser renderer for Forge component trees.
+
+## Installation
+
+Add it to a consuming workspace member:
+
+```json
+{
+  "dependencies": {
+    "@mission-platform/email-renderer": "workspace:*"
+  }
+}
+```
+
+## Usage
+
+```ts
+import { renderEmail, renderMarkdown } from '@mission-platform/email-renderer';
+
+const html = renderEmail(renderMarkdown('# Hello').node, { title: 'Hello' });
+```
+
+Browser previews use the optional adapter entry points, or the aggregate
+`@mission-platform/email-renderer/adapters` entry, with the same Forge tree.
