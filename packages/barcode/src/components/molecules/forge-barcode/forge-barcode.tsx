@@ -1,14 +1,24 @@
 import { ForgeButton, ForgeTypography } from '@mission-platform/components';
-import { h, type MpElement, type MpProperties, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
+import { h, type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
 import { ForgeIconCheck, ForgeIconCopy, ForgeIconDownload, ForgeIconImage } from '@mission-platform/icons';
 
-import { type BarcodeSymbology, encodeBarcode } from '@mission-platform/barcode';
+import { encodeBarcode } from '../../../encoder';
 
 import styles from './forge-barcode.module.scss';
 
-export type { BarcodeSymbology } from '@mission-platform/barcode';
+import type { BarcodeSymbology } from '../../../encoder';
 
-export interface BarcodeProperties extends MpProperties {
+/** Which action buttons the toolbar shows. `true` enables all of them. */
+export interface BarcodeActions {
+  /** Show the "save as image" (PNG download) button. */
+  download?: boolean;
+  /** Show the "copy image to clipboard" button. */
+  copyImage?: boolean;
+  /** Show the "copy value to clipboard" button. */
+  copyValue?: boolean;
+}
+
+export interface BarcodeProperties {
   /** The data to encode. Its valid form depends on the {@link symbology}. */
   value: string;
   /** The linear symbology used to encode {@link value}. Defaults to `'code128'`. */
@@ -28,21 +38,20 @@ export interface BarcodeProperties extends MpProperties {
   /** Accessible label describing the barcode's content. */
   ariaLabel?: string;
   /**
-   * Show the whole action toolbar (save as image, copy image, copy value). Acts
-   * as the default for the individual `show*Button` props below. Defaults to
-   * `false`.
+   * The action toolbar (save as image, copy image, copy value). Pass `true` to
+   * show every button, or a {@link BarcodeActions} object to pick them
+   * individually. Defaults to `false`.
    */
-  showActions?: boolean;
-  /** Show the "save as image" (PNG download) button. Defaults to {@link showActions}. */
-  showDownloadButton?: boolean;
-  /** Show the "copy image to clipboard" button. Defaults to {@link showActions}. */
-  showCopyImageButton?: boolean;
-  /** Show the "copy value to clipboard" button. Defaults to {@link showActions}. */
-  showCopyValueButton?: boolean;
+  showActions?: boolean | BarcodeActions;
   /** File name used when saving the barcode as an image. Defaults to `'barcode.png'`. */
   downloadFileName?: string;
   /** Fired when `value` cannot be encoded, or an action (save/copy) fails. */
   onError?: (error: Error) => void;
+}
+
+interface BarcodeRenderResult {
+  rendered: RenderedBarcode | undefined;
+  error: Error | undefined;
 }
 
 /** A single run of adjacent bars, in pixel coordinates. */
@@ -71,6 +80,42 @@ type CompletedAction = '' | 'download' | 'image' | 'value';
 /** Pixel height reserved for the human-readable value line, when shown. */
 const TEXT_HEIGHT = 20;
 
+function encodeRenderedBarcode(
+  symbology: BarcodeSymbology,
+  value: string,
+  margin: number,
+  moduleWidth: number,
+  height: number,
+  textHeight: number,
+): BarcodeRenderResult {
+  try {
+    const barcode = encodeBarcode(symbology, value);
+    const quietZone = Math.max(0, Math.floor(margin));
+    const totalModules = barcode.width + quietZone * 2;
+    const dimensionX = totalModules * moduleWidth;
+    const dimensionY = height + textHeight;
+
+    const bars: BarRun[] = [];
+    let run = 0;
+    for (let index = 0; index < barcode.modules.length; index++) {
+      if (barcode.modules[index] === 1) {
+        run += 1;
+      } else if (run > 0) {
+        bars.push({ x: (quietZone + index - run) * moduleWidth, width: run * moduleWidth });
+        run = 0;
+      }
+    }
+    if (run > 0) {
+      const start = barcode.modules.length - run;
+      bars.push({ x: (quietZone + start) * moduleWidth, width: run * moduleWidth });
+    }
+
+    return { rendered: { dimensionX, dimensionY, barHeight: height, bars }, error: undefined };
+  } catch (error) {
+    return { rendered: undefined, error: error instanceof Error ? error : new Error(String(error)) };
+  }
+}
+
 /**
  * `ForgeBarcode` — renders a scannable 1D (linear) barcode, authored once in the
  * neutral JSX dialect and compiled straight to React or Vue by
@@ -90,11 +135,12 @@ const TEXT_HEIGHT = 20;
  * width and quiet zone are configurable, and the human-readable value can be
  * shown beneath the bars via `displayValue`.
  *
- * An optional action toolbar (enabled via `showActions` or the individual
- * `show*Button` props) lets users **save the barcode as a PNG image**, **copy
- * the image to the clipboard**, and **copy the encoded value to the clipboard**.
- * The PNG is rasterised on the client by drawing the rendered SVG onto a canvas.
- * The `onError` callback fires when the value cannot be encoded for the chosen
+ * An optional action toolbar (enabled via `showActions` — `true` for every
+ * button, or a {@link BarcodeActions} object to pick them individually) lets
+ * users **save the barcode as a PNG image**, **copy the image to the
+ * clipboard**, and **copy the encoded value to the clipboard**. The PNG is
+ * rasterised on the client by drawing the rendered SVG onto a canvas. The
+ * `onError` callback fires when the value cannot be encoded for the chosen
  * symbology. It owns its styling through the co-located CSS Module
  * `forge-barcode.module.scss`.
  */
@@ -110,19 +156,19 @@ export function ForgeBarcode(properties: Readonly<BarcodeProperties>): MpElement
     displayValue = false,
     ariaLabel,
     showActions = false,
-    showDownloadButton,
-    showCopyImageButton,
-    showCopyValueButton,
     downloadFileName = 'barcode.png',
   } = properties;
 
-  // Each individual button falls back to `showActions` when not set explicitly.
-  // The fallback is resolved in the body (rather than as a destructuring default)
-  // so the Vue codegen doesn't emit a `withDefaults` entry referencing a sibling
-  // prop, which isn't in scope in the generated single-file component.
-  const showDownload = showDownloadButton ?? showActions;
-  const showCopyImage = showCopyImageButton ?? showActions;
-  const showCopyValue = showCopyValueButton ?? showActions;
+  // `showActions: true` enables every button; an object enables them one by one,
+  // each falling back to `false`. The resolution happens in the body (rather
+  // than as a destructuring default) so the Vue codegen doesn't emit a
+  // `withDefaults` entry referencing another prop, which isn't in scope in the
+  // generated single-file component.
+  const all = showActions === true;
+  const requestedActions = typeof showActions === 'object' && showActions !== null ? showActions : {};
+  const showDownload = requestedActions.download ?? all;
+  const showCopyImage = requestedActions.copyImage ?? all;
+  const showCopyValue = requestedActions.copyValue ?? all;
 
   const textHeight = displayValue ? TEXT_HEIGHT : 0;
 
@@ -139,53 +185,20 @@ export function ForgeBarcode(properties: Readonly<BarcodeProperties>): MpElement
     };
   }, []);
 
-  const result = useMemo<{ rendered: RenderedBarcode | undefined; error: Error | undefined }>(() => {
-    try {
-      const barcode = encodeBarcode(symbology, value);
-      const quietZone = Math.max(0, Math.floor(margin));
-      const totalModules = barcode.width + quietZone * 2;
-      const dimensionX = totalModules * moduleWidth;
-      const dimensionY = height + textHeight;
-
-      // Merge adjacent dark modules into runs so the SVG stays compact.
-      const bars: BarRun[] = [];
-      let run = 0;
-      for (let index = 0; index < barcode.modules.length; index++) {
-        if (barcode.modules[index] === 1) {
-          run += 1;
-        } else if (run > 0) {
-          bars.push({ x: (quietZone + index - run) * moduleWidth, width: run * moduleWidth });
-          run = 0;
-        }
-      }
-      if (run > 0) {
-        const start = barcode.modules.length - run;
-        bars.push({ x: (quietZone + start) * moduleWidth, width: run * moduleWidth });
-      }
-
-      return { rendered: { dimensionX, dimensionY, barHeight: height, bars }, error: undefined };
-    } catch (error) {
-      return { rendered: undefined, error: error instanceof Error ? error : new Error(String(error)) };
-    }
-  }, [value, symbology, margin, moduleWidth, height, textHeight]);
+  const result = useMemo(
+    () => encodeRenderedBarcode(symbology, value, margin, moduleWidth, height, textHeight),
+    [height, margin, moduleWidth, symbology, textHeight, value],
+  );
 
   if (result.error) {
     properties.onError?.(result.error);
   }
 
-  if (!result.rendered) {
-    return (
-      <svg
-        aria-hidden="true"
-        className={styles['forge-barcode']}
-        height="0"
-        width="0"
-        xmlns="http://www.w3.org/2000/svg"
-      />
-    );
-  }
-
-  const { dimensionX, dimensionY, barHeight, bars } = result.rendered;
+  const rendered = result.rendered;
+  const dimensionX = rendered?.dimensionX ?? 0;
+  const dimensionY = rendered?.dimensionY ?? 0;
+  const barHeight = rendered?.barHeight ?? 0;
+  const bars = rendered?.bars ?? [];
 
   const barcodeSvg = (
     <svg
@@ -322,71 +335,65 @@ export function ForgeBarcode(properties: Readonly<BarcodeProperties>): MpElement
     })();
   };
 
-  const actions: {
-    key: CompletedAction;
-    label: string;
-    doneLabel: string;
-    icon: MpElement;
-    onClick: () => void;
-    visible: boolean;
-  }[] = [
-    {
-      key: 'download',
-      label: 'Save image',
-      doneLabel: 'Saved',
-      icon: <ForgeIconDownload size="xs" />,
-      onClick: saveImage,
-      visible: showDownload,
-    },
-    {
-      key: 'image',
-      label: 'Copy image',
-      doneLabel: 'Copied',
-      icon: <ForgeIconImage size="xs" />,
-      onClick: copyImage,
-      visible: showCopyImage,
-    },
-    {
-      key: 'value',
-      label: 'Copy value',
-      doneLabel: 'Copied',
-      icon: <ForgeIconCopy size="xs" />,
-      onClick: copyValue,
-      visible: showCopyValue,
-    },
-  ];
-
-  const visibleActions = actions.filter((action) => action.visible);
-  if (visibleActions.length === 0) {
-    return barcodeSvg;
-  }
-
-  return (
+  const hasVisibleToolbarActions = rendered !== undefined && (showDownload || showCopyImage || showCopyValue);
+  return hasVisibleToolbarActions ? (
     <div className={styles['forge-barcode-figure']}>
       {barcodeSvg}
       <div className={styles['forge-barcode__actions']}>
-        {visibleActions.map((action) => {
-          const isDone = completed === action.key;
-          return (
-            <ForgeButton
-              key={action.key}
-              size="sm"
-              type="button"
-              variant="secondary"
-              onClick={action.onClick}
+        {showDownload ? (
+          <ForgeButton
+            size="sm"
+            type="button"
+            variant="secondary"
+            onClick={saveImage}
+          >
+            {completed === 'download' ? <ForgeIconCheck size="xs" /> : <ForgeIconDownload size="xs" />}
+            <ForgeTypography
+              as="span"
+              color="inherit"
+              variant="caption"
             >
-              {isDone ? <ForgeIconCheck size="xs" /> : action.icon}
-              <ForgeTypography
-                as="span"
-                color="inherit"
-                variant="caption"
-              >
-                {isDone ? action.doneLabel : action.label}
-              </ForgeTypography>
-            </ForgeButton>
-          );
-        })}
+              {completed === 'download' ? 'Saved' : 'Save image'}
+            </ForgeTypography>
+          </ForgeButton>
+        ) : null}
+        {showCopyImage ? (
+          <ForgeButton
+            size="sm"
+            type="button"
+            variant="secondary"
+            onClick={copyImage}
+          >
+            {completed === 'image' ? <ForgeIconCheck size="xs" /> : <ForgeIconImage size="xs" />}
+            <ForgeTypography
+              as="span"
+              color="inherit"
+              variant="caption"
+            >
+              {completed === 'image' ? 'Copied' : 'Copy image'}
+            </ForgeTypography>
+          </ForgeButton>
+        ) : null}
+        {showCopyValue ? (
+          <ForgeButton
+            size="sm"
+            type="button"
+            variant="secondary"
+            onClick={copyValue}
+          >
+            {completed === 'value' ? <ForgeIconCheck size="xs" /> : <ForgeIconCopy size="xs" />}
+            <ForgeTypography
+              as="span"
+              color="inherit"
+              variant="caption"
+            >
+              {completed === 'value' ? 'Copied' : 'Copy value'}
+            </ForgeTypography>
+          </ForgeButton>
+        ) : null}
       </div>
     </div>
+  ) : (
+    barcodeSvg
   );
 }

@@ -10,6 +10,8 @@
 // Every builder returns a plain `string`; nothing here touches the WebAssembly
 // encoder, so the helpers are cheap, synchronous, and safe to use anywhere.
 
+export { vCard, type VCardOptions } from '@mission-platform/vcard';
+
 /** Wi-Fi authentication type understood by the `WIFI:` payload scheme. */
 export type WifiEncryption = 'WPA' | 'WEP' | 'nopass';
 
@@ -54,30 +56,6 @@ export interface GeoOptions {
   longitude: number;
   /** Optional altitude in metres. */
   altitude?: number;
-}
-
-/** Options for {@link vCard} — a subset of the vCard 3.0 field set. */
-export interface VCardOptions {
-  /** First / given name. */
-  firstName?: string;
-  /** Last / family name. */
-  lastName?: string;
-  /** Full formatted name. Derived from first/last names when omitted. */
-  formattedName?: string;
-  /** Organisation / company. */
-  organization?: string;
-  /** Job title. */
-  title?: string;
-  /** One or more phone numbers. */
-  phone?: string | string[];
-  /** One or more email addresses. */
-  email?: string | string[];
-  /** Website URL. */
-  url?: string;
-  /** Free-form postal address (single line). */
-  address?: string;
-  /** Free-form note. */
-  note?: string;
 }
 
 /** Options for {@link meCard} — the compact contact format used by many phones. */
@@ -198,30 +176,6 @@ export function phone(number: string): string {
 export function geo(options: GeoOptions): string {
   const base = `geo:${options.latitude},${options.longitude}`;
   return options.altitude === undefined ? base : `${base},${options.altitude}`;
-}
-
-/**
- * A vCard 3.0 payload describing a contact. Multiple phone numbers / emails are
- * emitted as repeated `TEL` / `EMAIL` lines.
- */
-export function vCard(options: VCardOptions): string {
-  const first = options.firstName ?? '';
-  const last = options.lastName ?? '';
-  const formatted = options.formattedName ?? [first, last].filter(Boolean).join(' ');
-
-  const lines = ['BEGIN:VCARD', 'VERSION:3.0'];
-  lines.push(`N:${last};${first};;;`);
-  if (formatted) lines.push(`FN:${formatted}`);
-  if (options.organization) lines.push(`ORG:${options.organization}`);
-  if (options.title) lines.push(`TITLE:${options.title}`);
-  for (const number of toList(options.phone)) lines.push(`TEL:${number}`);
-  for (const address of toList(options.email)) lines.push(`EMAIL:${address}`);
-  if (options.url) lines.push(`URL:${options.url}`);
-  if (options.address) lines.push(`ADR:;;${options.address};;;;`);
-  if (options.note) lines.push(`NOTE:${options.note}`);
-  lines.push('END:VCARD');
-
-  return lines.join('\n');
 }
 
 /**

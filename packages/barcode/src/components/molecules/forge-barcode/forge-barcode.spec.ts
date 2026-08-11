@@ -98,7 +98,7 @@ describe('ForgeBarcode authors the same component for React and Vue', () => {
   });
 
   it('renders only the individually enabled action buttons', async () => {
-    const properties = { value: '012345678905', symbology: 'upca' as const, showCopyValueButton: true };
+    const properties = { value: '012345678905', symbology: 'upca' as const, showActions: { copyValue: true } };
     const react = renderToStaticMarkup(createElement(ReactBarcode, properties));
     const vue = await renderToString(createSSRApp({ render: () => vueH(VueBarcode, properties) }));
 
@@ -106,6 +106,19 @@ describe('ForgeBarcode authors the same component for React and Vue', () => {
       expect(html).toContain('Copy value');
       expect(html).not.toContain('Save image');
       expect(html).not.toContain('Copy image');
+    }
+  });
+
+  it('renders no action buttons for an empty showActions object', async () => {
+    const properties = { value: '012345678905', symbology: 'upca' as const, showActions: {} };
+    const react = renderToStaticMarkup(createElement(ReactBarcode, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueBarcode, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).not.toContain('<button');
+      expect(html).not.toContain('Save image');
+      expect(html).not.toContain('Copy image');
+      expect(html).not.toContain('Copy value');
     }
   });
 });

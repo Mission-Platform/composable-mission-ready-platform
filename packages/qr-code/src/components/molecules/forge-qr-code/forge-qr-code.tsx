@@ -1,11 +1,10 @@
 import { ForgeButton, ForgeTypography } from '@mission-platform/components';
 import { ForgeIconCheck, ForgeIconCopy, ForgeIconDownload, ForgeIconImage } from '@mission-platform/icons';
-import { h, type MpElement, type MpProperties, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
-import { encodeMicroQr, encodeQr, encodeRmqr, type QrErrorCorrection } from '@mission-platform/qr-code/encoder';
+import { h, type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
+import { encodeMicroQr, encodeQr, encodeRmqr } from '@/encoder';
+import { type QrErrorCorrection } from '@/types';
 
 import styles from './forge-qr-code.module.scss';
-
-export type { QrErrorCorrection } from '@mission-platform/qr-code/encoder';
 
 /** Shape used to draw each module (or finder pattern) of the code. */
 export type QrModuleShape = 'square' | 'rounded' | 'dot';
@@ -45,7 +44,17 @@ export interface QrLogo {
   radius?: number;
 }
 
-export interface QrCodeProperties extends MpProperties {
+/** Which action buttons the toolbar shows. `true` enables all of them. */
+export interface QrCodeActions {
+  /** Show the "save as image" (PNG download) button. */
+  download?: boolean;
+  /** Show the "copy image to clipboard" button. */
+  copyImage?: boolean;
+  /** Show the "copy value to clipboard" button. */
+  copyValue?: boolean;
+}
+
+export interface QrCodeProperties {
   /** The data to encode (URL, text, etc.). */
   value: string;
   /**
@@ -82,17 +91,11 @@ export interface QrCodeProperties extends MpProperties {
   /** Accessible label describing the code's destination. */
   ariaLabel?: string;
   /**
-   * Show the whole action toolbar (save as image, copy image, copy value). Acts
-   * as the default for the individual `show*Button` props below. Defaults to
-   * `false`.
+   * The action toolbar (save as image, copy image, copy value). Pass `true` to
+   * show every button, or a {@link QrCodeActions} object to pick them
+   * individually. Defaults to `false`.
    */
-  showActions?: boolean;
-  /** Show the "save as image" (PNG download) button. Defaults to {@link showActions}. */
-  showDownloadButton?: boolean;
-  /** Show the "copy image to clipboard" button. Defaults to {@link showActions}. */
-  showCopyImageButton?: boolean;
-  /** Show the "copy value to clipboard" button. Defaults to {@link showActions}. */
-  showCopyValueButton?: boolean;
+  showActions?: boolean | QrCodeActions;
   /** File name used when saving the QR code as an image. Defaults to `'qr-code.png'`. */
   downloadFileName?: string;
   /** Fired when `value` cannot be encoded, or an action (save/copy) fails. */
@@ -220,10 +223,11 @@ function stableId(prefix: string, seed: string): string {
  * linear or radial `gradient`; and an optional centre `logo` is overlaid on a
  * backing plate (pair it with `errorCorrection: 'H'` so the code still scans).
  *
- * An optional action toolbar (enabled via `showActions` or the individual
- * `show*Button` props) lets users **save the code as a PNG image**, **copy the
- * image to the clipboard**, and **copy the encoded value to the clipboard**. The
- * PNG is rasterised on the client by drawing the rendered SVG onto a canvas.
+ * An optional action toolbar (enabled via `showActions` — `true` for every
+ * button, or a {@link QrCodeActions} object to pick them individually) lets
+ * users **save the code as a PNG image**, **copy the image to the clipboard**,
+ * and **copy the encoded value to the clipboard**. The PNG is rasterised on the
+ * client by drawing the rendered SVG onto a canvas.
  *
  * Substitutions from the original Vue SFC: the `computed` render becomes the
  * neutral {@link useMemo}; the `error` emit becomes the `onError` callback prop
@@ -246,19 +250,19 @@ export function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement {
     logo,
     ariaLabel,
     showActions = false,
-    showDownloadButton,
-    showCopyImageButton,
-    showCopyValueButton,
     downloadFileName = 'qr-code.png',
   } = properties;
 
-  // Each individual button falls back to `showActions` when not set explicitly.
-  // The fallback is resolved in the body (rather than as a destructuring default)
-  // so the Vue codegen doesn't emit a `withDefaults` entry referencing a sibling
-  // prop, which isn't in scope in the generated single-file component.
-  const showDownload = showDownloadButton ?? showActions;
-  const showCopyImage = showCopyImageButton ?? showActions;
-  const showCopyValue = showCopyValueButton ?? showActions;
+  // `showActions: true` enables every button; an object enables them one by one,
+  // each falling back to `false`. The resolution happens in the body (rather
+  // than as a destructuring default) so the Vue codegen doesn't emit a
+  // `withDefaults` entry referencing another prop, which isn't in scope in the
+  // generated single-file component.
+  const all = showActions === true;
+  const requestedActions = typeof showActions === 'object' && showActions !== null ? showActions : {};
+  const showDownload = requestedActions.download ?? all;
+  const showCopyImage = requestedActions.copyImage ?? all;
+  const showCopyValue = requestedActions.copyValue ?? all;
 
   // Finder patterns fall back to the module shape when not set explicitly.
   const resolvedFinderShape = finderShape ?? moduleShape;
@@ -528,14 +532,7 @@ export function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement {
     </svg>
   );
 
-  const actions: {
-    key: CompletedAction;
-    label: string;
-    doneLabel: string;
-    icon: MpElement;
-    onClick: () => void;
-    visible: boolean;
-  }[] = [
+  const actions = [
     {
       key: 'download',
       label: 'Save image',
@@ -560,7 +557,7 @@ export function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement {
       onClick: copyValue,
       visible: showCopyValue,
     },
-  ];
+  ] as const;
 
   const visibleActions = actions.filter((action) => action.visible);
   if (visibleActions.length === 0) {

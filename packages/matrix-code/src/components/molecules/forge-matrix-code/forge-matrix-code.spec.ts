@@ -89,7 +89,7 @@ describe('ForgeMatrixCode authors the same component for React and Vue', () => {
   });
 
   it('renders only the individually enabled action buttons', async () => {
-    const properties = { value: 'hello', showCopyValueButton: true };
+    const properties = { value: 'hello', showActions: { copyValue: true } };
     const react = renderToStaticMarkup(createElement(ReactMatrixCode, properties));
     const vue = await renderToString(createSSRApp({ render: () => vueH(VueMatrixCode, properties) }));
 
@@ -97,6 +97,19 @@ describe('ForgeMatrixCode authors the same component for React and Vue', () => {
       expect(html).toContain('Copy value');
       expect(html).not.toContain('Save image');
       expect(html).not.toContain('Copy image');
+    }
+  });
+
+  it('renders no action buttons for an empty showActions object', async () => {
+    const properties = { value: 'hello', showActions: {} };
+    const react = renderToStaticMarkup(createElement(ReactMatrixCode, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueMatrixCode, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).not.toContain('<button');
+      expect(html).not.toContain('Save image');
+      expect(html).not.toContain('Copy image');
+      expect(html).not.toContain('Copy value');
     }
   });
 

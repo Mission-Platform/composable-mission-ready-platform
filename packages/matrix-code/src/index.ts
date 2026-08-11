@@ -9,3 +9,11 @@
 // `ForgeMatrixCode`) is added in a follow-up and re-exported here when present.
 export { type MatrixCode, type MatrixSymbology, encodeMatrix, encodeMatrixAsync } from './encoder';
 export { decodeMatrix, decodeMatrixAsync } from './decoder';
+export {
+  ForgeMatrixCode,
+  type MatrixCodeActions,
+  type MatrixCodeProperties,
+  type MatrixGradient,
+  type MatrixLogo,
+  type MatrixModuleShape,
+} from './components';

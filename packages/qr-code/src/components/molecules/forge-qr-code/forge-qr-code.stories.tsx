@@ -20,7 +20,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Cross-framework `ForgeQrCode` — authored once in the neutral JSX dialect and shipped to all supported frameworks. The payload is encoded entirely on the client by the WebAssembly `@mission-platform/qr-code` encoder and drawn as a crisp SVG. The `variant` prop switches between a standard square QR Code (`qr`), a compact square Micro QR Code (`micro`), and a wide Rectangular Micro QR / rMQR Code (`rmqr`). The original `computed` render becomes the neutral `useMemo`, and the `error` emit becomes the `onError` callback prop. Opt into a save/copy toolbar via `showActions` (or the individual `show*Button` props). Styling comes from the co-located `forge-qr-code.module.scss`.',
+          'Cross-framework `ForgeQrCode` — authored once in the neutral JSX dialect and shipped to all supported frameworks. The payload is encoded entirely on the client by the WebAssembly `@mission-platform/qr-code` encoder and drawn as a crisp SVG. The `variant` prop switches between a standard square QR Code (`qr`), a compact square Micro QR Code (`micro`), and a wide Rectangular Micro QR / rMQR Code (`rmqr`). The original `computed` render becomes the neutral `useMemo`, and the `error` emit becomes the `onError` callback prop. Opt into a save/copy toolbar via `showActions` — `true` for every button, or an object such as `{ download: true }` to pick them individually. Styling comes from the co-located `forge-qr-code.module.scss`.',
       },
     },
   },
@@ -33,10 +33,7 @@ const meta = {
     background: { control: 'color' },
     moduleShape: { control: 'select', options: ['square', 'rounded', 'dot'] },
     finderShape: { control: 'select', options: ['square', 'rounded', 'dot'] },
-    showActions: { control: 'boolean' },
-    showDownloadButton: { control: 'boolean' },
-    showCopyImageButton: { control: 'boolean' },
-    showCopyValueButton: { control: 'boolean' },
+    showActions: { control: 'object' },
   },
   args: {
     value: 'https://mission-platform.dev',
@@ -88,6 +85,11 @@ export const LongPayload: Story = {
 
 export const WithActions: Story = {
   args: { showActions: true },
+};
+
+/** Only the **save as image** button, picked out with a partial `showActions` object. */
+export const WithDownloadActionOnly: Story = {
+  args: { showActions: { download: true } },
 };
 
 export const DotModules: Story = { args: { moduleShape: 'dot' } };
