@@ -8,24 +8,67 @@
  * natively, so the output never pays for a generic runtime adapter and a new
  * target framework is added simply by writing another emitter.
  */
-// eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
-import { emitReactModule } from '../generators/react/index.js';
-// eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
-import { emitSolidHookModule, emitSolidModule } from '../generators/solid/index.js';
-// eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
-import { emitSvelteHookModule, emitSvelteModule } from '../generators/svelte/index.js';
-import { emitVueHookModule } from '../generators/vue/hook-module.js';
-// eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
-import { emitVueModule } from '../generators/vue/index.js';
-// eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
-import { emitWebComponentHookModule, emitWebComponentModule } from '../generators/web-components/index.js';
+import { createCompilerPipeline } from './pipeline.js';
 
-import { parseTsx, stripFrameworkDirective } from './ast.js';
-import { optimizeSourceFile, type OptimizeOptions } from './optimize.js';
-
-import type { SourceFile } from 'typescript';
+import type {
+  CompilerDiagnostic,
+  GeneratedModule,
+  FrameworkOutputPlugin,
+  OutputLanguage,
+} from '@mission-platform/forge-plugin-api';
 
 export { moduleTargetsFramework, readFrameworkDirective } from './ast.js';
+export { analyzeForgeModule, createCompilerPipeline } from './pipeline.js';
+export { createGenericAst, parseForgeModule, parseForgeSource, scriptKindForFileName } from './frontends.js';
+export { inferSemanticModule } from './infer.js';
+export { buildForgeFileGraph } from './graph.js';
+export type {
+  ForgeFileEdge,
+  ForgeFileEdgeRelation,
+  ForgeFileGraph,
+  ForgeFileGraphOptions,
+  ForgeFileKind,
+  ForgeFileNode,
+  ForgeGraphDiagnostic,
+  ForgeGraphDiagnosticCode,
+} from './graph.js';
+export type {
+  FrameworkBuildAdapters,
+  FrameworkOutputPlugin,
+  FrameworkSourceMetadata,
+  GeneratedExtraModule,
+  GeneratedModule,
+  GeneratorContext,
+  OutputLanguage,
+  TargetContext,
+  TargetIntentions,
+  TargetOptimizeOptions,
+  TsdownBuildContext,
+  ViteBuildContext,
+} from '@mission-platform/forge-plugin-api';
+export type { CompilerDiagnostic, CompilerDiagnosticSeverity, CompilerPhase } from '@mission-platform/forge-plugin-api';
+export type {
+  DynamicNodeIntention,
+  EffectIntention,
+  EventIntention,
+  GenericAstNode,
+  GenericImport,
+  GenericModuleAst,
+  GenericRenderNode,
+  GenericStatement,
+  ListKeyIntention,
+  MemoIntention,
+  PropIntention,
+  RefIntention,
+  SemanticIntentions,
+  SemanticModule,
+  SlotIntention,
+  SourceBackedExpression,
+  SourceSpan,
+  StateIntention,
+} from '@mission-platform/forge-plugin-api';
+export type { CompilerInput, CompilerPipeline } from './pipeline.js';
+export type { ForgeSourceKind, FrontendModule } from './frontends.js';
 export {
   constantBoolean,
   hasMpStaticMarker,
@@ -37,17 +80,16 @@ export {
   type OptimizeOptions,
 } from './optimize.js';
 
-/** A framework the neutral components can be compiled to. */
-export type JsxFramework = 'react' | 'vue' | 'svelte' | 'solid' | 'web-components';
-
 /** Options for {@link compileComponentModule}. */
 export interface CompileOptions {
-  /** The target framework. */
-  framework: JsxFramework;
+  /** The output plugin that owns target lowering and source generation. */
+  framework: FrameworkOutputPlugin;
   /** The neutral component's export name (e.g. `ForgeBadge`); used by the Vue emitter. */
   componentName: string;
   /** Source file name used for diagnostics. Defaults to `<componentName>.tsx`. */
   fileName?: string;
+  /** Owning workspace source root used to resolve `@/` imports. */
+  sourceRoot?: string;
   /**
    * The folder base names of the package's discovered components (e.g.
    * `forge-typography`). A relative value import whose base is in this set is a
@@ -65,6 +107,24 @@ export interface CompileOptions {
   optimize?: boolean | OptimizeOptions;
 }
 
+/** Options for compiling a module with an externally supplied output plugin. */
+export interface CompileModuleOptions {
+  /** The output plugin that owns lowering and source generation. */
+  framework: FrameworkOutputPlugin;
+  /** The neutral module kind being compiled. */
+  moduleKind: 'component' | 'composable';
+  /** The neutral component's export name, when compiling a component. */
+  componentName?: string;
+  /** Source file name used for diagnostics. */
+  fileName?: string;
+  /** Owning workspace source root used to resolve `@/` imports. */
+  sourceRoot?: string;
+  /** The folder base names of the package's discovered components. */
+  componentFolders?: ReadonlySet<string>;
+  /** Run Stage-1 optimization passes before target lowering. */
+  optimize?: boolean | OptimizeOptions;
+}
+
 /** An auxiliary SFC emitted alongside a primary module (e.g. a recursive helper component). */
 export interface ExtraModule {
   /** The flat-tree base name (no extension) the module is written under, e.g. `forge-menubar-item`. */
@@ -72,7 +132,7 @@ export interface ExtraModule {
   /** The emitted SFC source. */
   code: string;
   /** The extension/language the module is written under. */
-  lang: 'vue' | 'svelte' | 'ts' | 'tsx';
+  lang: OutputLanguage;
 }
 
 /** The Stage-1 result: emitted source and the extension it should be written under. */
@@ -83,7 +143,7 @@ export interface CompiledModule {
    * The file extension/language of {@link CompiledModule.code}: `tsx` for a React/Solid
    * component/hook module, `vue` for a Vue SFC, `svelte` for a Svelte SFC, or `ts` for a hook module.
    */
-  lang: 'tsx' | 'vue' | 'svelte' | 'ts';
+  lang: OutputLanguage;
   /**
    * Auxiliary SFCs generated alongside the primary module (e.g. the recursive
    * helper components the Vue emitter extracts from a self-recursive,
@@ -91,6 +151,8 @@ export interface CompiledModule {
    * driver and compiled in Stage 2. Empty/absent for the common single-file case.
    */
   extraModules?: ExtraModule[];
+  /** Phase-level diagnostics produced by an output plugin. */
+  diagnostics?: CompilerDiagnostic[];
 }
 
 /**
@@ -103,38 +165,44 @@ export interface CompiledModule {
  * (see {@link moduleTargetsFramework}).
  */
 export function compileComponentModule(source: string, options: CompileOptions): CompiledModule {
-  const parsed = parseTsx(options.fileName ?? `${options.componentName}.tsx`, source);
-  const stripped = stripFrameworkDirective(parsed);
-  const sourceFile = prepareSourceFile(stripped, options.optimize);
-  if (options.framework === 'react') {
-    return { code: emitReactModule(sourceFile, options.componentName), lang: 'tsx' };
-  }
-  if (options.framework === 'solid') {
-    const emitted = emitSolidModule(sourceFile, options.componentName, options.componentFolders);
-    return { code: emitted.code, lang: 'tsx', extraModules: emitted.extraModules };
-  }
-  if (options.framework === 'svelte') {
-    const emitted = emitSvelteModule(sourceFile, options.componentName, options.componentFolders);
-    return { code: emitted.code, lang: 'svelte', extraModules: emitted.extraModules };
-  }
-  if (options.framework === 'web-components') {
-    const emitted = emitWebComponentModule(sourceFile, options.componentName, options.componentFolders);
-    return { code: emitted.code, lang: 'ts', extraModules: emitted.extraModules };
-  }
-  const emitted = emitVueModule(sourceFile, options.componentName, options.componentFolders);
-  return {
-    code: emitted.code,
-    lang: 'vue',
-    extraModules: emitted.extraModules.map((module) => ({ name: module.name, code: module.code, lang: 'vue' })),
-  };
+  return compileModule(source, {
+    ...options,
+    moduleKind: 'component',
+  });
+}
+
+/**
+ * Compile one neutral module through a caller-supplied output plugin.
+ *
+ * Unlike the historical JSX convenience wrappers, this entry point preserves
+ * the plugin's open output language and auxiliary module languages. It is the
+ * shared seam used by standalone target packages such as Astro.
+ */
+export function compileModule(source: string, options: CompileModuleOptions): CompiledModule {
+  return projectGeneratedModule(
+    createCompilerPipeline().compile(
+      {
+        source,
+        fileName: options.fileName ?? `${options.componentName}.tsx`,
+        moduleKind: options.moduleKind,
+        componentName: options.componentName,
+        componentFolders: options.componentFolders,
+        sourceRoot: options.sourceRoot,
+        optimize: options.optimize === false ? false : options.optimize,
+      },
+      options.framework,
+    ),
+  );
 }
 
 /** Options for {@link compileHookModule}. */
 export interface CompileHookOptions {
-  /** The target framework. */
-  framework: JsxFramework;
+  /** The output plugin that owns target lowering and source generation. */
+  framework: FrameworkOutputPlugin;
   /** Source file name used for diagnostics. Defaults to `hook.tsx`. */
   fileName?: string;
+  /** Owning workspace source root used to resolve `@/` imports. */
+  sourceRoot?: string;
   /**
    * Run the Stage-1 (framework-neutral) optimisation passes before emit.
    * Defaults to `true`. Pass `false` to disable every pass, or an
@@ -149,47 +217,19 @@ export interface CompileHookOptions {
  * per-framework source (Stage 1).
  */
 export function compileHookModule(source: string, options: CompileHookOptions): CompiledModule {
-  const parsed = parseTsx(options.fileName ?? 'hook.tsx', source);
-  const stripped = stripFrameworkDirective(parsed);
-  const sourceFile = prepareSourceFile(stripped, options.optimize);
-  if (options.framework === 'vue') {
-    return { code: emitVueHookModule(sourceFile), lang: 'ts' };
-  }
-  if (options.framework === 'solid') {
-    return { code: emitSolidHookModule(sourceFile), lang: 'ts' };
-  }
-  if (options.framework === 'svelte') {
-    return { code: emitSvelteHookModule(sourceFile), lang: 'ts' };
-  }
-  if (options.framework === 'web-components') {
-    return { code: emitWebComponentHookModule(sourceFile), lang: 'ts' };
-  }
-  return { code: emitReactModule(sourceFile), lang: 'tsx' };
+  return compileModule(source, {
+    ...options,
+    moduleKind: 'composable',
+  });
 }
 
-/**
- * Apply Stage-1 optimisations unless the caller opted out. `optimize: false`
- * disables every pass; an options object toggles individual ones.
- */
-function prepareSourceFile(sourceFile: SourceFile, optimize: boolean | OptimizeOptions | undefined): SourceFile {
-  if (optimize === false) {
-    return sourceFile;
-  }
-  const options: OptimizeOptions = typeof optimize === 'object' && optimize !== null ? optimize : {};
-  return optimizeSourceFile(sourceFile, options);
-}
-
-/** Compile neutral TSX component to Svelte 5. */
-export function compileToSvelte(source: string, options: Omit<CompileOptions, 'framework'>): CompiledModule {
-  return compileComponentModule(source, { ...options, framework: 'svelte' });
-}
-
-/** Compile neutral TSX component to SolidJS. */
-export function compileToSolid(source: string, options: Omit<CompileOptions, 'framework'>): CompiledModule {
-  return compileComponentModule(source, { ...options, framework: 'solid' });
-}
-
-/** Compile neutral TSX component to Web Component Custom Element. */
-export function compileToWebComponent(source: string, options: Omit<CompileOptions, 'framework'>): CompiledModule {
-  return compileComponentModule(source, { ...options, framework: 'web-components' });
+function projectGeneratedModule(module: GeneratedModule): CompiledModule {
+  return {
+    code: module.code,
+    lang: module.lang,
+    extraModules: module.extraModules?.map((extraModule) => {
+      return { name: extraModule.name, code: extraModule.code, lang: extraModule.lang };
+    }),
+    diagnostics: module.diagnostics ? [...module.diagnostics] : undefined,
+  };
 }

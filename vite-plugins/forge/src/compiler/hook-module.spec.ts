@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { compileHookModule } from './compile';
+import { compileHookModule } from './compiler-test-helpers';
 
 // A `useState` + `useEffect` hook (the `useObservable` shape).
 const USE_OBSERVABLE = [

@@ -54,7 +54,6 @@ export { reactJsxPlugin as default } from './config.js';
 export {
   defineJsxHookLibraryConfig,
   defineJsxLibraryConfig,
-  defineJsxStoryblokLibraryConfig,
   reactJsxPlugin,
   solidJsxPlugin,
   solidJsxTsdownPlugin,
@@ -63,52 +62,55 @@ export {
   svelteTsdownPlugin,
   type JsxHookLibraryConfigOptions,
   type JsxLibraryConfigOptions,
-  type JsxStoryblokLibraryConfigOptions,
 } from './config.js';
 
 export {
+  analyzeForgeModule,
+  compileModule,
   compileComponentModule,
   compileHookModule,
-  compileToSolid,
-  compileToSvelte,
-  compileToWebComponent,
+  createCompilerPipeline,
+  parseForgeSource,
   type CompiledModule,
+  type CompilerInput,
+  type CompilerPipeline,
   type CompileHookOptions,
+  type CompileModuleOptions,
   type CompileOptions,
-  type JsxFramework,
 } from './compiler/compile.js';
 
-// eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
-export { emitSvelteModule } from './generators/svelte/index.js';
-// eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
-export { emitSolidModule } from './generators/solid/index.js';
-// eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
-export { emitWebComponentModule } from './generators/web-components/index.js';
-
+export { findComponentFunction, isSlotElement, parseTsx, readSlotName } from './compiler/ast.js';
 export {
-  analyzeStoryblokComponent,
-  emitBlokDataType,
-  emitStoryblokBlokWrapper,
-  emitStoryblokComponent,
-  toDisplayName,
-  toTechnicalName,
-  type AnalyzedField,
-  type AnalyzedStoryblokComponent,
-  type StoryblokBlokWrapperOptions,
-  type StoryblokComponent,
-  type StoryblokComponentNames,
-  type StoryblokSchemaField,
-  // eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
-} from './generators/storyblok/index.js';
+  discoverComponents,
+  discoverHelperExports,
+  type DiscoveredComponent,
+  type DiscoveredHelperExport,
+} from './compiler/discover.js';
+
+export type {
+  FrameworkBuildAdapters,
+  FrameworkOutputPlugin,
+  FrameworkSourceMetadata,
+  GeneratedExtraModule,
+  GeneratedModule,
+  GeneratorContext,
+  JsxFramework,
+  OutputLanguage,
+  TargetContext,
+  TargetIntentions,
+  TargetOptimizeOptions,
+  TsdownBuildContext,
+  ViteBuildContext,
+} from '@mission-platform/forge-plugin-api';
 
 export {
   generateFrameworkSources,
-  generateStoryblokBloks,
+  createFrameworkSourceTarget,
   jsxComponentsCssImportPlugin,
   jsxComponentsDtsPlugin,
   jsxComponentsEntryDtsPlugin,
   type GenerateFrameworkSourcesOptions,
-  type GenerateStoryblokBloksOptions,
+  type FrameworkSourceTarget,
   type JsxComponentsDtsOptions,
   type JsxComponentsEntryDtsOptions,
 } from './generate.js';
@@ -122,16 +124,11 @@ export {
 
 export {
   defineTsdownForgeComponents,
-  defineTsdownForgeComponentsAll,
+  defineTsdownForgeEmailComponents,
   defineTsdownForgeHooks,
   defineTsdownForgeHooksAll,
-  defineTsdownForgeStoryblok,
-  defineTsdownForgeStoryblokAll,
-  type TsdownForgeComponentsAllOptions,
   type TsdownForgeComponentsOptions,
+  type TsdownForgeEmailComponentsOptions,
   type TsdownForgeHooksAllOptions,
   type TsdownForgeHooksOptions,
-  type TsdownForgeStoryblokAllOptions,
-  type TsdownForgeStoryblokFramework,
-  type TsdownForgeStoryblokOptions,
 } from './tsdown.js';

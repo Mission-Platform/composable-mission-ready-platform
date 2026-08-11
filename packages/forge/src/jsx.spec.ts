@@ -6,11 +6,19 @@ import { renderToString } from 'vue/server-renderer';
 
 import { toReactComponent } from './adapters/react';
 import { toVueComponent } from './adapters/vue';
-import { Fragment, h, isMpElement, type MpComponent, Slot } from './runtime';
+import { Fragment, h, HtmlContent, isMpElement, type MpComponent, Slot } from './runtime';
 
 const HostTree: MpComponent = () => h('div', { class: 'x', id: 'y' }, 'hi');
 // A component whose `className` array/object forms collapse to a `class` string.
 const Chip: MpComponent = () => h('span', { className: ['chip', { 'chip--active': true, 'chip--off': false }] }, 'x');
+const RawContent: MpComponent = () =>
+  h(HtmlContent, {
+    html: '<svg viewBox="0 0 1 1"><title>trusted</title></svg>',
+    className: 'diagram',
+    id: 'diagram-host',
+    role: 'img',
+    'aria-label': 'Diagram',
+  });
 const Inner: MpComponent = (properties) => h('em', undefined, properties.children);
 const Outer: MpComponent = () => h(Fragment, undefined, h('b', undefined, 'a'), h(Inner, undefined, 'b'));
 
@@ -82,6 +90,20 @@ describe('@mission-platform/forge adapters render the same tree on React and Vue
     // never leak a literal `classnames` attribute.
     expect(react).toBe('<span class="chip chip--active">x</span>');
     expect(vue).toBe('<span class="chip chip--active">x</span>');
+  });
+
+  it('renders trusted HtmlContent as raw child markup and forwards host properties', async () => {
+    const react = renderToStaticMarkup(createElement(toReactComponent(RawContent), {}));
+    const vue = await renderToString(createSSRApp(toVueComponent(RawContent)));
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('<svg viewBox="0 0 1 1"><title>trusted</title></svg>');
+      expect(html).toContain('class="diagram"');
+      expect(html).toContain('id="diagram-host"');
+      expect(html).toContain('role="img"');
+      expect(html).toContain('aria-label="Diagram"');
+      expect(html).not.toContain('&lt;svg');
+    }
   });
 
   it('inlines nested neutral components and supports fragments on both frameworks', async () => {

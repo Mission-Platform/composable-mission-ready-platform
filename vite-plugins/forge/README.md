@@ -1,17 +1,24 @@
 # @mission-platform/vite-plugin-forge
 
-A **two-stage compiler** that turns the framework-neutral components authored
-against [`@mission-platform/forge`](../../packages/forge) into **fully native**
-**React** or **Vue 3** components at build time — no runtime adapter.
+A framework-neutral compiler driver that turns components and composables authored
+against [`@mission-platform/forge`](../../packages/forge) into native target
+artifacts. The driver owns parsing, normalization, semantic IR, neutral
+optimization, diagnostics, caching, and generic Vite/tsdown orchestration. It
+does not own framework emitters or a target registry.
 
-- **Stage 1 (source-to-source).** `generateFrameworkSources` parses each neutral
-  `.tsx` with the TypeScript compiler API and emits a per-framework source tree:
-  a React `.tsx` module (`class` → `className`, `h` → `React.createElement`) or a
-  real Vue `.vue` SFC (`defineComponent` + `setup`, React-style hooks translated
-  to Vue reactivity/lifecycle).
-- **Stage 2 (native compile).** The generated tree is compiled by the framework's
-  own toolchain — the classic-`h` React JSX transform (`reactJsxPlugin`) or
-  `@vitejs/plugin-vue` (+ `@vitejs/plugin-vue-jsx`).
+Each build supplies an explicit `FrameworkOutputPlugin` from a framework package.
+That plugin owns target lowering, target optimization, source generation,
+framework metadata, declarations, runtime externals, and native Vite/tsdown
+adapters. The strict flow is:
+
+`parse/normalize → neutral optimize → semantic IR → lower → optimize → generate → native build`
+
+Built-in targets live in their own packages, such as
+`@mission-platform/forge-plugin-react`, `@mission-platform/forge-plugin-vue`,
+`@mission-platform/forge-plugin-solid`, `@mission-platform/forge-plugin-svelte`,
+and `@mission-platform/forge-plugin-web-components`. Adding a target means
+adding a plugin package and selecting its factory in consuming package config;
+it does not mean extending this package's source tree.
 
 Each component build then gets its **own** declarations from
 `jsxComponentsDtsPlugin`, a **post-build** step (`closeBundle`) that runs the
@@ -26,16 +33,22 @@ equivalents — `MpChild` → `ReactNode`, `MpElement` → `ReactElement`, `MpRe
 `RefObject`, `MpDependencyList` → `DependencyList` (imported from `react`) — so a
 compiled component reads as a genuine `(props) => ReactElement`.
 
-The two render/props primitives that have **no** single first-class framework
-equivalent — `MpProperties` (the base every component's props interface
-`extends`) and `MpRenderProperty<S>` (a scoped-slot / render-prop function) — are
-handled differently: each framework build emits a tiny co-located
-`mp-jsx-types.ts` module defining **framework-specific variants** of them (React
-over `ReactNode`, Vue over `VNodeChild`), and both emitters redirect those two
-type imports to that local module. So the generated React/Vue sources — and their
-emitted declarations — carry **no** `@mission-platform/forge` render/props type
-import (only the framework-agnostic `classNames` runtime value keeps its neutral
-import).
+The one render primitive that has **no** single first-class framework equivalent
+— `MpRenderProperty<S>`, a scoped-slot / render-prop function — is handled
+differently: each framework build emits a tiny co-located `mp-jsx-types.ts`
+module defining a **framework-specific variant** of it (React over `ReactNode`,
+Vue over `VNodeChild`), and every emitter redirects that type import to the local
+module. So the generated React/Vue sources — and their emitted declarations —
+carry **no** `@mission-platform/forge` render type import (only the
+framework-agnostic `classNames` runtime value keeps its neutral import).
+
+There is no neutral props **base**: a component declares exactly the properties
+it accepts (adding `children?: MpChild | readonly MpChild[]` and
+`className?: ClassValue` only when it reads them), and the reserved `key`/`slot`
+attributes come from `MpReservedProperties` via `JSX.IntrinsicAttributes`. Every
+generated props interface therefore inherits nothing and carries no
+`[key: string]: unknown` index signature, so excess-property checking and `keyof`
+stay meaningful in each compiled target.
 
 The generated entry re-exports the **full** public surface the neutral barrel
 exposes — not just the component bindings (each under both its public `Badge`
@@ -50,9 +63,12 @@ members of a mixed relative import (`import { fn, type T } from './helper'` /
 those types still resolve inside each SFC and its declaration instead of being
 dropped alongside the value/default import.
 
-Adding another target framework is just another emitter in `src/generators/`.
+Framework-specific emitters live in their respective Forge framework plugins;
+the Vite package only dispatches to the selected plugin. Adding another target
+framework therefore means adding a `forge-plugin-*` package rather than
+extending this compiler's source tree.
 
-The same two stages also compile **hook libraries** — write-once _composables_
+The same strict pipeline also compiles **hook libraries** — write-once _composables_
 (not UI components) authored against the neutral `@mission-platform/forge` hooks,
 such as [`@mission-platform/rxjs`](../../packages/rxjs) and
 [`@mission-platform/d3`](../../packages/d3). `generateHookLibrarySources` reads a
@@ -71,94 +87,56 @@ against React's own hooks; the Vue build's composables return Vue `Ref`s. No
 common/shared declaration is used — each framework carries the types it actually
 exposes.
 
-The same neutral source also projects onto **Storyblok**: `generateStoryblokBloks`
-emits, per component, the **blok configuration** JSON (a Storyblok _component
-object_ — props → `option`/`boolean`/`number`/`text`/`bloks` fields, JSDoc →
-`description`, defaults → `default_value`, callbacks dropped) **and** a React
-`.tsx` / Vue `.vue` **blok wrapper** that binds Storyblok's `blok` prop onto the
-built framework component (`storyblokEditable` / `v-editable`, nested
-`StoryblokComponent`), plus the aggregate `components.json` and the wrapper
-entry's typed `index.d.ts`. The wrapper's `blok` prop is **precisely typed** —
-`SbBlokData & { … }`, one member per schema field (`option` → string-literal
-union, `bloks` → `SbBlokData[]`, …) — not an open `Record<string, unknown>`.
+CMS projection lives in the separate
+[`@mission-platform/forge-cms-plugin-api`](../../forge-plugins/forge-cms-plugin-api)
+package and its target adapters. It owns a platform-neutral content model (props
+→ `text`/`richtext`/`number`/`boolean`/`option`/`asset`/`link`/`children`, JSDoc
+→ `description`, defaults → `defaultValue`, callbacks dropped) plus a generic
+driver, and each target maps that model onto its own platform:
+[storyblok](../../forge-plugins/forge-cms-storyblok),
+[astro](../../forge-plugins/forge-cms-astro),
+[ghost](../../forge-plugins/forge-cms-ghost),
+[jekyll](../../forge-plugins/forge-cms-jekyll), and
+[webflow](../../forge-plugins/forge-cms-webflow).
+
+A CMS target _composes_ a `FrameworkOutputPlugin` rather than replacing one, so
+any platform pairs with any framework. Storyblok, for example, emits the **blok
+configuration** JSON per component, a framework-specific blok wrapper, the
+aggregate `components.json`, and the wrapper entry's typed `index.d.ts`; that
+wrapper's `blok` prop is **precisely typed** — `SbBlokData & { … }`, one member
+per schema field — rather than an open `Record<string, unknown>`.
+
+`analyzeForgeModule(input)` is the neutral seam the CMS driver uses to obtain
+semantic IR without electing a target plugin.
 
 ## Usage
 
-Run one build per target framework — Stage 1 generates the sources, Stage 2
-compiles them:
+Select target plugin instances explicitly in a package build. The helper creates
+one target build per supplied plugin and obtains native stage adapters from that
+plugin:
 
 ```ts
-// vite.config.ts (React target)
-import { generateFrameworkSources, jsxComponentsDtsPlugin, reactJsxPlugin } from '@mission-platform/vite-plugin-forge';
-import { defineConfig } from 'vite';
+import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 
-const entry = generateFrameworkSources({ framework: 'react', componentsModule, outDir });
-export default defineConfig({
-  plugins: [
-    reactJsxPlugin(),
-    // Post-build: emit React's own declarations from the generated `.tsx` tree.
-    jsxComponentsDtsPlugin({ framework: 'react', generatedDir: outDir, outDir: 'dist/react' }),
-  ],
-  build: { lib: { entry, fileName: 'react', formats: ['es'] } },
+export default defineTsdownForgeComponents({
+  rootDir: import.meta.dirname,
+  frameworks: [forgeReactFramework(), forgeVueFramework()],
+  componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+  name: 'MissionPlatformComponents',
 });
 ```
 
-```ts
-// vite.config.ts (Vue target — `vueTscBin` is the resolved path to vue-tsc/bin/vue-tsc.js)
-import { generateFrameworkSources, jsxComponentsDtsPlugin } from '@mission-platform/vite-plugin-forge';
-import vue from '@vitejs/plugin-vue';
-import vueJsx from '@vitejs/plugin-vue-jsx';
-import { defineConfig } from 'vite';
+For a hook package, use `defineTsdownForgeHooks` with one explicit plugin. For a
+content platform, pass `defineTsdownForgeCms(All)` from
+`@mission-platform/forge-cms-plugin-api` a target such as
+`forgeStoryblokCms({ packageName, plugin, storyblokRuntime })`; the CMS package
+owns schema, template, and manifest projection while the selected target plugin
+owns lowering and native compilation. Output lands in
+`dist/cms/<cms>/<framework>/**`.
 
-const entry = generateFrameworkSources({ framework: 'vue', componentsModule, outDir });
-export default defineConfig({
-  plugins: [
-    vue(),
-    vueJsx(),
-    // Post-build: emit Vue's own declarations from the generated `.vue` tree.
-    jsxComponentsDtsPlugin({ framework: 'vue', generatedDir: outDir, outDir: 'dist/vue', vueTscBin }),
-  ],
-  build: { lib: { entry, fileName: 'vue', formats: ['es'] } },
-});
-```
-
-```ts
-// vite.config.ts (hook library, e.g. @mission-platform/rxjs — `--mode react` / `--mode vue`)
-import { generateHookLibrarySources, hookLibraryDtsPlugin, reactJsxPlugin } from '@mission-platform/vite-plugin-forge';
-import { defineConfig } from 'vite';
-
-const framework = 'react'; // or 'vue'
-const generatedDir = outDir; // the Stage-1 generated tree
-const entry = generateHookLibrarySources({ framework, entryModule, outDir: generatedDir });
-export default defineConfig({
-  plugins: [
-    ...(framework === 'react' ? [reactJsxPlugin()] : []),
-    // Post-build: emit this framework's own declarations from the generated tree.
-    hookLibraryDtsPlugin({ framework, generatedDir, outDir: `dist/${framework}` }),
-  ],
-  build: { lib: { entry, formats: ['es'] }, outDir: `dist/${framework}` },
-});
-```
-
-```ts
-// vite.config.ts (Storyblok bloks + Vue wrappers)
-import { generateStoryblokBloks } from '@mission-platform/vite-plugin-forge';
-import vue from '@vitejs/plugin-vue';
-import { defineConfig } from 'vite';
-
-const entry = generateStoryblokBloks({
-  framework: 'vue',
-  componentsModule,
-  outDir, // <name>.json + <name>.vue wrappers + components.json + typed index.d.ts
-  // The bare package specifier — the `mp:<framework>` export condition picks the build.
-  componentsImport: '@mission-platform/components',
-});
-export default defineConfig({
-  plugins: [vue()],
-  build: { lib: { entry, fileName: 'storyblok', formats: ['es'] } },
-});
-```
-
-See [`@mission-platform/components`](../../packages/components) for a
-reference consumer that ships both a React and a Vue bundle from one neutral
-source, and [`llms.txt`](./llms.txt) for the full API.
+See [`@mission-platform/components`](../../packages/components) for a reference
+consumer that ships multiple target bundles from one neutral source, and
+[`llms.txt`](./llms.txt) for the API-oriented summary. The complete architecture
+explanation is [`docs/forge-compiler.md`](../../docs/forge-compiler.md).

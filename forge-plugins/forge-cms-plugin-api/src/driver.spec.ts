@@ -1,0 +1,285 @@
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import os from "node:os";
+import path from "node:path";
+
+import { afterEach, describe, expect, it } from "vitest";
+
+import { BADGE, COUNTER, GRID } from "./__fixtures__/components.js";
+import { stubFramework } from "./__fixtures__/framework.js";
+import { defineForgeCmsPlugin } from "./cms.js";
+import { generateCmsArtifacts } from "./driver.js";
+
+import type { CmsArtifact, CmsOutputPlugin } from "./cms.js";
+import type { ContentComponent } from "./content-model.js";
+
+const temporaryDirectories: string[] = [];
+
+afterEach(() => {
+  for (const directory of temporaryDirectories.splice(0)) {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+/** Materialise a neutral component barrel on disk and return its paths. */
+function createWorkspace(
+  components: readonly {
+    folder: string;
+    neutralName: string;
+    publicName: string;
+    propertiesType?: string;
+    source: string;
+  }[],
+): { componentsModule: string; outDir: string } {
+  const root = mkdtempSync(path.join(os.tmpdir(), "forge-cms-driver-"));
+  temporaryDirectories.push(root);
+  const componentsDirectory = path.join(root, "src/components");
+  mkdirSync(componentsDirectory, { recursive: true });
+
+  const barrel: string[] = [];
+  for (const component of components) {
+    const folder = path.join(componentsDirectory, component.folder);
+    mkdirSync(folder, { recursive: true });
+    writeFileSync(
+      path.join(folder, `${component.folder}.tsx`),
+      component.source,
+      "utf8",
+    );
+    const types =
+      component.propertiesType === undefined
+        ? ""
+        : `, type ${component.propertiesType}`;
+    writeFileSync(
+      path.join(folder, "index.ts"),
+      `export { ${component.neutralName}${types} } from './${component.folder}';\n`,
+      "utf8",
+    );
+    barrel.push(
+      `export { ${component.neutralName}${types} } from './${component.folder}';`,
+    );
+  }
+  const componentsModule = path.join(componentsDirectory, "index.ts");
+  writeFileSync(componentsModule, `${barrel.join("\n")}\n`, "utf8");
+
+  return { componentsModule, outDir: path.join(root, "out") };
+}
+
+const BADGE_COMPONENT = {
+  folder: "forge-badge",
+  neutralName: "ForgeBadge",
+  publicName: "Badge",
+  propertiesType: "BadgeProperties",
+  source: BADGE,
+};
+
+const GRID_COMPONENT = {
+  folder: "forge-grid",
+  neutralName: "ForgeGrid",
+  publicName: "Grid",
+  propertiesType: "GridProperties",
+  source: GRID,
+};
+
+const COUNTER_COMPONENT = {
+  folder: "forge-counter",
+  neutralName: "ForgeCounter",
+  publicName: "Counter",
+  propertiesType: "CounterProperties",
+  source: COUNTER,
+};
+
+/** A target that emits one schema, one template, a manifest, and an entry. */
+function recordingTarget(
+  overrides: Partial<CmsOutputPlugin> = {},
+): CmsOutputPlugin {
+  return defineForgeCmsPlugin({
+    id: "recorder",
+    framework: stubFramework("react"),
+    packageName: "@acme/components",
+    emitSchema(component: ContentComponent): CmsArtifact {
+      return {
+        fileName: `${component.names.folder}.json`,
+        contents: `${JSON.stringify({ name: component.names.technicalName }, undefined, 2)}\n`,
+        artifactKind: "schema",
+      };
+    },
+    emitTemplate(component: ContentComponent): CmsArtifact {
+      return {
+        fileName: `templates/${component.names.technicalName}.html`,
+        contents: `<!-- ${component.names.displayName} -->\n`,
+        artifactKind: "template",
+      };
+    },
+    emitManifest(
+      components: readonly ContentComponent[],
+    ): readonly CmsArtifact[] {
+      return [
+        {
+          fileName: "components.json",
+          contents: `${JSON.stringify(components.map((entry) => entry.names.technicalName))}\n`,
+          artifactKind: "manifest",
+          asset: true,
+        },
+      ];
+    },
+    emitEntry(components: readonly ContentComponent[]): readonly CmsArtifact[] {
+      return [
+        {
+          fileName: "index.ts",
+          contents:
+            components
+              .map((entry) => `export * from './${entry.names.folder}.js';`)
+              .join("\n") + "\n",
+          artifactKind: "entry",
+        },
+      ];
+    },
+    build: {},
+    ...overrides,
+  } as CmsOutputPlugin);
+}
+
+function run(
+  target: CmsOutputPlugin,
+  workspace: { componentsModule: string; outDir: string },
+) {
+  return generateCmsArtifacts({
+    plugin: target,
+    componentsModule: workspace.componentsModule,
+    outDir: workspace.outDir,
+    componentsImport: "@acme/components",
+  });
+}
+
+describe("generateCmsArtifacts", () => {
+  it("writes every artifact a target returned at the file name it declared", () => {
+    const workspace = createWorkspace([BADGE_COMPONENT, GRID_COMPONENT]);
+    const tree = run(recordingTarget(), workspace);
+
+    expect(tree.artifacts.map((artifact) => artifact.fileName)).toEqual([
+      "forge-badge.json",
+      "templates/badge.html",
+      "forge-grid.json",
+      "templates/grid.html",
+      "components.json",
+      "index.ts",
+    ]);
+    for (const artifact of tree.artifacts) {
+      expect(existsSync(path.join(workspace.outDir, artifact.fileName))).toBe(
+        true,
+      );
+    }
+    expect(
+      readFileSync(path.join(workspace.outDir, "components.json"), "utf8"),
+    ).toBe('["badge","grid"]\n');
+  });
+
+  it("returns the entry artifact path", () => {
+    const workspace = createWorkspace([BADGE_COMPONENT]);
+    const tree = run(recordingTarget(), workspace);
+    expect(tree.entry).toBe(path.join(workspace.outDir, "index.ts"));
+  });
+
+  it("projects each discovered component onto the content model", () => {
+    const workspace = createWorkspace([BADGE_COMPONENT, GRID_COMPONENT]);
+    const tree = run(recordingTarget(), workspace);
+    expect(
+      tree.components.map((component) => component.names.publicName),
+    ).toEqual(["Badge", "Grid"]);
+    expect(tree.components[0].fields.map((entry) => entry.prop)).toEqual([
+      "variant",
+      "size",
+      "pill",
+      "content",
+    ]);
+  });
+
+  it("writes no schema files for a target without emitSchema", () => {
+    const workspace = createWorkspace([BADGE_COMPONENT]);
+    const tree = run(recordingTarget({ emitSchema: undefined }), workspace);
+    expect(
+      tree.artifacts.some((artifact) => artifact.artifactKind === "schema"),
+    ).toBe(false);
+    expect(existsSync(path.join(workspace.outDir, "forge-badge.json"))).toBe(
+      false,
+    );
+  });
+
+  it("emits an empty manifest and a placeholder entry for an empty barrel", () => {
+    const workspace = createWorkspace([]);
+    const tree = run(recordingTarget({ emitEntry: undefined }), workspace);
+    expect(tree.components).toEqual([]);
+    expect(
+      readFileSync(path.join(workspace.outDir, "components.json"), "utf8"),
+    ).toBe("[]\n");
+    expect(tree.entry).toBe(path.join(workspace.outDir, "index.ts"));
+    expect(readFileSync(tree.entry, "utf8")).toBe("export {};\n");
+  });
+
+  it("reports interactivity from the neutral IR", () => {
+    const workspace = createWorkspace([BADGE_COMPONENT, COUNTER_COMPONENT]);
+    const tree = run(recordingTarget(), workspace);
+    expect(tree.components.map((component) => component.interactive)).toEqual([
+      false,
+      true,
+    ]);
+  });
+
+  it("aborts the build when a target reports an error diagnostic", () => {
+    const workspace = createWorkspace([BADGE_COMPONENT]);
+    const failing = recordingTarget({
+      id: "failing",
+      emitTemplate(component, _ir, context) {
+        context.diagnostics.push({
+          phase: "generation",
+          severity: "error",
+          code: "FORGE_TEST_UNSUPPORTED",
+          message: `Cannot project ${component.names.publicName}.`,
+          fileName: `${component.names.folder}.tsx`,
+        });
+        return {
+          fileName: `${component.names.folder}.html`,
+          contents: "",
+          artifactKind: "template",
+        };
+      },
+    });
+    expect(() => run(failing, workspace)).toThrow(/FORGE_TEST_UNSUPPORTED/);
+  });
+
+  it("co-generates a framework island and exposes its specifier to the emitters", () => {
+    const workspace = createWorkspace([BADGE_COMPONENT]);
+    let seen: string | undefined;
+    const target = recordingTarget({
+      id: "islander",
+      island: "framework",
+      emitTemplate(component, _ir, context): CmsArtifact {
+        seen = context.islandEntry;
+        return {
+          fileName: `${component.names.folder}.txt`,
+          contents: `${context.islandEntry ?? ""}\n`,
+          artifactKind: "template",
+        };
+      },
+    });
+    run(target, workspace);
+
+    expect(seen).toBe("./island/index.js");
+    expect(existsSync(path.join(workspace.outDir, "island"))).toBe(true);
+  });
+
+  it("does not generate an island for a target that opts out", () => {
+    const workspace = createWorkspace([BADGE_COMPONENT]);
+    const tree = run(recordingTarget(), workspace);
+    expect(existsSync(path.join(workspace.outDir, "island"))).toBe(false);
+    expect(
+      tree.diagnostics.every((diagnostic) => diagnostic.severity !== "error"),
+    ).toBe(true);
+  });
+});

@@ -25,10 +25,18 @@
  *
  * Like {@link Slot} and {@link Teleport}, the marker is never invoked directly.
  */
-import { type MpComponent, type MpElementType, type MpProperties } from './types';
+import { type MpComponent, type MpElementType, type MpPropertyBag } from './types';
 
-/** The properties accepted by the {@link Dynamic} element. */
-export interface MpDynamicProperties extends MpProperties {
+/**
+ * The properties accepted by the {@link Dynamic} element.
+ *
+ * This is one of the few declarations that legitimately keeps an **open bag**:
+ * every property other than `is` is forwarded verbatim to the element `is`
+ * resolves to, and that element is only known at runtime, so the attributes it
+ * accepts cannot be enumerated here. Component props interfaces must *not*
+ * follow this pattern — see {@link MpPropertyBag}.
+ */
+export interface MpDynamicProperties extends MpPropertyBag {
   /**
    * The element type to render: an intrinsic tag name (`'a'`, `'button'`) or a
    * component (intrinsic strings and neutral/native components are both

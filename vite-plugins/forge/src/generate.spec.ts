@@ -4,9 +4,18 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { generateEntry, generateFrameworkSources, jsxComponentsCssImportPlugin } from './generate';
+import { forgeSvelteFramework } from '../../../forge-plugins/forge-svelte/src';
+import { forgeVueFramework } from '../../../forge-plugins/forge-vue/src';
+
+import {
+  generateEntry,
+  generateFrameworkSources,
+  jsxComponentsCssImportPlugin,
+  jsxComponentsDtsPlugin,
+} from './generate';
 
 import type { DiscoveredComponent, DiscoveredHelperExport } from './compiler/discover';
+import type { FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
 
 /**
  * Minimal stand-in for a Rollup output chunk, carrying only the fields the
@@ -76,11 +85,11 @@ function component(
 
 /** Minimal atom used by the nested/flat generate parity fixtures. */
 const TYPOGRAPHY_SOURCE = [
-  "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge';",
   '',
   'export type TypographyVariant = "body" | "caption";',
   '',
-  'export interface TypographyProperties extends MpProperties {',
+  'export interface TypographyProperties {',
   '  variant?: TypographyVariant;',
   '}',
   '',
@@ -93,11 +102,11 @@ const TYPOGRAPHY_SOURCE = [
 /** Molecule that imports the typography atom via a relative sibling specifier. */
 function quoteSource(typographyImport: string): string {
   return [
-    "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
+    "import { h, type MpElement } from '@mission-platform/forge';",
     '',
     `import { ForgeTypography, type TypographyVariant } from '${typographyImport}';`,
     '',
-    'export interface QuoteProperties extends MpProperties {',
+    'export interface QuoteProperties {',
     '  variant?: TypographyVariant;',
     '}',
     '',
@@ -108,7 +117,200 @@ function quoteSource(typographyImport: string): string {
   ].join('\n');
 }
 
+const aliasPreservingPlugin: FrameworkOutputPlugin = {
+  id: 'alias-test',
+  outputLanguage: 'vue',
+  source: {
+    componentExtension: '.vue',
+    componentImportExtension: '.vue',
+    composableExtension: '.ts',
+    entryExtension: '.ts',
+    componentExport: 'default',
+  },
+  lower(ir, context) {
+    return { framework: context.framework, module: ir, context };
+  },
+  optimize(intentions) {
+    return intentions;
+  },
+  generate(intentions) {
+    return {
+      code: `<script setup lang="ts">\n${intentions.module.ast.source}\n</script>`,
+      lang: 'vue',
+    };
+  },
+  build: {},
+};
+
 describe('generateFrameworkSources', () => {
+  it('emits valid default re-exports from nested component folder entries', () => {
+    const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-svelte-folder-entry-'));
+    const componentsDir = path.join(packageDir, 'src', 'components');
+    const cardDir = path.join(componentsDir, 'molecules', 'forge-card');
+    const typographyDir = path.join(componentsDir, 'atoms', 'forge-typography');
+    const outDir = path.join(packageDir, 'generated', 'svelte');
+    try {
+      mkdirSync(cardDir, { recursive: true });
+      mkdirSync(typographyDir, { recursive: true });
+      writeFileSync(
+        path.join(componentsDir, 'index.ts'),
+        "export { ForgeCard } from './molecules/forge-card';\nexport { ForgeTypography, type TypographyVariant } from './atoms/forge-typography';\nexport { createCard, type CardOptions } from '../helpers/card';\nexport { useLayer, type UseLayerOptions } from '../composables/use-layer';\n",
+      );
+      writeFileSync(path.join(cardDir, 'index.ts'), "export { ForgeCard } from './forge-card';\n");
+      writeFileSync(
+        path.join(cardDir, 'forge-card.tsx'),
+        [
+          "import { h, type MpElement } from '@mission-platform/forge';",
+          "import { createCard } from '@/components';",
+          "import { ForgeTypography } from '@/components/atoms/forge-typography';",
+          '',
+          'export function ForgeCard(): MpElement { createCard({ tone: "card" }); return <ForgeTypography />; }',
+          '',
+        ].join('\n'),
+      );
+      writeFileSync(
+        path.join(typographyDir, 'index.ts'),
+        "export { ForgeTypography, type TypographyVariant } from './forge-typography';\n",
+      );
+      writeFileSync(path.join(typographyDir, 'forge-typography.tsx'), TYPOGRAPHY_SOURCE);
+      mkdirSync(path.join(packageDir, 'src', 'helpers'), { recursive: true });
+      writeFileSync(
+        path.join(packageDir, 'src', 'helpers', 'card.ts'),
+        'export type CardOptions = { tone: string };\nexport function createCard(options: CardOptions): string { return options.tone; }\n',
+      );
+      mkdirSync(path.join(packageDir, 'src', 'composables'), { recursive: true });
+      writeFileSync(
+        path.join(packageDir, 'src', 'composables', 'use-layer.ts'),
+        'export interface UseLayerOptions { layer: string; }\nexport function useLayer(): void {}\n',
+      );
+
+      generateFrameworkSources({
+        plugin: forgeSvelteFramework(),
+        componentsModule: path.join(componentsDir, 'index.ts'),
+        outDir,
+      });
+
+      expect(readFileSync(path.join(outDir, 'components', 'atoms', 'forge-typography', 'index.ts'), 'utf8')).toContain(
+        "export { default as ForgeTypography } from './forge-typography.svelte';",
+      );
+      const componentsIndex = readFileSync(path.join(outDir, 'components', 'index.ts'), 'utf8');
+      expect(componentsIndex).toContain(
+        "export type { TypographyVariant } from './atoms/forge-typography/forge-typography.svelte';",
+      );
+      expect(componentsIndex).toContain("export { createCard } from '../helpers/card';");
+      expect(componentsIndex).toContain("export { type CardOptions } from '../helpers/card';");
+      expect(componentsIndex).toContain("export { useLayer } from '../composables/use-layer';");
+      expect(componentsIndex).toContain("export { type UseLayerOptions } from '../composables/use-layer';");
+    } finally {
+      rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
+
+  it('resolves package TypeScript aliases from mirrored cache modules during declaration emit', async () => {
+    const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-alias-dts-'));
+    const generatedDir = path.join(packageDir, 'node_modules', '.cache', 'fixture-react');
+    const outDir = path.join(packageDir, 'dist', 'react');
+    try {
+      mkdirSync(path.join(generatedDir, 'components', 'atoms'), { recursive: true });
+      writeFileSync(path.join(packageDir, 'package.json'), JSON.stringify({ name: '@fixture/components' }));
+      writeFileSync(
+        path.join(packageDir, 'tsconfig.build.json'),
+        JSON.stringify({ compilerOptions: { baseUrl: '.', paths: { '@/*': ['./src/*'] } } }),
+      );
+      writeFileSync(path.join(generatedDir, 'types.ts'), 'export type FixtureAlias = string;\n');
+      writeFileSync(
+        path.join(generatedDir, 'components', 'atoms', 'forge-alias.ts'),
+        [
+          "import type { FixtureAlias } from '@/types';",
+          '',
+          'export interface ForgeAliasProperties { value: FixtureAlias; }',
+          'export function ForgeAlias(): null { return null; }',
+          '',
+        ].join('\n'),
+      );
+
+      const plugin = jsxComponentsDtsPlugin({ framework: 'react', generatedDir, outDir });
+      const warnings: string[] = [];
+      if (typeof plugin.closeBundle !== 'function') {
+        throw new TypeError('expected a function closeBundle hook');
+      }
+      await plugin.closeBundle.call({ warn: (message: string) => warnings.push(message) });
+
+      expect(warnings.some((warning) => warning.includes("Cannot find module '@/types'"))).toBe(false);
+      expect(warnings.some((warning) => warning.includes('rootDir'))).toBe(false);
+      expect(readFileSync(path.join(outDir, 'components', 'atoms', 'forge-alias.d.ts'), 'utf8')).toContain(
+        'FixtureAlias',
+      );
+    } finally {
+      rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
+
+  it('generates a custom target source tree with open component and auxiliary extensions', () => {
+    const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-custom-generate-'));
+    const componentsDir = path.join(packageDir, 'src', 'components');
+    const componentDir = path.join(componentsDir, 'molecules', 'forge-badge');
+    const helperDir = path.join(componentsDir, 'molecules', 'component');
+    const outDir = path.join(packageDir, 'generated', 'astro');
+    const plugin: FrameworkOutputPlugin = {
+      id: 'astro-fixture',
+      outputLanguage: 'astro',
+      source: {
+        componentExtension: '.astro',
+        componentImportExtension: '.astro',
+        composableExtension: '.ts',
+        entryExtension: '.ts',
+        componentExport: 'default',
+      },
+      lower(ir, context) {
+        return { framework: context.framework, module: ir, context };
+      },
+      optimize(intentions) {
+        return intentions;
+      },
+      generate() {
+        return {
+          code: '---\n---\n<span>Badge</span>',
+          lang: 'astro',
+          extraModules: [{ name: 'badge-island', code: 'export const mount = true;', lang: 'browser-ts' }],
+        };
+      },
+      build: { vite: () => [], tsdown: () => [] },
+    };
+    try {
+      mkdirSync(componentDir, { recursive: true });
+      mkdirSync(helperDir, { recursive: true });
+      writeFileSync(path.join(componentsDir, 'index.ts'), "export { ForgeBadge } from './molecules/forge-badge';\n");
+      writeFileSync(
+        path.join(componentDir, 'forge-badge.tsx'),
+        "import type { MpElement } from '@mission-platform/forge';\nimport { component } from '../component';\nexport function ForgeBadge(): MpElement { return component ? null : null; }\n",
+      );
+      writeFileSync(path.join(helperDir, 'index.ts'), 'export const component = true;\n');
+
+      const entryFile = generateFrameworkSources({
+        plugin,
+        componentsModule: path.join(componentsDir, 'index.ts'),
+        outDir,
+      });
+
+      expect(entryFile).toBe(path.join(outDir, 'index.ts'));
+      expect(
+        readFileSync(path.join(outDir, 'components', 'molecules', 'forge-badge', 'forge-badge.astro'), 'utf8'),
+      ).toContain('<span>Badge</span>');
+      expect(
+        readFileSync(path.join(outDir, 'components', 'molecules', 'forge-badge', 'badge-island.browser-ts'), 'utf8'),
+      ).toContain('mount');
+      expect(readFileSync(path.join(outDir, 'components', 'molecules', 'component', 'index.ts'), 'utf8')).toContain(
+        'export const component = true;',
+      );
+      expect(readFileSync(entryFile, 'utf8')).toContain(
+        "export { default as Badge } from './components/molecules/forge-badge/forge-badge.astro';",
+      );
+    } finally {
+      rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
+
   it('carries locale type declarations into the generated tree', () => {
     const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-jsx-generate-'));
     const componentsDir = path.join(packageDir, 'src', 'components');
@@ -126,7 +328,11 @@ describe('generateFrameworkSources', () => {
       );
       writeFileSync(path.join(localesDir, 'types.d.ts'), "declare module 'i18next' {}\n");
 
-      generateFrameworkSources({ framework: 'vue', componentsModule: path.join(componentsDir, 'index.ts'), outDir });
+      generateFrameworkSources({
+        plugin: forgeVueFramework(),
+        componentsModule: path.join(componentsDir, 'index.ts'),
+        outDir,
+      });
 
       expect(readFileSync(path.join(outDir, 'locales', 'types.d.ts'), 'utf8')).toBe("declare module 'i18next' {}\n");
     } finally {
@@ -176,26 +382,34 @@ describe('generateFrameworkSources', () => {
       writeFileSync(path.join(nestedQuoteDir, 'forge-quote.tsx'), quoteSource('../../atoms/forge-typography'));
 
       generateFrameworkSources({
-        framework: 'vue',
+        plugin: forgeVueFramework(),
         componentsModule: path.join(flatComponentsDir, 'index.ts'),
         outDir: flatOutDir,
       });
       generateFrameworkSources({
-        framework: 'vue',
+        plugin: forgeVueFramework(),
         componentsModule: path.join(nestedComponentsDir, 'index.ts'),
         outDir: nestedOutDir,
       });
 
       // Flat layout: each component lives under its own folder in the cache tree,
       // and a sibling import resolves through that folder.
-      const flatQuote = readFileSync(path.join(flatOutDir, 'forge-quote', 'forge-quote.vue'), 'utf8');
+      const flatQuote = readFileSync(path.join(flatOutDir, 'components', 'forge-quote', 'forge-quote.vue'), 'utf8');
       expect(flatQuote).toContain("import ForgeTypography from '../forge-typography/forge-typography.vue';");
       const flatEntry = readFileSync(path.join(flatOutDir, 'index.ts'), 'utf8');
-      expect(flatEntry).toContain("export { default as Typography } from './forge-typography/forge-typography.vue';");
-      expect(flatEntry).toContain("export { default as Quote } from './forge-quote/forge-quote.vue';");
+      expect(flatEntry).toContain(
+        "export { default as Typography } from './components/forge-typography/forge-typography.vue';",
+      );
+      expect(flatEntry).toContain("export { default as Quote } from './components/forge-quote/forge-quote.vue';");
 
       // Nested atomic-design layout is preserved verbatim in the cache tree.
-      const nestedQuote = readFileSync(path.join(nestedOutDir, 'molecules', 'forge-quote', 'forge-quote.vue'), 'utf8');
+      expect(
+        readFileSync(path.join(nestedOutDir, 'components', 'molecules', 'forge-quote', 'forge-quote.vue'), 'utf8'),
+      ).toContain('<script');
+      const nestedQuote = readFileSync(
+        path.join(nestedOutDir, 'components', 'molecules', 'forge-quote', 'forge-quote.vue'),
+        'utf8',
+      );
       // The molecule → atom sibling import climbs to the atoms folder in the mirror.
       expect(nestedQuote).toContain("import ForgeTypography from '../../atoms/forge-typography/forge-typography.vue';");
       expect(nestedQuote).toContain(
@@ -204,9 +418,49 @@ describe('generateFrameworkSources', () => {
 
       const nestedEntry = readFileSync(path.join(nestedOutDir, 'index.ts'), 'utf8');
       expect(nestedEntry).toContain(
-        "export { default as Typography } from './atoms/forge-typography/forge-typography.vue';",
+        "export { default as Typography } from './components/atoms/forge-typography/forge-typography.vue';",
       );
-      expect(nestedEntry).toContain("export { default as Quote } from './molecules/forge-quote/forge-quote.vue';");
+      expect(nestedEntry).toContain(
+        "export { default as Quote } from './components/molecules/forge-quote/forge-quote.vue';",
+      );
+    } finally {
+      rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
+
+  it('rewrites workspace-local @/ sibling imports without treating packages as local', () => {
+    const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-jsx-generate-alias-'));
+    const componentsDir = path.join(packageDir, 'src', 'components');
+    const typographyDir = path.join(componentsDir, 'atoms', 'forge-typography');
+    const quoteDir = path.join(componentsDir, 'molecules', 'forge-quote');
+    const outDir = path.join(packageDir, 'generated', 'vue');
+
+    try {
+      mkdirSync(typographyDir, { recursive: true });
+      mkdirSync(quoteDir, { recursive: true });
+      writeFileSync(path.join(componentsDir, 'index.ts'), "export { ForgeQuote } from './molecules/forge-quote';\n");
+      writeFileSync(path.join(typographyDir, 'forge-typography.tsx'), TYPOGRAPHY_SOURCE);
+      writeFileSync(
+        path.join(quoteDir, 'forge-quote.tsx'),
+        quoteSource('@/components/atoms/forge-typography').replace(
+          "import { h, type MpElement } from '@mission-platform/forge';",
+          "import { ForgeButton } from '@mission-platform/components';\nimport { h, type MpElement } from '@mission-platform/forge';",
+        ),
+      );
+
+      generateFrameworkSources({
+        plugin: aliasPreservingPlugin,
+        componentsModule: path.join(componentsDir, 'index.ts'),
+        outDir,
+      });
+
+      const quote = readFileSync(
+        path.join(outDir, 'components', 'molecules', 'forge-quote', 'forge-quote.vue'),
+        'utf8',
+      );
+      expect(quote).toContain("from '@/components/atoms/forge-typography';");
+      expect(quote).not.toContain('from "../../atoms/forge-typography";');
+      expect(quote).toContain("import { ForgeButton } from '@mission-platform/components';");
     } finally {
       rmSync(packageDir, { recursive: true, force: true });
     }
@@ -231,29 +485,33 @@ describe('generateFrameworkSources', () => {
       writeFileSync(
         path.join(componentDir, 'forge-counter.tsx'),
         [
-          "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
+          "import { h, type MpElement } from '@mission-platform/forge';",
           '',
           "import { getCount } from './counter-store';",
           '',
-          'export function ForgeCounter(_properties: MpProperties): MpElement {',
+          'export function ForgeCounter(): MpElement {',
           '  return <span>{getCount()}</span>;',
           '}',
           '',
         ].join('\n'),
       );
 
-      generateFrameworkSources({ framework: 'vue', componentsModule: path.join(componentsDir, 'index.ts'), outDir });
+      generateFrameworkSources({
+        plugin: forgeVueFramework(),
+        componentsModule: path.join(componentsDir, 'index.ts'),
+        outDir,
+      });
 
       // The component and its co-located helper both live under the mirrored
-      // `molecules/forge-counter/` directory, so the helper import stays local.
-      expect(readFileSync(path.join(outDir, 'molecules', 'forge-counter', 'forge-counter.vue'), 'utf8')).toContain(
-        "import { getCount } from './counter-store';",
-      );
-      expect(readFileSync(path.join(outDir, 'molecules', 'forge-counter', 'counter-store.ts'), 'utf8')).toContain(
-        'export function getCount',
-      );
+      // `components/molecules/forge-counter/` directory, so the helper import stays local.
+      expect(
+        readFileSync(path.join(outDir, 'components', 'molecules', 'forge-counter', 'forge-counter.vue'), 'utf8'),
+      ).toContain("import { getCount } from './counter-store';");
+      expect(
+        readFileSync(path.join(outDir, 'components', 'molecules', 'forge-counter', 'counter-store.ts'), 'utf8'),
+      ).toContain('export function getCount');
       expect(readFileSync(path.join(outDir, 'index.ts'), 'utf8')).toContain(
-        "export { default as Counter } from './molecules/forge-counter/forge-counter.vue';",
+        "export { default as Counter } from './components/molecules/forge-counter/forge-counter.vue';",
       );
     } finally {
       rmSync(packageDir, { recursive: true, force: true });
@@ -391,6 +649,61 @@ describe('generateEntry', () => {
     );
 
     expect(entry).toContain("export { useToast, showToast, type ToastOptions } from './toast-store';");
+  });
+
+  it('re-exports a type shared by several components exactly once', () => {
+    // `SpacingScale` is re-exported alongside every layout component, so it
+    // resolves once per claimant. Emitting each resolution would make the entry
+    // declare the same name several times (TS2300), so the first module wins.
+    const entry = generateEntry('react', [
+      component({
+        neutralName: 'ForgeButton',
+        folder: 'forge-button',
+        typeExports: ['ButtonProperties', 'SpacingScale'],
+      }),
+      component({ neutralName: 'ForgeCard', folder: 'forge-card', typeExports: ['CardProperties', 'SpacingScale'] }),
+      component({ neutralName: 'ForgeGrid', folder: 'forge-grid', typeExports: ['GridProperties', 'SpacingScale'] }),
+    ]);
+
+    const spacingLines = entry.split('\n').filter((line) => line.includes('type SpacingScale'));
+    expect(spacingLines).toHaveLength(1);
+    expect(spacingLines[0]).toBe("export { type ButtonProperties, type SpacingScale } from './forge-button';");
+    // The other components keep their own companion types.
+    expect(entry).toContain("export { type CardProperties } from './forge-card';");
+    expect(entry).toContain("export { type GridProperties } from './forge-grid';");
+  });
+
+  it('collapses an identical helper re-export reached from two barrels', () => {
+    const helper: DiscoveredHelperExport = {
+      base: 'date-time',
+      relativePath: 'utils/date-time/date-time',
+      values: [],
+      types: ['DateRange', 'TimeRange'],
+    };
+    const entry = generateEntry(
+      'react',
+      [component({ neutralName: 'ForgeBadge', folder: 'forge-badge' })],
+      [helper, { ...helper }],
+    );
+
+    const helperLines = entry.split('\n').filter((line) => line.includes('date-time'));
+    expect(helperLines).toHaveLength(1);
+  });
+
+  it('never declares the same exported name twice', () => {
+    const entry = generateEntry(
+      'react',
+      [
+        component({ neutralName: 'ForgeButton', folder: 'forge-button', typeExports: ['SpacingScale'] }),
+        component({ neutralName: 'ForgeStack', folder: 'forge-stack', typeExports: ['SpacingScale'] }),
+      ],
+      [{ base: 'date-time', relativePath: 'date-time', values: ['toRange'], types: ['DateRange'] }],
+    );
+
+    const exported = [...entry.matchAll(/(?:type\s+)?(\w+)(?:\s+as\s+(\w+))?(?=[,}])/g)].map(
+      (match) => match[2] ?? match[1],
+    );
+    expect(exported).toHaveLength(new Set(exported).size);
   });
 });
 

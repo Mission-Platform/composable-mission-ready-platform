@@ -27,6 +27,7 @@ import { classNames, type ClassValue } from '../runtime/class-names';
 import { isContextProvider, MP_CONTEXT } from '../runtime/context';
 import { Dynamic as DynamicMarker, type MpDynamicProperties } from '../runtime/dynamic';
 import { h } from '../runtime/h';
+import { HtmlContent as HtmlContentMarker, type HtmlContentProperties } from '../runtime/html-content';
 import {
   collectSlottedChildren,
   type MpSlotProperties,
@@ -38,7 +39,7 @@ import {
 } from '../runtime/slots';
 import { Teleport as TeleportMarker } from '../runtime/teleport';
 import { Transition as TransitionMarker, TransitionGroup as TransitionGroupMarker } from '../runtime/transition';
-import { Fragment, type MpChild, type MpComponent, type MpElement, type MpProperties } from '../runtime/types';
+import { Fragment, type MpChild, type MpComponent, type MpElement, type MpPropertyBag } from '../runtime/types';
 
 /** Neutral prop names that differ in React's DOM prop vocabulary. */
 const REACT_PROPERTY_ALIASES: Readonly<Record<string, string>> = {
@@ -46,7 +47,7 @@ const REACT_PROPERTY_ALIASES: Readonly<Record<string, string>> = {
   for: 'htmlFor',
 };
 
-function toReactProperties(properties: MpProperties): Record<string, unknown> {
+function toReactProperties(properties: MpPropertyBag): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(properties)) {
     // The neutral `className={…}` attribute collapses to React's string-only
@@ -86,6 +87,16 @@ function toReactChildren(children: readonly MpChild[]): ReactNode[] {
   return out;
 }
 
+/** Render trusted HTML into a React host using `dangerouslySetInnerHTML`. */
+export function HtmlContent(properties: HtmlContentProperties): ReactElement {
+  const { html, as = 'div', children: _children, ...hostProperties } = properties;
+  void _children;
+  return createElement(as, {
+    ...toReactProperties(hostProperties),
+    dangerouslySetInnerHTML: { __html: html },
+  });
+}
+
 /** Render a neutral {@link MpElement} tree into a React element. */
 export function renderToReact(element: MpElement): ReactElement {
   const { type, properties, children } = element;
@@ -110,6 +121,13 @@ export function renderToReact(element: MpElement): ReactElement {
   // adapter (cross-framework parity).
   if (type === TransitionMarker || type === TransitionGroupMarker) {
     return createElement(ReactFragment, undefined, ...toReactChildren(children));
+  }
+
+  // Raw HTML is a deliberate trusted-content boundary. React's native
+  // `dangerouslySetInnerHTML` keeps updates replacement-based and forwards the
+  // neutral host props (including `ref`) to the actual host element.
+  if (type === HtmlContentMarker) {
+    return HtmlContent(properties as HtmlContentProperties);
   }
 
   // A `<Dynamic is={…} …>` resolves `is` and renders it with the remaining
@@ -148,7 +166,7 @@ export function renderToReact(element: MpElement): ReactElement {
     // (forwarding) scope, so a component can forward its own slots into the
     // child's slots lexically — matching the compiled output.
     const { defaultChildren, slots } = collectSlottedChildren(resolveSlotMarkers(children));
-    const componentProperties: MpProperties = { ...properties, ...slots, children: defaultChildren };
+    const componentProperties: MpPropertyBag = { ...properties, ...slots, children: defaultChildren };
     pushSlotScope(componentProperties);
     try {
       return renderToReact((type as MpComponent)(componentProperties));
@@ -166,7 +184,7 @@ export function renderToReact(element: MpElement): ReactElement {
  * Wrap a neutral component as a first-class React function component, ready to
  * be rendered by `react-dom` or composed inside other React components.
  */
-export function toReactComponent<P extends MpProperties>(
+export function toReactComponent<P extends MpPropertyBag>(
   component: MpComponent<P>,
   displayName?: string,
 ): FunctionComponent<P> {

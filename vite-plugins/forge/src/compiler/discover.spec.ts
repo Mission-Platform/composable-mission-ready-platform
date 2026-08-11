@@ -1,6 +1,22 @@
-import { describe, expect, it } from 'vitest';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
 
-import { discoverComponents, discoverHelperExports } from './discover';
+import { afterEach, describe, expect, it } from 'vitest';
+
+import {
+  discoverComponents,
+  discoverComponentsFromGraph,
+  discoverHelperExports,
+  discoverHelperExportsFromGraph,
+} from './discover';
+import { buildForgeFileGraph } from './graph';
+
+const temporaryDirectories: string[] = [];
+
+afterEach(async () => {
+  await Promise.all(temporaryDirectories.splice(0).map((directory) => rm(directory, { recursive: true, force: true })));
+});
 
 const BARREL = `
 export { ForgeBadge, type BadgeProperties } from './forge-badge';
@@ -28,6 +44,77 @@ export {
 `;
 
 describe('discoverComponents', () => {
+  it('projects nested export chains and helpers from canonical source nodes', async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), 'forge-discover-'));
+    temporaryDirectories.push(root);
+    const files: Record<string, string> = {
+      'components/index.ts': `export { ForgeBadge, type BadgeProperties } from './atoms/forge-badge';\nexport { useToast } from '@/composables/use-toast';`,
+      'components/atoms/forge-badge/index.ts': `export { ForgeBadge, type BadgeProperties } from './forge-badge';`,
+      'components/atoms/forge-badge/forge-badge.tsx': `export interface BadgeProperties { tone: string; }\nexport function ForgeBadge() { return null; }`,
+      'composables/use-toast.ts': `export function useToast() { return undefined; }`,
+    };
+    await Promise.all(
+      Object.entries(files).map(async ([relativePath, source]) => {
+        const filePath = path.join(root, relativePath);
+        await mkdir(path.dirname(filePath), { recursive: true });
+        await writeFile(filePath, source);
+      }),
+    );
+
+    const graph = buildForgeFileGraph({ entry: path.join(root, 'components/index.ts'), sourceRoot: root });
+    const components = discoverComponentsFromGraph(graph);
+    const helpers = discoverHelperExportsFromGraph(graph, new Set(components.map((component) => component.folder)));
+
+    expect(components).toEqual([
+      expect.objectContaining({
+        neutralName: 'ForgeBadge',
+        publicName: 'Badge',
+        folder: 'forge-badge',
+        sourceDir: 'atoms/forge-badge',
+        sourcePath: path.join(root, 'components/atoms/forge-badge/forge-badge.tsx'),
+        typeExports: ['BadgeProperties'],
+        propertiesType: 'BadgeProperties',
+      }),
+    ]);
+    expect(helpers).toEqual([
+      expect.objectContaining({
+        base: 'use-toast',
+        relativePath: 'composables/use-toast',
+        sourcePath: path.join(root, 'composables/use-toast.ts'),
+        values: ['useToast'],
+      }),
+    ]);
+  });
+
+  it('matches type-only exports from composable modules', async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), 'forge-discover-composable-types-'));
+    temporaryDirectories.push(root);
+    const files: Record<string, string> = {
+      'components/index.ts': "export { useLayer, type UseLayerOptions } from '../composables/use-layer';\n",
+      'composables/use-layer.ts':
+        'export interface UseLayerOptions { layer: string; }\nexport function useLayer(): void {}\n',
+    };
+    await Promise.all(
+      Object.entries(files).map(async ([relativePath, source]) => {
+        const filePath = path.join(root, relativePath);
+        await mkdir(path.dirname(filePath), { recursive: true });
+        await writeFile(filePath, source);
+      }),
+    );
+
+    const graph = buildForgeFileGraph({ entry: path.join(root, 'components/index.ts'), sourceRoot: root });
+    const helpers = discoverHelperExportsFromGraph(graph, new Set());
+
+    expect(helpers).toEqual([
+      expect.objectContaining({
+        base: 'use-layer',
+        values: ['useLayer'],
+        types: ['UseLayerOptions'],
+        sourcePath: path.join(root, 'composables/use-layer.ts'),
+      }),
+    ]);
+  });
+
   it('keeps folder as the basename and sourceDir flat for a flat re-export', () => {
     const components = discoverComponents(BARREL);
     const badge = components.find((component) => component.neutralName === 'ForgeBadge');

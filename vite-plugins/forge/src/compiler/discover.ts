@@ -12,6 +12,9 @@
  * the exported props interface (`BadgeProperties`) — all of which are derived
  * here by parsing the barrel's `export { … } from './…'` re-exports.
  */
+import path from 'node:path';
+
+import type { ForgeFileGraph, ForgeFileNode } from './graph.js';
 
 /** A neutral component discovered in the barrel, plus its derived public shape. */
 export interface DiscoveredComponent {
@@ -36,6 +39,10 @@ export interface DiscoveredComponent {
    * generator joins this under `componentsDir` to locate the source `.tsx`.
    */
   sourceDir: string;
+  /** The export specifier that identifies the component source module. */
+  sourceSpecifier: string;
+  /** Canonical source node selected by graph-backed discovery. */
+  sourcePath?: string;
 }
 
 /** A single `export { … } from '…'` re-export parsed from the barrel. */
@@ -126,6 +133,174 @@ export interface DiscoveredHelperExport {
   values: string[];
   /** Type export names, e.g. `ToastOptions`, `ToastRecord`. */
   types: string[];
+  /** Canonical source node selected by graph-backed discovery. */
+  sourcePath?: string;
+}
+
+function sourceBase(filePath: string): string {
+  const fileName = path.basename(filePath);
+  if (fileName === 'index.ts' || fileName === 'index.tsx' || fileName === 'index.js' || fileName === 'index.jsx') {
+    return path.basename(path.dirname(filePath));
+  }
+  return fileName.replace(/\.d?\w+$/, '');
+}
+
+function relativeModulePath(entry: string, sourcePath: string): string {
+  const relative = path.relative(path.dirname(entry), path.dirname(sourcePath)).split(path.sep).join('/');
+  return relative.length === 0 ? '' : relative;
+}
+
+function graphExportTarget(
+  graph: ForgeFileGraph,
+  start: ForgeFileNode,
+  exportedName: string,
+  typeOnly = false,
+): ForgeFileNode | undefined {
+  let node = start;
+  let name = exportedName;
+  const visited = new Set<string>();
+  while (!visited.has(node.id)) {
+    visited.add(node.id);
+    const fact = node.exports.find(
+      (entryExport) =>
+        entryExport.typeOnly === typeOnly && entryExport.exportedName === name && entryExport.specifier !== undefined,
+    );
+    if (fact?.specifier === undefined) {
+      return node;
+    }
+    const targetId = graph.edges.find(
+      (edge) => edge.from === node.id && edge.specifier === fact.specifier && edge.resolved && edge.to !== undefined,
+    )?.to;
+    if (targetId === undefined) {
+      return undefined;
+    }
+    const target = graph.nodes.get(targetId);
+    if (target === undefined) {
+      return undefined;
+    }
+    node = target;
+    name = fact.localName ?? name;
+  }
+  return undefined;
+}
+
+function graphTypeExports(
+  graph: ForgeFileGraph,
+  entry: ForgeFileNode,
+  sourceNode: ForgeFileNode,
+  componentSpecifier: string,
+): string[] {
+  const names = new Set<string>();
+  for (const entryExport of entry.exports) {
+    if (!entryExport.typeOnly || entryExport.exportedName === undefined || entryExport.specifier === undefined) {
+      continue;
+    }
+    if (entryExport.specifier === componentSpecifier) {
+      names.add(entryExport.exportedName);
+      continue;
+    }
+    const targetId = graph.edges.find(
+      (edge) =>
+        edge.from === entry.id && edge.specifier === entryExport.specifier && edge.resolved && edge.to !== undefined,
+    )?.to;
+    if (targetId === sourceNode.id) {
+      names.add(entryExport.exportedName);
+    }
+  }
+  for (const entryExport of sourceNode.exports) {
+    if (entryExport.typeOnly && entryExport.exportedName !== undefined) {
+      names.add(entryExport.exportedName);
+    }
+  }
+  return [...names];
+}
+
+/** Project public component exports from the canonical graph while retaining the legacy result shape. */
+export function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge'): DiscoveredComponent[] {
+  const entry = graph.nodes.get(graph.entry);
+  if (entry === undefined) {
+    return [];
+  }
+  const components: DiscoveredComponent[] = [];
+  for (const entryExport of entry.exports) {
+    if (entryExport.typeOnly || entryExport.exportedName === undefined || entryExport.specifier === undefined) {
+      continue;
+    }
+    const sourceNode = graphExportTarget(graph, entry, entryExport.exportedName, entryExport.typeOnly);
+    if (sourceNode === undefined || sourceNode.kind !== 'component') {
+      continue;
+    }
+    const neutralName =
+      sourceNode.exports.find(
+        (sourceExport) =>
+          !sourceExport.typeOnly && sourceExport.exportedName === (entryExport.localName ?? entryExport.exportedName),
+      )?.exportedName ??
+      entryExport.localName ??
+      entryExport.exportedName;
+    const publicName = neutralName.startsWith(stripPrefix) ? neutralName.slice(stripPrefix.length) : neutralName;
+    const typeExports = graphTypeExports(graph, entry, sourceNode, entryExport.specifier);
+    const candidate = `${publicName}Properties`;
+    components.push({
+      neutralName,
+      publicName,
+      propertiesType: typeExports.includes(candidate) ? candidate : undefined,
+      typeExports,
+      folder: sourceBase(sourceNode.id),
+      sourceDir: relativeModulePath(graph.entry, sourceNode.id),
+      sourceSpecifier: entryExport.specifier,
+      sourcePath: sourceNode.id,
+    });
+  }
+  return components;
+}
+
+/** Project non-component public exports from the canonical graph. */
+export function discoverHelperExportsFromGraph(
+  graph: ForgeFileGraph,
+  componentFolders: ReadonlySet<string>,
+): DiscoveredHelperExport[] {
+  const entry = graph.nodes.get(graph.entry);
+  if (entry === undefined) {
+    return [];
+  }
+  const helpers = new Map<string, DiscoveredHelperExport>();
+  const entryDirectory = entry.sourceRelativePath.replace(/\/[^/]+$/, '');
+  for (const entryExport of entry.exports) {
+    if (entryExport.exportedName === undefined || entryExport.specifier === undefined) {
+      continue;
+    }
+    const sourceNode = graphExportTarget(graph, entry, entryExport.exportedName, entryExport.typeOnly);
+    if (sourceNode === undefined || sourceNode.id === entry.id || sourceNode.kind === 'component') {
+      continue;
+    }
+    const base = sourceBase(sourceNode.id);
+    if (componentFolders.has(base)) {
+      continue;
+    }
+    const key = sourceNode.id;
+    const helper = helpers.get(key) ?? {
+      base,
+      relativePath: (() => {
+        const sourceRelative = sourceNode.sourceRelativePath
+          .replace(/\.(?:d\.ts|d\.mts|d\.cts|[cm]?[jt]sx?)$/, '')
+          .replace(/\/index$/, '');
+        const relativeToEntryDirectory = sourceRelative.startsWith(`${entryDirectory}/`)
+          ? sourceRelative.slice(entryDirectory.length + 1)
+          : sourceRelative;
+        return relativeToEntryDirectory;
+      })(),
+      values: [],
+      types: [],
+      sourcePath: sourceNode.id,
+    };
+    if (entryExport.typeOnly) {
+      helper.types.push(entryExport.exportedName);
+    } else {
+      helper.values.push(entryExport.exportedName);
+    }
+    helpers.set(key, helper);
+  }
+  return [...helpers.values()];
 }
 
 /**
@@ -203,6 +378,7 @@ export function discoverComponents(barrelSource: string, stripPrefix = 'Forge'):
         typeExports: [...reExport.types],
         folder,
         sourceDir,
+        sourceSpecifier: reExport.from,
       });
     }
   }

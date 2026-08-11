@@ -18,6 +18,7 @@ export {
   type MpTransitionGroupProperties,
 } from './transition';
 export { Dynamic, type MpDynamicProperties } from './dynamic';
+export { HtmlContent, type HtmlContentProperties } from './html-content';
 export {
   createContext,
   useContext,
@@ -33,7 +34,8 @@ export {
   type MpComponent,
   type MpElement,
   type MpElementType,
-  type MpProperties,
+  type MpPropertyBag,
+  type MpReservedProperties,
 } from './types';
 export {
   useState,

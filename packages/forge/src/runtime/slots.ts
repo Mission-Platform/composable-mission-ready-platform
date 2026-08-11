@@ -23,7 +23,7 @@
  * nameless default slot resolves to `children`), exactly mirroring how the
  * compiled output reads its slots.
  */
-import { isMpElement, type MpChild, type MpElement, type MpProperties, Slot as SlotMarker } from './types';
+import { isMpElement, type MpChild, type MpElement, type MpPropertyBag, Slot as SlotMarker } from './types';
 
 /**
  * Re-export the `Slot` marker used as the element `type` for a named slot
@@ -42,7 +42,7 @@ export { Slot } from './types';
  * compiler maps to a Vue scoped slot (`slots.x?.(scope)`) and a React
  * render-prop call (`props.x?.(scope)`).
  */
-export type MpRenderProperty<S = MpProperties> = (scope: S) => MpChild | readonly MpChild[];
+export type MpRenderProperty<S = MpPropertyBag> = (scope: S) => MpChild | readonly MpChild[];
 
 /**
  * The content provided for a slot — either renderable children, or a function
@@ -50,10 +50,19 @@ export type MpRenderProperty<S = MpProperties> = (scope: S) => MpChild | readonl
  */
 export type MpSlotContent = MpChild | readonly MpChild[] | MpRenderProperty;
 
-/** The properties accepted by the {@link Slot} element. */
-export interface MpSlotProperties extends MpProperties {
+/**
+ * The properties accepted by the {@link Slot} element.
+ *
+ * A `<Slot>` is the one neutral element that genuinely accepts arbitrary extra
+ * attributes: a **scoped** slot passes its scope as attributes
+ * (`<Slot name="row" item={item} index={i} />`), so the declaration keeps an
+ * open bag rather than enumerating properties it cannot know.
+ */
+export interface MpSlotProperties extends MpPropertyBag {
   /** The slot name. Omitted (or `'default'`) targets the default slot. */
   name?: string;
+  /** Fallback content rendered when the consumer fills nothing in. */
+  children?: MpChild | readonly MpChild[];
 }
 
 /**
@@ -61,10 +70,10 @@ export interface MpSlotProperties extends MpProperties {
  * adapter. The top frame is the enclosing component whose slots a `<Slot />`
  * encountered during the walk resolves against.
  */
-const scopeStack: MpProperties[] = [];
+const scopeStack: MpPropertyBag[] = [];
 
 /** Push the props of the component about to be expanded onto the slot scope. */
-export function pushSlotScope(properties: MpProperties): void {
+export function pushSlotScope(properties: MpPropertyBag): void {
   scopeStack.push(properties);
 }
 
@@ -184,7 +193,7 @@ export function resolveSlot(properties: MpSlotProperties, fallback: readonly MpC
   }
   if (typeof provided === 'function') {
     const { name: _name, children: _children, ...scoped } = properties;
-    return (provided as (scope: MpProperties) => MpChild | readonly MpChild[])(scoped);
+    return (provided as (scope: MpPropertyBag) => MpChild | readonly MpChild[])(scoped);
   }
   return provided as MpChild | readonly MpChild[];
 }

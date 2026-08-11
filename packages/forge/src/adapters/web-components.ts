@@ -48,12 +48,119 @@ export class TemplateResult {
   }
 }
 
+/** A trusted raw-HTML value used by the native Web-Components adapter. */
+export class RawHtml {
+  readonly value: string;
+
+  constructor(value: string) {
+    this.value = value;
+  }
+}
+
+/** Mark a string as trusted child markup for the native Web-Components path. */
+export function unsafeHtml(value: string): RawHtml {
+  return new RawHtml(value);
+}
+
+/** Properties accepted by the native Web-Components HtmlContent helper. */
+export interface HtmlContentProperties {
+  html: string;
+  as?: string;
+  ref?: unknown;
+  children?: never;
+  [key: string]: unknown;
+}
+
+/** A native host plus trusted raw child markup, rendered by {@link render}. */
+export class HtmlContentResult {
+  readonly properties: HtmlContentProperties;
+
+  constructor(properties: HtmlContentProperties) {
+    this.properties = properties;
+  }
+}
+
+/** Build a native Web-Components raw-content result without escaping `html`. */
+export function HtmlContent(properties: HtmlContentProperties): HtmlContentResult {
+  return new HtmlContentResult(properties);
+}
+
 /**
  * Tagged-template factory. Captures the call site's static strings and dynamic
  * values into a {@link TemplateResult} for {@link render} to realise into DOM.
  */
 export function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult {
   return new TemplateResult(strings, values);
+}
+
+/** The prefix every {@link useId} value carries, so a generated id is recognisable. */
+const ID_PREFIX = 'forge-';
+
+/** Monotonically increasing counter backing {@link useId}. */
+let idCounter = 0;
+
+/**
+ * The native target's replacement for React's `useId`.
+ *
+ * The neutral vocabulary offers `useId()` for the ids that tie a control to its
+ * `<label for>` / `aria-describedby`; React maps it to its own `useId` and Solid
+ * to `createUniqueId`, but a custom element has no framework runtime to borrow
+ * one from — so this is it.
+ *
+ * A module-level counter is sufficient here, and deliberately simpler than a
+ * random/hashed generator: an id only has to be unique **within a document**,
+ * and the compiler lifts a `const x = useId()` out of `render()` into an
+ * instance field, so each element instance calls this exactly once and then
+ * keeps its id for its whole lifetime. Successive calls therefore never
+ * collide, no dependency (nanoid, `crypto.randomUUID`) is needed, and the
+ * result is stable and debuggable (`forge-1`, `forge-2`, …). The value is a
+ * valid HTML `id` and a valid CSS identifier, so it can be used in a selector
+ * unescaped.
+ */
+export function useId(): string {
+  idCounter += 1;
+  return `${ID_PREFIX}${idCounter}`;
+}
+
+/** The slot unnamed light-DOM content is projected into. */
+const DEFAULT_SLOT = 'default';
+
+/**
+ * Whether `host` was given content for one of its slots — the native target's
+ * replacement for the neutral `hasSlot('x')` marker.
+ *
+ * `hasSlot` is compile-time vocabulary: Vue lowers it to `!!slots.x`, React to
+ * `properties.x != null`, and a custom element has neither, so the check is made
+ * against the DOM instead. A generated element renders into an **open shadow
+ * root**, which means the content a consumer projects stays in the host's
+ * **light** DOM as its children — a named slot is filled by a child carrying
+ * `slot="<name>"`, and the default slot by any child that carries none. Only
+ * direct children are considered, exactly like slot assignment itself, and a
+ * whitespace-only text node does not count as content.
+ *
+ * The children are walked rather than queried with `[slot="…"]` so a slot name
+ * needs no CSS escaping, and so a bare text child (which no selector can match)
+ * still fills the default slot.
+ *
+ * Note that a slot is only observable once the host's children exist: during the
+ * parser's upgrade of an element written in the initial HTML, `connectedCallback`
+ * runs before they are attached. Content projected later re-renders the element
+ * through the usual reactive path.
+ */
+export function hasSlotContent(host: Element, name?: string): boolean {
+  const target = name === undefined || name.length === 0 ? DEFAULT_SLOT : name;
+  for (const child of host.childNodes) {
+    if (child instanceof Element) {
+      if ((child.getAttribute('slot') ?? DEFAULT_SLOT) === target) {
+        return true;
+      }
+      continue;
+    }
+    if (target === DEFAULT_SLOT && (child.textContent ?? '').trim().length > 0) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /** How a single `${…}` hole binds once its surrounding markup is parsed. */
@@ -146,6 +253,11 @@ function valueToNodes(value: unknown): Node[] {
   if (value instanceof TemplateResult) {
     return [instantiate(value)];
   }
+  if (value instanceof RawHtml) {
+    const template = document.createElement('template');
+    template.innerHTML = value.value;
+    return [...template.content.childNodes];
+  }
   if (Array.isArray(value)) {
     return value.flatMap((item) => valueToNodes(item));
   }
@@ -194,6 +306,35 @@ function findMarker(root: Node, id: number): Comment | undefined {
 }
 
 /** Realise a {@link TemplateResult} into a `DocumentFragment` with all bindings applied. */
+function applyHtmlContentProperties(element: Element, properties: HtmlContentProperties): void {
+  for (const [name, value] of Object.entries(properties)) {
+    if (name === 'html' || name === 'as' || name === 'children' || name === 'ref') {
+      continue;
+    }
+    if (name.startsWith('on') && typeof value === 'function') {
+      element.addEventListener(name.slice(2).toLowerCase(), value as EventListener);
+    } else if (value !== undefined && value !== null && value !== false) {
+      element.setAttribute(name === 'className' ? 'class' : name, value === true ? '' : String(value));
+    }
+  }
+  const reference = properties.ref;
+  if (typeof reference === 'function') {
+    reference(element);
+  } else if (typeof reference === 'object' && reference !== null && 'current' in reference) {
+    (reference as { current: Element }).current = element;
+  }
+}
+
+function instantiateHtmlContent(result: HtmlContentResult): DocumentFragment {
+  const { html: content, as = 'div', ...properties } = result.properties;
+  const fragment = document.createDocumentFragment();
+  const element = document.createElement(as);
+  applyHtmlContentProperties(element, { ...properties, html: content, as });
+  element.innerHTML = content;
+  fragment.append(element);
+  return fragment;
+}
+
 function instantiate(result: TemplateResult): DocumentFragment {
   const compiled = compileCached(result.strings);
   const template = document.createElement('template');
@@ -226,8 +367,8 @@ function instantiate(result: TemplateResult): DocumentFragment {
  * Render a {@link TemplateResult} into `container`, replacing its current
  * content. A full rebuild (no diffing) — correct and parity-accurate.
  */
-export function render(result: TemplateResult, container: ParentNode): void {
-  container.replaceChildren(instantiate(result));
+export function render(result: TemplateResult | HtmlContentResult, container: ParentNode): void {
+  container.replaceChildren(result instanceof HtmlContentResult ? instantiateHtmlContent(result) : instantiate(result));
 }
 
 /**
@@ -249,6 +390,8 @@ export class ForgeElement extends HTMLElement {
   private readonly mpRoot: ShadowRoot;
   /** Whether a re-render is already scheduled for the current microtask. */
   private mpDirty = false;
+  /** Whether {@link setup} has already run for this element. */
+  private mpSetUp = false;
 
   constructor() {
     super();
@@ -297,7 +440,28 @@ export class ForgeElement extends HTMLElement {
 
   connectedCallback(): void {
     this.adoptAttributes();
+    if (!this.mpSetUp) {
+      this.mpSetUp = true;
+      this.setup();
+    }
     this.renderRoot();
+  }
+
+  /**
+   * One-time initialisation, called **after** the host's attributes have been
+   * adopted onto their reactive properties and **before** the first render.
+   *
+   * A no-op here; a generated subclass overrides it when a state cell has to be
+   * seeded from a property value (`useState(parseTime(modelValue))`). Such a
+   * seed cannot run in the constructor, where every reactive property is still
+   * `undefined` — an element is constructed before its attributes exist.
+   *
+   * It runs exactly **once** per element, not once per connection: a
+   * disconnect/reconnect must not re-seed, which would discard whatever the
+   * user has since changed.
+   */
+  setup(): void {
+    // Overridden by a generated subclass that has deferred seeds.
   }
 
   attributeChangedCallback(name: string, _previous: string | null, value: string | null): void {

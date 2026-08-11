@@ -27,10 +27,12 @@
  * the adapters intercept it by identity (`type === Transition`) and the compiler
  * remaps its import, so calling it directly is a bug.
  */
-import { type MpComponent, type MpProperties } from './types';
+import { type MpChild, type MpComponent } from './types';
 
 /** The properties accepted by the {@link Transition} element. */
-export interface MpTransitionProperties extends MpProperties {
+export interface MpTransitionProperties {
+  /** The single child the enter/leave transition is applied to. */
+  children?: MpChild | readonly MpChild[];
   /**
    * The transition-class prefix. The child receives `<name>-enter-from`,
    * `<name>-enter-active`, `<name>-enter-to` while entering and the matching
@@ -78,7 +80,9 @@ export const Transition: MpComponent<MpTransitionProperties> = () => {
 };
 
 /** The properties accepted by the {@link TransitionGroup} element. */
-export interface MpTransitionGroupProperties extends MpProperties {
+export interface MpTransitionGroupProperties {
+  /** The list entries the group transitions in, out, and between positions. */
+  children?: MpChild | readonly MpChild[];
   /**
    * The transition-class prefix shared by every child. Each entering/leaving
    * child receives `<name>-enter-*` / `<name>-leave-*` and surviving children

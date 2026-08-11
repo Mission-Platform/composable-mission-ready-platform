@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { useId } from './runtime';
+import { useId, useMemo } from './runtime';
 
 describe('useId', () => {
   it('returns a non-empty string id', () => {
@@ -13,5 +13,18 @@ describe('useId', () => {
     const first = useId();
     const second = useId();
     expect(first).not.toBe(second);
+  });
+});
+
+describe('useMemo', () => {
+  it('provides a compiler-neutral memo boundary for function calls', () => {
+    let calls = 0;
+    const value = useMemo(() => {
+      calls += 1;
+      return 'memoized';
+    }, []);
+
+    expect(value).toBe('memoized');
+    expect(calls).toBe(1);
   });
 });

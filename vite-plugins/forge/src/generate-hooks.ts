@@ -27,22 +27,18 @@ import path from 'node:path';
 
 import ts from 'typescript';
 
-import {
-  LOCAL_EFFECT_FILE,
-  LOCAL_EFFECT_MODULE,
-  localEffectModuleSource,
-  parseTsx,
-  readNeutralImports,
-} from './compiler/ast.js';
-import { compileHookModule, type JsxFramework } from './compiler/compile.js';
+import { LOCAL_EFFECT_FILE, LOCAL_EFFECT_MODULE, localEffectModuleSource, readNeutralImports } from './compiler/ast.js';
+import { compileHookModule } from './compiler/compile.js';
 import { type DiscoveredHelperExport } from './compiler/discover.js';
+import { parseForgeSource } from './compiler/frontends.js';
 
+import type { FrameworkOutputPlugin, JsxFramework } from '@mission-platform/forge-plugin-api';
 import type { Plugin } from 'vite';
 
 /** Options for {@link generateHookLibrarySources}. */
 export interface GenerateHookLibrarySourcesOptions {
-  /** Target framework the neutral hooks are compiled to. */
-  framework: JsxFramework;
+  /** Explicit output plugin that owns hook lowering and source generation. */
+  plugin: FrameworkOutputPlugin;
   /** Absolute path of the neutral barrel (e.g. `src/index.ts`). */
   entryModule: string;
   /** Absolute path of the directory the generated sources + entry are written to. */
@@ -50,7 +46,7 @@ export interface GenerateHookLibrarySourcesOptions {
 }
 
 /** The extensions a re-exported module's source may be authored under. */
-const SOURCE_EXTENSIONS = ['ts', 'tsx'] as const;
+const SOURCE_EXTENSIONS = ['js', 'jsx', 'ts', 'tsx'] as const;
 
 interface HookReExport {
   values: string[];
@@ -219,7 +215,7 @@ function collectGeneratedSources(directory: string, extensions: readonly string[
     } else if (
       extensions.some((extension) => entry.name.endsWith(extension)) &&
       !entry.name.endsWith('.d.ts') &&
-      !/(?:\.spec|\.test)\.(?:ts|tsx)$/.test(entry.name)
+      !/(?:\.spec|\.test)\.(?:js|jsx|ts|tsx)$/.test(entry.name)
     ) {
       collected.push(full);
     }
@@ -233,17 +229,17 @@ function emitGeneratedSource(
   sourcePath: string,
   generatedPath: string,
   extension: string,
-  framework: JsxFramework,
+  plugin: FrameworkOutputPlugin,
 ): void {
   const source = readFileSync(sourcePath, 'utf8');
-  const parsed = parseTsx(sourcePath, source);
+  const parsed = parseForgeSource(sourcePath, source);
   const neutral = readNeutralImports(parsed);
   const usesNeutral = neutral.values.length > 0 || neutral.types.length > 0;
   if (!usesNeutral) {
     writeGeneratedModule(outDir, generatedPath, extension, source);
     return;
   }
-  const compiled = compileHookModule(source, { framework, fileName: sourcePath });
+  const compiled = compileHookModule(source, { framework: plugin, fileName: sourcePath });
   const code = rewriteLocalEffectImport(compiled.code, moduleDepth(generatedPath));
   writeGeneratedModule(outDir, generatedPath, compiled.lang, code);
 }
@@ -265,7 +261,7 @@ export function generateHookLibrarySources(options: GenerateHookLibrarySourcesOp
       continue;
     }
     if (!resolved.directory) {
-      emitGeneratedSource(options.outDir, resolved.path, module.relativePath, resolved.extension, options.framework);
+      emitGeneratedSource(options.outDir, resolved.path, module.relativePath, resolved.extension, options.plugin);
       continue;
     }
 
@@ -274,7 +270,7 @@ export function generateHookLibrarySources(options: GenerateHookLibrarySourcesOp
     // tree so the generated entry resolves its `./<composable>` import through
     // `index.ts` without flattening away the authored structure.
     const sourceDirectory = path.dirname(resolved.path);
-    for (const sourcePath of collectGeneratedSources(sourceDirectory, ['.ts', '.tsx'])) {
+    for (const sourcePath of collectGeneratedSources(sourceDirectory, ['.js', '.jsx', '.ts', '.tsx'])) {
       const relativeSourcePath = path.relative(sourceDirectory, sourcePath).split(path.sep).join('/');
       const sourceExtension = path.extname(relativeSourcePath).slice(1);
       const relativeSourceBase = relativeSourcePath.slice(0, -(sourceExtension.length + 1));
@@ -283,7 +279,7 @@ export function generateHookLibrarySources(options: GenerateHookLibrarySourcesOp
         sourcePath,
         `${module.relativePath}/${relativeSourceBase}`,
         sourceExtension,
-        options.framework,
+        options.plugin,
       );
     }
   }
@@ -293,14 +289,15 @@ export function generateHookLibrarySources(options: GenerateHookLibrarySourcesOp
   // on native `watch`/lifecycle). Written once per tree, exactly as the components
   // driver writes it. It is Vue-only, so `localEffectModuleSource` returns an empty
   // string for React and nothing is written for the React build.
-  const effectModuleSource = localEffectModuleSource(options.framework);
+  const framework = options.plugin.id as JsxFramework;
+  const effectModuleSource = localEffectModuleSource(framework);
   if (effectModuleSource.length > 0) {
     writeFileSync(path.join(options.outDir, LOCAL_EFFECT_FILE), effectModuleSource, 'utf8');
   }
 
   const entryFile = path.join(
     options.outDir,
-    options.framework === 'react' || options.framework === 'solid' ? 'index.tsx' : 'index.ts',
+    options.plugin.source.entryExtension === '.tsx' ? 'index.tsx' : 'index.ts',
   );
   const entrySource = `${modules.map((module) => reExportLine(module)).join('\n')}\n`;
   writeFileSync(entryFile, entrySource, 'utf8');
@@ -337,7 +334,7 @@ const HOOK_DTS_COMPILER_OPTIONS: ts.CompilerOptions = {
 
 /** The source extensions a generated framework tree is authored under (React also emits `.tsx`). */
 function hookSourceExtensions(framework: JsxFramework): readonly string[] {
-  return framework === 'react' || framework === 'solid' ? ['.ts', '.tsx'] : ['.ts'];
+  return framework === 'react' || framework === 'solid' || framework === 'svelte' ? ['.ts', '.tsx'] : ['.ts'];
 }
 
 /**
@@ -360,7 +357,11 @@ export function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin {
   const extensions = hookSourceExtensions(options.framework);
   return {
     name: '@mission-platform/vite-plugin-forge:hook-dts',
-    closeBundle() {
+    // Rolldown runs `writeBundle` for every output config, while its
+    // `closeBundle` compatibility hook is not guaranteed for array configs.
+    // Generate declarations after the framework tree has been written so every
+    // target receives the same package-level contract.
+    writeBundle() {
       const rootNames = collectGeneratedSources(options.generatedDir, extensions);
 
       const program = ts.createProgram(rootNames, {

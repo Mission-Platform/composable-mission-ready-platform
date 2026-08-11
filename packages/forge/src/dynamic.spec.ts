@@ -6,9 +6,9 @@ import { renderToString } from 'vue/server-renderer';
 
 import { toReactComponent } from './adapters/react';
 import { toVueComponent } from './adapters/vue';
-import { Dynamic, h, type MpComponent, type MpProperties } from './runtime';
+import { Dynamic, h, type MpComponent } from './runtime';
 
-interface LinkProperties extends MpProperties {
+interface LinkProperties {
   href?: string;
 }
 
