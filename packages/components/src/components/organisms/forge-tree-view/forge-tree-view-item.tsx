@@ -1,7 +1,7 @@
-import { h, type MpElement, type MpProperties, type MpRenderProperty, Slot } from '@mission-platform/forge';
+import { h, type MpChild, type MpElement, type MpRenderProperty, Slot } from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
 
-import { ForgeTypography } from '../../atoms/forge-typography';
+import { ForgeTypography } from '@/components/atoms/forge-typography';
 
 import styles from './forge-tree-view.module.scss';
 
@@ -12,7 +12,9 @@ function hasChildren(node: TreeViewNode): boolean {
   return Array.isArray(node.children) && node.children.length > 0;
 }
 
-export interface TreeViewItemProperties extends MpProperties {
+export interface TreeViewItemProperties {
+  /** The content the consumer fills the component’s slots with. */
+  children?: MpChild | readonly MpChild[];
   /** The node this item renders. */
   node: TreeViewNode;
   /** Depth in the tree (0 = root), driving the row's indentation. */

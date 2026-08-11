@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties, Slot } from '@mission-platform/forge';
+import { classNames, h, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
 
 import sizeStyles from '../../../styles/size.module.scss';
 
@@ -11,7 +11,9 @@ export type DeviceMockOrientation = 'portrait' | 'landscape';
 /** Size token — canonical 2xs → 2xl scale. Scales the whole frame via `em`-relative dimensions. */
 export type DeviceMockSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface DeviceMockProperties extends MpProperties {
+export interface DeviceMockProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Which device frame to render. Defaults to `'mobile'`. */
   device?: DeviceMockType;
   /**

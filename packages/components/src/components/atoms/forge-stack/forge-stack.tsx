@@ -1,4 +1,4 @@
-import { classNames, Dynamic, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, Dynamic, h, type MpChild, type MpElement } from '@mission-platform/forge';
 
 import sizeStyles from '../../../styles/size.module.scss';
 import spacingStyles from '../../../styles/spacing.module.scss';
@@ -46,7 +46,9 @@ const ALIGN_ITEMS: Record<StackAlign, string> = {
   baseline: 'baseline',
 };
 
-export interface StackProperties extends MpProperties {
+export interface StackProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Axis the children flow along: `vertical` (column) or `horizontal` (row). */
   direction?: StackDirection;
   /** Gap between children (named `2xs … 2xl` scale). */

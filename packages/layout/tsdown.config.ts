@@ -3,8 +3,13 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
+import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
-import { defineTsdownForgeComponentsAll, defineTsdownForgeStoryblokAll } from '@mission-platform/vite-plugin-forge';
+import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
 import * as sass from 'sass-embedded';
 
 const rootDirectory = import.meta.dirname;
@@ -38,8 +43,8 @@ function emitA11yStyles(): void {
 }
 
 /**
- * Neutral component tree (`dist/components/**`) plus the four forge framework
- * builds, Storyblok wrappers (`dist/storyblok/{react,vue}/` + `components.json`),
+ * Neutral component tree (`dist/components/**`) plus the five forge framework
+ * builds, the Storyblok CMS projection (`dist/cms/storyblok/{react,vue}/` + `components.json`),
  * and the compiled `./styles` CSS entry. Framework builds use synthesised entry
  * dts (`declarationModule: '../components'`), matching the prior Vite wiring.
  */
@@ -57,17 +62,18 @@ export default [
       },
     },
   }),
-  ...defineTsdownForgeComponentsAll({
+  ...defineTsdownForgeComponents({
     rootDir: rootDirectory,
-    frameworks: ['vue', 'react', 'solid', 'svelte', 'web-components'],
+    frameworks: [
+      forgeReactFramework(),
+      forgeSolidFramework(),
+      forgeSvelteFramework(),
+      forgeWebComponentsFramework(),
+      forgeVueFramework(),
+    ],
     componentsModule,
     name: 'MissionPlatformJsxLayouts',
-    declarationModule: '../components',
-  }),
-  ...defineTsdownForgeStoryblokAll({
-    rootDir: rootDirectory,
-    packageName: '@mission-platform/layouts',
-    componentsModule,
-    name: 'MissionPlatformJsxLayoutsStoryblok',
+    external: ['i18next'],
+    declarationModule: '..',
   }),
 ];

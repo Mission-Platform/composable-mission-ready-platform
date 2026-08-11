@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, h, type MpChild, type MpElement } from '@mission-platform/forge';
 
 import sizeStyles from '../../size.module.scss';
 
@@ -33,7 +33,9 @@ const MAX_WIDTH: Record<ContainerMaxWidth, string> = {
   '2xl': '96rem',
 };
 
-export interface ContainerProperties extends MpProperties {
+export interface ContainerProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Sizing strategy on the inline axis. Defaults to `'responsive'`. */
   variant?: ContainerVariant;
   /**

@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, h, type MpElement } from '@mission-platform/forge';
 
 import { ForgeTypography } from '../forge-typography';
 
@@ -10,7 +10,7 @@ export type ProgressVariant =
 /** Canonical 2xs → 2xl size scale (track thickness). */
 export type ProgressSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface ProgressBarProperties extends MpProperties {
+export interface ProgressBarProperties {
   /** Current value. Defaults to `0`. */
   value?: number;
   /** Maximum value. Defaults to `100`. */

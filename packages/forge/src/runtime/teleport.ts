@@ -28,10 +28,12 @@
  * it by identity (`type === Teleport`) and the compiler consumes the import, so
  * calling it directly is a bug.
  */
-import { type MpComponent, type MpProperties } from './types';
+import { type MpChild, type MpComponent } from './types';
 
 /** The properties accepted by the {@link Teleport} element. */
-export interface MpTeleportProperties extends MpProperties {
+export interface MpTeleportProperties {
+  /** The subtree rendered at the teleport target. */
+  children?: MpChild | readonly MpChild[];
   /**
    * Where to render the teleported children. A CSS selector string (resolved
    * against the document) or a DOM element. Defaults to `'body'`.

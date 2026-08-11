@@ -36,6 +36,24 @@ Deployable applications in `apps/` use **Vite** for development and production b
   framework-agnostic resolution.
 - **SSR/SSG Support**: Applications like `my-care-notes` use `vite-ssg` for static site generation.
 
+### Forge package builds
+
+Forge package builds add a neutral compiler front end to the normal `tsdown` or Vite flow. A consuming package imports
+the framework plugins it wants and passes explicit instances to `defineTsdownForgeComponents` or
+`defineTsdownForgeHooks`. The neutral driver creates semantic IR once, then the selected plugin owns target lowering,
+source generation, declarations, runtime externals, and its native Vite/tsdown adapter.
+
+Content-platform output is a second, orthogonal axis configured through `@mission-platform/forge-cms-plugin-api`. A
+consumer passes `defineTsdownForgeCms` (or `defineTsdownForgeCmsAll`) a list of `CmsOutputPlugin` instances, each of
+which *composes* a framework plugin — `forgeStoryblokCms({ packageName, plugin, storyblokRuntime })`,
+`forgeAstroCms({ packageName, plugin })`, and so on for Ghost, Jekyll, and Webflow. Because the platform and the
+framework are chosen independently, `storyblok × vue` and `astro × solid` are configuration rather than new code.
+
+CMS builds emit to `dist/cms/<cms>/<framework>/**`, with manifests and other platform sidecars mirrored into
+`dist/cms/<cms>/`. Targets that need a hydrated runtime (Astro, Webflow) co-generate an island tree from the bound
+framework plugin into the same build. The complete responsibility split and stage boundaries are described in
+[Forge Compiler Pipeline](forge-compiler.md).
+
 ## Turborepo Pipeline
 
 The root `turbo.json` defines a family of build tasks. Alongside the core tasks, a set of specialized tasks emit only a
@@ -55,13 +73,18 @@ These tasks reuse the same compilation but scope the emitted artifacts in `dist/
 
 | Task                    | Description                                                                                                                                                |
 |:------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `build:neutral`         | Emits only the framework-neutral output, excluding the per-framework bundles (Vue, React, Solid, Svelte, Web Components, Storyblok) and type declarations. |
-| `build:bundle`          | Emits all framework bundles (JS/CSS) but skips the `.d.ts` declaration files.                                                                              |
-| `build:solid`           | Emits only the Solid build (`dist/solid/**`).                                                                                                              |
-| `build:svelte`          | Emits only the Svelte build (`dist/svelte/**`).                                                                                                            |
-| `build:web-components`  | Emits only the Web Components build (`dist/web-components/**`).                                                                                            |
-| `build:storyblok-vue`   | Emits only the Storyblok Vue build (`dist/storyblok/vue/**` and the Storyblok component manifest JSON).                                                    |
-| `build:storyblok-react` | Emits only the Storyblok React build (`dist/storyblok/react/**`).                                                                                          |
+| `build:neutral`             | Emits only the framework-neutral output, excluding the per-framework bundles (Vue, React, Solid, Svelte, Web Components), the CMS output, and type declarations. |
+| `build:bundle`              | Emits all framework bundles (JS/CSS) but skips the `.d.ts` declaration files.                                                                              |
+| `build:solid`               | Emits only the Solid build (`dist/solid/**`).                                                                                                              |
+| `build:svelte`              | Emits only the Svelte build (`dist/svelte/**`).                                                                                                            |
+| `build:web-components`      | Emits only the Web Components build (`dist/web-components/**`).                                                                                            |
+| `build:cms`                 | Emits every CMS projection (`dist/cms/**`).                                                                                                                |
+| `build:cms-storyblok-vue`   | Emits only the Storyblok Vue build (`dist/cms/storyblok/vue/**` and the Storyblok component manifest JSON).                                                |
+| `build:cms-storyblok-react` | Emits only the Storyblok React build (`dist/cms/storyblok/react/**`).                                                                                      |
+| `build:cms-astro`           | Emits only the Astro projection (`dist/cms/astro/**`).                                                                                                     |
+| `build:cms-ghost`           | Emits only the Ghost projection (`dist/cms/ghost/**`).                                                                                                     |
+| `build:cms-jekyll`          | Emits only the Jekyll projection (`dist/cms/jekyll/**`).                                                                                                   |
+| `build:cms-webflow`         | Emits only the Webflow projection (`dist/cms/webflow/**`).                                                                                                 |
 
 ### Caching Strategy
 

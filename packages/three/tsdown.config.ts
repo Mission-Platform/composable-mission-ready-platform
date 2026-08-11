@@ -1,7 +1,12 @@
 import path from 'node:path';
 
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
+import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
-import { defineTsdownForgeComponentsAll } from '@mission-platform/vite-plugin-forge';
+import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
 
 /**
  * Neutral types/entry (`dist/index.d.ts`, …) plus the two forge component
@@ -14,12 +19,18 @@ export default [
     rootDir: import.meta.dirname,
     clean: true,
   }),
-  ...defineTsdownForgeComponentsAll({
+  ...defineTsdownForgeComponents({
     rootDir: import.meta.dirname,
-    frameworks: ['react', 'vue'],
+    frameworks: [
+      forgeVueFramework(),
+      forgeReactFramework(),
+      forgeSolidFramework(),
+      forgeSvelteFramework(),
+      forgeWebComponentsFramework(),
+    ],
     componentsModule: path.resolve(import.meta.dirname, 'src/components/index.ts'),
     name: 'MissionPlatformThree',
-    declarationModule: '..',
-    external: ['three'],
+    // Encoder is consumed through the package's own `.` entry.
+    external: ['i18next'],
   }),
 ];

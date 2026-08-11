@@ -59,7 +59,10 @@ export function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserC
 
   const base = defineConfig({
     plugins: [vue(), ignoreVueI18nBlocksPlugin()],
-    ...(conditions && !scoped ? { resolve: { conditions } } : {}),
+    resolve: {
+      tsconfigPaths: true,
+      ...(conditions && !scoped ? { conditions } : {}),
+    },
     test: {
       environment,
       globals,
@@ -84,7 +87,7 @@ export function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserC
               },
               {
                 extends: true,
-                resolve: { conditions },
+                resolve: { conditions, tsconfigPaths: true },
                 test: {
                   name: `mp:${framework}`,
                   include: [...frameworkInclude],

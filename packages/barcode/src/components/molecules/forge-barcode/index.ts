@@ -1,1 +1,1 @@
-export { ForgeBarcode, type BarcodeProperties, type BarcodeSymbology } from './forge-barcode';
+export { ForgeBarcode, type BarcodeActions, type BarcodeProperties } from './forge-barcode';

@@ -2,7 +2,7 @@
   "name": "@mission-platform/vite-plugin-forge",
   "version": "1.0.0",
   "license": "BSD-4-Clause",
-  "description": "A Vite plugin that compiles framework-neutral @mission-platform/forge components to React, Vue 3, Solid, Svelte, or Web Components at build time",
+  "description": "A Vite plugin that compiles framework-neutral @mission-platform/forge components to React, Astro, Vue 3, Solid, Svelte, or Web Components at build time",
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.js",
@@ -12,6 +12,30 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./compiler/ast": {
+      "types": "./dist/compiler/ast.d.ts",
+      "import": "./dist/compiler/ast.js"
+    },
+    "./compiler/ast.js": {
+      "types": "./dist/compiler/ast.d.ts",
+      "import": "./dist/compiler/ast.js"
+    },
+    "./compiler/optimize": {
+      "types": "./dist/compiler/optimize.d.ts",
+      "import": "./dist/compiler/optimize.js"
+    },
+    "./compiler/optimize.js": {
+      "types": "./dist/compiler/optimize.d.ts",
+      "import": "./dist/compiler/optimize.js"
+    },
+    "./compiler/hoist-static": {
+      "types": "./dist/compiler/hoist-static.d.ts",
+      "import": "./dist/compiler/hoist-static.js"
+    },
+    "./compiler/hoist-static.js": {
+      "types": "./dist/compiler/hoist-static.d.ts",
+      "import": "./dist/compiler/hoist-static.js"
     }
   },
   "files": [
@@ -29,6 +53,7 @@
   },
   "dependencies": {
     "@mission-platform/forge": "workspace:*",
+    "@mission-platform/forge-plugin-api": "workspace:*",
     "@sveltejs/vite-plugin-svelte": "catalog:svelte",
     "svelte": "catalog:svelte",
     "typescript": "catalog:typescript"

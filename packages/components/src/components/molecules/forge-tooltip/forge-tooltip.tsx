@@ -1,7 +1,7 @@
 import {
   h,
+  type MpChild,
   type MpElement,
-  type MpProperties,
   Slot,
   Teleport,
   useEffect,
@@ -10,9 +10,10 @@ import {
   useState,
 } from '@mission-platform/forge';
 
+import { ForgeTypography } from '@/components/atoms/forge-typography';
+import { resolvePortalTarget } from '@/utils/portal-target/portal-target';
+
 import sizeStyles from '../../../styles/size.module.scss';
-import { resolvePortalTarget } from '../../../utils/portal-target/portal-target';
-import { ForgeTypography } from '../../atoms/forge-typography';
 
 import styles from './forge-tooltip.module.scss';
 
@@ -22,7 +23,9 @@ export type TooltipSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 /** Preferred placement of the tooltip relative to its trigger. */
 export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right';
 
-export interface TooltipProperties extends MpProperties {
+export interface TooltipProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Text content of the tooltip. Plain text only. */
   content: string;
   /**

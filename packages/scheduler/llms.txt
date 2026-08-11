@@ -1,0 +1,21 @@
+# @mission-platform/scheduler
+
+Framework-neutral scheduler UI component for Mission Platform
+
+## Installation
+
+Add it to a consuming workspace member:
+
+```json
+{
+  "dependencies": {
+    "@mission-platform/scheduler": "workspace:*"
+  }
+}
+```
+
+## Usage
+
+```ts
+import { scheduler } from '@mission-platform/scheduler';
+```

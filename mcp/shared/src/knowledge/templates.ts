@@ -658,6 +658,12 @@ ${description}
 /**
  * Files for a new atomic-design component under
  * `src/components/<level>/<name>/` (paths relative to the target package).
+ *
+ * The generated props interface inherits nothing: there is no shared props
+ * base, so a component declares exactly the properties it accepts. Add
+ * `children?: MpChild | readonly MpChild[]` or `className?: ClassValue` only
+ * when the component actually reads them — `key` and `slot` are accepted on
+ * every element through `MpReservedProperties`.
  */
 export function componentFiles(options: ComponentScaffoldOptions): {
   files: Record<string, string>;
@@ -677,11 +683,18 @@ export function componentFiles(options: ComponentScaffoldOptions): {
   const baseDir = `src/components/${levelFolder}/${name}`;
 
   const files: Record<string, string> = {
-    [`${baseDir}/${name}.tsx`]: `import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
+    [`${baseDir}/${name}.tsx`]: `import { h, type MpChild, type MpElement } from '@mission-platform/forge';
 
-export interface ${propertiesName} extends MpProperties {
+/**
+ * Props of \`${componentName}\`. The interface inherits nothing — declare every
+ * property the component accepts, and only those it actually uses. \`key\` and
+ * \`slot\` are accepted on every element without being declared here.
+ */
+export interface ${propertiesName} {
   /** Optional accessible label forwarded to the root element. */
   ariaLabel?: string;
+  /** Content rendered inside the root element. */
+  children?: MpChild | readonly MpChild[];
 }
 
 /**

@@ -1,8 +1,9 @@
-import { classNames, h, type MpElement, type MpProperties, useMemo, useState } from '@mission-platform/forge';
+import { classNames, h, type MpElement, useMemo, useState } from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
 
+import { ForgeTypography } from '@/components/atoms/forge-typography';
+
 import sizeStyles from '../../../styles/size.module.scss';
-import { ForgeTypography } from '../../atoms/forge-typography';
 
 import styles from './forge-table.module.scss';
 
@@ -32,7 +33,7 @@ export interface TableColumn {
   render?: (value: unknown, row: Record<string, unknown>) => string;
 }
 
-export interface TableProperties extends MpProperties {
+export interface TableProperties {
   /** The column definitions, left-to-right. */
   columns: TableColumn[];
   /** The data rows. */

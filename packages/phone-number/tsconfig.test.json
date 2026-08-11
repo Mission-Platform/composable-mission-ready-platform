@@ -1,6 +1,7 @@
 {
   "extends": "@mission-platform/typescript-config/test",
   "compilerOptions": {
+    "paths": { "@/*": ["./src/*"] },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo"
   },
   "include": ["src/**/*.ts", "src/**/*.spec.ts"]

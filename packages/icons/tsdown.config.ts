@@ -1,11 +1,19 @@
 import path from 'node:path';
 
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
+import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
-import { defineTsdownForgeComponentsAll } from '@mission-platform/vite-plugin-forge';
+import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+
+const rootDirectory = import.meta.dirname;
+const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
 
 /**
  * Neutral component declarations (`dist/components/**`) plus the five forge
- * framework builds (`dist/{vue,react,solid,web-components}/`). Matches the
+ * framework builds (`dist/{vue,react,solid,svelte,web-components}/`). Matches the
  * prior Vite wiring: `generateFrameworkSources` + synthesised entry dts
  * (`declarationModule: '../components'`).
  */
@@ -21,11 +29,26 @@ export default [
       outDir: path.resolve(import.meta.dirname, 'dist/components'),
     },
   }),
-  ...defineTsdownForgeComponentsAll({
+  defineTsdownLibrary({
     rootDir: import.meta.dirname,
-    frameworks: ['vue', 'react', 'solid', 'svelte', 'web-components'],
-    componentsModule: path.resolve(import.meta.dirname, 'src/components/index.ts'),
-    name: 'MissionPlatformIconsJsx',
-    declarationModule: '../components',
+    entry: 'src/sprite/asset.ts',
+    clean: false,
+    overrides: {
+      outDir: path.resolve(import.meta.dirname, 'dist/sprite'),
+    },
+  }),
+  ...defineTsdownForgeComponents({
+    rootDir: rootDirectory,
+    frameworks: [
+      forgeReactFramework(),
+      forgeSolidFramework(),
+      forgeSvelteFramework(),
+      forgeWebComponentsFramework(),
+      forgeVueFramework(),
+    ],
+    componentsModule,
+    name: 'MissionPlatformJsxForms',
+    external: ['i18next'],
+    declarationModule: '..',
   }),
 ];

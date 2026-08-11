@@ -15,17 +15,17 @@ import {
   hasMpStaticMarker,
   MP_STATIC_ATTR,
   optimizeSourceFile,
-} from './compile';
+} from './compiler-test-helpers';
 
-import type { JsxFramework } from './compile';
+import type { JsxFramework } from './compiler-test-helpers';
 
 // ─── fixtures ───────────────────────────────────────────────────────────────
 
 /** Fully-static intrinsic subtree + a dynamic sibling (Stage-1 marks the static one). */
 const STATIC_SUBTREE = [
-  "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge';",
   '',
-  'export interface CardProperties extends MpProperties {',
+  'export interface CardProperties {',
   '  title: string;',
   '}',
   '',
@@ -41,9 +41,9 @@ const STATIC_SUBTREE = [
 
 /** Constant conditionals / short-circuits that Stage-1 must fold away. */
 const CONSTANT_CONDITIONALS = [
-  "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge';",
   '',
-  'export interface FlagProperties extends MpProperties {',
+  'export interface FlagProperties {',
   '  label: string;',
   '}',
   '',
@@ -61,12 +61,9 @@ const CONSTANT_CONDITIONALS = [
 
 /** Stable array-literal `.map` without keys — Stage-1 infers `key={item}`. */
 const STABLE_KEYED_LIST = [
-  "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge';",
   '',
-  'export interface ListProperties extends MpProperties {}',
-  '',
-  'export function ForgeStableList(properties: ListProperties): MpElement {',
-  '  void properties;',
+  'export function ForgeStableList(): MpElement {',
   '  return (',
   '    <ul class="list">',
   "      {['alpha', 'beta', 'gamma'].map((item) => (",
@@ -79,14 +76,11 @@ const STABLE_KEYED_LIST = [
 
 /** Module-level const array — also a stable map source. */
 const MODULE_CONST_LIST = [
-  "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge';",
   '',
   "const ITEMS = ['one', 'two'] as const;",
   '',
-  'export interface RowProperties extends MpProperties {}',
-  '',
-  'export function ForgeRows(properties: RowProperties): MpElement {',
-  '  void properties;',
+  'export function ForgeRows(): MpElement {',
   '  return (',
   '    <ul class="rows">',
   '      {ITEMS.map((item, index) => (',
@@ -99,9 +93,9 @@ const MODULE_CONST_LIST = [
 
 /** Dynamic prop-sourced map — Stage-1 must NOT invent keys (not a stable source). */
 const DYNAMIC_LIST = [
-  "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge';",
   '',
-  'export interface DynProperties extends MpProperties {',
+  'export interface DynProperties {',
   '  items: string[];',
   '}',
   '',
@@ -131,9 +125,9 @@ const CONSTANT_MEMO_HOOK = [
 
 /** Component with a constant derived const (template path). */
 const CONSTANT_DERIVED = [
-  "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
+  "import { h, type MpElement } from '@mission-platform/forge';",
   '',
-  'export interface TagProperties extends MpProperties {',
+  'export interface TagProperties {',
   '  name: string;',
   '}',
   '',
@@ -145,12 +139,9 @@ const CONSTANT_DERIVED = [
 
 /** Regression fixtures — slots / teleport / effects must still emit correctly. */
 const SLOT_LAYOUT = [
-  "import { h, Slot, type MpElement, type MpProperties } from '@mission-platform/forge';",
+  "import { h, type MpElement, Slot } from '@mission-platform/forge';",
   '',
-  'export interface LayoutProperties extends MpProperties {}',
-  '',
-  'export function ForgeLayout(properties: LayoutProperties): MpElement {',
-  '  void properties;',
+  'export function ForgeLayout(): MpElement {',
   '  return (',
   '    <div class="layout">',
   '      <header class="layout__header"><Slot name="header" /></header>',
@@ -161,9 +152,9 @@ const SLOT_LAYOUT = [
 ].join('\n');
 
 const TELEPORT_PANEL = [
-  "import { h, Teleport, useState, type MpElement, type MpProperties } from '@mission-platform/forge';",
+  "import { h, type MpElement, Teleport, useState } from '@mission-platform/forge';",
   '',
-  'export interface PanelProperties extends MpProperties {',
+  'export interface PanelProperties {',
   '  open?: boolean;',
   '}',
   '',
@@ -257,8 +248,9 @@ describe('Stage-1 optimise — static-node marking', () => {
 
   it('does not mark elements with dynamic bindings or event handlers', () => {
     const source = [
-      "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
-      'export function ForgeBtn(properties: MpProperties): MpElement {',
+      "import { h, type MpChild, type MpElement } from '@mission-platform/forge';",
+      'export interface ButtonProperties { children?: MpChild | readonly MpChild[]; }',
+      'export function ForgeBtn(properties: ButtonProperties): MpElement {',
       '  return <button type="button" onClick={() => undefined}>{properties.children}</button>;',
       '}',
     ].join('\n');
@@ -352,8 +344,8 @@ describe('Stage-2 — Svelte keyed each + constant memo', () => {
 
   it('emits a plain `const` (not `$derived`) for a constant `useMemo` in a component', () => {
     const source = [
-      "import { h, useMemo, type MpElement, type MpProperties } from '@mission-platform/forge';",
-      'export function ForgeLabel(properties: MpProperties): MpElement {',
+      "import { h, useMemo, type MpElement } from '@mission-platform/forge';",
+      'export function ForgeLabel(): MpElement {',
       "  const label = useMemo(() => 'hi', []);",
       '  return <span class="label">{label}</span>;',
       '}',
@@ -370,9 +362,8 @@ describe('Stage-2 — Svelte keyed each + constant memo', () => {
 describe('Stage-2 — Web Components static template hoist', () => {
   it('hoists a fully-static root to a module-level `html` template constant', () => {
     const source = [
-      "import { h, type MpElement, type MpProperties } from '@mission-platform/forge';",
-      'export function ForgeIcon(properties: MpProperties): MpElement {',
-      '  void properties;',
+      "import { h, type MpElement } from '@mission-platform/forge';",
+      'export function ForgeIcon(): MpElement {',
       '  return <span class="icon">★</span>;',
       '}',
     ].join('\n');

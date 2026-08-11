@@ -30,7 +30,17 @@ discovers and renders the stories that live alongside their components.
 - Co-locate each `.stories.tsx` file with its component inside that component's package directory (e.g.
   `packages/components/src/components/**/<component>/<component>.stories.tsx`), not under `apps/storybook`. This matches
   the convention in [Atomic Component Design](atomic-component-design.md).
-- Verify component behavior across different frameworks by switching the `STORYBOOK_FRAMEWORK` environment variable.
+- Verify component behavior across Vue, React, Svelte, Solid, and Web Components by switching the
+  `STORYBOOK_FRAMEWORK` environment variable. Each mode must consume the same neutral story inventory; a missing
+  framework artifact is a package/export failure, not a reason to filter that story out.
+
+The full static validation loop is:
+
+```bash
+for framework in vue react svelte solid web-component; do
+  STORYBOOK_FRAMEWORK="$framework" pnpm --filter @mission-platform/storybook run build-storybook
+done
+```
 
 ## Development Standards
 
@@ -45,7 +55,8 @@ All new source code must be written in TypeScript (`.ts`) or Vue SFCs with `<scr
 ### Framework-Neutral Components
 
 Whenever possible, author UI components using the `@mission-platform/forge` dialect. This allows components to be
-compiled and used in multiple frameworks (Vue, React, Solid, etc.) without rewriting the core logic.
+compiled and used in Vue, React, Svelte, Solid, and Web Components without rewriting the core logic. Configure the
+consumer's resolver with the matching `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, or `mp:web-component` condition.
 
 ### Reactivity Patterns (Vue 3)
 

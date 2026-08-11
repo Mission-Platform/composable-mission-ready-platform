@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, h, type MpElement } from '@mission-platform/forge';
 
 import sizeStyles from '../../../styles/size.module.scss';
 
@@ -22,7 +22,7 @@ export interface ResponsiveImageSource {
 /** How the image fills its box. */
 export type ResponsiveImageFit = 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
 
-export interface ResponsiveImageProperties extends MpProperties {
+export interface ResponsiveImageProperties {
   /** Fallback image URL (required, also used by browsers without `<picture>` support). */
   src: string;
   /** Size token controlling the picture's font scale. Defaults to `'md'`. */

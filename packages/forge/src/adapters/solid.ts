@@ -12,7 +12,9 @@
  * `createComponent` / plain functions.
  */
 import { createComponent, createEffect, createMemo, createSignal, type JSX } from 'solid-js';
-import { isServer, Portal } from 'solid-js/web';
+import { Dynamic, isServer, Portal } from 'solid-js/web';
+
+import type { HtmlContentProperties } from '../runtime/html-content';
 
 /** The properties accepted by the Solid {@link Teleport} component. */
 export interface TeleportProperties {
@@ -22,6 +24,20 @@ export interface TeleportProperties {
   disabled?: boolean;
   /** The content to teleport. */
   children?: JSX.Element;
+}
+
+/**
+ * The Solid build of the neutral `<HtmlContent>` primitive. Solid's
+ * `innerHTML` property is the native replacement-based raw-content operation.
+ */
+export function HtmlContent(properties: HtmlContentProperties): JSX.Element {
+  const { html, as = 'div', children: _children, ...hostProperties } = properties;
+  void _children;
+  return createComponent(Dynamic, {
+    component: as,
+    ...hostProperties,
+    innerHTML: html,
+  });
 }
 
 /**

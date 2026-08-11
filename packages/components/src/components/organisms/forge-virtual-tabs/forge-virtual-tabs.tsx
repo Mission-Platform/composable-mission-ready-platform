@@ -1,12 +1,13 @@
-import { h, type MpElement, type MpProperties, type MpRenderProperty, useRef } from '@mission-platform/forge';
+import { h, type MpElement, type MpRenderProperty, useRef } from '@mission-platform/forge';
 import { ForgeIconClose, ForgeIconPlus } from '@mission-platform/icons';
 
+import { ForgeTypography } from '@/components/atoms/forge-typography';
+
 import sizeStyles from '../../../styles/size.module.scss';
-import { ForgeTypography } from '../../atoms/forge-typography';
 
 import styles from './forge-virtual-tabs.module.scss';
 
-import type { TabItem, TabsVariant } from '../../molecules/forge-tabs';
+import type { TabItem, TabsVariant } from '@/components/molecules/forge-tabs';
 
 /** Size token — canonical 2xs → 2xl scale. */
 export type VirtualTabsSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
@@ -17,7 +18,7 @@ export interface VirtualTabPanelScope {
   tab: TabItem;
 }
 
-export interface VirtualTabsProperties extends MpProperties {
+export interface VirtualTabsProperties {
   /** Ordered list of tabs to render. */
   tabs: TabItem[];
   /** Size token controlling the tabs' scale. Defaults to `'md'`. */

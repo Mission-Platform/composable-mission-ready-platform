@@ -13,9 +13,11 @@
  * scope-aware reference rewriter the Vue emitter uses to turn React-style hook
  * usage into Vue reactivity.
  */
+import path from 'node:path';
+
 import ts from 'typescript';
 
-import type { JsxFramework } from './compile.js';
+import type { JsxFramework } from '@mission-platform/forge-plugin-api';
 
 /** The neutral package the components import their primitives from. */
 export const NEUTRAL_MODULE = '@mission-platform/forge';
@@ -84,7 +86,12 @@ export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string> = new Set(['Slot'
  * `@mission-platform/forge/react` group driver for React, the built-in
  * `import { TransitionGroup } from 'vue'` for Vue).
  */
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string> = new Set(['Teleport', 'Transition', 'TransitionGroup']);
+export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string> = new Set([
+  'Teleport',
+  'Transition',
+  'TransitionGroup',
+  'HtmlContent',
+]);
 
 /** The neutral framework-component imports Vue resolves straight from the `vue` runtime. */
 export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string> = new Set(['Teleport', 'Transition', 'TransitionGroup']);
@@ -141,29 +148,26 @@ export const REACT_TYPE_ALIASES: Readonly<Record<string, string>> = {
 /**
  * Neutral **type** imports that have no single first-class framework equivalent
  * to alias to (unlike {@link REACT_TYPE_ALIASES}), yet are trivially expressible
- * in each framework's own vocabulary — the render/props primitives:
+ * in each framework's own vocabulary — the render primitive
+ * `MpRenderProperty<S>`, a scoped-slot / render-prop function returning a
+ * slot's content for a given scope.
  *
- * - `MpProperties` — the bag of attributes/props a component accepts (the base
- *   every component's props interface `extends`), and
- * - `MpRenderProperty<S>` — a scoped-slot / render-prop function returning a
- *   slot's content for a given scope.
- *
- * Rather than keep these as an `@mission-platform/forge` import in the generated
+ * Rather than keep it as an `@mission-platform/forge` import in the generated
  * code, each framework build emits a tiny co-located module
- * ({@link LOCAL_JSX_TYPES_MODULE}) that defines **framework-specific variants**
- * of them — React's over `ReactNode`, Vue's over `VNodeChild` — and both
- * emitters redirect these two type imports there (see the React and Vue
- * `imports` builders). So the generated React/Vue sources carry no neutral
- * `@mission-platform/forge` render/props **type** import at all.
+ * ({@link LOCAL_JSX_TYPES_MODULE}) that defines a **framework-specific variant**
+ * of it — React's over `ReactNode`, Vue's over `VNodeChild` — and every emitter
+ * redirects the type import there (see the React and Vue `imports` builders).
+ * So the generated sources carry no neutral `@mission-platform/forge`
+ * render-prop **type** import at all.
  */
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string> = new Set(['MpProperties', 'MpRenderProperty']);
+export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string> = new Set(['MpRenderProperty']);
 
 /**
  * The neutral render/props type names the **Vue** build redirects to its
  * co-located {@link LOCAL_JSX_TYPES_MODULE}. It is a superset of
- * {@link LOCAL_JSX_TYPE_NAMES}: besides `MpProperties`/`MpRenderProperty`, the
- * Vue variant also re-declares the neutral **element** primitives `MpChild` and
- * `MpElement` as Vue's `VNodeChild` / `VNode`. Under `jsxImportSource: 'vue'` a
+ * {@link LOCAL_JSX_TYPE_NAMES}: besides `MpRenderProperty`, the Vue variant also
+ * re-declares the neutral **element** primitives `MpChild` and `MpElement` as
+ * Vue's `VNodeChild` / `VNode`. Under `jsxImportSource: 'vue'` a
  * JSX expression in a generated SFC has type `JSX.Element` (i.e. Vue's `VNode`);
  * keeping the neutral `@mission-platform/forge` definitions (branded with
  * `__mpElement`) would make every `const x: MpElement = <div/>` /
@@ -172,12 +176,7 @@ export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string> = new Set(['MpProperties'
  * {@link REACT_TYPE_ALIASES}); Vue keeps the `Mp*` names but resolves them to
  * the Vue-native types via the local module, so no reference rewriting is needed.
  */
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string> = new Set([
-  'MpProperties',
-  'MpRenderProperty',
-  'MpChild',
-  'MpElement',
-]);
+export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string> = new Set(['MpRenderProperty', 'MpChild', 'MpElement']);
 
 /** The relative specifier the generated per-framework {@link LOCAL_JSX_TYPES_MODULE} is imported under. */
 export const LOCAL_JSX_TYPES_MODULE = './mp-jsx-types';
@@ -187,12 +186,16 @@ export const LOCAL_JSX_TYPES_FILE = 'mp-jsx-types.ts';
 
 /**
  * The source of the co-located {@link LOCAL_JSX_TYPES_MODULE} for a target
- * framework: framework-specific variants of the neutral render/props primitives
- * named in {@link LOCAL_JSX_TYPE_NAMES}, so the generated components import
- * `MpProperties` / `MpRenderProperty` from this local module instead of the
- * neutral `@mission-platform/forge` package. The definitions differ per framework:
- * the "renderable content" position is React's `ReactNode` and Vue's
- * `VNodeChild`, so each build's declarations read idiomatically for its runtime.
+ * framework: framework-specific variants of the neutral render primitives named
+ * in {@link LOCAL_JSX_TYPE_NAMES}, so the generated components import
+ * `MpRenderProperty` from this local module instead of the neutral
+ * `@mission-platform/forge` package. The definitions differ per framework: the
+ * "renderable content" position is React's `ReactNode` and Vue's `VNodeChild`,
+ * so each build's declarations read idiomatically for its runtime.
+ *
+ * There is deliberately **no** `MpProperties` variant: a component declares
+ * exactly the properties it accepts, so nothing is generated for a props base
+ * that no longer exists in the neutral dialect.
  */
 export function localJsxTypesModuleSource(framework: JsxFramework): string {
   if (framework === 'solid') {
@@ -204,15 +207,8 @@ export function localJsxTypesModuleSource(framework: JsxFramework): string {
       ' */',
       "import type { JSX } from 'solid-js';",
       '',
-      '/** The bag of attributes/props a component accepts — the solid variant of the neutral `MpProperties`. */',
-      'export type MpProperties = {',
-      '  [key: string]: unknown;',
-      '  children?: JSX.Element;',
-      '  slot?: string;',
-      '};',
-      '',
       '/** A scoped-slot / render-prop function — the solid variant of the neutral `MpRenderProperty`. */',
-      'export type MpRenderProperty<S = MpProperties> = (scope: S) => JSX.Element;',
+      'export type MpRenderProperty<S = Record<string, unknown>> = (scope: S) => JSX.Element;',
       '',
       '/** Anything that may render as a child — the solid variant of the neutral `MpChild`. */',
       'export type MpChild = JSX.Element;',
@@ -223,40 +219,47 @@ export function localJsxTypesModuleSource(framework: JsxFramework): string {
     ].join('\n');
   }
   if (framework === 'svelte') {
+    // Svelte's compiled markup has no public renderable-value type, so the
+    // neutral primitives bind to `unknown` — a bounded fallback that still
+    // rejects the unsound assignments `any` would silently allow.
     return [
       '/**',
       ' * Framework-specific variants of the neutral `@mission-platform/forge` render/props',
       ' * primitives, generated for the svelte build so the compiled components',
       ' * carry no neutral-package type import (see `LOCAL_JSX_TYPE_NAMES`).',
       ' */',
-      'export type MpProperties = {',
-      '  [key: string]: unknown;',
-      '  children?: any;',
-      '  slot?: string;',
-      '};',
       '',
-      'export type MpRenderProperty<S = MpProperties> = (scope: S) => any;',
-      'export type MpChild = any;',
-      'export type MpElement = any;',
+      '/** A node in the rendered tree — the svelte variant of the neutral `MpElement`. */',
+      'export type MpElement = unknown;',
+      '',
+      '/** Anything that may render as a child — the svelte variant of the neutral `MpChild`. */',
+      'export type MpChild = unknown;',
+      '',
+      '/** A scoped-slot / render-prop function — the svelte variant of the neutral `MpRenderProperty`. */',
+      'export type MpRenderProperty<S = Record<string, unknown>> = (scope: S) => MpChild;',
       '',
     ].join('\n');
   }
   if (framework === 'web-components') {
+    // The native Web-Components runtime renders `html\`…\`` tagged templates, so
+    // the neutral element primitives map onto its concrete result types rather
+    // than `any`; primitive child values stay assignable through the union.
     return [
       '/**',
       ' * Framework-specific variants of the neutral `@mission-platform/forge` render/props',
       ' * primitives, generated for the web-components build so the compiled components',
       ' * carry no neutral-package type import (see `LOCAL_JSX_TYPE_NAMES`).',
       ' */',
-      'export type MpProperties = {',
-      '  [key: string]: unknown;',
-      '  children?: any;',
-      '  slot?: string;',
-      '};',
+      "import type { HtmlContentResult, TemplateResult } from '@mission-platform/forge/web-components';",
       '',
-      'export type MpRenderProperty<S = MpProperties> = (scope: S) => any;',
-      'export type MpChild = any;',
-      'export type MpElement = any;',
+      '/** A node in the rendered tree — the web-components variant of the neutral `MpElement`. */',
+      'export type MpElement = TemplateResult | HtmlContentResult;',
+      '',
+      '/** Anything that may render as a child — the web-components variant of the neutral `MpChild`. */',
+      'export type MpChild = MpElement | string | number | boolean | null | undefined;',
+      '',
+      '/** A scoped-slot / render-prop function — the web-components variant of the neutral `MpRenderProperty`. */',
+      'export type MpRenderProperty<S = Record<string, unknown>> = (scope: S) => MpChild;',
       '',
     ].join('\n');
   }
@@ -271,17 +274,8 @@ export function localJsxTypesModuleSource(framework: JsxFramework): string {
     ' */',
     imported,
     '',
-    '/** The bag of attributes/props a component accepts — the ' +
-      framework +
-      ' variant of the neutral `MpProperties`. */',
-    'export type MpProperties = {',
-    '  [key: string]: unknown;',
-    `  children?: ${renderable};`,
-    '  slot?: string;',
-    '};',
-    '',
     '/** A scoped-slot / render-prop function — the ' + framework + ' variant of the neutral `MpRenderProperty`. */',
-    `export type MpRenderProperty<S = MpProperties> = (scope: S) => ${renderable};`,
+    `export type MpRenderProperty<S = Record<string, unknown>> = (scope: S) => ${renderable};`,
     '',
   ];
   // Under `jsxImportSource: 'vue'` a JSX expression in a generated SFC is typed
@@ -465,7 +459,7 @@ export function readFrameworkDirective(sourceFile: ts.SourceFile): 'react' | 'vu
  * (no `"use <framework>"` directive) is emitted for every target; a gated module
  * is emitted **only** for the framework its directive names.
  */
-export function moduleTargetsFramework(sourceFile: ts.SourceFile, framework: JsxFramework): boolean {
+export function moduleTargetsFramework(sourceFile: ts.SourceFile, framework: string): boolean {
   const directive = readFrameworkDirective(sourceFile);
   return directive === undefined || directive === framework;
 }
@@ -490,11 +484,185 @@ export function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFil
   return ts.factory.updateSourceFile(sourceFile, statements);
 }
 
+/** A source location used by graph diagnostics and import/export facts. */
+export interface ForgeSourceSpan {
+  start: number;
+  end: number;
+  line: number;
+  column: number;
+}
+
+/** A static import discovered in a Forge source module. */
+export interface ForgeImportFact {
+  specifier: string;
+  valueNames: string[];
+  typeNames: string[];
+  sideEffectOnly: boolean;
+  span: ForgeSourceSpan;
+}
+
+/** A declaration or re-export discovered in a Forge source module. */
+export interface ForgeExportFact {
+  exportedName: string | undefined;
+  localName: string | undefined;
+  specifier: string | undefined;
+  typeOnly: boolean;
+  star: boolean;
+  span: ForgeSourceSpan;
+}
+
+/** All static module facts needed to build the canonical Forge file graph. */
+export interface ForgeModuleFacts {
+  imports: ForgeImportFact[];
+  exports: ForgeExportFact[];
+  frameworkDirective: 'react' | 'vue' | undefined;
+  hasJsx: boolean;
+}
+
+function forgeSourceSpan(sourceFile: ts.SourceFile, node: ts.Node): ForgeSourceSpan {
+  const start = node.getStart(sourceFile);
+  const end = node.getEnd();
+  const position = sourceFile.getLineAndCharacterOfPosition(start);
+  return { start, end, line: position.line + 1, column: position.character + 1 };
+}
+
+function exportedModifier(node: ts.Node): boolean {
+  return (
+    ts.canHaveModifiers(node) &&
+    ts.getModifiers(node)?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword) === true
+  );
+}
+
+function declarationExportFacts(sourceFile: ts.SourceFile, statement: ts.Statement): ForgeExportFact[] {
+  if (!exportedModifier(statement)) {
+    return [];
+  }
+  const span = forgeSourceSpan(sourceFile, statement);
+  const typeOnly =
+    ts.isInterfaceDeclaration(statement) ||
+    ts.isTypeAliasDeclaration(statement) ||
+    (ts.isImportEqualsDeclaration(statement) && statement.isTypeOnly === true);
+  if (
+    ts.isFunctionDeclaration(statement) ||
+    ts.isClassDeclaration(statement) ||
+    ts.isEnumDeclaration(statement) ||
+    ts.isModuleDeclaration(statement) ||
+    ts.isInterfaceDeclaration(statement) ||
+    ts.isTypeAliasDeclaration(statement)
+  ) {
+    const name = statement.name?.text ?? 'default';
+    return [{ exportedName: name, localName: statement.name?.text, specifier: undefined, typeOnly, star: false, span }];
+  }
+  if (ts.isVariableStatement(statement)) {
+    const facts: ForgeExportFact[] = [];
+    for (const declaration of statement.declarationList.declarations) {
+      if (ts.isIdentifier(declaration.name)) {
+        facts.push({
+          exportedName: declaration.name.text,
+          localName: declaration.name.text,
+          specifier: undefined,
+          typeOnly: false,
+          star: false,
+          span: forgeSourceSpan(sourceFile, declaration),
+        });
+      }
+    }
+    return facts;
+  }
+  return [];
+}
+
+function namedExportFacts(sourceFile: ts.SourceFile, statement: ts.ExportDeclaration): ForgeExportFact[] {
+  const span = forgeSourceSpan(sourceFile, statement);
+  const specifier =
+    statement.moduleSpecifier && ts.isStringLiteral(statement.moduleSpecifier)
+      ? statement.moduleSpecifier.text
+      : undefined;
+  if (statement.exportClause === undefined) {
+    return [{ exportedName: undefined, localName: undefined, specifier, typeOnly: false, star: true, span }];
+  }
+  if (ts.isNamespaceExport(statement.exportClause)) {
+    return [
+      {
+        exportedName: statement.exportClause.name.text,
+        localName: undefined,
+        specifier,
+        typeOnly: statement.isTypeOnly,
+        star: true,
+        span,
+      },
+    ];
+  }
+  return statement.exportClause.elements.map((element) => ({
+    exportedName: element.name.text,
+    localName: element.propertyName?.text ?? element.name.text,
+    specifier,
+    typeOnly: statement.isTypeOnly || element.isTypeOnly,
+    star: false,
+    span: forgeSourceSpan(sourceFile, element),
+  }));
+}
+
+function hasJsxSyntax(sourceFile: ts.SourceFile): boolean {
+  let found = false;
+  const visit = (node: ts.Node): void => {
+    if (found) {
+      return;
+    }
+    if (ts.isJsxElement(node) || ts.isJsxSelfClosingElement(node) || ts.isJsxFragment(node)) {
+      found = true;
+      return;
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+  return found;
+}
+
+/** Extract static imports, exports, type-only edges, and framework facts from a parsed module. */
+export function inspectForgeModule(sourceFile: ts.SourceFile): ForgeModuleFacts {
+  const imports: ForgeImportFact[] = [];
+  const exports: ForgeExportFact[] = [];
+  for (const statement of sourceFile.statements) {
+    if (ts.isImportDeclaration(statement) && ts.isStringLiteral(statement.moduleSpecifier)) {
+      const valueNames: string[] = [];
+      const typeNames: string[] = [];
+      const clause = statement.importClause;
+      if (clause?.name !== undefined) {
+        (clause.isTypeOnly ? typeNames : valueNames).push(clause.name.text);
+      }
+      if (clause?.namedBindings !== undefined) {
+        if (ts.isNamespaceImport(clause.namedBindings)) {
+          (clause.isTypeOnly ? typeNames : valueNames).push(clause.namedBindings.name.text);
+        } else {
+          for (const element of clause.namedBindings.elements) {
+            (clause.isTypeOnly || element.isTypeOnly ? typeNames : valueNames).push(element.name.text);
+          }
+        }
+      }
+      imports.push({
+        specifier: statement.moduleSpecifier.text,
+        valueNames,
+        typeNames,
+        sideEffectOnly: clause === undefined,
+        span: forgeSourceSpan(sourceFile, statement),
+      });
+      continue;
+    }
+    if (ts.isExportDeclaration(statement)) {
+      exports.push(...namedExportFacts(sourceFile, statement));
+      continue;
+    }
+    exports.push(...declarationExportFacts(sourceFile, statement));
+  }
+  return { imports, exports, frameworkDirective: readFrameworkDirective(sourceFile), hasJsx: hasJsxSyntax(sourceFile) };
+}
+
 /** The names a module imports from the neutral package, split by binding kind. */
 export interface NeutralImports {
   /** Value imports (e.g. `h`, `useState`). */
   values: string[];
-  /** Type-only imports (e.g. `MpProperties`). */
+  /** Type-only imports (e.g. `MpRenderProperty`). */
   types: string[];
 }
 
@@ -1523,17 +1691,81 @@ export interface ComponentImport {
   base: string;
   /** The original (relative) module specifier, e.g. `../forge-badge`. */
   specifier: string;
+  /** The source-relative specifier used to locate workspace-local aliases. */
+  resolvedSpecifier: string;
+}
+
+/**
+ * Resolve a workspace-local `@/` import to a path relative to its owning source
+ * file. Bare package imports are intentionally not handled here: only files
+ * inside the supplied workspace source root own the `@/` alias.
+ */
+export function resolveWorkspaceLocalImport(
+  specifier: string,
+  sourceFileName: string,
+  sourceRoot: string | undefined,
+): string | undefined {
+  if (sourceRoot === undefined || !specifier.startsWith('@/')) {
+    return undefined;
+  }
+
+  const absoluteSource = path.resolve(sourceFileName);
+  const absoluteRoot = path.resolve(sourceRoot);
+  const sourceRelativeToRoot = path.relative(absoluteRoot, absoluteSource);
+  if (sourceRelativeToRoot.startsWith('..') || path.isAbsolute(sourceRelativeToRoot)) {
+    return undefined;
+  }
+
+  const target = path.resolve(absoluteRoot, specifier.slice(2));
+  const relative = path.relative(path.dirname(absoluteSource), target).split(path.sep).join('/');
+  return relative.startsWith('.') ? relative : `./${relative}`;
+}
+
+/** Rewrite workspace-local `@/` imports before framework-specific emission. */
+export function rewriteWorkspaceLocalImports(sourceFile: ts.SourceFile, sourceRoot?: string): ts.SourceFile {
+  if (sourceRoot === undefined) {
+    return sourceFile;
+  }
+
+  const transformer: ts.TransformerFactory<ts.SourceFile> = (context) => {
+    const { factory } = context;
+    const visit = (node: ts.Node): ts.Node => {
+      if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
+        const resolved = resolveWorkspaceLocalImport(node.moduleSpecifier.text, sourceFile.fileName, sourceRoot);
+        if (resolved !== undefined) {
+          return factory.updateImportDeclaration(
+            node,
+            node.modifiers,
+            node.importClause,
+            factory.createStringLiteral(resolved),
+            node.attributes,
+          );
+        }
+      }
+      return ts.visitEachChild(node, visit, context);
+    };
+    return (file) => ts.visitNode(file, visit) as ts.SourceFile;
+  };
+
+  const result = ts.transform(sourceFile, [transformer]);
+  const transformed = result.transformed[0];
+  const rewrittenSource = ts.createPrinter().printFile(transformed);
+  result.dispose();
+  return ts.createSourceFile(sourceFile.fileName, rewrittenSource, sourceFile.languageVersion, true, ts.ScriptKind.TSX);
 }
 
 /** Collect relative (sibling-component) value + type imports from a module. */
-export function readComponentImports(sourceFile: ts.SourceFile): ComponentImport[] {
+export function readComponentImports(sourceFile: ts.SourceFile, sourceRoot?: string): ComponentImport[] {
   const imports: ComponentImport[] = [];
   for (const statement of sourceFile.statements) {
     if (!ts.isImportDeclaration(statement) || !ts.isStringLiteral(statement.moduleSpecifier)) {
       continue;
     }
-    const specifier = statement.moduleSpecifier.text;
-    if (!specifier.startsWith('.')) {
+    const authoredSpecifier = statement.moduleSpecifier.text;
+    const resolvedSpecifier = authoredSpecifier.startsWith('.')
+      ? authoredSpecifier
+      : resolveWorkspaceLocalImport(authoredSpecifier, sourceFile.fileName, sourceRoot);
+    if (resolvedSpecifier === undefined) {
       continue;
     }
     const bindings = statement.importClause?.namedBindings;
@@ -1553,10 +1785,16 @@ export function readComponentImports(sourceFile: ts.SourceFile): ComponentImport
         names.push(element.name.text);
       }
     }
-    const segments = specifier
+    const segments = resolvedSpecifier
       .split('/')
       .filter((segment) => segment !== '.' && segment !== '..' && segment.length > 0);
-    imports.push({ names, typeNames, base: segments.at(-1) ?? specifier, specifier });
+    imports.push({
+      names,
+      typeNames,
+      base: segments.at(-1) ?? resolvedSpecifier,
+      specifier: authoredSpecifier,
+      resolvedSpecifier,
+    });
   }
   return imports;
 }
@@ -1582,18 +1820,25 @@ const STYLE_EXTENSIONS = /\.(css|scss|sass|less|styl)$/;
  * generated per-framework source and re-points each import at the flat copy, so
  * a component can own (and ship) its own `.module.scss`.
  */
-export function readStyleImports(sourceFile: ts.SourceFile): StyleImport[] {
+export function readStyleImports(sourceFile: ts.SourceFile, sourceRoot?: string): StyleImport[] {
   const imports: StyleImport[] = [];
   for (const statement of sourceFile.statements) {
     if (
       !ts.isImportDeclaration(statement) ||
       !ts.isStringLiteral(statement.moduleSpecifier) ||
-      !statement.moduleSpecifier.text.startsWith('.') ||
+      (!statement.moduleSpecifier.text.startsWith('.') &&
+        resolveWorkspaceLocalImport(statement.moduleSpecifier.text, sourceFile.fileName, sourceRoot) === undefined) ||
       !STYLE_EXTENSIONS.test(statement.moduleSpecifier.text)
     ) {
       continue;
     }
-    const specifier = statement.moduleSpecifier.text;
+    const authoredSpecifier = statement.moduleSpecifier.text;
+    const specifier = authoredSpecifier.startsWith('.')
+      ? authoredSpecifier
+      : resolveWorkspaceLocalImport(authoredSpecifier, sourceFile.fileName, sourceRoot);
+    if (specifier === undefined) {
+      continue;
+    }
     const base =
       specifier.split('/').findLast((segment) => segment !== '.' && segment !== '..' && segment.length > 0) ??
       specifier;
@@ -1878,7 +2123,7 @@ export interface EventSignature {
  * lower-case the first remaining letter (`onChange` → `change`,
  * `onUpdateModelValue` → `updateModelValue`).
  */
-export function eventNameForProp(propName: string): string {
+export function eventNameForProperty(propName: string): string {
   const rest = propName.slice(2);
   return rest.charAt(0).toLowerCase() + rest.slice(1);
 }
@@ -1907,7 +2152,7 @@ export function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName:
       ) {
         events.push({
           propName: member.name.text,
-          eventName: eventNameForProp(member.name.text),
+          eventName: eventNameForProperty(member.name.text),
           paramsText: member.type.parameters.map((parameter) => parameter.getText(sourceFile)).join(', '),
           paramNames: member.type.parameters.map((parameter, index) =>
             ts.isIdentifier(parameter.name) ? parameter.name.text : `argument${index}`,
@@ -1993,7 +2238,7 @@ export function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName:
 }
 
 /** A binding pulled out of a `const { … } = properties` destructuring. */
-export interface DestructuredProp {
+export interface DestructuredProperty {
   /** The local name bound, e.g. `threshold`. */
   name: string;
   /** The default expression text, if any, e.g. `0.15`. */
@@ -2582,6 +2827,9 @@ export function createReferenceRewriter(scope: RewriteScope): ts.TransformerFact
           // A renamed binding (`const { format: formatProperty } = properties`)
           // resolves to the real prop name; a plain binding uses its own name.
           const propName = scope.propAliases.get(node.text) ?? node.text;
+          if (propName === 'children') {
+            return slotsDefaultCall();
+          }
           return factory.createPropertyAccessExpression(factory.createIdentifier(scope.propsParamName), propName);
         }
         return node;

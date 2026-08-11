@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { expectSsrParity } from '../../../test-utils/ssr-parity';
+import { expectSsrParity } from '@/test-utils/ssr-parity';
 
 import { ForgeBadge } from './forge-badge';
 

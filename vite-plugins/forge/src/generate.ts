@@ -28,26 +28,19 @@ import {
   localJsxTypesModuleSource,
   moduleTargetsFramework,
   parseTsx,
-  readComponentImports,
   readNeutralImports,
   readStyleImports,
 } from './compiler/ast.js';
-import { compileComponentModule, compileHookModule, type JsxFramework } from './compiler/compile.js';
+import { compileModule } from './compiler/compile.js';
 import {
-  discoverComponents,
-  discoverHelperExports,
+  discoverComponentsFromGraph,
+  discoverHelperExportsFromGraph,
   type DiscoveredComponent,
   type DiscoveredHelperExport,
 } from './compiler/discover.js';
-import {
-  analyzeStoryblokComponent,
-  emitBlokDataType,
-  emitStoryblokBlokWrapper,
-  type AnalyzedStoryblokComponent,
-  type StoryblokComponent,
-  // eslint-disable-next-line import-x/no-useless-path-segments -- explicit `/index.js` keeps the directory barrel resolvable by Node ESM at runtime
-} from './generators/storyblok/index.js';
+import { buildForgeFileGraph } from './compiler/graph.js';
 
+import type { FrameworkOutputPlugin, JsxFramework } from '@mission-platform/forge-plugin-api';
 import type { Plugin } from 'vite';
 
 /**
@@ -66,19 +59,87 @@ const RM_RETRY_OPTIONS = { maxRetries: 5, retryDelay: 100 } as const;
 
 /** Options for {@link generateFrameworkSources}. */
 export interface GenerateFrameworkSourcesOptions {
-  /** Target framework the neutral components are compiled to. */
-  framework: JsxFramework;
+  /** Explicit output plugin that owns the target source transformation. */
+  plugin: FrameworkOutputPlugin;
   /** Absolute path of the neutral components barrel (e.g. `src/components/index.ts`). */
   componentsModule: string;
   /** Absolute path of the directory the generated sources + entry are written to. */
   outDir: string;
   /** Prefix stripped from each neutral export name to form its public name. Defaults to `Forge`. */
   stripPrefix?: string;
+  /** Owning neutral source root used for graph alias resolution. Defaults to the parent of `componentsModule`. */
+  sourceRoot?: string;
 }
 
-/** Re-export one helper module's value + type bindings from the mirrored tree. */
-function helperReExportLine(helper: DiscoveredHelperExport): string {
-  const names = [...helper.values, ...helper.types.map((type) => `type ${type}`)];
+/** Target-specific source-tree conventions used by the generic package driver. */
+export interface FrameworkSourceTarget {
+  /** Framework/plugin identifier used for framework directives and diagnostics. */
+  readonly id: string;
+  /** Output plugin that owns module lowering and generation. */
+  readonly plugin: FrameworkOutputPlugin;
+  /** Extension, including the leading dot, for generated component modules. */
+  readonly componentExtension: string;
+  /** Extension used when importing a generated component module. */
+  readonly componentImportExtension: string;
+  /** Extension, including the leading dot, for generated composable modules. */
+  readonly composableExtension: string;
+  /** Extension, including the leading dot, for the generated public entry. */
+  readonly entryExtension: string;
+  /** Emit a component re-export for the target's module shape. */
+  readonly componentReExport: (component: DiscoveredComponent, as: string, specifier: string) => string;
+  /** Resolve a companion type's generated module specifier. */
+  readonly typeModuleSpecifier: (origin: TypeOrigin) => string;
+}
+
+/** Create a source-tree descriptor from an explicit output plugin. */
+export function createFrameworkSourceTarget(plugin: FrameworkOutputPlugin): FrameworkSourceTarget {
+  const { source } = plugin;
+  return {
+    id: plugin.id,
+    plugin,
+    componentExtension: source.componentExtension,
+    componentImportExtension: source.componentImportExtension,
+    composableExtension: source.composableExtension,
+    entryExtension: source.entryExtension,
+    componentReExport: (component, as, specifier) => {
+      if (source.componentExport === 'default') {
+        return `export { default as ${as} } from '${specifier}';`;
+      }
+      if (source.componentExport === 'element') {
+        return `export { ${component.neutralName}Element as ${as} } from '${specifier}';`;
+      }
+      return `export { ${component.neutralName} as ${as} } from '${specifier}';`;
+    },
+    typeModuleSpecifier: (origin) =>
+      `${origin.isComponent ? `./${origin.base}${source.componentImportExtension}` : `./${origin.base}`}`,
+  };
+}
+
+/**
+ * Re-export one helper module's value + type bindings from the mirrored tree.
+ *
+ * `claimed` carries every name the entry already exports — a helper type is
+ * routinely re-exported alongside a component too (`DateRange` ships with both
+ * `date-time` and `forge-date-range-input`), and naming it twice in the entry is
+ * a duplicate identifier. Returns `undefined` when nothing is left to forward.
+ */
+function helperReExportLine(helper: DiscoveredHelperExport, claimed: Set<string>): string | undefined {
+  const names: string[] = [];
+  for (const value of helper.values) {
+    if (!claimed.has(value)) {
+      claimed.add(value);
+      names.push(value);
+    }
+  }
+  for (const type of helper.types) {
+    if (!claimed.has(type)) {
+      claimed.add(type);
+      names.push(`type ${type}`);
+    }
+  }
+  if (names.length === 0) {
+    return undefined;
+  }
   const relativePath = helper.relativePath
     .replace(/^\.\//, '')
     .replace(/^\.\.\//, '')
@@ -92,17 +153,27 @@ function helperReExportLine(helper: DiscoveredHelperExport): string {
  * React re-exports the neutral function binding (`ForgeBadge`) under the target
  * name; Vue re-exports the SFC's `default` export.
  */
-function componentReExportLine(framework: JsxFramework, component: DiscoveredComponent, as: string): string {
-  if (framework === 'vue') {
-    return `export { default as ${as} } from './${component.folder}.vue';`;
-  }
-  if (framework === 'svelte') {
-    return `export { default as ${as} } from './${component.folder}.svelte';`;
-  }
-  if (framework === 'web-components') {
-    return `export { ${component.neutralName}Element as ${as} } from './${component.folder}';`;
-  }
-  return `export { ${component.neutralName} as ${as} } from './${component.folder}';`;
+function componentReExportLine(target: FrameworkSourceTarget, component: DiscoveredComponent, as: string): string {
+  const fileName = `${component.folder}${target.componentImportExtension}`;
+  return target.componentReExport(component, as, `./${fileName}`);
+}
+
+/** Adapt the legacy string form accepted by {@link generateEntry}. */
+function legacyEntryTarget(framework: JsxFramework): FrameworkSourceTarget {
+  const isVue = framework === 'vue';
+  return {
+    id: framework,
+    plugin: undefined as never,
+    componentExtension: isVue ? '.vue' : '.tsx',
+    componentImportExtension: isVue ? '.vue' : '',
+    composableExtension: '.ts',
+    entryExtension: isVue ? '.ts' : '.tsx',
+    componentReExport: (component, as, specifier) =>
+      isVue
+        ? `export { default as ${as} } from '${specifier}';`
+        : `export { ${component.neutralName} as ${as} } from '${specifier}';`,
+    typeModuleSpecifier: (origin) => `${origin.isComponent && isVue ? `./${origin.base}.vue` : `./${origin.base}`}`,
+  };
 }
 
 /**
@@ -140,9 +211,12 @@ const defaultTypeOriginResolver: TypeOriginResolver = (folder) => ({ base: folde
  * `<script setup>` declarations (Vue `.vue`); a helper module (`isComponent:
  * false`) is a plain `.ts` re-exported without the `.vue` suffix.
  */
-function componentTypesReExportLine(framework: JsxFramework, origin: TypeOrigin, types: readonly string[]): string {
-  const ext = framework === 'vue' ? '.vue' : framework === 'svelte' ? '.svelte' : '';
-  const specifier = origin.isComponent ? `./${origin.base}${ext}` : `./${origin.base}`;
+function componentTypesReExportLine(
+  target: FrameworkSourceTarget,
+  origin: TypeOrigin,
+  types: readonly string[],
+): string {
+  const specifier = target.typeModuleSpecifier(origin);
   const names = types.map((type) => `type ${type}`).join(', ');
   return `export { ${names} } from '${specifier}';`;
 }
@@ -158,16 +232,17 @@ function componentTypesReExportLine(framework: JsxFramework, origin: TypeOrigin,
  * barrel exposes, not just the component bindings.
  */
 export function generateEntry(
-  framework: JsxFramework,
+  frameworkOrTarget: JsxFramework | FrameworkSourceTarget,
   components: readonly DiscoveredComponent[],
   helpers: readonly DiscoveredHelperExport[] = [],
   resolveTypeOrigin: TypeOriginResolver = defaultTypeOriginResolver,
 ): string {
+  const target = typeof frameworkOrTarget === 'string' ? legacyEntryTarget(frameworkOrTarget) : frameworkOrTarget;
   const componentLines = components.flatMap((component) => {
-    const lines = [componentReExportLine(framework, component, component.publicName)];
+    const lines = [componentReExportLine(target, component, component.publicName)];
     // Also ship the neutral `Base*` name as an alias of the same component.
     if (component.neutralName !== component.publicName) {
-      lines.push(componentReExportLine(framework, component, component.neutralName));
+      lines.push(componentReExportLine(target, component, component.neutralName));
     }
     return lines;
   });
@@ -176,27 +251,40 @@ export function generateEntry(
   // no re-export dangles and types shared by that module collapse to one line.
   // Insertion order is preserved; a type that resolves nowhere is skipped rather
   // than emitted as a broken re-export.
+  //
+  // A type shared by several components (`SpacingScale`, `DateRange`) resolves
+  // once per component that re-exports it, so the first module to claim a name
+  // wins: re-exporting the same name twice from one module is a duplicate
+  // identifier, and every claimant re-exports the same declaration anyway.
   const typesByModule = new Map<string, { origin: TypeOrigin; types: string[] }>();
+  const claimedTypes = new Set<string>();
   for (const component of components) {
     for (const type of component.typeExports) {
+      if (claimedTypes.has(type)) {
+        continue;
+      }
       const origin = resolveTypeOrigin(component.folder, type);
       if (origin === undefined) {
         continue;
       }
+      claimedTypes.add(type);
       const group = typesByModule.get(origin.base) ?? { origin, types: [] };
-      if (!group.types.includes(type)) {
-        group.types.push(type);
-      }
+      group.types.push(type);
       typesByModule.set(origin.base, group);
     }
   }
   const typeLines = [...typesByModule.values()].map((group) =>
-    componentTypesReExportLine(framework, group.origin, group.types),
+    componentTypesReExportLine(target, group.origin, group.types),
   );
   // Forward shared helper-module APIs (e.g. the toast store) so consumers drive
-  // the same per-framework singleton the components use.
-  const helperLines = helpers.map((helper) => helperReExportLine(helper));
-  return `${[...componentLines, ...typeLines, ...helperLines].join('\n')}\n`;
+  // the same per-framework singleton the components use. Helper bindings are
+  // filtered against the names the component/type lines already claimed, and
+  // against each other, so the same helper reached from two barrels forwards a
+  // binding exactly once.
+  const claimed = new Set(claimedTypes);
+  const helperLines = helpers.flatMap((helper) => helperReExportLine(helper, claimed) ?? []);
+  const lines = [...new Set([...componentLines, ...typeLines, ...helperLines])];
+  return `${lines.join('\n')}\n`;
 }
 
 /**
@@ -234,46 +322,48 @@ function readExportedTypeNames(parsed: ts.SourceFile): Set<string> {
 }
 
 /**
- * The name of the first exported PascalCase function declaration in a module —
- * a neutral component's function. Used to discover co-located **sibling
- * components** authored beside a primary in the same folder.
- */
-function findExportedComponentName(sourceFile: ts.SourceFile): string | undefined {
-  for (const statement of sourceFile.statements) {
-    if (
-      ts.isFunctionDeclaration(statement) &&
-      statement.name !== undefined &&
-      /^[A-Z]/.test(statement.name.text) &&
-      statement.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword) === true
-    ) {
-      return statement.name.text;
-    }
-  }
-  return undefined;
-}
-
-/**
  * Compile a neutral components package to its per-framework source tree (Stage 1),
  * returning the generated entry module path.
  */
 export function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): string {
+  const target = createFrameworkSourceTarget(options.plugin);
   const stripPrefix = options.stripPrefix ?? 'Forge';
   const componentsDir = path.dirname(options.componentsModule);
-  const sourceRoot = path.dirname(componentsDir);
+  const sourceRoot = options.sourceRoot ?? path.dirname(componentsDir);
+  const graph = buildForgeFileGraph({ entry: options.componentsModule, sourceRoot });
+  const graphErrors = graph.diagnostics.filter((diagnostic) => diagnostic.code !== 'cycle');
+  if (graphErrors.length > 0) {
+    throw new Error(
+      [
+        `Forge graph entry: ${graph.entry}`,
+        `Forge graph source root: ${sourceRoot}`,
+        ...graphErrors.map((diagnostic) => `${diagnostic.code}: ${diagnostic.message}`),
+      ].join('\n'),
+    );
+  }
   // Framework-gated components (opening with a `"use react";` / `"use vue";`
   // directive) are emitted only for the framework they target; drop the rest so
   // they neither compile nor get re-exported from this framework's entry.
-  const components = discoverComponents(readFileSync(options.componentsModule, 'utf8'), stripPrefix).filter(
-    (component) => {
-      const sourcePath = path.join(componentsDir, component.sourceDir, `${component.folder}.tsx`);
-      return moduleTargetsFramework(parseTsx(sourcePath, readFileSync(sourcePath, 'utf8')), options.framework);
-    },
-  );
+  const components = discoverComponentsFromGraph(graph, stripPrefix).filter((component) => {
+    if (component.sourcePath === undefined || !existsSync(component.sourcePath)) {
+      return false;
+    }
+    return moduleTargetsFramework(
+      parseTsx(component.sourcePath, readFileSync(component.sourcePath, 'utf8')),
+      target.id,
+    );
+  });
   // The folder bases of every discovered component — used to tell sibling
   // **component** imports (rendered as Vue `./<base>.vue` children) apart from
   // plain **helper module** imports (kept as named `./<base>` imports and copied
   // verbatim into the flat tree below).
   const componentFolders = new Set(components.map((component) => component.folder));
+  const componentSourcePath = (component: DiscoveredComponent): string => {
+    if (component.sourcePath === undefined) {
+      throw new Error(`Missing graph source node for component ${component.neutralName}`);
+    }
+    return component.sourcePath;
+  };
 
   rmSync(options.outDir, { recursive: true, force: true, ...RM_RETRY_OPTIONS });
   mkdirSync(options.outDir, { recursive: true });
@@ -294,50 +384,70 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   const helperExportedTypes = new Map<string, Set<string>>();
 
   // Structure-preserving cache: every generated module is written under its
-  // source-relative directory (`<outDir>/<sourceDir>/…`) instead of a flat tree.
+  // source-relative directory (`<outDir>/<src-relative-dir>/…`) instead of a flat tree.
   // A registry maps each module's base name to its mirrored directory (POSIX,
   // `''` = tree root) so the generators' flat `./<base>` import specifiers — and
   // the entry barrel's — can be rewritten to the correct nested relative path in
   // a final pass, leaving each generator's own emitter untouched.
   const moduleRegistry = new Map<string, { dir: string; file: string }>();
-  const rewriteTargets: { file: string; dir: string }[] = [];
+  const moduleRegistryCollisions = new Set<string>();
+  const sourceModuleRegistry = new Map<string, { dir: string; file: string }>();
+  const rewriteTargets: { file: string; dir: string; sourceId?: string }[] = [];
   const toPosix = (value: string): string => value.split(path.sep).join('/');
   const normaliseDir = (dir: string): string => (dir === '.' || dir === '' ? '' : toPosix(dir));
-  // The mirrored directory (relative to the tree root) a source file maps to. A
-  // path outside the components dir (a distant shared helper) is clamped to the
-  // root so nothing is ever written outside `outDir`.
+  // The mirrored directory (relative to the `src` tree) a source file maps to.
+  // A path outside the source root is clamped to the root so nothing is ever
+  // written outside `outDir`.
   const mirrorDir = (sourceAbsPath: string): string => {
-    const relative = toPosix(path.relative(componentsDir, path.dirname(sourceAbsPath)));
+    const relative = toPosix(path.relative(sourceRoot, path.dirname(sourceAbsPath)));
     return relative.startsWith('..') ? '' : normaliseDir(relative);
   };
   const mirrorHelperDir = (sourceAbsPath: string): string => {
-    const relativeToComponents = toPosix(path.relative(componentsDir, path.dirname(sourceAbsPath)));
-    if (!relativeToComponents.startsWith('..')) {
-      return normaliseDir(relativeToComponents);
-    }
-    const relativeToSource = toPosix(path.relative(sourceRoot, path.dirname(sourceAbsPath)));
-    return relativeToSource.startsWith('..') ? '' : normaliseDir(relativeToSource);
+    return mirrorDir(sourceAbsPath);
   };
-  const KNOWN_MODULE_EXT = /(\.d\.ts|\.module\.scss|\.module\.css|\.vue|\.svelte|\.tsx|\.ts|\.jsx|\.js|\.scss|\.css)$/;
+  const KNOWN_MODULE_EXT = /(\.d\.ts|\.vue|\.svelte|\.tsx|\.ts|\.jsx|\.js)$/;
   const moduleBase = (fileName: string): string => fileName.replace(KNOWN_MODULE_EXT, '');
   // Write a generated module under its mirrored directory, register its base →
   // dir, and mark it for the import-rewrite pass.
-  const writeModule = (dir: string, fileName: string, code: string): void => {
+  const registerModule = (fileName: string, target: { dir: string; file: string }): void => {
+    const base = moduleBase(fileName);
+    const previous = moduleRegistry.get(base);
+    if (previous !== undefined && (previous.dir !== target.dir || previous.file !== target.file)) {
+      moduleRegistryCollisions.add(base);
+    } else if (!moduleRegistryCollisions.has(base)) {
+      moduleRegistry.set(base, target);
+    }
+  };
+  const writeModule = (dir: string, fileName: string, code: string, sourceId?: string): void => {
     const normalised = normaliseDir(dir);
     const destination = path.join(options.outDir, normalised, fileName);
     mkdirSync(path.dirname(destination), { recursive: true });
     writeFileSync(destination, code, 'utf8');
-    moduleRegistry.set(moduleBase(fileName), { dir: normalised, file: fileName });
-    rewriteTargets.push({ file: destination, dir: normalised });
+    const target = { dir: normalised, file: fileName };
+    registerModule(fileName, target);
+    // Directory imports such as `../../../utils` resolve to an index module;
+    // register the directory base as an alias so target emitters can use their
+    // flat `./utils` form before the final relative-path rewrite.
+    if (moduleBase(fileName) === 'index' && normalised !== '') {
+      registerModule(path.posix.basename(normalised), target);
+    }
+    if (sourceId !== undefined) {
+      sourceModuleRegistry.set(path.resolve(sourceId), target);
+    }
+    rewriteTargets.push({ file: destination, dir: normalised, sourceId });
   };
   // Copy a static asset (e.g. a stylesheet) under its mirrored directory and
   // register its base so importers resolve to the nested location.
-  const copyAsset = (dir: string, fileName: string, sourcePath: string): void => {
+  const copyAsset = (dir: string, fileName: string, sourcePath: string, sourceId?: string): void => {
     const normalised = normaliseDir(dir);
     const destination = path.join(options.outDir, normalised, fileName);
     mkdirSync(path.dirname(destination), { recursive: true });
     copyFileSync(sourcePath, destination);
-    moduleRegistry.set(moduleBase(fileName), { dir: normalised, file: fileName });
+    const target = { dir: normalised, file: fileName };
+    registerModule(fileName, target);
+    if (sourceId !== undefined) {
+      sourceModuleRegistry.set(path.resolve(sourceId), target);
+    }
   };
   // Resolve a flat `./<base>[.ext]` specifier, encountered in a module living in
   // `fromDir`, to the nested relative path of its registered target.
@@ -345,16 +455,36 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
     const rel = path.posix.relative(fromDir, path.posix.join(targetDir, fileName));
     return rel.startsWith('.') ? rel : `./${rel}`;
   };
-  const rewriteFlatImports = (code: string, fromDir: string): string => {
+  const rewriteFlatImports = (code: string, fromDir: string, sourceId?: string): string => {
     const rewrite = (specifier: string): string => {
       const rest = specifier.slice(2);
       const fileName = path.posix.basename(rest);
-      const target = moduleRegistry.get(moduleBase(fileName));
-      if (target === undefined) {
+      const graphTargets =
+        sourceId === undefined
+          ? []
+          : graph.edges
+              .filter((edge) => edge.from === path.resolve(sourceId) && edge.resolved && edge.to !== undefined)
+              .map((edge) => ({ edge, node: graph.nodes.get(edge.to as string) }))
+              .filter(({ node }) => node !== undefined && moduleBase(path.basename(node.id)) === moduleBase(fileName));
+      const graphTarget =
+        graphTargets.length === 1
+          ? sourceModuleRegistry.get(path.resolve(graphTargets[0].edge.to as string))
+          : undefined;
+      const componentTarget = components.find((component) => component.folder === moduleBase(fileName));
+      const registeredTarget =
+        graphTarget ??
+        (componentTarget?.sourcePath === undefined
+          ? undefined
+          : sourceModuleRegistry.get(path.resolve(componentTarget.sourcePath))) ??
+        (moduleRegistryCollisions.has(moduleBase(fileName)) ? undefined : moduleRegistry.get(moduleBase(fileName)));
+      if (registeredTarget === undefined) {
         return specifier;
       }
-      const targetFile = path.extname(fileName) !== '' ? target.file : moduleBase(target.file);
-      return relSpecifier(fromDir, target.dir, targetFile);
+      const targetFile =
+        path.extname(registeredTarget.file) === '.ts' || path.extname(registeredTarget.file) === '.tsx'
+          ? moduleBase(registeredTarget.file)
+          : registeredTarget.file;
+      return relSpecifier(fromDir, registeredTarget.dir, targetFile);
     };
     return code
       .replace(
@@ -377,6 +507,135 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   // the helper's own relative (non-component) imports are carried transitively,
   // so a composable that reads another composable or a shared context resolves.
   const carriedHelpers = new Set<string>();
+  const pendingIndexSources = new Set<string>();
+  const siblingComponents: DiscoveredComponent[] = [];
+  const componentForSource = (sourcePath: string): DiscoveredComponent | undefined =>
+    [...components, ...siblingComponents].find((component) => component.sourcePath === sourcePath);
+  const componentForIndexExport = (
+    sourceNode: ReturnType<typeof graph.nodes.get>,
+    exportedName: string,
+    typeOnly: boolean,
+  ): DiscoveredComponent | undefined => {
+    let node = sourceNode;
+    let name = exportedName;
+    const visited = new Set<string>();
+    while (node !== undefined && !visited.has(node.id)) {
+      visited.add(node.id);
+      const directComponent = componentForSource(node.id);
+      if (directComponent !== undefined && node.id !== sourceNode?.id) {
+        return directComponent;
+      }
+      const exportFact = node.exports.find(
+        (entryExport) =>
+          entryExport.exportedName === name && entryExport.specifier !== undefined && entryExport.typeOnly === typeOnly,
+      );
+      if (exportFact?.specifier === undefined) {
+        return componentForSource(node.id);
+      }
+      const targetId = graph.edges.find(
+        (edge) =>
+          edge.from === node?.id && edge.specifier === exportFact.specifier && edge.resolved && edge.to !== undefined,
+      )?.to;
+      if (targetId === undefined) {
+        return undefined;
+      }
+      node = graph.nodes.get(targetId);
+      name = exportFact.localName ?? name;
+    }
+    return undefined;
+  };
+  const exportMember = (localName: string, exportedName: string): string =>
+    localName === exportedName ? localName : `${localName} as ${exportedName}`;
+  const generatedModuleSpecifier = (fromSourcePath: string, targetSourcePath: string): string | undefined => {
+    const target = sourceModuleRegistry.get(path.resolve(targetSourcePath));
+    if (target === undefined) {
+      const targetNode = graph.nodes.get(path.resolve(targetSourcePath));
+      if (targetNode === undefined || path.basename(targetNode.id, path.extname(targetNode.id)) !== 'index') {
+        return undefined;
+      }
+      return relSpecifier(mirrorDir(fromSourcePath), mirrorDir(targetNode.id), 'index.ts');
+    }
+    const targetFile =
+      path.extname(target.file) === '.ts' || path.extname(target.file) === '.tsx'
+        ? moduleBase(target.file)
+        : target.file;
+    return relSpecifier(mirrorDir(fromSourcePath), target.dir, targetFile);
+  };
+  const generatedIndexSource = (sourcePath: string): string | undefined => {
+    const sourceNode = graph.nodes.get(sourcePath);
+    if (sourceNode === undefined) {
+      return undefined;
+    }
+    const source = readFileSync(sourcePath, 'utf8');
+    const parsed = parseTsx(sourcePath, source);
+    // A shared companion type is routinely re-exported from both its own helper
+    // module and the component that ships it (`DateRange` from `date-time` and
+    // from `forge-date-range-input`). The authored barrel tolerates that because
+    // at least one side arrives through `export *`, whose ambiguous names are
+    // dropped silently; the mirrored barrel names every binding explicitly, so
+    // the repeat would become a duplicate identifier. First mention wins.
+    const claimedExports = new Set<string>();
+    const statements = parsed.statements.map((statement) => {
+      if (
+        !ts.isExportDeclaration(statement) ||
+        statement.moduleSpecifier === undefined ||
+        !ts.isStringLiteral(statement.moduleSpecifier)
+      ) {
+        return statement.getFullText(parsed);
+      }
+      const edge = graph.edges.find(
+        (candidate) =>
+          candidate.from === sourcePath &&
+          candidate.specifier === statement.moduleSpecifier?.text &&
+          candidate.resolved &&
+          candidate.to !== undefined,
+      );
+      if (edge?.to === undefined) {
+        return statement.getFullText(parsed);
+      }
+      const targetSpecifier = generatedModuleSpecifier(sourcePath, edge.to);
+      if (targetSpecifier === undefined) {
+        return statement.getFullText(parsed);
+      }
+      if (statement.exportClause === undefined) {
+        const typePrefix = statement.isTypeOnly ? 'type ' : '';
+        return `export ${typePrefix}* from '${targetSpecifier}';\n`;
+      }
+      if (!ts.isNamedExports(statement.exportClause)) {
+        return statement.getFullText(parsed).replace(statement.moduleSpecifier.text, targetSpecifier);
+      }
+      const lines = statement.exportClause.elements.flatMap((element) => {
+        const exportedName = element.name.text;
+        if (claimedExports.has(exportedName)) {
+          return [];
+        }
+        claimedExports.add(exportedName);
+        const typeOnly = statement.isTypeOnly || element.isTypeOnly;
+        const component = componentForIndexExport(sourceNode, exportedName, typeOnly);
+        if (component?.sourcePath !== undefined) {
+          const componentSpecifier = generatedModuleSpecifier(sourcePath, component.sourcePath);
+          if (componentSpecifier === undefined) {
+            return undefined;
+          }
+          if (typeOnly) {
+            return `export type { ${exportMember(element.propertyName?.text ?? exportedName, exportedName)} } from '${componentSpecifier}';`;
+          }
+          return target.componentReExport(component, exportedName, componentSpecifier);
+        }
+        const typePrefix = typeOnly ? 'type ' : '';
+        const localName = element.propertyName?.text ?? exportedName;
+        return `export { ${typePrefix}${exportMember(localName, exportedName)} } from '${targetSpecifier}';`;
+      });
+      if (lines.includes(undefined)) {
+        return statement.getFullText(parsed);
+      }
+      if (lines.length === 0) {
+        return '';
+      }
+      return `${(lines as string[]).join('\n')}\n`;
+    });
+    return statements.join('');
+  };
   const carryHelperModule = (sourcePath: string): void => {
     const sourceKey = path.resolve(sourcePath);
     if (carriedHelpers.has(sourceKey)) {
@@ -385,30 +644,23 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
     carriedHelpers.add(sourceKey);
 
     if (path.basename(sourcePath, path.extname(sourcePath)) === 'index') {
-      const helperDirectory = path.dirname(sourcePath);
-      const helperBase = path.basename(helperDirectory);
-      const helperDir = mirrorHelperDir(sourcePath);
       const indexSource = readFileSync(sourcePath, 'utf8');
       const indexParsed = parseTsx(sourcePath, indexSource);
-      const indexNeutral = readNeutralImports(indexParsed);
-      if (indexNeutral.values.length > 0 || indexNeutral.types.length > 0) {
-        const compiled = compileHookModule(indexSource, { framework: options.framework, fileName: sourcePath });
-        writeModule(helperDir, `index.${compiled.lang}`, compiled.code);
-      } else {
-        writeModule(helperDir, 'index.ts', indexSource);
-      }
       helperExportedTypes.set('index', readExportedTypeNames(indexParsed));
-      for (const entry of readdirSync(helperDirectory, { withFileTypes: true })) {
-        if (!entry.isFile() || !/\.(?:ts|tsx)$/.test(entry.name) || /(?:\.spec|\.test)\.(?:ts|tsx)$/.test(entry.name)) {
-          continue;
+      for (const edge of graph.edges.filter(
+        (candidate) => candidate.from === sourcePath && candidate.resolved && candidate.to !== undefined,
+      )) {
+        const nestedNode = graph.nodes.get(edge.to as string);
+        if (
+          nestedNode !== undefined &&
+          nestedNode.kind !== 'component' &&
+          nestedNode.kind !== 'style' &&
+          nestedNode.kind !== 'asset'
+        ) {
+          carryHelperModule(nestedNode.id);
         }
-        carryHelperModule(path.join(helperDirectory, entry.name));
       }
-      const helperParent = path.posix.dirname(toPosix(helperDir));
-      const aliasPath = path.join(options.outDir, helperParent, `${helperBase}.ts`);
-      mkdirSync(path.dirname(aliasPath), { recursive: true });
-      writeFileSync(aliasPath, `export * from './${helperBase}/index';\n`, 'utf8');
-      moduleRegistry.set(helperBase, { dir: helperDir, file: helperBase });
+      pendingIndexSources.add(sourcePath);
       return;
     }
     const base = path.basename(sourcePath, path.extname(sourcePath));
@@ -418,13 +670,18 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
     const neutral = readNeutralImports(parsed);
     const usesNeutral = neutral.values.length > 0 || neutral.types.length > 0;
     if (usesNeutral) {
-      const compiled = compileHookModule(source, { framework: options.framework, fileName: sourcePath });
-      writeModule(mirrorHelperDir(sourcePath), `${base}.${compiled.lang}`, compiled.code);
+      const compiled = compileModule(source, {
+        framework: target.plugin,
+        moduleKind: 'composable',
+        fileName: sourcePath,
+        sourceRoot,
+      });
+      writeModule(mirrorHelperDir(sourcePath), `${base}.${compiled.lang}`, compiled.code, sourcePath);
     } else {
       // Verbatim helpers keep their authored relative imports; the mirrored tree
       // makes `../`-climbing specifiers resolve as-is, and any flat `./sibling`
       // is nested by the shared rewrite pass below.
-      writeModule(mirrorHelperDir(sourcePath), path.basename(sourcePath), source);
+      writeModule(mirrorHelperDir(sourcePath), path.basename(sourcePath), source, sourcePath);
     }
 
     // Record the helper's exported types so companion types declared there
@@ -434,22 +691,17 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
     }
 
     // Follow the helper's own relative (non-component) imports transitively.
-    const helperDir = path.dirname(sourcePath);
-    for (const relativeImport of readComponentImports(parsed)) {
-      if (componentFolders.has(relativeImport.base)) {
-        continue;
-      }
-      for (const extension of ['ts', 'tsx'] as const) {
-        const nestedPath = path.join(helperDir, `${relativeImport.specifier}.${extension}`);
-        if (existsSync(nestedPath)) {
-          carryHelperModule(nestedPath);
-          break;
-        }
-        const nestedIndexPath = path.join(helperDir, relativeImport.specifier, `index.${extension}`);
-        if (existsSync(nestedIndexPath)) {
-          carryHelperModule(nestedIndexPath);
-          break;
-        }
+    for (const edge of graph.edges.filter(
+      (candidate) => candidate.from === sourcePath && candidate.resolved && candidate.to !== undefined,
+    )) {
+      const nestedNode = graph.nodes.get(edge.to as string);
+      if (
+        nestedNode !== undefined &&
+        nestedNode.kind !== 'component' &&
+        nestedNode.kind !== 'style' &&
+        nestedNode.kind !== 'asset'
+      ) {
+        carryHelperModule(nestedNode.id);
       }
     }
   };
@@ -462,45 +714,58 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   // component `.tsx`, then compiled as first-class components. Their folder base
   // is added to `componentFolders` so the parent's `<Child/>` tag (and the
   // child's own recursion) resolves to a sibling component, not a helper.
-  const siblingComponents: DiscoveredComponent[] = [];
   const discoveredFolders = new Set(components.map((component) => component.folder));
   const discoveryQueue: DiscoveredComponent[] = [...components];
   while (discoveryQueue.length > 0) {
     const current = discoveryQueue.shift() as DiscoveredComponent;
-    const currentDir = path.join(componentsDir, current.sourceDir);
-    const currentPath = path.join(currentDir, `${current.folder}.tsx`);
-    if (!existsSync(currentPath)) {
+    const currentPath = componentSourcePath(current);
+    const currentNode = graph.nodes.get(currentPath);
+    if (currentNode === undefined) {
       continue;
     }
-    const currentParsed = parseTsx(currentPath, readFileSync(currentPath, 'utf8'));
-    for (const relativeImport of readComponentImports(currentParsed)) {
-      if (discoveredFolders.has(relativeImport.base) || !relativeImport.names.some((name) => /^[A-Z]/.test(name))) {
+    for (const edge of graph.edges.filter((candidate) => candidate.from === currentPath && candidate.resolved)) {
+      if (edge.to === undefined) {
         continue;
       }
-      const childPath = path.resolve(currentDir, `${relativeImport.specifier}.tsx`);
-      if (!existsSync(childPath)) {
-        continue;
-      }
-      const childParsed = parseTsx(childPath, readFileSync(childPath, 'utf8'));
-      const childNeutral = readNeutralImports(childParsed);
-      const childName = findExportedComponentName(childParsed);
+      const childNode = graph.nodes.get(edge.to);
+      const childFileName = path.basename(childNode?.id ?? '');
+      const childFolder = childFileName.startsWith('index.')
+        ? path.basename(path.dirname(childNode?.id ?? ''))
+        : childFileName.replace(/\.[^.]+$/, '');
+      const importedNames = currentNode.imports
+        .filter((entryImport) => entryImport.specifier === edge.specifier)
+        .flatMap((entryImport) => entryImport.valueNames);
       if (
-        (childNeutral.values.length === 0 && childNeutral.types.length === 0) ||
-        childName === undefined ||
-        !moduleTargetsFramework(childParsed, options.framework)
+        childNode === undefined ||
+        childNode.kind !== 'component' ||
+        discoveredFolders.has(childFolder) ||
+        !importedNames.some((name) => /^[A-Z]/.test(name)) ||
+        (childNode.frameworkDirective !== undefined && childNode.frameworkDirective !== target.id)
       ) {
         continue;
       }
+      const childName = childNode.exports.find(
+        (entryExport) =>
+          !entryExport.typeOnly && entryExport.exportedName !== undefined && /^[A-Z]/.test(entryExport.exportedName),
+      )?.exportedName;
+      if (childName === undefined) {
+        continue;
+      }
       const childPublicName = childName.startsWith(stripPrefix) ? childName.slice(stripPrefix.length) : childName;
-      const childCandidate = `${childPublicName}Properties`;
-      const childTypeNames = readExportedTypeNames(childParsed);
+      const childTypeNames = childNode.exports
+        .filter((entryExport) => entryExport.typeOnly && entryExport.exportedName !== undefined)
+        .map((entryExport) => entryExport.exportedName as string);
       const child: DiscoveredComponent = {
         neutralName: childName,
         publicName: childPublicName,
-        propertiesType: childTypeNames.has(childCandidate) ? childCandidate : undefined,
-        typeExports: [...childTypeNames],
-        folder: relativeImport.base,
-        sourceDir: toPosix(path.relative(componentsDir, path.dirname(childPath))),
+        propertiesType: childTypeNames.includes(`${childPublicName}Properties`)
+          ? `${childPublicName}Properties`
+          : undefined,
+        typeExports: childTypeNames,
+        folder: childFolder,
+        sourceDir: toPosix(path.relative(componentsDir, path.dirname(childNode.id))),
+        sourceSpecifier: edge.specifier,
+        sourcePath: childNode.id,
       };
       discoveredFolders.add(child.folder);
       componentFolders.add(child.folder);
@@ -513,47 +778,45 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   // compiled too (so their `.vue`/`.tsx`/… module exists), but stay off the
   // public entry barrel — they are internal children of their primary.
   for (const component of [...components, ...siblingComponents]) {
-    const componentDir = path.join(componentsDir, component.sourceDir);
-    const sourcePath = path.join(componentDir, `${component.folder}.tsx`);
+    const sourcePath = componentSourcePath(component);
     const source = readFileSync(sourcePath, 'utf8');
     const parsed = parseTsx(sourcePath, source);
     componentOwnTypes.set(component.folder, readExportedTypeNames(parsed));
-    const compiled = compileComponentModule(source, {
-      framework: options.framework,
+    const compiled = compileModule(source, {
+      framework: target.plugin,
+      moduleKind: 'component',
       componentName: component.neutralName,
       fileName: sourcePath,
       componentFolders,
+      sourceRoot,
     });
-    writeModule(component.sourceDir, `${component.folder}.${compiled.lang}`, compiled.code);
+    writeModule(mirrorDir(sourcePath), `${component.folder}.${compiled.lang}`, compiled.code, sourcePath);
 
     // Auxiliary SFCs the emitter generated alongside the primary module (e.g. a
     // recursive helper component extracted from a self-recursive render helper)
     // are written next to it in the flat tree so Stage 2 compiles them and the
     // primary SFC's `./<name>.vue` import resolves.
     for (const extra of compiled.extraModules ?? []) {
-      writeModule(component.sourceDir, `${extra.name}.${extra.lang}`, extra.code);
+      writeModule(mirrorDir(sourcePath), `${extra.name}.${extra.lang}`, extra.code);
     }
 
     // Carry each shared **helper module** the component imports (a relative value
     // import that is not itself a component) into the flat generated tree via the
     // recursive carrier, which compiles neutral composables/context per-framework
     // and copies framework-agnostic helpers verbatim (transitively).
-    for (const relativeImport of readComponentImports(parsed)) {
-      if (componentFolders.has(relativeImport.base)) {
+    for (const edge of graph.edges.filter(
+      (candidate) => candidate.from === sourcePath && candidate.resolved && candidate.to !== undefined,
+    )) {
+      const helperNode = graph.nodes.get(edge.to as string);
+      if (
+        helperNode === undefined ||
+        helperNode.kind === 'component' ||
+        helperNode.kind === 'style' ||
+        helperNode.kind === 'asset'
+      ) {
         continue;
       }
-      for (const extension of ['ts', 'tsx'] as const) {
-        const helperPath = path.join(componentDir, `${relativeImport.specifier}.${extension}`);
-        if (existsSync(helperPath)) {
-          carryHelperModule(helperPath);
-          break;
-        }
-        const helperIndexPath = path.join(componentDir, relativeImport.specifier, `index.${extension}`);
-        if (existsSync(helperIndexPath)) {
-          carryHelperModule(helperIndexPath);
-          break;
-        }
-      }
+      carryHelperModule(helperNode.id);
     }
 
     // Carry each component's own stylesheet (e.g. its CSS Module) into the flat
@@ -561,67 +824,96 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
     // the component ships its own CSS. The Vue emitter inlines CSS-Module imports
     // (default import) directly as an SFC `<style>` block, so those are not
     // copied for Vue; bare side-effect CSS imports (and all React imports) still are.
-    for (const styleImport of readStyleImports(parsed)) {
-      const inlinedInVueSfc = options.framework === 'vue' && styleImport.name !== undefined;
+    for (const edge of graph.edges.filter(
+      (candidate) =>
+        candidate.from === sourcePath &&
+        candidate.resolved &&
+        candidate.to !== undefined &&
+        candidate.relation === 'style',
+    )) {
+      const styleNode = graph.nodes.get(edge.to as string);
+      if (styleNode === undefined) {
+        continue;
+      }
+      const styleImport = readStyleImports(parsed, sourceRoot).find((entry) => entry.specifier === edge.specifier);
+      const inlinedInVueSfc = target.id === 'vue' && styleImport?.name !== undefined;
       if (inlinedInVueSfc) {
         continue;
       }
-      const stylePath = path.join(componentDir, styleImport.specifier);
-      if (existsSync(stylePath)) {
-        copyAsset(mirrorDir(stylePath), styleImport.base, stylePath);
+      copyAsset(mirrorDir(styleNode.id), path.basename(styleNode.id), styleNode.id, styleNode.id);
+    }
+  }
+
+  // Sprite definitions and the neutral provider are shared helpers owned by a
+  // package rather than public components. Carry the package-level sprite tree
+  // explicitly because it intentionally sits outside `src/components` and is
+  // therefore not reachable through the component discovery queue.
+  const spriteDir = path.join(sourceRoot, 'sprite');
+  const carrySpriteHelpers = (directory: string): void => {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      const entryPath = path.join(directory, entry.name);
+      if (entry.isDirectory()) {
+        carrySpriteHelpers(entryPath);
+      } else if (/\.(tsx?|jsx?)$/.test(entry.name) && !entry.name.endsWith('.spec.ts')) {
+        carryHelperModule(entryPath);
       }
     }
+  };
+  if (existsSync(spriteDir)) {
+    carrySpriteHelpers(spriteDir);
   }
 
   // Shared helper modules re-exported from the barrel (e.g. the toast store) are
   // forwarded through the entry; their source files are already carried into the
   // flat tree by the per-component helper-import copy above.
-  const helpers = discoverHelperExports(readFileSync(options.componentsModule, 'utf8'), componentFolders);
+  const helpers = discoverHelperExportsFromGraph(graph, componentFolders);
   for (const helper of helpers) {
-    const helperCandidates = [
-      path.resolve(componentsDir, helper.relativePath),
-      path.resolve(sourceRoot, helper.relativePath),
-      path.resolve(sourceRoot, helper.relativePath.replace(/^components\//, '')),
-    ];
-    const helperBase = helperCandidates.find((candidate) =>
-      ['ts', 'tsx'].some(
-        (extension) =>
-          existsSync(`${candidate}.${extension}`) || existsSync(path.join(candidate, `index.${extension}`)),
-      ),
-    );
-    if (helperBase === undefined) {
+    if (helper.sourcePath === undefined) {
       continue;
     }
-    for (const extension of ['ts', 'tsx'] as const) {
-      const helperFile = `${helperBase}.${extension}`;
-      const helperIndex = path.join(helperBase, `index.${extension}`);
-      if (existsSync(helperFile)) {
-        carryHelperModule(helperFile);
-        break;
-      }
-      if (existsSync(helperIndex)) {
-        carryHelperModule(helperIndex);
-        break;
-      }
+    carryHelperModule(helper.sourcePath);
+  }
+
+  for (const sourcePath of pendingIndexSources) {
+    const indexSource = generatedIndexSource(sourcePath);
+    if (indexSource !== undefined) {
+      writeModule(mirrorHelperDir(sourcePath), 'index.ts', indexSource, sourcePath);
     }
   }
 
   // The co-located local JSX types module: framework-specific variants of the
-  // neutral render/props primitives (`MpProperties`, `MpRenderProperty`) the
-  // emitters redirect those two type imports to (see `LOCAL_JSX_TYPE_NAMES`), so
-  // the generated components carry no neutral `@mission-platform/forge` render/props
-  // type import. Written once per tree; only referenced via `import type`, so it
-  // adds no runtime chunk and simply emits its own `.d.ts` alongside the build.
-  writeModule('', LOCAL_JSX_TYPES_FILE, localJsxTypesModuleSource(options.framework));
+  // neutral render primitives (`MpRenderProperty`, and the element primitives
+  // where a target re-declares them) the emitters redirect those type imports to
+  // (see `LOCAL_JSX_TYPE_NAMES`), so the generated components carry no neutral
+  // `@mission-platform/forge` render type import. Written once per tree; only
+  // referenced via `import type`, so it adds no runtime chunk and simply emits
+  // its own `.d.ts` alongside the build.
+  if (
+    target.id === 'react' ||
+    target.id === 'vue' ||
+    target.id === 'solid' ||
+    target.id === 'svelte' ||
+    target.id === 'web-components'
+  ) {
+    writeModule('', LOCAL_JSX_TYPES_FILE, localJsxTypesModuleSource(target.id));
+  }
 
   // The co-located effect helper module: the Vue-only generalised watcher
   // (`mpEffect`) the Vue emitter routes every `useEffect` through (built on
   // native `watch`/lifecycle). Written once per tree, exactly like the local JSX
   // types module. It is Vue-only, so `localEffectModuleSource` returns an empty
   // string for React and nothing is written for the React build.
-  const effectModuleSource = localEffectModuleSource(options.framework);
-  if (effectModuleSource.length > 0) {
-    writeModule('', LOCAL_EFFECT_FILE, effectModuleSource);
+  if (
+    target.id === 'react' ||
+    target.id === 'vue' ||
+    target.id === 'solid' ||
+    target.id === 'svelte' ||
+    target.id === 'web-components'
+  ) {
+    const effectModuleSource = localEffectModuleSource(target.id);
+    if (effectModuleSource.length > 0) {
+      writeModule('', LOCAL_EFFECT_FILE, effectModuleSource);
+    }
   }
 
   // Resolve each companion type to the flat-tree module that declares it: the
@@ -639,8 +931,8 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
     return undefined;
   };
 
-  const entryFile = path.join(options.outDir, options.framework === 'react' ? 'index.tsx' : 'index.ts');
-  writeFileSync(entryFile, generateEntry(options.framework, components, helpers, resolveTypeOrigin), 'utf8');
+  const entryFile = path.join(options.outDir, `index${target.entryExtension}`);
+  writeFileSync(entryFile, generateEntry(target, components, helpers, resolveTypeOrigin), 'utf8');
   rewriteTargets.push({ file: entryFile, dir: '' });
 
   // Final pass: rewrite every generated module's (and the entry's) flat
@@ -648,178 +940,11 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   // tree, so imports still resolve now that files are no longer co-located.
   for (const target of rewriteTargets) {
     const code = readFileSync(target.file, 'utf8');
-    const rewritten = rewriteFlatImports(code, target.dir);
+    const rewritten = rewriteFlatImports(code, target.dir, target.sourceId);
     if (rewritten !== code) {
       writeFileSync(target.file, rewritten, 'utf8');
     }
   }
-  return entryFile;
-}
-
-/** Options for {@link generateStoryblokBloks}. */
-export interface GenerateStoryblokBloksOptions {
-  /**
-   * Framework the emitted blok wrappers target (`react`/`solid` → `.tsx`,
-   * `vue` → `.vue`, `svelte` → `.svelte`, `web-components` → `.ts`).
-   */
-  framework: JsxFramework;
-  /** Absolute path of the neutral components barrel (e.g. `src/components/index.ts`). */
-  componentsModule: string;
-  /** Absolute path of the directory the JSON config, wrappers, and entry are written to. */
-  outDir: string;
-  /**
-   * Import specifier the generated wrappers import the **built** framework
-   * components from, e.g. `@mission-platform/components`.
-   */
-  componentsImport: string;
-  /** Prefix stripped from each neutral export name to form its public name. Defaults to `Forge`. */
-  stripPrefix?: string;
-}
-
-/** Generate the entry barrel re-exporting each generated blok wrapper. */
-function generateBlokEntry(framework: JsxFramework, components: readonly DiscoveredComponent[]): string {
-  const lines = components.map((component) => {
-    switch (framework) {
-      // Vue/Svelte SFC wrappers export the component as the module default.
-      case 'vue': {
-        return `export { default as ${component.publicName}Blok } from './${component.folder}.vue';`;
-      }
-      case 'svelte': {
-        return `export { default as ${component.publicName}Blok } from './${component.folder}.svelte';`;
-      }
-      // React/Solid `.tsx` and the Web-Component `.ts` wrapper are named exports.
-      default: {
-        return `export { ${component.publicName}Blok } from './${component.folder}';`;
-      }
-    }
-  });
-  return `${lines.join('\n')}\n`;
-}
-
-/** The generated blok-wrapper file extension for each target framework. */
-const BLOK_WRAPPER_LANG: Readonly<Record<JsxFramework, string>> = {
-  react: 'tsx',
-  vue: 'vue',
-  solid: 'tsx',
-  svelte: 'svelte',
-  'web-components': 'ts',
-};
-
-/** A generated blok wrapper paired with the analysis its declaration is derived from. */
-interface AnalyzedBlok {
-  /** The public component name (e.g. `Badge`); the wrapper exports `<publicName>Blok`. */
-  publicName: string;
-  /** The component's Storyblok analysis, used to type the wrapper's `blok` prop. */
-  analyzed: AnalyzedStoryblokComponent;
-}
-
-/** Per-framework imports for the synthesised blok-wrapper declarations. */
-const BLOK_DECLARATION = {
-  react: { componentType: 'FunctionComponent', frameworkImport: 'react', storyblokImport: '@storyblok/react' },
-  vue: { componentType: 'DefineComponent', frameworkImport: 'vue', storyblokImport: '@storyblok/vue' },
-  svelte: { componentType: 'any', frameworkImport: 'svelte', storyblokImport: '@storyblok/svelte' },
-  solid: { componentType: 'Component', frameworkImport: 'solid-js', storyblokImport: '@storyblok/solid' },
-  'web-components': { componentType: 'any', frameworkImport: 'ts', storyblokImport: '@storyblok/js' },
-} as const;
-
-/**
- * Synthesise the generated blok-wrapper entry's `index.d.ts`.
- *
- * The generated entry barrel is not a `tsc`-visible source file, so — as for the
- * framework entries — its declarations are synthesised here. Every wrapper is a
- * framework component taking a single Storyblok `blok` prop, but that prop is now
- * **precisely typed** via {@link emitBlokDataType} (`SbBlokData & { … }`, one
- * member per schema field) instead of an open `Record<string, unknown>`.
- */
-function generateBlokEntryDeclarations(framework: JsxFramework, bloks: readonly AnalyzedBlok[]): string {
-  const { componentType, frameworkImport, storyblokImport } = BLOK_DECLARATION[framework];
-  return [
-    `import type { ${componentType} } from '${frameworkImport}';`,
-    `import type { SbBlokData } from '${storyblokImport}';`,
-    ``,
-    ...bloks.map(
-      ({ publicName, analyzed }) =>
-        `export declare const ${publicName}Blok: ${componentType}<{ blok: ${emitBlokDataType(analyzed)} }>;`,
-    ),
-    ``,
-  ].join('\n');
-}
-
-/**
- * Project a neutral components package onto **Storyblok** (Stage 1).
- *
- * For every component this writes, into {@link GenerateStoryblokBloksOptions.outDir}:
- *
- * - `<folder>.json` — the Storyblok *component object* (`{ "component": … }`,
- *   the shape the Management API's create endpoint consumes), and
- * - `<folder>.{tsx,vue}` — the framework blok wrapper binding `blok.<field>`
- *   onto the built component imported from
- *   {@link GenerateStoryblokBloksOptions.componentsImport}.
- *
- * It also writes the aggregate `components.json` (`{ "components": [ … ] }`, the
- * shape `storyblok push-components` consumes), the wrapper entry barrel, and the
- * entry's synthesised `index.d.ts` (each wrapper precisely typed — `blok` is
- * `SbBlokData & { … }`, derived per component by {@link emitBlokDataType}). The
- * entry barrel path is returned so it can be handed straight to Vite's
- * `lib.entry` for Stage 2 (the framework's own toolchain compiles the wrappers
- * natively).
- */
-export function generateStoryblokBloks(options: GenerateStoryblokBloksOptions): string {
-  const stripPrefix = options.stripPrefix ?? 'Forge';
-  const components = discoverComponents(readFileSync(options.componentsModule, 'utf8'), stripPrefix);
-  const componentsDir = path.dirname(options.componentsModule);
-
-  rmSync(options.outDir, { recursive: true, force: true, ...RM_RETRY_OPTIONS });
-  mkdirSync(options.outDir, { recursive: true });
-
-  const bloks: StoryblokComponent[] = [];
-  const analyzedBloks: AnalyzedBlok[] = [];
-
-  for (const component of components) {
-    const sourcePath = path.join(componentsDir, component.sourceDir, `${component.folder}.tsx`);
-    const sourceFile = parseTsx(sourcePath, readFileSync(sourcePath, 'utf8'));
-    const analyzed = analyzeStoryblokComponent(sourceFile, {
-      neutralName: component.neutralName,
-      publicName: component.publicName,
-      propertiesType: component.propertiesType,
-    });
-    bloks.push(analyzed.component);
-    analyzedBloks.push({ publicName: component.publicName, analyzed });
-
-    // The Storyblok component object (create-endpoint shape).
-    writeFileSync(
-      path.join(options.outDir, `${component.folder}.json`),
-      `${JSON.stringify({ component: analyzed.component }, undefined, 2)}\n`,
-      'utf8',
-    );
-
-    // The framework blok wrapper for the built component.
-    const wrapper = emitStoryblokBlokWrapper(analyzed, component.publicName, {
-      framework: options.framework,
-      componentsImport: options.componentsImport,
-    });
-    const lang = BLOK_WRAPPER_LANG[options.framework];
-    writeFileSync(path.join(options.outDir, `${component.folder}.${lang}`), wrapper, 'utf8');
-  }
-
-  // The aggregate push-components file.
-  writeFileSync(
-    path.join(options.outDir, 'components.json'),
-    `${JSON.stringify({ components: bloks }, undefined, 2)}\n`,
-    'utf8',
-  );
-
-  const entryFile = path.join(options.outDir, options.framework === 'react' ? 'index.tsx' : 'index.ts');
-  writeFileSync(entryFile, generateBlokEntry(options.framework, components), 'utf8');
-
-  // The synthesised, precisely typed declaration of the wrapper entry barrel
-  // (the entry is not a `tsc`-visible source file). Consumers ship this verbatim.
-  writeFileSync(
-    path.join(options.outDir, 'index.d.ts'),
-    generateBlokEntryDeclarations(options.framework, analyzedBloks),
-    'utf8',
-  );
-
   return entryFile;
 }
 
@@ -835,6 +960,8 @@ export interface JsxComponentsEntryDtsOptions {
   declarationModule?: string;
   /** Prefix stripped from each neutral export name to form its public name. Defaults to `Forge`. */
   stripPrefix?: string;
+  /** Owning neutral source root used for graph alias resolution. */
+  sourceRoot?: string;
 }
 
 /**
@@ -995,10 +1122,30 @@ function generateEntryDeclaration(
   // (e.g. `./components/toast-store`), matching the entry's runtime re-exports.
   for (const helper of helpers) {
     const names = [...helper.values, ...helper.types.map((type) => `type ${type}`)];
-    lines.push(`export { ${names.join(', ')} } from ${JSON.stringify(`${declarationModule}/${helper.base}`)};`);
+    lines.push(`export { ${names.join(', ')} } from ${JSON.stringify(`${declarationModule}/${helper.relativePath}`)};`);
   }
   lines.push('');
   return lines.join('\n');
+}
+
+function discoverGeneratedEntrySources(
+  componentsModule: string,
+  stripPrefix = 'Forge',
+  sourceRoot = path.dirname(path.dirname(componentsModule)),
+): {
+  components: DiscoveredComponent[];
+  helpers: DiscoveredHelperExport[];
+} {
+  const graph = buildForgeFileGraph({ entry: componentsModule, sourceRoot });
+  const graphErrors = graph.diagnostics.filter((diagnostic) => diagnostic.code !== 'cycle');
+  if (graphErrors.length > 0) {
+    throw new Error(graphErrors.map((diagnostic) => `${diagnostic.code}: ${diagnostic.message}`).join('\n'));
+  }
+  const components = discoverComponentsFromGraph(graph, stripPrefix);
+  return {
+    components,
+    helpers: discoverHelperExportsFromGraph(graph, new Set(components.map((component) => component.folder))),
+  };
 }
 
 /**
@@ -1013,9 +1160,11 @@ export function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOption
   return {
     name: '@mission-platform/vite-plugin-forge:entry-dts',
     generateBundle() {
-      const barrelSource = readFileSync(options.componentsModule, 'utf8');
-      const components = discoverComponents(barrelSource, stripPrefix);
-      const helpers = discoverHelperExports(barrelSource, new Set(components.map((component) => component.folder)));
+      const { components, helpers } = discoverGeneratedEntrySources(
+        options.componentsModule,
+        stripPrefix,
+        options.sourceRoot,
+      );
       this.emitFile({
         type: 'asset',
         fileName: `${options.declarationFileName}.d.ts`,
@@ -1053,6 +1202,8 @@ export interface JsxComponentsDtsOptions {
    * when `svelte2tsx`'s `emitDts` does not leave a usable one behind.
    */
   componentsModule?: string;
+  /** Owning neutral source root used for graph alias resolution. */
+  sourceRoot?: string;
 }
 
 /**
@@ -1130,6 +1281,74 @@ function selfReferencePaths(generatedDir: string): ts.MapLike<string[]> {
     }
     directory = parent;
   }
+}
+
+/** Read the owning package's TypeScript alias configuration for a generated tree. */
+function packageAliasCompilerOptions(generatedDir: string): Pick<ts.CompilerOptions, 'paths'> {
+  let packageDirectory = generatedDir;
+  while (true) {
+    const manifestPath = path.join(packageDirectory, 'package.json');
+    if (existsSync(manifestPath)) {
+      break;
+    }
+    const parent = path.dirname(packageDirectory);
+    if (parent === packageDirectory) {
+      return {};
+    }
+    packageDirectory = parent;
+  }
+
+  const configFileName =
+    [path.join(packageDirectory, 'tsconfig.build.json'), path.join(packageDirectory, 'tsconfig.json')].find((file) =>
+      existsSync(file),
+    ) ?? ts.findConfigFile(packageDirectory, ts.sys.fileExists);
+  if (configFileName === undefined) {
+    return {};
+  }
+
+  const config = ts.readConfigFile(configFileName, ts.sys.readFile);
+  const compilerOptions = config.config?.compilerOptions as
+    { baseUrl?: string; paths?: Record<string, string[]> } | undefined;
+  if (compilerOptions?.paths === undefined) {
+    return {};
+  }
+
+  const sourceRoot = path.resolve(packageDirectory, 'src');
+  const configBaseUrl = compilerOptions.baseUrl ?? '.';
+  const baseUrl = path.resolve(path.dirname(configFileName), configBaseUrl);
+  const paths = Object.fromEntries(
+    Object.entries(compilerOptions.paths).map(([pattern, targets]) => [
+      pattern,
+      targets.map((target) => {
+        const wildcard = target.indexOf('*');
+        const targetPrefix = wildcard === -1 ? target : target.slice(0, wildcard);
+        const targetPath = path.resolve(baseUrl, targetPrefix);
+        if (targetPath === sourceRoot || targetPath.startsWith(`${sourceRoot}${path.sep}`)) {
+          const relativeToSource = path.relative(sourceRoot, targetPath);
+          return path.join(generatedDir, relativeToSource, target.slice(targetPrefix.length));
+        }
+        return path.resolve(baseUrl, target);
+      }),
+    ]),
+  );
+
+  return {
+    paths,
+  };
+}
+
+/** Find all generated TypeScript roots, including modules in mirrored subdirectories. */
+function generatedTypeScriptRoots(directory: string): string[] {
+  const roots: string[] = [];
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    const entryPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      roots.push(...generatedTypeScriptRoots(entryPath));
+    } else if ((entry.name.endsWith('.ts') || entry.name.endsWith('.tsx')) && !entry.name.endsWith('.d.ts')) {
+      roots.push(entryPath);
+    }
+  }
+  return roots;
 }
 
 /**
@@ -1232,14 +1451,14 @@ function emitTscComponentDeclarations(
   const shimPath = path.join(options.generatedDir, CSS_MODULE_SHIM_FILE);
   writeFileSync(shimPath, CSS_MODULE_SHIM, 'utf8');
 
-  const rootNames = readdirSync(options.generatedDir)
-    .filter((file) => (file.endsWith('.ts') || file.endsWith('.tsx')) && !file.endsWith('.d.ts'))
-    .map((file) => path.join(options.generatedDir, file));
+  const rootNames = generatedTypeScriptRoots(options.generatedDir);
+  const packageAliases = packageAliasCompilerOptions(options.generatedDir);
 
   const program = ts.createProgram([...rootNames, shimPath], {
     ...COMPONENT_DTS_COMPILER_OPTIONS,
     customConditions: [FRAMEWORK_DTS_CONDITION[options.framework]],
-    paths: selfReferencePaths(options.generatedDir),
+    ...packageAliases,
+    paths: { ...packageAliases.paths, ...selfReferencePaths(options.generatedDir) },
     ...compilerOverrides,
     rootDir: options.generatedDir,
     outDir: options.outDir,
@@ -1320,6 +1539,7 @@ function emitVueComponentDeclarations(
     throw new Error('jsxComponentsDtsPlugin: `vueTscBin` is required to emit declarations for the Vue tree.');
   }
   writeFileSync(path.join(options.generatedDir, CSS_MODULE_SHIM_FILE), CSS_MODULE_SHIM, 'utf8');
+  const packageAliases = packageAliasCompilerOptions(options.generatedDir);
 
   const tsconfig = {
     compilerOptions: {
@@ -1340,7 +1560,8 @@ function emitVueComponentDeclarations(
       // Bare `@mission-platform/*` imports in the generated SFCs must resolve to
       // each package's Vue build, exactly as a consuming app resolves them.
       customConditions: [FRAMEWORK_DTS_CONDITION.vue],
-      paths: selfReferencePaths(options.generatedDir),
+      ...packageAliases,
+      paths: { ...packageAliases.paths, ...selfReferencePaths(options.generatedDir) },
       skipLibCheck: true,
       esModuleInterop: true,
       strict: true,
@@ -1445,6 +1666,7 @@ async function emitSvelteComponentDeclarations(
   options: JsxComponentsDtsOptions,
 ): Promise<void> {
   writeFileSync(path.join(options.generatedDir, CSS_MODULE_SHIM_FILE), CSS_MODULE_SHIM, 'utf8');
+  const packageAliases = packageAliasCompilerOptions(options.generatedDir);
 
   const tsconfig = {
     compilerOptions: {
@@ -1454,7 +1676,8 @@ async function emitSvelteComponentDeclarations(
       lib: ['es2023', 'dom', 'dom.iterable'],
       // Resolve bare `@mission-platform/*` imports to each package's Svelte build.
       customConditions: [FRAMEWORK_DTS_CONDITION.svelte],
-      paths: selfReferencePaths(options.generatedDir),
+      ...packageAliases,
+      paths: { ...packageAliases.paths, ...selfReferencePaths(options.generatedDir) },
       skipLibCheck: true,
       strict: true,
       declaration: true,
@@ -1499,9 +1722,7 @@ async function emitSvelteComponentDeclarations(
   if (options.componentsModule === undefined) {
     return;
   }
-  const barrelSource = readFileSync(options.componentsModule, 'utf8');
-  const components = discoverComponents(barrelSource, 'Forge');
-  const helpers = discoverHelperExports(barrelSource, new Set(components.map((c) => c.folder)));
+  const { components, helpers } = discoverGeneratedEntrySources(options.componentsModule, 'Forge', options.sourceRoot);
   const dtsContent = generateEntryDeclaration(options.framework, '../components', components, helpers);
   mkdirSync(options.outDir, { recursive: true });
   writeFileSync(path.join(options.outDir, 'index.d.ts'), dtsContent, 'utf8');
@@ -1577,9 +1798,11 @@ export function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin
         }
         default: {
           if (options.componentsModule) {
-            const barrelSource = readFileSync(options.componentsModule, 'utf8');
-            const components = discoverComponents(barrelSource, 'Forge');
-            const helpers = discoverHelperExports(barrelSource, new Set(components.map((c) => c.folder)));
+            const { components, helpers } = discoverGeneratedEntrySources(
+              options.componentsModule,
+              'Forge',
+              options.sourceRoot,
+            );
             const dtsContent = generateEntryDeclaration(options.framework, '../components', components, helpers);
             mkdirSync(options.outDir, { recursive: true });
             writeFileSync(path.join(options.outDir, 'index.d.ts'), dtsContent, 'utf8');

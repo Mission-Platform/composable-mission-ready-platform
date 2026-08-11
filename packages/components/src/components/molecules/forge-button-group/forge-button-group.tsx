@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, h, type MpChild, type MpElement } from '@mission-platform/forge';
 
 import sizeStyles from '../../../styles/size.module.scss';
 
@@ -15,7 +15,9 @@ export type ButtonGroupGap = 'none' | 'xs' | 'sm' | 'md';
 export type ButtonGroupVariant =
   'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
-export interface ButtonGroupProperties extends MpProperties {
+export interface ButtonGroupProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Layout direction. Defaults to `'horizontal'`. */
   orientation?: ButtonGroupOrientation;
   /** Visually join children by collapsing inner border radii and gaps. */

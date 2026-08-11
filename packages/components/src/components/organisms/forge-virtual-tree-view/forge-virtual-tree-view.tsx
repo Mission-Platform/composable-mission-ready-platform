@@ -1,7 +1,7 @@
 import {
   h,
+  type MpChild,
   type MpElement,
-  type MpProperties,
   type MpRenderProperty,
   Slot,
   useEffect,
@@ -41,7 +41,9 @@ export interface TreeRowScope {
   select: () => void;
 }
 
-export interface VirtualTreeViewProperties extends MpProperties {
+export interface VirtualTreeViewProperties {
+  /** The content the consumer fills the component’s slots with. */
+  children?: MpChild | readonly MpChild[];
   /** Root-level nodes. */
   nodes: TreeNode[];
   /** Size token controlling the tree's font scale. Defaults to `'md'`. */

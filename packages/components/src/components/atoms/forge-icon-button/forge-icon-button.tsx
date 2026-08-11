@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, h, type MpChild, type MpElement } from '@mission-platform/forge';
 
 import styles from './forge-icon-button.module.scss';
 
@@ -8,7 +8,9 @@ export type IconButtonVariant =
 /** Size token controlling the square padding — canonical 2xs → 2xl scale. */
 export type IconButtonSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface IconButtonProperties extends MpProperties {
+export interface IconButtonProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Accessible name, applied as `aria-label`. Required because the button is icon-only. */
   label: string;
   /** Visual treatment. Defaults to `'ghost'`. */

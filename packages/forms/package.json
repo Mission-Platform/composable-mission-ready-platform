@@ -2,7 +2,7 @@
   "name": "@mission-platform/forms",
   "version": "1.0.0",
   "license": "BSD-4-Clause",
-  "description": "Write-once Mission Platform form builder and schema form authored with @mission-platform/forge and shipped as both Vue 3 and React components",
+  "description": "Write-once Mission Platform form builder and schema form authored with @mission-platform/forge and shipped as Vue, React, Svelte, Solid, and Web Component outputs",
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -33,15 +33,15 @@
       "types": "./dist/components/index.d.ts",
       "import": "./dist/components/index.js"
     },
-    "./storyblok/react": {
-      "types": "./dist/storyblok/react/index.d.ts",
-      "import": "./dist/storyblok/react/index.js"
+    "./cms/storyblok/react": {
+      "types": "./dist/cms/storyblok/react/index.d.ts",
+      "import": "./dist/cms/storyblok/react/index.js"
     },
-    "./storyblok/vue": {
-      "types": "./dist/storyblok/vue/index.d.ts",
-      "import": "./dist/storyblok/vue/index.js"
+    "./cms/storyblok/vue": {
+      "types": "./dist/cms/storyblok/vue/index.d.ts",
+      "import": "./dist/cms/storyblok/vue/index.js"
     },
-    "./storyblok/components.json": "./dist/storyblok/components.json",
+    "./cms/storyblok/components.json": "./dist/cms/storyblok/components.json",
     "./styles": "./src/styles/a11y.scss"
   },
   "files": [
@@ -65,19 +65,14 @@
   },
   "dependencies": {
     "@mission-platform/components": "workspace:*",
+    "@mission-platform/content": "workspace:*",
     "@mission-platform/forms-core": "workspace:*",
-    "@mission-platform/harper": "workspace:*",
-    "@mission-platform/hunspell": "workspace:*",
     "@mission-platform/icons": "workspace:*",
     "@mission-platform/forge": "workspace:*",
     "@mission-platform/layouts": "workspace:*",
     "@mission-platform/phone-number": "workspace:*",
-    "@mission-platform/scheduler-core": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
-    "highlight.js": "catalog:code",
-    "luxon": "catalog:",
-    "marked": "catalog:code",
-    "monaco-editor": "catalog:code"
+    "luxon": "catalog:"
   },
   "peerDependencies": {
     "@storyblok/react": "^6.1.11",
@@ -125,6 +120,13 @@
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@mission-platform/vite-plugin-forge": "workspace:*",
+    "@mission-platform/forge-plugin-react": "workspace:*",
+    "@mission-platform/forge-plugin-solid": "workspace:*",
+    "@mission-platform/forge-plugin-svelte": "workspace:*",
+    "@mission-platform/forge-plugin-vue": "workspace:*",
+    "@mission-platform/forge-plugin-web-components": "workspace:*",
+    "@mission-platform/forge-cms-plugin-api": "workspace:*",
+    "@mission-platform/forge-cms-storyblok": "workspace:*",
     "@storybook/vue3-vite": "catalog:storybook",
     "@tsdown/css": "catalog:build",
     "@types/luxon": "catalog:",

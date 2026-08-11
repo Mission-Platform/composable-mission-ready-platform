@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ForgeMarkdown } from '@mission-platform/components';
+  import { ForgeMarkdown } from '@mission-platform/content';
   import { useI18n } from '@mission-platform/i18n';
   import { breadcrumbList, organizationId, useSeo, webPage, webSiteId } from '@mission-platform/seo';
   import { computed, onBeforeUnmount, useTemplateRef, watch } from 'vue';

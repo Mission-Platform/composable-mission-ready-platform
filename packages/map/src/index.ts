@@ -12,5 +12,5 @@
 //   import 'maplibre-gl/dist/maplibre-gl.css'
 
 export * from './components';
-export { MapContext } from './components/map-context';
+export { MapContext } from './map-context';
 export * from './composables';

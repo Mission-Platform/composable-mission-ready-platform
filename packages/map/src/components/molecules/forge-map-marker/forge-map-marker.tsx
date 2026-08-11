@@ -1,11 +1,10 @@
-import { type MpElement, type MpProperties } from '@mission-platform/forge';
+import { type MpElement } from '@mission-platform/forge';
 
-import { useMap } from '../../../composables/use-map';
-import { useMarker } from '../../../composables/use-marker';
+import { useMap, useMarker } from '@/composables';
 
 import type { LngLatLike, MarkerOptions } from 'maplibre-gl';
 
-export interface MapMarkerProperties extends MpProperties {
+export interface MapMarkerProperties {
   /** Longitude/latitude position of the marker. */
   lngLat: LngLatLike;
   /** Marker colour (CSS colour string). Overrides the default blue. */
@@ -29,15 +28,17 @@ export interface MapMarkerProperties extends MpProperties {
  */
 export function ForgeMapMarker(properties: Readonly<MapMarkerProperties>): MpElement | null {
   const map = useMap();
-  useMarker(map, {
+  const handleDragend = properties.onDragend;
+  const markerOptions = {
     lngLat: properties.lngLat,
     color: properties.color,
     scale: properties.scale,
     draggable: properties.draggable ?? false,
     rotationAlignment: properties.rotationAlignment,
     pitchAlignment: properties.pitchAlignment,
-    onDragend: properties.onDragend,
-  });
+    ['onDragend']: handleDragend,
+  };
+  useMarker(map, markerOptions);
 
   // Renders no DOM of its own: an empty render is authored as `null`, which the
   // React build emits verbatim (React renders nothing) and the Vue build turns

@@ -1,7 +1,12 @@
 import path from 'node:path';
 
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
+import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
-import { defineTsdownForgeComponentsAll } from '@mission-platform/vite-plugin-forge';
+import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
 
 /**
  * Workspace `-wasm` packages whose already self-contained (base64-inlined)
@@ -32,12 +37,18 @@ export default [
       },
     },
   }),
-  ...defineTsdownForgeComponentsAll({
+  ...defineTsdownForgeComponents({
     rootDir: import.meta.dirname,
-    frameworks: ['vue', 'react', 'solid', 'svelte', 'web-components'],
+    frameworks: [
+      forgeVueFramework(),
+      forgeReactFramework(),
+      forgeSolidFramework(),
+      forgeSvelteFramework(),
+      forgeWebComponentsFramework(),
+    ],
     componentsModule: path.resolve(import.meta.dirname, 'src/components/index.ts'),
     name: 'MissionPlatformBarcode',
     // Encoder is consumed through the package's own `.` entry.
-    external: ['@mission-platform/barcode'],
+    external: ['i18next'],
   }),
 ];

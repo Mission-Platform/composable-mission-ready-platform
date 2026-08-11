@@ -59,9 +59,18 @@
       }
     }
 
+    /*
+     * The current page differs from the link crumbs by colour only: it inherits
+     * the trail's font size, weight and leading from the `forge-size--*`
+     * modifier on the `<nav>`, exactly like the `<a>` crumbs do. Setting a
+     * `font-size`/`font-weight` here (or wrapping the label in a smaller
+     * typography variant) is what previously made the last crumb read as
+     * supertext.
+     */
     &__current {
       display: inline-flex;
       align-items: center;
+      color: var(--mp-color-text-primary);
     }
   }
 }

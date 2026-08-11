@@ -1,4 +1,4 @@
-import { h, type MpChild, type MpElement, type MpProperties, Slot } from '@mission-platform/forge';
+import { h, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
 import {
   ForgeIconCheck,
   ForgeIconClose,
@@ -18,7 +18,9 @@ export type ToastSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type ToastVariant =
   'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
-export interface ToastProperties extends MpProperties {
+export interface ToastProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Intent / colour treatment. Defaults to `'info'`. */
   variant?: ToastVariant;
   /** Size token controlling the toast's scale. Defaults to `'md'`. */

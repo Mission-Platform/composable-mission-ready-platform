@@ -8,7 +8,7 @@
 
 import { useContext } from '@mission-platform/forge';
 
-import { MapContext } from '../../components/map-context';
+import { MapContext } from '@/map-context';
 
 import type { Map } from 'maplibre-gl';
 

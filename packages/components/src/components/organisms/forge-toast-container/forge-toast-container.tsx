@@ -1,28 +1,16 @@
-import {
-  h,
-  type MpElement,
-  type MpProperties,
-  Teleport,
-  TransitionGroup,
-  useEffect,
-  useState,
-} from '@mission-platform/forge';
+import { h, type MpElement, Teleport, TransitionGroup, useEffect, useState } from '@mission-platform/forge';
 
-import {
-  dismissToast,
-  getToastsSnapshot,
-  subscribeToasts,
-  type ToastPosition,
-} from '../../../stores/toast-store/toast-store';
+import { ForgeToast } from '@/components/molecules/forge-toast';
+import { dismissToast, getToastsSnapshot, subscribeToasts, type ToastPosition } from '@/stores/toast-store/toast-store';
+
 import sizeStyles from '../../../styles/size.module.scss';
-import { ForgeToast } from '../../molecules/forge-toast';
 
 import styles from './forge-toast-container.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
 export type ToastContainerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface ToastContainerProperties extends MpProperties {
+export interface ToastContainerProperties {
   /** Size token controlling the stack's font scale. Defaults to `'md'`. */
   size?: ToastContainerSize;
   /** Anchor position of the stack. Defaults to `'top-right'`. */

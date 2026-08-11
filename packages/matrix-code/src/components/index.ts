@@ -7,9 +7,9 @@
 // package's `./react` and `./vue` subpath exports).
 export {
   ForgeMatrixCode,
+  type MatrixCodeActions,
   type MatrixCodeProperties,
   type MatrixGradient,
   type MatrixLogo,
   type MatrixModuleShape,
-  type MatrixSymbology,
 } from './molecules/forge-matrix-code';

@@ -1,8 +1,9 @@
 import { ForgeButton, ForgeModal, type ModalSize } from '@mission-platform/components';
-import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { h, type MpElement } from '@mission-platform/forge';
 
 import {
   ForgeSchemaForm,
+  type SchemaFormFieldRenderer,
   type FormValues,
   type SchemaFormDefinition,
   type SchemaFormValidationMode,
@@ -10,7 +11,7 @@ import {
 
 import styles from './forge-schema-form-dialog.module.scss';
 
-export interface SchemaFormDialogProperties extends MpProperties {
+export interface SchemaFormDialogProperties {
   /**
    * Whether the dialog is open (controlled).
    * @model onUpdateOpen
@@ -38,6 +39,8 @@ export interface SchemaFormDialogProperties extends MpProperties {
   disabled?: boolean;
   /** Wizard validation strategy (forwarded to the inner form). */
   validationMode?: SchemaFormValidationMode;
+  /** Optional renderer for rich fields supplied by a UI package at composition time. */
+  renderField?: SchemaFormFieldRenderer;
   /** Close the dialog when a pointer lands on the backdrop. Defaults to `true`. */
   closeOnBackdrop?: boolean;
   /** Close the dialog when `Escape` is pressed. Defaults to `true`. */
@@ -120,6 +123,7 @@ export function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogPrope
         disabled={disabled}
         modelValue={modelValue}
         schema={schema}
+        renderField={properties.renderField}
         validationMode={validationMode}
         onSubmit={handleSubmit}
         onUpdateModelValue={handleUpdateModelValue}

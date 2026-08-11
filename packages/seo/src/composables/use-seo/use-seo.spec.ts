@@ -2,11 +2,11 @@ import { createHead, renderDOMHead } from '@unhead/vue/client';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { createApp, defineComponent, h, nextTick, ref } from 'vue';
 
-import { organization, webSite } from '../../build-json-ld';
+import { organization, webSite } from '@/build-json-ld';
 
 import { useSeo } from './use-seo';
 
-import type { SeoMetadata } from '../../types';
+import type { SeoMetadata } from '@/types';
 
 const renderEmpty = (): unknown => h('div');
 

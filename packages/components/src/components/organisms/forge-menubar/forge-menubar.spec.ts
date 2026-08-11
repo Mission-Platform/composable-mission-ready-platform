@@ -8,7 +8,7 @@ import { renderToString } from 'vue/server-renderer';
 
 import { ForgeMenubar } from './forge-menubar';
 
-import type { MenuNode } from '../../molecules/forge-menu';
+import type { MenuNode } from '@/components/molecules/forge-menu';
 
 /**
  * Exercises the **neutral** `ForgeMenubar` authored in this package, rendering it

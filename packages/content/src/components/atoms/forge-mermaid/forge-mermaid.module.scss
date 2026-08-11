@@ -1,0 +1,47 @@
+/**
+ * Styling for the standalone `ForgeMermaid` atom.
+ */
+
+@layer mp.components {
+  .forge-mermaid {
+    min-width: 0;
+    overflow-x: auto;
+    padding: var(--mp-spacing-4);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+    background: var(--mp-color-bg-sunken);
+    text-align: center;
+
+    svg {
+      display: block;
+      width: max-content;
+      min-width: 100%;
+      max-width: none;
+      height: auto;
+      margin: 0 auto;
+    }
+  }
+
+  .forge-mermaid__fallback,
+  .forge-mermaid__error pre {
+    margin: 0;
+    overflow-x: auto;
+    color: var(--mp-color-text-secondary);
+    font-family: var(--mp-font-family-mono);
+    font-size: var(--mp-font-size-sm);
+    line-height: var(--mp-line-height-relaxed);
+    text-align: left;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .forge-mermaid__error {
+    color: var(--mp-color-text-primary);
+    text-align: left;
+
+    p {
+      margin: 0 0 var(--mp-spacing-2);
+      font-weight: var(--mp-font-weight-semibold);
+    }
+  }
+}

@@ -2,7 +2,6 @@ import {
   h,
   type MpChild,
   type MpElement,
-  type MpProperties,
   type MpRenderProperty,
   Slot,
   useEffect,
@@ -42,7 +41,9 @@ export interface CarouselSlideScope {
   index: number;
 }
 
-export interface CarouselProperties extends MpProperties {
+export interface CarouselProperties {
+  /** The content the consumer fills the component’s slots with. */
+  children?: MpChild | readonly MpChild[];
   /** Size token controlling the carousel's scale. Defaults to `'md'`. */
   size?: CarouselSize;
   /** Ordered list of slides. */

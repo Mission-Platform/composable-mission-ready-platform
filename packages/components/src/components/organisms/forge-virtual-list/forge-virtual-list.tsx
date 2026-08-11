@@ -1,8 +1,8 @@
 import {
   classNames,
   h,
+  type MpChild,
   type MpElement,
-  type MpProperties,
   type MpRenderProperty,
   Slot,
   useEffect,
@@ -24,7 +24,9 @@ export interface VirtualListItemScope {
   index: number;
 }
 
-export interface VirtualListProperties extends MpProperties {
+export interface VirtualListProperties {
+  /** The content the consumer fills the component’s slots with. */
+  children?: MpChild | readonly MpChild[];
   /** The full data array. Only the rows in (or near) the viewport are rendered. */
   items: readonly unknown[];
   /** Fixed pixel height of every row — required for the offset maths. */

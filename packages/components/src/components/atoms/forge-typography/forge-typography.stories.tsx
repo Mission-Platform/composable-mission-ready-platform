@@ -42,6 +42,7 @@ const meta = {
         'label',
         'caption',
         'code',
+        'link',
       ],
     },
     weight: { control: 'inline-radio', options: ['regular', 'medium', 'semibold', 'bold'] },
@@ -70,6 +71,9 @@ const meta = {
     },
     truncate: { control: 'boolean' },
     truncatePopup: { control: 'boolean' },
+    href: { control: 'text' },
+    target: { control: 'inline-radio', options: ['_self', '_blank', '_parent', '_top'] },
+    underline: { control: 'inline-radio', options: ['always', 'hover', 'none'] },
   },
   args: {
     variant: 'body-md',
@@ -209,6 +213,73 @@ export const TruncatePopup: Story = {
     >
       <ForgeTypography {...arguments_}>
         This is a very long line of text that overflows and reveals a popup on hover
+      </ForgeTypography>
+    </div>
+  ),
+};
+
+/**
+ * Links come from the typography component itself, two ways: `variant="link"`
+ * for standalone link text, and `href` on **any** variant so a heading or a
+ * caption can be a link without leaving its own type scale. Both get the link
+ * colour, its hover/active and `:visited` treatment, a visible focus ring, and
+ * the chosen `underline` mode (`'hover'` by default). `target="_blank"` adds
+ * `rel="noopener noreferrer"` automatically.
+ */
+export const Link: Story = {
+  args: { variant: 'link', href: '#docs', color: undefined },
+  render: (arguments_) => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--mp-spacing-4)', maxWidth: '32rem' }}>
+      <ForgeTypography {...arguments_}>A standalone link at the body scale</ForgeTypography>
+
+      <ForgeTypography
+        variant="h3"
+        href="#releases"
+      >
+        A linked heading keeps its own scale
+      </ForgeTypography>
+
+      <ForgeTypography>
+        Inline links sit inside body text, like this{' '}
+        <ForgeTypography
+          as="a"
+          variant="link"
+          href="https://example.com"
+          target="_blank"
+        >
+          external link
+        </ForgeTypography>
+        , which opens in a new tab.
+      </ForgeTypography>
+
+      <ForgeTypography
+        variant="link"
+        href="#always"
+        underline="always"
+      >
+        underline=&quot;always&quot;
+      </ForgeTypography>
+      <ForgeTypography
+        variant="link"
+        href="#hover"
+        underline="hover"
+      >
+        underline=&quot;hover&quot; (default)
+      </ForgeTypography>
+      <ForgeTypography
+        variant="link"
+        href="#none"
+        underline="none"
+      >
+        underline=&quot;none&quot;
+      </ForgeTypography>
+
+      <ForgeTypography
+        variant="caption"
+        href="#caption"
+        color="secondary"
+      >
+        An explicit `color` still wins over the link colour
       </ForgeTypography>
     </div>
   ),

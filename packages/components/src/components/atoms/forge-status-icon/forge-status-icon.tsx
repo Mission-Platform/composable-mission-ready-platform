@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, h, type MpElement } from '@mission-platform/forge';
 import {
   ForgeIconCheck,
   ForgeIconError,
@@ -15,7 +15,7 @@ export type StatusIconLevel =
 /** Canonical 2xs → 2xl size scale. */
 export type StatusIconSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface StatusIconProperties extends MpProperties {
+export interface StatusIconProperties {
   /** Status conveyed. Defaults to `'neutral'`. */
   status?: StatusIconLevel;
   /** Size token. Defaults to `'md'`. */

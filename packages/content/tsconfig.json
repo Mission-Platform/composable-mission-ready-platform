@@ -1,0 +1,8 @@
+{
+  "files": ["tsdown.config.ts"],
+  "references": [
+    { "path": "./tsconfig.build.json" },
+    { "path": "./tsconfig.node.json" },
+    { "path": "./tsconfig.test.json" }
+  ]
+}

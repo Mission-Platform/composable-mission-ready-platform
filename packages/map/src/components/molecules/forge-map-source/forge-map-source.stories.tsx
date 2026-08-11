@@ -1,4 +1,4 @@
-import { h, type MpChild } from '@mission-platform/forge';
+import { h } from '@mission-platform/forge';
 
 import { ForgeMapLayer, ForgeMapLibre, ForgeMapSource } from '@mission-platform/map';
 
@@ -34,15 +34,21 @@ const POLYGON: FeatureCollection = {
 };
 
 /**
- * Every story wraps the map in a fixed-size box: ForgeMapLibre fills its container,
- * which has no intrinsic height, so a sized wrapper is required for the canvas
- * to appear.
+ * Every story wraps the map in a fixed-size box: `ForgeMapLibre` fills its
+ * container, which has no intrinsic height, so a sized wrapper is required for
+ * the canvas to appear.
+ *
+ * The wrapper is an inline `<div>`, never a local component taking `children`:
+ * the Vue JSX transform turns a component's JSX children into **slots**, so a
+ * `({ children }) => …` wrapper receives `undefined` and silently renders an
+ * empty box — which is exactly why these stories were blank.
  */
-const Frame = ({ children }: { children?: MpChild }) => (
-  <div style={{ width: '100%', height: '480px', borderRadius: 'var(--mp-radius-md, 8px)', overflow: 'hidden' }}>
-    {children}
-  </div>
-);
+const FRAME_STYLE = {
+  width: '100%',
+  height: '480px',
+  borderRadius: 'var(--mp-radius-md, 8px)',
+  overflow: 'hidden',
+};
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -76,7 +82,7 @@ export const FillSource: Story = {
       paint: { 'fill-color': '#2563eb', 'fill-opacity': 0.25 },
     };
     return (
-      <Frame>
+      <div style={FRAME_STYLE}>
         <ForgeMapLibre
           mapStyle={MAP_STYLE}
           center={[8, 50]}
@@ -89,7 +95,7 @@ export const FillSource: Story = {
             <ForgeMapLayer layer={fillLayer} />
           </ForgeMapSource>
         </ForgeMapLibre>
-      </Frame>
+      </div>
     );
   },
 };
@@ -111,7 +117,7 @@ export const FillAndOutline: Story = {
       paint: { 'line-color': '#2563eb', 'line-width': 2 },
     };
     return (
-      <Frame>
+      <div style={FRAME_STYLE}>
         <ForgeMapLibre
           mapStyle={MAP_STYLE}
           center={[8, 50]}
@@ -125,7 +131,7 @@ export const FillAndOutline: Story = {
             <ForgeMapLayer layer={lineLayer} />
           </ForgeMapSource>
         </ForgeMapLibre>
-      </Frame>
+      </div>
     );
   },
 };

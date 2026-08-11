@@ -2,7 +2,7 @@
   "name": "@mission-platform/icons",
   "version": "1.0.0",
   "license": "BSD-4-Clause",
-  "description": "SVG icon components for Mission Platform, authored once in JSX and compiled to Vue 3 and React",
+  "description": "SVG icon components for Mission Platform, authored once in JSX and compiled to Vue, React, Svelte, Solid, and Web Components",
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -54,14 +54,20 @@
         "types": "./dist/svelte/index.d.ts",
         "import": "./dist/svelte/*.js"
       }
-    }
+    },
+    "./sprite": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    },
+    "./icons.svg": "./dist/icons.svg"
   },
   "files": [
     "dist",
     "src"
   ],
   "scripts": {
-    "build": "tsdown",
+    "build": "tsdown && pnpm run build:sprite",
+    "build:sprite": "node --input-type=module -e \"import { mkdirSync, writeFileSync } from 'node:fs'; import { ICON_SPRITE_ASSET } from './dist/sprite/asset.js'; mkdirSync('./dist', { recursive: true }); writeFileSync('./dist/icons.svg', ICON_SPRITE_ASSET);\"",
     "build:check": "tsc --project tsconfig.build.json --noEmit",
     "build:watch": "tsdown --watch",
     "test": "vitest run",
@@ -113,6 +119,11 @@
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@mission-platform/vite-plugin-forge": "workspace:*",
+    "@mission-platform/forge-plugin-react": "workspace:*",
+    "@mission-platform/forge-plugin-solid": "workspace:*",
+    "@mission-platform/forge-plugin-svelte": "workspace:*",
+    "@mission-platform/forge-plugin-vue": "workspace:*",
+    "@mission-platform/forge-plugin-web-components": "workspace:*",
     "@storybook/vue3-vite": "catalog:storybook",
     "@tsdown/css": "catalog:build",
     "@types/node": "catalog:typescript",

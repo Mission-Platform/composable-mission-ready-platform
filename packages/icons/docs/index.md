@@ -1,16 +1,15 @@
 # @mission-platform/icons
 
-`@mission-platform/icons` is a collection of "write once, run on both frameworks" SVG icon components for the Mission
-Platform. Each icon is authored once in a framework-neutral JSX dialect and compiled into native **Vue 3** and **React**
-components at build time.
+`@mission-platform/icons` is a collection of framework-neutral SVG icon components for the Mission Platform. Each icon is
+authored once and compiled into native Vue 3, React, Solid, Svelte, and Web Component builds at build time.
 
 ## Architecture & Distribution
 
-The package leverages `@mission-platform/vite-plugin-forge` to provide high-performance, tree-shakable icons for both
-frameworks:
+The package leverages `@mission-platform/vite-plugin-forge` to provide high-performance, tree-shakable icons for all
+supported frameworks:
 
-- **Compilation**: A single `pnpm build` emits one framework-native bundle per target. Each icon is split into its own
-  JS chunk and CSS asset.
+- **Compilation**: A single `pnpm build` emits one framework-native bundle per target, a deterministic `dist/icons.svg`
+  sprite, and per-icon CSS assets.
 - **Single Entry, Conditional Resolution**: There is exactly one public entry point,
   `@mission-platform/icons`. It carries the `mp:vue`, `mp:react`, `mp:solid`, and
   `mp:web-component` export conditions; whichever one your toolchain activates decides which compiled build the bare
@@ -57,6 +56,46 @@ same specifier gives you the neutral source:
 import { ForgeIconAlert, ForgeIconArrow } from '@mission-platform/icons';
 ```
 
+## Taxonomy and catalog
+
+Authoring folders and Storybook titles follow `icons/<category>/<subcategory>/<icon-name>`. The reviewed catalog covers
+`navigation`, `text`, `maps`, `routing`, `drawing`, `content`, `status`, `communication`, `media`, `security`, `data`,
+`time`, and `objects`. The gap review is recorded in `src/catalog.ts`; it keeps country support data-driven and records
+deferred application-specific artwork instead of creating one component per country.
+
+## Sprite reuse
+
+Every wrapper renders an accessible outer `<svg>` with a `<use href="#icon-id">` reference. `IconSpriteProvider` mounts
+the canonical symbols once for an inline subtree:
+
+```tsx
+import { ForgeIconAlert, ForgeIconArrow, IconSpriteProvider } from '@mission-platform/icons';
+
+export function Toolbar() {
+  return (
+    <IconSpriteProvider>
+      <ForgeIconAlert ariaLabel="Alert" />
+      <ForgeIconArrow
+        direction="right"
+        ariaLabel="Next"
+      />
+    </IconSpriteProvider>
+  );
+}
+```
+
+For an external, cacheable asset use `src="/assets/icons.svg"` with `inline={false}`. External SVG fragment references
+require same-origin access or a compatible CORS policy; inline mode is the fallback for SSR, restrictive CSP, or browsers
+that cannot resolve external fragments. The package build emits `dist/icons.svg`, also available as
+`@mission-platform/icons/icons.svg`.
+
+## Country and composition APIs
+
+`ForgeIconFlag` and `ForgeIconCountryGlobe` accept uppercase ISO-style codes from `SUPPORTED_COUNTRY_CODES`, including
+`US`, `CA`, `JP`, `GB`, and `ZA`. Unsupported runtime values throw a descriptive error. Country globes, route/waypoint
+patterns, and future overlays are typed symbol compositions: they reference existing IDs with transforms and are checked
+for missing references and cycles before sprite generation.
+
 ## API Reference
 
 Each icon renders an `<svg role="img">` within a centering `<div>` wrapper that uses the `.forge-icon-<name>` BEM class.
@@ -96,16 +135,18 @@ The library includes a wide array of icons covering several categories:
 
 ## Development & Maintenance
 
-### Regenerating Icons
+### Building icons
 
-The neutral icons are generated from source Vue SFCs using a build script. To update the library after changing source
-icons, run:
+The package-owned build emits neutral declarations, all framework adapters, and the SVG sprite. After changing catalog or
+sprite source, run:
 
 ```sh
-node scripts/generate-icons.js
+pnpm exec turbo run build:check --filter @mission-platform/icons
+pnpm exec turbo run build --filter @mission-platform/icons
 ```
 
 ### Storybook
 
-Icons are catalogued in both Vue and React Storybooks under the `Icons` section. Each icon has its own story allowing
-for real-time testing of `size`, `color`, and `ariaLabel` props.
+Icons are catalogued under `icons/<category>/<subcategory>/<icon-name>`, while `icons/overview` remains the full gallery.
+The overview also demonstrates repeated icons through one `IconSpriteProvider`; individual stories expose `size`,
+`color`, country-code, and `ariaLabel` controls where applicable.

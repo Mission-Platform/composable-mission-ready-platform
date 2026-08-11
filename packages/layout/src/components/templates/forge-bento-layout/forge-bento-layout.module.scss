@@ -1,0 +1,76 @@
+@layer mp.layout {
+  .bento-layout {
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'hero'
+      'feature'
+      'supporting';
+
+    &__hero,
+    &__feature,
+    &__supporting {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    &__hero {
+      grid-area: hero;
+    }
+
+    &__feature {
+      grid-area: feature;
+    }
+
+    &__supporting {
+      grid-area: supporting;
+    }
+
+    &--xs {
+      @media (width >= 480px) {
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+        grid-template-areas:
+          'hero feature'
+          'hero supporting';
+      }
+    }
+
+    &--sm {
+      @media (width >= 768px) {
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+        grid-template-areas:
+          'hero feature'
+          'hero supporting';
+      }
+    }
+
+    &--md {
+      @media (width >= 1024px) {
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+        grid-template-areas:
+          'hero feature'
+          'hero supporting';
+      }
+    }
+
+    &--lg {
+      @media (width >= 1920px) {
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+        grid-template-areas:
+          'hero feature'
+          'hero supporting';
+      }
+    }
+
+    &--xl {
+      @media (width >= 2560px) {
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+        grid-template-areas:
+          'hero feature'
+          'hero supporting';
+      }
+    }
+  }
+}

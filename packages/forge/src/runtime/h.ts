@@ -1,4 +1,4 @@
-import { type MpChild, type MpElement, type MpElementType, type MpProperties } from './types';
+import { type MpChild, type MpElement, type MpElementType, type MpPropertyBag } from './types';
 
 export { Fragment } from './types';
 
@@ -28,12 +28,12 @@ function flattenChildren(children: readonly MpChild[]): MpChild[] {
  * either as trailing variadic arguments (the classic transform) or via
  * `properties.children`; both are normalised into a single flat array.
  */
-export function h<P extends MpProperties>(
+export function h<P extends object>(
   type: MpElementType | ((properties: P) => MpElement),
   properties?: P | null,
   ...children: MpChild[]
 ): MpElement {
-  const normalizedProperties: MpProperties = { ...properties };
+  const normalizedProperties: MpPropertyBag = { ...properties };
   const inlineChildren = normalizedProperties.children;
   delete normalizedProperties.children;
 

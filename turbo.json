@@ -72,7 +72,7 @@
         "!dist/react/**",
         "!dist/solid/**",
         "!dist/web-components/**",
-        "!dist/storyblok/**",
+        "!dist/cms/**",
         "!dist/**/*.d.ts",
         "!dist/**/*.d.ts.map"
       ]
@@ -143,7 +143,7 @@
         "dist/web-components/**"
       ]
     },
-    "build:storyblok-vue": {
+    "build:cms": {
       "dependsOn": [
         "^build"
       ],
@@ -156,11 +156,10 @@
         "!**/coverage/**"
       ],
       "outputs": [
-        "dist/storyblok/vue/**",
-        "dist/storyblok/*.json"
+        "dist/cms/**"
       ]
     },
-    "build:storyblok-react": {
+    "build:cms-storyblok-vue": {
       "dependsOn": [
         "^build"
       ],
@@ -173,7 +172,88 @@
         "!**/coverage/**"
       ],
       "outputs": [
-        "dist/storyblok/react/**"
+        "dist/cms/storyblok/vue/**",
+        "dist/cms/storyblok/*.json"
+      ]
+    },
+    "build:cms-storyblok-react": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": [
+        "dist/cms/storyblok/react/**"
+      ]
+    },
+    "build:cms-astro": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": [
+        "dist/cms/astro/**"
+      ]
+    },
+    "build:cms-ghost": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": [
+        "dist/cms/ghost/**"
+      ]
+    },
+    "build:cms-jekyll": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": [
+        "dist/cms/jekyll/**"
+      ]
+    },
+    "build:cms-webflow": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/dist/**",
+        "!**/storybook-static/**",
+        "!**/.vite/**",
+        "!**/coverage/**"
+      ],
+      "outputs": [
+        "dist/cms/webflow/**"
       ]
     },
     "build:watch": {

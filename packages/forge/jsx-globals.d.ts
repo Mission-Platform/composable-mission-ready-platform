@@ -19,11 +19,18 @@
  * `React.JSX` instead), so this declaration is free of conflicts even when
  * `@types/react` is installed.
  */
-import type { MpChild, MpElement } from '@mission-platform/forge';
+import type { MpChild, MpElement, MpReservedProperties } from '@mission-platform/forge';
 
 declare global {
   namespace JSX {
     type Element = MpElement;
+
+    /**
+     * The attributes accepted by *every* element on top of the properties a
+     * component declares — `key`, which identifies a list entry for the target
+     * framework's reconciler and is never read by the component itself.
+     */
+    type IntrinsicAttributes = MpReservedProperties;
 
     interface ElementChildrenAttribute {
       children: object;

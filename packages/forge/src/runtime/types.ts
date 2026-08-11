@@ -30,34 +30,60 @@ export const Fragment: MpFragment = () => {
   );
 };
 
-/** The bag of attributes/props passed to an element or component. */
-export interface MpProperties {
-  children?: MpChild | readonly MpChild[];
-  /**
-   * Routes this child into a parent component's **named slot**
-   * (`<button slot="trigger" />` fills the parent's `trigger` slot). The
-   * compiler turns it into a Vue `<template #name>` block / a React `name` prop,
-   * and the runtime adapters fold it into the parent's props (see
-   * `collectSlottedChildren`). Omitted (or `"default"`) means the default slot.
-   */
-  slot?: string;
+/**
+ * The **runtime** bag of attributes/props carried by an {@link MpElement}.
+ *
+ * This is deliberately a plain, untyped record: it is what the JSX factory
+ * builds and what the adapters index into while walking a neutral tree. It is
+ * *not* a base type for a component's props — a component declares exactly the
+ * properties it accepts (including `children?: MpChild | readonly MpChild[]`
+ * when it renders them), so that excess-property checking and `keyof` stay
+ * meaningful in every compiled target. The handful of attributes every element
+ * accepts regardless are declared once in {@link MpReservedProperties}.
+ */
+export type MpPropertyBag = Record<string, unknown>;
 
-  [key: string]: unknown;
+/**
+ * The **reserved** attributes every JSX element accepts on top of the properties
+ * it declares itself, wired up as `JSX.IntrinsicAttributes` by the opt-in
+ * `@mission-platform/forge/jsx-globals` typings.
+ *
+ * - `key` identifies an entry in a rendered list so the target framework can
+ *   reconcile it across updates (React's `key`, Vue's `:key`).
+ * - `slot` routes this element into a **named slot** of its parent component
+ *   (`<ForgeIcon slot="start" />`). The compiler turns it into a Vue
+ *   `<template #start>` block / a React `start` prop, and the runtime adapters
+ *   fold it into the parent's props (see `collectSlottedChildren`). Omitted (or
+ *   `"default"`) means the default slot.
+ *
+ * Neither is part of a component's own props contract — both are read by the
+ * *parent* (the reconciler, the slot router), never by the component itself —
+ * so they are accepted for every element here rather than declared on each
+ * props interface.
+ */
+export interface MpReservedProperties {
+  key?: string | number;
+  slot?: string;
 }
 
 /**
  * A component authored in the neutral JSX dialect: a pure function of its
  * properties returning a single {@link MpElement}.
+ *
+ * `P` is intentionally **unconstrained**: a component's props interface
+ * declares only the properties it actually accepts, and such an interface has
+ * no implicit index signature, so constraining `P` to a record type would
+ * reject every honest props declaration.
  */
-export type MpComponent<P extends MpProperties = MpProperties> = (properties: P) => MpElement;
+export type MpComponent<P = MpPropertyBag> = (properties: P) => MpElement;
 
 /**
- * The type of the {@link Fragment} factory. Its only prop is `children`; unlike
- * {@link MpProperties} it deliberately has **no** index signature, because the
- * classic transform synthesises a `{ children }` object for a `<>…</>` fragment
- * and type-checks it (not as a fresh object literal) against the factory's
- * parameter — an index-signature-bearing parameter would reject it with TS2322
- * ("Index signature for type 'string' is missing").
+ * The type of the {@link Fragment} factory. Its only prop is `children`, and it
+ * deliberately has **no** index signature, because the classic transform
+ * synthesises a `{ children }` object for a `<>…</>` fragment and type-checks it
+ * (not as a fresh object literal) against the factory's parameter — an
+ * index-signature-bearing parameter would reject it with TS2322 ("Index
+ * signature for type 'string' is missing").
  */
 export type MpFragment = (properties?: { readonly children?: MpChild | readonly MpChild[] }) => MpElement;
 
@@ -87,7 +113,7 @@ export type MpChild = MpElement | string | number | boolean | null | undefined;
 export interface MpElement {
   readonly __mpElement: true;
   readonly type: MpElementType;
-  readonly properties: MpProperties;
+  readonly properties: MpPropertyBag;
   readonly children: readonly MpChild[];
 }
 

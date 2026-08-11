@@ -12,15 +12,4 @@ export default defineTsdownLibrary({
     'adapters/web-components': 'src/adapters/web-components.ts',
   },
   external: ['react', 'react-dom', 'solid-js', 'svelte'],
-  overrides: {
-    inputOptions: {
-      transform: {
-        jsx: {
-          runtime: 'classic',
-          factory: 'h',
-          fragment: 'Fragment',
-        },
-      },
-    },
-  },
 });

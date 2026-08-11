@@ -4,6 +4,8 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { forgeVueFramework } from '../../../forge-plugins/forge-vue/src';
+
 import { generateHookLibrarySources } from './generate-hooks';
 
 describe('generateHookLibrarySources', () => {
@@ -40,7 +42,7 @@ describe('generateHookLibrarySources', () => {
 
     try {
       generateHookLibrarySources({
-        framework: 'vue',
+        plugin: forgeVueFramework(),
         entryModule: path.join(sourceDirectory, 'index.ts'),
         outDir: outputDirectory,
       });

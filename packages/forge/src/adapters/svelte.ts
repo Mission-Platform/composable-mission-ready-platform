@@ -6,9 +6,52 @@
  * surface for hand-written Svelte wrappers: they render their children in
  * place, matching the SSR-safe baseline of the other adapters.
  */
-import type { Snippet } from 'svelte';
+import { createRawSnippet, type Snippet } from 'svelte';
+
+import type { HtmlContentProperties } from '../runtime/html-content';
 
 const EMPTY_SNIPPET = (() => '') as unknown as Snippet;
+
+function escapeAttribute(value: unknown): string {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('"', '&quot;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;');
+}
+
+function setReference(reference: unknown, element: Element): void {
+  if (typeof reference === 'function') {
+    reference(element);
+  } else if (typeof reference === 'object' && reference !== null && 'current' in reference) {
+    (reference as { current: Element }).current = element;
+  }
+}
+
+/**
+ * The Svelte adapter's raw-content implementation. `createRawSnippet` is the
+ * runtime form of Svelte's `{@html}` operation and its setup callback preserves
+ * host refs and event forwarding for hand-written adapter usage.
+ */
+export function HtmlContent(properties: HtmlContentProperties): Snippet {
+  const { html, as = 'div', children: _children, ref, ...hostProperties } = properties;
+  void _children;
+  const attributes = Object.entries(hostProperties)
+    .filter(([, value]) => value !== undefined && value !== null && value !== false && typeof value !== 'function')
+    .map(([name, value]) => ` ${name === 'className' ? 'class' : name}="${escapeAttribute(value)}"`)
+    .join('');
+  return createRawSnippet(() => ({
+    render: () => `<${as}${attributes}>${html}</${as}>`,
+    setup: (element) => {
+      setReference(ref, element);
+      for (const [name, value] of Object.entries(hostProperties)) {
+        if (name.startsWith('on') && typeof value === 'function') {
+          element.addEventListener(name.slice(2).toLowerCase(), value as EventListener);
+        }
+      }
+    },
+  }));
+}
 
 /** The properties accepted by the Svelte {@link Teleport} primitive. */
 export interface TeleportProperties {

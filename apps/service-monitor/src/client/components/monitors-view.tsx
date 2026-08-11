@@ -4,14 +4,15 @@ import { ForgeTypography } from '@mission-platform/components';
 import { useI18n } from '@mission-platform/i18n';
 import { ForgeContainer } from '@mission-platform/layouts';
 import { useObservable } from '@mission-platform/rxjs';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { deleteMonitor, saveMonitor, servicesStream } from '../hooks/streams';
+import { createMonitorSession, deleteMonitor, hasMonitorSession, saveMonitor, servicesStream } from '../hooks/streams';
 import { ServiceMonitorShell } from '../layouts/service-monitor-shell';
 
 import { MonitorManager } from './monitor-manager';
 
 import type { Incident, MonitorTarget, ServicesResponse } from '@/monitoring/types';
+import type { FormEvent } from 'react';
 
 interface MonitorsViewProperties {
   readonly initialMonitors: MonitorTarget[];
@@ -35,7 +36,40 @@ export function MonitorsView({
   const { t } = useI18n();
   const intervalMs = intervalSeconds * 1000;
 
+  const [authenticated, setAuthenticated] = useState<boolean | null>(null);
+  const [sessionToken, setSessionToken] = useState('');
+  const [sessionError, setSessionError] = useState<string | null>(null);
   const [reloadNonce, setReloadNonce] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    void hasMonitorSession()
+      .then((value) => {
+        if (active) setAuthenticated(value);
+      })
+      .catch(() => {
+        if (active) setAuthenticated(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const signIn = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
+    event.preventDefault();
+    setSessionError(null);
+    try {
+      const ok = await createMonitorSession(sessionToken);
+      if (ok) {
+        setSessionToken('');
+        setAuthenticated(true);
+      } else {
+        setSessionError('The monitor token was rejected.');
+      }
+    } catch {
+      setSessionError('The monitor session could not be created.');
+    }
+  };
 
   const initialResponse = useMemo<ServicesResponse>(
     () => ({
@@ -78,22 +112,49 @@ export function MonitorsView({
         variant="responsive"
         className="monitors-page"
       >
-        <header className="monitors-page__header">
-          <ForgeTypography
-            as="h1"
-            variant="h1"
-            className="monitors-page__title"
-          >
-            {t(($) => $.nav.monitors, { ns: 'mp.service-monitor', defaultValue: 'Monitors' })}
-          </ForgeTypography>
-        </header>
+        {authenticated === true ? (
+          <>
+            <header className="monitors-page__header">
+              <ForgeTypography
+                as="h1"
+                variant="h1"
+                className="monitors-page__title"
+              >
+                {t(($) => $.nav.monitors, { ns: 'mp.service-monitor', defaultValue: 'Monitors' })}
+              </ForgeTypography>
+            </header>
 
-        <MonitorManager
-          monitors={monitors}
-          defaultIntervalSeconds={intervalSeconds}
-          onSave={onSave}
-          onDelete={onDelete}
-        />
+            <MonitorManager
+              monitors={monitors}
+              defaultIntervalSeconds={intervalSeconds}
+              onSave={onSave}
+              onDelete={onDelete}
+            />
+          </>
+        ) : authenticated === false ? (
+          <form onSubmit={signIn}>
+            <ForgeTypography
+              as="h1"
+              variant="h1"
+            >
+              Monitor access
+            </ForgeTypography>
+            <label>
+              API token
+              <input
+                autoComplete="current-password"
+                name="token"
+                onChange={(event) => setSessionToken(event.target.value)}
+                type="password"
+                value={sessionToken}
+              />
+            </label>
+            <button type="submit">Sign in</button>
+            {sessionError ? <p role="alert">{sessionError}</p> : null}
+          </form>
+        ) : (
+          <p>Checking monitor access…</p>
+        )}
       </ForgeContainer>
     </ServiceMonitorShell>
   );

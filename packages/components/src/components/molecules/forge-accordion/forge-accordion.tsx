@@ -1,8 +1,9 @@
-import { h, type MpElement, type MpProperties, type MpRenderProperty, Slot, useState } from '@mission-platform/forge';
+import { h, type MpChild, type MpElement, type MpRenderProperty, Slot, useState } from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
 
+import { ForgeTypography } from '@/components/atoms/forge-typography';
+
 import sizeStyles from '../../../styles/size.module.scss';
-import { ForgeTypography } from '../../atoms/forge-typography';
 
 import styles from './forge-accordion.module.scss';
 
@@ -33,7 +34,9 @@ export interface AccordionItemScope {
   open: boolean;
 }
 
-export interface AccordionProperties extends MpProperties {
+export interface AccordionProperties {
+  /** The content the consumer fills the component’s slots with. */
+  children?: MpChild | readonly MpChild[];
   /** Ordered list of collapsible items. */
   items: AccordionItem[];
   /** When `true` (default), opening an item closes the others. */

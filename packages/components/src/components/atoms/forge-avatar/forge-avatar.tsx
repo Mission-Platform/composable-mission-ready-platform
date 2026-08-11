@@ -1,4 +1,4 @@
-import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { h, type MpChild, type MpElement } from '@mission-platform/forge';
 
 /** Canonical 2xs → 2xl size scale shared across the display components. */
 export type AvatarSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
@@ -10,7 +10,9 @@ export type AvatarStatus = 'online' | 'offline' | 'away' | 'busy' | undefined;
 export type AvatarVariant =
   'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
-export interface AvatarProperties extends MpProperties {
+export interface AvatarProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Image source. When set, the image is shown in preference to `initials`/slot. */
   src?: string;
   /** Alternative text for the image. */

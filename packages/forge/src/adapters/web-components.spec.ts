@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { ForgeElement, html, nothing, render } from './web-components';
+import { ForgeElement, hasSlotContent, html, HtmlContent, nothing, render, unsafeHtml, useId } from './web-components';
 
 import type { TemplateResult } from './web-components';
 
@@ -123,6 +123,39 @@ describe('the native `html` tagged template + `render`', () => {
     expect([...(root?.querySelectorAll('i') ?? [])].map((node) => node.textContent)).toEqual(['b', 'c']);
   });
 
+  it('renders trusted raw content without escaping it', () => {
+    const container = document.createElement('div');
+    render(
+      html`
+        <section>${unsafeHtml('<svg><title>trusted</title></svg>')}</section>
+      `,
+      container,
+    );
+
+    expect(container.querySelector('svg title')?.textContent).toBe('trusted');
+    expect(container.textContent).not.toContain('<svg>');
+  });
+
+  it('renders HtmlContent into the requested host and forwards attributes/ref', () => {
+    const container = document.createElement('div');
+    const reference: { current?: Element } = { current: undefined };
+    render(
+      HtmlContent({
+        as: 'section',
+        html: '<strong>content</strong>',
+        className: 'content',
+        id: 'content-host',
+        ref: reference,
+      }),
+      container,
+    );
+
+    expect(container.firstElementChild?.outerHTML).toBe(
+      '<section class="content" id="content-host"><strong>content</strong></section>',
+    );
+    expect(reference.current).toBe(container.firstElementChild);
+  });
+
   it('drops an attribute whose value is `false`/`null`/`nothing`', () => {
     const container = document.createElement('div');
     render(
@@ -179,5 +212,191 @@ describe('the `ForgeElement` base class', () => {
     expect(CounterElement.observedAttributes).toContain('label');
     // Internal `state` properties are not observed as attributes.
     expect(CounterElement.observedAttributes).not.toContain('count');
+  });
+});
+
+/**
+ * A generated-style element whose reactive `state` is seeded the way the
+ * Web-Components emitter does it: declaration-only, assigned in the constructor.
+ */
+class SeededElement extends ForgeElement {
+  static readonly properties = { count: { state: true } };
+
+  declare count: number;
+
+  constructor() {
+    super();
+    this.count = 0;
+  }
+
+  render(): TemplateResult {
+    return html`
+      <span class="value">${this.count}</span>
+    `;
+  }
+}
+customElements.define('mp-seeded', SeededElement);
+
+/**
+ * The same element with its `count` seeded as an **own** property — what a class
+ * field initializer (`count = 0`) compiles to under `useDefineForClassFields`.
+ * It exists to pin down *why* the emitter declares reactive fields instead of
+ * initialising them.
+ */
+class ShadowedElement extends ForgeElement {
+  static readonly properties = { count: { state: true } };
+
+  declare count: number;
+
+  constructor() {
+    super();
+    Object.defineProperty(this, 'count', { configurable: true, enumerable: true, value: 0, writable: true });
+  }
+
+  render(): TemplateResult {
+    const value = this.count;
+    return html`
+      <span class="value">${value}</span>
+    `;
+  }
+}
+customElements.define('mp-shadowed', ShadowedElement);
+
+/**
+ * An element whose state cell is seeded **from a property**, the way the
+ * compiler emits `const [value] = useState(Number(modelValue) * 2)`: the seed
+ * cannot run in the constructor, where `modelValue` is still `undefined`, so it
+ * is deferred to {@link ForgeElement.setup}.
+ */
+class DeferredSeedElement extends ForgeElement {
+  static readonly properties = { modelValue: {}, doubled: { state: true } };
+
+  declare modelValue: string | undefined;
+
+  declare doubled: number;
+
+  setup(): void {
+    const { modelValue = '0' } = this;
+    this.doubled = Number(modelValue) * 2;
+  }
+
+  render(): TemplateResult {
+    return html`
+      <span class="value">${this.doubled}</span>
+    `;
+  }
+}
+customElements.define('mp-deferred-seed', DeferredSeedElement);
+
+describe('reactive state seeding', () => {
+  it('re-renders when state seeded in the constructor is written', async () => {
+    const element = new SeededElement();
+    document.body.append(element);
+    expect(element.shadowRoot?.querySelector('.value')?.textContent).toBe('0');
+
+    element.count = 3;
+    await tick();
+
+    expect(element.shadowRoot?.querySelector('.value')?.textContent).toBe('3');
+    // The value lives in the runtime's store, not on the instance.
+    expect(Object.prototype.hasOwnProperty.call(element, 'count')).toBe(false);
+  });
+
+  it('never re-renders when an own property shadows the reactive accessor', async () => {
+    const element = new ShadowedElement();
+    document.body.append(element);
+
+    element.count = 3;
+    await tick();
+
+    // The write hit the own data property, so the setter — and the re-render it
+    // schedules — never ran. This is the hazard a `declare`d field avoids.
+    expect(element.shadowRoot?.querySelector('.value')?.textContent).toBe('0');
+  });
+
+  it('seeds state from a property set as an attribute before the first render', () => {
+    const element = document.createElement('mp-deferred-seed');
+    element.setAttribute('modelvalue', '21');
+    document.body.append(element);
+
+    // `setup` runs after `adoptAttributes`, so the seed reads the real value —
+    // in the constructor it would have read `undefined` and fallen back to `0`.
+    expect(element.shadowRoot?.querySelector('.value')?.textContent).toBe('42');
+  });
+
+  it('seeds exactly once, so a reconnect keeps what the user has since changed', () => {
+    const element = document.createElement('mp-deferred-seed');
+    element.setAttribute('modelvalue', '1');
+    document.body.append(element);
+    element.remove();
+    document.body.append(element);
+
+    expect(element.shadowRoot?.querySelector('.value')?.textContent).toBe('2');
+    expect((element as DeferredSeedElement).doubled).toBe(2);
+  });
+});
+
+/** A host element with the given light-DOM children. */
+function host(...children: readonly Node[]): HTMLElement {
+  const element = document.createElement('div');
+  element.append(...children);
+  return element;
+}
+
+/** An element child, optionally assigned to a named slot. */
+function child(slot?: string): HTMLElement {
+  const element = document.createElement('span');
+  if (slot !== undefined) {
+    element.setAttribute('slot', slot);
+  }
+  return element;
+}
+
+describe('the native `hasSlotContent`', () => {
+  it('reports the default slot from any unassigned child', () => {
+    expect(hasSlotContent(host(child()))).toBe(true);
+    expect(hasSlotContent(host(document.createTextNode('text')))).toBe(true);
+    // An explicit `'default'` names the same slot.
+    expect(hasSlotContent(host(child()), 'default')).toBe(true);
+    expect(hasSlotContent(host(child('footer')))).toBe(false);
+    expect(hasSlotContent(host())).toBe(false);
+  });
+
+  it('ignores whitespace-only text, which fills no slot', () => {
+    expect(hasSlotContent(host(document.createTextNode('\n  ')))).toBe(false);
+  });
+
+  it('reports a named slot, kebab-case or camelCase', () => {
+    expect(hasSlotContent(host(child('footer')), 'footer')).toBe(true);
+    expect(hasSlotContent(host(child('start-content')), 'start-content')).toBe(true);
+    expect(hasSlotContent(host(child('avatarContent')), 'avatarContent')).toBe(true);
+    expect(hasSlotContent(host(child('footer')), 'header')).toBe(false);
+  });
+
+  it('considers only direct children, like slot assignment itself', () => {
+    const wrapper = host(child('footer'));
+    expect(hasSlotContent(host(wrapper), 'footer')).toBe(false);
+  });
+});
+
+/** The counter part of a generated id. */
+function idNumber(id: string): number {
+  return Number(id.slice('forge-'.length));
+}
+
+describe('the native `useId`', () => {
+  it('produces a prefixed, selector-safe id', () => {
+    expect(useId()).toMatch(/^forge-\d+$/);
+  });
+
+  it('never repeats an id across calls', () => {
+    const ids = Array.from({ length: 100 }, () => useId());
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('increases monotonically', () => {
+    const first = idNumber(useId());
+    const second = idNumber(useId());
+    expect(second).toBeGreaterThan(first);
   });
 });

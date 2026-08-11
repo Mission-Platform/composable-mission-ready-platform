@@ -1,0 +1,65 @@
+{
+  "name": "@mission-platform/forge-plugin-api",
+  "version": "0.1.0",
+  "license": "BSD-4-Clause",
+  "description": "Public API contracts for Forge framework output plugins",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./compiler/ast": {
+      "types": "./dist/compiler/ast.d.ts",
+      "import": "./dist/compiler/ast.js"
+    },
+    "./compiler/ast.js": {
+      "types": "./dist/compiler/ast.d.ts",
+      "import": "./dist/compiler/ast.js"
+    },
+    "./compiler/hoist-static": {
+      "types": "./dist/compiler/hoist-static.d.ts",
+      "import": "./dist/compiler/hoist-static.js"
+    },
+    "./compiler/hoist-static.js": {
+      "types": "./dist/compiler/hoist-static.d.ts",
+      "import": "./dist/compiler/hoist-static.js"
+    },
+    "./compiler/optimize": {
+      "types": "./dist/compiler/optimize.d.ts",
+      "import": "./dist/compiler/optimize.js"
+    },
+    "./compiler/optimize.js": {
+      "types": "./dist/compiler/optimize.d.ts",
+      "import": "./dist/compiler/optimize.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "format": "prettier --check ."
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@mission-platform/vite-config": "workspace:*",
+    "@types/node": "catalog:typescript",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "tsdown": "catalog:build",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite",
+    "vitest": "catalog:testing"
+  }
+}

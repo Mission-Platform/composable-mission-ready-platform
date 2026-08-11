@@ -1,7 +1,8 @@
-import { h, type MpElement, type MpProperties, type MpRenderProperty, Slot } from '@mission-platform/forge';
+import { h, type MpChild, type MpElement, type MpRenderProperty, Slot } from '@mission-platform/forge';
+
+import { ForgeTypography } from '@/components/atoms/forge-typography';
 
 import sizeStyles from '../../../styles/size.module.scss';
-import { ForgeTypography } from '../../atoms/forge-typography';
 
 import styles from './forge-timeline.module.scss';
 
@@ -42,7 +43,9 @@ export interface TimelineItemScope {
   index: number;
 }
 
-export interface TimelineProperties extends MpProperties {
+export interface TimelineProperties {
+  /** The content the consumer fills the component’s slots with. */
+  children?: MpChild | readonly MpChild[];
   /** Ordered list of events. */
   items: TimelineItem[];
   /** Lay the timeline out vertically (default) or horizontally. */

@@ -19,7 +19,10 @@ graph TD
     Apps[apps/] --> Packages[packages/]
     Apps --> Plugins[vite-plugins/]
     Apps --> Workers[workers/]
+    Packages --> ForgePlugins[forge-plugins/]
     Packages --> Configs[configs/]
+    ForgePlugins --> Plugins
+    ForgePlugins --> Configs
     Plugins --> Configs
     Workers --> Configs
 ```
@@ -28,39 +31,36 @@ graph TD
    monorepo.
 2. **Packages (`packages/`)**: Provide reusable logic and components. They can depend on each other but never on
    applications.
-3. **Configs (`configs/`)**: Shared tooling settings (ESLint, TypeScript, etc.). They are the foundation and depend on
+3. **Forge plugins (`forge-plugins/`)**: Compiler output targets — framework plugins and CMS targets. They may depend on
+   `vite-plugins/` and `configs/`, and never on `apps/` or on each other's siblings; a CMS adapter depends only on
+   `forge-cms-plugin-api`.
+4. **Configs (`configs/`)**: Shared tooling settings (ESLint, TypeScript, etc.). They are the foundation and depend on
    nothing within the monorepo.
 
 ## Framework-Neutral Engine: Forge
 
-The heart of Mission Platform is `@mission-platform/forge`, a tiny, framework-neutral JSX runtime. It allows developers
-to author UI components in a dialect that is independent of any specific framework like Vue or React.
+The heart of Mission Platform is `@mission-platform/forge`, a framework-neutral authoring model for components and
+composables. `@mission-platform/vite-plugin-forge` is the neutral compiler driver: it parses and normalizes source,
+builds semantic IR, runs shared analysis and optimization, and dispatches to an explicitly supplied
+`FrameworkOutputPlugin`.
 
-### How Forge Works
+Framework packages such as `@mission-platform/forge-plugin-react` and `@mission-platform/forge-plugin-vue` own target
+lowering, target optimization, native source generation, diagnostics, runtime metadata, and Vite/tsdown adapters. There
+is no central framework emitter or string-to-framework registry in the driver. Package build configurations select the
+plugin instances they publish, so target implementation dependencies remain at the framework boundary.
 
-- **Neutral Hooks**: Provides familiar React-style hooks (`useState`, `useEffect`, `useMemo`) that are translated to the
-  target framework's native primitives during compilation.
-- **Serializable VNodes**: Generates a standard `MpElement` tree that can be interpreted by various adapters.
-- **Zero Runtime Overhead**: The neutral code is transformed at build time into native framework code, ensuring optimal
-  performance.
+The resulting flow is **parse/normalize → neutral optimize → semantic IR → target lower → target optimize → generate →
+native build**. The native build is performed by the selected plugin's Vite or tsdown adapter, which also provides the
+target's declarations, externals, and output conventions.
 
-## Cross-Framework Compilation Pipeline
+A second, orthogonal axis projects the same neutral components onto **content platforms**.
+`@mission-platform/forge-cms-plugin-api` owns a platform-neutral content model, the `CmsOutputPlugin` contract, and a
+generic driver; the adapter packages `forge-cms-storyblok`, `forge-cms-astro`, `forge-cms-ghost`, `forge-cms-jekyll`,
+and `forge-cms-webflow` each own one platform. A CMS target *composes* a framework plugin rather than replacing one, so
+any platform pairs with any framework and the output lands in `dist/cms/<cms>/<framework>/**`.
 
-Mission Platform uses a custom two-stage compilation process, orchestrated by `@mission-platform/vite-plugin-forge`, to
-transform neutral components into multiple framework-specific outputs.
-
-### Stage 1: Source Transformation
-
-The neutral `.tsx` source is parsed using the TypeScript Compiler API. It is then transformed into:
-
-- **Vue SFCs**: Translating hooks to the Composition API and generating `<script setup>` blocks.
-- **React Components**: Mapping the neutral JSX to standard React modules.
-- **Solid/Svelte/Web Components**: Generating the appropriate native code for each target.
-
-### Stage 2: Native Compilation
-
-The generated source trees are then passed to the native framework toolchains (e.g., `@vitejs/plugin-vue`,
-`reactJsxPlugin`) to produce the final production bundles.
+For the complete pipeline, component and hook consumers, CMS projection, and extension guidance, see
+[Forge Compiler Pipeline](forge-compiler.md). For the build orchestration view, see [Build System](build-system.md).
 
 ## Design Token System
 

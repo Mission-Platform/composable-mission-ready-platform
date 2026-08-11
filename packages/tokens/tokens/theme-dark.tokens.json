@@ -88,6 +88,18 @@
       "on-primary": {
         "$value": "{color.cyan.900}",
         "$description": "color.cyan.900"
+      },
+      "link": {
+        "$value": "{color.cyan.300}",
+        "$description": "Link text at rest."
+      },
+      "link-hover": {
+        "$value": "{color.cyan.200}",
+        "$description": "Link text while hovered or active."
+      },
+      "link-visited": {
+        "$value": "{color.info.300}",
+        "$description": "Link text for an already-visited target."
       }
     },
     "primary": {

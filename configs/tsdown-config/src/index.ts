@@ -156,6 +156,8 @@ export interface TsdownLibraryOptions {
   autoExternalDeps?: boolean;
   /** Working directory for tsdown (defaults to `rootDir`). */
   cwd?: string;
+  /** Alternate source tree used when resolving TypeScript aliases (for generated caches). */
+  tsconfigPathsRoot?: string;
   /**
    * Re-link each extracted `.css` asset to the JS module that owns it (see
    * {@link cssBundlePlugin}). Defaults to `true` so co-located component styles
@@ -289,6 +291,98 @@ function resolveTsconfigOption(rootDirectory: string, tsconfig: string | boolean
   return fs.existsSync(buildConfig) ? buildConfig : true;
 }
 
+interface TsconfigAlias {
+  pattern: string;
+  targets: string[];
+}
+
+/** Read the package's path aliases, tolerating the comments used by tsconfig files. */
+function readTsconfigAliases(rootDirectory: string, targetRoot: string): TsconfigAlias[] {
+  const configFile = [path.join(rootDirectory, 'tsconfig.build.json'), path.join(rootDirectory, 'tsconfig.json')].find(
+    (file) => fs.existsSync(file),
+  );
+  if (configFile === undefined) {
+    return [];
+  }
+
+  try {
+    const source = fs
+      .readFileSync(configFile, 'utf8')
+      .replaceAll(/\/\/.*$/gmu, '')
+      // Do not treat the `/*` wildcard in a JSON path alias such as `@/*` as
+      // the start of a block comment.
+      .replaceAll(/\/\*(?!["'])[^]*?\*\//gu, '')
+      .replaceAll(/,\s*([}\]])/gu, '$1');
+    const config = JSON.parse(source) as {
+      compilerOptions?: { baseUrl?: string; paths?: Record<string, string[]> };
+    };
+    const compilerOptions = config.compilerOptions;
+    if (compilerOptions?.paths === undefined) {
+      return [];
+    }
+
+    // Resolve authored aliases here, but only return explicit absolute targets
+    // to the tsdown plugin; `baseUrl` is never forwarded to generated config.
+    const baseUrl = path.resolve(path.dirname(configFile), compilerOptions.baseUrl ?? '.');
+    const sourceRoot = path.resolve(rootDirectory, 'src');
+    return Object.entries(compilerOptions.paths).map(([pattern, targets]) => ({
+      pattern,
+      targets: targets.map((target) => {
+        const wildcard = target.indexOf('*');
+        const targetPrefix = wildcard === -1 ? target : target.slice(0, wildcard);
+        const targetPath = path.resolve(baseUrl, targetPrefix);
+        if (targetPath === sourceRoot || targetPath.startsWith(`${sourceRoot}${path.sep}`)) {
+          const relativeToSource = path.relative(sourceRoot, targetPath);
+          return path.join(targetRoot, relativeToSource, target.slice(targetPrefix.length));
+        }
+        return path.resolve(baseUrl, target);
+      }),
+    }));
+  } catch {
+    return [];
+  }
+}
+
+/** Resolve TypeScript path aliases, optionally against a generated cache tree. */
+function tsconfigPathsPlugin(rootDirectory: string, targetRoot = path.resolve(rootDirectory, 'src')): TsdownPlugin {
+  const aliases = readTsconfigAliases(rootDirectory, targetRoot);
+  return {
+    name: '@mission-platform/tsdown-config:tsconfig-paths',
+    resolveId(source) {
+      const [specifier, query = ''] = source.split(/(?=[?#])/u);
+      for (const alias of aliases) {
+        const wildcard = alias.pattern.indexOf('*');
+        const suffix = wildcard === -1 ? '' : alias.pattern.slice(wildcard + 1);
+        const prefix = wildcard === -1 ? alias.pattern : alias.pattern.slice(0, wildcard);
+        if (!specifier.startsWith(prefix) || !specifier.endsWith(suffix)) {
+          continue;
+        }
+        const match = specifier.slice(prefix.length, specifier.length - suffix.length || undefined);
+        const candidates = alias.targets.flatMap((target) => {
+          const resolvedTarget = target.replace('*', match);
+          return [
+            `${resolvedTarget}.ts`,
+            `${resolvedTarget}.tsx`,
+            `${resolvedTarget}.vue`,
+            `${resolvedTarget}.svelte`,
+            `${resolvedTarget}.css`,
+            `${resolvedTarget}.scss`,
+            `${resolvedTarget}.module.css`,
+            `${resolvedTarget}.module.scss`,
+            `${resolvedTarget}/index.ts`,
+            `${resolvedTarget}/index.tsx`,
+            `${resolvedTarget}/index.vue`,
+            `${resolvedTarget}/index.svelte`,
+            resolvedTarget,
+          ];
+        });
+        const resolved = candidates.find((candidate) => fs.existsSync(candidate) && fs.statSync(candidate).isFile());
+        return `${resolved ?? candidates[0]}${query}`;
+      }
+    },
+  } as TsdownPlugin;
+}
+
 /**
  * Build a tsdown config for a plain TypeScript (or single-bundle) library —
  * Archetype A/B. Mirrors `defineLibraryConfig` externalisation semantics from
@@ -307,6 +401,7 @@ export function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig {
     autoExternalDeps = unbundle,
     cwd = rootDir,
     tsconfig,
+    tsconfigPathsRoot,
     platform = 'neutral',
     cssBundle = true,
     overrides,
@@ -340,7 +435,7 @@ export function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig {
     },
     // Re-link the extracted per-module stylesheets (which Rolldown emits but does
     // not import back into the JS) to the modules that own them.
-    plugins: cssBundle ? [cssBundlePlugin()] : undefined,
+    plugins: [tsconfigPathsPlugin(rootDir, tsconfigPathsRoot), ...(cssBundle ? [cssBundlePlugin()] : [])],
     deps: {
       neverBundle: createExternalMatcher(externalNames),
     },

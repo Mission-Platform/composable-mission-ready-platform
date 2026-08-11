@@ -1,3 +1,6 @@
+import { env } from 'cloudflare:workers';
+
+import { authorizeMonitorRequest, handleMonitorSession } from '@/app/auth';
 import {
   resolveIntervalSeconds,
   resolveRetentionMs,
@@ -21,6 +24,16 @@ function json(body: unknown, init?: ResponseInit): Response {
       ...init?.headers,
     },
   });
+}
+
+/** Return the authentication failure for an administrative API request. */
+function requireAuthentication(request: Request): Response | null {
+  return authorizeMonitorRequest(request, env.MONITOR_API_TOKEN);
+}
+
+/** `/api/auth/session` — establish or clear the browser's administrative session. */
+export function handleAuthSession(request: Request): Promise<Response> {
+  return handleMonitorSession(request, env.MONITOR_API_TOKEN);
 }
 
 /**
@@ -70,7 +83,10 @@ export async function handleMetrics(request: Request): Promise<Response> {
  * `POST /api/check` — trigger an immediate server-side probe cycle. Useful for
  * seeding the dashboard on first load instead of waiting for the next alarm.
  */
-export async function handleCheckNow(): Promise<Response> {
+export async function handleCheckNow(request: Request): Promise<Response> {
+  const authenticationFailure = requireAuthentication(request);
+  if (authenticationFailure) return authenticationFailure;
+
   const monitor = getMonitor();
   await monitor.checkNow();
   return json({ ok: true });
@@ -96,6 +112,9 @@ export async function handleMonitors(): Promise<Response> {
  * probed immediately so the change is reflected without waiting for the alarm.
  */
 export async function handleMonitorUpsert(request: Request): Promise<Response> {
+  const authenticationFailure = requireAuthentication(request);
+  if (authenticationFailure) return authenticationFailure;
+
   let body: unknown;
   try {
     body = await request.json();
@@ -120,6 +139,9 @@ export async function handleMonitorUpsert(request: Request): Promise<Response> {
  * `DELETE /api/monitors?id=<id>` — remove a monitor and its stored samples.
  */
 export async function handleMonitorDelete(request: Request): Promise<Response> {
+  const authenticationFailure = requireAuthentication(request);
+  if (authenticationFailure) return authenticationFailure;
+
   const url = new URL(request.url);
   const id = url.searchParams.get('id');
   if (!id) {
@@ -135,7 +157,10 @@ export async function handleMonitorDelete(request: Request): Promise<Response> {
  * `/api/monitors` — dispatch to the list / upsert / delete handlers based on
  * the HTTP method so a single route can serve the whole CRUD surface.
  */
-export function handleMonitorsRoute(request: Request): Promise<Response> {
+export async function handleMonitorsRoute(request: Request): Promise<Response> {
+  const authenticationFailure = requireAuthentication(request);
+  if (authenticationFailure) return authenticationFailure;
+
   switch (request.method) {
     case 'POST':
     case 'PUT': {
@@ -144,14 +169,20 @@ export function handleMonitorsRoute(request: Request): Promise<Response> {
     case 'DELETE': {
       return handleMonitorDelete(request);
     }
-    default: {
+    case 'GET': {
       return handleMonitors();
+    }
+    default: {
+      return json({ error: 'Method not allowed.' }, { status: 405, headers: { allow: 'GET, POST, PUT, DELETE' } });
     }
   }
 }
 
 /** Runtime incident listing, reporting, and status updates. */
 export async function handleIncidentsRoute(request: Request): Promise<Response> {
+  const authenticationFailure = requireAuthentication(request);
+  if (authenticationFailure) return authenticationFailure;
+
   const monitor = getMonitor();
   if (request.method === 'GET') return json({ incidents: await monitor.listIncidents() });
   let body: Record<string, unknown>;
@@ -209,6 +240,9 @@ export async function handleIncidentsRoute(request: Request): Promise<Response> 
 
 /** Planned maintenance listing, creation, and updates. */
 export async function handleMaintenanceRoute(request: Request): Promise<Response> {
+  const authenticationFailure = requireAuthentication(request);
+  if (authenticationFailure) return authenticationFailure;
+
   const monitor = getMonitor();
   if (request.method === 'GET') return json({ maintenance: await monitor.listMaintenance() });
   let body: Record<string, unknown>;
@@ -284,7 +318,10 @@ export async function handleSpeedSeries(request: Request): Promise<Response> {
  * `POST /api/speed/run` — trigger an immediate speed-test run across every
  * provider and return the fresh results.
  */
-export async function handleSpeedRun(): Promise<Response> {
+export async function handleSpeedRun(request: Request): Promise<Response> {
+  const authenticationFailure = requireAuthentication(request);
+  if (authenticationFailure) return authenticationFailure;
+
   const monitor = getMonitor();
   const results = await monitor.runSpeedNow();
   return json({ ok: true, results });

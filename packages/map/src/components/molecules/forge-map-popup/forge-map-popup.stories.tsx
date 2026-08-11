@@ -1,4 +1,4 @@
-import { h, type MpChild } from '@mission-platform/forge';
+import { h } from '@mission-platform/forge';
 import { useArgs } from 'storybook/preview-api';
 
 import { ForgeMapLibre, ForgeMapPopup } from '@mission-platform/map';
@@ -11,15 +11,21 @@ import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 const MAP_STYLE = 'https://demotiles.maplibre.org/style.json';
 
 /**
- * Every story wraps the map in a fixed-size box: ForgeMapLibre fills its container,
- * which has no intrinsic height, so a sized wrapper is required for the canvas
- * to appear.
+ * Every story wraps the map in a fixed-size box: `ForgeMapLibre` fills its
+ * container, which has no intrinsic height, so a sized wrapper is required for
+ * the canvas to appear.
+ *
+ * The wrapper is an inline `<div>`, never a local component taking `children`:
+ * the Vue JSX transform turns a component's JSX children into **slots**, so a
+ * `({ children }) => …` wrapper receives `undefined` and silently renders an
+ * empty box — which is exactly why these stories were blank.
  */
-const Frame = ({ children }: { children?: MpChild }) => (
-  <div style={{ width: '100%', height: '480px', borderRadius: 'var(--mp-radius-md, 8px)', overflow: 'hidden' }}>
-    {children}
-  </div>
-);
+const FRAME_STYLE = {
+  width: '100%',
+  height: '480px',
+  borderRadius: 'var(--mp-radius-md, 8px)',
+  overflow: 'hidden',
+};
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -47,7 +53,7 @@ export const Default: Story = {
   render: () => {
     const [{ open }, updateArguments] = useArgs();
     return (
-      <Frame>
+      <div style={FRAME_STYLE}>
         <ForgeMapLibre
           mapStyle={MAP_STYLE}
           center={[2.35, 48.85]}
@@ -63,7 +69,7 @@ export const Default: Story = {
             onClose={() => updateArguments({ open: false })}
           />
         </ForgeMapLibre>
-      </Frame>
+      </div>
     );
   },
 };
@@ -73,7 +79,7 @@ export const WithAnchor: Story = {
   render: () => {
     const [{ open }, updateArguments] = useArgs();
     return (
-      <Frame>
+      <div style={FRAME_STYLE}>
         <ForgeMapLibre
           mapStyle={MAP_STYLE}
           center={[2.35, 48.85]}
@@ -89,7 +95,7 @@ export const WithAnchor: Story = {
             onClose={() => updateArguments({ open: false })}
           />
         </ForgeMapLibre>
-      </Frame>
+      </div>
     );
   },
 };
@@ -99,7 +105,7 @@ export const NoCloseButton: Story = {
   render: () => {
     const [{ open }, updateArguments] = useArgs();
     return (
-      <Frame>
+      <div style={FRAME_STYLE}>
         <ForgeMapLibre
           mapStyle={MAP_STYLE}
           center={[2.35, 48.85]}
@@ -115,7 +121,7 @@ export const NoCloseButton: Story = {
             onClose={() => updateArguments({ open: false })}
           />
         </ForgeMapLibre>
-      </Frame>
+      </div>
     );
   },
 };

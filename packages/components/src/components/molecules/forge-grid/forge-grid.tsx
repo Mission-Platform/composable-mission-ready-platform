@@ -1,4 +1,4 @@
-import { classNames, Dynamic, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, Dynamic, h, type MpChild, type MpElement } from '@mission-platform/forge';
 
 import sizeStyles from '../../../styles/size.module.scss';
 import spacingStyles from '../../../styles/spacing.module.scss';
@@ -23,7 +23,9 @@ const GAP_SPACING: Record<GridGap, string> = {
   '2xl': 'var(--mp-spacing-12)',
 };
 
-export interface GridProperties extends MpProperties {
+export interface GridProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Number of rows (m) in the grid. */
   rows?: number;
   /** Number of columns (n) in the grid. */

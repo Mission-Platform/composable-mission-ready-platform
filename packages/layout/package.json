@@ -2,7 +2,7 @@
   "name": "@mission-platform/layouts",
   "version": "1.0.0",
   "license": "BSD-4-Clause",
-  "description": "Sample write-once Mission Platform layouts authored with @mission-platform/forge and shipped as both Vue 3 and React components",
+  "description": "Sample write-once Mission Platform layouts authored with @mission-platform/forge and shipped as Vue, React, Svelte, Solid, and Web Component outputs",
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -55,15 +55,15 @@
         "import": "./dist/svelte/*.js"
       }
     },
-    "./storyblok/react": {
-      "types": "./dist/storyblok/react/index.d.ts",
-      "import": "./dist/storyblok/react/index.js"
+    "./cms/storyblok/react": {
+      "types": "./dist/cms/storyblok/react/index.d.ts",
+      "import": "./dist/cms/storyblok/react/index.js"
     },
-    "./storyblok/vue": {
-      "types": "./dist/storyblok/vue/index.d.ts",
-      "import": "./dist/storyblok/vue/index.js"
+    "./cms/storyblok/vue": {
+      "types": "./dist/cms/storyblok/vue/index.d.ts",
+      "import": "./dist/cms/storyblok/vue/index.js"
     },
-    "./storyblok/components.json": "./dist/storyblok/components.json",
+    "./cms/storyblok/components.json": "./dist/cms/storyblok/components.json",
     "./styles": "./dist/styles/a11y.css"
   },
   "files": [
@@ -91,7 +91,6 @@
     "@mission-platform/hunspell": "workspace:*",
     "@mission-platform/icons": "workspace:*",
     "@mission-platform/forge": "workspace:*",
-    "@mission-platform/scheduler-core": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
     "@mission-platform/components": "workspace:*",
     "@mission-platform/phone-number": "workspace:*",
@@ -146,6 +145,13 @@
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@mission-platform/vite-plugin-forge": "workspace:*",
+    "@mission-platform/forge-plugin-react": "workspace:*",
+    "@mission-platform/forge-plugin-solid": "workspace:*",
+    "@mission-platform/forge-plugin-svelte": "workspace:*",
+    "@mission-platform/forge-plugin-vue": "workspace:*",
+    "@mission-platform/forge-plugin-web-components": "workspace:*",
+    "@mission-platform/forge-cms-plugin-api": "workspace:*",
+    "@mission-platform/forge-cms-storyblok": "workspace:*",
     "@storybook/vue3-vite": "catalog:storybook",
     "@tsdown/css": "catalog:build",
     "@types/luxon": "catalog:",

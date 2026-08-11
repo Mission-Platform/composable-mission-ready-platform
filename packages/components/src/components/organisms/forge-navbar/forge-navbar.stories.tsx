@@ -1,4 +1,5 @@
 import { h } from '@mission-platform/forge';
+import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
 
 import { ForgeNavbar } from '@mission-platform/components';
 
@@ -37,38 +38,46 @@ const meta = {
     sticky: false,
     align: 'start',
   },
-  render: (arguments_) => (
-    <ForgeNavbar
-      {...arguments_}
-      end={
-        <button
-          type="button"
-          style={{ padding: 'var(--mp-spacing-2) var(--mp-spacing-4)' }}
+  // `brand` and `end` are named slots: passing a node as a prop only works on
+  // the React/Solid builds, so they go through `renderWithSlots` instead.
+  render: (arguments_) =>
+    renderWithSlots(
+      ForgeNavbar,
+      { ...arguments_ },
+      {
+        end: (
+          <button
+            type="button"
+            style={{ padding: 'var(--mp-spacing-2) var(--mp-spacing-4)' }}
+          >
+            Sign in
+          </button>
+        ),
+      },
+      [
+        <a
+          key="home"
+          href="#"
+          style={{ color: 'var(--mp-color-text-primary)', textDecoration: 'none' }}
         >
-          Sign in
-        </button>
-      }
-    >
-      <a
-        href="#"
-        style={{ color: 'var(--mp-color-text-primary)', textDecoration: 'none' }}
-      >
-        Home
-      </a>
-      <a
-        href="#"
-        style={{ color: 'var(--mp-color-text-primary)', textDecoration: 'none' }}
-      >
-        Features
-      </a>
-      <a
-        href="#"
-        style={{ color: 'var(--mp-color-text-primary)', textDecoration: 'none' }}
-      >
-        Pricing
-      </a>
-    </ForgeNavbar>
-  ),
+          Home
+        </a>,
+        <a
+          key="features"
+          href="#"
+          style={{ color: 'var(--mp-color-text-primary)', textDecoration: 'none' }}
+        >
+          Features
+        </a>,
+        <a
+          key="pricing"
+          href="#"
+          style={{ color: 'var(--mp-color-text-primary)', textDecoration: 'none' }}
+        >
+          Pricing
+        </a>,
+      ],
+    ),
 } satisfies Meta<typeof ForgeNavbar>;
 
 export default meta;
@@ -89,23 +98,26 @@ export const Sticky: Story = { args: { sticky: true } };
 export const MobileBreakpoint: Story = { args: { mobileBreakpoint: 'md' } };
 
 export const CustomBrand: Story = {
-  render: (arguments_) => (
-    <ForgeNavbar
-      {...arguments_}
-      brand={<strong style={{ color: 'var(--mp-color-primary-default)' }}>★ Custom Brand</strong>}
-    >
-      <a
-        href="#"
-        style={{ color: 'var(--mp-color-text-primary)', textDecoration: 'none' }}
-      >
-        Docs
-      </a>
-      <a
-        href="#"
-        style={{ color: 'var(--mp-color-text-primary)', textDecoration: 'none' }}
-      >
-        About
-      </a>
-    </ForgeNavbar>
-  ),
+  render: (arguments_) =>
+    renderWithSlots(
+      ForgeNavbar,
+      { ...arguments_ },
+      { brand: <strong style={{ color: 'var(--mp-color-primary-default)' }}>★ Custom Brand</strong> },
+      [
+        <a
+          key="docs"
+          href="#"
+          style={{ color: 'var(--mp-color-text-primary)', textDecoration: 'none' }}
+        >
+          Docs
+        </a>,
+        <a
+          key="about"
+          href="#"
+          style={{ color: 'var(--mp-color-text-primary)', textDecoration: 'none' }}
+        >
+          About
+        </a>,
+      ],
+    ),
 };

@@ -8,6 +8,30 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./slots": {
+      "mp:vue": {
+        "types": "./dist/slots.vue.d.ts",
+        "import": "./dist/slots.vue.js"
+      },
+      "mp:react": {
+        "types": "./dist/slots.react.d.ts",
+        "import": "./dist/slots.react.js"
+      },
+      "mp:solid": {
+        "types": "./dist/slots.solid.d.ts",
+        "import": "./dist/slots.solid.js"
+      },
+      "mp:svelte": {
+        "types": "./dist/slots.svelte.d.ts",
+        "import": "./dist/slots.svelte.js"
+      },
+      "mp:web-component": {
+        "types": "./dist/slots.web-component.d.ts",
+        "import": "./dist/slots.web-component.js"
+      },
+      "types": "./dist/slots.neutral.d.ts",
+      "import": "./dist/slots.neutral.js"
     }
   },
   "files": [
@@ -15,6 +39,7 @@
   ],
   "scripts": {
     "build": "tsdown",
+    "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --check .",
@@ -31,6 +56,9 @@
     "@sveltejs/vite-plugin-svelte": "*",
     "svelte": "*",
     "storybook-solidjs-vite": "*",
+    "react": "*",
+    "solid-js": "*",
+    "vue": "*",
     "vite": "*",
     "vite-plugin-solid": "*"
   },
@@ -65,6 +93,15 @@
     "svelte": {
       "optional": true
     },
+    "react": {
+      "optional": true
+    },
+    "solid-js": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    },
     "vite-plugin-solid": {
       "optional": true
     }
@@ -86,10 +123,13 @@
     "@storybook/vue3-vite": "catalog:storybook",
     "@storybook/web-components-vite": "catalog:storybook",
     "@types/node": "catalog:typescript",
+    "react": "catalog:react",
+    "vue": "catalog:vue",
     "@vitejs/plugin-react": "catalog:react",
     "@vitejs/plugin-vue-jsx": "catalog:vue",
     "@sveltejs/vite-plugin-svelte": "catalog:svelte",
     "eslint": "catalog:eslint",
+    "jsdom": "catalog:testing",
     "prettier": "catalog:prettier",
     "solid-js": "catalog:solid",
     "storybook-solidjs-vite": "catalog:storybook",
@@ -97,6 +137,7 @@
     "tsdown": "catalog:build",
     "typescript": "catalog:typescript",
     "vite": "catalog:vite",
-    "vite-plugin-solid": "catalog:solid"
+    "vite-plugin-solid": "catalog:solid",
+    "vitest": "catalog:testing"
   }
 }

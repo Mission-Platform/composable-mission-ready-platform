@@ -6,7 +6,7 @@ import type { MetricsResponse, MonitorTarget, Sample, ServicesResponse } from '@
 
 /** Fetch and parse JSON, throwing on non-2xx responses. */
 async function fetchJson<T>(input: string): Promise<T> {
-  const response = await fetch(input, { headers: { accept: 'application/json' } });
+  const response = await fetch(input, { credentials: 'same-origin', headers: { accept: 'application/json' } });
   if (!response.ok) {
     throw new Error(`Request to ${input} failed with HTTP ${response.status}`);
   }
@@ -73,12 +73,13 @@ export function speedSeriesStream(provider: SpeedProviderId, intervalMs: number)
 
 /** Trigger an immediate server-side speed-test run across every provider. */
 export async function triggerSpeedRun(): Promise<void> {
-  await fetch('/api/speed/run', { method: 'POST' });
+  await fetch('/api/speed/run', { credentials: 'same-origin', method: 'POST' });
 }
 
 /** Create or update a monitor at runtime. Returns `true` on success. */
 export async function saveMonitor(monitor: MonitorTarget): Promise<boolean> {
   const response = await fetch('/api/monitors', {
+    credentials: 'same-origin',
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(monitor),
@@ -88,6 +89,28 @@ export async function saveMonitor(monitor: MonitorTarget): Promise<boolean> {
 
 /** Remove a monitor (and its stored samples) at runtime. */
 export async function deleteMonitor(id: string): Promise<boolean> {
-  const response = await fetch(`/api/monitors?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+  const response = await fetch(`/api/monitors?id=${encodeURIComponent(id)}`, {
+    credentials: 'same-origin',
+    method: 'DELETE',
+  });
   return response.ok;
+}
+
+/** Exchange the operator token for an HttpOnly browser session cookie. */
+export async function createMonitorSession(token: string): Promise<boolean> {
+  const response = await fetch('/api/auth/session', {
+    body: JSON.stringify({ token }),
+    credentials: 'same-origin',
+    headers: { 'content-type': 'application/json' },
+    method: 'POST',
+  });
+  return response.ok;
+}
+
+/** Check whether the current browser has an authenticated monitor session. */
+export async function hasMonitorSession(): Promise<boolean> {
+  const response = await fetch('/api/auth/session', { credentials: 'same-origin' });
+  if (!response.ok) return false;
+  const body = (await response.json()) as { authenticated?: unknown };
+  return body.authenticated === true;
 }

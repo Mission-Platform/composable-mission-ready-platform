@@ -1,5 +1,5 @@
 import { ForgeButton } from '@mission-platform/components';
-import { h, type MpChild } from '@mission-platform/forge';
+import { h } from '@mission-platform/forge';
 import { useArgs } from 'storybook/preview-api';
 
 import { ForgeMapDraw, ForgeMapLibre } from '@mission-platform/map';
@@ -13,15 +13,21 @@ import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 const MAP_STYLE = 'https://demotiles.maplibre.org/style.json';
 
 /**
- * Every story wraps the map in a fixed-size box: ForgeMapLibre fills its container,
- * which has no intrinsic height, so a sized wrapper is required for the canvas
- * to appear.
+ * Every story wraps the map in a fixed-size box: `ForgeMapLibre` fills its
+ * container, which has no intrinsic height, so a sized wrapper is required for
+ * the canvas to appear.
+ *
+ * The wrapper is an inline `<div>`, never a local component taking `children`:
+ * the Vue JSX transform turns a component's JSX children into **slots**, so a
+ * `({ children }) => …` wrapper receives `undefined` and silently renders an
+ * empty box — which is exactly why these stories were blank.
  */
-const Frame = ({ children }: { children?: MpChild }) => (
-  <div style={{ width: '100%', height: '480px', borderRadius: 'var(--mp-radius-md, 8px)', overflow: 'hidden' }}>
-    {children}
-  </div>
-);
+const FRAME_STYLE = {
+  width: '100%',
+  height: '480px',
+  borderRadius: 'var(--mp-radius-md, 8px)',
+  overflow: 'hidden',
+};
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -55,7 +61,7 @@ function modeStory(mode?: DrawMode, strokeColor?: string): Story {
     render: (arguments_) => {
       const [{ mode: activeMode, modelValue: features }, updateArguments] = useArgs();
       return (
-        <Frame>
+        <div style={FRAME_STYLE}>
           <ForgeMapLibre
             mapStyle={MAP_STYLE}
             center={[8, 50]}
@@ -70,7 +76,7 @@ function modeStory(mode?: DrawMode, strokeColor?: string): Story {
               strokeColor={strokeColor}
             />
           </ForgeMapLibre>
-        </Frame>
+        </div>
       );
     },
   };
@@ -103,7 +109,7 @@ export const Geodesic: Story = {
   render: (arguments_) => {
     const [{ mode, modelValue: features, geodesic }, updateArguments] = useArgs();
     return (
-      <Frame>
+      <div style={FRAME_STYLE}>
         <ForgeMapLibre
           mapStyle={MAP_STYLE}
           center={[8, 50]}
@@ -120,7 +126,7 @@ export const Geodesic: Story = {
             strokeColor="#0891b2"
           />
         </ForgeMapLibre>
-      </Frame>
+      </div>
     );
   },
 };
@@ -144,7 +150,7 @@ export const Toolbar: Story = {
       { label: 'Triangle', value: 'triangle' },
     ];
     return (
-      <Frame>
+      <div style={FRAME_STYLE}>
         <ForgeMapLibre
           mapStyle={MAP_STYLE}
           center={[8, 50]}
@@ -211,7 +217,7 @@ export const Toolbar: Story = {
             )}
           />
         </ForgeMapLibre>
-      </Frame>
+      </div>
     );
   },
 };

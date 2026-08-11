@@ -168,11 +168,12 @@ package in `packages/`, including the typed WebAssembly façades.
 | `@mission-platform/phone-number`   | Typed WebAssembly phone-number parsing and formatting.        |
 | `@mission-platform/router`         | Framework-neutral routing primitives and adapters.            |
 | `@mission-platform/rxjs`           | RxJS observable and subscription composables.                 |
-| `@mission-platform/scheduler-core` | RFC 5545 recurrence and calendar layout domain logic.         |
+| `@mission-platform/scheduler`     | Scheduler UI, recurrence, and calendar layout domain logic. |
+| `@mission-platform/vcard`         | RFC 6350 vCard and RFC 5545 iCalendar data and components.  |
+| `@mission-platform/content`       | Content AST, builders, Monaco, Markdown, and WYSIWYG components. |
 | `@mission-platform/seo`            | Metadata, Open Graph, and structured-data composables.        |
 | `@mission-platform/speech-audio`   | Speech, audio, and Web MIDI composables.                      |
 | `@mission-platform/three`          | Three.js canvas and lifecycle composables.                    |
-| `@mission-platform/wysiwyg`        | Framework-neutral rich-text editor component.                 |
 
 ### Code and WebAssembly packages
 
@@ -191,3 +192,37 @@ package in `packages/`, including the typed WebAssembly façades.
 | `@mission-platform/qr-code-encode-wasm`     | Generated QR encoder WebAssembly module.          |
 | `@mission-platform/harper`                  | Harper grammar and style integration for Monaco.  |
 | `@mission-platform/hunspell`                | Emscripten Hunspell spell-checking wrapper.       |
+
+### Forge compiler targets
+
+These live in `forge-plugins/` rather than `packages/`. A **framework** plugin decides which runtime a neutral component
+is lowered to; a **CMS** target decides which content platform it is projected onto. The two axes compose, so any CMS
+target may be bound to any framework plugin. See [Forge Compiler Pipeline](./forge-compiler.md).
+
+| Package                                          | Purpose                                                                        |
+|:-------------------------------------------------|:--------------------------------------------------------------------------------|
+| `@mission-platform/forge-plugin-api`             | `FrameworkOutputPlugin` contract, semantic IR types, and build adapter types.   |
+| `@mission-platform/forge-plugin-react`           | React output target.                                                            |
+| `@mission-platform/forge-plugin-vue`             | Vue 3 output target.                                                            |
+| `@mission-platform/forge-plugin-solid`           | Solid output target.                                                            |
+| `@mission-platform/forge-plugin-svelte`          | Svelte 5 output target.                                                         |
+| `@mission-platform/forge-plugin-web-components`  | Web Components output target.                                                   |
+| `@mission-platform/forge-cms-plugin-api`         | `CmsOutputPlugin` contract, neutral content model, CMS driver, and build helpers. |
+| `@mission-platform/forge-cms-storyblok`          | Storyblok component objects, blok wrappers, and `components.json`.              |
+| `@mission-platform/forge-cms-astro`              | Static `.astro` templates and `client:load` framework islands.                  |
+| `@mission-platform/forge-cms-ghost`              | Ghost Handlebars partials and a `config.custom` theme fragment.                 |
+| `@mission-platform/forge-cms-jekyll`             | Jekyll Liquid includes, `_data` schema, and a `_config.yml` fragment.           |
+| `@mission-platform/forge-cms-webflow`            | Webflow `declareComponent` code components and a `webflow.json` library fragment. |
+
+#### @mission-platform/forge-cms-plugin-api
+
+| Export                     | Type     | Description                                                                    |
+|:---------------------------|:---------|:--------------------------------------------------------------------------------|
+| `analyzeContentComponent`  | Function | Projects a neutral component's props onto the platform-neutral content model.  |
+| `ContentComponent`         | Type     | Ordered `ContentField`s, slots, and the `interactive` flag.                    |
+| `ContentFieldKind`         | Type     | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`. |
+| `CmsOutputPlugin`          | Type     | The target contract: a bound framework plugin plus the four emitters.          |
+| `defineForgeCmsPlugin`     | Function | Validates a CMS target at configuration time.                                  |
+| `generateCmsArtifacts`     | Function | The generic discover → IR → content model → emit → write driver.               |
+| `defineTsdownForgeCms`     | Function | tsdown config for one CMS target, emitting `dist/cms/<cms>/<framework>/**`.    |
+| `defineTsdownForgeCmsAll`  | Function | tsdown configs for a list of CMS targets.                                      |

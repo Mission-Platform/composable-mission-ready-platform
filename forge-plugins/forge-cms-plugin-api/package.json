@@ -1,0 +1,56 @@
+{
+  "name": "@mission-platform/forge-cms-plugin-api",
+  "version": "0.1.0",
+  "license": "BSD-4-Clause",
+  "description": "Public API contracts, neutral content model, and build helpers for Forge CMS output plugins",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./fixtures": {
+      "types": "./dist/fixtures.d.ts",
+      "import": "./dist/fixtures.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "format": "prettier --check ."
+  },
+  "dependencies": {
+    "@mission-platform/forge-plugin-api": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
+    "@mission-platform/vite-config": "workspace:*",
+    "@mission-platform/vite-plugin-forge": "workspace:*",
+    "typescript": "catalog:typescript"
+  },
+  "peerDependencies": {
+    "vite": "^6.0.0 || ^7.0.0 || ^8.0.0"
+  },
+  "peerDependenciesMeta": {
+    "vite": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@types/node": "catalog:typescript",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "tsdown": "catalog:build",
+    "vite": "catalog:vite",
+    "vitest": "catalog:testing"
+  }
+}

@@ -1,11 +1,9 @@
 import { ForgeButton, ForgeTypography } from '@mission-platform/components';
 import { ForgeIconCheck, ForgeIconCopy, ForgeIconDownload, ForgeIconImage } from '@mission-platform/icons';
-import { h, type MpElement, type MpProperties, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
-import { encodeMatrix, type MatrixSymbology } from '@mission-platform/matrix-code';
+import { h, type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
+import { encodeMatrix, type MatrixSymbology } from '@/encoder';
 
 import styles from './forge-matrix-code.module.scss';
-
-export type { MatrixSymbology } from '@mission-platform/matrix-code';
 
 /** Shape used to draw each module of the code. */
 export type MatrixModuleShape = 'square' | 'rounded' | 'dot';
@@ -36,7 +34,17 @@ export interface MatrixLogo {
   radius?: number;
 }
 
-export interface MatrixCodeProperties extends MpProperties {
+/** Which action buttons the toolbar shows. `true` enables all of them. */
+export interface MatrixCodeActions {
+  /** Show the "save as image" (PNG download) button. */
+  download?: boolean;
+  /** Show the "copy image to clipboard" button. */
+  copyImage?: boolean;
+  /** Show the "copy value to clipboard" button. */
+  copyValue?: boolean;
+}
+
+export interface MatrixCodeProperties {
   /** The data to encode (URL, text, digits, etc.). */
   value: string;
   /** The 2D matrix symbology used to encode {@link value}. Defaults to `'datamatrix'`. */
@@ -61,17 +69,11 @@ export interface MatrixCodeProperties extends MpProperties {
   /** Accessible label describing the code's content. */
   ariaLabel?: string;
   /**
-   * Show the whole action toolbar (save as image, copy image, copy value). Acts
-   * as the default for the individual `show*Button` props below. Defaults to
-   * `false`.
+   * The action toolbar (save as image, copy image, copy value). Pass `true` to
+   * show every button, or a {@link MatrixCodeActions} object to pick them
+   * individually. Defaults to `false`.
    */
-  showActions?: boolean;
-  /** Show the "save as image" (PNG download) button. Defaults to {@link showActions}. */
-  showDownloadButton?: boolean;
-  /** Show the "copy image to clipboard" button. Defaults to {@link showActions}. */
-  showCopyImageButton?: boolean;
-  /** Show the "copy value to clipboard" button. Defaults to {@link showActions}. */
-  showCopyValueButton?: boolean;
+  showActions?: boolean | MatrixCodeActions;
   /** File name used when saving the code as an image. Defaults to `'data-matrix.png'`. */
   downloadFileName?: string;
   /** Fired when `value` cannot be encoded, or an action (save/copy) fails. */
@@ -149,10 +151,11 @@ function stableId(prefix: string, seed: string): string {
  * the symbol still scans, since Data Matrix has no adjustable error-correction
  * level).
  *
- * An optional action toolbar (enabled via `showActions` or the individual
- * `show*Button` props) lets users **save the code as a PNG image**, **copy the
- * image to the clipboard**, and **copy the encoded value to the clipboard**. The
- * PNG is rasterised on the client by drawing the rendered SVG onto a canvas.
+ * An optional action toolbar (enabled via `showActions` — `true` for every
+ * button, or a {@link MatrixCodeActions} object to pick them individually) lets
+ * users **save the code as a PNG image**, **copy the image to the clipboard**,
+ * and **copy the encoded value to the clipboard**. The PNG is rasterised on the
+ * client by drawing the rendered SVG onto a canvas.
  *
  * The `computed` render is the neutral {@link useMemo}; the `error` case becomes
  * the `onError` callback prop (invoked when encoding fails). It owns its styling
@@ -171,19 +174,19 @@ export function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpE
     logo,
     ariaLabel,
     showActions = false,
-    showDownloadButton,
-    showCopyImageButton,
-    showCopyValueButton,
     downloadFileName = 'data-matrix.png',
   } = properties;
 
-  // Each individual button falls back to `showActions` when not set explicitly.
-  // The fallback is resolved in the body (rather than as a destructuring default)
-  // so the Vue codegen doesn't emit a `withDefaults` entry referencing a sibling
-  // prop, which isn't in scope in the generated single-file component.
-  const showDownload = showDownloadButton ?? showActions;
-  const showCopyImage = showCopyImageButton ?? showActions;
-  const showCopyValue = showCopyValueButton ?? showActions;
+  // `showActions: true` enables every button; an object enables them one by one,
+  // each falling back to `false`. The resolution happens in the body (rather
+  // than as a destructuring default) so the Vue codegen doesn't emit a
+  // `withDefaults` entry referencing another prop, which isn't in scope in the
+  // generated single-file component.
+  const all = showActions === true;
+  const requestedActions = typeof showActions === 'object' && showActions !== null ? showActions : {};
+  const showDownload = requestedActions.download ?? all;
+  const showCopyImage = requestedActions.copyImage ?? all;
+  const showCopyValue = requestedActions.copyValue ?? all;
 
   const svgReference = useRef<SVGSVGElement | null>(null);
   const [completed, setCompleted] = useState<CompletedAction>('');
@@ -449,14 +452,7 @@ export function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpE
     </svg>
   );
 
-  const actions: {
-    key: CompletedAction;
-    label: string;
-    doneLabel: string;
-    icon: MpElement;
-    onClick: () => void;
-    visible: boolean;
-  }[] = [
+  const actions = [
     {
       key: 'download',
       label: 'Save image',
@@ -481,7 +477,7 @@ export function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpE
       onClick: copyValue,
       visible: showCopyValue,
     },
-  ];
+  ] as const;
 
   const visibleActions = actions.filter((action) => action.visible);
   if (visibleActions.length === 0) {

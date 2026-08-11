@@ -8,7 +8,7 @@ workspaces.
 All documents under `docs/` can be read directly on GitHub, or browsed in a dedicated documentation site: the **
 `@mission-platform/docs`** app (`apps/docs`). It is a Vite + Vue 3 single-page app that renders the canonical Markdown
 in `docs/` at build time, with grouped sidebar navigation, per-page table of contents, syntax-highlighted code, and
-in-app cross-links.
+in-app cross-links, and client-enhanced Mermaid diagrams with readable Markdown fallbacks.
 
 ```bash
 # Start the documentation site locally
@@ -77,6 +77,8 @@ site — there is no separate copy to maintain.
 #### Architecture
 
 - **[docs/architecture.md](docs/architecture.md)**: Detailed architecture documentation
+- **[docs/forge-compiler.md](docs/forge-compiler.md)**: Maintainer-focused explanation of the strict Forge compiler
+  pipeline, explicit target-plugin ownership, native build adapters, and component, hook, and Storyblok consumers
 
 #### API Reference
 
@@ -130,7 +132,8 @@ site — there is no separate copy to maintain.
 ### Technical Requirements
 
 - All documentation must be written in English
-- Use Mermaid diagrams where appropriate (with size limitations)
+- Use Mermaid diagrams where appropriate (with size limitations); fenced `mermaid` blocks render through the shared
+  `ForgeMarkdown` path and must retain readable source/error fallbacks for SSR and client-rendering failures
 - Ensure all links are working
 - Update documentation when codebase changes
 - Include version information where relevant

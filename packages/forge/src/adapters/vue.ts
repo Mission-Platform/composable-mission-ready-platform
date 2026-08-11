@@ -28,9 +28,10 @@ import {
   type MpChild,
   type MpComponent,
   type MpElement,
-  type MpProperties,
+  type MpPropertyBag,
 } from '../runtime';
 import { Dynamic as DynamicMarker, type MpDynamicProperties } from '../runtime/dynamic';
+import { HtmlContent as HtmlContentMarker, type HtmlContentProperties } from '../runtime/html-content';
 import {
   collectSlottedChildren,
   type MpSlotProperties,
@@ -49,7 +50,7 @@ import { Transition as TransitionMarker, TransitionGroup as TransitionGroupMarke
  * string/array/object forms directly, so the value passes straight through,
  * matching the native `:class` the two-stage compiler emits for the Vue target.
  */
-function toVueProperties(properties: MpProperties): Record<string, unknown> {
+function toVueProperties(properties: MpPropertyBag): Record<string, unknown> {
   if (!('className' in properties)) {
     return properties as Record<string, unknown>;
   }
@@ -84,6 +85,13 @@ function toVueChildren(children: readonly (MpChild | VNode)[]): VNodeChild[] {
   return out;
 }
 
+/** Render trusted HTML into a Vue host using its render-function `innerHTML` binding. */
+export function HtmlContent(properties: HtmlContentProperties): VNode {
+  const { html, as = 'div', children: _children, ...hostProperties } = properties;
+  void _children;
+  return createVueElement(as, { ...toVueProperties(hostProperties), innerHTML: html });
+}
+
 /** Render a neutral {@link MpElement} tree into a Vue `VNode`. */
 export function renderToVue(element: MpElement): VNode {
   const { type, properties, children } = element;
@@ -116,6 +124,12 @@ export function renderToVue(element: MpElement): VNode {
     return createVueElement(VueFragment, undefined, toVueChildren(children));
   }
 
+  // Vue's render-function equivalent of `v-html` is the `innerHTML` prop. It
+  // remains SSR-safe and lets Vue replace the host content when `html` changes.
+  if (type === HtmlContentMarker) {
+    return HtmlContent(properties as HtmlContentProperties);
+  }
+
   // A `<Dynamic is={…} …>` resolves `is` and renders it with the remaining
   // properties and children — exactly the compiled `<component :is>`.
   if (type === DynamicMarker) {
@@ -144,7 +158,7 @@ export function renderToVue(element: MpElement): VNode {
     // (forwarding) scope, so a component can forward its own slots into the
     // child's slots lexically — matching the compiled output.
     const { defaultChildren, slots } = collectSlottedChildren(resolveSlotMarkers(children));
-    const componentProperties: MpProperties = { ...properties, ...slots, children: defaultChildren };
+    const componentProperties: MpPropertyBag = { ...properties, ...slots, children: defaultChildren };
     pushSlotScope(componentProperties);
     try {
       return renderToVue((type as MpComponent)(componentProperties));
@@ -165,12 +179,12 @@ export function renderToVue(element: MpElement): VNode {
  * function), so a `<Slot name="…" />` in the component resolves against it and
  * the result can be used like any other Vue component.
  */
-export function toVueComponent<P extends MpProperties>(
+export function toVueComponent<P extends MpPropertyBag>(
   component: MpComponent<P>,
   name?: string,
 ): FunctionalComponent<P> {
   const Component: FunctionalComponent<P> = (properties, { attrs, slots }) => {
-    const merged: MpProperties = { ...attrs, ...properties };
+    const merged: MpPropertyBag = { ...attrs, ...properties };
     for (const [slotName, slotFunction] of Object.entries(slots)) {
       if (slotFunction === undefined) {
         continue;
@@ -181,7 +195,7 @@ export function toVueComponent<P extends MpProperties>(
           merged.children = slotChildren as unknown as MpChild[];
         }
       } else {
-        merged[slotName] = (scope: MpProperties) => slotFunction(scope);
+        merged[slotName] = (scope: MpPropertyBag) => slotFunction(scope);
       }
     }
     pushSlotScope(merged);

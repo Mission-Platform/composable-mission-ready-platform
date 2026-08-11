@@ -86,6 +86,9 @@ interface SsgUserConfig extends UserConfig {
 const config = defineFrameworkAppConfig({
   framework: 'vue',
   overrides: {
+    optimizeDeps: {
+      include: ['mermaid'],
+    },
     // The SEO companion plugin generates `robots.txt` + `sitemap.xml` from the
     // `@mission-platform/seo` builders into the app's `publicDir`, so they are
     // served in dev and copied into the build output.

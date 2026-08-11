@@ -1,6 +1,6 @@
 import { type MaybeRefOrGetter, onBeforeUnmount, toValue, watch } from 'vue';
 
-import { attachHarperMonaco, type HarperMonacoHandle } from '../../monaco/attach-harper-monaco';
+import { attachHarperMonaco, type HarperMonacoHandle } from '@/monaco/attach-harper-monaco';
 
 // Type-only import: erased at build time so `monaco-editor` is NOT pulled into
 // this package's synchronous module graph. The runtime module is loaded lazily
@@ -10,7 +10,7 @@ import { attachHarperMonaco, type HarperMonacoHandle } from '../../monaco/attach
 // editor components and triggering Rollup's INEFFECTIVE_DYNAMIC_IMPORT warning.
 import type * as monaco from 'monaco-editor';
 
-export { attachHarperMonaco, type HarperMonacoHandle } from '../../monaco/attach-harper-monaco';
+export { attachHarperMonaco, type HarperMonacoHandle } from '@/monaco/attach-harper-monaco';
 
 /**
  * Vue composable that integrates Harper grammar and style checking into a

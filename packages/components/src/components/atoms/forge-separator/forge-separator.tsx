@@ -1,4 +1,4 @@
-import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { h, type MpChild, type MpElement } from '@mission-platform/forge';
 
 import sizeStyles from '../../../styles/size.module.scss';
 import spacingStyles from '../../../styles/spacing.module.scss';
@@ -16,7 +16,9 @@ export type SeparatorSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 /** Named `padding`/`margin` scale; each step maps to a named `--mp-spacing-*` design token. */
 export type SpacingScale = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface SeparatorProperties extends MpProperties {
+export interface SeparatorProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Layout direction. Defaults to `'horizontal'`. */
   orientation?: SeparatorOrientation;
   /** Line style. Defaults to `'solid'`. */

@@ -1,11 +1,11 @@
-import { h, type MpElement, type MpProperties, Slot, useEffect, useRef, useState } from '@mission-platform/forge';
+import { h, type MpChild, type MpElement, Slot, useEffect, useRef, useState } from '@mission-platform/forge';
 import { ForgeIconChevron, type IconDirection } from '@mission-platform/icons';
 
 import sizeStyles from '../../../styles/size.module.scss';
 
 import styles from './forge-menubar.module.scss';
 
-import type { MenuNode } from '../../molecules/forge-menu';
+import type { MenuNode } from '@/components/molecules/forge-menu';
 
 /** Size token — canonical 2xs → 2xl scale. */
 export type MenubarSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
@@ -16,7 +16,9 @@ function parentOfPath(path: string): string {
   return dot === -1 ? '' : path.slice(0, dot);
 }
 
-export interface MenubarProperties extends MpProperties {
+export interface MenubarProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Size token controlling the menubar's scale. Defaults to `'md'`. */
   size?: MenubarSize;
   /** Accessible label for the menubar. Defaults to `'Menu'`. */

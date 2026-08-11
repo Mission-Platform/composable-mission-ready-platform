@@ -121,6 +121,7 @@ const config: SsgUserConfig = {
   },
   resolve: {
     conditions: frameworkConditions,
+    tsconfigPaths: true,
   },
   ssr: {
     noExternal: [/^@mission-platform\//],

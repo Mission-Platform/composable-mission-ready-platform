@@ -1,0 +1,46 @@
+{
+  "name": "@mission-platform/email-sender",
+  "private": true,
+  "version": "0.0.0",
+  "license": "BSD-4-Clause",
+  "description": "Local Cloudflare Worker email showcase sender backed by MailPit SMTP",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "wrangler dev",
+    "mailpit": "docker run -p 1025:1025 -p 8025:8025 axllent/mailpit",
+    "test": "vitest run",
+    "types": "wrangler types src/worker-configuration.d.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
+  },
+  "dependencies": {
+    "@mission-platform/email-components": "workspace:*"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "catalog:cloudflare",
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@types/node": "catalog:typescript",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "tsdown": "catalog:build",
+    "typescript": "catalog:typescript",
+    "vitest": "catalog:testing",
+    "wrangler": "catalog:cloudflare"
+  }
+}

@@ -1,30 +1,31 @@
 import {
   Fragment,
   h,
+  type MpChild,
   type MpElement,
-  type MpProperties,
   type MpRenderProperty,
   Slot,
   useEffect,
 } from '@mission-platform/forge';
 import { palette } from '@mission-platform/tokens';
 
+import { ForgeMapLayer, ForgeMapSource } from '@/components';
 import {
   type DrawMode,
   type DrawnFeature,
   type FeatureId,
   useDrawing,
   type UseDrawingReturn,
-} from '../../../composables/use-drawing';
-import { useMap } from '../../../composables/use-map';
-import { toMapColor } from '../../../utils/to-map-color';
-import { ForgeMapLayer } from '../forge-map-layer';
-import { ForgeMapSource } from '../forge-map-source';
+  useMap,
+} from '@/composables';
+import { toMapColor } from '@/utils/to-map-color';
 
 import type { Feature, FeatureCollection } from 'geojson';
 import type { GeoJSONSourceSpecification } from 'maplibre-gl';
 
-export interface MapDrawProperties extends MpProperties {
+export interface MapDrawProperties {
+  /** The content the consumer fills the component’s slots with. */
+  children?: MpChild | readonly MpChild[];
   /**
    * Currently active drawing mode. When omitted the tool is in idle/edit mode.
    * @model onModeChange

@@ -1,15 +1,6 @@
-import {
-  classNames,
-  Dynamic,
-  h,
-  hasSlot,
-  type MpChild,
-  type MpElement,
-  type MpProperties,
-  Slot,
-} from '@mission-platform/forge';
+import { classNames, Dynamic, h, hasSlot, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
 
-import { ForgeTypography } from '../../atoms/forge-typography';
+import { ForgeTypography } from '@/components/atoms/forge-typography';
 
 import styles from './forge-hero.module.scss';
 
@@ -18,7 +9,9 @@ export type HeroAlign = 'start' | 'center' | 'end';
 /** Vertical padding scale — canonical 2xs → 2xl scale. */
 export type HeroSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface HeroProperties extends MpProperties {
+export interface HeroProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Eyebrow / kicker text rendered above the title. */
   eyebrow?: string;
   /** Hero title. */

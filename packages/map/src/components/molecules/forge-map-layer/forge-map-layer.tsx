@@ -1,11 +1,10 @@
-import { type MpElement, type MpProperties } from '@mission-platform/forge';
+import { type MpElement } from '@mission-platform/forge';
 
-import { useLayer } from '../../../composables/use-layer';
-import { useMap } from '../../../composables/use-map';
+import { useLayer, useMap } from '@/composables';
 
 import type { LayerSpecification } from 'maplibre-gl';
 
-export interface MapLayerProperties extends MpProperties {
+export interface MapLayerProperties {
   /** Full MapLibre layer specification. Reactively replaced when changed. */
   layer: LayerSpecification;
   /**

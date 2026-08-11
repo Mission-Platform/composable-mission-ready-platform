@@ -81,10 +81,11 @@ Besides the default slot (`properties.children`), a component can declare
 **named slots** with the `<Slot name="…" />` element:
 
 ```tsx
-import { h, Slot, type MpChild, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { h, Slot, type MpChild, type MpElement } from '@mission-platform/forge';
 
-export interface LayoutProperties extends MpProperties {
+export interface LayoutProperties {
   header?: MpChild; // named-slot content
+  children?: MpChild | readonly MpChild[]; // default-slot content
 }
 
 export function Layout(properties: LayoutProperties): MpElement {
@@ -112,9 +113,14 @@ filled — the neutral counterpart of Vue's `$slots.x` / a React
 slot):
 
 ```tsx
-import { h, hasSlot, Slot, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { h, hasSlot, Slot, type MpChild, type MpElement } from '@mission-platform/forge';
 
-export function Card(properties: MpProperties): MpElement {
+export interface CardProperties {
+  header?: MpChild;
+  children?: MpChild | readonly MpChild[];
+}
+
+export function Card(properties: CardProperties): MpElement {
   return (
     <article class="card">
       {hasSlot('header') ? <header><Slot name="header" /></header> : undefined}
@@ -156,11 +162,11 @@ content with a `slot="name"` attribute (the neutral counterpart of Vue's
 slot:
 
 ```tsx
-import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { h, type MpElement } from '@mission-platform/forge';
 
 import { ForgeDropdown } from '../forge-dropdown';
 
-export function Picker(_properties: MpProperties): MpElement {
+export function Picker(_properties: Record<string, never>): MpElement {
   return (
     <ForgeDropdown>
       <button slot="trigger" type="button">Open</button>
@@ -378,9 +384,9 @@ ambient JSX namespace (`JSX.Element = MpElement`) by adding
 `@mission-platform/forge/jsx-globals` to `compilerOptions.types`, then:
 
 ```tsx
-import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { h, type MpElement } from '@mission-platform/forge';
 
-export interface GreetingProperties extends MpProperties {
+export interface GreetingProperties {
   name?: string;
 }
 

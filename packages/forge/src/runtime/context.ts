@@ -38,7 +38,7 @@
  * top of that stack — so a neutral component tree resolves context identically
  * on both adapters, keeping the cross-framework SSR parity intact.
  */
-import { type MpChild, type MpComponent, type MpProperties } from './types';
+import { type MpChild, type MpComponent } from './types';
 
 /**
  * The property the runtime adapters use to recognise a context {@link MpContext.Provider}
@@ -47,7 +47,7 @@ import { type MpChild, type MpComponent, type MpProperties } from './types';
 export const MP_CONTEXT: unique symbol = Symbol.for('@mission-platform/forge.context');
 
 /** The properties accepted by an {@link MpContext.Provider} element. */
-export interface MpContextProviderProperties<T> extends MpProperties {
+export interface MpContextProviderProperties<T> {
   /** The value provided to the subtree's {@link useContext} reads. */
   value: T;
   /** The subtree the provided value is visible to. */

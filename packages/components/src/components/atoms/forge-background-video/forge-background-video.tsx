@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties, useEffect, useRef, useState } from '@mission-platform/forge';
+import { classNames, h, type MpChild, type MpElement, useEffect, useRef, useState } from '@mission-platform/forge';
 
 import sizeStyles from '../../../styles/size.module.scss';
 
@@ -18,7 +18,9 @@ export interface BackgroundVideoSource {
 /** How the video fills its box. */
 export type BackgroundVideoFit = 'cover' | 'contain';
 
-export interface BackgroundVideoProperties extends MpProperties {
+export interface BackgroundVideoProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Single video URL. Use `sources` for multiple formats. */
   src?: string;
   /** Size token controlling the wrapper's font scale. Defaults to `'md'`. */

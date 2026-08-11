@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { classNames, h, type MpElement } from '@mission-platform/forge';
 import { ForgeIconChevron, ForgeIconChevrons } from '@mission-platform/icons';
 
 import styles from './forge-pagination.module.scss';
@@ -22,7 +22,7 @@ type PaginationControl =
       modifier: 'edge' | 'prev' | 'next';
     };
 
-export interface PaginationProperties extends MpProperties {
+export interface PaginationProperties {
   /**
    * Current page (1-based; controlled via `modelValue` + `onUpdateModelValue`).
    * @model onUpdateModelValue

@@ -1,4 +1,4 @@
-import { h, type MpElement, type MpProperties, useEffect, useRef, useState } from '@mission-platform/forge';
+import { h, type MpElement, useEffect, useRef, useState } from '@mission-platform/forge';
 import { ForgeIconChevron, type IconDirection } from '@mission-platform/icons';
 
 import sizeStyles from '../../../styles/size.module.scss';
@@ -33,7 +33,7 @@ function parentOfPath(path: string): string {
   return dot === -1 ? '' : path.slice(0, dot);
 }
 
-export interface MenuProperties extends MpProperties {
+export interface MenuProperties {
   /** Top-level menu entries. */
   items: MenuNode[];
   /** Size token controlling the menu's scale. Defaults to `'md'`. */

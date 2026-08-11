@@ -70,8 +70,6 @@ export function useSource(map: Map | undefined, options: UseSourceOptions): void
     previousMapReference.current = map;
   }, [map, options.source]);
 
-  // Remove the source only on unmount (child layers are removed first as they
-  // unmount before this parent effect's cleanup runs).
   useEffect(() => {
     return () => {
       const map_ = previousMapReference.current;

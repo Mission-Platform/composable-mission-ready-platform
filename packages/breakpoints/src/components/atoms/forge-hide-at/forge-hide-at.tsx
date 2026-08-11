@@ -1,8 +1,10 @@
-import { Fragment, h, type MpElement, type MpProperties, Slot, useEffect, useState } from '@mission-platform/forge';
+import { Fragment, h, type MpChild, type MpElement, Slot, useEffect, useState } from '@mission-platform/forge';
 
-import { type BreakpointKey, breakpoints } from '../../../breakpoints';
+import { type BreakpointKey, breakpoints } from '@/breakpoints';
 
-export interface HideAtProperties extends MpProperties {
+export interface HideAtProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Hide slot content when the viewport is at or above this breakpoint. */
   min?: BreakpointKey;
   /** Hide slot content when the viewport is strictly below this breakpoint. */

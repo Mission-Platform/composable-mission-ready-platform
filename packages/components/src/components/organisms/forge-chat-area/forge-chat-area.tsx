@@ -1,4 +1,4 @@
-import { h, type MpElement, type MpProperties, Slot, useEffect, useRef } from '@mission-platform/forge';
+import { h, type MpChild, type MpElement, Slot, useEffect, useRef } from '@mission-platform/forge';
 
 import sizeStyles from '../../../styles/size.module.scss';
 
@@ -7,7 +7,9 @@ import styles from './forge-chat-area.module.scss';
 /** Size token — canonical 2xs → 2xl scale. */
 export type ChatAreaSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-export interface ChatAreaProperties extends MpProperties {
+export interface ChatAreaProperties {
+  /** The content rendered inside the component. */
+  children?: MpChild | readonly MpChild[];
   /** Size token controlling the chat area's scale. Defaults to `'md'`. */
   size?: ChatAreaSize;
   /** Keep the log pinned to the newest message. Defaults to `true`. */

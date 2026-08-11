@@ -2,6 +2,7 @@ packages:
   - apps/**
   - configs/**
   - packages/**
+  - forge-plugins/**
   - vite-plugins/**
   - workers/**
   - examples/**
@@ -19,7 +20,7 @@ packages:
 catalog:
   "js-yaml": ^4.3.1
   "luxon": ^3.7.2
-  "@types/luxon": ^3.7.3
+  "@types/luxon": ^3.7.4
   rxjs: ^7.8.2
   capnweb: 0.5.0
 
@@ -28,7 +29,7 @@ catalogs:
     "@changesets/cli": ^2.31.1
     "@commitlint/cli": ^21.2.1
     "@commitlint/config-conventional": ^21.2.0
-    turbo: ^2.10.8
+    turbo: ^2.10.9
     assemblyscript: ^0.28.20
     husky: ^9.1.7
 
@@ -52,6 +53,7 @@ catalogs:
     "highlight.js": ^11.11.1
     "monaco-editor": ^0.55.1
     marked: ^18.0.9
+    mermaid: ^11.16.1
     "harper.js": ^2.7.0
 
   eslint:
@@ -59,13 +61,13 @@ catalogs:
     eslint-plugin-unicorn: ^64.0.0
     "@typescript-eslint/eslint-plugin": ^8.66.0
     "@typescript-eslint/parser": ^8.66.0
-    eslint: ^10.8.0
+    eslint: ^10.8.1
     eslint-config-prettier: ^10.1.8
-    eslint-config-turbo: ^2.10.8
+    eslint-config-turbo: ^2.10.9
     eslint-import-resolver-typescript: ^4.4.5
     eslint-plugin-import-x: ^4.17.1
     eslint-plugin-vue: ^10.10.0
-    eslint-plugin-vuejs-accessibility: ^2.5.0
+    eslint-plugin-vuejs-accessibility: ^2.6.0
     typescript-eslint: ^8.66.0
     vue-eslint-parser: ^10.4.1
 
@@ -86,7 +88,7 @@ catalogs:
 
   svelte:
     svelte: ^5.56.8
-    "@sveltejs/vite-plugin-svelte": ^7.2.0
+    "@sveltejs/vite-plugin-svelte": ^7.3.0
 
   webcomponents:
     lit: ^3.3.3
@@ -160,10 +162,10 @@ catalogs:
     typescript: ~6.0.3
 
   cloudflare:
-    rwsdk: ^1.6.0
-    wrangler: ^4.119.0
-    "@cloudflare/vite-plugin": ^1.51.0
-    "@cloudflare/workers-types": ^5.20260804.1
+    rwsdk: ^1.7.0
+    wrangler: ^4.120.0
+    "@cloudflare/vite-plugin": ^1.51.1
+    "@cloudflare/workers-types": ^5.20260810.1
 
   mcp:
     "@modelcontextprotocol/sdk": ^1.30.0

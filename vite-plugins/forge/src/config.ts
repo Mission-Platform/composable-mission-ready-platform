@@ -1,23 +1,21 @@
-import fs, { copyFileSync, mkdirSync, readdirSync, readFileSync } from 'node:fs';
+import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 
 import { defineLibraryConfig } from '@mission-platform/vite-config';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
-import vueJsx from '@vitejs/plugin-vue-jsx';
 import { mergeConfig, type Plugin, type UserConfig } from 'vite';
 import solidPlugin from 'vite-plugin-solid';
 
 import { generateHookLibrarySources, hookLibraryDtsPlugin } from './generate-hooks.js';
 import {
   generateFrameworkSources,
-  generateStoryblokBloks,
   jsxComponentsCssImportPlugin,
   jsxComponentsDtsPlugin,
   jsxComponentsEntryDtsPlugin,
 } from './generate.js';
 
-import type { JsxFramework } from './compiler/compile.js';
+import type { FrameworkOutputPlugin, JsxFramework } from '@mission-platform/forge-plugin-api';
 
 export function reactJsxPlugin(): Plugin {
   return {
@@ -158,28 +156,15 @@ export function solidJsxTsdownPlugin(): Plugin {
  * when the bundler is not Vite — the Vite-only Svelte/Solid plugins crash because
  * they require Vite's resolved config.
  */
-export function stagePluginsForTsdown(framework: JsxFramework): Plugin[] {
-  switch (framework) {
-    case 'react': {
-      return [reactJsxPlugin()];
-    }
-    case 'solid': {
-      return [solidJsxTsdownPlugin()];
-    }
-    case 'svelte': {
-      return [svelteTsdownPlugin()];
-    }
-    default: {
-      return [];
-    }
-  }
+export function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[] {
+  return (plugin.build.tsdown?.({}) ?? []) as Plugin[];
 }
 
 export interface JsxLibraryConfigOptions {
   /** Absolute root directory of the package (e.g. `__dirname`). */
   rootDir: string;
-  /** Target framework for dual-framework builds (`'react' | 'vue'`). */
-  framework: JsxFramework;
+  /** Explicit output plugin for this framework build. */
+  plugin: FrameworkOutputPlugin;
   /**
    * Base global/UMD name of the library (e.g. `'MissionPlatformBreakpoints'`).
    * `'React'` or `'Vue'` will be appended automatically if missing.
@@ -201,17 +186,9 @@ export interface JsxLibraryConfigOptions {
 }
 
 export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig {
-  const {
-    rootDir,
-    framework,
-    name,
-    componentsModule,
-    useEntryDts,
-    declarationModule,
-    external = [],
-    overrides,
-  } = options;
+  const { rootDir, plugin, name, componentsModule, useEntryDts, declarationModule, external = [], overrides } = options;
 
+  const framework = plugin.id;
   const cacheName = `${path.basename(rootDir)}-${framework}`;
   const generatedDir = path.join(rootDir, 'node_modules/.cache', cacheName);
 
@@ -229,47 +206,25 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
   });
 
   const entry = generateFrameworkSources({
-    framework,
+    plugin,
     componentsModule: resolvedComponentsModule,
+    sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
     outDir: generatedDir,
     // Keep the neutral `Forge` prefix on the public API (do not strip it).
     stripPrefix: '',
   });
 
-  const stagePlugins: Plugin[] =
-    framework === 'vue'
-      ? [vueJsx()]
-      : framework === 'react'
-        ? [reactJsxPlugin()]
-        : framework === 'solid'
-          ? [solidPlugin()]
-          : framework === 'svelte'
-            ? sveltePlugin()
-            : [];
+  const stagePlugins =
+    plugin.build.vite?.({
+      rootDir,
+      generatedDirectory: generatedDir,
+    }) ?? [];
 
-  const frameworkSuffix =
-    framework === 'react'
-      ? 'React'
-      : framework === 'vue'
-        ? 'Vue'
-        : framework === 'solid'
-          ? 'Solid'
-          : framework === 'svelte'
-            ? 'Svelte'
-            : 'WebComponents';
+  const frameworkSuffix = plugin.displayNameSuffix ?? plugin.id;
 
   const displayName = name.endsWith(frameworkSuffix) ? name : `${name}${frameworkSuffix}`;
 
-  const frameworkExternals =
-    framework === 'react'
-      ? ['react', 'react-dom']
-      : framework === 'vue'
-        ? ['vue']
-        : framework === 'solid'
-          ? ['solid-js']
-          : framework === 'svelte'
-            ? ['svelte']
-            : [];
+  const frameworkExternals = plugin.runtimeExternals ?? [];
 
   // `useEntryDts`/`declarationModule` are deliberate caller opt-outs (a
   // synthesised entry declaration whose props types are re-imported from the
@@ -281,6 +236,7 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
       ? jsxComponentsEntryDtsPlugin({
           framework,
           componentsModule: resolvedComponentsModule,
+          sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
           declarationFileName: 'index',
           declarationModule: declarationModule ?? '../components',
           // Keep the neutral `Forge` prefix on the public API (do not strip it).
@@ -292,6 +248,7 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
           outDir: path.resolve(rootDir, `dist/${framework}`),
           vueTscBin,
           componentsModule: resolvedComponentsModule,
+          sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
         });
 
   return defineLibraryConfig({
@@ -317,8 +274,8 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
 export interface JsxHookLibraryConfigOptions {
   /** Absolute root directory of the package (e.g. `__dirname`). */
   rootDir: string;
-  /** Build mode (`'react' | 'vue' | 'default'` / neutral). */
-  mode?: string;
+  /** Explicit output plugin; omit it only for a neutral hook build. */
+  plugin?: FrameworkOutputPlugin;
   /** Base global/UMD name of the library (e.g. `'MissionPlatformD3'`). */
   name: string;
   /** Path to the neutral hook entry module (defaults to `src/index.ts`). */
@@ -330,40 +287,20 @@ export interface JsxHookLibraryConfigOptions {
 }
 
 export function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions): UserConfig {
-  const { rootDir, mode, name, entryModule, external = [], overrides } = options;
+  const { rootDir, plugin, name, entryModule, external = [], overrides } = options;
   const resolvedEntry = entryModule ?? path.resolve(rootDir, 'src/index.ts');
 
-  if (mode === 'react' || mode === 'vue' || mode === 'solid' || mode === 'svelte' || mode === 'web-components') {
-    const framework = mode as JsxFramework;
+  if (plugin !== undefined) {
+    const framework = plugin.id as JsxFramework;
     const cacheName = `${path.basename(rootDir)}-${framework}`;
     const generatedDir = path.join(rootDir, 'node_modules/.cache', cacheName);
     const entry = generateHookLibrarySources({
-      framework,
+      plugin,
       entryModule: resolvedEntry,
       outDir: generatedDir,
     });
-    const frameworkSuffix =
-      framework === 'react'
-        ? 'React'
-        : framework === 'vue'
-          ? 'Vue'
-          : framework === 'solid'
-            ? 'Solid'
-            : framework === 'svelte'
-              ? 'Svelte'
-              : 'WebComponents';
-
-    const frameworkExternals =
-      framework === 'react'
-        ? ['react', 'react-dom']
-        : framework === 'vue'
-          ? ['vue']
-          : framework === 'solid'
-            ? ['solid-js']
-            : framework === 'svelte'
-              ? ['svelte']
-              : // Web Components import the native runtime from the forge package.
-                ['@mission-platform/forge', '@mission-platform/forge/web-components'];
+    const frameworkSuffix = plugin.displayNameSuffix ?? plugin.id;
+    const frameworkExternals = plugin.runtimeExternals ?? [];
 
     return defineLibraryConfig({
       rootDir,
@@ -376,13 +313,11 @@ export function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions)
         {
           build: { outDir: `dist/${framework}` },
           plugins: [
-            ...(framework === 'react'
-              ? [reactJsxPlugin()]
-              : framework === 'solid'
-                ? [solidPlugin()]
-                : framework === 'svelte'
-                  ? sveltePlugin()
-                  : []),
+            ...(plugin.build.vite?.({
+              rootDir,
+              generatedDirectory: generatedDir,
+              outputDirectory: path.resolve(rootDir, `dist/${framework}`),
+            }) ?? []),
             hookLibraryDtsPlugin({ framework, generatedDir, outDir: path.resolve(rootDir, `dist/${framework}`) }),
           ],
         },
@@ -397,129 +332,5 @@ export function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions)
     entry: resolvedEntry,
     external,
     overrides,
-  });
-}
-
-function storyblokEntryDeclarationsPlugin(cacheDirectory: string): Plugin {
-  return {
-    name: 'mission-platform:storyblok-entry-dts',
-    generateBundle() {
-      this.emitFile({
-        type: 'asset',
-        fileName: 'index.d.ts',
-        source: readFileSync(path.join(cacheDirectory, 'index.d.ts'), 'utf8'),
-      });
-    },
-  };
-}
-
-function storyblokConfigAssetsPlugin(rootDir: string, cacheDirectory: string): Plugin {
-  return {
-    name: 'mission-platform:storyblok-config-assets',
-    closeBundle() {
-      const destination = path.resolve(rootDir, 'dist/storyblok');
-      mkdirSync(destination, { recursive: true });
-      for (const file of readdirSync(cacheDirectory)) {
-        if (file.endsWith('.json')) {
-          copyFileSync(path.join(cacheDirectory, file), path.join(destination, file));
-        }
-      }
-    },
-  };
-}
-
-/** Runtime + Storyblok binding externalised for each Storyblok wrapper build. */
-const STORYBLOK_EXTERNALS: Readonly<Record<JsxFramework, readonly string[]>> = {
-  react: ['react', 'react-dom', '@storyblok/react'],
-  vue: ['vue', '@storyblok/vue'],
-  solid: ['solid-js', '@storyblok/solid'],
-  svelte: ['svelte', '@storyblok/svelte'],
-  'web-components': ['@storyblok/js'],
-};
-
-/** Display-name suffix appended per target framework. */
-const STORYBLOK_NAME_SUFFIX: Readonly<Record<JsxFramework, string>> = {
-  react: 'React',
-  vue: 'Vue',
-  solid: 'Solid',
-  svelte: 'Svelte',
-  'web-components': 'WebComponents',
-};
-
-export interface JsxStoryblokLibraryConfigOptions {
-  /** Absolute root directory of the package (e.g. `__dirname`). */
-  rootDir: string;
-  /** Target framework (any of the five forge targets). */
-  framework: JsxFramework;
-  /** Base UMD/global name (e.g. `'MissionPlatformJsxComponentsStoryblok'`). */
-  name: string;
-  /** Package import name (e.g. `'@mission-platform/components'`). */
-  packageName: string;
-  /** Path to neutral components barrel module. Auto-resolved if omitted. */
-  componentsModule?: string;
-  /** Additional Rollup externals. */
-  external?: string[];
-  /** Extra Vite config overrides. */
-  overrides?: UserConfig;
-}
-
-export function defineJsxStoryblokLibraryConfig(options: JsxStoryblokLibraryConfigOptions): UserConfig {
-  const { rootDir, framework, name, packageName, componentsModule, external = [], overrides } = options;
-
-  const cacheName = `${path.basename(rootDir)}-storyblok-${framework}`;
-  const cacheDirectory = path.join(rootDir, 'node_modules/.cache', cacheName);
-
-  const resolvedComponentsModule =
-    componentsModule ??
-    [
-      path.resolve(rootDir, 'src/components/index.ts'),
-      path.resolve(rootDir, 'src/component/index.ts'),
-      path.resolve(rootDir, 'src/index.ts'),
-    ].find((p) => fs.existsSync(p)) ??
-    path.resolve(rootDir, 'src/index.ts');
-
-  const entry = generateStoryblokBloks({
-    framework,
-    componentsModule: resolvedComponentsModule,
-    outDir: cacheDirectory,
-    componentsImport: packageName,
-    // Keep the neutral `Forge` prefix on the public API (do not strip it).
-    stripPrefix: '',
-  });
-
-  const stagePlugins: Plugin[] =
-    framework === 'react'
-      ? [reactJsxPlugin()]
-      : framework === 'vue'
-        ? [vueJsx()]
-        : framework === 'solid'
-          ? [solidPlugin()]
-          : framework === 'svelte'
-            ? sveltePlugin()
-            : [];
-
-  const suffix = STORYBLOK_NAME_SUFFIX[framework];
-  const displayName = name.endsWith(suffix) ? name : `${name}${suffix}`;
-
-  return defineLibraryConfig({
-    rootDir,
-    name: displayName,
-    entry,
-    preserveModules: true,
-    preserveModulesRoot: path.join('node_modules/.cache', cacheName),
-    external: [...STORYBLOK_EXTERNALS[framework], packageName, ...external],
-    overrides: mergeConfig(
-      {
-        build: {
-          outDir: `dist/storyblok/${framework}`,
-        },
-        plugins: [
-          ...stagePlugins,
-          storyblokEntryDeclarationsPlugin(cacheDirectory),
-          storyblokConfigAssetsPlugin(rootDir, cacheDirectory),
-        ],
-      },
-      overrides ?? {},
-    ),
   });
 }

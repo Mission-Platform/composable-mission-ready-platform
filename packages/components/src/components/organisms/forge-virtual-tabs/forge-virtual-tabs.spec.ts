@@ -8,7 +8,7 @@ import { renderToString } from 'vue/server-renderer';
 
 import { ForgeVirtualTabs } from './forge-virtual-tabs';
 
-import type { TabItem } from '../../molecules/forge-tabs';
+import type { TabItem } from '@/components/molecules/forge-tabs';
 
 /**
  * Exercises the **neutral** `ForgeVirtualTabs` authored in this package,

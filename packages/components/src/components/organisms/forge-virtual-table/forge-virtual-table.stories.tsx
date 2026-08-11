@@ -1,4 +1,5 @@
 import { h } from '@mission-platform/forge';
+import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
 
 import { ForgeVirtualTable } from '@mission-platform/components';
 
@@ -83,19 +84,25 @@ export const Bordered: Story = { args: { bordered: true } };
 
 export const Empty: Story = { args: { rows: [] } };
 
+// `footer` is a **named slot**, not a prop: only the React/Solid builds read it
+// as `properties.footer`, while Vue renders `renderSlot($slots, 'footer')`,
+// Svelte expects a snippet and the web component a light-DOM child. Passing it
+// through `renderWithSlots` is the one shape that works on all five.
 export const CustomFooter: Story = {
-  render: (arguments_) => (
-    <ForgeVirtualTable
-      {...arguments_}
-      footer={
-        <span className={styles['virtual-table-demo-footer']}>
-          Showing{' '}
-          <span className={styles['virtual-table-demo-footer__accent']}>
-            {(arguments_.rows ?? []).length.toLocaleString()}
-          </span>{' '}
-          people
-        </span>
-      }
-    />
-  ),
+  render: (arguments_) =>
+    renderWithSlots(
+      ForgeVirtualTable,
+      { ...arguments_ },
+      {
+        footer: (
+          <span className={styles['virtual-table-demo-footer']}>
+            Showing{' '}
+            <span className={styles['virtual-table-demo-footer__accent']}>
+              {(arguments_.rows ?? []).length.toLocaleString()}
+            </span>{' '}
+            people
+          </span>
+        ),
+      },
+    ),
 };

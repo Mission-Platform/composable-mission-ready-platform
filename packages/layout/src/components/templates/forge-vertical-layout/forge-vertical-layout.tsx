@@ -1,5 +1,5 @@
 import { type DrawerDraggable, type DrawerSize, ForgeDrawer } from '@mission-platform/components';
-import { h, hasSlot, type MpElement, type MpProperties, Slot, useEffect, useState } from '@mission-platform/forge';
+import { h, hasSlot, type MpChild, type MpElement, Slot, useEffect, useState } from '@mission-platform/forge';
 
 import styles from './forge-vertical-layout.module.scss';
 
@@ -8,7 +8,9 @@ export type VerticalLayoutSize = DrawerSize;
 /** Named viewport breakpoint at/above which the side columns render inline. */
 export type VerticalLayoutBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-export interface VerticalLayoutProperties extends MpProperties {
+export interface VerticalLayoutProperties {
+  /** The content the consumer fills the component’s slots with. */
+  children?: MpChild | readonly MpChild[];
   /** Overlay open state of the start column on small screens (callback-prop `v-model`). */
   startOpen?: boolean;
   /** Overlay open state of the end column on small screens (callback-prop `v-model`). */

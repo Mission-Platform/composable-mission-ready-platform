@@ -1,11 +1,13 @@
 # `@mission-platform/components`
 
 Write-once, framework-neutral component library for Mission Platform. Components are authored once in JSX using
-`@mission-platform/forge` and compiled into native **Vue 3** and **React** components.
+`@mission-platform/forge` and compiled into native **Vue 3**, **React**, **Svelte**, **Solid**, and **Web Component**
+outputs.
 
 ## Features
 
-- **Write Once, Run Anywhere**: Neutral source compiled into native Vue and React builds with zero runtime overhead.
+- **Write Once, Run Anywhere**: Neutral source compiled into native Vue, React, Svelte, Solid, and Web Component builds
+  with zero target-side source reparsing.
 - **Universal Sizing Scale**: Standardized `size` props (`2xs`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl`) across components.
 - **Design Token Integration**: Built-in integration with `@mission-platform/tokens` and design system CSS variables.
 - **Storyblok CMS Ready**: Automatically generates Storyblok blok configurations and wrappers.
@@ -22,7 +24,7 @@ pnpm add @mission-platform/components
 
 Pick your framework **once** — there are no per-framework subpaths. The bare `@mission-platform/components`
 specifier resolves to the native build for whichever `mp:<framework>` export condition your toolchain
-activates (`mp:vue`, `mp:react`, `mp:solid`, `mp:web-component`):
+activates (`mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, `mp:web-component`):
 
 ```ts
 // vite.config.ts
@@ -100,6 +102,21 @@ export function UserForm() {
 }
 ```
 
+### Svelte, Solid, and Web Components
+
+The same bare import resolves to the native target when the matching condition is active:
+
+| Target         | Export condition   | Native output                           |
+| :------------- | :----------------- | :-------------------------------------- |
+| Vue 3          | `mp:vue`           | Vue SFCs and declarations               |
+| React          | `mp:react`         | React JSX and declarations              |
+| Svelte         | `mp:svelte`        | Svelte components and declarations      |
+| Solid          | `mp:solid`         | Solid JSX and declarations              |
+| Web Components | `mp:web-component` | Custom-element classes and declarations |
+
+Configure `resolve.conditions` with the condition for the active application; do not import a generated `dist/<target>`
+directory directly. This keeps runtime externals, declarations, and auxiliary modules aligned with the selected target.
+
 ### Framework-Neutral Components
 
 When building higher-level write-once components using `@mission-platform/forge`, import from the same
@@ -134,7 +151,7 @@ import { ForgeBadge } from '@mission-platform/components/atoms/forge-badge/forge
 
 The subpath mirrors the source layout (`atoms` / `molecules` / `organisms` / `templates` +
 `<component>/<component>`). It honours every `mp:*` framework condition, so the import stays identical
-across Vue, React, Solid, and Web Components.
+across Vue, React, Svelte, Solid, and Web Components.
 
 ### Typed `ForgeNavbar` slots
 
@@ -160,15 +177,15 @@ import { ForgeNavbar } from '@mission-platform/components/organisms/forge-navbar
 
 ## Subpath Exports
 
-- `@mission-platform/components`: Barrel export. Resolves to the compiled native Vue 3, React, Solid,
+- `@mission-platform/components`: Barrel export. Resolves to the compiled native Vue 3, React, Svelte, Solid,
   or web-component build according to the active `mp:<framework>` condition, or to the neutral
   forge source when none is set.
 - `@mission-platform/components/<path>`: **Per-component** subpath, condition-aware in exactly the same
   way (e.g. `@mission-platform/components/atoms/forge-badge/forge-badge`). Imports only that
   component's chunk — see [Per-Component Imports](#per-component-imports-avoid-pulling-in-heavy-optional-components).
 - `@mission-platform/components/forge-drawer`: Subpath for `ForgeDrawer` component.
-- `@mission-platform/components/storyblok/vue`: Storyblok wrappers for Vue 3.
-- `@mission-platform/components/storyblok/react`: Storyblok wrappers for React.
+- `@mission-platform/components/cms/storyblok/vue`: Storyblok wrappers for Vue 3.
+- `@mission-platform/components/cms/storyblok/react`: Storyblok wrappers for React.
 - `@mission-platform/components/styles/a11y`: Shared SCSS accessibility helpers (`src/styles/_a11y.scss`).
 - `@mission-platform/components/styles`: Alias of `./styles/a11y` (kept for backwards compatibility).
 - `@mission-platform/components/styles/scss`: Alias of `./styles/a11y`.

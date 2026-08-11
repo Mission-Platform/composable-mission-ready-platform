@@ -1,4 +1,5 @@
 import { h } from '@mission-platform/forge';
+import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
 import { useArgs } from 'storybook/preview-api';
 
 import { ForgeButton, ForgeDropdown, ForgeStack } from '@mission-platform/components';
@@ -22,6 +23,7 @@ const meta = {
   component: ForgeDropdown,
   tags: ['autodocs'],
   parameters: {
+    layout: 'centered',
     docs: {
       description: {
         component:
@@ -46,47 +48,51 @@ const meta = {
     closeOnOutsideClick: true,
     open: false,
   },
+  // `trigger` is a **named slot**, not a prop: only the React/Solid builds read
+  // it as `properties.trigger`, while Vue renders `renderSlot($slots, 'trigger')`,
+  // Svelte expects a snippet and the web component a light-DOM child. Passing it
+  // through `renderWithSlots` is the one shape that works on all five.
   render: (arguments_) => {
     const [{ open }, updateArguments] = useArgs();
     const choose = (): void => updateArguments({ open: false });
-    return (
-      <div style={{ padding: '4rem', display: 'flex', justifyContent: 'center' }}>
-        <ForgeDropdown
-          {...arguments_}
-          open={Boolean(open)}
-          onUpdateOpen={(value) => updateArguments({ open: value })}
-          onClose={() => updateArguments({ open: false })}
-          trigger={
-            <ForgeButton
-              variant="secondary"
-              onClick={() => updateArguments({ open: !open })}
-            >
-              Menu ▾
-            </ForgeButton>
-          }
+    return renderWithSlots(
+      ForgeDropdown,
+      {
+        ...arguments_,
+        open: Boolean(open),
+        onUpdateOpen: (value: boolean) => updateArguments({ open: value }),
+        onClose: () => updateArguments({ open: false }),
+      },
+      {
+        trigger: (
+          <ForgeButton
+            variant="secondary"
+            onClick={() => updateArguments({ open: !open })}
+          >
+            Menu ▾
+          </ForgeButton>
+        ),
+      },
+      <ForgeStack gap="2xs">
+        <ForgeButton
+          variant="tertiary"
+          onClick={choose}
         >
-          <ForgeStack gap="2xs">
-            <ForgeButton
-              variant="tertiary"
-              onClick={choose}
-            >
-              Profile
-            </ForgeButton>
-            <ForgeButton
-              variant="tertiary"
-              onClick={choose}
-            >
-              Settings
-            </ForgeButton>
-            <ForgeButton
-              variant="tertiary"
-              onClick={choose}
-            >
-              Sign out
-            </ForgeButton>
-          </ForgeStack>
-        </ForgeDropdown>
-      </div>
+          Profile
+        </ForgeButton>
+        <ForgeButton
+          variant="tertiary"
+          onClick={choose}
+        >
+          Settings
+        </ForgeButton>
+        <ForgeButton
+          variant="tertiary"
+          onClick={choose}
+        >
+          Sign out
+        </ForgeButton>
+      </ForgeStack>,
     );
   },
 } satisfies Meta<typeof ForgeDropdown>;

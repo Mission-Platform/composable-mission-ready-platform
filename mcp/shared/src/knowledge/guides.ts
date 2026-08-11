@@ -193,7 +193,10 @@ Examples:
 
 ## Authoring rules
 
-1. **Write-once:** implement with \`@mission-platform/forge\` (\`h\`, \`MpProperties\`, neutral hooks). Never hand-write separate Vue/React sources.
+1. **Write-once:** implement with \`@mission-platform/forge\` (\`h\`, \`MpElement\`, neutral hooks). Never hand-write separate Vue/React sources.
+   Props interfaces inherit nothing — there is no shared props base. Declare exactly what the component accepts, adding
+   \`children?: MpChild | readonly MpChild[]\` or \`className?: ClassValue\` only when it uses them; \`key\` and \`slot\` come free
+   from \`MpReservedProperties\`.
 2. **Barrel:** export the component and its \`*Properties\` type from the folder \`index.ts\`, and re-export from \`src/components/index.ts\` via \`./<level>/<comp>\`.
 3. **Tests required:** every component ships a co-located \`<comp>.spec.ts\` (minimal passing skeleton is fine to start).
 4. **Stories required:** co-located \`<comp>.stories.tsx\` with the atomic title convention above.

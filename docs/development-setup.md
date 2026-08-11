@@ -10,7 +10,7 @@ Before cloning the repository, ensure your system meets the following requiremen
 ### System Requirements
 
 | Tool          | Required Version  | Purpose                                               |
-|:--------------|:------------------|:------------------------------------------------------|
+| :------------ | :---------------- | :---------------------------------------------------- |
 | **Node.js**   | `24.19.0`         | Runtime environment (Active LTS)                      |
 | **pnpm**      | `11.20.0`         | Package manager and workspace orchestrator            |
 | **Git**       | Latest stable     | Version control                                       |
@@ -92,9 +92,30 @@ pnpm storybook:vue
 
 # Start React Storybook
 pnpm storybook:react
+
+# Start Svelte Storybook
+pnpm storybook:svelte
+
+# Start Solid Storybook
+pnpm storybook:solid
+
+# Start Web Components Storybook
+pnpm storybook:web-component
 ```
 
-Other available framework targets include `solid` and `web-component`.
+All five modes use the same neutral story inventory. To validate every static
+workbench build in one pass:
+
+```bash
+for framework in vue react svelte solid web-component; do
+  STORYBOOK_FRAMEWORK="$framework" pnpm --filter @mission-platform/storybook run build-storybook
+done
+```
+
+Forge-backed packages publish matching `mp:vue`, `mp:react`, `mp:svelte`,
+`mp:solid`, and `mp:web-component` conditions. The active condition must be
+configured by the consuming bundler; see [the compiler reference](forge-compiler.md)
+for the target plugin and declaration pipeline.
 
 ### Application Development
 
@@ -110,7 +131,7 @@ The application will typically be available at `http://localhost:5173`.
 ### Common Commands
 
 | Task       | Command       | Description                    |
-|:-----------|:--------------|:-------------------------------|
+| :--------- | :------------ | :----------------------------- |
 | **Build**  | `pnpm build`  | Build all apps and packages    |
 | **Test**   | `pnpm test`   | Run all Vitest suites          |
 | **Lint**   | `pnpm lint`   | Run ESLint across the monorepo |

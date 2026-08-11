@@ -1,7 +1,6 @@
-import { h, type MpElement, type MpProperties } from '@mission-platform/forge';
+import { h, type MpElement } from '@mission-platform/forge';
 
 import sizeStyles from '../../../styles/size.module.scss';
-import { ForgeTypography } from '../../atoms/forge-typography';
 
 import styles from './forge-breadcrumb.module.scss';
 
@@ -16,7 +15,7 @@ export interface BreadcrumbItem {
   href?: string;
 }
 
-export interface BreadcrumbProperties extends MpProperties {
+export interface BreadcrumbProperties {
   /** The breadcrumb trail, root-first. The last entry is the current page. */
   items: BreadcrumbItem[];
   /** Visual separator rendered between entries. Defaults to `'/'`. */
@@ -32,8 +31,10 @@ export interface BreadcrumbProperties extends MpProperties {
  * It renders an ordered list inside a labelled `<nav>`: every entry except the
  * last with an `href` is a link, the last entry is the current page
  * (`aria-current="page"`), and a configurable `separator` is drawn between
- * entries. Item text composes the already-migrated {@link ForgeTypography}. It
- * owns its styling through the co-located CSS Module `forge-breadcrumb.module.scss`.
+ * entries. Every crumb — link or current — inherits the trail's own font from
+ * the `forge-size--*` modifier on the `<nav>`, so the current page is
+ * typographically in line with its siblings and only differs in colour. It owns
+ * its styling through the co-located CSS Module `forge-breadcrumb.module.scss`.
  *
  * The original Vue SFC supported `vue-router` `to` targets via `RouterLink`; the
  * neutral version renders a plain `<a href>` (the established router
@@ -75,14 +76,7 @@ export function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpE
                   className={styles['forge-breadcrumb__current']}
                   aria-current={isLast ? 'page' : undefined}
                 >
-                  <ForgeTypography
-                    as="span"
-                    color="secondary"
-                    variant="body-sm"
-                    weight="medium"
-                  >
-                    {item.label}
-                  </ForgeTypography>
+                  {item.label}
                 </span>
               )}
             </li>

@@ -1,0 +1,14 @@
+{
+  "extends": "@mission-platform/typescript-config/forge-neutral-library",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.build.tsbuildinfo",
+    "types": ["vite/client", "@mission-platform/forge/jsx-globals"],
+    "rootDir": "./src",
+    "declarationDir": "./dist"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts"],
+  "exclude": ["src/**/*.stories.ts", "src/**/*.stories.tsx", "src/**/*.spec.ts"]
+}

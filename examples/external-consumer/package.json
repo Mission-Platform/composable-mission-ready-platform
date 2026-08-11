@@ -5,12 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:worker": "pnpm --dir ../../workers/email-sender dev --port 8787",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@mission-platform/components": "workspace:*",
+    "@mission-platform/email-components": "workspace:*",
+    "@mission-platform/email-renderer": "workspace:*",
+    "@mission-platform/forms": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"

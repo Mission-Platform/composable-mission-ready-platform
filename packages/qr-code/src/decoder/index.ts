@@ -12,7 +12,7 @@
 
 import { decode as wasmDecode } from '@mission-platform/qr-code-decode-wasm';
 
-import type { QrMatrix } from '../types';
+import type { QrMatrix } from '@/types';
 
 /** Pack a {@link QrMatrix} into the decoder's `[size, ...modules]` buffer. */
 function packMatrix(matrix: QrMatrix): Uint8Array {
