@@ -1,5 +1,31 @@
 # @mission-platform/service-monitor
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [4714506]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [66130ee]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [4714506]
+- Updated dependencies [be97ac0]
+  - @mission-platform/breakpoints@6.0.0
+  - @mission-platform/components@3.0.0
+  - @mission-platform/d3@2.0.0
+  - @mission-platform/forms@2.0.0
+  - @mission-platform/layouts@2.0.0
+  - @mission-platform/icons@2.0.0
+  - @mission-platform/i18n@2.1.0
+  - @mission-platform/tokens@1.1.0
+  - @mission-platform/rxjs@1.0.0
+  - @mission-platform/seo@0.3.3
+
 ## 0.0.2
 
 ### Patch Changes

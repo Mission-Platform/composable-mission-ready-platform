@@ -1,0 +1,33 @@
+# @mission-platform/scheduler
+
+## 0.2.0
+
+### Minor Changes
+
+- be97ac0: add framework-specific Storyblok output builds for Forge packages
+
+  The CMS driver and Storyblok target now support shared assets plus React, Vue,
+  Svelte, Solid, and Web Components output. Forge packages expose the associated
+  build targets and components adds the generated Storyblok entry points.
+
+  BREAKING CHANGE: the generated `@mission-platform/icons` components barrel no
+  longer re-exports the catalog and sprite APIs; import those APIs from their
+  dedicated modules instead.
+
+### Patch Changes
+
+- be97ac0: Render the scheduler view body through the neutral Dynamic primitive so Vue preserves the returned view element instead of stringifying it.
+- Updated dependencies [4714506]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [66130ee]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [4714506]
+- Updated dependencies [be97ac0]
+  - @mission-platform/components@3.0.0
+  - @mission-platform/forms@2.0.0
+  - @mission-platform/icons@2.0.0
+  - @mission-platform/vcard@0.2.0
+  - @mission-platform/forge@1.0.0

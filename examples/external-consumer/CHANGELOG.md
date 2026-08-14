@@ -1,5 +1,27 @@
 # external-consumer-example
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [4714506]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [4714506]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [4714506]
+- Updated dependencies [be97ac0]
+  - @mission-platform/components@3.0.0
+  - @mission-platform/forms@2.0.0
+  - @mission-platform/email-components@1.0.0
+  - @mission-platform/email-renderer@0.1.1
+  - @mission-platform/tokens@1.1.0
+
 ## 0.1.1
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/tokens",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "license": "BSD-4-Clause",
   "description": "CSS design tokens and SCSS theme definitions for Mission Platform",
   "type": "module",

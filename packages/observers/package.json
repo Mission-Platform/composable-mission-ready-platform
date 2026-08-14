@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/observers",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "license": "BSD-4-Clause",
   "description": "Framework-neutral browser observer composables for Mission Platform — write-once IntersectionObserver, MutationObserver, and PerformanceObserver hooks (authored against @mission-platform/forge hooks and compiled to React, Vue, Solid, and Web Components)",
   "type": "module",

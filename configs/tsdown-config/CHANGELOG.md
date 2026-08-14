@@ -1,5 +1,11 @@
 # @mission-platform/tsdown-config
 
+## 0.2.1
+
+### Patch Changes
+
+- 585fc64: fix declaration builds when using a staged output root
+
 ## 0.2.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/three",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "license": "BSD-4-Clause",
   "description": "Framework-neutral Three.js integration for Mission Platform — a write-once ForgeThreeCanvas component and useThree hook compiled to Vue, React, Svelte, Solid, and Web Components",
   "type": "module",

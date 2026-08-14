@@ -1,5 +1,48 @@
 # @mission-platform/storybook
 
+## 0.0.13
+
+### Patch Changes
+
+- be97ac0: Force static Storybook docs source under the Svelte renderer so CSF `useArgs()` stories are not re-invoked outside the preview hooks context by `@storybook/svelte`'s source decorator.
+- Updated dependencies [4714506]
+- Updated dependencies [be97ac0]
+- Updated dependencies [4714506]
+- Updated dependencies [be97ac0]
+- Updated dependencies [4714506]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [66130ee]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [be97ac0]
+- Updated dependencies [4714506]
+- Updated dependencies [be97ac0]
+  - @mission-platform/barcode@2.0.0
+  - @mission-platform/breakpoints@6.0.0
+  - @mission-platform/components@3.0.0
+  - @mission-platform/d3@2.0.0
+  - @mission-platform/forms@2.0.0
+  - @mission-platform/layouts@2.0.0
+  - @mission-platform/map@2.0.0
+  - @mission-platform/content@1.0.0
+  - @mission-platform/code-scanner@1.1.0
+  - @mission-platform/email-components@1.0.0
+  - @mission-platform/icons@2.0.0
+  - @mission-platform/qr-code@2.0.0
+  - @mission-platform/resource-planner@1.1.0
+  - @mission-platform/scheduler@0.2.0
+  - @mission-platform/vcard@0.2.0
+  - @mission-platform/i18n@2.1.0
+  - @mission-platform/tokens@1.1.0
+  - @mission-platform/rxjs@1.0.0
+  - @mission-platform/speech-audio@1.0.0
+  - @mission-platform/harper@0.2.1
+  - @mission-platform/hunspell@0.4.1
+
 ## 0.0.12
 
 ### Patch Changes

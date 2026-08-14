@@ -1,5 +1,11 @@
 # @mission-platform/i18n
 
+## 2.1.0
+
+### Minor Changes
+
+- be97ac0: Expose the neutral `useI18n` fallback (`useI18n` / `UseI18nReturn`) so non-Vue/non-React builds can compile consistently.
+
 ## 2.0.0
 
 ### Major Changes
@@ -26,7 +32,7 @@
 
   ```ts
   // vite.config.ts
-  export default defineFrameworkAppConfig({ framework: 'vue' });
+  export default defineFrameworkAppConfig({ framework: "vue" });
   ```
 
   ```jsonc

@@ -1,7 +1,7 @@
 {
   "name": "@mission-platform/my-care-notes",
   "private": true,
-  "version": "0.0.13",
+  "version": "0.0.14",
   "license": "BSD-4-Clause",
   "description": "Mission Platform care-notes application demonstrating composable Vue workflows",
   "type": "module",
