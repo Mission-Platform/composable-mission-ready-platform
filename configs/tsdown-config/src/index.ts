@@ -318,7 +318,7 @@ function resolveDtsOption(
       ...existingCompilerOptions,
       declarationDir: stagedDeclarationDirectory,
       incremental: false,
-      tsBuildInfoFile: path.join(options.outputRoot, 'tsconfig.build.tsbuildinfo'),
+      tsBuildInfoFile: path.join(outputRoot, 'tsconfig.build.tsbuildinfo'),
     },
   };
 }
