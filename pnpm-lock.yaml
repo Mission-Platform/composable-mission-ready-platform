@@ -1030,6 +1030,12 @@ importers:
       '@mission-platform/content':
         specifier: workspace:*
         version: link:../../packages/content
+      '@mission-platform/forge':
+        specifier: workspace:*
+        version: link:../../packages/forge
+      '@mission-platform/forms':
+        specifier: workspace:*
+        version: link:../../packages/forms
       '@mission-platform/hunspell':
         specifier: workspace:*
         version: link:../../packages/hunspell

@@ -8,7 +8,6 @@
     ForgeCarousel,
     ForgeGrid,
     ForgeInView,
-    ForgeLanguageSwitcher,
     ForgeMasonry,
     ForgeNavbar,
     ForgeNavbarItem,
@@ -17,16 +16,17 @@
     ForgeThemeToggle,
     ForgeTypography,
   } from '@mission-platform/components';
+  import { ForgeSelect } from '@mission-platform/forms';
   import { useI18n } from '@mission-platform/i18n';
   import {
-    ForgeIconDebug,
-    ForgeIconGlobe,
+    ForgeIconCloud,
+    ForgeIconCodeBlock,
     ForgeIconLanguage,
     ForgeIconLightning,
     ForgeIconPalette,
     ForgeIconPuzzle,
     ForgeIconQrCode,
-    ForgeIconSearch,
+    ForgeIconWrench,
   } from '@mission-platform/icons';
   import { ForgeApplicationLayout } from '@mission-platform/layouts';
   import { ForgeQrCode } from '@mission-platform/qr-code';
@@ -34,6 +34,7 @@
   import { type Component, computed, onBeforeUnmount, onMounted, ref } from 'vue';
   import { useRouter } from 'vue-router';
 
+  import { LANGUAGE_OPTIONS } from '../language-options';
   import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type SupportedLocale } from '../router';
   import { canonicalFor, LOCALE_BCP47, SITE_DESCRIPTION, SITE_NAME, SITE_ORIGIN, SITE_TITLE } from '../seo-site';
 
@@ -132,7 +133,7 @@
       }),
     },
     {
-      icon: ForgeIconDebug,
+      icon: ForgeIconCodeBlock,
       title: t(($) => $.features.debugging.title, { defaultValue: 'Type-Safe', ns: 'mp.website' }),
       description: t(($) => $.features.debugging.description, {
         defaultValue: 'End-to-end TypeScript across every package, app and worker.',
@@ -140,7 +141,7 @@
       }),
     },
     {
-      icon: ForgeIconGlobe,
+      icon: ForgeIconCloud,
       title: t(($) => $.features.global.title, { defaultValue: 'Edge-Ready', ns: 'mp.website' }),
       description: t(($) => $.features.global.description, {
         defaultValue: 'Built to deploy to Cloudflare Workers and other serverless platforms.',
@@ -148,7 +149,7 @@
       }),
     },
     {
-      icon: ForgeIconSearch,
+      icon: ForgeIconWrench,
       title: t(($) => $.features.search.title, { defaultValue: 'Batteries Included', ns: 'mp.website' }),
       description: t(($) => $.features.search.description, {
         defaultValue: 'Forms, tables, scheduling, maps, charts and rich-text editing out of the box.',
@@ -166,23 +167,10 @@
   ]);
 
   // ── Language selector ────────────────────────────────────────────────────────
-  const languages = [
-    { code: 'en', label: 'English' },
-    { code: 'fr', label: 'Français' },
-    { code: 'es', label: 'Español' },
-    { code: 'nl', label: 'Nederlands' },
-    { code: 'it', label: 'Italiano' },
-    { code: 'de', label: 'Deutsch' },
-    { code: 'ko', label: '한국어' },
-    { code: 'ja', label: '日本語' },
-    { code: 'zh', label: '中文' },
-    { code: 'ar', label: 'العربية' },
-    { code: 'he', label: 'עברית' },
-  ];
-  async function switchLanguage(nextLocale: string): Promise<void> {
+  async function switchLanguage(nextLocale: string | number): Promise<void> {
     // Drive the locale entirely through the URL: the router guard in
     // `main.ts` loads messages and updates `<html lang>` / vue-i18n.
-    const code = nextLocale as SupportedLocale;
+    const code = String(nextLocale) as SupportedLocale;
     try {
       localStorage.setItem('mp-locale', code);
     } catch {
@@ -552,12 +540,19 @@
         />
 
         <template #end>
-          <ForgeLanguageSwitcher
-            :locale="locale"
-            :locales="languages"
+          <ForgeSelect
+            :model-value="locale"
+            :options="LANGUAGE_OPTIONS"
+            label="Language"
             label-hidden
-            @locale-change="switchLanguage"
-          />
+            :searchable="false"
+            size="sm"
+            @update:model-value="switchLanguage"
+          >
+            <template #start>
+              <ForgeIconLanguage size="sm" />
+            </template>
+          </ForgeSelect>
           <ForgeThemeToggle
             aria-label="Toggle colour theme"
             @change="handleThemeChange"

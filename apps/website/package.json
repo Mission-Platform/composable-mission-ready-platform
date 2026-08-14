@@ -28,6 +28,8 @@
     "@mission-platform/breakpoints": "workspace:*",
     "@mission-platform/components": "workspace:*",
     "@mission-platform/content": "workspace:*",
+    "@mission-platform/forge": "workspace:*",
+    "@mission-platform/forms": "workspace:*",
     "@mission-platform/hunspell": "workspace:*",
     "@mission-platform/i18n": "workspace:*",
     "@mission-platform/icons": "workspace:*",

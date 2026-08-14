@@ -9,9 +9,9 @@ import { createForgeI18N, createForgeI18NVue, forgeNamespace } from '@mission-pl
 import { organization, useSeo, webSite } from '@mission-platform/seo';
 import { resources as defaultLocaleResources } from 'virtual:i18n-resources';
 import { ViteSSG } from 'vite-ssg';
-import { computed, effectScope, h, type VNode } from 'vue';
-import { RouterView } from 'vue-router';
+import { computed, effectScope } from 'vue';
 
+import { renderRoot } from './app-root';
 import { DEFAULT_LOCALE, routerOptions, SUPPORTED_LOCALES, type SupportedLocale } from './router';
 import {
   canonicalFor,
@@ -30,9 +30,6 @@ import type { Resource } from 'i18next';
 
 import './styles/global.scss';
 
-/** Root render function — keeps `useHead`-bearing setup in a stable scope. */
-const renderRoot = (): VNode => h(RouterView);
-
 /**
  * Application entry — exported in the shape `vite-ssg` expects so the same
  * module powers both the SPA client and the static-site generator. During
@@ -40,7 +37,7 @@ const renderRoot = (): VNode => h(RouterView);
  * environment; in the browser it runs once on hydration.
  */
 export const createApp = ViteSSG(
-  // Root component — just the active route's view.
+  // Root component — the active route's view with application-level providers.
   { setup: () => renderRoot },
   routerOptions,
   async ({ app, router }) => {
