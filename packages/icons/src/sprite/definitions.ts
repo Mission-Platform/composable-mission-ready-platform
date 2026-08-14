@@ -1,12 +1,9 @@
 import { ICON_CATALOG } from '../catalog';
 
 import { ICON_COMPOSITIONS, validateCompositions } from './compositions';
+import { ICON_GEOMETRY } from './geometry';
 
 import type { IconSymbolDefinition, IconSvgNode } from './types';
-
-const fallbackNodes: readonly IconSvgNode[] = [
-  { element: 'circle', attributes: { cx: 12, cy: 12, r: 8, fill: 'none', stroke: 'currentColor', 'stroke-width': 2 } },
-];
 
 const knownDefinitions: Readonly<Record<string, IconSymbolDefinition>> = {
   'icon-arrow': {
@@ -42,6 +39,18 @@ const knownDefinitions: Readonly<Record<string, IconSymbolDefinition>> = {
         },
       },
       { element: 'circle', attributes: { cx: 18, cy: 18, r: 4, fill: 'currentColor' } },
+    ],
+  },
+  'icon-flag': {
+    id: 'icon-flag',
+    viewBox: '0 0 24 24',
+    category: 'maps',
+    subcategory: 'countries',
+    nodes: [
+      {
+        element: 'path',
+        attributes: { d: 'M5 22V3m0 0h11l-2 4 2 4H5', fill: 'none', stroke: 'currentColor', 'stroke-width': 2 },
+      },
     ],
   },
   'icon-globe': {
@@ -241,11 +250,16 @@ function createCountryFlagDefinition(
 const catalogDefinitions: readonly IconSymbolDefinition[] = [
   ...ICON_CATALOG.map((entry) => {
     const id = entry.name.replace(/^forge-/, '');
+    const knownDefinition = knownDefinitions[id];
+    const nodes = knownDefinition?.nodes ?? ICON_GEOMETRY[id];
+    if (nodes === undefined) {
+      throw new Error(`[icons] Missing geometry for catalog entry ${id}`);
+    }
     return (
-      knownDefinitions[id] ?? {
+      knownDefinition ?? {
         id,
         viewBox: '0 0 24 24',
-        nodes: fallbackNodes,
+        nodes,
         category: entry.category,
         subcategory: entry.subcategory,
       }

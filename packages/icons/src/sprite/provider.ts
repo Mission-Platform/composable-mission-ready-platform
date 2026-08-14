@@ -45,7 +45,12 @@ function SpriteHost(): MpElement {
 }
 
 function renderNode(node: IconSvgNode): MpElement {
-  return h(node.element, node.attributes, ...(node.children?.map((child) => renderNode(child)) ?? []));
+  return h(
+    node.element,
+    node.attributes,
+    ...(node.textContent === undefined ? [] : [node.textContent]),
+    ...(node.children?.map((child) => renderNode(child)) ?? []),
+  );
 }
 
 /** Resolve a local or external symbol URL for an icon wrapper. */

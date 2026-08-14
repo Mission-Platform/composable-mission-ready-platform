@@ -12,7 +12,7 @@ function escapeAttribute(value: string): string {
 
 export function serializeNode(node: IconSvgNode): string {
   const children = node.children?.map((child) => serializeNode(child)).join('') ?? '';
-  return `<${node.element}${serializeAttributes(node.attributes)}>${children}</${node.element}>`;
+  return `<${node.element}${serializeAttributes(node.attributes)}>${node.textContent ?? ''}${children}</${node.element}>`;
 }
 
 export function serializeSymbol(definition: IconSymbolDefinition): string {

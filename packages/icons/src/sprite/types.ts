@@ -4,6 +4,7 @@ export interface IconSvgNode {
   readonly element: string;
   readonly attributes?: Readonly<Record<string, string | number>>;
   readonly children?: readonly IconSvgNode[];
+  readonly textContent?: string;
 }
 
 export interface IconSymbolUse {

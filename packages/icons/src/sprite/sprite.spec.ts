@@ -37,6 +37,16 @@ describe('icon sprite serialization', () => {
     expect(ids).toContain('icon-country-globe-US');
   });
 
+  it('does not replace catalog artwork with the generic fallback circle', () => {
+    const fallback = '<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"></circle>';
+
+    const fallbackSymbols = ICON_SYMBOL_DEFINITIONS.filter((definition) =>
+      serializeSymbol(definition).includes(fallback),
+    );
+
+    expect(fallbackSymbols).toEqual([]);
+  });
+
   it('rejects missing composition references and cycles', () => {
     expect(() =>
       validateCompositions(
