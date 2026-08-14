@@ -131,4 +131,45 @@ describe("the Vue hook-module emitter compiles a neutral composable", () => {
     expect(code).toContain("export interface Shape {");
     expect(code).toContain("export const ORIGIN = { x: 0, y: 0 };");
   });
+
+  it("keeps neutral h imports used by context helper render functions", () => {
+    const module = semanticModule({
+      moduleKind: "composable",
+      fileName: "sprite-provider.ts",
+      imports: [
+        moduleImport(
+          "import { createContext, h, type MpElement, useContext } from '@mission-platform/forge';",
+          "@mission-platform/forge",
+          {
+            valueNames: ["createContext", "h", "useContext"],
+            typeNames: ["MpElement"],
+          },
+        ),
+      ],
+      declarations: [
+        statement(
+          "const SpriteContext = createContext<string>('');",
+          "variable",
+          { name: "SpriteContext" },
+        ),
+        statement(
+          `export function SpriteProvider(): MpElement {
+  return h('svg', { href: useContext(SpriteContext) });
+}`,
+          "function",
+          { name: "SpriteProvider", exported: true },
+        ),
+      ],
+    });
+
+    const code = emitVueHookModule(module);
+
+    expect(code).toContain("import { h } from '@mission-platform/forge';");
+    expect(code).toContain(
+      "import { createContext, useContext } from '@mission-platform/forge/vue';",
+    );
+    expect(code).toContain(
+      "return h('svg', { href: useContext(SpriteContext) });",
+    );
+  });
 });

@@ -1,4 +1,4 @@
-import { h } from '@mission-platform/forge';
+import { Dynamic, h } from '@mission-platform/forge';
 import { describe, expect, it } from 'vitest';
 
 import { renderMarkdown } from '../markdown';
@@ -13,6 +13,12 @@ describe('renderEmail', () => {
     expect(output).toContain('<p class="copy">Hello &lt;email&gt;</p>');
     expect(output).not.toContain('<script');
     expect(output).not.toContain('var(');
+  });
+
+  it('resolves neutral dynamic elements before serializing email HTML', () => {
+    const output = renderEmail(h(Dynamic, { is: 'h2', class: 'title' }, 'Heading'));
+
+    expect(output).toContain('<h2 class="title">Heading</h2>');
   });
 
   it('escapes document metadata and rejects unsafe attributes', () => {

@@ -11,19 +11,31 @@
  * like — it only knows how to place a {@link CmsArtifact}. Adding a platform
  * therefore requires no change here.
  */
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
 
 import {
   analyzeForgeModule,
-  discoverComponents,
+  buildForgeFileGraph,
+  discoverComponentsFromGraph,
   parseTsx,
 } from "@mission-platform/vite-plugin-forge";
 
 import { analyzeContentComponent } from "./analyze.js";
 import { generateIsland } from "./island.js";
 
-import type { CmsArtifact, CmsOutputPlugin, CmsTargetContext } from "./cms.js";
+import type {
+  CmsArtifact,
+  CmsArtifactKind,
+  CmsOutputPlugin,
+  CmsTargetContext,
+} from "./cms.js";
 import type { ContentComponent } from "./content-model.js";
 import type { CompilerDiagnostic } from "@mission-platform/forge-plugin-api";
 
@@ -49,6 +61,7 @@ export interface GenerateCmsArtifactsOptions {
   readonly stripPrefix?: string;
   /** Root of the consuming package; defaults to the parent of `outDir`. */
   readonly rootDir?: string;
+  readonly artifactKinds?: readonly CmsArtifactKind[];
 }
 
 /** Everything one target run produced. */
@@ -103,6 +116,39 @@ function writeArtifact(outputDirectory: string, artifact: CmsArtifact): void {
   writeFileSync(destination, artifact.contents, "utf8");
 }
 
+/** Resolve both folder-style and flat-file component barrel exports. */
+function resolveComponentSourcePath(
+  componentsDirectory: string,
+  component: {
+    sourceDir: string;
+    folder: string;
+    neutralName: string;
+    sourcePath?: string;
+  },
+): string {
+  if (component.sourcePath !== undefined && existsSync(component.sourcePath)) {
+    return component.sourcePath;
+  }
+  const folderStyle = path.join(
+    componentsDirectory,
+    component.sourceDir,
+    `${component.folder}.tsx`,
+  );
+  if (existsSync(folderStyle)) {
+    return folderStyle;
+  }
+
+  const flatFile = path.join(componentsDirectory, `${component.sourceDir}.tsx`);
+  if (existsSync(flatFile)) {
+    return flatFile;
+  }
+
+  throw new Error(
+    `Unable to resolve the source file for ${component.neutralName}; ` +
+      `checked ${folderStyle} and ${flatFile}`,
+  );
+}
+
 /**
  * Run the full discover → IR → content model → emit → write loop for one CMS
  * target, returning the entry module path and everything that was written.
@@ -112,21 +158,28 @@ export function generateCmsArtifacts(
 ): GeneratedCmsTree {
   const { plugin, outDir } = options;
   const stripPrefix = options.stripPrefix ?? "Forge";
-  const discovered = discoverComponents(
-    readFileSync(options.componentsModule, "utf8"),
-    stripPrefix,
-  );
+  const artifactKinds = options.artifactKinds;
+  const emits = (kind: CmsArtifactKind): boolean =>
+    artifactKinds === undefined || artifactKinds.includes(kind);
   const componentsDirectory = path.dirname(options.componentsModule);
+  const graph = buildForgeFileGraph({
+    entry: options.componentsModule,
+    sourceRoot: componentsDirectory,
+  });
+  const discovered = discoverComponentsFromGraph(graph, stripPrefix);
 
   rmSync(outDir, { recursive: true, force: true, ...RM_RETRY_OPTIONS });
   mkdirSync(outDir, { recursive: true });
 
-  const island = generateIsland({
-    plugin,
-    componentsModule: options.componentsModule,
-    outDir,
-    stripPrefix,
-  });
+  const island =
+    emits("template") || emits("entry") || emits("declaration")
+      ? generateIsland({
+          plugin,
+          componentsModule: options.componentsModule,
+          outDir,
+          stripPrefix,
+        })
+      : undefined;
 
   const diagnostics: CompilerDiagnostic[] = [];
   const context: CmsTargetContext = {
@@ -142,11 +195,12 @@ export function generateCmsArtifacts(
   const components: ContentComponent[] = [];
 
   for (const discoveredComponent of discovered) {
-    const sourcePath = path.join(
-      componentsDirectory,
-      discoveredComponent.sourceDir,
-      `${discoveredComponent.folder}.tsx`,
-    );
+    const sourcePath = resolveComponentSourcePath(componentsDirectory, {
+      sourceDir: discoveredComponent.sourceDir,
+      folder: discoveredComponent.folder,
+      neutralName: discoveredComponent.neutralName,
+      sourcePath: discoveredComponent.sourcePath,
+    });
     const source = readFileSync(sourcePath, "utf8");
     const semantic = analyzeForgeModule({
       source,
@@ -169,20 +223,29 @@ export function generateCmsArtifacts(
     );
     components.push(component);
 
-    const schema = plugin.emitSchema?.(component, semantic, context);
-    if (schema !== undefined) {
-      artifacts.push(schema);
+    if (emits("schema")) {
+      const schema = plugin.emitSchema?.(component, semantic, context);
+      if (schema !== undefined) artifacts.push(schema);
     }
-    artifacts.push(plugin.emitTemplate(component, semantic, context));
+    if (emits("template")) {
+      artifacts.push(plugin.emitTemplate(component, semantic, context));
+    }
   }
 
-  artifacts.push(...(plugin.emitManifest?.(components, context) ?? []));
+  if (emits("manifest")) {
+    artifacts.push(...(plugin.emitManifest?.(components, context) ?? []));
+  }
 
-  const entries = plugin.emitEntry?.(components, context) ?? [];
-  artifacts.push(...(entries.length > 0 ? entries : [PLACEHOLDER_ENTRY]));
+  if (emits("entry") || emits("declaration")) {
+    const entries = plugin.emitEntry?.(components, context) ?? [];
+    artifacts.push(...(entries.length > 0 ? entries : [PLACEHOLDER_ENTRY]));
+  }
 
   for (const artifact of artifacts) {
     writeArtifact(outDir, artifact);
+  }
+  if (!artifacts.some((artifact) => artifact.artifactKind === "entry")) {
+    writeArtifact(outDir, PLACEHOLDER_ENTRY);
   }
 
   reportDiagnostics(plugin.id, diagnostics);

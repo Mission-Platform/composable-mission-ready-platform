@@ -1671,7 +1671,29 @@ export function lowerWebComponentsPlan(
     scoped: new Set<string>([...members, ...promotedNames]),
     setters,
   };
-  const templateContext: TemplateContext = { scope, componentFolders };
+  // Every name a **non-promoted** render-head statement declares. A promoted
+  // constant becomes a member and is meant to read as `this.<name>`, but an
+  // ordinary head local that merely shares a member's name shadows it for the
+  // rest of `render()` — including the returned template — exactly as it would
+  // in plain JS, so it must stay the bare local rather than become `this.<name>`.
+  const nonPromotedHeadLocalNames = new Set(
+    headStatements
+      .flatMap((statement) => declaredHeadNames(statement))
+      .filter((name) => !promotedNames.has(name)),
+  );
+  // `render()`'s own scope: identical to `scope`, minus the names its own head
+  // locals shadow. A lifted getter/effect/seed has no such local in scope, so
+  // every other consumer of `scope` (below) keeps reading the member.
+  const renderScope: ElementScope = {
+    ...scope,
+    scoped: new Set(
+      [...scope.scoped].filter((name) => !nonPromotedHeadLocalNames.has(name)),
+    ),
+  };
+  const templateContext: TemplateContext = {
+    scope: renderScope,
+    componentFolders,
+  };
   const fieldScope: ElementScope = { ...scope, aliases };
 
   const promotedLocals: WebComponentsPromotedLocal[] = promoted.map(

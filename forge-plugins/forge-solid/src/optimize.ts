@@ -131,32 +131,39 @@ function collapseSingleChildFragments(state: OptimizationState): void {
   record(state, COLLAPSE_SINGLE_CHILD_FRAGMENTS);
 }
 
-/** Every render child reachable from a node, including the markup nested in interpolations. */
+/**
+ * Every render child reachable from a node, including whether an enclosing
+ * interpolation can introduce lexical bindings for it.
+ */
 function walkChildren(
   nodes: readonly GenericRenderNode[],
-  visit: (child: GenericRenderChild) => void,
+  visit: (child: GenericRenderChild, hasEnclosingExpression: boolean) => void,
+  hasEnclosingExpression = false,
 ): void {
   for (const node of nodes) {
     for (const child of node.children) {
-      visit(child);
+      visit(child, hasEnclosingExpression);
       if (child.kind === "render-node") {
-        walkChildren([child], visit);
+        walkChildren([child], visit, hasEnclosingExpression);
       } else if (child.kind === "expression-node") {
-        walkChildren(child.nested, visit);
+        // Nested markup belongs to the expression's source. That source may be
+        // a map/reduce callback or another closure, whose locals do not exist
+        // at the component scope where optimizer memos are declared.
+        walkChildren(child.nested, visit, true);
       }
     }
   }
 }
 
-/** Count how often each non-trivial dynamic child expression is rendered. */
+/** Count repeated non-trivial dynamic expressions that are safe at component scope. */
 function countDynamicExpressions(ir: SemanticModule): Map<string, number> {
   const counts = new Map<string, number>();
   const roots =
     ir.intentions.renderTree.length > 0
       ? ir.intentions.renderTree
       : ir.ast.renderNodes;
-  walkChildren(roots, (child) => {
-    if (child.kind !== "expression-node") {
+  walkChildren(roots, (child, hasEnclosingExpression) => {
+    if (child.kind !== "expression-node" || hasEnclosingExpression) {
       return;
     }
     const text = child.expression?.text.trim();

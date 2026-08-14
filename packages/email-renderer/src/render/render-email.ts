@@ -1,4 +1,13 @@
-import { Fragment, isMpElement, type MpChild, type MpElement, type MpPropertyBag } from '@mission-platform/forge';
+import {
+  Dynamic,
+  Fragment,
+  h,
+  isMpElement,
+  type MpChild,
+  type MpElement,
+  type MpElementType,
+  type MpPropertyBag,
+} from '@mission-platform/forge';
 
 import { serializeAttributes } from './attributes';
 import { escapeHtml } from './escape';
@@ -35,6 +44,11 @@ function serializeChild(child: MpChild): string {
 function serializeNode(node: MpElement): string {
   if (node.type === Fragment) {
     return node.children.map((child) => serializeChild(child)).join('');
+  }
+
+  if (node.type === Dynamic) {
+    const { is, ...properties } = node.properties;
+    return serializeNode(h(is as MpElementType, properties, ...node.children));
   }
 
   if (typeof node.type !== 'string') {

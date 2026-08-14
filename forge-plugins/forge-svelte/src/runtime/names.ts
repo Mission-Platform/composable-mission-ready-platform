@@ -17,6 +17,32 @@ export const DYNAMIC_TAG = "Dynamic";
 /** The neutral element rendering trusted markup (`{@html …}`). */
 export const HTML_CONTENT_TAG = "HtmlContent";
 
+/**
+ * The neutral enter/leave marker for a single (conditionally-rendered) child.
+ *
+ * React and Vue resolve `Transition` to a real component (a CSS-class driver
+ * for React, Vue's own built-in for Vue) so the enter/leave animation is
+ * framework-native. Svelte has no equivalent wrapper component — its own
+ * hand-written adapter primitive (`packages/forge/src/adapters/svelte.ts`)
+ * already renders `properties.children` in place and expects any animation to
+ * come from a native `transition:`/`in:`/`out:` directive applied directly to
+ * the child element by the author. The compiler mirrors that: `Transition` is
+ * a compile-time marker that unwraps to its children, dropping the
+ * enter/leave class props (which have no Svelte-native equivalent yet).
+ */
+export const TRANSITION_TAG = "Transition";
+
+/** The neutral enter/leave/move marker for a list of children — unwraps the same way as {@link TRANSITION_TAG}. */
+export const TRANSITION_GROUP_TAG = "TransitionGroup";
+
+/**
+ * The neutral portal marker. Svelte has no built-in DOM-portal primitive, so —
+ * matching the hand-written adapter's own `Teleport` (`packages/forge/src/adapters/svelte.ts`,
+ * which renders children in place) — this is a compile-time marker that
+ * unwraps to its children rather than moving them to another DOM location.
+ */
+export const TELEPORT_TAG = "Teleport";
+
 /** The neutral class-composition helper unwrapped into a Svelte class value. */
 export const CLASS_NAMES_HELPER = "classNames";
 
@@ -25,6 +51,9 @@ export const HYPERSCRIPT_CALL = "h";
 
 /** The default snippet a component's `children` renders through. */
 export const CHILDREN_SNIPPET = "children";
+
+/** Generated helper that normalizes a slot value to a Svelte snippet. */
+const SLOT_VALUE_SNIPPET = "__mpSlotValueSnippet";
 
 /** Attribute-name aliases (neutral React vocabulary → Svelte/DOM). */
 export const ATTRIBUTE_ALIASES: Readonly<Record<string, string>> = {
@@ -79,9 +108,24 @@ export function snippetName(name: string | undefined): string {
   return /^[A-Za-z_$]/.test(identifier) ? identifier : `slot${identifier}`;
 }
 
-/** `{@render <snippet>?.()}` for the default (`children`) or a named slot. */
-export function renderSnippet(name: string | undefined): string {
-  return `{@render ${snippetName(name)}?.()}`;
+/**
+ * Render a slot binding that may hold either a Svelte snippet *or* a plain
+ * `MpChild` value supplied by a non-Svelte caller such as the Storybook slot
+ * adapter.
+ *
+ * The neutral slot contract (`MpChild = MpElement | string | number | …`)
+ * allows a slot to be filled with primitive text, which React/Vue render
+ * directly; a bare `{@render name?.()}` would instead *call* that text and
+ * throw `… is not a function`. The generated script normalizes both forms to a
+ * snippet so markup never emits a bare text hole, which Svelte rejects inside
+ * structural elements such as `<tr>`. When the binding is absent, the optional
+ * `fallback` markup renders instead.
+ */
+export function renderSnippet(name: string | undefined, fallback = ""): string {
+  const binding = snippetName(name);
+  return fallback === ""
+    ? `{@render ${SLOT_VALUE_SNIPPET}(${binding})}`
+    : `{#if ${binding} != null}{@render ${SLOT_VALUE_SNIPPET}(${binding})}{:else}${fallback}{/if}`;
 }
 
 /** The last path segment of a relative import specifier. */

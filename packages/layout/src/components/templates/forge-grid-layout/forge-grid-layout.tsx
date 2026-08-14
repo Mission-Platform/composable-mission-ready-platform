@@ -85,11 +85,12 @@ export function ForgeGridLayout(properties: Readonly<GridLayoutProperties>): MpE
   if (margin) style.margin = SPACING[margin];
   if (padding) style.padding = SPACING[padding];
 
-  const cells = GRID_CELLS.slice(0, cellCount).map((name) =>
-    hasSlot(name)
-      ? h('div', { className: styles['grid-layout__cell'], 'data-cell': name }, h(Slot, { name }))
-      : undefined,
-  );
+  const cells: MpElement[] = [];
+  for (const name of GRID_CELLS.slice(0, cellCount)) {
+    if (hasSlot(name)) {
+      cells.push(h('div', { className: styles['grid-layout__cell'], 'data-cell': name }, h(Slot, { name })));
+    }
+  }
 
   return h(
     tag,

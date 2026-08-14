@@ -108,6 +108,75 @@ describe("lowerSvelteModule", () => {
     expect(lowered.script.refNames.has("hostRef")).toBe(true);
   });
 
+  it("keeps normalized prop locals when a properties rest destructure uses throwaway aliases", () => {
+    const root = element("button", {
+      selfClosing: true,
+      attributes: [expressionAttribute("className", "variant")],
+      source: "<button className={variant} />",
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [
+          statement("const { variant: _variant, ...rest } = properties;"),
+          statement("const variant = normalize(properties.variant);"),
+        ],
+        returned: { expression: root.expression!.text, nodes: [root] },
+      }),
+    });
+
+    const lowered = plan(module);
+
+    expect(lowered.propsContract).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "variant", local: "variantProp" }),
+      ]),
+    );
+    expect(lowered.script.restName).toBe("rest");
+  });
+
+  it("keeps a bare, self-named prop local when a later rest destructure uses a throwaway alias", () => {
+    // Mirrors `EmailButton`: `const variant = properties.variant ?? 'primary';`
+    // seeds the prop with a *bare* local (same name as the prop itself,
+    // because the literal fallback folds into `$props()`); the later
+    // `variant: _variant` in a `...rest` destructure exists only to exclude
+    // `variant` from `rest` and must not replace that bare local, or every
+    // other `variant` read in the script/markup becomes an unbound
+    // `ReferenceError`.
+    const root = element("button", {
+      selfClosing: true,
+      attributes: [expressionAttribute("className", "variant")],
+      source: "<button className={variant} />",
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [
+          statement("const variant = properties.variant ?? 'primary';"),
+          statement(
+            "const { children, variant: _variant, ...rest } = properties;",
+          ),
+        ],
+        returned: { expression: root.expression!.text, nodes: [root] },
+      }),
+    });
+
+    const lowered = plan(module);
+
+    expect(lowered.propsContract).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: "variant",
+          local: "variant",
+          defaultValue: "'primary'",
+        }),
+      ]),
+    );
+    expect(lowered.script.restName).toBe("rest");
+  });
+
   it("resolves a state type from the declared type, the inferred one, then unknown", () => {
     const root = element("div", { selfClosing: true, source: "<div />" });
     const module = semanticModule({
@@ -265,6 +334,31 @@ describe("lowerSvelteModule", () => {
       "__mpHoist_0",
     ]);
     expect(lowered.hoistedStatic).toEqual([]);
+  });
+
+  it("keeps a string-tag local on the element dynamic host despite its casing", () => {
+    const marker = element("Dynamic", {
+      selfClosing: true,
+      attributes: [expressionAttribute("is", "Tag")],
+      source: "<Dynamic is={Tag} />",
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [
+          statement(
+            "const Tag = properties.as ?? (properties.link ? 'a' : 'p');",
+          ),
+        ],
+        returned: { expression: marker.expression!.text, nodes: [marker] },
+      }),
+      dynamicNodes: [dynamicNode("Tag")],
+    });
+
+    expect(plan(module).dynamicNodes).toEqual([
+      { expression: "Tag", host: "svelte:element", span: { start: 0, end: 0 } },
+    ]);
   });
 
   it("keeps a composable module free of component decisions", () => {

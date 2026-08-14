@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "i18n:extract": "node --experimental-strip-types i18n-extract.ts",
+    "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --check .",
@@ -22,6 +23,7 @@
     "@types/node": "catalog:typescript",
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",
-    "typescript": "catalog:typescript"
+    "typescript": "catalog:typescript",
+    "vitest": "catalog:testing"
   }
 }

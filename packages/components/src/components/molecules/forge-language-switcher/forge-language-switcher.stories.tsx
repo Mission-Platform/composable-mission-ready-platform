@@ -1,8 +1,10 @@
-import { expect, userEvent, within } from 'storybook/test';
+import { expect, fn, userEvent, within } from 'storybook/test';
 
 import { ForgeLanguageSwitcher } from '@mission-platform/components';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+const onLocaleChange = fn();
 
 const meta = {
   title: 'Molecules/Navigation/ForgeLanguageSwitcher',
@@ -11,7 +13,9 @@ const meta = {
   args: {
     id: 'language-switcher',
     label: 'Language',
+    labelHidden: false,
     locale: 'en',
+    onLocaleChange,
     locales: [
       { code: 'en', label: 'English' },
       { code: 'fr', label: 'Français' },
@@ -29,8 +33,7 @@ export const SelectsAnotherLocale: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: 'Language' });
-    await userEvent.click(trigger);
-    await userEvent.click(await within(document.body).findByText('Français'));
-    await expect(trigger).toHaveValue('fr');
+    await userEvent.selectOptions(trigger, 'fr');
+    await expect(onLocaleChange).toHaveBeenCalledWith('fr');
   },
 };

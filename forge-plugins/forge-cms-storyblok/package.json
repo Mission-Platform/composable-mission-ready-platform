@@ -12,6 +12,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./solid": {
+      "types": "./dist/runtime/solid.d.ts",
+      "import": "./dist/runtime/solid.js"
     }
   },
   "files": [
@@ -26,9 +30,13 @@
   "dependencies": {
     "@mission-platform/forge-cms-plugin-api": "workspace:*",
     "@mission-platform/forge-plugin-api": "workspace:*",
+    "@storyblok/js": "^5.1.10",
     "typescript": "catalog:typescript"
   },
   "peerDependencies": {
+    "@storyblok/react": "^6.1.11",
+    "@storyblok/svelte": "^5.0.0",
+    "@storyblok/vue": "^10.1.10",
     "react": "^18.0.0 || ^19.0.0",
     "solid-js": "^1.9.0",
     "svelte": "^5.0.0",

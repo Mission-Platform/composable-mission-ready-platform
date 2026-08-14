@@ -8,9 +8,8 @@
  *
  * - a `<script lang="ts">` block: the imports the plan needs, the imports the
  *   source carries over, the retained type declarations, the `$props()`
- *   destructure, the `$state` cells, the `bind:this` cells, the `$derived`
- *   values, the carried-over setup statements and finally the `$effect` /
- *   `onMount` lifecycles,
+ *   destructure, source-ordered `$state` / `bind:this` / `$derived` / setup
+ *   initializers, and finally the `$effect` / `onMount` lifecycles,
  * - the markup, built from the component's returned render nodes by
  *   `../transformers/template.js`, preceded by a `{#snippet}` for every static
  *   subtree the optimizer hoisted out of the reactive scope.
@@ -112,7 +111,10 @@ function isRenderable(
     nodes.length > 0 ||
     /\bh\s*\(/.test(trimmed) ||
     context.jsxConstants.has(trimmed) ||
-    context.childrenAliases.has(trimmed)
+    context.childrenAliases.has(trimmed) ||
+    [...context.renderHelpers].some((name) =>
+      new RegExp(`^${name}\\s*\\(`).test(trimmed),
+    )
   );
 }
 
@@ -150,6 +152,20 @@ export function emitSvelteModule(
       componentFolders,
     }).lowered;
   const { script } = lowered;
+  const declaredRenderProps = script.declarations.flatMap((declaration) => [
+    ...declaration.matchAll(
+      /\b([A-Za-z_$][\w$]*)\s*\??:\s*MpRenderProperty\s*</g,
+    ),
+  ]);
+  const renderProps = new Set([
+    ...lowered.propsContract
+      .filter((entry) => /\bMpRenderProperty\s*</.test(entry.type ?? ""))
+      .map((entry) => entry.local),
+    ...declaredRenderProps.map((match) => {
+      const name = match[1]!;
+      return script.propAliases.get(name) ?? name;
+    }),
+  ]);
   const scope: SvelteScope = {
     propsParameter: script.propsParameter,
     propAliases: script.propAliases,
@@ -161,6 +177,8 @@ export function emitSvelteModule(
     scope,
     jsxConstants: script.jsxConstants,
     childrenAliases: script.childrenAliases,
+    renderHelpers: new Set(script.renderHelpers?.keys()),
+    renderProps,
     listKeys: lowered.listKeys,
     dynamicNodes: lowered.dynamicNodes,
     hoistedStatic,
@@ -175,9 +193,13 @@ export function emitSvelteModule(
 
   const propsAnnotation =
     script.propsType === undefined ? "" : `: ${script.propsType}`;
+  const restEntry =
+    lowered.script.restName === undefined
+      ? ""
+      : `, ...${lowered.script.restName}`;
   const propsLine = `let { ${lowered.propsContract
     .map((entry) => propEntry(entry, scope))
-    .join(", ")} }${propsAnnotation} = $props();`;
+    .join(", ")}${restEntry} }${propsAnnotation} = $props();`;
 
   const stateLines = lowered.runeState.map(
     (entry) =>
@@ -196,17 +218,62 @@ export function emitSvelteModule(
         : scopeExpression(entry.initializer, scope);
     return `let ${entry.name} = $state${typeArgument}(${initial});`;
   });
+  const derivedLines = lowered.derived.map((entry) =>
+    derivedLine(entry, scope),
+  );
+  const defaultInitializationLines = [
+    ...stateLines,
+    ...bindingLines,
+    ...derivedLines,
+    ...script.setupStatements.map((statement) =>
+      scopeExpression(statement, scope),
+    ),
+  ];
+  const stateLineByName = new Map(
+    lowered.runeState.map((entry, index) => [
+      entry.name,
+      stateLines[index] ?? "",
+    ]),
+  );
+  const bindingLineByName = new Map(
+    lowered.bindings.map((entry, index) => [
+      entry.name,
+      bindingLines[index] ?? "",
+    ]),
+  );
+  const derivedLineByName = new Map(
+    lowered.derived.map((entry, index) => [
+      entry.name,
+      derivedLines[index] ?? "",
+    ]),
+  );
+  const initializationLines =
+    script.initializationOrder?.map((entry) => {
+      if (entry.kind === "setup") {
+        return scopeExpression(
+          script.setupStatements[entry.index] ?? "",
+          scope,
+        );
+      }
+      if (entry.kind === "state") {
+        // The optimizer can convert a state entry to `$derived` while its
+        // source-order slot intentionally remains unchanged.
+        return (
+          stateLineByName.get(entry.name) ??
+          derivedLineByName.get(entry.name) ??
+          ""
+        );
+      }
+      if (entry.kind === "binding")
+        return bindingLineByName.get(entry.name) ?? "";
+      return derivedLineByName.get(entry.name) ?? "";
+    }) ?? defaultInitializationLines;
 
   const scriptBody = [
     ...imports,
     ...script.declarations,
     propsLine,
-    ...stateLines,
-    ...bindingLines,
-    ...lowered.derived.map((entry) => derivedLine(entry, scope)),
-    ...script.setupStatements.map((statement) =>
-      scopeExpression(statement, scope),
-    ),
+    ...initializationLines,
     ...lowered.effects.map((entry) => effectLine(entry, scope)),
   ]
     .map((line) => `  ${line}`)
@@ -224,6 +291,39 @@ export function emitSvelteModule(
       `{#snippet ${entry.name}()}${renderNode(entry.node, snippetContext)}{/snippet}`,
   );
 
+  // A JSX-returning local helper is declared once as a parameterised snippet and
+  // rendered by name (`{@render renderRow(item)}`) wherever it was called. A
+  // block-bodied helper's leading `const`s become `{@const}`s inside the snippet.
+  const helperSnippets = [...(script.renderHelpers?.values() ?? [])].map(
+    (helper) => {
+      const parameters = helper.parameters.join(", ");
+      const constants = helper.constants
+        .map(
+          (constant) =>
+            `{@const ${constant.name} = ${scopeExpression(constant.value, scope)}}`,
+        )
+        .join("");
+      const returnedMarkup = (returned: {
+        text: string;
+        nodes: readonly GenericRenderNode[];
+      }): string =>
+        returned.text === "undefined" || returned.text === "null"
+          ? ""
+          : renderExpression(returned.text, returned.nodes, context);
+      const fallback =
+        helper.returned === undefined ? "" : returnedMarkup(helper.returned);
+      const branches = helper.branches.map((branch, index) => {
+        const keyword = index === 0 ? "#if" : ":else if";
+        return `{${keyword} ${scopeExpression(branch.condition, scope)}}${returnedMarkup(branch)}`;
+      });
+      const markup =
+        branches.length === 0
+          ? fallback
+          : `${branches.join("")}${helper.returned === undefined ? "" : `{:else}${fallback}`}{/if}`;
+      return `{#snippet ${helper.name}(${parameters})}${constants}${markup}{/snippet}`;
+    },
+  );
+
   // An early return folds into a leading `{#if}` chain whose `{:else}` is the
   // component's final return, so no bare `return` ever reaches the output.
   const fallback = returnMarkup(script.finalReturn, context);
@@ -235,7 +335,7 @@ export function emitSvelteModule(
     branches.length > 0
       ? `${branches.join("")}{:else}${fallback}{/if}`
       : fallback;
-  const template = [...snippets, body].join("\n");
+  const template = [...snippets, ...helperSnippets, body].join("\n");
 
   return {
     code: `<script lang="ts">\n${scriptBody}\n</script>\n\n${template}\n`,

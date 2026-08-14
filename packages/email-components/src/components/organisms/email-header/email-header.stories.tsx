@@ -23,7 +23,7 @@ export const BrandName: Story = {};
 export const WithLogo: Story = {
   args: {
     brandName: 'Mission Platform',
-    logoSrc: 'https://example.com/mission-platform.png',
+    logoSrc: '/favicon.svg',
     logoAlt: 'Mission Platform logo',
     logoWidth: 160,
   },

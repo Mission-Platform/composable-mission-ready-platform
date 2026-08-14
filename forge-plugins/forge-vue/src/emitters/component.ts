@@ -110,6 +110,60 @@ export interface EmittedVueModule {
   readonly extraModules: EmittedExtraModule[];
 }
 
+/** The element type of a conservatively recognised array type. */
+function arrayElementType(typeText: string): string | undefined {
+  const trimmed = typeText.trim();
+  return (
+    /^(?:readonly\s+)?(.+?)\[\]$/.exec(trimmed)?.[1]?.trim() ??
+    /^(?:Readonly)?Array\s*<([\s\S]+)>$/.exec(trimmed)?.[1]?.trim()
+  );
+}
+
+/**
+ * Propagate the declared prop types through the simple collection operations
+ * used by render code. This metadata is only used to classify template child
+ * expressions; it does not add annotations to the emitted setup declarations.
+ */
+function templateBindingTypes(
+  properties: readonly VuePropertySignature[],
+  derived: readonly DerivedConst[],
+): Map<string, string> {
+  const types = new Map(
+    properties.map((property) => [property.name, property.typeText]),
+  );
+  for (const entry of derived) {
+    if (entry.typeText !== undefined) {
+      types.set(entry.name, entry.typeText);
+    }
+  }
+
+  for (let pass = 0; pass < derived.length; pass += 1) {
+    let changed = false;
+    for (const entry of derived) {
+      if (types.has(entry.name)) {
+        continue;
+      }
+      const source = /^([A-Za-z_$][\w$]*)\s*\.\s*filter\s*\(/.exec(
+        entry.initializer,
+      )?.[1];
+      const indexed = /^([A-Za-z_$][\w$]*)\s*\[/.exec(entry.initializer)?.[1];
+      const inferred =
+        (source === undefined ? undefined : types.get(source)) ??
+        (indexed === undefined
+          ? undefined
+          : arrayElementType(types.get(indexed) ?? ""));
+      if (inferred !== undefined) {
+        types.set(entry.name, inferred);
+        changed = true;
+      }
+    }
+    if (!changed) {
+      break;
+    }
+  }
+  return types;
+}
+
 /** The neutral `className` prop every component accepts. */
 const CLASS_NAME_SIGNATURE: VuePropertySignature = {
   name: "className",
@@ -568,14 +622,7 @@ export function emitVueModule(
     restPropNames: analysis.restPropNames,
     nodeTypedFieldsByType: nodeTypedFieldsByTypeName(ast.declarations),
     nodeReturningFunctions: nodeReturningFunctionNames(ast.declarations),
-    declaredTypes: new Map([
-      ...props
-        .filter((prop) => prop.type !== undefined)
-        .map((prop): [string, string] => [prop.name, prop.type?.text ?? ""]),
-      ...analysis.derived
-        .filter((entry) => entry.typeText !== undefined)
-        .map((entry): [string, string] => [entry.name, entry.typeText ?? ""]),
-    ]),
+    declaredTypes: templateBindingTypes(properties, analysis.derived),
     aliasTypes: new Map<string, string>(),
     staticHoisting:
       lowered?.staticSubtrees.some((subtree) => subtree.hoisted) === true,

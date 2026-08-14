@@ -125,6 +125,11 @@ export function ForgeVerticalLayout(properties: Readonly<VerticalLayoutPropertie
   const endTrack = isInline && hasEnd ? endTrackWidth : undefined;
   const gridTemplateColumns = [startTrack, 'minmax(0, 1fr)', endTrack].filter(Boolean).join(' ');
 
+  const startChildren: MpElement[] = [];
+  if (hasSlot('start-header')) startChildren.push(h('div', { slot: 'header' }, h(Slot, { name: 'start-header' })));
+  startChildren.push(h(Slot, { name: 'start' }));
+  if (hasSlot('start-footer')) startChildren.push(h('div', { slot: 'footer' }, h(Slot, { name: 'start-footer' })));
+
   const startColumn = hasStart
     ? h(
         ForgeDrawer,
@@ -139,11 +144,14 @@ export function ForgeVerticalLayout(properties: Readonly<VerticalLayoutPropertie
           onResize: (width: number) => setStartWidthOverride(`${width}rem`),
           onOpenChange: (next: boolean) => onStartOpenChange?.(next),
         },
-        hasSlot('start-header') ? h('div', { slot: 'header' }, h(Slot, { name: 'start-header' })) : undefined,
-        h(Slot, { name: 'start' }),
-        hasSlot('start-footer') ? h('div', { slot: 'footer' }, h(Slot, { name: 'start-footer' })) : undefined,
+        ...startChildren,
       )
     : undefined;
+
+  const endChildren: MpElement[] = [];
+  if (hasSlot('end-header')) endChildren.push(h('div', { slot: 'header' }, h(Slot, { name: 'end-header' })));
+  endChildren.push(h(Slot, { name: 'end' }));
+  if (hasSlot('end-footer')) endChildren.push(h('div', { slot: 'footer' }, h(Slot, { name: 'end-footer' })));
 
   const endColumn = hasEnd
     ? h(
@@ -159,9 +167,7 @@ export function ForgeVerticalLayout(properties: Readonly<VerticalLayoutPropertie
           onResize: (width: number) => setEndWidthOverride(`${width}rem`),
           onOpenChange: (next: boolean) => onEndOpenChange?.(next),
         },
-        hasSlot('end-header') ? h('div', { slot: 'header' }, h(Slot, { name: 'end-header' })) : undefined,
-        h(Slot, { name: 'end' }),
-        hasSlot('end-footer') ? h('div', { slot: 'footer' }, h(Slot, { name: 'end-footer' })) : undefined,
+        ...endChildren,
       )
     : undefined;
 

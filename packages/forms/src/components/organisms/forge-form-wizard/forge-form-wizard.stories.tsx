@@ -18,9 +18,14 @@ import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
  * that framework's own transform — so the same story renders on every framework.
  */
 const STEPS = [
-  { id: 'account', title: 'Account', description: 'Login details', content: <p>Step 1 — create your account.</p> },
-  { id: 'profile', title: 'Profile', description: 'About you', content: <p>Step 2 — tell us about yourself.</p> },
-  { id: 'review', title: 'Review', description: 'Confirm', content: <p>Step 3 — review and finish.</p> },
+  {
+    id: 'account',
+    title: 'Account',
+    description: 'Login details',
+    content: () => <p>Step 1 — create your account.</p>,
+  },
+  { id: 'profile', title: 'Profile', description: 'About you', content: () => <p>Step 2 — tell us about yourself.</p> },
+  { id: 'review', title: 'Review', description: 'Confirm', content: () => <p>Step 3 — review and finish.</p> },
 ];
 
 const meta = {
@@ -95,7 +100,7 @@ export const WithValidationAndConditionalSteps: Story = {
         title: 'Account',
         description: 'Login details',
         valid: emailValid && passwordValid,
-        content: (
+        content: () => (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <ForgeInput
               label="Email"
@@ -131,7 +136,7 @@ export const WithValidationAndConditionalSteps: Story = {
         description: 'Business details',
         when: isBusiness,
         valid: companyValid,
-        content: (
+        content: () => (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <p style={{ margin: 0 }}>This step only appears for business sign-ups.</p>
             <ForgeInput
@@ -151,7 +156,7 @@ export const WithValidationAndConditionalSteps: Story = {
         title: 'Review',
         description: 'Confirm',
         valid: accepted,
-        content: (
+        content: () => (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <p style={{ margin: 0 }}>Email: {email === '' ? '—' : email}</p>
             {isBusiness ? <p style={{ margin: 0 }}>Company: {company === '' ? '—' : company}</p> : undefined}

@@ -78,6 +78,40 @@ describe("Svelte Forge framework package", () => {
     expect(framework.build.tsdown?.({})).toHaveLength(1);
   });
 
+  it("retains the neutral useId import used by generated components", () => {
+    const generated = generate(
+      semanticModule({
+        imports: [
+          moduleImport(
+            "import { useId } from '@mission-platform/forge';",
+            NEUTRAL,
+            {
+              valueNames: ["useId"],
+            },
+          ),
+        ],
+        component: component({
+          name: "Fixture",
+          parameter: "properties",
+          body: [statement("const id = useId();")],
+          returned: {
+            expression: "<label for={id}>Name</label>",
+            nodes: [
+              element("label", {
+                attributes: [expressionAttribute("for", "id")],
+                children: [textChild("Name")],
+              }),
+            ],
+          },
+        }),
+      }),
+    );
+
+    expect(script(generated.code)).toContain(
+      "import { useId } from '@mission-platform/forge';",
+    );
+  });
+
   it("lowers state, derived values and effects into runes", () => {
     const button = element("button", {
       attributes: [expressionAttribute("onClick", "() => setCount(count + 1)")],
@@ -154,6 +188,42 @@ describe("Svelte Forge framework package", () => {
     expectCompiles(generated.code);
   });
 
+  it("retains runtime module declarations used by the component", () => {
+    const section = element("section", {
+      children: [expressionChild("SIZE_MAP.md")],
+      source: "<section>{SIZE_MAP.md}</section>",
+    });
+    const module = semanticModule({
+      declarations: [
+        statement(
+          "const SIZE_MAP: Record<string, string> = { md: '40px' };",
+          "variable",
+          { name: "SIZE_MAP" },
+        ),
+        statement(
+          "function mapTokenToPixels(token: string): number {\n  const sizes: Record<string, number> = { md: 24 };\n  return sizes[token] ?? 24;\n}",
+          "function",
+          { name: "mapTokenToPixels" },
+        ),
+      ],
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        returned: { expression: section.expression!.text, nodes: [section] },
+      }),
+    });
+
+    const generated = generate(module);
+
+    expect(script(generated.code)).toContain(
+      "const SIZE_MAP: Record<string, string> = { md: '40px' };",
+    );
+    expect(script(generated.code)).toContain(
+      "function mapTokenToPixels(token: string): number {\n  const sizes: Record<string, number> = { md: 24 };\n  return sizes[token] ?? 24;\n}",
+    );
+    expectCompiles(generated.code);
+  });
+
   it("renders slots as snippet props and presence checks as null comparisons", () => {
     const marker = element("Slot", {
       selfClosing: true,
@@ -184,7 +254,230 @@ describe("Svelte Forge framework package", () => {
       "let { footer, children } = $props();",
     );
     expect(markup(generated.code)).toBe(
-      "<section>{#if footer != null}{@render footer?.()}{/if}</section>",
+      "<section>{#if footer != null}{@render __mpSlotValueSnippet(footer)}{/if}</section>",
+    );
+    expect(script(generated.code)).toContain(
+      "import { createRawSnippet } from 'svelte';",
+    );
+    expectCompiles(generated.code);
+  });
+
+  it("renders primitive-capable slots through snippets inside structural elements", () => {
+    const row = element("tr", {
+      children: [expressionChild("children")],
+      source: "<tr>{children}</tr>",
+    });
+    const module = semanticModule({
+      component: component({
+        name: "EmailRow",
+        parameter: "properties",
+        body: [statement("const children = properties.children;")],
+        returned: { expression: row.expression!.text, nodes: [row] },
+      }),
+      props: [prop("children")],
+    });
+
+    const generated = generate(module);
+
+    expectCompiles(generated.code);
+    expect(markup(generated.code)).not.toContain("{children}");
+    expect(markup(generated.code)).toBe(
+      "<tr>{@render __mpSlotValueSnippet(children)}</tr>",
+    );
+    expect(script(generated.code)).toContain('.replaceAll("<", "&lt;")');
+  });
+
+  it("lowers children-list presence checks through a safe children alias", () => {
+    const content = element("div", {
+      children: [textChild("content")],
+      source: "<div>content</div>",
+    });
+    const host = element("section", {
+      children: [
+        expressionChild(
+          "childList.length > 0 ? <div>content</div> : undefined",
+          [content],
+        ),
+      ],
+      source:
+        "<section>{childList.length > 0 ? <div>content</div> : undefined}</section>",
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [
+          statement("const children = properties.children;"),
+          statement(
+            "const childList = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];",
+          ),
+        ],
+        returned: { expression: host.expression!.text, nodes: [host] },
+      }),
+      props: [prop("children")],
+    });
+
+    const generated = generate(module);
+
+    expect(script(generated.code)).toContain("const childList = children;");
+    expect(markup(generated.code)).toBe(
+      "<section>{#if children != null}<div>content</div>{/if}</section>",
+    );
+    expectCompiles(generated.code);
+  });
+
+  it("preserves children normalizations that are reused by later setup bindings", () => {
+    const message = element("div", {
+      children: [expressionChild("body")],
+      source: "<div>{body}</div>",
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [
+          statement(
+            "const slot = Array.isArray(properties.children) && properties.children.length === 0 ? undefined : properties.children;",
+          ),
+          statement("const body = slot ?? properties.message;"),
+        ],
+        returned: { expression: message.expression!.text, nodes: [message] },
+      }),
+      props: [prop("message"), prop("children")],
+    });
+
+    const generated = generate(module);
+
+    expect(script(generated.code)).toContain("const slot = children;");
+    expect(script(generated.code)).toContain("const body = slot ?? message;");
+    expect(markup(generated.code)).toBe("<div>{body}</div>");
+    expectCompiles(generated.code);
+  });
+
+  it("lowers value-position array spreads of mapped rows and children without leaking omitted locals", () => {
+    // Regression: ForgeList returns `{[...itemNodes, ...childList]}`. Both
+    // locals are omitted from the Svelte script (JSX constant + children
+    // normalisation), so the array hole must expand into structural markup
+    // rather than leaking `itemNodes` / `childList` as undeclared identifiers.
+    const item = element("li", {
+      attributes: [expressionAttribute("key", "index")],
+      children: [expressionChild("item.label")],
+      source: "<li key={index}>{item.label}</li>",
+    });
+    const itemNodesInitializer =
+      "items.map((item, index) => <li key={index}>{item.label}</li>)";
+    const host = element("ul", {
+      children: [expressionChild("[...itemNodes, ...childList]")],
+      source: "<ul>{[...itemNodes, ...childList]}</ul>",
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [
+          statement("const items = properties.items;"),
+          statement(`const itemNodes = ${itemNodesInitializer};`, "variable", {
+            renderNodes: [item],
+          }),
+          statement("const children = properties.children;"),
+          statement(
+            "const childList = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];",
+          ),
+        ],
+        returned: { expression: host.expression!.text, nodes: [host] },
+      }),
+      props: [prop("items"), prop("children")],
+    });
+
+    const generated = generate(module);
+
+    expect(script(generated.code)).not.toContain("itemNodes");
+    expect(script(generated.code)).toContain("const childList = children;");
+    expect(markup(generated.code)).not.toContain("itemNodes");
+    expect(markup(generated.code)).not.toContain("childList");
+    expect(markup(generated.code)).toBe(
+      "<ul>{#each items as item, index (index)}<li>{item.label}</li>{/each}{@render __mpSlotValueSnippet(children)}</ul>",
+    );
+    expect(script(generated.code)).toContain("const __mpSlotValueSnippet =");
+    expectCompiles(generated.code);
+  });
+
+  it("keeps non-literal same-name prop defaults out of $props to avoid TDZ", () => {
+    // Regression: ForgeTypography does `const color = properties.color ??
+    // (isLink ? 'inherit' : 'primary')` after declaring `isLink`. Folding that
+    // fallback into `$props()` reads `isLink` before initialization.
+    const host = element("span", {
+      children: [expressionChild("color")],
+      source: "<span>{color}</span>",
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [
+          statement("const variant = properties.variant ?? 'body-md';"),
+          statement("const href = properties.href;"),
+          statement("const isLink = href !== undefined || variant === 'link';"),
+          statement(
+            "const color = properties.color ?? (isLink ? 'inherit' : 'primary');",
+          ),
+        ],
+        returned: { expression: host.expression!.text, nodes: [host] },
+      }),
+      props: [prop("variant"), prop("href"), prop("color")],
+    });
+
+    const generated = generate(module);
+    const scriptBody = script(generated.code);
+
+    expect(scriptBody).toContain("color: colorProp");
+    expect(scriptBody).not.toMatch(/color\s*=\s*\(isLink/);
+    expect(scriptBody).toContain(
+      "const color = colorProp ?? (isLink ? 'inherit' : 'primary');",
+    );
+    expect(scriptBody.indexOf("const isLink")).toBeLessThan(
+      scriptBody.indexOf("const color = colorProp"),
+    );
+    expectCompiles(generated.code);
+  });
+
+  it("lowers flatMap-projected sibling rows used by description-style lists", () => {
+    const term = element("dt", {
+      attributes: [expressionAttribute("key", "`term-${index}`")],
+      children: [expressionChild("item.term")],
+      source: "<dt key={`term-${index}`}>{item.term}</dt>",
+    });
+    const detail = element("dd", {
+      attributes: [expressionAttribute("key", "`detail-${index}`")],
+      children: [expressionChild("item.content")],
+      source: "<dd key={`detail-${index}`}>{item.content}</dd>",
+    });
+    const itemNodesInitializer =
+      "items.flatMap((item, index) => [<dt key={`term-${index}`}>{item.term}</dt>, <dd key={`detail-${index}`}>{item.content}</dd>])";
+    const host = element("dl", {
+      children: [expressionChild("itemNodes")],
+      source: "<dl>{itemNodes}</dl>",
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [
+          statement("const items = properties.items;"),
+          statement(`const itemNodes = ${itemNodesInitializer};`, "variable", {
+            renderNodes: [term, detail],
+          }),
+        ],
+        returned: { expression: host.expression!.text, nodes: [host] },
+      }),
+      props: [prop("items")],
+    });
+
+    const generated = generate(module);
+
+    expect(script(generated.code)).not.toContain("itemNodes");
+    expect(markup(generated.code)).toBe(
+      "<dl>{#each items as item, index}<dt>{item.term}</dt><dd>{item.content}</dd>{/each}</dl>",
     );
     expectCompiles(generated.code);
   });
@@ -314,6 +607,39 @@ describe("Svelte Forge framework package", () => {
       '<svelte:component this={Icon} aria-hidden="true" />',
     );
     expect(script(generated.code)).toContain("import { Icon } from './icon';");
+  });
+
+  it("lowers a PascalCase string-tag local with object styles to <svelte:element>", () => {
+    const marker = element("Dynamic", {
+      attributes: [
+        expressionAttribute("is", "Tag"),
+        expressionAttribute("style", "{ color: 'red', margin: 0 }"),
+      ],
+      children: [textChild("Typography")],
+      source:
+        "<Dynamic is={Tag} style={{ color: 'red', margin: 0 }}>Typography</Dynamic>",
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [
+          statement(
+            "const Tag = properties.as ?? (properties.link ? 'a' : 'p');",
+          ),
+        ],
+        returned: { expression: marker.expression!.text, nodes: [marker] },
+      }),
+      props: [prop("as"), prop("link")],
+      dynamicNodes: [dynamicNode("Tag")],
+    });
+
+    const generated = generate(module);
+
+    expect(markup(generated.code)).toBe(
+      "<svelte:element this={Tag} style={{ color: 'red', margin: 0 }}>Typography</svelte:element>",
+    );
+    expectCompiles(generated.code);
   });
 
   it("lowers a mapped list to a keyed {#each} block", () => {
@@ -697,6 +1023,84 @@ describe("Svelte Forge framework package", () => {
       '<div class="host" aria-label="trusted">{@html markup}</div>',
     );
     expect(markup(generated.code)).not.toContain("<HtmlContent");
+    expectCompiles(generated.code);
+  });
+
+  it("unwraps a Transition marker to its child, dropping the enter/leave class props", () => {
+    // ForgeDrawer/ForgeNavbar wrap an already-conditional child in
+    // `<Transition name="…" enterFromClass={…} …>`. Svelte has no native
+    // wrapper component for this marker, so it must unwrap to the child
+    // markup rather than surviving as an unresolved `Transition` reference
+    // (a `ReferenceError: Transition is not defined` at render time).
+    const button = element("button", {
+      selfClosing: true,
+      attributes: [stringAttribute("type", "button")],
+      source: '<button type="button" />',
+    });
+    const transition = element("Transition", {
+      attributes: [
+        stringAttribute("name", "forge-drawer-fade"),
+        expressionAttribute("enterFromClass", "styles.enterFrom"),
+      ],
+      children: [
+        expressionChild('open ? <button type="button" /> : undefined', [
+          button,
+        ]),
+      ],
+      source:
+        '<Transition name="forge-drawer-fade" enterFromClass={styles.enterFrom}>{open ? <button type="button" /> : undefined}</Transition>',
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [statement("const open = properties.open;")],
+        returned: {
+          expression: transition.expression!.text,
+          nodes: [transition],
+        },
+      }),
+      props: [prop("open")],
+    });
+
+    const generated = generate(module);
+
+    expect(markup(generated.code)).toBe(
+      '{#if open}<button type="button" />{/if}',
+    );
+    expect(generated.code).not.toContain("Transition");
+    expectCompiles(generated.code);
+  });
+
+  it("unwraps nested TransitionGroup and Teleport markers to their innermost child", () => {
+    const item = element("li", {
+      children: [textChild("Row")],
+      source: "<li>Row</li>",
+    });
+    const teleport = element("Teleport", {
+      attributes: [stringAttribute("to", "body")],
+      children: [item],
+      source: '<Teleport to="body"><li>Row</li></Teleport>',
+    });
+    const group = element("TransitionGroup", {
+      attributes: [stringAttribute("name", "list")],
+      children: [teleport],
+      source:
+        '<TransitionGroup name="list"><Teleport to="body"><li>Row</li></Teleport></TransitionGroup>',
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        returned: { expression: group.expression!.text, nodes: [group] },
+      }),
+    });
+
+    const generated = generate(module);
+
+    expect(markup(generated.code)).toBe("<li>Row</li>");
+    expect(generated.code).not.toContain("Transition");
+    expect(generated.code).not.toContain("Teleport");
     expectCompiles(generated.code);
   });
 

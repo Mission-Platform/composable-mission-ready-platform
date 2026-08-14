@@ -47,8 +47,13 @@ export function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): M
   if (margin) style.margin = SPACING[margin];
   if (padding) style.padding = SPACING[padding];
 
-  const region = (name: BentoLayoutRegion): MpElement | undefined =>
-    hasSlot(name) ? h('section', { className: styles[`bento-layout__${name}`] }, h(Slot, { name })) : undefined;
+  const elementList: MpElement[] = [];
+  if (hasSlot('hero'))
+    elementList.push(h('section', { className: styles['bento-layout__hero'] }, h(Slot, { name: 'hero' })));
+  if (hasSlot('feature'))
+    elementList.push(h('section', { className: styles['bento-layout__feature'] }, h(Slot, { name: 'feature' })));
+  if (hasSlot('supporting'))
+    elementList.push(h('section', { className: styles['bento-layout__supporting'] }, h(Slot, { name: 'supporting' })));
 
   return h(
     tag,
@@ -56,8 +61,6 @@ export function ForgeBentoLayout(properties: Readonly<BentoLayoutProperties>): M
       className: [styles['bento-layout'], styles[`bento-layout--${breakpoint}`]],
       style,
     },
-    region('hero'),
-    region('feature'),
-    region('supporting'),
+    ...elementList,
   );
 }

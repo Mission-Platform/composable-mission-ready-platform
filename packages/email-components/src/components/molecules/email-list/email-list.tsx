@@ -33,7 +33,9 @@ export function EmailList(properties: Readonly<EmailListProperties>): MpElement 
               style={{ paddingBottom: spacingValue(properties.spacing ?? 'sm') }}
             >
               {properties.ordered ? undefined : '• '}
-              {item.href ? <a href={validateUrl(item.href, 'href')}>{item.children}</a> : item.children}
+              {item.href
+                ? h('a', { href: validateUrl(item.href, 'href') }, h('span', { children: item.children }))
+                : h('span', { children: item.children })}
             </td>
           </tr>
         ))}

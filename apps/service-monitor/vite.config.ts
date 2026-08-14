@@ -89,10 +89,12 @@ export default defineConfig(async ({ mode }) => ({
     tsconfigPaths: true,
   },
   optimizeDeps: {
+    ignoreOutdatedRequests: true,
     include: ['ajv', 'ajv-formats', 'd3', 'd3-selection', 'i18next', 'react-i18next', 'react', 'react-dom', 'rxjs'],
   },
   ssr: {
     optimizeDeps: {
+      ignoreOutdatedRequests: true,
       include: ['ajv', 'ajv-formats', 'd3', 'd3-selection', 'i18next', 'react-i18next', 'react', 'react-dom', 'rxjs'],
     },
     noExternal: [/^d3-/, 'd3', 'react-i18next', 'i18next', '@mission-platform/*'],

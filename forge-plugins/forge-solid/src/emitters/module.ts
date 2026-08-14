@@ -25,7 +25,10 @@ import {
   renameNeutralElementTypes,
 } from "../transformers/expressions.js";
 import { printSolidImports } from "../transformers/imports.js";
-import { lowerRenderNode } from "../transformers/jsx.js";
+import {
+  lowerRenderNode,
+  lowerTextWithRenderNodes,
+} from "../transformers/jsx.js";
 import {
   callsUseI18n,
   I18N_HOOK_STATEMENT,
@@ -96,16 +99,29 @@ function printParameter(parameter: GenericParameter | undefined): string {
  * A component whose render is not JSX — an explicit `h(tag, …)` call, a
  * conditional expression, a bare identifier — carries no `returnNode`; the
  * returned expression is then lowered as an expression so the hyperscript call
- * and the reactive reads inside it survive.
+ * and the reactive reads inside it survive. Nested JSX roots on the matching
+ * body `return` statement (ternary branches, hyperscript children) are spliced
+ * in before the expression rewrites run.
  */
 function printReturn(
   component: GenericComponent,
   context: SolidLoweringContext,
 ): string {
   if (component.returnNode === undefined) {
-    return component.returnExpression === undefined
-      ? "return null;"
-      : `return ${lowerExpressionText(component.returnExpression.text, context)};`;
+    if (component.returnExpression === undefined) {
+      return "return null;";
+    }
+    // Prefer the last body `return` so early-return guards do not supply nested
+    // roots for a different expression than the one being printed.
+    const returnStatement = component.body
+      .toReversed()
+      .find((entry) => entry.statementKind === "return");
+    return `return ${lowerTextWithRenderNodes(
+      component.returnExpression.text,
+      returnStatement?.renderNodes ?? [],
+      context,
+      0,
+    )};`;
   }
   // The markup is printed at column zero: `indent` below and the body indent in
   // `printComponent` together place it inside the parentheses.
@@ -162,6 +178,49 @@ function printMemoDeclarations(
     );
 }
 
+/**
+ * True when a lowered body statement can exit the component before later lines
+ * run. Nested `return`s inside `const fn = () => { return ... }` do not count —
+ * only top-level `return` and control-flow early returns.
+ */
+function isReturnBoundary(line: string): boolean {
+  const trimmed = line.trimStart();
+  if (/^return\b/.test(trimmed)) {
+    return true;
+  }
+  // `if (cond) { ... return ... }` must not run while optimizer memos are still
+  // in the temporal dead zone. Function-local returns stay with their preamble.
+  if (/^(if|switch|for|while|do)\b/.test(trimmed) && /\breturn\b/.test(line)) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Insert optimizer memos after preamble locals and before any return path.
+ *
+ * `createMemo` evaluates eagerly, so declarations must come after every body
+ * local the memoized expression reads. They must also initialize before any
+ * early-return branch that closes over them (for example wizard `if` returns),
+ * otherwise the binding stays in the temporal dead zone when the branch runs.
+ */
+function insertMemoDeclarations(
+  body: string[],
+  plan: SolidLoweringPlan | undefined,
+  context: SolidLoweringContext,
+): void {
+  const memos = printMemoDeclarations(plan, context);
+  if (memos.length === 0) {
+    return;
+  }
+  const boundaryIndex = body.findIndex((line) => isReturnBoundary(line));
+  if (boundaryIndex === -1) {
+    body.push(...memos);
+    return;
+  }
+  body.splice(boundaryIndex, 0, ...memos);
+}
+
 /** Print the whole component function. */
 function printComponent(
   component: GenericComponent,
@@ -170,7 +229,7 @@ function printComponent(
   plan: SolidLoweringPlan | undefined,
 ): string {
   const body = printBody(component, context);
-  body.unshift(...printMemoDeclarations(plan, context));
+  insertMemoDeclarations(body, plan, context);
   if (context.runtime.i18n && !body.some((line) => callsUseI18n(line))) {
     body.unshift(I18N_HOOK_STATEMENT);
   }

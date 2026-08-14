@@ -9,9 +9,14 @@
  *   `htmlFor` → `for`, `onX` → the Svelte 5 lowercase `onx={…}` attribute,
  *   `{...spread}` stays a spread, `ref={x}` becomes `bind:this={x}`, and the
  *   Stage-1 static marker never leaks,
- * - `<Slot/>` / a `children` read → `{@render children?.()}` (named slots →
- *   `{@render name?.()}`), `<HtmlContent html={…}/>` → `{@html …}`,
+ * - `<Slot/>` / a `children` read → a normalized snippet render (named slots
+ *   likewise) that invokes a snippet, renders an escaped primitive `MpChild`
+ *   value, or falls back — see {@link renderSnippet};
+ *   `<HtmlContent html={…}/>` → `{@html …}`,
  *   `<Dynamic is={…}/>` → `<svelte:component>` / `<svelte:element>`,
+ *   `<Transition/>` / `<TransitionGroup/>` / `<Teleport/>` → their children
+ *   rendered in place (no Svelte-native wrapper component exists for any of
+ *   the three; see {@link TRANSITION_TAG}),
  * - `cond && <A/>` → `{#if cond}…{/if}`, `a ? <X/> : <Y/>` →
  *   `{#if a}…{:else}…{/if}` (chained ternaries add `{:else if}`),
  *   `items.map((item) => <li/>)` → `{#each items as item}…{/each}` with the
@@ -44,9 +49,11 @@ import {
   SLOT_TAG,
   svelteAttributeName,
   svelteEventName,
+  TELEPORT_TAG,
+  TRANSITION_GROUP_TAG,
+  TRANSITION_TAG,
 } from "../runtime/names.js";
 import {
-  blockStatements,
   callArguments,
   indexOfTopLevel,
   isIdentifierText,
@@ -61,6 +68,7 @@ import {
   stripComments,
   stripParentheses,
   stripSemicolon,
+  stripTypeAssertion,
 } from "../runtime/source-text.js";
 
 import {
@@ -69,6 +77,7 @@ import {
   svelteClassValue,
   type SvelteScope,
 } from "./expression.js";
+import { readSafeBlockBody } from "./statements.js";
 
 import type {
   GenericAttribute,
@@ -87,6 +96,8 @@ export interface TemplateListKey {
 /** A computed tag expression and the marker node it was inferred from. */
 export interface TemplateDynamicNode {
   readonly expression: string;
+  /** The Svelte host selected during lowering. */
+  readonly host: "svelte:component" | "svelte:element";
   readonly span?: SourceSpan;
 }
 
@@ -115,6 +126,14 @@ export interface SvelteTemplateContext {
    * no such array, so a read of one renders the children snippet.
    */
   readonly childrenAliases: ReadonlySet<string>;
+  /**
+   * Names of JSX-returning local helpers lowered to `{#snippet}` declarations.
+   * A call to one (`renderRow(item)`) renders as `{@render renderRow(item)}`
+   * rather than leaking an undeclared identifier into an expression hole.
+   */
+  readonly renderHelpers: ReadonlySet<string>;
+  /** Scoped render props that lower to Svelte snippet props. */
+  readonly renderProps?: ReadonlySet<string>;
   /** Stable list keys kept by the plan, matched by list source text. */
   readonly listKeys: readonly TemplateListKey[];
   /** Dynamic tag expressions inferred by the neutral compiler, matched by span. */
@@ -125,6 +144,41 @@ export interface SvelteTemplateContext {
    * {@link hoistedStaticLookup} for why this is a resolver and not a map.
    */
   readonly hoistedStatic: HoistedStaticLookup;
+}
+
+function escapedRegExp(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/**
+ * Scope an expression after converting the array-style children presence check
+ * used by neutral components to the Svelte snippet presence check. The
+ * children normalisation local is deliberately omitted from the script, so a
+ * member read such as `childList.length > 0` must not survive into markup.
+ */
+function templateExpression(
+  text: string,
+  context: SvelteTemplateContext,
+): string {
+  let normalized = text;
+  for (const alias of context.childrenAliases) {
+    const pattern = new RegExp(
+      `\\b${escapedRegExp(alias)}\\s*\\.\\s*length\\s*(===|==|!==|!=|>=|>)\\s*(0|1)\\b`,
+      "g",
+    );
+    normalized = normalized.replace(
+      pattern,
+      (_match, operator: string, value: string) => {
+        const present =
+          (value === "0" && ["!==", "!=", ">=", ">"].includes(operator)) ||
+          (value === "1" && operator === ">=");
+        return present
+          ? `${CHILDREN_SNIPPET} != null`
+          : `${CHILDREN_SNIPPET} == null`;
+      },
+    );
+  }
+  return scopeExpression(normalized, context.scope);
 }
 
 /** One static subtree the optimizer lifted into a template-level snippet. */
@@ -211,6 +265,55 @@ function yieldsMarkup(
   );
 }
 
+/**
+ * Whether a sub-expression lowers to template markup, including spreads and
+ * bare reads of JSX-yielding locals / children aliases that were deliberately
+ * omitted from the script. Array holes such as `{[...itemNodes, ...childList]}`
+ * carry no nested render nodes of their own, so the plain {@link yieldsMarkup}
+ * check would miss them and leak undeclared identifiers into a value-position
+ * expression hole.
+ */
+function templateYieldsMarkup(
+  text: string,
+  nodes: readonly GenericRenderNode[],
+  context: SvelteTemplateContext,
+  visited: ReadonlySet<string> = new Set(),
+): boolean {
+  let expression = stripComments(stripParentheses(stripSemicolon(text)));
+  let previous = "";
+  while (previous !== expression) {
+    previous = expression;
+    expression = stripComments(stripParentheses(expression));
+  }
+  if (expression.startsWith("...")) {
+    return templateYieldsMarkup(
+      expression.slice(3).trim(),
+      nodes,
+      context,
+      visited,
+    );
+  }
+  if (isIdentifierText(expression)) {
+    if (context.childrenAliases.has(expression) || readsChildren(expression)) {
+      return true;
+    }
+    const constant = context.jsxConstants.get(expression);
+    if (constant !== undefined && !visited.has(expression)) {
+      return templateYieldsMarkup(
+        constant.text,
+        constant.nodes,
+        context,
+        new Set([...visited, expression]),
+      );
+    }
+  }
+  const helperCall = /^([A-Za-z_$][\w$]*)\s*\(/.exec(expression);
+  if (helperCall !== null && context.renderHelpers.has(helperCall[1]!)) {
+    return true;
+  }
+  return yieldsMarkup(expression, nodes);
+}
+
 /** The slot a `<Slot/>` marker renders. */
 function slotName(node: GenericRenderNode): string | undefined {
   return attributeStringValue(node, "name");
@@ -283,6 +386,32 @@ function attributeString(
     }),
   ];
   return parts.length > 0 ? ` ${parts.join(" ")}` : "";
+}
+
+/** A callback prop whose body renders a known helper, expressed as an implicit snippet prop. */
+function renderPropSnippet(
+  attribute: GenericAttribute,
+  context: SvelteTemplateContext,
+): string | undefined {
+  if (
+    attribute.kind !== "jsx-attribute" ||
+    attribute.value?.kind !== "expression" ||
+    isEventAttribute(attribute.name)
+  ) {
+    return undefined;
+  }
+  const expression = attribute.value.expression?.text;
+  if (expression === undefined) return undefined;
+  const callback = readCallback(expression);
+  if (callback === undefined || callback.body.trimStart().startsWith("{")) {
+    return undefined;
+  }
+  const body = stripParentheses(callback.body);
+  if (!templateYieldsMarkup(body, [], context)) return undefined;
+  const parameters = callback.parameters
+    .map((parameter) => parameterName(parameter))
+    .join(", ");
+  return `{#snippet ${attribute.name}(${parameters})}${branchMarkup(body, [], context, new Set())}{/snippet}`;
 }
 
 /** Markup for a tag with its attributes and already-rendered children. */
@@ -384,9 +513,9 @@ function dynamicMarkup(
     );
   }
   const scoped = scopeExpression(expression, context.scope);
-  const host = isComponentTagExpression(scoped)
-    ? "svelte:component"
-    : "svelte:element";
+  const host =
+    inferred?.host ??
+    (isComponentTagExpression(scoped) ? "svelte:component" : "svelte:element");
   const attributes = attributeString(node.attributes, context, consumed, [
     `this={${scoped}}`,
   ]);
@@ -432,15 +561,31 @@ export function renderNode(
   if (tag === HTML_CONTENT_TAG) {
     return htmlContentMarkup(node, context);
   }
+  if (
+    tag === TRANSITION_TAG ||
+    tag === TRANSITION_GROUP_TAG ||
+    tag === TELEPORT_TAG
+  ) {
+    return renderChildren(node.children, context);
+  }
   if (node.tagKind === "fragment") {
     return renderChildren(node.children, context);
   }
   const name = tag ?? (typeof node.tag === "string" ? node.tag : node.tag.text);
+  const renderPropSnippets = node.attributes.flatMap((attribute) => {
+    if (attribute.kind !== "jsx-attribute") return [];
+    const snippet = renderPropSnippet(attribute, context);
+    return snippet === undefined ? [] : [{ name: attribute.name, snippet }];
+  });
+  const consumed = new Set(renderPropSnippets.map((entry) => entry.name));
+  const children = `${renderChildren(node.children, context)}${renderPropSnippets
+    .map((entry) => entry.snippet)
+    .join("")}`;
   return tagMarkup(
     name,
-    attributeString(node.attributes, context),
-    node.selfClosing,
-    renderChildren(node.children, context),
+    attributeString(node.attributes, context, consumed),
+    node.selfClosing && renderPropSnippets.length === 0,
+    children,
   );
 }
 
@@ -465,6 +610,12 @@ export function renderExpression(
     previous = expression;
     expression = stripComments(stripParentheses(expression));
   }
+  const renderProp = renderPropCallMarkup(
+    expression,
+    nodeTexts(nodes),
+    context,
+  );
+  if (renderProp !== undefined) return renderProp;
   if (isIdentifierText(expression)) {
     const constant = context.jsxConstants.get(expression);
     if (constant !== undefined && !visited.has(expression)) {
@@ -483,6 +634,64 @@ export function renderExpression(
     return renderSnippet(CHILDREN_SNIPPET);
   }
   return branchMarkup(expression, nodes, context, visited);
+}
+
+/**
+ * Render an optional call to a declared `MpRenderProperty` as a snippet
+ * invocation. A render prop is read in three shapes:
+ *
+ * - a bare destructured name — `panel?.(…)`;
+ * - a member of the props parameter — `properties.panel?.(…)`, which collapses
+ *   to the destructured (aliased) name `$props()` binds; and
+ * - a member carried on a value — `activeStep?.content?.(…)`, where the field
+ *   (`content`) is a declared render prop (e.g. `WizardStep.content`) reached
+ *   through an object; the full accessor is preserved as the snippet target.
+ *
+ * The first two forms lower to `{@render panel?.(…)}`; the third keeps its
+ * accessor: `{@render activeStep?.content?.(…)}`.
+ */
+function renderPropCallMarkup(
+  expression: string,
+  fragments: readonly string[],
+  context: SvelteTemplateContext,
+): string | undefined {
+  // `<accessor>?.(<args>)` where `<accessor>` is an identifier optionally
+  // followed by a `.`/`?.` member chain and `<args>` is balanced to the end.
+  const match =
+    /^([A-Za-z_$][\w$]*(?:\s*\??\.\s*[A-Za-z_$][\w$]*)*)\s*\?\.\s*\(([\s\S]*)\)$/.exec(
+      expression,
+    );
+  if (match === null) return undefined;
+  const callee = match[1]!.trim();
+  const argumentText = match[2]!;
+  // Split the accessor into its object prefix and final member identifier.
+  const tail = /(\??\.)\s*([A-Za-z_$][\w$]*)$/.exec(callee);
+  const objectPrefix =
+    tail === null ? undefined : callee.slice(0, tail.index).trim();
+  const finalName = tail === null ? callee : tail[2]!;
+  // The `{@render …}` target: a bare prop name (also for `properties.<name>`,
+  // which binds the aliased local) or the full accessor for a value member.
+  const target =
+    objectPrefix === undefined
+      ? context.renderProps?.has(finalName) === true
+        ? finalName
+        : undefined
+      : objectPrefix === context.scope.propsParameter
+        ? (() => {
+            const aliased =
+              context.scope.propAliases.get(finalName) ?? finalName;
+            return context.renderProps?.has(aliased) === true
+              ? aliased
+              : undefined;
+          })()
+        : context.renderProps?.has(finalName) === true
+          ? scopeExpression(callee, context.scope)
+          : undefined;
+  if (target === undefined) return undefined;
+  const arguments_ = splitList(argumentText, fragments);
+  return `{@render ${target}?.(${arguments_
+    .map((argument) => scopeExpression(argument, context.scope))
+    .join(", ")})}`;
 }
 
 /** Markup for a branch of a structural expression, keeping the nested roots it contains. */
@@ -505,10 +714,10 @@ function elseChain(
   const nested = readTernary(text, nodeTexts(nodes));
   if (
     nested !== undefined &&
-    (yieldsMarkup(nested.whenTrue, nodes) ||
-      yieldsMarkup(nested.whenFalse, nodes))
+    (templateYieldsMarkup(nested.whenTrue, nodes, context, visited) ||
+      templateYieldsMarkup(nested.whenFalse, nodes, context, visited))
   ) {
-    return `{:else if ${scopeExpression(nested.condition, context.scope)}}${branch(nested.whenTrue, nodes, context, visited)}${elseChain(nested.whenFalse, nodes, context, visited)}`;
+    return `{:else if ${templateExpression(nested.condition, context)}}${branch(nested.whenTrue, nodes, context, visited)}${elseChain(nested.whenFalse, nodes, context, visited)}`;
   }
   const markup = branch(text, nodes, context, visited);
   // Omit an empty `{:else}` entirely — an `undefined`/`null` (or otherwise
@@ -540,6 +749,7 @@ function eachBlock(
       ? undefined
       : parameterName(callback.parameters[1]);
   const constants: string[] = [];
+  let blockConstants: readonly { name: string; value: string }[] = [];
   let returned = callback.body;
   if (callback.body.startsWith("{")) {
     // A block-bodied callback lifts its leading `const`s to Svelte `{@const}`s
@@ -548,6 +758,7 @@ function eachBlock(
     if (statements === undefined) {
       return undefined;
     }
+    blockConstants = statements.constants;
     for (const constant of statements.constants) {
       constants.push(
         `{@const ${constant.name} = ${scopeExpression(constant.value, context.scope)}}`,
@@ -555,10 +766,13 @@ function eachBlock(
     }
     returned = statements.returned;
   }
-  if (!yieldsMarkup(returned, nodes) && stripParentheses(returned) !== "null") {
+  if (
+    !templateYieldsMarkup(returned, nodes, context, visited) &&
+    stripParentheses(returned) !== "null"
+  ) {
     return undefined;
   }
-  const key = listKey(list, returned, nodes, context);
+  const key = listKey(list, returned, nodes, context, blockConstants);
   const binding =
     indexName === undefined ? itemName : `${itemName}, ${indexName}`;
   const suffix = key === undefined ? "" : ` (${key})`;
@@ -578,25 +792,9 @@ function blockBody(
 ):
   | { constants: { name: string; value: string }[]; returned: string }
   | undefined {
-  const statements = blockStatements(text, fragments);
-  const last = statements.at(-1);
-  if (last === undefined || !/^return\b/.test(last)) {
-    return undefined;
-  }
-  const constants: { name: string; value: string }[] = [];
-  for (const statement of statements.slice(0, -1)) {
-    const match = /^(?:const|let)\s+([A-Za-z_$][\w$]*)\s*=\s*([\s\S]+)$/.exec(
-      statement,
-    );
-    if (match === null) {
-      return undefined;
-    }
-    constants.push({ name: match[1]!, value: match[2]!.trim() });
-  }
-  return {
-    constants,
-    returned: stripParentheses(last.slice("return".length).trim()),
-  };
+  // Shared with render-helper acceptance: typed consts, leading comments, and a
+  // terminal return are all expressible as `{@const}` + markup inside `{#each}`.
+  return readSafeBlockBody(text, fragments);
 }
 
 /** The `{#each … (key)}` expression for a list, from the projected element or the inferred fact. */
@@ -605,6 +803,7 @@ function listKey(
   returned: string,
   nodes: readonly GenericRenderNode[],
   context: SvelteTemplateContext,
+  blockConstants: readonly { name: string; value: string }[] = [],
 ): string | undefined {
   const projected = nodesWithin(returned, nodes).find(
     (node) => node.expression?.text === stripParentheses(returned),
@@ -618,8 +817,45 @@ function listKey(
       ? attribute.value.expression?.text
       : undefined;
   const inferred = context.listKeys.find((entry) => entry.source === list)?.key;
-  const key = declared ?? inferred;
-  return key === undefined ? undefined : scopeExpression(key, context.scope);
+  let key = declared ?? inferred;
+  if (key === undefined) {
+    return undefined;
+  }
+  // The each-header key expression cannot see `{@const}` bindings that live in
+  // the body. Expand a bare block-local key (ForgeMenu's `key={path}`) to its
+  // initializer so the header stays self-contained.
+  const local = blockConstants.find((entry) => entry.name === key);
+  if (local !== undefined) {
+    key = local.value;
+  }
+  return scopeExpression(key, context.scope);
+}
+
+/** The static slot name declared by an `h(Slot, { name: "…" })` props object. */
+function hyperscriptSlotName(
+  propsArgument: string | undefined,
+): string | undefined {
+  const trimmed = propsArgument?.trim();
+  if (
+    trimmed === undefined ||
+    !trimmed.startsWith("{") ||
+    !trimmed.endsWith("}")
+  ) {
+    return undefined;
+  }
+  for (const member of splitList(trimmed.slice(1, -1))) {
+    const colon = indexOfTopLevel(scanSource(member), ":");
+    if (colon === -1) {
+      continue;
+    }
+    const rawKey = member.slice(0, colon).trim();
+    const key = /^(['"])(.*)\1$/.exec(rawKey)?.[2] ?? rawKey;
+    if (key !== "name") {
+      continue;
+    }
+    return /^(['"])(.*)\1$/.exec(member.slice(colon + 1).trim())?.[2];
+  }
+  return undefined;
 }
 
 /** Markup for a hyperscript `h(tag, props, ...children)` render call. */
@@ -633,10 +869,6 @@ function hyperscriptMarkup(
   if (tagArgument === undefined) {
     return "";
   }
-  const attributes =
-    propsArgument === undefined
-      ? ""
-      : hyperscriptAttributes(propsArgument, context);
   const children = childArguments
     .map((argument) => {
       const spread = argument.startsWith("...")
@@ -648,6 +880,20 @@ function hyperscriptMarkup(
       return branch(spread ?? argument, nodes, context, visited);
     })
     .join("");
+  if (tagArgument.trim() === SLOT_TAG) {
+    return renderSnippet(hyperscriptSlotName(propsArgument), children);
+  }
+  if (
+    tagArgument.trim() === TRANSITION_TAG ||
+    tagArgument.trim() === TRANSITION_GROUP_TAG ||
+    tagArgument.trim() === TELEPORT_TAG
+  ) {
+    return children;
+  }
+  const attributes =
+    propsArgument === undefined
+      ? ""
+      : hyperscriptAttributes(propsArgument, context);
   const literal = /^(['"])(.*)\1$/.exec(tagArgument.trim());
   if (literal !== null) {
     return tagMarkup(literal[2]!, attributes, false, children);
@@ -743,24 +989,35 @@ function branchMarkup(
   const ternary = readTernary(expression, fragments);
   if (
     ternary !== undefined &&
-    (yieldsMarkup(ternary.whenTrue, nodes) ||
-      yieldsMarkup(ternary.whenFalse, nodes))
+    (templateYieldsMarkup(ternary.whenTrue, nodes, context, visited) ||
+      templateYieldsMarkup(ternary.whenFalse, nodes, context, visited))
   ) {
-    return `{#if ${scopeExpression(ternary.condition, context.scope)}}${branch(ternary.whenTrue, nodes, context, visited)}${elseChain(ternary.whenFalse, nodes, context, visited)}{/if}`;
+    return `{#if ${templateExpression(ternary.condition, context)}}${branch(ternary.whenTrue, nodes, context, visited)}${elseChain(ternary.whenFalse, nodes, context, visited)}{/if}`;
   }
   const guard = readBinary(expression, "&&", fragments);
-  if (guard !== undefined && yieldsMarkup(guard.right, nodes)) {
-    return `{#if ${scopeExpression(guard.left, context.scope)}}${branch(guard.right, nodes, context, visited)}{/if}`;
+  if (
+    guard !== undefined &&
+    templateYieldsMarkup(guard.right, nodes, context, visited)
+  ) {
+    return `{#if ${templateExpression(guard.left, context)}}${branch(guard.right, nodes, context, visited)}{/if}`;
   }
   if (expression.startsWith("[") && expression.endsWith("]")) {
     const elements = splitList(expression.slice(1, -1), fragments);
-    if (elements.some((element) => yieldsMarkup(element, nodes))) {
+    if (
+      elements.some((element) =>
+        templateYieldsMarkup(element, nodes, context, visited),
+      )
+    ) {
       return elements
         .map((element) => branch(element, nodes, context, visited))
         .join("");
     }
   }
-  const iteration = memberCall(expression, "map", fragments);
+  // `.map` and `.flatMap` both project markup rows; flatMap is common when a
+  // single item expands to multiple sibling elements (e.g. description lists).
+  const iteration =
+    memberCall(expression, "map", fragments) ??
+    memberCall(expression, "flatMap", fragments);
   if (iteration?.arguments[0] !== undefined) {
     const each = eachBlock(
       iteration.target,
@@ -791,5 +1048,31 @@ function branchMarkup(
   if (hyperscript !== undefined) {
     return hyperscriptMarkup(hyperscript, nodes, context, visited);
   }
+  // A call to a JSX-returning local helper renders its snippet by name; the
+  // arguments are scoped like any other expression so prop/ref/state reads inside
+  // them resolve the same way they would in the surrounding markup. Type
+  // assertions (`item.children as MenuNode[]`) are stripped — Svelte markup is
+  // not a TypeScript expression context.
+  const helperCall = /^([A-Za-z_$][\w$]*)\s*\(/.exec(expression);
+  if (helperCall !== null && context.renderHelpers.has(helperCall[1]!)) {
+    const helperArguments = callArguments(
+      expression,
+      helperCall[1]!,
+      fragments,
+    );
+    if (helperArguments !== undefined) {
+      const scoped = helperArguments
+        .map((argument) =>
+          scopeExpression(
+            stripTypeAssertion(argument, fragments),
+            context.scope,
+          ),
+        )
+        .join(", ");
+      return `{@render ${helperCall[1]!}(${scoped})}`;
+    }
+  }
+  const renderProp = renderPropCallMarkup(expression, fragments, context);
+  if (renderProp !== undefined) return renderProp;
   return `{${scopeExpression(expression, context.scope)}}`;
 }

@@ -9,6 +9,61 @@ outputs.
 - **Write Once, Run Anywhere**: Neutral source compiled into native Vue, React, Svelte, Solid, and Web Component builds
   with zero target-side source reparsing.
 - **Universal Sizing Scale**: Standardized `size` props (`2xs`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl`) across components.
+
+## Building
+
+The aggregate package build is the default and produces the complete published tree: neutral components and declarations,
+all five framework targets, and the configured Storyblok output and shared manifest.
+
+```bash
+pnpm --filter @mission-platform/components run build
+```
+
+Forge output is staged in a package-local ignored cache and promoted only after the build completes. Aggregate promotion
+replaces the complete Forge-owned `dist` tree, so stale files cannot satisfy an export. A failed build removes its stage
+and leaves the previous `dist` tree untouched.
+
+### Targeted framework builds
+
+Use a compatibility alias when only one framework target is needed:
+
+```bash
+pnpm --filter @mission-platform/components run build:vue
+pnpm --filter @mission-platform/components run build:react
+pnpm --filter @mission-platform/components run build:svelte
+pnpm --filter @mission-platform/components run build:solid
+pnpm --filter @mission-platform/components run build:web-components
+pnpm --filter @mission-platform/components run build:forge
+```
+
+These aliases all call the shared Forge runner. A targeted promotion replaces only its framework tree and matching CMS
+wrapper tree; it preserves neutral output, declarations, sibling framework trees, email output, and CMS sidecars already
+in `dist`. This makes Vue-only followed by React-only (or the reverse) safe and non-destructive. The runner scopes the
+Storyblok selector to the requested framework so the matching `./cms/storyblok/<framework>` wrapper is rebuilt and
+promoted alongside the framework tree; it never removes a sibling wrapper (e.g. `./cms/storyblok/react`) that the
+current build did not regenerate.
+
+### Selective Storyblok builds
+
+Use the existing artifact-mode tasks when only one Storyblok projection or the shared assets are needed:
+
+```bash
+pnpm --filter @mission-platform/components run build:vue
+pnpm --filter @mission-platform/components run build:cms-storyblok:solid
+pnpm --filter @mission-platform/components run build:cms-storyblok:assets
+```
+
+The Storyblok exports are available at `./cms/storyblok/react`, `./cms/storyblok/vue`, `./cms/storyblok/svelte`,
+`./cms/storyblok/solid`, and `./cms/storyblok/web-components`; `./cms/storyblok/components.json` is the shared manifest.
+Build the shared assets once before independently building framework wrappers. The aggregate `build` handles the complete
+set together and does not erase the sidecars during framework promotion.
+
+After building, verify that every manifest target resolves to a file in the published tree:
+
+```bash
+pnpm validate:exports
+```
+
 - **Design Token Integration**: Built-in integration with `@mission-platform/tokens` and design system CSS variables.
 - **Storyblok CMS Ready**: Automatically generates Storyblok blok configurations and wrappers.
 

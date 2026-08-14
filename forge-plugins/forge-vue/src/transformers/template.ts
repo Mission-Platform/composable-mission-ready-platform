@@ -1341,17 +1341,35 @@ function isNodeTypedMemberRead(
   text: string,
   context: TemplateContext,
 ): boolean {
-  const match = /^([A-Za-z_$][\w$]*)\s*\.\s*([A-Za-z_$][\w$]*)$/.exec(
+  const match = /^([A-Za-z_$][\w$]*)\s*(?:\?\s*)?\.\s*([A-Za-z_$][\w$]*)$/.exec(
     stripTypeAssertion(text),
   );
   if (match === null) {
     return false;
   }
-  const typeName = context.aliasTypes.get(match[1] ?? "");
-  return typeName === undefined
-    ? false
-    : (context.nodeTypedFieldsByType.get(typeName)?.has(match[2] ?? "") ??
-        false);
+  return isNodeTypedField(match[1] ?? "", match[2] ?? "", context);
+}
+
+/** Whether `receiver.field` resolves to a field declared as node content. */
+function isNodeTypedField(
+  receiver: string,
+  field: string,
+  context: TemplateContext,
+): boolean {
+  const typeText =
+    context.aliasTypes.get(receiver) ?? context.declaredTypes.get(receiver);
+  if (typeText === undefined) {
+    return false;
+  }
+  for (const [typeName, fields] of context.nodeTypedFieldsByType) {
+    if (
+      fields.has(field) &&
+      new RegExp(String.raw`\b${typeName}\b`).test(typeText)
+    ) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /** Vue's "is the default slot filled" test. */
@@ -1471,20 +1489,32 @@ function isRenderPropCall(
   expression: string,
   context: TemplateContext,
 ): boolean {
-  const match =
-    /^([A-Za-z_$][\w$]*)\s*(?:\.\s*([A-Za-z_$][\w$]*)\s*)?(?:\?\s*\.)?\s*\(/.exec(
-      expression,
-    );
+  const callIndex = expression.indexOf("(");
   if (
-    match === null ||
-    matchBracket(expression, expression.indexOf("(")) !== expression.length - 1
+    callIndex < 1 ||
+    matchBracket(expression, callIndex) !== expression.length - 1
   ) {
     return false;
   }
-  const [, head, member] = match;
-  const name = member ?? head;
-  if (member !== undefined && head !== context.scope.propsParameterName) {
+  const target = expression
+    .slice(0, callIndex)
+    .replaceAll(/\s/g, "")
+    .replace(/\?\.$/, "")
+    .replaceAll("?.", ".");
+  const parts = target.split(".");
+  if (
+    parts.length < 1 ||
+    parts.length > 2 ||
+    parts.some((part) => !/^[A-Za-z_$][\w$]*$/.test(part))
+  ) {
     return false;
+  }
+  const [head, member] = parts;
+  const name = member ?? head;
+  if (member !== undefined) {
+    return head === context.scope.propsParameterName
+      ? context.nodeTypedProps.has(name)
+      : isNodeTypedField(head ?? "", name ?? "", context);
   }
   return context.nodeTypedProps.has(name);
 }

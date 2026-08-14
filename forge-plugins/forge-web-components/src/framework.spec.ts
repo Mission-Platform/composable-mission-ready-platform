@@ -95,6 +95,30 @@ describe("Web Components Forge framework package", () => {
     expect(generated.code).toContain("  declare label: string;");
   });
 
+  it("keeps a render-local helper when its name is also a prop", () => {
+    const generated = generate(
+      semanticModule({
+        componentName: "ForgeFixture",
+        component: component({
+          name: "ForgeFixture",
+          parameter: "properties",
+          body: [
+            statement("const renderField = () => 'field';"),
+            statement("return <span>{renderField()}</span>;", "return"),
+          ],
+          returnNode: element("span", {
+            children: [expressionChild("renderField()")],
+          }),
+        }),
+        props: [prop("renderField", "() => string")],
+      }),
+    );
+
+    expect(generated.code).toContain("const renderField = () => 'field';");
+    expect(generated.code).toContain("html`<span>${renderField()}</span>`");
+    expect(generated.code).not.toContain("this.renderField()");
+  });
+
   it("carries a refined target plan between its phases", () => {
     const lowered = plan(
       semanticModule({

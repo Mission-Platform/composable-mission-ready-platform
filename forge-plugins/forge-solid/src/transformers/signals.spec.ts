@@ -1,9 +1,21 @@
 import { describe, expect, it } from "vitest";
 
-import { rewriteGetterReads } from "./signals.js";
+import { lowerReactiveCalls, rewriteGetterReads } from "./signals.js";
 
 /** The reactive bindings the fragments below are rewritten against. */
 const GETTERS: ReadonlySet<string> = new Set(["open", "total"]);
+
+/** Create a fresh primitive-usage record for a lowering assertion. */
+function primitiveUsage(): Parameters<typeof lowerReactiveCalls>[1] {
+  return {
+    createSignal: false,
+    createMemo: false,
+    createEffect: false,
+    onMount: false,
+    createUniqueId: false,
+    mergeProps: false,
+  };
+}
 
 /** Rewrite a fragment against {@link GETTERS}. */
 function rewrite(text: string): string {
@@ -88,5 +100,33 @@ describe("rewriteGetterReads", () => {
       expect(rewrite("open ? 'yes' : 'no'")).toBe("open() ? 'yes' : 'no'");
       expect(rewrite("open?: boolean")).toBe("open?: boolean");
     });
+
+    it("calls a getter spread into an array or object", () => {
+      expect(rewrite("[...open]")).toBe("[...open()]");
+      expect(rewrite("ready ? open.toReversed() : [...open]")).toBe(
+        "ready ? open().toReversed() : [...open()]",
+      );
+      expect(rewrite("{ ...open, total }")).toBe(
+        "{ ...open(), total: total() }",
+      );
+    });
+  });
+});
+
+describe("lowerReactiveCalls", () => {
+  it("lowers multiline generic useMemo calls", () => {
+    const usage = primitiveUsage();
+    const lowered = lowerReactiveCalls(
+      `const result = useMemo<{
+  rendered: RenderedQr | undefined;
+  error: Error | undefined;
+}>(() => value, [value]);`,
+      usage,
+    );
+
+    expect(lowered).toContain(
+      "const result = createMemo<{\n  rendered: RenderedQr | undefined;\n  error: Error | undefined;\n}>(() => value);",
+    );
+    expect(usage.createMemo).toBe(true);
   });
 });

@@ -278,23 +278,26 @@ function matchAngleBracket(text: string, openIndex: number): number {
   let cursor = openIndex;
   while (cursor < text.length) {
     const character = text.charAt(cursor);
+    if (character === "'" || character === '"' || character === "`") {
+      cursor = skipQuoted(text, cursor);
+      continue;
+    }
     switch (character) {
       case "<": {
         depth += 1;
         break;
       }
       case ">": {
+        // A function type such as `() => Result` contains an arrow. The
+        // arrow's `>` is not the end of the type argument list.
+        if (text.charAt(cursor - 1) === "=") {
+          break;
+        }
         depth -= 1;
         if (depth === 0) {
           return cursor;
         }
         break;
-      }
-      case "(":
-      case ")":
-      case ";":
-      case "\n": {
-        return -1;
       }
       // No default
     }

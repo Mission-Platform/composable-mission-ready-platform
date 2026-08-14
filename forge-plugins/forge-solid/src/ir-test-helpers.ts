@@ -194,6 +194,8 @@ export function component(parts: {
   exported?: boolean;
   body?: readonly GenericStatement[];
   returnNode?: GenericRenderNode;
+  /** Non-JSX return expression text when {@link returnNode} is absent. */
+  returnExpression?: string;
 }): GenericComponent {
   return {
     kind: "component",
@@ -214,7 +216,10 @@ export function component(parts: {
             span: EMPTY_SPAN,
           },
     body: parts.body ?? [],
-    returnExpression: parts.returnNode?.expression,
+    returnExpression:
+      parts.returnExpression === undefined
+        ? parts.returnNode?.expression
+        : sourceBacked(parts.returnExpression),
     returnNode: parts.returnNode,
     span: EMPTY_SPAN,
   };

@@ -254,7 +254,10 @@ describe("the Solid blok wrapper emitter", () => {
       "import { Badge } from '@mission-platform/components';",
     );
     expect(solid).toContain(
-      "import { StoryblokComponent, storyblokEditable, type SbBlokData } from '@storyblok/solid';",
+      "import { StoryblokComponent } from '@mission-platform/forge-cms-storyblok/solid';",
+    );
+    expect(solid).toContain(
+      "import { storyblokEditable, type SbBlokData } from '@storyblok/js';",
     );
     expect(solid).toContain(
       "export function BadgeBlok(properties: BadgeBlokProperties) {",

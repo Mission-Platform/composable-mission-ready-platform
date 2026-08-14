@@ -113,6 +113,21 @@ export function objectBindingEntries(binding: string): DestructuredProperty[] {
   return entries;
 }
 
+/** The local name bound by an object-rest entry (`{ known, ...rest }`). */
+export function objectBindingRestName(binding: string): string | undefined {
+  const trimmed = binding.trim();
+  if (!trimmed.startsWith("{") || !trimmed.endsWith("}")) {
+    return undefined;
+  }
+  for (const member of splitList(trimmed.slice(1, -1))) {
+    const rest = member.trim();
+    if (rest.startsWith("...") && isIdentifierText(rest.slice(3).trim())) {
+      return rest.slice(3).trim();
+    }
+  }
+  return undefined;
+}
+
 /**
  * Whether a `const <localName> = …;` initializer merely re-reads the local's
  * **own** prop (`properties.<localName>`, optionally `??`/`||`-defaulted) — the
@@ -148,6 +163,37 @@ export function readSameNamePropDefault(
   return fallback.length > 0 && isBalanced(fallback)
     ? { propName: localName, fallback }
     : undefined;
+}
+
+const SAFE_DEFAULT_IDENTIFIERS = new Set([
+  "undefined",
+  "null",
+  "true",
+  "false",
+  "NaN",
+  "Infinity",
+]);
+
+/**
+ * Whether a same-name prop fallback is safe to embed as a `$props()` default.
+ * Defaults run while the destructure is evaluated, so any free identifier that
+ * is not a language literal (e.g. a later `const isLink = …`) would throw a
+ * temporal-dead-zone `ReferenceError` at component setup. Non-literal fallbacks
+ * must stay as ordinary script statements after the prop is aliased.
+ */
+export function isSafePropsDefaultFallback(fallback: string): boolean {
+  const trimmed = stripParentheses(fallback.trim());
+  if (trimmed.length === 0) {
+    return false;
+  }
+  // Mask string/template contents so their words are not treated as identifiers.
+  const withoutStrings = trimmed
+    .replace(/(['"])(?:\\.|(?!\1)[^\\])*\1/g, '""')
+    .replace(/`(?:\\.|[^`\\])*`/g, '""');
+  const identifiers = withoutStrings.match(/\b[A-Za-z_$][\w$]*\b/g) ?? [];
+  return identifiers.every((identifier) =>
+    SAFE_DEFAULT_IDENTIFIERS.has(identifier),
+  );
 }
 
 /**
@@ -252,6 +298,66 @@ export function readReturnExpression(text: string): string | undefined {
   }
   const expression = statement.slice("return".length).trim();
   return expression.length === 0 ? undefined : stripParentheses(expression);
+}
+
+/** Drop leading line/block comments so a statement keyword reads first. */
+export function stripLeadingComments(text: string): string {
+  let result = text.trimStart();
+  for (;;) {
+    if (result.startsWith("//")) {
+      const newline = result.indexOf("\n");
+      result = newline === -1 ? "" : result.slice(newline + 1).trimStart();
+    } else if (result.startsWith("/*")) {
+      const close = result.indexOf("*/");
+      result = close === -1 ? "" : result.slice(close + 2).trimStart();
+    } else {
+      return result;
+    }
+  }
+}
+
+/**
+ * A safe iteration-callback / helper block body: leading single-binding
+ * `const`/`let` declarations (optionally typed) followed by a terminal `return`.
+ *
+ * This is the shape `{#each}` and render-helper snippets can express via
+ * `{@const}` bindings. Control-flow statements and destructuring bindings are
+ * rejected so unsupported JavaScript never leaks into template markup.
+ */
+export function readSafeBlockBody(
+  text: string,
+  opaqueFragments: readonly string[] = [],
+):
+  | { constants: { name: string; value: string }[]; returned: string }
+  | undefined {
+  // Drop comment-only slices first so "last statement" is the real terminal
+  // return even when a trailing comment follows the final semicolon.
+  const statements = blockStatements(text, opaqueFragments)
+    .map((statement) => stripLeadingComments(statement))
+    .filter((statement) => statement.length > 0);
+  if (statements.length === 0) {
+    return undefined;
+  }
+  const constants: { name: string; value: string }[] = [];
+  const last = statements.at(-1)!;
+  const returned = readReturnExpression(last);
+  if (returned === undefined) {
+    return undefined;
+  }
+  for (const statement of statements.slice(0, -1)) {
+    const declaration = readVariableStatement(statement, opaqueFragments);
+    if (
+      declaration?.initializer === undefined ||
+      !isIdentifierText(declaration.binding)
+    ) {
+      return undefined;
+    }
+    constants.push({
+      name: declaration.binding,
+      value: declaration.initializer,
+    });
+  }
+  return { constants, returned };
 }
 
 /** Read a `<target>.push(<value>, …)` statement. */

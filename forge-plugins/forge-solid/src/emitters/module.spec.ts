@@ -252,6 +252,77 @@ describe("emitSolidModule", () => {
       expect(code).toContain('import h from "solid-js/h";');
     });
 
+    it("rewrites a useRef on Dynamic to a Solid hyperscript ref callback", () => {
+      const code = emit({
+        refs: [reference("host", "HTMLElement")],
+        component: component({
+          name: "Host",
+          body: [statement("const host = useRef<HTMLElement>(null);")],
+          returnNode: element("Dynamic", {
+            tagKind: "dynamic",
+            attributes: [
+              expressionAttribute("is", "tag"),
+              expressionAttribute("ref", "host"),
+              stringAttribute("className", "row"),
+            ],
+            source: '<Dynamic is={tag} ref={host} className="row" />',
+          }),
+        }),
+      });
+
+      expect(code).toContain("const host = { current: null };");
+      expect(code).toContain(
+        "h(tag, { ref: (el) => (host.current = el), class: 'row' })",
+      );
+    });
+
+    it("splices Slot and Dynamic roots from a conditional return expression", () => {
+      const iconSlot = element("Slot", {
+        attributes: [stringAttribute("name", "icon")],
+        source: '<Slot name="icon" />',
+      });
+      const labelSlot = element("Slot", {
+        children: [expressionChild("label")],
+        source: "<Slot>{label}</Slot>",
+      });
+      const hostBranch = element("div", {
+        attributes: [expressionAttribute("ref", "host")],
+        children: [iconSlot],
+        source: '<div ref={host}><Slot name="icon" /></div>',
+      });
+      const dynamicBranch = element("Dynamic", {
+        tagKind: "dynamic",
+        attributes: [expressionAttribute("is", "tag")],
+        children: [labelSlot],
+        source: "<Dynamic is={tag}><Slot>{label}</Slot></Dynamic>",
+      });
+      const returnExpression =
+        'hasChildren ? (<div ref={host}><Slot name="icon" /></div>) : (<Dynamic is={tag}><Slot>{label}</Slot></Dynamic>)';
+
+      const code = emit({
+        refs: [reference("host", "HTMLElement")],
+        slots: [slot("icon")],
+        component: component({
+          name: "NavItem",
+          parameter: "properties",
+          body: [
+            statement("const host = useRef<HTMLElement>(null);"),
+            statement(`return ${returnExpression};`, "return", {
+              renderNodes: [hostBranch, dynamicBranch],
+            }),
+          ],
+          returnExpression,
+        }),
+      });
+
+      expect(code).toContain("ref={(el) => (host.current = el)}");
+      expect(code).toContain("{properties.icon}");
+      expect(code).toContain("h(tag, undefined, properties.children ??");
+      expect(code).toContain("{label}");
+      expect(code).not.toContain("<Slot");
+      expect(code).not.toContain("<Dynamic");
+    });
+
     it("keeps list keys and static markers out of the emitted attributes", () => {
       const code = emit({
         listKeys: [listKey("items", { key: "item.id" })],

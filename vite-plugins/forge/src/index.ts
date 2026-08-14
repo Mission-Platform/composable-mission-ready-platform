@@ -81,11 +81,24 @@ export {
 
 export { findComponentFunction, isSlotElement, parseTsx, readSlotName } from './compiler/ast.js';
 export {
+  discoverComponentsFromGraph,
   discoverComponents,
+  discoverHelperExportsFromGraph,
   discoverHelperExports,
   type DiscoveredComponent,
   type DiscoveredHelperExport,
 } from './compiler/discover.js';
+
+export { buildForgeFileGraph } from './compiler/graph.js';
+export type {
+  ForgeFileEdge,
+  ForgeFileGraph,
+  ForgeFileGraphOptions,
+  ForgeFileKind,
+  ForgeFileNode,
+  ForgeGraphDiagnostic,
+  ForgeGraphDiagnosticCode,
+} from './compiler/graph.js';
 
 export type {
   FrameworkBuildAdapters,

@@ -4,6 +4,42 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build", "build:check"]
+    },
+    "build:forge": {
+      "dependsOn": ["^build", "build:check"]
+    },
+    "build:react": {
+      "dependsOn": ["^build", "build:check"]
+    },
+    "build:vue": {
+      "dependsOn": ["^build", "build:check"]
+    },
+    "build:svelte": {
+      "dependsOn": ["^build", "build:check"]
+    },
+    "build:solid": {
+      "dependsOn": ["^build", "build:check"]
+    },
+    "build:web-components": {
+      "dependsOn": ["^build", "build:check"]
+    },
+    "build:cms-storyblok:assets": {
+      "dependsOn": ["^build", "build:check"]
+    },
+    "build:cms-storyblok:react": {
+      "dependsOn": ["^build", "build:check", "build:cms-storyblok:assets"]
+    },
+    "build:cms-storyblok:vue": {
+      "dependsOn": ["^build", "build:check", "build:cms-storyblok:assets"]
+    },
+    "build:cms-storyblok:svelte": {
+      "dependsOn": ["^build", "build:check", "build:cms-storyblok:assets"]
+    },
+    "build:cms-storyblok:solid": {
+      "dependsOn": ["^build", "build:check", "build:cms-storyblok:assets"]
+    },
+    "build:cms-storyblok:web-components": {
+      "dependsOn": ["^build", "build:check", "build:cms-storyblok:assets"]
     }
   }
 }

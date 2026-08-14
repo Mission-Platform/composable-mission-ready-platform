@@ -435,6 +435,46 @@ export function stripSemicolon(text: string): string {
   return trimmed.endsWith(";") ? trimmed.slice(0, -1).trim() : trimmed;
 }
 
+/**
+ * Strip trailing TypeScript type assertions (`expr as Type`, `expr as const`)
+ * so template expressions never carry syntax Svelte markup cannot parse.
+ * Nested parentheses around the whole assertion are unwrapped first.
+ */
+export function stripTypeAssertion(
+  text: string,
+  opaqueFragments: readonly string[] = [],
+): string {
+  let current = text.trim();
+  for (;;) {
+    const unwrapped = stripParentheses(current);
+    const scan = scanSource(unwrapped, opaqueFragments);
+    let asAt = -1;
+    for (let index = 0; index < unwrapped.length; index += 1) {
+      if (
+        scan.depths[index] !== 0 ||
+        scan.masked[index] ||
+        !unwrapped.startsWith(" as ", index)
+      ) {
+        continue;
+      }
+      // Require a value token before ` as ` so `as Type` alone is not stripped.
+      if (index === 0) {
+        continue;
+      }
+      asAt = index;
+    }
+    if (asAt === -1) {
+      return unwrapped;
+    }
+    const left = unwrapped.slice(0, asAt).trimEnd();
+    const right = unwrapped.slice(asAt + 4).trim();
+    if (left.length === 0 || right.length === 0) {
+      return unwrapped;
+    }
+    current = left;
+  }
+}
+
 /** Whether a text is a bare identifier. */
 export function isIdentifierText(text: string): boolean {
   return IDENTIFIER_PATTERN.test(text.trim());
@@ -661,7 +701,9 @@ export function parameterName(text: string): string {
   const colon = indexOfTopLevel(scan, ":");
   const withoutType = colon === -1 ? trimmed : trimmed.slice(0, colon).trim();
   const equals = indexOfTopLevel(scanSource(withoutType), "=");
-  return (equals === -1 ? withoutType : withoutType.slice(0, equals)).trim();
+  return (equals === -1 ? withoutType : withoutType.slice(0, equals))
+    .trim()
+    .replace(/\?$/, "");
 }
 
 /** Split a block body (`{ … }`) into its top-level statements. */

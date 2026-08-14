@@ -1,4 +1,5 @@
 import { h } from '@mission-platform/forge';
+import { expect, waitFor } from 'storybook/test';
 
 import { ForgeShowAt } from '@mission-platform/breakpoints';
 
@@ -64,11 +65,21 @@ export const ShowFromMdOnMobile: Story = {
 export const ShowFromLg: Story = {
   globals: { viewport: { value: 'lg', isRotated: false } },
   args: { min: 'lg' },
+  play: async ({ canvasElement }) => {
+    Object.defineProperty(globalThis, 'innerWidth', { configurable: true, value: 1920 });
+    globalThis.dispatchEvent(new Event('resize'));
+    await waitFor(() => expect(canvasElement.textContent).toContain('Slot content is visible'));
+  },
 };
 
 export const ShowFromXl: Story = {
   globals: { viewport: { value: 'xl', isRotated: false } },
   args: { min: 'xl' },
+  play: async ({ canvasElement }) => {
+    Object.defineProperty(globalThis, 'innerWidth', { configurable: true, value: 2560 });
+    globalThis.dispatchEvent(new Event('resize'));
+    await waitFor(() => expect(canvasElement.textContent).toContain('Slot content is visible'));
+  },
 };
 
 export const ShowBelowLg: Story = {

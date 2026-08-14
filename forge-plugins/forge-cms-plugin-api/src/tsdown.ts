@@ -12,11 +12,14 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { defineTsdownLibrary } from "@mission-platform/tsdown-config";
+import {
+  defineTsdownLibrary,
+  resolveTsdownOutputDirectory,
+} from "@mission-platform/tsdown-config";
 
 import { generateCmsArtifacts } from "./driver.js";
 
-import type { CmsArtifact, CmsOutputPlugin } from "./cms.js";
+import type { CmsArtifact, CmsArtifactKind, CmsOutputPlugin } from "./cms.js";
 import type { TsdownPlugin, UserConfig } from "tsdown";
 
 /* eslint-disable unicorn/prevent-abbreviations -- tsdown mirrors the repository's public rootDir/outDir config names. */
@@ -24,6 +27,8 @@ import type { TsdownPlugin, UserConfig } from "tsdown";
 /** Options for {@link defineTsdownForgeCms}. */
 export interface TsdownForgeCmsOptions {
   rootDir: string;
+  /** Optional isolated output mirror used by the shared Forge runner. */
+  outputRoot?: string;
   /** The CMS target to build. */
   target: CmsOutputPlugin;
   /** Absolute path of the neutral components barrel; auto-detected when omitted. */
@@ -31,38 +36,57 @@ export interface TsdownForgeCmsOptions {
   /** Import specifier the generated templates use; defaults to the target's package name. */
   componentsImport?: string;
   external?: readonly string[];
+  artifactMode?: "all" | "shared" | "framework";
   overrides?: UserConfig;
 }
 
 /** Options for {@link defineTsdownForgeCmsAll}. */
 export interface TsdownForgeCmsAllOptions {
   rootDir: string;
+  /** Optional isolated output mirror used by the shared Forge runner. */
+  outputRoot?: string;
   /** Every CMS target to build, in order. */
   targets: readonly CmsOutputPlugin[];
   componentsModule?: string;
   componentsImport?: string;
   external?: readonly string[];
+  artifactMode?: "all" | "shared" | "framework";
   overrides?: UserConfig;
 }
 
 function mergeTsdownConfig(
   base: UserConfig,
   overrides?: UserConfig,
+  rootDir?: string,
+  outputRoot?: string,
 ): UserConfig {
   if (!overrides) return base;
+  const resolvedOverrides =
+    rootDir !== undefined &&
+    outputRoot !== undefined &&
+    typeof overrides.outDir === "string"
+      ? {
+          ...overrides,
+          outDir: resolveTsdownOutputDirectory(
+            rootDir,
+            overrides.outDir,
+            outputRoot,
+          ),
+        }
+      : overrides;
   const basePlugins = Array.isArray(base.plugins)
     ? base.plugins
     : base.plugins
       ? [base.plugins]
       : [];
-  const overridePlugins = Array.isArray(overrides.plugins)
-    ? overrides.plugins
-    : overrides.plugins
-      ? [overrides.plugins]
+  const overridePlugins = Array.isArray(resolvedOverrides.plugins)
+    ? resolvedOverrides.plugins
+    : resolvedOverrides.plugins
+      ? [resolvedOverrides.plugins]
       : [];
   return {
     ...base,
-    ...overrides,
+    ...resolvedOverrides,
     plugins: [...basePlugins, ...overridePlugins],
   };
 }
@@ -100,6 +124,41 @@ export function cmsOutputDirectory(
   return path.resolve(rootDir, `dist/cms/${target.id}/${target.framework.id}`);
 }
 
+function cmsSharedAssetsBundleDirectory(
+  rootDir: string,
+  target: CmsOutputPlugin,
+): string {
+  return path.join(
+    rootDir,
+    "node_modules/.cache",
+    `${path.basename(rootDir)}-cms-${target.id}-assets`,
+  );
+}
+
+function cmsBuildOutputDirectory(
+  rootDir: string,
+  target: CmsOutputPlugin,
+  artifactMode: TsdownForgeCmsOptions["artifactMode"],
+  outputRoot: string | undefined,
+): string {
+  if (artifactMode === "shared" && outputRoot === undefined) {
+    return cmsSharedAssetsBundleDirectory(rootDir, target);
+  }
+  return path.resolve(
+    rootDir,
+    `dist/cms/${target.id}` +
+      (artifactMode === "shared" ? "" : `/${target.framework.id}`),
+  );
+}
+
+function artifactKindsForMode(
+  mode: TsdownForgeCmsOptions["artifactMode"],
+): readonly CmsArtifactKind[] | undefined {
+  if (mode === "shared") return ["schema", "manifest"];
+  if (mode === "framework") return ["template", "entry", "declaration"];
+  return undefined;
+}
+
 /**
  * Emit the generated `index.d.ts` — targets that produce typed entries write it
  * into the cache, and tsdown would otherwise never see it because the entry is
@@ -130,6 +189,7 @@ function cmsAssetsTsdownPlugin(
   cacheDirectory: string,
   targetId: string,
   assets: readonly CmsArtifact[],
+  outputRoot: string | undefined,
 ): TsdownPlugin {
   return {
     name: "mission-platform:cms-assets",
@@ -137,7 +197,11 @@ function cmsAssetsTsdownPlugin(
       if (assets.length === 0) {
         return;
       }
-      const destinationRoot = path.resolve(rootDir, `dist/cms/${targetId}`);
+      const destinationRoot = resolveTsdownOutputDirectory(
+        rootDir,
+        path.resolve(rootDir, `dist/cms/${targetId}`),
+        outputRoot,
+      );
       for (const asset of assets) {
         const source = path.join(cacheDirectory, asset.fileName);
         if (!fs.existsSync(source)) {
@@ -155,9 +219,26 @@ function cmsAssetsTsdownPlugin(
 export function defineTsdownForgeCms(
   options: TsdownForgeCmsOptions,
 ): UserConfig {
-  const { rootDir, target, external = [], overrides } = options;
+  const {
+    rootDir,
+    outputRoot = process.env.FORGE_BUILD_STAGE_ROOT,
+    target,
+    external = [],
+    artifactMode = (process.env.FORGE_CMS_ARTIFACT_MODE as
+      "all" | "shared" | "framework" | undefined) ?? "all",
+    overrides,
+  } = options;
   const cacheDirectory = cmsCacheDirectory(rootDir, target);
-  const outDir = cmsOutputDirectory(rootDir, target);
+  const outDir = cmsBuildOutputDirectory(
+    rootDir,
+    target,
+    artifactMode,
+    outputRoot,
+  );
+  const stagedOutDir =
+    outputRoot === undefined
+      ? outDir
+      : resolveTsdownOutputDirectory(rootDir, outDir, outputRoot);
   const componentsImport = options.componentsImport ?? target.packageName;
 
   const generated = generateCmsArtifacts({
@@ -170,12 +251,13 @@ export function defineTsdownForgeCms(
     componentsImport,
     stripPrefix: "",
     rootDir,
+    artifactKinds: artifactKindsForMode(artifactMode),
   });
 
   const buildContext = {
     rootDir,
     generatedDirectory: cacheDirectory,
-    outputDirectory: outDir,
+    outputDirectory: stagedOutDir,
   };
   const stagePlugins = [
     ...(target.framework.build.tsdown?.(buildContext) ?? []),
@@ -188,6 +270,7 @@ export function defineTsdownForgeCms(
     dts: false,
     unbundle: true,
     outDir,
+    outputRoot,
     clean: true,
     external: [
       ...(target.framework.runtimeExternals ?? []),
@@ -209,11 +292,12 @@ export function defineTsdownForgeCms(
           cacheDirectory,
           target.id,
           generated.artifacts.filter((artifact) => artifact.asset === true),
+          outputRoot,
         ),
       ],
     },
   });
-  return mergeTsdownConfig(base, overrides);
+  return mergeTsdownConfig(base, overrides, rootDir, outputRoot);
 }
 
 /** Create tsdown configs for every requested CMS target. */
@@ -222,19 +306,23 @@ export function defineTsdownForgeCmsAll(
 ): UserConfig[] {
   const {
     rootDir,
+    outputRoot = process.env.FORGE_BUILD_STAGE_ROOT,
     targets,
     componentsModule,
     componentsImport,
     external,
+    artifactMode,
     overrides,
   } = options;
   return targets.map((target) =>
     defineTsdownForgeCms({
       rootDir,
+      outputRoot,
       target,
       componentsModule,
       componentsImport,
       external,
+      artifactMode,
       overrides,
     }),
   );

@@ -134,7 +134,5 @@ export { ForgeIconUser, type IconUserProperties } from './security/access/forge-
 export { ForgeIconWarning, type IconWarningProperties } from './status/feedback/forge-icon-warning';
 export { ForgeIconWaypoint, type IconWaypointProperties } from './routing/directions/forge-icon-waypoint';
 export { ForgeIconWrench, type IconWrenchProperties } from './objects/system/forge-icon-wrench';
-
-export * from '../catalog';
-export * from '../sprite';
-export { IconSpriteProvider } from '../sprite/provider';
+export { IconSpriteContext, IconSpriteProvider, useIconHref } from '../sprite';
+export type { IconSpriteProperties } from '../sprite';

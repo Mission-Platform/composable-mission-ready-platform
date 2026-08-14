@@ -131,8 +131,57 @@ function hasSlotName(argumentText: string): string {
 }
 
 /**
+ * Print a template literal (backtick string) with every `${…}` interpolation
+ * scoped through {@link scopeExpression}, while every other character — the
+ * surrounding backticks and the literal text between interpolations — is
+ * copied verbatim. `start` must index the opening backtick; the result's
+ * `end` is the index just past the matching closing one.
+ *
+ * A plain `endOfLiteral` skip (as every other quote uses) treats the whole
+ * template — including any `properties.x`/ref/setter read inside a `${…}` —
+ * as opaque text, so those reads print unrewritten and throw a
+ * `ReferenceError` once `properties` no longer exists as a bare identifier.
+ */
+function scopeTemplateLiteral(
+  text: string,
+  start: number,
+  scope: SvelteScope,
+): { printed: string; end: number } {
+  let out = "`";
+  let index = start + 1;
+  while (index < text.length) {
+    const char = text[index]!;
+    if (char === "\\") {
+      out += text.slice(index, index + 2);
+      index += 2;
+      continue;
+    }
+    if (char === "`") {
+      out += "`";
+      index += 1;
+      break;
+    }
+    if (char === "$" && text[index + 1] === "{") {
+      const close = endOfCall(text, index + 1);
+      if (close === -1) {
+        out += text.slice(index);
+        index = text.length;
+        break;
+      }
+      out += `\${${scopeExpression(text.slice(index + 2, close - 1), scope)}}`;
+      index = close;
+      continue;
+    }
+    out += char;
+    index += 1;
+  }
+  return { printed: out, end: index };
+}
+
+/**
  * Print an expression with every Svelte scoping rewrite applied throughout its
- * text. Strings, template literals and comments are copied verbatim, and a
+ * text. Plain strings and comments are copied verbatim; a template literal's
+ * `${…}` interpolations are scoped too (see {@link scopeTemplateLiteral}). A
  * name in member position (`foo.properties`) is never mistaken for a binding.
  */
 export function scopeExpression(text: string, scope: SvelteScope): string {
@@ -141,7 +190,14 @@ export function scopeExpression(text: string, scope: SvelteScope): string {
   let previous = "";
   while (index < text.length) {
     const char = text[index]!;
-    if (char === "'" || char === '"' || char === "`") {
+    if (char === "`") {
+      const { printed, end } = scopeTemplateLiteral(text, index, scope);
+      out += printed;
+      index = end;
+      previous = '"';
+      continue;
+    }
+    if (char === "'" || char === '"') {
       const end = endOfLiteral(text, index);
       out += text.slice(index, end);
       index = end;

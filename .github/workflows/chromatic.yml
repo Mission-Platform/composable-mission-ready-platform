@@ -3,10 +3,16 @@ name: Chromatic Visual Regression
 on:
   pull_request:
     paths:
-      - 'packages/**'
-      - 'apps/storybook/**'
-      - 'apps/storybook-react/**'
-      - 'pnpm-lock.yaml'
+      - "packages/**"
+      - "apps/**"
+      - "configs/**"
+      - "forge-plugins/**"
+      - "vite-plugins/**"
+      - "scripts/runtime-validation/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "turbo.json"
 
 concurrency:
   group: chromatic-${{ github.ref }}
@@ -14,7 +20,46 @@ concurrency:
 
 jobs:
   chromatic:
-    name: Run Chromatic Visual Diff
+    name: Run Chromatic Visual Diff (${{ matrix.framework }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        framework: [vue, react, solid, svelte, web-component]
+
+    env:
+      STORYBOOK_FRAMEWORK: ${{ matrix.framework }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Publish Storybook to Chromatic
+        uses: chromaui/action@v11
+        with:
+          projectToken: ${{ matrix.framework == 'vue' && secrets.CHROMATIC_PROJECT_TOKEN_VUE || matrix.framework == 'react' && secrets.CHROMATIC_PROJECT_TOKEN_REACT || secrets.CHROMATIC_PROJECT_TOKEN }}
+          workingDir: apps/storybook
+          storybookBuildDir: storybook-static
+          exitZeroOnChanges: true
+        continue-on-error: true
+
+  runtime-validation:
+    name: Runtime validation
     runs-on: ubuntu-latest
 
     steps:
@@ -36,20 +81,54 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Publish Vue Storybook to Chromatic
-        uses: chromaui/action@v11
-        with:
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_VUE || secrets.CHROMATIC_PROJECT_TOKEN }}
-          workingDir: apps/storybook
-          storybookBuildDir: storybook-static
-          exitZeroOnChanges: true
-        continue-on-error: true
+      - name: Run runtime validation
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p .artifacts/runtime-validation
+          pnpm validate:runtime --json 2>&1 | tee .artifacts/runtime-validation/runtime-validation.log
 
-      - name: Publish React Storybook to Chromatic
-        uses: chromaui/action@v11
+      - name: Upload runtime validation artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_REACT || secrets.CHROMATIC_PROJECT_TOKEN }}
-          workingDir: apps/storybook-react
-          storybookBuildDir: storybook-static
-          exitZeroOnChanges: true
-        continue-on-error: true
+          name: runtime-validation-artifacts
+          path: |
+            .artifacts/runtime-validation/**/*.json
+            .artifacts/runtime-validation/**/*.log
+            .artifacts/runtime-validation/**/*.png
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 14
+
+  static-gates:
+    name: Static gates
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run static gates
+        run: |
+          pnpm build
+          pnpm test
+          pnpm lint
+          pnpm lint:style
+          pnpm format
+          pnpm validate:exports

@@ -14,9 +14,25 @@ import { appendChild, applyProperties, asSlotElement, createDomElement, customEl
 import type { RenderWithSlots, StoryNodeFactory, StorySlots } from './slots.types.js';
 
 export type { StorySlots } from './slots.types.js';
+export { customElementTag } from './slots.dom.js';
 
 /** Marker component for JSX fragments — rendered as a `DocumentFragment`. */
 export const Fragment = (properties: { children?: unknown }): unknown => properties.children;
+
+/**
+ * Forge web-component builds expose their JSX children through a `children`
+ * property. That name collides with the platform `Element.children` collection,
+ * so preserve the neutral child value on the instance before it is connected.
+ */
+function setComponentChildren(element: Element, children: readonly unknown[]): void {
+  if (children.length === 0) {
+    return;
+  }
+  Object.defineProperty(element, 'children', {
+    configurable: true,
+    value: children.length === 1 ? children[0] : children,
+  });
+}
 
 /** @see {@link StoryNodeFactory} */
 export const node: StoryNodeFactory = (type, properties, ...children) => {
@@ -26,13 +42,23 @@ export const node: StoryNodeFactory = (type, properties, ...children) => {
     return fragment;
   }
   const tag = typeof type === 'string' ? type : customElementTag(type);
-  return createDomElement(tag, properties, children);
+  const element = createDomElement(tag, properties, []);
+  if (typeof type !== 'string') {
+    setComponentChildren(element, children);
+  }
+  for (const child of children) {
+    appendChild(element, child);
+  }
+  return element;
 };
 
 /** @see {@link RenderWithSlots} */
 export const renderWithSlots: RenderWithSlots = (component, properties, slots, children) => {
   const element = document.createElement(typeof component === 'string' ? component : customElementTag(component));
   applyProperties(element, properties);
+  if (typeof component !== 'string' || component.includes('-')) {
+    setComponentChildren(element, children === undefined ? [] : [children]);
+  }
   for (const [name, content] of Object.entries(slots as StorySlots)) {
     const slotted = asSlotElement(content, name);
     if (slotted) {

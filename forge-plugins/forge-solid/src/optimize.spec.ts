@@ -7,6 +7,7 @@ import {
   expressionChild,
   listKey,
   semanticModule,
+  statement,
   stringAttribute,
   textChild,
 } from "./ir-test-helpers.js";
@@ -69,6 +70,29 @@ const REPEATED_EXPRESSION: SemanticModuleParts = {
           children: [expressionChild("items.filter(Boolean).length")],
         }),
         element("i", { children: [expressionChild("title")] }),
+      ],
+    }),
+  }),
+};
+
+/** Repeated markup expressions that capture the surrounding map callback parameter. */
+const CALLBACK_LOCAL_EXPRESSION: SemanticModuleParts = {
+  component: component({
+    name: "Widget",
+    returnNode: element("div", {
+      children: [
+        expressionChild("items.map((item) => <li />)", [
+          element("li", {
+            children: [
+              element("span", {
+                children: [expressionChild("item.label.toUpperCase()")],
+              }),
+              element("em", {
+                children: [expressionChild("item.label.toUpperCase()")],
+              }),
+            ],
+          }),
+        ]),
       ],
     }),
   }),
@@ -215,6 +239,121 @@ describe("optimizeSolidModule", () => {
       );
       expect(code.match(/__mpMemo_0\(\)/g)).toHaveLength(2);
       expect(code).toContain('import { createMemo } from "solid-js";');
+    });
+
+    it("emits createMemo after body locals the expression reads", () => {
+      const parts: SemanticModuleParts = {
+        component: component({
+          name: "SchemaForm",
+          parameter: "properties",
+          body: [
+            statement("const currentFields = properties.fields ?? [];"),
+            statement(
+              "const renderField = (field: { key: string }) => field.key;",
+            ),
+            statement(
+              "return <div>{currentFields.map((field) => renderField(field))}</div>;",
+              "return",
+            ),
+          ],
+          returnNode: element("div", {
+            children: [
+              expressionChild(
+                "currentFields.map((field) => renderField(field))",
+              ),
+              expressionChild(
+                "currentFields.map((field) => renderField(field))",
+              ),
+            ],
+          }),
+        }),
+      };
+      const intentions = optimize(parts);
+      const { plan } = loweredOf(intentions);
+      const code = emitSolidModule(intentions.module, { plan }).code;
+
+      expect(plan.memoizedExpressions).toEqual([
+        {
+          expression: "currentFields.map((field) => renderField(field))",
+          name: "__mpMemo_0",
+        },
+      ]);
+
+      const currentFieldsAt = code.indexOf(
+        "const currentFields = properties.fields ?? [];",
+      );
+      const renderFieldAt = code.indexOf(
+        "const renderField = (field: { key: string }) => field.key;",
+      );
+      const memoAt = code.indexOf(
+        "const __mpMemo_0 = createMemo(() => currentFields.map((field) => renderField(field)));",
+      );
+      const returnAt = code.indexOf("return (");
+
+      expect(currentFieldsAt).toBeGreaterThan(-1);
+      expect(renderFieldAt).toBeGreaterThan(currentFieldsAt);
+      expect(memoAt).toBeGreaterThan(renderFieldAt);
+      expect(returnAt).toBeGreaterThan(memoAt);
+    });
+
+    it("emits createMemo before early-return control flow that closes over it", () => {
+      const parts: SemanticModuleParts = {
+        component: component({
+          name: "WizardForm",
+          parameter: "properties",
+          body: [
+            statement("const currentFields = properties.fields ?? [];"),
+            statement(
+              "const renderField = (field: { key: string }) => field.key;",
+            ),
+            statement(
+              "const renderStep = () => <div>{currentFields.map((field) => renderField(field))}</div>;",
+            ),
+            statement(
+              "if (properties.wizard) {\n  return <div>{renderStep()}</div>;\n}",
+            ),
+            statement(
+              "return <div>{currentFields.map((field) => renderField(field))}</div>;",
+              "return",
+            ),
+          ],
+          returnNode: element("div", {
+            children: [
+              expressionChild(
+                "currentFields.map((field) => renderField(field))",
+              ),
+              expressionChild(
+                "currentFields.map((field) => renderField(field))",
+              ),
+            ],
+          }),
+        }),
+      };
+      const intentions = optimize(parts);
+      const { plan } = loweredOf(intentions);
+      const code = emitSolidModule(intentions.module, { plan }).code;
+
+      const renderFieldAt = code.indexOf(
+        "const renderField = (field: { key: string }) => field.key;",
+      );
+      const memoAt = code.indexOf(
+        "const __mpMemo_0 = createMemo(() => currentFields.map((field) => renderField(field)));",
+      );
+      const earlyIfAt = code.indexOf("if (properties.wizard)");
+
+      expect(renderFieldAt).toBeGreaterThan(-1);
+      expect(memoAt).toBeGreaterThan(renderFieldAt);
+      expect(earlyIfAt).toBeGreaterThan(memoAt);
+    });
+
+    it("does not hoist expressions that capture a callback-local binding", () => {
+      const { plan } = loweredOf(optimize(CALLBACK_LOCAL_EXPRESSION));
+
+      expect(plan.memoizedExpressions).toEqual([]);
+      expect(
+        emitSolidModule(semanticModule(CALLBACK_LOCAL_EXPRESSION), { plan })
+          .code,
+      ).not.toContain("createMemo");
     });
 
     it("leaves a cheap or single-use expression alone", () => {

@@ -66,13 +66,13 @@ export function ForgeSlider(properties: Readonly<SliderProperties>): MpElement {
     formatValue,
   } = properties;
 
+  const clampedValue = clamp(modelValue, min, max);
   const trackReference = useRef<HTMLElement | null>(null);
   // The most recent committed value, so the drag-end `change` emit reports the
   // final value rather than the stale one captured when the gesture started.
   const latestValueReference = useRef<number>(clamp(modelValue, min, max));
 
-  const clampedValue = clamp(modelValue, min, max);
-  latestValueReference.current = clampedValue;
+  latestValueReference.current = clamp(modelValue, min, max);
 
   const span = max - min;
   const percent = span <= 0 ? 0 : ((clampedValue - min) / span) * 100;

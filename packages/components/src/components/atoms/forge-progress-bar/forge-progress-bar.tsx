@@ -84,12 +84,20 @@ export function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): M
           ) : undefined}
         </div>
       ) : undefined}
-      <progress
-        aria-label={label}
-        className={trackClassName}
-        max={max}
-        value={indeterminate ? undefined : value}
-      />
+      {indeterminate ? (
+        <progress
+          aria-label={label}
+          className={trackClassName}
+          max={max}
+        />
+      ) : (
+        <progress
+          aria-label={label}
+          className={trackClassName}
+          max={max}
+          value={value}
+        />
+      )}
     </div>
   );
 }

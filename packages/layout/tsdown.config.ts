@@ -3,12 +3,14 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
+import { defineTsdownForgeCmsAll } from '@mission-platform/forge-cms-plugin-api';
+import { forgeStoryblokCmsTargets } from '@mission-platform/forge-cms-storyblok';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
 import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
-import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
+import { defineTsdownLibrary, resolveTsdownOutputDirectory } from '@mission-platform/tsdown-config';
 import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
 import * as sass from 'sass-embedded';
 
@@ -23,7 +25,11 @@ const packageRequire = createRequire(path.join(rootDirectory, 'package.json'));
  */
 function emitA11yStyles(): void {
   const source = path.resolve(rootDirectory, 'src/styles/a11y.scss');
-  const outFile = path.resolve(rootDirectory, 'dist/styles/a11y.css');
+  const outFile = resolveTsdownOutputDirectory(
+    rootDirectory,
+    path.resolve(rootDirectory, 'dist/styles/a11y.css'),
+    process.env.FORGE_BUILD_STAGE_ROOT,
+  );
   const result = sass.compile(source, {
     style: 'expanded',
     importers: [
@@ -75,5 +81,19 @@ export default [
     name: 'MissionPlatformJsxLayouts',
     external: ['i18next'],
     declarationModule: '..',
+  }),
+  ...defineTsdownForgeCmsAll({
+    rootDir: rootDirectory,
+    componentsModule,
+    targets: forgeStoryblokCmsTargets({
+      packageName: '@mission-platform/layouts',
+      frameworks: [
+        forgeReactFramework(),
+        forgeVueFramework(),
+        forgeSvelteFramework(),
+        forgeSolidFramework(),
+        forgeWebComponentsFramework(),
+      ],
+    }),
   }),
 ];

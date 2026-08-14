@@ -9,7 +9,7 @@ import { createForgeI18N, forgeNamespace } from '@mission-platform/i18n';
 import {
   resolveStorybookFramework,
   sharedPreviewDecorators,
-  sharedPreviewParameters,
+  sharedPreviewParametersFor,
 } from '@mission-platform/storybook-framework';
 import { resources } from 'virtual:i18n-resources';
 
@@ -85,7 +85,7 @@ const preview: Preview = {
     viewport: { value: 'md', isRotated: false },
   },
 
-  parameters: sharedPreviewParameters,
+  parameters: sharedPreviewParametersFor(framework),
 };
 
 export default preview;

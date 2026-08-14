@@ -167,12 +167,103 @@ function facadeNeutralResolvePlugin(): Plugin {
 }
 
 /**
- * Frameworks whose Storybook preset installs no JSX transform for the shared
- * neutral `*.stories.tsx`, so the story JSX must be compiled through the slot
- * helper's own `node()` factory.
+ * Resolve workspace package roots to the active built artifact when the
+ * Storybook/Rolldown resolver does not apply custom `mp:*` conditions to a
+ * linked package. Packages without a framework build deliberately fall back
+ * to their neutral artifact instead of borrowing another framework's output.
  */
-function needsStoryJsxPragma(framework: StorybookFramework): boolean {
-  return framework === 'svelte' || framework === 'web-component';
+function frameworkPackageResolvePlugin(
+  framework: StorybookFramework,
+  repoRoot: string,
+  exists: (filePath: string) => boolean,
+): Plugin {
+  const target = framework === 'web-component' ? 'web-components' : framework;
+  return {
+    name: 'mission-platform:framework-package-resolve',
+    enforce: 'pre',
+    resolveId(source: string, importer: string | undefined) {
+      const match = /^@mission-platform\/([^/]+)$/.exec(source);
+      if (!match) {
+        return;
+      }
+      if (FACADE_FIRST_PACKAGES.includes(match[1]) && importer && /[/\\]dist[/\\]/.test(importer)) {
+        return;
+      }
+      const packageRoot = `${repoRoot}/packages/${match[1]}`;
+      const frameworkEntry = `${packageRoot}/dist/${target}/index.js`;
+      if (exists(frameworkEntry)) {
+        return frameworkEntry;
+      }
+      const frameworkFile = `${packageRoot}/dist/${target}.js`;
+      if (exists(frameworkFile)) {
+        return frameworkFile;
+      }
+      const neutralEntry = `${packageRoot}/dist/index.js`;
+      return exists(neutralEntry) ? neutralEntry : undefined;
+    },
+  };
+}
+
+/**
+ * Rolldown/Vite's built-in Oxc JSX transform strips `.tsx` syntax *before* any
+ * user Babel plugin's `transform` hook runs, using the nearest tsconfig's
+ * `jsxImportSource`. Every neutral `*.stories.tsx` resolves to the shared
+ * stories tsconfig (`@vue/tsconfig/tsconfig.dom.json` via
+ * `tsconfig.stories.json`), which sets `jsxImportSource: 'vue'` for the Vue
+ * Storybook shell's type-check — so without an explicit override Oxc always
+ * emits Vue vnodes, and a framework's own Babel JSX plugin (`@vitejs/plugin-react`,
+ * …) then has no JSX syntax left to transform. Frameworks whose Storybook
+ * preset installs no JSX transform of their own (`svelte`, `web-component`)
+ * compile the story JSX through the slot helper's `node()` factory instead;
+ * `react` forces Oxc's own automatic runtime to `react/jsx-runtime` so the
+ * story compiles to real React elements rather than a leaked Vue `VNode`
+ * (`Objects are not valid as a React child … __v_isVNode`).
+ */
+function storyJsxOxcOverride(
+  framework: StorybookFramework,
+): { jsx: Record<string, unknown>; jsxInject?: string } | undefined {
+  if (framework === 'svelte' || framework === 'web-component') {
+    return {
+      jsx: { runtime: 'classic', pragma: 'node', pragmaFrag: 'MpFragment' },
+      jsxInject: `import { node, Fragment as MpFragment } from '@mission-platform/storybook-framework/slots'`,
+    };
+  }
+  if (framework === 'react') {
+    return { jsx: { runtime: 'automatic', importSource: 'react' } };
+  }
+  return undefined;
+}
+
+/**
+ * The web-components renderer uses `meta.component` for arg-type extraction and
+ * requires the registered custom-element tag name, whereas neutral stories
+ * quite correctly annotate that field with the framework component export.
+ * Adapt only that metadata at Vite transform time; the story's render function
+ * and its neutral source contract remain unchanged.
+ */
+function webComponentStoryMetadataPlugin(): Plugin {
+  return {
+    name: 'mission-platform:web-component-story-metadata',
+    enforce: 'pre',
+    transform(code, id) {
+      const sourceId = id.split('?')[0];
+      if (!/\.stories\.[cm]?[jt]sx?$/.test(sourceId)) {
+        return;
+      }
+      const componentMetadata = /component:\s*([A-Za-z_$][\w$]*)/g;
+      if (!componentMetadata.test(code)) {
+        return;
+      }
+      componentMetadata.lastIndex = 0;
+      return {
+        code: `import { customElementTag as __mpStoryComponentTag } from '@mission-platform/storybook-framework/slots';\n${code.replace(
+          componentMetadata,
+          'component: __mpStoryComponentTag($1)',
+        )}`,
+        map: undefined,
+      };
+    },
+  };
 }
 
 /** The shared `viteFinal` every Mission Platform Storybook build layers on. */
@@ -187,12 +278,17 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
   // `SyntaxError: Identifier '__vite__injectQuery' has already been declared`.
   // Keeping these imports lazy means `sharedViteFinal` still runs at config time
   // in Node while the browser never eagerly loads Vite.
-  const [{ mergeConfig }, { ignoreVueI18nBlocksPlugin, frameworkResolveConditions }, { default: i18nPlugin }] =
-    await Promise.all([
-      import('vite'),
-      import('@mission-platform/vite-config'),
-      import('@mission-platform/vite-plugin-i18n'),
-    ]);
+  const [
+    { mergeConfig },
+    { ignoreVueI18nBlocksPlugin, frameworkResolveConditions },
+    { default: i18nPlugin },
+    { existsSync },
+  ] = await Promise.all([
+    import('vite'),
+    import('@mission-platform/vite-config'),
+    import('@mission-platform/vite-plugin-i18n'),
+    import('node:fs'),
+  ]);
 
   // Storybook always runs from `apps/storybook`, whose translations live in the
   // nested top-level `locales/<code>/mp.storybook.yaml` tree (not the default
@@ -200,6 +296,7 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
   // plugin at `locales` so those bundles actually load — otherwise
   // `virtual:i18n-resources` resolves to English defaults only.
   const plugins: Plugin[] = [
+    frameworkPackageResolvePlugin(framework, process.cwd().split('/').slice(0, -2).join('/'), existsSync),
     facadeNeutralResolvePlugin(),
     i18nPlugin({ defaultLocale: 'en', localesDir: 'locales' }) as Plugin,
   ];
@@ -239,6 +336,11 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
       break;
     }
   }
+  if (framework === 'web-component') {
+    plugins.push(webComponentStoryMetadataPlugin());
+  }
+
+  const conditions = frameworkResolveConditions(framework);
 
   return mergeConfig(config, {
     plugins,
@@ -251,26 +353,19 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
     // or mountable snippets (Svelte), which both renderers accept. The settings
     // intentionally live under `oxc`; Vite 8 ignores the legacy `esbuild` JSX
     // fields when both transformer option sets are present.
-    ...(needsStoryJsxPragma(framework)
-      ? {
-          oxc: {
-            jsx: {
-              runtime: 'classic' as const,
-              pragma: 'node',
-              pragmaFrag: 'MpFragment',
-            },
-            jsxInject: `import { node, Fragment as MpFragment } from '@mission-platform/storybook-framework/slots'`,
-          },
-        }
-      : {}),
+    ...(storyJsxOxcOverride(framework) ? { oxc: storyJsxOxcOverride(framework) } : {}),
     // Resolve bare `@mission-platform/*` imports in stories to the build for the
     // active framework via the `mp:<framework>` export conditions (the same
     // mechanism in-repo apps and external consumers use). Without this the
     // preview resolves the framework-agnostic default build, whose barrel only
     // exports the `Base*` names — so a neutral story importing the friendly alias
     // (`Accordion`, `Avatar`, …) fails with `MISSING_EXPORT`.
-    resolve: { conditions: frameworkResolveConditions(framework), tsconfigPaths: true },
+    resolve: { conditions, tsconfigPaths: true },
     optimizeDeps: { exclude: ['i18next-vue'] },
+    ssr: {
+      noExternal: [/^@mission-platform\//],
+      resolve: { conditions, externalConditions: conditions },
+    },
     // Emit Monaco's `?worker` entries as ES-module workers so their internal
     // `import` statements resolve.
     worker: { format: 'es' },

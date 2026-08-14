@@ -3,9 +3,8 @@
 Env-driven Storybook framework preset for the Mission Platform write-once
 ecosystem. One `apps/storybook` renders the platform's stories on any supported
 framework — the renderer, story globs, and shared Vite wiring are all selected
-by a single `STORYBOOK_FRAMEWORK` env var (or explicit option), removing the duplication
-that previously lived in separate `apps/storybook` / `apps/storybook-react`
-configs.
+by a single `STORYBOOK_FRAMEWORK` env var (or explicit option), without duplicating
+the Storybook app for each renderer.
 
 ## Usage
 
@@ -35,6 +34,16 @@ export default createStorybookConfig({
 ```bash
 STORYBOOK_FRAMEWORK=vue   pnpm --filter @mission-platform/storybook build-storybook
 STORYBOOK_FRAMEWORK=react pnpm --filter @mission-platform/storybook build-storybook
+```
+
+Supported values are `vue`, `react`, `solid`, `svelte`, and `web-component`. From the repository root, use the
+corresponding `storybook:<framework>` and `build-storybook:<framework>` shortcuts documented in
+[`apps/storybook`](../../apps/storybook/README.md) to run or build one renderer at a time.
+
+Runtime validation uses the same selector and can validate a single framework with:
+
+```bash
+pnpm run validate:framework -- --framework vue
 ```
 
 ## What it wires

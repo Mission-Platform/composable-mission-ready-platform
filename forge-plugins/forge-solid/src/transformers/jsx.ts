@@ -496,6 +496,19 @@ function lowerDynamicElement(
       tag = text;
       continue;
     }
+    // Solid's hyperscript `ref` must be a callback (or signal setter). A
+    // known `useRef` container becomes `ref: (el) => (container.current = el)`
+    // — the same rewrite JSX attributes apply via `printRefAttribute`.
+    if (attribute.name === REF_ATTRIBUTE) {
+      const refName = text.trim();
+      entries.push(
+        printObjectMember(
+          REF_ATTRIBUTE,
+          context.refs.has(refName) ? refCallback(refName) : text,
+        ),
+      );
+      continue;
+    }
     entries.push(printObjectMember(aliasAttributeName(attribute.name), text));
   }
   const children = meaningfulChildren(node)

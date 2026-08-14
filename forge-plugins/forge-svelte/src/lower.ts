@@ -39,6 +39,7 @@ import {
   NEUTRAL_RUNTIME_VALUES,
 } from "@mission-platform/forge-plugin-api/compiler/ast.js";
 import { MP_STATIC_ATTR } from "@mission-platform/forge-plugin-api/compiler/optimize.js";
+import ts from "typescript";
 
 import {
   CHILDREN_SNIPPET,
@@ -52,10 +53,14 @@ import {
   blockStatements,
   callArguments,
   endOfTypeArguments,
+  indexOfTopLevel,
   isBalanced,
   isIdentifierText,
   isTypeReferenceText,
+  memberCall,
+  parameterName,
   readCallback,
+  scanSource,
   splitList,
   splitUnionMembers,
   stripParentheses,
@@ -64,14 +69,18 @@ import {
   arrayBindingNames,
   branchStatements,
   isChildrenListNormalization,
+  isSafePropsDefaultFallback,
   isSelfShadowingWrapper,
   objectBindingEntries,
+  objectBindingRestName,
   readIfStatement,
   readPropNames,
   readPushStatement,
   readReturnExpression,
+  readSafeBlockBody,
   readSameNamePropDefault,
   readVariableStatement,
+  stripLeadingComments,
 } from "./transformers/statements.js";
 
 import type {
@@ -92,6 +101,31 @@ import type {
 
 /** The Svelte package every lifecycle import resolves to. */
 export const SVELTE_RUNTIME_MODULE = "svelte";
+
+/** Runtime helper emitted only for components that render slot values. */
+const SLOT_VALUE_SNIPPET_DECLARATION = `const __mpSlotValueSnippet = (value: unknown) =>
+  typeof value === "function"
+    ? value
+    : createRawSnippet(() => ({
+        render: () => {
+          const escape = (entry: unknown): string =>
+            Array.isArray(entry)
+              ? entry.map(escape).join("")
+              : entry === undefined || entry === null || typeof entry === "boolean"
+                ? ""
+                : String(entry)
+                    .replaceAll("&", "&amp;")
+                    .replaceAll("<", "&lt;")
+                    .replaceAll(">", "&gt;");
+          return escape(value);
+        },
+      }));`;
+
+/** Neutral runtime values that remain as calls in generated Svelte scripts. */
+const SVELTE_NEUTRAL_RUNTIME_VALUES = new Set([
+  ...NEUTRAL_RUNTIME_VALUES,
+  "useId",
+]);
 
 /**
  * Prefix of the snippet a hoisted static subtree is rendered through. It
@@ -151,6 +185,40 @@ export interface SvelteBindingPlan {
   readonly initializer?: string;
 }
 
+/** A component-script initializer in the order it appeared in neutral source. */
+export type SvelteInitializationPlan =
+  | {
+      readonly kind: "state" | "binding" | "derived";
+      readonly name: string;
+    }
+  | { readonly kind: "setup"; readonly index: number };
+
+/**
+ * A JSX-returning local helper (`const renderX = (a, b) => (<div/>)`) lowered to
+ * a Svelte `{#snippet}`.
+ *
+ * A neutral render helper is a parameterised, template-valued function, which is
+ * exactly what a Svelte 5 snippet expresses — including safe recursion, so a
+ * self-referential helper (a field renderer that recurses into field sets) works
+ * without inlining. Besides a single returned expression, terminal early-return
+ * guards and a terminal `switch` are represented as ordered snippet branches.
+ */
+export interface SvelteRenderHelperPlan {
+  /** The helper name — the snippet's name and the `{@render}` call target. */
+  readonly name: string;
+  /** The snippet parameter names, in order. */
+  readonly parameters: readonly string[];
+  /** Leading `const`/`let` bindings of a block body, emitted as `{@const}`s. */
+  readonly constants: readonly {
+    readonly name: string;
+    readonly value: string;
+  }[];
+  /** Ordered terminal return branches, emitted as a Svelte `{#if}` chain. */
+  readonly branches: readonly SvelteReturnBranchPlan[];
+  /** The final/default return after the ordered branches, when one exists. */
+  readonly returned?: SvelteReturnPlan;
+}
+
 /** A slot lowered to a snippet prop. */
 export interface SvelteSlotPlan {
   /** The prop key the parent fills, which may be hyphenated (`start-header`). */
@@ -188,7 +256,7 @@ export type SvelteStaticPlan = HoistedStaticEntry;
 
 /** Why the plan needs an import — the fact that keeps it alive through pruning. */
 export type SvelteImportReason =
-  "runtime-values" | "local-jsx-types" | "lifecycle";
+  "runtime-values" | "local-jsx-types" | "lifecycle" | "slot-runtime";
 
 /** An import line the plan requires in the generated `<script>`. */
 export interface SvelteImportPlan {
@@ -225,10 +293,16 @@ export interface SvelteScriptPlan {
   readonly setterNames: ReadonlyMap<string, string>;
   /** Locals that only exist as markup, substituted at each template read. */
   readonly jsxConstants: ReadonlyMap<string, JsxConstant>;
+  /** JSX-returning local helpers lowered to `{#snippet}` declarations. */
+  readonly renderHelpers?: ReadonlyMap<string, SvelteRenderHelperPlan>;
   /** Locals aliasing the component's `children` snippet. */
   readonly childrenAliases: ReadonlySet<string>;
+  /** Object-rest local forwarded by JSX spread attributes, when present. */
+  readonly restName?: string;
   /** Setup statements carried into the script head, as source text. */
   readonly setupStatements: readonly string[];
+  /** State, binding, derived and setup initializers in neutral source order. */
+  readonly initializationOrder?: readonly SvelteInitializationPlan[];
   /** Module-level declarations carried into the script, as source text. */
   readonly declarations: readonly string[];
   /** Early-return guards, folded into a leading `{#if}` chain. */
@@ -293,6 +367,335 @@ function fragmentsWithin(
 /** Whether a sub-expression of a statement contains literal markup. */
 function containsMarkup(text: string, statement: GenericStatement): boolean {
   return fragmentsWithin(text, statement).length > 0;
+}
+
+/** Split a helper block at top-level semicolons and completed control blocks. */
+function helperBlockStatements(
+  body: string,
+  fragments: readonly string[],
+): string[] {
+  const trimmed = body.trim();
+  const inner =
+    trimmed.startsWith("{") && trimmed.endsWith("}")
+      ? trimmed.slice(1, -1)
+      : trimmed;
+  const scan = scanSource(inner, fragments);
+  const statements: string[] = [];
+  let start = 0;
+  for (let index = 0; index < inner.length; index += 1) {
+    const topLevel = scan.depths[index] === 0 && scan.masked[index] === false;
+    if (inner[index] === ";" && topLevel) {
+      statements.push(inner.slice(start, index).trim());
+      start = index + 1;
+      continue;
+    }
+    if (inner[index] !== "}" || !topLevel) continue;
+    const remainder = inner.slice(index + 1).trimStart();
+    if (/^(?:if|switch|return|const|let)\b/.test(remainder)) {
+      statements.push(inner.slice(start, index + 1).trim());
+      start = inner.length - remainder.length;
+      index = start - 1;
+    }
+  }
+  statements.push(inner.slice(start).trim());
+  return statements.filter((statement) => statement.length > 0);
+}
+
+/** The parameter names and body text of an arrow / function-expression helper. */
+function readHelperSignature(
+  text: string,
+  fragments: readonly string[],
+): { parameters: string[]; body: string } | undefined {
+  const trimmed = stripParentheses(text);
+  if (/^function\b/.test(trimmed)) {
+    const callback = readCallback(trimmed, fragments);
+    return callback === undefined
+      ? undefined
+      : {
+          parameters: callback.parameters.map((parameter) =>
+            parameterName(parameter),
+          ),
+          body: callback.body,
+        };
+  }
+  // Arrows can carry a return-type annotation between the parameter list and the
+  // `=>` (`(field): MpElement => …`), so the parameters cannot be read by
+  // slicing to the last `)` before the body; the matching `)` of the leading
+  // `(` is found by bracket depth instead.
+  const scan = scanSource(trimmed, fragments);
+  const arrow = indexOfTopLevel(scan, "=>");
+  if (arrow === -1) {
+    return undefined;
+  }
+  const head = trimmed.slice(0, arrow).trim();
+  const body = trimmed.slice(arrow + 2).trim();
+  let parameterText: string;
+  if (head.startsWith("(")) {
+    let close = -1;
+    for (let index = 1; index < head.length; index += 1) {
+      if (
+        head[index] === ")" &&
+        scan.depths[index] === 0 &&
+        scan.masked[index] === false
+      ) {
+        close = index;
+        break;
+      }
+    }
+    if (close === -1) {
+      return undefined;
+    }
+    parameterText = head.slice(1, close);
+  } else {
+    parameterText = head;
+  }
+  return {
+    parameters: splitList(parameterText, fragments).map((parameter) =>
+      parameterName(parameter),
+    ),
+    body,
+  };
+}
+
+/**
+ * A JSX-returning local helper captured as a {@link SvelteRenderHelperPlan}, or
+ * `undefined` when the initializer is not a helper a snippet body can express.
+ *
+ * Supported block bodies contain non-markup local bindings followed by terminal
+ * early-return guards and/or a terminal switch. Other statement shapes are
+ * rejected so unsupported JavaScript never leaks into a template snippet.
+ */
+function readRenderHelper(
+  name: string,
+  initializer: string,
+  statement: GenericStatement,
+  knownHelpers: ReadonlySet<string> = new Set(),
+): SvelteRenderHelperPlan | undefined {
+  const fragments = statementFragments(statement);
+  const signature = readHelperSignature(initializer, fragments);
+  if (signature === undefined) {
+    return undefined;
+  }
+  const constants: { name: string; value: string }[] = [];
+  const branches: SvelteReturnBranchPlan[] = [];
+  let returned: SvelteReturnPlan | undefined;
+  const returnPlan = (text: string): SvelteReturnPlan | undefined => {
+    const returnedText = stripParentheses(text);
+    const nodes = fragmentsWithin(returnedText, statement);
+    const helperCall = /^([A-Za-z_$][\w$]*)\s*\(/.exec(returnedText)?.[1];
+    return returnedText === "undefined" ||
+      returnedText === "null" ||
+      isSnippetRenderableMarkup(returnedText, nodes, fragments) ||
+      (helperCall !== undefined &&
+        (helperCall === name || knownHelpers.has(helperCall))) ||
+      isIdentifierText(returnedText)
+      ? { text: returnedText, nodes }
+      : undefined;
+  };
+  if (!signature.body.startsWith("{")) {
+    returned = returnPlan(signature.body);
+  } else {
+    for (const raw of helperBlockStatements(signature.body, fragments)) {
+      const text = stripLeadingComments(raw);
+      const declaration = readVariableStatement(text, fragments);
+      if (
+        declaration?.initializer !== undefined &&
+        isIdentifierText(declaration.binding) &&
+        !containsMarkup(declaration.initializer, statement)
+      ) {
+        constants.push({
+          name: declaration.binding,
+          value: declaration.initializer,
+        });
+        continue;
+      }
+      const directReturn = readReturnExpression(text);
+      if (directReturn !== undefined) {
+        returned = returnPlan(directReturn);
+        if (returned === undefined) return undefined;
+        continue;
+      }
+      const conditional = readIfStatement(text, fragments);
+      if (conditional !== undefined && conditional.elseBranch === undefined) {
+        const branch = branchStatements(conditional.thenBranch, fragments);
+        const branchReturn =
+          branch.length === 1 ? readReturnExpression(branch[0]!) : undefined;
+        const plan =
+          branchReturn === undefined ? undefined : returnPlan(branchReturn);
+        if (plan === undefined) return undefined;
+        branches.push({ condition: conditional.condition, ...plan });
+        continue;
+      }
+      const switched = readHelperSwitch(text, fragments, returnPlan);
+      if (switched === undefined) return undefined;
+      branches.push(...switched.branches);
+      returned = switched.returned;
+    }
+  }
+  if (returned === undefined && branches.length === 0) return undefined;
+  return {
+    name,
+    parameters: signature.parameters,
+    constants,
+    branches,
+    returned,
+  };
+}
+
+interface HelperSwitchPlan {
+  readonly branches: readonly SvelteReturnBranchPlan[];
+  readonly returned?: SvelteReturnPlan;
+}
+
+/** Parse a terminal `switch` whose cases each return one snippet value. */
+function readHelperSwitch(
+  text: string,
+  fragments: readonly string[],
+  returnPlan: (text: string) => SvelteReturnPlan | undefined,
+): HelperSwitchPlan | undefined {
+  const trimmed = text.trim();
+  if (!/^switch\s*\(/.test(trimmed)) return undefined;
+  const open = trimmed.indexOf("(");
+  const scan = scanSource(trimmed, fragments);
+  let close = -1;
+  for (let index = open + 1; index < trimmed.length; index += 1) {
+    if (
+      trimmed[index] === ")" &&
+      scan.depths[index] === 0 &&
+      scan.masked[index] === false
+    ) {
+      close = index;
+      break;
+    }
+  }
+  const discriminant = trimmed.slice(open + 1, close).trim();
+  const body = close === -1 ? "" : trimmed.slice(close + 1).trim();
+  if (!body.startsWith("{") || !body.endsWith("}")) return undefined;
+  const inner = body.slice(1, -1);
+  const innerScan = scanSource(inner, fragments);
+  const markers: { start: number; bodyStart: number; label?: string }[] = [];
+  for (let index = 0; index < inner.length; index += 1) {
+    if (innerScan.depths[index] !== 0 || innerScan.masked[index] === true)
+      continue;
+    const rest = inner.slice(index);
+    const caseMatch = /^case\b/.exec(rest);
+    const defaultMatch = /^default\s*:/.exec(rest);
+    if (caseMatch === null && defaultMatch === null) continue;
+    let colon = index + (caseMatch?.[0].length ?? "default".length);
+    while (
+      colon < inner.length &&
+      !(
+        inner[colon] === ":" &&
+        innerScan.depths[colon] === 0 &&
+        innerScan.masked[colon] === false
+      )
+    ) {
+      colon += 1;
+    }
+    if (colon >= inner.length) return undefined;
+    markers.push({
+      start: index,
+      bodyStart: colon + 1,
+      label:
+        caseMatch === null
+          ? undefined
+          : inner.slice(index + caseMatch[0].length, colon).trim(),
+    });
+    index = colon;
+  }
+  if (markers.length === 0) return undefined;
+  const branches: SvelteReturnBranchPlan[] = [];
+  const pendingLabels: string[] = [];
+  let returned: SvelteReturnPlan | undefined;
+  for (const [index, marker] of markers.entries()) {
+    if (marker.label !== undefined) pendingLabels.push(marker.label);
+    const next = markers[index + 1]?.start ?? inner.length;
+    const statements = branchStatements(
+      inner.slice(marker.bodyStart, next).trim(),
+      fragments,
+    );
+    const returnedText =
+      statements.length === 1
+        ? readReturnExpression(statements[0]!)
+        : undefined;
+    if (returnedText === undefined) continue;
+    const plan = returnPlan(returnedText);
+    if (plan === undefined) return undefined;
+    if (marker.label === undefined) {
+      returned = plan;
+    } else {
+      branches.push({
+        condition: pendingLabels
+          .map((label) => `${discriminant} === ${label}`)
+          .join(" || "),
+        ...plan,
+      });
+    }
+    pendingLabels.length = 0;
+  }
+  return branches.length === 0 && returned === undefined
+    ? undefined
+    : { branches, returned };
+}
+
+/**
+ * Whether a helper's returned expression is one the template renderer lowers to
+ * a valid standalone snippet body: a direct JSX element/fragment, an `h(...)`
+ * hyperscript call, a conditional/logical whose branches are JSX, or a
+ * `.map()`/`.flatMap()`/`Array.from()` iteration whose callback returns markup
+ * (expression-bodied, or a safe block body of leading `const`s + terminal
+ * `return`) which lowers to an `{#each}` block.
+ *
+ * Block-bodied callbacks with control flow or other unsupported statement
+ * shapes are still rejected so raw JSX never leaks into an expression hole.
+ */
+function isSnippetRenderableMarkup(
+  text: string,
+  nodes: readonly GenericRenderNode[],
+  fragments: readonly string[] = [],
+): boolean {
+  const trimmed = text.trim();
+  if (trimmed.startsWith("<")) {
+    return true;
+  }
+  if (/^h\s*\(/.test(trimmed)) {
+    return true;
+  }
+  if (nodes.length === 0) {
+    return false;
+  }
+  const scan = scanSource(trimmed, fragments);
+  if (
+    indexOfTopLevel(scan, "?") !== -1 ||
+    indexOfTopLevel(scan, "&&") !== -1 ||
+    indexOfTopLevel(scan, "||") !== -1
+  ) {
+    return true;
+  }
+  // An iteration that projects markup rows is snippet-expressible when its
+  // callback returns markup — either expression-bodied (`=> <li/>`) or a safe
+  // block body (`=> { const x = …; return <li/>; }`) that `{#each}` already
+  // lowers via `{@const}` bindings. Unsupported block shapes still reject.
+  const callbackText =
+    memberCall(trimmed, "map", fragments)?.arguments[0] ??
+    memberCall(trimmed, "flatMap", fragments)?.arguments[0] ??
+    callArguments(trimmed, "Array.from", fragments)?.[1];
+  if (callbackText === undefined) {
+    return false;
+  }
+  const callback = readCallback(callbackText, fragments);
+  if (callback === undefined) {
+    return false;
+  }
+  let returned = stripParentheses(callback.body);
+  if (callback.body.trimStart().startsWith("{")) {
+    const body = readSafeBlockBody(callback.body, fragments);
+    if (body === undefined) {
+      return false;
+    }
+    returned = body.returned;
+  }
+  return isSnippetRenderableMarkup(returned, nodes, fragments);
 }
 
 /**
@@ -397,19 +800,54 @@ export function isEmptyCallback(body: string): boolean {
 }
 
 /**
- * The module-level declarations carried into the generated `<script>`: the
- * public type declarations (and enums) the props contract and the retained
- * statements refer to. An ambient (`declare …`) declaration describes a binding
- * the generated module never owns, so it is dropped rather than printed into a
- * script block with no ambient context to attach it to.
+ * The module-level declarations carried into the generated `<script>`: public
+ * types plus runtime bindings the generated component can reference. An
+ * ambient (`declare …`) declaration describes a binding the generated module
+ * never owns, so it is dropped rather than printed into a script block with no
+ * ambient context to attach it to.
  */
+function containsJsx(text: string): boolean {
+  const sourceFile = ts.createSourceFile(
+    "helper.tsx",
+    text,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX,
+  );
+  let found = false;
+  const visit = (node: ts.Node): void => {
+    if (found) {
+      return;
+    }
+    if (
+      ts.isJsxElement(node) ||
+      ts.isJsxSelfClosingElement(node) ||
+      ts.isJsxFragment(node)
+    ) {
+      found = true;
+      return;
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+  return found;
+}
+
 function retainedDeclarations(ir: SemanticModule): string[] {
-  const kinds = new Set(["interface", "type-alias", "enum"]);
+  const kinds = new Set([
+    "interface",
+    "type-alias",
+    "enum",
+    "variable",
+    "function",
+  ]);
   return ir.ast.declarations
     .filter(
       (statement) =>
         kinds.has(statement.statementKind) &&
-        !/^declare\b/.test(statement.text.text.trim()),
+        !/^declare\b/.test(statement.text.text.trim()) &&
+        (statement.statementKind !== "function" ||
+          !containsJsx(statement.text.text)),
     )
     .map((statement) => statement.text.text);
 }
@@ -465,13 +903,61 @@ function lowerEvents(ir: SemanticModule): SvelteEventPlan[] {
   }));
 }
 
+/** Whether a value expression can only resolve through string-tag values. */
+function isStringTagInitializer(initializer: string): boolean {
+  const scan = scanSource(initializer);
+  let containsString = false;
+  for (let index = 0; index < initializer.length; index += 1) {
+    const character = initializer[index]!;
+    if (character === "'" || character === '"' || character === "`") {
+      containsString = true;
+      continue;
+    }
+    if (
+      scan.masked[index] ||
+      !/[A-Za-z_$]/.test(character) ||
+      (index > 0 && /[\w$]/.test(initializer[index - 1]!))
+    ) {
+      continue;
+    }
+    const name = /^[A-Za-z_$][\w$]*/.exec(initializer.slice(index))?.[0];
+    if (name !== undefined && /^[A-Z]/.test(name)) {
+      return false;
+    }
+  }
+  return containsString;
+}
+
+/** String-tag locals retain their element host even when named in PascalCase. */
+function stringTagLocals(ir: SemanticModule): ReadonlySet<string> {
+  const locals = new Set<string>();
+  for (const statement of ir.ast.component?.body ?? []) {
+    const declaration = readVariableStatement(
+      statement.text.text,
+      statementFragments(statement),
+    );
+    if (
+      declaration !== undefined &&
+      declaration.initializer !== undefined &&
+      isIdentifierText(declaration.binding) &&
+      isStringTagInitializer(declaration.initializer)
+    ) {
+      locals.add(declaration.binding);
+    }
+  }
+  return locals;
+}
+
 /** The dynamic hosts the neutral facts record. */
 function lowerDynamicNodes(ir: SemanticModule): SvelteDynamicPlan[] {
+  const stringTags = stringTagLocals(ir);
   return ir.intentions.dynamicNodes.map((entry) => ({
     expression: entry.expression.text,
-    host: isComponentTagExpression(entry.expression.text)
-      ? "svelte:component"
-      : "svelte:element",
+    host:
+      !stringTags.has(entry.expression.text.trim()) &&
+      isComponentTagExpression(entry.expression.text)
+        ? "svelte:component"
+        : "svelte:element",
     span: entry.span,
   }));
 }
@@ -552,6 +1038,7 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
   const setterNames = new Map<string, string>();
   const jsxConstants = new Map<string, JsxConstant>();
   const childrenAliases = new Set<string>();
+  let restName: string | undefined;
 
   // Pre-scan: refs (so every `.current` read resolves regardless of order),
   // state setters (so an assignment rewrite never depends on statement order)
@@ -615,6 +1102,7 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
   // A component destructuring its props in the signature already states the
   // contract; otherwise every `properties.x` read and every named slot seeds one.
   if (parameter?.binding === "object-pattern") {
+    restName = objectBindingRestName(parameter.text);
     for (const entry of objectBindingEntries(parameter.text)) {
       propEntries.set(entry.propName, {
         ...seedEntry(entry.propName, entry.defaultValue),
@@ -642,7 +1130,13 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
   const derived: SvelteDerivedPlan[] = [];
   const effects: SvelteEffectPlan[] = [];
   const setupStatements: string[] = [];
+  const initializationOrder: SvelteInitializationPlan[] = [];
+  const pushSetupStatement = (text: string): void => {
+    initializationOrder.push({ kind: "setup", index: setupStatements.length });
+    setupStatements.push(text);
+  };
   const returnBranches: SvelteReturnBranchPlan[] = [];
+  const renderHelpers = new Map<string, SvelteRenderHelperPlan>();
   const stateFacts = new Map(
     ir.intentions.state.map((entry) => [entry.name, entry]),
   );
@@ -676,22 +1170,39 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
         last === undefined ? undefined : readReturnExpression(last);
       if (returned !== undefined) {
         const leading = branchTexts.slice(0, -1);
-        const lifted = leading.every((leadingText) => {
-          const declaration = readVariableStatement(leadingText, fragments);
-          if (
-            declaration?.initializer === undefined ||
-            !isIdentifierText(declaration.binding) ||
-            !containsMarkup(declaration.initializer, statement)
-          ) {
-            return false;
+        // Each leading `const … = …` is either a markup local (substituted at
+        // its template reads) or a plain value the branch's markup uses (e.g. a
+        // `const steps = list.map(…)` passed to a component prop). The former is
+        // dropped from the script; the latter must stay a real script statement,
+        // so a value-position reference (`steps={steps}`) still resolves.
+        const leadingDeclarations = leading
+          .map((leadingText) => {
+            const declaration = readVariableStatement(leadingText, fragments);
+            return declaration?.initializer !== undefined &&
+              isIdentifierText(declaration.binding)
+              ? {
+                  binding: declaration.binding,
+                  initializer: declaration.initializer,
+                }
+              : undefined;
+          })
+          .filter(
+            (entry): entry is { binding: string; initializer: string } =>
+              entry !== undefined,
+          );
+        if (leadingDeclarations.length === leading.length) {
+          for (const entry of leadingDeclarations) {
+            if (containsMarkup(entry.initializer, statement)) {
+              jsxConstants.set(entry.binding, {
+                text: entry.initializer,
+                nodes: fragmentsWithin(entry.initializer, statement),
+              });
+            } else {
+              pushSetupStatement(
+                `const ${entry.binding} = ${entry.initializer};`,
+              );
+            }
           }
-          jsxConstants.set(declaration.binding, {
-            text: declaration.initializer,
-            nodes: fragmentsWithin(declaration.initializer, statement),
-          });
-          return true;
-        });
-        if (lifted) {
           returnBranches.push({
             condition: conditional.condition,
             text: returned,
@@ -743,11 +1254,24 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
           stripParentheses(initializer) === propsParameter
         ) {
           for (const entry of objectBindingEntries(declaration.binding)) {
+            const existing = propEntries.get(entry.propName);
+            // `_prop` aliases are commonly used only to remove known props from
+            // `rest`; they must not replace the normalized local used by setup
+            // statements and markup. This holds whether that local was already
+            // renamed (`variantProp`) OR is still the bare prop name itself
+            // (`variant`, e.g. from a same-name literal default or an inline
+            // `properties.variant` read) — either way, the bare name is what
+            // the rest of the script/markup actually reads, so a throwaway
+            // `_`-alias here must never replace it.
+            if (existing !== undefined && entry.localName.startsWith("_")) {
+              continue;
+            }
             propEntries.set(entry.propName, {
               ...seedEntry(entry.propName, entry.defaultValue),
               local: entry.localName,
             });
           }
+          restName = objectBindingRestName(declaration.binding) ?? restName;
           continue;
         }
 
@@ -755,26 +1279,39 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
           const name = declaration.binding;
 
           // `const x = properties.x ?? 'default';` — the destructure already
-          // binds `x`, so the default folds into its entry and the statement goes.
+          // binds `x`, so a *literal* default folds into its entry and the
+          // statement goes. Fallbacks that read other locals (e.g. `isLink`)
+          // cannot live in `$props()` — alias the prop and keep the statement
+          // so it runs after those locals exist.
           const sameName = readSameNamePropDefault(
             name,
             initializer,
             propsParameter,
           );
           if (sameName !== undefined) {
-            if (sameName.fallback !== undefined) {
+            if (sameName.fallback === undefined) {
+              continue;
+            }
+            if (isSafePropsDefaultFallback(sameName.fallback)) {
               propEntries.set(
                 sameName.propName,
                 seedEntry(sameName.propName, sameName.fallback),
               );
+              continue;
             }
+            propAliases.set(name, `${name}Prop`);
+            propEntries.set(name, seedEntry(name));
+            pushSetupStatement(text);
             continue;
           }
 
           // A variadic `children` normalisation has no Svelte form: the local
-          // becomes an alias rendering the `children` snippet.
+          // becomes an alias rendering the `children` snippet. We preserve it
+          // as a script assignment so that other local expressions can still
+          // reference it safely without throwing ReferenceError.
           if (isChildrenListNormalization(initializer, propsParameter)) {
             childrenAliases.add(name);
+            pushSetupStatement(`const ${name} = children;`);
             continue;
           }
 
@@ -795,6 +1332,7 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
                   ? undefined
                   : initial,
             });
+            initializationOrder.push({ kind: "binding", name });
             continue;
           }
 
@@ -811,6 +1349,21 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
                 ? { name, expression: factory, kind: "derived-by" }
                 : { name, expression: constant, kind: "const" },
             );
+            initializationOrder.push({ kind: "derived", name });
+            continue;
+          }
+
+          // A JSX-returning local helper (`const renderRow = (item) => <li/>`)
+          // becomes a Svelte `{#snippet}` rendered by name at each call site,
+          // which expresses parameters and recursion a bare substitution cannot.
+          const helper = readRenderHelper(
+            name,
+            initializer,
+            statement,
+            new Set(renderHelpers.keys()),
+          );
+          if (helper !== undefined) {
+            renderHelpers.set(name, helper);
             continue;
           }
 
@@ -855,6 +1408,7 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
               type: stateType(fact?.type, fact?.inferredType),
               initializer: initial,
             });
+            initializationOrder.push({ kind: "state", name: getter });
           }
           continue;
         }
@@ -878,7 +1432,7 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
       continue;
     }
 
-    setupStatements.push(text);
+    pushSetupStatement(text);
   }
 
   // Every component takes the `children` snippet, whether or not it reads it.
@@ -896,8 +1450,11 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
       refNames,
       setterNames,
       jsxConstants,
+      renderHelpers,
       childrenAliases,
+      restName,
       setupStatements,
+      initializationOrder,
       declarations,
       returnBranches,
       finalReturn,
@@ -914,6 +1471,7 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
 function lowerImports(
   ir: SemanticModule,
   effects: readonly SvelteEffectPlan[],
+  hasSlots: boolean,
 ): SvelteImportPlan[] {
   const values: string[] = [];
   const localTypes: string[] = [];
@@ -922,7 +1480,7 @@ function lowerImports(
       continue;
     }
     for (const name of [...entry.valueNames, ...ir.intentions.runtimeImports]) {
-      if (NEUTRAL_RUNTIME_VALUES.has(name) && !values.includes(name)) {
+      if (SVELTE_NEUTRAL_RUNTIME_VALUES.has(name) && !values.includes(name)) {
         values.push(name);
       }
     }
@@ -949,6 +1507,14 @@ function lowerImports(
       reason: "local-jsx-types",
     });
   }
+  if (hasSlots) {
+    plans.push({
+      module: SVELTE_RUNTIME_MODULE,
+      names: ["createRawSnippet"],
+      typeOnly: false,
+      reason: "slot-runtime",
+    });
+  }
   if (effects.some((effect) => effect.lifecycle === "mount")) {
     plans.push({
       module: SVELTE_RUNTIME_MODULE,
@@ -966,6 +1532,20 @@ export function lowerSvelteModule(
   context: TargetContext,
 ): SvelteTargetIntentions {
   const analysis = analyzeComponent(ir);
+  const componentBody = ir.ast.component?.body ?? [];
+  const slots = lowerSlots(
+    ir,
+    componentBody.map((statement) => statement.text.text),
+  );
+  const rendersChildren = componentBody.some((statement) =>
+    statement.renderNodes.some((node) =>
+      /\bchildren\b/.test(node.expression?.text ?? ""),
+    ),
+  );
+  const needsSlotRuntime =
+    slots.length > 0 ||
+    analysis.script.childrenAliases.size > 0 ||
+    rendersChildren;
   const diagnostics: readonly CompilerDiagnostic[] | undefined = ir.diagnostics;
   const lowered: SvelteLoweredModule = {
     framework: "svelte",
@@ -976,18 +1556,23 @@ export function lowerSvelteModule(
     derived: analysis.derived,
     effects: analysis.effects,
     bindings: analysis.bindings,
-    slots: lowerSlots(
-      ir,
-      (ir.ast.component?.body ?? []).map((statement) => statement.text.text),
-    ),
+    slots,
     events: lowerEvents(ir),
     dynamicNodes: lowerDynamicNodes(ir),
     listKeys: lowerListKeys(ir),
     staticSubtrees: lowerStaticSubtrees(ir),
     hoistedStatic: [],
-    svelteImports: lowerImports(ir, analysis.effects),
+    svelteImports: lowerImports(ir, analysis.effects, needsSlotRuntime),
     unkeyedLists: [],
-    script: analysis.script,
+    script: !needsSlotRuntime
+      ? analysis.script
+      : {
+          ...analysis.script,
+          declarations: [
+            SLOT_VALUE_SNIPPET_DECLARATION,
+            ...analysis.script.declarations,
+          ],
+        },
   };
   return {
     framework: "svelte",

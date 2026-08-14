@@ -54,7 +54,28 @@
         "types": "./dist/svelte/index.d.ts",
         "import": "./dist/svelte/*.js"
       }
-    }
+    },
+    "./cms/storyblok/react": {
+      "types": "./dist/cms/storyblok/react/index.d.ts",
+      "import": "./dist/cms/storyblok/react/index.js"
+    },
+    "./cms/storyblok/vue": {
+      "types": "./dist/cms/storyblok/vue/index.d.ts",
+      "import": "./dist/cms/storyblok/vue/index.js"
+    },
+    "./cms/storyblok/svelte": {
+      "types": "./dist/cms/storyblok/svelte/index.d.ts",
+      "import": "./dist/cms/storyblok/svelte/index.js"
+    },
+    "./cms/storyblok/solid": {
+      "types": "./dist/cms/storyblok/solid/index.d.ts",
+      "import": "./dist/cms/storyblok/solid/index.js"
+    },
+    "./cms/storyblok/web-components": {
+      "types": "./dist/cms/storyblok/web-components/index.d.ts",
+      "import": "./dist/cms/storyblok/web-components/index.js"
+    },
+    "./cms/storyblok/components.json": "./dist/cms/storyblok/components.json"
   },
   "files": [
     "dist",
@@ -64,7 +85,20 @@
     "src/stores"
   ],
   "scripts": {
-    "build": "tsdown",
+    "build:forge": "node --experimental-strip-types ../../scripts/build-forge.ts --target forge",
+    "build:react": "node --experimental-strip-types ../../scripts/build-forge.ts --target react",
+    "build:vue": "node --experimental-strip-types ../../scripts/build-forge.ts --target vue",
+    "build:svelte": "node --experimental-strip-types ../../scripts/build-forge.ts --target svelte",
+    "build:solid": "node --experimental-strip-types ../../scripts/build-forge.ts --target solid",
+    "build:web-components": "node --experimental-strip-types ../../scripts/build-forge.ts --target web-components",
+    "build:cms-storyblok": "tsdown",
+    "build:cms-storyblok:assets": "FORGE_CMS_ARTIFACT_MODE=shared FORGE_CMS_STORYBLOK_TARGET=react tsdown",
+    "build:cms-storyblok:react": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=react tsdown",
+    "build:cms-storyblok:vue": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=vue tsdown",
+    "build:cms-storyblok:svelte": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=svelte tsdown",
+    "build:cms-storyblok:solid": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=solid tsdown",
+    "build:cms-storyblok:web-components": "FORGE_CMS_ARTIFACT_MODE=framework FORGE_CMS_STORYBLOK_TARGET=web-components tsdown",
+    "build": "node --experimental-strip-types ../../scripts/build-forge.ts",
     "build:check": "tsc --project tsconfig.build.json --noEmit",
     "build:watch": "tsdown --watch",
     "test": "vitest run",
@@ -86,7 +120,9 @@
     "luxon": "catalog:"
   },
   "peerDependencies": {
+    "@storyblok/js": "^5.1.10",
     "@storyblok/react": "^6.1.11",
+    "@storyblok/svelte": "^5.0.0",
     "@storyblok/vue": "^10.1.10",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
@@ -95,7 +131,13 @@
     "vue": "^3.5.0"
   },
   "peerDependenciesMeta": {
+    "@storyblok/js": {
+      "optional": true
+    },
     "@storyblok/react": {
+      "optional": true
+    },
+    "@storyblok/svelte": {
       "optional": true
     },
     "@storyblok/vue": {

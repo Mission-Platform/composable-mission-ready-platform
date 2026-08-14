@@ -108,7 +108,8 @@ export function ForgeContainer(properties: Readonly<ContainerProperties>): MpEle
   // Children must reach `h` as variadic args (the compile-time runtimes read
   // `...children`, not `properties.children`), so normalise the slot first.
   const children = properties.children;
-  const childList = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];
+  const childList =
+    children === undefined ? [] : Array.isArray(children) ? children.filter((x) => x !== undefined) : [children];
 
   return h(tag, { class: className, style }, ...childList);
 }

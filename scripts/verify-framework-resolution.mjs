@@ -23,7 +23,7 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 const packagesDirectory = path.join(repoRoot, 'packages');
 
 /** The framework builds a package may expose, keyed by their custom condition. */
-const FRAMEWORK_CONDITIONS = new Set(['mp:vue', 'mp:react', 'mp:solid', 'mp:web-component']);
+const FRAMEWORK_CONDITIONS = new Set(['mp:vue', 'mp:react', 'mp:solid', 'mp:svelte', 'mp:web-component']);
 
 /** The removed legacy subpath export keys, which must no longer be declared. */
 const LEGACY_SUBPATHS = ['./vue', './react', './solid', './svelte', './web-components'];

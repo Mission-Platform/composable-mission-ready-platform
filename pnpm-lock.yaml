@@ -352,7 +352,7 @@ catalogs:
 overrides:
   glob: ^13.0.6
   source-map: ^0.7.6
-  beasties: ^0.4.2
+  beasties: ^0.4.3
   DOMPurify: ^3.4.9
   nanoid: ^5.1.16
 
@@ -455,7 +455,7 @@ importers:
         specifier: catalog:vue
         version: 6.0.8(vite@8.2.1(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.6.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.2)(yaml@2.9.0))(vue@3.5.41(typescript@6.0.3))
       beasties:
-        specifier: ^0.4.2
+        specifier: ^0.4.3
         version: 0.4.3
       eslint:
         specifier: catalog:eslint
@@ -588,7 +588,7 @@ importers:
         specifier: catalog:typescript
         version: 24.13.3
       beasties:
-        specifier: ^0.4.2
+        specifier: ^0.4.3
         version: 0.4.3
       eslint:
         specifier: catalog:eslint
@@ -1104,7 +1104,7 @@ importers:
         specifier: catalog:vue
         version: 6.0.8(vite@8.2.1(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.6.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.2)(yaml@2.9.0))(vue@3.5.41(typescript@6.0.3))
       beasties:
-        specifier: ^0.4.2
+        specifier: ^0.4.3
         version: 0.4.3
       eslint:
         specifier: catalog:eslint
@@ -1790,6 +1790,18 @@ importers:
       '@mission-platform/forge-plugin-api':
         specifier: workspace:*
         version: link:../forge-plugin-api
+      '@storyblok/js':
+        specifier: ^5.1.10
+        version: 5.1.10(@floating-ui/dom@1.7.6)
+      '@storyblok/react':
+        specifier: ^6.1.11
+        version: 6.1.11(@floating-ui/dom@1.7.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@storyblok/svelte':
+        specifier: ^5.0.0
+        version: 5.2.17(svelte@5.56.8(@typescript-eslint/types@8.66.0))
+      '@storyblok/vue':
+        specifier: ^10.1.10
+        version: 10.1.10(@floating-ui/dom@1.7.6)(vue@3.5.41(typescript@6.0.3))
       react:
         specifier: ^18.0.0 || ^19.0.0
         version: 19.2.8
@@ -2694,6 +2706,12 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/forge-cms-plugin-api':
+        specifier: workspace:*
+        version: link:../../forge-plugins/forge-cms-plugin-api
+      '@mission-platform/forge-cms-storyblok':
+        specifier: workspace:*
+        version: link:../../forge-plugins/forge-cms-storyblok
       '@mission-platform/forge-plugin-react':
         specifier: workspace:*
         version: link:../../forge-plugins/forge-react
@@ -2832,9 +2850,15 @@ importers:
       '@mission-platform/tokens':
         specifier: workspace:*
         version: link:../tokens
+      '@storyblok/js':
+        specifier: ^5.1.10
+        version: 5.1.10(@floating-ui/dom@1.7.6)
       '@storyblok/react':
         specifier: ^6.1.11
         version: 6.1.11(@floating-ui/dom@1.7.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@storyblok/svelte':
+        specifier: ^5.0.0
+        version: 5.2.17(svelte@5.56.8(@typescript-eslint/types@8.66.0))
       '@storyblok/vue':
         specifier: ^10.1.10
         version: 10.1.10(@floating-ui/dom@1.7.6)(vue@3.5.41(typescript@6.0.3))
@@ -3029,6 +3053,12 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/forge-cms-plugin-api':
+        specifier: workspace:*
+        version: link:../../forge-plugins/forge-cms-plugin-api
+      '@mission-platform/forge-cms-storyblok':
+        specifier: workspace:*
+        version: link:../../forge-plugins/forge-cms-storyblok
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -3274,6 +3304,12 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/forge-cms-plugin-api':
+        specifier: workspace:*
+        version: link:../../forge-plugins/forge-cms-plugin-api
+      '@mission-platform/forge-cms-storyblok':
+        specifier: workspace:*
+        version: link:../../forge-plugins/forge-cms-storyblok
       '@mission-platform/forge-plugin-react':
         specifier: workspace:*
         version: link:../../forge-plugins/forge-react
@@ -3887,6 +3923,12 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/forge-cms-plugin-api':
+        specifier: workspace:*
+        version: link:../../forge-plugins/forge-cms-plugin-api
+      '@mission-platform/forge-cms-storyblok':
+        specifier: workspace:*
+        version: link:../../forge-plugins/forge-cms-storyblok
       '@mission-platform/forge-plugin-react':
         specifier: workspace:*
         version: link:../../forge-plugins/forge-react
@@ -4355,6 +4397,12 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/forge-cms-plugin-api':
+        specifier: workspace:*
+        version: link:../../forge-plugins/forge-cms-plugin-api
+      '@mission-platform/forge-cms-storyblok':
+        specifier: workspace:*
+        version: link:../../forge-plugins/forge-cms-storyblok
       '@mission-platform/forge-plugin-react':
         specifier: workspace:*
         version: link:../../forge-plugins/forge-react
@@ -4720,6 +4768,12 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/forge-cms-plugin-api':
+        specifier: workspace:*
+        version: link:../../forge-plugins/forge-cms-plugin-api
+      '@mission-platform/forge-cms-storyblok':
+        specifier: workspace:*
+        version: link:../../forge-plugins/forge-cms-storyblok
       '@mission-platform/forge-plugin-react':
         specifier: workspace:*
         version: link:../../forge-plugins/forge-react
@@ -4937,6 +4991,12 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/forge-cms-plugin-api':
+        specifier: workspace:*
+        version: link:../../forge-plugins/forge-cms-plugin-api
+      '@mission-platform/forge-cms-storyblok':
+        specifier: workspace:*
+        version: link:../../forge-plugins/forge-cms-storyblok
       '@mission-platform/forge-plugin-react':
         specifier: workspace:*
         version: link:../../forge-plugins/forge-react
@@ -5242,6 +5302,12 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/forge-cms-plugin-api':
+        specifier: workspace:*
+        version: link:../../forge-plugins/forge-cms-plugin-api
+      '@mission-platform/forge-cms-storyblok':
+        specifier: workspace:*
+        version: link:../../forge-plugins/forge-cms-storyblok
       '@mission-platform/forge-plugin-react':
         specifier: workspace:*
         version: link:../../forge-plugins/forge-react
@@ -5692,6 +5758,12 @@ importers:
       '@mission-platform/eslint-config':
         specifier: workspace:*
         version: link:../../configs/eslint-config
+      '@mission-platform/forge-cms-plugin-api':
+        specifier: workspace:*
+        version: link:../../forge-plugins/forge-cms-plugin-api
+      '@mission-platform/forge-cms-storyblok':
+        specifier: workspace:*
+        version: link:../../forge-plugins/forge-cms-storyblok
       '@mission-platform/forge-plugin-react':
         specifier: workspace:*
         version: link:../../forge-plugins/forge-react
@@ -5783,6 +5855,9 @@ importers:
       typescript:
         specifier: catalog:typescript
         version: 6.0.3
+      vitest:
+        specifier: catalog:testing
+        version: 4.1.10(@types/node@24.13.3)(@vitest/browser-playwright@4.1.10)(@vitest/coverage-v8@4.1.10)(happy-dom@20.11.2)(jsdom@29.1.1)(vite@8.2.1(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.6.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.2)(yaml@2.9.0))
 
   vite-plugins/assemblyscript:
     dependencies:
@@ -8509,6 +8584,9 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
+  '@storyblok/js@4.4.5':
+    resolution: {integrity: sha512-iOq3dPyABjcU97Ify09tO7kKoGlmaayO/Pn/AM9gRmApn2rLAw0CSKFzBIrFnowiaJwSV8+JTIQrgt88N7c3mg==}
+
   '@storyblok/js@5.1.10':
     resolution: {integrity: sha512-cpiOSizLol8fPiiCLyNfy2Z18mzJDT2YD/WmmEEg+HdqBSx84r+GjdtfOfUo9KGe76tXv676amh6RW/bi9PBSw==}
 
@@ -8522,8 +8600,16 @@ packages:
       next:
         optional: true
 
+  '@storyblok/richtext@3.8.2':
+    resolution: {integrity: sha512-zI86BOE5hE8eqIwnOBi20Hl3/C9CpMha88Ni9gs2qf3ECTqYP40p0ZQ2oeYQOCsVCoxEOZcTDaeKg5+LSF6gxA==}
+
   '@storyblok/richtext@4.3.5':
     resolution: {integrity: sha512-CSJUf+r6mjv4X6xvn2k9NWNfFoQ+FlWoubcp3Lmg5pIcK8CnJHICSgEBfiIqTzx4dgsAPF06OXaMEWyTTy9kMw==}
+
+  '@storyblok/svelte@5.2.17':
+    resolution: {integrity: sha512-jxl0D1vdIE0HwPjBwNQm1VjoUKg1Ew8RF//5yvkadoD4+if4G0N66rF6sx2swMPHt8lNYXXy+gMqP/BqNpIA9g==}
+    peerDependencies:
+      svelte: ^5.0.0
 
   '@storyblok/vue@10.1.10':
     resolution: {integrity: sha512-MRTzqcW2LKUm3mhPfLRenwUU0xeX9amhEdLa7lFryLPAMKnFlJIHjMY0O+jh0kJxNQDylX+3kNXa3bKhBp0HCA==}
@@ -11645,6 +11731,9 @@ packages:
     resolution: {integrity: sha512-/6gFNr0N04nob252sTQxyFLi3eKFRqIg1I87YcqAMT1i6SQrSF6KujUEQrtrjMV0H/eejTCltLdDSTEMzHbnsQ==}
     engines: {node: '>=20.20.0'}
 
+  github-slugger@1.5.0:
+    resolution: {integrity: sha512-wIh+gKBI9Nshz2o46B0B3f5k/W+WI9ZAv6y5Dn5WJ5SK1t0TnDimB4WE5rmTD05ZAIn8HALCZVmCsvj0w0v0lw==}
+
   gl-matrix@3.4.4:
     resolution: {integrity: sha512-latSnyDNt/8zYUB6VIJ6PCh2jBjJX6gnDsoCZ7LyW7GkqrD51EWwa9qCoGixj8YqBtETQK/xY7OmpTF8xz1DdQ==}
 
@@ -11757,6 +11846,10 @@ packages:
 
   hast-util-whitespace@3.0.0:
     resolution: {integrity: sha512-88JUN06ipLwsnv+dVn+OIYOvAuvBMy/Qoi6O7mQHxdPXpjy+Cd6xRkWwux7DKO+4sYILtLBRIKgsdpS2gQc7qw==}
+
+  he@1.2.0:
+    resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
+    hasBin: true
 
   highlight.js@11.11.1:
     resolution: {integrity: sha512-Xwwo44whKBVCYoliBQwaPvtd/2tYFkRQtXDWj1nackaV2JPXx3L0+Jvd8/qCJ2p+ML0/XVkJ2q+Mr+UVdpJK5w==}
@@ -11920,8 +12013,8 @@ packages:
     resolution: {integrity: sha512-5Hh7Y1wQbvY5ooGgPbDaL5iYLAPzMTUrjMulskHLH6wnv/A+1q5rgEaiuqEjB+oxGXIVZs1FF+R/KPN3ZSQYYg==}
     engines: {node: '>=12'}
 
-  ip-address@10.4.0:
-    resolution: {integrity: sha512-oSK96Grm3aP6OrS263xVxbNDGVL7rzBtYdpGqlDG8iQdoenDoTs/nkki+DflYbAEE8Xl6o5YxhxlrKvI3nqKXQ==}
+  ip-address@10.5.0:
+    resolution: {integrity: sha512-R5SnVLJmgYYvf2F2ZgwSBnelz5G4q5AxIC277GDfUaNbrZKNANcBC7RHqYYePlszf4kBolVkJauG0ZjHHFh55g==}
     engines: {node: '>= 12'}
 
   ipaddr.js@1.9.1:
@@ -12511,6 +12604,12 @@ packages:
     resolution: {integrity: sha512-o5vL7aDWatOTX8LzaS1WMoaoxIiLRQJuIKKe2wAw6IeULDHaqbiqiggmx+pKvZDb1Sj+pE46Sn1T7lCqfFtg1Q==}
     engines: {node: '>=16'}
 
+  markdown-it-github@0.5.0:
+    resolution: {integrity: sha512-ycHCFnPLSP9dlkcX/3yFzLhO9ZwHHYPIeqhFN9P7vnqWSpL56lbYganMbBU8u5H7b91qk6affHyYb2pMPbnMAQ==}
+
+  markdown-it-theme@0.2.0:
+    resolution: {integrity: sha512-3R9tXmfP/7ilkRsm6o82GRdEMm5jJ8/s5OgdFB2wZC8VK5fJJLL0hxHGhu38wg+nBX7COBrvRN/QmrT3xybj/g==}
+
   markdown-it@14.3.0:
     resolution: {integrity: sha512-RCEsPjR+sr0x+AuYp601tKTkgFG4YEPLCzHST3cQ/fhlJkqAkz1L2/Qbp1j9qw5SBwQHFBoW8+hoN5xssOF0Tw==}
     hasBin: true
@@ -12827,6 +12926,9 @@ packages:
 
   node-addon-api@7.1.1:
     resolution: {integrity: sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==}
+
+  node-html-parser@7.1.0:
+    resolution: {integrity: sha512-iJo8b2uYGT40Y8BTyy5ufL6IVbN8rbm/1QK2xffXU/1a/v3AAa0d1YAoqBNYqaS4R/HajkWIpIfdE6KcyFh1AQ==}
 
   node-releases@2.0.53:
     resolution: {integrity: sha512-D9UOmYG3UH1V+ENW56t5QXBwJw1YEY18ruVeus89Rw+SyIgjPkCO84bRzO3uNIYosJbNwiabWVn48o3uJLjxFQ==}
@@ -13378,8 +13480,8 @@ packages:
     resolution: {integrity: sha512-9u/XQ1pvrQtYyMpZe7DXKv2p5CNvyVwzUB6uhLAnQwHMSgKMBR62lc7AHljaeteeHXn11XTAaLLUVZYVZyuRBQ==}
     engines: {node: '>= 20.19.0'}
 
-  recast@0.23.19:
-    resolution: {integrity: sha512-T98lym7kH+pnZmRaD8yDRdaNqyUbwnbEBx0MuchrzMFOEMray4AO3ZJoTUZ5r78Ao78X/OhzW0DL8GB85w/I2w==}
+  recast@0.23.21:
+    resolution: {integrity: sha512-mFAyJq9vUbSTARLZUvAEf1z3YxlvAwswbmxMx2mPA/MSm4KmpwvwvhsH/NIrZhyOuwD60Lzyw2qh83uCbgTPYw==}
     engines: {node: '>= 4'}
 
   recma-build-jsx@1.0.0:
@@ -13886,6 +13988,9 @@ packages:
   stop-iteration-iterator@1.1.0:
     resolution: {integrity: sha512-eLoXW/DHyl62zxY4SCaIgnRhuMr6ri4juEYARS8E6sCEqzKpOiE521Ucofdx+KnDZl5xmvGYaaKCk5FEOxJCoQ==}
     engines: {node: '>= 0.4'}
+
+  storyblok-js-client@7.2.3:
+    resolution: {integrity: sha512-o/AjgNULoflv/7ei68d2Bh4Nb5ZCnpcqma19sCijvYrPtJinAuWW//JHT4q06y9op05HkWQpU2jrfata9iYONQ==}
 
   storyblok-js-client@7.6.1:
     resolution: {integrity: sha512-vwViT+Rehe6o0INeNL4KbdO00j/QCqrD/Dubvl9JLZtufmptJyT7DzXC9HQg//9JfyAYmfaizf4CH5Rrrgvtwg==}
@@ -14585,7 +14690,7 @@ packages:
     engines: {node: '>=20.0.0'}
     hasBin: true
     peerDependencies:
-      beasties: ^0.4.2
+      beasties: ^0.4.3
       prettier: ^3.3.0
       vite: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0-0 || ^6.0.0 || ^7.0.0-0 || ^8.0.0-0
       vue: ^3.2.10
@@ -17230,6 +17335,11 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
+  '@storyblok/js@4.4.5':
+    dependencies:
+      '@storyblok/richtext': 3.8.2
+      storyblok-js-client: 7.2.3
+
   '@storyblok/js@5.1.10(@floating-ui/dom@1.7.6)':
     dependencies:
       '@storyblok/richtext': 4.3.5(@floating-ui/dom@1.7.6)
@@ -17249,6 +17359,12 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
+  '@storyblok/richtext@3.8.2':
+    dependencies:
+      markdown-it: 14.3.0
+      markdown-it-github: 0.5.0
+      node-html-parser: 7.1.0
+
   '@storyblok/richtext@4.3.5(@floating-ui/dom@1.7.6)':
     dependencies:
       '@tiptap/core': 3.29.2(@tiptap/pm@3.29.2)
@@ -17258,7 +17374,7 @@ snapshots:
       '@tiptap/extension-code-block': 3.29.2(@tiptap/core@3.29.2(@tiptap/pm@3.29.2))(@tiptap/pm@3.29.2)
       '@tiptap/extension-details': 3.29.2(@tiptap/core@3.29.2(@tiptap/pm@3.29.2))(@tiptap/extension-text-style@3.29.2(@tiptap/core@3.29.2(@tiptap/pm@3.29.2)))(@tiptap/pm@3.29.2)
       '@tiptap/extension-document': 3.29.2(@tiptap/core@3.29.2(@tiptap/pm@3.29.2))
-      '@tiptap/extension-emoji': 3.29.2(@tiptap/core@3.29.2(@tiptap/pm@3.29.2))(@tiptap/pm@3.29.2)(@tiptap/suggestion@3.29.2(@floating-ui/dom@1.7.6)(@tiptap/core@3.29.2(@tiptap/pm@3.29.2))(@tiptap/pm@3.29.2))(emojibase@17.0.0)
+      '@tiptap/extension-emoji': 3.29.2(@tiptap/core@3.29.2(@tiptap/pm@3.29.2))(@tiptap/pm@3.29.2)(@tiptap/suggestion@3.29.2(@tiptap/core@3.29.2(@tiptap/pm@3.29.2))(@tiptap/pm@3.29.2))(emojibase@17.0.0)
       '@tiptap/extension-hard-break': 3.29.2(@tiptap/core@3.29.2(@tiptap/pm@3.29.2))
       '@tiptap/extension-heading': 3.29.2(@tiptap/core@3.29.2(@tiptap/pm@3.29.2))
       '@tiptap/extension-highlight': 3.29.2(@tiptap/core@3.29.2(@tiptap/pm@3.29.2))
@@ -17287,6 +17403,11 @@ snapshots:
       - '@floating-ui/dom'
       - bufferutil
       - utf-8-validate
+
+  '@storyblok/svelte@5.2.17(svelte@5.56.8(@typescript-eslint/types@8.66.0))':
+    dependencies:
+      '@storyblok/js': 4.4.5
+      svelte: 5.56.8(@typescript-eslint/types@8.66.0)
 
   '@storyblok/vue@10.1.10(@floating-ui/dom@1.7.6)(vue@3.5.41(typescript@6.0.3))':
     dependencies:
@@ -17570,7 +17691,7 @@ snapshots:
     dependencies:
       '@tiptap/core': 3.29.2(@tiptap/pm@3.29.2)
 
-  '@tiptap/extension-emoji@3.29.2(@tiptap/core@3.29.2(@tiptap/pm@3.29.2))(@tiptap/pm@3.29.2)(@tiptap/suggestion@3.29.2(@floating-ui/dom@1.7.6)(@tiptap/core@3.29.2(@tiptap/pm@3.29.2))(@tiptap/pm@3.29.2))(emojibase@17.0.0)':
+  '@tiptap/extension-emoji@3.29.2(@tiptap/core@3.29.2(@tiptap/pm@3.29.2))(@tiptap/pm@3.29.2)(@tiptap/suggestion@3.29.2(@tiptap/core@3.29.2(@tiptap/pm@3.29.2))(@tiptap/pm@3.29.2))(emojibase@17.0.0)':
     dependencies:
       '@tiptap/core': 3.29.2(@tiptap/pm@3.29.2)
       '@tiptap/pm': 3.29.2
@@ -21255,7 +21376,7 @@ snapshots:
     dependencies:
       debug: 4.4.3(supports-color@10.2.2)
       express: 5.2.1(supports-color@10.2.2)
-      ip-address: 10.4.0
+      ip-address: 10.5.0
     transitivePeerDependencies:
       - supports-color
 
@@ -21512,6 +21633,8 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
+  github-slugger@1.5.0: {}
+
   gl-matrix@3.4.4: {}
 
   glob-parent@5.1.2:
@@ -21669,6 +21792,8 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.5
 
+  he@1.2.0: {}
+
   highlight.js@11.11.1: {}
 
   hono@4.13.1: {}
@@ -21813,7 +21938,7 @@ snapshots:
 
   internmap@2.0.3: {}
 
-  ip-address@10.4.0: {}
+  ip-address@10.5.0: {}
 
   ipaddr.js@1.9.1: {}
 
@@ -22367,6 +22492,13 @@ snapshots:
 
   markdown-extensions@2.0.0: {}
 
+  markdown-it-github@0.5.0:
+    dependencies:
+      github-slugger: 1.5.0
+      markdown-it-theme: 0.2.0
+
+  markdown-it-theme@0.2.0: {}
+
   markdown-it@14.3.0:
     dependencies:
       argparse: 2.0.1
@@ -22835,6 +22967,11 @@ snapshots:
 
   node-addon-api@7.1.1:
     optional: true
+
+  node-html-parser@7.1.0:
+    dependencies:
+      css-select: 5.2.2
+      he: 1.2.0
 
   node-releases@2.0.53: {}
 
@@ -23456,7 +23593,7 @@ snapshots:
 
   readdirp@5.0.0: {}
 
-  recast@0.23.19:
+  recast@0.23.21:
     dependencies:
       ast-types: 0.16.1
       esprima: 4.0.1
@@ -24121,6 +24258,8 @@ snapshots:
       es-errors: 1.3.0
       internal-slot: 1.1.0
 
+  storyblok-js-client@7.2.3: {}
+
   storyblok-js-client@7.6.1: {}
 
   storybook-solidjs-vite@10.6.0(esbuild@0.28.1)(rollup@4.62.4)(solid-js@1.9.14)(storybook@10.5.7(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8))(typescript@6.0.3)(vite-plugin-solid@2.11.14(@testing-library/jest-dom@6.9.1)(solid-js@1.9.14)(supports-color@10.2.2)(vite@8.2.1(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.6.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.2)(yaml@2.9.0)))(vite@8.2.1(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.6.1)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.2)(yaml@2.9.0))(webpack@5.108.4(clean-css@5.3.3)(csso@5.0.5)(esbuild@0.28.1)(html-minifier-terser@7.2.0)(lightningcss@1.33.0)(postcss@8.5.26)):
@@ -24156,7 +24295,7 @@ snapshots:
       open: 10.2.0
       oxc-parser: 0.127.0
       oxc-resolver: 11.24.2
-      recast: 0.23.19
+      recast: 0.23.21
       semver: 7.8.5
       use-sync-external-store: 1.6.0(react@19.2.8)
       ws: 8.21.1
@@ -25136,7 +25275,7 @@ snapshots:
       hash-sum: 2.0.0
       lru-cache: 8.0.5
       pug: 3.0.4
-      recast: 0.23.19
+      recast: 0.23.21
       ts-map: 1.0.3
       vue: 3.5.41(typescript@6.0.3)
       vue-inbrowser-compiler-independent-utils: 4.71.1(vue@3.5.41(typescript@6.0.3))

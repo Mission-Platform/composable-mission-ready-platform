@@ -20,8 +20,19 @@
  */
 export {
   forgeStoryblokCms,
+  forgeStoryblokCmsTargets,
   type ForgeStoryblokCmsOptions,
+  type ForgeStoryblokCmsTargetsOptions,
 } from "./storyblok.js";
+
+export {
+  StoryblokComponent,
+  StoryblokProvider,
+  type StoryblokComponentProperties,
+  type StoryblokComponentRegistry,
+  type StoryblokComponentType,
+  type StoryblokProviderProperties,
+} from "./runtime/solid.js";
 
 export {
   analyzeStoryblokComponent,

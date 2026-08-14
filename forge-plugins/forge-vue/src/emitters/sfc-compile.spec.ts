@@ -76,6 +76,35 @@ function compileFixture(module: SemanticModule, name: string): string {
 }
 
 describe("the Vue emitter generates SFCs the Vue compiler accepts", () => {
+  it("inlines a JSX child helper instead of leaving its local unbound", () => {
+    const header = element("header", {
+      children: [textChild("Title")],
+      source: "<header>Title</header>",
+    });
+    const module = semanticModule({
+      imports: [NEUTRAL_IMPORT],
+      component: component({
+        name: "Drawer",
+        parameter: "properties",
+        body: [
+          statement("const headerNode = <header>Title</header>;", "variable", {
+            name: "headerNode",
+            renderNodes: [header],
+          }),
+        ],
+        returnNode: element("section", {
+          children: [expressionChild("headerNode")],
+        }),
+      }),
+    });
+
+    const code = compileFixture(module, "Drawer");
+
+    expect(code).toContain("<header>");
+    expect(code).toContain("Title");
+    expect(code).not.toContain("headerNode");
+  });
+
   it("compiles a class binding built from an array with a nested object literal", () => {
     const module = semanticModule({
       imports: [NEUTRAL_IMPORT],

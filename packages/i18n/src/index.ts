@@ -12,6 +12,8 @@ export { createForgeI18N, getServerI18n, runWithI18n, setServerI18n } from './st
 export type { CreateForgeI18NOptions } from './stores/create-forge-i18n';
 export { FORGE_DEFAULT_NAMESPACE, FORGE_NAMESPACE_PREFIX, forgeNamespace, localeNamespaces } from './utils/namespace';
 export { deepMergeLocales, deepMergeMessages, mergeLocales } from './utils/merge-locales';
+export { useI18n } from './composables/use-i18n/use-i18n.neutral';
+export type { UseI18nReturn } from './composables/use-i18n/use-i18n.neutral';
 export type {
   ForgeLocaleModule,
   ForgeLocales,

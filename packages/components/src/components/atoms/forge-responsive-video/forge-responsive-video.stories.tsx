@@ -4,7 +4,7 @@ import { ForgeResponsiveVideo } from '@mission-platform/components';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
-const SAMPLE_VIDEO = 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4';
+const SAMPLE_VIDEO = '/favicon.svg';
 
 /**
  * `ForgeResponsiveVideo` is the write-once `ForgeResponsiveVideo` component of

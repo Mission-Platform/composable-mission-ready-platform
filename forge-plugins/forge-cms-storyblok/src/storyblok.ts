@@ -41,7 +41,7 @@ const BLOK_WRAPPER_LANG: Readonly<Record<JsxFramework, string>> = {
 const BLOK_DECLARATION: Readonly<
   Record<
     JsxFramework,
-    { componentType: string; frameworkImport: string; storyblokImport: string }
+    { componentType: string; frameworkImport?: string; storyblokImport: string }
   >
 > = {
   react: {
@@ -55,20 +55,27 @@ const BLOK_DECLARATION: Readonly<
     storyblokImport: "@storyblok/vue",
   },
   svelte: {
-    componentType: "any",
+    componentType: "Component",
     frameworkImport: "svelte",
     storyblokImport: "@storyblok/svelte",
   },
   solid: {
     componentType: "Component",
     frameworkImport: "solid-js",
-    storyblokImport: "@storyblok/solid",
-  },
-  "web-components": {
-    componentType: "any",
-    frameworkImport: "ts",
     storyblokImport: "@storyblok/js",
   },
+  "web-components": {
+    componentType: "StoryblokWebComponent",
+    storyblokImport: "@storyblok/js",
+  },
+};
+
+const DEFAULT_STORYBLOK_RUNTIMES: Readonly<Record<JsxFramework, string>> = {
+  react: "@storyblok/react",
+  vue: "@storyblok/vue",
+  svelte: "@storyblok/svelte",
+  solid: "@storyblok/js",
+  "web-components": "@storyblok/js",
 };
 
 /** The framework id, narrowed to the set the Storyblok wrappers cover. */
@@ -107,7 +114,13 @@ function blokEntryDeclarations(
   const { componentType, frameworkImport, storyblokImport } =
     BLOK_DECLARATION[framework];
   return [
-    `import type { ${componentType} } from '${frameworkImport}';`,
+    ...(frameworkImport === undefined
+      ? [
+          "type StoryblokWebComponent<T> = {",
+          "  new (): HTMLElement & { blok: T };",
+          "};",
+        ]
+      : [`import type { ${componentType} } from '${frameworkImport}';`]),
     `import type { SbBlokData } from '${storyblokImport}';`,
     "",
     ...bloks.map(
@@ -125,20 +138,41 @@ export interface ForgeStoryblokCmsOptions {
   /** The framework output plugin the blok wrappers target. */
   plugin: FrameworkOutputPlugin;
   /** The Storyblok runtime the wrappers import (`@storyblok/react`, `@storyblok/vue`, …). */
-  storyblokRuntime: string;
+  storyblokRuntime?: string;
+  external?: readonly string[];
+}
+
+export interface ForgeStoryblokCmsTargetsOptions {
+  packageName: string;
+  frameworks: readonly FrameworkOutputPlugin[];
+  storyblokRuntimes?: Partial<Record<JsxFramework, string>>;
+  external?: readonly string[];
+}
+
+function storyblokRuntimeFor(
+  plugin: FrameworkOutputPlugin,
+  override?: string,
+): string {
+  return override ?? DEFAULT_STORYBLOK_RUNTIMES[plugin.id as JsxFramework];
 }
 
 /** Bind Storyblok projection to a caller-owned framework output plugin. */
 export function forgeStoryblokCms(
   options: ForgeStoryblokCmsOptions,
 ): CmsOutputPlugin {
-  const { packageName, plugin, storyblokRuntime } = options;
+  const { packageName, plugin } = options;
+  const storyblokRuntime = storyblokRuntimeFor(
+    plugin,
+    options.storyblokRuntime,
+  );
 
   return defineForgeCmsPlugin({
     id: "storyblok",
     framework: plugin,
     packageName,
-    runtimeExternals: [storyblokRuntime],
+    runtimeExternals: [storyblokRuntime, ...(options.external ?? [])].filter(
+      (runtime, index, runtimes) => runtimes.indexOf(runtime) === index,
+    ),
     island: "none",
     supportedFrameworks: ["react", "vue", "solid", "svelte", "web-components"],
 
@@ -216,4 +250,29 @@ export function forgeStoryblokCms(
     // build helpers; Storyblok needs no target-specific bundler wiring on top.
     build: {},
   });
+}
+
+export function forgeStoryblokCmsTargets(
+  options: ForgeStoryblokCmsTargetsOptions,
+): CmsOutputPlugin[] {
+  const requestedFramework = process.env.FORGE_CMS_STORYBLOK_TARGET;
+  if (
+    requestedFramework === undefined &&
+    process.env.FORGE_FRAMEWORK_TARGET !== undefined &&
+    process.env.FORGE_CMS_ARTIFACT_MODE === undefined
+  ) {
+    return [];
+  }
+  const frameworks =
+    requestedFramework === undefined
+      ? options.frameworks
+      : options.frameworks.filter((plugin) => plugin.id === requestedFramework);
+  return frameworks.map((plugin) =>
+    forgeStoryblokCms({
+      packageName: options.packageName,
+      plugin,
+      storyblokRuntime: options.storyblokRuntimes?.[plugin.id as JsxFramework],
+      external: options.external,
+    }),
+  );
 }

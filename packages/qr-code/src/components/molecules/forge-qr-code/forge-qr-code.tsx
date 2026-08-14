@@ -537,7 +537,7 @@ export function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement {
       key: 'download',
       label: 'Save image',
       doneLabel: 'Saved',
-      icon: <ForgeIconDownload size="xs" />,
+      icon: 'download',
       onClick: saveImage,
       visible: showDownload,
     },
@@ -545,7 +545,7 @@ export function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement {
       key: 'image',
       label: 'Copy image',
       doneLabel: 'Copied',
-      icon: <ForgeIconImage size="xs" />,
+      icon: 'image',
       onClick: copyImage,
       visible: showCopyImage,
     },
@@ -553,7 +553,7 @@ export function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement {
       key: 'value',
       label: 'Copy value',
       doneLabel: 'Copied',
-      icon: <ForgeIconCopy size="xs" />,
+      icon: 'value',
       onClick: copyValue,
       visible: showCopyValue,
     },
@@ -578,7 +578,15 @@ export function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement {
               variant="secondary"
               onClick={action.onClick}
             >
-              {isDone ? <ForgeIconCheck size="xs" /> : action.icon}
+              {isDone ? (
+                <ForgeIconCheck size="xs" />
+              ) : action.icon === 'download' ? (
+                <ForgeIconDownload size="xs" />
+              ) : action.icon === 'image' ? (
+                <ForgeIconImage size="xs" />
+              ) : (
+                <ForgeIconCopy size="xs" />
+              )}
               <ForgeTypography
                 as="span"
                 color="inherit"

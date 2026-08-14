@@ -1,6 +1,5 @@
 import {
   classNames,
-  Dynamic,
   h,
   hasSlot,
   type MpChild,
@@ -304,20 +303,33 @@ export function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement {
   // role — `aria-allowed-role`); an inline panel keeps `<aside>` for its
   // complementary landmark.
   const panel = isVisible ? (
-    <Dynamic
-      is={isInline ? 'aside' : 'div'}
-      ref={rootReference}
-      className={rootClass}
-      role={isInline ? undefined : 'dialog'}
-      aria-modal={isInline ? undefined : 'true'}
-      aria-label={title}
-      style={resizeStyle}
-    >
-      {headerNode}
-      <div className={styles['forge-drawer__body']}>{bodyChildren}</div>
-      {footerNode}
-      {resizeHandle}
-    </Dynamic>
+    isInline ? (
+      <aside
+        ref={rootReference}
+        className={rootClass}
+        aria-label={title}
+        style={resizeStyle}
+      >
+        {headerNode}
+        <div className={styles['forge-drawer__body']}>{bodyChildren}</div>
+        {footerNode}
+        {resizeHandle}
+      </aside>
+    ) : (
+      <div
+        ref={rootReference}
+        className={rootClass}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        style={resizeStyle}
+      >
+        {headerNode}
+        <div className={styles['forge-drawer__body']}>{bodyChildren}</div>
+        {footerNode}
+        {resizeHandle}
+      </div>
+    )
   ) : undefined;
 
   const backdrop = showBackdrop ? (

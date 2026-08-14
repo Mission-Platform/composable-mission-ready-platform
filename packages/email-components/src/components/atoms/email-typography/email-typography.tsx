@@ -1,5 +1,5 @@
 import { validateUrl } from '@mission-platform/email-renderer';
-import { h, type MpChild, type MpElement } from '@mission-platform/forge';
+import { Dynamic, h, type MpChild, type MpElement } from '@mission-platform/forge';
 
 import { colorValue, typographyStyle, type EmailColor, type EmailTypographyVariant } from '@/tokens';
 
@@ -56,7 +56,8 @@ export function EmailTypography(properties: Readonly<EmailTypographyProperties>)
   const underline = properties.underline ?? 'always';
 
   return (
-    <Tag
+    <Dynamic
+      is={Tag}
       {...rest}
       align={properties.align}
       href={href}
@@ -70,6 +71,6 @@ export function EmailTypography(properties: Readonly<EmailTypographyProperties>)
       }}
     >
       {children ?? href}
-    </Tag>
+    </Dynamic>
   );
 }

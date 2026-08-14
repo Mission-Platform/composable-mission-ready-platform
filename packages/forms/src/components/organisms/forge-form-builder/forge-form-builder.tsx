@@ -6,7 +6,7 @@ import {
   type TabItem,
 } from '@mission-platform/components';
 import { ForgeCodeBlock } from '@mission-platform/content';
-import { h, type MpChild, type MpElement, useRef, useState } from '@mission-platform/forge';
+import { Fragment, h, type MpChild, type MpElement, useRef, useState } from '@mission-platform/forge';
 import {
   type BuilderField,
   type BuilderFieldOption,
@@ -530,19 +530,27 @@ export function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): M
 
   // Render a container's child rows interleaved with the drop ghost at the
   // hovered slot (before a field, or appended at the end).
-  const renderContainerChildren = (list: BuilderField[], step: number, parentId?: string): MpChild[] => {
-    const nodes: MpChild[] = [];
+  const renderContainerChildren = (
+    list: BuilderField[],
+    step: number,
+    parentId: string | undefined,
+    index: number,
+  ): MpElement => {
     const scope = parentId ?? `step-${step}`;
-    for (const [index, field] of list.entries()) {
-      if (isGhostBefore(dropIndicator, parentId, step, index)) {
-        nodes.push(renderDropGhost(`${scope}-${index}`));
-      }
-      nodes.push(renderRow(field, step));
-    }
-    if (isGhostAtEnd(dropIndicator, parentId, step, list.length)) {
-      nodes.push(renderDropGhost(`${scope}-end`));
-    }
-    return nodes;
+    const field = list[index];
+    return (
+      <Fragment>
+        {field ? (
+          <Fragment>
+            {isGhostBefore(dropIndicator, parentId, step, index) ? renderDropGhost(`${scope}-${index}`) : undefined}
+            {renderRow(field, step)}
+            {renderContainerChildren(list, step, parentId, index + 1)}
+          </Fragment>
+        ) : isGhostAtEnd(dropIndicator, parentId, step, list.length) ? (
+          renderDropGhost(`${scope}-end`)
+        ) : undefined}
+      </Fragment>
+    );
   };
 
   // ─── Render: palette ──────────────────────────────────────────────────────────
@@ -701,7 +709,7 @@ export function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): M
                 </ForgeTypography>
               </li>
             ) : undefined}
-            {renderContainerChildren(field.children ?? [], step, field.id)}
+            {renderContainerChildren(field.children ?? [], step, field.id, 0)}
           </ul>
         ) : undefined}
       </li>
@@ -726,7 +734,7 @@ export function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): M
           </ForgeTypography>
         </li>
       ) : undefined}
-      {renderContainerChildren(list, step)}
+      {renderContainerChildren(list, step, undefined, 0)}
     </ul>
   );
 

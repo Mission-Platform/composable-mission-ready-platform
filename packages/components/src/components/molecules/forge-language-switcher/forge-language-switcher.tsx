@@ -19,7 +19,7 @@ export interface ForgeLanguageSwitcherProperties {
 }
 
 export function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherProperties>): MpElement {
-  const onLocaleChange = (event: Event): void => {
+  const handleLocaleChange = (event: Event): void => {
     properties.onLocaleChange?.((event.currentTarget as HTMLSelectElement).value);
   };
 
@@ -31,7 +31,7 @@ export function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcher
         id={properties.id}
         disabled={properties.disabled}
         value={properties.locale}
-        onChange={onLocaleChange}
+        onChange={handleLocaleChange}
       >
         {properties.locales.map((item) => {
           const option = typeof item === 'string' ? { code: item, label: item.toUpperCase() } : item;

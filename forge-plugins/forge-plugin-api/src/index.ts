@@ -7,6 +7,7 @@ export type {
   GeneratedExtraModule,
   GeneratedModule,
   GeneratorContext,
+  JsxFramework,
   NeutralOptimizeOptions,
   OutputLanguage,
   TargetContext,

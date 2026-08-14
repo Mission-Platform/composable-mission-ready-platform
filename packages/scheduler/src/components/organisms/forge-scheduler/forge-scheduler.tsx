@@ -1,5 +1,5 @@
 import { ForgeButton, ForgeDialog, ForgeTypography } from '@mission-platform/components';
-import { h, type MpElement, useState } from '@mission-platform/forge';
+import { Dynamic, h, type MpElement, useState } from '@mission-platform/forge';
 import { ForgeInput, ForgeTextarea } from '@mission-platform/forms';
 import { ForgeIconChevron } from '@mission-platform/icons';
 
@@ -657,7 +657,7 @@ export function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpEle
         className={styles['forge-scheduler__body']}
         data-view={view}
       >
-        {renderBody()}
+        <Dynamic is={renderBody} />
       </div>
 
       <ForgeDialog

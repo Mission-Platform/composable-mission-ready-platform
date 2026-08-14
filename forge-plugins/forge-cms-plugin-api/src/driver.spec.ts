@@ -186,6 +186,39 @@ describe("generateCmsArtifacts", () => {
     expect(tree.entry).toBe(path.join(workspace.outDir, "index.ts"));
   });
 
+  it("reads flat-file component exports", () => {
+    const root = mkdtempSync(path.join(os.tmpdir(), "forge-cms-flat-driver-"));
+    temporaryDirectories.push(root);
+    const componentsDirectory = path.join(root, "src/components");
+    mkdirSync(componentsDirectory, { recursive: true });
+    writeFileSync(
+      path.join(componentsDirectory, "forge-flat.tsx"),
+      BADGE,
+      "utf8",
+    );
+    writeFileSync(
+      path.join(componentsDirectory, "calendar-dates.ts"),
+      "export const WEEKDAY_LUXON = ['monday'];\n",
+      "utf8",
+    );
+    const componentsModule = path.join(componentsDirectory, "index.ts");
+    writeFileSync(
+      componentsModule,
+      "export { ForgeBadge, type BadgeProperties } from './forge-flat';\n" +
+        "export { WEEKDAY_LUXON } from './calendar-dates';\n",
+      "utf8",
+    );
+
+    const tree = run(recordingTarget(), {
+      componentsModule,
+      outDir: path.join(root, "out"),
+    });
+
+    expect(
+      tree.components.map((component) => component.names.publicName),
+    ).toEqual(["Badge"]);
+  });
+
   it("projects each discovered component onto the content model", () => {
     const workspace = createWorkspace([BADGE_COMPONENT, GRID_COMPONENT]);
     const tree = run(recordingTarget(), workspace);

@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 
-import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
+import { defineTsdownLibrary, resolveTsdownOutputDirectory } from '@mission-platform/tsdown-config';
 
 import { generateHookLibrarySources, hookLibraryDtsPlugin } from './generate-hooks.js';
 import {
@@ -28,35 +28,48 @@ function flattenPlugins(plugins: UserConfig['plugins']): TsdownPlugin[] {
 }
 
 /** Deep-merge a base tsdown config with caller overrides (shallow for top-level, concat plugins). */
-function mergeTsdownConfig(base: UserConfig, overrides?: UserConfig): UserConfig {
+function mergeTsdownConfig(
+  base: UserConfig,
+  overrides?: UserConfig,
+  rootDir?: string,
+  outputRoot?: string,
+): UserConfig {
   if (!overrides) {
     return base;
   }
 
-  const mergedPlugins = [...flattenPlugins(base.plugins), ...flattenPlugins(overrides.plugins)];
+  const resolvedOverrides =
+    rootDir !== undefined && outputRoot !== undefined && typeof overrides.outDir === 'string'
+      ? {
+          ...overrides,
+          outDir: resolveTsdownOutputDirectory(rootDir, overrides.outDir, outputRoot),
+        }
+      : overrides;
+
+  const mergedPlugins = [...flattenPlugins(base.plugins), ...flattenPlugins(resolvedOverrides.plugins)];
 
   return {
     ...base,
-    ...overrides,
+    ...resolvedOverrides,
     deps: {
       ...base.deps,
-      ...overrides.deps,
+      ...resolvedOverrides.deps,
     },
-    dts: overrides.dts === undefined ? base.dts : overrides.dts,
-    hooks: overrides.hooks ?? base.hooks,
+    dts: resolvedOverrides.dts === undefined ? base.dts : resolvedOverrides.dts,
+    hooks: resolvedOverrides.hooks ?? base.hooks,
     inputOptions:
-      typeof overrides.inputOptions === 'function' || typeof base.inputOptions === 'function'
-        ? (overrides.inputOptions ?? base.inputOptions)
+      typeof resolvedOverrides.inputOptions === 'function' || typeof base.inputOptions === 'function'
+        ? (resolvedOverrides.inputOptions ?? base.inputOptions)
         : {
             ...(typeof base.inputOptions === 'object' ? base.inputOptions : {}),
-            ...(typeof overrides.inputOptions === 'object' ? overrides.inputOptions : {}),
+            ...(typeof resolvedOverrides.inputOptions === 'object' ? resolvedOverrides.inputOptions : {}),
           },
     outputOptions:
-      typeof overrides.outputOptions === 'function' || typeof base.outputOptions === 'function'
-        ? (overrides.outputOptions ?? base.outputOptions)
+      typeof resolvedOverrides.outputOptions === 'function' || typeof base.outputOptions === 'function'
+        ? (resolvedOverrides.outputOptions ?? base.outputOptions)
         : {
             ...(typeof base.outputOptions === 'object' ? base.outputOptions : {}),
-            ...(typeof overrides.outputOptions === 'object' ? overrides.outputOptions : {}),
+            ...(typeof resolvedOverrides.outputOptions === 'object' ? resolvedOverrides.outputOptions : {}),
           },
     plugins: mergedPlugins.length > 0 ? mergedPlugins : undefined,
   };
@@ -65,6 +78,8 @@ function mergeTsdownConfig(base: UserConfig, overrides?: UserConfig): UserConfig
 export interface TsdownForgeHooksOptions {
   /** Absolute root directory of the package (e.g. `import.meta.dirname`). */
   rootDir: string;
+  /** Optional isolated output mirror used by the shared Forge runner. */
+  outputRoot?: string;
   /** Explicit output plugin for this forge hooks build. */
   plugin: FrameworkOutputPlugin;
   /** Path to the neutral hook entry module (defaults to `<rootDir>/src/index.ts`). */
@@ -83,12 +98,20 @@ export interface TsdownForgeHooksOptions {
  * emitting into `dist/<framework>/`.
  */
 export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig {
-  const { rootDir, plugin, entryModule, external = [], overrides } = options;
+  const {
+    rootDir,
+    plugin,
+    entryModule,
+    external = [],
+    outputRoot = process.env.FORGE_BUILD_STAGE_ROOT,
+    overrides,
+  } = options;
   const framework = plugin.id;
   const resolvedEntry = entryModule ?? path.resolve(rootDir, 'src/index.ts');
   const cacheName = `${path.basename(rootDir)}-${framework}`;
   const generatedDirectory = path.join(rootDir, 'node_modules/.cache', cacheName);
-  const outDir = path.resolve(rootDir, `dist/${framework}`);
+  const finalOutDir = path.resolve(rootDir, `dist/${framework}`);
+  const outDir = resolveTsdownOutputDirectory(rootDir, finalOutDir, outputRoot);
 
   const entry = generateHookLibrarySources({
     plugin,
@@ -113,7 +136,8 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
     // Declaration emit is owned by hookLibraryDtsPlugin over the generated tree.
     dts: false,
     unbundle: true,
-    outDir,
+    outDir: finalOutDir,
+    outputRoot,
     // Only wipe this framework's subtree — sibling framework builds must survive.
     clean: true,
     external: [...frameworkExternals, ...external],
@@ -137,12 +161,14 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
     },
   });
 
-  return mergeTsdownConfig(base, overrides);
+  return mergeTsdownConfig(base, overrides, rootDir, outputRoot);
 }
 
 export interface TsdownForgeHooksAllOptions {
   /** Absolute root directory of the package. */
   rootDir: string;
+  /** Optional isolated output mirror used by the shared Forge runner. */
+  outputRoot?: string;
   /** Explicit output plugins to emit. */
   frameworks: readonly FrameworkOutputPlugin[];
   /** Path to the neutral hook entry module (defaults to `<rootDir>/src/index.ts`). */
@@ -170,6 +196,7 @@ export interface TsdownForgeHooksAllOptions {
 export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserConfig[] {
   const {
     rootDir,
+    outputRoot = process.env.FORGE_BUILD_STAGE_ROOT,
     frameworks,
     entryModule,
     name,
@@ -185,6 +212,7 @@ export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): 
     configs.push(
       defineTsdownLibrary({
         rootDir,
+        outputRoot,
         entry: entryModule ? path.relative(rootDir, entryModule) : 'src/index.ts',
         external,
         // Wipe the whole `dist/` once. Framework configs below set `clean: true`
@@ -201,6 +229,7 @@ export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): 
       defineTsdownForgeHooks({
         rootDir,
         plugin,
+        outputRoot,
         entryModule,
         name,
         external,
@@ -216,6 +245,8 @@ export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): 
 export interface TsdownForgeComponentsOptions {
   /** Absolute root directory of the package. */
   rootDir: string;
+  /** Optional isolated output mirror used by the shared Forge runner. */
+  outputRoot?: string;
   /** Framework output plugins to build together through the same façade. */
   frameworks: readonly FrameworkOutputPlugin[];
   /**
@@ -241,13 +272,28 @@ export interface TsdownForgeComponentsOptions {
  * emitting into `dist/<framework>/`.
  */
 export function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[] {
-  return options.frameworks.map((plugin) => defineTsdownForgeComponent({ ...options, plugin }));
+  const requestedFramework =
+    process.env.FORGE_FRAMEWORK_TARGET ?? (process.env.FORGE_CMS_STORYBLOK_TARGET === undefined ? undefined : 'none');
+  const frameworks =
+    requestedFramework === undefined
+      ? options.frameworks
+      : options.frameworks.filter((plugin) => plugin.id === requestedFramework);
+  return frameworks.map((plugin) => defineTsdownForgeComponent({ ...options, plugin }));
 }
 
 function defineTsdownForgeComponent(
   options: Readonly<Omit<TsdownForgeComponentsOptions, 'frameworks'> & { plugin: FrameworkOutputPlugin }>,
 ): UserConfig {
-  const { rootDir, plugin, componentsModule, useEntryDts, declarationModule, external = [], overrides } = options;
+  const {
+    rootDir,
+    plugin,
+    componentsModule,
+    useEntryDts,
+    declarationModule,
+    external = [],
+    outputRoot = process.env.FORGE_BUILD_STAGE_ROOT,
+    overrides,
+  } = options;
   const framework = plugin.id;
 
   const cacheName = `${path.basename(rootDir)}-${framework}`;
@@ -276,7 +322,7 @@ function defineTsdownForgeComponent(
   const stagePlugins = (plugin.build.tsdown?.({
     rootDir,
     generatedDirectory,
-    outputDirectory: path.resolve(rootDir, `dist/${framework}`),
+    outputDirectory: resolveTsdownOutputDirectory(rootDir, path.resolve(rootDir, `dist/${framework}`), outputRoot),
   }) ?? []) as TsdownPlugin[];
 
   // vue-tsc is resolved from `@mission-platform/forge` the same way the Vite helper does.
@@ -303,21 +349,22 @@ function defineTsdownForgeComponent(
       : jsxComponentsDtsPlugin({
           framework,
           generatedDir: generatedDirectory,
-          outDir: path.resolve(rootDir, `dist/${framework}`),
+          outDir: resolveTsdownOutputDirectory(rootDir, path.resolve(rootDir, `dist/${framework}`), outputRoot),
           vueTscBin,
           componentsModule: resolvedComponentsModule,
           sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
         });
 
   const frameworkExternals = plugin.runtimeExternals ?? [];
-  const outDir = path.resolve(rootDir, `dist/${framework}`);
+  const finalOutDir = path.resolve(rootDir, `dist/${framework}`);
 
   const base = defineTsdownLibrary({
     rootDir,
     entry,
     dts: false,
     unbundle: true,
-    outDir,
+    outDir: finalOutDir,
+    outputRoot,
     clean: true,
     external: [...frameworkExternals, ...external],
     tsconfigPathsRoot: generatedDirectory,
@@ -331,12 +378,14 @@ function defineTsdownForgeComponent(
     },
   });
 
-  return mergeTsdownConfig(base, overrides);
+  return mergeTsdownConfig(base, overrides, rootDir, outputRoot);
 }
 
 export interface TsdownForgeEmailComponentsOptions {
   /** Absolute root directory of the package. */
   rootDir: string;
+  /** Optional isolated output mirror used by the shared Forge runner. */
+  outputRoot?: string;
   /** Path to the neutral email components entry module. */
   componentsModule?: string;
   /** Base display name (informational; unused by tsdown but kept for parity). */
@@ -354,7 +403,13 @@ export interface TsdownForgeEmailComponentsOptions {
  * `@mission-platform/email-renderer` can serialize it on the server.
  */
 export function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOptions): UserConfig {
-  const { rootDir, componentsModule, external = [], overrides } = options;
+  const {
+    rootDir,
+    componentsModule,
+    external = [],
+    outputRoot = process.env.FORGE_BUILD_STAGE_ROOT,
+    overrides,
+  } = options;
   const resolvedComponentsModule =
     componentsModule ??
     [
@@ -368,6 +423,7 @@ export function defineTsdownForgeEmailComponents(options: TsdownForgeEmailCompon
     rootDir,
     entry: { index: resolvedComponentsModule },
     external,
+    outputRoot,
     dts: true,
     clean: false,
     overrides: {

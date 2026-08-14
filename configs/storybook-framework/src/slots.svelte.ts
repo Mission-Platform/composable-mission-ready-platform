@@ -43,6 +43,18 @@ function isMounter(value: unknown): value is Mounter {
   return typeof value === 'function' && (value as Partial<Mounter>)[MOUNTER] === true;
 }
 
+/**
+ * A slot-destined value the adapter must convert to a snippet: a single mounter
+ * (`<Slot/>` content authored as JSX) or an array that contains mounters (a
+ * multi-child slot such as `footer={[<Button/>, <Button/>]}`). A plain string
+ * or number is *not* wrapped here — the Svelte target renders primitive
+ * `MpChild` slot values as text, and wrapping a same-typed regular prop
+ * (`size="md"`) as a snippet would corrupt it.
+ */
+function isSlotValue(value: unknown): value is Mounter | readonly unknown[] {
+  return isMounter(value) || (Array.isArray(value) && value.some((item) => isMounter(item)));
+}
+
 function createMounter(mountInto: (target: Element) => () => void): Mounter {
   const mounter = ((target: Element) => mountInto(target)) as Mounter;
   mounter[MOUNTER] = true;
@@ -95,6 +107,21 @@ function toComponent(value: Mounter): SvelteStoryComponent {
 }
 
 /**
+ * Svelte builds may expose a component as either the callable component itself
+ * or a module-shaped value with a callable `default`. Normalize both forms so
+ * neutral stories do not depend on the bundler's export interop mode.
+ */
+function resolveSvelteComponent(value: unknown): SvelteStoryComponent {
+  if (typeof value === 'function') {
+    return value as SvelteStoryComponent;
+  }
+  if (typeof value === 'object' && value !== null && 'default' in value && typeof value.default === 'function') {
+    return value.default as SvelteStoryComponent;
+  }
+  throw new TypeError('[storybook-framework] Expected a callable Svelte component.');
+}
+
+/**
  * Convert a JSX property bag for a Svelte component: any mounter-valued
  * property is a slot, so it becomes a snippet; `children` becomes the default
  * slot's snippet.
@@ -105,7 +132,7 @@ function toSvelteProperties(
 ): Record<string, unknown> {
   const resolved: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(properties ?? {})) {
-    resolved[key] = isMounter(value) ? toSnippet(value) : value;
+    resolved[key] = isSlotValue(value) ? toSnippet(value) : value;
   }
   if (children.length > 0) {
     resolved.children = toSnippet(children.length === 1 ? children[0] : children);
@@ -131,7 +158,10 @@ export const node: StoryNodeFactory = (type, properties, ...children) => {
     });
   }
   return createMounter((target) => {
-    const instance = mount(type as never, { target, props: toSvelteProperties(properties, children) as never });
+    const instance = mount(resolveSvelteComponent(type) as never, {
+      target,
+      props: toSvelteProperties(properties, children) as never,
+    });
     return () => void unmount(instance);
   });
 };

@@ -249,6 +249,7 @@ export function localJsxTypesModuleSource(framework: JsxFramework): string {
       " * primitives, generated for the svelte build so the compiled components",
       " * carry no neutral-package type import (see `LOCAL_JSX_TYPE_NAMES`).",
       " */",
+      "import type { Snippet } from 'svelte';",
       "",
       "/** A node in the rendered tree — the svelte variant of the neutral `MpElement`. */",
       "export type MpElement = unknown;",
@@ -256,8 +257,8 @@ export function localJsxTypesModuleSource(framework: JsxFramework): string {
       "/** Anything that may render as a child — the svelte variant of the neutral `MpChild`. */",
       "export type MpChild = unknown;",
       "",
-      "/** A scoped-slot / render-prop function — the svelte variant of the neutral `MpRenderProperty`. */",
-      "export type MpRenderProperty<S = Record<string, unknown>> = (scope: S) => MpChild;",
+      "/** A scoped snippet prop — the svelte variant of the neutral `MpRenderProperty`. */",
+      "export type MpRenderProperty<S = Record<string, unknown>> = Snippet<[S]>;",
       "",
     ].join("\n");
   }

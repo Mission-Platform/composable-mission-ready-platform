@@ -709,6 +709,17 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
     }
   };
 
+  // The active wizard step's body. It is a **render helper** (a node-returning
+  // local) so each step's `content` render property carries a deferred function
+  // rather than a live element: that is what lets the Svelte target lower it to
+  // a `{#snippet}` (a data property cannot carry a snippet), while React and Vue
+  // simply call it. Only the active step renders a body; the others are empty.
+  const renderWizardStepContent = (): MpElement => (
+    <div className={styles['forge-schema-form__fields']}>
+      {currentFields.map((field) => renderField(field, field.key))}
+    </div>
+  );
+
   // Wizard mode: a top-level array of step schemas.
   if (model.isWizard) {
     const wizardSteps: WizardStep[] = visibleStepIndices.map((stepIndex, position) => {
@@ -718,12 +729,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
         title: step.title ?? `Step ${position + 1}`,
         description: step.description,
         error: stepHasErrors[stepIndex],
-        content:
-          position === currentVisiblePosition ? (
-            <div className={styles['forge-schema-form__fields']}>
-              {currentFields.map((field) => renderField(field, field.key))}
-            </div>
-          ) : undefined,
+        content: position === currentVisiblePosition ? renderWizardStepContent : undefined,
       };
     });
 

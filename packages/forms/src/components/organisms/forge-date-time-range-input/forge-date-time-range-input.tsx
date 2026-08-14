@@ -409,8 +409,8 @@ export function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputP
             finishLabel="Done"
             modelValue={step}
             steps={[
-              { id: 'date', title: 'Date', content: datePane() },
-              { id: 'time', title: 'Time', content: timePane() },
+              { id: 'date', title: 'Date', content: datePane },
+              { id: 'time', title: 'Time', content: timePane },
             ]}
             onComplete={closeWizard}
             onUpdateModelValue={(index: number) => setStep(index)}

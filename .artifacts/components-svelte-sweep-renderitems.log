@@ -1,0 +1,6 @@
+$ node --experimental-strip-types scripts/runtime-validation/cli.ts framework -- --framework svelte --package @mission-platform/components --workers 1 --timeout-ms 120000 --port 61252 --no-build
+Manifest: /Users/rogan/Developer/sources/composable_mission_ready_platform/.artifacts/runtime-validation/runtime-validation.json
+Results: pass=248 runtime-failure=26
+Failure groups:
+svelte / @mission-platform/components / package-ui / runtime-failure: 26
+[ELIFECYCLE] Command failed with exit code 1.

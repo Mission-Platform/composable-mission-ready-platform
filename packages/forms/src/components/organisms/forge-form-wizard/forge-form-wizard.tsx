@@ -1,5 +1,5 @@
 import { ForgeTypography } from '@mission-platform/components';
-import { h, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
+import { h, type MpChild, type MpElement, type MpRenderProperty, Slot } from '@mission-platform/forge';
 
 import sizeStyles from '../../size.module.scss';
 
@@ -31,8 +31,17 @@ export interface WizardStep {
    * completion (final-step validation). Defaults to `true`.
    */
   valid?: boolean;
-  /** The step's body content (replaces the SFC's per-step scoped slot). */
-  content?: MpChild;
+  /**
+   * The step's body content (replaces the SFC's per-step scoped slot).
+   *
+   * It is a **render property** (`MpRenderProperty`) rather than a bare
+   * `MpChild`: the body is deferred content that a consumer builds per step and
+   * the wizard renders for the active step only. Modelling it as a scoped
+   * render function keeps it lowerable to a Svelte `{#snippet}` (which cannot
+   * carry a live vnode/element through a plain data property), while React and
+   * Vue simply call it to obtain the node.
+   */
+  content?: MpRenderProperty<Record<string, unknown>>;
 }
 
 export interface FormWizardProperties {
@@ -150,7 +159,7 @@ export function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpE
   // children render as real vnodes — instead of the flat-template path, which
   // would stringify the content (`toDisplayString`) and crash on a VNode.
   const renderContent = (): MpElement => (
-    <div className={styles['forge-form-wizard__content']}>{activeStep?.content}</div>
+    <div className={styles['forge-form-wizard__content']}>{activeStep?.content?.({})}</div>
   );
 
   return (

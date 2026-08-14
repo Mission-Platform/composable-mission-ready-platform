@@ -143,6 +143,8 @@ export interface TsdownLibraryOptions {
   format?: Array<'esm' | 'cjs'>;
   /** Output directory, relative to `rootDir` or absolute. Defaults to `dist`. */
   outDir?: string;
+  /** Optional package-local staging mirror used by the shared Forge runner. */
+  outputRoot?: string;
   /**
    * Whether to clean the output directory before emit. Defaults to `true`.
    * Multi-framework forge packages should set `false` (or a scoped glob) on
@@ -268,27 +270,120 @@ function cssBundlePlugin(): TsdownPlugin {
   return plugin as unknown as TsdownPlugin;
 }
 
-/** Resolve the default dts option so project-references packages still emit. */
-function resolveDtsOption(dts: boolean | DtsOptions): boolean | DtsOptions {
+/**
+ * Resolve the default dts option so project-references packages still emit.
+ *
+ * When a staged `outputRoot` is active, declaration emit and incremental tsc
+ * artifacts are redirected under that root. Otherwise packages with
+ * `declarationDir: "./dist"` keep reading and writing the live package `dist`
+ * tree, and multi-outDir libraries (e.g. icons' `dist/components` +
+ * `dist/sprite`) fail to resolve rewritten cross-entry imports such as
+ * `./sprite/*.js` against a stale final tree.
+ */
+function resolveDtsOption(
+  dts: boolean | DtsOptions,
+  options?: { readonly rootDir: string; readonly outputRoot?: string },
+): boolean | DtsOptions {
   if (dts === false) {
     return false;
   }
-  if (dts === true) {
-    // Most Mission Platform packages use a solution-style root `tsconfig.json`
-    // that only lists `references`. `build: true` makes rolldown-plugin-dts run
-    // `tsc -b` against those projects (or we point `tsconfig` at tsconfig.build.json).
-    return { build: true };
+
+  const rootDirectory = options?.rootDir ?? process.cwd();
+  const outputRoot = options?.outputRoot;
+
+  // Most Mission Platform packages use a solution-style root `tsconfig.json`
+  // that only lists `references`. `build: true` makes rolldown-plugin-dts run
+  // `tsc -b` against those projects (or we point `tsconfig` at tsconfig.build.json).
+  const resolved: DtsOptions = dts === true ? { build: true } : { build: true, ...dts };
+  if (outputRoot === undefined) {
+    return resolved;
   }
-  return { build: true, ...dts };
+
+  const stagedDeclarationDirectory = resolveTsdownOutputDirectory(rootDirectory, 'dist', outputRoot);
+  const existingCompilerOptions =
+    resolved.compilerOptions !== undefined && typeof resolved.compilerOptions === 'object'
+      ? resolved.compilerOptions
+      : {};
+
+  return {
+    ...resolved,
+    // Never reuse in-memory or on-disk declaration caches from a previous final
+    // `dist` when emitting into an isolated stage.
+    newContext: resolved.newContext ?? true,
+    // Solution-builder incremental state from the package tsconfig still points
+    // at the live `dist` tree; disable it for staged emits and rely on the
+    // stage-local tsconfig/tsbuildinfo instead.
+    incremental: false,
+    compilerOptions: {
+      ...existingCompilerOptions,
+      declarationDir: stagedDeclarationDirectory,
+      incremental: false,
+      tsBuildInfoFile: path.join(options.outputRoot, 'tsconfig.build.tsbuildinfo'),
+    },
+  };
 }
 
-/** Prefer the package's `tsconfig.build.json` when present. */
-function resolveTsconfigOption(rootDirectory: string, tsconfig: string | boolean | undefined): string | boolean {
-  if (tsconfig !== undefined) {
-    return tsconfig;
+/**
+ * Materialize a stage-local tsconfig so `tsc -b` cannot reuse the package's
+ * live `declarationDir` / `tsBuildInfoFile` from a previous final build.
+ */
+function writeStagedTsconfig(rootDirectory: string, outputRoot: string, baseTsconfig: string): string {
+  fs.mkdirSync(outputRoot, { recursive: true });
+  const stagedTsconfigPath = path.join(outputRoot, 'tsconfig.forge-stage.json');
+  // Absolute extends stays valid for both package-local stages and external repro roots.
+  const stagedConfig = {
+    extends: path.resolve(baseTsconfig),
+    compilerOptions: {
+      declarationDir: resolveTsdownOutputDirectory(rootDirectory, 'dist', outputRoot),
+      tsBuildInfoFile: path.join(outputRoot, 'tsconfig.build.tsbuildinfo'),
+      incremental: true,
+    },
+  };
+  fs.writeFileSync(stagedTsconfigPath, `${JSON.stringify(stagedConfig, undefined, 2)}\n`);
+  return stagedTsconfigPath;
+}
+
+/** Prefer the package's `tsconfig.build.json` when present, stage-remapped if needed. */
+function resolveTsconfigOption(
+  rootDirectory: string,
+  tsconfig: string | boolean | undefined,
+  outputRoot?: string,
+): string | boolean {
+  const resolvedBase =
+    tsconfig === undefined
+      ? fs.existsSync(path.resolve(rootDirectory, 'tsconfig.build.json'))
+        ? path.resolve(rootDirectory, 'tsconfig.build.json')
+        : true
+      : tsconfig;
+
+  if (outputRoot === undefined || resolvedBase === false || resolvedBase === true) {
+    return resolvedBase;
   }
-  const buildConfig = path.resolve(rootDirectory, 'tsconfig.build.json');
-  return fs.existsSync(buildConfig) ? buildConfig : true;
+
+  return writeStagedTsconfig(rootDirectory, outputRoot, resolvedBase);
+}
+
+/**
+ * Mirror a final package output path into an isolated build root. Keeping the
+ * package-relative suffix makes neutral, framework, email, and CMS outputs
+ * independently promotable without allowing tsdown to clean a sibling tree.
+ */
+export function resolveTsdownOutputDirectory(
+  rootDirectory: string,
+  outputDirectory: string,
+  outputRoot?: string,
+): string {
+  const resolvedOutput = path.isAbsolute(outputDirectory)
+    ? outputDirectory
+    : path.resolve(rootDirectory, outputDirectory);
+  if (outputRoot === undefined) {
+    return resolvedOutput;
+  }
+  const relativeOutput = path.relative(path.resolve(rootDirectory), resolvedOutput);
+  if (relativeOutput === '' || relativeOutput.startsWith(`..${path.sep}`) || path.isAbsolute(relativeOutput)) {
+    throw new Error(`tsdown output must be below rootDir when staging: ${outputDirectory}`);
+  }
+  return path.resolve(outputRoot, relativeOutput);
 }
 
 interface TsconfigAlias {
@@ -397,6 +492,7 @@ export function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig {
     unbundle = true,
     format = ['esm'],
     outDir: outDirectory = 'dist',
+    outputRoot = process.env.FORGE_BUILD_STAGE_ROOT,
     clean = true,
     autoExternalDeps = unbundle,
     cwd = rootDir,
@@ -406,6 +502,15 @@ export function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig {
     cssBundle = true,
     overrides,
   } = options;
+
+  const resolvedOutDirectory = resolveTsdownOutputDirectory(rootDir, outDirectory, outputRoot);
+  const resolvedOverrides =
+    overrides === undefined || typeof overrides.outDir !== 'string'
+      ? overrides
+      : {
+          ...overrides,
+          outDir: resolveTsdownOutputDirectory(rootDir, overrides.outDir, outputRoot),
+        };
 
   const externalNames = [
     ...DEFAULT_LIBRARY_EXTERNALS,
@@ -418,15 +523,15 @@ export function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig {
     entry: resolveEntry(rootDir, entry),
     format,
     platform,
-    dts: resolveDtsOption(dts),
-    tsconfig: resolveTsconfigOption(rootDir, tsconfig),
+    dts: resolveDtsOption(dts, { rootDir, outputRoot }),
+    tsconfig: resolveTsconfigOption(rootDir, tsconfig, outputRoot),
     clean,
     // Match the historical Vite/tsc library artifacts (no `.map` files in `dist/`).
     sourcemap: false,
     // Keep `.js`/`.d.ts` even when `platform: 'node'` (tsdown defaults node to
     // `.mjs`/`.d.mts`, which would break every package's existing `exports` map).
     fixedExtension: false,
-    outDir: path.isAbsolute(outDirectory) ? outDirectory : path.resolve(rootDir, outDirectory),
+    outDir: resolvedOutDirectory,
     unbundle,
     css: {
       transformer: 'lightningcss',
@@ -441,7 +546,7 @@ export function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig {
     },
   };
 
-  return mergeTsdownConfig(base, overrides);
+  return mergeTsdownConfig(base, resolvedOverrides);
 }
 
 /**

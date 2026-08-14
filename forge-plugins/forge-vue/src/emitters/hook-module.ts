@@ -26,6 +26,7 @@ import {
   LOCAL_EFFECT_MODULE,
   NEUTRAL_CONTEXT_VALUES,
   NEUTRAL_MODULE,
+  NEUTRAL_RUNTIME_VALUES,
   VUE_ADAPTER_MODULE,
 } from "@mission-platform/forge-plugin-api/compiler/ast.js";
 
@@ -69,6 +70,12 @@ const VUE_TYPE_IMPORTS: readonly string[] = ["Ref", "ComputedRef"];
 
 /** The neutral ref type whose Vue equivalent is `Ref` (`MpRef<X>` → `Ref<X>`). */
 const NEUTRAL_REF_TYPE = "MpRef";
+
+/** Neutral values that remain runtime calls in a plain helper module. */
+const NEUTRAL_HELPER_VALUES: ReadonlySet<string> = new Set([
+  ...NEUTRAL_RUNTIME_VALUES,
+  "h",
+]);
 
 /** A composable's header split into its signature and its declared return type. */
 interface HeaderParts {
@@ -412,6 +419,7 @@ export function emitVueHookModule(module: SemanticModule): string {
     importLines.push(`import { mpEffect } from '${LOCAL_EFFECT_MODULE}';`);
   }
   const neutralTypes: string[] = [];
+  const neutralRuntimeValues: string[] = [];
   const contextValues: string[] = [];
   for (const entry of ast.imports) {
     if (entry.source === NEUTRAL_MODULE) {
@@ -426,6 +434,13 @@ export function emitVueHookModule(module: SemanticModule): string {
       contextValues.push(
         ...entry.valueNames.filter((name) => NEUTRAL_CONTEXT_VALUES.has(name)),
       );
+      neutralRuntimeValues.push(
+        ...entry.valueNames.filter(
+          (name) =>
+            NEUTRAL_HELPER_VALUES.has(name) &&
+            new RegExp(String.raw`\b${name}\b`).test(emittedBody),
+        ),
+      );
       continue;
     }
     if (entry.source.startsWith(".")) {
@@ -439,6 +454,11 @@ export function emitVueHookModule(module: SemanticModule): string {
   if (neutralTypes.length > 0) {
     importLines.push(
       `import type { ${neutralTypes.join(", ")} } from '${NEUTRAL_MODULE}';`,
+    );
+  }
+  if (neutralRuntimeValues.length > 0) {
+    importLines.push(
+      `import { ${neutralRuntimeValues.join(", ")} } from '${NEUTRAL_MODULE}';`,
     );
   }
   // Context primitives are remapped to the Vue adapter (a `provide`/`inject`-backed

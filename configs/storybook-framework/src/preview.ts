@@ -10,6 +10,9 @@ import type { Renderer } from 'storybook/internal/types';
 //   return 'desktop';
 // }
 
+/** Framework ids accepted by {@link sharedPreviewParametersFor}. */
+type PreviewFramework = 'vue' | 'react' | 'solid' | 'svelte' | 'web-component';
+
 /**
  * Storybook viewports built from Mission Platform breakpoints.
  */
@@ -44,6 +47,34 @@ export const sharedPreviewParameters = {
     test: 'error' as const,
   },
 };
+
+/**
+ * Framework-aware Storybook parameters.
+ *
+ * For Svelte, force static docs source. `@storybook/svelte`'s docs
+ * `sourceDecorator` re-invokes `context.originalStoryFn` inside a `useEffect`
+ * to generate dynamic source. That second call is outside the hooks context, so
+ * CSF `render` functions that call `useArgs()` throw:
+ * "Storybook preview hooks can only be called inside decorators and story functions".
+ *
+ * Setting `docs.source.type = 'code'` makes `skipSourceRender` return true and
+ * avoids the out-of-context re-invoke. CSF still exposes `originalSource` for the
+ * source panel.
+ */
+export function sharedPreviewParametersFor(framework?: PreviewFramework) {
+  if (framework !== 'svelte') {
+    return sharedPreviewParameters;
+  }
+
+  return {
+    ...sharedPreviewParameters,
+    docs: {
+      source: {
+        type: 'code' as const,
+      },
+    },
+  };
+}
 
 /**
  * Shared Storybook decorators for all frameworks.

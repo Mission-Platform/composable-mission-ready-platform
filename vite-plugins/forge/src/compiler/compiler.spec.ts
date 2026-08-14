@@ -1244,7 +1244,10 @@ describe('the local JSX types module source (`localJsxTypesModuleSource`)', () =
     const source = localJsxTypesModuleSource('svelte');
     expect(source).toContain('export type MpElement = unknown;');
     expect(source).toContain('export type MpChild = unknown;');
-    expect(source).toContain('export type MpRenderProperty<S = Record<string, unknown>> = (scope: S) => MpChild;');
+    // A Svelte render prop is a native `Snippet`, so a `{@render prop?.(scope)}`
+    // invocation of the compiled render-prop call typechecks.
+    expect(source).toContain("import type { Snippet } from 'svelte';");
+    expect(source).toContain('export type MpRenderProperty<S = Record<string, unknown>> = Snippet<[S]>;');
   });
 
   it('binds the Web-Components variants to the native template result types', () => {
@@ -3179,17 +3182,18 @@ describe('the compiler emits Svelte markup for hyperscript `h(…)` renders and 
     expect(text.lang).toBe('svelte');
     // A dynamic-tag `h(tag, …)` render becomes `<svelte:element this={tag} …>`.
     expect(text.code).toContain('<svelte:element this={as}');
-    // The variadic `childList` normalisation renders the `children` snippet.
-    expect(text.code).toContain('{@render children?.()}');
+    // The variadic `childList` normalisation renders the `children` snippet
+    // (normalized so a primitive `MpChild` slot value renders as text instead).
+    expect(text.code).toContain('{@render __mpSlotValueSnippet(children)}');
     // The early `if (!popup) return h(…)` folds into an `{#if}/{:else}` chain.
     expect(text.code).toMatch(/\{#if !popup\}[\s\S]*\{:else\}[\s\S]*\{\/if\}/);
     // `h(…)` props map like JSX: `class` and the lowercase Svelte event form.
     expect(text.code).toContain('class={className}');
     expect(text.code).toContain('onmouseenter={');
-    // No bare `return` or `h(…)` call ever leaks into the `<script>` block.
+    // No source-level JSX/hyperscript return leaks into the `<script>` block.
     const scriptStart = text.code.indexOf('>', text.code.indexOf('<script')) + 1;
     const scriptOnly = text.code.slice(scriptStart, text.code.indexOf('</script>'));
-    expect(scriptOnly).not.toMatch(/\breturn\b/);
+    expect(scriptOnly).not.toMatch(/\breturn\s+(?:<|h\()/);
     expect(scriptOnly).not.toMatch(/\bh\(/);
   });
 });
@@ -3703,6 +3707,41 @@ describe('the Vue emitter renders a render-prop call natively via `<component :i
   it('keeps `panel` a real prop — never a Vue named slot', () => {
     expect(out.code).not.toContain('name="panel"');
     expect(out.code).toContain('panel?:');
+  });
+});
+
+const MEMBER_RENDER_PROP_CALL = [
+  "import { h, type MpElement, type MpRenderProperty } from '@mission-platform/forge';",
+  '',
+  'export interface WizardStep {',
+  '  when?: boolean;',
+  '  content?: MpRenderProperty<Record<string, unknown>>;',
+  '  label?: () => string;',
+  '}',
+  '',
+  'export interface WizardProperties {',
+  '  steps: WizardStep[];',
+  '  current: number;',
+  '}',
+  '',
+  'export function ForgeWizard(properties: Readonly<WizardProperties>): MpElement {',
+  '  const { steps, current } = properties;',
+  '  const visibleSteps = steps.filter((step) => step.when !== false);',
+  '  const activeStep = visibleSteps[current];',
+  '  return <div>{activeStep?.content?.({})}{activeStep?.label?.()}</div>;',
+  '}',
+].join('\n');
+
+describe('the Vue emitter renders a render-property member call as a node', () => {
+  const out = compileComponentModule(MEMBER_RENDER_PROP_CALL, {
+    framework: 'vue',
+    componentName: 'ForgeWizard',
+  });
+
+  it('propagates the receiver type through array filtering and indexing', () => {
+    expect(out.code).toContain('<component :is="activeStep?.content?.({})" />');
+    expect(out.code).not.toMatch(/\{\{\s*activeStep\?\.content\?\.\(\{\}\)\s*\}\}/);
+    expect(out.code).toContain('{{ activeStep?.label?.() }}');
   });
 });
 

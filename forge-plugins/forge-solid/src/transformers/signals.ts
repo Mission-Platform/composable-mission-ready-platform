@@ -189,7 +189,16 @@ export function rewriteGetterReads(
       return undefined;
     }
     // `x.open` — the member side of a property access is not a read of `open`.
+    // `...open` is a rest/spread of the value, not a member access: the three
+    // dots leave `before === '.'` for the identifier that follows.
     if (before === "." || before === "#") {
+      if (
+        before === "." &&
+        occurrence.start >= 3 &&
+        text.slice(occurrence.start - 3, occurrence.start) === "..."
+      ) {
+        return `${name}()`;
+      }
       return undefined;
     }
     // `open(…)` — already a call; calling again would yield `open()()`.

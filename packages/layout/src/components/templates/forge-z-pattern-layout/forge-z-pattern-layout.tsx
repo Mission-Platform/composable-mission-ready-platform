@@ -36,14 +36,6 @@ const SPACING: Record<ZPatternLayoutSpacing, string> = {
   '2xl': 'var(--mp-spacing-12)',
 };
 
-const REGION_CLASSES: Record<ZPatternLayoutRegion, string> = {
-  topStart: 'z-pattern-layout__top-start',
-  topEnd: 'z-pattern-layout__top-end',
-  middle: 'z-pattern-layout__middle',
-  bottomStart: 'z-pattern-layout__bottom-start',
-  bottomEnd: 'z-pattern-layout__bottom-end',
-};
-
 /**
  * `ForgeZPatternLayout` exposes `topStart`, `topEnd`, `middle`, `bottomStart`,
  * and `bottomEnd` named slots while preserving this semantic DOM order. Wide
@@ -55,8 +47,21 @@ export function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutPropertie
   if (margin) style.margin = SPACING[margin];
   if (padding) style.padding = SPACING[padding];
 
-  const region = (name: ZPatternLayoutRegion): MpElement | undefined =>
-    hasSlot(name) ? h('section', { className: styles[REGION_CLASSES[name]] }, h(Slot, { name })) : undefined;
+  const elementList: MpElement[] = [];
+  if (hasSlot('topStart'))
+    elementList.push(h('section', { className: styles['z-pattern-layout__top-start'] }, h(Slot, { name: 'topStart' })));
+  if (hasSlot('topEnd'))
+    elementList.push(h('section', { className: styles['z-pattern-layout__top-end'] }, h(Slot, { name: 'topEnd' })));
+  if (hasSlot('middle'))
+    elementList.push(h('section', { className: styles['z-pattern-layout__middle'] }, h(Slot, { name: 'middle' })));
+  if (hasSlot('bottomStart'))
+    elementList.push(
+      h('section', { className: styles['z-pattern-layout__bottom-start'] }, h(Slot, { name: 'bottomStart' })),
+    );
+  if (hasSlot('bottomEnd'))
+    elementList.push(
+      h('section', { className: styles['z-pattern-layout__bottom-end'] }, h(Slot, { name: 'bottomEnd' })),
+    );
 
   return h(
     tag,
@@ -64,10 +69,6 @@ export function ForgeZPatternLayout(properties: Readonly<ZPatternLayoutPropertie
       className: [styles['z-pattern-layout'], styles[`z-pattern-layout--${breakpoint}`]],
       style,
     },
-    region('topStart'),
-    region('topEnd'),
-    region('middle'),
-    region('bottomStart'),
-    region('bottomEnd'),
+    ...elementList,
   );
 }

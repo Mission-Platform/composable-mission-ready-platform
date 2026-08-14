@@ -10,6 +10,7 @@
   },
   "scripts": {
     "prepare": "husky",
+    "changeset": "changeset",
     "commitlint": "commitlint",
     "dev:docs": "pnpm exec turbo run dev --filter @mission-platform/docs",
     "dev:website": "pnpm exec turbo run dev --filter @mission-platform/website",
@@ -35,7 +36,13 @@
     "lint:style:fix": "pnpm exec turbo run lint:style:fix",
     "format": "pnpm exec turbo run format",
     "format:write": "pnpm exec turbo run format:write",
-    "validate:exports": "node scripts/validate-package-exports.mjs"
+    "validate:exports": "node scripts/validate-package-exports.mjs",
+    "validate:inventory": "node --experimental-strip-types scripts/runtime-validation/cli.ts inventory",
+    "validate:framework": "node --experimental-strip-types scripts/runtime-validation/cli.ts framework",
+    "validate:app": "node --experimental-strip-types scripts/runtime-validation/cli.ts app",
+    "validate:target": "node --experimental-strip-types scripts/runtime-validation/cli.ts target",
+    "validate:runtime": "node --experimental-strip-types scripts/runtime-validation/cli.ts full",
+    "test:runtime-validation": "pnpm --filter @mission-platform/components exec vitest run --config ../../scripts/runtime-validation/vitest.config.ts"
   },
   "devDependencies": {
     "@changesets/cli": "catalog:utilities",

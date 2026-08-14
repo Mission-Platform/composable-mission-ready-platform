@@ -239,7 +239,8 @@ function emitSolidBlokWrapper(
 
   const lines = [
     `import { For } from 'solid-js';`,
-    `import { StoryblokComponent, storyblokEditable, type SbBlokData } from '@storyblok/solid';`,
+    `import { StoryblokComponent } from '@mission-platform/forge-cms-storyblok/solid';`,
+    `import { storyblokEditable, type SbBlokData } from '@storyblok/js';`,
     ``,
     `import { ${publicName} } from '${componentsImport}';`,
     ``,

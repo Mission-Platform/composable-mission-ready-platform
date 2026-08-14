@@ -154,6 +154,157 @@ describe("optimizeSvelteModule", () => {
     expect(ungated.appliedOptimizations).not.toContain(HOIST_STATIC_MARKUP);
   });
 
+  it("does not hoist static-marked rows that close over each-block locals", () => {
+    // Regression: ForgeList's mapped `<li>{item.label}</li>` is static-marked
+    // by the neutral compiler, but a parameterless `{#snippet}` cannot see the
+    // `{#each}` binding `item`.
+    const item = element("li", {
+      attributes: [
+        stringAttribute("__mpStatic", "true"),
+        expressionAttribute("key", "index"),
+      ],
+      children: [expressionChild("item.label")],
+      source: "<li key={index}>{item.label}</li>",
+    });
+    const root = element("ul", {
+      children: [
+        expressionChild(
+          "items.map((item, index) => <li key={index}>{item.label}</li>)",
+          [item],
+        ),
+      ],
+      source:
+        "<ul>{items.map((item, index) => <li key={index}>{item.label}</li>)}</ul>",
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [statement("const items = properties.items;")],
+        returned: { expression: root.expression!.text, nodes: [root] },
+      }),
+      props: [{ name: "items", optional: false }],
+      listKeys: [listKey("items", "index", true)],
+      staticSubtrees: [item.span],
+    });
+
+    const refined = refine(module);
+    expect(refined.staticSubtrees).toHaveLength(1);
+    expect(refined.hoistedStatic).toEqual([]);
+
+    const code = emitSvelteModule(module, "Fixture", new Set(), refined).code;
+    expect(code).not.toContain("{#snippet");
+    expect(code).toContain("{#each items as item, index (index)}");
+    expect(code).toContain("<li>{item.label}</li>");
+  });
+
+  it("does not let a same-named parameter in an unrelated setup statement mark an each-block local as top-level", () => {
+    // Regression: ForgeSelect's `selectOption = (option: SelectOption) => {…}`
+    // parameter must not leak into the top-level binding set used to gate
+    // hoisting for the unrelated `options.map((option) => <option>…</option>)`
+    // row — a same-named arrow-function parameter is scoped to that function
+    // only, not visible from a parameterless hoisted `{#snippet}`. Hoisting it
+    // anyway throws `ReferenceError: option is not defined` at render time.
+    const optionRow = element("option", {
+      attributes: [
+        stringAttribute("__mpStatic", "true"),
+        expressionAttribute("value", "option.value"),
+      ],
+      children: [expressionChild("option.label")],
+      source: "<option value={option.value}>{option.label}</option>",
+    });
+    const root = element("select", {
+      children: [
+        expressionChild(
+          "options.map((option) => <option value={option.value}>{option.label}</option>)",
+          [optionRow],
+        ),
+      ],
+      source:
+        "<select>{options.map((option) => <option value={option.value}>{option.label}</option>)}</select>",
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [
+          statement("const options = properties.options;"),
+          statement(
+            "const selectOption = (option: SelectOption): void => { commit(option.value); };",
+          ),
+        ],
+        returned: { expression: root.expression!.text, nodes: [root] },
+      }),
+      props: [{ name: "options", optional: false }],
+      listKeys: [listKey("options", "option.value", true)],
+    });
+
+    const refined = refine(module);
+    expect(refined.staticSubtrees).toHaveLength(1);
+    expect(refined.hoistedStatic).toEqual([]);
+
+    const code = emitSvelteModule(module, "Fixture", new Set(), refined).code;
+    expect(code).not.toContain("{#snippet");
+    expect(code).toContain(
+      "<option value={option.value}>{option.label}</option>",
+    );
+  });
+
+  it("does not hoist description-style rows whose only free locals are in children or template keys", () => {
+    // ForgeList description rows use `` key={`term-${index}`} `` and nested
+    // component children `{item.term ?? item.label}`. Both must block hoisting.
+    const term = element("dt", {
+      attributes: [
+        stringAttribute("__mpStatic", "true"),
+        expressionAttribute("key", "`term-${index}`"),
+        expressionAttribute("className", "styles['term']"),
+      ],
+      children: [
+        element("ForgeTypography", {
+          attributes: [stringAttribute("variant", "body-md")],
+          children: [expressionChild("item.term ?? item.label")],
+          source:
+            '<ForgeTypography variant="body-md">{item.term ?? item.label}</ForgeTypography>',
+        }),
+      ],
+      source:
+        "<dt key={`term-${index}`} className={styles['term']}><ForgeTypography variant=\"body-md\">{item.term ?? item.label}</ForgeTypography></dt>",
+    });
+    const root = element("dl", {
+      children: [
+        expressionChild(
+          "items.flatMap((item, index) => [<dt key={`term-${index}`}>{item.term}</dt>])",
+          [term],
+        ),
+      ],
+      source:
+        "<dl>{items.flatMap((item, index) => [<dt key={`term-${index}`}>{item.term}</dt>])}</dl>",
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [
+          statement("const items = properties.items;"),
+          statement("const styles = {};"),
+        ],
+        returned: { expression: root.expression!.text, nodes: [root] },
+      }),
+      props: [{ name: "items", optional: false }],
+      listKeys: [listKey("items", undefined, false)],
+      staticSubtrees: [term.span],
+    });
+
+    const refined = refine(module);
+    expect(refined.staticSubtrees).toHaveLength(1);
+    // The free `item` / `index` reads must keep this candidate out of
+    // parameterless snippet hoisting even when styles is top-level.
+    expect(refined.hoistedStatic).toEqual([]);
+    expect(
+      emitSvelteModule(module, "Fixture", new Set(), refined).code,
+    ).not.toContain("{#snippet");
+  });
+
   it("keeps only stable each-keys while neutral key inference is enabled", () => {
     const module = refinableModule();
 

@@ -26,3 +26,4 @@ target/
 **/.junie/mcp/
 
 .env.local
+.artifacts/runtime-validation/

@@ -7,7 +7,7 @@ const meta = {
   component: EmailImage,
   tags: ['autodocs'],
   args: {
-    src: 'https://example.com/mission-platform.png',
+    src: '/favicon.svg',
     alt: 'Mission Platform logo',
     width: 240,
     height: 80,

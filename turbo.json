@@ -20,30 +20,37 @@
     "MISSION_REPO_ROOT",
     "NODE_OPTIONS",
     "STORYBOOK_FRAMEWORK",
+    "FORGE_FRAMEWORK_TARGET",
+    "FORGE_CMS_STORYBLOK_TARGET",
+    "FORGE_CMS_ARTIFACT_MODE",
+    "FORGE_BUILD_STAGE_ROOT",
     "VITE_*"
   ],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
+      "dependsOn": ["^build"],
+      "env": [
+        "FORGE_BUILD_TARGET",
+        "FORGE_FRAMEWORK_TARGET",
+        "FORGE_CMS_STORYBLOK_TARGET",
+        "FORGE_CMS_ARTIFACT_MODE"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/scripts/build-forge.ts",
+        "$TURBO_ROOT$/scripts/forge-build.ts",
         "!**/*.md",
         "!**/dist/**",
         "!**/storybook-static/**",
         "!**/.vite/**",
-        "!**/coverage/**"
+        "!**/coverage/**",
+        "!**/node_modules/.cache/forge-build/**",
+        "!**/.forge-promotion-*/**"
       ],
-      "outputs": [
-        "dist/**",
-        ".vite/**"
-      ]
+      "outputs": ["dist/**", ".vite/**"]
     },
     "build:check": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "inputs": [
         "$TURBO_DEFAULT$",
         "!**/*.md",
@@ -55,9 +62,7 @@
       "outputs": []
     },
     "build:neutral": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "inputs": [
         "$TURBO_DEFAULT$",
         "!**/*.md",
@@ -78,9 +83,7 @@
       ]
     },
     "build:bundle": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "inputs": [
         "$TURBO_DEFAULT$",
         "!**/*.md",
@@ -89,252 +92,109 @@
         "!**/.vite/**",
         "!**/coverage/**"
       ],
-      "outputs": [
-        "dist/**",
-        "!dist/**/*.d.ts",
-        "!dist/**/*.d.ts.map"
-      ]
+      "outputs": ["dist/**", "!dist/**/*.d.ts", "!dist/**/*.d.ts.map"]
     },
-    "build:solid": {
-      "dependsOn": [
-        "^build"
+    "build:forge": {
+      "dependsOn": ["^build"],
+      "env": [
+        "FORGE_BUILD_TARGET",
+        "FORGE_FRAMEWORK_TARGET",
+        "FORGE_CMS_STORYBLOK_TARGET",
+        "FORGE_CMS_ARTIFACT_MODE"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/scripts/build-forge.ts",
+        "$TURBO_ROOT$/scripts/forge-build.ts",
         "!**/*.md",
         "!**/dist/**",
         "!**/storybook-static/**",
         "!**/.vite/**",
-        "!**/coverage/**"
+        "!**/coverage/**",
+        "!**/node_modules/.cache/forge-build/**",
+        "!**/.forge-promotion-*/**"
       ],
-      "outputs": [
-        "dist/solid/**"
-      ]
+      "outputs": ["dist/**"]
+    },
+    "build:react": {
+      "dependsOn": ["^build"],
+      "env": ["FORGE_BUILD_TARGET", "FORGE_FRAMEWORK_TARGET"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/scripts/build-forge.ts", "$TURBO_ROOT$/scripts/forge-build.ts", "!**/dist/**", "!**/node_modules/.cache/forge-build/**", "!**/.forge-promotion-*/**"],
+      "outputs": ["dist/**"]
+    },
+    "build:vue": {
+      "dependsOn": ["^build"],
+      "env": ["FORGE_BUILD_TARGET", "FORGE_FRAMEWORK_TARGET"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/scripts/build-forge.ts", "$TURBO_ROOT$/scripts/forge-build.ts", "!**/dist/**", "!**/node_modules/.cache/forge-build/**", "!**/.forge-promotion-*/**"],
+      "outputs": ["dist/**"]
     },
     "build:svelte": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
-      ],
-      "outputs": [
-        "dist/svelte/**"
-      ]
+      "dependsOn": ["^build"],
+      "env": ["FORGE_BUILD_TARGET", "FORGE_FRAMEWORK_TARGET"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/scripts/build-forge.ts", "$TURBO_ROOT$/scripts/forge-build.ts", "!**/dist/**", "!**/node_modules/.cache/forge-build/**", "!**/.forge-promotion-*/**"],
+      "outputs": ["dist/**"]
+    },
+    "build:solid": {
+      "dependsOn": ["^build"],
+      "env": ["FORGE_BUILD_TARGET", "FORGE_FRAMEWORK_TARGET"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/scripts/build-forge.ts", "$TURBO_ROOT$/scripts/forge-build.ts", "!**/dist/**", "!**/node_modules/.cache/forge-build/**", "!**/.forge-promotion-*/**"],
+      "outputs": ["dist/**"]
     },
     "build:web-components": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
-      ],
-      "outputs": [
-        "dist/web-components/**"
-      ]
-    },
-    "build:cms": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
-      ],
-      "outputs": [
-        "dist/cms/**"
-      ]
-    },
-    "build:cms-storyblok-vue": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
-      ],
-      "outputs": [
-        "dist/cms/storyblok/vue/**",
-        "dist/cms/storyblok/*.json"
-      ]
-    },
-    "build:cms-storyblok-react": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
-      ],
-      "outputs": [
-        "dist/cms/storyblok/react/**"
-      ]
-    },
-    "build:cms-astro": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
-      ],
-      "outputs": [
-        "dist/cms/astro/**"
-      ]
-    },
-    "build:cms-ghost": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
-      ],
-      "outputs": [
-        "dist/cms/ghost/**"
-      ]
-    },
-    "build:cms-jekyll": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
-      ],
-      "outputs": [
-        "dist/cms/jekyll/**"
-      ]
-    },
-    "build:cms-webflow": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
-      ],
-      "outputs": [
-        "dist/cms/webflow/**"
-      ]
+      "dependsOn": ["^build"],
+      "env": ["FORGE_BUILD_TARGET", "FORGE_FRAMEWORK_TARGET"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/scripts/build-forge.ts", "$TURBO_ROOT$/scripts/forge-build.ts", "!**/dist/**", "!**/node_modules/.cache/forge-build/**", "!**/.forge-promotion-*/**"],
+      "outputs": ["dist/**"]
     },
     "build:watch": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
     },
     "dev": {
-      "dependsOn": [
-        "^build"
-      ],
-      "with": [
-        "@mission-platform/components#build:watch"
-      ],
+      "dependsOn": ["^build"],
+      "with": ["@mission-platform/components#build:watch"],
       "cache": false,
       "persistent": true
     },
     "preview": {
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "cache": false,
       "persistent": true
     },
     "storybook": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
     },
     "storybook-react": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
     },
     "test": {
-      "dependsOn": [
-        "build",
-        "^build"
-      ]
+      "dependsOn": ["build", "^build"]
     },
     "test:watch": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
     },
     "test:coverage": {
-      "dependsOn": [
-        "build",
-        "^build"
-      ],
-      "outputs": [
-        "coverage/**"
-      ]
+      "dependsOn": ["build", "^build"],
+      "outputs": ["coverage/**"]
     },
     "test:wasm": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "transit": {
-      "dependsOn": [
-        "^transit"
-      ]
+      "dependsOn": ["^transit"]
     },
     "lint": {
-      "dependsOn": [
-        "transit"
-      ]
+      "dependsOn": ["transit"]
     },
     "lint:fix": {
-      "dependsOn": [
-        "transit"
-      ],
+      "dependsOn": ["transit"],
       "cache": false
     },
     "lint:style": {},
@@ -346,34 +206,19 @@
       "cache": false
     },
     "deploy": {
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "cache": false
     },
     "i18n:extract": {
-      "dependsOn": [
-        "^i18n:extract"
-      ],
-      "outputs": [
-        "locales/*.yaml",
-        "i18n-meta.json"
-      ]
+      "dependsOn": ["^i18n:extract"],
+      "outputs": ["locales/*.yaml", "i18n-meta.json"]
     },
     "i18n:types": {
-      "dependsOn": [
-        "i18n:extract",
-        "^i18n:types"
-      ],
-      "outputs": [
-        "src/locales/types.d.ts",
-        "src/locales/resources.d.ts"
-      ]
+      "dependsOn": ["i18n:extract", "^i18n:types"],
+      "outputs": ["src/locales/types.d.ts", "src/locales/resources.d.ts"]
     },
     "i18n:lint": {
-      "dependsOn": [
-        "i18n:extract"
-      ]
+      "dependsOn": ["i18n:extract"]
     }
   }
 }

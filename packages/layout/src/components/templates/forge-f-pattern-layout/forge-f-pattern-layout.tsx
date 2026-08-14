@@ -47,14 +47,19 @@ export function ForgeFPatternLayout(properties: Readonly<FPatternLayoutPropertie
   if (margin) style.margin = SPACING[margin];
   if (padding) style.padding = SPACING[padding];
 
-  const region = (name: FPatternLayoutRegion): MpElement | undefined =>
-    hasSlot(name)
-      ? h(
-          name === 'header' ? 'header' : name === 'footer' ? 'footer' : 'section',
-          { className: styles[`f-pattern-layout__${name}`] },
-          h(Slot, { name }),
-        )
-      : undefined;
+  const elementList: MpElement[] = [];
+  if (hasSlot('header'))
+    elementList.push(h('header', { className: styles['f-pattern-layout__header'] }, h(Slot, { name: 'header' })));
+  if (hasSlot('intro'))
+    elementList.push(h('section', { className: styles['f-pattern-layout__intro'] }, h(Slot, { name: 'intro' })));
+  if (hasSlot('primary'))
+    elementList.push(h('section', { className: styles['f-pattern-layout__primary'] }, h(Slot, { name: 'primary' })));
+  if (hasSlot('secondary'))
+    elementList.push(
+      h('section', { className: styles['f-pattern-layout__secondary'] }, h(Slot, { name: 'secondary' })),
+    );
+  if (hasSlot('footer'))
+    elementList.push(h('footer', { className: styles['f-pattern-layout__footer'] }, h(Slot, { name: 'footer' })));
 
   return h(
     tag,
@@ -62,10 +67,6 @@ export function ForgeFPatternLayout(properties: Readonly<FPatternLayoutPropertie
       className: [styles['f-pattern-layout'], styles[`f-pattern-layout--${breakpoint}`]],
       style,
     },
-    region('header'),
-    region('intro'),
-    region('primary'),
-    region('secondary'),
-    region('footer'),
+    ...elementList,
   );
 }
