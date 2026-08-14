@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/forge-cms-ghost",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "BSD-4-Clause",
   "description": "Ghost CMS target for Forge components",
   "type": "module",

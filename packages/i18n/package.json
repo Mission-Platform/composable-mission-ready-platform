@@ -1,6 +1,6 @@
 {
   "name": "@mission-platform/i18n",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "license": "BSD-4-Clause",
   "description": "Framework-neutral i18next state and locale helpers with Vue and React adapters",
   "type": "module",

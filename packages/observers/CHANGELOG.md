@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.0.0
+
+### Major Changes
+
+- 4714506: move the Storyblok projection under the `./cms/storyblok/*` export namespace
+
+  Storyblok output is now produced by `@mission-platform/forge-cms-storyblok`
+  through the shared CMS driver, which namespaces every content-platform build
+  under `dist/cms/<cms>/<framework>/`.
+
+  BREAKING CHANGE: the `./storyblok/react`, `./storyblok/vue`, and
+  `./storyblok/components.json` subpath exports are now `./cms/storyblok/react`,
+  `./cms/storyblok/vue`, and `./cms/storyblok/components.json`, resolving to
+  `dist/cms/storyblok/**` instead of `dist/storyblok/**`. Update imports
+  accordingly; the module contents are unchanged.
+
+### Patch Changes
+
+- @mission-platform/forge@1.0.0
+
 ## 1.0.0
 
 ### Major Changes
@@ -22,7 +42,7 @@
 
   ```ts
   // vite.config.ts
-  export default defineFrameworkAppConfig({ framework: 'vue' });
+  export default defineFrameworkAppConfig({ framework: "vue" });
   ```
 
   ```jsonc
