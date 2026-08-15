@@ -40,8 +40,10 @@ packages:
     breakpoints: Utility e componenti per i breakpoint responsive.
     code-scanner: Scansiona codici QR, Data Matrix e codici a barre da un'immagine o dalla fotocamera.
     components: Componenti di interfaccia a scrittura unica per ogni framework supportato.
-    content: ''
+    content: AST dei contenuti, builder e componenti Monaco, Markdown e WYSIWYG.
     d3: Integrazione di D3 indipendente dal framework.
+    email-components: Componenti compatibili con i client email per tutti i framework supportati.
+    email-renderer: Rendering indipendente dal framework per email, Markdown e alberi Forge.
     forms: Generatore di moduli a scrittura unica e moduli guidati da schema.
     forms-core: Motore di moduli JSON Schema indipendente dal framework.
     harper: Controllo grammaticale e stilistico Harper per Monaco.
@@ -55,16 +57,31 @@ packages:
     observers: Hook a scrittura unica per gli observer Intersection, Mutation e Performance.
     phone-number: Analisi, validazione e formattazione dei numeri di telefono.
     qr-code: Codificatore e decodificatore di codici QR in WebAssembly.
+    resource-planner: Pianificazione delle risorse indipendente dal framework e timeline per più persone.
     router: Utility di routing.
     rxjs: Collega gli observable RxJS allo stato dei componenti.
-    scheduler: ''
+    scheduler: UI di pianificazione, eventi iCalendar e motore delle ricorrenze.
     seo: Dati strutturati, meta tag e utility per la sitemap.
     speech-audio: Hook per sintesi vocale, riconoscimento, audio e Web MIDI.
     three: Integrazione di Three.js indipendente dal framework.
     tokens: Token di design CSS e temi SCSS.
+    vcard: Dati vCard RFC 6350, iCalendar RFC 5545 e componenti Forge.
 projects:
   items:
+    docs:
+      cta: Leggi la documentazione
+      description: Il sito pubblico della documentazione per imparare, costruire e distribuire con Mission Platform.
+      name: Mission Platform Docs
     my-care-notes:
       cta: Scopri di più
       description: Un'applicazione di note di assistenza incentrata sul paziente, costruita su Mission Platform.
       name: My Care Notes
+    service-monitor:
+      cta: Scopri di più
+      description: Una dashboard di monitoraggio dei servizi lato server, con probe Durable Object, serie temporali SQLite e grafici RxJS e D3 in tempo reale.
+      name: Service Monitor
+seo:
+  description: Un monorepo open source e componibile per UI indipendenti dal framework, utility di dominio e prodotti web pronti per l’edge.
+  keywords: Mission Platform, architettura componibile, UI indipendente dal framework, Forge, Vue, React, Svelte, Solid, Web Components, TypeScript, WebAssembly, Cloudflare Workers
+  title: Mission Platform — Costruisci con coraggio. Pubblica con uno scopo.
+  twitter-description: Componi i blocchi per prodotti web affidabili e pubblicali ovunque si trovino i tuoi utenti.

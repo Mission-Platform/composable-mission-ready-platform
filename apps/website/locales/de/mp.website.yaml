@@ -40,8 +40,10 @@ packages:
     breakpoints: Responsive Breakpoint-Utilities und -Komponenten.
     code-scanner: QR, Data Matrix und Barcodes aus Bild oder Kamera scannen.
     components: Write-once-UI-Komponenten für jedes unterstützte Framework.
-    content: ''
+    content: Content-AST, Builder, Monaco-, Markdown- und WYSIWYG-Komponenten.
     d3: Framework-neutrale D3-Integration.
+    email-components: E-Mail-kompatible Komponenten für alle unterstützten Frameworks.
+    email-renderer: Framework-neutrales Rendering von E-Mail, Markdown und Forge-Bäumen im Browser.
     forms: Write-once-Formular-Builder und schemagesteuerte Formulare.
     forms-core: Framework-neutrale JSON-Schema-Formular-Engine.
     harper: Harper Grammatik- und Stilprüfung für Monaco.
@@ -55,16 +57,31 @@ packages:
     observers: Write-once Intersection-, Mutation- und Performance-Observer-Hooks.
     phone-number: Parsen, Validieren und Formatieren von Telefonnummern.
     qr-code: QR-Code-Encoder und -Decoder in WebAssembly.
+    resource-planner: Framework-neutrale Ressourcenplanung und Zeitachsen für mehrere Personen.
     router: Routing-Utilities.
     rxjs: RxJS-Observables an den Komponentenzustand koppeln.
-    scheduler: ''
+    scheduler: Scheduler-UI, iCalendar-Ereignisse und Wiederholungs-Engine.
     seo: Strukturierte Daten, Meta-Tags und Sitemap-Helfer.
     speech-audio: Sprachsynthese, -erkennung, Audio- und Web-MIDI-Hooks.
     three: Framework-neutrale Three.js-Integration.
     tokens: CSS-Design-Tokens und SCSS-Themes.
+    vcard: RFC-6350-vCard- und RFC-5545-iCalendar-Daten sowie Forge-Komponenten.
 projects:
   items:
+    docs:
+      cta: Doku lesen
+      description: Die öffentliche Dokumentationsseite zum Lernen, Entwickeln und Ausliefern mit der Mission Platform.
+      name: Mission Platform Docs
     my-care-notes:
       cta: Mehr erfahren
       description: Eine patientenzentrierte Pflegenotiz-Anwendung, gebaut auf dem Mission Platform.
       name: My Care Notes
+    service-monitor:
+      cta: Mehr erfahren
+      description: Ein serverseitiges Dashboard zur Dienstüberwachung mit Durable-Object-Prüfungen, SQLite-Zeitreihen und Live-Diagrammen mit RxJS und D3.
+      name: Service Monitor
+seo:
+  description: Ein Open-Source-Monorepo für framework-neutrale UI, Domänenwerkzeuge und edge-bereite Webprodukte.
+  keywords: Mission Platform, komponierbare Architektur, framework-neutrale UI, Forge, Vue, React, Svelte, Solid, Web Components, TypeScript, WebAssembly, Cloudflare Workers
+  title: Mission Platform — Mutig bauen. Mit Zweck ausliefern.
+  twitter-description: Komponieren Sie Bausteine für zuverlässige Webprodukte und liefern Sie sie überall dort aus, wo Ihre Nutzer sind.

@@ -40,8 +40,10 @@ packages:
     breakpoints: כלים ורכיבים לנקודות שבירה רספונסיביות.
     code-scanner: סרקו ברקודים מסוג QR, Data Matrix וברקודים מתמונה או ממצלמה.
     components: רכיבי ממשק משתמש בכתיבה חד־פעמית עבור כל מסגרת עבודה נתמכת.
-    content: ''
+    content: AST תוכן, בונים ורכיבי Monaco, Markdown ו־WYSIWYG.
     d3: שילוב D3 ניטרלי למסגרות עבודה.
+    email-components: רכיבים תואמי לקוחות דוא״ל המוצגים בכל המסגרות הנתמכות.
+    email-renderer: רינדור ניטרלי למסגרות עבודה של דוא״ל, Markdown ועצי Forge.
     forms: בונה טפסים בכתיבה חד־פעמית וטפסים מונחי סכימה.
     forms-core: מנוע טפסים של JSON Schema הניטרלי למסגרות עבודה.
     harper: בדיקת דקדוק וסגנון של Harper עבור Monaco.
@@ -55,16 +57,31 @@ packages:
     observers: הוקים של צופי Intersection, Mutation ו־Performance בכתיבה חד־פעמית.
     phone-number: ניתוח, אימות ועיצוב של מספרי טלפון.
     qr-code: מקודד ומפענח QR Code ב־WebAssembly.
+    resource-planner: תכנון משאבים ניטרלי למסגרות עבודה ורכיבי ציר זמן לכמה אנשים.
     router: כלי ניתוב.
     rxjs: גישור בין observables של RxJS למצב הרכיב.
-    scheduler: ''
+    scheduler: ממשק תזמון, אירועי iCalendar ומנוע חזרתיות.
     seo: נתונים מובנים, תגי מטא וכלי עזר למפת אתר.
     speech-audio: הוקים לסינתזת דיבור, זיהוי דיבור, שמע ו־Web MIDI.
     three: שילוב Three.js ניטרלי למסגרות עבודה.
     tokens: אסימוני עיצוב של CSS וערכות נושא של SCSS.
+    vcard: נתוני vCard לפי RFC 6350, נתוני iCalendar לפי RFC 5545 ורכיבי Forge.
 projects:
   items:
+    docs:
+      cta: לקריאת התיעוד
+      description: אתר התיעוד הציבורי ללמידה, לבנייה ולהשקה עם Mission Platform.
+      name: Mission Platform Docs
     my-care-notes:
       cta: למידע נוסף
       description: אפליקציית רשומות טיפול ממוקדת מטופל הבנויה על גבי ה־Mission Platform.
       name: My Care Notes
+    service-monitor:
+      cta: למידע נוסף
+      description: לוח בקרה לניטור שירותים בצד השרת, עם בדיקות Durable Object, סדרות זמן ב-SQLite ותרשימי RxJS ו-D3 חיים.
+      name: Service Monitor
+seo:
+  description: מונוריפו ניתן להרכבה בקוד פתוח לממשק ניטרלי למסגרות עבודה, כלי דומיין ומוצרי ווב מוכנים לקצה.
+  keywords: Mission Platform, ארכיטקטורה ניתנת להרכבה, ממשק ניטרלי למסגרות עבודה, Forge, Vue, React, Svelte, Solid, Web Components, TypeScript, WebAssembly, Cloudflare Workers
+  title: Mission Platform — בנו באומץ. השיקו בכוונה.
+  twitter-description: הרכיבו אבני בניין למוצרי ווב אמינים והשיקו אותם בכל מקום שבו המשתמשים שלכם נמצאים.

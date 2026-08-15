@@ -76,20 +76,24 @@
       ? (parameter as SupportedLocale)
       : DEFAULT_LOCALE;
   });
+  const localizedSiteTitle = computed(() => t(($) => $.seo.title, { defaultValue: SITE_TITLE, ns: 'mp.website' }));
+  const localizedSiteDescription = computed(() =>
+    t(($) => $.seo.description, { defaultValue: SITE_DESCRIPTION, ns: 'mp.website' }),
+  );
   useSeo(() => ({
     jsonLd: [
       {
         ...webPage({
-          name: SITE_TITLE,
+          name: localizedSiteTitle.value,
           url: canonicalFor(currentLocale.value),
-          description: SITE_DESCRIPTION,
+          description: localizedSiteDescription.value,
           inLanguage: LOCALE_BCP47[currentLocale.value],
           primaryImageOfPage: `${SITE_ORIGIN}/og-image.svg`,
           isPartOf: { name: SITE_NAME, url: `${SITE_ORIGIN}/` },
           workTranslation: SUPPORTED_LOCALES.filter((l) => l !== currentLocale.value).map((l) => ({
             url: canonicalFor(l),
             inLanguage: LOCALE_BCP47[l],
-            name: SITE_TITLE,
+            name: localizedSiteTitle.value,
           })),
         }),
         about: { '@id': organizationId(`${SITE_ORIGIN}/`) },
@@ -361,6 +365,34 @@
         ns: 'mp.website',
       }),
     },
+    {
+      name: '@mission-platform/resource-planner',
+      description: t(($) => $.packages.items['resource-planner'], {
+        defaultValue: 'Framework-neutral resource planning and multi-person timelines.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      name: '@mission-platform/vcard',
+      description: t(($) => $.packages.items.vcard, {
+        defaultValue: 'RFC 6350 vCard and RFC 5545 iCalendar data and components.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      name: '@mission-platform/email-components',
+      description: t(($) => $.packages.items['email-components'], {
+        defaultValue: 'Email-client-compatible components rendered across supported frameworks.',
+        ns: 'mp.website',
+      }),
+    },
+    {
+      name: '@mission-platform/email-renderer',
+      description: t(($) => $.packages.items['email-renderer'], {
+        defaultValue: 'Framework-neutral email, Markdown and browser rendering for Forge trees.',
+        ns: 'mp.website',
+      }),
+    },
   ]);
 
   const projects = computed<Project[]>(() => [
@@ -372,6 +404,28 @@
       }),
       href: 'https://care-notes.mission-platform.com/',
       cta: t(($) => $.projects.items['my-care-notes'].cta, { defaultValue: 'Learn More', ns: 'mp.website' }),
+    },
+    {
+      name: t(($) => $.projects.items['service-monitor'].name, {
+        defaultValue: 'Service Monitor',
+        ns: 'mp.website',
+      }),
+      description: t(($) => $.projects.items['service-monitor'].description, {
+        defaultValue:
+          'A server-side service monitoring dashboard with Durable Object probes, SQLite time series and live RxJS + D3 charts.',
+        ns: 'mp.website',
+      }),
+      href: 'https://github.com/Mission-Platform/composable-mission-ready-platform/tree/main/apps/service-monitor',
+      cta: t(($) => $.projects.items['service-monitor'].cta, { defaultValue: 'Learn More', ns: 'mp.website' }),
+    },
+    {
+      name: t(($) => $.projects.items.docs.name, { defaultValue: 'Mission Platform Docs', ns: 'mp.website' }),
+      description: t(($) => $.projects.items.docs.description, {
+        defaultValue: 'The public documentation site for learning, building and shipping with Mission Platform.',
+        ns: 'mp.website',
+      }),
+      href: 'https://docs.mission-platform.dev/',
+      cta: t(($) => $.projects.items.docs.cta, { defaultValue: 'Read the Docs', ns: 'mp.website' }),
     },
   ]);
 
@@ -500,7 +554,7 @@
             class="home__brand"
           >
             <ForgeAvatar
-              alt="Mission Platform"
+              :alt="t(($) => $.a11y.brand, { defaultValue: 'Mission Platform home', ns: 'mp.website' })"
               shape="square"
               size="sm"
               src="/favicon.svg"
@@ -543,7 +597,7 @@
           <ForgeSelect
             :model-value="locale"
             :options="LANGUAGE_OPTIONS"
-            label="Language"
+            :label="t(($) => $.a11y.language, { defaultValue: 'Language', ns: 'mp.website' })"
             label-hidden
             :searchable="false"
             size="sm"
@@ -554,7 +608,7 @@
             </template>
           </ForgeSelect>
           <ForgeThemeToggle
-            aria-label="Toggle colour theme"
+            :aria-label="t(($) => $.a11y.theme, { defaultValue: 'Toggle colour theme', ns: 'mp.website' })"
             @change="handleThemeChange"
           />
         </template>
@@ -576,7 +630,7 @@
             variant="display"
             weight="bold"
           >
-            {{ t(($) => $.hero.title, { defaultValue: 'Composable. Mission Ready.', ns: 'mp.website' }) }}
+            {{ t(($) => $.hero.title, { defaultValue: 'Build boldly. Ship with purpose.', ns: 'mp.website' }) }}
           </ForgeTypography>
           <ForgeTypography
             align="center"
@@ -587,7 +641,7 @@
             {{
               t(($) => $.hero.lead, {
                 defaultValue:
-                  'Author your interface once in the framework-agnostic Forge runtime, then build for Vue, React, Svelte, Solid and Web Components.',
+                  'A composable, framework-neutral foundation for teams that want to turn ambitious product ideas into dependable web experiences.',
                 ns: 'mp.website',
               })
             }}
@@ -599,20 +653,22 @@
             justify="center"
             wrap
           >
-            <ForgeButton
-              size="lg"
-              variant="primary"
-              @click="() => {}"
-            >
-              {{ t(($) => $.hero['cta-primary'], { defaultValue: 'Get Started', ns: 'mp.website' }) }}
-            </ForgeButton>
-            <ForgeButton
-              size="lg"
-              variant="secondary"
-              @click="() => {}"
-            >
-              {{ t(($) => $.hero['cta-secondary'], { defaultValue: 'Documentation', ns: 'mp.website' }) }}
-            </ForgeButton>
+            <a href="https://github.com/Mission-Platform/composable-mission-ready-platform">
+              <ForgeButton
+                size="lg"
+                variant="primary"
+              >
+                {{ t(($) => $.hero['cta-primary'], { defaultValue: 'Explore the platform', ns: 'mp.website' }) }}
+              </ForgeButton>
+            </a>
+            <a href="#packages">
+              <ForgeButton
+                size="lg"
+                variant="secondary"
+              >
+                {{ t(($) => $.hero['cta-secondary'], { defaultValue: 'Browse the packages', ns: 'mp.website' }) }}
+              </ForgeButton>
+            </a>
           </ForgeStack>
         </ForgeInView>
       </section>
@@ -834,6 +890,17 @@
 
     <template #footer>
       <div class="home__footer">
+        <ForgeTypography
+          color="tertiary"
+          variant="caption"
+        >
+          {{
+            t(($) => $.footer.tagline, {
+              defaultValue: 'Composable building blocks for mission-ready web experiences.',
+              ns: 'mp.website',
+            })
+          }}
+        </ForgeTypography>
         <ForgeTypography
           color="tertiary"
           variant="caption"

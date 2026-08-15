@@ -123,8 +123,34 @@ export const createApp = ViteSSG(
           { hreflang: 'x-default', href: canonicalFor(DEFAULT_LOCALE) },
         ]);
 
-        const siteTitle = SITE_TITLE;
-        const siteDescription = SITE_DESCRIPTION;
+        const siteTitle = computed(() =>
+          i18n.t(($) => $.seo.title, { ns: 'mp.website', lng: currentLocale.value, defaultValue: SITE_TITLE }),
+        );
+        const siteDescription = computed(() =>
+          i18n.t(($) => $.seo.description, {
+            ns: 'mp.website',
+            lng: currentLocale.value,
+            defaultValue: SITE_DESCRIPTION,
+          }),
+        );
+        const twitterDescription = computed(() =>
+          i18n.t(($) => $['seo']['twitter-description'], {
+            ns: 'mp.website',
+            lng: currentLocale.value,
+            defaultValue: SITE_DESCRIPTION,
+          }),
+        );
+        const keywords = computed(() =>
+          i18n
+            .t(($) => $.seo.keywords, {
+              ns: 'mp.website',
+              lng: currentLocale.value,
+              defaultValue: 'Mission Platform',
+            })
+            .split(',')
+            .map((keyword) => keyword.trim())
+            .filter(Boolean),
+        );
 
         // Per-app SEO surface: standard page meta, Open Graph / Twitter
         // Card meta, and the site-wide JSON-LD graph (`WebSite` +
@@ -133,36 +159,21 @@ export const createApp = ViteSSG(
         // calls are additive thanks to `@unhead/vue`'s array merging.
         useSeo(() => ({
           page: {
-            title: siteTitle,
-            description:
-              'Mission Platform is a composable monorepo of framework-neutral write-once components (Vue 3 + React), design tokens, composables, and Cloudflare Workers for building modern, mission-ready web experiences.',
-            keywords: [
-              'write once',
-              'framework-neutral',
-              'Vue 3',
-              'React',
-              'monorepo',
-              'design system',
-              'components',
-              'composable',
-              'Cloudflare Workers',
-              'TypeScript',
-              'Vite',
-              'Storybook',
-              'mission ready',
-              'Mission Platform',
-            ],
+            title: siteTitle.value,
+            description: siteDescription.value,
+            keywords: keywords.value,
             author: 'Mission Platform',
             generator: SITE_GENERATOR,
             robots: 'index,follow',
             canonical: currentCanonical.value,
             themeColor: '#4a9ebe',
             language: LOCALE_BCP47[currentLocale.value],
+            direction: LOCALE_DIR[currentLocale.value],
             alternates: alternates.value,
           },
           openGraph: {
-            title: siteTitle,
-            description: siteDescription,
+            title: siteTitle.value,
+            description: siteDescription.value,
             type: 'website',
             url: currentCanonical.value,
             siteName: 'Mission Platform',
@@ -174,16 +185,15 @@ export const createApp = ViteSSG(
                 type: 'image/svg+xml',
                 width: 1200,
                 height: 630,
-                alt: siteTitle,
+                alt: siteTitle.value,
               },
             ],
             twitter: {
               card: 'summary_large_image',
-              title: siteTitle,
-              description:
-                'A composable monorepo of framework-neutral write-once components for building modern, mission-ready web experiences.',
+              title: siteTitle.value,
+              description: twitterDescription.value,
               image: `${SITE_ORIGIN}/og-image.svg`,
-              imageAlt: siteTitle,
+              imageAlt: siteTitle.value,
             },
           },
           // Site-wide structured data so search engines can render rich
@@ -195,7 +205,7 @@ export const createApp = ViteSSG(
             webSite({
               name: SITE_NAME,
               url: `${SITE_ORIGIN}/`,
-              description: siteDescription,
+              description: siteDescription.value,
               // Advertise every supported locale on the site-wide WebSite
               // node so search engines know this is a multilingual property.
               inLanguage: SUPPORTED_LOCALES.map((l) => LOCALE_BCP47[l]),
@@ -205,7 +215,7 @@ export const createApp = ViteSSG(
               name: SITE_NAME,
               url: `${SITE_ORIGIN}/`,
               logo: `${SITE_ORIGIN}/icon.svg`,
-              description: siteDescription,
+              description: siteDescription.value,
               sameAs: ['https://github.com/Mission-Platform'],
             }),
           ],

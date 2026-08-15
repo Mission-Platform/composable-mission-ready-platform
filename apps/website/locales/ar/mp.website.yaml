@@ -40,8 +40,10 @@ packages:
     breakpoints: أدوات ومكوّنات نقاط التوقف المتجاوبة.
     code-scanner: امسح رموز QR وData Matrix والرموز الشريطية من صورة أو كاميرا.
     components: مكوّنات واجهة مستخدم تُكتب مرة واحدة لكل إطار عمل مدعوم.
-    content: ''
+    content: شجرة محتوى وبناة ومكوّنات Monaco وMarkdown والتحرير المرئي.
     d3: تكامل D3 محايد تجاه أطر العمل.
+    email-components: مكوّنات متوافقة مع عملاء البريد تُعرض عبر أطر العمل المدعومة.
+    email-renderer: عرض محايد تجاه أطر العمل للبريد وMarkdown والمتصفح لأشجار Forge.
     forms: مُنشئ نماذج يُكتب مرة واحدة ونماذج مدفوعة بالمخطط.
     forms-core: محرك نماذج JSON Schema محايد تجاه أطر العمل.
     harper: تدقيق القواعد والأسلوب من Harper لمحرر Monaco.
@@ -55,16 +57,31 @@ packages:
     observers: خطافات مراقِبات Intersection وMutation وPerformance تُكتب مرة واحدة.
     phone-number: تحليل أرقام الهواتف والتحقق منها وتنسيقها.
     qr-code: مُشفِّر ومُفكِّك لرموز QR Code بلغة WebAssembly.
+    resource-planner: أدوات تخطيط موارد محايدة تجاه أطر العمل ومكوّنات جداول زمنية متعددة الأشخاص.
     router: أدوات التوجيه.
     rxjs: ربط كائنات RxJS القابلة للمراقبة بحالة المكوّن.
-    scheduler: ''
+    scheduler: واجهة جدولة ومحرك أحداث iCalendar والتكرار.
     seo: بيانات منظمة ووسوم وصفية وأدوات مساعدة لخرائط الموقع.
     speech-audio: خطافات تركيب الكلام والتعرف عليه والصوت وWeb MIDI.
     three: تكامل Three.js محايد تجاه أطر العمل.
     tokens: رموز تصميم CSS وسمات SCSS.
+    vcard: بيانات vCard وفق RFC 6350 وiCalendar وفق RFC 5545 ومكوّنات Forge.
 projects:
   items:
+    docs:
+      cta: اقرأ التوثيق
+      description: موقع التوثيق العام لتعلّم Mission Platform وبنائها وشحنها.
+      name: Mission Platform Docs
     my-care-notes:
       cta: اعرف المزيد
       description: تطبيق ملاحظات رعاية يركّز على المريض مبني على Mission Platform.
       name: My Care Notes
+    service-monitor:
+      cta: اعرف المزيد
+      description: لوحة لمراقبة الخدمات من جهة الخادم، مع فحوصات Durable Object وسلسلة زمنية في SQLite ومخططات RxJS وD3 مباشرة.
+      name: Service Monitor
+seo:
+  description: مستودع أحادي مفتوح المصدر وقابل للتركيب لواجهات محايدة تجاه أطر العمل وأدوات النطاق ومنتجات الويب الجاهزة للحافة.
+  keywords: Mission Platform, بنية قابلة للتركيب, واجهات محايدة تجاه أطر العمل, Forge, Vue, React, Svelte, Solid, Web Components, TypeScript, WebAssembly, Cloudflare Workers
+  title: Mission Platform — ابنِ بجرأة. أطلق بغاية.
+  twitter-description: ركّب لبنات بناء لمنتجات ويب موثوقة ثم أطلقها أينما يوجد مستخدموك.

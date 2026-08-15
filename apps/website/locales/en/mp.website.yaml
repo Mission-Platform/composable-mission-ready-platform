@@ -42,6 +42,8 @@ packages:
     components: Write-once UI components for every supported framework.
     content: Content AST, builders, Monaco, Markdown, and WYSIWYG components.
     d3: Framework-neutral D3 integration.
+    email-components: Email-client-compatible components rendered across supported frameworks.
+    email-renderer: Framework-neutral email, Markdown and browser rendering for Forge trees.
     forms: Write-once form builder and schema-driven forms.
     forms-core: Framework-agnostic JSON Schema forms engine.
     harper: Harper grammar and style checking for Monaco.
@@ -55,6 +57,7 @@ packages:
     observers: Write-once Intersection, Mutation and Performance observer hooks.
     phone-number: Phone number parsing, validation and formatting.
     qr-code: QR Code encoder and decoder in WebAssembly.
+    resource-planner: Framework-neutral resource planning and multi-person timeline components.
     router: Routing utilities.
     rxjs: Bridge RxJS observables to component state.
     scheduler: Scheduler UI, iCalendar events and recurrence engine.
@@ -62,9 +65,23 @@ packages:
     speech-audio: Speech synthesis, recognition, audio and Web MIDI hooks.
     three: Framework-neutral Three.js integration.
     tokens: CSS design tokens and SCSS themes.
+    vcard: RFC 6350 vCard and RFC 5545 iCalendar data and Forge components.
 projects:
   items:
+    docs:
+      cta: Read the Docs
+      description: The public documentation site for learning, building and shipping with Mission Platform.
+      name: Mission Platform Docs
     my-care-notes:
       cta: Learn More
       description: A patient-centric care notes application built on the Mission Platform.
       name: My Care Notes
+    service-monitor:
+      cta: Learn More
+      description: A server-side service monitoring dashboard with Durable Object probes, SQLite time series and live RxJS + D3 charts.
+      name: Service Monitor
+seo:
+  description: An open-source, composable monorepo for framework-neutral UI, domain utilities and edge-ready web products.
+  keywords: Mission Platform, composable architecture, framework-neutral UI, Forge runtime, Vue, React, Svelte, Solid, Web Components, TypeScript, WebAssembly, Cloudflare Workers
+  title: Mission Platform — Build boldly. Ship with purpose.
+  twitter-description: Compose the building blocks for dependable web products, then ship them wherever your users are.

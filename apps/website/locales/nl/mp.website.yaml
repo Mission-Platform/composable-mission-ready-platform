@@ -40,8 +40,10 @@ packages:
     breakpoints: Responsieve breakpoint-utilities en -componenten.
     code-scanner: Scan QR, Data Matrix en barcodes vanaf afbeelding of camera.
     components: Write-once UI-componenten voor elk ondersteund framework.
-    content: ''
+    content: Content-AST, builders, Monaco-, Markdown- en WYSIWYG-componenten.
     d3: Framework-neutrale D3-integratie.
+    email-components: E-mailclient-compatibele componenten voor alle ondersteunde frameworks.
+    email-renderer: Framework-neutrale rendering van e-mail, Markdown en Forge-bomen.
     forms: Write-once formulierbouwer en schema-gedreven formulieren.
     forms-core: Framework-onafhankelijke JSON Schema-formulierenengine.
     harper: Harper grammatica- en stijlcontrole voor Monaco.
@@ -55,16 +57,31 @@ packages:
     observers: Write-once Intersection-, Mutation- en Performance-observer-hooks.
     phone-number: Parsen, valideren en formatteren van telefoonnummers.
     qr-code: QR Code-encoder en -decoder in WebAssembly.
+    resource-planner: Framework-neutrale resourceplanning en tijdlijnen voor meerdere personen.
     router: Routing-utilities.
     rxjs: Koppel RxJS-observables aan componentstatus.
-    scheduler: ''
+    scheduler: Scheduler-UI, iCalendar-events en herhalingsengine.
     seo: Gestructureerde data, meta-tags en sitemap-helpers.
     speech-audio: Spraaksynthese, -herkenning, audio- en Web MIDI-hooks.
     three: Framework-neutrale Three.js-integratie.
     tokens: CSS design tokens en SCSS-thema's.
+    vcard: RFC 6350 vCard- en RFC 5545 iCalendar-data en Forge-componenten.
 projects:
   items:
+    docs:
+      cta: Documentatie lezen
+      description: De openbare documentatiesite om te leren, bouwen en leveren met Mission Platform.
+      name: Mission Platform Docs
     my-care-notes:
       cta: Meer informatie
       description: Een patiëntgerichte zorgnotitie-applicatie gebouwd op het Mission Platform.
       name: My Care Notes
+    service-monitor:
+      cta: Meer informatie
+      description: Een server-side dashboard voor servicemonitoring met Durable Object-probes, SQLite-tijdreeksen en live RxJS- en D3-grafieken.
+      name: Service Monitor
+seo:
+  description: Een open-source, composable monorepo voor framework-neutrale UI, domeinutilities en edge-klare webproducten.
+  keywords: Mission Platform, composable architectuur, framework-neutrale UI, Forge, Vue, React, Svelte, Solid, Web Components, TypeScript, WebAssembly, Cloudflare Workers
+  title: Mission Platform — Bouw moedig. Lever met een doel.
+  twitter-description: Stel betrouwbare webproducten samen uit bouwstenen en lever ze waar je gebruikers zijn.

@@ -40,8 +40,10 @@ packages:
     breakpoints: 반응형 브레이크포인트 유틸리티 및 컴포넌트.
     code-scanner: 이미지 또는 카메라에서 QR, Data Matrix, 바코드를 스캔합니다.
     components: 지원하는 모든 프레임워크를 위한 한 번 작성 UI 컴포넌트.
-    content: ''
+    content: 콘텐츠 AST, 빌더, Monaco, Markdown 및 WYSIWYG 컴포넌트.
     d3: 프레임워크에 종속되지 않는 D3 통합.
+    email-components: 지원하는 프레임워크에서 렌더링되는 이메일 클라이언트 호환 컴포넌트.
+    email-renderer: Forge 트리를 위한 프레임워크 중립 이메일, Markdown 및 브라우저 렌더링.
     forms: 한 번 작성하는 폼 빌더와 스키마 기반 폼.
     forms-core: 프레임워크에 종속되지 않는 JSON Schema 폼 엔진.
     harper: Monaco용 Harper 문법 및 스타일 검사.
@@ -55,16 +57,31 @@ packages:
     observers: 한 번 작성하는 Intersection, Mutation, Performance 옵저버 훅.
     phone-number: 전화번호 파싱, 검증, 포맷팅.
     qr-code: WebAssembly로 구현한 QR Code 인코더 및 디코더.
+    resource-planner: 프레임워크 중립 리소스 계획 및 다중 사용자 타임라인 컴포넌트.
     router: 라우팅 유틸리티.
     rxjs: RxJS 옵저버블을 컴포넌트 상태에 연결합니다.
-    scheduler: ''
+    scheduler: 스케줄러 UI, iCalendar 이벤트 및 반복 엔진.
     seo: 구조화된 데이터, 메타 태그, 사이트맵 헬퍼.
     speech-audio: 음성 합성, 음성 인식, 오디오, Web MIDI 훅.
     three: 프레임워크에 종속되지 않는 Three.js 통합.
     tokens: CSS 디자인 토큰 및 SCSS 테마.
+    vcard: RFC 6350 vCard, RFC 5545 iCalendar 데이터 및 Forge 컴포넌트.
 projects:
   items:
+    docs:
+      cta: 문서 읽기
+      description: Mission Platform을 배우고 구축하고 배포하기 위한 공개 문서 사이트입니다.
+      name: Mission Platform Docs
     my-care-notes:
       cta: 자세히 보기
       description: Mission Platform으로 구축한 환자 중심 케어 노트 애플리케이션.
       name: My Care Notes
+    service-monitor:
+      cta: 자세히 보기
+      description: Durable Object 프로브, SQLite 시계열 데이터, RxJS 및 D3 실시간 차트를 제공하는 서버 측 서비스 모니터링 대시보드입니다.
+      name: Service Monitor
+seo:
+  description: 프레임워크 중립 UI, 도메인 유틸리티, 엣지 대응 웹 제품을 위한 오픈 소스 조합형 모노레포입니다.
+  keywords: Mission Platform, 조합형 아키텍처, 프레임워크 중립 UI, Forge, Vue, React, Svelte, Solid, Web Components, TypeScript, WebAssembly, Cloudflare Workers
+  title: Mission Platform — 대담하게 만들고, 목적 있게 출시하세요.
+  twitter-description: 신뢰할 수 있는 웹 제품의 구성 요소를 조합하고 사용자가 있는 곳에 출시하세요.

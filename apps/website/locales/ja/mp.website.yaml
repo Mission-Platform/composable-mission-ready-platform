@@ -40,8 +40,10 @@ packages:
     breakpoints: レスポンシブなブレークポイントのユーティリティとコンポーネント。
     code-scanner: 画像またはカメラから QR、Data Matrix、バーコードをスキャンします。
     components: 対応するすべてのフレームワーク向けの一度書けば動く UI コンポーネント。
-    content: ''
+    content: コンテンツ AST、ビルダー、Monaco、Markdown、WYSIWYG コンポーネント。
     d3: フレームワークに依存しない D3 統合。
+    email-components: 対応フレームワークで出力できるメールクライアント互換コンポーネント。
+    email-renderer: Forge ツリー向けのフレームワーク非依存メール・Markdown・ブラウザレンダリング。
     forms: 一度書けば動くフォームビルダーとスキーマ駆動フォーム。
     forms-core: フレームワークに依存しない JSON Schema フォームエンジン。
     harper: Monaco 向けの Harper 文法・スタイルチェック。
@@ -55,16 +57,31 @@ packages:
     observers: 一度書けば動く Intersection、Mutation、Performance オブザーバーのフック。
     phone-number: 電話番号の解析、検証、フォーマット。
     qr-code: WebAssembly による QR Code のエンコーダーとデコーダー。
+    resource-planner: フレームワークに依存しないリソース計画と複数人向けタイムライン。
     router: ルーティングユーティリティ。
     rxjs: RxJS のオブザーバブルをコンポーネントの状態に橋渡しします。
-    scheduler: ''
+    scheduler: スケジューラー UI、iCalendar イベント、繰り返しエンジン。
     seo: 構造化データ、メタタグ、サイトマップのヘルパー。
     speech-audio: 音声合成、音声認識、オーディオ、Web MIDI のフック。
     three: フレームワークに依存しない Three.js 統合。
     tokens: CSS デザイントークンと SCSS テーマ。
+    vcard: RFC 6350 vCard、RFC 5545 iCalendar データと Forge コンポーネント。
 projects:
   items:
+    docs:
+      cta: ドキュメントを読む
+      description: Mission Platform を学び、構築し、出荷するための公開ドキュメントサイトです。
+      name: Mission Platform Docs
     my-care-notes:
       cta: 詳細を見る
       description: Mission Platform 上に構築された、患者中心のケアノートアプリケーション。
       name: My Care Notes
+    service-monitor:
+      cta: 詳細を見る
+      description: Durable Object プローブ、SQLite 時系列データ、RxJS と D3 によるライブチャートを備えたサーバーサイドのサービス監視ダッシュボードです。
+      name: Service Monitor
+seo:
+  description: フレームワーク非依存の UI、ドメインユーティリティ、エッジ対応 Web プロダクトのためのオープンソース・コンポーザブルモノレポ。
+  keywords: Mission Platform, コンポーザブルアーキテクチャ, フレームワーク非依存 UI, Forge, Vue, React, Svelte, Solid, Web Components, TypeScript, WebAssembly, Cloudflare Workers
+  title: Mission Platform — 大胆に構築し、目的を持って届ける。
+  twitter-description: 信頼できる Web プロダクトの部品を組み合わせ、ユーザーのいる場所へ届けましょう。

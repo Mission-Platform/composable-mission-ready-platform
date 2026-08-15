@@ -8,6 +8,11 @@ export default interface Resources {
       };
       title: 'About';
     };
+    a11y: {
+      brand: 'Mission Platform home';
+      language: 'Choose language';
+      theme: 'Toggle colour theme';
+    };
     ai_translation_warning: 'ai-translation-warning';
     faq: {
       items: {
@@ -63,6 +68,7 @@ export default interface Resources {
     };
     footer: {
       copyright: '© {year} Mission Platform.';
+      tagline: 'Composable building blocks for mission-ready web experiences.';
     };
     hero: {
       badge: 'Open Source';
@@ -105,18 +111,38 @@ export default interface Resources {
         'speech-audio': 'Speech synthesis, recognition, audio and Web MIDI hooks.';
         three: 'Framework-neutral Three.js integration.';
         tokens: 'CSS design tokens and SCSS themes.';
+        'email-components': 'Email-client-compatible components rendered across supported frameworks.';
+        'email-renderer': 'Framework-neutral email, Markdown and browser rendering for Forge trees.';
+        'resource-planner': 'Framework-neutral resource planning and multi-person timeline components.';
+        vcard: 'RFC 6350 vCard and RFC 5545 iCalendar data and Forge components.';
       };
       lead: 'Composable building blocks — from UI and forms to WebAssembly-powered tooling.';
       title: 'Packages';
     };
     projects: {
       items: {
+        docs: {
+          cta: 'Read the Docs';
+          description: 'The public documentation site for learning, building and shipping with Mission Platform.';
+          name: 'Mission Platform Docs';
+        };
         'my-care-notes': {
           cta: 'Learn More';
           description: 'A patient-centric care notes application built on the Mission Platform.';
           name: 'My Care Notes';
         };
+        'service-monitor': {
+          cta: 'Learn More';
+          description: 'A server-side service monitoring dashboard with Durable Object probes, SQLite time series and live RxJS + D3 charts.';
+          name: 'Service Monitor';
+        };
       };
+    };
+    seo: {
+      description: 'An open-source, composable monorepo for framework-neutral UI, domain utilities and edge-ready web products.';
+      keywords: 'Mission Platform, composable architecture, framework-neutral UI, Forge runtime, Vue, React, Svelte, Solid, Web Components, TypeScript, WebAssembly, Cloudflare Workers';
+      title: 'Mission Platform — Build boldly. Ship with purpose.';
+      'twitter-description': 'Compose the building blocks for dependable web products, then ship them wherever your users are.';
     };
   };
 }

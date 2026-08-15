@@ -40,8 +40,10 @@ packages:
     breakpoints: Utilidades y componentes de puntos de ruptura adaptables.
     code-scanner: Escanea códigos QR, Data Matrix y códigos de barras desde una imagen o la cámara.
     components: Componentes de interfaz de escritura única para cada framework compatible.
-    content: ''
+    content: AST de contenido, constructores y componentes Monaco, Markdown y WYSIWYG.
     d3: Integración de D3 independiente del framework.
+    email-components: Componentes compatibles con clientes de correo para todos los frameworks admitidos.
+    email-renderer: Renderizado independiente del framework para correo, Markdown y árboles Forge.
     forms: Creador de formularios de escritura única y formularios basados en esquemas.
     forms-core: Motor de formularios JSON Schema independiente del framework.
     harper: Comprobación gramatical y de estilo de Harper para Monaco.
@@ -55,16 +57,31 @@ packages:
     observers: Hooks de observadores Intersection, Mutation y Performance de escritura única.
     phone-number: Análisis, validación y formato de números de teléfono.
     qr-code: Codificador y decodificador de códigos QR en WebAssembly.
+    resource-planner: Planificación de recursos independiente del framework y líneas de tiempo para varias personas.
     router: Utilidades de enrutamiento.
     rxjs: Conecta observables de RxJS con el estado de los componentes.
-    scheduler: ''
+    scheduler: Interfaz de planificación, eventos iCalendar y motor de recurrencia.
     seo: Datos estructurados, metaetiquetas y utilidades de sitemap.
     speech-audio: Hooks de síntesis de voz, reconocimiento, audio y Web MIDI.
     three: Integración de Three.js independiente del framework.
     tokens: Tokens de diseño CSS y temas SCSS.
+    vcard: Datos vCard RFC 6350, iCalendar RFC 5545 y componentes Forge.
 projects:
   items:
+    docs:
+      cta: Leer la documentación
+      description: El sitio público de documentación para aprender, construir y publicar con Mission Platform.
+      name: Mission Platform Docs
     my-care-notes:
       cta: Más información
       description: Una aplicación de notas de atención centrada en el paciente, construida sobre Mission Platform.
       name: My Care Notes
+    service-monitor:
+      cta: Más información
+      description: Un panel de monitorización de servicios en el servidor, con sondas Durable Object, series temporales SQLite y gráficos en vivo con RxJS y D3.
+      name: Service Monitor
+seo:
+  description: Un monorepo de código abierto y componible para UI independiente del framework, utilidades de dominio y productos web preparados para el edge.
+  keywords: Mission Platform, arquitectura componible, UI independiente del framework, Forge, Vue, React, Svelte, Solid, Web Components, TypeScript, WebAssembly, Cloudflare Workers
+  title: Mission Platform — Construye con valentía. Publica con propósito.
+  twitter-description: Combina bloques para productos web fiables y publícalos donde estén tus usuarios.
