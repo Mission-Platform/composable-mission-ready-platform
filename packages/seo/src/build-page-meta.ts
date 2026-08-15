@@ -6,6 +6,9 @@ export interface BuiltPageMeta {
   title?: string;
   /** Resolved `<html lang>` value, if any. */
   language?: string;
+
+  /** Resolved `<html dir>` value, if any. */
+  direction?: 'ltr' | 'rtl';
   /** Flat list of `<meta>` tag descriptors. */
   metaTags: SeoMetaTag[];
   /** Flat list of `<link>` tag descriptors. */
@@ -73,6 +76,7 @@ export function buildPageMeta(metadata: PageMetadata): BuiltPageMeta {
   return {
     title: resolveTitle(metadata),
     language: metadata.language,
+    direction: metadata.direction,
     metaTags,
     linkTags,
   };

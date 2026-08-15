@@ -14,6 +14,7 @@ beforeEach(() => {
   document.head.innerHTML = '';
   document.title = '';
   document.documentElement.removeAttribute('lang');
+  document.documentElement.removeAttribute('dir');
 });
 
 function mountWithSeo(setup: () => void) {
@@ -35,7 +36,13 @@ describe('useSeo', () => {
   it('applies standard page meta, Open Graph and JSON-LD in a single pass', async () => {
     const { app, head } = mountWithSeo(() => {
       useSeo({
-        page: { title: 'Home', description: 'desc', language: 'en-AU', canonical: 'https://x.test/' },
+        page: {
+          title: 'Home',
+          description: 'desc',
+          language: 'en-AU',
+          direction: 'rtl',
+          canonical: 'https://x.test/',
+        },
         openGraph: { title: 'Home', url: 'https://x.test/', siteName: 'X' },
         jsonLd: [webSite({ name: 'X', url: 'https://x.test/' }), organization({ name: 'X', url: 'https://x.test/' })],
       });
@@ -45,6 +52,7 @@ describe('useSeo', () => {
 
     expect(document.title).toBe('Home');
     expect(document.documentElement.getAttribute('lang')).toBe('en-AU');
+    expect(document.documentElement.getAttribute('dir')).toBe('rtl');
     expect(document.head.querySelector('meta[name="description"]')?.getAttribute('content')).toBe('desc');
     expect(document.head.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe('https://x.test/');
     expect(document.head.querySelector('meta[property="og:title"]')?.getAttribute('content')).toBe('Home');

@@ -59,6 +59,9 @@ export interface PageMetadata {
   canonical?: string;
   /** `<html lang="…">` — BCP 47 language tag, e.g. `'en-AU'`. */
   language?: string;
+
+  /** `<html dir="…">` — writing direction, e.g. `'ltr'` or `'rtl'`. */
+  direction?: 'ltr' | 'rtl';
   /** Charset for `<meta charset>`. Rarely needed — the host HTML usually sets it. */
   charset?: string;
   /** Additional `<link rel="alternate" hreflang>` entries. */

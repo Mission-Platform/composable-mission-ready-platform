@@ -36,7 +36,7 @@ function stripSsrJsonLdOnce(): void {
 
 interface UnheadShape {
   title?: string;
-  htmlAttrs?: { lang?: string };
+  htmlAttrs?: { lang?: string; dir?: 'ltr' | 'rtl' | 'auto' };
   meta: Array<Record<string, string>>;
   link: Array<Record<string, string>>;
   script: Array<Record<string, string>>;
@@ -55,7 +55,9 @@ function pageMetaToUnhead(built: BuiltPageMeta): Partial<UnheadShape> {
   });
   const out: Partial<UnheadShape> = { meta, link };
   if (built.title !== undefined) out.title = built.title;
-  if (built.language !== undefined) out.htmlAttrs = { lang: built.language };
+  if (built.language !== undefined || built.direction !== undefined) {
+    out.htmlAttrs = { lang: built.language, dir: built.direction };
+  }
   return out;
 }
 
