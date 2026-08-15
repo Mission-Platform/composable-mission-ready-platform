@@ -88,7 +88,7 @@ export function slugify(text: string): string {
   return text
     .toLowerCase()
     .trim()
-    .replaceAll(/[^\w]+/g, '-')
+    .replaceAll(/[^\p{L}\p{N}_]+/gu, '-')
     .replaceAll(/^-+|-+$/g, '');
 }
 
