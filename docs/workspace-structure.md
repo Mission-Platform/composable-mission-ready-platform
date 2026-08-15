@@ -10,16 +10,16 @@ into functional tiers:
 
 ```text
 composable_mission_ready_platform/
-├── apps/                   # Deployable products and catalogues
+├── apps/                   # Deployable products, docs, and workbenches
 ├── configs/                # Shared tooling and base configurations
 ├── packages/               # Reusable libraries and building blocks
 ├── vite-plugins/           # Build-time extensions and compilers
-├── workers/                # Cloudflare Worker edge functions
+├── workers/                # Reusable Cloudflare Worker edge functions
 ├── crates/                 # Rust crates (including Wasm-compiled ones)
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
 ├── examples/               # Example implementations and demos
-└── docs/                   # Platform documentation
+└── docs/                   # Canonical English and translated documentation
 ```
 
 ## Primary Directories
@@ -29,29 +29,34 @@ composable_mission_ready_platform/
 Applications are deployable units that compose functionality from the `packages/` directory. They are usually private
 and never published to a registry.
 
-- **`my-care-notes/`**: The flagship note-taking application.
-- **`service-monitor/`**: Service health dashboard.
-- **`website/`**: The Mission Platform marketing and documentation site.
-- **`storybook/`**: The primary component workbench and visual testing suite.
+- **`docs/`**: The Vite + Vue documentation site for the Markdown corpus.
+- **`my-care-notes/`**: The flagship care-notes application.
+- **`service-monitor/`**: The RedwoodSDK service health dashboard backed by a Durable Object.
+- **`website/`**: The Mission Platform marketing and product website.
+- **`storybook/`**: The component workbench and visual testing suite.
 
 ### 2. `packages/` (Building Blocks)
 
 Reusable, versioned libraries consumed by apps. These are intended to be framework-agnostic where possible.
 
-- **`@mission-platform/forge`**: The framework-neutral JSX runtime.
+- **`@mission-platform/forge`**: The framework-neutral JSX runtime and adapters.
 - **`@mission-platform/components`**: The multi-framework component library.
-- **`@mission-platform/tokens`**: Design token source-of-truth.
-- **`@mission-platform/router`**: Agnostic routing engine.
-- **`@mission-platform/i18n`**: Agnostic internationalisation wrapper.
+- **`@mission-platform/forms`** and **`@mission-platform/forms-core`**: Schema-driven form primitives.
+- **`@mission-platform/content`** and **`@mission-platform/email-renderer`**: Content and rendering pipelines.
+- **`@mission-platform/tokens`**: Design token source of truth.
+- **`@mission-platform/router`** and **`@mission-platform/i18n`**: Framework-neutral routing and localization.
+- **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`**, and
+  **`@mission-platform/qr-code`**: Wasm-backed scanning and encoding packages.
 
 ### 3. `configs/` (Tooling Foundation)
 
 Shared configurations that ensure consistency across all workspaces. Packages in this directory are typically used as
 `devDependencies`.
 
-- **`eslint-config/`**, **`prettier-config/`**, **`stylelint-config/`**: Linting and formatting rules.
-- **`typescript-config/`**: Base `tsconfig.json` files for various environments (Node, DOM, Library).
-- **`vite-config/`**: Common Vite and Vitest build patterns.
+- **`eslint-config/`**, **`prettier-config/`**, and **`stylelint-config/`**: Linting and formatting rules.
+- **`typescript-config/`**: Base `tsconfig.json` files for Node, DOM, library, and framework consumers.
+- **`tsdown-config/`** and **`vite-config/`**: Common library, app, Vite, and Vitest build patterns.
+- **`i18n-config/`** and **`storybook-framework/`**: Shared locale extraction and framework-workbench settings.
 
 ### 4. `vite-plugins/` (Build Extensions)
 
@@ -65,8 +70,13 @@ Custom plugins that extend the Vite build process.
 
 Cloudflare Workers for server-side logic and optimised asset delivery.
 
-- **`api-proxy/`**: Handles secure communication with backend services.
-- **`forge-spa/`**: Serves static assets with intelligent SPA routing fallbacks.
+- **`api-proxy/`**: Provides constrained read-only access to approved API routes.
+- **`email-sender/`**: Local MailPit-backed email showcase worker.
+- **`forge-spa/`**: Serves static assets with an `ASSETS`-binding SPA fallback.
+
+Deployable application Workers are configured by `apps/website/wrangler.jsonc`,
+`apps/my-care-notes/wrangler.jsonc`, and `apps/service-monitor/wrangler.jsonc`. The
+`api-proxy` and `forge-spa` packages are bundled dependencies rather than standalone Wrangler deployments.
 
 ## Internal Package Conventions
 
@@ -117,4 +127,7 @@ Cross-workspace tasks are executed via the root `package.json` using Turborepo:
 - `pnpm build`: Build all workspaces in the correct dependency order.
 - `pnpm test`: Run the test suites for all workspaces with a `test` task. Use `pnpm exec turbo run test --affected` for
   the changed-workspace CI scope.
-- `pnpm lint`: Run linting and formatting checks across the entire repo.
+- `pnpm lint`: Run ESLint across the workspaces.
+- `pnpm lint:style`: Run Stylelint for app and package styles.
+- `pnpm format`: Check formatting with Prettier.
+- `pnpm i18n:extract`: Extract translation keys for workspaces that own catalogues.

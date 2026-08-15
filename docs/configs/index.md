@@ -10,17 +10,18 @@ Packages and applications consume these configurations by extending them in thei
 
 ## Package Summary
 
-| Package                                                 | Purpose                                      | Primary Configuration File |
-|:--------------------------------------------------------|:---------------------------------------------|:---------------------------|
-| [`@mission-platform/eslint-config`](./eslint-config.md) | Linting rules for JS/TS and Vue.             | `eslint.config.js`         |
-| `@mission-platform/prettier-config`                     | Code formatting standards.                   | `prettier.config.js`       |
-| `@mission-platform/typescript-config`                   | TypeScript compiler presets.                 | `tsconfig.json`            |
-| `@mission-platform/stylelint-config`                    | CSS and SCSS linting.                        | `stylelint.config.js`      |
-| `@mission-platform/vite-config`                         | Vite build and dev server config.            | `vite.config.ts`           |
-| `@mission-platform/postcss-config`                      | PostCSS pipeline (Tailwind, etc.).           | `postcss.config.js`        |
-| `@mission-platform/i18n-config`                         | Shared i18n constants and settings.          | `i18next.config.ts`        |
-| [`@mission-platform/scripts`](./scripts-config.md)      | Shared utility scripts (in root `scripts/`). | `package.json`             |
-| [Workers Configuration](./workers-config.md)            | Conventions for Cloudflare Workers.          | N/A                        |
+| Package | Purpose | Primary configuration surface |
+|:---|:---|:---|
+| [`@mission-platform/eslint-config`](./eslint-config.md) | Flat ESLint rules for JS/TS and Vue. | `eslint.config.js` |
+| `@mission-platform/prettier-config` | Repository formatting defaults. | `prettier.config.mjs` |
+| `@mission-platform/typescript-config` | TypeScript compiler presets. | `tsconfig.json` |
+| `@mission-platform/stylelint-config` | CSS and SCSS linting. | `stylelint.config.mjs` |
+| `@mission-platform/vite-config` | Vite and Vitest configuration helpers. | `vite.config.ts` |
+| `@mission-platform/tsdown-config` | Library bundling helpers. | `tsdown.config.ts` |
+| `@mission-platform/postcss-config` | Shared PostCSS pipeline. | `postcss.config.mjs` |
+| `@mission-platform/i18n-config` | Shared locale and extraction settings. | `i18next.config.ts` |
+| `@mission-platform/storybook-framework` | Environment-selected Storybook framework preset. | `.storybook/main.ts` |
+| [Workers Configuration](./workers-config.md) | Cloudflare Worker conventions. | `wrangler.jsonc` |
 
 ## Core Tooling
 
@@ -40,6 +41,7 @@ Provides base `tsconfig` presets for different targets:
 - `base`: General defaults.
 - `vue`: Optimized for Vue 3 SFCs.
 - `node`: Optimized for Node.js environments.
+- `framework-<name>`: Adds the matching `mp:<framework>` export condition for external consumers.
 
 ## Build System
 
@@ -75,4 +77,16 @@ export default [
   ...baseConfig,
   // local overrides
 ];
+```
+
+## Choosing a configuration
+
+Use the package that owns the concern rather than copying rules into a workspace. Application and library build files
+may add local overrides, but shared defaults should remain in `configs/`. For a new package, start with the package
+scaffold and then run the workspace checks:
+
+```bash
+pnpm exec turbo run build:check --filter @mission-platform/<name>
+pnpm exec turbo run lint --filter @mission-platform/<name>
+pnpm exec turbo run format --filter @mission-platform/<name>
 ```

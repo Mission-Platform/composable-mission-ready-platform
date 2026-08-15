@@ -9,7 +9,7 @@ Mission Platform uses a modern, unified testing stack based on Vitest:
 
 - **Vitest**: The primary test runner for unit, component, and browser-based testing.
 - **@vue/test-utils**: Standard library for testing Vue components.
-- **Vitest Browser Mode (Playwright)**: Real-browser execution for interaction and visual testing.
+- **Vitest Browser Mode (Playwright)**: Real-browser execution for interaction and visual testing where configured.
 - **Storybook Test Runner**: Integration between Storybook stories and Vitest for automated interaction testing.
 
 ## How-to: Run Tests
@@ -137,7 +137,14 @@ export default defineVitestConfig({
 | `test`          | `pnpm exec turbo run test`                              | Run all workspace test tasks.            |
 | `test:watch`    | `pnpm --filter @mission-platform/components test:watch` | Run components tests in watch mode.      |
 | `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Generate a components coverage report. |
-| Rust/WASM       | `pnpm --filter @mission-platform/code-scan-crate test` | Run code-scan WASM tests in Node.        |
+| Rust/WASM       | `cargo test --workspace` | Run native Rust crate tests. |
+
+Wasm wrapper packages are tested through their owning package tasks. For example, run the scanner package and its
+wrapper together when changing scanner behavior:
+
+```bash
+pnpm exec turbo run test --filter @mission-platform/code-scanner...
+```
 
 ## Related Documentation
 

@@ -19,6 +19,7 @@ The Mission Platform is a VueJS 3 monorepo managed with pnpm workspaces. It foll
 - **Changesets**: Versioning and changelog automation
 
 ## Quick Start
+
 1. Install Node.js v24.19.0 (version specified in `.nvmrc`)
 2. Run `nvm use` to select the correct Node version
 3. Install dependencies: `pnpm install`
@@ -27,8 +28,10 @@ The Mission Platform is a VueJS 3 monorepo managed with pnpm workspaces. It foll
    - My Care Notes: `pnpm exec turbo run dev --filter @mission-platform/my-care-notes`
 
 ### Available Documentation
+
 - **[Overview](docs/overview.md)**: Mission Platform architecture principles and key features
 - **[Development Setup](docs/development-setup.md)**: Detailed instructions for setting up your development environment
+- **[Application Development](docs/application-development.md)**: Run, test, and deploy the applications in `apps/`
 - **[Workspace Structure](docs/workspace-structure.md)**: Overview of the repository's directory structure
 - **[Architecture](docs/architecture.md)**: Detailed architecture documentation
 - **[Package Development](docs/package-development.md)**: Guidelines for developing and publishing packages
@@ -39,6 +42,10 @@ The Mission Platform is a VueJS 3 monorepo managed with pnpm workspaces. It foll
 - **[Troubleshooting](docs/troubleshooting.md)**: Common issues and solutions for debugging and performance optimization
 - **[Circular Dependencies](docs/circular-dependencies.md)**: Identifying and resolving circular dependency issues
 - **[Migration Guide](docs/migration-guides/vue2-to-vue3.md)**: Step-by-step guide for migrating from Vue 2 to Vue 3
+
+English pages in `docs/` are canonical. Localized counterparts for `ar`, `de`, `es`, `fr`, `he`, `it`, `ja`, `ko`, `nl`,
+and `zh` mirror the same slugs under `docs/locales/<locale>/` (machine-assisted translations that preserve technical
+tokens); see [DOCUMENTATION.md](DOCUMENTATION.md) for translation conventions.
 
 ## Getting Started
 
@@ -65,6 +72,7 @@ pnpm exec turbo run test
 ## Package Development
 
 When creating a new package:
+
 1. Create `packages/<package-name>/` directory
 2. Initialize with `pnpm init -y`
 3. Add `@mission-platform/eslint-config`, `@mission-platform/prettier-config`, and (where applicable) `@mission-platform/postcss-config` as dev dependencies

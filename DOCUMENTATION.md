@@ -21,8 +21,13 @@ pnpm --filter @mission-platform/docs build
 pnpm --filter @mission-platform/docs preview
 ```
 
-Because the site reads the files in `docs/` directly, updating a Markdown document automatically updates the rendered
-site — there is no separate copy to maintain.
+English Markdown in `docs/` is the canonical source. Localized Markdown lives in
+`docs/locales/<locale>/` as a matching content tree (machine-assisted translations that preserve technical tokens); the
+docs application is responsible for selecting the active locale when it renders the site. Do not maintain a second
+English copy in a locale directory.
+
+Supported documentation locales are `en`, `ar`, `de`, `es`, `fr`, `he`, `it`, `ja`, `ko`, `nl`, and `zh`. English keeps
+the existing unprefixed URLs; translated pages use the same relative slug below their locale directory.
 
 ## Documentation Structure
 
@@ -45,6 +50,7 @@ site — there is no separate copy to maintain.
 
 - **[docs/development-setup.md](docs/development-setup.md)**: Detailed instructions for setting up your development
   environment
+- **[docs/application-development.md](docs/application-development.md)**: Run, test, and deploy applications in `apps/`
 
 #### Workspace Structure
 
@@ -94,6 +100,7 @@ site — there is no separate copy to maintain.
 
 - **[docs/best-practices.md](docs/best-practices.md)**: Essential guidelines for developing, testing, and maintaining
   applications in the Mission Platform monorepo
+- **[docs/framework-best-practices.md](docs/framework-best-practices.md)**: Framework integration and adapter guidance
 
 ### Troubleshooting
 
@@ -102,13 +109,42 @@ site — there is no separate copy to maintain.
 - **[docs/circular-dependencies.md](docs/circular-dependencies.md)**: Detecting, preventing, and resolving circular
   dependencies
 
+### Localized content
+
+Every canonical Markdown page must have a counterpart at `docs/locales/<locale>/<slug>.md` for each supported locale.
+The locale tree mirrors nested slugs such as `migration-guides/vue2-to-vue3` and `configs/index` exactly. Translations
+localize titles, headings, prose, tables, navigation-facing descriptions, and link text while preserving:
+
+- fenced code blocks, command lines, package names, exports, file paths, URLs, and technical identifiers;
+- relative links and their `.md` targets, unless a translated page intentionally changes only the visible link text;
+- heading structure, list/table shape, and important anchor headings so translated pages remain task-compatible.
+
+Use the locale's established technical terminology consistently. Arabic and Hebrew translations may use RTL prose, but
+code, commands, package names, and identifiers remain unchanged and readable. When adding or renaming an English page,
+update every locale tree in the same change and verify slug parity before review.
+
+Run the repository validation helper from the root:
+
+```bash
+node --experimental-strip-types scripts/validate-doc-locales.ts
+```
+
+The check compares the canonical and localized slug inventories, verifies source links, ensures fenced code blocks
+remain byte-for-byte identical, and rejects locale pages whose headings/prose are still effectively English copies.
+Regenerate locale trees with:
+
+```bash
+node --experimental-strip-types scripts/generate-doc-locales.ts
+```
+
 ## How to Contribute Documentation
 
 1. **Identify gaps**: Review existing documentation against common questions and issues
 2. **Create new files**: Add documentation in the `docs/` directory following the naming conventions
 3. **Update references**: Update README.md and other documentation files to include links to new documentation
-4. **Follow standards**: Use Diátaxis documentation framework principles
-5. **Review changes**: Ensure documentation is accurate, up-to-date, and follows project conventions
+4. **Translate the page**: Add the same slug under every supported `docs/locales/<locale>/` tree
+5. **Follow standards**: Use Diátaxis documentation framework principles
+6. **Review changes**: Ensure documentation is accurate, translated, and follows project conventions
 
 ## Documentation Standards
 
@@ -131,7 +167,9 @@ site — there is no separate copy to maintain.
 
 ### Technical Requirements
 
-- All documentation must be written in English
+- English is the canonical authoring language; published user-facing pages also have localized counterparts for every
+  supported locale (machine-assisted translations; human review recommended for release-critical pages)
+- Keep locale trees structurally identical to the English tree and never translate executable technical identifiers
 - Use Mermaid diagrams where appropriate (with size limitations); fenced `mermaid` blocks render through the shared
   `ForgeMarkdown` path and must retain readable source/error fallbacks for SSR and client-rendering failures
 - Ensure all links are working
