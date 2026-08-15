@@ -103,7 +103,7 @@
   `defineLibraryConfig`, `defineAppConfig`, and `defineVitestConfig` no longer bundle `@intlify/unplugin-vue-i18n`, and
   `vue-i18n` is removed from
   `DEFAULT_LIBRARY_EXTERNALS`. A new `ignoreVueI18nBlocksPlugin` export turns Vue SFC `<i18n>` custom blocks into inert
-  no-op modules (those blocks are now only consumed by `scripts/i18n-extract.ts`; translations load from the generated
+  no-op modules (those blocks are now only consumed by `i18next-cli`; translations load from the generated
   `src/locales/*.yaml` bundles via i18next).
 
   BREAKING CHANGE: Vue SFC `<i18n>` YAML blocks are no longer compiled into vue-i18n message modules, and `vue-i18n` is

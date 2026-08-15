@@ -9,8 +9,8 @@
 // a {@link ScanResult}; no second decoder wasm module and no re-crossing of the
 // wasm↔JS boundary are involved.
 
-// The `-wasm` package inlines its wasm binary and instantiates it synchronously
-// at import, so these scan functions are ready to call with no init step.
+// The `-wasm` package inlines its wasm binary and initializes it lazily on the
+// first operation, keeping Promise-based consumers free of import-time work.
 import {
   scan_and_decode as wasmScanAndDecode,
   scan_and_decode_all as wasmScanAndDecodeAll,
@@ -22,6 +22,17 @@ import { scannerLog } from '../debug';
 import { contrastStretchLuma, imageDataToLuma } from '../image';
 
 import type { ImageLike, Roi, ScanFormat, ScanResult } from '../types';
+import type * as ScannerWasm from '@mission-platform/code-scan-wasm';
+
+type ScannerWasmModule = typeof ScannerWasm;
+
+let scannerWasmPromise: Promise<ScannerWasmModule> | undefined;
+
+/** Load the scanner lazily for callers that use the Promise-based API. */
+function loadScannerWasm(): Promise<ScannerWasmModule> {
+  scannerWasmPromise ??= import('@mission-platform/code-scan-wasm');
+  return scannerWasmPromise;
+}
 
 /**
  * Format tags emitted by the wasm `scan_and_decode` entry point (see the Rust
@@ -57,11 +68,16 @@ function outcomeToResult(outcome: ScanOutcome): ScanResult {
  * glare and uneven lighting of live camera frames. Stretching the dynamic range
  * up front gives that threshold a clean, bimodal histogram to work with.
  */
-function locateAndDecode(image: ImageLike, roi?: Roi): ScanResult | null {
+function locateAndDecode(
+  image: ImageLike,
+  roi?: Roi,
+  scanAndDecode: typeof wasmScanAndDecode = wasmScanAndDecode,
+  scanAndDecodeRoi: typeof wasmScanAndDecodeRoi = wasmScanAndDecodeRoi,
+): ScanResult | null {
   const luma = contrastStretchLuma(imageDataToLuma(image));
   scannerLog('scan: locating and decoding luma image', { width: luma.width, height: luma.height, roi });
   const outcome: ScanOutcome | undefined = roi
-    ? wasmScanAndDecodeRoi(
+    ? scanAndDecodeRoi(
         luma.width,
         luma.height,
         luma.data,
@@ -70,7 +86,7 @@ function locateAndDecode(image: ImageLike, roi?: Roi): ScanResult | null {
         Math.max(0, Math.round(roi.width)),
         Math.max(0, Math.round(roi.height)),
       )
-    : wasmScanAndDecode(luma.width, luma.height, luma.data);
+    : scanAndDecode(luma.width, luma.height, luma.data);
   if (outcome === undefined) {
     scannerLog('scan: no code located in this frame');
     return null;
@@ -89,10 +105,13 @@ function locateAndDecode(image: ImageLike, roi?: Roi): ScanResult | null {
  * `scan_and_decode_all`), returning them in discovery order with duplicates
  * removed. Only successfully decoded symbols are returned.
  */
-function locateAndDecodeAll(image: ImageLike): ScanResult[] {
+function locateAndDecodeAll(
+  image: ImageLike,
+  scanAndDecodeAll: typeof wasmScanAndDecodeAll = wasmScanAndDecodeAll,
+): ScanResult[] {
   const luma = contrastStretchLuma(imageDataToLuma(image));
   scannerLog('scan: locating and decoding all codes', { width: luma.width, height: luma.height });
-  const list = wasmScanAndDecodeAll(luma.width, luma.height, luma.data);
+  const list = scanAndDecodeAll(luma.width, luma.height, luma.data);
   const results: ScanResult[] = [];
   for (let index = 0; index < list.length; index += 1) {
     const outcome = list.get(index);
@@ -120,14 +139,16 @@ export function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null {
 }
 
 /**
- * Locate and decode the first supported code in `image`, instantiating the
- * WebAssembly scanner asynchronously on first use.
+ * Locate and decode the first supported code in `image`, loading the
+ * WebAssembly scanner asynchronously on first use. Initialisation and scan
+ * failures are returned as Promise rejections.
  *
  * @param roi optional region of interest — see {@link scanImageData}.
  * @returns the {@link ScanResult}, or `null` when no code is found.
  */
-export function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null> {
-  return Promise.resolve(locateAndDecode(image, roi));
+export async function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null> {
+  const wasm = await loadScannerWasm();
+  return locateAndDecode(image, roi, wasm.scan_and_decode, wasm.scan_and_decode_roi);
 }
 
 /**
@@ -142,11 +163,13 @@ export function scanImageDataAll(image: ImageLike): ScanResult[] {
 }
 
 /**
- * Locate and decode *every* distinct code in `image`, instantiating the
- * WebAssembly scanner asynchronously on first use.
+ * Locate and decode *every* distinct code in `image`, loading the WebAssembly
+ * scanner asynchronously on first use. Initialisation and scan failures are
+ * returned as Promise rejections.
  *
  * @returns the decoded {@link ScanResult}s in discovery order, deduplicated.
  */
-export function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]> {
-  return Promise.resolve(locateAndDecodeAll(image));
+export async function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]> {
+  const wasm = await loadScannerWasm();
+  return locateAndDecodeAll(image, wasm.scan_and_decode_all);
 }

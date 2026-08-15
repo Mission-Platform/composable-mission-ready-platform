@@ -91,6 +91,7 @@ export function ForgeCodeScanner(properties: Readonly<CodeScannerProperties>): M
   const videoReference = useRef<HTMLVideoElement | null>(null);
   const streamReference = useRef<MediaStream | null>(null);
   const timerReference = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
+  const cameraGenerationReference = useRef(0);
 
   const [cameraActive, setCameraActive] = useState(false);
   const [result, setResult] = useState<ScanResult | null>(null);
@@ -104,16 +105,21 @@ export function ForgeCodeScanner(properties: Readonly<CodeScannerProperties>): M
     onResult?.(found);
   };
 
+  const stopStream = (stream: MediaStream): void => {
+    for (const track of stream.getTracks()) {
+      track.stop();
+    }
+  };
+
   const stopCamera = (): void => {
+    cameraGenerationReference.current += 1;
     if (timerReference.current !== undefined) {
       clearInterval(timerReference.current);
       timerReference.current = undefined;
     }
     const stream = streamReference.current;
     if (stream) {
-      for (const track of stream.getTracks()) {
-        track.stop();
-      }
+      stopStream(stream);
       streamReference.current = null;
     }
     const video = videoReference.current;
@@ -156,6 +162,27 @@ export function ForgeCodeScanner(properties: Readonly<CodeScannerProperties>): M
   };
 
   const startCamera = (): void => {
+    const generation = cameraGenerationReference.current + 1;
+    cameraGenerationReference.current = generation;
+
+    // A new activation supersedes an existing stream immediately. A pending
+    // getUserMedia call cannot be cancelled, so its generation is checked when
+    // it resolves and the resulting stream is stopped if it lost the race.
+    const previousStream = streamReference.current;
+    if (previousStream) {
+      stopStream(previousStream);
+      streamReference.current = null;
+    }
+    const video = videoReference.current;
+    if (video) {
+      video.srcObject = null;
+    }
+    setCameraActive(false);
+    if (timerReference.current !== undefined) {
+      clearInterval(timerReference.current);
+      timerReference.current = undefined;
+    }
+
     void (async () => {
       try {
         const media = typeof navigator === 'undefined' ? undefined : navigator.mediaDevices;
@@ -176,21 +203,34 @@ export function ForgeCodeScanner(properties: Readonly<CodeScannerProperties>): M
           },
           audio: false,
         });
+
+        if (generation !== cameraGenerationReference.current) {
+          stopStream(stream);
+          return;
+        }
+
         streamReference.current = stream;
         const video = videoReference.current;
         if (!video) {
-          for (const track of stream.getTracks()) {
-            track.stop();
-          }
+          stopStream(stream);
+          streamReference.current = null;
           return;
         }
         video.srcObject = stream;
         video.muted = true;
         video.setAttribute('playsinline', 'true');
         await video.play();
+
+        if (generation !== cameraGenerationReference.current) {
+          stopStream(stream);
+          if (streamReference.current === stream) streamReference.current = null;
+          return;
+        }
+
         setCameraActive(true);
         timerReference.current = setInterval(scanFrame, Math.max(100, scanIntervalMs));
       } catch (error) {
+        if (generation !== cameraGenerationReference.current) return;
         reportError(error);
         stopCamera();
       }

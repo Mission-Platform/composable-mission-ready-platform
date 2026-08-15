@@ -1,5 +1,4 @@
-// The barcode encoder/decoder wasm modules inline their binaries and instantiate
-// them synchronously at import (see `@mission-platform/barcode-{encode,decode}-wasm`),
-// so simply importing them here guarantees they are ready before any spec runs.
+// Keep the wrapper packages in the test module graph. Their binaries are now
+// initialized lazily on first operation rather than during import.
 import '@mission-platform/barcode-encode-wasm';
 import '@mission-platform/barcode-decode-wasm';

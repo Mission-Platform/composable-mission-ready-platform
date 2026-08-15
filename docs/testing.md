@@ -32,12 +32,25 @@ To run tests for a single package or application:
 pnpm exec turbo run test --filter @mission-platform/<name>
 ```
 
-### Watch Mode
+### Run Affected Tests (CI-style)
+For faster local feedback that matches the CI `--affected` behavior:
 
+```bash
+pnpm exec turbo run test --affected
+```
+
+`--affected` selects test tasks for workspaces changed relative to the repository's base revision. Omit it to run every
+workspace test task. Coverage is package-specific; for example, the components package provides:
+
+```bash
+pnpm --filter @mission-platform/components test:coverage
+```
+
+### Watch Mode
 For development, use watch mode to re-run tests on file changes:
 
 ```bash
-pnpm test:watch
+pnpm --filter @mission-platform/components test:watch
 ```
 
 ### Coverage Reports
@@ -45,7 +58,7 @@ pnpm test:watch
 To generate a coverage report using the `v8` provider:
 
 ```bash
-pnpm test:coverage
+pnpm --filter @mission-platform/components test:coverage
 ```
 
 Reports are output to the `coverage/` directory within each workspace.
@@ -121,10 +134,10 @@ export default defineVitestConfig({
 
 | Script          | Command                   | Purpose                                     |
 |:----------------|:--------------------------|:--------------------------------------------|
-| `test`          | `turbo run test`          | Run all tests in the workspace.             |
-| `test:watch`    | `turbo run test:watch`    | Run tests in interactive watch mode.        |
-| `test:coverage` | `turbo run test:coverage` | Generate v8 coverage reports.               |
-| `test:wasm`     | `turbo run test:wasm`     | Run WASM-specific tests (where applicable). |
+| `test`          | `pnpm exec turbo run test`                              | Run all workspace test tasks.            |
+| `test:watch`    | `pnpm --filter @mission-platform/components test:watch` | Run components tests in watch mode.      |
+| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Generate a components coverage report. |
+| Rust/WASM       | `pnpm --filter @mission-platform/code-scan-crate test` | Run code-scan WASM tests in Node.        |
 
 ## Related Documentation
 

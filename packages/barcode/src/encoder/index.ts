@@ -6,9 +6,21 @@
 // fully typed façade over the encoder. The decoder counterpart lives in
 // `../decoder`.
 
-// The `-wasm` package inlines its wasm binary and instantiates it synchronously
-// at import, so `encode` is ready to call with no initialisation step.
+// The `-wasm` package inlines its wasm binary and initializes it lazily on the
+// first operation, keeping Promise-based consumers free of import-time work.
 import { encode as wasmEncode } from '@mission-platform/barcode-encode-wasm';
+
+import type * as EncoderWasm from '@mission-platform/barcode-encode-wasm';
+
+type EncoderWasmModule = typeof EncoderWasm;
+
+let encoderWasmPromise: Promise<EncoderWasmModule> | undefined;
+
+/** Load the encoder lazily for callers that use the Promise-based API. */
+function loadEncoderWasm(): Promise<EncoderWasmModule> {
+  encoderWasmPromise ??= import('@mission-platform/barcode-encode-wasm');
+  return encoderWasmPromise;
+}
 
 /**
  * The linear symbologies this encoder supports. Passed as the first argument to
@@ -80,11 +92,13 @@ export function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcod
 }
 
 /**
- * Encode `data` into a linear barcode of the given `symbology`, instantiating
- * the WebAssembly encoder asynchronously on first use.
+ * Encode `data` into a linear barcode of the given `symbology`, loading the
+ * WebAssembly encoder asynchronously on first use.
  *
- * @throws {RangeError} if the payload is invalid for the symbology.
+ * Rejects with a {@link RangeError} if the payload is invalid for the symbology
+ * or if WebAssembly initialisation fails.
  */
-export function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode> {
-  return Promise.resolve(toBarcode(symbology, wasmEncode(symbology, data)));
+export async function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode> {
+  const wasm = await loadEncoderWasm();
+  return toBarcode(symbology, wasm.encode(symbology, data));
 }

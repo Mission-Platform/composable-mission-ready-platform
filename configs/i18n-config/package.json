@@ -22,6 +22,9 @@
     "format": "prettier --check .",
     "format:write": "prettier --write ."
   },
+  "dependencies": {
+    "i18next-cli-vue": "1.0.4"
+  },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",

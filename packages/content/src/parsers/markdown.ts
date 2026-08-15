@@ -8,6 +8,7 @@ import {
   type ContentMark,
 } from '../ast';
 import { normalizeDocument } from '../ast/validation';
+import { sanitizeHtml, sanitizeUrl } from '../utils/sanitize';
 
 interface MarkdownToken {
   type: string;
@@ -57,7 +58,7 @@ function parseInlineTokens(tokens: MarkdownToken[], inheritedMarks: ContentMark[
       case 'link': {
         result.push({
           type: 'link',
-          url: token.href ?? token.url ?? '',
+          url: sanitizeUrl(token.href ?? token.url) ?? '',
           ...(token.title === null || token.title === undefined ? {} : { title: token.title }),
           children: parseInlineTokens(tokensOf(token), inheritedMarks),
         });
@@ -66,14 +67,14 @@ function parseInlineTokens(tokens: MarkdownToken[], inheritedMarks: ContentMark[
       case 'image': {
         result.push({
           type: 'image',
-          src: token.href ?? token.url ?? '',
+          src: sanitizeUrl(token.href ?? token.url) ?? '',
           alt: tokenText(token),
           ...(token.title === null || token.title === undefined ? {} : { title: token.title }),
         });
         break;
       }
       case 'html': {
-        result.push({ type: 'raw-html', value: token.raw ?? tokenText(token) });
+        result.push({ type: 'raw-html', value: sanitizeHtml(token.raw ?? tokenText(token)) });
         break;
       }
       case 'br': {
@@ -145,14 +146,14 @@ function parseBlocks(tokens: MarkdownToken[]): ContentBlock[] {
       case 'image': {
         blocks.push({
           type: 'image',
-          src: token.href ?? token.url ?? '',
+          src: sanitizeUrl(token.href ?? token.url) ?? '',
           alt: tokenText(token),
           ...(token.title ? { title: token.title } : {}),
         });
         break;
       }
       case 'html': {
-        blocks.push({ type: 'raw-html', value: token.raw ?? tokenText(token) });
+        blocks.push({ type: 'raw-html', value: sanitizeHtml(token.raw ?? tokenText(token)) });
         break;
       }
       case 'hr': {

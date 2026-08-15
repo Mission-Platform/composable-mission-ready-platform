@@ -1,4 +1,5 @@
 import { normalizeDocument } from '../ast/validation';
+import { sanitizeHtml, sanitizeUrl } from '../utils/sanitize';
 
 import type { ContentAlign, ContentBlock, ContentBuilder, ContentInline } from '../ast';
 
@@ -26,10 +27,10 @@ function markdownInline(inline: ContentInline): string {
     return value;
   }
   if (inline.type === 'inline-code') return `\`${inline.value.replaceAll('`', '\\`')}\``;
-  if (inline.type === 'raw-html') return inline.value;
+  if (inline.type === 'raw-html') return sanitizeHtml(inline.value);
   if (inline.type === 'image')
-    return `![${escapeMarkdown(inline.alt)}](${inline.src}${inline.title ? ` "${inline.title}"` : ''})`;
-  return `[${inline.children.map((child) => markdownInline(child)).join('')}](${inline.url}${inline.title ? ` "${inline.title}"` : ''})`;
+    return `![${escapeMarkdown(inline.alt)}](${sanitizeUrl(inline.src) ?? ''}${inline.title ? ` "${inline.title}"` : ''})`;
+  return `[${inline.children.map((child) => markdownInline(child)).join('')}](${sanitizeUrl(inline.url) ?? ''}${inline.title ? ` "${inline.title}"` : ''})`;
 }
 
 function markdownBlock(block: ContentBlock, depth = 0): string {
@@ -37,8 +38,8 @@ function markdownBlock(block: ContentBlock, depth = 0): string {
   if (block.type === 'heading')
     return `${'#'.repeat(block.level)} ${block.children.map((child) => markdownInline(child)).join('')}`;
   if (block.type === 'image')
-    return `![${escapeMarkdown(block.alt)}](${block.src}${block.title ? ` "${block.title}"` : ''})`;
-  if (block.type === 'raw-html') return block.value;
+    return `![${escapeMarkdown(block.alt)}](${sanitizeUrl(block.src) ?? ''}${block.title ? ` "${block.title}"` : ''})`;
+  if (block.type === 'raw-html') return sanitizeHtml(block.value);
   if (block.type === 'code') return `\`\`\`${block.language ?? ''}\n${block.value}\n\`\`\``;
   if (block.type === 'quote')
     return block.children
@@ -77,10 +78,10 @@ function htmlInline(inline: ContentInline): string {
     return value;
   }
   if (inline.type === 'inline-code') return `<code>${escapeHtml(inline.value)}</code>`;
-  if (inline.type === 'raw-html') return inline.value;
+  if (inline.type === 'raw-html') return sanitizeHtml(inline.value);
   if (inline.type === 'image')
-    return `<img src="${escapeHtml(inline.src)}" alt="${escapeHtml(inline.alt)}"${inline.title ? ` title="${escapeHtml(inline.title)}"` : ''}>`;
-  return `<a href="${escapeHtml(inline.url)}"${inline.title ? ` title="${escapeHtml(inline.title)}"` : ''}>${inline.children.map((child) => htmlInline(child)).join('')}</a>`;
+    return `<img src="${escapeHtml(sanitizeUrl(inline.src) ?? '')}" alt="${escapeHtml(inline.alt)}"${inline.title ? ` title="${escapeHtml(inline.title)}"` : ''}>`;
+  return `<a href="${escapeHtml(sanitizeUrl(inline.url) ?? '')}"${inline.title ? ` title="${escapeHtml(inline.title)}"` : ''}>${inline.children.map((child) => htmlInline(child)).join('')}</a>`;
 }
 
 function htmlBlock(block: ContentBlock): string {
@@ -89,8 +90,8 @@ function htmlBlock(block: ContentBlock): string {
   if (block.type === 'heading')
     return `<h${block.level}${style(block.align)}>${block.children.map((child) => htmlInline(child)).join('')}</h${block.level}>`;
   if (block.type === 'image')
-    return `<img src="${escapeHtml(block.src)}" alt="${escapeHtml(block.alt)}"${block.title ? ` title="${escapeHtml(block.title)}"` : ''}${style(block.align)}>`;
-  if (block.type === 'raw-html') return block.value;
+    return `<img src="${escapeHtml(sanitizeUrl(block.src) ?? '')}" alt="${escapeHtml(block.alt)}"${block.title ? ` title="${escapeHtml(block.title)}"` : ''}${style(block.align)}>`;
+  if (block.type === 'raw-html') return sanitizeHtml(block.value);
   if (block.type === 'code')
     return `<pre${style(block.align)}><code${block.language ? ` class="language-${escapeHtml(block.language)}"` : ''}>${escapeHtml(block.value)}</code></pre>`;
   if (block.type === 'quote')

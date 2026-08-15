@@ -1,11 +1,11 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { type BarcodeSymbology, encodeBarcode } from '../encoder';
 
 import { decodeBarcode, decodeBarcodeAsync } from '.';
 
-// The encoder and decoder wasm modules are instantiated once in
-// `src/test-setup.ts` (a Vitest `setupFiles` entry) before any spec runs.
+// The encoder and decoder wrappers are imported in `src/test-setup.ts`; their
+// initialization is lazy and occurs on the first operation.
 
 describe('decodeBarcode', () => {
   // Encode → decode → re-encode: the decoded payload must reproduce the same
@@ -52,6 +52,29 @@ describe('decodeBarcode', () => {
   it('returns null for an invalid or unknown module run', () => {
     expect(decodeBarcode('code128', [1, 0, 1, 1, 0])).toBeNull();
     expect(decodeBarcode('ean13', new Uint8Array(40).fill(1))).toBeNull();
+  });
+
+  it('returns a real Promise and rejects conversion failures asynchronously', async () => {
+    const pending = decodeBarcodeAsync('code128', null as unknown as ArrayLike<number>);
+    expect(pending).toBeInstanceOf(Promise);
+    await expect(pending).rejects.toThrow();
+  });
+
+  it('normalizes initialization failures into Promise rejections', async () => {
+    vi.resetModules();
+    const failure = new Error('decoder initialization failed');
+    const instance = vi.spyOn(WebAssembly, 'Instance').mockImplementation(
+      class {
+        constructor() {
+          throw failure;
+        }
+      } as typeof WebAssembly.Instance,
+    );
+
+    const { decodeBarcodeAsync: freshDecodeBarcodeAsync } = await import('.');
+    await expect(freshDecodeBarcodeAsync('code128', [1, 0, 1])).rejects.toBe(failure);
+
+    instance.mockRestore();
   });
 
   it('decodes asynchronously to the same result', async () => {

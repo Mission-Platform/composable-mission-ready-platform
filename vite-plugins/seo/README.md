@@ -47,7 +47,7 @@ export default defineConfig({
 Customize the robots.txt policy with user-agent groups, crawl delays, and additional directives:
 
 ```ts
-// vite.config.t
+// vite.config.ts
 import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 import { defineConfig } from 'vite';
 
@@ -180,6 +180,6 @@ If your sitemap fails validation:
 
 ## See Also
 
-- [API Reference](api-reference.md#@mission-platform/vite-plugin-seo)
+- [API Reference](../../docs/api-reference.md#mission-platformseo)
 - [@mission-platform/seo](../../packages/seo) - The underlying SEO generation library
-- [Documentation Best Practices](docs/best-practices.md#documentation)
+- [Documentation Best Practices](../../docs/best-practices.md#testing-and-documentation)

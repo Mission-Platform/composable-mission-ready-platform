@@ -6,18 +6,17 @@ The Mission Platform maintains a set of shared utility scripts in the root `scri
 ## Overview
 
 These scripts automate common monorepo tasks, such as translation extraction, local development setup, and build
-verification. They are written in TypeScript and executed via the Node.js runner with experimental flag support or
-through `pnpm` scripts.
+verification. They are written in TypeScript or delegate to the repository's command-line tools through `pnpm` scripts.
 
 ## Available Scripts
 
 ### i18n Extraction (`i18n:extract`)
 
-Extracts translation keys from Vue SFCs and TypeScript files across the monorepo. It scans for `$t()` calls and `<i18n>`
-blocks and generates YAML bundles for `i18next`.
+Runs `i18next-cli extract` with the Vue SFC plugin for each application `i18next.config.ts`, generating YAML locale
+bundles in that application's `src/locales/` directory.
 
 ```bash
-pnpm run i18n:extract
+pnpm --filter @mission-platform/scripts run i18n:extract
 ```
 
 ### Dev Certificate Generation (`generate-dev-cert.ts`)

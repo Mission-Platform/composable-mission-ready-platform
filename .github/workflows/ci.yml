@@ -14,6 +14,9 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   build-test:
     name: Build & Test
@@ -21,28 +24,40 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           # Full history lets `turbo run … --affected` diff against the base.
           fetch-depth: 0
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@f520eceda224fe1a4aed5a2a27a194379a409996 # v6
         with:
           run_install: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version-file: .nvmrc
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # stable
         with:
+          toolchain: stable
           targets: wasm32-unknown-unknown
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      # Keep native Rust coverage in CI alongside the affected Turbo checks.
+      - name: Run code-scan native tests
+        run: cargo test -p mission-platform-code-scan
+
+      # The package-level Turbo task runs the release wasm-pack Node suite when
+      # the code-scan crate or one of its Rust inputs is affected.
+      - name: Run code-scan WASM tests
+        run: pnpm exec turbo run test --affected --filter=@mission-platform/code-scan-crate
 
       - name: Lint all affected workspaces
         run: pnpm exec turbo run lint --affected

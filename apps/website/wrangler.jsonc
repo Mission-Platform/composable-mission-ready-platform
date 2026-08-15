@@ -1,6 +1,8 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
   "name": "website",
+  // Deliberately aligned with the other application Workers; changing this
+  // pin requires compatibility validation before altering runtime behavior.
   "compatibility_date": "2026-06-07",
   "compatibility_flags": ["nodejs_compat"],
   "main": "../../workers/forge-spa/dist/index.js",

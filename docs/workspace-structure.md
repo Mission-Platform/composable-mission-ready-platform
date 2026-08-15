@@ -115,5 +115,6 @@ the monorepo. This prevents version drift and simplifies maintenance.
 Cross-workspace tasks are executed via the root `package.json` using Turborepo:
 
 - `pnpm build`: Build all workspaces in the correct dependency order.
-- `pnpm test`: Run the test suites for all modified packages.
+- `pnpm test`: Run the test suites for all workspaces with a `test` task. Use `pnpm exec turbo run test --affected` for
+  the changed-workspace CI scope.
 - `pnpm lint`: Run linting and formatting checks across the entire repo.

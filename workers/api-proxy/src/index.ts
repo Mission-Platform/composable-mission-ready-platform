@@ -7,6 +7,8 @@
 
 /** The only upstream origin that this worker can contact. */
 const TARGET_ORIGIN = 'https://api.example.com';
+const MAX_REDIRECTS = 5;
+const REDIRECT_STATUSES = new Set([301, 302, 303, 307, 308]);
 
 /** Keep the proxy read-only and limited to the documented API routes. */
 export const ALLOWED_METHODS = new Set(['GET', 'HEAD']);
@@ -50,15 +52,39 @@ function createSanitizedHeaders(headers: Headers): Headers {
   return sanitized;
 }
 
-function createUpstreamRequest(request: Request): Request {
+function createUpstreamRequest(request: Request, upstreamUrl?: URL): Request {
   const incomingUrl = new URL(request.url);
-  const upstreamUrl = new URL(`${TARGET_ORIGIN}${incomingUrl.pathname}${incomingUrl.search}`);
-  return new Request(upstreamUrl, {
+  const targetUrl = upstreamUrl ?? new URL(`${TARGET_ORIGIN}${incomingUrl.pathname}${incomingUrl.search}`);
+  return new Request(targetUrl, {
     method: request.method,
     headers: createSanitizedHeaders(request.headers),
     body: request.method === 'GET' || request.method === 'HEAD' ? undefined : request.body,
-    redirect: 'follow',
+    redirect: 'manual',
   });
+}
+
+async function fetchUpstream(request: Request): Promise<Response> {
+  let upstreamRequest = createUpstreamRequest(request);
+
+  for (let redirectCount = 0; redirectCount <= MAX_REDIRECTS; redirectCount += 1) {
+    const response = await fetch(upstreamRequest);
+    if (!REDIRECT_STATUSES.has(response.status)) return response;
+
+    const location = response.headers.get('Location');
+    if (!location || redirectCount === MAX_REDIRECTS) return new Response('Bad gateway', { status: 502 });
+
+    let redirectedUrl: URL;
+    try {
+      redirectedUrl = new URL(location, upstreamRequest.url);
+    } catch {
+      return new Response('Bad gateway', { status: 502 });
+    }
+    if (redirectedUrl.origin !== TARGET_ORIGIN) return new Response('Bad gateway', { status: 502 });
+
+    upstreamRequest = createUpstreamRequest(request, redirectedUrl);
+  }
+
+  return new Response('Bad gateway', { status: 502 });
 }
 
 export default {
@@ -68,7 +94,7 @@ export default {
     }
 
     try {
-      return await fetch(createUpstreamRequest(request));
+      return await fetchUpstream(request);
     } catch {
       console.error('Proxy upstream request failed');
       return new Response('Bad gateway', { status: 502 });

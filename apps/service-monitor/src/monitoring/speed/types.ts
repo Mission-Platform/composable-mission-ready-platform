@@ -4,6 +4,14 @@
 /** Supported speed-test providers. */
 export type SpeedProviderId = 'cloudflare' | 'fast' | 'speedtest';
 
+/** Runtime list of supported speed-test provider identifiers. */
+export const SPEED_PROVIDER_IDS = ['cloudflare', 'fast', 'speedtest'] as const satisfies readonly SpeedProviderId[];
+
+/** Narrow an unknown value to a supported speed-test provider identifier. */
+export function isSpeedProviderId(value: unknown): value is SpeedProviderId {
+  return typeof value === 'string' && (SPEED_PROVIDER_IDS as readonly string[]).includes(value);
+}
+
 /** Static description of a provider. */
 export interface SpeedProviderMeta {
   id: SpeedProviderId;

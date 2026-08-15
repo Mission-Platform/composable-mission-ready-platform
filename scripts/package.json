@@ -5,7 +5,7 @@
   "license": "BSD-4-Clause",
   "type": "module",
   "scripts": {
-    "i18n:extract": "node --experimental-strip-types i18n-extract.ts",
+    "i18n:extract": "for config in ../apps/*/i18next.config.ts; do (cd \"$(dirname \"$config\")\" && i18next-cli extract --config i18next.config.ts); done",
     "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
@@ -13,13 +13,11 @@
     "format:write": "prettier --write ."
   },
   "dependencies": {
-    "@vue/compiler-sfc": "catalog:vue",
-    "js-yaml": "catalog:"
+    "i18next-cli": "1.68.0"
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
-    "@types/js-yaml": "catalog:typescript",
     "@types/node": "catalog:typescript",
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",

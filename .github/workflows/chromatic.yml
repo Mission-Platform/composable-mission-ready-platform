@@ -18,6 +18,9 @@ concurrency:
   group: chromatic-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   chromatic:
     name: Run Chromatic Visual Diff (${{ matrix.framework }})
@@ -32,31 +35,32 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           fetch-depth: 0
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@f520eceda224fe1a4aed5a2a27a194379a409996 # v6
         with:
           run_install: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version-file: .nvmrc
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Publish Storybook to Chromatic
-        uses: chromaui/action@v11
+        uses: chromaui/action@016b2b6bd92fef54e5764ea1f15ada32f65939ce # v11
         with:
           projectToken: ${{ matrix.framework == 'vue' && secrets.CHROMATIC_PROJECT_TOKEN_VUE || matrix.framework == 'react' && secrets.CHROMATIC_PROJECT_TOKEN_REACT || secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: apps/storybook
           storybookBuildDir: storybook-static
           exitZeroOnChanges: true
-        continue-on-error: true
 
   runtime-validation:
     name: Runtime validation
@@ -64,19 +68,21 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           fetch-depth: 0
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@f520eceda224fe1a4aed5a2a27a194379a409996 # v6
         with:
           run_install: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version-file: .nvmrc
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -90,7 +96,7 @@ jobs:
 
       - name: Upload runtime validation artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: runtime-validation-artifacts
           path: |
@@ -107,19 +113,21 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           fetch-depth: 0
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@f520eceda224fe1a4aed5a2a27a194379a409996 # v6
         with:
           run_install: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version-file: .nvmrc
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

@@ -9,6 +9,7 @@ import {
   sanitizeMonitor,
 } from '@/monitoring/config';
 import { isIncidentSeverity, isIncidentStatus, validMaintenanceRange } from '@/monitoring/incidents';
+import { isSpeedProviderId } from '@/monitoring/speed/types';
 import { getMonitor } from '@/monitoring/store';
 
 import type { SpeedProviderId, SpeedResponse, SpeedSeriesResponse } from '@/monitoring/speed/types';
@@ -299,10 +300,14 @@ export async function handleSpeed(): Promise<Response> {
  */
 export async function handleSpeedSeries(request: Request): Promise<Response> {
   const url = new URL(request.url);
-  const provider = url.searchParams.get('provider') as SpeedProviderId | null;
-  if (!provider) {
+  const providerParameter = url.searchParams.get('provider');
+  if (!providerParameter) {
     return json({ error: 'Missing required "provider" query parameter.' }, { status: 400 });
   }
+  if (!isSpeedProviderId(providerParameter)) {
+    return json({ error: 'Invalid "provider" query parameter.' }, { status: 400 });
+  }
+  const provider: SpeedProviderId = providerParameter;
 
   const sinceParameter = Number.parseInt(url.searchParams.get('since') ?? '', 10);
   const since = Number.isFinite(sinceParameter) ? sinceParameter : Date.now() - resolveRetentionMs();

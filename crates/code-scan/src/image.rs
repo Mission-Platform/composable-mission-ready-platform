@@ -6,6 +6,26 @@
 //! to pick a global threshold, which is robust for the clean, high-contrast
 //! renders produced by file uploads and straight-on camera frames.
 
+/// Maximum number of source pixels accepted by any image operation.
+pub(crate) const MAX_IMAGE_PIXELS: usize = 8_388_608;
+
+/// Maximum number of pixels copied into one temporary crop or rotation buffer.
+pub(crate) const MAX_COPY_PIXELS: usize = 8_388_608;
+
+/// Maximum aggregate source pixels processed by one multi-region scan.
+pub(crate) const MAX_MULTI_SCAN_PIXELS: usize = 32_000_000;
+
+/// Maximum number of 64-bit cells in an integral image allocation.
+const MAX_INTEGRAL_CELLS: usize = 16_777_216;
+
+/// Return the checked source length when the frame is non-empty and within the
+/// scanner's resource budget.
+#[inline]
+pub(crate) fn checked_image_len(width: usize, height: usize) -> Option<usize> {
+    let pixels = width.checked_mul(height)?;
+    (width > 0 && height > 0 && pixels <= MAX_IMAGE_PIXELS).then_some(pixels)
+}
+
 /// A binarised image: `true` = dark (ink) pixel, `false` = light (background).
 #[derive(Debug, Clone)]
 pub struct Bitmap {
@@ -224,10 +244,12 @@ fn otsu_threshold(luma: &[u8]) -> u8 {
 }
 
 /// Binarise a luma buffer into a [`Bitmap`]. Returns `None` when the buffer size
-/// does not match `width * height` or the image is empty.
+/// does not match `width * height`, the image is empty, or the pixel budget is
+/// exceeded.
 #[tracing::instrument(skip_all)]
 pub fn binarize(width: usize, height: usize, luma: &[u8]) -> Option<Bitmap> {
-    if width == 0 || height == 0 || luma.len() != width * height {
+    let pixels = checked_image_len(width, height)?;
+    if luma.len() != pixels {
         return None;
     }
     let threshold = otsu_threshold(luma);
@@ -263,13 +285,33 @@ pub fn rotate_luma(
     luma: &[u8],
     angle: f64,
 ) -> (usize, usize, Vec<u8>) {
-    if width == 0 || height == 0 || luma.len() != width * height {
-        return (width, height, luma.to_vec());
+    let Some(input_pixels) = checked_image_len(width, height) else {
+        return (width, height, Vec::new());
+    };
+    if luma.len() != input_pixels || !angle.is_finite() {
+        return (width, height, Vec::new());
     }
     let (sin, cos) = angle.sin_cos();
-    let new_width = ((width as f64 * cos.abs()) + (height as f64 * sin.abs())).ceil() as usize + 2;
-    let new_height = ((width as f64 * sin.abs()) + (height as f64 * cos.abs())).ceil() as usize + 2;
-    let mut out = vec![255u8; new_width * new_height];
+    let Some(new_width) = (((width as f64 * cos.abs()) + (height as f64 * sin.abs())).ceil()
+        as usize)
+        .checked_add(2)
+        .filter(|&value| value > 0)
+    else {
+        return (width, height, Vec::new());
+    };
+    let Some(new_height) = (((width as f64 * sin.abs()) + (height as f64 * cos.abs())).ceil()
+        as usize)
+        .checked_add(2)
+        .filter(|&value| value > 0)
+    else {
+        return (width, height, Vec::new());
+    };
+    let Some(output_pixels) = checked_image_len(new_width, new_height)
+        .filter(|&pixels| pixels <= MAX_COPY_PIXELS)
+    else {
+        return (width, height, Vec::new());
+    };
+    let mut out = vec![255u8; output_pixels];
     let (cx, cy) = (width as f64 / 2.0, height as f64 / 2.0);
     let (ncx, ncy) = (new_width as f64 / 2.0, new_height as f64 / 2.0);
     for oy in 0..new_height {
@@ -312,9 +354,13 @@ struct Integral {
 
 impl Integral {
     #[tracing::instrument(skip_all)]
-    fn new(width: usize, height: usize, luma: &[u8]) -> Self {
-        let stride = width + 1;
-        let mut sum = vec![0u64; stride * (height + 1)];
+    fn new(width: usize, height: usize, luma: &[u8]) -> Option<Self> {
+        let stride = width.checked_add(1)?;
+        let cells = stride.checked_mul(height.checked_add(1)?)?;
+        if cells > MAX_INTEGRAL_CELLS {
+            return None;
+        }
+        let mut sum = vec![0u64; cells];
         for y in 0..height {
             let mut row_acc = 0u64;
             for x in 0..width {
@@ -322,7 +368,7 @@ impl Integral {
                 sum[(y + 1) * stride + (x + 1)] = sum[y * stride + (x + 1)] + row_acc;
             }
         }
-        Integral { width, height, sum }
+        Some(Integral { width, height, sum })
     }
 
     /// Mean luma over the window of half-size `radius` centred on `(cx, cy)`,
@@ -332,10 +378,20 @@ impl Integral {
     /// and per module (confidence), so a span here floods the wasm tracer.
     #[inline]
     fn window_mean(&self, cx: i64, cy: i64, radius: i64) -> f64 {
-        let x0 = (cx - radius).clamp(0, self.width as i64) as usize;
-        let x1 = (cx + radius + 1).clamp(0, self.width as i64) as usize;
-        let y0 = (cy - radius).clamp(0, self.height as i64) as usize;
-        let y1 = (cy + radius + 1).clamp(0, self.height as i64) as usize;
+        // `radius` is public-input-derived through `Grey::local_threshold`.
+        // Saturating arithmetic keeps extreme i64 values from wrapping before
+        // the coordinates are clamped to the image bounds.
+        let radius = radius.max(0);
+        let x0 = cx.saturating_sub(radius).clamp(0, self.width as i64) as usize;
+        let x1 = cx
+            .saturating_add(radius)
+            .saturating_add(1)
+            .clamp(0, self.width as i64) as usize;
+        let y0 = cy.saturating_sub(radius).clamp(0, self.height as i64) as usize;
+        let y1 = cy
+            .saturating_add(radius)
+            .saturating_add(1)
+            .clamp(0, self.height as i64) as usize;
         let area = ((x1 - x0) * (y1 - y0)) as f64;
         if area == 0.0 {
             return 128.0;
@@ -354,14 +410,15 @@ impl Integral {
 /// dark modules into the background — the failure a single global Otsu cannot
 /// escape. It is the retry-loop's second attempt after the fast global path.
 ///
-/// Returns `None` when the buffer size does not match `width * height` or the
-/// image is empty.
+/// Returns `None` when the buffer size does not match `width * height`, the
+/// image is empty, or the pixel/integral-image budgets are exceeded.
 #[tracing::instrument(skip_all)]
 pub fn binarize_adaptive(width: usize, height: usize, luma: &[u8]) -> Option<Bitmap> {
-    if width == 0 || height == 0 || luma.len() != width * height {
+    let pixels = checked_image_len(width, height)?;
+    if luma.len() != pixels {
         return None;
     }
-    let integral = Integral::new(width, height, luma);
+    let integral = Integral::new(width, height, luma)?;
     // A window a good deal larger than a module but smaller than the lighting
     // gradients we want to cancel. Tied to the frame size so it scales.
     let radius = (width.min(height) / 16).max(8) as i64;
@@ -369,7 +426,7 @@ pub fn binarize_adaptive(width: usize, height: usize, luma: &[u8]) -> Option<Bit
     // surround to count as ink, which suppresses noise in flat regions.
     const BIAS: f64 = 6.0;
 
-    let mut dark = vec![false; width * height];
+    let mut dark = vec![false; pixels];
     let mut sum_threshold = 0f64;
     for y in 0..height {
         for x in 0..width {
@@ -380,7 +437,7 @@ pub fn binarize_adaptive(width: usize, height: usize, luma: &[u8]) -> Option<Bit
         }
     }
     // A representative threshold (mean local threshold) for grey confidence.
-    let threshold = (sum_threshold / (width * height) as f64).clamp(0.0, 255.0) as u8;
+    let threshold = (sum_threshold / pixels as f64).clamp(0.0, 255.0) as u8;
     let dark_pixels = dark.iter().filter(|&&d| d).count();
     tracing::debug!(
         width,
@@ -416,14 +473,16 @@ impl<'a> Grey<'a> {
     /// buffer size does not match.
     #[tracing::instrument(skip_all)]
     pub fn new(width: usize, height: usize, luma: &'a [u8]) -> Option<Self> {
-        if width == 0 || height == 0 || luma.len() != width * height {
+        let pixels = checked_image_len(width, height)?;
+        if luma.len() != pixels {
             return None;
         }
+        let integral = Integral::new(width, height, luma)?;
         Some(Grey {
             width,
             height,
             luma,
-            integral: Integral::new(width, height, luma),
+            integral,
         })
     }
 
@@ -460,12 +519,16 @@ impl<'a> Grey<'a> {
 
 #[cfg(test)]
 mod tests {
-    use super::{binarize, binarize_adaptive, Grey};
+    use super::{binarize, binarize_adaptive, rotate_luma, Grey};
 
     #[test]
     fn rejects_a_mismatched_buffer() {
         assert!(binarize(2, 2, &[0, 0, 0]).is_none());
         assert!(binarize(0, 0, &[]).is_none());
+        assert!(binarize(usize::MAX, 2, &[]).is_none());
+        assert!(binarize_adaptive(usize::MAX, 2, &[]).is_none());
+        assert!(Grey::new(usize::MAX, 2, &[]).is_none());
+        assert_eq!(rotate_luma(2, 2, &[0], 0.0).2.len(), 0);
     }
 
     #[test]
@@ -543,5 +606,12 @@ mod tests {
         assert_eq!(grey.sample(0.0, 0.0), 0.0);
         assert_eq!(grey.sample(1.0, 0.0), 100.0);
         assert!((grey.sample(0.5, 0.0) - 50.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn grey_threshold_clamps_extreme_radius_without_overflow() {
+        let grey = Grey::new(2, 2, &[0, 100, 150, 255]).expect("valid buffer");
+        assert!(grey.local_threshold(0.0, 0.0, i64::MAX).is_finite());
+        assert!(grey.local_threshold(1.0, 1.0, i64::MIN).is_finite());
     }
 }

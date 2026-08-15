@@ -369,10 +369,26 @@ impl ScanOutcomeList {
 #[wasm_bindgen]
 #[tracing::instrument(skip_all)]
 pub fn scan_and_decode_all(width: usize, height: usize, luma: &[u8]) -> ScanOutcomeList {
+    if image::checked_image_len(width, height).is_none() {
+        tracing::debug!("scan_and_decode_all: rejected frame dimensions or buffer");
+        return ScanOutcomeList { items: Vec::new() };
+    }
+    let regions = scan_regions(width, height);
+    let Some(work_pixels) = regions.iter().try_fold(0usize, |total, &(_, _, rw, rh)| {
+        total.checked_add(rw.checked_mul(rh)?)
+    }) else {
+        tracing::debug!("scan_and_decode_all: region work calculation overflowed");
+        return ScanOutcomeList { items: Vec::new() };
+    };
+    if work_pixels > image::MAX_MULTI_SCAN_PIXELS {
+        tracing::debug!(work_pixels, "scan_and_decode_all: work budget exceeded");
+        return ScanOutcomeList { items: Vec::new() };
+    }
+
     let mut items: Vec<ScanOutcome> = Vec::new();
     let mut seen: Vec<(u8, String)> = Vec::new();
 
-    for (rx, ry, rw, rh) in scan_regions(width, height) {
+    for (rx, ry, rw, rh) in regions {
         let Some((cw, ch, cropped)) = crop_luma(width, height, luma, rx, ry, rw, rh) else {
             continue;
         };
@@ -448,13 +464,17 @@ fn crop_luma(
     w: usize,
     h: usize,
 ) -> Option<(usize, usize, Vec<u8>)> {
-    if width == 0 || height == 0 || luma.len() != width * height {
+    let frame_pixels = image::checked_image_len(width, height)?;
+    if luma.len() != frame_pixels || w == 0 || h == 0 {
         return None;
     }
     let x0 = x.min(width);
     let y0 = y.min(height);
-    let x1 = (x + w).min(width);
-    let y1 = (y + h).min(height);
+    if x0 >= width || y0 >= height {
+        return None;
+    }
+    let x1 = x.checked_add(w)?.min(width);
+    let y1 = y.checked_add(h)?.min(height);
     if x1 <= x0 || y1 <= y0 {
         return None;
     }
@@ -464,7 +484,11 @@ fn crop_luma(
     }
     let cw = x1 - x0;
     let ch = y1 - y0;
-    let mut cropped = vec![0u8; cw * ch];
+    let crop_pixels = image::checked_image_len(cw, ch)?;
+    if crop_pixels > image::MAX_COPY_PIXELS {
+        return None;
+    }
+    let mut cropped = vec![0u8; crop_pixels];
     for row in 0..ch {
         let src = (y0 + row) * width + x0;
         cropped[row * cw..(row + 1) * cw].copy_from_slice(&luma[src..src + cw]);

@@ -24,6 +24,7 @@ import {
 } from '../../../utils/commands';
 import { createEditorChangeStream, type EditorChangeStream } from '../../../utils/editor-stream';
 import { resolveLabels, type WysiwygLabels } from '../../../utils/labels';
+import { sanitizeHtml } from '../../../utils/sanitize';
 import { type EditorStats, EMPTY_EDITOR_STATS } from '../../../utils/text-stats';
 import { type CodeBlockLanguage, ForgeCodeBlock } from '../../atoms/forge-code-block';
 import {
@@ -482,7 +483,7 @@ export function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>
     const host = surfaceReference.current;
     const html = toHtml(modelValue);
     if (host && !sourceMode && serializeSurface(host) !== html) {
-      host.innerHTML = html;
+      host.innerHTML = sanitizeHtml(html);
       rescanCodeBlocks();
     }
   }, [modelValue, sourceMode]);

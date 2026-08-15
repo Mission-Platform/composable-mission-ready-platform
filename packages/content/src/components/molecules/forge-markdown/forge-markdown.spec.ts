@@ -89,6 +89,21 @@ describe('ForgeMarkdown authors the same renderer for React and Vue', () => {
     expect(react).not.toContain('<h1');
   });
 
+  it('does not render executable links or images from source or resolver values', async () => {
+    const properties = {
+      source: '[link](javascript:alert(1)) [resolved](docs) ![image](data:text/html,evil)',
+      resolveHref: () => 'JaVaScRiPt:alert(2)',
+    };
+    const react = renderToStaticMarkup(createElement(ReactMarkdown, properties));
+    const vue = await renderToString(createSSRApp({ render: () => vueH(VueMarkdown, properties) }));
+
+    for (const html of [react, vue]) {
+      expect(html).not.toMatch(/(?:href|src)="[^"]*(?:javascript|data):/i);
+      expect(html).not.toContain('javascript:');
+      expect(html).not.toContain('data:text/html');
+    }
+  });
+
   it('renders Mermaid fences as readable diagram fallbacks on both frameworks', async () => {
     const properties = { source: MERMAID_SOURCE };
     const react = renderToStaticMarkup(createElement(ReactMarkdown, properties));

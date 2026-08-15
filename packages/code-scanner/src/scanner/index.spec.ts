@@ -1,9 +1,9 @@
 import { type BarcodeSymbology, decodeBarcode, encodeBarcode } from '@mission-platform/barcode';
 import { encodeMatrix } from '@mission-platform/matrix-code';
 import { encodeQr, type QrErrorCorrection } from '@mission-platform/qr-code';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import { scanImageData, scanImageDataAll, scanImageDataAsync } from './index';
+import { scanImageData, scanImageDataAll, scanImageDataAllAsync, scanImageDataAsync } from './index';
 
 import type { ImageLike } from '../types';
 
@@ -622,6 +622,35 @@ describe('scanImageData — no code', () => {
 });
 
 describe('scanImageDataAsync', () => {
+  it('returns a real Promise before scanning', () => {
+    const pending = scanImageDataAsync({ width: 1, height: 1, data: new Uint8ClampedArray(4) });
+    expect(pending).toBeInstanceOf(Promise);
+  });
+
+  it('returns a real Promise for multi-code scans', () => {
+    const pending = scanImageDataAllAsync({ width: 1, height: 1, data: new Uint8ClampedArray(4) });
+    expect(pending).toBeInstanceOf(Promise);
+  });
+
+  it('normalizes initialization failures into Promise rejections', async () => {
+    vi.resetModules();
+    const failure = new Error('scanner initialization failed');
+    const instance = vi.spyOn(WebAssembly, 'Instance').mockImplementation(
+      class {
+        constructor() {
+          throw failure;
+        }
+      } as typeof WebAssembly.Instance,
+    );
+
+    const { scanImageDataAsync: freshScanImageDataAsync } = await import('./index');
+    await expect(freshScanImageDataAsync({ width: 1, height: 1, data: new Uint8ClampedArray(4) })).rejects.toBe(
+      failure,
+    );
+
+    instance.mockRestore();
+  });
+
   it('decodes a QR code after asynchronous initialisation', async () => {
     const value = 'async-scan';
     const result = await scanImageDataAsync(renderQrImage(value, 'M'));

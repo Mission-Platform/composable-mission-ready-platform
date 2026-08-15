@@ -128,5 +128,4 @@ export default defineVitestConfig({
   `@mission-platform/i18n` by default; declare any additional peer deps via
   `external`.
 - Vue SFC `<i18n>` custom blocks are turned into inert no-op modules by the bundled `ignoreVueI18nBlocksPlugin` (they
-  are consumed only by
-  `scripts/i18n-extract.ts`; runtime translations load from i18next).
+  are consumed only by `i18next-cli`; runtime translations load from i18next).

@@ -2,7 +2,7 @@
   "name": "@mission-platform/code-scan-wasm",
   "version": "0.2.0",
   "license": "BSD-4-Clause",
-  "description": "Self-contained WebAssembly build of the code-scan Rust crate: wasm-pack (bundler) glue with the wasm binary inlined as base64 and instantiated synchronously, exposing typed scan functions for @mission-platform/code-scanner",
+  "description": "Self-contained WebAssembly build of the code-scan Rust crate: wasm-pack (bundler) glue with the wasm binary inlined as base64 and initialized lazily, exposing typed scan functions for @mission-platform/code-scanner",
   "type": "module",
   "sideEffects": false,
   "exports": {

@@ -1,3 +1,5 @@
+import i18nextVuePlugin from 'i18next-cli-vue';
+
 export interface I18nConfigOptions {
   locales?: string[];
   defaultLocale?: string;
@@ -8,6 +10,13 @@ export interface I18nConfig {
   defaultNS: string;
   locales: string[];
   defaultLocale: string;
+  extract: {
+    input: string;
+    output: string;
+    outputFormat: 'yaml';
+    mergeNamespaces: boolean;
+  };
+  plugins: unknown[];
   [key: string]: unknown;
 }
 
@@ -20,6 +29,13 @@ export function createI18nConfig(defaultNS: string, options: I18nConfigOptions =
     defaultNS,
     locales,
     defaultLocale,
+    extract: {
+      input: 'src/**/*.{ts,tsx,vue}',
+      output: 'src/locales/{{language}}.yaml',
+      outputFormat: 'yaml',
+      mergeNamespaces: true,
+    },
+    plugins: [i18nextVuePlugin()],
     ...rest,
   };
 }

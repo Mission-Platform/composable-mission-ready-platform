@@ -108,6 +108,7 @@
     "@mission-platform/hunspell": "workspace:*",
     "@mission-platform/icons": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
+    "dompurify": "^3.4.13",
     "highlight.js": "catalog:code",
     "marked": "catalog:code",
     "mermaid": "catalog:code",

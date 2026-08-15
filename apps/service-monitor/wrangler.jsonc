@@ -2,6 +2,8 @@
   "$schema": "../../node_modules/wrangler/config-schema.json",
   "name": "service-monitor",
   "main": "src/worker.tsx",
+  // Deliberately aligned with the other application Workers; changing this
+  // pin requires compatibility validation before altering runtime behavior.
   "compatibility_date": "2026-06-07",
   "compatibility_flags": ["nodejs_compat"],
   "first_party_worker": true,

@@ -1,64 +1,87 @@
 # Worker Configuration & Development
 
-This document outlines the conventions and configuration for Cloudflare Workers within the Mission Platform monorepo.
+This document describes the Cloudflare Workers in the Mission Platform monorepo, their TypeScript entrypoints, and the
+configuration files used to run or deploy them.
 
-## Overview
+## Worker Inventory
 
-Workers in the Mission Platform are located in the `workers/` directory. They are used for edge computing tasks such as
-serving Single Page Applications (SPAs), proxying API requests, and handling scheduled tasks.
+Standalone worker packages live under `workers/`:
 
-## Project Structure
+| Worker | Handler | Configuration | Purpose |
+| :----- | :------ | :------------ | :------ |
+| `api-proxy` | `workers/api-proxy/src/index.ts` | None; consumed as a bundled package | Constrained read-only API proxy |
+| `email-sender` | `workers/email-sender/src/index.ts` | `workers/email-sender/wrangler.jsonc` | MailPit-backed email showcase worker |
+| `forge-spa` | `workers/forge-spa/src/index.ts` | None; consumed as a bundled package | `ASSETS`-binding SPA fallback handler |
 
-Each worker is a standalone package with its own `package.json` and build configuration.
+The deployable application Workers are:
 
-```text
-workers/
-├── forge-spa/        # Serves static assets with SPA fallback
-│   ├── src/
-│   │   └── index.ts # Entry point
-│   ├── package.json
-│   └── tsdown.config.ts
-└── api-proxy/       # Proxies requests to external services
-    └── index.js     # Entry point
-```
+| Application | Handler | Configuration |
+| :---------- | :------ | :------------ |
+| Website | `workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc` |
+| My Care Notes | `workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc` |
+| Service Monitor | `apps/service-monitor/src/worker.tsx` | `apps/service-monitor/wrangler.jsonc` |
+
+`api-proxy` and `forge-spa` do not have standalone Wrangler configuration files: their `src/index.ts` handlers are
+bundled by `tsdown` and referenced by the application Wrangler configurations or a consuming deployment.
 
 ## Build System
 
-Workers typically use `tsdown` for bundling. This ensures that the worker code and its dependencies are compiled into a
-single file compatible with the Cloudflare Workers environment.
+Worker packages use `tsdown` for bundling. Use the package task through Turborepo or pnpm so workspace dependencies are
+resolved consistently:
 
-- **Library Mode**: Most workers opt out of module preservation (`preserveModules: false`) to ship a self-contained
-  artifact.
-- **Types**: Use `@cloudflare/workers-types` for TypeScript support.
+```bash
+pnpm exec turbo run build --filter=@mission-platform/api-proxy
+pnpm exec turbo run build --filter=@mission-platform/forge-spa
+pnpm exec turbo run build --filter=@mission-platform/email-sender
+```
 
-## Configuration
+Worker tests use Vitest:
 
-Workers are configured via environment variables and Cloudflare Bindings.
+```bash
+pnpm --filter @mission-platform/api-proxy test
+pnpm --filter @mission-platform/email-sender test
+pnpm --filter @mission-platform/forge-spa test
+```
 
-### Local Development
+Use `@cloudflare/workers-types` for handler and binding types. The email sender's generated binding declarations are
+written to `workers/email-sender/src/worker-configuration.d.ts` by its `types` script.
 
-Use `wrangler dev` to run workers locally. This simulates the Cloudflare environment and allows for local testing of KV,
-Durable Objects, and other bindings.
+## Configuration and Local Development
 
-### Production
+Workers receive runtime values through the `env` object and Cloudflare bindings. Do not put secrets in tracked
+`wrangler.jsonc` files; use `wrangler secret put` for sensitive values.
 
-Deployment is handled via `wrangler deploy`. Environment-specific configuration is managed through Cloudflare's
-dashboard or a `wrangler.toml` file (if provided).
+For the standalone email sender, run its configured Wrangler development server from the workspace package:
+
+```bash
+pnpm --filter @mission-platform/email-sender dev
+```
+
+For deployable applications, use the scripts in each app package. For example, the Website and My Care Notes Wrangler
+files provide `staging` and `production` environments, while Service Monitor provides a `staging` environment:
+
+```bash
+pnpm --filter @mission-platform/website cf:dev
+pnpm --filter @mission-platform/my-care-notes cf:dev
+pnpm --filter @mission-platform/service-monitor dev
+```
+
+## Deployment
+
+Deploy from the application package whose `wrangler.jsonc` owns the route and environment:
+
+```bash
+pnpm --filter @mission-platform/website deploy:staging
+pnpm --filter @mission-platform/my-care-notes deploy:staging
+pnpm --filter @mission-platform/service-monitor deploy:staging
+```
+
+The standalone worker packages without Wrangler configuration are not deployed directly with `wrangler deploy`; build
+their handlers and deploy them through the consuming application configuration.
 
 ## Best Practices
 
-- **Self-Contained Artifacts**: Always bundle dependencies into the worker output to ensure consistent behavior at the
-  edge.
-- **Environment Variables**: Use the `env` object passed to the `fetch` handler instead of global process variables.
-- **Edge Compatibility**: Avoid using Node.js built-in modules that are not supported by the Cloudflare Workers runtime
-  (e.g., `fs`, `child_process`).
-- **Small Footprint**: Keep worker bundles small to minimize cold start times and stay within Cloudflare's resource
-  limits.
-
-## Deployment Command
-
-To deploy a worker, navigate to its directory and run:
-
-```bash
-pnpm exec wrangler deploy
-```
+- Bundle dependencies into the worker output for predictable edge execution.
+- Use the `env` object passed to the `fetch` handler instead of global process variables.
+- Avoid Node.js built-ins unsupported by the Workers runtime, such as `fs` and `child_process`, in worker handlers.
+- Keep worker bundles small to minimize cold starts and stay within Cloudflare resource limits.

@@ -9,7 +9,7 @@ import { defineConfig, mergeConfig, type Plugin, type UserConfig } from 'vite';
  * Vite plugin that turns Vue SFC `<i18n>` custom blocks into no-op modules.
  *
  * The platform's `<i18n>` blocks hold the English source strings consumed by
- * the `scripts/i18n-extract.ts` tooling only — at runtime translations are
+ * the `i18next-cli` tooling only — at runtime translations are
  * loaded from the generated `src/locales/*.yaml` bundles via i18next. Since the
  * project no longer uses a vue-i18n custom-block compiler, `@vitejs/plugin-vue`
  * would otherwise emit the raw YAML block as a JS module and fail to parse it.

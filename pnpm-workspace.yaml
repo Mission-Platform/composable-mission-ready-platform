@@ -188,6 +188,7 @@ trustPolicyExclude:
 
 allowBuilds:
   "@parcel/watcher": true
+  '@swc/core': true
   esbuild: true
   sharp: true
   unrs-resolver: true
@@ -199,7 +200,7 @@ overrides:
   glob: ^13.0.6
   source-map: ^0.7.6
   beasties: ^0.4.3
-  DOMPurify: ^3.4.9
+  dompurify: ^3.4.13
   nanoid: ^5.1.16
 
 patchedDependencies:

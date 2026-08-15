@@ -1,5 +1,7 @@
 import { marked, type Token, type Tokens } from 'marked';
 
+import { sanitizeUrl } from '../../../utils/sanitize';
+
 import type { CodeBlockLanguage } from '../../atoms/forge-code-block';
 import type { TypographyVariant } from '@mission-platform/components';
 
@@ -92,7 +94,8 @@ export function slugify(text: string): string {
 
 /** Whether an `href` points off-site (and should open in a new tab). */
 export function isAbsoluteHref(href: string): boolean {
-  return /^(https?:)?\/\//i.test(href) || /^(mailto:|tel:)/i.test(href);
+  const safeHref = sanitizeUrl(href);
+  return safeHref !== undefined && (/^(https?:)?\/\//i.test(safeHref) || /^(mailto:|tel:)/i.test(safeHref));
 }
 
 /** Flatten a list of inline tokens down to their plain-text content. */

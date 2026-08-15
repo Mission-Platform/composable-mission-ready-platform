@@ -7,6 +7,7 @@ import {
   type ContentMark,
 } from '../ast';
 import { normalizeDocument } from '../ast/validation';
+import { sanitizeHtml, sanitizeUrl } from '../utils/sanitize';
 
 interface HtmlTextNode {
   kind: 'text';
@@ -147,7 +148,7 @@ function parseInline(nodes: HtmlNode[]): ContentInline[] {
       case 'a': {
         result.push({
           type: 'link',
-          url: node.attributes.href ?? '',
+          url: sanitizeUrl(node.attributes.href) ?? '',
           ...(node.attributes.title ? { title: node.attributes.title } : {}),
           children: parseInline(node.children),
         });
@@ -156,7 +157,7 @@ function parseInline(nodes: HtmlNode[]): ContentInline[] {
       case 'img': {
         result.push({
           type: 'image',
-          src: node.attributes.src ?? '',
+          src: sanitizeUrl(node.attributes.src) ?? '',
           alt: node.attributes.alt ?? '',
           ...(node.attributes.title ? { title: node.attributes.title } : {}),
         });
@@ -274,7 +275,7 @@ function blocksFromNodes(nodes: HtmlNode[]): ContentBlock[] {
         case 'img': {
           blocks.push({
             type: 'image',
-            src: node.attributes.src ?? '',
+            src: sanitizeUrl(node.attributes.src) ?? '',
             alt: node.attributes.alt ?? '',
             ...(node.attributes.title ? { title: node.attributes.title } : {}),
             ...(align ? { align } : {}),
@@ -330,6 +331,6 @@ export function parseHtml(source: string): ContentDocument {
   return normalizeDocument({
     version: CONTENT_DOCUMENT_VERSION,
     type: 'document',
-    children: blocksFromNodes(parseHtmlNodes(source)),
+    children: blocksFromNodes(parseHtmlNodes(sanitizeHtml(source))),
   });
 }

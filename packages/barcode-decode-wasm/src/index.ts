@@ -1,13 +1,13 @@
-// Self-contained, synchronously-initialised wrapper around the wasm-pack
+// Self-contained, lazily-initialised wrapper around the wasm-pack
 // (bundler target) glue for the `barcode-decode` Rust crate.
 //
 // wasm-pack emits the wasm-bindgen bindings into `src/wasm/*`, keeping the
 // `_bg.wasm` binary as a separate file. This module inlines that binary as a
 // base64 string at tsdown build time (see the inline plugin in
 // `tsdown.config.ts`), decodes it, and instantiates the module *synchronously*
-// at import — wiring the instance into the generated bindings exactly like the
-// bundler-target entry would — so consumers just import the ready-to-use
-// `decode` function with no async initialisation step.
+// at first use — wiring the instance into the generated bindings exactly like
+// the bundler-target entry would. Keeping instantiation lazy prevents importing
+// a Promise-based façade from doing all WebAssembly work synchronously.
 import * as bindings from "./wasm/barcode-decode_bg.js";
 import wasmBase64 from "./wasm/barcode-decode_bg.wasm";
 
@@ -52,19 +52,39 @@ function toArrayBuffer(bytes: Uint8Array): ArrayBuffer {
 const glue = bindings as unknown as typeof WasmApi & {
   __wbg_set_wasm(value: unknown): void;
 };
-const instance = new WebAssembly.Instance(
-  new WebAssembly.Module(toArrayBuffer(toBytes(String(wasmBase64)))),
-  {
-    "./barcode-decode_bg.js": bindings as unknown as WebAssembly.ModuleImports,
-  },
-);
-glue.__wbg_set_wasm(instance.exports);
-(instance.exports as { __wbindgen_start: () => void }).__wbindgen_start();
+
+let initializationError: unknown;
+let initializationFailed = false;
+let initialized = false;
+
+function ensureInitialized(): void {
+  if (initialized) return;
+  if (initializationFailed) throw initializationError;
+  try {
+    const instance = new WebAssembly.Instance(
+      new WebAssembly.Module(toArrayBuffer(toBytes(String(wasmBase64)))),
+      {
+        "./barcode-decode_bg.js":
+          bindings as unknown as WebAssembly.ModuleImports,
+      },
+    );
+    glue.__wbg_set_wasm(instance.exports);
+    (instance.exports as { __wbindgen_start: () => void }).__wbindgen_start();
+    initialized = true;
+  } catch (error) {
+    initializationError = error;
+    initializationFailed = true;
+    throw error;
+  }
+}
 
 /**
  * Decode a run of module bits (`1` = bar, `0` = space) of the linear
  * `symbology` back into its payload. Returns `undefined` when the symbology is
- * unknown or the run is not a valid symbol. The wasm module is already
- * instantiated, so this is fully synchronous.
+ * unknown or the run is not a valid symbol. Initialization occurs synchronously
+ * on the first call.
  */
-export const decode: typeof WasmApi.decode = glue.decode;
+export const decode: typeof WasmApi.decode = (...arguments_) => {
+  ensureInitialized();
+  return glue.decode(...arguments_);
+};

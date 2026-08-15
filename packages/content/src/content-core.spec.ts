@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { sanitizeHtml, sanitizeUrl } from './utils/sanitize';
+
 import {
   CONTENT_DOCUMENT_VERSION,
   isContentDocument,
@@ -101,6 +103,57 @@ describe('Markdown parser and builder', () => {
       '<p><strong>&lt;safe&gt; &amp;</strong><img src="/image.png" alt="an image"></p><pre><code class="language-html">&lt;div&gt;</code></pre>',
     );
   });
+
+  it('sanitizes URLs and raw HTML from persisted documents before serialization', () => {
+    const document: ContentDocument = {
+      version: CONTENT_DOCUMENT_VERSION,
+      type: 'document',
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            { type: 'link', url: 'javascript:alert(1)', children: [{ type: 'text', value: 'link' }] },
+            { type: 'image', src: 'data:text/html,alert(2)', alt: 'image' },
+            { type: 'raw-html', value: '<strong>safe</strong><img src="javascript:alert(3)" onerror="alert(4)">' },
+          ],
+        },
+        { type: 'raw-html', value: '<script>alert(5)</script><em>safe</em>' },
+      ],
+    };
+
+    const html = toHtml(document);
+    const markdown = toMarkdown(document);
+
+    expect(html).toContain('<a href="">link</a>');
+    expect(html).toContain('<img src="" alt="image">');
+    expect(html).toContain('<strong>safe</strong>');
+    expect(html).toContain('<em>safe</em>');
+    expect(html).not.toContain('javascript:');
+    expect(html).not.toContain('data:text/html');
+    expect(html).not.toContain('onerror');
+    expect(html).not.toContain('<script');
+    expect(markdown).not.toContain('javascript:');
+    expect(markdown).not.toContain('data:text/html');
+    expect(markdown).not.toContain('onerror');
+    expect(markdown).not.toContain('<script');
+  });
+
+  it('rejects executable Markdown URLs, including encoded schemes', () => {
+    const document = parseMarkdown(
+      '[bad](JaVaScRiPt%3Aalert(1)) ![bad](data:text/html,evil) [ok](mailto:test@example.com)',
+    );
+
+    expect(document.children[0]).toMatchObject({
+      type: 'paragraph',
+      children: [
+        { type: 'link', url: '' },
+        { type: 'text', value: ' ' },
+        { type: 'image', src: '' },
+        { type: 'text', value: ' ' },
+        { type: 'link', url: 'mailto:test@example.com' },
+      ],
+    });
+  });
 });
 
 describe('HTML parser', () => {
@@ -125,9 +178,32 @@ describe('HTML parser', () => {
       items: [{ type: 'list-item', children: [{ type: 'paragraph', children: [{ type: 'text', value: 'First' }] }] }],
     });
     expect(document.children[2]).toEqual({ type: 'code', language: 'json', value: '{"ok":true}' });
-    expect(document.children[3]).toEqual({
-      type: 'paragraph',
-      children: [{ type: 'raw-html', value: '<custom data-value="1">raw</custom>' }],
-    });
+    expect(document.children[3]).toEqual({ type: 'paragraph', children: [{ type: 'text', value: 'raw' }] });
+  });
+
+  it('sanitizes dangerous raw HTML while retaining supported formatting', () => {
+    const html = sanitizeHtml(
+      '<p style="text-align:center"><strong>safe</strong><img src="javascript:alert(1)" onerror="alert(2)"><a href="javascript:alert(3)">link</a><script>alert(4)</script></p>',
+    );
+
+    expect(html).toContain('<strong>safe</strong>');
+    expect(html).not.toContain('javascript:');
+    expect(html).not.toContain('onerror');
+    expect(html).not.toContain('<script');
+    expect(sanitizeHtml('<img src="data:image/png;base64,AAAA">')).not.toContain('data:');
+  });
+
+  it('accepts only approved URL schemes', () => {
+    expect(sanitizeUrl('https://example.com')).toBe('https://example.com');
+    expect(sanitizeUrl('/relative')).toBe('/relative');
+    expect(sanitizeUrl('tel:+123')).toBe('tel:+123');
+    expect(sanitizeUrl('java\u0000script:alert(1)')).toBeUndefined();
+    expect(sanitizeUrl('&#x6a;avascript:alert(1)')).toBeUndefined();
+    expect(sanitizeUrl('data:image/png;base64,AAAA')).toBeUndefined();
+    expect(() => sanitizeUrl('&#x110000;avascript:alert(1)')).not.toThrow();
+  });
+
+  it('does not throw when HTML contains invalid numeric entities', () => {
+    expect(() => parseHtml('<p>&#x110000;</p>')).not.toThrow();
   });
 });

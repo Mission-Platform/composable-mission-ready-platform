@@ -1,6 +1,8 @@
 import { ForgeTypography } from '@mission-platform/components';
 import { h, type MpElement } from '@mission-platform/forge';
 
+import { sanitizeUrl } from '../../../utils/sanitize';
+
 import styles from './forge-markdown.module.scss';
 import { decodeEntities, isAbsoluteHref } from './markdown-utilities';
 
@@ -27,10 +29,10 @@ export function MarkdownInline(properties: Readonly<MarkdownInlineProperties>): 
   // Link target resolution: a resolver hit marks the link internal; otherwise an
   // absolute link opens in a new tab.
   const link = token as Tokens.Link;
-  const resolvedHref = type === 'link' ? resolveHref?.(link.href) : undefined;
+  const resolvedHref = type === 'link' ? sanitizeUrl(resolveHref?.(link.href)) : undefined;
   const linkIsInternal = resolvedHref !== undefined;
-  const linkHref = resolvedHref ?? (type === 'link' ? link.href : undefined);
-  const linkExternal = type === 'link' && !linkIsInternal && isAbsoluteHref(link.href);
+  const linkHref = resolvedHref ?? (type === 'link' ? sanitizeUrl(link.href) : undefined);
+  const linkExternal = type === 'link' && !linkIsInternal && isAbsoluteHref(linkHref ?? '');
 
   const childTokens = (token as { tokens?: Token[] }).tokens;
   const image = token as Tokens.Image;
@@ -79,7 +81,7 @@ export function MarkdownInline(properties: Readonly<MarkdownInlineProperties>): 
     <img
       alt={image.text}
       className={styles['forge-markdown__image']}
-      src={image.href}
+      src={sanitizeUrl(image.href)}
       title={image.title ?? undefined}
     />
   ) : type === 'link' ? (

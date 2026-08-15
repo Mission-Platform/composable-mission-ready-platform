@@ -65,6 +65,34 @@ describe('@mission-platform/api-proxy', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  it('follows redirects that stay on the fixed upstream origin', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(new Response(undefined, { status: 302, headers: { Location: '/users/456' } }))
+      .mockResolvedValueOnce(new Response('redirected-body', { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    const result = await worker.fetch(new Request('https://origin.test/users/123'), {}, executionContext);
+
+    expect(result.status).toBe(200);
+    expect(await result.text()).toBe('redirected-body');
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(new URL((fetchMock.mock.calls[1]?.[0] as Request).url).href).toBe('https://api.example.com/users/456');
+  });
+
+  it('rejects redirects to another origin without following them', async () => {
+    const fetchMock = vi.fn(
+      async () => new Response(undefined, { status: 302, headers: { Location: 'https://evil.test/' } }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    const result = await worker.fetch(new Request('https://origin.test/users/123'), {}, executionContext);
+
+    expect(result.status).toBe(502);
+    expect(await result.text()).toBe('Bad gateway');
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
   it('returns an opaque 502 when the upstream fetch throws', async () => {
     vi.stubGlobal(
       'fetch',
