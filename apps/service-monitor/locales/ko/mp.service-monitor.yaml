@@ -57,6 +57,12 @@ speed:
   down: '{value} Mbps 다운로드'
   enabled: '{interval}초마다 서버 측 속도 테스트(Cloudflare, Fast.com, Speedtest).'
   failed: 실패
+  graphMetric:
+    bandwidth: ''
+    download: ''
+    latency: ''
+    ping: ''
+    upload: ''
   graphTitle: '{name} · 시간별 {metric}'
   latency: '{value} ms'
   pending: 아직 측정값 없음

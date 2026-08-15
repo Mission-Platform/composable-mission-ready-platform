@@ -59,6 +59,7 @@
     "build:check": "tsc --project tsconfig.build.json --noEmit",
     "build:watch": "tsdown --watch",
     "test": "vitest run",
+    "i18n:extract": "i18next-cli extract --config i18next.config.ts",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint .",
@@ -106,6 +107,7 @@
   "devDependencies": {
     "@mission-platform/components": "workspace:*",
     "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/i18n-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
     "@mission-platform/stylelint-config": "workspace:*",
     "@mission-platform/tsdown-config": "workspace:*",
@@ -130,6 +132,7 @@
     "@vitejs/plugin-vue-jsx": "catalog:vue",
     "@vitest/coverage-v8": "catalog:testing",
     "eslint": "catalog:eslint",
+    "i18next-cli": "1.68.0",
     "jsdom": "catalog:testing",
     "lit": "catalog:webcomponents",
     "postcss-html": "catalog:stylelint",

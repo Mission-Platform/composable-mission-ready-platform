@@ -60,6 +60,12 @@ speed:
   down: '{value} ميجابت في الثانية تنزيل'
   enabled: اختبارات سرعة من جانب الخادم كل {interval} ثانية (Cloudflare، Fast.com، Speedtest).
   failed: فشل
+  graphMetric:
+    bandwidth: ''
+    download: ''
+    latency: ''
+    ping: ''
+    upload: ''
   graphTitle: '{name} · {metric} مع مرور الوقت'
   latency: '{value} مللي ثانية'
   pending: لا توجد قياسات بعد

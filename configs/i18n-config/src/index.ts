@@ -31,9 +31,9 @@ export function createI18nConfig(defaultNS: string, options: I18nConfigOptions =
     defaultLocale,
     extract: {
       input: 'src/**/*.{ts,tsx,vue}',
-      output: 'src/locales/{{language}}.yaml',
+      output: 'locales/{{language}}/{{namespace}}.yaml',
       outputFormat: 'yaml',
-      mergeNamespaces: true,
+      mergeNamespaces: false,
     },
     plugins: [i18nextVuePlugin()],
     ...rest,

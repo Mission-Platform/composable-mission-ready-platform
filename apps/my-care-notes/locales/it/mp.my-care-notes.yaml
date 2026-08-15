@@ -8,33 +8,12 @@ col:
   name: Nome
 content_label: Contenuto
 date_row_content: Data corrente (GG/MM/AAAA)
-menu:
-  export-all: Esporta tutto
-  import: Importa
-  import-all: Importa tutto
-  new: Nuovo
 name:
   hint: Digita {preview} nell'editor per inserire questo frammento
   label: Nome del frammento
   placeholder: es. greeting
-nav:
-  export-note: Esporta nota
-  import-note: Importa nota
-  notes: Note
-  reopen-closed: Riapri scheda chiusa
-  restore-tab: 'Ripristina: {title}'
-  snippets: Snippet
 rename:
-  cancel: Annulla
-  confirm: Rinomina
   label: Nome scheda
-  title: Rinomina scheda
-sidebar:
-  title: Snippet
-snippet:
-  edit: Modifica snippet
-  export: Esporta snippet
-theme_toggle: Cambia tema colore
 title:
   edit: Modifica frammento
   new: Nuovo frammento

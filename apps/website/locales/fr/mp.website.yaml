@@ -1,93 +1,70 @@
-about:
-  lead: "Mission Platform est un monorepo composable de blocs d'interface réutilisables, de modules WebAssembly et d'outils : concevez une seule fois dans Forge et compilez pour chaque framework."
-  projects:
-    aria-label: 'Liste des projets'
-  title: 'À propos'
-ai_translation_warning: 'ai-translation-warning'
 faq:
   items:
     composable:
-      answer: "Nous construisons l'interface à partir de petits blocs réutilisables et indépendants du framework que vous pouvez assembler à votre guise."
-      question: 'Que signifie « composable » ?'
+      answer: Nous construisons l'interface à partir de petits blocs réutilisables et indépendants du framework que vous pouvez assembler à votre guise.
+      question: Que signifie « composable » ?
     deploy:
-      answer: "La plateforme est conçue pour être déployée sur Cloudflare Workers et d'autres environnements d'hébergement serverless ou statiques."
-      question: 'Comment déployer ce projet ?'
+      answer: La plateforme est conçue pour être déployée sur Cloudflare Workers et d'autres environnements d'hébergement serverless ou statiques.
+      question: Comment déployer ce projet ?
     frameworks:
-      answer: "Les composants sont conçus une seule fois dans l'environnement d'exécution Forge, indépendant du framework, puis compilés pour Vue, React, Svelte, Solid et Web Components."
-      question: 'Quels frameworks sont pris en charge ?'
-  title: 'FAQ'
+      answer: Les composants sont conçus une seule fois dans l'environnement d'exécution Forge, indépendant du framework, puis compilés pour Vue, React, Svelte, Solid et Web Components.
+      question: Quels frameworks sont pris en charge ?
 features:
   barcode:
-    description: 'Générez et scannez des codes QR, Data Matrix et codes-barres 1D, propulsés par WebAssembly.'
-    title: 'Scan et codes'
+    description: Générez et scannez des codes QR, Data Matrix et codes-barres 1D, propulsés par WebAssembly.
+    title: Scan et codes
   composable:
-    description: "Concevez votre interface une seule fois dans l'environnement d'exécution Forge, indépendant du framework, puis compilez-la pour Vue, React, Svelte, Solid et Web Components."
-    title: 'Écrivez une fois, exécutez partout'
+    description: Concevez votre interface une seule fois dans l'environnement d'exécution Forge, indépendant du framework, puis compilez-la pour Vue, React, Svelte, Solid et Web Components.
+    title: Écrivez une fois, exécutez partout
   debugging:
-    description: 'TypeScript de bout en bout dans chaque package, application et worker.'
-    title: 'Typage sûr'
+    description: TypeScript de bout en bout dans chaque package, application et worker.
+    title: Typage sûr
   global:
-    description: "Conçu pour être déployé sur Cloudflare Workers et d'autres plateformes serverless."
-    title: "Prêt pour l'edge"
+    description: Conçu pour être déployé sur Cloudflare Workers et d'autres plateformes serverless.
+    title: Prêt pour l'edge
   i18n:
-    description: 'Traduction intégrée avec i18next et prise en charge complète des langues de droite à gauche.'
-    title: 'Internationalisation'
+    description: Traduction intégrée avec i18next et prise en charge complète des langues de droite à gauche.
+    title: Internationalisation
   performance:
-    description: 'Rust et AssemblyScript compilés en WebAssembly pour une vitesse quasi native.'
-    title: 'Performance'
+    description: Rust et AssemblyScript compilés en WebAssembly pour une vitesse quasi native.
+    title: Performance
   search:
-    description: "Formulaires, tableaux, planification, cartes, graphiques et édition de texte enrichi, prêts à l'emploi."
-    title: 'Tout inclus'
+    description: Formulaires, tableaux, planification, cartes, graphiques et édition de texte enrichi, prêts à l'emploi.
+    title: Tout inclus
   theming:
-    description: 'Jetons de design et thèmes SCSS avec des modes clair et sombre de premier ordre.'
-    title: 'Personnalisation des thèmes'
-  title: 'Fonctionnalités'
-footer:
-  copyright: '© {year} Mission Platform.'
-hero:
-  badge: 'Open source'
-  cta-primary: 'Commencer'
-  cta-secondary: 'Documentation'
-  lead: "Concevez votre interface une seule fois dans l'environnement d'exécution Forge, indépendant du framework, puis compilez-la pour Vue, React, Svelte, Solid et Web Components."
-  title: 'Composable. Mission Ready.'
-nav:
-  about: 'À propos'
-  faq: 'FAQ'
-  features: 'Fonctionnalités'
-  packages: 'Packages'
+    description: Jetons de design et thèmes SCSS avec des modes clair et sombre de premier ordre.
+    title: Personnalisation des thèmes
 packages:
   items:
-    barcode: 'Encodeur et décodeur de codes-barres 1D en WebAssembly.'
-    breakpoints: 'Utilitaires et composants de points de rupture responsives.'
-    code-scanner: "Scannez des codes QR, Data Matrix et codes-barres à partir d'une image ou de la caméra."
-    components: "Composants d'interface à écriture unique pour chaque framework pris en charge."
-    d3: 'Intégration de D3 indépendante du framework.'
-    forms: 'Générateur de formulaires à écriture unique et formulaires pilotés par schéma.'
-    forms-core: 'Moteur de formulaires JSON Schema indépendant du framework.'
-    harper: 'Vérification grammaticale et stylistique Harper pour Monaco.'
-    hunspell: 'Correction orthographique Hunspell en WebAssembly.'
-    i18n: 'Internationalisation propulsée par i18next.'
-    icons: 'Icônes SVG conçues une seule fois en JSX.'
-    jsx: "Environnement d'exécution JSX indépendant du framework avec des adaptateurs pour chaque framework."
-    layouts: "Mises en page d'application à écriture unique."
-    map: 'Composants et composables de cartes MapLibre GL.'
-    matrix-code: 'Encodeur et décodeur Data Matrix en WebAssembly.'
-    observers: "Hooks d'observateurs Intersection, Mutation et Performance à écriture unique."
-    phone-number: 'Analyse, validation et formatage de numéros de téléphone.'
-    qr-code: 'Encodeur et décodeur de codes QR en WebAssembly.'
-    router: 'Utilitaires de routage.'
-    rxjs: "Reliez les observables RxJS à l'état des composants."
-    scheduler-core: "Modèle d'événements iCalendar et moteur de récurrence."
-    seo: 'Données structurées, balises méta et utilitaires de sitemap.'
-    speech-audio: 'Hooks de synthèse vocale, reconnaissance, audio et Web MIDI.'
-    three: 'Intégration de Three.js indépendante du framework.'
-    tokens: 'Jetons de design CSS et thèmes SCSS.'
-    wysiwyg: 'Éditeur de texte enrichi à écriture unique.'
-  lead: "Des blocs de construction composables — de l'interface et des formulaires aux outils propulsés par WebAssembly."
-  title: 'Packages'
+    barcode: Encodeur et décodeur de codes-barres 1D en WebAssembly.
+    breakpoints: Utilitaires et composants de points de rupture responsives.
+    code-scanner: Scannez des codes QR, Data Matrix et codes-barres à partir d'une image ou de la caméra.
+    components: Composants d'interface à écriture unique pour chaque framework pris en charge.
+    content: ''
+    d3: Intégration de D3 indépendante du framework.
+    forms: Générateur de formulaires à écriture unique et formulaires pilotés par schéma.
+    forms-core: Moteur de formulaires JSON Schema indépendant du framework.
+    harper: Vérification grammaticale et stylistique Harper pour Monaco.
+    hunspell: Correction orthographique Hunspell en WebAssembly.
+    i18n: Internationalisation propulsée par i18next.
+    icons: Icônes SVG conçues une seule fois en JSX.
+    jsx: Environnement d'exécution JSX indépendant du framework avec des adaptateurs pour chaque framework.
+    layouts: Mises en page d'application à écriture unique.
+    map: Composants et composables de cartes MapLibre GL.
+    matrix-code: Encodeur et décodeur Data Matrix en WebAssembly.
+    observers: Hooks d'observateurs Intersection, Mutation et Performance à écriture unique.
+    phone-number: Analyse, validation et formatage de numéros de téléphone.
+    qr-code: Encodeur et décodeur de codes QR en WebAssembly.
+    router: Utilitaires de routage.
+    rxjs: Reliez les observables RxJS à l'état des composants.
+    scheduler: ''
+    seo: Données structurées, balises méta et utilitaires de sitemap.
+    speech-audio: Hooks de synthèse vocale, reconnaissance, audio et Web MIDI.
+    three: Intégration de Three.js indépendante du framework.
+    tokens: Jetons de design CSS et thèmes SCSS.
 projects:
   items:
     my-care-notes:
-      cta: 'En savoir plus'
-      description: 'Une application de notes de soins centrée sur le patient, construite sur Mission Platform.'
-      name: 'My Care Notes'
+      cta: En savoir plus
+      description: Une application de notes de soins centrée sur le patient, construite sur Mission Platform.
+      name: My Care Notes

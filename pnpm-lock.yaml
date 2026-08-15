@@ -590,6 +590,9 @@ importers:
       eslint:
         specifier: catalog:eslint
         version: 10.8.1(jiti@2.7.0)(supports-color@10.2.2)
+      i18next-cli:
+        specifier: 1.68.0
+        version: 1.68.0(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)
       postcss-html:
         specifier: catalog:stylelint
         version: 1.8.1
@@ -738,6 +741,9 @@ importers:
       eslint:
         specifier: catalog:eslint
         version: 10.8.1(jiti@2.7.0)(supports-color@10.2.2)
+      i18next-cli:
+        specifier: 1.68.0
+        version: 1.68.0(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)
       postcss-html:
         specifier: catalog:stylelint
         version: 1.8.1
@@ -949,6 +955,9 @@ importers:
       eslint:
         specifier: catalog:eslint
         version: 10.8.1(jiti@2.7.0)(supports-color@10.2.2)
+      i18next-cli:
+        specifier: 1.68.0
+        version: 1.68.0(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)
       js-yaml:
         specifier: 'catalog:'
         version: 4.3.1
@@ -1112,6 +1121,9 @@ importers:
       eslint:
         specifier: catalog:eslint
         version: 10.8.1(jiti@2.7.0)(supports-color@10.2.2)
+      i18next-cli:
+        specifier: 1.68.0
+        version: 1.68.0(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)
       postcss-html:
         specifier: catalog:stylelint
         version: 1.8.1
@@ -2372,6 +2384,9 @@ importers:
       eslint:
         specifier: catalog:eslint
         version: 10.8.1(jiti@2.7.0)(supports-color@10.2.2)
+      i18next-cli:
+        specifier: 1.68.0
+        version: 1.68.0(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)
       jsdom:
         specifier: catalog:testing
         version: 29.1.1
@@ -2598,6 +2613,9 @@ importers:
       i18next:
         specifier: catalog:i18next
         version: 26.3.6(typescript@6.0.3)
+      i18next-cli:
+        specifier: 1.68.0
+        version: 1.68.0(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)
       i18next-vue:
         specifier: catalog:i18next
         version: 5.4.0(i18next@26.3.6(typescript@6.0.3))(vue@3.5.41(typescript@6.0.3))
@@ -2734,6 +2752,9 @@ importers:
       '@mission-platform/forge-plugin-web-components':
         specifier: workspace:*
         version: link:../../forge-plugins/forge-web-components
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -2782,6 +2803,9 @@ importers:
       eslint:
         specifier: catalog:eslint
         version: 10.8.1(jiti@2.7.0)(supports-color@10.2.2)
+      i18next-cli:
+        specifier: 1.68.0
+        version: 1.68.0(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)
       jsdom:
         specifier: catalog:testing
         version: 29.1.1
@@ -2951,6 +2975,9 @@ importers:
       eslint:
         specifier: catalog:eslint
         version: 10.8.1(jiti@2.7.0)(supports-color@10.2.2)
+      i18next-cli:
+        specifier: 1.68.0
+        version: 1.68.0(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)
       jsdom:
         specifier: catalog:testing
         version: 29.1.1
@@ -3622,6 +3649,9 @@ importers:
       eslint:
         specifier: catalog:eslint
         version: 10.8.1(jiti@2.7.0)(supports-color@10.2.2)
+      i18next-cli:
+        specifier: 1.68.0
+        version: 1.68.0(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)
       jsdom:
         specifier: catalog:testing
         version: 29.1.1
@@ -4180,6 +4210,9 @@ importers:
       eslint:
         specifier: catalog:eslint
         version: 10.8.1(jiti@2.7.0)(supports-color@10.2.2)
+      i18next-cli:
+        specifier: 1.68.0
+        version: 1.68.0(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)
       jsdom:
         specifier: catalog:testing
         version: 29.1.1
@@ -4277,6 +4310,9 @@ importers:
       '@mission-platform/forge-plugin-web-components':
         specifier: workspace:*
         version: link:../../forge-plugins/forge-web-components
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -4328,6 +4364,9 @@ importers:
       eslint:
         specifier: catalog:eslint
         version: 10.8.1(jiti@2.7.0)(supports-color@10.2.2)
+      i18next-cli:
+        specifier: 1.68.0
+        version: 1.68.0(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)
       jsdom:
         specifier: catalog:testing
         version: 29.1.1
@@ -4428,6 +4467,9 @@ importers:
       '@mission-platform/forge-plugin-web-components':
         specifier: workspace:*
         version: link:../../forge-plugins/forge-web-components
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -4476,6 +4518,9 @@ importers:
       eslint:
         specifier: catalog:eslint
         version: 10.8.1(jiti@2.7.0)(supports-color@10.2.2)
+      i18next-cli:
+        specifier: 1.68.0
+        version: 1.68.0(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)
       jsdom:
         specifier: catalog:testing
         version: 29.1.1
@@ -4799,6 +4844,9 @@ importers:
       '@mission-platform/forge-plugin-web-components':
         specifier: workspace:*
         version: link:../../forge-plugins/forge-web-components
+      '@mission-platform/i18n-config':
+        specifier: workspace:*
+        version: link:../../configs/i18n-config
       '@mission-platform/prettier-config':
         specifier: workspace:*
         version: link:../../configs/prettier-config
@@ -4844,6 +4892,9 @@ importers:
       eslint:
         specifier: catalog:eslint
         version: 10.8.1(jiti@2.7.0)(supports-color@10.2.2)
+      i18next-cli:
+        specifier: 1.68.0
+        version: 1.68.0(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)
       jsdom:
         specifier: catalog:testing
         version: 29.1.1
@@ -5836,10 +5887,6 @@ importers:
         version: 4.1.10(@types/node@24.13.3)(@vitest/browser-playwright@4.1.10)(@vitest/coverage-v8@4.1.10)(happy-dom@20.11.2)(jsdom@29.1.1)(vite@8.2.1(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.49.2)(yaml@2.9.0))
 
   scripts:
-    dependencies:
-      i18next-cli:
-        specifier: 1.68.0
-        version: 1.68.0(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)
     devDependencies:
       '@mission-platform/eslint-config':
         specifier: workspace:*

@@ -8,33 +8,12 @@ col:
   name: 이름
 content_label: 내용
 date_row_content: 현재 날짜 (YYYY/MM/DD)
-menu:
-  export-all: 모두 내보내기
-  import: 가져오기
-  import-all: 모두 가져오기
-  new: 새로 만들기
 name:
   hint: 이 스니펫을 삽입하려면 편집기에 {preview}를 입력하세요
   label: 스니펫 이름
   placeholder: '예: greeting'
-nav:
-  export-note: 노트 내보내기
-  import-note: 노트 가져오기
-  notes: 노트
-  reopen-closed: 닫힌 탭 다시 열기
-  restore-tab: '복원: {title}'
-  snippets: 스니펫
 rename:
-  cancel: 취소
-  confirm: 이름 변경
   label: 탭 이름
-  title: 탭 이름 변경
-sidebar:
-  title: 스니펫
-snippet:
-  edit: 스니펫 편집
-  export: 스니펫 내보내기
-theme_toggle: 색상 테마 전환
 title:
   edit: 스니펫 편집
   new: 새 스니펫

@@ -8,33 +8,12 @@ col:
   name: الاسم
 content_label: المحتوى
 date_row_content: التاريخ الحالي (YYYY/MM/DD)
-menu:
-  export-all: تصدير الكل
-  import: استيراد
-  import-all: استيراد الكل
-  new: جديد
 name:
   hint: اكتب {preview} في المحرر لإدراج هذا المقتطف
   label: اسم المقتطف
   placeholder: على سبيل المثال greeting
-nav:
-  export-note: تصدير الملاحظة
-  import-note: استيراد الملاحظة
-  notes: ملاحظات
-  reopen-closed: إعادة فتح علامة التبويب المغلقة
-  restore-tab: 'استعادة: {title}'
-  snippets: قصاصات
 rename:
-  cancel: إلغاء
-  confirm: إعادة تسمية
   label: اسم علامة التبويب
-  title: إعادة تسمية علامة التبويب
-sidebar:
-  title: قصاصات
-snippet:
-  edit: تعديل القصاصة
-  export: تصدير القصاصة
-theme_toggle: تبديل المظهر الملون
 title:
   edit: تحرير المقتطف
   new: مقتطف جديد

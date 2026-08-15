@@ -148,19 +148,19 @@ pnpm --filter @mission-platform/storybook test
 
 ## Available Scripts
 
-| Command                                                    | Description                                                        |
-| ---------------------------------------------------------- | ------------------------------------------------------------------ |
-| `pnpm storybook:cert`                                      | Generates self-signed SSL certificate in `.storybook/certs/`       |
-| `pnpm storybook`                                           | Generates certs and launches the selected workspace Storybook      |
-| `pnpm storybook:<framework>`                               | Launches a root Storybook renderer shortcut on ports `6006`–`6010` |
-| `pnpm build-storybook`                                     | Compiles the selected workspace Storybook into `storybook-static/` |
-| `pnpm build-storybook:<framework>`                         | Builds one renderer into `storybook-static/`                       |
-| `pnpm deploy`                                              | Deploys static build to Chromatic for visual testing               |
-| `pnpm test`                                                | Runs interaction/a11y tests with Vitest + Playwright browser mode  |
-| `pnpm dev`                                                 | Runs Vite dev server for the landing page                          |
-| `pnpm build`                                               | Type-checks (`vue-tsc`) and builds Vite application bundle         |
-| `pnpm preview`                                             | Serves built application locally                                   |
-| `pnpm lint` / `pnpm lint:fix`                              | Lints code with ESLint                                             |
-| `pnpm lint:style` / `pnpm lint:style:fix`                  | Lints styles with Stylelint                                        |
-| `pnpm format` / `pnpm format:write`                        | Checks or fixes code formatting with Prettier                      |
-| `pnpm i18n:extract` / `pnpm i18n:types` / `pnpm i18n:lint` | i18n translation key extraction and type checking                  |
+| Command                                   | Description                                                        |
+| ----------------------------------------- | ------------------------------------------------------------------ |
+| `pnpm storybook:cert`                     | Generates self-signed SSL certificate in `.storybook/certs/`       |
+| `pnpm storybook`                          | Generates certs and launches the selected workspace Storybook      |
+| `pnpm storybook:<framework>`              | Launches a root Storybook renderer shortcut on ports `6006`–`6010` |
+| `pnpm build-storybook`                    | Compiles the selected workspace Storybook into `storybook-static/` |
+| `pnpm build-storybook:<framework>`        | Builds one renderer into `storybook-static/`                       |
+| `pnpm deploy`                             | Deploys static build to Chromatic for visual testing               |
+| `pnpm test`                               | Runs interaction/a11y tests with Vitest + Playwright browser mode  |
+| `pnpm dev`                                | Runs Vite dev server for the landing page                          |
+| `pnpm build`                              | Type-checks (`vue-tsc`) and builds Vite application bundle         |
+| `pnpm preview`                            | Serves built application locally                                   |
+| `pnpm lint` / `pnpm lint:fix`             | Lints code with ESLint                                             |
+| `pnpm lint:style` / `pnpm lint:style:fix` | Lints styles with Stylelint                                        |
+| `pnpm format` / `pnpm format:write`       | Checks or fixes code formatting with Prettier                      |
+| `pnpm i18n:extract`                       | Extracts i18n translation keys with `i18next-cli`                  |

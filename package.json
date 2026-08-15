@@ -30,6 +30,7 @@
     "build-storybook:svelte": "STORYBOOK_FRAMEWORK=svelte pnpm exec turbo run build-storybook --filter @mission-platform/storybook",
     "build-storybook:web-component": "STORYBOOK_FRAMEWORK=web-component pnpm exec turbo run build-storybook --filter @mission-platform/storybook",
     "test": "pnpm exec turbo run test",
+    "i18n:extract": "pnpm exec turbo run i18n:extract",
     "lint": "pnpm exec turbo run lint",
     "lint:fix": "pnpm exec turbo run lint:fix",
     "lint:style": "pnpm exec turbo run lint:style",

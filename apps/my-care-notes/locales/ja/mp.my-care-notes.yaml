@@ -8,33 +8,12 @@ col:
   name: 名前
 content_label: 内容
 date_row_content: 現在の日付 (YYYY/MM/DD)
-menu:
-  export-all: すべてエクスポート
-  import: インポート
-  import-all: すべてインポート
-  new: 新規
 name:
   hint: エディタで {preview} と入力してこのスニペットを挿入します
   label: スニペット名
   placeholder: '例: greeting'
-nav:
-  export-note: ノートをエクスポート
-  import-note: ノートをインポート
-  notes: ノート
-  reopen-closed: 閉じられたタブを再度開く
-  restore-tab: '復元: {title}'
-  snippets: スニペット
 rename:
-  cancel: キャンセル
-  confirm: 名前を変更
   label: タブ名
-  title: タブの名前を変更
-sidebar:
-  title: スニペット
-snippet:
-  edit: スニペットを編集
-  export: スニペットをエクスポート
-theme_toggle: カラーテーマの切り替え
 title:
   edit: スニペットを編集
   new: 新規スニペット

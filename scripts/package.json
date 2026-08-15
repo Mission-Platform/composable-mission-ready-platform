@@ -5,15 +5,11 @@
   "license": "BSD-4-Clause",
   "type": "module",
   "scripts": {
-    "i18n:extract": "for config in ../apps/*/i18next.config.ts; do (cd \"$(dirname \"$config\")\" && i18next-cli extract --config i18next.config.ts); done",
     "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --check .",
     "format:write": "prettier --write ."
-  },
-  "dependencies": {
-    "i18next-cli": "1.68.0"
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",

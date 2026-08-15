@@ -1,93 +1,70 @@
-about:
-  lead: 'Mission Platform 是一个可组合的 monorepo，汇集可复用的 UI 构建模块、WebAssembly 模块与工具链——在 Forge 中编写一次，即可为每种框架构建。'
-  projects:
-    aria-label: '项目列表'
-  title: '关于'
-ai_translation_warning: 'ai-translation-warning'
 faq:
   items:
     composable:
-      answer: '我们使用小巧、可复用、与框架无关的构建模块来搭建界面，您可以自由组合搭配。'
-      question: '“可组合”是什么意思？'
+      answer: 我们使用小巧、可复用、与框架无关的构建模块来搭建界面，您可以自由组合搭配。
+      question: “可组合”是什么意思？
     deploy:
-      answer: '该平台专为部署到 Cloudflare Workers 以及其他无服务器或静态托管环境而设计。'
-      question: '我该如何部署它？'
+      answer: 该平台专为部署到 Cloudflare Workers 以及其他无服务器或静态托管环境而设计。
+      question: 我该如何部署它？
     frameworks:
-      answer: '组件在与框架无关的 Forge 运行时中编写一次，即可为 Vue、React、Svelte、Solid 和 Web Components 构建。'
-      question: '支持哪些框架？'
-  title: '常见问题'
+      answer: 组件在与框架无关的 Forge 运行时中编写一次，即可为 Vue、React、Svelte、Solid 和 Web Components 构建。
+      question: 支持哪些框架？
 features:
   barcode:
-    description: '基于 WebAssembly，生成并扫描 QR、Data Matrix 及一维条码。'
-    title: '扫描与编码'
+    description: 基于 WebAssembly，生成并扫描 QR、Data Matrix 及一维条码。
+    title: 扫描与编码
   composable:
-    description: '在与框架无关的 Forge 运行时中编写一次 UI，即可为 Vue、React、Svelte、Solid 和 Web Components 构建。'
-    title: '一次编写，随处运行'
+    description: 在与框架无关的 Forge 运行时中编写一次 UI，即可为 Vue、React、Svelte、Solid 和 Web Components 构建。
+    title: 一次编写，随处运行
   debugging:
-    description: '贯穿每个包、应用和 worker 的端到端 TypeScript。'
-    title: '类型安全'
+    description: 贯穿每个包、应用和 worker 的端到端 TypeScript。
+    title: 类型安全
   global:
-    description: '专为部署到 Cloudflare Workers 及其他无服务器平台而打造。'
-    title: '边缘就绪'
+    description: 专为部署到 Cloudflare Workers 及其他无服务器平台而打造。
+    title: 边缘就绪
   i18n:
-    description: '内置 i18next 翻译，全面支持从右到左的语言。'
-    title: '国际化'
+    description: 内置 i18next 翻译，全面支持从右到左的语言。
+    title: 国际化
   performance:
-    description: '将 Rust 和 AssemblyScript 编译为 WebAssembly，实现接近原生的速度。'
-    title: '性能'
+    description: 将 Rust 和 AssemblyScript 编译为 WebAssembly，实现接近原生的速度。
+    title: 性能
   search:
-    description: '开箱即用的表单、表格、日程安排、地图、图表与富文本编辑。'
-    title: '功能齐备'
+    description: 开箱即用的表单、表格、日程安排、地图、图表与富文本编辑。
+    title: 功能齐备
   theming:
-    description: '设计令牌与 SCSS 主题，一流的浅色与深色模式支持。'
-    title: '主题定制'
-  title: '功能特性'
-footer:
-  copyright: '© {year} Mission Platform。'
-hero:
-  badge: '开源'
-  cta-primary: '开始使用'
-  cta-secondary: '文档'
-  lead: '在与框架无关的 Forge 运行时中编写一次界面，即可为 Vue、React、Svelte、Solid 和 Web Components 构建。'
-  title: 'Composable. Mission Ready.'
-nav:
-  about: '关于'
-  faq: '常见问题'
-  features: '功能特性'
-  packages: '软件包'
+    description: 设计令牌与 SCSS 主题，一流的浅色与深色模式支持。
+    title: 主题定制
 packages:
   items:
-    barcode: '基于 WebAssembly 的一维条码编码器与解码器。'
-    breakpoints: '响应式断点工具与组件。'
-    code-scanner: '从图像或摄像头扫描 QR、Data Matrix 和条码。'
-    components: '面向每种受支持框架的一次编写 UI 组件。'
-    d3: '与框架无关的 D3 集成。'
-    forms: '一次编写的表单构建器与模式驱动的表单。'
-    forms-core: '与框架无关的 JSON Schema 表单引擎。'
-    harper: '面向 Monaco 的 Harper 语法与文风检查。'
-    hunspell: '基于 WebAssembly 的 Hunspell 拼写检查。'
-    i18n: '由 i18next 驱动的国际化。'
-    icons: '以 JSX 编写一次的 SVG 图标。'
-    jsx: '与框架无关的 JSX 运行时，为每种框架提供适配器。'
-    layouts: '一次编写的应用布局。'
-    map: 'MapLibre GL 地图组件与组合式函数。'
-    matrix-code: '基于 WebAssembly 的 Data Matrix 编码器与解码器。'
-    observers: '一次编写的 Intersection、Mutation 与 Performance 观察器钩子。'
-    phone-number: '电话号码解析、校验与格式化。'
-    qr-code: '基于 WebAssembly 的 QR Code 编码器与解码器。'
-    router: '路由工具。'
-    rxjs: '将 RxJS 可观察对象桥接到组件状态。'
-    scheduler-core: 'iCalendar 事件模型与重复规则引擎。'
-    seo: '结构化数据、元标签与站点地图辅助工具。'
-    speech-audio: '语音合成、识别、音频与 Web MIDI 钩子。'
-    three: '与框架无关的 Three.js 集成。'
-    tokens: 'CSS 设计令牌与 SCSS 主题。'
-    wysiwyg: '一次编写的富文本编辑器。'
-  lead: '可组合的构建模块——从 UI 和表单到由 WebAssembly 驱动的工具链。'
-  title: '软件包'
+    barcode: 基于 WebAssembly 的一维条码编码器与解码器。
+    breakpoints: 响应式断点工具与组件。
+    code-scanner: 从图像或摄像头扫描 QR、Data Matrix 和条码。
+    components: 面向每种受支持框架的一次编写 UI 组件。
+    content: ''
+    d3: 与框架无关的 D3 集成。
+    forms: 一次编写的表单构建器与模式驱动的表单。
+    forms-core: 与框架无关的 JSON Schema 表单引擎。
+    harper: 面向 Monaco 的 Harper 语法与文风检查。
+    hunspell: 基于 WebAssembly 的 Hunspell 拼写检查。
+    i18n: 由 i18next 驱动的国际化。
+    icons: 以 JSX 编写一次的 SVG 图标。
+    jsx: 与框架无关的 JSX 运行时，为每种框架提供适配器。
+    layouts: 一次编写的应用布局。
+    map: MapLibre GL 地图组件与组合式函数。
+    matrix-code: 基于 WebAssembly 的 Data Matrix 编码器与解码器。
+    observers: 一次编写的 Intersection、Mutation 与 Performance 观察器钩子。
+    phone-number: 电话号码解析、校验与格式化。
+    qr-code: 基于 WebAssembly 的 QR Code 编码器与解码器。
+    router: 路由工具。
+    rxjs: 将 RxJS 可观察对象桥接到组件状态。
+    scheduler: ''
+    seo: 结构化数据、元标签与站点地图辅助工具。
+    speech-audio: 语音合成、识别、音频与 Web MIDI 钩子。
+    three: 与框架无关的 Three.js 集成。
+    tokens: CSS 设计令牌与 SCSS 主题。
 projects:
   items:
     my-care-notes:
-      cta: '了解更多'
-      description: '一款以患者为中心、基于 Mission Platform 构建的护理笔记应用。'
-      name: 'My Care Notes'
+      cta: 了解更多
+      description: 一款以患者为中心、基于 Mission Platform 构建的护理笔记应用。
+      name: My Care Notes

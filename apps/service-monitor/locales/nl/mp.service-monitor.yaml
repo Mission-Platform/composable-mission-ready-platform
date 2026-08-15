@@ -57,6 +57,12 @@ speed:
   down: '{value} Mbps down'
   enabled: Server-side snelheidstests elke {interval}s (Cloudflare, Fast.com, Speedtest).
   failed: Mislukt
+  graphMetric:
+    bandwidth: ''
+    download: ''
+    latency: ''
+    ping: ''
+    upload: ''
   graphTitle: '{name} · {metric} in de loop van de tijd'
   latency: '{value} ms'
   pending: Nog geen meting

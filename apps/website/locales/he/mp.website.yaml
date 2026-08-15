@@ -1,93 +1,70 @@
-about:
-  lead: 'ה־Mission Platform היא מונו־ריפו רכיבי (composable) של אבני בניין לממשק משתמש הניתנות לשימוש חוזר, מודולי WebAssembly וכלים — כתבו פעם אחת ב־Forge ובנו עבור כל מסגרת עבודה.'
-  projects:
-    aria-label: 'רשימת פרויקטים'
-  title: 'אודות'
-ai_translation_warning: 'ai-translation-warning'
 faq:
   items:
     composable:
-      answer: 'אנו בונים את הממשק מאבני בניין קטנות, ניתנות לשימוש חוזר וניטרליות למסגרת עבודה, שאותן אפשר לשלב ולהתאים כרצונכם.'
-      question: 'מה המשמעות של רכיבי (composable)?'
+      answer: אנו בונים את הממשק מאבני בניין קטנות, ניתנות לשימוש חוזר וניטרליות למסגרת עבודה, שאותן אפשר לשלב ולהתאים כרצונכם.
+      question: מה המשמעות של רכיבי (composable)?
     deploy:
-      answer: 'הפלטפורמה תוכננה לפריסה אל Cloudflare Workers ואל סביבות אירוח נטולות שרת או סטטיות נוספות.'
-      question: 'כיצד לפרוס את זה?'
+      answer: הפלטפורמה תוכננה לפריסה אל Cloudflare Workers ואל סביבות אירוח נטולות שרת או סטטיות נוספות.
+      question: כיצד לפרוס את זה?
     frameworks:
-      answer: 'הרכיבים נכתבים פעם אחת בסביבת הריצה Forge הניטרלית למסגרות עבודה, ונבנים עבור Vue, React, Svelte, Solid ו־Web Components.'
-      question: 'אילו מסגרות עבודה נתמכות?'
-  title: 'שאלות נפוצות'
+      answer: הרכיבים נכתבים פעם אחת בסביבת הריצה Forge הניטרלית למסגרות עבודה, ונבנים עבור Vue, React, Svelte, Solid ו־Web Components.
+      question: אילו מסגרות עבודה נתמכות?
 features:
   barcode:
-    description: 'צרו וסרקו ברקודים מסוג QR, Data Matrix וברקודים חד־ממדיים, המופעלים באמצעות WebAssembly.'
-    title: 'סריקה וקודים'
+    description: צרו וסרקו ברקודים מסוג QR, Data Matrix וברקודים חד־ממדיים, המופעלים באמצעות WebAssembly.
+    title: סריקה וקודים
   composable:
-    description: 'כתבו את הממשק שלכם פעם אחת בסביבת הריצה Forge הניטרלית למסגרות עבודה, ואז בנו עבור Vue, React, Svelte, Solid ו־Web Components.'
-    title: 'כתבו פעם אחת, הריצו בכל מקום'
+    description: כתבו את הממשק שלכם פעם אחת בסביבת הריצה Forge הניטרלית למסגרות עבודה, ואז בנו עבור Vue, React, Svelte, Solid ו־Web Components.
+    title: כתבו פעם אחת, הריצו בכל מקום
   debugging:
-    description: 'TypeScript מקצה לקצה בכל חבילה, אפליקציה ו־worker.'
-    title: 'בטוח מבחינת טיפוסים'
+    description: TypeScript מקצה לקצה בכל חבילה, אפליקציה ו־worker.
+    title: בטוח מבחינת טיפוסים
   global:
-    description: 'נבנתה לפריסה אל Cloudflare Workers ואל פלטפורמות נטולות שרת נוספות.'
-    title: 'מוכן לקצה'
+    description: נבנתה לפריסה אל Cloudflare Workers ואל פלטפורמות נטולות שרת נוספות.
+    title: מוכן לקצה
   i18n:
-    description: 'תרגום מובנה באמצעות i18next עם תמיכה מלאה בשפות מימין לשמאל.'
-    title: 'בינאום'
+    description: תרגום מובנה באמצעות i18next עם תמיכה מלאה בשפות מימין לשמאל.
+    title: בינאום
   performance:
-    description: 'Rust ו־AssemblyScript מהודרים ל־WebAssembly למהירות קרובה למקורית.'
-    title: 'ביצועים'
+    description: Rust ו־AssemblyScript מהודרים ל־WebAssembly למהירות קרובה למקורית.
+    title: ביצועים
   search:
-    description: 'טפסים, טבלאות, תזמון, מפות, תרשימים ועריכת טקסט עשיר, מוכנים לשימוש מיידי.'
-    title: 'הכול כלול'
+    description: טפסים, טבלאות, תזמון, מפות, תרשימים ועריכת טקסט עשיר, מוכנים לשימוש מיידי.
+    title: הכול כלול
   theming:
-    description: 'אסימוני עיצוב וערכות נושא ב־SCSS עם תמיכה מהשורה הראשונה במצב בהיר וכהה.'
-    title: 'עיצוב ערכות נושא'
-  title: 'תכונות'
-footer:
-  copyright: '© {year} Mission Platform.'
-hero:
-  badge: 'קוד פתוח'
-  cta-primary: 'התחילו עכשיו'
-  cta-secondary: 'תיעוד'
-  lead: 'כתבו את הממשק שלכם פעם אחת בסביבת הריצה Forge הניטרלית למסגרות עבודה, ואז בנו עבור Vue, React, Svelte, Solid ו־Web Components.'
-  title: 'Composable. Mission Ready.'
-nav:
-  about: 'אודות'
-  faq: 'שאלות נפוצות'
-  features: 'תכונות'
-  packages: 'חבילות'
+    description: אסימוני עיצוב וערכות נושא ב־SCSS עם תמיכה מהשורה הראשונה במצב בהיר וכהה.
+    title: עיצוב ערכות נושא
 packages:
   items:
-    barcode: 'מקודד ומפענח ברקודים חד־ממדיים ב־WebAssembly.'
-    breakpoints: 'כלים ורכיבים לנקודות שבירה רספונסיביות.'
-    code-scanner: 'סרקו ברקודים מסוג QR, Data Matrix וברקודים מתמונה או ממצלמה.'
-    components: 'רכיבי ממשק משתמש בכתיבה חד־פעמית עבור כל מסגרת עבודה נתמכת.'
-    d3: 'שילוב D3 ניטרלי למסגרות עבודה.'
-    forms: 'בונה טפסים בכתיבה חד־פעמית וטפסים מונחי סכימה.'
-    forms-core: 'מנוע טפסים של JSON Schema הניטרלי למסגרות עבודה.'
-    harper: 'בדיקת דקדוק וסגנון של Harper עבור Monaco.'
-    hunspell: 'בדיקת איות של Hunspell ב־WebAssembly.'
-    i18n: 'בינאום המופעל באמצעות i18next.'
-    icons: 'אייקוני SVG הנכתבים פעם אחת ב־JSX.'
-    jsx: 'סביבת ריצה של JSX ניטרלית למסגרות עבודה עם מתאמים לכל מסגרת.'
-    layouts: 'פריסות אפליקציה בכתיבה חד־פעמית.'
-    map: 'רכיבים ו־composables של מפות MapLibre GL.'
-    matrix-code: 'מקודד ומפענח Data Matrix ב־WebAssembly.'
-    observers: 'הוקים של צופי Intersection, Mutation ו־Performance בכתיבה חד־פעמית.'
-    phone-number: 'ניתוח, אימות ועיצוב של מספרי טלפון.'
-    qr-code: 'מקודד ומפענח QR Code ב־WebAssembly.'
-    router: 'כלי ניתוב.'
-    rxjs: 'גישור בין observables של RxJS למצב הרכיב.'
-    scheduler-core: 'מודל אירועים של iCalendar ומנוע חזרתיות.'
-    seo: 'נתונים מובנים, תגי מטא וכלי עזר למפת אתר.'
-    speech-audio: 'הוקים לסינתזת דיבור, זיהוי דיבור, שמע ו־Web MIDI.'
-    three: 'שילוב Three.js ניטרלי למסגרות עבודה.'
-    tokens: 'אסימוני עיצוב של CSS וערכות נושא של SCSS.'
-    wysiwyg: 'עורך טקסט עשיר בכתיבה חד־פעמית.'
-  lead: 'אבני בניין רכיביות (composable) — מממשקי משתמש וטפסים ועד כלים המופעלים באמצעות WebAssembly.'
-  title: 'חבילות'
+    barcode: מקודד ומפענח ברקודים חד־ממדיים ב־WebAssembly.
+    breakpoints: כלים ורכיבים לנקודות שבירה רספונסיביות.
+    code-scanner: סרקו ברקודים מסוג QR, Data Matrix וברקודים מתמונה או ממצלמה.
+    components: רכיבי ממשק משתמש בכתיבה חד־פעמית עבור כל מסגרת עבודה נתמכת.
+    content: ''
+    d3: שילוב D3 ניטרלי למסגרות עבודה.
+    forms: בונה טפסים בכתיבה חד־פעמית וטפסים מונחי סכימה.
+    forms-core: מנוע טפסים של JSON Schema הניטרלי למסגרות עבודה.
+    harper: בדיקת דקדוק וסגנון של Harper עבור Monaco.
+    hunspell: בדיקת איות של Hunspell ב־WebAssembly.
+    i18n: בינאום המופעל באמצעות i18next.
+    icons: אייקוני SVG הנכתבים פעם אחת ב־JSX.
+    jsx: סביבת ריצה של JSX ניטרלית למסגרות עבודה עם מתאמים לכל מסגרת.
+    layouts: פריסות אפליקציה בכתיבה חד־פעמית.
+    map: רכיבים ו־composables של מפות MapLibre GL.
+    matrix-code: מקודד ומפענח Data Matrix ב־WebAssembly.
+    observers: הוקים של צופי Intersection, Mutation ו־Performance בכתיבה חד־פעמית.
+    phone-number: ניתוח, אימות ועיצוב של מספרי טלפון.
+    qr-code: מקודד ומפענח QR Code ב־WebAssembly.
+    router: כלי ניתוב.
+    rxjs: גישור בין observables של RxJS למצב הרכיב.
+    scheduler: ''
+    seo: נתונים מובנים, תגי מטא וכלי עזר למפת אתר.
+    speech-audio: הוקים לסינתזת דיבור, זיהוי דיבור, שמע ו־Web MIDI.
+    three: שילוב Three.js ניטרלי למסגרות עבודה.
+    tokens: אסימוני עיצוב של CSS וערכות נושא של SCSS.
 projects:
   items:
     my-care-notes:
-      cta: 'למידע נוסף'
-      description: 'אפליקציית רשומות טיפול ממוקדת מטופל הבנויה על גבי ה־Mission Platform.'
-      name: 'My Care Notes'
+      cta: למידע נוסף
+      description: אפליקציית רשומות טיפול ממוקדת מטופל הבנויה על גבי ה־Mission Platform.
+      name: My Care Notes

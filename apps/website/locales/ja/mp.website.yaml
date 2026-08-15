@@ -1,93 +1,70 @@
-about:
-  lead: 'Mission Platform は、再利用可能な UI ビルディングブロック、WebAssembly モジュール、ツール群で構成されたコンポーザブルなモノレポです。Forge で一度記述すれば、あらゆるフレームワーク向けにビルドできます。'
-  projects:
-    aria-label: 'プロジェクト一覧'
-  title: '概要'
-ai_translation_warning: 'ai-translation-warning'
 faq:
   items:
     composable:
-      answer: '小さく再利用可能でフレームワークに依存しないビルディングブロックからインターフェースを構築し、自由に組み合わせられます。'
+      answer: 小さく再利用可能でフレームワークに依存しないビルディングブロックからインターフェースを構築し、自由に組み合わせられます。
       question: "'コンポーザブル（composable）' とはどういう意味ですか？"
     deploy:
-      answer: 'このプラットフォームは、Cloudflare Workers をはじめとするサーバーレスや静的ホスティング環境へのデプロイを想定して設計されています。'
-      question: 'どうやってデプロイしますか？'
+      answer: このプラットフォームは、Cloudflare Workers をはじめとするサーバーレスや静的ホスティング環境へのデプロイを想定して設計されています。
+      question: どうやってデプロイしますか？
     frameworks:
-      answer: 'コンポーネントはフレームワークに依存しない Forge ランタイムで一度記述し、Vue、React、Svelte、Solid、Web Components 向けにビルドされます。'
-      question: 'どのフレームワークに対応していますか？'
-  title: 'よくある質問'
+      answer: コンポーネントはフレームワークに依存しない Forge ランタイムで一度記述し、Vue、React、Svelte、Solid、Web Components 向けにビルドされます。
+      question: どのフレームワークに対応していますか？
 features:
   barcode:
-    description: 'WebAssembly を活用して、QR、Data Matrix、1D バーコードの生成とスキャンを行います。'
-    title: 'スキャンとコード'
+    description: WebAssembly を活用して、QR、Data Matrix、1D バーコードの生成とスキャンを行います。
+    title: スキャンとコード
   composable:
-    description: 'フレームワークに依存しない Forge ランタイムで UI を一度記述し、Vue、React、Svelte、Solid、Web Components 向けにビルドします。'
-    title: '一度書けば、どこでも動く'
+    description: フレームワークに依存しない Forge ランタイムで UI を一度記述し、Vue、React、Svelte、Solid、Web Components 向けにビルドします。
+    title: 一度書けば、どこでも動く
   debugging:
-    description: 'すべてのパッケージ、アプリ、ワーカーにわたるエンドツーエンドの TypeScript。'
-    title: '型安全'
+    description: すべてのパッケージ、アプリ、ワーカーにわたるエンドツーエンドの TypeScript。
+    title: 型安全
   global:
-    description: 'Cloudflare Workers をはじめとするサーバーレスプラットフォームへのデプロイを想定して構築されています。'
-    title: 'エッジ対応'
+    description: Cloudflare Workers をはじめとするサーバーレスプラットフォームへのデプロイを想定して構築されています。
+    title: エッジ対応
   i18n:
-    description: '右から左へ記述する言語を完全にサポートする i18next 内蔵の翻訳機能。'
-    title: '国際化'
+    description: 右から左へ記述する言語を完全にサポートする i18next 内蔵の翻訳機能。
+    title: 国際化
   performance:
-    description: 'Rust と AssemblyScript を WebAssembly にコンパイルし、ネイティブに近い速度を実現します。'
-    title: 'パフォーマンス'
+    description: Rust と AssemblyScript を WebAssembly にコンパイルし、ネイティブに近い速度を実現します。
+    title: パフォーマンス
   search:
-    description: 'フォーム、テーブル、スケジューリング、地図、チャート、リッチテキスト編集を標準で提供します。'
-    title: 'オールインワン'
+    description: フォーム、テーブル、スケジューリング、地図、チャート、リッチテキスト編集を標準で提供します。
+    title: オールインワン
   theming:
-    description: '一級のライトモードとダークモードを備えたデザイントークンと SCSS テーマ。'
-    title: 'テーマ'
-  title: '機能'
-footer:
-  copyright: '© {year} Mission Platform.'
-hero:
-  badge: 'オープンソース'
-  cta-primary: '使ってみる'
-  cta-secondary: 'ドキュメント'
-  lead: 'フレームワークに依存しない Forge ランタイムでインターフェースを一度記述し、Vue、React、Svelte、Solid、Web Components 向けにビルドします。'
-  title: 'Composable. Mission Ready.'
-nav:
-  about: '概要'
-  faq: 'よくある質問'
-  features: '機能'
-  packages: 'パッケージ'
+    description: 一級のライトモードとダークモードを備えたデザイントークンと SCSS テーマ。
+    title: テーマ
 packages:
   items:
-    barcode: 'WebAssembly による 1D バーコードのエンコーダーとデコーダー。'
-    breakpoints: 'レスポンシブなブレークポイントのユーティリティとコンポーネント。'
-    code-scanner: '画像またはカメラから QR、Data Matrix、バーコードをスキャンします。'
-    components: '対応するすべてのフレームワーク向けの一度書けば動く UI コンポーネント。'
-    d3: 'フレームワークに依存しない D3 統合。'
-    forms: '一度書けば動くフォームビルダーとスキーマ駆動フォーム。'
-    forms-core: 'フレームワークに依存しない JSON Schema フォームエンジン。'
-    harper: 'Monaco 向けの Harper 文法・スタイルチェック。'
-    hunspell: 'WebAssembly による Hunspell スペルチェック。'
-    i18n: 'i18next を活用した国際化。'
-    icons: 'JSX で一度記述した SVG アイコン。'
-    jsx: '各フレームワーク向けアダプターを備えたフレームワーク中立の JSX ランタイム。'
-    layouts: '一度書けば動くアプリケーションレイアウト。'
-    map: 'MapLibre GL の地図コンポーネントとコンポーザブル。'
-    matrix-code: 'WebAssembly による Data Matrix のエンコーダーとデコーダー。'
-    observers: '一度書けば動く Intersection、Mutation、Performance オブザーバーのフック。'
-    phone-number: '電話番号の解析、検証、フォーマット。'
-    qr-code: 'WebAssembly による QR Code のエンコーダーとデコーダー。'
-    router: 'ルーティングユーティリティ。'
-    rxjs: 'RxJS のオブザーバブルをコンポーネントの状態に橋渡しします。'
-    scheduler-core: 'iCalendar のイベントモデルと繰り返しエンジン。'
-    seo: '構造化データ、メタタグ、サイトマップのヘルパー。'
-    speech-audio: '音声合成、音声認識、オーディオ、Web MIDI のフック。'
-    three: 'フレームワークに依存しない Three.js 統合。'
-    tokens: 'CSS デザイントークンと SCSS テーマ。'
-    wysiwyg: '一度書けば動くリッチテキストエディター。'
-  lead: 'UI やフォームから WebAssembly を活用したツール群まで、コンポーザブルなビルディングブロック。'
-  title: 'パッケージ'
+    barcode: WebAssembly による 1D バーコードのエンコーダーとデコーダー。
+    breakpoints: レスポンシブなブレークポイントのユーティリティとコンポーネント。
+    code-scanner: 画像またはカメラから QR、Data Matrix、バーコードをスキャンします。
+    components: 対応するすべてのフレームワーク向けの一度書けば動く UI コンポーネント。
+    content: ''
+    d3: フレームワークに依存しない D3 統合。
+    forms: 一度書けば動くフォームビルダーとスキーマ駆動フォーム。
+    forms-core: フレームワークに依存しない JSON Schema フォームエンジン。
+    harper: Monaco 向けの Harper 文法・スタイルチェック。
+    hunspell: WebAssembly による Hunspell スペルチェック。
+    i18n: i18next を活用した国際化。
+    icons: JSX で一度記述した SVG アイコン。
+    jsx: 各フレームワーク向けアダプターを備えたフレームワーク中立の JSX ランタイム。
+    layouts: 一度書けば動くアプリケーションレイアウト。
+    map: MapLibre GL の地図コンポーネントとコンポーザブル。
+    matrix-code: WebAssembly による Data Matrix のエンコーダーとデコーダー。
+    observers: 一度書けば動く Intersection、Mutation、Performance オブザーバーのフック。
+    phone-number: 電話番号の解析、検証、フォーマット。
+    qr-code: WebAssembly による QR Code のエンコーダーとデコーダー。
+    router: ルーティングユーティリティ。
+    rxjs: RxJS のオブザーバブルをコンポーネントの状態に橋渡しします。
+    scheduler: ''
+    seo: 構造化データ、メタタグ、サイトマップのヘルパー。
+    speech-audio: 音声合成、音声認識、オーディオ、Web MIDI のフック。
+    three: フレームワークに依存しない Three.js 統合。
+    tokens: CSS デザイントークンと SCSS テーマ。
 projects:
   items:
     my-care-notes:
-      cta: '詳細を見る'
-      description: 'Mission Platform 上に構築された、患者中心のケアノートアプリケーション。'
-      name: 'My Care Notes'
+      cta: 詳細を見る
+      description: Mission Platform 上に構築された、患者中心のケアノートアプリケーション。
+      name: My Care Notes

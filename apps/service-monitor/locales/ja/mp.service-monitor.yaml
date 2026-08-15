@@ -57,6 +57,12 @@ speed:
   down: '{value} Mbps ダウンロード'
   enabled: サーバーサイドのスピードテストを {interval} 秒ごとに実行 (Cloudflare, Fast.com, Speedtest)。
   failed: 失敗
+  graphMetric:
+    bandwidth: ''
+    download: ''
+    latency: ''
+    ping: ''
+    upload: ''
   graphTitle: '{name} · 時間経過による {metric}'
   latency: '{value} ms'
   pending: 測定値なし

@@ -1,93 +1,70 @@
-about:
-  lead: 'إن Mission Platform عبارة عن مستودع أحادي قابل للتركيب يضم لبنات بناء واجهة مستخدم قابلة لإعادة الاستخدام ووحدات WebAssembly وأدوات — اكتب مرة واحدة في Forge وابنِ لكل إطار عمل.'
-  projects:
-    aria-label: 'قائمة المشاريع'
-  title: 'حول'
-ai_translation_warning: 'ai-translation-warning'
 faq:
   items:
     composable:
-      answer: 'نبني الواجهة من لبنات بناء صغيرة قابلة لإعادة الاستخدام ومحايدة تجاه إطار العمل، يمكنك مزجها ومطابقتها كما تشاء.'
-      question: 'ماذا تعني كلمة «قابل للتركيب»؟'
+      answer: نبني الواجهة من لبنات بناء صغيرة قابلة لإعادة الاستخدام ومحايدة تجاه إطار العمل، يمكنك مزجها ومطابقتها كما تشاء.
+      question: ماذا تعني كلمة «قابل للتركيب»؟
     deploy:
-      answer: 'صُممت المنصة للنشر على Cloudflare Workers وغيرها من بيئات الاستضافة عديمة الخوادم أو الثابتة.'
-      question: 'كيف أنشر هذا؟'
+      answer: صُممت المنصة للنشر على Cloudflare Workers وغيرها من بيئات الاستضافة عديمة الخوادم أو الثابتة.
+      question: كيف أنشر هذا؟
     frameworks:
-      answer: 'تُكتب المكوّنات مرة واحدة في بيئة تشغيل Forge المحايدة تجاه أطر العمل، ثم تُبنى لأطر Vue وReact وSvelte وSolid وWeb Components.'
-      question: 'ما أطر العمل المدعومة؟'
-  title: 'الأسئلة الشائعة'
+      answer: تُكتب المكوّنات مرة واحدة في بيئة تشغيل Forge المحايدة تجاه أطر العمل، ثم تُبنى لأطر Vue وReact وSvelte وSolid وWeb Components.
+      question: ما أطر العمل المدعومة؟
 features:
   barcode:
-    description: 'أنشئ وامسح رموز QR وData Matrix والرموز الشريطية أحادية البعد، مدعومة بـ WebAssembly.'
-    title: 'المسح والرموز'
+    description: أنشئ وامسح رموز QR وData Matrix والرموز الشريطية أحادية البعد، مدعومة بـ WebAssembly.
+    title: المسح والرموز
   composable:
-    description: 'اكتب واجهتك مرة واحدة في بيئة تشغيل Forge المحايدة تجاه أطر العمل، ثم ابنِ لأطر Vue وReact وSvelte وSolid وWeb Components.'
-    title: 'اكتب مرة، شغّل في كل مكان'
+    description: اكتب واجهتك مرة واحدة في بيئة تشغيل Forge المحايدة تجاه أطر العمل، ثم ابنِ لأطر Vue وReact وSvelte وSolid وWeb Components.
+    title: اكتب مرة، شغّل في كل مكان
   debugging:
-    description: 'لغة TypeScript من الطرف إلى الطرف عبر كل حزمة وتطبيق وعامل.'
-    title: 'آمن نوعيًا'
+    description: لغة TypeScript من الطرف إلى الطرف عبر كل حزمة وتطبيق وعامل.
+    title: آمن نوعيًا
   global:
-    description: 'مُصمم للنشر على Cloudflare Workers وغيرها من المنصات عديمة الخوادم.'
-    title: 'جاهز للحافة'
+    description: مُصمم للنشر على Cloudflare Workers وغيرها من المنصات عديمة الخوادم.
+    title: جاهز للحافة
   i18n:
-    description: 'ترجمة i18next مدمجة مع دعم كامل للغات التي تُكتب من اليمين إلى اليسار.'
-    title: 'التدويل'
+    description: ترجمة i18next مدمجة مع دعم كامل للغات التي تُكتب من اليمين إلى اليسار.
+    title: التدويل
   performance:
-    description: 'لغتا Rust وAssemblyScript مُصرَّفتان إلى WebAssembly لتحقيق سرعة تقارب السرعة الأصلية.'
-    title: 'الأداء'
+    description: لغتا Rust وAssemblyScript مُصرَّفتان إلى WebAssembly لتحقيق سرعة تقارب السرعة الأصلية.
+    title: الأداء
   search:
-    description: 'نماذج وجداول وجدولة زمنية وخرائط ومخططات وتحرير نصوص غني جاهزة للاستخدام مباشرة.'
-    title: 'كل ما تحتاجه مضمّن'
+    description: نماذج وجداول وجدولة زمنية وخرائط ومخططات وتحرير نصوص غني جاهزة للاستخدام مباشرة.
+    title: كل ما تحتاجه مضمّن
   theming:
-    description: 'رموز تصميم وسمات SCSS مع دعم من الدرجة الأولى للوضعين الفاتح والداكن.'
-    title: 'التنسيق المرئي'
-  title: 'المزايا'
-footer:
-  copyright: '© {year} Mission Platform.'
-hero:
-  badge: 'مفتوح المصدر'
-  cta-primary: 'ابدأ الآن'
-  cta-secondary: 'التوثيق'
-  lead: 'اكتب واجهتك مرة واحدة في بيئة تشغيل Forge المحايدة تجاه أطر العمل، ثم ابنِ لأطر Vue وReact وSvelte وSolid وWeb Components.'
-  title: 'Composable. Mission Ready.'
-nav:
-  about: 'حول'
-  faq: 'الأسئلة الشائعة'
-  features: 'المزايا'
-  packages: 'الحزم'
+    description: رموز تصميم وسمات SCSS مع دعم من الدرجة الأولى للوضعين الفاتح والداكن.
+    title: التنسيق المرئي
 packages:
   items:
-    barcode: 'مُشفِّر ومُفكِّك للرموز الشريطية أحادية البعد بلغة WebAssembly.'
-    breakpoints: 'أدوات ومكوّنات نقاط التوقف المتجاوبة.'
-    code-scanner: 'امسح رموز QR وData Matrix والرموز الشريطية من صورة أو كاميرا.'
-    components: 'مكوّنات واجهة مستخدم تُكتب مرة واحدة لكل إطار عمل مدعوم.'
-    d3: 'تكامل D3 محايد تجاه أطر العمل.'
-    forms: 'مُنشئ نماذج يُكتب مرة واحدة ونماذج مدفوعة بالمخطط.'
-    forms-core: 'محرك نماذج JSON Schema محايد تجاه أطر العمل.'
-    harper: 'تدقيق القواعد والأسلوب من Harper لمحرر Monaco.'
-    hunspell: 'تدقيق إملائي بـ Hunspell في WebAssembly.'
-    i18n: 'التدويل مدعوم بـ i18next.'
-    icons: 'أيقونات SVG تُكتب مرة واحدة بلغة JSX.'
-    jsx: 'بيئة تشغيل JSX محايدة تجاه أطر العمل مع محوّلات لكل إطار عمل.'
-    layouts: 'تخطيطات تطبيقات تُكتب مرة واحدة.'
-    map: 'مكوّنات وخطافات تركيبية لخرائط MapLibre GL.'
-    matrix-code: 'مُشفِّر ومُفكِّك لرموز Data Matrix بلغة WebAssembly.'
-    observers: 'خطافات مراقِبات Intersection وMutation وPerformance تُكتب مرة واحدة.'
-    phone-number: 'تحليل أرقام الهواتف والتحقق منها وتنسيقها.'
-    qr-code: 'مُشفِّر ومُفكِّك لرموز QR Code بلغة WebAssembly.'
-    router: 'أدوات التوجيه.'
-    rxjs: 'ربط كائنات RxJS القابلة للمراقبة بحالة المكوّن.'
-    scheduler-core: 'نموذج أحداث iCalendar ومحرك التكرار.'
-    seo: 'بيانات منظمة ووسوم وصفية وأدوات مساعدة لخرائط الموقع.'
-    speech-audio: 'خطافات تركيب الكلام والتعرف عليه والصوت وWeb MIDI.'
-    three: 'تكامل Three.js محايد تجاه أطر العمل.'
-    tokens: 'رموز تصميم CSS وسمات SCSS.'
-    wysiwyg: 'محرر نصوص غني يُكتب مرة واحدة.'
-  lead: 'لبنات بناء قابلة للتركيب — من واجهات المستخدم والنماذج إلى الأدوات المدعومة بـ WebAssembly.'
-  title: 'الحزم'
+    barcode: مُشفِّر ومُفكِّك للرموز الشريطية أحادية البعد بلغة WebAssembly.
+    breakpoints: أدوات ومكوّنات نقاط التوقف المتجاوبة.
+    code-scanner: امسح رموز QR وData Matrix والرموز الشريطية من صورة أو كاميرا.
+    components: مكوّنات واجهة مستخدم تُكتب مرة واحدة لكل إطار عمل مدعوم.
+    content: ''
+    d3: تكامل D3 محايد تجاه أطر العمل.
+    forms: مُنشئ نماذج يُكتب مرة واحدة ونماذج مدفوعة بالمخطط.
+    forms-core: محرك نماذج JSON Schema محايد تجاه أطر العمل.
+    harper: تدقيق القواعد والأسلوب من Harper لمحرر Monaco.
+    hunspell: تدقيق إملائي بـ Hunspell في WebAssembly.
+    i18n: التدويل مدعوم بـ i18next.
+    icons: أيقونات SVG تُكتب مرة واحدة بلغة JSX.
+    jsx: بيئة تشغيل JSX محايدة تجاه أطر العمل مع محوّلات لكل إطار عمل.
+    layouts: تخطيطات تطبيقات تُكتب مرة واحدة.
+    map: مكوّنات وخطافات تركيبية لخرائط MapLibre GL.
+    matrix-code: مُشفِّر ومُفكِّك لرموز Data Matrix بلغة WebAssembly.
+    observers: خطافات مراقِبات Intersection وMutation وPerformance تُكتب مرة واحدة.
+    phone-number: تحليل أرقام الهواتف والتحقق منها وتنسيقها.
+    qr-code: مُشفِّر ومُفكِّك لرموز QR Code بلغة WebAssembly.
+    router: أدوات التوجيه.
+    rxjs: ربط كائنات RxJS القابلة للمراقبة بحالة المكوّن.
+    scheduler: ''
+    seo: بيانات منظمة ووسوم وصفية وأدوات مساعدة لخرائط الموقع.
+    speech-audio: خطافات تركيب الكلام والتعرف عليه والصوت وWeb MIDI.
+    three: تكامل Three.js محايد تجاه أطر العمل.
+    tokens: رموز تصميم CSS وسمات SCSS.
 projects:
   items:
     my-care-notes:
-      cta: 'اعرف المزيد'
-      description: 'تطبيق ملاحظات رعاية يركّز على المريض مبني على Mission Platform.'
-      name: 'My Care Notes'
+      cta: اعرف المزيد
+      description: تطبيق ملاحظات رعاية يركّز على المريض مبني على Mission Platform.
+      name: My Care Notes

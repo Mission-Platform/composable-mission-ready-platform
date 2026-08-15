@@ -58,6 +58,12 @@ speed:
   down: '{value} Mbps הורדה'
   enabled: בדיקות מהירות מצד השרת כל {interval} שניות (Cloudflare, Fast.com, Speedtest).
   failed: נכשל
+  graphMetric:
+    bandwidth: ''
+    download: ''
+    latency: ''
+    ping: ''
+    upload: ''
   graphTitle: '{name} · {metric} לאורך זמן'
   latency: '{value} מילי-שנייה'
   pending: אין מדידות עדיין

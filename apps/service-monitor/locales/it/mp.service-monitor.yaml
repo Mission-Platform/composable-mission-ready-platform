@@ -58,6 +58,12 @@ speed:
   down: '{value} Mbps in download'
   enabled: Test di velocità lato server ogni {interval}s (Cloudflare, Fast.com, Speedtest).
   failed: Fallito
+  graphMetric:
+    bandwidth: ''
+    download: ''
+    latency: ''
+    ping: ''
+    upload: ''
   graphTitle: '{name} · {metric} nel tempo'
   latency: '{value} ms'
   pending: Nessuna misurazione ancora

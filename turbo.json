@@ -210,15 +210,7 @@
       "cache": false
     },
     "i18n:extract": {
-      "dependsOn": ["^i18n:extract"],
-      "outputs": ["locales/*.yaml", "i18n-meta.json"]
-    },
-    "i18n:types": {
-      "dependsOn": ["i18n:extract", "^i18n:types"],
-      "outputs": ["src/locales/types.d.ts", "src/locales/resources.d.ts"]
-    },
-    "i18n:lint": {
-      "dependsOn": ["i18n:extract"]
+      "outputs": ["locales/**"]
     }
   }
 }

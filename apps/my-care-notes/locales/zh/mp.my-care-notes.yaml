@@ -8,33 +8,12 @@ col:
   name: 名称
 content_label: 内容
 date_row_content: 当前日期 (YYYY/MM/DD)
-menu:
-  export-all: 导出全部
-  import: 导入
-  import-all: 导入全部
-  new: 新建
 name:
   hint: 在编辑器中输入 {preview} 以插入此代码段
   label: 代码段名称
   placeholder: 例如 greeting
-nav:
-  export-note: 导出笔记
-  import-note: 导入笔记
-  notes: 笔记
-  reopen-closed: 重新打开已关闭的标签页
-  restore-tab: '恢复: {title}'
-  snippets: 代码片段
 rename:
-  cancel: 取消
-  confirm: 重命名
   label: 标签页名称
-  title: 重命名标签页
-sidebar:
-  title: 代码片段
-snippet:
-  edit: 编辑代码片段
-  export: 导出代码片段
-theme_toggle: 切换颜色主题
 title:
   edit: 编辑代码段
   new: 新建代码段

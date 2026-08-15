@@ -96,16 +96,16 @@ Configuration is managed through `wrangler.jsonc` and `vite.config.ts`:
 
 ## Available Scripts
 
-| Command                                                    | Description                                                |
-| ---------------------------------------------------------- | ---------------------------------------------------------- |
-| `pnpm dev`                                                 | Starts Vite local dev server                               |
-| `pnpm build`                                               | Type-checks code (`vue-tsc`) and executes `vite-ssg build` |
-| `pnpm build:spa`                                           | Type-checks code and executes standard `vite build`        |
-| `pnpm preview`                                             | Serves local static build output                           |
-| `pnpm test`                                                | Runs unit and component tests with Vitest                  |
-| `pnpm lint` / `pnpm lint:fix`                              | Lints JavaScript/TypeScript code using ESLint              |
-| `pnpm lint:style` / `pnpm lint:style:fix`                  | Lints Vue/SCSS/CSS styles using Stylelint                  |
-| `pnpm format` / `pnpm format:write`                        | Validates or applies formatting with Prettier              |
-| `pnpm --filter @mission-platform/scripts run i18n:extract` | Extracts i18n translation strings with `i18next-cli`       |
-| `pnpm cf:dev` / `pnpm cf:dev:production`                   | Runs local Wrangler dev server for Cloudflare              |
-| `pnpm deploy` / `pnpm deploy:staging`                      | Deploys worker and assets to Cloudflare                    |
+| Command                                   | Description                                                |
+| ----------------------------------------- | ---------------------------------------------------------- |
+| `pnpm dev`                                | Starts Vite local dev server                               |
+| `pnpm build`                              | Type-checks code (`vue-tsc`) and executes `vite-ssg build` |
+| `pnpm build:spa`                          | Type-checks code and executes standard `vite build`        |
+| `pnpm preview`                            | Serves local static build output                           |
+| `pnpm test`                               | Runs unit and component tests with Vitest                  |
+| `pnpm lint` / `pnpm lint:fix`             | Lints JavaScript/TypeScript code using ESLint              |
+| `pnpm lint:style` / `pnpm lint:style:fix` | Lints Vue/SCSS/CSS styles using Stylelint                  |
+| `pnpm format` / `pnpm format:write`       | Validates or applies formatting with Prettier              |
+| `pnpm i18n:extract`                       | Extracts i18n translation strings with `i18next-cli`       |
+| `pnpm cf:dev` / `pnpm cf:dev:production`  | Runs local Wrangler dev server for Cloudflare              |
+| `pnpm deploy` / `pnpm deploy:staging`     | Deploys worker and assets to Cloudflare                    |

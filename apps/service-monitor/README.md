@@ -169,19 +169,19 @@ pnpm --filter @mission-platform/service-monitor deploy:staging    # staging
 
 ## Available Scripts
 
-| Command                                                    | Description                                                                           |
-| ---------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `pnpm dev`                                                 | Starts local dev server with `@cloudflare/vite-plugin` runtime                        |
-| `pnpm build`                                               | Compiles Worker bundle and static assets via Vite                                     |
-| `pnpm preview`                                             | Previews production build output locally                                              |
-| `pnpm types`                                               | Generates TypeScript definitions from Wrangler bindings (`worker-configuration.d.ts`) |
-| `pnpm deploy`                                              | Deploys Worker to Cloudflare production environment                                   |
-| `pnpm deploy:staging`                                      | Deploys Worker to Cloudflare staging environment                                      |
-| `pnpm test`                                                | Runs tests using Vitest                                                               |
-| `pnpm lint` / `pnpm lint:fix`                              | Lints codebase with ESLint                                                            |
-| `pnpm lint:style` / `pnpm lint:style:fix`                  | Lints stylesheets with Stylelint                                                      |
-| `pnpm format` / `pnpm format:write`                        | Validates or updates code formatting with Prettier                                    |
-| `pnpm i18n:extract` / `pnpm i18n:types` / `pnpm i18n:lint` | i18n extraction, type generation, and validation                                      |
+| Command                                   | Description                                                                           |
+| ----------------------------------------- | ------------------------------------------------------------------------------------- |
+| `pnpm dev`                                | Starts local dev server with `@cloudflare/vite-plugin` runtime                        |
+| `pnpm build`                              | Compiles Worker bundle and static assets via Vite                                     |
+| `pnpm preview`                            | Previews production build output locally                                              |
+| `pnpm types`                              | Generates TypeScript definitions from Wrangler bindings (`worker-configuration.d.ts`) |
+| `pnpm deploy`                             | Deploys Worker to Cloudflare production environment                                   |
+| `pnpm deploy:staging`                     | Deploys Worker to Cloudflare staging environment                                      |
+| `pnpm test`                               | Runs tests using Vitest                                                               |
+| `pnpm lint` / `pnpm lint:fix`             | Lints codebase with ESLint                                                            |
+| `pnpm lint:style` / `pnpm lint:style:fix` | Lints stylesheets with Stylelint                                                      |
+| `pnpm format` / `pnpm format:write`       | Validates or updates code formatting with Prettier                                    |
+| `pnpm i18n:extract`                       | Extracts i18n translation keys with `i18next-cli`                                     |
 
 ## HTTP API
 

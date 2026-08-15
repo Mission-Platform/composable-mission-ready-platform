@@ -8,33 +8,12 @@ col:
   name: Nom
 content_label: Contenu
 date_row_content: Date actuelle (JJ/MM/AAAA)
-menu:
-  export-all: Tout exporter
-  import: Importer
-  import-all: Tout importer
-  new: Nouveau
 name:
   hint: Tapez {preview} dans l'éditeur pour insérer cet extrait
   label: Nom de l'extrait
   placeholder: ex. greeting
-nav:
-  export-note: Exporter la note
-  import-note: Importer la note
-  notes: Notes
-  reopen-closed: Rouvrir l'onglet fermé
-  restore-tab: 'Raurer: {title}'
-  snippets: Extraits
 rename:
-  cancel: Annuler
-  confirm: Renommer
   label: Nom de l'onglet
-  title: Renommer l'onglet
-sidebar:
-  title: Extraits
-snippet:
-  edit: Modifier l'extrait
-  export: Exporter l'extrait
-theme_toggle: Changer le thème de couleur
 title:
   edit: Modifier l'extrait
   new: Nouvel extrait

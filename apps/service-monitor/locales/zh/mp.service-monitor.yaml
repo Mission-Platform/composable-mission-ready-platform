@@ -57,6 +57,12 @@ speed:
   down: '{value} Mbps 下载'
   enabled: 服务端测速每 {interval} 秒一次 (Cloudflare, Fast.com, Speedtest)。
   failed: 失败
+  graphMetric:
+    bandwidth: ''
+    download: ''
+    latency: ''
+    ping: ''
+    upload: ''
   graphTitle: '{name} · 随时间变化的 {metric}'
   latency: '{value} 毫秒'
   pending: 尚无测量结果

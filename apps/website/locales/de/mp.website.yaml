@@ -1,93 +1,70 @@
-about:
-  lead: 'Das Mission Platform ist ein composable Monorepo aus wiederverwendbaren UI-Bausteinen, WebAssembly-Modulen und Tooling — einmal in Forge entwickeln und für jedes Framework bauen.'
-  projects:
-    aria-label: 'Projektliste'
-  title: 'Über uns'
-ai_translation_warning: 'ai-translation-warning'
 faq:
   items:
     composable:
-      answer: 'Wir bauen die Oberfläche aus kleinen, wiederverwendbaren, framework-neutralen Bausteinen, die sich beliebig kombinieren lassen.'
-      question: "Was bedeutet 'composable'?"
+      answer: Wir bauen die Oberfläche aus kleinen, wiederverwendbaren, framework-neutralen Bausteinen, die sich beliebig kombinieren lassen.
+      question: Was bedeutet 'composable'?
     deploy:
-      answer: 'Die Plattform ist darauf ausgelegt, auf Cloudflare Workers sowie anderen serverlosen oder statischen Hosting-Umgebungen bereitgestellt zu werden.'
-      question: 'Wie stelle ich das bereit?'
+      answer: Die Plattform ist darauf ausgelegt, auf Cloudflare Workers sowie anderen serverlosen oder statischen Hosting-Umgebungen bereitgestellt zu werden.
+      question: Wie stelle ich das bereit?
     frameworks:
-      answer: 'Komponenten werden einmal in der framework-neutralen Forge-Runtime entwickelt und für Vue, React, Svelte, Solid und Web Components gebaut.'
-      question: 'Welche Frameworks werden unterstützt?'
-  title: 'FAQ'
+      answer: Komponenten werden einmal in der framework-neutralen Forge-Runtime entwickelt und für Vue, React, Svelte, Solid und Web Components gebaut.
+      question: Welche Frameworks werden unterstützt?
 features:
   barcode:
-    description: 'Erzeugen und scannen Sie QR-, Data-Matrix- und 1D-Barcodes, angetrieben von WebAssembly.'
-    title: 'Scannen & Codes'
+    description: Erzeugen und scannen Sie QR-, Data-Matrix- und 1D-Barcodes, angetrieben von WebAssembly.
+    title: Scannen & Codes
   composable:
-    description: 'Entwickeln Sie Ihre UI einmal in der framework-neutralen Forge-Runtime und bauen Sie sie dann für Vue, React, Svelte, Solid und Web Components.'
-    title: 'Einmal schreiben, überall ausführen'
+    description: Entwickeln Sie Ihre UI einmal in der framework-neutralen Forge-Runtime und bauen Sie sie dann für Vue, React, Svelte, Solid und Web Components.
+    title: Einmal schreiben, überall ausführen
   debugging:
-    description: 'Durchgängiges TypeScript über jedes Paket, jede App und jeden Worker hinweg.'
-    title: 'Typsicher'
+    description: Durchgängiges TypeScript über jedes Paket, jede App und jeden Worker hinweg.
+    title: Typsicher
   global:
-    description: 'Gebaut für die Bereitstellung auf Cloudflare Workers und anderen serverlosen Plattformen.'
-    title: 'Edge-ready'
+    description: Gebaut für die Bereitstellung auf Cloudflare Workers und anderen serverlosen Plattformen.
+    title: Edge-ready
   i18n:
-    description: 'Integrierte i18next-Übersetzung mit voller Unterstützung für Rechts-nach-links-Sprachen.'
-    title: 'Internationalisierung'
+    description: Integrierte i18next-Übersetzung mit voller Unterstützung für Rechts-nach-links-Sprachen.
+    title: Internationalisierung
   performance:
-    description: 'Rust und AssemblyScript kompiliert zu WebAssembly für nahezu native Geschwindigkeit.'
-    title: 'Performance'
+    description: Rust und AssemblyScript kompiliert zu WebAssembly für nahezu native Geschwindigkeit.
+    title: Performance
   search:
-    description: 'Formulare, Tabellen, Terminplanung, Karten, Diagramme und Rich-Text-Bearbeitung von Haus aus.'
-    title: 'Alles inklusive'
+    description: Formulare, Tabellen, Terminplanung, Karten, Diagramme und Rich-Text-Bearbeitung von Haus aus.
+    title: Alles inklusive
   theming:
-    description: 'Design-Tokens und SCSS-Themes mit erstklassigem Hell- und Dunkelmodus.'
-    title: 'Theming'
-  title: 'Funktionen'
-footer:
-  copyright: '© {year} Mission Platform.'
-hero:
-  badge: 'Open Source'
-  cta-primary: 'Loslegen'
-  cta-secondary: 'Dokumentation'
-  lead: 'Entwickeln Sie Ihre Oberfläche einmal in der framework-neutralen Forge-Runtime und bauen Sie sie dann für Vue, React, Svelte, Solid und Web Components.'
-  title: 'Composable. Mission Ready.'
-nav:
-  about: 'Über uns'
-  faq: 'FAQ'
-  features: 'Funktionen'
-  packages: 'Pakete'
+    description: Design-Tokens und SCSS-Themes mit erstklassigem Hell- und Dunkelmodus.
+    title: Theming
 packages:
   items:
-    barcode: '1D-Barcode-Encoder und -Decoder in WebAssembly.'
-    breakpoints: 'Responsive Breakpoint-Utilities und -Komponenten.'
-    code-scanner: 'QR, Data Matrix und Barcodes aus Bild oder Kamera scannen.'
-    components: 'Write-once-UI-Komponenten für jedes unterstützte Framework.'
-    d3: 'Framework-neutrale D3-Integration.'
-    forms: 'Write-once-Formular-Builder und schemagesteuerte Formulare.'
-    forms-core: 'Framework-neutrale JSON-Schema-Formular-Engine.'
-    harper: 'Harper Grammatik- und Stilprüfung für Monaco.'
-    hunspell: 'Hunspell-Rechtschreibprüfung in WebAssembly.'
-    i18n: 'Internationalisierung angetrieben von i18next.'
-    icons: 'SVG-Icons einmal in JSX entwickelt.'
-    jsx: 'Framework-neutrale JSX-Runtime mit Adaptern für jedes Framework.'
-    layouts: 'Write-once-Anwendungslayouts.'
-    map: 'MapLibre GL Kartenkomponenten und Composables.'
-    matrix-code: 'Data-Matrix-Encoder und -Decoder in WebAssembly.'
-    observers: 'Write-once Intersection-, Mutation- und Performance-Observer-Hooks.'
-    phone-number: 'Parsen, Validieren und Formatieren von Telefonnummern.'
-    qr-code: 'QR-Code-Encoder und -Decoder in WebAssembly.'
-    router: 'Routing-Utilities.'
-    rxjs: 'RxJS-Observables an den Komponentenzustand koppeln.'
-    scheduler-core: 'iCalendar-Ereignismodell und Wiederholungs-Engine.'
-    seo: 'Strukturierte Daten, Meta-Tags und Sitemap-Helfer.'
-    speech-audio: 'Sprachsynthese, -erkennung, Audio- und Web-MIDI-Hooks.'
-    three: 'Framework-neutrale Three.js-Integration.'
-    tokens: 'CSS-Design-Tokens und SCSS-Themes.'
-    wysiwyg: 'Write-once-Rich-Text-Editor.'
-  lead: 'Composable Bausteine — von UI und Formularen bis hin zu WebAssembly-gestütztem Tooling.'
-  title: 'Pakete'
+    barcode: 1D-Barcode-Encoder und -Decoder in WebAssembly.
+    breakpoints: Responsive Breakpoint-Utilities und -Komponenten.
+    code-scanner: QR, Data Matrix und Barcodes aus Bild oder Kamera scannen.
+    components: Write-once-UI-Komponenten für jedes unterstützte Framework.
+    content: ''
+    d3: Framework-neutrale D3-Integration.
+    forms: Write-once-Formular-Builder und schemagesteuerte Formulare.
+    forms-core: Framework-neutrale JSON-Schema-Formular-Engine.
+    harper: Harper Grammatik- und Stilprüfung für Monaco.
+    hunspell: Hunspell-Rechtschreibprüfung in WebAssembly.
+    i18n: Internationalisierung angetrieben von i18next.
+    icons: SVG-Icons einmal in JSX entwickelt.
+    jsx: Framework-neutrale JSX-Runtime mit Adaptern für jedes Framework.
+    layouts: Write-once-Anwendungslayouts.
+    map: MapLibre GL Kartenkomponenten und Composables.
+    matrix-code: Data-Matrix-Encoder und -Decoder in WebAssembly.
+    observers: Write-once Intersection-, Mutation- und Performance-Observer-Hooks.
+    phone-number: Parsen, Validieren und Formatieren von Telefonnummern.
+    qr-code: QR-Code-Encoder und -Decoder in WebAssembly.
+    router: Routing-Utilities.
+    rxjs: RxJS-Observables an den Komponentenzustand koppeln.
+    scheduler: ''
+    seo: Strukturierte Daten, Meta-Tags und Sitemap-Helfer.
+    speech-audio: Sprachsynthese, -erkennung, Audio- und Web-MIDI-Hooks.
+    three: Framework-neutrale Three.js-Integration.
+    tokens: CSS-Design-Tokens und SCSS-Themes.
 projects:
   items:
     my-care-notes:
-      cta: 'Mehr erfahren'
-      description: 'Eine patientenzentrierte Pflegenotiz-Anwendung, gebaut auf dem Mission Platform.'
-      name: 'My Care Notes'
+      cta: Mehr erfahren
+      description: Eine patientenzentrierte Pflegenotiz-Anwendung, gebaut auf dem Mission Platform.
+      name: My Care Notes
