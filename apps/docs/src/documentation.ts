@@ -1,7 +1,8 @@
-// Loads every Markdown document from the monorepo `docs/` directory at build
-// time (via Vite's glob import) so this site always mirrors the canonical
-// documentation without a copy step. Each entry exposes its slug, derived
-// title, and raw Markdown source.
+// Loads the canonical Markdown corpus and its translated counterparts from the
+// monorepo at build time. The English tree remains the source of truth for the
+// slug inventory; every translated tree must contain the same slugs.
+
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type DocumentationLocale } from './i18n';
 
 const rawModules = import.meta.glob('../../../docs/**/*.md', {
   query: '?raw',
@@ -10,11 +11,14 @@ const rawModules = import.meta.glob('../../../docs/**/*.md', {
 }) as Record<string, string>;
 
 const DOCS_PREFIX = '../../../docs/';
+const LOCALE_PATH = /\/locales\/([^/]+)\//;
 
 /** A single documentation page. */
 export interface DocumentEntry {
   /** Route-friendly identifier, e.g. `overview` or `configs/eslint-config`. */
   slug: string;
+  /** Locale of the Markdown source. */
+  locale: DocumentationLocale;
   /** Human-readable title taken from the first `# H1` (or derived from slug). */
   title: string;
   /** Short, plain-text summary derived from the first prose paragraph. */
@@ -25,15 +29,35 @@ export interface DocumentEntry {
 
 /** A labelled group of documents rendered together in the sidebar. */
 export interface NavGroup {
+  key: NavGroupKey;
   label: string;
   items: string[];
 }
+
+export type NavGroupKey =
+  | 'gettingStarted'
+  | 'architecture'
+  | 'authoring'
+  | 'buildTooling'
+  | 'quality'
+  | 'troubleshooting'
+  | 'reference'
+  | 'additional';
 
 /** Slug served at the site root. */
 export const DEFAULT_SLUG = 'overview';
 
 function toSlug(modulePath: string): string {
-  return modulePath.slice(DOCS_PREFIX.length).replace(/\.md$/, '');
+  const relative = modulePath.slice(DOCS_PREFIX.length);
+  const localized = relative.match(/^locales\/[^/]+\/(.*)$/);
+  return (localized?.[1] ?? relative).replace(/\.md$/, '');
+}
+
+function localeFromPath(modulePath: string): DocumentationLocale {
+  const locale = modulePath.match(LOCALE_PATH)?.[1];
+  return locale && (SUPPORTED_LOCALES as readonly string[]).includes(locale)
+    ? (locale as DocumentationLocale)
+    : DEFAULT_LOCALE;
 }
 
 function titleFromSlug(slug: string): string {
@@ -56,16 +80,25 @@ const DESCRIPTION_MAX_LENGTH = 160;
  * Derive a plain-text meta description from a Markdown document: the first
  * real prose paragraph, stripped of Markdown syntax and clamped to a
  * search-engine-friendly length. Headings, fenced code blocks, blockquotes,
- * list markers, and HTML comments are skipped so the summary reads naturally.
+ * list markers, HTML comments, and machine-translation provenance disclaimers
+ * are skipped so the summary reads naturally.
  */
 function extractDescription(markdown: string, fallback: string): string {
   const withoutCode = markdown.replaceAll(/```[\s\S]*?```/g, '').replaceAll(/<!--[\s\S]*?-->/g, '');
+
+  // Pattern to detect machine-translation provenance disclaimers across all supported locales.
+  // These are typically short paragraphs mentioning "machine-assisted translation" or equivalent.
+  // The pattern matches the opening words and key phrases from the provenance text in each locale.
+  const provenancePattern =
+    /^(machine-assisted|machine-supported|machine-generated|machine translation|assisted translation|maschinenunterstützte|traducción|traduction|traduzione|תרגום|machineondersteunde|由规范|정식|正規の|ترجمة)/i;
 
   for (const rawBlock of withoutCode.split(/\n{2,}/)) {
     const block = rawBlock.trim();
     if (block.length === 0) continue;
     // Skip headings, blockquotes, tables, and list-only blocks.
     if (/^(#{1,6}\s|>|\||[-*+]\s|\d+\.\s)/.test(block)) continue;
+    // Skip machine-translation provenance disclaimers.
+    if (provenancePattern.test(block)) continue;
 
     const text = block
       .replaceAll(/\r?\n/g, ' ')
@@ -85,48 +118,86 @@ function extractDescription(markdown: string, fallback: string): string {
   return fallback;
 }
 
-/** Every document keyed by slug. */
-export const documents: Record<string, DocumentEntry> = Object.fromEntries(
-  Object.entries(rawModules).map(([modulePath, source]) => {
+function buildManifest(): Record<DocumentationLocale, Record<string, DocumentEntry>> {
+  const manifest = Object.fromEntries(SUPPORTED_LOCALES.map((locale) => [locale, {}])) as Record<
+    DocumentationLocale,
+    Record<string, DocumentEntry>
+  >;
+
+  for (const [modulePath, source] of Object.entries(rawModules)) {
+    const locale = localeFromPath(modulePath);
     const slug = toSlug(modulePath);
-    return [
+    manifest[locale][slug] = {
       slug,
-      {
-        slug,
-        source,
-        title: extractTitle(source, titleFromSlug(slug)),
-        description: extractDescription(source, DEFAULT_DESCRIPTION),
-      },
-    ];
-  }),
-);
+      locale,
+      source,
+      title: extractTitle(source, titleFromSlug(slug)),
+      description: extractDescription(source, DEFAULT_DESCRIPTION),
+    };
+  }
+
+  const englishSlugs = new Set(Object.keys(manifest[DEFAULT_LOCALE]));
+  if (englishSlugs.size === 0) throw new Error('The English documentation manifest is empty.');
+
+  for (const locale of SUPPORTED_LOCALES) {
+    const localizedSlugs = new Set(Object.keys(manifest[locale]));
+    const missing = [...englishSlugs].filter((slug) => !localizedSlugs.has(slug));
+    const extra = [...localizedSlugs].filter((slug) => !englishSlugs.has(slug));
+    if (missing.length > 0 || extra.length > 0) {
+      throw new Error(
+        `Documentation locale ${locale} does not match English slugs. ` +
+          `Missing: ${missing.join(', ') || 'none'}; extra: ${extra.join(', ') || 'none'}`,
+      );
+    }
+  }
+
+  return manifest;
+}
+
+/** Every document keyed first by locale and then by slug. */
+export const documentsByLocale = buildManifest();
+
+/** English documents keyed by slug, retained for existing callers. */
+export const documents = documentsByLocale[DEFAULT_LOCALE];
+
+/** Return the complete document set for a locale. */
+export function getDocuments(locale: DocumentationLocale = DEFAULT_LOCALE): Record<string, DocumentEntry> {
+  return documentsByLocale[locale];
+}
 
 /** Look up a document by slug. */
-export function getDocument(slug: string): DocumentEntry | undefined {
-  return documents[slug];
+export function getDocument(slug: string, locale: DocumentationLocale = DEFAULT_LOCALE): DocumentEntry | undefined {
+  return documentsByLocale[locale][slug];
 }
 
 /** Title for a slug, falling back to a slug-derived label when unknown. */
-export function titleForSlug(slug: string): string {
-  return documents[slug]?.title ?? titleFromSlug(slug);
+export function titleForSlug(slug: string, locale: DocumentationLocale = DEFAULT_LOCALE): string {
+  return documentsByLocale[locale][slug]?.title ?? titleFromSlug(slug);
 }
 
 /** Meta description for a slug, falling back to a generic site description. */
-export function descriptionForSlug(slug: string): string {
-  return documents[slug]?.description ?? DEFAULT_DESCRIPTION;
+export function descriptionForSlug(slug: string, locale: DocumentationLocale = DEFAULT_LOCALE): string {
+  return documentsByLocale[locale][slug]?.description ?? DEFAULT_DESCRIPTION;
+}
+
+/** Build the locale-aware route for a document. English keeps its old URL shape. */
+export function documentPath(slug: string, locale: DocumentationLocale = DEFAULT_LOCALE): string {
+  return locale === DEFAULT_LOCALE ? `/${slug}` : `/${locale}/${slug}`;
 }
 
 // Curated ordering of the sidebar. Mirrors the structure documented in the
 // repository `DOCUMENTATION.md`. Any document not listed here is appended under
 // an "Additional" group so nothing is silently hidden.
 const CURATED_GROUPS: NavGroup[] = [
-  { label: 'Getting Started', items: ['overview', 'development-setup', 'workspace-structure'] },
-  { label: 'Architecture', items: ['architecture', 'forge-compiler', 'atomic-component-design'] },
+  { key: 'gettingStarted', label: 'Getting Started', items: ['overview', 'development-setup', 'workspace-structure'] },
+  { key: 'architecture', label: 'Architecture', items: ['architecture', 'forge-compiler', 'atomic-component-design'] },
   {
+    key: 'authoring',
     label: 'Authoring',
     items: ['package-development', 'composable-authoring', 'store-authoring', 'util-authoring'],
   },
   {
+    key: 'buildTooling',
     label: 'Build & Tooling',
     items: [
       'build-system',
@@ -136,9 +207,10 @@ const CURATED_GROUPS: NavGroup[] = [
       'configs/workers-config',
     ],
   },
-  { label: 'Quality', items: ['testing', 'best-practices', 'framework-best-practices'] },
-  { label: 'Troubleshooting', items: ['troubleshooting', 'circular-dependencies'] },
+  { key: 'quality', label: 'Quality', items: ['testing', 'best-practices', 'framework-best-practices'] },
+  { key: 'troubleshooting', label: 'Troubleshooting', items: ['troubleshooting', 'circular-dependencies'] },
   {
+    key: 'reference',
     label: 'Reference',
     items: ['api-reference', 'external-consumer-setup', 'migration-guides/vue2-to-vue3'],
   },
@@ -152,14 +224,14 @@ function buildNavGroups(): NavGroup[] {
       seen.add(slug);
       return true;
     });
-    return { label: group.label, items };
+    return { ...group, items };
   }).filter((group) => group.items.length > 0);
 
   const leftovers = Object.keys(documents)
     .filter((slug) => !seen.has(slug))
     .toSorted();
   if (leftovers.length > 0) {
-    groups.push({ label: 'Additional', items: leftovers });
+    groups.push({ key: 'additional', label: 'Additional', items: leftovers });
   }
 
   return groups;

@@ -1,6 +1,9 @@
 import { marked, type Tokens } from 'marked';
 import { computed, toValue, type ComputedRef, type MaybeRefOrGetter } from 'vue';
 
+import { documentPath } from '../documentation';
+import { DEFAULT_LOCALE, type DocumentationLocale } from '../i18n';
+
 /** A single entry in a document's table of contents. */
 export interface TocItem {
   id: string;
@@ -13,7 +16,7 @@ function slugify(text: string): string {
   return text
     .toLowerCase()
     .trim()
-    .replaceAll(/[^\w]+/g, '-')
+    .replaceAll(/[^\p{L}\p{N}_]+/gu, '-')
     .replaceAll(/^-+|-+$/g, '');
 }
 
@@ -27,7 +30,11 @@ function plainText(text: string): string {
  * into an in-app route path, resolved relative to the current document's
  * directory. Returns `undefined` for links that are not Markdown documents.
  */
-function resolveInternalHref(href: string, currentSlug: string): string | undefined {
+export function resolveInternalHref(
+  href: string,
+  currentSlug: string,
+  locale: DocumentationLocale = DEFAULT_LOCALE,
+): string | undefined {
   const [pathPart, hash] = href.split('#');
   if (!/\.md$/i.test(pathPart)) return undefined;
 
@@ -44,7 +51,7 @@ function resolveInternalHref(href: string, currentSlug: string): string | undefi
   }
 
   const slug = segments.join('/');
-  return `/${slug}${hash ? `#${hash}` : ''}`;
+  return `${documentPath(slug, locale)}${hash ? `#${hash}` : ''}`;
 }
 
 /**
@@ -81,11 +88,13 @@ function buildToc(markdown: string): TocItem[] {
 export function useMarkdown(
   source: MaybeRefOrGetter<string>,
   slug: MaybeRefOrGetter<string>,
+  locale: MaybeRefOrGetter<DocumentationLocale> = DEFAULT_LOCALE,
 ): { toc: ComputedRef<TocItem[]>; resolveHref: ComputedRef<(href: string) => string | undefined> } {
   const toc = computed(() => buildToc(toValue(source)));
   const resolveHref = computed(() => {
     const currentSlug = toValue(slug);
-    return (href: string): string | undefined => resolveInternalHref(href, currentSlug);
+    const currentLocale = toValue(locale);
+    return (href: string): string | undefined => resolveInternalHref(href, currentSlug, currentLocale);
   });
   return { toc, resolveHref };
 }

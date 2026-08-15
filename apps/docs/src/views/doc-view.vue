@@ -7,8 +7,16 @@
 
   import { useMarkdown } from '../composables/use-markdown';
   import { descriptionForSlug, getDocument, titleForSlug } from '../documentation';
-  import { DOCS_NAMESPACE } from '../i18n';
-  import { canonicalForSlug, SITE_LANGUAGE, SITE_NAME, SITE_ORIGIN, TITLE_TEMPLATE } from '../seo-site';
+  import { DOCS_NAMESPACE, resolveDocumentationLocale } from '../i18n';
+  import {
+    alternatesForSlug,
+    canonicalForSlug,
+    LOCALE_BCP47,
+    LOCALE_OG,
+    SITE_NAME,
+    SITE_ORIGIN,
+    TITLE_TEMPLATE,
+  } from '../seo-site';
 
   const route = useRoute();
   const router = useRouter();
@@ -20,10 +28,12 @@
     return Array.isArray(raw) ? raw.join('/') : (raw ?? '');
   });
 
-  const doc = computed(() => getDocument(slug.value));
+  const locale = computed(() => resolveDocumentationLocale(route.params.locale));
+
+  const doc = computed(() => getDocument(slug.value, locale.value));
   const source = computed(() => doc.value?.source ?? '');
 
-  const { toc, resolveHref } = useMarkdown(source, slug);
+  const { toc, resolveHref } = useMarkdown(source, slug, locale);
 
   // Per-route SEO surface. Each documentation page emits its own page-level
   // title / description / canonical, plus a `WebPage` + `BreadcrumbList`
@@ -31,10 +41,10 @@
   // (emitted once in `main.ts`) via stable `@id` references. Unknown slugs
   // render a "not found" state and are marked `noindex` so they never enter a
   // search index.
-  const canonical = computed(() => canonicalForSlug(slug.value));
-  const pageTitle = computed(() => (doc.value ? titleForSlug(slug.value) : 'Page not found'));
+  const canonical = computed(() => canonicalForSlug(slug.value, locale.value));
+  const pageTitle = computed(() => (doc.value ? titleForSlug(slug.value, locale.value) : t('notFound.title')));
   const pageDescription = computed(() =>
-    doc.value ? descriptionForSlug(slug.value) : `No documentation exists for “${slug.value}”.`,
+    doc.value ? descriptionForSlug(slug.value, locale.value) : t('notFound.body', { slug: slug.value }),
   );
 
   useSeo(() => ({
@@ -43,6 +53,8 @@
       titleTemplate: TITLE_TEMPLATE,
       description: pageDescription.value,
       canonical: doc.value ? canonical.value : undefined,
+      language: LOCALE_BCP47[locale.value],
+      alternates: doc.value ? alternatesForSlug(slug.value) : undefined,
       robots: doc.value ? 'index,follow' : 'noindex,follow',
     },
     openGraph: {
@@ -50,6 +62,7 @@
       description: pageDescription.value,
       type: 'article',
       url: canonical.value,
+      locale: LOCALE_OG[locale.value],
     },
     jsonLd: doc.value
       ? [
@@ -58,7 +71,7 @@
               name: pageTitle.value,
               url: canonical.value,
               description: pageDescription.value,
-              inLanguage: SITE_LANGUAGE,
+              inLanguage: LOCALE_BCP47[locale.value],
             }),
             isPartOf: { '@id': webSiteId(`${SITE_ORIGIN}/`) },
             about: { '@id': organizationId(`${SITE_ORIGIN}/`) },

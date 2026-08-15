@@ -45,6 +45,16 @@ describe('useMarkdown', () => {
     expect(resolveHref.value('../overview.md')).toBe('/overview');
   });
 
+  it('keeps relative links inside the active locale', () => {
+    const { resolveHref } = useMarkdown(
+      () => '',
+      () => 'configs/index',
+      () => 'ja',
+    );
+
+    expect(resolveHref.value('../overview.md#はじめに')).toBe('/ja/overview#はじめに');
+  });
+
   it('leaves non-Markdown links (external, anchors) unresolved', () => {
     const { resolveHref } = useMarkdown(
       () => '',

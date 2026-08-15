@@ -10,15 +10,15 @@ import { ViteSSG } from 'vite-ssg';
 import { effectScope } from 'vue';
 
 import App from './App.vue';
-import { createDocumentationI18n, DEFAULT_LOCALE, LOCALE_DIR, resolveDocumentationLocale } from './i18n';
+import { createDocumentationI18n, LOCALE_DIR, resolveDocumentationLocale } from './i18n';
 import { routerOptions } from './router';
 import {
   SITE_DESCRIPTION,
   SITE_GENERATOR,
-  SITE_LANGUAGE,
+  LOCALE_BCP47,
+  LOCALE_OG,
   SITE_NAME,
   SITE_OG_IMAGE,
-  SITE_OG_LOCALE,
   SITE_ORIGIN,
   SITE_TITLE,
   TITLE_TEMPLATE,
@@ -36,11 +36,12 @@ import './styles/global.scss';
  * `useHead`) has an active head context to write into on both the client and
  * the server (where the tags are baked into the prerendered HTML).
  */
-export const createApp = ViteSSG(App, routerOptions, ({ app }) => {
+export const createApp = ViteSSG(App, routerOptions, ({ app, router }) => {
   // Restore the persisted colour scheme + UI language before mount so there is
   // no flash of the wrong theme/locale. Skipped during SSG, where there is no
   // `localStorage` (the prerendered HTML ships the default-locale chrome).
-  let initialLocale = DEFAULT_LOCALE;
+  const routeLocale = resolveDocumentationLocale(router.currentRoute.value.params.locale);
+  const initialLocale = routeLocale;
   if (!import.meta.env.SSR) {
     try {
       const storedTheme = localStorage.getItem('mp-theme');
@@ -49,18 +50,15 @@ export const createApp = ViteSSG(App, routerOptions, ({ app }) => {
       } else if (storedTheme === 'auto') {
         delete document.documentElement.dataset.theme;
       }
-      initialLocale = resolveDocumentationLocale(localStorage.getItem('mp-locale'));
     } catch {
       // Ignore (private mode etc.)
     }
   }
 
-  // Localise the app chrome. The documentation content stays English; only the
-  // interface strings switch. `<html lang>`/`dir` are pinned to the restored
-  // locale on the client.
+  // Localise the app chrome to the locale encoded in the content route.
   const i18n = createDocumentationI18n(initialLocale);
   app.use(createForgeI18NVue(i18n));
-  if (!import.meta.env.SSR) {
+  if (typeof document !== 'undefined') {
     document.documentElement.setAttribute('lang', initialLocale);
     document.documentElement.setAttribute('dir', LOCALE_DIR[initialLocale]);
   }
@@ -85,7 +83,7 @@ export const createApp = ViteSSG(App, routerOptions, ({ app }) => {
           generator: SITE_GENERATOR,
           robots: 'index,follow',
           themeColor: '#4a9ebe',
-          language: SITE_LANGUAGE,
+          language: LOCALE_BCP47[initialLocale],
         },
         openGraph: {
           title: SITE_TITLE,
@@ -93,7 +91,7 @@ export const createApp = ViteSSG(App, routerOptions, ({ app }) => {
           type: 'website',
           url: `${SITE_ORIGIN}/`,
           siteName: SITE_NAME,
-          locale: SITE_OG_LOCALE,
+          locale: LOCALE_OG[initialLocale],
           images: [
             {
               url: SITE_OG_IMAGE,
@@ -120,7 +118,7 @@ export const createApp = ViteSSG(App, routerOptions, ({ app }) => {
             name: SITE_NAME,
             url: `${SITE_ORIGIN}/`,
             description: SITE_DESCRIPTION,
-            inLanguage: SITE_LANGUAGE,
+            inLanguage: LOCALE_BCP47[initialLocale],
             searchUrlTemplate: `${SITE_ORIGIN}/search?q={search_term_string}`,
           }),
           organization({

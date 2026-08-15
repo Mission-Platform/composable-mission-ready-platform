@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_SLUG, documents, getDocument, navGroups } from './documentation';
+import {
+  DEFAULT_SLUG,
+  documents,
+  documentsByLocale,
+  getDocument,
+  navGroups,
+  descriptionForSlug,
+} from './documentation';
+import { SUPPORTED_LOCALES } from './i18n';
 
 describe('documentation manifest', () => {
   it('loads the canonical docs from the repository docs/ folder', () => {
@@ -19,9 +27,35 @@ describe('documentation manifest', () => {
     expect(getDocument('does-not-exist')).toBeUndefined();
   });
 
+  it('contains the exact English slug inventory in every supported locale', () => {
+    const englishSlugs = Object.keys(documents).toSorted();
+    for (const locale of SUPPORTED_LOCALES) {
+      expect(Object.keys(documentsByLocale[locale]).toSorted()).toEqual(englishSlugs);
+      expect(Object.values(documentsByLocale[locale]).every((entry) => entry.locale === locale)).toBe(true);
+    }
+  });
+
   it('builds a non-empty grouped navigation starting with Getting Started', () => {
     expect(navGroups.length).toBeGreaterThan(0);
     expect(navGroups[0]?.label).toBe('Getting Started');
     expect(navGroups[0]?.items).toContain('overview');
+  });
+
+  it('derives localized page descriptions from substantive content, not provenance disclaimers', () => {
+    // Verify that non-English locales skip the machine-translation provenance paragraph
+    // and use the first real content paragraph as the description instead.
+    const nonEnglishLocales = SUPPORTED_LOCALES.filter((locale) => locale !== 'en');
+    for (const locale of nonEnglishLocales) {
+      const overviewDesc = descriptionForSlug('overview', locale);
+      // The provenance disclaimer contains phrases like "machine-assisted translation"
+      // or locale-specific equivalents. The real description should start with
+      // "Mission Platform" or similar substantive content.
+      expect(overviewDesc).not.toMatch(
+        /machine-assisted|machine-supported|machine-generated|machine translation|assisted translation|maschinenunterstützte|traducción|traduction|traduzione|תרגום|machineondersteunde|由规范|정식|正規の|ترجمة/i,
+      );
+      expect(overviewDesc.length).toBeGreaterThan(0);
+      // Verify it's not the fallback description (which is generic).
+      expect(overviewDesc).not.toBe('Documentation for the Mission Platform — a composable, mission-ready monorepo.');
+    }
   });
 });

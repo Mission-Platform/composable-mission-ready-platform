@@ -5,12 +5,13 @@
   import { computed } from 'vue';
   import { useRoute } from 'vue-router';
 
-  import { titleForSlug } from '../documentation';
-  import { DOCS_NAMESPACE } from '../i18n';
+  import { documentPath, titleForSlug } from '../documentation';
+  import { DOCS_NAMESPACE, resolveDocumentationLocale } from '../i18n';
   import { search } from '../search';
-  import { SITE_ORIGIN, TITLE_TEMPLATE } from '../seo-site';
+  import { alternatesForSearch, LOCALE_BCP47, LOCALE_OG, searchCanonical, TITLE_TEMPLATE } from '../seo-site';
 
   const route = useRoute();
+  const locale = computed(() => resolveDocumentationLocale(route.params.locale));
 
   const { t } = useI18n(DOCS_NAMESPACE);
 
@@ -19,7 +20,7 @@
     return (Array.isArray(raw) ? raw[0] : raw) ?? '';
   });
 
-  const results = computed(() => search(query.value));
+  const results = computed(() => search(query.value, locale.value));
 
   // The search results page is query-driven and has no stable, indexable
   // content, so it is marked `noindex` while still allowing crawlers to follow
@@ -28,21 +29,25 @@
     page: {
       title: query.value.trim().length > 0 ? `Search: ${query.value}` : 'Search',
       titleTemplate: TITLE_TEMPLATE,
-      description: 'Search the Mission Platform documentation.',
-      canonical: `${SITE_ORIGIN}/search`,
+      description: t('search.hint'),
+      canonical: searchCanonical(locale.value),
+      language: LOCALE_BCP47[locale.value],
+      alternates: alternatesForSearch(),
       robots: 'noindex,follow',
     },
     openGraph: {
-      title: 'Search the documentation',
-      description: 'Search the Mission Platform documentation.',
+      title: t('search.title'),
+      description: t('search.hint'),
       type: 'website',
-      url: `${SITE_ORIGIN}/search`,
+      url: searchCanonical(locale.value),
+      locale: LOCALE_OG[locale.value],
     },
   }));
 
   /** Route target for a hit, deep-linking to the matching heading when present. */
   function resultTo(slug: string, headingId?: string): string {
-    return headingId ? `/${slug}#${headingId}` : `/${slug}`;
+    const path = documentPath(slug, locale.value);
+    return headingId ? `${path}#${headingId}` : path;
   }
 </script>
 
@@ -122,7 +127,7 @@
                 color="tertiary"
                 class="search-view__slug"
               >
-                {{ titleForSlug(result.slug) }} · /{{ result.slug }}
+                {{ titleForSlug(result.slug, locale) }} · {{ documentPath(result.slug, locale) }}
               </ForgeTypography>
             </ForgeCard>
           </RouterLink>

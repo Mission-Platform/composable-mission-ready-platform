@@ -1,11 +1,29 @@
 import { DEFAULT_SLUG } from '../documentation';
+import { SUPPORTED_LOCALES } from '../i18n';
 
 import type { RouterOptions, RouteRecordRaw } from 'vue-router';
 
-const routes: RouteRecordRaw[] = [
+const LOCALE_PATTERN = SUPPORTED_LOCALES.join('|');
+
+export const routes: RouteRecordRaw[] = [
+  {
+    path: `/:locale(${LOCALE_PATTERN})`,
+    name: 'localized-home',
+    redirect: (to) => `/${to.params.locale}/${DEFAULT_SLUG}`,
+  },
   {
     path: '/',
     redirect: `/${DEFAULT_SLUG}`,
+  },
+  {
+    path: `/:locale(${LOCALE_PATTERN})/search`,
+    name: 'localized-search',
+    component: async () => import('../views/search-view.vue'),
+  },
+  {
+    path: `/:locale(${LOCALE_PATTERN})/:slug(.*)`,
+    name: 'localized-doc',
+    component: async () => import('../views/doc-view.vue'),
   },
   {
     // Full-text search over the indexed documentation. The query lives in the

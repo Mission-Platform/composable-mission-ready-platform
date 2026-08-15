@@ -25,12 +25,18 @@ const documentsDirectory = path.join(repoRoot, 'docs');
 // `import.meta.glob`) avoids pulling the Vue app graph into the Vite config.
 const SITE_ORIGIN = 'https://docs.mission-platform.dev';
 const DEFAULT_SLUG = 'overview';
+const SUPPORTED_LOCALES = ['en', 'ar', 'de', 'es', 'fr', 'he', 'it', 'ja', 'ko', 'nl', 'zh'] as const;
 
 /** All documentation slugs, e.g. `overview`, `configs/eslint-config`. */
 function collectDocumentSlugs(): string[] {
   const entries = readdirSync(documentsDirectory, { recursive: true, withFileTypes: true });
   return entries
-    .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
+    .filter(
+      (entry) =>
+        entry.isFile() &&
+        entry.name.endsWith('.md') &&
+        !path.join(entry.parentPath, entry.name).includes(`${path.sep}locales${path.sep}`),
+    )
     .map((entry) => {
       const relative = path.relative(documentsDirectory, path.join(entry.parentPath, entry.name));
       return relative.replace(/\.md$/, '').split(path.sep).join('/');
@@ -39,8 +45,16 @@ function collectDocumentSlugs(): string[] {
 }
 
 /** Canonical URL for a slug (the default slug maps to the site root). */
-function canonicalForSlug(slug: string): string {
-  return slug === DEFAULT_SLUG ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}/${slug}`;
+function canonicalForSlug(slug: string, locale: string = 'en'): string {
+  if (locale === 'en' && slug === DEFAULT_SLUG) return `${SITE_ORIGIN}/`;
+  return `${SITE_ORIGIN}/${locale === 'en' ? '' : `${locale}/`}${slug}`;
+}
+
+function alternatesForSlug(slug: string) {
+  return SUPPORTED_LOCALES.map((locale) => ({
+    hreflang: locale,
+    href: canonicalForSlug(slug, locale),
+  }));
 }
 
 const documentSlugs = collectDocumentSlugs();
@@ -49,15 +63,24 @@ const documentSlugs = collectDocumentSlugs();
 // to the default document) plus one route per documentation slug. The
 // query-driven `/search` view is intentionally excluded — it has no stable,
 // indexable content and is marked `noindex`.
-const includedRoutes: string[] = ['/', ...documentSlugs.map((slug) => `/${slug}`)];
+const includedRoutes: string[] = [
+  '/',
+  ...documentSlugs.map((slug) => `/${slug}`),
+  ...SUPPORTED_LOCALES.filter((locale) => locale !== 'en').flatMap((locale) =>
+    documentSlugs.map((slug) => `/${locale}/${slug}`),
+  ),
+];
 
 // One sitemap entry per canonical URL. The root/default document gets top
 // priority; every other page is slightly lower.
-const sitemapUrls: SitemapUrl[] = documentSlugs.map((slug) => ({
-  loc: canonicalForSlug(slug),
-  changefreq: 'weekly',
-  priority: slug === DEFAULT_SLUG ? 1 : 0.8,
-}));
+const sitemapUrls: SitemapUrl[] = SUPPORTED_LOCALES.flatMap((locale) =>
+  documentSlugs.map((slug) => ({
+    loc: canonicalForSlug(slug, locale),
+    changefreq: 'weekly' as const,
+    priority: slug === DEFAULT_SLUG ? 1 : 0.8,
+    alternates: alternatesForSlug(slug),
+  })),
+);
 
 const SITEMAP_URL = `${SITE_ORIGIN}/sitemap.xml`;
 

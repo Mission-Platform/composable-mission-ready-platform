@@ -1,16 +1,24 @@
 <script setup lang="ts">
-  import { navGroups, titleForSlug } from '../documentation';
+  import { useI18n } from '@mission-platform/i18n';
+  import { computed } from 'vue';
+  import { useRoute } from 'vue-router';
+
+  import { documentPath, navGroups, titleForSlug } from '../documentation';
+  import { DOCS_NAMESPACE, resolveDocumentationLocale } from '../i18n';
 
   // Emitted whenever a page link is activated, so a host that renders this
   // sidebar inside the navbar's mobile menu can dismiss the menu (a no-op for
   // the persistent desktop column).
   const emit = defineEmits<{ navigate: [] }>();
+  const route = useRoute();
+  const { t } = useI18n(DOCS_NAMESPACE);
+  const locale = computed(() => resolveDocumentationLocale(route.params.locale));
 </script>
 
 <template>
   <nav
     class="sidebar"
-    aria-label="Documentation"
+    :aria-label="t('nav.documentation')"
   >
     <ul class="sidebar__groups">
       <li
@@ -18,7 +26,7 @@
         :key="group.label"
         class="sidebar__group"
       >
-        <p class="sidebar__group-label">{{ group.label }}</p>
+        <p class="sidebar__group-label">{{ t(`nav.groups.${group.key}`) }}</p>
         <ul class="sidebar__links">
           <li
             v-for="slug in group.items"
@@ -26,11 +34,11 @@
           >
             <RouterLink
               class="sidebar__link"
-              :to="`/${slug}`"
+              :to="documentPath(slug, locale)"
               active-class="sidebar__link--active"
               @click="emit('navigate')"
             >
-              {{ titleForSlug(slug) }}
+              {{ titleForSlug(slug, locale) }}
             </RouterLink>
           </li>
         </ul>

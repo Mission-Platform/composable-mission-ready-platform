@@ -3,11 +3,21 @@
   import { ForgeSearchInput } from '@mission-platform/forms';
   import { useI18n } from '@mission-platform/i18n';
   import { ForgeApplicationLayout } from '@mission-platform/layouts';
-  import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+  import { useHead } from '@unhead/vue';
+  import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
 
   import AppSidebar from './components/app-sidebar.vue';
-  import { DOCS_NAMESPACE, type DocumentationLocale, LOCALE_DIR, LOCALE_LABELS, SUPPORTED_LOCALES } from './i18n';
+  import { DEFAULT_SLUG, documentPath } from './documentation';
+  import {
+    DOCS_NAMESPACE,
+    resolveDocumentationLocale,
+    type DocumentationLocale,
+    LOCALE_DIR,
+    LOCALE_LABELS,
+    SUPPORTED_LOCALES,
+  } from './i18n';
+  import { LOCALE_BCP47 } from './seo-site';
 
   const route = useRoute();
   const router = useRouter();
@@ -28,21 +38,52 @@
     document.querySelector<HTMLElement>('.forge-drawer-backdrop')?.click();
   }
 
-  /**
-   * Switch the app-chrome language. The documentation content stays English;
-   * only the interface strings change. The choice is persisted and `<html>`
-   * `lang`/`dir` are updated so right-to-left locales flip correctly.
-   */
-  async function switchLanguage(next: string): Promise<void> {
-    const code = next as DocumentationLocale;
-    await setLocale(code);
+  const activeLocale = computed(() => resolveDocumentationLocale(route.params.locale));
+  const homePath = computed(() => documentPath(DEFAULT_SLUG, activeLocale.value));
+
+  useHead(() => ({
+    htmlAttrs: {
+      lang: LOCALE_BCP47[activeLocale.value],
+      dir: LOCALE_DIR[activeLocale.value],
+    },
+  }));
+
+  /** Synchronise route, translated content, app chrome, and document direction. */
+  async function applyRouteLocale(): Promise<void> {
+    const code = activeLocale.value;
+    if (locale.value !== code) await setLocale(code);
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('lang', code);
+      document.documentElement.setAttribute('dir', LOCALE_DIR[code]);
+    }
     try {
       localStorage.setItem('mp-locale', code);
     } catch {
       // Ignore (private mode etc.)
     }
-    document.documentElement.setAttribute('lang', code);
-    document.documentElement.setAttribute('dir', LOCALE_DIR[code]);
+  }
+
+  watch(activeLocale, () => void applyRouteLocale(), { immediate: true });
+
+  /** Switch to the equivalent document or search page in another locale. */
+  async function switchLanguage(next: string): Promise<void> {
+    const code = next as DocumentationLocale;
+    if (!SUPPORTED_LOCALES.includes(code)) return;
+
+    if (route.name === 'search' || route.name === 'localized-search') {
+      await router.push({
+        name: code === 'en' ? 'search' : 'localized-search',
+        ...(code === 'en' ? {} : { params: { locale: code } }),
+        query: route.query,
+      });
+      return;
+    }
+
+    const rawSlug = route.params.slug;
+    const slug = Array.isArray(rawSlug) ? rawSlug.join('/') : (rawSlug ?? DEFAULT_SLUG);
+    await router.push(
+      code === 'en' ? { name: 'doc', params: { slug } } : { name: 'localized-doc', params: { locale: code, slug } },
+    );
   }
 
   /** Persist the chosen colour theme so it survives reloads. */
@@ -80,11 +121,17 @@
   function navigateToSearch(): void {
     const q = query.value.trim();
     if (q.length === 0) {
-      if (route.name === 'search') void router.replace({ name: 'search', query: {} });
+      if (route.name === 'search' || route.name === 'localized-search') {
+        void router.replace({ name: route.name, params: route.params, query: {} });
+      }
       return;
     }
-    const target = { name: 'search' as const, query: { q } };
-    if (route.name === 'search') {
+    const target = {
+      name: activeLocale.value === 'en' ? ('search' as const) : ('localized-search' as const),
+      ...(activeLocale.value === 'en' ? {} : { params: { locale: activeLocale.value } }),
+      query: { q },
+    };
+    if (route.name === 'search' || route.name === 'localized-search') {
       void router.replace(target);
     } else {
       void router.push(target);
@@ -151,7 +198,7 @@
       >
         <template #brand>
           <RouterLink
-            to="/"
+            :to="homePath"
             class="docs-navbar__brand"
           >
             <span

@@ -1,13 +1,10 @@
 /**
  * Documentation-app internationalisation.
  *
- * The documentation *content* is authored in English, but the app **chrome**
- * (search field, table-of-contents heading, "page not found" state, and the
- * accessible control labels) is localised into every language the Mission
- * Platform supports. Locale is switched entirely on the client — the prerendered
- * HTML ships the English baseline and the `ForgeLanguageSwitcher` swaps the active
- * i18next language (and `<html lang>`/`dir`) live — so the static-site
- * generation stays a single set of pages.
+ * The documentation content and app chrome are localised into every language
+ * the Mission Platform supports. Locale is encoded in the URL so the static
+ * generator can emit crawlable translated pages; the language switcher moves to
+ * the equivalent route and updates `<html lang>`/`dir` live after navigation.
  */
 import { createForgeI18N, type ForgeI18N, type ForgeLocales, forgeNamespace } from '@mission-platform/i18n';
 
@@ -78,7 +75,21 @@ const messages = {
       menu: 'Open navigation menu',
       closeMenu: 'Close navigation menu',
     },
-    nav: { home: 'Home', toggleSidebar: 'Toggle documentation navigation' },
+    nav: {
+      home: 'Home',
+      documentation: 'Documentation',
+      toggleSidebar: 'Toggle documentation navigation',
+      groups: {
+        gettingStarted: 'Getting Started',
+        architecture: 'Architecture',
+        authoring: 'Authoring',
+        buildTooling: 'Build & Tooling',
+        quality: 'Quality',
+        troubleshooting: 'Troubleshooting',
+        reference: 'Reference',
+        additional: 'Additional',
+      },
+    },
   },
   ar: {
     search: {
@@ -101,7 +112,21 @@ const messages = {
       menu: 'فتح قائمة التنقل',
       closeMenu: 'إغلاق قائمة التنقل',
     },
-    nav: { home: 'الصفحة الرئيسية', toggleSidebar: 'تبديل تنقل الوثائق' },
+    nav: {
+      home: 'الصفحة الرئيسية',
+      documentation: 'الوثائق',
+      toggleSidebar: 'تبديل تنقل الوثائق',
+      groups: {
+        gettingStarted: 'البدء',
+        architecture: 'البنية',
+        authoring: 'التأليف',
+        buildTooling: 'البناء والأدوات',
+        quality: 'الجودة',
+        troubleshooting: 'استكشاف الأخطاء',
+        reference: 'المرجع',
+        additional: 'إضافي',
+      },
+    },
   },
   de: {
     search: {
@@ -124,7 +149,21 @@ const messages = {
       menu: 'Navigationsmenü öffnen',
       closeMenu: 'Navigationsmenü schließen',
     },
-    nav: { home: 'Startseite', toggleSidebar: 'Dokumentationsnavigation umschalten' },
+    nav: {
+      home: 'Startseite',
+      documentation: 'Dokumentation',
+      toggleSidebar: 'Dokumentationsnavigation umschalten',
+      groups: {
+        gettingStarted: 'Erste Schritte',
+        architecture: 'Architektur',
+        authoring: 'Autorenschaft',
+        buildTooling: 'Build & Werkzeuge',
+        quality: 'Qualität',
+        troubleshooting: 'Fehlerbehebung',
+        reference: 'Referenz',
+        additional: 'Weitere',
+      },
+    },
   },
   es: {
     search: {
@@ -147,7 +186,21 @@ const messages = {
       menu: 'Abrir el menú de navegación',
       closeMenu: 'Cerrar el menú de navegación',
     },
-    nav: { home: 'Inicio', toggleSidebar: 'Alternar la navegación de la documentación' },
+    nav: {
+      home: 'Inicio',
+      documentation: 'Documentación',
+      toggleSidebar: 'Alternar la navegación de la documentación',
+      groups: {
+        gettingStarted: 'Primeros pasos',
+        architecture: 'Arquitectura',
+        authoring: 'Autoría',
+        buildTooling: 'Build y herramientas',
+        quality: 'Calidad',
+        troubleshooting: 'Solución de problemas',
+        reference: 'Referencia',
+        additional: 'Adicional',
+      },
+    },
   },
   fr: {
     search: {
@@ -170,7 +223,21 @@ const messages = {
       menu: 'Ouvrir le menu de navigation',
       closeMenu: 'Fermer le menu de navigation',
     },
-    nav: { home: 'Accueil', toggleSidebar: 'Basculer la navigation de la documentation' },
+    nav: {
+      home: 'Accueil',
+      documentation: 'Documentation',
+      toggleSidebar: 'Basculer la navigation de la documentation',
+      groups: {
+        gettingStarted: 'Bien démarrer',
+        architecture: 'Architecture',
+        authoring: 'Création',
+        buildTooling: 'Build et outils',
+        quality: 'Qualité',
+        troubleshooting: 'Dépannage',
+        reference: 'Référence',
+        additional: 'Complémentaire',
+      },
+    },
   },
   he: {
     search: {
@@ -193,7 +260,21 @@ const messages = {
       menu: 'פתיחת תפריט הניווט',
       closeMenu: 'סגירת תפריט הניווט',
     },
-    nav: { home: 'דף הבית', toggleSidebar: 'החלפת ניווט התיעוד' },
+    nav: {
+      home: 'דף הבית',
+      documentation: 'תיעוד',
+      toggleSidebar: 'החלפת ניווט התיעוד',
+      groups: {
+        gettingStarted: 'תחילת העבודה',
+        architecture: 'ארכיטקטורה',
+        authoring: 'כתיבה',
+        buildTooling: 'בנייה וכלים',
+        quality: 'איכות',
+        troubleshooting: 'פתרון בעיות',
+        reference: 'ייחוס',
+        additional: 'נוסף',
+      },
+    },
   },
   it: {
     search: {
@@ -216,7 +297,21 @@ const messages = {
       menu: 'Apri il menu di navigazione',
       closeMenu: 'Chiudi il menu di navigazione',
     },
-    nav: { home: 'Home', toggleSidebar: 'Attiva/disattiva la navigazione della documentazione' },
+    nav: {
+      home: 'Home',
+      documentation: 'Documentazione',
+      toggleSidebar: 'Attiva/disattiva la navigazione della documentazione',
+      groups: {
+        gettingStarted: 'Per iniziare',
+        architecture: 'Architettura',
+        authoring: 'Creazione',
+        buildTooling: 'Build e strumenti',
+        quality: 'Qualità',
+        troubleshooting: 'Risoluzione dei problemi',
+        reference: 'Riferimento',
+        additional: 'Aggiuntivo',
+      },
+    },
   },
   ja: {
     search: {
@@ -239,7 +334,21 @@ const messages = {
       menu: 'ナビゲーションメニューを開く',
       closeMenu: 'ナビゲーションメニューを閉じる',
     },
-    nav: { home: 'ホーム', toggleSidebar: 'ドキュメントナビゲーションの切り替え' },
+    nav: {
+      home: 'ホーム',
+      documentation: 'ドキュメント',
+      toggleSidebar: 'ドキュメントナビゲーションの切り替え',
+      groups: {
+        gettingStarted: 'はじめに',
+        architecture: 'アーキテクチャ',
+        authoring: '作成',
+        buildTooling: 'ビルドとツール',
+        quality: '品質',
+        troubleshooting: 'トラブルシューティング',
+        reference: 'リファレンス',
+        additional: 'その他',
+      },
+    },
   },
   ko: {
     search: {
@@ -262,7 +371,21 @@ const messages = {
       menu: '탐색 메뉴 열기',
       closeMenu: '탐색 메뉴 닫기',
     },
-    nav: { home: '홈', toggleSidebar: '문서 탐색 전환' },
+    nav: {
+      home: '홈',
+      documentation: '문서',
+      toggleSidebar: '문서 탐색 전환',
+      groups: {
+        gettingStarted: '시작하기',
+        architecture: '아키텍처',
+        authoring: '작성',
+        buildTooling: '빌드 및 도구',
+        quality: '품질',
+        troubleshooting: '문제 해결',
+        reference: '참조',
+        additional: '추가',
+      },
+    },
   },
   nl: {
     search: {
@@ -285,7 +408,21 @@ const messages = {
       menu: 'Navigatiemenu openen',
       closeMenu: 'Navigatiemenu sluiten',
     },
-    nav: { home: 'Home', toggleSidebar: 'Documentatienavigatie in-/uitschakelen' },
+    nav: {
+      home: 'Home',
+      documentation: 'Documentatie',
+      toggleSidebar: 'Documentatienavigatie in-/uitschakelen',
+      groups: {
+        gettingStarted: 'Aan de slag',
+        architecture: 'Architectuur',
+        authoring: 'Maken',
+        buildTooling: 'Build en tools',
+        quality: 'Kwaliteit',
+        troubleshooting: 'Problemen oplossen',
+        reference: 'Naslag',
+        additional: 'Aanvullend',
+      },
+    },
   },
   zh: {
     search: {
@@ -308,7 +445,21 @@ const messages = {
       menu: '打开导航菜单',
       closeMenu: '关闭导航菜单',
     },
-    nav: { home: '首页', toggleSidebar: '切换文档导航' },
+    nav: {
+      home: '首页',
+      documentation: '文档',
+      toggleSidebar: '切换文档导航',
+      groups: {
+        gettingStarted: '入门',
+        architecture: '架构',
+        authoring: '编写',
+        buildTooling: '构建与工具',
+        quality: '质量',
+        troubleshooting: '故障排除',
+        reference: '参考',
+        additional: '其他',
+      },
+    },
   },
 } satisfies ForgeLocales;
 

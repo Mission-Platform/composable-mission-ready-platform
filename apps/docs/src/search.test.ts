@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { getDocument } from './documentation';
 import { search } from './search';
 
 describe('documentation search index', () => {
@@ -46,5 +47,18 @@ describe('documentation search index', () => {
   it('honours the result limit', () => {
     const results = search('platform', 3);
     expect(results.length).toBeLessThanOrEqual(3);
+  });
+
+  it('uses a translated per-locale index and preserves localized titles', () => {
+    const germanTitle = getDocument('overview', 'de')?.title ?? '';
+    const term = germanTitle.split(/\s+/)[0] ?? '';
+    const results = search(term, 'de');
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.some((result) => result.title === germanTitle)).toBe(true);
+  });
+
+  it('tokenizes non-Latin queries', () => {
+    const result = search('文档', 'zh');
+    expect(result.length).toBeGreaterThan(0);
   });
 });
