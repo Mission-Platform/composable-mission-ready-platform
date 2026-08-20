@@ -1,0 +1,14 @@
+project_id_env: CROWDIN_PROJECT_ID
+api_token_env: CROWDIN_PERSONAL_TOKEN
+base_path: .
+preserve_hierarchy: true
+
+files:
+  - source: /apps/**/locales/en/*.yaml
+    translation: /apps/**/locales/%two_letters_code%/%original_file_name%
+  - source: /packages/**/locales/en/*.yaml
+    translation: /packages/**/locales/%two_letters_code%/%original_file_name%
+  - source: /docs/**/*.md
+    translation: /docs/locales/%two_letters_code%/**/%original_file_name%
+    ignore:
+      - /docs/locales/**/*.md
