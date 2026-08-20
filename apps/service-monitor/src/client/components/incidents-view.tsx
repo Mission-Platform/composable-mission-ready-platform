@@ -1,7 +1,9 @@
 'use client';
 
-import { ForgeButton, ForgeDialog, ForgeTypography } from '@mission-platform/components';
+import { ForgeButton } from '@mission-platform/components';
+import { ForgeDialog } from '@mission-platform/float';
 import { ForgeSchemaForm, type FormValues, type SchemaFormDefinition } from '@mission-platform/forms';
+import { ForgeTypography } from '@mission-platform/typography';
 import { useI18n } from '@mission-platform/i18n';
 import { ForgeContainer } from '@mission-platform/layouts';
 import { useState } from 'react';

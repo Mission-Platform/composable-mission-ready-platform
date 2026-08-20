@@ -1,8 +1,8 @@
 'use client';
 
-import { ForgeTypography } from '@mission-platform/components';
 import { useI18n } from '@mission-platform/i18n';
 import { ForgeIconClock } from '@mission-platform/icons';
+import { ForgeTypography } from '@mission-platform/typography';
 import { type ReactNode } from 'react';
 
 import { formatMs, formatPercent } from '../utils/format';

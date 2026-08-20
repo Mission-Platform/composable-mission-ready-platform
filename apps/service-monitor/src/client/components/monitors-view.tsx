@@ -1,8 +1,8 @@
 'use client';
 
-import { ForgeTypography } from '@mission-platform/components';
 import { useI18n } from '@mission-platform/i18n';
 import { ForgeContainer } from '@mission-platform/layouts';
+import { ForgeTypography } from '@mission-platform/typography';
 import { useObservable } from '@mission-platform/rxjs';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 

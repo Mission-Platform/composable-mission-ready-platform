@@ -1,8 +1,9 @@
 'use client';
 
-import { ForgeBadge, ForgeTypography } from '@mission-platform/components';
+import { ForgeBadge } from '@mission-platform/components';
 import { useI18n } from '@mission-platform/i18n';
 import { ForgeContainer } from '@mission-platform/layouts';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import { maintenanceStatus } from '@/monitoring/incidents';
 

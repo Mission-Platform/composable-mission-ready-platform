@@ -1,8 +1,10 @@
 'use client';
 
-import { ForgeLanguageSwitcher, ForgeNavbar, ForgeNavbarItem, ForgeThemeToggle } from '@mission-platform/components';
+import { ForgeNavbar, ForgeNavbarItem } from '@mission-platform/components';
 import { useI18n } from '@mission-platform/i18n';
 import { ForgeApplicationLayout } from '@mission-platform/layouts';
+import { ForgeLanguageSwitcher, type ForgeLanguageSwitcherOption } from '@mission-platform/select';
+import { ForgeThemeToggle } from '@mission-platform/theme';
 import { supportedLocales } from 'virtual:i18n-locales';
 
 import type { Incident } from '@/monitoring/types';
@@ -27,7 +29,25 @@ const LABELS: Record<string, string> = {
   he: 'עברית',
 };
 
-const LOCALES = supportedLocales.map((code) => ({ code, label: LABELS[code] ?? code.toUpperCase() }));
+const COUNTRY_CODES: Record<string, NonNullable<ForgeLanguageSwitcherOption['countryCode']>> = {
+  en: 'AU',
+  fr: 'FR',
+  es: 'ES',
+  nl: 'NL',
+  it: 'IT',
+  de: 'DE',
+  ko: 'KR',
+  ja: 'JP',
+  zh: 'CN',
+  ar: 'SA',
+  he: 'IL',
+};
+
+const LOCALES: ForgeLanguageSwitcherOption[] = supportedLocales.map((code) => ({
+  code,
+  countryCode: COUNTRY_CODES[code],
+  label: LABELS[code] ?? code.toUpperCase(),
+}));
 
 const localeBundles: Record<string, () => Promise<{ resources: Resource }>> = {
   ar: () => import('virtual:i18n-locale-ar'),

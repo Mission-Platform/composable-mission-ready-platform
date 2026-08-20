@@ -69,7 +69,8 @@ environment (client, ssr, worker), so each package's `mp:react` export condition
 | --------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | `@mission-platform/rxjs`                      | `useObservable` — RxJS streams → React state.                                                            |
 | `@mission-platform/d3`                        | `useD3` + margin helpers powering `TimeSeriesChart`.                                                     |
-| `@mission-platform/components`                | `Typography`, `Badge`, `Button`, `Spinner`, `Card` (re-typed for React children in `src/client/mp.tsx`). |
+| `@mission-platform/components`                | `Badge`, `Button`, `Spinner`, `Card` (re-typed for React children in `src/client/mp.tsx`).               |
+| `@mission-platform/typography`                | `ForgeTypography` text primitive.                                                                        |
 | `@mission-platform/icons`                     | Inline SVG icons (globe, clock, refresh, trash, plus, …).                                                |
 | `@mission-platform/layouts`                   | `Container` page shell.                                                                                  |
 | `@mission-platform/i18n`                      | All UI strings (`createAppI18n`, `useI18n`) under the `mp.service-monitor` namespace.                    |

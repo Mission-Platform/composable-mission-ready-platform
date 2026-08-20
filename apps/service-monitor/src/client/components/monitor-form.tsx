@@ -1,6 +1,6 @@
 'use client';
 
-import { ForgeDialog } from '@mission-platform/components';
+import { ForgeDialog } from '@mission-platform/float';
 import { ForgeSchemaForm, type FormValues, type SchemaFormDefinition } from '@mission-platform/forms';
 import { useI18n } from '@mission-platform/i18n';
 
