@@ -35,9 +35,15 @@ vi.mock('@mission-platform/components', () => ({
   ForgeButton: StubComponent,
   ForgeInput: StubComponent,
   ForgeMonacoEditor: StubComponent,
-  ForgeModal: ForgeModalStub,
   ForgeStack: StubComponent,
-  ForgeTypography: StubComponent,
+}));
+
+vi.mock('@mission-platform/float', () => ({
+  ForgeModal: ForgeModalStub,
+}));
+
+vi.mock('@mission-platform/forms', () => ({
+  ForgeSchemaForm: StubComponent,
 }));
 
 vi.mock('@mission-platform/i18n', () => ({

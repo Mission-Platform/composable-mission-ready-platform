@@ -1,23 +1,23 @@
 <script lang="ts" setup>
   import {
     ForgeButton,
-    ForgeDialog,
     ForgeDrawer,
     ForgeIconButton,
     ForgeMenubar,
     ForgeNavbar,
     ForgeNavbarItem,
     ForgeStack,
-    ForgeThemeToggle,
     ForgeVirtualTable,
     ForgeVirtualTabs,
-    ForgeLanguageSwitcher,
   } from '@mission-platform/components';
+  import { ForgeDialog } from '@mission-platform/float';
   import { type FormValues, ForgeSchemaForm, type SchemaFormDefinition } from '@mission-platform/forms';
   import { useI18n } from '@mission-platform/i18n';
   import { ForgeIconDownload, ForgeIconPencil } from '@mission-platform/icons';
   import { ForgeVerticalLayout } from '@mission-platform/layouts';
+  import { ForgeLanguageSwitcher, type ForgeLanguageSwitcherOption } from '@mission-platform/select';
   import { organizationId, useSeo, webPage } from '@mission-platform/seo';
+  import { ForgeThemeToggle } from '@mission-platform/theme';
   import { computed, defineAsyncComponent, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
 
@@ -83,7 +83,19 @@
   } = useSnippets();
 
   const { t, locale, setLocale } = useI18n();
-  const locales = ['ar', 'de', 'en', 'es', 'fr', 'he', 'it', 'ja', 'ko', 'nl', 'zh'];
+  const locales: ForgeLanguageSwitcherOption[] = [
+    { code: 'ar', countryCode: 'SA' },
+    { code: 'de', countryCode: 'DE' },
+    { code: 'en', countryCode: 'AU' },
+    { code: 'es', countryCode: 'ES' },
+    { code: 'fr', countryCode: 'FR' },
+    { code: 'he', countryCode: 'IL' },
+    { code: 'it', countryCode: 'IT' },
+    { code: 'ja', countryCode: 'JP' },
+    { code: 'ko', countryCode: 'KR' },
+    { code: 'nl', countryCode: 'NL' },
+    { code: 'zh', countryCode: 'CN' },
+  ];
 
   const route = useRoute();
   const router = useRouter();
@@ -333,7 +345,7 @@
       placement="start"
       size="xl"
       :title="t(($) => $.sidebar.title, { ns: 'mp.my-care-notes', defaultValue: 'Snippets' })"
-      @update:open="onSnippetsPanelUpdate"
+      @open-change="onSnippetsPanelUpdate"
     >
       <ForgeMenubar
         :items="[

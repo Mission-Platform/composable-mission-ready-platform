@@ -10,6 +10,7 @@ import { createApp, defineComponent, h, ref } from 'vue';
 
 // Capture the props the app passes to ForgeDrawer.
 let receivedDrawerProperties: Record<string, unknown> = {};
+const useRouterMock = { push: vi.fn() };
 
 // Shared empty render function (kept at module scope to satisfy lint rules).
 const renderEmpty = () => h('div');
@@ -35,8 +36,8 @@ const ForgeDrawerStub = defineComponent({
   // virtual table with scoped slots that expect row data, so we deliberately do
   // not render the default slot — we only need to capture the props.
   props: ['open', 'placement', 'size', 'title'],
-  setup(properties) {
-    receivedDrawerProperties = properties;
+  setup(properties, { attrs }) {
+    receivedDrawerProperties = { ...properties, ...attrs };
     return renderEmpty;
   },
 });
@@ -54,7 +55,6 @@ const routeQuery = ref<Record<string, unknown>>({});
 
 vi.mock('@mission-platform/components', () => ({
   ForgeButton: StubComponent,
-  ForgeDialog: StubComponent,
   ForgeDrawer: ForgeDrawerStub,
   ForgeIconButton: StubComponent,
   ForgeInput: StubComponent,
@@ -62,10 +62,20 @@ vi.mock('@mission-platform/components', () => ({
   ForgeNavbar: StubComponent,
   ForgeNavbarItem: StubComponent,
   ForgeStack: StubComponent,
-  ForgeTypography: StubComponent,
-  ForgeThemeToggle: StubComponent,
   ForgeVirtualTable: StubComponent,
   ForgeVirtualTabs: EmptyComponent,
+}));
+
+vi.mock('@mission-platform/theme', () => ({
+  ForgeThemeToggle: StubComponent,
+}));
+
+vi.mock('@mission-platform/float', () => ({
+  ForgeDialog: StubComponent,
+  ForgeDropdown: StubComponent,
+}));
+
+vi.mock('@mission-platform/select', () => ({
   ForgeLanguageSwitcher: StubComponent,
 }));
 
@@ -73,8 +83,11 @@ vi.mock('@mission-platform/layouts', () => ({
   ForgeVerticalLayout: StubComponent,
 }));
 
+vi.mock('@mission-platform/forms', () => ({
+  ForgeSchemaForm: StubComponent,
+}));
+
 vi.mock('@mission-platform/i18n', () => ({
-  ForgeLanguageSwitcher: StubComponent,
   useI18n: () => ({
     t: (_key: unknown, options?: { defaultValue?: string }) => options?.defaultValue ?? '',
     locale: ref('en'),
@@ -83,7 +96,10 @@ vi.mock('@mission-platform/i18n', () => ({
 }));
 
 vi.mock('@mission-platform/icons', () => ({
+  ForgeIconChevron: StubComponent,
   ForgeIconDownload: StubComponent,
+  ForgeIconFlag: StubComponent,
+  ForgeIconLanguage: StubComponent,
   ForgeIconPencil: StubComponent,
 }));
 
@@ -99,11 +115,15 @@ vi.mock('vue-router', () => ({
       return routeQuery.value;
     },
   }),
-  useRouter: () => ({ push: vi.fn() }),
+  useRouter: () => useRouterMock,
 }));
 
 vi.mock('./components/monaco-editor.vue', () => ({ default: StubComponent }));
-vi.mock('./components/snippet-editor-modal.vue', () => ({ default: StubComponent, __v_isVNode: false }));
+vi.mock('./components/snippet-editor-modal.vue', () => ({
+  default: StubComponent,
+  __isSuspense: false,
+  __v_isVNode: false,
+}));
 
 vi.mock('./composables/use-snippets', () => ({
   useSnippets: () => ({
@@ -150,6 +170,7 @@ async function mountApp(query: Record<string, unknown>) {
 
 afterEach(() => {
   receivedDrawerProperties = {};
+  useRouterMock.push.mockReset();
 });
 
 describe('MyCareNotesApp snippets drawer', () => {
@@ -162,6 +183,19 @@ describe('MyCareNotesApp snippets drawer', () => {
   it('keeps the drawer closed without the panel query', async () => {
     const cleanup = await mountApp({});
     expect(receivedDrawerProperties['open']).toBe(false);
+    cleanup();
+  });
+
+  it('removes panel query when the drawer is closed via onOpenChange', async () => {
+    const cleanup = await mountApp({ panel: 'snippets', other: 'param' });
+    expect(receivedDrawerProperties['open']).toBe(true);
+
+    const onOpenChange = receivedDrawerProperties['onOpenChange'] as (open: boolean) => void;
+    onOpenChange(false);
+
+    expect(useRouterMock.push).toHaveBeenCalledWith({
+      query: { other: 'param' },
+    });
     cleanup();
   });
 });
