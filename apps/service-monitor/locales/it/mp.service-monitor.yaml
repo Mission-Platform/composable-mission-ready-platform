@@ -46,7 +46,6 @@ nav:
 shell:
   activeIncidents_zero: '{count} incidenti attivi'
   activeIncidents_one: '{count} incidente attivo'
-  activeIncidents_many: ''
   activeIncidents_other: '{count} incidenti attivi'
   currentStatus: Stato attuale del sistema
   title: Service Monitor
@@ -59,11 +58,11 @@ speed:
   enabled: Test di velocità lato server ogni {interval}s (Cloudflare, Fast.com, Speedtest).
   failed: Fallito
   graphMetric:
-    bandwidth: ''
-    download: ''
-    latency: ''
-    ping: ''
-    upload: ''
+    bandwidth: speed.graphMetric.bandwidth
+    download: speed.graphMetric.download
+    latency: speed.graphMetric.latency
+    ping: speed.graphMetric.ping
+    upload: speed.graphMetric.upload
   graphTitle: '{name} · {metric} nel tempo'
   latency: '{value} ms'
   pending: Nessuna misurazione ancora
@@ -73,7 +72,6 @@ speed:
   running: In corso…
   summary_zero: media {average} · max {maximum} · n={count}
   summary_one: media {average} · max {maximum} · n={count}
-  summary_many: ''
   summary_other: media {average} · max {maximum} · n={count}
   title: Velocità di rete
   up: '{value} Mbps in upload'
