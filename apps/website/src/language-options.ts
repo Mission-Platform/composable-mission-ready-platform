@@ -1,4 +1,4 @@
-import type { SelectOption } from '@mission-platform/forms';
+import type { SelectOption } from '@mission-platform/select';
 
 /** Localized language labels shown by the website language picker. */
 export const LANGUAGE_OPTIONS: SelectOption[] = [

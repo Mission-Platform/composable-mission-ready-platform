@@ -12,11 +12,9 @@
     ForgeNavbar,
     ForgeNavbarItem,
     ForgeStack,
-    ForgeTag,
-    ForgeThemeToggle,
-    ForgeTypography,
   } from '@mission-platform/components';
-  import { ForgeSelect } from '@mission-platform/forms';
+  import { ForgeThemeToggle } from '@mission-platform/theme';
+  import { ForgeTypography } from '@mission-platform/typography';
   import { useI18n } from '@mission-platform/i18n';
   import {
     ForgeIconCloud,
@@ -30,6 +28,7 @@
   } from '@mission-platform/icons';
   import { ForgeApplicationLayout } from '@mission-platform/layouts';
   import { ForgeQrCode } from '@mission-platform/qr-code';
+  import { ForgeLanguageSwitcher, ForgeTag } from '@mission-platform/select';
   import { organizationId, useSeo, webPage, webSiteId } from '@mission-platform/seo';
   import { type Component, computed, onBeforeUnmount, onMounted, ref } from 'vue';
   import { useRouter } from 'vue-router';
@@ -63,6 +62,7 @@
 
   const { t, locale } = useI18n();
   const router = useRouter();
+  const languageSwitcherLocales = LANGUAGE_OPTIONS.map(({ label, value }) => ({ code: String(value), label }));
 
   // Per-route SEO surface: emit the `WebPage` JSON-LD node for this route,
   // explicitly linked into the site-wide `WebSite` + `Organization` graph
@@ -594,19 +594,14 @@
         />
 
         <template #end>
-          <ForgeSelect
-            :model-value="locale"
-            :options="LANGUAGE_OPTIONS"
+          <ForgeLanguageSwitcher
             :label="t(($) => $.a11y.language, { defaultValue: 'Language', ns: 'mp.website' })"
             label-hidden
-            :searchable="false"
+            :locale="locale"
+            :locales="languageSwitcherLocales"
             size="sm"
-            @update:model-value="switchLanguage"
-          >
-            <template #start>
-              <ForgeIconLanguage size="sm" />
-            </template>
-          </ForgeSelect>
+            @locale-change="switchLanguage"
+          />
           <ForgeThemeToggle
             :aria-label="t(($) => $.a11y.theme, { defaultValue: 'Toggle colour theme', ns: 'mp.website' })"
             @change="handleThemeChange"
