@@ -16,6 +16,7 @@
     "@mission-platform/email-renderer": "workspace:*",
     "@mission-platform/forms": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
+    "@mission-platform/typography": "workspace:*",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

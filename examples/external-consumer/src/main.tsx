@@ -1,6 +1,7 @@
 import '@mission-platform/tokens/scss/tokens';
-import {ForgeBadge, ForgeButton, ForgeCard, ForgeStack, ForgeTypography,} from "@mission-platform/components";
+import {ForgeBadge, ForgeButton, ForgeCard, ForgeStack,} from "@mission-platform/components";
 import {ForgeSchemaForm, type FormValues, type SchemaFormDefinition,} from "@mission-platform/forms";
+import {ForgeTypography,} from "@mission-platform/typography";
 import {useRef, useState} from "react";
 import {createRoot} from "react-dom/client";
 
