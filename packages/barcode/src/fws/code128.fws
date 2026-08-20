@@ -1,0 +1,331 @@
+// Code 128 and GS1-128 encoder graph.
+//
+// The graph mirrors the Rust encoder's two selection rules: even-length digit
+// payloads use Code C, while all other printable ASCII payloads use Code B.
+
+
+fn pattern(value: i32) -> string {
+  if value == 0 { return "212222"; }
+  if value == 1 { return "222122"; }
+  if value == 2 { return "222221"; }
+  if value == 3 { return "121223"; }
+  if value == 4 { return "121322"; }
+  if value == 5 { return "131222"; }
+  if value == 6 { return "122213"; }
+  if value == 7 { return "122312"; }
+  if value == 8 { return "132212"; }
+  if value == 9 { return "221213"; }
+  if value == 10 { return "221312"; }
+  if value == 11 { return "231212"; }
+  if value == 12 { return "112232"; }
+  if value == 13 { return "122132"; }
+  if value == 14 { return "122231"; }
+  if value == 15 { return "113222"; }
+  if value == 16 { return "123122"; }
+  if value == 17 { return "123221"; }
+  if value == 18 { return "223211"; }
+  if value == 19 { return "221132"; }
+  if value == 20 { return "221231"; }
+  if value == 21 { return "213212"; }
+  if value == 22 { return "223112"; }
+  if value == 23 { return "312131"; }
+  if value == 24 { return "311222"; }
+  if value == 25 { return "321122"; }
+  if value == 26 { return "321221"; }
+  if value == 27 { return "312212"; }
+  if value == 28 { return "322112"; }
+  if value == 29 { return "322211"; }
+  if value == 30 { return "212123"; }
+  if value == 31 { return "212321"; }
+  if value == 32 { return "232121"; }
+  if value == 33 { return "111323"; }
+  if value == 34 { return "131123"; }
+  if value == 35 { return "131321"; }
+  if value == 36 { return "112313"; }
+  if value == 37 { return "132113"; }
+  if value == 38 { return "132311"; }
+  if value == 39 { return "211313"; }
+  if value == 40 { return "231113"; }
+  if value == 41 { return "231311"; }
+  if value == 42 { return "112133"; }
+  if value == 43 { return "112331"; }
+  if value == 44 { return "132131"; }
+  if value == 45 { return "113123"; }
+  if value == 46 { return "113321"; }
+  if value == 47 { return "133121"; }
+  if value == 48 { return "313121"; }
+  if value == 49 { return "211331"; }
+  if value == 50 { return "231131"; }
+  if value == 51 { return "213113"; }
+  if value == 52 { return "213311"; }
+  if value == 53 { return "213131"; }
+  if value == 54 { return "311123"; }
+  if value == 55 { return "311321"; }
+  if value == 56 { return "331121"; }
+  if value == 57 { return "312113"; }
+  if value == 58 { return "312311"; }
+  if value == 59 { return "332111"; }
+  if value == 60 { return "314111"; }
+  if value == 61 { return "221411"; }
+  if value == 62 { return "431111"; }
+  if value == 63 { return "111224"; }
+  if value == 64 { return "111422"; }
+  if value == 65 { return "121124"; }
+  if value == 66 { return "121421"; }
+  if value == 67 { return "141122"; }
+  if value == 68 { return "141221"; }
+  if value == 69 { return "112214"; }
+  if value == 70 { return "112412"; }
+  if value == 71 { return "122114"; }
+  if value == 72 { return "122411"; }
+  if value == 73 { return "142112"; }
+  if value == 74 { return "142211"; }
+  if value == 75 { return "241211"; }
+  if value == 76 { return "221114"; }
+  if value == 77 { return "413111"; }
+  if value == 78 { return "241112"; }
+  if value == 79 { return "134111"; }
+  if value == 80 { return "111242"; }
+  if value == 81 { return "121142"; }
+  if value == 82 { return "121241"; }
+  if value == 83 { return "114212"; }
+  if value == 84 { return "124112"; }
+  if value == 85 { return "124211"; }
+  if value == 86 { return "411212"; }
+  if value == 87 { return "421112"; }
+  if value == 88 { return "421211"; }
+  if value == 89 { return "212141"; }
+  if value == 90 { return "214121"; }
+  if value == 91 { return "412121"; }
+  if value == 92 { return "111143"; }
+  if value == 93 { return "111341"; }
+  if value == 94 { return "131141"; }
+  if value == 95 { return "114113"; }
+  if value == 96 { return "114311"; }
+  if value == 97 { return "411113"; }
+  if value == 98 { return "411311"; }
+  if value == 99 { return "113141"; }
+  if value == 100 { return "114131"; }
+  if value == 101 { return "311141"; }
+  if value == 102 { return "411131"; }
+  if value == 103 { return "211412"; }
+  if value == 104 { return "211214"; }
+  if value == 105 { return "211232"; }
+  if value == 106 { return "2331112"; }
+  return "";
+}
+
+fn run(bit: i32, width: i32) -> string {
+  if bit == 1 {
+    if width == 1 { return "1"; }
+    if width == 2 { return "11"; }
+    if width == 3 { return "111"; }
+    if width == 4 { return "1111"; }
+  }
+  if width == 1 { return "0"; }
+  if width == 2 { return "00"; }
+  if width == 3 { return "000"; }
+  return "0000";
+}
+
+fn render_pattern(value: string, index: i32) -> string {
+  if index >= string_length(value) { return ""; }
+  let bit: i32 = 1;
+  if index % 2 == 1 { bit = 0; }
+  let width: i32 = string_byte_at(value, index) - 48;
+  return string_concat(run(bit, width), render_pattern(value, index + 1));
+}
+
+fn render_symbol(value: i32) -> string {
+  return render_pattern(pattern(value), 0);
+}
+
+fn all_digits(value: string, index: i32) -> bool {
+  if index >= string_length(value) { return true; }
+  let code: i32 = string_byte_at(value, index);
+  if code < 48 || code > 57 { return false; }
+  return all_digits(value, index + 1);
+}
+
+fn all_printable(value: string, index: i32) -> bool {
+  if index >= string_length(value) { return true; }
+  let code: i32 = string_byte_at(value, index);
+  if code < 32 || code > 126 { return false; }
+  return all_printable(value, index + 1);
+}
+
+fn finish(result: string, checksum: i32) -> string {
+  return string_concat(string_concat(result, render_symbol(checksum % 103)), render_symbol(106));
+}
+
+fn encode_b_data(value: string, index: i32, result: string, checksum: i32, weight: i32) -> string {
+  if index >= string_length(value) { return finish(result, checksum); }
+  let symbol: i32 = string_byte_at(value, index) - 32;
+  return encode_b_data(
+    value,
+    index + 1,
+    string_concat(result, render_symbol(symbol)),
+    checksum + symbol * weight,
+    weight + 1,
+  );
+}
+
+fn pair_value(value: string, index: i32) -> i32 {
+  let high: i32 = string_byte_at(value, index) - 48;
+  let low: i32 = string_byte_at(value, index + 1) - 48;
+  return high * 10 + low;
+}
+
+fn encode_c_data(value: string, index: i32, result: string, checksum: i32, weight: i32) -> string {
+  if index >= string_length(value) { return finish(result, checksum); }
+  let symbol: i32 = pair_value(value, index);
+  return encode_c_data(
+    value,
+    index + 2,
+    string_concat(result, render_symbol(symbol)),
+    checksum + symbol * weight,
+    weight + 1,
+  );
+}
+
+export fn encode_code128(value: string) -> string {
+  let length: i32 = string_length(value);
+  if length == 0 || !all_printable(value, 0) { return ""; }
+  if length % 2 == 0 && all_digits(value, 0) {
+    return encode_c_data(value, 0, render_symbol(105), 105, 1);
+  }
+  return encode_b_data(value, 0, render_symbol(104), 104, 1);
+}
+
+export fn encode_gs1_128(value: string) -> string {
+  let length: i32 = string_length(value);
+  if length == 0 || !all_printable(value, 0) { return ""; }
+  let fnc1: string = render_symbol(102);
+  if length % 2 == 0 && all_digits(value, 0) {
+    return encode_c_data(value, 0, string_concat(render_symbol(105), fnc1), 207, 2);
+  }
+  return encode_b_data(value, 0, string_concat(render_symbol(104), fnc1), 206, 2);
+}
+
+fn ascii_character(code: i32) -> string {
+  if code >= 0 && code <= 31 {
+    return string_slice("\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008\u0009\u000a\u000b\u000c\u000d\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f", code, code + 1);
+  }
+  if code >= 32 && code <= 64 {
+    return string_slice(" !\u0022#$%&'()*+,-./0123456789:;<=>?@", code - 32, code - 31);
+  }
+  if code >= 65 && code <= 90 { return string_slice("ABCDEFGHIJKLMNOPQRSTUVWXYZ", code - 65, code - 64); }
+  if code >= 91 && code <= 96 {
+    return string_slice("\u005b\u005c\u005d^_\u0060", code - 91, code - 90);
+  }
+  if code >= 97 && code <= 122 {
+    return string_slice("abcdefghijklmnopqrstuvwxyz", code - 97, code - 96);
+  }
+  if code >= 123 && code <= 127 {
+    return string_slice("{|}~\u007f", code - 123, code - 122);
+  }
+  return "";
+}
+
+fn valid_modules(modules: Array<i32>, index: i32) -> bool {
+  if index >= modules.length() { return true; }
+  let bit: i32 = modules[index];
+  if bit != 0 && bit != 1 { return false; }
+  return valid_modules(modules, index + 1);
+}
+
+fn module_mask_from_array(modules: Array<i32>, index: i32, end: i32, result: i32) -> i32 {
+  if index >= end || index >= modules.length() { return result; }
+  let next: i32 = result * 2;
+  if modules[index] == 1 { next = next + 1; }
+  return module_mask_from_array(modules, index + 1, end, next);
+}
+
+fn module_mask(value: string, index: i32, end: i32, result: i32) -> i32 {
+  if index >= end || index >= string_length(value) { return result; }
+  let next: i32 = result * 2;
+  if string_byte_at(value, index) == 49 { next = next + 1; }
+  return module_mask(value, index + 1, end, next);
+}
+
+fn decode_symbol(modules: Array<i32>, start: i32, candidate: i32) -> i32 {
+  if candidate > 105 { return -1; }
+  if module_mask_from_array(modules, start, start + 11, 0) == module_mask(render_symbol(candidate), 0, 11, 0) { return candidate; }
+  return decode_symbol(modules, start, candidate + 1);
+}
+
+fn remainder(value: i32, divisor: i32) -> i32 {
+  if value < divisor { return value; }
+  return remainder(value - divisor, divisor);
+}
+
+fn decimal_pair(value: i32) -> string {
+  return string_concat(ascii_character(48 + value / 10), ascii_character(48 + value % 10));
+}
+
+fn decode_data(modules: Array<i32>, start: i32, end: i32, code_set: i32, checksum: i32, weight: i32, result: string) -> string {
+  if start >= end {
+    let check: i32 = decode_symbol(modules, start, 0);
+    if check != remainder(checksum, 103) { return ""; }
+    return result;
+  }
+
+  let symbol: i32 = decode_symbol(modules, start, 0);
+  if symbol < 0 { return ""; }
+  let next_checksum: i32 = checksum + symbol * weight;
+  if code_set == 100 {
+    if symbol == 99 {
+      return decode_data(modules, start + 11, end, 99, next_checksum, weight + 1, result);
+    }
+    if symbol == 102 { return decode_data(modules, start + 11, end, code_set, next_checksum, weight + 1, result); }
+    if symbol > 95 { return ""; }
+    return decode_data(
+      modules,
+      start + 11,
+      end,
+      code_set,
+      next_checksum,
+      weight + 1,
+      string_concat(result, ascii_character(symbol + 32)),
+    );
+  }
+
+  if symbol == 100 {
+    return decode_data(modules, start + 11, end, 100, next_checksum, weight + 1, result);
+  }
+  if symbol == 102 { return decode_data(modules, start + 11, end, code_set, next_checksum, weight + 1, result); }
+  if symbol > 99 { return ""; }
+  return decode_data(
+    modules,
+    start + 11,
+    end,
+    code_set,
+    next_checksum,
+    weight + 1,
+    string_concat(result, decimal_pair(symbol)),
+  );
+}
+
+fn decode_code128_frame(modules: Array<i32>) -> string {
+  let length: i32 = modules.length();
+  if length < 35 { return ""; }
+  let symbol_region_length: i32 = length - 13;
+  if symbol_region_length % 11 != 0 { return ""; }
+  if !valid_modules(modules, 0) { return ""; }
+  if module_mask_from_array(modules, length - 13, length, 0) != module_mask(render_symbol(106), 0, 13, 0) { return ""; }
+
+  let start: i32 = decode_symbol(modules, 0, 0);
+  if start != 104 && start != 105 { return ""; }
+  let data_end: i32 = length - 24;
+  let code_set: i32 = 100;
+  if start == 105 { code_set = 99; }
+  return decode_data(modules, 11, data_end, code_set, start, 1, "");
+}
+
+export fn decode_code128(modules: Array<i32>) -> string {
+  return decode_code128_frame(modules);
+}
+
+export fn decode_gs1_128(modules: Array<i32>) -> string {
+  return decode_code128_frame(modules);
+}

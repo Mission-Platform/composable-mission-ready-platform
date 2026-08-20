@@ -1,0 +1,307 @@
+export fn region_is(region: string, expected: string) -> bool {
+  if string_length(region) != 2 { return false; }
+  return string_starts_with(region, expected);
+}
+
+export fn country_code_for_region(region: string) -> i32 {
+  if region_is(region, "US") || region_is(region, "CA") { return 1; }
+  if region_is(region, "GB") { return 44; }
+  if region_is(region, "FR") { return 33; }
+  if region_is(region, "DE") { return 49; }
+  if region_is(region, "AU") { return 61; }
+  if region_is(region, "IN") { return 91; }
+  if region_is(region, "JP") { return 81; }
+  if region_is(region, "BR") { return 55; }
+  if region_is(region, "CN") { return 86; }
+  if region_is(region, "RU") { return 7; }
+  return 0;
+}
+
+export fn region_for_country_code(code: i32) -> string {
+  if code == 1 { return "US"; }
+  if code == 44 { return "GB"; }
+  if code == 33 { return "FR"; }
+  if code == 49 { return "DE"; }
+  if code == 61 { return "AU"; }
+  if code == 91 { return "IN"; }
+  if code == 81 { return "JP"; }
+  if code == 55 { return "BR"; }
+  if code == 86 { return "CN"; }
+  if code == 7 { return "RU"; }
+  return "";
+}
+
+export fn national_prefix(region: string) -> string {
+  if region_is(region, "US") || region_is(region, "CA") { return "1"; }
+  if region_is(region, "RU") { return "8"; }
+  if country_code_for_region(region) != 0 { return "0"; }
+  return "";
+}
+
+export fn digits_only(input: string) -> string {
+  let result: string = "";
+  let index: i32 = 0;
+  while index < string_length(input) {
+    let value: i32 = string_byte_at(input, index);
+    if value >= 48 && value <= 57 {
+      result = string_concat(result, string_slice(input, index, index + 1));
+    }
+    index = index + 1;
+  }
+  return result;
+}
+
+export fn has_plus(input: string) -> bool {
+  let index: i32 = 0;
+  while index < string_length(input) {
+    let value: i32 = string_byte_at(input, index);
+    if value == 43 { return true; }
+    if value >= 48 && value <= 57 { return false; }
+    index = index + 1;
+  }
+  return false;
+}
+
+export fn code_length(code: i32) -> i32 {
+  if code >= 100 { return 3; }
+  if code >= 10 { return 2; }
+  return 1;
+}
+
+export fn international_code(digits: string) -> i32 {
+  let length: i32 = string_length(digits);
+  if length > 2 {
+    let code: i32 = string_to_i32(string_slice(digits, 0, 3));
+    if string_length(region_for_country_code(code)) != 0 { return code; }
+  }
+  if length > 1 {
+    let code: i32 = string_to_i32(string_slice(digits, 0, 2));
+    if string_length(region_for_country_code(code)) != 0 { return code; }
+  }
+  if length > 0 {
+    let code: i32 = string_to_i32(string_slice(digits, 0, 1));
+    if string_length(region_for_country_code(code)) != 0 { return code; }
+  }
+  return 0;
+}
+
+export fn is_international(input: string, digits: string) -> bool {
+  if has_plus(input) { return true; }
+  return string_starts_with(digits, "00") || string_starts_with(digits, "011");
+}
+
+export fn international_digits(input: string, digits: string) -> string {
+  if has_plus(input) { return digits; }
+  if string_starts_with(digits, "011") { return string_slice(digits, 3, string_length(digits)); }
+  if string_starts_with(digits, "00") { return string_slice(digits, 2, string_length(digits)); }
+  return digits;
+}
+
+export fn possible_length(region: string, length: i32) -> bool {
+  if region_is(region, "US") || region_is(region, "CA") { return length == 10; }
+  if region_is(region, "GB") { return length == 9 || length == 10; }
+  if region_is(region, "FR") { return length == 9; }
+  if region_is(region, "DE") { return length >= 7 && length <= 11; }
+  if region_is(region, "AU") { return length == 9; }
+  if region_is(region, "IN") { return length == 10; }
+  if region_is(region, "JP") { return length == 9 || length == 10; }
+  if region_is(region, "BR") { return length == 10 || length == 11; }
+  if region_is(region, "CN") { return length == 11; }
+  if region_is(region, "RU") { return length == 10; }
+  return false;
+}
+
+export fn strip_prefix(digits: string, region: string) -> string {
+  let prefix: string = national_prefix(region);
+  if string_length(prefix) == 0 || !string_starts_with(digits, prefix) { return digits; }
+  let stripped: string = string_slice(digits, string_length(prefix), string_length(digits));
+  if possible_length(region, string_length(stripped)) { return stripped; }
+  return digits;
+}
+
+export fn parsed_region(input: string, default_region: string) -> string {
+  let digits: string = digits_only(input);
+  if string_length(digits) == 0 { return ""; }
+  if is_international(input, digits) {
+    return region_for_country_code(international_code(international_digits(input, digits)));
+  }
+  if country_code_for_region(default_region) == 0 { return ""; }
+  return default_region;
+}
+
+export fn parsed_code(input: string, default_region: string) -> i32 {
+  let digits: string = digits_only(input);
+  if string_length(digits) == 0 { return 0; }
+  if is_international(input, digits) { return international_code(international_digits(input, digits)); }
+  return country_code_for_region(default_region);
+}
+
+export fn parsed_nsn(input: string, default_region: string) -> string {
+  let digits: string = digits_only(input);
+  if string_length(digits) == 0 { return ""; }
+  if is_international(input, digits) {
+    let rest: string = international_digits(input, digits);
+    let code: i32 = international_code(rest);
+    if code == 0 { return ""; }
+    return string_slice(rest, code_length(code), string_length(rest));
+  }
+  if country_code_for_region(default_region) == 0 { return ""; }
+  return strip_prefix(digits, default_region);
+}
+
+export fn valid_region_number(input: string, region: string) -> bool {
+  let parsed: string = parsed_region(input, region);
+  return region_is(parsed, region) && possible_length(region, string_length(parsed_nsn(input, region)));
+}
+
+export fn starts_any(value: string, first: string, second: string, third: string, fourth: string, fifth: string) -> bool {
+  if string_length(first) != 0 && string_starts_with(value, first) { return true; }
+  if string_length(second) != 0 && string_starts_with(value, second) { return true; }
+  if string_length(third) != 0 && string_starts_with(value, third) { return true; }
+  if string_length(fourth) != 0 && string_starts_with(value, fourth) { return true; }
+  if string_length(fifth) != 0 && string_starts_with(value, fifth) { return true; }
+  return false;
+}
+
+export fn number_type_for(input: string, region: string) -> i32 {
+  let parsed: string = parsed_region(input, region);
+  let nsn: string = parsed_nsn(input, region);
+  if string_length(parsed) == 0 || !possible_length(parsed, string_length(nsn)) { return -1; }
+  if region_is(parsed, "US") || region_is(parsed, "CA") { return 2; }
+  if region_is(parsed, "GB") {
+    if starts_any(nsn, "7", "", "", "", "") { return 1; }
+    if starts_any(nsn, "1", "2", "3", "8", "") { return 0; }
+    return -1;
+  }
+  if region_is(parsed, "FR") {
+    if starts_any(nsn, "6", "7", "", "", "") { return 1; }
+    if starts_any(nsn, "1", "2", "3", "4", "") { return 0; }
+    return -1;
+  }
+  if region_is(parsed, "DE") { if starts_any(nsn, "15", "16", "17", "", "") { return 1; } return 0; }
+  if region_is(parsed, "AU") {
+    if starts_any(nsn, "4", "", "", "", "") { return 1; }
+    if starts_any(nsn, "2", "3", "7", "8", "") { return 0; }
+    return -1;
+  }
+  if region_is(parsed, "IN") { if starts_any(nsn, "6", "7", "8", "9", "") { return 1; } return 0; }
+  if region_is(parsed, "JP") {
+    if starts_any(nsn, "70", "80", "90", "", "") { return 1; }
+    if starts_any(nsn, "3", "6", "", "", "") { return 0; }
+    return -1;
+  }
+  if region_is(parsed, "BR") { if starts_any(nsn, "6", "7", "8", "9", "") { return 1; } return 0; }
+  if region_is(parsed, "CN") { if starts_any(nsn, "1", "", "", "", "") { return 1; } return 0; }
+  if region_is(parsed, "RU") {
+    if starts_any(nsn, "9", "", "", "", "") { return 1; }
+    if starts_any(nsn, "3", "4", "8", "", "") { return 0; }
+    return -1;
+  }
+  return -1;
+}
+
+export fn group_digits(digits: string, first: i32, second: i32, third: i32, fourth: i32) -> string {
+  let length: i32 = string_length(digits);
+  let result: string = "";
+  let index: i32 = 0;
+  if length > index { result = string_slice(digits, index, index + first); index = index + first; }
+  if second > 0 && index < length { result = string_concat(result, string_concat(" ", string_slice(digits, index, index + second))); index = index + second; }
+  if third > 0 && index < length { result = string_concat(result, string_concat(" ", string_slice(digits, index, index + third))); index = index + third; }
+  if fourth > 0 && index < length { result = string_concat(result, string_concat(" ", string_slice(digits, index, index + fourth))); index = index + fourth; }
+  if index < length { result = string_concat(result, string_concat(" ", string_slice(digits, index, length))); }
+  return result;
+}
+
+export fn grouped(region: string, nsn: string) -> string {
+  if region_is(region, "US") || region_is(region, "CA") { return group_digits(nsn, 3, 3, 4, 0); }
+  if region_is(region, "GB") { return group_digits(nsn, 4, 6, 0, 0); }
+  if region_is(region, "FR") { return group_digits(nsn, 1, 2, 2, 2); }
+  if region_is(region, "DE") { return group_digits(nsn, 4, 7, 0, 0); }
+  if region_is(region, "AU") { return group_digits(nsn, 1, 4, 4, 0); }
+  if region_is(region, "IN") { return group_digits(nsn, 5, 5, 0, 0); }
+  if region_is(region, "JP") { return group_digits(nsn, 2, 4, 4, 0); }
+  if region_is(region, "BR") { return group_digits(nsn, 2, 5, 4, 0); }
+  if region_is(region, "CN") { return group_digits(nsn, 3, 4, 4, 0); }
+  if region_is(region, "RU") { return group_digits(nsn, 3, 3, 2, 2); }
+  return nsn;
+}
+
+export fn getCountryCodeForRegion(region: string) -> i32 { return country_code_for_region(region); }
+export fn getRegionCodeForCountryCode(code: i32) -> string { return region_for_country_code(code); }
+export fn getRegionCodeForNumber(input: string, default_region: string) -> string { return parsed_region(input, default_region); }
+export fn getNationalSignificantNumber(input: string, default_region: string) -> string { return parsed_nsn(input, default_region); }
+export fn isPossibleNumber(input: string, default_region: string) -> bool {
+  let region: string = parsed_region(input, default_region);
+  return string_length(region) != 0 && possible_length(region, string_length(parsed_nsn(input, default_region)));
+}
+export fn isValidNumber(input: string, default_region: string) -> bool { return number_type_for(input, default_region) != -1; }
+export fn isValidNumberForRegion(input: string, region: string) -> bool { return valid_region_number(input, region) && number_type_for(input, region) != -1; }
+export fn getNumberType(input: string, default_region: string) -> i32 { return number_type_for(input, default_region); }
+export fn getSupportedRegions() -> string { return "US,CA,GB,FR,DE,AU,IN,JP,BR,CN,RU"; }
+
+export fn getExampleNumber(region: string) -> string {
+  if region_is(region, "US") { return "+12015550123"; }
+  if region_is(region, "CA") { return "+15062345678"; }
+  if region_is(region, "GB") { return "+447400123456"; }
+  if region_is(region, "FR") { return "+33612345678"; }
+  if region_is(region, "DE") { return "+491512345678"; }
+  if region_is(region, "AU") { return "+61412345678"; }
+  if region_is(region, "IN") { return "+918123456789"; }
+  if region_is(region, "JP") { return "+819012345678"; }
+  if region_is(region, "BR") { return "+551123456789"; }
+  if region_is(region, "CN") { return "+8613123456789"; }
+  if region_is(region, "RU") { return "+791234567890"; }
+  return "";
+}
+
+export fn format(input: string, default_region: string, fmt: i32) -> string {
+  let region: string = parsed_region(input, default_region);
+  let nsn: string = parsed_nsn(input, default_region);
+  let code: i32 = parsed_code(input, default_region);
+  if string_length(region) == 0 || code == 0 { return ""; }
+  let e164: string = "";
+  if code == 1 { e164 = string_concat("+1", nsn); }
+  if code == 44 { e164 = string_concat("+44", nsn); }
+  if code == 33 { e164 = string_concat("+33", nsn); }
+  if code == 49 { e164 = string_concat("+49", nsn); }
+  if code == 61 { e164 = string_concat("+61", nsn); }
+  if code == 91 { e164 = string_concat("+91", nsn); }
+  if code == 81 { e164 = string_concat("+81", nsn); }
+  if code == 55 { e164 = string_concat("+55", nsn); }
+  if code == 86 { e164 = string_concat("+86", nsn); }
+  if code == 7 { e164 = string_concat("+7", nsn); }
+  if fmt == 0 { return e164; }
+  if fmt == 3 { return string_concat("tel:", e164); }
+  if fmt == 1 {
+    if code == 1 { return string_concat("+1 ", grouped(region, nsn)); }
+    if code == 44 { return string_concat("+44 ", grouped(region, nsn)); }
+    if code == 33 { return string_concat("+33 ", grouped(region, nsn)); }
+    if code == 49 { return string_concat("+49 ", grouped(region, nsn)); }
+    if code == 61 { return string_concat("+61 ", grouped(region, nsn)); }
+    if code == 91 { return string_concat("+91 ", grouped(region, nsn)); }
+    if code == 81 { return string_concat("+81 ", grouped(region, nsn)); }
+    if code == 55 { return string_concat("+55 ", grouped(region, nsn)); }
+    if code == 86 { return string_concat("+86 ", grouped(region, nsn)); }
+    return string_concat("+7 ", grouped(region, nsn));
+  }
+  if code == 1 && string_length(nsn) == 10 {
+    return string_concat(string_concat("(", string_concat(string_slice(nsn, 0, 3), ") ")), string_concat(string_slice(nsn, 3, 6), string_concat("-", string_slice(nsn, 6, 10))));
+  }
+  return string_concat(national_prefix(region), grouped(region, nsn));
+}
+
+export fn formatAsYouType(input: string, region: string) -> string {
+  let digits: string = digits_only(input);
+  if string_length(digits) == 0 { return ""; }
+  if has_plus(input) { return string_concat("+", digits); }
+  if region_is(region, "US") || region_is(region, "CA") {
+    if string_length(digits) <= 3 { return digits; }
+    if string_length(digits) <= 6 { return string_concat(string_concat("(", string_slice(digits, 0, 3)), string_concat(") ", string_slice(digits, 3, string_length(digits)))); }
+    return string_concat(string_concat("(", string_concat(string_slice(digits, 0, 3), ") ")), string_concat(string_slice(digits, 3, 6), string_concat("-", string_slice(digits, 6, string_length(digits)))));
+  }
+  let prefix: string = national_prefix(region);
+  let rest: string = digits;
+  if string_length(prefix) != 0 && string_starts_with(rest, prefix) { rest = string_slice(rest, string_length(prefix), string_length(rest)); }
+  if string_length(rest) == 0 { return prefix; }
+  return string_concat(prefix, grouped(region, rest));
+}

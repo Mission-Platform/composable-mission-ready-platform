@@ -1,11 +1,13 @@
 import { resolve } from 'node:path';
 
 import { defineVitestConfig } from '@mission-platform/vite-config/vitest';
+import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
 
 export default defineVitestConfig({
   coverageInclude: ['src/**/*.ts', 'src/**/*.tsx'],
   coverageExclude: ['src/**/*.spec.ts', 'src/test-setup.ts', 'src/test-support/**', 'src/**/*.stories.*'],
   overrides: {
+    plugins: [forgeWebScriptPlugin({ root: import.meta.dirname, requireExports: false })],
     // The neutral `ForgeBarcode` is authored in the `@mission-platform/forge`
     // dialect (the classic `h` factory), so its spec is transformed with that
     // JSX factory rather than React's automatic runtime.

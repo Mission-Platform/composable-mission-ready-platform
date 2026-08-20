@@ -1,10 +1,10 @@
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
-import { assemblyScriptPlugin } from '@mission-platform/vite-plugin-assemblyscript';
+import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
 
 /**
- * Single self-contained ESM bundle: the AssemblyScript core is compiled to
- * wasm and inlined as base64 in `src/generated` before the bundle step, so the
- * module graph is flattened (`unbundle: false`) rather than preserve-modules.
+ * Single self-contained ESM bundle: the Forge Web Script core is compiled to
+ * wasm and inlined by the FWS plugin before the bundle step, so the module
+ * graph is flattened (`unbundle: false`) rather than preserve-modules.
  */
 export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
@@ -15,13 +15,9 @@ export default defineTsdownLibrary({
   dts: true,
   overrides: {
     plugins: [
-      assemblyScriptPlugin({
-        rootDir: import.meta.dirname,
-        entry: 'assembly/index.ts',
-        wasmFile: 'build/phone-number.wasm',
-        outFile: 'src/generated/phone-number.js',
-        emitText: true,
-      }) as never,
+      forgeWebScriptPlugin({
+        root: import.meta.dirname,
+      }),
     ],
   },
 });

@@ -2,9 +2,6 @@ import { describe, expect, it } from 'vitest';
 
 import { encodeMatrix, encodeMatrixAsync, type MatrixCode, type MatrixSymbology } from './index';
 
-// The wasm module is instantiated once in `src/test-setup.ts` (a Vitest
-// `setupFiles` entry) before any spec runs.
-
 /** The grid is `width * height` binary modules. */
 function assertShape(code: MatrixCode, symbology: MatrixSymbology): void {
   expect(code.symbology).toBe(symbology);

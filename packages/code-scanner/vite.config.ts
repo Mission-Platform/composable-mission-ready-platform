@@ -28,8 +28,9 @@ import { defineConfig, type Plugin, type UserConfig } from 'vite';
  *   to native Vue 3 / React by the two-stage compiler in
  *   `@mission-platform/vite-plugin-forge`. These are the package's `./vue` /
  *   `./react` exports. The component consumes the scanner through the package's
- *   own `.` entry (`@mission-platform/code-scanner`, kept external) and reuses
- *   `ForgeButton` / `ForgeTypography` from `@mission-platform/components`.
+ *   own `.` entry (`@mission-platform/code-scanner`, kept external), reuses
+ *   `ForgeButton` from `@mission-platform/components`, and imports
+ *   `ForgeTypography` from `@mission-platform/typography`.
  */
 
 const componentsModule = path.resolve(__dirname, 'src/components/index.ts');

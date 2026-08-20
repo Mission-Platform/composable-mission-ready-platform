@@ -1,0 +1,34 @@
+export fn is_digit_at(value: string, index: i32) -> bool {
+  let code: i32 = string_byte_at(value, index);
+  return code >= 48 && code <= 57;
+}
+
+export fn has_thirteen_digits(value: string) -> bool {
+  return is_digit_at(value, 0) && is_digit_at(value, 1) && is_digit_at(value, 2) && is_digit_at(value, 3) && is_digit_at(value, 4) && is_digit_at(value, 5) && is_digit_at(value, 6) && is_digit_at(value, 7) && is_digit_at(value, 8) && is_digit_at(value, 9) && is_digit_at(value, 10) && is_digit_at(value, 11) && is_digit_at(value, 12);
+}
+
+export fn digit_at(value: string, index: i32) -> i32 {
+  return string_byte_at(value, index) - 48;
+}
+
+export fn check_digit(value: string) -> i32 {
+  let sum: i32 = digit_at(value, 0) * 3 + digit_at(value, 1) + digit_at(value, 2) * 3 + digit_at(value, 3) + digit_at(value, 4) * 3 + digit_at(value, 5) + digit_at(value, 6) * 3 + digit_at(value, 7) + digit_at(value, 8) * 3 + digit_at(value, 9) + digit_at(value, 10) * 3 + digit_at(value, 11) + digit_at(value, 12) * 3;
+  let remainder: i32 = sum % 10;
+  if remainder == 0 { return 0; }
+  if remainder == 1 { return 9; }
+  if remainder == 2 { return 8; }
+  if remainder == 3 { return 7; }
+  if remainder == 4 { return 6; }
+  if remainder == 5 { return 5; }
+  if remainder == 6 { return 4; }
+  if remainder == 7 { return 3; }
+  if remainder == 8 { return 2; }
+  return 1;
+}
+
+export fn validate_databar_gtin(value: string) -> bool {
+  if string_length(value) != 14 { return false; }
+  if !has_thirteen_digits(value) { return false; }
+  if !is_digit_at(value, 13) { return false; }
+  return digit_at(value, 13) == check_digit(value);
+}

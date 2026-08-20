@@ -1,4 +1,2 @@
-// Keep the wrapper packages in the test module graph. Their binaries are now
-// initialized lazily on first operation rather than during import.
-import '@mission-platform/barcode-encode-wasm';
-import '@mission-platform/barcode-decode-wasm';
+// Codec implementations initialize their wasm backends lazily. FWS fixtures
+// do not need to load the legacy wrapper packages during test setup.

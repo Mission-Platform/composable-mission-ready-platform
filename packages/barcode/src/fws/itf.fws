@@ -1,0 +1,198 @@
+// Interleaved 2 of 5 and ITF-14 encoder graph with GTIN check digits.
+
+
+fn pattern(value: i32) -> string {
+  if value == 0 { return "nnwwn"; }
+  if value == 1 { return "wnnnw"; }
+  if value == 2 { return "nwnnw"; }
+  if value == 3 { return "wwnnn"; }
+  if value == 4 { return "nnwnw"; }
+  if value == 5 { return "wnwnn"; }
+  if value == 6 { return "nwwnn"; }
+  if value == 7 { return "nnnww"; }
+  if value == 8 { return "wnnwn"; }
+  return "nwnwn";
+}
+
+fn run(bit: i32, width: i32) -> string {
+  if bit == 1 {
+    if width == 1 { return "1"; }
+    return "111";
+  }
+  if width == 1 { return "0"; }
+  return "000";
+}
+
+fn digit(value: i32) -> string {
+  if value == 0 { return "0"; }
+  if value == 1 { return "1"; }
+  if value == 2 { return "2"; }
+  if value == 3 { return "3"; }
+  if value == 4 { return "4"; }
+  if value == 5 { return "5"; }
+  if value == 6 { return "6"; }
+  if value == 7 { return "7"; }
+  if value == 8 { return "8"; }
+  return "9";
+}
+
+fn check(value: string) -> i32 {
+  let sum: i32 = string_byte_at(value, 0) - 48;
+  let weighted: i32 = sum * 3;
+  let second: i32 = string_byte_at(value, 1) - 48;
+  let third: i32 = string_byte_at(value, 2) - 48;
+  let fourth: i32 = string_byte_at(value, 3) - 48;
+  let fifth: i32 = string_byte_at(value, 4) - 48;
+  let sixth: i32 = string_byte_at(value, 5) - 48;
+  let seventh: i32 = string_byte_at(value, 6) - 48;
+  let eighth: i32 = string_byte_at(value, 7) - 48;
+  let ninth: i32 = string_byte_at(value, 8) - 48;
+  let tenth: i32 = string_byte_at(value, 9) - 48;
+  let eleventh: i32 = string_byte_at(value, 10) - 48;
+  let twelfth: i32 = string_byte_at(value, 11) - 48;
+  let thirteenth: i32 = string_byte_at(value, 12) - 48;
+  weighted = weighted + second + third * 3 + fourth + fifth * 3 + sixth + seventh * 3 + eighth + ninth * 3 + tenth + eleventh * 3 + twelfth + thirteenth * 3;
+  let remainder: i32 = weighted % 10;
+  if remainder == 0 { return 0; }
+  if remainder == 1 { return 9; }
+  if remainder == 2 { return 8; }
+  if remainder == 3 { return 7; }
+  if remainder == 4 { return 6; }
+  if remainder == 5 { return 5; }
+  if remainder == 6 { return 4; }
+  if remainder == 7 { return 3; }
+  if remainder == 8 { return 2; }
+  return 1;
+}
+
+fn render_pair(bars: string, spaces: string, index: i32) -> string {
+  if index >= 5 { return ""; }
+  let bar_width: i32 = 1;
+  if string_byte_at(bars, index) == 119 { bar_width = 3; }
+  let space_width: i32 = 1;
+  if string_byte_at(spaces, index) == 119 { space_width = 3; }
+  return string_concat(string_concat(run(1, bar_width), run(0, space_width)), render_pair(bars, spaces, index + 1));
+}
+
+fn encode_digits(value: string, index: i32, result: string) -> string {
+  if index >= string_length(value) {
+    return string_concat(string_concat(string_concat(result, "111"), "0"), "1");
+  }
+  let first: i32 = string_byte_at(value, index) - 48;
+  let second: i32 = string_byte_at(value, index + 1) - 48;
+  let pair: string = render_pair(pattern(first), pattern(second), 0);
+  return encode_digits(value, index + 2, string_concat(result, pair));
+}
+
+fn all_digits(value: string, index: i32) -> bool {
+  if index >= string_length(value) { return true; }
+  let code: i32 = string_byte_at(value, index);
+  if code < 48 || code > 57 { return false; }
+  return all_digits(value, index + 1);
+}
+
+export fn encode_itf(value: string) -> string {
+  let length: i32 = string_length(value);
+  if length == 0 || length % 2 != 0 { return ""; }
+  if !all_digits(value, 0) { return ""; }
+  return encode_digits(value, 0, "1010");
+}
+
+export fn encode_itf14(value: string) -> string {
+  let length: i32 = string_length(value);
+  if length != 13 && length != 14 { return ""; }
+  if !all_digits(value, 0) { return ""; }
+  let normalized: string = value;
+  if length == 13 { normalized = string_concat(value, digit(check(value))); }
+  if string_byte_at(normalized, 13) != 48 + check(string_slice(normalized, 0, 13)) { return ""; }
+  return encode_digits(normalized, 0, "1010");
+}
+
+fn valid_bits(modules: Array<i32>, index: i32) -> bool {
+  if index >= modules.length() { return true; }
+  let bit: i32 = modules[index];
+  if bit != 0 && bit != 1 { return false; }
+  return valid_bits(modules, index + 1);
+}
+
+fn run_length(modules: Array<i32>, start: i32, bit: i32, length: i32) -> i32 {
+  if start + length >= modules.length() { return length; }
+  if modules[start + length] != bit { return length; }
+  return run_length(modules, start, bit, length + 1);
+}
+
+fn narrowest_run(modules: Array<i32>, index: i32, current: i32) -> i32 {
+  if index >= modules.length() { return current; }
+  let width: i32 = run_length(modules, index, modules[index], 0);
+  let next: i32 = current;
+  if current == 0 || width < current { next = width; }
+  return narrowest_run(modules, index + width, next);
+}
+
+fn classify_runs(modules: Array<i32>, index: i32, narrow: i32, result: string) -> string {
+  if index >= modules.length() { return result; }
+  let width: i32 = run_length(modules, index, modules[index], 0);
+  let marker: string = "n";
+  if width >= narrow * 2 { marker = "w"; }
+  return classify_runs(modules, index + width, narrow, string_concat(result, marker));
+}
+
+fn pattern_matches(value: string, expected: string) -> bool {
+  return string_byte_at(value, 0) == string_byte_at(expected, 0) && string_byte_at(value, 1) == string_byte_at(expected, 1) && string_byte_at(value, 2) == string_byte_at(expected, 2) && string_byte_at(value, 3) == string_byte_at(expected, 3) && string_byte_at(value, 4) == string_byte_at(expected, 4);
+}
+
+fn digit_for_pattern(value: string) -> string {
+  if pattern_matches(value, "nnwwn") { return "0"; }
+  if pattern_matches(value, "wnnnw") { return "1"; }
+  if pattern_matches(value, "nwnnw") { return "2"; }
+  if pattern_matches(value, "wwnnn") { return "3"; }
+  if pattern_matches(value, "nnwnw") { return "4"; }
+  if pattern_matches(value, "wnwnn") { return "5"; }
+  if pattern_matches(value, "nwwnn") { return "6"; }
+  if pattern_matches(value, "nnnww") { return "7"; }
+  if pattern_matches(value, "wnnwn") { return "8"; }
+  if pattern_matches(value, "nwnwn") { return "9"; }
+  return "";
+}
+
+fn pattern_at(value: string, start: i32, step: i32, index: i32, result: string) -> string {
+  if index >= 5 { return result; }
+  let offset: i32 = start + index * step;
+  return pattern_at(value, start, step, index + 1, string_concat(result, string_slice(value, offset, offset + 1)));
+}
+
+fn decode_pairs(value: string, index: i32, end: i32, result: string) -> string {
+  if index >= end { return result; }
+  let bars: string = pattern_at(value, index, 2, 0, "");
+  let spaces: string = pattern_at(value, index + 1, 2, 0, "");
+  let first: string = digit_for_pattern(bars);
+  let second: string = digit_for_pattern(spaces);
+  if string_length(first) == 0 || string_length(second) == 0 { return ""; }
+  return decode_pairs(value, index + 10, end, string_concat(result, string_concat(first, second)));
+}
+
+fn decode_interleaved(modules: Array<i32>) -> string {
+  let length: i32 = modules.length();
+  if length < 1 || !valid_bits(modules, 0) { return ""; }
+  if modules[0] != 1 || modules[length - 1] != 1 { return ""; }
+  let narrow: i32 = narrowest_run(modules, 0, 0);
+  if narrow <= 0 { return ""; }
+  let elements: string = classify_runs(modules, 0, narrow, "");
+  let element_count: i32 = string_length(elements);
+  let body_count: i32 = element_count - 7;
+  if element_count < 17 || body_count % 10 != 0 { return ""; }
+  if string_byte_at(elements, 0) != 110 || string_byte_at(elements, 1) != 110 || string_byte_at(elements, 2) != 110 || string_byte_at(elements, 3) != 110 { return ""; }
+  let stop: i32 = element_count - 3;
+  if string_byte_at(elements, stop) != 119 || string_byte_at(elements, stop + 1) != 110 || string_byte_at(elements, stop + 2) != 110 { return ""; }
+  let result: string = decode_pairs(elements, 4, stop, "");
+  if string_length(result) < 6 { return ""; }
+  return result;
+}
+
+export fn decode_itf(modules: Array<i32>) -> string {
+  return decode_interleaved(modules);
+}
+
+export fn decode_itf14(modules: Array<i32>) -> string {
+  return decode_interleaved(modules);
+}

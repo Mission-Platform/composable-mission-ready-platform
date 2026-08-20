@@ -2,7 +2,7 @@
   "name": "@mission-platform/phone-number",
   "version": "0.3.1",
   "license": "BSD-4-Clause",
-  "description": "Google libphonenumber core (parse, validate, format) reimplemented in AssemblyScript and compiled to WebAssembly, with a typed ES module wrapper",
+  "description": "Google libphonenumber core (parse, validate, format) reimplemented in Forge Web Script and compiled to WebAssembly, with a typed ES module wrapper",
   "type": "module",
   "sideEffects": false,
   "exports": {
@@ -28,6 +28,9 @@
     "format": "prettier --check .",
     "format:write": "prettier --write ."
   },
+  "dependencies": {
+    "@mission-platform/forge-web-script-regex": "workspace:*"
+  },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/i18n-config": "workspace:*",
@@ -35,7 +38,7 @@
     "@mission-platform/tsdown-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
-    "@mission-platform/vite-plugin-assemblyscript": "workspace:*",
+    "@mission-platform/vite-plugin-forge-web-script": "workspace:*",
     "@types/node": "catalog:typescript",
     "@vitest/coverage-v8": "catalog:testing",
     "eslint": "catalog:eslint",

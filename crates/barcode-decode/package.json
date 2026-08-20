@@ -2,10 +2,9 @@
   "name": "@mission-platform/barcode-decode-crate",
   "version": "0.1.1",
   "private": true,
-  "description": "Rust crate build for barcode-decode (wasm-pack → packages/barcode-decode-wasm)",
+  "description": "Rust barcode decoder crate used by the code scanner and native tests",
   "license": "BSD-4-Clause",
   "scripts": {
-    "build": "wasm-pack build . --target bundler --release --weak-refs --reference-types --no-pack --out-dir ../../packages/barcode-decode-wasm/src/wasm --out-name barcode-decode",
     "test": "wasm-pack test --node ."
   },
   "devDependencies": {

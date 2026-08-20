@@ -71,8 +71,8 @@
     "@mission-platform/components": "workspace:*",
     "@mission-platform/forge": "workspace:*",
     "@mission-platform/icons": "workspace:*",
-    "@mission-platform/matrix-code-decode-wasm": "workspace:*",
-    "@mission-platform/matrix-code-encode-wasm": "workspace:*"
+    "@mission-platform/typography": "workspace:*",
+    "@mission-platform/matrix-code-decode-wasm": "workspace:*"
   },
   "peerDependencies": {
     "lit": "^3.0.0",
@@ -112,6 +112,7 @@
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@mission-platform/vite-plugin-forge": "workspace:*",
+    "@mission-platform/vite-plugin-forge-web-script": "workspace:*",
     "@mission-platform/forge-plugin-react": "workspace:*",
     "@mission-platform/forge-plugin-solid": "workspace:*",
     "@mission-platform/forge-plugin-svelte": "workspace:*",

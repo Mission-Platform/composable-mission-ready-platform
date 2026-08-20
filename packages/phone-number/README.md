@@ -2,29 +2,23 @@
 
 A focused reimplementation of the core of Google
 [libphonenumber](https://github.com/google/libphonenumber) — **parse, validate, classify and format** international
-phone numbers — written in
-[AssemblyScript](https://www.assemblyscript.org/) and compiled to **WebAssembly**, wrapped in a typed ES module.
+phone numbers — written in Forge Web Script and compiled to **WebAssembly**, wrapped in a typed ES module.
 
 ---
 
 ## How it works
 
 ```
-assembly/                  ← AssemblyScript source (compiled to wasm)
-  metadata.ts              ← curated per-region metadata (calling codes, lengths, ranges, formats)
-  index.ts                 ← parse / validate / classify / format logic
-vite.config.ts             ← wires in @mission-platform/vite-plugin-assemblyscript
-src/generated/             ← self-contained wasm module (.js @generated; .d.ts maintained contract)
+src/phone-number.fws       ← Forge Web Script parse / validate / classify / format logic
+src/phone-number.fws.d.ts  ← typed pointer-length ABI contract
 src/index.ts               ← typed `PhoneNumberUtil` façade over the wasm exports
-build/                     ← intermediate asc output (phone-number.wasm / .wat)
 dist/                      ← built artifact (wasm inlined as base64)
 ```
 
-The AssemblyScript core is compiled to a `.wasm` binary **by Vite** (via the
-`@mission-platform/vite-plugin-assemblyscript` plugin), which is then **inlined as base64** into a single self-contained
-JS module (mirroring
-`@mission-platform/hunspell`). This avoids any `.wasm` URL resolution in bundlers or Web Workers and keeps the package
-free of runtime dependencies.
+The Forge Web Script core is compiled to a `.wasm` binary by
+`@mission-platform/vite-plugin-forge-web-script`, then **inlined as base64** into the bundled ES module. The TypeScript
+façade owns the FWS pointer-length UTF-8 boundary, so consumers continue to use ordinary strings and booleans without
+touching the raw WebAssembly ABI.
 
 ---
 
@@ -58,9 +52,8 @@ already in international form (`+…`, `00…` or
 
 ### Synchronous usage
 
-When an `await` boundary is impractical (e.g. rendering a component), obtain the instance synchronously — the inlined
-wasm is compiled with the synchronous
-`WebAssembly` constructors:
+When an `await` boundary is impractical (e.g. rendering a component), obtain the instance synchronously — the embedded
+FWS wasm bytes are instantiated with the synchronous `WebAssembly` constructors:
 
 ```ts
 import { getPhoneNumberUtilSync } from '@mission-platform/phone-number';
@@ -95,16 +88,12 @@ util.isValidNumberForRegion('(415) 555-2671', 'US'); // true
 
 ## Building
 
-AssemblyScript is compiled **by Vite** — the
-`@mission-platform/vite-plugin-assemblyscript` plugin runs the AssemblyScript compiler in the Vite `buildStart` hook and
-regenerates `src/generated`. No Docker or native toolchain is required.
+Forge Web Script is compiled during the bundle step by
+`@mission-platform/vite-plugin-forge-web-script`. No Docker or native toolchain is required.
 
 ```bash
-# Full build (asc → wasm via Vite + typecheck + bundle + declarations):
+# Full build (FWS → wasm + typecheck + bundle + declarations):
 pnpm --filter @mission-platform/phone-number build
-
-# Just run Vite (recompiles AssemblyScript and regenerates src/generated):
-pnpm --filter @mission-platform/phone-number exec vite build
 ```
 
 ---
@@ -113,33 +102,32 @@ pnpm --filter @mission-platform/phone-number exec vite build
 
 Google's libphonenumber ships exhaustive, machine-generated metadata for every ITU region. This port encodes a
 **curated, hand-verified subset** of regions (US, CA, GB, FR, DE, AU, IN, JP, BR, CN, RU) and implements the core
-operations without relying on regular expressions (unavailable in AssemblyScript). Validation is length- and
+operations without relying on regular expressions. Validation is length- and
 leading-digit based, and formatting uses per-region grouping rules — plausible approximations rather than byte-for-byte
-parity with upstream. Additional regions can be added in `assembly/metadata.ts`.
+parity with upstream. Additional regions can be added in `src/phone-number.fws`.
 
 ---
 
 ## Regex precompilation engine (toward full upstream parity)
 
 Google's libphonenumber drives validation, number-type classification and formatting almost entirely with JavaScript
-`RegExp` applied to per-region patterns in its metadata. AssemblyScript has **no native `RegExp`**, so full parity uses
-a **precompile-patterns** approach: patterns are compiled ahead of time into compact, flat `i32` bytecode, and a tiny
-backtracking VM executes that bytecode at runtime — keeping the wasm core regex-free.
+`RegExp` applied to per-region patterns in its metadata. Forge Web Script uses a **precompile-patterns** approach for
+full parity: patterns are compiled ahead of time into compact, flat `i32` bytecode, and a tiny backtracking VM executes
+that bytecode at runtime — keeping the wasm core regex-free.
 
 ```
-src/regex/bytecode.ts        ← shared opcode / program contract
-src/regex/compiler.ts        ← build-time regex → bytecode compiler
-src/regex/reference-vm.ts    ← TypeScript reference VM (full/prefix/search + captures)
-assembly/regex.ts            ← the same VM in AssemblyScript (runs inside wasm)
-src/metadata/pattern-corpus.ts ← captured upstream pattern corpus (TypeScript data, for diff-testing)
+@mission-platform/forge-web-script-regex  ← shared Forge bytecode contract/compiler
+  /reference                            ← TypeScript oracle (tests only)
+src/phone-number.fws                     ← current Forge Web Script runtime entry point
+src/metadata/pattern-corpus.ts          ← captured upstream pattern corpus (diff-testing)
 ```
 
 Supported syntax (the subset used by the metadata): literals, `.`, character classes with ranges/negation,
 `\d \D \w \W \s \S`, capturing and `(?:)` groups, alternation, the quantifiers `* + ?` and `{n} {n,} {n,m}`
 (greedy/lazy), and the
-`^`/`$` anchors. The compiler and both VMs are validated against the **entire upstream pattern corpus** (500+ patterns)
-and diff-tested against the native engine and each other. The corpus is captured directly in
-`src/metadata/pattern-corpus.ts` (no vendored upstream sources are required).
+`^`/`$` anchors. The shared compiler and reference oracle are validated against the **entire upstream pattern corpus**
+(500+ patterns) and the native engine. The corpus is captured directly in `src/metadata/pattern-corpus.ts` (no vendored
+upstream sources are required).
 
 ### Roadmap
 

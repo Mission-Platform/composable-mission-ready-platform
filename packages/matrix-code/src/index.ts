@@ -2,13 +2,11 @@
 //
 // The typed encoder façade lives under `./encoder` and the decoder façade under
 // `./decoder`; both are re-exported here so the package root exposes a flat API.
-// The encoder and decoder are compiled from separate Rust crates
-// (`crates/matrix-code-encode` / `crates/matrix-code-decode`, sharing
-// `crates/matrix-code-common`) into two wasm modules under `generated/encode`
-// and `generated/decode`. The per-feature `component/` sibling (a write-once
-// `ForgeMatrixCode`) is added in a follow-up and re-exported here when present.
+// The encoder and decoder use separate Forge Web Script artifacts with typed
+// adapters. The per-feature `component/` sibling (a write-once `ForgeMatrixCode`)
+// is added in a follow-up and re-exported here when present.
 export { type MatrixCode, type MatrixSymbology, encodeMatrix, encodeMatrixAsync } from './encoder';
-export { decodeMatrix, decodeMatrixAsync } from './decoder';
+export { decodeMatrix, decodeMatrixAsync, decodeMatrixAsyncWithErasures, decodeMatrixWithErasures } from './decoder';
 export {
   ForgeMatrixCode,
   type MatrixCodeActions,

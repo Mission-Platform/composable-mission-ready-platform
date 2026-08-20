@@ -1,0 +1,442 @@
+// Code 93 standard and full-ASCII encoder graph with weighted check symbols.
+
+fn letter(value: i32) -> string {
+  if value == 0 { return "A"; }
+  if value == 1 { return "B"; }
+  if value == 2 { return "C"; }
+  if value == 3 { return "D"; }
+  if value == 4 { return "E"; }
+  if value == 5 { return "F"; }
+  if value == 6 { return "G"; }
+  if value == 7 { return "H"; }
+  if value == 8 { return "I"; }
+  if value == 9 { return "J"; }
+  if value == 10 { return "K"; }
+  if value == 11 { return "L"; }
+  if value == 12 { return "M"; }
+  if value == 13 { return "N"; }
+  if value == 14 { return "O"; }
+  if value == 15 { return "P"; }
+  if value == 16 { return "Q"; }
+  if value == 17 { return "R"; }
+  if value == 18 { return "S"; }
+  if value == 19 { return "T"; }
+  if value == 20 { return "U"; }
+  if value == 21 { return "V"; }
+  if value == 22 { return "W"; }
+  if value == 23 { return "X"; }
+  if value == 24 { return "Y"; }
+  return "Z";
+}
+
+fn digit(value: i32) -> string {
+  if value == 0 { return "0"; }
+  if value == 1 { return "1"; }
+  if value == 2 { return "2"; }
+  if value == 3 { return "3"; }
+  if value == 4 { return "4"; }
+  if value == 5 { return "5"; }
+  if value == 6 { return "6"; }
+  if value == 7 { return "7"; }
+  if value == 8 { return "8"; }
+  return "9";
+}
+
+fn character_for_value(value: i32) -> string {
+  if value >= 0 && value <= 9 { return digit(value); }
+  if value >= 10 && value <= 35 { return letter(value - 10); }
+  if value == 36 { return "-"; }
+  if value == 37 { return "."; }
+  if value == 38 { return " "; }
+  if value == 39 { return "$"; }
+  if value == 40 { return "/"; }
+  if value == 41 { return "+"; }
+  if value == 42 { return "%"; }
+  return "";
+}
+
+fn extended_sequence(value: i32) -> string {
+  if value == 0 { return "%U"; }
+  if value >= 1 && value <= 26 { return string_concat("$", letter(value - 1)); }
+  if value >= 27 && value <= 31 { return string_concat("%", letter(value - 27)); }
+  if value == 32 { return " "; }
+  if value >= 33 && value <= 44 { return string_concat("/", letter(value - 33)); }
+  if value == 45 { return "-"; }
+  if value == 46 { return "."; }
+  if value == 47 { return "/O"; }
+  if value >= 48 && value <= 57 { return digit(value - 48); }
+  if value == 58 { return "/Z"; }
+  if value >= 59 && value <= 63 { return string_concat("%", letter(value - 54)); }
+  if value == 64 { return "%V"; }
+  if value >= 65 && value <= 90 { return letter(value - 65); }
+  if value >= 91 && value <= 95 { return string_concat("%", letter(value - 81)); }
+  if value == 96 { return "%W"; }
+  if value >= 97 && value <= 122 { return string_concat("+", letter(value - 97)); }
+  if value >= 123 && value <= 127 { return string_concat("%", letter(value - 108)); }
+  return "";
+}
+
+fn uppercase(value: i32) -> i32 {
+  if value >= 97 && value <= 122 { return value - 32; }
+  return value;
+}
+
+fn standard_sequence(value: string, index: i32, result: string) -> string {
+  if index >= string_length(value) { return result; }
+  let code: i32 = uppercase(string_byte_at(value, index));
+  let symbol: string = character_for_value(base_value(code));
+  if string_length(symbol) == 0 { return ""; }
+  return standard_sequence(value, index + 1, string_concat(result, symbol));
+}
+
+fn extended_sequence_for_value(value: string, index: i32, result: string) -> string {
+  if index >= string_length(value) { return result; }
+  let sequence: string = extended_sequence(string_byte_at(value, index));
+  if string_length(sequence) == 0 { return ""; }
+  return extended_sequence_for_value(value, index + 1, string_concat(result, sequence));
+}
+
+fn remainder(value: i32, divisor: i32) -> i32 {
+  if value < divisor { return value; }
+  return remainder(value - divisor, divisor);
+}
+
+fn weighted_sum(value: string, index: i32, max_weight: i32, weight: i32, extended: i32) -> i32 {
+  if index >= string_length(value) { return 0; }
+  let next_weight: i32 = weight - 1;
+  if next_weight < 1 { next_weight = max_weight; }
+  return sequence_value(string_byte_at(value, index), extended) * weight + weighted_sum(value, index + 1, max_weight, next_weight, extended);
+}
+
+fn render_pattern(value: string, index: i32) -> string {
+  if index >= string_length(value) { return ""; }
+  let bit: string = "0";
+  if string_byte_at(value, index) == 49 { bit = "1"; }
+  return string_concat(bit, render_pattern(value, index + 1));
+}
+
+fn append_value(result: string, value: i32) -> string {
+  let value_pattern: string = pattern(value);
+  if string_length(value_pattern) == 0 { return ""; }
+  return string_concat(result, render_pattern(value_pattern, 0));
+}
+
+fn render_values(value: string, index: i32, result: string, check_c: i32, check_k: i32, extended: i32) -> string {
+  if index >= string_length(value) {
+    let with_c: string = append_value(result, check_c);
+    if string_length(with_c) == 0 { return ""; }
+    let with_k: string = append_value(with_c, check_k);
+    if string_length(with_k) == 0 { return ""; }
+    return string_concat(string_concat(with_k, render_pattern("101011110", 0)), "1");
+  }
+  let next: string = append_value(result, sequence_value(string_byte_at(value, index), extended));
+  if string_length(next) == 0 { return ""; }
+  return render_values(value, index + 1, next, check_c, check_k, extended);
+}
+
+fn encode_sequence(value: string, extended: i32) -> string {
+  if string_length(value) == 0 { return ""; }
+  let c_weight: i32 = remainder(string_length(value) - 1, 20) + 1;
+  let k_weight: i32 = remainder(string_length(value), 15) + 1;
+  let check_c: i32 = remainder(weighted_sum(value, 0, 20, c_weight, extended), 47);
+  let check_k: i32 = remainder(weighted_sum(value, 0, 15, k_weight, extended) + check_c, 47);
+  return render_values(value, 0, render_pattern("101011110", 0), check_c, check_k, extended);
+}
+
+export fn encode_code93(value: string) -> string {
+  return encode_sequence(standard_sequence(value, 0, ""), 0);
+}
+
+export fn encode_code93_extended(value: string) -> string {
+  return encode_sequence(extended_sequence_for_value(value, 0, ""), 1);
+}
+
+fn base_value(value: i32) -> i32 {
+  if value >= 48 && value <= 57 { return value - 48; }
+  if value >= 65 && value <= 90 { return value - 55; }
+  if value == 45 { return 36; }
+  if value == 46 { return 37; }
+  if value == 32 { return 38; }
+  if value == 36 { return 39; }
+  if value == 47 { return 40; }
+  if value == 43 { return 41; }
+  if value == 37 { return 42; }
+  return -1;
+}
+
+fn value_for_character(value: i32) -> i32 {
+  if value == 36 { return 43; }
+  if value == 37 { return 44; }
+  if value == 47 { return 45; }
+  if value == 43 { return 46; }
+  return base_value(value);
+}
+
+fn sequence_value(value: i32, extended: i32) -> i32 {
+  if extended == 1 { return value_for_character(value); }
+  return base_value(value);
+}
+
+
+fn pattern(value: i32) -> string {
+  if value == 0 { return "100010100"; }
+  if value == 1 { return "101001000"; }
+  if value == 2 { return "101000100"; }
+  if value == 3 { return "101000010"; }
+  if value == 4 { return "100101000"; }
+  if value == 5 { return "100100100"; }
+  if value == 6 { return "100100010"; }
+  if value == 7 { return "101010000"; }
+  if value == 8 { return "100010010"; }
+  if value == 9 { return "100001010"; }
+  if value == 10 { return "110101000"; }
+  if value == 11 { return "110100100"; }
+  if value == 12 { return "110100010"; }
+  if value == 13 { return "110010100"; }
+  if value == 14 { return "110010010"; }
+  if value == 15 { return "110001010"; }
+  if value == 16 { return "101101000"; }
+  if value == 17 { return "101100100"; }
+  if value == 18 { return "101100010"; }
+  if value == 19 { return "100110100"; }
+  if value == 20 { return "100011010"; }
+  if value == 21 { return "101011000"; }
+  if value == 22 { return "101001100"; }
+  if value == 23 { return "101000110"; }
+  if value == 24 { return "100101100"; }
+  if value == 25 { return "100010110"; }
+  if value == 26 { return "110110100"; }
+  if value == 27 { return "110110010"; }
+  if value == 28 { return "110101100"; }
+  if value == 29 { return "110100110"; }
+  if value == 30 { return "110010110"; }
+  if value == 31 { return "110011010"; }
+  if value == 32 { return "101101100"; }
+  if value == 33 { return "101100110"; }
+  if value == 34 { return "100110110"; }
+  if value == 35 { return "100111010"; }
+  if value == 36 { return "100101110"; }
+  if value == 37 { return "111010100"; }
+  if value == 38 { return "111010010"; }
+  if value == 39 { return "111001010"; }
+  if value == 40 { return "101101110"; }
+  if value == 41 { return "101110110"; }
+  if value == 42 { return "110101110"; }
+  if value == 43 { return "100100110"; }
+  if value == 44 { return "111011010"; }
+  if value == 45 { return "111010110"; }
+  if value == 46 { return "100110010"; }
+  return "";
+}
+
+fn module_mask_from_array(modules: Array<i32>, index: i32, end: i32, result: i32) -> i32 {
+  if index >= end || index >= modules.length() { return result; }
+  let next: i32 = result * 2;
+  if modules[index] == 1 { next = next + 1; }
+  return module_mask_from_array(modules, index + 1, end, next);
+}
+
+fn module_mask_for_string(value: string, index: i32, end: i32, result: i32) -> i32 {
+  if index >= end || index >= string_length(value) { return result; }
+  let next: i32 = result * 2;
+  if string_byte_at(value, index) == 49 { next = next + 1; }
+  return module_mask_for_string(value, index + 1, end, next);
+}
+
+fn code93_value_from_mask(mask: i32) -> i32 {
+  if mask == 276 { return 0; }
+  if mask == 328 { return 1; }
+  if mask == 324 { return 2; }
+  if mask == 322 { return 3; }
+  if mask == 296 { return 4; }
+  if mask == 292 { return 5; }
+  if mask == 290 { return 6; }
+  if mask == 336 { return 7; }
+  if mask == 274 { return 8; }
+  if mask == 266 { return 9; }
+  if mask == 424 { return 10; }
+  if mask == 420 { return 11; }
+  if mask == 418 { return 12; }
+  if mask == 404 { return 13; }
+  if mask == 402 { return 14; }
+  if mask == 394 { return 15; }
+  if mask == 360 { return 16; }
+  if mask == 356 { return 17; }
+  if mask == 354 { return 18; }
+  if mask == 308 { return 19; }
+  if mask == 282 { return 20; }
+  if mask == 344 { return 21; }
+  if mask == 332 { return 22; }
+  if mask == 326 { return 23; }
+  if mask == 300 { return 24; }
+  if mask == 278 { return 25; }
+  if mask == 436 { return 26; }
+  if mask == 434 { return 27; }
+  if mask == 428 { return 28; }
+  if mask == 422 { return 29; }
+  if mask == 406 { return 30; }
+  if mask == 410 { return 31; }
+  if mask == 364 { return 32; }
+  if mask == 358 { return 33; }
+  if mask == 310 { return 34; }
+  if mask == 314 { return 35; }
+  if mask == 302 { return 36; }
+  if mask == 468 { return 37; }
+  if mask == 466 { return 38; }
+  if mask == 458 { return 39; }
+  if mask == 366 { return 40; }
+  if mask == 374 { return 41; }
+  if mask == 430 { return 42; }
+  if mask == 294 { return 43; }
+  if mask == 474 { return 44; }
+  if mask == 470 { return 45; }
+  if mask == 306 { return 46; }
+  return -1;
+}
+
+fn symbol_value(modules: Array<i32>, start: i32) -> i32 {
+  if start + 9 > modules.length() { return -1; }
+  let mask: i32 = module_mask_from_array(modules, start, start + 9, 0);
+  if mask < 0 { return -1; }
+  if mask == module_mask_for_string("101011110", 0, 9, 0) { return 47; }
+  return code93_value_from_mask(mask);
+}
+
+fn decoded_character(value: i32) -> string {
+  if value <= 42 { return character_for_value(value); }
+  if value == 43 { return "$"; }
+  if value == 44 { return "%"; }
+  if value == 45 { return "/"; }
+  if value == 46 { return "+"; }
+  return "";
+}
+
+fn decode_payload(
+  modules: Array<i32>,
+  index: i32,
+  data_length: i32,
+  result: string,
+  c_sum: i32,
+  k_sum: i32,
+  c_weight: i32,
+  k_weight: i32,
+) -> string {
+  if index <= data_length {
+    let symbol: i32 = symbol_value(modules, index * 9);
+    if symbol < 0 || symbol > 46 { return ""; }
+    let character: string = decoded_character(symbol);
+    if string_length(character) == 0 { return ""; }
+    let next_c_weight: i32 = c_weight - 1;
+    if next_c_weight < 1 { next_c_weight = 20; }
+    let next_k_weight: i32 = k_weight - 1;
+    if next_k_weight < 1 { next_k_weight = 15; }
+    return decode_payload(
+      modules,
+      index + 1,
+      data_length,
+      string_concat(result, character),
+      c_sum + symbol * c_weight,
+      k_sum + symbol * k_weight,
+      next_c_weight,
+      next_k_weight,
+    );
+  }
+
+  let check_c: i32 = symbol_value(modules, index * 9);
+  if check_c < 0 || check_c > 46 || check_c != remainder(c_sum, 47) { return ""; }
+  let check_k_index: i32 = index + 1;
+  let check_k: i32 = symbol_value(modules, check_k_index * 9);
+  if check_k < 0 || check_k > 46 || check_k != remainder(k_sum + check_c, 47) { return ""; }
+  let stop_index: i32 = index + 2;
+  if symbol_value(modules, stop_index * 9) != 47 { return ""; }
+  let termination_index: i32 = index + 3;
+  if modules.length() != termination_index * 9 + 1 { return ""; }
+  if modules[termination_index * 9] != 1 { return ""; }
+  return result;
+}
+
+fn decode_sequence(modules: Array<i32>, extended: i32) -> string {
+  let length: i32 = modules.length();
+  if length < 37 { return ""; }
+  if modules[length - 1] != 1 { return ""; }
+  let body_length: i32 = length - 1;
+  if body_length % 9 != 0 { return ""; }
+  let symbol_count: i32 = body_length / 9;
+  if symbol_count < 4 || symbol_value(modules, 0) != 47 { return ""; }
+  let data_length: i32 = symbol_count - 4;
+  let c_weight: i32 = 1;
+  if data_length > 0 { c_weight = remainder(data_length - 1, 20) + 1; }
+  let k_weight: i32 = 1;
+  if data_length > 0 { k_weight = remainder(data_length, 15) + 1; }
+  let decoded: string = decode_payload(modules, 1, data_length, "", 0, 0, c_weight, k_weight);
+  if extended == 1 { return decode_extended_sequence(decoded, 0, ""); }
+  return decoded;
+}
+
+fn extended_code(shift: i32, follower: i32) -> i32 {
+  if shift == 36 && follower >= 65 && follower <= 90 { return follower - 64; }
+  if shift == 37 {
+    if follower == 85 { return 0; }
+    if follower >= 65 && follower <= 69 { return follower - 38; }
+    if follower >= 70 && follower <= 74 { return follower - 11; }
+    if follower == 86 { return 64; }
+    if follower >= 75 && follower <= 79 { return follower + 16; }
+    if follower == 87 { return 96; }
+    if follower >= 80 && follower <= 84 { return follower + 43; }
+    return -1;
+  }
+  if shift == 47 {
+    if follower >= 65 && follower <= 76 { return follower - 32; }
+    if follower == 79 { return 47; }
+    if follower == 90 { return 58; }
+    return -1;
+  }
+  if shift == 43 && follower >= 65 && follower <= 90 { return follower + 32; }
+  return -1;
+}
+
+fn ascii_character(code: i32) -> string {
+  if code >= 0 && code <= 31 {
+    return string_slice("\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008\u0009\u000a\u000b\u000c\u000d\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f", code, code + 1);
+  }
+  if code >= 32 && code <= 64 {
+    return string_slice(" !\u0022#$%&'()*+,-./0123456789:;<=>?@", code - 32, code - 31);
+  }
+  if code >= 65 && code <= 90 { return letter(code - 65); }
+  if code >= 91 && code <= 96 {
+    return string_slice("\u005b\u005c\u005d^_\u0060", code - 91, code - 90);
+  }
+  if code >= 97 && code <= 122 {
+    return string_slice("abcdefghijklmnopqrstuvwxyz", code - 97, code - 96);
+  }
+  if code >= 123 && code <= 127 {
+    return string_slice("{|}~\u007f", code - 123, code - 122);
+  }
+  return "";
+}
+
+fn decode_extended_pair(shift: i32, follower: i32) -> string {
+  let code: i32 = extended_code(shift, follower);
+  if code < 0 { return ""; }
+  return ascii_character(code);
+}
+
+fn decode_extended_sequence(value: string, index: i32, result: string) -> string {
+  if index >= string_length(value) { return result; }
+  let code: i32 = string_byte_at(value, index);
+  if code == 36 || code == 37 || code == 43 || code == 47 {
+    if index + 1 >= string_length(value) { return ""; }
+    let decoded: string = decode_extended_pair(code, string_byte_at(value, index + 1));
+    if string_length(decoded) == 0 { return ""; }
+    return decode_extended_sequence(value, index + 2, string_concat(result, decoded));
+  }
+  return decode_extended_sequence(value, index + 1, string_concat(result, string_slice(value, index, index + 1)));
+}
+
+export fn decode_code93(modules: Array<i32>) -> string {
+  return decode_sequence(modules, 0);
+}
+
+export fn decode_code93_extended(modules: Array<i32>) -> string {
+  return decode_sequence(modules, 1);
+}

@@ -1,0 +1,126 @@
+// MSI encoder graph with mod-10 validation.
+
+
+fn is_digit_at(value: string, index: i32) -> bool {
+  let code: i32 = string_byte_at(value, index);
+  return code >= 48 && code <= 57;
+}
+
+fn all_digits(value: string, index: i32) -> bool {
+  if index >= string_length(value) { return true; }
+  if !is_digit_at(value, index) { return false; }
+  return all_digits(value, index + 1);
+}
+
+fn digit_at(value: string, index: i32) -> i32 {
+  return string_byte_at(value, index) - 48;
+}
+
+fn digit_char(value: i32) -> string {
+  if value == 0 { return "0"; }
+  if value == 1 { return "1"; }
+  if value == 2 { return "2"; }
+  if value == 3 { return "3"; }
+  if value == 4 { return "4"; }
+  if value == 5 { return "5"; }
+  if value == 6 { return "6"; }
+  if value == 7 { return "7"; }
+  if value == 8 { return "8"; }
+  return "9";
+}
+
+fn digit_pattern(value: i32) -> string {
+  if value == 0 { return "100100100100"; }
+  if value == 1 { return "100100100110"; }
+  if value == 2 { return "100100110100"; }
+  if value == 3 { return "100100110110"; }
+  if value == 4 { return "100110100100"; }
+  if value == 5 { return "100110100110"; }
+  if value == 6 { return "100110110100"; }
+  if value == 7 { return "100110110110"; }
+  if value == 8 { return "110100100100"; }
+  if value == 9 { return "110100100110"; }
+  return "";
+}
+
+fn carry_digit_sum(value: i32) -> i32 {
+  if value == 0 { return 0; }
+  return value % 10 + carry_digit_sum(value / 10);
+}
+
+fn mod10_scan(value: string, index: i32, position: i32, carry: i32, doubled_sum: i32, even_sum: i32) -> i32 {
+  if index < 0 {
+    let sum: i32 = doubled_sum + carry_digit_sum(carry) + even_sum;
+    let remainder: i32 = sum % 10;
+    if remainder == 0 { return 0; }
+    if remainder == 1 { return 9; }
+    if remainder == 2 { return 8; }
+    if remainder == 3 { return 7; }
+    if remainder == 4 { return 6; }
+    if remainder == 5 { return 5; }
+    if remainder == 6 { return 4; }
+    if remainder == 7 { return 3; }
+    if remainder == 8 { return 2; }
+    return 1;
+  }
+
+  let digit: i32 = digit_at(value, index);
+  if position % 2 == 1 {
+    let doubled: i32 = digit * 2 + carry;
+    return mod10_scan(value, index - 1, position + 1, doubled / 10, doubled_sum + doubled % 10, even_sum);
+  }
+  return mod10_scan(value, index - 1, position + 1, carry, doubled_sum, even_sum + digit);
+}
+
+fn mod10_check(value: string) -> i32 {
+  return mod10_scan(value, string_length(value) - 1, 1, 0, 0, 0);
+}
+
+fn append_digit(result: string, value: i32) -> string {
+  return string_concat(result, digit_pattern(value));
+}
+
+fn encode_digits(value: string, index: i32, result: string) -> string {
+  if index >= string_length(value) {
+    let with_check: string = append_digit(result, mod10_check(value));
+    return string_concat(with_check, "1001");
+  }
+  return encode_digits(value, index + 1, append_digit(result, digit_at(value, index)));
+}
+
+export fn encode_msi(value: string) -> string {
+  if string_length(value) == 0 || !all_digits(value, 0) { return ""; }
+  return encode_digits(value, 0, "110");
+}
+
+fn msi_bit(modules: Array<i32>, start: i32) -> i32 {
+  if modules[start] == 1 && modules[start + 1] == 1 && modules[start + 2] == 0 { return 1; }
+  if modules[start] == 1 && modules[start + 1] == 0 && modules[start + 2] == 0 { return 0; }
+  return -1;
+}
+
+fn msi_digit(modules: Array<i32>, start: i32, index: i32, result: i32) -> i32 {
+  if index >= 4 { return result; }
+  let bit: i32 = msi_bit(modules, start + index * 3);
+  if bit < 0 { return -1; }
+  return msi_digit(modules, start, index + 1, result * 2 + bit);
+}
+
+fn decode_msi_digits(modules: Array<i32>, start: i32, end: i32, result: string) -> string {
+  if start >= end { return result; }
+  let number: i32 = msi_digit(modules, start, 0, 0);
+  if number < 0 || number > 9 { return ""; }
+  return decode_msi_digits(modules, start + 12, end, string_concat(result, digit_char(number)));
+}
+
+export fn decode_msi(modules: Array<i32>) -> string {
+  let length: i32 = modules.length();
+  if length < 19 { return ""; }
+  if modules[0] != 1 || modules[1] != 1 || modules[2] != 0 { return ""; }
+  if modules[length - 4] != 1 || modules[length - 3] != 0 || modules[length - 2] != 0 || modules[length - 1] != 1 { return ""; }
+  let body_length: i32 = length - 7;
+  if body_length <= 0 || body_length % 12 != 0 { return ""; }
+  let digits: string = decode_msi_digits(modules, 3, length - 4, "");
+  if string_length(digits) < 1 { return ""; }
+  return string_slice(digits, 0, string_length(digits) - 1);
+}

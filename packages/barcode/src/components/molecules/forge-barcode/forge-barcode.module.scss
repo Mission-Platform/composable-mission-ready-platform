@@ -5,11 +5,10 @@
  * stylesheet so its appearance ships in the built package CSS (the two-stage
  * compiler carries the import onto both the React and Vue builds).
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.barcode` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.barcode {
   .forge-barcode {
     display: block;
     max-width: 100%;
@@ -21,13 +20,13 @@
     display: inline-flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--mp-spacing-3);
+    gap: var(--mp-component-code-barcode-figure-gap);
   }
 
   .forge-barcode__actions {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: var(--mp-spacing-2);
+    gap: var(--mp-component-code-barcode-actions-gap);
   }
 }

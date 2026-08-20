@@ -1,6 +1,7 @@
-import { ForgeButton, ForgeTypography } from '@mission-platform/components';
+import { ForgeButton } from '@mission-platform/components';
 import { h, type MpElement, useEffect, useRef, useState } from '@mission-platform/forge';
 import { ForgeIconCamera, ForgeIconClose, ForgeIconUpload } from '@mission-platform/icons';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import { scannerLog } from '@/debug';
 import {

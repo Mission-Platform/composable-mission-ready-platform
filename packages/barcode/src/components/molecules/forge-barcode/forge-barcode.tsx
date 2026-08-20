@@ -1,6 +1,7 @@
-import { ForgeButton, ForgeTypography } from '@mission-platform/components';
+import { ForgeButton } from '@mission-platform/components';
 import { h, type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
 import { ForgeIconCheck, ForgeIconCopy, ForgeIconDownload, ForgeIconImage } from '@mission-platform/icons';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import { encodeBarcode } from '../../../encoder';
 

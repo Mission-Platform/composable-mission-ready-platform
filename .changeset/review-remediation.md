@@ -1,6 +1,4 @@
 ---
-'@mission-platform/barcode-decode-wasm': patch
-'@mission-platform/barcode-encode-wasm': patch
 '@mission-platform/barcode': patch
 '@mission-platform/code-scan-wasm': patch
 '@mission-platform/code-scanner': patch

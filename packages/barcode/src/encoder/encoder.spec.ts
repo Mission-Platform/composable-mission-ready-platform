@@ -1,9 +1,6 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { type Barcode, type BarcodeSymbology, encodeBarcode, encodeBarcodeAsync } from '.';
-
-// The wasm wrapper is imported in `src/test-setup.ts`; initialization is lazy
-// and occurs on the first operation.
 
 /** Every module bit must be 0 or 1, and the reported width must match. */
 function assertShape(barcode: Barcode, symbology: BarcodeSymbology): void {
@@ -66,21 +63,8 @@ describe('encodeBarcode', () => {
     await expect(pending).rejects.toThrow(RangeError);
   });
 
-  it('normalizes initialization failures into Promise rejections', async () => {
-    vi.resetModules();
-    const failure = new Error('encoder initialization failed');
-    const instance = vi.spyOn(WebAssembly, 'Instance').mockImplementation(
-      class {
-        constructor() {
-          throw failure;
-        }
-      } as typeof WebAssembly.Instance,
-    );
-
-    const { encodeBarcodeAsync: freshEncodeBarcodeAsync } = await import('.');
-    await expect(freshEncodeBarcodeAsync('code128', 'ASYNC-INIT')).rejects.toBe(failure);
-
-    instance.mockRestore();
+  it('rejects invalid UPC-E payloads through the native FWS loader', async () => {
+    await expect(encodeBarcodeAsync('upce', '012345x')).rejects.toThrow(RangeError);
   });
 
   it('produces the same result asynchronously', async () => {

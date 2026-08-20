@@ -1,9 +1,15 @@
 import { describe, expect, it } from 'vitest';
 
-import { decodeMatrix, decodeMatrixAsync, encodeMatrix, type MatrixCode } from '../index';
+import {
+  decodeMatrix,
+  decodeMatrixAsync,
+  decodeMatrixAsyncWithErasures,
+  decodeMatrixWithErasures,
+  encodeMatrix,
+  type MatrixCode,
+} from '../index';
 
-// The encoder and decoder wasm modules are instantiated once in
-// `src/test-setup.ts` (a Vitest `setupFiles` entry) before any spec runs.
+// The FWS encoder and decoder artifacts are loaded by their typed adapters.
 
 describe('decodeMatrix', () => {
   it('round-trips a numeric payload', () => {
@@ -50,6 +56,25 @@ describe('decodeMatrix', () => {
     expect(decodeMatrix(damaged)).toBe('123456');
   });
 
+  it('uses an erasure mask for a damaged module', async () => {
+    const code = encodeMatrix('datamatrix', 'ERASURE');
+    const damaged: MatrixCode = { ...code, modules: [...code.modules] };
+    const erasures = Array.from({ length: code.modules.length }, () => 0);
+    const index = 3 * code.width + 3;
+    damaged.modules[index] ^= 1;
+    erasures[index] = 1;
+    expect(decodeMatrixWithErasures(damaged, erasures)).toBe('ERASURE');
+    expect(await decodeMatrixAsyncWithErasures(damaged, erasures)).toBe('ERASURE');
+
+    const aztec = encodeMatrix('aztec', 'AZTEC ERASURE');
+    const damagedAztec: MatrixCode = { ...aztec, modules: [...aztec.modules] };
+    const aztecErasures = Array.from({ length: aztec.modules.length }, () => 0);
+    const aztecIndex = 3 * aztec.width + 3;
+    damagedAztec.modules[aztecIndex] ^= 1;
+    aztecErasures[aztecIndex] = 1;
+    expect(decodeMatrixWithErasures(damagedAztec, aztecErasures)).toBe('AZTEC ERASURE');
+  });
+
   it('returns null for an undecodable symbol', () => {
     const size = 10;
     const blank: MatrixCode = {
@@ -59,6 +84,13 @@ describe('decodeMatrix', () => {
       modules: Array.from({ length: size * size }, () => 0),
     };
     expect(decodeMatrix(blank)).toBeNull();
+  });
+
+  it('returns null for malformed dimensions, modules, and erasure masks', () => {
+    const code = encodeMatrix('datamatrix', 'VALID');
+    expect(decodeMatrix({ ...code, width: code.width + 1 })).toBeNull();
+    expect(decodeMatrix({ ...code, modules: [...code.modules.slice(0, -1), 2] })).toBeNull();
+    expect(decodeMatrixWithErasures(code, [1])).toBeNull();
   });
 
   it('produces the same result asynchronously', async () => {

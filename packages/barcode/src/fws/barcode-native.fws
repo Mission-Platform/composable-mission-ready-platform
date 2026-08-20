@@ -1,0 +1,73 @@
+// Statically linked barcode dispatcher.
+//
+// The enum values are part of the FWS ABI. Keep their explicit tags stable;
+// the TypeScript boundary maps the public string union to these declarations.
+
+import "./barcode.fws" as ean;
+import "./code128.fws" as code128;
+import "./code39.fws" as code39;
+import "./code93.fws" as code93;
+import "./codabar.fws" as codabar;
+import "./itf.fws" as itf;
+import "./msi.fws" as msi;
+import "./pharmacode.fws" as pharmacode;
+
+export enum BarcodeSymbology {
+  Code128 = 0,
+  Gs1_128 = 1,
+  Code39 = 2,
+  Code39Extended = 3,
+  Code93 = 4,
+  Code93Extended = 5,
+  Ean13 = 6,
+  Ean8 = 7,
+  Upca = 8,
+  Upce = 9,
+  Itf = 10,
+  Itf14 = 11,
+  Codabar = 12,
+  Msi = 13,
+  Pharmacode = 14,
+}
+
+export fn encode_native(symbology: BarcodeSymbology, value: string) -> string {
+  switch symbology {
+    case Code128: return encode_code128(value);
+    case Gs1_128: return encode_gs1_128(value);
+    case Code39: return encode_code39(value);
+    case Code39Extended: return encode_code39_extended(value);
+    case Code93: return encode_code93(value);
+    case Code93Extended: return encode_code93_extended(value);
+    case Ean13: return encode_ean13(value);
+    case Ean8: return encode_ean8(value);
+    case Upca: return encode_upca(value);
+    case Upce: return encode_upce(value);
+    case Itf: return encode_itf(value);
+    case Itf14: return encode_itf14(value);
+    case Codabar: return encode_codabar(value);
+    case Msi: return encode_msi(value);
+    case Pharmacode: return encode_pharmacode(value);
+    default: return "";
+  }
+}
+
+export fn decode_native(symbology: BarcodeSymbology, modules: Array<i32>) -> string {
+  switch symbology {
+    case Ean13: return decode_ean13(modules);
+    case Ean8: return decode_ean8(modules);
+    case Upca: return decode_upca(modules);
+    case Upce: return decode_upce(modules);
+    case Code128: return decode_code128(modules);
+    case Gs1_128: return decode_gs1_128(modules);
+    case Code39: return decode_code39(modules);
+    case Code39Extended: return decode_code39_extended(modules);
+    case Code93: return decode_code93(modules);
+    case Code93Extended: return decode_code93_extended(modules);
+    case Codabar: return decode_codabar(modules);
+    case Itf: return decode_itf(modules);
+    case Itf14: return decode_itf14(modules);
+    case Msi: return decode_msi(modules);
+    case Pharmacode: return decode_pharmacode(modules);
+    default: return "";
+  }
+}

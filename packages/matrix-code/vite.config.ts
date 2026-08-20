@@ -11,6 +11,7 @@ import {
   solidJsxPlugin,
   sveltePlugin,
 } from '@mission-platform/vite-plugin-forge';
+import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { defineConfig, type Plugin, type UserConfig } from 'vite';
 
@@ -29,8 +30,9 @@ import { defineConfig, type Plugin, type UserConfig } from 'vite';
  *   source tree from the neutral barrel `src/component/index.ts`; Stage 2 is the
  *   framework's own toolchain). These are the package's `./vue` / `./react`
  *   exports. The component imports the encoder from the package's own `.` entry
- *   (`@mission-platform/matrix-code`, kept external) and reuses `ForgeButton` /
- *   `ForgeTypography` from `@mission-platform/components`.
+ *   (`@mission-platform/matrix-code`, kept external), reuses `ForgeButton` from
+ *   `@mission-platform/components`; typography is supplied by the dedicated
+ *   `@mission-platform/typography` package.
  */
 
 const componentsModule = path.resolve(__dirname, 'src/components/index.ts');
@@ -84,7 +86,7 @@ function defineEncoderConfig(): UserConfig {
     // self-contained rather than emitting a separate module graph.
     preserveModules: false,
     overrides: {
-      plugins: [stripWasmUrlFallback()],
+      plugins: [forgeWebScriptPlugin({ root: __dirname, requireExports: false }), stripWasmUrlFallback()],
       build: {
         // Inline the compiled wasm (imported with `?url` from `src/encoder`) as a
         // base64 `data:` URI rather than emitting a loose asset. This keeps the

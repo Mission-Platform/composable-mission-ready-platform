@@ -5,11 +5,10 @@
  * stylesheet so its appearance ships in the built package CSS (the two-stage
  * compiler carries the import onto both the React and Vue builds).
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.matrix-code` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.matrix-code {
   .forge-matrix-code {
     display: block;
     max-width: 100%;

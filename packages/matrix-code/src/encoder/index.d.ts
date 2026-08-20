@@ -27,16 +27,16 @@ export interface MatrixCode {
   modules: number[];
 }
 /**
- * Encode `data` into a 2D matrix barcode of the given `symbology`, instantiating
- * the WebAssembly encoder synchronously on first use.
+ * Encode `data` into a 2D matrix barcode of the given `symbology`, loading the
+ * Forge Web Script encoder artifact synchronously on first use.
  *
  * @throws {RangeError} if the payload is invalid for the symbology (empty, or
  *   too large for the supported symbols).
  */
 export declare function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode;
 /**
- * Encode `data` into a 2D matrix barcode of the given `symbology`, instantiating
- * the WebAssembly encoder asynchronously on first use.
+ * Encode `data` into a 2D matrix barcode of the given `symbology`, loading the
+ * Forge Web Script encoder artifact asynchronously on first use.
  *
  * @throws {RangeError} if the payload is invalid for the symbology.
  */

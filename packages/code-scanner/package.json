@@ -73,6 +73,7 @@
     "@mission-platform/components": "workspace:*",
     "@mission-platform/forge": "workspace:*",
     "@mission-platform/icons": "workspace:*",
+    "@mission-platform/typography": "workspace:*",
     "@mission-platform/matrix-code": "workspace:*",
     "@mission-platform/qr-code": "workspace:*"
   },

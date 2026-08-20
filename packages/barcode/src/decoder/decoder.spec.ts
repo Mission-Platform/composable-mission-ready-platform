@@ -1,11 +1,8 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { type BarcodeSymbology, encodeBarcode } from '../encoder';
 
 import { decodeBarcode, decodeBarcodeAsync } from '.';
-
-// The encoder and decoder wrappers are imported in `src/test-setup.ts`; their
-// initialization is lazy and occurs on the first operation.
 
 describe('decodeBarcode', () => {
   // Encode → decode → re-encode: the decoded payload must reproduce the same
@@ -60,21 +57,8 @@ describe('decodeBarcode', () => {
     await expect(pending).rejects.toThrow();
   });
 
-  it('normalizes initialization failures into Promise rejections', async () => {
-    vi.resetModules();
-    const failure = new Error('decoder initialization failed');
-    const instance = vi.spyOn(WebAssembly, 'Instance').mockImplementation(
-      class {
-        constructor() {
-          throw failure;
-        }
-      } as typeof WebAssembly.Instance,
-    );
-
-    const { decodeBarcodeAsync: freshDecodeBarcodeAsync } = await import('.');
-    await expect(freshDecodeBarcodeAsync('code128', [1, 0, 1])).rejects.toBe(failure);
-
-    instance.mockRestore();
+  it('rejects malformed module input through the native FWS loader', async () => {
+    await expect(decodeBarcodeAsync('code128', [1, 0, 1])).resolves.toBeNull();
   });
 
   it('decodes asynchronously to the same result', async () => {

@@ -1,8 +1,7 @@
 # @mission-platform/barcode
 
-A dependency-free **1D (linear) barcode encoder** written in
-[Rust](https://www.rust-lang.org/) and compiled to **WebAssembly**, exposed through a small, fully typed ES module
-wrapper.
+A dependency-free **1D (linear) barcode encoder and decoder** backed by
+package-local Forge Web Script graphs and typed direct loaders.
 
 It renders a symbology + payload into a flat run of **module bits** (`1` = bar,
 `0` = space), one entry per unit-width module (no quiet zone) — ready to draw as an SVG or canvas. It also **decodes** a
@@ -44,9 +43,7 @@ const rects = barcode.modules
 const svg = `<svg viewBox="0 0 ${barcode.width} ${height}">${rects}</svg>`;
 ```
 
-`encodeBarcode` instantiates the wasm binary **synchronously** at import (the `@mission-platform/barcode-encode-wasm`
-package inlines the binary as a base64 `data:` URI and instantiates it eagerly), so it is self-contained, needs no
-runtime `fetch`, and is safe to call from render paths with no initialisation step. An async variant,
+`encodeBarcode` paths load their embedded FWS artifacts synchronously and need no runtime `fetch`; an async variant,
 `encodeBarcodeAsync`, is also exported.
 
 `encodeBarcode` throws a `RangeError` when the payload is invalid for the chosen symbology (bad characters, wrong
@@ -55,9 +52,10 @@ length, or a failing check digit).
 ### Decoding
 
 `decodeBarcode(symbology, modules)` is the inverse: it takes a clean module run (as produced by `encodeBarcode`) and
-recovers the payload, returning `null` when the run is not a valid symbol of that symbology. The recovered value is the
-symbology's canonical form (recomputed check digits, upper-cased Code 39/93 text, and the `system + digits + check` form
-for UPC-E). An async `decodeBarcodeAsync` mirrors the encoder.
+recovers the payload, returning `null` when the run is not a valid symbol of that symbology. All supported decoder
+families use direct FWS graphs, including EAN/UPC, Code 39/93, Codabar, ITF, MSI, Pharmacode, and Code 128/GS1-128. The recovered value is the symbology's canonical form (recomputed
+check digits, upper-cased Code 39/93 text, and the `system + digits + check` form for UPC-E). An async
+`decodeBarcodeAsync` mirrors the encoder.
 
 ```ts
 import { decodeBarcode, encodeBarcode } from '@mission-platform/barcode';
@@ -68,35 +66,30 @@ const text = decodeBarcode('code93', modules); // -> 'MISSION 93'
 
 ## Architecture
 
-- `crates/barcode/` (workspace top level) — the Rust crate, built with **`wasm-bindgen`**, split into focused modules:
-  - `lib.rs` — the `wasm-bindgen` surface (`encode` / `build_info`) and the symbology dispatch.
-  - `code128.rs`, `code39.rs`, `code93.rs`, `ean.rs`, `itf.rs`, `codabar.rs`,
-    `msi.rs`, `pharmacode.rs` — one module per symbology family (patterns, check digits, framing). The sibling
-    `crates/barcode-decode` crate mirrors these to recover payloads, sharing tables via `crates/barcode-common`.
-- `src/generated/` — emitted by **`wasm-pack build --target web`** (the
-  `wasm-bindgen` JS runtime, the `barcode_bg.wasm` binary, and its typings). Produced by the **`build:wasm` Turbo
-  task**, whose command invokes `wasm-pack`
-  directly via Turborepo's `experimentalTaskCommand` (no wrapper script). The directory is a build artifact and is
-  git-ignored.
-- `src/encoder/` — the typed façade: it imports the generated runtime and the wasm binary (via Vite's `?url`, inlined as
-  base64 at build time), instantiates it, and turns the module-bit buffer into a `Barcode`.
-- `src/index.ts` — the package entry, re-exporting the encoder API. The per-feature `component/` sibling (a write-once
-  `ForgeBarcode`) is added in a follow-up and re-exported here when present.
-- `vite.config.ts` — raises `assetsInlineLimit` so the wasm is inlined as a
-  `data:` URI (keeping the encoder synchronous and the bundle self-contained), and neutralises the generated glue's dead
-  `new URL(...)` init fallback so the binary is embedded exactly once.
+- `src/fws/` — package-local Forge Web Script graphs, handwritten ABI
+  declarations, and focused parity fixtures. The graphs cover the native 1D
+  encoder and decoder families listed above and expose generated `load` and
+  `loadSync` loaders.
+- `src/encoder/` and `src/decoder/` — typed façades that convert between the
+  direct FWS string ABI and the public module-bit contracts. Generated loaders
+  own linear-memory allocation and result cleanup.
+- `src/index.ts` — the package entry, re-exporting direct FWS codec APIs and
+  framework component entrypoints.
+- The barcode implementation is package-local and does not depend on a
+  generated WebAssembly wrapper package.
 
 ## Building
 
-The Rust → wasm step is driven by Turbo (it runs before the type-check, bundle and declaration steps):
+The package build embeds the package-local FWS graphs before the type-check,
+bundle, and declaration steps:
 
 ```sh
 pnpm exec turbo run build --filter @mission-platform/barcode
 ```
 
-Prerequisites: a Rust toolchain with the `wasm32-unknown-unknown` target and the pinned `wasm-pack` npm dependency:
+The normal workspace installation provides the Forge Web Script compiler and
+runtime packages:
 
 ```sh
-rustup target add wasm32-unknown-unknown
 pnpm install
 ```

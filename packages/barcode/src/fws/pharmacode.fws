@@ -1,0 +1,109 @@
+// Pharmacode encoder graph for values from 3 through 131070.
+
+
+fn is_digit_at(value: string, index: i32) -> bool {
+  let code: i32 = string_byte_at(value, index);
+  return code >= 48 && code <= 57;
+}
+
+fn parse_value(value: string, index: i32, result: i32) -> i32 {
+  if index >= string_length(value) {
+    if result < 3 || result > 131070 { return -1; }
+    return result;
+  }
+  if !is_digit_at(value, index) { return -1; }
+  let digit: i32 = string_byte_at(value, index) - 48;
+  if result > 13107 { return -1; }
+  if result == 13107 && digit > 0 { return -1; }
+  return parse_value(value, index + 1, result * 10 + digit);
+}
+
+fn bar_widths(value: i32) -> string {
+  if value == 0 { return ""; }
+  if value % 2 == 0 {
+    let next: i32 = value - 2;
+    return string_concat(bar_widths(next / 2), "w");
+  }
+  let next: i32 = value - 1;
+  return string_concat(bar_widths(next / 2), "n");
+}
+
+fn render_bars(value: string, index: i32) -> string {
+  if index >= string_length(value) { return ""; }
+  let separator: string = "";
+  if index > 0 { separator = "0"; }
+  let bar: string = "1";
+  if string_byte_at(value, index) == 119 { bar = "111"; }
+  return string_concat(string_concat(separator, bar), render_bars(value, index + 1));
+}
+
+export fn encode_pharmacode(value: string) -> string {
+  if string_length(value) == 0 { return ""; }
+  let parsed: i32 = parse_value(value, 0, 0);
+  if parsed < 0 { return ""; }
+  return render_bars(bar_widths(parsed), 0);
+}
+
+fn valid_bits(modules: Array<i32>, index: i32) -> bool {
+  if index >= modules.length() { return true; }
+  let bit: i32 = modules[index];
+  if bit != 0 && bit != 1 { return false; }
+  return valid_bits(modules, index + 1);
+}
+
+fn run_length(modules: Array<i32>, start: i32, bit: i32, length: i32) -> i32 {
+  if start + length >= modules.length() { return length; }
+  if modules[start + length] != bit { return length; }
+  return run_length(modules, start, bit, length + 1);
+}
+
+fn narrowest_run(modules: Array<i32>, index: i32, current: i32) -> i32 {
+  if index >= modules.length() { return current; }
+  let width: i32 = run_length(modules, index, modules[index], 0);
+  let next: i32 = current;
+  if current == 0 || width < current { next = width; }
+  return narrowest_run(modules, index + width, next);
+}
+
+fn pharmacode_value(modules: Array<i32>, index: i32, narrow: i32, result: i32, bars: i32) -> i32 {
+  if index >= modules.length() {
+    if bars == 0 || result < 3 || result > 131070 { return -1; }
+    return result;
+  }
+  let bit: i32 = modules[index];
+  let width: i32 = run_length(modules, index, bit, 0);
+  if bit == 1 {
+    let next: i32 = result * 2 + 1;
+    if width >= narrow * 2 { next = result * 2 + 2; }
+    if next > 131070 { return -1; }
+    return pharmacode_value(modules, index + width, narrow, next, bars + 1);
+  }
+  return pharmacode_value(modules, index + width, narrow, result, bars);
+}
+
+fn digit_char(value: i32) -> string {
+  if value == 0 { return "0"; }
+  if value == 1 { return "1"; }
+  if value == 2 { return "2"; }
+  if value == 3 { return "3"; }
+  if value == 4 { return "4"; }
+  if value == 5 { return "5"; }
+  if value == 6 { return "6"; }
+  if value == 7 { return "7"; }
+  if value == 8 { return "8"; }
+  return "9";
+}
+
+fn decimal(value: i32) -> string {
+  if value < 10 { return digit_char(value); }
+  return string_concat(decimal(value / 10), digit_char(value % 10));
+}
+
+export fn decode_pharmacode(modules: Array<i32>) -> string {
+  if modules.length() == 0 || !valid_bits(modules, 0) { return ""; }
+  let narrow: i32 = narrowest_run(modules, 0, 0);
+  if narrow <= 0 { return ""; }
+  let parsed: i32 = pharmacode_value(modules, 0, narrow, 0, 0);
+  if parsed < 0 { return ""; }
+  return decimal(parsed);
+}

@@ -5,15 +5,14 @@
  * stylesheet so its appearance ships in the built package CSS (the two-stage
  * compiler carries the import onto both the React and Vue builds).
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.code-scanner` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.code-scanner {
   .forge-code-scanner {
     display: inline-flex;
     flex-direction: column;
-    gap: var(--mp-spacing-3);
+    gap: var(--mp-component-code-scanner-gap-root);
     max-width: 100%;
   }
 
@@ -24,8 +23,8 @@
     width: 100%;
     max-width: 20rem;
     overflow: hidden;
-    background: var(--mp-color-surface-sunken, #000);
-    border-radius: var(--mp-radius-md, 0.5rem);
+    background: var(--mp-component-code-scanner-viewport-surface);
+    border-radius: var(--mp-component-code-scanner-viewport-radius);
   }
 
   .forge-code-scanner__video {
@@ -42,7 +41,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--mp-color-text-tertiary, #888);
+    color: var(--mp-component-code-scanner-placeholder-text);
   }
 
   // Centred scan-window guide, sized (via inline width/height) to the region of
@@ -54,15 +53,15 @@
     left: 50%;
     box-sizing: border-box;
     pointer-events: none;
-    border: var(--mp-border-width-thick, 2px) solid var(--mp-color-border-strong, rgb(255 255 255 / 75%));
-    border-radius: var(--mp-radius-sm, 0.25rem);
+    border: var(--mp-component-code-scanner-reticle-border-width) solid var(--mp-component-code-scanner-reticle-border);
+    border-radius: var(--mp-component-code-scanner-reticle-radius);
     transform: translate(-50%, -50%);
   }
 
   .forge-code-scanner__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--mp-spacing-2);
+    gap: var(--mp-component-code-scanner-gap-actions);
   }
 
   // The hidden native file input; the visible trigger is the styled button.
@@ -81,10 +80,10 @@
   .forge-code-scanner__result {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-spacing-1);
-    padding: var(--mp-spacing-2) var(--mp-spacing-3);
-    background: var(--mp-color-surface-raised, #f5f5f5);
-    border-radius: var(--mp-radius-sm, 0.25rem);
+    gap: var(--mp-component-code-scanner-gap-result);
+    padding: var(--mp-component-code-scanner-result-padding-block) var(--mp-component-code-scanner-result-padding-inline);
+    background: var(--mp-component-code-scanner-result-surface);
+    border-radius: var(--mp-component-code-scanner-result-radius);
     word-break: break-all;
   }
 }

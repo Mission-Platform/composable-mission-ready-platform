@@ -1,0 +1,122 @@
+// Codabar encoder graph with automatic A start and stop framing.
+
+fn pattern(value: i32) -> string {
+  if value == 48 { return "0000011"; }
+  if value == 49 { return "0000110"; }
+  if value == 50 { return "0001001"; }
+  if value == 51 { return "1100000"; }
+  if value == 52 { return "0010010"; }
+  if value == 53 { return "1000010"; }
+  if value == 54 { return "0100001"; }
+  if value == 55 { return "0100100"; }
+  if value == 56 { return "0110000"; }
+  if value == 57 { return "1000100"; }
+  if value == 45 { return "0001100"; }
+  if value == 36 { return "0011000"; }
+  if value == 58 { return "1000101"; }
+  if value == 47 { return "1010001"; }
+  if value == 46 { return "1010100"; }
+  if value == 43 { return "0010011"; }
+  if value == 65 { return "0011010"; }
+  if value == 66 { return "0101001"; }
+  if value == 67 { return "0001011"; }
+  if value == 68 { return "0001110"; }
+  return "";
+}
+
+fn run(bit: i32, width: i32) -> string {
+  if bit == 1 {
+    if width == 1 { return "1"; }
+    return "111";
+  }
+  if width == 1 { return "0"; }
+  return "000";
+}
+
+fn render(value: string, index: i32) -> string {
+  if index >= string_length(value) { return ""; }
+  let bit: i32 = 0;
+  if index % 2 == 0 { bit = 1; }
+  let width: i32 = 1;
+  if string_byte_at(value, index) == 49 { width = 3; }
+  return string_concat(run(bit, width), render(value, index + 1));
+}
+
+fn append(result: string, value: i32) -> string {
+  let symbol: string = pattern(value);
+  if string_length(symbol) == 0 { return ""; }
+  return string_concat(result, render(symbol, 0));
+}
+
+fn encode_payload(value: string, index: i32, result: string) -> string {
+  if index >= string_length(value) { return append(string_concat(result, "0"), 65); }
+  let code: i32 = string_byte_at(value, index);
+  if code >= 97 && code <= 100 { code = code - 32; }
+  if code == 65 || code == 66 || code == 67 || code == 68 { return ""; }
+  let next: string = append(string_concat(result, "0"), code);
+  if string_length(next) == 0 { return ""; }
+  return encode_payload(value, index + 1, next);
+}
+
+export fn encode_codabar(value: string) -> string {
+  if string_length(value) == 0 { return ""; }
+  return encode_payload(value, 0, append("", 65));
+}
+
+fn bits_match(modules: Array<i32>, start: i32, expected: string, index: i32) -> bool {
+  if index >= string_length(expected) { return true; }
+  if start + index >= modules.length() { return false; }
+  if modules[start + index] + 48 != string_byte_at(expected, index) { return false; }
+  return bits_match(modules, start, expected, index + 1);
+}
+
+fn decode_symbol(modules: Array<i32>, start: i32) -> string {
+  if bits_match(modules, start, render(pattern(58), 0), 0) { return ":"; }
+  if bits_match(modules, start, render(pattern(47), 0), 0) { return "/"; }
+  if bits_match(modules, start, render(pattern(46), 0), 0) { return "."; }
+  if bits_match(modules, start, render(pattern(43), 0), 0) { return "+"; }
+  if bits_match(modules, start, render(pattern(65), 0), 0) { return "A"; }
+  if bits_match(modules, start, render(pattern(66), 0), 0) { return "B"; }
+  if bits_match(modules, start, render(pattern(67), 0), 0) { return "C"; }
+  if bits_match(modules, start, render(pattern(68), 0), 0) { return "D"; }
+  if bits_match(modules, start, render(pattern(48), 0), 0) { return "0"; }
+  if bits_match(modules, start, render(pattern(49), 0), 0) { return "1"; }
+  if bits_match(modules, start, render(pattern(50), 0), 0) { return "2"; }
+  if bits_match(modules, start, render(pattern(51), 0), 0) { return "3"; }
+  if bits_match(modules, start, render(pattern(52), 0), 0) { return "4"; }
+  if bits_match(modules, start, render(pattern(53), 0), 0) { return "5"; }
+  if bits_match(modules, start, render(pattern(54), 0), 0) { return "6"; }
+  if bits_match(modules, start, render(pattern(55), 0), 0) { return "7"; }
+  if bits_match(modules, start, render(pattern(56), 0), 0) { return "8"; }
+  if bits_match(modules, start, render(pattern(57), 0), 0) { return "9"; }
+  if bits_match(modules, start, render(pattern(45), 0), 0) { return "-"; }
+  if bits_match(modules, start, render(pattern(36), 0), 0) { return "$"; }
+  return "";
+}
+
+fn symbol_width(symbol: string) -> i32 {
+  let code: i32 = string_byte_at(symbol, 0);
+  if code == 58 || code == 47 || code == 46 || code == 43 { return 13; }
+  if code == 65 || code == 66 || code == 67 || code == 68 { return 13; }
+  return 11;
+}
+
+fn decode_symbols(modules: Array<i32>, start: i32, result: string) -> string {
+  if start + 11 > modules.length() { return ""; }
+  let symbol: string = decode_symbol(modules, start);
+  if string_length(symbol) == 0 { return ""; }
+  let next: i32 = start + symbol_width(symbol);
+  if next == modules.length() { return string_concat(result, symbol); }
+  if modules[next] != 0 { return ""; }
+  return decode_symbols(modules, next + 1, string_concat(result, symbol));
+}
+
+export fn decode_codabar(modules: Array<i32>) -> string {
+  let length: i32 = modules.length();
+  if length < 27 { return ""; }
+  let framed: string = decode_symbols(modules, 0, "");
+  if string_length(framed) < 2 { return ""; }
+  if string_byte_at(framed, 0) != 65 { return ""; }
+  if string_byte_at(framed, string_length(framed) - 1) != 65 { return ""; }
+  return string_slice(framed, 1, string_length(framed) - 1);
+}
