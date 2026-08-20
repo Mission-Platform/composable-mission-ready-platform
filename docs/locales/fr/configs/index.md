@@ -18,7 +18,7 @@ Les packages et les applications consomment ces configurations en les étendant 
 | Forfait | Objectif | Surface de configuration principale |
 |:---|:---|:---|
 | [`@mission-platform/eslint-config`](eslint-config.md) | Plat ESLint règles pour JS/TS et Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` | Paramètres par défaut du formatage du référentiel. | `prettier.config.mjs` |
+| `@mission-platform/prettier-config` | Paramètres par défaut du formatage du référentiel. | `prettier.config.js` |
 | `@mission-platform/typescript-config` | TypeScript préréglages du compilateur. | `tsconfig.json` |
 | `@mission-platform/stylelint-config` | Pelucheux CSS et SCSS. | `stylelint.config.mjs` |
 | `@mission-platform/vite-config` | Vite et Vitest aides à la configuration. | `vite.config.ts` |

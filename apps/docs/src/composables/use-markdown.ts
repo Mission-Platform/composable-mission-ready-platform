@@ -1,5 +1,4 @@
 import { marked, type Tokens } from 'marked';
-import { computed, toValue, type ComputedRef, type MaybeRefOrGetter } from 'vue';
 
 import { documentPath } from '../documentation';
 import { DEFAULT_LOCALE, type DocumentationLocale } from '../i18n';
@@ -9,6 +8,16 @@ export interface TocItem {
   id: string;
   text: string;
   depth: 2 | 3;
+}
+
+export interface MarkdownValue<T> {
+  readonly value: T;
+}
+
+type MarkdownSource = string | (() => string);
+
+function readValue<T>(value: T | (() => T)): T {
+  return typeof value === 'function' ? (value as () => T)() : value;
 }
 
 /** Convert heading text into a stable, URL-safe anchor id. */
@@ -86,15 +95,16 @@ function buildToc(markdown: string): TocItem[] {
  * to in-app routes for `ForgeMarkdown`.
  */
 export function useMarkdown(
-  source: MaybeRefOrGetter<string>,
-  slug: MaybeRefOrGetter<string>,
-  locale: MaybeRefOrGetter<DocumentationLocale> = DEFAULT_LOCALE,
-): { toc: ComputedRef<TocItem[]>; resolveHref: ComputedRef<(href: string) => string | undefined> } {
-  const toc = computed(() => buildToc(toValue(source)));
-  const resolveHref = computed(() => {
-    const currentSlug = toValue(slug);
-    const currentLocale = toValue(locale);
-    return (href: string): string | undefined => resolveInternalHref(href, currentSlug, currentLocale);
-  });
+  source: MarkdownSource,
+  slug: MarkdownSource,
+  locale: DocumentationLocale | (() => DocumentationLocale) = DEFAULT_LOCALE,
+): { toc: MarkdownValue<TocItem[]>; resolveHref: MarkdownValue<(href: string) => string | undefined> } {
+  const markdown = readValue(source);
+  const currentSlug = readValue(slug);
+  const currentLocale = readValue(locale);
+  const toc = { value: buildToc(markdown) };
+  const resolveHref = {
+    value: (href: string): string | undefined => resolveInternalHref(href, currentSlug, currentLocale),
+  };
   return { toc, resolveHref };
 }

@@ -185,8 +185,6 @@ inpakken `packages/`, inclusief de getypte WebAssembly gevels.
 | Pakket | Doel |
 |:--------------------------------------------|:--------------------------------------------------|
 | `@mission-platform/barcode`                 | 1D-barcode codeert/decodeert gevel en onderdeel.    |
-| `@mission-platform/barcode-decode-wasm`     | Gegenereerde barcodedecoder WebAssembly-module.     |
-| `@mission-platform/barcode-encode-wasm`     | Gegenereerde barcode-encoder WebAssembly-module.     |
 | `@mission-platform/code-scan-wasm`          | Gegenereerde afbeeldingsscanner WebAssembly-module.       |
 | `@mission-platform/code-scanner`            | Component voor het scannen van camera- en beeldcodes.         |
 | `@mission-platform/matrix-code`             | Data Matrix en Azteekse codeer-/decodeerfaçade.       |

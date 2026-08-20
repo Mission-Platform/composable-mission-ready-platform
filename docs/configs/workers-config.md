@@ -13,13 +13,20 @@ Standalone worker packages live under `workers/`:
 | `email-sender` | `workers/email-sender/src/index.ts` | `workers/email-sender/wrangler.jsonc` | MailPit-backed email showcase worker |
 | `forge-spa` | `workers/forge-spa/src/index.ts` | None; consumed as a bundled package | `ASSETS`-binding SPA fallback handler |
 
-The deployable application Workers are:
+The deployable application configurations are:
 
-| Application | Handler | Configuration |
-| :---------- | :------ | :------------ |
-| Website | `workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc` |
-| My Care Notes | `workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc` |
-| Service Monitor | `apps/service-monitor/src/worker.tsx` | `apps/service-monitor/wrangler.jsonc` |
+| Application | Handler | Configuration | Assets |
+| :---------- | :------ | :------------ | :----- |
+| Website | `workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc` | `apps/website/dist/`, bound as `ASSETS` |
+| My Care Notes | `workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc` | `apps/my-care-notes/dist/`, bound as `ASSETS` |
+| Service Monitor | `apps/service-monitor/src/worker.tsx` | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, bound as `ASSETS` |
+| Docs | None; static-assets deployment | `apps/docs/wrangler.jsonc` | `apps/docs/dist/` |
+
+Website and My Care Notes use the shared Forge SPA Worker, which serves their application-specific `dist/` output.
+Service Monitor retains its Worker entrypoint, `MONITOR` Durable Object binding and migration, observability settings,
+runtime variables, and `public/` assets. Docs is a static Vite site and intentionally has no Worker entrypoint, bindings,
+or routes in its Wrangler configuration. Storybook is a component workbench, not a deployment target in this inventory,
+so `apps/storybook/wrangler.jsonc` is intentionally absent.
 
 `api-proxy` and `forge-spa` do not have standalone Wrangler configuration files: their `src/index.ts` handlers are
 bundled by `tsdown` and referenced by the application Wrangler configurations or a consuming deployment.
@@ -34,6 +41,14 @@ pnpm exec turbo run build --filter=@mission-platform/api-proxy
 pnpm exec turbo run build --filter=@mission-platform/forge-spa
 pnpm exec turbo run build --filter=@mission-platform/email-sender
 ```
+
+The four application Wrangler configurations set `build.cwd` to the repository root and bootstrap Rust directly in
+their `build.command`. The command prepends `$HOME/.cargo/bin`, installs `rustup` with the stable toolchain when it is
+missing, sources Cargo's environment, ensures the stable toolchain is available, adds the
+`wasm32-unknown-unknown` target, and then runs the app-specific `pnpm exec turbo run build` filter. This keeps the
+Rust/WASM dependency graph self-sufficient in Cloudflare's build environment while remaining safe to repeat when Rust
+is already installed. Their `watch_dir` values cover the Rust crates, generated WASM sources, selected app sources, and
+the relevant Worker sources so those changes trigger a rebuild.
 
 Worker tests use Vitest:
 
@@ -74,6 +89,12 @@ Deploy from the application package whose `wrangler.jsonc` owns the route and en
 pnpm --filter @mission-platform/website deploy:staging
 pnpm --filter @mission-platform/my-care-notes deploy:staging
 pnpm --filter @mission-platform/service-monitor deploy:staging
+```
+
+Docs is deployed from its application package with the same Wrangler build configuration and static `dist/` output:
+
+```bash
+cd apps/docs && pnpm exec wrangler deploy
 ```
 
 The standalone worker packages without Wrangler configuration are not deployed directly with `wrangler deploy`; build

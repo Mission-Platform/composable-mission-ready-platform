@@ -18,7 +18,7 @@
 |套餐 |目的|主构型面|
 |:---|:---|:---|
 | [`@mission-platform/eslint-config`](eslint-config.md) |平坦的 ESLint JS/TS 的规则和 Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` |存储库格式默认值。 | `prettier.config.mjs` |
+| `@mission-platform/prettier-config` |存储库格式默认值。 | `prettier.config.js` |
 | `@mission-platform/typescript-config` | TypeScript 编译器预设。 | `tsconfig.json` |
 | `@mission-platform/stylelint-config` | CSS 和 SCSS linting。 | `stylelint.config.mjs` |
 | `@mission-platform/vite-config` | Vite 和 Vitest 配置助手。 | `vite.config.ts` |

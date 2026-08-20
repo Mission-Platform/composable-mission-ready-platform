@@ -18,7 +18,7 @@ Pakketten en applicaties gebruiken deze configuraties door ze uit te breiden in 
 | Pakket | Doel | Primair configuratieoppervlak |
 |:---|:---|:---|
 | [`@mission-platform/eslint-config`](eslint-config.md) | Vlak ESLint regels voor JS/TS en Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` | Standaardinstellingen voor de opmaak van de opslagplaats. | `prettier.config.mjs` |
+| `@mission-platform/prettier-config` | Standaardinstellingen voor de opmaak van de opslagplaats. | `prettier.config.js` |
 | `@mission-platform/typescript-config` | TypeScript compiler-voorinstellingen. | `tsconfig.json` |
 | `@mission-platform/stylelint-config` | CSS- en SCSS-linting. | `stylelint.config.mjs` |
 | `@mission-platform/vite-config` | Vite En Vitest configuratiehulpen. | `vite.config.ts` |

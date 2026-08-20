@@ -185,8 +185,6 @@ WebAssembly 기반 맞춤법 검사.
 | 패키지 | 목적 |
 |:--------------------------------------------|:--------------------------------------------------|
 | `@mission-platform/barcode`                 | 1D 바코드 인코딩/디코딩 외관 및 구성요소.    |
-| `@mission-platform/barcode-decode-wasm`     | 생성된 바코드 디코더 WebAssembly 모듈.     |
-| `@mission-platform/barcode-encode-wasm`     | 바코드 인코더 WebAssembly 모듈이 생성되었습니다.     |
 | `@mission-platform/code-scan-wasm`          | 생성된 이미지 스캐너 WebAssembly 모듈.       |
 | `@mission-platform/code-scanner`            | 카메라 및 이미지 코드 스캔 구성 요소.         |
 | `@mission-platform/matrix-code`             | 데이터 매트릭스 및 Aztec 인코딩/디코딩 외관.       |

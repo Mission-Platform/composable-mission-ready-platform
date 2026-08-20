@@ -185,8 +185,6 @@ WebAssembly 支持的拼写检查。
 |套餐 |目的|
 |:--------------------------------------------|:--------------------------------------------------|
 | `@mission-platform/barcode`                 |一维条形码编码/解码外观和组件。    |
-| `@mission-platform/barcode-decode-wasm`     |生成的条形码解码器WebAssembly模块。     |
-| `@mission-platform/barcode-encode-wasm`     |生成的条形码编码器WebAssembly模块。     |
 | `@mission-platform/code-scan-wasm`          |生成图像扫描仪 WebAssembly 模块。       |
 | `@mission-platform/code-scanner`            |摄像头和图像扫码组件。         |
 | `@mission-platform/matrix-code`             | Data Matrix 和 Aztec 编码/解码外观。       |

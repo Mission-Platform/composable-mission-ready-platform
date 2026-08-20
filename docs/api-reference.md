@@ -26,16 +26,63 @@ The foundation of the "write-once" architecture, providing a framework-neutral J
 | `toVueComponent`   | Adapter  | Converts a forge component to a Vue 3 component (from `@mission-platform/forge/vue`).   |
 | `toReactComponent` | Adapter  | Converts a forge component to a React component (from `@mission-platform/forge/react`). |
 
+### @mission-platform/vite-plugin-forge
+
+The compiler driver accepts explicit `FrameworkOutputPlugin` instances; it does
+not provide a framework registry. `defineViteForgeComponents` and
+`defineTsdownForgeComponents` (plus the hook and CMS helpers) share an in-process
+`ForgeCompilerService` for one build or watch session.
+
+| Capability | Description |
+|:-----------|:------------|
+| Service lifecycle | Reuse source, graph, parsed-source, semantic-IR, and target-artifact state across builds; dispose one-shot services after completion and watcher services on close. |
+| Cache keys | Source/dependency/config fingerprints, compiler and router options, `tsconfig` `baseUrl`/`paths`, target ID, plugin identity/version, and relevant conditions. |
+| Watch invalidation | Changed files invalidate reverse graph dependents, including transitive component and hook entries; unrelated target snapshots remain reusable. |
+| Diagnostics/report | Reports phase timing, cache hit/miss counts, affected files, warnings, errors, and emitted artifact counts. Errors block promotion. |
+| Artifact manifest | Lists target-scoped entries, modules, declarations, source maps, assets, and checksums before atomic promotion. |
+| Extension point | Implement and pass a `FrameworkOutputPlugin` from a caller-owned `forge-plugin-*` package; do not add target branches to the neutral driver. |
+
+Configure aliases through the project `tsconfig.json` (`baseUrl` and
+`paths`); Vite and tsdown graph preparation use the same alias facts. Router
+selection, router plugins, and conditions are forwarded through component and
+hook helpers. A future worker/daemon may sit behind the service contract, but
+the supported implementation is currently in-process.
+
 ### @mission-platform/router
 
-Framework-agnostic routing primitives and adapters.
+Framework-neutral route contracts, pure matching helpers, and compiler markers for
+shared packages. Applications own route records and native router instances; the
+Forge router target selected by the application supplies the runtime capabilities.
 
-| Export           | Type     | Description                                                                                                      |
-|:-----------------|:---------|:-----------------------------------------------------------------------------------------------------------------|
-| `MpRoute`        | Type     | Interface for defining route trees.                                                                              |
-| `defineRoutes`   | Function | Helper to define and validate route trees.                                                                       |
-| `createMpRouter` | Adapter  | Creates a Vue-compatible router (exposed from `@mission-platform/router` when the `mp:vue` condition is active). |
-| `useMpRoute`     | Hook     | Access current route state (adapter-specific).                                                                   |
+| Export / package | Type | Description |
+|:-----------------|:-----|:------------|
+| `MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation` | Types | Route records, params, query/hash state, metadata, and navigation targets. |
+| `defineRoutes`, `matchRoutes`, `resolveLocation` | Functions | Define route trees and resolve paths without a DOM or framework runtime. |
+| `MpNavigationResult`, `MpRouteGuard`, `MpHistory`, `MpRouterAdapter` | Types | Navigation outcomes/events, guards, pluggable history, and adapter contracts. |
+| `MpLink`, `useMpRoute`, `useMpRouter`, `useMpNavigation`, `MpRouterView` | Compiler markers | Neutral link, route-state, navigation, resolution, and outlet capabilities consumed by shared packages. |
+| `@mission-platform/forge-router-*` | Forge targets | Independently selected native router targets for Vue Router, React Router, SolidJS Router, SvelteKit, RedwoodSDK, and Web Components. |
+
+Runtime packages own history and reactive state; the neutral package never imports a UI framework. For Web Components,
+register the elements once and pass complex targets through DOM properties rather than serialized attributes:
+
+```ts
+import {
+  MpMemoryHistory,
+  createWebComponentsRouter,
+  registerRouterElements,
+  setForgeRouter,
+} from '@mission-platform/forge-router-web-components/runtime';
+
+registerRouterElements();
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory('/overview'),
+  routes: [{ path: '/overview', component: () => 'Documentation' }],
+});
+setForgeRouter(router);
+const link = document.createElement('forge-router-link');
+link.to = { path: '/overview', query: { q: 'router' }, hash: 'results' };
+link.router = router;
+```
 
 ## UI & Design
 
@@ -166,7 +213,8 @@ package in `packages/`, including the typed WebAssembly façades.
 | `@mission-platform/map`            | MapLibre map components and composables.                      |
 | `@mission-platform/observers`      | Intersection, mutation, and performance observer composables. |
 | `@mission-platform/phone-number`   | Typed WebAssembly phone-number parsing and formatting.        |
-| `@mission-platform/router`         | Framework-neutral routing primitives and adapters.            |
+| `@mission-platform/router`         | Framework-neutral route contracts and compiler capabilities. |
+| `@mission-platform/forge-router-web-components` | Web Components router target and framework-free runtime. |
 | `@mission-platform/rxjs`           | RxJS observable and subscription composables.                 |
 | `@mission-platform/scheduler`     | Scheduler UI, recurrence, and calendar layout domain logic. |
 | `@mission-platform/vcard`         | RFC 6350 vCard and RFC 5545 iCalendar data and components.  |
@@ -180,8 +228,6 @@ package in `packages/`, including the typed WebAssembly façades.
 | Package                                     | Purpose                                           |
 |:--------------------------------------------|:--------------------------------------------------|
 | `@mission-platform/barcode`                 | 1D barcode encode/decode façade and component.    |
-| `@mission-platform/barcode-decode-wasm`     | Generated barcode decoder WebAssembly module.     |
-| `@mission-platform/barcode-encode-wasm`     | Generated barcode encoder WebAssembly module.     |
 | `@mission-platform/code-scan-wasm`          | Generated image scanner WebAssembly module.       |
 | `@mission-platform/code-scanner`            | Camera and image code-scanning component.         |
 | `@mission-platform/matrix-code`             | Data Matrix and Aztec encode/decode façade.       |

@@ -18,7 +18,7 @@ Mission Platform は、集中化された構成パッケージを使用します
 |パッケージ |目的 |一次構成面 |
 |:---|:---|:---|
 | [`@mission-platform/eslint-config`](eslint-config.md) |フラット ESLint JS/TS のルールと Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` |リポジトリのフォーマットのデフォルト。 | `prettier.config.mjs` |
+| `@mission-platform/prettier-config` |リポジトリのフォーマットのデフォルト。 | `prettier.config.js` |
 | `@mission-platform/typescript-config` | TypeScript コンパイラのプリセット。 | `tsconfig.json` |
 | `@mission-platform/stylelint-config` | CSS および SCSS リンティング。 | `stylelint.config.mjs` |
 | `@mission-platform/vite-config` | Vite そして Vitest 構成ヘルパー。 | `vite.config.ts` |

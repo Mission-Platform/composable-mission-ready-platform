@@ -185,8 +185,6 @@ einpacken `packages/`, einschließlich der typisierten WebAssembly-Fassaden.
 | Paket | Zweck |
 |:--------------------------------------------|:--------------------------------------------------|
 | `@mission-platform/barcode`                 | 1D-Barcode kodiert/dekodiert Fassade und Bauteil.    |
-| `@mission-platform/barcode-decode-wasm`     | Generiertes Barcode-Decoder-WebAssembly-Modul.     |
-| `@mission-platform/barcode-encode-wasm`     | Generiertes Barcode-Encoder-WebAssembly-Modul.     |
 | `@mission-platform/code-scan-wasm`          | Generiertes Bildscanner-WebAssembly-Modul.       |
 | `@mission-platform/code-scanner`            | Kamera- und Bildcode-Scankomponente.         |
 | `@mission-platform/matrix-code`             | Data Matrix und Aztec kodieren/dekodieren Fassade.       |

@@ -1,13 +1,15 @@
 /// <reference types="vitest/config" />
-import { readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { defineFrameworkAppConfig } from '@mission-platform/vite-config';
+import { defineWebComponentAppConfig } from '@mission-platform/vite-config';
 import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 
-import type { SitemapUrl } from '@mission-platform/seo';
-import type { UserConfig } from 'vite';
+import {
+  buildSitemapUrls,
+  collectDocumentSlugs,
+  SITE_ORIGIN,
+} from './src/route-inventory.ts';
 
 // The docs site renders the canonical Markdown that lives in the monorepo
 // `docs/` directory (outside this app's root). Allow Vite's dev server to read
@@ -17,104 +19,33 @@ const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(currentDirectory, '../..');
 const documentsDirectory = path.join(repoRoot, 'docs');
 
-// ─── SEO / SSG route inventory ───────────────────────────────────────────────
-// Enumerate every Markdown document at build time so the static-site generator
-// prerenders one HTML file per page and the sitemap advertises every URL. This
-// mirrors the runtime glob in `src/documentation.ts`; keeping the derivation in
-// the build config (rather than importing the runtime module, which relies on
-// `import.meta.glob`) avoids pulling the Vue app graph into the Vite config.
-const SITE_ORIGIN = 'https://docs.mission-platform.dev';
-const DEFAULT_SLUG = 'overview';
-const SUPPORTED_LOCALES = ['en', 'ar', 'de', 'es', 'fr', 'he', 'it', 'ja', 'ko', 'nl', 'zh'] as const;
-
-/** All documentation slugs, e.g. `overview`, `configs/eslint-config`. */
-function collectDocumentSlugs(): string[] {
-  const entries = readdirSync(documentsDirectory, { recursive: true, withFileTypes: true });
-  return entries
-    .filter(
-      (entry) =>
-        entry.isFile() &&
-        entry.name.endsWith('.md') &&
-        !path.join(entry.parentPath, entry.name).includes(`${path.sep}locales${path.sep}`),
-    )
-    .map((entry) => {
-      const relative = path.relative(documentsDirectory, path.join(entry.parentPath, entry.name));
-      return relative.replace(/\.md$/, '').split(path.sep).join('/');
-    })
-    .toSorted();
-}
-
-/** Canonical URL for a slug (the default slug maps to the site root). */
-function canonicalForSlug(slug: string, locale: string = 'en'): string {
-  if (locale === 'en' && slug === DEFAULT_SLUG) return `${SITE_ORIGIN}/`;
-  return `${SITE_ORIGIN}/${locale === 'en' ? '' : `${locale}/`}${slug}`;
-}
-
-function alternatesForSlug(slug: string) {
-  return SUPPORTED_LOCALES.map((locale) => ({
-    hreflang: locale,
-    href: canonicalForSlug(slug, locale),
-  }));
-}
-
-const documentSlugs = collectDocumentSlugs();
-
-// Routes the static-site generator prerenders: the site root (which resolves
-// to the default document) plus one route per documentation slug. The
-// query-driven `/search` view is intentionally excluded — it has no stable,
-// indexable content and is marked `noindex`.
-const includedRoutes: string[] = [
-  '/',
-  ...documentSlugs.map((slug) => `/${slug}`),
-  ...SUPPORTED_LOCALES.filter((locale) => locale !== 'en').flatMap((locale) =>
-    documentSlugs.map((slug) => `/${locale}/${slug}`),
-  ),
-];
+// ─── SEO / prerender route inventory ─────────────────────────────────────────
+// Keep the route list shared by Vite's SEO files and the memory-history
+// prerender script. The runtime documentation manifest remains the source of
+// page content; this build-time list only determines emitted URLs.
+const documentSlugs = collectDocumentSlugs(documentsDirectory);
 
 // One sitemap entry per canonical URL. The root/default document gets top
 // priority; every other page is slightly lower.
-const sitemapUrls: SitemapUrl[] = SUPPORTED_LOCALES.flatMap((locale) =>
-  documentSlugs.map((slug) => ({
-    loc: canonicalForSlug(slug, locale),
-    changefreq: 'weekly' as const,
-    priority: slug === DEFAULT_SLUG ? 1 : 0.8,
-    alternates: alternatesForSlug(slug),
-  })),
-);
+const sitemapUrls = buildSitemapUrls(documentSlugs);
 
 const SITEMAP_URL = `${SITE_ORIGIN}/sitemap.xml`;
 
-// `vite-ssg` reads `ssgOptions` off the resolved Vite config but does not ship
-// a module augmentation for Vite's own `UserConfig` type, so we extend it
-// locally and cast when attaching the property.
-interface BeastiesOptions {
-  preload?: 'body' | 'media' | 'swap' | 'swap-high' | 'js' | 'js-lazy';
-  pruneSource?: boolean;
-  inlineFonts?: boolean;
-  preloadFonts?: boolean;
-  noscriptFallback?: boolean;
-  logLevel?: 'info' | 'warn' | 'error' | 'silent' | 'debug' | 'trace';
-  [key: string]: unknown;
-}
-
-interface SsgUserConfig extends UserConfig {
-  ssgOptions?: {
-    includedRoutes?: () => string[] | Promise<string[]>;
-    formatting?: 'minify' | 'prettify' | 'none';
-    dirStyle?: 'flat' | 'nested';
-    beastiesOptions?: BeastiesOptions | false;
-  };
-}
-
-const config = defineFrameworkAppConfig({
-  framework: 'vue',
+const config = defineWebComponentAppConfig({
   overrides: {
     optimizeDeps: {
       include: ['mermaid'],
     },
+    // Forge custom elements load their compiled CSS through shadow-root
+    // `styleUrls`; keep even small sidecars addressable instead of turning
+    // them into data URLs in the client bundle.
+    build: {
+      assetsInlineLimit: 0,
+    },
     // The SEO companion plugin generates `robots.txt` + `sitemap.xml` from the
     // `@mission-platform/seo` builders into the app's `publicDir`, so they are
-    // served in dev and copied into the build output.
+    // served in dev and copied into the build output. Route HTML is emitted by
+    // the package-local memory-history prerender task after the client bundle.
     plugins: [
       seoPlugin({
         sitemap: { urls: sitemapUrls },
@@ -140,27 +71,5 @@ const config = defineFrameworkAppConfig({
     },
   },
 });
-
-// `vite-ssg` reads this at build time; it is not part of Vite's own
-// `UserConfig`, so we attach it via the locally extended `SsgUserConfig`.
-(config as SsgUserConfig).ssgOptions = {
-  includedRoutes: () => includedRoutes,
-  // Emit `dist/<slug>/index.html` so nested slugs (e.g. `configs/eslint-config`)
-  // resolve cleanly behind a static file server / SPA worker.
-  dirStyle: 'nested',
-  // Minify each generated HTML file.
-  formatting: 'minify',
-  // Inline critical CSS into each prerendered HTML file and lazy-load the rest
-  // via `beasties`. Keep the original stylesheets so client-side navigation
-  // after hydration can apply any non-critical styles.
-  beastiesOptions: {
-    preload: 'swap-high',
-    pruneSource: false,
-    noscriptFallback: true,
-    inlineFonts: false,
-    preloadFonts: false,
-    logLevel: 'warn',
-  },
-};
 
 export default config;

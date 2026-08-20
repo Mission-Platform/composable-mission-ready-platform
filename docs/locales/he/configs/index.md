@@ -18,7 +18,7 @@
 | חבילה | מטרה | משטח תצורה ראשי |
 |:---|:---|:---|
 | [`@mission-platform/eslint-config`](eslint-config.md) | שָׁטוּחַ ESLint כללים עבור JS/TS ו Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` | ברירת המחדל של עיצוב מאגר. | `prettier.config.mjs` |
+| `@mission-platform/prettier-config` | ברירת המחדל של עיצוב מאגר. | `prettier.config.js` |
 | `@mission-platform/typescript-config` | TypeScript הגדרות מראש של מהדר. | `tsconfig.json` |
 | `@mission-platform/stylelint-config` | מוך CSS ו- SCSS. | `stylelint.config.mjs` |
 | `@mission-platform/vite-config` | Vite ו Vitest עוזרי תצורה. | `vite.config.ts` |

@@ -75,8 +75,13 @@ Visual consistency is maintained through a sophisticated design token system man
 
 Core application services like routing and internationalisation are designed to be framework-agnostic.
 
-- **`@mission-platform/router`**: Defines routes as a plain data structure (`MpRoute`). Adapters for Vue translate these
-  into framework-specific router instances and composables.
+- **`@mission-platform/router`**: Provides structured route targets, pure URL/location helpers, and compiler markers such
+  as `MpLink`, `useMpRoute`, `useMpRouter`, and `MpRouterView`. It has no UI-framework or router-library runtime
+  dependencies and never owns an application's route table.
+- **Forge router targets**: `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`, `-redwood`, and
+  `-web-components` lower those markers to the native router selected by the consuming application. Applications retain
+  ownership of native route definitions, providers, guards, loaders, and router instances; the target only supplies
+  consumption capabilities.
 - **`@mission-platform/i18n`**: A wrapper around `i18next` that provides a universal `createForgeI18N` factory.
   Framework-specific adapters provide `useI18n` hooks and components for Vue and React.
 

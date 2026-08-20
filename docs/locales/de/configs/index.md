@@ -18,7 +18,7 @@ Pakete und Anwendungen nutzen diese Konfigurationen, indem sie sie in ihren loka
 | Paket | Zweck | Primäre Konfigurationsoberfläche |
 |:---|:---|:---|
 | [`@mission-platform/eslint-config`](eslint-config.md) | Wohnung ESLint Regeln für JS/TS und Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` | Standardeinstellungen für die Repository-Formatierung. | `prettier.config.mjs` |
+| `@mission-platform/prettier-config` | Standardeinstellungen für die Repository-Formatierung. | `prettier.config.js` |
 | `@mission-platform/typescript-config` | TypeScript Compiler-Voreinstellungen. | `tsconfig.json` |
 | `@mission-platform/stylelint-config` | CSS- und SCSS-Linting. | `stylelint.config.mjs` |
 | `@mission-platform/vite-config` | Vite Und Vitest Konfigurationshelfer. | `vite.config.ts` |

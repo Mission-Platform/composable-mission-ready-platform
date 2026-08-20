@@ -21,7 +21,7 @@ To select the correct bundle, you must configure your build tool and TypeScript 
 
 ### 1. Vite Configuration
 
-If you are using Vite, you can use the helper functions from `@mission-platform/vite-config` to automatically set the correct resolve conditions.
+If you are using Vite, you can use the helper functions from `@mission-platform/vite-config` to automatically set the correct resolve conditions. A framework-free app should select `mp:web-component`; do not install or configure a Vue plugin for that target.
 
 ```ts
 import { defineConfig } from 'vite';
@@ -29,8 +29,8 @@ import { frameworkResolveConditions } from '@mission-platform/vite-config';
 
 export default defineConfig({
   resolve: {
-    // This places 'mp:vue' at the top of the condition list
-    conditions: frameworkResolveConditions('mp:vue'),
+    // This places the Web Components build at the top of the condition list.
+    conditions: frameworkResolveConditions('web-component'),
   },
 });
 ```
@@ -41,9 +41,9 @@ To ensure the TypeScript Language Service (LSP) resolves types for the correct f
 
 ```json
 {
-  "extends": "@mission-platform/typescript-config/framework-vue",
+  "extends": "@mission-platform/typescript-config/framework-web-component",
   "compilerOptions": {
-    "customConditions": ["mp:vue"]
+    "customConditions": ["mp:web-component"]
   }
 }
 ```
@@ -53,7 +53,7 @@ To ensure the TypeScript Language Service (LSP) resolves types for the correct f
 Install the required packages from your registry:
 
 ```bash
-pnpm add @mission-platform/components @mission-platform/tokens
+pnpm add @mission-platform/components @mission-platform/tokens @mission-platform/router @mission-platform/forge-router-web-components
 ```
 
 ### Peer Dependencies
@@ -62,8 +62,13 @@ Most Mission Platform packages externalize their runtime dependencies. Ensure yo
 
 ```bash
 # Example for a Vue 3 project
-pnpm add vue vue-router @mission-platform/i18n
+pnpm add @mission-platform/i18n
 ```
+
+The neutral router package has no framework or router-library runtime dependencies. Install the native router selected by
+your application and the matching Forge target (`@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
+`-redwood`, or `-web-components`). The application owns route definitions, providers, guards, loaders, and the native
+router instance; reusable packages import only capabilities from `@mission-platform/router`.
 
 ## Component Usage
 
@@ -77,6 +82,33 @@ import { ForgeButton } from '@mission-platform/components';
 <template>
   <ForgeButton variant="primary">Click Me</ForgeButton>
 </template>
+```
+
+### Framework-free routing
+
+Use memory history for tests and prerendering, or omit `history` in a browser to use browser history. Register router
+elements once; assign route targets as properties when they contain params, query values, or hashes:
+
+```ts
+import {
+  MpMemoryHistory,
+  createWebComponentsRouter,
+  registerRouterElements,
+  setForgeRouter,
+} from '@mission-platform/forge-router-web-components/runtime';
+
+registerRouterElements();
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory('/'),
+  routes: [
+    { path: '/', redirect: '/docs/intro' },
+    { path: '/docs/*', name: 'doc', component: () => document.createTextNode('Docs') },
+  ],
+});
+setForgeRouter(router);
+
+const outlet = document.querySelector('forge-router-outlet');
+outlet?.setRouter(router);
 ```
 
 ## Design Token Customization

@@ -18,7 +18,7 @@
 | الحزمة | الغرض | سطح التكوين الأساسي |
 |:---|:---|:---|
 | [`@mission-platform/eslint-config`](eslint-config.md) | مستوي ESLint قواعد JS/TS و Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` | الإعدادات الافتراضية لتنسيق المستودع. | `prettier.config.mjs` |
+| `@mission-platform/prettier-config` | الإعدادات الافتراضية لتنسيق المستودع. | `prettier.config.js` |
 | `@mission-platform/typescript-config` | TypeScript الإعدادات المسبقة للمترجم. | `tsconfig.json` |
 | `@mission-platform/stylelint-config` | بطانة CSS وSCSS. | `stylelint.config.mjs` |
 | `@mission-platform/vite-config` | Vite و Vitest مساعدي التكوين. | `vite.config.ts` |

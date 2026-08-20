@@ -110,6 +110,30 @@ Run tests using Vitest:
 pnpm exec turbo run test --filter @mission-platform/<name>
 ```
 
+### Router packages and Web Components targets
+
+Use `@mission-platform/router` for structured route targets, pure URL helpers, and neutral compiler markers. Shared
+packages must not define or register application routes. Applications select one Forge router target independently from
+their UI target, retain ownership of native route records and router instances, and bind any target-specific runtime
+context during bootstrap. The initial targets are `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
+`-redwood`, and `-web-components`; unsupported capability combinations must remain compiler diagnostics.
+
+For a framework-free package or app, select the Forge Web Components condition in both build and TypeScript configs:
+
+```ts
+import { frameworkResolveConditions } from '@mission-platform/vite-config';
+
+export default {
+  resolve: { conditions: frameworkResolveConditions('web-component') },
+};
+```
+
+For Web Components applications, import the runtime from `@mission-platform/forge-router-web-components/runtime`, call
+`registerRouterElements()` once, call `setForgeRouter(appRouter)` after creating the app-owned router, pass structured
+`to` values as DOM properties, and use `MpMemoryHistory` in prerender/tests. A package that adds a reusable router
+element or changes Web Components behavior must add a neutral story under `src/**/*.stories.ts` and include the target in
+the Web Components Storybook workbench.
+
 ## Documentation (`llms.txt`)
 
 Every package includes an `llms.txt` file at its root. This file provides a concise, technical description of the

@@ -185,8 +185,6 @@
 | חבילה | מטרה |
 |:--------------------------------------------|:--------------------------------------------------|
 | `@mission-platform/barcode`                 | קידוד/פענוח ברקוד 1D חזית ורכיב.    |
-| `@mission-platform/barcode-decode-wasm`     | מודול WebAssembly של מפענח ברקוד.     |
-| `@mission-platform/barcode-encode-wasm`     | מודול WebAssembly מקודד ברקוד שנוצר.     |
 | `@mission-platform/code-scan-wasm`          | מודול WebAssembly של סורק תמונות שנוצר.       |
 | `@mission-platform/code-scanner`            | רכיב סריקת קוד מצלמה ותמונה.         |
 | `@mission-platform/matrix-code`             | מטריצת נתונים ואצטקים מקודדים/פענחים חזית.       |

@@ -185,8 +185,6 @@ paquet dans `packages/`, y compris les façades typées WebAssembly.
 | Forfait | Objectif |
 |:--------------------------------------------|:--------------------------------------------------|
 | `@mission-platform/barcode`                 | Code-barres 1D encodant/décodant la façade et le composant.    |
-| `@mission-platform/barcode-decode-wasm`     | Module WebAssembly de décodeur de codes-barres généré.     |
-| `@mission-platform/barcode-encode-wasm`     | Module WebAssembly d'encodeur de codes-barres généré.     |
 | `@mission-platform/code-scan-wasm`          | Module WebAssembly du scanner d'images généré.       |
 | `@mission-platform/code-scanner`            | Composant d'analyse de code d'appareil photo et d'image.         |
 | `@mission-platform/matrix-code`             | Façade d'encodage/décodage Data Matrix et Aztec.       |

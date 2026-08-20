@@ -185,8 +185,6 @@ WebAssembly を利用したスペルチェック。
 |パッケージ |目的 |
 |:--------------------------------------------|:--------------------------------------------------|
 | `@mission-platform/barcode`                 | 1D バーコードは、ファサードとコンポーネントをエンコード/デコードします。    |
-| `@mission-platform/barcode-decode-wasm`     |生成されたバーコード デコーダー WebAssembly モジュール。     |
-| `@mission-platform/barcode-encode-wasm`     |生成されたバーコード エンコーダー WebAssembly モジュール。     |
 | `@mission-platform/code-scan-wasm`          |生成されたイメージ スキャナー WebAssembly モジュール。       |
 | `@mission-platform/code-scanner`            |カメラおよび画像コードスキャンコンポーネント。         |
 | `@mission-platform/matrix-code`             | Data Matrix と Aztec はファサードをエンコード/デコードします。       |

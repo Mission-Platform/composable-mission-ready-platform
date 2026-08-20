@@ -85,6 +85,33 @@ semantic node instead of silently emitting a generic runtime closure or invalid 
 are cached by source content, module kind, and semantic-affecting options; the target stages receive the same cached
 module for each selected framework while keeping target lowering and optimization independent.
 
+## Service lifecycle and incremental builds
+
+Vite and tsdown helpers use one in-process `ForgeCompilerService` for the lifetime of a build session. The service owns
+the source snapshot, graph, parsed frontend, neutral optimization, semantic IR, and target artifact caches. It is safe to
+serve several explicit targets in sequence or concurrently; target artifacts are keyed by target ID and never share a
+generated directory. One-shot helpers dispose the service after the build, while watch helpers retain it until the Vite
+server closes.
+
+An effective cache key includes the source fingerprint, module kind, compiler and router options, source-root/config
+fingerprints, target ID and plugin fingerprint, and relevant conditions. A changed file invalidates its reverse graph
+dependents, including transitive component and hook entries, instead of clearing unrelated targets. `tsconfig.json`
+`baseUrl` and `paths` are included in graph preparation, so aliases are resolved consistently in Vite and tsdown builds.
+Call `invalidate(changedFiles)` from custom watch integrations and call `dispose()` when a service is no longer needed.
+
+The service report exposes phase timings, cache hits/misses, invalidated files, warnings, errors, and emitted artifact
+counts. Missing files, unsupported extensions, unresolved aliases, malformed exports, and target configuration errors are
+structured diagnostics. Warnings reach the build reporter; errors prevent generation and promotion.
+
+Every target snapshot has an artifact manifest listing generated modules, extra modules, declarations, source maps, assets,
+entries, and checksums. Native promotion validates that the manifest is complete and target-scoped before replacing the
+last successful output. A failed, cancelled, or timed-out build removes only its stage and preserves sibling targets and
+the previous `dist` tree.
+
+The first implementation is deliberately in-process because target plugins contain caller-owned functions and native
+adapters. A worker or cross-process transport/daemon may be introduced later behind the same service contract; it is not a
+framework registry and is not required for the current Vite/tsdown workflow.
+
 ## Explicit target ownership
 
 The central contracts live in `forge-plugins/forge-plugin-api/src/framework.ts`:
@@ -122,6 +149,27 @@ export default defineTsdownForgeComponents({
   name: "MissionPlatformComponents",
 });
 ```
+
+## Web Components applications and `mp:web-component`
+
+The Web Components target emits registered custom elements and is the framework-free Forge build used by static docs
+and other DOM consumers. Select it through the shared export condition rather than importing a target-specific package
+path; this keeps every `@mission-platform/*` import consistent and prevents Vue or another framework runtime from
+entering the bundle:
+
+```ts
+import { defineConfig } from 'vite';
+import { frameworkResolveConditions } from '@mission-platform/vite-config';
+
+export default defineConfig({
+  resolve: { conditions: frameworkResolveConditions('mp:web-component') },
+});
+```
+
+The matching TypeScript preset is `@mission-platform/typescript-config/framework-web-component` with
+`customConditions: ['mp:web-component']`. Browser applications can use native browser history; static/prerender builds
+should provide memory history and register elements during the render pass. The router outlet and link elements accept
+complex route targets as properties and are independent of the Forge compiler's component authoring model.
 
 The instances are caller-owned. Fresh instances can carry target-specific options and metadata, and an empty plugin list
 is a configuration error rather than a request to use a hidden default registry. This makes adding a new target an
@@ -275,6 +323,10 @@ Trace a build by responsibility rather than by generated file first:
 4. **CMS output:** inspect `forge-plugins/forge-cms-plugin-api/` for the content model, the driver, and the build
    helpers, then the specific `forge-plugins/forge-cms-*` target for its emitters and platform mapping.
 5. **Package selection:** inspect the consuming package’s `tsdown.config.ts` and direct `forge-plugin-*` dependencies.
+
+For a repeated or watch build, inspect the `ForgeCompilationReport` first: a low hit rate points to source/config or target
+fingerprints, while a large affected-file set points to graph edges or alias configuration. Check the target manifest
+before inspecting native bundler output; it distinguishes a missing generated artifact from a native compilation error.
 
 The most useful evidence is the first failing stage and its diagnostics. If semantic IR is wrong, fix neutral parsing or
 analysis. If the IR is correct but native source is wrong, fix the selected target plugin. If generated source is correct

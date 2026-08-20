@@ -3,8 +3,18 @@
   "compilerOptions": {
     "paths": { "@/*": ["./src/*"] },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "types": ["vite/client"],
-    "customConditions": ["mp:vue"]
+    "types": ["vite/client", "node"],
+    "customConditions": ["mp:web-component"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "environment.d.ts"]
+  "include": [
+    "src/main.ts",
+    "src/app/**/*.ts",
+    "src/ssg/**/*.ts",
+    "src/documentation.ts",
+    "src/i18n.ts",
+    "src/route-inventory.ts",
+    "src/seo-site.ts",
+    "src/shims.d.ts",
+    "environment.d.ts"
+  ]
 }

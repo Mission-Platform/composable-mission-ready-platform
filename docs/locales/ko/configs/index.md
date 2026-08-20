@@ -18,7 +18,7 @@ Mission Platform은 중앙 집중식 구성 패키지를 사용합니다. `confi
 | 패키지 | 목적 | 기본 구성 표면 |
 |:---|:---|:---|
 | [`@mission-platform/eslint-config`](eslint-config.md) | 평평한 ESLint JS/TS 규칙 및 Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` | 저장소 형식 기본값. | `prettier.config.mjs` |
+| `@mission-platform/prettier-config` | 저장소 형식 기본값. | `prettier.config.js` |
 | `@mission-platform/typescript-config` | TypeScript 컴파일러 사전 설정. | `tsconfig.json` |
 | `@mission-platform/stylelint-config` | CSS 및 SCSS 린트. | `stylelint.config.mjs` |
 | `@mission-platform/vite-config` | Vite 그리고 Vitest 구성 도우미. | `vite.config.ts` |

@@ -18,7 +18,7 @@ I pacchetti e le applicazioni utilizzano queste configurazioni estendendole nei 
 | Pacchetto | Scopo | Superficie di configurazione primaria |
 |:---|:---|:---|
 | [`@mission-platform/eslint-config`](eslint-config.md) | Piatto ESLint regole per JS/TS e Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` | Impostazioni predefinite di formattazione del repository. | `prettier.config.mjs` |
+| `@mission-platform/prettier-config` | Impostazioni predefinite di formattazione del repository. | `prettier.config.js` |
 | `@mission-platform/typescript-config` | TypeScript preimpostazioni del compilatore. | `tsconfig.json` |
 | `@mission-platform/stylelint-config` | Linting CSS e SCSS. | `stylelint.config.mjs` |
 | `@mission-platform/vite-config` | Vite E Vitest aiutanti di configurazione. | `vite.config.ts` |

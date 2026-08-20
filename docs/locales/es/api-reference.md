@@ -185,8 +185,6 @@ paquete en `packages/`, incluidas las fachadas WebAssembly escritas.
 | Paquete | Propósito |
 |:--------------------------------------------|:--------------------------------------------------|
 | `@mission-platform/barcode`                 | Codificación/decodificación de códigos de barras 1D de fachada y componente.    |
-| `@mission-platform/barcode-decode-wasm`     | Módulo WebAssembly decodificador de código de barras generado.     |
-| `@mission-platform/barcode-encode-wasm`     | Módulo WebAssembly del codificador de código de barras generado.     |
 | `@mission-platform/code-scan-wasm`          | Módulo WebAssembly del escáner de imágenes generadas.       |
 | `@mission-platform/code-scanner`            | Componente de escaneo de código de imagen y cámara.         |
 | `@mission-platform/matrix-code`             | Fachada de codificación/decodificación Data Matrix y Azteca.       |

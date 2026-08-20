@@ -13,7 +13,7 @@ Packages and applications consume these configurations by extending them in thei
 | Package | Purpose | Primary configuration surface |
 |:---|:---|:---|
 | [`@mission-platform/eslint-config`](./eslint-config.md) | Flat ESLint rules for JS/TS and Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` | Repository formatting defaults. | `prettier.config.mjs` |
+| `@mission-platform/prettier-config` | Repository formatting defaults. | `prettier.config.js` |
 | `@mission-platform/typescript-config` | TypeScript compiler presets. | `tsconfig.json` |
 | `@mission-platform/stylelint-config` | CSS and SCSS linting. | `stylelint.config.mjs` |
 | `@mission-platform/vite-config` | Vite and Vitest configuration helpers. | `vite.config.ts` |

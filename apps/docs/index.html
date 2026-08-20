@@ -9,11 +9,13 @@
     <title>Mission Platform Documentation</title>
     <meta
       name="description"
-      content="Documentation for the Mission Platform — a composable, mission-ready Vue 3 monorepo."
+      content="Documentation for the Mission Platform — a composable, framework-neutral monorepo."
     />
   </head>
   <body>
-    <div id="app"></div>
+    <docs-app-shell id="app">
+      <forge-router-outlet></forge-router-outlet>
+    </docs-app-shell>
     <script
       type="module"
       src="/src/main.ts"

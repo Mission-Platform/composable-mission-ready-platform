@@ -185,8 +185,6 @@
 | الحزمة | الغرض |
 |:--------------------------------------------|:--------------------------------------------------|
 | `@mission-platform/barcode`                 | واجهة ومكون تشفير/فك تشفير الباركود 1D.    |
-| `@mission-platform/barcode-decode-wasm`     | تم إنشاء وحدة فك ترميز الباركود WebAssembly.     |
-| `@mission-platform/barcode-encode-wasm`     | تم إنشاء وحدة WebAssembly لتشفير الباركود.     |
 | `@mission-platform/code-scan-wasm`          | تم إنشاء وحدة WebAssembly للماسح الضوئي للصور.       |
 | `@mission-platform/code-scanner`            | مكون مسح رمز الكاميرا والصورة.         |
 | `@mission-platform/matrix-code`             | مصفوفة البيانات وواجهة تشفير/فك تشفير الأزتيك.       |

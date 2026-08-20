@@ -18,7 +18,7 @@ Los paquetes y aplicaciones consumen estas configuraciones extendiéndolas en su
 | Paquete | Propósito | Superficie de configuración primaria |
 |:---|:---|:---|
 | [`@mission-platform/eslint-config`](eslint-config.md) | Departamento ESLint reglas para JS/TS y Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` | Valores predeterminados de formato del repositorio. | `prettier.config.mjs` |
+| `@mission-platform/prettier-config` | Valores predeterminados de formato del repositorio. | `prettier.config.js` |
 | `@mission-platform/typescript-config` | TypeScript ajustes preestablecidos del compilador. | `tsconfig.json` |
 | `@mission-platform/stylelint-config` | Linting CSS y SCSS. | `stylelint.config.mjs` |
 | `@mission-platform/vite-config` | Vite y Vitest ayudantes de configuración. | `vite.config.ts` |
