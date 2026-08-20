@@ -11,7 +11,7 @@ date_row_content: Date actuelle (JJ/MM/AAAA)
 name:
   hint: Tapez {preview} dans l'éditeur pour insérer cet extrait
   label: Nom de l'extrait
-  placeholder: ex. greeting
+  placeholder: par exemple salutation
 rename:
   label: Nom de l'onglet
 title:
