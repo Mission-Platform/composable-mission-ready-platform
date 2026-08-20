@@ -1,231 +1,274 @@
 # הפניה ל-API
 
-תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
+Technical reference for the Mission Platform core packages and framework adapters.
 
-> מקור באנגלית: [docs/api-reference.md](../../api-reference.md)
-> שפה: עברית (he)
+> **Imports are always bare.** Framework-shipping `@mission-platform/*` packages expose a single `.`
+> entry guarded by the `mp:vue`, `mp:react`, `mp:solid`, and `mp:web-component` export
+> conditions. Select the framework **once** — via `resolve.conditions` (see `defineFrameworkAppConfig` /
+> `frameworkResolveConditions` from `@mission-platform/vite-config`) and `customConditions` (via the
+> `@mission-platform/typescript-config/framework-<name>` presets) — then import everything with the bare
+> package specifier. See [External Consumer Setup](./external-consumer-setup.md).
 
-התייחסות טכנית לחבילות הליבה של Mission Platform ומתאמי מסגרת.
-
-> **היבוא תמיד חשוף.** משלוח מסגרת `@mission-platform/*` חבילות חושפות יחיד `.`
-> הכניסה נשמרת על ידי `mp:vue`, `mp:react`, `mp:solid`, ו `mp:web-component` ייצוא
-> תנאים. בחר את המסגרת **פעם** - באמצעות `resolve.conditions` (לִרְאוֹת `defineFrameworkAppConfig` /
-> `frameworkResolveConditions` מִן `@mission-platform/vite-config`) ו `customConditions` (דרך ה
-> `@mission-platform/typescript-config/framework-<name>` הגדרות קבועות מראש) - ואז ייבא הכל עם החשוף
-> מפרט החבילה. לִרְאוֹת [הגדרת צרכן חיצוני](external-consumer-setup.md).
-
-## מסגרת ליבה
+## Core Framework
 
 ### @mission-platform/forge
 
-הבסיס של ארכיטקטורת "כתוב פעם אחת", מספק זמן ריצה ו-hooks של JSX ניטרליים למסגרת.
+The foundation of the "write-once" architecture, providing a framework-neutral JSX runtime and hooks.
 
-| ייצוא | הקלד | תיאור |
-|:-------------------|:---------|:----------------------------------------------------------------------------------------|
-| `h`, `Fragment`    | פונקציה | מפעל ומקטע JSX ליצירת רכיבים.                                      |
-| `useState`         | הוק | וו מצב נייטרלי מסגרת.                                                           |
-| `useEffect`        | הוק | וו אפקט ניטרלי מסגרת.                                                          |
-| `useMemo`          | הוק | וו זיכרונות נייטרלי מסגרת.                                                     |
-| `useRef`           | הוק | וו התייחסות ניטרלי למסגרת.                                                       |
-| `useContext`       | הוק | וו הקשר ניטרלי למסגרת.                                                         |
-| `toVueComponent`   | מתאם | ממירה רכיב חישול ל-a Vue 3 רכיבים (מ `@mission-platform/forge/vue`).   |
-| `toReactComponent` | מתאם | ממירה רכיב חישול ל-a React רכיב (מ `@mission-platform/forge/react`). |
+| Export             | Type     | Description                                                                                                                |
+| :----------------- | :------- | :------------------------------------------------------------------------------------------------------------------------- |
+| `h`, `Fragment`    | Function | JSX factory and fragment for authoring components.                                                         |
+| `useState`         | Hook     | Framework-neutral state hook.                                                                              |
+| `useEffect`        | Hook     | Framework-neutral effect hook.                                                                             |
+| `useMemo`          | Hook     | Framework-neutral memoization hook.                                                                        |
+| `useRef`           | Hook     | Framework-neutral reference hook.                                                                          |
+| `useContext`       | Hook     | Framework-neutral context hook.                                                                            |
+| `toVueComponent`   | Adapter  | Converts a forge component to a Vue 3 component (from `@mission-platform/forge/vue`).   |
+| `toReactComponent` | Adapter  | Converts a forge component to a React component (from `@mission-platform/forge/react`). |
+
+### @mission-platform/vite-plugin-forge
+
+The compiler driver accepts explicit `FrameworkOutputPlugin` instances; it does
+not provide a framework registry. `defineViteForgeComponents` and
+`defineTsdownForgeComponents` (plus the hook and CMS helpers) share an in-process
+`ForgeCompilerService` for one build or watch session.
+
+| Capability         | Description                                                                                                                                                                         |
+| :----------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Service lifecycle  | Reuse source, graph, parsed-source, semantic-IR, and target-artifact state across builds; dispose one-shot services after completion and watcher services on close. |
+| Cache keys         | Source/dependency/config fingerprints, compiler and router options, `tsconfig` `baseUrl`/`paths`, target ID, plugin identity/version, and relevant conditions.      |
+| Watch invalidation | Changed files invalidate reverse graph dependents, including transitive component and hook entries; unrelated target snapshots remain reusable.                     |
+| Diagnostics/report | Reports phase timing, cache hit/miss counts, affected files, warnings, errors, and emitted artifact counts. Errors block promotion.                 |
+| Artifact manifest  | Lists target-scoped entries, modules, declarations, source maps, assets, and checksums before atomic promotion.                                                     |
+| Extension point    | Implement and pass a `FrameworkOutputPlugin` from a caller-owned `forge-plugin-*` package; do not add target branches to the neutral driver.                        |
+
+Configure aliases through the project `tsconfig.json` (`baseUrl` and
+`paths`); Vite and tsdown graph preparation use the same alias facts. Router
+selection, router plugins, and conditions are forwarded through component and
+hook helpers. A future worker/daemon may sit behind the service contract, but
+the supported implementation is currently in-process.
 
 ### @mission-platform/router
 
-פרימיטיבים ומתאמים של ניתוב אגנוסטיים למסגרת.
+Framework-neutral route contracts, pure matching helpers, and compiler markers for
+shared packages. Applications own route records and native router instances; the
+Forge router target selected by the application supplies the runtime capabilities.
 
-| ייצוא | הקלד | תיאור |
-|:-----------------|:---------|:-----------------------------------------------------------------------------------------------------------------|
-| `MpRoute`        | הקלד | ממשק להגדרת עצי מסלול.                                                                              |
-| `defineRoutes`   | פונקציה | עוזר להגדיר ולאמת עצי מסלול.                                                                       |
-| `createMpRouter` | מתאם | יוצר א Vue-נתב תואם (נחשף מ `@mission-platform/router` כאשר ה `mp:vue` המצב פעיל). |
-| `useMpRoute`     | הוק | גישה למצב המסלול הנוכחי (ספציפי למתאם).                                                                   |
+| Export / package                                                         | Type             | Description                                                                                                                                           |
+| :----------------------------------------------------------------------- | :--------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation`                    | Types            | Route records, params, query/hash state, metadata, and navigation targets.                                                            |
+| `defineRoutes`, `matchRoutes`, `resolveLocation`                         | Functions        | Define route trees and resolve paths without a DOM or framework runtime.                                                              |
+| `MpNavigationResult`, `MpRouteGuard`, `MpHistory`, `MpRouterAdapter`     | Types            | Navigation outcomes/events, guards, pluggable history, and adapter contracts.                                                         |
+| `MpLink`, `useMpRoute`, `useMpRouter`, `useMpNavigation`, `MpRouterView` | Compiler markers | Neutral link, route-state, navigation, resolution, and outlet capabilities consumed by shared packages.                               |
+| `@mission-platform/forge-router-*`                                       | Forge targets    | Independently selected native router targets for Vue Router, React Router, SolidJS Router, SvelteKit, RedwoodSDK, and Web Components. |
 
-## ממשק משתמש ועיצוב
+Runtime packages own history and reactive state; the neutral package never imports a UI framework. For Web Components,
+register the elements once and pass complex targets through DOM properties rather than serialized attributes:
+
+```ts
+import {
+  MpMemoryHistory,
+  createWebComponentsRouter,
+  registerRouterElements,
+  setForgeRouter,
+} from '@mission-platform/forge-router-web-components/runtime';
+
+registerRouterElements();
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory('/overview'),
+  routes: [{ path: '/overview', component: () => 'Documentation' }],
+});
+setForgeRouter(router);
+const link = document.createElement('forge-router-link');
+link.to = { path: '/overview', query: { q: 'router' }, hash: 'results' };
+link.router = router;
+```
+
+## UI & Design
 
 ### @mission-platform/tokens
 
-אסימוני עיצוב מרכזיים עבור צבעים, טיפוגרפיה ומרווחים.
+Centralized design tokens for colors, typography, and spacing.
 
-| ייצוא | תיאור |
-|:--------------|:--------------------------------------------------------------------------|
-| `tokens`      | אובייקט JS/TS המכיל את כל אסימוני העיצוב (למשל, `tokens.color.primary`). |
-| `tokens.scss` | משתני SCSS לשימוש בגיליונות סגנונות.                                    |
+| Export        | Description                                                                                                                                  |
+| :------------ | :------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tokens`      | JS/TS object containing all design tokens (e.g., `tokens.color.primary`). |
+| `tokens.scss` | SCSS variables for use in stylesheets.                                                                                       |
 
 ### @mission-platform/breakpoints
 
-כלי עזר רספונסיביים ורכיבי נראות.
+Responsive utilities and visibility components.
 
-| ייצוא | הקלד | תיאור |
-|:-----------------|:----------|:-----------------------------------------------------------|
-| `useBreakpoints` | הוק | מחזיר סטטוס נקודת שבירה תגובתי.                        |
-| `ShowIf`         | רכיב | מעבד ילדים רק כאשר תנאי נקודת שבירה תואם. |
-| `HideIf`         | רכיב | מסתיר ילדים כאשר תנאי נקודת שבירה תואם.        |
+| Export           | Type      | Description                                                                |
+| :--------------- | :-------- | :------------------------------------------------------------------------- |
+| `useBreakpoints` | Hook      | Returns reactive breakpoint status.                        |
+| `ShowIf`         | Component | Renders children only when a breakpoint condition matches. |
+| `HideIf`         | Component | Hides children when a breakpoint condition matches.        |
 
 ### @mission-platform/components
 
-רכיבי ממשק משתמש משותפים שנכתבו פעם אחת וזמינים עבור מסגרות מרובות.
+מערכת בינלאומית המבוססת על i18next.
 
-- **יבוא**: תמיד `@mission-platform/components`; הפעיל `mp:<framework>` התנאי מחליט אם אתה מקבל את
-  Vue 3, React, Solid, או בניית רכיבי אינטרנט.
-- **נתיבי משנה לכל רכיב**: `@mission-platform/components/<path>` (e.g.
-  `@mission-platform/components/atoms/forge-badge/forge-badge`) הוא גם מודע למצב, וטוען רק את הרכיב הזה
-  נתח.
-- **רכיבים**: `ForgeButton`, `ForgeInput`, `ForgeModal`, ועוד.
+- **Import**: always `@mission-platform/components`; the active `mp:<framework>` condition decides whether you get the
+  Vue 3, React, Solid, or web-component build.
+- **Per-component subpaths**: `@mission-platform/components/<path>` (e.g.
+  `@mission-platform/components/atoms/forge-badge/forge-badge`) is condition-aware too, and loads only that component's
+  chunk.
+- **Components**: `ForgeButton`, `ForgeInput`, `ForgeModal`, and more.
 
-## חבילות תכונה
+## Feature Packages
 
 ### @mission-platform/i18n
 
-מערכת בינלאומית המבוססת על i18next.
+Internationalization system based on i18next.
 
-| ייצוא | תיאור |
-|:------------------|:----------------------------------------------------------|
-| `createForgeI18N` | מאתחל את מופע i18n עם ברירות מחדל של פלטפורמה.     |
-| `useI18n`         | הוק עבור תרגומים ומעבר מקומי ברכיבים. |
+| Export            | Description                                                               |
+| :---------------- | :------------------------------------------------------------------------ |
+| `createForgeI18N` | Initializes the i18n instance with platform defaults.     |
+| `useI18n`         | Hook for translations and locale switching in components. |
 
 ### @mission-platform/seo
 
-מטא תג וניהול SEO.
+Meta tag and SEO management.
 
-| ייצוא | תיאור |
-|:---------|:----------------------------------------------------------------------|
-| `useSeo` | חבר להגדרה הצהרתית של כותרת עמוד, מטא תגים ונתוני Open Graph. |
+| Export   | Description                                                                           |
+| :------- | :------------------------------------------------------------------------------------ |
+| `useSeo` | Hook to declaratively set page title, meta tags, and Open Graph data. |
 
 ### @mission-platform/map
 
-עטיפה תגובתית עבור MapLibre GL.
+Reactive wrapper for MapLibre GL.
 
-| רכיב | תיאור |
-|:----------------|:------------------------------------------|
-| `<MpMap>`       | רכיב מיכל המפה הראשי.             |
-| `<MpMapMarker>` | רכיב להצבת סמנים על המפה. |
+| Component       | Description                                               |
+| :-------------- | :-------------------------------------------------------- |
+| `<MpMap>`       | Main map container component.             |
+| `<MpMapMarker>` | Component for placing markers on the map. |
 
 ### @mission-platform/code-scanner
 
-סריקת ברקוד וקוד QR מבוססי מצלמה.
+מגשרים RxJS צפיות למצב רכיב.
 
-| רכיב | תיאור |
-|:------------------|:-----------------------------------------------------------------|
-| `<MpCodeScanner>` | רכיב שמאתחל את זרם המצלמה ופולט תוצאות סריקה. |
+| הוק               | תיאור                                                              |
+| :---------------- | :----------------------------------------------------------------- |
+| `<MpCodeScanner>` | נרשם לצפייה ומחזיר את הערך האחרון שלו כמצב תגובתי. |
 
-## אינטגרציות
+## Integrations
 
 ### @mission-platform/rxjs
 
-מגשרים RxJS צפיות למצב רכיב.
+Bridges RxJS Observables to component state.
 
-| הוק | תיאור |
-|:----------------|:----------------------------------------------------------------------------|
-| `useObservable` | נרשם לצפייה ומחזיר את הערך האחרון שלו כמצב תגובתי. |
+| Hook            | Description                                                                                 |
+| :-------------- | :------------------------------------------------------------------------------------------ |
+| `useObservable` | Subscribes to an observable and returns its latest value as reactive state. |
 
 ### @mission-platform/d3
 
-אינטגרציה של D3.js ניטראלית במסגרת.
+Framework-neutral D3.js integration.
 
-| הוק | תיאור |
-|:--------|:-------------------------------------------------------------------|
-| `useD3` | קושר מבחר D3 ל-Ref רכיב עם ניהול מחזור חיים. |
+| Hook    | Description                                                                        |
+| :------ | :--------------------------------------------------------------------------------- |
+| `useD3` | Binds a D3 selection to a component ref with lifecycle management. |
 
 ### @mission-platform/hunspell
 
-בדיקת איות באמצעות WebAssembly.
+WebAssembly-powered spell checking.
 
-| ייצוא | תיאור |
-|:---------------|:--------------------------------------------------------|
-| `initHunspell` | טוען ומציג את מודול Hunspell WebAssembly. |
-| `spell`        | בודק אם מילה מאויתת נכון.                  |
-| `suggest`      | מספק הצעות איות למילה.               |
+| Export         | Description                                                             |
+| :------------- | :---------------------------------------------------------------------- |
+| `initHunspell` | Loads and instantiates the Hunspell WebAssembly module. |
+| `spell`        | Checks if a word is spelled correctly.                  |
+| `suggest`      | Provides spelling suggestions for a word.               |
 
-## קריאה נוספת
+## ליבה וממשק משתמש
 
-- [Vue 2 ל Vue 3 מדריך הגירה](migration-guides/vue2-to-vue3.md)
-- [סקירה כללית של תצורת הפרויקט](configs/index.md)
-- [מבנה סביבת עבודה](workspace-structure.md)
+- [Vue 2 to Vue 3 Migration Guide](./migration-guides/vue2-to-vue3.md)
+- [Project Configuration Overview](./configs/index.md)
+- [Workspace Structure](./workspace-structure.md)
 
-## אינדקס חבילות עבודה מלא
+## חומרים חיבורים ואינטגרציות
 
-האינדקס הבא נוצר ממניפסטי החבילה ונשמר כאן כך שההפניה הציבורית ל-API מכסה כל
-חבילה פנימה `packages/`, כולל חזיתות WebAssembly המוקלדות.
-
-### ליבה וממשק משתמש
-
-| חבילה | מטרה |
-|:-------------------------------|:--------------------------------------------------------------|
-| `@mission-platform/forge`      | זמן ריצה ומתאמים של JSX ניטרליים למסגרת.                   |
-| `@mission-platform/components` | רכיבי ממשק משתמש לכתיבה פעם אחת.                                     |
-| `@mission-platform/icons`      | רכיבי סמל SVG לכתיבה חד פעמית.                               |
-| `@mission-platform/layouts`    | רכיבי יישום, מיכל ופריסה רספונסיבית.     |
-| `@mission-platform/forms`      | טפסי סכימה ורכיבי בונה טפסים חזותיים.              |
-| `@mission-platform/forms-core` | גזירת סכימה, אימות ולוגיקת תחום בונה טפסים. |
-| `@mission-platform/tokens`     | מאפייני CSS מותאמים אישית ואסימוני עיצוב SCSS.                 |
-
-### חומרים חיבורים ואינטגרציות
-
-| חבילה | מטרה |
-|:-----------------------------------|:--------------------------------------------------------------|
-| `@mission-platform/breakpoints`    | עוזרי מצב נקודת שבירה רספונסיביים ונראות.           |
-| `@mission-platform/d3`             | D3 בחירת מחזור חיים כלי עזר ושוליים.       |
-| `@mission-platform/i18n`           | עוזרי שילוב של i18next מדינה ומסגרת.              |
-| `@mission-platform/map`            | רכיבי מפה ורכיבי מפה של MapLibre.                      |
-| `@mission-platform/observers`      | חומרי חיבור לצומת, מוטציה וביצועי צופה. |
-| `@mission-platform/phone-number`   | ניתוח ועיצוב מספרי טלפון של WebAssembly.        |
-| `@mission-platform/router`         | פרימיטיבים ומתאמים לניתוב ניטרליים למסגרת.            |
-| `@mission-platform/rxjs`           | RxJS ניתנים לצפייה ורכיבי מנוי.                 |
-| `@mission-platform/scheduler`     | לוגיקה של תחום של מתזמן, מחזוריות ופריסה של לוח שנה. |
-| `@mission-platform/vcard`         | נתונים ורכיבים של RFC 6350 vCard ו-RFC 5545 iCalendar.  |
-| `@mission-platform/content`       | רכיבי תוכן AST, Builders, מונקו, Markdown ו-WYSIWYG. |
-| `@mission-platform/seo`            | Metadata, Open Graph ורכיבי חיבור של נתונים מובנים.        |
-| `@mission-platform/speech-audio`   | רכיבי דיבור, אודיו ו-MIDI אינטרנט.                      |
-| `@mission-platform/three`          | Three.js canvas ורכיבי חיבור למחזור החיים.                    |
+The following index is generated from the package manifests and is kept here so the public API reference covers every
+package in `packages/`, including the typed WebAssembly façades.
 
 ### חבילות קוד ו-WebAssembly
 
-| חבילה | מטרה |
-|:--------------------------------------------|:--------------------------------------------------|
-| `@mission-platform/barcode`                 | קידוד/פענוח ברקוד 1D חזית ורכיב.    |
-| `@mission-platform/code-scan-wasm`          | מודול WebAssembly של סורק תמונות שנוצר.       |
-| `@mission-platform/code-scanner`            | רכיב סריקת קוד מצלמה ותמונה.         |
-| `@mission-platform/matrix-code`             | מטריצת נתונים ואצטקים מקודדים/פענחים חזית.       |
-| `@mission-platform/matrix-code-decode-wasm` | מודול WebAssembly של מפענח קוד מטריקס. |
-| `@mission-platform/matrix-code-encode-wasm` | מודול WebAssembly של מקודד קוד מטריקס. |
-| `@mission-platform/qr-code`                 | QR קידוד/פענח חזית ורכיב.            |
-| `@mission-platform/qr-code-decode-wasm`     | מודול WebAssembly של מפענח QR שנוצר.          |
-| `@mission-platform/qr-code-encode-wasm`     | מודול WebAssembly של מקודד QR שנוצר.          |
-| `@mission-platform/harper`                  | שילוב דקדוק וסגנון הרפר עבור מונקו.  |
-| `@mission-platform/hunspell`                | עטיפה לבדיקת איות של Emscripten Hunspell.       |
+| חבילה                          | מטרה                                                       |
+| :----------------------------- | :--------------------------------------------------------- |
+| `@mission-platform/forge`      | קידוד/פענוח ברקוד 1D חזית ורכיב.           |
+| `@mission-platform/components` | מודול WebAssembly של סורק תמונות שנוצר.    |
+| `@mission-platform/icons`      | רכיב סריקת קוד מצלמה ותמונה.               |
+| `@mission-platform/layouts`    | מטריצת נתונים ואצטקים מקודדים/פענחים חזית. |
+| `@mission-platform/forms`      | מודול WebAssembly של מפענח קוד מטריקס.     |
+| `@mission-platform/forms-core` | מודול WebAssembly של מקודד קוד מטריקס.     |
+| `@mission-platform/tokens`     | QR קידוד/פענח חזית ורכיב.                  |
 
 ### לזייף יעדי מהדר
 
-אלה חיים ב `forge-plugins/` במקום `packages/`. תוסף **מסגרת** מחליט באיזה זמן ריצה הוא רכיב ניטרלי
-מורד ל; יעד **CMS** מחליט על איזו פלטפורמת תוכן הוא מוקרן. שני הצירים מרכיבים, אז כל CMS
-target עשוי להיות קשור לכל תוסף מסגרת. לִרְאוֹת [Forge Compiler Pipeline](forge-compiler.md).
+| Package                                         | Purpose                                                                          |
+| :---------------------------------------------- | :------------------------------------------------------------------------------- |
+| `@mission-platform/breakpoints`                 | Responsive breakpoint state and visibility helpers.              |
+| `@mission-platform/d3`                          | D3 selection lifecycle composable and margin utilities.          |
+| `@mission-platform/i18n`                        | i18next state and framework integration helpers.                 |
+| `@mission-platform/map`                         | MapLibre map components and composables.                         |
+| `@mission-platform/observers`                   | Intersection, mutation, and performance observer composables.    |
+| `@mission-platform/phone-number`                | Typed WebAssembly phone-number parsing and formatting.           |
+| `@mission-platform/router`                      | Framework-neutral route contracts and compiler capabilities.     |
+| `@mission-platform/forge-router-web-components` | Web Components router target and framework-free runtime.         |
+| `@mission-platform/rxjs`                        | RxJS observable and subscription composables.                    |
+| `@mission-platform/scheduler`                   | Scheduler UI, recurrence, and calendar layout domain logic.      |
+| `@mission-platform/vcard`                       | RFC 6350 vCard and RFC 5545 iCalendar data and components.       |
+| `@mission-platform/content`                     | Content AST, builders, Monaco, Markdown, and WYSIWYG components. |
+| `@mission-platform/seo`                         | Metadata, Open Graph, and structured-data composables.           |
+| `@mission-platform/speech-audio`                | Speech, audio, and Web MIDI composables.                         |
+| `@mission-platform/three`                       | Three.js canvas and lifecycle composables.       |
 
-| חבילה | מטרה |
-|:-------------------------------------------------|:--------------------------------------------------------------------------------|
-| `@mission-platform/forge-plugin-api`             | `FrameworkOutputPlugin` חוזה, סוגי IR סמנטיים וסוגי מתאמים לבנות.   |
-| `@mission-platform/forge-plugin-react`           | React יעד פלט.                                                            |
-| `@mission-platform/forge-plugin-vue`             | Vue יעד פלט 3.                                                            |
-| `@mission-platform/forge-plugin-solid`           | Solid יעד פלט.                                                            |
-| `@mission-platform/forge-plugin-svelte`          | Svelte יעד פלט 5.                                                         |
-| `@mission-platform/forge-plugin-web-components`  | יעד פלט של רכיבי אינטרנט.                                                   |
-| `@mission-platform/forge-cms-plugin-api`         | `CmsOutputPlugin` חוזה, מודל תוכן ניטרלי, מנהל מערכת ניהול תוכן ובניית עוזרים. |
-| `@mission-platform/forge-cms-storyblok`          | אובייקטים מרכיבי Storyblok, עטיפות בלוק, ו `components.json`.              |
-| `@mission-platform/forge-cms-astro`              | סטָטִי `.astro` תבניות ו `client:load` איי מסגרת.                  |
-| `@mission-platform/forge-cms-ghost`              | חלקי כידון רפאים וא `config.custom` קטע נושא.                 |
-| `@mission-platform/forge-cms-jekyll`             | נוזל ג'קיל כולל, `_data` סכימה, וא `_config.yml` קֶטַע.           |
-| `@mission-platform/forge-cms-webflow`            | זרימת אינטרנט `declareComponent` רכיבי קוד וא `webflow.json` קטע ספרייה. |
+### Code and WebAssembly packages
+
+| Package                                     | Purpose                                                           |
+| :------------------------------------------ | :---------------------------------------------------------------- |
+| `@mission-platform/barcode`                 | 1D barcode encode/decode façade and component.    |
+| `@mission-platform/code-scan-wasm`          | Generated image scanner WebAssembly module.       |
+| `@mission-platform/code-scanner`            | Camera and image code-scanning component.         |
+| `@mission-platform/matrix-code`             | Data Matrix and Aztec encode/decode façade.       |
+| `@mission-platform/matrix-code-decode-wasm` | Generated Matrix Code decoder WebAssembly module. |
+| `@mission-platform/matrix-code-encode-wasm` | Generated Matrix Code encoder WebAssembly module. |
+| `@mission-platform/qr-code`                 | QR encode/decode façade and component.            |
+| `@mission-platform/qr-code-decode-wasm`     | Generated QR decoder WebAssembly module.          |
+| `@mission-platform/qr-code-encode-wasm`     | Generated QR encoder WebAssembly module.          |
+| `@mission-platform/harper`                  | Harper grammar and style integration for Monaco.  |
+| `@mission-platform/hunspell`                | Emscripten Hunspell spell-checking wrapper.       |
+
+### Forge compiler targets
+
+These live in `forge-plugins/` rather than `packages/`. A **framework** plugin decides which runtime a neutral component
+is lowered to; a **CMS** target decides which content platform it is projected onto. The two axes compose, so any CMS
+target may be bound to any framework plugin. See [Forge Compiler Pipeline](./forge-compiler.md).
+
+| Package                                         | Purpose                                                                                           |
+| :---------------------------------------------- | :------------------------------------------------------------------------------------------------ |
+| `@mission-platform/forge-plugin-api`            | `FrameworkOutputPlugin` contract, semantic IR types, and build adapter types.     |
+| `@mission-platform/forge-plugin-react`          | React output target.                                                              |
+| `@mission-platform/forge-plugin-vue`            | Vue 3 output target.                                                              |
+| `@mission-platform/forge-plugin-solid`          | Solid output target.                                                              |
+| `@mission-platform/forge-plugin-svelte`         | Svelte 5 output target.                                                           |
+| `@mission-platform/forge-plugin-web-components` | Web Components output target.                                                     |
+| `@mission-platform/forge-cms-plugin-api`        | `CmsOutputPlugin` contract, neutral content model, CMS driver, and build helpers. |
+| `@mission-platform/forge-cms-storyblok`         | Storyblok component objects, blok wrappers, and `components.json`.                |
+| `@mission-platform/forge-cms-astro`             | Static `.astro` templates and `client:load` framework islands.                    |
+| `@mission-platform/forge-cms-ghost`             | Ghost Handlebars partials and a `config.custom` theme fragment.                   |
+| `@mission-platform/forge-cms-jekyll`            | Jekyll Liquid includes, `_data` schema, and a `_config.yml` fragment.             |
+| `@mission-platform/forge-cms-webflow`           | Webflow `declareComponent` code components and a `webflow.json` library fragment. |
 
 #### @mission-platform/forge-cms-plugin-api
 
-| ייצוא | הקלד | תיאור |
-|:---------------------------|:---------|:--------------------------------------------------------------------------------|
-| `analyzeContentComponent`  | פונקציה | מקרין אביזרים של רכיב ניטרלי על מודל התוכן ניטרלי הפלטפורמה.  |
-| `ContentComponent`         | הקלד | הוזמן `ContentField`s, חריצים, וה `interactive` דֶגֶל.                    |
-| `ContentFieldKind`         | הקלד | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`. |
-| `CmsOutputPlugin`          | הקלד | חוזה היעד: תוסף מסגרת קשור בתוספת ארבעת הפולטים.          |
-| `defineForgeCmsPlugin`     | פונקציה | מאמת יעד CMS בזמן ההגדרה.                                  |
-| `generateCmsArtifacts`     | פונקציה | הגילוי הגנרי → IR → מודל תוכן → emit → כתוב מנהל התקן.               |
-| `defineTsdownForgeCms`     | פונקציה | tsdown config עבור יעד CMS אחד, פולט `dist/cms/<cms>/<framework>/**`.    |
-| `defineTsdownForgeCmsAll`  | פונקציה | tsdown הגדרות עבור רשימה של יעדי CMS.                                      |
+| Export                    | Type     | Description                                                                                           |
+| :------------------------ | :------- | :---------------------------------------------------------------------------------------------------- |
+| `analyzeContentComponent` | Function | Projects a neutral component's props onto the platform-neutral content model.         |
+| `ContentComponent`        | Type     | Ordered `ContentField`s, slots, and the `interactive` flag.                           |
+| `ContentFieldKind`        | Type     | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`.       |
+| `CmsOutputPlugin`         | Type     | The target contract: a bound framework plugin plus the four emitters. |
+| `defineForgeCmsPlugin`    | Function | Validates a CMS target at configuration time.                                         |
+| `generateCmsArtifacts`    | Function | The generic discover → IR → content model → emit → write driver.                      |
+| `defineTsdownForgeCms`    | Function | tsdown config for one CMS target, emitting `dist/cms/<cms>/<framework>/**`.           |
+| `defineTsdownForgeCmsAll` | Function | tsdown configs for a list of CMS targets.                                             |
