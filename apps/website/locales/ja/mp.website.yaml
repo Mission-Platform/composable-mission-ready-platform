@@ -2,7 +2,7 @@ faq:
   items:
     composable:
       answer: 小さく再利用可能でフレームワークに依存しないビルディングブロックからインターフェースを構築し、自由に組み合わせられます。
-      question: "'コンポーザブル（composable）' とはどういう意味ですか？"
+      question: '''コンポーザブル（composable）'' とはどういう意味ですか？'
     deploy:
       answer: このプラットフォームは、Cloudflare Workers をはじめとするサーバーレスや静的ホスティング環境へのデプロイを想定して設計されています。
       question: どうやってデプロイしますか？

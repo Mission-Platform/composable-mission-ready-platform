@@ -2,7 +2,7 @@ faq:
   items:
     composable:
       answer: 작고 재사용 가능하며 프레임워크에 종속되지 않는 빌딩 블록으로 인터페이스를 구성하여 자유롭게 조합할 수 있습니다.
-      question: "'컴포저블(composable)'이란 무엇인가요?"
+      question: '''컴포저블(composable)''이란 무엇인가요?'
     deploy:
       answer: 이 플랫폼은 Cloudflare Workers를 비롯한 다양한 서버리스 또는 정적 호스팅 환경에 배포하도록 설계되었습니다.
       question: 어떻게 배포하나요?

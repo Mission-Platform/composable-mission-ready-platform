@@ -2,13 +2,13 @@ faq:
   items:
     composable:
       answer: Construimos la interfaz a partir de bloques pequeños, reutilizables e independientes del framework que puedes combinar a tu gusto.
-      question: ¿Qué significa 'componible'?
+      question: '¿Qué significa ''componible''?'
     deploy:
       answer: La plataforma está diseñada para desplegarse en Cloudflare Workers y en otros entornos de alojamiento sin servidor o estáticos.
-      question: ¿Cómo despliego esto?
+      question: '¿Cómo despliego esto?'
     frameworks:
       answer: Los componentes se crean una sola vez en el entorno de ejecución Forge, independiente del framework, y se compilan para Vue, React, Svelte, Solid y Web Components.
-      question: ¿Qué frameworks son compatibles?
+      question: '¿Qué frameworks son compatibles?'
 features:
   barcode:
     description: Genera y escanea códigos QR, Data Matrix y códigos de barras 1D, con la potencia de WebAssembly.

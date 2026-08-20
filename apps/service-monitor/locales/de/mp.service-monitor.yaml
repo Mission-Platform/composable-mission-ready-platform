@@ -58,11 +58,11 @@ speed:
   enabled: Serverseitige Geschwindigkeitstests alle {interval}s (Cloudflare, Fast.com, Speedtest).
   failed: Fehlgeschlagen
   graphMetric:
-    bandwidth: ''
-    download: ''
-    latency: ''
-    ping: ''
-    upload: ''
+    bandwidth: speed.graphMetric.bandwidth
+    download: speed.graphMetric.download
+    latency: speed.graphMetric.latency
+    ping: speed.graphMetric.ping
+    upload: speed.graphMetric.upload
   graphTitle: '{name} · {metric} im Zeitverlauf'
   latency: '{value} ms'
   pending: Noch keine Messung

@@ -2,7 +2,7 @@ faq:
   items:
     composable:
       answer: 我们使用小巧、可复用、与框架无关的构建模块来搭建界面，您可以自由组合搭配。
-      question: “可组合”是什么意思？
+      question: '“可组合”是什么意思？'
     deploy:
       answer: 该平台专为部署到 Cloudflare Workers 以及其他无服务器或静态托管环境而设计。
       question: 我该如何部署它？

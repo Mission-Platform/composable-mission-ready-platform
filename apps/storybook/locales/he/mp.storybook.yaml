@@ -16,7 +16,6 @@ draw:
   triangle: משולש
 geojson-summary_zero: סיכום geojson
 geojson-summary_one: סיכום geojson
-geojson-summary_two: סיכום geojson
 geojson-summary_other: סיכום geojson
 label:
   draw: 'צייר:'
@@ -25,7 +24,7 @@ mode:
   flat: שטוח
   geodesic: גיאודזי
 status:
-  joining: ⚡ לחץ על קו אחר כדי לחבר עם {id}
+  joining: '⚡ לחץ על קו אחר כדי לחבר עם {id}'
   none: לחץ על צורה כדי לבחור
   selected: 'נבחר: {id}'
 title: סרגל כלי ציור במפה

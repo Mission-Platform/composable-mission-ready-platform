@@ -24,14 +24,14 @@ mode:
   flat: 平面
   geodesic: 测地线
 status:
-  joining: ⚡ 点击另一条线条以与 {id} 合并
+  joining: '⚡ 点击另一条线条以与 {id} 合并'
   none: 点击形状以选择
   selected: '已选择: {id}'
 title: 地图绘制工具栏
 tooltip:
   delete: 删除所选要素
-  flat: 平面模式：移动/缩放保持视觉形状。点击切换到测地线模式。
-  geodesic: 测地线模式：移动/缩放遵循地面距离。点击切换到平面/视觉模式。
+  flat: '平面模式：移动/缩放保持视觉形状。点击切换到测地线模式。'
+  geodesic: '测地线模式：移动/缩放遵循地面距离。点击切换到平面/视觉模式。'
   join: 在最近的端点处合并两条线条
   join-active: 正在合并 — 选择另一条线条以完成合并
   rotate-ccw: 旋转 −45°

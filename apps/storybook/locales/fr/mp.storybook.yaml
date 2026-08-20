@@ -16,8 +16,7 @@ draw:
   triangle: Triangle
 geojson-summary_zero: geojson-summary
 geojson-summary_one: geojson-summary
-geojson-summary_many: ''
-geojson-summary_other: geojson-summary
+geojson-summary_other: Sortie GeoJSON ( Fonctionnalités{count})
 label:
   draw: 'Dessiner :'
   edit: 'Modifier :'
@@ -25,14 +24,14 @@ mode:
   flat: Plat
   geodesic: Géodésique
 status:
-  joining: ⚡ Cliquez sur une autre ligne pour la joindre avec {id}
+  joining: '⚡ Cliquez sur une autre ligne pour la joindre avec {id}'
   none: Cliquez sur une forme pour la sélectionner
   selected: 'Sélectionné : {id}'
 title: Barre d'outils de dessin de carte
 tooltip:
   delete: Supprimer l'entité sélectionnée
-  flat: "Mode plat : le déplacement/la mise à l'échelle préserve la forme visuelle. Cliquez pour le mode géodésique."
-  geodesic: "Mode géodésique : le déplacement/la mise à l'échelle respecte les distances au sol. Cliquez pour le mode plat/visuel."
+  flat: 'Mode plat : le déplacement/la mise à l''échelle préserve la forme visuelle. Cliquez pour le mode géodésique.'
+  geodesic: 'Mode géodésique : le déplacement/la mise à l''échelle respecte les distances au sol. Cliquez pour le mode plat/visuel.'
   join: Joindre deux lignes aux extrémités les plus proches
   join-active: Jonction en cours — sélectionnez une autre ligne pour terminer la jonction
   rotate-ccw: Tourner de −45°

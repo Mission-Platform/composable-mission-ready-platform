@@ -10,7 +10,7 @@ dashboard:
     samples: Échantillons
     type: Type
     uptime: Temps de fonctionnement
-  subtitle: Contrôles de santé côté serveur (par défaut toutes les {interval}s, modifications par moniteur), stockés sous forme de séries chronologiques en périphérie (Edge).
+  subtitle: Les tests de santé côté serveur (par défaut tous les {interval}s, par moniteur), stockés comme une série temporelle sur le bord.
   title: Moniteur de Service
 incidents:
   addPostReport: Ajouter un rapport post-incident
@@ -46,7 +46,6 @@ nav:
 shell:
   activeIncidents_zero: '{count} incidents actifs'
   activeIncidents_one: '{count} incident actif'
-  activeIncidents_many: ''
   activeIncidents_other: '{count} incidents actifs'
   currentStatus: Statut actuel du système
   title: Service Monitor
@@ -59,11 +58,11 @@ speed:
   enabled: Tests de vitesse côté serveur toutes les {interval}s (Cloudflare, Fast.com, Speedtest).
   failed: Échoué
   graphMetric:
-    bandwidth: ''
-    download: ''
-    latency: ''
-    ping: ''
-    upload: ''
+    bandwidth: speed.graphMetric.bandwidth
+    download: speed.graphMetric.download
+    latency: speed.graphMetric.latency
+    ping: speed.graphMetric.ping
+    upload: speed.graphMetric.upload
   graphTitle: '{name} · {metric} au fil du temps'
   latency: '{value} ms'
   pending: Aucune mesure pour l'instant
@@ -73,7 +72,6 @@ speed:
   running: Exécution…
   summary_zero: moy {average} · max {maximum} · n={count}
   summary_one: moy {average} · max {maximum} · n={count}
-  summary_many: ''
   summary_other: moy {average} · max {maximum} · n={count}
   title: Vitesse du réseau
   up: '{value} Mbps ascendants'

@@ -16,7 +16,6 @@ draw:
   triangle: Triangolo
 geojson-summary_zero: geojson-summary
 geojson-summary_one: geojson-summary
-geojson-summary_many: ''
 geojson-summary_other: geojson-summary
 label:
   draw: 'Disegna:'
@@ -25,7 +24,7 @@ mode:
   flat: Piatto
   geodesic: Geodetico
 status:
-  joining: ⚡ Fai clic su un'altra linea per unirla a {id}
+  joining: '⚡ Fai clic su un''altra linea per unirla a {id}'
   none: Fai clic su una forma per selezionarla
   selected: 'Selezionato: {id}'
 title: Barra degli strumenti di disegno sulla mappa

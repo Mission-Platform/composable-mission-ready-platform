@@ -58,11 +58,11 @@ speed:
   enabled: Server-side snelheidstests elke {interval}s (Cloudflare, Fast.com, Speedtest).
   failed: Mislukt
   graphMetric:
-    bandwidth: ''
-    download: ''
-    latency: ''
-    ping: ''
-    upload: ''
+    bandwidth: speed.graphMetric.bandwidth
+    download: speed.graphMetric.download
+    latency: speed.graphMetric.latency
+    ping: speed.graphMetric.ping
+    upload: speed.graphMetric.upload
   graphTitle: '{name} · {metric} in de loop van de tijd'
   latency: '{value} ms'
   pending: Nog geen meting

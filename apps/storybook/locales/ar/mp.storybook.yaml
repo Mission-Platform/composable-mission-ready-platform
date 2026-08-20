@@ -16,9 +16,6 @@ draw:
   triangle: مثلث
 geojson-summary_zero: ملخص geojson
 geojson-summary_one: ملخص geojson
-geojson-summary_two: ملخص geojson
-geojson-summary_few: ملخص geojson
-geojson-summary_many: ملخص geojson
 geojson-summary_other: ملخص geojson
 label:
   draw: 'رسم:'
@@ -27,7 +24,7 @@ mode:
   flat: مسطح
   geodesic: جيوديسي
 status:
-  joining: ⚡ انقر فوق خط آخر للدمج مع {id}
+  joining: '⚡ انقر فوق خط آخر للدمج مع {id}'
   none: انقر فوق شكل لتحديده
   selected: 'محدد: {id}'
 title: شريط أدوات رسم الخريطة

@@ -24,7 +24,7 @@ mode:
   flat: Plat
   geodesic: Geodetisch
 status:
-  joining: ⚡ Klik op een andere lijn om samen te voegen met {id}
+  joining: '⚡ Klik op een andere lijn om samen te voegen met {id}'
   none: Klik op een vorm om te selecteren
   selected: 'Geselecteerd: {id}'
 title: Tekenwerkbalk kaart
@@ -34,7 +34,7 @@ tooltip:
   geodesic: 'Geodetische modus: verplaatsen/schalen houdt rekening met grondafstanden. Klik voor platte/visuele modus.'
   join: Twee lijnen samenvoegen bij de dichtstbijzijnde eindpunten
   join-active: Samenvoegen — selecteer een andere lijn om het samenvoegen te voltooien
-  rotate-ccw: −45° draaien
+  rotate-ccw: '−45° draaien'
   rotate-cw: +45° draaien
   scale-down: Kleiner maken ×0,75
   scale-up: Groter maken ×1,5
