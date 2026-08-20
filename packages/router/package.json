@@ -2,7 +2,7 @@
   "name": "@mission-platform/router",
   "version": "1.0.0",
   "license": "BSD-4-Clause",
-  "description": "Framework-neutral route definitions and Vue, React, and Redwood router adapters",
+  "description": "Framework-neutral router capabilities and pure route/location contracts",
   "type": "module",
   "sideEffects": false,
   "files": [
@@ -14,21 +14,13 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "mp:vue": {
-        "types": "./dist/vue.d.ts",
-        "import": "./dist/vue.js"
-      },
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    },
-    "./redwood": {
-      "types": "./dist/redwood.d.ts",
-      "import": "./dist/redwood.js"
     }
   },
   "scripts": {
     "build": "tsdown",
-    "build:check": "vue-tsc --project tsconfig.build.json --noEmit",
+    "build:check": "tsc --project tsconfig.build.json --noEmit",
     "build:watch": "tsdown --watch",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -38,26 +30,6 @@
     "format": "prettier --check .",
     "format:write": "prettier --write ."
   },
-  "peerDependencies": {
-    "react": "catalog:react",
-    "rwsdk": "catalog:cloudflare",
-    "vue": "catalog:vue",
-    "vue-router": "catalog:vue"
-  },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": true
-    },
-    "rwsdk": {
-      "optional": true
-    },
-    "vue": {
-      "optional": true
-    },
-    "vue-router": {
-      "optional": true
-    }
-  },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
@@ -65,20 +37,13 @@
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@types/node": "catalog:typescript",
-    "@types/react": "catalog:react",
     "@vitest/coverage-v8": "catalog:testing",
-    "@vue/test-utils": "catalog:vue",
     "eslint": "catalog:eslint",
     "jsdom": "catalog:testing",
     "prettier": "catalog:prettier",
-    "react": "catalog:react",
-    "rwsdk": "catalog:cloudflare",
     "tsdown": "catalog:build",
     "typescript": "catalog:typescript",
     "vite": "catalog:vite",
-    "vitest": "catalog:testing",
-    "vue": "catalog:vue",
-    "vue-router": "catalog:vue",
-    "vue-tsc": "catalog:vue"
+    "vitest": "catalog:testing"
   }
 }

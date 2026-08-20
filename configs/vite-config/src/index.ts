@@ -254,6 +254,43 @@ export function frameworkResolveConditions(framework: MissionPlatformFramework):
   return [frameworkCondition(framework), 'module', 'browser', 'import', 'default'];
 }
 
+/**
+ * Build a Vite app config for framework-free Web Components applications.
+ *
+ * Unlike {@link defineFrameworkAppConfig}, this helper deliberately does not
+ * install the Vue plugin (or any other framework plugin). The `mp:web-component`
+ * condition is still applied to both client and SSR/prerender resolution so
+ * bare Forge package imports select their custom-element artifacts everywhere.
+ */
+export function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig {
+  const conditions = frameworkResolveConditions('web-component');
+  const base = defineConfig({
+    css: {
+      postcss: postcssConfig,
+    },
+    resolve: {
+      conditions,
+      tsconfigPaths: true,
+    },
+    ssr: {
+      noExternal: [/^@mission-platform\//],
+      resolve: {
+        conditions,
+        externalConditions: conditions,
+      },
+    },
+    build: {
+      rolldownOptions: {
+        output: {
+          codeSplitting: true,
+        },
+      },
+    },
+  });
+
+  return options.overrides ? mergeConfig(base, options.overrides) : base;
+}
+
 export interface FrameworkAppConfigOptions extends AppConfigOptions {
   /**
    * The single framework this app targets. Bare `@mission-platform/<pkg>`
@@ -271,6 +308,9 @@ export interface FrameworkAppConfigOptions extends AppConfigOptions {
  */
 export function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig {
   const { framework, overrides } = options;
+  if (framework === 'web-component') {
+    return defineWebComponentAppConfig({ overrides });
+  }
   const conditions = frameworkResolveConditions(framework);
   const conditionsConfig = defineConfig({
     resolve: {

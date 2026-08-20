@@ -28,6 +28,9 @@ The package provides the following entry points:
 - **`@mission-platform/forge/vue`**: Vue 3 adapter (`toVueComponent`, `renderToVue`).
 - **`@mission-platform/forge/react`**: React adapter (`toReactComponent`, `renderToReact`).
 - **`@mission-platform/forge/jsx-globals`**: Global TypeScript JSX ambient declarations.
+- **`@mission-platform/forge/web-components`**: Native custom-element runtime used by
+  generated Web Components targets, including shadow-root policies and capability-gated
+  `ElementInternals` support.
 
 ---
 
@@ -123,3 +126,21 @@ export function App() {
 - **`renderToVue(element)`**: Renders a neutral `MpElement` tree to a Vue `VNode`.
 - **`toReactComponent(component)`**: Wraps a neutral JSX component into a native React component.
 - **`renderToReact(element)`**: Renders a neutral `MpElement` tree to a React `ReactElement`.
+
+### Generated Web Components
+
+The Web Components output plugin chooses a customized built-in only for a
+single static root in its conservative compatibility table: `div`, `span`,
+`p`, and `h1`–`h6`. Those classes extend the matching native element and are
+registered with an `extends` option; generated child references use the native
+tag plus `is`. Missing, dynamic, fragment, component, ambiguous, invalid, or
+unsupported roots fall back to autonomous custom elements and retain a stable
+fallback reason in the lowered plan for diagnostics.
+
+Generated elements use an open shadow root unless a component policy requests
+another mode. Optional shadow fields (`delegatesFocus`, `serializable`,
+`clonable`, and `slotAssignment`) are capability-checked at runtime, so older
+engines retain the supported portion of the policy. `ElementInternals` is
+attached only when available; explicit ARIA defaults do not overwrite author
+attributes, and form association/value/validity callbacks are emitted only for
+components that opt into form metadata.

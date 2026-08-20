@@ -1,0 +1,21 @@
+# @mission-platform/forge-router-vue
+
+Forge router target for Vue Router
+
+## Installation
+
+Add it to a consuming workspace member:
+
+```json
+{
+  "dependencies": {
+    "@mission-platform/forge-router-vue": "workspace:*"
+  }
+}
+```
+
+## Usage
+
+```ts
+import { forgeRouterVue } from '@mission-platform/forge-router-vue';
+```

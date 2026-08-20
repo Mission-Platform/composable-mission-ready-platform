@@ -32,7 +32,7 @@ export type MpRouteMeta = Record<string, unknown>;
  * any target router (vue-router, react-router, TanStack Router) or file-based
  * convention (Next.js, Nuxt) by an adapter.
  */
-export interface MpRoute {
+export interface MpRoute<View = unknown> {
   /**
    * The route's path pattern. Supports `:param` segments (`/users/:id`),
    * optional `:param?` segments, repeatable `:param*` / `:param+` segments, and
@@ -47,13 +47,15 @@ export interface MpRoute {
    * carries no framework dependency; adapters cast it to their own component
    * type (or use it to resolve a lazy import / file path).
    */
-  component?: unknown;
+  component?: View | (() => Promise<View>);
   /** Optional lazy component loader (`() => import('./View')`). */
-  lazy?: () => Promise<unknown>;
+  lazy?: () => Promise<View>;
   /** Redirect target (a path string or a neutral location) for this route. */
-  redirect?: MpRouteLocationRaw;
+  redirect?: MpRedirect;
+  /** Guards are evaluated by a runtime before entering the record. */
+  beforeEnter?: MpRouteGuard | readonly MpRouteGuard[];
   /** Nested child routes, with `path`s resolved relative to this route. */
-  children?: MpRoute[];
+  children?: readonly MpRoute<View>[];
   /** Arbitrary metadata (auth flags, layout hints, titles, …). */
   meta?: MpRouteMeta;
 }
@@ -99,6 +101,157 @@ export interface MpResolvedLocation {
   name?: string;
   /** The matched route's metadata, if any. */
   meta?: MpRouteMeta;
+}
+
+/** A redirect target, optionally computed from the destination route. */
+export type MpRedirect =
+  MpRouteLocationRaw | ((to: MpResolvedLocation) => MpRouteLocationRaw | Promise<MpRouteLocationRaw>);
+
+/** The result returned by a route guard before a transition is committed. */
+export type MpGuardOutcome = void | boolean | MpRouteLocationRaw;
+
+/** A route guard evaluated by a runtime-owned navigation state machine. */
+export type MpRouteGuard = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+) => MpGuardOutcome | Promise<MpGuardOutcome>;
+
+/** A transition operation initiated by a router or history implementation. */
+export type MpNavigationType = 'push' | 'replace' | 'pop' | 'go';
+
+export interface MpNavigationContext {
+  to: MpResolvedLocation;
+  from: MpResolvedLocation | null;
+  type: MpNavigationType;
+}
+
+export type MpNavigationFailureType = 'aborted' | 'cancelled' | 'duplicated' | 'error' | 'not-found';
+
+export interface MpNavigationSuccess {
+  type: 'success';
+  ok: true;
+  to: MpResolvedLocation;
+  from: MpResolvedLocation | null;
+}
+
+export interface MpNavigationRedirect {
+  type: 'redirect';
+  ok: false;
+  to: MpResolvedLocation;
+  from: MpResolvedLocation | null;
+  redirectTo: MpRouteLocationRaw;
+}
+
+export interface MpNavigationFailure {
+  type: 'failure';
+  ok: false;
+  to: MpResolvedLocation;
+  from: MpResolvedLocation | null;
+  failureType: MpNavigationFailureType;
+  error?: unknown;
+}
+
+export type MpNavigationResult = MpNavigationSuccess | MpNavigationRedirect | MpNavigationFailure;
+
+export interface MpHistoryEntry {
+  url: string;
+  state?: unknown;
+  key?: string;
+}
+
+export interface MpHistoryEvent {
+  type: MpNavigationType;
+  from: MpHistoryEntry;
+  to: MpHistoryEntry;
+  delta?: number;
+}
+
+export type MpHistoryListener = (event: MpHistoryEvent) => void;
+
+/** A browser, hash, or memory history implementation supplied by a runtime. */
+export interface MpHistory {
+  readonly location: string;
+  readonly state?: unknown;
+  push: (url: string, state?: unknown) => void | Promise<void>;
+  replace: (url: string, state?: unknown) => void | Promise<void>;
+  back: () => void | Promise<void>;
+  forward: () => void | Promise<void>;
+  go: (delta: number) => void | Promise<void>;
+  listen: (listener: MpHistoryListener) => () => void;
+}
+
+export interface MpScrollPosition {
+  left?: number;
+  top?: number;
+  /** A selector or runtime-specific element reference, never a DOM type. */
+  target?: string;
+  behavior?: 'auto' | 'smooth';
+}
+
+export type MpScrollBehavior = (
+  to: MpResolvedLocation,
+  from: MpResolvedLocation | null,
+  savedPosition?: MpScrollPosition,
+) => MpScrollPosition | false | void | Promise<MpScrollPosition | false | void>;
+
+export interface MpMetadataContext {
+  to: MpResolvedLocation;
+  from: MpResolvedLocation | null;
+}
+
+export interface MpRouteMetadata extends MpRouteMeta {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  robots?: string;
+}
+
+export type MpMetadataHook = (context: MpMetadataContext) => MpRouteMetadata | void | Promise<MpRouteMetadata | void>;
+
+export interface MpRouteChangeEvent {
+  type: 'start' | 'success' | 'redirect' | 'failure';
+  to: MpResolvedLocation;
+  from: MpResolvedLocation | null;
+  result?: MpNavigationResult;
+}
+
+export type MpRouteChangeListener = (event: MpRouteChangeEvent) => void;
+
+/** Structural reactive state used by adapters without prescribing a framework primitive. */
+export interface MpReadonlySignal<Value> {
+  readonly value: Value;
+  subscribe: (listener: (value: Value) => void) => () => void;
+}
+
+export interface MpRouteLink {
+  readonly to: MpRouteLocationRaw;
+  readonly href: string;
+  readonly active: boolean;
+  readonly exactActive: boolean;
+  readonly replace: boolean;
+  navigate: () => Promise<MpNavigationResult>;
+}
+
+export interface MpRouteViewContext<View = unknown> {
+  route: MpResolvedLocation;
+  view: View;
+}
+
+export interface MpRouteViewAdapter<View = unknown, Outlet = unknown> {
+  mount: (context: MpRouteViewContext<View>, outlet: Outlet) => void | Promise<void>;
+  unmount?: (outlet: Outlet) => void | Promise<void>;
+}
+
+/** Runtime-owned router state and navigation contract. */
+export interface MpRouterAdapter {
+  readonly current: MpReadonlySignal<MpResolvedLocation | null>;
+  resolve: (to: MpRouteLocationRaw) => MpResolvedLocation;
+  push: (to: MpRouteLocationRaw) => Promise<MpNavigationResult>;
+  replace: (to: MpRouteLocationRaw) => Promise<MpNavigationResult>;
+  back: () => Promise<MpNavigationResult>;
+  forward?: () => Promise<MpNavigationResult>;
+  go?: (delta: number) => Promise<MpNavigationResult>;
+  subscribe: (listener: MpRouteChangeListener) => () => void;
 }
 
 /**

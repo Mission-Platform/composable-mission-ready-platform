@@ -1,0 +1,21 @@
+# @mission-platform/forge-router-react
+
+Forge router target for React Router
+
+## Installation
+
+Add it to a consuming workspace member:
+
+```json
+{
+  "dependencies": {
+    "@mission-platform/forge-router-react": "workspace:*"
+  }
+}
+```
+
+## Usage
+
+```ts
+import { forgeRouterReact } from '@mission-platform/forge-router-react';
+```

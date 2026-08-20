@@ -1,0 +1,30 @@
+export {
+  createRouterDiagnostic,
+  defineForgeRouterTarget,
+  defineForgeRouterPlugin,
+  FORGE_ROUTER_RUNTIME_EXPORTS,
+  forgeRouterExtensionContracts,
+  MP_ROUTER_COMPILER_MARKER,
+  MP_ROUTER_MODULE,
+  selectForgeRouterPlugin,
+  unsupportedRouterCapabilities,
+} from './router.js';
+
+export type {
+  GeneratedRouterDeclaration,
+  GeneratedRouterModule,
+  RouterBuildAdapters,
+  RouterCapability,
+  RouterCapabilityImport,
+  RouterCapabilityModule,
+  RouterCapabilityUse,
+  RouterCapabilityUseKind,
+  ForgeRouterTargetOptions,
+  RouterNativeImport,
+  RouterTargetExtensionContract,
+  RouterOptimizeOptions,
+  RouterOutputPlugin,
+  RouterPluginSelection,
+  RouterTargetContext,
+  RouterTargetPlan,
+} from './router.js';

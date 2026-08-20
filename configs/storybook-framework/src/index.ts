@@ -341,6 +341,7 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
   }
 
   const conditions = frameworkResolveConditions(framework);
+  const slotsEntry = `${process.cwd().split('/').slice(0, -2).join('/')}/configs/storybook-framework/dist/slots.${framework}.js`;
 
   return mergeConfig(config, {
     plugins,
@@ -360,7 +361,11 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
     // preview resolves the framework-agnostic default build, whose barrel only
     // exports the `Base*` names — so a neutral story importing the friendly alias
     // (`Accordion`, `Avatar`, …) fails with `MISSING_EXPORT`.
-    resolve: { conditions, tsconfigPaths: true },
+    resolve: {
+      alias: { '@mission-platform/storybook-framework/slots': slotsEntry },
+      conditions,
+      tsconfigPaths: true,
+    },
     optimizeDeps: { exclude: ['i18next-vue'] },
     ssr: {
       noExternal: [/^@mission-platform\//],

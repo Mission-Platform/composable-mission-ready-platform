@@ -10,8 +10,8 @@
 
 import type { MpParameterValue, MpRouteParameters } from './types';
 
-/** Matches a `:name`, `:name?`, `:name*`, or `:name+` segment. */
-const SEGMENT_PARAMETER = /^:([A-Za-z0-9_]+)([?*+]?)$/;
+/** Matches a `:name`, constrained `:name(pattern)`, and its modifier. */
+const SEGMENT_PARAMETER = /^:([A-Za-z0-9_]+)(?:\((.*)\))?([?*+]?)$/;
 
 /** The key a standalone `*` catch-all segment is captured under. */
 export const WILDCARD_PARAM_KEY = 'pathMatch';
@@ -24,6 +24,8 @@ export interface MpPathParameterKey {
   optional: boolean;
   /** Whether the segment captures one or more path segments (`:name*` / `:name+` / `*`). */
   repeatable: boolean;
+  /** Optional inline regular-expression constraint for this parameter. */
+  pattern?: string;
 }
 
 /** The result of compiling a path pattern into a matcher. */
@@ -75,14 +77,15 @@ export function compilePath(pattern: string): MpCompiledPath {
 
     const match = SEGMENT_PARAMETER.exec(segment);
     if (match) {
-      const [, name, modifier] = match;
+      const [, name, pattern, modifier] = match;
       const optional = modifier === '?' || modifier === '*';
       const repeatable = modifier === '*' || modifier === '+';
-      keys.push({ name, optional, repeatable });
+      keys.push({ name, optional, repeatable, ...(pattern === undefined ? {} : { pattern }) });
+      const segmentPattern = pattern ?? (repeatable ? '.+' : '[^/]+');
       if (repeatable) {
-        source += optional ? '(?:/(.+))?' : '/(.+)';
+        source += optional ? `(?:/(${segmentPattern}))?` : `/(${segmentPattern})`;
       } else {
-        source += optional ? '(?:/([^/]+))?' : '/([^/]+)';
+        source += optional ? `(?:/(${segmentPattern}))?` : `/(${segmentPattern})`;
       }
       continue;
     }
@@ -182,7 +185,7 @@ export function buildPath(
       continue;
     }
 
-    const [, name, modifier] = match;
+    const [, name, , modifier] = match;
     const optional = modifier === '?' || modifier === '*';
     const repeatable = modifier === '*' || modifier === '+';
     const value = parameters[name];

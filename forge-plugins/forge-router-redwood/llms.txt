@@ -1,0 +1,21 @@
+# @mission-platform/forge-router-redwood
+
+Forge router target for RedwoodSDK
+
+## Installation
+
+Add it to a consuming workspace member:
+
+```json
+{
+  "dependencies": {
+    "@mission-platform/forge-router-redwood": "workspace:*"
+  }
+}
+```
+
+## Usage
+
+```ts
+import { forgeRouterRedwood } from '@mission-platform/forge-router-redwood';
+```

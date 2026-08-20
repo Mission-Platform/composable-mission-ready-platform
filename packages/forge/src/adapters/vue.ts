@@ -168,8 +168,19 @@ export function renderToVue(element: MpElement): VNode {
   }
 
   const vueChildren = toVueChildren(children);
+  const vueProperties = toVueProperties(properties);
 
-  return createVueElement(type, toVueProperties(properties), vueChildren);
+  // Neutral components can contain Vue component values after a target-specific
+  // context import is rewritten. Vue expects component children as slot
+  // functions; passing the neutral child array directly triggers its
+  // "Non-function value encountered for default slot" warning.
+  if (typeof type === 'object' && type !== null) {
+    return createVueElement(type as Parameters<typeof createVueElement>[0], vueProperties, {
+      default: () => vueChildren,
+    });
+  }
+
+  return createVueElement(type, vueProperties, vueChildren);
 }
 
 /**

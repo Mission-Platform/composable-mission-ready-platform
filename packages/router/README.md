@@ -3,6 +3,14 @@
 Framework-agnostic routing for Mission Platform apps. Define your routes and navigation targets **once** in a small,
 framework-neutral model, then let a per-framework adapter wire them into a real router.
 
+The canonical neutral contract is exported as `Mp*` types. It covers route
+records and targets, resolved params/query/hash state, guards and redirects,
+navigation results/events, history, metadata and scroll hooks, links, and
+route-view mounting. The `Forge*` names are type-only compatibility aliases for
+the same `Mp*` contracts; they are not a second route model. The package has no
+UI framework or DOM implementation dependency; runtime packages own matching,
+history, and reactive state.
+
 - **Framework-neutral core** (`@mission-platform/router`) — the route/location model (`MpRoute`, `MpRouteLocationRaw`,
   `MpResolvedLocation`) plus pure, dependency-free helpers:
   - path patterns: `compilePath`, `matchPath`, `buildPath`, `normalizePath`
@@ -10,6 +18,11 @@ framework-neutral model, then let a per-framework adapter wire them into a real 
   - locations: `parseLocation`, `stringifyLocation`, `normalizeHash`
   - route trees: `defineRoutes`, `flattenRoutes`, `findRouteByName`,
     `matchRoutes`, `resolveLocation`, `createRouteResolver`
+- **Shared compatibility fixtures** — `documentationCompatibilityFixture`, `websiteCompatibilityFixture`,
+  `myCareNotesCompatibilityFixture`, and `routerCompatibilityFixtures` describe locale prefixes, nested/catch-all
+  documents, query/hash values, redirects, guards, lazy routes, and browser/memory history expectations for runtime
+  adapter test suites. Guard and history rows are declarative in this package;
+  runtime packages execute them against their own state machines.
 - **Vue 3 adapter** (the same bare `@mission-platform/router` specifier with the `mp:vue` condition active, built on
   `vue-router` 4) — `createMpRouter`, `useMpRouter`, `useMpRoute`, `MpRouterLink`, plus the
   `toVueRoutes` / `toVueLocation` translators.
@@ -129,6 +142,9 @@ resolveLocation('/files/a/b', routes).params; // → { pathMatch: ['a', 'b'] }
   `resolveLocation`, `createRouteResolver`, `compilePath`, `matchPath`,
   `buildPath`, `normalizePath`, `parseQuery`, `stringifyQuery`, `parseLocation`,
   `stringifyLocation`, `normalizeHash`.
+- **Contracts** — canonical `Mp*` route, navigation, guard, history, metadata,
+  scroll, link, view, and adapter types. `Forge*` exports are aliases for these
+  types for compatibility.
 - **Vue** (`mp:vue` condition) — `createMpRouter`, `useMpRouter`, `useMpRoute`, `MpRouterLink`,
   `toVueRoutes`, `toVueLocation` (and a re-export of the entire core).
 - **RedwoodSDK** — `toRedwoodRoutes`, `renderRoutes`, `toRedwoodPath`,
