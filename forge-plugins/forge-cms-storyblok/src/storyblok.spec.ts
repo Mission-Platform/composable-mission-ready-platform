@@ -48,6 +48,65 @@ function contentOf(
   );
 }
 
+const ANNOTATED_SETTING = [
+  "import { h, type MpElement } from '@mission-platform/forge';",
+  "",
+  "export interface AnnotatedSettingProperties {",
+  "  /**",
+  "   * Editor label.",
+  "   * @cmsSetting",
+  "   */",
+  "  label?: string;",
+  "  /** Whether the component is enabled. */",
+  "  enabled?: boolean;",
+  "}",
+  "",
+  "/**",
+  " * A component with explicit Storyblok editor metadata.",
+  " * @cmsIcon   editorial-star",
+  " * @cmsColour: #123abc",
+  " */",
+  "export function ForgeAnnotatedSetting(properties: AnnotatedSettingProperties): MpElement {",
+  "  const label = properties.label ?? 'Default label';",
+  "  return <div data-enabled={properties.enabled}>{label}</div>;",
+  "}",
+].join("\n");
+
+const annotatedSettingNames: ContentComponentNamesInput = {
+  neutralName: "ForgeAnnotatedSetting",
+  publicName: "AnnotatedSetting",
+  folder: "forge-annotated-setting",
+  propertiesType: "AnnotatedSettingProperties",
+};
+
+const TABBED = [
+  "import { h, type MpElement } from '@mission-platform/forge';",
+  "",
+  "export interface TabbedProperties {",
+  "  /** @cmsTab Content */",
+  "  title?: string;",
+  "  /** Root-level state. */",
+  "  enabled?: boolean;",
+  "  /** @cmsTab: Content */",
+  "  description?: string;",
+  "  /** @cmsTab Content! */",
+  "  action?: string;",
+  "  /** Collides with a generated tab key. */",
+  "  tab_content?: string;",
+  "}",
+  "",
+  "export function ForgeTabbed(properties: TabbedProperties): MpElement {",
+  "  return <div>{properties.title}{properties.enabled}{properties.description}{properties.action}{properties.tab_content}</div>;",
+  "}",
+].join("\n");
+
+const tabbedNames: ContentComponentNamesInput = {
+  neutralName: "ForgeTabbed",
+  publicName: "Tabbed",
+  folder: "forge-tabbed",
+  propertiesType: "TabbedProperties",
+};
+
 describe("the Storyblok name helpers", () => {
   it("derives technical (snake_case) names", () => {
     expect(toTechnicalName("Badge")).toBe("badge");
@@ -96,6 +155,31 @@ describe("emitStoryblokComponent maps the props interface to a blok schema", () 
   it("exposes the default slot (`children`) as a trailing nestable `bloks` field", () => {
     expect(badge.schema.content.type).toBe("bloks");
     expect(badge.schema.content.pos).toBe(3);
+  });
+});
+
+describe("Storyblok component editor metadata", () => {
+  it("prefers component annotations for icon and colour", () => {
+    const component = emitStoryblokComponent(
+      parseTsx("forge-annotated-setting.tsx", ANNOTATED_SETTING),
+      annotatedSettingNames,
+    );
+
+    expect(component.icon).toBe("editorial-star");
+    expect(component.color).toBe("#123abc");
+  });
+
+  it("uses deterministic name-derived metadata when annotations are absent", () => {
+    const component = emitStoryblokComponent(
+      parseTsx("forge-badge.tsx", BADGE),
+      badgeNames,
+    );
+
+    expect(component.icon).toBe("block-icon-badge");
+    expect(component.color).toBe("#648278");
+    expect(component).toEqual(
+      emitStoryblokComponent(parseTsx("forge-badge.tsx", BADGE), badgeNames),
+    );
   });
 });
 
@@ -399,6 +483,82 @@ describe("emitBlokDataType derives a precise `blok` interface", () => {
   });
 });
 
+describe("Storyblok editor tabs", () => {
+  it("emits grouped tabs while leaving unannotated fields at the schema root", () => {
+    const analyzed = analyzeStoryblokComponent(
+      parseTsx("forge-tabbed.tsx", TABBED),
+      tabbedNames,
+    );
+
+    expect(analyzed.fields.map((entry) => entry.prop)).toEqual([
+      "title",
+      "enabled",
+      "description",
+      "action",
+      "tab_content",
+    ]);
+    expect(
+      analyzed.fields.every((entry) => !entry.field.type.includes("tab")),
+    ).toBe(true);
+    expect(analyzed.component.schema).toEqual({
+      tab_content_2: {
+        type: "tab",
+        display_name: "Content",
+        keys: ["title", "description"],
+        pos: 0,
+      },
+      title: { type: "text", pos: 1, translatable: true },
+      enabled: { type: "boolean", pos: 2, description: "Root-level state." },
+      description: { type: "text", pos: 3, translatable: true },
+      tab_content_3: {
+        type: "tab",
+        display_name: "Content!",
+        keys: ["action"],
+        pos: 4,
+      },
+      action: { type: "text", pos: 5, translatable: true },
+      tab_content: {
+        type: "text",
+        pos: 6,
+        description: "Collides with a generated tab key.",
+        translatable: true,
+      },
+    });
+  });
+
+  it("keeps tab keys and positions stable when an unrelated root field is added", () => {
+    const withoutRootField = TABBED.replace(
+      "  /** Root-level state. */\n  enabled?: boolean;\n",
+      "",
+    );
+    const withRoot = analyzeStoryblokComponent(
+      parseTsx("forge-tabbed.tsx", TABBED),
+      tabbedNames,
+    ).component.schema;
+    const withoutRoot = analyzeStoryblokComponent(
+      parseTsx("forge-tabbed.tsx", withoutRootField),
+      tabbedNames,
+    ).component.schema;
+
+    expect(withRoot.tab_content_2).toMatchObject({
+      type: "tab",
+      display_name: "Content",
+    });
+    expect(withoutRoot.tab_content_2).toMatchObject({
+      type: "tab",
+      display_name: "Content",
+    });
+    expect(withRoot.tab_content_3).toMatchObject({
+      type: "tab",
+      display_name: "Content!",
+    });
+    expect(withoutRoot.tab_content_3).toMatchObject({
+      type: "tab",
+      display_name: "Content!",
+    });
+  });
+});
+
 describe("the Storyblok CMS target", () => {
   const target = forgeStoryblokCms({
     packageName: "@mission-platform/components",
@@ -425,6 +585,100 @@ describe("the Storyblok CMS target", () => {
         storyblokRuntime: "@storyblok/js",
       }),
     ).toThrow(/does not support the "astro" framework plugin/);
+  });
+
+  it("rejects an empty Storyblok plugin field identifier at target construction", () => {
+    expect(() =>
+      forgeStoryblokCms({
+        packageName: "@mission-platform/components",
+        plugin: stubFramework("react"),
+        pluginField: { fieldType: "   " },
+      }),
+    ).toThrow(/pluginField\.fieldType.*non-empty string/);
+  });
+
+  it("rejects invalid required plugin fields at target construction", () => {
+    expect(() =>
+      forgeStoryblokCms({
+        packageName: "@mission-platform/components",
+        plugin: stubFramework("react"),
+        pluginField: {
+          fieldType: "my-plugin",
+          requiredFields: ["title", ""],
+        },
+      }),
+    ).toThrow(/pluginField\.requiredFields.*non-empty strings/);
+  });
+
+  it("maps @cmsSetting fields to the configured plugin contract", () => {
+    const configuredTarget = forgeStoryblokCms({
+      packageName: "@mission-platform/components",
+      plugin: stubFramework("react"),
+      pluginField: {
+        fieldType: "storyblok-button",
+        requiredFields: ["label", "variant"],
+      },
+      metadata: { icon: "target-icon", color: "#abcdef" },
+    });
+    const analyzed = contentOf(ANNOTATED_SETTING, annotatedSettingNames);
+    const schema = configuredTarget.emitSchema?.(
+      analyzed,
+      undefined as never,
+      context,
+    );
+    const component = JSON.parse(schema?.contents ?? "{}").component;
+
+    expect(component.icon).toBe("editorial-star");
+    expect(component.color).toBe("#123abc");
+    expect(component.schema.label).toEqual({
+      type: "plugin",
+      pos: 0,
+      description: "Editor label.",
+      translatable: true,
+      field_type: "storyblok-button",
+      required_fields: "label,variant",
+      default_value: "Default label",
+    });
+    expect(component.schema.enabled).toEqual({
+      type: "boolean",
+      pos: 1,
+      description: "Whether the component is enabled.",
+    });
+  });
+
+  it("keeps per-component and aggregate component objects byte-equivalent", () => {
+    const configuredTarget = forgeStoryblokCms({
+      packageName: "@mission-platform/components",
+      plugin: stubFramework("react"),
+      pluginField: { fieldType: "storyblok-button", requiredFields: ["label"] },
+    });
+    const analyzed = contentOf(ANNOTATED_SETTING, annotatedSettingNames);
+    const schema = configuredTarget.emitSchema?.(
+      analyzed,
+      undefined as never,
+      context,
+    );
+    const [manifest] = configuredTarget.emitManifest?.([analyzed]) ?? [];
+    const perComponent = JSON.parse(schema?.contents ?? "{}").component;
+    const aggregateComponent = JSON.parse(manifest?.contents ?? "{}")
+      .components[0];
+
+    expect(JSON.stringify(perComponent)).toBe(
+      JSON.stringify(aggregateComponent),
+    );
+  });
+
+  it("keeps tabbed component JSON identical in the root manifest", () => {
+    const analyzed = contentOf(TABBED, tabbedNames);
+    const schema = target.emitSchema?.(analyzed, undefined as never, context);
+    const [manifest] = target.emitManifest?.([analyzed], context) ?? [];
+    const component = JSON.parse(schema?.contents ?? "{}").component;
+    const aggregateComponent = JSON.parse(manifest?.contents ?? "{}")
+      .components[0];
+
+    expect(component.schema.tab_content_2.type).toBe("tab");
+    expect(JSON.stringify(component)).toBe(JSON.stringify(aggregateComponent));
+    expect(manifest?.fileName).toBe("components.json");
   });
 
   it("externalises the caller-supplied Storyblok runtime", () => {
@@ -480,6 +734,26 @@ describe("the Storyblok CMS target", () => {
     expect(artifacts[1].contents).toContain(
       "export declare const BadgeBlok: FunctionComponent<{ blok: SbBlokData & { variant?: 'default' | 'primary' | 'secondary'; size?: 'sm' | 'md' | 'lg'; pill?: boolean; content?: SbBlokData[] } }>;",
     );
+  });
+
+  it("mirrors nested atomic source paths for schema, wrappers, and entry imports", () => {
+    const nestedNames = { ...badgeNames, sourceDir: "atoms/forge-badge" };
+    const nested = contentOf(BADGE, nestedNames);
+    const schema = target.emitSchema?.(nested, undefined as never, context);
+    const template = target.emitTemplate(nested, undefined as never, context);
+    const artifacts = target.emitEntry?.([nested], context) ?? [];
+
+    expect(schema?.fileName).toBe("atoms/forge-badge/forge-badge.json");
+    expect(template.fileName).toBe("atoms/forge-badge/forge-badge.tsx");
+    expect(artifacts[0]?.contents).toBe(
+      "export { BadgeBlok } from './atoms/forge-badge/forge-badge';\n",
+    );
+    expect(artifacts.map((artifact) => artifact.fileName)).toEqual([
+      "index.tsx",
+      "index.d.ts",
+    ]);
+    const [manifest] = target.emitManifest?.([nested], context) ?? [];
+    expect(manifest?.fileName).toBe("components.json");
   });
 
   it("emits a Vue entry barrel with default re-exports", () => {

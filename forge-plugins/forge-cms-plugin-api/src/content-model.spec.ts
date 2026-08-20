@@ -109,6 +109,20 @@ describe("name derivation", () => {
       propertiesType: undefined,
     });
   });
+
+  it("preserves a discovered nested source directory", () => {
+    expect(
+      deriveContentComponentNames({
+        neutralName: "ForgeBadge",
+        publicName: "Badge",
+        folder: "forge-badge",
+        sourceDir: "atoms/forge-badge",
+      }),
+    ).toMatchObject({
+      folder: "forge-badge",
+      sourceDir: "atoms/forge-badge",
+    });
+  });
 });
 
 describe("analyzeContentComponent", () => {
@@ -201,6 +215,63 @@ describe("analyzeContentComponent", () => {
       "Brand name rendered in the header.",
     );
     expect(field(header, "sticky").setting).toBe(false);
+  });
+
+  it("captures normalized field tab annotations and leaves blank values absent", () => {
+    const source = [
+      "import { h, type MpElement } from '@mission-platform/forge';",
+      "export interface TabbedProperties {",
+      "  /** @cmsTab Content */",
+      "  title?: string;",
+      "  /** @cmsTab: Content */",
+      "  description?: string;",
+      "  /** @cmsTab:   */",
+      "  enabled?: boolean;",
+      "  /** @cmsSetting */",
+      "  locale?: string;",
+      "}",
+      "export function ForgeTabbed(properties: TabbedProperties): MpElement {",
+      "  return <div>{properties.title}{properties.description}{properties.enabled}{properties.locale}</div>;",
+      "}",
+    ].join("\n");
+    const tabbed = analyze(source, {
+      neutralName: "ForgeTabbed",
+      publicName: "Tabbed",
+      folder: "forge-tabbed",
+      propertiesType: "TabbedProperties",
+    });
+
+    expect(tabbed.fields.map((entry) => [entry.prop, entry.tab])).toEqual([
+      ["title", "Content"],
+      ["description", "Content"],
+      ["enabled", undefined],
+      ["locale", undefined],
+    ]);
+    expect(field(tabbed, "locale").setting).toBe(true);
+  });
+
+  it("captures and normalizes component-level editor metadata annotations", () => {
+    const source = [
+      "import { h, type MpElement } from '@mission-platform/forge';",
+      "/**",
+      " * A decorated component.",
+      " * @cmsIcon   hero-star  ",
+      " * @cmsColour:   #123456  ",
+      " */",
+      "export function ForgeDecorated(): MpElement {",
+      '  return <span class="decorated" />;',
+      "}",
+    ].join("\n");
+    const decorated = analyze(source, {
+      neutralName: "ForgeDecorated",
+      publicName: "Decorated",
+      folder: "forge-decorated",
+    });
+
+    expect(decorated.metadata).toEqual({
+      icon: "hero-star",
+      color: "#123456",
+    });
   });
 
   it("reports a component with no analysable props as an empty model", () => {

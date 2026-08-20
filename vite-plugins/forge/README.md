@@ -20,6 +20,37 @@ and `@mission-platform/forge-plugin-web-components`. Adding a target means
 adding a plugin package and selecting its factory in consuming package config;
 it does not mean extending this package's source tree.
 
+### Web Components host selection
+
+The Web Components target infers a customized built-in only when a component
+has one static intrinsic root from its compatibility table: `div`, `span`,
+`p`, or `h1`–`h6`. The generated class extends the corresponding native
+constructor and registers with `customElements.define(tag, Class, { extends })`;
+references to that component use the native tag with the required `is`
+attribute. Components with autonomous hosts continue to use their generated
+custom tag and the two-argument registration form.
+
+Inference is deliberately conservative. Missing, fragment, dynamic,
+component, ambiguous, invalid, or unsupported roots select the autonomous
+path and retain a stable fallback reason (`missing-root`, `fragment-root`,
+`dynamic-root`, `component-root`, `ambiguous-root`, `invalid-root`, or
+`unsupported-root`) in the lowered plan for diagnostics. This prevents a
+generated template from silently using an invalid customized-built-in base.
+
+Generated elements use an open shadow root by default. A lowered shadow policy
+can request `closed`, `delegatesFocus`, `serializable`, `clonable`, or named or
+manual slot assignment; optional fields are normalized and retried without
+unsupported platform options. The runtime retains its render root for closed
+roots, and manual slot plans require an explicit assignable target rather than
+assuming browser distribution.
+
+`ElementInternals` attachment is capability-gated and safe when
+`attachInternals` is unavailable. ARIA defaults are applied only for explicit
+semantic mappings and never replace author-supplied ARIA attributes. Form
+association, value synchronization, validity reporting, and form lifecycle
+callbacks are opt-in lowered metadata; ordinary generated components remain
+inert with respect to forms.
+
 Each component build then gets its **own** declarations from
 `jsxComponentsDtsPlugin`, a **post-build** step (`closeBundle`) that runs the
 framework's declaration toolchain over the generated tree — the TypeScript
@@ -140,3 +171,28 @@ See [`@mission-platform/components`](../../packages/components) for a reference
 consumer that ships multiple target bundles from one neutral source, and
 [`llms.txt`](./llms.txt) for the API-oriented summary. The complete architecture
 explanation is [`docs/forge-compiler.md`](../../docs/forge-compiler.md).
+
+## Service, cache, and watch behavior
+
+The Vite and tsdown helpers keep a `ForgeCompilerService` for the duration of a
+build session. Repeated builds reuse source snapshots, graph facts, parsed
+modules, neutral IR, and target artifacts; one-shot builds dispose the service
+after completion, while watch mode invalidates changed files and disposes it
+when the watcher closes. Custom integrations should call `invalidate()` with
+changed paths and `dispose()` at shutdown.
+
+Cache keys include source and transitive dependency fingerprints, compiler and
+router options, `tsconfig` `baseUrl`/`paths`, source-root/config fingerprints,
+target ID, and plugin identity/version. Consequently a helper change invalidates
+its dependent entries without deleting unrelated framework or CMS output.
+
+Compilation reports retain phase timings, cache hit/miss counts, affected files,
+warnings, errors, and emitted artifact counts. Generated modules, extra modules,
+declarations, source maps, assets, and checksums are listed in the target
+artifact manifest. Warnings are reported to the caller; errors prevent an
+incomplete target from being promoted.
+
+Targets remain explicit caller-owned `FrameworkOutputPlugin` instances. The
+neutral compiler has no framework registry and does not import target packages.
+Future worker/daemon transport is possible behind the service contract, but is
+not part of the current in-process implementation.

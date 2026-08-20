@@ -18,7 +18,29 @@ export type StoryblokFieldType =
   | "option"
   | "asset"
   | "multilink"
-  | "bloks";
+  | "bloks"
+  | "tab"
+  | "plugin";
+
+/** Configuration for Storyblok's plugin-backed schema field contract. */
+export interface StoryblokPluginFieldOptions {
+  /** The plugin field identifier supplied as Storyblok's `field_type`. */
+  readonly fieldType: string;
+  /** Storyblok field names required by the plugin, when applicable. */
+  readonly requiredFields?: readonly string[];
+}
+
+/** Optional Storyblok editor metadata defaults supplied by a target caller. */
+export interface StoryblokMetadataOptions {
+  readonly icon?: string;
+  readonly color?: string;
+}
+
+/** Options shared by every projection of a neutral component onto Storyblok. */
+export interface StoryblokProjectionOptions {
+  readonly pluginField?: StoryblokPluginFieldOptions;
+  readonly metadata?: StoryblokMetadataOptions;
+}
 
 /** A Storyblok schema field (the value of one entry in a component's `schema`). */
 export interface StoryblokSchemaField {
@@ -36,6 +58,14 @@ export interface StoryblokSchemaField {
   default_value?: string | number | boolean;
   /** Whether the field is mandatory (set for non-optional props). */
   required?: boolean;
+  /** Human-readable label for a synthetic Storyblok editor tab. */
+  display_name?: string;
+  /** Actual prop keys grouped under a synthetic Storyblok editor tab. */
+  keys?: string[];
+  /** The plugin field identifier for `type: "plugin"` fields. */
+  field_type?: string;
+  /** Comma-separated required field names for plugin fields. */
+  required_fields?: string;
 }
 
 /** A Storyblok *component object* (the writable subset consumed when pushing components). */
@@ -52,9 +82,9 @@ export interface StoryblokComponent {
   is_nestable: boolean;
   /** Mirrors {@link StoryblokComponent.name}; Storyblok keeps both. */
   real_name: string;
-  /** Editor icon colour (left unset by the generator). */
+  /** Editor icon colour, resolved from annotations, target defaults, or the component name. */
   color: string | null;
-  /** Editor icon (left unset by the generator). */
+  /** Editor icon, resolved from annotations, target defaults, or the component name. */
   icon: string | null;
   /** Field used to preview the component (left unset by the generator). */
   preview_field: string | null;
@@ -74,6 +104,8 @@ export interface AnalyzedField {
   isSlot: boolean;
   /** The wrapped component's slot name a `bloks` field feeds (`default` or a named slot). */
   slotName?: string;
+  /** The optional editor tab label carried from the neutral content model. */
+  tab?: string;
 }
 
 /** The full result of analysing one neutral component for Storyblok. */

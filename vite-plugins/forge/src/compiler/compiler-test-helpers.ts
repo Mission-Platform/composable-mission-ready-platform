@@ -48,7 +48,8 @@ export {
   hasMpStaticMarker,
   MP_STATIC_ATTR,
   moduleTargetsFramework,
-  optimizeSourceFile,
+  optimizeForgeModule,
+  optimizeGenericModule,
   readFrameworkDirective,
 } from './compile.js';
 export type { JsxFramework } from '@mission-platform/forge-plugin-api';

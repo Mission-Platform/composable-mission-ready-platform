@@ -29,11 +29,39 @@ describe("the Web-Components module emitter", () => {
 
     expect(
       code.startsWith(
-        "import { ForgeElement, html, nothing } from '@mission-platform/forge/web-components';",
+        "import { ForgeElement, DomTemplateResult, nothing } from '@mission-platform/forge/web-components';",
       ),
     ).toBe(true);
     expect(code).not.toContain("unsafeHtml");
     expect(code).not.toContain("from 'lit'");
+  });
+
+  it("emits source-relative own and shared stylesheet URLs for shadow-root loading", () => {
+    const { code } = emitWebComponentModule(
+      semanticModule({
+        imports: [
+          moduleImport(
+            "import './forge-card.module.scss';",
+            "./forge-card.module.scss",
+            { sideEffectOnly: true },
+          ),
+          moduleImport(
+            "import '../../styles/size.scss';",
+            "../../styles/size.scss",
+            { sideEffectOnly: true },
+          ),
+        ],
+      }),
+      "ForgeCard",
+    );
+
+    expect(code).toContain("static readonly styleUrls: readonly string[] = [");
+    expect(code).toContain(
+      'new URL("./forge-card.css", import.meta.url).href,',
+    );
+    expect(code).toContain(
+      'new URL("../../styles/size.css", import.meta.url).href,',
+    );
   });
 
   it("adds the conditional runtime values a template actually reaches for", () => {
@@ -58,7 +86,7 @@ describe("the Web-Components module emitter", () => {
     // contract rides the same header as an inline type specifier.
     expect(
       code.startsWith(
-        "import { ForgeElement, html, nothing, type PropertyDeclaration } from '@mission-platform/forge/web-components';",
+        "import { ForgeElement, DomTemplateResult, dynamicElement, nothing, ForgeElementMixin, type PropertyDeclaration } from '@mission-platform/forge/web-components';",
       ),
     ).toBe(true);
   });
@@ -175,6 +203,23 @@ describe("the Web-Components module emitter", () => {
     expect(code).toContain("import { formatDate } from 'date-utilities';");
   });
 
+  it("retains bare package side effects for external Forge components", () => {
+    const { code } = emitWebComponentModule(
+      semanticModule({
+        imports: [
+          moduleImport(
+            "import { ForgeDropdown } from '@mission-platform/float';",
+            "@mission-platform/float",
+            { valueNames: ["ForgeDropdown"] },
+          ),
+        ],
+      }),
+      "ForgeFixture",
+    );
+
+    expect(code).toContain("import '@mission-platform/float';");
+  });
+
   it("keeps retained declarations and lowers the markup they carry", () => {
     const icon = element("span", {
       source: '<span class="icon" />',
@@ -257,7 +302,7 @@ describe("the Web-Components module emitter", () => {
     expect(code).toContain("  declare label: string;");
     expect(code).toContain("  declare tone: string | undefined;");
     expect(code).toContain(
-      "return html`<button class=${this.tone}>${this.label}</button>`;",
+      "return new DomTemplateResult(__mpDomDefinition, [this.tone, this.label]);",
     );
     expect(code).toContain(
       "customElements.define('forge-fixture', ForgeFixtureElement);",
@@ -333,7 +378,7 @@ describe("the Web-Components module emitter", () => {
     );
 
     expect(withId.code).toContain(
-      "import { ForgeElement, html, nothing, useId } from '@mission-platform/forge/web-components';",
+      "import { ForgeElement, DomTemplateResult, nothing, useId } from '@mission-platform/forge/web-components';",
     );
     expect(withId.code).toContain("  readonly generatedId: string;");
     expect(withId.code).toContain("    this.generatedId = useId();");

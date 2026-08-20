@@ -39,7 +39,7 @@ import {
   NEUTRAL_RUNTIME_VALUES,
 } from "@mission-platform/forge-plugin-api/compiler/ast.js";
 import { MP_STATIC_ATTR } from "@mission-platform/forge-plugin-api/compiler/optimize.js";
-import ts from "typescript";
+import { parseSync } from "oxc-parser";
 
 import {
   CHILDREN_SNIPPET,
@@ -807,30 +807,26 @@ export function isEmptyCallback(body: string): boolean {
  * ambient context to attach it to.
  */
 function containsJsx(text: string): boolean {
-  const sourceFile = ts.createSourceFile(
-    "helper.tsx",
-    text,
-    ts.ScriptTarget.Latest,
-    true,
-    ts.ScriptKind.TSX,
-  );
-  let found = false;
-  const visit = (node: ts.Node): void => {
-    if (found) {
-      return;
-    }
-    if (
-      ts.isJsxElement(node) ||
-      ts.isJsxSelfClosingElement(node) ||
-      ts.isJsxFragment(node)
-    ) {
-      found = true;
-      return;
-    }
-    ts.forEachChild(node, visit);
-  };
-  visit(sourceFile);
-  return found;
+  try {
+    const parsed = parseSync("helper.tsx", text, {
+      astType: "ts",
+      lang: "tsx",
+      sourceType: "module",
+    });
+    const visit = (value: unknown): boolean => {
+      if (Array.isArray(value)) return value.some((child) => visit(child));
+      if (typeof value !== "object" || value === null) return false;
+      const record = value as Record<string, unknown>;
+      if (typeof record.type === "string" && record.type.startsWith("JSX"))
+        return true;
+      return Object.entries(record).some(([key, child]) =>
+        key === "loc" || key === "range" ? false : visit(child),
+      );
+    };
+    return visit(parsed.program);
+  } catch {
+    return false;
+  }
 }
 
 function retainedDeclarations(ir: SemanticModule): string[] {

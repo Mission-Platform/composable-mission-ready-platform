@@ -218,6 +218,7 @@ export function generateCmsArtifacts(
         publicName: discoveredComponent.publicName,
         folder: discoveredComponent.folder,
         propertiesType: discoveredComponent.propertiesType,
+        sourceDir: discoveredComponent.sourceDir,
       },
       semantic,
     );

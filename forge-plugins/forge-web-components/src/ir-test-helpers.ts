@@ -116,11 +116,14 @@ export function booleanAttribute(name: string): GenericJsxAttribute {
 }
 
 /** A `{...expression}` spread attribute. */
-export function spreadAttribute(text: string): GenericJsxSpreadAttribute {
+export function spreadAttribute(
+  text: string,
+  span = EMPTY_SPAN,
+): GenericJsxSpreadAttribute {
   return {
     kind: "jsx-spread-attribute",
     expression: sourceBacked(text),
-    span: EMPTY_SPAN,
+    span,
   };
 }
 
@@ -163,6 +166,27 @@ export function element(
     attributes: parts.attributes ?? [],
     children: parts.children ?? [],
     expression: sourceBacked(parts.source ?? `<${tag} />`),
+    span: EMPTY_SPAN,
+  };
+}
+
+/** Build a computed-tag render node. */
+export function dynamicElement(
+  expression: string,
+  parts: {
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+  } = {},
+): GenericRenderNode {
+  return {
+    kind: "render-node",
+    tag: sourceBacked(expression),
+    tagKind: "dynamic",
+    selfClosing: false,
+    attributes: parts.attributes ?? [],
+    children: parts.children ?? [],
+    expression: sourceBacked(parts.source ?? `<Dynamic is={${expression}} />`),
     span: EMPTY_SPAN,
   };
 }
@@ -323,8 +347,11 @@ export function listKey(
 }
 
 /** Build a dynamic-node intention. */
-export function dynamicNode(expression: string): DynamicNodeIntention {
-  return { expression: sourceBacked(expression), span: EMPTY_SPAN };
+export function dynamicNode(
+  expression: string,
+  span = EMPTY_SPAN,
+): DynamicNodeIntention {
+  return { expression: sourceBacked(expression), span };
 }
 
 /** Assemble a `SemanticModule` from the pieces a Web-Components spec cares about. */

@@ -1,9 +1,26 @@
-import path from 'node:path';
+import { createCompilerDiagnostic } from '@mission-platform/forge-plugin-api';
 
-import { printSourceFile } from '@mission-platform/forge-plugin-api/compiler/ast.js';
-import ts from 'typescript';
-
-import { stripFrameworkDirective } from './ast.js';
+import {
+  buildOxcParentMap,
+  isOxcJsxRoot,
+  isOxcNode,
+  oxcArray,
+  oxcIdentifierName,
+  oxcLiteralValue,
+  oxcNodeText,
+  oxcObject,
+  oxcProgramBody,
+  oxcSourceExpression,
+  oxcSourceSpan,
+  oxcTypeNode,
+  oxcUnwrapModuleStatement,
+  parseOxcModule,
+  stripOxcFrameworkDirective,
+  visitOxc,
+  type OxcNode,
+  type OxcParentMap,
+  type OxcParsedModule,
+} from './oxc.js';
 
 import type {
   CompilerDiagnostic,
@@ -21,140 +38,46 @@ import type {
   GenericStatementKind,
   GenericTagKind,
   SourceBackedExpression,
-  SourceSpan,
 } from '@mission-platform/forge-plugin-api';
 
 /** Source kinds supported by the Forge frontend. */
 export type ForgeSourceKind = 'js' | 'jsx' | 'ts' | 'tsx';
 
-/** Map a source extension to the TypeScript parser mode used by the frontend. */
-export function scriptKindForFileName(fileName: string): ts.ScriptKind {
-  switch (path.extname(fileName).toLowerCase()) {
-    case '.js': {
-      return ts.ScriptKind.JS;
+/** Return the TypeScript-compatible script-kind value for legacy compiler callers. */
+export function scriptKindForFileName(fileName: string): number {
+  switch (fileName.toLowerCase().split('.').pop()) {
+    case 'jsx': {
+      return 2;
     }
-    case '.jsx': {
-      return ts.ScriptKind.JSX;
+    case 'ts': {
+      return 3;
     }
-    case '.ts': {
-      return ts.ScriptKind.TS;
+    case 'tsx': {
+      return 4;
+    }
+    case 'js':
+    case 'mjs':
+    case 'cjs': {
+      return 1;
     }
     default: {
-      return ts.ScriptKind.TSX;
+      return 0;
     }
   }
 }
 
-/** Parse a component or composable using the source file's extension. */
-export function parseForgeSource(fileName: string, source: string): ts.SourceFile {
-  return ts.createSourceFile(fileName, source, ts.ScriptTarget.Latest, true, scriptKindForFileName(fileName));
+/**
+ * Parse Forge source through Oxc into the serializable module the neutral
+ * frontend, optimizer, and inference all consume. No TypeScript SourceFile is
+ * created; the returned module is the single parser-backed representation.
+ */
+export function parseForgeSource(fileName: string, source: string): OxcParsedModule {
+  return parseOxcModule(fileName, source);
 }
 
 /** Parse and remove only the Forge framework directive from a source module. */
-export function parseForgeModule(fileName: string, source: string): ts.SourceFile {
-  return stripFrameworkDirective(parseForgeSource(fileName, source));
-}
-
-function sourceSpan(sourceFile: ts.SourceFile, node: ts.Node): SourceSpan {
-  if (node.pos < 0) {
-    // A synthesized node produced by the neutral optimizer has no position in
-    // the original buffer; targets rely on its printed text instead.
-    return { start: 0, end: 0 };
-  }
-  const start = node.getStart(sourceFile);
-  const end = Math.max(start, node.getEnd());
-  const startLine = sourceFile.getLineAndCharacterOfPosition(start);
-  return {
-    start,
-    end,
-    line: startLine.line + 1,
-    column: startLine.character + 1,
-  };
-}
-
-const nodePrinter = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
-
-/**
- * The source text of a node. Nodes the neutral optimizer synthesized carry no
- * original position, so they are printed instead of sliced — every generic
- * record therefore always exposes usable text to the target emitters.
- */
-function nodeText(sourceFile: ts.SourceFile, node: ts.Node): string {
-  if (node.pos >= 0) {
-    return node.getText(sourceFile);
-  }
-  return nodePrinter.printNode(ts.EmitHint.Unspecified, node, sourceFile);
-}
-
-function sourceExpression(
-  sourceFile: ts.SourceFile,
-  node: ts.Node,
-  syntax: SourceBackedExpression['syntax'],
-): SourceBackedExpression {
-  return {
-    kind: 'source-backed-expression',
-    syntax,
-    text: nodeText(sourceFile, node),
-    span: sourceSpan(sourceFile, node),
-  };
-}
-
-function identifierText(sourceFile: ts.SourceFile, node: ts.Node): string {
-  return nodeText(sourceFile, node);
-}
-
-function importNames(sourceFile: ts.SourceFile, statement: ts.ImportDeclaration): GenericImport {
-  const valueNames: string[] = [];
-  const typeNames: string[] = [];
-  const clause = statement.importClause;
-  let defaultName: string | undefined;
-  let namespaceName: string | undefined;
-  if (clause?.name !== undefined) {
-    defaultName = clause.name.text;
-    (clause.isTypeOnly ? typeNames : valueNames).push(clause.name.text);
-  }
-  if (clause?.namedBindings !== undefined) {
-    if (ts.isNamespaceImport(clause.namedBindings)) {
-      namespaceName = clause.namedBindings.name.text;
-      (clause.isTypeOnly ? typeNames : valueNames).push(clause.namedBindings.name.text);
-    } else {
-      for (const element of clause.namedBindings.elements) {
-        const name = element.name.text;
-        if (clause.isTypeOnly || element.isTypeOnly) {
-          typeNames.push(name);
-        } else {
-          valueNames.push(name);
-        }
-      }
-    }
-  }
-  const moduleSpecifier = ts.isStringLiteral(statement.moduleSpecifier)
-    ? statement.moduleSpecifier.text
-    : statement.moduleSpecifier.pos < 0
-      ? ''
-      : statement.moduleSpecifier.getText(sourceFile).slice(1, -1);
-  return {
-    kind: 'import',
-    source: moduleSpecifier,
-    valueNames,
-    typeNames,
-    defaultName,
-    namespaceName,
-    typeOnly: clause?.isTypeOnly === true,
-    sideEffectOnly: clause === undefined,
-    text: nodeText(sourceFile, statement),
-    span: sourceSpan(sourceFile, statement),
-  };
-}
-
-type JsxRoot = ts.JsxElement | ts.JsxSelfClosingElement | ts.JsxFragment;
-
-function isJsxRoot(node: ts.Node): node is JsxRoot {
-  return ts.isJsxElement(node) || ts.isJsxSelfClosingElement(node) || ts.isJsxFragment(node);
-}
-
-function jsxTagName(sourceFile: ts.SourceFile, node: ts.JsxTagNameExpression): string | SourceBackedExpression {
-  return ts.isIdentifier(node) ? node.text : sourceExpression(sourceFile, node, 'expression');
+export function parseForgeModule(fileName: string, source: string): OxcParsedModule {
+  return stripOxcFrameworkDirective(parseOxcModule(fileName, source));
 }
 
 function tagKindFor(tag: string | SourceBackedExpression): GenericTagKind {
@@ -167,120 +90,214 @@ function tagKindFor(tag: string | SourceBackedExpression): GenericTagKind {
   return /^[a-z]/.test(tag) ? 'element' : 'component';
 }
 
-/** Collect JSX roots nested inside a non-JSX expression (callbacks, conditionals, …). */
-function nestedRenderNodes(sourceFile: ts.SourceFile, node: ts.Node): GenericRenderNode[] {
+function jsxTagName(source: string, name: OxcNode | undefined): string | SourceBackedExpression {
+  if (name === undefined) {
+    return oxcSourceExpression(
+      source,
+      { type: 'Identifier', start: 0, end: 0, name: 'Fragment' } as OxcNode,
+      'expression',
+    );
+  }
+  const identifier = oxcIdentifierName(name);
+  if (identifier !== undefined) {
+    return identifier;
+  }
+  if (name.type === 'JSXMemberExpression') {
+    return oxcSourceExpression(source, name, 'expression');
+  }
+  if (name.type === 'JSXNamespacedName') {
+    return oxcNodeText(source, name);
+  }
+  return oxcSourceExpression(source, name, 'expression');
+}
+
+function nestedRenderNodes(source: string, node: OxcNode): GenericRenderNode[] {
   const roots: GenericRenderNode[] = [];
-  const visit = (current: ts.Node): void => {
-    if (isJsxRoot(current)) {
-      roots.push(renderNode(sourceFile, current));
+  const visit = (current: OxcNode): void => {
+    if (isOxcJsxRoot(current)) {
+      roots.push(renderNode(source, current));
       return;
     }
-    ts.forEachChild(current, visit);
+    for (const key of Object.keys(current)) {
+      if (key === 'type' || key === 'start' || key === 'end' || key === 'range' || key === 'loc') continue;
+      const value = current[key];
+      if (Array.isArray(value)) {
+        for (const entry of value) {
+          if (isOxcNode(entry)) visit(entry);
+        }
+      } else if (isOxcNode(value)) {
+        visit(value);
+      }
+    }
   };
-  ts.forEachChild(node, visit);
+  // Scan children only so callers can pass non-JSX expressions without double-wrapping.
+  for (const key of Object.keys(node)) {
+    if (key === 'type' || key === 'start' || key === 'end' || key === 'range' || key === 'loc') continue;
+    const value = node[key];
+    if (Array.isArray(value)) {
+      for (const entry of value) {
+        if (isOxcNode(entry)) visit(entry);
+      }
+    } else if (isOxcNode(value)) {
+      visit(value);
+    }
+  }
   return roots;
 }
 
-function attributeValue(
-  sourceFile: ts.SourceFile,
-  initializer: ts.JsxAttributeValue | undefined,
-): GenericAttributeValue | undefined {
-  if (initializer === undefined) {
+function returnedRenderNode(source: string, expression: OxcNode): GenericRenderNode | undefined {
+  let current = expression;
+  while (current.type === 'ParenthesizedExpression') {
+    const inner = oxcObject(current, 'expression');
+    if (inner === undefined) break;
+    current = inner;
+  }
+  if (isOxcJsxRoot(current)) {
+    return renderNode(source, current);
+  }
+  const nested = nestedRenderNodes(source, current);
+  if (nested.length === 0) {
     return undefined;
   }
-  if (ts.isStringLiteral(initializer)) {
-    return { kind: 'string', value: initializer.text, span: sourceSpan(sourceFile, initializer) };
+  const sourceExpression = oxcSourceExpression(source, current, 'expression');
+  return {
+    kind: 'render-node',
+    tag: 'Fragment',
+    tagKind: 'fragment',
+    selfClosing: false,
+    attributes: [],
+    children: [
+      {
+        kind: 'expression-node',
+        expression: sourceExpression,
+        nested,
+        span: sourceExpression.span,
+      },
+    ],
+    expression: sourceExpression,
+    span: sourceExpression.span,
+  };
+}
+
+function attributeValue(source: string, initializer: OxcNode | undefined | null): GenericAttributeValue | undefined {
+  if (initializer === undefined || initializer === null) {
+    return undefined;
   }
-  if (ts.isJsxExpression(initializer)) {
-    const inner = initializer.expression;
-    if (inner === undefined) {
-      return { kind: 'expression', nested: [], span: sourceSpan(sourceFile, initializer) };
+  if (initializer.type === 'Literal' && typeof initializer.value === 'string') {
+    return { kind: 'string', value: initializer.value, span: oxcSourceSpan(source, initializer) };
+  }
+  if (initializer.type === 'JSXExpressionContainer') {
+    const inner = oxcObject(initializer, 'expression');
+    // Empty `{}` may surface as JSXEmptyExpression.
+    if (inner === undefined || inner.type === 'JSXEmptyExpression') {
+      return { kind: 'expression', nested: [], span: oxcSourceSpan(source, initializer) };
     }
     return {
       kind: 'expression',
-      expression: sourceExpression(sourceFile, inner, 'expression'),
-      nested: isJsxRoot(inner) ? [renderNode(sourceFile, inner)] : nestedRenderNodes(sourceFile, inner),
-      span: sourceSpan(sourceFile, initializer),
+      expression: oxcSourceExpression(source, inner, 'expression'),
+      nested: isOxcJsxRoot(inner) ? [renderNode(source, inner)] : nestedRenderNodes(source, inner),
+      span: oxcSourceSpan(source, initializer),
+    };
+  }
+  if (isOxcJsxRoot(initializer)) {
+    return {
+      kind: 'expression',
+      expression: oxcSourceExpression(source, initializer, 'expression'),
+      nested: [renderNode(source, initializer)],
+      span: oxcSourceSpan(source, initializer),
     };
   }
   return {
     kind: 'expression',
-    expression: sourceExpression(sourceFile, initializer, 'expression'),
-    nested: isJsxRoot(initializer) ? [renderNode(sourceFile, initializer)] : [],
-    span: sourceSpan(sourceFile, initializer),
+    expression: oxcSourceExpression(source, initializer, 'expression'),
+    nested: nestedRenderNodes(source, initializer),
+    span: oxcSourceSpan(source, initializer),
   };
 }
 
-function jsxAttributes(sourceFile: ts.SourceFile, attributes: ts.JsxAttributes): GenericAttribute[] {
-  return attributes.properties.map((property): GenericAttribute => {
-    if (ts.isJsxSpreadAttribute(property)) {
+function jsxAttributes(source: string, attributes: readonly OxcNode[]): GenericAttribute[] {
+  return attributes.map((property): GenericAttribute => {
+    if (property.type === 'JSXSpreadAttribute') {
+      const argument = oxcObject(property, 'argument') ?? property;
       return {
         kind: 'jsx-spread-attribute',
-        expression: sourceExpression(sourceFile, property.expression, 'expression'),
-        span: sourceSpan(sourceFile, property),
+        expression: oxcSourceExpression(source, argument, 'expression'),
+        span: oxcSourceSpan(source, property),
       };
     }
+    const nameNode = oxcObject(property, 'name');
+    const name =
+      oxcIdentifierName(nameNode) ??
+      (nameNode !== undefined ? oxcNodeText(source, nameNode) : oxcNodeText(source, property));
     return {
       kind: 'jsx-attribute',
-      name: ts.isIdentifier(property.name) ? property.name.text : identifierText(sourceFile, property.name),
-      value: attributeValue(sourceFile, property.initializer),
-      span: sourceSpan(sourceFile, property),
+      name,
+      value: attributeValue(source, oxcObject(property, 'value') ?? (property.value as OxcNode | null | undefined)),
+      span: oxcSourceSpan(source, property),
     };
   });
 }
 
-function renderChildren(sourceFile: ts.SourceFile, children: ts.NodeArray<ts.JsxChild>): GenericRenderChild[] {
+function renderChildren(source: string, children: readonly OxcNode[]): GenericRenderChild[] {
   const result: GenericRenderChild[] = [];
   for (const child of children) {
-    if (isJsxRoot(child)) {
-      result.push(renderNode(sourceFile, child));
+    if (isOxcJsxRoot(child)) {
+      result.push(renderNode(source, child));
       continue;
     }
-    if (ts.isJsxText(child)) {
-      if (child.text.trim().length === 0) {
+    if (child.type === 'JSXText') {
+      const text = typeof child.value === 'string' ? child.value : oxcNodeText(source, child);
+      if (text.trim().length === 0) {
         continue;
       }
-      result.push({ kind: 'text', text: child.text, span: sourceSpan(sourceFile, child) });
+      result.push({ kind: 'text', text, span: oxcSourceSpan(source, child) });
       continue;
     }
-    if (ts.isJsxExpression(child)) {
-      const inner = child.expression;
+    if (child.type === 'JSXExpressionContainer') {
+      const inner = oxcObject(child, 'expression');
+      if (inner === undefined || inner.type === 'JSXEmptyExpression') {
+        result.push({
+          kind: 'expression-node',
+          expression: undefined,
+          nested: [],
+          span: oxcSourceSpan(source, child),
+        });
+        continue;
+      }
       result.push({
         kind: 'expression-node',
-        expression: inner === undefined ? undefined : sourceExpression(sourceFile, inner, 'expression'),
-        nested: inner === undefined ? [] : nestedRenderNodes(sourceFile, inner),
-        span: sourceSpan(sourceFile, child),
+        expression: oxcSourceExpression(source, inner, 'expression'),
+        nested: isOxcJsxRoot(inner) ? [renderNode(source, inner)] : nestedRenderNodes(source, inner),
+        span: oxcSourceSpan(source, child),
+      });
+      continue;
+    }
+    if (child.type === 'JSXSpreadChild') {
+      const expression = oxcObject(child, 'expression');
+      result.push({
+        kind: 'expression-node',
+        expression: expression === undefined ? undefined : oxcSourceExpression(source, expression, 'expression'),
+        nested: expression === undefined ? [] : nestedRenderNodes(source, expression),
+        span: oxcSourceSpan(source, child),
       });
     }
   }
   return result;
 }
 
-function renderNode(sourceFile: ts.SourceFile, node: JsxRoot): GenericRenderNode {
-  if (ts.isJsxElement(node)) {
-    const tag = jsxTagName(sourceFile, node.openingElement.tagName);
+function renderNode(source: string, node: OxcNode): GenericRenderNode {
+  if (node.type === 'JSXElement') {
+    const opening = oxcObject(node, 'openingElement') ?? node;
+    const tag = jsxTagName(source, oxcObject(opening, 'name'));
     return {
       kind: 'render-node',
       tag,
       tagKind: tagKindFor(tag),
-      selfClosing: false,
-      attributes: jsxAttributes(sourceFile, node.openingElement.attributes),
-      children: renderChildren(sourceFile, node.children),
-      expression: sourceExpression(sourceFile, node, 'expression'),
-      span: sourceSpan(sourceFile, node),
-    };
-  }
-  if (ts.isJsxSelfClosingElement(node)) {
-    const tag = jsxTagName(sourceFile, node.tagName);
-    return {
-      kind: 'render-node',
-      tag,
-      tagKind: tagKindFor(tag),
-      selfClosing: true,
-      attributes: jsxAttributes(sourceFile, node.attributes),
-      children: [],
-      expression: sourceExpression(sourceFile, node, 'expression'),
-      span: sourceSpan(sourceFile, node),
+      selfClosing: opening.selfClosing === true,
+      attributes: jsxAttributes(source, oxcArray(opening, 'attributes')),
+      children: renderChildren(source, oxcArray(node, 'children')),
+      expression: oxcSourceExpression(source, node, 'expression'),
+      span: oxcSourceSpan(source, node),
     };
   }
   return {
@@ -289,205 +306,360 @@ function renderNode(sourceFile: ts.SourceFile, node: JsxRoot): GenericRenderNode
     tagKind: 'fragment',
     selfClosing: false,
     attributes: [],
-    children: renderChildren(sourceFile, node.children),
-    expression: sourceExpression(sourceFile, node, 'expression'),
-    span: sourceSpan(sourceFile, node),
+    children: renderChildren(source, oxcArray(node, 'children')),
+    expression: oxcSourceExpression(source, node, 'expression'),
+    span: oxcSourceSpan(source, node),
   };
 }
 
-function collectRenderNodes(sourceFile: ts.SourceFile): GenericRenderNode[] {
+function collectRenderNodes(source: string, program: OxcNode, parents: OxcParentMap): GenericRenderNode[] {
   const roots: GenericRenderNode[] = [];
-  const visit = (node: ts.Node): void => {
-    if (isJsxRoot(node)) {
-      const parent = node.parent;
-      if (parent === undefined || !(ts.isJsxElement(parent) || ts.isJsxFragment(parent))) {
-        roots.push(renderNode(sourceFile, node));
-      }
+  visitOxc(program, (node) => {
+    if (!isOxcJsxRoot(node)) {
       return;
     }
-    ts.forEachChild(node, visit);
-  };
-  visit(sourceFile);
+    const parent = parents.get(node);
+    // Skip JSX nested under another element/fragment; those are modeled as children.
+    if (parent !== undefined && (parent.type === 'JSXElement' || parent.type === 'JSXFragment')) {
+      return false;
+    }
+    roots.push(renderNode(source, node));
+    return false;
+  });
   return roots;
 }
 
-function statementKindOf(statement: ts.Statement): GenericStatementKind {
-  if (ts.isImportDeclaration(statement)) return 'import';
-  if (ts.isInterfaceDeclaration(statement)) return 'interface';
-  if (ts.isTypeAliasDeclaration(statement)) return 'type-alias';
-  if (ts.isEnumDeclaration(statement)) return 'enum';
-  if (ts.isVariableStatement(statement)) return 'variable';
-  if (ts.isFunctionDeclaration(statement)) return 'function';
-  if (ts.isClassDeclaration(statement)) return 'class';
-  if (ts.isExportDeclaration(statement) || ts.isExportAssignment(statement)) return 'export';
-  if (ts.isReturnStatement(statement)) return 'return';
-  if (ts.isExpressionStatement(statement)) return 'expression';
-  return 'other';
+function statementKindOf(node: OxcNode): GenericStatementKind {
+  switch (node.type) {
+    case 'ImportDeclaration': {
+      return 'import';
+    }
+    case 'TSInterfaceDeclaration': {
+      return 'interface';
+    }
+    case 'TSTypeAliasDeclaration': {
+      return 'type-alias';
+    }
+    case 'TSEnumDeclaration': {
+      return 'enum';
+    }
+    case 'VariableDeclaration': {
+      return 'variable';
+    }
+    case 'FunctionDeclaration': {
+      return 'function';
+    }
+    case 'ClassDeclaration': {
+      return 'class';
+    }
+    case 'ExportNamedDeclaration':
+    case 'ExportDefaultDeclaration':
+    case 'ExportAllDeclaration': {
+      return 'export';
+    }
+    case 'ReturnStatement': {
+      return 'return';
+    }
+    case 'ExpressionStatement': {
+      return 'expression';
+    }
+    default: {
+      return 'other';
+    }
+  }
 }
 
-function statementName(sourceFile: ts.SourceFile, statement: ts.Statement): string | undefined {
+function statementName(source: string, node: OxcNode): string | undefined {
   if (
-    (ts.isInterfaceDeclaration(statement) ||
-      ts.isTypeAliasDeclaration(statement) ||
-      ts.isEnumDeclaration(statement) ||
-      ts.isFunctionDeclaration(statement) ||
-      ts.isClassDeclaration(statement)) &&
-    statement.name !== undefined
+    node.type === 'TSInterfaceDeclaration' ||
+    node.type === 'TSTypeAliasDeclaration' ||
+    node.type === 'TSEnumDeclaration' ||
+    node.type === 'FunctionDeclaration' ||
+    node.type === 'ClassDeclaration'
   ) {
-    return statement.name.text;
+    return oxcIdentifierName(oxcObject(node, 'id'));
   }
-  if (ts.isVariableStatement(statement)) {
-    const [declaration] = statement.declarationList.declarations;
-    if (declaration !== undefined) {
-      return ts.isIdentifier(declaration.name) ? declaration.name.text : identifierText(sourceFile, declaration.name);
-    }
+  if (node.type === 'VariableDeclaration') {
+    const [declaration] = oxcArray(node, 'declarations');
+    if (declaration === undefined) return undefined;
+    const id = oxcObject(declaration, 'id');
+    return oxcIdentifierName(id) ?? (id === undefined ? undefined : oxcNodeText(source, id));
   }
   return undefined;
 }
 
-function isExported(statement: ts.Statement): boolean {
-  return ts.canHaveModifiers(statement)
-    ? (ts.getModifiers(statement) ?? []).some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)
-    : false;
-}
-
-function genericStatement(sourceFile: ts.SourceFile, statement: ts.Statement): GenericStatement {
-  return {
-    kind: 'statement',
-    statementKind: statementKindOf(statement),
-    name: statementName(sourceFile, statement),
-    exported: isExported(statement),
-    text: sourceExpression(sourceFile, statement, 'statement'),
-    renderNodes: nestedRenderNodes(sourceFile, statement),
-    span: sourceSpan(sourceFile, statement),
-  };
-}
-
-function bindingNames(sourceFile: ts.SourceFile, name: ts.BindingName): string[] {
-  if (ts.isIdentifier(name)) {
-    return [name.text];
+function bindingNames(source: string, name: OxcNode | undefined): string[] {
+  if (name === undefined) return [];
+  if (name.type === 'Identifier') {
+    const text = oxcIdentifierName(name);
+    return text === undefined ? [] : [text];
   }
-  return name.elements.flatMap((element) =>
-    ts.isOmittedExpression(element) ? [] : bindingNames(sourceFile, element.name),
-  );
+  if (name.type === 'ObjectPattern') {
+    return oxcArray(name, 'properties').flatMap((property) => {
+      if (property.type === 'RestElement') {
+        return bindingNames(source, oxcObject(property, 'argument'));
+      }
+      if (property.type === 'Property') {
+        return bindingNames(source, oxcObject(property, 'value') ?? oxcObject(property, 'key'));
+      }
+      return [];
+    });
+  }
+  if (name.type === 'ArrayPattern') {
+    return oxcArray(name, 'elements').flatMap((element) => {
+      if (element.type === 'RestElement') {
+        return bindingNames(source, oxcObject(element, 'argument'));
+      }
+      return bindingNames(source, element);
+    });
+  }
+  if (name.type === 'AssignmentPattern') {
+    return bindingNames(source, oxcObject(name, 'left'));
+  }
+  return [];
 }
 
-function genericParameter(sourceFile: ts.SourceFile, parameter: ts.ParameterDeclaration): GenericParameter {
-  const binding: GenericBindingKind = ts.isIdentifier(parameter.name)
-    ? 'identifier'
-    : ts.isObjectBindingPattern(parameter.name)
-      ? 'object-pattern'
-      : 'array-pattern';
+function genericParameter(source: string, parameter: OxcNode): GenericParameter {
+  // Oxc function params are patterns (Identifier / ObjectPattern / …).
+  const pattern =
+    parameter.type === 'Identifier' ||
+    parameter.type === 'ObjectPattern' ||
+    parameter.type === 'ArrayPattern' ||
+    parameter.type === 'AssignmentPattern' ||
+    parameter.type === 'RestElement'
+      ? parameter
+      : (oxcObject(parameter, 'name') ?? parameter);
+
+  const bindingNode = pattern.type === 'AssignmentPattern' ? (oxcObject(pattern, 'left') ?? pattern) : pattern;
+  const bindingTarget =
+    bindingNode.type === 'RestElement' ? (oxcObject(bindingNode, 'argument') ?? bindingNode) : bindingNode;
+  const binding = bindingKindFor(bindingTarget);
+  const typeAnnotation = oxcTypeNode(oxcObject(parameter, 'typeAnnotation'));
+  // Oxc Identifier spans include the type annotation; emit the binding name only.
+  const text =
+    bindingNode.type === 'Identifier'
+      ? (oxcIdentifierName(bindingNode) ?? oxcNodeText(source, bindingNode))
+      : oxcNodeText(source, pattern);
   return {
     kind: 'parameter',
-    text: nodeText(sourceFile, parameter.name),
+    text,
     binding,
-    names: bindingNames(sourceFile, parameter.name),
-    type: parameter.type === undefined ? undefined : sourceExpression(sourceFile, parameter.type, 'type'),
-    span: sourceSpan(sourceFile, parameter),
+    names: bindingNames(source, bindingNode),
+    type: typeAnnotation === undefined ? undefined : oxcSourceExpression(source, typeAnnotation, 'type'),
+    span: oxcSourceSpan(source, parameter),
   };
 }
 
-/** Locate the component function declaration the module is named after. */
-export function findComponentDeclaration(
-  sourceFile: ts.SourceFile,
-  componentName?: string,
-): ts.FunctionDeclaration | undefined {
-  const declarations = sourceFile.statements.filter((statement): statement is ts.FunctionDeclaration =>
-    ts.isFunctionDeclaration(statement),
-  );
-  if (componentName !== undefined) {
-    const named = declarations.find((declaration) => declaration.name?.text === componentName);
-    if (named !== undefined) {
-      return named;
+function bindingKindFor(node: OxcNode): GenericBindingKind {
+  switch (node.type) {
+    case 'ObjectPattern': {
+      return 'object-pattern';
+    }
+    case 'ArrayPattern': {
+      return 'array-pattern';
+    }
+    default: {
+      return 'identifier';
     }
   }
-  return declarations.find((declaration) => {
-    if (declaration.body === undefined) {
-      return false;
-    }
-    let hasJsx = false;
-    const visit = (node: ts.Node): void => {
-      if (hasJsx) return;
-      if (isJsxRoot(node)) {
-        hasJsx = true;
-        return;
-      }
-      ts.forEachChild(node, visit);
-    };
-    visit(declaration.body);
-    return hasJsx;
-  });
 }
 
-function genericComponent(sourceFile: ts.SourceFile, declaration: ts.FunctionDeclaration): GenericComponent {
-  const statements = declaration.body?.statements ?? ts.factory.createNodeArray<ts.Statement>();
-  const returnStatement = statements.find((statement): statement is ts.ReturnStatement =>
-    ts.isReturnStatement(statement),
-  );
-  const returned = returnStatement?.expression;
-  const unwrapped = returned !== undefined && ts.isParenthesizedExpression(returned) ? returned.expression : returned;
-  const parameter = declaration.parameters[0];
+function genericImport(source: string, statement: OxcNode): GenericImport {
+  const valueNames: string[] = [];
+  const typeNames: string[] = [];
+  let defaultName: string | undefined;
+  let namespaceName: string | undefined;
+  const statementTypeOnly = statement.importKind === 'type';
+  for (const specifier of oxcArray(statement, 'specifiers')) {
+    const local = oxcIdentifierName(oxcObject(specifier, 'local')) ?? '';
+    const typeOnly = statementTypeOnly || specifier.importKind === 'type';
+    if (specifier.type === 'ImportDefaultSpecifier') {
+      defaultName = local;
+      (typeOnly ? typeNames : valueNames).push(local);
+      continue;
+    }
+    if (specifier.type === 'ImportNamespaceSpecifier') {
+      namespaceName = local;
+      (typeOnly ? typeNames : valueNames).push(local);
+      continue;
+    }
+    (typeOnly ? typeNames : valueNames).push(local);
+  }
+  const sourceNode = oxcObject(statement, 'source');
+  const moduleSpecifier =
+    typeof oxcLiteralValue(sourceNode) === 'string' ? (oxcLiteralValue(sourceNode) as string) : '';
   return {
-    kind: 'component',
-    name: declaration.name?.text ?? '',
-    exported: isExported(declaration),
-    parameter: parameter === undefined ? undefined : genericParameter(sourceFile, parameter),
-    body: statements.map((statement) => genericStatement(sourceFile, statement)),
-    returnExpression: unwrapped === undefined ? undefined : sourceExpression(sourceFile, unwrapped, 'expression'),
-    returnNode: unwrapped !== undefined && isJsxRoot(unwrapped) ? renderNode(sourceFile, unwrapped) : undefined,
-    span: sourceSpan(sourceFile, declaration),
+    kind: 'import',
+    source: moduleSpecifier,
+    valueNames,
+    typeNames,
+    defaultName,
+    namespaceName,
+    typeOnly: statementTypeOnly,
+    sideEffectOnly: oxcArray(statement, 'specifiers').length === 0,
+    text: oxcNodeText(source, statement),
+    span: oxcSourceSpan(source, statement),
   };
 }
 
-/** Build a serializable generic AST from a parsed source file. */
-export function createGenericAst(
-  sourceFile: ts.SourceFile,
+function genericStatement(source: string, statement: OxcNode, exported: boolean): GenericStatement {
+  const { node } = oxcUnwrapModuleStatement(statement);
+  const effective =
+    statement.type.startsWith('Export') && oxcObject(statement, 'declaration') === undefined ? statement : node;
+  return {
+    kind: 'statement',
+    statementKind: statementKindOf(effective),
+    name: statementName(source, effective),
+    exported: exported || oxcUnwrapModuleStatement(statement).exported,
+    text: oxcSourceExpression(source, statement, 'statement'),
+    renderNodes: nestedRenderNodes(source, statement),
+    span: oxcSourceSpan(source, statement),
+  };
+}
+
+function functionHasJsx(declaration: OxcNode): boolean {
+  let found = false;
+  visitOxc(declaration, (node) => {
+    if (found) return false;
+    if (isOxcJsxRoot(node)) {
+      found = true;
+      return false;
+    }
+  });
+  return found;
+}
+
+function findOxcComponentDeclaration(
+  program: OxcNode,
+  componentName?: string,
+): { readonly statement: OxcNode; readonly declaration: OxcNode; readonly exported: boolean } | undefined {
+  const functions: { statement: OxcNode; declaration: OxcNode; exported: boolean }[] = [];
+  for (const statement of oxcProgramBody(program)) {
+    const unwrapped = oxcUnwrapModuleStatement(statement);
+    if (unwrapped.node.type !== 'FunctionDeclaration') continue;
+    functions.push({ statement, declaration: unwrapped.node, exported: unwrapped.exported });
+  }
+  if (componentName !== undefined) {
+    return functions.find((entry) => oxcIdentifierName(oxcObject(entry.declaration, 'id')) === componentName);
+  }
+  return functions.find((entry) => functionHasJsx(entry.declaration));
+}
+
+function genericComponent(source: string, declaration: OxcNode, exported: boolean): GenericComponent {
+  const body = oxcObject(declaration, 'body');
+  const statements = body === undefined ? [] : oxcArray(body, 'body');
+  const returnStatement = statements.find((statement) => statement.type === 'ReturnStatement');
+  const returned = returnStatement === undefined ? undefined : oxcObject(returnStatement, 'argument');
+  let unwrapped = returned;
+  while (unwrapped !== undefined && unwrapped.type === 'ParenthesizedExpression') {
+    unwrapped = oxcObject(unwrapped, 'expression');
+  }
+  const [parameter] = oxcArray(declaration, 'params');
+  return {
+    kind: 'component',
+    name: oxcIdentifierName(oxcObject(declaration, 'id')) ?? '',
+    exported,
+    parameter: parameter === undefined ? undefined : genericParameter(source, parameter),
+    body: statements.map((statement) => genericStatement(source, statement, false)),
+    returnExpression: unwrapped === undefined ? undefined : oxcSourceExpression(source, unwrapped, 'expression'),
+    returnNode: unwrapped === undefined ? undefined : returnedRenderNode(source, unwrapped),
+    span: oxcSourceSpan(source, declaration),
+  };
+}
+
+/** Build a serializable generic AST from an Oxc-parsed module. */
+export function createGenericAstFromOxc(
+  module: OxcParsedModule,
   moduleKind: 'component' | 'composable',
   componentName?: string,
 ): GenericModuleAst {
-  const componentDeclaration =
-    moduleKind === 'component' ? findComponentDeclaration(sourceFile, componentName) : undefined;
+  const source = module.source;
+  const parents = buildOxcParentMap(module.program);
+  const componentEntry =
+    moduleKind === 'component' ? findOxcComponentDeclaration(module.program, componentName) : undefined;
   const imports: GenericImport[] = [];
   const declarations: GenericStatement[] = [];
   const nodes: GenericAstNode[] = [];
-  for (const statement of sourceFile.statements) {
-    if (ts.isImportDeclaration(statement) && ts.isStringLiteral(statement.moduleSpecifier)) {
-      const entry = importNames(sourceFile, statement);
+
+  for (const statement of oxcProgramBody(module.program)) {
+    if (statement.type === 'ImportDeclaration') {
+      const entry = genericImport(source, statement);
       imports.push(entry);
       nodes.push(entry);
       continue;
     }
-    const entry = genericStatement(sourceFile, statement);
-    if (statement !== componentDeclaration) {
+    const unwrapped = oxcUnwrapModuleStatement(statement);
+    const entry = genericStatement(source, statement, unwrapped.exported);
+    if (componentEntry === undefined || statement !== componentEntry.statement) {
       declarations.push(entry);
     }
     nodes.push(entry);
   }
-  const renderNodes = collectRenderNodes(sourceFile);
+
+  const renderNodes = collectRenderNodes(source, module.program, parents);
   nodes.push(...renderNodes);
+
   return {
     kind: 'generic-module',
-    fileName: sourceFile.fileName,
+    fileName: module.fileName,
     moduleKind,
-    // `sourceFile.getFullText()` returns the original buffer even after a
-    // neutral transform. Print the transformed tree so target generators see
-    // dead-branch pruning, inferred keys, and static markers without parsing
-    // the pre-optimization source again.
-    source: printSourceFile(sourceFile),
+    // The Oxc module source is authoritative; optimizer passes edit this source
+    // and re-parse, so dead-branch pruning and stable keys are already reflected.
+    source,
     imports,
     declarations,
-    component: componentDeclaration === undefined ? undefined : genericComponent(sourceFile, componentDeclaration),
+    component:
+      componentEntry === undefined
+        ? undefined
+        : genericComponent(source, componentEntry.declaration, componentEntry.exported),
     renderNodes,
     nodes,
   };
 }
 
+/**
+ * Build a serializable generic AST from an Oxc-parsed module.
+ *
+ * The Oxc module is the single authoritative source for imports, JSX,
+ * components, and spans; no TypeScript tree is involved.
+ */
+export function createGenericAst(
+  module: OxcParsedModule,
+  moduleKind: 'component' | 'composable',
+  componentName?: string,
+): GenericModuleAst {
+  return createGenericAstFromOxc(module, moduleKind, componentName);
+}
+
 /** Frontend result shared by inference and future source diagnostics. */
 export interface FrontendModule {
-  readonly sourceFile: ts.SourceFile;
+  readonly fileName: string;
+  readonly oxc: OxcParsedModule;
   readonly ast: GenericModuleAst;
   readonly diagnostics: readonly CompilerDiagnostic[];
+}
+
+/** Convert Oxc's structured parser errors into stable Forge diagnostics. */
+function parserDiagnostics(fileName: string, parsed: OxcParsedModule): CompilerDiagnostic[] {
+  return parsed.errors.map((diagnostic) => {
+    const start = diagnostic.start;
+    const end = diagnostic.end;
+    const line = parsed.source.slice(0, start).split('\n').length;
+    const lineStart = parsed.source.lastIndexOf('\n', start - 1) + 1;
+    return createCompilerDiagnostic({
+      phase: 'frontend',
+      severity: 'error',
+      code: 'FORGE_FRONTEND_PARSE_ERROR',
+      message: `[OXC] ${diagnostic.message}`,
+      fileName,
+      span: {
+        start,
+        end,
+        line,
+        column: start - lineStart + 1,
+      },
+    });
+  });
 }
 
 export function parseFrontendModule(
@@ -496,10 +668,12 @@ export function parseFrontendModule(
   moduleKind: 'component' | 'composable',
   componentName?: string,
 ): FrontendModule {
-  const sourceFile = parseForgeModule(fileName, source);
+  const oxc = parseOxcModule(fileName, source);
+  const strippedOxc = stripOxcFrameworkDirective(oxc);
   return {
-    sourceFile,
-    ast: createGenericAst(sourceFile, moduleKind, componentName),
-    diagnostics: [],
+    fileName,
+    oxc: strippedOxc,
+    ast: createGenericAstFromOxc(strippedOxc, moduleKind, componentName),
+    diagnostics: parserDiagnostics(fileName, oxc),
   };
 }

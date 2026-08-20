@@ -14,7 +14,7 @@
  * - `promotedLocals` → a render-head constant the class owns, so a lifted scope
  *   can read it: a function value as a field (stable identity), a pure
  *   derivation as a getter,
- * - `lifecycle` → `connectedCallback` / `disconnectedCallback`,
+ * - `lifecycle` → `connectedCallback` / `updatedCallback` / `disconnectedCallback`,
  * - `template` → the `render()` body, reading a hoisted module-level constant
  *   when the plan carries one.
  *
@@ -93,12 +93,21 @@ function stateFieldType(type: string, initializer: string | undefined): string {
 }
 
 /** The custom-element registration guard emitted after the class. */
-function registration(tagName: string, className: string): string[] {
-  return [
-    `if (!customElements.get('${tagName}')) {`,
-    `  customElements.define('${tagName}', ${className});`,
-    "}",
-  ];
+function registration(
+  tagName: string,
+  className: string,
+  registrationExtends: string | undefined,
+): string[] {
+  const define =
+    registrationExtends === undefined
+      ? `customElements.define('${tagName}', ${className});`
+      : `customElements.define('${tagName}', ${className}, { extends: '${registrationExtends}' });`;
+  return [`if (!customElements.get('${tagName}')) {`, `  ${define}`, "}"];
+}
+
+/** Print a plan policy as a valid static class literal. */
+function policyLiteral(value: object): string {
+  return JSON.stringify(value).replace(/"([^"\n]+)":/gu, "$1:");
 }
 
 /** Print the `ForgeElement` subclass and its registration for a lowered plan. */
@@ -106,14 +115,47 @@ export function synthesiseElementClass(
   plan: WebComponentsLoweredModule,
 ): string {
   const { template } = plan;
-  const hoisted = template.hoisted.at(0);
-  const preamble = template.hoisted.map(
-    (part) => `const ${part.name} = html\`${part.template}\`;`,
-  );
-
-  const lines: string[] = [
-    `export class ${plan.className} extends ForgeElement {`,
+  const definitionName = "__mpDomDefinition";
+  const preamble = [
+    `const ${definitionName} = {`,
+    `  create: ${template.dom.create},`,
+    `  parts: ${JSON.stringify(template.dom.partDefinitions)},`,
+    ...(template.dom.hot
+      ? [
+          "  hotTemplate: (document) => {",
+          '    const template = document.createElement("template");',
+          `    const blueprint = ${definitionName}.create(document);`,
+          "    template.content.append(...blueprint.nodes);",
+          "    return template;",
+          "  },",
+        ]
+      : []),
+    "};",
   ];
+
+  const base =
+    plan.host.kind === "customized-built-in"
+      ? `ForgeElementMixin(${plan.host.constructorExpression})`
+      : plan.host.constructorExpression;
+  const lines: string[] = [
+    `export class ${plan.className} extends ${base} {`,
+    `  static readonly shadow = ${policyLiteral(plan.shadow)};`,
+    `  static readonly internals = ${policyLiteral(plan.internals)};`,
+  ];
+  if (plan.internals.formAssociated === true) {
+    lines.push("  static readonly formAssociated = true;");
+  }
+
+  if ((plan.styleUrls ?? []).length > 0) {
+    lines.push(
+      "  static readonly styleUrls: readonly string[] = [",
+      ...(plan.styleUrls ?? []).map(
+        (styleUrl) =>
+          `    new URL(${JSON.stringify(styleUrl)}, import.meta.url).href,`,
+      ),
+      "  ];",
+    );
+  }
 
   // A class cannot declare the same field twice, and a duplicate `static
   // properties` key is a hard parse error. `../optimize` collapses colliding
@@ -177,6 +219,19 @@ export function synthesiseElementClass(
     // element hands to its `<label for>` never changes underneath it.
     lines.push(`  readonly ${generated.name}: ${generated.type};`);
     seeded.push(`this.${generated.name} = useId();`);
+  }
+  const effectDependencyFields = new Set(
+    plan.lifecycle
+      .flatMap((hook) => hook.statements)
+      .flatMap((statement) =>
+        [...statement.matchAll(/this\.(__mpEffectDeps\d+)/gu)].map(
+          (match) => match[1],
+        ),
+      )
+      .filter((name): name is string => name !== undefined),
+  );
+  for (const field of effectDependencyFields) {
+    lines.push(`  declare ${field}: readonly unknown[] | undefined;`);
   }
   for (const reference of plan.elementRefs) {
     const cell = `{ current: ${reference.elementType} }`;
@@ -264,11 +319,17 @@ export function synthesiseElementClass(
   lines.push("", "  render() {");
   lines.push(...template.head.map((statement) => `    ${statement}`));
   lines.push(
-    hoisted === undefined
-      ? `    return html\`${template.template}\`;`
-      : `    return ${hoisted.name};`,
+    `    return new DomTemplateResult(${definitionName}, [${template.dom.values.join(", ")}]);`,
   );
-  lines.push("  }", "}", ...registration(plan.tagName, plan.className));
+  lines.push(
+    "  }",
+    "}",
+    ...registration(
+      plan.tagName,
+      plan.className,
+      plan.host.registrationExtends,
+    ),
+  );
 
   return [...preamble, ...lines].join("\n");
 }

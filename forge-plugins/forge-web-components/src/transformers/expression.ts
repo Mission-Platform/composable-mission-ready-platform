@@ -74,6 +74,51 @@ const HAS_SLOT_MARKER = "hasSlot";
 /** The native runtime helper the marker lowers to, called with the host element. */
 export const HAS_SLOT_RUNTIME = "hasSlotContent";
 
+/** Convert a neutral callback prop name into the DOM custom-event spelling. */
+function customEventNameOf(callbackName: string): string {
+  const eventName = callbackName.slice(2);
+  return (
+    eventName.charAt(0).toLowerCase() +
+    eventName
+      .slice(1)
+      .replace(/[A-Z]/gu, (character) => `-${character.toLowerCase()}`)
+  );
+}
+
+/** Replace callback-prop calls with typed, bubbling custom-event dispatches. */
+function rewriteCustomEventCalls(text: string): string {
+  const calls = /\bthis\.(on[A-Z][A-Za-z0-9_]*)\?\.\(/gu;
+  let output = "";
+  let cursor = 0;
+  let match: RegExpExecArray | null;
+  while ((match = calls.exec(text)) !== null) {
+    const callbackName = match[1];
+    if (callbackName === undefined) {
+      continue;
+    }
+    const open = calls.lastIndex - 1;
+    const close = matchingBracket(text, open);
+    if (close < open) {
+      break;
+    }
+    const argument = text.slice(open + 1, close).trim() || "undefined";
+    const detailExpression =
+      splitTopLevel(argument, ",")[0]?.trim() || "undefined";
+    output += text.slice(cursor, match.index);
+    if (argument === "eventDetail") {
+      output += text.slice(match.index, close + 1);
+      cursor = close + 1;
+      calls.lastIndex = cursor;
+      continue;
+    }
+    const detailType = `Parameters<NonNullable<typeof this.${callbackName}>>[0]`;
+    output += `(() => { const callback = this.${callbackName}; const eventDetail = (${detailExpression}); this.dispatchEvent(new CustomEvent<${detailType}>(${JSON.stringify(customEventNameOf(callbackName))}, { detail: eventDetail, bubbles: true, composed: true })); return callback?.(${argument}); })()`;
+    cursor = close + 1;
+    calls.lastIndex = cursor;
+  }
+  return output.length === 0 ? text : output + text.slice(cursor);
+}
+
 /** Keywords whose presence means an expression may have an effect. */
 const IMPURE_KEYWORDS: ReadonlySet<string> = new Set([
   "await",
@@ -722,7 +767,7 @@ export function rewriteExpressionText(
     out += char;
     cursor += 1;
   }
-  return out;
+  return rewriteCustomEventCalls(out);
 }
 
 /** Copy a template literal verbatim while rewriting the code inside its `${…}` holes. */

@@ -60,6 +60,12 @@ describe("the source-backed expression rewriter", () => {
     expect(rewrite("setOpen()")).toBe("this.open = undefined");
   });
 
+  it("emits a typed bubbling custom event for an outbound callback", () => {
+    expect(rewrite("properties.onLocaleChange?.(locale)")).toBe(
+      '(() => { const callback = this.onLocaleChange; const eventDetail = (locale); this.dispatchEvent(new CustomEvent<Parameters<NonNullable<typeof this.onLocaleChange>>[0]>("locale-change", { detail: eventDetail, bubbles: true, composed: true })); return callback?.(locale); })()',
+    );
+  });
+
   it("keeps an object-literal key but expands the shorthand read", () => {
     expect(rewrite("{ open: 'date' }")).toBe("{ open: 'date' }");
     expect(rewrite("{ open }")).toBe("{ open: this.open }");

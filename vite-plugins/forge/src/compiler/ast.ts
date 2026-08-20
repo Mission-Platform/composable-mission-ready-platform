@@ -17,6 +17,17 @@ import path from 'node:path';
 
 import ts from 'typescript';
 
+import {
+  oxcArray,
+  oxcIdentifierName,
+  oxcLiteralValue,
+  oxcObject,
+  oxcProgramBody,
+  parseOxcModule,
+  type OxcNode,
+  visitOxc,
+} from './oxc.js';
+
 import type { JsxFramework } from '@mission-platform/forge-plugin-api';
 
 /** The neutral package the components import their primitives from. */
@@ -407,7 +418,11 @@ const HAS_SLOT_CALLEE = 'hasSlot';
 
 const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
 
-/** Parse a `.tsx` source string into a (parented) TSX source file. */
+/**
+ * Parse a `.tsx` source string into the TypeScript SourceFile bridge used by the
+ * optimizer and legacy transform helpers. Neutral frontend AST/inference use
+ * {@link parseForgeSource} / Oxc instead.
+ */
 export function parseTsx(fileName: string, source: string): ts.SourceFile {
   return ts.createSourceFile(fileName, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
 }
@@ -441,18 +456,8 @@ const FRAMEWORK_DIRECTIVES: Readonly<Record<string, 'react' | 'vue'>> = {
  * inspected, matching JavaScript's directive semantics; other prologue
  * directives (e.g. `"use strict"`) are ignored.
  */
-export function readFrameworkDirective(sourceFile: ts.SourceFile): 'react' | 'vue' | undefined {
-  for (const statement of sourceFile.statements) {
-    if (!ts.isExpressionStatement(statement) || !ts.isStringLiteralLike(statement.expression)) {
-      // The directive prologue ends at the first non-string-literal statement.
-      break;
-    }
-    const framework = FRAMEWORK_DIRECTIVES[statement.expression.text];
-    if (framework !== undefined) {
-      return framework;
-    }
-  }
-  return undefined;
+export function readFrameworkDirective(fileName: string, source: string): 'react' | 'vue' | undefined {
+  return parseOxcModule(fileName, source).facts.frameworkDirective;
 }
 
 /**
@@ -460,8 +465,8 @@ export function readFrameworkDirective(sourceFile: ts.SourceFile): 'react' | 'vu
  * (no `"use <framework>"` directive) is emitted for every target; a gated module
  * is emitted **only** for the framework its directive names.
  */
-export function moduleTargetsFramework(sourceFile: ts.SourceFile, framework: string): boolean {
-  const directive = readFrameworkDirective(sourceFile);
+export function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean {
+  const directive = readFrameworkDirective(fileName, source);
   return directive === undefined || directive === framework;
 }
 
@@ -520,143 +525,9 @@ export interface ForgeModuleFacts {
   hasJsx: boolean;
 }
 
-function forgeSourceSpan(sourceFile: ts.SourceFile, node: ts.Node): ForgeSourceSpan {
-  const start = node.getStart(sourceFile);
-  const end = node.getEnd();
-  const position = sourceFile.getLineAndCharacterOfPosition(start);
-  return { start, end, line: position.line + 1, column: position.character + 1 };
-}
-
-function exportedModifier(node: ts.Node): boolean {
-  return (
-    ts.canHaveModifiers(node) &&
-    ts.getModifiers(node)?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword) === true
-  );
-}
-
-function declarationExportFacts(sourceFile: ts.SourceFile, statement: ts.Statement): ForgeExportFact[] {
-  if (!exportedModifier(statement)) {
-    return [];
-  }
-  const span = forgeSourceSpan(sourceFile, statement);
-  const typeOnly =
-    ts.isInterfaceDeclaration(statement) ||
-    ts.isTypeAliasDeclaration(statement) ||
-    (ts.isImportEqualsDeclaration(statement) && statement.isTypeOnly === true);
-  if (
-    ts.isFunctionDeclaration(statement) ||
-    ts.isClassDeclaration(statement) ||
-    ts.isEnumDeclaration(statement) ||
-    ts.isModuleDeclaration(statement) ||
-    ts.isInterfaceDeclaration(statement) ||
-    ts.isTypeAliasDeclaration(statement)
-  ) {
-    const name = statement.name?.text ?? 'default';
-    return [{ exportedName: name, localName: statement.name?.text, specifier: undefined, typeOnly, star: false, span }];
-  }
-  if (ts.isVariableStatement(statement)) {
-    const facts: ForgeExportFact[] = [];
-    for (const declaration of statement.declarationList.declarations) {
-      if (ts.isIdentifier(declaration.name)) {
-        facts.push({
-          exportedName: declaration.name.text,
-          localName: declaration.name.text,
-          specifier: undefined,
-          typeOnly: false,
-          star: false,
-          span: forgeSourceSpan(sourceFile, declaration),
-        });
-      }
-    }
-    return facts;
-  }
-  return [];
-}
-
-function namedExportFacts(sourceFile: ts.SourceFile, statement: ts.ExportDeclaration): ForgeExportFact[] {
-  const span = forgeSourceSpan(sourceFile, statement);
-  const specifier =
-    statement.moduleSpecifier && ts.isStringLiteral(statement.moduleSpecifier)
-      ? statement.moduleSpecifier.text
-      : undefined;
-  if (statement.exportClause === undefined) {
-    return [{ exportedName: undefined, localName: undefined, specifier, typeOnly: false, star: true, span }];
-  }
-  if (ts.isNamespaceExport(statement.exportClause)) {
-    return [
-      {
-        exportedName: statement.exportClause.name.text,
-        localName: undefined,
-        specifier,
-        typeOnly: statement.isTypeOnly,
-        star: true,
-        span,
-      },
-    ];
-  }
-  return statement.exportClause.elements.map((element) => ({
-    exportedName: element.name.text,
-    localName: element.propertyName?.text ?? element.name.text,
-    specifier,
-    typeOnly: statement.isTypeOnly || element.isTypeOnly,
-    star: false,
-    span: forgeSourceSpan(sourceFile, element),
-  }));
-}
-
-function hasJsxSyntax(sourceFile: ts.SourceFile): boolean {
-  let found = false;
-  const visit = (node: ts.Node): void => {
-    if (found) {
-      return;
-    }
-    if (ts.isJsxElement(node) || ts.isJsxSelfClosingElement(node) || ts.isJsxFragment(node)) {
-      found = true;
-      return;
-    }
-    ts.forEachChild(node, visit);
-  };
-  visit(sourceFile);
-  return found;
-}
-
 /** Extract static imports, exports, type-only edges, and framework facts from a parsed module. */
-export function inspectForgeModule(sourceFile: ts.SourceFile): ForgeModuleFacts {
-  const imports: ForgeImportFact[] = [];
-  const exports: ForgeExportFact[] = [];
-  for (const statement of sourceFile.statements) {
-    if (ts.isImportDeclaration(statement) && ts.isStringLiteral(statement.moduleSpecifier)) {
-      const valueNames: string[] = [];
-      const typeNames: string[] = [];
-      const clause = statement.importClause;
-      if (clause?.name !== undefined) {
-        (clause.isTypeOnly ? typeNames : valueNames).push(clause.name.text);
-      }
-      if (clause?.namedBindings !== undefined) {
-        if (ts.isNamespaceImport(clause.namedBindings)) {
-          (clause.isTypeOnly ? typeNames : valueNames).push(clause.namedBindings.name.text);
-        } else {
-          for (const element of clause.namedBindings.elements) {
-            (clause.isTypeOnly || element.isTypeOnly ? typeNames : valueNames).push(element.name.text);
-          }
-        }
-      }
-      imports.push({
-        specifier: statement.moduleSpecifier.text,
-        valueNames,
-        typeNames,
-        sideEffectOnly: clause === undefined,
-        span: forgeSourceSpan(sourceFile, statement),
-      });
-      continue;
-    }
-    if (ts.isExportDeclaration(statement)) {
-      exports.push(...namedExportFacts(sourceFile, statement));
-      continue;
-    }
-    exports.push(...declarationExportFacts(sourceFile, statement));
-  }
-  return { imports, exports, frameworkDirective: readFrameworkDirective(sourceFile), hasJsx: hasJsxSyntax(sourceFile) };
+export function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts {
+  return parseOxcModule(fileName, source).facts;
 }
 
 /** The names a module imports from the neutral package, split by binding kind. */
@@ -668,28 +539,15 @@ export interface NeutralImports {
 }
 
 /** Inspect a module's `import … from '@mission-platform/forge'` bindings. */
-export function readNeutralImports(sourceFile: ts.SourceFile): NeutralImports {
+export function readNeutralImports(fileName: string, source: string): NeutralImports {
   const values: string[] = [];
   const types: string[] = [];
-  for (const statement of sourceFile.statements) {
-    if (
-      !ts.isImportDeclaration(statement) ||
-      !ts.isStringLiteral(statement.moduleSpecifier) ||
-      statement.moduleSpecifier.text !== NEUTRAL_MODULE
-    ) {
+  for (const entry of parseOxcModule(fileName, source).facts.imports) {
+    if (entry.specifier !== NEUTRAL_MODULE) {
       continue;
     }
-    const bindings = statement.importClause?.namedBindings;
-    if (bindings === undefined || !ts.isNamedImports(bindings)) {
-      continue;
-    }
-    for (const element of bindings.elements) {
-      if (element.isTypeOnly) {
-        types.push(element.name.text);
-      } else {
-        values.push(element.name.text);
-      }
-    }
+    values.push(...entry.valueNames);
+    types.push(...entry.typeNames);
   }
   return { values, types };
 }
@@ -1821,30 +1679,32 @@ const STYLE_EXTENSIONS = /\.(css|scss|sass|less|styl)$/;
  * generated per-framework source and re-points each import at the flat copy, so
  * a component can own (and ship) its own `.module.scss`.
  */
-export function readStyleImports(sourceFile: ts.SourceFile, sourceRoot?: string): StyleImport[] {
+export function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[] {
   const imports: StyleImport[] = [];
-  for (const statement of sourceFile.statements) {
-    if (
-      !ts.isImportDeclaration(statement) ||
-      !ts.isStringLiteral(statement.moduleSpecifier) ||
-      (!statement.moduleSpecifier.text.startsWith('.') &&
-        resolveWorkspaceLocalImport(statement.moduleSpecifier.text, sourceFile.fileName, sourceRoot) === undefined) ||
-      !STYLE_EXTENSIONS.test(statement.moduleSpecifier.text)
-    ) {
+  const parsed = parseOxcModule(fileName, source);
+  for (const statement of oxcProgramBody(parsed.program)) {
+    if (statement.type !== 'ImportDeclaration') {
       continue;
     }
-    const authoredSpecifier = statement.moduleSpecifier.text;
+    const sourceNode = oxcObject(statement, 'source');
+    const authoredSpecifier = oxcLiteralValue(sourceNode);
+    if (typeof authoredSpecifier !== 'string' || !STYLE_EXTENSIONS.test(authoredSpecifier)) {
+      continue;
+    }
     const specifier = authoredSpecifier.startsWith('.')
       ? authoredSpecifier
-      : resolveWorkspaceLocalImport(authoredSpecifier, sourceFile.fileName, sourceRoot);
+      : resolveWorkspaceLocalImport(authoredSpecifier, fileName, sourceRoot);
     if (specifier === undefined) {
       continue;
     }
     const base =
       specifier.split('/').findLast((segment) => segment !== '.' && segment !== '..' && segment.length > 0) ??
       specifier;
-    const defaultName = statement.importClause?.name === undefined ? undefined : statement.importClause.name.text;
-    imports.push({ name: defaultName, specifier, flatSpecifier: `./${base}`, base });
+    const defaultName = oxcArray(statement, 'specifiers').find(
+      (specifierNode) => specifierNode.type === 'ImportDefaultSpecifier',
+    );
+    const name = oxcIdentifierName(defaultName === undefined ? undefined : oxcObject(defaultName, 'local'));
+    imports.push({ name, specifier, flatSpecifier: `./${base}`, base });
   }
   return imports;
 }
@@ -1866,24 +1726,29 @@ export function readStyleImports(sourceFile: ts.SourceFile, sourceRoot?: string)
  * (or Storybook/Vitest config) resolves the matching native build without the
  * generated source naming a framework subpath.
  */
-export function readExternalImports(sourceFile: ts.SourceFile): string[] {
+export function readExternalImports(fileName: string, source: string): string[] {
   const imports: string[] = [];
-  let needsI18nImport = usesI18nextT(sourceFile);
+  const parsed = parseOxcModule(fileName, source);
+  let needsI18nImport = usesI18nextT(parsed.program);
 
-  for (const statement of sourceFile.statements) {
-    if (!ts.isImportDeclaration(statement) || !ts.isStringLiteral(statement.moduleSpecifier)) {
+  for (const statement of oxcProgramBody(parsed.program)) {
+    if (statement.type !== 'ImportDeclaration') {
       continue;
     }
-    const specifier = statement.moduleSpecifier.text;
+    const sourceNode = oxcObject(statement, 'source');
+    const specifier = oxcLiteralValue(sourceNode);
+    if (typeof specifier !== 'string') {
+      continue;
+    }
     if (specifier.startsWith('.') || specifier === NEUTRAL_MODULE || STYLE_EXTENSIONS.test(specifier)) {
       continue;
     }
     if (specifier === 'i18next') {
-      imports.push(printNode(statement, sourceFile));
+      imports.push(source.slice(statement.start, statement.end));
       needsI18nImport = true;
       continue;
     }
-    imports.push(printNode(statement, sourceFile));
+    imports.push(source.slice(statement.start, statement.end));
   }
 
   if (needsI18nImport) {
@@ -1896,8 +1761,26 @@ export function readExternalImports(sourceFile: ts.SourceFile): string[] {
   return imports;
 }
 
-/** Whether a module or AST node calls `i18next.t(...)`. */
-export function usesI18nextT(node: ts.Node): boolean {
+/** Whether an Oxc module or node calls `i18next.t(...)`. */
+export function usesI18nextT(node: OxcNode): boolean {
+  let found = false;
+  visitOxc(node, (child) => {
+    if (found) return false;
+    if (child.type !== 'CallExpression') return;
+    const callee = oxcObject(child, 'callee');
+    if (callee?.type !== 'MemberExpression' && callee?.type !== 'StaticMemberExpression') return;
+    const object = oxcObject(callee, 'object');
+    const property = oxcObject(callee, 'property');
+    if (oxcIdentifierName(object) === 'i18next' && oxcIdentifierName(property) === 't') {
+      found = true;
+      return false;
+    }
+  });
+  return found;
+}
+
+/** Whether a legacy TypeScript AST node calls `i18next.t(...)`. */
+function usesI18nextTLegacy(node: ts.Node): boolean {
   let found = false;
   const visit = (child: ts.Node): void => {
     if (found) return;
@@ -1937,7 +1820,7 @@ function bodyCallsUseI18n(body: ts.Block): boolean {
  * Ensure component functions that call `i18next.t(...)` have a top-level `const { t } = useI18n();` statement.
  */
 export function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: ts.SourceFile): ts.SourceFile {
-  if (!usesI18nextT(sourceFile)) {
+  if (!usesI18nextTLegacy(sourceFile)) {
     return sourceFile;
   }
 
@@ -1947,7 +1830,7 @@ export function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: t
         (ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node) || ts.isArrowFunction(node)) &&
         node.body !== undefined &&
         ts.isBlock(node.body) &&
-        usesI18nextT(node.body) &&
+        usesI18nextTLegacy(node.body) &&
         !bodyCallsUseI18n(node.body)
       ) {
         const useI18nStatement = factory.createVariableStatement(

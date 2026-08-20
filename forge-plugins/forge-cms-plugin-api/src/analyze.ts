@@ -25,6 +25,7 @@ import { toDisplayName, toTechnicalName } from "./names.js";
 import type { ClassifiedFieldKind } from "./classify.js";
 import type {
   ContentComponent,
+  ContentComponentMetadata,
   ContentComponentNames,
   ContentComponentNamesInput,
   ContentDefaultValue,
@@ -38,6 +39,14 @@ export const DEFAULT_SLOT_FIELD = "content";
 
 /** The JSDoc tag that promotes a prop to a site-wide CMS setting. */
 export const CMS_SETTING_TAG = "cmsSetting";
+/** The JSDoc tag that assigns a prop to an editor tab. */
+export const CMS_TAB_TAG = "cmsTab";
+
+/** The JSDoc tags for optional component-level editor metadata. */
+export const CMS_ICON_TAG = "cmsIcon";
+export const CMS_COLOR_TAG = "cmsColor";
+/** British spelling accepted for source annotations. */
+export const CMS_COLOUR_TAG = "cmsColour";
 
 /** The first JSDoc description attached to a node, trimmed (`undefined` when absent). */
 function jsDocumentDescription(node: ts.Node): string | undefined {
@@ -64,6 +73,43 @@ function hasCmsSettingTag(node: ts.Node): boolean {
         ts.isJSDoc(entry) &&
         (entry.tags ?? []).some((tag) => tag.tagName.text === CMS_SETTING_TAG),
     );
+}
+
+/** Read and normalize a string-valued JSDoc tag, ignoring empty annotations. */
+function jsDocumentTagValue(
+  node: ts.Node | undefined,
+  tagNames: readonly string[],
+): string | undefined {
+  if (node === undefined) {
+    return undefined;
+  }
+  const tag = ts
+    .getJSDocTags(node)
+    .find((entry) => tagNames.includes(entry.tagName.text));
+  if (tag === undefined || tag.comment === undefined) {
+    return undefined;
+  }
+  const text =
+    typeof tag.comment === "string"
+      ? tag.comment
+      : ts.getTextOfJSDocComment(tag.comment);
+  const value = text.trim().replace(/^:\s*/, "");
+  return value.length > 0 ? value : undefined;
+}
+
+/** Extract optional component-level metadata from its function JSDoc. */
+function componentMetadata(
+  component: ts.FunctionDeclaration | undefined,
+): ContentComponentMetadata | undefined {
+  const icon = jsDocumentTagValue(component, [CMS_ICON_TAG]);
+  const color = jsDocumentTagValue(component, [CMS_COLOR_TAG, CMS_COLOUR_TAG]);
+  if (icon === undefined && color === undefined) {
+    return undefined;
+  }
+  return {
+    ...(icon === undefined ? {} : { icon }),
+    ...(color === undefined ? {} : { color }),
+  };
 }
 
 /** The literal value of an expression, if it is a string/number/boolean literal. */
@@ -213,6 +259,7 @@ function buildField(
   defaultValue: ContentDefaultValue | undefined,
   required: boolean,
   setting: boolean,
+  tab: string | undefined,
   slotName: string | undefined,
 ): ContentField {
   const isSlot = kind.kind === "children";
@@ -235,6 +282,9 @@ function buildField(
   if (slotName !== undefined) {
     field.slotName = slotName;
   }
+  if (tab !== undefined) {
+    field.tab = tab;
+  }
   return field;
 }
 
@@ -250,6 +300,7 @@ export function deriveContentComponentNames(
     folder:
       names.folder ?? toTechnicalName(names.neutralName).replaceAll("_", "-"),
     propertiesType: names.propertiesType,
+    ...(names.sourceDir === undefined ? {} : { sourceDir: names.sourceDir }),
   };
 }
 
@@ -325,6 +376,7 @@ export function analyzeContentComponent(
             defaults.get(property),
             member.questionToken === undefined,
             hasCmsSettingTag(member),
+            jsDocumentTagValue(member, [CMS_TAB_TAG]),
             kind.kind === "children" ? property : undefined,
           ),
         );
@@ -349,6 +401,7 @@ export function analyzeContentComponent(
         undefined,
         false,
         false,
+        undefined,
         "default",
       ),
     );
@@ -368,10 +421,15 @@ export function analyzeContentComponent(
     slots.push("default");
   }
 
-  return {
+  const metadata = componentMetadata(component);
+  const analyzed: Mutable<ContentComponent> = {
     names: resolved,
     fields,
     slots,
     interactive: isInteractiveModule(semantic),
   };
+  if (metadata !== undefined) {
+    analyzed.metadata = metadata;
+  }
+  return analyzed;
 }

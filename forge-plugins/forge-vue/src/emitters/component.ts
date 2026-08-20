@@ -77,6 +77,7 @@ import {
   buildConditionalTemplateMarkup,
   buildGuardedRootsMarkup,
   buildTemplateMarkup,
+  isTemplateListProjection,
   UnsupportedTemplate,
   type NodeArraySource,
   type TemplateContext,
@@ -88,6 +89,7 @@ import { assembleSfc, type SfcParts } from "./sfc.js";
 import type { VueLoweredModule } from "../lower.js";
 import type { VuePropertySignature } from "../transformers/props-interface.js";
 import type {
+  GenericRenderNode,
   GenericStatement,
   SemanticModule,
 } from "@mission-platform/forge-plugin-api";
@@ -147,11 +149,23 @@ function templateBindingTypes(
         entry.initializer,
       )?.[1];
       const indexed = /^([A-Za-z_$][\w$]*)\s*\[/.exec(entry.initializer)?.[1];
+      const referencedCollection = [
+        ...entry.initializer.matchAll(/\b([A-Za-z_$][\w$]*)\b/g),
+      ]
+        .map((match) => match[1])
+        .find(
+          (name) =>
+            name !== undefined &&
+            arrayElementType(types.get(name) ?? "") !== undefined,
+        );
       const inferred =
         (source === undefined ? undefined : types.get(source)) ??
         (indexed === undefined
           ? undefined
-          : arrayElementType(types.get(indexed) ?? ""));
+          : arrayElementType(types.get(indexed) ?? "")) ??
+        (referencedCollection === undefined
+          ? undefined
+          : types.get(referencedCollection));
       if (inferred !== undefined) {
         types.set(entry.name, inferred);
         changed = true;
@@ -278,6 +292,45 @@ function readsProperty(
 ): boolean {
   const pattern = new RegExp(String.raw`\b${propsParameterName}\.${name}\b`);
   return lines.some((line) => pattern.test(line));
+}
+
+/** Whether a derived value is interpolated in JSX child position. */
+function isUsedAsChild(
+  node: GenericRenderNode | undefined,
+  name: string,
+  derivedRenderNodes: ReadonlyMap<string, readonly GenericRenderNode[]>,
+  visited = new Set<string>(),
+): boolean {
+  if (node === undefined) {
+    return false;
+  }
+  return node.children.some((child) => {
+    if (child.kind === "expression-node") {
+      const expression = child.expression?.text.trim();
+      if (expression === name) {
+        return true;
+      }
+      // A render-producing declaration can be hidden behind another derived
+      // value (`headerNode` -> `panel` -> returned tree). Follow only exact
+      // declaration references here: arbitrary identifier reads also occur in
+      // data projections and must remain setup/computed values.
+      const nested =
+        expression === undefined || visited.has(expression)
+          ? undefined
+          : derivedRenderNodes.get(expression);
+      if (nested === undefined) {
+        return false;
+      }
+      const nextVisited = new Set(visited).add(expression!);
+      return nested.some((renderNode) =>
+        isUsedAsChild(renderNode, name, derivedRenderNodes, nextVisited),
+      );
+    }
+    return (
+      child.kind === "render-node" &&
+      isUsedAsChild(child, name, derivedRenderNodes, visited)
+    );
+  });
 }
 
 /** Whether the component renders itself (a recursive component). */
@@ -456,14 +509,54 @@ export function emitVueModule(
   );
 
   const slotSources = collectSlotSources(analysis.derived, propsParameterName);
+  const returnStatement = component.body
+    .toReversed()
+    .find((statement) => statement.statementKind === "return");
+  const returnNode =
+    component.returnNode ??
+    (component.returnExpression === undefined
+      ? undefined
+      : hyperscriptRenderNode(
+          component.returnExpression.text,
+          returnStatement?.renderNodes ?? [],
+        ));
+  // Hyperscript-built intermediates only record nested JSX roots, not the
+  // `h()` child arguments. Materialise those calls so transitive child walks
+  // still see references like `eyebrowNode` inside `content`. A purely
+  // JSX-valued intermediate (`const content = <div>…</div>;`, no ternary) is
+  // recorded on `nodeConsts` rather than `derived` (it is substituted
+  // structurally, not lifted to a `computed`), so both lists have to be
+  // walked or a chain like `eyebrowNode -> content -> return` loses its
+  // middle link.
+  const derivedRenderNodes = new Map(
+    [...analysis.derived, ...analysis.nodeConsts].map((entry) => {
+      const hyperscript = containsHyperscript(entry.initializer)
+        ? hyperscriptRenderNode(entry.initializer, entry.renderNodes)
+        : undefined;
+      return [
+        entry.name,
+        hyperscript === undefined ? entry.renderNodes : [hyperscript],
+      ] as const;
+    }),
+  );
   const nodeArraySources = new Map<string, NodeArraySource>(
     analysis.derived
       // A hyperscript-built const records no JSX of its own, but it still holds
-      // markup: it has to be inlined structurally rather than interpolated.
+      // markup: it has to be inlined structurally rather than interpolated. A
+      // handler (a function-valued const, e.g. `renderIcon`/`renderItems`)
+      // is never itself read as a bare JSX child — it is only called — so the
+      // `isUsedAsChild` gate does not apply: its render nodes are its own
+      // body's markup, which the (separate) helper-splicing / recursive-
+      // extraction machinery already owns. Requiring `isUsedAsChild` for a
+      // handler would strand it as a retained declaration whose JSX (and its
+      // neutral `className`) is never lowered.
       .filter(
         (entry) =>
           entry.node === undefined &&
-          (entry.renderNodes.length > 0 ||
+          ((entry.renderNodes.length > 0 &&
+            (entry.isHandler ||
+              isUsedAsChild(returnNode, entry.name, derivedRenderNodes))) ||
+            isTemplateListProjection(entry.initializer, entry.renderNodes) ||
             containsHyperscript(entry.initializer)),
       )
       .map((entry) => [
@@ -647,17 +740,6 @@ export function emitVueModule(
   // The JSX roots recorded for the `return` statement itself — the branches of a
   // component that returns a conditional rather than one element, and the JSX
   // arguments of a hyperscript render.
-  const returnStatement = component.body
-    .toReversed()
-    .find((statement) => statement.statementKind === "return");
-  const returnNode =
-    component.returnNode ??
-    (component.returnExpression === undefined
-      ? undefined
-      : hyperscriptRenderNode(
-          component.returnExpression.text,
-          returnStatement?.renderNodes ?? [],
-        ));
   // The derived consts that stay declarations: everything not consumed
   // structurally by the markup.
   const retainedDerived = analysis.derived.filter((entry) =>

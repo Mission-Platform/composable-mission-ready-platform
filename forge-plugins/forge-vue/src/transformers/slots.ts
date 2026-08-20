@@ -164,10 +164,13 @@ function rewriteHyperscriptSlots(source: string): string {
     if (close === -1) {
       return text;
     }
-    const [, properties = ""] = splitTopLevel(
+    const [tag, properties = "", ...fallback] = splitTopLevel(
       text.slice(open + 1, close),
       ",",
     ).map((part) => part.trim());
+    if (tag === undefined) {
+      return text;
+    }
     const literal =
       /['"]name['"]?\s*:\s*(['"])([^'"]*)\1/.exec(properties) ??
       /\bname\s*:\s*(['"])([^'"]*)\1/.exec(properties);
@@ -183,7 +186,18 @@ function rewriteHyperscriptSlots(source: string): string {
       name,
       scope.length === 0 ? "" : `{ ${scope.join(", ")} }`,
     );
-    text = text.slice(0, match.index) + call + text.slice(close + 1);
+    // `h(Slot, props, …fallback)` is the call-form equivalent of a JSX slot
+    // marker with children. Keep those children as VNode-valued fallback
+    // expressions; dropping them makes drawer title fallbacks disappear.
+    const loweredFallback = fallback.map((child) => rewriteJsxSlots(child));
+    const fallbackText =
+      loweredFallback.length === 0
+        ? ""
+        : loweredFallback.length === 1
+          ? ` ?? (${loweredFallback[0]})`
+          : ` ?? ([${loweredFallback.join(", ")}])`;
+    const replacement = `${call}${fallbackText}`;
+    text = text.slice(0, match.index) + replacement + text.slice(close + 1);
   }
 }
 

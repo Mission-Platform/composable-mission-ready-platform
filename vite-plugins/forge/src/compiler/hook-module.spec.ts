@@ -98,6 +98,10 @@ describe('compileHookModule — React', () => {
     expect(code).toContain('return value;');
   });
 
+  it('uses the documented hook filename when reporting source diagnostics', () => {
+    expect(() => compileHookModule('export const broken = <div>\n', { framework: 'react' })).toThrow(/hook\.tsx/);
+  });
+
   it('rewrites the neutral hook types to their React equivalents (`MpRef`→`RefObject`, `MpDependencyList`→`DependencyList`)', () => {
     const { code } = compileHookModule(USE_D3, { framework: 'react' });
     // Both neutral hook types are imported from `react` under their React names…

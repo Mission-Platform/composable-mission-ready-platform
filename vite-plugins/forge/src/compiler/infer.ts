@@ -1,8 +1,30 @@
-import { EMPTY_SEMANTIC_INTENTIONS } from '@mission-platform/forge-plugin-api';
-import ts from 'typescript';
+import {
+  createCompilerDiagnostic,
+  EMPTY_SEMANTIC_INTENTIONS,
+  walkRenderNodes,
+} from '@mission-platform/forge-plugin-api';
+import { hasMpStaticMarker } from '@mission-platform/forge-plugin-api/compiler/optimize.js';
 
 import { NEUTRAL_MODULE } from './ast.js';
-import { createGenericAst } from './frontends.js';
+import { createGenericAstFromOxc } from './frontends.js';
+import { optimizeGenericModule, type OptimizeOptions } from './optimize.js';
+import {
+  buildOxcParentMap,
+  oxcArray,
+  oxcIdentifierName,
+  oxcLiteralValue,
+  oxcNodeText,
+  oxcObject,
+  oxcProgramBody,
+  oxcSourceExpression,
+  oxcSourceSpan,
+  oxcTypeNode,
+  oxcUnwrapModuleStatement,
+  visitOxc,
+  type OxcNode,
+  type OxcParentMap,
+  type OxcParsedModule,
+} from './oxc.js';
 
 import type {
   CompilerDiagnostic,
@@ -21,459 +43,504 @@ import type {
   SlotIntention,
 } from '@mission-platform/forge-plugin-api';
 
-function span(sourceFile: ts.SourceFile, node: ts.Node): SourceSpan {
-  const start = node.pos < 0 ? 0 : node.getStart(sourceFile);
-  const end = Math.max(start, node.getEnd());
-  const line = sourceFile.getLineAndCharacterOfPosition(start);
-  return { start, end, line: line.line + 1, column: line.character + 1 };
-}
-
 function expression(
-  sourceFile: ts.SourceFile,
-  node: ts.Node,
+  source: string,
+  node: OxcNode,
   syntax: SourceBackedExpression['syntax'] = 'expression',
 ): SourceBackedExpression {
-  return {
-    kind: 'source-backed-expression',
-    syntax,
-    text: node.pos < 0 ? '' : node.getText(sourceFile),
-    span: span(sourceFile, node),
-  };
+  return oxcSourceExpression(source, node, syntax);
 }
 
-function callName(node: ts.CallExpression): string | undefined {
-  return ts.isIdentifier(node.expression) ? node.expression.text : undefined;
+function callName(node: OxcNode): string | undefined {
+  return oxcIdentifierName(oxcObject(node, 'callee'));
 }
 
-function variableDeclaration(node: ts.Node): ts.VariableDeclaration | undefined {
-  let current: ts.Node | undefined = node.parent;
-  while (current !== undefined && !ts.isVariableDeclaration(current)) {
-    current = current.parent;
+function variableDeclaratorFor(call: OxcNode, parents: OxcParentMap): OxcNode | undefined {
+  let current: OxcNode | undefined = parents.get(call);
+  while (current !== undefined && current.type !== 'VariableDeclarator') {
+    current = parents.get(current);
   }
-  return current && ts.isVariableDeclaration(current) ? current : undefined;
+  return current;
 }
 
-function bindingNames(name: ts.BindingName): string[] {
-  if (ts.isIdentifier(name)) {
-    return [name.text];
+function bindingNames(source: string, name: OxcNode | undefined): string[] {
+  if (name === undefined) return [];
+  if (name.type === 'Identifier') {
+    const text = oxcIdentifierName(name);
+    return text === undefined ? [] : [text];
   }
-  return name.elements.flatMap((element) => (ts.isOmittedExpression(element) ? [] : bindingNames(element.name)));
+  if (name.type === 'ArrayPattern') {
+    return oxcArray(name, 'elements').flatMap((element) => {
+      if (element.type === 'RestElement') {
+        return bindingNames(source, oxcObject(element, 'argument'));
+      }
+      return bindingNames(source, element);
+    });
+  }
+  if (name.type === 'ObjectPattern') {
+    return oxcArray(name, 'properties').flatMap((property) => {
+      if (property.type === 'RestElement') {
+        return bindingNames(source, oxcObject(property, 'argument'));
+      }
+      if (property.type === 'Property') {
+        return bindingNames(source, oxcObject(property, 'value') ?? oxcObject(property, 'key'));
+      }
+      return [];
+    });
+  }
+  if (name.type === 'AssignmentPattern') {
+    return bindingNames(source, oxcObject(name, 'left'));
+  }
+  return [];
 }
 
 /** Narrow a literal initializer to a safe TypeScript type name, never `any`. */
-function literalTypeName(node: ts.Expression | undefined): string | undefined {
-  if (node === undefined) {
+function literalTypeName(node: OxcNode | undefined): string | undefined {
+  if (node === undefined) return undefined;
+  if (node.type === 'Literal') {
+    const value = oxcLiteralValue(node);
+    if (typeof value === 'string') return 'string';
+    if (typeof value === 'number') return 'number';
+    if (typeof value === 'boolean') return 'boolean';
     return undefined;
   }
-  if (ts.isStringLiteralLike(node)) {
+  if (node.type === 'TemplateLiteral' && oxcArray(node, 'expressions').length === 0) {
     return 'string';
   }
-  if (ts.isNumericLiteral(node)) {
-    return 'number';
-  }
-  if (node.kind === ts.SyntaxKind.TrueKeyword || node.kind === ts.SyntaxKind.FalseKeyword) {
-    return 'boolean';
-  }
-  if (ts.isArrayLiteralExpression(node) && node.elements.length === 0) {
+  if (node.type === 'ArrayExpression' && oxcArray(node, 'elements').length === 0) {
     return 'unknown[]';
   }
-  if (ts.isPrefixUnaryExpression(node) && ts.isNumericLiteral(node.operand)) {
+  if (
+    node.type === 'UnaryExpression' &&
+    (node.operator === '+' || node.operator === '-') &&
+    oxcObject(node, 'argument')?.type === 'Literal' &&
+    typeof oxcLiteralValue(oxcObject(node, 'argument')) === 'number'
+  ) {
     return 'number';
   }
   return undefined;
 }
 
-function hookState(sourceFile: ts.SourceFile, call: ts.CallExpression): StateIntention | undefined {
-  if (callName(call) !== 'useState') {
-    return undefined;
-  }
-  const declaration = variableDeclaration(call);
-  if (declaration === undefined) {
-    return undefined;
-  }
-  const names = bindingNames(declaration.name);
-  const initializer = call.arguments[0];
-  // Prefer an explicit `useState<T>()` argument, then the declared variable
-  // type, then a literal-derived type; `unknown` is the target-side fallback.
-  const typeArgument = call.typeArguments?.[0];
-  const declaredType = ts.isIdentifier(declaration.name) ? declaration.type : undefined;
+function typeArguments(call: OxcNode): OxcNode[] {
+  const typeArgumentsNode = oxcObject(call, 'typeArguments') ?? oxcObject(call, 'typeParameters');
+  return typeArgumentsNode === undefined ? [] : oxcArray(typeArgumentsNode, 'params');
+}
+
+function hookState(source: string, call: OxcNode, parents: OxcParentMap): StateIntention | undefined {
+  if (callName(call) !== 'useState') return undefined;
+  const declaration = variableDeclaratorFor(call, parents);
+  if (declaration === undefined) return undefined;
+  const id = oxcObject(declaration, 'id');
+  const names = bindingNames(source, id);
+  const [initializer] = oxcArray(call, 'arguments');
+  const [typeArgument] = typeArguments(call);
+  const declaredType = id?.type === 'Identifier' ? oxcTypeNode(oxcObject(id, 'typeAnnotation')) : undefined;
   return {
-    name: names[0] ?? declaration.name.getText(sourceFile),
+    name: names[0] ?? (id === undefined ? '' : oxcNodeText(source, id)),
     setterName: names[1],
     type:
       typeArgument === undefined
         ? declaredType === undefined
           ? undefined
-          : expression(sourceFile, declaredType, 'type')
-        : expression(sourceFile, typeArgument, 'type'),
+          : expression(source, declaredType, 'type')
+        : expression(source, typeArgument, 'type'),
     inferredType: literalTypeName(initializer),
-    initializer: initializer ? expression(sourceFile, initializer) : undefined,
-    span: span(sourceFile, call),
+    initializer: initializer ? expression(source, initializer) : undefined,
+    span: oxcSourceSpan(source, call),
   };
 }
 
-function hookRef(sourceFile: ts.SourceFile, call: ts.CallExpression): RefIntention | undefined {
-  if (callName(call) !== 'useRef') {
-    return undefined;
-  }
-  const declaration = variableDeclaration(call);
-  if (declaration === undefined || !ts.isIdentifier(declaration.name)) {
-    return undefined;
-  }
+function hookRef(source: string, call: OxcNode, parents: OxcParentMap): RefIntention | undefined {
+  if (callName(call) !== 'useRef') return undefined;
+  const declaration = variableDeclaratorFor(call, parents);
+  const id = declaration === undefined ? undefined : oxcObject(declaration, 'id');
+  if (id === undefined || id.type !== 'Identifier') return undefined;
+  const [typeArgument] = typeArguments(call);
+  const [initializer] = oxcArray(call, 'arguments');
   return {
-    name: declaration.name.text,
-    elementType: call.typeArguments?.[0] ? expression(sourceFile, call.typeArguments[0], 'type') : undefined,
-    initializer: call.arguments[0] ? expression(sourceFile, call.arguments[0]) : undefined,
-    span: span(sourceFile, call),
+    name: oxcIdentifierName(id) ?? '',
+    elementType: typeArgument === undefined ? undefined : expression(source, typeArgument, 'type'),
+    initializer: initializer === undefined ? undefined : expression(source, initializer),
+    span: oxcSourceSpan(source, call),
   };
 }
 
-function hookMemo(sourceFile: ts.SourceFile, call: ts.CallExpression): MemoIntention | undefined {
-  if (callName(call) !== 'useMemo') {
-    return undefined;
-  }
-  const declaration = variableDeclaration(call);
-  if (declaration === undefined || !ts.isIdentifier(declaration.name) || call.arguments[0] === undefined) {
-    return undefined;
-  }
-  const dependencyArgument = call.arguments[1];
+function hookMemo(source: string, call: OxcNode, parents: OxcParentMap): MemoIntention | undefined {
+  if (callName(call) !== 'useMemo') return undefined;
+  const declaration = variableDeclaratorFor(call, parents);
+  const id = declaration === undefined ? undefined : oxcObject(declaration, 'id');
+  const args = oxcArray(call, 'arguments');
+  if (id === undefined || id.type !== 'Identifier' || args[0] === undefined) return undefined;
+  const dependencyArgument = args[1];
   return {
-    name: declaration.name.text,
-    factory: expression(sourceFile, call.arguments[0]),
+    name: oxcIdentifierName(id) ?? '',
+    factory: expression(source, args[0]),
     dependencies:
-      dependencyArgument !== undefined && ts.isArrayLiteralExpression(dependencyArgument)
-        ? dependencyArgument.elements.map((element) => expression(sourceFile, element))
+      dependencyArgument !== undefined && dependencyArgument.type === 'ArrayExpression'
+        ? oxcArray(dependencyArgument, 'elements').map((element) => expression(source, element))
         : undefined,
-    span: span(sourceFile, call),
+    span: oxcSourceSpan(source, call),
   };
 }
 
-function hookEffect(sourceFile: ts.SourceFile, call: ts.CallExpression): EffectIntention | undefined {
-  if (callName(call) !== 'useEffect' || call.arguments[0] === undefined) {
-    return undefined;
-  }
-  const dependencyArgument = call.arguments[1];
+function hookEffect(source: string, call: OxcNode): EffectIntention | undefined {
+  const args = oxcArray(call, 'arguments');
+  if (callName(call) !== 'useEffect' || args[0] === undefined) return undefined;
+  const dependencyArgument = args[1];
   let cleanup: SourceBackedExpression | undefined;
-  const callback = call.arguments[0];
-  if (ts.isArrowFunction(callback) || ts.isFunctionExpression(callback)) {
-    const returned = ts.isBlock(callback.body)
-      ? callback.body.statements.find((statement) => ts.isReturnStatement(statement))
-      : undefined;
-    if (returned?.expression !== undefined) {
-      cleanup = expression(sourceFile, returned.expression);
+  const callback = args[0];
+  if (callback.type === 'ArrowFunctionExpression' || callback.type === 'FunctionExpression') {
+    const body = oxcObject(callback, 'body');
+    if (body?.type === 'BlockStatement') {
+      const returned = oxcArray(body, 'body').find((statement) => statement.type === 'ReturnStatement');
+      const returnedExpression = returned === undefined ? undefined : oxcObject(returned, 'argument');
+      if (returnedExpression !== undefined) {
+        cleanup = expression(source, returnedExpression);
+      }
     }
   }
   return {
-    body: expression(sourceFile, call.arguments[0]),
+    body: expression(source, args[0]),
     cleanup,
     dependencies:
-      dependencyArgument !== undefined && ts.isArrayLiteralExpression(dependencyArgument)
-        ? dependencyArgument.elements.map((element) => expression(sourceFile, element))
+      dependencyArgument !== undefined && dependencyArgument.type === 'ArrayExpression'
+        ? oxcArray(dependencyArgument, 'elements').map((element) => expression(source, element))
         : undefined,
-    span: span(sourceFile, call),
+    span: oxcSourceSpan(source, call),
   };
 }
 
-type JsxElementLike = ts.JsxElement | ts.JsxSelfClosingElement;
-
-function jsxAttributes(node: JsxElementLike): ts.JsxAttributes {
-  return ts.isJsxElement(node) ? node.openingElement.attributes : node.attributes;
+function jsxOpening(node: OxcNode): OxcNode {
+  return node.type === 'JSXElement' ? (oxcObject(node, 'openingElement') ?? node) : node;
 }
 
-function jsxTag(node: JsxElementLike): ts.JsxTagNameExpression {
-  return ts.isJsxElement(node) ? node.openingElement.tagName : node.tagName;
+function jsxTag(node: OxcNode): OxcNode | undefined {
+  return oxcObject(jsxOpening(node), 'name');
 }
 
-function propTypeMembers(sourceFile: ts.SourceFile, typeName: string): PropIntention[] {
-  const declaration = sourceFile.statements.find(
-    (statement): statement is ts.InterfaceDeclaration | ts.TypeAliasDeclaration =>
-      (ts.isInterfaceDeclaration(statement) || ts.isTypeAliasDeclaration(statement)) &&
-      statement.name.text === typeName,
-  );
-  const members =
-    declaration === undefined
-      ? []
-      : ts.isInterfaceDeclaration(declaration)
-        ? [...declaration.members]
-        : ts.isTypeLiteralNode(declaration.type)
-          ? [...declaration.type.members]
-          : [];
+function jsxAttributeList(node: OxcNode): OxcNode[] {
+  return oxcArray(jsxOpening(node), 'attributes');
+}
+
+function propMembersFromTypeLiteral(source: string, members: readonly OxcNode[]): PropIntention[] {
   return members.flatMap((member) => {
-    if (!ts.isPropertySignature(member) || member.name === undefined) {
-      return [];
-    }
+    if (member.type !== 'TSPropertySignature') return [];
+    const key = oxcObject(member, 'key');
     const name =
-      ts.isIdentifier(member.name) || ts.isStringLiteral(member.name)
-        ? member.name.text
-        : member.name.getText(sourceFile);
+      oxcIdentifierName(key) ??
+      (key?.type === 'Literal' && typeof key.value === 'string'
+        ? key.value
+        : key === undefined
+          ? ''
+          : oxcNodeText(source, key));
+    const typeNode = oxcTypeNode(oxcObject(member, 'typeAnnotation'));
     return [
       {
         name,
-        optional: member.questionToken !== undefined,
-        type: member.type === undefined ? undefined : expression(sourceFile, member.type, 'type'),
-        span: span(sourceFile, member),
+        optional: member.optional === true,
+        type: typeNode === undefined ? undefined : expression(source, typeNode, 'type'),
+        span: oxcSourceSpan(source, member),
       },
     ];
   });
 }
 
-function typeMembers(sourceFile: ts.SourceFile, type: ts.TypeNode | undefined): PropIntention[] {
-  if (type === undefined) {
-    return [];
-  }
-  if (ts.isTypeReferenceNode(type) && ts.isIdentifier(type.typeName)) {
-    return propTypeMembers(sourceFile, type.typeName.text);
-  }
-  if (ts.isTypeLiteralNode(type)) {
-    return type.members.flatMap((member) => {
-      if (!ts.isPropertySignature(member) || member.name === undefined) {
-        return [];
+function propTypeMembers(source: string, program: OxcNode, typeName: string): PropIntention[] {
+  for (const statement of oxcProgramBody(program)) {
+    const { node } = oxcUnwrapModuleStatement(statement);
+    if (node.type === 'TSInterfaceDeclaration' && oxcIdentifierName(oxcObject(node, 'id')) === typeName) {
+      const body = oxcObject(node, 'body');
+      return propMembersFromTypeLiteral(source, body === undefined ? [] : oxcArray(body, 'body'));
+    }
+    if (node.type === 'TSTypeAliasDeclaration' && oxcIdentifierName(oxcObject(node, 'id')) === typeName) {
+      const typeAnnotation = oxcObject(node, 'typeAnnotation');
+      if (typeAnnotation?.type === 'TSTypeLiteral') {
+        return propMembersFromTypeLiteral(source, oxcArray(typeAnnotation, 'members'));
       }
-      return [
-        {
-          name: member.name.getText(sourceFile),
-          optional: member.questionToken !== undefined,
-          type: member.type === undefined ? undefined : expression(sourceFile, member.type, 'type'),
-          span: span(sourceFile, member),
-        },
-      ];
-    });
+    }
   }
   return [];
 }
 
-function componentDeclaration(
-  sourceFile: ts.SourceFile,
-  componentName: string | undefined,
-): ts.FunctionDeclaration | undefined {
-  return sourceFile.statements.find(
-    (statement): statement is ts.FunctionDeclaration =>
-      ts.isFunctionDeclaration(statement) && (componentName === undefined || statement.name?.text === componentName),
-  );
+function typeMembers(source: string, program: OxcNode, type: OxcNode | undefined): PropIntention[] {
+  if (type === undefined) return [];
+  if (type.type === 'TSTypeReference') {
+    const typeName = oxcIdentifierName(oxcObject(type, 'typeName'));
+    if (typeName !== undefined) {
+      return propTypeMembers(source, program, typeName);
+    }
+  }
+  if (type.type === 'TSTypeLiteral') {
+    return propMembersFromTypeLiteral(source, oxcArray(type, 'members'));
+  }
+  return [];
 }
 
-function inferProps(sourceFile: ts.SourceFile, componentName: string | undefined): PropIntention[] {
-  const component = componentDeclaration(sourceFile, componentName);
-  const parameter = component?.parameters[0];
-  if (parameter === undefined) {
-    return [];
+function inferProps(source: string, program: OxcNode, componentName: string | undefined): PropIntention[] {
+  let component: OxcNode | undefined;
+  for (const statement of oxcProgramBody(program)) {
+    const unwrapped = oxcUnwrapModuleStatement(statement);
+    if (unwrapped.node.type !== 'FunctionDeclaration') continue;
+    const name = oxcIdentifierName(oxcObject(unwrapped.node, 'id'));
+    if (componentName === undefined || name === componentName) {
+      component = unwrapped.node;
+      if (componentName !== undefined) break;
+    }
   }
-  if (ts.isObjectBindingPattern(parameter.name)) {
-    // A destructured parameter may still be annotated; use the annotation to
-    // recover per-prop types so targets never have to fall back to `any`.
-    const annotated = new Map(typeMembers(sourceFile, parameter.type).map((entry) => [entry.name, entry]));
-    return parameter.name.elements.flatMap((element) => {
-      if (!ts.isBindingElement(element) || !ts.isIdentifier(element.name)) {
-        return [];
+  const [parameter] = component === undefined ? [] : oxcArray(component, 'params');
+  if (parameter === undefined) return [];
+
+  const typeAnnotation = oxcTypeNode(oxcObject(parameter, 'typeAnnotation'));
+
+  if (parameter.type === 'ObjectPattern') {
+    const annotated = new Map(typeMembers(source, program, typeAnnotation).map((entry) => [entry.name, entry]));
+    return oxcArray(parameter, 'properties').flatMap((property) => {
+      if (property.type !== 'Property') return [];
+      const value = oxcObject(property, 'value') ?? oxcObject(property, 'key');
+      if (value === undefined) return [];
+      let nameNode = value;
+      let defaultValue: OxcNode | undefined;
+      if (value.type === 'AssignmentPattern') {
+        nameNode = oxcObject(value, 'left') ?? value;
+        defaultValue = oxcObject(value, 'right');
       }
-      const name = element.name.text;
+      if (nameNode.type !== 'Identifier') return [];
+      const name = oxcIdentifierName(nameNode) ?? '';
       return [
         {
           name,
-          optional: element.initializer === undefined,
+          // Preserve the previous TS frontend rule: a binding without a default
+          // is treated as optional at the intention layer.
+          optional: defaultValue === undefined,
           type: annotated.get(name)?.type,
-          defaultValue: element.initializer ? expression(sourceFile, element.initializer) : undefined,
-          span: span(sourceFile, element),
+          defaultValue: defaultValue === undefined ? undefined : expression(source, defaultValue),
+          span: oxcSourceSpan(source, property),
         },
       ];
     });
   }
-  return typeMembers(sourceFile, parameter.type);
+
+  // Match prior TS behavior: destructured optional defaults used initializer presence;
+  // for plain identifier props, optionality comes from the type members.
+  if (parameter.type === 'Identifier' || parameter.type === 'AssignmentPattern') {
+    return typeMembers(source, program, typeAnnotation);
+  }
+
+  return typeMembers(source, program, typeAnnotation);
 }
 
-function slotIntentions(sourceFile: ts.SourceFile, node: ts.Node): SlotIntention[] {
+function slotIntentions(source: string, root: OxcNode): SlotIntention[] {
   const slots: SlotIntention[] = [];
-  const visit = (current: ts.Node): void => {
-    if (ts.isCallExpression(current) && callName(current) === 'hasSlot' && current.arguments[0] !== undefined) {
-      const name = ts.isStringLiteral(current.arguments[0])
-        ? current.arguments[0].text
-        : current.arguments[0].getText(sourceFile);
-      slots.push({ name, span: span(sourceFile, current) });
-    }
-    if (ts.isJsxElement(current) || ts.isJsxSelfClosingElement(current)) {
-      const tagName = jsxTag(current);
-      if (ts.isIdentifier(tagName) && tagName.text === 'Slot') {
-        const attributes = jsxAttributes(current);
-        const nameAttribute = attributes.properties.find(
-          (attribute): attribute is ts.JsxAttribute =>
-            ts.isJsxAttribute(attribute) && ts.isIdentifier(attribute.name) && attribute.name.text === 'name',
-        );
-        const value = nameAttribute?.initializer;
-        const name = value && ts.isStringLiteral(value) ? value.text : (value?.getText(sourceFile) ?? 'default');
-        slots.push({ name, span: span(sourceFile, current) });
+  visitOxc(root, (current) => {
+    if (current.type === 'CallExpression' && callName(current) === 'hasSlot') {
+      const [argument] = oxcArray(current, 'arguments');
+      if (argument !== undefined) {
+        const name =
+          argument.type === 'Literal' && typeof argument.value === 'string'
+            ? argument.value
+            : oxcNodeText(source, argument);
+        slots.push({ name, span: oxcSourceSpan(source, current) });
       }
     }
-    ts.forEachChild(current, visit);
-  };
-  visit(node);
+    if (current.type === 'JSXElement' || current.type === 'JSXSelfClosingElement') {
+      const tagName = jsxTag(current);
+      if (oxcIdentifierName(tagName) === 'Slot') {
+        const nameAttribute = jsxAttributeList(current).find(
+          (attribute) =>
+            attribute.type === 'JSXAttribute' && oxcIdentifierName(oxcObject(attribute, 'name')) === 'name',
+        );
+        const value = nameAttribute === undefined ? undefined : oxcObject(nameAttribute, 'value');
+        let name = 'default';
+        if (value?.type === 'Literal' && typeof value.value === 'string') {
+          name = value.value;
+        } else if (value?.type === 'JSXExpressionContainer') {
+          const inner = oxcObject(value, 'expression');
+          name = inner === undefined ? 'default' : oxcNodeText(source, inner);
+        } else if (value !== undefined) {
+          name = oxcNodeText(source, value);
+        }
+        slots.push({ name, span: oxcSourceSpan(source, current) });
+      }
+    }
+  });
   return slots;
 }
 
-function eventIntentions(sourceFile: ts.SourceFile, node: ts.Node): EventIntention[] {
+function eventIntentions(source: string, root: OxcNode): EventIntention[] {
   const events: EventIntention[] = [];
-  const visit = (current: ts.Node): void => {
-    if (ts.isJsxElement(current) || ts.isJsxSelfClosingElement(current)) {
-      const attributes = jsxAttributes(current);
-      for (const attribute of attributes.properties) {
-        if (
-          !ts.isJsxAttribute(attribute) ||
-          !ts.isIdentifier(attribute.name) ||
-          !/^on[A-Z]/.test(attribute.name.text)
-        ) {
-          continue;
-        }
-        const value = attribute.initializer;
-        if (value === undefined) {
-          continue;
-        }
-        events.push({
-          name: attribute.name.text.slice(2).toLowerCase(),
-          handler:
-            ts.isJsxExpression(value) && value.expression
-              ? expression(sourceFile, value.expression)
-              : expression(sourceFile, value),
-          span: span(sourceFile, attribute),
-        });
-      }
+  visitOxc(root, (current) => {
+    if (current.type !== 'JSXElement' && current.type !== 'JSXSelfClosingElement') return;
+    for (const attribute of jsxAttributeList(current)) {
+      if (attribute.type !== 'JSXAttribute') continue;
+      const attributeName = oxcIdentifierName(oxcObject(attribute, 'name'));
+      if (attributeName === undefined || !/^on[A-Z]/.test(attributeName)) continue;
+      const value = oxcObject(attribute, 'value');
+      if (value === undefined) continue;
+      const handler =
+        value.type === 'JSXExpressionContainer' && oxcObject(value, 'expression') !== undefined
+          ? expression(source, oxcObject(value, 'expression')!)
+          : expression(source, value);
+      events.push({
+        name: attributeName.slice(2).toLowerCase(),
+        handler,
+        span: oxcSourceSpan(source, attribute),
+      });
     }
-    ts.forEachChild(current, visit);
-  };
-  visit(node);
+  });
   return events;
 }
 
-function dynamicIntentions(sourceFile: ts.SourceFile, node: ts.Node): DynamicNodeIntention[] {
+function dynamicIntentions(source: string, root: OxcNode): DynamicNodeIntention[] {
   const dynamics: DynamicNodeIntention[] = [];
-  const visit = (current: ts.Node): void => {
-    if (ts.isJsxElement(current) || ts.isJsxSelfClosingElement(current)) {
-      const tagName = jsxTag(current);
-      if (ts.isIdentifier(tagName) && tagName.text === 'Dynamic') {
-        const attribute = jsxAttributes(current).properties.find(
-          (property): property is ts.JsxAttribute =>
-            ts.isJsxAttribute(property) && ts.isIdentifier(property.name) && property.name.text === 'is',
-        );
-        const value = attribute?.initializer;
-        if (value !== undefined) {
-          const target = ts.isJsxExpression(value) && value.expression ? value.expression : value;
-          dynamics.push({ expression: expression(sourceFile, target), span: span(sourceFile, current) });
-        }
-      }
-    }
-    ts.forEachChild(current, visit);
-  };
-  visit(node);
+  visitOxc(root, (current) => {
+    if (current.type !== 'JSXElement' && current.type !== 'JSXSelfClosingElement') return;
+    if (oxcIdentifierName(jsxTag(current)) !== 'Dynamic') return;
+    const attribute = jsxAttributeList(current).find(
+      (entry) => entry.type === 'JSXAttribute' && oxcIdentifierName(oxcObject(entry, 'name')) === 'is',
+    );
+    const value = attribute === undefined ? undefined : oxcObject(attribute, 'value');
+    if (value === undefined) return;
+    const target =
+      value.type === 'JSXExpressionContainer' && oxcObject(value, 'expression') !== undefined
+        ? oxcObject(value, 'expression')!
+        : value;
+    dynamics.push({ expression: expression(source, target), span: oxcSourceSpan(source, current) });
+  });
   return dynamics;
 }
 
-function isStableListSource(sourceFile: ts.SourceFile, node: ts.Expression): boolean {
-  if (ts.isArrayLiteralExpression(node)) {
-    return true;
-  }
-  if (!ts.isIdentifier(node)) {
-    return false;
-  }
-  return sourceFile.statements.some(
-    (statement) =>
-      ts.isVariableStatement(statement) &&
-      statement.declarationList.flags === ts.NodeFlags.Const &&
-      statement.declarationList.declarations.some(
-        (declaration) => ts.isIdentifier(declaration.name) && declaration.name.text === node.text,
-      ),
-  );
+function isStableListSource(sourceModule: OxcParsedModule, node: OxcNode): boolean {
+  if (node.type === 'ArrayExpression') return true;
+  if (node.type !== 'Identifier') return false;
+  const name = oxcIdentifierName(node);
+  if (name === undefined) return false;
+  return oxcProgramBody(sourceModule.program).some((statement) => {
+    const { node: declaration } = oxcUnwrapModuleStatement(statement);
+    if (declaration.type !== 'VariableDeclaration' || declaration.kind !== 'const') return false;
+    return oxcArray(declaration, 'declarations').some((entry) => oxcIdentifierName(oxcObject(entry, 'id')) === name);
+  });
 }
 
-function listKeys(sourceFile: ts.SourceFile, node: ts.Node): ListKeyIntention[] {
+function listKeys(source: string, root: OxcNode, module: OxcParsedModule): ListKeyIntention[] {
   const lists: ListKeyIntention[] = [];
-  const visit = (current: ts.Node): void => {
-    if (
-      ts.isCallExpression(current) &&
-      ts.isPropertyAccessExpression(current.expression) &&
-      current.expression.name.text === 'map'
-    ) {
-      const listSource = current.expression.expression;
-      const callback = current.arguments[0];
-      let key: SourceBackedExpression | undefined;
-      if (callback && (ts.isArrowFunction(callback) || ts.isFunctionExpression(callback))) {
-        const returned = ts.isBlock(callback.body)
-          ? callback.body.statements.find((statement) => ts.isReturnStatement(statement))?.expression
-          : callback.body;
-        if (returned && (ts.isJsxElement(returned) || ts.isJsxSelfClosingElement(returned))) {
-          const attributes = jsxAttributes(returned);
-          const keyAttribute = attributes.properties.find(
-            (attribute): attribute is ts.JsxAttribute =>
-              ts.isJsxAttribute(attribute) && ts.isIdentifier(attribute.name) && attribute.name.text === 'key',
-          );
-          const value = keyAttribute?.initializer;
-          if (value !== undefined) {
-            key =
-              ts.isJsxExpression(value) && value.expression
-                ? expression(sourceFile, value.expression)
-                : expression(sourceFile, value);
-          }
+  visitOxc(root, (current) => {
+    if (current.type !== 'CallExpression') return;
+    const callee = oxcObject(current, 'callee');
+    if (callee?.type !== 'MemberExpression' && callee?.type !== 'OptionalMemberExpression') return;
+    if (oxcIdentifierName(oxcObject(callee, 'property')) !== 'map') return;
+    const listSource = oxcObject(callee, 'object');
+    if (listSource === undefined) return;
+    const [callback] = oxcArray(current, 'arguments');
+    let key: SourceBackedExpression | undefined;
+    if (callback && (callback.type === 'ArrowFunctionExpression' || callback.type === 'FunctionExpression')) {
+      const body = oxcObject(callback, 'body');
+      let returned: OxcNode | undefined;
+      if (body?.type === 'BlockStatement') {
+        const returnStatement = oxcArray(body, 'body').find((statement) => statement.type === 'ReturnStatement');
+        returned = returnStatement === undefined ? undefined : oxcObject(returnStatement, 'argument');
+      } else {
+        returned = body;
+      }
+      if (returned && (returned.type === 'JSXElement' || returned.type === 'JSXSelfClosingElement')) {
+        const keyAttribute = jsxAttributeList(returned).find(
+          (attribute) => attribute.type === 'JSXAttribute' && oxcIdentifierName(oxcObject(attribute, 'name')) === 'key',
+        );
+        const value = keyAttribute === undefined ? undefined : oxcObject(keyAttribute, 'value');
+        if (value !== undefined) {
+          key =
+            value.type === 'JSXExpressionContainer' && oxcObject(value, 'expression') !== undefined
+              ? expression(source, oxcObject(value, 'expression')!)
+              : expression(source, value);
         }
       }
-      lists.push({
-        source: expression(sourceFile, listSource),
-        key,
-        stable: isStableListSource(sourceFile, listSource),
-        span: span(sourceFile, current),
-      });
     }
-    ts.forEachChild(current, visit);
-  };
-  visit(node);
+    lists.push({
+      source: expression(source, listSource),
+      key,
+      stable: isStableListSource(module, listSource),
+      span: oxcSourceSpan(source, current),
+    });
+  });
   return lists;
 }
 
-/** Infer target-neutral intentions from a parsed source module. */
+/** Infer target-neutral intentions from a parsed Oxc source module. */
 export function inferSemanticModule(
-  sourceFile: ts.SourceFile,
+  module: OxcParsedModule,
   moduleKind: 'component' | 'composable',
   componentName?: string,
+  optimize: OptimizeOptions | false = {},
 ): SemanticModule {
-  const ast = createGenericAst(sourceFile, moduleKind, componentName);
+  const source = module.source;
+  const parents = buildOxcParentMap(module.program);
+  // Static-node marking is a pure record transform over the generic AST, shared
+  // with the framework plugins via the parser-independent optimizeGenericModule.
+  const baseAst = createGenericAstFromOxc(module, moduleKind, componentName);
+  const ast =
+    optimize !== false && optimize.staticMarking !== false
+      ? optimizeGenericModule(baseAst, { staticMarking: optimize.staticMarking }).module
+      : baseAst;
   const imports = ast.imports;
-  const props = moduleKind === 'component' ? inferProps(sourceFile, componentName) : [];
+  const props = moduleKind === 'component' ? inferProps(source, module.program, componentName) : [];
   const parameter = ast.component?.parameter;
   const state: StateIntention[] = [];
   const refs: RefIntention[] = [];
   const memos: MemoIntention[] = [];
   const effects: EffectIntention[] = [];
-  const visit = (node: ts.Node): void => {
-    if (ts.isCallExpression(node)) {
-      const stateIntention = hookState(sourceFile, node);
-      if (stateIntention) state.push(stateIntention);
-      const refIntention = hookRef(sourceFile, node);
-      if (refIntention) refs.push(refIntention);
-      const memoIntention = hookMemo(sourceFile, node);
-      if (memoIntention) memos.push(memoIntention);
-      const effectIntention = hookEffect(sourceFile, node);
-      if (effectIntention) effects.push(effectIntention);
-    }
-    ts.forEachChild(node, visit);
-  };
-  visit(sourceFile);
 
-  const slots = slotIntentions(sourceFile, sourceFile);
-  const renderTree = ast.renderNodes;
-  const events = eventIntentions(sourceFile, sourceFile);
-  const dynamicNodes = dynamicIntentions(sourceFile, sourceFile);
-  const listKeyFacts = listKeys(sourceFile, sourceFile);
+  visitOxc(module.program, (node) => {
+    if (node.type !== 'CallExpression') return;
+    const stateIntention = hookState(source, node, parents);
+    if (stateIntention) state.push(stateIntention);
+    const refIntention = hookRef(source, node, parents);
+    if (refIntention) refs.push(refIntention);
+    const memoIntention = hookMemo(source, node, parents);
+    if (memoIntention) memos.push(memoIntention);
+    const effectIntention = hookEffect(source, node);
+    if (effectIntention) effects.push(effectIntention);
+  });
+
+  const slots = slotIntentions(source, module.program);
+  const renderTree = module.facts.hasJsx === false ? [] : ast.renderNodes;
+  const events = eventIntentions(source, module.program);
+  const dynamicNodes = dynamicIntentions(source, module.program);
+  const listKeyFacts = listKeys(source, module.program, module);
   const setupStatements = ast.nodes
     .filter((node): node is GenericStatement => node.kind === 'statement')
     .map((node) => node.text);
-  const staticSubtrees = renderTree
-    .filter((node) => typeof node.tag === 'string' && /^[a-z]/.test(node.tag))
-    .map((node) => node.span);
+  const staticSubtrees: SourceSpan[] = [];
+  walkRenderNodes(renderTree, (node) => {
+    if (hasMpStaticMarker(node) && node.tagKind !== 'fragment') {
+      staticSubtrees.push(node.span);
+    }
+  });
   const runtimeImports = imports
     .filter((entry) => entry.source === NEUTRAL_MODULE)
     .flatMap((entry) => entry.valueNames);
 
   const diagnostics: CompilerDiagnostic[] = [];
+  if (moduleKind === 'component' && ast.component === undefined) {
+    diagnostics.push(
+      createCompilerDiagnostic({
+        phase: 'inference',
+        severity: 'error',
+        code: 'FORGE_COMPONENT_NOT_FOUND',
+        message: `Could not find a component function${componentName ? ` named "${componentName}"` : ''}.`,
+        fileName: module.fileName,
+        span: {
+          start: 0,
+          end: source.length,
+          line: 1,
+          column: 1,
+        },
+      }),
+    );
+  }
+
   return {
     kind: 'semantic-module',
     moduleKind,
-    fileName: sourceFile.fileName,
+    fileName: module.fileName,
     componentName,
     ast,
     imports,

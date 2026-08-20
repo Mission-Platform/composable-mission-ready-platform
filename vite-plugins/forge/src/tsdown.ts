@@ -4,6 +4,8 @@ import path from 'node:path';
 
 import { defineTsdownLibrary, resolveTsdownOutputDirectory } from '@mission-platform/tsdown-config';
 
+import { forgeServiceLifecyclePlugin, validateForgeBuildPlugin, validateForgeBuildSelection } from './build-integration.js';
+import { createForgeCompilerService, type ForgeCompilerService } from './compiler/service.js';
 import { generateHookLibrarySources, hookLibraryDtsPlugin } from './generate-hooks.js';
 import {
   generateFrameworkSources,
@@ -12,7 +14,8 @@ import {
   jsxComponentsEntryDtsPlugin,
 } from './generate.js';
 
-import type { FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
+import type { FrameworkOutputPlugin, JsxFramework } from '@mission-platform/forge-plugin-api';
+import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 import type { TsdownPlugin, UserConfig } from 'tsdown';
 
 /** Flatten tsdown's recursive `plugins` option into a plain array for merging. */
@@ -90,6 +93,18 @@ export interface TsdownForgeHooksOptions {
   external?: readonly string[];
   /** Override or extend the generated config. */
   overrides?: UserConfig;
+  /** Persistent service shared by component and hook helpers in one build session. */
+  service?: ForgeCompilerService;
+  /** Dispose an internally shared service after this config finishes. */
+  disposeService?: boolean;
+  /** Native router target selected independently from the framework target. */
+  router?: RouterPluginSelection;
+  /** Router targets available for id-based selection. */
+  routerPlugins?: readonly RouterOutputPlugin[];
+  /** Conditions forwarded to the selected router target. */
+  routerConditions?: readonly string[];
+  /** Reject test-fixture output; disable only for tests using fixture plugins. */
+  rejectFixturePlaceholder?: boolean;
 }
 
 /**
@@ -105,8 +120,14 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
     external = [],
     outputRoot = process.env.FORGE_BUILD_STAGE_ROOT,
     overrides,
+    router,
+    routerPlugins,
+    routerConditions,
+    rejectFixturePlaceholder = true,
   } = options;
-  const framework = plugin.id;
+  validateForgeBuildPlugin(plugin, 'tsdown');
+  const service = options.service ?? createForgeCompilerService();
+  const framework = plugin.id as JsxFramework;
   const resolvedEntry = entryModule ?? path.resolve(rootDir, 'src/index.ts');
   const cacheName = `${path.basename(rootDir)}-${framework}`;
   const generatedDirectory = path.join(rootDir, 'node_modules/.cache', cacheName);
@@ -117,6 +138,11 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
     plugin,
     entryModule: resolvedEntry,
     outDir: generatedDirectory,
+    service,
+    router,
+    routerPlugins,
+    routerConditions,
+    rejectFixturePlaceholder,
   });
 
   // Hook libraries emit plain `.ts`/`.tsx` (no `.svelte` SFCs). Only React
@@ -151,6 +177,10 @@ export function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserCo
         chunkFileNames: '[name].js',
       },
       plugins: [
+        forgeServiceLifecyclePlugin({
+          service,
+          disposeService: options.disposeService ?? options.service === undefined,
+        }) as unknown as TsdownPlugin,
         ...stagePlugins,
         hookLibraryDtsPlugin({
           framework,
@@ -186,6 +216,16 @@ export interface TsdownForgeHooksAllOptions {
   neutralOverrides?: UserConfig;
   /** Override applied to every framework build. */
   frameworkOverrides?: UserConfig;
+  /** Persistent service shared by the neutral and framework generation session. */
+  service?: ForgeCompilerService;
+  /** Native router target selected independently from the framework target. */
+  router?: RouterPluginSelection;
+  /** Router targets available for id-based selection. */
+  routerPlugins?: readonly RouterOutputPlugin[];
+  /** Conditions forwarded to the selected router target. */
+  routerConditions?: readonly string[];
+  /** Reject test-fixture output; disable only for tests using fixture plugins. */
+  rejectFixturePlaceholder?: boolean;
 }
 
 /**
@@ -204,7 +244,13 @@ export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): 
     includeNeutral = true,
     neutralOverrides,
     frameworkOverrides,
+    router,
+    routerPlugins,
+    routerConditions,
+    rejectFixturePlaceholder = true,
   } = options;
+  const selected = validateForgeBuildSelection(frameworks, 'tsdown');
+  const service = options.service ?? createForgeCompilerService();
 
   const configs: UserConfig[] = [];
 
@@ -224,7 +270,7 @@ export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): 
     );
   }
 
-  for (const plugin of frameworks) {
+  for (const [index, plugin] of selected.entries()) {
     configs.push(
       defineTsdownForgeHooks({
         rootDir,
@@ -233,6 +279,12 @@ export function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): 
         entryModule,
         name,
         external,
+        service,
+        disposeService: index === selected.length - 1 && options.service === undefined,
+        router,
+        routerPlugins,
+        routerConditions,
+        rejectFixturePlaceholder,
         // `defineTsdownForgeHooks` already scopes `clean` to `dist/<framework>/`.
         overrides: frameworkOverrides,
       }),
@@ -264,6 +316,16 @@ export interface TsdownForgeComponentsOptions {
   external?: readonly string[];
   /** Override or extend the generated config. */
   overrides?: UserConfig;
+  /** Persistent service shared by all framework targets in one build session. */
+  service?: ForgeCompilerService;
+  /** Native router target selected independently from the framework target. */
+  router?: RouterPluginSelection;
+  /** Router targets available for id-based selection. */
+  routerPlugins?: readonly RouterOutputPlugin[];
+  /** Conditions forwarded to the selected router target. */
+  routerConditions?: readonly string[];
+  /** Reject test-fixture output; disable only for tests using fixture plugins. */
+  rejectFixturePlaceholder?: boolean;
 }
 
 /**
@@ -272,17 +334,37 @@ export interface TsdownForgeComponentsOptions {
  * emitting into `dist/<framework>/`.
  */
 export function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[] {
-  const requestedFramework =
-    process.env.FORGE_FRAMEWORK_TARGET ?? (process.env.FORGE_CMS_STORYBLOK_TARGET === undefined ? undefined : 'none');
+  const selected = validateForgeBuildSelection(options.frameworks, 'tsdown');
+  const requestedFramework = process.env.FORGE_FRAMEWORK_TARGET;
+  const cmsOnlyBuild = process.env.FORGE_CMS_STORYBLOK_TARGET !== undefined;
   const frameworks =
     requestedFramework === undefined
-      ? options.frameworks
-      : options.frameworks.filter((plugin) => plugin.id === requestedFramework);
-  return frameworks.map((plugin) => defineTsdownForgeComponent({ ...options, plugin }));
+      ? cmsOnlyBuild
+        ? []
+        : selected
+      : selected.filter((plugin) => plugin.id === requestedFramework);
+  if (frameworks.length === 0) {
+    if (cmsOnlyBuild && requestedFramework === undefined) return [];
+    throw new Error(`Forge build target "${requestedFramework}" is not available in the selected framework plugins.`);
+  }
+  const service = options.service ?? createForgeCompilerService();
+  return frameworks.map((plugin, index) =>
+    defineTsdownForgeComponent({
+      ...options,
+      plugin,
+      service,
+      disposeService: index === frameworks.length - 1 && options.service === undefined,
+    }),
+  );
 }
 
 function defineTsdownForgeComponent(
-  options: Readonly<Omit<TsdownForgeComponentsOptions, 'frameworks'> & { plugin: FrameworkOutputPlugin }>,
+  options: Readonly<
+    Omit<TsdownForgeComponentsOptions, 'frameworks'> & {
+      plugin: FrameworkOutputPlugin;
+      disposeService?: boolean;
+    }
+  >,
 ): UserConfig {
   const {
     rootDir,
@@ -293,8 +375,14 @@ function defineTsdownForgeComponent(
     external = [],
     outputRoot = process.env.FORGE_BUILD_STAGE_ROOT,
     overrides,
+    router,
+    routerPlugins,
+    routerConditions,
+    rejectFixturePlaceholder = true,
+    service,
+    disposeService,
   } = options;
-  const framework = plugin.id;
+  const framework = plugin.id as JsxFramework;
 
   const cacheName = `${path.basename(rootDir)}-${framework}`;
   const generatedDirectory = path.join(rootDir, 'node_modules/.cache', cacheName);
@@ -308,6 +396,8 @@ function defineTsdownForgeComponent(
     ].find((candidate) => fs.existsSync(candidate)) ??
     path.resolve(rootDir, 'src/index.ts');
 
+  validateForgeBuildPlugin(plugin, 'tsdown');
+  const compilerService = service ?? createForgeCompilerService();
   const entry = generateFrameworkSources({
     plugin,
     componentsModule: resolvedComponentsModule,
@@ -315,6 +405,11 @@ function defineTsdownForgeComponent(
     outDir: generatedDirectory,
     // Keep the neutral `Forge` prefix on the public API (do not strip it).
     stripPrefix: '',
+    service: compilerService,
+    router,
+    routerPlugins,
+    routerConditions,
+    rejectFixturePlaceholder,
   });
 
   // Component packages need real Svelte/Solid compilers. Use the tsdown-safe
@@ -374,7 +469,15 @@ function defineTsdownForgeComponent(
         entryFileNames: '[name].js',
         chunkFileNames: '[name].js',
       },
-      plugins: [...stagePlugins, jsxComponentsCssImportPlugin() as TsdownPlugin, dtsPlugin as TsdownPlugin],
+      plugins: [
+        forgeServiceLifecyclePlugin({
+          service: compilerService,
+          disposeService: disposeService ?? service === undefined,
+        }) as unknown as TsdownPlugin,
+        ...stagePlugins,
+        jsxComponentsCssImportPlugin() as TsdownPlugin,
+        dtsPlugin as TsdownPlugin,
+      ],
     },
   });
 

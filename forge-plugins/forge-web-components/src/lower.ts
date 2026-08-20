@@ -25,10 +25,7 @@
  * {@link WebComponentsLoweredModule.framework}, so `generate` narrows it with
  * {@link isWebComponentsLowered} instead of casting.
  */
-import {
-  createCompilerDiagnostic,
-  walkRenderNodes,
-} from "@mission-platform/forge-plugin-api";
+import { walkRenderNodes } from "@mission-platform/forge-plugin-api";
 import { MP_STATIC_ATTR } from "@mission-platform/forge-plugin-api/compiler/optimize.js";
 
 import {
@@ -57,12 +54,13 @@ import {
 import {
   kebabCase,
   lowerStatementText,
+  renderNodeToDomTemplate,
   renderNodeToTemplate,
+  type DomTemplateSource,
   type TemplateContext,
 } from "./transformers/template.js";
 
 import type {
-  CompilerDiagnostic,
   GenericComponent,
   GenericRenderNode,
   GenericStatement,
@@ -89,6 +87,28 @@ const DEFAULT_PROPS_PARAMETER = "properties";
 /** The neutral prop that is rendered through slots rather than declared on the element. */
 const SLOTTED_PROP = "children";
 
+/** Stylesheet imports resolve to CSS sidecars with the source-relative layout. */
+const STYLE_IMPORT = /\.(?:css|scss|sass|less|styl)$/u;
+
+function styleSidecarUrl(specifier: string): string {
+  return specifier
+    .replace(/\.module\.(?:css|scss|sass|less|styl)$/u, ".css")
+    .replace(/\.(?:css|scss|sass|less|styl)$/u, ".css");
+}
+
+function styleUrlsOf(module: SemanticModule): readonly string[] {
+  return [
+    ...new Set(
+      module.ast.imports
+        .filter(
+          (entry) =>
+            entry.source.startsWith(".") && STYLE_IMPORT.test(entry.source),
+        )
+        .map((entry) => styleSidecarUrl(entry.source)),
+    ),
+  ];
+}
+
 /** Hook variable declarations that are lifted out of `render()` into element members. */
 const LIFTED_HOOK_DECLARATION = /\buse(?:State|Ref|Memo)\s*[(<]/;
 
@@ -109,6 +129,8 @@ const GENERATED_ID_DECLARATION =
 /** The native runtime values a generated element module can import, in header order. */
 const RUNTIME_VALUES = [
   "ForgeElement",
+  "DomTemplateResult",
+  "dynamicElement",
   "html",
   "nothing",
   HAS_SLOT_RUNTIME,
@@ -122,15 +144,13 @@ const RUNTIME_PROPERTY_DECLARATION_TYPE = "PropertyDeclaration";
 /**
  * Runtime values every generated element module imports, whatever it renders.
  *
- * `ForgeElement` and `html` are structural (the class extends one and `render()`
- * returns the other), and `nothing` is the target's header contract: it is the
- * sentinel every absent binding lowers to, so the native header is always
- * `import { ForgeElement, html, nothing } from '@mission-platform/forge/web-components';`.
- * Only `unsafeHtml` — needed exclusively by a raw-HTML hole — is pruned when unused.
+ * `ForgeElement` and `nothing` are structural: the class extends the former and
+ * direct DOM expressions use the latter for absent child values. The legacy
+ * `html` helper remains available only when retained compatibility code uses it.
  */
 const STRUCTURAL_RUNTIME_VALUES: ReadonlySet<string> = new Set([
   "ForgeElement",
-  "html",
+  "DomTemplateResult",
   "nothing",
 ]);
 
@@ -145,12 +165,6 @@ const CLEANUP_FIELD_PREFIX = "__mpCleanup";
 
 /** The type of a retained effect cleanup function. */
 const CLEANUP_FIELD_TYPE = "(() => void) | undefined";
-
-/** Diagnostic emitted for a render node whose tag is computed at runtime. */
-const DYNAMIC_TAG_DIAGNOSTIC = "FORGE_WC_DYNAMIC_TAG_UNSUPPORTED";
-
-/** Diagnostic emitted for a `{...spread}` binding, which lit-html cannot express. */
-const SPREAD_ATTRIBUTE_DIAGNOSTIC = "FORGE_WC_SPREAD_ATTRIBUTE_UNSUPPORTED";
 
 /** A `const { … } = <propsParameter>;` statement, capturing its pattern and source object. */
 const PROPS_DESTRUCTURING =
@@ -388,7 +402,7 @@ export interface WebComponentsCleanupField {
 
 /** The custom-element lifecycle callbacks a plan can generate. */
 export type WebComponentsLifecycleCallback =
-  "connectedCallback" | "disconnectedCallback";
+  "connectedCallback" | "disconnectedCallback" | "updatedCallback";
 
 /** One generated lifecycle callback and the statements it runs. */
 export interface WebComponentsLifecycleHook {
@@ -408,6 +422,8 @@ export interface WebComponentsStaticTemplatePart {
 export interface WebComponentsTemplatePlan {
   /** The lit-html template text, without its enclosing `html\`…\``. */
   readonly template: string;
+  /** Direct-DOM factory and typed values emitted for generated JSX. */
+  readonly dom: DomTemplateSource;
   /** Render-head statements, already lowered and scoped to the element instance. */
   readonly head: readonly string[];
   /** Whether Stage-1 marked the returned tree as fully static. */
@@ -433,13 +449,94 @@ export interface WebComponentsRuntimeImports {
   readonly localTypes: readonly string[];
 }
 
+/** The host form used by a generated custom element. */
+export type WebComponentsHostKind = "customized-built-in" | "autonomous";
+
+/** Stable reasons why a component cannot use a customized built-in host. */
+export type WebComponentsHostFallbackReason =
+  | "missing-root"
+  | "fragment-root"
+  | "dynamic-root"
+  | "component-root"
+  | "ambiguous-root"
+  | "invalid-root"
+  | "unsupported-root";
+
+/** The `customElements.define` options emitted for a customized built-in. */
+export interface WebComponentsRegistrationOptions {
+  readonly extends: string;
+}
+
+/** Host selection and invocation metadata for a generated component. */
+export interface WebComponentsHostPlan {
+  readonly kind: WebComponentsHostKind;
+  /** The intrinsic tag used as the native base, when one was selected. */
+  readonly baseTag?: string;
+  /** The constructor expression used by the generated class. */
+  readonly constructorExpression: string;
+  /** The `extends` value passed to `customElements.define`, when applicable. */
+  readonly registrationExtends?: string;
+  /** The complete registration options, when the host is customized-built-in. */
+  readonly registrationOptions?: WebComponentsRegistrationOptions;
+  /** How references to this component are represented in generated templates. */
+  readonly invocation: "is-attribute" | "custom-tag";
+  /** Stable explanation for an autonomous fallback. */
+  readonly fallbackReason?: WebComponentsHostFallbackReason;
+}
+
+/** Typed shadow-root policy retained by the target plan. */
+export interface WebComponentsShadowPolicy {
+  readonly mode: "open" | "closed";
+  readonly delegatesFocus?: boolean;
+  readonly serializable?: boolean;
+  readonly clonable?: boolean;
+  readonly slotAssignment?: "named" | "manual";
+}
+
+/** ElementInternals capabilities requested by a generated component. */
+export interface WebComponentsInternalsPolicy {
+  readonly attach: boolean;
+  readonly aria?: Readonly<Record<string, string>>;
+  readonly formAssociated?: boolean;
+  readonly formValue?: string;
+}
+
+/** The compatibility table for roots that can safely be customized built-ins. */
+export const WEBCOMPONENTS_NATIVE_HOSTS = {
+  div: "HTMLDivElement",
+  span: "HTMLSpanElement",
+  p: "HTMLParagraphElement",
+  h1: "HTMLHeadingElement",
+  h2: "HTMLHeadingElement",
+  h3: "HTMLHeadingElement",
+  h4: "HTMLHeadingElement",
+  h5: "HTMLHeadingElement",
+  h6: "HTMLHeadingElement",
+} as const satisfies Readonly<Record<string, string>>;
+
+/** Compatibility defaults preserved for generated components. */
+export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy = {
+  mode: "open",
+};
+
+/** Internals are capability-gated by the runtime; form association stays opt-in. */
+export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy =
+  {
+    attach: true,
+  };
+
 /** The Web-Components target plan produced by `lower` and refined by `optimize`. */
 export interface WebComponentsLoweredModule extends TargetLoweredModule {
   readonly framework: typeof WEB_COMPONENTS_FRAMEWORK;
+  readonly host: WebComponentsHostPlan;
+  readonly shadow: WebComponentsShadowPolicy;
+  readonly internals: WebComponentsInternalsPolicy;
   /** The registered custom-element tag (`ForgeInView` → `forge-in-view`). */
   readonly tagName: string;
   /** The generated class name (`ForgeInView` → `ForgeInViewElement`). */
   readonly className: string;
+  /** Source-relative CSS sidecar URLs used by the generated element's shadow root. */
+  readonly styleUrls: readonly string[];
   readonly reactiveProperties: readonly WebComponentsReactiveProperty[];
   readonly stateFields: readonly WebComponentsStateField[];
   readonly derived: readonly WebComponentsDerivedValue[];
@@ -469,6 +566,65 @@ export function isWebComponentsLowered(
 /** Escape a name for embedding in a regular expression. */
 function escapeForPattern(name: string): string {
   return name.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
+}
+
+function autonomousHost(
+  fallbackReason: WebComponentsHostFallbackReason,
+): WebComponentsHostPlan {
+  return {
+    kind: "autonomous",
+    constructorExpression: "ForgeElement",
+    invocation: "custom-tag",
+    fallbackReason,
+  };
+}
+
+/**
+ * Infer a customized-built-in host only from a single, static intrinsic root.
+ *
+ * The allowlist is intentionally conservative: an intrinsic tag being valid
+ * HTML does not guarantee that it is a safe or useful customized-built-in
+ * base across the supported DOM implementations.
+ */
+export function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+): WebComponentsHostPlan {
+  if (returnNode === undefined) {
+    return autonomousHost("missing-root");
+  }
+  if (returnNode.tagKind === "fragment") {
+    return autonomousHost("fragment-root");
+  }
+  if (returnNode.tagKind === "dynamic") {
+    return autonomousHost("dynamic-root");
+  }
+  if (returnNode.tagKind === "component") {
+    return autonomousHost("component-root");
+  }
+  if (typeof returnNode.tag !== "string") {
+    return autonomousHost("invalid-root");
+  }
+
+  const baseTag = returnNode.tag;
+  if (!/^[a-z][a-z0-9-]*$/u.test(baseTag)) {
+    return autonomousHost("invalid-root");
+  }
+  const constructorExpression =
+    WEBCOMPONENTS_NATIVE_HOSTS[
+      baseTag as keyof typeof WEBCOMPONENTS_NATIVE_HOSTS
+    ];
+  if (constructorExpression === undefined) {
+    return autonomousHost("unsupported-root");
+  }
+  const registrationOptions = { extends: baseTag };
+  return {
+    kind: "customized-built-in",
+    baseTag,
+    constructorExpression,
+    registrationExtends: baseTag,
+    registrationOptions,
+    invocation: "is-attribute",
+  };
 }
 
 /** Whether the given text references the bare identifier `name`. */
@@ -672,6 +828,52 @@ function propsBindingSites(
     }
   }
   return sites;
+}
+
+/**
+ * Find locals that are safe native default-slot passthroughs.
+ *
+ * Defaults, spreads, arrays and other expressions are deliberately excluded:
+ * only a value read directly from `properties.children` can remain owned by the
+ * source shadow root when lowered to a native outlet.
+ */
+function slotAliasesOf(
+  component: GenericComponent,
+  propsParameterName: string,
+  sites: readonly PropsBindingSite[],
+): ReadonlyMap<string, string> {
+  const aliases = new Map<string, string>();
+  for (const site of sites) {
+    for (const entry of site.binding.entries) {
+      const local = entry.locals.length === 1 ? entry.locals[0] : undefined;
+      if (
+        entry.member === SLOTTED_PROP &&
+        entry.defaultValue === undefined &&
+        local !== undefined
+      ) {
+        aliases.set(local, "default");
+      }
+    }
+  }
+
+  const direct = `${propsParameterName}.children`.replace(/\s+/g, "");
+  for (const statement of component.body) {
+    if (statement.statementKind !== "variable") {
+      continue;
+    }
+    const match = /^const\s+([A-Za-z_$][\w$]*)\s*=\s*(.*?)\s*;?$/.exec(
+      statement.text.text.trim(),
+    );
+    if (match === null) {
+      continue;
+    }
+    const local = match[1];
+    const source = (match[2] ?? "").replace(/\s+/g, "");
+    if (source === direct || aliases.has(source)) {
+      aliases.set(local, "default");
+    }
+  }
+  return aliases;
 }
 
 /**
@@ -1340,23 +1542,65 @@ function loweredLifecycle(
 } {
   const connected: string[] = [];
   const disconnected: string[] = [];
+  const updated: string[] = [];
   const cleanupFields: WebComponentsCleanupField[] = [];
   const bodies: string[] = [];
 
   for (const [index, effect] of module.intentions.effects.entries()) {
     const body = rewriteExpressionText(effect.body.text.trim(), scope);
+    const dependencies = (effect.dependencies ?? []).map((dependency) =>
+      rewriteExpressionText(dependency.text.trim(), scope),
+    );
+    const dependencyField = `__mpEffectDeps${index}`;
     bodies.push(body);
     // An effect that returns a teardown keeps it in a field so the element can
     // run it when it leaves the document; one that returns nothing is simply
     // invoked, so no field (and no `disconnectedCallback`) is generated.
     if (effect.cleanup === undefined) {
       connected.push(`(${body})();`);
+      if (dependencies.length === 0) {
+        updated.push(`(${body})();`);
+      } else {
+        connected.splice(
+          -1,
+          0,
+          `this.${dependencyField} = [${dependencies.join(", ")}];`,
+        );
+        updated.push(
+          `if (!this.${dependencyField}?.every((value, index) => Object.is(value, [${dependencies.join(", ")}][index]))) {`,
+          `  this.${dependencyField} = [${dependencies.join(", ")}];`,
+          `  (${body})();`,
+          "}",
+        );
+      }
       continue;
     }
     const field = `${CLEANUP_FIELD_PREFIX}${index}`;
     cleanupFields.push({ name: field, type: CLEANUP_FIELD_TYPE });
     connected.push(`this.${field} = (${body})();`);
+    if (dependencies.length > 0) {
+      connected.splice(
+        -1,
+        0,
+        `this.${dependencyField} = [${dependencies.join(", ")}];`,
+      );
+    }
     disconnected.push(`this.${field}?.();`, `this.${field} = undefined;`);
+    const rerun = [
+      `this.${field}?.();`,
+      `this.${field} = undefined;`,
+      `this.${field} = (${body})();`,
+    ];
+    if (dependencies.length === 0) {
+      updated.push(...rerun);
+    } else {
+      updated.push(
+        `if (!this.${dependencyField}?.every((value, index) => Object.is(value, [${dependencies.join(", ")}][index]))) {`,
+        `  this.${dependencyField} = [${dependencies.join(", ")}];`,
+        ...rerun.map((statement) => `  ${statement}`),
+        "}",
+      );
+    }
   }
 
   // Every effect body is an arrow declared *inside* the callback, so it closes
@@ -1387,46 +1631,18 @@ function loweredLifecycle(
     // `HTMLElement` declares no `disconnectedCallback`, so this one stands alone.
     lifecycle.push({
       callback: "disconnectedCallback",
-      callsSuper: false,
+      callsSuper: true,
       statements: disconnected,
     });
   }
-  return { lifecycle, cleanupFields };
-}
-
-/** Diagnostics for the neutral constructs the native target cannot express. */
-function loweredDiagnostics(module: SemanticModule): CompilerDiagnostic[] {
-  const diagnostics: CompilerDiagnostic[] = [];
-  for (const dynamicNode of module.intentions.dynamicNodes) {
-    diagnostics.push(
-      createCompilerDiagnostic({
-        phase: "generation",
-        severity: "warning",
-        code: DYNAMIC_TAG_DIAGNOSTIC,
-        message: `Dynamic tag "${dynamicNode.expression.text}" cannot be expressed as a custom-element tag; it is emitted verbatim.`,
-        fileName: module.fileName,
-        span: dynamicNode.span,
-      }),
-    );
+  if (updated.length > 0) {
+    lifecycle.push({
+      callback: "updatedCallback",
+      callsSuper: true,
+      statements: [...replay, ...replayedHead, ...updated],
+    });
   }
-  walkRenderNodes(module.ast.renderNodes, (node) => {
-    for (const attribute of node.attributes) {
-      if (attribute.kind !== "jsx-spread-attribute") {
-        continue;
-      }
-      diagnostics.push(
-        createCompilerDiagnostic({
-          phase: "generation",
-          severity: "warning",
-          code: SPREAD_ATTRIBUTE_DIAGNOSTIC,
-          message: `Spread binding "{...${attribute.expression.text}}" has no lit-html equivalent and is dropped.`,
-          fileName: module.fileName,
-          span: attribute.span,
-        }),
-      );
-    }
-  });
-  return diagnostics;
+  return { lifecycle, cleanupFields };
 }
 
 /** The runtime and local-type imports the plan's emitted text needs. */
@@ -1443,7 +1659,8 @@ export function resolveRuntimeImports(plan: {
   readonly retainedDeclarations: readonly string[];
 }): WebComponentsRuntimeImports {
   const text = [
-    plan.template.template,
+    plan.template.dom.create,
+    ...plan.template.dom.values,
     ...plan.template.head,
     ...plan.template.hoisted.map((part) => part.template),
     ...plan.derived.flatMap((derived) =>
@@ -1495,6 +1712,10 @@ function emptyPlan(
 ): WebComponentsLoweredModule {
   const template: WebComponentsTemplatePlan = {
     template: "<slot></slot>",
+    dom: renderNodeToDomTemplate(undefined, {
+      scope: MODULE_SCOPE,
+      componentFolders: new Set(),
+    }),
     head: [],
     staticRoot: false,
     hoisted: [],
@@ -1513,8 +1734,12 @@ function emptyPlan(
   } as const;
   return {
     framework: WEB_COMPONENTS_FRAMEWORK,
+    host: autonomousHost("missing-root"),
+    shadow: DEFAULT_WEBCOMPONENTS_SHADOW_POLICY,
+    internals: DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY,
     tagName,
     className,
+    styleUrls: styleUrlsOf(module),
     ...base,
     cleanupFields: [],
     listKeys: listKeysOf(module),
@@ -1532,6 +1757,35 @@ function listKeysOf(module: SemanticModule): WebComponentsListKey[] {
   }));
 }
 
+/** Lower retained neutral dynamic-element calls to the native runtime helper. */
+function lowerRetainedDeclarations(
+  module: SemanticModule,
+  context: TemplateContext,
+): string[] {
+  return module.ast.declarations.map((declaration) =>
+    lowerStatementText(
+      declaration.text.text,
+      declaration.renderNodes,
+      context,
+    ).replace(/\bh\s*\(/gu, "dynamicElement("),
+  );
+}
+
+function lowerDynamicElementCalls(text: string): string {
+  return text.replace(/\bh\s*\(/gu, "dynamicElement(");
+}
+
+function lowerRootDynamicElement(text: string): string {
+  const lowered = lowerDynamicElementCalls(text);
+  if (/^dynamicElement\(/u.test(lowered.trim())) {
+    return `\${${lowered}}`;
+  }
+  const wrapped = /^html`\$\{(dynamicElement\([\s\S]*\))\}`$/u.exec(
+    lowered.trim(),
+  );
+  return wrapped?.[1] === undefined ? lowered : `\${${wrapped[1]}}`;
+}
+
 /** Build the Web-Components target plan for a neutral module. */
 export function lowerWebComponentsPlan(
   module: SemanticModule,
@@ -1540,19 +1794,15 @@ export function lowerWebComponentsPlan(
   const componentName =
     context.componentName ?? module.componentName ?? "CustomElement";
   const componentFolders = context.componentFolders ?? new Set<string>();
+  const componentHosts = context.componentHosts;
   const className = `${componentName}Element`;
   const tagName = kebabCase(componentName);
   const moduleContext: TemplateContext = {
     scope: MODULE_SCOPE,
     componentFolders,
+    componentHosts,
   };
-  const retainedDeclarations = module.ast.declarations.map((declaration) =>
-    lowerStatementText(
-      declaration.text.text,
-      declaration.renderNodes,
-      moduleContext,
-    ),
-  );
+  const retainedDeclarations = lowerRetainedDeclarations(module, moduleContext);
 
   const component = module.ast.component;
   if (component === undefined) {
@@ -1578,6 +1828,11 @@ export function lowerWebComponentsPlan(
   // reactive properties; their locals shadow those fields, so the patterns are
   // replayed per scope rather than rewritten read by read.
   const propsBindings = propsBindingSites(component, propsParameterName);
+  const slotAliases = slotAliasesOf(
+    component,
+    propsParameterName,
+    propsBindings,
+  );
   const boundLocals = new Set(
     propsBindings.flatMap((site) => [...site.binding.locals]),
   );
@@ -1693,6 +1948,8 @@ export function lowerWebComponentsPlan(
   const templateContext: TemplateContext = {
     scope: renderScope,
     componentFolders,
+    componentHosts,
+    slotAliases,
   };
   const fieldScope: ElementScope = { ...scope, aliases };
 
@@ -1828,8 +2085,9 @@ export function lowerWebComponentsPlan(
   const elementRefs = seeds.refs;
 
   const template: WebComponentsTemplatePlan = {
-    template: templateText,
-    head,
+    template: lowerRootDynamicElement(templateText),
+    dom: renderNodeToDomTemplate(returnNode, templateContext),
+    head: head.map((statement) => lowerDynamicElementCalls(statement)),
     // Stage-1 marks a fully static subtree with `__mpStatic`; a marked root that
     // needs no render head can be built once at module scope (see `./optimize`).
     staticRoot:
@@ -1865,8 +2123,12 @@ export function lowerWebComponentsPlan(
 
   return {
     framework: WEB_COMPONENTS_FRAMEWORK,
+    host: inferWebComponentsHost(returnNode),
+    shadow: DEFAULT_WEBCOMPONENTS_SHADOW_POLICY,
+    internals: DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY,
     tagName,
     className,
+    styleUrls: styleUrlsOf(module),
     ...base,
     cleanupFields,
     listKeys: listKeysOf(module),
@@ -1890,7 +2152,7 @@ export function lowerWebComponentsModule(
     framework: WEB_COMPONENTS_FRAMEWORK,
     module,
     context,
-    diagnostics: [...(module.diagnostics ?? []), ...loweredDiagnostics(module)],
+    diagnostics: module.diagnostics ?? [],
     lowered,
   };
 }

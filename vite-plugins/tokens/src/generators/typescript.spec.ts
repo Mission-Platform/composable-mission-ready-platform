@@ -68,6 +68,30 @@ describe('buildTokenModule', () => {
     expect(module).toContain('"marginBlock": "0.857rem"');
     expect(module).toContain('"marginInline": "0"');
   });
+
+  it('preserves the nested component contract while resolving cross-document aliases', () => {
+    const module = buildTokenModule(
+      'component',
+      {
+        component: {
+          button: {
+            primary: {
+              background: { default: { $value: '{color.primary.default}' } },
+              padding: { $value: '{spacing.3}' },
+            },
+          },
+        },
+      },
+      {
+        color: { primary: { default: { $value: '#123456' } } },
+        spacing: { 3: { $value: '0.857rem' } },
+      },
+    );
+    expect(module).toContain('"button": {');
+    expect(module).toContain('"background": {');
+    expect(module).toContain('"default": "#123456"');
+    expect(module).toContain('"padding": "0.857rem"');
+  });
 });
 
 describe('buildBarrelModule', () => {

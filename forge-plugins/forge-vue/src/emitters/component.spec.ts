@@ -341,6 +341,127 @@ describe("the Vue component emitter builds an SFC from the generic AST", () => {
     expect(code).toContain("{{ item.label }}");
   });
 
+  it("keeps data projections that contain nested JSX in setup", () => {
+    const module = semanticModule({
+      component: component({
+        name: "Options",
+        parameter: "properties",
+        body: [
+          statement(
+            "const options = properties.locales.map((item) => ({ label: item.label, icon: <ForgeIconFlag countryCode={item.countryCode} /> }));",
+            "variable",
+            {
+              name: "options",
+              renderNodes: [
+                element("ForgeIconFlag", {
+                  selfClosing: true,
+                  attributes: [
+                    expressionAttribute("countryCode", "item.countryCode"),
+                  ],
+                  source: "<ForgeIconFlag countryCode={item.countryCode} />",
+                }),
+              ],
+            },
+          ),
+        ],
+        returnNode: element("ForgeSelect", {
+          attributes: [expressionAttribute("options", "options")],
+        }),
+      }),
+      props: [
+        prop("locales", "readonly { label: string; countryCode: string }[]"),
+      ],
+    });
+
+    const code = emitVueModule(module, "Options").code;
+
+    expect(code).toContain("const options = computed(() =>");
+    expect(code).toContain("properties.locales.map");
+    expect(code).toContain(':options="options"');
+  });
+
+  it("follows render-node declarations through an intermediate child", () => {
+    const header = element("header", {
+      children: [textChild("Title")],
+      source: "<header>Title</header>",
+    });
+    const panel = element("section", {
+      children: [expressionChild("headerNode")],
+      source: "<section>{headerNode}</section>",
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Indirect",
+        parameter: "properties",
+        body: [
+          statement(
+            "const headerNode = properties.title ? <header>Title</header> : undefined;",
+            "variable",
+            { name: "headerNode", renderNodes: [header] },
+          ),
+          statement(
+            "const panel = properties.visible ? <section>{headerNode}</section> : undefined;",
+            "variable",
+            { name: "panel", renderNodes: [panel] },
+          ),
+        ],
+        returnNode: element("main", {
+          children: [expressionChild("panel")],
+        }),
+      }),
+      props: [prop("title", "boolean"), prop("visible", "boolean")],
+    });
+
+    const code = emitVueModule(module, "Indirect").code;
+
+    expect(code).toContain("<header");
+    expect(code).toContain("Title");
+    expect(code).not.toContain("headerNode");
+    expect(code).not.toContain("panel");
+  });
+
+  it("follows render nodes through a hyperscript intermediate const", () => {
+    const eyebrow = element("p", {
+      attributes: [stringAttribute("className", "hero__eyebrow")],
+      children: [expressionChild("properties.eyebrow")],
+      source: '<p class="hero__eyebrow">{properties.eyebrow}</p>',
+    });
+    const title = element("h1", {
+      attributes: [stringAttribute("className", "hero__title")],
+      children: [expressionChild("properties.title")],
+      source: '<h1 class="hero__title">{properties.title}</h1>',
+    });
+    const module = semanticModule({
+      component: component({
+        name: "HeroShape",
+        parameter: "properties",
+        body: [
+          statement(
+            'const eyebrowNode = properties.eyebrow ? <p class="hero__eyebrow">{properties.eyebrow}</p> : undefined;',
+            "variable",
+            { name: "eyebrowNode", renderNodes: [eyebrow] },
+          ),
+          statement(
+            "const content = h('div', { class: 'hero__content' }, eyebrowNode, <h1 class=\"hero__title\">{properties.title}</h1>);",
+            "variable",
+            { name: "content", renderNodes: [title] },
+          ),
+        ],
+        returnExpression: "h('section', { class: 'hero' }, content)",
+      }),
+      props: [prop("title", "string"), prop("eyebrow", "string")],
+    });
+
+    const code = emitVueModule(module, "HeroShape").code;
+
+    expect(code).not.toContain("const render = () =>");
+    expect(code).toContain('<section class="hero"');
+    expect(code).toContain('<div class="hero__content">');
+    expect(code).toContain('v-if="properties.eyebrow"');
+    expect(code).not.toContain("eyebrowNode");
+    expect(code).not.toContain("const content");
+  });
+
   it("renders a hoisted static subtree with `v-once` only when the plan hoists it", () => {
     const staticMarker: GenericJsxAttribute = {
       kind: "jsx-attribute",

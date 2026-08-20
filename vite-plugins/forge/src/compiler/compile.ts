@@ -2,7 +2,7 @@
  * Stage-1 of the two-stage compiler: source-to-source transformation.
  *
  * A neutral component authored against `@mission-platform/forge` is parsed with
- * the TypeScript compiler API and re-emitted as a per-framework **source
+ * the Oxc parser and re-emitted as a per-framework **source
  * module** — a React `.tsx` or a Vue `.vue` single-file component. Stage 2 (the
  * framework's own Vite plugin / JSX transform) then compiles that module
  * natively, so the output never pays for a generic runtime adapter and a new
@@ -10,18 +10,24 @@
  */
 import { createCompilerPipeline } from './pipeline.js';
 
+import type { OptimizeOptions } from './optimize.js';
 import type {
   CompilerDiagnostic,
   GeneratedModule,
   FrameworkOutputPlugin,
   OutputLanguage,
+  TargetComponentHost,
 } from '@mission-platform/forge-plugin-api';
+import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 
 export { moduleTargetsFramework, readFrameworkDirective } from './ast.js';
 export { analyzeForgeModule, createCompilerPipeline } from './pipeline.js';
-export { createGenericAst, parseForgeModule, parseForgeSource, scriptKindForFileName } from './frontends.js';
+export { analyzeRouterCapabilities, compileRouterModule, createRouterCompilerPipeline } from './router.js';
+export { createGenericAst, parseForgeModule, parseForgeSource } from './frontends.js';
+export { parseFrontendModule } from './frontends.js';
 export { inferSemanticModule } from './infer.js';
 export { buildForgeFileGraph } from './graph.js';
+export { collectForgeDependents } from './graph.js';
 export type {
   ForgeFileEdge,
   ForgeFileEdgeRelation,
@@ -31,6 +37,7 @@ export type {
   ForgeFileNode,
   ForgeGraphDiagnostic,
   ForgeGraphDiagnosticCode,
+  ForgePathAliases,
 } from './graph.js';
 export type {
   FrameworkBuildAdapters,
@@ -41,6 +48,7 @@ export type {
   GeneratorContext,
   OutputLanguage,
   TargetContext,
+  TargetComponentHost,
   TargetIntentions,
   TargetOptimizeOptions,
   TsdownBuildContext,
@@ -68,13 +76,44 @@ export type {
   StateIntention,
 } from '@mission-platform/forge-plugin-api';
 export type { CompilerInput, CompilerPipeline } from './pipeline.js';
+export {
+  createForgeCompilerService,
+  PersistentForgeCompilerService,
+  type CompiledArtifact,
+  type ForgeCompileRequest,
+  type ForgeCompilerService,
+  type ForgeInvalidationResult,
+  type ForgeProjectInput,
+  type ForgeProjectSnapshot,
+} from './service.js';
+export {
+  DEFAULT_FORGE_CACHE_LIMITS,
+  createEmptyForgeCacheStats,
+  type ForgeCacheLimits,
+  type ForgeCacheStats,
+} from './cache.js';
+export {
+  createForgeArtifactManifest,
+  type ForgeArtifactKind,
+  type ForgeArtifactManifest,
+  type ForgeArtifactRecord,
+} from './artifact-manifest.js';
+export type { ForgeCompilationReport, ForgePhaseTiming } from './report.js';
+export type { RouterCompilationResult, RouterCompilerInput } from './router.js';
 export type { ForgeSourceKind, FrontendModule } from './frontends.js';
+export {
+  CompilerDiagnosticError,
+  createCompilerDiagnostic,
+  formatCompilerDiagnostic,
+  throwOnCompilerErrors,
+} from '@mission-platform/forge-plugin-api';
 export {
   constantBoolean,
   hasMpStaticMarker,
   isCompileTimeConstant,
   MP_STATIC_ATTR,
-  optimizeSourceFile,
+  optimizeForgeModule,
+  optimizeGenericModule,
   stripMpStaticAttributes,
   stripMpStaticMarker,
   type OptimizeOptions,
@@ -99,12 +138,18 @@ export interface CompileOptions {
    * component, preserving the original behaviour.
    */
   componentFolders?: ReadonlySet<string>;
+  /** Host metadata for sibling component references in target templates. */
+  componentHosts?: ReadonlyMap<string, TargetComponentHost>;
   /**
    * Run the Stage-1 (framework-neutral) optimisation passes before emit.
    * Defaults to `true`. Pass `false` to disable every pass, or an
    * {@link OptimizeOptions} object to toggle individual ones.
    */
   optimize?: boolean | OptimizeOptions;
+  /** Native router target selected independently from {@link framework}. */
+  router?: RouterPluginSelection;
+  routerPlugins?: readonly RouterOutputPlugin[];
+  routerConditions?: readonly string[];
 }
 
 /** Options for compiling a module with an externally supplied output plugin. */
@@ -121,8 +166,14 @@ export interface CompileModuleOptions {
   sourceRoot?: string;
   /** The folder base names of the package's discovered components. */
   componentFolders?: ReadonlySet<string>;
+  /** Host metadata for sibling component references in target templates. */
+  componentHosts?: ReadonlyMap<string, TargetComponentHost>;
   /** Run Stage-1 optimization passes before target lowering. */
   optimize?: boolean | OptimizeOptions;
+  /** Native router target selected independently from {@link framework}. */
+  router?: RouterPluginSelection;
+  routerPlugins?: readonly RouterOutputPlugin[];
+  routerConditions?: readonly string[];
 }
 
 /** An auxiliary SFC emitted alongside a primary module (e.g. a recursive helper component). */
@@ -151,6 +202,10 @@ export interface CompiledModule {
    * driver and compiled in Stage 2. Empty/absent for the common single-file case.
    */
   extraModules?: ExtraModule[];
+  /** Source map retained from the router pass or the framework generator. */
+  map?: string | Readonly<Record<string, unknown>>;
+  /** Declaration modules retained from the router pass or framework generator. */
+  declarations?: { name: string; code: string }[];
   /** Phase-level diagnostics produced by an output plugin. */
   diagnostics?: CompilerDiagnostic[];
 }
@@ -183,12 +238,17 @@ export function compileModule(source: string, options: CompileModuleOptions): Co
     createCompilerPipeline().compile(
       {
         source,
-        fileName: options.fileName ?? `${options.componentName}.tsx`,
+        fileName:
+          options.fileName ?? (options.moduleKind === 'composable' ? 'hook.tsx' : `${options.componentName}.tsx`),
         moduleKind: options.moduleKind,
         componentName: options.componentName,
         componentFolders: options.componentFolders,
+        componentHosts: options.componentHosts,
         sourceRoot: options.sourceRoot,
-        optimize: options.optimize === false ? false : options.optimize,
+        optimize: options.optimize === false ? false : options.optimize === true ? {} : options.optimize,
+        router: options.router,
+        routerPlugins: options.routerPlugins,
+        routerConditions: options.routerConditions,
       },
       options.framework,
     ),
@@ -230,6 +290,8 @@ function projectGeneratedModule(module: GeneratedModule): CompiledModule {
     extraModules: module.extraModules?.map((extraModule) => {
       return { name: extraModule.name, code: extraModule.code, lang: extraModule.lang };
     }),
+    map: module.map,
+    declarations: module.declarations ? [...module.declarations] : undefined,
     diagnostics: module.diagnostics ? [...module.diagnostics] : undefined,
   };
 }

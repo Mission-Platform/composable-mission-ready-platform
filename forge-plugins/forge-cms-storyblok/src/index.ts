@@ -15,8 +15,9 @@
  * });
  * ```
  *
- * The output lands in `dist/cms/storyblok/<framework>/**` with the schema JSON
- * and `components.json` mirrored into `dist/cms/storyblok/`.
+ * The output lands in `dist/cms/storyblok/<framework>/**`; nested component
+ * schema and wrapper paths mirror their source hierarchy, while
+ * `components.json` remains at the Storyblok output root.
  */
 export {
   forgeStoryblokCms,
@@ -39,6 +40,7 @@ export {
   contentFieldToStoryblokField,
   contentKindToStoryblokFieldType,
   emitStoryblokComponent,
+  resolveStoryblokMetadata,
   toStoryblokComponent,
 } from "./fields.js";
 
@@ -54,5 +56,8 @@ export type {
   StoryblokComponent,
   StoryblokComponentNames,
   StoryblokFieldType,
+  StoryblokMetadataOptions,
+  StoryblokPluginFieldOptions,
+  StoryblokProjectionOptions,
   StoryblokSchemaField,
 } from "./types.js";

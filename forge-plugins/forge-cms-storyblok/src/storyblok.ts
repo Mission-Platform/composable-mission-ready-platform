@@ -16,6 +16,9 @@ import { emitBlokDataType, emitStoryblokBlokWrapper } from "./wrappers.js";
 import type {
   AnalyzedStoryblokComponent,
   StoryblokComponent,
+  StoryblokMetadataOptions,
+  StoryblokPluginFieldOptions,
+  StoryblokProjectionOptions,
 } from "./types.js";
 import type {
   CmsArtifact,
@@ -83,22 +86,39 @@ function wrapperFramework(framework: FrameworkOutputPlugin): JsxFramework {
   return framework.id as JsxFramework;
 }
 
+/** Return the generated artifact stem, mirroring nested source components. */
+function artifactStem(component: ContentComponent): string {
+  const folder = component.names.folder;
+  const sourceDirectory = component.names.sourceDir
+    ?.replaceAll("\\", "/")
+    .replaceAll(/^\.\//g, "")
+    .replaceAll(/\/+$/g, "");
+  if (
+    sourceDirectory === undefined ||
+    sourceDirectory.length === 0 ||
+    sourceDirectory === folder
+  ) {
+    return folder;
+  }
+  return `${sourceDirectory}/${folder}`;
+}
+
 /** The `export …` line one component contributes to the entry barrel. */
 function blokEntryLine(
   framework: JsxFramework,
   component: ContentComponent,
 ): string {
-  const { folder } = component.names;
+  const stem = artifactStem(component);
   const name = `${component.names.publicName}Blok`;
   switch (framework) {
     case "vue": {
-      return `export { default as ${name} } from './${folder}.vue';`;
+      return `export { default as ${name} } from './${stem}.vue';`;
     }
     case "svelte": {
-      return `export { default as ${name} } from './${folder}.svelte';`;
+      return `export { default as ${name} } from './${stem}.svelte';`;
     }
     default: {
-      return `export { ${name} } from './${folder}';`;
+      return `export { ${name} } from './${stem}';`;
     }
   }
 }
@@ -140,6 +160,10 @@ export interface ForgeStoryblokCmsOptions {
   /** The Storyblok runtime the wrappers import (`@storyblok/react`, `@storyblok/vue`, …). */
   storyblokRuntime?: string;
   external?: readonly string[];
+  /** The plugin field contract used for props tagged `@cmsSetting`. */
+  pluginField?: StoryblokPluginFieldOptions;
+  /** Optional Storyblok editor metadata defaults. */
+  metadata?: StoryblokMetadataOptions;
 }
 
 export interface ForgeStoryblokCmsTargetsOptions {
@@ -147,6 +171,43 @@ export interface ForgeStoryblokCmsTargetsOptions {
   frameworks: readonly FrameworkOutputPlugin[];
   storyblokRuntimes?: Partial<Record<JsxFramework, string>>;
   external?: readonly string[];
+  pluginField?: StoryblokPluginFieldOptions;
+  metadata?: StoryblokMetadataOptions;
+}
+
+/** Validate and normalize the optional plugin field contract at target creation. */
+function validatePluginFieldOptions(
+  options: StoryblokPluginFieldOptions,
+): StoryblokPluginFieldOptions {
+  if (
+    options === null ||
+    typeof options !== "object" ||
+    typeof options.fieldType !== "string" ||
+    options.fieldType.trim().length === 0
+  ) {
+    throw new Error(
+      "Storyblok `pluginField.fieldType` must be a non-empty string.",
+    );
+  }
+  if (
+    options.requiredFields !== undefined &&
+    (!Array.isArray(options.requiredFields) ||
+      options.requiredFields.some(
+        (field) => typeof field !== "string" || field.trim().length === 0,
+      ))
+  ) {
+    throw new Error(
+      "Storyblok `pluginField.requiredFields` must contain only non-empty strings.",
+    );
+  }
+  return {
+    fieldType: options.fieldType.trim(),
+    ...(options.requiredFields === undefined
+      ? {}
+      : {
+          requiredFields: options.requiredFields.map((field) => field.trim()),
+        }),
+  };
 }
 
 function storyblokRuntimeFor(
@@ -165,6 +226,13 @@ export function forgeStoryblokCms(
     plugin,
     options.storyblokRuntime,
   );
+  const projection: StoryblokProjectionOptions = {
+    pluginField:
+      options.pluginField === undefined
+        ? undefined
+        : validatePluginFieldOptions(options.pluginField),
+    metadata: options.metadata,
+  };
 
   return defineForgeCmsPlugin({
     id: "storyblok",
@@ -177,9 +245,12 @@ export function forgeStoryblokCms(
     supportedFrameworks: ["react", "vue", "solid", "svelte", "web-components"],
 
     emitSchema(component: ContentComponent): CmsArtifact {
-      const { component: componentObject } = toStoryblokComponent(component);
+      const { component: componentObject } = toStoryblokComponent(
+        component,
+        projection,
+      );
       return {
-        fileName: `${component.names.folder}.json`,
+        fileName: `${artifactStem(component)}.json`,
         contents: `${JSON.stringify({ component: componentObject }, undefined, 2)}\n`,
         artifactKind: "schema",
         asset: true,
@@ -192,9 +263,9 @@ export function forgeStoryblokCms(
       context: CmsTargetContext,
     ): CmsArtifact {
       const framework = wrapperFramework(context.framework);
-      const analyzed = toStoryblokComponent(component);
+      const analyzed = toStoryblokComponent(component, projection);
       return {
-        fileName: `${component.names.folder}.${BLOK_WRAPPER_LANG[framework]}`,
+        fileName: `${artifactStem(component)}.${BLOK_WRAPPER_LANG[framework]}`,
         contents: emitStoryblokBlokWrapper(
           analyzed,
           component.names.publicName,
@@ -211,7 +282,7 @@ export function forgeStoryblokCms(
       components: readonly ContentComponent[],
     ): readonly CmsArtifact[] {
       const bloks: StoryblokComponent[] = components.map(
-        (component) => toStoryblokComponent(component).component,
+        (component) => toStoryblokComponent(component, projection).component,
       );
       return [
         {
@@ -230,7 +301,7 @@ export function forgeStoryblokCms(
       const framework = wrapperFramework(context.framework);
       const bloks = components.map((component) => ({
         publicName: component.names.publicName,
-        analyzed: toStoryblokComponent(component),
+        analyzed: toStoryblokComponent(component, projection),
       }));
       return [
         {
@@ -273,6 +344,8 @@ export function forgeStoryblokCmsTargets(
       plugin,
       storyblokRuntime: options.storyblokRuntimes?.[plugin.id as JsxFramework],
       external: options.external,
+      pluginField: options.pluginField,
+      metadata: options.metadata,
     }),
   );
 }

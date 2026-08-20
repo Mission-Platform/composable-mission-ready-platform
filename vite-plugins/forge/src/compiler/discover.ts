@@ -137,6 +137,20 @@ export interface DiscoveredHelperExport {
   sourcePath?: string;
 }
 
+/** A public barrel export whose source is another package rather than local Forge source. */
+export interface DiscoveredExternalExport {
+  /** The package or other external module specifier. */
+  specifier: string;
+  /** The name exposed by the public barrel, or `undefined` for a star export. */
+  exportedName: string | undefined;
+  /** The source module name when the barrel aliases the export. */
+  localName: string | undefined;
+  /** Whether the binding is type-only. */
+  typeOnly: boolean;
+  /** Whether this is an `export *` or `export * as name` declaration. */
+  star: boolean;
+}
+
 function sourceBase(filePath: string): string {
   const fileName = path.basename(filePath);
   if (fileName === 'index.ts' || fileName === 'index.tsx' || fileName === 'index.js' || fileName === 'index.jsx') {
@@ -301,6 +315,34 @@ export function discoverHelperExportsFromGraph(
     helpers.set(key, helper);
   }
   return [...helpers.values()];
+}
+
+/** Discover direct external re-exports so generated framework entries preserve the package public API. */
+export function discoverExternalExportsFromGraph(graph: ForgeFileGraph): DiscoveredExternalExport[] {
+  const entry = graph.nodes.get(graph.entry);
+  if (entry === undefined) {
+    return [];
+  }
+  return entry.exports.flatMap((entryExport) => {
+    if (entryExport.specifier === undefined || entryExport.specifier.startsWith('.')) {
+      return [];
+    }
+    const external = graph.edges.some(
+      (edge) => edge.from === entry.id && edge.specifier === entryExport.specifier && edge.external === true,
+    );
+    if (!external) {
+      return [];
+    }
+    return [
+      {
+        specifier: entryExport.specifier,
+        exportedName: entryExport.exportedName,
+        localName: entryExport.localName,
+        typeOnly: entryExport.typeOnly,
+        star: entryExport.star,
+      },
+    ];
+  });
 }
 
 /**

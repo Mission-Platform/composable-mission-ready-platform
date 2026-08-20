@@ -1,17 +1,22 @@
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 
 import ts from 'typescript';
 
-import { inspectForgeModule } from './ast.js';
+import { parseOxcModule, type OxcParsedModule } from './oxc.js';
 
-import type { ForgeExportFact, ForgeImportFact, ForgeSourceSpan } from './ast.js';
+import type { ForgeExportFact, ForgeImportFact, ForgeSourceSpan, inspectForgeModule } from './ast.js';
+
+export type { ForgeExportFact, ForgeImportFact, ForgeSourceSpan } from './ast.js';
 
 export type ForgeFileKind =
   'entry' | 'component' | 'composable' | 'code' | 'style' | 'folder' | 'asset' | 'declaration';
 
 export interface ForgeFileNode {
   readonly id: string;
+  /** Content fingerprint used to detect edits without relying on timestamps. */
+  readonly fingerprint: string;
   readonly kind: ForgeFileKind;
   readonly exports: readonly ForgeExportFact[];
   readonly imports: readonly ForgeImportFact[];
@@ -32,7 +37,12 @@ export interface ForgeFileEdge {
 }
 
 export type ForgeGraphDiagnosticCode =
-  'missing-entry' | 'missing-file' | 'unsupported-extension' | 'ambiguous-export' | 'cycle';
+  | 'missing-entry'
+  | 'missing-file'
+  | 'unsupported-extension'
+  | 'ambiguous-export'
+  | 'unsupported-authoring-form'
+  | 'cycle';
 
 export interface ForgeGraphDiagnostic {
   readonly code: ForgeGraphDiagnosticCode;
@@ -46,21 +56,50 @@ export interface ForgeFileGraph {
   readonly entry: string;
   readonly nodes: ReadonlyMap<string, ForgeFileNode>;
   readonly edges: readonly ForgeFileEdge[];
+  /** Direct dependencies keyed by importing node. */
+  readonly dependencies: ReadonlyMap<string, readonly string[]>;
+  /** Reverse direct-dependency index keyed by imported node. */
+  readonly reverseDependencies: ReadonlyMap<string, readonly string[]>;
   readonly diagnostics: readonly ForgeGraphDiagnostic[];
 }
+
+export type ForgePathAliases = Readonly<Record<string, string | readonly string[]>>;
 
 export interface ForgeFileGraphOptions {
   readonly entry: string;
   readonly sourceRoot?: string;
+  /** Optional tsconfig used for `baseUrl` and `paths` resolution. */
+  readonly tsconfig?: string;
+  /** Alias configuration that takes precedence over tsconfig paths. */
+  readonly paths?: ForgePathAliases;
+  readonly baseUrl?: string;
 }
 
 const CODE_EXTENSIONS = new Set(['.cjs', '.cts', '.js', '.jsx', '.mjs', '.mts', '.ts', '.tsx']);
 const STYLE_EXTENSIONS = new Set(['.css', '.less', '.sass', '.scss', '.styl']);
-const ASSET_EXTENSIONS = new Set(['.avif', '.gif', '.jpeg', '.jpg', '.png', '.svg', '.webp', '.woff', '.woff2']);
+// Forge Web Script sources are consumed by the dedicated FWS plugin rather
+// than the JavaScript authoring parser, but must remain resolvable when a
+// framework component imports a package façade that uses a local `.fws` graph.
+const ASSET_EXTENSIONS = new Set([
+  '.avif',
+  '.fws',
+  '.gif',
+  '.jpeg',
+  '.jpg',
+  '.png',
+  '.svg',
+  '.webp',
+  '.woff',
+  '.woff2',
+]);
 const PROBE_EXTENSIONS = [...CODE_EXTENSIONS, ...STYLE_EXTENSIONS, ...ASSET_EXTENSIONS];
 
 function canonical(filePath: string): string {
   return path.resolve(filePath);
+}
+
+function fingerprint(source: string | Uint8Array): string {
+  return crypto.createHash('sha256').update(source).digest('hex');
 }
 
 function isDeclaration(filePath: string): boolean {
@@ -75,30 +114,6 @@ function sourceRelativePath(filePath: string, sourceRoot: string): string {
   return path.relative(sourceRoot, filePath).split(path.sep).join('/');
 }
 
-function scriptKindFor(filePath: string): ts.ScriptKind {
-  switch (path.extname(filePath).toLowerCase()) {
-    case '.js':
-    case '.cjs':
-    case '.mjs': {
-      return ts.ScriptKind.JS;
-    }
-    case '.jsx': {
-      return ts.ScriptKind.JSX;
-    }
-    case '.ts':
-    case '.cts':
-    case '.d.ts':
-    case '.d.cts':
-    case '.d.mts':
-    case '.mts': {
-      return ts.ScriptKind.TS;
-    }
-    default: {
-      return ts.ScriptKind.TSX;
-    }
-  }
-}
-
 function isSupportedSource(filePath: string): boolean {
   const extension = extensionOf(filePath);
   return (
@@ -111,6 +126,52 @@ function isSupportedSource(filePath: string): boolean {
 
 function isLocalSpecifier(specifier: string): boolean {
   return specifier.startsWith('.') || specifier.startsWith('@/');
+}
+
+interface AliasConfiguration {
+  readonly baseUrl: string;
+  readonly paths: ForgePathAliases;
+}
+
+function readAliasConfiguration(options: ForgeFileGraphOptions, sourceRoot: string): AliasConfiguration {
+  let baseUrl = canonical(options.baseUrl ?? sourceRoot);
+  let paths: ForgePathAliases = options.paths ?? {};
+  const tsconfigPath = options.tsconfig === undefined ? undefined : canonical(options.tsconfig);
+  if (tsconfigPath !== undefined) {
+    const configured = ts.readConfigFile(tsconfigPath, (fileName) => fs.readFileSync(fileName, 'utf8'));
+    if (configured.error === undefined && configured.config !== undefined) {
+      const compilerOptions = configured.config.compilerOptions ?? {};
+      const configDirectory = path.dirname(tsconfigPath);
+      if (options.baseUrl === undefined && typeof compilerOptions.baseUrl === 'string') {
+        baseUrl = canonical(path.resolve(configDirectory, compilerOptions.baseUrl));
+      }
+      if (options.paths === undefined && compilerOptions.paths !== undefined) {
+        paths = compilerOptions.paths as ForgePathAliases;
+      }
+    }
+  }
+  return { baseUrl, paths };
+}
+
+function aliasTarget(specifier: string, aliases: AliasConfiguration): string | undefined {
+  const matches = Object.keys(aliases.paths)
+    .filter((pattern) => {
+      if (pattern.endsWith('*')) return specifier.startsWith(pattern.slice(0, -1));
+      return pattern === specifier;
+    })
+    .sort((left, right) => right.length - left.length);
+  const pattern = matches[0];
+  if (pattern === undefined) {
+    return specifier.startsWith('@/') ? path.resolve(aliases.baseUrl, specifier.slice(2)) : undefined;
+  }
+  const remainder = pattern.endsWith('*') ? specifier.slice(pattern.length - 1) : '';
+  const target = aliases.paths[pattern];
+  const firstTarget = typeof target === 'string' ? target : target?.[0];
+  return firstTarget === undefined ? undefined : path.resolve(aliases.baseUrl, firstTarget.replaceAll('*', remainder));
+}
+
+function hasAlias(specifier: string, aliases: AliasConfiguration): boolean {
+  return aliasTarget(specifier, aliases) !== undefined;
 }
 
 function isStyleSpecifier(specifier: string): boolean {
@@ -152,7 +213,7 @@ function nodeKind(
   return 'code';
 }
 
-function readSource(filePath: string): ts.SourceFile | undefined {
+function readSource(filePath: string): OxcParsedModule | undefined {
   if (
     !isSupportedSource(filePath) ||
     STYLE_EXTENSIONS.has(extensionOf(filePath)) ||
@@ -161,7 +222,7 @@ function readSource(filePath: string): ts.SourceFile | undefined {
     return undefined;
   }
   const source = fs.readFileSync(filePath, 'utf8');
-  return ts.createSourceFile(filePath, source, ts.ScriptTarget.Latest, true, scriptKindFor(filePath));
+  return parseOxcModule(filePath, source);
 }
 
 function existingFile(candidate: string): string | undefined {
@@ -178,11 +239,9 @@ function existingFile(candidate: string): string | undefined {
 function resolveLocalSpecifier(
   specifier: string,
   from: string,
-  sourceRoot: string,
+  aliases: AliasConfiguration,
 ): { file?: string; unsupported?: string } {
-  const target = specifier.startsWith('@/')
-    ? path.resolve(sourceRoot, specifier.slice(2))
-    : path.resolve(path.dirname(from), specifier);
+  const target = aliasTarget(specifier, aliases) ?? path.resolve(path.dirname(from), specifier);
   const explicitExtension = path.extname(target).length > 0;
   const exact = existingFile(target);
   if (exact !== undefined) {
@@ -214,9 +273,12 @@ function resolveLocalSpecifier(
   return explicitExtension && !isSupportedSource(target) ? { unsupported: target } : {};
 }
 
-function parseModule(filePath: string): ReturnType<typeof inspectForgeModule> | undefined {
-  const sourceFile = readSource(filePath);
-  return sourceFile === undefined ? undefined : inspectForgeModule(sourceFile);
+function parseModule(
+  filePath: string,
+): { facts: OxcParsedModule['facts']; fingerprint: string; parsed: OxcParsedModule } | undefined {
+  const parsed = readSource(filePath);
+  if (parsed === undefined) return undefined;
+  return { facts: parsed.facts, fingerprint: fingerprint(fs.readFileSync(filePath)), parsed };
 }
 
 function edgeRelation(
@@ -252,15 +314,17 @@ function diagnostic(
 export function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGraph {
   const entry = canonical(options.entry);
   const sourceRoot = canonical(options.sourceRoot ?? path.dirname(entry));
+  const aliases = readAliasConfiguration(options, sourceRoot);
   const nodes = new Map<string, ForgeFileNode>();
   const edges: ForgeFileEdge[] = [];
   const diagnostics: ForgeGraphDiagnostic[] = [];
   const visiting: string[] = [];
+  const visitingIndex = new Map<string, number>();
   const cycleKeys = new Set<string>();
 
   if (existingFile(entry) === undefined) {
     diagnostics.push(diagnostic('missing-entry', entry, entry, `Forge graph entry does not exist: ${entry}`));
-    return { entry, nodes, edges, diagnostics };
+    return { entry, nodes, edges, dependencies: new Map(), reverseDependencies: new Map(), diagnostics };
   }
 
   const visit = (filePath: string): void => {
@@ -268,10 +332,18 @@ export function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGr
     if (nodes.has(id)) {
       return;
     }
-    const facts = parseModule(id);
-    if (facts === undefined) {
+    const parsed = parseModule(id);
+    if (parsed === undefined) {
+      const nodeFingerprint = (() => {
+        try {
+          return fingerprint(fs.readFileSync(id));
+        } catch {
+          return '';
+        }
+      })();
       nodes.set(id, {
         id,
+        fingerprint: nodeFingerprint,
         kind: STYLE_EXTENSIONS.has(extensionOf(id))
           ? 'style'
           : ASSET_EXTENSIONS.has(extensionOf(id))
@@ -284,14 +356,35 @@ export function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGr
       });
       return;
     }
+    const facts = parsed.facts;
+    if (parsed.parsed.errors.length > 0) {
+      for (const parseDiagnostic of parsed.parsed.errors) {
+        const start = parseDiagnostic.start;
+        const lineStart = parsed.parsed.source.lastIndexOf('\n', start - 1) + 1;
+        diagnostics.push({
+          code: 'unsupported-authoring-form',
+          message: `Unable to parse ${id}: [OXC] ${parseDiagnostic.message}`,
+          source: id,
+          specifier: '',
+          span: {
+            start,
+            end: parseDiagnostic.end,
+            line: parsed.parsed.source.slice(0, start).split('\n').length,
+            column: start - lineStart + 1,
+          },
+        });
+      }
+    }
     nodes.set(id, {
       id,
+      fingerprint: parsed?.fingerprint ?? '',
       kind: nodeKind(id, entry, facts, sourceRoot),
       exports: facts.exports,
       imports: facts.imports,
       sourceRelativePath: sourceRelativePath(id, sourceRoot),
       frameworkDirective: facts.frameworkDirective,
     });
+    visitingIndex.set(id, visiting.length);
     visiting.push(id);
     const relationships = new Map<string, { importFact?: ForgeImportFact; reExports: ForgeExportFact[] }>();
     for (const importFact of facts.imports) {
@@ -309,7 +402,7 @@ export function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGr
       const importFact = relationship.importFact;
       const exportFacts = relationship.reExports.length === 0 ? [undefined] : relationship.reExports;
       for (const reExport of exportFacts) {
-        const local = isLocalSpecifier(specifier);
+        const local = isLocalSpecifier(specifier) || hasAlias(specifier, aliases);
         const relation = edgeRelation(importFact, reExport, specifier);
         if (!local) {
           edges.push({
@@ -322,7 +415,7 @@ export function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGr
           });
           continue;
         }
-        const resolved = resolveLocalSpecifier(specifier, id, sourceRoot);
+        const resolved = resolveLocalSpecifier(specifier, id, aliases);
         if (resolved.file === undefined) {
           edges.push({
             from: id,
@@ -353,8 +446,9 @@ export function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGr
           resolved: true,
           span: reExport?.span ?? importFact?.span,
         });
-        if (visiting.includes(target)) {
-          const cycle = [...visiting.slice(visiting.indexOf(target)), target].join(' -> ');
+        const cycleStart = visitingIndex.get(target);
+        if (cycleStart !== undefined) {
+          const cycle = [...visiting.slice(cycleStart), target].join(' -> ');
           const key = `${id}:${specifier}`;
           if (!cycleKeys.has(key)) {
             cycleKeys.add(key);
@@ -374,6 +468,7 @@ export function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGr
       }
     }
     visiting.pop();
+    visitingIndex.delete(id);
   };
 
   visit(entry);
@@ -384,6 +479,7 @@ export function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGr
       if (!nodes.has(directory)) {
         nodes.set(directory, {
           id: directory,
+          fingerprint: '',
           kind: 'folder',
           exports: [],
           imports: [],
@@ -425,5 +521,46 @@ export function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGr
   diagnostics.sort((left, right) =>
     `${left.source}:${left.specifier}:${left.code}`.localeCompare(`${right.source}:${right.specifier}:${right.code}`),
   );
-  return { entry, nodes, edges, diagnostics };
+  const dependencies = new Map<string, Set<string>>();
+  const reverseDependencies = new Map<string, Set<string>>();
+  for (const edge of edges) {
+    if (!edge.resolved || edge.to === undefined) continue;
+    const direct = dependencies.get(edge.from) ?? new Set<string>();
+    direct.add(edge.to);
+    dependencies.set(edge.from, direct);
+    const reverse = reverseDependencies.get(edge.to) ?? new Set<string>();
+    reverse.add(edge.from);
+    reverseDependencies.set(edge.to, reverse);
+  }
+  const stableDependencies = new Map<string, readonly string[]>(
+    [...dependencies].map(([from, targets]) => [from, [...targets].sort()] as const),
+  );
+  const stableReverseDependencies = new Map<string, readonly string[]>(
+    [...reverseDependencies].map(([to, dependents]) => [to, [...dependents].sort()] as const),
+  );
+  return {
+    entry,
+    nodes,
+    edges,
+    dependencies: stableDependencies,
+    reverseDependencies: stableReverseDependencies,
+    diagnostics,
+  };
+}
+
+/** Return a stable, sorted transitive dependent closure for watch invalidation. */
+export function collectForgeDependents(graph: ForgeFileGraph, changedFiles: readonly string[]): string[] {
+  const affected = new Set(changedFiles.map((fileName) => canonical(fileName)));
+  const pending = [...affected];
+  while (pending.length > 0) {
+    const current = pending.pop();
+    if (current === undefined) continue;
+    for (const dependent of graph.reverseDependencies.get(current) ?? []) {
+      if (!affected.has(dependent)) {
+        affected.add(dependent);
+        pending.push(dependent);
+      }
+    }
+  }
+  return [...affected].sort();
 }

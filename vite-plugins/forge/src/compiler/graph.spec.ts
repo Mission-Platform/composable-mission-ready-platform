@@ -4,7 +4,7 @@ import path from 'node:path';
 
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { buildForgeFileGraph } from './graph';
+import { buildForgeFileGraph, collectForgeDependents } from './graph';
 
 const temporaryDirectories: string[] = [];
 
@@ -106,6 +106,30 @@ export { useMap } from '../composables';`,
     );
   });
 
+  it('treats package-local Forge Web Script sources as resolvable assets', async () => {
+    const fixture = await createFixture({
+      'components/index.ts': `export { ForgeMap } from './molecules/forge-map';`,
+      'components/molecules/forge-map/index.tsx': `import { encodeBarcode } from '../../../encoder'; export function ForgeMap() { return encodeBarcode('ean8', '96385074'); }`,
+      'encoder.ts': `import './fws/barcode.fws'; export function encodeBarcode() { return undefined; }`,
+      'fws/barcode.fws': 'export fn encode_ean8(value: string) -> string { return value; }',
+    });
+
+    const graph = await buildForgeFileGraph({ entry: fixture.entry, sourceRoot: fixture.root });
+    const fwsPath = path.join(fixture.root, 'fws/barcode.fws');
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.nodes.get(fwsPath)?.kind).toBe('asset');
+    expect(graph.edges).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          to: fwsPath,
+          specifier: './fws/barcode.fws',
+          resolved: true,
+        }),
+      ]),
+    );
+  });
+
   it('reports unresolved local imports with source and specifier context', async () => {
     const fixture = await createFixture({
       'components/index.ts': `import '@/utils/missing';\nimport './unsupported.bin';\nexport const ForgeMap = 1;`,
@@ -144,6 +168,53 @@ export { useMap } from '../composables';`,
       expect.arrayContaining([
         expect.objectContaining({ code: 'ambiguous-export', specifier: 'duplicate' }),
         expect.objectContaining({ code: 'cycle' }),
+      ]),
+    );
+  });
+
+  it('indexes direct and transitive dependents and fingerprints source content', async () => {
+    const fixture = await createFixture({
+      'components/index.ts': `export * from './a';`,
+      'components/a.ts': `export * from './b';`,
+      'components/b.ts': `export const value = 1;`,
+      'components/unrelated.ts': `export const other = 2;`,
+    });
+
+    const first = buildForgeFileGraph({ entry: fixture.entry, sourceRoot: fixture.root });
+    const b = path.join(fixture.root, 'components/b.ts');
+    const a = path.join(fixture.root, 'components/a.ts');
+    expect(first.nodes.get(b)?.fingerprint).toHaveLength(64);
+    expect(first.reverseDependencies.get(b)).toEqual([a]);
+    expect(collectForgeDependents(first, [b])).toEqual([b, a, fixture.entry].sort());
+
+    await writeFile(b, 'export const value = 2;');
+    const second = buildForgeFileGraph({ entry: fixture.entry, sourceRoot: fixture.root });
+    expect(second.nodes.get(b)?.fingerprint).not.toBe(first.nodes.get(b)?.fingerprint);
+    expect(second.nodes.get(path.join(fixture.root, 'components/unrelated.ts'))?.fingerprint).toBe(
+      first.nodes.get(path.join(fixture.root, 'components/unrelated.ts'))?.fingerprint,
+    );
+  });
+
+  it('resolves configured tsconfig path aliases', async () => {
+    const fixture = await createFixture({
+      'tsconfig.json': JSON.stringify({ compilerOptions: { baseUrl: '.', paths: { '@shared/*': ['shared/*'] } } }),
+      'components/index.ts': `export { value } from '@shared/value';`,
+      'shared/value.ts': `export const value = 1;`,
+    });
+
+    const graph = buildForgeFileGraph({
+      entry: fixture.entry,
+      sourceRoot: fixture.root,
+      tsconfig: path.join(fixture.root, 'tsconfig.json'),
+    });
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.edges).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          specifier: '@shared/value',
+          to: path.join(fixture.root, 'shared/value.ts'),
+          resolved: true,
+        }),
       ]),
     );
   });

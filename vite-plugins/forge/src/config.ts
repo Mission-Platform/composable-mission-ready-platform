@@ -7,6 +7,8 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { mergeConfig, type Plugin, type UserConfig } from 'vite';
 import solidPlugin from 'vite-plugin-solid';
 
+import { forgeServiceLifecyclePlugin, validateForgeBuildPlugin } from './build-integration.js';
+import { createForgeCompilerService, type ForgeCompilerService } from './compiler/service.js';
 import { generateHookLibrarySources, hookLibraryDtsPlugin } from './generate-hooks.js';
 import {
   generateFrameworkSources,
@@ -16,6 +18,7 @@ import {
 } from './generate.js';
 
 import type { FrameworkOutputPlugin, JsxFramework } from '@mission-platform/forge-plugin-api';
+import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 
 export function reactJsxPlugin(): Plugin {
   return {
@@ -183,12 +186,34 @@ export interface JsxLibraryConfigOptions {
   external?: string[];
   /** Extra Vite configuration overrides to merge. */
   overrides?: UserConfig;
+  /** Persistent service shared by component and hook helpers in one build session. */
+  service?: ForgeCompilerService;
+  /** Native router target selected independently from the framework target. */
+  router?: RouterPluginSelection;
+  /** Router targets available for id-based selection. */
+  routerPlugins?: readonly RouterOutputPlugin[];
+  /** Conditions forwarded to the selected router target. */
+  routerConditions?: readonly string[];
 }
 
 export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig {
-  const { rootDir, plugin, name, componentsModule, useEntryDts, declarationModule, external = [], overrides } = options;
+  const {
+    rootDir,
+    plugin,
+    name,
+    componentsModule,
+    useEntryDts,
+    declarationModule,
+    external = [],
+    overrides,
+    router,
+    routerPlugins,
+    routerConditions,
+  } = options;
+  validateForgeBuildPlugin(plugin, 'vite');
+  const service = options.service ?? createForgeCompilerService();
 
-  const framework = plugin.id;
+  const framework = plugin.id as JsxFramework;
   const cacheName = `${path.basename(rootDir)}-${framework}`;
   const generatedDir = path.join(rootDir, 'node_modules/.cache', cacheName);
 
@@ -212,6 +237,11 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
     outDir: generatedDir,
     // Keep the neutral `Forge` prefix on the public API (do not strip it).
     stripPrefix: '',
+    service,
+    router,
+    routerPlugins,
+    routerConditions,
+    rejectFixturePlaceholder: true,
   });
 
   const stagePlugins =
@@ -264,7 +294,12 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
           outDir: `dist/${framework}`,
           cssCodeSplit: true,
         },
-        plugins: [...stagePlugins, jsxComponentsCssImportPlugin(), dtsPlugin],
+        plugins: [
+          forgeServiceLifecyclePlugin({ service, disposeService: options.service === undefined }),
+          ...stagePlugins,
+          jsxComponentsCssImportPlugin(),
+          dtsPlugin,
+        ],
       },
       overrides ?? {},
     ),
@@ -284,13 +319,33 @@ export interface JsxHookLibraryConfigOptions {
   external?: string[];
   /** Extra Vite configuration overrides to merge. */
   overrides?: UserConfig;
+  /** Persistent service shared by component and hook helpers in one build session. */
+  service?: ForgeCompilerService;
+  /** Native router target selected independently from the framework target. */
+  router?: RouterPluginSelection;
+  /** Router targets available for id-based selection. */
+  routerPlugins?: readonly RouterOutputPlugin[];
+  /** Conditions forwarded to the selected router target. */
+  routerConditions?: readonly string[];
 }
 
 export function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions): UserConfig {
-  const { rootDir, plugin, name, entryModule, external = [], overrides } = options;
+  const {
+    rootDir,
+    plugin,
+    name,
+    entryModule,
+    external = [],
+    overrides,
+    router,
+    routerPlugins,
+    routerConditions,
+  } = options;
   const resolvedEntry = entryModule ?? path.resolve(rootDir, 'src/index.ts');
 
   if (plugin !== undefined) {
+    validateForgeBuildPlugin(plugin, 'vite');
+    const service = options.service ?? createForgeCompilerService();
     const framework = plugin.id as JsxFramework;
     const cacheName = `${path.basename(rootDir)}-${framework}`;
     const generatedDir = path.join(rootDir, 'node_modules/.cache', cacheName);
@@ -298,6 +353,11 @@ export function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions)
       plugin,
       entryModule: resolvedEntry,
       outDir: generatedDir,
+      service,
+      router,
+      routerPlugins,
+      routerConditions,
+      rejectFixturePlaceholder: true,
     });
     const frameworkSuffix = plugin.displayNameSuffix ?? plugin.id;
     const frameworkExternals = plugin.runtimeExternals ?? [];
@@ -313,6 +373,7 @@ export function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions)
         {
           build: { outDir: `dist/${framework}` },
           plugins: [
+            forgeServiceLifecyclePlugin({ service, disposeService: options.service === undefined }),
             ...(plugin.build.vite?.({
               rootDir,
               generatedDirectory: generatedDir,

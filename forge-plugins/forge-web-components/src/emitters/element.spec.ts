@@ -73,10 +73,64 @@ describe("the element class synthesis", () => {
     expect(source).toContain(
       "export class ForgeEmptyElement extends ForgeElement {",
     );
-    expect(source).toContain("return html`<slot></slot>`;");
+    expect(source).toContain(
+      "return new DomTemplateResult(__mpDomDefinition, []);",
+    );
+    expect(source).toContain('document.createElement("slot")');
     expect(source).toContain(
       "customElements.define('forge-empty', ForgeEmptyElement);",
     );
+  });
+
+  it("emits customized built-ins for supported native roots", () => {
+    for (const [root, constructor] of [
+      ["div", "HTMLDivElement"],
+      ["span", "HTMLSpanElement"],
+      ["p", "HTMLParagraphElement"],
+      ["h1", "HTMLHeadingElement"],
+      ["h6", "HTMLHeadingElement"],
+    ] as const) {
+      const source = synthesise(
+        semanticModule({
+          component: component({
+            name: "ForgeFixture",
+            parameter: "properties",
+            returnNode: element(root),
+          }),
+        }),
+      );
+
+      expect(source).toContain(
+        `export class ForgeFixtureElement extends ForgeElementMixin(${constructor}) {`,
+      );
+      expect(source).toContain(
+        "customElements.define('forge-fixture', ForgeFixtureElement, { extends: '" +
+          root +
+          "' });",
+      );
+      expect(source).toContain('static readonly shadow = {mode:"open"};');
+      expect(source).toContain("static readonly internals = {attach:true};");
+    }
+  });
+
+  it("keeps unsupported roots autonomous", () => {
+    const source = synthesise(
+      semanticModule({
+        component: component({
+          name: "ForgeFixture",
+          parameter: "properties",
+          returnNode: element("article"),
+        }),
+      }),
+    );
+
+    expect(source).toContain(
+      "export class ForgeFixtureElement extends ForgeElement {",
+    );
+    expect(source).toContain(
+      "customElements.define('forge-fixture', ForgeFixtureElement);",
+    );
+    expect(source).not.toContain("{ extends: 'article' }");
   });
 
   it("types a reactive property from its declared prop type", () => {
@@ -95,7 +149,10 @@ describe("the element class synthesis", () => {
 
     expect(source).toContain("  declare label: string;");
     expect(source).toContain("    label: {},");
-    expect(source).toContain("return html`<span>${this.label}</span>`;");
+    expect(source).toContain(
+      "return new DomTemplateResult(__mpDomDefinition, [this.label]);",
+    );
+    expect(source).toContain('document.createElement("span")');
   });
 
   it("widens an optional prop with undefined", () => {
@@ -211,7 +268,7 @@ describe("the element class synthesis", () => {
     // A field initializer, never a render-head statement.
     expect(source).not.toContain("    const generatedId = useId();");
     expect(source).toContain(
-      "return html`<input id=${this.generatedId}></input>`;",
+      "return new DomTemplateResult(__mpDomDefinition, [this.generatedId]);",
     );
   });
 
@@ -230,7 +287,7 @@ describe("the element class synthesis", () => {
     );
 
     expect(source).not.toContain("children:");
-    expect(source).toContain("${this.children}");
+    expect(source).toContain('{ kind: "node"');
   });
 
   it("types a state field from an explicit useState type argument", () => {
@@ -395,10 +452,11 @@ describe("the element class synthesis", () => {
       }),
     );
 
+    expect(source).toContain("hotTemplate: (document) => {");
+    expect(source).toContain('document.createElement("template")');
     expect(source).toContain(
-      "const __mpStaticTpl_0 = html`<span>static</span>`;",
+      "return new DomTemplateResult(__mpDomDefinition, []);",
     );
-    expect(source).toContain("    return __mpStaticTpl_0;");
   });
 
   it("prints derived getters, ref cells and lifecycle callbacks", () => {
@@ -430,8 +488,8 @@ describe("the element class synthesis", () => {
     expect(source).toContain("    this.__mpCleanup0 = (() => { start(); })();");
     expect(source).toContain("  disconnectedCallback() {");
     expect(source).toContain("    this.__mpCleanup0?.();");
-    // `HTMLElement` declares no `disconnectedCallback`, so there is nothing to chain to.
-    expect(source).not.toContain("super.disconnectedCallback();");
+    expect(source).toContain("  updatedCallback() {");
+    expect(source).toContain("    super.disconnectedCallback();");
     expect(source).not.toMatch(/\bany\b/u);
   });
 
@@ -520,7 +578,9 @@ describe("the element class synthesis", () => {
     // The pattern itself stays the render head's binding, so its default holds…
     expect(source).toContain("    const { src, alt = '' } = this;");
     // …and the bare reads are left bare, resolving to that local.
-    expect(source).toContain("return html`<img src=${src} alt=${alt}></img>`;");
+    expect(source).toContain(
+      "return new DomTemplateResult(__mpDomDefinition, [src, alt]);",
+    );
   });
 
   it("replays a body props pattern inside a lifted effect and memo", () => {
@@ -571,7 +631,7 @@ describe("the element class synthesis", () => {
     // No body statement carries the parameter pattern, so the head is given one.
     expect(source).toContain("    const { label, size = 'md' } = this;");
     expect(source).toContain(
-      "return html`<span data-size=${size}>${label}</span>`;",
+      "return new DomTemplateResult(__mpDomDefinition, [size, label]);",
     );
   });
 
@@ -594,7 +654,9 @@ describe("the element class synthesis", () => {
     expect(source).toContain("    range: {},");
     expect(source).not.toContain("    start: {},");
     expect(source).toContain("    const { range: { start, end = 0 } } = this;");
-    expect(source).toContain("return html`<span>${start}</span>`;");
+    expect(source).toContain(
+      "return new DomTemplateResult(__mpDomDefinition, [start]);",
+    );
   });
 
   it("seeds a ref that reads a destructured prop in setup, with the pattern replayed", () => {
@@ -783,7 +845,8 @@ describe("the element class synthesis", () => {
     expect(source).toContain("    (() => { this.scrollToBottom(); })();");
     // …and the render head no longer declares it.
     expect(source).not.toContain("    const scrollToBottom =");
-    expect(source).toContain("@scroll=${this.scrollToBottom}");
+    expect(source).toContain('name: "@scroll"');
+    expect(source).toContain("this.scrollToBottom");
   });
 
   it("promotes a pure render-head derivation read by a lifted scope to a getter", () => {

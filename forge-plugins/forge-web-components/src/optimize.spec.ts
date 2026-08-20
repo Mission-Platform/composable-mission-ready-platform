@@ -89,6 +89,22 @@ describe("the Web-Components optimization phase", () => {
     expect(plan.appliedOptimizations).toEqual(ALL_PASSES);
   });
 
+  it("preserves host and platform capability metadata", () => {
+    const plan = optimize(
+      hostModule({
+        component: component({
+          name: "ForgeFixture",
+          returnNode: element("div"),
+        }),
+      }),
+    );
+
+    expect(plan.host.kind).toBe("customized-built-in");
+    expect(plan.host.baseTag).toBe("div");
+    expect(plan.shadow).toEqual({ mode: "open" });
+    expect(plan.internals).toEqual({ attach: true });
+  });
+
   it("is idempotent in both the plan and the recorded passes", () => {
     const once = optimize(
       hostModule({
@@ -190,9 +206,11 @@ describe("the Web-Components optimization phase", () => {
       neutral: { staticMarking: false },
     });
 
-    expect(hoisted.template.hoisted).toEqual([
-      { name: "__mpStaticTpl_0", template: "<span>static</span>" },
-    ]);
+    expect(hoisted.template.hoisted).toHaveLength(1);
+    expect(hoisted.template.hoisted[0]?.name).toBe("__mpStaticTpl_0");
+    expect(hoisted.template.hoisted[0]?.template).toContain(
+      'document.createElement("span")',
+    );
     expect(hoisted.appliedOptimizations).toContain(
       WEB_COMPONENTS_OPTIMIZATIONS.hoistStaticTemplateParts,
     );
@@ -253,16 +271,17 @@ describe("the Web-Components optimization phase", () => {
       }),
     );
 
-    // `nothing` belongs to the structural header contract; the pass prunes
-    // only `unsafeHtml` and unreferenced local JSX types.
+    // The direct-DOM result and `nothing` remain structural; compatibility
+    // `html` is imported only when retained legacy code references it.
     expect(plain.runtimeImports.values).toEqual([
       "ForgeElement",
-      "html",
+      "DomTemplateResult",
       "nothing",
     ]);
     expect(conditional.runtimeImports.values).toEqual([
       "ForgeElement",
-      "html",
+      "DomTemplateResult",
+      "dynamicElement",
       "nothing",
     ]);
   });

@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
@@ -16,6 +16,10 @@ export interface ForgeBuildOptions {
   readonly runCommand?: (context: ForgeBuildCommandContext) => Promise<void>;
   readonly command?: readonly string[];
   readonly env?: NodeJS.ProcessEnv;
+  /** Abort an in-flight native build and remove only its stage. */
+  readonly signal?: AbortSignal;
+  /** Maximum duration of the native build, in milliseconds. */
+  readonly timeoutMs?: number;
 }
 
 export interface ForgeBuildCommandContext {
@@ -23,6 +27,15 @@ export interface ForgeBuildCommandContext {
   readonly stageRoot: string;
   readonly command: readonly string[];
   readonly env: NodeJS.ProcessEnv;
+  readonly signal: AbortSignal;
+}
+
+export interface ForgeStageManifest {
+  readonly version: 1;
+  readonly target: ForgeBuildSelection;
+  readonly complete: true;
+  readonly entries: readonly string[];
+  readonly artifacts: readonly { readonly fileName: string; readonly hash: string; readonly size: number }[];
 }
 
 export interface BuildPromotion {
@@ -80,11 +93,91 @@ async function removeStage(packageRoot: string, stageRoot: string): Promise<void
   await fs.rm(stageRoot, { recursive: true, force: true });
 }
 
-async function assertCompleteStage(stageRoot: string): Promise<string> {
+const STAGE_MANIFEST = '.forge-build-manifest.json';
+const ENTRY_NAMES = ['index.js', 'index.mjs', 'index.cjs', 'index.ts', 'index.tsx', 'index.d.ts'];
+
+function fileHash(contents: Buffer): string {
+  return createHash('sha256').update(contents).digest('hex');
+}
+
+async function collectStageFiles(directory: string, prefix = ''): Promise<ForgeStageManifest['artifacts']> {
+  const artifacts: ForgeStageManifest['artifacts'] = [];
+  for (const entry of await fs.readdir(directory, { withFileTypes: true })) {
+    const fileName = prefix === '' ? entry.name : `${prefix}/${entry.name}`;
+    const fullPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      artifacts.push(...(await collectStageFiles(fullPath, fileName)));
+      continue;
+    }
+    if (fileName === STAGE_MANIFEST) continue;
+    const contents = await fs.readFile(fullPath);
+    artifacts.push({ fileName, hash: fileHash(contents), size: contents.byteLength });
+  }
+  return artifacts;
+}
+
+async function validateForgeArtifactManifests(stageRoot: string, target: ForgeBuildSelection): Promise<void> {
+  const manifests = (await collectStageFiles(stageRoot)).filter((artifact) =>
+    artifact.fileName.endsWith('.forge-artifact-manifest.json'),
+  );
+  for (const artifact of manifests) {
+    const manifestPath = path.join(stageRoot, artifact.fileName);
+    const manifest = JSON.parse(await fs.readFile(manifestPath, 'utf8')) as {
+      version?: number;
+      targetId?: string;
+      complete?: boolean;
+      entries?: readonly string[];
+    };
+    if (
+      manifest.version !== 1 ||
+      manifest.complete !== true ||
+      !Array.isArray(manifest.entries) ||
+      manifest.entries.length === 0 ||
+      (target !== 'all' && manifest.targetId !== target)
+    ) {
+      throw new Error(`Forge artifact manifest is incomplete or targets the wrong output: ${manifestPath}`);
+    }
+  }
+}
+
+async function assertCompleteStage(stageRoot: string, target: ForgeBuildSelection): Promise<string> {
   const stagedDist = path.join(stageRoot, 'dist');
-  const entries = await fs.readdir(stagedDist);
+  const entries = await fs.readdir(stagedDist).catch(() => []);
   if (entries.length === 0) {
     throw new Error(`Forge build stage is empty: ${stagedDist}`);
+  }
+  const expectedRoot = target === 'all' || target === 'forge' ? stagedDist : path.join(stagedDist, target);
+  const expectedEntries = await fs.readdir(expectedRoot, { withFileTypes: true }).catch(() => []);
+  if (expectedEntries.length === 0) {
+    throw new Error(`Forge build stage is missing expected target output "${target}": ${expectedRoot}`);
+  }
+  if (target !== 'all') {
+    const hasEntry = expectedEntries.some((entry) => !entry.isDirectory() && ENTRY_NAMES.includes(entry.name));
+    if (!hasEntry) {
+      throw new Error(`Forge build stage is missing the expected ${target} entry (index.*): ${expectedRoot}`);
+    }
+  }
+  if (target === 'all') {
+    const hasEntry = (await collectStageFiles(stagedDist)).some((artifact) =>
+      ENTRY_NAMES.includes(path.basename(artifact.fileName)),
+    );
+    if (!hasEntry) throw new Error(`Forge aggregate stage has no generated entry: ${stagedDist}`);
+  }
+  await validateForgeArtifactManifests(stagedDist, target);
+  const artifacts = await collectStageFiles(stagedDist);
+  const manifest: ForgeStageManifest = {
+    version: 1,
+    target,
+    complete: true,
+    entries: artifacts
+      .filter((artifact) => ENTRY_NAMES.includes(path.basename(artifact.fileName)))
+      .map((artifact) => artifact.fileName),
+    artifacts,
+  };
+  await fs.writeFile(path.join(stagedDist, STAGE_MANIFEST), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+  const parsed = JSON.parse(await fs.readFile(path.join(stagedDist, STAGE_MANIFEST), 'utf8')) as ForgeStageManifest;
+  if (parsed.version !== 1 || parsed.target !== target || parsed.complete !== true || parsed.entries.length === 0) {
+    throw new Error(`Forge build stage manifest is incomplete: ${path.join(stagedDist, STAGE_MANIFEST)}`);
   }
   return stagedDist;
 }
@@ -165,7 +258,7 @@ export async function promoteTarget(options: {
 }): Promise<BuildPromotion> {
   const { packageRoot, stageRoot, target } = options;
   assertSafeStageRoot(packageRoot, stageRoot);
-  const stagedDist = await assertCompleteStage(stageRoot);
+  const stagedDist = await assertCompleteStage(stageRoot, target);
   const destination = path.join(packageRoot, 'dist');
   const promotionRoot = await fs.mkdtemp(path.join(packageRoot, '.forge-promotion-'));
   const promotionDist = path.join(promotionRoot, 'dist');
@@ -199,7 +292,7 @@ export async function promoteAggregate(options: {
 }): Promise<BuildPromotion> {
   const { packageRoot, stageRoot } = options;
   assertSafeStageRoot(packageRoot, stageRoot);
-  const stagedDist = await assertCompleteStage(stageRoot);
+  const stagedDist = await assertCompleteStage(stageRoot, 'all');
   const destination = path.join(packageRoot, 'dist');
   await atomicReplaceDirectory(stagedDist, destination);
   return { stagedPath: stagedDist, destinationPath: destination, replaceMode: 'aggregate' };
@@ -228,18 +321,44 @@ function commandEnvironment(options: ForgeBuildOptions, stageRoot: string): Node
 
 async function executeCommand(context: ForgeBuildCommandContext): Promise<void> {
   const [executable, ...arguments_] = context.command;
+  if (executable === undefined) throw new Error('Forge build command must not be empty.');
   await new Promise<void>((resolve, reject) => {
+    let settled = false;
+    let killTimer: ReturnType<typeof setTimeout> | undefined;
     const child = spawn(executable, arguments_, {
       cwd: context.packageRoot,
       env: context.env,
       stdio: 'inherit',
     });
-    child.once('error', reject);
+    const finish = (error?: Error): void => {
+      if (settled) return;
+      settled = true;
+      if (killTimer !== undefined) clearTimeout(killTimer);
+      context.signal.removeEventListener('abort', abort);
+      if (error === undefined) resolve();
+      else reject(error);
+    };
+    const abort = (): void => {
+      child.kill('SIGTERM');
+      killTimer = setTimeout(() => child.kill('SIGKILL'), 2_000);
+      if (settled) return;
+      settled = true;
+      context.signal.removeEventListener('abort', abort);
+      reject(new Error('Forge build was cancelled.'));
+    };
+    if (context.signal.aborted) {
+      abort();
+      return;
+    }
+    context.signal.addEventListener('abort', abort, { once: true });
+    child.once('error', (error) => finish(error));
     child.once('exit', (code, signal) => {
+      if (killTimer !== undefined) clearTimeout(killTimer);
+      if (settled) return;
       if (code === 0) {
-        resolve();
+        finish();
       } else {
-        reject(
+        finish(
           new Error(`Forge build failed${signal === null ? ` with exit code ${code}` : ` with signal ${signal}`}`),
         );
       }
@@ -251,24 +370,38 @@ async function executeCommand(context: ForgeBuildCommandContext): Promise<void> 
 export async function runForgeBuild(options: ForgeBuildOptions): Promise<BuildPromotion> {
   const packageRoot = path.resolve(options.packageRoot);
   const stageRoot = path.resolve(options.stageRoot);
+  const target = normalizeForgeBuildTarget(options.target);
   assertSafeStageRoot(packageRoot, stageRoot);
   await removeStage(packageRoot, stageRoot);
   await fs.mkdir(stageRoot, { recursive: true });
   const command = options.command ?? ['pnpm', 'exec', 'tsdown'];
+  const controller = new AbortController();
+  const abortParent = (): void => controller.abort();
+  options.signal?.addEventListener('abort', abortParent, { once: true });
+  const timeout = options.timeoutMs === undefined ? undefined : setTimeout(() => controller.abort(), options.timeoutMs);
   const context: ForgeBuildCommandContext = {
     packageRoot,
     stageRoot,
     command,
-    env: commandEnvironment(options, stageRoot),
+    env: commandEnvironment({ ...options, target }, stageRoot),
+    signal: controller.signal,
   };
 
   try {
-    await (options.runCommand ?? executeCommand)(context);
-    if (options.target === 'all') {
+    if (controller.signal.aborted) throw new Error('Forge build was cancelled.');
+    const buildPromise = (options.runCommand ?? executeCommand)(context);
+    await new Promise<void>((resolve, reject) => {
+      const onAbort = (): void => reject(new Error('Forge build was cancelled.'));
+      controller.signal.addEventListener('abort', onAbort, { once: true });
+      buildPromise.then(resolve, reject).finally(() => controller.signal.removeEventListener('abort', onAbort));
+    });
+    if (target === 'all') {
       return await promoteAggregate({ packageRoot, stageRoot });
     }
-    return await promoteTarget({ packageRoot, stageRoot, target: options.target });
+    return await promoteTarget({ packageRoot, stageRoot, target });
   } finally {
+    if (timeout !== undefined) clearTimeout(timeout);
+    options.signal?.removeEventListener('abort', abortParent);
     await removeStage(packageRoot, stageRoot);
   }
 }

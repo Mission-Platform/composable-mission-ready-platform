@@ -24,6 +24,32 @@ Value handling:
 The generated file is a build artefact — add it to `.gitignore` /
 `.prettierignore` rather than committing it.
 
+The central Forge component contract lives in
+`packages/tokens/tokens/component.tokens.json`. Component overrides use the
+same stable path below the `component` namespace, so Storybook and consuming
+applications can restyle a component without changing its implementation:
+
+```jsonc
+{
+  "component": {
+    "button": {
+      "primary": {
+        "background": {
+          "hover": {
+            "$value": { "light": "#153fd1", "dark": "#9db0ff" },
+          },
+        },
+      },
+    },
+  },
+}
+```
+
+The path maps to `--mp-component-button-primary-background-hover`. Keep
+component names, variants, slots, and state names in kebab-case and override
+only documented leaves when matching the Figma contract. The schema accepts
+additional nested component paths for forward-compatible consumer contracts.
+
 ## Usage
 
 ```ts
@@ -81,6 +107,15 @@ so the transform ignores it):
   // Relative path from the override document to the schema; adjust the depth to
   // your repository layout, or point at the published file under node_modules.
   "$schema": "../../../vite-plugins/token-overrides/schema/token-overrides.schema.json",
+  "component": {
+    "button": {
+      "primary": {
+        "background": {
+          "hover": { "$value": { "light": "#153fd1", "dark": "#9db0ff" } },
+        },
+      },
+    },
+  },
   "color": {
     "primary": {
       "default": { "$value": { "light": "#8b7ff0", "dark": "#a99cf5" } },

@@ -100,6 +100,107 @@ describe('framework output plugin contracts', () => {
     expect(modules[0]).toBe(modules[1]);
   });
 
+  it('rejects a missing named component before target lowering', () => {
+    const phases: string[] = [];
+    const plugin: FrameworkOutputPlugin = {
+      ...fixtureFramework('missing-component-fixture'),
+      lower(ir, context) {
+        phases.push('lower');
+        return { framework: context.framework, module: ir, context };
+      },
+    };
+
+    expect(() =>
+      createCompilerPipeline().compile(
+        {
+          source: 'export function Available() { return <div />; }',
+          fileName: 'missing-component.tsx',
+          moduleKind: 'component',
+          componentName: 'Requested',
+        },
+        plugin,
+      ),
+    ).toThrow(/FORGE_COMPONENT_NOT_FOUND/);
+    expect(phases).toEqual([]);
+  });
+
+  it('stops after a lowering error without optimizing or generating output', () => {
+    const phases: string[] = [];
+    const plugin: FrameworkOutputPlugin = {
+      ...fixtureFramework('lowering-error-fixture'),
+      lower(ir, context) {
+        phases.push('lower');
+        return {
+          framework: context.framework,
+          module: ir,
+          context,
+          diagnostics: [
+            {
+              phase: 'generation',
+              severity: 'error',
+              code: 'FORGE_FIXTURE_LOWERING_ERROR',
+              message: 'The fixture cannot lower this module.',
+              fileName: ir.fileName,
+            },
+          ],
+        };
+      },
+      optimize(intentions) {
+        phases.push('optimize');
+        return intentions;
+      },
+      generate() {
+        phases.push('generate');
+        return { code: 'should not be emitted', lang: 'ts' };
+      },
+    };
+
+    expect(() =>
+      createCompilerPipeline().compile(
+        {
+          source: 'export const fixture = true;',
+          fileName: 'lowering-error.tsx',
+          moduleKind: 'composable',
+        },
+        plugin,
+      ),
+    ).toThrow(/FORGE_FIXTURE_LOWERING_ERROR/);
+    expect(phases).toEqual(['lower']);
+  });
+
+  it('preserves successful phase diagnostics without duplicating forwarded records', () => {
+    const warning = {
+      phase: 'optimization' as const,
+      severity: 'warning' as const,
+      code: 'FORGE_FIXTURE_WARNING',
+      message: 'The fixture used a conservative optimization.',
+      fileName: 'diagnostics.tsx',
+    };
+    const plugin: FrameworkOutputPlugin = {
+      ...fixtureFramework('diagnostic-fixture'),
+      lower(ir, context) {
+        return { framework: context.framework, module: ir, context, diagnostics: [warning] };
+      },
+      optimize(intentions) {
+        return intentions;
+      },
+      generate() {
+        return { code: 'export const fixture = true;', lang: 'ts', diagnostics: [warning] };
+      },
+    };
+
+    const result = createCompilerPipeline().compile(
+      {
+        source: 'export const fixture = true;',
+        fileName: 'diagnostics.tsx',
+        moduleKind: 'composable',
+      },
+      plugin,
+    );
+
+    expect(result.diagnostics).toEqual([warning]);
+  });
+
   it('compiles through an external plugin and preserves open output languages', () => {
     const plugin: FrameworkOutputPlugin = {
       id: 'external-fixture',

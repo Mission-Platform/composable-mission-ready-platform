@@ -1,38 +1,29 @@
 /**
  * Stage-1 driver + declaration synthesis for a neutral **hook library**.
  *
- * A hook library (e.g. `@mission-platform/rxjs`, `@mission-platform/d3`) is a
- * write-once package of composables authored against `@mission-platform/forge`'s
- * React-style hooks, re-exported from a single barrel (`src/index.ts`) — the
- * hook counterpart of the components barrel {@link generateFrameworkSources}
- * consumes. {@link generateHookLibrarySources} reads that barrel, compiles every
- * re-exported module to the target framework with {@link compileHookModule}
- * (framework-neutral *pure* modules — those that never import the neutral
- * package — are copied verbatim), writes them as a flat generated tree plus a
- * public entry re-exporting the barrel's API, and returns that entry path so it
- * can be handed straight to Vite's `lib.entry`. Stage 2 (the framework's own
- * Vite plugins) then compiles that tree natively.
- *
- * Because the generated tree is not a source file `tsc` sees, no declarations
- * are emitted for it by the framework's Stage-2 bundler. {@link
- * hookLibraryDtsPlugin} fills that gap as a post-build step: it runs the
- * TypeScript compiler API over the generated tree and emits **genuine,
- * per-framework** declarations into the build's own `dist/<framework>` — so the
- * React build gets declarations typed against React's hooks and the Vue build
- * gets declarations whose composables return Vue `Ref`s, rather than every
- * framework sharing one common (neutral) declaration.
+ * Hook barrels are inspected through the canonical Forge graph so nested,
+ * aliased, multiline, and type-only exports use the same facts as component
+ * discovery.
  */
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import ts from 'typescript';
 
 import { LOCAL_EFFECT_FILE, LOCAL_EFFECT_MODULE, localEffectModuleSource, readNeutralImports } from './compiler/ast.js';
-import { compileHookModule } from './compiler/compile.js';
 import { type DiscoveredHelperExport } from './compiler/discover.js';
-import { parseForgeSource } from './compiler/frontends.js';
+import { createForgeGenerationContext, type ForgeGenerationContext } from './compiler/generation-context.js';
 
-import type { FrameworkOutputPlugin, JsxFramework } from '@mission-platform/forge-plugin-api';
+import type {
+  ForgeExportFact,
+  ForgeFileGraph,
+  ForgeFileNode,
+  ForgeGraphDiagnostic,
+  ForgePathAliases,
+} from './compiler/graph.js';
+import type { ForgeCompilerService } from './compiler/service.js';
+import type { CompilerDiagnostic, FrameworkOutputPlugin, JsxFramework } from '@mission-platform/forge-plugin-api';
+import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 import type { Plugin } from 'vite';
 
 /** Options for {@link generateHookLibrarySources}. */
@@ -43,112 +34,125 @@ export interface GenerateHookLibrarySourcesOptions {
   entryModule: string;
   /** Absolute path of the directory the generated sources + entry are written to. */
   outDir: string;
+  /** Optional source root used for tsconfig paths and workspace aliases. */
+  sourceRoot?: string;
+  /** Optional tsconfig used to resolve hook barrel aliases. */
+  tsconfig?: string;
+  /** Explicit aliases used in addition to relative imports. */
+  paths?: ForgePathAliases;
+  /** Receives graph diagnostics before generation fails on an incomplete graph. */
+  diagnostics?: ForgeGraphDiagnostic[];
+  /** Persistent service reused by component and hook generation in one build session. */
+  service?: ForgeCompilerService;
+  /** Receives target compiler diagnostics in addition to graph diagnostics. */
+  compilerDiagnostics?: CompilerDiagnostic[];
+  /** Native router target selected independently from the framework target. */
+  router?: RouterPluginSelection;
+  /** Router targets available for id-based selection. */
+  routerPlugins?: readonly RouterOutputPlugin[];
+  /** Conditions forwarded to the selected router target. */
+  routerConditions?: readonly string[];
+  /** Reject test-fixture output when invoked from a production build driver. */
+  rejectFixturePlaceholder?: boolean;
 }
 
-/** The extensions a re-exported module's source may be authored under. */
+/** The extensions supported by generated hook source modules. */
 const SOURCE_EXTENSIONS = ['js', 'jsx', 'ts', 'tsx'] as const;
 
-interface HookReExport {
-  values: string[];
-  types: string[];
-  from: string;
-  exportAll: boolean;
+function graphTarget(graph: ForgeFileGraph, node: ForgeFileNode, fact: ForgeExportFact): ForgeFileNode | undefined {
+  if (fact.specifier === undefined) return undefined;
+  const target = graph.edges.find(
+    (edge) => edge.from === node.id && edge.specifier === fact.specifier && edge.resolved && edge.to !== undefined,
+  )?.to;
+  return target === undefined ? undefined : graph.nodes.get(target);
 }
 
-function parseHookReExports(source: string): HookReExport[] {
-  const result: HookReExport[] = [];
-  const reExport = /export\s+(type\s+)?(\*|\{([^}]*)\})\s+from\s*['"]([^'"]+)['"]/g;
-  let match: RegExpExecArray | null = reExport.exec(source);
-  while (match !== null) {
-    const values: string[] = [];
-    const types: string[] = [];
-    if (match[2] !== '*') {
-      for (const raw of match[3].split(',')) {
-        const token = raw.trim();
-        if (token.length === 0) {
-          continue;
-        }
-        if (match[1] !== undefined || token.startsWith('type ')) {
-          types.push(match[1] !== undefined ? token : token.slice('type '.length).trim());
-        } else {
-          values.push(token);
-        }
-      }
-    }
-    result.push({ values, types, from: match[4], exportAll: match[2] === '*' });
-    match = reExport.exec(source);
-  }
-  return result;
+function exportName(localName: string | undefined, exportedName: string | undefined): string | undefined {
+  if (exportedName === undefined) return undefined;
+  if (localName === undefined || localName === exportedName) return exportedName;
+  return `${localName} as ${exportedName}`;
 }
 
-function resolveSourceModule(directory: string, specifier: string): string | undefined {
-  for (const extension of SOURCE_EXTENSIONS) {
-    const candidate = path.resolve(directory, `${specifier}.${extension}`);
-    if (existsSync(candidate)) {
-      return candidate;
-    }
-  }
-  for (const extension of SOURCE_EXTENSIONS) {
-    const candidate = path.resolve(directory, specifier, `index.${extension}`);
-    if (existsSync(candidate)) {
-      return candidate;
-    }
-  }
-  return undefined;
-}
-
-function moduleRelativePath(rootDirectory: string, sourcePath: string): string {
+function sourceModulePath(rootDirectory: string, sourcePath: string): string {
+  const relative = path.relative(rootDirectory, sourcePath).split(path.sep).join('/');
+  const extension = path.extname(relative);
+  const withoutExtension = extension.length === 0 ? relative : relative.slice(0, -extension.length);
+  if (path.basename(withoutExtension) === 'index') return path.dirname(withoutExtension);
   const sourceDirectory = path.dirname(sourcePath);
-  const sourceName = path.basename(sourcePath, path.extname(sourcePath));
+  const sourceName = path.basename(withoutExtension);
   const parentName = path.basename(sourceDirectory);
-  const isDirectoryBarrel = sourceName === 'index';
-  const isDuplicatedFileWithBarrel = sourceName === parentName && existsSync(path.join(sourceDirectory, 'index.ts'));
-  const modulePath = isDirectoryBarrel || isDuplicatedFileWithBarrel ? sourceDirectory : sourcePath;
-  const relative = path.relative(rootDirectory, modulePath).split(path.sep).join('/');
-  return isDirectoryBarrel || isDuplicatedFileWithBarrel
-    ? relative
-    : relative.slice(0, -path.extname(sourcePath).length);
+  return sourceName === parentName && existsSync(path.join(sourceDirectory, 'index.ts'))
+    ? path.dirname(withoutExtension)
+    : withoutExtension;
 }
 
-function discoverHookModules(entryModule: string): DiscoveredHelperExport[] {
-  const rootDirectory = path.dirname(entryModule);
+interface HookDiscoveryResult {
+  modules: DiscoveredHelperExport[];
+  diagnostics: readonly ForgeGraphDiagnostic[];
+}
+
+function discoverHookModules(graph: ForgeFileGraph): HookDiscoveryResult {
+  const rootDirectory = path.dirname(graph.entry);
   const discovered = new Map<string, DiscoveredHelperExport>();
   const visitedBarrels = new Set<string>();
 
-  const visit = (barrelPath: string): void => {
-    const resolvedBarrel = path.resolve(barrelPath);
-    if (visitedBarrels.has(resolvedBarrel)) {
+  const add = (sourceNode: ForgeFileNode, values: readonly string[], types: readonly string[]): void => {
+    const relativePath = sourceModulePath(rootDirectory, sourceNode.id);
+    const current = discovered.get(sourceNode.id) ?? {
+      base: path.basename(relativePath),
+      relativePath,
+      values: [],
+      types: [],
+      sourcePath: sourceNode.id,
+    };
+    for (const value of values) {
+      if (!current.values.includes(value)) current.values.push(value);
+    }
+    for (const type of types) {
+      if (!current.types.includes(type)) current.types.push(type);
+    }
+    discovered.set(sourceNode.id, current);
+  };
+
+  const visit = (barrel: ForgeFileNode): void => {
+    if (visitedBarrels.has(barrel.id)) {
       return;
     }
-    visitedBarrels.add(resolvedBarrel);
+    visitedBarrels.add(barrel.id);
 
-    const source = readFileSync(resolvedBarrel, 'utf8');
-    for (const reExport of parseHookReExports(source)) {
-      const target = resolveSourceModule(path.dirname(resolvedBarrel), reExport.from);
-      if (target === undefined) {
-        continue;
-      }
-      if (reExport.exportAll && path.basename(target, path.extname(target)) === 'index') {
+    for (const fact of barrel.exports) {
+      const target = graphTarget(graph, barrel, fact);
+      if (target === undefined) continue;
+      if (fact.star || target.kind === 'folder') {
+        if (!fact.star && target.kind === 'folder') {
+          const name = exportName(fact.localName, fact.exportedName);
+          if (name !== undefined) add(target, fact.typeOnly ? [] : [name], fact.typeOnly ? [name] : []);
+        }
         visit(target);
+        if (fact.star && target.kind !== 'folder') {
+          add(
+            target,
+            target.exports
+              .filter((entry) => !entry.typeOnly)
+              .map((entry) => exportName(entry.localName, entry.exportedName))
+              .filter((name): name is string => name !== undefined),
+            target.exports
+              .filter((entry) => entry.typeOnly)
+              .map((entry) => exportName(entry.localName, entry.exportedName))
+              .filter((name): name is string => name !== undefined),
+          );
+        }
         continue;
       }
-
-      const relativePath = moduleRelativePath(rootDirectory, target);
-      const base = path.basename(relativePath);
-      const current = discovered.get(relativePath) ?? {
-        base,
-        relativePath,
-        values: [],
-        types: [],
-      };
-      current.values.push(...reExport.values.filter((name) => !current.values.includes(name)));
-      current.types.push(...reExport.types.filter((name) => !current.types.includes(name)));
-      discovered.set(relativePath, current);
+      const name = exportName(fact.localName, fact.exportedName);
+      if (name === undefined) continue;
+      add(target, fact.typeOnly ? [] : [name], fact.typeOnly ? [name] : []);
     }
   };
 
-  visit(entryModule);
-  return [...discovered.values()];
+  const entry = graph.nodes.get(graph.entry);
+  if (entry !== undefined) visit(entry);
+  return { modules: [...discovered.values()], diagnostics: graph.diagnostics };
 }
 
 /** Resolve a re-exported module, preserving whether it is a file or directory barrel. */
@@ -199,11 +203,6 @@ function rewriteLocalEffectImport(code: string, depth: number): string {
 }
 
 /** Write a generated module to `outDir`, mirroring its nested `relativePath` and creating folders as needed. */
-function writeGeneratedModule(outDir: string, relativePath: string, extension: string, contents: string): void {
-  const target = path.join(outDir, `${relativePath}.${extension}`);
-  mkdirSync(path.dirname(target), { recursive: true });
-  writeFileSync(target, contents, 'utf8');
-}
 
 /** Recursively collect source files, excluding declarations and colocated tests. */
 function collectGeneratedSources(directory: string, extensions: readonly string[]): string[] {
@@ -225,23 +224,46 @@ function collectGeneratedSources(directory: string, extensions: readonly string[
 
 /** Compile or copy one source file into its matching location in the cache tree. */
 function emitGeneratedSource(
-  outDir: string,
+  context: ForgeGenerationContext,
   sourcePath: string,
   generatedPath: string,
   extension: string,
-  plugin: FrameworkOutputPlugin,
+  router: RouterPluginSelection | undefined,
+  routerPlugins: readonly RouterOutputPlugin[] | undefined,
+  routerConditions: readonly string[] | undefined,
 ): void {
   const source = readFileSync(sourcePath, 'utf8');
-  const parsed = parseForgeSource(sourcePath, source);
-  const neutral = readNeutralImports(parsed);
+  const neutral = readNeutralImports(sourcePath, source);
   const usesNeutral = neutral.values.length > 0 || neutral.types.length > 0;
   if (!usesNeutral) {
-    writeGeneratedModule(outDir, generatedPath, extension, source);
+    context.writer.writeText(`${generatedPath}.${extension}`, source, 'module');
     return;
   }
-  const compiled = compileHookModule(source, { framework: plugin, fileName: sourcePath });
+  const compiled = context.compile({
+    source,
+    fileName: sourcePath,
+    moduleKind: 'composable',
+    router,
+    routerPlugins,
+    routerConditions,
+  });
   const code = rewriteLocalEffectImport(compiled.code, moduleDepth(generatedPath));
-  writeGeneratedModule(outDir, generatedPath, compiled.lang, code);
+  context.writer.writeText(`${generatedPath}.${compiled.lang}`, code, 'module');
+  for (const extra of compiled.extraModules ?? []) {
+    const directory = path.posix.dirname(generatedPath);
+    const prefix = directory === '.' ? '' : `${directory}/`;
+    context.writer.writeText(`${prefix}${extra.name}.${extra.lang}`, extra.code, 'module');
+  }
+  if (compiled.map !== undefined) {
+    context.writer.writeText(
+      `${generatedPath}.map`,
+      typeof compiled.map === 'string' ? compiled.map : JSON.stringify(compiled.map),
+      'map',
+    );
+  }
+  for (const declaration of compiled.declarations ?? []) {
+    context.writer.writeText(declaration.name, declaration.code, 'declaration');
+  }
 }
 
 /**
@@ -249,11 +271,27 @@ function emitGeneratedSource(
  * returning the generated entry module path.
  */
 export function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions): string {
-  const modules = discoverHookModules(options.entryModule);
+  const context = createForgeGenerationContext({
+    service: options.service,
+    target: options.plugin,
+    entry: options.entryModule,
+    outDir: options.outDir,
+    sourceRoot: options.sourceRoot ?? path.dirname(options.entryModule),
+    tsconfig: options.tsconfig,
+    paths: options.paths,
+    diagnostics: options.compilerDiagnostics,
+    rejectFixturePlaceholder: options.rejectFixturePlaceholder,
+  });
+  const graph = context.graph;
+  const discovery = discoverHookModules(graph);
+  options.diagnostics?.push(...discovery.diagnostics);
+  const graphErrors = discovery.diagnostics.filter((diagnostic) => diagnostic.code !== 'cycle');
+  if (graphErrors.length > 0) {
+    throw new Error(graphErrors.map((diagnostic) => `${diagnostic.code}: ${diagnostic.message}`).join('\n'));
+  }
+  const modules = discovery.modules;
   const directory = path.dirname(options.entryModule);
 
-  rmSync(options.outDir, { recursive: true, force: true });
-  mkdirSync(options.outDir, { recursive: true });
 
   for (const module of modules) {
     const resolved = resolveModuleSource(directory, module.relativePath);
@@ -261,7 +299,15 @@ export function generateHookLibrarySources(options: GenerateHookLibrarySourcesOp
       continue;
     }
     if (!resolved.directory) {
-      emitGeneratedSource(options.outDir, resolved.path, module.relativePath, resolved.extension, options.plugin);
+      emitGeneratedSource(
+        context,
+        resolved.path,
+        module.relativePath,
+        resolved.extension,
+        options.router,
+        options.routerPlugins,
+        options.routerConditions,
+      );
       continue;
     }
 
@@ -275,11 +321,13 @@ export function generateHookLibrarySources(options: GenerateHookLibrarySourcesOp
       const sourceExtension = path.extname(relativeSourcePath).slice(1);
       const relativeSourceBase = relativeSourcePath.slice(0, -(sourceExtension.length + 1));
       emitGeneratedSource(
-        options.outDir,
+        context,
         sourcePath,
         `${module.relativePath}/${relativeSourceBase}`,
         sourceExtension,
-        options.plugin,
+        options.router,
+        options.routerPlugins,
+        options.routerConditions,
       );
     }
   }
@@ -292,7 +340,7 @@ export function generateHookLibrarySources(options: GenerateHookLibrarySourcesOp
   const framework = options.plugin.id as JsxFramework;
   const effectModuleSource = localEffectModuleSource(framework);
   if (effectModuleSource.length > 0) {
-    writeFileSync(path.join(options.outDir, LOCAL_EFFECT_FILE), effectModuleSource, 'utf8');
+    context.writer.writeText(LOCAL_EFFECT_FILE, effectModuleSource, 'module');
   }
 
   const entryFile = path.join(
@@ -300,7 +348,8 @@ export function generateHookLibrarySources(options: GenerateHookLibrarySourcesOp
     options.plugin.source.entryExtension === '.tsx' ? 'index.tsx' : 'index.ts',
   );
   const entrySource = `${modules.map((module) => reExportLine(module)).join('\n')}\n`;
-  writeFileSync(entryFile, entrySource, 'utf8');
+  context.writer.writeText(path.basename(entryFile), entrySource, 'entry');
+  context.writer.finalize([path.basename(entryFile)]);
   return entryFile;
 }
 

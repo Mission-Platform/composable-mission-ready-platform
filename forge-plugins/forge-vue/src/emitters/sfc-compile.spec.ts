@@ -236,6 +236,67 @@ describe("the Vue emitter generates SFCs the Vue compiler accepts", () => {
     expect(code).toContain("`bar__end--${properties.align}`");
   });
 
+  it("lowers nested drawer slot declarations in a render closure", () => {
+    const module = semanticModule({
+      imports: [NEUTRAL_IMPORT],
+      component: component({
+        name: "DrawerShape",
+        parameter: "properties",
+        body: [
+          statement(
+            "const headerNode = h(Slot, { name: 'header' }, <h2>{properties.title}</h2>);",
+            "variable",
+            {
+              name: "headerNode",
+              renderNodes: [element("Slot", { source: "<Slot name=\"header\" />" })],
+            },
+          ),
+          statement(
+            "const footerNode = <Slot name=\"footer\" />;",
+            "variable",
+            {
+              name: "footerNode",
+              renderNodes: [element("Slot", { source: "<Slot name=\"footer\" />" })],
+            },
+          ),
+          statement(
+            "const panel = <section {...extra}>{headerNode}{footerNode}</section>;",
+            "variable",
+            {
+              name: "panel",
+              renderNodes: [
+                element("section", {
+                  attributes: [spreadAttribute("extra")],
+                  children: [
+                    expressionChild("headerNode"),
+                    expressionChild("footerNode"),
+                  ],
+                  source: "<section {...extra}>{headerNode}{footerNode}</section>",
+                }),
+              ],
+            },
+          ),
+        ],
+        returnNode: element("section", {
+          attributes: [spreadAttribute("extra")],
+          children: [expressionChild("panel")],
+        }),
+        returnExpression: "panel",
+      }),
+      props: [prop("title", "string")],
+      slots: [slot("header"), slot("footer")],
+    });
+
+    const code = compileFixture(module, "DrawerShape");
+
+    expect(code).toContain("const slots = useSlots();");
+    expect(code).toContain("slots.header?.() ?? (<h2>{properties.title}</h2>)");
+    expect(code).toContain("slots.footer?.()");
+    expect(code).not.toContain("<Slot");
+    expect(code).not.toContain("h(Slot");
+    expect(code).not.toMatch(/\{\s*slots\.(?:header|footer)/);
+  });
+
   it("hosts a call of a node-returning function in a dynamic component, not an interpolation", () => {
     const module = semanticModule({
       imports: [NEUTRAL_IMPORT],

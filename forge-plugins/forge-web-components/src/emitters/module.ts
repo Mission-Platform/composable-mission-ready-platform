@@ -158,6 +158,29 @@ function rewriteRelativeImport(
   return lines;
 }
 
+/** Whether an imported binding names a Forge component that must self-register. */
+function importsExternalForgeComponent(entry: GenericImport): boolean {
+  return entry.valueNames.some((name) => /^Forge[A-Z]/u.test(name));
+}
+
+/**
+ * Preserve a bare package's custom-element registrations alongside its imports.
+ *
+ * JSX lowering turns `<ForgeDropdown />` into the literal `<forge-dropdown>` tag,
+ * so the imported component binding is no longer referenced in the generated
+ * module. Bundlers consequently tree-shake the import even though evaluating the
+ * package is what registers the custom element. Keeping a side-effect import
+ * makes that registration explicit while retaining the original import for any
+ * value usage that survives in a retained declaration or helper.
+ */
+function rewriteBareImport(entry: GenericImport): string[] {
+  const lines = [importStatementText(entry)];
+  if (!entry.sideEffectOnly && importsExternalForgeComponent(entry)) {
+    lines.push(`import '${entry.source}';`);
+  }
+  return lines;
+}
+
 /** Transform the whole module into the native Web-Components target source. */
 export function emitWebComponentModule(
   module: SemanticModule,
@@ -186,8 +209,7 @@ export function emitWebComponentModule(
     kept.push(
       ...(entry.source.startsWith(".")
         ? rewriteRelativeImport(entry, componentFolders)
-        : // Bare package import — keep verbatim.
-          [importStatementText(entry)]),
+        : rewriteBareImport(entry)),
     );
   }
 
@@ -212,6 +234,10 @@ export function emitWebComponentModule(
   // generated module keeps a single import from the native runtime.
   const runtimeNames = [
     ...plan.runtimeImports.values,
+    ...(plan.host.kind === "customized-built-in" &&
+    !plan.runtimeImports.values.includes("ForgeElementMixin")
+      ? ["ForgeElementMixin"]
+      : []),
     ...plan.runtimeImports.types.map((name) => `type ${name}`),
   ];
   const header = `import { ${runtimeNames.join(", ")} } from '${RUNTIME_MODULE}';`;

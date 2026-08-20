@@ -1,7 +1,24 @@
+import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { PNG } from 'pngjs';
 import { describe, expect, it, vi } from 'vitest';
+
+import { matchesStorySelector, parseVisualParityArgs, selectedPairs } from '../visual-parity/cli.ts';
+import { comparePngFiles } from '../visual-parity/diff.ts';
+import {
+  buildStoryIframeUrl,
+  buildStoryReadinessSource,
+  egoProcessTimeoutMs,
+  runVisualParityCapture,
+  VISUAL_PARITY_CAPTURE_CHUNK_SIZE,
+  visualParityEgoScript,
+} from '../visual-parity/ego-script.ts';
+import { reportHasFailures, writeVisualParityReport } from '../visual-parity/report.ts';
+import { buildStorybookDevSpawnArgs } from '../visual-parity/servers.ts';
+import { createRendererDefinitions, type VisualParityReport } from '../visual-parity/types.ts';
 
 import { appScript, validateAppsForFullRun } from './app-sweep.ts';
 import { classifyFailure } from './classification.ts';
@@ -17,7 +34,12 @@ import {
 import { isTransientRuntimeError, withRetry } from './retry.ts';
 import { discoverAppRouteFiles, discoverAppRoutes, expandRoutePattern } from './routes.ts';
 import { selectResults } from './runner.ts';
-import { compareStorybookIndex, normalizeImportPath } from './storybook-index.ts';
+import {
+  compareStorybookIndex,
+  normalizeImportPath,
+  pairStorybookIndexes,
+  parseStorybookIndex,
+} from './storybook-index.ts';
 import { egoScript } from './storybook-sweep.ts';
 import { workstreamForPackage, workstreamForApp } from './workstreams.ts';
 
@@ -250,6 +272,78 @@ describe('manifest and index contracts', () => {
     );
   });
 
+  it('parses fetched indexes and pairs only neutral entries shared by all renderers', () => {
+    const neutralStory = {
+      id: '@mission-platform/components:button.stories.tsx',
+      packageName: '@mission-platform/components',
+      filePath: 'packages/components/src/button.stories.tsx',
+      absolutePath: path.join(repositoryRoot, 'packages/components/src/button.stories.tsx'),
+    };
+    const frameworkStory = {
+      id: '@mission-platform/storybook:i18n.vue.stories.tsx',
+      packageName: '@mission-platform/storybook',
+      filePath: 'apps/storybook/src/components/i18n/i18n.vue.stories.tsx',
+      absolutePath: path.join(repositoryRoot, 'apps/storybook/src/components/i18n/i18n.vue.stories.tsx'),
+      excludedFramework: 'vue' as const,
+    };
+    const onlyHereStory = {
+      id: '@mission-platform/components:only-here.stories.tsx',
+      packageName: '@mission-platform/components',
+      filePath: 'packages/components/src/only-here.stories.tsx',
+      absolutePath: path.join(repositoryRoot, 'packages/components/src/only-here.stories.tsx'),
+    };
+    const inventory = {
+      repositoryRoot,
+      workspacePackages: [],
+      packages: [],
+      apps: [],
+      stories: [neutralStory, frameworkStory, onlyHereStory],
+      storybookPackages: [],
+    } satisfies RepositoryInventory;
+    const makeIndex = (framework: string) =>
+      parseStorybookIndex({
+        entries: {
+          button: {
+            id: 'components-button--default',
+            importPath: '../../packages/components/src/button.stories.tsx',
+            title: 'Button',
+            name: 'Default',
+          },
+          framework: {
+            id: 'storybook-i18n--default',
+            importPath: '../../apps/storybook/src/components/i18n/i18n.vue.stories.tsx',
+            title: 'i18n',
+          },
+          ...(framework === 'web-component'
+            ? {
+                onlyHere: {
+                  id: `${framework}-only--default`,
+                  importPath: '../../packages/components/src/only-here.stories.tsx',
+                },
+              }
+            : {}),
+        },
+      });
+    const pairing = pairStorybookIndexes(repositoryRoot, inventory, {
+      'web-component': makeIndex('web-component'),
+      react: makeIndex('react'),
+      vue: makeIndex('vue'),
+    });
+
+    expect(pairing.pairs).toHaveLength(1);
+    expect(pairing.pairs[0]).toMatchObject({ storyId: 'components-button--default' });
+    expect(pairing.pairs[0]?.sourceImport).toBe('packages/components/src/button.stories.tsx');
+    expect(pairing.pairs[0]?.entries.react?.id).toBe('components-button--default');
+    expect(pairing.missing.some((missing) => missing.storyId === 'web-component-only--default')).toBe(true);
+    expect(pairing.missingStories).toEqual([onlyHereStory]);
+    expect(pairing.missing.some((missing) => missing.sourceImport.includes('i18n.vue'))).toBe(false);
+  });
+
+  it('rejects malformed fetched Storybook indexes', () => {
+    expect(() => parseStorybookIndex({ entries: [] })).toThrow('Invalid Storybook index');
+    expect(() => parseStorybookIndex({})).toThrow('Invalid Storybook index');
+  });
+
   it('generates an Ego Lite script with browser error and framework-scoped evidence capture', () => {
     const script = egoScript(
       [{ id: 'atoms-button--default' }],
@@ -371,6 +465,99 @@ describe('manifest and index contracts', () => {
     expect(selectResults(inventory, { storyId: 'missing', includeApps: false })).toMatchObject([
       { status: 'blocked', category: 'target-not-found', idOrRoute: 'missing' },
     ]);
+  });
+});
+
+describe('visual parity renderer definitions', () => {
+  it('assigns isolated deterministic loopback ports and renderer environments', () => {
+    expect(createRendererDefinitions()).toEqual([
+      expect.objectContaining({ framework: 'web-component', port: 6200, host: '127.0.0.1' }),
+      expect.objectContaining({ framework: 'react', port: 6201, host: '127.0.0.1' }),
+      expect.objectContaining({ framework: 'vue', port: 6202, host: '127.0.0.1' }),
+    ]);
+    expect(createRendererDefinitions({ ports: { react: 7101 } })[1]).toMatchObject({ port: 7101 });
+  });
+
+  it('builds Storybook dev spawn args using exact-port and automation-safe flags', () => {
+    const cert = { certificate: '/tmp/cert.pem', key: '/tmp/key.pem' };
+    const webComponent = createRendererDefinitions()[0];
+    const args = buildStorybookDevSpawnArgs(cert, webComponent);
+
+    expect(args).toContain('--exact-port');
+    expect(args).toContain('--ci');
+    expect(args).toContain('--no-open');
+    expect(args).toContain('--https');
+    expect(args).not.toContain('--strictPort');
+
+    const hostIndex = args.indexOf('--host');
+    expect(hostIndex).toBeGreaterThanOrEqual(0);
+    expect(args[hostIndex + 1]).toBe(webComponent.host);
+
+    const portIndex = args.indexOf('--port');
+    expect(portIndex).toBeGreaterThanOrEqual(0);
+    expect(args[portIndex + 1]).toBe(String(webComponent.port));
+
+    const sslCertIndex = args.indexOf('--ssl-cert');
+    expect(sslCertIndex).toBeGreaterThanOrEqual(0);
+    expect(args[sslCertIndex + 1]).toBe(cert.certificate);
+  });
+
+  it('builds iframe-only deterministic Ego Lite capture scripts', async () => {
+    expect(buildStoryIframeUrl('https://127.0.0.1:6200/', 'components/button--default')).toBe(
+      'https://127.0.0.1:6200/iframe.html?id=components%2Fbutton--default',
+    );
+
+    const script = visualParityEgoScript({
+      repositoryRoot,
+      artifactDirectory: path.join(repositoryRoot, '.artifacts/visual-parity'),
+      captures: [
+        { renderer: 'web-component', storyId: 'components-button--default', baseUrl: 'https://127.0.0.1:6200' },
+        { renderer: 'react', storyId: 'components-button--default', baseUrl: 'https://127.0.0.1:6201' },
+        { renderer: 'vue', storyId: 'components-button--default', baseUrl: 'https://127.0.0.1:6202' },
+      ],
+      timeoutMs: 8000,
+      retries: 2,
+    });
+
+    expect(script).toContain("await cdp('Emulation.setDeviceMetricsOverride'");
+    expect(script).toContain("await cdp('Security.setIgnoreCertificateErrors', { ignore: true })");
+    expect(script).toContain('deviceScaleFactor: viewport.deviceScaleFactor');
+    expect(script).toContain("document.documentElement.dataset.theme = 'light'");
+    expect(script).toContain('document.fonts.ready');
+    expect(script).toContain('customElements.whenDefined');
+    expect(script).toContain('requestAnimationFrame(() => requestAnimationFrame');
+    expect(script).toContain('storyRenders');
+    expect(script).toContain('current?.phase');
+    expect(script).toContain('isTerminalPhase');
+    expect(script).toContain('Date.now() +');
+    expect(script).toContain("await waitForElement('#storybook-root'");
+    expect(script).toContain('Page.captureScreenshot');
+    expect(script).toContain('completeTaskSpace(task.id, { keep: false })');
+    expect(script).toContain('net::ERR_ABORTED|canceled');
+    expect(script).not.toContain('http://storybook');
+    expect(script).toContain('/iframe.html?id=');
+    expect(buildStoryReadinessSource(8_000)).toContain('Date.now() + 4000');
+    expect(buildStoryReadinessSource(8_000)).toContain("phase === 'finished'");
+    expect(VISUAL_PARITY_CAPTURE_CHUNK_SIZE).toBeGreaterThan(0);
+    expect(egoProcessTimeoutMs(1, 30_000)).toBeGreaterThanOrEqual(30_000);
+    expect(egoProcessTimeoutMs(120, 120_000)).toBeGreaterThan(120_000);
+    expect(egoProcessTimeoutMs(120, 120_000)).toBeLessThan(120 * 120_000);
+    expect(
+      visualParityEgoScript({
+        repositoryRoot,
+        artifactDirectory: path.join(repositoryRoot, '.artifacts/visual-parity'),
+        captures: [],
+        taskName: 'visual parity capture#2',
+      }),
+    ).toContain('visual parity capture#2');
+
+    await expect(
+      runVisualParityCapture({
+        repositoryRoot,
+        artifactDirectory: path.join(repositoryRoot, '.artifacts/visual-parity'),
+        captures: [],
+      }),
+    ).resolves.toEqual({ results: [], diagnostics: [], cleanupErrors: [] });
   });
 });
 
@@ -510,5 +697,209 @@ describe('workstreams', () => {
     expect(workstreamForApp('service-monitor')).toBe('redwood-react-apps');
     expect(workstreamForApp('storybook')).toBe('storybook-ci');
     expect(workstreamForApp('unknown')).toBe('app:unknown');
+  });
+});
+
+describe('visual parity diffing and CLI options', () => {
+  it('passes identical PNGs, reports mismatches, and rejects dimensions before pixel comparison', () => {
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'visual-parity-'));
+    try {
+      const baselinePath = path.join(directory, 'baseline.png');
+      const candidatePath = path.join(directory, 'candidate.png');
+      const diffPath = path.join(directory, 'diff.png');
+      const baseline = new PNG({ width: 2, height: 2 });
+      baseline.data.fill(255);
+      fs.writeFileSync(baselinePath, PNG.sync.write(baseline));
+      fs.writeFileSync(candidatePath, PNG.sync.write(baseline));
+
+      expect(comparePngFiles({ baselinePath, candidatePath, diffPath })).toMatchObject({
+        status: 'pass',
+        mismatchPixels: 0,
+        mismatchRatio: 0,
+      });
+      baseline.data[0] = 0;
+      fs.writeFileSync(candidatePath, PNG.sync.write(baseline));
+      expect(comparePngFiles({ baselinePath, candidatePath, diffPath })).toMatchObject({
+        status: 'visual-mismatch',
+        mismatchPixels: 1,
+        diffPath,
+      });
+      const smaller = new PNG({ width: 1, height: 1 });
+      fs.writeFileSync(candidatePath, PNG.sync.write(smaller));
+      expect(comparePngFiles({ baselinePath, candidatePath, diffPath })).toMatchObject({
+        status: 'dimension-mismatch',
+        mismatchPixels: 0,
+      });
+      expect(fs.existsSync(diffPath)).toBe(true);
+    } finally {
+      fs.rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
+  it('parses selectors, isolated ports, deterministic settings, and diff thresholds', () => {
+    const options = parseVisualParityArgs(
+      [
+        '--package',
+        '@mission-platform/components',
+        '--story',
+        'forge-button--focus-visible',
+        '--max-stories',
+        '2',
+        '--port',
+        '6300',
+        '--workers',
+        '2',
+        '--timeout-ms',
+        '90000',
+        '--pixel-threshold',
+        '0.2',
+        '--diff-threshold',
+        '0.01',
+      ],
+      repositoryRoot,
+    );
+    expect(options).toMatchObject({
+      packageName: '@mission-platform/components',
+      storyId: 'forge-button--focus-visible',
+      maxStories: 2,
+      ports: { 'web-component': 6300, react: 6301, vue: 6302 },
+      workers: 2,
+      timeoutMs: 90_000,
+      pixelThreshold: 0.2,
+      maxMismatchRatio: 0.01,
+      theme: 'light',
+      viewport: { name: 'md', deviceScaleFactor: 1 },
+    });
+  });
+
+  it('matches exact and compact Storybook story selectors used by the CLI', () => {
+    expect(
+      matchesStorySelector('atoms-display-forgebutton--focus-visible', 'atoms-display-forgebutton--focus-visible'),
+    ).toBe(true);
+    expect(matchesStorySelector('atoms-display-forgebutton--focus-visible', 'forge-button--focus-visible')).toBe(true);
+    expect(matchesStorySelector('atoms-display-forgebutton--focus-visible', 'focus-visible')).toBe(true);
+    expect(matchesStorySelector('atoms-display-forgebutton--primary', 'forge-button--focus-visible')).toBe(false);
+    expect(matchesStorySelector('atoms-display-forgebutton--primary', 'atoms-display-forgebutton--default')).toBe(
+      false,
+    );
+
+    const inventory = {
+      repositoryRoot,
+      workspacePackages: [],
+      packages: [],
+      apps: [],
+      stories: [
+        {
+          id: '@mission-platform/components:forge-button.stories.tsx',
+          packageName: '@mission-platform/components',
+          filePath: 'packages/components/src/forge-button.stories.tsx',
+          absolutePath: path.join(repositoryRoot, 'packages/components/src/forge-button.stories.tsx'),
+        },
+      ],
+      storybookPackages: [],
+    } satisfies RepositoryInventory;
+    const pairs = [
+      {
+        storyId: 'atoms-display-forgebutton--focus-visible',
+        sourceImport: 'packages/components/src/forge-button.stories.tsx',
+        entries: {
+          'web-component': { id: 'atoms-display-forgebutton--focus-visible' },
+          react: { id: 'atoms-display-forgebutton--focus-visible' },
+          vue: { id: 'atoms-display-forgebutton--focus-visible' },
+        },
+      },
+    ];
+    expect(
+      selectedPairs(pairs, inventory, {
+        repositoryRoot,
+        storyId: 'forge-button--focus-visible',
+        ports: {},
+        viewport: { name: 'md', width: 1024, height: 768, deviceScaleFactor: 1 },
+        theme: 'light',
+        workers: 1,
+        timeoutMs: 1_000,
+        pixelThreshold: 0.1,
+        maxMismatchRatio: 0,
+        outputDirectory: path.join(repositoryRoot, '.artifacts/visual-parity'),
+      }),
+    ).toHaveLength(1);
+  });
+
+  it('serializes the visual-parity report and classifies comparison failures', () => {
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'visual-parity-report-'));
+    try {
+      const report: VisualParityReport = {
+        schemaVersion: 1,
+        generatedAt: new Date(0).toISOString(),
+        status: 'fail',
+        options: {
+          repositoryRoot,
+          packageName: '@mission-platform/components',
+          storyId: 'atoms-display-forgebutton--primary',
+          ports: {},
+          viewport: { name: 'md', width: 1024, height: 768, deviceScaleFactor: 1 },
+          theme: 'light',
+          workers: 1,
+          timeoutMs: 1_000,
+          pixelThreshold: 0.1,
+          maxMismatchRatio: 0,
+          outputDirectory: directory,
+        },
+        renderers: [],
+        results: [
+          {
+            storyId: 'atoms-display-forgebutton--primary',
+            packageName: '@mission-platform/components',
+            comparisons: [
+              {
+                baseline: 'web-component',
+                candidate: 'react',
+                status: 'visual-mismatch',
+                mismatchPixels: 12,
+                mismatchRatio: 0.01,
+              },
+              {
+                baseline: 'web-component',
+                candidate: 'vue',
+                status: 'runtime-failure',
+                message: 'Storybook root rendered no content.',
+              },
+            ],
+          },
+        ],
+        captures: [],
+        diagnostics: [],
+        cleanupErrors: [],
+      };
+      const target = writeVisualParityReport(directory, report);
+      expect(fs.existsSync(target)).toBe(true);
+      expect(JSON.parse(fs.readFileSync(target, 'utf8'))).toMatchObject({
+        status: 'fail',
+        results: [
+          {
+            comparisons: [{ status: 'visual-mismatch' }, { status: 'runtime-failure' }],
+          },
+        ],
+      });
+      expect(reportHasFailures(report)).toBe(true);
+      expect(
+        reportHasFailures({
+          ...report,
+          status: 'pass',
+          results: [
+            {
+              storyId: 'ok',
+              packageName: '@mission-platform/components',
+              comparisons: [
+                { baseline: 'web-component', candidate: 'react', status: 'pass' },
+                { baseline: 'web-component', candidate: 'vue', status: 'pass' },
+              ],
+            },
+          ],
+        }),
+      ).toBe(false);
+    } finally {
+      fs.rmSync(directory, { recursive: true, force: true });
+    }
   });
 });

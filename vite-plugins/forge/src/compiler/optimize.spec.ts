@@ -5,19 +5,20 @@
  * Follows the existing forge spec style: compile a neutral source string and
  * assert on the emitted framework code / intermediate IR markers.
  */
-import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 
-import { parseTsx, printSourceFile, stripFrameworkDirective } from './ast';
 import {
   compileComponentModule,
   compileHookModule,
   hasMpStaticMarker,
   MP_STATIC_ATTR,
-  optimizeSourceFile,
+  optimizeForgeModule,
+  optimizeGenericModule,
 } from './compiler-test-helpers';
+import { createGenericAst, parseForgeSource } from './frontends.js';
 
 import type { JsxFramework } from './compiler-test-helpers';
+import type { GenericRenderNode } from '@mission-platform/forge-plugin-api';
 
 // ─── fixtures ───────────────────────────────────────────────────────────────
 
@@ -193,9 +194,8 @@ const FRAMEWORKS: readonly JsxFramework[] = ['react', 'vue', 'solid', 'svelte', 
 
 describe('Stage-1 optimise — dead-branch pruning', () => {
   it('folds `true ? a : b` / `false && x` / `!true && x` out of the neutral AST', () => {
-    const parsed = stripFrameworkDirective(parseTsx('ForgeFlag.tsx', CONSTANT_CONDITIONALS));
-    const optimised = optimizeSourceFile(parsed);
-    const printed = printSourceFile(optimised);
+    const optimised = optimizeForgeModule(parseForgeSource('ForgeFlag.tsx', CONSTANT_CONDITIONALS));
+    const printed = optimised.source;
 
     expect(printed).toContain('flag__on');
     expect(printed).toContain('flag__yes');
@@ -225,25 +225,25 @@ describe('Stage-1 optimise — dead-branch pruning', () => {
 
 describe('Stage-1 optimise — static-node marking', () => {
   it('marks a fully-static intrinsic subtree with `__mpStatic`', () => {
-    const parsed = stripFrameworkDirective(parseTsx('ForgeCard.tsx', STATIC_SUBTREE));
-    const optimised = optimizeSourceFile(parsed);
+    const parsed = parseForgeSource('ForgeCard.tsx', STATIC_SUBTREE);
+    const optimised = optimizeGenericModule(createGenericAst(parsed, 'component', 'ForgeCard')).module;
 
     let staticCount = 0;
-    const walk = (node: ts.Node): void => {
-      if ((ts.isJsxElement(node) || ts.isJsxSelfClosingElement(node)) && hasMpStaticMarker(node)) {
+    const walk = (node: GenericRenderNode): void => {
+      if (hasMpStaticMarker(node)) {
         staticCount += 1;
       }
-      ts.forEachChild(node, walk);
+      for (const child of node.children) {
+        if (child.kind === 'render-node') walk(child);
+      }
     };
-    walk(optimised);
+    for (const node of optimised.renderNodes) walk(node);
     // At least the icon span is static; the title h2 and card root are dynamic.
     expect(staticCount).toBeGreaterThanOrEqual(1);
 
-    const printed = printSourceFile(optimised);
-    expect(printed).toContain(MP_STATIC_ATTR);
     // The dynamic title binding must NOT be on a static-marked element alone
     // without the parent also being dynamic — the h2 has `{properties.title}`.
-    expect(printed).toMatch(/card__icon/);
+    expect(optimised.source).toContain('card__icon');
   });
 
   it('does not mark elements with dynamic bindings or event handlers', () => {
@@ -254,32 +254,26 @@ describe('Stage-1 optimise — static-node marking', () => {
       '  return <button type="button" onClick={() => undefined}>{properties.children}</button>;',
       '}',
     ].join('\n');
-    const parsed = stripFrameworkDirective(parseTsx('ForgeBtn.tsx', source));
-    const optimised = optimizeSourceFile(parsed);
-    expect(printSourceFile(optimised)).not.toContain(MP_STATIC_ATTR);
+    const parsed = parseForgeSource('ForgeBtn.tsx', source);
+    const optimised = optimizeGenericModule(createGenericAst(parsed, 'component', 'ForgeBtn')).module;
+    expect(optimised.renderNodes.some((node) => hasMpStaticMarker(node))).toBe(false);
   });
 });
 
 describe('Stage-1 optimise — stable-key inference', () => {
   it('adds `key={item}` for a primitive array-literal `.map` missing a key', () => {
-    const parsed = stripFrameworkDirective(parseTsx('ForgeStableList.tsx', STABLE_KEYED_LIST));
-    const optimised = optimizeSourceFile(parsed);
-    const printed = printSourceFile(optimised);
-    expect(printed).toMatch(/key=\{item\}/);
+    const optimised = optimizeForgeModule(parseForgeSource('ForgeStableList.tsx', STABLE_KEYED_LIST));
+    expect(optimised.source).toMatch(/key=\{item\}/);
   });
 
   it('adds `key={index}` when a stable module-const map provides an index param', () => {
-    const parsed = stripFrameworkDirective(parseTsx('ForgeRows.tsx', MODULE_CONST_LIST));
-    const optimised = optimizeSourceFile(parsed);
-    const printed = printSourceFile(optimised);
-    expect(printed).toMatch(/key=\{index\}/);
+    const optimised = optimizeForgeModule(parseForgeSource('ForgeRows.tsx', MODULE_CONST_LIST));
+    expect(optimised.source).toMatch(/key=\{index\}/);
   });
 
   it('does not invent keys for a dynamic (prop-sourced) `.map`', () => {
-    const parsed = stripFrameworkDirective(parseTsx('ForgeDyn.tsx', DYNAMIC_LIST));
-    const optimised = optimizeSourceFile(parsed);
-    const printed = printSourceFile(optimised);
-    expect(printed).not.toMatch(/key=\{/);
+    const optimised = optimizeForgeModule(parseForgeSource('ForgeDyn.tsx', DYNAMIC_LIST));
+    expect(optimised.source).not.toMatch(/key=\{/);
   });
 });
 

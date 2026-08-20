@@ -179,6 +179,7 @@ function hoistStaticTemplateParts(
   if (
     !template.staticRoot ||
     template.head.length > 0 ||
+    !template.dom.hot ||
     template.hoisted.length > 0
   ) {
     return plan;
@@ -187,7 +188,7 @@ function hoistStaticTemplateParts(
     ...plan,
     template: {
       ...template,
-      hoisted: [{ name: staticTemplateName(0), template: template.template }],
+      hoisted: [{ name: staticTemplateName(0), template: template.dom.create }],
     },
   };
 }

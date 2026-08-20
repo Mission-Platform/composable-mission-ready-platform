@@ -36,6 +36,7 @@ import type {
   PropIntention,
   RefIntention,
   SemanticModule,
+  SourceSpan,
   SlotIntention,
   StateIntention,
 } from "@mission-platform/forge-plugin-api";
@@ -335,6 +336,7 @@ export interface SemanticModuleFixture {
   readonly events?: readonly EventIntention[];
   readonly dynamicNodes?: readonly DynamicNodeIntention[];
   readonly listKeys?: readonly ListKeyIntention[];
+  readonly staticSubtrees?: readonly SourceSpan[];
   readonly runtimeImports?: readonly string[];
 }
 
@@ -376,6 +378,7 @@ export function semanticModule(fixture: SemanticModuleFixture): SemanticModule {
       events: fixture.events ?? [],
       dynamicNodes: fixture.dynamicNodes ?? [],
       listKeys: fixture.listKeys ?? [],
+      staticSubtrees: fixture.staticSubtrees ?? [],
       renderTree: renderNodes,
       runtimeImports: fixture.runtimeImports ?? [],
     },

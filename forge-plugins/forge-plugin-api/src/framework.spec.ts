@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { defineForgeOutputPlugin } from ".";
+import { defineForgeOutputPlugin, validateForgeOutputPluginSelection } from ".";
 
 import type {
   GeneratedModule,
@@ -16,6 +16,13 @@ import type {
 const validPlugin = {
   id: "custom",
   outputLanguage: "tsx" as const,
+  source: {
+    componentExtension: ".tsx",
+    componentImportExtension: "",
+    composableExtension: ".tsx",
+    entryExtension: ".tsx",
+    componentExport: "named" as const,
+  },
   lower: (
     module: SemanticModule,
     context: TargetContext,
@@ -38,6 +45,9 @@ const validPlugin = {
 describe("Forge output-plugin API", () => {
   it("accepts custom output plugins without a core framework switch", () => {
     expect(defineForgeOutputPlugin(validPlugin)).toBe(validPlugin);
+    expect(
+      defineForgeOutputPlugin({ ...validPlugin, build: {} }),
+    ).toMatchObject({ id: validPlugin.id, build: {} });
   });
 
   it("preserves the shared semantic module through the plugin contract", () => {
@@ -95,5 +105,20 @@ describe("Forge output-plugin API", () => {
     expect(() =>
       defineForgeOutputPlugin({ ...validPlugin, generate: undefined }),
     ).toThrow("generate");
+    expect(() =>
+      defineForgeOutputPlugin({ ...validPlugin, source: undefined }),
+    ).toThrow("source metadata");
+    expect(() =>
+      defineForgeOutputPlugin({ ...validPlugin, build: { vite: "invalid" } }),
+    ).toThrow("valid Vite or tsdown adapter");
+  });
+
+  it("rejects empty and duplicate caller-owned target selections", () => {
+    expect(() => validateForgeOutputPluginSelection([])).toThrow(
+      "must not be empty",
+    );
+    expect(() =>
+      validateForgeOutputPluginSelection([validPlugin, { ...validPlugin }]),
+    ).toThrow('duplicate target id "custom"');
   });
 });

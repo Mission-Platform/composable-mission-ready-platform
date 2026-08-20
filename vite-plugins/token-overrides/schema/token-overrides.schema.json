@@ -13,6 +13,13 @@
       "type": "string",
       "description": "Human-readable description of the document (DTCG metadata, ignored by the transform)."
     },
+    "component": {
+      "type": "object",
+      "description": "Forge component semantic tokens. Paths are stable kebab-case Figma variable names grouped as component, component name, variant (when applicable), slot, and state. Values may be literals, light/dark pairs, or aliases resolved by the token generator; unknown component paths remain valid for forward-compatible consumer contracts.",
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
+    },
     "border-width": {
       "type": "object",
       "description": "Named border widths. Values are rem relative to the 14px root.",

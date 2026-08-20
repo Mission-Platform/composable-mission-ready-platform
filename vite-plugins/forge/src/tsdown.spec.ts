@@ -45,6 +45,7 @@ describe('Forge tsdown component helpers', () => {
       frameworks: ['vue', 'react', 'astro', 'solid', 'svelte', 'web-components'].map((id) => fixtureFramework(id)),
       componentsModule,
       name: 'MissionPlatformEmailComponents',
+      rejectFixturePlaceholder: false,
     });
     const emailRootDir = path.resolve('/tmp', 'mission-platform-email-components');
     const emailConfig = defineTsdownForgeEmailComponents({
@@ -66,6 +67,7 @@ describe('Forge tsdown component helpers', () => {
       rootDir,
       componentsModule: path.resolve(componentsRootDir, 'src/components/index.ts'),
       frameworks: [fixtureFramework('vue'), fixtureFramework('react')],
+      rejectFixturePlaceholder: false,
     });
 
     expect(Array.isArray(configs)).toBe(true);
@@ -85,6 +87,7 @@ describe('Forge tsdown component helpers', () => {
       outputRoot: stageRoot,
       componentsModule: path.resolve(componentsRootDir, 'src/components/index.ts'),
       frameworks: [fixtureFramework('vue'), fixtureFramework('react')],
+      rejectFixturePlaceholder: false,
     });
 
     expect((configs as UserConfig[]).map((config) => config.outDir)).toEqual([
@@ -101,6 +104,7 @@ describe('Forge tsdown component helpers', () => {
       rootDir,
       outputRoot: stageRoot,
       frameworks: [fixtureFramework('react')],
+      rejectFixturePlaceholder: false,
     });
 
     expect((configs as UserConfig[]).map((config) => config.outDir)).toEqual([

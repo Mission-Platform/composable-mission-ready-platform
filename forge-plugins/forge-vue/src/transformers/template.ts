@@ -1054,6 +1054,14 @@ function readListProjection(
   };
 }
 
+/** Whether a derived expression projects actual render nodes into a list. */
+export function isTemplateListProjection(
+  text: string,
+  nested: readonly GenericRenderNode[],
+): boolean {
+  return readListProjection(text, nested) !== undefined;
+}
+
 /** The loop source and callback source of a list-producing call. */
 function readListCall(
   text: string,

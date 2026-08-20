@@ -1,611 +1,282 @@
 /**
- * Stage-1 (framework-neutral) optimisation passes for the forge compiler.
+ * Stage-1 (framework-neutral) optimisation passes for the Forge compiler.
  *
- * Runs on the parsed TypeScript AST **before** any per-framework emitter, and
- * performs only SAFE, semantics-preserving rewrites:
+ * These passes run on the Oxc-parsed module **before** any per-framework
+ * emitter and perform only SAFE, semantics-preserving rewrites:
  *
  * 1. **Dead-branch pruning** — fold constant conditionals (`true ? a : b`,
  *    `false && x`, `true || x`, and boolean `!` of literals) so emitters never
  *    see unreachable JSX/expressions.
- * 2. **Static-node marking** — tag intrinsic JSX subtrees with no dynamic
- *    bindings using {@link MP_STATIC_ATTR}, so generators can hoist them out of
- *    the render path (and must strip the marker from final emit).
- * 3. **Stable-key inference** — when a `.map(...)` over a statically-analysable
+ * 2. **Stable-key inference** — when a `.map(...)` over a statically-analysable
  *    stable source returns JSX without a `key`, annotate a key from the item or
  *    index parameter.
+ * 3. **Static-node marking** — tag intrinsic JSX subtrees with no dynamic
+ *    bindings using {@link MP_STATIC_ATTR}, so generators can hoist them out of
+ *    the render path. This pass is applied to the framework-neutral generic AST
+ *    (see {@link inferSemanticModule}) via the shared, parser-independent
+ *    {@link optimizeGenericModule} helper.
  *
- * Every pass is a no-op for constructs it does not understand. Transforms are
- * pure (no I/O, no shared mutable state beyond the returned tree).
+ * Dead-branch pruning and stable-key inference are expressed as source edits
+ * computed from Oxc nodes and applied through the shared {@link applySourceEdits}
+ * primitive; the edited source is re-parsed once per pass so no TypeScript AST
+ * or printer is involved. Every pass is a no-op for constructs it does not
+ * understand and no shared mutable parser state escapes a call.
  */
-import ts from 'typescript';
+import { applySourceEdits, type SourceEdit } from '@mission-platform/forge-plugin-api/compiler/ast.js';
+import { constantBoolean, type OptimizeOptions } from '@mission-platform/forge-plugin-api/compiler/optimize.js';
 
-/** JSX attribute name used to mark a hoistable static subtree (stripped by emitters). */
-export const MP_STATIC_ATTR = '__mpStatic';
+import {
+  oxcArray,
+  oxcIdentifierName,
+  oxcNodeText,
+  oxcObject,
+  parseOxcModule,
+  visitOxc,
+  type OxcNode,
+  type OxcParsedModule,
+} from './oxc.js';
 
-/** Options controlling which Stage-1 optimisation passes run. */
-export interface OptimizeOptions {
-  /** Fold constant conditionals / short-circuits. Defaults to `true`. */
-  deadBranchPruning?: boolean;
-  /** Mark static intrinsic JSX subtrees with {@link MP_STATIC_ATTR}. Defaults to `true`. */
-  staticMarking?: boolean;
-  /** Infer `key` on stable `.map(...)` projections missing one. Defaults to `true`. */
-  stableKeyInference?: boolean;
-}
+// Re-export the parser-independent marker/classification contracts so the rest
+// of the compiler (and its public surface) shares a single implementation with
+// the framework plugins instead of a duplicate TypeScript-node version.
+export {
+  constantBoolean,
+  hasJsxKey,
+  hasMpStaticMarker,
+  isCompileTimeConstant,
+  MP_STATIC_ATTR,
+  optimizeGenericModule,
+  stripMpStaticAttributes,
+  stripMpStaticMarker,
+  type OptimizeOptions,
+} from '@mission-platform/forge-plugin-api/compiler/optimize.js';
+
+/** Maximum dead-branch folding iterations before we assume a fixpoint. */
+const MAX_FOLD_ITERATIONS = 16;
 
 /**
- * Whether an expression is a compile-time constant (literal, or a pure
- * combination of constants). Used by Stage-1 folding and Stage-2 emitters that
- * skip reactive wrappers around values that can never change.
+ * Run the source-level Stage-1 optimisation passes (dead-branch pruning and
+ * stable-key inference) over an Oxc-parsed module, returning a re-parsed module
+ * whose source reflects the applied edits. Static-node marking is a pure
+ * record-level transform handled by {@link optimizeGenericModule}.
+ *
+ * Defaults every pass ON; pass `{ deadBranchPruning: false, … }` to disable.
  */
-export function isCompileTimeConstant(expression: ts.Expression): boolean {
-  const node = unwrapExpression(expression);
-  switch (node.kind) {
-    case ts.SyntaxKind.StringLiteral:
-    case ts.SyntaxKind.NoSubstitutionTemplateLiteral:
-    case ts.SyntaxKind.NumericLiteral:
-    case ts.SyntaxKind.TrueKeyword:
-    case ts.SyntaxKind.FalseKeyword:
-    case ts.SyntaxKind.NullKeyword:
-    case ts.SyntaxKind.UndefinedKeyword: {
-      return true;
-    }
-    default: {
-      break;
-    }
+export function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions = {}): OxcParsedModule {
+  const deadBranchPruning = options.deadBranchPruning !== false;
+  const stableKeyInference = options.stableKeyInference !== false;
+
+  let current = module;
+  if (deadBranchPruning) {
+    current = pruneDeadBranches(current);
   }
-  if (ts.isIdentifier(node) && node.text === 'undefined') {
-    return true;
+  if (stableKeyInference) {
+    current = inferStableKeys(current);
   }
-  if (ts.isPrefixUnaryExpression(node)) {
-    return (
-      (node.operator === ts.SyntaxKind.ExclamationToken ||
-        node.operator === ts.SyntaxKind.PlusToken ||
-        node.operator === ts.SyntaxKind.MinusToken) &&
-      isCompileTimeConstant(node.operand)
-    );
-  }
-  if (ts.isArrayLiteralExpression(node)) {
-    return node.elements.every((element) => !ts.isSpreadElement(element) && isCompileTimeConstant(element));
-  }
-  if (ts.isObjectLiteralExpression(node)) {
-    return node.properties.every(
-      (property) =>
-        ts.isPropertyAssignment(property) &&
-        !ts.isComputedPropertyName(property.name) &&
-        isCompileTimeConstant(property.initializer),
-    );
-  }
-  if (ts.isParenthesizedExpression(node)) {
-    return isCompileTimeConstant(node.expression);
-  }
-  if (ts.isAsExpression(node) || ts.isTypeAssertionExpression(node) || ts.isSatisfiesExpression(node)) {
-    return isCompileTimeConstant(node.expression);
-  }
-  return false;
+  return current;
 }
 
-/** Resolve a constant boolean expression to `true`/`false`, or `undefined` if not constant. */
-export function constantBoolean(expression: ts.Expression): boolean | undefined {
-  const node = unwrapExpression(expression);
-  if (node.kind === ts.SyntaxKind.TrueKeyword) {
-    return true;
+/** Compatibility alias retained for compiler integrations using the old name. */
+export const optimizeSourceFile = optimizeForgeModule;
+
+// ─── dead-branch pruning ─────────────────────────────────────────────────────
+
+/**
+ * Fold constant conditionals and boolean short-circuits. Applied as
+ * non-overlapping source edits (outermost foldable node wins per pass), then
+ * re-parsed and repeated to a fixpoint so nested folds resolve.
+ */
+function pruneDeadBranches(module: OxcParsedModule): OxcParsedModule {
+  let current = module;
+  for (let iteration = 0; iteration < MAX_FOLD_ITERATIONS; iteration += 1) {
+    const edits = collectFoldEdits(current);
+    if (edits.length === 0) {
+      return current;
+    }
+    current = parseOxcModule(current.fileName, applySourceEdits(current.source, edits));
   }
-  if (node.kind === ts.SyntaxKind.FalseKeyword) {
-    return false;
+  return current;
+}
+
+function collectFoldEdits(module: OxcParsedModule): SourceEdit[] {
+  const edits: SourceEdit[] = [];
+  const { source } = module;
+  visitOxc(module.program, (node) => {
+    const edit = foldEdit(source, node);
+    if (edit !== undefined) {
+      edits.push(edit);
+      // Do not descend into a folded node; its replacement is re-parsed next pass.
+      return false;
+    }
+    return undefined;
+  });
+  return edits;
+}
+
+function nodeText(source: string, node: OxcNode | undefined): string {
+  return node === undefined ? '' : oxcNodeText(source, node);
+}
+
+/** Compute a fold edit for one node, or `undefined` when it is not constant. */
+function foldEdit(source: string, node: OxcNode): SourceEdit | undefined {
+  if (node.type === 'ConditionalExpression') {
+    const flag = constantBoolean(nodeText(source, oxcObject(node, 'test')));
+    if (flag === undefined) return undefined;
+    const branch = oxcObject(node, flag ? 'consequent' : 'alternate');
+    if (branch === undefined) return undefined;
+    return { start: node.start, end: node.end, text: nodeText(source, branch) };
   }
-  if (ts.isPrefixUnaryExpression(node) && node.operator === ts.SyntaxKind.ExclamationToken) {
-    const inner = constantBoolean(node.operand);
-    return inner === undefined ? undefined : !inner;
+
+  if (node.type === 'LogicalExpression') {
+    const operator = typeof node.operator === 'string' ? node.operator : '';
+    const flag = constantBoolean(nodeText(source, oxcObject(node, 'left')));
+    if (flag === undefined) return undefined;
+    const right = oxcObject(node, 'right');
+    if (operator === '&&') {
+      return { start: node.start, end: node.end, text: flag ? nodeText(source, right) : 'false' };
+    }
+    if (operator === '||') {
+      return { start: node.start, end: node.end, text: flag ? 'true' : nodeText(source, right) };
+    }
+    return undefined;
   }
+
+  if (node.type === 'UnaryExpression' && node.operator === '!') {
+    const flag = constantBoolean(nodeText(source, oxcObject(node, 'argument')));
+    if (flag === undefined) return undefined;
+    return { start: node.start, end: node.end, text: flag ? 'false' : 'true' };
+  }
+
   return undefined;
 }
 
-/** Whether a JSX attribute list already carries a `key` binding. */
-export function hasJsxKey(attributes: ts.JsxAttributes): boolean {
-  return attributes.properties.some(
-    (property) => ts.isJsxAttribute(property) && ts.isIdentifier(property.name) && property.name.text === 'key',
-  );
-}
-
-/** Whether a JSX element/self-closing element carries the Stage-1 static marker. */
-export function hasMpStaticMarker(node: ts.JsxElement | ts.JsxSelfClosingElement): boolean {
-  const attributes = ts.isJsxElement(node) ? node.openingElement.attributes : node.attributes;
-  return attributes.properties.some(
-    (property) =>
-      ts.isJsxAttribute(property) && ts.isIdentifier(property.name) && property.name.text === MP_STATIC_ATTR,
-  );
-}
+// ─── stable-key inference ────────────────────────────────────────────────────
 
 /**
- * Strip {@link MP_STATIC_ATTR} from a JSX attribute list. Emitters call this so
- * the private marker never leaks into framework output.
+ * For `stableSource.map((item[, index]) => <el/>)` without a `key`, insert
+ * `key={item}` (primitive array sources) or `key={index}` when an index
+ * parameter is present. Applied as a single source-edit pass.
  */
-export function stripMpStaticAttributes(factory: ts.NodeFactory, attributes: ts.JsxAttributes): ts.JsxAttributes {
-  const filtered = attributes.properties.filter(
-    (property) =>
-      !(ts.isJsxAttribute(property) && ts.isIdentifier(property.name) && property.name.text === MP_STATIC_ATTR),
-  );
-  if (filtered.length === attributes.properties.length) {
-    return attributes;
+function inferStableKeys(module: OxcParsedModule): OxcParsedModule {
+  const moduleConstArrays = collectModuleConstArrays(module);
+  const edits: SourceEdit[] = [];
+  const seen = new Set<number>();
+
+  visitOxc(module.program, (node) => {
+    if (node.type !== 'CallExpression') return undefined;
+    const callee = oxcObject(node, 'callee');
+    if (callee === undefined) return undefined;
+    if (callee.type !== 'MemberExpression' && callee.type !== 'OptionalMemberExpression') return undefined;
+    if (oxcIdentifierName(oxcObject(callee, 'property')) !== 'map') return undefined;
+    const listSource = oxcObject(callee, 'object');
+    if (listSource === undefined || !isStableMapSource(listSource, moduleConstArrays)) return undefined;
+
+    const [callback] = oxcArray(node, 'arguments');
+    if (callback === undefined) return undefined;
+    if (callback.type !== 'ArrowFunctionExpression' && callback.type !== 'FunctionExpression') return undefined;
+
+    const keyName = inferMapKeyName(callback);
+    if (keyName === undefined) return undefined;
+
+    const returned = returnedJsxElement(callback);
+    if (returned === undefined) return undefined;
+    const opening = returned.type === 'JSXElement' ? (oxcObject(returned, 'openingElement') ?? returned) : returned;
+    if (openingHasKey(opening)) return undefined;
+    const name = oxcObject(opening, 'name');
+    if (name === undefined) return undefined;
+    if (seen.has(name.end)) return undefined;
+    seen.add(name.end);
+    edits.push({ start: name.end, end: name.end, text: ` key={${keyName}}` });
+    return undefined;
+  });
+
+  if (edits.length === 0) {
+    return module;
   }
-  return factory.updateJsxAttributes(attributes, filtered);
-}
-
-/**
- * Return a copy of a JSX element/self-closing element with {@link MP_STATIC_ATTR}
- * removed (children/attributes otherwise preserved).
- */
-export function stripMpStaticMarker(
-  factory: ts.NodeFactory,
-  node: ts.JsxElement | ts.JsxSelfClosingElement,
-): ts.JsxElement | ts.JsxSelfClosingElement {
-  if (ts.isJsxSelfClosingElement(node)) {
-    return factory.updateJsxSelfClosingElement(
-      node,
-      node.tagName,
-      node.typeArguments,
-      stripMpStaticAttributes(factory, node.attributes),
-    );
-  }
-  return factory.updateJsxElement(
-    node,
-    factory.updateJsxOpeningElement(
-      node.openingElement,
-      node.openingElement.tagName,
-      node.openingElement.typeArguments,
-      stripMpStaticAttributes(factory, node.openingElement.attributes),
-    ),
-    node.children,
-    node.closingElement,
-  );
-}
-
-/**
- * Run all enabled Stage-1 optimisation passes over a neutral source file.
- * Defaults every pass ON; pass `{ deadBranchPruning: false, … }` to disable.
- */
-export function optimizeSourceFile(sourceFile: ts.SourceFile, options: OptimizeOptions = {}): ts.SourceFile {
-  const deadBranchPruning = options.deadBranchPruning !== false;
-  const staticMarking = options.staticMarking !== false;
-  const stableKeyInference = options.stableKeyInference !== false;
-
-  if (!deadBranchPruning && !staticMarking && !stableKeyInference) {
-    return sourceFile;
-  }
-
-  let current = sourceFile;
-
-  if (deadBranchPruning) {
-    current = applyTransform(current, createDeadBranchTransformer);
-  }
-  if (stableKeyInference) {
-    current = applyTransform(current, (context) => createStableKeyTransformer(context, current));
-  }
-  if (staticMarking) {
-    current = applyTransform(current, createStaticMarkTransformer);
-  }
-
-  return current;
-}
-
-// ─── internals ──────────────────────────────────────────────────────────────
-
-function applyTransform(
-  sourceFile: ts.SourceFile,
-  factory: (context: ts.TransformationContext) => ts.Transformer<ts.SourceFile>,
-): ts.SourceFile {
-  const result = ts.transform(sourceFile, [factory]);
-  const next = result.transformed[0];
-  result.dispose();
-  return next;
-}
-
-function unwrapExpression(expression: ts.Expression): ts.Expression {
-  let current = expression;
-  while (ts.isParenthesizedExpression(current)) {
-    current = current.expression;
-  }
-  return current;
-}
-
-/** Dead-branch pruning: fold constant ternaries and boolean short-circuits. */
-function createDeadBranchTransformer(context: ts.TransformationContext): ts.Transformer<ts.SourceFile> {
-  const { factory } = context;
-  const visit = (node: ts.Node): ts.Node => {
-    const visited = ts.visitEachChild(node, visit, context);
-
-    if (ts.isConditionalExpression(visited)) {
-      const flag = constantBoolean(visited.condition);
-      if (flag === true) {
-        return visited.whenTrue;
-      }
-      if (flag === false) {
-        return visited.whenFalse;
-      }
-      return visited;
-    }
-
-    if (ts.isBinaryExpression(visited)) {
-      const operator = visited.operatorToken.kind;
-      if (operator === ts.SyntaxKind.AmpersandAmpersandToken) {
-        const left = constantBoolean(visited.left);
-        if (left === true) {
-          return visited.right;
-        }
-        if (left === false) {
-          return factory.createFalse();
-        }
-      }
-      if (operator === ts.SyntaxKind.BarBarToken) {
-        const left = constantBoolean(visited.left);
-        if (left === true) {
-          return factory.createTrue();
-        }
-        if (left === false) {
-          return visited.right;
-        }
-      }
-    }
-
-    if (ts.isPrefixUnaryExpression(visited) && visited.operator === ts.SyntaxKind.ExclamationToken) {
-      const flag = constantBoolean(visited.operand);
-      if (flag === true) {
-        return factory.createFalse();
-      }
-      if (flag === false) {
-        return factory.createTrue();
-      }
-    }
-
-    return visited;
-  };
-  return (file) => ts.visitNode(file, visit) as ts.SourceFile;
-}
-
-/**
- * Stable-key inference: for `stableSource.map((item[, index]) => <el/>)` without
- * a `key`, add `key={item}` (primitive array sources) or `key={index}` when an
- * index parameter is present.
- */
-function createStableKeyTransformer(
-  context: ts.TransformationContext,
-  sourceFile: ts.SourceFile,
-): ts.Transformer<ts.SourceFile> {
-  const { factory } = context;
-  const moduleConstArrays = collectModuleConstArrays(sourceFile);
-
-  const visit = (node: ts.Node): ts.Node => {
-    const visited = ts.visitEachChild(node, visit, context);
-
-    if (!ts.isCallExpression(visited)) {
-      return visited;
-    }
-    if (!ts.isPropertyAccessExpression(visited.expression) || visited.expression.name.text !== 'map') {
-      return visited;
-    }
-    if (!isStableMapSource(visited.expression.expression, moduleConstArrays)) {
-      return visited;
-    }
-    const callback = visited.arguments[0];
-    if (callback === undefined || !(ts.isArrowFunction(callback) || ts.isFunctionExpression(callback))) {
-      return visited;
-    }
-
-    const keyExpression = inferMapKeyExpression(factory, callback);
-    if (keyExpression === undefined) {
-      return visited;
-    }
-
-    const newCallback = injectKeyIntoMapCallback(factory, callback, keyExpression);
-    if (newCallback === callback) {
-      return visited;
-    }
-    return factory.updateCallExpression(visited, visited.expression, visited.typeArguments, [
-      newCallback,
-      ...visited.arguments.slice(1),
-    ]);
-  };
-
-  return (file) => ts.visitNode(file, visit) as ts.SourceFile;
+  return parseOxcModule(module.fileName, applySourceEdits(module.source, edits));
 }
 
 /** Module-level `const name = […literal…]` bindings — stable map sources. */
-function collectModuleConstArrays(sourceFile: ts.SourceFile): ReadonlySet<string> {
+function collectModuleConstArrays(module: OxcParsedModule): ReadonlySet<string> {
   const names = new Set<string>();
-  for (const statement of sourceFile.statements) {
-    if (!ts.isVariableStatement(statement)) {
+  const body = oxcArray(module.program, 'body');
+  for (const statement of body) {
+    const declaration =
+      statement.type === 'VariableDeclaration'
+        ? statement
+        : statement.type === 'ExportNamedDeclaration'
+          ? oxcObject(statement, 'declaration')
+          : undefined;
+    if (declaration === undefined || declaration.type !== 'VariableDeclaration' || declaration.kind !== 'const') {
       continue;
     }
-    if ((statement.declarationList.flags & ts.NodeFlags.Const) === 0) {
-      continue;
-    }
-    for (const declaration of statement.declarationList.declarations) {
-      if (ts.isIdentifier(declaration.name) && declaration.initializer !== undefined) {
-        const init = unwrapExpression(declaration.initializer);
-        // Accept `as const` / type assertions wrapping a literal array.
-        const arrayInit = ts.isArrayLiteralExpression(init)
-          ? init
-          : ts.isAsExpression(init) || ts.isTypeAssertionExpression(init) || ts.isSatisfiesExpression(init)
-            ? unwrapExpression(init.expression)
-            : undefined;
-        if (arrayInit !== undefined && ts.isArrayLiteralExpression(arrayInit)) {
-          names.add(declaration.name.text);
-        } else if (ts.isArrayLiteralExpression(init)) {
-          names.add(declaration.name.text);
-        }
+    for (const declarator of oxcArray(declaration, 'declarations')) {
+      const id = oxcObject(declarator, 'id');
+      const name = oxcIdentifierName(id);
+      if (name === undefined) continue;
+      if (initializerIsArray(oxcObject(declarator, 'init'))) {
+        names.add(name);
       }
     }
   }
   return names;
 }
 
-function isStableMapSource(expression: ts.Expression, moduleConstArrays: ReadonlySet<string>): boolean {
-  const node = unwrapExpression(expression);
-  if (ts.isArrayLiteralExpression(node)) {
-    return true;
+function initializerIsArray(node: OxcNode | undefined): boolean {
+  let current = node;
+  while (
+    current !== undefined &&
+    (current.type === 'TSAsExpression' ||
+      current.type === 'TSSatisfiesExpression' ||
+      current.type === 'TSTypeAssertion' ||
+      current.type === 'ParenthesizedExpression')
+  ) {
+    current = oxcObject(current, 'expression');
   }
-  return ts.isIdentifier(node) && moduleConstArrays.has(node.text);
+  return current !== undefined && current.type === 'ArrayExpression';
 }
 
-/**
- * Choose a key expression for a map callback: prefer the index parameter when
- * present, otherwise the item parameter (safe for primitive array sources).
- */
-function inferMapKeyExpression(
-  factory: ts.NodeFactory,
-  callback: ts.ArrowFunction | ts.FunctionExpression,
-): ts.Expression | undefined {
-  const itemParam = callback.parameters[0];
-  const indexParam = callback.parameters[1];
-  if (indexParam !== undefined && ts.isIdentifier(indexParam.name)) {
-    return factory.createIdentifier(indexParam.name.text);
+function isStableMapSource(node: OxcNode, moduleConstArrays: ReadonlySet<string>): boolean {
+  let current: OxcNode | undefined = node;
+  while (current !== undefined && current.type === 'ParenthesizedExpression') {
+    current = oxcObject(current, 'expression');
   }
-  if (itemParam !== undefined && ts.isIdentifier(itemParam.name)) {
-    return factory.createIdentifier(itemParam.name.text);
-  }
-  return undefined;
-}
-
-/** Inject `key={…}` onto the JSX element returned by a map callback, if missing. */
-function injectKeyIntoMapCallback(
-  factory: ts.NodeFactory,
-  callback: ts.ArrowFunction | ts.FunctionExpression,
-  keyExpression: ts.Expression,
-): ts.ArrowFunction | ts.FunctionExpression {
-  const body = callback.body;
-
-  if (ts.isBlock(body)) {
-    const statements = [...body.statements];
-    const last = statements.at(-1);
-    if (last === undefined || !ts.isReturnStatement(last) || last.expression === undefined) {
-      return callback;
-    }
-    const withKey = addKeyToJsx(factory, last.expression, keyExpression);
-    if (withKey === last.expression) {
-      return callback;
-    }
-    statements[statements.length - 1] = factory.updateReturnStatement(last, withKey);
-    const newBody = factory.updateBlock(body, statements);
-    return updateCallbackBody(factory, callback, newBody);
-  }
-
-  const withKey = addKeyToJsx(factory, body, keyExpression);
-  if (withKey === body) {
-    return callback;
-  }
-  return updateCallbackBody(factory, callback, withKey);
-}
-
-function updateCallbackBody(
-  factory: ts.NodeFactory,
-  callback: ts.ArrowFunction | ts.FunctionExpression,
-  body: ts.ConciseBody,
-): ts.ArrowFunction | ts.FunctionExpression {
-  if (ts.isArrowFunction(callback)) {
-    return factory.updateArrowFunction(
-      callback,
-      callback.modifiers,
-      callback.typeParameters,
-      callback.parameters,
-      callback.type,
-      callback.equalsGreaterThanToken,
-      body,
-    );
-  }
-  if (!ts.isBlock(body)) {
-    return callback;
-  }
-  return factory.updateFunctionExpression(
-    callback,
-    callback.modifiers,
-    callback.asteriskToken,
-    callback.name,
-    callback.typeParameters,
-    callback.parameters,
-    callback.type,
-    body,
-  );
-}
-
-function addKeyToJsx(factory: ts.NodeFactory, expression: ts.Expression, keyExpression: ts.Expression): ts.Expression {
-  const node = unwrapExpression(expression);
-  if (ts.isJsxElement(node)) {
-    if (hasJsxKey(node.openingElement.attributes)) {
-      return expression;
-    }
-    return factory.updateJsxElement(
-      node,
-      factory.updateJsxOpeningElement(
-        node.openingElement,
-        node.openingElement.tagName,
-        node.openingElement.typeArguments,
-        withKeyAttribute(factory, node.openingElement.attributes, keyExpression),
-      ),
-      node.children,
-      node.closingElement,
-    );
-  }
-  if (ts.isJsxSelfClosingElement(node)) {
-    if (hasJsxKey(node.attributes)) {
-      return expression;
-    }
-    return factory.updateJsxSelfClosingElement(
-      node,
-      node.tagName,
-      node.typeArguments,
-      withKeyAttribute(factory, node.attributes, keyExpression),
-    );
-  }
-  // Parenthesized return: re-wrap if we rewrote the inner expression.
-  if (ts.isParenthesizedExpression(expression)) {
-    const inner = addKeyToJsx(factory, expression.expression, keyExpression);
-    if (inner === expression.expression) {
-      return expression;
-    }
-    return factory.updateParenthesizedExpression(expression, inner);
-  }
-  return expression;
-}
-
-function withKeyAttribute(
-  factory: ts.NodeFactory,
-  attributes: ts.JsxAttributes,
-  keyExpression: ts.Expression,
-): ts.JsxAttributes {
-  const keyAttr = factory.createJsxAttribute(
-    factory.createIdentifier('key'),
-    factory.createJsxExpression(undefined, keyExpression),
-  );
-  return factory.updateJsxAttributes(attributes, [keyAttr, ...attributes.properties]);
-}
-
-/**
- * Static-node marking: bottom-up, tag intrinsic JSX elements whose attributes
- * and children are fully static (no expressions, spreads, events, refs, or
- * component tags). Fragments are never marked (no attribute slot); their static
- * children still are.
- */
-function createStaticMarkTransformer(context: ts.TransformationContext): ts.Transformer<ts.SourceFile> {
-  const { factory } = context;
-  const visit = (node: ts.Node): ts.Node => {
-    const visited = ts.visitEachChild(node, visit, context);
-
-    if (ts.isJsxSelfClosingElement(visited) && isStaticJsxElement(visited)) {
-      return markStatic(factory, visited);
-    }
-    if (ts.isJsxElement(visited) && isStaticJsxElement(visited)) {
-      return markStatic(factory, visited);
-    }
-    return visited;
-  };
-  return (file) => ts.visitNode(file, visit) as ts.SourceFile;
-}
-
-function isIntrinsicTag(tag: ts.JsxTagNameExpression): boolean {
-  return ts.isIdentifier(tag) && /^[a-z]/.test(tag.text);
-}
-
-function isStaticJsxElement(node: ts.JsxElement | ts.JsxSelfClosingElement): boolean {
-  if (hasMpStaticMarker(node)) {
-    return true;
-  }
-  const tag = ts.isJsxElement(node) ? node.openingElement.tagName : node.tagName;
-  if (!isIntrinsicTag(tag)) {
-    return false;
-  }
-  const attributes = ts.isJsxElement(node) ? node.openingElement.attributes : node.attributes;
-  if (!attributesAreStatic(attributes)) {
-    return false;
-  }
-  if (ts.isJsxElement(node)) {
-    return node.children.every((child) => isStaticJsxChild(child));
-  }
-  return true;
-}
-
-function isStaticJsxChild(child: ts.JsxChild): boolean {
-  if (ts.isJsxText(child)) {
-    return true;
-  }
-  if (ts.isJsxExpression(child)) {
-    // Empty `{}` is static; a constant expression hole is also static.
-    return child.expression === undefined || isCompileTimeConstant(child.expression);
-  }
-  if (ts.isJsxElement(child) || ts.isJsxSelfClosingElement(child)) {
-    return isStaticJsxElement(child);
-  }
-  if (ts.isJsxFragment(child)) {
-    return child.children.every((nested) => isStaticJsxChild(nested));
+  if (current === undefined) return false;
+  if (current.type === 'ArrayExpression') return true;
+  if (current.type === 'Identifier') {
+    const name = oxcIdentifierName(current);
+    return name !== undefined && moduleConstArrays.has(name);
   }
   return false;
 }
 
-function attributesAreStatic(attributes: ts.JsxAttributes): boolean {
-  for (const property of attributes.properties) {
-    if (ts.isJsxSpreadAttribute(property)) {
-      return false;
-    }
-    if (!ts.isJsxAttribute(property) || !ts.isIdentifier(property.name)) {
-      return false;
-    }
-    const name = property.name.text;
-    if (name === MP_STATIC_ATTR) {
-      continue;
-    }
-    // Events / refs / keys always count as dynamic (keys are list-local).
-    if (name === 'ref' || name === 'key' || /^on[A-Z]/.test(name)) {
-      return false;
-    }
-    const initializer = property.initializer;
-    if (initializer === undefined) {
-      // Boolean attribute: static.
-      continue;
-    }
-    if (ts.isStringLiteral(initializer)) {
-      continue;
-    }
-    if (ts.isJsxExpression(initializer)) {
-      if (initializer.expression === undefined) {
-        continue;
-      }
-      if (!isCompileTimeConstant(initializer.expression)) {
-        return false;
-      }
-      continue;
-    }
-    return false;
-  }
-  return true;
+/**
+ * Choose a key name for a map callback: prefer the index parameter when
+ * present, otherwise the item parameter (safe for primitive array sources).
+ */
+function inferMapKeyName(callback: OxcNode): string | undefined {
+  const params = oxcArray(callback, 'params');
+  const indexName = oxcIdentifierName(params[1]);
+  if (indexName !== undefined) return indexName;
+  return oxcIdentifierName(params[0]);
 }
 
-function markStatic(
-  factory: ts.NodeFactory,
-  node: ts.JsxElement | ts.JsxSelfClosingElement,
-): ts.JsxElement | ts.JsxSelfClosingElement {
-  if (hasMpStaticMarker(node)) {
-    return node;
+/** Resolve the JSX element a map callback returns, unwrapping parens/blocks. */
+function returnedJsxElement(callback: OxcNode): OxcNode | undefined {
+  let body = oxcObject(callback, 'body');
+  if (body !== undefined && body.type === 'BlockStatement') {
+    const returnStatement = oxcArray(body, 'body').find((statement) => statement.type === 'ReturnStatement');
+    body = returnStatement === undefined ? undefined : oxcObject(returnStatement, 'argument');
   }
-  const marker = factory.createJsxAttribute(factory.createIdentifier(MP_STATIC_ATTR), undefined);
-  if (ts.isJsxSelfClosingElement(node)) {
-    return factory.updateJsxSelfClosingElement(
-      node,
-      node.tagName,
-      node.typeArguments,
-      factory.updateJsxAttributes(node.attributes, [marker, ...node.attributes.properties]),
-    );
+  while (body !== undefined && body.type === 'ParenthesizedExpression') {
+    body = oxcObject(body, 'expression');
   }
-  return factory.updateJsxElement(
-    node,
-    factory.updateJsxOpeningElement(
-      node.openingElement,
-      node.openingElement.tagName,
-      node.openingElement.typeArguments,
-      factory.updateJsxAttributes(node.openingElement.attributes, [
-        marker,
-        ...node.openingElement.attributes.properties,
-      ]),
-    ),
-    node.children,
-    node.closingElement,
+  if (body === undefined) return undefined;
+  return body.type === 'JSXElement' || body.type === 'JSXSelfClosingElement' ? body : undefined;
+}
+
+function openingHasKey(opening: OxcNode): boolean {
+  return oxcArray(opening, 'attributes').some(
+    (attribute) => attribute.type === 'JSXAttribute' && oxcIdentifierName(oxcObject(attribute, 'name')) === 'key',
   );
 }

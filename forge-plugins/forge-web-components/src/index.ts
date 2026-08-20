@@ -2,6 +2,7 @@ import { defineForgeOutputPlugin } from "@mission-platform/forge-plugin-api";
 
 import { emitWebComponentModule } from "./emitters/module.js";
 import {
+  inferWebComponentsHost,
   isWebComponentsLowered,
   lowerWebComponentsModule,
   lowerWebComponentsPlan,
@@ -12,12 +13,27 @@ import { emitWebComponentHookModule } from "./runtime/hook-module.js";
 import type {
   FrameworkBuildAdapters,
   FrameworkOutputPlugin,
+  SemanticModule,
+  TargetComponentHost,
   TargetContext,
   TargetIntentions,
   TargetOptimizeOptions,
 } from "@mission-platform/forge-plugin-api";
 
 const BUILD: FrameworkBuildAdapters = { vite: () => [], tsdown: () => [] };
+
+/** Host metadata for components shared across independently built packages. */
+const SHARED_COMPONENT_HOSTS = {
+  "forge-dropdown": { baseTag: "div", invocation: "is-attribute" },
+  "forge-typography": { baseTag: "span", invocation: "is-attribute" },
+} as const satisfies Readonly<Record<string, TargetComponentHost>>;
+
+function componentTagName(name: string): string {
+  return name
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .replace(/([A-Z]+)([A-Z][a-z])/g, "$1-$2")
+    .toLowerCase();
+}
 
 /** Create the TypeScript-only Web Components output plugin. */
 export function forgeWebComponentsFramework(): FrameworkOutputPlugin {
@@ -37,6 +53,23 @@ export function forgeWebComponentsFramework(): FrameworkOutputPlugin {
       "@mission-platform/forge/web-components",
     ],
     displayNameSuffix: "WebComponents",
+    prepareComponentHosts(
+      modules: readonly { componentName: string; module: SemanticModule }[],
+    ): ReadonlyMap<string, TargetComponentHost> {
+      return new Map([
+        ...Object.entries(SHARED_COMPONENT_HOSTS),
+        ...modules.map(({ componentName, module }) => {
+          const host = inferWebComponentsHost(module.ast.component?.returnNode);
+          return [
+            componentTagName(componentName),
+            {
+              baseTag: host.baseTag,
+              invocation: host.invocation,
+            },
+          ] as const;
+        }),
+      ]);
+    },
     lower: lowerWebComponentsModule,
     optimize(
       intentions: TargetIntentions,
@@ -77,13 +110,21 @@ export {
   isWebComponentsLowered,
   lowerWebComponentsModule,
   lowerWebComponentsPlan,
+  DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY,
+  DEFAULT_WEBCOMPONENTS_SHADOW_POLICY,
+  inferWebComponentsHost,
   UNKNOWN_TYPE,
+  WEBCOMPONENTS_NATIVE_HOSTS,
   WEB_COMPONENTS_FRAMEWORK,
   type WebComponentsCleanupField,
   type WebComponentsDerivedBody,
   type WebComponentsDerivedValue,
   type WebComponentsElementRef,
   type WebComponentsGeneratedId,
+  type WebComponentsHostFallbackReason,
+  type WebComponentsHostKind,
+  type WebComponentsHostPlan,
+  type WebComponentsInternalsPolicy,
   type WebComponentsLifecycleCallback,
   type WebComponentsLifecycleHook,
   type WebComponentsListKey,
@@ -92,6 +133,8 @@ export {
   type WebComponentsPropertyDeclaration,
   type WebComponentsReactiveProperty,
   type WebComponentsRuntimeImports,
+  type WebComponentsRegistrationOptions,
+  type WebComponentsShadowPolicy,
   type WebComponentsSetupPhase,
   type WebComponentsStateField,
   type WebComponentsStaticTemplatePart,

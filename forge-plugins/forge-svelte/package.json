@@ -26,6 +26,7 @@
   "dependencies": {
     "@mission-platform/forge-plugin-api": "workspace:*",
     "@sveltejs/vite-plugin-svelte": "catalog:svelte",
+    "oxc-parser": "catalog:compiler",
     "svelte": "catalog:svelte",
     "typescript": "catalog:typescript"
   },

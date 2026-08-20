@@ -7,6 +7,7 @@ import {
   elementRef,
   expressionAttribute,
   expressionChild,
+  fragment,
   dynamicNode,
   listKey,
   memo,
@@ -73,6 +74,74 @@ describe("the Web-Components lowering phase", () => {
     expect(plan.className).toBe("ForgeFixtureElement");
     expect(plan.tagName).toBe("forge-fixture");
     expect(plan.appliedOptimizations).toEqual([]);
+  });
+
+  it.each([
+    ["div", "HTMLDivElement"],
+    ["span", "HTMLSpanElement"],
+    ["p", "HTMLParagraphElement"],
+    ["h1", "HTMLHeadingElement"],
+    ["h6", "HTMLHeadingElement"],
+  ] as const)("selects a customized built-in for <%s>", (tag, constructor) => {
+    const plan = lower(
+      hostModule({
+        component: component({
+          name: "ForgeFixture",
+          returnNode: element(tag),
+        }),
+      }),
+    );
+
+    expect(plan.host).toEqual({
+      kind: "customized-built-in",
+      baseTag: tag,
+      constructorExpression: constructor,
+      registrationExtends: tag,
+      registrationOptions: { extends: tag },
+      invocation: "is-attribute",
+    });
+    expect(plan.shadow).toEqual({ mode: "open" });
+    expect(plan.internals).toEqual({ attach: true });
+  });
+
+  it.each([
+    ["missing root", undefined, "missing-root"],
+    ["a fragment root", fragment([]), "fragment-root"],
+    [
+      "an invalid intrinsic root",
+      element("1div", { tagKind: "element" }),
+      "invalid-root",
+    ],
+    ["an unsupported intrinsic root", element("button"), "unsupported-root"],
+  ] as const)(
+    "retains an autonomous host for %s",
+    (_label, returnNode, reason) => {
+      const plan = lower(
+        hostModule({
+          component: component({ name: "ForgeFixture", returnNode }),
+        }),
+      );
+
+      expect(plan.host).toMatchObject({
+        kind: "autonomous",
+        constructorExpression: "ForgeElement",
+        invocation: "custom-tag",
+        fallbackReason: reason,
+      });
+    },
+  );
+
+  it("retains an autonomous host for a dynamic root", () => {
+    const plan = lower(
+      hostModule({
+        component: component({
+          name: "ForgeFixture",
+          returnNode: element("tag", { tagKind: "dynamic" }),
+        }),
+      }),
+    );
+
+    expect(plan.host.fallbackReason).toBe("dynamic-root");
   });
 
   it("narrows a target plan without casting", () => {
@@ -508,10 +577,20 @@ describe("the Web-Components lowering phase", () => {
       },
       {
         callback: "disconnectedCallback",
-        callsSuper: false,
+        callsSuper: true,
         statements: [
           "this.__mpCleanup0?.();",
           "this.__mpCleanup0 = undefined;",
+        ],
+      },
+      {
+        callback: "updatedCallback",
+        callsSuper: true,
+        statements: [
+          "this.__mpCleanup0?.();",
+          "this.__mpCleanup0 = undefined;",
+          "this.__mpCleanup0 = (() => { start(); })();",
+          "(() => { warmUp(); })();",
         ],
       },
     ]);
@@ -576,16 +655,17 @@ describe("the Web-Components lowering phase", () => {
       }),
     );
 
-    // `nothing` is part of the target's structural header contract, so it is
-    // never pruned; only `unsafeHtml` and unreferenced local types are.
+    // The direct-DOM result and `nothing` are structural; compatibility `html`
+    // is imported only when retained legacy code reaches for it.
     expect(plain.runtimeImports).toEqual({
-      values: ["ForgeElement", "html", "nothing"],
+      values: ["ForgeElement", "DomTemplateResult", "nothing"],
       types: [],
       localTypes: [],
     });
     expect(conditional.runtimeImports.values).toEqual([
       "ForgeElement",
-      "html",
+      "DomTemplateResult",
+      "dynamicElement",
       "nothing",
     ]);
     // The `static properties` map is annotated with the runtime's own
@@ -615,34 +695,53 @@ describe("the Web-Components lowering phase", () => {
     ]);
   });
 
-  it("reports what the native target cannot express", () => {
+  it("lowers retained neutral dynamic-element calls to the native runtime", () => {
+    const plan = lower(
+      semanticModule({
+        declarations: [statement("export const content = h('div', {});")],
+      }),
+    );
+
+    expect(plan.retainedDeclarations).toEqual([
+      "export const content = dynamicElement('div', {});",
+    ]);
+    expect(plan.runtimeImports.values).toContain("dynamicElement");
+  });
+
+  it("lowers spread bindings without diagnostics", () => {
     const intentions = lowerWebComponentsModule(
       semanticModule({
+        fileName: "src/Fixture.tsx",
         component: component({
           name: "ForgeFixture",
           parameter: "properties",
           returnNode: element("span", {
-            attributes: [spreadAttribute("rest")],
+            attributes: [
+              spreadAttribute("rest", {
+                start: 41,
+                end: 50,
+                line: 3,
+                column: 17,
+              }),
+            ],
           }),
         }),
-        dynamicNodes: [dynamicNode("tag")],
+        dynamicNodes: [
+          dynamicNode("tag", {
+            start: 24,
+            end: 27,
+            line: 3,
+            column: 1,
+          }),
+        ],
       }),
       CONTEXT,
     );
 
     expect(intentions.framework).toBe("web-components");
     expect(intentions.lowered).toBeDefined();
-    expect(
-      intentions.diagnostics?.map((diagnostic) => diagnostic.code),
-    ).toEqual([
-      "FORGE_WC_DYNAMIC_TAG_UNSUPPORTED",
-      "FORGE_WC_SPREAD_ATTRIBUTE_UNSUPPORTED",
-    ]);
-    expect(
-      intentions.diagnostics?.every(
-        (diagnostic) => diagnostic.severity === "warning",
-      ),
-    ).toBe(true);
+    expect(intentions.diagnostics).toEqual([]);
+    expect(intentions.lowered?.template.template).toContain("dynamicElement");
   });
 
   it("lowers a module with no component into a slot-only plan", () => {
@@ -652,5 +751,23 @@ describe("the Web-Components lowering phase", () => {
     expect(plan.template.head).toEqual([]);
     expect(plan.reactiveProperties).toEqual([]);
     expect(plan.stateFields).toEqual([]);
+  });
+
+  it("classifies direct children aliases as default-slot outlets", () => {
+    const plan = lower(
+      semanticModule({
+        component: component({
+          name: "ForgeFixture",
+          parameter: "properties",
+          body: [statement("const children = properties.children;")],
+          returnNode: element("div", {
+            children: [expressionChild("children")],
+          }),
+        }),
+        props: [prop("children", "MpChild", true)],
+      }),
+    );
+
+    expect(plan.template.template).toBe("<div><slot></slot></div>");
   });
 });

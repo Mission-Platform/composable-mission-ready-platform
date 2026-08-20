@@ -1,12 +1,16 @@
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { forgeReactFramework } from '../../../forge-plugins/forge-react/src';
+import { forgeSolidFramework } from '../../../forge-plugins/forge-solid/src';
 import { forgeSvelteFramework } from '../../../forge-plugins/forge-svelte/src';
 import { forgeVueFramework } from '../../../forge-plugins/forge-vue/src';
+import { forgeWebComponentsFramework } from '../../../forge-plugins/forge-web-components/src';
 
+import { createForgeCompilerService } from './compiler/service';
 import {
   generateEntry,
   generateFrameworkSources,
@@ -14,7 +18,7 @@ import {
   jsxComponentsDtsPlugin,
 } from './generate';
 
-import type { DiscoveredComponent, DiscoveredHelperExport } from './compiler/discover';
+import type { DiscoveredComponent, DiscoveredExternalExport, DiscoveredHelperExport } from './compiler/discover';
 import type { FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
 
 /**
@@ -80,6 +84,7 @@ function component(
     typeExports: overrides.typeExports ?? [],
     folder,
     sourceDir: overrides.sourceDir ?? folder,
+    sourceSpecifier: overrides.sourceSpecifier ?? `./${overrides.sourceDir ?? folder}`,
   };
 }
 
@@ -143,6 +148,323 @@ const aliasPreservingPlugin: FrameworkOutputPlugin = {
 };
 
 describe('generateFrameworkSources', () => {
+  it('carries transitive Forge Web Script imports into the generated tree', () => {
+    const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-fws-assets-'));
+    const componentsDir = path.join(packageDir, 'src', 'components');
+    const fwsDir = path.join(packageDir, 'src', 'fws');
+    const sourceIndex = path.join(componentsDir, 'index.ts');
+    const outDir = path.join(packageDir, 'generated', 'svelte');
+
+    try {
+      mkdirSync(componentsDir, { recursive: true });
+      mkdirSync(fwsDir, { recursive: true });
+      writeFileSync(sourceIndex, "export { ForgeCard } from './forge-card';\n");
+      writeFileSync(
+        path.join(componentsDir, 'forge-card.tsx'),
+        [
+          "import { h, type MpElement } from '@mission-platform/forge';",
+          "import { encodeValue } from '../encoder';",
+          '',
+          'export function ForgeCard(): MpElement {',
+          "  return <span>{encodeValue('nested')}</span>;",
+          '}',
+          '',
+        ].join('\n'),
+      );
+      writeFileSync(
+        path.join(packageDir, 'src', 'encoder.ts'),
+        ["import './fws/entry.fws';", 'export function encodeValue(value: string): string { return value; }', ''].join(
+          '\n',
+        ),
+      );
+      writeFileSync(path.join(fwsDir, 'entry.fws'), 'import "./nested.fws" as nested;\n');
+      writeFileSync(
+        path.join(fwsDir, 'nested.fws'),
+        'export fn encode_nested(value: string) -> string { return value; }\n',
+      );
+
+      generateFrameworkSources({
+        plugin: forgeSvelteFramework(),
+        componentsModule: sourceIndex,
+        outDir,
+      });
+
+      expect(readFileSync(path.join(outDir, 'fws', 'entry.fws'), 'utf8')).toContain('nested.fws');
+      expect(readFileSync(path.join(outDir, 'fws', 'nested.fws'), 'utf8')).toContain('encode_nested');
+    } finally {
+      rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
+
+  it('writes authored target-native modules for every built-in framework plugin', () => {
+    const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-real-framework-artifacts-'));
+    const componentsDir = path.join(packageDir, 'src', 'components');
+    const componentDir = path.join(componentsDir, 'forge-card');
+    const helpersDir = path.join(packageDir, 'src', 'helpers');
+    const sourceIndex = path.join(componentsDir, 'index.ts');
+    const frameworkPlugins: readonly [string, FrameworkOutputPlugin, string, string][] = [
+      ['react', forgeReactFramework(), '.tsx', 'from "react"'],
+      ['vue', forgeVueFramework(), '.vue', '<script'],
+      ['solid', forgeSolidFramework(), '.tsx', 'from "solid-js"'],
+      ['svelte', forgeSvelteFramework(), '.svelte', '<script'],
+      ['web-components', forgeWebComponentsFramework(), '.ts', 'customElements.define'],
+    ];
+
+    try {
+      mkdirSync(componentDir, { recursive: true });
+      mkdirSync(helpersDir, { recursive: true });
+      writeFileSync(
+        sourceIndex,
+        [
+          "export { ForgeCard, type CardProperties } from './forge-card';",
+          "export { createCard, type CardOptions } from '../helpers/card';",
+          '',
+        ].join('\n'),
+      );
+      writeFileSync(
+        path.join(componentDir, 'forge-card.tsx'),
+        [
+          "import { h, type MpElement } from '@mission-platform/forge';",
+          "import { createCard } from '@/helpers/card';",
+          '',
+          'export interface CardProperties { label?: string; }',
+          '',
+          'export function ForgeCard(properties: CardProperties): MpElement {',
+          "  const tone = createCard({ tone: 'artifact-boundary' });",
+          "  return <button data-forge-marker={tone}>{properties.label ?? 'ForgeCard authored body'}</button>;",
+          '}',
+          '',
+        ].join('\n'),
+      );
+      writeFileSync(
+        path.join(helpersDir, 'card.ts'),
+        [
+          'export type CardOptions = { tone: string };',
+          'export function createCard(options: CardOptions): string { return options.tone; }',
+          '',
+        ].join('\n'),
+      );
+
+      for (const [id, plugin, extension, marker] of frameworkPlugins) {
+        const outDir = path.join(packageDir, 'generated', id);
+        generateFrameworkSources({ plugin, componentsModule: sourceIndex, outDir });
+
+        const componentPath = path.join(outDir, 'components', 'forge-card', `forge-card${extension}`);
+        const componentSource = readFileSync(componentPath, 'utf8');
+        const entrySource = readFileSync(path.join(outDir, `index${plugin.source.entryExtension}`), 'utf8');
+        const helperSource = readFileSync(path.join(outDir, 'helpers', 'card.ts'), 'utf8');
+
+        expect(componentSource, `${id} component`).toContain('ForgeCard');
+        expect(componentSource, `${id} authored body`).toContain('artifact-boundary');
+        expect(componentSource, `${id} target marker`).toContain(marker);
+        expect(componentSource, `${id} placeholder`).not.toContain('export const fixture = true;');
+        expect(helperSource, `${id} helper`).toContain('createCard');
+        expect(entrySource, `${id} entry`).toContain('ForgeCard');
+        expect(entrySource, `${id} entry helper`).toContain('createCard');
+
+        const generatedFiles: string[] = [];
+        const visit = (directory: string): void => {
+          for (const entry of readdirSync(directory, { withFileTypes: true })) {
+            const fullPath = path.join(directory, entry.name);
+            if (entry.isDirectory()) visit(fullPath);
+            else generatedFiles.push(fullPath);
+          }
+        };
+        visit(outDir);
+        for (const generatedFile of generatedFiles) {
+          expect(readFileSync(generatedFile, 'utf8'), `${id} ${generatedFile}`).not.toContain(
+            'export const fixture = true;',
+          );
+        }
+      }
+    } finally {
+      rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
+  it('passes inferred sibling hosts to Web Components child templates', () => {
+    const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-web-components-hosts-'));
+    const componentsDir = path.join(packageDir, 'src', 'components');
+    const childDir = path.join(componentsDir, 'forge-card');
+    const parentDir = path.join(componentsDir, 'forge-panel');
+    const outDir = path.join(packageDir, 'generated', 'web-components');
+
+    try {
+      mkdirSync(childDir, { recursive: true });
+      mkdirSync(parentDir, { recursive: true });
+      writeFileSync(path.join(componentsDir, 'index.ts'), "export { ForgePanel } from './forge-panel';\n");
+      writeFileSync(path.join(childDir, 'forge-card.tsx'), 'export function ForgeCard(): null { return <div />; }\n');
+      writeFileSync(
+        path.join(parentDir, 'forge-panel.tsx'),
+        [
+          "import { ForgeCard } from '../forge-card/forge-card';",
+          '',
+          'export function ForgePanel(): null { return <ForgeCard />; }',
+          '',
+        ].join('\n'),
+      );
+
+      generateFrameworkSources({
+        plugin: forgeWebComponentsFramework(),
+        componentsModule: path.join(componentsDir, 'index.ts'),
+        outDir,
+      });
+
+      const generatedPanel = readFileSync(path.join(outDir, 'components', 'forge-panel', 'forge-panel.ts'), 'utf8');
+      expect(generatedPanel).toContain('<div is="forge-card"></div>');
+      expect(generatedPanel).not.toContain('<forge-card></forge-card>');
+    } finally {
+      rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
+
+  it('reuses neutral analysis on warm and multi-target generation and records isolated snapshots', () => {
+    const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-generation-snapshot-'));
+    const componentsDir = path.join(packageDir, 'src', 'components');
+    const sourceDir = path.join(componentsDir, 'atoms', 'forge-typography');
+    const vueOutDir = path.join(packageDir, 'generated', 'vue');
+    const svelteOutDir = path.join(packageDir, 'generated', 'svelte');
+    const service = createForgeCompilerService();
+    try {
+      mkdirSync(sourceDir, { recursive: true });
+      writeFileSync(
+        path.join(componentsDir, 'index.ts'),
+        "export { ForgeTypography } from './atoms/forge-typography';\n",
+      );
+      writeFileSync(path.join(sourceDir, 'index.ts'), "export { ForgeTypography } from './forge-typography';\n");
+      writeFileSync(path.join(sourceDir, 'forge-typography.tsx'), TYPOGRAPHY_SOURCE);
+
+      generateFrameworkSources({
+        plugin: forgeVueFramework(),
+        componentsModule: path.join(componentsDir, 'index.ts'),
+        outDir: vueOutDir,
+        service,
+      });
+      const generatedComponent = path.join(
+        vueOutDir,
+        'components',
+        'atoms',
+        'forge-typography',
+        'forge-typography.vue',
+      );
+      const firstMtime = statSync(generatedComponent).mtimeMs;
+      const firstManifest = JSON.parse(readFileSync(path.join(vueOutDir, '.forge-artifact-manifest.json'), 'utf8')) as {
+        targetId: string;
+        complete: boolean;
+        artifacts: { fileName: string; hash: string }[];
+      };
+
+      generateFrameworkSources({
+        plugin: forgeVueFramework(),
+        componentsModule: path.join(componentsDir, 'index.ts'),
+        outDir: vueOutDir,
+        service,
+      });
+      const secondMtime = statSync(generatedComponent).mtimeMs;
+      expect(secondMtime).toBe(firstMtime);
+      expect(service.report().cache.semanticHits).toBeGreaterThan(0);
+
+      generateFrameworkSources({
+        plugin: forgeSvelteFramework(),
+        componentsModule: path.join(componentsDir, 'index.ts'),
+        outDir: svelteOutDir,
+        service,
+      });
+      const secondManifest = JSON.parse(
+        readFileSync(path.join(svelteOutDir, '.forge-artifact-manifest.json'), 'utf8'),
+      ) as {
+        targetId: string;
+        complete: boolean;
+        artifacts: { fileName: string; hash: string }[];
+      };
+      expect(firstManifest).toMatchObject({ targetId: 'vue', complete: true });
+      expect(secondManifest).toMatchObject({ targetId: 'svelte', complete: true });
+      expect(firstManifest.artifacts.length).toBeGreaterThan(1);
+      expect(secondManifest.artifacts.length).toBeGreaterThan(1);
+      expect(firstManifest.artifacts.map((artifact) => artifact.fileName)).not.toEqual(
+        secondManifest.artifacts.map((artifact) => artifact.fileName),
+      );
+    } finally {
+      service.dispose();
+      rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
+
+  it('clears a generated tree when a target is switched in place', () => {
+    const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-generation-target-switch-'));
+    const componentsDir = path.join(packageDir, 'src', 'components');
+    const componentDir = path.join(componentsDir, 'forge-card');
+    const outDir = path.join(packageDir, 'generated');
+    try {
+      mkdirSync(componentDir, { recursive: true });
+      writeFileSync(path.join(componentsDir, 'index.ts'), "export { ForgeCard } from './forge-card';\n");
+      writeFileSync(path.join(componentDir, 'forge-card.tsx'), 'export function ForgeCard() { return <div />; }\n');
+
+      generateFrameworkSources({
+        plugin: forgeVueFramework(),
+        componentsModule: path.join(componentsDir, 'index.ts'),
+        outDir,
+      });
+      expect(statSync(path.join(outDir, 'components', 'forge-card', 'forge-card.vue'))).toBeDefined();
+
+      generateFrameworkSources({
+        plugin: forgeSvelteFramework(),
+        componentsModule: path.join(componentsDir, 'index.ts'),
+        outDir,
+      });
+      expect(statSync(path.join(outDir, 'components', 'forge-card', 'forge-card.svelte'))).toBeDefined();
+      expect(() => statSync(path.join(outDir, 'components', 'forge-card', 'forge-card.vue'))).toThrow();
+      expect(JSON.parse(readFileSync(path.join(outDir, '.forge-artifact-manifest.json'), 'utf8'))).toMatchObject({
+        targetId: 'svelte',
+        complete: true,
+      });
+      const staleFile = path.join(outDir, 'stale-placeholder.ts');
+      writeFileSync(staleFile, 'export const fixture = true;\n');
+      generateFrameworkSources({
+        plugin: forgeSvelteFramework(),
+        componentsModule: path.join(componentsDir, 'index.ts'),
+        outDir,
+      });
+      expect(() => statSync(staleFile)).toThrow();
+    } finally {
+      rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
+
+  it('fails before writing a test fixture placeholder from a production generation path', () => {
+    const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-generation-placeholder-'));
+    const componentsDir = path.join(packageDir, 'src', 'components');
+    const componentDir = path.join(componentsDir, 'forge-card');
+    const outDir = path.join(packageDir, 'generated');
+    const placeholderPlugin: FrameworkOutputPlugin = {
+      ...aliasPreservingPlugin,
+      id: 'placeholder-production-path',
+      generate: () => ({ code: 'export const fixture = true;', lang: 'vue' }),
+    };
+    try {
+      mkdirSync(componentDir, { recursive: true });
+      writeFileSync(path.join(componentsDir, 'index.ts'), "export { ForgeCard } from './forge-card';\n");
+      writeFileSync(path.join(componentDir, 'forge-card.tsx'), 'export function ForgeCard() { return <div />; }\n');
+      generateFrameworkSources({
+        plugin: aliasPreservingPlugin,
+        componentsModule: path.join(componentsDir, 'index.ts'),
+        outDir,
+      });
+      expect(statSync(path.join(outDir, '.forge-artifact-manifest.json'))).toBeDefined();
+
+      expect(() =>
+        generateFrameworkSources({
+          plugin: placeholderPlugin,
+          componentsModule: path.join(componentsDir, 'index.ts'),
+          outDir,
+          rejectFixturePlaceholder: true,
+        }),
+      ).toThrow('generated the test fixture placeholder');
+      expect(() => statSync(path.join(outDir, '.forge-artifact-manifest.json'))).toThrow();
+    } finally {
+      rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
+
   it('emits valid default re-exports from nested component folder entries', () => {
     const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-svelte-folder-entry-'));
     const componentsDir = path.join(packageDir, 'src', 'components');
@@ -231,10 +553,11 @@ describe('generateFrameworkSources', () => {
 
       const plugin = jsxComponentsDtsPlugin({ framework: 'react', generatedDir, outDir });
       const warnings: string[] = [];
-      if (typeof plugin.closeBundle !== 'function') {
+      const closeBundle = plugin.closeBundle;
+      if (typeof closeBundle !== 'function') {
         throw new TypeError('expected a function closeBundle hook');
       }
-      await plugin.closeBundle.call({ warn: (message: string) => warnings.push(message) });
+      await closeBundle.call({ warn: (message: unknown) => warnings.push(String(message)) } as never);
 
       expect(warnings.some((warning) => warning.includes("Cannot find module '@/types'"))).toBe(false);
       expect(warnings.some((warning) => warning.includes('rootDir'))).toBe(false);
@@ -527,6 +850,38 @@ describe('generateEntry', () => {
     expect(entry).toContain("export { ForgeBadge as ForgeBadge } from './forge-badge';");
   });
 
+  it('preserves value, type, and aliased external barrel re-exports', () => {
+    const externalExports: DiscoveredExternalExport[] = [
+      {
+        specifier: '@mission-platform/select',
+        exportedName: 'ForgeSelect',
+        localName: 'ForgeSelect',
+        typeOnly: false,
+        star: false,
+      },
+      {
+        specifier: '@mission-platform/select',
+        exportedName: 'SelectProperties',
+        localName: 'SelectProperties',
+        typeOnly: true,
+        star: false,
+      },
+      {
+        specifier: '@mission-platform/select',
+        exportedName: 'LanguageSwitcher',
+        localName: 'ForgeLanguageSwitcher',
+        typeOnly: false,
+        star: false,
+      },
+    ];
+
+    const entry = generateEntry('web-components', [], [], undefined, externalExports);
+
+    expect(entry).toContain("export { ForgeSelect } from '@mission-platform/select';");
+    expect(entry).toContain("export { type SelectProperties } from '@mission-platform/select';");
+    expect(entry).toContain("export { ForgeLanguageSwitcher as LanguageSwitcher } from '@mission-platform/select';");
+  });
+
   it('re-exports every companion type a component ships, from the React `.tsx` module (type-only)', () => {
     const entry = generateEntry('react', [
       component({
@@ -716,7 +1071,7 @@ describe('jsxComponentsCssImportPlugin', () => {
 
   it('prepends a relative side-effect import for each CSS file a chunk owns', () => {
     const cssName = 'forge-badge.vue_vue_type_style_index_0_scoped_88cf7452_lang.css';
-    const bundle = {
+    const bundle: Record<string, Record<string, unknown>> = {
       'forge-badge.js': chunk('forge-badge.js', 'export { n as default };', [cssName]),
       [cssName]: asset(cssName),
     };
@@ -777,7 +1132,7 @@ describe('jsxComponentsCssImportPlugin', () => {
     // hashing already baked into the sibling `.module.js` map. Keeping the
     // `.module.css` suffix makes a downstream bundler re-hash it (breaking the
     // class-name match), so it must ship as a plain, global `.css`.
-    const bundle = {
+    const bundle: Record<string, Record<string, unknown>> = {
       'map-libre.module.js': chunk('map-libre.module.js', 'export { e as default };', ['map-libre.module.css']),
       'map-libre.module.css': asset('map-libre.module.css'),
     };

@@ -21,6 +21,7 @@ export {
   contentFields,
   slotFields,
   type ContentComponent,
+  type ContentComponentMetadata,
   type ContentComponentNames,
   type ContentComponentNamesInput,
   type ContentDefaultValue,
@@ -40,7 +41,11 @@ export {
 } from "./classify.js";
 
 export {
+  CMS_COLOR_TAG,
+  CMS_COLOUR_TAG,
+  CMS_ICON_TAG,
   CMS_SETTING_TAG,
+  CMS_TAB_TAG,
   DEFAULT_SLOT_FIELD,
   analyzeContentComponent,
   deriveContentComponentNames,

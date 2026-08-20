@@ -1,15 +1,18 @@
-import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 
-import { createGenericAst, parseForgeSource, scriptKindForFileName, parseFrontendModule } from './frontends.js';
+import { readExternalImports, readStyleImports } from './ast.js';
+import { compileComponentModule } from './compiler-test-helpers.js';
+import { createGenericAst, parseForgeSource, parseFrontendModule } from './frontends.js';
 import { inferSemanticModule } from './infer.js';
+import { analyzeForgeModule } from './pipeline.js';
 
 describe('Forge source frontends', () => {
-  it('selects TypeScript parser modes from source extensions', () => {
-    expect(scriptKindForFileName('use-data.js')).toBe(ts.ScriptKind.JS);
-    expect(scriptKindForFileName('use-data.jsx')).toBe(ts.ScriptKind.JSX);
-    expect(scriptKindForFileName('use-data.ts')).toBe(ts.ScriptKind.TS);
-    expect(scriptKindForFileName('ForgeCard.tsx')).toBe(ts.ScriptKind.TSX);
+  it('parses all supported source extensions through Oxc', () => {
+    for (const fileName of ['use-data.js', 'use-data.jsx', 'use-data.ts', 'ForgeCard.tsx']) {
+      const frontend = parseFrontendModule(fileName, 'export const value = 1;', 'composable');
+      expect(frontend.oxc.fileName).toBe(fileName);
+      expect(frontend.diagnostics).toHaveLength(0);
+    }
   });
 
   it('builds a serializable generic AST and removes framework directives', () => {
@@ -24,10 +27,140 @@ describe('Forge source frontends', () => {
     expect(ast.declarations.map((entry) => entry.statementKind)).toEqual(['expression', 'variable']);
     expect(ast.declarations[1]?.exported).toBe(true);
     expect(ast.component).toBeUndefined();
-    expect(frontend.sourceFile.statements[0]?.getText()).toContain('import');
+    expect(frontend.oxc.source).toContain('import');
     expect(JSON.stringify(ast)).not.toContain('SourceFileObject');
     expect('sourceFile' in ast).toBe(false);
   });
+
+  it('reports Oxc parser diagnostics with source locations', () => {
+    const frontend = parseFrontendModule(
+      'Broken.tsx',
+      'export function Broken() {\n  return <div>\n}',
+      'component',
+      'Broken',
+    );
+
+    expect(frontend.diagnostics.length).toBeGreaterThan(0);
+    expect(frontend.diagnostics).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          phase: 'frontend',
+          severity: 'error',
+          code: 'FORGE_FRONTEND_PARSE_ERROR',
+          fileName: 'Broken.tsx',
+          message: expect.stringContaining('[OXC]'),
+          span: expect.objectContaining({
+            start: expect.any(Number),
+            end: expect.any(Number),
+            line: 3,
+            column: expect.any(Number),
+          }),
+        }),
+      ]),
+    );
+    expect(frontend.diagnostics.every((diagnostic) => diagnostic.span?.end !== undefined)).toBe(true);
+  });
+
+  it('normalizes Oxc imports, aliases, JSX, and framework directives', () => {
+    const source = [
+      '"use vue";',
+      'import Component, { type Properties, value as alias } from "./component";',
+      'export { alias as rendered } from "./component";',
+      'export function ForgeCard(properties: Properties) { return <Component value={alias} {...properties} />; }',
+    ].join('\n');
+    const parsed = parseForgeSource('ForgeCard.tsx', source);
+    const oxc = parsed;
+
+    expect(oxc.facts.frameworkDirective).toBe('vue');
+    expect(oxc.facts.hasJsx).toBe(true);
+    expect(oxc.facts.imports[0]).toMatchObject({
+      specifier: './component',
+      valueNames: ['Component', 'alias'],
+      typeNames: ['Properties'],
+    });
+    expect(oxc.facts.exports).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ exportedName: 'rendered', localName: 'alias', specifier: './component' }),
+        expect.objectContaining({ exportedName: 'ForgeCard', localName: 'ForgeCard' }),
+      ]),
+    );
+  });
+
+  it('reads generation imports and i18next usage from Oxc facts', () => {
+    const source = [
+      "import styles, { type Theme } from './card.module.scss';",
+      "import './reset.css';",
+      "import { format } from '@mission-platform/format';",
+      "import i18next from 'i18next';",
+      '',
+      "export const label = i18next.t('label') as Theme;",
+    ].join('\n');
+
+    expect(readStyleImports('/workspace/components/card.tsx', source)).toEqual([
+      {
+        name: 'styles',
+        specifier: './card.module.scss',
+        flatSpecifier: './card.module.scss',
+        base: 'card.module.scss',
+      },
+      {
+        name: undefined,
+        specifier: './reset.css',
+        flatSpecifier: './reset.css',
+        base: 'reset.css',
+      },
+    ]);
+    expect(readExternalImports('/workspace/components/card.tsx', source)).toEqual([
+      "import { format } from '@mission-platform/format';",
+      "import i18next from 'i18next';",
+      "import { useI18n } from '@mission-platform/i18n';",
+    ]);
+  });
+
+  it('reports a missing named component with a source-backed diagnostic', () => {
+    const source = 'export function Available() { return <div />; }';
+    const semantic = inferSemanticModule(parseForgeSource('Missing.tsx', source), 'component', 'Missing');
+    const diagnostic = semantic.diagnostics?.find((entry) => entry.code === 'FORGE_COMPONENT_NOT_FOUND');
+
+    expect(diagnostic).toMatchObject({
+      phase: 'inference',
+      severity: 'error',
+      code: 'FORGE_COMPONENT_NOT_FOUND',
+      message: expect.stringContaining('"Missing"'),
+      fileName: 'Missing.tsx',
+      span: { start: 0, end: source.length, line: 1, column: 1 },
+    });
+  });
+
+  it('retains frontend and semantic diagnostics in the semantic cache', () => {
+    const input = {
+      source: 'export const value = <div>\n',
+      fileName: 'CachedBroken.tsx',
+      moduleKind: 'component' as const,
+      componentName: 'CachedBroken',
+    };
+    const first = analyzeForgeModule(input);
+    const second = analyzeForgeModule(input);
+
+    expect(first).toBe(second);
+    expect(first.diagnostics?.map((diagnostic) => diagnostic.code)).toEqual(
+      expect.arrayContaining(['FORGE_FRONTEND_PARSE_ERROR', 'FORGE_COMPONENT_NOT_FOUND']),
+    );
+  });
+
+  it('fails the pipeline when frontend parsing reports errors', () => {
+    expect(() =>
+      compileComponentModule('export function Broken() {\n  return <div>\n}', {
+        framework: 'web-components',
+        componentName: 'Broken',
+        fileName: 'Broken.tsx',
+      }),
+    ).toThrow(/FORGE_FRONTEND_PARSE_ERROR/);
+  });
+
+  // Production WC lowering does not yet emit these diagnostic codes; tracked for the
+  // target-plugin migration rather than the Oxc frontend normalization step.
+  it.todo('fails the target pipeline before generating lossy Web Components output');
 
   it('extracts the component structure, attributes, and children into the generic AST', () => {
     const source = [
@@ -78,6 +211,61 @@ describe('Forge source frontends', () => {
     expect(root?.span.start).toBeGreaterThan(0);
   });
 
+  it('preserves self-closing JSX elements, components, and markers', () => {
+    const source = [
+      'import { Slot } from "@mission-platform/forge";',
+      'export function ForgeForm() {',
+      '  return (',
+      '    <form>',
+      '      <input id="name" type="text" />',
+      '      <input id="email" type="email" />',
+      '      <Slot />',
+      '      <CustomComponent value={42} />',
+      '      <div>content</div>',
+      '    </form>',
+      '  );',
+      '}',
+    ].join('\n');
+    const ast = createGenericAst(parseForgeSource('ForgeForm.tsx', source), 'component', 'ForgeForm');
+
+    const root = ast.component?.returnNode;
+    expect(root?.tag).toBe('form');
+    expect(root?.selfClosing).toBe(false);
+
+    const children = root?.children ?? [];
+    expect(children).toHaveLength(5);
+
+    // Self-closing input element
+    const input1 = children[0];
+    expect(input1?.kind).toBe('render-node');
+    expect(input1?.kind === 'render-node' ? input1.tag : undefined).toBe('input');
+    expect(input1?.kind === 'render-node' ? input1.selfClosing : undefined).toBe(true);
+
+    // Another self-closing input element
+    const input2 = children[1];
+    expect(input2?.kind).toBe('render-node');
+    expect(input2?.kind === 'render-node' ? input2.tag : undefined).toBe('input');
+    expect(input2?.kind === 'render-node' ? input2.selfClosing : undefined).toBe(true);
+
+    // Self-closing Slot component
+    const slot = children[2];
+    expect(slot?.kind).toBe('render-node');
+    expect(slot?.kind === 'render-node' ? slot.tag : undefined).toBe('Slot');
+    expect(slot?.kind === 'render-node' ? slot.selfClosing : undefined).toBe(true);
+
+    // Self-closing CustomComponent
+    const customComponent = children[3];
+    expect(customComponent?.kind).toBe('render-node');
+    expect(customComponent?.kind === 'render-node' ? customComponent.tag : undefined).toBe('CustomComponent');
+    expect(customComponent?.kind === 'render-node' ? customComponent.selfClosing : undefined).toBe(true);
+
+    // Non-self-closing div
+    const div = children[4];
+    expect(div?.kind).toBe('render-node');
+    expect(div?.kind === 'render-node' ? div.tag : undefined).toBe('div');
+    expect(div?.kind === 'render-node' ? div.selfClosing : undefined).toBe(false);
+  });
+
   it('retains prop and state type information for target emitters', () => {
     const source = [
       'import { useState } from "@mission-platform/forge";',
@@ -102,6 +290,20 @@ describe('Forge source frontends', () => {
     ]);
   });
 
+  it('retains JSX roots nested in conditional component returns', () => {
+    const source = [
+      'export function MarkdownBlock(properties: { open: boolean }) {',
+      '  return properties.open ? <p>content</p> : <span>closed</span>;',
+      '}',
+    ].join('\n');
+    const ast = createGenericAst(parseForgeSource('MarkdownBlock.tsx', source), 'component', 'MarkdownBlock');
+
+    expect(ast.component?.returnNode?.tagKind).toBe('fragment');
+    const child = ast.component?.returnNode?.children[0];
+    expect(child?.kind).toBe('expression-node');
+    expect(child?.kind === 'expression-node' ? child.nested.map((node) => node.tag) : []).toEqual(['p', 'span']);
+  });
+
   it('infers shared component intentions without selecting a framework', () => {
     const source = [
       'import { Dynamic, Slot, hasSlot, useEffect, useMemo, useRef, useState } from "@mission-platform/forge";',
@@ -114,8 +316,8 @@ describe('Forge source frontends', () => {
       '  return <div ref={element} onClick={() => setCount(count + 1)}>{hasSlot("footer") && <Slot name="footer" />}<Dynamic is="button" /></div>;',
       '}',
     ].join('\n');
-    const sourceFile = parseForgeSource('ForgeCard.tsx', source);
-    const semantic = inferSemanticModule(sourceFile, 'component', 'ForgeCard');
+    const parsed = parseForgeSource('ForgeCard.tsx', source);
+    const semantic = inferSemanticModule(parsed, 'component', 'ForgeCard');
 
     expect(semantic.intentions.props.map((prop) => prop.name)).toEqual(['title', 'active']);
     expect(semantic.intentions.state[0]?.setterName).toBe('setCount');

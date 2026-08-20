@@ -4,7 +4,21 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { deriveForgeStagePath, normalizeForgeBuildTarget, promoteTarget, runForgeBuild } from './forge-build.ts';
+import { forgeReactFramework } from '../forge-plugins/forge-react/src';
+import { forgeSolidFramework } from '../forge-plugins/forge-solid/src';
+import { forgeSvelteFramework } from '../forge-plugins/forge-svelte/src';
+import { forgeVueFramework } from '../forge-plugins/forge-vue/src';
+import { forgeWebComponentsFramework } from '../forge-plugins/forge-web-components/src';
+import { generateFrameworkSources } from '../vite-plugins/forge/src/generate';
+
+import {
+  deriveForgeStagePath,
+  normalizeForgeBuildTarget,
+  promoteAggregate,
+  promoteTarget,
+  runForgeBuild,
+  type ForgeStageManifest,
+} from './forge-build.ts';
 
 import type { ForgeBuildCommandContext } from './forge-build.ts';
 
@@ -95,6 +109,82 @@ describe('Forge staged build orchestration', () => {
     await expect(fs.stat(stageRoot)).rejects.toThrow();
   });
 
+  it('publishes real framework-generated modules for every aggregate target', async () => {
+    const packageRoot = await fixturePackage();
+    const stageRoot = path.join(packageRoot, 'node_modules/.cache/forge-build/run');
+    const componentsDir = path.join(packageRoot, 'src/components');
+    const componentDir = path.join(componentsDir, 'forge-card');
+    const helpersDir = path.join(packageRoot, 'src/helpers');
+    const sourceIndex = path.join(componentsDir, 'index.ts');
+    const plugins = [
+      ['react', forgeReactFramework(), '.tsx'],
+      ['vue', forgeVueFramework(), '.vue'],
+      ['solid', forgeSolidFramework(), '.tsx'],
+      ['svelte', forgeSvelteFramework(), '.svelte'],
+      ['web-components', forgeWebComponentsFramework(), '.ts'],
+    ] as const;
+
+    await fs.mkdir(componentDir, { recursive: true });
+    await fs.mkdir(helpersDir, { recursive: true });
+    await fs.writeFile(
+      sourceIndex,
+      ["export { ForgeCard } from './forge-card';", "export { createCard } from '../helpers/card';", ''].join('\n'),
+    );
+    await fs.writeFile(
+      path.join(componentDir, 'forge-card.tsx'),
+      [
+        "import { h } from '@mission-platform/forge';",
+        'export function ForgeCard() {',
+        '  return <button data-build-marker="published-real-framework">ForgeCard published body</button>;',
+        '}',
+        '',
+      ].join('\n'),
+    );
+    await fs.writeFile(
+      path.join(helpersDir, 'card.ts'),
+      'export function createCard(): string { return "published helper"; }\n',
+    );
+
+    for (const [id, plugin] of plugins) {
+      generateFrameworkSources({
+        plugin,
+        componentsModule: sourceIndex,
+        outDir: path.join(stageRoot, 'dist', id),
+      });
+    }
+
+    await promoteAggregate({ packageRoot, stageRoot });
+
+    for (const [id, plugin, extension] of plugins) {
+      const publishedRoot = path.join(packageRoot, 'dist', id);
+      const componentSource = await fs.readFile(
+        path.join(publishedRoot, 'components/forge-card', `forge-card${extension}`),
+        'utf8',
+      );
+      const entrySource = await fs.readFile(path.join(publishedRoot, `index${plugin.source.entryExtension}`), 'utf8');
+      const helperSource = await fs.readFile(path.join(publishedRoot, 'helpers/card.ts'), 'utf8');
+      expect(componentSource, `${id} published component`).toContain('ForgeCard');
+      expect(componentSource, `${id} published body`).toContain('published-real-framework');
+      expect(componentSource, `${id} published placeholder`).not.toContain('export const fixture = true;');
+      expect(entrySource, `${id} published entry`).toContain('ForgeCard');
+      expect(entrySource, `${id} published helper entry`).toContain('createCard');
+      expect(helperSource, `${id} published helper`).toContain('published helper');
+
+      const visit = async (directory: string): Promise<void> => {
+        for (const entry of await fs.readdir(directory, { withFileTypes: true })) {
+          const fullPath = path.join(directory, entry.name);
+          if (entry.isDirectory()) await visit(fullPath);
+          else {
+            expect(await fs.readFile(fullPath, 'utf8'), `${id} ${fullPath}`).not.toContain(
+              'export const fixture = true;',
+            );
+          }
+        }
+      };
+      await visit(publishedRoot);
+    }
+  });
+
   it('scopes the CMS selector to the requested framework so its wrapper subtree is regenerated', async () => {
     const packageRoot = await fixturePackage();
     const stageRoot = path.join(packageRoot, 'node_modules/.cache/forge-build/run');
@@ -154,5 +244,51 @@ describe('Forge staged build orchestration', () => {
     await expect(fs.readFile(path.join(dist, 'cms/storyblok/vue/index.js'), 'utf8')).resolves.toBe(
       'existing-vue-wrapper',
     );
+  });
+
+  it('writes a complete checksum manifest only after the expected entry is staged', async () => {
+    const packageRoot = await fixturePackage();
+    const stageRoot = path.join(packageRoot, 'node_modules/.cache/forge-build/run');
+
+    await runForgeBuild({
+      packageRoot,
+      stageRoot,
+      target: 'react',
+      runCommand: async ({ stageRoot: commandStageRoot }) => {
+        await fs.mkdir(path.join(commandStageRoot, 'dist/react'), { recursive: true });
+        await fs.writeFile(path.join(commandStageRoot, 'dist/react/index.js'), 'complete');
+      },
+    });
+
+    const manifest = JSON.parse(
+      await fs.readFile(path.join(packageRoot, 'dist/.forge-build-manifest.json'), 'utf8'),
+    ) as ForgeStageManifest;
+    expect(manifest).toMatchObject({ version: 1, target: 'react', complete: true });
+    expect(manifest.entries).toContain('react/index.js');
+    expect(manifest.artifacts.find((artifact) => artifact.fileName === 'react/index.js')?.hash).toHaveLength(64);
+  });
+
+  it('cancels a hanging build, preserves the last successful output, and removes only its stage', async () => {
+    const packageRoot = await fixturePackage();
+    const stageRoot = path.join(packageRoot, 'node_modules/.cache/forge-build/run');
+    const dist = path.join(packageRoot, 'dist');
+    await fs.mkdir(dist, { recursive: true });
+    await fs.writeFile(path.join(dist, 'sentinel.js'), 'previous');
+
+    await expect(
+      runForgeBuild({
+        packageRoot,
+        stageRoot,
+        target: 'react',
+        timeoutMs: 10,
+        runCommand: async ({ signal }) =>
+          new Promise<void>((resolve) => {
+            signal.addEventListener('abort', () => resolve(), { once: true });
+          }),
+      }),
+    ).rejects.toThrow('cancelled');
+
+    await expect(fs.readFile(path.join(dist, 'sentinel.js'), 'utf8')).resolves.toBe('previous');
+    await expect(fs.stat(stageRoot)).rejects.toThrow();
   });
 });

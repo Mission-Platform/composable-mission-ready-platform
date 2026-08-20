@@ -57,6 +57,8 @@ export interface ContentField {
   readonly slotName?: string;
   /** `true` when the prop is tagged `@cmsSetting` and belongs to site-wide settings. */
   readonly setting: boolean;
+  /** The optional editor tab label from `@cmsTab`. */
+  readonly tab?: string;
 }
 
 /** Every name a content platform may ask for, derived from one component. */
@@ -73,6 +75,8 @@ export interface ContentComponentNames {
   readonly folder: string;
   /** The exported props interface name, e.g. `BadgeProperties`. */
   readonly propertiesType?: string;
+  /** The discovered source path relative to the components barrel, when nested. */
+  readonly sourceDir?: string;
 }
 
 /** The subset of {@link ContentComponentNames} a caller supplies; the rest is derived. */
@@ -80,11 +84,23 @@ export type ContentComponentNamesInput = Pick<
   ContentComponentNames,
   "neutralName" | "publicName"
 > &
-  Partial<Pick<ContentComponentNames, "folder" | "propertiesType">>;
+  Partial<
+    Pick<ContentComponentNames, "folder" | "propertiesType" | "sourceDir">
+  >;
+
+/** Optional platform-neutral metadata annotated on a component. */
+export interface ContentComponentMetadata {
+  /** The component's editor icon identifier, when annotated. */
+  readonly icon?: string;
+  /** The component's editor colour value, when annotated. */
+  readonly color?: string;
+}
 
 /** A component projected onto the neutral content model. */
 export interface ContentComponent {
   readonly names: ContentComponentNames;
+  /** Component-level metadata annotations, when present. */
+  readonly metadata?: ContentComponentMetadata;
   /** Authorable fields in declaration order, slots last. */
   readonly fields: readonly ContentField[];
   /** Every slot the component renders, `default` included. */

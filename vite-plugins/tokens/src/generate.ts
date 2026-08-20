@@ -38,7 +38,7 @@ export interface TokensPluginOptions {
 }
 
 /** How a DTCG source is rendered to SCSS. */
-type SourceKind = 'structural' | 'typography' | 'theme';
+type SourceKind = 'structural' | 'typography' | 'component' | 'theme';
 
 /** A single DTCG source file and how its SCSS is rendered. */
 interface SourceDescriptor {
@@ -69,6 +69,7 @@ function sourceDescriptors(): SourceDescriptor[] {
     { file: 'spacing', kind: 'structural' },
     { file: 'z-index', kind: 'structural' },
     { file: 'typography', kind: 'typography' },
+    { file: 'component', kind: 'component' },
     { file: 'theme-light', kind: 'theme' },
     { file: 'theme-dark', kind: 'theme' },
   ];
@@ -85,6 +86,7 @@ interface EmitContext {
   fontDocument?: DtcgGroup;
   spacingDocument?: DtcgGroup;
   paletteDocument?: DtcgGroup;
+  componentAliasDocument?: DtcgGroup;
 }
 
 /**
@@ -92,7 +94,8 @@ interface EmitContext {
  * its `{font.*}` and `{spacing.*}` aliases against the merged `font` + `spacing`
  * documents (their top-level groups — `font`/`line-height`/`letter-spacing` vs
  * `spacing` — don't collide), the themes resolve their semantic `{color.*}`
- * aliases against the `palette` document, and everything else has no aliases to
+ * aliases against the `palette` document, and component aliases against the
+ * merged component alias document. Structural sources have no aliases to
  * resolve.
  */
 function aliasDocumentFor(descriptor: SourceDescriptor, context: EmitContext): DtcgGroup | undefined {
@@ -102,6 +105,9 @@ function aliasDocumentFor(descriptor: SourceDescriptor, context: EmitContext): D
     }
     case 'theme': {
       return context.paletteDocument;
+    }
+    case 'component': {
+      return context.componentAliasDocument;
     }
     default: {
       return undefined;
@@ -117,12 +123,12 @@ function aliasDocumentFor(descriptor: SourceDescriptor, context: EmitContext): D
  */
 function writeSourceArtefacts(descriptor: SourceDescriptor, document_: DtcgGroup, context: EmitContext): void {
   const { scssDirectory, tsDirectory, prefix } = context;
-  if (descriptor.kind === 'structural' || descriptor.kind === 'typography') {
+  if (descriptor.kind === 'structural' || descriptor.kind === 'typography' || descriptor.kind === 'component') {
     const records =
       descriptor.kind === 'typography'
         ? buildTypographyRecords(document_.typography as DtcgGroup, prefix)
         : flattenTokens(document_);
-    writeFileSync(join(scssDirectory, `_${descriptor.file}-vars.scss`), buildScssVariablesScss(records));
+    writeFileSync(join(scssDirectory, `_${descriptor.file}-vars.scss`), buildScssVariablesScss(records, prefix));
     writeFileSync(
       join(scssDirectory, `_${descriptor.file}.scss`),
       buildStructuralScss(records, prefix, descriptor.file),
@@ -182,10 +188,29 @@ export function generateTokens(options: TokensPluginOptions): void {
   const fontDocument = documents.get('font');
   const spacingDocument = documents.get('spacing');
   const paletteDocument = documents.get('palette');
+  // Component aliases refer to semantic theme tokens (`color.*`) as well as
+  // primitive scales. Merge palette first so the light semantic theme can
+  // intentionally take precedence over the palette's same-named groups.
+  const componentAliasDescriptors: SourceDescriptor[] = [
+    ...descriptors.filter(({ kind }) => kind !== 'theme' && kind !== 'component'),
+    { file: 'theme-light', kind: 'theme' },
+  ];
+  let componentAliasDocument: DtcgGroup = {};
+  for (const { file } of componentAliasDescriptors) {
+    componentAliasDocument = deepMergeTokens(componentAliasDocument, documents.get(file) as DtcgGroup);
+  }
 
   // The `@forward`/`@use` references omit the partial's leading underscore, as
   // Sass resolves a partial from its unprefixed name.
-  const context: EmitContext = { scssDirectory, tsDirectory, prefix, fontDocument, spacingDocument, paletteDocument };
+  const context: EmitContext = {
+    scssDirectory,
+    tsDirectory,
+    prefix,
+    fontDocument,
+    spacingDocument,
+    paletteDocument,
+    componentAliasDocument,
+  };
   for (const descriptor of descriptors) {
     writeSourceArtefacts(descriptor, documents.get(descriptor.file) as DtcgGroup, context);
   }

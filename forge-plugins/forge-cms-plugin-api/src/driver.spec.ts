@@ -33,6 +33,7 @@ function createWorkspace(
     folder: string;
     neutralName: string;
     publicName: string;
+    sourceDir?: string;
     propertiesType?: string;
     source: string;
   }[],
@@ -44,7 +45,8 @@ function createWorkspace(
 
   const barrel: string[] = [];
   for (const component of components) {
-    const folder = path.join(componentsDirectory, component.folder);
+    const sourceDirectory = component.sourceDir ?? component.folder;
+    const folder = path.join(componentsDirectory, sourceDirectory);
     mkdirSync(folder, { recursive: true });
     writeFileSync(
       path.join(folder, `${component.folder}.tsx`),
@@ -61,7 +63,7 @@ function createWorkspace(
       "utf8",
     );
     barrel.push(
-      `export { ${component.neutralName}${types} } from './${component.folder}';`,
+      `export { ${component.neutralName}${types} } from './${sourceDirectory}';`,
     );
   }
   const componentsModule = path.join(componentsDirectory, "index.ts");
@@ -92,6 +94,11 @@ const COUNTER_COMPONENT = {
   publicName: "Counter",
   propertiesType: "CounterProperties",
   source: COUNTER,
+};
+
+const NESTED_BADGE_COMPONENT = {
+  ...BADGE_COMPONENT,
+  sourceDir: "atoms/forge-badge",
 };
 
 /** A target that emits one schema, one template, a manifest, and an entry. */
@@ -217,6 +224,16 @@ describe("generateCmsArtifacts", () => {
     expect(
       tree.components.map((component) => component.names.publicName),
     ).toEqual(["Badge"]);
+  });
+
+  it("propagates nested source directories without changing target artifact names", () => {
+    const workspace = createWorkspace([NESTED_BADGE_COMPONENT]);
+    const tree = run(recordingTarget(), workspace);
+
+    expect(tree.components[0]?.names.sourceDir).toBe("atoms/forge-badge");
+    expect(tree.artifacts.map((artifact) => artifact.fileName)).toContain(
+      "forge-badge.json",
+    );
   });
 
   it("projects each discovered component onto the content model", () => {

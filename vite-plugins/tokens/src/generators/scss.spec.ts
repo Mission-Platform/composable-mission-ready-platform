@@ -113,6 +113,20 @@ describe('buildPropertyRule', () => {
     expect(rule).toContain("syntax: '*';");
     expect(rule).not.toContain('initial-value');
   });
+
+  it('uses the universal `*` syntax without an initial-value for aliased values', () => {
+    const rule = buildPropertyRule(
+      {
+        path: ['component', 'button', 'background'],
+        group: 'component',
+        type: 'color',
+        value: '{color.primary.default}',
+      },
+      'mp',
+    );
+    expect(rule).toContain("syntax: '*';");
+    expect(rule).not.toContain('initial-value');
+  });
 });
 
 describe('buildStructuralScss', () => {
@@ -141,6 +155,15 @@ describe('buildStructuralScss', () => {
     expect(scss.indexOf('@property --mp-radius-md {')).toBeLessThan(scss.indexOf(':root {'));
     // `@property` is never emitted at the top level (always inside the layer).
     expect(scss).not.toMatch(/^@property/m);
+  });
+});
+
+describe('component alias SCSS emission', () => {
+  it('converts DTCG aliases to prefixed CSS variables in the vars partial', () => {
+    const records = flattenTokens({ component: { button: { background: { $value: '{color.primary.default}' } } } });
+    expect(buildScssVariables(records, 'custom')).toContain(
+      '$component-button-background: var(--custom-color-primary-default);',
+    );
   });
 });
 

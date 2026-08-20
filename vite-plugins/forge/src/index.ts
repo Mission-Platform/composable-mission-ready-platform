@@ -70,14 +70,49 @@ export {
   compileComponentModule,
   compileHookModule,
   createCompilerPipeline,
+  createForgeCompilerService,
+  PersistentForgeCompilerService,
+  parseFrontendModule,
   parseForgeSource,
   type CompiledModule,
   type CompilerInput,
   type CompilerPipeline,
+  type CompiledArtifact,
   type CompileHookOptions,
   type CompileModuleOptions,
   type CompileOptions,
+  type ForgeCacheLimits,
+  type ForgeCacheStats,
+  type ForgeCompilationReport,
+  type ForgeCompileRequest,
+  type ForgeCompilerService,
+  type ForgeInvalidationResult,
+  type ForgeProjectInput,
+  type ForgeProjectSnapshot,
 } from './compiler/compile.js';
+export { DEFAULT_FORGE_CACHE_LIMITS, createEmptyForgeCacheStats } from './compiler/cache.js';
+export {
+  createForgeArtifactManifest,
+  type ForgeArtifactKind,
+  type ForgeArtifactManifest,
+  type ForgeArtifactRecord,
+} from './compiler/artifact-manifest.js';
+export {
+  createForgeArtifactWriter,
+  type ForgeArtifactWriter,
+} from './compiler/artifact-writer.js';
+export {
+  createForgeGenerationContext,
+  type ForgeGenerationContext,
+  type ForgeGenerationContextOptions,
+} from './compiler/generation-context.js';
+
+export {
+  CompilerDiagnosticError,
+  createCompilerDiagnostic,
+  formatCompilerDiagnostic,
+  throwOnCompilerErrors,
+} from '@mission-platform/forge-plugin-api';
 
 export { findComponentFunction, isSlotElement, parseTsx, readSlotName } from './compiler/ast.js';
 export {
@@ -101,6 +136,9 @@ export type {
 } from './compiler/graph.js';
 
 export type {
+  CompilerDiagnostic,
+  CompilerDiagnosticSeverity,
+  CompilerPhase,
   FrameworkBuildAdapters,
   FrameworkOutputPlugin,
   FrameworkSourceMetadata,
@@ -115,6 +153,25 @@ export type {
   TsdownBuildContext,
   ViteBuildContext,
 } from '@mission-platform/forge-plugin-api';
+export { validateForgeOutputPlugin, validateForgeOutputPluginSelection } from '@mission-platform/forge-plugin-api';
+
+export type {
+  GeneratedRouterDeclaration,
+  GeneratedRouterModule,
+  RouterBuildAdapters,
+  RouterCapability,
+  RouterCapabilityImport,
+  RouterCapabilityModule,
+  RouterCapabilityUse,
+  RouterCapabilityUseKind,
+  RouterOptimizeOptions,
+  RouterOutputPlugin,
+  RouterPluginSelection,
+  RouterTargetContext,
+  RouterTargetPlan,
+} from '@mission-platform/forge-router-plugin-api';
+
+export { analyzeRouterCapabilities, compileRouterModule, createRouterCompilerPipeline } from './compiler/router.js';
 
 export {
   generateFrameworkSources,

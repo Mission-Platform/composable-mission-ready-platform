@@ -1,7 +1,7 @@
 import { localJsxTypesModuleSource as sharedLocalJsxTypesModuleSource } from '@mission-platform/forge-plugin-api/compiler/ast.js';
 import { describe, expect, it } from 'vitest';
 
-import { localEffectModuleSource, localJsxTypesModuleSource, parseTsx } from './ast';
+import { localEffectModuleSource, localJsxTypesModuleSource } from './ast';
 import {
   compileComponentModule,
   compileHookModule,
@@ -2393,27 +2393,27 @@ const USE_VUE_WIDGET = [
 
 describe('the compiler reads and applies `"use <framework>";` module directives', () => {
   it('detects the framework a module is pinned to from its directive prologue', () => {
-    expect(readFrameworkDirective(parseTsx('a.tsx', '"use vue";\nexport const a = 1;'))).toBe('vue');
-    expect(readFrameworkDirective(parseTsx('a.tsx', '"use react";\nexport const a = 1;'))).toBe('react');
+    expect(readFrameworkDirective('a.tsx', '"use vue";\nexport const a = 1;')).toBe('vue');
+    expect(readFrameworkDirective('a.tsx', '"use react";\nexport const a = 1;')).toBe('react');
   });
 
   it('returns undefined for a neutral module or an unrelated prologue directive', () => {
-    expect(readFrameworkDirective(parseTsx('a.tsx', 'export const a = 1;'))).toBeUndefined();
-    expect(readFrameworkDirective(parseTsx('a.tsx', '"use strict";\nexport const a = 1;'))).toBeUndefined();
+    expect(readFrameworkDirective('a.tsx', 'export const a = 1;')).toBeUndefined();
+    expect(readFrameworkDirective('a.tsx', '"use strict";\nexport const a = 1;')).toBeUndefined();
   });
 
   it('ignores a `"use vue"` string that is not part of the directive prologue', () => {
-    expect(readFrameworkDirective(parseTsx('a.tsx', 'const x = 1;\n"use vue";'))).toBeUndefined();
+    expect(readFrameworkDirective('a.tsx', 'const x = 1;\n"use vue";')).toBeUndefined();
   });
 
   it('gates a module to its framework, while neutral modules target every framework', () => {
-    const gated = parseTsx('a.tsx', '"use vue";\nexport const a = 1;');
-    expect(moduleTargetsFramework(gated, 'vue')).toBe(true);
-    expect(moduleTargetsFramework(gated, 'react')).toBe(false);
+    const gated = '"use vue";\nexport const a = 1;';
+    expect(moduleTargetsFramework('a.tsx', gated, 'vue')).toBe(true);
+    expect(moduleTargetsFramework('a.tsx', gated, 'react')).toBe(false);
 
-    const neutral = parseTsx('a.tsx', 'export const a = 1;');
-    expect(moduleTargetsFramework(neutral, 'vue')).toBe(true);
-    expect(moduleTargetsFramework(neutral, 'react')).toBe(true);
+    const neutral = 'export const a = 1;';
+    expect(moduleTargetsFramework('a.tsx', neutral, 'vue')).toBe(true);
+    expect(moduleTargetsFramework('a.tsx', neutral, 'react')).toBe(true);
   });
 
   it('strips the directive from the compiled output so the marker never leaks', () => {
@@ -3226,6 +3226,57 @@ describe('the compiler emits Web Components custom elements', () => {
     expect(wc.code).toContain('render()');
     expect(wc.code).toContain('return html`');
     expect(wc.code).toContain("customElements.define('forge-in-view', ForgeInViewElement);");
+  });
+});
+
+const SLOT_PROJECTION_FIXTURE = [
+  "import { Slot, type MpChild, type MpElement } from '@mission-platform/forge';",
+  '',
+  'export interface ProjectionProperties {',
+  '  children?: MpChild | readonly MpChild[];',
+  '}',
+  '',
+  'export function ForgeProjection(properties: Readonly<ProjectionProperties>): MpElement {',
+  '  const children = properties.children;',
+  '  return (',
+  '    <section>',
+  '      <Slot />',
+  '      <Slot name="end" />',
+  '      <Slot />',
+  '      <ForgeDrawer>',
+  '        <nav><Slot /></nav>',
+  '        {children}',
+  '        {[children]}',
+  '        {properties.children?.length ? properties.children : undefined}',
+  '      </ForgeDrawer>',
+  '    </section>',
+  '  );',
+  '}',
+].join('\n');
+
+describe('the Web Components compiler preserves slot ownership', () => {
+  const projection = compileComponentModule(SLOT_PROJECTION_FIXTURE, {
+    framework: 'web-components',
+    componentName: 'ForgeProjection',
+  });
+
+  it('emits repeated default/named outlets and exact children aliases natively', () => {
+    expect(projection.code.match(/<slot><\/slot>/g)?.length).toBe(2);
+    expect(projection.code).toContain('<slot name="end"></slot>');
+    expect(projection.code).toContain(
+      '<forge-slot data-mp-forge-slot="true" data-mp-forge-nested="true" .content=${this.children}></forge-slot>',
+    );
+  });
+
+  it('marks nested forwarding and conditional/array slot expressions for runtime resolution', () => {
+    expect(projection.code).toContain(
+      '<nav><forge-slot data-mp-forge-slot="true" data-mp-forge-nested="true" .content=${this.children}></forge-slot></nav>',
+    );
+    expect(projection.code).toContain('<forge-slot data-mp-forge-slot="true" .content=${children}></forge-slot>');
+    expect(projection.code).toContain('<forge-slot data-mp-forge-slot="default" .content=${[children]}></forge-slot>');
+    expect(projection.code).toContain(
+      '<forge-slot data-mp-forge-slot="default" .content=${this.children?.length ? this.children : undefined}></forge-slot>',
+    );
   });
 });
 

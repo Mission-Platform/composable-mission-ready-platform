@@ -1,4 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+import { createCompilerPipeline } from "../../../vite-plugins/forge/src/compiler/pipeline.ts";
 
 import {
   emitWebComponentModule,
@@ -64,12 +66,49 @@ function plan(module: SemanticModule): TargetLoweredModule | undefined {
 }
 
 describe("Web Components Forge framework package", () => {
+  it("provides host metadata for shared components", () => {
+    const framework = forgeWebComponentsFramework();
+    const hosts = framework.prepareComponentHosts?.([]);
+
+    expect(hosts?.get("forge-dropdown")).toEqual({
+      baseTag: "div",
+      invocation: "is-attribute",
+    });
+    expect(hosts?.get("forge-typography")).toEqual({
+      baseTag: "span",
+      invocation: "is-attribute",
+    });
+  });
+
   it("provides TypeScript output without framework compiler bundles", () => {
     const framework = forgeWebComponentsFramework();
     expect(framework.id).toBe("web-components");
     expect(framework.outputLanguage).toBe("ts");
     expect(framework.build.vite?.({})).toEqual([]);
     expect(framework.build.tsdown?.({})).toEqual([]);
+  });
+
+  it("lowers dynamic tags and spreads before generation", () => {
+    const framework = forgeWebComponentsFramework();
+    const generateSpy = vi.spyOn(framework, "generate");
+
+    expect(() =>
+      createCompilerPipeline().compile(
+        {
+          source: [
+            "export function Fixture({ tag, rest }: { tag: string; rest: Record<string, unknown> }) {",
+            "  return <Dynamic is={tag} {...rest} />;",
+            "}",
+          ].join("\n"),
+          fileName: "src/Fixture.tsx",
+          moduleKind: "component",
+          componentName: "Fixture",
+        },
+        framework,
+      ),
+    ).not.toThrow();
+
+    expect(generateSpy).toHaveBeenCalled();
   });
 
   it("generates the element module from the semantic IR alone", () => {
@@ -90,7 +129,10 @@ describe("Web Components Forge framework package", () => {
 
     expect(generated.lang).toBe("ts");
     expect(generated.code).toContain(
-      "export class ForgeFixtureElement extends ForgeElement {",
+      "export class ForgeFixtureElement extends ForgeElementMixin(HTMLSpanElement) {",
+    );
+    expect(generated.code).toContain(
+      "customElements.define('forge-fixture', ForgeFixtureElement, { extends: 'span' });",
     );
     expect(generated.code).toContain("  declare label: string;");
   });
@@ -115,7 +157,8 @@ describe("Web Components Forge framework package", () => {
     );
 
     expect(generated.code).toContain("const renderField = () => 'field';");
-    expect(generated.code).toContain("html`<span>${renderField()}</span>`");
+    expect(generated.code).toContain('document.createElement("span")');
+    expect(generated.code).toContain("renderField()");
     expect(generated.code).not.toContain("this.renderField()");
   });
 
@@ -218,8 +261,8 @@ describe("Web Components Forge framework package", () => {
       "Fixture",
     ).code;
 
-    expect(generated).toContain("ForgeElement, html, nothing, unsafeHtml");
-    expect(generated).toContain("${unsafeHtml(this.markup)}");
+    expect(generated).toContain("DomTemplateResult");
+    expect(generated).toContain("unsafeHtml(this.markup)");
     expect(generated).not.toContain(".innerHTML=");
     expect(generated).not.toContain("<HtmlContent");
   });
@@ -274,7 +317,8 @@ describe("Web Components Forge framework package", () => {
     expect(generated).toContain("    this.open = false;");
     expect(generated).toContain("  declare bag: unknown;");
     expect(generated).toContain("    this.bag = buildBag();");
-    expect(generated).toContain("@click=${() => this.open = !this.open}");
+    expect(generated).toContain('name: "click"');
+    expect(generated).toContain("() => this.open = !this.open");
     expect(generated).not.toMatch(/\bany\b/u);
   });
 });

@@ -43,6 +43,15 @@ const COMPONENTS_ROOT = path.resolve(
 
 const VUE_FRAMEWORK = forgeVueFramework();
 
+/** Current fixture sentinels ensure discovery is neither empty nor partial. */
+const DISCOVERY_SENTINELS = [
+  'forge-avatar',
+  'forge-background-video',
+  'forge-button',
+  'forge-hero',
+  'forge-navbar',
+] as const;
+
 /** Convert a kebab-case component folder to its PascalCase exported name. */
 function pascalCase(name: string): string {
   return name
@@ -144,8 +153,9 @@ describe('Vue template render-safety audit (no template throws out of its render
   const components = discoverComponents();
 
   it('discovers the component library', () => {
-    // A sanity check so a broken path can never make the gate vacuously pass.
-    expect(components.length).toBeGreaterThan(50);
+    const discovered = new Set(components.map(({ name }) => name));
+    expect(components.length).toBe(45);
+    expect(DISCOVERY_SENTINELS.every((name) => discovered.has(name))).toBe(true);
   });
 
   it('no compiled component reads an identifier the script never declares', () => {

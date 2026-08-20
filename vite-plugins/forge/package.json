@@ -43,6 +43,8 @@
   ],
   "scripts": {
     "build": "tsdown",
+    "bench": "FORGE_BENCH_RUN=1 FORGE_BENCH_IMPLEMENTATION=oxc FORGE_BENCH_OUTPUT=benchmarks/oxc-comparison.json vitest run src/compiler/benchmark.spec.ts --reporter=dot",
+    "bench:baseline": "FORGE_BENCH_RUN=1 FORGE_BENCH_IMPLEMENTATION=typescript vitest run src/compiler/benchmark.spec.ts --reporter=dot",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -54,7 +56,9 @@
   "dependencies": {
     "@mission-platform/forge": "workspace:*",
     "@mission-platform/forge-plugin-api": "workspace:*",
+    "@mission-platform/forge-router-plugin-api": "workspace:*",
     "@sveltejs/vite-plugin-svelte": "catalog:svelte",
+    "oxc-parser": "catalog:compiler",
     "svelte": "catalog:svelte",
     "typescript": "catalog:typescript"
   },

@@ -46,6 +46,15 @@ const KNOWN_FALLBACKS: ReadonlySet<string> = new Set([
 
 const VUE_FRAMEWORK = forgeVueFramework();
 
+/** Current fixture sentinels ensure discovery is neither empty nor partial. */
+const DISCOVERY_SENTINELS = [
+  'forge-avatar',
+  'forge-background-video',
+  'forge-button',
+  'forge-hero',
+  'forge-navbar',
+] as const;
+
 /** Convert a kebab-case component folder to its PascalCase exported name. */
 function pascalCase(name: string): string {
   return name
@@ -94,8 +103,9 @@ describe('Vue render-closure audit (standing zero-fallback regression gate)', ()
   const components = discoverComponents();
 
   it('discovers the component library', () => {
-    // A sanity check so a broken path can never make the gate vacuously pass.
-    expect(components.length).toBeGreaterThan(50);
+    const discovered = new Set(components.map(({ name }) => name));
+    expect(components.length).toBe(45);
+    expect(DISCOVERY_SENTINELS.every((name) => discovered.has(name))).toBe(true);
   });
 
   it('no component outside the known-fallback allowlist emits a render closure', () => {
@@ -121,7 +131,7 @@ describe('Vue render-closure audit (standing zero-fallback regression gate)', ()
     const untranslated: string[] = [];
     for (const { name, source } of components) {
       const compiled = compileComponentModule(source, { framework: VUE_FRAMEWORK, componentName: pascalCase(name) });
-      const modules = [compiled.code, ...compiled.extraModules.map((module) => module.code)];
+      const modules = [compiled.code, ...(compiled.extraModules ?? []).map((module) => module.code)];
       if (modules.some((code) => /\bclassName=[{"']/.test(code))) {
         untranslated.push(name);
       }

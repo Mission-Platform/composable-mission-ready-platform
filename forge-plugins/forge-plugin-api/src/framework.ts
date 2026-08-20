@@ -23,6 +23,13 @@ export interface GeneratedModule {
   readonly code: string;
   readonly lang: OutputLanguage;
   readonly extraModules?: readonly GeneratedExtraModule[];
+  /** Optional source map retained by chained compiler passes. */
+  readonly map?: string | Readonly<Record<string, unknown>>;
+  /** Optional declaration modules retained by chained compiler passes. */
+  readonly declarations?: readonly {
+    readonly name: string;
+    readonly code: string;
+  }[];
   readonly diagnostics?: readonly CompilerDiagnostic[];
 }
 
@@ -32,6 +39,14 @@ export interface TargetContext {
   readonly moduleKind: "component" | "composable";
   readonly componentName?: string;
   readonly componentFolders?: ReadonlySet<string>;
+  /** Host metadata for sibling component references, when a target needs it. */
+  readonly componentHosts?: ReadonlyMap<string, TargetComponentHost>;
+}
+
+/** Target-neutral host invocation metadata shared by generated component references. */
+export interface TargetComponentHost {
+  readonly baseTag?: string;
+  readonly invocation: "is-attribute" | "custom-tag";
 }
 
 /**
@@ -107,6 +122,8 @@ export interface FrameworkSourceMetadata {
 /** A composable post-IR framework output plugin. */
 export interface FrameworkOutputPlugin {
   readonly id: JsxFramework | string;
+  /** Optional implementation version used to invalidate target artifacts. */
+  readonly version?: string;
   readonly outputLanguage: OutputLanguage;
   /** Output language used when the plugin compiles neutral hook modules. */
   readonly hookOutputLanguage?: OutputLanguage;
@@ -117,6 +134,13 @@ export interface FrameworkOutputPlugin {
     ir: SemanticModule,
     context: TargetContext,
   ) => TargetIntentions;
+  /** Prepare cross-module metadata used while lowering generated components. */
+  readonly prepareComponentHosts?: (
+    modules: readonly {
+      readonly componentName: string;
+      readonly module: SemanticModule;
+    }[],
+  ) => ReadonlyMap<string, TargetComponentHost>;
   readonly optimize: (
     intentions: TargetIntentions,
     options: TargetOptimizeOptions,
@@ -127,3 +151,6 @@ export interface FrameworkOutputPlugin {
   ) => GeneratedModule;
   readonly build: FrameworkBuildAdapters;
 }
+
+/** Caller-owned target selection; validation rejects empty and duplicate IDs. */
+export type FrameworkOutputPluginSelection = readonly FrameworkOutputPlugin[];
