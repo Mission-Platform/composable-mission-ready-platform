@@ -1,0 +1,33 @@
+{
+  "name": "@mission-platform/benchmark",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Evidence-based Forge Web Script runtime benchmark harness",
+  "type": "module",
+  "scripts": {
+    "bench": "node --experimental-strip-types src/cli.ts",
+    "build": "tsc --project tsconfig.json --noEmit",
+    "test": "vitest run --maxWorkers=1",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
+  },
+  "dependencies": {
+    "@mission-platform/forge-web-script": "workspace:*",
+    "@mission-platform/forge-web-script-runtime": "workspace:*",
+    "@mission-platform/vite-plugin-assemblyscript": "workspace:*",
+    "vite": "catalog:vite"
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@types/node": "catalog:typescript",
+    "eslint": "catalog:eslint",
+    "playwright": "catalog:testing",
+    "prettier": "catalog:prettier",
+    "typescript": "catalog:typescript",
+    "vitest": "catalog:testing"
+  }
+}

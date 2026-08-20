@@ -1,0 +1,20 @@
+// Scalar arithmetic-reduce kernel (divide-and-conquer, no host calls).
+
+export fn range_sum(lo: i32, hi: i32, mult: i32, seed: i32) -> i32 {
+  if lo >= hi {
+    return 0;
+  }
+  if lo + 1 == hi {
+    let idx: i32 = lo + 1;
+    let raw: i32 = idx * 1103515245 + seed + 12345;
+    let term: i32 = raw % 2001 - 1000;
+    return term * mult;
+  }
+  let mid: i32 = lo + hi;
+  let half: i32 = mid / 2;
+  return range_sum(lo, half, mult, seed) + range_sum(half, hi, mult, seed);
+}
+
+export fn arithmetic_reduce(n: i32, multiplier: i32, offset: i32, seed: i32) -> i32 {
+  return offset + range_sum(0, n, multiplier, seed);
+}

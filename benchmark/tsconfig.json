@@ -1,0 +1,10 @@
+{
+  "extends": "@mission-platform/typescript-config/node",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "lib": ["ESNext", "DOM"],
+    "noEmit": true,
+    "types": ["node", "vitest/globals"]
+  },
+  "include": ["src/**/*.ts"]
+}

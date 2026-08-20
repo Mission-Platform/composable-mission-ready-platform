@@ -1,0 +1,17 @@
+[package]
+name = "mission-platform-benchmark"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wasm-bindgen.workspace = true
+
+# The workspace release profile already performs size optimisation. The
+# bundled wasm-opt version cannot validate bulk-memory instructions emitted by
+# the current wasm-bindgen toolchain.
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false

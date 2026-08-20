@@ -1,0 +1,11 @@
+{
+  "name": "@mission-platform/benchmark-rust",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "build": "wasm-pack build . --target bundler --release --no-pack --out-dir ../../generated/rust"
+  },
+  "devDependencies": {
+    "wasm-pack": "0.15.0"
+  }
+}

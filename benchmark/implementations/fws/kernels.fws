@@ -1,0 +1,64 @@
+// Native Forge Web Script benchmark kernels.
+// No host capabilities: arithmetic, string helpers, and bytes scan only.
+
+export fn range_sum(lo: i32, hi: i32, mult: i32, seed: i32) -> i32 {
+  if lo >= hi {
+    return 0;
+  }
+  if lo + 1 == hi {
+    let idx: i32 = lo + 1;
+    let raw: i32 = idx * 1103515245 + seed + 12345;
+    let term: i32 = raw % 2001 - 1000;
+    return term * mult;
+  }
+  let mid: i32 = lo + hi;
+  let half: i32 = mid / 2;
+  return range_sum(lo, half, mult, seed) + range_sum(half, hi, mult, seed);
+}
+
+export fn arithmetic_reduce(n: i32, multiplier: i32, offset: i32, seed: i32) -> i32 {
+  return offset + range_sum(0, n, multiplier, seed);
+}
+
+export fn repeat_str(piece: string, n: i32) -> string {
+  if n <= 0 {
+    return "";
+  }
+  if n == 1 {
+    return piece;
+  }
+  let halfn: i32 = n / 2;
+  let half: string = repeat_str(piece, halfn);
+  let doubled: string = string_concat(half, half);
+  if n % 2 == 0 {
+    return doubled;
+  }
+  return string_concat(doubled, piece);
+}
+
+export fn string_transform(value: string, prefix: string, suffix: string, repeat: i32) -> string {
+  if string_starts_with(value, prefix) {
+    return string_concat(value, repeat_str(suffix, repeat));
+  }
+  return string_concat(string_concat(value, prefix), repeat_str(suffix, repeat));
+}
+
+export fn scan_bytes(data: bytes, lo: i32, hi: i32, threshold: i32) -> i32 {
+  if lo >= hi {
+    return 0;
+  }
+  if lo + 1 == hi {
+    let b: i32 = bytes_byte_at(data, lo);
+    if b >= threshold {
+      return b + 1;
+    }
+    return 0;
+  }
+  let mid: i32 = lo + hi;
+  let half: i32 = mid / 2;
+  return scan_bytes(data, lo, half, threshold) + scan_bytes(data, half, hi, threshold);
+}
+
+export fn dataset_scan(data: bytes, threshold: i32) -> i32 {
+  return scan_bytes(data, 0, bytes_length(data), threshold);
+}

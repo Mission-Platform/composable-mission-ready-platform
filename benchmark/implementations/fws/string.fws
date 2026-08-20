@@ -1,0 +1,24 @@
+// String transform using only compiler-owned string helpers.
+
+export fn repeat_str(piece: string, n: i32) -> string {
+  if n <= 0 {
+    return "";
+  }
+  if n == 1 {
+    return piece;
+  }
+  let halfn: i32 = n / 2;
+  let half: string = repeat_str(piece, halfn);
+  let doubled: string = string_concat(half, half);
+  if n % 2 == 0 {
+    return doubled;
+  }
+  return string_concat(doubled, piece);
+}
+
+export fn string_transform(value: string, prefix: string, suffix: string, repeat: i32) -> string {
+  if string_starts_with(value, prefix) {
+    return string_concat(value, repeat_str(suffix, repeat));
+  }
+  return string_concat(string_concat(value, prefix), repeat_str(suffix, repeat));
+}
