@@ -1,6 +1,5 @@
 import { h, type MpChild, type MpElement, Slot, useEffect, useState } from '@mission-platform/forge';
-
-import { ForgeTypography } from '@/components/atoms/forge-typography';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import sizeStyles from '../../../styles/size.module.scss';
 import { ForgeDrawer } from '../forge-drawer';

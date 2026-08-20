@@ -37,6 +37,19 @@ describe('icon sprite serialization', () => {
     expect(ids).toContain('icon-country-globe-US');
   });
 
+  it('renders the Australian flag with its canton and stars', () => {
+    const australia = ICON_SYMBOL_DEFINITIONS.find((definition) => definition.id === 'icon-flag-AU');
+
+    expect(australia).toBeDefined();
+    if (australia === undefined) return;
+
+    const serialized = serializeSymbol(australia);
+    expect(serialized).toContain('id="icon-flag-AU"');
+    expect(serialized).toContain('fill="#1f3c88"');
+    expect(serialized).toContain('fill="#c8102e"');
+    expect(serialized.match(/<polygon/g)?.length).toBeGreaterThanOrEqual(9);
+  });
+
   it('does not replace catalog artwork with the generic fallback circle', () => {
     const fallback = '<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"></circle>';
 

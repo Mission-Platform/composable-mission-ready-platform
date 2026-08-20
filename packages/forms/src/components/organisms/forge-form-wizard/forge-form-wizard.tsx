@@ -1,7 +1,5 @@
-import { ForgeTypography } from '@mission-platform/components';
 import { h, type MpChild, type MpElement, type MpRenderProperty, Slot } from '@mission-platform/forge';
-
-import sizeStyles from '../../size.module.scss';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-form-wizard.module.scss';
 
@@ -163,7 +161,7 @@ export function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpE
   );
 
   return (
-    <div className={[styles['forge-form-wizard'], sizeStyles[`forge-size--${size}`]]}>
+    <div className={[styles['forge-form-wizard'], size ? `forge-size--${size}` : undefined]}>
       <ol
         className={styles['forge-form-wizard__steps']}
         role="list"

@@ -1,7 +1,5 @@
 import { h, type MpElement } from '@mission-platform/forge';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 import styles from './forge-breadcrumb.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
@@ -46,7 +44,7 @@ export function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpE
   return (
     <nav
       aria-label="Breadcrumb"
-      className={[styles['forge-breadcrumb'], sizeStyles[`forge-size--${size}`]]}
+      className={[styles['forge-breadcrumb'], size ? `forge-size--${size}` : undefined]}
     >
       <ol className={styles['forge-breadcrumb__list']}>
         {items.map((item, index) => {

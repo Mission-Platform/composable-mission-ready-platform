@@ -28,7 +28,6 @@ export function EmailButton(properties: Readonly<EmailButtonProperties>): MpElem
   const size = properties.size ?? 'md';
   const colors = controlColors(variant);
   const background = colors.background === 'transparent' ? 'transparent' : colorValue(colors.background);
-  const { children, href: _href, variant: _variant, size: _size, color: _color, ...rest } = properties;
   return (
     <table
       role="presentation"
@@ -48,7 +47,6 @@ export function EmailButton(properties: Readonly<EmailButtonProperties>): MpElem
             }}
           >
             <a
-              {...rest}
               href={validateUrl(properties.href, 'href')}
               role="button"
               style={{
@@ -61,7 +59,7 @@ export function EmailButton(properties: Readonly<EmailButtonProperties>): MpElem
                 textDecoration: 'none',
               }}
             >
-              {children ?? properties.href}
+              {properties.children ?? properties.href}
             </a>
           </td>
         </tr>

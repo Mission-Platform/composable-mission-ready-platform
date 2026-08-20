@@ -1,28 +1,31 @@
-@layer mp.components {
+@layer mp.content {
   .wysiwyg-block-menu__trigger {
     display: inline-flex;
-    gap: var(--mp-spacing-2xs);
+    gap: var(--mp-component-editor-block-menu-trigger-gap);
     align-items: center;
     min-width: 8rem;
-    padding: var(--mp-spacing-2xs) var(--mp-spacing-xs);
-    color: var(--mp-color-text-default);
+    padding: var(--mp-component-editor-block-menu-trigger-padding-block)
+      var(--mp-component-editor-block-menu-trigger-padding-inline);
+    color: var(--mp-component-editor-block-menu-trigger-text);
     font: inherit;
     background-color: transparent;
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-sm);
+    border: var(--mp-component-editor-block-menu-trigger-border-width) solid
+      var(--mp-component-editor-block-menu-trigger-border);
+    border-radius: var(--mp-component-editor-block-menu-trigger-radius);
     cursor: pointer;
 
     &:hover:not(:disabled) {
-      background-color: var(--mp-color-surface-hover);
+      background-color: var(--mp-component-editor-block-menu-trigger-surface-hover);
     }
 
     &:focus-visible {
-      outline: 2px solid var(--mp-color-primary-default);
+      outline: var(--mp-component-editor-block-menu-trigger-focus-border-width) solid
+        var(--mp-component-editor-block-menu-trigger-focus-border);
       outline-offset: 1px;
     }
 
     &:disabled {
-      opacity: 0.5;
+      opacity: var(--mp-component-editor-block-menu-trigger-opacity-disabled);
       cursor: not-allowed;
     }
   }
@@ -35,40 +38,42 @@
   .wysiwyg-block-menu__list {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: var(--mp-component-editor-block-menu-list-gap);
     min-width: 10rem;
     margin: 0;
-    padding: var(--mp-spacing-2xs);
-    color: var(--mp-color-text-default);
-    background-color: var(--mp-color-bg-surface);
-    border-radius: var(--mp-radius-md);
+    padding: var(--mp-component-editor-block-menu-list-padding);
+    color: var(--mp-component-editor-block-menu-list-text);
+    background-color: var(--mp-component-editor-block-menu-list-surface);
+    border-radius: var(--mp-component-editor-block-menu-list-radius);
     list-style: none;
   }
 
   .wysiwyg-block-menu__item {
     display: block;
     width: 100%;
-    padding: var(--mp-spacing-2xs) var(--mp-spacing-sm);
-    color: var(--mp-color-text-default);
+    padding: var(--mp-component-editor-block-menu-item-padding-block)
+      var(--mp-component-editor-block-menu-item-padding-inline);
+    color: var(--mp-component-editor-block-menu-item-text-default);
     font: inherit;
     text-align: start;
     background-color: transparent;
     border: none;
-    border-radius: var(--mp-radius-sm);
+    border-radius: var(--mp-component-editor-block-menu-item-radius);
     cursor: pointer;
 
     &:hover {
-      background-color: var(--mp-color-surface-hover);
+      background-color: var(--mp-component-editor-block-menu-item-surface-hover);
     }
 
     &:focus-visible {
-      outline: 2px solid var(--mp-color-primary-default);
+      outline: var(--mp-component-editor-block-menu-item-focus-border-width) solid
+        var(--mp-component-editor-block-menu-item-focus-border);
       outline-offset: -2px;
     }
   }
 
   .wysiwyg-block-menu__item--active {
-    color: var(--mp-color-primary-default);
-    font-weight: 600;
+    color: var(--mp-component-editor-block-menu-item-text-active);
+    font-weight: var(--mp-component-editor-block-menu-item-active-font-weight);
   }
 }

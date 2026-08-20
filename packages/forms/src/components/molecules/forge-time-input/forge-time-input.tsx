@@ -1,4 +1,4 @@
-import { ForgeDropdown, ForgeTypography } from '@mission-platform/components';
+import { ForgeDropdown } from '@mission-platform/float';
 import {
   type ClassValue,
   h,
@@ -10,6 +10,7 @@ import {
   useId,
   useState,
 } from '@mission-platform/forge';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import {
   clamp,

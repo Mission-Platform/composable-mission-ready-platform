@@ -12,9 +12,9 @@
   .tree-view {
     margin: 0;
     padding: 0;
-    font-family: var(--mp-font-family-sans);
-    font-size: var(--mp-font-size-sm);
-    color: var(--mp-color-text-primary);
+    font-family: var(--mp-component-data-tree-font-family);
+    font-size: var(--mp-component-data-tree-font-size);
+    color: var(--mp-component-data-tree-text-default);
     list-style: none;
     user-select: none;
   }
@@ -31,23 +31,24 @@
 
   .tree-node__label {
     display: flex;
-    gap: var(--mp-spacing-2);
+    gap: var(--mp-component-data-tree-label-gap);
     align-items: center;
-    height: 32px;
-    padding-right: var(--mp-spacing-3);
-    color: var(--mp-color-text-primary);
+    height: var(--mp-component-data-tree-label-height);
+    padding-right: var(--mp-component-data-tree-label-padding-inline-end);
+    color: var(--mp-component-data-tree-text-default);
     cursor: pointer;
-    border-radius: var(--mp-radius-sm);
+    border-radius: var(--mp-component-data-tree-label-radius);
     outline: none;
-    transition: background-color 80ms ease;
+    transition: background-color var(--mp-component-data-tree-label-transition-duration)
+      var(--mp-component-data-tree-label-transition-easing);
 
     &:hover {
-      background-color: var(--mp-color-bg-muted);
+      background-color: var(--mp-component-data-tree-label-hover-surface);
     }
 
     &:focus-visible {
       outline: none;
-      box-shadow: var(--mp-shadow-focus-primary);
+      box-shadow: var(--mp-component-data-tree-label-focus-ring);
     }
   }
 
@@ -56,23 +57,24 @@
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
+    width: var(--mp-component-data-tree-toggle-size);
+    height: var(--mp-component-data-tree-toggle-size);
     padding: 0;
-    color: var(--mp-color-text-secondary);
+    color: var(--mp-component-data-tree-text-toggle);
     cursor: pointer;
     background: none;
     border: none;
-    border-radius: var(--mp-radius-sm);
-    transition: color 80ms ease;
+    border-radius: var(--mp-component-data-tree-toggle-radius);
+    transition: color var(--mp-component-data-tree-toggle-transition-duration)
+      var(--mp-component-data-tree-toggle-transition-easing);
 
     &:hover {
-      color: var(--mp-color-text-primary);
+      color: var(--mp-component-data-tree-text-toggle-hover);
     }
   }
 
   .tree-node__toggle--open {
-    color: var(--mp-color-text-primary);
+    color: var(--mp-component-data-tree-text-toggle-open);
   }
 
   .tree-node__spacer {

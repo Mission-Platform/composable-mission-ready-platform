@@ -1,7 +1,5 @@
 import { classNames, h, type MpElement } from '@mission-platform/forge';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 import styles from './forge-responsive-image.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
@@ -94,7 +92,7 @@ export function ForgeResponsiveImage(properties: Readonly<ResponsiveImagePropert
     size = 'md',
   } = properties;
 
-  const className = classNames(styles['forge-responsive-image'], sizeStyles[`forge-size--${size}`], {
+  const className = classNames(styles['forge-responsive-image'], size ? `forge-size--${size}` : undefined, {
     [styles['forge-responsive-image--rounded']]: rounded,
   });
 

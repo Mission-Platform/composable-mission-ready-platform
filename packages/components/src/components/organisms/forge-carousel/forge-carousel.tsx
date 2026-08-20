@@ -10,8 +10,6 @@ import {
 } from '@mission-platform/forge';
 import { ForgeIconChevron, ForgeIconPause, ForgeIconPlay } from '@mission-platform/icons';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 import styles from './forge-carousel.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
@@ -277,7 +275,7 @@ export function ForgeCarousel(properties: Readonly<CarouselProperties>): MpEleme
     <section
       aria-label={ariaLabel}
       aria-roledescription="carousel"
-      className={[styles['forge-carousel'], styles[`forge-carousel--${variant}`], sizeStyles[`forge-size--${size}`]]}
+      className={[styles['forge-carousel'], styles[`forge-carousel--${variant}`], size ? `forge-size--${size}` : undefined]}
       tabindex={0}
       onKeydown={handleKeydown}
       onMouseenter={() => {

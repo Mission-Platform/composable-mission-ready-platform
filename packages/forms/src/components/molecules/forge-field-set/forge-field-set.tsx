@@ -1,7 +1,5 @@
-import { ForgeTypography } from '@mission-platform/components';
 import { type ClassValue, h, type MpChild, type MpElement } from '@mission-platform/forge';
-
-import sizeStyles from '../../size.module.scss';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-field-set.module.scss';
 
@@ -52,7 +50,7 @@ export function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpEleme
     <fieldset
       className={[
         styles['forge-field-set'],
-        sizeStyles[`forge-size--${size}`],
+        size ? `forge-size--${size}` : undefined,
         { [styles['forge-field-set--flush']]: flush },
         properties.className,
       ]}

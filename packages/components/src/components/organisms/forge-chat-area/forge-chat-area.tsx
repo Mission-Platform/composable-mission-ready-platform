@@ -1,7 +1,5 @@
 import { h, type MpChild, type MpElement, Slot, useEffect, useRef } from '@mission-platform/forge';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 import styles from './forge-chat-area.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
@@ -86,7 +84,7 @@ export function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpEleme
   }, []);
 
   return (
-    <div className={[styles['forge-chat-area'], sizeStyles[`forge-size--${size}`]]}>
+    <div className={[styles['forge-chat-area'], size ? `forge-size--${size}` : undefined]}>
       <header className={styles['forge-chat-area__header']}>
         <Slot name="header" />
       </header>

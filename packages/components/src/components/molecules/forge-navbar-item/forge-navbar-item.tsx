@@ -11,8 +11,6 @@ import {
 } from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 import styles from './forge-navbar-item.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
@@ -69,7 +67,7 @@ export interface NavbarItemProperties {
  * (falling back to `label`) with an optional leading `icon` slot. It owns its
  * styling through the co-located CSS Module `forge-navbar-item.module.scss`.
  *
- * The original Vue SFC used `@mission-platform/components`' `ForgeDropdown`
+ * The original Vue SFC used a floating dropdown
  * (Teleport + `@floating-ui` positioning), a dynamic `<component :is>` tag,
  * `vue-router` `RouterLink`, the `@mission-platform/icons` `ForgeIconChevron`, and a
  * `click` emit. The neutral version keeps the **dynamic tag** — the childless
@@ -125,7 +123,7 @@ export function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpE
   const itemClass = classNames(
     styles['forge-navbar-item'],
     styles[`forge-navbar-item--${variant}`],
-    sizeStyles[`forge-size--${size}`],
+    size ? `forge-size--${size}` : undefined,
     {
       [styles['forge-navbar-item--active']]: active,
       [styles['forge-navbar-item--disabled']]: disabled,

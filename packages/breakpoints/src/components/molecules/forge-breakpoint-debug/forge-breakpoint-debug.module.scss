@@ -5,64 +5,64 @@
     bottom: 0;
     z-index: 9999;
     display: flex;
-    gap: var(--mp-spacing-1, 0.286rem);
+    gap: var(--mp-component-debug-breakpoint-gap);
     align-items: center;
-    padding: var(--mp-spacing-1, 0.286rem) var(--mp-spacing-2, 0.571rem);
-    font-family: var(--mp-font-family-mono, monospace) monospace;
-    font-size: var(--mp-size-font-2xs, 0.643rem);
+    padding: var(--mp-component-debug-breakpoint-padding-block) var(--mp-component-debug-breakpoint-padding-inline);
+    font-family: var(--mp-component-debug-breakpoint-typography-font-family);
+    font-size: var(--mp-component-debug-breakpoint-typography-font-size);
 
     /* White text on a near-black overlay gives contrast well above the WCAG AA 4.5:1 threshold. */
 
-    /* --mp-color-bg-scrim is a semi-transparent token (rgb(0 0 0 / 50%)) that composites to a */
+    /* A semi-transparent scrim composites to a mid-gray against a white background, */
 
     /* mid-gray (~#808080) against a white background — making it impossible for any text to pass */
 
     /* 4.5:1. A solid dark overlay is required for the debug badge to be WCAG compliant. */
-    color: var(--mp-color-text-inverse, #f9f9fb);
-    background: rgb(8 6 13 / 85%);
-    border-top-left-radius: var(--mp-radius-sm, 0.286rem);
+    color: var(--mp-component-debug-breakpoint-text-default);
+    background: var(--mp-component-debug-breakpoint-surface);
+    border-top-left-radius: var(--mp-component-debug-breakpoint-radius);
   }
 
   .bp-debug__label {
-    margin-right: var(--mp-spacing-1, 0.286rem);
+    margin-right: var(--mp-component-debug-breakpoint-label-margin);
 
     /* Slightly dimmed but still readable; 85% opacity on near-white over near-black is ≥4.5:1 */
-    opacity: 0.85;
+    opacity: var(--mp-component-debug-breakpoint-label-opacity);
   }
 
   .bp-debug__current {
-    font-weight: var(--mp-font-weight-bold);
+    font-weight: var(--mp-component-debug-breakpoint-typography-font-weight);
 
     /* success-muted (#d0f4df) is a light green — high contrast on the near-black overlay */
-    color: var(--mp-color-success-muted, #d0f4df);
+    color: var(--mp-component-debug-breakpoint-text-current);
   }
 
   .bp-debug__separator {
-    margin: 0 var(--mp-spacing-1, 0.286rem);
-    opacity: 0.6;
+    margin: 0 var(--mp-component-debug-breakpoint-separator-margin);
+    opacity: var(--mp-component-debug-breakpoint-separator-opacity);
   }
 
   .bp-debug__badge {
-    padding: var(--mp-size-pad-block-2xs, 0.143rem) var(--mp-size-pad-inline-2xs, 0.286rem);
-    border-radius: var(--mp-radius-xs, 0.286rem);
-    color: var(--mp-color-text-inverse, #f9f9fb);
+    padding: var(--mp-component-debug-breakpoint-badge-padding-block) var(--mp-component-debug-breakpoint-badge-padding-inline);
+    border-radius: var(--mp-component-debug-breakpoint-badge-radius);
+    color: var(--mp-component-debug-breakpoint-badge-text);
   }
 
   .bp-debug__badge--active {
     /* Dark text on the light success-muted badge background — token bg-base is near-black in */
 
     /* most themes; use text-primary which is always the darkest text token for legibility */
-    color: var(--mp-color-text-primary, #08060d);
-    background: var(--mp-color-success-muted, #d0f4df);
+    color: var(--mp-component-debug-breakpoint-badge-active-text);
+    background: var(--mp-component-debug-breakpoint-badge-active-surface);
 
     .bp-debug__px {
-      color: var(--mp-color-text-primary, #08060d);
+      color: var(--mp-component-debug-breakpoint-badge-active-text);
     }
   }
 
   .bp-debug__px {
-    margin-left: 0.1rem;
-    font-size: var(--mp-size-font-2xs, 0.643rem);
-    color: inherit;
+    margin-left: var(--mp-component-debug-breakpoint-px-margin);
+    font-size: var(--mp-component-debug-breakpoint-px-font-size);
+    color: var(--mp-component-debug-breakpoint-px-text);
   }
 }

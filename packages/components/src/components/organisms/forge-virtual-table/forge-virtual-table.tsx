@@ -12,8 +12,6 @@ import {
 } from '@mission-platform/forge';
 import { ForgeIconSort } from '@mission-platform/icons';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 /** Size token — canonical 2xs → 2xl scale. */
 export type VirtualTableSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
@@ -196,7 +194,7 @@ export function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>):
 
   return (
     <div
-      class={classNames('virtual-table', sizeStyles[`forge-size--${size}`])}
+      class={classNames('virtual-table', size ? `forge-size--${size}` : undefined)}
       role="table"
       aria-label={caption ?? undefined}
       aria-rowcount={sortedRows.length}

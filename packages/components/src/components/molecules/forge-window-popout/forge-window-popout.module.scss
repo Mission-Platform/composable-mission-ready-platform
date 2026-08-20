@@ -15,7 +15,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: var(--mp-spacing-2);
+    gap: var(--mp-component-overlay-window-popout-gap);
 
     &__inline {
       width: 100%;
@@ -29,11 +29,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: var(--mp-spacing-6);
-      border: var(--mp-border-width-thick) dashed var(--mp-color-border-default);
-      border-radius: var(--mp-radius-lg);
-      background-color: var(--mp-color-bg-muted, var(--mp-color-bg-surface));
-      min-height: 80px;
+      padding: var(--mp-component-overlay-window-popout-placeholder-padding);
+      border: var(--mp-component-overlay-window-popout-placeholder-border-width) dashed var(--mp-component-overlay-window-popout-placeholder-border);
+      border-radius: var(--mp-component-overlay-window-popout-placeholder-radius);
+      background-color: var(--mp-component-overlay-window-popout-placeholder-surface);
+      min-height: var(--mp-component-overlay-window-popout-placeholder-min-height);
     }
 
     &__placeholder-text {
@@ -48,32 +48,32 @@
     &__toggle {
       display: inline-flex;
       align-items: center;
-      gap: var(--mp-spacing-1);
-      padding: var(--mp-spacing-1) var(--mp-spacing-3);
-      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background: var(--mp-color-bg-surface);
-      color: var(--mp-color-text-primary);
+      gap: var(--mp-component-overlay-window-popout-toggle-gap);
+      padding: var(--mp-component-overlay-window-popout-toggle-padding-block) var(--mp-component-overlay-window-popout-toggle-padding-inline);
+      border: var(--mp-component-overlay-window-popout-toggle-border-width) solid var(--mp-component-overlay-window-popout-toggle-border-default);
+      border-radius: var(--mp-component-overlay-window-popout-toggle-radius);
+      background: var(--mp-component-overlay-window-popout-toggle-surface-default);
+      color: var(--mp-component-overlay-window-popout-toggle-text-default);
       cursor: pointer;
       transition:
-        background-color 150ms ease,
-        color 150ms ease,
-        border-color 150ms ease;
+        background-color var(--mp-component-overlay-window-popout-toggle-transition-duration) var(--mp-component-overlay-window-popout-toggle-transition-easing),
+        color var(--mp-component-overlay-window-popout-toggle-transition-duration) var(--mp-component-overlay-window-popout-toggle-transition-easing),
+        border-color var(--mp-component-overlay-window-popout-toggle-transition-duration) var(--mp-component-overlay-window-popout-toggle-transition-easing);
 
       &:hover {
-        background-color: var(--mp-color-bg-muted, var(--mp-color-bg-surface));
-        border-color: var(--mp-color-border-strong, var(--mp-color-border-default));
+        background-color: var(--mp-component-overlay-window-popout-toggle-surface-hover);
+        border-color: var(--mp-component-overlay-window-popout-toggle-border-hover);
       }
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-shadow-focus-primary, 0 0 0 2px var(--mp-color-primary-default));
+        box-shadow: var(--mp-component-overlay-window-popout-toggle-focus-ring);
       }
 
       &[aria-pressed='true'] {
-        background-color: var(--mp-color-primary-muted, var(--mp-color-bg-surface));
-        color: var(--mp-color-primary-default);
-        border-color: var(--mp-color-primary-default);
+        background-color: var(--mp-component-overlay-window-popout-toggle-surface-selected);
+        color: var(--mp-component-overlay-window-popout-toggle-text-selected);
+        border-color: var(--mp-component-overlay-window-popout-toggle-border-selected);
       }
     }
   }

@@ -1,0 +1,93 @@
+/**
+ * Styling for the write-once `ForgeTag`.
+ *
+ * Carried onto both frameworks by the two-stage compiler: React imports this as
+ * a hashed CSS Module, Vue inlines it as a (non-scoped) `<style>` block. The
+ * rules live in the package-owned `mp.select` cascade layer.
+ */
+
+@layer mp.select {
+  .forge-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mp-component-tag-gap);
+    border-radius: var(--mp-component-tag-radius);
+    font-family: var(--mp-component-tag-font-family);
+    line-height: var(--mp-component-tag-line-height);
+    white-space: nowrap;
+
+    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+      &--#{$size} {
+        padding: var(--mp-component-tag-size-#{$size}-padding-block)
+          var(--mp-component-tag-size-#{$size}-padding-inline);
+        font-size: var(--mp-component-tag-size-#{$size}-font-size);
+      }
+    }
+
+    /**
+     * Variants — the canonical colour set. Each tone maps to a semantic colour
+     * family (the `neutral` tone reuses the `default` token family, which has no
+     * `neutral` alias).
+     */
+    @each $name,
+      $family
+        in (
+          'neutral': 'default',
+          'primary': 'primary',
+          'secondary': 'secondary',
+          'tertiary': 'tertiary',
+          'success': 'success',
+          'warning': 'warning',
+          'info': 'info',
+          'error': 'error',
+          'critical': 'critical'
+        )
+    {
+      &--#{$name} {
+        background-color: var(--mp-component-tag-#{$name}-background);
+        color: var(--mp-component-tag-#{$name}-text);
+      }
+    }
+
+    /* States */
+    &--disabled {
+      pointer-events: none;
+      background-color: var(--mp-component-tag-disabled-background);
+      color: var(--mp-component-tag-disabled-text);
+    }
+
+    &__label {
+      line-height: inherit;
+    }
+
+    &__remove {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: inherit;
+      border-radius: var(--mp-component-tag-radius);
+      line-height: 1;
+
+      svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+        fill: currentcolor;
+      }
+
+      &:hover {
+        opacity: var(--mp-component-tag-remove-hover-opacity);
+      }
+
+      &:focus-visible {
+        outline: var(--mp-component-tag-border-width-focus) solid currentcolor;
+        outline-offset: 1px;
+      }
+    }
+  }
+}

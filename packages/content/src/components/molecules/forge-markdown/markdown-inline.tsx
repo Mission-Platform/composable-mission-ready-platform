@@ -1,5 +1,5 @@
-import { ForgeTypography } from '@mission-platform/components';
 import { h, type MpElement } from '@mission-platform/forge';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import { sanitizeUrl } from '../../../utils/sanitize';
 

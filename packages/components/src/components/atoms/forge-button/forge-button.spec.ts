@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+
 import { toReactComponent } from '@mission-platform/forge/react';
 import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
@@ -19,6 +22,22 @@ import { ForgeButton } from './forge-button';
  */
 const ReactButton = toReactComponent(ForgeButton, 'Button');
 const VueButton = toVueComponent(ForgeButton, 'Button');
+const buttonStyles = readFileSync(
+  path.resolve(process.cwd(), 'src/components/atoms/forge-button/forge-button.module.scss'),
+  'utf8',
+);
+type TokenLeaf = { $value: string };
+type ButtonContract = Record<
+  string,
+  {
+    background: Record<string, TokenLeaf>;
+    text: Record<string, TokenLeaf>;
+    border: Record<string, TokenLeaf>;
+  }
+>;
+const componentContract = JSON.parse(
+  readFileSync(path.resolve(process.cwd(), '../tokens/tokens/component.tokens.json'), 'utf8'),
+) as { component: { button: ButtonContract } };
 
 describe('ForgeButton authors the same component for React and Vue', () => {
   it('renders the variant and size modifiers to matching markup on both frameworks', async () => {
@@ -53,5 +72,17 @@ describe('ForgeButton authors the same component for React and Vue', () => {
       expect(html).toContain('role="status"');
       expect(html).toContain('aria-label="Loading…"');
     }
+  });
+
+  it('keeps migrated variant tokens aligned with the original visual treatments', () => {
+    const { button } = componentContract.component;
+    expect(button.neutral.text.default.$value).toBe('{color.text.on-primary}');
+    expect(button.secondary.background.default.$value).toBe('{color.bg.surface}');
+    expect(button.secondary.border.hover.$value).toBe('{color.border.strong}');
+    expect(button.tertiary.background.default.$value).toBe('transparent');
+    expect(button.ghost.background.default.$value).toBe('transparent');
+    expect(buttonStyles).toContain("@include transparent('tertiary');");
+    expect(buttonStyles).toContain("@include transparent('ghost');");
+    expect(buttonStyles).toContain('--mp-component-button-secondary-border-hover');
   });
 });

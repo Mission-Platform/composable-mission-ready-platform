@@ -1,0 +1,58 @@
+/**
+ * Styling for the write-once `ForgeThemeToggle`, ported from the original
+ * `@mission-platform/components` SFC.
+ *
+ * The rules live in the shared `mp.components` cascade layer (matching the
+ * components package) and are authored as a CSS Module consumed through the
+ * `classNames(styles[…])` helper. On the Vue build the two-stage compiler inlines
+ * this file as a non-scoped `<style>` block and collapses the `styles[…]` reads
+ * to these literal BEM class names; on the React build it ships as a hashed CSS
+ * Module — both resolve to the same visual result.
+ */
+
+@layer mp.components {
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mp-component-button-primary-gap);
+    padding: var(--mp-component-theme-toggle-padding-block) var(--mp-component-theme-toggle-padding-inline);
+    background-color: var(--mp-component-button-secondary-background-default);
+    color: var(--mp-component-button-secondary-text-default);
+    border: var(--mp-component-button-secondary-border-width) solid var(--mp-component-button-secondary-border-default);
+    border-radius: var(--mp-component-button-primary-radius);
+    cursor: pointer;
+    font: inherit;
+    transition:
+      background-color var(--mp-component-button-secondary-transition-duration) var(--mp-component-button-secondary-transition-easing),
+      border-color var(--mp-component-button-secondary-transition-duration) var(--mp-component-button-secondary-transition-easing),
+      color var(--mp-component-button-secondary-transition-duration) var(--mp-component-button-secondary-transition-easing);
+
+    &:hover {
+      background-color: var(--mp-component-button-secondary-background-hover);
+      border-color: var(--mp-component-theme-toggle-border-color-hover);
+    }
+
+    &:focus-visible {
+      outline: var(--mp-component-theme-toggle-focus-width) solid var(--mp-component-button-secondary-border-focus-visible);
+      outline-offset: var(--mp-component-theme-toggle-focus-offset);
+    }
+
+    &__icon {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      font-size: var(--mp-component-theme-toggle-icon-size);
+      line-height: 1;
+      color: var(--mp-component-theme-toggle-icon-color-default);
+    }
+
+    &__label {
+      font-family: var(--mp-component-theme-toggle-label-font-family);
+      font-size: var(--mp-component-theme-toggle-label-font-size);
+      font-weight: var(--mp-component-theme-toggle-label-font-weight);
+      line-height: var(--mp-component-theme-toggle-label-line-height);
+      letter-spacing: var(--mp-component-theme-toggle-label-letter-spacing);
+      white-space: nowrap;
+    }
+  }
+}

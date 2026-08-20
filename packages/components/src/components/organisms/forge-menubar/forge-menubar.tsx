@@ -1,8 +1,6 @@
 import { h, type MpChild, type MpElement, Slot, useEffect, useRef, useState } from '@mission-platform/forge';
 import { ForgeIconChevron, type IconDirection } from '@mission-platform/icons';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 import styles from './forge-menubar.module.scss';
 
 import type { MenuNode } from '@/components/molecules/forge-menu';
@@ -187,7 +185,7 @@ export function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement
       aria-label={items ? label : undefined}
       className={[
         styles['forge-menubar'],
-        sizeStyles[`forge-size--${size}`],
+        size ? `forge-size--${size}` : undefined,
         {
           [styles['forge-menubar--bordered']]: bordered,
         },

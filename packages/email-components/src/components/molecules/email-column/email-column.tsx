@@ -13,10 +13,9 @@ export interface EmailColumnProperties {
 }
 
 export function EmailColumn(properties: Readonly<EmailColumnProperties>): MpElement {
-  const { children, width, align, valign, stackOnMobile, padding, ...rest } = properties;
+  const { children, width, align, valign, stackOnMobile, padding } = properties;
   return (
     <td
-      {...rest}
       class={stackOnMobile ? 'mp-email-stack' : undefined}
       width={width}
       align={align}

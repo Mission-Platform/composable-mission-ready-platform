@@ -1,6 +1,5 @@
 import { h, type MpChild, type MpElement } from '@mission-platform/forge';
 
-import sizeStyles from '../../../styles/size.module.scss';
 import spacingStyles from '../../../styles/spacing.module.scss';
 
 import styles from './forge-separator.module.scss';
@@ -62,7 +61,7 @@ export function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpEle
     padding,
     margin,
   } = properties;
-  const sizeClass = sizeStyles[`forge-size--${size}`];
+  const sizeClass = size ? `forge-size--${size}` : undefined;
 
   const role = decorative ? 'none' : 'separator';
   const hasLabel = orientation === 'horizontal' && properties.children !== undefined;

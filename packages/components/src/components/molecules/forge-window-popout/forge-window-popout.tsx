@@ -8,10 +8,7 @@ import {
   useRef,
   useState,
 } from '@mission-platform/forge';
-
-import { ForgeTypography } from '@/components/atoms/forge-typography';
-
-import sizeStyles from '../../../styles/size.module.scss';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-window-popout.module.scss';
 
@@ -180,7 +177,7 @@ export function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>):
   ) : undefined;
 
   return (
-    <div className={classNames(styles['forge-window-popout'], sizeStyles[`forge-size--${size}`])}>
+    <div className={classNames(styles['forge-window-popout'], size ? `forge-size--${size}` : undefined)}>
       {inlineNode}
       {placeholderNode}
       <div className={styles['forge-window-popout__controls']}>

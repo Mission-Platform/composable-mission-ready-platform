@@ -12,27 +12,27 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    background: var(--mp-color-bg-sunken);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
+    background: var(--mp-component-code-virtual-log-viewer-surface);
+    border: var(--mp-component-code-virtual-log-viewer-border-width) solid var(--mp-component-code-virtual-log-viewer-border);
+    border-radius: var(--mp-component-code-virtual-log-viewer-radius);
   }
 
   .log-viewer__toolbar {
     display: flex;
     flex-shrink: 0;
     align-items: center;
-    height: 32px;
-    padding: 0 var(--mp-spacing-4);
-    background: var(--mp-color-bg-surface);
-    border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-strong);
+    height: var(--mp-component-code-virtual-log-viewer-toolbar-height);
+    padding: 0 var(--mp-component-code-virtual-log-viewer-toolbar-padding-inline);
+    background: var(--mp-component-code-virtual-log-viewer-toolbar-surface);
+    border-bottom: var(--mp-component-code-virtual-log-viewer-border-width) solid var(--mp-component-code-virtual-log-viewer-toolbar-border);
   }
 
   .log-viewer__filter-badge {
-    font-family: var(--mp-font-family-sans);
-    font-size: var(--mp-font-size-xs);
-    font-weight: var(--mp-font-weight-semibold);
-    color: var(--mp-color-text-secondary);
-    letter-spacing: 0.04em;
+    font-family: var(--mp-component-code-virtual-log-viewer-filter-font-family);
+    font-size: var(--mp-component-code-virtual-log-viewer-filter-font-size);
+    font-weight: var(--mp-component-code-virtual-log-viewer-filter-font-weight);
+    color: var(--mp-component-code-virtual-log-viewer-filter-text);
+    letter-spacing: var(--mp-component-code-virtual-log-viewer-filter-letter-spacing);
     text-transform: uppercase;
   }
 
@@ -42,10 +42,10 @@
 
   .log-viewer__row {
     display: flex;
-    gap: var(--mp-spacing-2);
+    gap: var(--mp-component-code-virtual-log-viewer-row-gap);
     align-items: center;
     width: 100%;
-    padding: 0 var(--mp-spacing-3);
+    padding: 0 var(--mp-component-code-virtual-log-viewer-row-padding-inline);
     margin: 0;
     font: inherit;
     color: inherit;
@@ -53,53 +53,53 @@
     cursor: default;
     background: none;
     border: 0;
-    border-bottom: var(--mp-border-width-thin) solid transparent;
+    border-bottom: var(--mp-component-code-virtual-log-viewer-row-border-width) solid var(--mp-component-code-virtual-log-viewer-row-border);
     outline: none;
-    transition: background-color 80ms ease;
+    transition: background-color var(--mp-component-code-virtual-log-viewer-row-transition-duration) var(--mp-component-code-virtual-log-viewer-row-transition-easing);
 
     &:hover {
-      background-color: var(--mp-color-bg-raised);
+      background-color: var(--mp-component-code-virtual-log-viewer-row-hover-surface);
     }
 
     &:focus-visible {
       outline: none;
-      box-shadow: var(--mp-shadow-focus-primary);
+      box-shadow: var(--mp-component-code-virtual-log-viewer-row-focus-ring);
     }
   }
 
   .log-viewer__row--warn {
-    background: color-mix(in srgb, var(--mp-color-warning-default) 6%, transparent);
+    background: color-mix(in srgb, var(--mp-component-code-virtual-log-viewer-severity-warn) var(--mp-component-code-virtual-log-viewer-severity-warn-opacity), transparent);
   }
 
   .log-viewer__row--error,
   .log-viewer__row--fatal {
-    background: color-mix(in srgb, var(--mp-color-danger-default) 8%, transparent);
+    background: color-mix(in srgb, var(--mp-component-code-virtual-log-viewer-severity-error) var(--mp-component-code-virtual-log-viewer-severity-error-opacity), transparent);
   }
 
   .log-viewer__line-no {
     flex-shrink: 0;
-    min-width: 44px;
-    padding-right: var(--mp-spacing-2);
+    min-width: var(--mp-component-code-virtual-log-viewer-line-number-min-width);
+    padding-right: var(--mp-component-code-virtual-log-viewer-line-number-padding-inline-end);
     text-align: right;
-    border-right: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    border-right: var(--mp-component-code-virtual-log-viewer-row-border-width) solid var(--mp-component-code-virtual-log-viewer-line-number-border);
   }
 
   .log-viewer__timestamp {
     flex-shrink: 0;
-    min-width: 140px;
+    min-width: var(--mp-component-code-virtual-log-viewer-timestamp-min-width);
   }
 
   .log-viewer__level {
     display: flex;
     flex-shrink: 0;
-    gap: var(--mp-spacing-1);
+    gap: var(--mp-component-code-virtual-log-viewer-level-gap);
     align-items: center;
-    min-width: 72px;
+    min-width: var(--mp-component-code-virtual-log-viewer-level-min-width);
   }
 
   .log-viewer__level-label {
-    font-weight: var(--mp-font-weight-semibold);
-    letter-spacing: 0.06em;
+    font-weight: var(--mp-component-code-virtual-log-viewer-level-font-weight);
+    letter-spacing: var(--mp-component-code-virtual-log-viewer-level-letter-spacing);
     text-transform: uppercase;
   }
 

@@ -14,7 +14,7 @@
   .avatar-demo-row {
     display: flex;
     align-items: center;
-    gap: var(--mp-spacing-4);
+    gap: var(--mp-component-layout-gap);
     flex-wrap: wrap;
   }
 }

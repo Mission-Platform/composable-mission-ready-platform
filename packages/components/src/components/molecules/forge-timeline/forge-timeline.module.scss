@@ -13,9 +13,9 @@
 
 @layer mp.components {
   .forge-timeline {
-    --mp-timeline-marker-size: 0.875rem;
-    --mp-timeline-line-thickness: var(--mp-border-width-thick);
-    --mp-timeline-gutter: var(--mp-spacing-6);
+    --mp-timeline-marker-size: var(--mp-component-timeline-marker-size);
+    --mp-timeline-line-thickness: var(--mp-component-timeline-line-width);
+    --mp-timeline-gutter: var(--mp-component-timeline-gutter);
 
     list-style: none;
     margin: 0;
@@ -35,7 +35,7 @@
   }
 
   .forge-timeline-item {
-    --mp-timeline-item-color: var(--mp-color-primary-default);
+    --mp-timeline-item-color: var(--mp-component-timeline-marker-default);
 
     position: relative;
     display: flex;
@@ -44,7 +44,7 @@
       'critical'
     {
       &--#{$family} {
-        --mp-timeline-item-color: var(--mp-color-#{$family}-default);
+        --mp-timeline-item-color: var(--mp-component-timeline-variant-#{$family});
       }
     }
 
@@ -59,20 +59,20 @@
     &__dot {
       width: var(--mp-timeline-marker-size);
       height: var(--mp-timeline-marker-size);
-      border-radius: var(--mp-radius-full, 9999px);
+      border-radius: var(--mp-component-timeline-marker-radius);
       background-color: var(--mp-timeline-item-color);
-      box-shadow: 0 0 0 4px var(--mp-color-bg-surface);
+      box-shadow: 0 0 0 var(--mp-component-timeline-marker-outline-width) var(--mp-component-timeline-marker-outline-surface);
     }
 
     &--outlined &__dot {
-      background-color: var(--mp-color-bg-surface);
+      background-color: var(--mp-component-timeline-marker-outlined-surface);
       border: var(--mp-timeline-line-thickness) solid var(--mp-timeline-item-color);
     }
 
     /* ── Vertical ─────────────────────────────────────────────────────────── */
     &--vertical {
       flex-direction: row;
-      gap: var(--mp-spacing-4);
+      gap: var(--mp-component-timeline-vertical-gap);
       padding-bottom: var(--mp-timeline-gutter);
 
       .forge-timeline-item__marker {
@@ -89,7 +89,7 @@
         left: 50%;
         width: var(--mp-timeline-line-thickness);
         transform: translateX(-50%);
-        background-color: var(--mp-color-border-default);
+        background-color: var(--mp-component-timeline-line-surface);
       }
 
       .forge-timeline-item__content {
@@ -100,7 +100,7 @@
     /* ── Horizontal ───────────────────────────────────────────────────────── */
     &--horizontal {
       flex-direction: column;
-      gap: var(--mp-spacing-3);
+      gap: var(--mp-component-timeline-horizontal-gap);
       min-width: 12rem;
       padding-right: var(--mp-timeline-gutter);
 
@@ -118,14 +118,14 @@
         top: 50%;
         height: var(--mp-timeline-line-thickness);
         transform: translateY(-50%);
-        background-color: var(--mp-color-border-default);
+        background-color: var(--mp-component-timeline-line-surface);
       }
     }
 
     &__content {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-spacing-1);
+      gap: var(--mp-component-timeline-content-gap);
       min-width: 0;
     }
 
@@ -134,7 +134,7 @@
     }
 
     &__body {
-      margin-top: var(--mp-spacing-1);
+      margin-top: var(--mp-component-timeline-content-body-margin-top);
     }
 
     /* The final item has no following sibling, so hide its connecting line.

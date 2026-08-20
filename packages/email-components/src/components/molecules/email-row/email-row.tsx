@@ -12,10 +12,9 @@ export interface EmailRowProperties {
 }
 
 export function EmailRow(properties: Readonly<EmailRowProperties>): MpElement {
-  const { children, align, valign, stackOnMobile, spacing, ...rest } = properties;
+  const { children, align, valign, stackOnMobile, spacing } = properties;
   return (
     <table
-      {...rest}
       class={stackOnMobile ? 'mp-email-stack' : undefined}
       role="presentation"
       width="100%"

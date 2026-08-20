@@ -1,9 +1,7 @@
 import { h, hasSlot, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import { ForgeAvatar } from '@/components/atoms/forge-avatar';
-import { ForgeTypography } from '@/components/atoms/forge-typography';
-
-import sizeStyles from '../../../styles/size.module.scss';
 
 import styles from './forge-chat-bubble.module.scss';
 
@@ -79,7 +77,7 @@ export function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpE
         styles['forge-chat-bubble'],
         styles[`forge-chat-bubble--${side}`],
         styles[`forge-chat-bubble--${variant}`],
-        sizeStyles[`forge-size--${size}`],
+        size ? `forge-size--${size}` : undefined,
         { [styles['forge-chat-bubble--pending']]: pending },
       ]}
     >

@@ -1,7 +1,5 @@
 import { classNames, h, type MpChild, type MpElement } from '@mission-platform/forge';
 
-import sizeStyles from '../../size.module.scss';
-
 import styles from './forge-container.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
@@ -102,7 +100,7 @@ export function ForgeContainer(properties: Readonly<ContainerProperties>): MpEle
     'forge-container',
     `forge-container--${variant}`,
     variant === 'responsive' ? styles['forge-container--responsive'] : undefined,
-    sizeStyles[`forge-size--${size}`],
+    size ? `forge-size--${size}` : undefined,
   );
 
   // Children must reach `h` as variadic args (the compile-time runtimes read

@@ -10,8 +10,6 @@ import {
 } from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 import styles from './forge-virtual-tree-view.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
@@ -141,7 +139,7 @@ export function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewPropert
   return (
     <div
       ref={containerReference}
-      className={[styles['virtual-tree'], sizeStyles[`forge-size--${size}`]]}
+      className={[styles['virtual-tree'], size ? `forge-size--${size}` : undefined]}
       role="tree"
       tabindex={0}
       style={{ height: `${height}px`, overflowY: 'auto', position: 'relative' }}

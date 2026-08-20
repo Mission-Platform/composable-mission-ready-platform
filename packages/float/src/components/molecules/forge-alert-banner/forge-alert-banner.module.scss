@@ -1,0 +1,117 @@
+/**
+ * Styling for the write-once `ForgeAlertBanner`.
+ *
+ * `ForgeAlertBanner` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its BEM appearance ships in the built package CSS (the
+ * two-stage compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package.
+ */
+
+@layer mp.components {
+  /* `display: contents` host so toggling visibility adds no layout box. */
+  .forge-alert-banner-host {
+    display: contents;
+  }
+
+  .forge-alert-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--mp-component-overlay-alert-banner-gap);
+    padding: var(--mp-component-overlay-alert-banner-padding-block)
+      var(--mp-component-overlay-alert-banner-padding-inline);
+    border: var(--mp-component-overlay-border-width) solid transparent;
+    border-radius: var(--mp-component-overlay-alert-banner-radius);
+    font-family: var(--mp-component-overlay-font-family);
+
+    &__icon {
+      display: flex;
+      flex-shrink: 0;
+      margin-top: 1px;
+      font-size: var(--mp-component-overlay-icon-size);
+      line-height: 1;
+
+      svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+        fill: currentcolor;
+      }
+    }
+
+    &__content {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--mp-component-overlay-alert-banner-content-gap);
+      min-width: 0;
+    }
+
+    &__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--mp-component-overlay-alert-banner-actions-gap);
+      margin-top: var(--mp-component-overlay-alert-banner-actions-margin-top);
+    }
+
+    &__dismiss {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      padding: var(--mp-component-overlay-dismiss-padding);
+      margin: calc(var(--mp-component-overlay-dismiss-padding) * -1);
+      background: transparent;
+      border: 0;
+      border-radius: var(--mp-component-overlay-dismiss-radius);
+      color: inherit;
+      cursor: pointer;
+      opacity: var(--mp-component-overlay-alert-banner-dismiss-opacity);
+      transition: opacity var(--mp-component-overlay-alert-banner-dismiss-transition-duration)
+        var(--mp-component-overlay-alert-banner-dismiss-transition-easing);
+      line-height: 1;
+
+      svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+        fill: currentcolor;
+      }
+
+      &:hover {
+        opacity: 1;
+      }
+
+      &:focus-visible {
+        outline: var(--mp-component-overlay-dismiss-focus-width) solid currentcolor;
+        outline-offset: 1px;
+      }
+    }
+
+    /**
+     * Variants — the canonical colour set. The `neutral` tone reuses the
+     * `default` token family (no `neutral` alias).
+     */
+    @each $name,
+      $family
+        in (
+          'neutral': 'neutral',
+          'primary': 'info',
+          'secondary': 'neutral',
+          'tertiary': 'neutral',
+          'success': 'success',
+          'warning': 'warning',
+          'info': 'info',
+          'error': 'danger',
+          'critical': 'danger'
+        )
+    {
+      &--#{$name} {
+        background-color: var(--mp-component-feedback-#{$family}-background);
+        border-color: var(--mp-component-feedback-#{$family}-border);
+        color: var(--mp-component-feedback-#{$family}-text);
+      }
+    }
+  }
+}

@@ -1,7 +1,5 @@
 import { classNames, h, type MpChild, type MpElement, useEffect, useRef, useState } from '@mission-platform/forge';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 import styles from './forge-background-video.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
@@ -99,7 +97,7 @@ export function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoPropert
     }
   }, [reducedMotion]);
 
-  const className = classNames(styles['forge-background-video'], sizeStyles[`forge-size--${size}`], {
+  const className = classNames(styles['forge-background-video'], size ? `forge-size--${size}` : undefined, {
     [styles['forge-background-video--overlay']]: overlay,
   });
 

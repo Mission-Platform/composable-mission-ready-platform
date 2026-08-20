@@ -2,7 +2,20 @@ import { useArgs } from 'storybook/preview-api';
 
 import { ForgeMonacoEditor } from '@mission-platform/content';
 
+import type { ForgeWebScriptWorkspaceHost } from '@mission-platform/forge-web-script-language-service';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+const capabilityWorkspace: ForgeWebScriptWorkspaceHost = {
+  readFile: async () => '',
+  listFiles: async () => [],
+  getOptions: async () => ({
+    requestedCapabilities: ['clock.now'],
+    capabilityNames: ['clock.now'],
+    capabilitySignatures: new Map([
+      ['clock.now', { parameters: [], result: 'i64', documentation: 'Read the current Unix timestamp.' }],
+    ]),
+  }),
+};
 
 /**
  * `ForgeMonacoEditor` is the write-once `ForgeMonacoEditor` component of `@mission-platform/components`. Monaco is mounted imperatively in a `useEffect`
@@ -23,7 +36,10 @@ const meta = {
   },
   argTypes: {
     size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
-    language: { control: 'select', options: ['typescript', 'javascript', 'json', 'markdown', 'python', 'plaintext'] },
+    language: {
+      control: 'select',
+      options: ['typescript', 'javascript', 'json', 'markdown', 'python', 'fws', 'plaintext'],
+    },
     theme: { control: 'inline-radio', options: ['vs', 'vs-dark', 'hc-black', 'hc-light'] },
     readonly: { control: 'boolean' },
     minimap: { control: 'boolean' },
@@ -69,3 +85,30 @@ export const Dark: Story = { args: { theme: 'vs-dark' } };
 export const Json: Story = { args: { language: 'json', modelValue: '{\n  "ok": true\n}' } };
 
 export const ReadonlyWithMinimap: Story = { args: { readonly: true, minimap: true } };
+
+export const ForgeWebScriptValid: Story = {
+  args: {
+    language: 'fws',
+    modelValue: ['export fn add(value: i32) -> i32 {', '  return value + 1;', '}'].join('\n'),
+  },
+};
+
+export const ForgeWebScriptInvalid: Story = {
+  args: {
+    language: 'fws',
+    modelValue: 'fn hidden() -> i32 { return 1; }',
+  },
+};
+
+export const ForgeWebScriptCapabilities: Story = {
+  args: {
+    language: 'fws',
+    forgeWebScript: { workspaceHost: capabilityWorkspace },
+    modelValue: [
+      'import capability "clock.now" as now() -> i64;',
+      'export fn current() -> i64 {',
+      '  return now();',
+      '}',
+    ].join('\n'),
+  },
+};

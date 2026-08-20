@@ -1,4 +1,4 @@
-import { ForgeButton, ForgeTypography } from '@mission-platform/components';
+import { ForgeButton } from '@mission-platform/components';
 import { h, type MpChild, type MpElement, Slot, useMemo, useState } from '@mission-platform/forge';
 import {
   createFormValidator,
@@ -15,6 +15,8 @@ import {
   type SchemaFormDefinition,
   type SchemaFormValidationMode,
 } from '@mission-platform/forms-core';
+import { ForgeMultiselect, ForgeSelect } from '@mission-platform/select';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import { ForgeCheckbox } from '../../atoms/forge-checkbox';
 import { ForgeInput } from '../../atoms/forge-input';
@@ -25,14 +27,11 @@ import { ForgeDateRangeInput } from '../../molecules/forge-date-range-input';
 import { ForgeFieldSet } from '../../molecules/forge-field-set';
 import { ForgeFileInput } from '../../molecules/forge-file-input';
 import { ForgeLocationInput, type LocationValue } from '../../molecules/forge-location-input';
-import { ForgeMultiselect } from '../../molecules/forge-multiselect';
 import { ForgeNumberStepper } from '../../molecules/forge-number-stepper';
 import { ForgePhoneInput } from '../../molecules/forge-phone-input';
 import { ForgeRadioGroup } from '../../molecules/forge-radio-group';
-import { ForgeSelect } from '../../molecules/forge-select';
 import { ForgeTimeInput } from '../../molecules/forge-time-input';
 import { ForgeTimeRangeInput } from '../../molecules/forge-time-range-input';
-import sizeStyles from '../../size.module.scss';
 import { ForgeDateTimeRangeInput } from '../forge-date-time-range-input';
 import { ForgeFormWizard, type WizardStep } from '../forge-form-wizard';
 
@@ -738,7 +737,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
         className={[
           styles['forge-schema-form'],
           styles['forge-schema-form--wizard'],
-          sizeStyles[`forge-size--${size}`],
+          size ? `forge-size--${size}` : undefined,
           {
             [styles['forge-schema-form--disabled']]: disabled,
           },
@@ -761,7 +760,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
     <form
       className={[
         styles['forge-schema-form'],
-        sizeStyles[`forge-size--${size}`],
+        size ? `forge-size--${size}` : undefined,
         {
           [styles['forge-schema-form--disabled']]: disabled,
         },

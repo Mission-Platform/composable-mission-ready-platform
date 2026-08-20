@@ -1,0 +1,14 @@
+/**
+ * Size utility classes used by floating components inside their shadow roots.
+ *
+ * This stylesheet is intentionally local to the package: Forge Web Components
+ * emit CSS-module imports into the component's shadow-root stylesheet, while
+ * package-to-package SCSS imports remain external during the build.
+ */
+@layer mp.components {
+  @each $step in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
+    .forge-size--#{$step} {
+      font-size: var(--mp-size-font-#{$step});
+    }
+  }
+}

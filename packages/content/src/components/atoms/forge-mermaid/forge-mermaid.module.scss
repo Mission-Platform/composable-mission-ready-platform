@@ -2,14 +2,14 @@
  * Styling for the standalone `ForgeMermaid` atom.
  */
 
-@layer mp.components {
+@layer mp.content {
   .forge-mermaid {
     min-width: 0;
     overflow-x: auto;
-    padding: var(--mp-spacing-4);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-    background: var(--mp-color-bg-sunken);
+    padding: var(--mp-component-code-padding);
+    border: var(--mp-component-code-border-default) solid var(--mp-component-code-border-width);
+    border-radius: var(--mp-component-code-radius);
+    background: var(--mp-component-code-surface-default);
     text-align: center;
 
     svg {
@@ -26,22 +26,22 @@
   .forge-mermaid__error pre {
     margin: 0;
     overflow-x: auto;
-    color: var(--mp-color-text-secondary);
-    font-family: var(--mp-font-family-mono);
-    font-size: var(--mp-font-size-sm);
-    line-height: var(--mp-line-height-relaxed);
+    color: var(--mp-component-code-error-text);
+    font-family: var(--mp-component-code-typography-font-family);
+    font-size: var(--mp-component-code-typography-font-size);
+    line-height: var(--mp-component-code-typography-line-height);
     text-align: left;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
   }
 
   .forge-mermaid__error {
-    color: var(--mp-color-text-primary);
+    color: var(--mp-component-code-text-default);
     text-align: left;
 
     p {
-      margin: 0 0 var(--mp-spacing-2);
-      font-weight: var(--mp-font-weight-semibold);
+      margin: 0 0 var(--mp-component-code-error-margin-bottom);
+      font-weight: var(--mp-component-code-error-font-weight);
     }
   }
 }

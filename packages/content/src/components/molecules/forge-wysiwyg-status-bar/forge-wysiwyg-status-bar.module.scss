@@ -1,12 +1,14 @@
-@layer mp.components {
+@layer mp.content {
   .wysiwyg-status-bar {
     display: flex;
-    gap: var(--mp-spacing-md);
+    gap: var(--mp-component-editor-status-bar-gap);
     align-items: center;
-    padding: var(--mp-spacing-2xs) var(--mp-spacing-sm);
-    color: var(--mp-color-text-subtle);
-    font-size: 0.85rem;
-    border-top: 1px solid var(--mp-color-border-subtle);
+    padding: var(--mp-component-editor-status-bar-padding-block)
+      var(--mp-component-editor-status-bar-padding-inline);
+    color: var(--mp-component-editor-status-bar-text);
+    font-size: var(--mp-component-editor-status-bar-font-size);
+    border-top: var(--mp-component-editor-status-bar-border-width) solid
+      var(--mp-component-editor-status-bar-border);
   }
 
   .wysiwyg-status-bar--start {

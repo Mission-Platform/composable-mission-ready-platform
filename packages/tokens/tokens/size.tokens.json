@@ -117,6 +117,53 @@
       "lg": { "$value": "85.714rem" },
       "xl": { "$value": "114.286rem" },
       "2xl": { "$value": "171.429rem" }
+    },
+    "checkable": {
+      "$description": "Exact track, thumb, switch, and rating dimensions used by checkable controls.",
+      "control": { "$value": "18px" },
+      "indicator": { "$value": "8px" },
+      "2xs": {
+        "slider-track-height": { "$value": "0.1875rem" },
+        "slider-thumb-size": { "$value": "0.625rem" },
+        "rating-font-size": { "$value": "0.625rem" },
+        "switch": { "width": { "$value": "24px" }, "height": { "$value": "14px" }, "padding": { "$value": "2px" }, "thumb-size": { "$value": "10px" }, "translate": { "$value": "12px" } }
+      },
+      "xs": {
+        "slider-track-height": { "$value": "0.25rem" },
+        "slider-thumb-size": { "$value": "0.75rem" },
+        "rating-font-size": { "$value": "0.875rem" },
+        "switch": { "width": { "$value": "28px" }, "height": { "$value": "16px" }, "padding": { "$value": "2px" }, "thumb-size": { "$value": "12px" }, "translate": { "$value": "14px" } }
+      },
+      "sm": {
+        "slider-track-height": { "$value": "0.25rem" },
+        "slider-thumb-size": { "$value": "0.875rem" },
+        "rating-font-size": { "$value": "1rem" },
+        "switch": { "width": { "$value": "32px" }, "height": { "$value": "18px" }, "padding": { "$value": "2px" }, "thumb-size": { "$value": "14px" }, "translate": { "$value": "16px" } }
+      },
+      "md": {
+        "slider-track-height": { "$value": "0.375rem" },
+        "slider-thumb-size": { "$value": "1.125rem" },
+        "rating-font-size": { "$value": "1.5rem" },
+        "switch": { "width": { "$value": "40px" }, "height": { "$value": "22px" }, "padding": { "$value": "2px" }, "thumb-size": { "$value": "18px" }, "translate": { "$value": "20px" } }
+      },
+      "lg": {
+        "slider-track-height": { "$value": "0.5rem" },
+        "slider-thumb-size": { "$value": "1.5rem" },
+        "rating-font-size": { "$value": "2rem" },
+        "switch": { "width": { "$value": "52px" }, "height": { "$value": "28px" }, "padding": { "$value": "3px" }, "thumb-size": { "$value": "22px" }, "translate": { "$value": "26px" } }
+      },
+      "xl": {
+        "slider-track-height": { "$value": "0.625rem" },
+        "slider-thumb-size": { "$value": "1.875rem" },
+        "rating-font-size": { "$value": "2.5rem" },
+        "switch": { "width": { "$value": "60px" }, "height": { "$value": "32px" }, "padding": { "$value": "3px" }, "thumb-size": { "$value": "26px" }, "translate": { "$value": "30px" } }
+      },
+      "2xl": {
+        "slider-track-height": { "$value": "0.75rem" },
+        "slider-thumb-size": { "$value": "2.25rem" },
+        "rating-font-size": { "$value": "3rem" },
+        "switch": { "width": { "$value": "72px" }, "height": { "$value": "38px" }, "padding": { "$value": "4px" }, "thumb-size": { "$value": "30px" }, "translate": { "$value": "36px" } }
+      }
     }
   }
 }

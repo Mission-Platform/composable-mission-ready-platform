@@ -1,8 +1,5 @@
 import { classNames, h, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
-
-import { ForgeTypography } from '@/components/atoms/forge-typography';
-
-import sizeStyles from '../../../styles/size.module.scss';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-menu-item.module.scss';
 
@@ -72,7 +69,7 @@ export function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpEleme
   const liClass = classNames(
     styles['forge-menu-item'],
     styles[`forge-menu-item--${variant}`],
-    sizeStyles[`forge-size--${size}`],
+    size ? `forge-size--${size}` : undefined,
     {
       [styles['forge-menu-item--disabled']]: disabled,
       [styles['forge-menu-item--active']]: active,

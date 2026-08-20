@@ -4,16 +4,15 @@
  * Monaco renders its own DOM into this host on the client; the module only
  * styles the surrounding container chrome.
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.content` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.content {
   .forge-monaco-editor {
     width: 100%;
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
+    border: var(--mp-component-editor-monaco-border-width) solid var(--mp-component-editor-monaco-border);
+    border-radius: var(--mp-component-editor-monaco-radius);
     overflow: hidden;
-    background-color: var(--mp-color-bg-surface);
+    background-color: var(--mp-component-editor-monaco-surface);
   }
 }

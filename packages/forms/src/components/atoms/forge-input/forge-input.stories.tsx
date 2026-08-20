@@ -1,5 +1,6 @@
 import { h } from '@mission-platform/forge';
 import { useArgs } from 'storybook/preview-api';
+import { expect, userEvent, within } from 'storybook/test';
 
 import { ForgeInput } from '@mission-platform/forms';
 
@@ -69,6 +70,14 @@ export const WithHint: Story = { args: { hint: 'As it appears on your passport.'
 export const WithError: Story = { args: { error: 'This field is required.' } };
 
 export const Disabled: Story = { args: { disabled: true, modelValue: 'Locked value' } };
+
+export const FocusVisible: Story = {
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByRole('textbox', { name: 'Full name' });
+    await userEvent.tab();
+    await expect(input).toHaveFocus();
+  },
+};
 
 export const WithDatalist: Story = {
   args: { label: 'Favourite fruit', list: ['Apple', 'Banana', 'Cherry', 'Date'], placeholder: 'Start typing…' },

@@ -15,7 +15,7 @@
        neutral version is a plain flex column with the equivalent gap. */
     display: flex;
     flex-direction: column;
-    gap: var(--mp-spacing-1);
+    gap: var(--mp-component-feedback-progress-gap);
 
     &__header {
       display: flex;
@@ -28,41 +28,41 @@
       display: block;
       width: 100%;
       border: none;
-      border-radius: var(--mp-radius-full);
+      border-radius: var(--mp-component-feedback-progress-track-radius);
       overflow: hidden;
-      background-color: var(--mp-color-bg-muted);
+      background-color: var(--mp-component-feedback-progress-track-background);
 
       /* WebKit: trough */
       &::-webkit-progress-bar {
-        background-color: var(--mp-color-bg-muted);
-        border-radius: var(--mp-radius-full);
+        background-color: var(--mp-component-feedback-progress-track-background);
+        border-radius: var(--mp-component-feedback-progress-track-radius);
       }
 
       /**
        * Fill per variant (WebKit + Firefox/standard pseudo-elements). The
        * `neutral` tone reuses the `default` token family (no `neutral` alias).
        */
-      @mixin fill($name, $family) {
+      @mixin fill($name) {
         &--#{$name}::-webkit-progress-value {
-          background-color: var(--mp-color-#{$family}-default);
-          border-radius: var(--mp-radius-full);
+          background-color: var(--mp-component-feedback-progress-fill-#{$name});
+          border-radius: var(--mp-component-feedback-progress-track-radius);
         }
 
         &--#{$name}::-moz-progress-bar {
-          background-color: var(--mp-color-#{$family}-default);
-          border-radius: var(--mp-radius-full);
+          background-color: var(--mp-component-feedback-progress-fill-#{$name});
+          border-radius: var(--mp-component-feedback-progress-track-radius);
         }
       }
 
-      @include fill('neutral', 'default');
-      @include fill('primary', 'primary');
-      @include fill('secondary', 'secondary');
-      @include fill('tertiary', 'tertiary');
-      @include fill('success', 'success');
-      @include fill('warning', 'warning');
-      @include fill('info', 'info');
-      @include fill('error', 'error');
-      @include fill('critical', 'critical');
+      @include fill('neutral');
+      @include fill('primary');
+      @include fill('secondary');
+      @include fill('tertiary');
+      @include fill('success');
+      @include fill('warning');
+      @include fill('info');
+      @include fill('error');
+      @include fill('critical');
 
       &--indeterminate {
         animation: mp-progress-indeterminate 1.5s ease-in-out infinite;

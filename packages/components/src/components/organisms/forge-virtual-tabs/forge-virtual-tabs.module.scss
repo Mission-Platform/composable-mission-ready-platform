@@ -20,7 +20,7 @@
       align-items: stretch;
 
       &--line {
-        border-bottom: var(--mp-border-width-thick) solid var(--mp-color-border-default);
+        border-bottom: var(--mp-component-navigation-tabs-bar-border-width) solid var(--mp-component-navigation-tabs-bar-border);
       }
     }
 
@@ -37,68 +37,70 @@
       }
 
       &--pill {
-        background-color: var(--mp-color-bg-muted);
-        border-radius: var(--mp-radius-md);
-        padding: var(--mp-spacing-1);
-        gap: var(--mp-spacing-1);
+        background-color: var(--mp-component-navigation-tabs-list-pill-surface);
+        border-radius: var(--mp-component-navigation-tabs-list-pill-radius);
+        padding: var(--mp-component-navigation-tabs-list-pill-padding);
+        gap: var(--mp-component-navigation-tabs-list-pill-gap);
       }
     }
 
     &__tab {
       display: inline-flex;
       align-items: center;
-      gap: var(--mp-spacing-2);
+      gap: var(--mp-component-navigation-tabs-wrapper-gap);
       border: none;
       background: transparent;
       cursor: pointer;
-      color: var(--mp-color-text-secondary);
+      color: var(--mp-component-navigation-tabs-text-default);
       white-space: nowrap;
       user-select: none;
       transition:
-        color 150ms ease,
-        background-color 150ms ease;
+        color var(--mp-component-navigation-tabs-transition-duration) var(--mp-component-navigation-tabs-transition-easing),
+        background-color var(--mp-component-navigation-tabs-transition-duration) var(--mp-component-navigation-tabs-transition-easing);
 
       &:focus-visible {
         outline: none;
-        border-radius: var(--mp-radius-sm);
-        box-shadow: var(--mp-shadow-focus-primary);
+        border-radius: var(--mp-component-navigation-tabs-radius-focus);
+        box-shadow: var(--mp-component-navigation-tabs-shadow-focus);
       }
 
       &--disabled {
-        opacity: 0.5;
+        opacity: var(--mp-component-navigation-tabs-opacity-disabled);
         cursor: not-allowed;
       }
 
       &--line {
-        padding: var(--mp-spacing-2) var(--mp-spacing-4);
-        border-bottom: var(--mp-border-width-thick) solid transparent;
+        padding: var(--mp-component-navigation-tabs-wrapper-line-padding-block) var(--mp-component-navigation-tabs-wrapper-line-padding-inline);
+        border-bottom: var(--mp-component-navigation-tabs-wrapper-line-indicator-width) solid var(--mp-component-navigation-tabs-wrapper-line-indicator-default);
         margin-bottom: -2px;
-        border-radius: var(--mp-radius-sm) var(--mp-radius-sm) 0 0;
+        border-radius: var(--mp-component-navigation-tabs-wrapper-line-radius) var(--mp-component-navigation-tabs-wrapper-line-radius) 0 0;
+        color: var(--mp-component-navigation-tabs-wrapper-line-text-default);
 
         &:hover:not(.forge-virtual-tabs__tab--disabled) {
-          color: var(--mp-color-text-primary);
-          border-bottom-color: var(--mp-color-border-strong);
+          color: var(--mp-component-navigation-tabs-wrapper-line-text-hover);
+          border-bottom-color: var(--mp-component-navigation-tabs-wrapper-line-indicator-hover);
         }
 
         &.forge-virtual-tabs__tab--active {
-          color: var(--mp-color-primary-text);
-          border-bottom-color: var(--mp-color-primary-text);
+          color: var(--mp-component-navigation-tabs-wrapper-line-text-active);
+          border-bottom-color: var(--mp-component-navigation-tabs-wrapper-line-indicator-active);
         }
       }
 
       &--pill {
-        padding: var(--mp-spacing-2) var(--mp-spacing-3);
-        border-radius: var(--mp-radius-sm);
+        padding: var(--mp-component-navigation-tabs-wrapper-pill-padding-block) var(--mp-component-navigation-tabs-wrapper-pill-padding-inline);
+        border-radius: var(--mp-component-navigation-tabs-wrapper-pill-radius);
+        color: var(--mp-component-navigation-tabs-wrapper-pill-text-default);
 
         &:hover:not(.forge-virtual-tabs__tab--active, .forge-virtual-tabs__tab--disabled) {
-          background-color: var(--mp-color-bg-sunken);
-          color: var(--mp-color-text-primary);
+          background-color: var(--mp-component-navigation-tabs-wrapper-pill-surface-hover);
+          color: var(--mp-component-navigation-tabs-wrapper-pill-text-hover);
         }
 
         &.forge-virtual-tabs__tab--active {
-          background-color: var(--mp-color-bg-surface);
-          color: var(--mp-color-text-primary);
-          box-shadow: var(--mp-shadow-sm);
+          background-color: var(--mp-component-navigation-tabs-wrapper-pill-surface-active);
+          color: var(--mp-component-navigation-tabs-wrapper-pill-text-active);
+          box-shadow: var(--mp-component-navigation-tabs-wrapper-pill-shadow-active);
         }
       }
     }
@@ -110,18 +112,18 @@
       flex-shrink: 0;
       border: none;
       background: transparent;
-      color: var(--mp-color-text-muted);
-      padding: 2px;
-      border-radius: var(--mp-radius-sm);
+      color: var(--mp-component-navigation-tabs-text-muted);
+      padding: var(--mp-component-navigation-tabs-close-padding);
+      border-radius: var(--mp-component-navigation-tabs-radius-close);
       cursor: pointer;
-      font-size: var(--mp-size-font-xs);
+      font-size: var(--mp-component-navigation-tabs-close-font-size);
       transition:
-        color 150ms ease,
-        background-color 150ms ease;
+        color var(--mp-component-navigation-tabs-transition-duration) var(--mp-component-navigation-tabs-transition-easing),
+        background-color var(--mp-component-navigation-tabs-transition-duration) var(--mp-component-navigation-tabs-transition-easing);
 
       &:hover {
-        color: var(--mp-color-text-primary);
-        background-color: var(--mp-color-bg-muted);
+        color: var(--mp-component-navigation-tabs-text-default);
+        background-color: var(--mp-component-navigation-tabs-surface-hover);
       }
     }
 
@@ -133,28 +135,28 @@
       border: none;
       background: transparent;
       cursor: pointer;
-      color: var(--mp-color-text-muted);
-      padding: var(--mp-spacing-2) var(--mp-spacing-3);
-      transition: color 150ms ease;
+      color: var(--mp-component-navigation-tabs-text-muted);
+      padding: var(--mp-component-navigation-tabs-padding-add-block) var(--mp-component-navigation-tabs-padding-add-inline);
+      transition: color var(--mp-component-navigation-tabs-transition-duration) var(--mp-component-navigation-tabs-transition-easing);
 
       &:hover {
-        color: var(--mp-color-text-primary);
+        color: var(--mp-component-navigation-tabs-text-default);
       }
 
       &:focus-visible {
         outline: none;
-        border-radius: var(--mp-radius-sm);
-        box-shadow: var(--mp-shadow-focus-primary);
+        border-radius: var(--mp-component-navigation-tabs-radius-add-focus);
+        box-shadow: var(--mp-component-navigation-tabs-shadow-focus);
       }
 
       &--line {
-        border-bottom: var(--mp-border-width-thick) solid var(--mp-color-border-default);
+        border-bottom: var(--mp-component-navigation-tabs-bar-border-width) solid var(--mp-component-navigation-tabs-bar-border);
         margin-bottom: -2px;
       }
     }
 
     &__panel {
-      padding-top: var(--mp-spacing-4);
+      padding-top: var(--mp-component-navigation-tabs-padding-panel-block-start);
       display: flex;
       flex-direction: column;
       flex: 1;

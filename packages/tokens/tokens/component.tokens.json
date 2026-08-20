@@ -1,0 +1,3422 @@
+{
+  "$description": "Semantic component-token contract for Forge. Component tokens are the stable Figma variable names for visual decisions; values alias primitives or semantic theme tokens, with transparent surface slots retained where the component has no fill. Colour aliases resolve through the existing light/dark theme documents, light-dark(), and subtree theme pins. Structural formulas and behavior-only components remain local to their component.",
+  "component": {
+    "$description": "Figma variable collection: Mission Platform / Component. Use Light and Dark modes supplied by the semantic colour aliases.",
+    "button": {
+      "$description": "Button and icon-button contract. Variants are neutral, primary, secondary, tertiary, success, warning, info, error, critical, and ghost; sizes use 2xs through 2xl.",
+      "font-family": { "$value": "{font.family.sans}" },
+      "font-weight": { "$value": "{font.weight.medium}" },
+      "line-height": { "$value": "{line-height.tight}" },
+      "border-width": { "default": { "$value": "{border-width.thin}" } },
+      "spinner": {
+        "border-width": { "$value": "{border-width.thick}" },
+        "radius": { "$value": "{radius.full}" }
+      },
+      "primary": {
+        "background": {
+          "default": { "$value": "{color.primary.default}", "$description": "Primary button fill at rest." },
+          "hover": { "$value": "{color.primary.hover}", "$description": "Primary button fill on hover." },
+          "active": { "$value": "{color.primary.active}", "$description": "Primary button fill while pressed." },
+          "disabled": { "$value": "{color.primary.muted}", "$description": "Primary button fill when disabled." },
+          "loading": { "$value": "{color.primary.default}", "$description": "Primary button fill while loading." }
+        },
+        "text": {
+          "default": { "$value": "{color.text.on-primary}" },
+          "disabled": { "$value": "{color.text.disabled}" }
+        },
+        "border": {
+          "default": { "$value": "{color.primary.default}" },
+          "focus-visible": { "$value": "{color.border.focus}" }
+        },
+        "focus-ring": { "$value": "{shadow.focus-primary}" },
+        "padding": { "$value": "{size.pad-inline.md}" },
+        "gap": { "$value": "{size.gap.md}" },
+        "radius": { "$value": "{size.radius.md}" },
+        "shadow": { "default": { "$value": "{shadow.sm}" }, "active": { "$value": "{shadow.inner}" } },
+        "opacity": { "disabled": { "$value": "{opacity.disabled}" } },
+        "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } }
+      },
+      "secondary": {
+        "$description": "Secondary button is an outlined treatment with a surface background and stronger border on hover.",
+        "background": {
+          "default": { "$value": "{color.bg.surface}" },
+          "hover": { "$value": "{color.bg.muted}" },
+          "active": { "$value": "{color.bg.sunken}" },
+          "disabled": { "$value": "{color.bg.surface}" }
+        },
+        "text": {
+          "default": { "$value": "{color.text.primary}" },
+          "disabled": { "$value": "{color.text.disabled}" }
+        },
+        "border": {
+          "default": { "$value": "{color.border.default}" },
+          "hover": { "$value": "{color.border.strong}" },
+          "focus-visible": { "$value": "{color.border.focus}" }
+        },
+        "border-width": { "$value": "{border-width.thin}" },
+        "focus-ring": { "$value": "{shadow.focus-primary}" },
+        "icon-size": { "$value": "{size.font.lg}" },
+        "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } }
+      },
+      "neutral": {
+        "$description": "Neutral/default button contract.",
+        "background": {
+          "default": { "$value": "{color.default.default}" },
+          "hover": { "$value": "{color.default.hover}" },
+          "active": { "$value": "{color.default.active}" },
+          "disabled": { "$value": "{color.default.muted}" }
+        },
+        "text": {
+          "default": { "$value": "{color.text.on-primary}" },
+          "disabled": { "$value": "{color.text.disabled}" }
+        },
+        "border": {
+          "default": { "$value": "{color.border.default}" },
+          "focus-visible": { "$value": "{color.border.focus}" }
+        },
+        "focus-ring": { "$value": "{shadow.focus-primary}" }
+      },
+      "tertiary": {
+        "$description": "Tertiary button is a transparent, low-emphasis treatment with semantic surface feedback.",
+        "background": {
+          "default": { "$value": "transparent" },
+          "hover": { "$value": "{color.bg.muted}" },
+          "active": { "$value": "{color.bg.sunken}" },
+          "disabled": { "$value": "transparent" }
+        },
+        "text": {
+          "default": { "$value": "{color.text.primary}" },
+          "hover": { "$value": "{color.text.primary}" },
+          "disabled": { "$value": "{color.text.disabled}" }
+        },
+        "border": {
+          "default": { "$value": "{color.border.default}" },
+          "focus-visible": { "$value": "{color.border.focus}" }
+        },
+        "focus-ring": { "$value": "{shadow.focus-primary}" }
+      },
+      "success": {
+        "$description": "Success button contract.",
+        "background": {
+          "default": { "$value": "{color.success.default}" },
+          "hover": { "$value": "{color.success.hover}" },
+          "active": { "$value": "{color.success.hover}" },
+          "disabled": { "$value": "{color.success.muted}" }
+        },
+        "text": {
+          "default": { "$value": "{color.text.on-primary}" },
+          "disabled": { "$value": "{color.text.disabled}" }
+        },
+        "border": {
+          "default": { "$value": "{color.success.default}" },
+          "focus-visible": { "$value": "{color.border.focus}" }
+        },
+        "focus-ring": { "$value": "{shadow.focus-primary}" }
+      },
+      "warning": {
+        "$description": "Warning button contract.",
+        "background": {
+          "default": { "$value": "{color.warning.default}" },
+          "hover": { "$value": "{color.warning.hover}" },
+          "active": { "$value": "{color.warning.hover}" },
+          "disabled": { "$value": "{color.warning.muted}" }
+        },
+        "text": {
+          "default": { "$value": "{color.text.on-primary}" },
+          "disabled": { "$value": "{color.text.disabled}" }
+        },
+        "border": {
+          "default": { "$value": "{color.warning.default}" },
+          "focus-visible": { "$value": "{color.border.focus}" }
+        },
+        "focus-ring": { "$value": "{shadow.focus-primary}" }
+      },
+      "info": {
+        "$description": "Info button contract.",
+        "background": {
+          "default": { "$value": "{color.info.default}" },
+          "hover": { "$value": "{color.info.hover}" },
+          "active": { "$value": "{color.info.hover}" },
+          "disabled": { "$value": "{color.info.muted}" }
+        },
+        "text": {
+          "default": { "$value": "{color.text.on-primary}" },
+          "disabled": { "$value": "{color.text.disabled}" }
+        },
+        "border": {
+          "default": { "$value": "{color.info.default}" },
+          "focus-visible": { "$value": "{color.border.focus}" }
+        },
+        "focus-ring": { "$value": "{shadow.focus-primary}" }
+      },
+      "error": {
+        "$description": "Error button contract.",
+        "background": {
+          "default": { "$value": "{color.error.default}" },
+          "hover": { "$value": "{color.error.hover}" },
+          "active": { "$value": "{color.error.hover}" },
+          "disabled": { "$value": "{color.error.muted}" }
+        },
+        "text": {
+          "default": { "$value": "{color.text.on-primary}" },
+          "disabled": { "$value": "{color.text.disabled}" }
+        },
+        "border": {
+          "default": { "$value": "{color.error.default}" },
+          "focus-visible": { "$value": "{color.border.focus}" }
+        },
+        "focus-ring": { "$value": "{shadow.focus-danger}" }
+      },
+      "critical": {
+        "$description": "Critical button contract.",
+        "background": {
+          "default": { "$value": "{color.critical.default}" },
+          "hover": { "$value": "{color.critical.hover}" },
+          "active": { "$value": "{color.critical.hover}" },
+          "disabled": { "$value": "{color.critical.muted}" }
+        },
+        "text": {
+          "default": { "$value": "{color.text.on-primary}" },
+          "disabled": { "$value": "{color.text.disabled}" }
+        },
+        "border": {
+          "default": { "$value": "{color.critical.default}" },
+          "focus-visible": { "$value": "{color.border.focus}" }
+        },
+        "focus-ring": { "$value": "{shadow.focus-danger}" }
+      },
+      "ghost": {
+        "$description": "Ghost button has a transparent surface and uses semantic text colours.",
+        "background": {
+          "default": { "$value": "transparent" },
+          "hover": { "$value": "{color.bg.muted}" },
+          "active": { "$value": "{color.bg.sunken}" },
+          "disabled": { "$value": "transparent" }
+        },
+        "text": {
+          "default": { "$value": "{color.text.primary}" },
+          "hover": { "$value": "{color.text.primary}" },
+          "disabled": { "$value": "{color.text.disabled}" }
+        },
+        "border": {
+          "default": { "$value": "{color.border.default}" },
+          "focus-visible": { "$value": "{color.border.focus}" }
+        },
+        "focus-ring": { "$value": "{shadow.focus-primary}" }
+      },
+      "size": {
+        "font": { "$value": "{size.font.md}" },
+        "height": { "$value": "{size.height.md}" },
+        "padding-inline": { "$value": "{size.pad-inline.md}" },
+        "padding-block": { "$value": "{size.pad-block.md}" },
+        "gap": { "$value": "{size.gap.md}" },
+        "radius": { "$value": "{size.radius.md}" },
+        "2xs": {
+          "font-size": { "$value": "{size.font.2xs}" },
+          "padding-block": { "$value": "{size.pad-block.2xs}" },
+          "padding-inline": { "$value": "{size.pad-inline.2xs}" }
+        },
+        "xs": {
+          "font-size": { "$value": "{size.font.xs}" },
+          "padding-block": { "$value": "{size.pad-block.xs}" },
+          "padding-inline": { "$value": "{size.pad-inline.xs}" }
+        },
+        "sm": {
+          "font-size": { "$value": "{size.font.sm}" },
+          "padding-block": { "$value": "{size.pad-block.sm}" },
+          "padding-inline": { "$value": "{size.pad-inline.sm}" }
+        },
+        "md": {
+          "font-size": { "$value": "{size.font.md}" },
+          "padding-block": { "$value": "{size.pad-block.md}" },
+          "padding-inline": { "$value": "{size.pad-inline.md}" }
+        },
+        "lg": {
+          "font-size": { "$value": "{size.font.lg}" },
+          "padding-block": { "$value": "{size.pad-block.lg}" },
+          "padding-inline": { "$value": "{size.pad-inline.lg}" }
+        },
+        "xl": {
+          "font-size": { "$value": "{size.font.xl}" },
+          "padding-block": { "$value": "{size.pad-block.xl}" },
+          "padding-inline": { "$value": "{size.pad-inline.xl}" }
+        },
+        "2xl": {
+          "font-size": { "$value": "{size.font.2xl}" },
+          "padding-block": { "$value": "{size.pad-block.2xl}" },
+          "padding-inline": { "$value": "{size.pad-inline.2xl}" }
+        }
+      },
+      "icon-button": {
+        "$description": "Icon-button chrome; the icon glyph inherits currentColor and keeps its 1em local sizing.",
+        "border-width": { "$value": "{border-width.thin}" },
+        "radius": { "$value": "{radius.sm}" },
+        "color": { "$value": "{color.text.secondary}" },
+        "focus-ring": { "$value": "{shadow.focus-primary}" },
+        "opacity": { "disabled": { "$value": "{opacity.disabled}" } },
+        "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } },
+        "size": {
+          "2xs": {
+            "font-size": { "$value": "{size.font.2xs}" },
+            "padding": { "$value": "{size.pad-block.2xs}" }
+          },
+          "xs": {
+            "font-size": { "$value": "{size.font.xs}" },
+            "padding": { "$value": "{size.pad-block.xs}" }
+          },
+          "sm": {
+            "font-size": { "$value": "{size.font.sm}" },
+            "padding": { "$value": "{size.pad-block.sm}" }
+          },
+          "md": {
+            "font-size": { "$value": "{size.font.md}" },
+            "padding": { "$value": "{size.pad-block.md}" }
+          },
+          "lg": {
+            "font-size": { "$value": "{size.font.lg}" },
+            "padding": { "$value": "{size.pad-block.lg}" }
+          },
+          "xl": {
+            "font-size": { "$value": "{size.font.xl}" },
+            "padding": { "$value": "{size.pad-block.xl}" }
+          },
+          "2xl": {
+            "font-size": { "$value": "{size.font.2xl}" },
+            "padding": { "$value": "{size.pad-block.2xl}" }
+          }
+        }
+      }
+    },
+    "input": {
+      "$description": "Text, textarea, date, number, search, phone, OTP, colour, and file controls. Sizes use 2xs through 2xl.",
+      "surface": {
+        "default": { "$value": "{color.bg.surface}" },
+        "disabled": { "$value": "{color.bg.muted}" },
+        "invalid": { "$value": "{color.danger.subtle}" },
+        "selected": { "$value": "{color.primary.subtle}" }
+      },
+      "text": {
+        "default": { "$value": "{color.text.primary}" },
+        "secondary": { "$value": "{color.text.secondary}" },
+        "placeholder": { "$value": "{color.text.tertiary}" },
+        "disabled": { "$value": "{color.text.disabled}" },
+        "invalid": { "$value": "{color.danger.text}" }
+      },
+      "border": {
+        "default": { "$value": "{color.border.default}" },
+        "hover": { "$value": "{color.border.strong}" },
+        "focus-visible": { "$value": "{color.border.focus}" },
+        "invalid": { "$value": "{color.danger.default}" },
+        "disabled": { "$value": "{color.border.default}" }
+      },
+      "focus-ring": { "$value": "{shadow.focus-primary}" },
+      "focus-ring-invalid": { "$value": "{shadow.focus-danger}" },
+      "border-width": { "$value": "{border-width.thin}" },
+      "padding": { "inline": { "$value": "{size.pad-inline.md}" }, "block": { "$value": "{size.pad-block.md}" } },
+      "gap": { "$value": "{size.gap.sm}" },
+      "field-gap": { "$value": "{spacing.1}" },
+      "extension-gap": { "$value": "{spacing.2}" },
+      "font-family": { "$value": "{font.family.sans}" },
+      "line-height": { "$value": "{line-height.normal}" },
+      "radius": { "$value": "{size.radius.md}" },
+      "opacity": { "disabled": { "$value": "{opacity.disabled}" } },
+      "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } },
+      "size": {
+        "2xs": {
+          "font-size": { "$value": "{size.font.2xs}" },
+          "padding-block": { "$value": "{size.pad-block.2xs}" },
+          "padding-inline": { "$value": "{size.pad-inline.2xs}" }
+        },
+        "xs": {
+          "font-size": { "$value": "{size.font.xs}" },
+          "padding-block": { "$value": "{size.pad-block.xs}" },
+          "padding-inline": { "$value": "{size.pad-inline.xs}" }
+        },
+        "sm": {
+          "font-size": { "$value": "{size.font.sm}" },
+          "padding-block": { "$value": "{size.pad-block.sm}" },
+          "padding-inline": { "$value": "{size.pad-inline.sm}" }
+        },
+        "md": {
+          "font-size": { "$value": "{size.font.md}" },
+          "padding-block": { "$value": "{size.pad-block.md}" },
+          "padding-inline": { "$value": "{size.pad-inline.md}" }
+        },
+        "lg": {
+          "font-size": { "$value": "{size.font.lg}" },
+          "padding-block": { "$value": "{size.pad-block.lg}" },
+          "padding-inline": { "$value": "{size.pad-inline.lg}" }
+        },
+        "xl": {
+          "font-size": { "$value": "{size.font.xl}" },
+          "padding-block": { "$value": "{size.pad-block.xl}" },
+          "padding-inline": { "$value": "{size.pad-inline.xl}" }
+        },
+        "2xl": {
+          "font-size": { "$value": "{size.font.2xl}" },
+          "padding-block": { "$value": "{size.pad-block.2xl}" },
+          "padding-inline": { "$value": "{size.pad-inline.2xl}" }
+        }
+      },
+      "file": {
+        "$description": "ForgeFileInput browse button and dropzone roles; native input clipping remains structural.",
+        "gap": { "stack": { "$value": "{spacing.1}" }, "row": { "$value": "{spacing.3}" }, "dropzone": { "$value": "{spacing.2}" } },
+        "surface": {
+          "default": { "$value": "{color.bg.surface}" },
+          "hover": { "$value": "{color.bg.muted}" },
+          "disabled": { "$value": "{color.bg.muted}" },
+          "active": { "$value": "{color.primary.subtle}" }
+        },
+        "text": {
+          "default": { "$value": "{color.text.primary}" },
+          "muted": { "$value": "{color.text.tertiary}" },
+          "disabled": { "$value": "{color.text.disabled}" },
+          "link": { "$value": "{color.primary.text}" },
+          "link-hover": { "$value": "{color.text.primary}" },
+          "error": { "$value": "{color.danger.text}" }
+        },
+        "border": {
+          "default": { "$value": "{color.border.default}" },
+          "hover": { "$value": "{color.border.strong}" },
+          "active": { "$value": "{color.primary.default}" },
+          "invalid": { "$value": "{color.danger.default}" }
+        },
+        "border-width": { "default": { "$value": "{border-width.thin}" }, "dropzone": { "$value": "{border-width.thick}" } },
+        "radius": { "button": { "$value": "{radius.md}" }, "dropzone": { "$value": "{radius.lg}" } },
+        "font-weight": { "$value": "{font.weight.medium}" },
+        "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } },
+        "padding": { "dropzone-block": { "$value": "{spacing.8}" }, "dropzone-inline": { "$value": "{spacing.4}" } },
+        "required": { "$value": "{color.danger.default}" },
+        "size": {
+          "2xs": { "font-size": { "$value": "{size.font.2xs}" }, "padding-block": { "$value": "{size.pad-block.2xs}" }, "padding-inline": { "$value": "{size.pad-inline.2xs}" } },
+          "xs": { "font-size": { "$value": "{size.font.xs}" }, "padding-block": { "$value": "{size.pad-block.xs}" }, "padding-inline": { "$value": "{size.pad-inline.xs}" } },
+          "sm": { "font-size": { "$value": "{size.font.sm}" }, "padding-block": { "$value": "{size.pad-block.sm}" }, "padding-inline": { "$value": "{size.pad-inline.sm}" } },
+          "md": { "font-size": { "$value": "{size.font.md}" }, "padding-block": { "$value": "{size.pad-block.md}" }, "padding-inline": { "$value": "{size.pad-inline.md}" } },
+          "lg": { "font-size": { "$value": "{size.font.lg}" }, "padding-block": { "$value": "{size.pad-block.lg}" }, "padding-inline": { "$value": "{size.pad-inline.lg}" } },
+          "xl": { "font-size": { "$value": "{size.font.xl}" }, "padding-block": { "$value": "{size.pad-block.xl}" }, "padding-inline": { "$value": "{size.pad-inline.xl}" } },
+          "2xl": { "font-size": { "$value": "{size.font.2xl}" }, "padding-block": { "$value": "{size.pad-block.2xl}" }, "padding-inline": { "$value": "{size.pad-inline.2xl}" } }
+        }
+      },
+      "location": {
+        "$description": "ForgeLocationInput fieldset and composed-coordinate state roles.",
+        "gap": { "stack": { "$value": "{spacing.2}" }, "row": { "$value": "{spacing.2}" }, "legend": { "$value": "{spacing.1}" } },
+        "required": { "$value": "{color.danger.default}" },
+        "text": { "disabled": { "$value": "{color.text.disabled}" }, "error": { "$value": "{color.danger.text}" } }
+      },
+      "number": {
+        "$description": "ForgeNumberStepper button and field-specific roles; the shared input contract owns the wrapper states.",
+        "button": {
+          "background": { "default": { "$value": "{color.bg.muted}" }, "hover": { "$value": "{color.border.default}" } },
+          "text": { "$value": "{color.text.primary}" },
+          "font-size": { "$value": "{font.size.lg}" },
+          "width": { "$value": "2.25rem" },
+          "disabled-opacity": { "$value": 0.4 }
+        }
+      },
+      "otp": {
+        "$description": "ForgeOtpInput cell surface, state, and canonical cell-size roles.",
+        "gap": { "$value": "{spacing.2}" },
+        "surface": { "$value": "{color.bg.surface}" },
+        "text": { "$value": "{color.text.primary}" },
+        "border": { "default": { "$value": "{color.border.default}" }, "focus": { "$value": "{color.primary.default}" } },
+        "border-width": { "$value": "{border-width.thin}" },
+        "radius": { "$value": "{radius.md}" },
+        "focus-ring": { "$value": "{shadow.focus-primary}" },
+        "font-family": { "$value": "{font.family.sans}" },
+        "font-weight": { "$value": "{font.weight.semibold}" },
+        "disabled-opacity": { "$value": 0.5 },
+        "size": {
+          "2xs": { "cell": { "$value": "2rem" }, "font-size": { "$value": "{size.font.sm}" } },
+          "xs": { "cell": { "$value": "2.25rem" }, "font-size": { "$value": "{size.font.md}" } },
+          "sm": { "cell": { "$value": "2.5rem" }, "font-size": { "$value": "{size.font.md}" } },
+          "md": { "cell": { "$value": "3rem" }, "font-size": { "$value": "{size.font.lg}" } },
+          "lg": { "cell": { "$value": "3.5rem" }, "font-size": { "$value": "{size.font.xl}" } },
+          "xl": { "cell": { "$value": "4rem" }, "font-size": { "$value": "{size.font.2xl}" } },
+          "2xl": { "cell": { "$value": "4.5rem" }, "font-size": { "$value": "{size.font.2xl}" } }
+        }
+      },
+      "phone": {
+        "$description": "ForgePhoneInput composed country, dial-code, status, and validation roles.",
+        "country-border": { "$value": "{color.border.default}" },
+        "dial-padding": { "$value": "{spacing.2}" },
+        "dial-text": { "$value": "{color.text.secondary}" },
+        "status-padding": { "$value": "{spacing.2}" },
+        "status-muted": { "$value": "{color.text.tertiary}" },
+        "status-valid": { "$value": "{color.success.default}" },
+        "status-invalid": { "$value": "{color.danger.default}" },
+        "disabled-opacity": { "$value": 0.5 }
+      },
+      "search": {
+        "$description": "ForgeSearchInput affordance, clear-button, spinner, and size roles.",
+        "gap": { "$value": "{spacing.1}" },
+        "icon-text": { "$value": "{color.text.tertiary}" },
+        "clear-text": { "default": { "$value": "{color.text.tertiary}" }, "hover": { "$value": "{color.text.primary}" } },
+        "clear-radius": { "$value": "{radius.full}" },
+        "spinner": { "size": { "$value": "14px" }, "border-width": { "$value": "{border-width.thick}" }, "radius": { "$value": "{radius.full}" }, "duration": { "$value": "0.6s" } }
+      }
+    },
+    "select": {
+      "$description": "Select and multiselect controls, including language and segment selectors.",
+      "surface": {
+        "default": { "$value": "{color.bg.surface}" },
+        "hover": { "$value": "{color.bg.raised}" },
+        "expanded": { "$value": "{color.bg.raised}" },
+        "disabled": { "$value": "{color.bg.muted}" }
+      },
+      "text": {
+        "default": { "$value": "{color.text.primary}" },
+        "secondary": { "$value": "{color.text.secondary}" },
+        "placeholder": { "$value": "{color.text.tertiary}" },
+        "selected": { "$value": "{color.text.primary}" },
+        "disabled": { "$value": "{color.text.disabled}" }
+      },
+      "border": {
+        "default": { "$value": "{color.border.default}" },
+        "focus-visible": { "$value": "{color.border.focus}" },
+        "expanded": { "$value": "{color.border.focus}" },
+        "invalid": { "$value": "{color.danger.default}" }
+      },
+      "focus-ring": { "$value": "{shadow.focus-primary}" },
+      "focus-ring-invalid": { "$value": "{shadow.focus-danger}" },
+      "radius": { "$value": "{size.radius.md}" },
+      "border-width": { "default": { "$value": "{border-width.thin}" }, "focus": { "$value": "{border-width.thick}" } },
+      "shadow": { "$value": "{shadow.md}" },
+      "gap": { "$value": "{size.gap.sm}" },
+      "field-gap": { "$value": "{spacing.1}" },
+      "control-gap": { "$value": "{spacing.2}" },
+      "tag-gap": { "$value": "{spacing.1}" },
+      "extension-padding-start": { "$value": "{spacing.2}" },
+      "extension-padding-end": { "$value": "{spacing.1}" },
+      "option-content-gap": { "$value": "{spacing.2}" },
+      "font-family": { "$value": "{font.family.sans}" },
+      "line-height": { "$value": "{line-height.normal}" },
+      "padding": { "block": { "$value": "{spacing.sm}" }, "inline": { "$value": "{spacing.md}" } },
+      "option": {
+        "background": {
+          "default": { "$value": "{color.bg.surface}" },
+          "hover": { "$value": "{color.primary.subtle}" },
+          "selected": { "$value": "{color.primary.muted}" }
+        },
+        "text": {
+          "default": { "$value": "{color.text.primary}" },
+          "selected": { "$value": "{color.primary.text}" },
+          "disabled": { "$value": "{color.text.disabled}" }
+        },
+        "font-size": { "$value": "{font.size.sm}" },
+        "font-weight-selected": { "$value": "{font.weight.medium}" },
+        "padding-block": { "$value": "{spacing.2}" },
+        "padding-inline": { "$value": "{spacing.3}" }
+      },
+      "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } },
+      "size": {
+        "2xs": {
+          "font-size": { "$value": "{size.font.2xs}" },
+          "padding-block": { "$value": "{size.pad-block.2xs}" },
+          "padding-inline": { "$value": "{size.pad-inline.2xs}" }
+        },
+        "xs": {
+          "font-size": { "$value": "{size.font.xs}" },
+          "padding-block": { "$value": "{size.pad-block.xs}" },
+          "padding-inline": { "$value": "{size.pad-inline.xs}" }
+        },
+        "sm": {
+          "font-size": { "$value": "{size.font.sm}" },
+          "padding-block": { "$value": "{size.pad-block.sm}" },
+          "padding-inline": { "$value": "{size.pad-inline.sm}" }
+        },
+        "md": {
+          "font-size": { "$value": "{size.font.md}" },
+          "padding-block": { "$value": "{size.pad-block.md}" },
+          "padding-inline": { "$value": "{size.pad-inline.md}" }
+        },
+        "lg": {
+          "font-size": { "$value": "{size.font.lg}" },
+          "padding-block": { "$value": "{size.pad-block.lg}" },
+          "padding-inline": { "$value": "{size.pad-inline.lg}" }
+        },
+        "xl": {
+          "font-size": { "$value": "{size.font.xl}" },
+          "padding-block": { "$value": "{size.pad-block.xl}" },
+          "padding-inline": { "$value": "{size.pad-inline.xl}" }
+        },
+        "2xl": {
+          "font-size": { "$value": "{size.font.2xl}" },
+          "padding-block": { "$value": "{size.pad-block.2xl}" },
+          "padding-inline": { "$value": "{size.pad-inline.2xl}" }
+        }
+      },
+      "segment": {
+        "$description": "ForgeSegmentControl container and selected-segment roles; width/layout behavior remains local.",
+        "surface": { "default": { "$value": "{color.bg.sunken}" }, "selected": { "$value": "{color.bg.surface}" } },
+        "text": { "default": { "$value": "{color.text.secondary}" }, "hover": { "$value": "{color.text.primary}" }, "selected": { "$value": "{color.text.primary}" } },
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" },
+        "radius": { "container": { "$value": "{radius.lg}" }, "segment": { "$value": "{radius.md}" } },
+        "padding": { "$value": "{spacing.1}" },
+        "gap": { "$value": "{spacing.1}" },
+        "shadow-selected": { "$value": "{shadow.sm}" },
+        "font-family": { "$value": "{font.family.sans}" },
+        "font-weight": { "$value": "{font.weight.medium}" },
+        "disabled-opacity": { "$value": 0.5 },
+        "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } }
+      }
+    },
+    "checkable": {
+      "$description": "Checkbox, radio, switch, rating, slider, and range controls.",
+      "thumb": {
+        "default": { "$value": "{color.bg.surface}" },
+        "selected": { "$value": "{color.primary.default}" },
+        "disabled": { "$value": "{color.text.disabled}" },
+        "on-track": { "$value": "{color.text.on-primary}" }
+      },
+      "text": { "default": { "$value": "{color.text.primary}" }, "disabled": { "$value": "{color.text.disabled}" } },
+      "font-family": { "$value": "{font.family.sans}" },
+      "glyph-font-size": {
+        "$value": "12px",
+        "$description": "Exact checkmark/minus glyph size used by the checkbox indicator."
+      },
+      "glyph-font-weight": { "$value": "{font.weight.bold}" },
+      "border": {
+        "default": { "$value": "{color.border.default}" },
+        "selected": { "$value": "{color.primary.default}" },
+        "focus-visible": { "$value": "{color.border.focus}" },
+        "invalid": { "$value": "{color.danger.default}" }
+      },
+      "border-width": {
+        "default": {
+          "$value": "{border-width.thick}",
+          "$description": "Default control stroke (radio/checkbox/thumb)."
+        },
+        "focus": { "$value": "{border-width.thick}", "$description": "Focus-visible outline width." },
+        "invalid": {
+          "$value": "{border-width.thin}",
+          "$description": "Invalid/error outline width (switch error track)."
+        }
+      },
+      "focus-ring": { "$value": "{shadow.focus-primary}" },
+      "gap": {
+        "inline": {
+          "$value": "{spacing.2}",
+          "$description": "Horizontal gap between control and label (radio, switch row)."
+        },
+        "stack": {
+          "$value": "{spacing.1}",
+          "$description": "Tight stacked gap (switch field column, rating stars)."
+        }
+      },
+      "rating": {
+        "filled": { "$value": "{color.warning.default}" },
+        "empty": { "$value": "{color.border.default}" }
+      },
+      "shadow": { "$value": "{shadow.sm}" },
+      "radius": { "$value": "{radius.sm}" },
+      "circle-radius": { "$value": "{radius.full}" },
+      "control-size": { "$value": "{size.checkable.control}" },
+      "indicator-size": { "$value": "{size.checkable.indicator}" },
+      "value": {
+        "background": { "$value": "{color.text.primary}" },
+        "text": { "$value": "{color.bg.surface}" },
+        "padding-block": { "$value": "{spacing.1}", "$description": "Value badge vertical padding (range/slider)." },
+        "padding-inline": { "$value": "{spacing.2}", "$description": "Value badge horizontal padding (range/slider)." },
+        "radius": { "$value": "{radius.sm}" },
+        "font-size": { "$value": "{size.font.xs}" }
+      },
+      "value-offset": { "$value": "{spacing.1}" },
+      "size": {
+        "2xs": {
+          "track-height": { "$value": "{size.checkable.2xs.slider-track-height}" },
+          "thumb-size": { "$value": "{size.checkable.2xs.slider-thumb-size}" },
+          "rating-font-size": { "$value": "{size.checkable.2xs.rating-font-size}" },
+          "switch": {
+            "width": { "$value": "{size.checkable.2xs.switch.width}" },
+            "height": { "$value": "{size.checkable.2xs.switch.height}" },
+            "padding": { "$value": "{size.checkable.2xs.switch.padding}" },
+            "thumb-size": { "$value": "{size.checkable.2xs.switch.thumb-size}" },
+            "translate": { "$value": "{size.checkable.2xs.switch.translate}" }
+          }
+        },
+        "xs": {
+          "track-height": { "$value": "{size.checkable.xs.slider-track-height}" },
+          "thumb-size": { "$value": "{size.checkable.xs.slider-thumb-size}" },
+          "rating-font-size": { "$value": "{size.checkable.xs.rating-font-size}" },
+          "switch": {
+            "width": { "$value": "{size.checkable.xs.switch.width}" },
+            "height": { "$value": "{size.checkable.xs.switch.height}" },
+            "padding": { "$value": "{size.checkable.xs.switch.padding}" },
+            "thumb-size": { "$value": "{size.checkable.xs.switch.thumb-size}" },
+            "translate": { "$value": "{size.checkable.xs.switch.translate}" }
+          }
+        },
+        "sm": {
+          "track-height": { "$value": "{size.checkable.sm.slider-track-height}" },
+          "thumb-size": { "$value": "{size.checkable.sm.slider-thumb-size}" },
+          "rating-font-size": { "$value": "{size.checkable.sm.rating-font-size}" },
+          "switch": {
+            "width": { "$value": "{size.checkable.sm.switch.width}" },
+            "height": { "$value": "{size.checkable.sm.switch.height}" },
+            "padding": { "$value": "{size.checkable.sm.switch.padding}" },
+            "thumb-size": { "$value": "{size.checkable.sm.switch.thumb-size}" },
+            "translate": { "$value": "{size.checkable.sm.switch.translate}" }
+          }
+        },
+        "md": {
+          "track-height": { "$value": "{size.checkable.md.slider-track-height}" },
+          "thumb-size": { "$value": "{size.checkable.md.slider-thumb-size}" },
+          "rating-font-size": { "$value": "{size.checkable.md.rating-font-size}" },
+          "switch": {
+            "width": { "$value": "{size.checkable.md.switch.width}" },
+            "height": { "$value": "{size.checkable.md.switch.height}" },
+            "padding": { "$value": "{size.checkable.md.switch.padding}" },
+            "thumb-size": { "$value": "{size.checkable.md.switch.thumb-size}" },
+            "translate": { "$value": "{size.checkable.md.switch.translate}" }
+          }
+        },
+        "lg": {
+          "track-height": { "$value": "{size.checkable.lg.slider-track-height}" },
+          "thumb-size": { "$value": "{size.checkable.lg.slider-thumb-size}" },
+          "rating-font-size": { "$value": "{size.checkable.lg.rating-font-size}" },
+          "switch": {
+            "width": { "$value": "{size.checkable.lg.switch.width}" },
+            "height": { "$value": "{size.checkable.lg.switch.height}" },
+            "padding": { "$value": "{size.checkable.lg.switch.padding}" },
+            "thumb-size": { "$value": "{size.checkable.lg.switch.thumb-size}" },
+            "translate": { "$value": "{size.checkable.lg.switch.translate}" }
+          }
+        },
+        "xl": {
+          "track-height": { "$value": "{size.checkable.xl.slider-track-height}" },
+          "thumb-size": { "$value": "{size.checkable.xl.slider-thumb-size}" },
+          "rating-font-size": { "$value": "{size.checkable.xl.rating-font-size}" },
+          "switch": {
+            "width": { "$value": "{size.checkable.xl.switch.width}" },
+            "height": { "$value": "{size.checkable.xl.switch.height}" },
+            "padding": { "$value": "{size.checkable.xl.switch.padding}" },
+            "thumb-size": { "$value": "{size.checkable.xl.switch.thumb-size}" },
+            "translate": { "$value": "{size.checkable.xl.switch.translate}" }
+          }
+        },
+        "2xl": {
+          "track-height": { "$value": "{size.checkable.2xl.slider-track-height}" },
+          "thumb-size": { "$value": "{size.checkable.2xl.slider-thumb-size}" },
+          "rating-font-size": { "$value": "{size.checkable.2xl.rating-font-size}" },
+          "switch": {
+            "width": { "$value": "{size.checkable.2xl.switch.width}" },
+            "height": { "$value": "{size.checkable.2xl.switch.height}" },
+            "padding": { "$value": "{size.checkable.2xl.switch.padding}" },
+            "thumb-size": { "$value": "{size.checkable.2xl.switch.thumb-size}" },
+            "translate": { "$value": "{size.checkable.2xl.switch.translate}" }
+          }
+        }
+      },
+      "track": {
+        "default": { "$value": "{color.bg.surface}" },
+        "inactive": { "$value": "{color.bg.sunken}" },
+        "unselected": { "$value": "{color.border.default}" },
+        "hover": { "$value": "{color.primary.subtle}" },
+        "disabled": { "$value": "{color.bg.muted}" },
+        "selected": { "$value": "{color.primary.default}" }
+      },
+      "opacity": { "disabled": { "$value": "{opacity.disabled}" } },
+      "transition": {
+        "duration": {
+          "$value": "{duration.fast}",
+          "$description": "Default checkable motion (radio/checkbox colour and indicator)."
+        },
+        "switch-duration": {
+          "$value": "{duration.moderate}",
+          "$description": "Switch track/thumb motion (200ms)."
+        },
+        "easing": { "$value": "{easing.standard}" }
+      }
+    },
+    "tag": {
+      "$description": "Compact tone labels and removable selection tags.",
+      "neutral": { "background": { "$value": "{color.default.muted}" }, "text": { "$value": "{color.default.text}" } },
+      "primary": { "background": { "$value": "{color.primary.muted}" }, "text": { "$value": "{color.primary.text}" } },
+      "secondary": {
+        "background": { "$value": "{color.secondary.muted}" },
+        "text": { "$value": "{color.secondary.text}" }
+      },
+      "tertiary": {
+        "background": { "$value": "{color.tertiary.muted}" },
+        "text": { "$value": "{color.tertiary.text}" }
+      },
+      "success": { "background": { "$value": "{color.success.muted}" }, "text": { "$value": "{color.success.text}" } },
+      "warning": { "background": { "$value": "{color.warning.muted}" }, "text": { "$value": "{color.warning.text}" } },
+      "info": { "background": { "$value": "{color.info.muted}" }, "text": { "$value": "{color.info.text}" } },
+      "error": { "background": { "$value": "{color.error.muted}" }, "text": { "$value": "{color.error.text}" } },
+      "critical": {
+        "background": { "$value": "{color.critical.muted}" },
+        "text": { "$value": "{color.critical.text}" }
+      },
+      "disabled": { "background": { "$value": "{color.bg.muted}" }, "text": { "$value": "{color.text.disabled}" } },
+      "remove-hover-opacity": { "$value": "{opacity.interactive}" },
+      "radius": { "$value": "{radius.full}" },
+      "gap": { "$value": "{spacing.1}" },
+      "font-family": { "$value": "{font.family.sans}" },
+      "line-height": { "$value": "{line-height.tight}" },
+      "border-width": { "focus": { "$value": "{border-width.thick}" } },
+      "size": {
+        "2xs": {
+          "font-size": { "$value": "{size.font.2xs}" },
+          "padding-block": { "$value": "{size.pad-block.2xs}" },
+          "padding-inline": { "$value": "{size.pad-inline.2xs}" }
+        },
+        "xs": {
+          "font-size": { "$value": "{size.font.xs}" },
+          "padding-block": { "$value": "{size.pad-block.xs}" },
+          "padding-inline": { "$value": "{size.pad-inline.xs}" }
+        },
+        "sm": {
+          "font-size": { "$value": "{size.font.sm}" },
+          "padding-block": { "$value": "{size.pad-block.sm}" },
+          "padding-inline": { "$value": "{size.pad-inline.sm}" }
+        },
+        "md": {
+          "font-size": { "$value": "{size.font.md}" },
+          "padding-block": { "$value": "{size.pad-block.md}" },
+          "padding-inline": { "$value": "{size.pad-inline.md}" }
+        },
+        "lg": {
+          "font-size": { "$value": "{size.font.lg}" },
+          "padding-block": { "$value": "{size.pad-block.lg}" },
+          "padding-inline": { "$value": "{size.pad-inline.lg}" }
+        },
+        "xl": {
+          "font-size": { "$value": "{size.font.xl}" },
+          "padding-block": { "$value": "{size.pad-block.xl}" },
+          "padding-inline": { "$value": "{size.pad-inline.xl}" }
+        },
+        "2xl": {
+          "font-size": { "$value": "{size.font.2xl}" },
+          "padding-block": { "$value": "{size.pad-block.2xl}" },
+          "padding-inline": { "$value": "{size.pad-inline.2xl}" }
+        }
+      }
+    },
+    "calendar": {
+      "$description": "ForgeCalendar surface, navigation, day-state, range-preview, and size roles. Grid geometry and date behavior remain local.",
+      "surface": {
+        "default": { "$value": "{color.bg.surface}" },
+        "flat": { "$value": "transparent" },
+        "hover": { "$value": "{color.bg.muted}" },
+        "selected": { "$value": "{color.primary.default}" },
+        "range": { "$value": "{color.primary.default}" }
+      },
+      "text": {
+        "default": { "$value": "{color.text.primary}" },
+        "secondary": { "$value": "{color.text.secondary}" },
+        "muted": { "$value": "{color.text.tertiary}" },
+        "selected": { "$value": "{color.text.on-primary}" },
+        "range": { "$value": "{color.primary.default}" }
+      },
+      "border": {
+        "default": { "$value": "{color.border.default}" },
+        "focus": { "$value": "{color.border.focus}" },
+        "width": { "$value": "{border-width.thin}" },
+        "focus-width": { "$value": "{border-width.thick}" }
+      },
+      "radius": { "default": { "$value": "{radius.lg}" }, "control": { "$value": "{radius.sm}" } },
+      "shadow": { "$value": "{shadow.md}" },
+      "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } },
+      "header-gap": { "$value": "{spacing.2}" },
+      "label-gap": { "$value": "{spacing.1}" },
+      "label-padding": { "block": { "$value": "{spacing.1}" }, "inline": { "$value": "{spacing.2}" } },
+      "popup-padding": { "$value": "{spacing.2}" },
+      "font-weight": {
+        "medium": { "$value": "{font.weight.medium}" },
+        "selected": { "$value": "{font.weight.semibold}" }
+      },
+      "range-opacity": { "$value": "12%" },
+      "preview-opacity": { "$value": "8%" },
+      "preview-end-opacity": { "$value": "20%" },
+      "disabled-opacity": { "$value": 0.3 },
+      "outside-opacity": { "$value": 0.6 },
+      "size": {
+        "2xs": {
+          "padding": { "$value": "{size.pad-inline.2xs}" },
+          "cell-height": { "$value": "{size.height.2xs}" },
+          "font-size": { "$value": "{size.font.2xs}" }
+        },
+        "xs": {
+          "padding": { "$value": "{size.pad-inline.xs}" },
+          "cell-height": { "$value": "{size.height.xs}" },
+          "font-size": { "$value": "{size.font.xs}" }
+        },
+        "sm": {
+          "padding": { "$value": "{size.pad-inline.sm}" },
+          "cell-height": { "$value": "{size.height.sm}" },
+          "font-size": { "$value": "{size.font.sm}" }
+        },
+        "md": {
+          "padding": { "$value": "{size.pad-inline.md}" },
+          "cell-height": { "$value": "{size.height.md}" },
+          "font-size": { "$value": "{size.font.md}" }
+        },
+        "lg": {
+          "padding": { "$value": "{size.pad-inline.lg}" },
+          "cell-height": { "$value": "{size.height.lg}" },
+          "font-size": { "$value": "{size.font.lg}" }
+        },
+        "xl": {
+          "padding": { "$value": "{size.pad-inline.xl}" },
+          "cell-height": { "$value": "{size.height.xl}" },
+          "font-size": { "$value": "{size.font.xl}" }
+        },
+        "2xl": {
+          "padding": { "$value": "{size.pad-inline.2xl}" },
+          "cell-height": { "$value": "{size.height.2xl}" },
+          "font-size": { "$value": "{size.font.2xl}" }
+        }
+      }
+    },
+    "color-input": {
+      "$description": "ForgeColorInput wrapper, swatch, monospace value, state, and size roles.",
+      "gap": { "stack": { "$value": "{spacing.1}" }, "inline": { "$value": "{spacing.2}" } },
+      "surface": { "default": { "$value": "{color.bg.surface}" }, "disabled": { "$value": "{color.bg.muted}" } },
+      "text": {
+        "default": { "$value": "{color.text.primary}" },
+        "placeholder": { "$value": "{color.text.tertiary}" },
+        "error": { "$value": "{color.danger.text}" }
+      },
+      "border": {
+        "default": { "$value": "{color.border.default}" },
+        "focus": { "$value": "{color.border.focus}" },
+        "invalid": { "$value": "{color.danger.default}" },
+        "width": { "$value": "{border-width.thin}" }
+      },
+      "radius": { "$value": "{radius.md}" },
+      "focus-ring": { "$value": "{shadow.focus-primary}" },
+      "focus-ring-invalid": { "$value": "{shadow.focus-danger}" },
+      "font-family": { "$value": "{font.family.mono}" },
+      "letter-spacing": { "$value": "0.05em" },
+      "hover-opacity": { "$value": "{opacity.subtle}" },
+      "disabled-opacity": { "$value": "{opacity.disabled}" },
+      "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } },
+      "size": {
+        "2xs": {
+          "swatch": { "$value": "{size.height.2xs}" },
+          "font-size": { "$value": "{size.font.2xs}" },
+          "padding-block": { "$value": "{size.pad-block.2xs}" },
+          "padding-inline": { "$value": "{size.pad-inline.2xs}" }
+        },
+        "xs": {
+          "swatch": { "$value": "{size.height.xs}" },
+          "font-size": { "$value": "{size.font.xs}" },
+          "padding-block": { "$value": "{size.pad-block.xs}" },
+          "padding-inline": { "$value": "{size.pad-inline.xs}" }
+        },
+        "sm": {
+          "swatch": { "$value": "{size.height.sm}" },
+          "font-size": { "$value": "{size.font.sm}" },
+          "padding-block": { "$value": "{size.pad-block.sm}" },
+          "padding-inline": { "$value": "{size.pad-inline.sm}" }
+        },
+        "md": {
+          "swatch": { "$value": "{size.height.md}" },
+          "font-size": { "$value": "{size.font.md}" },
+          "padding-block": { "$value": "{size.pad-block.md}" },
+          "padding-inline": { "$value": "{size.pad-inline.md}" }
+        },
+        "lg": {
+          "swatch": { "$value": "{size.height.lg}" },
+          "font-size": { "$value": "{size.font.lg}" },
+          "padding-block": { "$value": "{size.pad-block.lg}" },
+          "padding-inline": { "$value": "{size.pad-inline.lg}" }
+        },
+        "xl": {
+          "swatch": { "$value": "{size.height.xl}" },
+          "font-size": { "$value": "{size.font.xl}" },
+          "padding-block": { "$value": "{size.pad-block.xl}" },
+          "padding-inline": { "$value": "{size.pad-inline.xl}" }
+        },
+        "2xl": {
+          "swatch": { "$value": "{size.height.2xl}" },
+          "font-size": { "$value": "{size.font.2xl}" },
+          "padding-block": { "$value": "{size.pad-block.2xl}" },
+          "padding-inline": { "$value": "{size.pad-inline.2xl}" }
+        }
+      }
+    },
+    "time": {
+      "$description": "ForgeTimeInput and ForgeTimeRangeInput popover list and action roles.",
+      "popover-padding": { "$value": "{spacing.2}" },
+      "columns-gap": { "$value": "{spacing.1}" },
+      "text": {
+        "default": { "$value": "{color.text.primary}" },
+        "secondary": { "$value": "{color.text.secondary}" },
+        "muted": { "$value": "{color.text.tertiary}" },
+        "selected": { "$value": "{color.text.on-primary}" }
+      },
+      "border": {
+        "default": { "$value": "{color.border.default}" },
+        "focus": { "$value": "{color.border.focus}" },
+        "focus-width": { "$value": "{border-width.thick}" }
+      },
+      "surface": { "hover": { "$value": "{color.bg.muted}" }, "selected": { "$value": "{color.primary.default}" } },
+      "font-family": { "sans": { "$value": "{font.family.sans}" }, "mono": { "$value": "{font.family.mono}" } },
+      "font-size": {
+        "separator": { "$value": "{font.size.md}" },
+        "header": { "$value": "{font.size.xs}" },
+        "unit": { "$value": "{font.size.sm}" }
+      },
+      "font-weight": {
+        "medium": { "$value": "{font.weight.medium}" },
+        "selected": { "$value": "{font.weight.semibold}" }
+      },
+      "unit-padding": { "block": { "$value": "{spacing.1}" }, "inline": { "$value": "{spacing.2}" } },
+      "unit-radius": { "$value": "{radius.sm}" },
+      "done-padding": { "block": { "$value": "{spacing.1}" }, "inline": { "$value": "{spacing.3}" } },
+      "done-radius": { "$value": "{radius.md}" },
+      "timezone-gap": { "$value": "{spacing.1}" },
+      "timezone-margin": { "$value": "{spacing.2}" },
+      "panes-gap": { "$value": "{spacing.4}" },
+      "pane-gap": { "$value": "{spacing.1}" },
+      "header-gap": { "$value": "{spacing.1}" },
+      "header-padding": { "$value": "{spacing.1}" },
+      "footer-gap": { "$value": "{spacing.2}" },
+      "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } },
+      "done-hover-opacity": { "$value": 0.9 }
+    },
+    "form": {
+      "$description": "Shared visual contract for form-builder, form-wizard, and schema-form regions; drag/drop and layout behavior remain local.",
+      "surface": { "default": { "$value": "{color.bg.surface}" }, "muted": { "$value": "{color.bg.muted}" } },
+      "text": {
+        "default": { "$value": "{color.text.primary}" },
+        "secondary": { "$value": "{color.text.secondary}" },
+        "muted": { "$value": "{color.text.tertiary}" },
+        "inverse": { "$value": "{color.text.on-primary}" },
+        "invalid": { "$value": "{color.danger.text}" }
+      },
+      "border": {
+        "default": { "$value": "{color.border.default}" },
+        "focus": { "$value": "{color.border.focus}" },
+        "selected": { "$value": "{color.primary.default}" },
+        "invalid": { "$value": "{color.danger.default}" },
+        "width": { "$value": "{border-width.thin}" },
+        "focus-width": { "$value": "{border-width.thick}" }
+      },
+      "primary": { "$value": "{color.primary.default}" },
+      "radius": { "small": { "$value": "{radius.sm}" }, "default": { "$value": "{radius.md}" } },
+      "focus-ring": { "$value": "{shadow.focus-primary}" },
+      "gap": {
+        "tight": { "$value": "{spacing.1}" },
+        "default": { "$value": "{spacing.2}" },
+        "section": { "$value": "{spacing.3}" },
+        "large": { "$value": "{spacing.4}" },
+        "wizard": { "$value": "{spacing.6}" }
+      },
+      "padding": {
+        "tight": { "$value": "{spacing.1}" },
+        "default": { "$value": "{spacing.2}" },
+        "section": { "$value": "{spacing.3}" },
+        "large": { "$value": "{spacing.4}" }
+      },
+      "font-family": { "sans": { "$value": "{font.family.sans}" }, "mono": { "$value": "{font.family.mono}" } },
+      "font-size": { "small": { "$value": "{font.size.sm}" }, "extra-small": { "$value": "{font.size.xs}" } },
+      "font-weight": { "medium": { "$value": "{font.weight.medium}" } },
+      "disabled-opacity": { "$value": "{opacity.disabled}" },
+      "drag-opacity": { "$value": 0.4 },
+      "ghost-opacity": { "$value": 0.65 },
+      "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } },
+      "primary-hover-opacity": { "$value": 0.9 }
+    },
+    "field": {
+      "$description": "Shared form-field label, hint, error, field-set, builder, wizard, and schema-form regions.",
+      "label": { "$value": "{typography.label}" },
+      "helper-text": { "$value": "{typography.caption}" },
+      "text": {
+        "default": { "$value": "{color.text.primary}" },
+        "invalid": { "$value": "{color.danger.text}" },
+        "disabled": { "$value": "{color.text.disabled}" }
+      },
+      "gap": { "$value": "{spacing.xs}" },
+      "error": { "$value": "{color.danger.text}" },
+      "required": { "$value": "{color.danger.default}" }
+    },
+    "field-set": {
+      "$description": "ForgeFieldSet frame, legend, description, and content spacing roles.",
+      "padding": { "$value": "{spacing.4}" },
+      "surface": { "$value": "{color.bg.surface}" },
+      "border": { "$value": "{color.border.default}" },
+      "border-width": { "$value": "{border-width.thin}" },
+      "radius": { "$value": "{radius.lg}" },
+      "legend-padding": { "$value": "{spacing.1}" },
+      "description-margin": { "$value": "{spacing.3}" },
+      "content-gap": { "$value": "{spacing.3}" }
+    },
+    "surface": {
+      "$description": "Cards, panels, separators, tables, lists, grids, stacks, masonry, timelines, and layout surfaces.",
+      "background": {
+        "default": { "$value": "{color.bg.surface}" },
+        "raised": { "$value": "{color.bg.raised}" },
+        "sunken": { "$value": "{color.bg.sunken}" },
+        "muted": { "$value": "{color.bg.muted}" }
+      },
+      "text": { "default": { "$value": "{color.text.primary}" }, "secondary": { "$value": "{color.text.secondary}" } },
+      "border": {
+        "default": { "$value": "{color.border.default}" },
+        "strong": { "$value": "{color.border.strong}" },
+        "selected": { "$value": "{color.primary.default}" }
+      },
+      "separator": {
+        "$description": "Separator line, label, and spacing roles.",
+        "line": { "$value": "{color.border.default}" },
+        "line-width": { "$value": "{border-width.thin}" },
+        "label": { "$value": "{color.text.secondary}" },
+        "label-font-family": { "$value": "{font.family.sans}" },
+        "label-font-size": { "$value": "{font.size.sm}" },
+        "label-line-height": { "$value": "{line-height.tight}" },
+        "label-gap": { "$value": "{spacing.3}" },
+        "margin": {
+          "none": { "$value": "{spacing.0}" },
+          "sm": { "$value": "{spacing.2}" },
+          "md": { "$value": "{spacing.4}" },
+          "lg": { "$value": "{spacing.6}" },
+          "xl": { "$value": "{spacing.8}" },
+          "default": { "$value": "{spacing.4}" }
+        }
+      },
+      "quote": {
+        "$description": "ForgeQuote chrome. Text italics and composed typography variants remain local or are owned by ForgeTypography.",
+        "gap": { "$value": "{spacing.3}" },
+        "attribution-gap": { "$value": "{spacing.2}" },
+        "attribution-marker": { "$value": "{color.text.tertiary}" },
+        "bordered-padding": { "$value": "{spacing.4}" },
+        "bordered-border-width": { "$value": "{border-width.heavy}" },
+        "default-padding": { "$value": "{spacing.5}" },
+        "default-radius": { "$value": "{radius.lg}" },
+        "background": {
+          "neutral": { "$value": "{color.bg.muted}" },
+          "primary": { "$value": "{color.primary.muted}" },
+          "secondary": { "$value": "{color.secondary.muted}" },
+          "tertiary": { "$value": "{color.tertiary.muted}" },
+          "success": { "$value": "{color.success.muted}" },
+          "warning": { "$value": "{color.warning.muted}" },
+          "info": { "$value": "{color.info.muted}" },
+          "error": { "$value": "{color.error.muted}" },
+          "critical": { "$value": "{color.critical.muted}" }
+        },
+        "border": {
+          "primary": { "$value": "{color.primary.default}" },
+          "secondary": { "$value": "{color.secondary.default}" },
+          "tertiary": { "$value": "{color.tertiary.default}" },
+          "success": { "$value": "{color.success.default}" },
+          "warning": { "$value": "{color.warning.default}" },
+          "info": { "$value": "{color.info.default}" },
+          "error": { "$value": "{color.error.default}" },
+          "critical": { "$value": "{color.critical.default}" }
+        }
+      },
+      "radius": { "$value": "{radius.lg}" },
+      "padding": { "$value": "{spacing.md}" },
+      "gap": { "$value": "{spacing.md}" },
+      "shadow": { "$value": "{shadow.md}" }
+    },
+    "card": {
+      "$description": "ForgeCard surface, border, elevation, tone, and responsive padding variants. Container-query mechanics remain local.",
+      "background": { "$value": "{color.bg.surface}" },
+      "border": { "$value": "{color.border.default}" },
+      "border-width": { "$value": "{border-width.thin}" },
+      "radius": { "$value": "{radius.lg}" },
+      "shadow": { "$value": "{shadow.md}" },
+      "padding": {
+        "none": { "block": { "$value": "{spacing.0}" }, "inline": { "$value": "{spacing.0}" } },
+        "sm": {
+          "block": { "$value": "{spacing.2}" },
+          "inline": { "$value": "{spacing.3}" },
+          "wide-block": { "$value": "{spacing.3}" },
+          "wide-inline": { "$value": "{spacing.4}" }
+        },
+        "md": {
+          "block": { "$value": "{spacing.3}" },
+          "inline": { "$value": "{spacing.4}" },
+          "wide-block": { "$value": "{spacing.4}" },
+          "wide-inline": { "$value": "{spacing.6}" }
+        },
+        "lg": {
+          "block": { "$value": "{spacing.4}" },
+          "inline": { "$value": "{spacing.6}" },
+          "wide-block": { "$value": "{spacing.6}" },
+          "wide-inline": { "$value": "{spacing.8}" }
+        }
+      },
+      "tone": {
+        "primary": {
+          "background": { "$value": "{color.primary.muted}" },
+          "text": { "$value": "{color.primary.text}" },
+          "border": { "$value": "{color.primary.subtle}" }
+        },
+        "secondary": {
+          "background": { "$value": "{color.secondary.muted}" },
+          "text": { "$value": "{color.secondary.text}" },
+          "border": { "$value": "{color.secondary.subtle}" }
+        },
+        "tertiary": {
+          "background": { "$value": "{color.tertiary.muted}" },
+          "text": { "$value": "{color.tertiary.text}" },
+          "border": { "$value": "{color.tertiary.subtle}" }
+        },
+        "success": {
+          "background": { "$value": "{color.success.muted}" },
+          "text": { "$value": "{color.success.text}" },
+          "border": { "$value": "{color.success.subtle}" }
+        },
+        "warning": {
+          "background": { "$value": "{color.warning.muted}" },
+          "text": { "$value": "{color.warning.text}" },
+          "border": { "$value": "{color.warning.subtle}" }
+        },
+        "info": {
+          "background": { "$value": "{color.info.muted}" },
+          "text": { "$value": "{color.info.text}" },
+          "border": { "$value": "{color.info.subtle}" }
+        },
+        "error": {
+          "background": { "$value": "{color.error.muted}" },
+          "text": { "$value": "{color.error.text}" },
+          "border": { "$value": "{color.error.subtle}" }
+        },
+        "critical": {
+          "background": { "$value": "{color.critical.muted}" },
+          "text": { "$value": "{color.critical.text}" },
+          "border": { "$value": "{color.critical.subtle}" }
+        }
+      }
+    },
+    "overlay": {
+      "$description": "Alert banners, dropdowns, popovers, tooltips, toasts, drawers, dialogs, modals, and window popouts.",
+      "surface": {
+        "default": { "$value": "{color.bg.overlay}" },
+        "scrim": { "$value": "{color.bg.scrim}" },
+        "loading": { "$value": "{color.bg.loading-overlay}" }
+      },
+      "text": { "default": { "$value": "{color.text.primary}" }, "inverse": { "$value": "{color.text.inverse}" } },
+      "font-family": { "$value": "{font.family.sans}" },
+      "border": {
+        "default": { "$value": "{color.border.default}" },
+        "focus-visible": { "$value": "{color.border.focus}" }
+      },
+      "border-width": { "$value": "{border-width.thin}" },
+      "radius": { "$value": "{radius.xl}" },
+      "padding": { "$value": "{spacing.lg}" },
+      "icon-size": { "$value": "{font.size.xl}" },
+      "dismiss": {
+        "padding": { "$value": "{spacing.1}" },
+        "radius": { "$value": "{radius.sm}" },
+        "focus-width": { "$value": "{border-width.thick}" }
+      },
+      "panel": { "padding-block": { "$value": "{spacing.1}" } },
+      "header": {
+        "gap": { "$value": "{spacing.4}" },
+        "padding-block": { "$value": "{spacing.4}" },
+        "padding-inline": { "$value": "{spacing.6}" }
+      },
+      "body": { "padding": { "$value": "{spacing.6}" } },
+      "footer": {
+        "gap": { "$value": "{spacing.3}" },
+        "padding-block": { "$value": "{spacing.4}" },
+        "padding-inline": { "$value": "{spacing.6}" }
+      },
+      "toast": {
+        "$description": "Toast typography and compact chrome; do not use dialog/modal-scale padding, radius, shadow, or surface values.",
+        "font-size": { "$value": "{size.font.sm}" },
+        "font-weight": { "$value": "{font.weight.semibold}" },
+        "title-gap": { "$value": "{spacing.1}" },
+        "surface": { "$value": "{color.bg.surface}" },
+        "text": {
+          "default": { "$value": "{color.text.primary}" },
+          "message": { "$value": "{color.text.secondary}" }
+        },
+        "gap": { "$value": "{spacing.3}" },
+        "padding-block": { "$value": "{spacing.3}" },
+        "padding-inline": { "$value": "{spacing.4}" },
+        "radius": { "$value": "{radius.md}" },
+        "shadow": { "$value": "{shadow.lg}" },
+        "transition": {
+          "duration": { "$value": "{duration.fast}" },
+          "easing": { "$value": "{easing.standard}" }
+        }
+      },
+      "alert-banner": {
+        "$description": "Alert-banner-specific chrome. These compact values intentionally remain distinct from dialog and modal overlay chrome.",
+        "gap": { "$value": "{spacing.3}" },
+        "padding-block": { "$value": "{spacing.3}" },
+        "padding-inline": { "$value": "{spacing.4}" },
+        "content-gap": { "$value": "{spacing.1}" },
+        "actions-gap": { "$value": "{spacing.2}" },
+        "actions-margin-top": { "$value": "{spacing.2}" },
+        "radius": { "$value": "{radius.md}" },
+        "dismiss": {
+          "opacity": { "$value": "{opacity.interactive}" },
+          "transition-duration": { "$value": "{duration.fast}" },
+          "transition-easing": { "$value": "{easing.standard}" }
+        }
+      },
+      "dropdown": {
+        "$description": "Compact dropdown panel chrome; dimensions and anchor positioning remain local.",
+        "surface": { "$value": "{color.bg.surface}" },
+        "radius": { "$value": "{radius.md}" },
+        "shadow": { "$value": "{shadow.md}" },
+        "transition": {
+          "duration": { "$value": "{duration.fast}" },
+          "easing": { "$value": "{easing.standard}" }
+        }
+      },
+      "popover": {
+        "$description": "Compact popover panel chrome; dimensions and anchor positioning remain local.",
+        "surface": { "$value": "{color.bg.surface}" },
+        "radius": { "$value": "{radius.lg}" },
+        "shadow": { "$value": "{shadow.lg}" },
+        "transition": {
+          "duration": { "$value": "{duration.fast}" },
+          "easing": { "$value": "{easing.standard}" }
+        }
+      },
+      "dialog": {
+        "$description": "Dialog surface and chrome; panel dimensions and native dialog behavior remain local.",
+        "surface": { "default": { "$value": "{color.bg.surface}" } }
+      },
+      "modal": {
+        "$description": "Modal surface and elevation; panel dimensions and native dialog behavior remain local.",
+        "surface": { "default": { "$value": "{color.bg.surface}" } },
+        "shadow": { "$value": "{shadow.2xl}" },
+        "size": {
+          "2xs": { "$value": "20rem" },
+          "xs": { "$value": "24rem" },
+          "sm": { "$value": "{size.width.sm}" },
+          "md": { "$value": "{size.width.md}" },
+          "lg": { "$value": "51.429rem" },
+          "xl": { "$value": "68.571rem" },
+          "2xl": { "$value": "{size.width.lg}" }
+        }
+      },
+      "shadow": { "$value": "{shadow.xl}" },
+      "focus-ring": { "$value": "{shadow.focus-primary}" },
+      "transition": { "duration": { "$value": "{duration.moderate}" }, "easing": { "$value": "{easing.standard}" } },
+      "tooltip": {
+        "$description": "Compact inverse-tone hint panel — distinct chrome from the neutral overlay surface shared by dialogs/popovers/toasts.",
+        "surface": { "$value": "{color.text.primary}" },
+        "text": { "$value": "{color.text.inverse}" },
+        "radius": { "$value": "{radius.sm}" },
+        "padding-block": { "$value": "{spacing.1}" },
+        "padding-inline": { "$value": "{spacing.3}" },
+        "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } }
+      },
+      "drawer": {
+        "$description": "Drawer panel, backdrop, header/footer chrome, close affordance, resize handle, and enter/leave motion. Placement, dimensions, and drag mechanics remain local.",
+        "backdrop": { "surface": { "$value": "{color.bg.scrim-soft}" } },
+        "panel": {
+          "surface": { "$value": "{color.bg.surface}" },
+          "border": { "$value": "{color.border.default}" },
+          "border-width": { "$value": "{border-width.thin}" },
+          "shadow": { "$value": "{shadow.xl}" }
+        },
+        "header": {
+          "padding-block": { "$value": "{spacing.4}" },
+          "padding-inline": { "$value": "{spacing.6}" },
+          "gap": { "$value": "{spacing.4}" },
+          "border": { "$value": "{color.border.default}" },
+          "border-width": { "$value": "{border-width.thin}" }
+        },
+        "title": {
+          "font-family": { "$value": "{font.family.sans}" },
+          "font-size": { "$value": "{font.size.lg}" },
+          "font-weight": { "$value": "{font.weight.medium}" },
+          "line-height": { "$value": "{line-height.snug}" },
+          "text": { "$value": "{color.text.primary}" }
+        },
+        "close": {
+          "size": { "$value": "{size.height.sm}" },
+          "radius": { "$value": "{radius.md}" },
+          "surface": { "default": { "$value": "transparent" }, "hover": { "$value": "{color.bg.surface}" } },
+          "text": { "default": { "$value": "{color.text.secondary}" }, "hover": { "$value": "{color.text.primary}" } },
+          "font-size": { "$value": "{font.size.xl}" },
+          "line-height": { "$value": 1 }
+        },
+        "body": { "padding": { "$value": "{spacing.6}" } },
+        "footer": {
+          "gap": { "$value": "{spacing.3}" },
+          "padding-block": { "$value": "{spacing.4}" },
+          "padding-inline": { "$value": "{spacing.6}" },
+          "border": { "$value": "{color.border.default}" },
+          "border-width": { "$value": "{border-width.thin}" }
+        },
+        "resize-handle": {
+          "size": { "$value": "{spacing.2}" },
+          "surface": { "default": { "$value": "transparent" }, "active": { "$value": "{color.border.strong}" } },
+          "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } }
+        },
+        "transition": { "duration": { "$value": "{duration.base}" }, "easing": { "$value": "{easing.standard}" } }
+      },
+      "window-popout": {
+        "$description": "Inline popout wrapper, unavailable-content placeholder, and pop-in/pop-out toggle states. Browser-window lifecycle and content transfer remain local behavior.",
+        "gap": { "$value": "{spacing.2}" },
+        "placeholder": {
+          "padding": { "$value": "{spacing.6}" },
+          "border": { "$value": "{color.border.default}" },
+          "border-width": { "$value": "{border-width.thick}" },
+          "radius": { "$value": "{radius.lg}" },
+          "surface": { "$value": "{color.bg.muted}" },
+          "min-height": { "$value": "80px" }
+        },
+        "toggle": {
+          "gap": { "$value": "{spacing.1}" },
+          "padding-block": { "$value": "{spacing.1}" },
+          "padding-inline": { "$value": "{spacing.3}" },
+          "border": {
+            "default": { "$value": "{color.border.default}" },
+            "hover": { "$value": "{color.border.strong}" },
+            "selected": { "$value": "{color.primary.default}" },
+            "width": { "$value": "{border-width.thin}" }
+          },
+          "radius": { "$value": "{radius.md}" },
+          "surface": {
+            "default": { "$value": "{color.bg.surface}" },
+            "hover": { "$value": "{color.bg.muted}" },
+            "selected": { "$value": "{color.primary.muted}" }
+          },
+          "text": {
+            "default": { "$value": "{color.text.primary}" },
+            "selected": { "$value": "{color.primary.default}" }
+          },
+          "focus-ring": { "$value": "{shadow.focus-primary}" },
+          "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } }
+        }
+      }
+    },
+    "feedback": {
+      "$description": "Badges, tags, status icons, progress, skeletons, spinners, and alert/status treatments.",
+      "success": {
+        "background": { "$value": "{color.success.subtle}" },
+        "text": { "$value": "{color.success.text}" },
+        "border": { "$value": "{color.success.default}" }
+      },
+      "warning": {
+        "background": { "$value": "{color.warning.subtle}" },
+        "text": { "$value": "{color.warning.text}" },
+        "border": { "$value": "{color.warning.default}" }
+      },
+      "info": {
+        "background": { "$value": "{color.info.subtle}" },
+        "text": { "$value": "{color.info.text}" },
+        "border": { "$value": "{color.info.default}" }
+      },
+      "danger": {
+        "background": { "$value": "{color.danger.subtle}" },
+        "text": { "$value": "{color.danger.text}" },
+        "border": { "$value": "{color.danger.default}" }
+      },
+      "neutral": {
+        "background": { "$value": "{color.bg.muted}" },
+        "text": { "$value": "{color.text.secondary}" },
+        "border": { "$value": "{color.border.default}" }
+      },
+      "badge": {
+        "$description": "ForgeBadge visual contract. Tone aliases preserve the original badge palette; size, gap, and radius slots cover the BEM variants while display and wrapping remain local.",
+        "neutral": {
+          "background": { "$value": "{color.default.muted}" },
+          "text": { "$value": "{color.default.text}" }
+        },
+        "primary": {
+          "background": { "$value": "{color.primary.muted}" },
+          "text": { "$value": "{color.primary.text}" }
+        },
+        "secondary": {
+          "background": { "$value": "{color.secondary.muted}" },
+          "text": { "$value": "{color.secondary.text}" }
+        },
+        "tertiary": {
+          "background": { "$value": "{color.tertiary.muted}" },
+          "text": { "$value": "{color.tertiary.text}" }
+        },
+        "success": {
+          "background": { "$value": "{color.success.muted}" },
+          "text": { "$value": "{color.success.text}" }
+        },
+        "warning": {
+          "background": { "$value": "{color.warning.muted}" },
+          "text": { "$value": "{color.warning.text}" }
+        },
+        "info": { "background": { "$value": "{color.info.muted}" }, "text": { "$value": "{color.info.text}" } },
+        "error": { "background": { "$value": "{color.error.muted}" }, "text": { "$value": "{color.error.text}" } },
+        "critical": {
+          "background": { "$value": "{color.critical.muted}" },
+          "text": { "$value": "{color.critical.text}" }
+        },
+        "gap": { "$value": "{spacing.1}" },
+        "radius": { "default": { "$value": "{radius.sm}" }, "pill": { "$value": "{radius.full}" } },
+        "font-family": { "$value": "{font.family.sans}" },
+        "line-height": { "$value": "{line-height.tight}" },
+        "size": {
+          "2xs": {
+            "font-size": { "$value": "{size.font.2xs}" },
+            "padding-block": { "$value": "{size.pad-block.2xs}" },
+            "padding-inline": { "$value": "{size.pad-inline.2xs}" }
+          },
+          "xs": {
+            "font-size": { "$value": "{size.font.xs}" },
+            "padding-block": { "$value": "{size.pad-block.xs}" },
+            "padding-inline": { "$value": "{size.pad-inline.xs}" }
+          },
+          "sm": {
+            "font-size": { "$value": "{size.font.sm}" },
+            "padding-block": { "$value": "{size.pad-block.sm}" },
+            "padding-inline": { "$value": "{size.pad-inline.sm}" }
+          },
+          "md": {
+            "font-size": { "$value": "{size.font.md}" },
+            "padding-block": { "$value": "{size.pad-block.md}" },
+            "padding-inline": { "$value": "{size.pad-inline.md}" }
+          },
+          "lg": {
+            "font-size": { "$value": "{size.font.lg}" },
+            "padding-block": { "$value": "{size.pad-block.lg}" },
+            "padding-inline": { "$value": "{size.pad-inline.lg}" }
+          },
+          "xl": {
+            "font-size": { "$value": "{size.font.xl}" },
+            "padding-block": { "$value": "{size.pad-block.xl}" },
+            "padding-inline": { "$value": "{size.pad-inline.xl}" }
+          },
+          "2xl": {
+            "font-size": { "$value": "{size.font.2xl}" },
+            "padding-block": { "$value": "{size.pad-block.2xl}" },
+            "padding-inline": { "$value": "{size.pad-inline.2xl}" }
+          }
+        }
+      },
+      "progress": {
+        "$description": "Progress-bar track and fill roles. Fill aliases preserve the existing tone-to-theme mapping.",
+        "gap": { "$value": "{spacing.1}" },
+        "track": {
+          "background": { "$value": "{color.bg.muted}" },
+          "radius": { "$value": "{radius.full}" }
+        },
+        "fill": {
+          "neutral": { "$value": "{color.default.default}" },
+          "primary": { "$value": "{color.primary.default}" },
+          "secondary": { "$value": "{color.secondary.default}" },
+          "tertiary": { "$value": "{color.tertiary.default}" },
+          "success": { "$value": "{color.success.default}" },
+          "warning": { "$value": "{color.warning.default}" },
+          "info": { "$value": "{color.info.default}" },
+          "error": { "$value": "{color.error.default}" },
+          "critical": { "$value": "{color.critical.default}" }
+        }
+      },
+      "skeleton": {
+        "$description": "Skeleton placeholder fills, shimmer, and shape radii.",
+        "background": {
+          "default": { "$value": "{color.bg.muted}" },
+          "primary": { "$value": "{color.primary.muted}" },
+          "secondary": { "$value": "{color.secondary.muted}" },
+          "tertiary": { "$value": "{color.tertiary.muted}" },
+          "success": { "$value": "{color.success.muted}" },
+          "warning": { "$value": "{color.warning.muted}" },
+          "info": { "$value": "{color.info.muted}" },
+          "error": { "$value": "{color.error.muted}" },
+          "critical": { "$value": "{color.critical.muted}" }
+        },
+        "shimmer": { "$value": "{color.skeleton.shimmer}" },
+        "radius": {
+          "default": { "$value": "{radius.sm}" },
+          "line": { "$value": "{radius.sm}" },
+          "circle": { "$value": "{radius.full}" },
+          "block": { "$value": "{radius.md}" }
+        }
+      },
+      "spinner": {
+        "$description": "Spinner foreground colors, size dimensions, radius, and available border widths.",
+        "color": {
+          "neutral": { "$value": "{color.default.default}" },
+          "primary": { "$value": "{color.primary.default}" },
+          "secondary": { "$value": "{color.secondary.default}" },
+          "tertiary": { "$value": "{color.tertiary.default}" },
+          "success": { "$value": "{color.success.default}" },
+          "warning": { "$value": "{color.warning.default}" },
+          "info": { "$value": "{color.info.default}" },
+          "error": { "$value": "{color.error.default}" },
+          "critical": { "$value": "{color.critical.default}" }
+        },
+        "radius": { "$value": "{radius.full}" },
+        "size": {
+          "2xs": { "$value": "{size.height.2xs}" },
+          "xs": { "$value": "{size.height.xs}" },
+          "sm": { "$value": "{size.height.sm}" },
+          "md": { "$value": "{size.height.md}" },
+          "lg": { "$value": "{size.height.lg}" },
+          "xl": { "$value": "{size.height.xl}" },
+          "2xl": { "$value": "{size.height.2xl}" }
+        },
+        "border-width": {
+          "2xs": { "$value": "{border-width.thick}" },
+          "xs": { "$value": "{border-width.thick}" },
+          "sm": { "$value": "{border-width.thick}" },
+          "md": { "$value": "{border-width.heavy}" },
+          "lg": { "$value": "{border-width.heavy}" }
+        }
+      },
+      "status": {
+        "$description": "Status-icon foreground colors and size dimensions.",
+        "color": {
+          "neutral": { "$value": "{color.default.default}" },
+          "primary": { "$value": "{color.primary.default}" },
+          "secondary": { "$value": "{color.secondary.default}" },
+          "tertiary": { "$value": "{color.tertiary.default}" },
+          "success": { "$value": "{color.success.default}" },
+          "warning": { "$value": "{color.warning.default}" },
+          "info": { "$value": "{color.info.default}" },
+          "error": { "$value": "{color.error.default}" },
+          "critical": { "$value": "{color.critical.default}" }
+        },
+        "size": {
+          "2xs": { "$value": "{size.height.2xs}" },
+          "xs": { "$value": "{size.height.xs}" },
+          "sm": { "$value": "{size.height.sm}" },
+          "md": { "$value": "{size.height.md}" },
+          "lg": { "$value": "{size.height.lg}" },
+          "xl": { "$value": "{size.height.xl}" },
+          "2xl": { "$value": "{size.height.2xl}" }
+        }
+      },
+      "opacity": { "disabled": { "$value": "{opacity.disabled}" }, "loading": { "$value": "{opacity.subtle}" } },
+      "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.linear}" } }
+    },
+    "button-group": {
+      "$description": "Attached and detached button-group chrome. Flex direction, responsive gap formulas, border-radius collapsing, and focus stacking remain local.",
+      "gap": {
+        "none": { "$value": "{spacing.0}" },
+        "xs": { "$value": "{spacing.1}" },
+        "sm": { "$value": "{spacing.2}" },
+        "md": { "$value": "{spacing.3}" }
+      },
+      "border": {
+        "primary": { "$value": "{color.primary.subtle}" },
+        "secondary": { "$value": "{color.secondary.subtle}" },
+        "tertiary": { "$value": "{color.tertiary.subtle}" },
+        "success": { "$value": "{color.success.subtle}" },
+        "warning": { "$value": "{color.warning.subtle}" },
+        "info": { "$value": "{color.info.subtle}" },
+        "error": { "$value": "{color.error.subtle}" },
+        "critical": { "$value": "{color.critical.subtle}" }
+      }
+    },
+    "collapse": {
+      "$description": "Native details disclosure surface, summary interaction states, content divider, disabled treatment, tone variants, and motion. Disclosure behavior and open-state rotation remain local.",
+      "surface": { "$value": "{color.bg.surface}" },
+      "border": { "$value": "{color.border.default}" },
+      "border-width": { "$value": "{border-width.thin}" },
+      "radius": { "$value": "{radius.md}" },
+      "disabled": {
+        "surface": { "$value": "{color.bg.muted}" },
+        "border": { "$value": "{color.border.default}" },
+        "text": { "$value": "{color.text.disabled}" }
+      },
+      "summary": {
+        "padding-block": { "$value": "{spacing.3}" },
+        "padding-inline": { "$value": "{spacing.4}" },
+        "gap": { "$value": "{spacing.2}" },
+        "text": { "$value": "{color.text.primary}" },
+        "font-weight": { "$value": "{font.weight.medium}" },
+        "surface-hover": { "$value": "{color.bg.muted}" },
+        "focus-ring": { "$value": "{shadow.focus-primary}" }
+      },
+      "content": {
+        "padding-block": { "$value": "{spacing.3}" },
+        "padding-inline": { "$value": "{spacing.4}" },
+        "text": { "$value": "{color.text.primary}" },
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" }
+      },
+      "tone": {
+        "primary": { "border": { "$value": "{color.primary.subtle}" }, "text": { "$value": "{color.primary.text}" } },
+        "secondary": {
+          "border": { "$value": "{color.secondary.subtle}" },
+          "text": { "$value": "{color.secondary.text}" }
+        },
+        "tertiary": {
+          "border": { "$value": "{color.tertiary.subtle}" },
+          "text": { "$value": "{color.tertiary.text}" }
+        },
+        "success": { "border": { "$value": "{color.success.subtle}" }, "text": { "$value": "{color.success.text}" } },
+        "warning": { "border": { "$value": "{color.warning.subtle}" }, "text": { "$value": "{color.warning.text}" } },
+        "info": { "border": { "$value": "{color.info.subtle}" }, "text": { "$value": "{color.info.text}" } },
+        "error": { "border": { "$value": "{color.error.subtle}" }, "text": { "$value": "{color.error.text}" } },
+        "critical": { "border": { "$value": "{color.critical.subtle}" }, "text": { "$value": "{color.critical.text}" } }
+      },
+      "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } }
+    },
+    "navigation": {
+      "$description": "Breadcrumbs, menus, menu items, navbar, tabs, pagination, carousel controls, and navigation links.",
+      "navbar": {
+        "$description": "Navbar surface, responsive container spacing, mobile navigation chrome, and hamburger states. Sticky positioning and responsive visibility remain local.",
+        "surface": { "$value": "{color.bg.surface}" },
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" },
+        "container-height": { "$value": "{size.height.xl}" },
+        "container-padding-default": { "$value": "{spacing.4}" },
+        "container-padding-wide": { "$value": "{spacing.6}" },
+        "container-padding-widest": { "$value": "{spacing.8}" },
+        "container-gap-default": { "$value": "{spacing.3}" },
+        "container-gap-wide": { "$value": "{spacing.4}" },
+        "container-gap-widest": { "$value": "{spacing.6}" },
+        "start-gap": { "$value": "{spacing.4}" },
+        "center-gap-default": { "$value": "{spacing.3}" },
+        "center-gap-wide": { "$value": "{spacing.4}" },
+        "center-gap-widest": { "$value": "{spacing.6}" },
+        "end-gap": { "$value": "{spacing.2}" },
+        "hamburger": {
+          "gap": { "$value": "{spacing.1}" },
+          "size": { "$value": "{size.height.md}" },
+          "padding": { "$value": "{spacing.2}" },
+          "radius": { "$value": "{radius.md}" },
+          "text": { "$value": "{color.text.primary}" },
+          "surface-hover": { "$value": "{color.bg.muted}" },
+          "focus-ring": { "$value": "{shadow.focus-primary}" },
+          "bar-height": { "$value": "{border-width.thick}" },
+          "bar-color": { "$value": "{color.text.primary}" }
+        },
+        "mobile-nav": {
+          "gap": { "$value": "{spacing.1}" },
+          "padding-block": { "$value": "{spacing.2}" },
+          "padding-inline": { "$value": "{spacing.3}" },
+          "items-gap": { "$value": "{spacing.1}" },
+          "end-gap": { "$value": "{spacing.2}" },
+          "end-padding-top": { "$value": "{spacing.4}" }
+        }
+      },
+      "navbar-item": {
+        "$description": "Navbar item and inline dropdown visual states. Dropdown positioning and viewport formulas remain local.",
+        "gap": { "$value": "{spacing.2}" },
+        "padding-block": { "$value": "{spacing.1-5}" },
+        "padding-inline": { "$value": "{spacing.3}" },
+        "radius": { "$value": "{radius.md}" },
+        "font-family": { "$value": "{font.family.sans}" },
+        "font-weight": { "$value": "{font.weight.medium}" },
+        "text-default": { "$value": "{color.text.secondary}" },
+        "text-hover": { "$value": "{color.text.primary}" },
+        "text-active": { "$value": "{color.primary.text}" },
+        "text-open": { "$value": "{color.text.primary}" },
+        "surface-hover": { "$value": "{color.bg.muted}" },
+        "surface-active": { "$value": "{color.primary.muted}" },
+        "surface-open": { "$value": "{color.bg.muted}" },
+        "chevron": { "$value": "{color.text.secondary}" },
+        "focus-ring": { "$value": "{shadow.focus-primary}" },
+        "opacity-disabled": { "$value": "{opacity.disabled}" },
+        "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } },
+        "tone": {
+          "primary": {
+            "text": { "$value": "{color.primary.text}" },
+            "surface-hover": { "$value": "{color.primary.muted}" }
+          },
+          "secondary": {
+            "text": { "$value": "{color.secondary.text}" },
+            "surface-hover": { "$value": "{color.secondary.muted}" }
+          },
+          "tertiary": {
+            "text": { "$value": "{color.tertiary.text}" },
+            "surface-hover": { "$value": "{color.tertiary.muted}" }
+          },
+          "success": {
+            "text": { "$value": "{color.success.text}" },
+            "surface-hover": { "$value": "{color.success.muted}" }
+          },
+          "warning": {
+            "text": { "$value": "{color.warning.text}" },
+            "surface-hover": { "$value": "{color.warning.muted}" }
+          },
+          "information": {
+            "text": { "$value": "{color.information.text}" },
+            "surface-hover": { "$value": "{color.information.muted}" }
+          },
+          "error": { "text": { "$value": "{color.error.text}" }, "surface-hover": { "$value": "{color.error.muted}" } },
+          "critical": {
+            "text": { "$value": "{color.critical.text}" },
+            "surface-hover": { "$value": "{color.critical.muted}" }
+          }
+        },
+        "dropdown": {
+          "margin": { "$value": "{spacing.1}" },
+          "padding": { "$value": "{spacing.1}" },
+          "viewport-gutter": { "$value": "{spacing.4}" },
+          "surface": { "$value": "{color.bg.surface}" },
+          "border": { "$value": "{color.border.default}" },
+          "border-width": { "$value": "{border-width.thin}" },
+          "radius": { "$value": "{radius.md}" },
+          "shadow": { "$value": "{shadow.md}" },
+          "item": {
+            "gap": { "$value": "{spacing.2}" },
+            "padding-block": { "$value": "{spacing.2}" },
+            "padding-inline": { "$value": "{spacing.4}" },
+            "text": { "$value": "{color.text.primary}" },
+            "text-disabled": { "$value": "{color.text.disabled}" },
+            "surface-hover": { "$value": "{color.bg.muted}" },
+            "focus-ring": { "$value": "{shadow.focus-primary}" }
+          }
+        }
+      },
+      "surface": {
+        "default": { "$value": "{color.bg.surface}" },
+        "hover": { "$value": "{color.primary.subtle}" },
+        "active": { "$value": "{color.primary.muted}" },
+        "selected": { "$value": "{color.primary.subtle}" },
+        "disabled": { "$value": "{color.bg.muted}" }
+      },
+      "text": {
+        "default": { "$value": "{color.text.primary}" },
+        "hover": { "$value": "{color.text.link-hover}" },
+        "selected": { "$value": "{color.primary.text}" },
+        "disabled": { "$value": "{color.text.disabled}" }
+      },
+      "border": {
+        "default": { "$value": "{color.border.default}" },
+        "selected": { "$value": "{color.primary.default}" },
+        "focus-visible": { "$value": "{color.border.focus}" }
+      },
+      "focus-ring": { "$value": "{shadow.focus-primary}" },
+      "gap": { "$value": "{size.gap.md}" },
+      "font-family": { "$value": "{font.family.sans}" },
+      "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } },
+      "breadcrumb": {
+        "$description": "Breadcrumb trail text, separator, responsive spacing, and keyboard-focus chrome. Navigation layout remains local.",
+        "gap": { "default": { "$value": "{spacing.1}" }, "wide": { "$value": "{spacing.2}" } },
+        "separator": { "$value": "{color.text.tertiary}" },
+        "link": {
+          "text": { "$value": "{color.text.secondary}" },
+          "text-hover": { "$value": "{color.text.primary}" },
+          "radius": { "$value": "{radius.xs}" },
+          "focus-ring": { "$value": "{shadow.focus-primary}" }
+        },
+        "current": { "text": { "$value": "{color.text.primary}" } }
+      },
+      "menu": {
+        "$description": "Menu panel, links, nested submenu chrome, and interaction states. Positioning and orientation remain local.",
+        "surface": {
+          "default": { "$value": "{color.bg.surface}" },
+          "link-default": { "$value": "{color.bg.sunken}" },
+          "link-hover": { "$value": "{color.bg.muted}" },
+          "link-expanded": { "$value": "{color.bg.muted}" }
+        },
+        "text": {
+          "default": { "$value": "{color.text.primary}" },
+          "chevron": { "$value": "{color.text.secondary}" },
+          "disabled": { "$value": "{color.text.disabled}" }
+        },
+        "border": { "default": { "$value": "{color.border.default}" }, "focus": { "$value": "{color.border.focus}" } },
+        "border-width": {
+          "default": { "$value": "{border-width.thin}" },
+          "focus": { "$value": "{border-width.thick}" }
+        },
+        "radius": { "$value": "{radius.md}" },
+        "padding": { "$value": "{spacing.2}" },
+        "link": {
+          "gap": { "$value": "{spacing.2}" },
+          "padding-block": { "$value": "{spacing.2}" },
+          "padding-inline": { "$value": "{spacing.3}" },
+          "radius": { "$value": "{radius.md}" }
+        },
+        "chevron-font-size": { "$value": "{size.font.xs}" },
+        "submenu": {
+          "gap": { "$value": "{spacing.1}" },
+          "padding-inline-start": { "$value": "{spacing.4}" },
+          "nested-margin": { "$value": "{spacing.2}" }
+        },
+        "shadow": { "$value": "{shadow.md}" },
+        "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } },
+        "tone": {
+          "primary": {
+            "text": { "$value": "{color.primary.text}" },
+            "surface-hover": { "$value": "{color.primary.subtle}" }
+          },
+          "secondary": {
+            "text": { "$value": "{color.secondary.text}" },
+            "surface-hover": { "$value": "{color.secondary.subtle}" }
+          },
+          "tertiary": {
+            "text": { "$value": "{color.tertiary.text}" },
+            "surface-hover": { "$value": "{color.tertiary.subtle}" }
+          },
+          "success": {
+            "text": { "$value": "{color.success.text}" },
+            "surface-hover": { "$value": "{color.success.subtle}" }
+          },
+          "warning": {
+            "text": { "$value": "{color.warning.text}" },
+            "surface-hover": { "$value": "{color.warning.subtle}" }
+          },
+          "information": {
+            "text": { "$value": "{color.information.text}" },
+            "surface-hover": { "$value": "{color.information.subtle}" }
+          },
+          "error": {
+            "text": { "$value": "{color.error.text}" },
+            "surface-hover": { "$value": "{color.error.subtle}" }
+          },
+          "critical": {
+            "text": { "$value": "{color.critical.text}" },
+            "surface-hover": { "$value": "{color.critical.subtle}" }
+          }
+        }
+      },
+      "menu-item": {
+        "$description": "Standalone menu-item links and buttons. These slots preserve the compact menu-item geometry and feedback timing distinct from the menu panel links.",
+        "surface": { "active": { "$value": "{color.primary.muted}" } },
+        "text": { "active": { "$value": "{color.primary.text}" } },
+        "radius": { "$value": "{radius.sm}" },
+        "transition": { "duration": { "$value": "{duration.quick}" }, "easing": { "$value": "{easing.standard}" } }
+      },
+      "pagination": {
+        "$description": "Pagination button states, text, borders, focus, motion, and per-size typography. Control dimensions remain local custom properties to preserve the existing pagination scale.",
+        "gap": {
+          "default": { "$value": "{spacing.1}" },
+          "wide": { "$value": "{spacing.2}" },
+          "wider": { "$value": "{spacing.3}" }
+        },
+        "surface": {
+          "default": { "$value": "transparent" },
+          "hover": { "$value": "{color.bg.muted}" },
+          "active": { "$value": "{color.primary.default}" }
+        },
+        "text": {
+          "default": { "$value": "{color.text.primary}" },
+          "active": { "$value": "{color.text.on-primary}" },
+          "ellipsis": { "$value": "{color.text.tertiary}" }
+        },
+        "border": {
+          "default": { "$value": "{color.border.default}" },
+          "hover": { "$value": "{color.border.strong}" },
+          "active": { "$value": "{color.primary.default}" },
+          "width": { "$value": "{border-width.thin}" }
+        },
+        "radius": { "$value": "{radius.md}" },
+        "padding-inline": { "$value": "{spacing.2}" },
+        "focus-ring": { "$value": "{shadow.focus-primary}" },
+        "opacity": { "disabled": { "$value": "{opacity.disabled}" } },
+        "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } },
+        "font": {
+          "2xs": { "$value": "{size.font.2xs}" },
+          "xs": { "$value": "{size.font.xs}" },
+          "sm": { "$value": "{size.font.xs}" },
+          "md": { "$value": "{size.font.sm}" },
+          "lg": { "$value": "{size.font.md}" },
+          "xl": { "$value": "{size.font.lg}" },
+          "2xl": { "$value": "{size.font.xl}" }
+        }
+      },
+      "carousel": {
+        "$description": "Carousel viewport, controls, indicators, autoplay affordance, focus states, tone accents, and motion. Slide measurement, transforms, pointer handling, and autoplay behavior remain local.",
+        "focus": {
+          "border": { "$value": "{color.primary.default}" },
+          "border-width": { "$value": "{border-width.thick}" },
+          "offset": { "$value": "{spacing.micro}" }
+        },
+        "viewport": { "radius": { "$value": "{radius.lg}" } },
+        "track": {
+          "transition": { "duration": { "$value": "{duration.slow}" }, "easing": { "$value": "{easing.standard}" } }
+        },
+        "control": {
+          "size": { "$value": "40px" },
+          "radius": { "$value": "{radius.full}" },
+          "border": { "$value": "{color.border.default}" },
+          "border-width": { "$value": "{border-width.thin}" },
+          "surface": { "default": { "$value": "{color.bg.surface}" }, "hover": { "$value": "{color.bg.forge-alt}" } },
+          "text": { "$value": "inherit" },
+          "font-size": { "$value": "24px" },
+          "line-height": { "$value": 1 },
+          "shadow": { "$value": "{shadow.sm}" },
+          "offset": { "$value": "{spacing.2}" },
+          "opacity": { "disabled": { "$value": 0.4 } }
+        },
+        "indicators": { "gap": { "$value": "{spacing.2}" }, "margin-top": { "$value": "{spacing.3}" } },
+        "indicator": {
+          "target-size": { "$value": "24px" },
+          "dot-size": { "$value": "10px" },
+          "radius": { "$value": "{radius.full}" },
+          "surface": {
+            "default": { "$value": "transparent" },
+            "dot-default": { "$value": "{color.border.default}" },
+            "dot-selected": { "$value": "{color.primary.default}" }
+          },
+          "transition": { "duration": { "$value": "{duration.moderate}" }, "easing": { "$value": "{easing.standard}" } }
+        },
+        "autoplay": {
+          "size": { "$value": "28px" },
+          "margin-top": { "$value": "{spacing.2}" },
+          "radius": { "$value": "{radius.full}" },
+          "border": { "$value": "{color.border.default}" },
+          "border-width": { "$value": "{border-width.thin}" },
+          "surface": { "default": { "$value": "{color.bg.surface}" }, "hover": { "$value": "{color.bg.forge-alt}" } },
+          "text": { "$value": "inherit" },
+          "font-size": { "$value": "12px" },
+          "line-height": { "$value": 1 },
+          "shadow": { "$value": "{shadow.sm}" }
+        },
+        "tone": {
+          "primary": {
+            "indicator": { "$value": "{color.primary.default}" },
+            "control-text": { "$value": "{color.primary.text}" },
+            "control-border": { "$value": "{color.primary.subtle}" }
+          },
+          "secondary": {
+            "indicator": { "$value": "{color.secondary.default}" },
+            "control-text": { "$value": "{color.secondary.text}" },
+            "control-border": { "$value": "{color.secondary.subtle}" }
+          },
+          "tertiary": {
+            "indicator": { "$value": "{color.tertiary.default}" },
+            "control-text": { "$value": "{color.tertiary.text}" },
+            "control-border": { "$value": "{color.tertiary.subtle}" }
+          },
+          "success": {
+            "indicator": { "$value": "{color.success.default}" },
+            "control-text": { "$value": "{color.success.text}" },
+            "control-border": { "$value": "{color.success.subtle}" }
+          },
+          "warning": {
+            "indicator": { "$value": "{color.warning.default}" },
+            "control-text": { "$value": "{color.warning.text}" },
+            "control-border": { "$value": "{color.warning.subtle}" }
+          },
+          "info": {
+            "indicator": { "$value": "{color.info.default}" },
+            "control-text": { "$value": "{color.info.text}" },
+            "control-border": { "$value": "{color.info.subtle}" }
+          },
+          "error": {
+            "indicator": { "$value": "{color.error.default}" },
+            "control-text": { "$value": "{color.error.text}" },
+            "control-border": { "$value": "{color.error.subtle}" }
+          },
+          "critical": {
+            "indicator": { "$value": "{color.critical.default}" },
+            "control-text": { "$value": "{color.critical.text}" },
+            "control-border": { "$value": "{color.critical.subtle}" }
+          }
+        }
+      },
+      "tabs": {
+        "$description": "Tab list, line/pill variants, close/add affordances, and panel spacing. Scrolling and tab measurement remain local.",
+        "bar": {
+          "border": { "$value": "{color.border.default}" },
+          "border-width": { "$value": "{border-width.thick}" }
+        },
+        "list": {
+          "pill": {
+            "surface": { "$value": "{color.bg.muted}" },
+            "radius": { "$value": "{radius.md}" },
+            "padding": { "$value": "{spacing.1}" },
+            "gap": { "$value": "{spacing.1}" }
+          }
+        },
+        "wrapper": {
+          "gap": { "$value": "{spacing.2}" },
+          "line": {
+            "padding-block": { "$value": "{spacing.2}" },
+            "padding-inline": { "$value": "{spacing.4}" },
+            "radius": { "$value": "{radius.sm}" },
+            "text-default": { "$value": "{color.text.secondary}" },
+            "text-hover": { "$value": "{color.text.primary}" },
+            "text-active": { "$value": "{color.primary.text}" },
+            "surface-active": { "$value": "{color.primary.subtle}" },
+            "indicator-default": { "$value": "transparent" },
+            "indicator-hover": { "$value": "{color.border.strong}" },
+            "indicator-active": { "$value": "{color.primary.text}" },
+            "indicator-width": { "$value": "{border-width.thick}" },
+            "indicator-radius": { "$value": "{radius.xs}" },
+            "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } }
+          },
+          "pill": {
+            "padding-block": { "$value": "{spacing.2}" },
+            "padding-inline": { "$value": "{spacing.3}" },
+            "radius": { "$value": "{radius.sm}" },
+            "text-default": { "$value": "{color.text.secondary}" },
+            "text-hover": { "$value": "{color.text.primary}" },
+            "text-active": { "$value": "{color.text.primary}" },
+            "surface-hover": { "$value": "{color.bg.sunken}" },
+            "surface-active": { "$value": "{color.bg.surface}" },
+            "shadow-active": { "$value": "{shadow.sm}" },
+            "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } }
+          }
+        },
+        "surface": {
+          "default": { "$value": "transparent" },
+          "pill": { "$value": "{color.bg.muted}" },
+          "selected": { "$value": "{color.primary.subtle}" },
+          "hover": { "$value": "{color.bg.muted}" },
+          "indicator-default": { "$value": "transparent" }
+        },
+        "text": {
+          "default": { "$value": "{color.text.primary}" },
+          "hover": { "$value": "{color.text.primary}" },
+          "muted": { "$value": "{color.text.tertiary}" }
+        },
+        "border": {
+          "line": { "$value": "{color.border.default}" },
+          "selected": { "$value": "{color.primary.default}" },
+          "hover": { "$value": "{color.border.focus}" },
+          "width": { "$value": "{border-width.thick}" }
+        },
+        "radius": {
+          "indicator": { "$value": "{radius.xs}" },
+          "close": { "$value": "{radius.sm}" },
+          "focus": { "$value": "{radius.xs}" },
+          "add-focus": { "$value": "{radius.sm}" }
+        },
+        "shadow": { "selected": { "$value": "{shadow.sm}" }, "focus": { "$value": "{shadow.focus-primary}" } },
+        "padding": {
+          "add-block": { "$value": "{spacing.2}" },
+          "add-inline": { "$value": "{spacing.3}" },
+          "panel-block-start": { "$value": "{spacing.4}" }
+        },
+        "close-padding": { "$value": "2px" },
+        "close-font-size": { "$value": "{size.font.xs}" },
+        "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } },
+        "opacity": { "disabled": { "$value": "{opacity.disabled}" } }
+      },
+      "menubar": {
+        "$description": "ForgeMenubar horizontal root, item links, nested submenu chrome, and interaction states. Recursive menu behavior, open-path state, and positioning remain local.",
+        "gap": { "$value": "{spacing.1}" },
+        "padding": { "$value": "{spacing.1}" },
+        "surface": { "$value": "{color.bg.surface}" },
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" },
+        "radius": { "$value": "{radius.md}" },
+        "item": { "opacity-disabled": { "$value": "{opacity.disabled}" } },
+        "link": {
+          "gap": { "$value": "{spacing.2}" },
+          "padding-block": { "$value": "{spacing.2}" },
+          "padding-inline": { "$value": "{spacing.3}" },
+          "radius": { "$value": "{radius.md}" },
+          "text": { "$value": "{color.text.primary}" },
+          "text-disabled": { "$value": "{color.text.disabled}" },
+          "surface-hover": { "$value": "{color.bg.muted}" },
+          "text-hover": { "$value": "{color.text.primary}" },
+          "font-family": { "$value": "{font.family.sans}" },
+          "focus-ring": { "$value": "{color.border.focus}" },
+          "focus-border-width": { "$value": "{border-width.thick}" },
+          "focus-offset": { "$value": "2px" },
+          "transition": { "duration": { "$value": "0.15s" }, "easing": { "$value": "ease" } }
+        },
+        "chevron": { "text": { "$value": "{color.text.secondary}" }, "font-size": { "$value": "{size.font.xs}" } },
+        "submenu": {
+          "margin": { "$value": "{spacing.1}" },
+          "nested-margin": { "$value": "{spacing.1}" },
+          "padding": { "$value": "{spacing.1}" },
+          "min-width": { "$value": "180px" },
+          "viewport-gutter": { "$value": "{spacing.4}" },
+          "gap": { "$value": "{spacing.1}" },
+          "surface": { "$value": "{color.bg.surface}" },
+          "border": { "$value": "{color.border.default}" },
+          "border-width": { "$value": "{border-width.thin}" },
+          "radius": { "$value": "{radius.md}" },
+          "shadow": { "$value": "{shadow.md}" },
+          "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } },
+          "starting-offset": { "$value": "0.5rem" }
+        }
+      },
+      "list": {
+        "$description": "List typography, item padding, separators, markers, and description-list spacing. Grid columns and responsive formulas remain local.",
+        "line-height": { "$value": "{line-height.normal}" },
+        "border": { "default": { "$value": "{color.border.default}" }, "width": { "$value": "{border-width.thin}" } },
+        "marker-padding-inline-start": { "$value": "{spacing.6}" },
+        "term-padding-inline-end": { "$value": "{spacing.6}" },
+        "description-gap-wide": { "$value": "{spacing.6}" },
+        "description-gap-wider": { "$value": "{spacing.8}" },
+        "size": {
+          "2xs": { "font": { "$value": "{size.font.2xs}" }, "padding-block": { "$value": "{size.pad-block.2xs}" } },
+          "xs": { "font": { "$value": "{size.font.xs}" }, "padding-block": { "$value": "{size.pad-block.xs}" } },
+          "sm": { "font": { "$value": "{size.font.sm}" }, "padding-block": { "$value": "{size.pad-block.sm}" } },
+          "md": { "font": { "$value": "{size.font.md}" }, "padding-block": { "$value": "{size.pad-block.md}" } },
+          "lg": { "font": { "$value": "{size.font.lg}" }, "padding-block": { "$value": "{size.pad-block.lg}" } },
+          "xl": { "font": { "$value": "{size.font.xl}" }, "padding-block": { "$value": "{size.pad-block.xl}" } },
+          "2xl": { "font": { "$value": "{size.font.2xl}" }, "padding-block": { "$value": "{size.pad-block.2xl}" } }
+        },
+        "tone": {
+          "primary": {
+            "marker": { "$value": "{color.primary.default}" },
+            "border": { "$value": "{color.primary.subtle}" }
+          },
+          "secondary": {
+            "marker": { "$value": "{color.secondary.default}" },
+            "border": { "$value": "{color.secondary.subtle}" }
+          },
+          "tertiary": {
+            "marker": { "$value": "{color.tertiary.default}" },
+            "border": { "$value": "{color.tertiary.subtle}" }
+          },
+          "success": {
+            "marker": { "$value": "{color.success.default}" },
+            "border": { "$value": "{color.success.subtle}" }
+          },
+          "warning": {
+            "marker": { "$value": "{color.warning.default}" },
+            "border": { "$value": "{color.warning.subtle}" }
+          },
+          "info": { "marker": { "$value": "{color.info.default}" }, "border": { "$value": "{color.info.subtle}" } },
+          "error": { "marker": { "$value": "{color.error.default}" }, "border": { "$value": "{color.error.subtle}" } },
+          "critical": {
+            "marker": { "$value": "{color.critical.default}" },
+            "border": { "$value": "{color.critical.subtle}" }
+          }
+        }
+      }
+    },
+    "typography": {
+      "$description": "ForgeTypography, email typography, quotes, code, markdown, and content text. Named variants and interaction chrome are the canonical Figma roles; alignment, truncation, and anchor positioning remain structural.",
+      "base": {
+        "font-family": { "$value": "{font.family.sans}" },
+        "line-height": { "$value": "{line-height.normal}" }
+      },
+      "font-family": {
+        "sans": { "$value": "{font.family.sans}" },
+        "mono": { "$value": "{font.family.mono}" }
+      },
+      "font-size": {
+        "xs": { "$value": "{font.size.xs}" },
+        "sm": { "$value": "{font.size.sm}" },
+        "md": { "$value": "{font.size.md}" },
+        "lg": { "$value": "{font.size.lg}" },
+        "xl": { "$value": "{font.size.xl}" },
+        "2xl": { "$value": "{font.size.2xl}" },
+        "3xl": { "$value": "{font.size.3xl}" },
+        "4xl": { "$value": "{font.size.4xl}" },
+        "5xl": { "$value": "{font.size.5xl}" }
+      },
+      "font-weight": {
+        "regular": { "$value": "{font.weight.regular}" },
+        "medium": { "$value": "{font.weight.medium}" },
+        "semibold": { "$value": "{font.weight.semibold}" },
+        "bold": { "$value": "{font.weight.bold}" }
+      },
+      "line-height": {
+        "tight": { "$value": "{line-height.tight}" },
+        "snug": { "$value": "{line-height.snug}" },
+        "normal": { "$value": "{line-height.normal}" },
+        "relaxed": { "$value": "{line-height.relaxed}" },
+        "loose": { "$value": "{line-height.loose}" }
+      },
+      "letter-spacing": {
+        "tight": { "$value": "{letter-spacing.tight}" },
+        "normal": { "$value": "{letter-spacing.normal}" },
+        "wide": { "$value": "{letter-spacing.wide}" }
+      },
+      "margin-bottom": {
+        "3": { "$value": "{spacing.3}" },
+        "4": { "$value": "{spacing.4}" },
+        "5": { "$value": "{spacing.5}" }
+      },
+      "variant": {
+        "display": {
+          "font-family": { "$value": "{font.family.sans}" },
+          "font-size": { "$value": "{font.size.5xl}" },
+          "font-weight": { "$value": "{font.weight.bold}" },
+          "line-height": { "$value": "{line-height.tight}" },
+          "letter-spacing": { "$value": "{letter-spacing.tight}" },
+          "margin-bottom": { "$value": "{spacing.5}" }
+        },
+        "h1": {
+          "font-family": { "$value": "{font.family.sans}" },
+          "font-size": { "$value": "{font.size.4xl}" },
+          "font-weight": { "$value": "{font.weight.semibold}" },
+          "line-height": { "$value": "{line-height.tight}" },
+          "letter-spacing": { "$value": "{letter-spacing.tight}" },
+          "margin-bottom": { "$value": "{spacing.5}" }
+        },
+        "h2": {
+          "font-family": { "$value": "{font.family.sans}" },
+          "font-size": { "$value": "{font.size.3xl}" },
+          "font-weight": { "$value": "{font.weight.semibold}" },
+          "line-height": { "$value": "{line-height.tight}" },
+          "letter-spacing": { "$value": "{letter-spacing.tight}" },
+          "margin-bottom": { "$value": "{spacing.4}" }
+        },
+        "h3": {
+          "font-family": { "$value": "{font.family.sans}" },
+          "font-size": { "$value": "{font.size.2xl}" },
+          "font-weight": { "$value": "{font.weight.medium}" },
+          "line-height": { "$value": "{line-height.snug}" },
+          "letter-spacing": { "$value": "{letter-spacing.tight}" },
+          "margin-bottom": { "$value": "{spacing.4}" }
+        },
+        "h4": {
+          "font-family": { "$value": "{font.family.sans}" },
+          "font-size": { "$value": "{font.size.xl}" },
+          "font-weight": { "$value": "{font.weight.medium}" },
+          "line-height": { "$value": "{line-height.snug}" },
+          "letter-spacing": { "$value": "{letter-spacing.tight}" },
+          "margin-bottom": { "$value": "{spacing.4}" }
+        },
+        "h5": {
+          "font-family": { "$value": "{font.family.sans}" },
+          "font-size": { "$value": "{font.size.lg}" },
+          "font-weight": { "$value": "{font.weight.medium}" },
+          "line-height": { "$value": "{line-height.snug}" },
+          "letter-spacing": { "$value": "{letter-spacing.normal}" },
+          "margin-bottom": { "$value": "{spacing.3}" }
+        },
+        "h6": {
+          "font-family": { "$value": "{font.family.sans}" },
+          "font-size": { "$value": "{font.size.md}" },
+          "font-weight": { "$value": "{font.weight.medium}" },
+          "line-height": { "$value": "{line-height.normal}" },
+          "letter-spacing": { "$value": "{letter-spacing.normal}" },
+          "margin-bottom": { "$value": "{spacing.3}" }
+        },
+        "body-lg": {
+          "font-family": { "$value": "{font.family.sans}" },
+          "font-size": { "$value": "{font.size.lg}" },
+          "font-weight": { "$value": "{font.weight.regular}" },
+          "line-height": { "$value": "{line-height.relaxed}" },
+          "letter-spacing": { "$value": "{letter-spacing.normal}" },
+          "margin-bottom": { "$value": "{spacing.3}" }
+        },
+        "body-md": {
+          "font-family": { "$value": "{font.family.sans}" },
+          "font-size": { "$value": "{font.size.md}" },
+          "font-weight": { "$value": "{font.weight.regular}" },
+          "line-height": { "$value": "{line-height.normal}" },
+          "letter-spacing": { "$value": "{letter-spacing.normal}" },
+          "margin-bottom": { "$value": "{spacing.3}" }
+        },
+        "body-sm": {
+          "font-family": { "$value": "{font.family.sans}" },
+          "font-size": { "$value": "{font.size.sm}" },
+          "font-weight": { "$value": "{font.weight.regular}" },
+          "line-height": { "$value": "{line-height.normal}" },
+          "letter-spacing": { "$value": "{letter-spacing.normal}" },
+          "margin-bottom": { "$value": "{spacing.3}" }
+        },
+        "body-xs": {
+          "font-family": { "$value": "{font.family.sans}" },
+          "font-size": { "$value": "{font.size.xs}" },
+          "font-weight": { "$value": "{font.weight.regular}" },
+          "line-height": { "$value": "{line-height.snug}" },
+          "letter-spacing": { "$value": "{letter-spacing.wide}" },
+          "margin-bottom": { "$value": "{spacing.3}" }
+        },
+        "label": {
+          "font-family": { "$value": "{font.family.sans}" },
+          "font-size": { "$value": "{font.size.sm}" },
+          "font-weight": { "$value": "{font.weight.medium}" },
+          "line-height": { "$value": "{line-height.snug}" },
+          "letter-spacing": { "$value": "{letter-spacing.normal}" }
+        },
+        "caption": {
+          "font-family": { "$value": "{font.family.sans}" },
+          "font-size": { "$value": "{font.size.xs}" },
+          "font-weight": { "$value": "{font.weight.regular}" },
+          "line-height": { "$value": "{line-height.snug}" },
+          "letter-spacing": { "$value": "{letter-spacing.wide}" }
+        },
+        "code": {
+          "font-family": { "$value": "{font.family.mono}" },
+          "font-size": { "$value": "{font.size.sm}" },
+          "font-weight": { "$value": "{font.weight.regular}" },
+          "line-height": { "$value": "{line-height.snug}" },
+          "letter-spacing": { "$value": "{letter-spacing.normal}" }
+        }
+      },
+      "color": {
+        "default": { "$value": "{color.text.primary}" },
+        "primary": { "$value": "{color.text.primary}" },
+        "secondary": { "$value": "{color.text.secondary}" },
+        "muted": { "$value": "{color.text.tertiary}" },
+        "tertiary": { "$value": "{color.text.tertiary}" },
+        "disabled": { "$value": "{color.text.disabled}" },
+        "inverse": { "$value": "{color.text.inverse}" },
+        "link": { "$value": "{color.text.link}" },
+        "link-visited": { "$value": "{color.text.link-visited}" },
+        "link-hover": { "$value": "{color.text.link-hover}" },
+        "neutral": { "$value": "{color.default.text}" },
+        "success": { "$value": "{color.success.text}" },
+        "warning": { "$value": "{color.warning.text}" },
+        "info": { "$value": "{color.info.text}" },
+        "error": { "$value": "{color.error.text}" },
+        "critical": { "$value": "{color.critical.text}" },
+        "invalid": { "$value": "{color.danger.text}" }
+      },
+      "override": {
+        "font-weight": {
+          "regular": { "$value": "{font.weight.regular}" },
+          "medium": { "$value": "{font.weight.medium}" },
+          "semibold": { "$value": "{font.weight.semibold}" },
+          "bold": { "$value": "{font.weight.bold}" }
+        },
+        "line-height": {
+          "tight": { "$value": "{line-height.tight}" },
+          "snug": { "$value": "{line-height.snug}" },
+          "normal": { "$value": "{line-height.normal}" },
+          "relaxed": { "$value": "{line-height.relaxed}" },
+          "loose": { "$value": "{line-height.loose}" }
+        }
+      },
+      "link": {
+        "radius": { "$value": "{radius.2xs}" },
+        "focus-ring": { "$value": "{shadow.focus-primary}" },
+        "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } }
+      },
+      "popup": {
+        "margin-top": { "$value": "{spacing.1}" },
+        "max-width": { "$value": "480px" },
+        "padding-block": { "$value": "{spacing.2}" },
+        "padding-inline": { "$value": "{spacing.3}" },
+        "surface": { "$value": "{color.bg.surface}" },
+        "text": { "$value": "{color.text.primary}" },
+        "border-width": { "$value": "{border-width.thin}" },
+        "border": { "$value": "{color.border.default}" },
+        "radius": { "$value": "{radius.md}" },
+        "shadow": { "$value": "{shadow.md}" },
+        "font-family": { "$value": "{font.family.sans}" },
+        "font-size": { "$value": "{font.size.sm}" },
+        "font-weight": { "$value": "{font.weight.regular}" },
+        "line-height": { "$value": "{line-height.normal}" },
+        "letter-spacing": { "$value": "{letter-spacing.normal}" }
+      },
+      "margin": { "$value": "{spacing.0}" }
+    },
+    "theme-toggle": {
+      "$description": "ForgeThemeToggle focus indicator and label typography; button surface, border, spacing, and motion reuse the button contract.",
+      "focus": {
+        "width": { "$value": "{border-width.thick}" },
+        "offset": { "$value": "2px" }
+      },
+      "label": {
+        "font-family": { "$value": "{font.family.sans}" },
+        "font-size": { "$value": "{font.size.sm}" },
+        "font-weight": { "$value": "{font.weight.medium}" },
+        "line-height": { "$value": "{line-height.snug}" },
+        "letter-spacing": { "$value": "{letter-spacing.normal}" }
+      },
+      "icon": {
+        "color": { "default": { "$value": "{color.text.secondary}" } },
+        "size": { "$value": "{font.size.lg}" }
+      },
+      "border": { "color": { "hover": { "$value": "{color.border.strong}" } } },
+      "padding": { "block": { "$value": "{spacing.2}" }, "inline": { "$value": "{spacing.3}" } }
+    },
+    "icon": {
+      "$description": "All 106 icon glyph components inherit currentColor and consumer-controlled size. Do not create a token per glyph.",
+      "color": {
+        "default": { "$value": "{color.text.primary}" },
+        "muted": { "$value": "{color.text.tertiary}" },
+        "disabled": { "$value": "{color.text.disabled}" },
+        "selected": { "$value": "{color.primary.default}" }
+      },
+      "size": { "$value": "{size.icon.md}" },
+      "opacity": { "disabled": { "$value": "{opacity.disabled}" }, "muted": { "$value": "{opacity.muted}" } },
+      "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } }
+    },
+    "media": {
+      "$description": "Avatar, responsive image/video, background video, device mock, chat, and media surfaces.",
+      "surface": {
+        "default": { "$value": "{color.bg.surface}" },
+        "placeholder": { "$value": "{color.bg.muted}" },
+        "overlay": { "$value": "{color.bg.scrim}" }
+      },
+      "text": { "default": { "$value": "{color.text.primary}" }, "inverse": { "$value": "{color.text.inverse}" } },
+      "border": { "default": { "$value": "{color.border.default}" } },
+      "radius": { "$value": "{radius.lg}" },
+      "shadow": { "$value": "{shadow.md}" },
+      "avatar": {
+        "$description": "ForgeAvatar fallback fills, presence colours, and outline roles. Pixel dimensions remain local because the avatar scale is not the control-height scale.",
+        "surface": {
+          "neutral": { "$value": "{color.default.default}" },
+          "primary": { "$value": "{color.primary.default}" },
+          "secondary": { "$value": "{color.secondary.default}" },
+          "tertiary": { "$value": "{color.tertiary.default}" },
+          "success": { "$value": "{color.success.default}" },
+          "warning": { "$value": "{color.warning.default}" },
+          "info": { "$value": "{color.info.default}" },
+          "error": { "$value": "{color.error.default}" },
+          "critical": { "$value": "{color.critical.default}" }
+        },
+        "text": { "default": { "$value": "{color.text.on-primary}" } },
+        "border": { "status": { "$value": "{color.bg.surface}" } },
+        "radius": {
+          "circle": { "$value": "{radius.full}" },
+          "square": { "$value": "{radius.md}" },
+          "status": { "$value": "{radius.full}" }
+        },
+        "status": {
+          "online": { "$value": "{color.success.default}" },
+          "offline": { "$value": "{color.border.default}" },
+          "away": { "$value": "{color.warning.default}" },
+          "busy": { "$value": "{color.danger.default}" }
+        }
+      },
+      "video": {
+        "$description": "Responsive video surface; sizing, aspect ratio, object-fit, and playback behavior remain local/native.",
+        "surface": { "default": { "$value": "{color.bg.sunken}" } }
+      },
+      "background": {
+        "$description": "Background-video content chrome; positioning and playback behavior remain local.",
+        "padding": { "$value": "{spacing.8}" }
+      },
+      "device": {
+        "$description": "ForgeDeviceMock frame chrome. Em-based dimensions and orientation geometry remain local so the size prop scales the complete device.",
+        "screen": {
+          "surface": { "$value": "{color.bg.surface}" },
+          "text": { "$value": "{color.text.primary}" }
+        },
+        "frame": {
+          "surface": { "$value": "{color.text.primary}" },
+          "shadow-handheld": { "$value": "{shadow.xl}" },
+          "shadow-desktop": { "$value": "{shadow.xl}" },
+          "shadow-browser": { "$value": "{shadow.lg}" }
+        },
+        "detail": { "surface": { "$value": "{color.text.tertiary}" } },
+        "browser": {
+          "surface": { "$value": "{color.bg.surface}" },
+          "chrome": { "$value": "{color.bg.muted}" },
+          "border": { "$value": "{color.border.default}" },
+          "border-width": { "$value": "{border-width.thin}" },
+          "radius": { "$value": "{radius.xl}" },
+          "address-text": { "$value": "{color.text.secondary}" },
+          "address-surface": { "$value": "{color.bg.surface}" },
+          "address-radius": { "$value": "{radius.full}" },
+          "control-surface": { "$value": "{color.border.strong}" },
+          "control-radius": { "$value": "{radius.full}" }
+        },
+        "camera-radius": { "$value": "{radius.full}" }
+      },
+      "chat-area": {
+        "$description": "ForgeChatArea conversation surface, optional header/footer chrome, message-list rhythm, and responsive padding. Scrolling, auto-scroll, slot presence, and message rendering remain local.",
+        "surface": { "$value": "{color.bg.surface}" },
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" },
+        "radius": { "$value": "{radius.lg}" },
+        "header": {
+          "padding-block": { "$value": "{spacing.3}" },
+          "padding-inline": { "$value": "{spacing.4}" },
+          "padding-block-wide": { "$value": "{spacing.4}" },
+          "padding-inline-wide": { "$value": "{spacing.6}" },
+          "border": { "$value": "{color.border.default}" }
+        },
+        "log": {
+          "padding": { "$value": "{spacing.4}" },
+          "padding-wide": { "$value": "{spacing.6}" }
+        },
+        "messages": {
+          "gap": { "$value": "{spacing.3}" },
+          "gap-wide": { "$value": "{spacing.4}" }
+        },
+        "footer": {
+          "padding-block": { "$value": "{spacing.3}" },
+          "padding-inline": { "$value": "{spacing.4}" },
+          "padding-block-wide": { "$value": "{spacing.4}" },
+          "padding-inline-wide": { "$value": "{spacing.6}" },
+          "border": { "$value": "{color.border.default}" }
+        }
+      }
+    },
+    "chat-bubble": {
+      "$description": "ForgeChatBubble message rhythm, bubble chrome, typography, pending treatment, and primary variant. Avatar composition and message alignment remain local.",
+      "gap": { "$value": "{spacing.2}" },
+      "column-gap": { "$value": "{spacing.1}" },
+      "meta": {
+        "gap": { "$value": "{spacing.2}" },
+        "padding-inline": { "$value": "{spacing.1}" }
+      },
+      "body": {
+        "padding-block": { "$value": "{spacing.2}" },
+        "padding-inline": { "$value": "{spacing.3}" },
+        "surface": { "$value": "{color.bg.sunken}" },
+        "text": { "$value": "{color.text.primary}" },
+        "radius": { "$value": "{radius.lg}" },
+        "tail-radius": { "$value": "{radius.xs}" },
+        "font-family": { "$value": "{font.family.sans}" },
+        "font-size": { "$value": "{size.font.sm}" },
+        "line-height": { "$value": "{line-height.normal}" },
+        "font-weight": { "$value": "{font.weight.regular}" }
+      },
+      "primary": {
+        "surface": { "$value": "{color.primary.default}" },
+        "text": { "$value": "{color.text.on-primary}" }
+      },
+      "pending-opacity": { "$value": "{opacity.subtle}" },
+      "footer-padding-inline": { "$value": "{spacing.1}" }
+    },
+    "in-view": {
+      "$description": "ForgeInView demo content chrome. IntersectionObserver behavior and reveal animation styles remain local.",
+      "padding": { "$value": "{spacing.4}" },
+      "radius": { "$value": "{radius.lg}" },
+      "surface": { "$value": "{color.primary.subtle}" },
+      "text": { "$value": "{color.primary.text}" },
+      "font-weight": { "$value": "{font.weight.semibold}" }
+    },
+    "code": {
+      "$description": "Code block, Monaco, Mermaid, scanner, barcode, QR, and matrix-code rendering surfaces.",
+      "surface": { "default": { "$value": "{color.bg.sunken}" }, "raised": { "$value": "{color.bg.raised}" } },
+      "text": { "default": { "$value": "{color.text.primary}" }, "muted": { "$value": "{color.text.tertiary}" } },
+      "border": { "default": { "$value": "{color.border.default}" } },
+      "border-width": { "$value": "{border-width.thin}" },
+      "radius": { "$value": "{radius.md}" },
+      "padding": { "$value": "{spacing.md}" },
+      "typography": {
+        "font-family": { "$value": "{font.family.mono}" },
+        "font-size": { "$value": "{font.size.sm}" },
+        "line-height": { "$value": "{line-height.relaxed}" }
+      },
+      "header": {
+        "padding-block": { "$value": "{spacing.2}" },
+        "padding-inline": { "$value": "{spacing.4}" },
+        "gap": { "$value": "{spacing.3}" },
+        "surface": { "$value": "{color.bg.muted}" },
+        "border": { "$value": "{color.border.default}" }
+      },
+      "filename": {
+        "font-family": { "$value": "{font.family.mono}" },
+        "font-size": { "$value": "{font.size.xs}" },
+        "text": { "$value": "{color.text.secondary}" }
+      },
+      "language": {
+        "font-family": { "$value": "{font.family.mono}" },
+        "font-size": { "$value": "{font.size.xs}" },
+        "text": { "$value": "{color.text.tertiary}" }
+      },
+      "copy": {
+        "gap": { "$value": "{spacing.1}" },
+        "padding-block": { "$value": "{spacing.1}" },
+        "padding-inline": { "$value": "{spacing.2}" },
+        "border": {
+          "default": { "$value": "{color.border.default}" },
+          "hover": { "$value": "{color.border.strong}" },
+          "focus-visible": { "$value": "{color.border.focus}" }
+        },
+        "border-width": {
+          "default": { "$value": "{border-width.thin}" },
+          "focus-visible": { "$value": "{border-width.thick}" }
+        },
+        "radius": { "$value": "{radius.sm}" },
+        "surface": { "default": { "$value": "transparent" }, "hover": { "$value": "{color.bg.surface}" } },
+        "text": { "default": { "$value": "{color.text.tertiary}" }, "hover": { "$value": "{color.text.primary}" } },
+        "font-family": { "$value": "{font.family.sans}" },
+        "font-size": { "$value": "{font.size.xs}" },
+        "focus-ring": { "$value": "{shadow.focus-primary}" },
+        "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } }
+      },
+      "gutter": {
+        "padding-block": { "$value": "{spacing.4}" },
+        "padding-inline-start": { "$value": "{spacing.4}" },
+        "padding-inline-end": { "$value": "{spacing.2}" },
+        "text": { "$value": "{color.text.disabled}" }
+      },
+      "error": {
+        "margin-bottom": { "$value": "{spacing.2}" },
+        "font-weight": { "$value": "{font.weight.semibold}" },
+        "text": { "$value": "{color.text.secondary}" }
+      },
+      "variant": {
+        "primary": { "border": { "$value": "{color.primary.subtle}" } },
+        "secondary": { "border": { "$value": "{color.secondary.subtle}" } },
+        "tertiary": { "border": { "$value": "{color.tertiary.subtle}" } },
+        "success": { "border": { "$value": "{color.success.subtle}" } },
+        "warning": { "border": { "$value": "{color.warning.subtle}" } },
+        "info": { "border": { "$value": "{color.info.subtle}" } },
+        "error": { "border": { "$value": "{color.error.subtle}" } },
+        "critical": { "border": { "$value": "{color.critical.subtle}" } }
+      },
+      "barcode": {
+        "$description": "ForgeBarcode wrapper rhythm. Bar and background colours remain API-controlled SVG properties so barcode scannability is not coupled to the theme.",
+        "figure": { "gap": { "$value": "{spacing.3}" } },
+        "actions": { "gap": { "$value": "{spacing.2}" } }
+      },
+      "scanner": {
+        "$description": "ForgeCodeScanner camera viewport, scan reticle, action rhythm, placeholder, and decoded-result chrome. Camera permissions, decoder integration, and square/layout formulas remain local.",
+        "gap": {
+          "root": { "$value": "{spacing.3}" },
+          "actions": { "$value": "{spacing.2}" },
+          "result": { "$value": "{spacing.1}" }
+        },
+        "viewport": { "surface": { "$value": "{color.bg.sunken}" }, "radius": { "$value": "{radius.md}" } },
+        "placeholder": { "text": { "$value": "{color.text.tertiary}" } },
+        "reticle": {
+          "border": { "$value": "{color.border.strong}" },
+          "border-width": { "$value": "{border-width.thick}" },
+          "radius": { "$value": "{radius.sm}" }
+        },
+        "result": {
+          "padding-block": { "$value": "{spacing.2}" },
+          "padding-inline": { "$value": "{spacing.3}" },
+          "surface": { "$value": "{color.bg.raised}" },
+          "radius": { "$value": "{radius.sm}" }
+        }
+      },
+      "virtual-log-viewer": {
+        "$description": "ForgeVirtualLogViewer log surface, filter toolbar, virtual row interaction chrome, columns, typography, and severity washes. Filtering, scrolling, row virtualization, and log formatting remain local.",
+        "surface": { "$value": "{color.bg.sunken}" },
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" },
+        "radius": { "$value": "{radius.md}" },
+        "toolbar": {
+          "height": { "$value": "32px" },
+          "padding-inline": { "$value": "{spacing.4}" },
+          "surface": { "$value": "{color.bg.surface}" },
+          "border": { "$value": "{color.border.strong}" }
+        },
+        "filter": {
+          "font-family": { "$value": "{font.family.sans}" },
+          "font-size": { "$value": "{font.size.xs}" },
+          "font-weight": { "$value": "{font.weight.semibold}" },
+          "text": { "$value": "{color.text.secondary}" },
+          "letter-spacing": { "$value": "0.04em" }
+        },
+        "row": {
+          "gap": { "$value": "{spacing.2}" },
+          "padding-inline": { "$value": "{spacing.3}" },
+          "border-width": { "$value": "{border-width.thin}" },
+          "border": { "$value": "transparent" },
+          "hover-surface": { "$value": "{color.bg.raised}" },
+          "focus-ring": { "$value": "{shadow.focus-primary}" },
+          "transition-duration": { "$value": "80ms" },
+          "transition-easing": { "$value": "ease" }
+        },
+        "line-number": {
+          "min-width": { "$value": "44px" },
+          "padding-inline-end": { "$value": "{spacing.2}" },
+          "border": { "$value": "{color.border.default}" }
+        },
+        "timestamp": { "min-width": { "$value": "140px" } },
+        "level": {
+          "gap": { "$value": "{spacing.1}" },
+          "min-width": { "$value": "72px" },
+          "font-weight": { "$value": "{font.weight.semibold}" },
+          "letter-spacing": { "$value": "0.06em" }
+        },
+        "severity": {
+          "debug": { "$value": "{color.text.secondary}" },
+          "info": { "$value": "{color.info.default}" },
+          "warn": { "$value": "{color.warning.default}" },
+          "error": { "$value": "{color.danger.default}" },
+          "fatal": { "$value": "{color.danger.hover}" },
+          "warn-opacity": { "$value": "6%" },
+          "error-opacity": { "$value": "8%" }
+        }
+      }
+    },
+    "debug": {
+      "$description": "Development-only diagnostic surfaces. These tokens describe visible debug chrome without implying runtime component behavior.",
+      "breakpoint": {
+        "$description": "ForgeBreakpointDebug fixed viewport badge. Its always-dark opaque surface preserves readable inverse text in both theme modes; viewport observation and breakpoint calculations remain local.",
+        "surface": { "$value": "rgb(8 6 13 / 85%)" },
+        "text": {
+          "default": { "$value": "{color.text.inverse}" },
+          "current": { "$value": "{color.success.muted}" },
+          "active": { "$value": "{color.text.primary}" }
+        },
+        "gap": { "$value": "{spacing.1}" },
+        "padding": { "block": { "$value": "{spacing.1}" }, "inline": { "$value": "{spacing.2}" } },
+        "radius": { "$value": "{radius.sm}" },
+        "typography": {
+          "font-family": { "$value": "{font.family.mono}" },
+          "font-size": { "$value": "{size.font.2xs}" },
+          "font-weight": { "$value": "{font.weight.bold}" }
+        },
+        "label": { "margin": { "$value": "{spacing.1}" }, "opacity": { "$value": "{opacity.subtle}" } },
+        "separator": { "margin": { "$value": "{spacing.1}" }, "opacity": { "$value": "{opacity.content-disabled}" } },
+        "badge": {
+          "padding-block": { "$value": "{size.pad-block.2xs}" },
+          "padding-inline": { "$value": "{size.pad-inline.2xs}" },
+          "radius": { "$value": "{radius.xs}" },
+          "text": { "$value": "{color.text.inverse}" },
+          "active": { "surface": { "$value": "{color.success.muted}" }, "text": { "$value": "{color.text.primary}" } }
+        },
+        "px": {
+          "margin": { "$value": "0.1rem" },
+          "font-size": { "$value": "{size.font.2xs}" },
+          "text": { "$value": "inherit" }
+        }
+      }
+    },
+    "markdown": {
+      "$description": "Markdown document flow chrome. Typography of composed headings and paragraphs remains owned by ForgeTypography; these slots cover renderer-owned rhythm, links, quotes, rules, and images.",
+      "text": {
+        "default": { "$value": "{color.text.primary}" },
+        "secondary": { "$value": "{color.text.secondary}" },
+        "link": { "$value": "{color.primary.default}" }
+      },
+      "typography": {
+        "font-family": { "$value": "{font.family.sans}" },
+        "line-height": { "$value": "{line-height.relaxed}" }
+      },
+      "flow": {
+        "block-gap": { "$value": "{spacing.4}" },
+        "list-indent": { "$value": "{spacing.5}" },
+        "list-item-gap": { "$value": "{spacing.2}" },
+        "task-gap": { "$value": "{spacing.2}" },
+        "heading-scroll-margin": { "$value": "{spacing.16}" }
+      },
+      "blockquote": {
+        "padding-block": { "$value": "{spacing.2}" },
+        "padding-inline": { "$value": "{spacing.4}" },
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thick}" },
+        "text": { "$value": "{color.text.secondary}" }
+      },
+      "rule": {
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" }
+      },
+      "image": { "radius": { "$value": "{radius.md}" } },
+      "error": { "font-weight": { "$value": "{font.weight.semibold}" } }
+    },
+    "timeline": {
+      "$description": "Timeline marker, outlined state, connectors, orientation rhythm, and content spacing. Item order, alternating placement, and scroll behavior remain local.",
+      "marker": {
+        "size": { "$value": "0.875rem" },
+        "default": { "$value": "{color.primary.default}" },
+        "outline-width": { "$value": "{spacing.1}" },
+        "outline-surface": { "$value": "{color.bg.surface}" },
+        "outlined-surface": { "$value": "{color.bg.surface}" },
+        "radius": { "$value": "{radius.full}" }
+      },
+      "line": { "width": { "$value": "{border-width.thick}" }, "surface": { "$value": "{color.border.default}" } },
+      "gutter": { "$value": "{spacing.6}" },
+      "vertical": { "gap": { "$value": "{spacing.4}" } },
+      "horizontal": { "gap": { "$value": "{spacing.3}" } },
+      "content": { "gap": { "$value": "{spacing.1}" }, "body-margin-top": { "$value": "{spacing.1}" } },
+      "variant": {
+        "default": { "$value": "{color.default.default}" },
+        "primary": { "$value": "{color.primary.default}" },
+        "secondary": { "$value": "{color.secondary.default}" },
+        "tertiary": { "$value": "{color.tertiary.default}" },
+        "success": { "$value": "{color.success.default}" },
+        "warning": { "$value": "{color.warning.default}" },
+        "information": { "$value": "{color.information.default}" },
+        "error": { "$value": "{color.error.default}" },
+        "critical": { "$value": "{color.critical.default}" }
+      }
+    },
+    "editor": {
+      "$description": "WYSIWYG and Monaco editor chrome. Editing, scrolling, positioning, and third-party renderer behavior remain local; these slots expose editor-owned visual surfaces, states, and typography.",
+      "block-controls": {
+        "$description": "Per-block selection outline and floating alignment/move control bar.",
+        "selection": {
+          "border": { "$value": "{color.primary.default}" },
+          "border-width": { "$value": "{border-width.thin}" },
+          "radius": { "$value": "{radius.sm}" }
+        },
+        "bar": {
+          "surface": { "$value": "{color.bg.raised}" },
+          "border": { "$value": "{color.border.default}" },
+          "border-width": { "$value": "{border-width.thin}" },
+          "radius": { "$value": "{radius.md}" },
+          "shadow": { "$value": "{shadow.sm}" }
+        },
+        "gap": { "$value": "{spacing.micro}" },
+        "padding": { "$value": "{spacing.micro}" }
+      },
+      "block-menu": {
+        "$description": "Block-format trigger, menu panel, menu items, and keyboard/active states.",
+        "trigger": {
+          "gap": { "$value": "{spacing.2xs}" },
+          "padding-block": { "$value": "{spacing.2xs}" },
+          "padding-inline": { "$value": "{spacing.xs}" },
+          "text": { "$value": "{color.text.primary}" },
+          "surface": { "default": { "$value": "transparent" }, "hover": { "$value": "{color.bg.muted}" } },
+          "border": { "$value": "{color.border.default}" },
+          "border-width": { "$value": "{border-width.thin}" },
+          "radius": { "$value": "{radius.sm}" },
+          "focus": {
+            "border": { "$value": "{color.primary.default}" },
+            "border-width": { "$value": "{border-width.thick}" }
+          },
+          "opacity": { "disabled": { "$value": "{opacity.disabled}" } }
+        },
+        "list": {
+          "gap": { "$value": "{spacing.micro}" },
+          "padding": { "$value": "{spacing.2xs}" },
+          "surface": { "$value": "{color.bg.surface}" },
+          "text": { "$value": "{color.text.primary}" },
+          "radius": { "$value": "{radius.md}" }
+        },
+        "item": {
+          "padding-block": { "$value": "{spacing.2xs}" },
+          "padding-inline": { "$value": "{spacing.sm}" },
+          "text": {
+            "default": { "$value": "{color.text.primary}" },
+            "active": { "$value": "{color.primary.default}" }
+          },
+          "surface": { "default": { "$value": "transparent" }, "hover": { "$value": "{color.bg.muted}" } },
+          "radius": { "$value": "{radius.sm}" },
+          "focus": {
+            "border": { "$value": "{color.primary.default}" },
+            "border-width": { "$value": "{border-width.thick}" }
+          },
+          "active-font-weight": { "$value": "{font.weight.semibold}" }
+        }
+      },
+      "status-bar": {
+        "$description": "Compact editor statistics/status strip. Alignment and item content remain component behavior/layout.",
+        "gap": { "$value": "{spacing.md}" },
+        "padding-block": { "$value": "{spacing.2xs}" },
+        "padding-inline": { "$value": "{spacing.sm}" },
+        "text": { "$value": "{color.text.tertiary}" },
+        "font-size": { "$value": "{font.size.status}" },
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" }
+      },
+      "toolbar": {
+        "$description": "WYSIWYG formatting toolbar and group separators; button interaction states are owned by ForgeButton.",
+        "gap": { "$value": "{spacing.xs}" },
+        "padding": { "$value": "{spacing.xs}" },
+        "surface": { "$value": "{color.bg.surface}" },
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" },
+        "group": {
+          "gap": { "$value": "{spacing.2xs}" },
+          "padding-inline-end": { "$value": "{spacing.xs}" },
+          "border": { "$value": "{color.border.default}" },
+          "border-width": { "$value": "{border-width.thin}" }
+        }
+      },
+      "monaco": {
+        "$description": "Monaco host container chrome; Monaco's own editor DOM and theme remain third-party/runtime behavior.",
+        "surface": { "$value": "{color.bg.surface}" },
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" },
+        "radius": { "$value": "{radius.md}" }
+      },
+      "wysiwyg": {
+        "$description": "WYSIWYG editor shell and editable surface chrome.",
+        "surface": { "$value": "{color.bg.surface}" },
+        "text": { "$value": "{color.text.primary}" },
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" },
+        "radius": { "$value": "{radius.md}" },
+        "disabled-opacity": { "$value": "{opacity.content-disabled}" },
+        "surface-padding": { "$value": "{spacing.sm}" },
+        "line-height": { "$value": "{size.leading.md}" },
+        "focus": {
+          "color": { "$value": "{color.primary.default}" },
+          "width": { "$value": "{border-width.thick}" }
+        },
+        "placeholder": { "$value": "{color.text.tertiary}" },
+        "code-block-margin": { "$value": "{spacing.sm}" }
+      }
+    },
+    "map": {
+      "$description": "MapLibre host and child components. DOM-less map layers, sources, markers, and draw controls inherit the map host contract; third-party canvas pixels remain outside Forge CSS.",
+      "surface": {
+        "default": { "$value": "{color.bg.surface}" },
+        "popup": { "$value": "{color.bg.overlay}" },
+        "selected": { "$value": "{color.primary.subtle}" }
+      },
+      "text": { "default": { "$value": "{color.text.primary}" }, "inverse": { "$value": "{color.text.inverse}" } },
+      "border": {
+        "default": { "$value": "{color.border.default}" },
+        "focus-visible": { "$value": "{color.border.focus}" }
+      },
+      "radius": { "$value": "{radius.md}" },
+      "shadow": { "$value": "{shadow.md}" }
+    },
+    "layout": {
+      "$description": "Container and layout templates expose inherited surface, text, spacing, and responsive structure tokens; grid formulas remain local.",
+      "surface": { "default": { "$value": "{color.bg.base}" }, "raised": { "$value": "{color.bg.raised}" } },
+      "text": { "default": { "$value": "{color.text.primary}" } },
+      "padding": { "$value": "{spacing.md}" },
+      "gap": { "$value": "{spacing.md}" },
+      "demo": {
+        "padding": { "$value": "{spacing.4}" },
+        "border-width": { "$value": "{border-width.thin}" },
+        "border": { "$value": "{color.border.default}" },
+        "radius": { "$value": "{radius.md}" },
+        "surface-sunken": { "$value": "{color.bg.sunken}" },
+        "surface-raised": { "$value": "{color.bg.raised}" },
+        "text": { "$value": "{color.text.primary}" }
+      },
+      "grid": {
+        "$description": "ForgeGrid demo container and cell chrome; grid track formulas and inline layout styles remain local.",
+        "container": {
+          "padding": { "$value": "{spacing.4}" },
+          "border-width": { "$value": "{border-width.thin}" },
+          "border": { "$value": "{color.border.default}" },
+          "radius": { "$value": "{radius.md}" }
+        },
+        "cell": {
+          "padding-block": { "$value": "{spacing.2}" },
+          "padding-inline": { "$value": "{spacing.4}" },
+          "padding-wide": { "$value": "{spacing.4}" },
+          "border-width": { "$value": "{border-width.thin}" },
+          "border": { "$value": "{color.border.default}" },
+          "surface": { "$value": "{color.bg.raised}" },
+          "text": { "$value": "{color.text.primary}" },
+          "radius": { "$value": "{radius.md}" }
+        }
+      },
+      "masonry": {
+        "$description": "ForgeMasonry demo item chrome; column flow, break safety, and dynamic gap calculations remain local.",
+        "gap": { "$value": "{spacing.4}" },
+        "demo": {
+          "padding": { "$value": "{spacing.4}" },
+          "border-width": { "$value": "{border-width.thin}" },
+          "border": { "$value": "{color.border.default}" },
+          "radius": { "$value": "{radius.md}" },
+          "surface": { "$value": "{color.bg.raised}" },
+          "text": { "$value": "{color.text.primary}" }
+        }
+      },
+      "hero": {
+        "$description": "ForgeHero responsive spacing and radius; alignment, media positioning, and content layout formulas remain local.",
+        "radius": { "$value": "{radius.xl}" },
+        "padding": {
+          "2xs": { "block": { "$value": "{spacing.4}" }, "inline": { "$value": "{spacing.4}" } },
+          "xs": { "block": { "$value": "{spacing.6}" }, "inline": { "$value": "{spacing.5}" } },
+          "sm": { "block": { "$value": "{spacing.8}" }, "inline": { "$value": "{spacing.6}" } },
+          "md": {
+            "block": { "$value": "{spacing.16}" },
+            "inline": { "$value": "{spacing.8}" },
+            "wide-block": { "$value": "{spacing.20}" },
+            "wide-inline": { "$value": "{spacing.12}" }
+          },
+          "lg": {
+            "block": { "$value": "{spacing.24}" },
+            "inline": { "$value": "{spacing.10}" },
+            "wide-block": { "$value": "{spacing.24}" },
+            "wide-inline": { "$value": "{spacing.16}" }
+          },
+          "xl": {
+            "block": { "$value": "{spacing.24}" },
+            "inline": { "$value": "{spacing.12}" },
+            "wide-block": { "$value": "{spacing.24}" },
+            "wide-inline": { "$value": "{spacing.20}" }
+          },
+          "2xl": {
+            "block": { "$value": "{spacing.24}" },
+            "inline": { "$value": "{spacing.16}" },
+            "wide-block": { "$value": "{spacing.24}" },
+            "wide-inline": { "$value": "{spacing.24}" }
+          }
+        },
+        "content": { "gap": { "default": { "$value": "{spacing.4}" }, "wide": { "$value": "{spacing.6}" } } },
+        "actions": {
+          "gap": { "default": { "$value": "{spacing.3}" }, "wide": { "$value": "{spacing.4}" } },
+          "margin-top": { "$value": "{spacing.2}" }
+        },
+        "text": { "inverse": { "$value": "{color.text.inverse}" } },
+        "overlay": { "$value": "{color.bg.scrim}" }
+      },
+      "stack": {
+        "$description": "ForgeStack demo container/item chrome; the component's flex direction, gap, alignment, and sizing formulas remain local or inline.",
+        "container": {
+          "padding": { "$value": "{spacing.4}" },
+          "border-width": { "$value": "{border-width.thin}" },
+          "border": { "$value": "{color.border.default}" },
+          "radius": { "$value": "{radius.md}" }
+        },
+        "item": {
+          "padding-block": { "$value": "{spacing.2}" },
+          "padding-inline": { "$value": "{spacing.4}" },
+          "border-width": { "$value": "{border-width.thin}" },
+          "border": { "$value": "{color.border.default}" },
+          "radius": { "$value": "{radius.md}" },
+          "surface": { "$value": "{color.surface.raised}" },
+          "text": { "$value": "{color.text.primary}" }
+        }
+      },
+      "application": {
+        "$description": "ForgeApplicationLayout shell chrome. Sidebar positioning, breakpoint behavior, dimensions, and stacking remain local; these aliases cover surfaces, separators, overlay treatment, status colours, status padding, and status motion.",
+        "surface": {
+          "default": { "$value": "{color.bg.base}" },
+          "sidebar": { "$value": "{color.bg.surface}" }
+        },
+        "text": {
+          "status": { "$value": "{color.text.on-primary}" }
+        },
+        "border": {
+          "sidebar": { "$value": "{color.border.default}" }
+        },
+        "border-width": {
+          "sidebar": { "$value": "{border-width.thin}" }
+        },
+        "shadow": {
+          "overlay": { "$value": "{shadow.lg}" }
+        },
+        "scrim": {
+          "default": { "$value": "{color.bg.scrim}" }
+        },
+        "status": {
+          "background": {
+            "info": { "$value": "{color.info.default}" },
+            "warning": { "$value": "{color.warning.default}" },
+            "error": { "$value": "{color.danger.default}" }
+          }
+        },
+        "padding": {
+          "status-block": { "$value": "{spacing.2}" },
+          "status-inline": { "$value": "{spacing.4}" },
+          "status-inline-wide": { "$value": "{spacing.6}" }
+        },
+        "typography": {
+          "font-family": { "$value": "{font.family.sans}" },
+          "font-size": { "$value": "{font.size.sm}" },
+          "font-weight": { "$value": "{font.weight.medium}" },
+          "line-height": { "$value": "{line-height.snug}" },
+          "letter-spacing": { "$value": "{letter-spacing.normal}" }
+        },
+        "transition": {
+          "duration": { "$value": "{duration.moderate}" },
+          "easing": { "$value": "{easing.standard}" }
+        }
+      }
+    },
+    "data": {
+      "$description": "Data-dense Forge components. Table, tree, and virtualized list/table/tree contracts cover visual chrome only; scrolling, measurement, row positioning, and disclosure state remain component behavior.",
+      "table": {
+        "$description": "ForgeTable wrapper, loading state, header/cell rhythm, sortable affordance, row treatments, and tone variants. Native table layout, responsive breakpoint selection, and sorting remain local.",
+        "wrapper": {
+          "border": { "$value": "{color.border.default}" },
+          "border-width": { "$value": "{border-width.thin}" },
+          "radius": { "$value": "{radius.md}" }
+        },
+        "loading": {
+          "surface": { "$value": "{color.bg.loading-overlay}" },
+          "radius": { "$value": "{radius.md}" }
+        },
+        "spinner": {
+          "size": { "$value": "{size.icon.lg}" },
+          "border": { "$value": "{color.primary.default}" },
+          "border-width": { "$value": "{border-width.heavy}" },
+          "radius": { "$value": "{radius.full}" },
+          "animation-duration": { "$value": "0.65s" },
+          "animation-easing": { "$value": "linear" }
+        },
+        "font-size": { "$value": "{size.font.sm}" },
+        "caption": { "padding-block": { "$value": "{spacing.3}" }, "padding-inline": { "$value": "{spacing.4}" } },
+        "head": {
+          "surface": { "$value": "{color.bg.muted}" },
+          "border": { "$value": "{color.border.default}" }
+        },
+        "header": {
+          "padding-block": { "$value": "{spacing.2}" },
+          "padding-inline": { "$value": "{spacing.3}" },
+          "padding-block-wide": { "$value": "{spacing.3}" },
+          "padding-inline-wide": { "$value": "{spacing.4}" },
+          "border": { "$value": "{color.border.default}" },
+          "sortable-hover-surface": { "$value": "{color.bg.sunken}" },
+          "sortable-hover-text": { "$value": "{color.text.primary}" },
+          "content-gap": { "$value": "{spacing.1}" }
+        },
+        "sort": { "opacity": { "$value": 0.5 }, "font-size": { "$value": "0.75em" } },
+        "cell": {
+          "padding-block": { "$value": "{spacing.2}" },
+          "padding-inline": { "$value": "{spacing.3}" },
+          "padding-block-wide": { "$value": "{spacing.3}" },
+          "padding-inline-wide": { "$value": "{spacing.4}" }
+        },
+        "row": {
+          "border": { "$value": "{color.border.default}" },
+          "striped-surface": { "$value": "{color.bg.muted}" },
+          "hover-surface": { "$value": "{color.bg.muted}" }
+        },
+        "empty": { "padding-block": { "$value": "{spacing.8}" }, "padding-inline": { "$value": "{spacing.4}" } },
+        "bordered": {
+          "border": { "$value": "{color.border.default}" },
+          "border-width": { "$value": "{border-width.thin}" }
+        },
+        "tone": {
+          "primary": {
+            "head-surface": { "$value": "{color.primary.muted}" },
+            "border": { "$value": "{color.primary.subtle}" }
+          },
+          "secondary": {
+            "head-surface": { "$value": "{color.secondary.muted}" },
+            "border": { "$value": "{color.secondary.subtle}" }
+          },
+          "tertiary": {
+            "head-surface": { "$value": "{color.tertiary.muted}" },
+            "border": { "$value": "{color.tertiary.subtle}" }
+          },
+          "success": {
+            "head-surface": { "$value": "{color.success.muted}" },
+            "border": { "$value": "{color.success.subtle}" }
+          },
+          "warning": {
+            "head-surface": { "$value": "{color.warning.muted}" },
+            "border": { "$value": "{color.warning.subtle}" }
+          },
+          "info": { "head-surface": { "$value": "{color.info.muted}" }, "border": { "$value": "{color.info.subtle}" } },
+          "error": {
+            "head-surface": { "$value": "{color.error.muted}" },
+            "border": { "$value": "{color.error.subtle}" }
+          },
+          "critical": {
+            "head-surface": { "$value": "{color.critical.muted}" },
+            "border": { "$value": "{color.critical.subtle}" }
+          }
+        }
+      },
+      "tree": {
+        "$description": "ForgeTreeView recursive tree typography, label row, focus/hover treatment, and disclosure toggle. Recursive rendering, depth, and open-map behavior remain local.",
+        "font-family": { "$value": "{font.family.sans}" },
+        "font-size": { "$value": "{font.size.sm}" },
+        "text": {
+          "default": { "$value": "{color.text.primary}" },
+          "toggle": { "$value": "{color.text.secondary}" },
+          "toggle-hover": { "$value": "{color.text.primary}" },
+          "toggle-open": { "$value": "{color.text.primary}" }
+        },
+        "label": {
+          "gap": { "$value": "{spacing.2}" },
+          "height": { "$value": "32px" },
+          "padding-inline-end": { "$value": "{spacing.3}" },
+          "radius": { "$value": "{radius.sm}" },
+          "hover-surface": { "$value": "{color.bg.muted}" },
+          "focus-ring": { "$value": "{shadow.focus-primary}" },
+          "transition-duration": { "$value": "80ms" },
+          "transition-easing": { "$value": "ease" }
+        },
+        "toggle": {
+          "size": { "$value": "20px" },
+          "radius": { "$value": "{radius.sm}" },
+          "transition-duration": { "$value": "80ms" },
+          "transition-easing": { "$value": "ease" }
+        }
+      },
+      "virtual-table": {
+        "$description": "ForgeVirtualTable custom footer demo chrome. Scroll virtualization, sticky header geometry, row sizing, and slot behavior remain local or inline.",
+        "footer": {
+          "gap": { "$value": "{spacing.4}" },
+          "text": { "$value": "{color.text.secondary}" },
+          "accent-text": { "$value": "{color.primary.default}" },
+          "accent-font-weight": { "$value": "{font.weight.semibold}" }
+        }
+      },
+      "virtual-list": {
+        "$description": "ForgeVirtualList Storybook row chrome. Scroll offsets, item height, and absolute positioning remain inline behavior.",
+        "row": {
+          "padding-block": { "$value": "{spacing.2}" },
+          "padding-inline": { "$value": "{spacing.4}" },
+          "border": { "$value": "{color.border.default}" },
+          "border-width": { "$value": "{border-width.thin}" },
+          "text": { "$value": "{color.text.primary}" },
+          "alternate-surface": { "$value": "{color.bg.raised}" }
+        }
+      },
+      "virtual-tree": {
+        "$description": "ForgeVirtualTreeView flattened-tree typography, label row, focus/hover treatment, and disclosure toggle. Flattening, scroll window, depth indentation, and row measurement remain local.",
+        "font-family": { "$value": "{font.family.sans}" },
+        "font-size": { "$value": "{font.size.sm}" },
+        "text": {
+          "default": { "$value": "{color.text.primary}" },
+          "toggle": { "$value": "{color.text.secondary}" },
+          "toggle-hover": { "$value": "{color.text.primary}" }
+        },
+        "label": {
+          "gap": { "$value": "{spacing.2}" },
+          "padding-inline-end": { "$value": "{spacing.3}" },
+          "radius": { "$value": "{radius.sm}" },
+          "hover-surface": { "$value": "{color.bg.muted}" },
+          "focus-ring": { "$value": "{shadow.focus-primary}" },
+          "transition-duration": { "$value": "80ms" },
+          "transition-easing": { "$value": "ease" }
+        },
+        "toggle": {
+          "size": { "$value": "20px" },
+          "radius": { "$value": "{radius.sm}" },
+          "transition-duration": { "$value": "80ms" },
+          "transition-easing": { "$value": "ease" }
+        }
+      }
+    },
+    "resource-planner": {
+      "$description": "ForgeResourcePlanner visual contract for resource rows, timeline chrome, bookings, capacity status, and selection. Timeline sizing, scrolling, virtualization, drag/resize behavior, and resource data remain local.",
+      "container": {
+        "gap": { "$value": "{spacing.3}" },
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" },
+        "radius": { "$value": "{radius.lg}" },
+        "surface": { "$value": "{color.bg.surface}" },
+        "padding": { "$value": "{spacing.3}" }
+      },
+      "toolbar": { "gap": { "$value": "{spacing.2}" } },
+      "control": {
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" },
+        "radius": { "$value": "{radius.sm}" },
+        "surface": { "$value": "{color.bg.surface}" },
+        "text": { "$value": "{color.text.primary}" },
+        "padding-block": { "$value": "{spacing.1}" },
+        "padding-inline": { "$value": "{spacing.2}" },
+        "selected-surface": { "$value": "{color.primary.default}" },
+        "selected-text": { "$value": "{color.text.on-primary}" },
+        "focus-ring": { "$value": "{color.border.focus}" }
+      },
+      "viewport": {
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" }
+      },
+      "header": {
+        "surface": { "$value": "{color.bg.surface}" },
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" }
+      },
+      "resource": {
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" },
+        "surface": { "$value": "{color.bg.surface}" },
+        "padding": { "$value": "{spacing.2}" },
+        "gap": { "$value": "{spacing.1}" },
+        "secondary-text": { "$value": "{color.text.secondary}" },
+        "heading-weight": { "$value": "{font.weight.semibold}" }
+      },
+      "timeline": {
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" },
+        "selected-ring": { "$value": "{color.primary.default}" },
+        "header-padding": { "$value": "{spacing.2}" },
+        "header-text": { "$value": "{color.text.secondary}" },
+        "header-font-size": { "$value": "{font.size.sm}" }
+      },
+      "row": {
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" }
+      },
+      "capacity": {
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" },
+        "font-size": { "$value": "{font.size.xs}" },
+        "unavailable-surface": { "$value": "{color.bg.muted}" },
+        "conflict-surface": { "$value": "{color.error.default}" }
+      },
+      "booking": {
+        "radius": { "$value": "{radius.sm}" },
+        "surface": { "$value": "{color.primary.default}" },
+        "conflict-surface": { "$value": "{color.error.default}" },
+        "text": { "$value": "{color.text.on-primary}" },
+        "padding-block": { "$value": "{spacing.1}" },
+        "padding-inline": { "$value": "{spacing.2}" },
+        "height-inset": { "$value": "{spacing.4}" },
+        "focus-ring": { "$value": "{color.border.focus}" }
+      },
+      "selection": {
+        "border": { "$value": "{color.primary.default}" },
+        "border-width": { "$value": "1px" },
+        "border-style": { "$value": "dashed" },
+        "surface": { "$value": "{color.primary.default}" },
+        "height-inset": { "$value": "{spacing.2}" }
+      },
+      "current-time": {
+        "width": { "$value": "2px" },
+        "surface": { "$value": "{color.error.default}" }
+      },
+      "empty": { "text": { "$value": "{color.text.secondary}" } }
+    },
+    "scheduler": {
+      "$description": "ForgeScheduler visual contract for calendar grids, event cards, month/year views, and event-form rhythm. Calendar calculations, scrolling, drag/resize behavior, and event data remain local.",
+      "container": {
+        "gap": { "$value": "{spacing.3}" },
+        "border": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" },
+        "radius": { "$value": "{radius.lg}" },
+        "surface": { "$value": "{color.bg.surface}" },
+        "padding": { "$value": "{spacing.3}" }
+      },
+      "toolbar": { "gap": { "$value": "{spacing.2}" } },
+      "navigation": { "gap": { "$value": "{spacing.1}" }, "title-margin": { "$value": "{spacing.2}" } },
+      "view-switcher": { "gap": { "$value": "{spacing.1}" } },
+      "grid": {
+        "surface": { "$value": "{color.bg.surface}" },
+        "border": { "$value": "{color.border.default}" },
+        "border-subtle": { "$value": "{color.border.default}" },
+        "border-width": { "$value": "{border-width.thin}" }
+      },
+      "day-heading": {
+        "gap": { "$value": "{spacing.1}" },
+        "padding": { "$value": "{spacing.2}" },
+        "border": { "$value": "{color.border.default}" },
+        "surface": { "$value": "transparent" },
+        "text": { "$value": "{color.text.primary}" },
+        "today-text": { "$value": "{color.primary.default}" },
+        "today-weight": { "$value": "{font.weight.semibold}" }
+      },
+      "weekday": { "font-size": { "$value": "{font.size.xs}" }, "text": { "$value": "{color.text.tertiary}" } },
+      "day-number": { "font-size": { "$value": "{font.size.lg}" } },
+      "hour-label": {
+        "padding-inline-end": { "$value": "{spacing.2}" },
+        "font-size": { "$value": "{font.size.xs}" },
+        "text": { "$value": "{color.text.tertiary}" }
+      },
+      "event": {
+        "padding": { "$value": "{spacing.1}" },
+        "border": { "$value": "{color.primary.default}" },
+        "border-width": { "$value": "{border-width.thin}" },
+        "accent-border-width": { "$value": "{border-width.heavy}" },
+        "radius": { "$value": "{radius.sm}" },
+        "surface": { "$value": "{color.primary.subtle}" },
+        "text": { "$value": "{color.text.primary}" },
+        "font-size": { "$value": "{font.size.xs}" },
+        "time-font-family": { "$value": "{font.family.mono}" },
+        "muted-text": { "$value": "{color.text.tertiary}" },
+        "title-weight": { "$value": "{font.weight.medium}" }
+      },
+      "month": {
+        "weekday-padding": { "$value": "{spacing.1}" },
+        "weekday-border": { "$value": "{color.border.default}" },
+        "cell-gap": { "$value": "{spacing.1}" },
+        "cell-padding": { "$value": "{spacing.1}" },
+        "cell-border": { "$value": "{color.border.default}" },
+        "cell-surface": { "$value": "transparent" },
+        "cell-text": { "$value": "{color.text.primary}" },
+        "outside-surface": { "$value": "{color.bg.muted}" },
+        "outside-text": { "$value": "{color.text.secondary}" },
+        "today-ring": { "$value": "{color.primary.default}" },
+        "today-ring-width": { "$value": "{border-width.thick}" },
+        "create-focus-ring": { "$value": "{color.primary.default}" },
+        "create-focus-ring-width": { "$value": "{border-width.thick}" },
+        "create-radius": { "$value": "{radius.sm}" },
+        "create-surface": { "$value": "transparent" },
+        "day-number-font-size": { "$value": "{font.size.sm}" },
+        "events-gap": { "$value": "{spacing.micro}" },
+        "chip-padding-block": { "$value": "1px" },
+        "chip-padding-inline": { "$value": "{spacing.1}" },
+        "chip-radius": { "$value": "{radius.sm}" },
+        "chip-surface": { "$value": "{color.primary.subtle}" },
+        "chip-font-size": { "$value": "{font.size.xs}" },
+        "more-font-size": { "$value": "{font.size.xs}" },
+        "more-text": { "$value": "{color.text.tertiary}" }
+      },
+      "year": {
+        "gap": { "$value": "{spacing.3}" },
+        "mini-gap": { "$value": "{spacing.1}" },
+        "mini-padding": { "$value": "{spacing.2}" },
+        "mini-border": { "$value": "{color.border.default}" },
+        "mini-radius": { "$value": "{radius.md}" },
+        "mini-surface": { "$value": "transparent" },
+        "mini-text": { "$value": "{color.text.primary}" },
+        "title-font-size": { "$value": "{font.size.sm}" },
+        "title-weight": { "$value": "{font.weight.semibold}" },
+        "mini-grid-gap": { "$value": "1px" },
+        "day-font-size": { "$value": "0.625rem" },
+        "day-radius": { "$value": "{radius.full}" },
+        "outside-text": { "$value": "{color.text.secondary}" },
+        "outside-weight": { "$value": "{font.weight.light}" },
+        "busy-surface": { "$value": "{color.primary.subtle}" },
+        "busy-text": { "$value": "{color.primary.default}" },
+        "busy-weight": { "$value": "{font.weight.semibold}" },
+        "today-ring": { "$value": "{color.primary.default}" },
+        "today-ring-width": { "$value": "{border-width.thin}" }
+      },
+      "form": {
+        "gap": { "$value": "{spacing.3}" },
+        "row-gap": { "$value": "{spacing.2}" },
+        "actions-gap": { "$value": "{spacing.2}" }
+      }
+    },
+    "email": {
+      "$description": "Email components use the same semantic roles when translated to inline email CSS. Email clients do not consume runtime custom properties; the email renderer resolves this contract at generation time.",
+      "surface": { "default": { "$value": "{color.bg.surface}" }, "raised": { "$value": "{color.bg.raised}" } },
+      "text": { "default": { "$value": "{color.text.primary}" }, "inverse": { "$value": "{color.text.inverse}" } },
+      "border": { "default": { "$value": "{color.border.default}" } },
+      "padding": { "$value": "{spacing.md}" },
+      "radius": { "$value": "{radius.md}" }
+    },
+    "inherited": {
+      "$description": "Inherited-visual contract for components that render no styled host of their own. Their visual decisions come from children, currentColor, the host canvas, or the parent contract.",
+      "color": { "$value": "{color.text.primary}" },
+      "surface": { "$value": "{color.bg.surface}" },
+      "text": { "$value": "{color.text.primary}" }
+    }
+  }
+}

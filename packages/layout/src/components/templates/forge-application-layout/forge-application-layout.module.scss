@@ -20,30 +20,31 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-color: var(--mp-color-bg-base);
+    background-color: var(--mp-component-layout-application-surface-default);
 
     &__status {
-      transition: background-color 0.2s ease;
+      transition: background-color var(--mp-component-layout-application-transition-duration)
+        var(--mp-component-layout-application-transition-easing);
       min-height: 0;
       padding-left: env(safe-area-inset-left);
       padding-right: env(safe-area-inset-right);
 
       &:not(:empty) {
-        // Resolved `mp-font-label`: label font size, medium weight, snug leading.
         font-family:
-          var(--mp-font-family-sans) system-ui,
+          var(--mp-component-layout-application-typography-font-family) system-ui,
           -apple-system,
           'Segoe UI',
           roboto,
           sans-serif;
-        font-size: var(--mp-font-size-sm);
-        font-weight: var(--mp-font-weight-medium);
-        line-height: var(--mp-line-height-snug);
-        letter-spacing: var(--mp-letter-spacing-normal);
-        padding: var(--mp-spacing-2) var(--mp-spacing-4);
+        font-size: var(--mp-component-layout-application-typography-font-size);
+        font-weight: var(--mp-component-layout-application-typography-font-weight);
+        line-height: var(--mp-component-layout-application-typography-line-height);
+        letter-spacing: var(--mp-component-layout-application-typography-letter-spacing);
+        padding: var(--mp-component-layout-application-padding-status-block)
+          var(--mp-component-layout-application-padding-status-inline);
 
         @include bp.bp-up('xs') {
-          padding: var(--mp-spacing-2) var(--mp-spacing-6);
+          padding-inline: var(--mp-component-layout-application-padding-status-inline-wide);
         }
       }
     }
@@ -81,14 +82,16 @@
       width: var(--mp-application-layout-sidebar-width, 16rem);
       max-height: calc(100vh - var(--mp-application-layout-sidebar-top, 0px));
       overflow-y: auto;
-      background-color: var(--mp-color-bg-surface);
+      background-color: var(--mp-component-layout-application-surface-sidebar);
 
       &--start {
-        border-right: 1px solid var(--mp-color-border-default);
+        border-right: var(--mp-component-layout-application-border-width-sidebar) solid
+          var(--mp-component-layout-application-border-sidebar);
       }
 
       &--end {
-        border-left: 1px solid var(--mp-color-border-default);
+        border-left: var(--mp-component-layout-application-border-width-sidebar) solid
+          var(--mp-component-layout-application-border-sidebar);
       }
 
       // Overlay variant: when a host forces a breakpoint-collapsed sidebar open,
@@ -103,7 +106,7 @@
         bottom: 0;
         z-index: 90;
         max-height: none;
-        box-shadow: var(--mp-shadow-lg, 0 0.5rem 1.5rem rgb(0 0 0 / 15%));
+        box-shadow: var(--mp-component-layout-application-shadow-overlay);
 
         &.application-layout__sidebar--start {
           inset-inline-start: 0;
@@ -122,7 +125,7 @@
       position: fixed;
       inset: var(--mp-application-layout-sidebar-top, 0) 0 0;
       z-index: 89;
-      background-color: var(--mp-color-overlay-scrim, rgb(0 0 0 / 40%));
+      background-color: var(--mp-component-layout-application-scrim-default);
     }
 
     &__content {

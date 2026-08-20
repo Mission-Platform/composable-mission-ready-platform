@@ -30,7 +30,8 @@
       "2xl": { "$value": "1.5rem", "$description": "21px — h3." },
       "3xl": { "$value": "1.875rem", "$description": "26.25px — h2." },
       "4xl": { "$value": "2.25rem", "$description": "31.5px — h1." },
-      "5xl": { "$value": "3rem", "$description": "42px — hero / marketing display." }
+      "5xl": { "$value": "3rem", "$description": "42px — hero / marketing display." },
+      "status": { "$value": "0.85rem", "$description": "0.85rem — compact editor status text." }
     },
     "weight": {
       "$description": "Named font-weight steps (400 → 700) covering the supported Comfortaa/Datatype axes.",

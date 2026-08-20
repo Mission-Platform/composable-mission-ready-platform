@@ -1,6 +1,5 @@
 import { classNames, Dynamic, h, type MpChild, type MpElement } from '@mission-platform/forge';
 
-import sizeStyles from '../../../styles/size.module.scss';
 import spacingStyles from '../../../styles/spacing.module.scss';
 
 import styles from './forge-masonry.module.scss';
@@ -76,7 +75,7 @@ export function ForgeMasonry(properties: Readonly<MasonryProperties>): MpElement
   // token-driven spacing classes rather than inline styles.
   const className = classNames(
     styles['forge-masonry'],
-    sizeStyles[`forge-size--${size}`],
+    size ? `forge-size--${size}` : undefined,
     padding ? spacingStyles[`forge-spacing--padding-${padding}`] : undefined,
     margin ? spacingStyles[`forge-spacing--margin-${margin}`] : undefined,
   );

@@ -8,23 +8,23 @@
   .forge-schema-form {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-spacing-4);
+    gap: var(--mp-component-form-gap-large);
 
     &--disabled {
-      opacity: 0.6;
+      opacity: var(--mp-component-form-disabled-opacity);
       pointer-events: none;
     }
 
     &__fields {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-spacing-4);
+      gap: var(--mp-component-form-gap-large);
     }
 
     &__datetime {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-spacing-2);
+      gap: var(--mp-component-form-gap-default);
       padding: 0;
       margin: 0;
       border: 0;
@@ -32,28 +32,28 @@
 
     &__datetime-legend {
       padding: 0;
-      margin-bottom: var(--mp-spacing-1);
+      margin-bottom: var(--mp-component-form-gap-tight);
     }
 
     &__datetime-controls {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: var(--mp-spacing-2);
+      gap: var(--mp-component-form-gap-default);
     }
 
     &__datetime-hint {
       margin: 0;
-      color: var(--mp-color-text-tertiary);
+      color: var(--mp-component-form-text-muted);
 
       &--error {
-        color: var(--mp-color-danger-text);
+        color: var(--mp-component-form-text-invalid);
       }
     }
 
     &__code {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-spacing-2);
+      gap: var(--mp-component-form-gap-default);
       padding: 0;
       margin: 0;
       border: 0;
@@ -61,56 +61,56 @@
 
     &__code-legend {
       padding: 0;
-      margin-bottom: var(--mp-spacing-1);
+      margin-bottom: var(--mp-component-form-gap-tight);
     }
 
     &__code-hint {
       margin: 0;
-      color: var(--mp-color-text-tertiary);
+      color: var(--mp-component-form-text-muted);
 
       &--error {
-        color: var(--mp-color-danger-text);
+        color: var(--mp-component-form-text-invalid);
       }
     }
 
     &__actions {
       display: flex;
       justify-content: flex-end;
-      gap: var(--mp-spacing-2);
-      padding-top: var(--mp-spacing-2);
-      border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      gap: var(--mp-component-form-gap-default);
+      padding-top: var(--mp-component-form-padding-default);
+      border-top: var(--mp-component-form-border-width) solid var(--mp-component-form-border-default);
     }
 
     &__button {
-      padding: var(--mp-spacing-2) var(--mp-spacing-4);
-      border: var(--mp-border-width-thin) solid transparent;
-      border-radius: var(--mp-radius-md);
+      padding: var(--mp-component-form-padding-default) var(--mp-component-form-padding-large);
+      border: var(--mp-component-form-border-width) solid transparent;
+      border-radius: var(--mp-component-form-radius-default);
       cursor: pointer;
       transition:
-        opacity 150ms ease,
-        background-color 150ms ease;
+        opacity var(--mp-component-form-transition-duration) var(--mp-component-form-transition-easing),
+        background-color var(--mp-component-form-transition-duration) var(--mp-component-form-transition-easing);
 
       &:focus-visible {
-        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+        outline: var(--mp-component-form-border-focus-width) solid var(--mp-component-form-border-focus);
         outline-offset: 2px;
       }
 
       &--primary {
-        background-color: var(--mp-color-primary-default);
-        color: var(--mp-color-text-on-primary);
+        background-color: var(--mp-component-form-primary);
+        color: var(--mp-component-form-text-inverse);
 
         &:hover {
-          opacity: 0.9;
+          opacity: var(--mp-component-form-primary-hover-opacity);
         }
       }
 
       &--secondary {
         background: transparent;
-        border-color: var(--mp-color-border-default);
-        color: var(--mp-color-text-primary);
+        border-color: var(--mp-component-form-border-default);
+        color: var(--mp-component-form-text-default);
 
         &:hover {
-          background-color: var(--mp-color-bg-muted);
+          background-color: var(--mp-component-form-surface-muted);
         }
       }
     }

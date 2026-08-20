@@ -14,7 +14,7 @@
     display: inline-block;
     border-style: solid;
     border-top-color: transparent;
-    border-radius: var(--mp-radius-full);
+    border-radius: var(--mp-component-feedback-spinner-radius);
     animation: mp-spin 0.65s linear infinite;
     flex-shrink: 0;
 
@@ -22,18 +22,18 @@
     @each $size,
       $border-width
         in (
-          '2xs': var(--mp-border-width-thick),
-          'xs': var(--mp-border-width-thick),
-          'sm': var(--mp-border-width-thick),
-          'md': var(--mp-border-width-heavy),
-          'lg': var(--mp-border-width-heavy),
+          '2xs': var(--mp-component-feedback-spinner-border-width-2xs),
+          'xs': var(--mp-component-feedback-spinner-border-width-xs),
+          'sm': var(--mp-component-feedback-spinner-border-width-sm),
+          'md': var(--mp-component-feedback-spinner-border-width-md),
+          'lg': var(--mp-component-feedback-spinner-border-width-lg),
           'xl': 4px,
           '2xl': 4px
         )
     {
       &--#{$size} {
-        width: var(--mp-size-height-#{$size});
-        height: var(--mp-size-height-#{$size});
+        width: var(--mp-component-feedback-spinner-size-#{$size});
+        height: var(--mp-component-feedback-spinner-size-#{$size});
         border-width: $border-width;
       }
     }
@@ -42,22 +42,9 @@
      * Variants — the canonical colour set. The `neutral` tone reuses the
      * `default` token family (no `neutral` alias).
      */
-    @each $name,
-      $family
-        in (
-          'neutral': 'default',
-          'primary': 'primary',
-          'secondary': 'secondary',
-          'tertiary': 'tertiary',
-          'success': 'success',
-          'warning': 'warning',
-          'info': 'info',
-          'error': 'error',
-          'critical': 'critical'
-        )
-    {
+    @each $name in ('neutral', 'primary', 'secondary', 'tertiary', 'success', 'warning', 'info', 'error', 'critical') {
       &--#{$name} {
-        border-color: var(--mp-color-#{$family}-default);
+        border-color: var(--mp-component-feedback-spinner-color-#{$name});
         border-top-color: transparent;
       }
     }

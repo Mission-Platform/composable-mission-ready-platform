@@ -1,10 +1,9 @@
 import { h, type MpElement, useEffect, useRef } from '@mission-platform/forge';
 import { font } from '@mission-platform/tokens';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 import styles from './forge-monaco-editor.module.scss';
 
+import type { ForgeWebScriptMonacoOptions } from '../../../monaco/forge-web-script';
 // Type-only import: erased at build time, so `monaco-editor` is NOT pulled into
 // the synchronous module graph. The runtime module is loaded lazily via a
 // dynamic `import('monaco-editor')` inside the mount `useEffect`, which lets
@@ -64,6 +63,8 @@ export interface MonacoEditorProperties {
   automaticLayout?: boolean;
   /** Optional completion-item provider registered for the current language. */
   completionProvider?: MonacoEditorCompletionItemProvider;
+  /** Configure the built-in Forge Web Script integration when `language` is `'fws'`; set to `false` to disable it. */
+  forgeWebScript?: ForgeWebScriptMonacoOptions | false;
   /**
    * Whether spell (Hunspell) + grammar (Harper) checking should be active. When
    * `true` (and not `readonly`), the editor lazily `import()`s the
@@ -144,6 +145,33 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
   // Disposers for the lazily-attached spell/grammar checkers.
   const hunspellDisposeReference = useRef<(() => void) | undefined>(undefined);
   const harperDisposeReference = useRef<(() => void) | undefined>(undefined);
+  const forgeWebScriptDisposeReference = useRef<(() => void) | undefined>(undefined);
+  const forgeWebScriptAttachGenerationReference = useRef(0);
+
+  const applyForgeWebScript = (): void => {
+    forgeWebScriptAttachGenerationReference.current += 1;
+    const generation = forgeWebScriptAttachGenerationReference.current;
+    forgeWebScriptDisposeReference.current?.();
+    forgeWebScriptDisposeReference.current = undefined;
+    const editor = editorReference.current;
+    const runtime = monacoReference.current;
+    if (!editor || !runtime || language !== 'fws' || properties.forgeWebScript === false) return;
+    void import('../../../monaco/forge-web-script').then(({ attachForgeWebScriptMonaco }) => {
+      if (
+        forgeWebScriptAttachGenerationReference.current === generation &&
+        editorReference.current === editor &&
+        monacoReference.current === runtime &&
+        language === 'fws' &&
+        properties.forgeWebScript !== false
+      ) {
+        forgeWebScriptDisposeReference.current = attachForgeWebScriptMonaco(
+          editor,
+          runtime,
+          properties.forgeWebScript ?? {},
+        ).dispose;
+      }
+    });
+  };
 
   // (Re-)wire Hunspell + Harper against the live editor. Both cores are imported
   // lazily (browser-only WASM) so they stay out of the synchronous module graph.
@@ -237,6 +265,7 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
       editor.onDidFocusEditorText(() => properties.onFocus?.());
 
       registerCompletionProvider(language);
+      applyForgeWebScript();
       properties.onReady?.({ editor, monaco: runtime });
       applySpellCheck();
     };
@@ -251,6 +280,9 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
       hunspellDisposeReference.current = undefined;
       harperDisposeReference.current?.();
       harperDisposeReference.current = undefined;
+      forgeWebScriptAttachGenerationReference.current += 1;
+      forgeWebScriptDisposeReference.current?.();
+      forgeWebScriptDisposeReference.current = undefined;
       editorReference.current?.dispose();
       editorReference.current = undefined;
     };
@@ -261,6 +293,10 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
   useEffect(() => {
     applySpellCheck();
   }, [spellCheck, readonly, language]);
+
+  useEffect(() => {
+    applyForgeWebScript();
+  }, [language, properties.forgeWebScript]);
 
   // Mirror controlled value changes (skip echoes of the editor's own edits).
   useEffect(() => {
@@ -323,7 +359,7 @@ export function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>):
     <div
       ref={containerReference}
       aria-label="Code editor"
-      className={[styles['forge-monaco-editor'], sizeStyles[`forge-size--${size}`]]}
+      className={[styles['forge-monaco-editor'], size ? `forge-size--${size}` : undefined]}
       data-language={language}
       role="group"
       style={{ height }}

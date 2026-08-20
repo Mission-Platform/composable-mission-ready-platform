@@ -38,18 +38,7 @@ export interface EmailTypographyProperties {
  * literal inline declarations, because email clients ignore CSS classes.
  */
 export function EmailTypography(properties: Readonly<EmailTypographyProperties>): MpElement {
-  const {
-    children,
-    as: _as,
-    variant: _variant,
-    color: _color,
-    align: _align,
-    href: linkHref,
-    target: _target,
-    underline: _underline,
-    ...rest
-  } = properties;
-  const href = linkHref === undefined ? undefined : validateUrl(linkHref, 'href');
+  const href = properties.href === undefined ? undefined : validateUrl(properties.href, 'href');
   const isLink = href !== undefined;
   const Tag = properties.as ?? (isLink ? 'a' : 'p');
   const variant = properties.variant ?? HEADING_SCALES[Tag] ?? 'body-md';
@@ -58,7 +47,6 @@ export function EmailTypography(properties: Readonly<EmailTypographyProperties>)
   return (
     <Dynamic
       is={Tag}
-      {...rest}
       align={properties.align}
       href={href}
       target={properties.target}
@@ -70,7 +58,7 @@ export function EmailTypography(properties: Readonly<EmailTypographyProperties>)
         textDecoration: isLink && underline === 'always' ? 'underline' : undefined,
       }}
     >
-      {children ?? href}
+      {properties.children ?? href}
     </Dynamic>
   );
 }

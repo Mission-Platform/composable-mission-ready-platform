@@ -10,10 +10,9 @@ export interface EmailFooterProperties {
 }
 
 export function EmailFooter(properties: Readonly<EmailFooterProperties>): MpElement {
-  const { children, text, ...rest } = properties;
+  const { children, text } = properties;
   return (
     <footer
-      {...rest}
       style={{ padding: `${spacingValue('lg')} ${spacingValue('md')} ${spacingValue('md')}` }}
     >
       <EmailDivider />

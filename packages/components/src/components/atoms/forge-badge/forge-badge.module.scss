@@ -14,33 +14,33 @@
   .forge-badge {
     display: inline-flex;
     align-items: center;
-    gap: var(--mp-spacing-1);
-    border-radius: var(--mp-radius-sm);
-    font-family: var(--mp-font-family-sans);
-    line-height: var(--mp-line-height-tight);
+    gap: var(--mp-component-feedback-badge-gap);
+    border-radius: var(--mp-component-feedback-badge-radius-default);
+    font-family: var(--mp-component-feedback-badge-font-family);
+    line-height: var(--mp-component-feedback-badge-line-height);
     white-space: nowrap;
 
     &--pill {
-      border-radius: var(--mp-radius-full);
+      border-radius: var(--mp-component-feedback-badge-radius-pill);
     }
 
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} {
-        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
-        font-size: var(--mp-size-font-#{$size});
+        padding: var(--mp-component-feedback-badge-size-#{$size}-padding-block)
+          var(--mp-component-feedback-badge-size-#{$size}-padding-inline);
+        font-size: var(--mp-component-feedback-badge-size-#{$size}-font-size);
       }
     }
 
     /**
      * Variants — the canonical colour set. Each tone maps to a semantic colour
-     * family (the `neutral` tone reuses the `default` token family, which has no
-     * `neutral` alias).
+     * family. The badge slots preserve the original tone mapping.
      */
     @each $name,
       $family
         in (
-          'neutral': 'default',
+          'neutral': 'neutral',
           'primary': 'primary',
           'secondary': 'secondary',
           'tertiary': 'tertiary',
@@ -52,8 +52,8 @@
         )
     {
       &--#{$name} {
-        background-color: var(--mp-color-#{$family}-muted);
-        color: var(--mp-color-#{$family}-text);
+        background-color: var(--mp-component-feedback-badge-#{$family}-background);
+        color: var(--mp-component-feedback-badge-#{$family}-text);
       }
     }
   }

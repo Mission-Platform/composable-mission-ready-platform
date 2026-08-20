@@ -1,6 +1,7 @@
-import { ForgeTypography } from '@mission-platform/components';
 import { h, type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
 import { ForgeIconCheck, ForgeIconCopy } from '@mission-platform/icons';
+import { ForgeTypography } from '@mission-platform/typography';
+import type { SizeScale } from '@mission-platform/tokens';
 import hljs from 'highlight.js/lib/core';
 import bash from 'highlight.js/lib/languages/bash';
 import css from 'highlight.js/lib/languages/css';
@@ -20,8 +21,6 @@ import typescript from 'highlight.js/lib/languages/typescript';
 import xml from 'highlight.js/lib/languages/xml';
 import yaml from 'highlight.js/lib/languages/yaml';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 // The hljs token theme ships as a **plain (global) CSS side-effect import** —
 // not a CSS Module — so highlight.js' generated `.hljs-*` class names are NOT
 // hashed (a CSS Module would localise them). The two-stage compiler carries
@@ -30,7 +29,7 @@ import './forge-code-block.hljs.css';
 import styles from './forge-code-block.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
-export type CodeBlockSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+export type CodeBlockSize = SizeScale;
 
 /** Colour tone of the code block — the canonical colour set (`neutral` is the plain treatment). */
 export type CodeBlockVariant =
@@ -188,7 +187,7 @@ export function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpEle
       className={[
         styles['forge-code-block'],
         styles[`forge-code-block--${variant}`],
-        sizeStyles[`forge-size--${size}`],
+        size ? `forge-size--${size}` : undefined,
       ]}
     >
       {hasHeader ? (

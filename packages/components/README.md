@@ -181,6 +181,12 @@ bare specifier with no `mp:*` condition active — you get the neutral forge sou
 import { ForgeButton, ForgeCard } from '@mission-platform/components';
 ```
 
+`ForgeTypography` is provided by the dedicated `@mission-platform/typography` package:
+
+```tsx
+import { ForgeTypography } from '@mission-platform/typography';
+```
+
 ### Per-Component Imports (avoid pulling in heavy optional components)
 
 The package barrel re-exports **every** component. Some components are deliberately heavy — e.g.
@@ -247,17 +253,22 @@ import { ForgeNavbar } from '@mission-platform/components/organisms/forge-navbar
 
 ## Component Categories
 
-- **Layout & Structure**: `ForgeStack`, `ForgeGrid`, `ForgeSeparator`, `ForgeMasonry`
-- **Application Shell & Navigation**: `ForgeApplicationLayout`, `ForgeNavbar`, `ForgeDrawer`, `ForgePagination`, `ForgeTabs`,
-  `ForgeMenu`, `ForgeMenubar`, `ForgeBreadcrumb`
-- **Typography & Content**: `ForgeTypography`, `ForgeHero`, `ForgeQuote`, `ForgeList`
-- **Forms & Inputs**: `ForgeButton`, `ForgeIconButton`, `ForgeInput`, `ForgeTextarea`, `ForgeCheckbox`, `ForgeRadio`,
-  `ForgeSwitch`, `ForgeNumberStepper`, `ForgeSlider`, `ForgeDateInput`, `ForgeColorInput`
-- **Data Display**: `ForgeTable`, `ForgeVirtualList`, `ForgeVirtualTable`, `ForgeVirtualTreeView`, `ForgeTreeView`,
-  `ForgeTimeline`
-- **Feedback & Overlays**: `ForgeAlertBanner`, `ForgeToast`, `ForgeSpinner`, `ForgeSkeleton`, `ForgeProgressBar`,
-  `ForgeStatusIcon`
-- **Media & Theme**: `ForgeResponsiveImage`, `ForgeResponsiveVideo`, `ForgeBackgroundVideo`, `ForgeDeviceMock`,
-  `ForgeThemeToggle`, `ForgeThemeProvider`
+- **Foundation/content**: `ForgeAvatar`, `ForgeButton`, `ForgeButtonGroup`, `ForgeIconButton`, `ForgeQuote`,
+  `ForgeSkeleton`, `ForgeSpinner`, `ForgeHero`
+- **Navigation**: `ForgeBreadcrumb`, `ForgeMenu`, `ForgeMenuItem`, `ForgeMenubar`, `ForgeNavbar`, `ForgeNavbarItem`,
+  `ForgePagination`, `ForgeTabs`, `ForgeVirtualTabs`
+- **Data display**: `ForgeAccordion`, `ForgeList`, `ForgeTable`, `ForgeTreeView`, `ForgeVirtualList`,
+  `ForgeVirtualTable`, `ForgeVirtualTreeView`, `ForgeVirtualLogViewer`, `ForgeTimeline`, `ForgeBadge`,
+  `ForgeProgressBar`, `ForgeStatusIcon`
+- **Layout**: `ForgeCard`, `ForgeGrid`, `ForgeMasonry`, `ForgeStack`, `ForgeSeparator`, `ForgeCollapse`
+- **Media**: `ForgeBackgroundVideo`, `ForgeResponsiveImage`, `ForgeResponsiveVideo`, `ForgeCarousel`, `ForgeDeviceMock`
+- **Communication**: `ForgeChatBubble`, `ForgeChatArea`
+- **Utilities/deferred boundaries**: `ForgeInView`, `ForgeDrawer`, `ForgeWindowPopout`
+
+Theme UI and theme contracts are provided by `@mission-platform/theme`:
+`ForgeThemeToggle`, `ForgeThemeProvider`, `ForgeThemeComposer`, and the shared theme stores.
+
+The complete residual inventory and the dependency-aware recommendations for future domain packages are documented in
+[the decomposition map](docs/decomposition-map.md).
 
 For detailed component props and architecture guides, see [docs/index.md](docs/index.md).

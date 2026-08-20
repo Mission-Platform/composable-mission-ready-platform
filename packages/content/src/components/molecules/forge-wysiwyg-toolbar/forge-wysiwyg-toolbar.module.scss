@@ -1,23 +1,25 @@
-@layer mp.components {
+@layer mp.content {
   .wysiwyg-toolbar {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--mp-spacing-xs);
-    padding: var(--mp-spacing-xs);
-    border-bottom: 1px solid var(--mp-color-border-default);
-    background-color: var(--mp-color-surface-default);
+    gap: var(--mp-component-editor-toolbar-gap);
+    padding: var(--mp-component-editor-toolbar-padding);
+    border-bottom: var(--mp-component-editor-toolbar-border-width) solid
+      var(--mp-component-editor-toolbar-border);
+    background-color: var(--mp-component-editor-toolbar-surface);
   }
 
   .wysiwyg-toolbar__group {
     display: flex;
     align-items: center;
-    gap: var(--mp-spacing-2xs);
+    gap: var(--mp-component-editor-toolbar-group-gap);
   }
 
   .wysiwyg-toolbar__group:not(:last-child) {
-    padding-right: var(--mp-spacing-xs);
-    border-right: 1px solid var(--mp-color-border-subtle);
+    padding-right: var(--mp-component-editor-toolbar-group-padding-inline-end);
+    border-right: var(--mp-component-editor-toolbar-group-border-width) solid
+      var(--mp-component-editor-toolbar-group-border);
   }
 
   .wysiwyg-toolbar__group--end {

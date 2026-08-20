@@ -38,10 +38,10 @@
 
     /* Gaps (only when not attached) */
     $gap-map: (
-      'none': var(--mp-spacing-0),
-      'xs': var(--mp-spacing-1),
-      'sm': var(--mp-spacing-2),
-      'md': var(--mp-spacing-3),
+      'none': var(--mp-component-button-group-gap-none),
+      'xs': var(--mp-component-button-group-gap-xs),
+      'sm': var(--mp-component-button-group-gap-sm),
+      'md': var(--mp-component-button-group-gap-md),
     );
 
     @each $name, $value in $gap-map {
@@ -112,7 +112,7 @@
         )
     {
       &--#{$name}.forge-button-group--attached > * {
-        border-color: var(--mp-color-#{$family}-subtle);
+        border-color: var(--mp-component-button-group-border-#{$family});
       }
     }
   }

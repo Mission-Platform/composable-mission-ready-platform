@@ -1,7 +1,5 @@
 import { classNames, h, type MpChild, type MpElement } from '@mission-platform/forge';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 import styles from './forge-button-group.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
@@ -62,7 +60,7 @@ export function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): M
     styles[`forge-button-group--${orientation}`],
     styles[`forge-button-group--gap-${gap}`],
     styles[`forge-button-group--${variant}`],
-    sizeStyles[`forge-size--${size}`],
+    size ? `forge-size--${size}` : undefined,
     { [styles['forge-button-group--attached']]: attached },
   );
 

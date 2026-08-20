@@ -21,4 +21,3 @@ export {
   type TimezoneMode,
 } from './date-time/date-time';
 export { beginPointerDrag, rootFontSize, type PointerDragHandlers } from './pointer-drag/pointer-drag';
-export { resolvePortalTarget } from './portal-target/portal-target';

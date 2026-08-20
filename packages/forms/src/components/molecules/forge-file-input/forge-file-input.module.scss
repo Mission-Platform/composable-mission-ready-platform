@@ -5,21 +5,20 @@
  * stylesheet so its BEM appearance ships in the built package CSS (the
  * two-stage compiler carries the import onto both the React and Vue builds).
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.forms {
   .forge-file-input {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-spacing-1);
+    gap: var(--mp-component-input-file-gap-stack);
 
     /* Sizes — canonical 2xs → 2xl scale (browse button padding + font). */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} .forge-file-input__button {
-        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
-        font-size: var(--mp-size-font-#{$size});
+        padding: var(--mp-component-input-file-size-#{$size}-padding-block) var(--mp-component-input-file-size-#{$size}-padding-inline);
+        font-size: var(--mp-component-input-file-size-#{$size}-font-size);
       }
     }
 
@@ -38,7 +37,7 @@
     }
 
     &__required {
-      color: var(--mp-color-danger-default);
+      color: var(--mp-component-input-file-required);
       margin-left: 2px;
     }
 
@@ -57,19 +56,19 @@
     &__row {
       display: flex;
       align-items: center;
-      gap: var(--mp-spacing-3);
+      gap: var(--mp-component-input-file-gap-row);
     }
 
     &__button {
       display: inline-flex;
       align-items: center;
-      padding: var(--mp-spacing-2) var(--mp-spacing-4);
-      font-size: var(--mp-font-size-sm);
-      font-weight: var(--mp-font-weight-medium);
-      color: var(--mp-color-text-primary);
-      background-color: var(--mp-color-bg-surface);
-      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
+      padding: var(--mp-component-input-file-size-sm-padding-block) var(--mp-component-input-file-size-sm-padding-inline);
+      font-size: var(--mp-component-input-file-size-sm-font-size);
+      font-weight: var(--mp-component-input-file-font-weight);
+      color: var(--mp-component-input-file-text-default);
+      background-color: var(--mp-component-input-file-surface-default);
+      border: var(--mp-component-input-file-border-width-default) solid var(--mp-component-input-file-border-default);
+      border-radius: var(--mp-component-input-file-radius-button);
       cursor: pointer;
       white-space: nowrap;
       transition:
@@ -77,14 +76,14 @@
         border-color 150ms ease;
 
       &--disabled {
-        background-color: var(--mp-color-bg-muted);
-        color: var(--mp-color-text-disabled);
+        background-color: var(--mp-component-input-file-surface-disabled);
+        color: var(--mp-component-input-file-text-disabled);
         cursor: not-allowed;
       }
 
       &:hover:not(.forge-file-input__button--disabled) {
-        background-color: var(--mp-color-bg-muted);
-        border-color: var(--mp-color-border-strong);
+        background-color: var(--mp-component-input-file-surface-hover);
+        border-color: var(--mp-component-input-file-border-hover);
       }
     }
 
@@ -99,11 +98,11 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: var(--mp-spacing-2);
-      padding: var(--mp-spacing-8) var(--mp-spacing-4);
-      border: var(--mp-border-width-thick) dashed var(--mp-color-border-default);
-      border-radius: var(--mp-radius-lg);
-      background-color: var(--mp-color-bg-surface);
+      gap: var(--mp-component-input-file-gap-dropzone);
+      padding: var(--mp-component-input-file-padding-dropzone-block) var(--mp-component-input-file-padding-dropzone-inline);
+      border: var(--mp-component-input-file-border-width-dropzone) dashed var(--mp-component-input-file-border-default);
+      border-radius: var(--mp-component-input-file-radius-dropzone);
+      background-color: var(--mp-component-input-file-surface-default);
       transition:
         border-color 150ms ease,
         background-color 150ms ease;
@@ -111,13 +110,13 @@
       text-align: center;
 
       &--active {
-        border-color: var(--mp-color-primary-default);
-        background-color: var(--mp-color-primary-subtle);
+        border-color: var(--mp-component-input-file-border-active);
+        background-color: var(--mp-component-input-file-surface-active);
       }
     }
 
     &__icon {
-      color: var(--mp-color-text-tertiary);
+      color: var(--mp-component-input-file-text-muted);
       font-size: 2rem;
       line-height: 1;
 
@@ -134,13 +133,13 @@
     }
 
     &__browse-link {
-      color: var(--mp-color-primary-text);
+      color: var(--mp-component-input-file-text-link);
       cursor: pointer;
-      font-weight: var(--mp-font-weight-medium);
+      font-weight: var(--mp-component-input-file-font-weight);
       text-decoration: underline;
 
       &:hover {
-        color: var(--mp-color-text-primary);
+        color: var(--mp-component-input-file-text-link-hover);
       }
     }
 
@@ -151,7 +150,7 @@
     &--error {
       .forge-file-input__button,
       .forge-file-input__dropzone {
-        border-color: var(--mp-color-danger-default);
+        border-color: var(--mp-component-input-file-border-invalid);
       }
     }
 
@@ -162,18 +161,18 @@
       .forge-file-input__name,
       .forge-file-input__drop-text,
       .forge-file-input__file-name {
-        color: var(--mp-color-text-disabled);
+        color: var(--mp-component-input-file-text-disabled);
       }
 
       .forge-file-input__dropzone {
-        background-color: var(--mp-color-bg-muted);
-        color: var(--mp-color-text-disabled);
+        background-color: var(--mp-component-input-file-surface-disabled);
+        color: var(--mp-component-input-file-text-disabled);
         cursor: not-allowed;
       }
     }
 
     &__error {
-      color: var(--mp-color-danger-text);
+      color: var(--mp-component-input-file-text-error);
       margin: 0;
     }
 

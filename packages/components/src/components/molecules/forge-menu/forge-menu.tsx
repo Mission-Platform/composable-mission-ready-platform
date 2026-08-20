@@ -1,8 +1,6 @@
 import { h, type MpElement, useEffect, useRef, useState } from '@mission-platform/forge';
 import { ForgeIconChevron, type IconDirection } from '@mission-platform/icons';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 import styles from './forge-menu.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
@@ -202,7 +200,7 @@ export function ForgeMenu(properties: Readonly<MenuProperties>): MpElement {
     <nav
       ref={navReference}
       aria-label={ariaLabel}
-      className={[styles['forge-menu'], styles[`forge-menu--${orientation}`], sizeStyles[`forge-size--${size}`]]}
+      className={[styles['forge-menu'], styles[`forge-menu--${orientation}`], size ? `forge-size--${size}` : undefined]}
     >
       <menu
         aria-orientation={orientation}

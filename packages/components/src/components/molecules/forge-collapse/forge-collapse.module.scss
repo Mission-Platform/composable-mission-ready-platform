@@ -14,23 +14,23 @@
 
 @layer mp.components {
   .forge-collapse {
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-    background-color: var(--mp-color-bg-surface);
+    border: var(--mp-component-collapse-border-width) solid var(--mp-component-collapse-border);
+    border-radius: var(--mp-component-collapse-radius);
+    background-color: var(--mp-component-collapse-surface);
     overflow: hidden;
 
     &--disabled {
       pointer-events: none;
-      background-color: var(--mp-color-bg-muted);
-      border-color: var(--mp-color-border-default);
+      background-color: var(--mp-component-collapse-disabled-surface);
+      border-color: var(--mp-component-collapse-disabled-border);
 
       .forge-collapse__summary {
-        color: var(--mp-color-text-disabled);
+        color: var(--mp-component-collapse-disabled-text);
         cursor: not-allowed;
       }
 
       .forge-collapse__content {
-        color: var(--mp-color-text-disabled);
+        color: var(--mp-component-collapse-disabled-text);
       }
     }
 
@@ -42,25 +42,25 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: var(--mp-spacing-3) var(--mp-spacing-4);
+      padding: var(--mp-component-collapse-summary-padding-block) var(--mp-component-collapse-summary-padding-inline);
       cursor: pointer;
-      color: var(--mp-color-text-primary);
-      font-weight: var(--mp-font-weight-medium);
+      color: var(--mp-component-collapse-summary-text);
+      font-weight: var(--mp-component-collapse-summary-font-weight);
       list-style: none;
       user-select: none;
-      gap: var(--mp-spacing-2);
+      gap: var(--mp-component-collapse-summary-gap);
 
       &::-webkit-details-marker {
         display: none;
       }
 
       &:hover {
-        background-color: var(--mp-color-bg-muted);
+        background-color: var(--mp-component-collapse-summary-surface-hover);
       }
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-shadow-focus-primary);
+        box-shadow: var(--mp-component-collapse-summary-focus-ring);
       }
     }
 
@@ -73,15 +73,17 @@
       flex-shrink: 0;
       display: inline-flex;
       align-items: center;
-      transition: transform 150ms ease;
+      transition: transform var(--mp-component-collapse-transition-duration)
+        var(--mp-component-collapse-transition-easing);
     }
 
     &__content {
-      padding: var(--mp-spacing-3) var(--mp-spacing-4);
-      color: var(--mp-color-text-primary);
-      border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      padding: var(--mp-component-collapse-content-padding-block) var(--mp-component-collapse-content-padding-inline);
+      color: var(--mp-component-collapse-content-text);
+      border-top: var(--mp-component-collapse-content-border-width) solid var(--mp-component-collapse-content-border);
       opacity: 1;
-      transition: opacity var(--mp-duration-fast) var(--mp-easing-standard);
+      transition: opacity var(--mp-component-collapse-transition-duration)
+        var(--mp-component-collapse-transition-easing);
 
       @starting-style {
         opacity: 0;
@@ -106,14 +108,14 @@
         )
     {
       &--#{$name} {
-        border-color: var(--mp-color-#{$family}-subtle);
+        border-color: var(--mp-component-collapse-tone-#{$family}-border);
 
         .forge-collapse__summary {
-          color: var(--mp-color-#{$family}-text);
+          color: var(--mp-component-collapse-tone-#{$family}-text);
         }
 
         .forge-collapse__content {
-          border-top-color: var(--mp-color-#{$family}-subtle);
+          border-top-color: var(--mp-component-collapse-tone-#{$family}-border);
         }
       }
     }

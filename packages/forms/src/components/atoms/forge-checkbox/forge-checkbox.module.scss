@@ -5,20 +5,19 @@
  * stylesheet so its BEM appearance ships in the built package CSS (the
  * two-stage compiler carries the import onto both the React and Vue builds).
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.forms {
   .forge-checkbox {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-spacing-1);
+    gap: var(--mp-component-checkable-gap-stack);
 
     &__row {
       display: inline-flex;
       align-items: center;
-      gap: var(--mp-spacing-2);
+      gap: var(--mp-component-checkable-gap-inline);
       cursor: pointer;
     }
 
@@ -34,23 +33,24 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 18px;
-      height: 18px;
-      border: var(--mp-border-width-thick) solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-sm);
-      background-color: var(--mp-color-bg-surface);
+      width: var(--mp-component-checkable-control-size);
+      height: var(--mp-component-checkable-control-size);
+      border: var(--mp-component-checkable-border-width-default) solid var(--mp-component-checkable-border-default);
+      border-radius: var(--mp-component-checkable-radius);
+      background-color: var(--mp-component-checkable-track-default);
       color: transparent;
       transition:
-        background-color 150ms ease,
-        border-color 150ms ease;
+        background-color var(--mp-component-checkable-transition-duration)
+          var(--mp-component-checkable-transition-easing),
+        border-color var(--mp-component-checkable-transition-duration) var(--mp-component-checkable-transition-easing);
       pointer-events: none;
     }
 
     &__glyph {
       display: block;
-      font-size: 12px;
+      font-size: var(--mp-component-checkable-glyph-font-size);
       line-height: 1;
-      font-weight: var(--mp-font-weight-bold, 700);
+      font-weight: var(--mp-component-checkable-glyph-font-weight);
 
       svg {
         display: block;
@@ -75,14 +75,14 @@
     }
 
     &__required {
-      color: var(--mp-color-danger-default);
+      color: var(--mp-component-field-required);
       margin-left: 2px;
     }
 
     /* States */
     &--error {
       .forge-checkbox__box {
-        border-color: var(--mp-color-danger-default);
+        border-color: var(--mp-component-checkable-border-invalid);
       }
     }
 
@@ -95,20 +95,21 @@
       cursor: pointer;
 
       &:focus-visible ~ .forge-checkbox__box {
-        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+        outline: var(--mp-component-checkable-border-width-focus) solid
+          var(--mp-component-checkable-border-focus-visible);
         outline-offset: 2px;
       }
 
       &:checked ~ .forge-checkbox__box,
       &:indeterminate ~ .forge-checkbox__box {
-        background-color: var(--mp-color-primary-default);
-        border-color: var(--mp-color-primary-default);
-        color: var(--mp-color-text-on-primary);
+        background-color: var(--mp-component-checkable-track-selected);
+        border-color: var(--mp-component-checkable-border-selected);
+        color: var(--mp-component-checkable-thumb-on-track);
       }
     }
 
     &--disabled {
-      opacity: 0.5;
+      opacity: var(--mp-component-feedback-opacity-disabled);
       pointer-events: none;
 
       .forge-checkbox__row {
@@ -117,14 +118,14 @@
     }
 
     &__error {
-      color: var(--mp-color-danger-text);
+      color: var(--mp-component-field-error);
       margin: 0;
-      padding-left: calc(18px + var(--mp-spacing-2));
+      padding-left: calc(var(--mp-component-checkable-control-size) + var(--mp-component-checkable-gap-inline));
     }
 
     &__hint {
       margin: 0;
-      padding-left: calc(18px + var(--mp-spacing-2));
+      padding-left: calc(var(--mp-component-checkable-control-size) + var(--mp-component-checkable-gap-inline));
     }
   }
 }

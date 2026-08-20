@@ -17,19 +17,19 @@
     &__button {
       display: flex;
       align-items: center;
-      gap: var(--mp-spacing-2);
+      gap: var(--mp-component-navigation-menu-link-gap);
       width: 100%;
-      padding: var(--mp-spacing-2) var(--mp-spacing-3);
-      font-family: var(--mp-font-family-sans);
+      padding: var(--mp-component-navigation-menu-link-padding-block) var(--mp-component-navigation-menu-link-padding-inline);
+      font-family: var(--mp-component-navigation-font-family);
       cursor: pointer;
-      border-radius: var(--mp-radius-sm);
+      border-radius: var(--mp-component-navigation-menu-item-radius);
       user-select: none;
       white-space: nowrap;
       text-decoration: none;
       color: inherit;
       transition:
-        background-color 100ms ease,
-        color 100ms ease;
+        background-color var(--mp-component-navigation-menu-item-transition-duration) var(--mp-component-navigation-menu-item-transition-easing),
+        color var(--mp-component-navigation-menu-item-transition-duration) var(--mp-component-navigation-menu-item-transition-easing);
 
       svg {
         display: block;
@@ -41,28 +41,28 @@
 
     &__link:hover,
     &__button:hover {
-      background-color: var(--mp-color-bg-muted);
+      background-color: var(--mp-component-navigation-menu-surface-link-hover);
     }
 
     &__link:focus-visible,
     &__button:focus-visible {
       outline: none;
-      box-shadow: var(--mp-shadow-focus-primary);
+      box-shadow: var(--mp-component-navigation-focus-ring);
     }
 
     &--active > &__link,
     &--active > &__button {
-      background-color: var(--mp-color-primary-muted);
-      color: var(--mp-color-primary-text);
+      background-color: var(--mp-component-navigation-menu-item-surface-active);
+      color: var(--mp-component-navigation-menu-item-text-active);
     }
 
     @mixin tone($family) {
       &--#{$family} > .forge-menu-item__link,
       &--#{$family} > .forge-menu-item__button {
-        color: var(--mp-color-#{$family}-text);
+        color: var(--mp-component-navigation-menu-tone-#{$family}-text);
 
         &:hover {
-          background-color: var(--mp-color-#{$family}-subtle);
+          background-color: var(--mp-component-navigation-menu-tone-#{$family}-surface-hover);
         }
       }
     }
@@ -78,7 +78,7 @@
 
     &--disabled > &__link,
     &--disabled > &__button {
-      opacity: 0.5;
+      opacity: var(--mp-component-feedback-opacity-disabled);
       cursor: not-allowed;
       pointer-events: none;
     }

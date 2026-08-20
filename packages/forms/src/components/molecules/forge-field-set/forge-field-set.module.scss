@@ -5,18 +5,17 @@
  * stylesheet so its BEM appearance ships in the built package CSS (the
  * two-stage compiler carries the import onto both the React and Vue builds).
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.forms {
   .forge-field-set {
     min-width: 0;
-    padding: var(--mp-spacing-4);
+    padding: var(--mp-component-field-set-padding);
     margin: 0;
-    background-color: var(--mp-color-bg-surface);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-lg);
+    background-color: var(--mp-component-field-set-surface);
+    border: var(--mp-component-field-set-border-width) solid var(--mp-component-field-set-border);
+    border-radius: var(--mp-component-field-set-radius);
 
     &--flush {
       padding: 0;
@@ -26,17 +25,17 @@
     }
 
     &__legend {
-      padding: 0 var(--mp-spacing-1);
+      padding: 0 var(--mp-component-field-set-legend-padding);
     }
 
     &__description {
-      margin: 0 0 var(--mp-spacing-3);
+      margin: 0 0 var(--mp-component-field-set-description-margin);
     }
 
     &__content {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-spacing-3);
+      gap: var(--mp-component-field-set-content-gap);
     }
   }
 }

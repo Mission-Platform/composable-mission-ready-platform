@@ -1,6 +1,5 @@
 import { classNames, h, type MpChild, type MpElement } from '@mission-platform/forge';
-
-import { ForgeTypography, type TypographyVariant } from '../forge-typography';
+import { ForgeTypography, type TypographyVariant } from '@mission-platform/typography';
 
 import styles from './forge-quote.module.scss';
 

@@ -6,7 +6,8 @@
   "sideEffects": [
     "**/*.css",
     "**/*.scss",
-    "**/*.vue"
+    "**/*.vue",
+    "dist/web-components/**/*.js"
   ],
   "exports": {
     ".": {
@@ -99,15 +100,18 @@
   "dependencies": {
     "@mission-platform/components": "workspace:*",
     "@mission-platform/forge": "workspace:*",
+    "@mission-platform/float": "workspace:*",
     "@mission-platform/forge-plugin-react": "workspace:*",
     "@mission-platform/forge-plugin-solid": "workspace:*",
     "@mission-platform/forge-plugin-svelte": "workspace:*",
     "@mission-platform/forge-plugin-vue": "workspace:*",
     "@mission-platform/forge-plugin-web-components": "workspace:*",
+    "@mission-platform/forge-web-script-language-service": "workspace:*",
     "@mission-platform/harper": "workspace:*",
     "@mission-platform/hunspell": "workspace:*",
     "@mission-platform/icons": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
+    "@mission-platform/typography": "workspace:*",
     "dompurify": "^3.4.13",
     "highlight.js": "catalog:code",
     "marked": "catalog:code",

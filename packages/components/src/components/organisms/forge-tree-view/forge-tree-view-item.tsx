@@ -1,7 +1,6 @@
 import { h, type MpChild, type MpElement, type MpRenderProperty, Slot } from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
-
-import { ForgeTypography } from '@/components/atoms/forge-typography';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-tree-view.module.scss';
 

@@ -6,7 +6,7 @@ import { useIconHref } from '../../../../sprite/provider';
 import styles from './forge-icon-flag.module.scss';
 
 /** Supported country codes for the data-driven flag component. */
-export type IconCountryCode = 'AU' | 'BR' | 'CA' | 'DE' | 'FR' | 'GB' | 'IN' | 'JP' | 'US' | 'ZA';
+export type IconCountryCode = (typeof SUPPORTED_COUNTRY_CODES)[number];
 
 export interface IconFlagProperties {
   /** Width and height — named size token ('2xs' → '2xl') or pixel number. */

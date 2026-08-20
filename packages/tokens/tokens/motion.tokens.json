@@ -4,6 +4,7 @@
     "$description": "Transition/animation duration scale, from fast press-feedback to slow enter/exit. The default UI transition is `fast` (150ms).",
     "$type": "duration",
     "instant": { "$value": "80ms", "$description": "80ms — fast press / hover feedback." },
+    "quick": { "$value": "100ms", "$description": "100ms — compact navigation-item hover and active feedback." },
     "fast": {
       "$value": "150ms",
       "$description": "150ms — the default UI transition (colour, border, shadow, opacity)."

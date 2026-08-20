@@ -1,9 +1,6 @@
 import { h, type MpElement, type MpRenderProperty, useRef } from '@mission-platform/forge';
 import { ForgeIconClose, ForgeIconPlus } from '@mission-platform/icons';
-
-import { ForgeTypography } from '@/components/atoms/forge-typography';
-
-import sizeStyles from '../../../styles/size.module.scss';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-tabs.module.scss';
 
@@ -170,7 +167,7 @@ export function ForgeTabs(properties: Readonly<TabsProperties>): MpElement {
     ));
 
   return (
-    <div className={[styles['forge-tabs'], styles[`forge-tabs--${variant}`], sizeStyles[`forge-size--${size}`]]}>
+    <div className={[styles['forge-tabs'], styles[`forge-tabs--${variant}`], size ? `forge-size--${size}` : undefined]}>
       <div className={[styles['forge-tabs__bar'], styles[`forge-tabs__bar--${variant}`]]}>
         <div
           ref={listReference}

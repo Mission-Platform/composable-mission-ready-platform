@@ -5,11 +5,10 @@
  * stylesheet so its BEM appearance ships in the built package CSS (the
  * two-stage compiler carries the import onto both the React and Vue builds).
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.forms {
   .forge-search-input {
     display: flex;
     flex-direction: column;
@@ -17,17 +16,17 @@
     &__wrapper {
       display: flex;
       align-items: center;
-      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background-color: var(--mp-color-bg-surface);
+      border: var(--mp-component-input-border-width) solid var(--mp-component-input-border-default);
+      border-radius: var(--mp-component-input-radius);
+      background-color: var(--mp-component-input-surface-default);
       transition:
         border-color 150ms ease,
         box-shadow 150ms ease;
-      gap: var(--mp-spacing-1);
+      gap: var(--mp-component-input-search-gap);
 
       &:focus-within {
-        border-color: var(--mp-color-border-focus);
-        box-shadow: var(--mp-shadow-focus-primary);
+        border-color: var(--mp-component-input-border-focus-visible);
+        box-shadow: var(--mp-component-input-focus-ring);
       }
     }
 
@@ -36,7 +35,7 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      color: var(--mp-color-text-tertiary);
+      color: var(--mp-component-input-search-icon-text);
     }
 
     &__field {
@@ -44,11 +43,11 @@
       border: none;
       outline: none;
       background: transparent;
-      color: var(--mp-color-text-primary);
-      font-family: var(--mp-font-family-sans);
+      color: var(--mp-component-input-text-default);
+      font-family: var(--mp-component-input-font-family);
 
       &::placeholder {
-        color: var(--mp-color-text-tertiary);
+        color: var(--mp-component-input-text-placeholder);
       }
 
       /* Remove native search clear button */
@@ -65,18 +64,18 @@
       border: none;
       background: transparent;
       cursor: pointer;
-      color: var(--mp-color-text-tertiary);
-      border-radius: var(--mp-radius-full);
+      color: var(--mp-component-input-search-clear-text-default);
+      border-radius: var(--mp-component-input-search-clear-radius);
       flex-shrink: 0;
       line-height: 1;
 
       &:hover {
-        color: var(--mp-color-text-primary);
+        color: var(--mp-component-input-search-clear-text-hover);
       }
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-shadow-focus-primary);
+        box-shadow: var(--mp-component-input-focus-ring);
       }
     }
 
@@ -84,22 +83,22 @@
       display: inline-block;
       width: 14px;
       height: 14px;
-      border: var(--mp-border-width-thick) solid currentcolor;
+      border: var(--mp-component-input-search-spinner-border-width) solid currentcolor;
       border-top-color: transparent;
-      border-radius: var(--mp-radius-full);
-      animation: mp-search-spin 0.6s linear infinite;
+      border-radius: var(--mp-component-input-search-spinner-radius);
+      animation: mp-search-spin var(--mp-component-input-search-spinner-duration) linear infinite;
     }
 
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} {
         .forge-search-input__wrapper {
-          padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+          padding: var(--mp-component-input-size-#{$size}-padding-block) var(--mp-component-input-size-#{$size}-padding-inline);
         }
 
         .forge-search-input__field {
           padding: 0;
-          font-size: var(--mp-size-font-#{$size});
+          font-size: var(--mp-component-input-size-#{$size}-font-size);
         }
       }
     }
@@ -108,14 +107,14 @@
       pointer-events: none;
 
       .forge-search-input__wrapper {
-        background-color: var(--mp-color-bg-muted);
+        background-color: var(--mp-component-input-surface-disabled);
         cursor: not-allowed;
       }
 
       .forge-search-input__field,
       .forge-search-input__search-icon,
       .forge-search-input__clear {
-        color: var(--mp-color-text-disabled);
+        color: var(--mp-component-input-text-disabled);
       }
     }
   }

@@ -1,5 +1,6 @@
-import { ForgeCard, ForgeStack, ForgeTypography } from '@mission-platform/components';
+import { ForgeCard, ForgeStack } from '@mission-platform/components';
 import { h, type MpElement } from '@mission-platform/forge';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import { toVCardOptions, type VCard, type VCardOptions } from '../ast/vcard';
 

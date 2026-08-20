@@ -1,5 +1,7 @@
-import { ForgeButton, ForgeDialog, ForgeTypography } from '@mission-platform/components';
+import { ForgeButton } from '@mission-platform/components';
+import { ForgeDialog } from '@mission-platform/float';
 import { Dynamic, h, type MpElement, useState } from '@mission-platform/forge';
+import { ForgeTypography } from '@mission-platform/typography';
 import { ForgeInput, ForgeTextarea } from '@mission-platform/forms';
 import { ForgeIconChevron } from '@mission-platform/icons';
 
@@ -20,7 +22,6 @@ import {
   type VEvent,
   type WeekStart,
 } from '../../../core';
-import sizeStyles from '../../../styles/size.module.scss';
 import { beginPointerDrag } from '../../../utils/pointer-drag/pointer-drag';
 
 import styles from './forge-scheduler.module.scss';
@@ -584,7 +585,7 @@ export function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpEle
   };
 
   return (
-    <div className={[styles['forge-scheduler'], sizeStyles[`forge-size--${size}`]]}>
+    <div className={[styles['forge-scheduler'], size ? `forge-size--${size}` : undefined]}>
       <div className={styles['forge-scheduler__toolbar']}>
         <ForgeButton
           size="sm"

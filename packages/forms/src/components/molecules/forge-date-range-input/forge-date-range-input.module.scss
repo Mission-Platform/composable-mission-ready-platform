@@ -5,15 +5,14 @@
  * delegated to composed `ForgeCalendar`s (which ship their own CSS), so this
  * module styles only the teleported popover shell and its two-pane layout.
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.forms {
   .forge-date-range-input {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-spacing-1);
+    gap: var(--mp-component-input-field-gap);
 
     &__label {
       display: flex;
@@ -34,23 +33,23 @@
     }
 
     &__required {
-      color: var(--mp-color-danger-default);
+      color: var(--mp-component-field-required);
       margin-left: 2px;
     }
 
     &__wrapper {
       display: flex;
       align-items: center;
-      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background-color: var(--mp-color-bg-surface);
+      border: var(--mp-component-input-border-width) solid var(--mp-component-input-border-default);
+      border-radius: var(--mp-component-input-radius);
+      background-color: var(--mp-component-input-surface-default);
       transition:
-        border-color 150ms ease,
-        box-shadow 150ms ease;
+        border-color var(--mp-component-input-transition-duration) var(--mp-component-input-transition-easing),
+        box-shadow var(--mp-component-input-transition-duration) var(--mp-component-input-transition-easing);
 
       &:focus-within {
-        border-color: var(--mp-color-border-focus);
-        box-shadow: var(--mp-shadow-focus-primary);
+        border-color: var(--mp-component-input-border-focus-visible);
+        box-shadow: var(--mp-component-input-focus-ring);
       }
     }
 
@@ -81,28 +80,28 @@
       display: flex;
       align-items: center;
       flex-shrink: 0;
-      color: var(--mp-color-text-secondary);
+      color: var(--mp-component-input-text-secondary);
 
       &--start {
-        margin-inline-start: var(--mp-spacing-2);
+        margin-inline-start: var(--mp-component-input-extension-gap);
       }
 
       &--end {
-        margin-inline-end: var(--mp-spacing-2);
+        margin-inline-end: var(--mp-component-input-extension-gap);
       }
     }
 
     &__value {
-      color: var(--mp-color-text-primary);
-      font-family: var(--mp-font-family-sans);
+      color: var(--mp-component-input-text-default);
+      font-family: var(--mp-component-input-font-family);
 
       &--placeholder {
-        color: var(--mp-color-text-tertiary);
+        color: var(--mp-component-input-text-placeholder);
       }
     }
 
     &__icon {
-      color: var(--mp-color-text-secondary);
+      color: var(--mp-component-input-text-secondary);
       display: flex;
       align-items: center;
       flex-shrink: 0;
@@ -118,35 +117,36 @@
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} .forge-date-range-input__trigger {
-        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+        padding: var(--mp-component-input-size-#{$size}-padding-block)
+          var(--mp-component-input-size-#{$size}-padding-inline);
 
         .forge-date-range-input__value {
-          font-size: var(--mp-size-font-#{$size});
+          font-size: var(--mp-component-input-size-#{$size}-font-size);
         }
       }
     }
 
     /* States */
     &--error .forge-date-range-input__wrapper {
-      border-color: var(--mp-color-danger-default);
+      border-color: var(--mp-component-input-border-invalid);
 
       &:focus-within {
-        box-shadow: var(--mp-shadow-focus-danger);
+        box-shadow: var(--mp-component-input-focus-ring-invalid);
       }
     }
 
     &--disabled {
-      opacity: 0.5;
+      opacity: var(--mp-component-input-opacity-disabled);
       pointer-events: none;
 
       .forge-date-range-input__wrapper {
-        background-color: var(--mp-color-bg-muted);
+        background-color: var(--mp-component-input-surface-disabled);
         cursor: not-allowed;
       }
     }
 
     &__error {
-      color: var(--mp-color-danger-text);
+      color: var(--mp-component-field-error);
       margin: 0;
     }
 
@@ -157,7 +157,7 @@
     /* Two-pane content filling the ForgeDropdown panel (which owns the surface,
        border, shadow, scrolling, and anchored positioning). */
     &__calendar {
-      padding: var(--mp-spacing-2);
+      padding: var(--mp-component-calendar-popup-padding);
 
       /* Cap to the viewport so the two panes wrap instead of overflowing on mobile. */
       max-width: calc(100vw - var(--mp-spacing-4));
@@ -166,13 +166,13 @@
     &__panes {
       display: flex;
       flex-wrap: wrap;
-      gap: var(--mp-spacing-4);
+      gap: var(--mp-component-form-gap-large);
     }
 
     &__pane {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-spacing-1);
+      gap: var(--mp-component-form-gap-tight);
       min-width: 260px;
     }
   }

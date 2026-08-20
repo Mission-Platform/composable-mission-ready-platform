@@ -11,6 +11,8 @@
 
 /* stylelint-disable selector-class-pattern */
 
+@layer mp.content {
+
 .hljs {
   color: #24292e;
   background: transparent;
@@ -208,6 +210,8 @@
     color: #ffdcd7;
     background: #67060c;
   }
+}
+
 }
 
 /* stylelint-enable selector-class-pattern */

@@ -1,8 +1,8 @@
-import { ForgeTypography } from '@mission-platform/components';
 import { type ClassValue, h, type MpElement, useEffect, useId, useState } from '@mission-platform/forge';
+import { ForgeSelect } from '@mission-platform/select';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import { ForgeInput } from '../../atoms/forge-input';
-import { ForgeSelect } from '../forge-select';
 
 import styles from './forge-location-input.module.scss';
 import { emptyLocation, formatAxis, parseAxis } from './location';

@@ -1,10 +1,11 @@
-@layer mp.components {
+@layer mp.content {
   .wysiwyg-block-controls {
     position: absolute;
     z-index: 1;
     box-sizing: border-box;
-    border: 1px dashed var(--mp-color-primary-default);
-    border-radius: var(--mp-radius-sm);
+    border: var(--mp-component-editor-block-controls-selection-border-width) dashed
+      var(--mp-component-editor-block-controls-selection-border);
+    border-radius: var(--mp-component-editor-block-controls-selection-radius);
     pointer-events: none;
   }
 
@@ -13,13 +14,14 @@
     top: 2px;
     right: 2px;
     display: inline-flex;
-    gap: 2px;
+    gap: var(--mp-component-editor-block-controls-gap);
     align-items: center;
-    padding: 2px;
-    background-color: var(--mp-color-surface-raised, var(--mp-color-surface-default));
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-    box-shadow: var(--mp-shadow-sm, 0 1px 2px rgb(0 0 0 / 20%));
+    padding: var(--mp-component-editor-block-controls-padding);
+    background-color: var(--mp-component-editor-block-controls-bar-surface);
+    border: var(--mp-component-editor-block-controls-bar-border-width) solid
+      var(--mp-component-editor-block-controls-bar-border);
+    border-radius: var(--mp-component-editor-block-controls-bar-radius);
+    box-shadow: var(--mp-component-editor-block-controls-bar-shadow);
     pointer-events: auto;
   }
 

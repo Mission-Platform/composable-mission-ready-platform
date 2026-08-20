@@ -13,19 +13,24 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: var(--mp-border-width-thin) solid transparent;
-    border-radius: var(--mp-radius-sm);
-    background: transparent;
-    color: var(--mp-color-text-secondary);
+    border: var(--mp-component-button-icon-button-border-width) solid transparent;
+    border-radius: var(--mp-component-button-icon-button-radius);
+    background: var(--mp-component-button-ghost-background-default);
+    color: var(--mp-component-button-icon-button-color);
     line-height: 1;
     cursor: pointer;
     flex-shrink: 0;
     transition:
-      background-color 150ms ease,
-      border-color 150ms ease,
-      color 150ms ease,
-      box-shadow 150ms ease,
-      opacity 150ms ease;
+      background-color var(--mp-component-button-icon-button-transition-duration)
+        var(--mp-component-button-icon-button-transition-easing),
+      border-color var(--mp-component-button-icon-button-transition-duration)
+        var(--mp-component-button-icon-button-transition-easing),
+      color var(--mp-component-button-icon-button-transition-duration)
+        var(--mp-component-button-icon-button-transition-easing),
+      box-shadow var(--mp-component-button-icon-button-transition-duration)
+        var(--mp-component-button-icon-button-transition-easing),
+      opacity var(--mp-component-button-icon-button-transition-duration)
+        var(--mp-component-button-icon-button-transition-easing);
 
     svg {
       display: block;
@@ -46,36 +51,40 @@
 
     &:focus-visible {
       outline: none;
-      box-shadow: var(--mp-shadow-focus-primary);
+      box-shadow: var(--mp-component-button-icon-button-focus-ring);
     }
 
     &:disabled {
       cursor: not-allowed;
-      opacity: 0.5;
+      opacity: var(--mp-component-button-icon-button-opacity-disabled);
     }
 
     /* Sizes — square padding, canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} {
-        padding: var(--mp-size-pad-block-#{$size});
-        font-size: var(--mp-size-font-#{$size});
+        padding: var(--mp-component-button-icon-button-size-#{$size}-padding);
+        font-size: var(--mp-component-button-icon-button-size-#{$size}-font-size);
       }
     }
 
     /* Variants */
 
     /* Ghost / tertiary — transparent, the default toolbar / close affordance. */
-    &--ghost,
-    &--tertiary {
-      &:hover:not(:disabled) {
-        background-color: var(--mp-color-bg-muted);
-        color: var(--mp-color-text-primary);
-      }
+    @mixin transparent($name) {
+      &--#{$name} {
+        &:hover:not(:disabled) {
+          background-color: var(--mp-component-button-#{$name}-background-hover);
+          color: var(--mp-component-button-#{$name}-text-hover);
+        }
 
-      &:active:not(:disabled) {
-        background-color: var(--mp-color-bg-sunken);
+        &:active:not(:disabled) {
+          background-color: var(--mp-component-button-#{$name}-background-active);
+        }
       }
     }
+
+    @include transparent('ghost');
+    @include transparent('tertiary');
 
     /**
      * Solid fill (high emphasis) for the colour tones. The `neutral` tone reuses
@@ -83,15 +92,18 @@
      */
     @mixin solid($name, $family) {
       &--#{$name} {
-        background-color: var(--mp-color-#{$family}-default);
-        color: var(--mp-color-text-on-primary);
+        background-color: var(--mp-component-button-#{$name}-background-default);
+        color: var(--mp-component-button-#{$name}-text-default);
 
         &:hover:not(:disabled) {
-          background-color: var(--mp-color-#{$family}-hover);
+          background-color: var(--mp-component-button-#{$name}-background-hover);
         }
 
         &:active:not(:disabled) {
-          background-color: var(--mp-color-#{$family}-active, var(--mp-color-#{$family}-hover));
+          background-color: var(
+            --mp-component-button-#{$name}-background-active,
+            var(--mp-component-button-#{$name}-background-hover)
+          );
         }
       }
     }
@@ -107,23 +119,23 @@
     &--error,
     &--critical {
       &:focus-visible {
-        box-shadow: var(--mp-shadow-focus-danger);
+        box-shadow: var(--mp-component-button-error-focus-ring);
       }
     }
 
     /* Secondary — outlined (medium emphasis). */
     &--secondary {
-      border-color: var(--mp-color-border-default);
-      background-color: var(--mp-color-bg-surface);
-      color: var(--mp-color-text-primary);
+      border-color: var(--mp-component-button-secondary-border-default);
+      background-color: var(--mp-component-button-secondary-background-default);
+      color: var(--mp-component-button-secondary-text-default);
 
       &:hover:not(:disabled) {
-        background-color: var(--mp-color-bg-muted);
-        border-color: var(--mp-color-border-strong);
+        background-color: var(--mp-component-button-secondary-background-hover);
+        border-color: var(--mp-component-button-secondary-border-hover);
       }
 
       &:active:not(:disabled) {
-        background-color: var(--mp-color-bg-sunken);
+        background-color: var(--mp-component-button-secondary-background-active);
       }
     }
   }

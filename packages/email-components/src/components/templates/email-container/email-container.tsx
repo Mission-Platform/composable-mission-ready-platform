@@ -10,10 +10,8 @@ export interface EmailContainerProperties {
 }
 
 export function EmailContainer(properties: Readonly<EmailContainerProperties>): MpElement {
-  const { children, width: _width, background: _background, ...rest } = properties;
   return (
     <table
-      {...rest}
       class="mp-email-container"
       role="presentation"
       width="100%"
@@ -30,7 +28,7 @@ export function EmailContainer(properties: Readonly<EmailContainerProperties>): 
     >
       <tbody>
         <tr>
-          <td>{children}</td>
+          <td>{properties.children}</td>
         </tr>
       </tbody>
     </table>

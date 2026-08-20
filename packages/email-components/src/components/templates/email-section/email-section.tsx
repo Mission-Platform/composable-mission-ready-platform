@@ -10,10 +10,8 @@ export interface EmailSectionProperties {
 }
 
 export function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement {
-  const { children, background: _background, padding: _padding, ...rest } = properties;
   return (
     <section
-      {...rest}
       style={{ margin: 0 }}
     >
       <table
@@ -26,7 +24,7 @@ export function EmailSection(properties: Readonly<EmailSectionProperties>): MpEl
       >
         <tbody>
           <tr>
-            <td style={{ padding: spacingValue(properties.padding ?? 'lg') }}>{children}</td>
+            <td style={{ padding: spacingValue(properties.padding ?? 'lg') }}>{properties.children}</td>
           </tr>
         </tbody>
       </table>

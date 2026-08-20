@@ -122,8 +122,8 @@ Typography mixins (legacy — being retired in Phase 2):
 > **Phase 2 (in progress):** the SCSS `mp-font-*` mixin layer is being incrementally
 > retired in favour of composing the generated `--mp-font-*`, `--mp-line-height-*`
 > and `--mp-letter-spacing-*` CSS custom properties directly. New code should prefer
-> the CSS variables; `ForgeTypography` (in `@mission-platform/components`) has already
-> been migrated as the first consumer.
+> the CSS variables; `ForgeTypography` (in `@mission-platform/typography`) consumes
+> the dedicated typography package's implementation.
 
 Plain CSS (no SCSS toolchain):
 

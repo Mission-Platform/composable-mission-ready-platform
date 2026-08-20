@@ -1,8 +1,5 @@
 import { h, type MpChild, type MpElement, type MpRenderProperty, Slot } from '@mission-platform/forge';
-
-import { ForgeTypography } from '@/components/atoms/forge-typography';
-
-import sizeStyles from '../../../styles/size.module.scss';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-timeline.module.scss';
 
@@ -91,7 +88,7 @@ export function ForgeTimeline(properties: Readonly<TimelineProperties>): MpEleme
       className={[
         styles['forge-timeline'],
         styles[`forge-timeline--${orientation}`],
-        sizeStyles[`forge-size--${size}`],
+        size ? `forge-size--${size}` : undefined,
         {
           [styles['forge-timeline--alternate']]: isAlternate,
         },

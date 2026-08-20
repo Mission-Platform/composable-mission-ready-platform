@@ -18,11 +18,12 @@
      * a background, so the control looked invisible until hovered.
      */
     display: inline-block;
-    padding: var(--mp-spacing-2);
-    color: var(--mp-color-text-primary);
-    background-color: var(--mp-color-bg-surface);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
+    padding: var(--mp-component-navigation-menu-padding);
+    color: var(--mp-component-navigation-menu-text-default);
+    background-color: var(--mp-component-navigation-menu-surface-default);
+    border: var(--mp-component-navigation-menu-border-width-default) solid
+      var(--mp-component-navigation-menu-border-default);
+    border-radius: var(--mp-component-navigation-menu-radius);
 
     /* A vertical menu is a stacked panel; a horizontal one is a full-width bar. */
     &--vertical {
@@ -41,7 +42,7 @@
       padding: 0;
       display: flex;
       flex-direction: column;
-      gap: var(--mp-spacing-1);
+      gap: var(--mp-component-navigation-menu-submenu-gap);
     }
 
     /*
@@ -52,7 +53,7 @@
     &--horizontal &__list {
       flex-flow: row wrap;
       align-items: center;
-      gap: var(--mp-spacing-2);
+      gap: var(--mp-component-navigation-menu-link-gap);
     }
 
     &--horizontal &__link {
@@ -66,47 +67,50 @@
     &__link {
       display: flex;
       align-items: center;
-      gap: var(--mp-spacing-2);
+      gap: var(--mp-component-navigation-menu-link-gap);
       width: 100%;
-      padding: var(--mp-spacing-2) var(--mp-spacing-3);
-      border-radius: var(--mp-radius-md);
-      color: var(--mp-color-text-primary);
+      padding: var(--mp-component-navigation-menu-link-padding-block)
+        var(--mp-component-navigation-menu-link-padding-inline);
+      border-radius: var(--mp-component-navigation-menu-link-radius);
+      color: var(--mp-component-navigation-menu-text-default);
 
       /*
        * A resting tint so each row is discernible as an item on the surface. The
-       * old rule left the link transparent and only painted on `:hover` — and it
-       * reached for `--mp-color-bg-subtle`, which is not a token in the set, so
-       * even the hover state painted nothing.
+       * old rule left the link transparent and only painted on `:hover`, so the
+       * item was not visually discoverable at rest.
        */
-      background-color: var(--mp-color-bg-sunken);
+      background-color: var(--mp-component-navigation-menu-surface-link-default);
       border: none;
       cursor: pointer;
       text-decoration: none;
       text-align: left;
-      font-family: var(--mp-font-family-sans);
+      font-family: var(--mp-component-navigation-font-family);
       transition:
-        background-color 0.15s ease,
-        color 0.15s ease;
+        background-color var(--mp-component-navigation-menu-transition-duration)
+          var(--mp-component-navigation-menu-transition-easing),
+        color var(--mp-component-navigation-menu-transition-duration)
+          var(--mp-component-navigation-menu-transition-easing);
 
       &:focus-visible {
-        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+        outline: var(--mp-component-navigation-menu-border-width-focus) solid
+          var(--mp-component-navigation-menu-border-focus);
         outline-offset: 2px;
       }
 
       &:disabled,
       &[aria-disabled='true'] {
-        color: var(--mp-color-text-disabled);
+        color: var(--mp-component-navigation-menu-text-disabled);
         cursor: not-allowed;
         pointer-events: none;
       }
 
       &:hover:not(:disabled, [aria-disabled='true']) {
-        background-color: var(--mp-color-bg-muted);
-        color: var(--mp-color-text-primary);
+        background-color: var(--mp-component-navigation-menu-surface-link-hover);
+        color: var(--mp-component-navigation-menu-text-default);
       }
 
       &[aria-expanded='true'] {
-        background-color: var(--mp-color-bg-muted);
+        background-color: var(--mp-component-navigation-menu-surface-link-expanded);
       }
     }
 
@@ -120,22 +124,24 @@
 
     &__chevron {
       flex-shrink: 0;
-      color: var(--mp-color-text-secondary);
-      font-size: var(--mp-size-font-xs);
+      color: var(--mp-component-navigation-menu-text-chevron);
+      font-size: var(--mp-component-navigation-menu-chevron-font-size);
     }
 
     &__submenu {
       list-style: none;
       margin: 0;
-      padding: 0 0 0 var(--mp-spacing-4);
+      padding: 0 0 0 var(--mp-component-navigation-menu-submenu-padding-inline-start);
       display: flex;
       flex-direction: column;
-      gap: var(--mp-spacing-1);
+      gap: var(--mp-component-navigation-menu-submenu-gap);
       opacity: 1;
       translate: 0 0;
       transition:
-        opacity var(--mp-duration-fast) var(--mp-easing-standard),
-        translate var(--mp-duration-fast) var(--mp-easing-standard);
+        opacity var(--mp-component-navigation-menu-transition-duration)
+          var(--mp-component-navigation-menu-transition-easing),
+        translate var(--mp-component-navigation-menu-transition-duration)
+          var(--mp-component-navigation-menu-transition-easing);
 
       @starting-style {
         opacity: 0;
@@ -143,8 +149,9 @@
       }
 
       &--nested {
-        margin-left: var(--mp-spacing-2);
-        border-left: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+        margin-left: var(--mp-component-navigation-menu-submenu-nested-margin);
+        border-left: var(--mp-component-navigation-menu-border-width-default) solid
+          var(--mp-component-navigation-menu-border-default);
       }
     }
 
@@ -160,17 +167,19 @@
       inset-inline-start: 0;
       z-index: var(--mp-z-index-dropdown);
       min-width: 12rem;
-      padding: var(--mp-spacing-2);
-      background-color: var(--mp-color-bg-surface);
-      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      box-shadow: var(--mp-shadow-md);
+      padding: var(--mp-component-navigation-menu-padding);
+      background-color: var(--mp-component-navigation-menu-surface-default);
+      border: var(--mp-component-navigation-menu-border-width-default) solid
+        var(--mp-component-navigation-menu-border-default);
+      border-radius: var(--mp-component-navigation-menu-radius);
+      box-shadow: var(--mp-component-navigation-menu-shadow);
 
       &--nested {
         inset-block-start: 0;
         inset-inline-start: 100%;
         margin-left: 0;
-        border-left: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+        border-left: var(--mp-component-navigation-menu-border-width-default) solid
+          var(--mp-component-navigation-menu-border-default);
       }
     }
 

@@ -1,20 +1,21 @@
-@layer mp.components {
+@layer mp.resource-planner {
   .forge-resource-planner {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-spacing-3);
+    gap: var(--mp-component-resource-planner-container-gap);
     min-width: 0;
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-lg);
-    background: var(--mp-color-bg-surface);
-    padding: var(--mp-spacing-3);
+    border: var(--mp-component-resource-planner-container-border-width) solid
+      var(--mp-component-resource-planner-container-border);
+    border-radius: var(--mp-component-resource-planner-container-radius);
+    background: var(--mp-component-resource-planner-container-surface);
+    padding: var(--mp-component-resource-planner-container-padding);
 
     &__toolbar,
     &__navigation,
     &__view-switcher {
       display: flex;
       align-items: center;
-      gap: var(--mp-spacing-2);
+      gap: var(--mp-component-resource-planner-toolbar-gap);
     }
 
     &__toolbar {
@@ -24,23 +25,26 @@
 
     &__navigation button,
     &__view-switcher button {
-      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-sm);
-      background: var(--mp-color-bg-surface);
-      color: var(--mp-color-text-primary);
+      border: var(--mp-component-resource-planner-control-border-width) solid
+        var(--mp-component-resource-planner-control-border);
+      border-radius: var(--mp-component-resource-planner-control-radius);
+      background: var(--mp-component-resource-planner-control-surface);
+      color: var(--mp-component-resource-planner-control-text);
       cursor: pointer;
-      padding: var(--mp-spacing-1) var(--mp-spacing-2);
+      padding: var(--mp-component-resource-planner-control-padding-block)
+        var(--mp-component-resource-planner-control-padding-inline);
     }
 
     &__view-switcher button[aria-pressed="true"] {
-      background: var(--mp-color-primary-default);
-      color: var(--mp-color-text-on-primary);
+      background: var(--mp-component-resource-planner-control-selected-surface);
+      color: var(--mp-component-resource-planner-control-selected-text);
     }
 
     &__viewport {
       overflow: auto;
       min-height: 12rem;
-      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      border: var(--mp-component-resource-planner-viewport-border-width) solid
+        var(--mp-component-resource-planner-viewport-border);
     }
 
     &__header,
@@ -55,9 +59,9 @@
       top: 0;
       z-index: 3;
       min-height: 2.75rem;
-      border-bottom: var(--mp-border-width-thin) solid
-        var(--mp-color-border-default);
-      background: var(--mp-color-bg-surface);
+      border-bottom: var(--mp-component-resource-planner-header-border-width)
+        solid var(--mp-component-resource-planner-header-border);
+      background: var(--mp-component-resource-planner-header-surface);
     }
 
     &__resource-header,
@@ -65,15 +69,15 @@
       position: sticky;
       left: 0;
       z-index: 2;
-      border-right: var(--mp-border-width-thin) solid
-        var(--mp-color-border-default);
-      background: var(--mp-color-bg-surface);
-      padding: var(--mp-spacing-2);
+      border-right: var(--mp-component-resource-planner-resource-border-width)
+        solid var(--mp-component-resource-planner-resource-border);
+      background: var(--mp-component-resource-planner-resource-surface);
+      padding: var(--mp-component-resource-planner-resource-padding);
     }
 
     &__resource-header {
       z-index: 4;
-      font-weight: var(--mp-font-weight-semibold);
+      font-weight: var(--mp-component-resource-planner-resource-heading-weight);
     }
 
     &__timeline-header,
@@ -85,11 +89,11 @@
 
     &__timeline-header > div {
       flex: 0 0 auto;
-      border-right: var(--mp-border-width-thin) solid
-        var(--mp-color-border-default);
-      padding: var(--mp-spacing-2);
-      color: var(--mp-color-text-secondary);
-      font-size: var(--mp-font-size-sm);
+      border-right: var(--mp-component-resource-planner-timeline-border-width)
+        solid var(--mp-component-resource-planner-timeline-border);
+      padding: var(--mp-component-resource-planner-timeline-header-padding);
+      color: var(--mp-component-resource-planner-timeline-header-text);
+      font-size: var(--mp-component-resource-planner-timeline-header-font-size);
     }
 
     &__rows {
@@ -103,20 +107,20 @@
       width: 100%;
       height: var(--resource-row-height);
       min-height: var(--resource-row-height);
-      border-bottom: var(--mp-border-width-thin) solid
-        var(--mp-color-border-default);
+      border-bottom: var(--mp-component-resource-planner-row-border-width) solid
+        var(--mp-component-resource-planner-row-border);
     }
 
     &__resource {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: var(--mp-spacing-1);
+      gap: var(--mp-component-resource-planner-resource-gap);
       cursor: pointer;
     }
 
     &__resource small {
-      color: var(--mp-color-text-secondary);
+      color: var(--mp-component-resource-planner-resource-secondary-text);
     }
 
     &__timeline {
@@ -125,52 +129,67 @@
         90deg,
         transparent 0,
         transparent calc(var(--slot-width, 144px) - 1px),
-        var(--mp-color-border-default) calc(var(--slot-width, 144px) - 1px),
-        var(--mp-color-border-default) var(--slot-width, 144px)
+        var(--mp-component-resource-planner-timeline-border)
+          calc(var(--slot-width, 144px) - 1px),
+        var(--mp-component-resource-planner-timeline-border)
+          var(--slot-width, 144px)
       );
       cursor: crosshair;
     }
 
     &__timeline[data-selected="true"] {
-      outline: 2px solid var(--mp-color-primary-default);
+      outline: 2px solid
+        var(--mp-component-resource-planner-timeline-selected-ring);
       outline-offset: -2px;
     }
 
     &__capacity-cell {
       flex: 0 0 auto;
       height: 100%;
-      border-right: var(--mp-border-width-thin) solid
-        color-mix(in srgb, var(--mp-color-border-default) 45%, transparent);
+      border-right: var(--mp-component-resource-planner-capacity-border-width)
+        solid
+        color-mix(
+          in srgb,
+          var(--mp-component-resource-planner-capacity-border) 45%,
+          transparent
+        );
       color: transparent;
-      font-size: var(--mp-font-size-xs);
+      font-size: var(--mp-component-resource-planner-capacity-font-size);
       pointer-events: none;
     }
 
     &__capacity-cell[data-status="unavailable"] {
-      background: color-mix(in srgb, var(--mp-color-bg-muted) 70%, transparent);
+      background: color-mix(
+        in srgb,
+        var(--mp-component-resource-planner-capacity-unavailable-surface) 70%,
+        transparent
+      );
     }
 
     &__capacity-cell[data-status="over-capacity"],
     &__capacity-cell[data-status="conflict"] {
       background: color-mix(
         in srgb,
-        var(--mp-color-error-default) 12%,
+        var(--mp-component-resource-planner-capacity-conflict-surface) 12%,
         transparent
       );
     }
 
     &__booking {
       position: absolute;
-      top: var(--mp-spacing-2);
+      top: var(--mp-component-resource-planner-booking-padding-inline);
       z-index: 1;
       overflow: hidden;
-      height: calc(100% - var(--mp-spacing-4));
+      height: calc(
+        100% - var(--mp-component-resource-planner-booking-height-inset)
+      );
       border: none;
-      border-radius: var(--mp-radius-sm);
-      background: var(--mp-color-primary-default);
-      color: var(--mp-color-text-on-primary);
+      border-radius: var(--mp-component-resource-planner-booking-radius);
+      background: var(--mp-component-resource-planner-booking-surface);
+      color: var(--mp-component-resource-planner-booking-text);
       cursor: grab;
-      padding: var(--mp-spacing-1) var(--mp-spacing-2);
+      padding: var(--mp-component-resource-planner-booking-padding-block)
+        var(--mp-component-resource-planner-booking-padding-inline);
       text-align: left;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -179,12 +198,12 @@
     &__booking:focus-visible,
     &__navigation button:focus-visible,
     &__view-switcher button:focus-visible {
-      outline: 2px solid var(--mp-color-focus-ring);
+      outline: 2px solid var(--mp-component-resource-planner-booking-focus-ring);
       outline-offset: 2px;
     }
 
     &__booking[data-conflict="true"] {
-      background: var(--mp-color-error-default);
+      background: var(--mp-component-resource-planner-booking-conflict-surface);
     }
 
     &__resize-start,
@@ -206,13 +225,17 @@
 
     &__selection {
       position: absolute;
-      top: var(--mp-spacing-1);
+      top: var(--mp-component-resource-planner-booking-padding-block);
       z-index: 0;
-      height: calc(100% - var(--mp-spacing-2));
-      border: 1px dashed var(--mp-color-primary-default);
+      height: calc(
+        100% - var(--mp-component-resource-planner-selection-height-inset)
+      );
+      border: var(--mp-component-resource-planner-selection-border-width)
+        var(--mp-component-resource-planner-selection-border-style)
+        var(--mp-component-resource-planner-selection-border);
       background: color-mix(
         in srgb,
-        var(--mp-color-primary-default) 12%,
+        var(--mp-component-resource-planner-selection-surface) 12%,
         transparent
       );
       pointer-events: none;
@@ -222,15 +245,15 @@
       position: absolute;
       top: 0;
       z-index: 2;
-      width: 2px;
+      width: var(--mp-component-resource-planner-current-time-width);
       height: 100%;
-      background: var(--mp-color-error-default);
+      background: var(--mp-component-resource-planner-current-time-surface);
       pointer-events: none;
     }
 
     &__empty {
       margin: 0;
-      color: var(--mp-color-text-secondary);
+      color: var(--mp-component-resource-planner-empty-text);
     }
   }
 }

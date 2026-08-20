@@ -1,8 +1,6 @@
 import { classNames, h, type MpChild, type MpElement } from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 import styles from './forge-collapse.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
@@ -54,7 +52,7 @@ export function ForgeCollapse(properties: Readonly<CollapseProperties>): MpEleme
   const className = classNames(
     styles['forge-collapse'],
     styles[`forge-collapse--${variant}`],
-    sizeStyles[`forge-size--${size}`],
+    size ? `forge-size--${size}` : undefined,
     {
       [styles['forge-collapse--disabled']]: disabled,
     },

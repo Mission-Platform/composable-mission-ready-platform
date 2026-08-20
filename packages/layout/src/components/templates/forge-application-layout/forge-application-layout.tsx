@@ -76,9 +76,9 @@ const BREAKPOINT_PX: Record<SidebarBreakpoint, number> = {
 /** Maps each {@link StatusLevel} onto the banner background colour token. */
 const STATUS_BACKGROUND: Record<StatusLevel, string> = {
   none: 'transparent',
-  info: 'var(--mp-color-info-default)',
-  warning: 'var(--mp-color-warning-default)',
-  error: 'var(--mp-color-danger-default)',
+  info: 'var(--mp-component-layout-application-status-background-info)',
+  warning: 'var(--mp-component-layout-application-status-background-warning)',
+  error: 'var(--mp-component-layout-application-status-background-error)',
 };
 
 /**
@@ -168,7 +168,8 @@ export function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutPro
   };
 
   const statusColor = STATUS_BACKGROUND[statusLevel];
-  const statusTextColor = statusLevel === 'none' ? undefined : 'var(--mp-color-text-on-primary)';
+  const statusTextColor =
+    statusLevel === 'none' ? undefined : 'var(--mp-component-layout-application-text-status)';
   const statusRole = resolveStatusRole(statusLevel);
 
   return (

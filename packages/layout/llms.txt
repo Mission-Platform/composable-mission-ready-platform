@@ -30,9 +30,10 @@ t-shirt scale (`'2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'`), defaulting t
 `ForgeIconButton`, `ForgeHero`, `ForgePagination`, `ForgeSlider`, `ForgeRangeInput`,
 `ForgeRating`, `ForgeSegmentControl`, `ForgeOtpInput`, `ForgeMarkdownInput`,
 `ForgeFileInput`) scale that styling across all seven steps; every other component
-applies the shared `src/components/size.module.scss` utility, whose
+applies the shared `@mission-platform/tokens` utility, whose
 `forge-size--<step>` classes set `font-size` to the matching `--mp-size-font-*`
 design token so the element (and any `em`-relative box) scales with the request.
+The utilities are emitted by `@mission-platform/tokens`.
 Two intentional exceptions: `ForgeTypography`'s `size` is **opt-in** (unset by
 default so the chosen `variant` keeps driving its font-size, and only overrides
 it when set), and `ForgeModal` keeps its extra non-canonical `'full'` value

@@ -1,6 +1,5 @@
 import { classNames, h, type MpChild, type MpElement } from '@mission-platform/forge';
-
-import { ForgeTypography } from '../forge-typography';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-badge.module.scss';
 

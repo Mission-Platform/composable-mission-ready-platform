@@ -66,9 +66,11 @@
   },
   "dependencies": {
     "@mission-platform/components": "workspace:*",
+    "@mission-platform/float": "workspace:*",
     "@mission-platform/forms": "workspace:*",
     "@mission-platform/forge": "workspace:*",
     "@mission-platform/icons": "workspace:*",
+    "@mission-platform/typography": "workspace:*",
     "@mission-platform/vcard": "workspace:*",
     "luxon": "catalog:",
     "nanoid": "^5.1.16"

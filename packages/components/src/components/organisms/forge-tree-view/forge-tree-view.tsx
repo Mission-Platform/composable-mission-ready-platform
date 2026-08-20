@@ -1,7 +1,5 @@
 import { h, type MpElement, type MpRenderProperty, useState } from '@mission-platform/forge';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 import { ForgeTreeViewItem } from './forge-tree-view-item';
 import styles from './forge-tree-view.module.scss';
 
@@ -99,7 +97,7 @@ export function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpEleme
 
   return (
     <ul
-      className={[styles['tree-view'], sizeStyles[`forge-size--${size}`]]}
+      className={[styles['tree-view'], size ? `forge-size--${size}` : undefined]}
       role="tree"
     >
       {nodes.map((node) => (

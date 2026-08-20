@@ -28,7 +28,7 @@
       position: absolute;
       inset: 0;
       z-index: -1;
-      background-color: var(--mp-color-bg-scrim);
+      background-color: var(--mp-component-media-surface-overlay);
     }
 
     &__content {
@@ -38,8 +38,8 @@
       flex-direction: column;
       justify-content: center;
       min-height: inherit;
-      padding: var(--mp-spacing-8);
-      color: var(--mp-color-text-inverse);
+      padding: var(--mp-component-media-background-padding);
+      color: var(--mp-component-media-text-inverse);
     }
   }
 }

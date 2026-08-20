@@ -1,9 +1,6 @@
 import { h, type MpChild, type MpElement, type MpRenderProperty, Slot, useState } from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
-
-import { ForgeTypography } from '@/components/atoms/forge-typography';
-
-import sizeStyles from '../../../styles/size.module.scss';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-accordion.module.scss';
 
@@ -95,7 +92,7 @@ export function ForgeAccordion(properties: Readonly<AccordionProperties>): MpEle
 
   return (
     <div
-      className={[styles['forge-accordion'], styles[`forge-accordion--${variant}`], sizeStyles[`forge-size--${size}`]]}
+      className={[styles['forge-accordion'], styles[`forge-accordion--${variant}`], size ? `forge-size--${size}` : undefined]}
     >
       {items.map((item) => {
         const open = openIdSet.has(item.id);

@@ -6,66 +6,65 @@
  * document flow (vertical rhythm) and the few structural elements the renderer
  * emits directly (lists, blockquotes, rules, images, inline anchors).
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.content` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.content {
   .forge-markdown {
-    color: var(--mp-color-text-primary);
-    font-family: var(--mp-font-family-sans);
-    line-height: var(--mp-line-height-relaxed);
+    color: var(--mp-component-markdown-text-default);
+    font-family: var(--mp-component-markdown-typography-font-family);
+    line-height: var(--mp-component-markdown-typography-line-height);
     overflow-wrap: anywhere;
 
     /* Vertical rhythm between the direct block children. */
     > * + * {
-      margin-top: var(--mp-spacing-4);
+      margin-top: var(--mp-component-markdown-flow-block-gap);
     }
 
     /* Heading wrapper: carries the anchor id + scroll offset for deep links. */
     &__heading {
-      scroll-margin-top: var(--mp-spacing-16, 5rem);
+      scroll-margin-top: var(--mp-component-markdown-flow-heading-scroll-margin);
     }
 
     &__list {
-      margin-left: var(--mp-spacing-5);
+      margin-left: var(--mp-component-markdown-flow-list-indent);
       padding: 0;
 
       > li + li {
-        margin-top: var(--mp-spacing-2);
+        margin-top: var(--mp-component-markdown-flow-list-item-gap);
       }
     }
 
     &__list-item {
-      line-height: var(--mp-line-height-relaxed);
+      line-height: var(--mp-component-markdown-typography-line-height);
     }
 
     &__task {
-      margin-right: var(--mp-spacing-2);
+      margin-right: var(--mp-component-markdown-flow-task-gap);
       vertical-align: middle;
     }
 
     &__blockquote {
       margin-left: 0;
-      padding: var(--mp-spacing-2) var(--mp-spacing-4);
-      border-left: var(--mp-border-width-thick) solid var(--mp-color-border-default);
-      color: var(--mp-color-text-secondary);
+      padding: var(--mp-component-markdown-blockquote-padding-block) var(--mp-component-markdown-blockquote-padding-inline);
+      border-left: var(--mp-component-markdown-blockquote-border-width) solid var(--mp-component-markdown-blockquote-border);
+      color: var(--mp-component-markdown-blockquote-text);
     }
 
     &__hr {
       border: none;
-      border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      border-top: var(--mp-component-markdown-rule-border-width) solid var(--mp-component-markdown-rule-border);
     }
 
     &__image {
       max-width: 100%;
       height: auto;
-      border-radius: var(--mp-radius-md);
+      border-radius: var(--mp-component-markdown-image-radius);
     }
 
     /* Inline links inherit the primary tone with an underline on interaction. */
     a {
-      color: var(--mp-color-primary-default);
+      color: var(--mp-component-markdown-text-link);
       text-decoration: none;
 
       &:hover,

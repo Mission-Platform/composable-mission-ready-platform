@@ -19,19 +19,10 @@ export interface EmailCardProperties {
 }
 
 export function EmailCard(properties: Readonly<EmailCardProperties>): MpElement {
-  const {
-    children,
-    background: _background,
-    borderColor: _borderColor,
-    radius: _radius,
-    padding: _padding,
-    ...rest
-  } = properties;
   const background = colorValue(properties.background ?? 'bg.surface');
   const borderColor = colorValue(properties.borderColor ?? 'border.default');
   return (
     <table
-      {...rest}
       role="presentation"
       width="100%"
       border={0}
@@ -45,7 +36,7 @@ export function EmailCard(properties: Readonly<EmailCardProperties>): MpElement 
     >
       <tbody>
         <tr>
-          <td style={{ padding: spacingValue(properties.padding ?? 'lg') }}>{children}</td>
+          <td style={{ padding: spacingValue(properties.padding ?? 'lg') }}>{properties.children}</td>
         </tr>
       </tbody>
     </table>

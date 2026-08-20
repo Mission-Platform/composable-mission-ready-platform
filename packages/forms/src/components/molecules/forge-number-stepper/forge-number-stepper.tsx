@@ -1,6 +1,6 @@
-import { ForgeTypography } from '@mission-platform/components';
 import { type ClassValue, h, type MpElement, useId } from '@mission-platform/forge';
 import { ForgeIconMinus, ForgeIconPlus } from '@mission-platform/icons';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-number-stepper.module.scss';
 

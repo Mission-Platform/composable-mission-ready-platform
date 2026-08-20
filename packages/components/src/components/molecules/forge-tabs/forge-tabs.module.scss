@@ -20,7 +20,7 @@
       align-items: stretch;
 
       &--line {
-        border-bottom: var(--mp-border-width-thick) solid var(--mp-color-border-default);
+        border-bottom: var(--mp-component-navigation-tabs-bar-border-width) solid var(--mp-component-navigation-tabs-bar-border);
       }
     }
 
@@ -37,17 +37,17 @@
       }
 
       &--pill {
-        background-color: var(--mp-color-bg-muted);
-        border-radius: var(--mp-radius-md);
-        padding: var(--mp-spacing-1);
-        gap: var(--mp-spacing-1);
+        background-color: var(--mp-component-navigation-tabs-list-pill-surface);
+        border-radius: var(--mp-component-navigation-tabs-list-pill-radius);
+        padding: var(--mp-component-navigation-tabs-list-pill-padding);
+        gap: var(--mp-component-navigation-tabs-list-pill-gap);
       }
     }
 
     &__tab-wrapper {
       display: inline-flex;
       align-items: center;
-      gap: var(--mp-spacing-2);
+      gap: var(--mp-component-navigation-tabs-wrapper-gap);
 
       /*
        * The active indicator is drawn as an `::after` **inside** the wrapper's own
@@ -59,62 +59,62 @@
        */
       &--line {
         position: relative;
-        padding: var(--mp-spacing-2) var(--mp-spacing-4);
-        border-radius: var(--mp-radius-sm) var(--mp-radius-sm) 0 0;
-        color: var(--mp-color-text-secondary);
-        transition: color 150ms ease;
+        padding: var(--mp-component-navigation-tabs-wrapper-line-padding-block) var(--mp-component-navigation-tabs-wrapper-line-padding-inline);
+        border-radius: var(--mp-component-navigation-tabs-wrapper-line-radius) var(--mp-component-navigation-tabs-wrapper-line-radius) 0 0;
+        color: var(--mp-component-navigation-tabs-wrapper-line-text-default);
+        transition: color var(--mp-component-navigation-tabs-wrapper-line-transition-duration) var(--mp-component-navigation-tabs-wrapper-line-transition-easing);
 
         &::after {
           content: '';
           position: absolute;
           inset-inline: 0;
           inset-block-end: 0;
-          block-size: var(--mp-border-width-thick);
-          background-color: transparent;
-          border-radius: var(--mp-radius-2xs) var(--mp-radius-2xs) 0 0;
-          transition: background-color 150ms ease;
+          block-size: var(--mp-component-navigation-tabs-wrapper-line-indicator-width);
+          background-color: var(--mp-component-navigation-tabs-wrapper-line-indicator-default);
+          border-radius: var(--mp-component-navigation-tabs-wrapper-line-indicator-radius) var(--mp-component-navigation-tabs-wrapper-line-indicator-radius) 0 0;
+          transition: background-color var(--mp-component-navigation-tabs-wrapper-line-transition-duration) var(--mp-component-navigation-tabs-wrapper-line-transition-easing);
         }
 
         &:hover:not(.forge-tabs__tab-wrapper--disabled) {
-          color: var(--mp-color-text-primary);
+          color: var(--mp-component-navigation-tabs-wrapper-line-text-hover);
 
           &::after {
-            background-color: var(--mp-color-border-strong);
+            background-color: var(--mp-component-navigation-tabs-wrapper-line-indicator-hover);
           }
         }
 
         &.forge-tabs__tab-wrapper--active {
-          color: var(--mp-color-primary-text);
-          background-color: var(--mp-color-primary-subtle);
+          color: var(--mp-component-navigation-tabs-wrapper-line-text-active);
+          background-color: var(--mp-component-navigation-tabs-wrapper-line-surface-active);
 
           &::after {
-            background-color: var(--mp-color-primary-text);
+            background-color: var(--mp-component-navigation-tabs-wrapper-line-indicator-active);
           }
         }
       }
 
       &--pill {
-        padding: var(--mp-spacing-2) var(--mp-spacing-3);
-        border-radius: var(--mp-radius-sm);
-        color: var(--mp-color-text-secondary);
+        padding: var(--mp-component-navigation-tabs-wrapper-pill-padding-block) var(--mp-component-navigation-tabs-wrapper-pill-padding-inline);
+        border-radius: var(--mp-component-navigation-tabs-wrapper-pill-radius);
+        color: var(--mp-component-navigation-tabs-wrapper-pill-text-default);
         transition:
-          color 150ms ease,
-          background-color 150ms ease;
+          color var(--mp-component-navigation-tabs-wrapper-pill-transition-duration) var(--mp-component-navigation-tabs-wrapper-pill-transition-easing),
+          background-color var(--mp-component-navigation-tabs-wrapper-pill-transition-duration) var(--mp-component-navigation-tabs-wrapper-pill-transition-easing);
 
         &:hover:not(.forge-tabs__tab-wrapper--active, .forge-tabs__tab-wrapper--disabled) {
-          background-color: var(--mp-color-bg-sunken);
-          color: var(--mp-color-text-primary);
+          background-color: var(--mp-component-navigation-tabs-wrapper-pill-surface-hover);
+          color: var(--mp-component-navigation-tabs-wrapper-pill-text-hover);
         }
 
         &.forge-tabs__tab-wrapper--active {
-          background-color: var(--mp-color-bg-surface);
-          color: var(--mp-color-text-primary);
-          box-shadow: var(--mp-shadow-sm);
+          background-color: var(--mp-component-navigation-tabs-wrapper-pill-surface-active);
+          color: var(--mp-component-navigation-tabs-wrapper-pill-text-active);
+          box-shadow: var(--mp-component-navigation-tabs-wrapper-pill-shadow-active);
         }
       }
 
       &--disabled {
-        opacity: 0.5;
+        opacity: var(--mp-component-navigation-tabs-opacity-disabled);
         cursor: not-allowed;
       }
     }
@@ -132,8 +132,8 @@
 
       &:focus-visible {
         outline: none;
-        border-radius: var(--mp-radius-2xs);
-        box-shadow: var(--mp-shadow-focus-primary);
+        border-radius: var(--mp-component-navigation-tabs-radius-focus);
+        box-shadow: var(--mp-component-navigation-tabs-shadow-focus);
       }
 
       &--disabled {
@@ -149,14 +149,14 @@
       flex-shrink: 0;
       border: none;
       background: transparent;
-      color: var(--mp-color-text-muted);
+      color: var(--mp-component-navigation-tabs-text-muted);
       padding: 2px;
-      border-radius: var(--mp-radius-sm);
+      border-radius: var(--mp-component-navigation-tabs-radius-close);
       cursor: pointer;
-      font-size: var(--mp-size-font-xs);
+      font-size: var(--mp-component-navigation-tabs-close-font-size);
       transition:
-        color 150ms ease,
-        background-color 150ms ease;
+        color var(--mp-component-navigation-tabs-transition-duration) var(--mp-component-navigation-tabs-transition-easing),
+        background-color var(--mp-component-navigation-tabs-transition-duration) var(--mp-component-navigation-tabs-transition-easing);
 
       svg {
         display: block;
@@ -176,8 +176,8 @@
       }
 
       &:hover {
-        color: var(--mp-color-text-primary);
-        background-color: var(--mp-color-bg-muted);
+        color: var(--mp-component-navigation-tabs-text-hover);
+        background-color: var(--mp-component-navigation-tabs-surface-hover);
       }
     }
 
@@ -189,9 +189,9 @@
       border: none;
       background: transparent;
       cursor: pointer;
-      color: var(--mp-color-text-muted);
-      padding: var(--mp-spacing-2) var(--mp-spacing-3);
-      transition: color 150ms ease;
+      color: var(--mp-component-navigation-tabs-text-muted);
+      padding: var(--mp-component-navigation-tabs-padding-add-block) var(--mp-component-navigation-tabs-padding-add-inline);
+      transition: color var(--mp-component-navigation-tabs-transition-duration) var(--mp-component-navigation-tabs-transition-easing);
 
       svg {
         display: block;
@@ -201,13 +201,13 @@
       }
 
       &:hover {
-        color: var(--mp-color-text-primary);
+        color: var(--mp-component-navigation-tabs-text-hover);
       }
 
       &:focus-visible {
         outline: none;
-        border-radius: var(--mp-radius-sm);
-        box-shadow: var(--mp-shadow-focus-primary);
+        border-radius: var(--mp-component-navigation-tabs-radius-add-focus);
+        box-shadow: var(--mp-component-navigation-tabs-shadow-focus);
       }
 
       /*
@@ -216,12 +216,12 @@
        * box either, otherwise it no longer lines up with the bar's own rule.
        */
       &--line {
-        border-bottom: var(--mp-border-width-thick) solid var(--mp-color-border-default);
+        border-bottom: var(--mp-component-navigation-tabs-border-width) solid var(--mp-component-navigation-tabs-border-line);
       }
     }
 
     &__panel {
-      padding-top: var(--mp-spacing-4);
+      padding-top: var(--mp-component-navigation-tabs-padding-panel-block-start);
       display: flex;
       flex-direction: column;
       flex: 1;

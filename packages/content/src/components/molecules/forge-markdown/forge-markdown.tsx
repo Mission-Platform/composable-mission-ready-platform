@@ -1,7 +1,5 @@
 import { h, type MpElement, useMemo } from '@mission-platform/forge';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 import styles from './forge-markdown.module.scss';
 import { MarkdownBlock } from './markdown-block';
 import { collectHeadingIds, lexMarkdown, type MarkdownSize } from './markdown-utilities';
@@ -52,7 +50,7 @@ export function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpEleme
   const blocks = documentTokens.filter((token) => token.type !== 'space' && token.type !== 'def');
 
   return (
-    <div className={[styles['forge-markdown'], sizeStyles[`forge-size--${size}`]]}>
+    <div className={[styles['forge-markdown'], size ? `forge-size--${size}` : undefined]}>
       {blocks.map((token, index) => (
         <MarkdownBlock
           key={index}

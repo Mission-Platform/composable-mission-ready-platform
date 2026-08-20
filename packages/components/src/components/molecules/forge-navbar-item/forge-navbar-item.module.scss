@@ -18,43 +18,46 @@
   .forge-navbar-item {
     display: inline-flex;
     align-items: center;
-    gap: var(--mp-spacing-2);
-    padding: var(--mp-spacing-1-5) var(--mp-spacing-3);
-    border-radius: var(--mp-radius-md);
-    color: var(--mp-color-text-secondary);
+    gap: var(--mp-component-navigation-navbar-item-gap);
+    padding: var(--mp-component-navigation-navbar-item-padding-block)
+      var(--mp-component-navigation-navbar-item-padding-inline);
+    border-radius: var(--mp-component-navigation-navbar-item-radius);
+    color: var(--mp-component-navigation-navbar-item-text-default);
     background: none;
     border: none;
     cursor: pointer;
     text-decoration: none;
     white-space: nowrap;
     user-select: none;
-    font-family: var(--mp-font-family-sans);
-    font-weight: var(--mp-font-weight-medium, 500);
+    font-family: var(--mp-component-navigation-navbar-item-font-family);
+    font-weight: var(--mp-component-navigation-navbar-item-font-weight);
     transition:
-      background-color 150ms ease,
-      color 150ms ease;
+      background-color var(--mp-component-navigation-navbar-item-transition-duration)
+        var(--mp-component-navigation-navbar-item-transition-easing),
+      color var(--mp-component-navigation-navbar-item-transition-duration)
+        var(--mp-component-navigation-navbar-item-transition-easing);
 
     &:focus-visible {
       outline: none;
-      box-shadow: var(--mp-shadow-focus-primary);
+      box-shadow: var(--mp-component-navigation-navbar-item-focus-ring);
     }
 
     &--active {
-      background-color: var(--mp-color-primary-muted);
-      color: var(--mp-color-primary-text);
+      background-color: var(--mp-component-navigation-navbar-item-surface-active);
+      color: var(--mp-component-navigation-navbar-item-text-active);
     }
 
     &--open {
-      background-color: var(--mp-color-bg-subtle);
-      color: var(--mp-color-text-primary);
+      background-color: var(--mp-component-navigation-navbar-item-surface-open);
+      color: var(--mp-component-navigation-navbar-item-text-open);
     }
 
     @mixin tone($family) {
       &--#{$family} {
-        color: var(--mp-color-#{$family}-text);
+        color: var(--mp-component-navigation-navbar-item-tone-#{$family}-text);
 
         &:hover:not(.forge-navbar-item--disabled) {
-          background-color: var(--mp-color-#{$family}-muted);
+          background-color: var(--mp-component-navigation-navbar-item-tone-#{$family}-surface-hover);
         }
       }
     }
@@ -69,20 +72,20 @@
     @include tone('critical');
 
     &--disabled {
-      opacity: 0.5;
+      opacity: var(--mp-component-navigation-navbar-item-opacity-disabled);
       cursor: not-allowed;
       pointer-events: none;
     }
 
     &:hover:not(.forge-navbar-item--disabled) {
-      background-color: var(--mp-color-bg-subtle);
-      color: var(--mp-color-text-primary);
+      background-color: var(--mp-component-navigation-navbar-item-surface-hover);
+      color: var(--mp-component-navigation-navbar-item-text-hover);
     }
 
     &__chevron {
       flex-shrink: 0;
       display: inline-flex;
-      color: var(--mp-color-text-secondary);
+      color: var(--mp-component-navigation-navbar-item-chevron);
     }
   }
 
@@ -92,16 +95,17 @@
     left: 0;
     z-index: 10;
     list-style: none;
-    margin: var(--mp-spacing-1) 0 0;
-    padding: var(--mp-spacing-1) 0;
+    margin: var(--mp-component-navigation-navbar-item-dropdown-margin) 0 0;
+    padding: var(--mp-component-navigation-navbar-item-dropdown-padding) 0;
     min-width: 180px;
 
     /* Never exceed the viewport so an edge-anchored menu stays on-screen on mobile. */
-    max-width: calc(100vw - var(--mp-spacing-4));
-    background-color: var(--mp-color-bg-surface);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-    box-shadow: var(--mp-shadow-md);
+    max-width: calc(100vw - var(--mp-component-navigation-navbar-item-dropdown-viewport-gutter));
+    background-color: var(--mp-component-navigation-navbar-item-dropdown-surface);
+    border: var(--mp-component-navigation-navbar-item-dropdown-border-width)
+      solid var(--mp-component-navigation-navbar-item-dropdown-border);
+    border-radius: var(--mp-component-navigation-navbar-item-dropdown-radius);
+    box-shadow: var(--mp-component-navigation-navbar-item-dropdown-shadow);
   }
 
   .forge-navbar-item__dropdown-item-wrapper {
@@ -112,34 +116,37 @@
   .forge-navbar-item__dropdown-item {
     display: flex;
     align-items: center;
-    gap: var(--mp-spacing-2);
+    gap: var(--mp-component-navigation-navbar-item-dropdown-item-gap);
     width: 100%;
-    padding: var(--mp-spacing-2) var(--mp-spacing-4);
-    color: var(--mp-color-text-primary);
+    padding: var(--mp-component-navigation-navbar-item-dropdown-item-padding-block)
+      var(--mp-component-navigation-navbar-item-dropdown-item-padding-inline);
+    color: var(--mp-component-navigation-navbar-item-dropdown-item-text);
     background: none;
     border: none;
     cursor: pointer;
     text-decoration: none;
     text-align: left;
     white-space: nowrap;
-    font-family: var(--mp-font-family-sans);
+    font-family: var(--mp-component-navigation-navbar-item-font-family);
     transition:
-      background-color 150ms ease,
-      color 150ms ease;
+      background-color var(--mp-component-navigation-navbar-item-transition-duration)
+        var(--mp-component-navigation-navbar-item-transition-easing),
+      color var(--mp-component-navigation-navbar-item-transition-duration)
+        var(--mp-component-navigation-navbar-item-transition-easing);
 
     &:focus-visible {
       outline: none;
-      box-shadow: var(--mp-shadow-focus-primary);
+      box-shadow: var(--mp-component-navigation-navbar-item-dropdown-item-focus-ring);
     }
 
     &--disabled {
-      color: var(--mp-color-text-disabled);
+      color: var(--mp-component-navigation-navbar-item-dropdown-item-text-disabled);
       cursor: not-allowed;
       pointer-events: none;
     }
 
     &:hover:not(.forge-navbar-item__dropdown-item--disabled) {
-      background-color: var(--mp-color-bg-subtle);
+      background-color: var(--mp-component-navigation-navbar-item-dropdown-item-surface-hover);
     }
   }
 

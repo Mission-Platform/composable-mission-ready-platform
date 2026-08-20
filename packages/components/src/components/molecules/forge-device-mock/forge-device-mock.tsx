@@ -1,7 +1,5 @@
 import { classNames, h, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 import styles from './forge-device-mock.module.scss';
 
 /** The device frame the screen content is displayed inside. */
@@ -65,7 +63,7 @@ export function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpE
     styles['forge-device-mock'],
     styles[`forge-device-mock--${device}`],
     isHandheld ? styles[`forge-device-mock--${orientation}`] : undefined,
-    sizeStyles[`forge-size--${size}`],
+    size ? `forge-size--${size}` : undefined,
   );
 
   const screen = (

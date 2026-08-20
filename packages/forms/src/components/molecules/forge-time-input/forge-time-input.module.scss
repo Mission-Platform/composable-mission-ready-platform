@@ -6,15 +6,14 @@
  * precedent), and the teleported popover is anchored via CSS Anchor Positioning
  * rather than `@floating-ui`.
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.forms {
   .forge-time-input {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-spacing-1);
+    gap: var(--mp-component-input-field-gap);
 
     &__label {
       display: flex;
@@ -35,23 +34,23 @@
     }
 
     &__required {
-      color: var(--mp-color-danger-default);
+      color: var(--mp-component-field-required);
       margin-left: 2px;
     }
 
     &__wrapper {
       display: flex;
       align-items: center;
-      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background-color: var(--mp-color-bg-surface);
+      border: var(--mp-component-input-border-width) solid var(--mp-component-input-border-default);
+      border-radius: var(--mp-component-input-radius);
+      background-color: var(--mp-component-input-surface-default);
       transition:
-        border-color 150ms ease,
-        box-shadow 150ms ease;
+        border-color var(--mp-component-input-transition-duration) var(--mp-component-input-transition-easing),
+        box-shadow var(--mp-component-input-transition-duration) var(--mp-component-input-transition-easing);
 
       &:focus-within {
-        border-color: var(--mp-color-border-focus);
-        box-shadow: var(--mp-shadow-focus-primary);
+        border-color: var(--mp-component-input-border-focus-visible);
+        box-shadow: var(--mp-component-input-focus-ring);
       }
     }
 
@@ -78,28 +77,28 @@
       display: flex;
       align-items: center;
       flex-shrink: 0;
-      color: var(--mp-color-text-secondary);
+      color: var(--mp-component-input-text-secondary);
 
       &--start {
-        margin-inline-start: var(--mp-spacing-2);
+        margin-inline-start: var(--mp-component-input-extension-gap);
       }
 
       &--end {
-        margin-inline-end: var(--mp-spacing-2);
+        margin-inline-end: var(--mp-component-input-extension-gap);
       }
     }
 
     &__value {
-      color: var(--mp-color-text-primary);
-      font-family: var(--mp-font-family-sans);
+      color: var(--mp-component-input-text-default);
+      font-family: var(--mp-component-input-font-family);
 
       &--placeholder {
-        color: var(--mp-color-text-tertiary);
+        color: var(--mp-component-input-text-placeholder);
       }
     }
 
     &__icon {
-      color: var(--mp-color-text-secondary);
+      color: var(--mp-component-input-text-secondary);
       display: flex;
       align-items: center;
       flex-shrink: 0;
@@ -108,35 +107,36 @@
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} .forge-time-input__trigger {
-        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
+        padding: var(--mp-component-input-size-#{$size}-padding-block)
+          var(--mp-component-input-size-#{$size}-padding-inline);
 
         .forge-time-input__value {
-          font-size: var(--mp-size-font-#{$size});
+          font-size: var(--mp-component-input-size-#{$size}-font-size);
         }
       }
     }
 
     /* States */
     &--error .forge-time-input__wrapper {
-      border-color: var(--mp-color-danger-default);
+      border-color: var(--mp-component-input-border-invalid);
 
       &:focus-within {
-        box-shadow: var(--mp-shadow-focus-danger);
+        box-shadow: var(--mp-component-input-focus-ring-invalid);
       }
     }
 
     &--disabled {
-      opacity: 0.5;
+      opacity: var(--mp-component-input-opacity-disabled);
       pointer-events: none;
 
       .forge-time-input__wrapper {
-        background-color: var(--mp-color-bg-muted);
+        background-color: var(--mp-component-input-surface-disabled);
         cursor: not-allowed;
       }
     }
 
     &__error {
-      color: var(--mp-color-danger-text);
+      color: var(--mp-component-field-error);
       margin: 0;
     }
 
@@ -148,18 +148,18 @@
        shadow, scrolling, and anchored positioning). */
     &__popover {
       margin: 0;
-      padding: var(--mp-spacing-2);
+      padding: var(--mp-component-time-popover-padding);
     }
 
     &__columns {
       display: flex;
       align-items: flex-start;
-      gap: var(--mp-spacing-1);
+      gap: var(--mp-component-time-columns-gap);
     }
 
     &__sep {
-      font-size: var(--mp-font-size-md);
-      color: var(--mp-color-text-secondary);
+      font-size: var(--mp-component-time-font-size-separator);
+      color: var(--mp-component-time-text-secondary);
       padding-top: 36px;
       line-height: 1;
     }
@@ -171,13 +171,13 @@
     }
 
     &__col-header {
-      font-size: var(--mp-font-size-xs);
-      font-weight: var(--mp-font-weight-medium);
-      color: var(--mp-color-text-tertiary);
+      font-size: var(--mp-component-time-font-size-header);
+      font-weight: var(--mp-component-time-font-weight-medium);
+      color: var(--mp-component-time-text-muted);
       text-align: center;
-      margin-bottom: var(--mp-spacing-1);
-      padding-bottom: var(--mp-spacing-1);
-      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      margin-bottom: var(--mp-component-time-unit-padding-block);
+      padding-bottom: var(--mp-component-time-unit-padding-block);
+      border-bottom: var(--mp-component-input-border-width) solid var(--mp-component-time-border-default);
     }
 
     &__scroll {
@@ -197,66 +197,66 @@
       }
 
       &::-webkit-scrollbar-thumb {
-        background: var(--mp-color-border-default);
-        border-radius: 2px;
+        background: var(--mp-component-time-border-default);
+        border-radius: var(--mp-component-time-unit-radius);
       }
     }
 
     &__unit-btn {
-      font-size: var(--mp-font-size-sm);
-      padding: var(--mp-spacing-1) var(--mp-spacing-2);
+      font-size: var(--mp-component-time-font-size-unit);
+      padding: var(--mp-component-time-unit-padding-block) var(--mp-component-time-unit-padding-inline);
       border: none;
       background: transparent;
-      border-radius: var(--mp-radius-sm);
+      border-radius: var(--mp-component-time-unit-radius);
       cursor: pointer;
-      color: var(--mp-color-text-primary);
+      color: var(--mp-component-time-text-default);
       text-align: center;
       transition:
-        background-color 150ms ease,
-        color 150ms ease;
+        background-color var(--mp-component-time-transition-duration) var(--mp-component-time-transition-easing),
+        color var(--mp-component-time-transition-duration) var(--mp-component-time-transition-easing);
       width: 100%;
 
       &--active {
-        background-color: var(--mp-color-primary-default);
-        color: var(--mp-color-text-on-primary);
-        font-weight: var(--mp-font-weight-semibold);
+        background-color: var(--mp-component-time-surface-selected);
+        color: var(--mp-component-time-text-selected);
+        font-weight: var(--mp-component-time-font-weight-selected);
       }
 
       &:focus-visible {
-        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+        outline: var(--mp-component-time-border-focus-width) solid var(--mp-component-time-border-focus);
         outline-offset: 2px;
       }
 
       &:hover:not(.forge-time-input__unit-btn--active) {
-        background-color: var(--mp-color-bg-muted);
+        background-color: var(--mp-component-time-surface-hover);
       }
     }
 
     &__footer {
       display: flex;
       justify-content: flex-end;
-      margin-top: var(--mp-spacing-2);
-      padding-top: var(--mp-spacing-2);
-      border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      margin-top: var(--mp-component-time-popover-padding);
+      padding-top: var(--mp-component-time-popover-padding);
+      border-top: var(--mp-component-input-border-width) solid var(--mp-component-time-border-default);
     }
 
     &__done-btn {
-      font-size: var(--mp-font-size-sm);
-      font-weight: var(--mp-font-weight-medium);
-      padding: var(--mp-spacing-1) var(--mp-spacing-3);
+      font-size: var(--mp-component-time-font-size-unit);
+      font-weight: var(--mp-component-time-font-weight-medium);
+      padding: var(--mp-component-time-done-padding-block) var(--mp-component-time-done-padding-inline);
       border: none;
-      background-color: var(--mp-color-primary-default);
-      color: var(--mp-color-text-on-primary);
-      border-radius: var(--mp-radius-md);
+      background-color: var(--mp-component-time-surface-selected);
+      color: var(--mp-component-time-text-selected);
+      border-radius: var(--mp-component-time-done-radius);
       cursor: pointer;
-      transition: opacity 150ms ease;
+      transition: opacity var(--mp-component-time-transition-duration) var(--mp-component-time-transition-easing);
 
       &:hover {
-        opacity: 0.9;
+        opacity: var(--mp-component-time-done-hover-opacity);
       }
 
       &:focus-visible {
-        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+        outline: var(--mp-component-time-border-focus-width) solid var(--mp-component-time-border-focus);
         outline-offset: 2px;
       }
     }

@@ -21,14 +21,14 @@
     }
 
     &:focus-visible {
-      outline: var(--mp-border-width-thick) solid var(--mp-color-primary-default);
-      outline-offset: 2px;
-      border-radius: var(--mp-radius-lg);
+      outline: var(--mp-component-navigation-carousel-focus-border-width) solid var(--mp-component-navigation-carousel-focus-border);
+      outline-offset: var(--mp-component-navigation-carousel-focus-offset);
+      border-radius: var(--mp-component-navigation-carousel-viewport-radius);
     }
 
     &__viewport {
       overflow: hidden;
-      border-radius: var(--mp-radius-lg);
+      border-radius: var(--mp-component-navigation-carousel-viewport-radius);
       touch-action: pan-y;
       user-select: none;
     }
@@ -36,7 +36,7 @@
     &__track {
       display: flex;
       width: 100%;
-      transition: transform 400ms ease;
+      transition: transform var(--mp-component-navigation-carousel-track-transition-duration) var(--mp-component-navigation-carousel-track-transition-easing);
     }
 
     &__slide {
@@ -55,19 +55,19 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-      background: var(--mp-color-bg-surface);
-      color: var(--mp-color-text-default);
-      font-size: 24px;
-      line-height: 1;
+      width: var(--mp-component-navigation-carousel-control-size);
+      height: var(--mp-component-navigation-carousel-control-size);
+      border-radius: var(--mp-component-navigation-carousel-control-radius);
+      border: var(--mp-component-navigation-carousel-control-border-width) solid var(--mp-component-navigation-carousel-control-border);
+      background: var(--mp-component-navigation-carousel-control-surface-default);
+      color: var(--mp-component-navigation-carousel-control-text);
+      font-size: var(--mp-component-navigation-carousel-control-font-size);
+      line-height: var(--mp-component-navigation-carousel-control-line-height);
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: var(--mp-shadow-sm);
+      box-shadow: var(--mp-component-navigation-carousel-control-shadow);
 
       svg {
         display: block;
@@ -77,28 +77,28 @@
       }
 
       &--prev {
-        left: var(--mp-spacing-2);
+        left: var(--mp-component-navigation-carousel-control-offset);
       }
 
       &--next {
-        right: var(--mp-spacing-2);
+        right: var(--mp-component-navigation-carousel-control-offset);
       }
 
       &:disabled {
-        opacity: 0.4;
+        opacity: var(--mp-component-navigation-carousel-control-opacity-disabled);
         cursor: not-allowed;
       }
 
       &:hover:not(:disabled) {
-        background: var(--mp-color-bg-forge-alt);
+        background: var(--mp-component-navigation-carousel-control-surface-hover);
       }
     }
 
     &__indicators {
       display: flex;
       justify-content: center;
-      gap: var(--mp-spacing-2);
-      margin-top: var(--mp-spacing-3);
+      gap: var(--mp-component-navigation-carousel-indicators-gap);
+      margin-top: var(--mp-component-navigation-carousel-indicators-margin-top);
     }
 
     &__indicator {
@@ -107,30 +107,30 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 24px;
-      height: 24px;
+      width: var(--mp-component-navigation-carousel-indicator-target-size);
+      height: var(--mp-component-navigation-carousel-indicator-target-size);
       padding: 0;
       border: none;
-      border-radius: 50%;
-      background: transparent;
+      border-radius: var(--mp-component-navigation-carousel-indicator-radius);
+      background: var(--mp-component-navigation-carousel-indicator-surface-default);
       cursor: pointer;
 
       &::before {
         content: '';
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: var(--mp-color-border-default);
-        transition: background 200ms ease;
+        width: var(--mp-component-navigation-carousel-indicator-dot-size);
+        height: var(--mp-component-navigation-carousel-indicator-dot-size);
+        border-radius: var(--mp-component-navigation-carousel-indicator-radius);
+        background: var(--mp-component-navigation-carousel-indicator-surface-dot-default);
+        transition: background var(--mp-component-navigation-carousel-indicator-transition-duration) var(--mp-component-navigation-carousel-indicator-transition-easing);
       }
 
       &--active::before {
-        background: var(--mp-color-primary-default);
+        background: var(--mp-component-navigation-carousel-indicator-surface-dot-selected);
       }
 
       &:focus-visible {
-        outline: var(--mp-border-width-thick) solid var(--mp-color-primary-default);
-        outline-offset: 2px;
+        outline: var(--mp-component-navigation-carousel-focus-border-width) solid var(--mp-component-navigation-carousel-focus-border);
+        outline-offset: var(--mp-component-navigation-carousel-focus-offset);
       }
     }
 
@@ -140,18 +140,18 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 28px;
-      height: 28px;
-      margin: var(--mp-spacing-2) auto 0;
+      width: var(--mp-component-navigation-carousel-autoplay-size);
+      height: var(--mp-component-navigation-carousel-autoplay-size);
+      margin: var(--mp-component-navigation-carousel-autoplay-margin-top) auto 0;
       padding: 0;
-      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-      border-radius: 50%;
-      background: var(--mp-color-bg-surface);
-      color: var(--mp-color-text-default);
-      font-size: 12px;
-      line-height: 1;
+      border: var(--mp-component-navigation-carousel-autoplay-border-width) solid var(--mp-component-navigation-carousel-autoplay-border);
+      border-radius: var(--mp-component-navigation-carousel-autoplay-radius);
+      background: var(--mp-component-navigation-carousel-autoplay-surface-default);
+      color: var(--mp-component-navigation-carousel-autoplay-text);
+      font-size: var(--mp-component-navigation-carousel-autoplay-font-size);
+      line-height: var(--mp-component-navigation-carousel-autoplay-line-height);
       cursor: pointer;
-      box-shadow: var(--mp-shadow-sm);
+      box-shadow: var(--mp-component-navigation-carousel-autoplay-shadow);
 
       svg {
         display: block;
@@ -161,12 +161,12 @@
       }
 
       &:hover {
-        background: var(--mp-color-bg-forge-alt);
+        background: var(--mp-component-navigation-carousel-autoplay-surface-hover);
       }
 
       &:focus-visible {
-        outline: var(--mp-border-width-thick) solid var(--mp-color-primary-default);
-        outline-offset: 2px;
+        outline: var(--mp-component-navigation-carousel-focus-border-width) solid var(--mp-component-navigation-carousel-focus-border);
+        outline-offset: var(--mp-component-navigation-carousel-focus-offset);
       }
     }
 
@@ -189,12 +189,12 @@
     {
       &--#{$name} {
         .forge-carousel__indicator--active::before {
-          background: var(--mp-color-#{$family}-default);
+          background: var(--mp-component-navigation-carousel-tone-#{$name}-indicator);
         }
 
         .forge-carousel__control {
-          color: var(--mp-color-#{$family}-text);
-          border-color: var(--mp-color-#{$family}-subtle);
+          color: var(--mp-component-navigation-carousel-tone-#{$name}-control-text);
+          border-color: var(--mp-component-navigation-carousel-tone-#{$name}-control-border);
         }
       }
     }

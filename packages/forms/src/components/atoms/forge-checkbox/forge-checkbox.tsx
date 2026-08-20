@@ -1,8 +1,6 @@
-import { ForgeTypography } from '@mission-platform/components';
 import { type ClassValue, h, type MpElement, useEffect, useId, useRef } from '@mission-platform/forge';
 import { ForgeIconCheck, ForgeIconMinus } from '@mission-platform/icons';
-
-import sizeStyles from '../../size.module.scss';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-checkbox.module.scss';
 
@@ -116,7 +114,7 @@ export function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpEleme
     <div
       className={[
         styles['forge-checkbox'],
-        sizeStyles[`forge-size--${size}`],
+        size ? `forge-size--${size}` : undefined,
         {
           [styles['forge-checkbox--error']]: !!error,
           [styles['forge-checkbox--disabled']]: disabled,

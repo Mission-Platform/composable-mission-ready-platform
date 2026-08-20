@@ -33,11 +33,18 @@ export {
   type LocationValue,
 } from './molecules/forge-location-input';
 export {
+  ForgeLanguageSwitcher,
+  type ForgeLanguageSwitcherOption,
+  type ForgeLanguageSwitcherProperties,
   ForgeMultiselect,
   type MultiselectOption,
   type MultiselectProperties,
   type MultiselectSize,
-} from './molecules/forge-multiselect';
+  ForgeSelect,
+  type SelectOption,
+  type SelectProperties,
+  type SelectSize,
+} from '@mission-platform/select';
 export {
   ForgeNumberStepper,
   type NumberStepperProperties,
@@ -71,7 +78,6 @@ export {
 } from './atoms/forge-range-input';
 export { ForgeRating, type RatingProperties, type RatingSize } from './atoms/forge-rating';
 export { ForgeSearchInput, type SearchInputProperties, type SearchInputSize } from './molecules/forge-search-input';
-export { ForgeSelect, type SelectOption, type SelectProperties, type SelectSize } from './molecules/forge-select';
 export {
   ForgeSegmentControl,
   type SegmentControlProperties,

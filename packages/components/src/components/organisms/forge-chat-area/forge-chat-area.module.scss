@@ -18,9 +18,9 @@
     flex-direction: column;
     min-height: 0;
     height: 100%;
-    background-color: var(--mp-color-bg-surface);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-lg);
+    background-color: var(--mp-component-media-chat-area-surface);
+    border: var(--mp-component-media-chat-area-border-width) solid var(--mp-component-media-chat-area-border);
+    border-radius: var(--mp-component-media-chat-area-radius);
     overflow: hidden;
 
     @supports (container-type: inline-size) {
@@ -29,15 +29,15 @@
 
     &__header {
       flex-shrink: 0;
-      padding: var(--mp-spacing-3) var(--mp-spacing-4);
-      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      padding: var(--mp-component-media-chat-area-header-padding-block) var(--mp-component-media-chat-area-header-padding-inline);
+      border-bottom: var(--mp-component-media-chat-area-border-width) solid var(--mp-component-media-chat-area-header-border);
 
       &:empty {
         display: none;
       }
 
       @container forge-chat-area (width >= 40rem) {
-        padding: var(--mp-spacing-4) var(--mp-spacing-6);
+        padding: var(--mp-component-media-chat-area-header-padding-block-wide) var(--mp-component-media-chat-area-header-padding-inline-wide);
       }
     }
 
@@ -45,38 +45,38 @@
       flex: 1 1 auto;
       min-height: 0;
       overflow-y: auto;
-      padding: var(--mp-spacing-4);
+      padding: var(--mp-component-media-chat-area-log-padding);
       scroll-behavior: smooth;
 
       @container forge-chat-area (width >= 40rem) {
-        padding: var(--mp-spacing-6);
+        padding: var(--mp-component-media-chat-area-log-padding-wide);
       }
     }
 
     &__messages {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-spacing-3);
+      gap: var(--mp-component-media-chat-area-messages-gap);
       margin: 0;
       padding: 0;
       list-style: none;
 
       @container forge-chat-area (width >= 40rem) {
-        gap: var(--mp-spacing-4);
+        gap: var(--mp-component-media-chat-area-messages-gap-wide);
       }
     }
 
     &__footer {
       flex-shrink: 0;
-      padding: var(--mp-spacing-3) var(--mp-spacing-4);
-      border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      padding: var(--mp-component-media-chat-area-footer-padding-block) var(--mp-component-media-chat-area-footer-padding-inline);
+      border-top: var(--mp-component-media-chat-area-border-width) solid var(--mp-component-media-chat-area-footer-border);
 
       &:empty {
         display: none;
       }
 
       @container forge-chat-area (width >= 40rem) {
-        padding: var(--mp-spacing-4) var(--mp-spacing-6);
+        padding: var(--mp-component-media-chat-area-footer-padding-block-wide) var(--mp-component-media-chat-area-footer-padding-inline-wide);
       }
     }
   }

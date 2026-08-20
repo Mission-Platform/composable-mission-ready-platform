@@ -8,7 +8,10 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     size: { control: 'select', options: ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
-    countryCode: { control: 'select', options: ['AU', 'BR', 'CA', 'DE', 'FR', 'GB', 'IN', 'JP', 'US', 'ZA'] },
+    countryCode: {
+      control: 'select',
+      options: ['AU', 'BR', 'CA', 'CN', 'DE', 'ES', 'FR', 'GB', 'IL', 'IN', 'IT', 'JP', 'KR', 'NL', 'SA', 'US', 'ZA'],
+    },
     ariaLabel: { control: 'text' },
   },
   args: { size: 'md', countryCode: 'US' },

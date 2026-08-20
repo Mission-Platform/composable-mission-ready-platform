@@ -1,5 +1,5 @@
-import { ForgeTypography } from '@mission-platform/components';
 import { h, type MpElement, useEffect, useId, useState } from '@mission-platform/forge';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-color-input.module.scss';
 

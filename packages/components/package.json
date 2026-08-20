@@ -6,7 +6,8 @@
   "type": "module",
   "sideEffects": [
     "**/*.css",
-    "**/*.scss"
+    "**/*.scss",
+    "dist/web-components/**/*.js"
   ],
   "exports": {
     ".": {
@@ -77,12 +78,13 @@
     },
     "./cms/storyblok/components.json": "./dist/cms/storyblok/components.json"
   },
+  "main": "./dist/components/index.js",
+  "types": "./dist/components/index.d.ts",
   "files": [
     "dist",
     "src/components",
     "src/styles",
-    "src/utils",
-    "src/stores"
+    "src/utils"
   ],
   "scripts": {
     "build:forge": "node --experimental-strip-types ../../scripts/build-forge.ts --target forge",
@@ -117,6 +119,7 @@
     "@mission-platform/icons": "workspace:*",
     "@mission-platform/forge": "workspace:*",
     "@mission-platform/phone-number": "workspace:*",
+    "@mission-platform/typography": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
     "luxon": "catalog:"
   },

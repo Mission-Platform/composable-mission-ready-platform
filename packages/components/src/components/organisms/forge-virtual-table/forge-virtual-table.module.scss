@@ -13,14 +13,14 @@
 @layer mp.components {
   .virtual-table-demo-footer {
     display: flex;
-    gap: var(--mp-spacing-4);
+    gap: var(--mp-component-data-virtual-table-footer-gap);
     align-items: center;
     width: 100%;
-    color: var(--mp-color-text-secondary);
+    color: var(--mp-component-data-virtual-table-footer-text);
   }
 
   .virtual-table-demo-footer__accent {
-    color: var(--mp-color-primary-default);
-    font-weight: var(--mp-font-weight-semibold);
+    color: var(--mp-component-data-virtual-table-footer-accent-text);
+    font-weight: var(--mp-component-data-virtual-table-footer-accent-font-weight);
   }
 }

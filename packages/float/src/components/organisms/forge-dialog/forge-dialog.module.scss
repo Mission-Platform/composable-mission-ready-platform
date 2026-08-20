@@ -1,0 +1,110 @@
+/**
+ * Styling for the write-once `ForgeDialog`.
+ *
+ * `ForgeDialog` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its appearance ships in the built package CSS (the two-stage
+ * compiler carries the import onto both the React and Vue builds).
+ *
+ * The component is a native `<dialog>` opened with `showModal()`, so the UA
+ * provides the top layer and the `::backdrop` scrim. The enter/exit fade is
+ * pure CSS: because opening toggles `display` (none ⇄ flex) and the top layer,
+ * the transition lists `display`/`overlay` with `allow-discrete`, and
+ * `@starting-style` supplies the pre-open values to animate from. This replaces
+ * the original Vue `<Transition>`.
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package.
+ */
+
+@layer mp.components {
+  .forge-dialog {
+    width: 100%;
+    max-width: min(560px, calc(100vw - 2rem));
+    padding: 0;
+    background: var(--mp-component-overlay-dialog-surface-default);
+    border: none;
+    border-radius: var(--mp-component-overlay-radius);
+    box-shadow: var(--mp-component-overlay-shadow);
+    opacity: 0;
+    translate: 0 0.5rem;
+    transition:
+      opacity var(--mp-component-overlay-transition-duration) var(--mp-component-overlay-transition-easing),
+      translate var(--mp-component-overlay-transition-duration) var(--mp-component-overlay-transition-easing),
+      overlay var(--mp-component-overlay-transition-duration) var(--mp-component-overlay-transition-easing)
+        allow-discrete,
+      display var(--mp-component-overlay-transition-duration) var(--mp-component-overlay-transition-easing)
+        allow-discrete;
+
+    &::backdrop {
+      background-color: var(--mp-component-overlay-surface-scrim);
+      opacity: 0;
+      transition:
+        opacity var(--mp-component-overlay-transition-duration) var(--mp-component-overlay-transition-easing),
+        overlay var(--mp-component-overlay-transition-duration) var(--mp-component-overlay-transition-easing)
+          allow-discrete,
+        display var(--mp-component-overlay-transition-duration) var(--mp-component-overlay-transition-easing)
+          allow-discrete;
+    }
+
+    &[open] {
+      display: flex;
+      opacity: 1;
+      translate: 0 0;
+
+      @starting-style {
+        opacity: 0;
+        translate: 0 0.5rem;
+      }
+
+      &::backdrop {
+        opacity: 1;
+
+        @starting-style {
+          opacity: 0;
+        }
+      }
+    }
+
+    &__panel {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    &__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--mp-component-overlay-header-gap);
+      padding: var(--mp-component-overlay-header-padding-block) var(--mp-component-overlay-header-padding-inline);
+      border-bottom: var(--mp-component-overlay-border-width) solid var(--mp-component-overlay-border-default);
+    }
+
+    &__title {
+      margin: 0;
+    }
+
+    &__body {
+      flex: 1;
+      padding: var(--mp-component-overlay-body-padding);
+      overflow-y: auto;
+    }
+
+    &__footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--mp-component-overlay-footer-gap);
+      padding: var(--mp-component-overlay-footer-padding-block) var(--mp-component-overlay-footer-padding-inline);
+      border-top: var(--mp-component-overlay-border-width) solid var(--mp-component-overlay-border-default);
+    }
+
+    /* Respect users who prefer reduced motion. */
+    @media (prefers-reduced-motion: reduce) {
+      &,
+      &::backdrop {
+        transition: none;
+      }
+    }
+  }
+}

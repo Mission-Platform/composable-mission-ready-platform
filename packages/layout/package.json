@@ -6,7 +6,8 @@
   "type": "module",
   "sideEffects": [
     "**/*.css",
-    "**/*.scss"
+    "**/*.scss",
+    "dist/web-components/**/*.js"
   ],
   "exports": {
     ".": {

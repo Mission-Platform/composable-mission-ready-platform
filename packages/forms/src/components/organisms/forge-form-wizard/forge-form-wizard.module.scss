@@ -1,15 +1,14 @@
 /**
  * Styling for the write-once `ForgeFormWizard`.
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.forms {
   .forge-form-wizard {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-spacing-6);
+    gap: var(--mp-component-form-gap-wizard);
 
     @supports (container-type: inline-size) {
       container: forge-form-wizard / inline-size;
@@ -18,13 +17,13 @@
     &__steps {
       display: flex;
       flex-wrap: wrap;
-      gap: var(--mp-spacing-2);
+      gap: var(--mp-component-form-gap-default);
       margin: 0;
       padding: 0;
       list-style: none;
 
       @container forge-form-wizard (width >= 40rem) {
-        gap: var(--mp-spacing-4);
+        gap: var(--mp-component-form-gap-large);
       }
     }
 
@@ -36,46 +35,46 @@
     &__step-btn {
       display: flex;
       align-items: center;
-      gap: var(--mp-spacing-2);
+      gap: var(--mp-component-form-gap-default);
       width: 100%;
-      padding: var(--mp-spacing-2) var(--mp-spacing-3);
-      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
+      padding: var(--mp-component-form-padding-default) var(--mp-component-form-padding-section);
+      border: var(--mp-component-form-border-width) solid var(--mp-component-form-border-default);
+      border-radius: var(--mp-component-form-radius-default);
       background: transparent;
       cursor: pointer;
       text-align: left;
-      color: var(--mp-color-text-secondary);
+      color: var(--mp-component-form-text-secondary);
       transition:
-        border-color 150ms ease,
-        color 150ms ease,
-        background-color 150ms ease;
+        border-color var(--mp-component-form-transition-duration) var(--mp-component-form-transition-easing),
+        color var(--mp-component-form-transition-duration) var(--mp-component-form-transition-easing),
+        background-color var(--mp-component-form-transition-duration) var(--mp-component-form-transition-easing);
 
       @container forge-form-wizard (width >= 40rem) {
-        padding: var(--mp-spacing-3) var(--mp-spacing-4);
-        gap: var(--mp-spacing-4);
+        padding: var(--mp-component-form-padding-section) var(--mp-component-form-padding-large);
+        gap: var(--mp-component-form-gap-large);
       }
 
       &:disabled {
-        opacity: 0.5;
+        opacity: var(--mp-component-form-disabled-opacity);
         cursor: not-allowed;
       }
 
       &:focus-visible {
-        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+        outline: var(--mp-component-form-border-focus-width) solid var(--mp-component-form-border-focus);
         outline-offset: 2px;
       }
 
       &--active {
-        border-color: var(--mp-color-primary-default);
-        color: var(--mp-color-text-primary);
+        border-color: var(--mp-component-form-border-selected);
+        color: var(--mp-component-form-text-default);
       }
 
       &--done {
-        color: var(--mp-color-text-primary);
+        color: var(--mp-component-form-text-default);
       }
 
       &--error {
-        border-color: var(--mp-color-danger-default);
+        border-color: var(--mp-component-form-border-invalid);
       }
     }
 
@@ -87,13 +86,13 @@
       height: 1.5rem;
       flex-shrink: 0;
       border-radius: 50%;
-      background-color: var(--mp-color-bg-muted);
+      background-color: var(--mp-component-form-surface-muted);
       font-variant-numeric: tabular-nums;
     }
 
     &__step-btn--active &__step-index {
-      background-color: var(--mp-color-primary-default);
-      color: var(--mp-color-text-on-primary);
+      background-color: var(--mp-component-form-primary);
+      color: var(--mp-component-form-text-inverse);
     }
 
     &__step-text {
@@ -109,59 +108,59 @@
     &__footer {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-spacing-3);
-      padding-top: var(--mp-spacing-3);
-      border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      gap: var(--mp-component-form-gap-section);
+      padding-top: var(--mp-component-form-padding-section);
+      border-top: var(--mp-component-form-border-width) solid var(--mp-component-form-border-default);
 
       @container forge-form-wizard (width >= 48rem) {
-        padding-top: var(--mp-spacing-6);
-        gap: var(--mp-spacing-4);
+        padding-top: var(--mp-component-form-gap-wizard);
+        gap: var(--mp-component-form-gap-large);
       }
     }
 
     &__nav {
       display: flex;
       justify-content: space-between;
-      gap: var(--mp-spacing-2);
+      gap: var(--mp-component-form-gap-default);
     }
 
     &__button {
-      padding: var(--mp-spacing-2) var(--mp-spacing-4);
-      border: var(--mp-border-width-thin) solid transparent;
-      border-radius: var(--mp-radius-md);
+      padding: var(--mp-component-form-padding-default) var(--mp-component-form-padding-large);
+      border: var(--mp-component-form-border-width) solid transparent;
+      border-radius: var(--mp-component-form-radius-default);
       cursor: pointer;
-      font-family: var(--mp-font-family-sans);
-      font-size: var(--mp-font-size-sm);
+      font-family: var(--mp-component-form-font-family-sans);
+      font-size: var(--mp-component-form-font-size-small);
       transition:
-        opacity 150ms ease,
-        background-color 150ms ease;
+        opacity var(--mp-component-form-transition-duration) var(--mp-component-form-transition-easing),
+        background-color var(--mp-component-form-transition-duration) var(--mp-component-form-transition-easing);
 
       &:disabled {
-        opacity: 0.5;
+        opacity: var(--mp-component-form-disabled-opacity);
         cursor: not-allowed;
       }
 
       &:focus-visible {
-        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+        outline: var(--mp-component-form-border-focus-width) solid var(--mp-component-form-border-focus);
         outline-offset: 2px;
       }
 
       &--primary {
-        background-color: var(--mp-color-primary-default);
-        color: var(--mp-color-text-on-primary);
+        background-color: var(--mp-component-form-primary);
+        color: var(--mp-component-form-text-inverse);
 
         &:hover:not(:disabled) {
-          opacity: 0.9;
+          opacity: var(--mp-component-form-primary-hover-opacity);
         }
       }
 
       &--secondary {
         background: transparent;
-        border-color: var(--mp-color-border-default);
-        color: var(--mp-color-text-primary);
+        border-color: var(--mp-component-form-border-default);
+        color: var(--mp-component-form-text-default);
 
         &:hover:not(:disabled) {
-          background-color: var(--mp-color-bg-muted);
+          background-color: var(--mp-component-form-surface-muted);
         }
       }
     }

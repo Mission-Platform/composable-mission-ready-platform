@@ -9,9 +9,9 @@
 
 @layer mp.components {
   .virtual-tree {
-    font-family: var(--mp-font-family-sans);
-    font-size: var(--mp-font-size-sm);
-    color: var(--mp-color-text-primary);
+    font-family: var(--mp-component-data-virtual-tree-font-family);
+    font-size: var(--mp-component-data-virtual-tree-font-size);
+    color: var(--mp-component-data-virtual-tree-text-default);
     user-select: none;
     outline: none;
   }
@@ -23,24 +23,25 @@
 
   .virtual-tree__label {
     display: flex;
-    gap: var(--mp-spacing-2);
+    gap: var(--mp-component-data-virtual-tree-label-gap);
     align-items: center;
     width: 100%;
     height: 100%;
-    padding-right: var(--mp-spacing-3);
-    color: var(--mp-color-text-primary);
+    padding-right: var(--mp-component-data-virtual-tree-label-padding-inline-end);
+    color: var(--mp-component-data-virtual-tree-text-default);
     cursor: pointer;
-    border-radius: var(--mp-radius-sm);
+    border-radius: var(--mp-component-data-virtual-tree-label-radius);
     outline: none;
-    transition: background-color 80ms ease;
+    transition: background-color var(--mp-component-data-virtual-tree-label-transition-duration)
+      var(--mp-component-data-virtual-tree-label-transition-easing);
 
     &:hover {
-      background-color: var(--mp-color-bg-muted);
+      background-color: var(--mp-component-data-virtual-tree-label-hover-surface);
     }
 
     &:focus-visible {
       outline: none;
-      box-shadow: var(--mp-shadow-focus-primary);
+      box-shadow: var(--mp-component-data-virtual-tree-label-focus-ring);
     }
   }
 
@@ -49,18 +50,19 @@
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
+    width: var(--mp-component-data-virtual-tree-toggle-size);
+    height: var(--mp-component-data-virtual-tree-toggle-size);
     padding: 0;
-    color: var(--mp-color-text-secondary);
+    color: var(--mp-component-data-virtual-tree-text-toggle);
     cursor: pointer;
     background: none;
     border: none;
-    border-radius: var(--mp-radius-sm);
-    transition: color 80ms ease;
+    border-radius: var(--mp-component-data-virtual-tree-toggle-radius);
+    transition: color var(--mp-component-data-virtual-tree-toggle-transition-duration)
+      var(--mp-component-data-virtual-tree-toggle-transition-easing);
 
     &:hover {
-      color: var(--mp-color-text-primary);
+      color: var(--mp-component-data-virtual-tree-text-toggle-hover);
     }
   }
 

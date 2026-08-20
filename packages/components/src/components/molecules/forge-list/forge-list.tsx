@@ -1,6 +1,5 @@
 import { classNames, Dynamic, h, type MpChild, type MpElement } from '@mission-platform/forge';
-
-import { ForgeTypography } from '@/components/atoms/forge-typography';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-list.module.scss';
 

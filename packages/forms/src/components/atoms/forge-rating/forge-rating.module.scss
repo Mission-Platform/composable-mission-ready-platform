@@ -9,56 +9,55 @@
  * the row's `1em`; the empty layer is tinted (outline) and the fill layer is
  * clipped by width and painted solid.
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.forms {
   .forge-rating {
     display: inline-flex;
     align-items: center;
-    gap: var(--mp-spacing-1);
-    color: var(--mp-color-warning-default);
+    gap: var(--mp-component-checkable-gap-stack);
+    color: var(--mp-component-checkable-rating-filled);
     line-height: 1;
 
     /* Sizes — canonical 2xs → 2xl scale (star glyph font-size). */
     &--2xs {
-      font-size: 0.625rem;
+      font-size: var(--mp-component-checkable-size-2xs-rating-font-size);
     }
 
     &--xs {
-      font-size: 0.875rem;
+      font-size: var(--mp-component-checkable-size-xs-rating-font-size);
     }
 
     &--sm {
-      font-size: 1rem;
+      font-size: var(--mp-component-checkable-size-sm-rating-font-size);
     }
 
     &--md {
-      font-size: 1.5rem;
+      font-size: var(--mp-component-checkable-size-md-rating-font-size);
     }
 
     &--lg {
-      font-size: 2rem;
+      font-size: var(--mp-component-checkable-size-lg-rating-font-size);
     }
 
     &--xl {
-      font-size: 2.5rem;
+      font-size: var(--mp-component-checkable-size-xl-rating-font-size);
     }
 
     &--2xl {
-      font-size: 3rem;
+      font-size: var(--mp-component-checkable-size-2xl-rating-font-size);
     }
 
     &--disabled {
-      opacity: 0.5;
+      opacity: var(--mp-component-checkable-opacity-disabled);
       cursor: not-allowed;
     }
 
     &:focus-visible {
       outline: none;
-      border-radius: var(--mp-radius-sm);
-      box-shadow: var(--mp-shadow-focus-primary);
+      border-radius: var(--mp-component-checkable-radius);
+      box-shadow: var(--mp-component-checkable-focus-ring);
     }
 
     &__star {
@@ -84,7 +83,7 @@
       }
 
       &--empty {
-        color: var(--mp-color-border-default);
+        color: var(--mp-component-checkable-rating-empty);
       }
 
       &--filled svg {
@@ -96,7 +95,7 @@
       position: absolute;
       inset: 0;
       overflow: hidden;
-      color: var(--mp-color-warning-default);
+      color: var(--mp-component-checkable-rating-filled);
     }
 
     &__hit {

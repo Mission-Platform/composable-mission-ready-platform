@@ -9,11 +9,10 @@ export interface EmailDocumentProperties {
 }
 
 export function EmailDocument(properties: Readonly<EmailDocumentProperties>): MpElement {
-  const { children, previewText, ...rest } = properties;
   return (
-    <div {...rest}>
-      {previewText ? <EmailPreheader text={previewText} /> : undefined}
-      {children}
+    <div>
+      {properties.previewText ? <EmailPreheader text={properties.previewText} /> : undefined}
+      {properties.children}
     </div>
   );
 }

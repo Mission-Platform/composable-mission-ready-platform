@@ -1,4 +1,5 @@
 import { h } from '@mission-platform/forge';
+import { expect, userEvent, within } from 'storybook/test';
 
 import { ForgeButton } from '@mission-platform/components';
 
@@ -87,6 +88,32 @@ export const Ghost: Story = { args: { variant: 'ghost' } };
 export const Disabled: Story = { args: { disabled: true } };
 
 export const Loading: Story = { args: { loading: true } };
+
+export const FocusVisible: Story = {
+  play: async ({ canvasElement }) => {
+    // Web Components wrap the native button in an open shadow root. React/Vue
+    // expose the button in light DOM. Prefer keyboard tab for light DOM so
+    // :focus-visible applies; fall back to an explicit focusVisible focus for
+    // shadow-DOM hosts where tab order can skip the nested control.
+    const host = canvasElement.querySelector('forge-button');
+    const button =
+      (host?.shadowRoot?.querySelector('button') as HTMLElement | null) ??
+      within(canvasElement).getByRole('button', { name: /save/i });
+
+    if (host) {
+      try {
+        button.focus({ preventScroll: true, focusVisible: true } as FocusOptions);
+      } catch {
+        button.focus({ preventScroll: true });
+      }
+      await expect(host).toHaveFocus();
+      await expect(host.shadowRoot?.activeElement).toBe(button);
+    } else {
+      await userEvent.tab();
+      await expect(button).toHaveFocus();
+    }
+  },
+};
 
 export const Small: Story = { args: { size: 'sm' } };
 

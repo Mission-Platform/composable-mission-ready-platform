@@ -5,15 +5,14 @@
  * stylesheet so its BEM appearance ships in the built package CSS (the
  * two-stage compiler carries the import onto both the React and Vue builds).
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.forms {
   .forge-radio {
     display: inline-flex;
     align-items: center;
-    gap: var(--mp-spacing-2);
+    gap: var(--mp-component-checkable-gap-inline);
     cursor: pointer;
 
     &__control-wrapper {
@@ -22,8 +21,8 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      width: 18px;
-      height: 18px;
+      width: var(--mp-component-checkable-control-size);
+      height: var(--mp-component-checkable-control-size);
     }
 
     &__input {
@@ -35,12 +34,12 @@
       cursor: pointer;
 
       &:focus-visible ~ .forge-radio__circle {
-        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+        outline: var(--mp-component-checkable-border-width-focus) solid var(--mp-component-checkable-border-focus-visible);
         outline-offset: 2px;
       }
 
       &:checked ~ .forge-radio__circle {
-        border-color: var(--mp-color-primary-default);
+        border-color: var(--mp-component-checkable-border-selected);
 
         &::after {
           transform: translate(-50%, -50%) scale(1);
@@ -50,12 +49,12 @@
 
     &__circle {
       display: block;
-      width: 18px;
-      height: 18px;
-      border: var(--mp-border-width-thick) solid var(--mp-color-border-default);
-      border-radius: 50%;
-      background-color: var(--mp-color-bg-surface);
-      transition: border-color 150ms ease;
+      width: var(--mp-component-checkable-control-size);
+      height: var(--mp-component-checkable-control-size);
+      border: var(--mp-component-checkable-border-width-default) solid var(--mp-component-checkable-border-default);
+      border-radius: var(--mp-component-checkable-circle-radius);
+      background-color: var(--mp-component-checkable-track-default);
+      transition: border-color var(--mp-component-checkable-transition-duration) var(--mp-component-checkable-transition-easing);
       pointer-events: none;
 
       &::after {
@@ -63,12 +62,12 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background-color: var(--mp-color-primary-default);
+        width: var(--mp-component-checkable-indicator-size);
+        height: var(--mp-component-checkable-indicator-size);
+        border-radius: var(--mp-component-checkable-circle-radius);
+        background-color: var(--mp-component-checkable-track-selected);
         transform: translate(-50%, -50%) scale(0);
-        transition: transform 150ms ease;
+        transition: transform var(--mp-component-checkable-transition-duration) var(--mp-component-checkable-transition-easing);
       }
     }
 
@@ -91,7 +90,7 @@
     }
 
     &--disabled {
-      opacity: 0.5;
+      opacity: var(--mp-component-checkable-opacity-disabled);
       pointer-events: none;
       cursor: not-allowed;
     }

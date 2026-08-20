@@ -20,16 +20,16 @@
       container: forge-card / inline-size;
     }
 
-    background-color: var(--mp-color-bg-surface);
-    border-radius: var(--mp-radius-lg);
+    background-color: var(--mp-component-card-background);
+    border-radius: var(--mp-component-card-radius);
     overflow: hidden;
 
     &--bordered {
-      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      border: var(--mp-component-card-border-width) solid var(--mp-component-card-border);
     }
 
     &--shadow {
-      box-shadow: var(--mp-shadow-md);
+      box-shadow: var(--mp-component-card-shadow);
     }
 
     /* Padding variants — compact by default, wider cards get more breathing room */
@@ -45,10 +45,10 @@
       .forge-card__header,
       .forge-card__body,
       .forge-card__footer {
-        padding: var(--mp-spacing-2) var(--mp-spacing-3);
+        padding: var(--mp-component-card-padding-sm-block) var(--mp-component-card-padding-sm-inline);
 
         @container forge-card (width >= 30rem) {
-          padding: var(--mp-spacing-3) var(--mp-spacing-4);
+          padding: var(--mp-component-card-padding-sm-wide-block) var(--mp-component-card-padding-sm-wide-inline);
         }
       }
     }
@@ -57,10 +57,10 @@
       .forge-card__header,
       .forge-card__body,
       .forge-card__footer {
-        padding: var(--mp-spacing-3) var(--mp-spacing-4);
+        padding: var(--mp-component-card-padding-md-block) var(--mp-component-card-padding-md-inline);
 
         @container forge-card (width >= 30rem) {
-          padding: var(--mp-spacing-4) var(--mp-spacing-6);
+          padding: var(--mp-component-card-padding-md-wide-block) var(--mp-component-card-padding-md-wide-inline);
         }
       }
     }
@@ -69,10 +69,10 @@
       .forge-card__header,
       .forge-card__body,
       .forge-card__footer {
-        padding: var(--mp-spacing-4) var(--mp-spacing-6);
+        padding: var(--mp-component-card-padding-lg-block) var(--mp-component-card-padding-lg-inline);
 
         @container forge-card (width >= 30rem) {
-          padding: var(--mp-spacing-6) var(--mp-spacing-8);
+          padding: var(--mp-component-card-padding-lg-wide-block) var(--mp-component-card-padding-lg-wide-inline);
         }
       }
     }
@@ -95,29 +95,29 @@
         )
     {
       &--#{$name} {
-        background-color: var(--mp-color-#{$family}-muted);
-        color: var(--mp-color-#{$family}-text);
+        background-color: var(--mp-component-card-tone-#{$family}-background);
+        color: var(--mp-component-card-tone-#{$family}-text);
 
         &.forge-card--bordered {
-          border-color: var(--mp-color-#{$family}-subtle);
+          border-color: var(--mp-component-card-tone-#{$family}-border);
         }
 
         .forge-card__header {
-          border-bottom-color: var(--mp-color-#{$family}-subtle);
+          border-bottom-color: var(--mp-component-card-tone-#{$family}-border);
         }
 
         .forge-card__footer {
-          border-top-color: var(--mp-color-#{$family}-subtle);
+          border-top-color: var(--mp-component-card-tone-#{$family}-border);
         }
       }
     }
 
     &__header {
-      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      border-bottom: var(--mp-component-card-border-width) solid var(--mp-component-card-border);
     }
 
     &__footer {
-      border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      border-top: var(--mp-component-card-border-width) solid var(--mp-component-card-border);
     }
   }
 }

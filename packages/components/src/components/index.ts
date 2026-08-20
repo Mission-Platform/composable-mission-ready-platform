@@ -4,7 +4,6 @@ export {
   type AccordionItemScope,
   type AccordionProperties,
 } from './molecules/forge-accordion';
-export { ForgeAlertBanner, type AlertBannerProperties, type AlertBannerVariant } from './molecules/forge-alert-banner';
 export {
   ForgeAvatar,
   type AvatarProperties,
@@ -49,7 +48,6 @@ export {
   type DeviceMockSize,
   type DeviceMockType,
 } from './molecules/forge-device-mock';
-export { ForgeDialog, type DialogProperties } from './organisms/forge-dialog';
 export {
   ForgeDrawer,
   type DrawerBreakpoint,
@@ -59,7 +57,6 @@ export {
   type DrawerVariant,
   type DrawerDraggable,
 } from './organisms/forge-drawer';
-export { ForgeDropdown, type DropdownPlacement, type DropdownProperties } from './molecules/forge-dropdown';
 export { ForgeGrid, type GridAlignment, type GridGap, type GridProperties } from './molecules/forge-grid';
 export { ForgeHero, type HeroAlign, type HeroProperties, type HeroSize } from './templates/forge-hero';
 export {
@@ -69,17 +66,11 @@ export {
   type IconButtonVariant,
 } from './atoms/forge-icon-button';
 export { ForgeInView, type InViewAnimation, type InViewProperties } from './molecules/forge-in-view';
-export {
-  ForgeLanguageSwitcher,
-  type ForgeLanguageSwitcherOption,
-  type ForgeLanguageSwitcherProperties,
-} from './molecules/forge-language-switcher';
 export { ForgeList, type ListItem, type ListProperties, type ListSize, type ListVariant } from './molecules/forge-list';
 export { ForgeMasonry, type MasonryGap, type MasonryProperties } from './molecules/forge-masonry';
 export { ForgeMenu, type MenuNode, type MenuOrientation, type MenuProperties } from './molecules/forge-menu';
 export { ForgeMenuItem, type MenuItemProperties, type MenuItemVariant } from './molecules/forge-menu-item';
 export { ForgeMenubar, type MenubarProperties } from './organisms/forge-menubar';
-export { ForgeModal, type ModalProperties, type ModalSize } from './organisms/forge-modal';
 export { ForgeNavbar, type NavbarAlign, type NavbarBreakpoint, type NavbarProperties } from './organisms/forge-navbar';
 export {
   ForgeNavbarItem,
@@ -93,7 +84,6 @@ export {
   type PaginationProperties,
   type PaginationSize,
 } from './molecules/forge-pagination';
-export { ForgePopover, type PopoverPlacement, type PopoverProperties } from './molecules/forge-popover';
 export {
   ForgeProgressBar,
   type ProgressBarProperties,
@@ -144,15 +134,6 @@ export {
   type TabsProperties,
   type TabsVariant,
 } from './molecules/forge-tabs';
-export { ForgeTag, type TagProperties, type TagSize, type TagVariant } from './atoms/forge-tag';
-export {
-  ForgeThemeComposer,
-  type ThemeComposerAttribute,
-  type ThemeComposerConfig,
-  type ThemeComposerProperties,
-} from './organisms/forge-theme-composer';
-export { ForgeThemeProvider, type ThemeProviderProperties } from './organisms/forge-theme-provider';
-export { ForgeThemeToggle, type ThemeToggleProperties } from './atoms/forge-theme-toggle';
 export {
   ForgeTimeline,
   type TimelineAlign,
@@ -162,25 +143,12 @@ export {
   type TimelineOrientation,
   type TimelineProperties,
 } from './molecules/forge-timeline';
-export { ForgeToast, type ToastProperties, type ToastVariant } from './molecules/forge-toast';
-export { ForgeToastContainer, type ToastContainerProperties } from './organisms/forge-toast-container';
-export { ForgeTooltip, type TooltipPlacement, type TooltipProperties } from './molecules/forge-tooltip';
 export {
   ForgeTreeView,
   type TreeViewLabelScope,
   type TreeViewNode,
   type TreeViewProperties,
 } from './organisms/forge-tree-view';
-export {
-  ForgeTypography,
-  type TypographyHorizontalAlign,
-  type TypographyColor,
-  type TypographyLineHeight,
-  type TypographyProperties,
-  type TypographyVariant,
-  type TypographyVerticalAlign,
-  type TypographyWeight,
-} from './atoms/forge-typography';
 export {
   ForgeVirtualList,
   type VirtualListItemScope,
@@ -210,25 +178,3 @@ export {
   type VirtualTreeViewProperties,
 } from './organisms/forge-virtual-tree-view';
 export { ForgeWindowPopout, type WindowPopoutProperties } from './molecules/forge-window-popout';
-
-// ── Shared helper APIs ──────────────────────────────────────────────────────
-// Re-exported through the generated `./react` / `./vue` entry so consumers drive
-// the same per-framework singleton the components use. The toast store is the
-// neutral counterpart of the Vue package's `useToast` composable, rendered by
-// `ForgeToastContainer`. (`ToastVariant` is already exported by `forge-toast`.)
-export {
-  clearToasts,
-  dismissToast,
-  errorToast,
-  getToastsSnapshot,
-  infoToast,
-  showToast,
-  subscribeToasts,
-  successToast,
-  useToast,
-  warningToast,
-  type ToastOptions,
-  type ToastPosition,
-  type ToastRecord,
-  type UseToastReturn,
-} from '../stores/toast-store/toast-store';

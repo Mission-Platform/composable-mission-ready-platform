@@ -16,11 +16,11 @@
     align-items: center;
     justify-content: center;
     min-height: 8rem;
-    padding: var(--mp-spacing-4);
-    border-radius: var(--mp-radius-lg);
-    background: var(--mp-color-primary-subtle);
-    color: var(--mp-color-primary-text);
-    font-weight: 600;
+    padding: var(--mp-component-in-view-padding);
+    border-radius: var(--mp-component-in-view-radius);
+    background: var(--mp-component-in-view-surface);
+    color: var(--mp-component-in-view-text);
+    font-weight: var(--mp-component-in-view-font-weight);
   }
 
   .in-view-spacer {

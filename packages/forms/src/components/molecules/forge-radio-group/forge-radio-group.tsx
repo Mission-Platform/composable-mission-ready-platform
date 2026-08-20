@@ -1,8 +1,8 @@
-import { ForgeStack, ForgeTypography } from '@mission-platform/components';
+import { ForgeStack } from '@mission-platform/components';
 import { type ClassValue, h, type MpChild, type MpElement, useId } from '@mission-platform/forge';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import { ForgeRadio } from '../../atoms/forge-radio';
-import sizeStyles from '../../size.module.scss';
 
 import styles from './forge-radio-group.module.scss';
 
@@ -130,7 +130,7 @@ export function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpE
     <fieldset
       className={[
         styles['forge-radio-group'],
-        sizeStyles[`forge-size--${size}`],
+        size ? `forge-size--${size}` : undefined,
         {
           [styles['forge-radio-group--error']]: !!error,
           [styles['forge-radio-group--disabled']]: disabled,

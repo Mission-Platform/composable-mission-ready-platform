@@ -1,7 +1,5 @@
 import { classNames, h, type MpElement } from '@mission-platform/forge';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 import styles from './forge-responsive-video.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
@@ -97,7 +95,7 @@ export function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoPropert
     size = 'md',
   } = properties;
 
-  const className = classNames(styles['forge-responsive-video'], sizeStyles[`forge-size--${size}`], {
+  const className = classNames(styles['forge-responsive-video'], size ? `forge-size--${size}` : undefined, {
     [styles['forge-responsive-video--rounded']]: rounded,
   });
 

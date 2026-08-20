@@ -5,15 +5,14 @@
  * stylesheet so its BEM appearance ships in the built package CSS (the
  * two-stage compiler carries the import onto both the React and Vue builds).
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.forms {
   .forge-color-input {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-spacing-1);
+    gap: var(--mp-component-color-input-gap-stack);
 
     &__label {
       &--hidden {
@@ -30,24 +29,25 @@
     }
 
     &__required {
-      color: var(--mp-color-danger-default);
+      color: var(--mp-component-form-text-invalid);
       margin-left: 2px;
     }
 
     &__wrapper {
       display: flex;
       align-items: center;
-      gap: var(--mp-spacing-2);
-      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background-color: var(--mp-color-bg-surface);
+      gap: var(--mp-component-color-input-gap-inline);
+      border: var(--mp-component-color-input-border-width) solid var(--mp-component-color-input-border-default);
+      border-radius: var(--mp-component-color-input-radius);
+      background-color: var(--mp-component-color-input-surface-default);
       transition:
-        border-color 150ms ease,
-        box-shadow 150ms ease;
+        border-color var(--mp-component-color-input-transition-duration)
+          var(--mp-component-color-input-transition-easing),
+        box-shadow var(--mp-component-color-input-transition-duration) var(--mp-component-color-input-transition-easing);
 
       &:focus-within {
-        border-color: var(--mp-color-border-focus);
-        box-shadow: var(--mp-shadow-focus-primary);
+        border-color: var(--mp-component-color-input-border-focus);
+        box-shadow: var(--mp-component-color-input-focus-ring);
       }
     }
 
@@ -63,13 +63,15 @@
     &__swatch-label {
       display: block;
       flex-shrink: 0;
-      border-radius: calc(var(--mp-radius-md) - 2px) 0 0 calc(var(--mp-radius-md) - 2px);
-      border-right: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      border-radius: calc(var(--mp-component-color-input-radius) - 2px) 0 0
+        calc(var(--mp-component-color-input-radius) - 2px);
+      border-right: var(--mp-component-color-input-border-width) solid var(--mp-component-color-input-border-default);
       cursor: pointer;
-      transition: opacity 150ms ease;
+      transition: opacity var(--mp-component-color-input-transition-duration)
+        var(--mp-component-color-input-transition-easing);
 
       &:hover {
-        opacity: 0.85;
+        opacity: var(--mp-component-color-input-hover-opacity);
       }
     }
 
@@ -80,12 +82,12 @@
       border: none;
       outline: none;
       background: transparent;
-      color: var(--mp-color-text-primary);
-      font-family: var(--mp-font-family-mono);
-      letter-spacing: 0.05em;
+      color: var(--mp-component-color-input-text-default);
+      font-family: var(--mp-component-color-input-font-family);
+      letter-spacing: var(--mp-component-color-input-letter-spacing);
 
       &::placeholder {
-        color: var(--mp-color-text-tertiary);
+        color: var(--mp-component-color-input-text-placeholder);
       }
     }
 
@@ -93,13 +95,14 @@
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} {
         .forge-color-input__swatch-label {
-          width: var(--mp-size-height-#{$size});
-          height: var(--mp-size-height-#{$size});
+          width: var(--mp-component-color-input-size-#{$size}-swatch);
+          height: var(--mp-component-color-input-size-#{$size}-swatch);
         }
 
         .forge-color-input__text {
-          padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
-          font-size: var(--mp-size-font-#{$size});
+          padding: var(--mp-component-color-input-size-#{$size}-padding-block)
+            var(--mp-component-color-input-size-#{$size}-padding-inline);
+          font-size: var(--mp-component-color-input-size-#{$size}-font-size);
         }
       }
     }
@@ -107,25 +110,25 @@
     /* States */
     &--error {
       .forge-color-input__wrapper {
-        border-color: var(--mp-color-danger-default);
+        border-color: var(--mp-component-color-input-border-invalid);
 
         &:focus-within {
-          box-shadow: var(--mp-shadow-focus-danger);
+          box-shadow: var(--mp-component-color-input-focus-ring-invalid);
         }
       }
     }
 
     &--disabled {
-      opacity: 0.5;
+      opacity: var(--mp-component-color-input-disabled-opacity);
       pointer-events: none;
 
       .forge-color-input__wrapper {
-        background-color: var(--mp-color-bg-muted);
+        background-color: var(--mp-component-color-input-surface-disabled);
       }
     }
 
     &__error {
-      color: var(--mp-color-danger-text);
+      color: var(--mp-component-color-input-text-error);
       margin: 0;
     }
 

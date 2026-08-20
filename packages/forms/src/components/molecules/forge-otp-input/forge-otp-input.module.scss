@@ -5,17 +5,16 @@
  * stylesheet so its BEM appearance ships in the built package CSS (the
  * two-stage compiler carries the import onto both the React and Vue builds).
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.forms {
   .forge-otp-input {
-    --mp-otp-cell-size: 3rem;
-    --mp-otp-font-size: var(--mp-size-font-lg);
+    --mp-otp-cell-size: var(--mp-component-input-otp-size-md-cell);
+    --mp-otp-font-size: var(--mp-component-input-otp-size-md-font-size);
 
     display: inline-flex;
-    gap: var(--mp-spacing-2);
+    gap: var(--mp-component-input-otp-gap);
     margin: 0;
     padding: 0;
     border: 0;
@@ -23,38 +22,38 @@
 
     /* Sizes — canonical 2xs → 2xl scale (cell size + glyph font). */
     &--2xs {
-      --mp-otp-cell-size: 2rem;
-      --mp-otp-font-size: var(--mp-size-font-sm);
+      --mp-otp-cell-size: var(--mp-component-input-otp-size-2xs-cell);
+      --mp-otp-font-size: var(--mp-component-input-otp-size-2xs-font-size);
     }
 
     &--xs {
-      --mp-otp-cell-size: 2.25rem;
-      --mp-otp-font-size: var(--mp-size-font-md);
+      --mp-otp-cell-size: var(--mp-component-input-otp-size-xs-cell);
+      --mp-otp-font-size: var(--mp-component-input-otp-size-xs-font-size);
     }
 
     &--sm {
-      --mp-otp-cell-size: 2.5rem;
-      --mp-otp-font-size: var(--mp-size-font-md);
+      --mp-otp-cell-size: var(--mp-component-input-otp-size-sm-cell);
+      --mp-otp-font-size: var(--mp-component-input-otp-size-sm-font-size);
     }
 
     &--md {
-      --mp-otp-cell-size: 3rem;
-      --mp-otp-font-size: var(--mp-size-font-lg);
+      --mp-otp-cell-size: var(--mp-component-input-otp-size-md-cell);
+      --mp-otp-font-size: var(--mp-component-input-otp-size-md-font-size);
     }
 
     &--lg {
-      --mp-otp-cell-size: 3.5rem;
-      --mp-otp-font-size: var(--mp-size-font-xl);
+      --mp-otp-cell-size: var(--mp-component-input-otp-size-lg-cell);
+      --mp-otp-font-size: var(--mp-component-input-otp-size-lg-font-size);
     }
 
     &--xl {
-      --mp-otp-cell-size: 4rem;
-      --mp-otp-font-size: var(--mp-size-font-2xl);
+      --mp-otp-cell-size: var(--mp-component-input-otp-size-xl-cell);
+      --mp-otp-font-size: var(--mp-component-input-otp-size-xl-font-size);
     }
 
     &--2xl {
-      --mp-otp-cell-size: 4.5rem;
-      --mp-otp-font-size: var(--mp-size-font-2xl);
+      --mp-otp-cell-size: var(--mp-component-input-otp-size-2xl-cell);
+      --mp-otp-font-size: var(--mp-component-input-otp-size-2xl-font-size);
     }
 
     &__cell {
@@ -62,26 +61,26 @@
       height: var(--mp-otp-cell-size);
       padding: 0;
       text-align: center;
-      font-family: var(--mp-font-family-sans);
+      font-family: var(--mp-component-input-otp-font-family);
       font-size: var(--mp-otp-font-size);
-      font-weight: var(--mp-font-weight-semibold, 600);
-      color: var(--mp-color-text-primary);
-      background-color: var(--mp-color-bg-surface);
-      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
+      font-weight: var(--mp-component-input-otp-font-weight);
+      color: var(--mp-component-input-otp-text);
+      background-color: var(--mp-component-input-otp-surface);
+      border: var(--mp-component-input-otp-border-width) solid var(--mp-component-input-otp-border-default);
+      border-radius: var(--mp-component-input-otp-radius);
       transition:
         border-color 0.15s ease,
         box-shadow 0.15s ease;
 
       &:focus {
         outline: none;
-        border-color: var(--mp-color-primary-default);
-        box-shadow: var(--mp-shadow-focus-primary);
+        border-color: var(--mp-component-input-otp-border-focus);
+        box-shadow: var(--mp-component-input-otp-focus-ring);
       }
     }
 
     &--disabled &__cell {
-      opacity: 0.5;
+      opacity: var(--mp-component-input-otp-disabled-opacity);
       cursor: not-allowed;
     }
   }

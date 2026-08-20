@@ -1,8 +1,5 @@
 import { classNames, h, type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
-
-import { ForgeTypography } from '@/components/atoms/forge-typography';
-
-import sizeStyles from '../../../styles/size.module.scss';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-virtual-log-viewer.module.scss';
 
@@ -49,11 +46,11 @@ export interface VirtualLogViewerProperties {
 
 /** Level → text colour token. */
 const LEVEL_COLORS: Record<LogLevel, string> = {
-  debug: 'var(--mp-color-text-secondary)',
-  info: 'var(--mp-color-info-default)',
-  warn: 'var(--mp-color-warning-default)',
-  error: 'var(--mp-color-danger-default)',
-  fatal: 'var(--mp-color-danger-emphasis)',
+  debug: 'var(--mp-component-code-virtual-log-viewer-severity-debug)',
+  info: 'var(--mp-component-code-virtual-log-viewer-severity-info)',
+  warn: 'var(--mp-component-code-virtual-log-viewer-severity-warn)',
+  error: 'var(--mp-component-code-virtual-log-viewer-severity-error)',
+  fatal: 'var(--mp-component-code-virtual-log-viewer-severity-fatal)',
 };
 
 /**
@@ -153,7 +150,7 @@ export function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerPrope
 
   return (
     <div
-      className={[styles['log-viewer'], sizeStyles[`forge-size--${size}`]]}
+      className={[styles['log-viewer'], size ? `forge-size--${size}` : undefined]}
       style={{ height: `${height}px` }}
     >
       {toolbar}

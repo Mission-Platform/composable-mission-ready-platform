@@ -15,10 +15,9 @@ export interface EmailListProperties {
 }
 
 export function EmailList(properties: Readonly<EmailListProperties>): MpElement {
-  const { items, ordered: _ordered, spacing: _spacing, ...rest } = properties;
+  const { items } = properties;
   return (
     <table
-      {...rest}
       role="list"
       width="100%"
       border={0}

@@ -1,6 +1,5 @@
 import { classNames, Dynamic, h, hasSlot, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
-
-import { ForgeTypography } from '@/components/atoms/forge-typography';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-hero.module.scss';
 

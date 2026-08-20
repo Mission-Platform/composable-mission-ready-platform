@@ -1,7 +1,5 @@
 import { classNames, h, type MpElement } from '@mission-platform/forge';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 import styles from './forge-skeleton.module.scss';
 
 /** The shape the skeleton placeholder is rendered as. */
@@ -45,7 +43,7 @@ export function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpEleme
     styles['forge-skeleton'],
     styles[`forge-skeleton--${shape}`],
     styles[`forge-skeleton--${variant}`],
-    sizeStyles[`forge-size--${size}`],
+    size ? `forge-size--${size}` : undefined,
     {
       [styles['forge-skeleton--animated']]: animated,
     },

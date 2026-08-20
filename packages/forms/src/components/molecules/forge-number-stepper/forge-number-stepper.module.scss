@@ -5,15 +5,14 @@
  * the stylesheet so its BEM appearance ships in the built package CSS (the
  * two-stage compiler carries the import onto both the React and Vue builds).
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.forms {
   .forge-number-stepper {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-spacing-1);
+    gap: var(--mp-component-input-field-gap);
 
     &__label {
       display: flex;
@@ -34,24 +33,24 @@
     }
 
     &__required {
-      color: var(--mp-color-danger-default);
+      color: var(--mp-component-field-required);
       margin-left: 2px;
     }
 
     &__wrapper {
       display: flex;
       align-items: stretch;
-      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background-color: var(--mp-color-bg-surface);
+      border: var(--mp-component-input-border-width) solid var(--mp-component-input-border-default);
+      border-radius: var(--mp-component-input-radius);
+      background-color: var(--mp-component-input-surface-default);
       overflow: hidden;
       transition:
         border-color 150ms ease,
         box-shadow 150ms ease;
 
       &:focus-within {
-        border-color: var(--mp-color-border-focus);
-        box-shadow: var(--mp-shadow-focus-primary);
+        border-color: var(--mp-component-input-border-focus-visible);
+        box-shadow: var(--mp-component-input-focus-ring);
       }
     }
 
@@ -59,12 +58,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 2.25rem;
+      width: var(--mp-component-input-number-button-width);
       flex-shrink: 0;
       border: none;
-      background-color: var(--mp-color-bg-muted);
-      color: var(--mp-color-text-primary);
-      font-size: var(--mp-font-size-lg);
+      background-color: var(--mp-component-input-number-button-background-default);
+      color: var(--mp-component-input-number-button-text);
+      font-size: var(--mp-component-input-number-button-font-size);
       line-height: 1;
       cursor: pointer;
       user-select: none;
@@ -72,11 +71,11 @@
 
       &:disabled {
         cursor: not-allowed;
-        opacity: 0.4;
+        opacity: var(--mp-component-input-number-button-disabled-opacity);
       }
 
       &:hover:not(:disabled) {
-        background-color: var(--mp-color-border-default);
+        background-color: var(--mp-component-input-number-button-background-hover);
       }
     }
 
@@ -88,42 +87,42 @@
       outline: none;
       background: transparent;
       text-align: center;
-      color: var(--mp-color-text-primary);
-      font-family: var(--mp-font-family-sans);
-      line-height: var(--mp-line-height-normal);
+      color: var(--mp-component-input-text-default);
+      font-family: var(--mp-component-input-font-family);
+      line-height: var(--mp-component-input-line-height);
 
       &::placeholder {
-        color: var(--mp-color-text-tertiary);
+        color: var(--mp-component-input-text-placeholder);
       }
     }
 
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} .forge-number-stepper__field {
-        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
-        font-size: var(--mp-size-font-#{$size});
+        padding: var(--mp-component-input-size-#{$size}-padding-block) var(--mp-component-input-size-#{$size}-padding-inline);
+        font-size: var(--mp-component-input-size-#{$size}-font-size);
       }
     }
 
     &--error .forge-number-stepper__wrapper {
-      border-color: var(--mp-color-danger-default);
+      border-color: var(--mp-component-input-border-invalid);
 
       &:focus-within {
-        box-shadow: var(--mp-shadow-focus-danger);
+        box-shadow: var(--mp-component-input-focus-ring-invalid);
       }
     }
 
     &--disabled {
-      opacity: 0.5;
+      opacity: var(--mp-component-input-opacity-disabled);
       pointer-events: none;
 
       .forge-number-stepper__wrapper {
-        background-color: var(--mp-color-bg-muted);
+        background-color: var(--mp-component-input-surface-disabled);
         cursor: not-allowed;
       }
     }
 
     &__error {
-      color: var(--mp-color-danger-text);
+      color: var(--mp-component-input-text-invalid);
       margin: 0;
     }
 

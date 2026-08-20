@@ -1,8 +1,7 @@
-import { ForgeTypography } from '@mission-platform/components';
 import { type ClassValue, h, type MpElement, useId } from '@mission-platform/forge';
 import { ForgeIconCheck, ForgeIconError } from '@mission-platform/icons';
-
-import { ForgeSelect, type SelectOption } from '../forge-select';
+import { ForgeSelect, type SelectOption } from '@mission-platform/select';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-phone-input.module.scss';
 import { dialCode, exampleNumber, formatAsYouType, isValid, listCountries, type PhoneCountry, toE164 } from './phone';

@@ -1,6 +1,5 @@
 import { classNames, Dynamic, h, type MpChild, type MpElement } from '@mission-platform/forge';
 
-import sizeStyles from '../../../styles/size.module.scss';
 import spacingStyles from '../../../styles/spacing.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
@@ -103,7 +102,7 @@ export function ForgeStack(properties: Readonly<StackProperties>): MpElement {
     `forge-stack--${direction}`,
     padding ? spacingStyles[`forge-spacing--padding-${padding}`] : undefined,
     margin ? spacingStyles[`forge-spacing--margin-${margin}`] : undefined,
-    sizeStyles[`forge-size--${size}`],
+    size ? `forge-size--${size}` : undefined,
   );
   const style: Record<string, string> = {
     display: inline ? 'inline-flex' : 'flex',

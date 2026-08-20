@@ -6,7 +6,7 @@ import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
  * `ForgeWysiwygBlockMenu` is the write-once `ForgeWysiwygBlockMenu` — the toolbar's
  * block-style selector. It replaces the former heading/paragraph/quote buttons
  * with a single dropdown (Paragraph, Headings 1-6, Block Quote, Monospace),
- * composing `@mission-platform/components`' `ForgeDropdown`.
+ * composing `@mission-platform/float`'s `ForgeDropdown`.
  *
  * This is a single, framework-agnostic story: the bare
  * `@mission-platform/content` import auto-resolves to the framework selected by

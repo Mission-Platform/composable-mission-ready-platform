@@ -5,11 +5,10 @@
  * `forge-code-block.hljs.css` (a bare side-effect import) so the `.hljs-*` class
  * names are not hashed; this module holds only the (hashed) chrome.
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.content` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.content {
   .forge-code-block {
     /**
      * The single line box the gutter and the code share. Both columns are laid
@@ -17,14 +16,14 @@
      * modifier scales them together) and the same leading — otherwise the two
      * columns drift apart and the numbers stop matching their lines.
      */
-    --mp-code-block-line-height: var(--mp-line-height-relaxed);
+    --mp-code-block-line-height: var(--mp-component-code-typography-line-height);
 
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-    background-color: var(--mp-color-bg-sunken);
+    border: var(--mp-component-code-border-width) solid var(--mp-component-code-border-default);
+    border-radius: var(--mp-component-code-radius);
+    background-color: var(--mp-component-code-surface-default);
     overflow: hidden;
-    font-family: var(--mp-font-family-mono);
-    font-size: var(--mp-font-size-sm);
+    font-family: var(--mp-component-code-typography-font-family);
+    font-size: var(--mp-component-code-typography-font-size);
 
     &__header {
       position: sticky;
@@ -33,16 +32,16 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: var(--mp-spacing-2) var(--mp-spacing-4);
-      border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-      background-color: var(--mp-color-bg-muted);
-      gap: var(--mp-spacing-3);
+      padding: var(--mp-component-code-header-padding-block) var(--mp-component-code-header-padding-inline);
+      border-bottom: var(--mp-component-code-border-width) solid var(--mp-component-code-header-border);
+      background-color: var(--mp-component-code-header-surface);
+      gap: var(--mp-component-code-header-gap);
     }
 
     &__filename {
-      font-family: var(--mp-font-family-mono);
-      font-size: var(--mp-font-size-xs);
-      color: var(--mp-color-text-secondary);
+      font-family: var(--mp-component-code-filename-font-family);
+      font-size: var(--mp-component-code-filename-font-size);
+      color: var(--mp-component-code-filename-text);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -51,9 +50,9 @@
     }
 
     &__language {
-      font-family: var(--mp-font-family-mono);
-      font-size: var(--mp-font-size-xs);
-      color: var(--mp-color-text-tertiary);
+      font-family: var(--mp-component-code-language-font-family);
+      font-size: var(--mp-component-code-language-font-size);
+      color: var(--mp-component-code-language-text);
       text-transform: lowercase;
       flex: 1;
       min-width: 0;
@@ -62,20 +61,20 @@
     &__copy {
       display: inline-flex;
       align-items: center;
-      gap: var(--mp-spacing-1);
-      padding: var(--mp-spacing-1) var(--mp-spacing-2);
-      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-sm);
-      background: transparent;
-      color: var(--mp-color-text-tertiary);
-      font-family: var(--mp-font-family-sans);
-      font-size: var(--mp-font-size-xs);
+      gap: var(--mp-component-code-copy-gap);
+      padding: var(--mp-component-code-copy-padding-block) var(--mp-component-code-copy-padding-inline);
+      border: var(--mp-component-code-copy-border-default) solid var(--mp-component-code-copy-border-width-default);
+      border-radius: var(--mp-component-code-copy-radius);
+      background: var(--mp-component-code-copy-surface-default);
+      color: var(--mp-component-code-copy-text-default);
+      font-family: var(--mp-component-code-copy-font-family);
+      font-size: var(--mp-component-code-copy-font-size);
       line-height: 1;
       cursor: pointer;
       transition:
-        color 150ms ease,
-        border-color 150ms ease,
-        background-color 150ms ease;
+        color var(--mp-component-code-copy-transition-duration) var(--mp-component-code-copy-transition-easing),
+        border-color var(--mp-component-code-copy-transition-duration) var(--mp-component-code-copy-transition-easing),
+        background-color var(--mp-component-code-copy-transition-duration) var(--mp-component-code-copy-transition-easing);
       white-space: nowrap;
       flex-shrink: 0;
 
@@ -87,13 +86,13 @@
       }
 
       &:hover {
-        color: var(--mp-color-text-primary);
-        border-color: var(--mp-color-border-strong);
-        background-color: var(--mp-color-bg-surface);
+        color: var(--mp-component-code-copy-text-hover);
+        border-color: var(--mp-component-code-copy-border-hover);
+        background-color: var(--mp-component-code-copy-surface-hover);
       }
 
       &:focus-visible {
-        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+        outline: var(--mp-component-code-copy-border-width-focus-visible) solid var(--mp-component-code-copy-border-focus-visible);
         outline-offset: 2px;
       }
     }
@@ -111,9 +110,9 @@
       display: block;
       flex-shrink: 0;
       user-select: none;
-      padding: var(--mp-spacing-4) var(--mp-spacing-2) var(--mp-spacing-4) var(--mp-spacing-4);
-      color: var(--mp-color-text-disabled);
-      font-family: var(--mp-font-family-mono);
+      padding: var(--mp-component-code-gutter-padding-block) var(--mp-component-code-gutter-padding-inline-end) var(--mp-component-code-gutter-padding-block) var(--mp-component-code-gutter-padding-inline-start);
+      color: var(--mp-component-code-gutter-text);
+      font-family: var(--mp-component-code-typography-font-family);
       font-size: inherit;
       line-height: var(--mp-code-block-line-height);
       font-variant-numeric: tabular-nums;
@@ -127,12 +126,12 @@
 
     &__pre {
       margin: 0;
-      padding: var(--mp-spacing-4);
+      padding: var(--mp-component-code-padding);
       background: transparent;
       overflow: visible;
       flex: 1;
       min-width: 0;
-      font-family: var(--mp-font-family-mono);
+      font-family: var(--mp-component-code-typography-font-family);
       font-size: inherit;
       line-height: var(--mp-code-block-line-height);
     }
@@ -165,10 +164,10 @@
         )
     {
       &--#{$name} {
-        border-color: var(--mp-color-#{$family}-subtle);
+        border-color: var(--mp-component-code-variant-#{$family}-border);
 
         .forge-code-block__header {
-          border-bottom-color: var(--mp-color-#{$family}-subtle);
+          border-bottom-color: var(--mp-component-code-variant-#{$family}-border);
         }
       }
     }

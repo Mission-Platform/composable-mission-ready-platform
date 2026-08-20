@@ -1,6 +1,5 @@
 import { classNames, h, hasSlot, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
 
-import sizeStyles from '../../../styles/size.module.scss';
 import spacingStyles from '../../../styles/spacing.module.scss';
 
 import styles from './forge-card.module.scss';
@@ -65,7 +64,7 @@ export function ForgeCard(properties: Readonly<CardProperties>): MpElement {
     styles['forge-card'],
     styles[`forge-card--padding-${padding}`],
     styles[`forge-card--${variant}`],
-    sizeStyles[`forge-size--${size}`],
+    size ? `forge-size--${size}` : undefined,
     {
       [styles['forge-card--shadow']]: shadow,
       [styles['forge-card--bordered']]: bordered,

@@ -6,7 +6,8 @@
   "type": "module",
   "sideEffects": [
     "**/*.css",
-    "**/*.scss"
+    "**/*.scss",
+    "dist/web-components/**/*.js"
   ],
   "exports": {
     ".": {
@@ -79,13 +80,16 @@
   },
   "dependencies": {
     "@mission-platform/components": "workspace:*",
+    "@mission-platform/float": "workspace:*",
     "@mission-platform/content": "workspace:*",
     "@mission-platform/forms-core": "workspace:*",
     "@mission-platform/icons": "workspace:*",
     "@mission-platform/forge": "workspace:*",
     "@mission-platform/layouts": "workspace:*",
+    "@mission-platform/select": "workspace:*",
     "@mission-platform/phone-number": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
+    "@mission-platform/typography": "workspace:*",
     "luxon": "catalog:"
   },
   "peerDependencies": {

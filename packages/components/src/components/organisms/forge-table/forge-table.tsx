@@ -1,9 +1,6 @@
 import { classNames, h, type MpElement, useMemo, useState } from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
-
-import { ForgeTypography } from '@/components/atoms/forge-typography';
-
-import sizeStyles from '../../../styles/size.module.scss';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-table.module.scss';
 
@@ -210,7 +207,7 @@ export function ForgeTable(properties: Readonly<TableProperties>): MpElement {
         ));
 
   return (
-    <div className={[styles['forge-table-wrapper'], sizeStyles[`forge-size--${size}`]]}>
+    <div className={[styles['forge-table-wrapper'], size ? `forge-size--${size}` : undefined]}>
       {loading ? (
         <div
           className={styles['forge-table__loading']}

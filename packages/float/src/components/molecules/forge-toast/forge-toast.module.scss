@@ -1,0 +1,120 @@
+/**
+ * Styling for the write-once `ForgeToast`.
+ *
+ * `ForgeToast` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its BEM appearance ships in the built package CSS (the
+ * two-stage compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the shared `mp.components` cascade layer, matching the
+ * `@mission-platform/components` package.
+ */
+
+@layer mp.components {
+  .forge-toast {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--mp-component-overlay-toast-gap);
+    width: 100%;
+    max-width: 24rem;
+    padding: var(--mp-component-overlay-toast-padding-block) var(--mp-component-overlay-toast-padding-inline);
+    background-color: var(--mp-component-overlay-toast-surface);
+    border: var(--mp-component-overlay-border-width) solid var(--mp-component-overlay-border-default);
+    border-left-width: 4px;
+    border-radius: var(--mp-component-overlay-toast-radius);
+    box-shadow: var(--mp-component-overlay-toast-shadow);
+    color: var(--mp-component-overlay-toast-text-default);
+    font-family: var(--mp-component-overlay-font-family);
+    pointer-events: auto;
+
+    &__icon {
+      display: flex;
+      flex-shrink: 0;
+      font-size: var(--mp-component-overlay-icon-size);
+      line-height: 1;
+
+      svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+        fill: currentcolor;
+      }
+    }
+
+    &__content {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    &__title {
+      margin: 0 0 var(--mp-component-overlay-toast-title-gap);
+      font-size: var(--mp-component-overlay-toast-font-size);
+      font-weight: var(--mp-component-overlay-toast-font-weight);
+    }
+
+    &__message {
+      font-size: var(--mp-component-overlay-toast-font-size);
+      color: var(--mp-component-overlay-toast-text-message);
+      overflow-wrap: break-word;
+    }
+
+    &__dismiss {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      padding: var(--mp-component-overlay-dismiss-padding);
+      margin: calc(var(--mp-component-overlay-dismiss-padding) * -1);
+      background: transparent;
+      border: 0;
+      border-radius: var(--mp-component-overlay-dismiss-radius);
+      color: var(--mp-component-icon-color-muted);
+      cursor: pointer;
+      transition: color var(--mp-component-overlay-toast-transition-duration)
+        var(--mp-component-overlay-toast-transition-easing);
+      line-height: 1;
+
+      svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+        fill: currentcolor;
+      }
+
+      &:hover {
+        color: var(--mp-component-overlay-toast-text-default);
+      }
+
+      &:focus-visible {
+        outline: var(--mp-component-overlay-dismiss-focus-width) solid var(--mp-component-overlay-border-focus-visible);
+        outline-offset: 1px;
+      }
+    }
+
+    /**
+     * Variants — accent the icon and left border with the canonical colour set.
+     * The `neutral` tone reuses the `default` token family (no `neutral` alias).
+     */
+    @each $name,
+      $family
+        in (
+          'neutral': 'neutral',
+          'primary': 'info',
+          'secondary': 'neutral',
+          'tertiary': 'neutral',
+          'success': 'success',
+          'warning': 'warning',
+          'info': 'info',
+          'error': 'danger',
+          'critical': 'danger'
+        )
+    {
+      &--#{$name} {
+        border-left-color: var(--mp-component-feedback-#{$family}-border);
+
+        .forge-toast__icon {
+          color: var(--mp-component-feedback-#{$family}-border);
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
-import { ForgeTypography } from '@mission-platform/components';
 import { type ClassValue, h, type MpElement, useId } from '@mission-platform/forge';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-switch.module.scss';
 

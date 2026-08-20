@@ -20,8 +20,9 @@
   }
 
   .forge-navbar {
-    background-color: var(--mp-color-bg-surface);
-    border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    background-color: var(--mp-component-navigation-navbar-surface);
+    border-bottom: var(--mp-component-navigation-navbar-border-width) solid
+      var(--mp-component-navigation-navbar-border);
     z-index: 100;
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
@@ -38,41 +39,45 @@
     &__container {
       display: flex;
       align-items: center;
-      height: var(--mp-size-height-xl);
-      padding: 0 var(--mp-spacing-4);
-      gap: var(--mp-spacing-3);
+      height: var(--mp-component-navigation-navbar-container-height);
+      padding: 0 var(--mp-component-navigation-navbar-container-padding-default);
+      gap: var(--mp-component-navigation-navbar-container-gap-default);
       max-width: 100%;
 
       @include bp.bp-up('sm') {
-        padding: 0 var(--mp-spacing-6);
-        gap: var(--mp-spacing-4);
+        padding: 0 var(--mp-component-navigation-navbar-container-padding-wide);
+        gap: var(--mp-component-navigation-navbar-container-gap-wide);
       }
 
       @container forge-navbar (width >= 60rem) {
-        padding: 0 var(--mp-spacing-8);
-        gap: var(--mp-spacing-6);
+        padding: 0 var(--mp-component-navigation-navbar-container-padding-widest);
+        gap: var(--mp-component-navigation-navbar-container-gap-widest);
       }
     }
 
     &__start {
       display: flex;
       align-items: center;
-      gap: var(--mp-spacing-4);
+      gap: var(--mp-component-navigation-navbar-start-gap);
       flex-shrink: 0;
     }
 
     &__center {
       display: flex;
       align-items: center;
-      gap: var(--mp-spacing-3);
+      gap: var(--mp-component-navigation-navbar-center-gap-default);
       flex: 1;
 
+      > forge-slot {
+        display: contents;
+      }
+
       @include bp.bp-up('sm') {
-        gap: var(--mp-spacing-4);
+        gap: var(--mp-component-navigation-navbar-center-gap-wide);
       }
 
       @container forge-navbar (width >= 60rem) {
-        gap: var(--mp-spacing-6);
+        gap: var(--mp-component-navigation-navbar-center-gap-widest);
       }
 
       &--start {
@@ -91,8 +96,12 @@
     &__end {
       display: flex;
       align-items: center;
-      gap: var(--mp-spacing-2);
+      gap: var(--mp-component-navigation-navbar-end-gap);
       flex-shrink: 0;
+
+      > forge-slot {
+        display: contents;
+      }
     }
 
     &__brand {
@@ -105,57 +114,59 @@
       flex-direction: column;
       justify-content: center;
       margin-left: auto;
-      gap: var(--mp-spacing-1);
-      width: var(--mp-size-height-md);
-      height: var(--mp-size-height-md);
-      padding: var(--mp-spacing-2);
+      gap: var(--mp-component-navigation-navbar-hamburger-gap);
+      width: var(--mp-component-navigation-navbar-hamburger-size);
+      height: var(--mp-component-navigation-navbar-hamburger-size);
+      padding: var(--mp-component-navigation-navbar-hamburger-padding);
       background: none;
       border: none;
-      border-radius: var(--mp-radius-md);
+      border-radius: var(--mp-component-navigation-navbar-hamburger-radius);
       cursor: pointer;
-      color: var(--mp-color-text-primary);
+      color: var(--mp-component-navigation-navbar-hamburger-text);
       flex-shrink: 0;
 
       &:hover {
-        background-color: var(--mp-color-bg-subtle, var(--mp-color-bg-surface));
+        background-color: var(--mp-component-navigation-navbar-hamburger-surface-hover);
       }
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-shadow-focus-primary, 0 0 0 2px var(--mp-color-primary-default));
+        box-shadow: var(--mp-component-navigation-navbar-hamburger-focus-ring);
       }
     }
 
     &__hamburger-bar {
       display: block;
       width: 100%;
-      height: 2px;
+      height: var(--mp-component-navigation-navbar-hamburger-bar-height);
       border-radius: 1px;
-      background-color: currentcolor;
+      background-color: var(--mp-component-navigation-navbar-hamburger-bar-color);
     }
   }
 
   .forge-navbar__mobile-nav {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-spacing-1);
-    padding: var(--mp-spacing-2) var(--mp-spacing-3);
+    gap: var(--mp-component-navigation-navbar-mobile-nav-gap);
+    padding: var(--mp-component-navigation-navbar-mobile-nav-padding-block)
+      var(--mp-component-navigation-navbar-mobile-nav-padding-inline);
     height: 100%;
   }
 
   .forge-navbar__mobile-nav-items {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-spacing-1);
+    gap: var(--mp-component-navigation-navbar-mobile-nav-items-gap);
     flex: 1;
   }
 
   .forge-navbar__mobile-nav-end {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-spacing-2);
-    padding-top: var(--mp-spacing-4);
-    border-top: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    gap: var(--mp-component-navigation-navbar-mobile-nav-end-gap);
+    padding-top: var(--mp-component-navigation-navbar-mobile-nav-end-padding-top);
+    border-top: var(--mp-component-navigation-navbar-border-width) solid
+      var(--mp-component-navigation-navbar-border);
   }
 
   /* Collapse into the mobile drawer. The transition point is configurable via

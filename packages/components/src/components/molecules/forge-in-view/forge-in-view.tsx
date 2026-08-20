@@ -9,8 +9,6 @@ import {
   useState,
 } from '@mission-platform/forge';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 export type InViewAnimation = 'fade' | 'slide-up' | 'slide-left' | 'slide-right' | 'scale' | 'none';
 /** Size token — canonical 2xs → 2xl scale. */
 export type InViewSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
@@ -138,7 +136,7 @@ export function ForgeInView(properties: Readonly<InViewProperties>): MpElement {
     <Dynamic
       is={tag}
       ref={wrapperReference}
-      className={classNames('in-view', sizeStyles[`forge-size--${size}`])}
+      className={classNames('in-view', size ? `forge-size--${size}` : undefined)}
       style={wrapperStyle(animation, duration, delay, inView)}
     >
       {properties.children}

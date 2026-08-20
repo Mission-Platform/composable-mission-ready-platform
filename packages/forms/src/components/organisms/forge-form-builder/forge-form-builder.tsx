@@ -2,7 +2,6 @@ import {
   type DrawerDraggable,
   ForgeButton,
   ForgeTabs,
-  ForgeTypography,
   type TabItem,
 } from '@mission-platform/components';
 import { ForgeCodeBlock } from '@mission-platform/content';
@@ -33,9 +32,10 @@ import {
   widgetHasOptions,
 } from '@mission-platform/forms-core';
 import { ForgeVerticalLayout } from '@mission-platform/layouts';
+import { ForgeSelect } from '@mission-platform/select';
+import { ForgeTypography } from '@mission-platform/typography';
 
-import { ForgeCheckbox, ForgeInput, ForgeNumberStepper, ForgeSelect, ForgeSwitch, ForgeTextarea } from '../..';
-import sizeStyles from '../../size.module.scss';
+import { ForgeCheckbox, ForgeInput, ForgeNumberStepper, ForgeSwitch, ForgeTextarea } from '../..';
 import { ForgeSchemaForm } from '../forge-schema-form';
 
 import styles from './forge-form-builder.module.scss';
@@ -1289,7 +1289,7 @@ export function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): M
       aria-disabled={disabled ? 'true' : undefined}
       className={[
         styles['forge-form-builder'],
-        sizeStyles[`forge-size--${size}`],
+        size ? `forge-size--${size}` : undefined,
         {
           [styles['forge-form-builder--disabled']]: disabled,
         },

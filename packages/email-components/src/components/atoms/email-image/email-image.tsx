@@ -15,7 +15,6 @@ export function EmailImage(properties: Readonly<EmailImageProperties>): MpElemen
   if (properties.alt.trim().length === 0) {
     throw new Error('EmailImage requires non-empty alt text.');
   }
-  const { children: _children, fluid: _fluid, ...rest } = properties;
   const style = {
     display: 'block',
     height: properties.height ? `${properties.height}px` : 'auto',
@@ -24,7 +23,6 @@ export function EmailImage(properties: Readonly<EmailImageProperties>): MpElemen
   };
   return (
     <img
-      {...rest}
       src={validateUrl(properties.src, 'src')}
       alt={properties.alt}
       width={properties.width}

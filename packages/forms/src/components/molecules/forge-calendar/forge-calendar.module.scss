@@ -5,18 +5,17 @@
  * stylesheet so its BEM appearance ships in the built package CSS (the
  * two-stage compiler carries the import onto both the React and Vue builds).
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.forms {
   .forge-calendar {
     display: inline-flex;
     flex-direction: column;
-    background: var(--mp-color-bg-surface);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-lg);
-    box-shadow: var(--mp-shadow-md);
+    background: var(--mp-component-calendar-surface-default);
+    border: var(--mp-component-calendar-border-width) solid var(--mp-component-calendar-border-default);
+    border-radius: var(--mp-component-calendar-radius-default);
+    box-shadow: var(--mp-component-calendar-shadow);
     user-select: none;
 
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
@@ -24,14 +23,14 @@
       $min-width in ('2xs': 200px, 'xs': 220px, 'sm': 240px, 'md': 280px, 'lg': 320px, 'xl': 360px, '2xl': 400px)
     {
       &--#{$size} {
-        padding: var(--mp-size-pad-inline-#{$size});
+        padding: var(--mp-component-calendar-size-#{$size}-padding);
         min-width: $min-width;
 
         .forge-calendar__weekday,
         .forge-calendar__day,
         .forge-calendar__cell {
-          height: var(--mp-size-height-#{$size});
-          font-size: var(--mp-size-font-#{$size});
+          height: var(--mp-component-calendar-size-#{$size}-cell-height);
+          font-size: var(--mp-component-calendar-size-#{$size}-font-size);
         }
       }
     }
@@ -48,7 +47,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: var(--mp-spacing-2);
+      margin-bottom: var(--mp-component-calendar-header-gap);
     }
 
     &__month-label {
@@ -60,23 +59,24 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: var(--mp-spacing-1);
+      gap: var(--mp-component-calendar-label-gap);
     }
 
     &__label-btn {
       border: none;
       background: transparent;
-      padding: var(--mp-spacing-1) var(--mp-spacing-2);
-      border-radius: var(--mp-radius-sm);
+      padding: var(--mp-component-calendar-label-padding-block) var(--mp-component-calendar-label-padding-inline);
+      border-radius: var(--mp-component-calendar-radius-control);
       cursor: pointer;
-      transition: background-color 150ms ease;
+      transition: background-color var(--mp-component-calendar-transition-duration)
+        var(--mp-component-calendar-transition-easing);
 
       &:hover {
-        background-color: var(--mp-color-bg-muted);
+        background-color: var(--mp-component-calendar-surface-hover);
       }
 
       &:focus-visible {
-        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+        outline: var(--mp-component-calendar-border-focus-width) solid var(--mp-component-calendar-border-focus);
         outline-offset: 2px;
       }
     }
@@ -90,12 +90,12 @@
       flex-shrink: 0;
       border: none;
       background: transparent;
-      border-radius: var(--mp-radius-sm);
+      border-radius: var(--mp-component-calendar-radius-control);
       cursor: pointer;
-      color: var(--mp-color-text-secondary);
+      color: var(--mp-component-calendar-text-secondary);
       transition:
-        background-color 150ms ease,
-        color 150ms ease;
+        background-color var(--mp-component-calendar-transition-duration) var(--mp-component-calendar-transition-easing),
+        color var(--mp-component-calendar-transition-duration) var(--mp-component-calendar-transition-easing);
 
       svg {
         display: block;
@@ -105,12 +105,12 @@
       }
 
       &:hover {
-        background-color: var(--mp-color-bg-muted);
-        color: var(--mp-color-text-primary);
+        background-color: var(--mp-component-calendar-surface-hover);
+        color: var(--mp-component-calendar-text-default);
       }
 
       &:focus-visible {
-        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+        outline: var(--mp-component-calendar-border-focus-width) solid var(--mp-component-calendar-border-focus);
         outline-offset: 2px;
       }
     }
@@ -131,8 +131,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: var(--mp-font-weight-medium);
-      color: var(--mp-color-text-tertiary);
+      font-weight: var(--mp-component-calendar-font-weight-medium);
+      color: var(--mp-component-calendar-text-muted);
     }
 
     &__day {
@@ -142,73 +142,89 @@
       width: 100%;
       border: none;
       background: transparent;
-      border-radius: var(--mp-radius-sm);
+      border-radius: var(--mp-component-calendar-radius-control);
       cursor: pointer;
-      color: var(--mp-color-text-primary);
+      color: var(--mp-component-calendar-text-default);
       transition:
-        background-color 150ms ease,
-        color 150ms ease;
+        background-color var(--mp-component-calendar-transition-duration) var(--mp-component-calendar-transition-easing),
+        color var(--mp-component-calendar-transition-duration) var(--mp-component-calendar-transition-easing);
 
       &--empty {
         pointer-events: none;
       }
 
       &--selected {
-        background-color: var(--mp-color-primary-default);
-        color: var(--mp-color-text-on-primary);
-        font-weight: var(--mp-font-weight-semibold);
+        background-color: var(--mp-component-calendar-surface-selected);
+        color: var(--mp-component-calendar-text-selected);
+        font-weight: var(--mp-component-calendar-font-weight-selected);
       }
 
       &--range-start,
       &--range-end {
-        background-color: var(--mp-color-primary-default);
-        color: var(--mp-color-text-on-primary);
-        font-weight: var(--mp-font-weight-semibold);
+        background-color: var(--mp-component-calendar-surface-selected);
+        color: var(--mp-component-calendar-text-selected);
+        font-weight: var(--mp-component-calendar-font-weight-selected);
       }
 
       &--range-start {
-        border-radius: var(--mp-radius-sm) 0 0 var(--mp-radius-sm);
+        border-radius: var(--mp-component-calendar-radius-control) 0 0 var(--mp-component-calendar-radius-control);
       }
 
       &--range-end {
-        border-radius: 0 var(--mp-radius-sm) var(--mp-radius-sm) 0;
+        border-radius: 0 var(--mp-component-calendar-radius-control) var(--mp-component-calendar-radius-control) 0;
       }
 
       &--in-range {
-        background-color: color-mix(in srgb, var(--mp-color-primary-default) 12%, transparent);
-        color: var(--mp-color-primary-default);
+        background-color: color-mix(
+          in srgb,
+          var(--mp-component-calendar-surface-range) var(--mp-component-calendar-range-opacity),
+          transparent
+        );
+        color: var(--mp-component-calendar-text-range);
         border-radius: 0;
       }
 
       /* Tentative range preview (start chosen, end being hovered): a lighter
          in-between fill and a softer, outlined end cap than the committed range. */
       &--in-preview {
-        background-color: color-mix(in srgb, var(--mp-color-primary-default) 8%, transparent);
-        color: var(--mp-color-primary-default);
+        background-color: color-mix(
+          in srgb,
+          var(--mp-component-calendar-surface-range) var(--mp-component-calendar-preview-opacity),
+          transparent
+        );
+        color: var(--mp-component-calendar-text-range);
         border-radius: 0;
       }
 
       &--preview-end {
-        background-color: color-mix(in srgb, var(--mp-color-primary-default) 20%, transparent);
-        color: var(--mp-color-primary-default);
-        font-weight: var(--mp-font-weight-semibold);
-        border-radius: 0 var(--mp-radius-sm) var(--mp-radius-sm) 0;
+        background-color: color-mix(
+          in srgb,
+          var(--mp-component-calendar-surface-range) var(--mp-component-calendar-preview-end-opacity),
+          transparent
+        );
+        color: var(--mp-component-calendar-text-range);
+        font-weight: var(--mp-component-calendar-font-weight-selected);
+        border-radius: 0 var(--mp-component-calendar-radius-control) var(--mp-component-calendar-radius-control) 0;
       }
 
       &--today {
-        background-color: color-mix(in srgb, var(--mp-color-primary-default) 12%, transparent);
-        color: var(--mp-color-primary-default);
-        font-weight: var(--mp-font-weight-semibold);
+        background-color: color-mix(
+          in srgb,
+          var(--mp-component-calendar-surface-range) var(--mp-component-calendar-range-opacity),
+          transparent
+        );
+        color: var(--mp-component-calendar-text-range);
+        font-weight: var(--mp-component-calendar-font-weight-selected);
       }
 
       &--disabled {
-        opacity: 0.3;
+        opacity: var(--mp-component-calendar-disabled-opacity);
         cursor: not-allowed;
         pointer-events: none;
       }
 
       &:focus-visible {
-        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+        outline: var(--mp-component-calendar-border-focus-width) solid var(--mp-component-calendar-border-focus);
         outline-offset: 2px;
       }
 
@@ -219,7 +235,7 @@
           .forge-calendar__day--range-end,
           .forge-calendar__day--preview-end
         ) {
-        background-color: var(--mp-color-bg-muted);
+        background-color: var(--mp-component-calendar-surface-hover);
       }
     }
 
@@ -228,7 +244,7 @@
     &__years {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: var(--mp-spacing-1);
+      gap: var(--mp-component-calendar-label-gap);
     }
 
     &__cell {
@@ -237,31 +253,31 @@
       justify-content: center;
       border: none;
       background: transparent;
-      border-radius: var(--mp-radius-sm);
+      border-radius: var(--mp-component-calendar-radius-control);
       cursor: pointer;
-      color: var(--mp-color-text-primary);
+      color: var(--mp-component-calendar-text-default);
       transition:
-        background-color 150ms ease,
-        color 150ms ease;
+        background-color var(--mp-component-calendar-transition-duration) var(--mp-component-calendar-transition-easing),
+        color var(--mp-component-calendar-transition-duration) var(--mp-component-calendar-transition-easing);
 
       &--current {
-        background-color: var(--mp-color-primary-default);
-        color: var(--mp-color-text-on-primary);
-        font-weight: var(--mp-font-weight-semibold);
+        background-color: var(--mp-component-calendar-surface-selected);
+        color: var(--mp-component-calendar-text-selected);
+        font-weight: var(--mp-component-calendar-font-weight-selected);
       }
 
       &--outside {
-        color: var(--mp-color-text-tertiary);
-        opacity: 0.6;
+        color: var(--mp-component-calendar-text-muted);
+        opacity: var(--mp-component-calendar-outside-opacity);
       }
 
       &:focus-visible {
-        outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+        outline: var(--mp-component-calendar-border-focus-width) solid var(--mp-component-calendar-border-focus);
         outline-offset: 2px;
       }
 
       &:hover:not(.forge-calendar__cell--current) {
-        background-color: var(--mp-color-bg-muted);
+        background-color: var(--mp-component-calendar-surface-hover);
       }
     }
   }

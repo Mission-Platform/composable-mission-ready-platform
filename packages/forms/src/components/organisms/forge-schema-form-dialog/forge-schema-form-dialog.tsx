@@ -1,4 +1,5 @@
-import { ForgeButton, ForgeModal, type ModalSize } from '@mission-platform/components';
+import { ForgeButton } from '@mission-platform/components';
+import { ForgeModal, type ModalSize } from '@mission-platform/float';
 import { h, type MpElement } from '@mission-platform/forge';
 
 import {

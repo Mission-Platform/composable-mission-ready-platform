@@ -255,9 +255,6 @@ export function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement {
     { [styles['forge-drawer--inline']]: isInline, [styles['forge-drawer--draggable']]: canResize },
   );
 
-  const children = properties.children;
-  const bodyChildren = children === undefined ? [] : Array.isArray(children) ? [...children] : [children];
-
   // The header/footer are plain `<div>`s rather than `<header>`/`<footer>`: an
   // `inline` panel has no `dialog` role, so semantic `<header>`/`<footer>` would
   // become page-level `banner`/`contentinfo` landmarks and two inline drawers
@@ -311,7 +308,9 @@ export function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement {
         style={resizeStyle}
       >
         {headerNode}
-        <div className={styles['forge-drawer__body']}>{bodyChildren}</div>
+        <div className={styles['forge-drawer__body']}>
+          <Slot />
+        </div>
         {footerNode}
         {resizeHandle}
       </aside>
@@ -325,7 +324,9 @@ export function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement {
         style={resizeStyle}
       >
         {headerNode}
-        <div className={styles['forge-drawer__body']}>{bodyChildren}</div>
+        <div className={styles['forge-drawer__body']}>
+          <Slot />
+        </div>
         {footerNode}
         {resizeHandle}
       </div>

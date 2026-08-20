@@ -1,7 +1,5 @@
-import { ForgeTypography } from '@mission-platform/components';
 import { h, type MpChild, type MpElement } from '@mission-platform/forge';
-
-import sizeStyles from '../../size.module.scss';
+import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-radio.module.scss';
 
@@ -61,7 +59,7 @@ export function ForgeRadio(properties: Readonly<RadioProperties>): MpElement {
     <label
       className={[
         styles['forge-radio'],
-        sizeStyles[`forge-size--${size}`],
+        size ? `forge-size--${size}` : undefined,
         {
           [styles['forge-radio--checked']]: isChecked,
           [styles['forge-radio--disabled']]: disabled,

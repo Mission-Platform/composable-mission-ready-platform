@@ -1,3 +1,4 @@
+import { isMpElement, Slot, type MpElement } from '@mission-platform/forge';
 import { toReactComponent } from '@mission-platform/forge/react';
 import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
@@ -17,6 +18,23 @@ import { ForgeDrawer } from './forge-drawer';
 const ReactDrawer = toReactComponent(ForgeDrawer, 'Drawer');
 const VueDrawer = toVueComponent(ForgeDrawer, 'Drawer');
 
+function findDefaultSlotOutlet(element: MpElement): MpElement | undefined {
+  if (
+    element.children.some((child) => isMpElement(child) && child.type === Slot && child.properties.name === undefined)
+  ) {
+    return element;
+  }
+  for (const child of element.children) {
+    if (isMpElement(child)) {
+      const outlet = findDefaultSlotOutlet(child);
+      if (outlet) {
+        return outlet;
+      }
+    }
+  }
+  return undefined;
+}
+
 describe('ForgeDrawer authors the same component for React and Vue', () => {
   it('renders the panel, header, body, and backdrop when open on both frameworks', async () => {
     const properties = { open: true, title: 'Settings', placement: 'end' as const, size: 'sm' as const };
@@ -34,6 +52,27 @@ describe('ForgeDrawer authors the same component for React and Vue', () => {
       expect(html).toContain('Drawer body');
       // The close button carries the accessible label.
       expect(html).toContain('aria-label="Close"');
+    }
+  });
+
+  it('projects the default body slot and preserves header/footer named slots on both frameworks', async () => {
+    const properties = { open: true, header: 'Drawer header', footer: 'Footer actions' };
+    const react = renderToStaticMarkup(createElement(ReactDrawer, properties, 'Drawer body'));
+    const vue = await renderToString(
+      createSSRApp({ render: () => vueH(VueDrawer, properties, { default: () => 'Drawer body' }) }),
+    );
+
+    const body = findDefaultSlotOutlet(ForgeDrawer({ ...properties, children: 'Drawer body' }));
+    expect(body).toBeDefined();
+    expect(body?.children).toHaveLength(1);
+
+    for (const html of [react, vue]) {
+      expect(html).toContain('forge-drawer__header');
+      expect(html).toContain('Drawer header');
+      expect(html).toContain('forge-drawer__body');
+      expect(html).toContain('Drawer body');
+      expect(html).toContain('forge-drawer__footer');
+      expect(html).toContain('Footer actions');
     }
   });
 

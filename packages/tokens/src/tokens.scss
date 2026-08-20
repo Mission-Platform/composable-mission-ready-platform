@@ -17,7 +17,9 @@
 /*   @use '@mission-platform/tokens/scss/themes/light';  // optional: pin to light */
 
 @use 'scss/fonts';
+@use 'scss/size';
 @use 'generated/tokens';
+@include size.size-classes;
 
 /* The token custom properties + base resets live in the `mp.tokens` cascade */
 

@@ -13,9 +13,9 @@
 @layer mp.components {
   .stack-demo-container {
     min-height: 10rem;
-    padding: var(--mp-spacing-4);
-    border: var(--mp-border-width-thin) dashed var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
+    padding: var(--mp-component-layout-stack-container-padding);
+    border: var(--mp-component-layout-stack-container-border-width) dashed var(--mp-component-layout-stack-container-border);
+    border-radius: var(--mp-component-layout-stack-container-radius);
   }
 
   .stack-demo-item {
@@ -24,10 +24,10 @@
     justify-content: center;
     min-width: 4rem;
     min-height: 3rem;
-    padding: var(--mp-spacing-2) var(--mp-spacing-4);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-    background: var(--mp-color-surface-raised);
-    color: var(--mp-color-text-primary);
+    padding: var(--mp-component-layout-stack-item-padding-block) var(--mp-component-layout-stack-item-padding-inline);
+    border: var(--mp-component-layout-stack-item-border-width) solid var(--mp-component-layout-stack-item-border);
+    border-radius: var(--mp-component-layout-stack-item-radius);
+    background: var(--mp-component-layout-stack-item-surface);
+    color: var(--mp-component-layout-stack-item-text);
   }
 }

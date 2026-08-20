@@ -1,8 +1,11 @@
 # @mission-platform/components
 
-`@mission-platform/components` is the core write-once component library for the Mission Platform. Every component in
+`@mission-platform/components` is the residual write-once component library for the Mission Platform. Every component in
 this library is authored once using a framework-neutral JSX dialect (via `@mission-platform/forge`) and then compiled at
-build time into native **Vue 3** and **React** components.
+build time into native **Vue 3**, **React**, **Svelte**, **Solid**, and **Web Component** outputs.
+
+`ForgeTypography` is owned by the dedicated `@mission-platform/typography` package. Import it from that package rather
+than from `@mission-platform/components`.
 
 ## Architecture: "Write Once, Run Anywhere"
 
@@ -54,26 +57,24 @@ Primitives for arranging content on the page.
 
 High-level components for app structure and routing.
 
-| Component                    | Description                                                      | Key Props                                       |
-| :--------------------------- | :--------------------------------------------------------------- | :---------------------------------------------- |
-| `ForgeApplicationLayout`     | Top-level shell with status banner, navbar, content, and footer. | `statusLevel`, `stickyHeader`                   |
-| `ForgeNavbar`                | Responsive top navigation bar with brand and hamburger menu.     | `brand`, `sticky`, `mobileTitle`                |
-| `ForgeDrawer`                | Sliding panel (fixed or inline responsive).                      | `open`, `placement`, `size`, `inlineBreakpoint` |
-| `ForgePagination`            | Controlled page-navigation control.                              | `modelValue`, `pageCount`/`total`, `pageSize`   |
-| `ForgeTabs`                  | ARIA tablist with roving tabindex and panels.                    | `tabs`, `modelValue`, `variant` (`line`/`pill`) |
-| `ForgeMenu` / `ForgeMenubar` | Accessible recursive menus/menubar with submenus.                | `items`, `orientation`, `ariaLabel`             |
-| `ForgeBreadcrumb`            | Hierarchical trail of links.                                     | `items`, `separator`                            |
+| Component                    | Description                                                  | Key Props                                       |
+| :--------------------------- | :----------------------------------------------------------- | :---------------------------------------------- |
+| `ForgeNavbar`                | Responsive top navigation bar with brand and hamburger menu. | `brand`, `sticky`, `mobileTitle`                |
+| `ForgeDrawer`                | Sliding panel (fixed or inline responsive).                  | `open`, `placement`, `size`, `inlineBreakpoint` |
+| `ForgePagination`            | Controlled page-navigation control.                          | `modelValue`, `pageCount`/`total`, `pageSize`   |
+| `ForgeTabs`                  | ARIA tablist with roving tabindex and panels.                | `tabs`, `modelValue`, `variant` (`line`/`pill`) |
+| `ForgeMenu` / `ForgeMenubar` | Accessible recursive menus/menubar with submenus.            | `items`, `orientation`, `ariaLabel`             |
+| `ForgeBreadcrumb`            | Hierarchical trail of links.                                 | `items`, `separator`                            |
 
 ### Typography & Content
 
 Text-styling and semantic content blocks.
 
-| Component         | Description                                                      | Key Props                                      |
-| :---------------- | :--------------------------------------------------------------- | :--------------------------------------------- |
-| `ForgeTypography` | The primary text primitive for all styles (h1-h6, body, etc.).   | `variant`, `as`, `weight`, `color`, `truncate` |
-| `ForgeHero`       | Page banner with title, subtitle, media background, and actions. | `title`, `subtitle`, `media`, `actions`        |
-| `ForgeQuote`      | Semantic blockquote with attribution.                            | `variant`, `tone`, `author`, `source`          |
-| `ForgeList`       | Generic list (ordered/unordered/description).                    | `items`, `variant`, `tone`, `divided`          |
+| Component    | Description                                                      | Key Props                               |
+| :----------- | :--------------------------------------------------------------- | :-------------------------------------- |
+| `ForgeHero`  | Page banner with title, subtitle, media background, and actions. | `title`, `subtitle`, `media`, `actions` |
+| `ForgeQuote` | Semantic blockquote with attribution.                            | `variant`, `tone`, `author`, `source`   |
+| `ForgeList`  | Generic list (ordered/unordered/description).                    | `items`, `variant`, `tone`, `divided`   |
 
 ### Forms & Inputs
 
@@ -108,28 +109,23 @@ Components for handling large datasets efficiently.
 
 Notification and loading indicators.
 
-| Component          | Description                                         | Key Props                                            |
-| :----------------- | :-------------------------------------------------- | :--------------------------------------------------- |
-| `ForgeAlertBanner` | Controlled notification banner with intent tones.   | `modelValue`, `variant`, `title`, `dismissible`      |
-| `ForgeToast`       | Presentational toast item for short-lived messages. | `variant`, `title`, `message`, `onDismiss`           |
-| `ForgeSpinner`     | Indeterminate loading ring.                         | `size`, `variant`, `label`                           |
-| `ForgeSkeleton`    | Shimmering placeholder for loading content.         | `shape` (`line`/`circle`/`block`), `width`, `height` |
-| `ForgeProgressBar` | Determinate or indeterminate progress track.        | `value`, `max`, `variant`, `indeterminate`           |
-| `ForgeStatusIcon`  | Small toned status indicator glyph.                 | `status`, `size`, `label`                            |
+| Component          | Description                                  | Key Props                                            |
+| :----------------- | :------------------------------------------- | :--------------------------------------------------- |
+| `ForgeSpinner`     | Indeterminate loading ring.                  | `size`, `variant`, `label`                           |
+| `ForgeSkeleton`    | Shimmering placeholder for loading content.  | `shape` (`line`/`circle`/`block`), `width`, `height` |
+| `ForgeProgressBar` | Determinate or indeterminate progress track. | `value`, `max`, `variant`, `indeterminate`           |
+| `ForgeStatusIcon`  | Small toned status indicator glyph.          | `status`, `size`, `label`                            |
 
-### Media & Theme
+### Media
 
 Handling images, video and the platform's look-and-feel.
 
-| Component              | Description                                                   | Key Props                                    |
-| :--------------------- | :------------------------------------------------------------ | :------------------------------------------- |
-| `ForgeResponsiveImage` | Art-directed `<picture>` with native srcset/sizes.            | `src`, `sources`, `aspectRatio`, `fit`       |
-| `ForgeResponsiveVideo` | Responsive video player with fixed aspect ratio.              | `src`, `sources`, `poster`, `autoplay`       |
-| `ForgeBackgroundVideo` | Full-bleed background video with reduced-motion support.      | `src`, `overlay`, `minHeight`                |
-| `ForgeDeviceMock`      | Device frame (mobile/tablet/desktop/browser) around a screen. | `device`, `orientation`, `url`, `size`       |
-| `ForgeThemeToggle`     | Button to cycle light/dark/auto themes via shared store.      | `ariaLabel`, `onChange`                      |
-| `ForgeThemeProvider`   | Configures and exposes the global theme state.                | `defaultTheme`, `persist`, `storageKey`      |
-| `ForgeThemeComposer`   | Controlled editor for design-token overrides.                 | `modelValue`, `global`, `onUpdateModelValue` |
+| Component              | Description                                                   | Key Props                              |
+| :--------------------- | :------------------------------------------------------------ | :------------------------------------- |
+| `ForgeResponsiveImage` | Art-directed `<picture>` with native srcset/sizes.            | `src`, `sources`, `aspectRatio`, `fit` |
+| `ForgeResponsiveVideo` | Responsive video player with fixed aspect ratio.              | `src`, `sources`, `poster`, `autoplay` |
+| `ForgeBackgroundVideo` | Full-bleed background video with reduced-motion support.      | `src`, `overlay`, `minHeight`          |
+| `ForgeDeviceMock`      | Device frame (mobile/tablet/desktop/browser) around a screen. | `device`, `orientation`, `url`, `size` |
 
 ## Implementation Details
 
@@ -140,6 +136,10 @@ slots) while others use **Scoped Render-Props** for high-performance virtualizat
 
 ### Theme Integration
 
-Theme-related components (`ForgeThemeToggle`, etc.) interact with a singleton theme store that manages `data-theme`
-attributes on the document root, ensuring instant updates across the entire application without needing a global state
-provider in every app.
+Theme-related components are owned by `@mission-platform/theme`. Import `ForgeThemeToggle`, `ForgeThemeProvider`,
+and `ForgeThemeComposer` from that package; its singleton stores manage `data-theme` attributes on the document root
+and design-token CSS variables without requiring a global state provider in every app.
+
+The complete residual inventory and the dependency-aware future package split are documented in
+[the decomposition map](decomposition-map.md). `ForgeDrawer` and `ForgeWindowPopout` remain in this package pending
+the separate overlay/window boundary decision described there.

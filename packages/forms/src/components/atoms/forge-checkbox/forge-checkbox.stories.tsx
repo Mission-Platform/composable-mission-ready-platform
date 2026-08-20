@@ -1,5 +1,6 @@
 import { h } from '@mission-platform/forge';
 import { useArgs } from 'storybook/preview-api';
+import { expect, userEvent, within } from 'storybook/test';
 
 import { ForgeCheckbox } from '@mission-platform/forms';
 
@@ -72,3 +73,11 @@ export const WithHint: Story = { args: { hint: 'You can change this later in set
 export const WithError: Story = { args: { error: 'You must accept to continue.' } };
 
 export const Disabled: Story = { args: { disabled: true } };
+
+export const FocusVisible: Story = {
+  play: async ({ canvasElement }) => {
+    const checkbox = within(canvasElement).getByRole('checkbox', { name: 'Accept terms and conditions' });
+    await userEvent.tab();
+    await expect(checkbox).toHaveFocus();
+  },
+};

@@ -1,4 +1,4 @@
-import { ForgeDropdown } from '@mission-platform/components';
+import { ForgeDropdown } from '@mission-platform/float';
 import { h, type MpElement, useState } from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
 

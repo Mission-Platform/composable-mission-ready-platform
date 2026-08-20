@@ -29,9 +29,9 @@
        with the wrapper's font-size instead. */
     @each $size in ('2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl') {
       &--#{$size} {
-        width: var(--mp-size-height-#{$size});
-        height: var(--mp-size-height-#{$size});
-        font-size: var(--mp-size-height-#{$size});
+        width: var(--mp-component-feedback-status-size-#{$size});
+        height: var(--mp-component-feedback-status-size-#{$size});
+        font-size: var(--mp-component-feedback-status-size-#{$size});
       }
     }
 
@@ -39,22 +39,9 @@
      * Variants — the canonical colour set applied as the glyph's foreground. The
      * `neutral` tone reuses the `default` token family (no `neutral` alias).
      */
-    @each $name,
-      $family
-        in (
-          'neutral': 'default',
-          'primary': 'primary',
-          'secondary': 'secondary',
-          'tertiary': 'tertiary',
-          'success': 'success',
-          'warning': 'warning',
-          'info': 'info',
-          'error': 'error',
-          'critical': 'critical'
-        )
-    {
+    @each $name in ('neutral', 'primary', 'secondary', 'tertiary', 'success', 'warning', 'info', 'error', 'critical') {
       &--#{$name} {
-        color: var(--mp-color-#{$family}-default);
+        color: var(--mp-component-feedback-status-color-#{$name});
       }
     }
   }

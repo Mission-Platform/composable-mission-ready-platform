@@ -11,8 +11,6 @@ import {
   useState,
 } from '@mission-platform/forge';
 
-import sizeStyles from '../../../styles/size.module.scss';
-
 /** Size token — canonical 2xs → 2xl scale. */
 export type VirtualListSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
@@ -98,7 +96,7 @@ export function ForgeVirtualList(properties: Readonly<VirtualListProperties>): M
   return (
     <div
       ref={containerReference}
-      class={classNames('forge-virtual-list', sizeStyles[`forge-size--${size}`])}
+      class={classNames('forge-virtual-list', size ? `forge-size--${size}` : undefined)}
       role="list"
       tabindex={0}
       style={{ height: `${height}px`, overflowY: 'auto', position: 'relative' }}

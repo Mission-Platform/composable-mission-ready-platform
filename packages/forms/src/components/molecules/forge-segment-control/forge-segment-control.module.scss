@@ -5,18 +5,17 @@
  * the stylesheet so its BEM appearance ships in the built package CSS (the
  * two-stage compiler carries the import onto both the React and Vue builds).
  *
- * The rules live in the shared `mp.components` cascade layer, matching the
- * `@mission-platform/components` package.
+ * The rules live in the package-owned `mp.forms` cascade layer.
  */
 
-@layer mp.components {
+@layer mp.forms {
   .forge-segment-control {
     display: inline-flex;
-    padding: var(--mp-spacing-1);
-    background-color: var(--mp-color-bg-sunken);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-lg);
-    gap: var(--mp-spacing-1);
+    padding: var(--mp-component-select-segment-padding);
+    background-color: var(--mp-component-select-segment-surface-default);
+    border: var(--mp-component-select-segment-border-width) solid var(--mp-component-select-segment-border);
+    border-radius: var(--mp-component-select-segment-radius-container);
+    gap: var(--mp-component-select-segment-gap);
 
     &--full-width {
       display: flex;
@@ -24,7 +23,7 @@
     }
 
     &--disabled {
-      opacity: 0.5;
+      opacity: var(--mp-component-select-segment-disabled-opacity);
     }
 
     &__segment {
@@ -34,43 +33,43 @@
       justify-content: center;
       white-space: nowrap;
       background-color: transparent;
-      color: var(--mp-color-text-secondary);
+      color: var(--mp-component-select-segment-text-default);
       border: 0;
-      border-radius: var(--mp-radius-md);
-      font-family: var(--mp-font-family-sans);
-      font-weight: var(--mp-font-weight-medium, 500);
+      border-radius: var(--mp-component-select-segment-radius-segment);
+      font-family: var(--mp-component-select-segment-font-family);
+      font-weight: var(--mp-component-select-segment-font-weight);
       cursor: pointer;
       transition:
-        background-color 150ms ease,
-        color 150ms ease,
-        box-shadow 150ms ease;
+        background-color var(--mp-component-select-segment-transition-duration) var(--mp-component-select-segment-transition-easing),
+        color var(--mp-component-select-segment-transition-duration) var(--mp-component-select-segment-transition-easing),
+        box-shadow var(--mp-component-select-segment-transition-duration) var(--mp-component-select-segment-transition-easing);
 
       &--selected {
-        background-color: var(--mp-color-bg-surface);
-        color: var(--mp-color-text-primary);
-        box-shadow: var(--mp-shadow-sm);
+        background-color: var(--mp-component-select-segment-surface-selected);
+        color: var(--mp-component-select-segment-text-selected);
+        box-shadow: var(--mp-component-select-segment-shadow-selected);
       }
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-shadow-focus-primary);
+        box-shadow: var(--mp-component-input-focus-ring);
       }
 
       &:disabled {
         cursor: not-allowed;
-        opacity: 0.5;
+        opacity: var(--mp-component-select-segment-disabled-opacity);
       }
 
       &:hover:not(:disabled, .forge-segment-control__segment--selected) {
-        color: var(--mp-color-text-primary);
+        color: var(--mp-component-select-segment-text-hover);
       }
     }
 
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} .forge-segment-control__segment {
-        padding: var(--mp-size-pad-block-#{$size}) var(--mp-size-pad-inline-#{$size});
-        font-size: var(--mp-size-font-#{$size});
+        padding: var(--mp-component-select-size-#{$size}-padding-block) var(--mp-component-select-size-#{$size}-padding-inline);
+        font-size: var(--mp-component-select-size-#{$size}-font-size);
       }
     }
   }
