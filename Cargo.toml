@@ -8,7 +8,8 @@ members = [
     "crates/gs1-databar-common", "crates/gs1-databar-encode", "crates/gs1-databar-decode",
     "crates/pdf417-common", "crates/pdf417-encode", "crates/pdf417-decode",
     "crates/maxicode-common", "crates/maxicode-encode", "crates/maxicode-decode",
-    "crates/code-scan"
+    "crates/code-scan",
+    "benchmark/implementations/rust"
 ]
 
 [workspace.package]

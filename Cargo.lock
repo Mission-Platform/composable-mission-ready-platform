@@ -511,6 +511,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "mission-platform-benchmark"
+version = "0.1.0"
+dependencies = [
+ "wasm-bindgen",
+]
+
+[[package]]
 name = "mission-platform-code-scan"
 version = "0.1.0"
 dependencies = [
