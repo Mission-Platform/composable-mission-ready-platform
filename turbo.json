@@ -23,6 +23,10 @@
     "FORGE_FRAMEWORK_TARGET",
     "FORGE_CMS_STORYBLOK_TARGET",
     "FORGE_CMS_ARTIFACT_MODE",
+    "FORGE_BENCH_RUN",
+    "FORGE_BENCH_IMPLEMENTATION",
+    "FORGE_BENCH_OUTPUT",
+    "FORGE_BENCH_COMMAND",
     "FORGE_BUILD_STAGE_ROOT",
     "VITE_*"
   ],
@@ -150,6 +154,10 @@
       "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
+    },
+    "bench": {
+      "cache": false,
+      "outputs": []
     },
     "dev": {
       "dependsOn": ["^build"],

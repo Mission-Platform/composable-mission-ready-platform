@@ -6,7 +6,7 @@
   "type": "module",
   "engines": {
     "node": "24.19.0",
-    "pnpm": "11.21.0"
+    "pnpm": "11.22.0"
   },
   "scripts": {
     "prepare": "husky",
@@ -23,6 +23,7 @@
     "storybook:web-component": "STORYBOOK_FRAMEWORK=web-component pnpm exec turbo run storybook --filter @mission-platform/storybook -- -p 6010",
     "chromatic:deploy": "pnpm exec turbo run chromatic:deploy",
     "build": "pnpm exec turbo run build",
+    "bench": "pnpm exec turbo run bench",
     "build:force": "pnpm exec turbo run build --force",
     "build-storybook:vue": "STORYBOOK_FRAMEWORK=vue pnpm exec turbo run build-storybook --filter @mission-platform/storybook",
     "build-storybook:react": "STORYBOOK_FRAMEWORK=react pnpm exec turbo run build-storybook --filter @mission-platform/storybook",
@@ -43,6 +44,7 @@
     "validate:app": "node --experimental-strip-types scripts/runtime-validation/cli.ts app",
     "validate:target": "node --experimental-strip-types scripts/runtime-validation/cli.ts target",
     "validate:runtime": "node --experimental-strip-types scripts/runtime-validation/cli.ts full",
+    "visual:parity": "node --experimental-strip-types scripts/visual-parity/cli.ts",
     "test:runtime-validation": "pnpm --filter @mission-platform/components exec vitest run --config ../../scripts/runtime-validation/vitest.config.ts"
   },
   "devDependencies": {
@@ -55,5 +57,5 @@
     "turbo": "catalog:utilities",
     "wrangler": "catalog:cloudflare"
   },
-  "packageManager": "pnpm@11.21.0+sha512.521705bce689924eac72f5a3587122f362689ef6571e55ba80076fd637c11132ecffada26fad4ea79c485bfddbfd3d5a2a5b05805a77e893de71ec8a6cca3bb1"
+  "packageManager": "pnpm@11.22.0+sha512.1ff870c4c6133dfd88fb2afc46dd13d47f09c9794b438c6fdb47ca98caf3bc16381ee0be93a091b8e3824cf01f889f46d7d9e20910fb0be1ab0fb5baa80dd621"
 }

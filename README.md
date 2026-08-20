@@ -1,15 +1,23 @@
 # Mission Platform
 
-**VueJS 3 monorepo** managed with [pnpm workspaces](https://pnpm.io/workspaces).
+
+## [![Repography logo](https://images.repography.com/logo.svg)](https://repography.com) / Recent activity [![Time period](https://images.repography.com/155173428/Mission-Platform/composable-mission-ready-platform/recent-activity/SyGDEcOdJxld8xThJbRovB0ksrUiVZp6kH-ymX0ozzI/ETrElwZjggVMBiDJt2tPi_pm0KooUNgnDReiGQ04xls_badge.svg)](https://repography.com)
+[![Timeline graph](https://images.repography.com/155173428/Mission-Platform/composable-mission-ready-platform/recent-activity/SyGDEcOdJxld8xThJbRovB0ksrUiVZp6kH-ymX0ozzI/ETrElwZjggVMBiDJt2tPi_pm0KooUNgnDReiGQ04xls_timeline.svg)](https://github.com/Mission-Platform/composable-mission-ready-platform/commits)
+[![Issue status graph](https://images.repography.com/155173428/Mission-Platform/composable-mission-ready-platform/recent-activity/SyGDEcOdJxld8xThJbRovB0ksrUiVZp6kH-ymX0ozzI/ETrElwZjggVMBiDJt2tPi_pm0KooUNgnDReiGQ04xls_issues.svg)](https://github.com/Mission-Platform/composable-mission-ready-platform/issues)
+[![Pull request status graph](https://images.repography.com/155173428/Mission-Platform/composable-mission-ready-platform/recent-activity/SyGDEcOdJxld8xThJbRovB0ksrUiVZp6kH-ymX0ozzI/ETrElwZjggVMBiDJt2tPi_pm0KooUNgnDReiGQ04xls_prs.svg)](https://github.com/Mission-Platform/composable-mission-ready-platform/pulls)
+[![Trending topics](https://images.repography.com/155173428/Mission-Platform/composable-mission-ready-platform/recent-activity/SyGDEcOdJxld8xThJbRovB0ksrUiVZp6kH-ymX0ozzI/ETrElwZjggVMBiDJt2tPi_pm0KooUNgnDReiGQ04xls_words.svg)](https://github.com/Mission-Platform/composable-mission-ready-platform/commits)
+[![Top contributors](https://images.repography.com/155173428/Mission-Platform/composable-mission-ready-platform/recent-activity/SyGDEcOdJxld8xThJbRovB0ksrUiVZp6kH-ymX0ozzI/ETrElwZjggVMBiDJt2tPi_pm0KooUNgnDReiGQ04xls_users.svg)](https://github.com/Mission-Platform/composable-mission-ready-platform/graphs/contributors)
+[![Activity map](https://images.repography.com/155173428/Mission-Platform/composable-mission-ready-platform/recent-activity/SyGDEcOdJxld8xThJbRovB0ksrUiVZp6kH-ymX0ozzI/ETrElwZjggVMBiDJt2tPi_pm0KooUNgnDReiGQ04xls_map.svg)](https://github.com/Mission-Platform/composable-mission-ready-platform/commits)
+
+
 
 ## Project Overview
 
-The Mission Platform is a VueJS 3 monorepo managed with pnpm workspaces. It follows a composable, package-driven architecture where reusable building blocks live in `packages/` and deployable applications are assembled from those building blocks in `apps/`.
+The Mission Platform is a monorepo managed with pnpm workspaces. It follows a composable, package-driven architecture where reusable building blocks live in `packages/` and deployable applications are assembled from those building blocks in `apps/`.
 
 ## Key Features
 
 - **Forge JSX (`@mission-platform/forge`)**: The primary, framework-neutral UI framework in which all shared components (everything except the apps) are authored
-- **Vue 3 (Composition API / `<script setup>`)**: The framework the apps are built with, and the primary native render target for Forge components
 - **TypeScript**: Type-safe JavaScript across every workspace
 - **Vite**: Dev server and production bundler
 - **Vitest + Playwright**: Unit and browser-level testing

@@ -15,7 +15,11 @@
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
     "@types/node": "catalog:typescript",
+    "@types/pixelmatch": "^5.2.6",
+    "@types/pngjs": "^6.0.5",
     "eslint": "catalog:eslint",
+    "pixelmatch": "^7.2.0",
+    "pngjs": "^7.0.0",
     "prettier": "catalog:prettier",
     "typescript": "catalog:typescript",
     "vitest": "catalog:testing"
