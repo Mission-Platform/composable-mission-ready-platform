@@ -1,0 +1,44 @@
+<idea-plugin>
+    <id>com.missionplatform.fws</id>
+    <name>Forge Web Script</name>
+    <vendor url="https://github.com/mission-platform">Mission Platform</vendor>
+    <description><![CDATA[
+        Forge Web Script language support using the shared Forge Web Script Language Server over LSP4IJ.
+    ]]></description>
+    <version>0.1.0</version>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.redhat.devtools.lsp4ij</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType
+                name="Forge Web Script"
+                language="fws"
+                extensions="fws"
+                implementationClass="com.missionplatform.fws.FwsFileType"/>
+        <applicationService serviceImplementation="com.missionplatform.fws.FwsSettingsState"/>
+        <applicationConfigurable instance="com.missionplatform.fws.FwsSettingsConfigurable"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="com.redhat.devtools.lsp4ij">
+        <server
+                id="forge-web-script"
+                name="Forge Web Script Language Server"
+                factoryClass="com.missionplatform.fws.FwsLanguageServerDefinition"/>
+        <fileNamePatternMapping
+                patterns="*.fws"
+                serverId="forge-web-script"
+                languageId="fws"/>
+        <debugAdapterServer
+                id="forge-web-script-dap"
+                name="Forge Web Script"
+                factoryClass="com.missionplatform.fws.FwsDebugAdapterDescriptorFactory"/>
+    </extensions>
+
+    <actions>
+        <action
+                id="forge-web-script.showReferences"
+                class="com.redhat.devtools.lsp4ij.commands.editor.ShowReferencesAction"/>
+    </actions>
+</idea-plugin>

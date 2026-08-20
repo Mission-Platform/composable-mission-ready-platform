@@ -1,0 +1,3 @@
+export fn wrong() -> i32 {
+    return true;
+}

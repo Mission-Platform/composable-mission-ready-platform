@@ -1,0 +1,219 @@
+{
+  "name": "fws-vscode",
+  "displayName": "Forge Web Script",
+  "description": "Forge Web Script language support backed by the shared Forge Web Script language server.",
+  "version": "0.1.0",
+  "type": "module",
+  "publisher": "mission-platform",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mission-platform/composable-mission-ready-platform"
+  },
+  "icon": "./resources/fws.png",
+  "license": "BSD-4-Clause",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:fws",
+    "onDebugResolve:fws"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "fws",
+        "aliases": [
+          "Forge Web Script",
+          "fws"
+        ],
+        "extensions": [
+          ".fws"
+        ],
+        "icon": {
+          "light": "./resources/fws.svg",
+          "dark": "./resources/fws.svg"
+        },
+        "configuration": "./language-configuration.json",
+        "firstLine": "^#!.*\\bfws\\b"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "fws",
+        "scopeName": "source.forge-web-script",
+        "path": "./syntaxes/fws.tmLanguage.json"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "fws",
+        "label": "Forge Web Script",
+        "languages": [
+          "fws"
+        ],
+        "configurationAttributes": {
+          "launch": {
+            "required": [
+              "program"
+            ],
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": "Forge Web Script program to launch."
+              },
+              "cwd": {
+                "type": "string",
+                "default": "${workspaceFolder}",
+                "description": "Working directory for the Forge Web Script runtime."
+              },
+              "runtimePath": {
+                "type": "string",
+                "description": "Forge Web Script runtime executable. Defaults to forgeWebScript.runtimePath."
+              },
+              "runtimeArgs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Arguments passed to the Forge Web Script runtime."
+              },
+              "args": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Arguments passed to the Forge Web Script program."
+              },
+              "env": {
+                "type": "object",
+                "description": "Environment variables passed to the Forge Web Script runtime."
+              },
+              "stopOnEntry": {
+                "type": "boolean",
+                "default": false,
+                "description": "Stop before executing the first statement."
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "fws",
+            "request": "launch",
+            "name": "Launch Forge Web Script",
+            "program": "${file}",
+            "cwd": "${workspaceFolder}"
+          }
+        ],
+        "configurationSnippets": [
+          {
+            "label": "Forge Web Script: Launch",
+            "description": "Launch the active Forge Web Script file.",
+            "body": {
+              "type": "fws",
+              "request": "launch",
+              "name": "Launch Forge Web Script",
+              "program": "${file}",
+              "cwd": "${workspaceFolder}"
+            }
+          }
+        ]
+      }
+    ],
+    "breakpoints": [
+      {
+        "languageIds": [
+          "fws"
+        ]
+      }
+    ],
+    "configuration": {
+      "title": "Forge Web Script",
+      "properties": {
+        "forgeWebScript.nodePath": {
+          "type": "string",
+          "default": "node",
+          "description": "Node.js executable used to launch the Forge Web Script language server. Node.js 24 or newer is required."
+        },
+        "forgeWebScript.serverPath": {
+          "type": "string",
+          "default": "",
+          "description": "Optional path override for the Forge Web Script language-server entrypoint. The packaged server is used when empty."
+        },
+        "forgeWebScript.serverArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Additional arguments passed to the Forge Web Script language server."
+        },
+        "forgeWebScript.trace.server": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "enumDescriptions": [
+            "Disable LSP tracing.",
+            "Log LSP messages.",
+            "Log LSP messages and payload details."
+          ],
+          "default": "off",
+          "description": "Trace level for the Forge Web Script language server."
+        },
+        "forgeWebScript.dapPath": {
+          "type": "string",
+          "default": "",
+          "description": "Optional path override for the Forge Web Script debug adapter entrypoint. The packaged adapter is used when empty."
+        },
+        "forgeWebScript.runtimePath": {
+          "type": "string",
+          "default": "",
+          "description": "Forge Web Script runtime executable used by the debugger."
+        },
+        "forgeWebScript.runtimeArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Arguments passed to the Forge Web Script runtime by the debugger."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "pnpm run compile && node --experimental-strip-types scripts/stage-server.ts",
+    "compile": "tsc --project tsconfig.build.json",
+    "build:check": "tsc --project tsconfig.json --noEmit",
+    "check:packaging": "node --experimental-strip-types scripts/check-staged-server.ts",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "format": "prettier --check .",
+    "format:write": "prettier --write .",
+    "package": "pnpm run build && vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/forge-web-script-dap": "workspace:*",
+    "@mission-platform/forge-web-script-lsp": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@types/node": "catalog:typescript",
+    "@types/vscode": "^1.125.0",
+    "@vscode/vsce": "3.6.0",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "typescript": "catalog:typescript",
+    "vitest": "catalog:testing"
+  },
+  "dependencies": {
+    "vscode-languageclient": "10.1.0"
+  }
+}

@@ -1,0 +1,11 @@
+enum Option<T> {
+  None,
+  Some(T),
+}
+
+fn is_some<T>(value: Option<T>) -> bool {
+  match value {
+    Option::None => false,
+    Option::Some(_) => true,
+  }
+}

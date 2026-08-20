@@ -1,0 +1,121 @@
+// An iterator is a lazy, single-pass view until a terminal operation is called.
+// Combinators preserve source order and return a new iterator descriptor.
+interface Iterator<T> {
+  // Pull the next value. Exhausted iterators return Option.none and remain exhausted.
+  fn next() -> Option<T>;
+  // Lazily transform each value; mapper work starts when the result is consumed.
+  fn map<U>(mapper: Mapper<T, U>) -> Iterator<U>;
+  // Lazily retain values for which predicate returns true.
+  fn filter(predicate: Predicate<T>) -> Iterator<T>;
+  // Lazily visit nested iterators in outer-source order.
+  fn flatten<U>() -> Iterator<U>;
+  // Consume only as much of the source as needed to return its first value.
+  fn first() -> Option<T>;
+  // Consume the source and return its final value, or Option.none when empty.
+  fn last() -> Option<T>;
+  // Return the zero-based value at index, or Option.none when it is unavailable.
+  fn at(index: u32) -> Option<T>;
+  // Append a value after the current source without changing existing order.
+  fn add(value: T) -> Iterator<T>;
+  // Consume the iterator into an owned growable Vector.
+  fn collect() -> Vector<T>;
+  // Consume the iterator into an owned fixed Array.
+  fn to_array() -> Array<T>;
+  // Consume values left-to-right, including the empty-source initial value.
+  fn fold<U>(initial: U, folder: Folder<U, T>) -> U;
+}
+
+// A linear iterator supports sequential consumption. map, filter, and ordinary
+// flattening retain this capability; at may consume values to reach its index.
+interface LinearIterator<T> {
+  fn linear() -> Iterator<T>;
+}
+
+// A random-access iterator can answer at without consuming earlier values.
+// A combinator may downgrade this capability when it cannot preserve indexing.
+interface RandomAccessIterator<T> {
+  fn random_access() -> Iterator<T>;
+  fn at(index: u32) -> Option<T>;
+}
+
+// Callback used by map. It is invoked lazily for serial chains and receives one value at a time.
+interface Mapper<T, U> {
+  fn apply(value: T) -> U;
+}
+
+// Callback used by filter. It is invoked lazily and preserves the relative order of accepted values.
+interface Predicate<T> {
+  fn test(value: T) -> bool;
+}
+
+// Callback used by fold. Values are supplied in source order and the returned accumulator is reused.
+interface Folder<TAccumulator, TValue> {
+  fn apply(accumulator: TAccumulator, value: TValue) -> TAccumulator;
+}
+
+// Describes whether an iterator is sequential or directly indexable.
+enum IteratorCapability {
+  Linear,
+  RandomAccess,
+}
+
+// Descriptor metadata at the ABI boundary. next_function identifies the owned
+// handle operation used to pull values; capability controls whether at is direct.
+struct IteratorDescriptor<T> {
+  element_type: string,
+  next_function: string,
+  capability: IteratorCapability,
+}
+
+// The scheduler selected for a parallel operation. Serial is the explicit fallback
+// for targets or hosts that do not provide the requested worker capabilities.
+enum ParallelStrategy {
+  Serial,
+  HostWorkers,
+  WasmThreads,
+}
+
+// Describes the deterministic parallel contract. ordered is always true: results
+// are merged by source index even when workers finish out of order.
+struct ParallelOperationDescriptor {
+  operation: ParallelOperation,
+  ordered: bool,
+  strategy: ParallelStrategy,
+}
+
+// Parallel operation names exposed by the stdlib. par_filter is the canonical spelling.
+enum ParallelOperation {
+  Map,
+  Filter,
+  Flatten,
+  Collect,
+  ToArray,
+  Fold,
+  First,
+  Last,
+  At,
+}
+
+// Parallel combinators use the same ordered contract as serial combinators.
+// A strategy may be selected by runtime capabilities; unsupported strategies fall
+// back to serial execution without changing values, errors, or traps.
+interface ParallelIterator<T> {
+  // Parallel map returns values in the original source order.
+  fn par_map<U>(mapper: Mapper<T, U>) -> Iterator<U>;
+  // Parallel filter returns accepted values in the original source order.
+  fn par_filter(predicate: Predicate<T>) -> Iterator<T>;
+  // Parallel flatten preserves the order of outer iterators and each nested source.
+  fn par_flatten<U>() -> Iterator<U>;
+  // Materialize ordered results into an owned Vector.
+  fn par_collect() -> Vector<T>;
+  // Materialize ordered results into an owned Array.
+  fn par_to_array() -> Array<T>;
+  // Fold the ordered result stream using the same accumulator semantics as fold.
+  fn par_fold<U>(initial: U, folder: Folder<U, T>) -> U;
+  // Return the first value in source order, or Option.none when empty.
+  fn par_first() -> Option<T>;
+  // Return the last value in source order, or Option.none when empty.
+  fn par_last() -> Option<T>;
+  // Return the zero-based value in source order, or Option.none when out of bounds.
+  fn par_at(index: u32) -> Option<T>;
+}

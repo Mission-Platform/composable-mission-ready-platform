@@ -1,0 +1,13 @@
+.gitignore
+.prettierignore
+scripts/**
+src/**
+*.config.*
+.turbo/**
+dist/**/*.map
+dist/**/*.spec.js
+tsconfig.json
+tsconfig.build.json
+vitest.config.ts
+!resources/fws.svg
+!resources/fws.png

@@ -1,0 +1,59 @@
+{
+  "name": "@mission-platform/forge-web-script-cli",
+  "version": "0.1.0",
+  "description": "Standalone Forge Web Script v1 compiler and checker CLI",
+  "type": "module",
+  "bin": {
+    "forge-web-script": "./dist/main.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./args": {
+      "types": "./dist/args.d.ts",
+      "import": "./dist/args.js"
+    },
+    "./output": {
+      "types": "./dist/output.d.ts",
+      "import": "./dist/output.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "start": "node dist/main.js",
+    "dev": "node --watch src/main.ts",
+    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
+  },
+  "dependencies": {
+    "@mission-platform/forge-web-script": "workspace:*",
+    "@mission-platform/forge-web-script-runtime": "workspace:*"
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@types/node": "catalog:typescript",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "tsdown": "catalog:build",
+    "typescript": "catalog:typescript",
+    "vitest": "catalog:testing"
+  }
+}

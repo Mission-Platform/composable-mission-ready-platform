@@ -1,0 +1,5 @@
+import capability "clock.now" as now() -> i64;
+
+export fn current() -> i64 {
+    return now();
+}

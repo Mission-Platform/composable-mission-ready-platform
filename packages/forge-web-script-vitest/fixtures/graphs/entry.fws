@@ -1,0 +1,5 @@
+import "./dependency.fws" as dependency;
+
+export fn answer() -> i32 {
+    return 42;
+}

@@ -1,0 +1,42 @@
+{
+  "name": "Forge Web Script",
+  "scopeName": "source.forge-web-script",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#keywords" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        { "match": "//.*$", "name": "comment.line.double-slash.fws" },
+        { "begin": "/\\*", "end": "\\*/", "name": "comment.block.fws" }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "begin": "\"",
+          "end": "\"",
+          "name": "string.quoted.double.fws",
+          "patterns": [{ "match": "\\\\.", "name": "constant.character.escape.fws" }]
+        },
+        {
+          "begin": "'",
+          "end": "'",
+          "name": "string.quoted.single.fws",
+          "patterns": [{ "match": "\\\\.", "name": "constant.character.escape.fws" }]
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [{ "match": "\\b(?:0[xX][0-9a-fA-F]+|\\d+(?:\\.\\d+)?)\\b", "name": "constant.numeric.fws" }]
+    },
+    "keywords": {
+      "patterns": [
+        { "match": "\\b(?:let|const|fn|if|else|for|while|return|true|false|null)\\b", "name": "keyword.control.fws" }
+      ]
+    }
+  }
+}

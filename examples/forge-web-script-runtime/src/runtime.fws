@@ -1,0 +1,7 @@
+import capability "clock.now" as now() -> i64;
+import "./project-helper.fws" as project;
+import "../shared-project/shared-value.fws" as shared;
+
+export fn currentTime() -> i64 {
+    return now();
+}

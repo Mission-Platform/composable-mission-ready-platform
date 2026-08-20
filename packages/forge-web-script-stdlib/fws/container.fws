@@ -1,0 +1,7 @@
+interface Hash<T> {
+  fn hash(value: T) -> u32;
+}
+
+interface Equal<T> {
+  fn equal(left: T, right: T) -> bool;
+}

@@ -1,0 +1,39 @@
+export enum State { Idle = -1, Ready, Done = 7 }
+
+export fn dispatch(state: State) -> i32 {
+  switch state {
+    case Idle: return 10;
+    case Ready: return 20;
+    default: return -1;
+  }
+}
+
+export fn arrayValue() -> i32 {
+  let values: [i32; 3] = [1, 2, 3];
+  return values[1];
+}
+
+export fn vectorValue() -> i32 {
+  let values: Vector<i32> = vector[4, 5];
+  return values[1];
+}
+
+fn seed() -> i32 {
+  return 9;
+}
+
+export fn inferredElements(items: Array<i32>) -> i32 {
+  let values: [i32; 2] = [items[0], seed()];
+  let negatives: Vector<i32> = vector[-1, -2];
+  let empty: Vector<i32> = vector[];
+  return values[1] + negatives[0];
+}
+
+export fn collectionMethods(array: Array<i32>, vector: Vector<i32>) -> u32 {
+  let size: u32 = array.length();
+  return size;
+}
+
+export fn escapedString() -> string {
+  return "quote: \" slash: \\ unicode: \u0041 newline: \n";
+}

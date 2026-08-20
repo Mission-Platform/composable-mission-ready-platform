@@ -1,0 +1,12 @@
+struct Entity {
+  index: u32,
+  generation: u32,
+}
+
+struct World {
+  version: u64,
+}
+
+fn empty_world() -> World {
+  return World { version: 0 };
+}

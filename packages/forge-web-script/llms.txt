@@ -1,0 +1,85 @@
+# @mission-platform/forge-web-script
+
+Forge Web Script v1 language contracts, bootstrap parser, and conformance fixtures.
+
+The authoritative language and capability reference is `docs/forge-web-script.md`
+at the repository root. The public API exports AST, lexer, parser, diagnostics,
+ABI manifest, compiler artifact contracts, and bootstrap validation helpers.
+
+## Installation
+
+Add it to a consuming workspace member:
+
+```json
+{
+  "dependencies": {
+    "@mission-platform/forge-web-script": "workspace:*"
+  }
+}
+```
+
+## Usage
+
+```ts
+import { validateForgeWebScript } from '@mission-platform/forge-web-script';
+
+const result = validateForgeWebScript(source, 'runtime.fws', {
+  requestedCapabilities: ['clock.now'],
+});
+```
+
+Tooling consumers use `createForgeWebScriptCompilerService` with the bounded
+self-hosted lex stage enabled by default. The CLI exposes the stage mode as
+`--vm-mode interpret|jit|aot`; Vite and language-service integrations use
+`selfHostedVmMode`. The lex stage is VM-executed and parity-checked against the
+seed, while later compiler stages remain explicitly seed-backed until their own
+bootstrap parity is complete. Wasm remains the production artifact path.
+
+## Iterator and explicit outcomes
+
+FWS uses `Option<T>` and `Result<T, E>` from the standard library instead of
+source-language exceptions. Match every outcome explicitly:
+
+```fws
+fn is_present<T>(value: Option<T>) -> bool {
+  match value {
+    Option::None => false,
+    Option::Some(_) => true,
+  }
+}
+
+export iter fn values(source: Iterator<i32>) -> Iterator<i32> {
+  loop next = source.next() { yield next; }
+}
+```
+
+`iter fn` exports are adapted to JavaScript iterators. The generated export has
+`next()` returning `{ value, done }`, remains complete after the first done
+result, and can be consumed by `for...of` in JavaScript. `throw`, `try`,
+`catch`, `for`, `while`, and `do while` are rejected by the frontend.
+
+## Optimization, target profiles, and debug artifacts
+
+Release compilation may unroll proven empty iterators, inline pure calls, and
+identify tail calls. Mark a function `noinline` when its call boundary must be
+preserved; host capability calls remain observable and are not reordered.
+Target capabilities are explicit compile input and become part of the ABI
+manifest and cache identity:
+
+```ts
+compileForgeWebScript({
+  source,
+  fileName: 'runtime.fws',
+  compilerVersion: '0.1.0',
+  optimization: 'release',
+  targetFeatures: { simd: true, tailCall: true, memory64: true },
+  compilerHints: { iteratorUnrollLimit: 4 },
+});
+```
+
+Threads require both `threads: true` and `atomics: true`; unsupported feature
+combinations produce diagnostics instead of silently downgrading. When a WAT
+cache is configured, debug compilation writes deterministic
+`<key>.optimized.wat`, `<key>.unoptimized.wat`, `<key>.optimized.wasm`, and
+`<key>.unoptimized.wasm` companions when the cache provides a binary writer.
+Cache failures are logged and do not fail compilation.

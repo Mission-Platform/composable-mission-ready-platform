@@ -1,0 +1,11 @@
+enum Result<T, E> {
+  Ok(T),
+  Error(E),
+}
+
+fn is_ok<T, E>(value: Result<T, E>) -> bool {
+  match value {
+    Result::Ok(_) => true,
+    Result::Error(_) => false,
+  }
+}

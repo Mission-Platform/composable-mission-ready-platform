@@ -1,0 +1,33 @@
+// An owned growable collection. values is contiguous typed storage; length is
+// the number of initialized elements and capacity is the allocated element count.
+struct Vector<T> {
+  values: bytes,
+  length: u32,
+  capacity: u32,
+}
+
+// Create an empty owned vector with zero initialized elements.
+fn empty<T>() -> Vector<T> {
+  return Vector { values: "", length: 0, capacity: 0 };
+}
+
+// Allocate an owned vector with room for at least capacity elements.
+fn with_capacity<T>(capacity: u32) -> Vector<T>;
+// Return a vector with room for at least capacity elements, preserving values and ownership.
+fn reserve<T>(value: Vector<T>, capacity: u32) -> Vector<T>;
+// Return the number of initialized elements.
+fn length<T>(value: Vector<T>) -> u32;
+// Return true when the vector contains no initialized elements.
+fn is_empty<T>(value: Vector<T>) -> bool;
+// Read a zero-based element; out-of-bounds indices return Option.none.
+fn get<T>(value: Vector<T>, index: u32) -> Option<T>;
+// Replace a zero-based element and return the updated owned vector; invalid indices trap.
+fn set<T>(value: Vector<T>, index: u32, element: T) -> Vector<T>;
+// Append an element, growing capacity as needed, and return the updated owned vector.
+fn push<T>(value: Vector<T>, element: T) -> Vector<T>;
+// Remove and return the final element, or Option.none when empty.
+fn pop<T>(value: Vector<T>) -> Option<T>;
+// Create a lazy iterator over the vector's current values in index order.
+fn iter<T>(value: Vector<T>) -> Iterator<T>;
+// Consume the vector into a fixed owned Array with the same element order.
+fn to_array<T>(value: Vector<T>) -> Array<T>;

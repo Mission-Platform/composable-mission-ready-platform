@@ -1,0 +1,22 @@
+{
+  "name": "forge-web-script-runtime-example",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mission-platform/forge-web-script-runtime": "workspace:*"
+  },
+  "devDependencies": {
+    "@mission-platform/forge-web-script": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@mission-platform/vite-plugin-forge-web-script": "workspace:*",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite"
+  }
+}

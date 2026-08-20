@@ -1,0 +1,21 @@
+// Fixed arrays use contiguous typed element slots and carry a fixed length.
+// Array values are owned at the descriptor boundary; updates return a new value.
+interface Array<T> {
+  // Return the compile-time fixed number of elements.
+  fn length() -> u32;
+  // Read a zero-based element; out-of-bounds indices return Option.none.
+  fn get(index: u32) -> Option<T>;
+  // Return an updated array without changing its fixed length; invalid indices trap.
+  fn set(index: u32, element: T) -> Array<T>;
+  // Create a lazy iterator over elements in index order.
+  fn iter() -> Iterator<T>;
+}
+
+// Allocate a fixed array of length elements, initialized from element.
+fn array_new<T>(length: u32, element: T) -> Array<T>;
+// Read the fixed length of an array value.
+fn array_length<T>(value: Array<T>) -> u32;
+// Read a zero-based element; out-of-bounds indices return Option.none.
+fn array_get<T>(value: Array<T>, index: u32) -> Option<T>;
+// Return an updated fixed array; invalid indices trap.
+fn array_set<T>(value: Array<T>, index: u32, element: T) -> Array<T>;

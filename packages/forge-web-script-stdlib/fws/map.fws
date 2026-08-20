@@ -1,0 +1,4 @@
+struct Map<K, V> {
+  entries: bytes,
+  length: u32,
+}

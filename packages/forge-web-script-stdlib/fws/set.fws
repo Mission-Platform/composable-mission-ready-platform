@@ -1,0 +1,4 @@
+struct Set<T> {
+  entries: bytes,
+  length: u32,
+}

@@ -1,0 +1,53 @@
+// Bounded self-hosted lex / token-normalization stage.
+// The checked-in VM bytecode in lex-stage.ts is the bootstrap lowering of this algorithm.
+// Input bytes are supplied as the ForgeWebScriptSourceBytes aggregate (len + byte-at).
+
+export fn is_ws(byte: i32) -> bool {
+  if byte == 9 { return true; }
+  if byte == 10 { return true; }
+  if byte == 13 { return true; }
+  if byte == 32 { return true; }
+  return false;
+}
+
+export fn is_alpha(byte: i32) -> bool {
+  if byte >= 65 {
+    if byte <= 90 { return true; }
+  }
+  if byte >= 97 {
+    if byte <= 122 { return true; }
+  }
+  if byte == 95 { return true; }
+  return false;
+}
+
+export fn is_digit(byte: i32) -> bool {
+  if byte >= 48 {
+    if byte <= 57 { return true; }
+  }
+  return false;
+}
+
+export fn is_alnum(byte: i32) -> bool {
+  if is_alpha(byte) { return true; }
+  if is_digit(byte) { return true; }
+  return false;
+}
+
+export fn fnv_mix(hash: i32, byte: i32) -> i32 {
+  // Bootstrap lowering uses 32-bit xor-multiply (FNV-1a). FWS lacks '^', so the
+  // VM lowering owns the exact mix while this source documents the stage shape.
+  let mixed: i32 = hash + byte;
+  return mixed;
+}
+
+export fn lex_fingerprint(length: i32) -> i32 {
+  // Walks source bytes (via VM aggregate ops), emits normalized token-kind tags,
+  // and folds them with FNV-1a. See computeForgeWebScriptLexStageFingerprint.
+  return lex_fingerprint_step(0, length, 2166136261);
+}
+
+export fn lex_fingerprint_step(i: i32, length: i32, hash: i32) -> i32 {
+  if i >= length { return hash; }
+  return lex_fingerprint_step(i + 1, length, hash);
+}

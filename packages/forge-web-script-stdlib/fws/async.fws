@@ -1,0 +1,25 @@
+enum TaskKind {
+  Microtask,
+  Worker,
+}
+
+struct Task<T> {
+  id: u32,
+  sequence: u64,
+  kind: TaskKind,
+  payload: bytes,
+}
+
+struct WorkerMessage {
+  task_id: u32,
+  sequence: u64,
+  payload: bytes,
+}
+
+interface MicrotaskScheduler {
+  fn schedule(payload: bytes) -> u32;
+}
+
+interface WorkerScheduler {
+  fn post(message: WorkerMessage) -> u32;
+}

@@ -1,0 +1,24 @@
+enum Broken { First = 1, Duplicate = 1 }
+
+export fn broken(state: Broken) -> i32 {
+  switch state {
+    default: return 0;
+  }
+}
+
+export fn invalidCalls(array: Array<i32>, vector: Vector<i32>) -> unit {
+  array.get();
+  array.get("bad");
+  array.push(1);
+  vector.set(0, "bad");
+}
+
+enum Outcome<T, E> { Ok(value: T), Error(error: E) }
+
+export fn invalidAggregates(value: Outcome<i32, string>) -> i32 {
+  return match value {
+    Outcome::Unknown(item) => item,
+    Outcome::Ok(first, second) => first,
+    Outcome::Error(message, message) => missingName,
+  };
+}

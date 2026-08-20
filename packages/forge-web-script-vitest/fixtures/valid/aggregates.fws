@@ -1,0 +1,15 @@
+export fn increment(value: i32) -> i32 {
+  return value + 1;
+}
+
+export fn apply(value: Result<i32, string>) -> i32 {
+  let callback: Fn<i32, i32> = fn increment;
+  return match value {
+    Result::Ok(item) => callback(item),
+    Result::Error(message) => 0,
+  };
+}
+
+export fn makeResult(value: i32) -> Result<i32, string> {
+  return Result::Ok(value);
+}
