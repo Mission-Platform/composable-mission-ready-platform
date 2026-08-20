@@ -58,11 +58,11 @@ speed:
   enabled: '{interval}초마다 서버 측 속도 테스트(Cloudflare, Fast.com, Speedtest).'
   failed: 실패
   graphMetric:
-    bandwidth: ''
-    download: ''
-    latency: ''
-    ping: ''
-    upload: ''
+    bandwidth: speed.graphMetric.bandwidth
+    download: speed.graphMetric.download
+    latency: speed.graphMetric.latency
+    ping: speed.graphMetric.ping
+    upload: speed.graphMetric.upload
   graphTitle: '{name} · 시간별 {metric}'
   latency: '{value} ms'
   pending: 아직 측정값 없음
