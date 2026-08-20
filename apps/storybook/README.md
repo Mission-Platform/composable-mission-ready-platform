@@ -134,6 +134,54 @@ Pass `--app <name>` to the full command to limit its app portion while retaining
 - `.artifacts/runtime-validation/manifest/` — Storybook build/index comparison logs.
 - Each validated app's `dist/` directory — the local production build consumed by app validation.
 
+### Visual parity
+
+Run the neutral Storybook stories through the Web Components, React, and Vue
+renderers and compare the iframe screenshots pairwise (Web Components ↔ React
+and Web Components ↔ Vue):
+
+```bash
+# Focus one package/story (the command starts three isolated HTTPS servers)
+pnpm visual:parity -- --package @mission-platform/components --story atoms-display-forgebutton--focus-visible
+
+# Short selectors also match (compact alphanumeric suffix)
+pnpm visual:parity -- --package @mission-platform/components --story forge-button--focus-visible
+
+# Run a small representative sample
+pnpm visual:parity -- --max-stories 10 --port 6200
+
+# Full neutral inventory (chunked Ego Lite captures; may take a long time)
+pnpm visual:parity -- --port 6200 --timeout-ms 120000
+```
+
+Useful options include `--package`, `--story`, `--max-stories`, `--port` (a
+three-port base), `--ports web-component=6200,react=6201,vue=6202`,
+`--web-component-port`, `--react-port`, `--vue-port`,
+`--viewport md`, `--theme light`, `--workers`, `--timeout-ms`,
+`--pixel-threshold` (`--pixel-tolerance`), and `--diff-threshold`
+(`--max-mismatch-ratio`). The pixel threshold controls
+per-pixel `pixelmatch` tolerance; the diff threshold controls the maximum
+allowed changed-pixel ratio. A dimension mismatch, missing renderer pair,
+server/browser failure, or threshold violation exits non-zero.
+
+#### Visual parity artifacts
+
+Results are written to `.artifacts/visual-parity/`:
+
+- `summary.json` — renderer URLs/settings, source story metadata, captures,
+  pairwise statuses, mismatch counts/ratios, and diagnostics.
+- `servers/*.log` — certificate and Storybook server output.
+- `stories/<story>/source.json` — the paired Storybook entries and source import.
+- `stories/<story>/<renderer>/capture.png` and `capture.json` — screenshots and
+  browser/runtime diagnostics.
+- `stories/<story>/web-component-to-{react,vue}.diff.png` — changed pixels for
+  visual mismatches, with the baseline and candidate image paths recorded in
+  the pairwise JSON diagnostic.
+
+Parity is a visual signal over the shared neutral story contract. Runtime and
+accessibility validation remain independently available through the runtime
+validation and Storybook test workflows.
+
 ### Interaction & Accessibility Tests
 
 Run Storybook tests via Vitest browser mode and Playwright:

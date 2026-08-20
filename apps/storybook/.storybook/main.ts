@@ -3,6 +3,8 @@ import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overri
 
 import type { StorybookConfig } from '@storybook/vue3-vite';
 
+const visualParityCacheDir = process.env.STORYBOOK_VITE_CACHE_DIR;
+
 /**
  * The single Mission Platform Storybook app. The renderer, story globs, and
  * shared Vite wiring are all driven by `@mission-platform/storybook-framework`
@@ -15,6 +17,10 @@ const config: StorybookConfig = createStorybookConfig({
   packages: [
     'breakpoints',
     'components',
+    'float',
+    'select',
+    'theme',
+    'typography',
     'resource-planner',
     'scheduler',
     'd3',
@@ -34,6 +40,11 @@ const config: StorybookConfig = createStorybookConfig({
   ],
   viteFinal: (config) => ({
     ...config,
+    ...(visualParityCacheDir ? { cacheDir: visualParityCacheDir } : {}),
+    optimizeDeps: {
+      ...config.optimizeDeps,
+      ignoreOutdatedRequests: true,
+    },
     plugins: [...(config.plugins ?? []), tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
   }),
 });

@@ -1,6 +1,18 @@
 {
   "$schema": "../../../vite-plugins/token-overrides/schema/token-overrides.schema.json",
-  "$description": "Hide and Seek design-token override (DTCG-style). The source is intended for the Storybook app and is transformed into overrides.generated.scss by @mission-platform/vite-plugin-token-overrides. It captures the reference site's vivid blue, navy, red, warm neutrals, flat geometry, Agrandir display type, and Avenir Next body type. All semantic colours include an explicit dark adaptation because the reference site is light-only.",
+  "$description": "Hide and Seek design-token override (DTCG-style). The source is intended for the Storybook app and is transformed into overrides.generated.scss by @mission-platform/vite-plugin-token-overrides. It captures the reference site's vivid blue, navy, red, warm neutrals, flat geometry, Agrandir display type, and Avenir Next body type. All semantic colours include an explicit dark adaptation because the reference site is light-only. Component overrides belong under component.<component>.<variant>.<slot>.<state> and use the same light/dark pair convention.",
+  "component": {
+    "button": {
+      "primary": {
+        "background": {
+          "hover": {
+            "$value": { "light": "#153fd1", "dark": "#9db0ff" },
+            "$description": "Storybook-only primary button hover override; remove this branch to use the central component contract."
+          }
+        }
+      }
+    }
+  },
   "font": {
     "family": {
       "sans": {

@@ -1,8 +1,9 @@
 <script lang="ts" setup>
   import type {} from './locales/types';
 
-  import { ForgeButton, ForgeCollapse, ForgeTooltip } from '@mission-platform/components';
+  import { ForgeButton, ForgeCollapse } from '@mission-platform/components';
   import { ForgeCodeBlock } from '@mission-platform/content';
+  import { ForgeTooltip } from '@mission-platform/float';
   import { useI18n } from '@mission-platform/i18n';
   import {
     ForgeIconDrawCircle,

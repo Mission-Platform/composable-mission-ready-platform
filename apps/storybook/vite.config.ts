@@ -18,7 +18,9 @@ export default defineFrameworkAppConfig({
   // runs of the shell use the matching `mp:<framework>` package condition too.
   framework,
   overrides: {
+    ...(process.env.STORYBOOK_VITE_CACHE_DIR ? { cacheDir: process.env.STORYBOOK_VITE_CACHE_DIR } : {}),
     optimizeDeps: {
+      ignoreOutdatedRequests: true,
       include: ['storybook/test'],
     },
     plugins: [
