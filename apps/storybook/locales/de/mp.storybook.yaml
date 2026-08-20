@@ -24,7 +24,7 @@ mode:
   flat: Flach
   geodesic: Geodätisch
 status:
-  joining: ⚡ Klicken Sie auf eine andere Linie, um sie mit {id} zu verbinden
+  joining: '⚡ Klicken Sie auf eine andere Linie, um sie mit {id} zu verbinden'
   none: Klicken Sie auf eine Form zum Auswählen
   selected: 'Ausgewählt: {id}'
 title: Kartenzeichnungs-Symbolleiste
