@@ -77,6 +77,27 @@ describe('Forge Web Script WASM backend', () => {
     ).toEqual([1, 2, 3, 4]);
   });
 
+  it('sizes memory from static data and permits checked allocator growth', () => {
+    const module = moduleWith([
+      {
+        kind: 'function',
+        name: 'largeStaticValue',
+        exported: true,
+        parameters: [],
+        result: { name: 'string', span },
+        span,
+        body: [{ kind: 'return', value: literal('x'.repeat(70_000)), span }],
+      },
+    ]);
+    const result = compileForgeWebScriptWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
+    expect(result.diagnostics).toEqual([]);
+    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<string, Function>;
+    const memory = exports.memory as WebAssembly.Memory;
+    expect(memory.buffer.byteLength).toBeGreaterThanOrEqual(2 * 65_536);
+    expect(() => exports.fws_alloc(70_000)).not.toThrow();
+    expect(memory.buffer.byteLength).toBeGreaterThanOrEqual(3 * 65_536);
+  });
+
   it('lowers checked switch dispatch through br_table and routes out-of-range values to default', () => {
     const module = moduleWith([
       {
@@ -1524,7 +1545,7 @@ describe('Forge Web Script WASM backend', () => {
     const deallocate = exports.fws_dealloc as (pointer: number, size: number) => void;
 
     expect(allocate(0)).toBe(1024);
-    expect(() => allocate(0x00_01_00_00)).toThrow(WebAssembly.RuntimeError);
+    expect(() => allocate(0xff_ff_ff_ff)).toThrow(WebAssembly.RuntimeError);
     expect(() => deallocate(0, 1)).toThrow(WebAssembly.RuntimeError);
     expect(() => deallocate(1024, 0x00_01_00_00)).toThrow(WebAssembly.RuntimeError);
   });
@@ -1556,7 +1577,7 @@ describe('Forge Web Script WASM backend', () => {
     expect(reallocate(tail, 4, 0)).toBe(tail);
     expect(allocate(2)).toBe(tail);
     expect(() => reallocate(0, 1, 1)).toThrow(WebAssembly.RuntimeError);
-    expect(() => reallocate(tail, 4, 65_537)).toThrow(WebAssembly.RuntimeError);
+    expect(() => reallocate(tail, 4, 0xff_ff_ff_ff)).toThrow(WebAssembly.RuntimeError);
   });
 
   it('resets the allocator high-water mark for reusable instances', () => {

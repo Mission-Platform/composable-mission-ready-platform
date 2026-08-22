@@ -151,9 +151,13 @@ export fn answer() -> i32 {
       await readFile(join(root, "dist", manifestAsset!), "utf8"),
     ) as {
       readonly linkMode: string;
+      readonly linkProfile: string;
+      readonly optimizationProfile: string;
       readonly linkedExports: readonly { readonly name: string }[];
     };
     expect(manifest.linkMode).toBe("static");
+    expect(manifest.linkProfile).toBe("static");
+    expect(manifest.optimizationProfile).toBe("static-aggressive");
     expect(manifest.linkedExports.map(({ name }) => name)).toEqual(
       expect.arrayContaining(["answer", "helper"]),
     );
@@ -244,8 +248,13 @@ export fn answer() -> i32 {
     const manifest = JSON.parse(
       await readFile(join(root, "dist", manifestAsset!), "utf8"),
     ) as {
+      readonly linkProfile: string;
+      readonly optimizationProfile: string;
+      readonly dynamicLinkMetadata?: { readonly modules: readonly unknown[] };
       readonly sourceImports: readonly { readonly linkMode?: string }[];
     };
+    expect(manifest.linkProfile).toBe("dynamic");
+    expect(manifest.optimizationProfile).toBe("dynamic-conservative");
     expect(manifest.sourceImports).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ linkMode: "dynamic" }),

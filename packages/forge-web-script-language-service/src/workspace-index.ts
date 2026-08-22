@@ -6,6 +6,8 @@ import {
   type ForgeWebScriptSourceSpan,
   type ForgeWebScriptStatement,
   type ForgeWebScriptTypeName,
+  hashForgeWebScriptModuleGraph,
+  resolveForgeWebScriptImportTypeEnvironment,
   resolveForgeWebScriptModuleGraph,
 } from '@mission-platform/forge-web-script';
 
@@ -37,6 +39,7 @@ interface WorkspaceRecord {
   readonly source: string;
   readonly moduleId: string;
   readonly analysis: ForgeWebScriptAnalysis;
+  readonly graphKey?: string;
   readonly module?: ForgeWebScriptModule;
   readonly symbols: readonly IndexedSymbol[];
 }
@@ -96,6 +99,7 @@ export class ForgeWebScriptWorkspaceSemanticIndex implements ForgeWebScriptWorks
     };
 
     const result = await resolveForgeWebScriptModuleGraph(entries, resolver);
+    const graphKey = hashForgeWebScriptModuleGraph(result.graph);
     const nextRecords = new Map<string, WorkspaceRecord>();
     const nextImports = new Map<string, Map<string, string>>();
 
@@ -109,7 +113,9 @@ export class ForgeWebScriptWorkspaceSemanticIndex implements ForgeWebScriptWorks
         text: module.source,
         version: 0,
       };
-      nextRecords.set(document.uri, this.#createRecord(document, analyzeForgeWebScript(document, options), module));
+      const importTypeEnvironment = resolveForgeWebScriptImportTypeEnvironment(module, result.graph);
+      const analysis = analyzeForgeWebScript(document, options, { importTypeEnvironment });
+      nextRecords.set(document.uri, this.#createRecord(document, analysis, module, undefined, graphKey));
     }
 
     for (const edge of result.graph.edges) {
@@ -151,6 +157,19 @@ export class ForgeWebScriptWorkspaceSemanticIndex implements ForgeWebScriptWorks
 
   public invalidate(_change?: ForgeWebScriptWorkspaceChange): void {
     this.#dirty = true;
+  }
+
+  public analysisSnapshot(
+    uri: string,
+  ): { readonly analysis: ForgeWebScriptAnalysis; readonly identity: string } | undefined {
+    if (this.#dirty) return undefined;
+    const record = this.#findRecord(uri);
+    if (record?.graphKey === undefined) return undefined;
+    const current = this.#findDocument(uri);
+    if (current !== undefined && (current.text !== record.source || current.version !== record.analysis.version)) {
+      return undefined;
+    }
+    return { analysis: record.analysis, identity: record.graphKey };
   }
 
   public definition(uri: string, position: ForgeWebScriptPosition): readonly ForgeWebScriptLocation[] {
@@ -255,6 +274,7 @@ export class ForgeWebScriptWorkspaceSemanticIndex implements ForgeWebScriptWorks
     analysis: ForgeWebScriptAnalysis,
     graphModule?: ForgeWebScriptResolvedModule,
     previous?: WorkspaceRecord,
+    graphKey?: string,
   ): WorkspaceRecord {
     // Do not reuse a parsed module after the current source becomes malformed.
     // Keeping the old AST would make navigation target declarations that no
@@ -265,6 +285,7 @@ export class ForgeWebScriptWorkspaceSemanticIndex implements ForgeWebScriptWorks
       source: document.text,
       moduleId: graphModule?.moduleId ?? module?.name ?? previous?.moduleId ?? document.uri,
       analysis,
+      ...(graphKey === undefined ? {} : { graphKey }),
       ...(module === undefined ? {} : { module }),
       symbols: [],
     };

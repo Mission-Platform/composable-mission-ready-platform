@@ -135,7 +135,10 @@ class BinaryWriter {
   }
 
   public raw(value: Uint8Array): void {
-    this.bytes.push(...value);
+    // Avoid `push(...value)`: spreading a large `Uint8Array` into call
+    // arguments overflows the JS call stack once the payload grows past a
+    // few tens of thousands of bytes (e.g. a linked multi-module FWS graph).
+    for (let index = 0; index < value.length; index += 1) this.bytes.push(value[index]!);
   }
 
   public string(value: string): void {

@@ -1,6 +1,7 @@
 import {
   forgeWebScriptTypeNameToString,
   type ForgeWebScriptExpression,
+  type ForgeWebScriptImportTypeEnvironment,
   type ForgeWebScriptModule,
   type ForgeWebScriptSourceSpan,
   type ForgeWebScriptStatement,
@@ -111,6 +112,7 @@ export function inlayHintsForgeWebScript(
   source: string,
   module: ForgeWebScriptModule | undefined,
   requestedRange?: ForgeWebScriptRange,
+  importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment,
 ): readonly ForgeWebScriptInlayHint[] {
   if (module === undefined) return [];
   const hints: ForgeWebScriptInlayHint[] = [];
@@ -132,6 +134,13 @@ export function inlayHintsForgeWebScript(
     string,
     { readonly parameters: readonly string[]; readonly result: string; readonly names: readonly string[] }
   >();
+  for (const imported of importTypeEnvironment?.externalFunctions ?? []) {
+    callables.set(imported.name, {
+      parameters: imported.parameters.map((parameter) => forgeWebScriptTypeNameToString(parameter.type)),
+      result: forgeWebScriptTypeNameToString(imported.result),
+      names: imported.parameters.map((parameter) => parameter.name),
+    });
+  }
   for (const declaration of module.functions) {
     callables.set(declaration.name, {
       parameters: declaration.parameters.map((parameter) => forgeWebScriptTypeNameToString(parameter.type)),

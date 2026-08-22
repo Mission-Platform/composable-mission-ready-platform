@@ -279,8 +279,8 @@ export function lowerForgeWebScriptWasmFunctionToSsa(
           alternate.fallsThrough ? alternate.bindings : undefined,
         ]);
         if (incoming.length === 0) return { bindings, fallsThrough: false };
-        exitBindings.set(statement, merged);
-        bindings = merged;
+        exitBindings.set(statement, new Map(merged));
+        bindings = new Map(merged);
       } else if (statement.kind === 'switch') {
         const outputs: (Map<string, ForgeWebScriptWasmSsaValue> | undefined)[] = [];
         for (const arm of statement.cases) {
@@ -295,8 +295,9 @@ export function lowerForgeWebScriptWasmFunctionToSsa(
         const incoming = outputs.filter((output): output is Map<string, ForgeWebScriptWasmSsaValue> => output !== undefined);
         branchOutputs.set(statement, outputs);
         if (incoming.length === 0) return { bindings, fallsThrough: false };
-        exitBindings.set(statement, mergeBindings(incoming, [...bindings.keys()], (name, type) => createValue(name, type, 'phi')));
-        bindings = exitBindings.get(statement) as Map<string, ForgeWebScriptWasmSsaValue>;
+        const merged = mergeBindings(incoming, [...bindings.keys()], (name, type) => createValue(name, type, 'phi'));
+        exitBindings.set(statement, new Map(merged));
+        bindings = new Map(merged);
       } else if (statement.kind === 'while' || statement.kind === 'for' || statement.kind === 'do-while') {
         let loopBindings = new Map(bindings);
         if (statement.kind === 'for' && statement.initializer !== undefined) {
@@ -312,14 +313,14 @@ export function lowerForgeWebScriptWasmFunctionToSsa(
           if (incoming !== undefined) loopBindings.set(name, createValue(name, incoming.type, 'phi'));
         }
         loopInitialBindings.set(statement, new Map(bindings));
-        loopHeaders.set(statement, loopBindings);
+        loopHeaders.set(statement, new Map(loopBindings));
         const loopItems = statement.kind === 'for'
           ? [...statement.body, statement.update].filter((value): value is ForgeWebScriptWasmStatement => value !== undefined)
           : statement.body;
         const result = analyze(loopItems, new Map(loopBindings));
         loopBackedges.set(statement, result.fallsThrough ? result.bindings : undefined);
-        exitBindings.set(statement, loopBindings);
-        bindings = loopBindings;
+        exitBindings.set(statement, new Map(loopBindings));
+        bindings = new Map(loopBindings);
       } else if (statement.kind === 'return') return { bindings, fallsThrough: false };
     }
     return { bindings, fallsThrough: true };

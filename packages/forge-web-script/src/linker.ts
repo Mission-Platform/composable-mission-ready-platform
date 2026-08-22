@@ -21,16 +21,25 @@ function callableSignature(declaration: ForgeWebScriptFunction): string {
   return `${declaration.parameters.map(({ type }) => type.name).join(',')}->${declaration.result.name}`;
 }
 
+function moduleLinkPrefix(moduleId: string): string {
+  return `__${moduleId.replace(/[^A-Za-z0-9_]/g, '_')}__`;
+}
+
 function namespacePrivateFunctions(
   module: ForgeWebScriptModule,
   moduleId: string,
   linkedCalls: ReadonlyMap<string, string> = new Map(),
+  options: { readonly namespaceExports?: boolean } = {},
 ): ForgeWebScriptModule['functions'] {
+  const namespaceExports = options.namespaceExports === true;
   const privateNames = new Set(module.functions.filter(({ exported }) => !exported).map(({ name }) => name));
-  const prefix = `__${moduleId.replace(/[^A-Za-z0-9_]/g, '_')}__`;
+  const exportNames = new Set(module.functions.filter(({ exported }) => exported).map(({ name }) => name));
+  const prefix = moduleLinkPrefix(moduleId);
   const rename = (name: string): string => {
     const linked = linkedCalls.get(name) ?? name;
-    return privateNames.has(linked) ? `${prefix}${linked}` : linked;
+    if (privateNames.has(linked)) return `${prefix}${linked}`;
+    if (namespaceExports && exportNames.has(linked) && !linkedCalls.has(name)) return `${prefix}${linked}`;
+    return linked;
   };
 
   const expression = (value: ForgeWebScriptExpression): ForgeWebScriptExpression => {
@@ -113,11 +122,16 @@ function namespacePrivateFunctions(
     }
   });
 
-  return module.functions.map((functionDeclaration) => ({
-    ...functionDeclaration,
-    name: rename(functionDeclaration.name),
-    body: statements(functionDeclaration.body),
-  }));
+  return module.functions.map((functionDeclaration) => {
+    const nextName = rename(functionDeclaration.name);
+    return {
+      ...functionDeclaration,
+      name: nextName,
+      // Non-entry modules keep callable bodies but drop ABI export surface after namespacing.
+      exported: namespaceExports ? false : functionDeclaration.exported,
+      body: statements(functionDeclaration.body),
+    };
+  });
 }
 
 function staticComponents(
@@ -151,17 +165,20 @@ function staticComponents(
       .map((fileName) => byFile.get(fileName))
       .filter((module): module is NonNullable<typeof module> => module !== undefined);
     const exports = new Map<string, { moduleId: string; signature: string }>();
-    for (const module of modules) {
-      for (const declaration of (Array.isArray(module.module.functions) ? module.module.functions : []).filter(
+    for (const linkedModule of modules) {
+      // Cross-project exports are namespaced during flattening, so they cannot collide.
+      // Only same-project bare ABI exports can genuinely clash.
+      if (linkedModule.projectRoot !== root.projectRoot) continue;
+      for (const declaration of (Array.isArray(linkedModule.module.functions) ? linkedModule.module.functions : []).filter(
         ({ exported }) => exported,
       )) {
         const signature = callableSignature(declaration);
         const previous = exports.get(declaration.name);
-        if (previous === undefined) exports.set(declaration.name, { moduleId: module.moduleId, signature });
+        if (previous === undefined) exports.set(declaration.name, { moduleId: linkedModule.moduleId, signature });
         else {
           diagnostics.push(
             createDiagnostic(
-              module.fileName,
+              linkedModule.fileName,
               'link',
               previous.signature === signature ? 'FWS-LINK-003' : 'FWS-LINK-004',
               previous.signature === signature
@@ -169,7 +186,7 @@ function staticComponents(
                 : `Static link export '${declaration.name}' has incompatible signatures.`,
               declaration.span,
               'error',
-              'Rename one exported function; static links do not apply implicit namespacing.',
+              'Rename one exported function in the static component.',
             ),
           );
         }
@@ -182,8 +199,12 @@ function staticComponents(
       structs: modules.flatMap(({ module }) => (Array.isArray(module.structs) ? module.structs : [])),
       enums: modules.flatMap(({ module }) => (Array.isArray(module.enums) ? module.enums : [])),
       interfaces: modules.flatMap(({ module }) => (Array.isArray(module.interfaces) ? module.interfaces : [])),
-      functions: modules.flatMap(({ fileName, module, moduleId }) => {
+      functions: modules.flatMap(({ fileName, projectRoot, module, moduleId }) => {
         if (!Array.isArray(module.functions)) return [];
+        // Exports from other projects are namespaced so shared helper names
+        // (itoa, gf_mul, ...) can coexist once flattened. Same-project exports
+        // keep their bare ABI names so the entry surface stays stable.
+        const sameProject = projectRoot === root.projectRoot;
         const linkedCalls = new Map<string, string>();
         for (const sourceImport of module.sourceImports) {
           const edge = graph.edges.find(
@@ -191,10 +212,20 @@ function staticComponents(
               candidate.importer === fileName && candidate.source === sourceImport.source && candidate.linkMode === 'static',
           );
           const target = edge === undefined ? undefined : byFile.get(edge.resolved);
-          for (const declaration of target?.module.functions ?? [])
-            if (declaration.exported) linkedCalls.set(`${sourceImport.alias}.${declaration.name}`, declaration.name);
+          if (target === undefined) continue;
+          // Rewrite the caller so it targets the namespaced symbol when the target
+          // export lives in another project.
+          const targetSameProject = target.projectRoot === root.projectRoot;
+          const targetPrefix = moduleLinkPrefix(target.moduleId);
+          for (const declaration of target.module.functions ?? []) {
+            if (!declaration.exported) continue;
+            const flattenedName = targetSameProject ? declaration.name : `${targetPrefix}${declaration.name}`;
+            linkedCalls.set(`${sourceImport.alias}.${declaration.name}`, flattenedName);
+          }
         }
-        return namespacePrivateFunctions(module, moduleId, linkedCalls);
+        return namespacePrivateFunctions(module, moduleId, linkedCalls, {
+          namespaceExports: !sameProject,
+        });
       }),
     };
     result.push(merged);
@@ -233,7 +264,8 @@ export function validateForgeWebScriptLinks(
       edge.linkMode === 'static' &&
       configuredMode === undefined &&
       configuration.crossProjectLinkMode === undefined &&
-      configuration.defaultLinkMode === undefined
+      configuration.defaultLinkMode === undefined &&
+      configuration.linkProfile === undefined
     )
       diagnostics.push(
         createDiagnostic(

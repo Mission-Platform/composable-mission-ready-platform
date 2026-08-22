@@ -248,6 +248,38 @@ export fn caller() -> i32 { return add(1); }`;
     );
   });
 
+  it('classifies grammar tokens across trivia and preserves UTF-16 ranges', () => {
+    const source = 'export fn /* docs */ add(value: /* type */ i32) -> i32 {\r\n  return "🙂";\r\n}';
+    const tokens = tokenizeForgeWebScript(source);
+
+    expect(tokens.map(({ kind, text }) => ({ kind, text }))).toEqual([
+      { kind: 'keyword', text: 'export' },
+      { kind: 'keyword', text: 'fn' },
+      { kind: 'comment', text: '/* docs */' },
+      { kind: 'declaration', text: 'add' },
+      { kind: 'punctuation', text: '(' },
+      { kind: 'declaration', text: 'value' },
+      { kind: 'punctuation', text: ':' },
+      { kind: 'comment', text: '/* type */' },
+      { kind: 'type', text: 'i32' },
+      { kind: 'punctuation', text: ')' },
+      { kind: 'operator', text: '->' },
+      { kind: 'type', text: 'i32' },
+      { kind: 'punctuation', text: '{' },
+      { kind: 'keyword', text: 'return' },
+      { kind: 'string', text: '"🙂"' },
+      { kind: 'punctuation', text: ';' },
+      { kind: 'punctuation', text: '}' },
+    ]);
+    expect(tokens.find((token) => token.text === '"🙂"')?.range).toMatchObject({
+      startOffset: source.indexOf('"🙂"'),
+      endOffset: source.indexOf('"🙂"') + 4,
+      start: { line: 1, character: 9 },
+      end: { line: 1, character: 13 },
+    });
+    expect(tokens.some((token) => token.text === 'eof')).toBe(false);
+  });
+
   it('supports imperative loops and exposes iterator types in editor surfaces', () => {
     const service = createForgeWebScriptLanguageService();
     const source = `export iter fn values(source: Iterator<i32>) -> Iterator<i32> {
@@ -264,6 +296,7 @@ export fn invalid() -> i32 { while true { return 1; } }`;
     const analysis = service.diagnose(iteratorDocument.uri);
     expect(analysis.valid).toBe(true);
     expect(analysis.diagnostics).toEqual([]);
+    expect(analysis.selfHosted).toMatchObject({ parity: true });
     expect(analysis.symbols.find((symbol) => symbol.name === 'Iterator<i32>')).toMatchObject({
       detail: 'Forge Web Script type Iterator<i32>',
     });
@@ -298,6 +331,7 @@ export iter fn values(source: Iterator<i32>) -> Iterator<i32> {
 
     const analysis = service.diagnose(editorDocument.uri);
     expect(analysis.diagnostics).toEqual([]);
+    expect(analysis.selfHosted).toMatchObject({ parity: true });
     expect(analysis.symbols.map((symbol) => symbol.name)).toEqual(
       expect.arrayContaining(['Pair', 'T', 'first', 'second', 'Maybe', 'Some', 'Equatable', 'equals', 'next', 'x']),
     );
@@ -487,6 +521,116 @@ export fn caller(value: i32) -> i32 { return add(value); }`;
         range: expect.objectContaining({ startOffset: otherSource.indexOf('run') }),
       }),
     ]);
+    service.dispose();
+  });
+
+  it('checks imported signatures and refreshes importer diagnostics when dependencies change', async () => {
+    const helperUri = 'file:///workspace/helper.fws';
+    const mainUri = 'file:///workspace/main.fws';
+    const files = new Map<string, string>([
+      [helperUri, 'export fn run(value: i32) -> i32 { return value + 1; }'],
+      [mainUri, 'import "./helper.fws" as helper;\nexport fn entry(value: i32) -> i32 { return helper.run(value); }'],
+    ]);
+    const service = createForgeWebScriptLanguageService({
+      readFile: async (uri) => files.get(uri) ?? '',
+      listFiles: async () => [...files.keys()],
+      getOptions: async () => ({}),
+    });
+    for (const [uri, text] of files) service.openDocument({ uri, fileName: uri.split('/').pop()!, text, version: 1 });
+
+    await service.refreshWorkspace();
+    expect(service.diagnose(mainUri).diagnostics).not.toEqual(
+      expect.arrayContaining([expect.objectContaining({ code: expect.stringMatching(/FWS-(ABI|TYPE)/u) })]),
+    );
+    expect(service.inlayHints(mainUri)).toEqual(
+      expect.arrayContaining([expect.objectContaining({ label: ': i32', kind: 'type' })]),
+    );
+
+    const incompatibleHelper = 'export fn run(value: string) -> string { return value; }';
+    files.set(helperUri, incompatibleHelper);
+    service.updateDocument({ uri: helperUri, fileName: 'helper.fws', text: incompatibleHelper, version: 2 });
+    await service.refreshWorkspace(helperUri);
+
+    expect(service.diagnose(mainUri).diagnostics).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ code: 'FWS-TYPE-005', message: expect.stringContaining('string') }),
+      ]),
+    );
+    expect(service.inlayHints(mainUri)).toEqual(
+      expect.arrayContaining([expect.objectContaining({ label: ': string', kind: 'type' })]),
+    );
+    service.dispose();
+  });
+
+  it('uses imported signatures for inlay hints and preserves export filtering across alias changes', async () => {
+    const helperUri = 'file:///workspace/helper.fws';
+    const otherUri = 'file:///workspace/other.fws';
+    const mainUri = 'file:///workspace/main.fws';
+    const helperSource =
+      'export fn run(value: i32) -> i32 { return value + 1; }\nfn hidden(value: i32) -> i32 { return value; }';
+    const otherSource = 'export fn run(value: string) -> string { return value; }';
+    const mainSource =
+      'import "./helper.fws" as helper;\nimport "./other.fws" as other;\nexport fn entry(value: i32) -> i32 { return helper.run(value); }';
+    const files = new Map<string, string>([
+      [helperUri, helperSource],
+      [otherUri, otherSource],
+      [mainUri, mainSource],
+    ]);
+    const service = createForgeWebScriptLanguageService({
+      readFile: async (uri) => files.get(uri) ?? '',
+      listFiles: async () => [...files.keys()],
+      getOptions: async () => ({}),
+    });
+    for (const [uri, text] of files) service.openDocument({ uri, fileName: uri.split('/').pop()!, text, version: 1 });
+
+    await service.refreshWorkspace();
+    expect(service.inlayHints(mainUri)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ label: 'value:', kind: 'parameter' }),
+        expect.objectContaining({ label: ': i32', kind: 'type' }),
+      ]),
+    );
+    expect(service.diagnose(mainUri).diagnostics).not.toEqual(
+      expect.arrayContaining([expect.objectContaining({ code: expect.stringMatching(/^FWS-(ABI|TYPE)/u) })]),
+    );
+
+    const incompatibleMain =
+      'import "./helper.fws" as helper;\nexport fn entry(value: string) -> string { return helper.run(value); }';
+    service.updateDocument({ uri: mainUri, fileName: 'main.fws', text: incompatibleMain, version: 2 });
+    await service.refreshWorkspace(mainUri);
+    expect(service.diagnose(mainUri).diagnostics).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ code: 'FWS-TYPE-005', message: expect.stringContaining("expected 'i32'") }),
+        expect.objectContaining({
+          code: 'FWS-TYPE-005',
+          message: expect.stringContaining("returns 'string', but the return statement has type 'i32'"),
+        }),
+      ]),
+    );
+    expect(service.inlayHints(mainUri)).toEqual(
+      expect.arrayContaining([expect.objectContaining({ label: ': i32', kind: 'type' })]),
+    );
+
+    const aliasedMain = 'import "./helper.fws" as h;\nexport fn entry(value: i32) -> i32 { return h.run(value); }';
+    service.updateDocument({ uri: mainUri, fileName: 'main.fws', text: aliasedMain, version: 3 });
+    await service.refreshWorkspace(mainUri);
+    expect(service.diagnose(mainUri).diagnostics).not.toEqual(
+      expect.arrayContaining([expect.objectContaining({ code: expect.stringMatching(/^FWS-(ABI|TYPE)/u) })]),
+    );
+    expect(service.inlayHints(mainUri)).toEqual(
+      expect.arrayContaining([expect.objectContaining({ label: ': i32', kind: 'type' })]),
+    );
+
+    const privateMain =
+      'import "./helper.fws" as helper;\nexport fn entry(value: i32) -> i32 { return helper.hidden(value); }';
+    service.updateDocument({ uri: mainUri, fileName: 'main.fws', text: privateMain, version: 4 });
+    await service.refreshWorkspace(mainUri);
+    expect(service.diagnose(mainUri).diagnostics).toEqual(
+      expect.arrayContaining([expect.objectContaining({ code: 'FWS-ABI-004' })]),
+    );
+    expect(service.inlayHints(mainUri)).not.toEqual(
+      expect.arrayContaining([expect.objectContaining({ label: ': i32', kind: 'type' })]),
+    );
     service.dispose();
   });
 

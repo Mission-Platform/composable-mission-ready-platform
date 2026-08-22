@@ -7,6 +7,7 @@ import {
   createForgeWebScriptCompilerService,
   decodeForgeWebScriptSelfHostedModule,
   decodeForgeWebScriptSelfHostedTokens,
+  lexForgeWebScript,
 } from '@mission-platform/forge-web-script';
 import { describe, expect, it } from 'vitest';
 
@@ -133,6 +134,18 @@ export fn sample(value: i32) -> bool {
     expect(run.parity).toBe(true);
     expect(run.steps).toBeGreaterThan(50);
     expect(run.lexFingerprint).toBe(computeForgeWebScriptLexStageFingerprint(source));
+  });
+
+  it.each(['interpret', 'jit', 'aot'] as const)('keeps extended grammar tokens serialized in %s mode', (mode) => {
+    const source = 'default iter inline noinline value::next[0].field != other => result';
+    const expected = lexForgeWebScript(source, 'extended-grammar.fws');
+    const run = runForgeWebScriptSelfHostedCompiler(input(source), mode);
+    const lex = run.stages?.[0];
+
+    expect(run.parity).toBe(true);
+    expect(run.lexFingerprint).toBe(computeForgeWebScriptLexStageFingerprint(source));
+    expect(decodeForgeWebScriptSelfHostedTokens(lex!.artifact!.payload)).toEqual(expected.tokens);
+    expect(lex?.outputHash).toBe(lex?.expectedOutputHash);
   });
 
   it.each(['interpret', 'jit', 'aot'] as const)(

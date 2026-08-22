@@ -657,7 +657,12 @@ function expressionType(
       expression.standardLibrary === 'bytes-byte-at'
     )
       return 'i32';
+    if (expression.standardLibrary === 'bytes-length-u32') return 'u32';
+    if (expression.standardLibrary === 'bytes-byte-at-u32') return 'u32';
     if (expression.standardLibrary === 'string-starts-with') return 'bool';
+    if (expression.standardLibrary === 'memory-alloc' || expression.standardLibrary === 'memory-load-u32' || expression.standardLibrary === 'memory-realloc') return 'u32';
+    if (expression.standardLibrary === 'memory-load-f64' || expression.standardLibrary === 'f64-from-u32') return 'f64';
+    if (expression.standardLibrary === 'memory-dealloc' || expression.standardLibrary === 'memory-store-u32' || expression.standardLibrary === 'memory-store-f64') return 'unit';
     if (expression.standardLibrary !== undefined && COLLECTION_RUNTIME_OPERATIONS.has(expression.standardLibrary)) {
       if (expression.standardLibrary === 'iterator-next') return 'i64';
       return expression.standardLibrary.endsWith('-set') ? 'unit' : 'i32';
@@ -798,11 +803,17 @@ function validateTargetFeatures(
   return diagnostics;
 }
 
-function memoryLimits(targetFeatures: ForgeWebScriptTargetFeatures | undefined): number[] {
-  if (targetFeatures?.memory64 === true && targetFeatures.threads === true) return [0x01, 0x07, 0x01, 0x01];
-  if (targetFeatures?.memory64 === true) return [0x01, 0x04, 0x01];
-  if (targetFeatures?.threads === true) return [0x01, 0x03, 0x01, 0x01];
-  return [0x01, 0x00, 0x01];
+function memoryLimits(
+  targetFeatures: ForgeWebScriptTargetFeatures | undefined,
+  requiredBytes: number,
+): number[] {
+  const initialPages = Math.max(1, Math.ceil(requiredBytes / 65_536));
+  if (targetFeatures?.memory64 === true && targetFeatures.threads === true)
+    return [0x01, 0x07, ...unsignedLeb(initialPages), ...unsignedLeb(65_536)];
+  if (targetFeatures?.memory64 === true) return [0x01, 0x04, ...unsignedLeb(initialPages)];
+  if (targetFeatures?.threads === true)
+    return [0x01, 0x03, ...unsignedLeb(initialPages), ...unsignedLeb(65_536)];
+  return [0x01, 0x00, ...unsignedLeb(initialPages)];
 }
 
 function featureCustomSection(targetFeatures: ForgeWebScriptTargetFeatures | undefined): number[] {
@@ -1064,11 +1075,15 @@ function emitWasm(
         expressionLocations.set(expression, allocateI32());
         expression.elements.forEach(collectExpression);
       } else if (expression.kind === 'call') {
-        if (expression.standardLibrary === 'bytes-byte-at')
+        if (expression.standardLibrary === 'bytes-byte-at' || expression.standardLibrary === 'bytes-byte-at-u32')
           bytesByteAtLocations.set(expression, { pointer: allocateI32(), length: allocateI32(), index: allocateI32() });
         else if (expression.standardLibrary === 'string-byte-at')
           stringByteAtLocations.set(expression, { pointer: allocateI32(), length: allocateI32(), index: allocateI32() });
-        else if (expression.standardLibrary === 'string-length' || expression.standardLibrary === 'bytes-length')
+        else if (
+          expression.standardLibrary === 'string-length' ||
+          expression.standardLibrary === 'bytes-length' ||
+          expression.standardLibrary === 'bytes-length-u32'
+        )
           pointerLengthLocations.set(expression, { pointer: allocateI32(), length: allocateI32() });
         expression.arguments.forEach(collectExpression);
       }
@@ -1290,8 +1305,68 @@ function emitWasm(
         }
       } else if (expression.kind === 'call') {
         if (expression.standardLibrary !== undefined) {
+          if (
+            expression.standardLibrary === 'memory-alloc' ||
+            expression.standardLibrary === 'memory-dealloc' ||
+            expression.standardLibrary === 'memory-realloc'
+          ) {
+            for (const argument of expression.arguments) emitExpression(argument, visible);
+            const offset =
+              expression.standardLibrary === 'memory-alloc'
+                ? 0
+                : expression.standardLibrary === 'memory-dealloc'
+                  ? 1
+                  : 3 + collectionBodies.length;
+            body.push(0x10, ...unsignedLeb(allocatorFunctionIndex + offset));
+            return;
+          }
+          if (expression.standardLibrary === 'memory-load-u32') {
+            const address = expression.arguments[0];
+            if (address === undefined) throw new Error('FWS-MEMORY-001: memory_load_u32 requires an address.');
+            emitExpression(address, visible);
+            body.push(0x28, 0x02, 0x00);
+            return;
+          }
+          if (expression.standardLibrary === 'memory-store-u32') {
+            const address = expression.arguments[0];
+            const value = expression.arguments[1];
+            if (address === undefined || value === undefined)
+              throw new Error('FWS-MEMORY-002: memory_store_u32 requires an address and value.');
+            emitExpression(address, visible);
+            emitExpression(value, visible);
+            body.push(0x36, 0x02, 0x00);
+            return;
+          }
+          if (expression.standardLibrary === 'memory-load-f64') {
+            const address = expression.arguments[0];
+            if (address === undefined) throw new Error('FWS-MEMORY-003: memory_load_f64 requires an address.');
+            emitExpression(address, visible);
+            body.push(0x2b, 0x03, 0x00);
+            return;
+          }
+          if (expression.standardLibrary === 'memory-store-f64') {
+            const address = expression.arguments[0];
+            const value = expression.arguments[1];
+            if (address === undefined || value === undefined)
+              throw new Error('FWS-MEMORY-004: memory_store_f64 requires an address and value.');
+            emitExpression(address, visible);
+            emitExpression(value, visible);
+            body.push(0x39, 0x03, 0x00);
+            return;
+          }
+          if (expression.standardLibrary === 'f64-from-u32') {
+            const value = expression.arguments[0];
+            if (value === undefined) throw new Error('FWS-NUMERIC-001: f64_from_u32 requires a value.');
+            emitExpression(value, visible);
+            body.push(0xb8);
+            return;
+          }
           if (expression.standardLibrary.startsWith('string-') || expression.standardLibrary.startsWith('bytes-')) {
-            if (expression.standardLibrary === 'string-length' || expression.standardLibrary === 'bytes-length') {
+            if (
+              expression.standardLibrary === 'string-length' ||
+              expression.standardLibrary === 'bytes-length' ||
+              expression.standardLibrary === 'bytes-length-u32'
+            ) {
               const value = expression.arguments[0];
               const explicitLength = expression.arguments[1];
               const locations = pointerLengthLocations.get(expression);
@@ -1343,7 +1418,11 @@ function emitWasm(
                 return;
               }
             }
-            if (expression.standardLibrary === 'bytes-byte-at' || expression.standardLibrary === 'string-byte-at') {
+            if (
+              expression.standardLibrary === 'bytes-byte-at' ||
+              expression.standardLibrary === 'bytes-byte-at-u32' ||
+              expression.standardLibrary === 'string-byte-at'
+            ) {
               const bytes = expression.arguments[0];
               const index = expression.arguments[1];
               const locations = bytesByteAtLocations.get(expression) ?? stringByteAtLocations.get(expression);
@@ -2436,7 +2515,10 @@ function emitWasm(
           ].flatMap((type) => unsignedLeb(type)),
         ),
       ),
-      section(5, memoryLimits(targetFeatures)),
+      section(
+        5,
+        memoryLimits(targetFeatures, globalInitialValue),
+      ),
       section(6, global),
       section(7, [...unsignedLeb(exportEntries.length), ...exportEntries.flat()]),
       section(10, [...unsignedLeb(bodies.length), ...bodies.flat()]),

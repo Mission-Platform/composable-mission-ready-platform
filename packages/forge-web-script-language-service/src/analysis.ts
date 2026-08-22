@@ -13,6 +13,7 @@ import { tokenizeForgeWebScript } from './tokenization.js';
 
 import type {
   ForgeWebScriptAnalysis,
+  ForgeWebScriptAnalysisOptions,
   ForgeWebScriptDocument,
   ForgeWebScriptLanguageDiagnostic,
   ForgeWebScriptWorkspaceOptions,
@@ -21,12 +22,14 @@ import type {
 export function analyzeForgeWebScript(
   document: ForgeWebScriptDocument,
   options: ForgeWebScriptWorkspaceOptions,
+  analysisOptions: ForgeWebScriptAnalysisOptions = {},
 ): ForgeWebScriptAnalysis {
   const workspaceOptions = normalizeForgeWebScriptWorkspaceOptions(options);
   const fileName = document.fileName ?? document.uri;
   const validation = validateForgeWebScript(document.text, fileName, {
     requestedCapabilities: workspaceOptions.requestedCapabilities,
     requireExports: workspaceOptions.requireExports,
+    externalFunctions: analysisOptions.importTypeEnvironment?.externalFunctions,
   });
   const tokens = tokenizeForgeWebScript(document.text, fileName);
   const index = buildSymbolIndex(document.text, validation.module, tokens);
@@ -40,6 +43,9 @@ export function analyzeForgeWebScript(
     version: document.version,
     valid: validation.valid && selfHostedResult.diagnostic === undefined,
     ...(validation.module === undefined ? {} : { module: validation.module }),
+    ...(analysisOptions.importTypeEnvironment === undefined
+      ? {}
+      : { importTypeEnvironment: analysisOptions.importTypeEnvironment }),
     diagnostics: diagnostics.map((diagnostic) => toLanguageDiagnostic(document.text, diagnostic)),
     symbols: index.symbols,
     tokens,

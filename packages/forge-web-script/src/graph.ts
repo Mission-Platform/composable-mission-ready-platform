@@ -1,5 +1,6 @@
 import { createDiagnostic, type ForgeWebScriptDiagnostic } from './diagnostics.js';
 import { deriveForgeWebScriptModuleId, normalizeForgeWebScriptFileId } from './identity.js';
+import { resolveForgeWebScriptImportTypeEnvironment } from './module-types.js';
 import { parseForgeWebScript } from './parser.js';
 import { checkForgeWebScript } from './type-checker.js';
 
@@ -38,6 +39,8 @@ export interface ForgeWebScriptModuleGraph {
 
 export interface ForgeWebScriptLinkConfiguration {
   readonly projectRoots?: readonly string[];
+  /** Selects the cross-project packaging policy when no explicit mode exists. */
+  readonly linkProfile?: ForgeWebScriptLinkMode;
   readonly defaultLinkMode?: ForgeWebScriptLinkMode;
   readonly crossProjectLinkMode?: ForgeWebScriptLinkMode;
   readonly linkModes?: Readonly<Record<string, ForgeWebScriptLinkMode>>;
@@ -105,7 +108,12 @@ function linkModeFor(
   const configured = configuration.linkModes?.[key] ?? configuration.linkModes?.[target.projectRoot];
   if (configured !== undefined) return configured;
   if (importer.projectRoot === target.projectRoot) return 'static';
-  return configuration.crossProjectLinkMode ?? configuration.defaultLinkMode ?? 'dynamic';
+  return (
+    configuration.crossProjectLinkMode ??
+    configuration.defaultLinkMode ??
+    configuration.linkProfile ??
+    'dynamic'
+  );
 }
 
 export async function resolveForgeWebScriptModuleGraph(
@@ -216,19 +224,14 @@ export async function resolveForgeWebScriptModuleGraph(
           span: imported.span,
         });
     }
-    const linkedFunctions = edges
-      .filter(({ importer }) => importer === normalizedFileName)
-      .flatMap((edge) => {
-        const alias = module.module.sourceImports.find(({ source }) => source === edge.source)?.alias;
-        return (modules.get(edge.resolved)?.module.functions ?? [])
-          .filter(({ exported }) => exported)
-          .flatMap((declaration) =>
-            alias === undefined ? [declaration] : [declaration, { ...declaration, name: `${alias}.${declaration.name}` }],
-          );
-      });
+    const importTypeEnvironment = resolveForgeWebScriptImportTypeEnvironment(module, {
+      modules: [...modules.values()],
+      edges,
+      projects: [],
+    });
     const checked = checkForgeWebScript(parsed.module, normalizedFileName, {
       requireExports: false,
-      externalFunctions: linkedFunctions,
+      externalFunctions: importTypeEnvironment.externalFunctions,
     });
     diagnostics.push(...checked.diagnostics);
     visiting.delete(normalizedFileName);

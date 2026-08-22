@@ -57,14 +57,28 @@ function classifyToken(
 }
 
 function isDeclarationToken(index: number, tokens: readonly ForgeWebScriptToken[]): boolean {
-  const previous = tokens[index - 1]?.text;
-  const next = tokens[index + 1]?.text;
+  const previous = previousSignificantToken(index, tokens)?.text;
+  const next = nextSignificantToken(index, tokens)?.text;
   return previous === 'module' || previous === 'fn' || previous === 'as' || previous === 'let' || next === ':';
 }
 
 function isTypeDeclarationToken(index: number, tokens: readonly ForgeWebScriptToken[]): boolean {
-  const previous = tokens[index - 1]?.text;
+  const previous = previousSignificantToken(index, tokens)?.text;
   return previous === 'struct' || previous === 'enum' || previous === 'interface';
+}
+
+function previousSignificantToken(index: number, tokens: readonly ForgeWebScriptToken[]): ForgeWebScriptToken | undefined {
+  for (let candidate = index - 1; candidate >= 0; candidate -= 1) {
+    if (tokens[candidate]?.kind !== 'comment') return tokens[candidate];
+  }
+  return undefined;
+}
+
+function nextSignificantToken(index: number, tokens: readonly ForgeWebScriptToken[]): ForgeWebScriptToken | undefined {
+  for (let candidate = index + 1; candidate < tokens.length; candidate += 1) {
+    if (tokens[candidate]?.kind !== 'comment') return tokens[candidate];
+  }
+  return undefined;
 }
 
 export function tokenKindToClassification(kind: ForgeWebScriptTokenKind): ForgeWebScriptTokenClassification['kind'] {

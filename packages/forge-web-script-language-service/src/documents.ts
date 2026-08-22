@@ -86,10 +86,11 @@ export function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspa
     assertActive();
     const document = getDocument(uri);
     const workspaceOptions = options.get(uri) ?? emptyOptions;
-    const key = keyFor(document, workspaceOptions);
+    const snapshot = workspaceIndex?.analysisSnapshot(uri);
+    const key = `${keyFor(document, workspaceOptions)}\0${snapshot?.identity ?? 'local'}`;
     const cached = cache.get(uri);
     if (cached?.key === key) return cached.analysis;
-    const analysis = analyzeForgeWebScript(document, workspaceOptions);
+    const analysis = snapshot?.analysis ?? analyzeForgeWebScript(document, workspaceOptions);
     cache.set(uri, { key, analysis });
     return analysis;
   };
@@ -176,7 +177,7 @@ export function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspa
     },
     inlayHints(uri, range?: ForgeWebScriptRange): readonly ForgeWebScriptInlayHint[] {
       const analysis = diagnose(uri);
-      return inlayHintsForgeWebScript(getDocument(uri).text, analysis.module, range);
+      return inlayHintsForgeWebScript(getDocument(uri).text, analysis.module, range, analysis.importTypeEnvironment);
     },
     documentSymbols(uri): readonly ForgeWebScriptDocumentSymbol[] {
       const analysis = diagnose(uri);

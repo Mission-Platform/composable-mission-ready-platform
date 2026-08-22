@@ -78,6 +78,43 @@ describe('Forge Web Script CFG/SSA emitter integration', () => {
     expect(exports.loopValue()).toBe(3);
   });
 
+  it('keeps the loop backedge stable when its counter is reassigned after the loop', () => {
+    const module = moduleWith([{
+      kind: 'function',
+      name: 'reassignedLoopValue',
+      exported: true,
+      parameters: [],
+      result: { name: 'i32', span },
+      span,
+      body: [
+        { kind: 'let', name: 'value', type: { name: 'i32', span }, value: index32(0), span },
+        {
+          kind: 'while',
+          condition: {
+            kind: 'binary',
+            operator: '<',
+            left: identifier('value'),
+            right: index32(3),
+            span,
+          },
+          body: [{
+            kind: 'assignment',
+            name: 'value',
+            value: { kind: 'binary', operator: '+', left: identifier('value'), right: index32(1), span },
+            span,
+          }],
+          span,
+        },
+        { kind: 'assignment', name: 'value', value: index32(7), span },
+        { kind: 'return', value: identifier('value'), span },
+      ],
+    }]);
+    const result = compileForgeWebScriptWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
+    expect(result.diagnostics).toEqual([]);
+    const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports as Record<string, () => number>;
+    expect(exports.reassignedLoopValue()).toBe(7);
+  });
+
   it('keeps a for initializer before the loop header phi', () => {
     const module = moduleWith([{
       kind: 'function',

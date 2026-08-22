@@ -30,6 +30,41 @@ function instantiate(
 }
 
 describe('Forge Web Script bootstrap compiler', () => {
+  it('compiles and executes the stateful memory fixture through Wasm', () => {
+    const fileName = path.join(import.meta.dirname, 'fixtures/stateful-memory.fws');
+    const artifact = compileForgeWebScript({ ...input(readFileSync(fileName, 'utf8')), fileName });
+
+    expect(artifact.diagnostics).toEqual([]);
+    expect(artifact.manifest?.exports.map(({ name }) => name)).toEqual([
+      'convert_u32_to_f64',
+      'invalid_load',
+      'invalid_load_f64',
+      'recursive_sum',
+      'write_and_read',
+      'write_and_read_f64',
+    ]);
+    const instance = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!), {});
+    const exports = instance.exports as unknown as {
+      readonly write_and_read: (value: number) => number;
+      readonly write_and_read_f64: (value: number) => number;
+      readonly convert_u32_to_f64: (value: number) => number;
+      readonly recursive_sum: (value: number) => number;
+      readonly invalid_load: (address: number) => number;
+      readonly invalid_load_f64: (address: number) => number;
+      readonly fws_reset: () => void;
+    };
+
+    expect(exports.write_and_read(0xfeed_beef)).toBe(0xfeed_beef | 0);
+    expect(exports.write_and_read_f64(Math.PI)).toBe(Math.PI);
+    expect(exports.convert_u32_to_f64(4_000_000_000)).toBe(4_000_000_000);
+    expect(exports.recursive_sum(5)).toBe(15);
+    exports.fws_reset();
+    expect(exports.write_and_read(0x1234_5678)).toBe(0x1234_5678 | 0);
+    expect(exports.write_and_read_f64(-123.625)).toBe(-123.625);
+    expect(() => exports.invalid_load(0xfffffff0)).toThrow();
+    expect(() => exports.invalid_load_f64(0xfffffff0)).toThrow();
+  });
+
   it('compiles the package-local file fixture through the artifact contract', () => {
     const fileName = path.join(import.meta.dirname, 'fixtures/file-compile.fws');
     const artifact = compileForgeWebScript({ ...input(readFileSync(fileName, 'utf8')), fileName });
@@ -552,6 +587,16 @@ export fn invoke(value: bytes) -> bytes { return reverse(value); }`,
     } finally {
       globalThis.atob = originalAtob;
     }
+  });
+
+  it('resets temporary guest allocations before consecutive string exports', async () => {
+    const artifact = compileForgeWebScript(
+      input('export fn suffix(value: string) -> string { return string_concat(value, "!"); }'),
+    );
+    expect(artifact.diagnostics).toEqual([]);
+    const generated = await import(`data:text/javascript,${encodeURIComponent(artifact.esmSource)}`);
+    const exports = generated.loadSync();
+    for (let index = 0; index < 400; index += 1) expect(exports.suffix('x'.repeat(128))).toHaveLength(129);
   });
 
   it('passes imports through both generated loaders and rejects missing imports', async () => {

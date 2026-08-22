@@ -23,6 +23,7 @@ import type {
   ForgeWebScriptFrontendLinkMetadata,
   ForgeWebScriptFrontendResult,
   ForgeWebScriptGraphCompileInput,
+  ForgeWebScriptLinkOptimizationProfile,
 } from './contracts.js';
 import type { ForgeWebScriptAbiFunction } from './manifest.js';
 
@@ -57,6 +58,18 @@ const emptyLinks = (): ForgeWebScriptFrontendLinkMetadata => ({
   linkedModules: [],
 });
 
+function linkOptimizationProfile(
+  profile: ForgeWebScriptLinkOptimizationProfile | 'static' | 'dynamic' | undefined,
+  linkMode: 'static' | 'dynamic' | undefined,
+): ForgeWebScriptLinkOptimizationProfile {
+  if (profile === 'static') return 'static-aggressive';
+  if (profile === 'dynamic') return 'dynamic-conservative';
+  if (profile !== undefined) return profile;
+  if (linkMode === 'static') return 'static-aggressive';
+  if (linkMode === 'dynamic') return 'dynamic-conservative';
+  return 'standard';
+}
+
 function uniqueDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): readonly ForgeWebScriptDiagnostic[] {
   return diagnostics.filter(
     (diagnostic, index, all) =>
@@ -85,7 +98,7 @@ function checkedModule(
 function resultFor(
   input: Pick<
     ForgeWebScriptCompileInput,
-    'source' | 'fileName' | 'optimization' | 'standardLibrary' | 'async' | 'targetFeatures' | 'compilerHints'
+    | 'source' | 'fileName' | 'optimization' | 'standardLibrary' | 'async' | 'targetFeatures' | 'compilerHints' | 'linkProfile'
   >,
   module: ForgeWebScriptModule | undefined,
   diagnostics: readonly ForgeWebScriptDiagnostic[],
@@ -95,8 +108,12 @@ function resultFor(
   if (module === undefined || diagnostics.length > 0) {
     return { source: input.source, fileName: input.fileName, links, sourceFiles, diagnostics };
   }
+  const profile = input.linkProfile;
   const ir = lowerForgeWebScriptToIr(module);
-  const optimized = optimizeForgeWebScriptModule(module, input.optimization ?? 'debug');
+  const optimized = optimizeForgeWebScriptModule(
+    module,
+    input.optimization ?? (profile === undefined ? 'debug' : 'release'),
+  );
   return {
     source: input.source,
     fileName: input.fileName,
@@ -109,6 +126,8 @@ function resultFor(
       ...(links.graphHash === undefined ? {} : { graphHash: links.graphHash }),
       ...(links.projectRoot === undefined ? {} : { projectRoot: links.projectRoot }),
       ...(links.linkMode === undefined ? {} : { linkMode: links.linkMode }),
+      ...(links.linkProfile === undefined ? {} : { linkProfile: links.linkProfile }),
+      optimizationProfile: links.optimizationProfile ?? linkOptimizationProfile(input.linkProfile, links.linkMode),
       ...(links.sourceImports === undefined ? {} : { sourceImports: links.sourceImports }),
       ...(links.linkedExports === undefined ? {} : { linkedExports: links.linkedExports }),
       standardLibrary: forgeWebScriptStandardLibraryIdentity(input.standardLibrary),
@@ -123,7 +142,12 @@ function resultFor(
 
 export function prepareForgeWebScriptFrontend(input: ForgeWebScriptCompileInput): ForgeWebScriptFrontendResult {
   const validation = checkedModule(input);
-  return resultFor(input, validation.module, validation.diagnostics, emptyLinks(), [input.fileName]);
+  const profile = input.linkProfile ?? input.linkConfiguration?.linkProfile;
+  const links: ForgeWebScriptFrontendLinkMetadata = {
+    ...emptyLinks(),
+    ...(profile === undefined ? {} : { linkProfile: profile, optimizationProfile: linkOptimizationProfile(undefined, profile) }),
+  };
+  return resultFor(input, validation.module, validation.diagnostics, links, [input.fileName]);
 }
 
 function graphLinks(
@@ -162,10 +186,19 @@ function graphLinks(
           }),
     };
   });
+  const linkProfile =
+    input.linkProfile ??
+    input.linkConfiguration?.linkProfile ??
+    (input.graph.edges.some(({ linkMode }) => linkMode === 'dynamic') ? 'dynamic' : 'static');
   return {
     graphHash,
     projectRoot: entry?.projectRoot,
-    linkMode: 'static',
+    linkMode: input.graph.edges.some(({ linkMode }) => linkMode === 'dynamic') ? 'dynamic' : 'static',
+    linkProfile,
+    optimizationProfile: linkOptimizationProfile(
+      linkProfile,
+      input.graph.edges.some(({ linkMode }) => linkMode === 'dynamic') ? 'dynamic' : 'static',
+    ),
     sourceImports,
     linkedExports,
     linkedModules: linkedRecords.map(({ moduleId }) => moduleId),
@@ -175,14 +208,24 @@ function graphLinks(
 export function prepareForgeWebScriptGraphFrontend(
   input: ForgeWebScriptGraphCompileInput,
 ): ForgeWebScriptFrontendResult {
-  const configuration: ForgeWebScriptLinkConfiguration = input.linkConfiguration ?? {};
+  const configuration: ForgeWebScriptLinkConfiguration = {
+    ...(input.linkConfiguration ?? {}),
+    ...(input.linkProfile === undefined ? {} : { linkProfile: input.linkProfile }),
+  };
   const graphHash = hashForgeWebScriptModuleGraph(input.graph, configuration);
   const links = validateForgeWebScriptLinks(input.graph, configuration);
   const entry = input.graph.modules.find(({ fileName }) => fileName === input.entryFileName);
   const linked = links.staticModules.find(({ name }) => name === entry?.moduleId);
-  const linkedRecords = input.graph.modules.filter((module) =>
-    linked?.functions.some(({ name }) => module.module.functions.some((candidate) => candidate.name === name)),
-  );
+  const linkedFiles = new Set<string>();
+  const visitStatic = (fileName: string): void => {
+    if (linkedFiles.has(fileName)) return;
+    linkedFiles.add(fileName);
+    for (const edge of input.graph.edges) {
+      if (edge.importer === fileName && edge.linkMode === 'static') visitStatic(edge.resolved);
+    }
+  };
+  if (entry !== undefined) visitStatic(entry.fileName);
+  const linkedRecords = input.graph.modules.filter(({ fileName }) => linkedFiles.has(fileName));
   // Type-check the linked component as one module. In particular, the root
   // dispatcher is allowed to call functions exported by its static imports;
   // checking each source module in isolation would report those calls as
@@ -234,6 +277,7 @@ export function prepareForgeWebScriptGraphFrontend(
       source,
       fileName: input.entryFileName,
       optimization: input.optimization,
+      linkProfile: input.linkProfile ?? input.linkConfiguration?.linkProfile,
       standardLibrary: input.standardLibrary,
       async: input.async,
       targetFeatures: input.targetFeatures,

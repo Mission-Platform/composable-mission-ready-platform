@@ -2,6 +2,7 @@ import { createDiagnostic, type ForgeWebScriptDiagnostic, type ForgeWebScriptSou
 import { primitiveTypes } from './parser.js';
 import { FORGE_WEB_SCRIPT_REGEX_FUNCTIONS, type ForgeWebScriptStandardLibraryFunction } from './stdlib/regex.js';
 import { FORGE_WEB_SCRIPT_STRING_FUNCTIONS, type ForgeWebScriptStringFunction } from './stdlib/string.js';
+import { FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS, type ForgeWebScriptMemoryFunction } from './stdlib/memory.js';
 
 import type {
   ForgeWebScriptExpression,
@@ -28,7 +29,9 @@ interface Callable {
   readonly parameters: readonly string[];
   readonly result: string;
   readonly standardLibrary?:
-    ForgeWebScriptStandardLibraryFunction['operation'] | ForgeWebScriptStringFunction['operation'];
+    | ForgeWebScriptStandardLibraryFunction['operation']
+    | ForgeWebScriptStringFunction['operation']
+    | ForgeWebScriptMemoryFunction['operation'];
 }
 
 type CollectionKind = 'Array' | 'Vector';
@@ -60,7 +63,11 @@ export function checkForgeWebScript(
   options: ForgeWebScriptTypeCheckOptions = {},
 ): ForgeWebScriptTypeCheckResult {
   const diagnostics: ForgeWebScriptDiagnostic[] = [];
-  const standardLibraryFunctions = [...FORGE_WEB_SCRIPT_REGEX_FUNCTIONS, ...FORGE_WEB_SCRIPT_STRING_FUNCTIONS];
+  const standardLibraryFunctions = [
+    ...FORGE_WEB_SCRIPT_REGEX_FUNCTIONS,
+    ...FORGE_WEB_SCRIPT_STRING_FUNCTIONS,
+    ...FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS,
+  ];
   const callables = new Map<string, Callable>(
     standardLibraryFunctions.map((declaration) => [
       declaration.name,
@@ -664,7 +671,18 @@ function inferExpression(
   expectedType?: string,
   module?: ForgeWebScriptModule,
 ): string {
-  if (expression.kind === 'literal') return expression.type;
+  if (expression.kind === 'literal') {
+    if (
+      expectedType !== undefined &&
+      ['i32', 'u32', 'i64', 'u64'].includes(expectedType) &&
+      expression.type === 'i32' &&
+      typeof expression.value === 'number' &&
+      Number.isInteger(expression.value) &&
+      (expectedType[0] !== 'u' || expression.value >= 0)
+    )
+      return expectedType;
+    return expression.type;
+  }
   if (expression.kind === 'identifier') {
     const type = locals.get(expression.name);
     if (type === undefined) {
@@ -758,8 +776,8 @@ function inferExpression(
         ),
       );
     for (const [index, argument] of expression.arguments.entries()) {
-      const actual = inferExpression(argument, locals, callables, fileName, diagnostics, enumValues, undefined, module);
       const expected = callable.parameters[index];
+      const actual = inferExpression(argument, locals, callables, fileName, diagnostics, enumValues, expected, module);
       if (expected !== undefined && actual !== expected)
         mismatch(
           argument.span,
@@ -914,7 +932,16 @@ function inferExpression(
   }
   if (expression.kind !== 'binary') return 'unit';
   const left = inferExpression(expression.left, locals, callables, fileName, diagnostics, enumValues, undefined, module);
-  const right = inferExpression(expression.right, locals, callables, fileName, diagnostics, enumValues, undefined, module);
+  const right = inferExpression(
+    expression.right,
+    locals,
+    callables,
+    fileName,
+    diagnostics,
+    enumValues,
+    isNumber(left) ? left : undefined,
+    module,
+  );
   if (['+', '-', '*', '/', '%'].includes(expression.operator)) {
     if (!isNumber(left) || left !== right)
       mismatch(expression.span, fileName, diagnostics, 'Arithmetic operands must have the same numeric type.');

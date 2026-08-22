@@ -29,8 +29,10 @@ const KEYWORDS = [
   'as',
   'capability',
   'case',
+  'catch',
   'class',
   'constructor',
+  'default',
   'else',
   'enum',
   'extends',
@@ -38,23 +40,33 @@ const KEYWORDS = [
   'do',
   'for',
   'fn',
+  'iter',
   'if',
   'impl',
   'interface',
   'import',
+  'inline',
   'let',
+  'likely',
   'match',
   'module',
   'new',
+  'noinline',
   'return',
   'struct',
+  'switch',
   'trait',
+  'loop',
+  'try',
+  'throw',
+  'unlikely',
   'while',
+  'yield',
 ] as const;
 
-const TWO_CHAR_OPS = ['!=', '&&', '==', '||', '<=', '>=', '->', '=>'] as const;
+const TWO_CHAR_OPS = ['!=', '&&', '==', '||', '<=', '>=', '->', '=>', '::'] as const;
 const ONE_CHAR_OPS = new Set(['!', '%', '*', '+', '-', '/', '<', '>', '=']);
-const PUNCT = new Set(['{', '}', '(', ')', ':', ';', ',', '|']);
+const PUNCT = new Set(['{', '}', '(', ')', '[', ']', ':', ';', ',', '|', '.']);
 
 export type ForgeWebScriptSelfHostedVmInstruction =
   | { readonly opcode: 'const'; readonly destination?: number; readonly constant: number }
@@ -487,7 +499,9 @@ export function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeW
     int32Constant(62), // ->
     int32Constant(61),
     int32Constant(62), // =>
-    // one-char ops at 48..56
+    int32Constant(58),
+    int32Constant(58), // ::
+    // one-char ops at 50..58
     int32Constant(33),
     int32Constant(37),
     int32Constant(42),
@@ -497,21 +511,24 @@ export function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeW
     int32Constant(60),
     int32Constant(62),
     int32Constant(61),
-    // punct at 57..64
+    // punct at 59..69
     int32Constant(123),
     int32Constant(125),
     int32Constant(40),
     int32Constant(41),
+    int32Constant(91),
+    int32Constant(93),
     int32Constant(58),
     int32Constant(59),
     int32Constant(44),
     int32Constant(124),
-    // keyword hashes at 65..
+    int32Constant(46),
+    // keyword hashes at 70..
     ...keywordHashes.map((hash) => word32Constant(hash)),
     int32Constant(42), // block-comment '*'
   ];
 
-  const keywordConstantBase = 65;
+  const keywordConstantBase = 70;
   const blockCommentStarConstant = keywordConstantBase + keywordHashes.length;
 
   const fnvMixFunction = buildFnvMix();
@@ -747,6 +764,7 @@ function buildIsTwoCharOp(): ForgeWebScriptSelfHostedVmFunction {
     [42, 43],
     [44, 45],
     [46, 47],
+    [48, 49],
   ] as const;
   const b = createBuilder(2);
   const temporary = b.alloc();
@@ -787,11 +805,11 @@ function buildIsTwoCharOp(): ForgeWebScriptSelfHostedVmFunction {
 }
 
 function buildIsOneCharOp(): ForgeWebScriptSelfHostedVmFunction {
-  return buildPredicateFromEquals('is_one_char_op', [48, 49, 50, 51, 52, 53, 54, 55, 56]);
+  return buildPredicateFromEquals('is_one_char_op', [50, 51, 52, 53, 54, 55, 56, 57, 58]);
 }
 
 function buildIsPunct(): ForgeWebScriptSelfHostedVmFunction {
-  return buildPredicateFromEquals('is_punct', [57, 58, 59, 60, 61, 62, 63, 64]);
+  return buildPredicateFromEquals('is_punct', [59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69]);
 }
 
 function buildLexFingerprint(blockCommentStarConstant: number): ForgeWebScriptSelfHostedVmFunction {

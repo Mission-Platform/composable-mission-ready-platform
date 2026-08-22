@@ -1,0 +1,172 @@
+(*
+ * Forge Web Script v1 grammar
+ *
+ * This file is the checked-in grammar contract for the TypeScript frontend,
+ * language service, and later self-hosted lexer/parser stages. It describes
+ * significant tokens; comments remain in the token stream for documentation
+ * consumers but are ignored between grammar terminals by the parser.
+ *
+ * Source offsets are UTF-16 code-unit offsets in the TypeScript frontend. A
+ * self-hosted byte scanner must convert its UTF-8 offsets before emitting the
+ * shared token payload. All ranges are half-open [start, end).
+ *)
+
+source                  = { trivia }, compilation-unit, { trivia }, eof ;
+compilation-unit        = legacy-module | { top-level-declaration } ;
+legacy-module           = "module", identifier, "{", { top-level-declaration }, "}" ;
+top-level-declaration   = import-declaration
+                        | struct-declaration
+                        | enum-declaration
+                        | interface-declaration
+                        | function-declaration
+                        | unsupported-class-declaration ;
+
+(* Lexical grammar *)
+trivia                  = whitespace | line-comment | block-comment ;
+whitespace              = { horizontal-whitespace | line-terminator } ;
+horizontal-whitespace  = ? Unicode WhiteSpace code point other than CR or LF ? ;
+line-terminator         = "\n" | "\r" | "\r\n" ;
+line-comment            = "//", { ? any source character other than LF ? } ;
+block-comment           = "/*", { ? any source character, including line terminators ? }, "*/" ;
+identifier              = identifier-start, { identifier-part } ;
+identifier-start        = letter | "_" ;
+identifier-part         = identifier-start | decimal-digit ;
+letter                  = "A" .. "Z" | "a" .. "z" ;
+decimal-digit           = "0" .. "9" ;
+integer                 = decimal-digit, { decimal-digit } ;
+string                  = "\"", { string-character | escape-sequence }, "\"" ;
+string-character        = ? any source character other than quote, backslash, CR, or LF ? ;
+escape-sequence         = "\\", ( "\"" | "\\" | "/" | "b" | "f" | "n" | "r" | "t" | unicode-escape ) ;
+unicode-escape          = "u", hex-digit, hex-digit, hex-digit, hex-digit ;
+hex-digit               = decimal-digit | "A" .. "F" | "a" .. "f" ;
+
+(* The scanner uses longest match for operators before one-character forms. *)
+operator                = "!=" | "&&" | "==" | "||" | "<=" | ">=" | "->" | "=>" | "::"
+                        | "!" | "%" | "*" | "+" | "-" | "/" | "<" | ">" | "=" ;
+punctuation             = "{" | "}" | "(" | ")" | "[" | "]" | ":" | ";"
+                        | "," | "|" | "." ;
+
+keyword                 = "as" | "capability" | "case" | "catch" | "class"
+                        | "constructor" | "default" | "do" | "else" | "enum"
+                        | "extends" | "export" | "for" | "fn" | "if" | "impl"
+                        | "import" | "inline" | "interface" | "iter" | "let"
+                        | "likely" | "loop" | "match" | "module" | "new"
+                        | "noinline" | "return" | "struct" | "switch" | "throw"
+                        | "trait" | "try" | "unlikely" | "while" | "yield" ;
+boolean-literal         = "true" | "false" ;
+
+(* Lexical recovery *)
+(*
+ * An unterminated block comment consumes through EOF and reports
+ * FWS-LEX-003. An unterminated string consumes through EOF and reports
+ * FWS-LEX-001. Invalid escapes report FWS-LEX-004; raw CR, LF, or CRLF in a
+ * string reports FWS-LEX-005. Any other source character consumes one source
+ * code unit and reports FWS-LEX-002. Recovery always advances and the scanner
+ * emits one eof token after the final source offset.
+ *)
+eof                     = ? zero-width end-of-input token ? ;
+
+(* Imports and declarations *)
+import-declaration      = capability-import | source-import ;
+capability-import       = "import", "capability", string, "as", identifier,
+                          parameter-list, "->", type, ";" ;
+source-import           = "import", [ "module" ], string, "as", identifier, ";" ;
+parameter-list          = "(", [ parameters ], ")" ;
+parameters              = parameter, { ",", parameter } ;
+parameter               = identifier, ":", type ;
+
+function-declaration    = { function-modifier }, "fn", identifier,
+                          [ generic-parameters ], parameter-list, "->", type, block ;
+function-modifier       = "export" | "iter" | "inline" | "noinline" ;
+generic-parameters      = "<", generic-parameter, { ",", generic-parameter }, ">" ;
+generic-parameter       = identifier, [ ":", identifier, { "+", identifier } ] ;
+
+struct-declaration      = "struct", identifier, [ generic-parameters ], "{",
+                          { struct-field }, "}" ;
+struct-field            = identifier, ":", type, ( "," | ";" ) ;
+enum-declaration        = [ "export" ], "enum", identifier, [ generic-parameters ],
+                          "{", [ enum-variant, { ",", enum-variant }, [ "," ] ], "}" ;
+enum-variant            = identifier, [ parameter-list ], [ "=", [ "-" ], integer ] ;
+interface-declaration   = "interface", identifier, [ generic-parameters ], "{",
+                          { interface-function }, "}" ;
+interface-function      = "fn", identifier, [ generic-parameters ], parameter-list,
+                          "->", type, ";" ;
+
+(* Statements *)
+block                   = "{", { statement }, "}" ;
+statement               = let-statement
+                        | assignment-statement
+                        | return-statement
+                        | yield-statement
+                        | iterator-loop-statement
+                        | if-statement
+                        | while-statement
+                        | do-while-statement
+                        | switch-statement
+                        | unsupported-exception-statement
+                        | unsupported-for-statement
+                        | expression-statement ;
+let-statement           = "let", identifier, ":", type, "=", expression, ";" ;
+assignment-statement    = identifier, [ "[", expression, "]" ], "=", expression, ";" ;
+return-statement        = "return", [ expression ], ";" ;
+yield-statement         = "yield", expression, ";" ;
+iterator-loop-statement = "loop", identifier, "=", expression, block ;
+if-statement            = "if", [ "likely" | "unlikely" ], expression, block,
+                          [ "else", block ] ;
+while-statement         = "while", expression, block ;
+do-while-statement      = "do", block, "while", expression, ";" ;
+switch-statement        = "switch", expression, "{", { switch-arm }, "}" ;
+switch-arm              = "case", switch-case-value, ":", switch-arm-body
+                        | "default", ":", switch-arm-body ;
+switch-case-value       = [ "-" ], ( integer | identifier ) ;
+switch-arm-body         = block | statement ;
+for-clause              = let-clause | assignment-clause | expression ;
+let-clause              = "let", identifier, ":", type, "=", expression ;
+assignment-clause       = identifier, "=", expression ;
+unsupported-for-statement = "for", "(", [ for-clause ], ";", expression, ";",
+                            [ for-clause ], ")", block ;
+unsupported-exception-statement = ( "throw" | "try" | "catch" ),
+                                 { ? token other than semicolon or closing brace ? }, [ ";" ] ;
+
+(* Types and expressions *)
+type                    = fixed-array-type | type-name ;
+fixed-array-type        = "[", type, ";", integer, "]" ;
+type-name               = type-atom, [ "<", type, { ",", type }, ">" ] ;
+type-atom               = primitive-type | identifier ;
+primitive-type          = "bool" | "bytes" | "f32" | "f64" | "i32" | "i64"
+                        | "string" | "u32" | "u64" | "unit" ;
+
+expression              = binary-expression ;
+binary-expression       = unary-expression, { binary-operator, unary-expression } ;
+binary-operator         = "||" | "&&" | "==" | "!=" | "<" | "<=" | ">" | ">="
+                        | "+" | "-" | "*" | "/" | "%" ;
+unary-expression        = ( "!" | "-" ), unary-expression | postfix-expression ;
+postfix-expression      = primary-expression, { member-access | index-access } ;
+member-access           = ".", member-name, [ call-arguments ] ;
+member-name             = identifier | "iter" | "next" ;
+index-access            = "[", expression, "]" ;
+primary-expression      = integer
+                        | string
+                        | boolean-literal
+                        | identifier-expression
+                        | function-value
+                        | array-literal
+                        | vector-literal
+                        | match-expression ;
+identifier-expression   = identifier, [ qualified-constructor | call-arguments
+                        | record-initializer ] ;
+qualified-constructor   = "::", identifier, [ call-arguments ] ;
+function-value          = "fn", identifier ;
+call-arguments          = "(", [ expression, { ",", expression } ], ")" ;
+record-initializer      = "{", identifier, ":", expression, { ",", identifier, ":", expression }, "}" ;
+array-literal           = "[", [ expression, { ",", expression } ], "]" ;
+vector-literal          = "vector", "[", [ expression, { ",", expression } ], "]" ;
+match-expression        = "match", expression, "{", { [ "case" ], match-arm, [ "," ] }, "}" ;
+match-arm               = pattern, "=>", expression ;
+pattern                 = "_" | integer | string | boolean-literal
+                        | identifier, [ "::", identifier ], [ "(", [ identifier, { ",", identifier } ], ")" ] ;
+
+(* Unsupported declarations are consumed for stable recovery and report
+ * FWS-PARSE-052; they are not part of the accepted AST contract. *)
+unsupported-class-declaration = ( "class" | "constructor" | "extends" | "impl" | "new" | "trait" ),
+                                { ? token until a balanced declaration boundary ? } ;

@@ -4,7 +4,11 @@ import { forgeWebScriptWatCacheKey, persistForgeWebScriptDebugArtifacts, persist
 import { createDiagnostic, type ForgeWebScriptDiagnostic } from './diagnostics.js';
 import { prepareForgeWebScriptFrontend, prepareForgeWebScriptGraphFrontend } from './frontend.js';
 import { hashForgeWebScriptModuleGraph } from './graph.js';
-import { FORGE_WEB_SCRIPT_ABI_VERSION, FORGE_WEB_SCRIPT_LANGUAGE_VERSION } from './manifest.js';
+import {
+  FORGE_WEB_SCRIPT_ABI_VERSION,
+  FORGE_WEB_SCRIPT_LANGUAGE_VERSION,
+  type ForgeWebScriptDynamicLinkMetadata,
+} from './manifest.js';
 import { forgeWebScriptStandardLibraryIdentity } from './stdlib/regex.js';
 
 import type { ForgeWebScriptPrimitiveType } from './ast.js';
@@ -51,6 +55,26 @@ function hashBytes(bytes: Uint8Array): string {
     hash = Math.imul(hash, 16_777_619) >>> 0;
   }
   return hash.toString(16).padStart(8, '0');
+}
+
+function dynamicLinkMetadata(
+  manifest: ForgeWebScriptAbiManifest,
+  artifactId: string,
+): ForgeWebScriptDynamicLinkMetadata | undefined {
+  const modules = manifest.sourceImports
+    .filter((sourceImport) => sourceImport.linkMode === 'dynamic' && sourceImport.resolvedModuleId !== undefined)
+    .map((sourceImport) => ({
+      moduleId: sourceImport.resolvedModuleId as string,
+      alias: sourceImport.alias,
+      exports: sourceImport.exports ?? [],
+    }))
+    .toSorted((left, right) => left.moduleId.localeCompare(right.moduleId));
+  if (modules.length === 0) return undefined;
+  return {
+    artifactId,
+    manifestHash: hashBytes(encoder.encode(JSON.stringify(manifest))),
+    modules,
+  };
 }
 
 function declarationType(
@@ -261,6 +285,8 @@ function createDeclarations(manifest: ForgeWebScriptAbiManifest): string {
     '  readonly graphHash?: string;',
     '  readonly projectRoot?: string;',
     '  readonly linkMode?: "static" | "dynamic";',
+    '  readonly linkProfile?: "static" | "dynamic";',
+    '  readonly optimizationProfile?: "standard" | "static-aggressive" | "dynamic-conservative";',
     '  readonly linkedExports?: readonly ForgeWebScriptManifestLinkedExport[];',
     '  readonly requiredCapabilities: readonly string[];',
     '  readonly memory: ForgeWebScriptManifestMemoryLayout;',
@@ -306,8 +332,18 @@ function createDeclarations(manifest: ForgeWebScriptAbiManifest): string {
     dynamicImports.length === 0 ? '' : '  readonly dynamicModules?: ForgeWebScriptDynamicModuleLoaders;',
     '}',
     '',
+    'export interface ForgeWebScriptDynamicLinkMetadata {',
+    '  readonly artifactId: string;',
+    '  readonly manifestHash: string;',
+    '  readonly modules: readonly { readonly moduleId: string; readonly alias: string; readonly exports: readonly ForgeWebScriptManifestFunction[] }[];',
+    '}',
+    '',
     'export const manifest: ForgeWebScriptManifest;',
     'export const abiManifest: ForgeWebScriptManifest;',
+    'export const dynamicLinkMetadata: ForgeWebScriptDynamicLinkMetadata | undefined;',
+    'export function resolveDynamicExport(alias: string, exportName: string, imports?: ForgeWebScriptImports): Promise<(...args: readonly number[]) => unknown>;',
+    'export function resolveDynamicExportSync(alias: string, exportName: string, imports?: ForgeWebScriptImports): (...args: readonly number[]) => unknown;',
+    'export function clearDynamicLinkCache(): void;',
     'export function load(imports?: ForgeWebScriptImports): Promise<ForgeWebScriptExports>;',
     'export function loadSync(imports?: ForgeWebScriptImports): ForgeWebScriptExports;',
   ].join('\n');
@@ -323,6 +359,7 @@ function createEsmSource(
   wasm: Uint8Array,
   manifest: ForgeWebScriptAbiManifest,
   iteratorExports: readonly ForgeWebScriptIteratorExport[] = [],
+  dynamicMetadata?: ForgeWebScriptDynamicLinkMetadata,
 ): string {
   const base64 = bytesToBase64(wasm);
   const byteArray = [...wasm].join(',');
@@ -471,6 +508,10 @@ const decoder = new TextDecoder('utf-8', { fatal: true });
     total += bytes.byteLength;
     if (!Number.isSafeInteger(total) || total > 0xffffffff) throw new RangeError('Forge Web Script string input is too large.');
   }
+  // Guest allocations are bump-allocated. Reset before each independent value
+  // call so temporary graph buffers from a previous call cannot exhaust the
+  // Wasm page; result bytes remain valid until this invocation finishes.
+  if (stringCount !== 0) wasmExports.fws_reset();
   const inputPointer = stringCount === 0 ? undefined : wasmExports.fws_alloc(total);
   let output;
   const owned = [];
@@ -603,6 +644,52 @@ function adaptValueExports(wasmExports, runtime) {
   return `${enumExports}${enumExports.length === 0 ? '' : '\n'}const wasm = Uint8Array.from([${byteArray}]);
 const wasmBase64 = '${base64}';
 export const manifest = ${JSON.stringify(manifest)};
+export const dynamicLinkMetadata = ${JSON.stringify(dynamicMetadata)};
+const dynamicModuleCache = new Map();
+const dynamicExportCache = new Map();
+function dynamicModule(alias, imports) {
+  const loader = imports.dynamicModules?.[alias];
+  if (typeof loader !== 'function') throw new Error('Forge Web Script dynamic module loader "' + alias + '" is missing.');
+  let loaded = dynamicModuleCache.get(alias);
+  if (loaded === undefined) {
+    loaded = Promise.resolve(loader());
+    dynamicModuleCache.set(alias, loaded);
+  }
+  return loaded;
+}
+export async function resolveDynamicExport(alias, exportName, imports = {}) {
+  const key = alias + '\\0' + exportName;
+  let cached = dynamicExportCache.get(key);
+  if (cached === undefined) {
+    cached = dynamicModule(alias, imports).then((module) => {
+      const callable = module?.[exportName];
+      if (typeof callable !== 'function') throw new Error('Forge Web Script dynamic export "' + exportName + '" is missing from module "' + alias + '".');
+      return callable;
+    });
+    dynamicExportCache.set(key, cached);
+  }
+  return cached;
+}
+export function resolveDynamicExportSync(alias, exportName, imports = {}) {
+  const key = alias + '\\0' + exportName;
+  const cached = dynamicExportCache.get(key);
+  if (cached !== undefined && typeof cached === 'function') return cached;
+  const loader = imports.dynamicModules?.[alias];
+  if (typeof loader !== 'function') throw new Error('Forge Web Script dynamic module loader "' + alias + '" is missing.');
+  let module = dynamicModuleCache.get(alias);
+  if (module === undefined || typeof module.then === 'function') {
+    module = loader();
+    dynamicModuleCache.set(alias, module);
+  }
+  const callable = module?.[exportName];
+  if (typeof callable !== 'function') throw new Error('Forge Web Script dynamic export "' + exportName + '" is missing from module "' + alias + '".');
+  dynamicExportCache.set(key, callable);
+  return callable;
+}
+export function clearDynamicLinkCache() {
+  dynamicModuleCache.clear();
+  dynamicExportCache.clear();
+}
 function decodeWasm() {
   return Uint8Array.from(atob(wasmBase64), (character) => character.charCodeAt(0));
 }
@@ -677,7 +764,10 @@ export function loadSync(imports = {}) {
 function compileForgeWebScriptModule(
   input: ForgeWebScriptCompileInput,
   frontend: ForgeWebScriptFrontendResult,
-  graphMetadata: Pick<ForgeWebScriptArtifact, 'graphHash' | 'linkMode' | 'linkedModules'> = {},
+  graphMetadata: Pick<
+    ForgeWebScriptArtifact,
+    'graphHash' | 'linkMode' | 'linkedModules' | 'linkProfile' | 'optimizationProfile'
+  > = {},
   sourceFiles: readonly string[] = frontend.sourceFiles,
 ): ForgeWebScriptArtifact {
   const diagnostics = [...frontend.diagnostics];
@@ -689,7 +779,7 @@ function compileForgeWebScriptModule(
   );
   if (diagnostics.length > 0 || frontend.optimizedModule === undefined || frontend.abi === undefined)
     return { esmSource: '', declarations: '', contentHash: emptyHash, diagnostics, ...graphMetadata };
-  const optimization = input.optimization ?? 'debug';
+  const optimization = input.optimization ?? (frontend.links.linkProfile === undefined ? 'debug' : 'release');
   const module = frontend.optimizedModule;
   const manifest = frontend.abi;
   const backend = compileForgeWebScriptWasm(
@@ -778,13 +868,15 @@ function compileForgeWebScriptModule(
       : persistForgeWebScriptDebugArtifacts(cache, cacheKey, debugArtifacts ?? {});
   const watPath = debugPaths.optimizedWatPath ?? persistForgeWebScriptWat(cache, cacheKey, wat);
   input.logger?.log('info', 'compile.complete', { fileName: input.fileName, contentHash: hashBytes(wasm) });
+  const contentHash = hashBytes(wasm);
+  const dynamicMetadata = dynamicLinkMetadata(manifest, contentHash);
   return {
     wasm,
-    esmSource: createEsmSource(wasm, manifest, backend.iteratorExports ?? []),
+    esmSource: createEsmSource(wasm, manifest, backend.iteratorExports ?? [], dynamicMetadata),
     declarations: createDeclarations(manifest),
     manifest,
     ...(sourceMap === undefined ? {} : { sourceMap }),
-    contentHash: hashBytes(wasm),
+    contentHash,
     wat,
     ...(watPath === undefined ? {} : { watPath }),
     ...(debugPaths.unoptimizedWatPath === undefined ? {} : { unoptimizedWatPath: debugPaths.unoptimizedWatPath }),
@@ -795,6 +887,7 @@ function compileForgeWebScriptModule(
     ...(input.targetFeatures === undefined ? {} : { targetFeatures: input.targetFeatures }),
     ...(input.compilerHints === undefined ? {} : { compilerHints: input.compilerHints }),
     optimizationReport: frontend.optimizationReport,
+    ...(dynamicMetadata === undefined ? {} : { dynamicLinkMetadata: dynamicMetadata }),
     diagnostics: [],
     ...graphMetadata,
   };
@@ -833,10 +926,11 @@ function compileForgeWebScriptGraph(input: ForgeWebScriptGraphCompileInput): For
       fileName: input.entryFileName,
       compilerVersion: input.compilerVersion,
       requireExports: input.requireExports,
-      optimization: input.optimization,
+      optimization: input.optimization ?? (input.linkProfile === undefined ? undefined : 'release'),
       requestedCapabilities: input.requestedCapabilities,
       watCache: input.watCache,
       linkConfiguration: input.linkConfiguration,
+      linkProfile: input.linkProfile,
       standardLibrary: input.standardLibrary,
       targetFeatures: input.targetFeatures,
       compilerHints: input.compilerHints,
@@ -847,6 +941,8 @@ function compileForgeWebScriptGraph(input: ForgeWebScriptGraphCompileInput): For
       graphHash: frontend.links.graphHash,
       linkMode: frontend.links.linkMode,
       linkedModules: frontend.links.linkedModules,
+      linkProfile: frontend.links.linkProfile,
+      optimizationProfile: frontend.links.optimizationProfile,
     },
   );
 }

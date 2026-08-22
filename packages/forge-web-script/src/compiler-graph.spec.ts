@@ -179,4 +179,31 @@ describe('Forge Web Script graph compiler service', () => {
     expect(service.report().cacheMisses).toBe(3);
     service.dispose();
   });
+
+  it('records correct optimization profile for link profiles', async () => {
+    const files = {
+      '/workspace/app/main.fws': 'export fn main() -> i32 { return 1; }',
+    };
+    const service = createForgeWebScriptCompilerService();
+
+    const staticResult = await graphFor(files, { projectRoots: ['/workspace/app'], linkProfile: 'static' });
+    const staticArtifact = service.compileGraph({
+      graph: staticResult.graph,
+      entryFileName: '/workspace/app/main.fws',
+      compilerVersion: '0.1.0',
+      linkConfiguration: { linkProfile: 'static' },
+    });
+    expect(staticArtifact.manifest?.optimizationProfile).toBe('static-aggressive');
+
+    const dynamicResult = await graphFor(files, { projectRoots: ['/workspace/app'], linkProfile: 'dynamic' });
+    const dynamicArtifact = service.compileGraph({
+      graph: dynamicResult.graph,
+      entryFileName: '/workspace/app/main.fws',
+      compilerVersion: '0.1.0',
+      linkConfiguration: { linkProfile: 'dynamic' },
+    });
+    expect(dynamicArtifact.manifest?.optimizationProfile).toBe('dynamic-conservative');
+
+    service.dispose();
+  });
 });

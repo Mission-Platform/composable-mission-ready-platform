@@ -1,6 +1,7 @@
 import { createForgeWebScriptIteratorBoundaryDescriptor } from './generics.js';
 import { FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP, type ForgeWebScriptRegexOperation } from './stdlib/regex.js';
 import { FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP, type ForgeWebScriptStringOperation } from './stdlib/string.js';
+import { FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP, type ForgeWebScriptMemoryOperation } from './stdlib/memory.js';
 
 import type {
   ForgeWebScriptBinaryOperator,
@@ -38,7 +39,11 @@ export interface ForgeWebScriptIrCallExpression {
   readonly callee: string;
   readonly arguments: readonly ForgeWebScriptIrExpression[];
   /** Set only for compiler-owned calls; these never become ABI imports. */
-  readonly standardLibrary?: ForgeWebScriptRegexOperation | ForgeWebScriptStringOperation | ForgeWebScriptCollectionOperation;
+  readonly standardLibrary?:
+    | ForgeWebScriptRegexOperation
+    | ForgeWebScriptStringOperation
+    | ForgeWebScriptMemoryOperation
+    | ForgeWebScriptCollectionOperation;
   /** Set by tail-position analysis; it is a hint, never a semantic requirement. */
   readonly tailPosition?: boolean;
   /** The source function which supplied this expression after a safe inline. */
@@ -280,7 +285,8 @@ function lowerAstExpression(expression: ForgeWebScriptExpression): ForgeWebScrip
     const collectionOperation = method === 'iter' ? 'array-iter' : method === 'next' ? 'iterator-next' : method === 'length' ? 'array-length' : undefined;
     const standardLibrary =
       FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP.get(expression.callee)?.operation ??
-      FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP.get(expression.callee)?.operation;
+      FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP.get(expression.callee)?.operation ??
+      FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP.get(expression.callee)?.operation;
     return {
       ...expression,
       arguments: [

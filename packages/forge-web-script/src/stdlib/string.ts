@@ -9,7 +9,9 @@ export type ForgeWebScriptStringOperation =
   | 'string-slice'
   | 'string-to-i32'
   | 'bytes-length'
+  | 'bytes-length-u32'
   | 'bytes-byte-at'
+  | 'bytes-byte-at-u32'
   | 'bytes-slice';
 
 export interface ForgeWebScriptStringFunction {
@@ -27,7 +29,9 @@ export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly ForgeWebScriptStringFun
   { name: 'string_slice', parameters: ['string', 'i32', 'i32'], result: 'string', operation: 'string-slice' },
   { name: 'string_to_i32', parameters: ['string'], result: 'i32', operation: 'string-to-i32' },
   { name: 'bytes_length', parameters: ['bytes'], result: 'i32', operation: 'bytes-length' },
+  { name: 'bytes_length_u32', parameters: ['bytes'], result: 'u32', operation: 'bytes-length-u32' },
   { name: 'bytes_byte_at', parameters: ['bytes', 'i32'], result: 'i32', operation: 'bytes-byte-at' },
+  { name: 'bytes_byte_at_u32', parameters: ['bytes', 'u32'], result: 'u32', operation: 'bytes-byte-at-u32' },
   { name: 'bytes_slice', parameters: ['bytes', 'i32', 'i32'], result: 'bytes', operation: 'bytes-slice' },
 ];
 

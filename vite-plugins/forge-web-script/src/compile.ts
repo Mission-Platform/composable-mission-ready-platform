@@ -11,6 +11,7 @@ import {
   createForgeWebScriptCompilerService,
   resolveForgeWebScriptModuleGraph,
   type ForgeWebScriptLinkConfiguration,
+  type ForgeWebScriptLinkProfile,
   type ForgeWebScriptModuleGraph,
   type ForgeWebScriptModuleResolver,
   type ForgeWebScriptArtifact,
@@ -35,6 +36,8 @@ export interface ForgeWebScriptPluginOptions {
   readonly crossProjectLinkMode?: ForgeWebScriptLinkConfiguration["crossProjectLinkMode"];
   /** Per-module link-mode overrides keyed by module name or path. */
   readonly linkModes?: ForgeWebScriptLinkConfiguration["linkModes"];
+  /** Select static flattening or explicit dynamic source-module linking. */
+  readonly linkProfile?: ForgeWebScriptLinkProfile;
   /** Resolve an imported FWS module before falling back to Vite/path resolution. */
   readonly resolveModule?: ForgeWebScriptModuleResolver["resolve"];
   /** Compiler version recorded in artifact and manifest metadata. */
@@ -145,6 +148,7 @@ export function compileForgeWebScriptFile(
     ...(options.optimization === undefined
       ? {}
       : { optimization: options.optimization }),
+    ...(options.linkProfile === undefined ? {} : { linkProfile: options.linkProfile }),
     ...(capabilities === undefined
       ? {}
       : { requestedCapabilities: capabilities }),
@@ -178,6 +182,7 @@ export async function compileForgeWebScriptGraph(
     defaultLinkMode: options.defaultLinkMode,
     crossProjectLinkMode: options.crossProjectLinkMode,
     linkModes: options.linkModes,
+    linkProfile: options.linkProfile,
   });
   const source = readFileSync(fileName, "utf8");
   const capabilities =
@@ -192,6 +197,7 @@ export async function compileForgeWebScriptGraph(
     ...(options.optimization === undefined
       ? {}
       : { optimization: options.optimization }),
+    ...(options.linkProfile === undefined ? {} : { linkProfile: options.linkProfile }),
     ...(capabilities === undefined
       ? {}
       : { requestedCapabilities: capabilities }),
@@ -202,6 +208,7 @@ export async function compileForgeWebScriptGraph(
       defaultLinkMode: options.defaultLinkMode,
       crossProjectLinkMode: options.crossProjectLinkMode,
       linkModes: options.linkModes,
+      linkProfile: options.linkProfile,
     },
     watCache: watCacheFor(options),
   });

@@ -82,7 +82,26 @@ persist deterministic `<key>.optimized.wat`, `<key>.unoptimized.wat`,
 `<key>.optimized.wasm`, and `<key>.unoptimized.wasm` artifacts. Cache writes
 are additive and unavailable or failing caches do not fail compilation.
 
+## Cross-project link profiles
+
+FWS supports two primary link profiles for cross-project dependency management:
+
+- `linkProfile: "static"`: Cross-project modules are flattened into a single
+  scanner graph artifact. This enables aggressive static optimization
+  (`static-aggressive` profile) and eliminates runtime module lookup at the
+  cost of artifact size.
+- `linkProfile: "dynamic"`: Explicit source-module boundaries are preserved.
+  `ForgeWebScriptDynamicLinkCache` is used to resolve decoder modules at runtime,
+  with cached function addresses keyed by artifact and manifest identity. This
+  uses the `dynamic-conservative` optimization profile, which is safer for
+  modular distributions.
+
 ## Lexical reference
+
+The canonical checked-in grammar is
+[`packages/forge-web-script/src/grammar/forge-web-script.ebnf`](../packages/forge-web-script/src/grammar/forge-web-script.ebnf).
+The lexical and parser summaries below explain the public v1 contract; the
+EBNF artifact is authoritative when an implementation detail is ambiguous.
 
 Whitespace is insignificant except inside strings. `//` starts a comment that
 runs to the end of the line. `/*` starts a block comment that ends at the next
@@ -96,11 +115,12 @@ bootstrap subset. Strings use double quotes and only JSON-compatible escapes:
 four hexadecimal digits. Raw line terminators and invalid escapes are lexical
 errors; use `\n` or `\r` instead. String values are UTF-8 values.
 
-The reserved words are `as`, `capability`, `case`, `class`, `constructor`, `do`,
-`else`, `enum`, `extends`, `export`, `for`, `fn`, `if`, `impl`, `import`,
-`interface`, `let`, `loop`, `match`, `module`, `new`, `noinline`, `return`,
-`struct`, `switch`, `trait`, `try`, `while`, `throw`, and `yield`. `true` and
-`false` are boolean literals. Punctuation is
+The reserved words are `as`, `capability`, `case`, `catch`, `class`,
+`constructor`, `default`, `do`, `else`, `enum`, `extends`, `export`, `for`,
+`fn`, `if`, `impl`, `import`, `inline`, `interface`, `iter`, `let`, `likely`,
+`loop`, `match`, `module`, `new`, `noinline`, `return`, `struct`, `switch`,
+`throw`, `trait`, `try`, `unlikely`, `while`, and `yield`. `true` and `false`
+are boolean literals. Punctuation is
 `{ } ( ) [ ] : ; , | .`; operators are
 `! % * + - / < <= == != > >= && || = -> => ::`.
 
@@ -109,6 +129,15 @@ original UTF-16 TypeScript string (offsets count UTF-16 code units), with
 one-based line and column fields. The
 bootstrap implementation reports offsets and line/column data together so a
 Vite adapter can produce source-mapped diagnostics without reparsing.
+
+The scanner retains comments as `comment` tokens so documentation comments can
+be attached to functions, while parser decisions skip all trivia. Operators
+with shared prefixes are selected by longest match. On malformed input the
+scanner consumes a bounded region, emits the stable `FWS-LEX-*` diagnostic, and
+continues to a single EOF token; this recovery behavior is part of the grammar
+contract. The TypeScript frontend measures all offsets in UTF-16 code units;
+self-hosted byte stages must convert UTF-8 byte spans before publishing the
+shared token contract.
 
 ### Function documentation comments
 
@@ -199,8 +228,10 @@ not change the module's ABI or generated executable contract.
 
 ## Source grammar
 
-The following grammar describes the v1 bootstrap surface. The grammar uses
-`*` and `?` in the usual EBNF sense:
+The checked-in EBNF artifact linked above describes the complete lexical,
+bootstrap, extended aggregate, and recovery contract. The following excerpt
+describes the v1 bootstrap surface for readers who do not need the full file.
+The grammar uses `*` and `?` in the usual EBNF sense:
 
 ```ebnf
 module       = { import | function } ;
@@ -238,7 +269,7 @@ left-associative. Parenthesized expressions are reserved for the next bootstrap
 revision; a compiler must issue a parse diagnostic rather than silently
 accepting them today.
 
-This grammar is the **bootstrap** grammar. It covers file-defined modules,
+This excerpt is the **bootstrap** grammar. It covers file-defined modules,
 capability/source imports, primitive signatures, calls, local values,
 expressions, structured `if`/`else`, `while`, C-style `for`, `do while`, and
 `return`. The loop forms are part of the executable bootstrap contract; only
@@ -504,6 +535,37 @@ Host exceptions are converted to `HostError` with the capability name and an
 opaque host error code. Guest traps are never converted into ordinary return
 values. Hosts may log trap details, but they must not expose secrets or raw
 browser exceptions to untrusted guest code.
+
+### Guest-owned checked memory operations
+
+FWS source modules that implement a stateful guest heap may use the compiler-owned
+operations `memory_alloc(size: u32) -> u32`,
+`memory_dealloc(pointer: u32, size: u32) -> unit`,
+`memory_realloc(pointer: u32, oldSize: u32, newSize: u32) -> u32`,
+`memory_load_u32(address: u32) -> u32`, and
+`memory_store_u32(address: u32, value: u32) -> unit`. These operations are
+lowered directly to the module allocator or checked WebAssembly memory
+instructions; they are not host imports and do not expose guest state to
+TypeScript.
+
+The allocator uses the same ownership and trap contract as `fws_alloc` and
+`fws_realloc`. A load or store requires a complete four-byte range within the
+current linear memory; an invalid range traps with `MemoryOutOfBounds` before
+the operation can partially execute. `memory_realloc` preserves the first
+`min(oldSize, newSize)` bytes and returns a guest-owned pointer, while callers
+must use the returned pointer and its exact current size for later operations.
+The stateful-memory fixture under
+`packages/forge-web-script/src/fixtures/stateful-memory.fws` is the conformance
+fixture for these signatures, allocator reuse, recursion, reset, and bounds
+traps.
+
+Compiler-owned byte readers also provide unsigned-index variants for guest
+front ends that represent source offsets as handles: `bytes_length_u32(value:
+bytes) -> u32` and `bytes_byte_at_u32(value: bytes, index: u32) -> u32`. They
+use the same pointer-length bounds checks as the signed `bytes_length` and
+`bytes_byte_at` operations and are not host imports. The WebLua front end uses
+these operations to keep lexer offsets and guest memory addresses in one
+checked `u32` domain.
 
 ### Raw WASM ABI and generated ESM contract
 
@@ -890,12 +952,20 @@ contract.
 ## Tooling cutover and bootstrap boundary
 
 The CLI, Vite plugin, language service, and LSP all consume the public compiler
-service contract. Their default service runs the bounded FWS-authored lex/token
-normalization stage through the VM before the compatibility compiler produces the
-artifact. The remaining frontend, linker, optimizer, manifest, and Wasm-emission
-stages are still seed-backed in this release; this boundary is intentional and
-is exposed as `ForgeWebScriptSelfHostedStageReport` rather than being presented
-as complete self-hosting.
+service contract. The lexer migration is intentionally LSP-first: the checked-in
+EBNF grammar defines the TypeScript token contract, the language service and
+editor adapters are the first acceptance boundary, and compiler/frontend or
+self-hosted ownership must not move until token kinds, diagnostics, symbols,
+completion, hover, and UTF-16 ranges conform. The current bounded FWS-authored
+lex/token stage remains a compatibility parity path while the TypeScript lexer
+and language-service gate are being migrated; it is not the grammar authority.
+
+After the LSP gate is green, the same grammar will be ported to the FWS/VM lexer
+and then to the bounded parser-module stage. The remaining frontend, linker,
+optimizer, manifest, and Wasm-emission stages are still seed-backed in this
+release; this boundary is intentional and is exposed as
+`ForgeWebScriptSelfHostedStageReport` rather than being presented as complete
+self-hosting.
 
 The CLI selects the VM mode with `--vm-mode interpret|jit|aot`. The Vite plugin
 and language-service workspace options use the corresponding `selfHostedVmMode`

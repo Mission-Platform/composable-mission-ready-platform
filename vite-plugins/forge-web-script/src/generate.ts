@@ -45,6 +45,9 @@ export function createForgeWebScriptDeclarationsSource(
     graphHash: compiled.artifact.graphHash,
     linkMode: compiled.artifact.linkMode,
     linkedModules: compiled.artifact.linkedModules,
+    linkProfile: compiled.artifact.linkProfile,
+    optimizationProfile: compiled.artifact.optimizationProfile,
+    dynamicLinkMetadata: compiled.artifact.dynamicLinkMetadata,
   };
   return `export const declarations = ${JSON.stringify(compiled.artifact.declarations)};\nexport const graphMetadata = ${JSON.stringify(graphMetadata)};\nexport const selfHostedMetadata = ${JSON.stringify(compiled.selfHosted ?? null)};\nexport default declarations;\n`;
 }

@@ -92,6 +92,11 @@ function assignedNames(statements: readonly ForgeWebScriptIrStatement[], names =
 
         break;
       }
+      case 'switch': {
+        for (const arm of statement.cases) assignedNames(arm.body, names);
+        if (statement.defaultCase !== undefined) assignedNames(statement.defaultCase, names);
+        break;
+      }
       case 'while':
       case 'do-while': {
         assignedNames(statement.body, names);
@@ -436,6 +441,9 @@ function optimizeStatements(
         cases: statement.cases.map((arm) => ({ ...arm, body: optimizeStatements(arm.body, new Map(locals), counters) })),
         ...(statement.defaultCase === undefined ? {} : { defaultCase: optimizeStatements(statement.defaultCase, new Map(locals), counters) }),
       });
+      // A value reassigned in any case is no longer a known constant after the switch.
+      for (const arm of statement.cases) for (const name of assignedNames(arm.body)) locals.delete(name);
+      if (statement.defaultCase !== undefined) for (const name of assignedNames(statement.defaultCase)) locals.delete(name);
       continue;
     }
     if (statement.kind === 'yield') {
@@ -478,6 +486,9 @@ function optimizeStatements(
         reason: 'Selected the branch of a condition proven constant without evaluating a host call.',
       });
       result.push(...optimized);
+      // The inlined branch was optimized against an isolated scope; drop constants
+      // it reassigned so later statements do not read stale values.
+      for (const name of assignedNames(selected)) locals.delete(name);
       if (optimized.some(({ kind }) => kind === 'return')) terminated = true;
     } else {
       if (statement.conditionalHint !== undefined)
@@ -492,6 +503,10 @@ function optimizeStatements(
         statement.alternate === undefined
           ? undefined
           : optimizeStatements(statement.alternate, new Map(locals), counters);
+      // A value reassigned in either branch is no longer a known constant after the if.
+      for (const name of assignedNames(statement.consequent)) locals.delete(name);
+      if (statement.alternate !== undefined)
+        for (const name of assignedNames(statement.alternate)) locals.delete(name);
       result.push({ ...statement, condition, consequent, ...(alternate === undefined ? {} : { alternate }) });
     }
   }

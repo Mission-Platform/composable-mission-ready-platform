@@ -1,10 +1,14 @@
-// Bounded self-hosted lex / token-normalization stage.
-// The checked-in VM bytecode in lex-stage.ts is the bootstrap lowering of this algorithm.
-// Input bytes are supplied as the ForgeWebScriptSourceBytes aggregate (len + byte-at).
+// Forge Web Script v1 byte-oriented lexer.
+// The checked-in VM bytecode in lex-stage.ts is the bounded lowering of this
+// grammar-directed scanner. Input bytes are supplied as the
+// ForgeWebScriptSourceBytes aggregate (len + byte-at); token payload framing is
+// performed by the stage codec after the scan.
 
 export fn is_ws(byte: i32) -> bool {
   if byte == 9 { return true; }
   if byte == 10 { return true; }
+  if byte == 11 { return true; }
+  if byte == 12 { return true; }
   if byte == 13 { return true; }
   if byte == 32 { return true; }
   return false;
@@ -34,16 +38,92 @@ export fn is_alnum(byte: i32) -> bool {
   return false;
 }
 
+export fn is_hex(byte: i32) -> bool {
+  if is_digit(byte) { return true; }
+  if byte >= 65 {
+    if byte <= 70 { return true; }
+  }
+  if byte >= 97 {
+    if byte <= 102 { return true; }
+  }
+  return false;
+}
+
+export fn is_two_char_op(first: i32, second: i32) -> bool {
+  if first == 33 { if second == 61 { return true; } }
+  if first == 38 { if second == 38 { return true; } }
+  if first == 61 { if second == 61 { return true; } }
+  if first == 124 { if second == 124 { return true; } }
+  if first == 60 { if second == 61 { return true; } }
+  if first == 62 { if second == 61 { return true; } }
+  if first == 45 { if second == 62 { return true; } }
+  if first == 61 { if second == 62 { return true; } }
+  if first == 58 { if second == 58 { return true; } }
+  return false;
+}
+
+export fn is_one_char_op(byte: i32) -> bool {
+  if byte == 33 { return true; }
+  if byte == 37 { return true; }
+  if byte == 42 { return true; }
+  if byte == 43 { return true; }
+  if byte == 45 { return true; }
+  if byte == 47 { return true; }
+  if byte == 60 { return true; }
+  if byte == 62 { return true; }
+  if byte == 61 { return true; }
+  return false;
+}
+
+export fn is_punctuation(byte: i32) -> bool {
+  if byte == 123 { return true; }
+  if byte == 125 { return true; }
+  if byte == 40 { return true; }
+  if byte == 41 { return true; }
+  if byte == 91 { return true; }
+  if byte == 93 { return true; }
+  if byte == 58 { return true; }
+  if byte == 59 { return true; }
+  if byte == 44 { return true; }
+  if byte == 124 { return true; }
+  if byte == 46 { return true; }
+  return false;
+}
+
+export fn is_simple_escape(byte: i32) -> bool {
+  if byte == 34 { return true; }
+  if byte == 92 { return true; }
+  if byte == 47 { return true; }
+  if byte == 98 { return true; }
+  if byte == 102 { return true; }
+  if byte == 110 { return true; }
+  if byte == 114 { return true; }
+  if byte == 116 { return true; }
+  return false;
+}
+
+// The lowered scanner applies these decisions in order: trivia, identifier,
+// decimal number, string/escape, longest-match operator, punctuation, then a
+// one-byte error recovery token. Unterminated comments and strings consume to
+// EOF; invalid escapes and raw line terminators retain their diagnostic span.
+export fn scan_token_kind(first: i32, second: i32) -> i32 {
+  if is_alpha(first) { return 1; }
+  if is_digit(first) { return 2; }
+  if first == 34 { return 3; }
+  if is_two_char_op(first, second) { return 4; }
+  if is_one_char_op(first) { return 4; }
+  if is_punctuation(first) { return 5; }
+  return 6;
+}
+
 export fn fnv_mix(hash: i32, byte: i32) -> i32 {
-  // Bootstrap lowering uses 32-bit xor-multiply (FNV-1a). FWS lacks '^', so the
-  // VM lowering owns the exact mix while this source documents the stage shape.
-  let mixed: i32 = hash + byte;
-  return mixed;
+  // The VM lowering implements the exact 32-bit xor-multiply operation.
+  return hash + byte;
 }
 
 export fn lex_fingerprint(length: i32) -> i32 {
-  // Walks source bytes (via VM aggregate ops), emits normalized token-kind tags,
-  // and folds them with FNV-1a. See computeForgeWebScriptLexStageFingerprint.
+  // Walk source bytes, emit normalized token-kind tags, and fold them with
+  // FNV-1a. The VM lowering supplies byte-at and bounded recovery operations.
   return lex_fingerprint_step(0, length, 2166136261);
 }
 

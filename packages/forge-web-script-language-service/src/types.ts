@@ -1,6 +1,7 @@
 import type {
   ForgeWebScriptDiagnosticPhase,
   ForgeWebScriptDiagnosticSeverity,
+  ForgeWebScriptImportTypeEnvironment,
   ForgeWebScriptModule,
   ForgeWebScriptSelfHostedStageReport,
   ForgeWebScriptSelfHostedStageRunner,
@@ -63,6 +64,10 @@ export interface ForgeWebScriptWorkspaceOptions {
   /** VM mode used by the bounded FWS compiler stage for editor parity checks. */
   readonly selfHostedVmMode?: ForgeWebScriptVmExecutionMode;
   readonly selfHostedRunner?: ForgeWebScriptSelfHostedStageRunner;
+}
+
+export interface ForgeWebScriptAnalysisOptions {
+  readonly importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment;
 }
 
 export interface ForgeWebScriptWorkspaceHost {
@@ -198,6 +203,7 @@ export interface ForgeWebScriptAnalysis {
   readonly version: number;
   readonly valid: boolean;
   readonly module?: ForgeWebScriptModule;
+  readonly importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment;
   readonly diagnostics: readonly ForgeWebScriptLanguageDiagnostic[];
   readonly symbols: readonly ForgeWebScriptSymbol[];
   readonly tokens: readonly ForgeWebScriptTokenClassification[];

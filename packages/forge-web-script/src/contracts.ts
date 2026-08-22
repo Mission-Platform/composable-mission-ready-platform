@@ -3,7 +3,12 @@ import type { ForgeWebScriptWatCache } from './cache.js';
 import type { ForgeWebScriptDiagnostic } from './diagnostics.js';
 import type { ForgeWebScriptLinkConfiguration, ForgeWebScriptModuleGraph } from './graph.js';
 import type { ForgeWebScriptIrModule } from './ir.js';
-import type { ForgeWebScriptAbiManifest, ForgeWebScriptLinkedExport, ForgeWebScriptSourceImport } from './manifest.js';
+import type {
+  ForgeWebScriptAbiManifest,
+  ForgeWebScriptDynamicLinkMetadata,
+  ForgeWebScriptLinkedExport,
+  ForgeWebScriptSourceImport,
+} from './manifest.js';
 import type { ForgeWebScriptOptimizationReport } from './optimizer.js';
 import type {
   ForgeWebScriptSelfHostedCompilerStage,
@@ -12,6 +17,15 @@ import type {
 import type { ForgeWebScriptStandardLibraryIdentity } from './stdlib/regex.js';
 
 export type ForgeWebScriptOptimization = 'debug' | 'release';
+
+/** Named cross-project packaging profile used by graph-aware consumers. */
+export type ForgeWebScriptLinkProfile = 'static' | 'dynamic';
+
+/** Link-time policy recorded alongside the ordinary compiler optimization. */
+export type ForgeWebScriptLinkOptimizationProfile =
+  | 'standard'
+  | 'static-aggressive'
+  | 'dynamic-conservative';
 
 export interface ForgeWebScriptCompilerLogger {
   readonly scope: string;
@@ -104,6 +118,7 @@ export interface ForgeWebScriptCompileInput {
   readonly root?: string;
   readonly watCache?: ForgeWebScriptWatCache;
   readonly linkConfiguration?: ForgeWebScriptLinkConfiguration;
+  readonly linkProfile?: ForgeWebScriptLinkProfile;
   /** Compiler-owned stdlib identities are part of cache/artifact inputs. */
   readonly standardLibrary?: ForgeWebScriptStandardLibraryIdentity;
   readonly async?: ForgeWebScriptAsyncCompilationContract;
@@ -121,6 +136,7 @@ export interface ForgeWebScriptGraphCompileInput {
   readonly optimization?: ForgeWebScriptOptimization;
   readonly requestedCapabilities?: readonly string[];
   readonly linkConfiguration?: ForgeWebScriptLinkConfiguration;
+  readonly linkProfile?: ForgeWebScriptLinkProfile;
   readonly standardLibrary?: ForgeWebScriptStandardLibraryIdentity;
   readonly watCache?: ForgeWebScriptWatCache;
   readonly async?: ForgeWebScriptAsyncCompilationContract;
@@ -136,6 +152,8 @@ export interface ForgeWebScriptFrontendLinkMetadata {
   readonly sourceImports?: readonly ForgeWebScriptSourceImport[];
   readonly linkedExports?: readonly ForgeWebScriptLinkedExport[];
   readonly linkedModules: readonly string[];
+  readonly linkProfile?: ForgeWebScriptLinkProfile;
+  readonly optimizationProfile?: ForgeWebScriptLinkOptimizationProfile;
 }
 
 /** The stable, backend-independent result of parsing, checking, and lowering a module. */
@@ -210,6 +228,9 @@ export interface ForgeWebScriptArtifact {
   readonly targetFeatures?: ForgeWebScriptTargetFeatures;
   readonly compilerHints?: ForgeWebScriptCompilerHints;
   readonly optimizationReport?: ForgeWebScriptOptimizationReport;
+  readonly linkProfile?: ForgeWebScriptLinkProfile;
+  readonly optimizationProfile?: ForgeWebScriptLinkOptimizationProfile;
+  readonly dynamicLinkMetadata?: ForgeWebScriptDynamicLinkMetadata;
   readonly diagnostics: readonly ForgeWebScriptDiagnostic[];
 }
 

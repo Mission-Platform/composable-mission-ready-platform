@@ -112,6 +112,51 @@ describe('Forge Web Script typed IR optimizer', () => {
     expect(releaseExports.f()).toBe(5);
   });
 
+  it('invalidates a constant when a local is reassigned inside a conditional branch', () => {
+    // Regression: release constant propagation used to keep `x = 0` after a
+    // branch reassigned it, so `return x` folded to 0 even when the branch ran.
+    const source = `export fn f(cond: i32) -> i32 {
+      let x: i32 = 0;
+      if cond == 1 { x = 7; }
+      return x;
+    }`;
+    const debug = compileForgeWebScript({ source, fileName: 'reassign.fws', compilerVersion: '0.1.0', optimization: 'debug' });
+    const release = compileForgeWebScript({ source, fileName: 'reassign.fws', compilerVersion: '0.1.0', optimization: 'release' });
+
+    expect(debug.diagnostics).toEqual([]);
+    expect(release.diagnostics).toEqual([]);
+
+    const debugExports = new WebAssembly.Instance(new WebAssembly.Module(debug.wasm!), {}).exports as unknown as {
+      f: (cond: number) => number;
+    };
+    const releaseExports = new WebAssembly.Instance(new WebAssembly.Module(release.wasm!), {}).exports as unknown as {
+      f: (cond: number) => number;
+    };
+
+    expect(debugExports.f(1)).toBe(7);
+    expect(releaseExports.f(1)).toBe(7);
+    expect(debugExports.f(0)).toBe(0);
+    expect(releaseExports.f(0)).toBe(0);
+  });
+
+  it('invalidates a constant when a local is reassigned inside a switch case', () => {
+    const source = `export fn f(cond: i32) -> i32 {
+      let x: i32 = 0;
+      switch cond {
+        case 1: { x = 9; }
+        default: {}
+      }
+      return x;
+    }`;
+    const release = compileForgeWebScript({ source, fileName: 'switch-reassign.fws', compilerVersion: '0.1.0', optimization: 'release' });
+    expect(release.diagnostics).toEqual([]);
+    const releaseExports = new WebAssembly.Instance(new WebAssembly.Module(release.wasm!), {}).exports as unknown as {
+      f: (cond: number) => number;
+    };
+    expect(releaseExports.f(1)).toBe(9);
+    expect(releaseExports.f(0)).toBe(0);
+  });
+
   it('represents iterator suspension points without imperative IR nodes', () => {
     const parsed = parseForgeWebScript(
       `export iter fn values(source: Iterator<i32>) -> Iterator<i32> {

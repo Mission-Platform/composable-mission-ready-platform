@@ -1,0 +1,35 @@
+export fn write_and_read(value: u32) -> u32 {
+  let pointer: u32 = memory_alloc(4);
+  memory_store_u32(pointer, value);
+  let resized: u32 = memory_realloc(pointer, 4, 8);
+  let result: u32 = memory_load_u32(resized);
+  memory_dealloc(resized, 8);
+  return result;
+}
+
+export fn write_and_read_f64(value: f64) -> f64 {
+  let pointer: u32 = memory_alloc(8);
+  memory_store_f64(pointer, value);
+  let result: f64 = memory_load_f64(pointer);
+  memory_dealloc(pointer, 8);
+  return result;
+}
+
+export fn convert_u32_to_f64(value: u32) -> f64 {
+  return f64_from_u32(value);
+}
+
+export fn recursive_sum(value: i32) -> i32 {
+  if value == 0 {
+    return 0;
+  }
+  return value + recursive_sum(value - 1);
+}
+
+export fn invalid_load(address: u32) -> u32 {
+  return memory_load_u32(address);
+}
+
+export fn invalid_load_f64(address: u32) -> f64 {
+  return memory_load_f64(address);
+}

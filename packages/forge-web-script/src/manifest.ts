@@ -15,6 +15,8 @@ import type {
 import type {
   ForgeWebScriptAsyncCapability,
   ForgeWebScriptAsyncCompilationContract,
+  ForgeWebScriptLinkOptimizationProfile,
+  ForgeWebScriptLinkProfile,
   ForgeWebScriptTargetFeatures,
 } from './contracts.js';
 import type { ForgeWebScriptLinkMode } from './graph.js';
@@ -73,7 +75,10 @@ export interface ForgeWebScriptAbiManifest {
   readonly graphHash?: string;
   readonly projectRoot?: string;
   readonly linkMode?: ForgeWebScriptLinkMode;
+  readonly linkProfile?: ForgeWebScriptLinkProfile;
+  readonly optimizationProfile?: ForgeWebScriptLinkOptimizationProfile;
   readonly linkedExports?: readonly ForgeWebScriptLinkedExport[];
+  readonly dynamicLinkMetadata?: ForgeWebScriptDynamicLinkMetadata;
   readonly requiredCapabilities: readonly string[];
   readonly memory: ForgeWebScriptMemoryLayout;
   readonly valueRepresentations: Readonly<Record<ForgeWebScriptPrimitiveType, ForgeWebScriptValueRepresentation>>;
@@ -153,6 +158,20 @@ export interface ForgeWebScriptSourceImport {
   readonly linkMode?: ForgeWebScriptLinkMode;
   /** Export signatures used to type an explicitly dynamic source-module link. */
   readonly exports?: readonly ForgeWebScriptAbiFunction[];
+}
+
+/** Manifest-visible binding information for an explicitly dynamic module. */
+export interface ForgeWebScriptDynamicModuleBinding {
+  readonly moduleId: string;
+  readonly alias: string;
+  readonly exports: readonly ForgeWebScriptAbiFunction[];
+}
+
+/** Stable metadata consumed by dynamic loaders and their dispatch caches. */
+export interface ForgeWebScriptDynamicLinkMetadata {
+  readonly artifactId: string;
+  readonly manifestHash: string;
+  readonly modules: readonly ForgeWebScriptDynamicModuleBinding[];
 }
 
 export interface ForgeWebScriptLinkedExport {
@@ -331,6 +350,9 @@ export interface ForgeWebScriptAbiManifestOptions {
   readonly graphHash?: string;
   readonly projectRoot?: string;
   readonly linkMode?: ForgeWebScriptLinkMode;
+  readonly linkProfile?: ForgeWebScriptLinkProfile;
+  readonly optimizationProfile?: ForgeWebScriptLinkOptimizationProfile;
+  readonly dynamicLinkMetadata?: ForgeWebScriptDynamicLinkMetadata;
   readonly sourceImports?: readonly ForgeWebScriptSourceImport[];
   readonly linkedExports?: readonly ForgeWebScriptLinkedExport[];
   readonly standardLibrary?: ForgeWebScriptStandardLibraryIdentity;
@@ -437,6 +459,9 @@ export function createForgeWebScriptAbiManifest(
     ...(options.graphHash === undefined ? {} : { graphHash: options.graphHash }),
     ...(options.projectRoot === undefined ? {} : { projectRoot: options.projectRoot }),
     ...(options.linkMode === undefined ? {} : { linkMode: options.linkMode }),
+    ...(options.linkProfile === undefined ? {} : { linkProfile: options.linkProfile }),
+    ...(options.optimizationProfile === undefined ? {} : { optimizationProfile: options.optimizationProfile }),
     ...(options.linkedExports === undefined ? {} : { linkedExports: options.linkedExports }),
+    ...(options.dynamicLinkMetadata === undefined ? {} : { dynamicLinkMetadata: options.dynamicLinkMetadata }),
   };
 }
