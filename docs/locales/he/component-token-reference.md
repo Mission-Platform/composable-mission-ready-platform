@@ -1,45 +1,64 @@
-# זיוף הפניה לרכיב-אסימון
+# Forge component-token reference
 
-תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
+This is the canonical inventory and Figma handoff for Forge-authored components. It is intentionally independent of
+the generated framework adapters: the same entry applies to Vue, React, Solid, Svelte, and Web Components.
 
-> מקור באנגלית: [docs/component-token-reference.md](../../component-token-reference.md)
-> שפה: עברית (he)
+## Reading the contract
 
-זהו המלאי הקנוני ומסירת Figma עבור רכיבים שכתב Forge. זה בלתי תלוי בכוונה
-מתאמי המסגרת שנוצרו: אותו ערך חל על Vue, React, Solid, Svelte, ורכיבי אינטרנט.
-
-## קורא את החוזה
-
-מקור האמת הוא [`packages/tokens/tokens/component.tokens.json`](../../../packages/tokens/tokens/component.tokens.json).
-הנתיב שלו ממפה ישירות למאפיין מותאם אישית של CSS ולמשתנה Figma:
+The source of truth is the recursive component source tree under
+[`packages/tokens/tokens/component/`](../packages/tokens/tokens/component/), grouped by atomic level
+(`atoms/`, `molecules/`, `organisms/`, and `templates/`). Each source is independently generated, while all sources
+preserve the same stable `component.*` DTCG contract:
 
 ```text
 component.<component>.<variant?>.<slot>.<state?>
-  -> --mp-component-<component>-<variant?>-<slot>-<state?>
+  -> --mp-<component>-<variant?>-<slot>-<state?>
   -> Mission Platform / Component / <component> / <variant?> / <slot> / <state?>
 ```
 
-ערכי רכיבים כינויים למסמכי הנושא הפרימיטיביים והסמנטיים הקיימים. כתוצאה מכך, לאוסף Figma יש
-מצבי **אור** ו**כהה** ללא שכפול אסימוני רכיבים. התנהגות אור/כהה בזמן ריצה ממשיכה להשתמש
-`color-scheme`, `light-dark()`, `[data-theme]`, ו `.theme-*` סיכות תת-עץ. צרכנים וספר סיפורים עשויים לעקוף כל
-עלה למטה `component` ב `overrides.tokens.json`; חלה דריסה לאחר גיליון הסגנונות האסימון שנוצר.
+The DTCG path is also the Figma and runtime override path; only the generated CSS name drops the `component` wrapper.
+For example, `component.button.primary.background.hover` is emitted as `--mp-button-primary-background-hover`. A
+source ID such as `component/atoms/button` identifies the file that owns the contract, not a new DTCG path.
 
-### משבצות סמנטיות ואוצר מילים של המדינה
+Component values alias the existing primitive and semantic theme documents. Consequently, the Figma collection has
+**Light** and **Dark** modes without duplicating component tokens. Runtime light/dark behavior continues to use
+`color-scheme`, `light-dark()`, `[data-theme]`, and `.theme-*` subtree pins. Consumers and Storybook may override any
+leaf below `component` in `overrides.tokens.json`; an override is applied after the generated token stylesheet. Overrides
+continue to use `component.*` keys even though CSS custom properties use the layer namespace.
 
-| משפחת חריץ | תפקיד פיגמה | מצבים אופייניים |
+## Source and generated output layout
+
+Every visual contract has one owner under the atomic source tree. The generator discovers new files recursively, so a
+new source does not require a descriptor registration:
+
+```text
+packages/tokens/tokens/component/<atomic-level>/<source>.tokens.json
+  -> packages/tokens/src/generated/scss/component/<atomic-level>/_<source>.scss
+  -> packages/tokens/src/generated/scss/component/<atomic-level>/_<source>-vars.scss
+  -> packages/tokens/src/generated/ts/component/<atomic-level>/<source>.ts
+```
+
+The generated SCSS and TypeScript barrels include every component source in deterministic source-ID order. Component
+files may reuse shared contracts such as `button`, `field`, `input`, `navigation`, and `overlay`; composed components
+must not duplicate those token paths. Behavior-only components, inherited-only glyphs, and layout/DOM formulas remain
+outside the visual token contract unless an inventory entry assigns them visual ownership.
+
+### Semantic slots and state vocabulary
+
+| Slot family                                  | Figma role                                  | Typical states                                                                         |
 | -------------------------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `background` / `surface` / `track` / `thumb` | משטח מילוי או שליטה | `default`, `hover`, `active`, `disabled`, `loading`, `expanded`, `selected`, `invalid` |
-| `text` / `label` / `helper-text`             | צבע טיפוגרפיה או סגנון טיפוגרפיה בשם | `default`, `hover`, `disabled`, `selected`, `invalid`                                  |
-| `border` / `focus-ring`                      | חיווי שבץ ומקלדת | `default`, `hover`, `focus-visible`, `active`, `disabled`, `selected`, `invalid`       |
-| `padding` / `gap` / `radius` / `shadow`      | גיאומטריה וגובה | ברירת מחדל או גודל ספציפי |
-| `opacity` / `transition`                     | דה-הדגשה ותנועה | `disabled`, `loading`, `hover`, `active`                                               |
+| `background` / `surface` / `track` / `thumb` | Fill or control surface                     | `default`, `hover`, `active`, `disabled`, `loading`, `expanded`, `selected`, `invalid` |
+| `text` / `label` / `helper-text`             | Typography colour or named typography style | `default`, `hover`, `disabled`, `selected`, `invalid`                                  |
+| `border` / `focus-ring`                      | Stroke and keyboard indication              | `default`, `hover`, `focus-visible`, `active`, `disabled`, `selected`, `invalid`       |
+| `padding` / `gap` / `radius` / `shadow`      | Geometry and elevation                      | default or size-specific                                                               |
+| `opacity` / `transition`                     | De-emphasis and motion                      | `disabled`, `loading`, `hover`, `active`                                               |
 
-רק מדינות הנתמכות על ידי רכיב מופיעות למטה. `expanded` משמש לגילוי/בחר משטחים, `selected`
-עבור אפשרויות/כרטיסיות/ניווט, ו `invalid` לאימות טופס; אין צורך במשתני מצב שאינם בשימוש.
+Only states supported by a component are listed below. `expanded` is used for disclosure/select surfaces, `selected`
+for choices/tabs/navigation, and `invalid` for form validation; no unused state variables are required.
 
-## סיכום מלאי
+## Inventory summary
 
-מלאי המאגר מבוסס על נתיבי המקור הצרים הבאים:
+The repository inventory is based on the following narrow source paths:
 
 ```text
 packages/*/src/components/**/*.tsx
@@ -47,225 +66,233 @@ packages/*/src/components/**/*.stories.tsx
 packages/*/src/components/**/*.module.scss
 ```
 
-| חפץ | לספור | המשמעות |
+| Artifact              | Count | Meaning                                                                              |
 | --------------------- | ----: | ------------------------------------------------------------------------------------ |
-| מקורות רכיב TSX |   249 | מקורות לא-סיפור Forge ורכיבי דואר אלקטרוני |
-| סיפורים משותפים |   246 | לשלושה מקורות רקורסיביים של Markdown/עץ עוזר אין בכוונה סיפור עצמאי |
-| מודולי CSS |   219 | מודולים בסגנון חזותי מקומי; דוא"ל מוטבע וחוזים שעברו בירושה מתועדים גם כן |
-| חבילות |    20 | כל חבילה המכילה מקור רכיב |
+| Component TSX sources |   249 | Non-story Forge and email component sources                                          |
+| Co-located stories    |   246 | Three recursive Markdown/tree helper sources intentionally have no standalone story  |
+| CSS modules           |   219 | Local visual style modules; inline email and inherited contracts are also documented |
+| Packages              |    20 | Every package containing a component source                                          |
 
-הסיווג הוא לפי מקור, לא לפי חבילה:
+The post-audit generated surface contains **2,841 token leaves**: 132 active, 2,161 protected, and 548 ambiguous;
+there are no remaining candidates. The cleanup removed 189 unreachable leaves in total: the 185 candidates from the
+review report plus 4 net second-order palette leaves (6 removed, 2 restored as reachable `.500` leaves) exposed after alias closure. This reduction affects generated
+primitive, semantic, typography, and structural exports only; retained `component.*` paths and their
+`--mp-<layer>-*` names are unchanged. The three unresolved aliases (`color.surface.raised`, `radius.2xs`, and
+`font.weight.light`) predate this audit and remain unchanged.
 
-- **Visual** - הבעלים של מודול CSS או פלט חזותי מוטבע ומפות לחוזה המוצג בטבלת החבילות.
-- **ירושה-חזותי** - לא מציג מארח בסגנון עצמאי; המראה שלו מגיע מילד, הורה, `currentColor`,
-  מארח/קנבס של צד שלישי, או החוזה של הרכיב המורכב.
-- **התנהגות בלבד** - שולט בעיבוד או בהתנהגות נקודת התצוגה ואינו מקבל החלטה חזותית משל עצמה.
+Classification is per source, not per package:
 
-כל כדור למטה הוא ערך מלאי אחד. אלא אם כן מסומן סיפור `story: missing`, לרכיב יש התאמה
-`<component>.stories.tsx` ליד המקור. כותרת חבילה/רמה מספקת את קידומת נתיב המקור היציבה.
+- **Visual** — owns a CSS module or inline visual output and maps to the contract shown in the package table.
+- **Inherited-visual** — renders no independently styled host; its appearance comes from a child, parent, `currentColor`,
+  a third-party host/canvas, or the contract of the composed component.
+- **Behavior-only** — controls rendering or viewport behavior and makes no visual decision of its own.
+
+Every bullet below is one inventory entry. Unless a story is marked `story: missing`, the component has a matching
+`<component>.stories.tsx` beside the source. A package/level heading supplies the stable source path prefix.
 
 ## `@mission-platform/components`
 
-### אטומים - `packages/components/src/components/atoms/`
+### Atoms — `packages/components/src/components/atoms/`
 
-| רכיב | סיווג | חוזה | אביזרי מראה / מצבים |
+| Component                | Classification | Contract                                        | Appearance props / states                                                                   |
 | ------------------------ | -------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| `forge-avatar`           | חזותי | `component.media`                               | `src`, `initials`, `size`, `shape`, `status`, `variant`; צבעי מצב ברירת מחדל/מושבת |
-| `forge-background-video` | חזותי | `component.media`                               | מקור, הפעלה אוטומטית/מושתק/לולאה; ברירת מחדל/שכבת על |
-| `forge-badge`            | חזותי | `component.feedback`                            | `variant`, `size`; ברירת מחדל/מושבת |
-| `forge-button`           | חזותי | `component.button.<variant>`                    | `variant`, `size`, `padding`, `margin`; default/hover/active/focus-visible/disabled/loading |
-| `forge-icon-button`      | חזותי | `component.button.<variant>` + `component.icon` | מַדבֵּקָה, `variant`, `size`; default/hover/active/focus-visible/disabled/loading |
-| `forge-progress-bar`     | חזותי | `component.feedback`                            | ערך, וריאנט; ברירת מחדל/טעינה/מושבת |
-| `forge-quote`            | חזותי | `component.typography` + `component.surface`    | ציטוט, וריאנט; ברירת מחדל |
-| `forge-responsive-image` | חזותי | `component.media`                               | מקור, היבט/התאמה; ברירת מחדל/מציין מיקום |
-| `forge-responsive-video` | חזותי | `component.media`                               | מקור, פקדים/הפעלה אוטומטית; ברירת מחדל/שכבת על |
-| `forge-separator`        | חזותי | `component.surface`                             | הִתמַצְאוּת; ברירת מחדל |
-| `forge-skeleton`         | חזותי | `component.feedback`                            | צורה/גודל; טוען |
-| `forge-spinner`          | חזותי | `component.feedback`                            | גודל, וריאנט; טוען |
-| `forge-stack`            | חזותי | `component.layout`                              | כיוון, `gap`, יישור; ברירת מחדל |
-| `forge-status-icon`      | חזותי | `component.feedback.<status>`                   | מצב, גודל; ברירת מחדל/מושבת |
-| `forge-tag`              | חזותי | `component.feedback`                            | וריאנט, גודל, נשלף; ברירת מחדל/רחף/מושבת |
-| `forge-theme-toggle`     | חזותי | `component.button` + `component.icon`           | נושא, גודל; ברירת מחדל/רחף/פעיל/נבחר |
-| `forge-typography`       | חזותי | `component.typography`                          | `as`, וריאנט טיפוגרפיה, צבע; default/link/disabled |
+| `forge-avatar`           | visual         | `component.media`                               | `src`, `initials`, `size`, `shape`, `status`, `variant`; default/disabled status colours    |
+| `forge-background-video` | visual         | `component.media`                               | source, autoplay/muted/loop; default/overlay                                                |
+| `forge-badge`            | visual         | `component.feedback`                            | `variant`, `size`; default/disabled                                                         |
+| `forge-button`           | visual         | `component.button.<variant>`                    | `variant`, `size`, `padding`, `margin`; default/hover/active/focus-visible/disabled/loading |
+| `forge-icon-button`      | visual         | `component.button.<variant>` + `component.icon` | label, `variant`, `size`; default/hover/active/focus-visible/disabled/loading               |
+| `forge-progress-bar`     | visual         | `component.feedback`                            | value, variant; default/loading/disabled                                                    |
+| `forge-quote`            | visual         | `component.typography` + `component.surface`    | citation, variant; default                                                                  |
+| `forge-responsive-image` | visual         | `component.media`                               | source, aspect/fit; default/placeholder                                                     |
+| `forge-responsive-video` | visual         | `component.media`                               | source, controls/autoplay; default/overlay                                                  |
+| `forge-separator`        | visual         | `component.surface`                             | orientation; default                                                                        |
+| `forge-skeleton`         | visual         | `component.feedback`                            | shape/size; loading                                                                         |
+| `forge-spinner`          | visual         | `component.feedback`                            | size, variant; loading                                                                      |
+| `forge-stack`            | visual         | `component.layout`                              | direction, `gap`, alignment; default                                                        |
+| `forge-status-icon`      | visual         | `component.feedback.<status>`                   | status, size; default/disabled                                                              |
+| `forge-tag`              | visual         | `component.feedback`                            | variant, size, removable; default/hover/disabled                                            |
+| `forge-theme-toggle`     | visual         | `component.button` + `component.icon`           | theme, size; default/hover/active/selected                                                  |
+| `forge-typography`       | visual         | `component.typography`                          | `as`, typography variant, colour; default/link/disabled                                     |
 
-### מולקולות - `packages/components/src/components/molecules/`
+### Molecules — `packages/components/src/components/molecules/`
 
-| רכיב | סיווג | חוזה | אביזרי מראה / מצבים |
-| ------------------------- | ---------------- | ---------------------------------------------- | ---------------------------------------------------------------------- |
-| `forge-accordion`         | חזותי | `component.surface` + `component.navigation`   | פריטים, מורחבים; ברירת מחדל/רחף/פוקוס-נראה/מורחב/מושבת |
-| `forge-alert-banner`      | חזותי | `component.feedback` + `component.overlay`     | סטטוס, ניתן לביטול; ברירת מחדל/רחף/מיקוד גלוי |
-| `forge-breadcrumb`        | חזותי | `component.navigation`                         | פריטים; ברירת מחדל/רחף/נבחר/למיקוד גלוי |
-| `forge-button-group`      | חזותי | `component.button-group`                       | אוריינטציה, מצורף, וריאנט, פער; ברירת מחדל/מיקוד גלוי/מושבת |
-| `forge-card`              | חזותי | `component.surface`                            | וריאנט, ריפוד; ברירת מחדל/רחף/נבחר |
-| `forge-chat-bubble`       | חזותי | `component.media` + `component.surface`        | מחבר, כיוון/סטטוס; ברירת מחדל/נבחר |
-| `forge-collapse`          | חזותי | `component.collapse`                           | פתוח, וריאנט, מושבת; default/hover/focus-visible/expanded/disabled |
-| `forge-device-mock`       | חזותי | `component.media.device`                       | מכשיר, כיוון, גודל; ברירת מחדל |
-| `forge-dropdown`          | חזותי | `component.overlay` + `component.navigation`   | פתוח, מיקום; ברירת מחדל/מורחב/למיקוד גלוי |
-| `forge-grid`              | חזותי | `component.layout.grid`                         | עמודים, פער, ריפוד; ברירת מחדל |
-| `forge-in-view`           | חזותי | `component.layout`                             | סַף; חוזה ילד בירושה |
-| `forge-language-switcher` | בירושה-חזותי | `component.navigation` + חוזה בחר ילד | מקומי; ברירת מחדל/מורחב/נבחר |
-| `forge-list`              | חזותי | `component.surface`                            | וריאנט, פער; ברירת מחדל/נבחר |
-| `forge-masonry`           | חזותי | `component.layout.masonry`                      | עמודים, פער, ריפוד; ברירת מחדל |
-| `forge-menu-item`         | חזותי | `component.navigation`                         | פעיל/נכה; default/hover/focus-visible/selected/disabled |
-| `forge-menu`              | חזותי | `component.navigation`                         | פתוח/התמצאות; ברירת מחדל/מורחב |
-| `forge-navbar-item`       | חזותי | `component.navigation.navbar-item`             | active, dropdown, variant, disabled; default/hover/focus-visible/selected/expanded/disabled |
-| `forge-pagination`        | חזותי | `component.navigation`                         | עמוד, גודל; default/hover/focus-visible/selected/disabled |
-| `forge-popover`           | חזותי | `component.overlay`                            | פתוח, מיקום; ברירת מחדל/מורחב/למיקוד גלוי |
-| `forge-tabs`              | חזותי | `component.navigation`                         | אוריינטציה, לשונית פעילה; default/hover/focus-visible/selected/disabled |
-| `forge-timeline`          | חזותי | `component.timeline`                          | מצב, כיוון, סמן מתאר; ברירת מחדל/נבחר |
-| `forge-toast`             | חזותי | `component.overlay` + `component.feedback`     | מצב, משך; ברירת מחדל/טעינה |
-| `forge-tooltip`           | חזותי | `component.overlay`                            | פתוח, מיקום; ברירת מחדל/מורחב |
-| `forge-window-popout`     | חזותי | `component.overlay.window-popout`              | פתוח, גודל; ברירת מחדל/רחף/פוקוס-נראה/נבחר |
+| Component                 | Classification   | Contract                                       | Appearance props / states                                                                   |
+| ------------------------- | ---------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `forge-accordion`         | visual           | `component.surface` + `component.navigation`   | items, expanded; default/hover/focus-visible/expanded/disabled                              |
+| `forge-alert-banner`      | visual           | `component.feedback` + `component.overlay`     | status, dismissible; default/hover/focus-visible                                            |
+| `forge-breadcrumb`        | visual           | `component.navigation`                         | items; default/hover/selected/focus-visible                                                 |
+| `forge-button-group`      | visual           | `component.button-group`                       | orientation, attached, variant, gap; default/focus-visible/disabled                         |
+| `forge-card`              | visual           | `component.surface`                            | variant, padding; default/hover/selected                                                    |
+| `forge-chat-bubble`       | visual           | `component.media` + `component.surface`        | author, direction/status; default/selected                                                  |
+| `forge-collapse`          | visual           | `component.collapse`                           | open, variant, disabled; default/hover/focus-visible/expanded/disabled                      |
+| `forge-device-mock`       | visual           | `component.media.device`                       | device, orientation, size; default                                                          |
+| `forge-dropdown`          | visual           | `component.overlay` + `component.navigation`   | open, placement; default/expanded/focus-visible                                             |
+| `forge-grid`              | visual           | `component.layout.grid`                        | columns, gap, padding; default                                                              |
+| `forge-in-view`           | visual           | `component.layout`                             | threshold; inherited child contract                                                         |
+| `forge-language-switcher` | inherited-visual | `component.navigation` + child select contract | locale; default/expanded/selected                                                           |
+| `forge-list`              | visual           | `component.surface`                            | variant, gap; default/selected                                                              |
+| `forge-masonry`           | visual           | `component.layout.masonry`                     | columns, gap, padding; default                                                              |
+| `forge-menu-item`         | visual           | `component.navigation`                         | active/disabled; default/hover/focus-visible/selected/disabled                              |
+| `forge-menu`              | visual           | `component.navigation`                         | open/orientation; default/expanded                                                          |
+| `forge-navbar-item`       | visual           | `component.navigation.navbar-item`             | active, dropdown, variant, disabled; default/hover/focus-visible/selected/expanded/disabled |
+| `forge-pagination`        | visual           | `component.navigation`                         | page, size; default/hover/focus-visible/selected/disabled                                   |
+| `forge-popover`           | visual           | `component.overlay`                            | open, placement; default/expanded/focus-visible                                             |
+| `forge-tabs`              | visual           | `component.navigation`                         | orientation, active tab; default/hover/focus-visible/selected/disabled                      |
+| `forge-timeline`          | visual           | `component.timeline`                           | status, orientation, outlined marker; default/selected                                      |
+| `forge-toast`             | visual           | `component.overlay` + `component.feedback`     | status, duration; default/loading                                                           |
+| `forge-tooltip`           | visual           | `component.overlay`                            | open, placement; default/expanded                                                           |
+| `forge-window-popout`     | visual           | `component.overlay.window-popout`              | open, size; default/hover/focus-visible/selected                                            |
 
-### אורגניזמים ותבניות - `packages/components/src/components/{organisms,templates}/`
+### Organisms and templates — `packages/components/src/components/{organisms,templates}/`
 
-| רכיב | סיווג | חוזה | אביזרי מראה / מצבים |
-| -------------------------- | ---------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `forge-carousel`           | חזותי | `component.navigation.carousel`                                 | שקופיות, פקדים, הפעלה אוטומטית, טון; default/hover/focus-visible/selected/disabled |
-| `forge-chat-area`          | חזותי | `component.media.chat-area`                                      | גודל, חריצי כותרת עליונה/תחתונה, גלילה אוטומטית; ברירת מחדל/טעינה |
-| `forge-dialog`             | חזותי | `component.overlay`                                             | פתוח, כותרת/כותרת תחתונה; ברירת מחדל/מורחב/למיקוד גלוי |
-| `forge-drawer`             | חזותי | `component.overlay.drawer`                                      | פתוח, מיקום/גודל, שינוי גודל; ברירת מחדל/רחף/פעיל/מורחב |
-| `forge-menubar`            | חזותי | `component.navigation.menubar`                                  | פריטים, תוחמים, גודל; default/hover/focus-visible/expanded/disabled |
-| `forge-modal`              | חזותי | `component.overlay`                                             | פתוח, גודל, כותרת עליונה/תחתונה; ברירת מחדל/מורחב/למיקוד גלוי |
-| `forge-navbar`             | חזותי | `component.navigation.navbar`                  | פריטים, מצב תגובה; ברירת מחדל/רחף/פוקוס-נראה/נבחר |
-| `forge-table`              | חזותי | `component.data.table`                                           | עמודות, גודל, כיתוב, פסים/תוחמים/ניתנים לרחף, טון, טעינה; ברירת מחדל/רחף/פוקוס גלוי/טעינה |
-| `forge-theme-composer`     | חזותי | `component.surface` + `component.field`                         | ערכי נושא; ברירת מחדל/לא חוקי |
-| `forge-theme-provider`     | חזותי | `component.layout`                                              | מצב נושא; ברירת מחדל/בהיר/כהה |
-| `forge-toast-container`    | חזותי | `component.overlay`                                             | מיקום; ברירת מחדל/טעינה |
-| `forge-tree-view-item`     | בירושה-חזותי | `component.navigation` + `component.surface`                    | מורחבת, נבחרה, מושבתת; default/hover/focus-visible/expanded/selected/disabled |
-| `forge-tree-view`          | חזותי | `component.data.tree`                                            | צמתים, גודל, defaultOpen, renderer תוויות; ברירת מחדל/רחף/פוקוס-נראה/מורחב/נבחר |
-| `forge-virtual-list`       | חזותי | `component.data.virtual-list`                                    | פריטים, גודל, פריט גובה, גובה, סריקה יתרה, מעבד שורות; ברירת מחדל/נבחר |
-| `forge-virtual-log-viewer` | חזותי | `component.code.virtual-log-viewer`                              | רמה/מסנן, עמודות, זנב מעקב; default/hover/focus-visible/warn/error/fatal |
-| `forge-virtual-table`      | חזותי | `component.data.virtual-table` + `component.data.table`          | עמודות, גודל, rowHeight, גובה, סריקה יתרה, פסים/תוחמים, מיון; ברירת מחדל/רחף/מיקוד גלוי |
-| `forge-virtual-tabs`       | חזותי | `component.navigation.tabs`                                      | וריאנט, כרטיסייה פעילה, ניתן לסגירה/ניתן להוספה; default/hover/focus-visible/selected/disabled |
-| `forge-virtual-tree-view`  | חזותי | `component.data.virtual-tree`                                   | צמתים, גודל, itemHeight, גובה, סריקת יתר, defaultOpen, renderer שורה; ברירת מחדל/רחף/פוקוס גלוי/מורחב |
-| `forge-hero`               | חזותי | `component.layout.hero`                         | מדיה, יישור, גודל, שכבת-על; ברירת מחדל |
+| Component                  | Classification   | Contract                                                | Appearance props / states                                                                                  |
+| -------------------------- | ---------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `forge-carousel`           | visual           | `component.navigation.carousel`                         | slides, controls, autoplay, tone; default/hover/focus-visible/selected/disabled                            |
+| `forge-chat-area`          | visual           | `component.media.chat-area`                             | size, header/footer slots, auto-scroll; default/loading                                                    |
+| `forge-dialog`             | visual           | `component.overlay`                                     | open, title/footer; default/expanded/focus-visible                                                         |
+| `forge-drawer`             | visual           | `component.overlay.drawer`                              | open, placement/size, resize; default/hover/active/expanded                                                |
+| `forge-menubar`            | visual           | `component.navigation.menubar`                          | items, bordered, size; default/hover/focus-visible/expanded/disabled                                       |
+| `forge-modal`              | visual           | `component.overlay`                                     | open, size, header/footer; default/expanded/focus-visible                                                  |
+| `forge-navbar`             | visual           | `component.navigation.navbar`                           | items, responsive mode; default/hover/focus-visible/selected                                               |
+| `forge-table`              | visual           | `component.data.table`                                  | columns, size, caption, striped/bordered/hoverable, tone, loading; default/hover/focus-visible/loading     |
+| `forge-theme-composer`     | visual           | `component.surface` + `component.field`                 | theme values; default/invalid                                                                              |
+| `forge-theme-provider`     | visual           | `component.layout`                                      | theme mode; default/light/dark                                                                             |
+| `forge-toast-container`    | visual           | `component.overlay`                                     | placement; default/loading                                                                                 |
+| `forge-tree-view-item`     | inherited-visual | `component.navigation` + `component.surface`            | expanded, selected, disabled; default/hover/focus-visible/expanded/selected/disabled                       |
+| `forge-tree-view`          | visual           | `component.data.tree`                                   | nodes, size, defaultOpen, label renderer; default/hover/focus-visible/expanded/selected                    |
+| `forge-virtual-list`       | visual           | `component.data.virtual-list`                           | items, size, itemHeight, height, overscan, row renderer; default/selected                                  |
+| `forge-virtual-log-viewer` | visual           | `component.code.virtual-log-viewer`                     | level/filter, columns, follow-tail; default/hover/focus-visible/warn/error/fatal                           |
+| `forge-virtual-table`      | visual           | `component.data.virtual-table` + `component.data.table` | columns, size, rowHeight, height, overscan, striped/bordered, sort; default/hover/focus-visible            |
+| `forge-virtual-tabs`       | visual           | `component.navigation.tabs`                             | variant, active tab, closable/addable; default/hover/focus-visible/selected/disabled                       |
+| `forge-virtual-tree-view`  | visual           | `component.data.virtual-tree`                           | nodes, size, itemHeight, height, overscan, defaultOpen, row renderer; default/hover/focus-visible/expanded |
+| `forge-hero`               | visual           | `component.layout.hero`                                 | media, alignment, size, overlay; default                                                                   |
 
-## חבילות Forge מיוחדות
+## Specialized Forge packages
 
-| חבילה / רמה | רכיב | סיווג | חוזה | אביזרי מראה / מצבים |
-| ------------------------ | ------------------------------ | ---------------- | -------------------------------------------- | --------------------------------------------------------------------- |
-| `barcode/molecules`      | `forge-barcode`                | חזותי | `component.code.barcode`                      | ערך, פורמט, גודל; ברירת מחדל/טעינה/לא חוקית |
-| `breakpoints/atoms`      | `forge-hide-at`                | התנהגות בלבד | אף אחד | `min`, `max`; נראות נקודת מבט בלבד |
-| `breakpoints/atoms`      | `forge-show-at`                | התנהגות בלבד | אף אחד | `min`, `max`; נראות נקודת מבט בלבד |
-| `breakpoints/molecules`  | `forge-breakpoint-debug`       | חזותי | `component.debug.breakpoint`                  | תצוגת נקודת שבירה; ברירת מחדל |
-| `code-scanner/organisms` | `forge-code-scanner`           | חזותי | `component.code.scanner`                      | מצלמה/פורמט, סריקה; ברירת מחדל/טעינה/לא חוקית |
-| `content/atoms`          | `forge-code-block`             | חזותי | `component.code`                             | שפה, העתקה; ברירת מחדל/נבחר |
-| `content/atoms`          | `forge-mermaid`                | חזותי | `component.code`                             | מקור דיאגרמה, טעינה/שגיאה; ברירת מחדל/טעינה/לא חוקית |
-| `content/atoms`          | `forge-wysiwyg-toolbar-button` | חזותי | `component.button` + `component.icon`        | פקודה, פעיל; default/hover/active/focus-visible/disabled/selected |
-| `content/molecules`      | `forge-markdown`               | חזותי | `component.typography` + `component.code`    | גודל, קישורים; ברירת מחדל/לא חוקי |
-| `content/molecules`      | `markdown-block`               | בירושה-חזותי | `component.typography` + חוזי ילדים | אסימון, גודל; בירושה |
-| `content/molecules`      | `markdown-inline`              | בירושה-חזותי | `component.typography`                       | אסימון, קישורים; עבר בירושה/רחף/נבחר |
-| `content/molecules`      | `forge-wysiwyg-block-controls` | חזותי | `component.editor.block-controls` + `component.button` | בחירת בלוקים; ברירת מחדל/רחף/פוקוס-נראה/נבחר |
-| `content/molecules`      | `forge-wysiwyg-block-menu`     | חזותי | `component.editor.block-menu` + `component.overlay`   | לִפְתוֹחַ; ברירת מחדל/מורחב/נבחר |
-| `content/molecules`      | `forge-wysiwyg-status-bar`     | חזותי | `component.editor.status-bar`                         | סטָטוּס; ברירת מחדל/לא חוקי/טעינה |
-| `content/molecules`      | `forge-wysiwyg-toolbar`        | חזותי | `component.editor.toolbar` + `component.button`       | פקודות; ברירת מחדל/מושבת |
-| `content/organisms`      | `forge-monaco-editor`          | חזותי | `component.editor.monaco` + `component.code`          | שפה, לקריאה בלבד; ברירת מחדל/מושבת/לא חוקי |
-| `content/organisms`      | `forge-wysiwyg-editor`         | חזותי | `component.editor.wysiwyg` + `component.code`        | ניתן לעריכה, לא חוקי; default/focus-visible/invalid/disabled |
-| `float/molecules`        | `forge-alert-banner`           | חזותי | `component.feedback` + `component.overlay`   | סטטוס, ניתן לביטול; ברירת מחדל/מיקוד גלוי |
-| `float/molecules`        | `forge-dropdown`               | חזותי | `component.overlay` + `component.navigation` | לִפְתוֹחַ; ברירת מחדל/מורחב/נבחר |
-| `float/molecules`        | `forge-popover`                | חזותי | `component.overlay`                          | לִפְתוֹחַ; ברירת מחדל/מורחב |
-| `float/molecules`        | `forge-toast`                  | חזותי | `component.overlay` + `component.feedback`   | סטָטוּס; ברירת מחדל/טעינה |
-| `float/molecules`        | `forge-tooltip`                | חזותי | `component.overlay`                          | לִפְתוֹחַ; ברירת מחדל/מורחב |
-| `float/organisms`        | `forge-dialog`                 | חזותי | `component.overlay`                          | פתוח, כותרת/כותרת תחתונה; ברירת מחדל/מורחב/למיקוד גלוי |
-| `float/organisms`        | `forge-modal`                  | חזותי | `component.overlay`                          | פתוח, גודל, כותרת עליונה/תחתונה; ברירת מחדל/מורחב/למיקוד גלוי |
-| `float/organisms`        | `forge-toast-container`        | חזותי | `component.overlay`                          | מיקום; ברירת מחדל/טעינה |
+| Package / level          | Component                      | Classification   | Contract                                               | Appearance props / states                                             |
+| ------------------------ | ------------------------------ | ---------------- | ------------------------------------------------------ | --------------------------------------------------------------------- |
+| `barcode/molecules`      | `forge-barcode`                | visual           | `component.code.barcode`                               | value, format, size; default/loading/invalid                          |
+| `breakpoints/atoms`      | `forge-hide-at`                | behavior-only    | none                                                   | `min`, `max`; viewport visibility only                                |
+| `breakpoints/atoms`      | `forge-show-at`                | behavior-only    | none                                                   | `min`, `max`; viewport visibility only                                |
+| `breakpoints/molecules`  | `forge-breakpoint-debug`       | visual           | `component.debug.breakpoint`                           | breakpoint display; default                                           |
+| `code-scanner/organisms` | `forge-code-scanner`           | visual           | `component.code.scanner`                               | camera/format, scanning; default/loading/invalid                      |
+| `content/atoms`          | `forge-code-block`             | visual           | `component.code`                                       | language, copy; default/selected                                      |
+| `content/atoms`          | `forge-mermaid`                | visual           | `component.code`                                       | diagram source, loading/error; default/loading/invalid                |
+| `content/atoms`          | `forge-wysiwyg-toolbar-button` | visual           | `component.button` + `component.icon`                  | command, active; default/hover/active/focus-visible/disabled/selected |
+| `content/molecules`      | `forge-markdown`               | visual           | `component.typography` + `component.code`              | size, links; default/invalid                                          |
+| `content/molecules`      | `markdown-block`               | inherited-visual | `component.typography` + child contracts               | token, size; inherited                                                |
+| `content/molecules`      | `markdown-inline`              | inherited-visual | `component.typography`                                 | token, links; inherited/hover/selected                                |
+| `content/molecules`      | `forge-wysiwyg-block-controls` | visual           | `component.editor.block-controls` + `component.button` | block selection; default/hover/focus-visible/selected                 |
+| `content/molecules`      | `forge-wysiwyg-block-menu`     | visual           | `component.editor.block-menu` + `component.overlay`    | open; default/expanded/selected                                       |
+| `content/molecules`      | `forge-wysiwyg-status-bar`     | visual           | `component.editor.status-bar`                          | status; default/invalid/loading                                       |
+| `content/molecules`      | `forge-wysiwyg-toolbar`        | visual           | `component.editor.toolbar` + `component.button`        | commands; default/disabled                                            |
+| `content/organisms`      | `forge-monaco-editor`          | visual           | `component.editor.monaco` + `component.code`           | language, read-only; default/disabled/invalid                         |
+| `content/organisms`      | `forge-wysiwyg-editor`         | visual           | `component.editor.wysiwyg` + `component.code`          | editable, invalid; default/focus-visible/invalid/disabled             |
+| `float/molecules`        | `forge-alert-banner`           | visual           | `component.feedback` + `component.overlay`             | status, dismissible; default/focus-visible                            |
+| `float/molecules`        | `forge-dropdown`               | visual           | `component.overlay` + `component.navigation`           | open; default/expanded/selected                                       |
+| `float/molecules`        | `forge-popover`                | visual           | `component.overlay`                                    | open; default/expanded                                                |
+| `float/molecules`        | `forge-toast`                  | visual           | `component.overlay` + `component.feedback`             | status; default/loading                                               |
+| `float/molecules`        | `forge-tooltip`                | visual           | `component.overlay`                                    | open; default/expanded                                                |
+| `float/organisms`        | `forge-dialog`                 | visual           | `component.overlay`                                    | open, title/footer; default/expanded/focus-visible                    |
+| `float/organisms`        | `forge-modal`                  | visual           | `component.overlay`                                    | open, size, header/footer; default/expanded/focus-visible             |
+| `float/organisms`        | `forge-toast-container`        | visual           | `component.overlay`                                    | placement; default/loading                                            |
 
-### טפסים - `packages/forms/src/components/`
+### Forms — `packages/forms/src/components/`
 
-כל הרשומות בטופס משתמשות ב-Shared `component.field` תפקידי תווית/עוזר/שגיאה בנוסף לחוזה למטה. יליד
-מצבי שליטה מיוצגים רק כאשר השליטה תומכת בהם.
+All form entries use the shared `component.field` label/helper/error roles in addition to the contract below. Native
+control states are represented only where the control supports them.
 
-| רמה | רכיבים (ערך אחד לכל שם מופרד בפסיקים) | סיווג / חוזה | אביזרי מראה משותפים ומצבים |
+| Level     | Components (one entry per comma-separated name)                                                                                                                                                                                                                                                                                                        | Classification / contract                                                                                                 | Shared appearance props and states                                                                           |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| אטומים | `forge-checkbox`, `forge-input`, `forge-radio`, `forge-range-input`, `forge-rating`, `forge-slider`, `forge-switch`, `forge-textarea`                                                                                                                                                                                                                                     | חזותי / `component.checkable` עבור תיבת סימון/רדיו/דירוג/מחוון/מתג; `component.input` עבור קלט/קלט-טווח/אזור טקסט | `size`, אביזרי תווית/ערך; default/hover/active/focus-visible/disabled/invalid/selected איפה נתמך |
-| מולקולות | `forge-calendar`, `forge-color-input`, `forge-date-input`, `forge-date-range-input`, `forge-field-set`, `forge-file-input`, `forge-location-input`, `forge-multiselect`, `forge-number-stepper`, `forge-otp-input`, `forge-phone-input`, `forge-radio-group`, `forge-search-input`, `forge-segment-control`, `forge-select`, `forge-time-input`, `forge-time-range-input` | חזותי / `component.input`, `component.select`, `component.checkable`, או `component.field` לפי בקרה מורכבת | `size`, `disabled`, אביזרי אימות ובחירה; default/focus-visible/disabled/expanded/selected/invalid |
-| אורגניזמים | `forge-date-time-range-input`, `forge-form-builder`, `forge-form-wizard`, `forge-schema-form-dialog`, `forge-schema-form`                                                                                                                                                                                                                                                 | חזותי / `component.field` + חוזי קלט/בחירה/שכבת-על מורכבים | סכימה, שלבים, אימות; default/focus-visible/disabled/expanded/selected/invalid |
+| atoms     | `forge-checkbox`, `forge-input`, `forge-radio`, `forge-range-input`, `forge-rating`, `forge-slider`, `forge-switch`, `forge-textarea`                                                                                                                                                                                                                                     | visual / `component.checkable` for checkbox/radio/rating/slider/switch; `component.input` for input/range-input/textarea  | `size`, label/value props; default/hover/active/focus-visible/disabled/invalid/selected where supported      |
+| molecules | `forge-calendar`, `forge-color-input`, `forge-date-input`, `forge-date-range-input`, `forge-field-set`, `forge-file-input`, `forge-location-input`, `forge-multiselect`, `forge-number-stepper`, `forge-otp-input`, `forge-phone-input`, `forge-radio-group`, `forge-search-input`, `forge-segment-control`, `forge-select`, `forge-time-input`, `forge-time-range-input` | visual / `component.input`, `component.select`, `component.checkable`, or `component.field` according to composed control | `size`, `disabled`, validation and selection props; default/focus-visible/disabled/expanded/selected/invalid |
+| organisms | `forge-date-time-range-input`, `forge-form-builder`, `forge-form-wizard`, `forge-schema-form-dialog`, `forge-schema-form`                                                                                                                                                                                                                                                 | visual / `component.field` + composed input/select/overlay contracts                                                      | schema, steps, validation; default/focus-visible/disabled/expanded/selected/invalid                          |
 
-### אייקונים - `packages/icons/src/components/`
+### Icons — `packages/icons/src/components/`
 
-כל 106 ערכי הסמלים הם **עובר בירושה**. שימוש בגליפים `currentColor`; הגודל שלהם הוא בשליטת הצרכן או מפות ל
-`component.icon.size`. הם אינם מקבלים משתנה לכל גליף. לכל אחד יש סיפור משותף והוא עוקב אחר אותו הדבר
-תפקידי צבע ברירת מחדל/נבחרים/מושבתים שבהם ההורה חושף את המצב הזה.
+All 106 icon entries are **inherited-visual**. Glyphs use `currentColor`; their size is consumer-controlled or maps to
+`component.icon.size`. They do not receive a per-glyph variable. Each has a co-located story and follows the same
+default/selected/disabled colour roles where the parent exposes that state.
 
-| קטגוריית אייקונים | רכיבים |
+| Icon category           | Components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| תקשורת/הודעות | `forge-icon-bell`, `forge-icon-chat`, `forge-icon-mail`, `forge-icon-phone`, `forge-icon-send`                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| תקשורת/שיתוף | `forge-icon-share`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| תוכן/עריכה | `forge-icon-copy`, `forge-icon-edit`, `forge-icon-eye`, `forge-icon-eye-off`, `forge-icon-redo`, `forge-icon-trash`, `forge-icon-undo`                                                                                                                                                                                                                                                                                                                                                                                       |
-| תוכן/קבצים | `forge-icon-download`, `forge-icon-upload`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| נתונים/סינון | `forge-icon-filter`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| נתונים/טבלאות | `forge-icon-sort`, `forge-icon-table`, `forge-icon-table-column-add`, `forge-icon-table-column-remove`, `forge-icon-table-row-add`, `forge-icon-table-row-remove`                                                                                                                                                                                                                                                                                                                                                            |
-| ציור/טרנספורמציה | `forge-icon-draw-circle`, `forge-icon-draw-line`, `forge-icon-draw-polygon`, `forge-icon-draw-square`, `forge-icon-draw-triangle`, `forge-icon-move`, `forge-icon-palette`, `forge-icon-pencil`, `forge-icon-rotate-ccw`, `forge-icon-rotate-cw`, `forge-icon-scale-down`, `forge-icon-scale-up`                                                                                                                                                                                                                             |
-| מפות/מדינות | `forge-icon-country-globe`, `forge-icon-flag`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| מפות/גיאוגרפיה | `forge-icon-geodesic`, `forge-icon-globe`, `forge-icon-language`, `forge-icon-map-pin`                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| מפות/שכבות | `forge-icon-layer`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| מפות/סמנים | `forge-icon-map-marker-cluster`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| מדיה/לכידה | `forge-icon-camera`, `forge-icon-image`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| מדיה/השמעה | `forge-icon-pause`, `forge-icon-play`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| ניווט/פקדים | `forge-icon-arrow`, `forge-icon-chevron`, `forge-icon-chevrons`, `forge-icon-close`, `forge-icon-home`, `forge-icon-join`, `forge-icon-menu`, `forge-icon-minus`, `forge-icon-plus`, `forge-icon-refresh`, `forge-icon-split`                                                                                                                                                                                                                                                                                                |
-| ניווט/קישורים | `forge-icon-external-link`, `forge-icon-link`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| ניווט/חיפוש | `forge-icon-search`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| אובייקטים/מערכת | `forge-icon-cloud`, `forge-icon-debug`, `forge-icon-heart`, `forge-icon-lightning`, `forge-icon-puzzle`, `forge-icon-qr-code`, `forge-icon-settings`, `forge-icon-star`, `forge-icon-wrench`                                                                                                                                                                                                                                                                                                                                 |
-| ניתוב/כיוונים | `forge-icon-route`, `forge-icon-waypoint`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| אבטחה/גישה | `forge-icon-lock`, `forge-icon-lock-open`, `forge-icon-user`                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| סטטוס/משוב | `forge-icon-alert`, `forge-icon-alert-critical`, `forge-icon-alert-info`, `forge-icon-alert-neutral`, `forge-icon-alert-warning`, `forge-icon-check`, `forge-icon-error`, `forge-icon-info`, `forge-icon-notice`, `forge-icon-warning`                                                                                                                                                                                                                                                                                       |
-| טקסט/עיצוב | `forge-icon-align-center`, `forge-icon-align-justify`, `forge-icon-align-left`, `forge-icon-align-right`, `forge-icon-blockquote`, `forge-icon-bold`, `forge-icon-bullet-list`, `forge-icon-code-block`, `forge-icon-code-inline`, `forge-icon-heading`, `forge-icon-heading-five`, `forge-icon-heading-four`, `forge-icon-heading-one`, `forge-icon-heading-six`, `forge-icon-heading-three`, `forge-icon-heading-two`, `forge-icon-italic`, `forge-icon-numbered-list`, `forge-icon-strikethrough`, `forge-icon-underline` |
-| זמן/לוח שנה | `forge-icon-calendar`, `forge-icon-clock`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| communication/messaging | `forge-icon-bell`, `forge-icon-chat`, `forge-icon-mail`, `forge-icon-phone`, `forge-icon-send`                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| communication/sharing   | `forge-icon-share`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| content/editing         | `forge-icon-copy`, `forge-icon-edit`, `forge-icon-eye`, `forge-icon-eye-off`, `forge-icon-redo`, `forge-icon-trash`, `forge-icon-undo`                                                                                                                                                                                                                                                                                                                                                                                       |
+| content/files           | `forge-icon-download`, `forge-icon-upload`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| data/filtering          | `forge-icon-filter`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| data/tables             | `forge-icon-sort`, `forge-icon-table`, `forge-icon-table-column-add`, `forge-icon-table-column-remove`, `forge-icon-table-row-add`, `forge-icon-table-row-remove`                                                                                                                                                                                                                                                                                                                                                            |
+| drawing/transform       | `forge-icon-draw-circle`, `forge-icon-draw-line`, `forge-icon-draw-polygon`, `forge-icon-draw-square`, `forge-icon-draw-triangle`, `forge-icon-move`, `forge-icon-palette`, `forge-icon-pencil`, `forge-icon-rotate-ccw`, `forge-icon-rotate-cw`, `forge-icon-scale-down`, `forge-icon-scale-up`                                                                                                                                                                                                                             |
+| maps/countries          | `forge-icon-country-globe`, `forge-icon-flag`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| maps/geography          | `forge-icon-geodesic`, `forge-icon-globe`, `forge-icon-language`, `forge-icon-map-pin`                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| maps/layers             | `forge-icon-layer`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| maps/markers            | `forge-icon-map-marker-cluster`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| media/capture           | `forge-icon-camera`, `forge-icon-image`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| media/playback          | `forge-icon-pause`, `forge-icon-play`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| navigation/controls     | `forge-icon-arrow`, `forge-icon-chevron`, `forge-icon-chevrons`, `forge-icon-close`, `forge-icon-home`, `forge-icon-join`, `forge-icon-menu`, `forge-icon-minus`, `forge-icon-plus`, `forge-icon-refresh`, `forge-icon-split`                                                                                                                                                                                                                                                                                                |
+| navigation/links        | `forge-icon-external-link`, `forge-icon-link`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| navigation/search       | `forge-icon-search`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| objects/system          | `forge-icon-cloud`, `forge-icon-debug`, `forge-icon-heart`, `forge-icon-lightning`, `forge-icon-puzzle`, `forge-icon-qr-code`, `forge-icon-settings`, `forge-icon-star`, `forge-icon-wrench`                                                                                                                                                                                                                                                                                                                                 |
+| routing/directions      | `forge-icon-route`, `forge-icon-waypoint`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| security/access         | `forge-icon-lock`, `forge-icon-lock-open`, `forge-icon-user`                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| status/feedback         | `forge-icon-alert`, `forge-icon-alert-critical`, `forge-icon-alert-info`, `forge-icon-alert-neutral`, `forge-icon-alert-warning`, `forge-icon-check`, `forge-icon-error`, `forge-icon-info`, `forge-icon-notice`, `forge-icon-warning`                                                                                                                                                                                                                                                                                       |
+| text/formatting         | `forge-icon-align-center`, `forge-icon-align-justify`, `forge-icon-align-left`, `forge-icon-align-right`, `forge-icon-blockquote`, `forge-icon-bold`, `forge-icon-bullet-list`, `forge-icon-code-block`, `forge-icon-code-inline`, `forge-icon-heading`, `forge-icon-heading-five`, `forge-icon-heading-four`, `forge-icon-heading-one`, `forge-icon-heading-six`, `forge-icon-heading-three`, `forge-icon-heading-two`, `forge-icon-italic`, `forge-icon-numbered-list`, `forge-icon-strikethrough`, `forge-icon-underline` |
+| time/calendar           | `forge-icon-calendar`, `forge-icon-clock`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 
-### חבילות ויזואליות אחרות
+### Other visual packages
 
-| חבילה / רמה | רכיב | סיווג | חוזה | אביזרי מראה / מצבים |
+| Package / level              | Component                                                                                                                                          | Classification   | Contract                                                     | Appearance props / states                                                                        |
 | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
-| `layout/atoms`               | `forge-container`                                                                                                                                  | חזותי | `component.layout`                                           | רוחב מרבי, ריפוד; ברירת מחדל |
-| `layout/templates`           | `forge-application-layout`, `forge-bento-layout`, `forge-f-pattern-layout`, `forge-grid-layout`, `forge-vertical-layout`, `forge-z-pattern-layout` | חזותי | `component.layout`                                           | תצורת פריסה ופערים; ברירת מחדל |
-| `map/molecules`              | `forge-map-draw`, `forge-map-layer`, `forge-map-marker`, `forge-map-popup`, `forge-map-source`                                                     | בירושה-חזותי | `component.map`                                              | אפשרויות מקור/שכבה/סמן/קופץ במפה; ברירת מחדל / פוקוס גלוי, אחרים עברו בירושה מארח |
-| `map/organisms`              | `forge-map-libre`                                                                                                                                  | חזותי | `component.map`                                              | פקדים, סגנון, קופץ; ברירת מחדל/טעינה/נבחרה |
-| `matrix-code/molecules`      | `forge-matrix-code`                                                                                                                                | חזותי | `component.code`                                             | ערך, גודל; ברירת מחדל/לא חוקי/טעינה |
-| `qr-code/molecules`          | `forge-qr-code`                                                                                                                                    | חזותי | `component.code`                                             | ערך, גודל; ברירת מחדל/לא חוקי/טעינה |
-| `resource-planner/organisms` | `forge-resource-planner`                                                                                                                           | חזותי | `component.resource-planner`                                 | משאבים, טווח, בחירה; default/hover/selected/focus-visible/conflict/unavailable |
-| `scheduler/organisms`        | `forge-scheduler`                                                                                                                                  | חזותי | `component.scheduler`                                        | טווח, אירועים, מבחר; ברירת מחדל/פוקוס גלוי/היום/בחוץ/עסוק |
-| `select/atoms`               | `forge-tag`                                                                                                                                        | חזותי | `component.feedback`                                         | וריאנט, גודל, נשלף; ברירת מחדל/רחף/מושבת |
-| `select/molecules`           | `forge-language-switcher`                                                                                                                          | בירושה-חזותי | `component.select` + `component.navigation`                  | מקומי; ברירת מחדל/מורחב/נבחר |
-| `select/molecules`           | `forge-multiselect`, `forge-select`                                                                                                                | חזותי | `component.select` + `component.input` + `component.field`   | גודל, אפשרויות, דגם, אימות; default/hover/focus-visible/disabled/expanded/selected/invalid |
-| `theme/atoms`                | `forge-theme-toggle`                                                                                                                               | חזותי | `component.button` + `component.icon`                        | מצב; ברירת מחדל/רחף/פעיל/נבחר |
-| `theme/organisms`            | `forge-theme-composer`, `forge-theme-provider`                                                                                                     | חזותי | `component.surface` + `component.field` / `component.layout` | ערכי נושא/מצב; ברירת מחדל/בהיר/כהה/לא חוקי |
-| `three/organisms`            | `forge-three-canvas`                                                                                                                               | בירושה-חזותי | `component.media`                                            | מידות המארח בד הם מבניים; משטח בירושה |
-| `typography/atoms`           | `forge-typography`                                                                                                                                 | חזותי | `component.typography`                                       | וריאנט, צבע, `as`; default/link/disabled |
-| `vcard`                      | `forge-icalendar`                                                                                                                                  | התנהגות בלבד | אף אחד | מסדרת נתוני לוח שנה; אין מארח חזותי |
-| `vcard`                      | `forge-vcard`                                                                                                                                      | התנהגות בלבד | אף אחד | מסדרת נתוני קשר; אין מארח חזותי |
+| `layout/atoms`               | `forge-container`                                                                                                                                  | visual           | `component.layout`                                           | max width, padding; default                                                                      |
+| `layout/templates`           | `forge-application-layout`, `forge-bento-layout`, `forge-f-pattern-layout`, `forge-grid-layout`, `forge-vertical-layout`, `forge-z-pattern-layout` | visual           | `component.layout`                                           | layout configuration and gaps; default                                                           |
+| `map/molecules`              | `forge-map-draw`, `forge-map-layer`, `forge-map-marker`, `forge-map-popup`, `forge-map-source`                                                     | inherited-visual | `component.map`                                              | map source/layer/marker/popup options; popup default/focus-visible, others host-inherited        |
+| `map/organisms`              | `forge-map-libre`                                                                                                                                  | visual           | `component.map`                                              | controls, style, popup; default/loading/selected                                                 |
+| `matrix-code/molecules`      | `forge-matrix-code`                                                                                                                                | visual           | `component.code`                                             | value, size; default/invalid/loading                                                             |
+| `qr-code/molecules`          | `forge-qr-code`                                                                                                                                    | visual           | `component.code`                                             | value, size; default/invalid/loading                                                             |
+| `resource-planner/organisms` | `forge-resource-planner`                                                                                                                           | visual           | `component.resource-planner`                                 | resources, range, selection; default/hover/selected/focus-visible/conflict/unavailable           |
+| `scheduler/organisms`        | `forge-scheduler`                                                                                                                                  | visual           | `component.scheduler`                                        | range, events, selection; default/focus-visible/today/outside/busy                               |
+| `select/atoms`               | `forge-tag`                                                                                                                                        | visual           | `component.feedback`                                         | variant, size, removable; default/hover/disabled                                                 |
+| `select/molecules`           | `forge-language-switcher`                                                                                                                          | inherited-visual | `component.select` + `component.navigation`                  | locale; default/expanded/selected                                                                |
+| `select/molecules`           | `forge-multiselect`, `forge-select`                                                                                                                | visual           | `component.select` + `component.input` + `component.field`   | size, options, model, validation; default/hover/focus-visible/disabled/expanded/selected/invalid |
+| `theme/atoms`                | `forge-theme-toggle`                                                                                                                               | visual           | `component.button` + `component.icon`                        | mode; default/hover/active/selected                                                              |
+| `theme/organisms`            | `forge-theme-composer`, `forge-theme-provider`                                                                                                     | visual           | `component.surface` + `component.field` / `component.layout` | theme values/mode; default/light/dark/invalid                                                    |
+| `three/organisms`            | `forge-three-canvas`                                                                                                                               | inherited-visual | `component.media`                                            | canvas host dimensions are structural; inherited surface                                         |
+| `typography/atoms`           | `forge-typography`                                                                                                                                 | visual           | `component.typography`                                       | variant, colour, `as`; default/link/disabled                                                     |
+| `vcard`                      | `forge-icalendar`                                                                                                                                  | behavior-only    | none                                                         | serializes calendar data; no visual host                                                         |
+| `vcard`                      | `forge-vcard`                                                                                                                                      | behavior-only    | none                                                         | serializes contact data; no visual host                                                          |
 
-## רכיבי דואר אלקטרוני
+## Email components
 
-`@mission-platform/email-components` נכלל מכיוון שמקורות ה-TSX שלו הם בכתב Forge. לקוחות דוא"ל לא
-לצרוך מאפיינים מותאמים אישית של זמן ריצה: המעבד פותר את אותם תפקידים סמנטיים לערכים מוטבעים. כל ערך למטה
-הוא ויזואלי ומשתמשים `component.email`, עם `component.button`, `component.typography`, או `component.media` היכן מצוין.
+`@mission-platform/email-components` is included because its TSX sources are Forge-authored. Email clients do not
+consume runtime custom properties: the renderer resolves the same semantic roles into inline values. Every entry below
+is visual and uses `component.email`, with `component.button`, `component.typography`, or `component.media` where noted.
 
-| רמה | רכיבים | חוזה |
+| Level     | Components                                                                    | Contract                                                                                                                                                               |
 | --------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| אטומים | `email-button`                                                                | `component.email` + `component.button.<variant>`; גרסאות ניטרליות/ראשוניות/משניות/שלישוניות/הצלחה/אזהרה/מידע/שגיאה/קריטית/רוח רפאים; ברירת מחדל/רחף/פעיל/מושבת |
-| אטומים | `email-divider`, `email-image`, `email-spacer`, `email-typography`            | `component.email` + `component.surface`/`component.media`/`component.typography`; ברירת מחדל |
-| מולקולות | `email-card`, `email-column`, `email-list`, `email-row`, `email-social-links` | `component.email`; ברירת מחדל/נבחר כאשר הקישורים אינטראקטיביים |
-| אורגניזמים | `email-footer`, `email-header`, `email-preheader`                             | `component.email` + `component.typography`; ברירת מחדל |
-| תבניות | `email-container`, `email-document`, `email-section`                          | `component.email`; מצב מקור ברירת מחדל/אור/כהה |
+| atoms     | `email-button`                                                                | `component.email` + `component.button.<variant>`; variants neutral/primary/secondary/tertiary/success/warning/info/error/critical/ghost; default/hover/active/disabled |
+| atoms     | `email-divider`, `email-image`, `email-spacer`, `email-typography`            | `component.email` + `component.surface`/`component.media`/`component.typography`; default                                                                              |
+| molecules | `email-card`, `email-column`, `email-list`, `email-row`, `email-social-links` | `component.email`; default/selected where links are interactive                                                                                                        |
+| organisms | `email-footer`, `email-header`, `email-preheader`                             | `component.email` + `component.typography`; default                                                                                                                    |
+| templates | `email-container`, `email-document`, `email-section`                          | `component.email`; default/light/dark source mode                                                                                                                      |
 
-## סיקור סיפור ועקיפה
+## Story and override coverage
 
-ישנם 246 סיפורים משותפים עבור 249 מקורות מרכיבים. המקורות היחידים ללא סיפורים עצמאיים הם
-עוזרים רקורסיביים `components/organisms/forge-tree-view/forge-tree-view-item`,
-`content/molecules/forge-markdown/markdown-block`, ו `content/molecules/forge-markdown/markdown-inline`; שלהם
-מצבים חזותיים מופעלים על ידי סיפורי ההורים שלהם ומתועדים לעיל כבירושה-חזותי.
+There are 246 co-located stories for 249 component sources. The only sources without standalone stories are the
+recursive helpers `components/organisms/forge-tree-view/forge-tree-view-item`,
+`content/molecules/forge-markdown/markdown-block`, and `content/molecules/forge-markdown/markdown-inline`; their
+visual states are exercised by their parent stories and are documented above as inherited-visual.
 
-התצוגה המקדימה של ספר הסיפורים המשותפת נטענת `@mission-platform/tokens/scss/tokens`, התוסף לעקוף ספר סיפורים, וה-
-`theme` גלוֹבָּלִי. כדי לבדוק את החוזה, הגדר את הנושא הגלובלי לבהיר או כהה והשתמש בפקדים של הסיפורים המרכיבים;
-כדי לבדוק עקיפת צרכנים, ערוך `apps/storybook/design-tokens/overrides.tokens.json` תַחַת `component` באמצעות א
-`{ "light": "...", "dark": "..." }` עֵרֶך. סכימת העקיפה היא
-[`vite-plugins/token-overrides/schema/token-overrides.schema.json`](../../../vite-plugins/token-overrides/schema/token-overrides.schema.json).
+The shared Storybook preview loads `@mission-platform/tokens/scss/tokens`, the Storybook override plugin, and the
+`theme` global. To inspect the contract, set the theme global to light or dark and use the component stories' controls;
+to test consumer overrides, edit `apps/storybook/design-tokens/overrides.tokens.json` under `component` using a
+`{ "light": "...", "dark": "..." }` value. The override schema is
+[`vite-plugins/token-overrides/schema/token-overrides.schema.json`](../vite-plugins/token-overrides/schema/token-overrides.schema.json).
 
-## צ'ק רשימת מסירת Figma
+## Figma handoff checklist
 
-1. צור את `Mission Platform / Component` אוסף משתנה עם מצבי אור וחושך.
-2. ייבא את נתיבי הרכיבים מ `component.tokens.json`, שמירה על מקטעי רכיב, וריאציה, משבצת ומצב.
-3. קשר משתני רכיבים למשתנים הפרימיטיביים/סמנטיים המתאימים במקום להעתיק ערכי צבע גולמי או קנה מידה.
-4. צור מאפייני רכיב עבור הגרסאות והגדלים המתועדים; צור גרסאות מצב רק עבור מדינות הרשומות במלאי.
-5. שמור נוסחאות פריסה, נקודות עצירה של נקודת מבט, התנהגות בד והתנהגות DOM/נגישות מחוץ לאוסף המשתנים החזותיים.
+1. Create the `Mission Platform / Component` variable collection with Light and Dark modes.
+2. Import the component paths from the `component/<atomic-level>/` source tree, preserving component, variant, slot,
+   and state segments.
+3. Bind component variables to the corresponding primitive/semantic variables rather than copying raw colour or scale values.
+4. Create component properties for the documented variants and sizes; create state variants only for states listed in the inventory.
+5. Keep layout formulas, viewport breakpoints, canvas behavior, and DOM/accessibility behavior outside the visual variable collection.
