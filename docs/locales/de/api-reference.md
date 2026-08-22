@@ -225,19 +225,15 @@ einpacken `packages/`, einschließlich der typisierten WebAssembly-Fassaden.
 
 ### Code- und WebAssembly-Pakete
 
-| Paket                                       | Zweck                                                              |
-| :------------------------------------------ | :----------------------------------------------------------------- |
-| `@mission-platform/barcode`                 | 1D-Barcode kodiert/dekodiert Fassade und Bauteil.  |
-| `@mission-platform/code-scan-wasm`          | Generiertes Bildscanner-WebAssembly-Modul.         |
-| `@mission-platform/code-scanner`            | Kamera- und Bildcode-Scankomponente.               |
-| `@mission-platform/matrix-code`             | Data Matrix und Aztec kodieren/dekodieren Fassade. |
-| `@mission-platform/matrix-code-decode-wasm` | Generiertes Matrixcode-Decoder-WebAssembly-Modul.  |
-| `@mission-platform/matrix-code-encode-wasm` | Generiertes Matrixcode-Encoder-WebAssembly-Modul.  |
-| `@mission-platform/qr-code`                 | QR-Kodierung/Dekodierung von Fassade und Bauteil.  |
-| `@mission-platform/qr-code-decode-wasm`     | Generiertes QR-Decoder-WebAssembly-Modul.          |
-| `@mission-platform/qr-code-encode-wasm`     | Generiertes QR-Encoder-WebAssembly-Modul.          |
-| `@mission-platform/harper`                  | Harper-Grammatik- und Stilintegration für Monaco.  |
-| `@mission-platform/hunspell`                | Emscripten Hunspell-Rechtschreibprüfungs-Wrapper.  |
+| Paket                              | Zweck                                                              |
+| :--------------------------------- | :----------------------------------------------------------------- |
+| `@mission-platform/barcode`        | 1D-Barcode kodiert/dekodiert Fassade und Bauteil.  |
+| `@mission-platform/code-scan-wasm` | Generiertes Bildscanner-WebAssembly-Modul.         |
+| `@mission-platform/code-scanner`   | Kamera- und Bildcode-Scankomponente.               |
+| `@mission-platform/matrix-code`    | Data Matrix und Aztec kodieren/dekodieren Fassade. |
+| `@mission-platform/qr-code`        | QR-Kodierung/Dekodierung von Fassade und Bauteil.  |
+| `@mission-platform/harper`         | Harper-Grammatik- und Stilintegration für Monaco.  |
+| `@mission-platform/hunspell`       | Emscripten Hunspell-Rechtschreibprüfungs-Wrapper.  |
 
 ### Forge compiler targets
 
