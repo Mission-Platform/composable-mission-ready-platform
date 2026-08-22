@@ -36,7 +36,7 @@ type ButtonContract = Record<
   }
 >;
 const componentContract = JSON.parse(
-  readFileSync(path.resolve(process.cwd(), '../tokens/tokens/component.tokens.json'), 'utf8'),
+  readFileSync(path.resolve(process.cwd(), '../tokens/tokens/component/atoms/button.tokens.json'), 'utf8'),
 ) as { component: { button: ButtonContract } };
 
 describe('ForgeButton authors the same component for React and Vue', () => {
@@ -83,6 +83,6 @@ describe('ForgeButton authors the same component for React and Vue', () => {
     expect(button.ghost.background.default.$value).toBe('transparent');
     expect(buttonStyles).toContain("@include transparent('tertiary');");
     expect(buttonStyles).toContain("@include transparent('ghost');");
-    expect(buttonStyles).toContain('--mp-component-button-secondary-border-hover');
+    expect(buttonStyles).toContain('--mp-button-secondary-border-hover');
   });
 });

@@ -46,9 +46,9 @@ describe('ForgeIconButton authors the same component for React and Vue', () => {
   });
 
   it('keeps transparent variants separate and preserves the muted default icon color', () => {
-    expect(iconButtonStyles).toContain('color: var(--mp-component-button-icon-button-color);');
+    expect(iconButtonStyles).toContain('color: var(--mp-button-icon-button-color);');
     expect(iconButtonStyles).toContain("@include transparent('ghost');");
     expect(iconButtonStyles).toContain("@include transparent('tertiary');");
-    expect(iconButtonStyles).toContain('--mp-component-button-secondary-border-hover');
+    expect(iconButtonStyles).toContain('--mp-button-secondary-border-hover');
   });
 });
