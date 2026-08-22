@@ -225,19 +225,15 @@ inpakken `packages/`, inclusief de getypte WebAssembly gevels.
 
 ### Code- en WebAssembly-pakketten
 
-| Pakket                                      | Purpose                                                               |
-| :------------------------------------------ | :-------------------------------------------------------------------- |
-| `@mission-platform/barcode`                 | 1D-barcode codeert/decodeert gevel en onderdeel.      |
-| `@mission-platform/code-scan-wasm`          | Gegenereerde afbeeldingsscanner WebAssembly-module.   |
-| `@mission-platform/code-scanner`            | Component voor het scannen van camera- en beeldcodes. |
-| `@mission-platform/matrix-code`             | Data Matrix en Azteekse codeer-/decodeerfaçade.       |
-| `@mission-platform/matrix-code-decode-wasm` | Gegenereerde Matrix Code-decoder WebAssembly-module.  |
-| `@mission-platform/matrix-code-encode-wasm` | Gegenereerde Matrix Code-encoder WebAssembly-module.  |
-| `@mission-platform/qr-code`                 | QR codeert/decodeert gevel en component.              |
-| `@mission-platform/qr-code-decode-wasm`     | Gegenereerde QR-decoder WebAssembly-module.           |
-| `@mission-platform/qr-code-encode-wasm`     | Gegenereerde QR-encoder WebAssembly-module.           |
-| `@mission-platform/harper`                  | Harper grammatica en stijlintegratie voor Monaco.     |
-| `@mission-platform/hunspell`                | Emscripten Hunspell-wrapper voor spellingcontrole.    |
+| Pakket                             | Purpose                                                               |
+| :--------------------------------- | :-------------------------------------------------------------------- |
+| `@mission-platform/barcode`        | 1D-barcode codeert/decodeert gevel en onderdeel.      |
+| `@mission-platform/code-scan-wasm` | Gegenereerde afbeeldingsscanner WebAssembly-module.   |
+| `@mission-platform/code-scanner`   | Component voor het scannen van camera- en beeldcodes. |
+| `@mission-platform/matrix-code`    | Data Matrix en Azteekse codeer-/decodeerfaçade.       |
+| `@mission-platform/qr-code`        | QR codeert/decodeert gevel en component.              |
+| `@mission-platform/harper`         | Harper grammatica en stijlintegratie voor Monaco.     |
+| `@mission-platform/hunspell`       | Emscripten Hunspell-wrapper voor spellingcontrole.    |
 
 ### Smeed compilerdoelen
 
