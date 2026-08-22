@@ -16,6 +16,7 @@ apps/*/**/*.generated.scss
 # Build Output
 .vite-ssg-temp/
 dist/
+dist-node/
 .turbo/
 target/
 
