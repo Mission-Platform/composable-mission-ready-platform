@@ -136,6 +136,14 @@ describe('Forge Web Script Monaco adapter', () => {
         expect.objectContaining({ scopes: 'type' }),
       ]),
     });
+    expect((tokenResult as { tokens: Array<{ startIndex: number; scopes: string }> }).tokens).toEqual(
+      expect.arrayContaining([
+        { startIndex: 0, scopes: 'keyword' },
+        { startIndex: 7, scopes: 'keyword' },
+        { startIndex: 10, scopes: 'type' },
+        { startIndex: 21, scopes: 'type' },
+      ]),
+    );
     // Verify no custom 'fws.*' scopes are emitted (they won't be colored by built-in themes)
     const allScopes = (tokenResult as { tokens: Array<{ scopes: string }> }).tokens.map((t) => t.scopes);
     expect(allScopes).not.toContain(expect.stringContaining('fws.'));
