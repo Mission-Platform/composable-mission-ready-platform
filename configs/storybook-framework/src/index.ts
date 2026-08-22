@@ -105,6 +105,7 @@ const SHARED_ADDONS: readonly string[] = [
   '@storybook/addon-a11y',
   '@storybook/addon-themes',
   '@storybook/addon-docs',
+  '@storybook/addon-designs',
 ];
 
 const STORY_EXTENSIONS = '@(js|jsx|mjs|ts|tsx)';

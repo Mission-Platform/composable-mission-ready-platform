@@ -72,6 +72,7 @@
     "@storybook/addon-docs": "catalog:storybook",
     "@storybook/addon-themes": "catalog:storybook",
     "@storybook/addon-vitest": "catalog:storybook",
+    "@storybook/addon-designs": "catalog:storybook",
     "@storybook/react-vite": "catalog:storybook",
     "@storybook/svelte-vite": "catalog:storybook",
     "@sveltejs/vite-plugin-svelte": "catalog:svelte",
