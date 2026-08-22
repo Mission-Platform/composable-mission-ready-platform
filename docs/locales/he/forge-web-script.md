@@ -1,62 +1,243 @@
 # Forge Web Script v1
 
-תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
+Forge Web Script (`.fws`) is a small, general-purpose language for WebAssembly
+workloads. It is web-first, capability-based, and deliberately independent of
+Vue, React, the DOM, and the Forge component compiler. This document is the
+authoritative v1 language and module contract. `@mission-platform/forge-web-script`
+is the browser-safe compatibility facade for parsing, type checking, graph/link
+resolution, manifest data, and the compiler service API used by the Vite adapter
+and LSP. `@mission-platform/forge-web-script-wasm` is the deterministic backend
+that lowers checked IR to validated WebAssembly and WAT. The Node-only
+`@mission-platform/forge-web-script-cli` package provides the `forge-web-script`
+command for checking and compiling files or source graphs. The TypeScript
+package also contains the executable conformance fixtures.
 
-> מקור באנגלית: [docs/forge-web-script.md](../../forge-web-script.md)
-> שפה: עברית (he)
+## Status and versioning
 
-Forge Web Script (`.fws`) היא שפה קטנה לשימוש כללי עבור WebAssembly
-עומסי עבודה. זה אינטרנט ראשון, מבוסס יכולות ובלתי תלוי בכוונה
-Vue, React, ה-DOM ומהדר רכיב Forge. מסמך זה הוא ה
-חוזה שפה ומודולים סמכותי v1. ה TypeScript חֲבִילָה
-`@mission-platform/forge-web-script` מכיל את מנתח bootstrap הניתן להפעלה,
-בודק סוגים, סוגי מניפסט ABI ותקני התאמה.
+The current contract is **language version `1.0`** and **logical ABI version
+`1.2`**. The language version describes source and semantics; the ABI version
+describes the WebAssembly boundary and host protocol. They are versioned
+independently. A compiler must write both versions into every generated module
+manifest, and a loader must validate both before instantiation. ABI `1.2` is a
+breaking revision of the memory contract: `memory` manifests must declare
+`allocatorExport: "fws_alloc"`, `deallocatorExport: "fws_dealloc"`, and
+`reallocatorExport: "fws_realloc"`, while `fws_reset` must be present in the
+module export set. Loaders reject older or incomplete manifests and modules
+rather than silently assuming the missing reallocator.
 
-## סטטוס וניהול גרסאות
+The source format is UTF-8 text with the `.fws` extension. A source file is a
+file-defined module; its identity is derived from the normalized Vite file ID
+(or workspace-relative path). The compiler input identifies the language version, while the
+generated manifest is the persisted version marker consumed by loaders. Future
+revisions may add a source pragma, but v1 does not require one; a v1 compiler
+must reject a source construct it does not understand rather than guessing its
+version.
 
-החוזה הנוכחי הוא **גרסת שפה `1.0`** ו**גרסת ABI הגיונית
-`1.0`**. גרסת השפה מתארת ​​מקור וסמנטיקה; גרסת ABI
-מתאר את גבול ה-WebAssembly ואת פרוטוקול המארח. הם בעלי גרסה
-באופן עצמאי. מהדר חייב לכתוב את שתי הגרסאות לכל מודול שנוצר
-מניפסט, ומטען חייב לאמת את שניהם לפני מופע.
+## Exception-free outcomes and structured control flow
 
-פורמט המקור הוא טקסט UTF-8 עם ה- `.fws` הַרחָבָה. קובץ מקור הוא א
-מודול בודד. קלט המהדר מזהה את גרסת השפה, בעוד ה-
-המניפסט שנוצר הוא סמן הגרסה המתמשכת הנצרך על ידי מעמיסים. עתיד
-גרסאות עשויות להוסיף פרגמת מקור, אך v1 אינו מצריך אחת; מהדר v1
-חייב לדחות מבנה מקור שהוא לא מבין במקום לנחש אותו
-גרסה.
+Forge Web Script represents recoverable outcomes with the standard-library
+`Option<T>` and `Result<T, E>` enums. Use `match` to handle every variant;
+source-level `throw`, `try`, and `catch` are not executable constructs. The
+structured `for`, `while`, and `do while` forms are executable v1 control flow;
+they are not exception or iterator constructs. `Result` has exactly the
+variants `Ok(T)` and `Error(E)`.
 
-## התייחסות לקסיקלית
+Iterator functions use `iter fn`, return `Iterator<T>`, and suspend at `yield`:
 
-רווח לבן אינו משמעותי למעט המחרוזות הפנימיות. `//` מתחיל תגובה ש
-רץ עד סוף הקו. מזהים מתחילים ב `A-Z`, `a-z`, או `_`, ו
-המשך עם אותם תווים או ספרות עשרוניות. מזהים הם
-תלוי רישיות. מילים שלמים הם רצפים עשרוניים לא שליליים; v1 עושה זאת
-אין לקבל תחביר מילולי הקסדצימלי, אוקטלי או נקודה צפה ב-
-תת-קבוצת אתחול. מחרוזות משתמשות במירכאות כפולות ו-escapes תואמות JSON ו
-הם ערכי UTF-8.
+```fws
+export iter fn forward(source: Iterator<i32>) -> Iterator<i32> {
+  loop value = source.next() { yield value; }
+}
+```
 
-המילים השמורות הן `as`, `capability`, `else`, `export`, `fn`, `if`,
-`import`, `let`, `module`, ו `return`. `true` ו `false` הם בוליאניים
-מילוליים. סימני פיסוק הם `{ } ( ) : ; ,`; מפעילים הם `! % * + - / < <= ==
-!= > >= && || = ->`.
+The compiler exposes an iterator export through a JavaScript-compatible
+`next()` adapter. Each call returns `{ value, done: false }` for a value and
+`{ value: undefined, done: true }` on completion; subsequent calls remain
+complete. `Iterator<T>.next()` is typed as `Option<T>`, so chained iterators
+must preserve the element type and ownership contract.
 
-כל טווח אבחון הוא טווח קיזוז של מקור פתוח למחצה `[start, end)` ב-
-UTF-16 מקורי TypeScript מחרוזת (הקיזוזים סופרים יחידות קוד UTF-16), עם
-שדות שורה ועמודה מבוססים אחד. ה
-הטמעת bootstrap מדווחת על קיזוז ונתוני שורה/עמודה יחדיו, כך שא
-Vite מתאם יכול לייצר אבחון ממופת מקור ללא ניתוח חוזר.
+## Optimization and target profiles
 
-## דקדוק המקור
+Release optimization can apply proven iterator unrolling, pure-call inlining,
+tail-call analysis, and safe conditional folding. Use the `noinline` directive
+when a function boundary must remain visible. Capability imports and logging
+are observable side effects and are not reordered. Target features are opt-in
+compile input and are recorded in the ABI manifest and cache key:
 
-הדקדוק הבא מתאר את משטח האתחול v1. הדקדוק משתמש
-`*` ו `?` במובן הרגיל של EBNF:
+```ts
+const artifact = compileForgeWebScript({
+  source,
+  fileName: "runtime.fws",
+  compilerVersion: "1.0.0",
+  optimization: "release",
+  targetFeatures: { simd: true, tailCall: true, memory64: true },
+  compilerHints: { iteratorUnrollLimit: 4 },
+});
+```
+
+`threads` and `atomics` must both be enabled for shared-memory atomic output;
+unsupported combinations produce diagnostics. A memory64 manifest uses `u64`
+addresses and pointer-length-u64 values. In debug mode, a configured cache may
+persist deterministic `<key>.optimized.wat`, `<key>.unoptimized.wat`,
+`<key>.optimized.wasm`, and `<key>.unoptimized.wasm` artifacts. Cache writes
+are additive and unavailable or failing caches do not fail compilation.
+
+## Cross-project link profiles
+
+FWS supports two primary link profiles for cross-project dependency management:
+
+- `linkProfile: "static"`: Cross-project modules are flattened into a single
+  scanner graph artifact. This enables aggressive static optimization
+  (`static-aggressive` profile) and eliminates runtime module lookup at the
+  cost of artifact size.
+- `linkProfile: "dynamic"`: Explicit source-module boundaries are preserved.
+  `ForgeWebScriptDynamicLinkCache` is used to resolve decoder modules at runtime,
+  with cached function addresses keyed by artifact and manifest identity. This
+  uses the `dynamic-conservative` optimization profile, which is safer for
+  modular distributions.
+
+## Lexical reference
+
+The canonical checked-in grammar is
+[`packages/forge-web-script/src/grammar/forge-web-script.ebnf`](../packages/forge-web-script/src/grammar/forge-web-script.ebnf).
+The lexical and parser summaries below explain the public v1 contract; the
+EBNF artifact is authoritative when an implementation detail is ambiguous.
+
+Whitespace is insignificant except inside strings. `//` starts a comment that
+runs to the end of the line. `/*` starts a block comment that ends at the next
+`*/`; block comments may span lines. Comments are trivia and do not enter the
+grammar. Identifiers start with `A-Z`, `a-z`, or `_`, and
+continue with those characters or decimal digits. Identifiers are
+case-sensitive. Integer literals are non-negative decimal sequences; v1 does
+not accept hexadecimal, octal, or floating-point literal syntax in the
+bootstrap subset. Strings use double quotes and only JSON-compatible escapes:
+`\\`, `\"`, `\/`, `\b`, `\f`, `\n`, `\r`, `\t`, and `\uXXXX` with exactly
+four hexadecimal digits. Raw line terminators and invalid escapes are lexical
+errors; use `\n` or `\r` instead. String values are UTF-8 values.
+
+The reserved words are `as`, `capability`, `case`, `catch`, `class`,
+`constructor`, `default`, `do`, `else`, `enum`, `extends`, `export`, `for`,
+`fn`, `if`, `impl`, `import`, `inline`, `interface`, `iter`, `let`, `likely`,
+`loop`, `match`, `module`, `new`, `noinline`, `return`, `struct`, `switch`,
+`throw`, `trait`, `try`, `unlikely`, `while`, and `yield`. `true` and `false`
+are boolean literals. Punctuation is
+`{ } ( ) [ ] : ; , | .`; operators are
+`! % * + - / < <= == != > >= && || = -> => ::`.
+
+Every diagnostic span is a half-open source-offset range `[start, end)` in the
+original UTF-16 TypeScript string (offsets count UTF-16 code units), with
+one-based line and column fields. The
+bootstrap implementation reports offsets and line/column data together so a
+Vite adapter can produce source-mapped diagnostics without reparsing.
+
+The scanner retains comments as `comment` tokens so documentation comments can
+be attached to functions, while parser decisions skip all trivia. Operators
+with shared prefixes are selected by longest match. On malformed input the
+scanner consumes a bounded region, emits the stable `FWS-LEX-*` diagnostic, and
+continues to a single EOF token; this recovery behavior is part of the grammar
+contract. The TypeScript frontend measures all offsets in UTF-16 code units;
+self-hosted byte stages must convert UTF-8 byte spans before publishing the
+shared token contract.
+
+### Function documentation comments
+
+A block comment whose opening delimiter is `/**` is a documentation comment.
+It is attached to the next top-level `fn` or `export fn` declaration when only
+whitespace and ordinary comments occur between the comment and the declaration:
+
+```fws
+/**
+ * Adds one to a value.
+ *
+ * @param value The value to increment.
+ * @return The incremented value.
+ * @deprecated Use `increment` in new code.
+ */
+export fn add(value: i32) -> i32 {
+  return value + 1;
+}
+```
+
+Documentation comments before capability imports, source imports, structs,
+enums, interfaces, or other non-function declarations are discarded. They do
+not carry forward to a later function. If several documentation comments occur
+before one declaration, the closest (last) documentation comment is used;
+ordinary `//` and `/* ... */` comments do not replace it. Documentation is
+recognized only at the top level; comments inside function bodies are not
+function metadata. An unterminated block comment produces the stable lexical
+diagnostic `FWS-LEX-003` and parser recovery remains available for the rest of
+the source.
+
+The normalized AST metadata has this shape:
+
+```ts
+interface ForgeWebScriptDocumentation {
+  readonly description: string;
+  readonly tags: readonly ForgeWebScriptDocumentationTag[];
+}
+
+interface ForgeWebScriptDocumentationTag {
+  readonly name: string;
+  readonly subject?: string;
+  readonly text: string;
+}
+```
+
+The normalizer removes the `/**` and `*/` delimiters, leading whitespace, the
+optional leading `*` decoration on each line, and surrounding whitespace. Runs
+of whitespace collapse to one space. Description lines before the first tag
+are grouped into paragraphs; blank lines remain paragraph breaks. A tag starts
+on a line beginning with `@`, and non-empty following lines continue the
+previous tag. Tag order and duplicate tags are preserved.
+
+The commonly used tag forms are:
+
+| Tag form                                                 | Structured fields                            |
+| -------------------------------------------------------- | -------------------------------------------- |
+| `@param name text`, `@arg`, `@argument`, or `@parameter` | `name` is `subject`; the remainder is `text` |
+| `@typeparam name text`                                   | `name` is `subject`; the remainder is `text` |
+| `@throws type text` or `@exception type text`            | `type` is `subject`; the remainder is `text` |
+| `@return text` or `@returns text`                        | `text` only                                  |
+| `@deprecated text`                                       | `text` only                                  |
+
+Other `@name` forms are accepted and retained as ordered tags rather than
+reported as diagnostics. They have no inferred subject; their remaining text
+is preserved. Tag names are case-sensitive.
+
+For editor consumers, the same metadata is rendered deterministically as the
+description followed by each tag in source order, with blank lines between
+parts. A subject is emitted between the tag name and its text, for example:
+
+```text
+Adds one to a value.
+
+@param value The value to increment.
+
+@return The incremented value.
+
+@deprecated Use `increment` in new code.
+```
+
+Documentation is analysis metadata, not executable language semantics. It may
+be preserved in the AST and IR for language-service consumers, but it does not
+affect parsing of declarations, type checking, lowering, or runtime behavior.
+Documentation is excluded from ABI signatures and manifests, generated
+declarations and loader artifacts, Wasm/WAT, executable content hashes, and
+capability requirements. Changing only a documentation comment therefore does
+not change the module's ABI or generated executable contract.
+
+## Source grammar
+
+The checked-in EBNF artifact linked above describes the complete lexical,
+bootstrap, extended aggregate, and recovery contract. The following excerpt
+describes the v1 bootstrap surface for readers who do not need the full file.
+The grammar uses `*` and `?` in the usual EBNF sense:
 
 ```ebnf
-module       = "module", identifier, "{", { import | function }, "}" ;
+module       = { import | function } ;
 import       = "import", "capability", string, "as", identifier,
                "(", [ parameters ], ")", "->", type, ";" ;
+sourceImport = "import", string, "as", identifier, ";" ;
 function     = [ "export" ], "fn", identifier, "(", [ parameters ], ")",
                "->", type, block ;
 parameters   = parameter, { ",", parameter } ;
@@ -65,7 +246,15 @@ block        = "{", { statement }, "}" ;
 statement    = "let", identifier, ":", type, "=", expression, ";"
              | "return", [ expression ], ";"
              | "if", expression, block, [ "else", block ]
+             | "while", expression, block
+             | "for", "(", [ for-clause ], ";", expression, ";",
+               [ for-clause ], ")", block
+             | "do", block, "while", expression, ";"
+             | identifier, "=", expression, ";"
              | expression, ";" ;
+for-clause   = "let", identifier, ":", type, "=", expression
+             | identifier, "=", expression
+             | expression ;
 type         = "bool" | "bytes" | "f32" | "f64" | "i32" | "i64"
              | "string" | "u32" | "u64" | "unit" ;
 expression   = literal | identifier | call | unary | binary ;
@@ -74,49 +263,193 @@ unary        = ( "!" | "-" ), expression ;
 literal      = integer | string | "true" | "false" ;
 ```
 
-אופרטורים בינאריים עוקבים אחר רמות העדיפות האלה, מהחזק לחלש ביותר:
-`* / %`, `+ -`, השוואות מסודרות, שוויון, `&&`, ו `||`. מפעילים הם
-שמאל-אסוציאטיבי. ביטויים בסוגריים שמורים ל-bootstrap הבא
-עדכון; מהדר חייב להוציא אבחון ניתוח ולא בשקט
-מקבל אותם היום.
+Binary operators follow these precedence levels, from strongest to weakest:
+`* / %`, `+ -`, ordered comparisons, equality, `&&`, and `||`. Operators are
+left-associative. Parenthesized expressions are reserved for the next bootstrap
+revision; a compiler must issue a parse diagnostic rather than silently
+accepting them today.
 
-## סוגים וסמנטיקה
+This excerpt is the **bootstrap** grammar. It covers file-defined modules,
+capability/source imports, primitive signatures, calls, local values,
+expressions, structured `if`/`else`, `while`, C-style `for`, `do while`, and
+`return`. The loop forms are part of the executable bootstrap contract; only
+the reserved exception words `throw`, `try`, and `catch` are rejected as
+executable constructs. Aggregate declarations and values below are the
+**extended** contract and must not be treated as an alternative spelling for
+the bootstrap grammar.
 
-ל-V1 יש את הטיפוסים הפרימיטיביים `bool`, חתום `i32`/`i64`, לא חתום `u32`/`u64`,
-`f32`/`f64`, `string`, `bytes`, ו `unit`. אין מספרים מרומזים
-המרות. אופרנדים אריתמטיים חייבים להיות בעלי אותו סוג מספרי; השוואות
-לייצר `bool`; אופרטורים לוגיים דורשים `bool`; שוויון דורש שוויון
-סוגים. לפונקציה יש סוג תוצאה מוצהר אחד ו-a `unit` הפונקציה חוזרת
-ללא ערך.
+### Extended aggregate grammar
 
-`string` ו `bytes` הם הערכים המצטברים של v1. מחרוזת היא בלתי משתנה
-רצף של ערכים סקלרים של Unicode המיוצגים כ-UTF-8 בגבול ABI.
-בתים הם רצף בלתי ניתן לשינוי של אוקטטים ועשויים להכיל כל ערך מ
-`0x00` בְּאֶמצָעוּת `0xff`. הפעולות ברמת המקור שלהם קטנות בכוונה
-בתת-קבוצת האתחול; שיחות מארח ומאוחר יותר מודולים של ספרייה סטנדרטית מספקים
-פעולות קידוד, חיתוך ואיסוף מבלי להוסיף דפדפן סביבתי
-ממשקי API לשפה.
+The extended contract adds immutable structs, tagged enums, generic types,
+interfaces, function values, collection literals, indexing, and `match`.
+Their core source forms are:
 
-מקומיים הם בהיקף פונקציות, מאותחלים פעם אחת בדיוק, ולא ניתן לקרוא אותם קודם לכן
-ההצהרה שלהם. הצהרה מקומית לא מצילה שם קיים: שכפול
-שמות הם שגיאה. פונקציות וכינויים ליכולות חולקים מרחב שמות של מודול אחד
-וחייב להיות ייחודי. קריאה חייבת לתת שם לפונקציה שהוצהרה או מיובאת
-היכולת, וסוגי האריות והטיעונים שלה חייבים להתאים בדיוק.
+```ebnf
+aggregate    = struct | enum | interface ;
+struct       = "struct", identifier, [ generic_parameters ], "{",
+               { identifier, ":", type, ";" }, "}" ;
+enum         = [ "export" ], "enum", identifier, [ generic_parameters ], "{",
+               variant, { ",", variant }, [ "," ], "}" ;
+variant      = identifier, [ "(", [ parameters ], ")" ] ;
+generic_parameters = "<", generic_parameter, { ",", generic_parameter }, ">" ;
+generic_parameter  = identifier, [ ":", identifier ] ;
+type         = primitive | identifier, [ "<", type, { ",", type }, ">" ]
+             | "[", type, ";", integer, "]"
+             | "Fn", "<", type, ",", type, ">" ;
+constructor  = identifier, "::", identifier, "(", [ expression ], ")" ;
+match        = "match", expression, "{", match_arm, { ",", match_arm }, "}" ;
+match_arm    = pattern, "=>", expression ;
+pattern      = "_" | identifier, [ "(", [ identifier, { ",", identifier } ], ")" ] ;
+```
 
-משטח הזרימה הבקרה של v1 מובנה `if`/`else` ומוקדם `return`.
-אין תוצאה מרומזת של נפילה: כל נתיב שניתן להגיע אליו ב-non-`unit`
-הפונקציה חייבת להחזיר את הסוג המוצהר. בודק האתחול מדווח על חזרה
-שגיאות סוג; ניתוח נגישות הוא מעקב נדרש לפני ההכרזה על א
-מהדר תואם לחלוטין ל-v1.
+Qualified constructors such as `Result::Ok(value)` and
+`Result::Error(message)` resolve against the aggregate and validate variant
+arity and field types. The standard `Result<T, E>` variants are exactly
+`Ok(T)` and `Error(E)`; `Option<T>` remains `Some(T)` and `None`. A function
+value uses `fn name` and a declared `Fn<parameter, result>` type, for example
+`let callback: Fn<i32, i32> = fn increment;`. Function values are checked by
+the referenced function signature and are callable only with matching arity
+and argument types.
 
-## הצהרות מודול ויצוא
+Match bindings are local to their arm: `Result::Ok(item) => item` binds
+`item` while checking that expression only. Binding names must be unique in an
+arm and their count must match the selected variant fields; they do not leak
+to sibling arms or the surrounding function.
 
-רק הצהרות שקדמו `export` הם ציבוריים. שמות הייצוא יציבים,
-מחרוזות רגישות רישיות וממוינות לקסיקוגרפית בקובץ שנוצר
-מתגלה. פונקציות פרטיות עשויות להיות בשימוש על ידי פונקציות מיוצאות אך לא
-גלוי למארח. אין ייצוא תווים כלליים ואין ייבוא ​​סביבה.
+## Types and semantics
 
-לייבוא ​​יכולות יש שם מצוטט בבעלות מארח וכינוי אורח מקומי:
+V1 has the primitive types `bool`, signed `i32`/`i64`, unsigned `u32`/`u64`,
+`f32`/`f64`, `string`, `bytes`, and `unit`. There are no implicit numeric
+conversions. Arithmetic operands must have the same numeric type; comparisons
+produce `bool`; logical operators require `bool`; equality requires equal
+types. A function has one declared result type and a `unit` function returns
+without a value.
+
+### Compiler-owned regular expressions
+
+Forge Web Script provides a deterministic regular-expression standard library.
+The calls `regex_full_match(pattern, value) -> bool`,
+`regex_prefix_match(pattern, value) -> bool`, and
+`regex_search(pattern, value, start: i32) -> bool` perform whole-value,
+position-zero prefix, and leftmost search matching respectively. Capture bounds
+are available through the corresponding `regex_*_capture_start` and
+`regex_*_capture_end` calls; they take a group index and return a UTF-16 string
+offset, or `-1` when there is no match or the group is unset. Search capture
+calls additionally take the starting offset before the group index.
+
+Regex calls are compiler-owned standard-library functions. They are typed by
+the frontend, annotated in IR, and are never capability imports. A module using
+only regex calls therefore has an empty `imports` array and an empty
+`requiredCapabilities` array. Backend lowering and the in-module VM are a
+separate implementation phase; a compiler must not replace these calls with a
+browser `RegExp`, Node API, or implicit host import.
+
+The supported syntax is intentionally restricted to literals, `.`, character
+classes and ranges (including `^` negation), `\d`, `\D`, `\w`, `\W`, `\s`,
+`\S`, escaped literals, capturing and non-capturing groups, alternation,
+`*`, `+`, `?`, bounded `{n}`, `{n,}`, `{n,m}` quantifiers, lazy quantifiers,
+and `^`/`$` anchors. Backreferences, lookaround, named groups, flags, and
+other host-engine extensions are rejected. Unsupported syntax has the stable
+`FWS-REGEX-001` diagnostic; malformed patterns use `FWS-REGEX-002`, and an
+internal compiler invariant failure uses `FWS-REGEX-003`.
+
+The shared package `@mission-platform/forge-web-script-regex` owns the stable
+bytecode (`FORGE_REGEX_BYTECODE_VERSION`) and build-time compiler. Its explicit
+`/reference` entry point exposes a TypeScript VM only as a conformance oracle
+for native-engine and backend differential tests; the package root does not
+expose that VM. Phone-specific metadata remains in the phone-number package.
+Production regex execution belongs to the Forge Web Script backend and the
+generated WASM module, never to a TypeScript runtime layer or host capability.
+
+`string` and `bytes` are the v1 aggregate values. A string is an immutable
+sequence of Unicode scalar values represented as UTF-8 at the ABI boundary.
+Bytes are an immutable sequence of octets and may contain any value from
+`0x00` through `0xff`. Their source-level operations are intentionally small
+in the bootstrap subset; host calls and later standard-library modules provide
+encoding, slicing, and collection operations without adding ambient browser
+APIs to the language.
+
+### Collection signatures
+
+The extended collection contract is structural and receiver-based; it does
+not add arbitrary object methods. Fixed arrays are written `[T; N]` and
+vectors as `Vector<T>`. The supported signatures are:
+
+| Receiver    | Method          | Signature               |
+| ----------- | --------------- | ----------------------- |
+| `Array<T>`  | `length`        | `() -> u32`             |
+| `Array<T>`  | `get`           | `(u32) -> Option<T>`    |
+| `Array<T>`  | `set`           | `(u32, T) -> Array<T>`  |
+| `Array<T>`  | `iter`          | `() -> Iterator<T>`     |
+| `Vector<T>` | `length`        | `() -> u32`             |
+| `Vector<T>` | `get`           | `(u32) -> Option<T>`    |
+| `Vector<T>` | `set`           | `(u32, T) -> Vector<T>` |
+| `Vector<T>` | `push` or `add` | `(T) -> Vector<T>`      |
+| `Vector<T>` | `pop`           | `() -> Option<T>`       |
+| `Vector<T>` | `iter`          | `() -> Iterator<T>`     |
+
+The `add` spelling is intentionally a compatibility alias for vector
+`push`; it is not an array method. Indices are `u32`, element arguments must
+match `T`, and return values must match the signatures above. Wrong arity,
+argument types, receiver kinds, and unknown methods are type-checking errors.
+Empty literals require contextual element type, while non-empty array/vector
+literals infer their element type recursively and reject mixed elements. A
+fixed array literal must contain exactly `N` elements.
+
+Locals are function-scoped, initialized exactly once, and cannot be read before
+their declaration. A local declaration shadows no existing name: duplicate
+names are an error. Functions and capability aliases share one module namespace
+and must be unique. A call must name a declared function or imported
+capability, and its arity and argument types must match exactly.
+
+The v1 control-flow surface is structured `if`/`else`, `while`, C-style `for`,
+`do while`, and early `return`. `for` clauses are explicit statements and do
+not introduce classes, receivers, or implicit mutation outside the loop's
+local value environment. There is no implicit fall-through result: every
+reachable path in a non-`unit` function must return the declared type. The
+bootstrap checker reports return type errors; reachability analysis is a
+required follow-up before declaring a compiler fully v1-conformant.
+
+FWS is intentionally class-free. `class`, `constructor`, `extends`, `impl`,
+`new`, and `trait` are reserved and rejected with stable diagnostic
+`FWS-PARSE-052`; immutable structs, tagged enums, interfaces, and function
+values are the supported value-oriented alternatives. The staged self-hosting
+contract keeps the checked-in TypeScript compiler as a seed while FWS compiler
+and runtime contracts are bootstrapped incrementally.
+
+## File-defined modules, source imports, and exports
+
+There is no nested `module` declaration. Every `.fws` file is a module and its
+stable name is derived from its normalized file ID. For example,
+`src/time.fws` in project `/workspace/app` has module ID `src/time`. Nested
+`module name { ... }` syntax is rejected with a migration diagnostic.
+
+Source-module imports are distinct from host capability imports:
+
+```fws
+import "./math.fws" as math;
+import capability "clock.now" as now() -> i64;
+```
+
+The Vite adapter resolves source imports through its module graph. Dependencies
+inside one project are statically linked by default. Cross-project edges default
+to dynamic loading and can be configured as `static` or `dynamic` with explicit
+project-root link configuration. Missing modules, cycles unsupported by the
+selected link mode, and identity collisions are graph diagnostics.
+
+Static links flatten reachable guest exports into one artifact. Export collisions
+are rejected deterministically (`FWS-LINK-003` for duplicate signatures and
+`FWS-LINK-004` for incompatible signatures); the linker does not silently
+namespace or overwrite guest functions. Dynamic links remain separate module
+boundaries and are recorded as source-module imports in the ABI manifest, never
+as ambient host capabilities.
+
+Only declarations preceded by `export` are public. Export names are stable,
+case-sensitive strings and are sorted lexicographically in a generated
+manifest. Private functions may be used by exported functions but are not
+visible to the host. There is no wildcard export and no ambient import.
+
+Capability imports have a quoted, host-owned name and a guest-local alias:
 
 ```fws
 import capability "clock.now" as now() -> i64;
@@ -126,83 +459,190 @@ export fn current_time() -> i64 {
 }
 ```
 
-שם היכולת המצוטט, הכינוי, שמות/סוגי פרמטרים וסוג התוצאה הם
-הכל כלול במניפסט. היבוא הוא דטרמיניסטי: כינויים כפולים או
-הצהרות יכולות נדחות, ושמות יכולות נדרשות
-ביטול כפילות ומיון. המארח מספק יישומים לפי שם יכולת;
-האורח אינו יכול לגלות או לקרוא ליכולת שנעדרת ממנה
-מתגלה.
+The quoted capability name, alias, parameter names/types, and result type are
+all included in the manifest. Imports are deterministic: duplicate aliases or
+capability declarations are rejected, and required capability names are
+deduplicated and sorted. The host supplies implementations by capability name;
+the guest cannot discover or call a capability that is absent from its
+manifest.
 
-## יכולת לוגית ABI
+## Logical capability ABI
 
-Forge Web Script משתמש בגבול _לוגי_ בהשראת WASI, לא בטענה של מלא
-תאימות WASI. יכולת היא פונקציית מארח צרה ומפורשת כגון
-`clock.now`, `random.bytes`, או `storage.read`. שמות היכולות הם בבעלות
-הפלטפורמה, ולכל שם יש חתימה בגרסה נפרדת. אובייקטי DOM,
-`window`, `document`, Node מובנים, לקוחות רשת ודפדפנים גלובליים אחרים
-הם אף פעם לא תלות אורחים סביבתיים.
+Forge Web Script uses a WASI-inspired _logical_ boundary, not a claim of full
+WASI compatibility. A capability is a narrow, explicit host function such as
+`clock.now`, `random.bytes`, or `storage.read`. Capability names are owned by
+the platform, and each name has a separately versioned signature. DOM objects,
+`window`, `document`, Node built-ins, network clients, and other browser globals
+are never ambient guest dependencies.
 
-המעמיס מבצע את הבדיקות הבאות לפני המופע:
+The loader performs these checks before instantiation:
 
-1. פורמט המניפסט, גרסת השפה וגרסת ABI נתמכים.
-2. כל יכולת נדרשת קיימת ברישום המארח.
-3. לכל יכולת שסופקה יש את החתימה המוצהרת המדויקת ולא מוצהרת
-   ייבוא אורחים מתקבל.
-4. הצהרות זיכרון, מקצה, ייצוא וייבוא הן פנימיות
-   עקבי.
+1. The manifest format, language version, and ABI version are supported.
+2. Every required capability is present in the host registry.
+3. Every supplied capability has the exact declared signature and no undeclared
+   guest import is accepted.
+4. Memory, allocator, export, and import declarations are internally
+   consistent.
 
-גילוי יכולת הוא פעולת מארח מפורשת. מארח עשוי לחשוף א
-מלאי יכולת לקוד יישום, אך האורח מקבל רק את
-יבוא המוצהר על ידי המודול שלו. יכולות חסרות או נדחות נכשלות עם א
-זמן טעינה `CapabilityDenied` מַלכּוֹדֶת; הם לא הופכים `undefined` או א
-ללא הפעלה שקטה.
+Capability discovery is an explicit host operation. A host may expose a
+capability inventory to application code, but the guest only receives the
+imports declared by its module. Missing or denied capabilities fail with a
+load-time `CapabilityDenied` trap; they do not become `undefined` or a
+silent no-op.
 
-## ערכים, זיכרון ליניארי ובעלות
+## Values, linear memory, and ownership
 
-המודול משתמש בזיכרון ליניארי WebAssembly אחד עם 64 עמודי KiB ו-Little-endian
-ערכים סקלרים. ערכים סקלרים ממפים באופן הבא:
+The module uses one WebAssembly linear memory with 64 KiB pages and little-endian
+scalar values. Scalar values map as follows:
 
-| Forge Web Script | ייצוג WebAssembly |
-| ----------------- | ------------------------------------------ |
-| `bool`            | `i32`, איפה `0` הוא שקר ו `1` נכון |
-| `i32`, `u32`      | `i32`                                      |
-| `i64`, `u64`      | `i64`                                      |
-| `f32`, `f64`      | תואם WebAssembly float |
-| `unit`            | אין ערך תוצאה |
-| `string`, `bytes` | דוּ `u32` ערכים: מצביע ואז אורך בתים |
+| Forge Web Script  | WebAssembly representation                                 |
+| ----------------- | ---------------------------------------------------------- |
+| `bool`            | `i32`, where `0` is false and `1` is true                  |
+| `i32`, `u32`      | `i32`                                                      |
+| `i64`, `u64`      | `i64`                                                      |
+| `f32`, `f64`      | matching WebAssembly float                                 |
+| `unit`            | no result value                                            |
+| `string`, `bytes` | two `u32` values: pointer then byte length |
 
-המניפסט מצהיר על אותו מיפוי ב `valueRepresentations`. א
-צמד אורך מצביע תמיד מסומן כטווח ללא סימן לפני קריאה או
-כותב: `pointer <= memory.byteLength` ו `length <= byteLength - pointer`.
-אורך אפס חוקי ועשוי להשתמש בכל מצביע בגבולות, כולל הסוף של
-זיכרון. בדיקה נכשלת מלכודת עם `MemoryOutOfBounds` ולעולם לא חושף א
-ערך מפוענח חלקית.
+The manifest declares the same mapping in `valueRepresentations`. A
+pointer-length pair is always checked as an unsigned range before reading or
+writing: `pointer <= memory.byteLength` and `length <= byteLength - pointer`.
+Zero length is valid and may use any in-bounds pointer, including the end of
+memory. A failed check traps with `MemoryOutOfBounds` and never exposes a
+partially decoded value.
 
-המודול שנוצר מייצא `fws_alloc(size: u32) -> u32` ו
-`fws_dealloc(pointer: u32, size: u32) -> unit` כגבול הבעלות עבור
-חוצצים. המתקשר שמקצה מאגר הוא הבעלים שלו ועליו להקצות אותו
-באמצעות אותו מודול. יישומי מארח חייבים להעתיק בייטי קלט לפני ה-
-שיחת אורח חוזרת אלא אם המניפסט מציג במפורש עתיד שהושאל
-חוזה חיץ. אסור לקוד אורח לשמור מצביע בבעלות מארח אחרי מארח
-להתקשר. כישלון ההקצאה לוכד עם `MemoryExhausted`; כפול חינם ובלתי חוקי
-מלכודת חינם עם `InvalidOwnership`.
+The generated module exports `fws_alloc(size: u32) -> u32`,
+`fws_dealloc(pointer: u32, size: u32) -> unit`, and
+`fws_realloc(pointer: u32, oldSize: u32, newSize: u32) -> u32` as the ownership
+boundary for buffers. In signature shorthand, the operation is
+`fws_realloc(pointer, oldSize, newSize) -> pointer`. The caller that allocates a buffer owns it and must
+deallocate or reallocate it using the same module and its exact current size.
+The reallocator prefers to resize the current high-water allocation in place,
+including shrinking and growing when linear memory can grow. Otherwise it
+allocates a replacement, copies exactly `min(oldSize, newSize)` bytes, and
+releases the old allocation before returning the replacement pointer. A
+zero-size result is valid, and an equal-size request returns the original
+pointer. Host implementations must copy input bytes before the guest call
+returns unless the manifest explicitly introduces a future borrowed buffer
+contract. Guest code must not retain a host-owned pointer after a host call.
+Allocation or growth failure traps with `MemoryExhausted`; an invalid pointer or
+size range traps with `MemoryOutOfBounds`; and a stale pointer, incorrect
+`oldSize`, double free, or invalid free traps with `InvalidOwnership`. These
+checks happen before mutation, and a failed reallocation leaves the original
+allocation and bytes unchanged.
 
-חריגים מארח מומרים ל `HostError` עם שם היכולת ו-an
-קוד שגיאה מארח אטום. מלכודות אורחים לעולם אינן מומרות להחזרה רגילה
-ערכים. מארחים עשויים לרשום פרטי מלכודת, אך אסור להם לחשוף סודות או גולמיים
-חריגים בדפדפן לקוד אורח לא מהימן.
+Host exceptions are converted to `HostError` with the capability name and an
+opaque host error code. Guest traps are never converted into ordinary return
+values. Hosts may log trap details, but they must not expose secrets or raw
+browser exceptions to untrusted guest code.
 
-## פורמט מניפסט
+### Guest-owned checked memory operations
 
-לכל מודול שנוצר יש מניפסט ABI יציב תואם JSON לצדו
-חפץ WASM ומטען ESM מודפס:
+FWS source modules that implement a stateful guest heap may use the compiler-owned
+operations `memory_alloc(size: u32) -> u32`,
+`memory_dealloc(pointer: u32, size: u32) -> unit`,
+`memory_realloc(pointer: u32, oldSize: u32, newSize: u32) -> u32`,
+`memory_load_u32(address: u32) -> u32`, and
+`memory_store_u32(address: u32, value: u32) -> unit`. These operations are
+lowered directly to the module allocator or checked WebAssembly memory
+instructions; they are not host imports and do not expose guest state to
+TypeScript.
+
+The allocator uses the same ownership and trap contract as `fws_alloc` and
+`fws_realloc`. A load or store requires a complete four-byte range within the
+current linear memory; an invalid range traps with `MemoryOutOfBounds` before
+the operation can partially execute. `memory_realloc` preserves the first
+`min(oldSize, newSize)` bytes and returns a guest-owned pointer, while callers
+must use the returned pointer and its exact current size for later operations.
+The stateful-memory fixture under
+`packages/forge-web-script/src/fixtures/stateful-memory.fws` is the conformance
+fixture for these signatures, allocator reuse, recursion, reset, and bounds
+traps.
+
+Compiler-owned byte readers also provide unsigned-index variants for guest
+front ends that represent source offsets as handles: `bytes_length_u32(value:
+bytes) -> u32` and `bytes_byte_at_u32(value: bytes, index: u32) -> u32`. They
+use the same pointer-length bounds checks as the signed `bytes_length` and
+`bytes_byte_at` operations and are not host imports. The WebLua front end uses
+these operations to keep lexer offsets and guest memory addresses in one
+checked `u32` domain.
+
+### Raw WASM ABI and generated ESM contract
+
+The representation above is the stable raw WASM ABI. It is intentionally
+low-level and does not change when the generated JavaScript facade becomes more
+ergonomic:
+
+```text
+raw string value: (pointer: u32, length: u32)
+raw bytes value:  (pointer: u32, length: u32)
+```
+
+The compiler-generated ESM artifact projects that ABI into a JavaScript API:
+
+```ts
+type ForgeWebScriptBytes = readonly [pointer: number, length: number];
+
+interface ForgeWebScriptExports {
+  readonly memory: WebAssembly.Memory;
+  readonly fws_alloc: (size: number) => number;
+  readonly fws_dealloc: (pointer: number, size: number) => void;
+  readonly fws_realloc: (
+    pointer: number,
+    oldSize: number,
+    newSize: number,
+  ) => number;
+  readonly fws_reset: () => void;
+  readonly echo: (value: string) => string;
+  readonly processBytes: (value: ForgeWebScriptBytes) => ForgeWebScriptBytes;
+}
+```
+
+Every generated declaration, including capability imports and dynamic linked
+exports, uses `string` for FWS `string` values. The generated `load` and
+`loadSync` wrappers encode JavaScript strings as UTF-8, pass pointer-length
+pairs to the unchanged WASM ABI, and decode returned strings back to JavaScript
+strings. Decoding uses a fatal UTF-8 decoder: malformed guest bytes are an
+explicit boundary error rather than replacement characters.
+
+String arguments for one call are encoded first and packed into one contiguous
+guest allocation. This keeps the raw ABI unchanged while avoiding one guest
+allocation and JavaScript-to-WASM copy per argument. Scalar arguments retain
+their direct fast path. `bytes` is deliberately not converted to `Uint8Array`:
+callers continue to pass and receive `ForgeWebScriptBytes`, and `memory` is
+exposed so callers can read or write raw byte ranges using the module's memory
+and ownership rules.
+
+The generated adapter owns temporary buffers created for string arguments and
+string results. It decodes a result before releasing it, then releases each
+temporary range exactly once in a `finally` path on success, guest traps, host
+exceptions, and decode failures. A host capability with string values receives
+JavaScript strings and may return a JavaScript string; the wrapper performs the
+guest allocation and UTF-8 copy for that return value. Host code must still copy
+raw `bytes` inputs before returning unless a future manifest explicitly declares
+a borrowed-buffer contract. `load` and `loadSync` expose the same generated
+contract; they differ only in module initialization scheduling.
+
+Changing this JavaScript projection does not change `valueRepresentations`, the
+raw pointer-length ABI, the ABI version, or the raw WASM content hash.
+The generated artifact keeps one lazily decoded embedded-WASM representation;
+`load` and `loadSync` share it rather than materializing separate payload
+copies. Consequently, async-versus-sync loader checks should compare behavior
+and declarations, while deterministic content-hash checks should hash the raw
+WASM bytes independently of generated ESM source size or loader implementation
+details.
+
+## Manifest format
+
+Each generated module has a stable JSON-compatible ABI manifest alongside its
+WASM artifact and typed ESM loader:
 
 ```json
 {
   "format": "forge-web-script-module",
   "languageVersion": "1.0",
   "abiVersion": "1.2",
-  "moduleName": "clocked",
+  "moduleName": "src/clocked",
   "exports": [{ "name": "current_time", "parameters": [], "result": "i64" }],
   "imports": [
     {
@@ -211,6 +651,7 @@ Forge Web Script משתמש בגבול _לוגי_ בהשראת WASI, לא בטע
       "function": { "name": "now", "parameters": [], "result": "i64" }
     }
   ],
+  "sourceImports": [],
   "requiredCapabilities": ["clock.now"],
   "memory": {
     "pageSize": 65536,
@@ -223,84 +664,323 @@ Forge Web Script משתמש בגבול _לוגי_ בהשראת WASI, לא בטע
     "reallocatorExport": "fws_realloc"
   },
   "valueRepresentations": { "i64": "i64", "string": "pointer-length-u32" },
-  "trapModel": "explicit-trap"
+  "trapModel": "explicit-trap",
+  "standardLibrary": { "regexBytecodeVersion": "bytecode-1" }
 }
 ```
 
-המניפסט בפועל מכיל את כל ערכי הייצוג הפרימיטיביים, לא רק
-אלה המשמשים את הדוגמה. מפתחות JSON ליצוא, יבוא ויכולות הם
-יציב על פני בנייה חוזרת; מפות מקור ו-hash של תוכן נפלטים על ידי
-מתאם המהדר ואינם חלק מהתאמת חתימות ABI.
+The actual manifest contains all primitive representation entries, not only
+those used by the example. JSON keys for exports, imports, and capabilities are
+stable across repeated builds; source maps and content hashes are emitted by
+the compiler adapter and are not part of ABI signature matching.
 
-## אבחון
+The `standardLibrary` manifest field records compiler-owned library identities.
+For regex, `regexBytecodeVersion` and an optional `regexCorpusHash` are cache
+and artifact inputs. The normalized source, compiler version, optimization
+mode, module graph, link configuration, standard-library identity, and metadata
+corpus hash must be serialized in a stable order before cache lookup. Identical
+inputs produce identical bytecode tables, manifests, declarations, WAT, and
+content hashes; changing any identity input is a cache miss. A corpus hash is
+owned by the package providing the corpus and must not be inferred from host
+runtime state.
 
-אבחון הם רשומות מובנות עם `code`, `severity`, `phase`, `message`,
-`fileName`, ומקור `span`; רשומות הניתנות לפעולה עשויות לכלול גם `hint`.
-השלב הוא אחד מ `lex`, `parse`, `type-check`, או `abi`. קוד v1 יציב
-משפחות כוללות:
+## Compiler and CLI boundaries
 
-| משפחת קוד | המשמעות |
-| ------------- | ------------------------------------------------------------ |
-| `FWS-LEX-*`   | תווים לא חוקיים או מחרוזות שלא נגמרו |
-| `FWS-PARSE-*` | תחביר מודול, הצהרה, משפט או ביטוי לא חוקי |
-| `FWS-TYPE-*`  | סוג פרימיטיבי לא חוקי, שם, אופרטור, ארגומנט או החזרה |
-| `FWS-ABI-*`   | שמות כפולים, יכולות שנדחו, ייצוא או יבוא |
+The public TypeScript facade keeps frontend contracts and orchestration separate
+from emission. It accepts a source file or resolved graph, produces structured
+diagnostics plus typed IR, and delegates WebAssembly/WAT generation to
+`@mission-platform/forge-web-script-wasm`. The backend validates its bytes before
+returning them; errors suppress executable output. The Vite adapter and LSP use
+the facade and do not need to depend on the Node CLI.
 
-שגיאות מונעות יצירת חפצים. אזהרות ואבחון מידע כן
-לא לשנות סמנטיקה. סדר אבחון הוא סדר מקור, ואחריו שלב
-הזמנה לאבחון המחוברת לאותו טווח. א Vite מתאם חייב לשמר
-הקוד והטווח היציבים בעת העברת שגיאה ל Vite.
+For filesystem workflows, install `@mission-platform/forge-web-script-cli` and
+use its standalone `forge-web-script` binary:
 
-## חוזה התאמה של Bootstrap
+```text
+forge-web-script check <entry.fws> [--root <directory>] [--project-root <directory>]
+forge-web-script compile <entry.fws> --out-dir <directory>
+  [--root <directory>] [--project-root <directory>]
+  [--link-mode static|dynamic] [--capability <name>] [--optimization debug|release]
+```
 
-יעד המהדר של bootstrap קטן בכוונה מהיעד הסופי
-מהדר מתארח בעצמו. תוכנית נמצאת בתת-קבוצת האתחול אם היא משתמשת באחת כזו
-מודול, הכללים המילוניים לעיל, טיפוסים פרימיטיביים, `string`/`bytes` ערכים,
-פונקציות מיוצאות במפורש, יבוא יכולות, הצהרות מקומיות, שיחות,
-ביטויים, `if`/`else`, ו `return`. אסור שזה יהיה תלוי במשתמע
-דפדפן או Node גלוֹבָּלִי.
+`check` validates source and graph inputs without writing files. A successful
+`compile` writes exactly `<entry>.wasm`, `<entry>.wat`, `<entry>.abi.json`,
+`<entry>.d.ts`, `<entry>.js`, and `<entry>.map` to the selected output directory.
+The CLI stages and renames the complete set only after diagnostics are clear, so
+malformed source, unresolved graph edges, denied capabilities, and ABI errors
+leave no executable artifact and return a non-zero status. Output ordering,
+manifest JSON, WAT, declarations, loader data, source maps, and content hashes
+are deterministic for identical inputs.
 
-`packages/forge-web-script/src/fixtures/bootstrap.ts` הוא קובץ ההפעלה
-קורפוס התאמה. מתקנים מקובלים חייבים לאמת ללא אבחון שגיאות;
-מתקנים שנדחו חייבים לדווח על קודי האבחון היציבים הרשומים שלהם ותקפים
-טווחי מקור. הטמעות בשפות אחרות יכולות לצרוך את אותו מתקן
-לעצב ולהשוות ASTs מנורמלים, אבחון ו-JSON מניפסט. המתקן
-חבילה היא יעד התאמה, לא תמונת מצב ספציפית ליישום.
+## Vitest and Vite test integration
 
-## מדיניות תאימות
+Use `@mission-platform/forge-web-script-vitest` when a Vitest suite needs to
+assert compiler artifacts, structured diagnostics, Wasm behavior, graph links,
+or the generated Vite module contract. Its direct harness methods (`compile`,
+`compileSource`, `compileGraph`, `inspect`, `load`, `loadSync`, and
+`checkVmParity`) delegate to the public compiler/runtime contracts; its
+`defineForgeWebScriptVitestConfig` helper installs the production
+`forgeWebScriptPlugin` while preserving consumer Vite plugins and settings.
+See [Testing in Mission Platform](testing.md#forge-web-script-tests) for the
+configuration and fixture examples.
 
-השפה והגרסאות העיקריות של ABI אינן תואמות כברירת מחדל. מטעין עשוי לקבל
-אותו ABI עיקרי עם גרסה מינורית גבוהה יותר רק כאשר המפיק מסמן את
-שדות חדשים אופציונליים והצרכן מתעלם משדות לא ידועים בבטחה. הסרת א
-ייצוא, שינוי סוג, שינוי בעלות או שינוי יכולת
-החתימה דורשת גרסת ABI עיקרית. הוספת יכולת לעולם לא בשקט
-משנה מודול קיים: הוא דורש הצהרת מניפסט ומארח חדשים
-אישור.
+The harness accepts host functions only through explicit capability maps keyed
+by manifest capability names, for example:
 
-גרסאות מהדר אינן גרסאות ABI. המהדרים חייבים לכלול את הגרסה שלהם ב
-ה-Compilation input ו-hash artifact, אבל מעמיסים משווים בין השפה ל-ABI
-גרסאות בתוספת חתימת המניפסט. בדיקת תאימות נכשלה היא א
-אבחון זמן טעינה, לא נפילה של זמן ריצה. מודולי Rust ו-AssemblyScript
-להמשיך להשתמש במעטפת הקיימים ובחוזי ABI במהלך הדו-קיום
-תקופה; Forge Web Script אינו מפרש מחדש או מחליף אותם.
+```ts
+const exports = await harness.load<{ current: () => bigint }>(
+  "capabilities/clock-now.fws",
+  {
+    "clock.now": { now: () => 123n },
+  },
+);
+```
 
-## מפת דרכים לאירוח עצמי של Bootstrap
+Missing declared imports and undeclared supplied imports are failures. Test
+projects that import `.fws` or its virtual artifact queries should add the
+type-only declaration subpath
+`@mission-platform/forge-web-script-vitest/forge-web-script` to their
+TypeScript `types` list or a referenced test type entrypoint.
 
-1. **חוזה אתחול:** לשמור על TypeScript לקסר, מנתח, בודק סוג,
-   מניפסט בונה, מתקנים ואבחון כהתאמה לביצוע
-   מטרה. הוסף פולט WASM רק לאחר תוכניות מקובלות וקלט שגוי
-   בעלי התנהגות יציבה.
-2. **ספרייה סטנדרטית של Bootstrap:** יישם מספר שלם/צף דטרמיניסטי
-   פעולות, UTF-8 ובייט קודקים, הקצאה והפצת מלכודות ללא
-   ממשקי API של דפדפן. בדוק כל פעולה דרך ה-ABI ההגיוני והמארחים המזויפים.
-3. ** תת-קבוצת המהדר של Forge Web Script:** הטמיע את המהדר ב- Forge Web
-   סקריפט המשתמש רק בתת-הקבוצה המקובלת, רשומות מפורשות עבור מצב המהדר,
-   מאגרי בתים/מחרוזות, וייבוא של יכולות מוצהרות. הפלט שלו חייב לעבור
-   את TypeScript קורפוס התאמה בת-בייט כאשר דטרמיניסטי.
-4. **הרחבת אירוח עצמי:** הוסף אגרגטים עשירים יותר, לולאות, התאמת דפוסים,
-   עוזרי אבחון, וקומפילציה מצטברת רק לאחר שיש לכל תכונה
-   מתקן גרסה וסיפור ABI תואם.
+The shared harness fixtures under
+`packages/forge-web-script-vitest/fixtures/` are the cross-package corpus for
+valid modules, diagnostics, capabilities, graphs, and self-hosted parity.
+Package-local fixtures remain appropriate for compiler, runtime, and plugin
+tests that exercise private details.
 
-אירוח עצמי הוא אבן דרך מאוחרת יותר. מהדר ה-bootstrap מבסס סמנטיקה
-תאימות; זו לא הבטחה ש-v1 עצמו יכול להרכיב ייצור
-מהדר או שעומסי עבודה קיימים של Rust/AssemblyScript ייכתבו מחדש.
+`checkVmParity` reports the bounded self-hosted lex-stage parity contract in
+`interpret`, `jit`, or `aot` mode. Assert parity, fingerprints, step counts,
+and AOT reproducibility metadata, but do not treat this report as arbitrary
+compiled-FWS VM execution; Wasm loading remains the runtime behavior check.
+
+## Diagnostics
+
+Diagnostics are structured records with `code`, `severity`, `phase`, `message`,
+`fileName`, and a source `span`; actionable records may also include `hint`.
+The phase is one of `lex`, `parse`, `type-check`, or `abi`. Stable v1 code
+families include:
+
+| Code family   | Meaning                                                                                   |
+| ------------- | ----------------------------------------------------------------------------------------- |
+| `FWS-LEX-*`   | invalid characters/escapes, raw string line terminators, or unterminated strings/comments |
+| `FWS-PARSE-*` | invalid module, declaration, statement, or expression syntax                              |
+| `FWS-TYPE-*`  | invalid primitive type, name, operator, argument, or return                               |
+| `FWS-ABI-*`   | duplicate names, denied capabilities, exports, or imports                                 |
+| `FWS-REGEX-*` | unsupported or malformed compiler-owned regex patterns                                    |
+
+Errors prevent artifact generation. Warnings and informational diagnostics do
+not change semantics. Diagnostic ordering is source order, followed by phase
+order for diagnostics attached to the same span. A Vite adapter must preserve
+the stable code and span when forwarding an error to Vite.
+
+## Bootstrap conformance contract
+
+The v1 compiler target is intentionally limited to the language and ABI surface
+documented here. A program is in the bootstrap subset if it uses one
+module, the lexical rules above, primitive types, `string`/`bytes` values,
+explicitly exported functions, capability imports, local declarations, calls,
+expressions, `if`/`else`, `while`, C-style `for`, `do while`, and `return`.
+The extended aggregate contract is separately conformance-tested and adds
+structs, enums, generic types, collection values, function values, and
+`match`; it must not depend on an implicit browser or Node global.
+
+`packages/forge-web-script/src/fixtures/bootstrap.ts` is the executable
+conformance corpus. Accepted fixtures must validate with no error diagnostics;
+rejected fixtures must report their listed stable diagnostic codes and valid
+source spans. Implementations in other languages can consume the same fixture
+shape and compare normalized ASTs, diagnostics, and manifest JSON. The fixture
+suite is a conformance target, not an implementation-specific snapshot.
+
+The shared source corpus in
+`packages/forge-web-script-vitest/fixtures` covers the same boundary:
+`valid/collections.fws` exercises collection literals, indexing, contextual
+empty vectors, `length()`, and valid escaped strings;
+`valid/aggregates.fws` exercises function values, qualified `Result::Ok` and
+`Result::Error` constructors, and arm-local match bindings; and
+`diagnostics/collections.fws` exercises invalid collection calls and aggregate
+constructor/binding diagnostics. The collection fixture is also compiled
+through the shared Wasm harness; aggregate syntax is retained as a frontend
+conformance source until aggregate Wasm lowering is enabled for that harness.
+
+## Compatibility policy
+
+Language and ABI major versions are incompatible by default. A loader may accept
+the same major ABI with a higher minor version only when the producer marks the
+new fields optional and the consumer ignores unknown fields safely. Removing an
+export, changing a type, changing ownership, or changing a capability
+signature requires a breaking ABI revision and must be rejected by loaders that
+do not implement it. ABI `1.2` is such a breaking revision despite retaining
+the `1.x` numbering: its required `fws_realloc` memory export is not optional,
+and ABI `1.1` manifests are not silently upgraded. Adding a capability never
+silently changes an existing module: it requires a new manifest declaration and
+host approval.
+
+Compiler versions are not ABI versions. Compilers must include their version in
+the compile input and artifact hash, but loaders compare the language and ABI
+versions plus the manifest signature. A failed compatibility check is a
+load-time diagnostic, not a runtime fallback. Rust and AssemblyScript modules
+continue to use their existing wrappers and ABI contracts during the coexistence
+period; Forge Web Script does not reinterpret or replace them.
+
+Regex standard-library compatibility is intentionally separate from host regex
+compatibility. The Forge bytecode contract and compiler define the accepted
+syntax and stable diagnostics; the reference VM is used only to validate the
+leftmost/backtracking behavior, UTF-16 capture offsets, and `-1` unset sentinel
+until the backend VM is available. Browser or Node regular-expression behavior
+is only a differential oracle, and neither the TypeScript reference VM nor a
+host regular-expression API may execute a production standard-library call.
+Changing opcode numbering, capture-slot layout, supported syntax, diagnostic
+codes, or matching semantics requires a new regex bytecode version and a new
+artifact identity. Until backend/runtime conformance and phone-number migration
+evidence are complete, the AssemblyScript phone implementation remains an
+explicit legacy regression oracle and is never mixed with a Forge artifact.
+
+## Coexistence and migration
+
+Forge Web Script is an additional target during v1 adoption. Existing Rust
+crates and their `packages/*-wasm` wrappers remain the production path for QR,
+matrix, and code-scan workloads. Existing consumers should continue to
+import those typed wrappers directly; no wrapper is silently redirected through
+Forge Web Script, and no generated wasm file is shared between the pipelines.
+
+The `codecMigrationFixture` in
+`packages/forge-web-script/src/fixtures/codec-migration.ts` is the first
+conformance fixture shaped like a codec adapter. It declares
+`codec.barcode.encode(payload: string) -> bytes`, exports `encode_payload`, validates the
+pointer-length ABI, and uses an injectable host to write caller-owned output.
+It intentionally remains a narrow ABI fixture: the host can use a deterministic
+fake for conformance tests while the fixture proves the Forge Web Script
+boundary. Production codec parity still requires matching vectors and
+performance measurements, not just a matching function name.
+
+The corresponding legacy wrapper exports `encode(symbology, data)` and returns
+`Uint8Array | undefined`; the fixture exports `encode_payload(payload)` and
+returns an ABI-owned `bytes` pair. That deliberate difference keeps the
+capability boundary explicit: a migration adapter may map the legacy
+symbology/data call into the declared capability, but the fixture does not
+pretend that the two exports are behaviorally interchangeable yet.
+
+### Selecting an implementation
+
+| Workload or requirement                                                | Select                                                                 | Reason                                                                                                     |
+| ---------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Existing QR, matrix, or scanner behavior                               | `packages/*-wasm`                                                      | Stable Rust implementation and existing typed ESM wrapper; keep its current wasm-pack ABI. |
+| Existing barcode behavior                                              | `@mission-platform/barcode`                                            | Package-local Forge Web Script graphs provide the typed barcode façade.                    |
+| New general-purpose browser-safe compute with explicit host effects    | Forge Web Script plus `@mission-platform/vite-plugin-forge-web-script` | Versioned `.fws` source, manifest, typed loader, and deny-by-default capabilities.         |
+| Existing AssemblyScript source or an AssemblyScript-specific migration | `@mission-platform/vite-plugin-assemblyscript`                         | Compiles `.ts` AssemblyScript entries and preserves its generated raw-export contract.     |
+| Framework-neutral UI/component compilation                             | Forge component compiler                                               | Forge Web Script is not a replacement for `FrameworkOutputPlugin` or component targets.    |
+
+Use the Forge Web Script Vite plugin only for `.fws` entries. Use the
+AssemblyScript plugin for existing AssemblyScript entries, and keep Rust crate
+builds owned by their crate `turbo.json` tasks. During migration, an application
+may bundle all three kinds of module: each loader owns its own initialization,
+memory, and ABI validation, and capability imports must be supplied explicitly
+to Forge Web Script modules.
+
+### Evidence and deprecation gate
+
+Migration work should record four independent comparisons for each candidate:
+
+1. exported behavior against shared golden vectors, including invalid-input and
+   boundary cases;
+2. ABI safety, including manifest/version checks, import denial, bounds checks,
+   trap conversion, and buffer ownership;
+3. generated artifact stability, including reproducible hashes, declarations,
+   source maps, and browser/Node loading; and
+4. a representative release-build performance measurement covering compile
+   time, artifact size, initialization, and steady-state calls.
+
+The migration fixture currently supplies the ABI and artifact portions of this
+evidence. The existing barcode wrapper and Rust crate remain the behavior and
+legacy regression oracle; run their package and crate tests alongside the
+fixture rather than treating the fixture as a replacement benchmark. Forge Web
+Script must not deprecate a Rust or AssemblyScript path until a workload passes
+all four comparisons in two supported host environments, has a documented
+rollback path, and has no unresolved ABI or security findings. Deprecation then
+requires an announced compatibility window and an adapter or migration guide;
+removal requires a subsequent major release.
+
+## Class-free aggregate and execution contracts
+
+The extended class-free contract adds immutable `struct` values, tagged `enum`
+values, structural compile-time `interface` declarations, generic parameters
+with interface bounds, function values, collection literals/methods, and
+`match` expressions/statements. Qualified enum constructors use `Type::Variant`
+and match bindings are arm-local; for example,
+`Result::Ok(item) => item` binds `item` only in that arm. The standard
+`Result<T, E>` contract uses `Ok(T)` and `Error(E)`, not `Err(E)`.
+Struct updates are pure value transformations; neither structs nor interfaces
+have constructors, identity, inheritance, receivers, or runtime dispatch. Any
+attempt to declare class/object-oriented constructs (including `class`,
+`constructor`, `extends`, `impl`, `new`, and `trait`) is rejected with stable
+diagnostic `FWS-PARSE-052`.
+
+Aggregate layouts are recorded in the manifest in canonical name order. Struct
+fields are ordered, four-byte aligned values; enum layouts begin with a four-byte
+discriminant. Field ownership is explicit (`owned`, `borrowed`, or `shared`) and
+defaults to owned immutable storage. Generic values are specialized per concrete
+type; descriptor-based representations are reserved for explicit iterator or
+interface boundaries and are represented by specialization records.
+
+The VM bytecode contract is backend-independent. A `ForgeWebScriptVmModule`
+contains typed functions, constants, aggregate layouts, specializations,
+capability imports, source spans, and the 64 KiB linear-memory
+`fws_alloc`/`fws_dealloc`/`fws_realloc` boundary. `interpret`, `jit`, and `aot` are execution
+modes over the same instruction/value/trap semantics; JIT cache keys and AOT
+artifacts include compiler and source hashes. Capabilities are callable only
+when present in the module manifest.
+
+Reactive runtime state is data: entity indices use generation counters,
+component stores and worlds are immutable snapshots, and systems return world
+transitions. Signals, subscriptions, query requirements, deterministic order,
+and bounded scheduler steps are explicit values. ECS host integration requires
+the same declared capability boundary as any other FWS import.
+
+## Scope boundary
+
+The v1 implementation is a TypeScript frontend plus deterministic WebAssembly
+backend, exposed through the compatibility facade and the standalone Node CLI.
+The conformance fixtures and generated artifacts are the compatibility target.
+
+Self-hosted compilation (running the compiler as an FWS program) is explicitly
+supported by this v1 contract’s class-free surface and VM bytecode execution
+model, but it is not required for correctness of the v1 ABI and language
+boundary. Richer language features, replacement of existing Rust or
+AssemblyScript workloads, and other non-v1 compiler evolutions are outside this
+contract.
+
+## Tooling cutover and bootstrap boundary
+
+The CLI, Vite plugin, language service, and LSP all consume the public compiler
+service contract. The lexer migration is intentionally LSP-first: the checked-in
+EBNF grammar defines the TypeScript token contract, the language service and
+editor adapters are the first acceptance boundary, and compiler/frontend or
+self-hosted ownership must not move until token kinds, diagnostics, symbols,
+completion, hover, and UTF-16 ranges conform. The current bounded FWS-authored
+lex/token stage remains a compatibility parity path while the TypeScript lexer
+and language-service gate are being migrated; it is not the grammar authority.
+
+After the LSP gate is green, the same grammar will be ported to the FWS/VM lexer
+and then to the bounded parser-module stage. The remaining frontend, linker,
+optimizer, manifest, and Wasm-emission stages are still seed-backed in this
+release; this boundary is intentional and is exposed as
+`ForgeWebScriptSelfHostedStageReport` rather than being presented as complete
+self-hosting.
+
+The CLI selects the VM mode with `--vm-mode interpret|jit|aot`. The Vite plugin
+and language-service workspace options use the corresponding `selfHostedVmMode`
+value. All three modes execute the same bytecode and compare the lex fingerprint
+with the independent seed reference. A mismatch or VM trap becomes the stable
+`FWS-BOOTSTRAP-001` diagnostic and prevents an invalid Wasm artifact from being
+emitted. `interpret` is intended for quick checks, while `jit` and `aot` are
+conformance/development modes; compiled Wasm remains the normal production
+artifact and runtime path.
+
+Graph linking, declarations, source maps, ABI manifests, deterministic hashes,
+linear-memory ownership, capability denial, collection/ECS values, and explicit
+async scheduler capabilities remain governed by the existing public contracts.
+The tooling adapters do not add ambient host APIs or implicit object dispatch.
+Microtasks and Web Workers are available only through declared scheduler
+capabilities, and their ordering remains explicit and deterministic. Consumers
+should treat the VM report as a parity/conformance signal until later releases
+move additional compiler stages behind the same FWS boundary.
